@@ -27,7 +27,7 @@ const CreateCampaign = () => {
     channel: "Select Channel",
     name: "",
     publishDate: null,
-    collaborators: ['bdbaf83a-3006-4d10-90cf-e4c6773955ba'],
+    collaborators: [],
     status: "draft",
   });
   // Array projects
