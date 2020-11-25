@@ -15,6 +15,7 @@
 }
 .data-text {
   color: var(--color-prim-navy);
+  font-weight: 800;
 }
 .icon-container {
   /* background-color: tomato; */

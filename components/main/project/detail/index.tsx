@@ -1,21 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
-import styles from './index.module.css';
-import Link from 'next/link';
-import update from 'immutability-helper';
-import projectApi from '../../../../server-api/project';
-import taskApi from '../../../../server-api/task';
-import toastUtils from '../../../../utils/toast';
-import { ProjectTypes, Utilities } from '../../../../assets';
-import Router from 'next/router';
-import urlUtils from '../../../../utils/url';
+import styles from "./index.module.css";
+import Link from "next/link";
+import update from "immutability-helper";
+import projectApi from "../../../../server-api/project";
+import taskApi from "../../../../server-api/task";
+import toastUtils from "../../../../utils/toast";
+import { ProjectTypes, Utilities } from "../../../../assets";
+import Router from "next/router";
+import urlUtils from "../../../../utils/url";
 
 // Components
-import ItemSubheader from '../../../common/items/item-subheader';
-import ItemSublayout from '../../../common/layouts/item-sublayout';
-import ConversationList from '../../../common/conversation/conversation-list';
-import TasksList from './tasks-list';
-import Fields from './project-fields';
+import ItemSubheader from "../../../common/items/item-subheader";
+import ItemSublayout from "../../../common/layouts/item-sublayout";
+import ConversationList from "../../../common/conversation/conversation-list";
+import TasksList from "./tasks-list";
+import Fields from "./project-fields";
 
 const ProjectDetail = () => {
   const [project, setProject] = useState(undefined);
@@ -24,17 +24,17 @@ const ProjectDetail = () => {
 
   const [tasks, setTasks] = useState([]);
 
-  const [status, setStatus] = useState(');
+  const [status, setStatus] = useState("");
 
-  const [activeSideComponent, setActiveSidecomponent] = useState('tasks');
+  const [activeSideComponent, setActiveSidecomponent] = useState("tasks");
 
   const [editableFields, setEditableFields] = useState({
-    name: ',
-    headline: ',
-    subject: ',
-    preheader: ',
+    name: "",
+    headline: "",
+    subject: "",
+    preheader: "",
     collaborators: [],
-    description: ',
+    description: "",
     campaign: null,
     startDate: null,
     publishDate: null,
@@ -71,8 +71,8 @@ const ProjectDetail = () => {
   const deleteProject = async () => {
     try {
       await projectApi.deleteProject(project?.id);
-      Router.replace('/main/overview');
-      toastUtils.success('Project deleted sucesfully');
+      Router.replace("/main/overview");
+      toastUtils.success("Project deleted sucesfully");
     } catch (err) {
       console.log(err);
     }
@@ -89,16 +89,16 @@ const ProjectDetail = () => {
 
   const saveProject = async () => {
     if (!editableFields.publishDate) {
-      return toastUtils.error('You must add an Deadline Date');
+      return toastUtils.error("You must add an Deadline Date");
     }
     if (!editableFields.name) {
-      return toastUtils.error('The name cannot be empty');
+      return toastUtils.error("The name cannot be empty");
     }
     if (
       editableFields.name !== project.name &&
       projectNames.includes(editableFields.name)
     ) {
-      return toastUtils.error('A project with that name already exists');
+      return toastUtils.error("A project with that name already exists");
     }
     try {
       const saveData = {
@@ -116,7 +116,7 @@ const ProjectDetail = () => {
       const { data } = await projectApi.updateProject(project.id, saveData);
       getProjectNames();
       setProject(data);
-      toastUtils.success('Project saved sucesfully');
+      toastUtils.success("Project saved sucesfully");
     } catch (err) {
       console.log(err);
     }
@@ -144,9 +144,9 @@ const ProjectDetail = () => {
       try {
         const { data } = await projectApi.addTag(project.id, newTag);
         if (!isNew) {
-          editFields('tags', update(editableFields.tags, { $push: [newTag] }));
+          editFields("tags", update(editableFields.tags, { $push: [newTag] }));
         } else {
-          editFields('tags', update(editableFields.tags, { $push: [data] }));
+          editFields("tags", update(editableFields.tags, { $push: [data] }));
         }
         return data;
       } catch (err) {
@@ -158,7 +158,7 @@ const ProjectDetail = () => {
   const removeTag = async (index) => {
     try {
       editFields(
-        'tags',
+        "tags",
         update(editableFields.tags, { $splice: [[index, 1]] })
       );
       await projectApi.removeTag(project.id, editableFields.tags[index].id);
@@ -179,7 +179,7 @@ const ProjectDetail = () => {
         return await removeCollaborator(user);
       }
       editFields(
-        'collaborators',
+        "collaborators",
         update(editableFields.collaborators, { $push: [user] })
       );
       await projectApi.addCollaborators(project.id, {
@@ -197,7 +197,7 @@ const ProjectDetail = () => {
       );
       if (searchedCollaboratorIndex === -1) return;
       editFields(
-        'collaborators',
+        "collaborators",
         update(editableFields.collaborators, {
           $splice: [[searchedCollaboratorIndex, 1]],
         })
@@ -269,12 +269,12 @@ const ProjectDetail = () => {
 
   const changeStatus = async (newStatus) => {
     if (!editableFields.publishDate) {
-      return toastUtils.error('You must add an Deadline Date');
+      return toastUtils.error("You must add an Deadline Date");
     }
 
-    if (newStatus === 'scheduled' && editableFields.publishDate < new Date()) {
+    if (newStatus === "scheduled" && editableFields.publishDate < new Date()) {
       return toastUtils.error(
-        'You cannot schedule if the Publish Date is in the past'
+        "You cannot schedule if the Publish Date is in the past"
       );
     }
 
@@ -293,12 +293,12 @@ const ProjectDetail = () => {
       const { data } = await projectApi.createDuplicatedProject(project.id);
       Router.replace(`/main/projects/${data.id}`);
     } catch (error) {
-      console.log('There is an error on duplicateProject', error);
+      console.log("There is an error on duplicateProject", error);
     }
   };
 
   let SideComponent;
-  if (activeSideComponent === 'tasks')
+  if (activeSideComponent === "tasks")
     SideComponent = (
       <TasksList
         tasks={tasks}
@@ -308,9 +308,9 @@ const ProjectDetail = () => {
         replaceTaskAssigned={replaceTaskAssigned}
       />
     );
-  else if (activeSideComponent === 'comments')
+  else if (activeSideComponent === "comments")
     SideComponent = (
-      <ConversationList itemId={project?.id} itemType='projects' />
+      <ConversationList itemId={project?.id} itemType="projects" />
     );
 
   return (
@@ -319,30 +319,30 @@ const ProjectDetail = () => {
         title={editableFields.name}
         saveDraft={saveProject}
         status={status}
-        changeName={(name) => editFields('name', name)}
+        changeName={(name) => editFields("name", name)}
         changeStatus={changeStatus}
-        resetPageTittle={() => editFields('name', project?.name)}
+        resetPageTittle={() => editFields("name", project?.name)}
         hasAssets={true}
-        type='project'
+        type="project"
         itemId={project?.id}
       />
       <main className={`${styles.container}`}>
         <ItemSublayout
           deleteItem={deleteProject}
           hasAssets={true}
-          type='project'
+          type="project"
           itemId={project?.id}
           navElements={[
             {
               icon: ProjectTypes.task,
               onClick: () => {
-                setActiveSidecomponent('tasks');
+                setActiveSidecomponent("tasks");
               },
             },
             {
               icon: Utilities.comment,
               onClick: () => {
-                setActiveSidecomponent('comments');
+                setActiveSidecomponent("comments");
               },
             },
           ]}
