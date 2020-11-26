@@ -1,7 +1,5 @@
 .container {
-  /* background-color: green; */
   display: flex;
-  justify-content: center;
   width: 100%;
   align-items: center;
 }
@@ -16,9 +14,6 @@
 .data-text {
   color: var(--color-prim-navy);
   font-weight: 800;
-}
-.icon-container {
-  /* background-color: tomato; */
 }
 
 .icon-left {
