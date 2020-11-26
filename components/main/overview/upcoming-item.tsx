@@ -25,8 +25,8 @@ const UpcomingItem = ({ name, date, status, users, detailUrl, deleteItem }) => (
     <div className={styles.user}>
       {users.length <= 1 ?
         <div className={styles['single-user']}>
-          <UserPhoto photoUrl={users[0].profilePhoto} sizePx={30} />
-          <span>{users[0].name}</span>
+          <UserPhoto photoUrl={users[0]?.profilePhoto} sizePx={30} />
+          <span>{users[0]?.name}</span>
         </div>
         :
         <ul className={styles['multiple-users']}>
