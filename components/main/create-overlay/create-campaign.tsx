@@ -1,111 +1,143 @@
-import styles from "./create-campaign.module.css"
-import { useState, useEffect, useContext } from "react"
-import { useForm } from "react-hook-form"
-import { UserContext, TeamContext } from "../../../context"
-import Router from "next/router"
-import campaignApi from "../../../server-api/campaign"
-import toastUtils from "../../../utils/toast"
-import update from "immutability-helper"
+import styles from './create-campaign.module.css'
+import { useState, useEffect, useContext } from 'react'
+import { useForm } from 'react-hook-form'
+import { UserContext, TeamContext } from '../../../context'
+import Router from 'next/router'
+import campaignApi from '../../../server-api/campaign'
+import projectApi from '../../../server-api/project'
+import toastUtils from '../../../utils/toast'
+import update from 'immutability-helper'
 // Components
-import Button from "../../common/buttons/button"
-import FormInput from "../../common/inputs/form-input"
-import Input from "../../common/inputs/input"
-import CampaignDetail from "../campaign/detail/campaign-detail"
+import Button from '../../common/buttons/button'
+import FormInput from '../../common/inputs/form-input'
+import Input from '../../common/inputs/input'
+import CampaignDetail from '../campaign/detail/campaign-detail'
+
+const EMPTY_CHANNEL = 'Select Channel'
 
 const CreateCampaign = () => {
   const {
-    user: { id },
+    user,
   } = useContext(UserContext)
 
   const { getTeamMembers } = useContext(TeamContext)
 
   const { control, handleSubmit, errors } = useForm()
-  const [submitError, setSubmitError] = useState("")
+  const [submitError, setSubmitError] = useState('')
 
   const [campaignNames, setCampaignNames] = useState([])
+  const [projectNames, setProjectNames] = useState([])
 
   // New editable fields
-
-  const [editableProjectFields, setEditableProjectFields] = useState({
-    channel: "Select Channel",
-    name: "",
+  const DEFAULT_PROJECT_FIELDS = {
+    channel: EMPTY_CHANNEL,
+    name: '',
     publishDate: null,
     collaborators: [],
-    status: "draft",
-  })
+    status: 'draft',
+  }
+
   // Array projects
-  const [projects, setProject] = useState([])
+  const [projects, setProjects] = useState([{
+    ...DEFAULT_PROJECT_FIELDS
+  }])
 
   useEffect(() => {
-    getCampaignNames()
     getTeamMembers()
   }, [])
 
   const addProject = (e) => {
     e.preventDefault()
-    setProject([...projects, editableProjectFields])
+    setProjects([...projects, { ...DEFAULT_PROJECT_FIELDS }])
   }
 
-  const addCollaborator = async (index, user) => {
-    try {
-      // Only add if collaborator is not on list
-      if (
-        id === user.id ||
-        projects[index].collaborators.find(
-          (collaborator) => collaborator.id === user.id
-        )
-      ) {
-        return await removeCollaborator(user, index)
+  const removeProject = (e, index) => {
+    e.preventDefault()
+    setProjects(update(projects, {
+      $splice: [[index, 1]]
+    }))
+  }
+
+  const addCollaborator = (index, user) => {
+    // Only add if collaborator is not on list
+    if (projects[index].collaborators.find(({ id }) => id === user.id)) {
+      return removeCollaborator(index, user)
+    }
+    console.log(projects)
+    setProjects(update(projects, {
+      [index]: {
+        collaborators: {
+          $push: [user]
+        }
       }
-      setProject(update(projects, { [index]: { $merge: [user] } }))
-    } catch (err) {
-      console.log(err)
-    }
+    }))
   }
-  const removeCollaborator = async (user, index) => {
-    try {
-      const searchedCollaboratorIndex = projects[index].collaborators.findIndex(
-        (collaborator) => collaborator.id === user.id
-      )
-      if (searchedCollaboratorIndex === -1) return
-      setProject(
-        update(projects, {
-          [index]: {
-            $splice: [[searchedCollaboratorIndex, 1]],
-          },
-        })
-      )
-    } catch (err) {
-      console.log(err)
-    }
+
+  const removeCollaborator = (index, user) => {
+    const searchedCollaboratorIndex = projects[index].collaborators.findIndex(
+      ({ id }) => id === user.id
+    )
+    if (searchedCollaboratorIndex === -1) return
+    setProjects(
+      update(projects, {
+        [index]: {
+          collaborators: {
+            $splice: [[searchedCollaboratorIndex, 1]]
+          }
+        }
+      })
+    )
   }
+
   const editFields = (index, data) => {
-    setProject(update(projects, { [index]: { $merge: data } }))
+    setProjects(update(projects, { [index]: { $merge: data } }))
   }
+
   const onSubmit = async (campaignData, e) => {
+    await getNames()
     e.preventDefault()
     if (campaignNames.includes(campaignData.name)) {
-      return toastUtils.error("A campaign with that name already exists")
+      return toastUtils.error('A campaign with that name already exists')
+    }
+    if (projectsHaveDuplicateNames()) {
+      return toastUtils.error('One or more projects have duplicate names')
+    }
+    if (!projectsHaveRequiredFields()) {
+      return toastUtils.error('All projects must have a name, a deadline date and a channel')
     }
     try {
       campaignData.projects = projects
-      // console.log(campaignData)
       const { data } = await campaignApi.createCampaign(campaignData)
-      Router.replace(`/main/campaigns/${data.id}`)
+      Router.replace(`/main/projects/${data.id}`)
     } catch (err) {
       // TODO: Show error message
       if (err.response?.data?.message) {
         setSubmitError(err.response.data.message)
       } else {
-        setSubmitError("Something went wrong, please try again later")
+        setSubmitError('Something went wrong, please try again later')
       }
     }
   }
 
-  const getCampaignNames = async () => {
+  const projectsHaveRequiredFields = () => {
+    return projects.every(({ name, publishDate, channel }) => name && publishDate && channel !== EMPTY_CHANNEL)
+  }
+
+  const projectsHaveDuplicateNames = () => {
+    return projects.some(({ name }, index) =>
+      projectNames.includes(name)
+      ||
+      projects.filter((_, proIndex) => index !== proIndex)
+        .map((otherProject) => otherProject.name).includes(name))
+  }
+
+  const getNames = async () => {
     try {
-      const { data } = await campaignApi.getCampaigns()
-      setCampaignNames(data.map((campaign) => campaign.name))
+      const { data: campaignsData } = await campaignApi.getCampaigns()
+      setCampaignNames(campaignsData.map((campaign) => campaign.name))
+
+      const { data: projectsData } = await projectApi.getProjects()
+      setProjectNames(projectsData.map((project) => project.name))
     } catch (err) {
       // TODO: Error handling
     }
@@ -114,19 +146,19 @@ const CreateCampaign = () => {
   return (
     <div className={`${styles.container}`}>
       <h2>Create New Campaign</h2>
-      <form onSubmit={handleSubmit(onSubmit)} className={"create-overlay-form"}>
-        <div className={styles["input-wrapper"]}>
+      <form onSubmit={handleSubmit(onSubmit)} className={'create-overlay-form'}>
+        <div className={styles['input-wrapper']}>
           <FormInput
             InputComponent={
               <Input
-                type="text"
-                placeholder="Name your Campaign"
-                styleType="regular"
+                type='text'
+                placeholder='Name your Campaign'
+                styleType='regular'
               />
             }
-            name="name"
+            name='name'
             control={control}
-            message={"This field should be between 1 and 30 characters long"}
+            message={'This field should be between 1 and 30 characters long'}
             rules={{ minLength: 1, maxLength: 30, required: true }}
             errors={errors}
           />
@@ -135,12 +167,13 @@ const CreateCampaign = () => {
           editFields={editFields}
           projects={projects}
           addProject={addProject}
-          ownerId={id}
+          ownerId={user.id}
           addCollaborator={addCollaborator}
           removeCollaborator={removeCollaborator}
+          removeProject={removeProject}
         />
-        <div className={styles["button-wrapper"]}>
-          <Button type={"submit"} text={"Save changes"} styleType="primary" />
+        <div className={styles['button-wrapper']}>
+          <Button type={'submit'} text={'Save changes'} styleType='primary' />
         </div>
       </form>
     </div>
