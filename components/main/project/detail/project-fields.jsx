@@ -42,6 +42,7 @@ const ProjectFields = ({
   editFields,
   project,
   addCollaborator,
+  addToCampaign,
   removeCollaborator
 }) => {
 
@@ -149,9 +150,12 @@ const ProjectFields = ({
     toggleActiveInput('tags')
   }
 
-  const handleCampaignChange = (selected) => {
-    editFields('campaign', selected)
-    toggleActiveInput('campaign')
+  const handleCampaignChange = async (selected, actionMeta) => {
+    const newCampaign = await addToCampaign(selected, actionMeta.action === 'create-option')
+    if (actionMeta.action === 'create-option') {
+      setInputTags(update(inputCampaigns, { $push: [newCampaign] }))
+    }
+    toggleActiveInput('campaigns')
   }
 
   const handleChannelChange = (value) => {
@@ -337,9 +341,9 @@ const ProjectFields = ({
           <span>{campaign?.name}</span>
           {activeInput === 'campaign' ?
             <div className={'tag-select'}>
-              <Select
+              <CreatableSelect
                 options={inputCampaigns.map(campaign => ({ ...campaign, label: campaign.name, value: campaign.id }))}
-                placeholder={'Select a campaign'}
+                placeholder={'Enter a new campaign or select an existing one'}
                 value={campaign ? { label: campaign.name, value: campaign.id } : null}
                 onChange={handleCampaignChange}
                 styleType={'regular item'}

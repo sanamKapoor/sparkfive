@@ -18,6 +18,7 @@ import { format } from 'date-fns';
 const CampaignDetail = ({
   projects = [],
   addProject,
+  removeProject,
   editFields,
   ownerId,
   removeCollaborator,
@@ -59,9 +60,9 @@ const CampaignDetail = ({
       <h3>Projects</h3>
       <div className={styles['header-row']}>
         <div>Channel</div>
-        <div>Project</div>
+        <div>Name</div>
         <div>Deadline</div>
-        {/* <div>Collaborators</div> */}
+        <div>Collaborators</div>
         <div>Status</div>
       </div>
       {projects.map((project, index) => {
@@ -138,24 +139,24 @@ const CampaignDetail = ({
                 )}
               </ItemDropdownWrapper>
             </div>
-            {/* <div>
+            <div>
               <ToggleableAbsoluteWrapper
                 closeOnAction={false}
                 Wrapper={({ children }) => (
                   <>
                     <ItemDropdownWrapper
-                      image={Utilities.add}
+                      image={project.collaborators.length === 0 && Utilities.add}
                       data='Add Collaborators'
                       hasOption={true}
                       optionOnClick={() => toggleActiveInput('collaborators')}
                     >
                       <ul className={styles['collaborator-list']}>
                         {project.collaborators.map((collaborator) => (
-                          <li key={collaborator.id}>
+                          <li key={collaborator}>
                             <CollaboratorItem
                               photoUrl={collaborator.profilePhoto}
                               onRemove={() =>
-                                removeCollaborator(collaborator)
+                                removeCollaborator(index, collaborator)
                               }
                             />
                           </li>
@@ -171,15 +172,13 @@ const CampaignDetail = ({
                   <SearchableUserList
                     onUserSelected={(user) => addCollaborator(index, user)}
                     filterOut={[ownerId]}
-                    selectedList={project.collaborators.map(
-                      (colab) => colab.id
-                    )}
+                    selectedList={project.collaborators.map(({ id }) => id)}
                   />
                 )}
                 wrapperClass={styles['image-wrapper']}
                 contentClass={styles['user-list-wrapper']}
               />
-            </div> */}
+            </div>
             <div>
               <ToggleableAbsoluteWrapper
                 wrapperClass='field'
@@ -209,6 +208,11 @@ const CampaignDetail = ({
                   />
                 )}
               />
+            </div>
+            <div className={styles.delete}>
+              {index !== 0 &&
+                <div onClick={(e) => removeProject(e, index)}>&#10005; </div>
+              }
             </div>
           </div>
         );
