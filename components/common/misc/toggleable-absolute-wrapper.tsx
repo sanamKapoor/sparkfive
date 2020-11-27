@@ -1,14 +1,21 @@
 import { useState, useRef } from 'react'
 
-const ToggleableAbsoluteWrapper = ({ Wrapper, Content, wrapperClass = '', contentClass = '', closeOnAction = true, onCloseAction = false, onClose = () => { } }) => {
+const ToggleableAbsoluteWrapper = ({ Wrapper, Content, wrapperClass = '', contentClass = '', closeOnAction = true, onCloseAction = false, onClose = () => { }, ignoreSelect = false }) => {
 
   const wrapperRef = useRef(null)
   const contentRef = useRef(null)
 
   const [isOpen, setIsOpen] = useState(false)
 
-  const handleClickOutside = (event) => {
-    if (contentRef.current && !contentRef.current.contains(event.target) && !wrapperRef.current.contains(event.target)) {
+  const handleClickOutside = ({ target }) => {
+
+    if (ignoreSelect) {
+      const allowedDivs = ['svg', 'path']
+      const allowedClass = 'select-prefix__indicator'
+      if (allowedDivs.includes(target.tagName) || target.className.includes(allowedClass)) return
+    }
+
+    if (contentRef.current && !contentRef.current.contains(target) && !wrapperRef.current.contains(target)) {
       setDropdownOpen(null, false)
     }
   }

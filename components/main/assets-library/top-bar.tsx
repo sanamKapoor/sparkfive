@@ -10,6 +10,7 @@ import { CALENDAR_ACCESS } from '../../../constants/permissions'
 // Components
 import SectionButton from '../../common/buttons/section-button'
 import NestedSelect from '../../common/inputs/nested-select'
+import FiltersSelect from '../../common/inputs/filters-select'
 import Select from '../../common/inputs/select'
 import Button from '../../common/buttons/button'
 import IconClickable from '../../common/buttons/icon-clickable'
@@ -55,7 +56,6 @@ const TopBar = ({
   const getTopTags = async () => {
     try {
       const { data } = await tagApi.getTopTags()
-      console.log("here is data", data)
       setTopTags(data)
     } catch (error) {
       console.log(error);
@@ -72,9 +72,21 @@ const TopBar = ({
   const applyFilters = (selectData) => {
     setActiveSortFilter({
       ...activeSortFilter,
-      filterCampaigns: selectData[0],
-      filterChannels: selectData[1],
-      filterTags: selectData[2],
+      filterTags: selectData[0]
+    })
+  }
+
+  const onCampaignChange = (selected) => {
+    setActiveSortFilter({
+      ...activeSortFilter,
+      filterCampaigns: selected
+    })
+  }
+
+  const onChannelChange = (selected) => {
+    setActiveSortFilter({
+      ...activeSortFilter,
+      filterChannels: selected
     })
   }
 
@@ -106,59 +118,50 @@ const TopBar = ({
       </div>
       <IconClickable src={Utilities.filter} additionalClass={styles.filter} onClick={toggleHamurgerList} />
       <div className={styles['row-nested']}>
-        {/* <TagsData
-          styleType='filter filter-schedule'
-          options={[
-            { value: 'chocolate', label: 'Chocolate' },
-            { value: 'strawberry', label: 'Strawberry' },
-            { value: 'vanilla', label: 'Vanilla' }
-          ]}
-        /> */}
-        <TagsData
-          options={[
-            { value: 'chocolate', label: 'Chocolate' },
-            { value: 'strawberry', label: 'Strawberry' },
-            { value: 'vanilla', label: 'Vanilla' }
-          ]}
-          styleType='filter new-filter-schedule'
-          placeholder='Tags'
-          topTags={topTags}
-        >
-          <NestedSelect
-            selectList={[
-              {
-                options: tagsFilter,
-                placeholder: 'Tags',
-                value: activeSortFilter.filterTags
-              },
+        <div className={styles['select-wrapper']}>
+          <TagsData
+            styleType='filter new-filter-schedule'
+            topTags={topTags}
+          >
+            <NestedSelect
+              selectList={[
+                {
+                  options: tagsFilter,
+                  placeholder: 'Tags',
+                  value: activeSortFilter.filterTags
+                },
 
-            ]}
-            onApplyFilters={applyFilters}
-          />
-        </TagsData>
+              ]}
+              onApplyFilters={applyFilters}
+            />
+          </TagsData>
+        </div>
+        {hasPermission([CALENDAR_ACCESS]) &&
+          <div className={styles['select-wrapper']}>
+            <FiltersSelect
+              options={campaignsFilter}
+              placeholder='Campaigns'
+              isClearable={true}
+              styleType='filter filter-schedule'
+              value={activeSortFilter.filterCampaigns}
+              onChange={onCampaignChange}
+            />
+          </div>
+        }
 
+        {hasPermission([CALENDAR_ACCESS]) &&
+          <div className={styles['select-wrapper']}>
+            <FiltersSelect
+              options={selectOptions.channels}
+              placeholder='Channels'
+              isClearable={true}
+              styleType='filter filter-schedule'
+              value={activeSortFilter.filterChannels}
+              onChange={onChannelChange}
+            />
+          </div>
+        }
 
-        <NestedSelect
-          selectList={[
-            // {
-            //   options: tagsFilter,
-            //   placeholder: 'Tags',
-            //   value: activeSortFilter.filterTags
-            // },
-            {
-              options: campaignsFilter,
-              placeholder: 'Campaigns',
-              value: activeSortFilter.filterCampaigns,
-              hidden: !hasPermission([CALENDAR_ACCESS])
-            },
-            {
-              options: selectOptions.channels,
-              placeholder: 'Channels',
-              value: activeSortFilter.filterChannels
-            }
-          ]}
-          onApplyFilters={applyFilters}
-        />
       </div>
       <div className={styles['sec-filters']} ref={filtersRef}>
         {activeSortFilter.mainFilter !== 'folders' && <Button type='button' text='Select All' styleType='secondary' onClick={selectAll} />}
