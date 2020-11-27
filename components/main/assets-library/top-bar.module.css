@@ -48,6 +48,11 @@
   display: none;
 }
 
+.row-nested {
+  display: flex;
+  flex-direction: row;
+}
+
 @media screen and (max-width: 1200px) {
   .container {
     margin-bottom: 1rem;
@@ -98,4 +103,9 @@
   .print {
     display: none;
   }
+
+  /* .row-nested {
+    display: flex;
+    flex-direction: row;
+  } */
 }

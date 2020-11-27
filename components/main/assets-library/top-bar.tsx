@@ -13,6 +13,7 @@ import NestedSelect from '../../common/inputs/nested-select'
 import Select from '../../common/inputs/select'
 import Button from '../../common/buttons/button'
 import IconClickable from '../../common/buttons/icon-clickable'
+import { TagsData } from '../../common/inputs/tags-data'
 
 const TopBar = ({
   activeSortFilter,
@@ -26,10 +27,12 @@ const TopBar = ({
 
   const [campaignsFilter, setCampaignsFilter] = useState([])
   const [tagsFilter, setTagsFilter] = useState([])
+  const [topTags, setTopTags] = useState([])
 
   const { hasPermission } = useContext(UserContext)
   useEffect(() => {
     getCampaignsTagsFilters()
+    getTopTags()
   }, [])
 
   const getCampaignsTagsFilters = async () => {
@@ -49,7 +52,16 @@ const TopBar = ({
       // Handle this error
     }
   }
+  const getTopTags = async () => {
+    try {
+      const { data } = await tagApi.getTopTags()
+      console.log("here is data", data)
+      setTopTags(data)
+    } catch (error) {
+      console.log(error);
 
+    }
+  }
   const setSortFilterValue = (key, value) => {
     setActiveSortFilter({
       ...activeSortFilter,
@@ -93,32 +105,66 @@ const TopBar = ({
         ))}
       </div>
       <IconClickable src={Utilities.filter} additionalClass={styles.filter} onClick={toggleHamurgerList} />
+      <div className={styles['row-nested']}>
+        {/* <TagsData
+          styleType='filter filter-schedule'
+          options={[
+            { value: 'chocolate', label: 'Chocolate' },
+            { value: 'strawberry', label: 'Strawberry' },
+            { value: 'vanilla', label: 'Vanilla' }
+          ]}
+        /> */}
+        <TagsData
+          options={[
+            { value: 'chocolate', label: 'Chocolate' },
+            { value: 'strawberry', label: 'Strawberry' },
+            { value: 'vanilla', label: 'Vanilla' }
+          ]}
+          styleType='filter new-filter-schedule'
+          placeholder='Tags'
+          topTags={topTags}
+        >
+          <NestedSelect
+            selectList={[
+              {
+                options: tagsFilter,
+                placeholder: 'Tags',
+                value: activeSortFilter.filterTags
+              },
+
+            ]}
+            onApplyFilters={applyFilters}
+          />
+        </TagsData>
+
+
+        <NestedSelect
+          selectList={[
+            // {
+            //   options: tagsFilter,
+            //   placeholder: 'Tags',
+            //   value: activeSortFilter.filterTags
+            // },
+            {
+              options: campaignsFilter,
+              placeholder: 'Campaigns',
+              value: activeSortFilter.filterCampaigns,
+              hidden: !hasPermission([CALENDAR_ACCESS])
+            },
+            {
+              options: selectOptions.channels,
+              placeholder: 'Channels',
+              value: activeSortFilter.filterChannels
+            }
+          ]}
+          onApplyFilters={applyFilters}
+        />
+      </div>
       <div className={styles['sec-filters']} ref={filtersRef}>
         {activeSortFilter.mainFilter !== 'folders' && <Button type='button' text='Select All' styleType='secondary' onClick={selectAll} />}
         <img src={Utilities.gridView} onClick={() => setActiveView('grid')} />
         <img src={Utilities.listView} onClick={() => setActiveView('list')} />
         <div className={styles['nested-wrapper']}>
-          <NestedSelect
-            selectList={[
-              {
-                options: campaignsFilter,
-                placeholder: 'Campaigns',
-                value: activeSortFilter.filterCampaigns,
-                hidden: !hasPermission([CALENDAR_ACCESS])
-              },
-              {
-                options: selectOptions.channels,
-                placeholder: 'Channels',
-                value: activeSortFilter.filterChannels
-              },
-              {
-                options: tagsFilter,
-                placeholder: 'Tags',
-                value: activeSortFilter.filterTags
-              }
-            ]}
-            onApplyFilters={applyFilters}
-          />
         </div>
         <div className={styles['sort-wrapper']}>
           <Select
