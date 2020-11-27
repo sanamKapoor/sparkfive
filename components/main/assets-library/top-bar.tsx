@@ -1,10 +1,9 @@
 import styles from './top-bar.module.css'
 import { useEffect, useState, useContext, useRef } from 'react'
-import { UserContext } from '../../../context'
+import { UserContext, TagContext } from '../../../context'
 import { Utilities } from '../../../assets'
 import selectOptions from './select-options'
 import campaignApi from '../../../server-api/campaign'
-import tagApi from '../../../server-api/tag'
 import { CALENDAR_ACCESS } from '../../../constants/permissions'
 
 // Components
@@ -27,41 +26,39 @@ const TopBar = ({
 }) => {
 
   const [campaignsFilter, setCampaignsFilter] = useState([])
-  const [tagsFilter, setTagsFilter] = useState([])
-  const [topTags, setTopTags] = useState([])
+
+  const {
+    getTopTags,
+    getTags,
+    tags: tagsFilter,
+    topTags
+  } = useContext(TagContext)
 
   const { hasPermission } = useContext(UserContext)
+
   useEffect(() => {
     getCampaignsTagsFilters()
     getTopTags()
+    getTags()
   }, [])
+
+  const selectValueMapFn = item => ({
+    label: item.name,
+    value: item.id
+  })
 
   const getCampaignsTagsFilters = async () => {
     try {
-      const selectValueMapFn = item => ({
-        label: item.name,
-        value: item.id
-      })
       if (hasPermission([CALENDAR_ACCESS])) {
         const campaingsResponse = await campaignApi.getCampaigns()
         setCampaignsFilter(campaingsResponse.data.map(selectValueMapFn))
       }
-      const tagsResponse = await tagApi.getTags()
-      setTagsFilter(tagsResponse.data.map(selectValueMapFn))
     } catch (err) {
       console.log(err)
       // Handle this error
     }
   }
-  const getTopTags = async () => {
-    try {
-      const { data } = await tagApi.getTopTags()
-      setTopTags(data)
-    } catch (error) {
-      console.log(error);
 
-    }
-  }
   const setSortFilterValue = (key, value) => {
     setActiveSortFilter({
       ...activeSortFilter,
@@ -126,7 +123,7 @@ const TopBar = ({
             <NestedSelect
               selectList={[
                 {
-                  options: tagsFilter,
+                  options: tagsFilter.map(selectValueMapFn),
                   placeholder: 'Tags',
                   value: activeSortFilter.filterTags
                 },

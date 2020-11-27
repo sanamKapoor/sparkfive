@@ -88,3 +88,13 @@ export const ScheduleContext = createContext({
     newItem: undefined,
     setNewItem: (item) => { }
 })
+
+export const TagContext = createContext({
+    tags: [],
+    setTags: (data) => { },
+    getTags: () => { },
+
+    topTags: [],
+    setTopTags: (data) => { },
+    getTopTags: () => { }
+})
