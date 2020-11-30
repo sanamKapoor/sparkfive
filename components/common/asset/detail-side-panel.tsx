@@ -2,7 +2,7 @@ import styles from './detail-side-panel.module.css'
 import update from 'immutability-helper'
 import CreatableSelect from 'react-select/creatable';
 
-import { AssetContext, UserContext, TagContext } from '../../../context'
+import { AssetContext, UserContext } from '../../../context'
 import { useEffect, useState, useContext } from 'react'
 import { format } from 'date-fns'
 import { capitalCase } from 'change-case'
@@ -38,8 +38,8 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
 
   const { assets, setAssets } = useContext(AssetContext)
   const { hasPermission } = useContext(UserContext)
-  const { getTags, getTopTags, tags: inputTags, setTags: setInputTags } = useContext(TagContext)
 
+  const [inputTags, setInputTags] = useState([])
   const [inputProjects, setInputProjects] = useState([])
   const [inputTasks, setInputTasks] = useState([])
 
@@ -48,7 +48,7 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
 
   useEffect(() => {
     if (!isShare) {
-      getTags()
+      getTagsInputData()
       if (hasPermission([CALENDAR_ACCESS])) {
         getInputData()
       }
@@ -61,6 +61,15 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
       setInputProjects(projectsResponse.data)
       const tasksResponse = await taskApi.getTasks()
       setInputTasks(tasksResponse.data)
+    } catch (err) {
+      // TODO: Maybe show error?
+    }
+  }
+
+  const getTagsInputData = async () => {
+    try {
+      const tagsResponse = await tagApi.getTags()
+      setInputTags(tagsResponse.data)
     } catch (err) {
       // TODO: Maybe show error?
     }
@@ -85,7 +94,6 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
           tags: { $set: stateTagsUpdate }
         })
         setActiveDropdown('')
-        getTopTags()
         return data
       } catch (err) {
         // TODO: Error if failure for whatever reason
@@ -104,7 +112,6 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
       updateAssetState({
         tags: { $set: stateTagsUpdate }
       })
-      getTopTags()
     } catch (err) {
       // TODO: Error if failure for whatever reason
     }

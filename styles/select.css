@@ -109,12 +109,6 @@
   font-size: 12px;
 }
 
-.new-filter-schedule .select-prefix__menu {
-  width: 400px;
-  margin-left: -100%;
-  font-size: 12px;
-}
-
 /* Multi filter */
 .filter .select-prefix__option--is-selected {
   background-color: inherit;
