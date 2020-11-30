@@ -7,6 +7,9 @@ import campaignApi from '../../../server-api/campaign'
 import projectApi from '../../../server-api/project'
 import toastUtils from '../../../utils/toast'
 import update from 'immutability-helper'
+import channelSocialOptions from '../../../resources/data/channels-social.json'
+import projectTypeOptions from '../../../resources/data/project-types.json'
+
 // Components
 import Button from '../../common/buttons/button'
 import FormInput from '../../common/inputs/form-input'
@@ -106,8 +109,22 @@ const CreateCampaign = () => {
       return toastUtils.error('All projects must have a name, a deadline date and a channel')
     }
     try {
-      campaignData.projects = projects
-      const { data } = await campaignApi.CreateCampaignProjects(campaignData)
+      campaignData.projects = projects.map((project => {
+        let type
+        let channel
+        if (channelSocialOptions.includes(project.channel)) {
+          type = 'social'
+          channel = project.channel
+        } else {
+          type = project.channel
+        }
+        return {
+          ...project,
+          type,
+          channel
+        }
+      }))
+      const { data } = await campaignApi.createCampaign(campaignData)
       Router.replace(`/main/projects/${data.id}`)
     } catch (err) {
       // TODO: Show error message

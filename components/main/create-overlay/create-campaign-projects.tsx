@@ -4,15 +4,16 @@ import styles from './create-campaign-projects.module.css'
 import DayPicker from 'react-day-picker'
 import { capitalCase } from 'change-case'
 import { format } from 'date-fns'
-import { ProjectTypeChannel, Utilities } from '../../../assets'
+import { ProjectTypeChannel, Utilities, ProjectType } from '../../../assets'
+import projectStatus from '../../../resources/data/project-status.json'
+import channelSocialOptions from '../../../resources/data/channels-social.json'
+import projectTypeOptions from '../../../resources/data/project-types.json'
 
 // Components
 import Dropdown from '../../common/inputs/dropdown'
 import ItemDropdownWrapper from '../../common/items/item-dropdown-wrapper'
 import CollaboratorItem from '../../common/items/collaborator-item'
 import SearchableUserList from '../../common/user/searchable-user-list'
-import channelSocialOptions from '../../../resources/data/channels-social.json'
-import projectStatus from '../../../resources/data/project-status.json'
 import ButtonIcon from '../../common/buttons/button-icon'
 import ToggleableAbsoluteWrapper from '../../common/misc/toggleable-absolute-wrapper'
 import ItemFieldWrapper from '../../common/items/item-field-wrapper'
@@ -34,7 +35,7 @@ const CreateCampaignProjects = ({
     else setActiveInput(input)
   }
 
-  const toggleActiveInpudiveadlineDate = (input, index) => {
+  const toggleActivePublishDate = (input, index) => {
     if (input === activeInput && index === activeIndex) {
       setActiveInput("")
       setActiveIndex(null)
@@ -60,7 +61,7 @@ const CreateCampaignProjects = ({
   return (
     <div className={styles.container}>
       <h3>Projects</h3>
-      <div className={styles['header-row']}>        
+      <div className={styles['header-row']}>
         <div>Channel</div>
         <div>Name</div>
         <div>Deadline</div>
@@ -77,7 +78,7 @@ const CreateCampaignProjects = ({
                 Wrapper={({ children }) => (
                   <>
                     <ItemDropdownWrapper
-                      image={ProjectTypeChannel[project.channel]}
+                      image={ProjectTypeChannel[project.channel] || ProjectType[project.channel]}
                       data={capitalCase(project.channel)}
                       hasOption={true}
                       optionOnClick={() => toggleActiveInput('channel')}
@@ -89,8 +90,8 @@ const CreateCampaignProjects = ({
                 )}
                 Content={() => (
                   <Dropdown
-                    options={channelSocialOptions.map((option) => ({
-                      label: option,
+                    options={[...projectTypeOptions, ...channelSocialOptions].map((option) => ({
+                      label: capitalCase(option),
                       onClick: () => {
                         handleChannelChange(index, option)
                       },
@@ -113,7 +114,6 @@ const CreateCampaignProjects = ({
             </div>
             <div>
               <ItemDropdownWrapper
-                image='/'
                 data={
                   project.publishDate
                     ? format(new Date(project.publishDate), 'MMM d, yyyy')
@@ -122,7 +122,7 @@ const CreateCampaignProjects = ({
                 overrideIcon={true}
                 hasOption={true}
                 optionOnClick={() =>
-                  toggleActiveInpudiveadlineDate("deadlineDate", index)
+                  toggleActivePublishDate("deadlineDate", index)
                 }
                 styleType={!project.publishDate ? false : true}
               >
@@ -131,7 +131,7 @@ const CreateCampaignProjects = ({
                     <DayPicker
                       selectedDays={project.publishDate}
                       disabledDays={{
-                        before: project.stardivate && new Date(project.stardivate),
+                        before: project.publishDate && new Date(project.publishDate),
                       }}
                       onDayClick={(day) =>
                         handleDeadlineDateChange(index, day)
@@ -148,8 +148,9 @@ const CreateCampaignProjects = ({
                   <>
                     <ItemDropdownWrapper
                       image={Utilities.add}
-                      data='Add Collaborators'
+                      data={`${project.collaborators.length === 0 ? 'Add Collaborators' : ''}`}
                       optionOnClick={() => toggleActiveInput('collaborators')}
+                      childrenOnSide={true}
                     >
                       <ul className={styles['collaborator-list']}>
                         {project.collaborators.map((collaborator) => (
