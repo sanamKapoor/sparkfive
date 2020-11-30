@@ -1,21 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import CreatableSelect from 'react-select/creatable';
-import ToggleableAbsoluteWrapper from '../../../common/misc/toggleable-absolute-wrapper';
-import ItemFieldWrapper from '../../../common/items/item-field-wrapper';
-import { ProjectTypeChannel, Utilities } from '../../../../assets';
-import styles from './campaign-detail.module.css';
-import DayPicker from 'react-day-picker';
-import Dropdown from '../../../common/inputs/dropdown';
-import ItemDropdownWrapper from '../../../common/items/item-dropdown-wrapper';
-import CollaboratorItem from '../../../common/items/collaborator-item';
-import SearchableUserList from '../../../common/user/searchable-user-list';
-import channelSocialOptions from '../../../../resources/data/channels-social.json';
-import projectStatus from '../../../../resources/data/project-status.json';
-import ButtonIcon from '../../../common/buttons/button-icon';
-import { capitalCase } from 'change-case';
-import { format } from 'date-fns';
+import React, { useState, useEffect } from 'react'
+import CreatableSelect from 'react-select/creatable'
+import styles from './create-campaign-projects.module.css'
+import DayPicker from 'react-day-picker'
+import { capitalCase } from 'change-case'
+import { format } from 'date-fns'
+import { ProjectTypeChannel, Utilities } from '../../../assets'
 
-const CampaignDetail = ({
+// Components
+import Dropdown from '../../common/inputs/dropdown'
+import ItemDropdownWrapper from '../../common/items/item-dropdown-wrapper'
+import CollaboratorItem from '../../common/items/collaborator-item'
+import SearchableUserList from '../../common/user/searchable-user-list'
+import channelSocialOptions from '../../../resources/data/channels-social.json'
+import projectStatus from '../../../resources/data/project-status.json'
+import ButtonIcon from '../../common/buttons/button-icon'
+import ToggleableAbsoluteWrapper from '../../common/misc/toggleable-absolute-wrapper'
+import ItemFieldWrapper from '../../common/items/item-field-wrapper'
+
+const CreateCampaignProjects = ({
   projects = [],
   addProject,
   removeProject,
@@ -24,41 +26,41 @@ const CampaignDetail = ({
   removeCollaborator,
   addCollaborator,
 }) => {
-  const [activeInput, setActiveInput] = useState('');
-  const [activeIndex, setActiveIndex] = useState(null);
+  const [activeInput, setActiveInput] = useState('')
+  const [activeIndex, setActiveIndex] = useState(null)
 
   const toggleActiveInput = (input) => {
-    if (input === activeInput) setActiveInput('');
-    else setActiveInput(input);
-  };
+    if (input === activeInput) setActiveInput('')
+    else setActiveInput(input)
+  }
 
   const toggleActiveInpudiveadlineDate = (input, index) => {
     if (input === activeInput && index === activeIndex) {
-      setActiveInput("");
-      setActiveIndex(null);
+      setActiveInput("")
+      setActiveIndex(null)
     } else {
-      setActiveInput(input);
-      setActiveIndex(index);
+      setActiveInput(input)
+      setActiveIndex(index)
     }
-  };
+  }
 
   const handleChannelChange = (index, value) => {
-    toggleActiveInput('channel');
-    editFields(index, { channel: value });
-  };
+    toggleActiveInput('channel')
+    editFields(index, { channel: value })
+  }
   const handleStatusChange = (index, value) => {
-    toggleActiveInput('status');
-    editFields(index, { status: value });
-  };
+    toggleActiveInput('status')
+    editFields(index, { status: value })
+  }
   const handleDeadlineDateChange = (index, value) => {
-    toggleActiveInput('deadlineDate');
-    editFields(index, { publishDate: value });
-  };
+    toggleActiveInput('deadlineDate')
+    editFields(index, { publishDate: value })
+  }
 
   return (
     <div className={styles.container}>
       <h3>Projects</h3>
-      <div className={styles['header-row']}>
+      <div className={styles['header-row']}>        
         <div>Channel</div>
         <div>Name</div>
         <div>Deadline</div>
@@ -90,7 +92,7 @@ const CampaignDetail = ({
                     options={channelSocialOptions.map((option) => ({
                       label: option,
                       onClick: () => {
-                        handleChannelChange(index, option);
+                        handleChannelChange(index, option)
                       },
                     }))}
                   />
@@ -145,9 +147,8 @@ const CampaignDetail = ({
                 Wrapper={({ children }) => (
                   <>
                     <ItemDropdownWrapper
-                      image={project.collaborators.length === 0 && Utilities.add}
+                      image={Utilities.add}
                       data='Add Collaborators'
-                      hasOption={true}
                       optionOnClick={() => toggleActiveInput('collaborators')}
                     >
                       <ul className={styles['collaborator-list']}>
@@ -202,7 +203,7 @@ const CampaignDetail = ({
                     options={projectStatus.map((option) => ({
                       label: option,
                       onClick: () => {
-                        handleStatusChange(index, option);
+                        handleStatusChange(index, option)
                       },
                     }))}
                   />
@@ -211,11 +212,11 @@ const CampaignDetail = ({
             </div>
             <div className={styles.delete}>
               {index !== 0 &&
-                <div onClick={(e) => removeProject(e, index)}>&#10005; </div>
+                <div onClick={(e) => removeProject(e, index)}> &#10005; </div>
               }
             </div>
           </div>
-        );
+        )
       })}
       <div className={styles['button-container']}>
         <ButtonIcon
@@ -228,7 +229,7 @@ const CampaignDetail = ({
         />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CampaignDetail;
+export default CreateCampaignProjects

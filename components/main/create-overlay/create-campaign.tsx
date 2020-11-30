@@ -11,7 +11,7 @@ import update from 'immutability-helper'
 import Button from '../../common/buttons/button'
 import FormInput from '../../common/inputs/form-input'
 import Input from '../../common/inputs/input'
-import CampaignDetail from '../campaign/detail/campaign-detail'
+import CreateCampaignProjects from './create-campaign-projects'
 
 const EMPTY_CHANNEL = 'Select Channel'
 
@@ -107,7 +107,7 @@ const CreateCampaign = () => {
     }
     try {
       campaignData.projects = projects
-      const { data } = await campaignApi.createCampaign(campaignData)
+      const { data } = await campaignApi.CreateCampaignProjects(campaignData)
       Router.replace(`/main/projects/${data.id}`)
     } catch (err) {
       // TODO: Show error message
@@ -146,7 +146,7 @@ const CreateCampaign = () => {
   return (
     <div className={`${styles.container}`}>
       <h2>Create New Campaign</h2>
-      <form onSubmit={handleSubmit(onSubmit)} className={'create-overlay-form'}>
+      <form onSubmit={handleSubmit(onSubmit)} className={`create-overlay-form ${styles['create-form']}`}>
         <div className={styles['input-wrapper']}>
           <FormInput
             InputComponent={
@@ -154,6 +154,7 @@ const CreateCampaign = () => {
                 type='text'
                 placeholder='Name your Campaign'
                 styleType='regular'
+                additionalClasses={styles['campaign-input']}
               />
             }
             name='name'
@@ -163,7 +164,7 @@ const CreateCampaign = () => {
             errors={errors}
           />
         </div>
-        <CampaignDetail
+        <CreateCampaignProjects
           editFields={editFields}
           projects={projects}
           addProject={addProject}

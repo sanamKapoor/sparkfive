@@ -19,3 +19,7 @@
 .icon-left {
   width: 20px;
 }
+
+.icon-container{
+  display: flex;
+}

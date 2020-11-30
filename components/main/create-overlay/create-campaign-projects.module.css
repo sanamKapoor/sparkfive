@@ -12,18 +12,18 @@
 .project-row > div {
   padding: 20px;
   padding-left: 0;
-  width: 18%;
+  width: 19%;
   display: flex;
   align-items: center;
 }
 
-.project-row {
+.header-row {
   border-bottom: 1px solid var(--color-secondary-border);
 }
 
 .header-row > div {
-  border-bottom: 3px solid var(--color-sec-lightivory);
   color: var(--color-prim-turquoise);
+  font-weight: 600;
 }
 
 .project-row > div > div {
@@ -31,7 +31,7 @@
 }
 
 .project-row > .delete {
-  width: 10%;
+  width: 5%;
   display: flex;
   justify-content: flex-end;
 }
@@ -49,6 +49,12 @@
 
 .button-container {
   width: 50px;
+  margin-top: 2rem;
+}
+
+.button-container button{
+  padding: 0;
+  min-width: 130px;
 }
 
 .day-picker {
@@ -64,12 +70,12 @@
 }
 
 .collaborator-list {
-  margin-top: 0.4rem;
   display: flex;
   flex-wrap: wrap;
 }
 
 .collaborator-list li {
+  margin-top: 0.4rem;
   margin-right: 0.7rem;
 }
 
