@@ -90,7 +90,7 @@ const CreateCampaignProjects = ({
                 )}
                 Content={() => (
                   <Dropdown
-                    options={[...projectTypeOptions, ...channelSocialOptions].map((option) => ({
+                    options={[...projectTypeOptions, ...channelSocialOptions].filter(option => option !== 'social').map((option) => ({
                       label: capitalCase(option),
                       onClick: () => {
                         handleChannelChange(index, option)
@@ -131,7 +131,7 @@ const CreateCampaignProjects = ({
                     <DayPicker
                       selectedDays={project.publishDate}
                       disabledDays={{
-                        before: project.publishDate && new Date(project.publishDate),
+                        before: new Date(),
                       }}
                       onDayClick={(day) =>
                         handleDeadlineDateChange(index, day)
