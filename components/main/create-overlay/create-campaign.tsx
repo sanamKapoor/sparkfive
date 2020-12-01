@@ -127,7 +127,11 @@ const CreateCampaign = () => {
         }
       }))
       await campaignApi.createCampaign(campaignData)
-      setNeedItemReset(true)
+      if (Router.route !== '/main/schedule') {
+        Router.replace('/main/schedule')
+      } else {
+        setNeedItemReset(true)
+      }
     } catch (err) {
       // TODO: Show error message
       if (err.response?.data?.message) {
