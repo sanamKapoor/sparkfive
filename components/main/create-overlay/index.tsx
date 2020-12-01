@@ -1,17 +1,23 @@
-import { useState } from 'react'
+import { useContext } from 'react'
 import styles from './index.module.css'
 import Link from 'next/link'
 import { Utilities, ProjectTypes } from '../../../assets'
+import { LoadingContext } from '../../../context'
 
 // Components
 import CreateCampaign from './create-campaign'
 import CreateProject from './create-project'
 import CreateTask from './create-task'
 import CreateItem from './create-item'
+import SpinnerOverlay from '../../common/spinners/spinner-overlay'
 
 const CreateOverlay = ({ type = '', setType, closeOverlay, endDate = '' }) => {
+
+  const { isLoading } = useContext(LoadingContext)
+
   return (
     <div className={`app-overlay ${styles.container}`}>
+      {isLoading && <SpinnerOverlay />}
       <div className={styles.top}>
         <div className={styles.back} onClick={closeOverlay}>
           {

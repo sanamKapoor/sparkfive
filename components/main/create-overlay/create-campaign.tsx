@@ -1,7 +1,7 @@
 import styles from './create-campaign.module.css'
 import { useState, useEffect, useContext } from 'react'
 import { useForm } from 'react-hook-form'
-import { UserContext, TeamContext } from '../../../context'
+import { UserContext, TeamContext, ScheduleContext, LoadingContext } from '../../../context'
 import Router from 'next/router'
 import campaignApi from '../../../server-api/campaign'
 import projectApi from '../../../server-api/project'
@@ -26,6 +26,8 @@ const CreateCampaign = () => {
   const { getTeamMembers } = useContext(TeamContext)
 
   const { control, handleSubmit, errors } = useForm()
+  const { setNeedItemReset } = useContext(ScheduleContext)
+  const { isLoading, setIsLoading } = useContext(LoadingContext)
   const [submitError, setSubmitError] = useState('')
 
   const [campaignNames, setCampaignNames] = useState([])
@@ -66,7 +68,6 @@ const CreateCampaign = () => {
     if (projects[index].collaborators.find(({ id }) => id === user.id)) {
       return removeCollaborator(index, user)
     }
-    console.log(projects)
     setProjects(update(projects, {
       [index]: {
         collaborators: {
@@ -97,6 +98,7 @@ const CreateCampaign = () => {
   }
 
   const onSubmit = async (campaignData, e) => {
+    setIsLoading(true)
     await getNames()
     e.preventDefault()
     if (campaignNames.includes(campaignData.name)) {
@@ -124,8 +126,8 @@ const CreateCampaign = () => {
           channel
         }
       }))
-      const { data } = await campaignApi.createCampaign(campaignData)
-      Router.replace(`/main/projects/${data.id}`)
+      await campaignApi.createCampaign(campaignData)
+      setNeedItemReset(true)
     } catch (err) {
       // TODO: Show error message
       if (err.response?.data?.message) {
@@ -133,6 +135,8 @@ const CreateCampaign = () => {
       } else {
         setSubmitError('Something went wrong, please try again later')
       }
+    } finally {
+      setIsLoading(false)
     }
   }
 

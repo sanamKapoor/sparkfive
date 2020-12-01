@@ -86,5 +86,7 @@ export const LocationContext = createContext({
 
 export const ScheduleContext = createContext({
     newItem: undefined,
-    setNewItem: (item) => { }
+    setNewItem: (item) => { },
+    needItemsReset: false,
+    setNeedItemReset: (newValue) => { }
 })

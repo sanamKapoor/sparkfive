@@ -1,6 +1,6 @@
 import styles from './create-task.module.css'
 import { useState, useEffect, useContext } from 'react'
-import { ScheduleContext } from '../../../context'
+import { ScheduleContext, LoadingContext } from '../../../context'
 import { useForm } from 'react-hook-form'
 import Router from 'next/router'
 import taskApi from '../../../server-api/task'
@@ -22,7 +22,10 @@ const CreateTask = ({ endDate }) => {
     getTaskNames()
   }, [])
 
+  const { setIsLoading } = useContext(LoadingContext)
+
   const onSubmit = async taskData => {
+    setIsLoading(true)
     const createData = { ...taskData }
     if (taskNames.includes(taskData.name)) {
       return toastUtils.error('A task with that name already exists')
@@ -45,6 +48,8 @@ const CreateTask = ({ endDate }) => {
       } else {
         setSubmitError('Something went wrong, please try again later')
       }
+    } finally{
+      setIsLoading(false)
     }
   }
 

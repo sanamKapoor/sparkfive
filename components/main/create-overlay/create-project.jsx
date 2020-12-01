@@ -1,6 +1,6 @@
 import styles from "./create-project.module.css";
 import { useState, useEffect, useContext } from 'react'
-import { ScheduleContext } from '../../../context'
+import { ScheduleContext, LoadingContext } from '../../../context'
 import { useForm } from "react-hook-form";
 import Router from "next/router";
 import projectApi from "../../../server-api/project";
@@ -23,11 +23,14 @@ const CreateProject = ({ publishDate }) => {
 
   const [projectNames, setProjectNames] = useState([]);
 
+  const { setIsLoading } = useContext(LoadingContext)
+
   useEffect(() => {
     getProjectNames();
   }, []);
 
   const onSubmit = async (projectData) => {
+    setIsLoading(true)
     if (projectNames.includes(projectData.name)) {
       return toastUtils.error("A project with that name already exists");
     }
@@ -56,6 +59,8 @@ const CreateProject = ({ publishDate }) => {
       } else {
         setSubmitError("Something went wrong, please try again later");
       }
+    } finally {
+      setIsLoading(false)
     }
   };
 

@@ -3,10 +3,13 @@ import { ScheduleContext } from '../context'
 
 export default ({ children }) => {
   const [newItem, setNewItem] = useState(undefined)
+  const [needItemsReset, setNeedItemReset] = useState(false)
 
   const scheduleValue = {
     newItem,
-    setNewItem
+    setNewItem,
+    needItemsReset,
+    setNeedItemReset
   }
 
   return (
