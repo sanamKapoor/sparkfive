@@ -15,6 +15,7 @@ export default ({ children }) => {
       if (once && team) return
       const { data } = await teamApi.getTeam()
       setTeam(data)
+      getPlan()
     } catch (err) {
       console.log(err)
     }
@@ -23,7 +24,7 @@ export default ({ children }) => {
   const getPlan = async ({ withStorageUsage = '' } = {}) => {
     try {
       const { data } = await planApi.getPlanDetail({ withStorageUsage })
-      setPlan(data)
+      setPlan({...data, type: 'dam'})
     } catch (err) {
       console.log(err)
     }
