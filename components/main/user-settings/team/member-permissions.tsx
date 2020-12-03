@@ -48,9 +48,6 @@ const MemberPermissions = ({ memberPermissions, permissions, setMemberPermission
   if(plan.type === 'dam'){
     permissionsList = mappedPermissions.filter(damPermission => damPermission.category === 'Asset Library')
   }
-  
-  console.log(permissionsList)
-
 
   return (
     <div className={styles.container}>
