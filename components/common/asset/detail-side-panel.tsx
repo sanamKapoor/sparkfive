@@ -11,7 +11,6 @@ import { getAssociatedCampaigns, getAssociatedChannels, getParsedExtension } fro
 import tagApi from '../../../server-api/tag'
 import assetApi from '../../../server-api/asset'
 import projectApi from '../../../server-api/project'
-import taskApi from '../../../server-api/task'
 import { Utilities } from '../../../assets'
 
 import {
@@ -33,7 +32,6 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
     size,
     tags,
     projects,
-    tasks
   } = asset
 
   const { assets, setAssets } = useContext(AssetContext)
@@ -41,7 +39,6 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
 
   const [inputTags, setInputTags] = useState([])
   const [inputProjects, setInputProjects] = useState([])
-  const [inputTasks, setInputTasks] = useState([])
 
   const [assetTags, setTags] = useState(tags)
   const [activeDropdown, setActiveDropdown] = useState('')
@@ -59,8 +56,6 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
     try {
       const projectsResponse = await projectApi.getProjects()
       setInputProjects(projectsResponse.data)
-      const tasksResponse = await taskApi.getTasks()
-      setInputTasks(tasksResponse.data)
     } catch (err) {
       // TODO: Maybe show error?
     }
@@ -269,45 +264,6 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
                 <div className={`add ${styles['select-add']}`} onClick={() => setActiveDropdown('projects')}>
                   <IconClickable src={Utilities.add} />
                   <span>Add to Project</span>
-                </div>
-              }
-            </>
-          }
-        </div>
-      </div>
-
-      <div className={styles['field-wrapper']} >
-        <div className={`secondary-text ${styles.field}`}>Tasks</div>
-        <div className={'normal-text'}>
-          <ul className={`tags-list ${styles['tags-list']}`}>
-            {tasks?.map((task, index) => (
-              <li key={task.id}>
-                <Tag
-                  altColor='yellow'
-                  tag={task.name}
-                  canRemove={!isShare}
-                  removeFunction={() => handleAssociationChange(task.id, 'tasks', 'remove')}
-                />
-              </li>
-            ))}
-          </ul>
-          {!isShare && hasPermission([CALENDAR_ACCESS]) &&
-            <>
-              {activeDropdown === 'tasks' ?
-                <div className={`tag-select ${styles['select-wrapper']}`}>
-                  <Select
-                    options={inputTasks.map(task => ({ ...task, label: task.name, value: task.id }))}
-                    placeholder={'Select a task'}
-                    onChange={(selected) => handleAssociationChange(selected.value, 'tasks', 'add')}
-                    styleType={'regular item'}
-                    menuPlacement={'top'}
-                    isClearable={true}
-                  />
-                </div>
-                :
-                <div className={`add ${styles['select-add']}`} onClick={() => setActiveDropdown('tasks')}>
-                  <IconClickable src={Utilities.add} />
-                  <span>Add to Task</span>
                 </div>
               }
             </>

@@ -13,6 +13,7 @@ import {
   SETTINGS_PLAN,
   SUPERADMIN_ACCESS
 } from '../../../constants/permissions'
+import { TeamContext } from '../../../context'
 
 // Components
 import HeaderLink from '../layouts/header-link'
@@ -29,6 +30,8 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
   const { user, logOut, hasPermission } = useContext(UserContext)
   const { isLoading } = useContext(LoadingContext)
   const pageListRef = useRef(null)
+
+  const { plan } = useContext(TeamContext)
 
   const SettingsLink = ({ settingRef, name }) => (
     <Link href={`/main/user-settings/${settingRef}`}>
@@ -68,7 +71,7 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
     if (current?.classList.contains(classType)) current.classList.remove(classType)
     else current.classList.add(classType)
   }
-
+  
   return (
     <>
       {user &&
@@ -83,20 +86,14 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
             </Link>
             <div className={styles.hamburger} onClick={toggleHamurgerList}>&#9776;</div>
             <ul className={styles['navigation-links']} ref={pageListRef}>
+              {plan?.type !== 'dam' &&
               <HeaderLink
                 active={Router.pathname.indexOf('overview') !== -1}
                 href='/main/overview'
                 img={Router.pathname.indexOf('overview') !== -1 ? Navigation.overviewSelected : Navigation.overview}
                 imgHover={Navigation.overviewSelected}
                 text='Overview'
-              />
-              <HeaderLink
-                active={Router.pathname.indexOf('schedule') !== -1}
-                href='/main/schedule'
-                img={Router.pathname.indexOf('schedule') !== -1 ? Navigation.scheduleSelected : Navigation.schedule}
-                imgHover={Navigation.scheduleSelected}
-                text='Schedule'
-              />
+              />}
               <HeaderLink
                 active={Router.pathname.indexOf('assets') !== -1}
                 href='/main/assets'
@@ -104,6 +101,14 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
                 imgHover={Navigation.assetsSelected}
                 text='Assets'
               />
+              {plan?.type !== 'dam' &&
+              <HeaderLink
+                active={Router.pathname.indexOf('schedule') !== -1}
+                href='/main/schedule'
+                img={Router.pathname.indexOf('schedule') !== -1 ? Navigation.scheduleSelected : Navigation.schedule}
+                imgHover={Navigation.scheduleSelected}
+                text='Schedule'
+              />}
               {/* TODO: Reports page will be implemented later */}
               {/* <HeaderLink
                 active={Router.pathname.indexOf('reports') !== -1}

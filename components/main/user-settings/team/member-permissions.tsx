@@ -1,11 +1,13 @@
 import styles from './member-permissions.module.css'
 import update from 'immutability-helper'
 import { Utilities } from '../../../../assets'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
+import { TeamContext } from '../../../../context'
 
 const MemberPermissions = ({ memberPermissions, permissions, setMemberPermissions }) => {
 
   const [mappedPermissions, setMappedPermissions] = useState([])
+  const { plan } = useContext(TeamContext)
 
   useEffect(() => {
     if (memberPermissions.length > 0 && permissions.length > 0) {
@@ -42,10 +44,15 @@ const MemberPermissions = ({ memberPermissions, permissions, setMemberPermission
     }
   }
 
+  let permissionsList = mappedPermissions
+  if(plan.type === 'dam'){
+    permissionsList = mappedPermissions.filter(damPermission => damPermission.category === 'Asset Library')
+  }
+
   return (
     <div className={styles.container}>
       <h3>Permissions</h3>
-      {mappedPermissions.map(({ category, features }) => (
+      {permissionsList.map(({ category, features }) => (
         <div key={category} className={styles.group}>
           <h4>{category}</h4>
           <ul>
