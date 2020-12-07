@@ -36,7 +36,7 @@ const SubscriptionCheckout = ({ goBack, checkoutProduct }) => {
   const subscribe = async (paymentMethodId) => {
     try {
       await planApi.changePlan({ priceId: selectedPrice.id, paymentMethodId })
-      await getPlan()
+      await getPlan({ withStorageUsage: true })
       goBack()
       toastUtils.success('Plan changed succesfully')
     } catch (err) {

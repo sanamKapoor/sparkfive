@@ -20,6 +20,23 @@ const PREMIUM_V1_FEATURES = [
   'Advanced Integrations'
 ]
 
+const DAM_PRO_V1_FEATURES = [
+  '100GB of Storage',
+  '1 Admin',
+  'Unlimited Users',
+  'Collaboration Features',
+  'Digital Asset Management'
+]
+
+const DAM_PREMIUM_V1_FEATURES = [
+  'Everything from PRO',
+  '1TB of Storage',
+  '3 Admins',
+  'Advanced Workflow tools',
+  'Asset distribution via CDN',
+  'Advanced Integrations'
+]
+
 const ENTERPRISE_FEATURES = [
   'Everything from PREMIUM',
   'Custom Storage',
@@ -41,6 +58,9 @@ export default {
   PRO_V1_FEATURES,
   PREMIUM_V1_SUMMARY,
   PREMIUM_V1_FEATURES,
+  DAM_PRO_V1_FEATURES,
+  DAM_PREMIUM_V1_FEATURES,
+  
   ENTERPRISE_SUMMARY,
   ENTERPRISE_FEATURES,
 
