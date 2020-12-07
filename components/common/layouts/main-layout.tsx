@@ -86,7 +86,7 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
             </Link>
             <div className={styles.hamburger} onClick={toggleHamurgerList}>&#9776;</div>
             <ul className={styles['navigation-links']} ref={pageListRef}>
-              {plan?.type !== 'dam' &&
+              {plan?.type === 'marketing_hub' &&
               <HeaderLink
                 active={Router.pathname.indexOf('overview') !== -1}
                 href='/main/overview'
@@ -101,7 +101,7 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
                 imgHover={Navigation.assetsSelected}
                 text='Assets'
               />
-              {plan?.type !== 'dam' &&
+              {plan?.type === 'marketing_hub' &&
               <HeaderLink
                 active={Router.pathname.indexOf('schedule') !== -1}
                 href='/main/schedule'
@@ -109,14 +109,6 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
                 imgHover={Navigation.scheduleSelected}
                 text='Schedule'
               />}
-              {/* TODO: Reports page will be implemented later */}
-              {/* <HeaderLink
-                active={Router.pathname.indexOf('reports') !== -1}
-                href='/main/reports'
-                img={Router.pathname.indexOf('reports') !== -1 ? Navigation.reportsSelected : Navigation.reports}
-                imgHover={Navigation.reportsSelected}
-                text='Reports'
-              /> */}
             </ul>
             <div className={styles['notifications-wrapper']}>
               <Notification />

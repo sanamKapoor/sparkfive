@@ -11,9 +11,11 @@ import SectionButton from '../../../common/buttons/section-button'
 import DataUsage from '../../../common/usage/data-usage'
 import PlanCard from './plan-card'
 import PlanChangeModal from './plan-change-modal'
+import SpinnerOverlay from '../../../common/spinners/spinner-overlay'
 
 const Plan = () => {
   const [activeCycle, setActiveCycle] = useState('annual')
+  const [activeType, setActiveType] = useState('marketing_hub')
   const [productData, setProductData] = useState(undefined)
 
   const [selectedPlan, setSelectedPlan] = useState(undefined)
@@ -22,10 +24,14 @@ const Plan = () => {
   const { getPlan, plan } = useContext(TeamContext)
 
   useEffect(() => {
-    getPlan({ withStorageUsage: true })
     getBillingInfo()
     getPaymentMethod()
   }, [])
+
+  useEffect(() => {
+    if (plan)
+      setActiveType(plan.type)
+  }, [plan])
 
   const getBillingInfo = async () => {
     try {
@@ -64,16 +70,20 @@ const Plan = () => {
     }
   }
 
-  const SectionButtonOption = ({ section }) => (
+  const SectionButtonOption = ({ label, section, type }) => (
     <SectionButton
-      text={capitalCase(section)}
-      active={activeCycle === section}
-      onClick={() => setActiveCycle(section)}
+      text={label}
+      active={activeCycle === section && activeType === type}
+      onClick={() => {
+        setActiveCycle(section)
+        setActiveType(type)
+      }}
     />
   )
 
   return (
     <div className={styles.container}>
+      {(!plan || !productData) && <SpinnerOverlay />}
       {plan &&
         <>
           <div className={styles.usage}>
@@ -81,11 +91,13 @@ const Plan = () => {
             <DataUsage limit={plan.benefit.storage} limitBytes={plan.storageLimitBytes} usage={plan.storageUsage} />
           </div>
           <div className={styles['section-buttons']}>
-            <SectionButtonOption section='annual' />
-            <SectionButtonOption section='monthly' />
+            <SectionButtonOption label='Annual Marketing Hub' section='annual' type='marketing_hub' />
+            <SectionButtonOption label='Monthly Marketing Hub' section='monthly' type='marketing_hub' />
+            <SectionButtonOption label='Annual DAM' section='annual' type='dam' />
+            <SectionButtonOption label='Monthly DAM' section='monthly' type='dam' />
           </div>
           <ul className={styles.products}>
-            {productData && [...productData[activeCycle], constants.ENTERPRISE_PLAN].map(price => {
+            {productData && [...productData[activeCycle].filter(({ metadata: { type } }) => type === activeType), constants.ENTERPRISE_PLAN].map(price => {
               let buttonText = 'Upgrade'
               if (price.id === plan.stripePriceId) {
                 buttonText = 'Current Plan'
