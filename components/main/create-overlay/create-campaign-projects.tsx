@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import CreatableSelect from 'react-select/creatable'
 import styles from './create-campaign-projects.module.css'
-import DayPicker from 'react-day-picker'
 import { capitalCase } from 'change-case'
-import { format } from 'date-fns'
-import { ProjectTypeChannel, Utilities, ProjectType } from '../../../assets'
+import { ProjectTypeChannel, Utilities } from '../../../assets'
 import projectStatus from '../../../resources/data/project-status.json'
-import channelSocialOptions from '../../../resources/data/channels-social.json'
-import projectTypeOptions from '../../../resources/data/project-types.json'
 
 // Components
 import Dropdown from '../../common/inputs/dropdown'
@@ -16,7 +11,8 @@ import CollaboratorItem from '../../common/items/collaborator-item'
 import SearchableUserList from '../../common/user/searchable-user-list'
 import ButtonIcon from '../../common/buttons/button-icon'
 import ToggleableAbsoluteWrapper from '../../common/misc/toggleable-absolute-wrapper'
-import ItemFieldWrapper from '../../common/items/item-field-wrapper'
+import ChannelSelector from '../../common/items/channel-selector'
+import DateSelector from '../../common/items/date-selector'
 
 const CreateCampaignProjects = ({
   projects = [],
@@ -71,35 +67,13 @@ const CreateCampaignProjects = ({
       {projects.map((project, index) => {
         return (
           <div className={styles['project-row']} key={index}>
-            <div>
-              <ToggleableAbsoluteWrapper
-                wrapperClass='field'
-                contentClass='dropdown'
-                Wrapper={({ children }) => (
-                  <>
-                    <ItemDropdownWrapper
-                      image={ProjectTypeChannel[project.channel] || ProjectType[project.channel]}
-                      data={capitalCase(project.channel)}
-                      hasOption={true}
-                      optionOnClick={() => toggleActiveInput('channel')}
-                      styleType={project.channel === 'Select Channel' ? false : true}
-                    >
-                      {children}
-                    </ItemDropdownWrapper>
-                  </>
-                )}
-                Content={() => (
-                  <Dropdown
-                    options={[...projectTypeOptions, ...channelSocialOptions].filter(option => option !== 'social').map((option) => ({
-                      label: capitalCase(option),
-                      onClick: () => {
-                        handleChannelChange(index, option)
-                      },
-                    }))}
-                  />
-                )}
-              />
-            </div>
+            <ChannelSelector 
+              onLabelClick={() => toggleActiveInput('channel')}
+              handleChannelChange={(option) => {
+                handleChannelChange(index, option)
+              }}
+              channel={project?.channel}
+            />
             <div>
               <input
                 className={styles['input-name']}
@@ -112,35 +86,12 @@ const CreateCampaignProjects = ({
                 onBlur={() => toggleActiveInput('name')}
               />
             </div>
-            <div>
-              <ItemDropdownWrapper
-                data={
-                  project.publishDate
-                    ? format(new Date(project.publishDate), 'MMM d, yyyy')
-                    : 'Select Deadline'
-                }
-                overrideIcon={true}
-                hasOption={true}
-                optionOnClick={() =>
-                  toggleActivePublishDate("deadlineDate", index)
-                }
-                styleType={!project.publishDate ? false : true}
-              >
-                {activeInput === 'deadlineDate' && index === activeIndex && (
-                  <div className={styles['day-picker']}>
-                    <DayPicker
-                      selectedDays={project.publishDate}
-                      disabledDays={{
-                        before: new Date(),
-                      }}
-                      onDayClick={(day) =>
-                        handleDeadlineDateChange(index, day)
-                      }
-                    />
-                  </div>
-                )}
-              </ItemDropdownWrapper>
-            </div>
+            <DateSelector
+              date={project.publishDate}
+              handleDateChange={(day) => handleDeadlineDateChange(index, day)}
+              onOptionClick={() => toggleActivePublishDate("deadlineDate", index)}
+              pickerIsActive={activeInput === 'deadlineDate' && index === activeIndex}
+            />
             <div>
               <ToggleableAbsoluteWrapper
                 closeOnAction={false}

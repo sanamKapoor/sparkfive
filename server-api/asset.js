@@ -21,5 +21,8 @@ export default {
   deleteAsset: id => axios.delete(`${assetUrl}/${id}`),
   deleteMultipleAssets: ({ assetIds }) => axios.delete(`${assetUrl}`, { data: { assetIds } }),
   addTag: (id, data) => axios.post(`${assetUrl}/${id}/tags`, data),
-  removeTag: (id, tagId) => axios.delete(`${assetUrl}/${id}/tags/${tagId}`)
+  removeTag: (id, tagId) => axios.delete(`${assetUrl}/${id}/tags/${tagId}`),
+  addCampaign: (id, data) => axios.post(`${assetUrl}/${id}/campaigns`, data),
+  removeCampaign: (id, campaignId) => axios.delete(`${assetUrl}/${id}/campaigns/${campaignId}`),
+  addProject: (id, data) => axios.post(`${assetUrl}/${id}/projects`, data),
 }

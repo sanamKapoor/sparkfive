@@ -59,9 +59,14 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
     }
   }
 
-  const updateAsset = async (updateData) => {
+  const updateAsset = async (inputData) => {
     try {
-      const { data } = await assetApi.updateAsset(asset.id, updateData)
+      // Optimistic data set
+      setAssetDetail({
+        ...assetDetail,
+        ...inputData.updateData
+      })      
+      const { data } = await assetApi.updateAsset(asset.id, inputData)
       setAssetDetail(data)
     } catch (err) {
       console.log(err)
@@ -147,7 +152,7 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
             <SidePanel asset={assetDetail} updateAsset={updateAsset} isShare={isShare} />
           }
           {!isShare && activeSideComponent === 'comments' &&
-            < ConversationList itemId={asset?.id} itemType='assets' />
+            <ConversationList itemId={asset?.id} itemType='assets' />
           }
         </section>
       }

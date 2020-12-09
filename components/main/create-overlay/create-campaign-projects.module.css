@@ -57,14 +57,6 @@
   min-width: 130px;
 }
 
-.day-picker {
-  position: absolute;
-  border: 1px solid var(--color-secondary-border);
-  z-index: 500;
-  background-color: white;
-  border-radius: 10px;
-  margin-top: 20rem;
-}
 .collaborators-dropdown {
   position: absolute;
   z-index: 100;
