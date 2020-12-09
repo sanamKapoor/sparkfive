@@ -1,0 +1,20 @@
+.input-wrapper{
+  height: 20rem;
+  padding: 1rem;
+}
+
+.properties-row{
+  margin-top: 1rem;
+  display: flex;
+  position: relative;
+}
+
+.properties-row>div{  
+  position: relative;
+  cursor: pointer;
+}
+
+
+.channel-wrapper{
+  width: 10rem;
+}

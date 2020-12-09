@@ -11,8 +11,10 @@ import { getAssociatedCampaigns, getAssociatedChannels, getParsedExtension } fro
 import tagApi from '../../../server-api/tag'
 import assetApi from '../../../server-api/asset'
 import projectApi from '../../../server-api/project'
+import campaignApi from '../../../server-api/campaign'
 import { Utilities } from '../../../assets'
 
+import channelSocialOptions from '../../../resources/data/channels-social.json'
 import {
   CALENDAR_ACCESS
 } from '../../../constants/permissions'
@@ -20,7 +22,8 @@ import {
 // Components
 import Tag from '../misc/tag'
 import IconClickable from '../buttons/icon-clickable'
-import Select from '../inputs/select'
+import ChannelSelector from '../items/channel-selector'
+import ProjectCreationModal from '../modals/project-creation-modal'
 
 const SidePanel = ({ asset, updateAsset, isShare }) => {
   const {
@@ -31,17 +34,31 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
     dimension,
     size,
     tags,
+    campaigns,
     projects,
+    channel
   } = asset
 
   const { assets, setAssets } = useContext(AssetContext)
   const { hasPermission } = useContext(UserContext)
 
+  const [inputCampaigns, setInputCampaigns] = useState([])
   const [inputTags, setInputTags] = useState([])
   const [inputProjects, setInputProjects] = useState([])
 
   const [assetTags, setTags] = useState(tags)
+  const [assetCampaigns, setCampaigns] = useState(campaigns)
+  const [assetProjects, setProjects] = useState(projects)
+
   const [activeDropdown, setActiveDropdown] = useState('')
+
+  const [newProjectName, setNewProjectName] = useState('')
+
+  useEffect(() => {
+    setTags(tags)
+    setCampaigns(campaigns)
+    setProjects(projects)
+  }, [asset])
 
   useEffect(() => {
     if (!isShare) {
@@ -55,7 +72,9 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
   const getInputData = async () => {
     try {
       const projectsResponse = await projectApi.getProjects()
+      const campaignsResponse = await campaignApi.getCampaigns()
       setInputProjects(projectsResponse.data)
+      setInputCampaigns(campaignsResponse.data)
     } catch (err) {
       // TODO: Maybe show error?
     }
@@ -112,6 +131,65 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
     }
   }
 
+  const addCampaign = async (campaign, isNew = false) => {
+    if (campaigns.findIndex(assetCampaign => campaign.label === assetCampaign.name) === -1) {
+      const newCampaign = { name: campaign.label }
+      if (!isNew) newCampaign.id = campaign.value
+      try {
+        const { data } = await assetApi.addCampaign(id, newCampaign)
+        let stateCampaignsUpdate
+        if (!isNew) {
+          stateCampaignsUpdate = update(assetCampaigns, { $push: [newCampaign] })
+          setCampaigns(stateCampaignsUpdate)
+        } else {
+          stateCampaignsUpdate = update(assetCampaigns, { $push: [data] })
+          setCampaigns(stateCampaignsUpdate)
+          setInputCampaigns(update(inputCampaigns, { $push: [data] }))
+        }
+        updateAssetState({
+          campaigns: { $set: stateCampaignsUpdate }
+        })
+        setActiveDropdown('')
+        return data
+      } catch (err) {
+        // TODO: Error if failure for whatever reason
+        setActiveDropdown('')
+      }
+    } else {
+      setActiveDropdown('')
+    }
+  }
+
+  const removeCampaign = async (index) => {
+    try {
+      let stateCampaignsUpdate = update(assetCampaigns, { $splice: [[index, 1]] })
+      setCampaigns(stateCampaignsUpdate)
+      await assetApi.removeCampaign(id, assetCampaigns[index].id)
+      updateAssetState({
+        campaigns: { $set: stateCampaignsUpdate }
+      })
+    } catch (err) {
+      // TODO: Error if failure for whatever reason
+    }
+  }
+
+  const addNewProject = async (newProjectData) => {
+    try {
+      let type = newProjectData.channel
+      let channel
+      if (channelSocialOptions.includes(newProjectData.channel)) {
+        type = 'social'
+        channel = newProjectData.channel
+      }
+      const { data: newProject } = await assetApi.addProject(id, { ...newProjectData, type, channel })
+      const stateProjectsUpdate = update(assetProjects, { $push: [newProject] })
+      setProjects(stateProjectsUpdate)
+      setInputCampaigns(update(inputProjects, { $push: [newProject] }))
+    } catch (err) {
+      // TODO: Error if failure for whatever reason
+    }
+  }
+
   const updateAssetState = (updatedata) => {
     const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
     setAssets(update(assets, {
@@ -126,6 +204,22 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
     const newTag = await addTag(selected, actionMeta.action === 'create-option')
     if (actionMeta.action === 'create-option') {
       setInputTags(update(inputTags, { $push: [newTag] }))
+    }
+  }
+
+  const handleCampaignChange = async (selected, actionMeta) => {
+    const newCampaign = await addCampaign(selected, actionMeta.action === 'create-option')
+    if (actionMeta.action === 'create-option') {
+      setInputTags(update(inputCampaigns, { $push: [newCampaign] }))
+    }
+  }
+
+  const handleProjectChange = async (selected, actionMeta) => {
+    // const newCampaign = await addCampaign(selected, actionMeta.action === 'create-option')
+    if (actionMeta.action === 'create-option') {
+      setNewProjectName(selected.value)
+    } else {
+      handleAssociationChange(selected.value, 'projects', 'add')
     }
   }
 
@@ -144,6 +238,10 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
       }
     })
     setActiveDropdown('')
+  }
+
+  const updateChannel = async (channel) => {
+    await updateAsset({ updateData: { channel } })
   }
 
   let formattedDimension
@@ -183,6 +281,8 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
     }
   ]
 
+  console.log(assetProjects)
+
   return (
     <div className={styles.container}>
       <h2>Details</h2>
@@ -192,6 +292,54 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
           <div className={'normal-text'}>{fieldvalue.value}</div>
         </div>
       ))}
+
+      <div className={styles['field-wrapper']} >
+        <div className={`secondary-text ${styles.field}`}>Asset Channel</div>
+        <ChannelSelector
+          channel={channel || undefined}
+          onLabelClick={() => { }}
+          handleChannelChange={(option) => updateChannel(option)}
+        />
+      </div>
+
+      <div className={styles['field-wrapper']} >
+        <div className={`secondary-text ${styles.field}`}>Asset Campaigns</div>
+        <div className={'normal-text'}>
+          <ul className={`tags-list ${styles['tags-list']}`}>
+            {assetCampaigns?.map((campaign, index) => (
+              <li key={campaign.id}>
+                <Tag
+                  altColor='yellow'
+                  tag={campaign.name}
+                  canRemove={!isShare}
+                  removeFunction={() => removeCampaign(index)}
+                />
+              </li>
+            ))}
+          </ul>
+          {!isShare &&
+            <>
+              {activeDropdown === 'campaigns' ?
+                <div className={`tag-select ${styles['select-wrapper']}`}>
+                  <CreatableSelect
+                    placeholder={'Enter a new campaign or select an existing one'}
+                    options={inputCampaigns.map(campaign => ({ label: campaign.name, value: campaign.id }))}
+                    onChange={handleCampaignChange}
+                    styleType={'regular item'}
+                    menuPlacement={'top'}
+                    isClearable={true}
+                  />
+                </div>
+                :
+                <div className={`add ${styles['select-add']}`} onClick={() => setActiveDropdown('campaigns')}>
+                  <IconClickable src={Utilities.add} />
+                  <span>Add to Campaign</span>
+                </div>
+              }
+            </>
+          }
+        </div>
+      </div>
 
       <div className={styles['field-wrapper']} >
         <div className={`secondary-text ${styles.field}`}>Tags</div>
@@ -216,8 +364,8 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
                     options={inputTags.map(tag => ({ label: tag.name, value: tag.id }))}
                     className={`regular item`}
                     onChange={handleTagChange}
-                    classNamePrefix='select-prefix'
                     menuPlacement={'top'}
+                    styleType={'regular item'}
                     isClearable={true}
                   />
                 </div>
@@ -236,7 +384,7 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
         <div className={`secondary-text ${styles.field}`}>Projects</div>
         <div className={'normal-text'}>
           <ul className={`tags-list ${styles['tags-list']}`}>
-            {projects?.map((project, index) => (
+            {assetProjects?.map((project, index) => (
               <li key={project.id}>
                 <Tag
                   altColor='turquoise'
@@ -251,10 +399,10 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
             <>
               {activeDropdown === 'projects' ?
                 <div className={`tag-select ${styles['select-wrapper']}`}>
-                  <Select
+                  <CreatableSelect
                     options={inputProjects.map(project => ({ ...project, label: project.name, value: project.id }))}
                     placeholder={'Select a project'}
-                    onChange={(selected) => handleAssociationChange(selected.value, 'projects', 'add')}
+                    onChange={handleProjectChange}
                     styleType={'regular item'}
                     menuPlacement={'top'}
                     isClearable={true}
@@ -270,7 +418,12 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
           }
         </div>
       </div>
-
+      <ProjectCreationModal
+        initialValue={newProjectName}
+        closeModal={() => setNewProjectName('')}
+        confirmCreation={addNewProject}
+        modalIsOpen={newProjectName}
+      />
     </div >
   )
 }
