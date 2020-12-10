@@ -17,7 +17,8 @@ const PlanCard = ({
   onChange = (priceId) => { },
   buttonDisabled,
   buttonText,
-  paymentMethodExists = false
+  paymentMethodExists = false,
+  activeType
 }) => {
 
   let monthValue = amount / 100
@@ -34,10 +35,22 @@ const PlanCard = ({
       styleType='primary'
     />
 
+  let summary
+  let features
+
+  if (activeType === 'dam') {
+    summary = featuresConstants[`DAM_${metadata.benefits_id}_SUMMARY`]
+    features = featuresConstants[`DAM_${metadata.benefits_id}_FEATURES`]
+  } else {
+    summary = featuresConstants[`${metadata.benefits_id}_SUMMARY`]
+    features = featuresConstants[`${metadata.benefits_id}_FEATURES`]
+  }
+
+
   return (
     <div className={styles.container}>
       <h3>{name.toUpperCase()}</h3>
-      <p className={styles.description}>{featuresConstants[`${metadata.benefits_id}_SUMMARY`]}</p>
+      <p className={styles.description}>{summary}</p>
       <div className={styles.pricing}>
         {type === 'enterprise' ?
           <div className={styles.contact}>Contact Us</div>
@@ -55,7 +68,7 @@ const PlanCard = ({
       </div>
       <div className={styles['key-header']}>Key Features:</div>
       <ul className={styles.features}>
-        {featuresConstants[`${metadata.benefits_id}_FEATURES`].map((feature) => (
+        {features.map((feature) => (
           <li key={feature}>
             <div>✔</div>
             <div>{feature}</div>

@@ -1,26 +1,39 @@
-.section-buttons{
+.section-buttons-type,
+.section-buttons-cycle {
   margin-top: 2.5rem;
 }
 
-.section-buttons button{
+.section-buttons-cycle {
+  display: flex;
+  justify-content: center;
+  width: 1056px;
+}
+
+.section-buttons-cycle button{
+  font-weight: normal;
+}
+
+.section-buttons-type button,
+.section-buttons-cycle button {
   margin-right: 2rem;
   font-size: 16px;
   margin-bottom: 1rem;
 }
 
-.products{
+.products {
   display: flex;
   /* flex-wrap: wrap; */
   margin-top: 2rem;
+  width: fit-content;
 }
 
-.products>li{
+.products > li {
   margin-right: 1rem;
   margin-left: 1rem;
   margin-bottom: 1.5rem;
 }
 
-.usage{
+.usage {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -29,12 +42,16 @@
   border-bottom: 1px solid var(--color-secondary-border);
 }
 
-.usage h3{
+.usage h3 {
   margin-right: 3rem;
 }
 
-@media screen and (max-width: 1420px){
-  .products{
+@media screen and (max-width: 1420px) {
+  .products {
     flex-wrap: wrap;
+  }
+
+  .section-buttons-cycle{
+    width: 100%;
   }
 }

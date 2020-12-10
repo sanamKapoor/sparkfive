@@ -1,6 +1,10 @@
-const PRO_V1_SUMMARY = 'Perfect for smaller teams poised for growth'
+const PRO_V1_SUMMARY = 'Combines digital asset management with a robust market management platform'
 const PREMIUM_V1_SUMMARY = 'Ideal for teams that are scaling and have more complex workflows'
-const ENTERPRISE_SUMMARY = 'Robust Enterprise capabilities to server larger companies'
+const ENTERPRISE_SUMMARY = 'Robust Enterprise capabilities to serve larger companies'
+
+const DAM_PRO_V1_SUMMARY = 'Perfect for smaller teams poised for growth'
+const DAM_PREMIUM_V1_SUMMARY = 'Ideal for teams that are scaling and have more complex workflows'
+const DAM_ENTERPRISE_SUMMARY = 'Robust Enterprise capabilities to serve larger companies'
 
 const PRO_V1_FEATURES = [
   '100GB of Storage',
@@ -20,12 +24,21 @@ const PREMIUM_V1_FEATURES = [
   'Advanced Integrations'
 ]
 
+const ENTERPRISE_FEATURES = [
+  'Everything from PREMIUM',
+  'Custom Storage',
+  'Dedicated Account Manager',
+  'Unlimited Admins',
+  'Automated workflows',
+  'Advanced Security'
+]
+
 const DAM_PRO_V1_FEATURES = [
   '100GB of Storage',
   '1 Admin',
-  'Unlimited Users',
-  'Collaboration Features',
-  'Digital Asset Management'
+  'Unlimited Users',  
+  'Collaboration Tools',
+  'Access Controls'
 ]
 
 const DAM_PREMIUM_V1_FEATURES = [
@@ -37,7 +50,7 @@ const DAM_PREMIUM_V1_FEATURES = [
   'Advanced Integrations'
 ]
 
-const ENTERPRISE_FEATURES = [
+const DAM_ENTERPRISE_FEATURES = [
   'Everything from PREMIUM',
   'Custom Storage',
   'Dedicated Account Manager',
@@ -56,13 +69,21 @@ const ENTERPRISE_PLAN = {
 export default {
   PRO_V1_SUMMARY,
   PRO_V1_FEATURES,
+
   PREMIUM_V1_SUMMARY,
   PREMIUM_V1_FEATURES,
-  DAM_PRO_V1_FEATURES,
-  DAM_PREMIUM_V1_FEATURES,
-  
+
   ENTERPRISE_SUMMARY,
   ENTERPRISE_FEATURES,
+
+  DAM_PRO_V1_FEATURES,
+  DAM_PRO_V1_SUMMARY,
+
+  DAM_PREMIUM_V1_FEATURES,
+  DAM_PREMIUM_V1_SUMMARY,
+
+  DAM_ENTERPRISE_FEATURES,
+  DAM_ENTERPRISE_SUMMARY,
 
   ENTERPRISE_PLAN
 }

@@ -90,11 +90,13 @@ const Plan = () => {
             <h3>Data Usage</h3>
             <DataUsage limit={plan.benefit.storage} limitBytes={plan.storageLimitBytes} usage={plan.storageUsage} />
           </div>
-          <div className={styles['section-buttons']}>
-            <SectionButtonOption label='Annual Marketing Hub' section='annual' type='marketing_hub' />
-            <SectionButtonOption label='Monthly Marketing Hub' section='monthly' type='marketing_hub' />
-            <SectionButtonOption label='Annual DAM' section='annual' type='dam' />
-            <SectionButtonOption label='Monthly DAM' section='monthly' type='dam' />
+          <div className={styles['section-buttons-type']}>
+            <SectionButton text='DAM' onClick={() => setActiveType('dam')} active={activeType === 'dam'} />
+            <SectionButton text='Marketing Hub' onClick={() => setActiveType('marketing_hub')} active={activeType === 'marketing_hub'} />
+          </div>
+          <div className={styles['section-buttons-cycle']}>
+            <SectionButton text='Annual' onClick={() => setActiveCycle('annual')} active={activeCycle === 'annual'} />
+            <SectionButton text='Monthly' onClick={() => setActiveCycle('monthly')} active={activeCycle === 'monthly'} />
           </div>
           <ul className={styles.products}>
             {productData && [...productData[activeCycle].filter(({ metadata: { type } }) => type === activeType), constants.ENTERPRISE_PLAN].map(price => {
@@ -111,6 +113,7 @@ const Plan = () => {
                     onChange={price.type !== 'enterprise' ? () => openChangeModal(price) : redirectToContact}
                     buttonDisabled={price.id === plan.stripePriceId}
                     buttonText={buttonText}
+                    activeType={activeType}
                     paymentMethodExists={paymentMethod} />
                 </li>
               )
