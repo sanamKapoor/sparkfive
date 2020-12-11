@@ -10,7 +10,7 @@ module.exports = withImages({
       process.env.STRIPE_EXPIRE_PRODUCT_NAME || "Free",
     STRIPE_DEFAULT_SIGNUP_PRICE:
       process.env.STRIPE_DEFAULT_SIGNUP_PRICE ||
-      "price_1HLF2JI2e9K8b8wpF4aheZKo",
+      "price_1HvYJMI2e9K8b8wp6Mo8AX7K",
     DEFAULT_TRIAL_PRODUCT:
       process.env.DEFAULT_TRIAL_PRODUCT || "prod_Hv5C1USjYMtYBp",
     GOOGLE_CLIENT_ID:

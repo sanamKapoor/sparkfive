@@ -36,9 +36,15 @@ export default ({ children }) => {
         if (!data.firstTimeLogin && Router.pathname.indexOf('/main/setup') === -1) {
           await Router.replace('/main/setup')
         }
-        else if (Router.pathname.indexOf('/main') === -1)
-          await Router.replace('/main/overview')
-
+        else if (Router.pathname.indexOf('/main') === -1) {
+          if (data.team.plan.type === 'dam') {
+            await Router.replace('/main/assets')
+          } else {
+            await Router.replace('/main/overview')
+          }
+        } else if (data.firstTimeLogin && data.team.plan.type === 'dam') {
+          await Router.replace('/main/assets')
+        }
       } catch (err) {
         console.log(err)
         initialRedirect()

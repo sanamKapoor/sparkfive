@@ -401,7 +401,7 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
                 <div className={`tag-select ${styles['select-wrapper']}`}>
                   <CreatableSelect
                     options={inputProjects.map(project => ({ ...project, label: project.name, value: project.id }))}
-                    placeholder={'Select a project'}
+                    placeholder={'Enter new project or select an existing one'}
                     onChange={handleProjectChange}
                     styleType={'regular item'}
                     menuPlacement={'top'}
