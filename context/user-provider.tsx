@@ -42,7 +42,7 @@ export default ({ children }) => {
           } else {
             await Router.replace('/main/overview')
           }
-        } else if (data.firstTimeLogin && data.team.plan.type === 'dam') {
+        } else if (data.firstTimeLogin && data.team.plan.type === 'dam' && Router.pathname.indexOf('/user-settings') === -1) {
           await Router.replace('/main/assets')
         }
       } catch (err) {
