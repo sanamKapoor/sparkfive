@@ -270,14 +270,6 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
     {
       field: 'Size',
       value: filesize(size)
-    },
-    {
-      field: 'Campaigns',
-      value: getAssociatedCampaigns(asset)
-    },
-    {
-      field: 'Channels',
-      value: getAssociatedChannels(asset)
     }
   ]
 
@@ -294,7 +286,7 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
       ))}
 
       <div className={styles['field-wrapper']} >
-        <div className={`secondary-text ${styles.field}`}>Asset Channel</div>
+        <div className={`secondary-text ${styles.field}`}>Channel</div>
         <ChannelSelector
           channel={channel || undefined}
           onLabelClick={() => { }}
@@ -303,7 +295,7 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
       </div>
 
       <div className={styles['field-wrapper']} >
-        <div className={`secondary-text ${styles.field}`}>Asset Campaigns</div>
+        <div className={`secondary-text ${styles.field}`}>Campaigns</div>
         <div className={'normal-text'}>
           <ul className={`tags-list ${styles['tags-list']}`}>
             {assetCampaigns?.map((campaign, index) => (
