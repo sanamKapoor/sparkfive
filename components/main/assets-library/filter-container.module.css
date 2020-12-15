@@ -1,0 +1,12 @@
+.container {
+    width: 300px;
+    margin-left: 20px;
+    border: 5px red solid;
+}
+
+.top-bar {
+    display: grid;
+}
+.top-bar p {
+    color: var(--color-prim-turquoise);
+}

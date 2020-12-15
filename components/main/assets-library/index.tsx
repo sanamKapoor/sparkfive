@@ -13,6 +13,7 @@ import SearchOverlay from '../search-overlay-assets'
 import AssetSubheader from './asset-subheader'
 import AssetGrid from '../../common/asset/asset-grid'
 import TopBar from './top-bar'
+import FilterContainer from './filter-container'
 import { DropzoneProvider } from '../../common/misc/dropzone'
 import RenameModal from '../../common/modals/rename-modal'
 
@@ -289,21 +290,24 @@ const AssetsLibrary = () => {
           setActiveSearchOverlay={() => setActiveSearchOverlay(true)}
           selectAll={selectAll}
         />
-        <DropzoneProvider>
-          <AssetGrid
-            activeFolder={activeFolder}
-            getFolders={getFolders}
-            activeView={activeView}
-            activeSortFilter={activeSortFilter}
-            onFilesDataGet={onFilesDataGet}
-            toggleSelected={toggleSelected}
-            mode={activeMode}
-            folders={folders}
-            viewFolder={viewFolder}
-            deleteFolder={deleteFolder}
-            loadMore={() => getAssets(false)}
-          />
-        </DropzoneProvider>
+        <div className={styles['col-wrapper']}>
+          <DropzoneProvider>
+            <AssetGrid
+              activeFolder={activeFolder}
+              getFolders={getFolders}
+              activeView={activeView}
+              activeSortFilter={activeSortFilter}
+              onFilesDataGet={onFilesDataGet}
+              toggleSelected={toggleSelected}
+              mode={activeMode}
+              folders={folders}
+              viewFolder={viewFolder}
+              deleteFolder={deleteFolder}
+              loadMore={() => getAssets(false)}
+            />
+          </DropzoneProvider>
+          <FilterContainer />
+        </div>
       </main>
       <AssetOps />
       <RenameModal
