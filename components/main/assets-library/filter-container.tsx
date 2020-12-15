@@ -9,7 +9,7 @@ const FilterContainer = () => {
     return (
         <main className={`${styles.container}`}>
            <div className={styles['top-bar']}>
-               <h3>Filters</h3>
+                <h3>Filters</h3>
                 <p>Clear</p>
                 <div>&#10005;</div>
             </div>
