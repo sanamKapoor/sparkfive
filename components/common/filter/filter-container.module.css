@@ -6,13 +6,15 @@
 }
 .container section {
     border-bottom: 1px var(--color-secondary-border) solid;
-    padding: 10px;
+    padding: 20px 10px;
 }
 .container section h4 {
-    margin: 0 auto;
+    margin-top: 0;
+    margin-bottom: 0;
     font-weight: 400;
     font-size: 15px;
     color: var(--color-prim-navy);
+    text-align: left;
 }
 
 .top-bar {
@@ -27,6 +29,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 }
 .top-bar h3 {
     margin: 0 auto;
@@ -40,6 +43,16 @@
     color: var(--color-prim-turquoise);
     margin-right: 10px;
     font-size: 13px;
+}
+.expand-bar {
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.expand-icon {
+    color: var(--color-secondary-border);
+    font-size: 17px;
 }
 
 @media screen and (max-width: 500px) {
