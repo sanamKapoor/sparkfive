@@ -1,0 +1,44 @@
+.container {
+    margin-top: 15px;
+}
+
+.item-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.select-item {
+    width: 45%;
+    display: grid;
+    grid-template-columns: 20px auto 20%;
+    margin: 5px 0;
+}
+
+.select-icon {
+    display: block;
+}
+.select-item p {
+    margin: 0 5px;
+}
+.item-name {
+    text-align: left;
+}
+.item-total {
+    font-size: 12px;
+    color: var(--color-sec-text);
+}
+
+.container form {
+    margin-top: 20px;
+}
+.container form img {
+    height: 18px;
+    width: 18px;
+    margin: 17px 10px;
+}
+.container form input {
+    min-height: 50px;
+}
+.container button {
+    display: none;
+}

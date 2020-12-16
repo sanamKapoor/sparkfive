@@ -13,7 +13,7 @@ import SearchOverlay from '../search-overlay-assets'
 import AssetSubheader from './asset-subheader'
 import AssetGrid from '../../common/asset/asset-grid'
 import TopBar from './top-bar'
-import FilterContainer from './filter-container'
+import FilterContainer from '../../common/filter/filter-container'
 import { DropzoneProvider } from '../../common/misc/dropzone'
 import RenameModal from '../../common/modals/rename-modal'
 
