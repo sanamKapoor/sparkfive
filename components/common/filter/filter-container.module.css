@@ -1,6 +1,6 @@
 .container {
     width: 30%;
-    min-width: 300px;
+    min-width: 320px;
     margin-left: 20px;
     border: 8px var(--color-secondary-border) solid;
 }

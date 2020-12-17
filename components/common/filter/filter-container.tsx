@@ -4,11 +4,13 @@ import { useState, useEffect } from 'react'
 
 // Components
 import FilterSelector from './filter-selector'
+import DateUploaded from './date-uploaded'
+import ProductFilter from './product-filter'
 
 
 const FilterContainer = () => {
 
-    const [expandedMenus, setExpandedMenus] = useState(['tags', 'channels', 'campaigns'])
+    const [expandedMenus, setExpandedMenus] = useState(['tags', 'channels', 'campaigns', 'product'])
 
     const tags = [
 
@@ -120,6 +122,24 @@ const FilterContainer = () => {
             total: '44'
         },
     ]
+    const orientation = [
+        {
+            name: 'Square',
+            total: '3'
+        },
+        {
+            name: 'Horizontal',
+            total: '23'
+        },
+        {
+            name: 'Vertical',
+            total: '32'
+        },
+        {
+            name: 'Panoramic',
+            total: '44'
+        },
+    ]
 
     const handleExpand = (menu) => {
         let index = expandedMenus.findIndex((item) => item === menu)
@@ -183,21 +203,21 @@ const FilterContainer = () => {
                     <h4>Product</h4>
                     {expandedMenus.includes('product') ? <div className={styles['expand-icon']}>&#8743;</div> : <div className={styles['expand-icon']}>&#8744;</div>}
                 </div>
-                {expandedMenus.includes('product') && <FilterSelector filters={fileTypes} numItems={5} />}
+                {expandedMenus.includes('product') && <ProductFilter />}
             </section>
             <section>
                 <div className={styles['expand-bar']} onClick={() => handleExpand('date')}>
                     <h4>Date Uploaded</h4>
                     {expandedMenus.includes('date') ? <div className={styles['expand-icon']}>&#8743;</div> : <div className={styles['expand-icon']}>&#8744;</div>}
                 </div>
-                {expandedMenus.includes('date') && <FilterSelector filters={fileTypes} numItems={5} />}
+                {expandedMenus.includes('date') && <DateUploaded  />}
             </section>
             <section>
                 <div className={styles['expand-bar']} onClick={() => handleExpand('orientation')}>
                     <h4>Orientation</h4>
                     {expandedMenus.includes('orientation') ? <div className={styles['expand-icon']}>&#8743;</div> : <div className={styles['expand-icon']}>&#8744;</div>}
                 </div>
-                {expandedMenus.includes('orientation') && <FilterSelector filters={fileTypes} numItems={5} />}
+                {expandedMenus.includes('orientation') && <FilterSelector filters={orientation} searchBar={false} numItems={4} />}
             </section>
             <section>
                 <div className={styles['expand-bar']} onClick={() => handleExpand('dimensions')}>

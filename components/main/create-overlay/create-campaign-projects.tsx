@@ -67,7 +67,7 @@ const CreateCampaignProjects = ({
       {projects.map((project, index) => {
         return (
           <div className={styles['project-row']} key={index}>
-            <ChannelSelector 
+            <ChannelSelector
               onLabelClick={() => toggleActiveInput('channel')}
               handleChannelChange={(option) => {
                 handleChannelChange(index, option)

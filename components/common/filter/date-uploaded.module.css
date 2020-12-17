@@ -1,0 +1,21 @@
+.container{
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+    margin-top: 20px;
+}
+.container .icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 20px;
+}
+.dates-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 50px;
+}
+.calendar {
+    margin-top: 10px;
+    left: -70px;
+}

@@ -5,9 +5,9 @@ import { format } from 'date-fns'
 // Components
 import ItemDropdownWrapper from '../items/item-dropdown-wrapper'
 
-const DateSelector = ({ date, dateText = 'Select Deadline', onOptionClick, pickerIsActive, handleDateChange, includeMargin = true }) => {
+const DateSelector = ({ date, dateText = 'Select Deadline', onOptionClick, pickerIsActive, handleDateChange, includeMargin = true, isDisabled = new Date(), additionalClasses = '' }) => {
   return (
-    <div>
+    <div className={styles['calendar-container']}>
       <ItemDropdownWrapper
         data={
           date
@@ -20,11 +20,12 @@ const DateSelector = ({ date, dateText = 'Select Deadline', onOptionClick, picke
         styleType={!date ? false : true}
       >
         {pickerIsActive && (
-          <div className={`${styles['day-picker']} ${includeMargin && styles['top-margin']}`}>
+          <div className={`${styles['day-picker']} ${includeMargin && styles['top-margin']} ${additionalClasses}`}>
             <DayPicker
               selectedDays={date}
               disabledDays={{
-                before: new Date(),
+                before: isDisabled,
+                
               }}
               onDayClick={(day) =>
                 handleDateChange(day)
