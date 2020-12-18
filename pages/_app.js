@@ -14,6 +14,8 @@ import '../styles/overlays.css'
 import '../styles/toast.css'
 import 'react-day-picker/lib/style.css'
 import 'emoji-mart/css/emoji-mart.css'
+import 'react-input-range/lib/css/index.css'
+import '../styles/slider.css'
 // Import stripe as a side effect so it helps detect fraudulent activy
 import '@stripe/stripe-js';
 import dragndropPolyfill from '../polyfills/dragndroptouch'

@@ -12,6 +12,7 @@
     display: grid;
     grid-template-columns: 20px auto 20%;
     margin-top: 10px;
+    align-items: center;
 }
 .one-column {
     flex-direction: column;

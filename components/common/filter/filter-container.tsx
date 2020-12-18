@@ -6,11 +6,12 @@ import { useState, useEffect } from 'react'
 import FilterSelector from './filter-selector'
 import DateUploaded from './date-uploaded'
 import ProductFilter from './product-filter'
+import DimensionsFilter from './dimensions-filter'
 
 
 const FilterContainer = () => {
 
-    const [expandedMenus, setExpandedMenus] = useState(['tags', 'channels', 'campaigns', 'product'])
+    const [expandedMenus, setExpandedMenus] = useState(['tags', 'channels', 'campaigns'])
 
     const tags = [
 
@@ -36,6 +37,22 @@ const FilterContainer = () => {
         },
         {
             name: 'spring',
+            total: '18'
+        },
+        {
+            name: 'Q3 creative',
+            total: '18'
+        },
+        {
+            name: 'inside',
+            total: '18'
+        },
+        {
+            name: 'mountains',
+            total: '18'
+        },
+        {
+            name: 'outdoor',
             total: '18'
         },
     ]
@@ -143,11 +160,11 @@ const FilterContainer = () => {
 
     const handleExpand = (menu) => {
         let index = expandedMenus.findIndex((item) => item === menu)
-        if(index !== -1 ){
+        if (index !== -1) {
             setExpandedMenus(update(expandedMenus, {
                 $splice: [[index, 1]]
             }))
-        }else {
+        } else {
             setExpandedMenus(update(expandedMenus, {
                 $push: [menu]
             }))
@@ -166,65 +183,83 @@ const FilterContainer = () => {
             <section>
                 <div className={styles['expand-bar']} onClick={() => handleExpand('tags')}>
                     <h4>Tags</h4>
-                    {expandedMenus.includes('tags') ? <div className={styles['expand-icon']}>&#8743;</div> : <div className={styles['expand-icon']}>&#8744;</div>}
+                    {expandedMenus.includes('tags') ?
+                        <div className={styles['expand-icon']}>&#8743;</div> :
+                        <div className={styles['expand-icon']}>&#8744;</div>}
                 </div>
                 {expandedMenus.includes('tags') && <FilterSelector filters={tags} numItems={10} />}
             </section>
             <section>
                 <div className={styles['expand-bar']} onClick={() => handleExpand('channels')}>
                     <h4>Channels</h4>
-                    {expandedMenus.includes('channels') ? <div className={styles['expand-icon']}>&#8743;</div> : <div className={styles['expand-icon']}>&#8744;</div>}
+                    {expandedMenus.includes('channels') ?
+                        <div className={styles['expand-icon']}>&#8743;</div> :
+                        <div className={styles['expand-icon']}>&#8744;</div>}
                 </div>
                 {expandedMenus.includes('channels') && <FilterSelector searchBar={false} filters={channels} numItems={8} />}
             </section>
             <section>
                 <div className={styles['expand-bar']} onClick={() => handleExpand('campaigns')}>
                     <h4>Campaigns</h4>
-                    {expandedMenus.includes('campaigns') ? <div className={styles['expand-icon']}>&#8743;</div> : <div className={styles['expand-icon']}>&#8744;</div>}
+                    {expandedMenus.includes('campaigns') ?
+                        <div className={styles['expand-icon']}>&#8743;</div> :
+                        <div className={styles['expand-icon']}>&#8744;</div>}
                 </div>
                 {expandedMenus.includes('campaigns') && <FilterSelector filters={campaigns} oneColumn={true} numItems={5} />}
             </section>
             <section>
                 <div className={styles['expand-bar']} onClick={() => handleExpand('projects')}>
                     <h4>Projects</h4>
-                    {expandedMenus.includes('projects') ? <div className={styles['expand-icon']}>&#8743;</div> : <div className={styles['expand-icon']}>&#8744;</div>}
+                    {expandedMenus.includes('projects') ?
+                        <div className={styles['expand-icon']}>&#8743;</div> :
+                        <div className={styles['expand-icon']}>&#8744;</div>}
                 </div>
                 {expandedMenus.includes('projects') && <FilterSelector filters={projects} oneColumn={true} numItems={5} />}
             </section>
             <section>
                 <div className={styles['expand-bar']} onClick={() => handleExpand('file-types')}>
                     <h4>File Types</h4>
-                    {expandedMenus.includes('file-types') ? <div className={styles['expand-icon']}>&#8743;</div> : <div className={styles['expand-icon']}>&#8744;</div>}
+                    {expandedMenus.includes('file-types') ?
+                        <div className={styles['expand-icon']}>&#8743;</div> :
+                        <div className={styles['expand-icon']}>&#8744;</div>}
                 </div>
-                {expandedMenus.includes('file-types') && <FilterSelector filters={fileTypes} numItems={5} />}
+                {expandedMenus.includes('file-types') && <FilterSelector filters={fileTypes} searchBar={false} numItems={5} />}
             </section>
             <section>
                 <div className={styles['expand-bar']} onClick={() => handleExpand('product')}>
                     <h4>Product</h4>
-                    {expandedMenus.includes('product') ? <div className={styles['expand-icon']}>&#8743;</div> : <div className={styles['expand-icon']}>&#8744;</div>}
+                    {expandedMenus.includes('product') ?
+                        <div className={styles['expand-icon']}>&#8743;</div> :
+                        <div className={styles['expand-icon']}>&#8744;</div>}
                 </div>
                 {expandedMenus.includes('product') && <ProductFilter />}
             </section>
             <section>
                 <div className={styles['expand-bar']} onClick={() => handleExpand('date')}>
                     <h4>Date Uploaded</h4>
-                    {expandedMenus.includes('date') ? <div className={styles['expand-icon']}>&#8743;</div> : <div className={styles['expand-icon']}>&#8744;</div>}
+                    {expandedMenus.includes('date') ?
+                        <div className={styles['expand-icon']}>&#8743;</div> :
+                        <div className={styles['expand-icon']}>&#8744;</div>}
                 </div>
-                {expandedMenus.includes('date') && <DateUploaded  />}
+                {expandedMenus.includes('date') && <DateUploaded />}
             </section>
             <section>
                 <div className={styles['expand-bar']} onClick={() => handleExpand('orientation')}>
                     <h4>Orientation</h4>
-                    {expandedMenus.includes('orientation') ? <div className={styles['expand-icon']}>&#8743;</div> : <div className={styles['expand-icon']}>&#8744;</div>}
+                    {expandedMenus.includes('orientation') ?
+                        <div className={styles['expand-icon']}>&#8743;</div> :
+                        <div className={styles['expand-icon']}>&#8744;</div>}
                 </div>
                 {expandedMenus.includes('orientation') && <FilterSelector filters={orientation} searchBar={false} numItems={4} />}
             </section>
             <section>
                 <div className={styles['expand-bar']} onClick={() => handleExpand('dimensions')}>
                     <h4>Dimensions</h4>
-                    {expandedMenus.includes('dimensions') ? <div className={styles['expand-icon']}>&#8743;</div> : <div className={styles['expand-icon']}>&#8744;</div>}
+                    {expandedMenus.includes('dimensions') ?
+                        <div className={styles['expand-icon']}>&#8743;</div> :
+                        <div className={styles['expand-icon']}>&#8744;</div>}
                 </div>
-                {expandedMenus.includes('dimensions') && <FilterSelector filters={fileTypes} numItems={5} />}
+                {expandedMenus.includes('dimensions') && <DimensionsFilter />}
             </section>
         </div>
 

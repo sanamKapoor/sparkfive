@@ -1,0 +1,24 @@
+.input-range__label--min, .input-range__label--max {
+    display: none;
+}
+.input-range__label-container {
+    color: var(--color-prim-navy);
+    font-family: "Montserrat", sans-serif;
+    font-size: 13px;
+}
+.input-range__label {
+    top: -2.5rem !important;
+}
+.input-range__track {
+    height: 1rem !important;
+    border-radius: 0 !important;
+    background-color: var(--color-sec-ivory) !important;
+}
+.input-range__slider {
+    background-color: var(--color-prim-turquoise) !important;
+    border: var(--color-prim-turquoise) !important;
+    border-radius: 0 !important;
+    width: 0.3rem !important;
+    margin-top: -1rem !important;
+    margin-left: 0 !important;
+}
