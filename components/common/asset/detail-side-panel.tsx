@@ -278,12 +278,14 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
   return (
     <div className={styles.container}>
       <h2>Details</h2>
-      {fieldValues.map(fieldvalue => (
-        <div className={styles['field-wrapper']} key={fieldvalue.field}>
-          <div className={`secondary-text ${styles.field}`}>{fieldvalue.field}</div>
-          <div className={'normal-text'}>{fieldvalue.value}</div>
-        </div>
-      ))}
+      <div className={styles['first-section']}>
+        {fieldValues.map(fieldvalue => (
+          <div className={styles['field-wrapper']} key={fieldvalue.field}>
+            <div className={`secondary-text ${styles.field}`}>{fieldvalue.field}</div>
+            <div className={'normal-text'}>{fieldvalue.value}</div>
+          </div>
+        ))}
+      </div>
 
       <div className={styles['field-wrapper']} >
         <div className={`secondary-text ${styles.field}`}>Channel</div>
@@ -410,6 +412,7 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
           }
         </div>
       </div>
+
       <ProjectCreationModal
         initialValue={newProjectName}
         closeModal={() => setNewProjectName('')}

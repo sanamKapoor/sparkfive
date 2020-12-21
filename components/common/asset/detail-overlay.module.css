@@ -119,6 +119,9 @@
     grid-template-areas: "content-asset asset-menu";
     grid-template-columns: 1fr 60px;
   }
+  .menu {
+    right: 0;
+  }
 
   .side {
     grid-area: unset;
