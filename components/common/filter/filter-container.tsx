@@ -182,10 +182,8 @@ const FilterContainer = () => {
         <div className={`${styles.container} ${stickyMenuScroll && styles['sticky-menu']}`}>
             <section className={styles['top-bar']}>
                 <h3>Filters</h3>
-                <div className={`${styles.clear}`}>
-                    <p>Clear</p>
-                    <div>&#10005;</div>
-                </div>
+                <p className={`${styles['clear-container']}`}>Clear</p>
+                <div className={`${styles['close-container']}`}>&#10005;</div>
             </section>
             <div className={styles['section-container']}>
                 <section>

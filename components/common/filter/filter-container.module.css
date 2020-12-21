@@ -28,14 +28,23 @@
     position: relative;
     height: 70px;
 }
-.clear {
+.clear-container {
+    margin: 0 auto;
     position: absolute;
-    right: 20px;
+    right: 50px;
     top: 50%;
     transform: translateY(-50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    color: var(--color-prim-turquoise);
+    margin-right: 10px;
+    font-size: 13px;
+    cursor: pointer;
+}
+.close-container {
+    margin: 0 auto;
+    position: absolute;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
     cursor: pointer;
 }
 .top-bar h3 {
@@ -45,11 +54,6 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-}
-.clear p {
-    color: var(--color-prim-turquoise);
-    margin-right: 10px;
-    font-size: 13px;
 }
 .expand-bar {
     display: flex;
