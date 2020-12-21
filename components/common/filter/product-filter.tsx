@@ -64,7 +64,7 @@ const ProductFilter = () => {
                 <Select
                     options={fieldOptions}
                     value={productSelected}
-                    styleType='filter filter-schedule'
+                    styleType='filter select-filter'
                     onChange={(selected) => hadleProductSelected(selected)}
                     placeholder='Select Product'
                 />
@@ -74,7 +74,7 @@ const ProductFilter = () => {
                 <Select
                     options={valueOptions}
                     value={valueSelected}
-                    styleType='filter filter-schedule'
+                    styleType='filter select-filter'
                     onChange={(selected) => hadleValueSelected(selected)}
                     placeholder='Select Value'
                 />

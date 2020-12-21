@@ -3,6 +3,13 @@
     min-width: 320px;
     margin-left: 20px;
     border: 8px var(--color-secondary-border) solid;
+    height: 100%;
+    background-color: #fff;
+}
+.section-container {
+    max-height: calc(120vh - 70px);
+    overflow-y: auto;
+    background-color: #fff;
 }
 .container section {
     border-bottom: 1px var(--color-secondary-border) solid;
@@ -55,8 +62,26 @@
     font-size: 17px;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 800px) {
     .container {
-        border: 10px var(--color-secondary-border) solid;
+        position: absolute;
+        right: 0;
+        height: auto;
     }
-  }
+    .section-container {
+        max-height: calc(94vh - 70px);
+    }
+    .sticky-menu {
+        position: fixed;
+        top: 0;
+        right: 0;
+    }
+}
+@media screen and (max-width: 400px) {
+    .container {
+        width: 100%;
+    }
+    .section-container {
+        max-height: calc(80vh - 70px);
+    }
+}
