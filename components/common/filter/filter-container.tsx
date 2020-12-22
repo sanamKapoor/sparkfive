@@ -1,6 +1,7 @@
 import styles from './filter-container.module.css'
 import update from 'immutability-helper'
 import { useState, useEffect } from 'react'
+import { Utilities } from '../../../assets'
 
 // Components
 import FilterSelector from './filter-selector'
@@ -204,8 +205,8 @@ const FilterContainer = ({ openFilter, setOpenFilter }) => {
                     <div className={styles['expand-bar']} onClick={() => handleExpand('tags')}>
                         <h4>Tags</h4>
                         {expandedMenus.includes('tags') ?
-                            <div className={styles['expand-icon']}>&#8743;</div> :
-                            <div className={styles['expand-icon']}>&#8744;</div>}
+                            <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :
+                            <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
                     </div>
                     {expandedMenus.includes('tags') &&
                         <FilterSelector filters={tags} numItems={10} clearSelector={clearSelector} />}
@@ -214,8 +215,8 @@ const FilterContainer = ({ openFilter, setOpenFilter }) => {
                     <div className={styles['expand-bar']} onClick={() => handleExpand('channels')}>
                         <h4>Channels</h4>
                         {expandedMenus.includes('channels') ?
-                            <div className={styles['expand-icon']}>&#8743;</div> :
-                            <div className={styles['expand-icon']}>&#8744;</div>}
+                            <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :
+                            <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
                     </div>
                     {expandedMenus.includes('channels') &&
                         <FilterSelector searchBar={false} filters={channels} numItems={8} clearSelector={clearSelector} />}
@@ -224,8 +225,8 @@ const FilterContainer = ({ openFilter, setOpenFilter }) => {
                     <div className={styles['expand-bar']} onClick={() => handleExpand('campaigns')}>
                         <h4>Campaigns</h4>
                         {expandedMenus.includes('campaigns') ?
-                            <div className={styles['expand-icon']}>&#8743;</div> :
-                            <div className={styles['expand-icon']}>&#8744;</div>}
+                            <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :
+                            <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
                     </div>
                     {expandedMenus.includes('campaigns') &&
                         <FilterSelector filters={campaigns} oneColumn={true} numItems={5} clearSelector={clearSelector} />}
@@ -234,8 +235,8 @@ const FilterContainer = ({ openFilter, setOpenFilter }) => {
                     <div className={styles['expand-bar']} onClick={() => handleExpand('projects')}>
                         <h4>Projects</h4>
                         {expandedMenus.includes('projects') ?
-                            <div className={styles['expand-icon']}>&#8743;</div> :
-                            <div className={styles['expand-icon']}>&#8744;</div>}
+                            <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :
+                            <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
                     </div>
                     {expandedMenus.includes('projects') &&
                         <FilterSelector filters={projects} oneColumn={true} numItems={5} clearSelector={clearSelector} />}
@@ -244,8 +245,8 @@ const FilterContainer = ({ openFilter, setOpenFilter }) => {
                     <div className={styles['expand-bar']} onClick={() => handleExpand('file-types')}>
                         <h4>File Types</h4>
                         {expandedMenus.includes('file-types') ?
-                            <div className={styles['expand-icon']}>&#8743;</div> :
-                            <div className={styles['expand-icon']}>&#8744;</div>}
+                            <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :
+                            <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
                     </div>
                     {expandedMenus.includes('file-types') &&
                         <FilterSelector filters={fileTypes} searchBar={false} numItems={5} clearSelector={clearSelector} />}
@@ -254,8 +255,8 @@ const FilterContainer = ({ openFilter, setOpenFilter }) => {
                     <div className={styles['expand-bar']} onClick={() => handleExpand('product')}>
                         <h4>Product</h4>
                         {expandedMenus.includes('product') ?
-                            <div className={styles['expand-icon']}>&#8743;</div> :
-                            <div className={styles['expand-icon']}>&#8744;</div>}
+                            <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :
+                            <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
                     </div>
                     {expandedMenus.includes('product') && <ProductFilter />}
                 </section>
@@ -263,8 +264,8 @@ const FilterContainer = ({ openFilter, setOpenFilter }) => {
                     <div className={styles['expand-bar']} onClick={() => handleExpand('date')}>
                         <h4>Date Uploaded</h4>
                         {expandedMenus.includes('date') ?
-                            <div className={styles['expand-icon']}>&#8743;</div> :
-                            <div className={styles['expand-icon']}>&#8744;</div>}
+                            <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :
+                            <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
                     </div>
                     {expandedMenus.includes('date') && <DateUploaded />}
                 </section>
@@ -272,8 +273,8 @@ const FilterContainer = ({ openFilter, setOpenFilter }) => {
                     <div className={styles['expand-bar']} onClick={() => handleExpand('orientation')}>
                         <h4>Orientation</h4>
                         {expandedMenus.includes('orientation') ?
-                            <div className={styles['expand-icon']}>&#8743;</div> :
-                            <div className={styles['expand-icon']}>&#8744;</div>}
+                            <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :
+                            <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
                     </div>
                     {expandedMenus.includes('orientation') && 
                     <FilterSelector filters={orientation} searchBar={false} numItems={4} clearSelector={clearSelector} />}
@@ -282,8 +283,8 @@ const FilterContainer = ({ openFilter, setOpenFilter }) => {
                     <div className={styles['expand-bar']} onClick={() => handleExpand('dimensions')}>
                         <h4>Dimensions</h4>
                         {expandedMenus.includes('dimensions') ?
-                            <div className={styles['expand-icon']}>&#8743;</div> :
-                            <div className={styles['expand-icon']}>&#8744;</div>}
+                            <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :
+                            <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
                     </div>
                     {expandedMenus.includes('dimensions') &&
                         <DimensionsFilter />}

@@ -7,7 +7,7 @@
     background-color: #fff;
 }
 .section-container {
-    max-height: calc(150vh - 70px);
+    max-height: calc(180vh - 70px);
     overflow-y: auto;
     background-color: #fff;
 }
@@ -58,12 +58,14 @@
 .expand-bar {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     cursor: pointer;
 }
 
 .expand-icon {
-    color: var(--color-secondary-border);
-    font-size: 17px;
+    width: 13px;
+    height: 7px;
+    margin-right: 10px;
 }
 
 @media screen and (max-width: 800px) {
