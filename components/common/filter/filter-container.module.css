@@ -5,6 +5,7 @@
     border: 8px var(--color-secondary-border) solid;
     height: 100%;
     background-color: #fff;
+    z-index: 99;
 }
 .section-container {
     max-height: calc(180vh - 70px);
