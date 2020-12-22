@@ -9,16 +9,28 @@ import ProductFilter from './product-filter'
 import DimensionsFilter from './dimensions-filter'
 
 
-const FilterContainer = () => {
+const FilterContainer = ({ openFilter, setOpenFilter }) => {
 
     const [expandedMenus, setExpandedMenus] = useState(['tags', 'channels', 'campaigns'])
     const [stickyMenuScroll, setStickyMenuScroll] = useState(false)
+    const [clearSelector, setClearSelector] = useState([])
 
     useEffect(() => {
         window.addEventListener("scroll", () => {
             setStickyMenuScroll(window.scrollY > 233);
         });
     }, []);
+
+    const handleOpenFilter = () => {
+        if (openFilter) {
+            setOpenFilter(false)
+        } else {
+            setOpenFilter(true)
+        }
+    }
+    const handleClear = () => {
+        setClearSelector([])
+    }
 
     const tags = [
 
@@ -182,8 +194,10 @@ const FilterContainer = () => {
         <div className={`${styles.container} ${stickyMenuScroll && styles['sticky-menu']}`}>
             <section className={styles['top-bar']}>
                 <h3>Filters</h3>
-                <p className={`${styles['clear-container']}`}>Clear</p>
-                <div className={`${styles['close-container']}`}>&#10005;</div>
+                <p className={`${styles['clear-container']}`}
+                    onClick={() => { handleClear() }}>Clear</p>
+                <div className={`${styles['close-container']}`}
+                    onClick={() => { handleOpenFilter() }}>&#10005;</div>
             </section>
             <div className={styles['section-container']}>
                 <section>
@@ -193,7 +207,8 @@ const FilterContainer = () => {
                             <div className={styles['expand-icon']}>&#8743;</div> :
                             <div className={styles['expand-icon']}>&#8744;</div>}
                     </div>
-                    {expandedMenus.includes('tags') && <FilterSelector filters={tags} numItems={10} />}
+                    {expandedMenus.includes('tags') &&
+                        <FilterSelector filters={tags} numItems={10} clearSelector={clearSelector} />}
                 </section>
                 <section>
                     <div className={styles['expand-bar']} onClick={() => handleExpand('channels')}>
@@ -202,7 +217,8 @@ const FilterContainer = () => {
                             <div className={styles['expand-icon']}>&#8743;</div> :
                             <div className={styles['expand-icon']}>&#8744;</div>}
                     </div>
-                    {expandedMenus.includes('channels') && <FilterSelector searchBar={false} filters={channels} numItems={8} />}
+                    {expandedMenus.includes('channels') &&
+                        <FilterSelector searchBar={false} filters={channels} numItems={8} clearSelector={clearSelector} />}
                 </section>
                 <section>
                     <div className={styles['expand-bar']} onClick={() => handleExpand('campaigns')}>
@@ -211,7 +227,8 @@ const FilterContainer = () => {
                             <div className={styles['expand-icon']}>&#8743;</div> :
                             <div className={styles['expand-icon']}>&#8744;</div>}
                     </div>
-                    {expandedMenus.includes('campaigns') && <FilterSelector filters={campaigns} oneColumn={true} numItems={5} />}
+                    {expandedMenus.includes('campaigns') &&
+                        <FilterSelector filters={campaigns} oneColumn={true} numItems={5} clearSelector={clearSelector} />}
                 </section>
                 <section>
                     <div className={styles['expand-bar']} onClick={() => handleExpand('projects')}>
@@ -220,7 +237,8 @@ const FilterContainer = () => {
                             <div className={styles['expand-icon']}>&#8743;</div> :
                             <div className={styles['expand-icon']}>&#8744;</div>}
                     </div>
-                    {expandedMenus.includes('projects') && <FilterSelector filters={projects} oneColumn={true} numItems={5} />}
+                    {expandedMenus.includes('projects') &&
+                        <FilterSelector filters={projects} oneColumn={true} numItems={5} clearSelector={clearSelector} />}
                 </section>
                 <section>
                     <div className={styles['expand-bar']} onClick={() => handleExpand('file-types')}>
@@ -229,7 +247,8 @@ const FilterContainer = () => {
                             <div className={styles['expand-icon']}>&#8743;</div> :
                             <div className={styles['expand-icon']}>&#8744;</div>}
                     </div>
-                    {expandedMenus.includes('file-types') && <FilterSelector filters={fileTypes} searchBar={false} numItems={5} />}
+                    {expandedMenus.includes('file-types') &&
+                        <FilterSelector filters={fileTypes} searchBar={false} numItems={5} clearSelector={clearSelector} />}
                 </section>
                 <section>
                     <div className={styles['expand-bar']} onClick={() => handleExpand('product')}>
@@ -256,7 +275,8 @@ const FilterContainer = () => {
                             <div className={styles['expand-icon']}>&#8743;</div> :
                             <div className={styles['expand-icon']}>&#8744;</div>}
                     </div>
-                    {expandedMenus.includes('orientation') && <FilterSelector filters={orientation} searchBar={false} numItems={4} />}
+                    {expandedMenus.includes('orientation') && 
+                    <FilterSelector filters={orientation} searchBar={false} numItems={4} clearSelector={clearSelector} />}
                 </section>
                 <section>
                     <div className={styles['expand-bar']} onClick={() => handleExpand('dimensions')}>
@@ -265,7 +285,8 @@ const FilterContainer = () => {
                             <div className={styles['expand-icon']}>&#8743;</div> :
                             <div className={styles['expand-icon']}>&#8744;</div>}
                     </div>
-                    {expandedMenus.includes('dimensions') && <DimensionsFilter />}
+                    {expandedMenus.includes('dimensions') &&
+                        <DimensionsFilter />}
                 </section>
             </div>
         </div>

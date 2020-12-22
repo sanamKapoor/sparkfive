@@ -21,7 +21,9 @@ const TopBar = ({
   activeView,
   setActiveView,
   selectAll,
-  activeFolder
+  activeFolder,
+  setOpenFilter,
+  openFilter
 }) => {
 
   const [campaignsFilter, setCampaignsFilter] = useState([])
@@ -57,13 +59,12 @@ const TopBar = ({
     })
   }
 
-  const applyFilters = (selectData) => {
-    setActiveSortFilter({
-      ...activeSortFilter,
-      filterCampaigns: selectData[0],
-      filterChannels: selectData[1],
-      filterTags: selectData[2],
-    })
+  const handleOpenFilter = () => {
+    if(openFilter) {
+      setOpenFilter(false)
+    } else {
+      setOpenFilter(true)
+    }
   }
 
   const filtersRef = useRef(null)
@@ -98,27 +99,13 @@ const TopBar = ({
         <img src={Utilities.gridView} onClick={() => setActiveView('grid')} />
         <img src={Utilities.listView} onClick={() => setActiveView('list')} />
         <div className={styles['nested-wrapper']}>
-          <NestedSelect
-            selectList={[
-              {
-                options: campaignsFilter,
-                placeholder: 'Campaigns',
-                value: activeSortFilter.filterCampaigns,
-                hidden: !hasPermission([CALENDAR_ACCESS])
-              },
-              {
-                options: selectOptions.channels,
-                placeholder: 'Channels',
-                value: activeSortFilter.filterChannels
-              },
-              {
-                options: tagsFilter,
-                placeholder: 'Tags',
-                value: activeSortFilter.filterTags
-              }
-            ]}
-            onApplyFilters={applyFilters}
-          />
+          <Button
+            text='Filters'
+            type='button'
+            styleType='secondary'
+            onClick={() => {
+              handleOpenFilter()
+            }} />
         </div>
         <div className={styles['sort-wrapper']}>
           <Select

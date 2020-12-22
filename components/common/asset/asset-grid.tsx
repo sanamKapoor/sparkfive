@@ -34,7 +34,8 @@ const AssetGrid = ({
   itemId = '',
   getFolders = () => { },
   loadMore = () => { },
-  viewFolder = (id) => { } }) => {
+  viewFolder = (id) => { },
+  openFilter }) => {
 
   const isDragging = useDropzone()
   const { assets, setAssets, setActiveOperation, setOperationAsset, nextPage, setOperationFolder } = useContext(AssetContext)
@@ -116,7 +117,7 @@ const AssetGrid = ({
   const shouldShowUpload = activeSearchOverlay || (mode === 'assets' && assets.length === 0) || (mode === 'folders' && folders.length === 0)
 
   return (
-    <section className={styles.container}>
+    <section className={`${styles.container} ${openFilter && styles.filter}`}>
       {(shouldShowUpload || isDragging) &&
         <AssetUpload
           onDragText={'Drop files here to upload'}

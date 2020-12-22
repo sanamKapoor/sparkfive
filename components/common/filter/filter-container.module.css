@@ -7,7 +7,7 @@
     background-color: #fff;
 }
 .section-container {
-    max-height: calc(120vh - 70px);
+    max-height: calc(150vh - 70px);
     overflow-y: auto;
     background-color: #fff;
 }

@@ -8,7 +8,7 @@ import IconClickable from '../buttons/icon-clickable'
 import Search from '../../common/inputs/search'
 
 
-const FilterSelector = ({ searchBar = true, filters, oneColumn = false, numItems }) => {
+const FilterSelector = ({ searchBar = true, filters, oneColumn = false, numItems, clearSelector }) => {
 
     const [selectedItem, setSelectedItem] = useState([])
 
@@ -24,6 +24,10 @@ const FilterSelector = ({ searchBar = true, filters, oneColumn = false, numItems
             }))
         }
     }
+
+    useEffect(() => {
+        setSelectedItem(clearSelector)
+    },[clearSelector])
 
     return (
         <div className={`${styles.container}`}>
