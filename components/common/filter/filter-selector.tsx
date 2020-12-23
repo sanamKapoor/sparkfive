@@ -48,7 +48,7 @@ const FilterSelector = ({ searchBar = true, filters, oneColumn = false, numItems
                             }
                         </div>
                         <p className={styles['item-name']}>{filter.name}</p>
-                        <p className={styles['item-total']}>{filter.total}</p>
+                        <div className={styles['item-total']}>{filter.total}</div>
                     </li>
                 ))}
             </ul>

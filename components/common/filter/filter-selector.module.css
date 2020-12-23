@@ -13,15 +13,18 @@
     grid-template-columns: 20px auto 20%;
     margin-top: 10px;
     align-items: center;
+    text-align: right;
+    
+}
+.select-item p {
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 .one-column {
     flex-direction: column;
 }
 .one-column .select-item {
     width: 100%;
-}
-.one-column .item-total {
-    text-align: right;
 }
 
 .select-icon {

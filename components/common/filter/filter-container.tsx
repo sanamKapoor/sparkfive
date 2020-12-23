@@ -37,15 +37,15 @@ const FilterContainer = ({ openFilter, setOpenFilter }) => {
 
         {
             name: 'Women',
-            total: '25'
+            total: '5'
         },
         {
             name: 'men',
-            total: '15'
+            total: '5'
         },
         {
             name: 'fall',
-            total: '34'
+            total: '3'
         },
         {
             name: 'winter',
@@ -68,12 +68,12 @@ const FilterContainer = ({ openFilter, setOpenFilter }) => {
             total: '18'
         },
         {
-            name: 'mountains',
-            total: '18'
+            name: 'mountainsjkjjkkjk',
+            total: '1'
         },
         {
             name: 'outdoor',
-            total: '18'
+            total: '8'
         },
     ]
     const channels = [
@@ -84,11 +84,11 @@ const FilterContainer = ({ openFilter, setOpenFilter }) => {
         },
         {
             name: 'Facebook',
-            total: '65'
+            total: '6'
         },
         {
             name: 'Ads',
-            total: '2'
+            total: '52'
         },
         {
             name: 'Twitter',
@@ -98,20 +98,20 @@ const FilterContainer = ({ openFilter, setOpenFilter }) => {
     const campaigns = [
 
         {
-            name: 'black friday 2020',
+            name: 'black friday 2020 fhdlkkhfgksd fdsjkhfkjsd fdkjhfsdb',
             total: '55'
         },
         {
             name: 'valentines day 2020',
-            total: '65'
+            total: '6'
         },
         {
             name: 'holiday 2020',
-            total: '2'
+            total: '52'
         },
         {
             name: 'Twitter',
-            total: '78'
+            total: '7'
         }
     ]
     const projects = [
