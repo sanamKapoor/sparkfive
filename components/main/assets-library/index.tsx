@@ -50,6 +50,8 @@ const AssetsLibrary = () => {
 
   const [renameModalOpen, setRenameModalOpen] = useState(false)
 
+  const [openFilter, setOpenFilter] = useState(false)
+
   useEffect(() => {
     setActivePageMode('library')
     if (activeSortFilter.mainFilter === 'folders') {
@@ -289,8 +291,10 @@ const AssetsLibrary = () => {
           activeFolder={activeFolder}
           setActiveSearchOverlay={() => setActiveSearchOverlay(true)}
           selectAll={selectAll}
+          setOpenFilter={setOpenFilter}
+          openFilter={openFilter}
         />
-        <div className={styles['col-wrapper']}>
+        <div className={`${openFilter && styles['col-wrapper']}`}>
           <DropzoneProvider>
             <AssetGrid
               activeFolder={activeFolder}
@@ -304,9 +308,10 @@ const AssetsLibrary = () => {
               viewFolder={viewFolder}
               deleteFolder={deleteFolder}
               loadMore={() => getAssets(false)}
+              openFilter={openFilter}
             />
           </DropzoneProvider>
-          <FilterContainer />
+          {openFilter && <FilterContainer openFilter={openFilter} setOpenFilter={setOpenFilter}/>}
         </div>
       </main>
       <AssetOps />
