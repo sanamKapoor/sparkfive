@@ -4,7 +4,7 @@ import { UserContext } from '../../../context'
 import { Utilities } from '../../../assets'
 import selectOptions from './select-options'
 import campaignApi from '../../../server-api/campaign'
-import filterApi from '../../../server-api/filters'
+import filterApi from '../../../server-api/filter'
 import tagApi from '../../../server-api/tag'
 import { CALENDAR_ACCESS } from '../../../constants/permissions'
 

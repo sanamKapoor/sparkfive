@@ -2,13 +2,23 @@ import styles from './filters-select.module.css'
 import ReactSelect, { components } from 'react-select'
 import { Utilities } from '../../../assets'
 
-const FiltersSelect = ({ options, placeholder, value = null, onChange = (selected) => { }, styleType = '', isClearable = false, closeMenuOnSelect = false }) => {
+const FiltersSelect = ({
+  options,
+  placeholder,
+  value = null,
+  onChange = (selected) => { },
+  styleType = '',
+  isClearable = false,
+  closeMenuOnSelect = false,
+  hasCount = false
+}) => {
 
   const Option = props => (
     <components.Option {...props} >
       <div className={styles.option}>
-        <span>{props.label}</span>
         <img src={props.isSelected ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal} />
+        <div className={styles.label}>{props.label}</div>
+        {hasCount && <div>{props.data.count}</div>}
       </div>
     </components.Option>
   )

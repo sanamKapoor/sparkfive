@@ -90,3 +90,22 @@ export const ScheduleContext = createContext({
     needItemsReset: false,
     setNeedItemReset: (newValue) => { }
 })
+
+export const FilterContext = createContext({
+    tags: [],
+    loadTags: () => { },
+
+    campaigns: [],
+    loadCampaigns: () => { },
+
+    channels: [],
+    loadChannels: () => { },
+
+    projects: [],
+    loadProjects: () => { },
+
+    fileTypes: [],
+    loadFileTypes: () => { },
+
+    loadAll: () => { }
+})

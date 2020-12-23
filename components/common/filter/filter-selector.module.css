@@ -52,3 +52,10 @@
 .container button {
     display: none;
 }
+
+.select-filter{
+    width: 100%;
+    max-width: 20rem;
+    margin: 0 auto;
+    padding-top: 1.5rem;
+}

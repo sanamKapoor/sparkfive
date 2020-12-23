@@ -9,21 +9,21 @@ const AssetApplication = ({ extension, onList = false }) => {
         <div className={`${styles.container} ${onList && styles.small}`}>
           <img src={pdf} className={styles.icon} />
         </div>
-      ) : extension === 'msword' ||
+      ) : extension === 'doc' ||
         extension ===
-          'vnd.openxmlformats-officedocument.wordprocessingml.document' ? (
+          'docx' ? (
             <div className={`${styles.container} ${onList && styles.small}`}>
           <img src={msword} className={styles.icon} />
         </div>
       ) : extension ===
-          'vnd.openxmlformats-officedocument.presentationml.presentation' ||
+          'ppt' ||
         extension === 'vnd.ms-powerpoint' ? (
           <div className={`${styles.container} ${onList && styles.small}`}>
           <img src={msppt} className={styles.icon} />
         </div>
       ) : extension === 'vnd.ms-excel' ||
         extension ===
-          'vnd.openxmlformats-officedocument.spreadsheetml.sheet' ? (
+          'xlsx' ? (
             <div className={`${styles.container} ${onList && styles.small}`}>
           <img src={msexcel} className={styles.icon} />
         </div>

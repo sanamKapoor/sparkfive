@@ -1,6 +1,7 @@
 import styles from './index.module.css'
 import { useState, useEffect, useContext } from 'react'
 import { AssetContext } from '../../../context'
+import FilterProvider from '../../../context/filter-provider'
 import selectOptions from './select-options'
 import update from 'immutability-helper'
 import assetApi from '../../../server-api/asset'
@@ -24,7 +25,10 @@ const AssetsLibrary = () => {
     mainFilter: 'all',
     filterCampaigns: [],
     filterChannels: [],
-    filterTags: []
+    filterTags: [],
+    filterProjects: [],
+    filterFileTypes: [],
+    filterOrientation: []
   })
   const [activeView, setActiveView] = useState('grid')
   const {
@@ -272,7 +276,7 @@ const AssetsLibrary = () => {
   }
 
   return (
-    <>
+    <FilterProvider>
       <AssetSubheader
         activeFolder={activeFolder}
         getFolders={getFolders}
@@ -311,7 +315,7 @@ const AssetsLibrary = () => {
               openFilter={openFilter}
             />
           </DropzoneProvider>
-          {openFilter && <FilterContainer openFilter={openFilter} setOpenFilter={setOpenFilter}/>}
+          {openFilter && <FilterContainer openFilter={openFilter} setOpenFilter={setOpenFilter} activeSortFilter={activeSortFilter} setActiveSortFilter={setActiveSortFilter} />}
         </div>
       </main>
       <AssetOps />
@@ -327,7 +331,7 @@ const AssetsLibrary = () => {
           closeOverlay={closeSearchOverlay}
         />
       }
-    </>
+    </FilterProvider>
   )
 }
 
