@@ -52,7 +52,7 @@ const FilterSelector = ({
                                 }
                             </div>
                             <p className={styles['item-name']}>{filter.name}</p>
-                            <p className={styles['item-total']}>{filter.count}</p>
+                            <div className={styles['item-total']}>{filter.count}</div>
                         </li>
                     )
                 })}
