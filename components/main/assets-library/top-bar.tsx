@@ -4,6 +4,7 @@ import { UserContext } from '../../../context'
 import { Utilities } from '../../../assets'
 import selectOptions from './select-options'
 import campaignApi from '../../../server-api/campaign'
+import filterApi from '../../../server-api/filter'
 import tagApi from '../../../server-api/tag'
 import { CALENDAR_ACCESS } from '../../../constants/permissions'
 
@@ -21,7 +22,9 @@ const TopBar = ({
   activeView,
   setActiveView,
   selectAll,
-  activeFolder
+  activeFolder,
+  setOpenFilter,
+  openFilter
 }) => {
 
   const [campaignsFilter, setCampaignsFilter] = useState([])
@@ -39,7 +42,7 @@ const TopBar = ({
         value: item.id
       })
       if (hasPermission([CALENDAR_ACCESS])) {
-        const campaingsResponse = await campaignApi.getCampaigns()
+        const campaingsResponse = await campaignApi.getCampaigns({ assetsCount: 'yes' })
         setCampaignsFilter(campaingsResponse.data.map(selectValueMapFn))
       }
       const tagsResponse = await tagApi.getTags()
@@ -57,13 +60,12 @@ const TopBar = ({
     })
   }
 
-  const applyFilters = (selectData) => {
-    setActiveSortFilter({
-      ...activeSortFilter,
-      filterCampaigns: selectData[0],
-      filterChannels: selectData[1],
-      filterTags: selectData[2],
-    })
+  const handleOpenFilter = () => {
+    if(openFilter) {
+      setOpenFilter(false)
+    } else {
+      setOpenFilter(true)
+    }
   }
 
   const filtersRef = useRef(null)
@@ -98,27 +100,13 @@ const TopBar = ({
         <img src={Utilities.gridView} onClick={() => setActiveView('grid')} />
         <img src={Utilities.listView} onClick={() => setActiveView('list')} />
         <div className={styles['nested-wrapper']}>
-          <NestedSelect
-            selectList={[
-              {
-                options: campaignsFilter,
-                placeholder: 'Campaigns',
-                value: activeSortFilter.filterCampaigns,
-                hidden: !hasPermission([CALENDAR_ACCESS])
-              },
-              {
-                options: selectOptions.channels,
-                placeholder: 'Channels',
-                value: activeSortFilter.filterChannels
-              },
-              {
-                options: tagsFilter,
-                placeholder: 'Tags',
-                value: activeSortFilter.filterTags
-              }
-            ]}
-            onApplyFilters={applyFilters}
-          />
+          <Button
+            text='Filters'
+            type='button'
+            styleType='secondary'
+            onClick={() => {
+              handleOpenFilter()
+            }} />
         </div>
         <div className={styles['sort-wrapper']}>
           <Select

@@ -4,6 +4,9 @@
   position: relative;
   min-height: 60vh;
 }
+.filter {
+  width: 80%;
+}
 
 .list-wrapper{
   width: 100%;

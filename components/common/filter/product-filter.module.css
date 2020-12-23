@@ -1,0 +1,10 @@
+.container h5 {
+    font-weight: 400;
+    font-size: 13px;
+}
+.field {
+    width: 100%;
+}
+.select-filter {
+    color: teal;
+}

@@ -1,6 +1,7 @@
 import styles from './index.module.css'
 import { useState, useEffect, useContext } from 'react'
 import { AssetContext } from '../../../context'
+import FilterProvider from '../../../context/filter-provider'
 import selectOptions from './select-options'
 import update from 'immutability-helper'
 import assetApi from '../../../server-api/asset'
@@ -13,17 +14,30 @@ import SearchOverlay from '../search-overlay-assets'
 import AssetSubheader from './asset-subheader'
 import AssetGrid from '../../common/asset/asset-grid'
 import TopBar from './top-bar'
+import FilterContainer from '../../common/filter/filter-container'
 import { DropzoneProvider } from '../../common/misc/dropzone'
 import RenameModal from '../../common/modals/rename-modal'
+
+const DEFAULT_FILTERS = {
+  filterCampaigns: [],
+  filterChannels: [],
+  filterTags: [],
+  filterProjects: [],
+  filterFileTypes: [],
+  filterOrientations: [],
+  dimensionWidth: undefined,
+  dimensionHeight: undefined,
+  beginDate: undefined,
+  endDate: undefined
+}
 
 const AssetsLibrary = () => {
 
   const [activeSortFilter, setActiveSortFilter] = useState({
     sort: selectOptions.sort[1],
     mainFilter: 'all',
-    filterCampaigns: [],
-    filterChannels: [],
-    filterTags: []
+    ...DEFAULT_FILTERS,
+    dimensionsActive: false
   })
   const [activeView, setActiveView] = useState('grid')
   const {
@@ -41,6 +55,7 @@ const AssetsLibrary = () => {
     addedIds,
     setAddedIds
   } = useContext(AssetContext)
+
   const [activeMode, setActiveMode] = useState('assets')
 
   const [activeSearchOverlay, setActiveSearchOverlay] = useState(false)
@@ -48,6 +63,8 @@ const AssetsLibrary = () => {
   const [firstLoaded, setFirstLoaded] = useState(false)
 
   const [renameModalOpen, setRenameModalOpen] = useState(false)
+
+  const [openFilter, setOpenFilter] = useState(false)
 
   useEffect(() => {
     setActivePageMode('library')
@@ -77,6 +94,13 @@ const AssetsLibrary = () => {
     }
     setNeedsFetch('')
   }, [needsFetch])
+
+  const clearFilters = () => {
+    setActiveSortFilter({
+      ...activeSortFilter,
+      ...DEFAULT_FILTERS
+    })
+  }
 
   const onFilesDataGet = async (files) => {
     const currentDataClone = [...assets]
@@ -158,7 +182,20 @@ const AssetsLibrary = () => {
 
   const getFilters = (replace) => {
     const filters = {}
-    const { mainFilter, filterCampaigns, filterTags, filterChannels } = activeSortFilter
+    const {
+      mainFilter,
+      filterCampaigns,
+      filterTags,
+      filterChannels,
+      filterProjects,
+      filterFileTypes,
+      filterOrientations,
+      dimensionWidth,
+      dimensionHeight,
+      dimensionsActive,
+      beginDate,
+      endDate
+    } = activeSortFilter
     if (mainFilter !== 'folders') {
       if (mainFilter === 'images') {
         filters.type = 'image'
@@ -172,17 +209,12 @@ const AssetsLibrary = () => {
       else filters.stage = 'draft'
     }
 
-    if (filterCampaigns?.length > 0) {
-      filters.campaigns = filterCampaigns.map(camp => camp.value).join(',')
-    }
-
-    if (filterChannels?.length > 0) {
-      filters.channels = filterChannels.map(channel => channel.value).join(',')
-    }
-
-    if (filterTags?.length > 0) {
-      filters.tags = filterTags.map(tag => tag.value).join(',')
-    }
+    addFilerToQuery(filters, filterCampaigns, 'campaigns')
+    addFilerToQuery(filters, filterProjects, 'projects')
+    addFilerToQuery(filters, filterChannels, 'channels')
+    addFilerToQuery(filters, filterTags, 'tags')
+    addFilerToQuery(filters, filterFileTypes, 'fileTypes')
+    addFilerToQuery(filters, filterOrientations, 'orientations')
 
     if (activeFolder) {
       filters.folderId = activeFolder
@@ -192,8 +224,30 @@ const AssetsLibrary = () => {
       filters.excludeIds = addedIds.join(',')
     }
 
+    if (dimensionsActive && dimensionWidth) {
+      filters.dimensionWidth = `${dimensionWidth.min},${dimensionWidth.max}`
+    }
+
+    if (dimensionsActive && dimensionHeight) {
+      filters.dimensionHeight = `${dimensionHeight.min},${dimensionHeight.max}`
+    }
+
+    if (beginDate) {
+      filters.beginDate = beginDate.toISOString()
+    }
+
+    if (endDate) {
+      filters.endDate = endDate.toISOString()
+    }
+
     filters.page = replace ? 1 : nextPage
     return filters
+  }
+
+  const addFilerToQuery = (filters, filterItems, key) => {
+    if (filterItems?.length > 0) {
+      filters[key] = filterItems.map(item => item.value).join(',')
+    }
   }
 
   const getSort = () => {
@@ -269,7 +323,7 @@ const AssetsLibrary = () => {
   }
 
   return (
-    <>
+    <FilterProvider>
       <AssetSubheader
         activeFolder={activeFolder}
         getFolders={getFolders}
@@ -288,22 +342,36 @@ const AssetsLibrary = () => {
           activeFolder={activeFolder}
           setActiveSearchOverlay={() => setActiveSearchOverlay(true)}
           selectAll={selectAll}
+          setOpenFilter={setOpenFilter}
+          openFilter={openFilter}
         />
-        <DropzoneProvider>
-          <AssetGrid
-            activeFolder={activeFolder}
-            getFolders={getFolders}
-            activeView={activeView}
-            activeSortFilter={activeSortFilter}
-            onFilesDataGet={onFilesDataGet}
-            toggleSelected={toggleSelected}
-            mode={activeMode}
-            folders={folders}
-            viewFolder={viewFolder}
-            deleteFolder={deleteFolder}
-            loadMore={() => getAssets(false)}
-          />
-        </DropzoneProvider>
+        <div className={`${openFilter && styles['col-wrapper']}`}>
+          <DropzoneProvider>
+            <AssetGrid
+              activeFolder={activeFolder}
+              getFolders={getFolders}
+              activeView={activeView}
+              activeSortFilter={activeSortFilter}
+              onFilesDataGet={onFilesDataGet}
+              toggleSelected={toggleSelected}
+              mode={activeMode}
+              folders={folders}
+              viewFolder={viewFolder}
+              deleteFolder={deleteFolder}
+              loadMore={() => getAssets(false)}
+              openFilter={openFilter}
+            />
+          </DropzoneProvider>
+          {openFilter &&
+            <FilterContainer
+              clearFilters={clearFilters}
+              openFilter={openFilter}
+              setOpenFilter={setOpenFilter}
+              activeSortFilter={activeSortFilter}
+              setActiveSortFilter={setActiveSortFilter}
+            />
+          }
+        </div>
       </main>
       <AssetOps />
       <RenameModal
@@ -318,7 +386,7 @@ const AssetsLibrary = () => {
           closeOverlay={closeSearchOverlay}
         />
       }
-    </>
+    </FilterProvider>
   )
 }
 
