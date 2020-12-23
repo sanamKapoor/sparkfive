@@ -1,13 +1,6 @@
 import InputRange from 'react-input-range';
-import { useState } from 'react'
 
-const SliderSelector = ({minNum, maxNum}) => {
-
-    const [valueSlider, setValueSlider] = useState( { min: minNum, max: maxNum, },)
-
-    const handleSlider = ({ value }) => {
-        setValueSlider(value)
-    }
+const SliderSelector = ({ minNum, maxNum, valueSlider, handleSlider }) => {
 
     return (
         <InputRange

@@ -107,5 +107,11 @@ export const FilterContext = createContext({
     fileTypes: [],
     loadFileTypes: () => { },
 
+    assetDimensionLimits: {},
+    loadAssetDimensionLimits: () => { },
+
+    assetOrientations: [],
+    loadAssetOrientations: () => { },
+
     loadAll: () => { }
 })

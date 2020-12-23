@@ -11,11 +11,10 @@ import ProductFilter from './product-filter'
 import DimensionsFilter from './dimensions-filter'
 
 
-const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiveSortFilter }) => {
+const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiveSortFilter, clearFilters }) => {
 
     const [expandedMenus, setExpandedMenus] = useState(['tags', 'channels', 'campaigns'])
     const [stickyMenuScroll, setStickyMenuScroll] = useState(false)
-    const [clearSelector, setClearSelector] = useState([])
 
     const {
         campaigns,
@@ -23,15 +22,22 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
         fileTypes,
         projects,
         tags,
+        assetOrientations,
+        assetDimensionLimits: {
+            maxHeight,
+            minHeight,
+            maxWidth,
+            minWidth
+        },
         loadAll
     } = useContext(FilterContext)
 
     useEffect(() => {
         window.addEventListener("scroll", () => {
-            setStickyMenuScroll(window.scrollY > 233);
-        });
+            setStickyMenuScroll(window.scrollY > 233)
+        })
         loadAll()
-    }, []);
+    }, [])
 
     const handleOpenFilter = () => {
         if (openFilter) {
@@ -40,31 +46,8 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
             setOpenFilter(true)
         }
     }
-    const handleClear = () => {
-        setClearSelector([])
-    }
 
-    const orientations = [
-        {
-            name: 'Square',
-            count: '3'
-        },
-        {
-            name: 'Horizontal',
-            count: '23'
-        },
-        {
-            name: 'Vertical',
-            count: '32'
-        },
-        {
-            name: 'Panoramic',
-            count: '44'
-        },
-    ]
-
-    const setSortFilterValue = (key, value) => {    
-        // Check if exists or not 
+    const setSortFilterValue = (key, value) => {
         setActiveSortFilter({
             ...activeSortFilter,
             [key]: value
@@ -84,14 +67,12 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
         }
     }
 
-    console.log(activeSortFilter)
-
     return (
         <div className={`${styles.container} ${stickyMenuScroll && styles['sticky-menu']}`}>
             <section className={styles['top-bar']}>
                 <h3>Filters</h3>
                 <p className={`${styles['clear-container']}`}
-                    onClick={() => { handleClear() }}>Clear</p>
+                    onClick={clearFilters}>Clear</p>
                 <div className={`${styles['close-container']}`}
                     onClick={() => { handleOpenFilter() }}>&#10005;</div>
             </section>
@@ -106,7 +87,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                     {expandedMenus.includes('tags') &&
                         <FilterSelector
                             numItems={10}
-                            clearSelector={clearSelector}
+
                             placeholder={'Tags'}
                             filters={tags.map(tag => ({ ...tag, label: tag.name, value: tag.id }))}
                             value={activeSortFilter.filterTags}
@@ -124,7 +105,6 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                         <FilterSelector
                             searchBar={false}
                             numItems={8}
-                            clearSelector={clearSelector}
                             placeholder={'Channels'}
                             filters={channels.map(channel => ({ ...channel, label: channel.name, value: channel.name }))}
                             value={activeSortFilter.filterChannels}
@@ -142,7 +122,6 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                         <FilterSelector
                             oneColumn={true}
                             numItems={5}
-                            clearSelector={clearSelector}
                             placeholder={'Campaigns'}
                             filters={campaigns.map(campaign => ({ ...campaign, label: campaign.name, value: campaign.id }))}
                             value={activeSortFilter.filterCampaigns}
@@ -160,7 +139,6 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                         <FilterSelector
                             oneColumn={true}
                             numItems={5}
-                            clearSelector={clearSelector}
                             placeholder={'Projects'}
                             filters={projects.map(project => ({ ...project, label: project.name, value: project.id }))}
                             value={activeSortFilter.filterProjects}
@@ -178,7 +156,6 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                         <FilterSelector
                             searchBar={false}
                             numItems={5}
-                            clearSelector={clearSelector}
                             placeholder={'File Types'}
                             filters={fileTypes.map(fileType => ({ ...fileType, label: fileType.name, value: fileType.name }))}
                             value={activeSortFilter.filterFileTypes}
@@ -201,7 +178,14 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                             <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :
                             <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
                     </div>
-                    {expandedMenus.includes('date') && <DateUploaded />}
+                    {expandedMenus.includes('date') &&
+                        <DateUploaded
+                            handleBeginDate={(date) => setSortFilterValue('beginDate', date)}
+                            handleEndDate={(date) => setSortFilterValue('endDate', date)}
+                            beginDate={activeSortFilter.beginDate}
+                            endDate={activeSortFilter.endDate}
+                        />
+                    }
                 </section>
                 <section>
                     <div className={styles['expand-bar']} onClick={() => handleExpand('orientation')}>
@@ -214,22 +198,31 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                         <FilterSelector
                             searchBar={false}
                             numItems={4}
-                            clearSelector={clearSelector}
                             placeholder={'Orientation'}
-                            filters={orientations.map(orientation => ({ ...orientation, label: orientation.name, value: orientation.name }))}
-                            value={activeSortFilter.filterOrientation}
-                            setValue={(selected) => setSortFilterValue('filterOrientation', selected)}
+                            filters={assetOrientations.map(orientation => ({ ...orientation, label: orientation.name, value: orientation.name }))}
+                            value={activeSortFilter.filterOrientations}
+                            setValue={(selected) => setSortFilterValue('filterOrientations', selected)}
                         />}
                 </section>
                 <section>
-                    <div className={styles['expand-bar']} onClick={() => handleExpand('dimensions')}>
+                    <div className={styles['expand-bar']} onClick={() => {
+                        setSortFilterValue('dimensionsActive', !expandedMenus.includes('dimensions'))
+                        handleExpand('dimensions')
+                    }}>
                         <h4>Dimensions</h4>
                         {expandedMenus.includes('dimensions') ?
                             <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :
                             <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
                     </div>
                     {expandedMenus.includes('dimensions') &&
-                        <DimensionsFilter />}
+                        <DimensionsFilter
+                            heightDimensionLimits={{ min: minHeight, max: maxHeight }}
+                            widthdimensionLimits={{ min: minWidth, max: maxWidth }}
+                            handleHeight={({ value }) => setSortFilterValue('dimensionHeight', value)}
+                            handleWidth={({ value }) => setSortFilterValue('dimensionWidth', value)}
+                            valueHeight={activeSortFilter.dimensionHeight || { min: minHeight, max: maxHeight }}
+                            valueWidth={activeSortFilter.dimensionWidth || { min: minWidth, max: maxWidth }}
+                        />}
                 </section>
             </div>
         </div>

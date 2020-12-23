@@ -6,19 +6,17 @@ import { ItemFields, Utilities } from '../../../assets'
 import DateSelector from '../../common/items/date-selector'
 
 
-const DateUploaded = () => {
+const DateUploaded = ({ handleBeginDate, handleEndDate, beginDate, endDate }) => {
 
-    const [selectedStarDate, setSelectedStartDate] = useState(null)
-    const [selectedEndDate, setSelectedEndDate] = useState(null)
     const [activeInput, setActiveInput] = useState('')
 
     const handleStartDay = (value) => {
         toggleActiveInput('startDate')
-        setSelectedStartDate(value)
+        handleBeginDate(value)
     }
     const handleEndDay = (value) => {
         toggleActiveInput('endDate')
-        setSelectedEndDate(value)
+        handleEndDate(value)
     }
 
     const toggleActiveInput = (input) => {
@@ -40,7 +38,7 @@ const DateUploaded = () => {
             <div className={styles['dates-container']}>
                 <DateSelector
                     dateText={'Select Start Date'}
-                    date={selectedStarDate}
+                    date={beginDate}
                     handleDateChange={(day) => handleStartDay(day)}
                     onOptionClick={() => toggleActivePublishDate("startDate")}
                     pickerIsActive={activeInput === 'startDate'}
@@ -50,12 +48,12 @@ const DateUploaded = () => {
                 />
                 <DateSelector
                     dateText={'Select End Date'}
-                    date={selectedEndDate}
+                    date={endDate}
                     handleDateChange={(day) => handleEndDay(day)}
                     onOptionClick={() => toggleActivePublishDate("endDate")}
                     pickerIsActive={activeInput === 'endDate'}
                     includeMargin={false}
-                    isDisabled={new Date(selectedStarDate)}
+                    isDisabled={null}
                     additionalClasses={`${styles.calendar}`}
                 />
             </div >

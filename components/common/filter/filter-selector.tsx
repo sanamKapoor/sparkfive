@@ -12,15 +12,14 @@ const FilterSelector = ({
     filters,
     oneColumn = false,
     numItems,
-    clearSelector,
     setValue,
     value,
     placeholder
 }) => {
 
     const toggleSelected = (selected) => {
-        let index = value.findIndex((item) => item.value === selected.value)
-        if (index !== -1) {
+        let index = value && value.findIndex((item) => item.value === selected.value)
+        if (!value || index !== -1) {
             setValue(update(value, {
                 $splice: [[index, 1]]
             }))
@@ -35,7 +34,7 @@ const FilterSelector = ({
         <div className={`${styles.container}`}>
             <ul className={`${styles['item-list']} ${oneColumn && styles['one-column']}`}>
                 {filters.slice(0, numItems).map((filter, index) => {
-                    const isSelected = value.findIndex((item) => item.value === filter.value) !== -1
+                    const isSelected = value && value.findIndex((item) => item.value === filter.value) !== -1
                     return (
                         <li key={index} className={styles['select-item']}>
                             <div className={`${styles['selectable-wrapper']} ${isSelected && styles['selected-wrapper']}`}>

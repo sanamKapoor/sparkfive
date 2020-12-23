@@ -12,6 +12,8 @@ export default ({ children }) => {
   const [channels, setChannels] = useState([])
   const [projects, setProjects] = useState([])
   const [fileTypes, setFileTypes] = useState([])
+  const [assetDimensionLimits, setAssetDimensionLimits] = useState({})
+  const [assetOrientations, setAssetOrientations] = useState([])
 
   const loadAll = () => {
     loadTags()
@@ -19,6 +21,8 @@ export default ({ children }) => {
     loadChannels()
     loadProjects()
     loadFileTypes()
+    loadAssetDimensionLimits()
+    loadAssetOrientations()
   }
 
   const loadFromEndpoint = async (fetchPromise, setMethod) => {
@@ -50,6 +54,14 @@ export default ({ children }) => {
     loadFromEndpoint(filterApi.getAssetFileExtensions(), setFileTypes)
   }
 
+  const loadAssetDimensionLimits = () => {
+    loadFromEndpoint(filterApi.getAssetDimensionLimits(), setAssetDimensionLimits)
+  }
+
+  const loadAssetOrientations = () => {
+    loadFromEndpoint(filterApi.getAssetOrientations(), setAssetOrientations)
+  }
+
   const filterValue = {
     loadAll,
     tags,
@@ -61,7 +73,11 @@ export default ({ children }) => {
     projects,
     loadProjects,
     fileTypes,
-    loadFileTypes
+    loadFileTypes,
+    assetDimensionLimits,
+    loadAssetDimensionLimits,
+    assetOrientations,
+    loadAssetOrientations,
   }
   return (
     <FilterContext.Provider value={filterValue}>
