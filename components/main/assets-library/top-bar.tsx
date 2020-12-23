@@ -4,6 +4,7 @@ import { UserContext } from '../../../context'
 import { Utilities } from '../../../assets'
 import selectOptions from './select-options'
 import campaignApi from '../../../server-api/campaign'
+import filterApi from '../../../server-api/filters'
 import tagApi from '../../../server-api/tag'
 import { CALENDAR_ACCESS } from '../../../constants/permissions'
 
@@ -39,7 +40,7 @@ const TopBar = ({
         value: item.id
       })
       if (hasPermission([CALENDAR_ACCESS])) {
-        const campaingsResponse = await campaignApi.getCampaigns()
+        const campaingsResponse = await campaignApi.getCampaigns({ assetsCount: 'yes' })
         setCampaignsFilter(campaingsResponse.data.map(selectValueMapFn))
       }
       const tagsResponse = await tagApi.getTags()
