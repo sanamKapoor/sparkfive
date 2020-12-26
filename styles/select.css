@@ -119,6 +119,9 @@
   background-color: #DEEBFF;
 }
 
+.filter .select-prefix__value-container {
+  margin-left: 1.3rem;
+}
 
 @media screen and (max-width: 1000px) {
   .filter-schedule .select-prefix__menu {
