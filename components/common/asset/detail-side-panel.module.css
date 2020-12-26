@@ -9,6 +9,14 @@
 .field-wrapper {
   margin-top: 1.5rem;
 }
+.first-section {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+.first-section .field-wrapper:first-child {
+  grid-column-start: 1;
+  grid-column-end:   3;
+}
 
 .container .field-wrapper .tags-list{
   margin-top: 0.7rem;
