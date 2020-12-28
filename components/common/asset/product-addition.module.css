@@ -1,0 +1,29 @@
+.sku-container p {
+    font-weight: 600;
+    margin: 0.5rem 0 0.5rem 8px;
+}
+.select-add {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-left: 8px;
+    margin-bottom: 0.5rem;
+}
+.select-add img {
+    margin-right: 5px;
+}
+
+.field-container {
+    margin-top: 1.5rem;
+}
+.field-item-container {
+    margin: 0.5rem 0 0.5rem 8px;
+    display: grid;
+    grid-template-columns: 30% 1fr;
+}
+.field-item-container div {
+    font-weight: 300;
+}
+.field-item-container div:first-child {
+    font-weight: 600;
+}
