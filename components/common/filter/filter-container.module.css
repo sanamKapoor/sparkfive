@@ -2,13 +2,14 @@
     width: 30%;
     min-width: 320px;
     margin-left: 20px;
-    border: 8px var(--color-secondary-border) solid;
+    border: 5px var(--color-secondary-border) solid;
     height: 100%;
     background-color: #fff;
     z-index: 99;
 }
 .section-container {
     max-height: calc(180vh - 70px);
+    height: 100%;
     overflow-y: auto;
     background-color: #fff;
 }
