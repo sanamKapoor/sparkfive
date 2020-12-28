@@ -22,3 +22,13 @@
     margin-top: -1rem !important;
     margin-left: 0 !important;
 }
+.input-range__track.input-range__track--background span.input-range__slider-container:nth-child(2) span.input-range__label.input-range__label--value,
+.input-range__track.input-range__track--background span.input-range__slider-container:nth-child(3) span.input-range__label.input-range__label--value {
+    opacity: 0;
+    transition: all 0.2s ease-in-out;
+}
+
+.input-range__track.input-range__track--background span.input-range__slider-container:nth-child(2):hover span.input-range__label.input-range__label--value,
+.input-range__track.input-range__track--background span.input-range__slider-container:nth-child(3):hover span.input-range__label.input-range__label--value {
+    opacity: 1;
+}

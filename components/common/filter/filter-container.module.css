@@ -2,14 +2,13 @@
     width: 30%;
     min-width: 320px;
     margin-left: 20px;
-    border: 8px var(--color-secondary-border) solid;
+    border: 5px var(--color-secondary-border) solid;
     height: 100%;
     background-color: #fff;
     z-index: 99;
 }
 .section-container {
-    max-height: calc(180vh - 70px);
-    overflow-y: auto;
+    height: 100%;
     background-color: #fff;
 }
 .container section {
@@ -76,19 +75,18 @@
         height: auto;
     }
     .section-container {
-        max-height: calc(94vh - 70px);
+        max-height: calc(96vh - 70px);
+        overflow-y: auto;
     }
     .sticky-menu {
         position: fixed;
         top: 0;
         right: 0;
+        margin-top: 13px;
     }
 }
 @media screen and (max-width: 400px) {
     .container {
         width: 100%;
-    }
-    .section-container {
-        max-height: calc(80vh - 70px);
     }
 }
