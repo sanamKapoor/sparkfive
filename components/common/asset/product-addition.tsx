@@ -8,6 +8,8 @@ import productApi from '../../../server-api/product'
 import assetApi from '../../../server-api/asset'
 import tagApi from '../../../server-api/tag'
 
+import productFields from '../../../resources/data/product-fields.json'
+
 // Components
 import IconClickable from '../buttons/icon-clickable'
 
@@ -25,6 +27,7 @@ const ProductAddition = ({
   const [inputCategories, setInputCategories] = useState([])
   const [inputVendors, setInputVendors] = useState([])
   const [inputRetailers, setInputRetailers] = useState([])
+  const [valueLabel, setValueLabel] = useState('')
 
   useEffect(() => {
     // Get input data
@@ -55,20 +58,51 @@ const ProductAddition = ({
     try {
       const sku = productSku
       const { data: newProduct } = await assetApi.addProduct(assetId, { sku })
-      updateAssetState({
-        productId: { $set: newProduct.id }
-      })
+      changeProductState(newProduct)
       setInputProducts(update(inputProducts, { $push: [newProduct] }))
     } catch (err) {
       console.log(err)
     }
   }
 
-  const changeProduct = (selected) => {
+  const changeProductState = (product) => {
     updateAssetState({
-      productId: { $set: selected.value },
-      product: { $set: selected }
+      productId: { $set: product.id },
+      product: { $set: product }
     })
+  }
+
+  const addProductValue = async (name) => {
+    try {
+      const { data: newTag } = await productApi.addValue(product.id, { name, type: activeDropdown })
+      changeValueState(newTag, true)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const changeValueState = (tag, isNew = false) => {
+    let stateUpdateObj = {
+      product: {}
+    }
+    if (activeDropdown === 'product_vendor') {
+      stateUpdateObj.product = { vendor: { $set: tag } }
+      if (isNew) setInputVendors(update(inputVendors, { $push: [tag] }))
+    }
+    if (activeDropdown === 'product_category') {
+      stateUpdateObj.product = { category: { $set: tag } }
+      if (isNew) setInputCategories(update(inputCategories, { $push: [tag] }))
+    }
+    if (activeDropdown === 'product_retailer') {
+      stateUpdateObj.product = { retailer: { $set: tag } }
+      if (isNew) setInputRetailers(update(inputRetailers, { $push: [tag] }))
+    }
+    updateAssetState(stateUpdateObj)
+  }
+
+  const onFieldChange = (selected) => {
+    setValueLabel(selected.label)
+    setActiveDropdown(selected.value)
   }
 
   const ProductProperty = ({ label, value }) => (
@@ -78,7 +112,12 @@ const ProductAddition = ({
     </div>
   )
 
-  let valueInput
+  let valueInput = undefined
+  if (activeDropdown === 'product_vendor') valueInput = inputVendors
+  if (activeDropdown === 'product_category') valueInput = inputCategories
+  if (activeDropdown === 'product_retailer') valueInput = inputRetailers
+
+
 
   return (
     <FieldWrapper>
@@ -92,7 +131,7 @@ const ProductAddition = ({
                 <ReactCreatableSelect
                   options={inputProducts.map(product => ({ ...product, label: product.sku, value: product.id }))}
                   placeholder={'Enter new SKU or select an existing one'}
-                  onChange={(selected, actionMeta) => onValueChange(selected, actionMeta, addProduct, changeProduct)}
+                  onChange={(selected, actionMeta) => onValueChange(selected, actionMeta, addProduct, changeProductState)}
                   styleType={'regular item'}
                   menuPlacement={'top'}
                   isClearable={true}
@@ -118,9 +157,9 @@ const ProductAddition = ({
               {activeDropdown === 'product_field' ?
                 <div className={`tag-select ${styles['select-wrapper']}`}>
                   <ReactSelect
-                    options={inputProducts.map(product => ({ ...product, label: product.sku, value: product.id }))}
+                    options={productFields}
                     placeholder={'Select Field'}
-                    onChange={(selected, actionMeta) => onValueChange(selected, actionMeta, addProduct, changeProduct)}
+                    onChange={onFieldChange}
                     styleType={'regular item'}
                     menuPlacement={'top'}
                     isClearable={true}
@@ -132,12 +171,13 @@ const ProductAddition = ({
                   <span>Add Field</span>
                 </div>
               }
-              {activeDropdown === 'product_value' &&
+              {valueInput &&
                 <div className={`tag-select ${styles['select-wrapper']}`}>
+                  {valueLabel}
                   <ReactCreatableSelect
-                    options={inputProducts.map(product => ({ ...product, label: product.sku, value: product.id }))}
+                    options={valueInput.map(tag => ({ ...tag, label: tag.name, value: tag.id }))}
                     placeholder={'Enter new value or select an existing one'}
-                    onChange={(selected, actionMeta) => onValueChange(selected, actionMeta, addProduct, changeProduct)}
+                    onChange={(selected, actionMeta) => onValueChange(selected, actionMeta, addProductValue, changeValueState)}
                     styleType={'regular item'}
                     menuPlacement={'top'}
                     isClearable={true}

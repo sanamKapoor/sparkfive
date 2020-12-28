@@ -1,0 +1,14 @@
+[
+  {
+    "label": "Category",
+    "value": "product_category"
+  },
+  {
+    "label": "Vendor",
+    "value": "product_vendor"
+  },
+  {
+    "label": "Retailer",
+    "value": "product_retailer"
+  }
+]
