@@ -27,7 +27,7 @@ import CreatableSelect from '../inputs/creatable-select'
 import ProjectCreationModal from '../modals/project-creation-modal'
 import ProductAddition from './product-addition'
 
-const SidePanel = ({ asset, updateAsset, isShare }) => {
+const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
   const {
     id,
     createdAt,
@@ -116,6 +116,7 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
         asset: updatedata
       }
     }))
+    setAssetDetail(update(asset, updatedata))
     setActiveDropdown('')
   }
 

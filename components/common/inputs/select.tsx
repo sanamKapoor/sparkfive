@@ -1,7 +1,7 @@
 import styles from './select.module.css'
 import ReactSelect from 'react-select'
 
-const Select = ({ options, placeholder, value = null, onChange = (selected) => { }, styleType = '', isClearable = false, menuPlacement = 'auto' }) => (
+const Select = ({ options, placeholder, value = null, onChange = (selected) => { }, styleType = '', isClearable = false, menuPlacement = 'auto', isMulti = false }) => (
   <ReactSelect
     placeholder={placeholder}
     options={options}
@@ -11,6 +11,7 @@ const Select = ({ options, placeholder, value = null, onChange = (selected) => {
     classNamePrefix='select-prefix'
     isClearable={isClearable}
     menuPlacement={menuPlacement}
+    isMulti={isMulti}
   />
 )
 

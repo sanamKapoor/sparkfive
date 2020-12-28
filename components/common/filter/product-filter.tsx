@@ -3,8 +3,6 @@ import { useState, useEffect } from 'react'
 import Select from '../../common/inputs/select'
 import productFields from '../../../resources/data/product-fields.json'
 
-// Components
-
 const ProductFilter = ({ loadFn, productFilters, setSortFilterValue, typeValue, fieldsValue }) => {
 
     useEffect(() => {
@@ -12,9 +10,9 @@ const ProductFilter = ({ loadFn, productFilters, setSortFilterValue, typeValue, 
     }, [])
 
     let valueFilters = []
-    if (typeValue.value === 'product_category') valueFilters = productFilters.categories
-    if (typeValue.value === 'product_vendor') valueFilters = productFilters.vendors
-    if (typeValue.value === 'product_retailer') valueFilters = productFilters.retailers
+    if (typeValue?.value === 'product_category') valueFilters = productFilters.categories
+    if (typeValue?.value === 'product_vendor') valueFilters = productFilters.vendors
+    if (typeValue?.value === 'product_retailer') valueFilters = productFilters.retailers
 
     return (
         <div className={`${styles.container}`}>
@@ -23,7 +21,7 @@ const ProductFilter = ({ loadFn, productFilters, setSortFilterValue, typeValue, 
                 <Select
                     options={productFields.map((field) => ({ ...field, label: `Product ${field.label}` }))}
                     value={typeValue}
-                    styleType='filter select-filter'
+                    styleType='regular'
                     onChange={(selected) => setSortFilterValue('filterProductType', selected)}
                     placeholder='Select Product Field'
                 />
@@ -31,9 +29,10 @@ const ProductFilter = ({ loadFn, productFilters, setSortFilterValue, typeValue, 
             <div className={`${styles.field}`}>
                 <h5>Value</h5>
                 <Select
-                    options={valueFilters}
+                    options={valueFilters.map((value => ({ ...value, label: value.name, value: value.id })))}
                     value={fieldsValue}
-                    styleType='filter select-filter'
+                    isMulti={true}
+                    styleType='regular'
                     onChange={(selected) => setSortFilterValue('filterProductFields', selected)}
                     placeholder='Select Value'
                 />

@@ -26,7 +26,7 @@ const DEFAULT_FILTERS = {
   filterFileTypes: [],
   filterOrientations: [],
   filterProductFields: [],
-  filterProductType: undefined,
+  filterProductType: [],
   dimensionWidth: undefined,
   dimensionHeight: undefined,
   beginDate: undefined,
@@ -249,7 +249,10 @@ const AssetsLibrary = () => {
       if (filterProductType.value === 'product_category') type = 'categoryId'
       if (filterProductType.value === 'product_vendor') type = 'vendorId'
       if (filterProductType.value === 'product_retailer') type = 'retailerId'
-      filters.productFields = [type, ...filterProductFields.map(item => item.value).join(',')]
+
+      // TODO: this may turn into multifilter
+      // filters.productFields = [type, ...filterProductFields.map(item => item.value).join(',')]
+      filters.productFields = [type, ...filterProductFields.map(item => item.value)].join(',')
     }
 
     filters.page = replace ? 1 : nextPage

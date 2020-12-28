@@ -40,11 +40,11 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
       toggleSideMenu()
   }, [])
 
-  useEffect(() => {
-    const modAssetIndex = assets.findIndex(assetItem => assetItem.asset.id === assetDetail?.id)
-    if (modAssetIndex !== -1)
-      setAssetDetail(assets[modAssetIndex].asset)
-  }, [assets])
+  // useEffect(() => {
+  //   const modAssetIndex = assets.findIndex(assetItem => assetItem.asset.id === assetDetail?.id)
+  //   if (modAssetIndex !== -1)
+  //     setAssetDetail(assets[modAssetIndex].asset)
+  // }, [assets])
 
   const checkInitialParams = () => {
     if (initiaParams?.side) {
@@ -155,7 +155,7 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
       {sideOpen &&
         <section className={styles.side}>
           {assetDetail && activeSideComponent === 'detail' &&
-            <SidePanel asset={assetDetail} updateAsset={updateAsset} isShare={isShare} />
+            <SidePanel asset={assetDetail} updateAsset={updateAsset} setAssetDetail={setAssetDetail} isShare={isShare} />
           }
           {!isShare && activeSideComponent === 'comments' &&
             <ConversationList itemId={asset?.id} itemType='assets' />

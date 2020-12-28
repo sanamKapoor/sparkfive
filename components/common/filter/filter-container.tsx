@@ -185,6 +185,8 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                             loadFn={loadProductFields}
                             productFilters={productFields}
                             setSortFilterValue={setSortFilterValue}
+                            fieldsValue={activeSortFilter.filterProductFields}
+                            typeValue={activeSortFilter.filterProductType}
                         />
                     }
                 </section>
