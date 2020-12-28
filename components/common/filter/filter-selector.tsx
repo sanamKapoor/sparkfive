@@ -14,8 +14,13 @@ const FilterSelector = ({
     numItems,
     setValue,
     value,
-    placeholder
+    placeholder,
+    loadFn
 }) => {
+
+    useEffect(() => {
+        loadFn()
+    }, [])
 
     const toggleSelected = (selected) => {
         let index = value && value.findIndex((item) => item.value === selected.value)

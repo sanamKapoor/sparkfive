@@ -1,4 +1,5 @@
 import styles from './dimensions-filter.module.css'
+import { useEffect } from 'react'
 
 // Components
 import SliderSelector from '../../common/inputs/slider-selector'
@@ -9,8 +10,14 @@ const DimensionsFilter = ({
     handleHeight,
     valueHeight,
     handleWidth,
-    valueWidth
+    valueWidth,
+    loadFn
 }) => {
+
+    useEffect(() => {
+        loadFn()
+    }, [])
+
     return (
         <div className={`${styles.container}`}>
             <p className={`${styles.slider} ${styles['slider-height']}`}>

@@ -14,6 +14,11 @@ export default ({ children }) => {
   const [fileTypes, setFileTypes] = useState([])
   const [assetDimensionLimits, setAssetDimensionLimits] = useState({})
   const [assetOrientations, setAssetOrientations] = useState([])
+  const [productFields, setProductFields] = useState({
+    categories: [],
+    vendors: [],
+    retailers: []
+  })
 
   const loadAll = () => {
     loadTags()
@@ -62,6 +67,21 @@ export default ({ children }) => {
     loadFromEndpoint(filterApi.getAssetOrientations(), setAssetOrientations)
   }
 
+  const loadProductFields = async () => {
+    try {
+      const { data: categories } = await tagApi.getTags({ type: 'product_category' })
+      const { data: vendors } = await tagApi.getTags({ type: 'product_vendor' })
+      const { data: retailers } = await tagApi.getTags({ type: 'product_retailer' })
+      setProductFields({
+        categories,
+        vendors,
+        retailers
+      })
+    } catch (err) {
+
+    }
+  }
+
   const filterValue = {
     loadAll,
     tags,
@@ -78,6 +98,8 @@ export default ({ children }) => {
     loadAssetDimensionLimits,
     assetOrientations,
     loadAssetOrientations,
+    productFields,
+    loadProductFields
   }
   return (
     <FilterContext.Provider value={filterValue}>
