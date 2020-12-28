@@ -40,6 +40,12 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
       toggleSideMenu()
   }, [])
 
+  useEffect(() => {
+    const modAssetIndex = assets.findIndex(assetItem => assetItem.asset.id === assetDetail?.id)
+    if (modAssetIndex !== -1)
+      setAssetDetail(assets[modAssetIndex].asset)
+  }, [assets])
+
   const checkInitialParams = () => {
     if (initiaParams?.side) {
       setActiveSidecomponent(initiaParams.side)
@@ -65,7 +71,7 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
       setAssetDetail({
         ...assetDetail,
         ...inputData.updateData
-      })      
+      })
       const { data } = await assetApi.updateAsset(asset.id, inputData)
       setAssetDetail(data)
     } catch (err) {
