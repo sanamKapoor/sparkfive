@@ -66,10 +66,19 @@ const ProductAddition = ({
   }
 
   const changeProductState = (product) => {
-    updateAssetState({
-      productId: { $set: product.id },
-      product: { $set: product }
-    })
+    let stateUpdate
+    if (!product) {
+      stateUpdate = {
+        productId: { $set: undefined },
+        product: { $set: undefined }
+      }
+    } else {
+      stateUpdate = {
+        productId: { $set: product.id },
+        product: { $set: product }
+      }
+    }
+    updateAssetState(stateUpdate)
   }
 
   const addProductValue = async (name) => {
@@ -149,9 +158,10 @@ const ProductAddition = ({
       </div>
       {product &&
         <div className={'normal-text'}>
+          {product.category && <ProductProperty label={'Category'} value={product.category.name} />}
           {product.vendor && <ProductProperty label={'Vendor'} value={product.vendor.name} />}
           {product.retailer && <ProductProperty label={'Retailer'} value={product.retailer.name} />}
-          {product.category && <ProductProperty label={'Category'} value={product.category.name} />}
+
           {!isShare &&
             <>
               {activeDropdown === 'product_field' ?
