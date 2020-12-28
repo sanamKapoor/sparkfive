@@ -34,7 +34,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
 
     useEffect(() => {
         window.addEventListener("scroll", () => {
-            setStickyMenuScroll(window.scrollY > 233)
+            setStickyMenuScroll(window.scrollY > 215)
         })
         loadAll()
     }, [])

@@ -1,10 +1,9 @@
 import styles from './date-uploaded.module.css'
 import { useState, useEffect } from 'react'
 import { ItemFields, Utilities } from '../../../assets'
+import DayPickerInput from 'react-day-picker/DayPickerInput';
 
 // Components
-import DateSelector from '../../common/items/date-selector'
-
 
 const DateUploaded = ({ handleBeginDate, handleEndDate, beginDate, endDate }) => {
 
@@ -24,38 +23,40 @@ const DateUploaded = ({ handleBeginDate, handleEndDate, beginDate, endDate }) =>
         else setActiveInput(input)
     }
 
-    const toggleActivePublishDate = (input) => {
-        if (input === activeInput) {
-            setActiveInput("")
-        } else {
-            setActiveInput(input)
-        }
-    }
-
     return (
         <div className={`${styles.container}`}>
             <img src={ItemFields.date} className={`${styles.icon}`} />
             <div className={styles['dates-container']}>
-                <DateSelector
-                    dateText={'Select Start Date'}
-                    date={beginDate}
-                    handleDateChange={(day) => handleStartDay(day)}
-                    onOptionClick={() => toggleActivePublishDate("startDate")}
-                    pickerIsActive={activeInput === 'startDate'}
-                    includeMargin={false}
-                    isDisabled={null}
-                    additionalClasses={`${styles.calendar}`}
-                />
-                <DateSelector
-                    dateText={'Select End Date'}
-                    date={endDate}
-                    handleDateChange={(day) => handleEndDay(day)}
-                    onOptionClick={() => toggleActivePublishDate("endDate")}
-                    pickerIsActive={activeInput === 'endDate'}
-                    includeMargin={false}
-                    isDisabled={null}
-                    additionalClasses={`${styles.calendar}`}
-                />
+                <div>
+                    <DayPickerInput
+                    classNames={{
+                        container: styles.input
+                    }}
+                        value={beginDate}
+                        onDayChange={(day) => handleStartDay(day)}
+                        placeholder="From (yyyy-mm-dd)"
+                        dayPickerProps={{
+                            className: styles.calendar
+                        }}
+                    />
+                </div>
+            
+                <div>
+                    <DayPickerInput
+                        classNames={{
+                            container: styles.input
+                        }}
+                        value={endDate}
+                        onDayChange={(day) => handleEndDay(day)}
+                        placeholder="To (yyyy-mm-dd)"
+                        dayPickerProps={{
+                            className: styles.calendar,
+                            disabledDays: {
+                                before: beginDate
+                            },
+                        }}
+                    />
+                </div>
             </div >
         </div>
 
