@@ -1,6 +1,7 @@
 import styles from './filter-container.module.css'
 import update from 'immutability-helper'
-import { useState, useEffect } from 'react'
+import { FilterContext } from '../../../context'
+import { useState, useEffect, useContext } from 'react'
 import { Utilities } from '../../../assets'
 
 // Components
@@ -10,17 +11,33 @@ import ProductFilter from './product-filter'
 import DimensionsFilter from './dimensions-filter'
 
 
-const FilterContainer = ({ openFilter, setOpenFilter }) => {
+const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiveSortFilter, clearFilters }) => {
 
     const [expandedMenus, setExpandedMenus] = useState(['tags', 'channels', 'campaigns'])
     const [stickyMenuScroll, setStickyMenuScroll] = useState(false)
-    const [clearSelector, setClearSelector] = useState([])
+
+    const {
+        campaigns,
+        channels,
+        fileTypes,
+        projects,
+        tags,
+        assetOrientations,
+        assetDimensionLimits: {
+            maxHeight,
+            minHeight,
+            maxWidth,
+            minWidth
+        },
+        loadAll
+    } = useContext(FilterContext)
 
     useEffect(() => {
         window.addEventListener("scroll", () => {
-            setStickyMenuScroll(window.scrollY > 233);
-        });
-    }, []);
+            setStickyMenuScroll(window.scrollY > 233)
+        })
+        loadAll()
+    }, [])
 
     const handleOpenFilter = () => {
         if (openFilter) {
@@ -29,154 +46,13 @@ const FilterContainer = ({ openFilter, setOpenFilter }) => {
             setOpenFilter(true)
         }
     }
-    const handleClear = () => {
-        setClearSelector([])
+
+    const setSortFilterValue = (key, value) => {
+        setActiveSortFilter({
+            ...activeSortFilter,
+            [key]: value
+        })
     }
-
-    const tags = [
-
-        {
-            name: 'Women',
-            total: '5'
-        },
-        {
-            name: 'men',
-            total: '5'
-        },
-        {
-            name: 'fall',
-            total: '3'
-        },
-        {
-            name: 'winter',
-            total: '3'
-        },
-        {
-            name: 'summer',
-            total: '2'
-        },
-        {
-            name: 'spring',
-            total: '18'
-        },
-        {
-            name: 'Q3 creative',
-            total: '18'
-        },
-        {
-            name: 'inside',
-            total: '18'
-        },
-        {
-            name: 'mountainsjkjjkkjk',
-            total: '1'
-        },
-        {
-            name: 'outdoor',
-            total: '8'
-        },
-    ]
-    const channels = [
-
-        {
-            name: 'email',
-            total: '55'
-        },
-        {
-            name: 'Facebook',
-            total: '6'
-        },
-        {
-            name: 'Ads',
-            total: '52'
-        },
-        {
-            name: 'Twitter',
-            total: '78'
-        }
-    ]
-    const campaigns = [
-
-        {
-            name: 'black friday 2020 fhdlkkhfgksd fdsjkhfkjsd fdkjhfsdb',
-            total: '55'
-        },
-        {
-            name: 'valentines day 2020',
-            total: '6'
-        },
-        {
-            name: 'holiday 2020',
-            total: '52'
-        },
-        {
-            name: 'Twitter',
-            total: '7'
-        }
-    ]
-    const projects = [
-
-        {
-            name: 'project test 1',
-            total: '3'
-        },
-        {
-            name: 'project test 2',
-            total: '23'
-        },
-        {
-            name: 'project test 3',
-            total: '32'
-        },
-        {
-            name: 'Tproject test 4',
-            total: '44'
-        },
-        {
-            name: 'Tproject test 5',
-            total: '44'
-        },
-        {
-            name: 'Tproject test 6',
-            total: '44'
-        }
-    ]
-    const fileTypes = [
-        {
-            name: 'jpg',
-            total: '3'
-        },
-        {
-            name: 'pdf',
-            total: '23'
-        },
-        {
-            name: 'png',
-            total: '32'
-        },
-        {
-            name: 'doc',
-            total: '44'
-        },
-    ]
-    const orientation = [
-        {
-            name: 'Square',
-            total: '3'
-        },
-        {
-            name: 'Horizontal',
-            total: '23'
-        },
-        {
-            name: 'Vertical',
-            total: '32'
-        },
-        {
-            name: 'Panoramic',
-            total: '44'
-        },
-    ]
 
     const handleExpand = (menu) => {
         let index = expandedMenus.findIndex((item) => item === menu)
@@ -196,7 +72,7 @@ const FilterContainer = ({ openFilter, setOpenFilter }) => {
             <section className={styles['top-bar']}>
                 <h3>Filters</h3>
                 <p className={`${styles['clear-container']}`}
-                    onClick={() => { handleClear() }}>Clear</p>
+                    onClick={clearFilters}>Clear</p>
                 <div className={`${styles['close-container']}`}
                     onClick={() => { handleOpenFilter() }}>&#10005;</div>
             </section>
@@ -209,7 +85,14 @@ const FilterContainer = ({ openFilter, setOpenFilter }) => {
                             <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
                     </div>
                     {expandedMenus.includes('tags') &&
-                        <FilterSelector filters={tags} numItems={10} clearSelector={clearSelector} />}
+                        <FilterSelector
+                            numItems={10}
+
+                            placeholder={'Tags'}
+                            filters={tags.map(tag => ({ ...tag, label: tag.name, value: tag.id }))}
+                            value={activeSortFilter.filterTags}
+                            setValue={(selected) => setSortFilterValue('filterTags', selected)}
+                        />}
                 </section>
                 <section>
                     <div className={styles['expand-bar']} onClick={() => handleExpand('channels')}>
@@ -219,7 +102,14 @@ const FilterContainer = ({ openFilter, setOpenFilter }) => {
                             <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
                     </div>
                     {expandedMenus.includes('channels') &&
-                        <FilterSelector searchBar={false} filters={channels} numItems={8} clearSelector={clearSelector} />}
+                        <FilterSelector
+                            searchBar={false}
+                            numItems={8}
+                            placeholder={'Channels'}
+                            filters={channels.map(channel => ({ ...channel, label: channel.name, value: channel.name }))}
+                            value={activeSortFilter.filterChannels}
+                            setValue={(selected) => setSortFilterValue('filterChannels', selected)}
+                        />}
                 </section>
                 <section>
                     <div className={styles['expand-bar']} onClick={() => handleExpand('campaigns')}>
@@ -229,7 +119,14 @@ const FilterContainer = ({ openFilter, setOpenFilter }) => {
                             <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
                     </div>
                     {expandedMenus.includes('campaigns') &&
-                        <FilterSelector filters={campaigns} oneColumn={true} numItems={5} clearSelector={clearSelector} />}
+                        <FilterSelector
+                            oneColumn={true}
+                            numItems={5}
+                            placeholder={'Campaigns'}
+                            filters={campaigns.map(campaign => ({ ...campaign, label: campaign.name, value: campaign.id }))}
+                            value={activeSortFilter.filterCampaigns}
+                            setValue={(selected) => setSortFilterValue('filterCampaigns', selected)}
+                        />}
                 </section>
                 <section>
                     <div className={styles['expand-bar']} onClick={() => handleExpand('projects')}>
@@ -239,7 +136,14 @@ const FilterContainer = ({ openFilter, setOpenFilter }) => {
                             <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
                     </div>
                     {expandedMenus.includes('projects') &&
-                        <FilterSelector filters={projects} oneColumn={true} numItems={5} clearSelector={clearSelector} />}
+                        <FilterSelector
+                            oneColumn={true}
+                            numItems={5}
+                            placeholder={'Projects'}
+                            filters={projects.map(project => ({ ...project, label: project.name, value: project.id }))}
+                            value={activeSortFilter.filterProjects}
+                            setValue={(selected) => setSortFilterValue('filterProjects', selected)}
+                        />}
                 </section>
                 <section>
                     <div className={styles['expand-bar']} onClick={() => handleExpand('file-types')}>
@@ -249,7 +153,14 @@ const FilterContainer = ({ openFilter, setOpenFilter }) => {
                             <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
                     </div>
                     {expandedMenus.includes('file-types') &&
-                        <FilterSelector filters={fileTypes} searchBar={false} numItems={5} clearSelector={clearSelector} />}
+                        <FilterSelector
+                            searchBar={false}
+                            numItems={5}
+                            placeholder={'File Types'}
+                            filters={fileTypes.map(fileType => ({ ...fileType, label: fileType.name, value: fileType.name }))}
+                            value={activeSortFilter.filterFileTypes}
+                            setValue={(selected) => setSortFilterValue('filterFileTypes', selected)}
+                        />}
                 </section>
                 <section>
                     <div className={styles['expand-bar']} onClick={() => handleExpand('product')}>
@@ -267,7 +178,14 @@ const FilterContainer = ({ openFilter, setOpenFilter }) => {
                             <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :
                             <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
                     </div>
-                    {expandedMenus.includes('date') && <DateUploaded />}
+                    {expandedMenus.includes('date') &&
+                        <DateUploaded
+                            handleBeginDate={(date) => setSortFilterValue('beginDate', date)}
+                            handleEndDate={(date) => setSortFilterValue('endDate', date)}
+                            beginDate={activeSortFilter.beginDate}
+                            endDate={activeSortFilter.endDate}
+                        />
+                    }
                 </section>
                 <section>
                     <div className={styles['expand-bar']} onClick={() => handleExpand('orientation')}>
@@ -276,18 +194,35 @@ const FilterContainer = ({ openFilter, setOpenFilter }) => {
                             <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :
                             <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
                     </div>
-                    {expandedMenus.includes('orientation') && 
-                    <FilterSelector filters={orientation} searchBar={false} numItems={4} clearSelector={clearSelector} />}
+                    {expandedMenus.includes('orientation') &&
+                        <FilterSelector
+                            searchBar={false}
+                            numItems={4}
+                            placeholder={'Orientation'}
+                            filters={assetOrientations.map(orientation => ({ ...orientation, label: orientation.name, value: orientation.name }))}
+                            value={activeSortFilter.filterOrientations}
+                            setValue={(selected) => setSortFilterValue('filterOrientations', selected)}
+                        />}
                 </section>
                 <section>
-                    <div className={styles['expand-bar']} onClick={() => handleExpand('dimensions')}>
+                    <div className={styles['expand-bar']} onClick={() => {
+                        setSortFilterValue('dimensionsActive', !expandedMenus.includes('dimensions'))
+                        handleExpand('dimensions')
+                    }}>
                         <h4>Dimensions</h4>
                         {expandedMenus.includes('dimensions') ?
                             <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :
                             <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
                     </div>
                     {expandedMenus.includes('dimensions') &&
-                        <DimensionsFilter />}
+                        <DimensionsFilter
+                            heightDimensionLimits={{ min: minHeight, max: maxHeight }}
+                            widthdimensionLimits={{ min: minWidth, max: maxWidth }}
+                            handleHeight={({ value }) => setSortFilterValue('dimensionHeight', value)}
+                            handleWidth={({ value }) => setSortFilterValue('dimensionWidth', value)}
+                            valueHeight={activeSortFilter.dimensionHeight || { min: minHeight, max: maxHeight }}
+                            valueWidth={activeSortFilter.dimensionWidth || { min: minWidth, max: maxWidth }}
+                        />}
                 </section>
             </div>
         </div>

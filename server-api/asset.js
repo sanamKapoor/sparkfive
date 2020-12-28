@@ -25,4 +25,7 @@ export default {
   addCampaign: (id, data) => axios.post(`${assetUrl}/${id}/campaigns`, data),
   removeCampaign: (id, campaignId) => axios.delete(`${assetUrl}/${id}/campaigns/${campaignId}`),
   addProject: (id, data) => axios.post(`${assetUrl}/${id}/projects`, data),
+
+  addProduct: (id, data) => axios.post(`${assetUrl}/${id}/products`, data),
+  removeProduct: (id, productId) => axios.delete(`${assetUrl}/${id}/products/${productId}`),
 }

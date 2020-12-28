@@ -5,57 +5,69 @@ import update from 'immutability-helper'
 
 // Components
 import IconClickable from '../buttons/icon-clickable'
-import Search from '../../common/inputs/search'
+import FiltersSelect from '../inputs/filters-select'
 
+const FilterSelector = ({
+    searchBar = true,
+    filters,
+    oneColumn = false,
+    numItems,
+    setValue,
+    value,
+    placeholder
+}) => {
 
-const FilterSelector = ({ searchBar = true, filters, oneColumn = false, numItems, clearSelector }) => {
-
-    const [selectedItem, setSelectedItem] = useState([])
-
-    const toggleSelected = (filter) => {
-        let index = selectedItem.findIndex((item) => item === filter)
-        if (index !== -1) {
-            setSelectedItem(update(selectedItem, {
+    const toggleSelected = (selected) => {
+        let index = value && value.findIndex((item) => item.value === selected.value)
+        if (!value || index !== -1) {
+            setValue(update(value, {
                 $splice: [[index, 1]]
             }))
         } else {
-            setSelectedItem(update(selectedItem, {
-                $push: [filter]
+            setValue(update(value, {
+                $push: [selected]
             }))
         }
     }
 
-    useEffect(() => {
-        setSelectedItem(clearSelector)
-    },[clearSelector])
-
     return (
         <div className={`${styles.container}`}>
             <ul className={`${styles['item-list']} ${oneColumn && styles['one-column']}`}>
-                {filters.slice(0, numItems).map((filter, index) => (
-                    <li key={index} className={styles['select-item']}>
-                        <div className={`${styles['selectable-wrapper']} ${selectedItem.includes(filter.name) && styles['selected-wrapper']}`}>
-                            {selectedItem.includes(filter.name) ?
-                                <IconClickable
-                                    src={Utilities.radioButtonEnabled}
-                                    additionalClass={styles['select-icon']}
-                                    onClick={() => toggleSelected(filter.name)} />
-                                :
-                                <IconClickable
-                                    src={Utilities.radioButtonNormal}
-                                    additionalClass={styles['select-icon']}
-                                    onClick={() => toggleSelected(filter.name)} />
-                            }
-                        </div>
-                        <p className={styles['item-name']}>{filter.name}</p>
-                        <div className={styles['item-total']}>{filter.total}</div>
-                    </li>
-                ))}
+                {filters.slice(0, numItems).map((filter, index) => {
+                    const isSelected = value && value.findIndex((item) => item.value === filter.value) !== -1
+                    return (
+                        <li key={index} className={styles['select-item']}>
+                            <div className={`${styles['selectable-wrapper']} ${isSelected && styles['selected-wrapper']}`}>
+                                {isSelected ?
+                                    <IconClickable
+                                        src={Utilities.radioButtonEnabled}
+                                        additionalClass={styles['select-icon']}
+                                        onClick={() => toggleSelected(filter)} />
+                                    :
+                                    <IconClickable
+                                        src={Utilities.radioButtonNormal}
+                                        additionalClass={styles['select-icon']}
+                                        onClick={() => toggleSelected(filter)} />
+                                }
+                            </div>
+                            <p className={styles['item-name']}>{filter.name}</p>
+                            <div className={styles['item-total']}>{filter.count}</div>
+                        </li>
+                    )
+                })}
             </ul>
             {searchBar &&
-                <Search
-                    placeholder={'Search'}
-                />}
+                <div className={styles['select-filter']}>
+                    <FiltersSelect
+                        options={filters}
+                        placeholder={placeholder}
+                        styleType='filter'
+                        onChange={(selected) => setValue(selected)}
+                        value={value}
+                        isClearable={true}
+                        hasCount={true}
+                    />
+                </div>}
         </div>
 
     )

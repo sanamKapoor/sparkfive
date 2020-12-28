@@ -16,16 +16,25 @@
   align-items: center;
 }
 
-.option span{
+.label {
+  margin-left: 0.5rem;
+  flex: 1;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  flex: 1;
 }
 
 .option img {
   width: 15px;
   height: 15px;
+}
+
+.search {
+  margin: 11px;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  z-index: 1;
 }
 
 @media screen and (max-width: 1000px) {
