@@ -61,6 +61,7 @@ const TopBar = ({
   }
 
   const handleOpenFilter = () => {
+    toggleHamurgerList()
     if(openFilter) {
       setOpenFilter(false)
     } else {

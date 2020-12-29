@@ -25,6 +25,8 @@ const DEFAULT_FILTERS = {
   filterProjects: [],
   filterFileTypes: [],
   filterOrientations: [],
+  filterProductFields: [],
+  filterProductType: [],
   dimensionWidth: undefined,
   dimensionHeight: undefined,
   beginDate: undefined,
@@ -194,7 +196,9 @@ const AssetsLibrary = () => {
       dimensionHeight,
       dimensionsActive,
       beginDate,
-      endDate
+      endDate,
+      filterProductFields,
+      filterProductType
     } = activeSortFilter
     if (mainFilter !== 'folders') {
       if (mainFilter === 'images') {
@@ -209,12 +213,12 @@ const AssetsLibrary = () => {
       else filters.stage = 'draft'
     }
 
-    addFilerToQuery(filters, filterCampaigns, 'campaigns')
-    addFilerToQuery(filters, filterProjects, 'projects')
-    addFilerToQuery(filters, filterChannels, 'channels')
-    addFilerToQuery(filters, filterTags, 'tags')
-    addFilerToQuery(filters, filterFileTypes, 'fileTypes')
-    addFilerToQuery(filters, filterOrientations, 'orientations')
+    addFilterToQuery(filters, filterCampaigns, 'campaigns')
+    addFilterToQuery(filters, filterProjects, 'projects')
+    addFilterToQuery(filters, filterChannels, 'channels')
+    addFilterToQuery(filters, filterTags, 'tags')
+    addFilterToQuery(filters, filterFileTypes, 'fileTypes')
+    addFilterToQuery(filters, filterOrientations, 'orientations')
 
     if (activeFolder) {
       filters.folderId = activeFolder
@@ -240,11 +244,22 @@ const AssetsLibrary = () => {
       filters.endDate = endDate.toISOString()
     }
 
+    if (filterProductType && filterProductFields?.length > 0) {
+      let type
+      if (filterProductType.value === 'product_category') type = 'categoryId'
+      if (filterProductType.value === 'product_vendor') type = 'vendorId'
+      if (filterProductType.value === 'product_retailer') type = 'retailerId'
+
+      // TODO: this may turn into multifilter
+      // filters.productFields = [type, ...filterProductFields.map(item => item.value).join(',')]
+      filters.productFields = [type, ...filterProductFields.map(item => item.value)].join(',')
+    }
+
     filters.page = replace ? 1 : nextPage
     return filters
   }
 
-  const addFilerToQuery = (filters, filterItems, key) => {
+  const addFilterToQuery = (filters, filterItems, key) => {
     if (filterItems?.length > 0) {
       filters[key] = filterItems.map(item => item.value).join(',')
     }

@@ -29,14 +29,21 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
             maxWidth,
             minWidth
         },
-        loadAll
+        productFields,
+        loadAssetDimensionLimits,
+        loadAssetOrientations,
+        loadCampaigns,
+        loadChannels,
+        loadFileTypes,
+        loadProjects,
+        loadTags,
+        loadProductFields
     } = useContext(FilterContext)
 
     useEffect(() => {
         window.addEventListener("scroll", () => {
-            setStickyMenuScroll(window.scrollY > 233)
+            setStickyMenuScroll(window.scrollY > 215)
         })
-        loadAll()
     }, [])
 
     const handleOpenFilter = () => {
@@ -87,11 +94,12 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                     {expandedMenus.includes('tags') &&
                         <FilterSelector
                             numItems={10}
-
+                            loadFn={loadTags}
                             placeholder={'Tags'}
                             filters={tags.map(tag => ({ ...tag, label: tag.name, value: tag.id }))}
                             value={activeSortFilter.filterTags}
                             setValue={(selected) => setSortFilterValue('filterTags', selected)}
+                            addtionalClass={'tags-container'}
                         />}
                 </section>
                 <section>
@@ -105,6 +113,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                         <FilterSelector
                             searchBar={false}
                             numItems={8}
+                            loadFn={loadChannels}
                             placeholder={'Channels'}
                             filters={channels.map(channel => ({ ...channel, label: channel.name, value: channel.name }))}
                             value={activeSortFilter.filterChannels}
@@ -121,6 +130,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                     {expandedMenus.includes('campaigns') &&
                         <FilterSelector
                             oneColumn={true}
+                            loadFn={loadCampaigns}
                             numItems={5}
                             placeholder={'Campaigns'}
                             filters={campaigns.map(campaign => ({ ...campaign, label: campaign.name, value: campaign.id }))}
@@ -138,6 +148,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                     {expandedMenus.includes('projects') &&
                         <FilterSelector
                             oneColumn={true}
+                            loadFn={loadProjects}
                             numItems={5}
                             placeholder={'Projects'}
                             filters={projects.map(project => ({ ...project, label: project.name, value: project.id }))}
@@ -154,6 +165,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                     </div>
                     {expandedMenus.includes('file-types') &&
                         <FilterSelector
+                            loadFn={loadFileTypes}
                             searchBar={false}
                             numItems={5}
                             placeholder={'File Types'}
@@ -169,7 +181,15 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                             <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :
                             <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
                     </div>
-                    {expandedMenus.includes('product') && <ProductFilter />}
+                    {expandedMenus.includes('product') &&
+                        <ProductFilter
+                            loadFn={loadProductFields}
+                            productFilters={productFields}
+                            setSortFilterValue={setSortFilterValue}
+                            fieldsValue={activeSortFilter.filterProductFields}
+                            typeValue={activeSortFilter.filterProductType}
+                        />
+                    }
                 </section>
                 <section>
                     <div className={styles['expand-bar']} onClick={() => handleExpand('date')}>
@@ -197,6 +217,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                     {expandedMenus.includes('orientation') &&
                         <FilterSelector
                             searchBar={false}
+                            loadFn={loadAssetOrientations}
                             numItems={4}
                             placeholder={'Orientation'}
                             filters={assetOrientations.map(orientation => ({ ...orientation, label: orientation.name, value: orientation.name }))}
@@ -216,6 +237,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                     </div>
                     {expandedMenus.includes('dimensions') &&
                         <DimensionsFilter
+                            loadFn={loadAssetDimensionLimits}
                             heightDimensionLimits={{ min: minHeight, max: maxHeight }}
                             widthdimensionLimits={{ min: minWidth, max: maxWidth }}
                             handleHeight={({ value }) => setSortFilterValue('dimensionHeight', value)}

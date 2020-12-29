@@ -1,6 +1,6 @@
 import styles from './detail-side-panel.module.css'
 import update from 'immutability-helper'
-import CreatableSelect from 'react-select/creatable';
+import ReactCreatableSelect from 'react-select/creatable'
 
 import { AssetContext, UserContext } from '../../../context'
 import { useEffect, useState, useContext } from 'react'
@@ -23,9 +23,11 @@ import {
 import Tag from '../misc/tag'
 import IconClickable from '../buttons/icon-clickable'
 import ChannelSelector from '../items/channel-selector'
+import CreatableSelect from '../inputs/creatable-select'
 import ProjectCreationModal from '../modals/project-creation-modal'
+import ProductAddition from './product-addition'
 
-const SidePanel = ({ asset, updateAsset, isShare }) => {
+const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
   const {
     id,
     createdAt,
@@ -36,7 +38,8 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
     tags,
     campaigns,
     projects,
-    channel
+    channel,
+    product
   } = asset
 
   const { assets, setAssets } = useContext(AssetContext)
@@ -89,90 +92,6 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
     }
   }
 
-  const addTag = async (tag, isNew = false) => {
-    if (tags.findIndex(assetTag => tag.label === assetTag.name) === -1) {
-      const newTag = { name: tag.label }
-      if (!isNew) newTag.id = tag.value
-      try {
-        const { data } = await assetApi.addTag(id, newTag)
-        let stateTagsUpdate
-        if (!isNew) {
-          stateTagsUpdate = update(assetTags, { $push: [newTag] })
-          setTags(stateTagsUpdate)
-        } else {
-          stateTagsUpdate = update(assetTags, { $push: [data] })
-          setTags(stateTagsUpdate)
-          setInputTags(update(inputTags, { $push: [data] }))
-        }
-        updateAssetState({
-          tags: { $set: stateTagsUpdate }
-        })
-        setActiveDropdown('')
-        return data
-      } catch (err) {
-        // TODO: Error if failure for whatever reason
-        setActiveDropdown('')
-      }
-    } else {
-      setActiveDropdown('')
-    }
-  }
-
-  const removeTag = async (index) => {
-    try {
-      let stateTagsUpdate = update(assetTags, { $splice: [[index, 1]] })
-      setTags(stateTagsUpdate)
-      await assetApi.removeTag(id, assetTags[index].id)
-      updateAssetState({
-        tags: { $set: stateTagsUpdate }
-      })
-    } catch (err) {
-      // TODO: Error if failure for whatever reason
-    }
-  }
-
-  const addCampaign = async (campaign, isNew = false) => {
-    if (campaigns.findIndex(assetCampaign => campaign.label === assetCampaign.name) === -1) {
-      const newCampaign = { name: campaign.label }
-      if (!isNew) newCampaign.id = campaign.value
-      try {
-        const { data } = await assetApi.addCampaign(id, newCampaign)
-        let stateCampaignsUpdate
-        if (!isNew) {
-          stateCampaignsUpdate = update(assetCampaigns, { $push: [newCampaign] })
-          setCampaigns(stateCampaignsUpdate)
-        } else {
-          stateCampaignsUpdate = update(assetCampaigns, { $push: [data] })
-          setCampaigns(stateCampaignsUpdate)
-          setInputCampaigns(update(inputCampaigns, { $push: [data] }))
-        }
-        updateAssetState({
-          campaigns: { $set: stateCampaignsUpdate }
-        })
-        setActiveDropdown('')
-        return data
-      } catch (err) {
-        // TODO: Error if failure for whatever reason
-        setActiveDropdown('')
-      }
-    } else {
-      setActiveDropdown('')
-    }
-  }
-
-  const removeCampaign = async (index) => {
-    try {
-      let stateCampaignsUpdate = update(assetCampaigns, { $splice: [[index, 1]] })
-      setCampaigns(stateCampaignsUpdate)
-      await assetApi.removeCampaign(id, assetCampaigns[index].id)
-      updateAssetState({
-        campaigns: { $set: stateCampaignsUpdate }
-      })
-    } catch (err) {
-      // TODO: Error if failure for whatever reason
-    }
-  }
-
   const addNewProject = async (newProjectData) => {
     try {
       let type = newProjectData.channel
@@ -184,7 +103,7 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
       const { data: newProject } = await assetApi.addProject(id, { ...newProjectData, type, channel })
       const stateProjectsUpdate = update(assetProjects, { $push: [newProject] })
       setProjects(stateProjectsUpdate)
-      setInputCampaigns(update(inputProjects, { $push: [newProject] }))
+      setInputProjects(update(inputProjects, { $push: [newProject] }))
     } catch (err) {
       // TODO: Error if failure for whatever reason
     }
@@ -197,21 +116,8 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
         asset: updatedata
       }
     }))
+    setAssetDetail(update(asset, updatedata))
     setActiveDropdown('')
-  }
-
-  const handleTagChange = async (selected, actionMeta) => {
-    const newTag = await addTag(selected, actionMeta.action === 'create-option')
-    if (actionMeta.action === 'create-option') {
-      setInputTags(update(inputTags, { $push: [newTag] }))
-    }
-  }
-
-  const handleCampaignChange = async (selected, actionMeta) => {
-    const newCampaign = await addCampaign(selected, actionMeta.action === 'create-option')
-    if (actionMeta.action === 'create-option') {
-      setInputTags(update(inputCampaigns, { $push: [newCampaign] }))
-    }
   }
 
   const handleProjectChange = async (selected, actionMeta) => {
@@ -273,17 +179,17 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
     }
   ]
 
-  console.log(assetProjects)
-
   return (
     <div className={styles.container}>
       <h2>Details</h2>
-      {fieldValues.map(fieldvalue => (
-        <div className={styles['field-wrapper']} key={fieldvalue.field}>
-          <div className={`secondary-text ${styles.field}`}>{fieldvalue.field}</div>
-          <div className={'normal-text'}>{fieldvalue.value}</div>
-        </div>
-      ))}
+      <div className={styles['first-section']}>
+        {fieldValues.map(fieldvalue => (
+          <div className={styles['field-wrapper']} key={fieldvalue.field}>
+            <div className={`secondary-text ${styles.field}`}>{fieldvalue.field}</div>
+            <div className={'normal-text'}>{fieldvalue.value}</div>
+          </div>
+        ))}
+      </div>
 
       <div className={styles['field-wrapper']} >
         <div className={`secondary-text ${styles.field}`}>Channel</div>
@@ -295,81 +201,56 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
       </div>
 
       <div className={styles['field-wrapper']} >
-        <div className={`secondary-text ${styles.field}`}>Campaigns</div>
-        <div className={'normal-text'}>
-          <ul className={`tags-list ${styles['tags-list']}`}>
-            {assetCampaigns?.map((campaign, index) => (
-              <li key={campaign.id}>
-                <Tag
-                  altColor='yellow'
-                  tag={campaign.name}
-                  canRemove={!isShare}
-                  removeFunction={() => removeCampaign(index)}
-                />
-              </li>
-            ))}
-          </ul>
-          {!isShare &&
-            <>
-              {activeDropdown === 'campaigns' ?
-                <div className={`tag-select ${styles['select-wrapper']}`}>
-                  <CreatableSelect
-                    placeholder={'Enter a new campaign or select an existing one'}
-                    options={inputCampaigns.map(campaign => ({ label: campaign.name, value: campaign.id }))}
-                    onChange={handleCampaignChange}
-                    styleType={'regular item'}
-                    menuPlacement={'top'}
-                    isClearable={true}
-                  />
-                </div>
-                :
-                <div className={`add ${styles['select-add']}`} onClick={() => setActiveDropdown('campaigns')}>
-                  <IconClickable src={Utilities.add} />
-                  <span>Add to Campaign</span>
-                </div>
-              }
-            </>
-          }
-        </div>
+        <CreatableSelect
+          title='Campaigns'
+          addText='Add to Campaign'
+          onAddClick={() => setActiveDropdown('campaigns')}
+          selectPlaceholder={'Enter a new campaign or select an existing one'}
+          avilableItems={inputCampaigns}
+          setAvailableItems={setInputCampaigns}
+          selectedItems={assetCampaigns}
+          setSelectedItems={setCampaigns}
+          onAddOperationFinished={(stateUpdate) => updateAssetState({
+            campaigns: { $set: stateUpdate }
+          })}
+          onRemoveOperationFinished={async (index, stateUpdate) => {
+            await assetApi.removeCampaign(id, assetCampaigns[index].id)
+            updateAssetState({
+              campaigns: { $set: stateUpdate }
+            })
+          }}
+          onOperationFailedSkipped={() => setActiveDropdown('')}
+          isShare={isShare}
+          asyncCreateFn={(newItem) => assetApi.addCampaign(id, newItem)}
+          dropdownIsActive={activeDropdown === 'campaigns'}
+          altColor='yellow'
+        />
       </div>
 
       <div className={styles['field-wrapper']} >
-        <div className={`secondary-text ${styles.field}`}>Tags</div>
-        <div className={'normal-text'}>
-          <ul className={`tags-list ${styles['tags-list']}`}>
-            {assetTags?.map((tag, index) => (
-              <li key={tag.id}>
-                <Tag
-                  tag={tag.name}
-                  canRemove={!isShare}
-                  removeFunction={() => removeTag(index)}
-                />
-              </li>
-            ))}
-          </ul>
-          {!isShare &&
-            <>
-              {activeDropdown === 'tags' ?
-                <div className={`tag-select ${styles['select-wrapper']}`}>
-                  <CreatableSelect
-                    placeholder={'Enter a new tag or select an existing one'}
-                    options={inputTags.map(tag => ({ label: tag.name, value: tag.id }))}
-                    className={`regular item`}
-                    onChange={handleTagChange}
-                    menuPlacement={'top'}
-                    styleType={'regular item'}
-                    isClearable={true}
-                  />
-                </div>
-                :
-                <div className={`add ${styles['select-add']}`} onClick={() => setActiveDropdown('tags')}>
-                  <IconClickable src={Utilities.add} />
-                  <span>Add Tag</span>
-                </div>
-              }
-            </>
-          }
-        </div>
+        <CreatableSelect
+          title='Tags'
+          addText='Add Tags'
+          onAddClick={() => setActiveDropdown('tags')}
+          selectPlaceholder={'Enter a new tag or select an existing one'}
+          avilableItems={inputTags}
+          setAvailableItems={setInputTags}
+          selectedItems={assetTags}
+          setSelectedItems={setTags}
+          onAddOperationFinished={(stateUpdate) => updateAssetState({
+            tags: { $set: stateUpdate }
+          })}
+          onRemoveOperationFinished={async (index, stateUpdate) => {
+            await assetApi.removeTag(id, assetTags[index].id)
+            updateAssetState({
+              tags: { $set: stateUpdate }
+            })
+          }}
+          onOperationFailedSkipped={() => setActiveDropdown('')}
+          isShare={isShare}
+          asyncCreateFn={(newItem) => assetApi.addTag(id, newItem)}
+          dropdownIsActive={activeDropdown === 'tags'}
+        />
       </div>
 
       <div className={styles['field-wrapper']} >
@@ -391,7 +272,7 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
             <>
               {activeDropdown === 'projects' ?
                 <div className={`tag-select ${styles['select-wrapper']}`}>
-                  <CreatableSelect
+                  <ReactCreatableSelect
                     options={inputProjects.map(project => ({ ...project, label: project.name, value: project.id }))}
                     placeholder={'Enter new project or select an existing one'}
                     onChange={handleProjectChange}
@@ -410,6 +291,18 @@ const SidePanel = ({ asset, updateAsset, isShare }) => {
           }
         </div>
       </div>
+      <ProductAddition
+        FieldWrapper={({ children }) => (
+          <div className={styles['field-wrapper']} >{children}</div>
+        )}
+        isShare={isShare}
+        activeDropdown={activeDropdown}
+        setActiveDropdown={setActiveDropdown}
+        assetId={id}
+        updateAssetState={updateAssetState}
+        product={product}
+      />
+
       <ProjectCreationModal
         initialValue={newProjectName}
         closeModal={() => setNewProjectName('')}

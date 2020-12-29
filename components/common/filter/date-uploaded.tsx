@@ -1,10 +1,12 @@
 import styles from './date-uploaded.module.css'
-import { useState, useEffect } from 'react'
-import { ItemFields, Utilities } from '../../../assets'
+import { useState } from 'react'
+import { ItemFields } from '../../../assets'
+import DayPickerInput from 'react-day-picker/DayPickerInput';
+import { DateUtils } from 'react-day-picker';
+import dateFnsFormat from 'date-fns/format';
+import dateFnsParse from 'date-fns/parse';
 
 // Components
-import DateSelector from '../../common/items/date-selector'
-
 
 const DateUploaded = ({ handleBeginDate, handleEndDate, beginDate, endDate }) => {
 
@@ -23,39 +25,60 @@ const DateUploaded = ({ handleBeginDate, handleEndDate, beginDate, endDate }) =>
         if (input === activeInput) setActiveInput('')
         else setActiveInput(input)
     }
+    // https://react-day-picker.js.org/docs/input/
+    // const formatDate = (date, format, locale) => {
+    //     return dateFnsFormat(date, format, { locale });
+    // }
+    // const parseDate = (str, format, locale) => {
+    //     const parsed = dateFnsParse(str, format, new Date(), { locale });
+    //     if (DateUtils.isDate(parsed)) {
+    //       return parsed;
+    //     }
+    //     return undefined;
+    //   }
 
-    const toggleActivePublishDate = (input) => {
-        if (input === activeInput) {
-            setActiveInput("")
-        } else {
-            setActiveInput(input)
-        }
-    }
+    // const FORMAT = 'MM/dd/yyyy';
 
     return (
         <div className={`${styles.container}`}>
             <img src={ItemFields.date} className={`${styles.icon}`} />
             <div className={styles['dates-container']}>
-                <DateSelector
-                    dateText={'Select Start Date'}
-                    date={beginDate}
-                    handleDateChange={(day) => handleStartDay(day)}
-                    onOptionClick={() => toggleActivePublishDate("startDate")}
-                    pickerIsActive={activeInput === 'startDate'}
-                    includeMargin={false}
-                    isDisabled={null}
-                    additionalClasses={`${styles.calendar}`}
-                />
-                <DateSelector
-                    dateText={'Select End Date'}
-                    date={endDate}
-                    handleDateChange={(day) => handleEndDay(day)}
-                    onOptionClick={() => toggleActivePublishDate("endDate")}
-                    pickerIsActive={activeInput === 'endDate'}
-                    includeMargin={false}
-                    isDisabled={null}
-                    additionalClasses={`${styles.calendar}`}
-                />
+                <div>
+                    <DayPickerInput
+                        // formatDate={formatDate}
+                        // format={FORMAT}
+                        // parseDate={parseDate}
+                        classNames={{
+                            container: styles.input
+                        }}
+                        value={beginDate}
+                        onDayChange={(day) => handleStartDay(day)}
+                        placeholder='From (yyyy-mm-dd)'
+                        dayPickerProps={{
+                            className: styles.calendar
+                        }}
+                    />
+                </div>
+
+                <div>
+                    <DayPickerInput
+                        // formatDate={formatDate}
+                        // format={FORMAT}
+                        // parseDate={parseDate}
+                        classNames={{
+                            container: styles.input
+                        }}
+                        value={endDate}
+                        onDayChange={(day) => handleEndDay(day)}
+                        placeholder='To (yyyy-mm-dd)'
+                        dayPickerProps={{
+                            className: styles.calendar,
+                            disabledDays: {
+                                before: beginDate
+                            },
+                        }}
+                    />
+                </div>
             </div >
         </div>
 

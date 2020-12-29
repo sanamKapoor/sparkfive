@@ -113,5 +113,12 @@ export const FilterContext = createContext({
     assetOrientations: [],
     loadAssetOrientations: () => { },
 
+    productFields: {
+        categories: [],
+        vendors: [],
+        retailers: []
+    },
+    loadProductFields: () => { },
+
     loadAll: () => { }
 })

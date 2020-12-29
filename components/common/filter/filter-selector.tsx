@@ -14,8 +14,14 @@ const FilterSelector = ({
     numItems,
     setValue,
     value,
-    placeholder
+    placeholder,
+    loadFn,
+    addtionalClass
 }) => {
+
+    useEffect(() => {
+        loadFn()
+    }, [])
 
     const toggleSelected = (selected) => {
         let index = value && value.findIndex((item) => item.value === selected.value)
@@ -36,7 +42,7 @@ const FilterSelector = ({
                 {filters.slice(0, numItems).map((filter, index) => {
                     const isSelected = value && value.findIndex((item) => item.value === filter.value) !== -1
                     return (
-                        <li key={index} className={styles['select-item']}>
+                        <li key={index} className={`${styles['select-item']} ${styles[addtionalClass]}`}>
                             <div className={`${styles['selectable-wrapper']} ${isSelected && styles['selected-wrapper']}`}>
                                 {isSelected ?
                                     <IconClickable
