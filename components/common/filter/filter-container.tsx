@@ -99,6 +99,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                             filters={tags.map(tag => ({ ...tag, label: tag.name, value: tag.id }))}
                             value={activeSortFilter.filterTags}
                             setValue={(selected) => setSortFilterValue('filterTags', selected)}
+                            addtionalClass={'tags-container'}
                         />}
                 </section>
                 <section>

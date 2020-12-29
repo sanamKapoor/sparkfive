@@ -28,7 +28,7 @@
 .calendar {
     position: absolute;
     margin-top: 10px;
-    left: -55px;
+    left: -73px;
     background-color: white;
     z-index: 99;
     border: 2px solid var(--color-secondary-border);

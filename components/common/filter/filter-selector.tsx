@@ -15,7 +15,8 @@ const FilterSelector = ({
     setValue,
     value,
     placeholder,
-    loadFn
+    loadFn,
+    addtionalClass
 }) => {
 
     useEffect(() => {
@@ -41,7 +42,7 @@ const FilterSelector = ({
                 {filters.slice(0, numItems).map((filter, index) => {
                     const isSelected = value && value.findIndex((item) => item.value === filter.value) !== -1
                     return (
-                        <li key={index} className={styles['select-item']}>
+                        <li key={index} className={`${styles['select-item']} ${styles[addtionalClass]}`}>
                             <div className={`${styles['selectable-wrapper']} ${isSelected && styles['selected-wrapper']}`}>
                                 {isSelected ?
                                     <IconClickable
