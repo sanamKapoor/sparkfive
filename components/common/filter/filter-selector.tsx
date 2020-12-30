@@ -16,7 +16,7 @@ const FilterSelector = ({
     value,
     placeholder,
     loadFn,
-    addtionalClass
+    addtionalClass = ''
 }) => {
 
     useEffect(() => {
@@ -63,10 +63,10 @@ const FilterSelector = ({
                 })}
             </ul>
             {searchBar &&
-                <div className={styles['select-filter']}>
+                <div className={`${styles['select-filter']} search-filters`}>
                     <FiltersSelect
                         options={filters}
-                        placeholder={placeholder}
+                        placeholder='Search'
                         styleType='filter'
                         onChange={(selected) => setValue(selected)}
                         value={value}

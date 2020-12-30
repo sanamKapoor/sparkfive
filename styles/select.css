@@ -84,7 +84,15 @@
 .regular .select-prefix__placeholder {
   color: var(--color-prim-navy);
 }
+.search-filters .filter .select-prefix__placeholder,
+.product-select .select-prefix__placeholder {
+  color: var(--color-sec-text);
+  font-weight: 500;
+}
 
+.search-filters .filter .select-prefix__indicators {
+  display: none;
+}
 .filter .select-prefix__indicators,
 .regular .select-prefix__indicators {
   background-color: white;

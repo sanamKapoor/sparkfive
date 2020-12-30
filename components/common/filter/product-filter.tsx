@@ -16,7 +16,7 @@ const ProductFilter = ({ loadFn, productFilters, setSortFilterValue, typeValue, 
 
     return (
         <div className={`${styles.container}`}>
-            <div className={`${styles.field}`}>
+            <div className={`${styles.field} product-select`}>
                 <h5>Field</h5>
                 <Select
                     options={productFields.map((field) => ({ ...field, label: `Product ${field.label}` }))}
@@ -26,7 +26,7 @@ const ProductFilter = ({ loadFn, productFilters, setSortFilterValue, typeValue, 
                     placeholder='Select Product Field'
                 />
             </div>
-            <div className={`${styles.field}`}>
+            <div className={`${styles.field} product-select`}>
                 <h5>Value</h5>
                 <Select
                     options={valueFilters.map((value => ({ ...value, label: value.name, value: value.id })))}
