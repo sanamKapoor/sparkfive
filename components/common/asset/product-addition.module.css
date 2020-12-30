@@ -1,6 +1,24 @@
-.sku-container p {
+.sku-container .label {
     font-weight: 600;
     margin: 0.5rem 0 0.5rem 8px;
+}
+
+.multi-list .multi-item:first-child{
+    margin-left: 0;
+}
+
+.multi-item div span{
+    font-weight: normal;
+}
+
+.remove {
+    cursor: pointer;
+    font-weight: 600;
+    margin-left: 0.5rem;
+    color: var(--color-sec-text);
+}
+.remove:hover {
+    color: var(--color-prim-turquoise);
 }
 .select-add {
     display: flex;
