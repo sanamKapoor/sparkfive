@@ -250,9 +250,7 @@ const AssetsLibrary = () => {
       if (filterProductType.value === 'product_vendor') type = 'vendorId'
       if (filterProductType.value === 'product_retailer') type = 'retailerId'
 
-      // TODO: this may turn into multifilter
-      // filters.productFields = [type, ...filterProductFields.map(item => item.value).join(',')]
-      filters.productFields = [type, ...filterProductFields.map(item => item.value)].join(',')
+      filters.productFields = filterProductFields.map(item => item.value).join(',')
     }
 
     filters.page = replace ? 1 : nextPage

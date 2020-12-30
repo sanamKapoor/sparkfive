@@ -7,5 +7,5 @@ export default {
   getProducts: (queryParams) => axios.get(`${productUrl}?${querystring.stringify(queryParams)}`),
   patchProduct: (id, patchData) => axios.patch(`${productUrl}/${id}`, patchData),
   addTag: (id, tagData) => axios.post(`${productUrl}/${id}/tags`, tagData),
-  deleteTag: (id, tagId) => axios.post(`${productUrl}/${id}/tags/${tagId}`)
+  deleteTag: (id, tagId) => axios.delete(`${productUrl}/${id}/tags/${tagId}`)
 }

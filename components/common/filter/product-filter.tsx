@@ -3,11 +3,18 @@ import { useState, useEffect } from 'react'
 import Select from '../../common/inputs/select'
 import productFields from '../../../resources/data/product-fields.json'
 
-const ProductFilter = ({ loadFn, productFilters, setSortFilterValue, typeValue, fieldsValue }) => {
+const ProductFilter = ({ loadFn, productFilters, setSortFilterValue, fieldsValue }) => {
+
+    const [typeValue, setType] = useState(null)
 
     useEffect(() => {
         loadFn()
     }, [])
+
+    useEffect(() => {
+        if (typeValue)
+            setSortFilterValue('filterProductFields', null)
+    }, [typeValue])
 
     let valueFilters = []
     if (typeValue?.value === 'product_category') valueFilters = productFilters.categories
@@ -22,7 +29,7 @@ const ProductFilter = ({ loadFn, productFilters, setSortFilterValue, typeValue, 
                     options={productFields.map((field) => ({ ...field, label: `Product ${field.label}` }))}
                     value={typeValue}
                     styleType='regular'
-                    onChange={(selected) => setSortFilterValue('filterProductType', selected)}
+                    onChange={(selected) => setType(selected)}
                     placeholder='Select Product Field'
                 />
             </div>
