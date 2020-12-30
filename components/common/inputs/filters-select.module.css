@@ -42,3 +42,7 @@
     min-width: 0;
   }
 }
+
+.select-prefix {
+  margin-left: 1.3rem;
+}

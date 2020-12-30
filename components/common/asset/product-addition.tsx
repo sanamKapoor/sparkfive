@@ -117,7 +117,10 @@ const ProductAddition = ({
   const ProductProperty = ({ label, value }) => (
     <div className={styles['field-item-container']}>
       <div>{label}</div>
-      <div>{value}</div>
+      <div>
+        <span>{value}</span>
+        <span className={styles.remove}>x</span>
+      </div>
     </div>
   )
 
@@ -132,7 +135,10 @@ const ProductAddition = ({
     <FieldWrapper>
       <div className={`secondary-text ${styles.field}`}>Product</div>
       <div className={`normal-text ${styles['sku-container']}`}>
-        <p>{product?.sku}</p>
+        <p className={styles['sku-name']}>
+          <span className={styles.label}>{product?.sku}</span>
+          <span className={styles.remove}>x</span>
+        </p>
         {!isShare &&
           <>
             {activeDropdown === 'sku' ?

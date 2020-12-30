@@ -11,7 +11,7 @@ const FiltersSelect = ({
   styleType = '',
   isClearable = false,
   closeMenuOnSelect = false,
-  hasCount = false
+  hasCount = false,
 }) => {
 
   const [optionsVisible, setOptionsVisible] = useState(false)
@@ -49,7 +49,7 @@ const FiltersSelect = ({
         isMulti={true}
         hideSelectedOptions={false}
         onChange={onChange}
-        classNamePrefix='select-prefix'
+        classNamePrefix={`select-prefix`}
         isClearable={isClearable}
         menuIsOpen={optionsVisible}
         onInputChange={onInputChange}
