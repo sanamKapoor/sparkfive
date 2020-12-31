@@ -2,7 +2,7 @@ import styles from './detail-side-panel.module.css'
 import update from 'immutability-helper'
 import ReactCreatableSelect from 'react-select/creatable'
 
-import { AssetContext, UserContext } from '../../../context'
+import { AssetContext, UserContext, FilterContext } from '../../../context'
 import { useEffect, useState, useContext } from 'react'
 import { format } from 'date-fns'
 import { capitalCase } from 'change-case'
@@ -44,6 +44,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
 
   const { assets, setAssets } = useContext(AssetContext)
   const { hasPermission } = useContext(UserContext)
+  const { loadCampaigns, loadProjects, loadTags, loadChannels } = useContext(FilterContext)
 
   const [inputCampaigns, setInputCampaigns] = useState([])
   const [inputTags, setInputTags] = useState([])
@@ -104,6 +105,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
       const stateProjectsUpdate = update(assetProjects, { $push: [newProject] })
       setProjects(stateProjectsUpdate)
       setInputProjects(update(inputProjects, { $push: [newProject] }))
+      loadProjects()
     } catch (err) {
       // TODO: Error if failure for whatever reason
     }
@@ -210,9 +212,12 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
           setAvailableItems={setInputCampaigns}
           selectedItems={assetCampaigns}
           setSelectedItems={setCampaigns}
-          onAddOperationFinished={(stateUpdate) => updateAssetState({
-            campaigns: { $set: stateUpdate }
-          })}
+          onAddOperationFinished={(stateUpdate) => {
+            updateAssetState({
+              campaigns: { $set: stateUpdate }
+            })
+            loadCampaigns()
+          }}
           onRemoveOperationFinished={async (index, stateUpdate) => {
             await assetApi.removeCampaign(id, assetCampaigns[index].id)
             updateAssetState({
@@ -237,9 +242,12 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
           setAvailableItems={setInputTags}
           selectedItems={assetTags}
           setSelectedItems={setTags}
-          onAddOperationFinished={(stateUpdate) => updateAssetState({
-            tags: { $set: stateUpdate }
-          })}
+          onAddOperationFinished={(stateUpdate) => {
+            updateAssetState({
+              tags: { $set: stateUpdate }
+            })
+            loadTags()
+          }}
           onRemoveOperationFinished={async (index, stateUpdate) => {
             await assetApi.removeTag(id, assetTags[index].id)
             updateAssetState({

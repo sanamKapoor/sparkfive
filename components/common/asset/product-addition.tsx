@@ -1,6 +1,7 @@
 import styles from './product-addition.module.css'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import update from 'immutability-helper'
+import { FilterContext } from '../../../context'
 import ReactCreatableSelect from 'react-select/creatable'
 import ReactSelect from 'react-select'
 import { Utilities } from '../../../assets'
@@ -29,6 +30,8 @@ const ProductAddition = ({
   const [inputVendors, setInputVendors] = useState([])
   const [inputRetailers, setInputRetailers] = useState([])
   const [valueLabel, setValueLabel] = useState('')
+
+  const { loadProductFields } = useContext(FilterContext)
 
   useEffect(() => {
     // Get input data
@@ -104,6 +107,7 @@ const ProductAddition = ({
     try {
       const { data: newTag } = await productApi.addTag(product.id, { name, type: activeDropdown })
       changeValueState(newTag, true)
+      loadProductFields()
     } catch (err) {
       console.log(err)
     }
@@ -241,8 +245,8 @@ const ProductAddition = ({
       </div>
       {product &&
         <div className={`normal-text ${styles['field-container']}`}>
-          {categories?.length > 0 && <ProductProperty label={'Category'} value={categories[0]} />}
-          {vendors?.length > 0 && <ProductProperty label={'Vendor'} value={vendors[0]} />}
+          {categories?.length > 0 && <ProductProperty label={'Category'} value={categories} isMulti={true} />}
+          {vendors?.length > 0 && <ProductProperty label={'Vendor'} value={vendors} isMulti={true} />}
           {retailers?.length > 0 && <ProductProperty label={'Retailer'} value={retailers} isMulti={true} />}
 
           {!isShare &&
