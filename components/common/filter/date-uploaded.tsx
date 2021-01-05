@@ -25,19 +25,20 @@ const DateUploaded = ({ handleBeginDate, handleEndDate, beginDate, endDate }) =>
         if (input === activeInput) setActiveInput('')
         else setActiveInput(input)
     }
-    // https://react-day-picker.js.org/docs/input/
-    // const formatDate = (date, format, locale) => {
-    //     return dateFnsFormat(date, format, { locale });
-    // }
-    // const parseDate = (str, format, locale) => {
-    //     const parsed = dateFnsParse(str, format, new Date(), { locale });
-    //     if (DateUtils.isDate(parsed)) {
-    //       return parsed;
-    //     }
-    //     return undefined;
-    //   }
 
-    // const FORMAT = 'MM/dd/yyyy';
+    const parseDate = (str, format, locale) => {
+        const parsed = dateFnsParse(str, format, new Date(), { locale });
+        console.log(parsed)
+        if (DateUtils.isDate(parsed)) {
+            return parsed;
+        }
+        return undefined;
+    }
+    const formatDate = (date, format, locale) => {
+        return dateFnsFormat(date, format, { locale });
+    }
+
+    const FORMAT = 'MM/dd/yyyy';
 
     return (
         <div className={`${styles.container}`}>
@@ -45,15 +46,14 @@ const DateUploaded = ({ handleBeginDate, handleEndDate, beginDate, endDate }) =>
             <div className={styles['dates-container']}>
                 <div>
                     <DayPickerInput
-                        // formatDate={formatDate}
-                        // format={FORMAT}
-                        // parseDate={parseDate}
+                        formatDate={formatDate}
+                        format={FORMAT}
+                        parseDate={parseDate}
                         classNames={{
                             container: styles.input
                         }}
-                        value={beginDate}
                         onDayChange={(day) => handleStartDay(day)}
-                        placeholder='From (yyyy-mm-dd)'
+                        placeholder={`${dateFnsFormat(new Date(), FORMAT)}`}
                         dayPickerProps={{
                             className: styles.calendar
                         }}
@@ -62,15 +62,14 @@ const DateUploaded = ({ handleBeginDate, handleEndDate, beginDate, endDate }) =>
 
                 <div>
                     <DayPickerInput
-                        // formatDate={formatDate}
-                        // format={FORMAT}
-                        // parseDate={parseDate}
+                        formatDate={formatDate}
+                        format={FORMAT}
+                        parseDate={parseDate}
                         classNames={{
                             container: styles.input
                         }}
-                        value={endDate}
                         onDayChange={(day) => handleEndDay(day)}
-                        placeholder='To (yyyy-mm-dd)'
+                        placeholder={`${dateFnsFormat(new Date(), FORMAT)}`}
                         dayPickerProps={{
                             className: styles.calendar,
                             disabledDays: {
