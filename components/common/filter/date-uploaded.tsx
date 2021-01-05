@@ -53,7 +53,7 @@ const DateUploaded = ({ handleBeginDate, handleEndDate, beginDate, endDate }) =>
                             container: styles.input
                         }}
                         onDayChange={(day) => handleStartDay(day)}
-                        placeholder={`${dateFnsFormat(new Date(), FORMAT)}`}
+                        placeholder={'mm/dd/yyyy'}
                         dayPickerProps={{
                             className: styles.calendar
                         }}
@@ -69,7 +69,7 @@ const DateUploaded = ({ handleBeginDate, handleEndDate, beginDate, endDate }) =>
                             container: styles.input
                         }}
                         onDayChange={(day) => handleEndDay(day)}
-                        placeholder={`${dateFnsFormat(new Date(), FORMAT)}`}
+                        placeholder={'mm/dd/yyyy'}
                         dayPickerProps={{
                             className: styles.calendar,
                             disabledDays: {
