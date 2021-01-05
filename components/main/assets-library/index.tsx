@@ -210,7 +210,7 @@ const AssetsLibrary = () => {
         filters.stage = 'draft'
       }
       else if (mainFilter === 'product') {
-        filters.type = 'product'
+        filters.hasProducts = 'product'
         filters.stage = 'draft'
       }
       else if (mainFilter === 'archived') filters.stage = 'archived'

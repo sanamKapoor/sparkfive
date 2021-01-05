@@ -76,7 +76,7 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, importAssets
             />
           </div>
         }
-        <ul>
+        <ul className={'search-content-list'}>
           {assets.map((assetItem, index) => (
             <SearchItem
               key={index}

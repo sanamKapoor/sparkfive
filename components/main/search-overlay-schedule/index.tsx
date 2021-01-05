@@ -98,7 +98,7 @@ const CreateOverlay = ({ closeOverlay }) => {
             onSubmit={(inputTerm) => getData(inputTerm)}
           />
         </div>
-        <ul>
+        <ul className={'search-content-list'}>
           {mixedList.map((item, index) => (
             <SearchItem
               key={index}
