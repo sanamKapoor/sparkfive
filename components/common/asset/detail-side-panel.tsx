@@ -126,7 +126,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     // const newCampaign = await addCampaign(selected, actionMeta.action === 'create-option')
     if (actionMeta.action === 'create-option') {
       setNewProjectName(selected.value)
-    } else {
+    } else if (selected) {
       handleAssociationChange(selected.value, 'projects', 'add')
     }
   }

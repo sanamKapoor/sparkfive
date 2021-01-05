@@ -209,9 +209,15 @@ const AssetsLibrary = () => {
         filters.type = 'video'
         filters.stage = 'draft'
       }
+      else if (mainFilter === 'product') {
+        filters.hasProducts = 'product'
+        filters.stage = 'draft'
+      }
       else if (mainFilter === 'archived') filters.stage = 'archived'
       else filters.stage = 'draft'
     }
+
+    console.log(filters)
 
     addFilterToQuery(filters, filterCampaigns, 'campaigns')
     addFilterToQuery(filters, filterProjects, 'projects')

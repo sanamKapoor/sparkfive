@@ -45,6 +45,10 @@ export default {
       name: 'images'
     },
     {
+      text: 'Product',
+      name: 'product'
+    },
+    {
       text: 'Videos',
       name: 'videos'
     },

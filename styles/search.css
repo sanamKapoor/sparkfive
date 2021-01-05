@@ -48,7 +48,7 @@
 }
 
 .search-cont,
-.search-content ul {
+.search-content .search-content-list {
     margin-top: 35px;
     max-width: 50rem;
     width: 100%;
