@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 
-const ToggleableAbsoluteWrapper = ({ Wrapper, Content, wrapperClass = '', contentClass = '', closeOnAction = true, onCloseAction = false, onClose = () => { } }) => {
+const ToggleableAbsoluteWrapper = ({ Wrapper, Content, wrapperClass = '', contentClass = '', closeOnAction = true, onCloseAction = false, onClose = () => { }, enabled = true }) => {
 
   const wrapperRef = useRef(null)
   const contentRef = useRef(null)
@@ -14,6 +14,7 @@ const ToggleableAbsoluteWrapper = ({ Wrapper, Content, wrapperClass = '', conten
   }
 
   const setDropdownOpen = (e, visible) => {
+    if (!enabled) return
     if (e)
       e.stopPropagation()
 

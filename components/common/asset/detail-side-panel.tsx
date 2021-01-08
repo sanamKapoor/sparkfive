@@ -197,6 +197,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
         <div className={`secondary-text ${styles.field}`}>Channel</div>
         <ChannelSelector
           channel={channel || undefined}
+          isShare={isShare}
           onLabelClick={() => { }}
           handleChannelChange={(option) => updateChannel(option)}
         />

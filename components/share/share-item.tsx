@@ -30,7 +30,7 @@ const ShareItem = ({
 		<>
 			<div className={styles.container}>
 				<div className={styles['image-wrapper']}>
-					{asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} opaque={isUploading} />}
+					{asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} opaque={false} />}
 					{asset.type === 'video' && <AssetVideo asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} />}
 					{asset.type === 'application' && <AssetApplication extension={asset.extension} />}
 					{asset.type === 'text' && <AssetText extension={asset.extension} />}

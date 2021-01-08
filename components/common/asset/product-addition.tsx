@@ -215,7 +215,7 @@ const ProductAddition = ({
       <div className={`normal-text ${styles['sku-container']}`}>
         <p className={styles['sku-name']}>
           {product && <span className={styles.label}>{product.sku}</span>}
-          {product && <span className={styles.remove} onClick={deleteProduct}>x</span>}
+          {product && !isShare && <span className={styles.remove} onClick={deleteProduct}>x</span>}
         </p>
         {!isShare &&
           <>

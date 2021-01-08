@@ -9,10 +9,11 @@ import ToggleableAbsoluteWrapper from '../misc/toggleable-absolute-wrapper'
 import ItemDropdownWrapper from '../items/item-dropdown-wrapper'
 import Dropdown from '../inputs/dropdown'
 
-const ChannelSelector = ({ onLabelClick, handleChannelChange, channel = 'Select Channel' }) => {
+const ChannelSelector = ({ onLabelClick, handleChannelChange, channel = 'Select Channel', isShare = false }) => {
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${isShare && styles.shared}`}>
       <ToggleableAbsoluteWrapper
+        enabled={!isShare}
         wrapperClass='field'
         contentClass='dropdown'
         Wrapper={({ children }) => (
@@ -22,6 +23,7 @@ const ChannelSelector = ({ onLabelClick, handleChannelChange, channel = 'Select 
               data={capitalCase(channel)}
               hasOption={true}
               optionOnClick={onLabelClick}
+              isShare={isShare}
               styleType={channel === 'Select Channel' ? false : true}
             >
               {children}
