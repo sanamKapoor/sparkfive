@@ -212,19 +212,19 @@ const AssetAddition = ({
 			onClick: openDropboxSelector,
 			icon: Assets.dropbox
 		},
-		{
-			label: 'Google Drive',
-			text: 'Import files',
-			onClick: () => { },
-			icon: Assets.gdrive,
-			CustomContent: ({ children }) => (
-				<DriveSelector
-					onFilesSelect={onDriveFilesSelection}
-				>
-					{children}
-				</DriveSelector>
-			)
-		}
+		// {
+		// 	label: 'Google Drive',
+		// 	text: 'Import files',
+		// 	onClick: () => { },
+		// 	icon: Assets.gdrive,
+		// 	CustomContent: ({ children }) => (
+		// 		<DriveSelector
+		// 			onFilesSelect={onDriveFilesSelection}
+		// 		>
+		// 			{children}
+		// 		</DriveSelector>
+		// 	)
+		// }
 	]
 
 	if (folderAdd) {
