@@ -2,18 +2,18 @@ import styles from './top-bar.module.css'
 import { useEffect, useState, useContext, useRef } from 'react'
 import { UserContext } from '../../../context'
 import { Utilities } from '../../../assets'
-import selectOptions from './select-options'
+import selectOptions from '../select-options'
 import campaignApi from '../../../server-api/campaign'
 import filterApi from '../../../server-api/filter'
 import tagApi from '../../../server-api/tag'
 import { CALENDAR_ACCESS } from '../../../constants/permissions'
 
 // Components
-import SectionButton from '../../common/buttons/section-button'
-import NestedSelect from '../../common/inputs/nested-select'
-import Select from '../../common/inputs/select'
-import Button from '../../common/buttons/button'
-import IconClickable from '../../common/buttons/icon-clickable'
+import SectionButton from '../buttons/section-button'
+import NestedSelect from '../inputs/nested-select'
+import Select from '../inputs/select'
+import Button from '../buttons/button'
+import IconClickable from '../buttons/icon-clickable'
 
 const TopBar = ({
   activeSortFilter,
