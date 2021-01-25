@@ -69,6 +69,7 @@ const ShareFolderModal = ({ modalIsOpen, closeModal, shareAssets, folder }) => {
 
   const idChars = folder?.id?.substring(0, 10)
   const shareUrl = `${process.env.CLIENT_BASE_URL}/collections/${team?.company || 'sparkfive'}/${idChars}/`
+  const textUrl = `.../collections/${team?.company || 'sparkfive'}/${idChars}/`
 
   const copyShareLink = () => copy(`${shareUrl}${customUrl}`)
 
@@ -79,6 +80,7 @@ const ShareFolderModal = ({ modalIsOpen, closeModal, shareAssets, folder }) => {
       confirmText={'Share'}
       headText={`Share ${folder?.name} collection`}
       disabledConfirm={!customUrl}
+      additionalClasses={[`${styles['modal-share-folder']}`]}
       confirmAction={() => {
         shareAssets({
           shareStatus: shareStatus.value,
@@ -93,45 +95,54 @@ const ShareFolderModal = ({ modalIsOpen, closeModal, shareAssets, folder }) => {
         })
         closemoveModal()
       }} >
-      <Select
-        options={SHARE_STATUSES}
-        onChange={onSharestatusChange}
-        value={shareStatus}
-        placeholder='Select share status'
-      />
-      {shareStatus?.value !== 'disabled' &&
-        <>
-          <div>
-            <div>
-              {shareUrl}
-            </div>
-            <Input onChange={onCustomUrlChange} styleType={'regular-short'} value={customUrl} />
-          </div>
-          <Button
-            text='Copy Link'
-            type='button'
-            onClick={copyShareLink}
-            styleType={'secondary'}
+      <div className={`${styles['container-info']}`}>
+        <div className={`${styles['container-select']}`}>
+          <Select
+            styleType='regular'
+            options={SHARE_STATUSES}
+            onChange={onSharestatusChange}
+            value={shareStatus}
+            placeholder='Select share status'
           />
-        </>
-      }
-      {shareStatus?.value === 'private' &&
-        <Input placeholder={'Share password'} onChange={e => setPassword(e.target.value)} styleType={'regular-short'} />
-      }
-      <div onClick={() => setSendNotification(!sendNotification)}>
-        <IconClickable src={sendNotification ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal} />
-          Send notification with link and password (if enabled)
         </div>
-      {sendNotification &&
-        <>
-          <div className={styles['input-wrapper']}>
-            <Input placeholder={'Emails separated with comma'} onChange={e => setRecipients(e.target.value)} styleType={'regular-short'} />
+        {shareStatus?.value !== 'disabled' &&
+          <>
+            <div className={`${styles['shared-url']}`}>
+              <div>
+                {textUrl}
+              </div>
+              <input onChange={onCustomUrlChange} 
+              // styleType={'regular-short'} 
+              value={customUrl} className={`${styles['input-container']}`}/>
+            </div>
+            <Button
+              text='Copy Link'
+              type='button'
+              onClick={copyShareLink}
+              styleType={'secondary'}
+            />
+          </>
+        }
+        {shareStatus?.value === 'private' &&
+          <div className={`${styles['share-password']}`}>
+            <Input placeholder={'Share password'} onChange={e => setPassword(e.target.value)} styleType={'regular-short'} />
           </div>
-          <div className={styles['input-wrapper']}>
-            <TextArea placeholder={'Add a message (optional)'} rows={7} onChange={e => setMessage(e.target.value)} styleType={'regular-short'} noResize={true} />
+        }
+        <div onClick={() => setSendNotification(!sendNotification)} className={`${styles['container-send-notification']}`}>
+          <IconClickable src={sendNotification ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal} />
+            Send notification with link and password (if enabled)
           </div>
-        </>
-      }
+        {sendNotification &&
+          <>
+            <div className={styles['input-wrapper']}>
+              <Input placeholder={'Emails separated with comma'} onChange={e => setRecipients(e.target.value)} styleType={'regular-short'} />
+            </div>
+            <div className={styles['input-wrapper']}>
+              <TextArea placeholder={'Add a message (optional)'} rows={7} onChange={e => setMessage(e.target.value)} styleType={'regular-short'} noResize={true} />
+            </div>
+          </>
+        }
+      </div>
     </Base >)
 }
 
