@@ -12,7 +12,7 @@ import { getAssetsFilters, getAssetsSort } from '../../../utils/asset'
 // Components
 import AssetOps from '../../common/asset/asset-ops'
 import SearchOverlay from '../search-overlay-assets'
-import AssetSubheader from './asset-subheader'
+import AssetSubheader from '../../common/asset/asset-subheader'
 import AssetGrid from '../../common/asset/asset-grid'
 import TopBar from '../../common/asset/top-bar'
 import FilterContainer from '../../common/filter/filter-container'

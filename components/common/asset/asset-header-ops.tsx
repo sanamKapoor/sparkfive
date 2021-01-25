@@ -7,7 +7,7 @@ import { ASSET_DOWNLOAD } from '../../../constants/permissions'
 // Components
 import Button from '../../common/buttons/button'
 
-const AssetHeaderOps = ({ isUnarchive = false, itemType = '' }) => {
+const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false }) => {
 	const {
 		assets,
 		setAssets,
@@ -27,13 +27,13 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '' }) => {
 	}
 	return (
 		<>
-			<Button text={'Delete'} type='button' styleType='tertiary' onClick={() => setActiveOperation('delete')} />
-			<Button text={isUnarchive ? 'Unarchive' : 'Archive'} type='button' styleType='tertiary' onClick={() => setActiveOperation(isUnarchive ? 'unarchive' : 'archive')} />
-			{hasPermission([ASSET_DOWNLOAD]) && <Button text={'Download'} type='button' styleType='tertiary' onClick={downloadSelectedAssets} />}
-			<Button text={'Move'} type='button' styleType='tertiary' onClick={() => setActiveOperation('move')} />
-			<Button text={'Copy'} type='button' styleType='tertiary' onClick={() => setActiveOperation('copy')} />
-			<Button text={'Share'} type='button' styleType='tertiary' onClick={() => setActiveOperation('share')} />
-			{itemType && <Button text={'Remove'} type='button' styleType='tertiary' onClick={() => setActiveOperation('remove_item')} />}
+			{!isShare && <Button text={'Delete'} type='button' styleType='tertiary' onClick={() => setActiveOperation('delete')} />}
+			{!isShare && <Button text={isUnarchive ? 'Unarchive' : 'Archive'} type='button' styleType='tertiary' onClick={() => setActiveOperation(isUnarchive ? 'unarchive' : 'archive')} />}
+			{(isShare || hasPermission([ASSET_DOWNLOAD])) && <Button text={'Download'} type='button' styleType={isShare ? 'secondary' : 'tertiary'} onClick={downloadSelectedAssets} />}
+			{!isShare && <Button text={'Move'} type='button' styleType='tertiary' onClick={() => setActiveOperation('move')} />}
+			{!isShare && <Button text={'Copy'} type='button' styleType='tertiary' onClick={() => setActiveOperation('copy')} />}
+			{!isShare && <Button text={'Share'} type='button' styleType='tertiary' onClick={() => setActiveOperation('share')} />}
+			{itemType && !isShare && <Button text={'Remove'} type='button' styleType='tertiary' onClick={() => setActiveOperation('remove_item')} />}
 			<Button text={`Deselect All (${selectedAssets.length})`} type='button' styleType='primary' onClick={deselectAll} />
 		</>
 	)

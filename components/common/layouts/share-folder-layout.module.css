@@ -1,5 +1,5 @@
 .header {
-    background-color: var(--color-prim-navy);
+    background-color: white;
     padding: 30px 32px;
     display: flex;
     align-items: center;
@@ -47,7 +47,11 @@
     margin-right: 10px;
 }
 .header h1 {
-    color: var(--color-sec-ivory);
+    color: var(--color-prim-navy);
     font-weight: 600;
+    flex: 1;
 }
-  
+
+.ops-wrapper button {
+    margin-left: 1rem;
+}
