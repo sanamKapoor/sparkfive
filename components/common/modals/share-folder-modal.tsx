@@ -81,6 +81,7 @@ const ShareFolderModal = ({ modalIsOpen, closeModal, shareAssets, folder }) => {
       headText={`Share ${folder?.name} collection`}
       disabledConfirm={!customUrl}
       additionalClasses={[`${styles['modal-share-folder']}`]}
+      textWidth={true}
       confirmAction={() => {
         shareAssets({
           shareStatus: shareStatus.value,

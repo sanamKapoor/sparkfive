@@ -16,6 +16,7 @@ const Base = ({
   confirmAction = () => { },
   confirmText = '',
   headText = '',
+  textWidth = false,
   disabledConfirm = false,
   noHeightMax = false,
   additionalClasses = ['']
@@ -31,7 +32,7 @@ const Base = ({
       shouldFocusAfterRender={false}
     >
       {headText &&
-        <div className={styles.text}>
+        <div className={`${styles.text} ${textWidth && styles['full-width']}`}>
           <p>{headText}</p>
           <span className={styles.close} onClick={closeModal}>x</span>
         </div>
