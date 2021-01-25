@@ -68,7 +68,7 @@ const ShareFolderModal = ({ modalIsOpen, closeModal, shareAssets, folder }) => {
   }
 
   const idChars = folder?.id?.substring(0, 10)
-  const shareUrl = `${process.env.CLIENT_BASE_URL}/collections/${team?.company || 'sparkfive'}/${idChars}/`
+  const shareUrl = `${process.env.CLIENT_BASE_URL}/collections/${team?.company ? snakeCase(team.company) : 'sparkfive'}/${idChars}/`
 
   const copyShareLink = () => copy(`${shareUrl}${customUrl}`)
 
