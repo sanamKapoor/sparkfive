@@ -11,6 +11,7 @@ import update from 'immutability-helper'
 // Components
 import MoveModal from '../modals/move-modal'
 import ShareModal from '../modals/share-modal'
+import ShareFolderModal from '../modals/share-folder-modal'
 import ConfirmModal from '../modals/confirm-modal'
 
 export default () => {
@@ -190,6 +191,25 @@ export default () => {
 		}
 	}
 
+	const shareFolders = async ({ shareStatus, newPassword, customUrl, notificationSettings }) => {
+		try {
+			const { data } = await folderApi.shareFolder(operationFolder.id, {
+				shareStatus,
+				newPassword,
+				customUrl,
+				notificationSettings
+			})
+			toastUtils.success('Collection shared successfully')
+			const folderIndex = folders.findIndex(folder => folder.id === data.id)
+			console.log(folderIndex)
+			setFolders(update(folders, { [folderIndex]: { $merge: data } }))
+			closeModalAndClearOpAsset()
+		} catch (err) {
+			console.log(err)
+			toastUtils.error('Could not share collection, please try again later.')
+		}
+	}
+
 	const copyAssets = async (selectedFolder) => {
 		try {
 			let copyAssetIds
@@ -240,7 +260,7 @@ export default () => {
 				if (currentItem.type === 'project') {
 					await projectApi.associateAssets(currentItem.id, { assetIds: [operationAsset.asset.id] }, { operation: 'disassociate' })
 				} else if (currentItem.type === 'task') {
-					await taskApi.associateAssets(currentItem.id, { assetIds: [operationAsset.asset.id] }, { operation: 'disassociate' })					
+					await taskApi.associateAssets(currentItem.id, { assetIds: [operationAsset.asset.id] }, { operation: 'disassociate' })
 				}
 				const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === operationAsset.asset.id)
 				if (assetIndex !== -1)
@@ -310,6 +330,12 @@ export default () => {
 				closeModal={closeModalAndClearOpAsset}
 				itemsAmount={operationLength}
 				shareAssets={shareAssets}
+			/>
+			<ShareFolderModal
+				modalIsOpen={activeOperation === 'shareFolders'}
+				closeModal={closeModalAndClearOpAsset}
+				folder={operationFolder}
+				shareAssets={shareFolders}
 			/>
 			<ConfirmModal
 				modalIsOpen={activeOperation === 'archive'}

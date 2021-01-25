@@ -1,4 +1,4 @@
-import styles from './share-modal.module.css'
+import styles from './rename-modal.module.css'
 import { useState, useEffect } from 'react'
 
 // Components

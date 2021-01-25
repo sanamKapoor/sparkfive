@@ -9,16 +9,18 @@ import ToggleableAbsoluteWrapper from '../misc/toggleable-absolute-wrapper'
 const FolderOptions = ({
 	downloadFoldercontents,
 	setDeleteOpen,
-	shareAssets
+	shareAssets,
+	copyShareLink,
+	copyEnabled
 }) => {
 
 	const options = [
-		// { label: 'Edit', onClick: editFolder },
 		{ label: 'Download', onClick: downloadFoldercontents },
-		// { label: 'Archive', onClick: archiveFolder },
 		{ label: 'Delete', onClick: () => setDeleteOpen(true) },
 		{ label: 'Share', onClick: shareAssets }
 	]
+
+	if (copyEnabled) options.push({ label: 'Copy Link', onClick: copyShareLink })
 
 	return (
 		<ToggleableAbsoluteWrapper

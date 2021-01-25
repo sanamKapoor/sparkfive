@@ -122,3 +122,8 @@ export const FilterContext = createContext({
 
     loadAll: () => { }
 })
+
+export const ShareContext = createContext({
+    folderInfo: undefined,
+    setFolderInfo: (folderInfo) => { }
+})

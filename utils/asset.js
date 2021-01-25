@@ -78,3 +78,97 @@ export const getParsedExtension = (extension) => {
             return extension
     }
 }
+
+export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '', addedIds }) => {
+    const filters = {}
+    const {
+        mainFilter,
+        filterCampaigns,
+        filterTags,
+        filterChannels,
+        filterProjects,
+        filterFileTypes,
+        filterOrientations,
+        dimensionWidth,
+        dimensionHeight,
+        dimensionsActive,
+        beginDate,
+        endDate,
+        filterProductFields,
+        filterProductType
+    } = userFilterObject
+    if (mainFilter !== 'folders') {
+        if (mainFilter === 'images') {
+            filters.type = 'image'
+            filters.stage = 'draft'
+        }
+        else if (mainFilter === 'videos') {
+            filters.type = 'video'
+            filters.stage = 'draft'
+        }
+        else if (mainFilter === 'product') {
+            filters.hasProducts = 'product'
+            filters.stage = 'draft'
+        }
+        else if (mainFilter === 'archived') filters.stage = 'archived'
+        else filters.stage = 'draft'
+    }
+
+    addFilterToQuery(filters, filterCampaigns, 'campaigns')
+    addFilterToQuery(filters, filterProjects, 'projects')
+    addFilterToQuery(filters, filterChannels, 'channels')
+    addFilterToQuery(filters, filterTags, 'tags')
+    addFilterToQuery(filters, filterFileTypes, 'fileTypes')
+    addFilterToQuery(filters, filterOrientations, 'orientations')
+
+    if (activeFolder) {
+        filters.folderId = activeFolder
+    }
+
+    if (!replace && addedIds.length > 0) {
+        filters.excludeIds = addedIds.join(',')
+    }
+
+    if (dimensionsActive && dimensionWidth) {
+        filters.dimensionWidth = `${dimensionWidth.min},${dimensionWidth.max}`
+    }
+
+    if (dimensionsActive && dimensionHeight) {
+        filters.dimensionHeight = `${dimensionHeight.min},${dimensionHeight.max}`
+    }
+
+    if (beginDate) {
+        filters.beginDate = beginDate.toISOString()
+    }
+
+    if (endDate) {
+        filters.endDate = endDate.toISOString()
+    }
+
+    if (filterProductType && filterProductFields?.length > 0) {
+        let type
+        if (filterProductType.value === 'product_category') type = 'categoryId'
+        if (filterProductType.value === 'product_vendor') type = 'vendorId'
+        if (filterProductType.value === 'product_retailer') type = 'retailerId'
+
+        filters.productFields = filterProductFields.map(item => item.value).join(',')
+    }
+
+    filters.page = replace ? 1 : nextPage
+    return filters
+}
+
+export const getAssetsSort = (userFilterObject) => {
+    if (userFilterObject.sort.value !== 'none') {
+        const { field, order } = userFilterObject.sort
+        return {
+            sort: `${field},${order}`
+        }
+    } else return {}
+}
+
+const addFilterToQuery = (filters, filterItems, key) => {
+    if (filterItems?.length > 0) {
+        filters[key] = filterItems.map(item => item.value).join(',')
+    }
+}

@@ -9,7 +9,6 @@ import Dropdown from '../inputs/dropdown'
 import ToggleableAbsoluteWrapper from '../misc/toggleable-absolute-wrapper'
 
 const AssetOptions = ({
-	realUrl,
 	itemType = '',
 	asset,
 	downloadAsset,
@@ -19,9 +18,10 @@ const AssetOptions = ({
 	openDeleteAsset,
 	openShareAsset,
 	openComments,
-	openRemoveAsset
+	openRemoveAsset,
+	isShare = false
 }) => {
-	// onClick={() => downloadUtils.downloadFile(realUrl, assetDetail.name)}
+
 	const options = [
 		{ label: 'Download', onClick: downloadAsset, permissions: [ASSET_DOWNLOAD] },
 		{ label: 'Comment', onClick: openComments },
@@ -49,7 +49,7 @@ const AssetOptions = ({
 			Content={() => (
 				<div className={styles.more} >
 					<Dropdown
-						options={options}
+						options={isShare ? [{ label: 'Download', onClick: downloadAsset }] : options}
 					/>
 				</div>
 			)}

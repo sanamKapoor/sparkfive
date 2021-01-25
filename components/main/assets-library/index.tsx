@@ -7,13 +7,14 @@ import update from 'immutability-helper'
 import assetApi from '../../../server-api/asset'
 import folderApi from '../../../server-api/folder'
 import toastUtils from '../../../utils/toast'
+import { getAssetsFilters, getAssetsSort } from '../../../utils/asset'
 
 // Components
 import AssetOps from '../../common/asset/asset-ops'
 import SearchOverlay from '../search-overlay-assets'
 import AssetSubheader from './asset-subheader'
 import AssetGrid from '../../common/asset/asset-grid'
-import TopBar from '../../common/top-bar/top-bar'
+import TopBar from '../../common/asset/top-bar'
 import FilterContainer from '../../common/filter/filter-container'
 import { DropzoneProvider } from '../../common/misc/dropzone'
 import RenameModal from '../../common/modals/rename-modal'
@@ -48,7 +49,6 @@ const AssetsLibrary = () => {
     folders,
     setFolders,
     setPlaceHolders,
-    nextPage,
     activeFolder,
     setActiveFolder,
     setActivePageMode,
@@ -69,6 +69,7 @@ const AssetsLibrary = () => {
   const [openFilter, setOpenFilter] = useState(false)
 
   useEffect(() => {
+    console.log('first thing?')
     setActivePageMode('library')
     if (activeSortFilter.mainFilter === 'folders') {
       setActiveMode('folders')
@@ -161,8 +162,15 @@ const AssetsLibrary = () => {
         setAddedIds([])
       }
       setPlaceHolders('asset', replace)
-      // await new Promise((resolve) => setTimeout(resolve, 2500))
-      const { data } = await assetApi.getAssets({ ...getFilters(replace), ...getSort() })
+      const { data } = await assetApi.getAssets({
+        ...getAssetsFilters({
+          replace,
+          activeFolder,
+          addedIds,
+          userFilterObject: activeSortFilter
+        }),
+        ...getAssetsSort(activeSortFilter)
+      })
       setAssets({ ...data, results: data.results.map(mapWithToggleSelection) }, replace)
       setFirstLoaded(true)
     } catch (err) {
@@ -180,102 +188,6 @@ const AssetsLibrary = () => {
       //TODO: Handle error
       console.log(err)
     }
-  }
-
-  const getFilters = (replace) => {
-    const filters = {}
-    const {
-      mainFilter,
-      filterCampaigns,
-      filterTags,
-      filterChannels,
-      filterProjects,
-      filterFileTypes,
-      filterOrientations,
-      dimensionWidth,
-      dimensionHeight,
-      dimensionsActive,
-      beginDate,
-      endDate,
-      filterProductFields,
-      filterProductType
-    } = activeSortFilter
-    if (mainFilter !== 'folders') {
-      if (mainFilter === 'images') {
-        filters.type = 'image'
-        filters.stage = 'draft'
-      }
-      else if (mainFilter === 'videos') {
-        filters.type = 'video'
-        filters.stage = 'draft'
-      }
-      else if (mainFilter === 'product') {
-        filters.hasProducts = 'product'
-        filters.stage = 'draft'
-      }
-      else if (mainFilter === 'archived') filters.stage = 'archived'
-      else filters.stage = 'draft'
-    }
-
-    console.log(filters)
-
-    addFilterToQuery(filters, filterCampaigns, 'campaigns')
-    addFilterToQuery(filters, filterProjects, 'projects')
-    addFilterToQuery(filters, filterChannels, 'channels')
-    addFilterToQuery(filters, filterTags, 'tags')
-    addFilterToQuery(filters, filterFileTypes, 'fileTypes')
-    addFilterToQuery(filters, filterOrientations, 'orientations')
-
-    if (activeFolder) {
-      filters.folderId = activeFolder
-    }
-
-    if (!replace && addedIds.length > 0) {
-      filters.excludeIds = addedIds.join(',')
-    }
-
-    if (dimensionsActive && dimensionWidth) {
-      filters.dimensionWidth = `${dimensionWidth.min},${dimensionWidth.max}`
-    }
-
-    if (dimensionsActive && dimensionHeight) {
-      filters.dimensionHeight = `${dimensionHeight.min},${dimensionHeight.max}`
-    }
-
-    if (beginDate) {
-      filters.beginDate = beginDate.toISOString()
-    }
-
-    if (endDate) {
-      filters.endDate = endDate.toISOString()
-    }
-
-    if (filterProductType && filterProductFields?.length > 0) {
-      let type
-      if (filterProductType.value === 'product_category') type = 'categoryId'
-      if (filterProductType.value === 'product_vendor') type = 'vendorId'
-      if (filterProductType.value === 'product_retailer') type = 'retailerId'
-
-      filters.productFields = filterProductFields.map(item => item.value).join(',')
-    }
-
-    filters.page = replace ? 1 : nextPage
-    return filters
-  }
-
-  const addFilterToQuery = (filters, filterItems, key) => {
-    if (filterItems?.length > 0) {
-      filters[key] = filterItems.map(item => item.value).join(',')
-    }
-  }
-
-  const getSort = () => {
-    if (activeSortFilter.sort.value !== 'none') {
-      const { field, order } = activeSortFilter.sort
-      return {
-        sort: `${field},${order}`
-      }
-    } else return {}
   }
 
   const toggleSelected = (id) => {
@@ -314,7 +226,7 @@ const AssetsLibrary = () => {
       setFolders(update(folders, {
         $splice: [[modFolderIndex, 1]]
       }))
-      toastUtils.success('Folder deleted successfully')
+      toastUtils.success('Collection deleted successfully')
     } catch (err) {
       console.log(err)
     }
@@ -334,10 +246,10 @@ const AssetsLibrary = () => {
           name: { $set: newValue }
         }
       }))
-      toastUtils.success('Folder name updated')
+      toastUtils.success('Collection name updated')
     } catch (err) {
       console.log(err)
-      toastUtils.error('Could not update folder name')
+      toastUtils.error('Could not update collection name')
     }
   }
 
@@ -356,7 +268,6 @@ const AssetsLibrary = () => {
         <TopBar
           activeSortFilter={activeSortFilter}
           setActiveSortFilter={setActiveSortFilter}
-          activeView={activeView}
           setActiveView={setActiveView}
           activeFolder={activeFolder}
           setActiveSearchOverlay={() => setActiveSearchOverlay(true)}

@@ -1,8 +1,9 @@
 import styles from './photo-upload.module.css'
 import { useState, useEffect, useRef, useContext } from 'react'
-import { UserContext } from '../../../context'
+import { UserContext, TeamContext } from '../../../context'
 import toastUtils from '../../../utils/toast'
 import userApi from '../../../server-api/user'
+import teamApi from '../../../server-api/team'
 
 import { Utilities } from '../../../assets'
 
@@ -13,12 +14,17 @@ import Button from '../buttons/button'
 import ButtonIcon from '../buttons/button-icon'
 import Spinner from '../spinners/spinner'
 
-const PhotoUpload = ({ userPhoto = '' }) => {
+const PhotoUpload = ({
+  userPhoto = '',
+  explainText = 'Your Avatar appears in your team comments and notifications',
+  type = 'user'
+}) => {
   const [currentPhoto, setCurrentPhoto] = useState(undefined)
   const [uploadedImage, setUploadedImage] = useState(undefined)
   const [isUploading, setIsUploading] = useState(false)
 
   const { setUser } = useContext(UserContext)
+  const { getTeam } = useContext(TeamContext)
 
   const fileBrowserRef = useRef(undefined)
 
@@ -50,8 +56,11 @@ const PhotoUpload = ({ userPhoto = '' }) => {
       setIsUploading(true)
       const formData = new FormData()
       formData.append('photo', uploadImg)
-      const { data } = await userApi.uploadPhoto(formData)
-      setUser(data)
+      let updateFn = userApi.uploadPhoto
+      if (type === 'team') updateFn = teamApi.uploadPhoto
+      const { data } = await updateFn(formData)
+      if (type === 'user') setUser(data)
+      else getTeam()
       toastUtils.success(`Photo updated.`)
       setUploadedImage(undefined)
     } catch (err) {
@@ -90,7 +99,7 @@ const PhotoUpload = ({ userPhoto = '' }) => {
             onClick={openUpload}
           />
         }
-        <p className={styles.description}>Your Avatar appears in your team comments and notifications</p>
+        <p className={styles.description}>{explainText}</p>
       </div>
       <input id="file-input-id" ref={fileBrowserRef} style={{ display: 'none' }} type='file'
         onChange={onFileChange} accept={ALLOWED_TYPES} />

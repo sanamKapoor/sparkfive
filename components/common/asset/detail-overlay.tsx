@@ -21,7 +21,7 @@ import AssetApplication from './asset-application'
 import AssetText from './asset-text'
 import RenameModal from '../modals/rename-modal'
 
-const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { }, openDeleteAsset = () => { }, isShare = false, initiaParams }) => {
+const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { }, openDeleteAsset = () => { }, isShare = false, initialParams }) => {
 
   const [assetDetail, setAssetDetail] = useState(undefined)
 
@@ -47,8 +47,8 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
   // }, [assets])
 
   const checkInitialParams = () => {
-    if (initiaParams?.side) {
-      setActiveSidecomponent(initiaParams.side)
+    if (initialParams?.side) {
+      setActiveSidecomponent(initialParams.side)
     }
   }
 

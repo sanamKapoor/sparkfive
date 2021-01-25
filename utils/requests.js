@@ -2,8 +2,8 @@ import toastUtils from './toast'
 import axios from 'axios'
 
 export default {
-  setAuthToken: (token) => {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+  setAuthToken: (token, headerValue = 'Authorization') => {
+    axios.defaults.headers.common[headerValue] = `Bearer ${token}`
   },
 
   removeAuthToken: () => {

@@ -23,7 +23,7 @@ const FolderModal = ({ modalIsOpen, closeModal, onSubmit }) => {
           <span className={styles.x}>X</span>
         </div>
         <div>
-          <h2>Create Folder</h2>
+          <h2>Create Collection</h2>
         </div>
           <div className={styles.folder_modal_input}>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -31,7 +31,7 @@ const FolderModal = ({ modalIsOpen, closeModal, onSubmit }) => {
               InputComponent={
                 <Input
                   type='text'
-                  placeholder='Name Your Folder'
+                  placeholder='Name Your Collection'
                   styleType='regular-short'
                 />
               }

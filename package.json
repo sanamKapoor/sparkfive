@@ -14,6 +14,7 @@
     "axios": "^0.19.2",
     "change-case": "^4.1.1",
     "chart.js": "^2.9.3",
+    "copy-to-clipboard": "^3.3.1",
     "cross-fetch": "^3.0.5",
     "date-fns": "^2.12.0",
     "detect-it": "^3.0.7",

@@ -6,7 +6,7 @@ import requestsUtils from '../utils/requests'
 
 import userApi from '../server-api/user'
 
-const allowedBase = ['/signup', '/share', '/reset-password', '/forgot-password', '/two-factor']
+const allowedBase = ['/signup', '/share', '/reset-password', '/forgot-password', '/two-factor', '/collections']
 
 export default ({ children }) => {
   const [user, setUser] = useState(null)
@@ -17,6 +17,9 @@ export default ({ children }) => {
   const router = useRouter()
 
   const fetchUser = async (redirectLogin = false) => {
+    // Skip fetching user if on collections page
+    if (Router.pathname.indexOf('/collections') !== -1) return
+
     if (redirectLogin) return Router.replace('/login')
     const jwt = cookiesUtils.get('jwt')
 

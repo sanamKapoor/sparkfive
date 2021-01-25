@@ -1,16 +1,10 @@
 import styles from './top-bar.module.css'
-import { useEffect, useState, useContext, useRef } from 'react'
-import { UserContext } from '../../../context'
+import { useRef } from 'react'
 import { Utilities } from '../../../assets'
 import selectOptions from '../select-options'
-import campaignApi from '../../../server-api/campaign'
-import filterApi from '../../../server-api/filter'
-import tagApi from '../../../server-api/tag'
-import { CALENDAR_ACCESS } from '../../../constants/permissions'
 
 // Components
 import SectionButton from '../buttons/section-button'
-import NestedSelect from '../inputs/nested-select'
 import Select from '../inputs/select'
 import Button from '../buttons/button'
 import IconClickable from '../buttons/icon-clickable'
@@ -19,39 +13,13 @@ const TopBar = ({
   activeSortFilter,
   setActiveSearchOverlay,
   setActiveSortFilter,
-  activeView,
   setActiveView,
   selectAll,
-  activeFolder,
+  activeFolder = '',
   setOpenFilter,
-  openFilter
+  openFilter,
+  isShare = false
 }) => {
-
-  const [campaignsFilter, setCampaignsFilter] = useState([])
-  const [tagsFilter, setTagsFilter] = useState([])
-
-  const { hasPermission } = useContext(UserContext)
-  useEffect(() => {
-    getCampaignsTagsFilters()
-  }, [])
-
-  const getCampaignsTagsFilters = async () => {
-    try {
-      const selectValueMapFn = item => ({
-        label: item.name,
-        value: item.id
-      })
-      if (hasPermission([CALENDAR_ACCESS])) {
-        const campaingsResponse = await campaignApi.getCampaigns({ assetsCount: 'yes' })
-        setCampaignsFilter(campaingsResponse.data.map(selectValueMapFn))
-      }
-      const tagsResponse = await tagApi.getTags()
-      setTagsFilter(tagsResponse.data.map(selectValueMapFn))
-    } catch (err) {
-      console.log(err)
-      // Handle this error
-    }
-  }
 
   const setSortFilterValue = (key, value) => {
     setActiveSortFilter({
@@ -62,7 +30,7 @@ const TopBar = ({
 
   const handleOpenFilter = () => {
     toggleHamurgerList()
-    if(openFilter) {
+    if (openFilter) {
       setOpenFilter(false)
     } else {
       setOpenFilter(true)
@@ -84,7 +52,7 @@ const TopBar = ({
         <img src={Utilities.search} onClick={setActiveSearchOverlay} />
         {selectOptions.views.map(view => (
           <>
-            {(!activeFolder || !view.ommitFolder) &&
+            {(!activeFolder || !view.omitFolder) && (!isShare || (isShare && !view.omitShare)) &&
               <SectionButton
                 key={view.name}
                 text={view.text}

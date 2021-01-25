@@ -19,7 +19,9 @@ const FolderGridItem = ({
 	viewFolder,
 	isLoading = false,
 	deleteFolder,
-	shareAssets = (folder) => { }
+	shareAssets = (folder) => { },
+	copyShareLink = (folder) => { },
+	copyEnabled
 }) => {
 
 	const previews = [1, 2, 3, 4]
@@ -45,7 +47,7 @@ const FolderGridItem = ({
 						</div>
 					))}
 					<div className={styles['image-button-wrapper']}>
-						<Button styleType={'primary'} text={'View Folder'} type={'button'}
+						<Button styleType={'primary'} text={'View Collection'} type={'button'}
 							onClick={viewFolder} />
 					</div>
 				</>
@@ -58,6 +60,8 @@ const FolderGridItem = ({
 						downloadFoldercontents={downloadFoldercontents}
 						setDeleteOpen={setDeleteOpen}
 						shareAssets={shareAssets}
+						copyShareLink={copyShareLink}
+						copyEnabled={copyEnabled}
 					/>
 				</div>
 			</div>
