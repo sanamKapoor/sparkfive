@@ -119,7 +119,7 @@ const AssetGrid = ({
 
   const shouldShowUpload = activeSearchOverlay || (mode === 'assets' && assets.length === 0) || (mode === 'folders' && folders.length === 0)
 
-  const copyShareLink = (folder) => copyClipboard(`${process.env.SERVER_BASE_URL}/collections/${folder.sharePath}`)
+  const copyShareLink = (folder) => copyClipboard(`${process.env.CLIENT_BASE_URL}/collections/${folder.sharePath}`)
 
   const getShareIsEnabled = ({ shareStatus }) => shareStatus === 'public' || shareStatus === 'private'
 
