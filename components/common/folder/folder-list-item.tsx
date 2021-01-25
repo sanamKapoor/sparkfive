@@ -19,7 +19,9 @@ const FolderListItem = ({
 	viewFolder,
 	isLoading = false,
 	deleteFolder = () => { },
-	shareAssets = (folder) => { }
+	shareAssets = (folder) => { },
+	copyShareLink = (folder) => { },
+	copyEnabled
 }) => {
 
 	const dateFormat = 'MMM do, yyyy h:mm a'
@@ -57,6 +59,8 @@ const FolderListItem = ({
 								downloadFoldercontents={downloadFoldercontents}
 								shareAssets={shareAssets}
 								setDeleteOpen={setDeleteOpen}
+								copyShareLink={copyShareLink}
+								copyEnabled={copyEnabled}
 							/>
 						</div>
 					}

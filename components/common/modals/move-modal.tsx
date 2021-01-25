@@ -52,7 +52,7 @@ const MoveModal = ({ modalIsOpen, closeModal, folders, itemsAmount, moveAssets, 
           <form onSubmit={onSubmit}>
             <div className={styles['create-new']} onClick={() => setFolderInputActive(false)}>X</div>
             <Input
-              placeholder={'Folder name'}
+              placeholder={'Collection name'}
               onChange={e => setNewFolderName(e.target.value)}
               value={newFolderName}
               styleType={'regular-short'} />
@@ -64,7 +64,7 @@ const MoveModal = ({ modalIsOpen, closeModal, folders, itemsAmount, moveAssets, 
             />
           </form>
           :
-          <span onClick={() => setFolderInputActive(true)} className={styles['create-new']}>+ Create New Folder</span>
+          <span onClick={() => setFolderInputActive(true)} className={styles['create-new']}>+ Create New Collection</span>
         }
       </div>
     </Base >)

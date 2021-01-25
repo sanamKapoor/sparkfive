@@ -16,6 +16,7 @@ import AssetOptions from './asset-options'
 const DEFAULT_DETAIL_PROPS = { visible: false, side: 'detail' }
 
 const AssetThumbail = ({
+  isShare,
   type,
   asset,
   thumbailUrl,
@@ -93,7 +94,7 @@ const AssetThumbail = ({
                 openShareAsset={openShareAsset}
                 openComments={openComments}
                 openRemoveAsset={openRemoveAsset}
-                realUrl={realUrl}
+                isShare={isShare}
               />
             }
           </div>
@@ -101,6 +102,7 @@ const AssetThumbail = ({
       </div>
       {overlayProperties.visible &&
         <DetailOverlay
+          isShare={isShare}
           asset={asset}
           realUrl={realUrl}
           initiaParams={overlayProperties}

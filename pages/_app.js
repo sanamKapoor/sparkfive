@@ -28,6 +28,7 @@ import TeamContextProvider from '../context/team-provider'
 import UserContextProvider from '../context/user-provider'
 import LoadingContextProvider from '../context/loading-provider'
 import ScheduleProvider from '../context/schedule-provider'
+import ShareProvider from '../context/share-provider'
 
 // FB pixel
 import FBPixel from '../components/common/scripts/fb-pixel'
@@ -77,21 +78,23 @@ export default function MyApp({ Component, pageProps }) {
   return (
     <LoadingContextProvider>
       <UserContextProvider >
-        <ScheduleProvider>
-          <LanguageContext.Provider value={languageValue}>
-            <ThemeContext.Provider value={themeValue}>
-              <AssetContextProvider>
-                <TeamContextProvider>
-                  <Head>
-                    <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key={process.env.DROPBOX_API_KEY}></script>
-                  </Head>
-                  {process.env.INCLUDE_PIXEL === 'yes' && <FBPixel />}
-                  <Component {...pageProps} />
-                </TeamContextProvider>
-              </AssetContextProvider>
-            </ThemeContext.Provider>
-          </LanguageContext.Provider>
-        </ScheduleProvider>
+        <ShareProvider>
+          <ScheduleProvider>
+            <LanguageContext.Provider value={languageValue}>
+              <ThemeContext.Provider value={themeValue}>
+                <AssetContextProvider>
+                  <TeamContextProvider>
+                    <Head>
+                      <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key={process.env.DROPBOX_API_KEY}></script>
+                    </Head>
+                    {process.env.INCLUDE_PIXEL === 'yes' && <FBPixel />}
+                    <Component {...pageProps} />
+                  </TeamContextProvider>
+                </AssetContextProvider>
+              </ThemeContext.Provider>
+            </LanguageContext.Provider>
+          </ScheduleProvider>
+        </ShareProvider>
       </UserContextProvider>
     </LoadingContextProvider>
   )

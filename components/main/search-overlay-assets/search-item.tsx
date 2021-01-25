@@ -15,7 +15,7 @@ import AssetText from '../../common/asset/asset-text'
 import DetailOverlay from '../../common/asset/detail-overlay'
 import IconClickable from '../../common/buttons/icon-clickable'
 
-const SearchItem = ({ assetItem, term, openShareAsset, openDeleteAsset, toggleSelected, enabledSelect = false }) => {
+const SearchItem = ({ assetItem, term, openShareAsset, openDeleteAsset, toggleSelected, enabledSelect = false, isShare }) => {
 
   const { asset, thumbailUrl, realUrl, isLoading = false, isSelected } = assetItem
   const [visibleOverlay, setVisibleOVerlay] = useState(false)
@@ -71,13 +71,15 @@ const SearchItem = ({ assetItem, term, openShareAsset, openDeleteAsset, toggleSe
               highlightClassName={'search-highlight'}
               searchWords={[term]}
               autoEscape={true}
-              textToHighlight={asset.folder?.name || 'No Folder'}
+              textToHighlight={asset.folder?.name || 'No Collection'}
             />
           }
         </div>
       </li >
       {visibleOverlay &&
         <DetailOverlay
+          isShare={isShare}
+          initialParams={{}}
           asset={asset}
           realUrl={realUrl}
           openShareAsset={openShareAsset}

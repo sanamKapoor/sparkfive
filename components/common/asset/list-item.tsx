@@ -20,6 +20,7 @@ import AssetOptions from './asset-options'
 const DEFAULT_DETAIL_PROPS = { visible: false, side: 'detail' }
 
 const ListItem = ({
+  isShare,
   type,
   assetItem: {
     asset,
@@ -129,11 +130,12 @@ const ListItem = ({
                   openArchiveAsset={openArchiveAsset}
                   openDeleteAsset={openDeleteAsset}
                   openMoveAsset={openMoveAsset}
-                  realUrl={realUrl}
+                  isShare={isShare}
                   downloadAsset={downloadAsset}
                   openShareAsset={openShareAsset}
                   openCopyAsset={openCopyAsset}
                   openComments={openComments}
+                  openRemoveAsset={openRemoveAsset}
                 />
               </div>
             }
@@ -142,6 +144,7 @@ const ListItem = ({
       </div>
       {overlayProperties.visible &&
         <DetailOverlay
+          isShare={isShare}
           asset={asset}
           realUrl={realUrl}
           initiaParams={overlayProperties}

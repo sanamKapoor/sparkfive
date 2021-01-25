@@ -24,7 +24,7 @@ const AssetSubheader = ({
           <div className={styles.back} onClick={backToFolders}>
             {'<'}
           </div>
-          <h4>Folder</h4>
+          <h4>Collection</h4>
         </div>
       ) : null}
     >

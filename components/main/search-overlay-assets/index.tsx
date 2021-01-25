@@ -2,6 +2,7 @@ import { useState, useContext, useEffect } from 'react'
 import { AssetContext } from '../../../context'
 import styles from './index.module.css'
 import assetApi from '../../../server-api/asset'
+import shareCollectionApi from '../../../server-api/share-collection'
 import { Waypoint } from 'react-waypoint'
 import update from 'immutability-helper'
 
@@ -10,7 +11,7 @@ import Search from '../../common/inputs/search'
 import SearchItem from './search-item'
 import Button from '../../common/buttons/button'
 
-const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, importAssets = () => { } }) => {
+const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, importAssets = () => { }, sharePath = '' }) => {
 
   const { assets, setAssets, setActiveOperation, setOperationAsset, setPlaceHolders, nextPage } = useContext(AssetContext)
   const [term, setTerm] = useState('')
@@ -18,8 +19,10 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, importAssets
   const getData = async (inputTerm, replace = true) => {
     setTerm(inputTerm)
     try {
+      let fetchFn = assetApi.getAssets
+      if (sharePath) fetchFn = shareCollectionApi.getAssets
       setPlaceHolders('asset', replace)
-      const { data } = await assetApi.getAssets({ term: inputTerm, page: replace ? 1 : nextPage })
+      const { data } = await fetchFn({ term: inputTerm, page: replace ? 1 : nextPage, sharePath })
       setAssets(data, replace)
     } catch (err) {
       // TODO: Handle this error
@@ -61,7 +64,7 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, importAssets
         </h2>
         <div className={'search-cont'}>
           <Search
-            placeholder={'Find Assets by Name, Extension, Folder, Campaign, Channel, Tag'}
+            placeholder={'Find Assets by Name, Extension, Collection, Campaign, Channel, Tag'}
             onSubmit={(inputTerm) => getData(inputTerm)}
           />
         </div>
@@ -79,6 +82,7 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, importAssets
         <ul className={'search-content-list'}>
           {assets.map((assetItem, index) => (
             <SearchItem
+              isShare={sharePath}
               key={index}
               enabledSelect={importEnabled}
               toggleSelected={() => toggleSelected(assetItem.asset.id)}

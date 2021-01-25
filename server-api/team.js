@@ -8,4 +8,9 @@ export default {
   getTeamMembers: () => axios.get(`${teamUrl}/members`),
   patchTeamMember: (id, updatedata) => axios.patch(`${teamUrl}/members/${id}`, updatedata),
   disableTeamMember: (id) => axios.patch(`${teamUrl}/members/${id}/disable`),
+  uploadPhoto: (formData) => axios.post(`${teamUrl}/photo`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
 }

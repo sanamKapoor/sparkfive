@@ -5,6 +5,7 @@ import { useEffect, useContext, useState } from 'react'
 import { AssetContext } from '../../../context'
 import toastUtils from '../../../utils/toast'
 import { Waypoint } from 'react-waypoint'
+import copyClipboard from 'copy-to-clipboard'
 import urlUtils from '../../../utils/url'
 import downloadUtils from '../../../utils/download'
 import assetsApi from '../../../server-api/asset'
@@ -22,7 +23,8 @@ import Button from '../buttons/button'
 
 const AssetGrid = ({
   activeView = 'grid',
-  onFilesDataGet,
+  isShare = false,
+  onFilesDataGet = (files) => { },
   toggleSelected,
   mode = 'assets',
   activeSortFilter = {},
@@ -37,7 +39,8 @@ const AssetGrid = ({
   viewFolder = (id) => { },
   openFilter }) => {
 
-  const isDragging = useDropzone()
+  let isDragging
+  if (!isShare) isDragging = useDropzone()
   const { assets, setAssets, setActiveOperation, setOperationAsset, nextPage, setOperationFolder } = useContext(AssetContext)
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
@@ -116,15 +119,19 @@ const AssetGrid = ({
 
   const shouldShowUpload = activeSearchOverlay || (mode === 'assets' && assets.length === 0) || (mode === 'folders' && folders.length === 0)
 
+  const copyShareLink = (folder) => copyClipboard(`${process.env.SERVER_BASE_URL}/collections/${folder.sharePath}`)
+
+  const getShareIsEnabled = ({ shareStatus }) => shareStatus === 'public' || shareStatus === 'private'
+
   return (
     <section className={`${styles.container} ${openFilter && styles.filter}`}>
-      {(shouldShowUpload || isDragging) &&
+      {(shouldShowUpload || isDragging) && !isShare &&
         <AssetUpload
           onDragText={'Drop files here to upload'}
           preDragText={shouldShowUpload ? `Drag and drop your files here to upload (png, jpg, gif, doc, xlsx, pdf or mp4)` : ''}
           onFilesDataGet={onFilesDataGet} />
       }
-      {shouldShowUpload &&
+      {shouldShowUpload && !isShare &&
         <AssetAddition
           displayMode='regular'
           folderAdd={false}
@@ -144,6 +151,7 @@ const AssetGrid = ({
                 <li className={styles['grid-item']} key={assetItem.asset.id || index}>
                   <AssetThumbail
                     {...assetItem}
+                    isShare={isShare}
                     type={type}
                     toggleSelected={() => toggleSelected(assetItem.asset.id)}
                     openArchiveAsset={() => openArchiveAsset(assetItem.asset)}
@@ -158,13 +166,15 @@ const AssetGrid = ({
               )
             })}
 
-            {mode === 'folders' && folders.map((folder, index) => {
+            {mode === 'folders' && !isShare && folders.map((folder, index) => {
               return (
                 <li className={styles['grid-item']} key={folder.id || index}>
                   <FolderGridItem {...folder}
                     viewFolder={() => viewFolder(folder.id)}
                     deleteFolder={() => deleteFolder(folder.id)}
-                    shareAssets={() => beginAssetOperation({ folder }, 'share')} />
+                    copyShareLink={() => copyShareLink(folder)}
+                    copyEnabled={getShareIsEnabled(folder)}
+                    shareAssets={() => beginAssetOperation({ folder }, 'shareFolders')} />
                 </li>
               )
             })}
@@ -176,6 +186,7 @@ const AssetGrid = ({
               return (
                 <li className={styles['regular-item']} key={assetItem.asset.id || index}>
                   <ListItem
+                    isShare={isShare}
                     type={type}
                     assetItem={assetItem}
                     index={index}
@@ -191,13 +202,15 @@ const AssetGrid = ({
                 </li>
               )
             })}
-            {mode === 'folders' && folders.map((folder, index) => {
+            {mode === 'folders' && !isShare && folders.map((folder, index) => {
               return (
                 <li className={styles['grid-item']} key={folder.id || index}>
                   <FolderListItem {...folder}
                     viewFolder={() => viewFolder(folder.id)}
                     deleteFolder={() => deleteFolder(folder.id)} index={index}
-                    shareAssets={() => beginAssetOperation({ folder }, 'share')} />
+                    copyShareLink={() => copyShareLink(folder)}
+                    copyEnabled={getShareIsEnabled(folder)}
+                    shareAssets={() => beginAssetOperation({ folder }, 'shareFolders')} />
                 </li>
               )
             })}
@@ -266,6 +279,7 @@ const AssetGrid = ({
       {/* Overlay exclusive to page load assets */}
       {initAsset &&
         <DetailOverlay
+          isShare={isShare}
           asset={initAsset.asset}
           realUrl={initAsset.realUrl}
           initiaParams={{ side: 'comments' }}

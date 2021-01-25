@@ -2,6 +2,7 @@ const withImages = require("next-images");
 module.exports = withImages({
   env: {
     SERVER_BASE_URL: process.env.SERVER_BASE_URL || "http://localhost:8080",
+    CLIENT_BASE_URL: process.env.CLIENT_BASE_URL || "http://localhost:3000",
     // SERVER_BASE_URL: "https://d13c3bdc9413.ngrok.io",
     DROPBOX_API_KEY: process.env.DROPBOX_API_KEY || "gtwo80vc34l8vjd",
     STRIPE_PUBLIC_KEY:

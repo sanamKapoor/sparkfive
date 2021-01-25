@@ -32,13 +32,14 @@ export default {
 
   views: [
     {
-      text: 'Folders',
+      text: 'Collections',
       name: 'folders',
-      ommitFolder: true
+      omitFolder: true,
+      omitShare: true
     },
     {
       text: 'All',
-      name: 'all'
+      name: 'all',
     },
     {
       text: 'Images',
@@ -55,7 +56,8 @@ export default {
     {
       text: 'Archived',
       name: 'archived',
-      ommitFolder: true
+      omitFolder: true,
+      omitShare: true
     }
   ],
 

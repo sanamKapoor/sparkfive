@@ -4,11 +4,12 @@ import { TeamContext } from '../../../../context'
 
 // Components
 import NameForm from './name-form'
+import PhotoUpload from '../../../common/account/photo-upload'
 import AddressForm from './address-form'
 
 const Company = () => {
 
-  const { getTeam } = useContext(TeamContext)
+  const { getTeam, team } = useContext(TeamContext)
 
   useEffect(() => {
     getTeam()
@@ -17,6 +18,11 @@ const Company = () => {
   return (
     <div>
       <NameForm />
+      <PhotoUpload
+        userPhoto={team?.workspaceIcon}
+        explainText={`Your company's icon appears in shared collections`} 
+        type={'team'}
+        />
       <AddressForm />
     </div>
   )

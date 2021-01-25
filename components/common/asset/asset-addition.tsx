@@ -111,7 +111,7 @@ const AssetAddition = ({
 			await folderApi.createFolder(folderData)
 			setActiveModal('')
 			getFolders()
-			toastUtils.success('Folder created sucesfully')
+			toastUtils.success('Collection created sucesfully')
 		} catch (err) {
 			// TODO: Show error message
 			if (err.response?.data?.message) {
@@ -229,7 +229,7 @@ const AssetAddition = ({
 
 	if (folderAdd) {
 		dropdownOptions.unshift({
-			label: 'Add Folder',
+			label: 'Add Collection',
 			text: 'Organized Files',
 			onClick: () => setActiveModal('folder'),
 			icon: Assets.folder

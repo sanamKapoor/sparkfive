@@ -4,8 +4,9 @@ import campaignApi from '../server-api/campaign'
 import projectApi from '../server-api/project'
 import tagApi from '../server-api/tag'
 import filterApi from '../server-api/filter'
+import shareCollectionApi from '../server-api/share-collection'
 
-export default ({ children }) => {
+export default ({ children, isPublic = false, sharePath = '' }) => {
 
   const [tags, setTags] = useState([])
   const [campaigns, setCampaigns] = useState([])
@@ -40,31 +41,38 @@ export default ({ children }) => {
   }
 
   const loadTags = () => {
-    loadFromEndpoint(tagApi.getTags({ assetsCount: 'yes' }), setTags)
+    const fetchMethod = isPublic ? shareCollectionApi.getTags : tagApi.getTags
+    loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath }), setTags)
   }
 
   const loadCampaigns = () => {
-    loadFromEndpoint(campaignApi.getCampaigns({ assetsCount: 'yes' }), setCampaigns)
+    const fetchMethod = isPublic ? shareCollectionApi.getCampaigns : campaignApi.getCampaigns
+    loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath }), setCampaigns)
   }
 
   const loadChannels = () => {
-    loadFromEndpoint(filterApi.getAssetChannels(), setChannels)
+    const fetchMethod = isPublic ? shareCollectionApi.getAssetChannels : filterApi.getAssetChannels
+    loadFromEndpoint(fetchMethod({ sharePath }), setChannels)
   }
 
   const loadProjects = () => {
-    loadFromEndpoint(projectApi.getProjects({ assetsCount: 'yes' }), setProjects)
+    const fetchMethod = isPublic ? shareCollectionApi.getProjects : projectApi.getProjects
+    loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath }), setProjects)
   }
 
   const loadFileTypes = () => {
-    loadFromEndpoint(filterApi.getAssetFileExtensions(), setFileTypes)
+    const fetchMethod = isPublic ? shareCollectionApi.getAssetFileExtensions : filterApi.getAssetFileExtensions
+    loadFromEndpoint(fetchMethod({ sharePath }), setFileTypes)
   }
 
   const loadAssetDimensionLimits = () => {
-    loadFromEndpoint(filterApi.getAssetDimensionLimits(), setAssetDimensionLimits)
+    const fetchMethod = isPublic ? shareCollectionApi.getAssetDimensionLimits : filterApi.getAssetDimensionLimits
+    loadFromEndpoint(fetchMethod({ sharePath }), setAssetDimensionLimits)
   }
 
   const loadAssetOrientations = () => {
-    loadFromEndpoint(filterApi.getAssetOrientations(), setAssetOrientations)
+    const fetchMethod = isPublic ? shareCollectionApi.getAssetOrientations : filterApi.getAssetOrientations
+    loadFromEndpoint(fetchMethod({ sharePath }), setAssetOrientations)
   }
 
   const loadProductFields = async () => {
