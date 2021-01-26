@@ -17,8 +17,6 @@ import DriveSelector from '../asset/drive-selector'
 import FolderModal from '../folder/folder-modal'
 import IconClickable from '../buttons/icon-clickable'
 
-const ALLOWED_TYPES = 'image/png, image/jpeg, application/pdf, image/gif, video/mp4, video/mov, video/wmv, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, application/vnd.ms-powerpoint, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, text/html, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-
 const AssetAddition = ({
 	activeFolder = '',
 	getFolders = () => { },
@@ -44,7 +42,7 @@ const AssetAddition = ({
 			let needsFolderFetch
 			const formData = new FormData()
 			const newPlaceholders = []
-			files.filter(file => ALLOWED_TYPES.includes(file.originalFile.type)).forEach(file => {
+			files.forEach(file => {
 				if (file.originalFile.name.includes('/')) {
 					needsFolderFetch = true
 				}
@@ -127,7 +125,6 @@ const AssetAddition = ({
 			success: onDropboxFilesSelection,
 			linkType: 'direct',
 			multiselect: true,
-			extensions: ['.png', '.jpg', '.gif', '.mp4'],
 			folderselect: false,
 			sizeLimit: 50 * 1024 * 1024
 		}
@@ -300,9 +297,9 @@ const AssetAddition = ({
 	return (
 		<>
 			<input multiple={true} id="file-input-id" ref={fileBrowserRef} style={{ display: 'none' }} type='file'
-				onChange={onFileChange} accept={ALLOWED_TYPES} />
+				onChange={onFileChange} />
 			<input multiple={true} webkitdirectory='' webkitRelativePath='' id="file-input-id" ref={folderBrowserRef} style={{ display: 'none' }} type='file'
-				onChange={onFileChange} accept={ALLOWED_TYPES} />
+				onChange={onFileChange} />
 			{displayMode === 'dropdown' ?
 				<ToggleAbleAbsoluteWrapper
 					Wrapper={SimpleButtonWrapper}
