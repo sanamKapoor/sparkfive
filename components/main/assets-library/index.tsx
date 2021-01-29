@@ -18,6 +18,7 @@ import TopBar from '../../common/asset/top-bar'
 import FilterContainer from '../../common/filter/filter-container'
 import { DropzoneProvider } from '../../common/misc/dropzone'
 import RenameModal from '../../common/modals/rename-modal'
+import BulkEditOverlay from '../../common/bulk-edit-overlay'
 
 const DEFAULT_FILTERS = {
   filterCampaigns: [],
@@ -61,6 +62,8 @@ const AssetsLibrary = () => {
   const [activeMode, setActiveMode] = useState('assets')
 
   const [activeSearchOverlay, setActiveSearchOverlay] = useState(false)
+
+  const [activeBulkEditOverlay, setActiveBulkEditOverlay] = useState(false)
 
   const [firstLoaded, setFirstLoaded] = useState(false)
 
@@ -315,6 +318,9 @@ const AssetsLibrary = () => {
         <SearchOverlay
           closeOverlay={closeSearchOverlay}
         />
+      }
+      {activeBulkEditOverlay &&
+        <BulkEditOverlay />
       }
     </FilterProvider>
   )
