@@ -63,13 +63,15 @@ const AssetsLibrary = () => {
 
   const [activeSearchOverlay, setActiveSearchOverlay] = useState(false)
 
-  const [activeBulkEditOverlay, setActiveBulkEditOverlay] = useState(false)
+  const [activeBulkEditOverlay, setActiveBulkEditOverlay] = useState(true)
 
   const [firstLoaded, setFirstLoaded] = useState(false)
 
   const [renameModalOpen, setRenameModalOpen] = useState(false)
 
   const [openFilter, setOpenFilter] = useState(false)
+
+  console.log(activeBulkEditOverlay)
 
   useEffect(() => {
     console.log('first thing?')
@@ -202,6 +204,13 @@ const AssetsLibrary = () => {
     }))
   }
 
+  const handleBackButtonBulkEdit = () => {
+    if (activeBulkEditOverlay)
+      setActiveBulkEditOverlay(!activeBulkEditOverlay)
+    else
+      setActiveBulkEditOverlay(activeBulkEditOverlay)
+  }
+
   const selectAll = () => {
     setAssets(assets.map(assetItem => ({ ...assetItem, isSelected: true })))
   }
@@ -320,7 +329,7 @@ const AssetsLibrary = () => {
         />
       }
       {activeBulkEditOverlay &&
-        <BulkEditOverlay />
+        <BulkEditOverlay handleBackButton={handleBackButtonBulkEdit}/>
       }
     </FilterProvider>
   )
