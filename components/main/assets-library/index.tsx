@@ -71,8 +71,6 @@ const AssetsLibrary = () => {
 
   const [openFilter, setOpenFilter] = useState(false)
 
-  console.log(activeBulkEditOverlay)
-
   useEffect(() => {
     console.log('first thing?')
     setActivePageMode('library')
