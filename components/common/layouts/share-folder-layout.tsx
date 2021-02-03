@@ -18,7 +18,7 @@ const ShareFolderLayout = ({ children }) => {
 				<img
 					className={styles['logo-img']}
 					src={folderInfo?.teamIcon || GeneralImg.logo} />
-				<h1>{folderInfo?.folderName}</h1>
+				<h1 className={styles['collection-name']}>{folderInfo?.folderName}</h1>
 				{selectedAssets.length > 0 &&
 					<div className={styles['ops-wrapper']}>
 						<AssetHeaderOps isShare={true} />

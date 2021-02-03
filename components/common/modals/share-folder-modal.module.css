@@ -38,6 +38,14 @@
 .share-password {
   margin-bottom: 1rem;
 }
+.container-show-password {
+  margin-top: 5px;
+  display: flex;
+  justify-content: flex-end;
+}
+.container-show-password img {
+  margin-right: 7px;
+}
 
 .container-send-notification {
   display: flex;
