@@ -7,12 +7,8 @@ import AuthContainer from '../common/containers/auth-container'
 import Input from '../common/inputs/input'
 import AuthButton from '../common/buttons/auth-button'
 
-const CreateOverlay = ({ onPasswordSubmit }) => {
+const CreateOverlay = ({ onPasswordSubmit, logo }) => {
   const [sharePassword, setSharePassword] = useState('')
-
-  // useEffect(() => {
-  //   setSharePassword('')
-  // }, [])
 
   const submitPassword = (e) => {
     e.preventDefault()
@@ -22,9 +18,10 @@ const CreateOverlay = ({ onPasswordSubmit }) => {
   return (
     <div className={`app-overlay ${styles.container}`}>
       <div className={`${styles.container} container-centered`}>
-        <img src={GeneralImg.logoHorizontal} className={styles.logo} />
+        <img src={logo || GeneralImg.logoHorizontal} className={styles.logo} />
         <AuthContainer
           title='Welcome!'
+          additionalClass={'color-secondary'}
           subtitle={'Enter password to proceed'}>
           <form onSubmit={submitPassword} className={styles['password-form']}>
             <Input placeholder={'Password'} onChange={(e) => setSharePassword(e.target.value)} styleType={'regular-short'} type='password'/>

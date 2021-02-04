@@ -1,5 +1,7 @@
 .input-wrapper{
   padding: 1rem;
+  display: flex;
+  justify-content: center;
 }
 
 .modal-share-folder {
