@@ -167,7 +167,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                         <FilterSelector
                             loadFn={loadFileTypes}
                             searchBar={false}
-                            numItems={5}
+                            numItems={40}
                             placeholder={'File Types'}
                             filters={fileTypes.map(fileType => ({ ...fileType, label: fileType.name, value: fileType.name }))}
                             value={activeSortFilter.filterFileTypes}
