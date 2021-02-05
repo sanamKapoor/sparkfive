@@ -3,17 +3,24 @@
     padding: 30px 32px;
     display: flex;
     align-items: center;
+    position: relative;
 }
 
 .logo-img {
-    max-height: 200px;
+    max-height: 75px;
     width: auto;
     margin-right: 48px;
     cursor: pointer;
 }
 .collection-name{
-    text-align: center;
     font-size: 22px;
+    height: 75px;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    right: 0;
+    left: 0;
 }
 
 .navigation-links {
