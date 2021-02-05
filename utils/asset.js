@@ -79,7 +79,7 @@ export const getParsedExtension = (extension) => {
     }
 }
 
-export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '', addedIds }) => {
+export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '', addedIds, nextPage }) => {
     const filters = {}
     const {
         mainFilter,

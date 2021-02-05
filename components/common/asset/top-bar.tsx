@@ -49,7 +49,7 @@ const TopBar = ({
   return (
     <section className={styles.container}>
       <div className={styles.filters} >
-        <img src={Utilities.search} onClick={setActiveSearchOverlay} />
+        <img src={Utilities.search} onClick={setActiveSearchOverlay} className={styles.search}/>
         {selectOptions.views.map(view => (
           <>
             {(!activeFolder || !view.omitFolder) && (!isShare || (isShare && !view.omitShare)) &&

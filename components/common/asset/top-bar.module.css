@@ -48,6 +48,10 @@
   display: none;
 }
 
+.container .search{
+  margin-left: 0;
+}
+
 @media screen and (max-width: 1200px) {
   .container {
     margin-bottom: 1rem;

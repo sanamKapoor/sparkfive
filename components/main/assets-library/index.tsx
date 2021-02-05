@@ -53,6 +53,7 @@ const AssetsLibrary = () => {
     setActiveFolder,
     setActivePageMode,
     needsFetch,
+    nextPage,
     setNeedsFetch,
     addedIds,
     setAddedIds
@@ -69,7 +70,6 @@ const AssetsLibrary = () => {
   const [openFilter, setOpenFilter] = useState(false)
 
   useEffect(() => {
-    console.log('first thing?')
     setActivePageMode('library')
     if (activeSortFilter.mainFilter === 'folders') {
       setActiveMode('folders')
@@ -167,6 +167,7 @@ const AssetsLibrary = () => {
           replace,
           activeFolder,
           addedIds,
+          nextPage,
           userFilterObject: activeSortFilter
         }),
         ...getAssetsSort(activeSortFilter)

@@ -53,7 +53,8 @@ const ShareFolderMain = () => {
         needsFetch,
         setNeedsFetch,
         addedIds,
-        setAddedIds
+        setAddedIds,
+        nextPage,
     } = useContext(AssetContext)
 
     const { folderInfo, setFolderInfo } = useContext(ShareContext)
@@ -161,6 +162,7 @@ const ShareFolderMain = () => {
             const { data } = await shareCollectionApi.getAssets({
                 ...getAssetsFilters({
                     replace,
+                    nextPage,
                     addedIds,
                     userFilterObject: activeSortFilter
                 }),
