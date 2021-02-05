@@ -64,28 +64,33 @@ const TopBar = ({
         ))}
       </div>
       <IconClickable src={Utilities.filter} additionalClass={styles.filter} onClick={toggleHamurgerList} />
+
       <div className={styles['sec-filters']} ref={filtersRef}>
         {activeSortFilter.mainFilter !== 'folders' && <Button type='button' text='Select All' styleType='secondary' onClick={selectAll} />}
         <img src={Utilities.gridView} onClick={() => setActiveView('grid')} />
         <img src={Utilities.listView} onClick={() => setActiveView('list')} />
-        <div className={styles['nested-wrapper']}>
-          <Button
-            text='Filters'
-            type='button'
-            styleType='secondary'
-            onClick={() => {
-              handleOpenFilter()
-            }} />
-        </div>
-        <div className={styles['sort-wrapper']}>
-          <Select
-            options={selectOptions.sort}
-            value={activeSortFilter.sort}
-            styleType='filter filter-schedule'
-            onChange={(selected) => setSortFilterValue('sort', selected)}
-            placeholder='Sort By'
-          />
-        </div>
+        {activeSortFilter.mainFilter !== 'folders' &&
+          <div className={styles['nested-wrapper']}>
+            <Button
+              text='Filters'
+              type='button'
+              styleType='secondary'
+              onClick={() => {
+                handleOpenFilter()
+              }} />
+          </div>
+        }
+        {activeSortFilter.mainFilter !== 'folders' &&
+          <div className={styles['sort-wrapper']}>
+            <Select
+              options={selectOptions.sort}
+              value={activeSortFilter.sort}
+              styleType='filter filter-schedule'
+              onChange={(selected) => setSortFilterValue('sort', selected)}
+              placeholder='Sort By'
+            />
+          </div>
+        }
       </div>
     </section >
   )

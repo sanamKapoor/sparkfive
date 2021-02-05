@@ -28,6 +28,10 @@
   --color-ghost-text: #9597a6;
 }
 
+.color-secondary{
+  color: var(--color-sec-text)
+}
+
 ::placeholder {
   color: var(--color-ghost-text);
 }

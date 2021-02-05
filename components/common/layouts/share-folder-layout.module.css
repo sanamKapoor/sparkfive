@@ -6,10 +6,14 @@
 }
 
 .logo-img {
-    height: 48px;
+    height: 90px;
     width: auto;
     margin-right: 48px;
     cursor: pointer;
+}
+.collection-name{
+    text-align: center;
+    font-size: 25px;
 }
 
 .navigation-links {

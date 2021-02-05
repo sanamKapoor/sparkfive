@@ -38,7 +38,7 @@ const FolderModal = ({ modalIsOpen, closeModal, onSubmit }) => {
               name='name'
               control={control}
               message={'This field should be between 1 and 30 characters long'}
-              rules={{ minLength: 1, maxLength: 30, required: true }}
+              rules={{ minLength: 1, maxLength: 70, required: true }}
               errors={errors}
             />
           <div className={styles.buttons_container}>

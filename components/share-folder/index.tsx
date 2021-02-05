@@ -59,7 +59,7 @@ const ShareFolderMain = () => {
     const { folderInfo, setFolderInfo } = useContext(ShareContext)
 
     const [firstLoaded, setFirstLoaded] = useState(false)
-    const [activePasswordOverlay, setActivePasswordOverlay] = useState(false)
+    const [activePasswordOverlay, setActivePasswordOverlay] = useState(true)
     const [activeSearchOverlay, setActiveSearchOverlay] = useState(false)
     const [openFilter, setOpenFilter] = useState(false)
     const [activeView, setActiveView] = useState('grid')
@@ -93,7 +93,7 @@ const ShareFolderMain = () => {
     }, [sharePath])
 
     useEffect(() => {
-        if (folderInfo) {
+        if (folderInfo && !folderInfo.error) {
             setActivePageMode('library')
             setAssets([])
             getAssets()
@@ -115,6 +115,7 @@ const ShareFolderMain = () => {
         } catch (err) {
             // If not 500, must be auth error, request user password
             if (err.response.status !== 500) {
+                setFolderInfo(err.response.data)
                 setActivePasswordOverlay(true)
             }
             console.log(err)
@@ -212,6 +213,7 @@ const ShareFolderMain = () => {
             {activePasswordOverlay &&
                 <PasswordOverlay
                     onPasswordSubmit={submitPassword}
+                    logo={folderInfo?.teamIcon}
                 />
             }
             {activeSearchOverlay &&
