@@ -1,4 +1,4 @@
-import { AssetContext } from '../../../context'
+import { AssetContext, FilterContext } from '../../../context'
 import { useState, useContext, useEffect } from 'react'
 import assetApi from '../../../server-api/asset'
 import projectApi from '../../../server-api/project'
@@ -30,6 +30,8 @@ export default () => {
 		activeFolder,
 		activePageMode
 	} = useContext(AssetContext)
+
+	const { loadFolders } = useContext(FilterContext)
 
 	const router = useRouter()
 
@@ -236,6 +238,7 @@ export default () => {
 		try {
 			const { data } = await folderApi.createFolder({ name: newFolderName })
 			setFolders(update(folders, { $push: [data] }))
+			loadFolders()
 		} catch (err) {
 			console.log(err)
 			toastUtils.error('Could not create folder, please try again later.')
@@ -310,7 +313,6 @@ export default () => {
 		<>
 			<MoveModal
 				modalIsOpen={activeOperation === 'move'}
-				folders={filteredFolders}
 				closeModal={closeModalAndClearOpAsset}
 				itemsAmount={operationLength}
 				moveAssets={moveAssets}
@@ -318,7 +320,6 @@ export default () => {
 			/>
 			<MoveModal
 				modalIsOpen={activeOperation === 'copy'}
-				folders={filteredFolders}
 				closeModal={closeModalAndClearOpAsset}
 				itemsAmount={operationLength}
 				moveAssets={copyAssets}

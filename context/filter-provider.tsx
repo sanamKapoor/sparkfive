@@ -4,12 +4,14 @@ import campaignApi from '../server-api/campaign'
 import projectApi from '../server-api/project'
 import tagApi from '../server-api/tag'
 import filterApi from '../server-api/filter'
+import fodlerApi from '../server-api/folder'
 import shareCollectionApi from '../server-api/share-collection'
 
 export default ({ children, isPublic = false, sharePath = '' }) => {
 
   const [tags, setTags] = useState([])
   const [campaigns, setCampaigns] = useState([])
+  const [folders, setFolders] = useState([])
   const [channels, setChannels] = useState([])
   const [projects, setProjects] = useState([])
   const [fileTypes, setFileTypes] = useState([])
@@ -43,6 +45,11 @@ export default ({ children, isPublic = false, sharePath = '' }) => {
   const loadTags = () => {
     const fetchMethod = isPublic ? shareCollectionApi.getTags : tagApi.getTags
     loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath }), setTags)
+  }
+
+  const loadFolders = () => {
+    const fetchMethod = fodlerApi.getFoldersSimple
+    loadFromEndpoint(fetchMethod(), setFolders)
   }
 
   const loadCampaigns = () => {
@@ -107,7 +114,9 @@ export default ({ children, isPublic = false, sharePath = '' }) => {
     assetOrientations,
     loadAssetOrientations,
     productFields,
-    loadProductFields
+    loadProductFields,
+    folders,
+    loadFolders
   }
   return (
     <FilterContext.Provider value={filterValue}>

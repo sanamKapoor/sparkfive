@@ -95,6 +95,9 @@ export const FilterContext = createContext({
     tags: [],
     loadTags: () => { },
 
+    folders: [],
+    loadFolders: () => { },
+
     campaigns: [],
     loadCampaigns: () => { },
 
