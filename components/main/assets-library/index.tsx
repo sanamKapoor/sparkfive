@@ -180,11 +180,18 @@ const AssetsLibrary = () => {
     }
   }
 
-  const getFolders = async () => {
+  const getFolders = async (replace = true) => {
     try {
-      setPlaceHolders('folder')
-      const { data } = await folderApi.getFolders()
-      setFolders(data)
+      if (replace) {
+        setAddedIds([])
+      }
+      setPlaceHolders('folder', replace)
+      const queryParams = { page: replace ? 1 : nextPage }
+      if (!replace && addedIds.length > 0) {
+        queryParams.excludeIds = addedIds.join(',')
+      }
+      const { data } = await folderApi.getFolders(queryParams)
+      setFolders({ ...data, results: data.results }, replace)
     } catch (err) {
       //TODO: Handle error
       console.log(err)
@@ -254,6 +261,14 @@ const AssetsLibrary = () => {
     }
   }
 
+  const loadMore = () => {
+    if (activeMode === 'assets') {
+      getAssets(false)
+    } else {
+      getFolders(false)
+    }
+  }
+
   return (
     <FilterProvider>
       <AssetSubheader
@@ -286,10 +301,9 @@ const AssetsLibrary = () => {
               onFilesDataGet={onFilesDataGet}
               toggleSelected={toggleSelected}
               mode={activeMode}
-              folders={folders}
               viewFolder={viewFolder}
               deleteFolder={deleteFolder}
-              loadMore={() => getAssets(false)}
+              loadMore={loadMore}
               openFilter={openFilter}
             />
           </DropzoneProvider>

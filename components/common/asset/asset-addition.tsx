@@ -34,7 +34,7 @@ const AssetAddition = ({
 	const [activeModal, setActiveModal] = useState('')
 	const [submitError, setSubmitError] = useState('')
 
-	const { assets, setAssets, setNeedsFetch, setAddedIds, activePageMode } = useContext(AssetContext)
+	const { assets, setAssets, setNeedsFetch, setAddedIds, activePageMode, folders, setFolders } = useContext(AssetContext)
 
 	const onFilesDataGet = async (files) => {
 		const currentDataClone = [...assets]
@@ -94,6 +94,7 @@ const AssetAddition = ({
 			setAssets([...newPlaceholders, ...currentDataClone])
 			const { data } = await assetApi.importAssets('dropbox', files.map(file => ({ link: file.link, name: file.name, size: file.bytes })), getCreationParameters())
 			setAssets([...data, ...currentDataClone])
+			setAddedIds(data.id)
 			toastUtils.success('Assets imported.')
 		} catch (err) {
 			//TODO: Handle error
@@ -106,10 +107,11 @@ const AssetAddition = ({
 
 	const onSubmit = async folderData => {
 		try {
-			await folderApi.createFolder(folderData)
+			const currentDataClone = [...folders]
+			const { data } = await folderApi.createFolder(folderData)
 			setActiveModal('')
-			getFolders()
-			toastUtils.success('Collection created sucesfully')
+			setFolders([data, ...currentDataClone])
+			toastUtils.success('Collection created successfully')
 		} catch (err) {
 			// TODO: Show error message
 			if (err.response?.data?.message) {

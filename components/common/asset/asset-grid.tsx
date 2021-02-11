@@ -28,7 +28,6 @@ const AssetGrid = ({
   toggleSelected,
   mode = 'assets',
   activeSortFilter = {},
-  folders = [],
   deleteFolder = (id) => { },
   itemSize = 'regular',
   activeFolder = '',
@@ -41,7 +40,7 @@ const AssetGrid = ({
 
   let isDragging
   if (!isShare) isDragging = useDropzone()
-  const { assets, setAssets, setActiveOperation, setOperationAsset, nextPage, setOperationFolder } = useContext(AssetContext)
+  const { assets, setAssets, setActiveOperation, setOperationAsset, nextPage, setOperationFolder, folders } = useContext(AssetContext)
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
   const [activeArchiveAsset, setActiveArchiveAsset] = useState(undefined)
@@ -122,6 +121,9 @@ const AssetGrid = ({
   const copyShareLink = (folder) => copyClipboard(`${process.env.CLIENT_BASE_URL}/collections/${folder.sharePath}`)
 
   const getShareIsEnabled = ({ shareStatus }) => shareStatus === 'public' || shareStatus === 'private'
+
+  const showLoadMore = ((mode === 'assets' && assets.length > 0) || (mode === 'folders' && folders.length > 0))
+  const loadingAssetsFolders = ((assets.length > 0 && assets[assets.length - 1].isLoading) || (folders.length > 0 && folders[folders.length - 1].isLoading))
 
   return (
     <section className={`${styles.container} ${openFilter && styles.filter}`}>
@@ -216,18 +218,18 @@ const AssetGrid = ({
             })}
           </ul>
         }
-        {(mode === 'assets' && assets.length > 0) && nextPage !== -1 &&
+        {(showLoadMore) && nextPage !== -1 &&
           <>
             {nextPage > 2 ?
               <>
-                {!assets[assets.length - 1].isLoading &&
+                {!loadingAssetsFolders &&
                   <Waypoint onEnter={loadMore} fireOnRapidScroll={false} />
                 }
               </>
 
               :
               <>
-                {!assets[assets.length - 1].isLoading &&
+                {!loadingAssetsFolders &&
                   <div className={styles['button-wrapper']}>
                     <Button
                       text='Load More'
