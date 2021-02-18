@@ -92,6 +92,9 @@ export const ScheduleContext = createContext({
 })
 
 export const FilterContext = createContext({
+    activeSortFilter: {},
+    setActiveSortFilter: (val) => { },
+
     tags: [],
     loadTags: () => { },
 

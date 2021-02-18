@@ -18,16 +18,20 @@
 .select-item p {
     text-overflow: ellipsis;
     overflow: hidden;
-    text-transform: capitalize;
 }
+
+.capitalize .select-item p{
+
+}
+
 @media screen and (max-width: 800px) {
     .item-list {
         flex-direction: column;
-    }  
+    }
     .select-item {
         width: 100%;
     }
-    .item-list .tags-container:nth-last-child(-n+5) {
+    .item-list .tags-container:nth-last-child(-n + 5) {
         display: none;
     }
     .select-item p {
@@ -70,10 +74,30 @@
     display: none;
 }
 
-.select-filter{
+.select-filter {
     width: 100%;
     max-width: 20rem;
     margin: 0 auto;
     padding-top: 1.5rem;
     position: relative;
+}
+
+.any-all-wrapper {
+    display: flex;
+    font-size: 12px;
+    justify-content: center;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.any-all-wrapper > div {
+    display: flex;
+}
+
+.any-all-wrapper > div:first-child {
+    margin-right: 17px;
+}
+
+.any-all-text {
+    margin-left: 5px;
 }

@@ -1,6 +1,7 @@
 import styles from './filter-selector.module.css'
 import { Utilities } from '../../../assets'
-import { useState, useEffect } from 'react'
+import { FilterContext } from '../../../context'
+import { useContext, useEffect } from 'react'
 import update from 'immutability-helper'
 
 // Components
@@ -14,14 +15,18 @@ const FilterSelector = ({
     numItems,
     setValue,
     value,
-    placeholder,
+    anyAllSelection = '',
+    setAnyAll = (val) => { },
     loadFn,
-    addtionalClass = ''
+    addtionalClass = '',
+    capitalize = false
 }) => {
+
+    const { activeSortFilter } = useContext(FilterContext)
 
     useEffect(() => {
         loadFn()
-    }, [])
+    }, [activeSortFilter])
 
     const toggleSelected = (selected) => {
         let index = value && value.findIndex((item) => item.value === selected.value)
@@ -36,10 +41,34 @@ const FilterSelector = ({
         }
     }
 
+    // Set value and filters as selected
+    let visibleFilters = filters.slice(0, numItems)
+
+    if (value)
+        visibleFilters = [...visibleFilters, ...value.filter(selected => !visibleFilters.map(({ value }) => value).includes(selected.value))]
+
     return (
         <div className={`${styles.container}`}>
-            <ul className={`${styles['item-list']} ${oneColumn && styles['one-column']}`}>
-                {filters.slice(0, numItems).map((filter, index) => {
+            {anyAllSelection !== '' &&
+                <div className={styles['any-all-wrapper']}>
+                    <div>
+                        <IconClickable
+                            src={anyAllSelection === 'all' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                            additionalClass={styles['select-icon']}
+                            onClick={() => setAnyAll('all')} />
+                        <div className={styles['any-all-text']}>All selected</div>
+                    </div>
+                    <div>
+                        <IconClickable
+                            src={anyAllSelection === 'any' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                            additionalClass={styles['select-icon']}
+                            onClick={() => setAnyAll('any')} />
+                        <div className={styles['any-all-text']}>Any selected</div>
+                    </div>
+                </div>
+            }
+            <ul className={`${styles['item-list']} ${oneColumn && styles['one-column']} ${capitalize && 'capitalize'}`}>
+                {visibleFilters.map((filter, index) => {
                     const isSelected = value && value.findIndex((item) => item.value === filter.value) !== -1
                     return (
                         <li key={index} className={`${styles['select-item']} ${styles[addtionalClass]}`}>

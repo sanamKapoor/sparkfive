@@ -24,6 +24,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { LanguageContext, ThemeContext } from '../context'
 import AssetContextProvider from '../context/asset-provider'
+import FilterProvider from '../context/filter-provider'
 import TeamContextProvider from '../context/team-provider'
 import UserContextProvider from '../context/user-provider'
 import LoadingContextProvider from '../context/loading-provider'
@@ -78,23 +79,25 @@ export default function MyApp({ Component, pageProps }) {
   return (
     <LoadingContextProvider>
       <UserContextProvider >
-        <ShareProvider>
-          <ScheduleProvider>
-            <LanguageContext.Provider value={languageValue}>
-              <ThemeContext.Provider value={themeValue}>
-                <AssetContextProvider>
-                  <TeamContextProvider>
-                    <Head>
-                      <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key={process.env.DROPBOX_API_KEY}></script>
-                    </Head>
-                    {process.env.INCLUDE_PIXEL === 'yes' && <FBPixel />}
-                    <Component {...pageProps} />
-                  </TeamContextProvider>
-                </AssetContextProvider>
-              </ThemeContext.Provider>
-            </LanguageContext.Provider>
-          </ScheduleProvider>
-        </ShareProvider>
+        <FilterProvider>
+          <ShareProvider>
+            <ScheduleProvider>
+              <LanguageContext.Provider value={languageValue}>
+                <ThemeContext.Provider value={themeValue}>
+                  <AssetContextProvider>
+                    <TeamContextProvider>
+                      <Head>
+                        <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key={process.env.DROPBOX_API_KEY}></script>
+                      </Head>
+                      {process.env.INCLUDE_PIXEL === 'yes' && <FBPixel />}
+                      <Component {...pageProps} />
+                    </TeamContextProvider>
+                  </AssetContextProvider>
+                </ThemeContext.Provider>
+              </LanguageContext.Provider>
+            </ScheduleProvider>
+          </ShareProvider>
+        </FilterProvider>
       </UserContextProvider>
     </LoadingContextProvider>
   )

@@ -1,15 +1,14 @@
 import styles from './index.module.css'
 import { useState, useContext, useEffect } from 'react'
-import { getAssetsFilters, getAssetsSort } from '../../utils/asset'
+import { getAssetsFilters, getAssetsSort, DEFAULT_FILTERS } from '../../utils/asset'
 import toastUtils from '../../utils/toast'
 import requestUtils from '../../utils/requests'
 import { useRouter } from 'next/router'
-import selectOptions from '../common/select-options'
 import FilterProvider from '../../context/filter-provider'
 import update from 'immutability-helper'
 import shareCollectionApi from '../../server-api/share-collection'
 import folderApi from '../../server-api/folder'
-import { AssetContext, ShareContext } from '../../context'
+import { AssetContext, ShareContext, FilterContext } from '../../context'
 
 // Components
 import AssetOps from '../common/asset/asset-ops'
@@ -17,32 +16,9 @@ import TopBar from '../common/asset/top-bar'
 import PasswordOverlay from './password-overlay'
 import AssetGrid from '../common/asset/asset-grid'
 import SearchOverlay from '../main/search-overlay-assets'
-import { DropzoneProvider } from '../common/misc/dropzone'
 import FilterContainer from '../common/filter/filter-container'
 
-const DEFAULT_FILTERS = {
-    filterCampaigns: [],
-    filterChannels: [],
-    filterTags: [],
-    filterProjects: [],
-    filterFileTypes: [],
-    filterOrientations: [],
-    filterProductFields: [],
-    filterProductType: [],
-    dimensionWidth: undefined,
-    dimensionHeight: undefined,
-    beginDate: undefined,
-    endDate: undefined
-}
-
 const ShareFolderMain = () => {
-    const [activeSortFilter, setActiveSortFilter] = useState({
-        sort: selectOptions.sort[1],
-        mainFilter: 'all',
-        ...DEFAULT_FILTERS,
-        dimensionsActive: false
-    })
-
     const router = useRouter()
 
     const {
@@ -58,6 +34,8 @@ const ShareFolderMain = () => {
     } = useContext(AssetContext)
 
     const { folderInfo, setFolderInfo } = useContext(ShareContext)
+
+    const { activeSortFilter, setActiveSortFilter } = useContext(FilterContext)
 
     const [firstLoaded, setFirstLoaded] = useState(false)
     const [activePasswordOverlay, setActivePasswordOverlay] = useState(true)

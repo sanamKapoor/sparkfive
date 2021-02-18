@@ -1,13 +1,11 @@
 import styles from './index.module.css'
 import { useState, useEffect, useContext } from 'react'
-import { AssetContext } from '../../../context'
-import FilterProvider from '../../../context/filter-provider'
-import selectOptions from '../../common/select-options'
+import { AssetContext, FilterContext } from '../../../context'
 import update from 'immutability-helper'
 import assetApi from '../../../server-api/asset'
 import folderApi from '../../../server-api/folder'
 import toastUtils from '../../../utils/toast'
-import { getAssetsFilters, getAssetsSort } from '../../../utils/asset'
+import { getAssetsFilters, getAssetsSort, DEFAULT_FILTERS } from '../../../utils/asset'
 
 // Components
 import AssetOps from '../../common/asset/asset-ops'
@@ -19,29 +17,8 @@ import FilterContainer from '../../common/filter/filter-container'
 import { DropzoneProvider } from '../../common/misc/dropzone'
 import RenameModal from '../../common/modals/rename-modal'
 
-const DEFAULT_FILTERS = {
-  filterCampaigns: [],
-  filterChannels: [],
-  filterTags: [],
-  filterProjects: [],
-  filterFileTypes: [],
-  filterOrientations: [],
-  filterProductFields: [],
-  filterProductType: [],
-  dimensionWidth: undefined,
-  dimensionHeight: undefined,
-  beginDate: undefined,
-  endDate: undefined
-}
-
 const AssetsLibrary = () => {
 
-  const [activeSortFilter, setActiveSortFilter] = useState({
-    sort: selectOptions.sort[1],
-    mainFilter: 'all',
-    ...DEFAULT_FILTERS,
-    dimensionsActive: false
-  })
   const [activeView, setActiveView] = useState('grid')
   const {
     assets,
@@ -68,6 +45,8 @@ const AssetsLibrary = () => {
   const [renameModalOpen, setRenameModalOpen] = useState(false)
 
   const [openFilter, setOpenFilter] = useState(false)
+
+  const { activeSortFilter, setActiveSortFilter } = useContext(FilterContext)
 
   useEffect(() => {
     setActivePageMode('library')
@@ -190,6 +169,9 @@ const AssetsLibrary = () => {
       if (!replace && addedIds.length > 0) {
         queryParams.excludeIds = addedIds.join(',')
       }
+      if (activeSortFilter.filterFolders?.length > 0) {
+        queryParams.folders = activeSortFilter.filterFolders.map(item => item.value).join(',')
+      }
       const { data } = await folderApi.getFolders(queryParams)
       setFolders({ ...data, results: data.results }, replace)
     } catch (err) {
@@ -270,7 +252,7 @@ const AssetsLibrary = () => {
   }
 
   return (
-    <FilterProvider>
+    <>
       <AssetSubheader
         activeFolder={activeFolder}
         getFolders={getFolders}
@@ -314,6 +296,7 @@ const AssetsLibrary = () => {
               setOpenFilter={setOpenFilter}
               activeSortFilter={activeSortFilter}
               setActiveSortFilter={setActiveSortFilter}
+              isFolder={activeSortFilter.mainFilter === 'folders'}
             />
           }
         </div>
@@ -331,7 +314,7 @@ const AssetsLibrary = () => {
           closeOverlay={closeSearchOverlay}
         />
       }
-    </FilterProvider>
+    </>
   )
 }
 

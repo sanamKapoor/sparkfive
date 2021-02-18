@@ -1,7 +1,7 @@
 import styles from './top-bar.module.css'
 import { useRef } from 'react'
 import { Utilities } from '../../../assets'
-import selectOptions from '../select-options'
+import selectOptions from '../../../utils/select-options'
 
 // Components
 import SectionButton from '../buttons/section-button'
@@ -49,7 +49,7 @@ const TopBar = ({
   return (
     <section className={styles.container}>
       <div className={styles.filters} >
-        <img src={Utilities.search} onClick={setActiveSearchOverlay} className={styles.search}/>
+        <img src={Utilities.search} onClick={setActiveSearchOverlay} className={styles.search} />
         {selectOptions.views.map(view => (
           <>
             {(!activeFolder || !view.omitFolder) && (!isShare || (isShare && !view.omitShare)) &&
@@ -69,17 +69,15 @@ const TopBar = ({
         {activeSortFilter.mainFilter !== 'folders' && <Button type='button' text='Select All' styleType='secondary' onClick={selectAll} />}
         <img src={Utilities.gridView} onClick={() => setActiveView('grid')} />
         <img src={Utilities.listView} onClick={() => setActiveView('list')} />
-        {activeSortFilter.mainFilter !== 'folders' &&
-          <div className={styles['nested-wrapper']}>
-            <Button
-              text='Filters'
-              type='button'
-              styleType='secondary'
-              onClick={() => {
-                handleOpenFilter()
-              }} />
-          </div>
-        }
+        <div className={styles['nested-wrapper']}>
+          <Button
+            text='Filters'
+            type='button'
+            styleType='secondary'
+            onClick={() => {
+              handleOpenFilter()
+            }} />
+        </div>
         {activeSortFilter.mainFilter !== 'folders' &&
           <div className={styles['sort-wrapper']}>
             <Select
