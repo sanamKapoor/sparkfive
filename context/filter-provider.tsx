@@ -53,7 +53,7 @@ export default ({ children, isPublic = false }) => {
 
   const loadTags = () => {
     const fetchMethod = isPublic ? shareCollectionApi.getTags : tagApi.getTags
-    loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath, ...getCommonParams(activeSortFilter.allTags !== 'any') }), setTags)
+    loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath, ...getCommonParams() }), setTags)
   }
 
   const loadFolders = () => {
@@ -63,7 +63,7 @@ export default ({ children, isPublic = false }) => {
 
   const loadCampaigns = () => {
     const fetchMethod = isPublic ? shareCollectionApi.getCampaigns : campaignApi.getCampaigns
-    loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath, ...getCommonParams(activeSortFilter.allCampaigns !== 'any') }), setCampaigns)
+    loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath, ...getCommonParams() }), setCampaigns)
   }
 
   const loadChannels = () => {
@@ -73,7 +73,7 @@ export default ({ children, isPublic = false }) => {
 
   const loadProjects = () => {
     const fetchMethod = isPublic ? shareCollectionApi.getProjects : projectApi.getProjects
-    loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath, ...getCommonParams(activeSortFilter.allProjects !== 'any') }), setProjects)
+    loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath, ...getCommonParams() }), setProjects)
   }
 
   const loadFileTypes = () => {
@@ -93,9 +93,10 @@ export default ({ children, isPublic = false }) => {
 
   const loadProductFields = async () => {
     try {
-      const { data: categories } = await tagApi.getTags({ type: 'product_category' })
-      const { data: vendors } = await tagApi.getTags({ type: 'product_vendor' })
-      const { data: retailers } = await tagApi.getTags({ type: 'product_retailer' })
+      const fetchMethod = isPublic ? shareCollectionApi.getTags : tagApi.getTags
+      const { data: categories } = await fetchMethod({ type: 'product_category', sharePath, ...getCommonParams() })
+      const { data: vendors } = await fetchMethod({ type: 'product_vendor', sharePath, ...getCommonParams() })
+      const { data: retailers } = await fetchMethod({ type: 'product_retailer', sharePath, ...getCommonParams() })
       setProductFields({
         categories,
         vendors,
@@ -106,14 +107,21 @@ export default ({ children, isPublic = false }) => {
     }
   }
 
-  const getCommonParams = (limit = false) => {
+  const isAnyall = () => {
+    const { allTags, allCampaigns, allProjects, filterCampaigns, filterTags, filterProjects } = activeSortFilter
+    return (allTags !== 'any' && filterTags.length > 0)
+      || (allCampaigns !== 'any' && filterCampaigns.length > 0)
+      || (allProjects !== 'any' && filterProjects.length > 0)
+  }
+
+  const getCommonParams = () => {
     const params = getAssetsFilters({
       replace: false,
       addedIds: [],
       nextPage: 0,
       userFilterObject: activeSortFilter
     })
-    if (limit && anyFilters()) params.assetLim = 'yes'
+    if (isAnyall() && anyFilters()) params.assetLim = 'yes'
     return params
   }
 
