@@ -9,7 +9,7 @@ import fodlerApi from '../server-api/folder'
 import shareCollectionApi from '../server-api/share-collection'
 import { DEFAULT_FILTERS, getAssetsFilters } from '../utils/asset'
 
-export default ({ children, isPublic = false, sharePath = '' }) => {
+export default ({ children, isPublic = false }) => {
 
   const [activeSortFilter, setActiveSortFilter] = useState({
     sort: selectOptions.sort[1],
@@ -17,6 +17,7 @@ export default ({ children, isPublic = false, sharePath = '' }) => {
     ...DEFAULT_FILTERS,
     dimensionsActive: false
   })
+  const [sharePath, setSharePath] = useState('')
   const [tags, setTags] = useState([])
   const [campaigns, setCampaigns] = useState([])
   const [folders, setFolders] = useState([])
@@ -52,7 +53,7 @@ export default ({ children, isPublic = false, sharePath = '' }) => {
 
   const loadTags = () => {
     const fetchMethod = isPublic ? shareCollectionApi.getTags : tagApi.getTags
-    loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath, ...getCommonParams() }), setTags)
+    loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath, ...getCommonParams(activeSortFilter.allTags !== 'any') }), setTags)
   }
 
   const loadFolders = () => {
@@ -62,7 +63,7 @@ export default ({ children, isPublic = false, sharePath = '' }) => {
 
   const loadCampaigns = () => {
     const fetchMethod = isPublic ? shareCollectionApi.getCampaigns : campaignApi.getCampaigns
-    loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath, ...getCommonParams() }), setCampaigns)
+    loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath, ...getCommonParams(activeSortFilter.allCampaigns !== 'any') }), setCampaigns)
   }
 
   const loadChannels = () => {
@@ -72,7 +73,7 @@ export default ({ children, isPublic = false, sharePath = '' }) => {
 
   const loadProjects = () => {
     const fetchMethod = isPublic ? shareCollectionApi.getProjects : projectApi.getProjects
-    loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath, ...getCommonParams() }), setProjects)
+    loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath, ...getCommonParams(activeSortFilter.allProjects !== 'any') }), setProjects)
   }
 
   const loadFileTypes = () => {
@@ -105,14 +106,14 @@ export default ({ children, isPublic = false, sharePath = '' }) => {
     }
   }
 
-  const getCommonParams = () => {
+  const getCommonParams = (limit = false) => {
     const params = getAssetsFilters({
       replace: false,
       addedIds: [],
       nextPage: 0,
       userFilterObject: activeSortFilter
     })
-    if (anyFilters()) params.assetLim = 'yes'
+    if (limit && anyFilters()) params.assetLim = 'yes'
     return params
   }
 
@@ -161,7 +162,8 @@ export default ({ children, isPublic = false, sharePath = '' }) => {
     folders,
     loadFolders,
     activeSortFilter,
-    setActiveSortFilter
+    setActiveSortFilter,
+    setSharePath
   }
   return (
     <FilterContext.Provider value={filterValue}>

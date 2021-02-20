@@ -165,24 +165,27 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                             setValue={(selected) => setSortFilterValue('filterFolders', selected)}
                         />}
                 </section>
-                {/* <section>
-                    <div className={styles['expand-bar']} onClick={() => handleExpand('projects')}>
-                        <h4>Projects</h4>
-                        {expandedMenus.includes('projects') ?
-                            <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :
-                            <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
-                    </div>
-                    {expandedMenus.includes('projects') &&
-                        <FilterSelector
-                            oneColumn={true}
-                            loadFn={loadProjects}
-                            numItems={5}
-                            placeholder={'Projects'}
-                            filters={projects.map(project => ({ ...project, label: project.name, value: project.id }))}
-                            value={activeSortFilter.filterProjects}
-                            setValue={(selected) => setSortFilterValue('filterProjects', selected)}
-                        />}
-                </section> */}
+                {!isFolder &&
+                    <section>
+                        <div className={styles['expand-bar']} onClick={() => handleExpand('projects')}>
+                            <h4>Projects</h4>
+                            {expandedMenus.includes('projects') ?
+                                <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :
+                                <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
+                        </div>
+                        {expandedMenus.includes('projects') &&
+                            <FilterSelector
+                                oneColumn={true}
+                                loadFn={loadProjects}
+                                numItems={5}
+                                anyAllSelection={activeSortFilter.allProjects}
+                                setAnyAll={(value) => setActiveSortFilter(update(activeSortFilter, { allProjects: { $set: value } }))}
+                                filters={projects.map(project => ({ ...project, label: project.name, value: project.id }))}
+                                value={activeSortFilter.filterProjects}
+                                setValue={(selected) => setSortFilterValue('filterProjects', selected)}
+                            />}
+                    </section>
+                }
                 {!isFolder &&
                     <section>
                         <div className={styles['expand-bar']} onClick={() => handleExpand('file-types')}>

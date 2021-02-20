@@ -4,7 +4,6 @@ import { getAssetsFilters, getAssetsSort, DEFAULT_FILTERS } from '../../utils/as
 import toastUtils from '../../utils/toast'
 import requestUtils from '../../utils/requests'
 import { useRouter } from 'next/router'
-import FilterProvider from '../../context/filter-provider'
 import update from 'immutability-helper'
 import shareCollectionApi from '../../server-api/share-collection'
 import folderApi from '../../server-api/folder'
@@ -35,7 +34,7 @@ const ShareFolderMain = () => {
 
     const { folderInfo, setFolderInfo } = useContext(ShareContext)
 
-    const { activeSortFilter, setActiveSortFilter } = useContext(FilterContext)
+    const { activeSortFilter, setActiveSortFilter, setSharePath: setContextPath } = useContext(FilterContext)
 
     const [firstLoaded, setFirstLoaded] = useState(false)
     const [activePasswordOverlay, setActivePasswordOverlay] = useState(true)
@@ -62,6 +61,7 @@ const ShareFolderMain = () => {
             // Get shareUrl from path
             const splitPath = asPath.split('collections/')
             setSharePath(splitPath[1])
+            setContextPath(splitPath[1])
         }
     }, [router.asPath])
 
@@ -156,7 +156,7 @@ const ShareFolderMain = () => {
     }
 
     return (
-        <FilterProvider isPublic={true} sharePath={sharePath}>
+        <>
             <main className={styles.container}>
                 <TopBar
                     activeSortFilter={activeSortFilter}
@@ -202,7 +202,7 @@ const ShareFolderMain = () => {
                     closeOverlay={closeSearchOverlay}
                 />
             }
-        </FilterProvider>
+        </>
     )
 }
 

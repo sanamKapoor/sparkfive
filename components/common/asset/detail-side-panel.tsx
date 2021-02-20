@@ -21,6 +21,7 @@ import {
 } from '../../../constants/permissions'
 
 // Components
+import Tag from '../misc/tag'
 import IconClickable from '../buttons/icon-clickable'
 import ChannelSelector from '../items/channel-selector'
 import CreatableSelect from '../inputs/creatable-select'
@@ -316,6 +317,44 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
           asyncCreateFn={(newItem) => assetApi.addTag(id, newItem)}
           dropdownIsActive={activeDropdown === 'tags'}
         />
+      </div>
+      <div className={styles['field-wrapper']} >
+        <div className={`secondary-text ${styles.field}`}>Projects</div>
+        <div className={'normal-text'}>
+          <ul className={`tags-list ${styles['tags-list']}`}>
+            {assetProjects?.map((project, index) => (
+              <li key={project.id}>
+                <Tag
+                  altColor='turquoise'
+                  tag={project.name}
+                  canRemove={!isShare}
+                  removeFunction={() => handleAssociationChange(project.id, 'projects', 'remove')}
+                />
+              </li>
+            ))}
+          </ul>
+          {!isShare && hasPermission([CALENDAR_ACCESS]) &&
+            <>
+              {activeDropdown === 'projects' ?
+                <div className={`tag-select ${styles['select-wrapper']}`}>
+                  <ReactCreatableSelect
+                    options={inputProjects.map(project => ({ ...project, label: project.name, value: project.id }))}
+                    placeholder={'Enter new project or select an existing one'}
+                    onChange={handleProjectChange}
+                    styleType={'regular item'}
+                    menuPlacement={'top'}
+                    isClearable={true}
+                  />
+                </div>
+                :
+                <div className={`add ${styles['select-add']}`} onClick={() => setActiveDropdown('projects')}>
+                  <IconClickable src={Utilities.add} />
+                  <span>Add to Project</span>
+                </div>
+              }
+            </>
+          }
+        </div>
       </div>
 
       <div className={styles['field-wrapper']} >

@@ -92,6 +92,7 @@ export const ScheduleContext = createContext({
 })
 
 export const FilterContext = createContext({
+
     activeSortFilter: {},
     setActiveSortFilter: (val) => { },
 
@@ -125,7 +126,7 @@ export const FilterContext = createContext({
         retailers: []
     },
     loadProductFields: () => { },
-
+    setSharePath: (path) => { },
     loadAll: () => { }
 })
 
