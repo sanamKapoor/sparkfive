@@ -53,7 +53,7 @@ export default ({ children, isPublic = false }) => {
 
   const loadTags = () => {
     const fetchMethod = isPublic ? shareCollectionApi.getTags : tagApi.getTags
-    loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath, ...getCommonParams() }), setTags)
+    loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath, ...getCommonParams(activeSortFilter.allTags !== 'any') }), setTags)
   }
 
   const loadFolders = () => {
@@ -63,7 +63,7 @@ export default ({ children, isPublic = false }) => {
 
   const loadCampaigns = () => {
     const fetchMethod = isPublic ? shareCollectionApi.getCampaigns : campaignApi.getCampaigns
-    loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath, ...getCommonParams() }), setCampaigns)
+    loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath, ...getCommonParams(activeSortFilter.allCampaigns !== 'any') }), setCampaigns)
   }
 
   const loadChannels = () => {
@@ -73,7 +73,7 @@ export default ({ children, isPublic = false }) => {
 
   const loadProjects = () => {
     const fetchMethod = isPublic ? shareCollectionApi.getProjects : projectApi.getProjects
-    loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath, ...getCommonParams() }), setProjects)
+    loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath, ...getCommonParams(activeSortFilter.allProjects !== 'any') }), setProjects)
   }
 
   const loadFileTypes = () => {
@@ -107,21 +107,21 @@ export default ({ children, isPublic = false }) => {
     }
   }
 
-  const isAnyall = () => {
+  const isAnyAll = () => {
     const { allTags, allCampaigns, allProjects, filterCampaigns, filterTags, filterProjects } = activeSortFilter
     return (allTags !== 'any' && filterTags.length > 0)
       || (allCampaigns !== 'any' && filterCampaigns.length > 0)
       || (allProjects !== 'any' && filterProjects.length > 0)
   }
 
-  const getCommonParams = () => {
+  const getCommonParams = (assetLim = false) => {
     const params = getAssetsFilters({
       replace: false,
       addedIds: [],
       nextPage: 0,
       userFilterObject: activeSortFilter
     })
-    if (isAnyall() && anyFilters()) params.assetLim = 'yes'
+    if (assetLim || (isAnyAll() && anyFilters())) params.assetLim = 'yes'
     return params
   }
 
