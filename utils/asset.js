@@ -1,5 +1,24 @@
 import { capitalCase } from 'change-case'
 
+export const DEFAULT_FILTERS = {
+    filterCampaigns: [],
+    filterChannels: [],
+    filterTags: [],
+    filterFolders: [],
+    filterProjects: [],
+    filterFileTypes: [],
+    filterOrientations: [],
+    filterProductFields: [],
+    filterProductType: [],
+    allTags: 'all',
+    allCampaigns: 'all',
+    allProjects: 'all',
+    dimensionWidth: undefined,
+    dimensionHeight: undefined,
+    beginDate: undefined,
+    endDate: undefined
+  }
+
 export const getAssociatedCampaigns = (asset) => {
     const campaigns = {}
     const { projects, tasks } = asset
@@ -79,12 +98,13 @@ export const getParsedExtension = (extension) => {
     }
 }
 
-export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '', addedIds }) => {
+export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '', addedIds, nextPage }) => {
     const filters = {}
     const {
         mainFilter,
         filterCampaigns,
         filterTags,
+        filterFolders,
         filterChannels,
         filterProjects,
         filterFileTypes,
@@ -94,6 +114,8 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
         dimensionsActive,
         beginDate,
         endDate,
+        allTags,
+        allCampaigns,
         filterProductFields,
         filterProductType
     } = userFilterObject
@@ -116,6 +138,7 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
 
     addFilterToQuery(filters, filterCampaigns, 'campaigns')
     addFilterToQuery(filters, filterProjects, 'projects')
+    addFilterToQuery(filters, filterFolders, 'folders')
     addFilterToQuery(filters, filterChannels, 'channels')
     addFilterToQuery(filters, filterTags, 'tags')
     addFilterToQuery(filters, filterFileTypes, 'fileTypes')
@@ -146,13 +169,11 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
     }
 
     if (filterProductType && filterProductFields?.length > 0) {
-        let type
-        if (filterProductType.value === 'product_category') type = 'categoryId'
-        if (filterProductType.value === 'product_vendor') type = 'vendorId'
-        if (filterProductType.value === 'product_retailer') type = 'retailerId'
-
         filters.productFields = filterProductFields.map(item => item.value).join(',')
     }
+
+    if (filterTags.length > 0 && allTags) filters.allTags = allTags
+    if (filterCampaigns.length > 0 && allCampaigns) filters.allCampaigns = allCampaigns
 
     filters.page = replace ? 1 : nextPage
     return filters

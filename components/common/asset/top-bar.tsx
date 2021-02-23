@@ -1,7 +1,7 @@
 import styles from './top-bar.module.css'
 import { useRef } from 'react'
 import { Utilities } from '../../../assets'
-import selectOptions from '../select-options'
+import selectOptions from '../../../utils/select-options'
 
 // Components
 import SectionButton from '../buttons/section-button'
@@ -49,7 +49,7 @@ const TopBar = ({
   return (
     <section className={styles.container}>
       <div className={styles.filters} >
-        <img src={Utilities.search} onClick={setActiveSearchOverlay} />
+        <img src={Utilities.search} onClick={setActiveSearchOverlay} className={styles.search} />
         {selectOptions.views.map(view => (
           <>
             {(!activeFolder || !view.omitFolder) && (!isShare || (isShare && !view.omitShare)) &&
@@ -64,6 +64,7 @@ const TopBar = ({
         ))}
       </div>
       <IconClickable src={Utilities.filter} additionalClass={styles.filter} onClick={toggleHamurgerList} />
+
       <div className={styles['sec-filters']} ref={filtersRef}>
         {activeSortFilter.mainFilter !== 'folders' && <Button type='button' text='Select All' styleType='secondary' onClick={selectAll} />}
         <img src={Utilities.gridView} onClick={() => setActiveView('grid')} />
@@ -77,15 +78,17 @@ const TopBar = ({
               handleOpenFilter()
             }} />
         </div>
-        <div className={styles['sort-wrapper']}>
-          <Select
-            options={selectOptions.sort}
-            value={activeSortFilter.sort}
-            styleType='filter filter-schedule'
-            onChange={(selected) => setSortFilterValue('sort', selected)}
-            placeholder='Sort By'
-          />
-        </div>
+        {activeSortFilter.mainFilter !== 'folders' &&
+          <div className={styles['sort-wrapper']}>
+            <Select
+              options={selectOptions.sort}
+              value={activeSortFilter.sort}
+              styleType='filter filter-schedule'
+              onChange={(selected) => setSortFilterValue('sort', selected)}
+              placeholder='Sort By'
+            />
+          </div>
+        }
       </div>
     </section >
   )

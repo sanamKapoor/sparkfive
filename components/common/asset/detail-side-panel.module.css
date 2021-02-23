@@ -1,4 +1,4 @@
-.container{
+.container {
   padding: 0 20px;
 }
 
@@ -15,14 +15,14 @@
 }
 .first-section .field-wrapper:first-child {
   grid-column-start: 1;
-  grid-column-end:   3;
+  grid-column-end: 3;
 }
 
-.container .field-wrapper .tags-list{
+.container .field-wrapper .tags-list {
   margin-top: 0.7rem;
 }
 
-.select-add{
+.select-add {
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -30,12 +30,27 @@
   margin-top: 10px;
 }
 
-.select-add img{
+.select-add img {
   margin-right: 5px;
 }
 
+.collection-container .label {
+  font-weight: 600;
+  margin: 0.5rem 0 0.5rem 8px;
+}
+
+.remove {
+  cursor: pointer;
+  font-weight: 600;
+  margin-left: 0.5rem;
+  color: var(--color-sec-text);
+}
+.remove:hover {
+  color: var(--color-prim-turquoise);
+}
+
 @media screen and (max-width: 1200px) {
-  .container{
+  .container {
     min-width: 25rem;
   }
 }

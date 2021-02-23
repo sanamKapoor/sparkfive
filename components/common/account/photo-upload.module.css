@@ -29,3 +29,8 @@
 .no-photo {
 
 }
+
+.team{
+  object-fit: contain;
+  border-radius: 0;
+}

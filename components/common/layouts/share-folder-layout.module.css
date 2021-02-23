@@ -3,13 +3,28 @@
     padding: 30px 32px;
     display: flex;
     align-items: center;
+    position: relative;
+}
+
+.image-wrapper {
+    flex: 1;
 }
 
 .logo-img {
-    height: 48px;
+    max-height: 75px;
     width: auto;
     margin-right: 48px;
     cursor: pointer;
+}
+.collection-name {
+    font-size: 22px;
+    height: 75px;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    right: 300px;
+    left: 300px;
 }
 
 .navigation-links {
@@ -54,4 +69,24 @@
 
 .ops-wrapper button {
     margin-left: 1rem;
+}
+
+@media screen and (max-width: 900px) {
+    .header {
+        padding: 17.5px 16px;
+        flex-wrap: wrap;
+    }
+    .ops-wrapper {
+        margin-top: 1rem;
+        width: 100%;
+    }
+
+    .header h1 {
+        top: 1.5rem;
+    }
+
+    .collection-name {
+        right: 0;
+        left: 0;
+    }
 }

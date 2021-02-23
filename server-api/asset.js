@@ -28,4 +28,7 @@ export default {
 
   addProduct: (id, data) => axios.post(`${assetUrl}/${id}/products`, data),
   removeProduct: (id, productId) => axios.delete(`${assetUrl}/${id}/products/${productId}`),
+
+  addFolder: (id, data) => axios.post(`${assetUrl}/${id}/folders`, data),
+  removeFolder: (id, folderId) => axios.delete(`${assetUrl}/${id}/folders/${folderId}`),
 }

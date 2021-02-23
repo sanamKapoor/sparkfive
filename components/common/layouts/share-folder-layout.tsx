@@ -15,10 +15,12 @@ const ShareFolderLayout = ({ children }) => {
 	return (
 		<>
 			<header className={styles.header}>
-				<img
-					className={styles['logo-img']}
-					src={folderInfo?.teamIcon || GeneralImg.logo} />
-				<h1>{folderInfo?.folderName}</h1>
+				<div className={styles['image-wrapper']}>
+					<img
+						className={styles['logo-img']}
+						src={folderInfo?.teamIcon || GeneralImg.logo} />
+				</div>
+				<h1 className={styles['collection-name']}>{folderInfo?.folderName}</h1>
 				{selectedAssets.length > 0 &&
 					<div className={styles['ops-wrapper']}>
 						<AssetHeaderOps isShare={true} />

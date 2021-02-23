@@ -1,7 +1,7 @@
 import styles from './auth-container.module.css'
 
-const AuthContainer = ({ title, subtitle = '', children }) => (
-  <section className={styles.container}>
+const AuthContainer = ({ title, subtitle = '', children, additionalClass = '' }) => (
+  <section className={`${styles.container} ${additionalClass}`}>
     <h2>
       {title}
     </h2>

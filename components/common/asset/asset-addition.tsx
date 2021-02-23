@@ -17,8 +17,6 @@ import DriveSelector from '../asset/drive-selector'
 import FolderModal from '../folder/folder-modal'
 import IconClickable from '../buttons/icon-clickable'
 
-const ALLOWED_TYPES = 'image/png, image/jpeg, application/pdf, image/gif, video/mp4, video/mov, video/wmv, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, application/vnd.ms-powerpoint, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, text/html, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-
 const AssetAddition = ({
 	activeFolder = '',
 	getFolders = () => { },
@@ -36,7 +34,7 @@ const AssetAddition = ({
 	const [activeModal, setActiveModal] = useState('')
 	const [submitError, setSubmitError] = useState('')
 
-	const { assets, setAssets, setNeedsFetch, setAddedIds, activePageMode } = useContext(AssetContext)
+	const { assets, setAssets, setNeedsFetch, setAddedIds, activePageMode, folders, setFolders } = useContext(AssetContext)
 
 	const onFilesDataGet = async (files) => {
 		const currentDataClone = [...assets]
@@ -44,7 +42,7 @@ const AssetAddition = ({
 			let needsFolderFetch
 			const formData = new FormData()
 			const newPlaceholders = []
-			files.filter(file => ALLOWED_TYPES.includes(file.originalFile.type)).forEach(file => {
+			files.forEach(file => {
 				if (file.originalFile.name.includes('/')) {
 					needsFolderFetch = true
 				}
@@ -96,6 +94,7 @@ const AssetAddition = ({
 			setAssets([...newPlaceholders, ...currentDataClone])
 			const { data } = await assetApi.importAssets('dropbox', files.map(file => ({ link: file.link, name: file.name, size: file.bytes })), getCreationParameters())
 			setAssets([...data, ...currentDataClone])
+			setAddedIds(data.id)
 			toastUtils.success('Assets imported.')
 		} catch (err) {
 			//TODO: Handle error
@@ -108,10 +107,11 @@ const AssetAddition = ({
 
 	const onSubmit = async folderData => {
 		try {
-			await folderApi.createFolder(folderData)
+			const currentDataClone = [...folders]
+			const { data } = await folderApi.createFolder(folderData)
 			setActiveModal('')
-			getFolders()
-			toastUtils.success('Collection created sucesfully')
+			setFolders([data, ...currentDataClone])
+			toastUtils.success('Collection created successfully')
 		} catch (err) {
 			// TODO: Show error message
 			if (err.response?.data?.message) {
@@ -127,9 +127,8 @@ const AssetAddition = ({
 			success: onDropboxFilesSelection,
 			linkType: 'direct',
 			multiselect: true,
-			extensions: ['.png', '.jpg', '.gif', '.mp4'],
 			folderselect: false,
-			sizeLimit: 50 * 1024 * 1024
+			sizeLimit: 1000 * 1024 * 1024
 		}
 		// Ignore this annoying warning
 		Dropbox.choose(options)
@@ -300,9 +299,9 @@ const AssetAddition = ({
 	return (
 		<>
 			<input multiple={true} id="file-input-id" ref={fileBrowserRef} style={{ display: 'none' }} type='file'
-				onChange={onFileChange} accept={ALLOWED_TYPES} />
+				onChange={onFileChange} />
 			<input multiple={true} webkitdirectory='' webkitRelativePath='' id="file-input-id" ref={folderBrowserRef} style={{ display: 'none' }} type='file'
-				onChange={onFileChange} accept={ALLOWED_TYPES} />
+				onChange={onFileChange} />
 			{displayMode === 'dropdown' ?
 				<ToggleAbleAbsoluteWrapper
 					Wrapper={SimpleButtonWrapper}

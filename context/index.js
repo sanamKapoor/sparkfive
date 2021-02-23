@@ -36,7 +36,7 @@ export const AssetContext = createContext({
     assets: [],
     setAssets: (assets, replace) => { },
     folders: [],
-    setFolders: (folders) => { },
+    setFolders: (folders, replace) => { },
     setPlaceHolders: (type, replace) => { },
     operationAsset: null,
     setOperationAsset: (asset) => { },
@@ -92,8 +92,15 @@ export const ScheduleContext = createContext({
 })
 
 export const FilterContext = createContext({
+
+    activeSortFilter: {},
+    setActiveSortFilter: (val) => { },
+
     tags: [],
     loadTags: () => { },
+
+    folders: [],
+    loadFolders: () => { },
 
     campaigns: [],
     loadCampaigns: () => { },
@@ -119,7 +126,7 @@ export const FilterContext = createContext({
         retailers: []
     },
     loadProductFields: () => { },
-
+    setSharePath: (path) => { },
     loadAll: () => { }
 })
 

@@ -74,7 +74,7 @@ const PhotoUpload = ({
 
   return (
     <div className={styles.container}>
-      {!isUploading && <img className={`${currentPhoto ? styles.current : styles['no-photo']}`} src={currentPhoto || Utilities.memberProfile} />}
+      {!isUploading && <img className={`${currentPhoto ? styles.current : styles['no-photo']} ${styles[type]}`} src={currentPhoto || Utilities.memberProfile} />}
       {isUploading && <div className={styles.loading}><Spinner /></div>}
       <div>
         {uploadedImage ?

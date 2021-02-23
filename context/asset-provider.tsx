@@ -64,6 +64,11 @@ export default ({ children }) => {
     }
 
     const setFolderItems = (inputFolders, replace = true) => {
+        const { results, next, total } = inputFolders
+        if (results) inputFolders = results
+        if (next) setNextPage(next)
+        if (total) setTotalAssets(total)
+
         if (replace)
             setFolders(inputFolders)
         else

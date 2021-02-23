@@ -38,6 +38,7 @@ const ShareFolderModal = ({ modalIsOpen, closeModal, shareAssets, folder }) => {
   const [sendNotification, setSendNotification] = useState(false)
   const [password, setPassword] = useState('')
   const [customUrl, setCustomUrl] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
 
   useEffect(() => {
     if (folder) {
@@ -45,6 +46,7 @@ const ShareFolderModal = ({ modalIsOpen, closeModal, shareAssets, folder }) => {
       setSendNotification(false)
       const splitShareUrl = folder.sharePath?.split('/')
       setCustomUrl(snakeCase(splitShareUrl ? splitShareUrl[splitShareUrl.length - 1] : folder.name))
+      setPassword(folder.sharePassword || '')
     }
   }, [folder])
 
@@ -67,6 +69,34 @@ const ShareFolderModal = ({ modalIsOpen, closeModal, shareAssets, folder }) => {
     }
   }
 
+  const toggleShowPassword = () => {
+    if (!showPassword) {
+      setShowPassword(true)
+    } else {
+      setShowPassword(false)
+    }
+  }
+
+  const saveChanges = (withNotification = false) => {
+    const shareObj = {
+      shareStatus: shareStatus.value,
+      newPassword: password,
+      customUrl,
+      notificationSettings: {}
+    }
+
+    if (withNotification) {
+      shareObj.notificationSettings = {
+        collection: folder.name,
+        recipients,
+        message,
+        send: sendNotification
+      }
+    }
+
+    shareAssets(shareObj)
+  }
+
   const idChars = folder?.id?.substring(0, 10)
   const shareUrl = `${process.env.CLIENT_BASE_URL}/collections/${team?.company ? snakeCase(team.company) : 'sparkfive'}/${idChars}/`
   const textUrl = `.../collections/${team?.company ? snakeCase(team.company) : 'sparkfive'}/${idChars}/`
@@ -77,23 +107,13 @@ const ShareFolderModal = ({ modalIsOpen, closeModal, shareAssets, folder }) => {
     <Base
       modalIsOpen={modalIsOpen}
       closeModal={closemoveModal}
-      confirmText={'Share'}
+      confirmText={'Save'}
       headText={`Share ${folder?.name} collection`}
       disabledConfirm={!customUrl}
       additionalClasses={[`${styles['modal-share-folder']}`]}
       textWidth={true}
       confirmAction={() => {
-        shareAssets({
-          shareStatus: shareStatus.value,
-          newPassword: password,
-          customUrl,
-          notificationSettings: {
-            collection: folder.name,
-            recipients,
-            message,
-            send: sendNotification
-          }
-        })
+        saveChanges()
         closemoveModal()
       }} >
       <div className={`${styles['container-info']}`}>
@@ -112,9 +132,9 @@ const ShareFolderModal = ({ modalIsOpen, closeModal, shareAssets, folder }) => {
               <div>
                 {textUrl}
               </div>
-              <input onChange={onCustomUrlChange} 
-              // styleType={'regular-short'} 
-              value={customUrl} className={`${styles['input-container']}`}/>
+              <input onChange={onCustomUrlChange}
+                // styleType={'regular-short'} 
+                value={customUrl} className={`${styles['input-container']}`} />
             </div>
             <Button
               text='Copy Link'
@@ -126,7 +146,12 @@ const ShareFolderModal = ({ modalIsOpen, closeModal, shareAssets, folder }) => {
         }
         {shareStatus?.value === 'private' &&
           <div className={`${styles['share-password']}`}>
-            <Input placeholder={'Share password'} onChange={e => setPassword(e.target.value)} styleType={'regular-short'} />
+            <Input type={showPassword ? 'text' : 'password'} placeholder={'Share password'}
+              onChange={e => setPassword(e.target.value)} styleType={'regular-short'} value={password} />
+            <div onClick={toggleShowPassword} className={`${styles['container-show-password']}`}>
+              <IconClickable src={showPassword ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal} />
+              Show Password
+            </div>
           </div>
         }
         <div onClick={() => setSendNotification(!sendNotification)} className={`${styles['container-send-notification']}`}>
@@ -140,6 +165,14 @@ const ShareFolderModal = ({ modalIsOpen, closeModal, shareAssets, folder }) => {
             </div>
             <div className={styles['input-wrapper']}>
               <TextArea placeholder={'Add a message (optional)'} rows={7} onChange={e => setMessage(e.target.value)} styleType={'regular-short'} noResize={true} />
+            </div>
+            <div className={styles['input-wrapper']}>
+              <Button
+                text='Send'
+                type='button'
+                onClick={() => saveChanges(true)}
+                styleType={'secondary'}
+              />
             </div>
           </>
         }
