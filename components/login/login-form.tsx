@@ -26,14 +26,15 @@ const Form = () => {
       }
       const { data } = await userApi.signIn(signInData)
       await afterAuth(data)
-    } catch (err) {
-      setIsLoading(false)
+    } catch (err) {      
       // TODO: Show error message
       if (err.response?.data?.message) {
         setSubmitError(err.response.data.message)
       } else {
         setSubmitError('Something went wrong, please try again later')
       }
+    } finally{
+      setIsLoading(false)
     }
   }
 
