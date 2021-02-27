@@ -5,7 +5,7 @@ import update from 'immutability-helper'
 import assetApi from '../../../server-api/asset'
 import folderApi from '../../../server-api/folder'
 import toastUtils from '../../../utils/toast'
-import { getAssetsFilters, getAssetsSort, DEFAULT_FILTERS } from '../../../utils/asset'
+import { getAssetsFilters, getAssetsSort, DEFAULT_FILTERS, getFoldersFromUploads } from '../../../utils/asset'
 
 // Components
 import AssetOps from '../../common/asset/asset-ops'
@@ -86,9 +86,21 @@ const AssetsLibrary = () => {
 
   const onFilesDataGet = async (files) => {
     const currentDataClone = [...assets]
+    const currenFolderClone = [...folders]
     try {
       const formData = new FormData()
       const newPlaceholders = []
+      const folderPlaceholders = []
+      const foldersUploaded = getFoldersFromUploads(files)
+      foldersUploaded.forEach(folder => {
+        folderPlaceholders.push({
+          name: folder,
+          length: 10,
+          assets: [],
+          isLoading: true,
+          createdAt: new Date()
+        })
+      })
       files.forEach(file => {
         let { originalFile } = file
         newPlaceholders.push({
@@ -110,6 +122,7 @@ const AssetsLibrary = () => {
         formData.append('asset', originalFile)
       })
       setAssets([...newPlaceholders, ...currentDataClone])
+      setFolders([...folderPlaceholders, ...currenFolderClone])
       const { data } = await assetApi.uploadAssets(formData, getCreationParameters())
       if (activeMode === 'folders') {
         setNeedsFetch('folders')
