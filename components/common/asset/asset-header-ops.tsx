@@ -27,6 +27,7 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false })
 	}
 	return (
 		<>
+			{!isShare && <Button text={'Edit'} type='button' styleType='tertiary' onClick={() => setActiveOperation('edit')} />}
 			{!isShare && <Button text={'Delete'} type='button' styleType='tertiary' onClick={() => setActiveOperation('delete')} />}
 			{!isShare && <Button text={isUnarchive ? 'Unarchive' : 'Archive'} type='button' styleType='tertiary' onClick={() => setActiveOperation(isUnarchive ? 'unarchive' : 'archive')} />}
 			{(isShare || hasPermission([ASSET_DOWNLOAD])) && <Button text={'Download'} type='button' styleType={isShare ? 'secondary' : 'tertiary'} onClick={downloadSelectedAssets} />}

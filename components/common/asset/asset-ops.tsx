@@ -13,6 +13,7 @@ import MoveModal from '../modals/move-modal'
 import ShareModal from '../modals/share-modal'
 import ShareFolderModal from '../modals/share-folder-modal'
 import ConfirmModal from '../modals/confirm-modal'
+import BulkEditOverlay from '../bulk-edit-overlay'
 
 export default () => {
 
@@ -366,6 +367,9 @@ export default () => {
 				confirmText={'Remove'}
 				message={`Remove ${operationLength} item(s) from ${currentItem.type}?`}
 			/>
+			{activeOperation === 'edit' &&
+				<BulkEditOverlay handleBackButton={() => setActiveOperation('')} selectedAssets={selectedAssets}/>
+			}
 		</>
 	)
 }

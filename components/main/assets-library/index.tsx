@@ -16,7 +16,6 @@ import TopBar from '../../common/asset/top-bar'
 import FilterContainer from '../../common/filter/filter-container'
 import { DropzoneProvider } from '../../common/misc/dropzone'
 import RenameModal from '../../common/modals/rename-modal'
-import BulkEditOverlay from '../../common/bulk-edit-overlay'
 
 const AssetsLibrary = () => {
 
@@ -40,8 +39,6 @@ const AssetsLibrary = () => {
   const [activeMode, setActiveMode] = useState('assets')
 
   const [activeSearchOverlay, setActiveSearchOverlay] = useState(false)
-
-  const [activeBulkEditOverlay, setActiveBulkEditOverlay] = useState(true)
 
   const [firstLoaded, setFirstLoaded] = useState(false)
 
@@ -192,13 +189,6 @@ const AssetsLibrary = () => {
     }))
   }
 
-  const handleBackButtonBulkEdit = () => {
-    if (activeBulkEditOverlay)
-      setActiveBulkEditOverlay(!activeBulkEditOverlay)
-    else
-      setActiveBulkEditOverlay(activeBulkEditOverlay)
-  }
-
   const selectAll = () => {
     setAssets(assets.map(assetItem => ({ ...assetItem, isSelected: true })))
   }
@@ -323,9 +313,6 @@ const AssetsLibrary = () => {
         <SearchOverlay
           closeOverlay={closeSearchOverlay}
         />
-      }
-      {activeBulkEditOverlay &&
-        <BulkEditOverlay handleBackButton={handleBackButtonBulkEdit} />
       }
     </>
   )
