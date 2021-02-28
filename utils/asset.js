@@ -17,7 +17,7 @@ export const DEFAULT_FILTERS = {
     dimensionHeight: undefined,
     beginDate: undefined,
     endDate: undefined
-  }
+}
 
 export const getAssociatedCampaigns = (asset) => {
     const campaigns = {}
@@ -180,12 +180,28 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
 }
 
 export const getAssetsSort = (userFilterObject) => {
+    // /ori/PXL_20210215_215652102.MP.jpg
     if (userFilterObject.sort.value !== 'none') {
         const { field, order } = userFilterObject.sort
         return {
             sort: `${field},${order}`
         }
     } else return {}
+}
+
+export const getFoldersFromUploads = (files) => {
+    const folders = new Set()
+    files.forEach(({ path }) => {
+        if (path.indexOf('/') !== -1) {
+            const splitFile = path.split('/')
+            splitFile.forEach((name, index) => {
+                if (index < splitFile.length - 1 && name) {
+                    folders.add(name)
+                }
+            })
+        }
+    })
+    return Array.from(folders)
 }
 
 const addFilterToQuery = (filters, filterItems, key) => {
