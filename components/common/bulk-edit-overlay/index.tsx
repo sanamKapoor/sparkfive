@@ -2,6 +2,7 @@ import styles from './index.module.css'
 import { useState, useEffect, useContext } from 'react'
 import { Utilities } from '../../../assets'
 import { AssetContext } from '../../../context'
+import update from 'immutability-helper'
 
 // Components
 import Button from '../buttons/button'
@@ -11,9 +12,11 @@ import EditGrid from './edit-grid'
 
 const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 
-	const { assets } = useContext(AssetContext)
+	const { assets, setAssets } = useContext(AssetContext)
 
 	const [sideOpen, setSideOpen] = useState(true)
+
+	useEffect(() => deselectAll(), [])
 
 	const toggleSideMenu = (value = null) => {
 		if (value === null)
@@ -21,6 +24,25 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 		else
 			setSideOpen(value)
 	}
+
+	const toggleSelectedEdit = (id) => {
+		const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
+		setAssets(update(assets, {
+			[assetIndex]: {
+				isEditSelected: { $set: !assets[assetIndex].isEditSelected }
+			}
+		}))
+	}
+
+	const selectAll = () => {
+		setAssets(assets.map(assetItem => ({ ...assetItem, isEditSelected: true })))
+	}
+
+	const deselectAll = () => {
+		setAssets(assets.map(asset => ({ ...asset, isEditSelected: false })))
+	}
+
+	const editSelectedAssets = selectedAssets.filter(({ isEditSelected }) => isEditSelected)
 
 	return (
 		<div className={`app-overlay ${styles.container}`}>
@@ -33,16 +55,16 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 					<div className={styles.name}>
 						<h3>Edit Assets</h3>
 						<div className={styles['asset-actions']}>
-							<Button text={'Select All'} type={'button'} styleType={'secondary'} />
-							<Button text={`(${selectedAssets.length}) Selected`} type={'button'} styleType={'primary'} />
+							<Button text={'Select All'} type={'button'} styleType={'secondary'} onClick={selectAll} />
+							<Button text={`Deselect All (${editSelectedAssets.length})`} type={'button'} styleType={'primary'} onClick={deselectAll} />
 						</div>
 					</div>
 				</div>
-				<EditGrid assets={selectedAssets} />
+				<EditGrid assets={selectedAssets} toggleSelectedEdit={toggleSelectedEdit} />
 			</section>
 			{sideOpen &&
 				<section className={styles.side}>
-					<SidePanelBulk elementsSelected={selectedAssets} />
+					<SidePanelBulk elementsSelected={editSelectedAssets} onUpdate={handleBackButton}/>
 				</section>
 			}
 			<section className={styles.menu}>

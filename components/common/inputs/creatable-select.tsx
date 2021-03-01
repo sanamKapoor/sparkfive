@@ -22,49 +22,64 @@ const CreatableSelect = ({
   isShare,
   asyncCreateFn,
   dropdownIsActive,
-  altColor = ''
+  altColor = '',
+  isBulkEdit = false
 }) => {
 
   const onChange = async (selected, actionMeta) => {
     const newItem = await addItem(selected, actionMeta.action === 'create-option')
-    if (actionMeta.action === 'create-option') {
+    if (newItem && actionMeta.action === 'create-option') {
       setAvailableItems(update(avilableItems, { $push: [newItem] }))
     }
   }
 
   const addItem = async (item, isNew = false) => {
-    if (selectedItems.findIndex(selectedItem => item.label === selectedItem.name) === -1) {
-      const newItem = { name: item.label }
-      if (!isNew) newItem.id = item.value
-      try {
-        const { data } = await asyncCreateFn(newItem)
-        let stateItemsUpdate
-        if (!isNew) {
-          stateItemsUpdate = update(selectedItems, { $push: [newItem] })
-          setSelectedItems(stateItemsUpdate)
-        } else {
-          stateItemsUpdate = update(selectedItems, { $push: [data] })
-          setSelectedItems(stateItemsUpdate)
-          setAvailableItems(update(avilableItems, { $push: [data] }))
+    if (isBulkEdit) {
+      if (!item || selectedItems.findIndex(selectedItem => item.label === selectedItem.name) !== -1) return
+      if (!isNew) {
+        setSelectedItems(update(selectedItems, { $push: [item] }))
+      } else {
+        setSelectedItems(update(selectedItems, { $push: [{ ...item, name: item.value }] }))
+      }
+      return item
+    } else {
+      if (selectedItems.findIndex(selectedItem => item.label === selectedItem.name) === -1) {
+        const newItem = { name: item.label }
+        if (!isNew) newItem.id = item.value
+        try {
+          const { data } = await asyncCreateFn(newItem)
+          let stateItemsUpdate
+          if (!isNew) {
+            stateItemsUpdate = update(selectedItems, { $push: [newItem] })
+            setSelectedItems(stateItemsUpdate)
+          } else {
+            stateItemsUpdate = update(selectedItems, { $push: [data] })
+            setSelectedItems(stateItemsUpdate)
+            setAvailableItems(update(avilableItems, { $push: [data] }))
+          }
+          onAddOperationFinished(stateItemsUpdate)
+          return data
+        } catch (err) {
+          // TODO: Error if failure for whatever reason
+          onOperationFailedSkipped()
         }
-        onAddOperationFinished(stateItemsUpdate)
-        return data
-      } catch (err) {
-        // TODO: Error if failure for whatever reason
+      } else {
         onOperationFailedSkipped()
       }
-    } else {
-      onOperationFailedSkipped()
     }
   }
 
   const removeItem = async (index) => {
-    try {
-      let stateItemsUpdate = update(selectedItems, { $splice: [[index, 1]] })
-      setSelectedItems(stateItemsUpdate)
-      onRemoveOperationFinished(index, stateItemsUpdate)
-    } catch (err) {
-      // TODO: Error if failure for whatever reason
+    if (isBulkEdit) {
+      setSelectedItems(update(selectedItems, { $splice: [[index, 1]] }))
+    } else {
+      try {
+        let stateItemsUpdate = update(selectedItems, { $splice: [[index, 1]] })
+        setSelectedItems(stateItemsUpdate)
+        onRemoveOperationFinished(index, stateItemsUpdate)
+      } catch (err) {
+        // TODO: Error if failure for whatever reason
+      }
     }
   }
 
@@ -73,11 +88,11 @@ const CreatableSelect = ({
       <div className={`secondary-text ${styles.field}`}>{title}</div>
       <div className={'normal-text'}>
         <ul className={`tags-list ${styles['tags-list']}`}>
-          {selectedItems?.map((campaign, index) => (
-            <li key={campaign.id}>
+          {selectedItems?.map((item, index) => (
+            <li key={item.id || item.value}>
               <Tag
                 altColor={altColor}
-                tag={campaign.name}
+                tag={item.name}
                 canRemove={!isShare}
                 removeFunction={() => removeItem(index)}
               />
@@ -90,7 +105,7 @@ const CreatableSelect = ({
               <div className={`tag-select`}>
                 <ReactCreatableSelect
                   placeholder={selectPlaceholder}
-                  options={avilableItems.map(item => ({ label: item.name, value: item.id }))}
+                  options={avilableItems.map(item => ({ ...item, label: item.name, value: item.id }))}
                   onChange={onChange}
                   styleType={'regular item'}
                   menuPlacement={'top'}

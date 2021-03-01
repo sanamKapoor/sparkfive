@@ -4,14 +4,12 @@ import ReactCreatableSelect from 'react-select/creatable'
 
 import { AssetContext, UserContext, FilterContext } from '../../../context'
 import { useEffect, useState, useContext } from 'react'
-import { format } from 'date-fns'
-import { capitalCase } from 'change-case'
-import filesize from 'filesize'
-import { getAssociatedCampaigns, getAssociatedChannels, getParsedExtension } from '../../../utils/asset'
 import tagApi from '../../../server-api/tag'
 import assetApi from '../../../server-api/asset'
 import projectApi from '../../../server-api/project'
 import campaignApi from '../../../server-api/campaign'
+import folderApi from '../../../server-api/folder'
+import toastUtils from '../../../utils/toast'
 import { Utilities } from '../../../assets'
 
 
@@ -23,71 +21,97 @@ import ChannelSelector from '../items/channel-selector'
 import CreatableSelect from '../inputs/creatable-select'
 import ProjectCreationModal from '../modals/project-creation-modal'
 import ProductAddition from '../asset/product-addition'
+import folder from '../../../server-api/folder'
 
-const SidePanelBulk = ({elementsSelected}) => {
-
-  const collections = [
-    {
-      id: '1',
-      name: 'col1'
-    },
-    {
-      id: '2',
-      name: 'col2'
-    },
-    {
-      id: '3',
-      name: 'col3'
-    }
-  ]
+const SidePanelBulk = ({ elementsSelected, onUpdate }) => {
 
   const [channel, setChannel] = useState(null)
   const [activeDropdown, setActiveDropdown] = useState('')
+
   const [inputCampaigns, setInputCampaigns] = useState([])
   const [assetCampaigns, setCampaigns] = useState([])
-  const [inputCollections, setInputCollections] = useState([])
-  const [assetCollections, setCollections] = useState([])
+
+  const [inputFolders, setInputFolders] = useState([])
+  const [assetFolder, setAssetFolder] = useState(null)
+
   const [inputTags, setInputTags] = useState([])
   const [assetTags, setTags] = useState([])
-  const [assetProjects, setProjects] = useState([])
+
   const [inputProjects, setInputProjects] = useState([])
+  const [assetProjects, setAssetProjects] = useState([])
+
   const [newProjectName, setNewProjectName] = useState('')
+
+  const [assetProduct, setAssetProduct] = useState(null)
 
   useEffect(() => {
     getInputData()
-    getTagsInputData()
   }, [])
 
   const updateChannel = (option) => {
     setChannel(option)
   }
-  
+
   const getInputData = async () => {
     try {
       const projectsResponse = await projectApi.getProjects()
       const campaignsResponse = await campaignApi.getCampaigns()
+      const folderResponse = await folderApi.getFoldersSimple()
+      const tagsResponse = await tagApi.getTags()
       setInputProjects(projectsResponse.data)
       setInputCampaigns(campaignsResponse.data)
-      setInputCollections(collections)
-    } catch (err) {
-      // TODO: Maybe show error?
-    }
-  }
-  const getTagsInputData = async () => {
-    try {
-      const tagsResponse = await tagApi.getTags()
+      setInputFolders(folderResponse.data)
       setInputTags(tagsResponse.data)
     } catch (err) {
       // TODO: Maybe show error?
     }
   }
-  const handleProjectChange = async (selected, actionMeta) => {
-    // const newCampaign = await addCampaign(selected, actionMeta.action === 'create-option')
+
+  const handleProjectChange = (selected, actionMeta) => {
+    if (!selected || assetProjects.findIndex(selectedItem => selected.label === selectedItem.name) !== -1) return
     if (actionMeta.action === 'create-option') {
       setNewProjectName(selected.value)
-    } 
+    } else if (selected) {
+      setAssetProjects(update(assetProjects, { $push: [selected] }))
+    }
   }
-  
+
+  const removeProject = (index) => {
+    setAssetProjects(update(assetProjects, { $splice: [[index, 1]] }))
+  }
+
+  const onValueChange = (selected, actionMeta) => {
+    setActiveDropdown('')
+    if (actionMeta.action === 'create-option') {
+      setAssetFolder({ ...selected, name: selected.value })
+    } else {
+      setAssetFolder(selected)
+    }
+  }
+
+  const saveChanges = async () => {
+    try {
+      const mapAttributes = ({ id, name }) => ({ id, name })
+      const updateObject = {
+        assetIds: elementsSelected.map(({ asset: { id } }) => id),
+        attributes: {
+          channel,
+          folders: [],
+          campaigns: assetCampaigns.map(mapAttributes),
+          projects: assetProjects.map(mapAttributes),
+          tags: assetTags.map(mapAttributes),
+          products: [{ product: assetProduct, productTags: assetProduct.tags }]
+        }
+      }
+
+      if (assetFolder) updateObject.attributes.folders = [{ name: assetFolder.name, id: assetFolder.id }]
+      await assetApi.updateMultipleAttributes(updateObject)
+      onUpdate()
+      toastUtils.success('Successfully updated assets')
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   return (
     <div className={styles.container}>
@@ -99,29 +123,42 @@ const SidePanelBulk = ({elementsSelected}) => {
         <div className={`secondary-text ${styles.field}`}>Channel</div>
         <ChannelSelector
           channel={channel || undefined}
-          // isShare={isShare}
+          isShare={false}
           onLabelClick={() => { }}
           handleChannelChange={(option) => updateChannel(option)}
         />
       </section>
 
       <section className={styles['field-wrapper']} >
-        <CreatableSelect
-          title='Collections'
-          addText='Add to Collection'
-          onAddClick={() => setActiveDropdown('collections')}
-          selectPlaceholder={'Enter a new collection or select an existing one'}
-          avilableItems={inputCollections}
-          setAvailableItems={setInputCollections}
-          selectedItems={assetCollections}
-          setSelectedItems={setCollections}
-          onAddOperationFinished={() => null }
-          onRemoveOperationFinished={() => null }
-          onOperationFailedSkipped={() => setActiveDropdown('')}
-          asyncCreateFn={() => null}
-          dropdownIsActive={activeDropdown === 'collections'}
-          altColor='yellow'
-        />
+        <div className={`secondary-text ${styles.field}`}>Collection</div>
+        <div className={`normal-text ${styles['collection-container']}`}>
+          <p className={styles['collection-name']}>
+            {assetFolder && <span className={styles.label}>{assetFolder.name}</span>}
+          </p>
+          <>
+            {activeDropdown === 'collection' ?
+              <div className={`tag-select ${styles['select-wrapper']}`}>
+                <ReactCreatableSelect
+                  options={inputFolders.map(folder => ({ ...folder, label: folder.name, value: folder.id }))}
+                  placeholder={'Enter new collection or select an existing one'}
+                  onChange={onValueChange}
+                  styleType={'regular item'}
+                  menuPlacement={'top'}
+                  isClearable={true}
+                />
+              </div>
+              :
+              <>
+                {activeDropdown !== 'collection' &&
+                  <div className={`add ${styles['select-add']}`} onClick={() => setActiveDropdown('collection')}>
+                    <IconClickable src={Utilities.add} />
+                    <span>Add to Collection</span>
+                  </div>
+                }
+              </>
+            }
+          </>
+        </div>
       </section>
 
       <section className={styles['field-wrapper']} >
@@ -134,12 +171,14 @@ const SidePanelBulk = ({elementsSelected}) => {
           setAvailableItems={setInputCampaigns}
           selectedItems={assetCampaigns}
           setSelectedItems={setCampaigns}
-          onAddOperationFinished={() => null }
-          onRemoveOperationFinished={() => null }
+          onAddOperationFinished={() => null}
+          onRemoveOperationFinished={() => null}
           onOperationFailedSkipped={() => setActiveDropdown('')}
           asyncCreateFn={() => null}
           dropdownIsActive={activeDropdown === 'campaigns'}
           altColor='yellow'
+          isShare={false}
+          isBulkEdit={true}
         />
       </section>
 
@@ -153,11 +192,13 @@ const SidePanelBulk = ({elementsSelected}) => {
           setAvailableItems={setInputTags}
           selectedItems={assetTags}
           setSelectedItems={setTags}
-          onAddOperationFinished={() => null }
-          onRemoveOperationFinished={() => null }
+          onAddOperationFinished={() => null}
+          onRemoveOperationFinished={() => null}
           onOperationFailedSkipped={() => setActiveDropdown('')}
           asyncCreateFn={() => null}
           dropdownIsActive={activeDropdown === 'tags'}
+          isShare={false}
+          isBulkEdit={true}
         />
       </section>
 
@@ -170,31 +211,31 @@ const SidePanelBulk = ({elementsSelected}) => {
                 <Tag
                   altColor='turquoise'
                   tag={project.name}
-                  // canRemove={!isShare}
-                  // removeFunction={() => handleAssociationChange(project.id, 'projects', 'remove')}
+                  canRemove={true}
+                  removeFunction={() => removeProject(index)}
                 />
               </li>
             ))}
           </ul>
-            <>
-              {activeDropdown === 'projects' ?
-                <div className={`tag-select ${styles['select-wrapper']}`}>
-                  <ReactCreatableSelect
-                    options={inputProjects.map(project => ({ ...project, label: project.name, value: project.id }))}
-                    placeholder={'Enter new project or select an existing one'}
-                    onChange={handleProjectChange}
-                    styleType={'regular item'}
-                    menuPlacement={'top'}
-                    isClearable={true}
-                  />
-                </div>
-                :
-                <div className={`add ${styles['select-add']}`} onClick={() => setActiveDropdown('projects')}>
-                  <IconClickable src={Utilities.add} />
-                  <span>Add to Project</span>
-                </div>
-              }
-            </>
+          <>
+            {activeDropdown === 'projects' ?
+              <div className={`tag-select ${styles['select-wrapper']}`}>
+                <ReactCreatableSelect
+                  options={inputProjects.map(project => ({ ...project, label: project.name, value: project.id }))}
+                  placeholder={'Enter new project or select an existing one'}
+                  onChange={handleProjectChange}
+                  styleType={'regular item'}
+                  menuPlacement={'top'}
+                  isClearable={true}
+                />
+              </div>
+              :
+              <div className={`add ${styles['select-add']}`} onClick={() => setActiveDropdown('projects')}>
+                <IconClickable src={Utilities.add} />
+                <span>Add to Project</span>
+              </div>
+            }
+          </>
         </div>
       </section>
 
@@ -207,18 +248,23 @@ const SidePanelBulk = ({elementsSelected}) => {
           setActiveDropdown={setActiveDropdown}
           assetId={null}
           updateAssetState={() => null}
-          product={null}
+          product={assetProduct}
+          isShare={false}
+          isBulkEdit={true}
+          setAssetProduct={setAssetProduct}
         />
       </section>
 
       <ProjectCreationModal
         initialValue={newProjectName}
         closeModal={() => setNewProjectName('')}
-        // confirmCreation={addNewProject}
+        confirmCreation={(project) => handleProjectChange({ ...project, label: project.name }, 'create-option')}
         modalIsOpen={newProjectName}
       />
-      
-      <div className={styles['save-changes']}><Button text={'Save Changes'} type={'button'} styleType={'primary'} /></div>
+
+      <div className={styles['save-changes']}>
+        <Button text={'Save Changes'} type={'button'} styleType={'primary'} onClick={saveChanges} disabled={elementsSelected.length === 0} />
+      </div>
     </div >
   )
 }

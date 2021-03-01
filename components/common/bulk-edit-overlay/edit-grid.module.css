@@ -1,12 +1,13 @@
-.list-wrapper{
+.list-wrapper {
   width: 100%;
   max-width: 1800px;
+  margin-top: 2rem;
 }
 
 .grid-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  grid-gap: 2rem;
+  grid-template-columns: repeat(auto-fill, 120px);
+  grid-gap: 3rem;
 }
 
 .container {
@@ -15,6 +16,7 @@
   flex-direction: column;
   height: 100%;
   position: relative;
+  cursor: pointer;
 }
 
 .image-wrapper {
@@ -24,4 +26,50 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.image-wrapper .selectable-wrapper .select-icon {
+  width: 25px;
+  height: auto;
+}
+
+.image-wrapper > img,
+.image-wrapper > .video-wrapper {
+  width: inherit;
+  height: inherit;
+  object-fit: cover;
+}
+
+.text-wrapper{
+  margin-top: 0.6rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  font-size: 11px;
+  position: absolute;
+  max-width: 120px;
+}
+
+.selectable-wrapper{
+  position: absolute;
+  top: 5px;
+  left: 5px;
+}
+
+@keyframes halfopacity {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes intoview {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }

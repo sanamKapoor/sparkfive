@@ -16,3 +16,7 @@
 .small .icon{
   width: 30px;
 }
+
+.bulk-size .icon{
+  width: auto;
+}

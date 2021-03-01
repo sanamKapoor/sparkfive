@@ -46,7 +46,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
 
   const { assets, setAssets } = useContext(AssetContext)
   const { hasPermission } = useContext(UserContext)
-  const { loadCampaigns, loadProjects, loadTags, loadFolders } = useContext(FilterContext)
+  const { loadCampaigns, loadProjects, loadTags } = useContext(FilterContext)
 
   const [inputCampaigns, setInputCampaigns] = useState([])
   const [inputTags, setInputTags] = useState([])
@@ -128,7 +128,6 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
   }
 
   const handleProjectChange = async (selected, actionMeta) => {
-    // const newCampaign = await addCampaign(selected, actionMeta.action === 'create-option')
     if (actionMeta.action === 'create-option') {
       setNewProjectName(selected.value)
     } else if (selected) {
@@ -379,7 +378,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                 </div>
                 :
                 <>
-                  {!product &&
+                  {!folder &&
                     <div className={`add ${styles['select-add']}`} onClick={() => setActiveDropdown('collection')}>
                       <IconClickable src={Utilities.add} />
                       <span>Add Collection</span>

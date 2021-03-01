@@ -1,4 +1,4 @@
-.wrapper{
+.wrapper {
     overflow: hidden;
     height: 100%;
     display: flex;
@@ -6,4 +6,11 @@
     align-items: center;
 }
 
-.wrapper video{}
+.wrapper video {
+    max-width: 200px;
+}
+
+.bulk-size video{
+    width: 120px;
+    height: 120px;
+}
