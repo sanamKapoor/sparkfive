@@ -32,4 +32,5 @@ export default {
 
   addFolder: (id, data) => axios.post(`${assetUrl}/${id}/folders`, data),
   removeFolder: (id, folderId) => axios.delete(`${assetUrl}/${id}/folders/${folderId}`),
+  getBulkProperties: (data) => axios.post(`${assetUrl}/bulk-properties`, data)
 }

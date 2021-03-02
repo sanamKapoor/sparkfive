@@ -16,7 +16,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 
 	const [sideOpen, setSideOpen] = useState(true)
 
-	useEffect(() => deselectAll(), [])
+	useEffect(() => selectAll(), [])
 
 	const toggleSideMenu = (value = null) => {
 		if (value === null)

@@ -25,6 +25,8 @@ import folder from '../../../server-api/folder'
 
 const SidePanelBulk = ({ elementsSelected, onUpdate }) => {
 
+  const [dataLoaded, setDataLoaded] = useState(false)
+
   const [channel, setChannel] = useState(null)
   const [activeDropdown, setActiveDropdown] = useState('')
 
@@ -48,8 +50,26 @@ const SidePanelBulk = ({ elementsSelected, onUpdate }) => {
     getInputData()
   }, [])
 
+  useEffect(() => {
+    if (!dataLoaded && elementsSelected.length > 0) {
+      getInitialAttributes()
+    }
+  }, [dataLoaded, elementsSelected])
+
   const updateChannel = (option) => {
     setChannel(option)
+  }
+
+  const getInitialAttributes = async () => {
+    try {
+      const { data: { tags, projects, campaigns } } = await assetApi.getBulkProperties({ assetIds: elementsSelected.map(({ asset: { id } }) => id) })
+      setDataLoaded(true)
+      setCampaigns(campaigns)
+      setAssetProjects(projects)
+      setTags(tags)
+    } catch (err) {
+
+    }
   }
 
   const getInputData = async () => {
@@ -62,6 +82,7 @@ const SidePanelBulk = ({ elementsSelected, onUpdate }) => {
       setInputCampaigns(campaignsResponse.data)
       setInputFolders(folderResponse.data)
       setInputTags(tagsResponse.data)
+      setDataLoaded(true)
     } catch (err) {
       // TODO: Maybe show error?
     }

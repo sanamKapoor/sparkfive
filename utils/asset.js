@@ -189,11 +189,14 @@ export const getAssetsSort = (userFilterObject) => {
     } else return {}
 }
 
-export const getFoldersFromUploads = (files) => {
+export const getFoldersFromUploads = (files, isRegular = false) => {
+    console.log(files)
     const folders = new Set()
-    files.forEach(({ path }) => {
-        if (path.indexOf('/') !== -1) {
-            const splitFile = path.split('/')
+    files.forEach(({ path, originalFile }) => {
+        let pathToParse = path
+        if (isRegular) pathToParse = originalFile.webkitRelativePath
+        if (pathToParse.indexOf('/') !== -1) {
+            const splitFile = pathToParse.split('/')
             splitFile.forEach((name, index) => {
                 if (index < splitFile.length - 1 && name) {
                     folders.add(name)

@@ -2,6 +2,7 @@ import styles from './asset-addition.module.css'
 import { useRef, useState, useContext } from 'react'
 import { Assets } from '../../../assets'
 import { AssetContext } from '../../../context'
+import { getFoldersFromUploads } from '../../../utils/asset'
 import toastUtils from '../../../utils/toast'
 import cookiesUtils from '../../../utils/cookies'
 import assetApi from '../../../server-api/asset'
@@ -38,14 +39,26 @@ const AssetAddition = ({
 
 	const onFilesDataGet = async (files) => {
 		const currentDataClone = [...assets]
+		const currenFolderClone = [...folders]
 		try {
 			let needsFolderFetch
 			const formData = new FormData()
 			const newPlaceholders = []
+			const folderPlaceholders = []
+			const foldersUploaded = getFoldersFromUploads(files, true)
+			if (foldersUploaded.length > 0) {
+				needsFolderFetch = true
+			}
+			foldersUploaded.forEach(folder => {
+				folderPlaceholders.push({
+					name: folder,
+					length: 10,
+					assets: [],
+					isLoading: true,
+					createdAt: new Date()
+				})
+			})
 			files.forEach(file => {
-				if (file.originalFile.name.includes('/')) {
-					needsFolderFetch = true
-				}
 				newPlaceholders.push({
 					asset: {
 						name: file.originalFile.name,
@@ -59,6 +72,7 @@ const AssetAddition = ({
 				formData.append('asset', file.path || file.originalFile)
 			})
 			setAssets([...newPlaceholders, ...currentDataClone])
+			setFolders([...folderPlaceholders, ...currenFolderClone])
 			const { data } = await assetApi.uploadAssets(formData, getCreationParameters())
 			if (needsFolderFetch) {
 				setNeedsFetch('folders')
@@ -69,6 +83,7 @@ const AssetAddition = ({
 			toastUtils.success(`${data.length} Asset(s) uploaded.`)
 		} catch (err) {
 			setAssets(currentDataClone)
+			setFolders(currenFolderClone)
 			console.log(err)
 			if (err.response?.status === 402) toastUtils.error(err.response.data.message)
 			else toastUtils.error('Could not upload assets, please try again later.')
