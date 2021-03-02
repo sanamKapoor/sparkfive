@@ -190,7 +190,6 @@ export const getAssetsSort = (userFilterObject) => {
 }
 
 export const getFoldersFromUploads = (files, isRegular = false) => {
-    console.log(files)
     const folders = new Set()
     files.forEach(({ path, originalFile }) => {
         let pathToParse = path
