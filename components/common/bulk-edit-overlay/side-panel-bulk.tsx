@@ -32,7 +32,9 @@ const SidePanelBulk = ({
   setCampaigns,
   assetTags,
   setTags,
-  originalInputs
+  originalInputs,
+  setLoading,
+  loading
 }) => {
 
   const [channel, setChannel] = useState(null)
@@ -108,6 +110,8 @@ const SidePanelBulk = ({
 
   const saveChanges = async () => {
     try {
+      setWarningMessage('')
+      setLoading(true)
       const mapAttributes = ({ id, name }) => ({ id, name })
       const campaigns = assetCampaigns.map(mapAttributes)
       const projects = assetProjects.map(mapAttributes)
@@ -132,6 +136,9 @@ const SidePanelBulk = ({
       toastUtils.success('Successfully updated assets')
     } catch (err) {
       console.log(err)
+      toastUtils.error('An error occurred, please try again later')
+    } finally{
+      setLoading(false)
     }
   }
 
@@ -294,7 +301,7 @@ const SidePanelBulk = ({
       />
 
       <div className={styles['save-changes']}>
-        <Button text={'Save Changes'} type={'button'} styleType={'primary'} onClick={prepareSave} disabled={elementsSelected.length === 0} />
+        <Button text={'Save Changes'} type={'button'} styleType={'primary'} onClick={prepareSave} disabled={elementsSelected.length === 0 || loading} />
       </div>
 
       <ConfirmModal

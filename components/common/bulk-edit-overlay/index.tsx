@@ -1,7 +1,7 @@
 import styles from './index.module.css'
 import { useState, useEffect, useContext } from 'react'
 import { Utilities } from '../../../assets'
-import { AssetContext } from '../../../context'
+import { AssetContext, LoadingContext } from '../../../context'
 import assetApi from '../../../server-api/asset'
 import update from 'immutability-helper'
 
@@ -10,10 +10,14 @@ import Button from '../buttons/button'
 import IconClickable from '../buttons/icon-clickable'
 import SidePanelBulk from './side-panel-bulk'
 import EditGrid from './edit-grid'
+import SpinnerOverlay from '../spinners/spinner-overlay'
 
 const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 
 	const { loadingAssets } = useContext(AssetContext)
+
+	const [loading, setLoading] = useState(true)
+
 	const [sideOpen, setSideOpen] = useState(true)
 
 	const [initialSelect, setInitialSelect] = useState(false)
@@ -56,6 +60,8 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 			})
 		} catch (err) {
 			// TODO: Maybe show error?
+		} finally{
+			setLoading(false)
 		}
 	}
 
@@ -87,6 +93,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 
 	return (
 		<div className={`app-overlay ${styles.container}`}>
+			{loading && <SpinnerOverlay />}
 			<section className={styles.content}>
 				<div className={styles['top-wrapper']}>
 					<div className={styles.back} onClick={handleBackButton}>
@@ -115,6 +122,8 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 						setAssetProjects={setAssetProjects}
 						setCampaigns={setCampaigns}
 						setTags={setTags}
+						setLoading={setLoading}
+						loading={loading}
 					/>
 				</section>
 			}
