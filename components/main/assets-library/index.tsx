@@ -33,7 +33,8 @@ const AssetsLibrary = () => {
     nextPage,
     setNeedsFetch,
     addedIds,
-    setAddedIds
+    setAddedIds,
+    setLoadingAssets
   } = useContext(AssetContext)
 
   const [activeMode, setActiveMode] = useState('assets')
@@ -76,6 +77,14 @@ const AssetsLibrary = () => {
     }
     setNeedsFetch('')
   }, [needsFetch])
+
+  useEffect(() => {
+    if (activeMode === 'folders') {
+      setAssets(assets.map(asset => ({ ...asset, isSelected: false })))
+    } else if (activeMode === 'assets') {
+      setFolders(folders.map(folder => ({ ...folder, isSelected: false })))
+    }
+  }, [activeMode])
 
   const clearFilters = () => {
     setActiveSortFilter({
@@ -133,6 +142,7 @@ const AssetsLibrary = () => {
       toastUtils.success(`${data.length} Asset(s) uploaded.`)
     } catch (err) {
       setAssets(currentDataClone)
+      setFolders(currenFolderClone)
       console.log(err)
       if (err.response?.status === 402) toastUtils.error(err.response.data.message)
       else toastUtils.error('Could not upload assets, please try again later.')
@@ -150,6 +160,7 @@ const AssetsLibrary = () => {
 
   const getAssets = async (replace = true) => {
     try {
+      setLoadingAssets(true)
       if (replace) {
         setAddedIds([])
       }
@@ -169,6 +180,8 @@ const AssetsLibrary = () => {
     } catch (err) {
       //TODO: Handle error
       console.log(err)
+    } finally {
+      setLoadingAssets(false)
     }
   }
 
@@ -194,16 +207,29 @@ const AssetsLibrary = () => {
   }
 
   const toggleSelected = (id) => {
-    const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
-    setAssets(update(assets, {
-      [assetIndex]: {
-        isSelected: { $set: !assets[assetIndex].isSelected }
-      }
-    }))
+    if (activeMode === 'assets') {
+      const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
+      setAssets(update(assets, {
+        [assetIndex]: {
+          isSelected: { $set: !assets[assetIndex].isSelected }
+        }
+      }))
+    } else if (activeMode === 'folders') {
+      const folderIndex = folders.findIndex(folder => folder.id === id)
+      setFolders(update(folders, {
+        [folderIndex]: {
+          isSelected: { $set: !folders[folderIndex].isSelected }
+        }
+      }))
+    }
   }
 
   const selectAll = () => {
-    setAssets(assets.map(assetItem => ({ ...assetItem, isSelected: true })))
+    if (activeMode === 'assets') {
+      setAssets(assets.map(assetItem => ({ ...assetItem, isSelected: true })))
+    } else if (activeMode === 'folders') {
+      setFolders(folders.map(folder => ({ ...folder, isSelected: true })))
+    }
   }
 
   const mapWithToggleSelection = asset => ({ ...asset, toggleSelected })
@@ -217,6 +243,8 @@ const AssetsLibrary = () => {
   }
 
   const selectedAssets = assets.filter(asset => asset.isSelected)
+
+  const selectedFolders = folders.filter(folder => folder.isSelected)
 
   const viewFolder = async (id) => {
     setActiveFolder(id)
@@ -269,7 +297,8 @@ const AssetsLibrary = () => {
       <AssetSubheader
         activeFolder={activeFolder}
         getFolders={getFolders}
-        amountSelected={selectedAssets.length}
+        mode={activeMode}
+        amountSelected={activeMode === 'assets' ? selectedAssets.length : selectedFolders.length}
         activeFolderData={activeFolder && folders.find(folder => folder.id === activeFolder)}
         backToFolders={backToFolders}
         setRenameModalOpen={setRenameModalOpen}

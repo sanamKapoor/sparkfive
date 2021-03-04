@@ -22,7 +22,9 @@ const ProductAddition = ({
   setActiveDropdown,
   assetId,
   updateAssetState,
-  product
+  product,
+  isBulkEdit = false,
+  setAssetProduct = (prod) => { }
 }) => {
 
   const [inputProducts, setInputProducts] = useState([])
@@ -59,31 +61,45 @@ const ProductAddition = ({
   }
 
   const addProduct = async (productSku) => {
-    try {
-      const sku = productSku
-      const { data: newProduct } = await assetApi.addProduct(assetId, { sku })
-      changeProductState(newProduct)
-      setInputProducts(update(inputProducts, { $push: [newProduct] }))
-    } catch (err) {
-      console.log(err)
+    if (isBulkEdit) {
+      setAssetProduct({ sku: productSku, tags: [] })
+      setActiveDropdown('')
+    } else {
+      try {
+        const sku = productSku
+        const { data: newProduct } = await assetApi.addProduct(assetId, { sku })
+        changeProductState(newProduct)
+        setInputProducts(update(inputProducts, { $push: [newProduct] }))
+      } catch (err) {
+        console.log(err)
+      }
     }
   }
 
   const deleteProduct = async () => {
-    try {
-      await assetApi.updateAsset(assetId, { updateData: { productId: null } })
-      changeProductState(null)
-    } catch (err) {
-      console.log(err)
+    if (isBulkEdit) {
+      setAssetProduct(null)
+    } else {
+      try {
+        await assetApi.updateAsset(assetId, { updateData: { productId: null } })
+        changeProductState(null)
+      } catch (err) {
+        console.log(err)
+      }
     }
   }
 
   const changeProduct = async (product) => {
-    try {
-      await assetApi.addProduct(assetId, { id: product.id })
-      changeProductState(product)
-    } catch (err) {
-      console.log(err)
+    if (isBulkEdit) {
+      setAssetProduct(product)
+      setActiveDropdown('')
+    } else {
+      try {
+        await assetApi.addProduct(assetId, { id: product.id })
+        changeProductState(product)
+      } catch (err) {
+        console.log(err)
+      }
     }
   }
 
@@ -104,38 +120,52 @@ const ProductAddition = ({
   }
 
   const addProductTag = async (name) => {
-    try {
-      const { data: newTag } = await productApi.addTag(product.id, { name, type: activeDropdown })
-      changeValueState(newTag, true)
-      loadProductFields()
-    } catch (err) {
-      console.log(err)
+    if (isBulkEdit) {
+      setAssetProduct(update(product, { tags: { $push: [{ name, type: activeDropdown }] } }))
+    } else {
+      try {
+        const { data: newTag } = await productApi.addTag(product.id, { name, type: activeDropdown })
+        changeValueState(newTag, true)
+        loadProductFields()
+      } catch (err) {
+        console.log(err)
+      }
     }
   }
 
   const changeProductTag = async (selected) => {
-    try {
-      // Skip if already on product
-      if (product.tags.some(tag => tag.id === selected.id)) return
-      await productApi.addTag(product.id, { id: selected.id })
-      changeValueState(selected)
-    } catch (err) {
-      console.log(err)
+    if (isBulkEdit) {
+      if (!selected || product.tags.findIndex(selectedItem => selected.label === selectedItem.name) !== -1) return
+      setAssetProduct(update(product, { tags: { $push: [selected] } }))
+    } else {
+      try {
+        // Skip if already on product
+        if (product.tags.some(tag => tag.id === selected.id)) return
+        await productApi.addTag(product.id, { id: selected.id })
+        changeValueState(selected)
+      } catch (err) {
+        console.log(err)
+      }
     }
   }
 
-  const removeProductTag = async (id) => {
-    try {
-      // Skip if already on product
-      await productApi.deleteTag(product.id, id)
-      const deleteTagIndex = product.tags.findIndex(tag => tag.id === id)
-      updateAssetState({
-        product: {
-          tags: { $splice: [[deleteTagIndex, 1]] }
-        }
-      })
-    } catch (err) {
-      console.log(err)
+  const removeProductTag = async (id, name) => {
+    if (isBulkEdit) {
+      const index = product.tags.findIndex((tag) => tag.name === name)
+      setAssetProduct(update(product, { tags: { $splice: [[index, 1]] } }))
+    } else {
+      try {
+        // Skip if already on product
+        await productApi.deleteTag(product.id, id)
+        const deleteTagIndex = product.tags.findIndex(tag => tag.id === id)
+        updateAssetState({
+          product: {
+            tags: { $splice: [[deleteTagIndex, 1]] }
+          }
+        })
+      } catch (err) {
+        console.log(err)
+      }
     }
   }
 
@@ -170,7 +200,7 @@ const ProductAddition = ({
         :
         <div>
           <span>{value.name}</span>
-          <span className={styles.remove} onClick={() => removeProductTag(value.id)}>x</span>
+          <span className={styles.remove} onClick={() => removeProductTag(value.id, value.name)}>x</span>
         </div>
       }
     </div>
@@ -184,7 +214,7 @@ const ProductAddition = ({
             altColor='orange'
             tag={value.name}
             canRemove={!isShare}
-            removeFunction={() => removeProductTag(value.id)}
+            removeFunction={() => removeProductTag(value.id, value.name)}
           />
         </li>
       ))}

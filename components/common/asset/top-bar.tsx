@@ -66,7 +66,7 @@ const TopBar = ({
       <IconClickable src={Utilities.filter} additionalClass={styles.filter} onClick={toggleHamurgerList} />
 
       <div className={styles['sec-filters']} ref={filtersRef}>
-        {activeSortFilter.mainFilter !== 'folders' && <Button type='button' text='Select All' styleType='secondary' onClick={selectAll} />}
+        <Button type='button' text='Select All' styleType='secondary' onClick={selectAll} />
         <img src={Utilities.gridView} onClick={() => setActiveView('grid')} />
         <img src={Utilities.listView} onClick={() => setActiveView('list')} />
         <div className={styles['nested-wrapper']}>

@@ -5,6 +5,7 @@ import projectApi from '../../../server-api/project'
 import taskApi from '../../../server-api/task'
 import folderApi from '../../../server-api/folder'
 import toastUtils from '../../../utils/toast'
+import { getAssetsFilters } from '../../../utils/asset'
 import { useRouter } from 'next/router'
 import update from 'immutability-helper'
 
@@ -13,6 +14,7 @@ import MoveModal from '../modals/move-modal'
 import ShareModal from '../modals/share-modal'
 import ShareFolderModal from '../modals/share-folder-modal'
 import ConfirmModal from '../modals/confirm-modal'
+import BulkEditOverlay from '../bulk-edit-overlay'
 
 export default () => {
 
@@ -28,7 +30,8 @@ export default () => {
 		operationFolder,
 		setOperationFolder,
 		activeFolder,
-		activePageMode
+		activePageMode,
+		setLoadingAssets
 	} = useContext(AssetContext)
 
 	const { loadFolders } = useContext(FilterContext)
@@ -43,6 +46,9 @@ export default () => {
 	useEffect(() => {
 		if (activeOperation === 'move' || activeOperation === 'copy') {
 			getFolders()
+		}
+		if (activeOperation === 'edit' && selectedFolders.length > 0) {
+			getSelectedFolderAssets()
 		}
 	}, [activeOperation])
 
@@ -66,6 +72,27 @@ export default () => {
 		}
 	}, [router.asPath])
 
+	const getSelectedFolderAssets = async () => {
+		try {
+			setLoadingAssets(true)
+			const { data } = await assetApi.getAssets({
+				...getAssetsFilters({
+					replace: true,
+					addedIds: [],
+					nextPage: 1,
+					userFilterObject: {
+						filterFolders: selectedFolders.map(folder => ({ value: folder.id }))
+					}
+				})
+			})
+			setAssets({ ...data, results: data.results.map(asset => ({ ...asset, isSelected: true })) }, true)
+		} catch (err) {
+			console.log(err)
+		} finally{
+			setLoadingAssets(false)
+		}
+	}
+
 	const getFolders = async () => {
 		try {
 			const { data } = await folderApi.getFolders()
@@ -84,6 +111,7 @@ export default () => {
 	}
 
 	const selectedAssets = assets.filter(asset => asset.isSelected)
+	const selectedFolders = folders.filter(folder => folder.isSelected)
 
 	const moveAssets = async (selectedFolder) => {
 		try {
@@ -307,8 +335,6 @@ export default () => {
 		operationLength = selectedAssets.length
 	}
 
-	const filteredFolders = folders.filter(folder => folder.id !== activeFolder)
-
 	return (
 		<>
 			<MoveModal
@@ -366,6 +392,9 @@ export default () => {
 				confirmText={'Remove'}
 				message={`Remove ${operationLength} item(s) from ${currentItem.type}?`}
 			/>
+			{activeOperation === 'edit' &&
+				<BulkEditOverlay handleBackButton={() => setActiveOperation('')} selectedAssets={selectedAssets} />
+			}
 		</>
 	)
 }

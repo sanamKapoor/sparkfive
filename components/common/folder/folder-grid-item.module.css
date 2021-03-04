@@ -27,7 +27,7 @@
     display: none;
 }
 
-.sub-image-wrapper>img {
+.sub-image-wrapper > img {
     width: inherit;
     height: inherit;
     object-fit: cover;
@@ -39,7 +39,8 @@
     opacity: 0.5;
 }
 
-.image-wrapper:hover .image-button-wrapper, .image-wrapper:hover .selectable-wrapper:not(.selected-wrapper) {
+.image-wrapper:hover .image-button-wrapper,
+.image-wrapper:hover .selectable-wrapper:not(.selected-wrapper) {
     display: block;
     animation: intoview 0.5s;
 }
@@ -71,7 +72,23 @@
     display: flex;
 }
 
-.details-wrapper>div:first-child {
+.details-wrapper > div:first-child {
     margin-top: 0.5rem;
     flex: 1;
+}
+
+.selectable-wrapper {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    display: none;
+}
+
+.selectable-wrapper.selected-wrapper {
+    display: block;
+}
+
+.image-wrapper .selectable-wrapper .select-icon {
+    width: 25px;
+    height: auto;
 }

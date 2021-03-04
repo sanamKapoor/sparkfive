@@ -14,6 +14,7 @@ const FolderGridItem = ({
 	id,
 	name,
 	size,
+	isSelected,
 	length,
 	assets,
 	viewFolder,
@@ -21,6 +22,7 @@ const FolderGridItem = ({
 	deleteFolder,
 	shareAssets = (folder) => { },
 	copyShareLink = (folder) => { },
+	toggleSelected,
 	copyEnabled
 }) => {
 
@@ -49,6 +51,9 @@ const FolderGridItem = ({
 					<div className={styles['image-button-wrapper']}>
 						<Button styleType={'primary'} text={'View Collection'} type={'button'}
 							onClick={viewFolder} />
+					</div>
+					<div className={`${styles['selectable-wrapper']} ${isSelected && styles['selected-wrapper']}`}>
+						<IconClickable src={isSelected ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal} additionalClass={styles['select-icon']} onClick={toggleSelected}/>
 					</div>
 				</>
 			</div>

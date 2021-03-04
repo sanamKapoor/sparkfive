@@ -89,6 +89,8 @@ Container for modifying campaigns
 .tags-list {
   display: flex;
   flex-wrap: wrap;
+  max-height: 12rem;
+  overflow-y: auto;
 }
 
 .tags-list li {

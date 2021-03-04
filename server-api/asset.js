@@ -14,6 +14,7 @@ export default {
   getRealUrl: (assetId) => axios.get(`${assetUrl}/${assetId}/real-url`),
   importAssets: (provider, assetData, queryData) => axios.post(`${assetUrl}/import/${provider}?${querystring.encode(queryData)}`, assetData),
   updateMultiple: (updateData) => axios.patch(`${assetUrl}`, updateData),
+  updateMultipleAttributes: (updateData) => axios.patch(`${assetUrl}/attributes`, updateData),
   getSharedAssets: (shareJWT) => axios.get(`${assetUrl}/share?shareJWT=${shareJWT}`),
   generateAndSendShareUrl: (data) => axios.post(`${assetUrl}/share`, data),
   getById: id => axios.get(`${assetUrl}/${id}`),
@@ -31,4 +32,5 @@ export default {
 
   addFolder: (id, data) => axios.post(`${assetUrl}/${id}/folders`, data),
   removeFolder: (id, folderId) => axios.delete(`${assetUrl}/${id}/folders/${folderId}`),
+  getBulkProperties: (data) => axios.post(`${assetUrl}/bulk-properties`, data)
 }
