@@ -10,6 +10,7 @@
   
   .header h4:first-child {
     width: 21%;
+    margin-left: 45px;
   }
   
   .header h4:last-child {
@@ -25,6 +26,7 @@
     cursor: pointer;
     font-weight: 600;
     position: relative;
+    margin-left: 20px;
   }
   
   .name:hover{
@@ -34,7 +36,7 @@
   .field_name {
     width: 14%;
     font-size: 13px;  
-    position: relative;
+    position: relative;    
   }
   
   .item {
@@ -47,6 +49,11 @@
 
   .item>*:last-child{
     margin-left: 2rem;
+  }
+
+  .select-icon {
+    width: 25px;
+    height: auto;
   }
 
   @media screen and (max-width: 900px) {

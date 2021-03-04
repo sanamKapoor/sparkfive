@@ -172,6 +172,7 @@ const AssetGrid = ({
               return (
                 <li className={styles['grid-item']} key={folder.id || index}>
                   <FolderGridItem {...folder}
+                    toggleSelected={() => toggleSelected(folder.id)}
                     viewFolder={() => viewFolder(folder.id)}
                     deleteFolder={() => deleteFolder(folder.id)}
                     copyShareLink={() => copyShareLink(folder)}
@@ -208,6 +209,7 @@ const AssetGrid = ({
               return (
                 <li className={styles['grid-item']} key={folder.id || index}>
                   <FolderListItem {...folder}
+                    toggleSelected={() => toggleSelected(folder.id)}
                     viewFolder={() => viewFolder(folder.id)}
                     deleteFolder={() => deleteFolder(folder.id)} index={index}
                     copyShareLink={() => copyShareLink(folder)}

@@ -10,6 +10,10 @@
   grid-gap: 3rem;
 }
 
+.grid-list li{
+  position: relative;
+}
+
 .container {
   border: 1px solid var(--color-secondary-border);
   display: flex;

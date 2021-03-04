@@ -102,8 +102,8 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
     const filters = {}
     const {
         mainFilter,
-        filterCampaigns,
-        filterTags,
+        filterCampaigns = [],
+        filterTags = [],
         filterFolders,
         filterChannels,
         filterProjects,

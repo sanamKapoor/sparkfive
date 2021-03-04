@@ -6,13 +6,15 @@ import Base from './base'
 import Button from '../buttons/button'
 
 // Used for the future
-const ConfirmModal = ({ modalIsOpen, closeModal, message, confirmText, confirmAction }) => (
+const ConfirmModal = ({ modalIsOpen, closeModal, message, secondMessage = '', confirmText, confirmAction }) => (
   <Base
     modalIsOpen={modalIsOpen}
     closeModal={closeModal}
   >
     <div className={styles.text}>
-      <p>{message}</p>
+      <p>{message}
+        {secondMessage && <><br /><br />{secondMessage}</>}
+      </p>
       <span className={styles.close} onClick={closeModal}>x</span>
     </div>
     <div className={styles.buttons}>

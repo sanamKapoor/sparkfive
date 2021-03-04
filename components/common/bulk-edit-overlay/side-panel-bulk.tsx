@@ -21,55 +21,45 @@ import ChannelSelector from '../items/channel-selector'
 import CreatableSelect from '../inputs/creatable-select'
 import ProjectCreationModal from '../modals/project-creation-modal'
 import ProductAddition from '../asset/product-addition'
-import folder from '../../../server-api/folder'
+import ConfirmModal from '../modals/confirm-modal'
 
-const SidePanelBulk = ({ elementsSelected, onUpdate }) => {
-
-  const [dataLoaded, setDataLoaded] = useState(false)
+const SidePanelBulk = ({
+  elementsSelected,
+  onUpdate,
+  assetProjects,
+  setAssetProjects,
+  assetCampaigns,
+  setCampaigns,
+  assetTags,
+  setTags,
+  originalInputs
+}) => {
 
   const [channel, setChannel] = useState(null)
   const [activeDropdown, setActiveDropdown] = useState('')
 
   const [inputCampaigns, setInputCampaigns] = useState([])
-  const [assetCampaigns, setCampaigns] = useState([])
 
   const [inputFolders, setInputFolders] = useState([])
   const [assetFolder, setAssetFolder] = useState(null)
 
   const [inputTags, setInputTags] = useState([])
-  const [assetTags, setTags] = useState([])
 
   const [inputProjects, setInputProjects] = useState([])
-  const [assetProjects, setAssetProjects] = useState([])
 
   const [newProjectName, setNewProjectName] = useState('')
 
   const [assetProduct, setAssetProduct] = useState(null)
 
+  const [warningMessage, setWarningMessage] = useState('')
+  const [warningMessage2, setWarningMessage2] = useState('')
+
   useEffect(() => {
     getInputData()
   }, [])
 
-  useEffect(() => {
-    if (!dataLoaded && elementsSelected.length > 0) {
-      getInitialAttributes()
-    }
-  }, [dataLoaded, elementsSelected])
-
   const updateChannel = (option) => {
     setChannel(option)
-  }
-
-  const getInitialAttributes = async () => {
-    try {
-      const { data: { tags, projects, campaigns } } = await assetApi.getBulkProperties({ assetIds: elementsSelected.map(({ asset: { id } }) => id) })
-      setDataLoaded(true)
-      setCampaigns(campaigns)
-      setAssetProjects(projects)
-      setTags(tags)
-    } catch (err) {
-
-    }
   }
 
   const getInputData = async () => {
@@ -82,7 +72,6 @@ const SidePanelBulk = ({ elementsSelected, onUpdate }) => {
       setInputCampaigns(campaignsResponse.data)
       setInputFolders(folderResponse.data)
       setInputTags(tagsResponse.data)
-      setDataLoaded(true)
     } catch (err) {
       // TODO: Maybe show error?
     }
@@ -110,27 +99,48 @@ const SidePanelBulk = ({ elementsSelected, onUpdate }) => {
     }
   }
 
+  const prepareSave = () => {
+    const warningMessage = `Any campaigns, tags or projects you removed from the list will be also removed from the (${elementsSelected.length}) selected assets.`
+    const warningMessage2 = `Any collection, product or channel set will replace the respective property from the (${elementsSelected.length}) selected assets.`
+    setWarningMessage(warningMessage)
+    setWarningMessage2(warningMessage2)
+  }
+
   const saveChanges = async () => {
     try {
       const mapAttributes = ({ id, name }) => ({ id, name })
+      const campaigns = assetCampaigns.map(mapAttributes)
+      const projects = assetProjects.map(mapAttributes)
+      const tags = assetTags.map(mapAttributes)
       const updateObject = {
         assetIds: elementsSelected.map(({ asset: { id } }) => id),
         attributes: {
           channel,
           folders: [],
-          campaigns: assetCampaigns.map(mapAttributes),
-          projects: assetProjects.map(mapAttributes),
-          tags: assetTags.map(mapAttributes),
-          products: [{ product: assetProduct, productTags: assetProduct.tags }]
+          campaigns,
+          projects,
+          tags,
+          products: [],
+          ...getRemoveAttributes({ campaigns, projects, tags })
         }
       }
 
+      if (assetProduct) updateObject.attributes.products = [{ product: assetProduct, productTags: assetProduct.tags }]
       if (assetFolder) updateObject.attributes.folders = [{ name: assetFolder.name, id: assetFolder.id }]
       await assetApi.updateMultipleAttributes(updateObject)
       onUpdate()
       toastUtils.success('Successfully updated assets')
     } catch (err) {
       console.log(err)
+    }
+  }
+
+  const getRemoveAttributes = ({ campaigns, projects, tags }) => {
+    const filterFn = (chosenList) => origItem => chosenList.findIndex(chosenItem => chosenItem.id === origItem.id) === -1
+    return {
+      removeCampaigns: originalInputs.campaigns.filter(filterFn(campaigns)),
+      removeProjects: originalInputs.projects.filter(filterFn(projects)),
+      removeTags: originalInputs.tags.filter(filterFn(tags))
     }
   }
 
@@ -284,8 +294,17 @@ const SidePanelBulk = ({ elementsSelected, onUpdate }) => {
       />
 
       <div className={styles['save-changes']}>
-        <Button text={'Save Changes'} type={'button'} styleType={'primary'} onClick={saveChanges} disabled={elementsSelected.length === 0} />
+        <Button text={'Save Changes'} type={'button'} styleType={'primary'} onClick={prepareSave} disabled={elementsSelected.length === 0} />
       </div>
+
+      <ConfirmModal
+        confirmAction={saveChanges}
+        confirmText={'Save changes'}
+        closeModal={() => setWarningMessage('')}
+        message={warningMessage}
+        secondMessage={warningMessage2}
+        modalIsOpen={warningMessage}
+      />
     </div >
   )
 }

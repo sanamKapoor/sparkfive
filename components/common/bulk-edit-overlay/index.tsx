@@ -2,6 +2,7 @@ import styles from './index.module.css'
 import { useState, useEffect, useContext } from 'react'
 import { Utilities } from '../../../assets'
 import { AssetContext } from '../../../context'
+import assetApi from '../../../server-api/asset'
 import update from 'immutability-helper'
 
 // Components
@@ -12,11 +13,51 @@ import EditGrid from './edit-grid'
 
 const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 
-	const { assets, setAssets } = useContext(AssetContext)
-
+	const { loadingAssets } = useContext(AssetContext)
 	const [sideOpen, setSideOpen] = useState(true)
 
-	useEffect(() => selectAll(), [])
+	const [initialSelect, setInitialSelect] = useState(false)
+
+	const [assetProjects, setAssetProjects] = useState([])
+	const [assetTags, setTags] = useState([])
+	const [assetCampaigns, setCampaigns] = useState([])
+
+	const [editAssets, setEditAssets] = useState([])
+
+	const [originalInputs, setOriginalInputs] = useState({
+		campaigns: [],
+		projects: [],
+		tags: []
+	})
+
+	useEffect(() => {
+		if (!loadingAssets && !initialSelect && selectedAssets.length > 0) {
+			setInitialSelect(true)
+			setEditAssets(selectedAssets.map(assetItem => ({ ...assetItem, isEditSelected: true })))
+			getInitialAttributes()
+		}
+		if (loadingAssets) {
+			setEditAssets([])
+			setInitialSelect(false)
+		}
+	}, [selectedAssets, loadingAssets])
+
+	const getInitialAttributes = async () => {
+		try {
+			const { data: { tags, projects, campaigns } } = await assetApi.getBulkProperties({ assetIds: selectedAssets.map(({ asset: { id } }) => id) })
+			setCampaigns(campaigns)
+			setAssetProjects(projects)
+			setTags(tags)
+
+			setOriginalInputs({
+				campaigns,
+				projects,
+				tags
+			})
+		} catch (err) {
+			// TODO: Maybe show error?
+		}
+	}
 
 	const toggleSideMenu = (value = null) => {
 		if (value === null)
@@ -26,23 +67,23 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 	}
 
 	const toggleSelectedEdit = (id) => {
-		const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
-		setAssets(update(assets, {
+		const assetIndex = editAssets.findIndex(assetItem => assetItem.asset.id === id)
+		setEditAssets(update(editAssets, {
 			[assetIndex]: {
-				isEditSelected: { $set: !assets[assetIndex].isEditSelected }
+				isEditSelected: { $set: !editAssets[assetIndex].isEditSelected }
 			}
 		}))
 	}
 
 	const selectAll = () => {
-		setAssets(assets.map(assetItem => ({ ...assetItem, isEditSelected: true })))
+		setEditAssets(editAssets.map(assetItem => ({ ...assetItem, isEditSelected: true })))
 	}
 
 	const deselectAll = () => {
-		setAssets(assets.map(asset => ({ ...asset, isEditSelected: false })))
+		setEditAssets(editAssets.map(asset => ({ ...asset, isEditSelected: false })))
 	}
 
-	const editSelectedAssets = selectedAssets.filter(({ isEditSelected }) => isEditSelected)
+	const editSelectedAssets = editAssets.filter(({ isEditSelected }) => isEditSelected)
 
 	return (
 		<div className={`app-overlay ${styles.container}`}>
@@ -60,11 +101,21 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 						</div>
 					</div>
 				</div>
-				<EditGrid assets={selectedAssets} toggleSelectedEdit={toggleSelectedEdit} />
+				<EditGrid assets={editAssets} toggleSelectedEdit={toggleSelectedEdit} />
 			</section>
 			{sideOpen &&
 				<section className={styles.side}>
-					<SidePanelBulk elementsSelected={editSelectedAssets} onUpdate={handleBackButton}/>
+					<SidePanelBulk
+						elementsSelected={editSelectedAssets}
+						onUpdate={handleBackButton}
+						assetCampaigns={assetCampaigns}
+						assetProjects={assetProjects}
+						assetTags={assetTags}
+						originalInputs={originalInputs}
+						setAssetProjects={setAssetProjects}
+						setCampaigns={setCampaigns}
+						setTags={setTags}
+					/>
 				</section>
 			}
 			<section className={styles.menu}>

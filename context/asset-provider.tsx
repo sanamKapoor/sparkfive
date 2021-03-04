@@ -35,6 +35,8 @@ export default ({ children }) => {
 
     const [needsFetch, setNeedsFetch] = useState('')
 
+    const [loadingAssets, setLoadingAssets] = useState(false)
+
     const [addedIds, setAddedIds] = useState([])
 
     const setPlaceHolders = (type, replace = true) => {
@@ -96,7 +98,9 @@ export default ({ children }) => {
         needsFetch,
         setNeedsFetch,
         addedIds,
-        setAddedIds
+        setAddedIds,
+        loadingAssets,
+        setLoadingAssets
     }
     return (
         <AssetContext.Provider value={assetsValue}>

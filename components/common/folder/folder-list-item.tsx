@@ -7,6 +7,7 @@ import zipDownloadUtils from '../../../utils/download'
 // Components
 import FolderOptions from './folder-options'
 import ConfirmModal from '../modals/confirm-modal'
+import IconClickable from '../buttons/icon-clickable'
 
 const FolderListItem = ({
 	index,
@@ -21,7 +22,9 @@ const FolderListItem = ({
 	deleteFolder = () => { },
 	shareAssets = (folder) => { },
 	copyShareLink = (folder) => { },
-	copyEnabled
+	copyEnabled,
+	toggleSelected,
+	isSelected
 }) => {
 
 	const dateFormat = 'MMM do, yyyy h:mm a'
@@ -44,6 +47,11 @@ const FolderListItem = ({
 					</div>
 				}
 				<div className={styles.item}>
+					<div className={`${styles['selectable-wrapper']} ${isSelected && styles['selected-wrapper']}`}>
+						{!isLoading &&
+							<IconClickable src={isSelected ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal} additionalClass={styles['select-icon']} onClick={toggleSelected} />
+						}
+					</div>
 					<div className={`${styles.name} ${isLoading && 'loadable'}`} onClick={viewFolder}>
 						{name}
 					</div>

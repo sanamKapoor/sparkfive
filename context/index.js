@@ -41,6 +41,9 @@ export const AssetContext = createContext({
     operationAsset: null,
     setOperationAsset: (asset) => { },
 
+    loadingAssets: false,
+    setLoadingAssets: (loading) => { },
+
     operationFolder: null,
     setOperationFolder: (folder) => { },
 
