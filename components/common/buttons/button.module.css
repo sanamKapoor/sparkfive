@@ -65,6 +65,11 @@
   color: white;
 }
 
+.tertiary-blue {
+  background-color: inherit;
+  color: var(--color-prim-navy);
+}
+
 .tertiary:hover {
   opacity: 0.6;
 }

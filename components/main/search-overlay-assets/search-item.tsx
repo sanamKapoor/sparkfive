@@ -24,7 +24,7 @@ const SearchItem = ({ assetItem, term, openShareAsset, openDeleteAsset, toggleSe
     <>
       <li
         className={`search-item ${styles['search-item']}`}>
-        {enabledSelect &&
+        {!isLoading && enabledSelect &&
           <>
             {isSelected ?
               <IconClickable src={Utilities.radioButtonEnabled} additionalClass={styles['select-icon']} onClick={toggleSelected} />

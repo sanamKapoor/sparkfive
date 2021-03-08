@@ -354,6 +354,7 @@ const AssetsLibrary = () => {
       {activeSearchOverlay &&
         <SearchOverlay
           closeOverlay={closeSearchOverlay}
+          operationsEnabled={true}
         />
       }
     </>

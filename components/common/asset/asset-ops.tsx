@@ -88,7 +88,7 @@ export default () => {
 			setAssets({ ...data, results: data.results.map(asset => ({ ...asset, isSelected: true })) }, true)
 		} catch (err) {
 			console.log(err)
-		} finally{
+		} finally {
 			setLoadingAssets(false)
 		}
 	}
@@ -187,6 +187,24 @@ export default () => {
 						$splice: [[assetIndex, 1]]
 					}))
 			}
+
+			closeModalAndClearOpAsset()
+			toastUtils.success('Assets deleted successfully')
+		} catch (err) {
+			console.log(err)
+			toastUtils.error('Could not delete assets, please try again later.')
+		}
+	}
+
+	const deleteSelectedFolders = async () => {
+		try {
+			await assetApi.deleteMultipleAssets({ assetIds: selectedAssets.map(assetItem => assetItem.asset.id) })
+			const newAssets = assets.filter(existingAsset => {
+				const searchedAssetIndex = selectedAssets.findIndex(assetListItem => existingAsset.asset.id === assetListItem.asset.id)
+				return searchedAssetIndex === -1
+			})
+			setAssets(newAssets)
+
 
 			closeModalAndClearOpAsset()
 			toastUtils.success('Assets deleted successfully')

@@ -2,6 +2,7 @@
     display: grid;
     grid-template-areas: "content-asset side";
     grid-template-columns: 1fr 26.5rem;
+    z-index: 3500;
 }
 .content, .side {
     height: 100vh;

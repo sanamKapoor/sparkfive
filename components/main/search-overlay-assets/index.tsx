@@ -10,8 +10,9 @@ import update from 'immutability-helper'
 import Search from '../../common/inputs/search'
 import SearchItem from './search-item'
 import Button from '../../common/buttons/button'
+import AssetHeaderOps from '../../common/asset/asset-header-ops'
 
-const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, importAssets = () => { }, sharePath = '' }) => {
+const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEnabled = false, importAssets = () => { }, sharePath = '' }) => {
 
   const { assets, setAssets, setActiveOperation, setOperationAsset, setPlaceHolders, nextPage } = useContext(AssetContext)
   const [term, setTerm] = useState('')
@@ -48,6 +49,14 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, importAssets
     }))
   }
 
+  const selectAll = () => {
+    setAssets(assets.map(assetItem => ({ ...assetItem, isSelected: true })))
+  }
+
+  const deselectAll = () => {
+    setAssets(assets.map(asset => ({ ...asset, isSelected: false })))
+  }
+
   const selectedAssets = assets.filter(asset => asset.isSelected)
 
   return (
@@ -64,9 +73,14 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, importAssets
         </h2>
         <div className={'search-cont'}>
           <Search
-            placeholder={'Find Assets by Name, Extension, Collection, Campaign, Channel, Tag'}
+            placeholder={'Find Assets by Name, Extension, Collection, Campaign, Channel, Tag (min 3 characters)'}
             onSubmit={(inputTerm) => getData(inputTerm)}
           />
+        </div>
+        <div className={styles.operations}>
+          <Button type='button' text='Select All' styleType='secondary' onClick={selectAll} />
+          {selectedAssets.length > 0 && <Button text={`Deselect All (${selectedAssets.length})`} type='button' styleType='primary' onClick={deselectAll} />}
+          {selectedAssets.length > 0 && <AssetHeaderOps deselectHidden={true} buttonStyleType={'tertiary-blue'} />}
         </div>
         {importEnabled &&
           <div className={styles['import-wrapper']}>
@@ -84,7 +98,7 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, importAssets
             <SearchItem
               isShare={sharePath}
               key={index}
-              enabledSelect={importEnabled}
+              enabledSelect={importEnabled || operationsEnabled}
               toggleSelected={() => toggleSelected(assetItem.asset.id)}
               assetItem={assetItem}
               term={term}

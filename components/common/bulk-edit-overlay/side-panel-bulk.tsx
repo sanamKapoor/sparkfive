@@ -132,8 +132,7 @@ const SidePanelBulk = ({
       if (assetProduct) updateObject.attributes.products = [{ product: assetProduct, productTags: assetProduct.tags }]
       if (assetFolder) updateObject.attributes.folders = [{ name: assetFolder.name, id: assetFolder.id }]
       await assetApi.updateMultipleAttributes(updateObject)
-      onUpdate()
-      toastUtils.success('Successfully updated assets')
+      toastUtils.success('Asset edits saved')
     } catch (err) {
       console.log(err)
       toastUtils.error('An error occurred, please try again later')
