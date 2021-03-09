@@ -52,9 +52,16 @@
 .mode {
   position: absolute;
   right: 0;
-  top: 55px;
+  top: 50px;
   display: flex;
   align-items: center;
+}
+@media screen and (max-width: 1250px) {
+  .mode {
+   position: unset;
+   justify-content: center;
+   margin-top: 15px;
+  }
 }
 .mode p {
   font-weight: 700;
