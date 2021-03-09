@@ -11,6 +11,7 @@ import IconClickable from '../buttons/icon-clickable'
 import SidePanelBulk from './side-panel-bulk'
 import EditGrid from './edit-grid'
 import SpinnerOverlay from '../spinners/spinner-overlay'
+import { add } from 'date-fns'
 
 const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 
@@ -27,6 +28,9 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 	const [assetCampaigns, setCampaigns] = useState([])
 
 	const [editAssets, setEditAssets] = useState([])
+
+	const [addMode, setAddMode] = useState(true)
+	const [removeMode, setRemoveMode] = useState(false)
 
 	const [originalInputs, setOriginalInputs] = useState({
 		campaigns: [],
@@ -60,7 +64,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 			})
 		} catch (err) {
 			// TODO: Maybe show error?
-		} finally{
+		} finally {
 			setLoading(false)
 		}
 	}
@@ -71,6 +75,31 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 		else
 			setSideOpen(value)
 	}
+
+	const toggleAddMode = () => {
+
+		if (addMode) {
+			setAddMode(true)
+			setRemoveMode(false)
+		}
+		else {
+			setAddMode(true)
+			setRemoveMode(false)
+		}
+	}
+	console.log(removeMode)
+
+	const toggleRemoveMode = () => {
+		if (removeMode) {
+			setRemoveMode(true)
+			setAddMode(false)
+		}
+		else {
+			setRemoveMode(true)
+			setAddMode(false)
+		}
+	}
+
 
 	const toggleSelectedEdit = (id) => {
 		const assetIndex = editAssets.findIndex(assetItem => assetItem.asset.id === id)
@@ -107,6 +136,20 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 							<Button text={`Deselect All (${editSelectedAssets.length})`} type={'button'} styleType={'primary'} onClick={deselectAll} />
 						</div>
 					</div>
+					<div className={styles.mode}>
+						<p>Mode: </p>
+						<div className={styles.option} onClick={() => toggleAddMode()}>
+							<IconClickable src={addMode ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+								additionalClass={styles['select-icon']}
+							/>
+									Add
+								</div>
+						<div className={styles.option} onClick={() => toggleRemoveMode()}>
+							<IconClickable src={removeMode ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+								additionalClass={styles['select-icon']} />
+									Remove
+								</div>
+					</div>
 				</div>
 				<EditGrid assets={editAssets} toggleSelectedEdit={toggleSelectedEdit} />
 			</section>
@@ -124,6 +167,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 						setTags={setTags}
 						setLoading={setLoading}
 						loading={loading}
+						addMode={addMode}
 					/>
 				</section>
 			}

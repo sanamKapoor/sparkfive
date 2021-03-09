@@ -34,7 +34,8 @@ const SidePanelBulk = ({
   setTags,
   originalInputs,
   setLoading,
-  loading
+  loading,
+  addMode
 }) => {
 
   const [channel, setChannel] = useState(null)
@@ -152,7 +153,7 @@ const SidePanelBulk = ({
 
   return (
     <div className={styles.container}>
-      <h2>Apply Attributes to Selected Assets</h2>
+      <h2>{addMode ? 'Add' : 'Remove'} Attributes to Selected Assets</h2>
       <section className={styles['first-section']}>
         <p>{`Editing (${elementsSelected.length}) files`}</p>
       </section>

@@ -49,6 +49,27 @@
     margin-right: 0.5rem;
 }
 
+.mode {
+  position: absolute;
+  right: 0;
+  top: 55px;
+  display: flex;
+  align-items: center;
+}
+.mode p {
+  font-weight: 700;
+  margin-right: 25px;
+}
+.mode .option {
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.mode .option img {
+  margin-right: 5px;
+}
+
 .asset-actions {
     text-align: center;
 }
