@@ -61,6 +61,14 @@ const SidePanelBulk = ({
     getInputData()
   }, [])
 
+  useEffect(() => {
+    if (addMode) {
+      setAssetFolder(null)
+      setChannel(null)
+      setAssetProduct(null)
+    }
+  }, [addMode])
+
   const updateChannel = (option) => {
     setChannel(option)
   }
@@ -133,11 +141,12 @@ const SidePanelBulk = ({
       if (assetProduct) updateObject.attributes.products = [{ product: assetProduct, productTags: assetProduct.tags }]
       if (assetFolder) updateObject.attributes.folders = [{ name: assetFolder.name, id: assetFolder.id }]
       await assetApi.updateMultipleAttributes(updateObject)
+      onUpdate()
       toastUtils.success('Asset edits saved')
     } catch (err) {
       console.log(err)
       toastUtils.error('An error occurred, please try again later')
-    } finally{
+    } finally {
       setLoading(false)
     }
   }

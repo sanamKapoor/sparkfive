@@ -11,7 +11,6 @@ import IconClickable from '../buttons/icon-clickable'
 import SidePanelBulk from './side-panel-bulk'
 import EditGrid from './edit-grid'
 import SpinnerOverlay from '../spinners/spinner-overlay'
-import { add } from 'date-fns'
 
 const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 
@@ -30,7 +29,6 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 	const [editAssets, setEditAssets] = useState([])
 
 	const [addMode, setAddMode] = useState(true)
-	const [removeMode, setRemoveMode] = useState(false)
 
 	const [originalInputs, setOriginalInputs] = useState({
 		campaigns: [],
@@ -50,12 +48,27 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 		}
 	}, [selectedAssets, loadingAssets])
 
+	useEffect(() => {
+		if (addMode) {
+			setAssetProjects([])
+			setTags([])
+			setCampaigns([])
+		} else if (!addMode) {
+			setCampaigns(originalInputs.campaigns)
+			setAssetProjects(originalInputs.projects)
+			setTags(originalInputs.tags)
+		}
+	}, [addMode])
+
 	const getInitialAttributes = async () => {
 		try {
 			const { data: { tags, projects, campaigns } } = await assetApi.getBulkProperties({ assetIds: selectedAssets.map(({ asset: { id } }) => id) })
-			setCampaigns(campaigns)
-			setAssetProjects(projects)
-			setTags(tags)
+
+			if (!addMode) {
+				setCampaigns(campaigns)
+				setAssetProjects(projects)
+				setTags(tags)
+			}
 
 			setOriginalInputs({
 				campaigns,
@@ -75,31 +88,6 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 		else
 			setSideOpen(value)
 	}
-
-	const toggleAddMode = () => {
-
-		if (addMode) {
-			setAddMode(true)
-			setRemoveMode(false)
-		}
-		else {
-			setAddMode(true)
-			setRemoveMode(false)
-		}
-	}
-	console.log(removeMode)
-
-	const toggleRemoveMode = () => {
-		if (removeMode) {
-			setRemoveMode(true)
-			setAddMode(false)
-		}
-		else {
-			setRemoveMode(true)
-			setAddMode(false)
-		}
-	}
-
 
 	const toggleSelectedEdit = (id) => {
 		const assetIndex = editAssets.findIndex(assetItem => assetItem.asset.id === id)
@@ -138,14 +126,14 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 					</div>
 					<div className={styles.mode}>
 						<p>Mode: </p>
-						<div className={styles.option} onClick={() => toggleAddMode()}>
+						<div className={styles.option} onClick={() => setAddMode(true)}>
 							<IconClickable src={addMode ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
 								additionalClass={styles['select-icon']}
 							/>
 									Add
 								</div>
-						<div className={styles.option} onClick={() => toggleRemoveMode()}>
-							<IconClickable src={removeMode ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+						<div className={styles.option} onClick={() => setAddMode(false)}>
+							<IconClickable src={!addMode ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
 								additionalClass={styles['select-icon']} />
 									Remove
 								</div>
@@ -157,7 +145,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 				<section className={styles.side}>
 					<SidePanelBulk
 						elementsSelected={editSelectedAssets}
-						onUpdate={handleBackButton}
+						onUpdate={getInitialAttributes}
 						assetCampaigns={assetCampaigns}
 						assetProjects={assetProjects}
 						assetTags={assetTags}
