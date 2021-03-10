@@ -7,7 +7,6 @@ import AssetVideo from '../asset/asset-video'
 import AssetApplication from '../asset/asset-application'
 import AssetText from '../asset/asset-text'
 import IconClickable from '../buttons/icon-clickable'
-import Button from '../buttons/button'
 
 const EditGrid = ({ assets, toggleSelectedEdit }) => (
   <div className={styles['list-wrapper']}>

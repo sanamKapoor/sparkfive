@@ -23,7 +23,8 @@ const CreatableSelect = ({
   asyncCreateFn,
   dropdownIsActive,
   altColor = '',
-  isBulkEdit = false
+  isBulkEdit = false,
+  canAdd = true
 }) => {
 
   const onChange = async (selected, actionMeta) => {
@@ -99,7 +100,7 @@ const CreatableSelect = ({
             </li>
           ))}
         </ul>
-        {!isShare &&
+        {!isShare && canAdd &&
           <>
             {dropdownIsActive ?
               <div className={`tag-select`}>

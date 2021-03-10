@@ -58,17 +58,11 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 			setAssetProjects(originalInputs.projects)
 			setTags(originalInputs.tags)
 		}
-	}, [addMode])
+	}, [addMode, originalInputs])
 
 	const getInitialAttributes = async () => {
 		try {
 			const { data: { tags, projects, campaigns } } = await assetApi.getBulkProperties({ assetIds: selectedAssets.map(({ asset: { id } }) => id) })
-
-			if (!addMode) {
-				setCampaigns(campaigns)
-				setAssetProjects(projects)
-				setTags(tags)
-			}
 
 			setOriginalInputs({
 				campaigns,
