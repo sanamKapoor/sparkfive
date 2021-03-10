@@ -53,7 +53,7 @@ const SearchItem = ({ assetItem, term, openShareAsset, openDeleteAsset, toggleSe
               highlightClassName={'search-highlight'}
               searchWords={[term]}
               autoEscape={true}
-              textToHighlight={(asset.campaigns && asset.campaigns.length > 0) ? asset.campaigns.map(({ name }) => name).join(', ') : 'No Campaigns'}
+              textToHighlight={(asset?.campaigns && asset.campaigns.length > 0) ? asset.campaigns.map(({ name }) => name).join(', ') : 'No Campaigns'}
             />
           }
         </div>
