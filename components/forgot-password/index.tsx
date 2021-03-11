@@ -44,7 +44,7 @@ const ForgotPassword = () => {
                 }
                 name='email'
                 control={control}
-                rules={{ required: true, pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i }}
+                rules={{ required: true, pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,15}$/i }}
                 message={'Invalid email address'}
                 errors={errors}
               />

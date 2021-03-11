@@ -83,7 +83,8 @@ export default () => {
 					userFilterObject: {
 						filterFolders: selectedFolders.map(folder => ({ value: folder.id }))
 					}
-				})
+				}),
+				complete: '1'
 			})
 			setAssets({ ...data, results: data.results.map(asset => ({ ...asset, isSelected: true })) }, true)
 		} catch (err) {
