@@ -93,6 +93,7 @@ const SidePanelBulk = ({
     } else if (selected) {
       setAssetProjects(update(assetProjects, { $push: [selected] }))
     }
+    setActiveDropdown('')
   }
 
   const removeProject = (index) => {
@@ -228,7 +229,7 @@ const SidePanelBulk = ({
           setAvailableItems={setInputCampaigns}
           selectedItems={assetCampaigns}
           setSelectedItems={setCampaigns}
-          onAddOperationFinished={() => null}
+          onAddOperationFinished={() => setActiveDropdown('')}
           onRemoveOperationFinished={() => null}
           onOperationFailedSkipped={() => setActiveDropdown('')}
           asyncCreateFn={() => null}
@@ -250,7 +251,7 @@ const SidePanelBulk = ({
           setAvailableItems={setInputTags}
           selectedItems={assetTags}
           setSelectedItems={setTags}
-          onAddOperationFinished={() => null}
+          onAddOperationFinished={() => setActiveDropdown('')}
           onRemoveOperationFinished={() => null}
           onOperationFailedSkipped={() => setActiveDropdown('')}
           asyncCreateFn={() => null}

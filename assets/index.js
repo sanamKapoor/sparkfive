@@ -142,3 +142,20 @@ export const Integrations = {
   google_drive: require('./Icons/Assets/icons8-google-drive-1.svg'),
   dropbox: require('./Icons/Assets/Dropbox_Icon.svg'),
 }
+
+export const AssetOps = {
+  edit: require('./Icons/Utilities/Description-Edit/icn-utilities-description_edit-fill.svg'),
+  delete: require('./Icons/Utilities/Delete/icn-utilities-delete.svg'),
+  archive: require('./Icons/Asset Actions/archive.svg'),
+  download: require('./Icons/Utilities/Download/icn-utilities-download.svg'),
+  move: require('./Icons/Utilities/Move Folder/icn-utilities-movefolder.svg'),
+  copy: require('./Icons/Asset Actions/copy.svg'),
+  share: require('./Icons/Asset Actions/share.svg'),
+  editWhite: require('./Icons/Utilities/Description-Edit/icn-utilities-description_edit-fill-white.svg'),
+  deleteWhite: require('./Icons/Utilities/Delete/icn-utilities-delete-white.svg'),
+  archiveWhite: require('./Icons/Asset Actions/archive-white.svg'),
+  downloadWhite: require('./Icons/Utilities/Download/icn-utilities-download-white.svg'),
+  moveWhite: require('./Icons/Utilities/Move Folder/icn-utilities-movefolder-white.svg'),
+  copyWhite: require('./Icons/Asset Actions/copy-white.svg'),
+  shareWhite: require('./Icons/Asset Actions/share-white.svg'),
+}

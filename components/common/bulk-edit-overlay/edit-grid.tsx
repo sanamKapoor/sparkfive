@@ -1,5 +1,6 @@
 import styles from './edit-grid.module.css'
 import { Utilities } from '../../../assets'
+import ReactTooltip from 'react-tooltip'
 
 // Components
 import AssetImg from '../asset/asset-img'
@@ -27,9 +28,10 @@ const EditGrid = ({ assets, toggleSelectedEdit }) => (
                 </>
               </div>
             </div>
-            <div className={styles['text-wrapper']}>
+            <div data-tip data-for={`asset-${asset.id}`} className={styles['text-wrapper']}>
               {asset.name}
             </div>
+            <ReactTooltip id={`asset-${asset.id}`} delayShow={300} effect='solid'>{asset.name}</ReactTooltip>
           </>
         </li>
       ))}

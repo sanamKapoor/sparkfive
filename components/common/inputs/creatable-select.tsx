@@ -42,6 +42,7 @@ const CreatableSelect = ({
       } else {
         setSelectedItems(update(selectedItems, { $push: [{ ...item, name: item.value }] }))
       }
+      onAddOperationFinished()
       return item
     } else {
       if (selectedItems.findIndex(selectedItem => item.label === selectedItem.name) === -1) {

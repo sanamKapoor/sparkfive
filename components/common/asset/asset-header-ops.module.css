@@ -1,0 +1,12 @@
+.action-button{
+  width: 1.5rem;
+  margin-left: 1.2rem;
+}
+
+.action-button:last-of-type{
+  margin-right: 1.2rem;
+}
+
+.action-button:hover{
+  opacity: 0.5;
+}

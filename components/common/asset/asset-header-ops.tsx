@@ -1,13 +1,17 @@
+import styles from './asset-header-ops.module.css'
 import { useContext } from 'react'
 import { AssetContext, UserContext } from '../../../context'
 import downloadUtils from '../../../utils/download'
 
 import { ASSET_DOWNLOAD } from '../../../constants/permissions'
 
+import { AssetOps } from '../../../assets'
+
 // Components
 import Button from '../../common/buttons/button'
+import IconClickable from '../../common/buttons/icon-clickable'
 
-const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, isFolder = false, deselectHidden = false, buttonStyleType = 'tertiary' }) => {
+const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, isFolder = false, deselectHidden = false, iconColor = '' }) => {
 	const {
 		assets,
 		setAssets,
@@ -35,14 +39,14 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 
 	return (
 		<>
-			{!isShare && <Button text={'Edit'} type='button' styleType={buttonStyleType} onClick={() => setActiveOperation('edit')} />}
-			{!isFolder && !isShare && <Button text={'Delete'} type='button' styleType={buttonStyleType} onClick={() => setActiveOperation('delete')} />}
-			{!isFolder && !isShare && <Button text={isUnarchive ? 'Unarchive' : 'Archive'} type='button' styleType={buttonStyleType} onClick={() => setActiveOperation(isUnarchive ? 'unarchive' : 'archive')} />}
-			{!isFolder && (isShare || hasPermission([ASSET_DOWNLOAD])) && <Button text={'Download'} type='button' styleType={isShare ? 'secondary' : buttonStyleType} onClick={downloadSelectedAssets} />}
-			{!isFolder && !isShare && <Button text={'Move'} type='button' styleType={buttonStyleType} onClick={() => setActiveOperation('move')} />}
-			{!isFolder && !isShare && <Button text={'Copy'} type='button' styleType={buttonStyleType} onClick={() => setActiveOperation('copy')} />}
-			{!isFolder && !isShare && <Button text={'Share'} type='button' styleType={buttonStyleType} onClick={() => setActiveOperation('share')} />}
-			{!isFolder && itemType && !isShare && <Button text={'Remove'} type='button' styleType={buttonStyleType} onClick={() => setActiveOperation('remove_item')} />}
+			{!isShare && <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`edit${iconColor}`]} tooltipText={'Edit'} tooltipId={'Edit'} onClick={() => setActiveOperation('edit')} />}
+			{!isFolder && !isShare && <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`delete${iconColor}`]}  tooltipText={'Delete'} tooltipId={'Delete'} onClick={() => setActiveOperation('delete')} />}
+			{!isFolder && !isShare && <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`archive${iconColor}`]}  tooltipText={isUnarchive ? 'Unarchive' : 'Archive'} tooltipId={isUnarchive ? 'Unarchive' : 'Archive'} onClick={() => setActiveOperation(isUnarchive ? 'unarchive' : 'archive')} />}
+			{!isFolder && (isShare || hasPermission([ASSET_DOWNLOAD])) && <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`download${iconColor}`]}  tooltipId={'Download'} tooltipText={'Download'} onClick={downloadSelectedAssets} />}
+			{!isFolder && !isShare && <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`move${iconColor}`]}  tooltipText={'Move'} tooltipId={'Move'} onClick={() => setActiveOperation('move')} />}
+			{!isFolder && !isShare && <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`copy${iconColor}`]}  tooltipText={'Copy'} tooltipId={'Copy'} onClick={() => setActiveOperation('copy')} />}
+			{!isFolder && !isShare && <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`share${iconColor}`]}  tooltipText={'Share'} tooltipId={'Share'} onClick={() => setActiveOperation('share')} />}
+			{!isFolder && itemType && !isShare && <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`delete${iconColor}`]}  tooltipText={'Remove'} onClick={() => setActiveOperation('remove_item')} />}
 			{!deselectHidden && <Button text={`Deselect All (${!isFolder ? selectedAssets.length : selectedFolders.length})`} type='button' styleType='primary' onClick={deselectAll} />}
 		</>
 	)
