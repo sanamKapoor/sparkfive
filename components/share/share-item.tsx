@@ -2,6 +2,8 @@ import styles from './share-item.module.css'
 import { format } from 'date-fns'
 import { useState, useEffect } from 'react'
 
+import { Utilities, Assets } from '../../assets'
+
 // Component
 import AssetImg from '../common/asset/asset-img'
 import AssetVideo from '../common/asset/asset-video'
@@ -9,11 +11,14 @@ import AssetApplication from '../common/asset/asset-application'
 import AssetText from '../common/asset/asset-text'
 import Button from '../common/buttons/button'
 import DetailOverlay from '../common/asset/detail-overlay'
+import IconClickable from "../common/buttons/icon-clickable";
 
 const ShareItem = ({
 	asset,
 	thumbailUrl,
-	realUrl
+	realUrl,
+	isSelected = false,
+	toggleSelected = () => { },
 }) => {
 
 	const [visibleOverlay, setVisibleOVerlay] = useState(false)
@@ -34,6 +39,13 @@ const ShareItem = ({
 					{asset.type === 'video' && <AssetVideo asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} />}
 					{asset.type === 'application' && <AssetApplication extension={asset.extension} />}
 					{asset.type === 'text' && <AssetText extension={asset.extension} />}
+					<div className={`${styles['selectable-wrapper']} ${isSelected && styles['selected-wrapper']}`}>
+						{isSelected ?
+							<IconClickable src={Utilities.radioButtonEnabled} additionalClass={styles['select-icon']} onClick={toggleSelected} />
+							:
+							<IconClickable src={Utilities.radioButtonNormal} additionalClass={styles['select-icon']} onClick={toggleSelected} />
+						}
+					</div>
 					<div className={styles['image-button-wrapper']}>
 						<Button styleType={'primary'} text={'View Details'} type={'button'}
 							onClick={() => setVisibleOVerlay(true)} />
