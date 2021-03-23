@@ -11,7 +11,7 @@ import AssetApplication from '../common/asset/asset-application'
 import AssetText from '../common/asset/asset-text'
 import Button from '../common/buttons/button'
 import DetailOverlay from '../common/asset/detail-overlay'
-import IconClickable from "../common/buttons/icon-clickable";
+import IconClickable from "../common/buttons/icon-clickable"
 
 const ShareItem = ({
 	asset,

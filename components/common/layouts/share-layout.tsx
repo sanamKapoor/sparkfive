@@ -1,6 +1,6 @@
-import styles from './share-layout.module.css';
-import { GeneralImg, Navigation, Utilities } from '../../../assets';
-import AssetContextProvider from '../../../context/asset-provider';
+import styles from './share-layout.module.css'
+import { GeneralImg, Navigation, Utilities } from '../../../assets'
+import AssetContextProvider from '../../../context/asset-provider'
 
 const ShareLayout = ({ children }) => {
 	return (

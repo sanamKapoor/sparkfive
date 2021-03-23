@@ -1,25 +1,25 @@
 // External import
-import update from "immutability-helper";
+import update from "immutability-helper"
 import { useEffect, useState } from 'react'
 
 // Styles
-import styles from './index.module.css';
+import styles from './index.module.css'
 
-import assetApi from '../../server-api/asset';
-import toastUtils from '../../utils/toast';
-import urlUtils from '../../utils/url';
+import assetApi from '../../server-api/asset'
+import toastUtils from '../../utils/toast'
+import urlUtils from '../../utils/url'
 
 // Utils
-import downloadUtils from '../../utils/download';
+import downloadUtils from '../../utils/download'
 
 // Components
 import ShareItem from './share-item'
-import ShareOperationButtons from "./share-operation-buttons";
+import ShareOperationButtons from "./share-operation-buttons"
 
 const AssetShare = () => {
 
-	const [assets, setAssets] = useState([]);
-	const [selectedAsset, setSelectedAsset] = useState(0);
+	const [assets, setAssets] = useState([])
+	const [selectedAsset, setSelectedAsset] = useState(0)
 
 	// Toggle select asset
 	const toggleSelected = (id) => {
@@ -27,9 +27,9 @@ const AssetShare = () => {
 
 		// Toggle selected item
 		if(!assets[assetIndex].isSelected){
-			setSelectedAsset(selectedAsset+1);
+			setSelectedAsset(selectedAsset+1)
 		}else{
-			setSelectedAsset(selectedAsset-1);
+			setSelectedAsset(selectedAsset-1)
 		}
 
 		setAssets(update(assets, {
@@ -43,11 +43,11 @@ const AssetShare = () => {
 	const selectAll = () => {
 		// If already select all, do deselect
 		if(selectedAsset){
-			setAssets(assets.map(assetItem => ({ ...assetItem, isSelected: false })));
-			setSelectedAsset(0);
+			setAssets(assets.map(assetItem => ({ ...assetItem, isSelected: false })))
+			setSelectedAsset(0)
 		}else{
-			setAssets(assets.map(assetItem => ({ ...assetItem, isSelected: true })));
-			setSelectedAsset(assets.length);
+			setAssets(assets.map(assetItem => ({ ...assetItem, isSelected: true })))
+			setSelectedAsset(assets.length)
 		}
 
 	}

@@ -1,6 +1,6 @@
-import styles from "./share-operation-buttons.module.css";
+import styles from "./share-operation-buttons.module.css"
 
-import Button from "../common/buttons/button";
+import Button from "../common/buttons/button"
 
 const ShareOperationButtons = ({ selectAll, selectedAsset, downloadSelectedAssets }: Props) => {
     return  <div className={styles.container}>
@@ -11,9 +11,9 @@ const ShareOperationButtons = ({ selectAll, selectedAsset, downloadSelectedAsset
 }
 
 interface Props{
-    downloadSelectedAssets: () => void;
-    selectAll: () => void;
-    selectedAsset: number;
+    downloadSelectedAssets: () => void
+    selectAll: () => void
+    selectedAsset: number
 }
 
-export default ShareOperationButtons;
+export default ShareOperationButtons
