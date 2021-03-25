@@ -12,6 +12,7 @@
 
 .operations{
     display: flex;
+    align-items: center;
     margin-top: 2rem;
     width: 100%;
     max-width: 55rem;
@@ -19,4 +20,14 @@
 
 .operations button:first-child{
     margin-right: 1rem;
+}
+
+.select-only-shown-items-text{
+    cursor: pointer;
+    margin-left: 15px;
+    padding: 5px;
+}
+
+.select-only-shown-items-text:hover{
+    text-decoration: underline;
 }
