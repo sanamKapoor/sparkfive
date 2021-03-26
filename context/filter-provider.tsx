@@ -31,6 +31,7 @@ export default ({ children, isPublic = false }) => {
     vendors: [],
     retailers: []
   })
+  const [term, setTerm] = useState("")
 
   const loadAll = () => {
     loadTags()
@@ -149,6 +150,10 @@ export default ({ children, isPublic = false }) => {
     return false
   }
 
+  const setSearchTerm = (value) => {
+    setTerm(value);
+  }
+
   const filterValue = {
     loadAll,
     tags,
@@ -171,7 +176,9 @@ export default ({ children, isPublic = false }) => {
     loadFolders,
     activeSortFilter,
     setActiveSortFilter,
-    setSharePath
+    setSharePath,
+    term,
+    setSearchTerm
   }
   return (
     <FilterContext.Provider value={filterValue}>

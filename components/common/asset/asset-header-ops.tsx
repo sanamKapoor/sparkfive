@@ -17,12 +17,25 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 		setAssets,
 		folders,
 		setFolders,
-		setActiveOperation
+		setActiveOperation,
+		selectedAllAssets,
+		selectAllAssets,
+		totalAssets
 	} = useContext(AssetContext)
 
 	const { hasPermission } = useContext(UserContext)
 
 	const selectedAssets = assets.filter(asset => asset.isSelected)
+	let totalSelectAssets = selectedAssets.length;
+
+	// Hidden pagination assets are selected
+	if(selectedAllAssets){
+		// Get assets is not selected on screen
+		const currentUnSelectedAssets = assets.filter(asset => !asset.isSelected)
+		totalSelectAssets  = totalAssets - currentUnSelectedAssets.length
+	}
+
+
 	const selectedFolders = folders.filter(folder => folder.isSelected)
 
 	const downloadSelectedAssets = async () => {
@@ -31,6 +44,9 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 
 	const deselectAll = () => {
 		if (!isFolder) {
+			// Mark deselect all
+			selectAllAssets(false)
+
 			setAssets(assets.map(asset => ({ ...asset, isSelected: false })))
 		} else {
 			setFolders(folders.map(folder => ({ ...folder, isSelected: false })))
@@ -47,7 +63,7 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 			{!isFolder && !isShare && <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`copy${iconColor}`]}  tooltipText={'Copy'} tooltipId={'Copy'} onClick={() => setActiveOperation('copy')} />}
 			{!isFolder && !isShare && <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`share${iconColor}`]}  tooltipText={'Share'} tooltipId={'Share'} onClick={() => setActiveOperation('share')} />}
 			{!isFolder && itemType && !isShare && <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`delete${iconColor}`]}  tooltipText={'Remove'} onClick={() => setActiveOperation('remove_item')} />}
-			{!deselectHidden && <Button text={`Deselect All (${!isFolder ? selectedAssets.length : selectedFolders.length})`} type='button' styleType='primary' onClick={deselectAll} />}
+			{!deselectHidden && <Button text={`Deselect All (${!isFolder ? (totalSelectAssets) : selectedFolders.length})`} type='button' styleType='primary' onClick={deselectAll} />}
 		</>
 	)
 }

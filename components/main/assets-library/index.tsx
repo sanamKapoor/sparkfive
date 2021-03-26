@@ -34,7 +34,8 @@ const AssetsLibrary = () => {
     setNeedsFetch,
     addedIds,
     setAddedIds,
-    setLoadingAssets
+    setLoadingAssets,
+    selectAllAssets
   } = useContext(AssetContext)
 
   const [activeMode, setActiveMode] = useState('assets')
@@ -158,7 +159,7 @@ const AssetsLibrary = () => {
     return queryData
   }
 
-  const getAssets = async (replace = true) => {
+  const getAssets = async (replace = true, complete = null) => {
     try {
       setLoadingAssets(true)
       if (replace) {
@@ -173,6 +174,7 @@ const AssetsLibrary = () => {
           nextPage,
           userFilterObject: activeSortFilter
         }),
+        complete,
         ...getAssetsSort(activeSortFilter)
       })
       setAssets({ ...data, results: data.results.map(mapWithToggleSelection) }, replace)
@@ -226,6 +228,9 @@ const AssetsLibrary = () => {
 
   const selectAll = () => {
     if (activeMode === 'assets') {
+      // Mark select all
+      selectAllAssets()
+
       setAssets(assets.map(assetItem => ({ ...assetItem, isSelected: true })))
     } else if (activeMode === 'folders') {
       setFolders(folders.map(folder => ({ ...folder, isSelected: true })))
