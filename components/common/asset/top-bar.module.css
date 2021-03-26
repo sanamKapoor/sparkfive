@@ -103,3 +103,12 @@
     display: none;
   }
 }
+
+.select-only-shown-items-text{
+  cursor: pointer;
+  margin-right: 15px;
+}
+
+.select-only-shown-items-text:hover{
+  text-decoration: underline;
+}

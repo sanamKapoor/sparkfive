@@ -1,5 +1,5 @@
 import styles from './top-bar.module.css'
-import { useRef } from 'react'
+import {useContext, useRef} from 'react'
 import { Utilities } from '../../../assets'
 import selectOptions from '../../../utils/select-options'
 
@@ -8,6 +8,9 @@ import SectionButton from '../buttons/section-button'
 import Select from '../inputs/select'
 import Button from '../buttons/button'
 import IconClickable from '../buttons/icon-clickable'
+
+// Context
+import { AssetContext } from '../../../context'
 
 const TopBar = ({
   activeSortFilter,
@@ -20,6 +23,11 @@ const TopBar = ({
   openFilter,
   isShare = false
 }) => {
+
+  const {
+    selectedAllAssets,
+    selectAllAssets
+  } = useContext(AssetContext)
 
   const setSortFilterValue = (key, value) => {
     setActiveSortFilter({
@@ -46,6 +54,10 @@ const TopBar = ({
     else current.classList.add(classType)
   }
 
+  const toggleSelectAll = () => {
+    selectAllAssets(!selectedAllAssets)
+  }
+
   return (
     <section className={styles.container}>
       <div className={styles.filters} >
@@ -66,6 +78,7 @@ const TopBar = ({
       <IconClickable src={Utilities.filter} additionalClass={styles.filter} onClick={toggleHamurgerList} />
 
       <div className={styles['sec-filters']} ref={filtersRef}>
+        {selectedAllAssets && <span className={styles['select-only-shown-items-text']} onClick={toggleSelectAll}>Select only 25 assets shown</span>}
         <Button type='button' text='Select All' styleType='secondary' onClick={selectAll} />
         <img src={Utilities.gridView} onClick={() => setActiveView('grid')} />
         <img src={Utilities.listView} onClick={() => setActiveView('list')} />

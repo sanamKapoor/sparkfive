@@ -31,10 +31,16 @@ export default () => {
 		setOperationFolder,
 		activeFolder,
 		activePageMode,
-		setLoadingAssets
+		setLoadingAssets,
+		selectedAllAssets,
+		completedAssets,
+		setCompletedAssets
 	} = useContext(AssetContext)
 
-	const { loadFolders } = useContext(FilterContext)
+	const { loadFolders, activeSortFilter, term } = useContext(FilterContext)
+
+	// We need this for all selected asset ignore pagination
+	const unSelectedAssets = selectedAllAssets ? assets.filter(asset => !asset.isSelected) : []
 
 	const router = useRouter()
 
@@ -47,8 +53,18 @@ export default () => {
 		if (activeOperation === 'move' || activeOperation === 'copy') {
 			getFolders()
 		}
+
+		// Edit assets in collections
 		if (activeOperation === 'edit' && selectedFolders.length > 0) {
+			// Get all assets in collections and set it as selected
 			getSelectedFolderAssets()
+		}
+
+		// Edit assets including hidden pagination items
+		if(activeOperation === 'edit' && selectedAllAssets){
+			console.log(unSelectedAssets)
+			//  Get all assets without pagination
+			getSelectedAssets(unSelectedAssets.map((data)=> data.asset.id))
 		}
 	}, [activeOperation])
 
@@ -88,6 +104,34 @@ export default () => {
 			})
 			setAssets({ ...data, results: data.results.map(asset => ({ ...asset, isSelected: true })) }, true)
 		} catch (err) {
+			console.log(err)
+		} finally {
+			setLoadingAssets(false)
+		}
+	}
+
+	const getSelectedAssets = async (excludeIds = []) => {
+		try {
+			setLoadingAssets(true)
+			let filters = {
+				...getAssetsFilters({
+					replace: false,
+					activeFolder,
+					addedIds: excludeIds,
+					nextPage: 1,
+					userFilterObject: activeSortFilter
+				}),
+				complete: '1',
+			};
+
+			if(term){
+				// @ts-ignore
+				filters.term = term;
+			}
+			const { data } = await assetApi.getAssets(filters)
+			setCompletedAssets({ ...data, results: data.results.map(asset => ({ ...asset, isSelected: true })) }, true)
+		} catch (err) {
+			//TODO: Handle error
 			console.log(err)
 		} finally {
 			setLoadingAssets(false)
@@ -412,7 +456,7 @@ export default () => {
 				message={`Remove ${operationLength} item(s) from ${currentItem.type}?`}
 			/>
 			{activeOperation === 'edit' &&
-				<BulkEditOverlay handleBackButton={() => setActiveOperation('')} selectedAssets={selectedAssets} />
+				<BulkEditOverlay handleBackButton={() => setActiveOperation('')} selectedAssets={selectedAllAssets ? completedAssets : selectedAssets} />
 			}
 		</>
 	)

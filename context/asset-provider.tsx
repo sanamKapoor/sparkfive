@@ -39,6 +39,9 @@ export default ({ children }) => {
 
     const [addedIds, setAddedIds] = useState([])
 
+    const [selectedAllAssets, setSelectedAllAssets] = useState(false)
+    const [completedAssets, setCompletedAssets] = useState([])
+
     const setPlaceHolders = (type, replace = true) => {
         if (type === 'asset') {
             if (replace)
@@ -65,6 +68,16 @@ export default ({ children }) => {
             setAssets([...assets.filter(asset => !asset.isLoading), ...inputAssets])
     }
 
+    const setCompletedAssetItems = (inputAssets, replace = true) => {
+        const { results, next, total } = inputAssets
+        if (results) inputAssets = results
+
+        if (replace)
+            setCompletedAssets(inputAssets)
+        else
+            setCompletedAssets([...completedAssets.filter(asset => !asset.isLoading), ...inputAssets])
+    }
+
     const setFolderItems = (inputFolders, replace = true) => {
         const { results, next, total } = inputFolders
         if (results) inputFolders = results
@@ -77,9 +90,16 @@ export default ({ children }) => {
             setFolders([...folders.filter(folder => !folder.isLoading), ...inputFolders])
     }
 
+    // Mark assets have been selected all even assets do not exist in pagination
+    const selectAllAssets = (isSelectedAll = true) => {
+        setSelectedAllAssets(isSelectedAll)
+    }
+
     const assetsValue = {
         assets,
         setAssets: setAssetItems,
+        completedAssets,
+        setCompletedAssets: setCompletedAssetItems,
         nextPage,
         totalAssets,
         folders,
@@ -100,7 +120,9 @@ export default ({ children }) => {
         addedIds,
         setAddedIds,
         loadingAssets,
-        setLoadingAssets
+        setLoadingAssets,
+        selectedAllAssets,
+        selectAllAssets,
     }
     return (
         <AssetContext.Provider value={assetsValue}>

@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from 'react'
-import { AssetContext } from '../../../context'
+import { AssetContext, FilterContext } from '../../../context'
 import styles from './index.module.css'
 import assetApi from '../../../server-api/asset'
 import shareCollectionApi from '../../../server-api/share-collection'
@@ -14,11 +14,12 @@ import AssetHeaderOps from '../../common/asset/asset-header-ops'
 
 const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEnabled = false, importAssets = () => { }, sharePath = '' }) => {
 
-  const { assets, setAssets, setActiveOperation, setOperationAsset, setPlaceHolders, nextPage } = useContext(AssetContext)
-  const [term, setTerm] = useState('')
+  const { assets, setAssets, setActiveOperation, setOperationAsset, setPlaceHolders, nextPage, selectAllAssets, selectedAllAssets, totalAssets } = useContext(AssetContext)
+  const { term, setSearchTerm } = useContext(FilterContext)
+
 
   const getData = async (inputTerm, replace = true) => {
-    setTerm(inputTerm)
+    setSearchTerm(inputTerm)
     try {
       let fetchFn = assetApi.getAssets
       if (sharePath) fetchFn = shareCollectionApi.getAssets
@@ -50,19 +51,46 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
   }
 
   const selectAll = () => {
+    // Mark select all
+    selectAllAssets()
+
     setAssets(assets.map(assetItem => ({ ...assetItem, isSelected: true })))
   }
 
   const deselectAll = () => {
+    selectAllAssets(false)
+
     setAssets(assets.map(asset => ({ ...asset, isSelected: false })))
   }
 
   const selectedAssets = assets.filter(asset => asset.isSelected)
 
+  let totalSelectAssets = selectedAssets.length;
+
+  // Hidden pagination assets are selected
+  if(selectedAllAssets){
+    // Get assets is not selected on screen
+    const currentUnSelectedAssets = assets.filter(asset => !asset.isSelected)
+    totalSelectAssets  = totalAssets - currentUnSelectedAssets.length
+  }
+
+  const toggleSelectAll = () => {
+    selectAllAssets(!selectedAllAssets)
+  }
+
+  // Close search modal
+  const closeSearchModal = () => {
+    // Reset all value
+    setSearchTerm("")
+    selectAllAssets(false)
+
+    closeOverlay();
+  }
+
   return (
     <div className={`app-overlay search-container`}>
       <div className={'search-top'}>
-        <div className={'search-close'} onClick={closeOverlay}>
+        <div className={'search-close'} onClick={closeSearchModal}>
           <span className={'search-x'}>X</span>
           <span>esc</span>
         </div>
@@ -79,7 +107,8 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
         </div>
         <div className={styles.operations}>
           <Button type='button' text='Select All' styleType='secondary' onClick={selectAll} />
-          {selectedAssets.length > 0 && <Button text={`Deselect All (${selectedAssets.length})`} type='button' styleType='primary' onClick={deselectAll} />}
+          {selectedAssets.length > 0 && <Button text={`Deselect All (${totalSelectAssets})`} type='button' styleType='primary' onClick={deselectAll} />}
+          {selectedAllAssets && <span className={styles['select-only-shown-items-text']} onClick={toggleSelectAll}>Select only 25 assets shown</span>}
           {selectedAssets.length > 0 && <AssetHeaderOps deselectHidden={true} buttonStyleType={'tertiary-blue'} />}
         </div>
         {importEnabled &&

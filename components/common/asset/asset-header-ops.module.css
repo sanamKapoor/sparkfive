@@ -10,3 +10,13 @@
 .action-button:hover{
   opacity: 0.5;
 }
+
+.select-only-shown-items-text{
+  cursor: pointer;
+  margin-left: 15px;
+  padding: 5px;
+}
+
+.select-only-shown-items-text:hover{
+  text-decoration: underline;
+}
