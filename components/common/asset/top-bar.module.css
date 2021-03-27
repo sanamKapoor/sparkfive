@@ -107,6 +107,7 @@
 .select-only-shown-items-text{
   cursor: pointer;
   margin-right: 15px;
+  font-size: 9px;
 }
 
 .select-only-shown-items-text:hover{

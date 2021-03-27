@@ -30,6 +30,9 @@ const TopBar = ({
   } = useContext(AssetContext)
 
   const setSortFilterValue = (key, value) => {
+    // Reset select all status
+    selectAllAssets(false);
+
     setActiveSortFilter({
       ...activeSortFilter,
       [key]: value
