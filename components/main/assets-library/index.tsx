@@ -315,7 +315,7 @@ const AssetsLibrary = () => {
           setActiveSortFilter={setActiveSortFilter}
           setActiveView={setActiveView}
           activeFolder={activeFolder}
-          setActiveSearchOverlay={() => setActiveSearchOverlay(true)}
+          setActiveSearchOverlay={() => {selectAllAssets(false);setActiveSearchOverlay(true)}}
           selectAll={selectAll}
           setOpenFilter={setOpenFilter}
           openFilter={openFilter}

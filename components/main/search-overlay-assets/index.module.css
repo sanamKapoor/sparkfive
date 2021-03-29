@@ -26,6 +26,7 @@
     cursor: pointer;
     margin-left: 15px;
     padding: 5px;
+    font-size: 9px;
 }
 
 .select-only-shown-items-text:hover{
