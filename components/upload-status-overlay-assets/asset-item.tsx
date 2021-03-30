@@ -36,7 +36,7 @@ const AssetItem = ({ assetItem, toggleSelected, onRetry }) => {
             {!error && <span className={`${styles['no-error']}`}>No Error</span>}
         </div>
         <div>
-            <Button onClick={()=>{onRetry}} className={clsx({[styles['hidden']]: !error})} type='button' text='Retry' styleType='primary'/>
+            <Button onClick={onRetry} className={clsx({[styles['hidden']]: !error})} type='button' text='Retry' styleType='primary'/>
         </div>
       </li >
   )

@@ -5,6 +5,8 @@ import { convertTimeFromSeconds } from "../utils/upload"
 
 import assetApi from '../server-api/asset'
 
+import {validation} from "../constants/file-validation";
+
 const loadingDefaultAsset = {
     asset: {
         name: 'placeholder',
@@ -149,6 +151,22 @@ export default ({ children }) => {
         try{
             const formData = new FormData()
             const file = retryList[i].file
+
+            // Do validation
+            if(retryList[i].asset.size > validation.UPLOAD.MAX_SIZE.VALUE){
+                // Violate validation, mark failure
+                const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE} : asset);
+
+                setUploadingAssets(updatedAssets)
+
+                // The final one
+                if(i === retryList.length - 1){
+                    // Finish uploading process
+                    showUploadProcess('done')
+                }else{ // Keep going
+                    await reUploadAsset(i+1, assets,  currentDataClone, totalSize, retryList)
+                }
+            }
 
             // Show uploading toast
             showUploadProcess('uploading', i)

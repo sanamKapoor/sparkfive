@@ -17,7 +17,10 @@ import ToggleAbleAbsoluteWrapper from '../misc/toggleable-absolute-wrapper'
 import DriveSelector from '../asset/drive-selector'
 import FolderModal from '../folder/folder-modal'
 import IconClickable from '../buttons/icon-clickable'
-import update from "immutability-helper";
+
+import { validation } from '../../../constants/file-validation'
+
+
 
 const AssetAddition = ({
 	activeFolder = '',
@@ -44,6 +47,21 @@ const AssetAddition = ({
 		try{
 			const formData = new FormData()
 			const file = assets[i].file
+
+			// Do validation
+			if(assets[i].asset.size > validation.UPLOAD.MAX_SIZE.VALUE){
+				// Violate validation, mark failure
+				const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE} : asset);
+
+				setUploadingAssets(updatedAssets)
+
+				// The final one
+				if(i === assets.length - 1){
+					return
+				}else{ // Keep going
+					await uploadAsset(i+1, assets, currentDataClone, totalSize)
+				}
+			}
 
 			// Show uploading toast
 			showUploadProcess('uploading', i)

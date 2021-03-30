@@ -43,11 +43,8 @@ const UploadStatusOverlayAssets = ({ closeOverlay }) => {
     closeOverlay();
   }
 
-  const retryUpload = () => {
-
-  }
-
   const onRetry = async (index) => {
+    console.log(`onRetry`)
     // Start to upload assets
     reUploadAsset(0, uploadingAssets, assets, uploadingAssets[index].asset.size, [uploadingAssets[index]])
 
