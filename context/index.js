@@ -74,6 +74,9 @@ export const AssetContext = createContext({
     uploadingPercent: 0,
     uploadingAssets: [],
     setUploadingAssets: (assets) => { },
+    uploadDetailOverlay: false,
+    setUploadDetailOverlay: (show) => { },
+    reUploadAsset: (i, assets, currentDataClone, totalSize, retryList) => { },
 })
 
 export const TeamContext = createContext({

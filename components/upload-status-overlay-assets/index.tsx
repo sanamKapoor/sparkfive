@@ -1,165 +1,119 @@
-import { useState, useContext, useEffect } from 'react'
-import { AssetContext, FilterContext } from '../../../context'
+import {  useContext } from 'react'
+import { AssetContext } from '../../context'
 import styles from './index.module.css'
-import assetApi from '../../../server-api/asset'
-import shareCollectionApi from '../../../server-api/share-collection'
-import { Waypoint } from 'react-waypoint'
+
 import update from 'immutability-helper'
 
 // Components
-import Search from '../../common/inputs/search'
-import SearchItem from './search-item'
-import Button from '../../common/buttons/button'
-import AssetHeaderOps from '../../common/asset/asset-header-ops'
-
-const UploadStatusOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEnabled = false, importAssets = () => { }, sharePath = '' }) => {
-
-  const { assets, setAssets, setActiveOperation, setOperationAsset, setPlaceHolders, nextPage, selectAllAssets, selectedAllAssets, totalAssets } = useContext(AssetContext)
-  const { term, setSearchTerm } = useContext(FilterContext)
+import AssetItem from './asset-item'
+import Button from '../common/buttons/button'
 
 
-  const getData = async (inputTerm, replace = true) => {
-    setSearchTerm(inputTerm)
-    try {
-      let fetchFn = assetApi.getAssets
-      if (sharePath) fetchFn = shareCollectionApi.getAssets
-      setPlaceHolders('asset', replace)
-      const { data } = await fetchFn({ term: inputTerm, page: replace ? 1 : nextPage, sharePath })
-      setAssets(data, replace)
-    } catch (err) {
-      // TODO: Handle this error
-      console.log(err)
-    }
-  }
+const UploadStatusOverlayAssets = ({ closeOverlay }) => {
 
-  useEffect(() => {
-    setAssets([])
-  }, [])
+  const { assets, uploadingAssets, setUploadingAssets, reUploadAsset } = useContext(AssetContext)
 
-  const beginAssetOperation = (asset, operation) => {
-    setOperationAsset(asset)
-    setActiveOperation(operation)
-  }
+  const selectedAssets = uploadingAssets.filter(asset => asset.isSelected)
+  let totalSelectAssets = selectedAssets.length;
 
-  const toggleSelected = (id) => {
-    const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
-    setAssets(update(assets, {
-      [assetIndex]: {
-        isSelected: { $set: !assets[assetIndex].isSelected }
+  // Get fail uploading assets
+  const failUploadingAssets = uploadingAssets.filter(asset => asset.status === 'fail')
+
+  const toggleSelected = (asset) => {
+    const index = uploadingAssets.findIndex(assetItem => assetItem.asset.name === asset.name)
+
+    setUploadingAssets(update(uploadingAssets, {
+      [index]: {
+        isSelected: { $set: !uploadingAssets[index].isSelected }
       }
     }))
   }
 
   const selectAll = () => {
-    // Mark select all
-    selectAllAssets()
-
-    setAssets(assets.map(assetItem => ({ ...assetItem, isSelected: true })))
+    setUploadingAssets(uploadingAssets.map(assetItem => ({ ...assetItem, isSelected: true })))
   }
 
   const deselectAll = () => {
-    selectAllAssets(false)
-
-    setAssets(assets.map(asset => ({ ...asset, isSelected: false })))
-  }
-
-  const selectedAssets = assets.filter(asset => asset.isSelected)
-
-  let totalSelectAssets = selectedAssets.length;
-
-  // Hidden pagination assets are selected
-  if(selectedAllAssets){
-    // Get assets is not selected on screen
-    const currentUnSelectedAssets = assets.filter(asset => !asset.isSelected)
-    totalSelectAssets  = totalAssets - currentUnSelectedAssets.length
-  }
-
-  const toggleSelectAll = () => {
-    selectAllAssets(!selectedAllAssets)
+    setUploadingAssets(uploadingAssets.map(assetItem => ({ ...assetItem, isSelected: false })))
   }
 
   // Close search modal
-  const closeSearchModal = () => {
+  const closeUploadDetailModal = () => {
     // Reset all value
-    setSearchTerm("")
-    selectAllAssets(false)
+    closeOverlay();
+  }
+
+  const retryUpload = () => {
+
+  }
+
+  const onRetry = async (index) => {
+    // Start to upload assets
+    reUploadAsset(0, uploadingAssets, assets, uploadingAssets[index].asset.size, [uploadingAssets[index]])
 
     closeOverlay();
   }
 
+  const onBulkRetry = async () => {
+    const selectedAssets = uploadingAssets.filter((asset)=>asset.isSelected)
+
+    let totalSize = 0;
+    selectedAssets.map((asset)=>{
+      totalSize+=asset.asset.size
+    })
+    // Start to upload assets
+    reUploadAsset(0, uploadingAssets, assets, totalSize, selectedAssets)
+
+    closeOverlay();
+  }
+
+
   return (
     <div className={`app-overlay search-container`}>
       <div className={'search-top'}>
-        <div className={'search-close'} onClick={closeSearchModal}>
+        <div className={'search-close'} onClick={closeUploadDetailModal}>
           <span className={'search-x'}>X</span>
           <span>esc</span>
         </div>
       </div>
       <div className={'search-content'}>
         <h2 >
-          Upload Detail
+          Upload Details
         </h2>
-        <div className={'search-cont'}>
-          <Search
-            placeholder={'Find Assets by Name, Extension, Collection, Campaign, Channel, Tag (min 3 characters)'}
-            onSubmit={(inputTerm) => getData(inputTerm)}
-          />
-        </div>
         <div className={styles.operations}>
           <Button type='button' text='Select All' styleType='secondary' onClick={selectAll} />
           {selectedAssets.length > 0 && <Button text={`Deselect All (${totalSelectAssets})`} type='button' styleType='primary' onClick={deselectAll} />}
-          {selectedAllAssets && <span className={styles['select-only-shown-items-text']} onClick={toggleSelectAll}>Select only 25 assets shown</span>}
-          {selectedAssets.length > 0 && <AssetHeaderOps deselectHidden={true} buttonStyleType={'tertiary-blue'} />}
+          {selectedAssets.length > 0 && <Button text={`Retry (${totalSelectAssets})`} type='button' styleType='primary' onClick={onBulkRetry}/>}
+          <span className={styles['select-only-shown-items-text']}>{uploadingAssets.length - failUploadingAssets.length} out of {uploadingAssets.length} successfully uploaded. {failUploadingAssets.length} errors</span>
         </div>
-        {importEnabled &&
-          <div className={styles['import-wrapper']}>
-            <Button
-              text='Import Assets'
-              type='button'
-              disabled={selectedAssets.length === 0}
-              onClick={importAssets}
-              styleType='primary'
-            />
-          </div>
-        }
         <ul className={'search-content-list'}>
-          {assets.map((assetItem, index) => (
-            <SearchItem
-              isShare={sharePath}
+          <li className={`search-item ${styles['search-item']}`}>
+            <div className={`${styles['select-wrapper']}`} />
+            <div className={`${styles.name}`}>
+              Name
+            </div>
+            <div className={styles.type}>
+              Type
+            </div>
+            <div className={styles.type}>
+              Size
+            </div>
+            <div className={`${styles['upload-error']}`}>
+              Upload Error
+            </div>
+            <div className={styles.button}>
+              <Button type='button' text='Retry' styleType='primary'/>
+            </div>
+          </li>
+          {uploadingAssets.map((assetItem, index) => (
+            <AssetItem
               key={index}
-              enabledSelect={importEnabled || operationsEnabled}
-              toggleSelected={() => toggleSelected(assetItem.asset.id)}
+              toggleSelected={() => toggleSelected(assetItem.asset)}
               assetItem={assetItem}
-              term={term}
-              openShareAsset={() => beginAssetOperation(assetItem, 'share')}
-              openDeleteAsset={() => beginAssetOperation(assetItem, 'delete')}
+              onRetry={()=>{onRetry(index)}}
             />
           ))}
         </ul>
-        {assets.length > 0 && nextPage !== -1 &&
-          <>
-            {nextPage > 2 ?
-              <>
-                {!assets[assets.length - 1].isLoading &&
-                  <Waypoint onEnter={() => getData(term, false)} fireOnRapidScroll={false} />
-                }
-              </>
-
-              :
-              <>
-                {!assets[assets.length - 1].isLoading &&
-                  <div className={styles['button-wrapper']}>
-                    <Button
-                      text='Load More'
-                      type='button'
-                      styleType='primary'
-                      onClick={() => getData(term, false)} />
-                  </div>
-                }
-              </>
-            }
-          </>
-        }
       </div>
     </div >
   )

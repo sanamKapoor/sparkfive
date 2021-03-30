@@ -18,7 +18,7 @@
     max-width: 55rem;
 }
 
-.operations button:first-child{
+.operations button{
     margin-right: 1rem;
 }
 
@@ -32,3 +32,42 @@
 .select-only-shown-items-text:hover{
     text-decoration: underline;
 }
+
+.select-wrapper{
+    width: 75px;
+}
+
+.name {
+    width: 25%;
+    position: relative;
+    opacity: 0.3;
+}
+
+.type {
+    width: 10%;
+    opacity: 0.3;
+}
+
+.upload-error {
+    width: 40%;
+    position: relative;
+    opacity: 0.3;
+}
+
+.search-item {
+    cursor: default;
+    padding: 12px 0;
+    border-top: none;
+    border-bottom: 1px solid var(--color-secondary-border);
+}
+
+.search-item .select-icon {
+    width: 25px;
+    height: auto;
+    margin-right: 25px;
+}
+
+.button{
+    visibility: hidden;
+}
+

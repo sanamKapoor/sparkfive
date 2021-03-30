@@ -14,11 +14,12 @@ const AssetUploadProcess = () => {
         showUploadProcess,
         uploadingFile,
         uploadRemainingTime,
-        uploadingPercent
+        uploadingPercent,
+        setUploadDetailOverlay,
     } = useContext(AssetContext)
 
     const uploadedAssets = uploadingAssets.filter(asset => asset.status === 'done')
-    const failAssetsCount = uploadingAssets.length - uploadedAssets.length
+    const failAssetsCount = uploadingAssets.filter(asset => asset.status === 'fail').length
 
     return <div className={clsx(styles.container, {[styles['center-align']]: uploadingStatus === 'done'})}>
         <div className={clsx(styles.row, {[styles['no-margin']]: uploadingStatus === 'done'})}>
@@ -32,12 +33,12 @@ const AssetUploadProcess = () => {
                     {failAssetsCount > 0 && <span>{failAssetsCount} failed</span>}
                 </span>
             }
-            {uploadingStatus === 'done' && <span className={styles['underline-text']}>See detail</span>}
+            {uploadingStatus === 'done' && <span className={styles['underline-text']} onClick={()=>{setUploadDetailOverlay(true)}}>See detail</span>}
         </div>
         <div className={styles['close-button']} onClick={()=>{showUploadProcess('none')}}>
             x
         </div>
-        {uploadingStatus === 'uploading' && <Line percent={uploadingPercent} strokeWidth={1} strokeColor="#00806e" trailColor={"#fff"}/>}
+        {uploadingStatus === 'uploading' && <Line percent={uploadingPercent} strokeWidth={1} strokeColor="#fff" trailColor={"#9597a6"}/>}
 
     </div>
 }

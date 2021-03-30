@@ -3,6 +3,8 @@ import { AssetContext, SocketContext } from '../context'
 
 import { convertTimeFromSeconds } from "../utils/upload"
 
+import assetApi from '../server-api/asset'
+
 const loadingDefaultAsset = {
     asset: {
         name: 'placeholder',
@@ -52,6 +54,7 @@ export default ({ children }) => {
     const [uploadingPercent, setUploadingPercent] = useState(0) // Percent of uploading process: 0 - 100
     const [uploadingFile, setUploadingFile] = useState<number>() // Current uploading file index
     const [uploadRemainingTime, setUploadRemainingTime] = useState<string>(convertTimeFromSeconds(0)) // Remaining time
+    const [uploadDetailOverlay, setUploadDetailOverlay] = useState(false) // Detail overlay
 
     const setPlaceHolders = (type, replace = true) => {
         if (type === 'asset') {
@@ -126,6 +129,79 @@ export default ({ children }) => {
         setUploadingAssets(inputAssets)
     }
 
+    const openUploadDetailOverlay = (show: boolean) => {
+        setUploadDetailOverlay(show)
+    }
+
+    // Get params
+    const getCreationParameters = (attachQuery?: any) => {
+        let queryData: any = {}
+
+        // Attach extra query
+        if(attachQuery){
+            queryData = {...queryData, ...attachQuery}
+        }
+        return queryData
+    }
+
+    // Upload asset
+    const reUploadAsset  = async (i: number, assets: any, currentDataClone: any, totalSize: number, retryList: any[]) => {
+        try{
+            const formData = new FormData()
+            const file = retryList[i].file
+
+            // Show uploading toast
+            showUploadProcess('uploading', i)
+
+            // Append file to form data
+            formData.append('asset', file.path || file.originalFile)
+
+            let size = totalSize;
+            // Calculate the rest of size
+            assets.map((asset)=>{
+                // Exclude done assets
+                if(asset.status === 'done'){
+                    size -= asset.asset.size
+                }
+            })
+
+            // Call API to upload
+            const { data } = await assetApi.uploadAssets(formData, getCreationParameters(
+                {estimateTime: 1, size}))
+
+
+            // At this point, file place holder will be removed
+            setAssets([...data, ...currentDataClone])
+            setAddedIds(data.map(assetItem => assetItem.asset.id))
+
+            // Mark this asset as done
+            const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'done'} : asset);
+
+            setUploadingAssets(updatedAssets)
+
+            // The final one
+            if(i === retryList.length - 1){
+                // Finish uploading process
+                showUploadProcess('done')
+            }else{ // Keep going
+                await reUploadAsset(i+1, updatedAssets, [...data, ...currentDataClone], totalSize, retryList)
+            }
+        }catch (e){
+            // Mark this asset as fail
+            const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: e.message} : asset);
+
+            setUploadingAssets(updatedAssets)
+
+            // The final one
+            if(i === retryList.length - 1){
+                // Finish uploading process
+                showUploadProcess('done')
+            }else{ // Keep going
+                await reUploadAsset(i+1, assets,  currentDataClone, totalSize, retryList)
+            }
+        }
+    }
+
     // Init socket listener
     useEffect(()=>{
         if(socket){
@@ -175,6 +251,9 @@ export default ({ children }) => {
         uploadingPercent,
         uploadingAssets,
         setUploadingAssets: setUploadingAssetItems,
+        uploadDetailOverlay,
+        setUploadDetailOverlay: openUploadDetailOverlay,
+        reUploadAsset
 
     }
     return (

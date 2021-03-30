@@ -36,7 +36,7 @@ const AssetAddition = ({
 	const [activeModal, setActiveModal] = useState('')
 	const [submitError, setSubmitError] = useState('')
 
-	const { assets, setAssets, setNeedsFetch, setAddedIds, activePageMode, folders, setFolders, showUploadProcess, uploadingAssets, setUploadingAssets, setUploadDoneAsset } = useContext(AssetContext)
+	const { assets, setAssets, setNeedsFetch, setAddedIds, activePageMode, folders, setFolders, showUploadProcess, uploadingAssets, setUploadingAssets } = useContext(AssetContext)
 
 
 	// Upload asset
@@ -69,6 +69,7 @@ const AssetAddition = ({
 			setAssets([...data, ...currentDataClone])
 			setAddedIds(data.map(assetItem => assetItem.asset.id))
 
+			// Mark this asset as done
 			const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'done'} : asset);
 
 			setUploadingAssets(updatedAssets)
@@ -81,7 +82,9 @@ const AssetAddition = ({
 			}
 		}catch (e){
 			// Mark this asset as fail
-			setUploadDoneAsset(i, 'fail')
+			const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: e.message} : asset);
+
+			setUploadingAssets(updatedAssets)
 
 			// The final one
 			if(i === assets.length - 1){
@@ -123,6 +126,7 @@ const AssetAddition = ({
 						size: file.originalFile.size,
 						stage: 'draft',
 						type: 'image',
+						mimeType: file.originalFile.type,
 					},
 					file,
 					status: 'queued',
