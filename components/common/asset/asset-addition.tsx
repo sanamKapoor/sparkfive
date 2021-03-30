@@ -17,6 +17,7 @@ import ToggleAbleAbsoluteWrapper from '../misc/toggleable-absolute-wrapper'
 import DriveSelector from '../asset/drive-selector'
 import FolderModal from '../folder/folder-modal'
 import IconClickable from '../buttons/icon-clickable'
+import update from "immutability-helper";
 
 const AssetAddition = ({
 	activeFolder = '',
@@ -35,14 +36,67 @@ const AssetAddition = ({
 	const [activeModal, setActiveModal] = useState('')
 	const [submitError, setSubmitError] = useState('')
 
-	const { assets, setAssets, setNeedsFetch, setAddedIds, activePageMode, folders, setFolders } = useContext(AssetContext)
+	const { assets, setAssets, setNeedsFetch, setAddedIds, activePageMode, folders, setFolders, showUploadProcess, uploadingAssets, setUploadingAssets, setUploadDoneAsset } = useContext(AssetContext)
+
+
+	// Upload asset
+	const uploadAsset  = async (i: number, assets: any, currentDataClone: any, totalSize: number) => {
+		try{
+			const formData = new FormData()
+			const file = assets[i].file
+
+			// Show uploading toast
+			showUploadProcess('uploading', i)
+
+			// Append file to form data
+			formData.append('asset', file.path || file.originalFile)
+
+			let size = totalSize;
+			// Calculate the rest of size
+			assets.map((asset)=>{
+				// Exclude done assets
+				if(asset.status === 'done'){
+					size -= asset.asset.size
+				}
+			})
+
+			// Call API to upload
+			const { data } = await assetApi.uploadAssets(formData, getCreationParameters(
+				{estimateTime: 1, size}))
+
+
+			// At this point, file place holder will be removed
+			setAssets([...data, ...currentDataClone])
+			setAddedIds(data.map(assetItem => assetItem.asset.id))
+
+			const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'done'} : asset);
+
+			setUploadingAssets(updatedAssets)
+
+			// The final one
+			if(i === assets.length - 1){
+				return
+			}else{ // Keep going
+				await uploadAsset(i+1, updatedAssets, [...data, ...currentDataClone], totalSize)
+			}
+		}catch (e){
+			// Mark this asset as fail
+			setUploadDoneAsset(i, 'fail')
+
+			// The final one
+			if(i === assets.length - 1){
+				return
+			}else{ // Keep going
+				await uploadAsset(i+1, assets,  currentDataClone, totalSize)
+			}
+		}
+	}
 
 	const onFilesDataGet = async (files) => {
 		const currentDataClone = [...assets]
 		const currenFolderClone = [...folders]
 		try {
 			let needsFolderFetch
-			const formData = new FormData()
 			const newPlaceholders = []
 			const folderPlaceholders = []
 			const foldersUploaded = getFoldersFromUploads(files, true)
@@ -58,30 +112,48 @@ const AssetAddition = ({
 					createdAt: new Date()
 				})
 			})
+
+			let totalSize = 0;
 			files.forEach(file => {
+				totalSize+=file.originalFile.size
 				newPlaceholders.push({
 					asset: {
 						name: file.originalFile.name,
 						createdAt: new Date(),
 						size: file.originalFile.size,
 						stage: 'draft',
-						type: 'image'
+						type: 'image',
 					},
+					file,
+					status: 'queued',
 					isUploading: true
 				})
-				formData.append('asset', file.path || file.originalFile)
+				// formData.append('asset', file.path || file.originalFile)
 			})
+
+			// Store current uploading assets for calculation
+			setUploadingAssets(newPlaceholders)
+
+			// Showing assets = uploading assets + existing assets
 			setAssets([...newPlaceholders, ...currentDataClone])
 			setFolders([...folderPlaceholders, ...currenFolderClone])
-			const { data } = await assetApi.uploadAssets(formData, getCreationParameters())
+
+			// Start to upload assets
+			await uploadAsset(0, newPlaceholders, currentDataClone, totalSize)
+
+			// Finish uploading process
+			showUploadProcess('done')
+
 			if (needsFolderFetch) {
 				setNeedsFetch('folders')
-			} else {
-				setAssets([...data, ...currentDataClone])
-				setAddedIds(data.map(assetItem => assetItem.asset.id))
 			}
-			toastUtils.success(`${data.length} Asset(s) uploaded.`)
+
+			// Do not need toast here because we have already process toast
+			// toastUtils.success(`${data.length} Asset(s) uploaded.`)
 		} catch (err) {
+			// Finish uploading process
+			showUploadProcess('done')
+
 			setAssets(currentDataClone)
 			setFolders(currenFolderClone)
 			console.log(err)
@@ -259,13 +331,17 @@ const AssetAddition = ({
 		})
 	}
 
-	const getCreationParameters = () => {
-		const queryData = {}
+	const getCreationParameters = (attachQuery?: any) => {
+		let queryData: any = {}
 		if (activeFolder) {
 			queryData.folderId = activeFolder
 		}
 		if (type === 'project') queryData.projectId = itemId
 		if (type === 'task') queryData.taskId = itemId
+		// Attach extra query
+		if(attachQuery){
+			queryData = {...queryData, ...attachQuery}
+		}
 		return queryData
 	}
 

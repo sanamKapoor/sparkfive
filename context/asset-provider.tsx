@@ -1,5 +1,7 @@
-import { useState } from 'react'
-import { AssetContext } from '../context'
+import {useContext, useEffect, useState} from 'react'
+import { AssetContext, SocketContext } from '../context'
+
+import { convertTimeFromSeconds } from "../utils/upload"
 
 const loadingDefaultAsset = {
     asset: {
@@ -19,6 +21,8 @@ const loadingDefaultFolder = {
 }
 
 export default ({ children }) => {
+    const { socket } = useContext(SocketContext);
+
     const [assets, setAssets] = useState([])
     const [folders, setFolders] = useState([])
 
@@ -41,6 +45,13 @@ export default ({ children }) => {
 
     const [selectedAllAssets, setSelectedAllAssets] = useState(false)
     const [completedAssets, setCompletedAssets] = useState([])
+
+    // Upload process
+    const [uploadingAssets, setUploadingAssets] = useState([])
+    const [uploadingStatus, setUploadingStatus] = useState("none") // Allowed value: "none", "uploading", "done"
+    const [uploadingPercent, setUploadingPercent] = useState(0) // Percent of uploading process: 0 - 100
+    const [uploadingFile, setUploadingFile] = useState<number>() // Current uploading file index
+    const [uploadRemainingTime, setUploadRemainingTime] = useState<string>(convertTimeFromSeconds(0)) // Remaining time
 
     const setPlaceHolders = (type, replace = true) => {
         if (type === 'asset') {
@@ -95,6 +106,40 @@ export default ({ children }) => {
         setSelectedAllAssets(isSelectedAll)
     }
 
+    // Show upload process toast
+    const showUploadProcess = (value: string, fileIndex?: number) => {
+        // Set uploading file index
+        if(fileIndex !== undefined){
+            setUploadingFile(fileIndex)
+        }
+
+        // Update uploading status
+        setUploadingStatus(value)
+
+        // Reset all value
+        setUploadingPercent(0)
+        setUploadRemainingTime(convertTimeFromSeconds(0))
+    }
+
+    // Set upload assets
+    const setUploadingAssetItems = (inputAssets) => {
+        setUploadingAssets(inputAssets)
+    }
+
+    // Init socket listener
+    useEffect(()=>{
+        if(socket){
+            console.log(`Register listener...`)
+            // Listen upload file process event
+            socket.on('uploadFilesProgress', function(data){
+                console.log(`uploadFilesProgress...`)
+                console.log(data)
+                setUploadingPercent(data.percent)
+                setUploadRemainingTime(convertTimeFromSeconds(data.timeLeft))
+            })
+        }
+    },[socket])
+
     const assetsValue = {
         assets,
         setAssets: setAssetItems,
@@ -123,6 +168,14 @@ export default ({ children }) => {
         setLoadingAssets,
         selectedAllAssets,
         selectAllAssets,
+        uploadingStatus,
+        showUploadProcess,
+        uploadingFile,
+        uploadRemainingTime,
+        uploadingPercent,
+        uploadingAssets,
+        setUploadingAssets: setUploadingAssetItems,
+
     }
     return (
         <AssetContext.Provider value={assetsValue}>

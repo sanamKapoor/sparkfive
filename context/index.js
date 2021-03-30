@@ -65,7 +65,15 @@ export const AssetContext = createContext({
     setNeedsFetch: (type) => { },
 
     addedIds: [],
-    setAddedIds: (idList) => { }
+    setAddedIds: (idList) => { },
+
+    uploadingStatus: '',
+    showUploadProcess: (value, fileIndex) => { },
+    uploadingFile: undefined,
+    uploadRemainingTime: '',
+    uploadingPercent: 0,
+    uploadingAssets: [],
+    setUploadingAssets: (assets) => { },
 })
 
 export const TeamContext = createContext({
@@ -144,4 +152,8 @@ export const FilterContext = createContext({
 export const ShareContext = createContext({
     folderInfo: undefined,
     setFolderInfo: (folderInfo) => { }
+})
+
+export const SocketContext = createContext({
+    socket: undefined,
 })
