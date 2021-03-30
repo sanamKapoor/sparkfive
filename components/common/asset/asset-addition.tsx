@@ -79,8 +79,13 @@ const AssetAddition = ({
 			})
 
 			// Call API to upload
-			const { data } = await assetApi.uploadAssets(formData, getCreationParameters(
+			let { data } = await assetApi.uploadAssets(formData, getCreationParameters(
 				{estimateTime: 1, size}))
+
+			data = data.map((item) => {
+				item.isSelected = true
+				return item
+			})
 
 
 			// At this point, file place holder will be removed
