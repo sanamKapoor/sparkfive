@@ -26,7 +26,7 @@ const AssetUploadProcess = () => {
             {uploadingStatus === 'uploading' && <>
                 <span>{uploadingAssets[uploadingFile].asset.name}</span>
                 <span>{uploadingFile+1} of {uploadingAssets.length} assets</span>
-                <span>{uploadRemainingTime} remaining</span>
+                <span>{uploadRemainingTime}</span>
             </>}
             {uploadingStatus === 'done' &&
                 <span>{uploadedAssets.length} assets uploaded successfully.
