@@ -43,7 +43,7 @@ const AssetAddition = ({
 
 
 	// Upload asset
-	const uploadAsset  = async (i: number, assets: any, currentDataClone: any, totalSize: number) => {
+	const uploadAsset  = async (i: number, assets: any, currentDataClone: any, totalSize: number, folderId) => {
 		try{
 			const formData = new FormData()
 			const file = assets[i].file
@@ -59,7 +59,7 @@ const AssetAddition = ({
 				if(i === assets.length - 1){
 					return
 				}else{ // Keep going
-					await uploadAsset(i+1, assets, currentDataClone, totalSize)
+					await uploadAsset(i+1, assets, currentDataClone, totalSize, folderId)
 				}
 			}
 
@@ -78,10 +78,15 @@ const AssetAddition = ({
 				}
 			})
 
+			let attachedQuery = {estimateTime: 1, size}
+
+			if(folderId){
+				attachedQuery['folderId'] = folderId
+			}
+
 			// Call API to upload
 			let { data } = await assetApi.uploadAssets(formData, getCreationParameters(
-				{estimateTime: 1, size}))
-
+				attachedQuery))
 			data = data.map((item) => {
 				item.isSelected = true
 				return item
@@ -101,7 +106,8 @@ const AssetAddition = ({
 			if(i === assets.length - 1){
 				return
 			}else{ // Keep going
-				await uploadAsset(i+1, updatedAssets, [...data, ...currentDataClone], totalSize)
+				let newFolderId = data[0].asset.folderId;
+				await uploadAsset(i+1, updatedAssets, [...data, ...currentDataClone], totalSize, newFolderId ? newFolderId : null)
 			}
 		}catch (e){
 			// Mark this asset as fail
@@ -113,7 +119,7 @@ const AssetAddition = ({
 			if(i === assets.length - 1){
 				return
 			}else{ // Keep going
-				await uploadAsset(i+1, assets,  currentDataClone, totalSize)
+				await uploadAsset(i+1, assets,  currentDataClone, totalSize, folderId)
 			}
 		}
 	}
@@ -166,7 +172,7 @@ const AssetAddition = ({
 			setFolders([...folderPlaceholders, ...currenFolderClone])
 
 			// Start to upload assets
-			await uploadAsset(0, newPlaceholders, currentDataClone, totalSize)
+			await uploadAsset(0, newPlaceholders, currentDataClone, totalSize, activeFolder)
 
 			// Finish uploading process
 			showUploadProcess('done')

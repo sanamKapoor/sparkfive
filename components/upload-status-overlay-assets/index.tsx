@@ -11,7 +11,7 @@ import Button from '../common/buttons/button'
 
 const UploadStatusOverlayAssets = ({ closeOverlay }) => {
 
-  const { assets, uploadingAssets, setUploadingAssets, reUploadAsset } = useContext(AssetContext)
+  const { assets, uploadingAssets, setUploadingAssets, reUploadAsset, activeFolder } = useContext(AssetContext)
 
   const selectedAssets = uploadingAssets.filter(asset => asset.isSelected)
   let totalSelectAssets = selectedAssets.length;
@@ -46,7 +46,7 @@ const UploadStatusOverlayAssets = ({ closeOverlay }) => {
   const onRetry = async (index) => {
     console.log(`onRetry`)
     // Start to upload assets
-    reUploadAsset(0, uploadingAssets, assets, uploadingAssets[index].asset.size, [uploadingAssets[index]])
+    reUploadAsset(0, uploadingAssets, assets, uploadingAssets[index].asset.size, [uploadingAssets[index], activeFolder])
 
     closeOverlay();
   }
@@ -59,7 +59,7 @@ const UploadStatusOverlayAssets = ({ closeOverlay }) => {
       totalSize+=asset.asset.size
     })
     // Start to upload assets
-    reUploadAsset(0, uploadingAssets, assets, totalSize, selectedAssets)
+    reUploadAsset(0, uploadingAssets, assets, totalSize, selectedAssets, activeFolder)
 
     closeOverlay();
   }

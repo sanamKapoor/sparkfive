@@ -147,7 +147,7 @@ export default ({ children }) => {
     }
 
     // Upload asset
-    const reUploadAsset  = async (i: number, assets: any, currentDataClone: any, totalSize: number, retryList: any[]) => {
+    const reUploadAsset  = async (i: number, assets: any, currentDataClone: any, totalSize: number, retryList: any[], folderId) => {
         try{
             const formData = new FormData()
             const file = retryList[i].file
@@ -164,7 +164,7 @@ export default ({ children }) => {
                     // Finish uploading process
                     showUploadProcess('done')
                 }else{ // Keep going
-                    await reUploadAsset(i+1, assets,  currentDataClone, totalSize, retryList)
+                    await reUploadAsset(i+1, assets,  currentDataClone, totalSize, retryList, folderId)
                 }
             }
 
@@ -183,9 +183,15 @@ export default ({ children }) => {
                 }
             })
 
+            const attachedQuery = {estimateTime: 1, size}
+
+            if(folderId){
+                attachedQuery['folderId'] = folderId
+            }
+
             // Call API to upload
             const { data } = await assetApi.uploadAssets(formData, getCreationParameters(
-                {estimateTime: 1, size}))
+                attachedQuery))
 
 
             // At this point, file place holder will be removed
@@ -202,7 +208,8 @@ export default ({ children }) => {
                 // Finish uploading process
                 showUploadProcess('done')
             }else{ // Keep going
-                await reUploadAsset(i+1, updatedAssets, [...data, ...currentDataClone], totalSize, retryList)
+                const newFolderId = data[0].asset.folderId
+                await reUploadAsset(i+1, updatedAssets, [...data, ...currentDataClone], totalSize, retryList, newFolderId ? newFolderId : null)
             }
         }catch (e){
             // Mark this asset as fail
@@ -215,7 +222,7 @@ export default ({ children }) => {
                 // Finish uploading process
                 showUploadProcess('done')
             }else{ // Keep going
-                await reUploadAsset(i+1, assets,  currentDataClone, totalSize, retryList)
+                await reUploadAsset(i+1, assets,  currentDataClone, totalSize, retryList, folderId)
             }
         }
     }
