@@ -16,6 +16,7 @@ import TopBar from '../../common/asset/top-bar'
 import FilterContainer from '../../common/filter/filter-container'
 import { DropzoneProvider } from '../../common/misc/dropzone'
 import RenameModal from '../../common/modals/rename-modal'
+import UploadStatusOverlayAssets from "../../upload-status-overlay-assets";
 
 const AssetsLibrary = () => {
 
@@ -35,7 +36,9 @@ const AssetsLibrary = () => {
     addedIds,
     setAddedIds,
     setLoadingAssets,
-    selectAllAssets
+    selectAllAssets,
+    uploadDetailOverlay,
+    setUploadDetailOverlay
   } = useContext(AssetContext)
 
   const [activeMode, setActiveMode] = useState('assets')
@@ -362,6 +365,7 @@ const AssetsLibrary = () => {
           operationsEnabled={true}
         />
       }
+      {uploadDetailOverlay && <UploadStatusOverlayAssets closeOverlay={()=>{setUploadDetailOverlay(false)}} /> }
     </>
   )
 }

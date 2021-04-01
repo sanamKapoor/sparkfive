@@ -1,0 +1,73 @@
+.button-wrapper {
+    margin-top: 3rem;
+    display: flex;
+    justify-content: center;
+}
+
+.import-wrapper {
+    max-width: 55rem;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.operations{
+    display: flex;
+    align-items: center;
+    margin-top: 2rem;
+    width: 100%;
+    max-width: 55rem;
+}
+
+.operations button{
+    margin-right: 1rem;
+}
+
+.select-only-shown-items-text{
+    cursor: pointer;
+    margin-left: 15px;
+    padding: 5px;
+    font-size: 9px;
+}
+
+.select-only-shown-items-text:hover{
+    text-decoration: underline;
+}
+
+.select-wrapper{
+    width: 75px;
+}
+
+.name {
+    width: 25%;
+    position: relative;
+    opacity: 0.3;
+}
+
+.type {
+    width: 10%;
+    opacity: 0.3;
+}
+
+.upload-error {
+    width: 40%;
+    position: relative;
+    opacity: 0.3;
+}
+
+.search-item {
+    cursor: default;
+    padding: 12px 0;
+    border-top: none;
+    border-bottom: 1px solid var(--color-secondary-border);
+}
+
+.search-item .select-icon {
+    width: 25px;
+    height: auto;
+    margin-right: 25px;
+}
+
+.button{
+    visibility: hidden;
+}
+

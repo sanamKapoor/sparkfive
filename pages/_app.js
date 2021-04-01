@@ -22,6 +22,8 @@ import dragndropPolyfill from '../polyfills/dragndroptouch'
 import ReactGA from 'react-ga'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
+
+// Contexts
 import { LanguageContext, ThemeContext } from '../context'
 import AssetContextProvider from '../context/asset-provider'
 import TeamContextProvider from '../context/team-provider'
@@ -29,6 +31,7 @@ import UserContextProvider from '../context/user-provider'
 import LoadingContextProvider from '../context/loading-provider'
 import ScheduleProvider from '../context/schedule-provider'
 import ShareProvider from '../context/share-provider'
+import SocketProvider from '../context/socket-provider'
 
 // FB pixel
 import FBPixel from '../components/common/scripts/fb-pixel'
@@ -42,7 +45,7 @@ toast.configure()
 
 // This default export is required in a new `pages/_app.js` file.
 export default function MyApp({ Component, pageProps }) {
-  // set up context following this: https://stackoverflow.com/questions/41030361/how-to-update-react-context-from-inside-a-child-component  
+  // set up context following this: https://stackoverflow.com/questions/41030361/how-to-update-react-context-from-inside-a-child-component
   const [language, setLanguage] = useState("en")
   const languageValue = { language, setLanguage }
 
@@ -78,23 +81,25 @@ export default function MyApp({ Component, pageProps }) {
   return (
     <LoadingContextProvider>
       <UserContextProvider >
-        <ShareProvider>
-          <ScheduleProvider>
-            <LanguageContext.Provider value={languageValue}>
-              <ThemeContext.Provider value={themeValue}>
-                <AssetContextProvider>
-                  <TeamContextProvider>
-                    <Head>
-                      <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key={process.env.DROPBOX_API_KEY}></script>
-                    </Head>
-                    {process.env.INCLUDE_PIXEL === 'yes' && <FBPixel />}
-                    <Component {...pageProps} />
-                  </TeamContextProvider>
-                </AssetContextProvider>
-              </ThemeContext.Provider>
-            </LanguageContext.Provider>
-          </ScheduleProvider>
-        </ShareProvider>
+        <SocketProvider>
+          <ShareProvider>
+            <ScheduleProvider>
+              <LanguageContext.Provider value={languageValue}>
+                <ThemeContext.Provider value={themeValue}>
+                  <AssetContextProvider>
+                    <TeamContextProvider>
+                      <Head>
+                        <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key={process.env.DROPBOX_API_KEY}></script>
+                      </Head>
+                      {process.env.INCLUDE_PIXEL === 'yes' && <FBPixel />}
+                      <Component {...pageProps} />
+                    </TeamContextProvider>
+                  </AssetContextProvider>
+                </ThemeContext.Provider>
+              </LanguageContext.Provider>
+            </ScheduleProvider>
+          </ShareProvider>
+        </SocketProvider>
       </UserContextProvider>
     </LoadingContextProvider>
   )
