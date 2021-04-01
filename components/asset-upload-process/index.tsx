@@ -35,9 +35,9 @@ const AssetUploadProcess = () => {
             }
             {uploadingStatus === 'done' && <span className={styles['underline-text']} onClick={()=>{setUploadDetailOverlay(true)}}>See detail</span>}
         </div>
-        <div className={styles['close-button']} onClick={()=>{showUploadProcess('none')}}>
+        {uploadingStatus === 'done' && <div className={styles['close-button']} onClick={()=>{showUploadProcess('none')}}>
             x
-        </div>
+        </div>}
         {uploadingStatus === 'uploading' && <Line percent={uploadingPercent} strokeWidth={1} strokeColor="#fff" trailColor={"#9597a6"}/>}
 
     </div>
