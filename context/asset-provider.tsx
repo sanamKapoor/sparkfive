@@ -185,7 +185,7 @@ export default ({ children }) => {
                 }
             })
 
-            const attachedQuery = {estimateTime: 1, size}
+            const attachedQuery = {estimateTime: 1, size, totalSize}
 
             if(folderId){
                 attachedQuery['folderId'] = folderId

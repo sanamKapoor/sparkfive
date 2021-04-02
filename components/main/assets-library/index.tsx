@@ -136,7 +136,7 @@ const AssetsLibrary = () => {
         }
       })
 
-      let attachedQuery = {estimateTime: 1, size}
+      let attachedQuery = {estimateTime: 1, size, totalSize}
 
       if(folderId){
         attachedQuery['folderId'] = folderId
