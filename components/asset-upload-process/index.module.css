@@ -1,13 +1,13 @@
 .container {
   position: fixed;
   top: 25px;
-  right: 20%;
-  padding: 5px 20px;
-  border-radius: 15px;
+  right: 17%;
+  padding: 15px 20px;
+  border-radius: 20px;
   background-color: var(--color-prim-turquoise);
   color: white;
-  max-width: 500px;
-  width: 50%;
+  max-width: 550px;
+  width: 60%;
   z-index: 100;
   min-height: 40px;
 }
@@ -42,7 +42,7 @@
 
 .row span{
   margin-right: 10px;
-  font-size: 9px;
+  font-size: 12px;
   font-weight: bold;
 }
 

@@ -22,7 +22,7 @@ const AssetUploadProcess = () => {
     const failAssetsCount = uploadingAssets.filter(asset => asset.status === 'fail').length
 
     return <div className={clsx(styles.container, {[styles['center-align']]: uploadingStatus === 'done'})}>
-        <div className={clsx(styles.row, {[styles['no-margin']]: uploadingStatus === 'done'})}>
+        <div className={clsx(styles.row, styles['no-margin'])}>
             {uploadingStatus === 'uploading' && <>
                 <span>{uploadingAssets[uploadingFile].asset.name}</span>
                 <span>{uploadingFile+1} of {uploadingAssets.length} assets</span>

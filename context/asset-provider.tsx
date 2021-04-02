@@ -55,7 +55,7 @@ export default ({ children }) => {
     const [uploadingStatus, setUploadingStatus] = useState("none") // Allowed value: "none", "uploading", "done"
     const [uploadingPercent, setUploadingPercent] = useState(0) // Percent of uploading process: 0 - 100
     const [uploadingFile, setUploadingFile] = useState<number>() // Current uploading file index
-    const [uploadRemainingTime, setUploadRemainingTime] = useState<string>("Calculating time") // Remaining time
+    const [uploadRemainingTime, setUploadRemainingTime] = useState<string>("") // Remaining time
     const [uploadDetailOverlay, setUploadDetailOverlay] = useState(false) // Detail overlay
 
     const setPlaceHolders = (type, replace = true) => {
@@ -122,8 +122,10 @@ export default ({ children }) => {
         setUploadingStatus(value)
 
         // Reset all value
-        setUploadingPercent(0)
-        setUploadRemainingTime("Calculating time")
+        if(fileIndex === 0){
+            setUploadingPercent(0)
+        }
+
     }
 
     // Set upload assets
