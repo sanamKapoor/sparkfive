@@ -21,7 +21,7 @@ const AssetUploadProcess = () => {
     const uploadedAssets = uploadingAssets.filter(asset => asset.status === 'done')
     const failAssetsCount = uploadingAssets.filter(asset => asset.status === 'fail').length
 
-    return <div className={clsx(styles.container, {[styles['center-align']]: uploadingStatus === 'done'})}>
+    return <div className={clsx(styles.container, {[styles['center-align']]: uploadingStatus === 'done', [styles['less-margin-bottom']]: uploadingStatus === 'uploading'})}>
         <div className={clsx(styles.row, styles['no-margin'])}>
             {uploadingStatus === 'uploading' && <>
                 <span>{uploadingAssets[uploadingFile].asset.name}</span>
@@ -30,10 +30,10 @@ const AssetUploadProcess = () => {
             </>}
             {uploadingStatus === 'done' &&
                 <span>{uploadedAssets.length} assets uploaded successfully.
-                    {failAssetsCount > 0 && <span>{failAssetsCount} failed</span>}
+                    {failAssetsCount > 0 && <span className={styles['fail-text']}>{failAssetsCount} failed</span>}
                 </span>
             }
-            {uploadingStatus === 'done' && <span className={styles['underline-text']} onClick={()=>{setUploadDetailOverlay(true)}}>See detail</span>}
+            {uploadingStatus === 'done' && failAssetsCount > 0 && <span className={styles['underline-text']} onClick={()=>{setUploadDetailOverlay(true)}}>See detail</span>}
         </div>
         {uploadingStatus === 'done' && <div className={styles['close-button']} onClick={()=>{showUploadProcess('none')}}>
             x

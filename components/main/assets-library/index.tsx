@@ -111,73 +111,90 @@ const AssetsLibrary = () => {
         // Violate validation, mark failure
         const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE} : asset);
 
+        // Update uploading assets
+        setUploadingAssets(updatedAssets)
+
+        // Remove current asset from asset placeholder
+        let newAssetPlaceholder = updatedAssets.filter(asset => asset.status !== 'fail')
+
+
+        // At this point, file place holder will be removed
+        setAssets([...newAssetPlaceholder, ...currentDataClone])
+
+        // The final one
+        if(i === assets.length - 1){
+          return
+        }else{ // Keep going
+          await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId)
+        }
+      }else{
+        // Show uploading toast
+        showUploadProcess('uploading', i)
+
+        // Append file to form data
+        formData.append('asset', assets[i].uploadDirectly ? file : file.originalFile)
+
+        let size = totalSize;
+        // Calculate the rest of size
+        assets.map((asset)=>{
+          // Exclude done assets
+          if(asset.status === 'done'){
+            size -= asset.asset.size
+          }
+        })
+
+        let attachedQuery = {estimateTime: 1, size, totalSize}
+
+        if(folderId){
+          attachedQuery['folderId'] = folderId
+        }
+
+        // Call API to upload
+        let { data } = await assetApi.uploadAssets(formData, getCreationParameters(attachedQuery))
+
+        data = data.map((item) => {
+          item.isSelected = true
+          return item
+        })
+
+        assets[i] = data[0]
+
+        // At this point, file place holder will be removed
+        setAssets([...assets, ...currentDataClone])
+        setAddedIds(data.map(assetItem => assetItem.asset.id))
+
+        // Mark this asset as done
+        const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'done'} : asset);
+
         setUploadingAssets(updatedAssets)
 
         // The final one
         if(i === assets.length - 1){
           return
         }else{ // Keep going
-          await uploadAsset(i+1, assets, currentDataClone, totalSize, folderId)
+          let newFolderId = data[0].asset.folderId;
+          await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, newFolderId ? newFolderId : null)
         }
       }
+    }catch (e){
+      // Violate validation, mark failure
+      const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: e.message} : asset);
 
-      // Show uploading toast
-      showUploadProcess('uploading', i)
+      // Update uploading assets
+      setUploadingAssets(updatedAssets)
 
-      // Append file to form data
-      formData.append('asset', assets[i].uploadDirectly ? file : file.originalFile)
-
-      let size = totalSize;
-      // Calculate the rest of size
-      assets.map((asset)=>{
-        // Exclude done assets
-        if(asset.status === 'done'){
-          size -= asset.asset.size
-        }
-      })
-
-      let attachedQuery = {estimateTime: 1, size, totalSize}
-
-      if(folderId){
-        attachedQuery['folderId'] = folderId
-      }
-
-      // Call API to upload
-      let { data } = await assetApi.uploadAssets(formData, getCreationParameters(
-          attachedQuery))
-      data = data.map((item) => {
-        item.isSelected = true
-        return item
-      })
+      // Remove current asset from asset placeholder
+      let newAssetPlaceholder = updatedAssets.filter(asset => asset.status !== 'fail')
 
 
       // At this point, file place holder will be removed
-      setAssets([...data, ...currentDataClone])
-      setAddedIds(data.map(assetItem => assetItem.asset.id))
-
-      // Mark this asset as done
-      const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'done'} : asset);
-
-      setUploadingAssets(updatedAssets)
+      setAssets([...newAssetPlaceholder, ...currentDataClone])
 
       // The final one
       if(i === assets.length - 1){
         return
       }else{ // Keep going
-        let newFolderId = data[0].asset.folderId;
-        await uploadAsset(i+1, updatedAssets, [...data, ...currentDataClone], totalSize, newFolderId ? newFolderId : null)
-      }
-    }catch (e){
-      // Mark this asset as fail
-      const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: e.message} : asset);
-
-      setUploadingAssets(updatedAssets)
-
-      // The final one
-      if(i === assets.length - 1){
-        return
-      }else{ // Keep going
-        await uploadAsset(i+1, assets,  currentDataClone, totalSize, folderId)
+        await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId)
       }
     }
   }

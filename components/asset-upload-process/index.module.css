@@ -17,6 +17,10 @@
   align-items: center;
 }
 
+.less-margin-bottom{
+  padding: 15px 20px 5px 20px;
+}
+
 .no-margin{
   margin-bottom: 0 !important;
 }
@@ -38,12 +42,18 @@
 
 .row{
   margin-bottom: -7px;
+  width: 100%;
 }
 
 .row span{
   margin-right: 10px;
   font-size: 12px;
   font-weight: bold;
+  display: inline-flex;
+  max-width: 50%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .close-button{
@@ -53,4 +63,8 @@
   font-weight: 900;
   font-family: monospace;
   cursor: pointer;
+}
+
+.fail-text{
+  margin-left: 5px;
 }

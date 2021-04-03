@@ -6,6 +6,7 @@ export const convertTimeFromSeconds =  (seconds) => {
 }
 
 export const getTypeFromMimeType =  (type) => {
+	if(!type) return ''
 	const types = type.split('/')
 	return types[types.length-1]
 }

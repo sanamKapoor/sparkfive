@@ -159,14 +159,21 @@ export default ({ children }) => {
                 // Violate validation, mark failure
                 const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE} : asset);
 
+                // Update uploading assets
                 setUploadingAssets(updatedAssets)
 
+                // Remove current asset from asset placeholder
+                let newAssetPlaceholder = updatedAssets.filter(asset => asset.status !== 'fail')
+
+
+                // At this point, file place holder will be removed
+                setAssets([...newAssetPlaceholder, ...currentDataClone])
+
                 // The final one
-                if(i === retryList.length - 1){
-                    // Finish uploading process
-                    showUploadProcess('done')
+                if(i === assets.length - 1){
+                    return
                 }else{ // Keep going
-                    await reUploadAsset(i+1, assets,  currentDataClone, totalSize, retryList, folderId)
+                    await reUploadAsset(i+1, updatedAssets, currentDataClone, totalSize, updatedAssets, folderId)
                 }
             }
 
@@ -192,12 +199,20 @@ export default ({ children }) => {
             }
 
             // Call API to upload
-            const { data } = await assetApi.uploadAssets(formData, getCreationParameters(
+            let { data } = await assetApi.uploadAssets(formData, getCreationParameters(
                 attachedQuery))
+
+            // Mark
+            data = data.map((item) => {
+                item.isSelected = true
+                return item
+            })
+
+            assets[i] = data[0]
 
 
             // At this point, file place holder will be removed
-            setAssets([...data, ...currentDataClone])
+            setAssets([...assets, ...currentDataClone])
             setAddedIds(data.map(assetItem => assetItem.asset.id))
 
             // Mark this asset as done
@@ -211,20 +226,27 @@ export default ({ children }) => {
                 showUploadProcess('done')
             }else{ // Keep going
                 const newFolderId = data[0].asset.folderId
-                await reUploadAsset(i+1, updatedAssets, [...data, ...currentDataClone], totalSize, retryList, newFolderId ? newFolderId : null)
+                await reUploadAsset(i+1, updatedAssets, currentDataClone, totalSize, retryList, newFolderId ? newFolderId : null)
             }
         }catch (e){
-            // Mark this asset as fail
+            // Violate validation, mark failure
             const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: e.message} : asset);
 
+            // Update uploading assets
             setUploadingAssets(updatedAssets)
 
+            // Remove current asset from asset placeholder
+            let newAssetPlaceholder = updatedAssets.filter(asset => asset.status !== 'fail')
+
+
+            // At this point, file place holder will be removed
+            setAssets([...newAssetPlaceholder, ...currentDataClone])
+
             // The final one
-            if(i === retryList.length - 1){
-                // Finish uploading process
-                showUploadProcess('done')
+            if(i === assets.length - 1){
+                return
             }else{ // Keep going
-                await reUploadAsset(i+1, assets,  currentDataClone, totalSize, retryList, folderId)
+                await reUploadAsset(i+1, updatedAssets, currentDataClone, totalSize, retryList, folderId)
             }
         }
     }
@@ -232,11 +254,11 @@ export default ({ children }) => {
     // Init socket listener
     useEffect(()=>{
         if(socket){
-            console.log(`Register listener...`)
+            // console.log(`Register listener...`)
             // Listen upload file process event
             socket.on('uploadFilesProgress', function(data){
-                console.log(`uploadFilesProgress...`)
-                console.log(data)
+                // console.log(`uploadFilesProgress...`)
+                // console.log(data)
                 setUploadingPercent(data.percent)
                 setUploadRemainingTime(`${convertTimeFromSeconds(data.timeLeft)} remaining`)
             })
