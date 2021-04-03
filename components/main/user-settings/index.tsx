@@ -1,4 +1,5 @@
 import styles from './index.module.css'
+import { useRouter } from 'next/router'
 import { useState, useEffect, useContext } from 'react'
 import update from 'immutability-helper'
 import toastUtils from '../../../utils/toast'
@@ -48,10 +49,12 @@ const UserSettings = () => {
 
   const { hasPermission } = useContext(UserContext)
 
+  const router = useRouter()
+
   useEffect(() => {
     const activeView = urlUtils.getPathId()
     setActiveView(activeView)
-  }, [])
+  }, [router.query.view])
 
   const [activeView, setActiveView] = useState('')
   const [menuActive, setMenuActive] = useState(true)
