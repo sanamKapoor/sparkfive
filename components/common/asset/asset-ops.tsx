@@ -34,7 +34,8 @@ export default () => {
 		setLoadingAssets,
 		selectedAllAssets,
 		completedAssets,
-		setCompletedAssets
+		setCompletedAssets,
+		totalAssets,
 	} = useContext(AssetContext)
 
 	const { loadFolders, activeSortFilter, term } = useContext(FilterContext)
@@ -62,7 +63,6 @@ export default () => {
 
 		// Edit assets including hidden pagination items
 		if(activeOperation === 'edit' && selectedAllAssets){
-			console.log(unSelectedAssets)
 			//  Get all assets without pagination
 			getSelectedAssets(unSelectedAssets.map((data)=> data.asset.id))
 		}
@@ -217,7 +217,23 @@ export default () => {
 	const deleteSelectedAssets = async () => {
 		try {
 			if (!operationAsset) {
-				await assetApi.deleteMultipleAssets({ assetIds: selectedAssets.map(assetItem => assetItem.asset.id) })
+				let filters = {
+					...getAssetsFilters({
+						replace: false,
+						activeFolder,
+						addedIds: [],
+						nextPage: 1,
+						userFilterObject: activeSortFilter
+					}),
+					complete: '1',
+				};
+
+				if(term){
+					// @ts-ignore
+					filters.term = term;
+				}
+
+				await assetApi.deleteMultipleAssets({ assetIds: selectedAssets.map(assetItem => assetItem.asset.id), selectedAll: selectedAllAssets, filters })
 				const newAssets = assets.filter(existingAsset => {
 					const searchedAssetIndex = selectedAssets.findIndex(assetListItem => existingAsset.asset.id === assetListItem.asset.id)
 					return searchedAssetIndex === -1
@@ -395,7 +411,7 @@ export default () => {
 		operationLength = operationFolder.assets.length
 	}
 	else {
-		operationLength = selectedAssets.length
+		operationLength = selectedAllAssets ? totalAssets : selectedAssets.length
 	}
 
 	return (
