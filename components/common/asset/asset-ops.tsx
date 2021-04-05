@@ -161,6 +161,7 @@ export default () => {
 	const moveAssets = async (selectedFolder) => {
 		try {
 			let updateAssets
+			let filters = {}
 			if (!operationAsset) {
 				updateAssets = selectedAssets.map(selectedAsset => (
 					{ id: selectedAsset.asset.id, changes: { folderId: selectedFolder } }
@@ -171,7 +172,28 @@ export default () => {
 				}]
 			}
 
-			await assetApi.updateMultiple(updateAssets)
+			// Select all assets without pagination
+			if(selectedAllAssets){
+				filters = {
+					...getAssetsFilters({
+						replace: false,
+						activeFolder,
+						addedIds: [],
+						nextPage: 1,
+						userFilterObject: activeSortFilter
+					}),
+					selectedAll: '1',
+				};
+
+				if(term){
+					// @ts-ignore
+					filters.term = term;
+				}
+				// @ts-ignore
+				delete filters.page
+			}
+
+			await assetApi.updateMultiple(updateAssets, filters)
 			closeModalAndClearOpAsset()
 			if (activeFolder && activeFolder !== selectedFolder) {
 				removeSelectedFromList()
@@ -194,6 +216,7 @@ export default () => {
 	const modifyAssetsStage = async (stage, successMessage, errMessage) => {
 		try {
 			let updateAssets
+			let filters = {}
 			if (!operationAsset) {
 				updateAssets = selectedAssets.map(assetItem => (
 					{ id: assetItem.asset.id, changes: { stage } }
@@ -204,7 +227,28 @@ export default () => {
 				}]
 			}
 
-			await assetApi.updateMultiple(updateAssets)
+			// Select all assets without pagination
+			if(selectedAllAssets){
+				filters = {
+					...getAssetsFilters({
+						replace: false,
+						activeFolder,
+						addedIds: [],
+						nextPage: 1,
+						userFilterObject: activeSortFilter
+					}),
+					selectedAll: '1',
+				};
+
+				if(term){
+					// @ts-ignore
+					filters.term = term;
+				}
+				// @ts-ignore
+				delete filters.page
+			}
+
+			await assetApi.updateMultiple(updateAssets, filters)
 			removeSelectedFromList()
 			closeModalAndClearOpAsset()
 			toastUtils.success(successMessage)
@@ -216,8 +260,11 @@ export default () => {
 
 	const deleteSelectedAssets = async () => {
 		try {
-			if (!operationAsset) {
-				let filters = {
+			let filters = {}
+
+			// Select all assets without pagination
+			if(selectedAllAssets){
+				filters = {
 					...getAssetsFilters({
 						replace: false,
 						activeFolder,
@@ -225,15 +272,19 @@ export default () => {
 						nextPage: 1,
 						userFilterObject: activeSortFilter
 					}),
-					complete: '1',
+					selectedAll: '1',
 				};
 
 				if(term){
 					// @ts-ignore
 					filters.term = term;
 				}
+				// @ts-ignore
+				delete filters.page
+			}
 
-				await assetApi.deleteMultipleAssets({ assetIds: selectedAssets.map(assetItem => assetItem.asset.id), selectedAll: selectedAllAssets, filters })
+			if (!operationAsset) {
+				await assetApi.deleteMultipleAssets({ assetIds: selectedAssets.map(assetItem => assetItem.asset.id), filters })
 				const newAssets = assets.filter(existingAsset => {
 					const searchedAssetIndex = selectedAssets.findIndex(assetListItem => existingAsset.asset.id === assetListItem.asset.id)
 					return searchedAssetIndex === -1
@@ -241,7 +292,7 @@ export default () => {
 
 				setAssets(newAssets)
 			} else {
-				await assetApi.deleteAsset(operationAsset.asset.id)
+				await assetApi.deleteAsset(operationAsset.asset.id, filters)
 				const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === operationAsset.asset.id)
 				if (assetIndex !== -1)
 					setAssets(update(assets, {
@@ -278,6 +329,7 @@ export default () => {
 	const shareAssets = async (recipients, message) => {
 		try {
 			let assetIds
+			let filters = {}
 			if (operationAsset) {
 				assetIds = operationAsset.asset.id
 			}
@@ -287,11 +339,32 @@ export default () => {
 			else {
 				assetIds = selectedAssets.map(assetItem => assetItem.asset.id).join(',')
 			}
+
+			// Select all assets without pagination
+			if(selectedAllAssets){
+				filters = {
+					...getAssetsFilters({
+						replace: false,
+						activeFolder,
+						addedIds: [],
+						nextPage: 1,
+						userFilterObject: activeSortFilter
+					}),
+					selectedAll: '1',
+				};
+
+				if(term){
+					// @ts-ignore
+					filters.term = term;
+				}
+				// @ts-ignore
+				delete filters.page
+			}
 			await assetApi.generateAndSendShareUrl({
 				recipients,
 				message,
 				assetIds
-			})
+			},filters)
 			toastUtils.success('Assets shared succesfully')
 			closeModalAndClearOpAsset()
 		} catch (err) {
@@ -322,13 +395,35 @@ export default () => {
 	const copyAssets = async (selectedFolder) => {
 		try {
 			let copyAssetIds
+			let filters = {}
 			if (!operationAsset) {
 				copyAssetIds = selectedAssets.map(selectedAsset => selectedAsset.asset.id)
 			} else {
 				copyAssetIds = [operationAsset.asset.id]
 			}
 
-			const { data } = await assetApi.copyAssets({ idList: copyAssetIds, folderId: selectedFolder })
+			// Select all assets without pagination
+			if(selectedAllAssets){
+				filters = {
+					...getAssetsFilters({
+						replace: false,
+						activeFolder,
+						addedIds: [],
+						nextPage: 1,
+						userFilterObject: activeSortFilter
+					}),
+					selectedAll: '1',
+				};
+
+				if(term){
+					// @ts-ignore
+					filters.term = term;
+				}
+				// @ts-ignore
+				delete filters.page
+			}
+
+			const { data } = await assetApi.copyAssets({ idList: copyAssetIds, folderId: selectedFolder }, filters)
 			closeModalAndClearOpAsset()
 			toastUtils.success('Assets copied successfully')
 			if (!activeFolder && activePageMode === 'library') {
@@ -354,11 +449,33 @@ export default () => {
 
 	const removeSelectedAssetsFromItem = async () => {
 		try {
+			let filters = {}
+			// Select all assets without pagination
+			if(selectedAllAssets){
+				filters = {
+					...getAssetsFilters({
+						replace: false,
+						activeFolder,
+						addedIds: [],
+						nextPage: 1,
+						userFilterObject: activeSortFilter
+					}),
+					selectedAll: '1',
+				};
+
+				if(term){
+					// @ts-ignore
+					filters.term = term;
+				}
+				// @ts-ignore
+				delete filters.page
+			}
+
 			if (!operationAsset) {
 				if (currentItem.type === 'project') {
-					await projectApi.associateAssets(currentItem.id, { assetIds: selectedAssets.map(assetItem => assetItem.asset.id) }, { operation: 'disassociate' })
+					await projectApi.associateAssets(currentItem.id, { assetIds: selectedAssets.map(assetItem => assetItem.asset.id) }, { operation: 'disassociate', ...filters })
 				} else if (currentItem.type === 'task') {
-					await taskApi.associateAssets(currentItem.id, { assetIds: selectedAssets.map(assetItem => assetItem.asset.id) }, { operation: 'disassociate' })
+					await taskApi.associateAssets(currentItem.id, { assetIds: selectedAssets.map(assetItem => assetItem.asset.id) }, { operation: 'disassociate', ...filters })
 				}
 				const newAssets = assets.filter(existingAsset => {
 					const searchedAssetIndex = selectedAssets.findIndex(assetListItem => existingAsset.asset.id === assetListItem.asset.id)
@@ -368,9 +485,9 @@ export default () => {
 				setAssets(newAssets)
 			} else {
 				if (currentItem.type === 'project') {
-					await projectApi.associateAssets(currentItem.id, { assetIds: [operationAsset.asset.id] }, { operation: 'disassociate' })
+					await projectApi.associateAssets(currentItem.id, { assetIds: [operationAsset.asset.id] }, { operation: 'disassociate', ...filters })
 				} else if (currentItem.type === 'task') {
-					await taskApi.associateAssets(currentItem.id, { assetIds: [operationAsset.asset.id] }, { operation: 'disassociate' })
+					await taskApi.associateAssets(currentItem.id, { assetIds: [operationAsset.asset.id] }, { operation: 'disassociate', ...filters })
 				}
 				const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === operationAsset.asset.id)
 				if (assetIndex !== -1)
