@@ -19,6 +19,7 @@ import FolderModal from '../folder/folder-modal'
 import IconClickable from '../buttons/icon-clickable'
 
 import { validation } from '../../../constants/file-validation'
+import {getFolderKeyAndNewNameByFileName} from "../../../utils/upload";
 
 
 
@@ -43,10 +44,14 @@ const AssetAddition = ({
 
 
 	// Upload asset
-	const uploadAsset  = async (i: number, assets: any, currentDataClone: any, totalSize: number, folderId) => {
+	const uploadAsset  = async (i: number, assets: any, currentDataClone: any, totalSize: number, folderId, folderGroup = {}) => {
 		try{
 			const formData = new FormData()
-			const file = assets[i].file
+			let file = assets[i].file.originalFile
+			let currentUploadingFolderId = null
+
+			// Get file group info, this returns folderKey and newName of file
+			let fileGroupInfo = getFolderKeyAndNewNameByFileName(file.webkitRelativePath)
 
 			// Do validation
 			if(assets[i].asset.size > validation.UPLOAD.MAX_SIZE.VALUE){
@@ -67,14 +72,27 @@ const AssetAddition = ({
 				if(i === assets.length - 1){
 					return
 				}else{ // Keep going
-					await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId)
+					await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup)
 				}
 			}else{
 				// Show uploading toast
 				showUploadProcess('uploading', i)
 
+				// If user is uploading files in folder which is not saved from server yet
+				if(fileGroupInfo.folderKey && !folderId){
+					// Current folder Group have the key
+					if(folderGroup[fileGroupInfo.folderKey]){
+						currentUploadingFolderId = folderGroup[fileGroupInfo.folderKey]
+						// Assign new file name without splash
+						file = new File([file.slice(0, file.size, file.type)],
+							fileGroupInfo.newName
+							, { type: file.type })
+					}
+				}
+
+
 				// Append file to form data
-				formData.append('asset', file.path || file.originalFile)
+				formData.append('asset', file)
 
 				let size = totalSize;
 				// Calculate the rest of size
@@ -87,12 +105,28 @@ const AssetAddition = ({
 
 				let attachedQuery = {estimateTime: 1, size, totalSize}
 
+
+				// Uploading inside specific folders
 				if(folderId){
 					attachedQuery['folderId'] = folderId
 				}
 
+				// Uploading the new folder
+				if(currentUploadingFolderId){
+					attachedQuery['folderId'] = currentUploadingFolderId
+				}
+
 				// Call API to upload
 				let { data } = await assetApi.uploadAssets(formData, getCreationParameters(attachedQuery))
+
+				// If user is uploading files in folder which is not saved from server yet
+				if(fileGroupInfo.folderKey && !folderId){
+					/// If user is uploading new folder and this one still does not have folder Id, add it to folder group
+					if(!folderGroup[fileGroupInfo.folderKey]){
+						folderGroup[fileGroupInfo.folderKey] = data[0].asset.folderId
+					}
+				}
+
 
 				data = data.map((item) => {
 					item.isSelected = true
@@ -100,7 +134,6 @@ const AssetAddition = ({
 				})
 
 				assets[i] = data[0]
-
 
 				// At this point, file place holder will be removed
 				setAssets([...assets, ...currentDataClone])
@@ -115,8 +148,7 @@ const AssetAddition = ({
 				if(i === assets.length - 1){
 					return
 				}else{ // Keep going
-					let newFolderId = data[0].asset.folderId;
-					await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, newFolderId ? newFolderId : null)
+					await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup)
 				}
 			}
 		}catch (e){
@@ -137,7 +169,7 @@ const AssetAddition = ({
 			if(i === assets.length - 1){
 				return
 			}else{ // Keep going
-				await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId)
+				await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup)
 			}
 		}
 	}

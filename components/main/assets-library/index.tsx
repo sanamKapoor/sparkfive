@@ -5,6 +5,7 @@ import update from 'immutability-helper'
 import assetApi from '../../../server-api/asset'
 import folderApi from '../../../server-api/folder'
 import toastUtils from '../../../utils/toast'
+import { getFolderKeyAndNewNameByFileName } from '../../../utils/upload'
 import { getAssetsFilters, getAssetsSort, DEFAULT_FILTERS, getFoldersFromUploads } from '../../../utils/asset'
 
 // Components
@@ -101,10 +102,11 @@ const AssetsLibrary = () => {
   }
 
   // Upload asset
-  const uploadAsset  = async (i: number, assets: any, currentDataClone: any, totalSize: number, folderId) => {
+  const uploadAsset  = async (i: number, assets: any, currentDataClone: any, totalSize: number, folderId, folderGroup = {}) => {
     try{
       const formData = new FormData()
-      const file = assets[i].file
+      let file = assets[i].file
+      let currentUploadingFolderId = null
 
       // Do validation
       if(assets[i].asset.size > validation.UPLOAD.MAX_SIZE.VALUE){
@@ -125,14 +127,29 @@ const AssetsLibrary = () => {
         if(i === assets.length - 1){
           return
         }else{ // Keep going
-          await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId)
+          await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup)
         }
       }else{
         // Show uploading toast
         showUploadProcess('uploading', i)
 
+        // If user is uploading files in folder which is not saved from server yet
+        if(assets[i].dragDropFolderUpload && !folderId){
+          // Get file group info, this returns folderKey and newName of file
+          let fileGroupInfo = getFolderKeyAndNewNameByFileName(file.name)
+
+          // Current folder Group have the key
+          if(fileGroupInfo.folderKey && folderGroup[fileGroupInfo.folderKey]){
+            currentUploadingFolderId = folderGroup[fileGroupInfo.folderKey]
+            // Assign new file name without splash
+            file = new File([file.slice(0, file.size, file.type)],
+                fileGroupInfo.newName
+                , { type: file.type })
+          }
+        }
+
         // Append file to form data
-        formData.append('asset', assets[i].uploadDirectly ? file : file.originalFile)
+        formData.append('asset', assets[i].dragDropFolderUpload ? file : file.originalFile)
 
         let size = totalSize;
         // Calculate the rest of size
@@ -145,12 +162,31 @@ const AssetsLibrary = () => {
 
         let attachedQuery = {estimateTime: 1, size, totalSize}
 
+
+        // Uploading inside specific folders
         if(folderId){
           attachedQuery['folderId'] = folderId
         }
 
+        // Uploading the new folder
+        if(currentUploadingFolderId){
+          attachedQuery['folderId'] = currentUploadingFolderId
+        }
+
         // Call API to upload
         let { data } = await assetApi.uploadAssets(formData, getCreationParameters(attachedQuery))
+
+        // If user is uploading files in folder which is not saved from server yet
+        if(assets[i].dragDropFolderUpload && !folderId){
+          // Get file group info, this returns folderKey and newName of file
+          let fileGroupInfo = getFolderKeyAndNewNameByFileName(file.name)
+
+          /// If user is uploading new folder and this one still does not have folder Id, add it to folder group
+          if(fileGroupInfo.folderKey && !folderGroup[fileGroupInfo.folderKey]){
+            folderGroup[fileGroupInfo.folderKey] = data[0].asset.folderId
+          }
+        }
+
 
         data = data.map((item) => {
           item.isSelected = true
@@ -172,8 +208,7 @@ const AssetsLibrary = () => {
         if(i === assets.length - 1){
           return
         }else{ // Keep going
-          let newFolderId = data[0].asset.folderId;
-          await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, newFolderId ? newFolderId : null)
+          await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup)
         }
       }
     }catch (e){
@@ -194,7 +229,7 @@ const AssetsLibrary = () => {
       if(i === assets.length - 1){
         return
       }else{ // Keep going
-        await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId)
+        await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup)
       }
     }
   }
@@ -224,11 +259,11 @@ const AssetsLibrary = () => {
       files.forEach(file => {
 
         let fileToUpload = file;
-        let uploadDirectly = false;
+        let dragDropFolderUpload = false;
 
         // Upload folder
         if (file.originalFile.path.includes('/')) {
-          uploadDirectly = true;
+          dragDropFolderUpload = true;
           fileToUpload = new File([file.originalFile.slice(0, file.originalFile.size, file.originalFile.type)],
               file.originalFile.path.substring(1, file.originalFile.path.length)
               , { type: file.originalFile.type })
@@ -249,7 +284,7 @@ const AssetsLibrary = () => {
           file: fileToUpload,
           status: 'queued',
           isUploading: true,
-          uploadDirectly, // Drag and drop folder will have different process a bit here
+          dragDropFolderUpload, // Drag and drop folder will have different process a bit here
         })
       })
 
