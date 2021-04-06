@@ -40,7 +40,18 @@ const AssetAddition = ({
 	const [activeModal, setActiveModal] = useState('')
 	const [submitError, setSubmitError] = useState('')
 
-	const { assets, setAssets, setNeedsFetch, setAddedIds, activePageMode, folders, setFolders, showUploadProcess, uploadingAssets, setUploadingAssets } = useContext(AssetContext)
+	const {
+		assets,
+		setAssets,
+		setNeedsFetch,
+		setAddedIds,
+		activePageMode,
+		folders,
+		setFolders,
+		showUploadProcess,
+		setUploadingAssets,
+		setUploadingFileName
+	} = useContext(AssetContext)
 
 
 	// Upload asset
@@ -77,6 +88,10 @@ const AssetAddition = ({
 			}else{
 				// Show uploading toast
 				showUploadProcess('uploading', i)
+
+				// Set current upload file name
+				setUploadingFileName(assets[i].asset.name)
+
 
 				// If user is uploading files in folder which is not saved from server yet
 				if(fileGroupInfo.folderKey && !folderId){
@@ -248,13 +263,15 @@ const AssetAddition = ({
 	const onDropboxFilesSelection = async (files) => {
 		const currentDataClone = [...assets]
 		try {
+			let totalSize = 0;
 			const newPlaceholders = []
 			files.forEach(file => {
+				totalSize += file.bytes
 				newPlaceholders.push({
 					asset: {
 						name: file.name,
 						createdAt: new Date(),
-						size: file.size,
+						size: file.bytes,
 						stage: 'draft',
 						type: 'image'
 					},
@@ -262,10 +279,23 @@ const AssetAddition = ({
 				})
 			})
 			setAssets([...newPlaceholders, ...currentDataClone])
-			const { data } = await assetApi.importAssets('dropbox', files.map(file => ({ link: file.link, name: file.name, size: file.bytes })), getCreationParameters())
+
+			// Update uploading assets
+			setUploadingAssets(newPlaceholders)
+
+			// Show uploading process
+			showUploadProcess('uploading')
+
+			// Show message
+			setUploadingFileName('Importing files from Drop Box')
+
+			const { data } = await assetApi.importAssets('dropbox', files.map(file => ({ link: file.link, name: file.name, size: file.bytes })), getCreationParameters({estimateTime: 1, totalSize}))
 			setAssets([...data, ...currentDataClone])
 			setAddedIds(data.id)
-			toastUtils.success('Assets imported.')
+
+			// Mark process as done
+			showUploadProcess('none')
+			// toastUtils.success('Assets imported.')
 		} catch (err) {
 			//TODO: Handle error
 			setAssets(currentDataClone)

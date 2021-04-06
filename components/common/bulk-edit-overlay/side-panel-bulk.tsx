@@ -2,7 +2,7 @@ import styles from './side-panel-bulk.module.css'
 import update from 'immutability-helper'
 import ReactCreatableSelect from 'react-select/creatable'
 
-import { useEffect, useState } from 'react'
+import {useContext, useEffect, useState} from 'react'
 import tagApi from '../../../server-api/tag'
 import assetApi from '../../../server-api/asset'
 import projectApi from '../../../server-api/project'
@@ -10,6 +10,11 @@ import campaignApi from '../../../server-api/campaign'
 import folderApi from '../../../server-api/folder'
 import toastUtils from '../../../utils/toast'
 import { Utilities } from '../../../assets'
+
+// Contexts
+import { AssetContext, FilterContext } from '../../../context'
+
+import { getAssetsFilters } from '../../../utils/asset'
 
 
 // Components
@@ -36,6 +41,13 @@ const SidePanelBulk = ({
   loading,
   addMode
 }) => {
+
+  const {
+    activeFolder,
+    selectedAllAssets,
+  } = useContext(AssetContext)
+
+  const { activeSortFilter, term } = useContext(FilterContext)
 
   const [channel, setChannel] = useState(null)
   const [activeDropdown, setActiveDropdown] = useState('')
@@ -121,6 +133,28 @@ const SidePanelBulk = ({
 
   const saveChanges = async () => {
     try {
+      let filters = {}
+      // Select all assets without pagination
+      if(selectedAllAssets){
+        filters = {
+          ...getAssetsFilters({
+            replace: false,
+            activeFolder,
+            addedIds: [],
+            nextPage: 1,
+            userFilterObject: activeSortFilter
+          }),
+          selectedAll: '1',
+        };
+
+        if(term){
+          // @ts-ignore
+          filters.term = term;
+        }
+        // @ts-ignore
+        delete filters.page
+      }
+
       setWarningMessage('')
       setLoading(true)
       const mapAttributes = ({ id, name }) => ({ id, name })
@@ -147,7 +181,7 @@ const SidePanelBulk = ({
         updateObject.attributes = getRemoveAttributes({ campaigns, projects, tags })
       }
 
-      await assetApi.updateMultipleAttributes(updateObject)
+      await assetApi.updateMultipleAttributes(updateObject, filters)
       await onUpdate()
       toastUtils.success('Asset edits saved')
     } catch (err) {

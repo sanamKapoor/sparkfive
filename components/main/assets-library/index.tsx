@@ -42,7 +42,8 @@ const AssetsLibrary = () => {
     uploadDetailOverlay,
     setUploadDetailOverlay,
     setUploadingAssets,
-    showUploadProcess
+    showUploadProcess,
+    setUploadingFileName
   } = useContext(AssetContext)
 
   const [activeMode, setActiveMode] = useState('assets')
@@ -132,6 +133,8 @@ const AssetsLibrary = () => {
       }else{
         // Show uploading toast
         showUploadProcess('uploading', i)
+        // Set current upload file name
+        setUploadingFileName(assets[i].asset.name)
 
         // If user is uploading files in folder which is not saved from server yet
         if(assets[i].dragDropFolderUpload && !folderId){

@@ -55,6 +55,7 @@ export default ({ children }) => {
     const [uploadingStatus, setUploadingStatus] = useState("none") // Allowed value: "none", "uploading", "done"
     const [uploadingPercent, setUploadingPercent] = useState(0) // Percent of uploading process: 0 - 100
     const [uploadingFile, setUploadingFile] = useState<number>() // Current uploading file index
+    const [uploadingFileName, setUploadingFileName] = useState<string>() // Current uploading file name, import feature need this
     const [uploadRemainingTime, setUploadRemainingTime] = useState<string>("") // Remaining time
     const [uploadDetailOverlay, setUploadDetailOverlay] = useState(false) // Detail overlay
 
@@ -251,6 +252,10 @@ export default ({ children }) => {
         }
     }
 
+    const updateUploadingFileName = (name: string) => {
+        setUploadingFileName(name)
+    }
+
     // Init socket listener
     useEffect(()=>{
         if(socket){
@@ -261,6 +266,16 @@ export default ({ children }) => {
                 // console.log(data)
                 setUploadingPercent(data.percent)
                 setUploadRemainingTime(`${convertTimeFromSeconds(data.timeLeft)} remaining`)
+
+                // setUploadingFileName("Test.png")
+                if(data.fileName){
+                    setUploadingFileName(data.fileName)
+                }
+
+                // setUploadingFile(0)
+                if(data.uploadingAssets){
+                    setUploadingFile(data.uploadingAssets)
+                }
             })
         }
     },[socket])
@@ -302,7 +317,9 @@ export default ({ children }) => {
         setUploadingAssets: setUploadingAssetItems,
         uploadDetailOverlay,
         setUploadDetailOverlay: openUploadDetailOverlay,
-        reUploadAsset
+        reUploadAsset,
+        uploadingFileName,
+        setUploadingFileName: updateUploadingFileName
 
     }
     return (

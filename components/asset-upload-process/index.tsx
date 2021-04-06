@@ -16,6 +16,7 @@ const AssetUploadProcess = () => {
         uploadRemainingTime,
         uploadingPercent,
         setUploadDetailOverlay,
+        uploadingFileName
     } = useContext(AssetContext)
 
     const uploadedAssets = uploadingAssets.filter(asset => asset.status === 'done')
@@ -24,8 +25,8 @@ const AssetUploadProcess = () => {
     return <div className={clsx(styles.container, {[styles['center-align']]: uploadingStatus === 'done', [styles['less-margin-bottom']]: uploadingStatus === 'uploading'})}>
         <div className={clsx(styles.row, styles['no-margin'])}>
             {uploadingStatus === 'uploading' && <>
-                <span>{uploadingAssets[uploadingFile].asset.name}</span>
-                <span>{uploadingFile+1} of {uploadingAssets.length} assets</span>
+            <span>{uploadingFileName}</span>
+            {!isNaN(uploadingFile) && <span>{uploadingFile+1} of {uploadingAssets.length} assets</span>}
                 <span>{uploadRemainingTime}</span>
             </>}
             {uploadingStatus === 'done' &&
