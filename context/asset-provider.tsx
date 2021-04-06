@@ -273,7 +273,7 @@ export default ({ children }) => {
                 }
 
                 // setUploadingFile(0)
-                if(data.uploadingAssets){
+                if(!isNaN(data.uploadingAssets)){
                     setUploadingFile(data.uploadingAssets)
                 }
             })
