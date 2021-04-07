@@ -1,7 +1,7 @@
 import {useContext, useEffect, useState} from 'react'
 import { AssetContext, SocketContext } from '../context'
 
-import { convertTimeFromSeconds } from "../utils/upload"
+import {convertTimeFromSeconds, getFolderKeyAndNewNameByFileName} from "../utils/upload"
 
 import assetApi from '../server-api/asset'
 
@@ -55,8 +55,10 @@ export default ({ children }) => {
     const [uploadingStatus, setUploadingStatus] = useState("none") // Allowed value: "none", "uploading", "done"
     const [uploadingPercent, setUploadingPercent] = useState(0) // Percent of uploading process: 0 - 100
     const [uploadingFile, setUploadingFile] = useState<number>() // Current uploading file index
-    const [uploadRemainingTime, setUploadRemainingTime] = useState<string>("Calculating time") // Remaining time
+    const [uploadingFileName, setUploadingFileName] = useState<string>() // Current uploading file name, import feature need this
+    const [uploadRemainingTime, setUploadRemainingTime] = useState<string>("") // Remaining time
     const [uploadDetailOverlay, setUploadDetailOverlay] = useState(false) // Detail overlay
+    const [folderGroups, setFolderGroups] = useState() // This groups contain all folder key which is need to identity which folder file need to be saved to
 
     const setPlaceHolders = (type, replace = true) => {
         if (type === 'asset') {
@@ -122,8 +124,10 @@ export default ({ children }) => {
         setUploadingStatus(value)
 
         // Reset all value
-        setUploadingPercent(0)
-        setUploadRemainingTime("Calculating time")
+        if(fileIndex === 0){
+            setUploadingPercent(0)
+        }
+
     }
 
     // Set upload assets
@@ -147,32 +151,59 @@ export default ({ children }) => {
     }
 
     // Upload asset
-    const reUploadAsset  = async (i: number, assets: any, currentDataClone: any, totalSize: number, retryList: any[], folderId) => {
+    const reUploadAsset  = async (i: number, assets: any, currentDataClone: any, totalSize: number, retryList: any[], folderId, folderGroup = {}) => {
         try{
             const formData = new FormData()
-            const file = retryList[i].file
+            let file = retryList[i].file.originalFile
+
+            let currentUploadingFolderId = null
+
+            // Get file group info, this returns folderKey and newName of file
+            let fileGroupInfo = getFolderKeyAndNewNameByFileName(file.webkitRelativePath)
 
             // Do validation
             if(retryList[i].asset.size > validation.UPLOAD.MAX_SIZE.VALUE){
                 // Violate validation, mark failure
                 const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE} : asset);
 
+                // Update uploading assets
                 setUploadingAssets(updatedAssets)
 
+                // Remove current asset from asset placeholder
+                let newAssetPlaceholder = updatedAssets.filter(asset => asset.status !== 'fail')
+
+
+                // At this point, file place holder will be removed
+                setAssets([...newAssetPlaceholder, ...currentDataClone])
+
                 // The final one
-                if(i === retryList.length - 1){
-                    // Finish uploading process
-                    showUploadProcess('done')
+                if(i === assets.length - 1){
+                    return
                 }else{ // Keep going
-                    await reUploadAsset(i+1, assets,  currentDataClone, totalSize, retryList, folderId)
+                    await reUploadAsset(i+1, updatedAssets, currentDataClone, totalSize, updatedAssets, folderId, folderGroup)
                 }
             }
 
             // Show uploading toast
             showUploadProcess('uploading', i)
 
+            // Set current upload file name
+            setUploadingFileName(retryList[i].asset.name)
+
+            // If user is uploading files in folder which is not saved from server yet
+            if(fileGroupInfo.folderKey && !folderId){
+                // Current folder Group have the key
+                if(folderGroup[fileGroupInfo.folderKey]){
+                    currentUploadingFolderId = folderGroup[fileGroupInfo.folderKey]
+                    // Assign new file name without splash
+                    file = new File([file.slice(0, file.size, file.type)],
+                        fileGroupInfo.newName
+                        , { type: file.type })
+                }
+            }
+
             // Append file to form data
-            formData.append('asset', file.path || file.originalFile)
+            formData.append('asset', file)
 
             let size = totalSize;
             // Calculate the rest of size
@@ -183,19 +214,40 @@ export default ({ children }) => {
                 }
             })
 
-            const attachedQuery = {estimateTime: 1, size}
+            const attachedQuery = {estimateTime: 1, size, totalSize}
 
             if(folderId){
                 attachedQuery['folderId'] = folderId
             }
 
+            // Uploading the new folder
+            if(currentUploadingFolderId){
+                attachedQuery['folderId'] = currentUploadingFolderId
+            }
+
             // Call API to upload
-            const { data } = await assetApi.uploadAssets(formData, getCreationParameters(
+            let { data } = await assetApi.uploadAssets(formData, getCreationParameters(
                 attachedQuery))
+
+            // If user is uploading files in folder which is not saved from server yet
+            if(fileGroupInfo.folderKey && !folderId){
+                /// If user is uploading new folder and this one still does not have folder Id, add it to folder group
+                if(!folderGroup[fileGroupInfo.folderKey]){
+                    folderGroup[fileGroupInfo.folderKey] = data[0].asset.folderId
+                }
+            }
+
+            // Mark asset selected
+            data = data.map((item) => {
+                item.isSelected = true
+                return item
+            })
+
+            assets[i] = data[0]
 
 
             // At this point, file place holder will be removed
-            setAssets([...data, ...currentDataClone])
+            setAssets([...assets, ...currentDataClone])
             setAddedIds(data.map(assetItem => assetItem.asset.id))
 
             // Mark this asset as done
@@ -208,35 +260,57 @@ export default ({ children }) => {
                 // Finish uploading process
                 showUploadProcess('done')
             }else{ // Keep going
-                const newFolderId = data[0].asset.folderId
-                await reUploadAsset(i+1, updatedAssets, [...data, ...currentDataClone], totalSize, retryList, newFolderId ? newFolderId : null)
+                await reUploadAsset(i+1, updatedAssets, currentDataClone, totalSize, retryList, folderId, folderGroup)
             }
         }catch (e){
-            // Mark this asset as fail
-            const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: e.message} : asset);
+            // Violate validation, mark failure
+            const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: 'Processing file error'} : asset);
 
+            // Update uploading assets
             setUploadingAssets(updatedAssets)
 
+            // Remove current asset from asset placeholder
+            let newAssetPlaceholder = updatedAssets.filter(asset => asset.status !== 'fail')
+
+
+            // At this point, file place holder will be removed
+            setAssets([...newAssetPlaceholder, ...currentDataClone])
+
             // The final one
-            if(i === retryList.length - 1){
-                // Finish uploading process
-                showUploadProcess('done')
+            if(i === assets.length - 1){
+                return
             }else{ // Keep going
-                await reUploadAsset(i+1, assets,  currentDataClone, totalSize, retryList, folderId)
+                await reUploadAsset(i+1, updatedAssets, currentDataClone, totalSize, retryList, folderId, folderGroup)
             }
         }
+    }
+
+    const updateUploadingFileName = (name: string) => {
+        setUploadingFileName(name)
+    }
+
+    const updateFolderGroups = (value) => {
+        setFolderGroups(value)
     }
 
     // Init socket listener
     useEffect(()=>{
         if(socket){
-            console.log(`Register listener...`)
+            // console.log(`Register listener...`)
             // Listen upload file process event
             socket.on('uploadFilesProgress', function(data){
-                console.log(`uploadFilesProgress...`)
-                console.log(data)
                 setUploadingPercent(data.percent)
                 setUploadRemainingTime(`${convertTimeFromSeconds(data.timeLeft)} remaining`)
+
+                // setUploadingFileName("Test.png")
+                if(data.fileName){
+                    setUploadingFileName(data.fileName)
+                }
+
+                // setUploadingFile(0)
+                if(!isNaN(data.uploadingAssets)){
+                    setUploadingFile(data.uploadingAssets)
+                }
             })
         }
     },[socket])
@@ -278,7 +352,11 @@ export default ({ children }) => {
         setUploadingAssets: setUploadingAssetItems,
         uploadDetailOverlay,
         setUploadDetailOverlay: openUploadDetailOverlay,
-        reUploadAsset
+        reUploadAsset,
+        uploadingFileName,
+        setUploadingFileName: updateUploadingFileName,
+        folderGroups,
+        setFolderGroups: updateFolderGroups
 
     }
     return (

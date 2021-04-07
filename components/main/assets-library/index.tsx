@@ -5,6 +5,7 @@ import update from 'immutability-helper'
 import assetApi from '../../../server-api/asset'
 import folderApi from '../../../server-api/folder'
 import toastUtils from '../../../utils/toast'
+import { getFolderKeyAndNewNameByFileName } from '../../../utils/upload'
 import { getAssetsFilters, getAssetsSort, DEFAULT_FILTERS, getFoldersFromUploads } from '../../../utils/asset'
 
 // Components
@@ -17,6 +18,7 @@ import FilterContainer from '../../common/filter/filter-container'
 import { DropzoneProvider } from '../../common/misc/dropzone'
 import RenameModal from '../../common/modals/rename-modal'
 import UploadStatusOverlayAssets from "../../upload-status-overlay-assets";
+import {validation} from "../../../constants/file-validation";
 
 const AssetsLibrary = () => {
 
@@ -38,7 +40,11 @@ const AssetsLibrary = () => {
     setLoadingAssets,
     selectAllAssets,
     uploadDetailOverlay,
-    setUploadDetailOverlay
+    setUploadDetailOverlay,
+    setUploadingAssets,
+    showUploadProcess,
+    setUploadingFileName,
+    setFolderGroups
   } = useContext(AssetContext)
 
   const [activeMode, setActiveMode] = useState('assets')
@@ -97,14 +103,152 @@ const AssetsLibrary = () => {
     })
   }
 
+  // Upload asset
+  const uploadAsset  = async (i: number, assets: any, currentDataClone: any, totalSize: number, folderId, folderGroup = {}) => {
+    try{
+      const formData = new FormData()
+      let file = assets[i].file
+      let currentUploadingFolderId = null
+
+      // Do validation
+      if(assets[i].asset.size > validation.UPLOAD.MAX_SIZE.VALUE){
+        // Violate validation, mark failure
+        const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE} : asset);
+
+        // Update uploading assets
+        setUploadingAssets(updatedAssets)
+
+        // Remove current asset from asset placeholder
+        let newAssetPlaceholder = updatedAssets.filter(asset => asset.status !== 'fail')
+
+
+        // At this point, file place holder will be removed
+        setAssets([...newAssetPlaceholder, ...currentDataClone])
+
+        // The final one
+        if(i === assets.length - 1){
+          return folderGroup
+        }else{ // Keep going
+          await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup)
+        }
+      }else{
+        // Show uploading toast
+        showUploadProcess('uploading', i)
+        // Set current upload file name
+        setUploadingFileName(assets[i].asset.name)
+
+        // If user is uploading files in folder which is not saved from server yet
+        if(assets[i].dragDropFolderUpload && !folderId){
+          // Get file group info, this returns folderKey and newName of file
+          let fileGroupInfo = getFolderKeyAndNewNameByFileName(file.name)
+
+          // Current folder Group have the key
+          if(fileGroupInfo.folderKey && folderGroup[fileGroupInfo.folderKey]){
+            currentUploadingFolderId = folderGroup[fileGroupInfo.folderKey]
+            // Assign new file name without splash
+            file = new File([file.slice(0, file.size, file.type)],
+                fileGroupInfo.newName
+                , { type: file.type })
+          }
+        }
+
+        // Append file to form data
+        formData.append('asset', assets[i].dragDropFolderUpload ? file : file.originalFile)
+
+        let size = totalSize;
+        // Calculate the rest of size
+        assets.map((asset)=>{
+          // Exclude done assets
+          if(asset.status === 'done'){
+            size -= asset.asset.size
+          }
+        })
+
+        let attachedQuery = {estimateTime: 1, size, totalSize}
+
+
+        // Uploading inside specific folders
+        if(folderId){
+          attachedQuery['folderId'] = folderId
+        }
+
+        // Uploading the new folder
+        if(currentUploadingFolderId){
+          attachedQuery['folderId'] = currentUploadingFolderId
+        }
+
+        // Call API to upload
+        let { data } = await assetApi.uploadAssets(formData, getCreationParameters(attachedQuery))
+
+        // If user is uploading files in folder which is not saved from server yet
+        if(assets[i].dragDropFolderUpload && !folderId){
+          // Get file group info, this returns folderKey and newName of file
+          let fileGroupInfo = getFolderKeyAndNewNameByFileName(file.name)
+
+          /// If user is uploading new folder and this one still does not have folder Id, add it to folder group
+          if(fileGroupInfo.folderKey && !folderGroup[fileGroupInfo.folderKey]){
+            folderGroup[fileGroupInfo.folderKey] = data[0].asset.folderId
+          }
+        }
+
+
+        data = data.map((item) => {
+          item.isSelected = true
+          return item
+        })
+
+        assets[i] = data[0]
+
+        // At this point, file place holder will be removed
+        setAssets([...assets, ...currentDataClone])
+        setAddedIds(data.map(assetItem => assetItem.asset.id))
+
+        // Mark this asset as done
+        const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'done'} : asset);
+
+        setUploadingAssets(updatedAssets)
+
+        // The final one
+        if(i === assets.length - 1){
+          return folderGroup
+        }else{ // Keep going
+          await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup)
+        }
+      }
+    }catch (e){
+      // Violate validation, mark failure
+      const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: 'Processing file error'} : asset);
+
+      // Update uploading assets
+      setUploadingAssets(updatedAssets)
+
+      // Remove current asset from asset placeholder
+      let newAssetPlaceholder = updatedAssets.filter(asset => asset.status !== 'fail')
+
+
+      // At this point, file place holder will be removed
+      setAssets([...newAssetPlaceholder, ...currentDataClone])
+
+      // The final one
+      if(i === assets.length - 1){
+        return folderGroup
+      }else{ // Keep going
+        await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup)
+      }
+    }
+  }
+
   const onFilesDataGet = async (files) => {
     const currentDataClone = [...assets]
     const currenFolderClone = [...folders]
     try {
-      const formData = new FormData()
+      let needsFolderFetch
       const newPlaceholders = []
       const folderPlaceholders = []
       const foldersUploaded = getFoldersFromUploads(files)
+      if (foldersUploaded.length > 0) {
+        needsFolderFetch = true
+      }
       foldersUploaded.forEach(folder => {
         folderPlaceholders.push({
           name: folder,
@@ -114,37 +258,66 @@ const AssetsLibrary = () => {
           createdAt: new Date()
         })
       })
+
+      let totalSize = 0;
       files.forEach(file => {
-        let { originalFile } = file
+
+        let fileToUpload = file;
+        let dragDropFolderUpload = false;
+
+        // Upload folder
+        if (file.originalFile.path.includes('/')) {
+          dragDropFolderUpload = true;
+          fileToUpload = new File([file.originalFile.slice(0, file.originalFile.size, file.originalFile.type)],
+              file.originalFile.path.substring(1, file.originalFile.path.length)
+              , { type: file.originalFile.type })
+        }else{
+          fileToUpload.path = null;
+        }
+
+        totalSize+=file.originalFile.size
         newPlaceholders.push({
           asset: {
-            name: originalFile.name,
+            name: file.originalFile.name,
             createdAt: new Date(),
-            size: originalFile.size,
+            size: file.originalFile.size,
             stage: 'draft',
-            type: 'image'
+            type: 'image',
+            mimeType: file.originalFile.type,
           },
-          isUploading: true
+          file: fileToUpload,
+          status: 'queued',
+          isUploading: true,
+          dragDropFolderUpload, // Drag and drop folder will have different process a bit here
         })
-        const { path, type, size } = originalFile
-        if (path.includes('/')) {
-          originalFile = new File([originalFile.slice(0, size, type)],
-            path.substring(1, path.length)
-            , { type })
-        }
-        formData.append('asset', originalFile)
       })
+
+      // Store current uploading assets for calculation
+      setUploadingAssets(newPlaceholders)
+
+      // Showing assets = uploading assets + existing assets
       setAssets([...newPlaceholders, ...currentDataClone])
       setFolders([...folderPlaceholders, ...currenFolderClone])
-      const { data } = await assetApi.uploadAssets(formData, getCreationParameters())
-      if (activeMode === 'folders') {
+
+      // Start to upload assets
+      let folderGroups = await uploadAsset(0, newPlaceholders, currentDataClone, totalSize, activeFolder)
+
+      // Save this for retry failure files later
+      setFolderGroups(folderGroups)
+
+      // Finish uploading process
+      showUploadProcess('done')
+
+      if (needsFolderFetch) {
         setNeedsFetch('folders')
-      } else {
-        setAddedIds(data.map(assetItem => assetItem.asset.id))
-        setAssets([...data, ...currentDataClone])
       }
-      toastUtils.success(`${data.length} Asset(s) uploaded.`)
+
+      // Do not need toast here because we have already process toast
+      // toastUtils.success(`${data.length} Asset(s) uploaded.`)
     } catch (err) {
+      // Finish uploading process
+      showUploadProcess('done')
+
       setAssets(currentDataClone)
       setFolders(currenFolderClone)
       console.log(err)
@@ -153,12 +326,15 @@ const AssetsLibrary = () => {
     }
   }
 
-  const getCreationParameters = () => {
-    const queryData = {}
+  const getCreationParameters = (attachQuery?: any) => {
+    let queryData: any = {}
     if (activeFolder) {
       queryData.folderId = activeFolder
     }
-
+    // Attach extra query
+    if(attachQuery){
+      queryData = {...queryData, ...attachQuery}
+    }
     return queryData
   }
 
