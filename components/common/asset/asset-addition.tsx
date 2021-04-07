@@ -19,6 +19,7 @@ import FolderModal from '../folder/folder-modal'
 import IconClickable from '../buttons/icon-clickable'
 
 import { validation } from '../../../constants/file-validation'
+import {getFolderKeyAndNewNameByFileName} from "../../../utils/upload";
 
 
 
@@ -39,19 +40,123 @@ const AssetAddition = ({
 	const [activeModal, setActiveModal] = useState('')
 	const [submitError, setSubmitError] = useState('')
 
-	const { assets, setAssets, setNeedsFetch, setAddedIds, activePageMode, folders, setFolders, showUploadProcess, uploadingAssets, setUploadingAssets } = useContext(AssetContext)
+	const {
+		assets,
+		setAssets,
+		setNeedsFetch,
+		setAddedIds,
+		activePageMode,
+		folders,
+		setFolders,
+		showUploadProcess,
+		setUploadingAssets,
+		setUploadingFileName,
+		setFolderGroups
+	} = useContext(AssetContext)
 
 
 	// Upload asset
-	const uploadAsset  = async (i: number, assets: any, currentDataClone: any, totalSize: number, folderId) => {
+	const uploadAsset  = async (i: number, assets: any, currentDataClone: any, totalSize: number, folderId, folderGroup = {}) => {
 		try{
 			const formData = new FormData()
-			const file = assets[i].file
+			let file = assets[i].file.originalFile
+			let currentUploadingFolderId = null
+
+			// Get file group info, this returns folderKey and newName of file
+			let fileGroupInfo = getFolderKeyAndNewNameByFileName(file.webkitRelativePath)
 
 			// Do validation
 			if(assets[i].asset.size > validation.UPLOAD.MAX_SIZE.VALUE){
 				// Violate validation, mark failure
 				const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE} : asset);
+
+				// Update uploading assets
+				setUploadingAssets(updatedAssets)
+
+				// Remove current asset from asset placeholder
+				let newAssetPlaceholder = updatedAssets.filter(asset => asset.status !== 'fail')
+
+
+				// At this point, file place holder will be removed
+				setAssets([...newAssetPlaceholder, ...currentDataClone])
+
+				// The final one
+				if(i === assets.length - 1){
+					return folderGroup
+				}else{ // Keep going
+					await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup)
+				}
+			}else{
+				// Show uploading toast
+				showUploadProcess('uploading', i)
+
+				// Set current upload file name
+				setUploadingFileName(assets[i].asset.name)
+
+
+				// If user is uploading files in folder which is not saved from server yet
+				if(fileGroupInfo.folderKey && !folderId){
+					// Current folder Group have the key
+					if(folderGroup[fileGroupInfo.folderKey]){
+						currentUploadingFolderId = folderGroup[fileGroupInfo.folderKey]
+						// Assign new file name without splash
+						file = new File([file.slice(0, file.size, file.type)],
+							fileGroupInfo.newName
+							, { type: file.type })
+					}
+				}
+
+
+				// Append file to form data
+				formData.append('asset', file)
+
+				let size = totalSize;
+				// Calculate the rest of size
+				assets.map((asset)=>{
+					// Exclude done assets
+					if(asset.status === 'done'){
+						size -= asset.asset.size
+					}
+				})
+
+				let attachedQuery = {estimateTime: 1, size, totalSize}
+
+
+				// Uploading inside specific folders
+				if(folderId){
+					attachedQuery['folderId'] = folderId
+				}
+
+				// Uploading the new folder
+				if(currentUploadingFolderId){
+					attachedQuery['folderId'] = currentUploadingFolderId
+				}
+
+				// Call API to upload
+				let { data } = await assetApi.uploadAssets(formData, getCreationParameters(attachedQuery))
+
+				// If user is uploading files in folder which is not saved from server yet
+				if(fileGroupInfo.folderKey && !folderId){
+					/// If user is uploading new folder and this one still does not have folder Id, add it to folder group
+					if(!folderGroup[fileGroupInfo.folderKey]){
+						folderGroup[fileGroupInfo.folderKey] = data[0].asset.folderId
+					}
+				}
+
+
+				data = data.map((item) => {
+					item.isSelected = true
+					return item
+				})
+
+				assets[i] = data[0]
+
+				// At this point, file place holder will be removed
+				setAssets([...assets, ...currentDataClone])
+				setAddedIds(data.map(assetItem => assetItem.asset.id))
+
+				// Mark this asset as done
+				const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'done'} : asset);
 
 				setUploadingAssets(updatedAssets)
 
@@ -59,67 +164,28 @@ const AssetAddition = ({
 				if(i === assets.length - 1){
 					return
 				}else{ // Keep going
-					await uploadAsset(i+1, assets, currentDataClone, totalSize, folderId)
+					await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup)
 				}
 			}
+		}catch (e){
+			// Violate validation, mark failure
+			const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: 'Processing file error'} : asset);
 
-			// Show uploading toast
-			showUploadProcess('uploading', i)
+			// Update uploading assets
+			setUploadingAssets(updatedAssets)
 
-			// Append file to form data
-			formData.append('asset', file.path || file.originalFile)
-
-			let size = totalSize;
-			// Calculate the rest of size
-			assets.map((asset)=>{
-				// Exclude done assets
-				if(asset.status === 'done'){
-					size -= asset.asset.size
-				}
-			})
-
-			let attachedQuery = {estimateTime: 1, size}
-
-			if(folderId){
-				attachedQuery['folderId'] = folderId
-			}
-
-			// Call API to upload
-			let { data } = await assetApi.uploadAssets(formData, getCreationParameters(
-				attachedQuery))
-			data = data.map((item) => {
-				item.isSelected = true
-				return item
-			})
+			// Remove current asset from asset placeholder
+			let newAssetPlaceholder = updatedAssets.filter(asset => asset.status !== 'fail')
 
 
 			// At this point, file place holder will be removed
-			setAssets([...data, ...currentDataClone])
-			setAddedIds(data.map(assetItem => assetItem.asset.id))
-
-			// Mark this asset as done
-			const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'done'} : asset);
-
-			setUploadingAssets(updatedAssets)
+			setAssets([...newAssetPlaceholder, ...currentDataClone])
 
 			// The final one
 			if(i === assets.length - 1){
-				return
+				return folderGroup
 			}else{ // Keep going
-				let newFolderId = data[0].asset.folderId;
-				await uploadAsset(i+1, updatedAssets, [...data, ...currentDataClone], totalSize, newFolderId ? newFolderId : null)
-			}
-		}catch (e){
-			// Mark this asset as fail
-			const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: e.message} : asset);
-
-			setUploadingAssets(updatedAssets)
-
-			// The final one
-			if(i === assets.length - 1){
-				return
-			}else{ // Keep going
-				await uploadAsset(i+1, assets,  currentDataClone, totalSize, folderId)
+				await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup)
 			}
 		}
 	}
@@ -172,7 +238,10 @@ const AssetAddition = ({
 			setFolders([...folderPlaceholders, ...currenFolderClone])
 
 			// Start to upload assets
-			await uploadAsset(0, newPlaceholders, currentDataClone, totalSize, activeFolder)
+			let folderGroups =  await uploadAsset(0, newPlaceholders, currentDataClone, totalSize, activeFolder)
+
+			// Save this for retry failure files later
+			setFolderGroups(folderGroups)
 
 			// Finish uploading process
 			showUploadProcess('done')
@@ -198,13 +267,15 @@ const AssetAddition = ({
 	const onDropboxFilesSelection = async (files) => {
 		const currentDataClone = [...assets]
 		try {
+			let totalSize = 0;
 			const newPlaceholders = []
 			files.forEach(file => {
+				totalSize += file.bytes
 				newPlaceholders.push({
 					asset: {
 						name: file.name,
 						createdAt: new Date(),
-						size: file.size,
+						size: file.bytes,
 						stage: 'draft',
 						type: 'image'
 					},
@@ -212,10 +283,23 @@ const AssetAddition = ({
 				})
 			})
 			setAssets([...newPlaceholders, ...currentDataClone])
-			const { data } = await assetApi.importAssets('dropbox', files.map(file => ({ link: file.link, name: file.name, size: file.bytes })), getCreationParameters())
+
+			// Update uploading assets
+			setUploadingAssets(newPlaceholders)
+
+			// Show uploading process
+			showUploadProcess('uploading')
+
+			// Show message
+			setUploadingFileName('Importing files from Drop Box')
+
+			const { data } = await assetApi.importAssets('dropbox', files.map(file => ({ link: file.link, name: file.name, size: file.bytes })), getCreationParameters({estimateTime: 1, totalSize}))
 			setAssets([...data, ...currentDataClone])
 			setAddedIds(data.id)
-			toastUtils.success('Assets imported.')
+
+			// Mark process as done
+			showUploadProcess('none')
+			// toastUtils.success('Assets imported.')
 		} catch (err) {
 			//TODO: Handle error
 			setAssets(currentDataClone)
