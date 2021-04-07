@@ -1,13 +1,13 @@
 .container {
   position: fixed;
   top: 25px;
-  right: 20%;
-  padding: 5px 20px;
-  border-radius: 15px;
+  right: 17%;
+  padding: 15px 20px;
+  border-radius: 20px;
   background-color: var(--color-prim-turquoise);
   color: white;
-  max-width: 500px;
-  width: 50%;
+  max-width: 550px;
+  width: 60%;
   z-index: 100;
   min-height: 40px;
 }
@@ -15,6 +15,10 @@
 .center-align{
   display: flex;
   align-items: center;
+}
+
+.less-margin-bottom{
+  padding: 15px 20px 5px 20px;
 }
 
 .no-margin{
@@ -38,12 +42,18 @@
 
 .row{
   margin-bottom: -7px;
+  width: 100%;
 }
 
 .row span{
   margin-right: 10px;
-  font-size: 9px;
+  font-size: 12px;
   font-weight: bold;
+  display: inline-flex;
+  max-width: 50%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .close-button{
@@ -53,4 +63,8 @@
   font-weight: 900;
   font-family: monospace;
   cursor: pointer;
+}
+
+.fail-text{
+  margin-left: 5px;
 }
