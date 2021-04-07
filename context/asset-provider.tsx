@@ -1,7 +1,7 @@
 import {useContext, useEffect, useState} from 'react'
 import { AssetContext, SocketContext } from '../context'
 
-import { convertTimeFromSeconds } from "../utils/upload"
+import {convertTimeFromSeconds, getFolderKeyAndNewNameByFileName} from "../utils/upload"
 
 import assetApi from '../server-api/asset'
 
@@ -58,6 +58,7 @@ export default ({ children }) => {
     const [uploadingFileName, setUploadingFileName] = useState<string>() // Current uploading file name, import feature need this
     const [uploadRemainingTime, setUploadRemainingTime] = useState<string>("") // Remaining time
     const [uploadDetailOverlay, setUploadDetailOverlay] = useState(false) // Detail overlay
+    const [folderGroups, setFolderGroups] = useState() // This groups contain all folder key which is need to identity which folder file need to be saved to
 
     const setPlaceHolders = (type, replace = true) => {
         if (type === 'asset') {
@@ -150,10 +151,15 @@ export default ({ children }) => {
     }
 
     // Upload asset
-    const reUploadAsset  = async (i: number, assets: any, currentDataClone: any, totalSize: number, retryList: any[], folderId) => {
+    const reUploadAsset  = async (i: number, assets: any, currentDataClone: any, totalSize: number, retryList: any[], folderId, folderGroup = {}) => {
         try{
             const formData = new FormData()
-            const file = retryList[i].file
+            let file = retryList[i].file.originalFile
+
+            let currentUploadingFolderId = null
+
+            // Get file group info, this returns folderKey and newName of file
+            let fileGroupInfo = getFolderKeyAndNewNameByFileName(file.webkitRelativePath)
 
             // Do validation
             if(retryList[i].asset.size > validation.UPLOAD.MAX_SIZE.VALUE){
@@ -174,15 +180,30 @@ export default ({ children }) => {
                 if(i === assets.length - 1){
                     return
                 }else{ // Keep going
-                    await reUploadAsset(i+1, updatedAssets, currentDataClone, totalSize, updatedAssets, folderId)
+                    await reUploadAsset(i+1, updatedAssets, currentDataClone, totalSize, updatedAssets, folderId, folderGroup)
                 }
             }
 
             // Show uploading toast
             showUploadProcess('uploading', i)
 
+            // Set current upload file name
+            setUploadingFileName(retryList[i].asset.name)
+
+            // If user is uploading files in folder which is not saved from server yet
+            if(fileGroupInfo.folderKey && !folderId){
+                // Current folder Group have the key
+                if(folderGroup[fileGroupInfo.folderKey]){
+                    currentUploadingFolderId = folderGroup[fileGroupInfo.folderKey]
+                    // Assign new file name without splash
+                    file = new File([file.slice(0, file.size, file.type)],
+                        fileGroupInfo.newName
+                        , { type: file.type })
+                }
+            }
+
             // Append file to form data
-            formData.append('asset', file.path || file.originalFile)
+            formData.append('asset', file)
 
             let size = totalSize;
             // Calculate the rest of size
@@ -199,11 +220,24 @@ export default ({ children }) => {
                 attachedQuery['folderId'] = folderId
             }
 
+            // Uploading the new folder
+            if(currentUploadingFolderId){
+                attachedQuery['folderId'] = currentUploadingFolderId
+            }
+
             // Call API to upload
             let { data } = await assetApi.uploadAssets(formData, getCreationParameters(
                 attachedQuery))
 
-            // Mark
+            // If user is uploading files in folder which is not saved from server yet
+            if(fileGroupInfo.folderKey && !folderId){
+                /// If user is uploading new folder and this one still does not have folder Id, add it to folder group
+                if(!folderGroup[fileGroupInfo.folderKey]){
+                    folderGroup[fileGroupInfo.folderKey] = data[0].asset.folderId
+                }
+            }
+
+            // Mark asset selected
             data = data.map((item) => {
                 item.isSelected = true
                 return item
@@ -226,12 +260,11 @@ export default ({ children }) => {
                 // Finish uploading process
                 showUploadProcess('done')
             }else{ // Keep going
-                const newFolderId = data[0].asset.folderId
-                await reUploadAsset(i+1, updatedAssets, currentDataClone, totalSize, retryList, newFolderId ? newFolderId : null)
+                await reUploadAsset(i+1, updatedAssets, currentDataClone, totalSize, retryList, folderId, folderGroup)
             }
         }catch (e){
             // Violate validation, mark failure
-            const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: e.message} : asset);
+            const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: 'Processing file error'} : asset);
 
             // Update uploading assets
             setUploadingAssets(updatedAssets)
@@ -247,7 +280,7 @@ export default ({ children }) => {
             if(i === assets.length - 1){
                 return
             }else{ // Keep going
-                await reUploadAsset(i+1, updatedAssets, currentDataClone, totalSize, retryList, folderId)
+                await reUploadAsset(i+1, updatedAssets, currentDataClone, totalSize, retryList, folderId, folderGroup)
             }
         }
     }
@@ -256,14 +289,16 @@ export default ({ children }) => {
         setUploadingFileName(name)
     }
 
+    const updateFolderGroups = (value) => {
+        setFolderGroups(value)
+    }
+
     // Init socket listener
     useEffect(()=>{
         if(socket){
             // console.log(`Register listener...`)
             // Listen upload file process event
             socket.on('uploadFilesProgress', function(data){
-                // console.log(`uploadFilesProgress...`)
-                // console.log(data)
                 setUploadingPercent(data.percent)
                 setUploadRemainingTime(`${convertTimeFromSeconds(data.timeLeft)} remaining`)
 
@@ -319,7 +354,9 @@ export default ({ children }) => {
         setUploadDetailOverlay: openUploadDetailOverlay,
         reUploadAsset,
         uploadingFileName,
-        setUploadingFileName: updateUploadingFileName
+        setUploadingFileName: updateUploadingFileName,
+        folderGroups,
+        setFolderGroups: updateFolderGroups
 
     }
     return (

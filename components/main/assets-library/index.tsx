@@ -43,7 +43,8 @@ const AssetsLibrary = () => {
     setUploadDetailOverlay,
     setUploadingAssets,
     showUploadProcess,
-    setUploadingFileName
+    setUploadingFileName,
+    setFolderGroups
   } = useContext(AssetContext)
 
   const [activeMode, setActiveMode] = useState('assets')
@@ -126,7 +127,7 @@ const AssetsLibrary = () => {
 
         // The final one
         if(i === assets.length - 1){
-          return
+          return folderGroup
         }else{ // Keep going
           await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup)
         }
@@ -209,14 +210,14 @@ const AssetsLibrary = () => {
 
         // The final one
         if(i === assets.length - 1){
-          return
+          return folderGroup
         }else{ // Keep going
           await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup)
         }
       }
     }catch (e){
       // Violate validation, mark failure
-      const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: e.message} : asset);
+      const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: 'Processing file error'} : asset);
 
       // Update uploading assets
       setUploadingAssets(updatedAssets)
@@ -230,7 +231,7 @@ const AssetsLibrary = () => {
 
       // The final one
       if(i === assets.length - 1){
-        return
+        return folderGroup
       }else{ // Keep going
         await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup)
       }
@@ -299,7 +300,10 @@ const AssetsLibrary = () => {
       setFolders([...folderPlaceholders, ...currenFolderClone])
 
       // Start to upload assets
-      await uploadAsset(0, newPlaceholders, currentDataClone, totalSize, activeFolder)
+      let folderGroups = await uploadAsset(0, newPlaceholders, currentDataClone, totalSize, activeFolder)
+
+      // Save this for retry failure files later
+      setFolderGroups(folderGroups)
 
       // Finish uploading process
       showUploadProcess('done')
