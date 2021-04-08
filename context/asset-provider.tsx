@@ -59,6 +59,9 @@ export default ({ children }) => {
     const [uploadRemainingTime, setUploadRemainingTime] = useState<string>("") // Remaining time
     const [uploadDetailOverlay, setUploadDetailOverlay] = useState(false) // Detail overlay
     const [folderGroups, setFolderGroups] = useState() // This groups contain all folder key which is need to identity which folder file need to be saved to
+    // For dropbox upload process
+    const [uploadSourceType, setUploadSourceType] = useState() // This maybe local or dropbox
+    const [dropboxUploadingFile, setDropboxUploadingFile] = useState() // Current dropbox uploading file index, this is received from server
 
     const setPlaceHolders = (type, replace = true) => {
         if (type === 'asset') {
@@ -293,6 +296,10 @@ export default ({ children }) => {
         setFolderGroups(value)
     }
 
+    const updateUploadSourceType = (value) => {
+        setUploadSourceType(value)
+    }
+
     // Init socket listener
     useEffect(()=>{
         if(socket){
@@ -310,7 +317,7 @@ export default ({ children }) => {
 
                 // setUploadingFile(0)
                 if(!isNaN(data.uploadingAssets)){
-                    setUploadingFile(data.uploadingAssets)
+                    setDropboxUploadingFile(data.uploadingAssets)
                 }
             })
         }
@@ -357,7 +364,10 @@ export default ({ children }) => {
         uploadingFileName,
         setUploadingFileName: updateUploadingFileName,
         folderGroups,
-        setFolderGroups: updateFolderGroups
+        setFolderGroups: updateFolderGroups,
+        setUploadSourceType: updateUploadSourceType,
+        dropboxUploadingFile,
+        uploadSourceType
 
     }
     return (

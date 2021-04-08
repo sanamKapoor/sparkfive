@@ -16,19 +16,35 @@ const AssetUploadProcess = () => {
         uploadRemainingTime,
         uploadingPercent,
         setUploadDetailOverlay,
-        uploadingFileName
+        uploadingFileName,
+        dropboxUploadingFile,
+        uploadSourceType
     } = useContext(AssetContext)
 
     const uploadedAssets = uploadingAssets.filter(asset => asset.status === 'done')
     const failAssetsCount = uploadingAssets.filter(asset => asset.status === 'fail').length
 
+
     return <div className={clsx(styles.container, {[styles['center-align']]: uploadingStatus === 'done', [styles['less-margin-bottom']]: uploadingStatus === 'uploading'})}>
         <div className={clsx(styles.row, styles['no-margin'])}>
             {uploadingStatus === 'uploading' && <>
-            <span>{uploadingFileName}</span>
-            {!isNaN(uploadingFile) && <span>{uploadingFile+1} of {uploadingAssets.length} assets</span>}
-                <span>{uploadRemainingTime}</span>
+            <span>
+                {<span className={styles['no-wrap-text']}>
+                    {uploadingFileName}
+                </span>
+                }
+            </span>
+
+
+            {uploadSourceType !== 'dropbox' && !isNaN(uploadingFile) &&
+            <span className={styles['processing-file-count']}>{uploadingFile+1} of {uploadingAssets.length} assets</span>}
             </>}
+
+            {uploadingStatus === 'uploading' && <>
+                {uploadSourceType === 'dropbox' && !isNaN(dropboxUploadingFile) &&
+                <span className={styles['processing-file-count']}>{dropboxUploadingFile+1} of {uploadingAssets.length} assets</span>}
+            </>}
+
             {uploadingStatus === 'done' &&
                 <span>{uploadedAssets.length} assets uploaded successfully.
                     {failAssetsCount > 0 && <span className={styles['fail-text']}>{failAssetsCount} failed</span>}

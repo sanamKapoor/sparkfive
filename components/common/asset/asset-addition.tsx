@@ -51,7 +51,8 @@ const AssetAddition = ({
 		showUploadProcess,
 		setUploadingAssets,
 		setUploadingFileName,
-		setFolderGroups
+		setFolderGroups,
+		setUploadSourceType
 	} = useContext(AssetContext)
 
 
@@ -293,12 +294,22 @@ const AssetAddition = ({
 			// Show message
 			setUploadingFileName('Importing files from Drop Box')
 
+			setUploadSourceType('dropbox')
 			const { data } = await assetApi.importAssets('dropbox', files.map(file => ({ link: file.link, name: file.name, size: file.bytes })), getCreationParameters({estimateTime: 1, totalSize}))
 			setAssets([...data, ...currentDataClone])
 			setAddedIds(data.id)
 
+			// Mark done
+			const updatedAssets = data.map(asset => { return {...asset, status: 'done'}});
+
+			// Update uploading assets
+			setUploadingAssets(updatedAssets)
+
 			// Mark process as done
-			showUploadProcess('none')
+			showUploadProcess('done')
+
+			// Reset upload source type
+			setUploadSourceType('')
 			// toastUtils.success('Assets imported.')
 		} catch (err) {
 			//TODO: Handle error
