@@ -25,7 +25,7 @@ const loadingDefaultFolder = {
 }
 
 export default ({ children }) => {
-    const { socket } = useContext(SocketContext);
+    const { socket, connected } = useContext(SocketContext);
 
     const [assets, setAssets] = useState([])
     const [folders, setFolders] = useState([])
@@ -99,11 +99,11 @@ export default ({ children }) => {
             setCompletedAssets([...completedAssets.filter(asset => !asset.isLoading), ...inputAssets])
     }
 
-    const setFolderItems = (inputFolders, replace = true) => {
+    const setFolderItems = (inputFolders, replace = true, ignoreTotalItem = false) => {
         const { results, next, total } = inputFolders
         if (results) inputFolders = results
         if (next) setNextPage(next)
-        if (total) setTotalAssets(total)
+        if (total && !ignoreTotalItem) setTotalAssets(total)
 
         if (replace)
             setFolders(inputFolders)
@@ -302,7 +302,8 @@ export default ({ children }) => {
 
     // Init socket listener
     useEffect(()=>{
-        if(socket){
+        // Socket is available and connected
+        if(socket && connected){
             console.log(`Register socket listener...`)
             // Listen upload file process event
             socket.on('uploadFilesProgress', function(data){
@@ -321,7 +322,7 @@ export default ({ children }) => {
                 }
             })
         }
-    },[socket])
+    },[socket, connected])
 
     const assetsValue = {
         assets,
