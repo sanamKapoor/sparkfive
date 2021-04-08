@@ -64,6 +64,7 @@ export default ({ children }) => {
   }
 
   const logOut = () => {
+    setUser(null)
     cookiesUtils.remove('jwt')
     requestsUtils.removeAuthToken()
     Router.replace('/login')

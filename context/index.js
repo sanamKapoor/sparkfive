@@ -38,7 +38,7 @@ export const AssetContext = createContext({
     completedAssets: [],
     setCompletedAssets: (assets, replace) => { },
     folders: [],
-    setFolders: (folders, replace) => { },
+    setFolders: (folders, replace, ignoreTotalItems) => { },
     setPlaceHolders: (type, replace) => { },
     operationAsset: null,
     setOperationAsset: (asset) => { },
@@ -169,4 +169,6 @@ export const ShareContext = createContext({
 
 export const SocketContext = createContext({
     socket: undefined,
+    connected: false,
+    socketLogout: () => { }
 })
