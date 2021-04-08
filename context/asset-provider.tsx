@@ -99,11 +99,11 @@ export default ({ children }) => {
             setCompletedAssets([...completedAssets.filter(asset => !asset.isLoading), ...inputAssets])
     }
 
-    const setFolderItems = (inputFolders, replace = true) => {
+    const setFolderItems = (inputFolders, replace = true, ignoreTotalItem = false) => {
         const { results, next, total } = inputFolders
         if (results) inputFolders = results
         if (next) setNextPage(next)
-        if (total) setTotalAssets(total)
+        if (total && !ignoreTotalItem) setTotalAssets(total)
 
         if (replace)
             setFolders(inputFolders)
