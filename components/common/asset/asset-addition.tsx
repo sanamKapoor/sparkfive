@@ -52,7 +52,9 @@ const AssetAddition = ({
 		setUploadingAssets,
 		setUploadingFileName,
 		setFolderGroups,
-		setUploadSourceType
+		setUploadSourceType,
+		setTotalAssets,
+		totalAssets
 	} = useContext(AssetContext)
 
 
@@ -62,6 +64,7 @@ const AssetAddition = ({
 			const formData = new FormData()
 			let file = assets[i].file.originalFile
 			let currentUploadingFolderId = null
+			let newAssets = 0
 
 			// Get file group info, this returns folderKey and newName of file
 			let fileGroupInfo = getFolderKeyAndNewNameByFileName(file.webkitRelativePath)
@@ -117,6 +120,7 @@ const AssetAddition = ({
 					// Exclude done assets
 					if(asset.status === 'done'){
 						size -= asset.asset.size
+						newAssets+=1
 					}
 				})
 
@@ -155,6 +159,9 @@ const AssetAddition = ({
 				// At this point, file place holder will be removed
 				setAssets([...assets, ...currentDataClone])
 				setAddedIds(data.map(assetItem => assetItem.asset.id))
+
+				// Update total assets
+				setTotalAssets(totalAssets + newAssets +1)
 
 				// Mark this asset as done
 				const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'done'} : asset);

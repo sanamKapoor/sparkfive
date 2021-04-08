@@ -44,7 +44,9 @@ const AssetsLibrary = () => {
     setUploadingAssets,
     showUploadProcess,
     setUploadingFileName,
-    setFolderGroups
+    setFolderGroups,
+    totalAssets,
+    setTotalAssets
   } = useContext(AssetContext)
 
   const [activeMode, setActiveMode] = useState('assets')
@@ -109,6 +111,7 @@ const AssetsLibrary = () => {
       const formData = new FormData()
       let file = assets[i].file
       let currentUploadingFolderId = null
+      let newAssets = 0
 
       // Do validation
       if(assets[i].asset.size > validation.UPLOAD.MAX_SIZE.VALUE){
@@ -160,6 +163,7 @@ const AssetsLibrary = () => {
         assets.map((asset)=>{
           // Exclude done assets
           if(asset.status === 'done'){
+            newAssets+=1
             size -= asset.asset.size
           }
         })
@@ -207,6 +211,9 @@ const AssetsLibrary = () => {
         const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'done'} : asset);
 
         setUploadingAssets(updatedAssets)
+
+        // Update total assets
+        setTotalAssets(totalAssets + newAssets +1)
 
         // The final one
         if(i === assets.length - 1){

@@ -158,6 +158,7 @@ export default ({ children }) => {
         try{
             const formData = new FormData()
             let file = retryList[i].file.originalFile
+            let newAssets = 0
 
             let currentUploadingFolderId = null
 
@@ -214,6 +215,7 @@ export default ({ children }) => {
                 // Exclude done assets
                 if(asset.status === 'done'){
                     size -= asset.asset.size
+                    newAssets+=1
                 }
             })
 
@@ -252,6 +254,9 @@ export default ({ children }) => {
             // At this point, file place holder will be removed
             setAssets([...assets, ...currentDataClone])
             setAddedIds(data.map(assetItem => assetItem.asset.id))
+
+            // Update total assets
+            setTotalAssets(totalAssets + newAssets +1)
 
             // Mark this asset as done
             const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'done'} : asset);
@@ -298,6 +303,10 @@ export default ({ children }) => {
 
     const updateUploadSourceType = (value) => {
         setUploadSourceType(value)
+    }
+
+    const updateTotalAssets = (value: number) => {
+        setTotalAssets(value)
     }
 
     // Init socket listener
@@ -368,7 +377,8 @@ export default ({ children }) => {
         setFolderGroups: updateFolderGroups,
         setUploadSourceType: updateUploadSourceType,
         dropboxUploadingFile,
-        uploadSourceType
+        uploadSourceType,
+        setTotalAssets: updateTotalAssets
 
     }
     return (
