@@ -169,4 +169,6 @@ export const ShareContext = createContext({
 
 export const SocketContext = createContext({
     socket: undefined,
+    connected: false,
+    socketLogout: () => { }
 })
