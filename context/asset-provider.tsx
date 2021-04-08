@@ -296,9 +296,10 @@ export default ({ children }) => {
     // Init socket listener
     useEffect(()=>{
         if(socket){
-            // console.log(`Register listener...`)
+            console.log(`Register socket listener...`)
             // Listen upload file process event
             socket.on('uploadFilesProgress', function(data){
+                console.log(data)
                 setUploadingPercent(data.percent)
                 setUploadRemainingTime(`${convertTimeFromSeconds(data.timeLeft)} remaining`)
 
