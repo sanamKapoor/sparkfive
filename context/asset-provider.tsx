@@ -63,6 +63,12 @@ export default ({ children }) => {
     const [uploadSourceType, setUploadSourceType] = useState() // This maybe local or dropbox
     const [dropboxUploadingFile, setDropboxUploadingFile] = useState() // Current dropbox uploading file index, this is received from server
 
+    // Download process
+    const [totalDownloadingAssets, setTotalDownloadingAssets] = useState(0)
+    const [downloadingStatus, setDownloadingStatus] = useState("none") // Allowed value: "none", "zipping", "done"
+    const [downloadingPercent, setDownloadingPercent] = useState(0) // Percent of uploading process: 0 - 100
+
+
     const setPlaceHolders = (type, replace = true) => {
         if (type === 'asset') {
             if (replace)
@@ -309,6 +315,20 @@ export default ({ children }) => {
         setTotalAssets(value)
     }
 
+    const updateDownloadingStatus = (status, percent, totalDownloadingAssets) => {
+        if(status){
+            setDownloadingStatus(status)
+        }
+
+        if(!isNaN(percent)){
+            setDownloadingPercent(percent)
+        }
+
+        if(!isNaN(totalDownloadingAssets)){
+            setTotalDownloadingAssets(totalDownloadingAssets)
+        }
+    }
+
     // Init socket listener
     useEffect(()=>{
         // Socket is available and connected
@@ -329,6 +349,11 @@ export default ({ children }) => {
                 if(!isNaN(data.uploadingAssets)){
                     setDropboxUploadingFile(data.uploadingAssets)
                 }
+            })
+
+            socket.on('downloadFilesProgress', function(data){
+                console.log(data)
+                setDownloadingPercent(data.percent)
             })
         }
     },[socket, connected])
@@ -378,7 +403,11 @@ export default ({ children }) => {
         setUploadSourceType: updateUploadSourceType,
         dropboxUploadingFile,
         uploadSourceType,
-        setTotalAssets: updateTotalAssets
+        setTotalAssets: updateTotalAssets,
+        downloadingStatus,
+        downloadingPercent,
+        totalDownloadingAssets,
+        updateDownloadingStatus,
 
     }
     return (

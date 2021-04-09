@@ -32,5 +32,15 @@ export default {
 
   addFolder: (id, data) => axios.post(`${assetUrl}/${id}/folders`, data),
   removeFolder: (id, folderId) => axios.delete(`${assetUrl}/${id}/folders/${folderId}`),
-  getBulkProperties: (data) => axios.post(`${assetUrl}/bulk-properties`, data)
+  getBulkProperties: (data) => axios.post(`${assetUrl}/bulk-properties`, data),
+
+
+  downloadAll: (data, filters) => {
+    return axios({
+      url: `${assetUrl}/download?${querystring.encode(filters)}`,
+      method: 'POST',
+      responseType: 'blob', // Important
+      data
+    })
+  }
 }
