@@ -1,0 +1,96 @@
+.container {
+  position: fixed;
+  top: 25px;
+  right: 17%;
+  padding: 15px 20px;
+  border-radius: 20px;
+  background-color: var(--color-prim-turquoise);
+  color: white;
+  max-width: 550px;
+  width: 60%;
+  z-index: 100;
+  min-height: 40px;
+}
+
+.center-align{
+  display: flex;
+  align-items: center;
+}
+
+.less-margin-bottom{
+  padding: 15px 20px 5px 20px;
+}
+
+.no-margin{
+  margin-bottom: 0 !important;
+}
+
+.underline-text{
+  text-decoration: underline;
+  font-weight: normal !important;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+  .container{
+    left: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+
+.row{
+  margin-bottom: -7px;
+  width: 100%;
+}
+
+.row span{
+  margin-right: 10px;
+  font-size: 12px;
+  font-weight: bold;
+  display: inline-flex;
+  max-width: 70%;
+  min-width: 70%;
+}
+
+.row span.processing-file-count{
+  max-width: 25%;
+  min-width: 25%;
+}
+
+@media screen and (max-width: 650px) {
+  .row span.processing-file-count{
+    max-width: 100%;
+    min-width: 100%;
+  }
+
+  .row span{
+    max-width: 100%;
+    min-width: 100%;
+  }
+}
+
+.row span .no-wrap-text{
+  font-size: 12px;
+  font-weight: bold;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  min-width: 100%;
+}
+
+.close-button{
+  position: absolute;
+  right: 15px;
+  top: 0;
+  font-weight: 900;
+  font-family: monospace;
+  cursor: pointer;
+}
+
+.fail-text{
+  margin-left: 5px;
+}

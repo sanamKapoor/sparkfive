@@ -10,6 +10,12 @@ export default ({ children }) => {
 
   const { user } = useContext(UserContext)
 
+  // Unregister socket events
+  const unregisterEvents = (client) => {
+    client.off('uploadFilesProgress');
+    client.off('downloadFilesProgress');
+  }
+
   const connectSocket = async () => {
     // If socket has already connected
     if (connected) return
@@ -32,7 +38,7 @@ export default ({ children }) => {
       client.on('disconnect', function (){
         setConnected(false)
         // Destroy event
-        client.off('uploadFilesProgress');
+        unregisterEvents(client)
 
         setSocketInstance(null)
       })
@@ -43,7 +49,7 @@ export default ({ children }) => {
 
         setConnected(false)
         // Destroy event
-        client.off('uploadFilesProgress');
+        unregisterEvents(client)
         setSocketInstance(null)
       })
 
@@ -51,7 +57,7 @@ export default ({ children }) => {
         console.log(`Socket closed`)
         setConnected(false)
         // Destroy event
-        client.off('uploadFilesProgress');
+        unregisterEvents(client)
         setSocketInstance(null)
       })
     }

@@ -88,7 +88,12 @@ export const AssetContext = createContext({
     dropboxUploadingFile: undefined,
     setUploadSourceType: (value) => { },
 
-    setTotalAssets: (value) => { }
+    setTotalAssets: (value) => { },
+
+    downloadingPercent: 0,
+    downloadingStatus: 'none',
+    totalDownloadingAssets: 0,
+    updateDownloadingStatus: (status, percent, totalAssets) => { },
 })
 
 export const TeamContext = createContext({

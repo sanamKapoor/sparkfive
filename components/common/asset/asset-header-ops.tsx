@@ -1,11 +1,22 @@
-import styles from './asset-header-ops.module.css'
+// External
 import { useContext } from 'react'
-import { AssetContext, UserContext } from '../../../context'
+import fileDownload from 'js-file-download';
+
+
+import styles from './asset-header-ops.module.css'
+
+// Contexts
+import { AssetContext, UserContext, FilterContext } from '../../../context'
+
+// Utils
 import downloadUtils from '../../../utils/download'
-
 import { ASSET_DOWNLOAD } from '../../../constants/permissions'
+import { getAssetsFilters } from '../../../utils/asset'
+import assetApi from '../../../server-api/asset'
 
+// Components
 import { AssetOps } from '../../../assets'
+
 
 // Components
 import Button from '../../common/buttons/button'
@@ -20,10 +31,14 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 		setActiveOperation,
 		selectedAllAssets,
 		selectAllAssets,
-		totalAssets
+		totalAssets,
+		activeFolder,
+		updateDownloadingStatus
 	} = useContext(AssetContext)
 
 	const { hasPermission } = useContext(UserContext)
+
+	const {  activeSortFilter, term } = useContext(FilterContext)
 
 	const selectedAssets = assets.filter(asset => asset.isSelected)
 	let totalSelectAssets = selectedAssets.length;
@@ -39,7 +54,53 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 	const selectedFolders = folders.filter(folder => folder.isSelected)
 
 	const downloadSelectedAssets = async () => {
-		downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets')
+		let payload = {
+			assetIds: []
+		};
+
+		let totalDownloadingAssets = 0;
+		let filters = {
+			estimateTime: 1
+		}
+
+		if(selectedAllAssets){
+			totalDownloadingAssets = totalAssets
+			// Download all assets without pagination
+			filters = {
+				...getAssetsFilters({
+					replace: false,
+					activeFolder,
+					addedIds: [],
+					nextPage: 1,
+					userFilterObject: activeSortFilter
+				}),
+				selectedAll: 1,
+				estimateTime: 1
+			};
+
+			if(term){
+				// @ts-ignore
+				filters.term = term;
+			}
+			// @ts-ignore
+			delete filters.page
+		}else{
+			totalDownloadingAssets = selectedAssets.length
+			payload.assetIds = selectedAssets.map(assetItem => assetItem.asset.id)
+		}
+
+
+		// Show processing bar
+		updateDownloadingStatus('zipping', 0, totalDownloadingAssets)
+
+		const { data } = await assetApi.downloadAll(payload,filters)
+
+		// Download file to storage
+		fileDownload(data, 'assets.zip');
+
+		updateDownloadingStatus('done', 0, 0)
+
+		// downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets')
 	}
 
 	const deselectAll = () => {
