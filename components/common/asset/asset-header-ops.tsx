@@ -59,7 +59,9 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 		};
 
 		let totalDownloadingAssets = 0;
-		let filters = {}
+		let filters = {
+			estimateTime: 1
+		}
 
 		if(selectedAllAssets){
 			totalDownloadingAssets = totalAssets
@@ -72,7 +74,7 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 					nextPage: 1,
 					userFilterObject: activeSortFilter
 				}),
-				selectedAll: '1',
+				selectedAll: 1,
 				estimateTime: 1
 			};
 
