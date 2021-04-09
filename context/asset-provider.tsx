@@ -65,8 +65,9 @@ export default ({ children }) => {
 
     // Download process
     const [totalDownloadingAssets, setTotalDownloadingAssets] = useState(0)
-    const [downloadingStatus, setDownloadingStatus] = useState("none") // Allowed value: "none", "zipping", "done"
+    const [downloadingStatus, setDownloadingStatus] = useState("none") // Allowed value: "none", "zipping", "done", "error"
     const [downloadingPercent, setDownloadingPercent] = useState(0) // Percent of uploading process: 0 - 100
+    const [downloadingError, setDownloadingError] = useState('') // Percent of uploading process: 0 - 100
 
 
     const setPlaceHolders = (type, replace = true) => {
@@ -315,7 +316,7 @@ export default ({ children }) => {
         setTotalAssets(value)
     }
 
-    const updateDownloadingStatus = (status, percent, totalDownloadingAssets) => {
+    const updateDownloadingStatus = (status, percent, totalDownloadingAssets, error) => {
         if(status){
             setDownloadingStatus(status)
         }
@@ -326,6 +327,10 @@ export default ({ children }) => {
 
         if(!isNaN(totalDownloadingAssets)){
             setTotalDownloadingAssets(totalDownloadingAssets)
+        }
+
+        if(error){
+            setDownloadingError(error)
         }
     }
 
@@ -407,6 +412,7 @@ export default ({ children }) => {
         downloadingStatus,
         downloadingPercent,
         totalDownloadingAssets,
+        downloadingError,
         updateDownloadingStatus,
 
     }
