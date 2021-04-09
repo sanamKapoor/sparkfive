@@ -12,7 +12,8 @@ const AssetDownloadProcess = () => {
         downloadingPercent,
         downloadingStatus,
         updateDownloadingStatus,
-        totalDownloadingAssets
+        totalDownloadingAssets,
+        downloadingError
     } = useContext(AssetContext)
 
 
@@ -36,8 +37,10 @@ const AssetDownloadProcess = () => {
 
             {downloadingStatus === 'done' && <span>Download ready</span>}
 
-            {downloadingStatus === 'done' &&
-                <div className={styles['close-button']} onClick={()=>{updateDownloadingStatus('none', 0, 0)}}>
+            {downloadingStatus === 'error' && <span>{downloadingError}</span>}
+
+            {(downloadingStatus === 'done' || downloadingStatus === 'error') &&
+                <div className={styles['close-button']} onClick={()=>{updateDownloadingStatus('none', 0, 0, '')}}>
                     x
                 </div>
             }
