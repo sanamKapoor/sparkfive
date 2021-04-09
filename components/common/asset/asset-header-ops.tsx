@@ -54,51 +54,56 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 	const selectedFolders = folders.filter(folder => folder.isSelected)
 
 	const downloadSelectedAssets = async () => {
-		let payload = {
-			assetIds: []
-		};
-
-		let totalDownloadingAssets = 0;
-		let filters = {
-			estimateTime: 1
-		}
-
-		if(selectedAllAssets){
-			totalDownloadingAssets = totalAssets
-			// Download all assets without pagination
-			filters = {
-				...getAssetsFilters({
-					replace: false,
-					activeFolder,
-					addedIds: [],
-					nextPage: 1,
-					userFilterObject: activeSortFilter
-				}),
-				selectedAll: 1,
-				estimateTime: 1
+		try{
+			let payload = {
+				assetIds: []
 			};
 
-			if(term){
-				// @ts-ignore
-				filters.term = term;
+			let totalDownloadingAssets = 0;
+			let filters = {
+				estimateTime: 1
 			}
-			// @ts-ignore
-			delete filters.page
-		}else{
-			totalDownloadingAssets = selectedAssets.length
-			payload.assetIds = selectedAssets.map(assetItem => assetItem.asset.id)
+
+			if(selectedAllAssets){
+				totalDownloadingAssets = totalAssets
+				// Download all assets without pagination
+				filters = {
+					...getAssetsFilters({
+						replace: false,
+						activeFolder,
+						addedIds: [],
+						nextPage: 1,
+						userFilterObject: activeSortFilter
+					}),
+					selectedAll: 1,
+					estimateTime: 1
+				};
+
+				if(term){
+					// @ts-ignore
+					filters.term = term;
+				}
+				// @ts-ignore
+				delete filters.page
+			}else{
+				totalDownloadingAssets = selectedAssets.length
+				payload.assetIds = selectedAssets.map(assetItem => assetItem.asset.id)
+			}
+
+
+			// Show processing bar
+			updateDownloadingStatus('zipping', 0, totalDownloadingAssets)
+
+			const { data } = await assetApi.downloadAll(payload,filters)
+
+			// Download file to storage
+			fileDownload(data, 'assets.zip');
+
+			updateDownloadingStatus('done', 0, 0)
+		}catch (e){
+			updateDownloadingStatus('error', 0, 0, 'Internal Server Error. Please try again.')
 		}
 
-
-		// Show processing bar
-		updateDownloadingStatus('zipping', 0, totalDownloadingAssets)
-
-		const { data } = await assetApi.downloadAll(payload,filters)
-
-		// Download file to storage
-		fileDownload(data, 'assets.zip');
-
-		updateDownloadingStatus('done', 0, 0)
 
 		// downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets')
 	}
