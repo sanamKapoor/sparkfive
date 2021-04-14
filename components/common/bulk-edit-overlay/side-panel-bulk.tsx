@@ -135,25 +135,27 @@ const SidePanelBulk = ({
     try {
       let filters = {}
       // Select all assets without pagination
-      if(selectedAllAssets){
-        filters = {
-          ...getAssetsFilters({
-            replace: false,
-            activeFolder,
-            addedIds: [],
-            nextPage: 1,
-            userFilterObject: activeSortFilter
-          }),
-          selectedAll: '1',
-        };
-
-        if(term){
-          // @ts-ignore
-          filters.term = term;
-        }
-        // @ts-ignore
-        delete filters.page
-      }
+      // Comment this because, deselect all then select single asset wont change selectedAllAssets status => it will update all assets
+      // if(selectedAllAssets){
+      //   console.log(`Select all`)
+      //   filters = {
+      //     ...getAssetsFilters({
+      //       replace: false,
+      //       activeFolder,
+      //       addedIds: [],
+      //       nextPage: 1,
+      //       userFilterObject: activeSortFilter
+      //     }),
+      //     selectedAll: '1',
+      //   };
+      //
+      //   if(term){
+      //     // @ts-ignore
+      //     filters.term = term;
+      //   }
+      //   // @ts-ignore
+      //   delete filters.page
+      // }
 
       setWarningMessage('')
       setLoading(true)
