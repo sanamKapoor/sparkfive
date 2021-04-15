@@ -95,6 +95,7 @@ export const AssetContext = createContext({
     totalDownloadingAssets: 0,
     downloadingError: '',
     updateDownloadingStatus: (status, percent, totalAssets, error) => { },
+    retryListCount: 0
 })
 
 export const TeamContext = createContext({

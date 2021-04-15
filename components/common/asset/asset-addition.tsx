@@ -72,7 +72,7 @@ const AssetAddition = ({
 			// Do validation
 			if(assets[i].asset.size > validation.UPLOAD.MAX_SIZE.VALUE){
 				// Violate validation, mark failure
-				const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE} : asset);
+				const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', index, error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE} : asset);
 
 				// Update uploading assets
 				setUploadingAssets(updatedAssets)
@@ -177,7 +177,7 @@ const AssetAddition = ({
 			}
 		}catch (e){
 			// Violate validation, mark failure
-			const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: 'Processing file error'} : asset);
+			const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, index, status: 'fail', error: 'Processing file error'} : asset);
 
 			// Update uploading assets
 			setUploadingAssets(updatedAssets)

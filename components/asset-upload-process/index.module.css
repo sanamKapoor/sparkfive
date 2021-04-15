@@ -94,3 +94,8 @@
 .fail-text{
   margin-left: 5px;
 }
+
+.no-max-min-width{
+  max-width: unset !important;
+  min-width: unset !important;
+}
