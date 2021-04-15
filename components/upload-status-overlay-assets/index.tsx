@@ -1,4 +1,4 @@
-import {  useContext } from 'react'
+import {useContext, useState} from 'react'
 import { AssetContext } from '../../context'
 import styles from './index.module.css'
 
@@ -13,7 +13,7 @@ const UploadStatusOverlayAssets = ({ closeOverlay }) => {
 
   const { assets, uploadingAssets, setUploadingAssets, reUploadAsset, activeFolder, folderGroups } = useContext(AssetContext)
   // Get fail uploading assets
-  const failUploadingAssets = uploadingAssets.filter(asset => asset.status === 'fail')
+  const [failUploadingAssets, setFailUploadingAssets] = useState(uploadingAssets.filter(asset => asset.status === 'fail'))
 
   const selectedAssets = failUploadingAssets.filter(asset => asset.isSelected)
   let totalSelectAssets = failUploadingAssets.length;
@@ -29,11 +29,11 @@ const UploadStatusOverlayAssets = ({ closeOverlay }) => {
   }
 
   const selectAll = () => {
-    setUploadingAssets(failUploadingAssets.map(assetItem => ({ ...assetItem, isSelected: true })))
+    setFailUploadingAssets(failUploadingAssets.map(assetItem => ({ ...assetItem, isSelected: true })))
   }
 
   const deselectAll = () => {
-    setUploadingAssets(failUploadingAssets.map(assetItem => ({ ...assetItem, isSelected: false })))
+    setFailUploadingAssets(failUploadingAssets.map(assetItem => ({ ...assetItem, isSelected: false })))
   }
 
   // Close search modal
@@ -43,18 +43,25 @@ const UploadStatusOverlayAssets = ({ closeOverlay }) => {
   }
 
   const onRetry = async (index) => {
+    let size = 0;
+    // Calculate the rest of size
+    uploadingAssets.map((asset)=>{
+      size += asset.asset.size
+    })
+
     // Start to upload assets
-    reUploadAsset(0, uploadingAssets, assets, uploadingAssets[index].asset.size, uploadingAssets[index], activeFolder, folderGroups)
+    reUploadAsset(0, uploadingAssets, assets, size, [uploadingAssets[index]], activeFolder, folderGroups)
 
     closeOverlay();
   }
 
   const onBulkRetry = async () => {
-    const selectedAssets = uploadingAssets.filter((asset)=>asset.isSelected)
+    const selectedAssets = failUploadingAssets.filter((asset)=>asset.isSelected)
 
     let totalSize = 0;
-    selectedAssets.map((asset)=>{
-      totalSize+=asset.asset.size
+    // Calculate the rest of size
+    uploadingAssets.map((asset)=>{
+      totalSize += asset.asset.size
     })
     // Start to upload assets
     reUploadAsset(0, uploadingAssets, assets, totalSize, selectedAssets, activeFolder, folderGroups)
@@ -105,7 +112,7 @@ const UploadStatusOverlayAssets = ({ closeOverlay }) => {
               key={index}
               toggleSelected={() => toggleSelected(assetItem.asset)}
               assetItem={assetItem}
-              onRetry={()=>{onRetry(index)}}
+              onRetry={()=>{onRetry(assetItem.index)}}
             />
           ))}
         </ul>
