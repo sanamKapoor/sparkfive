@@ -161,8 +161,8 @@ const AssetsLibrary = () => {
         let size = totalSize;
         // Calculate the rest of size
         assets.map((asset)=>{
-          // Exclude done assets
-          if(asset.status === 'done'){
+          // Exclude done and  assets
+          if(asset.status === 'done' || asset.status === 'fail'){
             newAssets+=1
             size -= asset.asset.size
           }

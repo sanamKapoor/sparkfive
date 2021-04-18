@@ -219,7 +219,7 @@ export default ({ children }) => {
             // Calculate the rest of size
             assets.map((asset)=>{
                 // Exclude done assets
-                if(asset.status === 'done'){
+                if(asset.status === 'done' || asset.status === 'fail'){
                     size -= asset.asset.size
                     newAssets+=1
                 }

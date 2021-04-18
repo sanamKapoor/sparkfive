@@ -117,8 +117,8 @@ const AssetAddition = ({
 				let size = totalSize;
 				// Calculate the rest of size
 				assets.map((asset)=>{
-					// Exclude done assets
-					if(asset.status === 'done'){
+					// Exclude done or fail assets
+					if(asset.status === 'done' || asset.status === 'fail'){
 						size -= asset.asset.size
 						newAssets+=1
 					}
