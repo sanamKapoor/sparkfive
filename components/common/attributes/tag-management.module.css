@@ -16,6 +16,10 @@
     width: 200px;
 }
 
+.campaign-select{
+    width: 250px;
+}
+
 .sort-select{
     min-width: 150px;
     max-width: 200px;

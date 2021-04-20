@@ -9,7 +9,7 @@ import Search from "./search-input"
 import Tag from "../misc/tag"
 
 // APIs
-import tagApi from '../../../server-api/attribute'
+import campaignApi from '../../../server-api/attribute'
 import SpinnerOverlay from "../spinners/spinner-overlay";
 
 const sorts = [
@@ -31,9 +31,9 @@ const sorts = [
     }
 ]
 
-const TagManagement = () => {
+const CampaignManagement = () => {
     const [activeDropdown, setActiveDropdown] = useState('')
-    const [tagList, setTagList] = useState([])
+    const [campaignList, setCampaignList] = useState([])
     const [sort, setSort] = useState(sorts[0])
     const [searchType, setSearchType] = useState('')
     const [searchKey, setSearchKey] = useState('')
@@ -44,37 +44,37 @@ const TagManagement = () => {
         // Show loading
         setLoading(true)
 
-        await tagApi.createTags({tags: [item]})
+        await campaignApi.createCampaigns({campaigns: [item]})
 
         // Reload the list
-        getTagList();
+        getCampaignList();
     }
 
     // Get tag list
-    const getTagList = async () => {
+    const getCampaignList = async () => {
         // Show loading
         setLoading(true)
 
-        let { data } = await tagApi.getTags({isAll: 1, sort: sort.value, searchType, searchKey})
-        setTagList(data)
+        let { data } = await campaignApi.getCampaigns({isAll: 1, sort: sort.value, searchType, searchKey})
+        setCampaignList(data)
 
         // Hide loading
         setLoading(false)
     }
 
-    const deleteTagList = async(id) => {
+    const deleteCampaignList = async(id) => {
         // Show loading
         setLoading(true)
 
         // Call API to delete tag
-        await tagApi.deleteTags({tagIds: [id]})
+        await campaignApi.deleteCampaigns({campaignIds: [id]})
 
         // Refresh the list
-        getTagList();
+        getCampaignList();
     }
 
     useEffect(()=>{
-        getTagList();
+        getCampaignList();
     },[sort, searchKey])
 
     return (
@@ -82,9 +82,9 @@ const TagManagement = () => {
             <div className={styles['operation-row']}>
                 <CreatableSelect
                     title=''
-                    addText='Add Tags'
-                    onAddClick={() => setActiveDropdown('tags')}
-                    selectPlaceholder={'Enter a new tag'}
+                    addText='Add Campaign'
+                    onAddClick={() => setActiveDropdown('campaigns')}
+                    selectPlaceholder={'Enter a new campaign'}
                     avilableItems={[]}
                     setAvailableItems={()=>{}}
                     selectedItems={[]}
@@ -94,8 +94,8 @@ const TagManagement = () => {
                     onOperationFailedSkipped={() => setActiveDropdown('')}
                     isShare={false}
                     asyncCreateFn={createTag}
-                    dropdownIsActive={activeDropdown === 'tags'}
-                    selectClass={styles['tag-select']}
+                    dropdownIsActive={activeDropdown === 'campaigns'}
+                    selectClass={styles['campaign-select']}
                 />
 
                 <Select
@@ -129,11 +129,11 @@ const TagManagement = () => {
             </div>
 
             <ul className={styles['tag-wrapper']}>
-                {tagList.map((tag, index) => <li key={index} className={styles['tag-item']}>
+                {campaignList.map((campaign, index) => <li key={index} className={styles['tag-item']}>
                     <Tag
-                        tag={<><span className={styles['tag-item-text']}>{tag.numberOfFiles}</span> <span>{tag.name}</span></>}
+                        tag={<><span className={styles['tag-item-text']}>{campaign.numberOfFiles}</span> <span>{campaign.name}</span></>}
                         canRemove={true}
-                        removeFunction={() => {deleteTagList(tag.id)}}
+                        removeFunction={() => {deleteCampaignList(campaign.id)}}
                     />
                 </li>)}
             </ul>
@@ -144,4 +144,4 @@ const TagManagement = () => {
     )
 }
 
-export default TagManagement
+export default CampaignManagement

@@ -4,6 +4,7 @@ import { useState } from 'react'
 // Components
 import SectionButton from '../../common/buttons/section-button'
 import TagManagement from "./tag-management";
+import CampaignManagement from "./campaign-management";
 
 const Main = () => {
     const [activeList, setActiveList] = useState('tags')
@@ -29,6 +30,7 @@ const Main = () => {
             </div>
 
             {activeList === 'tags' && <TagManagement />}
+            {activeList === 'campaigns' && <CampaignManagement />}
         </>
     )
 }
