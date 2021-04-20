@@ -149,23 +149,25 @@ const AssetGrid = ({
         {activeView === 'grid' &&
           <ul className={`${styles['grid-list']} ${styles[itemSize]}`}>
             {mode === 'assets' && assets.map((assetItem, index) => {
-              return (
-                <li className={styles['grid-item']} key={assetItem.asset.id || index}>
-                  <AssetThumbail
-                    {...assetItem}
-                    isShare={isShare}
-                    type={type}
-                    toggleSelected={() => toggleSelected(assetItem.asset.id)}
-                    openArchiveAsset={() => openArchiveAsset(assetItem.asset)}
-                    openDeleteAsset={() => openDeleteAsset(assetItem.asset.id)}
-                    openMoveAsset={() => beginAssetOperation({ asset: assetItem }, 'move')}
-                    openCopyAsset={() => beginAssetOperation({ asset: assetItem }, 'copy')}
-                    openShareAsset={() => beginAssetOperation({ asset: assetItem }, 'share')}
-                    downloadAsset={() => downloadAsset(assetItem)}
-                    openRemoveAsset={() => beginAssetOperation({ asset: assetItem }, 'remove_item')}
-                  />
-                </li>
-              )
+              if(assetItem.status !== 'fail'){
+                return (
+                    <li className={styles['grid-item']} key={assetItem.asset.id || index}>
+                      <AssetThumbail
+                          {...assetItem}
+                          isShare={isShare}
+                          type={type}
+                          toggleSelected={() => toggleSelected(assetItem.asset.id)}
+                          openArchiveAsset={() => openArchiveAsset(assetItem.asset)}
+                          openDeleteAsset={() => openDeleteAsset(assetItem.asset.id)}
+                          openMoveAsset={() => beginAssetOperation({ asset: assetItem }, 'move')}
+                          openCopyAsset={() => beginAssetOperation({ asset: assetItem }, 'copy')}
+                          openShareAsset={() => beginAssetOperation({ asset: assetItem }, 'share')}
+                          downloadAsset={() => downloadAsset(assetItem)}
+                          openRemoveAsset={() => beginAssetOperation({ asset: assetItem }, 'remove_item')}
+                      />
+                    </li>
+                )
+              }
             })}
 
             {mode === 'folders' && !isShare && folders.map((folder, index) => {

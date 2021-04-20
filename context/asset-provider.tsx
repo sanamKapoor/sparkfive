@@ -59,6 +59,8 @@ export default ({ children }) => {
     const [uploadRemainingTime, setUploadRemainingTime] = useState<string>("") // Remaining time
     const [uploadDetailOverlay, setUploadDetailOverlay] = useState(false) // Detail overlay
     const [folderGroups, setFolderGroups] = useState() // This groups contain all folder key which is need to identity which folder file need to be saved to
+    const [retryListCount, setRetryListCount] = useState(0)
+
     // For dropbox upload process
     const [uploadSourceType, setUploadSourceType] = useState() // This maybe local or dropbox
     const [dropboxUploadingFile, setDropboxUploadingFile] = useState() // Current dropbox uploading file index, this is received from server
@@ -175,28 +177,25 @@ export default ({ children }) => {
             // Do validation
             if(retryList[i].asset.size > validation.UPLOAD.MAX_SIZE.VALUE){
                 // Violate validation, mark failure
-                const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE} : asset);
+                const updatedAssets = assets.map((asset, index)=> index === retryList[i].index ? {...asset, status: 'fail', index,  error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE} : asset);
 
                 // Update uploading assets
                 setUploadingAssets(updatedAssets)
 
-                // Remove current asset from asset placeholder
-                let newAssetPlaceholder = updatedAssets.filter(asset => asset.status !== 'fail')
-
-
-                // At this point, file place holder will be removed
-                setAssets([...newAssetPlaceholder, ...currentDataClone])
-
                 // The final one
-                if(i === assets.length - 1){
+                if(i === retryList.length - 1){
                     return
                 }else{ // Keep going
-                    await reUploadAsset(i+1, updatedAssets, currentDataClone, totalSize, updatedAssets, folderId, folderGroup)
+                    await reUploadAsset(i+1, updatedAssets, currentDataClone, totalSize, retryList, folderId, folderGroup)
                 }
             }
 
+            if(i === 0){
+                setRetryListCount(retryList.length)
+            }
+
             // Show uploading toast
-            showUploadProcess('uploading', i)
+            showUploadProcess('re-uploading', i)
 
             // Set current upload file name
             setUploadingFileName(retryList[i].asset.name)
@@ -220,7 +219,7 @@ export default ({ children }) => {
             // Calculate the rest of size
             assets.map((asset)=>{
                 // Exclude done assets
-                if(asset.status === 'done'){
+                if(asset.status === 'done' || asset.status === 'fail'){
                     size -= asset.asset.size
                     newAssets+=1
                 }
@@ -255,7 +254,7 @@ export default ({ children }) => {
                 return item
             })
 
-            assets[i] = data[0]
+            assets[retryList[i].index] = data[0]
 
 
             // At this point, file place holder will be removed
@@ -266,7 +265,7 @@ export default ({ children }) => {
             setTotalAssets(totalAssets + newAssets +1)
 
             // Mark this asset as done
-            const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'done'} : asset);
+            const updatedAssets = assets.map((asset, index)=> index === retryList[i].index ? {...asset, status: 'done'} : asset);
 
             setUploadingAssets(updatedAssets)
 
@@ -279,21 +278,15 @@ export default ({ children }) => {
             }
         }catch (e){
             // Violate validation, mark failure
-            const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: 'Processing file error'} : asset);
+            const updatedAssets = assets.map((asset, index)=> index === retryList[i].index ? {...asset, index, status: 'fail', error: 'Processing file error'} : asset);
 
             // Update uploading assets
             setUploadingAssets(updatedAssets)
 
-            // Remove current asset from asset placeholder
-            let newAssetPlaceholder = updatedAssets.filter(asset => asset.status !== 'fail')
-
-
-            // At this point, file place holder will be removed
-            setAssets([...newAssetPlaceholder, ...currentDataClone])
-
             // The final one
-            if(i === assets.length - 1){
-                return
+            if(i === retryList.length - 1){
+                // Finish uploading process
+                showUploadProcess('done')
             }else{ // Keep going
                 await reUploadAsset(i+1, updatedAssets, currentDataClone, totalSize, retryList, folderId, folderGroup)
             }
@@ -414,6 +407,8 @@ export default ({ children }) => {
         totalDownloadingAssets,
         downloadingError,
         updateDownloadingStatus,
+        retryListCount
+
 
     }
     return (
