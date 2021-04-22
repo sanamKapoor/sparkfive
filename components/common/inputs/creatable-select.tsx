@@ -24,7 +24,8 @@ const CreatableSelect = ({
   dropdownIsActive,
   altColor = '',
   isBulkEdit = false,
-  canAdd = true
+  canAdd = true,
+  selectClass = ''
 }) => {
 
   const onChange = async (selected, actionMeta) => {
@@ -104,7 +105,7 @@ const CreatableSelect = ({
         {!isShare && canAdd &&
           <>
             {dropdownIsActive ?
-              <div className={`tag-select`}>
+              <div className={`tag-select ${selectClass}`}>
                 <ReactCreatableSelect
                   placeholder={selectPlaceholder}
                   options={avilableItems.map(item => ({ ...item, label: item.name, value: item.id }))}
