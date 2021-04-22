@@ -13,6 +13,7 @@ import Button from "../buttons/button";
 
 // APIs
 import tagApi from '../../../server-api/attribute'
+import ConfirmModal from "../modals/confirm-modal";
 
 const sorts = [
     {
@@ -40,6 +41,8 @@ const TagManagement = () => {
     const [searchType, setSearchType] = useState('')
     const [searchKey, setSearchKey] = useState('')
     const [loading, setLoading] = useState(false)
+    const [confirmDeleteModal, setConfirmDeleteModal] = useState(false)
+    const [currentDeleteId, setCurrentDeleteId] = useState() // Id is pending to delete
     const [editMode, setEditMode] = useState(false) // Double click on tag to edit
     const [currentEditIndex, setCurrentEditIndex] = useState<number>() // Current edit tag
     const [currentEditValue, setCurrentEditValue] = useState('') // Current edit value
@@ -68,6 +71,9 @@ const TagManagement = () => {
     }
 
     const deleteTagList = async(id) => {
+        // Hide confirm modal
+        setConfirmDeleteModal(false)
+
         // Show loading
         setLoading(true)
 
@@ -167,12 +173,15 @@ const TagManagement = () => {
                         tag={<><span className={styles['tag-item-text']}>{tag.numberOfFiles}</span> <span>{tag.name}</span></>}
                         canRemove={true}
                         editFunction={()=>{
-                            setCurrentEditIndex(index);
-                            setCurrentEditValue(tag.name);
-                            setEditMode(true);
+                            setCurrentEditIndex(index)
+                            setCurrentEditValue(tag.name)
+                            setEditMode(true)
 
                         }}
-                        removeFunction={() => {deleteTagList(tag.id)}}
+                        removeFunction={() => {
+                            setCurrentDeleteId(tag.id)
+                            setConfirmDeleteModal(true)}
+                        }
                     />}
                     {editMode === true && currentEditIndex === index && <div>
                         <Input
@@ -202,6 +211,14 @@ const TagManagement = () => {
             </ul>
 
             {loading && <SpinnerOverlay />}
+
+            <ConfirmModal
+                modalIsOpen={confirmDeleteModal}
+                closeModal={()=>{setConfirmDeleteModal(false)}}
+                confirmAction={()=>{deleteTagList(currentDeleteId)}}
+                confirmText={'Delete'}
+                message={`This tag will be deleted and removed from any file that has it. Are you sure you want to delete these?`}
+            />
 
         </div>
     )

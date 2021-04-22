@@ -13,6 +13,7 @@ import campaignApi from '../../../server-api/attribute'
 import SpinnerOverlay from "../spinners/spinner-overlay";
 import Input from "../inputs/input";
 import Button from "../buttons/button";
+import ConfirmModal from "../modals/confirm-modal";
 
 const sorts = [
     {
@@ -40,6 +41,8 @@ const CampaignManagement = () => {
     const [searchType, setSearchType] = useState('')
     const [searchKey, setSearchKey] = useState('')
     const [loading, setLoading] = useState(false)
+    const [confirmDeleteModal, setConfirmDeleteModal] = useState(false)
+    const [currentDeleteId, setCurrentDeleteId] = useState() // Id is pending to delete
     const [editMode, setEditMode] = useState(false) // Double click on tag to edit
     const [currentEditIndex, setCurrentEditIndex] = useState<number>() // Current edit tag
     const [currentEditValue, setCurrentEditValue] = useState('') // Current edit value
@@ -68,6 +71,9 @@ const CampaignManagement = () => {
     }
 
     const deleteCampaignList = async(id) => {
+        // Hide confirm modal
+        setConfirmDeleteModal(false)
+        
         // Show loading
         setLoading(true)
 
@@ -172,7 +178,10 @@ const CampaignManagement = () => {
                             setEditMode(true);
 
                         }}
-                        removeFunction={() => {deleteCampaignList(campaign.id)}}
+                        removeFunction={() => {
+                            setCurrentDeleteId(campaign.id)
+                            setConfirmDeleteModal(true)
+                        }}
                     />}
                     {editMode === true && currentEditIndex === index && <div>
                         <Input
@@ -202,6 +211,14 @@ const CampaignManagement = () => {
             </ul>
 
             {loading && <SpinnerOverlay />}
+
+            <ConfirmModal
+                modalIsOpen={confirmDeleteModal}
+                closeModal={()=>{setConfirmDeleteModal(false)}}
+                confirmAction={()=>{deleteCampaignList(currentDeleteId)}}
+                confirmText={'Delete'}
+                message={`This campaign will be deleted and removed from any file that has it. Are you sure you want to delete these?`}
+            />
 
         </div>
     )
