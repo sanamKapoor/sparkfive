@@ -83,12 +83,35 @@
 }
 
 .tag-item{
-    display: inline-block;
+    display: flex;
+    align-items: center;
     margin: 5px;
+    cursor: pointer;
 }
 
 .tag-item-text{
     font-weight: normal;
     margin-right: 10px;
     font-size: 13px;
+}
+
+.edit-row{
+
+}
+
+.edit-input{
+    width: auto;
+    min-height: auto;
+    display: inline-block;
+    margin-right: 10px
+}
+
+
+.edit-submit-btn{
+    display: inline-block;
+}
+
+.edit-cancel-btn{
+    margin-left: 5px;
+    display: inline-block;
 }

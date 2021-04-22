@@ -11,6 +11,8 @@ import Tag from "../misc/tag"
 // APIs
 import campaignApi from '../../../server-api/attribute'
 import SpinnerOverlay from "../spinners/spinner-overlay";
+import Input from "../inputs/input";
+import Button from "../buttons/button";
 
 const sorts = [
     {
@@ -38,6 +40,9 @@ const CampaignManagement = () => {
     const [searchType, setSearchType] = useState('')
     const [searchKey, setSearchKey] = useState('')
     const [loading, setLoading] = useState(false)
+    const [editMode, setEditMode] = useState(false) // Double click on tag to edit
+    const [currentEditIndex, setCurrentEditIndex] = useState<number>() // Current edit tag
+    const [currentEditValue, setCurrentEditValue] = useState('') // Current edit value
 
     // Create the new tag
     const createTag = async (item) => {
@@ -68,6 +73,34 @@ const CampaignManagement = () => {
 
         // Call API to delete tag
         await campaignApi.deleteCampaigns({campaignIds: [id]})
+
+        // Refresh the list
+        getCampaignList();
+    }
+
+    // Reset edit state
+    const resetEditState = () => {
+        setEditMode(false);
+        setCurrentEditIndex(0);
+        setCurrentEditValue('')
+    }
+
+    // Save updated changes
+    const saveChanges = async (id) => {
+        // Show loading
+        setLoading(true)
+
+        // Call API to delete tag
+        await campaignApi.updateCampaigns({
+            campaigns: [
+                {
+                    id: id,
+                    name: currentEditValue
+                }
+            ]
+        })
+
+        resetEditState();
 
         // Refresh the list
         getCampaignList();
@@ -130,11 +163,41 @@ const CampaignManagement = () => {
 
             <ul className={styles['tag-wrapper']}>
                 {campaignList.map((campaign, index) => <li key={index} className={styles['tag-item']}>
-                    <Tag
+                    {(editMode === false || (editMode === true && currentEditIndex !== index)) && <Tag
                         tag={<><span className={styles['tag-item-text']}>{campaign.numberOfFiles}</span> <span>{campaign.name}</span></>}
                         canRemove={true}
+                        editFunction={()=>{
+                            setCurrentEditIndex(index);
+                            setCurrentEditValue(campaign.name);
+                            setEditMode(true);
+
+                        }}
                         removeFunction={() => {deleteCampaignList(campaign.id)}}
-                    />
+                    />}
+                    {editMode === true && currentEditIndex === index && <div>
+                        <Input
+                            placeholder={'Edit name'}
+                            onChange={(e)=>{setCurrentEditValue(e.target.value)}}
+                            additionalClasses={styles['edit-input']}
+                            value={currentEditValue}
+                            styleType={'regular-short'} />
+                        <Button
+                            styleTypes={['exclude-min-height']}
+                            type={'submit'}
+                            className={styles['edit-submit-btn']}
+                            text='Save changes'
+                            styleType='primary'
+                            onClick={()=>{saveChanges(campaign.id)}}
+                        />
+                        <Button
+                            styleTypes={['secondary']}
+                            type={'button'}
+                            className={styles['edit-cancel-btn']}
+                            text='Cancel'
+                            styleType='primary'
+                            onClick={resetEditState}
+                        />
+                    </div>}
                 </li>)}
             </ul>
 

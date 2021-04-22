@@ -9,10 +9,12 @@ export default {
     getTags: (queryParams) => axios.get(`${tagUrl}?${querystring.stringify(queryParams)}`),
     createTags: (payload) => axios.post(`${tagUrl}`, payload),
     deleteTags: (payload) => axios.delete(`${tagUrl}`, {data: payload}),
+    updateTags: (payload) => axios.patch(`${tagUrl}`, payload),
 
 
     // For campaign management
     getCampaigns: (queryParams) => axios.get(`${campaignUrl}?${querystring.stringify(queryParams)}`),
     createCampaigns: (payload) => axios.post(`${campaignUrl}`, payload),
     deleteCampaigns: (payload) => axios.delete(`${campaignUrl}`, {data: payload}),
+    updateCampaigns: (payload) => axios.patch(`${campaignUrl}`, payload),
 }

@@ -7,10 +7,12 @@ import CreatableSelect from '../inputs/creatable-select'
 import Select from "../inputs/select"
 import Search from "./search-input"
 import Tag from "../misc/tag"
+import Input from '../../common/inputs/input'
+import SpinnerOverlay from "../spinners/spinner-overlay";
+import Button from "../buttons/button";
 
 // APIs
 import tagApi from '../../../server-api/attribute'
-import SpinnerOverlay from "../spinners/spinner-overlay";
 
 const sorts = [
     {
@@ -38,6 +40,9 @@ const TagManagement = () => {
     const [searchType, setSearchType] = useState('')
     const [searchKey, setSearchKey] = useState('')
     const [loading, setLoading] = useState(false)
+    const [editMode, setEditMode] = useState(false) // Double click on tag to edit
+    const [currentEditIndex, setCurrentEditIndex] = useState<number>() // Current edit tag
+    const [currentEditValue, setCurrentEditValue] = useState('') // Current edit value
 
     // Create the new tag
     const createTag = async (item) => {
@@ -68,6 +73,34 @@ const TagManagement = () => {
 
         // Call API to delete tag
         await tagApi.deleteTags({tagIds: [id]})
+
+        // Refresh the list
+        getTagList();
+    }
+
+    // Reset edit state
+    const resetEditState = () => {
+        setEditMode(false);
+        setCurrentEditIndex(0);
+        setCurrentEditValue('')
+    }
+
+    // Save updated changes
+    const saveChanges = async (id) => {
+        // Show loading
+        setLoading(true)
+
+        // Call API to delete tag
+        await tagApi.updateTags({
+            tags: [
+                {
+                    id: id,
+                    name: currentEditValue
+                }
+            ]
+        })
+
+        resetEditState();
 
         // Refresh the list
         getTagList();
@@ -130,11 +163,41 @@ const TagManagement = () => {
 
             <ul className={styles['tag-wrapper']}>
                 {tagList.map((tag, index) => <li key={index} className={styles['tag-item']}>
-                    <Tag
+                    {(editMode === false || (editMode === true && currentEditIndex !== index)) && <Tag
                         tag={<><span className={styles['tag-item-text']}>{tag.numberOfFiles}</span> <span>{tag.name}</span></>}
                         canRemove={true}
+                        editFunction={()=>{
+                            setCurrentEditIndex(index);
+                            setCurrentEditValue(tag.name);
+                            setEditMode(true);
+
+                        }}
                         removeFunction={() => {deleteTagList(tag.id)}}
-                    />
+                    />}
+                    {editMode === true && currentEditIndex === index && <div>
+                        <Input
+                            placeholder={'Edit name'}
+                            onChange={(e)=>{setCurrentEditValue(e.target.value)}}
+                            additionalClasses={styles['edit-input']}
+                            value={currentEditValue}
+                            styleType={'regular-short'} />
+                        <Button
+                            styleTypes={['exclude-min-height']}
+                            type={'submit'}
+                            className={styles['edit-submit-btn']}
+                            text='Save changes'
+                            styleType='primary'
+                            onClick={()=>{saveChanges(tag.id)}}
+                        />
+                        <Button
+                            styleTypes={['secondary']}
+                            type={'button'}
+                            className={styles['edit-cancel-btn']}
+                            text='Cancel'
+                            styleType='primary'
+                            onClick={resetEditState}
+                        />
+                    </div>}
                 </li>)}
             </ul>
 
