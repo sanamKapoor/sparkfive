@@ -42,7 +42,7 @@ const SETTING_OPTIONS = {
   team: { label: 'Team', permissions: [SETTINGS_TEAM], content: Team },
   notifications: { label: 'Notifications', permissions: [], content: Notifications },
   integrations: { label: 'Integrations', permissions: [], content: Integrations },
-  attributes: { label: 'Attributes', contentTitle: 'Custom Attributes', permissions: [], content: Attributes },
+  attributes: { label: 'Attributes', contentTitle: 'Custom Attributes', permissions: [SETTINGS_TEAM, SETTINGS_COMPANY], content: Attributes },
   ['super-admin']: { label: 'Super Admin', permissions: [SUPERADMIN_ACCESS], content: SuperAdmin },
 }
 

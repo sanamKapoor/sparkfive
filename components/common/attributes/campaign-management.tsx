@@ -73,7 +73,7 @@ const CampaignManagement = () => {
     const deleteCampaignList = async(id) => {
         // Hide confirm modal
         setConfirmDeleteModal(false)
-        
+
         // Show loading
         setLoading(true)
 
