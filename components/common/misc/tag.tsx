@@ -20,8 +20,8 @@ const Tag = ({ tag, canRemove = false, removeFunction = () => { }, editFunction 
         }
     }
 
-    return <div className={`${styles.container} ${hasPermission([SETTINGS_TEAM, SETTINGS_COMPANY]) ? styles['pointer'] : ''} ${altColor && styles[`alt-color-${altColor}`]}`} onClick={goToTagManagement}>
-        <span onDoubleClick={editFunction}>{tag}</span>
+    return <div className={`${styles.container} ${hasPermission([SETTINGS_TEAM, SETTINGS_COMPANY]) ? styles['pointer'] : ''} ${altColor && styles[`alt-color-${altColor}`]}`}>
+        <span onDoubleClick={editFunction} onClick={goToTagManagement}>{tag}</span>
         {canRemove &&
         <span onClick={removeFunction} className={styles.remove}>x</span>
         }

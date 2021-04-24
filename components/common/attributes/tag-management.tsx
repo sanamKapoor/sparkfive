@@ -15,6 +15,9 @@ import Button from "../buttons/button";
 import tagApi from '../../../server-api/attribute'
 import ConfirmModal from "../modals/confirm-modal";
 
+// Utils
+import toastUtils from '../../../utils/toast'
+
 const sorts = [
     {
         value: 'name,asc',
@@ -49,13 +52,21 @@ const TagManagement = () => {
 
     // Create the new tag
     const createTag = async (item) => {
-        // Show loading
-        setLoading(true)
+        try{
+            // Show loading
+            setLoading(true)
 
-        await tagApi.createTags({tags: [item]})
+            await tagApi.createTags({tags: [item]})
 
-        // Reload the list
-        getTagList();
+            // Reload the list
+            getTagList();
+        } catch (err) {
+            if (err.response?.status === 400) toastUtils.error(err.response.data.message)
+            else toastUtils.error('Could not create tag, please try again later.')
+
+            // Show loading
+            setLoading(false)
+        }
     }
 
     // Get tag list
@@ -63,7 +74,7 @@ const TagManagement = () => {
         // Show loading
         setLoading(true)
 
-        let { data } = await tagApi.getTags({isAll: 1, sort: sort.value, searchType, searchKey})
+        let { data } = await tagApi.getTags({isAll: 1, sensitive: 0, sort: sort.value, searchType, searchKey})
         setTagList(data)
 
         // Hide loading
@@ -149,20 +160,29 @@ const TagManagement = () => {
             <div className={styles['search-row']}>
                 <div className={styles['search-column-1']}>
                     <Search
-                        placeholder={'Start with'}
+                        name={'start'}
+                        searchType={searchType}
+                        placeholder={'Starts with'}
                         onSubmit={(key)=>{setSearchType('start');setSearchKey(key);}}
+                        onClear={()=>{setSearchKey('')}}
                     />
                 </div>
                 <div className={styles['search-column-2']}>
                     <Search
+                        name={'exact'}
+                        searchType={searchType}
                         placeholder={'Exact Match'}
                         onSubmit={(key)=>{setSearchType('exact');setSearchKey(key);}}
+                        onClear={()=>{setSearchKey('')}}
                     />
                 </div>
                 <div className={styles['search-column-3']}>
                     <Search
+                        name={'contain'}
+                        searchType={searchType}
                         placeholder={'Contains'}
                         onSubmit={(key)=>{setSearchType('contain');setSearchKey(key);}}
+                        onClear={()=>{setSearchKey('')}}
                     />
                 </div>
             </div>
@@ -217,7 +237,9 @@ const TagManagement = () => {
                 closeModal={()=>{setConfirmDeleteModal(false)}}
                 confirmAction={()=>{deleteTagList(currentDeleteId)}}
                 confirmText={'Delete'}
-                message={`This tag will be deleted and removed from any file that has it. Are you sure you want to delete these?`}
+                message={<span>This tag will be deleted and removed from any file that has it.&nbsp; Are you sure you want to delete these?</span>}
+                closeButtonClass={styles['close-modal-btn']}
+                textContentClass={styles['confirm-modal-text']}
             />
 
         </div>
