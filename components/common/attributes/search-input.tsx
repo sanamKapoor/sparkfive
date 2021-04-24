@@ -1,6 +1,6 @@
 import styles from './search-input.module.css'
 import { Utilities } from '../../../assets'
-import { useState } from 'react'
+import {useEffect, useState} from 'react'
 
 // Components
 import Button from '../buttons/button'
@@ -8,6 +8,13 @@ import Button from '../buttons/button'
 const Search = (props) => {
 
     const [term, setTerm] = useState('')
+
+    useEffect(()=>{
+        // Clear search value if user do submit in another search input
+        if(props.name !== props.searchType){
+            setTerm('')
+        }
+    },[props.searchType])
 
     return (
         <form className={styles.form} onSubmit={(e) => {
@@ -23,6 +30,7 @@ const Search = (props) => {
                     placeholder={props.placeholder || 'Search'}
                     className={`${styles.container} ${props.styleType && styles[props.styleType]}`}
                 />
+                <span className={styles.remove} onClick={()=>{setTerm(''); props.onClear()}}>x</span>
             </div>
             <Button
                 styleTypes={['exclude-min-height']}

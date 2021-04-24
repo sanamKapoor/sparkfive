@@ -15,6 +15,9 @@ import Input from "../inputs/input";
 import Button from "../buttons/button";
 import ConfirmModal from "../modals/confirm-modal";
 
+// Utils
+import toastUtils from '../../../utils/toast'
+
 const sorts = [
     {
         value: 'name,asc',
@@ -49,13 +52,22 @@ const CampaignManagement = () => {
 
     // Create the new tag
     const createTag = async (item) => {
-        // Show loading
-        setLoading(true)
+        try{
+            // Show loading
+            setLoading(true)
 
-        await campaignApi.createCampaigns({campaigns: [item]})
+            await campaignApi.createCampaigns({campaigns: [item]})
 
-        // Reload the list
-        getCampaignList();
+            // Reload the list
+            getCampaignList();
+        }catch (err) {
+            if (err.response?.status === 400) toastUtils.error(err.response.data.message)
+            else toastUtils.error('Could not create campaign, please try again later.')
+
+            // Show loading
+            setLoading(false)
+        }
+
     }
 
     // Get tag list
@@ -149,20 +161,29 @@ const CampaignManagement = () => {
             <div className={styles['search-row']}>
                 <div className={styles['search-column-1']}>
                     <Search
-                        placeholder={'Start with'}
+                        name={'start'}
+                        searchType={searchType}
+                        placeholder={'Starts with'}
                         onSubmit={(key)=>{setSearchType('start');setSearchKey(key);}}
+                        onClear={()=>{setSearchKey('')}}
                     />
                 </div>
                 <div className={styles['search-column-2']}>
                     <Search
+                        name={'exact'}
+                        searchType={searchType}
                         placeholder={'Exact Match'}
                         onSubmit={(key)=>{setSearchType('exact');setSearchKey(key);}}
+                        onClear={()=>{setSearchKey('')}}
                     />
                 </div>
                 <div className={styles['search-column-3']}>
                     <Search
+                        name={'contain'}
+                        searchType={searchType}
                         placeholder={'Contains'}
                         onSubmit={(key)=>{setSearchType('contain');setSearchKey(key);}}
+                        onClear={()=>{setSearchKey('')}}
                     />
                 </div>
             </div>
@@ -217,7 +238,9 @@ const CampaignManagement = () => {
                 closeModal={()=>{setConfirmDeleteModal(false)}}
                 confirmAction={()=>{deleteCampaignList(currentDeleteId)}}
                 confirmText={'Delete'}
-                message={`This campaign will be deleted and removed from any file that has it. Are you sure you want to delete these?`}
+                message={<span>This campaign will be deleted and removed from any file that has it.&nbsp; Are you sure you want to delete these?</span>}
+                closeButtonClass={styles['close-modal-btn']}
+                textContentClass={styles['confirm-modal-text']}
             />
 
         </div>
