@@ -115,3 +115,13 @@
     margin-left: 5px;
     display: inline-block;
 }
+
+.close-modal-btn{
+    position: absolute;
+    right: 10px;
+    top: 0;
+}
+
+.confirm-modal-text{
+    padding-top: 30px;
+}

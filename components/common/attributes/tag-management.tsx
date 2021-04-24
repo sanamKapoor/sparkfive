@@ -217,7 +217,9 @@ const TagManagement = () => {
                 closeModal={()=>{setConfirmDeleteModal(false)}}
                 confirmAction={()=>{deleteTagList(currentDeleteId)}}
                 confirmText={'Delete'}
-                message={`This tag will be deleted and removed from any file that has it. Are you sure you want to delete these?`}
+                message={<span>This tag will be deleted and removed from any file that has it.&nbsp; Are you sure you want to delete these?</span>}
+                closeButtonClass={styles['close-modal-btn']}
+                textContentClass={styles['confirm-modal-text']}
             />
 
         </div>

@@ -217,7 +217,9 @@ const CampaignManagement = () => {
                 closeModal={()=>{setConfirmDeleteModal(false)}}
                 confirmAction={()=>{deleteCampaignList(currentDeleteId)}}
                 confirmText={'Delete'}
-                message={`This campaign will be deleted and removed from any file that has it. Are you sure you want to delete these?`}
+                message={<span>This campaign will be deleted and removed from any file that has it.&nbsp; Are you sure you want to delete these?</span>}
+                closeButtonClass={styles['close-modal-btn']}
+                textContentClass={styles['confirm-modal-text']}
             />
 
         </div>
