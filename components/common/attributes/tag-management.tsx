@@ -149,20 +149,29 @@ const TagManagement = () => {
             <div className={styles['search-row']}>
                 <div className={styles['search-column-1']}>
                     <Search
-                        placeholder={'Start with'}
+                        name={'start'}
+                        searchType={searchType}
+                        placeholder={'Starts with'}
                         onSubmit={(key)=>{setSearchType('start');setSearchKey(key);}}
+                        onClear={()=>{setSearchKey('')}}
                     />
                 </div>
                 <div className={styles['search-column-2']}>
                     <Search
+                        name={'exact'}
+                        searchType={searchType}
                         placeholder={'Exact Match'}
                         onSubmit={(key)=>{setSearchType('exact');setSearchKey(key);}}
+                        onClear={()=>{setSearchKey('')}}
                     />
                 </div>
                 <div className={styles['search-column-3']}>
                     <Search
+                        name={'contain'}
+                        searchType={searchType}
                         placeholder={'Contains'}
                         onSubmit={(key)=>{setSearchType('contain');setSearchKey(key);}}
+                        onClear={()=>{setSearchKey('')}}
                     />
                 </div>
             </div>
