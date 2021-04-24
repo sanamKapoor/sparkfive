@@ -15,6 +15,9 @@ import Button from "../buttons/button";
 import tagApi from '../../../server-api/attribute'
 import ConfirmModal from "../modals/confirm-modal";
 
+// Utils
+import toastUtils from '../../../utils/toast'
+
 const sorts = [
     {
         value: 'name,asc',
@@ -49,13 +52,21 @@ const TagManagement = () => {
 
     // Create the new tag
     const createTag = async (item) => {
-        // Show loading
-        setLoading(true)
+        try{
+            // Show loading
+            setLoading(true)
 
-        await tagApi.createTags({tags: [item]})
+            await tagApi.createTags({tags: [item]})
 
-        // Reload the list
-        getTagList();
+            // Reload the list
+            getTagList();
+        } catch (err) {
+            if (err.response?.status === 400) toastUtils.error(err.response.data.message)
+            else toastUtils.error('Could not create tag, please try again later.')
+
+            // Show loading
+            setLoading(false)
+        }
     }
 
     // Get tag list
@@ -63,7 +74,7 @@ const TagManagement = () => {
         // Show loading
         setLoading(true)
 
-        let { data } = await tagApi.getTags({isAll: 1, sort: sort.value, searchType, searchKey})
+        let { data } = await tagApi.getTags({isAll: 1, sensitive: 0, sort: sort.value, searchType, searchKey})
         setTagList(data)
 
         // Hide loading
