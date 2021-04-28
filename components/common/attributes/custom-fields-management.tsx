@@ -128,18 +128,26 @@ const CustomFieldsManagement = () => {
 
     // Save updated changes
     const saveChanges = async (index) => {
-        // Show loading
-        setLoading(true)
+        try{
+            // Show loading
+            setLoading(true)
 
-        // Call API to delete tag
-        await customFieldsApi.createCustomField({
-            attributes: [
-                customFieldList[index]
-            ]
-        })
+            // Call API to delete tag
+            await customFieldsApi.createCustomField({
+                attributes: [
+                    customFieldList[index]
+                ]
+            })
 
-        // Refresh the list
-        getCustomFields();
+            // Refresh the list
+            getCustomFields();
+        }catch (err) {
+            if (err.response?.status === 400) toastUtils.error(err.response.data.message)
+            else toastUtils.error('Could not create tag, please try again later.')
+
+            // Show loading
+            setLoading(false)
+        }
     }
 
     const deleteCustomAttribute = async(id) => {

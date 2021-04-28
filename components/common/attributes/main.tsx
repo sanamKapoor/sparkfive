@@ -8,7 +8,7 @@ import CampaignManagement from "./campaign-management";
 import CustomFieldsManagement from "./custom-fields-management"
 
 const Main = () => {
-    const [activeList, setActiveList] = useState('customFields')
+    const [activeList, setActiveList] = useState('tags')
 
     return (
         <>
