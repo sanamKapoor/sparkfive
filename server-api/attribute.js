@@ -3,6 +3,7 @@ import querystring from 'querystring'
 
 const tagUrl = `${process.env.SERVER_BASE_URL}/attribute/tags`
 const campaignUrl = `${process.env.SERVER_BASE_URL}/attribute/campaigns`
+const customFieldsUrl = `${process.env.SERVER_BASE_URL}/attribute/custom-fields`
 
 export default {
     // For tag management
@@ -17,4 +18,10 @@ export default {
     createCampaigns: (payload) => axios.post(`${campaignUrl}`, payload),
     deleteCampaigns: (payload) => axios.delete(`${campaignUrl}`, {data: payload}),
     updateCampaigns: (payload) => axios.patch(`${campaignUrl}`, payload),
+
+
+    // Custom fields management
+    getCustomFields: (queryParams) => axios.get(`${customFieldsUrl}?${querystring.stringify(queryParams)}`),
+    createCustomField: (payload) => axios.post(`${customFieldsUrl}`, payload),
+    deleteCustomField: (payload) => axios.delete(`${customFieldsUrl}`, {data: payload}),
 }
