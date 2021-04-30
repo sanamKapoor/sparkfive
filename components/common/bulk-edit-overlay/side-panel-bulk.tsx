@@ -1,12 +1,14 @@
 import styles from './side-panel-bulk.module.css'
 import update from 'immutability-helper'
 import ReactCreatableSelect from 'react-select/creatable'
+import ReactSelect from 'react-select'
 
 import {useContext, useEffect, useState} from 'react'
 import tagApi from '../../../server-api/tag'
 import assetApi from '../../../server-api/asset'
 import projectApi from '../../../server-api/project'
 import campaignApi from '../../../server-api/campaign'
+import attributeApi from '../../../server-api/attribute'
 import folderApi from '../../../server-api/folder'
 import toastUtils from '../../../utils/toast'
 import { Utilities } from '../../../assets'
@@ -27,6 +29,26 @@ import ProjectCreationModal from '../modals/project-creation-modal'
 import ProductAddition from '../asset/product-addition'
 import ConfirmModal from '../modals/confirm-modal'
 
+
+// Server DO NOT return full custom field slots including empty array, so we will generate empty array here
+// The order of result should be match with order of custom field list
+const mappingCustomFieldData = (list, valueList) => {
+  let rs = []
+  list.map((field)=>{
+    let value = valueList.filter(valueField => valueField.id === field.id)
+
+    if(value.length > 0){
+      rs.push(value[0])
+    }else{
+      let customField = { ...field }
+      customField.values = []
+      rs.push(customField)
+    }
+  })
+
+  return rs
+}
+
 const SidePanelBulk = ({
   elementsSelected,
   onUpdate,
@@ -36,6 +58,8 @@ const SidePanelBulk = ({
   setCampaigns,
   assetTags,
   setTags,
+  assetCustomFields,
+  setCustomFields,
   originalInputs,
   setLoading,
   loading,
@@ -67,6 +91,11 @@ const SidePanelBulk = ({
 
   const [warningMessage, setWarningMessage] = useState('')
 
+  // Custom fields
+  const [inputCustomFields, setInputCustomFields] = useState([])
+  const [activeCustomField, setActiveCustomField] = useState<number>()
+
+
   useEffect(() => {
     getInputData()
   }, [])
@@ -89,10 +118,13 @@ const SidePanelBulk = ({
       const campaignsResponse = await campaignApi.getCampaigns()
       const folderResponse = await folderApi.getFoldersSimple()
       const tagsResponse = await tagApi.getTags()
+      const customFieldsResponse = await attributeApi.getCustomFields({isAll: 1, sort: 'createdAt,asc'})
+
       setInputProjects(projectsResponse.data)
       setInputCampaigns(campaignsResponse.data)
       setInputFolders(folderResponse.data)
       setInputTags(tagsResponse.data)
+      setInputCustomFields(customFieldsResponse.data)
     } catch (err) {
       // TODO: Maybe show error?
     }
@@ -160,9 +192,22 @@ const SidePanelBulk = ({
       setWarningMessage('')
       setLoading(true)
       const mapAttributes = ({ id, name }) => ({ id, name })
+
+      // Parse custom field attributes
+      const customFieldAttributes = (customFields) => {
+        let values = []
+        customFields.map((field)=>{
+          values = values.concat(field.values)
+        })
+
+        return values
+
+      }
+
       const campaigns = assetCampaigns.map(mapAttributes)
       const projects = assetProjects.map(mapAttributes)
       const tags = assetTags.map(mapAttributes)
+      const customs = customFieldAttributes(assetCustomFields).map(mapAttributes)
       const updateObject = {
         assetIds: elementsSelected.map(({ asset: { id } }) => id),
         attributes: {}
@@ -175,6 +220,7 @@ const SidePanelBulk = ({
           campaigns,
           projects,
           tags,
+          customs,
           products: []
         }
         if (assetProduct) updateObject.attributes.products = [{ product: assetProduct, productTags: assetProduct.tags }]
@@ -297,6 +343,83 @@ const SidePanelBulk = ({
           canAdd={addMode}
         />
       </section>
+
+      {inputCustomFields.map((field, index)=>{
+        if(field.type === 'selectOne'){
+          return <div className={styles['field-wrapper']} >
+            <div className={`secondary-text ${styles.field}`}>{field.name}</div>
+            <div className={'normal-text'}>
+              <ul className={`tags-list ${styles['tags-list']}`}>
+                {assetCustomFields[index]?.values?.map((value, valueIndex) => (
+                    <li key={value.id}>
+                      <Tag
+                          altColor='turquoise'
+                          tag={value.name}
+                          canRemove={true}
+                          removeFunction={() => {
+                            let stateItemsUpdate = update(assetCustomFields[index]?.values, { $splice: [[valueIndex, 1]] })
+                            setCustomFields(index, stateItemsUpdate)
+                          }}
+                      />
+                    </li>
+                ))}
+              </ul>
+              {activeCustomField === index ?
+                  <div className={`tag-select ${styles['select-wrapper']}`}>
+                    <ReactSelect
+                        options={field.values.map(customField => ({ ...customField, label: customField.name, value: customField.id }))}
+                        placeholder={'Select an existing one'}
+                        onChange={(selected, actionMeta)=>{
+                          // onChangeSelectOneCustomField(selected, actionMeta, index)
+                          setCustomFields(index, [selected])
+                        }
+                        }
+                        styleType={'regular item'}
+                        menuPlacement={'top'}
+                        isClearable={false}
+                    />
+                  </div>
+                  :
+                  <div className={`add ${styles['select-add']}`} onClick={() => setActiveCustomField(index)}>
+                    <IconClickable src={Utilities.add} />
+                    <span>{`Add ${field.name}`}</span>
+                  </div>
+              }
+            </div>
+          </div>
+        }
+
+        if(field.type === 'selectMultiple'){
+          return <div className={styles['field-wrapper']} key={index}>
+            <CreatableSelect
+                creatable={false}
+                title={field.name}
+                addText={`Add ${field.name}`}
+                onAddClick={() => setActiveCustomField(index)}
+                selectPlaceholder={'Select an existing one'}
+                avilableItems={field.values}
+                isShare={false}
+                setAvailableItems={()=>{}}
+                selectedItems={(assetCustomFields.filter((assetField)=>assetField.id === field.id))[0]?.values || []}
+                setSelectedItems={(data)=>{
+                  setActiveCustomField(undefined)
+                  setCustomFields(index, data)
+                }
+                }
+                onAddOperationFinished={(stateUpdate) => {
+                }}
+                onRemoveOperationFinished={async (index, stateUpdate, removeId) => {
+                  setCustomFields(index, stateUpdate)
+                }}
+                onOperationFailedSkipped={() => setActiveCustomField(undefined)}
+                asyncCreateFn={() => null}
+                dropdownIsActive={activeCustomField === index}
+                isBulkEdit={true}
+                canAdd={addMode}
+            />
+          </div>
+        }
+      })}
 
       <section className={styles['field-wrapper']} >
         <div className={`secondary-text ${styles.field}`}>Projects</div>
