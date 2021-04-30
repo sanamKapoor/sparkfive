@@ -139,6 +139,8 @@ const CustomFieldsManagement = () => {
                 ]
             })
 
+            toastUtils.success('Custom field changes saved')
+
             // Refresh the list
             getCustomFields();
         }catch (err) {
