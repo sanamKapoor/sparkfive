@@ -150,7 +150,7 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
         if(key.includes('custom-p')){
             // Get all keys
             const index = key.split("custom-p")[1]
-            if (userFilterObject[key].length > 0 && userFilterObject[`all-p${index}`] && userFilterObject[`all-p${index}`] !== 'none'){
+            if (userFilterObject[key] && userFilterObject[key].length > 0 && userFilterObject[`all-p${index}`] && userFilterObject[`all-p${index}`] !== 'none'){
                 filters[`all-p${index}`] = userFilterObject[`all-p${index}`]
             }
             addFilterToQuery(filters, userFilterObject[key], key)

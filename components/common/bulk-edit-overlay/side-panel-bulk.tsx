@@ -28,6 +28,7 @@ import CreatableSelect from '../inputs/creatable-select'
 import ProjectCreationModal from '../modals/project-creation-modal'
 import ProductAddition from '../asset/product-addition'
 import ConfirmModal from '../modals/confirm-modal'
+import CustomFieldSelector from "../items/custom-field-selector";
 
 
 // Server DO NOT return full custom field slots including empty array, so we will generate empty array here
@@ -348,45 +349,55 @@ const SidePanelBulk = ({
         if(field.type === 'selectOne'){
           return <div className={styles['field-wrapper']} >
             <div className={`secondary-text ${styles.field}`}>{field.name}</div>
-            <div className={'normal-text'}>
-              <ul className={`tags-list ${styles['tags-list']}`}>
-                {assetCustomFields[index]?.values?.map((value, valueIndex) => (
-                    <li key={value.id}>
-                      <Tag
-                          altColor='turquoise'
-                          tag={value.name}
-                          canRemove={true}
-                          removeFunction={() => {
-                            let stateItemsUpdate = update(assetCustomFields[index]?.values, { $splice: [[valueIndex, 1]] })
-                            setCustomFields(index, stateItemsUpdate)
-                          }}
-                      />
-                    </li>
-                ))}
-              </ul>
-              {activeCustomField === index ?
-                  <div className={`tag-select ${styles['select-wrapper']}`}>
-                    <ReactSelect
-                        options={field.values.map(customField => ({ ...customField, label: customField.name, value: customField.id }))}
-                        placeholder={'Select an existing one'}
-                        onChange={(selected, actionMeta)=>{
-                          // onChangeSelectOneCustomField(selected, actionMeta, index)
-                          setCustomFields(index, [selected])
-                        }
-                        }
-                        styleType={'regular item'}
-                        menuPlacement={'top'}
-                        isClearable={false}
-                    />
-                  </div>
-                  :
-                  <div className={`add ${styles['select-add']}`} onClick={() => setActiveCustomField(index)}>
-                    <IconClickable src={Utilities.add} />
-                    <span>{`Add ${field.name}`}</span>
-                  </div>
-              }
-            </div>
+            <CustomFieldSelector
+                data={assetCustomFields[index]?.values[0]?.name}
+                options={field.values}
+                isShare={false}
+                onLabelClick={() => { }}
+                handleFieldChange={(option)=>{ setCustomFields(index, [option])}}
+            />
           </div>
+          // return <div className={styles['field-wrapper']} >
+          //   <div className={`secondary-text ${styles.field}`}>{field.name}</div>
+          //   <div className={'normal-text'}>
+          //     <ul className={`tags-list ${styles['tags-list']}`}>
+          //       {assetCustomFields[index]?.values?.map((value, valueIndex) => (
+          //           <li key={value.id}>
+          //             <Tag
+          //                 altColor='turquoise'
+          //                 tag={value.name}
+          //                 canRemove={true}
+          //                 removeFunction={() => {
+          //                   let stateItemsUpdate = update(assetCustomFields[index]?.values, { $splice: [[valueIndex, 1]] })
+          //                   setCustomFields(index, stateItemsUpdate)
+          //                 }}
+          //             />
+          //           </li>
+          //       ))}
+          //     </ul>
+          //     {activeCustomField === index ?
+          //         <div className={`tag-select ${styles['select-wrapper']}`}>
+          //           <ReactSelect
+          //               options={field.values.map(customField => ({ ...customField, label: customField.name, value: customField.id }))}
+          //               placeholder={'Select an existing one'}
+          //               onChange={(selected, actionMeta)=>{
+          //                 // onChangeSelectOneCustomField(selected, actionMeta, index)
+          //                 setCustomFields(index, [selected])
+          //               }
+          //               }
+          //               styleType={'regular item'}
+          //               menuPlacement={'top'}
+          //               isClearable={false}
+          //           />
+          //         </div>
+          //         :
+          //         <div className={`add ${styles['select-add']}`} onClick={() => setActiveCustomField(index)}>
+          //           <IconClickable src={Utilities.add} />
+          //           <span>{`Add ${field.name}`}</span>
+          //         </div>
+          //     }
+          //   </div>
+          // </div>
         }
 
         if(field.type === 'selectMultiple'){

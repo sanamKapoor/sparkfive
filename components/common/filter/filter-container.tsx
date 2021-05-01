@@ -150,7 +150,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                             <FilterSelector
                                 numItems={10}
                                 anyAllSelection={field.type === 'selectMultiple' ? activeSortFilter[`all-p${index}`] : ''}
-                                setAnyAll={field.type === 'selectMultiple' ? (value) => setActiveSortFilter(update(activeSortFilter, { [`all-p${index}`]: { $set: value } })) : ''}
+                                setAnyAll={field.type === 'selectMultiple' ? (value) => setActiveSortFilter(update(activeSortFilter, { [`all-p${index}`]: { $set: value } })) : () => {}}
                                 loadFn={()=>{}}
                                 filters={field.values.map(tag => ({ ...tag, label: tag.name, value: tag.id }))}
                                 value={activeSortFilter[`custom-p${index}`]}
