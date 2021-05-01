@@ -432,44 +432,44 @@ const SidePanelBulk = ({
         }
       })}
 
-      <section className={styles['field-wrapper']} >
-        <div className={`secondary-text ${styles.field}`}>Projects</div>
-        <div className={'normal-text'}>
-          <ul className={`tags-list ${styles['tags-list']}`}>
-            {assetProjects?.map((project, index) => (
-              <li key={project.id}>
-                <Tag
-                  altColor='turquoise'
-                  tag={project.name}
-                  canRemove={true}
-                  removeFunction={() => removeProject(index)}
-                />
-              </li>
-            ))}
-          </ul>
-          {addMode &&
-            <>
-              {activeDropdown === 'projects' ?
-                <div className={`tag-select ${styles['select-wrapper']}`}>
-                  <ReactCreatableSelect
-                    options={inputProjects.map(project => ({ ...project, label: project.name, value: project.id }))}
-                    placeholder={'Enter new project or select an existing one'}
-                    onChange={handleProjectChange}
-                    styleType={'regular item'}
-                    menuPlacement={'top'}
-                    isClearable={true}
-                  />
-                </div>
-                :
-                <div className={`add ${styles['select-add']}`} onClick={() => setActiveDropdown('projects')}>
-                  <IconClickable src={Utilities.add} />
-                  <span>Add to Project</span>
-                </div>
-              }
-            </>
-          }
-        </div>
-      </section>
+      {/*<section className={styles['field-wrapper']} >*/}
+      {/*  <div className={`secondary-text ${styles.field}`}>Projects</div>*/}
+      {/*  <div className={'normal-text'}>*/}
+      {/*    <ul className={`tags-list ${styles['tags-list']}`}>*/}
+      {/*      {assetProjects?.map((project, index) => (*/}
+      {/*        <li key={project.id}>*/}
+      {/*          <Tag*/}
+      {/*            altColor='turquoise'*/}
+      {/*            tag={project.name}*/}
+      {/*            canRemove={true}*/}
+      {/*            removeFunction={() => removeProject(index)}*/}
+      {/*          />*/}
+      {/*        </li>*/}
+      {/*      ))}*/}
+      {/*    </ul>*/}
+      {/*    {addMode &&*/}
+      {/*      <>*/}
+      {/*        {activeDropdown === 'projects' ?*/}
+      {/*          <div className={`tag-select ${styles['select-wrapper']}`}>*/}
+      {/*            <ReactCreatableSelect*/}
+      {/*              options={inputProjects.map(project => ({ ...project, label: project.name, value: project.id }))}*/}
+      {/*              placeholder={'Enter new project or select an existing one'}*/}
+      {/*              onChange={handleProjectChange}*/}
+      {/*              styleType={'regular item'}*/}
+      {/*              menuPlacement={'top'}*/}
+      {/*              isClearable={true}*/}
+      {/*            />*/}
+      {/*          </div>*/}
+      {/*          :*/}
+      {/*          <div className={`add ${styles['select-add']}`} onClick={() => setActiveDropdown('projects')}>*/}
+      {/*            <IconClickable src={Utilities.add} />*/}
+      {/*            <span>Add to Project</span>*/}
+      {/*          </div>*/}
+      {/*        }*/}
+      {/*      </>*/}
+      {/*    }*/}
+      {/*  </div>*/}
+      {/*</section>*/}
 
       {addMode &&
         <section>

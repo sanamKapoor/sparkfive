@@ -171,7 +171,9 @@ export const FilterContext = createContext({
     },
     loadProductFields: () => { },
     setSharePath: (path) => { },
-    loadAll: () => { }
+    loadAll: () => { },
+
+    isPublic: false,
 })
 
 export const ShareContext = createContext({

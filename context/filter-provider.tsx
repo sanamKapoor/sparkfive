@@ -187,7 +187,8 @@ export default ({ children, isPublic = false }) => {
     setActiveSortFilter,
     setSharePath,
     term,
-    setSearchTerm
+    setSearchTerm,
+    isPublic
   }
   return (
     <FilterContext.Provider value={filterValue}>

@@ -5,6 +5,7 @@ import { useState, useEffect, useContext } from 'react'
 import { Utilities } from '../../../assets'
 
 import customFieldsApi from '../../../server-api/attribute'
+import shareCollectionApi from '../../../server-api/share-collection'
 
 // Components
 import FilterSelector from './filter-selector'
@@ -43,12 +44,15 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
         loadTags,
         loadCustomFields,
         loadProductFields,
-        loadFolders
+        loadFolders,
+        isPublic
     } = useContext(FilterContext)
 
     const getCustomFields = async () => {
         try {
-            const { data } = await customFieldsApi.getCustomFieldsWithCount({assetsCount: 'yes', assetLim: 'yes'})
+            const { data } = isPublic ?
+                await shareCollectionApi.getCustomFields({assetsCount: 'yes', assetLim: 'yes'}) :
+                await customFieldsApi.getCustomFieldsWithCount({assetsCount: 'yes', assetLim: 'yes'})
 
             setCustomFields(data)
 
@@ -219,27 +223,27 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                             setValue={(selected) => setSortFilterValue('filterFolders', selected)}
                         />}
                 </section>
-                {!isFolder &&
-                    <section>
-                        <div className={styles['expand-bar']} onClick={() => handleExpand('projects')}>
-                            <h4>Projects</h4>
-                            {expandedMenus.includes('projects') ?
-                                <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :
-                                <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
-                        </div>
-                        {expandedMenus.includes('projects') &&
-                            <FilterSelector
-                                oneColumn={true}
-                                loadFn={loadProjects}
-                                numItems={5}
-                                anyAllSelection={activeSortFilter.allProjects}
-                                setAnyAll={(value) => setActiveSortFilter(update(activeSortFilter, { allProjects: { $set: value } }))}
-                                filters={projects.map(project => ({ ...project, label: project.name, value: project.id }))}
-                                value={activeSortFilter.filterProjects}
-                                setValue={(selected) => setSortFilterValue('filterProjects', selected)}
-                            />}
-                    </section>
-                }
+                {/*{!isFolder &&*/}
+                {/*    <section>*/}
+                {/*        <div className={styles['expand-bar']} onClick={() => handleExpand('projects')}>*/}
+                {/*            <h4>Projects</h4>*/}
+                {/*            {expandedMenus.includes('projects') ?*/}
+                {/*                <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :*/}
+                {/*                <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}*/}
+                {/*        </div>*/}
+                {/*        {expandedMenus.includes('projects') &&*/}
+                {/*            <FilterSelector*/}
+                {/*                oneColumn={true}*/}
+                {/*                loadFn={loadProjects}*/}
+                {/*                numItems={5}*/}
+                {/*                anyAllSelection={activeSortFilter.allProjects}*/}
+                {/*                setAnyAll={(value) => setActiveSortFilter(update(activeSortFilter, { allProjects: { $set: value } }))}*/}
+                {/*                filters={projects.map(project => ({ ...project, label: project.name, value: project.id }))}*/}
+                {/*                value={activeSortFilter.filterProjects}*/}
+                {/*                setValue={(selected) => setSortFilterValue('filterProjects', selected)}*/}
+                {/*            />}*/}
+                {/*    </section>*/}
+                {/*}*/}
                 {!isFolder &&
                     <section>
                         <div className={styles['expand-bar']} onClick={() => handleExpand('file-types')}>
