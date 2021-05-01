@@ -55,7 +55,9 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
             let filter = {}
             let filterValue = {}
             data.map((value, index)=>{
-                filter[`all-p${index}`] = {$set: 'all'}
+                console.log(value)
+                // Select on wont use `all-px` query field
+                filter[`all-p${index}`] = {$set: value.type === 'selectOne' ? 'none' :  'all'}
                 filter[`custom-p${index}`] = {$set: []}
             })
 
@@ -147,8 +149,8 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                             {expandedMenus.includes('customFields') &&
                             <FilterSelector
                                 numItems={10}
-                                anyAllSelection={activeSortFilter[`all-p${index}`]}
-                                setAnyAll={(value) => setActiveSortFilter(update(activeSortFilter, { [`all-p${index}`]: { $set: value } }))}
+                                anyAllSelection={field.type === 'selectMultiple' ? activeSortFilter[`all-p${index}`] : ''}
+                                setAnyAll={field.type === 'selectMultiple' ? (value) => setActiveSortFilter(update(activeSortFilter, { [`all-p${index}`]: { $set: value } })) : ''}
                                 loadFn={()=>{}}
                                 filters={field.values.map(tag => ({ ...tag, label: tag.name, value: tag.id }))}
                                 value={activeSortFilter[`custom-p${index}`]}
