@@ -4,6 +4,8 @@ import { FilterContext } from '../../../context'
 import { useState, useEffect, useContext } from 'react'
 import { Utilities } from '../../../assets'
 
+import customFieldsApi from '../../../server-api/attribute'
+
 // Components
 import FilterSelector from './filter-selector'
 import DateUploaded from './date-uploaded'
@@ -13,8 +15,9 @@ import DimensionsFilter from './dimensions-filter'
 
 const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiveSortFilter, clearFilters, isFolder = false }) => {
 
-    const [expandedMenus, setExpandedMenus] = useState(isFolder ? ['folders'] : ['tags', 'channels', 'campaigns'])
+    const [expandedMenus, setExpandedMenus] = useState(isFolder ? ['folders'] : ['tags', 'customFields', 'channels', 'campaigns'])
     const [stickyMenuScroll, setStickyMenuScroll] = useState(false)
+    const [customFields, setCustomFields] = useState([])
 
     const {
         folders,
@@ -38,14 +41,37 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
         loadFileTypes,
         loadProjects,
         loadTags,
+        loadCustomFields,
         loadProductFields,
         loadFolders
     } = useContext(FilterContext)
+
+    const getCustomFields = async () => {
+        try {
+            const { data } = await customFieldsApi.getCustomFieldsWithCount({assetsCount: 'yes', assetLim: 'yes'})
+
+            setCustomFields(data)
+
+            let filter = {}
+            let filterValue = {}
+            data.map((value, index)=>{
+                filter[`all-p${index}`] = {$set: 'all'}
+                filter[`custom-p${index}`] = {$set: []}
+            })
+
+            // Add filter
+            setActiveSortFilter(update(activeSortFilter, filter))
+        } catch (err) {
+            // TODO: Maybe show error?
+        }
+    }
 
     useEffect(() => {
         window.addEventListener("scroll", () => {
             setStickyMenuScroll(window.scrollY > 215)
         })
+
+        getCustomFields()
     }, [])
 
     const handleOpenFilter = () => {
@@ -107,6 +133,32 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                             />}
                     </section>
                 }
+
+                {customFields.map((field, index)=>{
+                    return <>
+                        {!isFolder &&
+                        <section key={index}>
+                            <div className={styles['expand-bar']} onClick={() => handleExpand('customFields')}>
+                                <h4>{field.name}</h4>
+                                {expandedMenus.includes('customFields') ?
+                                    <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :
+                                    <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
+                            </div>
+                            {expandedMenus.includes('customFields') &&
+                            <FilterSelector
+                                numItems={10}
+                                anyAllSelection={activeSortFilter[`all-p${index}`]}
+                                setAnyAll={(value) => setActiveSortFilter(update(activeSortFilter, { [`all-p${index}`]: { $set: value } }))}
+                                loadFn={()=>{}}
+                                filters={field.values.map(tag => ({ ...tag, label: tag.name, value: tag.id }))}
+                                value={activeSortFilter[`custom-p${index}`]}
+                                setValue={(selected) => setSortFilterValue(`custom-p${index}`, selected)}
+                                addtionalClass={'tags-container'}
+                            />}
+                        </section>
+                        }
+                    </>
+                })}
                 {!isFolder &&
                     <section>
                         <div className={styles['expand-bar']} onClick={() => handleExpand('channels')}>

@@ -4,6 +4,7 @@ import campaignApi from '../server-api/campaign'
 import projectApi from '../server-api/project'
 import selectOptions from '../utils/select-options'
 import tagApi from '../server-api/tag'
+import attributeApi from '../server-api/attribute'
 import filterApi from '../server-api/filter'
 import fodlerApi from '../server-api/folder'
 import shareCollectionApi from '../server-api/share-collection'
@@ -19,6 +20,7 @@ export default ({ children, isPublic = false }) => {
   })
   const [sharePath, setSharePath] = useState('')
   const [tags, setTags] = useState([])
+  const [customFields, setCustomFields] = useState([])
   const [campaigns, setCampaigns] = useState([])
   const [folders, setFolders] = useState([])
   const [channels, setChannels] = useState([])
@@ -55,6 +57,11 @@ export default ({ children, isPublic = false }) => {
   const loadTags = () => {
     const fetchMethod = isPublic ? shareCollectionApi.getTags : tagApi.getTags
     loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath, ...getCommonParams(activeSortFilter.allTags !== 'any') }), setTags)
+  }
+
+  const loadCustomFields = () => {
+    const fetchMethod = isPublic ? shareCollectionApi.getCustomFields : attributeApi.getCustomFields
+    loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath, ...getCommonParams(activeSortFilter.allCustomFields !== 'any') }), setCustomFields)
   }
 
   const loadFolders = () => {
@@ -158,6 +165,8 @@ export default ({ children, isPublic = false }) => {
     loadAll,
     tags,
     loadTags,
+    customFields,
+    loadCustomFields,
     campaigns,
     loadCampaigns,
     channels,

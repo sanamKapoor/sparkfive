@@ -140,6 +140,9 @@ export const FilterContext = createContext({
     tags: [],
     loadTags: () => { },
 
+    customFields: [],
+    loadCustomFields: () => { },
+
     folders: [],
     loadFolders: () => { },
 

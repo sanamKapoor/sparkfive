@@ -62,6 +62,7 @@ const AssetsLibrary = () => {
   const { activeSortFilter, setActiveSortFilter } = useContext(FilterContext)
 
   useEffect(() => {
+    console.log('Filters',activeSortFilter)
     setActivePageMode('library')
     if (activeSortFilter.mainFilter === 'folders') {
       setActiveMode('folders')

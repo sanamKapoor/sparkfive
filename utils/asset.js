@@ -10,6 +10,7 @@ export const DEFAULT_FILTERS = {
     filterOrientations: [],
     filterProductFields: [],
     filterProductType: [],
+    filterCustomFields: [],
     allTags: 'all',
     allCampaigns: 'all',
     allProjects: 'all',
@@ -143,6 +144,18 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
     addFilterToQuery(filters, filterTags, 'tags')
     addFilterToQuery(filters, filterFileTypes, 'fileTypes')
     addFilterToQuery(filters, filterOrientations, 'orientations')
+
+    Object.keys(userFilterObject).map((key)=>{
+        // Custom fields key
+        if(key.includes('custom-p')){
+            // Get all keys
+            const index = key.split("custom-p")[1]
+            if (userFilterObject[key].length > 0 && userFilterObject[`all-p${index}`]){
+                filters[`all-p${index}`] = userFilterObject[`all-p${index}`]
+            }
+            addFilterToQuery(filters, userFilterObject[key], key)
+        }
+    })
 
     if (activeFolder) {
         filters.folderId = activeFolder
