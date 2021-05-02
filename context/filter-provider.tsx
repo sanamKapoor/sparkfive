@@ -59,11 +59,6 @@ export default ({ children, isPublic = false }) => {
     loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath, ...getCommonParams(activeSortFilter.allTags !== 'any') }), setTags)
   }
 
-  const loadCustomFields = () => {
-    const fetchMethod = isPublic ? shareCollectionApi.getCustomFields : attributeApi.getCustomFields
-    loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath, ...getCommonParams(activeSortFilter.allCustomFields !== 'any') }), setCustomFields)
-  }
-
   const loadFolders = () => {
     const fetchMethod = fodlerApi.getFoldersSimple
     loadFromEndpoint(fetchMethod(({ assetsCount: 'yes', ...getCommonParams() })), setFolders)
@@ -166,7 +161,6 @@ export default ({ children, isPublic = false }) => {
     tags,
     loadTags,
     customFields,
-    loadCustomFields,
     campaigns,
     loadCampaigns,
     channels,
@@ -188,7 +182,8 @@ export default ({ children, isPublic = false }) => {
     setSharePath,
     term,
     setSearchTerm,
-    isPublic
+    isPublic,
+    sharePath
   }
   return (
     <FilterContext.Provider value={filterValue}>

@@ -42,24 +42,22 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
         loadFileTypes,
         loadProjects,
         loadTags,
-        loadCustomFields,
         loadProductFields,
         loadFolders,
-        isPublic
+        isPublic,
+        sharePath
     } = useContext(FilterContext)
 
     const getCustomFields = async () => {
         try {
             const { data } = isPublic ?
-                await shareCollectionApi.getCustomFields({assetsCount: 'yes', assetLim: 'yes'}) :
-                await customFieldsApi.getCustomFieldsWithCount({assetsCount: 'yes', assetLim: 'yes'})
+                await shareCollectionApi.getCustomFields({assetsCount: 'yes', assetLim: 'yes', sharePath}) :
+                await customFieldsApi.getCustomFieldsWithCount({assetsCount: 'yes', assetLim: 'yes', sharePath})
 
             setCustomFields(data)
 
             let filter = {}
-            let filterValue = {}
             data.map((value, index)=>{
-                console.log(value)
                 // Select on wont use `all-px` query field
                 filter[`all-p${index}`] = {$set: value.type === 'selectOne' ? 'none' :  'all'}
                 filter[`custom-p${index}`] = {$set: []}
