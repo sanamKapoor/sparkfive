@@ -158,6 +158,7 @@ const AssetsLibrary = () => {
 
         // Append file to form data
         formData.append('asset', assets[i].dragDropFolderUpload ? file : file.originalFile)
+        formData.append('fieldModifiedAt', assets[i].dragDropFolderUpload ? file.lastModifiedDate : file.originalFile.lastModifiedDate)
 
         let size = totalSize;
         // Calculate the rest of size

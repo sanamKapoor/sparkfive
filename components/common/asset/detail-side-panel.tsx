@@ -59,6 +59,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
   const {
     id,
     createdAt,
+    fileModifiedAt,
     type,
     extension,
     dimension,
@@ -236,6 +237,10 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     {
       field: 'Created',
       value: format(new Date(createdAt), 'Pp')
+    },
+    {
+      field: 'Last Updated',
+      value: format(new Date(fileModifiedAt), 'Pp')
     },
     {
       field: 'Type',

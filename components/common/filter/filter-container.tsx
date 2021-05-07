@@ -280,6 +280,24 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                     </section>
                 }
                 {!isFolder &&
+                <section>
+                    <div className={styles['expand-bar']} onClick={() => handleExpand('modifiedDate')}>
+                        <h4>Last Updated</h4>
+                        {expandedMenus.includes('date') ?
+                            <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :
+                            <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
+                    </div>
+                    {expandedMenus.includes('modifiedDate') &&
+                    <DateUploaded
+                        handleBeginDate={(date) => setSortFilterValue('fileModifiedBeginDate', date)}
+                        handleEndDate={(date) => setSortFilterValue('fileModifiedEndDate', date)}
+                        beginDate={activeSortFilter.fileModifiedBeginDate}
+                        endDate={activeSortFilter.fileModifiedEndDate}
+                    />
+                    }
+                </section>
+                }
+                {!isFolder &&
                     <section>
                         <div className={styles['expand-bar']} onClick={() => handleExpand('date')}>
                             <h4>Date Uploaded</h4>

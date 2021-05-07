@@ -113,6 +113,7 @@ const AssetAddition = ({
 
 				// Append file to form data
 				formData.append('asset', file)
+				formData.append('fieldModifiedAt', file.lastModifiedDate)
 
 				let size = totalSize;
 				// Calculate the rest of size
@@ -199,6 +200,7 @@ const AssetAddition = ({
 	}
 
 	const onFilesDataGet = async (files) => {
+		console.log(files)
 		const currentDataClone = [...assets]
 		const currenFolderClone = [...folders]
 		try {
@@ -230,6 +232,7 @@ const AssetAddition = ({
 						stage: 'draft',
 						type: 'image',
 						mimeType: file.originalFile.type,
+						fileModifiedAt: file.originalFile.lastModifiedDate
 					},
 					file,
 					status: 'queued',

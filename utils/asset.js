@@ -17,7 +17,9 @@ export const DEFAULT_FILTERS = {
     dimensionWidth: undefined,
     dimensionHeight: undefined,
     beginDate: undefined,
-    endDate: undefined
+    endDate: undefined,
+    fileModifiedBeginDate: undefined,
+    fileModifiedEndDate: undefined
 }
 
 export const getAssociatedCampaigns = (asset) => {
@@ -115,6 +117,8 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
         dimensionsActive,
         beginDate,
         endDate,
+        fileModifiedBeginDate,
+        fileModifiedEndDate,
         allTags,
         allCampaigns,
         filterProductFields,
@@ -179,6 +183,14 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
 
     if (endDate) {
         filters.endDate = endDate.toISOString()
+    }
+
+    if (fileModifiedBeginDate) {
+        filters.fileModifiedBeginDate = fileModifiedBeginDate.toISOString()
+    }
+
+    if (fileModifiedEndDate) {
+        filters.fileModifiedEndDate = fileModifiedEndDate.toISOString()
     }
 
     if (filterProductType && filterProductFields?.length > 0) {
