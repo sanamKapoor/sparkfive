@@ -1,6 +1,7 @@
 import styles from './creatable-select.module.css'
 import update from 'immutability-helper'
 import ReactCreatableSelect from 'react-select/creatable'
+import ReactSelect from 'react-select'
 import { Utilities } from '../../../assets'
 
 // Components
@@ -25,13 +26,17 @@ const CreatableSelect = ({
   altColor = '',
   isBulkEdit = false,
   canAdd = true,
-  selectClass = ''
+  selectClass = '',
+  creatable = true
 }) => {
 
   const onChange = async (selected, actionMeta) => {
-    const newItem = await addItem(selected, actionMeta.action === 'create-option')
-    if (newItem && actionMeta.action === 'create-option') {
-      setAvailableItems(update(avilableItems, { $push: [newItem] }))
+    console.log(actionMeta.action)
+    if(actionMeta.action !== 'clear'){
+      const newItem = await addItem(selected, actionMeta.action === 'create-option')
+      if (newItem && actionMeta.action === 'create-option') {
+        setAvailableItems(update(avilableItems, { $push: [newItem] }))
+      }
     }
   }
 
@@ -72,14 +77,14 @@ const CreatableSelect = ({
     }
   }
 
-  const removeItem = async (index) => {
+  const removeItem = async (index, id) => {
     if (isBulkEdit) {
       setSelectedItems(update(selectedItems, { $splice: [[index, 1]] }))
     } else {
       try {
         let stateItemsUpdate = update(selectedItems, { $splice: [[index, 1]] })
         setSelectedItems(stateItemsUpdate)
-        onRemoveOperationFinished(index, stateItemsUpdate)
+        onRemoveOperationFinished(index, stateItemsUpdate, id)
       } catch (err) {
         // TODO: Error if failure for whatever reason
       }
@@ -97,7 +102,7 @@ const CreatableSelect = ({
                 altColor={altColor}
                 tag={item.name}
                 canRemove={!isShare}
-                removeFunction={() => removeItem(index)}
+                removeFunction={() => removeItem(index, item.id)}
               />
             </li>
           ))}
@@ -106,14 +111,25 @@ const CreatableSelect = ({
           <>
             {dropdownIsActive ?
               <div className={`tag-select ${selectClass}`}>
-                <ReactCreatableSelect
+                {creatable && <ReactCreatableSelect
+                    placeholder={selectPlaceholder}
+                    options={avilableItems.map(item => ({...item, label: item.name, value: item.id}))}
+                    onChange={onChange}
+                    styleType={'regular item'}
+                    menuPlacement={'top'}
+                    isClearable={true}
+                />
+                }
+
+                {!creatable && <ReactSelect
                   placeholder={selectPlaceholder}
                   options={avilableItems.map(item => ({ ...item, label: item.name, value: item.id }))}
                   onChange={onChange}
                   styleType={'regular item'}
                   menuPlacement={'top'}
                   isClearable={true}
-                />
+                  />
+                }
               </div>
               :
               <div className={`add ${styles['select-add']}`} onClick={onAddClick}>

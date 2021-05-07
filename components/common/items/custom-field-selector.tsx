@@ -1,15 +1,12 @@
 import styles from './channel-selector.module.css'
-import { capitalCase } from 'change-case'
 import { ProjectTypeChannel, ProjectType } from '../../../assets'
-import projectTypeOptions from '../../../resources/data/project-types.json'
-import channelSocialOptions from '../../../resources/data/channels-social.json'
 
 // Components
 import ToggleableAbsoluteWrapper from '../misc/toggleable-absolute-wrapper'
 import ItemDropdownWrapper from '../items/item-dropdown-wrapper'
 import Dropdown from '../inputs/dropdown'
 
-const ChannelSelector = ({ onLabelClick, handleChannelChange, channel = 'Select Channel', isShare = false }) => {
+const CustomFieldSelector = ({ onLabelClick, handleFieldChange, data = 'Select field',  options, isShare = false }) => {
   return (
     <div className={`${styles.container} ${isShare && styles.shared}`}>
       <ToggleableAbsoluteWrapper
@@ -19,12 +16,12 @@ const ChannelSelector = ({ onLabelClick, handleChannelChange, channel = 'Select 
         Wrapper={({ children }) => (
           <>
             <ItemDropdownWrapper
-              image={ProjectTypeChannel[channel] || ProjectType[channel]}
-              data={capitalCase(channel)}
+              image={ProjectTypeChannel['Select Channel'] || ProjectType['Select Channel']}
+              data={data}
               hasOption={true}
               optionOnClick={onLabelClick}
               isShare={isShare}
-              styleType={channel === 'Select Channel' ? false : true}
+              styleType={data === 'Select field' ? false : true}
             >
               {children}
             </ItemDropdownWrapper>
@@ -32,9 +29,9 @@ const ChannelSelector = ({ onLabelClick, handleChannelChange, channel = 'Select 
         )}
         Content={() => (
           <Dropdown
-            options={[...projectTypeOptions, ...channelSocialOptions].filter(option => option !== 'social').map((option) => ({
-              label: capitalCase(option),
-              onClick: () => handleChannelChange(option),
+            options={[...options].map((option) => ({
+              label: option.name,
+              onClick: () => handleFieldChange(option),
             }))}
           />
         )}
@@ -43,4 +40,4 @@ const ChannelSelector = ({ onLabelClick, handleChannelChange, channel = 'Select 
   )
 }
 
-export default ChannelSelector
+export default CustomFieldSelector

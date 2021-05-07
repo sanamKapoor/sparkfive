@@ -3,6 +3,7 @@ import { useState, useEffect, useContext } from 'react'
 import { Utilities } from '../../../assets'
 import { AssetContext, LoadingContext } from '../../../context'
 import assetApi from '../../../server-api/asset'
+import customFieldsApi from '../../../server-api/attribute'
 import update from 'immutability-helper'
 
 // Components
@@ -11,6 +12,25 @@ import IconClickable from '../buttons/icon-clickable'
 import SidePanelBulk from './side-panel-bulk'
 import EditGrid from './edit-grid'
 import SpinnerOverlay from '../spinners/spinner-overlay'
+
+// Server DO NOT return full custom field slots including empty array, so we will generate empty array here
+// The order of result should be match with order of custom field list
+const mappingCustomFieldData = (list, valueList) => {
+	let rs = []
+	list.map((field)=>{
+		let value = valueList.filter(valueField => valueField.id === field.id)
+
+		if(value.length > 0){
+			rs.push(value[0])
+		}else{
+			let customField = { ...field }
+			customField.values = []
+			rs.push(customField)
+		}
+	})
+
+	return rs
+}
 
 const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 
@@ -33,8 +53,26 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 	const [originalInputs, setOriginalInputs] = useState({
 		campaigns: [],
 		projects: [],
-		tags: []
+		tags: [],
+		customs: []
 	})
+
+	// Custom fields
+	const [inputCustomFields, setInputCustomFields] = useState([])
+	const [assetCustomFields, setAssetCustomFields] = useState(mappingCustomFieldData(inputCustomFields, originalInputs.customs))
+
+	const getCustomFieldsInputData = async () => {
+		try {
+			const { data } = await customFieldsApi.getCustomFields({isAll: 1, sort: 'createdAt,asc'})
+
+			setInputCustomFields(data)
+
+			return data
+
+		} catch (err) {
+			// TODO: Maybe show error?
+		}
+	}
 
 	useEffect(() => {
 		if (!loadingAssets && !initialSelect && selectedAssets.length > 0) {
@@ -53,21 +91,38 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 			setAssetProjects([])
 			setTags([])
 			setCampaigns([])
+
+			// Custom fiedls
+			if(inputCustomFields.length > 0){
+				const updatedMappingCustomFieldData =  mappingCustomFieldData(inputCustomFields, originalInputs.customs)
+
+				setAssetCustomFields(update(assetCustomFields, {
+					$set: updatedMappingCustomFieldData
+				}))
+
+			}else{
+				setAssetCustomFields([])
+			}
 		} else if (!addMode) {
 			setCampaigns(originalInputs.campaigns)
 			setAssetProjects(originalInputs.projects)
 			setTags(originalInputs.tags)
+			setAssetCustomFields(originalInputs.customs)
 		}
 	}, [addMode, originalInputs])
 
 	const getInitialAttributes = async () => {
 		try {
-			const { data: { tags, projects, campaigns } } = await assetApi.getBulkProperties({ assetIds: selectedAssets.map(({ asset: { id } }) => id) })
+			// Get custom fields list
+			await getCustomFieldsInputData();
+
+			const { data: { tags, projects, campaigns, customs } } = await assetApi.getBulkProperties({ assetIds: selectedAssets.map(({ asset: { id } }) => id) })
 
 			setOriginalInputs({
 				campaigns,
 				projects,
-				tags
+				tags,
+				customs
 			})
 		} catch (err) {
 			// TODO: Maybe show error?
@@ -101,6 +156,26 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 	}
 
 	const editSelectedAssets = editAssets.filter(({ isEditSelected }) => isEditSelected)
+
+	// On change custom fields (add/remove)
+	const onChangeCustomField = (index, data) => {
+		// Show loading
+		// setIsLoading(true)
+
+		// Hide select list
+		// setActiveCustomField(undefined)
+
+
+		// Update asset custom field (local)
+		setAssetCustomFields(update(assetCustomFields, {
+			[index]: {
+				values: {$set: data}
+			}
+		}))
+
+		// Show loading
+		// setIsLoading(false)
+	}
 
 	return (
 		<div className={`app-overlay ${styles.container}`}>
@@ -143,10 +218,12 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 						assetCampaigns={assetCampaigns}
 						assetProjects={assetProjects}
 						assetTags={assetTags}
+						assetCustomFields={assetCustomFields}
 						originalInputs={originalInputs}
 						setAssetProjects={setAssetProjects}
 						setCampaigns={setCampaigns}
 						setTags={setTags}
+						setCustomFields={onChangeCustomField}
 						setLoading={setLoading}
 						loading={loading}
 						addMode={addMode}

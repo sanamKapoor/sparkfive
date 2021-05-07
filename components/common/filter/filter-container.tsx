@@ -4,6 +4,9 @@ import { FilterContext } from '../../../context'
 import { useState, useEffect, useContext } from 'react'
 import { Utilities } from '../../../assets'
 
+import customFieldsApi from '../../../server-api/attribute'
+import shareCollectionApi from '../../../server-api/share-collection'
+
 // Components
 import FilterSelector from './filter-selector'
 import DateUploaded from './date-uploaded'
@@ -13,8 +16,9 @@ import DimensionsFilter from './dimensions-filter'
 
 const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiveSortFilter, clearFilters, isFolder = false }) => {
 
-    const [expandedMenus, setExpandedMenus] = useState(isFolder ? ['folders'] : ['tags', 'channels', 'campaigns'])
+    const [expandedMenus, setExpandedMenus] = useState(isFolder ? ['folders'] : ['tags', 'customFields', 'channels', 'campaigns'])
     const [stickyMenuScroll, setStickyMenuScroll] = useState(false)
+    const [customFields, setCustomFields] = useState([])
 
     const {
         folders,
@@ -39,13 +43,39 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
         loadProjects,
         loadTags,
         loadProductFields,
-        loadFolders
+        loadFolders,
+        isPublic,
+        sharePath
     } = useContext(FilterContext)
+
+    const getCustomFields = async () => {
+        try {
+            const { data } = isPublic ?
+                await shareCollectionApi.getCustomFields({assetsCount: 'yes', assetLim: 'yes', sharePath}) :
+                await customFieldsApi.getCustomFieldsWithCount({assetsCount: 'yes', assetLim: 'yes', sharePath})
+
+            setCustomFields(data)
+
+            let filter = {}
+            data.map((value, index)=>{
+                // Select on wont use `all-px` query field
+                filter[`all-p${index}`] = {$set: value.type === 'selectOne' ? 'none' :  'all'}
+                filter[`custom-p${index}`] = {$set: []}
+            })
+
+            // Add filter
+            setActiveSortFilter(update(activeSortFilter, filter))
+        } catch (err) {
+            // TODO: Maybe show error?
+        }
+    }
 
     useEffect(() => {
         window.addEventListener("scroll", () => {
             setStickyMenuScroll(window.scrollY > 215)
         })
+
+        getCustomFields()
     }, [])
 
     const handleOpenFilter = () => {
@@ -107,6 +137,32 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                             />}
                     </section>
                 }
+
+                {customFields.map((field, index)=>{
+                    return <>
+                        {!isFolder &&
+                        <section key={index}>
+                            <div className={styles['expand-bar']} onClick={() => handleExpand('customFields')}>
+                                <h4>{field.name}</h4>
+                                {expandedMenus.includes('customFields') ?
+                                    <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :
+                                    <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
+                            </div>
+                            {expandedMenus.includes('customFields') &&
+                            <FilterSelector
+                                numItems={10}
+                                anyAllSelection={field.type === 'selectMultiple' ? activeSortFilter[`all-p${index}`] : ''}
+                                setAnyAll={field.type === 'selectMultiple' ? (value) => setActiveSortFilter(update(activeSortFilter, { [`all-p${index}`]: { $set: value } })) : () => {}}
+                                loadFn={()=>{}}
+                                filters={field.values.map(tag => ({ ...tag, label: tag.name, value: tag.id }))}
+                                value={activeSortFilter[`custom-p${index}`]}
+                                setValue={(selected) => setSortFilterValue(`custom-p${index}`, selected)}
+                                addtionalClass={'tags-container'}
+                            />}
+                        </section>
+                        }
+                    </>
+                })}
                 {!isFolder &&
                     <section>
                         <div className={styles['expand-bar']} onClick={() => handleExpand('channels')}>
@@ -165,27 +221,27 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                             setValue={(selected) => setSortFilterValue('filterFolders', selected)}
                         />}
                 </section>
-                {!isFolder &&
-                    <section>
-                        <div className={styles['expand-bar']} onClick={() => handleExpand('projects')}>
-                            <h4>Projects</h4>
-                            {expandedMenus.includes('projects') ?
-                                <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :
-                                <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
-                        </div>
-                        {expandedMenus.includes('projects') &&
-                            <FilterSelector
-                                oneColumn={true}
-                                loadFn={loadProjects}
-                                numItems={5}
-                                anyAllSelection={activeSortFilter.allProjects}
-                                setAnyAll={(value) => setActiveSortFilter(update(activeSortFilter, { allProjects: { $set: value } }))}
-                                filters={projects.map(project => ({ ...project, label: project.name, value: project.id }))}
-                                value={activeSortFilter.filterProjects}
-                                setValue={(selected) => setSortFilterValue('filterProjects', selected)}
-                            />}
-                    </section>
-                }
+                {/*{!isFolder &&*/}
+                {/*    <section>*/}
+                {/*        <div className={styles['expand-bar']} onClick={() => handleExpand('projects')}>*/}
+                {/*            <h4>Projects</h4>*/}
+                {/*            {expandedMenus.includes('projects') ?*/}
+                {/*                <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :*/}
+                {/*                <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}*/}
+                {/*        </div>*/}
+                {/*        {expandedMenus.includes('projects') &&*/}
+                {/*            <FilterSelector*/}
+                {/*                oneColumn={true}*/}
+                {/*                loadFn={loadProjects}*/}
+                {/*                numItems={5}*/}
+                {/*                anyAllSelection={activeSortFilter.allProjects}*/}
+                {/*                setAnyAll={(value) => setActiveSortFilter(update(activeSortFilter, { allProjects: { $set: value } }))}*/}
+                {/*                filters={projects.map(project => ({ ...project, label: project.name, value: project.id }))}*/}
+                {/*                value={activeSortFilter.filterProjects}*/}
+                {/*                setValue={(selected) => setSortFilterValue('filterProjects', selected)}*/}
+                {/*            />}*/}
+                {/*    </section>*/}
+                {/*}*/}
                 {!isFolder &&
                     <section>
                         <div className={styles['expand-bar']} onClick={() => handleExpand('file-types')}>
@@ -222,6 +278,24 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                             />
                         }
                     </section>
+                }
+                {!isFolder &&
+                <section>
+                    <div className={styles['expand-bar']} onClick={() => handleExpand('modifiedDate')}>
+                        <h4>Last Updated</h4>
+                        {expandedMenus.includes('date') ?
+                            <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :
+                            <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
+                    </div>
+                    {expandedMenus.includes('modifiedDate') &&
+                    <DateUploaded
+                        handleBeginDate={(date) => setSortFilterValue('fileModifiedBeginDate', date)}
+                        handleEndDate={(date) => setSortFilterValue('fileModifiedEndDate', date)}
+                        beginDate={activeSortFilter.fileModifiedBeginDate}
+                        endDate={activeSortFilter.fileModifiedEndDate}
+                    />
+                    }
+                </section>
                 }
                 {!isFolder &&
                     <section>
