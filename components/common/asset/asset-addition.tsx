@@ -106,14 +106,14 @@ const AssetAddition = ({
 						// Assign new file name without splash
 						file = new File([file.slice(0, file.size, file.type)],
 							fileGroupInfo.newName
-							, { type: file.type })
+							, { type: file.type, lastModified: file.lastModifiedDate })
 					}
 				}
 
 
 				// Append file to form data
 				formData.append('asset', file)
-				formData.append('fieldModifiedAt', file.lastModifiedDate)
+				formData.append('fileModifiedAt', new Date(file.lastModifiedDate.toUTCString()).toISOString())
 
 				let size = totalSize;
 				// Calculate the rest of size
@@ -200,7 +200,6 @@ const AssetAddition = ({
 	}
 
 	const onFilesDataGet = async (files) => {
-		console.log(files)
 		const currentDataClone = [...assets]
 		const currenFolderClone = [...folders]
 		try {

@@ -9,9 +9,14 @@
 .field-wrapper {
   margin-top: 1.5rem;
 }
+
+.meta-text{
+  font-size: 12px;
+}
+
 .first-section {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
 }
 /*.first-section .field-wrapper:first-child {*/
 /*  grid-column-start: 1;*/
@@ -52,6 +57,10 @@
 @media screen and (max-width: 1200px) {
   .container {
     min-width: 25rem;
+  }
+
+  .first-section {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 

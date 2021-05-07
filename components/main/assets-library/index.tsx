@@ -62,7 +62,6 @@ const AssetsLibrary = () => {
   const { activeSortFilter, setActiveSortFilter } = useContext(FilterContext)
 
   useEffect(() => {
-    console.log('Filters',activeSortFilter)
     setActivePageMode('library')
     if (activeSortFilter.mainFilter === 'folders') {
       setActiveMode('folders')
@@ -152,13 +151,13 @@ const AssetsLibrary = () => {
             // Assign new file name without splash
             file = new File([file.slice(0, file.size, file.type)],
                 fileGroupInfo.newName
-                , { type: file.type })
+                , { type: file.type, lastModified: file.lastModifiedDate })
           }
         }
 
         // Append file to form data
         formData.append('asset', assets[i].dragDropFolderUpload ? file : file.originalFile)
-        formData.append('fieldModifiedAt', assets[i].dragDropFolderUpload ? file.lastModifiedDate : file.originalFile.lastModifiedDate)
+        formData.append('fileModifiedAt', assets[i].dragDropFolderUpload ? new Date(file.lastModifiedDate.toUTCString()).toISOString() : new Date(file.originalFile.lastModifiedDate.toUTCString()).toISOString())
 
         let size = totalSize;
         // Calculate the rest of size
@@ -279,7 +278,7 @@ const AssetsLibrary = () => {
           dragDropFolderUpload = true;
           fileToUpload = new File([file.originalFile.slice(0, file.originalFile.size, file.originalFile.type)],
               file.originalFile.path.substring(1, file.originalFile.path.length)
-              , { type: file.originalFile.type })
+              , { type: file.originalFile.type, lastModified: file.originalFile.lastModifiedDate })
         }else{
           fileToUpload.path = null;
         }

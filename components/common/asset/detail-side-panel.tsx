@@ -235,12 +235,12 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
 
   const fieldValues = [
     {
-      field: 'Created',
-      value: format(new Date(createdAt), 'Pp')
-    },
-    {
       field: 'Last Updated',
       value: format(new Date(fileModifiedAt), 'Pp')
+    },
+    {
+      field: 'Uploaded',
+      value: format(new Date(createdAt), 'Pp')
     },
     {
       field: 'Type',
@@ -386,7 +386,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
         {fieldValues.map(fieldvalue => (
           <div className={styles['field-wrapper']} key={fieldvalue.field}>
             <div className={`secondary-text ${styles.field}`}>{fieldvalue.field}</div>
-            <div className={'normal-text'}>{fieldvalue.value}</div>
+            <div className={`normal-text ${styles['meta-text']}`}>{fieldvalue.value}</div>
           </div>
         ))}
       </div>
