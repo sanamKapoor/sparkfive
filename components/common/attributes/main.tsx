@@ -5,6 +5,7 @@ import { useState } from 'react'
 import SectionButton from '../../common/buttons/section-button'
 import TagManagement from "./tag-management";
 import CampaignManagement from "./campaign-management";
+import CustomFieldsManagement from "./custom-fields-management"
 
 const Main = () => {
     const [activeList, setActiveList] = useState('tags')
@@ -31,7 +32,7 @@ const Main = () => {
 
             {activeList === 'tags' && <TagManagement />}
             {activeList === 'campaigns' && <CampaignManagement />}
-            {activeList === 'customFields' && <span>No Custom Fields</span>}
+            {activeList === 'customFields' && <CustomFieldsManagement />}
         </>
     )
 }
