@@ -74,32 +74,24 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 		}
 	}
 
-	useEffect(() => {
-		if (!loadingAssets && !initialSelect && selectedAssets.length > 0) {
-			setInitialSelect(true)
-			setEditAssets(selectedAssets.map(assetItem => ({ ...assetItem, isEditSelected: true })))
-			getInitialAttributes()
-		}
-		if (loadingAssets) {
-			setEditAssets([])
-			setInitialSelect(false)
-		}
-	}, [selectedAssets, loadingAssets])
+	// Reset all selected field values
+	const resetSelectedFieldValue = () => {
+		setAssetProjects([])
+		setTags([])
+		setCampaigns([])
 
-	useEffect(() => {
+
+		// Default custom field values
+		const updatedMappingCustomFieldData =  mappingCustomFieldData(inputCustomFields, [])
+
+		setAssetCustomFields(update(assetCustomFields, {
+			$set: updatedMappingCustomFieldData
+		}))
+	}
+
+	const initialize = () => {
 		if (addMode) {
-			setAssetProjects([])
-			setTags([])
-			setCampaigns([])
-
-
-			// Default custom field values
-			const updatedMappingCustomFieldData =  mappingCustomFieldData(inputCustomFields, [])
-
-			setAssetCustomFields(update(assetCustomFields, {
-				$set: updatedMappingCustomFieldData
-			}))
-
+			resetSelectedFieldValue()
 		} else if (!addMode) {
 			setCampaigns(originalInputs.campaigns)
 			setAssetProjects(originalInputs.projects)
@@ -118,6 +110,22 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 				setAssetCustomFields(originalInputs.customs)
 			}
 		}
+	}
+
+	useEffect(() => {
+		if (!loadingAssets && !initialSelect && selectedAssets.length > 0) {
+			setInitialSelect(true)
+			setEditAssets(selectedAssets.map(assetItem => ({ ...assetItem, isEditSelected: true })))
+			getInitialAttributes()
+		}
+		if (loadingAssets) {
+			setEditAssets([])
+			setInitialSelect(false)
+		}
+	}, [selectedAssets, loadingAssets])
+
+	useEffect(() => {
+		initialize()
 	}, [addMode, originalInputs])
 
 	const getInitialAttributes = async () => {
@@ -158,10 +166,14 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 
 	const selectAll = () => {
 		setEditAssets(editAssets.map(assetItem => ({ ...assetItem, isEditSelected: true })))
+
+		initialize()
 	}
 
 	const deselectAll = () => {
 		setEditAssets(editAssets.map(asset => ({ ...asset, isEditSelected: false })))
+
+		resetSelectedFieldValue()
 	}
 
 	const editSelectedAssets = editAssets.filter(({ isEditSelected }) => isEditSelected)
