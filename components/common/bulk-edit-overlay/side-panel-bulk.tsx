@@ -346,7 +346,7 @@ const SidePanelBulk = ({
       </section>
 
       {inputCustomFields.map((field, index)=>{
-        if(field.type === 'selectOne'){
+        if(field.type === 'selectOne' && addMode){
           return <section className={styles['field-wrapper']} >
             <div className={`secondary-text ${styles.field}`}>{field.name}</div>
             <CustomFieldSelector
