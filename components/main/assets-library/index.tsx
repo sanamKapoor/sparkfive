@@ -6,7 +6,7 @@ import assetApi from '../../../server-api/asset'
 import folderApi from '../../../server-api/folder'
 import toastUtils from '../../../utils/toast'
 import { getFolderKeyAndNewNameByFileName } from '../../../utils/upload'
-import { getAssetsFilters, getAssetsSort, DEFAULT_FILTERS, getFoldersFromUploads } from '../../../utils/asset'
+import { getAssetsFilters, getAssetsSort, DEFAULT_FILTERS, DEFAULT_CUSTOM_FIELD_FILTERS, getFoldersFromUploads } from '../../../utils/asset'
 
 // Components
 import AssetOps from '../../common/asset/asset-ops'
@@ -101,7 +101,8 @@ const AssetsLibrary = () => {
   const clearFilters = () => {
     setActiveSortFilter({
       ...activeSortFilter,
-      ...DEFAULT_FILTERS
+      ...DEFAULT_FILTERS,
+      ...DEFAULT_CUSTOM_FIELD_FILTERS(activeSortFilter)
     })
   }
 

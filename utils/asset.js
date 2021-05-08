@@ -22,6 +22,26 @@ export const DEFAULT_FILTERS = {
     fileModifiedEndDate: undefined
 }
 
+export const DEFAULT_CUSTOM_FIELD_FILTERS = (userFilterObject) => {
+    let filters = {}
+    Object.keys(userFilterObject).map((key)=>{
+        // Custom fields key
+        if(key.includes('custom-p')){
+            // Get all keys
+            const index = key.split('custom-p')[1]
+            filters[`custom-p${index}`] = []
+        }
+
+        if(key.includes('all-p')){
+            // Get all keys
+            const index = key.split("all-p")[1]
+            filters[`all-p${index}`] = 'all'
+        }
+    })
+
+    return filters
+}
+
 export const getAssociatedCampaigns = (asset) => {
     const campaigns = {}
     const { projects, tasks } = asset
