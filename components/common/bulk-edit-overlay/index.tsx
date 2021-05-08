@@ -92,7 +92,21 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 			setTags([])
 			setCampaigns([])
 
-			// Custom fiedls
+
+			// Default custom field values
+			const updatedMappingCustomFieldData =  mappingCustomFieldData(inputCustomFields, [])
+
+			setAssetCustomFields(update(assetCustomFields, {
+				$set: updatedMappingCustomFieldData
+			}))
+
+		} else if (!addMode) {
+			setCampaigns(originalInputs.campaigns)
+			setAssetProjects(originalInputs.projects)
+			setTags(originalInputs.tags)
+			setAssetCustomFields(originalInputs.customs)
+
+			// Custom fields
 			if(inputCustomFields.length > 0){
 				const updatedMappingCustomFieldData =  mappingCustomFieldData(inputCustomFields, originalInputs.customs)
 
@@ -101,13 +115,8 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 				}))
 
 			}else{
-				setAssetCustomFields([])
+				setAssetCustomFields(originalInputs.customs)
 			}
-		} else if (!addMode) {
-			setCampaigns(originalInputs.campaigns)
-			setAssetProjects(originalInputs.projects)
-			setTags(originalInputs.tags)
-			setAssetCustomFields(originalInputs.customs)
 		}
 	}, [addMode, originalInputs])
 
