@@ -177,7 +177,7 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
             if (userFilterObject[key] && userFilterObject[key].length > 0 && userFilterObject[`all-p${index}`] && userFilterObject[`all-p${index}`] !== 'none'){
                 filters[`all-p${index}`] = userFilterObject[`all-p${index}`]
             }
-            addFilterToQuery(filters, userFilterObject[key], key)
+            addFilterToQuery(filters, userFilterObject[key], key, 'id')
         }
     })
 
@@ -251,8 +251,8 @@ export const getFoldersFromUploads = (files, isRegular = false) => {
     return Array.from(folders)
 }
 
-const addFilterToQuery = (filters, filterItems, key) => {
+const addFilterToQuery = (filters, filterItems, key, valueKey = 'value') => {
     if (filterItems?.length > 0) {
-        filters[key] = filterItems.map(item => item.value).join(',')
+        filters[key] = filterItems.map(item => item[valueKey]).join(',')
     }
 }
