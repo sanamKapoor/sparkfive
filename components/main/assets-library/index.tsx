@@ -152,13 +152,16 @@ const AssetsLibrary = () => {
             // Assign new file name without splash
             file = new File([file.slice(0, file.size, file.type)],
                 fileGroupInfo.newName
-                , { type: file.type, lastModified: file.lastModifiedDate })
+                , { type: file.type, lastModified: (file.lastModifiedDate || new Date(file.lastModified)) })
           }
         }
 
         // Append file to form data
         formData.append('asset', assets[i].dragDropFolderUpload ? file : file.originalFile)
-        formData.append('fileModifiedAt', assets[i].dragDropFolderUpload ? new Date(file.lastModifiedDate.toUTCString()).toISOString() : new Date(file.originalFile.lastModifiedDate.toUTCString()).toISOString())
+        formData.append('fileModifiedAt', assets[i].dragDropFolderUpload ?
+            new Date((file.lastModifiedDate || new Date(file.lastModified)).toUTCString()).toISOString() :
+            new Date((file.originalFile.lastModifiedDate || new Date(file.originalFile.lastModified)).toUTCString()).toISOString()
+        )
 
         let size = totalSize;
         // Calculate the rest of size
@@ -225,6 +228,7 @@ const AssetsLibrary = () => {
         }
       }
     }catch (e){
+      console.log(e)
       // Violate validation, mark failure
       const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', index, error: 'Processing file error'} : asset);
 
@@ -279,7 +283,7 @@ const AssetsLibrary = () => {
           dragDropFolderUpload = true;
           fileToUpload = new File([file.originalFile.slice(0, file.originalFile.size, file.originalFile.type)],
               file.originalFile.path.substring(1, file.originalFile.path.length)
-              , { type: file.originalFile.type, lastModified: file.originalFile.lastModifiedDate })
+              , { type: file.originalFile.type, lastModified: (file.originalFile.lastModifiedDate || new Date(file.originalFile.lastModified)) })
         }else{
           fileToUpload.path = null;
         }
