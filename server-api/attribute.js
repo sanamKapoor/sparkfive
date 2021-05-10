@@ -24,6 +24,7 @@ export default {
     // Custom fields management
     getCustomFields: (queryParams) => axios.get(`${customFieldsUrl}?${querystring.stringify(queryParams)}`),
     getCustomFieldsWithCount: (queryParams) => axios.get(`${customFieldsWithCountUrl}?${querystring.stringify(queryParams)}`),
+    getCustomFieldWithCount: (id, queryParams) => axios.get(`${customFieldsWithCountUrl}/${id}?${querystring.stringify(queryParams)}`),
     createCustomField: (payload) => axios.post(`${customFieldsUrl}`, payload),
     deleteCustomField: (payload) => axios.delete(`${customFieldsUrl}`, {data: payload}),
 }

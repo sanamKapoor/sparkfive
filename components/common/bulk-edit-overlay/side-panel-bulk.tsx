@@ -346,8 +346,8 @@ const SidePanelBulk = ({
       </section>
 
       {inputCustomFields.map((field, index)=>{
-        if(field.type === 'selectOne'){
-          return <div className={styles['field-wrapper']} >
+        if(field.type === 'selectOne' && addMode){
+          return <section className={styles['field-wrapper']} >
             <div className={`secondary-text ${styles.field}`}>{field.name}</div>
             <CustomFieldSelector
                 data={assetCustomFields[index]?.values[0]?.name}
@@ -356,7 +356,7 @@ const SidePanelBulk = ({
                 onLabelClick={() => { }}
                 handleFieldChange={(option)=>{ setCustomFields(index, [option])}}
             />
-          </div>
+          </section>
           // return <div className={styles['field-wrapper']} >
           //   <div className={`secondary-text ${styles.field}`}>{field.name}</div>
           //   <div className={'normal-text'}>
@@ -401,7 +401,7 @@ const SidePanelBulk = ({
         }
 
         if(field.type === 'selectMultiple'){
-          return <div className={styles['field-wrapper']} key={index}>
+          return <section className={styles['field-wrapper']} key={index}>
             <CreatableSelect
                 creatable={false}
                 title={field.name}
@@ -428,7 +428,7 @@ const SidePanelBulk = ({
                 isBulkEdit={true}
                 canAdd={addMode}
             />
-          </div>
+          </section>
         }
       })}
 

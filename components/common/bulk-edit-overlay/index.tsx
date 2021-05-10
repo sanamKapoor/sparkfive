@@ -74,6 +74,44 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 		}
 	}
 
+	// Reset all selected field values
+	const resetSelectedFieldValue = () => {
+		setAssetProjects([])
+		setTags([])
+		setCampaigns([])
+
+
+		// Default custom field values
+		const updatedMappingCustomFieldData =  mappingCustomFieldData(inputCustomFields, [])
+
+		setAssetCustomFields(update(assetCustomFields, {
+			$set: updatedMappingCustomFieldData
+		}))
+	}
+
+	const initialize = () => {
+		if (addMode) {
+			resetSelectedFieldValue()
+		} else if (!addMode) {
+			setCampaigns(originalInputs.campaigns)
+			setAssetProjects(originalInputs.projects)
+			setTags(originalInputs.tags)
+			setAssetCustomFields(originalInputs.customs)
+
+			// Custom fields
+			if(inputCustomFields.length > 0){
+				const updatedMappingCustomFieldData =  mappingCustomFieldData(inputCustomFields, originalInputs.customs)
+
+				setAssetCustomFields(update(assetCustomFields, {
+					$set: updatedMappingCustomFieldData
+				}))
+
+			}else{
+				setAssetCustomFields(originalInputs.customs)
+			}
+		}
+	}
+
 	useEffect(() => {
 		if (!loadingAssets && !initialSelect && selectedAssets.length > 0) {
 			setInitialSelect(true)
@@ -87,28 +125,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 	}, [selectedAssets, loadingAssets])
 
 	useEffect(() => {
-		if (addMode) {
-			setAssetProjects([])
-			setTags([])
-			setCampaigns([])
-
-			// Custom fiedls
-			if(inputCustomFields.length > 0){
-				const updatedMappingCustomFieldData =  mappingCustomFieldData(inputCustomFields, originalInputs.customs)
-
-				setAssetCustomFields(update(assetCustomFields, {
-					$set: updatedMappingCustomFieldData
-				}))
-
-			}else{
-				setAssetCustomFields([])
-			}
-		} else if (!addMode) {
-			setCampaigns(originalInputs.campaigns)
-			setAssetProjects(originalInputs.projects)
-			setTags(originalInputs.tags)
-			setAssetCustomFields(originalInputs.customs)
-		}
+		initialize()
 	}, [addMode, originalInputs])
 
 	const getInitialAttributes = async () => {
@@ -149,10 +166,14 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 
 	const selectAll = () => {
 		setEditAssets(editAssets.map(assetItem => ({ ...assetItem, isEditSelected: true })))
+
+		initialize()
 	}
 
 	const deselectAll = () => {
 		setEditAssets(editAssets.map(asset => ({ ...asset, isEditSelected: false })))
+
+		resetSelectedFieldValue()
 	}
 
 	const editSelectedAssets = editAssets.filter(({ isEditSelected }) => isEditSelected)

@@ -18,7 +18,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
 
     const [expandedMenus, setExpandedMenus] = useState(isFolder ? ['folders'] : ['tags', 'customFields', 'channels', 'campaigns'])
     const [stickyMenuScroll, setStickyMenuScroll] = useState(false)
-    const [customFields, setCustomFields] = useState([])
+    const [customFieldList, setCustomFieldList] = useState([])
 
     const {
         folders,
@@ -45,8 +45,13 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
         loadProductFields,
         loadFolders,
         isPublic,
-        sharePath
+        sharePath,
+        customFields,
+        loadCustomFields,
+        setCustomFields
     } = useContext(FilterContext)
+
+    // console.log(customFields)
 
     const getCustomFields = async () => {
         try {
@@ -54,14 +59,18 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                 await shareCollectionApi.getCustomFields({assetsCount: 'yes', assetLim: 'yes', sharePath}) :
                 await customFieldsApi.getCustomFieldsWithCount({assetsCount: 'yes', assetLim: 'yes', sharePath})
 
-            setCustomFields(data)
+            setCustomFieldList(data)
 
             let filter = {}
+            let fieldValues = {}
             data.map((value, index)=>{
                 // Select on wont use `all-px` query field
-                filter[`all-p${index}`] = {$set: value.type === 'selectOne' ? 'none' :  'all'}
-                filter[`custom-p${index}`] = {$set: []}
+                filter[`all-p${value.id}`] = {$set: value.type === 'selectOne' ? 'none' :  'all'}
+                filter[`custom-p${value.id}`] = {$set: []}
+                fieldValues[value.id] = []
             })
+
+            setCustomFields(fieldValues)
 
             // Add filter
             setActiveSortFilter(update(activeSortFilter, filter))
@@ -138,10 +147,10 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                     </section>
                 }
 
-                {customFields.map((field, index)=>{
-                    return <>
+                {customFieldList.map((field, index)=>{
+                    return <div key={index}>
                         {!isFolder &&
-                        <section key={index}>
+                        <section>
                             <div className={styles['expand-bar']} onClick={() => handleExpand('customFields')}>
                                 <h4>{field.name}</h4>
                                 {expandedMenus.includes('customFields') ?
@@ -151,17 +160,19 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                             {expandedMenus.includes('customFields') &&
                             <FilterSelector
                                 numItems={10}
-                                anyAllSelection={field.type === 'selectMultiple' ? activeSortFilter[`all-p${index}`] : ''}
-                                setAnyAll={field.type === 'selectMultiple' ? (value) => setActiveSortFilter(update(activeSortFilter, { [`all-p${index}`]: { $set: value } })) : () => {}}
-                                loadFn={()=>{}}
-                                filters={field.values.map(tag => ({ ...tag, label: tag.name, value: tag.id }))}
-                                value={activeSortFilter[`custom-p${index}`]}
-                                setValue={(selected) => setSortFilterValue(`custom-p${index}`, selected)}
+                                anyAllSelection={field.type === 'selectMultiple' ? activeSortFilter[`all-p${field.id}`] : ''}
+                                setAnyAll={field.type === 'selectMultiple' ? (value) => setActiveSortFilter(update(activeSortFilter, { [`all-p${field.id}`]: { $set: value } })) : () => {}}
+                                loadFn={()=>loadCustomFields(field.id)}
+                                filters={customFields[field.id] ? customFields[field.id].map(tag => ({ ...tag, label: tag.name, value: tag.id })) : []}
+                                value={activeSortFilter[`custom-p${field.id}`]}
+                                setValue={(selected) => setSortFilterValue(`custom-p${field.id}`, selected)}
                                 addtionalClass={'tags-container'}
+                                internalFilter
+                                mappingValueName={'id'}
                             />}
                         </section>
                         }
-                    </>
+                    </div>
                 })}
                 {!isFolder &&
                     <section>

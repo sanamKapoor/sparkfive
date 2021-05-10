@@ -22,6 +22,26 @@ export const DEFAULT_FILTERS = {
     fileModifiedEndDate: undefined
 }
 
+export const DEFAULT_CUSTOM_FIELD_FILTERS = (userFilterObject) => {
+    let filters = {}
+    Object.keys(userFilterObject).map((key)=>{
+        // Custom fields key
+        if(key.includes('custom-p')){
+            // Get all keys
+            const index = key.split('custom-p')[1]
+            filters[`custom-p${index}`] = []
+        }
+
+        if(key.includes('all-p')){
+            // Get all keys
+            const index = key.split("all-p")[1]
+            filters[`all-p${index}`] = 'all'
+        }
+    })
+
+    return filters
+}
+
 export const getAssociatedCampaigns = (asset) => {
     const campaigns = {}
     const { projects, tasks } = asset
@@ -157,7 +177,7 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
             if (userFilterObject[key] && userFilterObject[key].length > 0 && userFilterObject[`all-p${index}`] && userFilterObject[`all-p${index}`] !== 'none'){
                 filters[`all-p${index}`] = userFilterObject[`all-p${index}`]
             }
-            addFilterToQuery(filters, userFilterObject[key], key)
+            addFilterToQuery(filters, userFilterObject[key], key, 'id')
         }
     })
 
@@ -231,8 +251,8 @@ export const getFoldersFromUploads = (files, isRegular = false) => {
     return Array.from(folders)
 }
 
-const addFilterToQuery = (filters, filterItems, key) => {
+const addFilterToQuery = (filters, filterItems, key, valueKey = 'value') => {
     if (filterItems?.length > 0) {
-        filters[key] = filterItems.map(item => item.value).join(',')
+        filters[key] = filterItems.map(item => item[valueKey]).join(',')
     }
 }

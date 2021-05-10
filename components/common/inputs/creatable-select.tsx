@@ -31,7 +31,6 @@ const CreatableSelect = ({
 }) => {
 
   const onChange = async (selected, actionMeta) => {
-    console.log(actionMeta.action)
     if(actionMeta.action !== 'clear'){
       const newItem = await addItem(selected, actionMeta.action === 'create-option')
       if (newItem && actionMeta.action === 'create-option') {

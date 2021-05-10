@@ -236,11 +236,11 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
   const fieldValues = [
     {
       field: 'Last Updated',
-      value: format(new Date(fileModifiedAt), 'Pp')
+      value: format(new Date(fileModifiedAt), 'P')
     },
     {
       field: 'Uploaded',
-      value: format(new Date(createdAt), 'Pp')
+      value: format(new Date(createdAt), 'P')
     },
     {
       field: 'Type',
