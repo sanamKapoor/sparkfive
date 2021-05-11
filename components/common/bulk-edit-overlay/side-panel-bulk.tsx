@@ -164,6 +164,17 @@ const SidePanelBulk = ({
     setWarningMessage(warningMessage)
   }
 
+  // Parse custom field attributes
+  const customFieldAttributes = (customFields) => {
+    let values = []
+    customFields.map((field)=>{
+      values = values.concat(field.values)
+    })
+
+    return values
+
+  }
+
   const saveChanges = async () => {
     try {
       let filters = {}
@@ -194,17 +205,6 @@ const SidePanelBulk = ({
       setLoading(true)
       const mapAttributes = ({ id, name }) => ({ id, name })
 
-      // Parse custom field attributes
-      const customFieldAttributes = (customFields) => {
-        let values = []
-        customFields.map((field)=>{
-          values = values.concat(field.values)
-        })
-
-        return values
-
-      }
-
       const campaigns = assetCampaigns.map(mapAttributes)
       const projects = assetProjects.map(mapAttributes)
       const tags = assetTags.map(mapAttributes)
@@ -224,10 +224,11 @@ const SidePanelBulk = ({
           customs,
           products: []
         }
+
         if (assetProduct) updateObject.attributes.products = [{ product: assetProduct, productTags: assetProduct.tags }]
         if (assetFolder) updateObject.attributes.folders = [{ name: assetFolder.name, id: assetFolder.id }]
       } else {
-        updateObject.attributes = getRemoveAttributes({ campaigns, projects, tags })
+        updateObject.attributes = getRemoveAttributes({ campaigns, projects, tags, customs })
       }
 
       await assetApi.updateMultipleAttributes(updateObject, filters)
@@ -241,12 +242,13 @@ const SidePanelBulk = ({
     }
   }
 
-  const getRemoveAttributes = ({ campaigns, projects, tags }) => {
+  const getRemoveAttributes = ({ campaigns, projects, tags, customs }) => {
     const filterFn = (chosenList) => origItem => chosenList.findIndex(chosenItem => chosenItem.id === origItem.id) === -1
     return {
       removeCampaigns: originalInputs.campaigns.filter(filterFn(campaigns)),
       removeProjects: originalInputs.projects.filter(filterFn(projects)),
-      removeTags: originalInputs.tags.filter(filterFn(tags))
+      removeTags: originalInputs.tags.filter(filterFn(tags)),
+      removeCustoms: customFieldAttributes(originalInputs.customs).filter(filterFn(customs))
     }
   }
 
