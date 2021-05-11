@@ -1,20 +1,27 @@
+// External
 import styles from './detail-side-panel.module.css'
 import update from 'immutability-helper'
 import ReactCreatableSelect from 'react-select/creatable'
-
-import { AssetContext, UserContext, FilterContext } from '../../../context'
+import ReactSelect from 'react-select'
 import { useEffect, useState, useContext } from 'react'
 import { format } from 'date-fns'
 import { capitalCase } from 'change-case'
 import filesize from 'filesize'
-import { getParsedExtension } from '../../../utils/asset'
+
+// APIs
 import tagApi from '../../../server-api/tag'
+import customFieldsApi from '../../../server-api/attribute'
 import assetApi from '../../../server-api/asset'
 import projectApi from '../../../server-api/project'
 import campaignApi from '../../../server-api/campaign'
 import folderApi from '../../../server-api/folder'
-import { Utilities } from '../../../assets'
 
+// Contexts
+import { AssetContext, UserContext, FilterContext, LoadingContext } from '../../../context'
+
+// Utils
+import { getParsedExtension } from '../../../utils/asset'
+import { Utilities } from '../../../assets'
 import channelSocialOptions from '../../../resources/data/channels-social.json'
 import {
   CALENDAR_ACCESS
@@ -24,14 +31,35 @@ import {
 import Tag from '../misc/tag'
 import IconClickable from '../buttons/icon-clickable'
 import ChannelSelector from '../items/channel-selector'
+import CustomFieldSelector from "../items/custom-field-selector"
 import CreatableSelect from '../inputs/creatable-select'
 import ProjectCreationModal from '../modals/project-creation-modal'
 import ProductAddition from './product-addition'
+
+// Server DO NOT return full custom field slots including empty array, so we will generate empty array here
+// The order of result should be match with order of custom field list
+const mappingCustomFieldData = (list, valueList) => {
+  let rs = []
+  list.map((field)=>{
+    let value = valueList.filter(valueField => valueField.id === field.id)
+
+    if(value.length > 0){
+      rs.push(value[0])
+    }else{
+      let customField = { ...field }
+      customField.values = []
+      rs.push(customField)
+    }
+  })
+
+  return rs
+}
 
 const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
   const {
     id,
     createdAt,
+    fileModifiedAt,
     type,
     extension,
     dimension,
@@ -41,12 +69,16 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     projects,
     channel,
     product,
-    folder
+    folder,
+    customs
   } = asset
 
   const { assets, setAssets } = useContext(AssetContext)
+
   const { hasPermission } = useContext(UserContext)
   const { loadCampaigns, loadProjects, loadTags } = useContext(FilterContext)
+
+  const { setIsLoading }  = useContext(LoadingContext)
 
   const [inputCampaigns, setInputCampaigns] = useState([])
   const [inputTags, setInputTags] = useState([])
@@ -61,20 +93,48 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
 
   const [newProjectName, setNewProjectName] = useState('')
 
+  // Custom fields
+  const [activeCustomField, setActiveCustomField] = useState<number>()
+  const [inputCustomFields, setInputCustomFields] = useState([])
+  const [assetCustomFields, setAssetCustomFields] = useState(mappingCustomFieldData(inputCustomFields, customs))
+
   useEffect(() => {
     setTags(tags)
     setCampaigns(campaigns)
     setProjects(projects)
+
+    // setAssetCustomFields(update(assetCustomFields, {
+    //   $set: mappingCustomFieldData(inputCustomFields, customs)
+    // }))
+
   }, [asset])
 
   useEffect(() => {
     if (!isShare) {
       getTagsInputData()
+      getCustomFieldsInputData()
       if (hasPermission([CALENDAR_ACCESS])) {
         getInputData()
+        getCustomFieldsInputData()
       }
     }
   }, [])
+
+
+  useEffect(()=>{
+    if(inputCustomFields.length > 0){
+      const updatedMappingCustomFieldData =  mappingCustomFieldData(inputCustomFields, customs)
+
+      setAssetCustomFields(update(assetCustomFields, {
+        $set: updatedMappingCustomFieldData
+      }))
+
+      updateAssetState({
+        customs: {$set: updatedMappingCustomFieldData}
+      })
+    }
+  },[inputCustomFields])
+
 
   const getInputData = async () => {
     try {
@@ -93,6 +153,17 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     try {
       const tagsResponse = await tagApi.getTags()
       setInputTags(tagsResponse.data)
+    } catch (err) {
+      // TODO: Maybe show error?
+    }
+  }
+
+  const getCustomFieldsInputData = async () => {
+    try {
+      const { data } = await customFieldsApi.getCustomFields({isAll: 1, sort: 'createdAt,asc'})
+
+      setInputCustomFields(data)
+
     } catch (err) {
       // TODO: Maybe show error?
     }
@@ -164,8 +235,12 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
 
   const fieldValues = [
     {
-      field: 'Created',
-      value: format(new Date(createdAt), 'Pp')
+      field: 'Last Updated',
+      value: format(new Date(fileModifiedAt), 'P')
+    },
+    {
+      field: 'Uploaded',
+      value: format(new Date(createdAt), 'P')
     },
     {
       field: 'Type',
@@ -237,6 +312,73 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     updateAssetState(stateUpdate)
   }
 
+  // On change custom fields (add/remove)
+  const onChangeCustomField = (index, data) => {
+    // Show loading
+    setIsLoading(true)
+
+    // Hide select list
+    setActiveCustomField(undefined)
+
+
+    // Update asset custom field (local)
+    setAssetCustomFields(update(assetCustomFields, {
+      [index]: {
+        values: {$set: data}
+      }
+    }))
+
+    // Show loading
+    setIsLoading(false)
+  }
+
+  // On custom field select one changes
+  const onChangeSelectOneCustomField = async (selected, index) => {
+    console.log(selected)
+    // Show loading
+    setIsLoading(true)
+
+    // Call API to add custom fields
+    await assetApi.addCustomFields(id, selected)
+
+    // Hide select list
+    setActiveCustomField(undefined)
+
+    // Update asset custom field (local)
+    setAssetCustomFields(update(assetCustomFields, {
+      [index]: {
+        values: {$set: [selected]}
+      }
+    }))
+
+    // Hide loading
+    setIsLoading(false)
+  }
+
+  // On remove select one custom field
+
+  const onRemoveSelectOneCustomField = async (removeId, index, stateUpdate) => {
+    // Show loading
+    setIsLoading(true)
+
+    await assetApi.removeCustomFields(id, removeId)
+
+    // Update asset custom field (local)
+    setAssetCustomFields(update(assetCustomFields, {
+      [index]: {
+        values: {$set: stateUpdate}
+      }
+    }))
+
+    // Update asset (global)
+    updateAssetState({
+      customs: {[index]: {values: { $set: stateUpdate }}}
+    })
+
+    // Hide loading
+    setIsLoading(false)
+  }
+
   return (
     <div className={styles.container}>
       <h2>Details</h2>
@@ -244,7 +386,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
         {fieldValues.map(fieldvalue => (
           <div className={styles['field-wrapper']} key={fieldvalue.field}>
             <div className={`secondary-text ${styles.field}`}>{fieldvalue.field}</div>
-            <div className={'normal-text'}>{fieldvalue.value}</div>
+            <div className={`normal-text ${styles['meta-text']}`}>{fieldvalue.value}</div>
           </div>
         ))}
       </div>
@@ -317,44 +459,141 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
           dropdownIsActive={activeDropdown === 'tags'}
         />
       </div>
-      <div className={styles['field-wrapper']} >
-        <div className={`secondary-text ${styles.field}`}>Projects</div>
-        <div className={'normal-text'}>
-          <ul className={`tags-list ${styles['tags-list']}`}>
-            {assetProjects?.map((project, index) => (
-              <li key={project.id}>
-                <Tag
-                  altColor='turquoise'
-                  tag={project.name}
-                  canRemove={!isShare}
-                  removeFunction={() => handleAssociationChange(project.id, 'projects', 'remove')}
-                />
-              </li>
-            ))}
-          </ul>
-          {!isShare && hasPermission([CALENDAR_ACCESS]) &&
-            <>
-              {activeDropdown === 'projects' ?
-                <div className={`tag-select ${styles['select-wrapper']}`}>
-                  <ReactCreatableSelect
-                    options={inputProjects.map(project => ({ ...project, label: project.name, value: project.id }))}
-                    placeholder={'Enter new project or select an existing one'}
-                    onChange={handleProjectChange}
-                    styleType={'regular item'}
-                    menuPlacement={'top'}
-                    isClearable={true}
-                  />
-                </div>
-                :
-                <div className={`add ${styles['select-add']}`} onClick={() => setActiveDropdown('projects')}>
-                  <IconClickable src={Utilities.add} />
-                  <span>Add to Project</span>
-                </div>
-              }
-            </>
-          }
-        </div>
-      </div>
+
+      {inputCustomFields.map((field, index)=>{
+        if(field.type === 'selectOne'){
+
+          return <div className={styles['field-wrapper']} >
+            <div className={`secondary-text ${styles.field}`}>{field.name}</div>
+            <CustomFieldSelector
+                data={assetCustomFields[index]?.values[0]?.name}
+                options={field.values}
+                isShare={isShare}
+                onLabelClick={() => { }}
+                handleFieldChange={(option)=>{onChangeSelectOneCustomField(option, index)}}
+            />
+          </div>
+
+          // return <div className={styles['field-wrapper']} >
+          //   <div className={`secondary-text ${styles.field}`}>{field.name}</div>
+          //   <div className={'normal-text'}>
+          //     <ul className={`tags-list ${styles['tags-list']}`}>
+          //       {assetCustomFields[index]?.values?.map((value, valueIndex) => (
+          //           <li key={value.id}>
+          //             <Tag
+          //                 altColor='turquoise'
+          //                 tag={value.name}
+          //                 canRemove={!isShare}
+          //                 removeFunction={() => {
+          //                   let stateItemsUpdate = update(assetCustomFields[index]?.values, { $splice: [[valueIndex, 1]] })
+          //                   onRemoveSelectOneCustomField(value.id, index, stateItemsUpdate)
+          //                 }}
+          //             />
+          //           </li>
+          //       ))}
+          //     </ul>
+          //     {!isShare && hasPermission([CALENDAR_ACCESS]) &&
+          //     <>
+          //       {activeCustomField === index ?
+          //           <div className={`tag-select ${styles['select-wrapper']}`}>
+          //             <ReactSelect
+          //                 options={field.values.map(customField => ({ ...customField, label: customField.name, value: customField.id }))}
+          //                 placeholder={'Select an existing one'}
+          //                 onChange={(selected, actionMeta)=>{onChangeSelectOneCustomField(selected, actionMeta, index)}}
+          //                 styleType={'regular item'}
+          //                 menuPlacement={'top'}
+          //                 isClearable={true}
+          //             />
+          //           </div>
+          //           :
+          //           <div className={`add ${styles['select-add']}`} onClick={() => setActiveCustomField(index)}>
+          //             <IconClickable src={Utilities.add} />
+          //             <span>{`Add ${field.name}`}</span>
+          //           </div>
+          //       }
+          //     </>
+          //     }
+          //   </div>
+          // </div>
+        }
+
+        if(field.type === 'selectMultiple'){
+          return <div className={styles['field-wrapper']} key={index}>
+            <CreatableSelect
+                creatable={false}
+                title={field.name}
+                addText={`Add ${field.name}`}
+                onAddClick={() => setActiveCustomField(index)}
+                selectPlaceholder={'Select an existing one'}
+                avilableItems={field.values}
+                setAvailableItems={()=>{}}
+                selectedItems={(assetCustomFields.filter((assetField)=>assetField.id === field.id))[0]?.values || []}
+                setSelectedItems={(data)=>{onChangeCustomField(index, data)}}
+                onAddOperationFinished={(stateUpdate) => {
+                  updateAssetState({
+                    customs: {[index]: {values: { $set: stateUpdate }}}
+                  })
+                }}
+                onRemoveOperationFinished={async (index, stateUpdate, removeId) => {
+                  setIsLoading(true);
+
+                  await assetApi.removeCustomFields(id, removeId)
+
+                  updateAssetState({
+                    customs: {[index]: {values: { $set: stateUpdate }}}
+                  })
+
+                  setIsLoading(false);
+                }}
+                onOperationFailedSkipped={() => setActiveCustomField(undefined)}
+                isShare={isShare}
+                asyncCreateFn={(newItem) => { // Show loading
+                  setIsLoading(true); return assetApi.addCustomFields(id, newItem)}}
+                dropdownIsActive={activeCustomField === index}
+            />
+          </div>
+        }
+      })}
+
+
+      {/*<div className={styles['field-wrapper']} >*/}
+      {/*  <div className={`secondary-text ${styles.field}`}>Projects</div>*/}
+      {/*  <div className={'normal-text'}>*/}
+      {/*    <ul className={`tags-list ${styles['tags-list']}`}>*/}
+      {/*      {assetProjects?.map((project, index) => (*/}
+      {/*        <li key={project.id}>*/}
+      {/*          <Tag*/}
+      {/*            altColor='turquoise'*/}
+      {/*            tag={project.name}*/}
+      {/*            canRemove={!isShare}*/}
+      {/*            removeFunction={() => handleAssociationChange(project.id, 'projects', 'remove')}*/}
+      {/*          />*/}
+      {/*        </li>*/}
+      {/*      ))}*/}
+      {/*    </ul>*/}
+      {/*    {!isShare && hasPermission([CALENDAR_ACCESS]) &&*/}
+      {/*      <>*/}
+      {/*        {activeDropdown === 'projects' ?*/}
+      {/*          <div className={`tag-select ${styles['select-wrapper']}`}>*/}
+      {/*            <ReactCreatableSelect*/}
+      {/*              options={inputProjects.map(project => ({ ...project, label: project.name, value: project.id }))}*/}
+      {/*              placeholder={'Enter new project or select an existing one'}*/}
+      {/*              onChange={handleProjectChange}*/}
+      {/*              styleType={'regular item'}*/}
+      {/*              menuPlacement={'top'}*/}
+      {/*              isClearable={true}*/}
+      {/*            />*/}
+      {/*          </div>*/}
+      {/*          :*/}
+      {/*          <div className={`add ${styles['select-add']}`} onClick={() => setActiveDropdown('projects')}>*/}
+      {/*            <IconClickable src={Utilities.add} />*/}
+      {/*            <span>Add to Project</span>*/}
+      {/*          </div>*/}
+      {/*        }*/}
+      {/*      </>*/}
+      {/*    }*/}
+      {/*  </div>*/}
+      {/*</div>*/}
 
       <div className={styles['field-wrapper']} >
         <div className={`secondary-text ${styles.field}`}>Collection</div>

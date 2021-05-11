@@ -106,13 +106,14 @@ const AssetAddition = ({
 						// Assign new file name without splash
 						file = new File([file.slice(0, file.size, file.type)],
 							fileGroupInfo.newName
-							, { type: file.type })
+							, { type: file.type, lastModified: (file.lastModifiedDate || new Date(file.lastModified)) })
 					}
 				}
 
 
 				// Append file to form data
 				formData.append('asset', file)
+				formData.append('fileModifiedAt', new Date((file.lastModifiedDate || new Date(file.lastModified)).toUTCString()).toISOString())
 
 				let size = totalSize;
 				// Calculate the rest of size
@@ -230,6 +231,7 @@ const AssetAddition = ({
 						stage: 'draft',
 						type: 'image',
 						mimeType: file.originalFile.type,
+						fileModifiedAt: file.originalFile.lastModifiedDate || new Date(file.originalFile.lastModified)
 					},
 					file,
 					status: 'queued',

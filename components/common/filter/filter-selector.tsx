@@ -1,7 +1,7 @@
 import styles from './filter-selector.module.css'
 import { Utilities } from '../../../assets'
 import { FilterContext } from '../../../context'
-import { useContext, useEffect } from 'react'
+import {useContext, useEffect, useState} from 'react'
 import update from 'immutability-helper'
 
 // Components
@@ -19,17 +19,30 @@ const FilterSelector = ({
     setAnyAll = (val) => { },
     loadFn,
     addtionalClass = '',
-    capitalize = false
+    capitalize = false,
+    internalFilter = false, // Filter list will be get from loadFn resolve directly (useful for custom fields),
+    mappingValueName = 'value'
 }) => {
 
     const { activeSortFilter } = useContext(FilterContext)
+    const [internalFilters, setInternalFilters] = useState([])
+
+    const getFilterList = async () => {
+        setInternalFilters(await loadFn())
+    }
 
     useEffect(() => {
-        loadFn()
+        // Get filter list directly without by context
+        if(internalFilter){
+            getFilterList()
+        }else{
+            loadFn()
+        }
+
     }, [activeSortFilter])
 
     const toggleSelected = (selected) => {
-        let index = value && value.findIndex((item) => item.value === selected.value)
+        let index = value && value.findIndex((item) => item[mappingValueName] === selected[mappingValueName])
         if (!value || index !== -1) {
             setValue(update(value, {
                 $splice: [[index, 1]]
@@ -42,7 +55,7 @@ const FilterSelector = ({
     }
 
     // Set value and filters as selected
-    let visibleFilters = filters.slice(0, numItems)
+    let visibleFilters = internalFilter ? internalFilters.slice(0, numItems) : filters.slice(0, numItems)
 
     if (value)
         visibleFilters = [...visibleFilters, ...value.filter(selected => !visibleFilters.map(({ value }) => value).includes(selected.value))]
@@ -69,7 +82,7 @@ const FilterSelector = ({
             }
             <ul className={`${styles['item-list']} ${oneColumn && styles['one-column']} ${capitalize && 'capitalize'}`}>
                 {visibleFilters.map((filter, index) => {
-                    const isSelected = value && value.findIndex((item) => item.value === filter.value) !== -1
+                    const isSelected = value && value.findIndex((item) => item[mappingValueName] === filter[mappingValueName]) !== -1
                     return (
                         <li key={index} className={`${styles['select-item']} ${styles[addtionalClass]}`}>
                             <div className={`${styles['selectable-wrapper']} ${isSelected && styles['selected-wrapper']}`}>
@@ -94,7 +107,7 @@ const FilterSelector = ({
             {searchBar &&
                 <div className={`${styles['select-filter']} search-filters`}>
                     <FiltersSelect
-                        options={filters}
+                        options={internalFilter ? internalFilters : filters}
                         placeholder='Search'
                         styleType='filter'
                         onChange={(selected) => setValue(selected)}

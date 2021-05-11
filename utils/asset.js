@@ -10,13 +10,36 @@ export const DEFAULT_FILTERS = {
     filterOrientations: [],
     filterProductFields: [],
     filterProductType: [],
+    filterCustomFields: [],
     allTags: 'all',
     allCampaigns: 'all',
     allProjects: 'all',
     dimensionWidth: undefined,
     dimensionHeight: undefined,
     beginDate: undefined,
-    endDate: undefined
+    endDate: undefined,
+    fileModifiedBeginDate: undefined,
+    fileModifiedEndDate: undefined
+}
+
+export const DEFAULT_CUSTOM_FIELD_FILTERS = (userFilterObject) => {
+    let filters = {}
+    Object.keys(userFilterObject).map((key)=>{
+        // Custom fields key
+        if(key.includes('custom-p')){
+            // Get all keys
+            const index = key.split('custom-p')[1]
+            filters[`custom-p${index}`] = []
+        }
+
+        if(key.includes('all-p')){
+            // Get all keys
+            const index = key.split("all-p")[1]
+            filters[`all-p${index}`] = 'all'
+        }
+    })
+
+    return filters
 }
 
 export const getAssociatedCampaigns = (asset) => {
@@ -114,6 +137,8 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
         dimensionsActive,
         beginDate,
         endDate,
+        fileModifiedBeginDate,
+        fileModifiedEndDate,
         allTags,
         allCampaigns,
         filterProductFields,
@@ -144,6 +169,18 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
     addFilterToQuery(filters, filterFileTypes, 'fileTypes')
     addFilterToQuery(filters, filterOrientations, 'orientations')
 
+    Object.keys(userFilterObject).map((key)=>{
+        // Custom fields key
+        if(key.includes('custom-p')){
+            // Get all keys
+            const index = key.split("custom-p")[1]
+            if (userFilterObject[key] && userFilterObject[key].length > 0 && userFilterObject[`all-p${index}`] && userFilterObject[`all-p${index}`] !== 'none'){
+                filters[`all-p${index}`] = userFilterObject[`all-p${index}`]
+            }
+            addFilterToQuery(filters, userFilterObject[key], key, 'id')
+        }
+    })
+
     if (activeFolder) {
         filters.folderId = activeFolder
     }
@@ -166,6 +203,14 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
 
     if (endDate) {
         filters.endDate = endDate.toISOString()
+    }
+
+    if (fileModifiedBeginDate) {
+        filters.fileModifiedBeginDate = fileModifiedBeginDate.toISOString()
+    }
+
+    if (fileModifiedEndDate) {
+        filters.fileModifiedEndDate = fileModifiedEndDate.toISOString()
     }
 
     if (filterProductType && filterProductFields?.length > 0) {
@@ -206,8 +251,8 @@ export const getFoldersFromUploads = (files, isRegular = false) => {
     return Array.from(folders)
 }
 
-const addFilterToQuery = (filters, filterItems, key) => {
+const addFilterToQuery = (filters, filterItems, key, valueKey = 'value') => {
     if (filterItems?.length > 0) {
-        filters[key] = filterItems.map(item => item.value).join(',')
+        filters[key] = filterItems.map(item => item[valueKey]).join(',')
     }
 }

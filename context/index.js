@@ -140,6 +140,10 @@ export const FilterContext = createContext({
     tags: [],
     loadTags: () => { },
 
+    customFields: [],
+    loadCustomFields: (id, customFields) => { },
+    setCustomFields: (val) => { },
+
     folders: [],
     loadFolders: () => { },
 
@@ -168,7 +172,10 @@ export const FilterContext = createContext({
     },
     loadProductFields: () => { },
     setSharePath: (path) => { },
-    loadAll: () => { }
+    loadAll: () => { },
+
+    isPublic: false,
+    sharePath: ''
 })
 
 export const ShareContext = createContext({
