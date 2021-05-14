@@ -28,7 +28,6 @@ const DateUploaded = ({ handleBeginDate, handleEndDate, beginDate, endDate }) =>
 
     const parseDate = (str, format, locale) => {
         const parsed = dateFnsParse(str, format, new Date(), { locale });
-        console.log(parsed)
         if (DateUtils.isDate(parsed)) {
             return parsed;
         }
@@ -46,6 +45,7 @@ const DateUploaded = ({ handleBeginDate, handleEndDate, beginDate, endDate }) =>
             <div className={styles['dates-container']}>
                 <div>
                     <DayPickerInput
+                        value={beginDate}
                         formatDate={formatDate}
                         format={FORMAT}
                         parseDate={parseDate}
@@ -62,6 +62,7 @@ const DateUploaded = ({ handleBeginDate, handleEndDate, beginDate, endDate }) =>
 
                 <div>
                     <DayPickerInput
+                        value={endDate}
                         formatDate={formatDate}
                         format={FORMAT}
                         parseDate={parseDate}
