@@ -1,5 +1,5 @@
 // External
-import { useContext } from 'react'
+import {useContext, useEffect, useState} from 'react'
 import fileDownload from 'js-file-download';
 
 
@@ -13,6 +13,7 @@ import downloadUtils from '../../../utils/download'
 import { ASSET_DOWNLOAD } from '../../../constants/permissions'
 import { getAssetsFilters } from '../../../utils/asset'
 import assetApi from '../../../server-api/asset'
+import shareApi from '../../../server-api/share-collection'
 
 // Components
 import { AssetOps } from '../../../assets'
@@ -21,6 +22,7 @@ import { AssetOps } from '../../../assets'
 // Components
 import Button from '../../common/buttons/button'
 import IconClickable from '../../common/buttons/icon-clickable'
+import {useRouter} from "next/router";
 
 const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, isFolder = false, deselectHidden = false, iconColor = '' }) => {
 	const {
@@ -36,9 +38,12 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 		updateDownloadingStatus
 	} = useContext(AssetContext)
 
+	const router = useRouter()
+
 	const { hasPermission } = useContext(UserContext)
 
 	const {  activeSortFilter, term } = useContext(FilterContext)
+	const [sharePath, setSharePath] = useState('')
 
 	const selectedAssets = assets.filter(asset => asset.isSelected)
 	let totalSelectAssets = selectedAssets.length;
@@ -73,7 +78,7 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 						activeFolder,
 						addedIds: [],
 						nextPage: 1,
-						userFilterObject: activeSortFilter
+						userFilterObject: activeSortFilter,
 					}),
 					selectedAll: 1,
 					estimateTime: 1
@@ -90,11 +95,22 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 				payload.assetIds = selectedAssets.map(assetItem => assetItem.asset.id)
 			}
 
+			// Add sharePath property if user is at share collection page
+			if(sharePath){
+				filters['sharePath'] = sharePath
+			}
+
 
 			// Show processing bar
 			updateDownloadingStatus('zipping', 0, totalDownloadingAssets)
 
-			const { data } = await assetApi.downloadAll(payload,filters)
+			let api = assetApi;
+
+			if(isShare){
+				api = shareApi
+			}
+
+			const { data } = await api.downloadAll(payload,filters)
 
 			// Download file to storage
 			fileDownload(data, 'assets.zip');
@@ -118,6 +134,15 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 			setFolders(folders.map(folder => ({ ...folder, isSelected: false })))
 		}
 	}
+
+	useEffect(() => {
+		const { asPath } = router
+		if (asPath) {
+			// Get shareUrl from path
+			const splitPath = asPath.split('collections/')
+			setSharePath(splitPath[1])
+		}
+	}, [router.asPath])
 
 	return (
 		<>
