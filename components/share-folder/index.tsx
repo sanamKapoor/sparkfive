@@ -30,6 +30,7 @@ const ShareFolderMain = () => {
         addedIds,
         setAddedIds,
         nextPage,
+        selectAllAssets
     } = useContext(AssetContext)
 
     const { folderInfo, setFolderInfo } = useContext(ShareContext)
@@ -113,6 +114,9 @@ const ShareFolderMain = () => {
     }
 
     const selectAll = () => {
+        // Mark select all
+        selectAllAssets()
+
         setAssets(assets.map(assetItem => ({ ...assetItem, isSelected: true })))
     }
 
