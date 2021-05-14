@@ -10,6 +10,8 @@ import dateFnsParse from 'date-fns/parse';
 
 const DateUploaded = ({ handleBeginDate, handleEndDate, beginDate, endDate }) => {
 
+    console.log(beginDate)
+
     const [activeInput, setActiveInput] = useState('')
 
     const handleStartDay = (value) => {
