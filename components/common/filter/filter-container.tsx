@@ -51,8 +51,6 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
         setCustomFields
     } = useContext(FilterContext)
 
-    // console.log(customFields)
-
     const getCustomFields = async () => {
         try {
             const { data } = isPublic ?

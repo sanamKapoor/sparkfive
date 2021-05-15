@@ -9,7 +9,7 @@
 .options-list {
     position: absolute;
     display: flex;
-    z-index: 300;
+    z-index: 10000;
     flex-wrap: wrap;
     justify-content: center;
 }
