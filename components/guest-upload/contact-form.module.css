@@ -1,0 +1,48 @@
+.form{
+  border: solid 1px var(--color-secondary-border);
+  padding: 0 20px;
+  border-radius: 15px;
+  max-height: 275px;
+  overflow: scroll;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.container button{
+  margin-top: 18px;
+}
+
+.state-country{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.fields-pair{
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+  margin-top: 28px;
+}
+
+.fields-pair>div:first-child{
+  width: 55%;
+  margin-right: 5%;
+}
+
+.fields-pair>div:last-child{
+  width: 40%;
+}
+
+@media screen and (max-width: 650px) {
+  .fields-pair>div:first-child{
+    width: 100%;
+    margin-right: 0%;
+  }
+
+  .fields-pair>div:last-child{
+    width: 100%;
+  }
+}

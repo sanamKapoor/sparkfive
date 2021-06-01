@@ -7,3 +7,27 @@
   color: var(--color-sec-blue);
   font-size: 12px;
 }
+
+.underline-text{
+  text-decoration: underline;
+}
+
+.italic-text{
+  font-style: italic;
+}
+
+.pointer{
+  cursor: pointer;
+}
+
+.font-12{
+  font-size: 12px;
+}
+
+.font-weight-600{
+  font-weight: 600;
+}
+
+.font-weight-500{
+  font-weight: 500;
+}

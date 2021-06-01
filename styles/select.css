@@ -1,5 +1,9 @@
 /* Select prefix */
 
+.primary-input-height.select-prefix__control{
+  min-height: 48px;
+}
+
 .select-prefix__control {
   border-style: none !important;
 }

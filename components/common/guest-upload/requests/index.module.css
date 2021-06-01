@@ -1,0 +1,22 @@
+.time-col{
+  color: var(--color-ghost-text);
+  font-size: 12px;
+  line-height: 5px;
+}
+
+.name-col{
+  line-height: 5px;
+}
+
+.description-text{
+  color: var(--color-ghost-text);
+  font-size: 12px;
+}
+
+.data-row{
+  padding: 30px 0;
+}
+
+.ghost-line{
+  border-bottom: solid 1px var(--color-secondary-border);
+}

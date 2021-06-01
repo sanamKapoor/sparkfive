@@ -71,7 +71,7 @@ const TrialReminderModal = () => {
         <h3>Unleash Your Brand</h3>
         <ul>
           {BENEFITS.map(({ name, desc }, index) => (
-            <li>
+            <li key={index}>
               <div>{name}</div>
               <div>{desc}</div>
             </li>

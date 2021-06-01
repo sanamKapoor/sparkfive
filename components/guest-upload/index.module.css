@@ -1,0 +1,137 @@
+.container {
+    position: relative;
+    min-height: 60vh;
+    padding: 5rem 20rem;
+}
+
+.list-wrapper{
+    width: 100%;
+    max-width: 1800px;
+}
+
+.grid-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-gap: 2rem;
+}
+
+.row{
+    padding: 20px 0
+}
+
+.footer p{
+    font-size: 12px;
+    width: 100%;
+    text-align: center;
+}
+
+.button-wrapper {
+    position: relative;
+}
+
+.button-wrapper-displaced {
+    margin-right: 1rem;
+}
+
+.options-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.options-list.regular {
+    bottom: 1rem;
+}
+
+.options-list.dropdown {
+    right: 0;
+}
+
+.option {
+    background-color: white;
+    border: 1px solid var(--color-secondary-border);
+    /* border-right: none; */
+    width: 10rem;
+    height: 8em;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+
+.option-label {
+    font-weight: 500;
+    margin-top: 0.5rem;
+}
+
+.option-text {
+    color: var(--color-sec-blue);
+    font-size: 12px;
+    margin-top: 0.2rem;
+}
+
+.option:last-child {
+    border-right: 1px solid var(--color-secondary-border);
+}
+
+.option .icon {
+    width: 25px;
+    height: 25px;
+}
+
+.back {
+    margin-right: 0.3rem;
+    color: var(--color-sec-ivory);
+    font-size: 25px;
+    font-family: monospace;
+    cursor: pointer;
+}
+
+.additional-folder-wrapper {
+    position: relative;
+}
+
+.additional-folder-wrapper h4 {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+}
+
+.options-list.dropdown {
+    right: 0;
+    flex-wrap: nowrap;
+}
+
+.file-upload-row{
+    padding: 10px 5px;
+}
+
+.file-list{
+    border: solid 1px var(--color-secondary-border);
+    padding: 0 20px;
+    border-radius: 15px;
+    max-height: 275px;
+    overflow: scroll;
+}
+
+@media screen and (max-width: 1200px) {
+    .options-list.dropdown {
+        width: calc(160px * 3);
+        z-index: 400;
+        flex-wrap: wrap;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .options-list.dropdown {
+        width: calc(160px * 2);
+    }
+}
+
+@media screen and (max-width: 380px) {
+    .options-list.dropdown {
+        width: 160px
+    }
+}
+

@@ -15,8 +15,8 @@ const UserSettings = ({ activeView, SETTING_OPTIONS }) => {
       <ul>
         {Object.entries(SETTING_OPTIONS)
           .filter(([_, optionProps]) => hasPermission(optionProps.permissions))
-          .map(([option, optionProps]) => (
-            <Link href={`/main/user-settings/${option}`}>
+          .map(([option, optionProps], index) => (
+            <Link href={`/main/user-settings/${option}`} key={index}>
               <a>
                 <li className={`${styles.setting} ${activeView === option && styles.selected}`}>
                   <span>{optionProps.label}</span>
