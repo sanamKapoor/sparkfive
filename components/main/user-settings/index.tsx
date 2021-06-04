@@ -32,6 +32,7 @@ import SuperAdmin from './super-admin'
 import Notifications from './notifications'
 import NoPermissionNotice from '../../common/misc/no-permission-notice'
 import Button from '../../common/buttons/button'
+import GuestUpload from "./guest-upload";
 
 
 const SETTING_OPTIONS = {
@@ -42,6 +43,7 @@ const SETTING_OPTIONS = {
   security: { label: 'Security', permissions: [SETTINGS_SECURITY], content: Security },
   team: { label: 'Team', permissions: [SETTINGS_TEAM], content: Team },
   notifications: { label: 'Notifications', permissions: [], content: Notifications },
+  ['guest-upload']: { label: 'Guest Upload', contentTitle: 'Guest Upload', permissions: [SETTINGS_TEAM, SETTINGS_COMPANY], content: GuestUpload },
   integrations: { label: 'Integrations', permissions: [], content: Integrations },
   attributes: { label: 'Attributes', contentTitle: 'Custom Attributes', permissions: [SETTINGS_TEAM, SETTINGS_COMPANY], content: Attributes },
   ['super-admin']: { label: 'Super Admin', permissions: [SUPERADMIN_ACCESS], content: SuperAdmin },

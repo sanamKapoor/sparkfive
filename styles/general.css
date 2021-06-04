@@ -26,6 +26,7 @@
   --color-secondary-border: #dedad4;
   --color-secondary-hover: var(--color-sec-lightivory);
   --color-ghost-text: #9597a6;
+  --color-prim-blue: #4AA4FF;
 }
 
 .color-secondary{
@@ -204,5 +205,32 @@ ul {
 @media screen and (max-width: 1000px) {
   h1 {
     font-size: 25px;
+  }
+}
+
+.justify-center{
+  justify-content: center;
+}
+
+.p-l-0{
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.p-r-0{
+  padding-right: 0 !important;
+}
+
+.p-l-15{
+  padding-left: 15px;
+}
+
+@media screen and (max-width: 1280px){
+  .p-l-0-mobile{
+    padding-left: 0 !important;
+  }
+
+  .m-l-0-mobile{
+    margin-left: 0 !important;
   }
 }

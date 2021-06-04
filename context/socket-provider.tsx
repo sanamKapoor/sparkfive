@@ -7,6 +7,7 @@ import cookiesUtils from '../utils/cookies'
 export default ({ children }) => {
   const [socketInstance, setSocketInstance] = useState(null)
   const [connected, setConnected] = useState(false)
+  const [globalListener, setGlobalListener] = useState(true) // listener will be initialized in any context's child
 
   const { user } = useContext(UserContext)
 
@@ -16,11 +17,16 @@ export default ({ children }) => {
     client.off('downloadFilesProgress');
   }
 
-  const connectSocket = async () => {
+  const connectSocket = async (token?: string) => {
     // If socket has already connected
     if (connected) return
 
-    const jwt = cookiesUtils.get('jwt')
+    // If any component connect to socket manually (like gust upload), global listener is disable to prevent duplicate listner
+    if(token){
+      setGlobalListener(false)
+    }
+
+    const jwt = token ? token : cookiesUtils.get('jwt')
 
     if (jwt){
       // Init client
@@ -87,8 +93,10 @@ export default ({ children }) => {
   },[user])
 
   const socketValue = {
+    globalListener: globalListener,
     socket: socketInstance,
     socketLogout: logout,
+    connectSocket: connectSocket,
     connected
   }
   return (
