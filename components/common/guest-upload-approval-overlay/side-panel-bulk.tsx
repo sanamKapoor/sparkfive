@@ -64,7 +64,8 @@ const SidePanelBulk = ({
   originalInputs,
   setLoading,
   loading,
-  addMode
+  addMode,
+  approvalStatus = ''
 }) => {
 
   const {
@@ -95,6 +96,9 @@ const SidePanelBulk = ({
   // Custom fields
   const [inputCustomFields, setInputCustomFields] = useState([])
   const [activeCustomField, setActiveCustomField] = useState<number>()
+
+  // Guest upload
+  const [rejectConfirm, setRejectConfirm] = useState(false)
 
 
   useEffect(() => {
@@ -161,7 +165,14 @@ const SidePanelBulk = ({
     } else {
       warningMessage = `Are you sure you want to remove attributes from the (${elementsSelected.length}) selected assets?`
     }
-    setWarningMessage(warningMessage)
+
+    // If action is reject, show confirm popup
+    if(approvalStatus === 'rejected'){
+      setRejectConfirm(true)
+    }else{
+      setWarningMessage(warningMessage)
+    }
+
   }
 
   // Parse custom field attributes
@@ -211,7 +222,8 @@ const SidePanelBulk = ({
       const customs = customFieldAttributes(assetCustomFields).map(mapAttributes)
       const updateObject = {
         assetIds: elementsSelected.map(({ asset: { id } }) => id),
-        attributes: {}
+        attributes: {},
+        status: approvalStatus
       }
 
       if (addMode) {
@@ -508,6 +520,16 @@ const SidePanelBulk = ({
         closeModal={() => setWarningMessage('')}
         message={warningMessage}
         modalIsOpen={warningMessage}
+      />
+
+      <ConfirmModal
+          modalIsOpen={rejectConfirm}
+          closeModal={() => setRejectConfirm(false)}
+          confirmAction={saveChanges}
+          confirmText={'Reject'}
+          message={`Are you sure you want to reject ${elementsSelected.length} asset(s)?`}
+          closeButtonClass={styles['close-modal-btn']}
+          textContentClass={styles['confirm-modal-text']}
       />
     </div >
   )

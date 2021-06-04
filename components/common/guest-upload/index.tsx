@@ -5,9 +5,26 @@ import { useState } from 'react'
 import SectionButton from '../../common/buttons/section-button'
 import Links from "./links";
 import Requests from "./requests";
+import {useRouter} from "next/router";
 
 const GuestUpload = () => {
-    const [activeList, setActiveList] = useState('links')
+    const { query } = useRouter()
+
+    const getDefaultTab = () => {
+        switch (query.tab){
+            case '0': {
+                return 'links'
+            }
+            case '1': {
+                return 'requests'
+            }
+            default: {
+                return 'links'
+            }
+        }
+    }
+
+    const [activeList, setActiveList] = useState(getDefaultTab())
 
     return (
         <>

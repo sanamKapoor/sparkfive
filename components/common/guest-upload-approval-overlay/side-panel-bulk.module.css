@@ -22,7 +22,7 @@
     margin-left: 8px;
     margin-top: 10px;
 }
-  
+
 .select-add img{
     margin-right: 5px;
 }
@@ -31,4 +31,14 @@
     width: 100%;
     text-align: center;
     margin-top: 50px;
+}
+
+.close-modal-btn{
+    position: absolute;
+    right: 10px;
+    top: 0;
+}
+
+.confirm-modal-text{
+    padding-top: 30px;
 }

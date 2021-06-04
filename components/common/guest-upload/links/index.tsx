@@ -226,7 +226,7 @@ const Links = () => {
                                 </div>}
                                 {!field.default && <Input
                                     onChange={(e)=>{onInputChange(e, 'url', index)}}
-                                    value={field.url}
+                                    value={`${process.env.CLIENT_BASE_URL}/guest-upload?code=${field.url}`}
                                     disabled
                                     placeholder={'Link URL'}
                                     styleType={'regular-short'} />}
@@ -243,7 +243,7 @@ const Links = () => {
                                 <div className={`${styles['row']} justify-center ${styles['operation-row']}`}>
                                     <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`copy`]}  tooltipText={'Copy'} tooltipId={'Copy'}
                                                    onClick={(e)=>{
-                                                       copy(field.url)
+                                                       copy(`${process.env.CLIENT_BASE_URL}/guest-upload?code=${field.url}`)
                                                    }}
                                     />
 

@@ -15,4 +15,15 @@ export const requestStatus = {
     2: 'Completed'
 }
 
+export const approvalList = [
+    {
+        label: 'Approve',
+        value: 'approved'
+    },
+    {
+        label: 'Reject',
+        value: 'rejected'
+    },
+]
+
 export const maximumLinks = 3;

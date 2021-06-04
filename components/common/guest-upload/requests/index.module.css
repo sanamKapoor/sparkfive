@@ -1,7 +1,6 @@
 .time-col{
   color: var(--color-ghost-text);
   font-size: 12px;
-  line-height: 5px;
 }
 
 .name-col{
@@ -11,6 +10,7 @@
 .description-text{
   color: var(--color-ghost-text);
   font-size: 12px;
+  line-height: 12px;
 }
 
 .data-row{

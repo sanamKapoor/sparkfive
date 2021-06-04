@@ -2,7 +2,7 @@
   border: solid 1px var(--color-secondary-border);
   padding: 0 20px;
   border-radius: 15px;
-  max-height: 275px;
+  max-height: 300px;
   overflow: scroll;
 }
 
@@ -34,6 +34,10 @@
 
 .fields-pair>div:last-child{
   width: 40%;
+}
+
+.input{
+  margin-top: 5px;
 }
 
 @media screen and (max-width: 650px) {

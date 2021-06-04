@@ -25,7 +25,7 @@ const loadingDefaultFolder = {
 }
 
 export default ({ children }) => {
-    const { socket, connected } = useContext(SocketContext);
+    const { socket, connected, globalListener } = useContext(SocketContext);
 
     const [assets, setAssets] = useState([])
     const [folders, setFolders] = useState([])
@@ -330,7 +330,7 @@ export default ({ children }) => {
     // Init socket listener
     useEffect(()=>{
         // Socket is available and connected
-        if(socket && connected){
+        if(socket && connected && globalListener){
             console.log(`Register socket listener...`)
             // Listen upload file process event
             socket.on('uploadFilesProgress', function(data){

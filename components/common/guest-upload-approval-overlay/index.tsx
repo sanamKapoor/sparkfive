@@ -5,6 +5,7 @@ import { AssetContext, LoadingContext } from '../../../context'
 import assetApi from '../../../server-api/asset'
 import customFieldsApi from '../../../server-api/attribute'
 import update from 'immutability-helper'
+import moment from "moment";
 
 // Components
 import Button from '../buttons/button'
@@ -12,6 +13,10 @@ import IconClickable from '../buttons/icon-clickable'
 import SidePanelBulk from './side-panel-bulk'
 import EditGrid from './edit-grid'
 import SpinnerOverlay from '../spinners/spinner-overlay'
+import {statusList} from "../../../constants/guest-upload";
+import Select from "../inputs/select";
+
+import { approvalList } from '../../../constants/guest-upload'
 
 // Server DO NOT return full custom field slots including empty array, so we will generate empty array here
 // The order of result should be match with order of custom field list
@@ -32,9 +37,7 @@ const mappingCustomFieldData = (list, valueList) => {
 	return rs
 }
 
-const GuestUploadApprovalOverlay = ({ handleBackButton, selectedAssets }) => {
-
-	const { loadingAssets } = useContext(AssetContext)
+const GuestUploadApprovalOverlay = ({ handleBackButton, selectedAssets, loadingAssets = true, requestInfo = {} }) => {
 
 	const [loading, setLoading] = useState(true)
 
@@ -49,6 +52,8 @@ const GuestUploadApprovalOverlay = ({ handleBackButton, selectedAssets }) => {
 	const [editAssets, setEditAssets] = useState([])
 
 	const [addMode, setAddMode] = useState(true)
+
+	const [approvalStatus, setApprovalStatus] = useState('')
 
 	const [originalInputs, setOriginalInputs] = useState({
 		campaigns: [],
@@ -113,9 +118,16 @@ const GuestUploadApprovalOverlay = ({ handleBackButton, selectedAssets }) => {
 	}
 
 	useEffect(() => {
-		console.log(`Initial load`, loadingAssets)
-		getInitialAttributes()
-	}, [selectedAssets])
+		if (!loadingAssets && !initialSelect && selectedAssets.length > 0) {
+			setInitialSelect(true)
+			setEditAssets(selectedAssets.map(assetItem => ({ ...assetItem, isEditSelected: true })))
+			getInitialAttributes()
+		}
+		if (loadingAssets) {
+			setEditAssets([])
+			setInitialSelect(false)
+		}
+	}, [selectedAssets, loadingAssets])
 
 	const getInitialAttributes = async () => {
 		try {
@@ -188,6 +200,10 @@ const GuestUploadApprovalOverlay = ({ handleBackButton, selectedAssets }) => {
 		// setIsLoading(false)
 	}
 
+	const onChangeApproval = (selected) => {
+		setApprovalStatus(selected.value)
+	}
+
 	return (
 		<div className={`app-overlay ${styles.container}`}>
 			{loading && <SpinnerOverlay />}
@@ -198,10 +214,23 @@ const GuestUploadApprovalOverlay = ({ handleBackButton, selectedAssets }) => {
 						<span>Back</span>
 					</div>
 					<div className={styles.name}>
-						<h3>Guest Upload from</h3>
+						<h3>Guest Upload from {requestInfo.email}</h3>
+						<span>{moment(requestInfo.createdAt).format('DD/MM/YYYY')}</span>
+
 						<div className={styles['asset-actions']}>
 							<Button text={'Select All'} type={'button'} styleType={'secondary'} onClick={selectAll} />
 							<Button text={`Deselect All (${editSelectedAssets.length})`} type={'button'} styleType={'primary'} onClick={deselectAll} />
+						</div>
+
+						<div className={styles['select-action']}>
+							<Select
+								options={approvalList}
+								additionalClass={'font-weight-normal primary-input-height'}
+								onChange={(selected) => onChangeApproval(selected)}
+								placeholder={`Action on ${editSelectedAssets.length} Selected`}
+								styleType='regular'
+								value={approvalList.filter((item)=> item.value === approvalStatus)[0]}
+							/>
 						</div>
 					</div>
 				</div>
@@ -211,7 +240,7 @@ const GuestUploadApprovalOverlay = ({ handleBackButton, selectedAssets }) => {
 				<section className={styles.side}>
 					<SidePanelBulk
 						elementsSelected={editSelectedAssets}
-						onUpdate={getInitialAttributes}
+						onUpdate={handleBackButton}
 						assetCampaigns={assetCampaigns}
 						assetProjects={assetProjects}
 						assetTags={assetTags}
@@ -224,6 +253,7 @@ const GuestUploadApprovalOverlay = ({ handleBackButton, selectedAssets }) => {
 						setLoading={setLoading}
 						loading={loading}
 						addMode={addMode}
+						approvalStatus={approvalStatus}
 					/>
 				</section>
 			}

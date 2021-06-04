@@ -9,6 +9,23 @@ import AssetApplication from '../asset/asset-application'
 import AssetText from '../asset/asset-text'
 import IconClickable from '../buttons/icon-clickable'
 
+const getStatusClass = (status: string) => {
+    switch (status){
+        case 'approved': {
+            return 'green'
+        }
+
+        case 'pending': {
+            return 'yellow'
+        }
+
+        case 'rejected': {
+            return 'red'
+        }
+    }
+}
+
+
 const EditGrid = ({ assets, toggleSelectedEdit }) => (
   <div className={styles['list-wrapper']}>
     <ul className={`${styles['grid-list']}`}>
@@ -31,6 +48,9 @@ const EditGrid = ({ assets, toggleSelectedEdit }) => (
             <div data-tip data-for={`asset-${asset.id}`} className={styles['text-wrapper']}>
               {asset.name}
             </div>
+              <div className={`${styles['status-text']} ${styles[getStatusClass(asset.status)]}`}>
+                  {asset.status}
+              </div>
             <ReactTooltip id={`asset-${asset.id}`} delayShow={300} effect='solid'>{asset.name}</ReactTooltip>
           </>
         </li>

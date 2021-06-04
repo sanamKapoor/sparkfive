@@ -10,3 +10,10 @@
     float: right;
     margin-left: auto;
 }
+
+.file-name{
+    white-space: nowrap;
+    max-width: 75%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

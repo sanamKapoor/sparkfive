@@ -79,3 +79,25 @@
     margin-right: 20px;
     font-size: 12px;
 }
+
+@media screen and (max-width: 550px) {
+    .header {
+        padding: 30px 5px;
+    }
+
+    .left-logo{
+        left: 15px;
+    }
+
+    .right-logo{
+        right: 0;
+    }
+
+    .right-logo span{
+        display: none;
+    }
+
+    .logo-img {
+        margin-right: 15px;
+    }
+}

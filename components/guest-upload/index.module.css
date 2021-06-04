@@ -19,6 +19,22 @@
     padding: 20px 0
 }
 
+.success-row{
+    display: flex;
+    padding: 10px 0;
+}
+
+.success-text{
+    color: var(--color-nav);
+    font-size: 16px;
+}
+
+.upload-more-text{
+    padding-bottom: 0;
+    margin-top: 60px;
+    font-size: 12px;
+}
+
 .footer p{
     font-size: 12px;
     width: 100%;
@@ -109,10 +125,15 @@
 
 .file-list{
     border: solid 1px var(--color-secondary-border);
-    padding: 0 20px;
+    padding: 10px 20px;
     border-radius: 15px;
-    max-height: 275px;
+    max-height: 300px;
+    height: 100%;
     overflow: scroll;
+}
+
+.link{
+    color: var(--color-prim-blue);
 }
 
 @media screen and (max-width: 1200px) {
@@ -126,6 +147,12 @@
 @media screen and (max-width: 550px) {
     .options-list.dropdown {
         width: calc(160px * 2);
+    }
+
+    .container {
+        position: relative;
+        min-height: 60vh;
+        padding: 5rem 2rem;
     }
 }
 

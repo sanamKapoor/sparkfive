@@ -55,6 +55,31 @@
   max-width: 120px;
 }
 
+.status-text {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  font-size: 11px;
+  position: absolute;
+  max-width: 120px;
+  margin-top: 1.7rem;
+  width: 100%;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.green {
+  color: var(--color-prim-turquoise);
+}
+
+.yellow {
+  color: var(--color-prim-yellow);
+}
+
+.red {
+  color: var(--color-prim-red);
+}
+
 .selectable-wrapper{
   position: absolute;
   top: 5px;
