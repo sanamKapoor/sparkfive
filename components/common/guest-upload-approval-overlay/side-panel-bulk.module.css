@@ -1,0 +1,44 @@
+.container {
+    padding: 0 20px;
+}
+.container h2 {
+    font-size: 22px;
+    margin: 15px 0 30px 0;
+}
+.container section {
+    padding-left: 10px;
+}
+
+.field-wrapper {
+    margin-top: 1.5rem;
+}
+.container .field-wrapper .tags-list{
+    margin-top: 0.7rem;
+}
+.select-add{
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-left: 8px;
+    margin-top: 10px;
+}
+
+.select-add img{
+    margin-right: 5px;
+}
+
+.save-changes {
+    width: 100%;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.close-modal-btn{
+    position: absolute;
+    right: 10px;
+    top: 0;
+}
+
+.confirm-modal-text{
+    padding-top: 30px;
+}

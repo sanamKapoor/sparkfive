@@ -186,5 +186,12 @@ export const ShareContext = createContext({
 export const SocketContext = createContext({
     socket: undefined,
     connected: false,
-    socketLogout: () => { }
+    globalListener: true, // listener will be initialized in any context's child
+    socketLogout: () => { },
+    connectSocket: (token) => { }
+})
+
+export const GuestUploadContext = createContext({
+    logo: '',
+    updateLogo: (url) => {}
 })

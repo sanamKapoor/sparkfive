@@ -8,7 +8,7 @@ import Input from '../../common/inputs/input'
 import TextArea from '../../common/inputs/text-area'
 import IconClickable from '../../common/buttons/icon-clickable'
 
-const ShareModal = ({ modalIsOpen, closeModal, itemsAmount, shareAssets }) => {
+const ShareModal = ({ modalIsOpen, closeModal, itemsAmount, shareAssets, title }) => {
 
 	const [recipients, setRecipients] = useState('')
 	const [message, setMessage] = useState('')
@@ -24,7 +24,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount, shareAssets }) => {
 			modalIsOpen={modalIsOpen}
 			closeModal={closemoveModal}
 			confirmText={'Share'}
-			headText={`Share ${itemsAmount} item(s)`}
+			headText={title ? title : `Share ${itemsAmount} item(s)`}
 			disabledConfirm={!recipients}
 			confirmAction={() => {
 				shareAssets(recipients, message)
@@ -37,6 +37,14 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount, shareAssets }) => {
 				<TextArea placeholder={'Add a message (optional)'} rows={7} onChange={e => setMessage(e.target.value)} styleType={'regular-short'} noResize={true}/>
 			</div>
 		</Base >)
+}
+
+interface Props{
+	modalIsOpen: boolean;
+	closeModal: () => void;
+	itemsAmount: number;
+	shareAssets: (recipients: string, message: string) => void;
+	title?: string;
 }
 
 export default ShareModal
