@@ -213,7 +213,7 @@ const Links = () => {
         <div className={styles['main-wrapper']}>
             {linkList.map((field, index)=>{
                 return <div className={`${styles['row']} ${styles['field-block']}`} key={index}>
-                    <div className={`${styles['col-50']} ${styles['col-md-65']} p-r-0 p-l-0-mobile`}>
+                    <div className={`${styles['col-50']} ${styles['col-md-80']} ${styles['col-sm-100']} p-r-0 p-l-0-mobile`}>
                         <div className={styles['row']}>
                             <div className={`${styles['col-100']} ${styles['flex-display']} p-l-0-mobile`}>
                                 <span className={styles['font-weight-600']}>{index+1}.</span>
@@ -233,9 +233,9 @@ const Links = () => {
                             </div>
                         </div>
                     </div>
-                    {!field.default && <div className={`${styles['col-15']} ${styles['col-md-35']} p-l-0`}>
+                    {!field.default && <div className={`${styles['col-15']} ${styles['col-md-20']} ${styles['col-sm-100']} p-l-0`}>
                         <div className={styles['row']}>
-                            <div className={`${styles['col-100']} ${styles['flex-display']}`}>
+                            <div className={`${styles['col-100']} ${styles['col-sm-d-n']} ${styles['flex-display']}`}>
                                 <span className={`${styles['font-weight-600']} ${styles['visibility-hidden']}`}>{index+1}.</span>
                                 <span className={`${styles['row-header']} ${styles['visibility-hidden']}`}>Link URL</span>
                             </div>
@@ -257,7 +257,7 @@ const Links = () => {
                             </div>
                         </div>
                     </div>}
-                    <div className={`${styles['col-15']} ${styles['col-md-100']} p-l-0`}>
+                    <div className={`${styles['col-15']} ${styles['col-md-80']} ${styles['col-sm-100']} p-l-0`}>
                         <div className={styles['row']}>
                             <div className={`${styles['col-100']} p-l-0`}>
                                 <span className={`${styles['row-header']} ${styles['font-weight-600']} m-l-0-mobile`}>Status</span>
@@ -274,12 +274,12 @@ const Links = () => {
                             </div>
                         </div>
                     </div>
-                    <div className={`${styles['col-20']} ${styles['col-md-100']} ${styles['button-row']} p-l-0`}>
+                    <div className={`${styles['col-20']} ${styles['col-md-80']} ${styles['col-sm-100']} ${styles['button-row']} p-l-0`}>
                         <div className={styles['row']}>
                             <div className={`${styles['col-100']} p-l-0-mobile`}>
                                 <span className={`${styles['row-header']} ${styles['font-weight-600']} ${styles['visibility-hidden']}`}>Status</span>
                             </div>
-                            <div className={`${styles['col-100']}  p-l-0-mobile`}>
+                            <div className={`${field.status === 'public' ? 'p-r-0' : ''} ${styles['col-100']}  p-l-0-mobile`}>
                                 {field.status === 'private' && <>
                                     <Input
                                     type={field.showPassword ? 'text' : 'password'}
@@ -295,11 +295,31 @@ const Links = () => {
                                                 setValue={(value)=>{showPassword(index, value)}} toggle={true}/>
                                 </>
                                 }
+
+                                {field.status === 'public' && <div className={`${styles['button-row']} p-l-0 flex-row-reverse`}>
+                                    {field.id && <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`delete`]}  tooltipText={'Delete'} tooltipId={'Delete'}
+                                                                onClick={()=>{
+                                                                    setCurrentDeleteId(field.id)
+                                                                    setConfirmDeleteModal(true)
+                                                                }}
+                                    />}
+                                    {field.id && <Button
+                                        styleTypes={['exclude-min-height']}
+                                        type={'button'}
+                                        text='Save'
+                                        styleType='primary'
+                                        onClick={()=>{saveChanges(index)}}
+                                        disabled={!field.url}
+                                    />}
+
+                                </div>
+                                }
                             </div>
                         </div>
                     </div>
 
-                    <div className={`${styles['col-100']} ${styles['col-md-100']} ${styles['button-row']} p-l-0 flex-row-reverse m-t-10`}>
+                    {field.status === 'private' &&
+                    <div className={`${styles['col-100']} ${styles['col-md-100']} ${styles['button-row']} p-l-0 flex-row-reverse m-t-20`}>
                         {field.id && <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`delete`]}  tooltipText={'Delete'} tooltipId={'Delete'}
                                                     onClick={()=>{
                                                         setCurrentDeleteId(field.id)
@@ -315,7 +335,7 @@ const Links = () => {
                             disabled={!field.url}
                         />}
 
-                    </div>
+                    </div>}
                 </div>
             })}
 
