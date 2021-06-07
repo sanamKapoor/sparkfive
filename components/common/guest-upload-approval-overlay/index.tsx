@@ -129,9 +129,12 @@ const GuestUploadApprovalOverlay = ({ handleBackButton, selectedAssets, loadingA
 		}
 	}, [selectedAssets, loadingAssets])
 
+	useEffect(() => {
+		initialize()
+	}, [addMode, originalInputs])
+
 	const getInitialAttributes = async () => {
 		try {
-			console.log(`getInitialAttributes`)
 			// Get custom fields list
 			await getCustomFieldsInputData();
 

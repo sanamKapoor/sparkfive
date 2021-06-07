@@ -342,6 +342,10 @@ const GuestUpload = () => {
     }
 
     const saveChanges = async (data) => {
+        // Scroll to top
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+
         // Retry upload
         if(retryListCount > 0){
             const failAssets = files.filter((updatedAsset)=>updatedAsset.status === 'fail')
@@ -493,19 +497,19 @@ const GuestUpload = () => {
                     retryListCount={retryListCount}
                     />}
 
-                    {uploadingStatus === 'none' && <div className={`row justify-center m-b-10`}>
+                    {uploadingStatus === 'none' && <div className={`row justify-center text-align-center m-b-10`}>
                         Your upload is ready
                     </div>}
 
-                    {uploadingStatus === 'done' && retryListCount > 0 && <div className={`row justify-center m-b-10`}>
+                    {uploadingStatus === 'done' && retryListCount > 0 && <div className={`row justify-center text-align-center m-b-10`}>
                         {retryListCount} assets uploaded fail
                     </div>}
 
-                    {uploadingStatus === 'done' && retryListCount > 0 && <div className={`row justify-center m-b-25`}>
+                    {uploadingStatus === 'done' && retryListCount > 0 && <div className={`row justify-center text-align-center m-b-25`}>
                         Press Retry button to try again
                     </div>}
 
-                    {uploadingStatus === 'none' && <div className={`row justify-center m-b-25`}>
+                    {uploadingStatus === 'none' && <div className={`row justify-center text-align-center m-b-25`}>
                         Please complete the form below and press Submit button when ready to send your files
                     </div>}
 
