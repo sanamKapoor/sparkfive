@@ -4,7 +4,7 @@
   border-radius: 15px;
   max-height: 400px;
   height: 100%;
-  overflow: scroll;
+  /*overflow: scroll;*/
 }
 
 .container {
@@ -58,5 +58,9 @@
 
   .fields-pair>div:last-child{
     width: 100%;
+  }
+
+  .form{
+    max-height: 100%;
   }
 }
