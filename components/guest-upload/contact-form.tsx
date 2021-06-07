@@ -1,24 +1,14 @@
 import styles from './contact-form.module.css'
-import { useContext, useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { LocationContext, TeamContext } from '../../context'
 
 // Components
-import Button from '../common/buttons/button'
 import FormInput from '../common/inputs/form-input'
 import Input from '../common/inputs/input'
 import TextArea from '../common/inputs/text-area'
-import Select from '../common/inputs/select'
 
-const ContactForm = ({ id, onSubmit, disabled = false }) => {
+const ContactForm = ({ id, onSubmit, disabled = false, teamName = '' }) => {
   const { control, handleSubmit, errors } = useForm()
-
-  const { countries, states, loadStates } = useContext(LocationContext)
-  const { team, patchTeam } = useContext(TeamContext)
-
-  const[name, setName] = useState('')
-  const[email, setEmail] = useState('')
-  const[notes, setNotes] = useState('')
 
   const submitForm = data => {
       onSubmit(data)
@@ -43,7 +33,7 @@ const ContactForm = ({ id, onSubmit, disabled = false }) => {
                       />
                     }
                     name='name'
-                    defaultValue={name}
+                    defaultValue={''}
                     control={control}
                     rules={{ required: true, minLength: 2, maxLength: 30 }}
                     errors={errors}
@@ -63,7 +53,7 @@ const ContactForm = ({ id, onSubmit, disabled = false }) => {
                       />
                     }
                     name='email'
-                    defaultValue={email}
+                    defaultValue={''}
                     control={control}
                     rules={{ required: true, pattern: {
                             value: /\S+@\S+\.\S+/,
@@ -77,7 +67,7 @@ const ContactForm = ({ id, onSubmit, disabled = false }) => {
 
             <FormInput
                 labId='notes'
-                label={'Note to Customer (i.e name of project, campaign, etc)'}
+                label={`Note to ${teamName} (i.e name of project, campaign, etc)`}
                 InputComponent={
                   <TextArea
                       type='text'
@@ -87,12 +77,12 @@ const ContactForm = ({ id, onSubmit, disabled = false }) => {
                       additionalClasses={styles.input}
                   />
                 }
-                defaultValue={notes}
+                defaultValue={''}
                 name='notes'
                 control={control}
-                rules={{ minLength: 4, maxLength: 50 }}
+                rules={{ minLength: 4, maxLength: 300 }}
                 errors={errors}
-                message={'This field should be between 4 and 50 characters long'}
+                message={'This field should be between 4 and 300 characters long'}
             />
           </div>
         </div>

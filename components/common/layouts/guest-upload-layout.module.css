@@ -1,8 +1,9 @@
 .header {
-    background-color: var(--color-prim-navy);
-    padding: 30px 32px;
+    background-color: rgb(249 249 249);
+    border-bottom: solid 4px rgb(8 19 94);
+    padding: 30px 32px 64px 32px;
     display: flex;
-    color: white;
+    color: var(--color-prim-navy);
     position: relative;
 }
 
@@ -16,15 +17,15 @@
 .left-logo{
     position: absolute;
     left: 48px;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 20px;
+    /*transform: translateY(-50%);*/
 }
 
 .right-logo{
     position: absolute;
     right: 48px;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 20px;
+    /*transform: translateY(-50%);*/
 }
 
 .navigation-links {

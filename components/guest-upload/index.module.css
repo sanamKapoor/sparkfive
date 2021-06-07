@@ -127,7 +127,7 @@
     border: solid 1px var(--color-secondary-border);
     padding: 10px 20px;
     border-radius: 15px;
-    max-height: 300px;
+    max-height: 400px;
     height: 100%;
     overflow: scroll;
 }
@@ -141,6 +141,10 @@
         width: calc(160px * 3);
         z-index: 400;
         flex-wrap: wrap;
+    }
+
+    .container {
+        padding: 2rem 0;
     }
 }
 
