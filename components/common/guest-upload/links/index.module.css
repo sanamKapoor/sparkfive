@@ -234,9 +234,25 @@
 }
 
 @media screen and (max-width: 1280px){
+    .button-row{
+        display: block;
+    }
+
     .col-md-100{
         flex: 0 0 100%;
         max-width: 100%;
+        margin: 15px 0;
+    }
+
+    .col-md-80{
+        flex: 0 0 80%;
+        max-width: 80%;
+        margin: 15px 0;
+    }
+
+    .col-md-20{
+        flex: 0 0 20%;
+        max-width: 20%;
         margin: 15px 0;
     }
 
@@ -257,4 +273,21 @@
         border-bottom: solid 2px #eae8e4;
         padding-bottom: 30px;
     }
+}
+
+@media screen and (max-width: 576px){
+    .col-sm-100{
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin: 15px 0;
+    }
+
+    .col-sm-d-n{
+        display: none;
+    }
+
+    .operation-row{
+        justify-content: flex-start;
+    }
+
 }

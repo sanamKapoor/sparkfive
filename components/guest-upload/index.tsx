@@ -36,7 +36,7 @@ import shareUploadLinkApi from "../../server-api/share-upload-link"
 
 const GuestUpload = () => {
     const { socket, connected, connectSocket } = useContext(SocketContext)
-    const { updateLogo } = useContext(GuestUploadContext)
+    const { updateLogo, logo } = useContext(GuestUploadContext)
 
 
     const { query } = useRouter()
@@ -388,6 +388,8 @@ const GuestUpload = () => {
         try {
             const { data } = await shareUploadLinkApi.getLinkDetail({ url: query.code })
 
+            console.log(data)
+
             // Show team name and logo
             updateLogo(data.logo)
             setTeamName(data.team)
@@ -400,6 +402,7 @@ const GuestUpload = () => {
         } catch (err) {
             // If not 500, must be auth error, request user password
             if (err.response.status !== 500) {
+                updateLogo(err.response?.data?.teamIcon)
                 // Hide loading
                 setLoading(false)
 
@@ -515,7 +518,12 @@ const GuestUpload = () => {
                             </div>
                         </div>
                         <div className={'col-55 col-md-100'}>
-                            <ContactForm id={'contact-form'} onSubmit={saveChanges} disabled={uploadingStatus === 'uploading'}/>
+                            <ContactForm
+                                id={'contact-form'}
+                                onSubmit={saveChanges}
+                                disabled={uploadingStatus === 'uploading'}
+                                teamName={teamName}
+                            />
                         </div>
                     </div>
 
@@ -532,13 +540,13 @@ const GuestUpload = () => {
                     <p className={'font-weight-600 m-b-0'}>Sparkfive</p>
                     <p className={'m-b-0'}>Store, organize & distribute your digital assets efficiently with Sparkfive</p>
                     <p className={'m-t-0'}>Unlease the power of your team</p>
-                    <p className={'m-t-0'}><Link href={'/'}><a className={styles.link}>Learn More</a></Link></p>
+                    <p className={'m-t-0'}><Link href={'https://www.sparkfive.com'}><a className={styles.link}>Learn More</a></Link></p>
                 </div>
 
                 {activePasswordOverlay &&
                 <PasswordOverlay
                     onPasswordSubmit={submitPassword}
-                    logo={""}
+                    logo={logo}
                 />
                 }
             </>}

@@ -2,7 +2,8 @@
   border: solid 1px var(--color-secondary-border);
   padding: 0 20px;
   border-radius: 15px;
-  max-height: 300px;
+  max-height: 400px;
+  height: 100%;
   overflow: scroll;
 }
 
@@ -39,6 +40,15 @@
 .input{
   margin-top: 5px;
 }
+
+@media screen and (max-width: 1200px) {
+  .container{
+    flex-direction: column;
+  }
+}
+
+
+
 
 @media screen and (max-width: 650px) {
   .fields-pair>div:first-child{
