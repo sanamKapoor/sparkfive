@@ -8,6 +8,8 @@ import AssetVideo from '../asset/asset-video'
 import AssetApplication from '../asset/asset-application'
 import AssetText from '../asset/asset-text'
 import IconClickable from '../buttons/icon-clickable'
+import ImagePreviewModal from '../modals/image-preview-modal'
+import {useState} from "react";
 
 const getStatusClass = (status: string) => {
     switch (status){
@@ -26,20 +28,48 @@ const getStatusClass = (status: string) => {
 }
 
 
-const EditGrid = ({ assets, toggleSelectedEdit }) => (
-  <div className={styles['list-wrapper']}>
+const EditGrid = ({ assets, toggleSelectedEdit }) => {
+    const [previewModalOpen, setPreviewModalOpen] = useState(false)
+    const [previewUrl, setPreviewUrl] = useState('')
+
+    const showPreviewImage = (url) => {
+        setPreviewUrl(url)
+        setPreviewModalOpen(true)
+    }
+
+
+  return <div className={styles['list-wrapper']}>
     <ul className={`${styles['grid-list']}`}>
       {assets.map(({ asset, thumbailUrl, realUrl, isEditSelected }, index) => (
         <li key={asset.id || index}>
           <>
             <div className={`${styles.container}`}>
-              <div className={styles['image-wrapper']} onClick={() => toggleSelectedEdit(asset.id)}>
-                {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} />}
-                {asset.type === 'video' && <AssetVideo asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} bulkSize={true} />}
-                {asset.type === 'application' && <AssetApplication extension={asset.extension} bulkSize={true} />}
-                {asset.type === 'text' && <AssetText extension={asset.extension} bulkSize={true} />}
+              <div className={styles['image-wrapper']}>
+                {asset.type === 'image' && <AssetImg
+                    assetImg={thumbailUrl}
+                    type={asset.type}
+                    name={asset.name}
+                    onClick={()=>{showPreviewImage(realUrl)}}
+                />}
+                {asset.type === 'video' && <AssetVideo
+                    asset={asset}
+                    realUrl={realUrl}
+                    additionalClass={styles['video-wrapper']}
+                    bulkSize={true}
+                    onClick={()=>{showPreviewImage(realUrl)}}
+                />}
+                {asset.type === 'application' && <AssetApplication
+                    extension={asset.extension}
+                    bulkSize={true}
+                    onClick={()=>{showPreviewImage(realUrl)}}
+                />}
+                {asset.type === 'text' && <AssetText
+                    extension={asset.extension}
+                    bulkSize={true}
+                    onClick={()=>{showPreviewImage(realUrl)}}
+                />}
                 <>
-                  <div className={`${styles['selectable-wrapper']} ${isEditSelected && styles['selected-wrapper']}`}>
+                  <div id={`button-${index}`} className={`${styles['selectable-wrapper']} ${isEditSelected && styles['selected-wrapper']}`} onClick={() => toggleSelectedEdit(asset.id)}>
                     <IconClickable src={isEditSelected ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal} additionalClass={styles['select-icon']} />
                   </div>
                 </>
@@ -56,7 +86,9 @@ const EditGrid = ({ assets, toggleSelectedEdit }) => (
         </li>
       ))}
     </ul>
+
+      <ImagePreviewModal url={previewUrl} modalIsOpen={previewModalOpen} closeModal={()=>{setPreviewModalOpen(false)}}/>
   </div>
-)
+}
 
 export default EditGrid
