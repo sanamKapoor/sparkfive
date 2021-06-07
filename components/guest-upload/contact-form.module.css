@@ -59,4 +59,8 @@
   .fields-pair>div:last-child{
     width: 100%;
   }
+
+  .form{
+    max-height: 100%;
+  }
 }
