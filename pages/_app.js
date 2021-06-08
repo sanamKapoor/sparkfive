@@ -1,6 +1,8 @@
 import Head from 'next/head'
 // Import global css
 import '../styles/general.css'
+import '../styles/grid.css'
+import '../styles/position.css'
 import '../styles/auth.css'
 import '../styles/time-picker.css'
 import '../styles/detail-pages.css'

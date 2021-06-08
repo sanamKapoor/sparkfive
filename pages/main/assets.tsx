@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import {useContext} from "react";
+import {useContext} from "react"
 import FilterProvider from '../../context/filter-provider'
 import { ASSET_ACCESS } from '../../constants/permissions'
 

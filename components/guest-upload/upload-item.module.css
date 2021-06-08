@@ -1,0 +1,19 @@
+.file-upload-row {
+    padding: 10px 5px;
+}
+
+.file-icon{
+    margin-right: 15px;
+}
+
+.check-icon{
+    float: right;
+    margin-left: auto;
+}
+
+.file-name{
+    white-space: nowrap;
+    max-width: 75%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
