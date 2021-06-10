@@ -1,6 +1,6 @@
 import styles from './index.module.css'
 import { useState, useContext, useEffect } from 'react'
-import { getAssetsFilters, getAssetsSort, DEFAULT_FILTERS } from '../../utils/asset'
+import { getAssetsFilters, getAssetsSort, DEFAULT_FILTERS, DEFAULT_CUSTOM_FIELD_FILTERS } from '../../utils/asset'
 import toastUtils from '../../utils/toast'
 import requestUtils from '../../utils/requests'
 import { useRouter } from 'next/router'
@@ -30,6 +30,7 @@ const ShareFolderMain = () => {
         addedIds,
         setAddedIds,
         nextPage,
+        selectAllAssets
     } = useContext(AssetContext)
 
     const { folderInfo, setFolderInfo } = useContext(ShareContext)
@@ -107,11 +108,15 @@ const ShareFolderMain = () => {
     const clearFilters = () => {
         setActiveSortFilter({
             ...activeSortFilter,
-            ...DEFAULT_FILTERS
+            ...DEFAULT_FILTERS,
+            ...DEFAULT_CUSTOM_FIELD_FILTERS(activeSortFilter)
         })
     }
 
     const selectAll = () => {
+        // Mark select all
+        selectAllAssets()
+
         setAssets(assets.map(assetItem => ({ ...assetItem, isSelected: true })))
     }
 

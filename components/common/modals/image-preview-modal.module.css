@@ -1,0 +1,48 @@
+.modal-wrapper{
+    width: 90vw;
+    height: 90vh;
+    text-align: center;
+    overflow-y: hidden;
+}
+
+.modal-wrapper img{
+    height: 100%;
+    width: auto;
+    max-width: 100%;
+}
+
+.text {
+    display: flex;
+    padding: 10px 10px;
+    font-size: 17px;
+    max-width: 100%;
+    width: 100%;
+    align-items: center;
+}
+
+.text p {
+    flex: 1;
+    margin: 0;
+}
+
+.text span {
+    display: inline-flex;
+}
+
+.close {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-sec-blue);
+    cursor: pointer;
+}
+
+.close-modal-btn{
+    position: absolute;
+    right: 10px;
+    top: 0;
+    text-align: center;
+}
+
+.confirm-modal-text{
+
+}

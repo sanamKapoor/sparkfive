@@ -1,7 +1,7 @@
 import styles from './icon-clickable.module.css'
 import ReactTooltip from 'react-tooltip'
 
-const IconClickable = ({ src, onClick = (e) => { }, additionalClass = '', tooltipId = '', tooltipText }) => (
+const IconClickable = ({ src, onClick = (e) => { }, additionalClass = '', tooltipId = '', tooltipText }: Props) => (
   <>
     <img data-tip data-for={tooltipId} src={src} onClick={onClick} className={`${styles.button} ${additionalClass}`} />
     {tooltipText &&
@@ -10,5 +10,13 @@ const IconClickable = ({ src, onClick = (e) => { }, additionalClass = '', toolti
   </>
 
 )
+
+interface Props{
+    src: string;
+    onClick?: (e: any) => void;
+    additionalClass?: string;
+    tooltipId?: string;
+    tooltipText?: string;
+}
 
 export default IconClickable

@@ -35,3 +35,7 @@
 .alt-color-orange{
   background-color: var(--color-sec-lightorange);
 }
+
+.pointer{
+  cursor: pointer;
+}

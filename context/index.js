@@ -38,7 +38,7 @@ export const AssetContext = createContext({
     completedAssets: [],
     setCompletedAssets: (assets, replace) => { },
     folders: [],
-    setFolders: (folders, replace) => { },
+    setFolders: (folders, replace, ignoreTotalItems) => { },
     setPlaceHolders: (type, replace) => { },
     operationAsset: null,
     setOperationAsset: (asset) => { },
@@ -82,7 +82,20 @@ export const AssetContext = createContext({
     setUploadingFileName: (name) => { },
 
     folderGroups: {},
-    setFolderGroups: (value) => { }
+    setFolderGroups: (value) => { },
+
+    uploadSourceType: undefined,
+    dropboxUploadingFile: undefined,
+    setUploadSourceType: (value) => { },
+
+    setTotalAssets: (value) => { },
+
+    downloadingPercent: 0,
+    downloadingStatus: 'none',
+    totalDownloadingAssets: 0,
+    downloadingError: '',
+    updateDownloadingStatus: (status, percent, totalAssets, error) => { },
+    retryListCount: 0
 })
 
 export const TeamContext = createContext({
@@ -127,6 +140,10 @@ export const FilterContext = createContext({
     tags: [],
     loadTags: () => { },
 
+    customFields: [],
+    loadCustomFields: (id, customFields) => { },
+    setCustomFields: (val) => { },
+
     folders: [],
     loadFolders: () => { },
 
@@ -155,7 +172,10 @@ export const FilterContext = createContext({
     },
     loadProductFields: () => { },
     setSharePath: (path) => { },
-    loadAll: () => { }
+    loadAll: () => { },
+
+    isPublic: false,
+    sharePath: ''
 })
 
 export const ShareContext = createContext({
@@ -165,4 +185,13 @@ export const ShareContext = createContext({
 
 export const SocketContext = createContext({
     socket: undefined,
+    connected: false,
+    globalListener: true, // listener will be initialized in any context's child
+    socketLogout: () => { },
+    connectSocket: (token) => { }
+})
+
+export const GuestUploadContext = createContext({
+    logo: '',
+    updateLogo: (url) => {}
 })

@@ -20,6 +20,8 @@ export default ({ children }) => {
     // Skip fetching user if on collections page
     if (Router.pathname.indexOf('/collections') !== -1) return
 
+    if (Router.pathname.indexOf('/guest-upload') !== -1) return
+
     if (redirectLogin) return Router.replace('/login')
     const jwt = cookiesUtils.get('jwt')
 
@@ -64,6 +66,7 @@ export default ({ children }) => {
   }
 
   const logOut = () => {
+    setUser(null)
     cookiesUtils.remove('jwt')
     requestsUtils.removeAuthToken()
     Router.replace('/login')

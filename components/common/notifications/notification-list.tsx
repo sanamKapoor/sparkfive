@@ -15,10 +15,14 @@ const NotificationList = ({ notifications, onClear = (notif) => { }, onMarkRead 
       let formattedContent
 
       if (mode === 'header') {
-        formattedContent = content.length > 65 ?
-          `"${content.substring(0, 65)}..."` : `"${content}"`
+        if(content){
+          formattedContent = content.length > 65 ?
+              `"${content.substring(0, 65)}..."` : `"${content}"`
+        }else{
+          formattedContent = content
+        }
       } else {
-        formattedContent = content
+
       }
 
       const date = new Date(notification.timestamp * 1000)

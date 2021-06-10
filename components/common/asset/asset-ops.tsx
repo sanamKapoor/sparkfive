@@ -52,7 +52,7 @@ export default () => {
 
 	useEffect(() => {
 		if (activeOperation === 'move' || activeOperation === 'copy') {
-			getFolders()
+			getFolders(true)
 		}
 
 		// Edit assets in collections
@@ -138,10 +138,10 @@ export default () => {
 		}
 	}
 
-	const getFolders = async () => {
+	const getFolders = async (ignoreSetTotalItems) => {
 		try {
 			const { data } = await folderApi.getFolders()
-			setFolders(data)
+			setFolders(data, true, ignoreSetTotalItems)
 		} catch (err) {
 			//TODO: Handle error
 			console.log(err)

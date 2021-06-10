@@ -1,12 +1,19 @@
 import { useState, useEffect } from 'react'
+import update from 'immutability-helper'
+
 import { FilterContext } from '../context'
+
+// APIs
 import campaignApi from '../server-api/campaign'
 import projectApi from '../server-api/project'
-import selectOptions from '../utils/select-options'
 import tagApi from '../server-api/tag'
 import filterApi from '../server-api/filter'
 import fodlerApi from '../server-api/folder'
 import shareCollectionApi from '../server-api/share-collection'
+import customFieldsApi from '../server-api/attribute'
+
+// Utils
+import selectOptions from '../utils/select-options'
 import { DEFAULT_FILTERS, getAssetsFilters } from '../utils/asset'
 
 export default ({ children, isPublic = false }) => {
@@ -19,6 +26,7 @@ export default ({ children, isPublic = false }) => {
   })
   const [sharePath, setSharePath] = useState('')
   const [tags, setTags] = useState([])
+  const [customFields, setCustomFields] = useState({})
   const [campaigns, setCampaigns] = useState([])
   const [folders, setFolders] = useState([])
   const [channels, setChannels] = useState([])
@@ -55,6 +63,22 @@ export default ({ children, isPublic = false }) => {
   const loadTags = () => {
     const fetchMethod = isPublic ? shareCollectionApi.getTags : tagApi.getTags
     loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath, ...getCommonParams(activeSortFilter.allTags !== 'any') }), setTags)
+  }
+
+  const loadCustomFields = (id) => {
+    return new Promise((resolve)=>{
+      const fetchMethod = isPublic ? shareCollectionApi.getCustomField : customFieldsApi.getCustomFieldWithCount
+
+      const setCustomFieldsValue = (values) => {
+        if(typeof values === 'object') {
+          resolve(values)
+        }else{
+          resolve([])
+        }
+      }
+
+      loadFromEndpoint(fetchMethod(id, { assetsCount: 'yes', sharePath, ...getCommonParams(activeSortFilter[`all-p${id}`] !== 'any') }), setCustomFieldsValue)
+    })
   }
 
   const loadFolders = () => {
@@ -110,9 +134,29 @@ export default ({ children, isPublic = false }) => {
 
   const isAnyAll = () => {
     const { allTags, allCampaigns, allProjects, filterCampaigns, filterTags, filterProjects } = activeSortFilter
+
+    const isAnyAllForCustomFields = () => {
+      let check = false
+
+      // For custom fields
+      Object.keys(activeSortFilter).map((key)=>{
+        // Custom fields key
+        if(key.includes('custom-p')){
+          // Get all keys
+          const index = key.split("custom-p")[1]
+
+          if(activeSortFilter[`all-p${index}`] !== 'any' && activeSortFilter[`custom-p${index}`].length > 0){
+            check = true
+          }
+        }
+      })
+
+      return check
+    }
+
     return (allTags !== 'any' && filterTags.length > 0)
       || (allCampaigns !== 'any' && filterCampaigns.length > 0)
-      || (allProjects !== 'any' && filterProjects.length > 0)
+      || (allProjects !== 'any' && filterProjects.length > 0) || isAnyAllForCustomFields()
   }
 
   const getCommonParams = (assetLim = false) => {
@@ -138,6 +182,27 @@ export default ({ children, isPublic = false }) => {
       filterProductFields,
       filterProductType
     } = activeSortFilter
+
+    // If if there is any custom fields filter has value
+    const checkAnyCustomFieldsFilter = () => {
+      let check = false
+
+      // For custom fields
+      Object.keys(activeSortFilter).map((key)=>{
+        // Custom fields key
+        if(key.includes('custom-p')){
+          // Get all keys
+          const index = key.split("custom-p")[1]
+
+          if(activeSortFilter[`custom-p${index}`].length > 0){
+            check = true
+          }
+        }
+      })
+
+      return check
+    }
+
     if (filterCampaigns?.length > 0) return true
     if (filterChannels?.length > 0) return true
     if (filterTags?.length > 0) return true
@@ -147,6 +212,7 @@ export default ({ children, isPublic = false }) => {
     if (filterOrientations?.length > 0) return true
     if (filterProductFields?.length > 0) return true
     if (filterProductType?.length > 0) return true
+    if(checkAnyCustomFieldsFilter()) return true
     return false
   }
 
@@ -158,6 +224,9 @@ export default ({ children, isPublic = false }) => {
     loadAll,
     tags,
     loadTags,
+    customFields,
+    loadCustomFields,
+    setCustomFields,
     campaigns,
     loadCampaigns,
     channels,
@@ -178,7 +247,9 @@ export default ({ children, isPublic = false }) => {
     setActiveSortFilter,
     setSharePath,
     term,
-    setSearchTerm
+    setSearchTerm,
+    isPublic,
+    sharePath
   }
   return (
     <FilterContext.Provider value={filterValue}>

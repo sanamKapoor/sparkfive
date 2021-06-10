@@ -6,7 +6,7 @@ import assetApi from '../../../server-api/asset'
 import folderApi from '../../../server-api/folder'
 import toastUtils from '../../../utils/toast'
 import { getFolderKeyAndNewNameByFileName } from '../../../utils/upload'
-import { getAssetsFilters, getAssetsSort, DEFAULT_FILTERS, getFoldersFromUploads } from '../../../utils/asset'
+import { getAssetsFilters, getAssetsSort, DEFAULT_FILTERS, DEFAULT_CUSTOM_FIELD_FILTERS, getFoldersFromUploads } from '../../../utils/asset'
 
 // Components
 import AssetOps from '../../common/asset/asset-ops'
@@ -44,7 +44,9 @@ const AssetsLibrary = () => {
     setUploadingAssets,
     showUploadProcess,
     setUploadingFileName,
-    setFolderGroups
+    setFolderGroups,
+    totalAssets,
+    setTotalAssets
   } = useContext(AssetContext)
 
   const [activeMode, setActiveMode] = useState('assets')
@@ -99,7 +101,8 @@ const AssetsLibrary = () => {
   const clearFilters = () => {
     setActiveSortFilter({
       ...activeSortFilter,
-      ...DEFAULT_FILTERS
+      ...DEFAULT_FILTERS,
+      ...DEFAULT_CUSTOM_FIELD_FILTERS(activeSortFilter)
     })
   }
 
@@ -109,11 +112,12 @@ const AssetsLibrary = () => {
       const formData = new FormData()
       let file = assets[i].file
       let currentUploadingFolderId = null
+      let newAssets = 0
 
       // Do validation
       if(assets[i].asset.size > validation.UPLOAD.MAX_SIZE.VALUE){
         // Violate validation, mark failure
-        const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE} : asset);
+        const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', index, error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE} : asset);
 
         // Update uploading assets
         setUploadingAssets(updatedAssets)
@@ -148,18 +152,23 @@ const AssetsLibrary = () => {
             // Assign new file name without splash
             file = new File([file.slice(0, file.size, file.type)],
                 fileGroupInfo.newName
-                , { type: file.type })
+                , { type: file.type, lastModified: (file.lastModifiedDate || new Date(file.lastModified)) })
           }
         }
 
         // Append file to form data
         formData.append('asset', assets[i].dragDropFolderUpload ? file : file.originalFile)
+        formData.append('fileModifiedAt', assets[i].dragDropFolderUpload ?
+            new Date((file.lastModifiedDate || new Date(file.lastModified)).toUTCString()).toISOString() :
+            new Date((file.originalFile.lastModifiedDate || new Date(file.originalFile.lastModified)).toUTCString()).toISOString()
+        )
 
         let size = totalSize;
         // Calculate the rest of size
         assets.map((asset)=>{
-          // Exclude done assets
-          if(asset.status === 'done'){
+          // Exclude done and  assets
+          if(asset.status === 'done' || asset.status === 'fail'){
+            newAssets+=1
             size -= asset.asset.size
           }
         })
@@ -208,6 +217,9 @@ const AssetsLibrary = () => {
 
         setUploadingAssets(updatedAssets)
 
+        // Update total assets
+        setTotalAssets(totalAssets + newAssets +1)
+
         // The final one
         if(i === assets.length - 1){
           return folderGroup
@@ -216,8 +228,9 @@ const AssetsLibrary = () => {
         }
       }
     }catch (e){
+      console.log(e)
       // Violate validation, mark failure
-      const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: 'Processing file error'} : asset);
+      const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', index, error: 'Processing file error'} : asset);
 
       // Update uploading assets
       setUploadingAssets(updatedAssets)
@@ -270,7 +283,7 @@ const AssetsLibrary = () => {
           dragDropFolderUpload = true;
           fileToUpload = new File([file.originalFile.slice(0, file.originalFile.size, file.originalFile.type)],
               file.originalFile.path.substring(1, file.originalFile.path.length)
-              , { type: file.originalFile.type })
+              , { type: file.originalFile.type, lastModified: (file.originalFile.lastModifiedDate || new Date(file.originalFile.lastModified)) })
         }else{
           fileToUpload.path = null;
         }

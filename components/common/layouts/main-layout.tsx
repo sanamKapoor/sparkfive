@@ -60,7 +60,9 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
   if (hasPermission([SETTINGS_PLAN])) dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Plan' settingRef='plan' /> })
   if (hasPermission([SETTINGS_SECURITY])) dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Security' settingRef='security' /> })
   if (hasPermission([SETTINGS_TEAM])) dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Team' settingRef='team' /> })
+  if (hasPermission([SETTINGS_TEAM])) dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Attributes' settingRef='attributes' /> })
   dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Notifications' settingRef='notifications' /> })
+  if (hasPermission([SETTINGS_TEAM])) dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Guest Upload' settingRef='guest-upload' /> })
   dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Integrations' settingRef='integrations' /> })
   dropdownOptions.push({ label: 'Log Out', onClick: logOut })
   if (hasPermission([SUPERADMIN_ACCESS])) dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Super Admin' settingRef='super-admin' /> })
@@ -71,7 +73,7 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
     if (current?.classList.contains(classType)) current.classList.remove(classType)
     else current.classList.add(classType)
   }
-  
+
   return (
     <>
       {user &&
@@ -139,12 +141,12 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
           }
           {adminJWT &&
             <div className={styles['superadmin-back']} >
-              <Button 
+              <Button
                 text='Go back to Superadmin'
                 type='button'
                 styleType='secondary'
                 onClick={getBackToAdmin}
-              />                
+              />
             </div>}
           <footer className={styles.footer}>
             <TrialReminderModal />

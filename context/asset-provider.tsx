@@ -25,7 +25,7 @@ const loadingDefaultFolder = {
 }
 
 export default ({ children }) => {
-    const { socket } = useContext(SocketContext);
+    const { socket, connected, globalListener } = useContext(SocketContext);
 
     const [assets, setAssets] = useState([])
     const [folders, setFolders] = useState([])
@@ -59,6 +59,18 @@ export default ({ children }) => {
     const [uploadRemainingTime, setUploadRemainingTime] = useState<string>("") // Remaining time
     const [uploadDetailOverlay, setUploadDetailOverlay] = useState(false) // Detail overlay
     const [folderGroups, setFolderGroups] = useState() // This groups contain all folder key which is need to identity which folder file need to be saved to
+    const [retryListCount, setRetryListCount] = useState(0)
+
+    // For dropbox upload process
+    const [uploadSourceType, setUploadSourceType] = useState() // This maybe local or dropbox
+    const [dropboxUploadingFile, setDropboxUploadingFile] = useState() // Current dropbox uploading file index, this is received from server
+
+    // Download process
+    const [totalDownloadingAssets, setTotalDownloadingAssets] = useState(0)
+    const [downloadingStatus, setDownloadingStatus] = useState("none") // Allowed value: "none", "zipping", "done", "error"
+    const [downloadingPercent, setDownloadingPercent] = useState(0) // Percent of uploading process: 0 - 100
+    const [downloadingError, setDownloadingError] = useState('') // Percent of uploading process: 0 - 100
+
 
     const setPlaceHolders = (type, replace = true) => {
         if (type === 'asset') {
@@ -96,11 +108,11 @@ export default ({ children }) => {
             setCompletedAssets([...completedAssets.filter(asset => !asset.isLoading), ...inputAssets])
     }
 
-    const setFolderItems = (inputFolders, replace = true) => {
+    const setFolderItems = (inputFolders, replace = true, ignoreTotalItem = false) => {
         const { results, next, total } = inputFolders
         if (results) inputFolders = results
         if (next) setNextPage(next)
-        if (total) setTotalAssets(total)
+        if (total && !ignoreTotalItem) setTotalAssets(total)
 
         if (replace)
             setFolders(inputFolders)
@@ -155,6 +167,7 @@ export default ({ children }) => {
         try{
             const formData = new FormData()
             let file = retryList[i].file.originalFile
+            let newAssets = 0
 
             let currentUploadingFolderId = null
 
@@ -164,28 +177,25 @@ export default ({ children }) => {
             // Do validation
             if(retryList[i].asset.size > validation.UPLOAD.MAX_SIZE.VALUE){
                 // Violate validation, mark failure
-                const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE} : asset);
+                const updatedAssets = assets.map((asset, index)=> index === retryList[i].index ? {...asset, status: 'fail', index,  error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE} : asset);
 
                 // Update uploading assets
                 setUploadingAssets(updatedAssets)
 
-                // Remove current asset from asset placeholder
-                let newAssetPlaceholder = updatedAssets.filter(asset => asset.status !== 'fail')
-
-
-                // At this point, file place holder will be removed
-                setAssets([...newAssetPlaceholder, ...currentDataClone])
-
                 // The final one
-                if(i === assets.length - 1){
+                if(i === retryList.length - 1){
                     return
                 }else{ // Keep going
-                    await reUploadAsset(i+1, updatedAssets, currentDataClone, totalSize, updatedAssets, folderId, folderGroup)
+                    await reUploadAsset(i+1, updatedAssets, currentDataClone, totalSize, retryList, folderId, folderGroup)
                 }
             }
 
+            if(i === 0){
+                setRetryListCount(retryList.length)
+            }
+
             // Show uploading toast
-            showUploadProcess('uploading', i)
+            showUploadProcess('re-uploading', i)
 
             // Set current upload file name
             setUploadingFileName(retryList[i].asset.name)
@@ -209,8 +219,9 @@ export default ({ children }) => {
             // Calculate the rest of size
             assets.map((asset)=>{
                 // Exclude done assets
-                if(asset.status === 'done'){
+                if(asset.status === 'done' || asset.status === 'fail'){
                     size -= asset.asset.size
+                    newAssets+=1
                 }
             })
 
@@ -243,15 +254,18 @@ export default ({ children }) => {
                 return item
             })
 
-            assets[i] = data[0]
+            assets[retryList[i].index] = data[0]
 
 
             // At this point, file place holder will be removed
             setAssets([...assets, ...currentDataClone])
             setAddedIds(data.map(assetItem => assetItem.asset.id))
 
+            // Update total assets
+            setTotalAssets(totalAssets + newAssets +1)
+
             // Mark this asset as done
-            const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'done'} : asset);
+            const updatedAssets = assets.map((asset, index)=> index === retryList[i].index ? {...asset, status: 'done'} : asset);
 
             setUploadingAssets(updatedAssets)
 
@@ -264,21 +278,15 @@ export default ({ children }) => {
             }
         }catch (e){
             // Violate validation, mark failure
-            const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', error: 'Processing file error'} : asset);
+            const updatedAssets = assets.map((asset, index)=> index === retryList[i].index ? {...asset, index, status: 'fail', error: 'Processing file error'} : asset);
 
             // Update uploading assets
             setUploadingAssets(updatedAssets)
 
-            // Remove current asset from asset placeholder
-            let newAssetPlaceholder = updatedAssets.filter(asset => asset.status !== 'fail')
-
-
-            // At this point, file place holder will be removed
-            setAssets([...newAssetPlaceholder, ...currentDataClone])
-
             // The final one
-            if(i === assets.length - 1){
-                return
+            if(i === retryList.length - 1){
+                // Finish uploading process
+                showUploadProcess('done')
             }else{ // Keep going
                 await reUploadAsset(i+1, updatedAssets, currentDataClone, totalSize, retryList, folderId, folderGroup)
             }
@@ -293,12 +301,40 @@ export default ({ children }) => {
         setFolderGroups(value)
     }
 
+    const updateUploadSourceType = (value) => {
+        setUploadSourceType(value)
+    }
+
+    const updateTotalAssets = (value: number) => {
+        setTotalAssets(value)
+    }
+
+    const updateDownloadingStatus = (status, percent, totalDownloadingAssets, error) => {
+        if(status){
+            setDownloadingStatus(status)
+        }
+
+        if(!isNaN(percent)){
+            setDownloadingPercent(percent)
+        }
+
+        if(!isNaN(totalDownloadingAssets)){
+            setTotalDownloadingAssets(totalDownloadingAssets)
+        }
+
+        if(error){
+            setDownloadingError(error)
+        }
+    }
+
     // Init socket listener
     useEffect(()=>{
-        if(socket){
-            // console.log(`Register listener...`)
+        // Socket is available and connected
+        if(socket && connected && globalListener){
+            console.log(`Register socket listener...`)
             // Listen upload file process event
             socket.on('uploadFilesProgress', function(data){
+                console.log(data)
                 setUploadingPercent(data.percent)
                 setUploadRemainingTime(`${convertTimeFromSeconds(data.timeLeft)} remaining`)
 
@@ -309,11 +345,16 @@ export default ({ children }) => {
 
                 // setUploadingFile(0)
                 if(!isNaN(data.uploadingAssets)){
-                    setUploadingFile(data.uploadingAssets)
+                    setDropboxUploadingFile(data.uploadingAssets)
                 }
             })
+
+            socket.on('downloadFilesProgress', function(data){
+                console.log(data)
+                setDownloadingPercent(data.percent)
+            })
         }
-    },[socket])
+    },[socket, connected])
 
     const assetsValue = {
         assets,
@@ -356,7 +397,18 @@ export default ({ children }) => {
         uploadingFileName,
         setUploadingFileName: updateUploadingFileName,
         folderGroups,
-        setFolderGroups: updateFolderGroups
+        setFolderGroups: updateFolderGroups,
+        setUploadSourceType: updateUploadSourceType,
+        dropboxUploadingFile,
+        uploadSourceType,
+        setTotalAssets: updateTotalAssets,
+        downloadingStatus,
+        downloadingPercent,
+        totalDownloadingAssets,
+        downloadingError,
+        updateDownloadingStatus,
+        retryListCount
+
 
     }
     return (

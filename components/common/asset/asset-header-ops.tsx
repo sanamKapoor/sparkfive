@@ -1,15 +1,28 @@
+// External
+import {useContext, useEffect, useState} from 'react'
+import fileDownload from 'js-file-download';
+
+
 import styles from './asset-header-ops.module.css'
-import { useContext } from 'react'
-import { AssetContext, UserContext } from '../../../context'
+
+// Contexts
+import { AssetContext, UserContext, FilterContext } from '../../../context'
+
+// Utils
 import downloadUtils from '../../../utils/download'
-
 import { ASSET_DOWNLOAD } from '../../../constants/permissions'
+import { getAssetsFilters } from '../../../utils/asset'
+import assetApi from '../../../server-api/asset'
+import shareApi from '../../../server-api/share-collection'
 
+// Components
 import { AssetOps } from '../../../assets'
+
 
 // Components
 import Button from '../../common/buttons/button'
 import IconClickable from '../../common/buttons/icon-clickable'
+import {useRouter} from "next/router";
 
 const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, isFolder = false, deselectHidden = false, iconColor = '' }) => {
 	const {
@@ -20,10 +33,17 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 		setActiveOperation,
 		selectedAllAssets,
 		selectAllAssets,
-		totalAssets
+		totalAssets,
+		activeFolder,
+		updateDownloadingStatus
 	} = useContext(AssetContext)
 
+	const router = useRouter()
+
 	const { hasPermission } = useContext(UserContext)
+
+	const {  activeSortFilter, term } = useContext(FilterContext)
+	const [sharePath, setSharePath] = useState('')
 
 	const selectedAssets = assets.filter(asset => asset.isSelected)
 	let totalSelectAssets = selectedAssets.length;
@@ -39,7 +59,69 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 	const selectedFolders = folders.filter(folder => folder.isSelected)
 
 	const downloadSelectedAssets = async () => {
-		downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets')
+		try{
+			let payload = {
+				assetIds: []
+			};
+
+			let totalDownloadingAssets = 0;
+			let filters = {
+				estimateTime: 1
+			}
+
+			if(selectedAllAssets){
+				totalDownloadingAssets = totalAssets
+				// Download all assets without pagination
+				filters = {
+					...getAssetsFilters({
+						replace: false,
+						activeFolder,
+						addedIds: [],
+						nextPage: 1,
+						userFilterObject: activeSortFilter,
+					}),
+					selectedAll: 1,
+					estimateTime: 1
+				};
+
+				if(term){
+					// @ts-ignore
+					filters.term = term;
+				}
+				// @ts-ignore
+				delete filters.page
+			}else{
+				totalDownloadingAssets = selectedAssets.length
+				payload.assetIds = selectedAssets.map(assetItem => assetItem.asset.id)
+			}
+
+			// Add sharePath property if user is at share collection page
+			if(sharePath){
+				filters['sharePath'] = sharePath
+			}
+
+
+			// Show processing bar
+			updateDownloadingStatus('zipping', 0, totalDownloadingAssets)
+
+			let api = assetApi;
+
+			if(isShare){
+				api = shareApi
+			}
+
+			const { data } = await api.downloadAll(payload,filters)
+
+			// Download file to storage
+			fileDownload(data, 'assets.zip');
+
+			updateDownloadingStatus('done', 0, 0)
+		}catch (e){
+			updateDownloadingStatus('error', 0, 0, 'Internal Server Error. Please try again.')
+		}
+
+
+		// downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets')
 	}
 
 	const deselectAll = () => {
@@ -52,6 +134,15 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 			setFolders(folders.map(folder => ({ ...folder, isSelected: false })))
 		}
 	}
+
+	useEffect(() => {
+		const { asPath } = router
+		if (asPath) {
+			// Get shareUrl from path
+			const splitPath = asPath.split('collections/')
+			setSharePath(splitPath[1])
+		}
+	}, [router.asPath])
 
 	return (
 		<>

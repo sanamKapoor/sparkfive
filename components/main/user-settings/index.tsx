@@ -26,10 +26,12 @@ import Billing from './billing'
 import Plan from './plan'
 import Security from './security'
 import Integrations from './integrations'
+import Attributes from "./attributes"
 import SuperAdmin from './super-admin'
 import Notifications from './notifications'
 import NoPermissionNotice from '../../common/misc/no-permission-notice'
 import Button from '../../common/buttons/button'
+import GuestUpload from "./guest-upload";
 
 
 const SETTING_OPTIONS = {
@@ -40,7 +42,9 @@ const SETTING_OPTIONS = {
   security: { label: 'Security', permissions: [SETTINGS_SECURITY], content: Security },
   team: { label: 'Team', permissions: [SETTINGS_TEAM], content: Team },
   notifications: { label: 'Notifications', permissions: [], content: Notifications },
+  ['guest-upload']: { label: 'Guest Upload', contentTitle: 'Guest Upload', permissions: [SETTINGS_TEAM, SETTINGS_COMPANY], content: GuestUpload },
   integrations: { label: 'Integrations', permissions: [], content: Integrations },
+  attributes: { label: 'Attributes', contentTitle: 'Custom Attributes', permissions: [SETTINGS_TEAM, SETTINGS_COMPANY], content: Attributes },
   ['super-admin']: { label: 'Super Admin', permissions: [SUPERADMIN_ACCESS], content: SuperAdmin },
 }
 
@@ -69,6 +73,14 @@ const UserSettings = () => {
     }
   }, [])
 
+  const getTitle = (activeView) => {
+    if(SETTING_OPTIONS[activeView]){
+      return SETTING_OPTIONS[activeView].contentTitle ? SETTING_OPTIONS[activeView].contentTitle : activeView
+    }else{
+      return activeView
+    }
+  }
+
   return (
     <main className={`${styles.container}`}>
       <div className={styles.settings}>
@@ -82,7 +94,7 @@ const UserSettings = () => {
           />
         }
         <section className={styles.content}>
-          <h2>{capitalCase(activeView)}</h2>
+          <h2>{capitalCase(getTitle(activeView))}</h2>
           {hasPermission(SETTING_OPTIONS[activeView]?.permissions) ?
             <ActiveContent />
             :

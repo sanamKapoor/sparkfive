@@ -50,10 +50,36 @@
   font-size: 12px;
   font-weight: bold;
   display: inline-flex;
-  max-width: 50%;
+  max-width: 75%;
+  min-width: 75%;
+}
+
+.row span.processing-file-count{
+  max-width: 20%;
+  min-width: 20%;
+}
+
+@media screen and (max-width: 650px) {
+  .row span.processing-file-count{
+    max-width: 100%;
+    min-width: 100%;
+  }
+
+  .row span{
+    max-width: 100%;
+    min-width: 100%;
+  }
+}
+
+.row span .no-wrap-text{
+  font-size: 12px;
+  font-weight: bold;
+  display: block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  width: 100%;
+  min-width: 100%;
 }
 
 .close-button{
@@ -67,4 +93,9 @@
 
 .fail-text{
   margin-left: 5px;
+}
+
+.no-max-min-width{
+  max-width: unset !important;
+  min-width: unset !important;
 }

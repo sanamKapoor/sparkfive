@@ -11,6 +11,14 @@
   min-height: 70px;
 }
 
+.exclude-min-height {
+  min-height: unset !important;
+}
+
+.cancel-btn{
+
+}
+
 .normal-height,
 .normal-height-primary {
   min-height: 34px;
