@@ -62,7 +62,7 @@ export default ({ children }) => {
     const [retryListCount, setRetryListCount] = useState(0)
 
     // For dropbox upload process
-    const [uploadSourceType, setUploadSourceType] = useState() // This maybe local or dropbox
+    const [uploadSourceType, setUploadSourceType] = useState() // This maybe local or dropbox or gdrive
     const [dropboxUploadingFile, setDropboxUploadingFile] = useState() // Current dropbox uploading file index, this is received from server
 
     // Download process
@@ -134,6 +134,11 @@ export default ({ children }) => {
 
         // Update uploading status
         setUploadingStatus(value)
+
+        // Reset dropbox uploading file
+        if(value === 'uploading'){
+            setDropboxUploadingFile(undefined)
+        }
 
         // Reset all value
         if(fileIndex === 0){

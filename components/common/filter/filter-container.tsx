@@ -284,6 +284,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                                 productFilters={productFields}
                                 setSortFilterValue={setSortFilterValue}
                                 fieldsValue={activeSortFilter.filterProductFields}
+                                skuValue={activeSortFilter.filterProductSku}
                             />
                         }
                     </section>
