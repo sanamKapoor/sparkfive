@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import Select from '../../common/inputs/select'
 import productFields from '../../../resources/data/product-fields.json'
 
-const ProductFilter = ({ loadFn, productFilters, setSortFilterValue, fieldsValue }) => {
+const ProductFilter = ({ loadFn, productFilters, setSortFilterValue, fieldsValue, skuValue }) => {
 
     const [typeValue, setType] = useState(null)
 
@@ -23,6 +23,17 @@ const ProductFilter = ({ loadFn, productFilters, setSortFilterValue, fieldsValue
 
     return (
         <div className={`${styles.container}`}>
+            <div className={`${styles.field} product-select`}>
+                <h5>Sku</h5>
+                <Select
+                    options={productFilters.sku.map((field) => ({ ...field, value: field.sku, label: field.sku }))}
+                    value={skuValue}
+                    styleType='regular'
+                    isClearable={true}
+                    onChange={(selected) => setSortFilterValue('filterProductSku', selected)}
+                    placeholder='Select Value'
+                />
+            </div>
             <div className={`${styles.field} product-select`}>
                 <h5>Field</h5>
                 <Select
