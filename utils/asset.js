@@ -9,6 +9,7 @@ export const DEFAULT_FILTERS = {
     filterFileTypes: [],
     filterOrientations: [],
     filterProductFields: [],
+    filterProductSku: undefined,
     filterProductType: [],
     filterCustomFields: [],
     allTags: 'all',
@@ -142,7 +143,8 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
         allTags,
         allCampaigns,
         filterProductFields,
-        filterProductType
+        filterProductType,
+        filterProductSku
     } = userFilterObject
     if (mainFilter !== 'folders') {
         if (mainFilter === 'images') {
@@ -217,10 +219,15 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
         filters.productFields = filterProductFields.map(item => item.value).join(',')
     }
 
+    if (filterProductSku) {
+        filters.filterProductSku = filterProductSku.sku
+    }
+
     if (filterTags.length > 0 && allTags) filters.allTags = allTags
     if (filterCampaigns.length > 0 && allCampaigns) filters.allCampaigns = allCampaigns
 
     filters.page = replace ? 1 : nextPage
+    
     return filters
 }
 
