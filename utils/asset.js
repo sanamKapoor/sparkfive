@@ -227,7 +227,7 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
     if (filterCampaigns.length > 0 && allCampaigns) filters.allCampaigns = allCampaigns
 
     filters.page = replace ? 1 : nextPage
-    
+
     return filters
 }
 
