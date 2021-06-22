@@ -363,7 +363,6 @@ const AssetAddition = ({
 	}
 
 	const onDriveFilesSelection = async (files) => {
-		console.log(files)
 		const googleAuthToken = cookiesUtils.get('gdriveToken')
 		const currentDataClone = [...assets]
 		try {
