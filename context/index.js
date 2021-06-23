@@ -86,6 +86,8 @@ export const AssetContext = createContext({
 
     uploadSourceType: undefined,
     dropboxUploadingFile: undefined,
+    folderImport: false,
+    setFolderImport: (value) => {},
     setUploadSourceType: (value) => { },
 
     setTotalAssets: (value) => { },

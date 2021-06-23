@@ -54,7 +54,8 @@ const AssetAddition = ({
 		setFolderGroups,
 		setUploadSourceType,
 		setTotalAssets,
-		totalAssets
+		totalAssets,
+		setFolderImport
 	} = useContext(AssetContext)
 
 
@@ -304,6 +305,12 @@ const AssetAddition = ({
 			setUploadingFileName('Importing files from Drop Box')
 
 			setUploadSourceType('dropbox')
+
+			// Check if there is 1 folder in upload links
+			const containFolderUrl = files.filter(file => file.isDir)
+
+			setFolderImport(containFolderUrl.length > 0)
+
 			const { data } = await assetApi.importAssets('dropbox', files.map(file => ({ link: file.link, isDir: file.isDir, name: file.name, size: file.bytes })), getCreationParameters({estimateTime: 1, totalSize}))
 			setAssets([...data, ...currentDataClone])
 			setAddedIds(data.id)
@@ -394,6 +401,11 @@ const AssetAddition = ({
 			setUploadingFileName('Importing files from Google Drive')
 
 			setUploadSourceType('dropbox')
+
+			// Check if there is 1 folder in upload links
+			const containFolderUrl = files.filter(file => file.type === 'folder')
+
+			setFolderImport(containFolderUrl.length > 0)
 
 			const { data } = await assetApi.importAssets('drive', files.map(file => ({
 				googleAuthToken,
