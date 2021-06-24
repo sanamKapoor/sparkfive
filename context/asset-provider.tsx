@@ -62,8 +62,9 @@ export default ({ children }) => {
     const [retryListCount, setRetryListCount] = useState(0)
 
     // For dropbox upload process
-    const [uploadSourceType, setUploadSourceType] = useState() // This maybe local or dropbox
+    const [uploadSourceType, setUploadSourceType] = useState() // This maybe local or dropbox or gdrive
     const [dropboxUploadingFile, setDropboxUploadingFile] = useState() // Current dropbox uploading file index, this is received from server
+    const [folderImport, setFolderImport] = useState(false) // If there is 1 folder imported, just hide number of imported assets due to complexity to count file number
 
     // Download process
     const [totalDownloadingAssets, setTotalDownloadingAssets] = useState(0)
@@ -134,6 +135,16 @@ export default ({ children }) => {
 
         // Update uploading status
         setUploadingStatus(value)
+
+        // Reset dropbox uploading file
+        if(value === 'uploading'){
+            setDropboxUploadingFile(undefined)
+        }
+
+        if(value === 'none'){
+            setFolderImport(false)
+            setUploadingPercent(0)
+        }
 
         // Reset all value
         if(fileIndex === 0){
@@ -407,7 +418,9 @@ export default ({ children }) => {
         totalDownloadingAssets,
         downloadingError,
         updateDownloadingStatus,
-        retryListCount
+        retryListCount,
+        folderImport,
+        setFolderImport
 
 
     }

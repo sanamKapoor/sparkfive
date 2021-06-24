@@ -62,8 +62,8 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
             let filter = {}
             let fieldValues = {}
             data.map((value, index)=>{
-                // Select on wont use `all-px` query field
-                filter[`all-p${value.id}`] = {$set: value.type === 'selectOne' ? 'none' :  'all'}
+                // Select one will use `all-px` query field also
+                filter[`all-p${value.id}`] = {$set: value.type === 'selectOne' ? 'all' :  'all'} // Available: none, all
                 filter[`custom-p${value.id}`] = {$set: []}
                 fieldValues[value.id] = []
             })
@@ -284,6 +284,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                                 productFilters={productFields}
                                 setSortFilterValue={setSortFilterValue}
                                 fieldsValue={activeSortFilter.filterProductFields}
+                                skuValue={activeSortFilter.filterProductSku}
                             />
                         }
                     </section>
