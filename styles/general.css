@@ -221,8 +221,30 @@ ul {
   padding-right: 0 !important;
 }
 
+.p-l-r-0{
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
 .p-l-15{
   padding-left: 15px;
+}
+
+.p-t-15{
+  padding-top: 15px;
+}
+
+.visibility-hidden{
+  visibility: hidden;
+}
+
+.p-l-r-10{
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.d-flex{
+  display: flex;
 }
 
 @media screen and (max-width: 1280px){

@@ -63,6 +63,7 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
   if (hasPermission([SETTINGS_TEAM])) dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Attributes' settingRef='attributes' /> })
   dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Notifications' settingRef='notifications' /> })
   if (hasPermission([SETTINGS_TEAM])) dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Guest Upload' settingRef='guest-upload' /> })
+  if (hasPermission([SETTINGS_TEAM])) dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Custom Settings' settingRef='custom-settings' /> })
   dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Integrations' settingRef='integrations' /> })
   dropdownOptions.push({ label: 'Log Out', onClick: logOut })
   if (hasPermission([SUPERADMIN_ACCESS])) dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Super Admin' settingRef='super-admin' /> })
