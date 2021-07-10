@@ -11,7 +11,7 @@ const AssetCropImg = ({ assetImg, type = 'image', name, opaque = false, width = 
 	const previewCanvasRef = useRef(null);
 	const imgRef = useRef(null);
 	const [loaded, setLoaded] = useState(false)
-	const [crop, setCrop] = useState({ unit: 'px', width, height });
+	const [crop, setCrop] = useState<any>({ unit: '%', width: 100, height: 100, x: 0, y: 0 });
 	const [completedCrop, setCompletedCrop] = useState(null);
 
 	let finalImg = assetImg
@@ -75,41 +75,36 @@ const AssetCropImg = ({ assetImg, type = 'image', name, opaque = false, width = 
 		);
 	}
 
-	const onLoad = useCallback((img) => {
-
-		// // You must inform ReactCrop when your media has loaded.
-		// e.target.dispatchEvent(new Event('medialoaded', { bubbles: true }));
-
-		imgRef.current = img;
-
-		// const aspect = 16 / 9;
-		// const width = img.width / aspect < img.height * aspect ? 100 : ((img.height * aspect) / img.width) * 100;
-		// const height = img.width / aspect > img.height * aspect ? 100 : (img.width / aspect / img.height) * 100;
-		// const y = (100 - height) / 2;
-		// const x = (100 - width) / 2;
-		//
-		// setCrop({
-		// 	unit: '%',
-		// 	width: 50,
-		// 	x,
-		// 	y,
-		// 	aspect,
-		// });
-
-		setLoaded(true)
-
-		// return false; // Return false if you set crop state in here.
-
-	}, []);
-
 	useEffect(()=>{
-	setCrop({
-			unit: 'px',
-			width,
-			height,
-			x: width/2,
-			y: height/2
-		});
+
+		if(imgRef.current){
+
+			// Center crop box
+			const image = imgRef.current;
+
+			const scaleX = image.naturalWidth / image.width;
+			const scaleY = image.naturalHeight / image.height;
+
+
+			const widthPercent = width / (image.width) * scaleX * 100
+			const heightPercent = height/ (image.height) * scaleY * 100
+
+			setCrop({
+				unit: '%',
+				width: widthPercent,
+				height: heightPercent,
+				x: (100 - widthPercent)/2,
+				y: (100 - heightPercent)/2,
+			});
+		}else{
+			setCrop({
+				unit: '%',
+				width: 100,
+				height: 100,
+				x: 0,
+				y: 0,
+			});
+		}
 	},[width, height])
 
 	const imageComponent = (
@@ -119,11 +114,18 @@ const AssetCropImg = ({ assetImg, type = 'image', name, opaque = false, width = 
 			 alt={name}
 			 className={`${styles.asset} ${opaque && styles.opaque}`}
 			 onLoad={(e) => {
-			 	console.log(e.target)
 				imgRef.current = e.target;
 
 			 	setLoaded(true)
 				e.target.dispatchEvent(new Event('medialoaded', { bubbles: true }));
+
+				 setCrop({
+					 unit: '%',
+					 width: 100,
+					 height: 100,
+					 x: 0,
+					 y: 0,
+				 });
 			 }}
 			 style={loaded ? {} : {
 				opacity: 0,
@@ -138,7 +140,7 @@ const AssetCropImg = ({ assetImg, type = 'image', name, opaque = false, width = 
 
 	return (
 		<>
-			{/*<img src={Assets.empty} alt={'blank'} style={loaded ? { display: "none" } : {}} />*/}
+			<img src={Assets.empty} alt={'blank'} style={loaded ? { display: "none" } : {}} />
 			<ReactCrop
 				src={finalImg}
 				// onImageLoaded={onLoad}
