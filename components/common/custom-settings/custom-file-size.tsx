@@ -4,7 +4,7 @@ import styles from './custom-file-size.module.css'
 import { Utilities } from '../../../assets'
 
 // APIs
-import customFieldsApi from '../../../server-api/attribute'
+import sizeApi from '../../../server-api/size'
 
 // Components
 import toastUtils from '../../../utils/toast'
@@ -16,9 +16,6 @@ import Button from "../buttons/button";
 import ConfirmModal from "../modals/confirm-modal";
 
 import { customSettings } from '../../../constants/custom-settings'
-
-// Maximum custom fields
-const maximumCustomFields = 3;
 
 const CustomFileSizes = () => {
     const [fileSizeList, setFileSizeList] = useState([])
@@ -36,50 +33,13 @@ const CustomFileSizes = () => {
     }
 
     // Get tag list
-    const getCustomFields = async () => {
+    const getCustomSizes = async () => {
         // Show loading
         setLoading(true)
 
-        let { data } = await customFieldsApi.getCustomFields({isAll: 1, sort: 'createdAt,asc'})
+        let { data } = await sizeApi.getCustomFileSizes()
 
-        if(data.length > 0){
-            // There still be available fields to create
-            if(data.length < maximumCustomFields){
-                const dataLength = data.length
-                // Add it
-                for(let i=0;i<(maximumCustomFields-dataLength);i++){
-                    data.push({
-                        id: null,
-                        name: '',
-                        type: 'selectOne',
-                        values: []
-                    })
-                }
-            }
-
-            setFileSizeList(data)
-        }else{
-            setFileSizeList([
-                {
-                    id: null,
-                    name: '',
-                    type: 'selectOne',
-                    values: []
-                },
-                {
-                    id: null,
-                    name: '',
-                    type: 'selectOne',
-                    values: []
-                },
-                {
-                    id: null,
-                    name: '',
-                    type: 'selectOne',
-                    values: []
-                }
-            ])
-        }
+        setFileSizeList(data)
 
         // Hide loading
         setLoading(false)
@@ -98,50 +58,47 @@ const CustomFileSizes = () => {
             setLoading(true)
 
             // Call API to delete tag
-            await customFieldsApi.createCustomField({
-                attributes: [
-                    fileSizeList[index]
-                ]
-            })
+            await sizeApi.createCustomSize({sizes: [fileSizeList[index]]})
 
-            toastUtils.success('Custom field changes saved')
+            // Edit
+            if(fileSizeList[index].id !== null){
+                toastUtils.success('Custom size changes saved')
 
-            // Refresh the list
-            getCustomFields();
+                // Refresh the list
+                getCustomSizes();
+            }else{ // Create the new one
+                toastUtils.success('Custom size created successfully')
+
+                // Refresh the list
+                getCustomSizes();
+            }
         }catch (err) {
             if (err.response?.status === 400) toastUtils.error(err.response.data.message)
-            else toastUtils.error('Could not create tag, please try again later.')
+            else toastUtils.error('Could not create custom file size, please try again later.')
 
             // Show loading
             setLoading(false)
         }
     }
 
-    const deleteCustomAttribute = async(id) => {
+    const deleteCustomSize = async(id) => {
         // Hide confirm modal
         setConfirmDeleteModal(false)
 
         // Show loading
         setLoading(true)
 
-        // Call API to delete tag
-        await customFieldsApi.deleteCustomField({attributeIds: [id]})
+        // Call API to delete custom size
+        await sizeApi.deleteCustomSize({sizeIds: [id]})
 
         // Refresh the list
-        getCustomFields();
+        getCustomSizes();
     }
 
     // On input change
     const onInputChange = (e, name, index) => {
         let currentFieldList = [...fileSizeList];
         currentFieldList[index][name] = e.target.value;
-        setFileSizeList(currentFieldList)
-    }
-
-    // On select option change
-    const onSelectChange = (value, index) => {
-        let currentFieldList = [...fileSizeList];
-        currentFieldList[index].type = value;
         setFileSizeList(currentFieldList)
     }
 
@@ -153,7 +110,7 @@ const CustomFileSizes = () => {
     }
 
     useEffect(()=>{
-        // getCustomFields();
+        getCustomSizes();
 
     },[])
 
@@ -226,7 +183,7 @@ const CustomFileSizes = () => {
                                    text='Save'
                                    styleType='primary'
                                    onClick={()=>{saveChanges(index)}}
-                                   disabled={!field.name}
+                                   disabled={!field.name || !field.width || !field.height}
                                />
                                {<IconClickable additionalClass={styles['action-button']}  src={AssetOps[`delete`]}  tooltipText={'Delete'} tooltipId={'Delete'}
                                                            onClick={()=>{
@@ -259,9 +216,9 @@ const CustomFileSizes = () => {
             <ConfirmModal
                 modalIsOpen={confirmDeleteModal}
                 closeModal={()=>{setConfirmDeleteModal(false)}}
-                confirmAction={()=>{deleteCustomAttribute(currentDeleteId)}}
+                confirmAction={()=>{deleteCustomSize(currentDeleteId)}}
                 confirmText={'Delete'}
-                message={<span>This custom field will be deleted and removed from any file that has it.&nbsp; Are you sure you want to delete this?</span>}
+                message={<span>Are you sure you want to delete this custom size?</span>}
                 closeButtonClass={styles['close-modal-btn']}
                 textContentClass={styles['confirm-modal-text']}
             />
