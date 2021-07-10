@@ -74,7 +74,7 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
   const getCropResizeOptions = async () => {
     const results = await Promise.all([
         customFileSizeApi.getCustomFileSizes(),
-        customFileSizeApi.getSizePresets()
+        customFileSizeApi.getSizePresetsByGroup()
     ])
 
     // @ts-ignore
@@ -173,16 +173,26 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
 
       // Restore values
       if(value.value === 'none'){
+        // Set width, height as their original size
         setWidth(asset.dimensionWidth)
         setHeight(asset.dimensionHeight)
 
+        // Set default size to none
         setSize({ label: 'None', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight})
+
+        // Restore size back to temp size
         setSizes(tempSize)
+
+        // Clear temp size
+        setTempSizes([])
       }else{
+        // Reset size value
         setSize(undefined)
 
-        // Store temp sizes
-        setTempSizes(sizes)
+        if(tempSize.length === 0){
+          // Store temp sizes
+          setTempSizes(sizes)
+        }
 
         // Set size list by preset data
         setSizes(value.data)

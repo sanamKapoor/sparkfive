@@ -12,5 +12,8 @@ export default {
 
 
     // For preset sizes
-    getSizePresets: (queryParams) => axios.get(`${sizePreset}?${querystring.stringify(queryParams)}`)
+    getSizePresets: (queryParams) => axios.get(`${sizePreset}?${querystring.stringify(queryParams)}`),
+    getSizePresetsByGroup: (queryParams) => axios.get(`${sizePreset}/group?${querystring.stringify(queryParams)}`),
+    createPresetSize: (data) => axios.post(sizePreset, data),
+    deletePresetSize: (payload) => axios.delete(`${sizePreset}`, {data: payload}),
 }

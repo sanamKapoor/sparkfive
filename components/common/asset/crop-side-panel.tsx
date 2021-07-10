@@ -174,7 +174,7 @@ const CropSidePanel = ({ asset,
                 <div className={`${styles.title}`}>Size</div>
                 <div className={styles['field-content']}>
                     <SizeSelect
-                        options={sizes}
+                        options={sizes.map((size) => { size.label = size.label || size.name; size.value = size.value || size.name; return size})}
                         placeholder='Select size'
                         styleType='filter'
                         onChange={(value)=>{onSelectChange('size', value)}}

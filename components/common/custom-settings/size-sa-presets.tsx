@@ -4,7 +4,7 @@ import styles from './custom-file-size.module.css'
 import { Utilities } from '../../../assets'
 
 // APIs
-import customFieldsApi from '../../../server-api/attribute'
+import sizeApi from '../../../server-api/size'
 
 // Components
 import toastUtils from '../../../utils/toast'
@@ -15,78 +15,23 @@ import Input from "../inputs/input";
 import Button from "../buttons/button";
 import ConfirmModal from "../modals/confirm-modal";
 
-// Maximum custom fields
-const maximumCustomFields = 3;
-
 const SizeSaPresets = () => {
-    const [fileSizeList, setFileSizeList] = useState([])
+    const [presetList, setPresetList] = useState([])
     const [loading, setLoading] = useState(false)
     const [confirmDeleteModal, setConfirmDeleteModal] = useState(false)
     const [currentDeleteId, setCurrentDeleteId] = useState() // Id is pending to delete
 
-    // Create the new tag
-    const createValue = async (index, item) => {
-        let currentFieldList = [...fileSizeList];
-        currentFieldList[index].values.push({
-            name: item.name
-        });
-        setFileSizeList(currentFieldList)
-    }
-
     // Get tag list
-    const getCustomFields = async () => {
+    const getSizePresets = async () => {
         // Show loading
         setLoading(true)
 
-        let { data } = await customFieldsApi.getCustomFields({isAll: 1, sort: 'createdAt,asc'})
+        let { data } = await sizeApi.getSizePresets()
 
-        if(data.length > 0){
-            // There still be available fields to create
-            if(data.length < maximumCustomFields){
-                const dataLength = data.length
-                // Add it
-                for(let i=0;i<(maximumCustomFields-dataLength);i++){
-                    data.push({
-                        id: null,
-                        name: '',
-                        type: 'selectOne',
-                        values: []
-                    })
-                }
-            }
-
-            setFileSizeList(data)
-        }else{
-            setFileSizeList([
-                {
-                    id: null,
-                    name: '',
-                    type: 'selectOne',
-                    values: []
-                },
-                {
-                    id: null,
-                    name: '',
-                    type: 'selectOne',
-                    values: []
-                },
-                {
-                    id: null,
-                    name: '',
-                    type: 'selectOne',
-                    values: []
-                }
-            ])
-        }
+        setPresetList(data)
 
         // Hide loading
         setLoading(false)
-    }
-
-    const deleteValue = async(customFieldIndex, valueIndex) => {
-        let currentFieldList = [...fileSizeList];
-        currentFieldList[customFieldIndex].values.splice(valueIndex, 1)
-        setFileSizeList(currentFieldList)
     }
 
     // Save updated changes
@@ -96,68 +41,66 @@ const SizeSaPresets = () => {
             setLoading(true)
 
             // Call API to delete tag
-            await customFieldsApi.createCustomField({
-                attributes: [
-                    fileSizeList[index]
-                ]
-            })
+            await sizeApi.createPresetSize({sizes: [presetList[index]]})
 
-            toastUtils.success('Custom field changes saved')
+            // Edit
+            if(presetList[index].id !== null){
+                toastUtils.success('Preset size changes saved')
 
-            // Refresh the list
-            getCustomFields();
+                // Refresh the list
+                getSizePresets();
+            }else{ // Create the new one
+                toastUtils.success('Preset size created successfully')
+
+                // Refresh the list
+                getSizePresets();
+            }
         }catch (err) {
             if (err.response?.status === 400) toastUtils.error(err.response.data.message)
-            else toastUtils.error('Could not create tag, please try again later.')
+            else toastUtils.error('Could not create file size preset, please try again later.')
 
             // Show loading
             setLoading(false)
         }
     }
 
-    const deleteCustomAttribute = async(id) => {
+    const deleteSizePreset = async(id) => {
         // Hide confirm modal
         setConfirmDeleteModal(false)
 
         // Show loading
         setLoading(true)
 
-        // Call API to delete tag
-        await customFieldsApi.deleteCustomField({attributeIds: [id]})
+        // Call API to delete custom size
+        await sizeApi.deletePresetSize({sizeIds: [id]})
 
         // Refresh the list
-        getCustomFields();
+        getSizePresets();
     }
 
     // On input change
     const onInputChange = (e, name, index) => {
-        let currentFieldList = [...fileSizeList];
+        let currentFieldList = [...presetList];
         currentFieldList[index][name] = e.target.value;
-        setFileSizeList(currentFieldList)
-    }
-
-    // On select option change
-    const onSelectChange = (value, index) => {
-        let currentFieldList = [...fileSizeList];
-        currentFieldList[index].type = value;
-        setFileSizeList(currentFieldList)
+        setPresetList(currentFieldList)
     }
 
     const addNew = () => {
-        setFileSizeList(fileSizeList.concat([{
+        setPresetList(presetList.concat([{
             id: null,
-            name: ''
+            name: '',
+            presetName: ''
         }]))
     }
 
     useEffect(()=>{
-        // getCustomFields();
+        getSizePresets()
 
     },[])
 
     return (
         <div className={styles['main-wrapper']}>
-            {fileSizeList.map((field, index)=>{
+            {presetList.map((field, index)=>{
                return <div className={`${styles['row']} ${styles['field-block']}`} key={index}>
                    <div className={`${styles['col-20']} ${styles['col-md-100']} p-l-r-0`}>
                        <div className={styles['row']}>
@@ -170,8 +113,8 @@ const SizeSaPresets = () => {
                                    Width (px)
                                </label>
                                <Input
-                                   onChange={(e)=>{onInputChange(e, 'channel', index)}}
-                                   value={field.channel}
+                                   onChange={(e)=>{onInputChange(e, 'presetName', index)}}
+                                   value={field.presetName}
                                    placeholder={'Channel'}
                                    styleType={'regular-short'} />
                            </div>
@@ -241,7 +184,7 @@ const SizeSaPresets = () => {
                                    text='Save'
                                    styleType='primary'
                                    onClick={()=>{saveChanges(index)}}
-                                   disabled={!field.name}
+                                   disabled={!field.name || !field.presetName || !field.width || !field.height }
                                />
                                {<IconClickable additionalClass={styles['action-button']}  src={AssetOps[`delete`]}  tooltipText={'Delete'} tooltipId={'Delete'}
                                                            onClick={()=>{
@@ -249,7 +192,7 @@ const SizeSaPresets = () => {
                                                                    setCurrentDeleteId(field.id)
                                                                    setConfirmDeleteModal(true)
                                                                }else{
-                                                                   setFileSizeList(fileSizeList.filter((item, indexItem)=> index !== indexItem))
+                                                                   setPresetList(presetList.filter((item, indexItem)=> index !== indexItem))
                                                                }
                                                            }}
                                />}
@@ -265,7 +208,6 @@ const SizeSaPresets = () => {
                         <div className={`add ${styles['select-add']}`} onClick={addNew}>
                             <IconClickable src={Utilities.add} />
                             <span className={'font-weight-500'}>Add New</span>
-                            <span className={'font-12'}>&nbsp; (up to 10 allowed)</span>
                         </div>
                     </div>
                 </div>
@@ -274,9 +216,9 @@ const SizeSaPresets = () => {
             <ConfirmModal
                 modalIsOpen={confirmDeleteModal}
                 closeModal={()=>{setConfirmDeleteModal(false)}}
-                confirmAction={()=>{deleteCustomAttribute(currentDeleteId)}}
+                confirmAction={()=>{deleteSizePreset(currentDeleteId)}}
                 confirmText={'Delete'}
-                message={<span>This custom field will be deleted and removed from any file that has it.&nbsp; Are you sure you want to delete this?</span>}
+                message={<span>Are you sure you want to delete this size preset?</span>}
                 closeButtonClass={styles['close-modal-btn']}
                 textContentClass={styles['confirm-modal-text']}
             />

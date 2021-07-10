@@ -45,12 +45,6 @@ const CustomFileSizes = () => {
         setLoading(false)
     }
 
-    const deleteValue = async(customFieldIndex, valueIndex) => {
-        let currentFieldList = [...fileSizeList];
-        currentFieldList[customFieldIndex].values.splice(valueIndex, 1)
-        setFileSizeList(currentFieldList)
-    }
-
     // Save updated changes
     const saveChanges = async (index) => {
         try{
