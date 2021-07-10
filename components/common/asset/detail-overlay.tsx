@@ -3,6 +3,7 @@ import { Utilities } from '../../../assets'
 import { saveAs } from 'file-saver'
 import { useState, useEffect, useContext } from 'react'
 import assetApi from '../../../server-api/asset'
+import customFileSizeApi from '../../../server-api/size'
 import { AssetContext } from '../../../context'
 import toastUtils from '../../../utils/toast'
 import update from 'immutability-helper'
@@ -20,6 +21,8 @@ import AssetImg from './asset-img'
 import AssetApplication from './asset-application'
 import AssetText from './asset-text'
 import RenameModal from '../modals/rename-modal'
+import CropSidePanel from './crop-side-panel'
+import AssetCropImg from './asset-crop-img'
 
 const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { }, openDeleteAsset = () => { }, isShare = false, initialParams }) => {
 
@@ -33,7 +36,55 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
 
   const [sideOpen, setSideOpen] = useState(true)
 
+  // For resize and cropping
+  const [mode, setMode] = useState('detail') // Available options: resize, crop, detail
+  const [imageType, setImageType] = useState('bmp') // Available options: bmp, png, jpg, tiff
+
+  const [presetTypes, setPresetTypes] = useState([{ label: 'None', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight}])
+  const [preset, setPreset] = useState<any>(presetTypes[0])
+
+  const [sizes, setSizes] = useState([{ label: 'None', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight}])
+  const [tempSize, setTempSizes] = useState([]) // Keep size list value when user choose preset. This will reduce number of API calls
+  const [size, setSize] = useState<any>(sizes[0])
+
+  const [width, setWidth] = useState(asset.dimensionWidth)
+  const [height, setHeight] = useState(asset.dimensionHeight)
+
+
+
+  const downloadImageTypes = [
+    {
+      value: 'bmp',
+      label: 'BMP (original)'
+    },
+    {
+      value: 'png',
+      label: 'PNG'
+    },
+    {
+      value: 'jpg',
+      label: 'JPG'
+    },
+    {
+      value: 'tiff',
+      label: 'TIFF'
+    }
+  ]
+
+  const getCropResizeOptions = async () => {
+    const results = await Promise.all([
+        customFileSizeApi.getCustomFileSizes(),
+        customFileSizeApi.getSizePresets()
+    ])
+
+    // @ts-ignore
+    setSizes(sizes.concat(results[0].data))
+    // @ts-ignore
+    setPresetTypes(presetTypes.concat(results[1].data))
+  }
+
   useEffect(() => {
+    getCropResizeOptions()
     getDetail()
     checkInitialParams()
     if (isMobile)
@@ -114,6 +165,44 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
     setSideOpen(true)
   }
 
+  // On Crop/Resize select change
+  const onSelectChange = (type, value) => {
+
+    if(type === 'preset'){
+      setPreset(value)
+
+      // Restore values
+      if(value.value === 'none'){
+        setWidth(asset.dimensionWidth)
+        setHeight(asset.dimensionHeight)
+
+        setSize({ label: 'None', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight})
+        setSizes(tempSize)
+      }else{
+        setSize(undefined)
+
+        // Store temp sizes
+        setTempSizes(sizes)
+
+        // Set size list by preset data
+        setSizes(value.data)
+      }
+
+    }
+
+    if(type === 'size'){
+      setWidth(value.width)
+      setHeight(value.height)
+
+      setSize(value)
+    }
+  }
+
+  const lockCropping = () => {
+    // Only lock if user is choose specific preset
+    return (preset && preset.value !== 'none') || (size && size.value !== 'none')
+  }
+
   return (
     <div className={`app-overlay ${styles.container}`}>
       {assetDetail &&
@@ -133,12 +222,22 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
               {!isShare &&
                 <Button text={'Share'} type={'button'} styleType={'primary'} onClick={openShareAsset} />
               }
-              <Button text={'Download'} type={'button'} styleType={'secondary'} onClick={() => downloadUtils.downloadFile(realUrl, assetDetail.name)} />
+              {mode === 'detail' && <Button text={'Download'}
+                      type={'button'}
+                      styleType={'secondary'}
+                      onClick={
+                        () => {
+                          setMode('resize')
+                        }
+                      } />}
             </div>
           </div>
           <div className={styles['img-wrapper']}>
             {assetDetail.type === 'image' &&
-              <AssetImg name={assetDetail.name} assetImg={realUrl} />
+                <>
+                {(mode === 'detail' || mode === 'resize') && <AssetImg name={assetDetail.name} assetImg={realUrl} />}
+                {mode === 'crop' && <AssetCropImg  locked={lockCropping()} name={assetDetail.name} assetImg={realUrl} width={width} height={height} />}
+                </>
             }
             {assetDetail.type === 'application' && <AssetApplication extension={assetDetail.extension} />}
             {assetDetail.type === 'text' && <AssetText extension={assetDetail.extension} />}
@@ -155,7 +254,26 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
       {sideOpen &&
         <section className={styles.side}>
           {assetDetail && activeSideComponent === 'detail' &&
-            <SidePanel asset={assetDetail} updateAsset={updateAsset} setAssetDetail={setAssetDetail} isShare={isShare} />
+              <>
+              {mode === 'detail' && <SidePanel asset={assetDetail} updateAsset={updateAsset} setAssetDetail={setAssetDetail} isShare={isShare} />}
+              {mode !== 'detail' && <CropSidePanel
+                  imageType={imageType}
+                  onImageTypeChange={(type)=>{
+                    setImageType(type)
+                  }}
+                  downloadImageTypes={downloadImageTypes}
+                  presetTypes={presetTypes}
+                  presetTypeValue={preset}
+                  sizes={sizes}
+                  sizeValue={size}
+                  mode={mode}
+                  width={width}
+                  height={height}
+                  onModeChange={(mode)=>{setMode(mode)}}
+                  onSelectChange={onSelectChange}
+                  asset={assetDetail}
+                 />}
+              </>
           }
           {!isShare && activeSideComponent === 'comments' &&
             <ConversationList itemId={asset?.id} itemType='assets' />

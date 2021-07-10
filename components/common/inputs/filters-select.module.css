@@ -10,6 +10,12 @@
   border: 2px solid var(--color-secondary-border);
 }
 
+.size {
+  min-width: 170px;
+  font-size: 13px;
+  border: 2px solid var(--color-secondary-border);
+}
+
 .option {
   display: flex;
   justify-content: space-between;
