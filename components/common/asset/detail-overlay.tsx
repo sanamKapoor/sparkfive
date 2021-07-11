@@ -219,12 +219,16 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
 
   // On width, height input change
   const onSizeInputChange = (name, value) => {
+    const originalRatio = asset.dimensionWidth/asset.dimensionHeight
+
     if(name === 'width'){
       setWidth(value)
+      setHeight(Math.round(value/originalRatio))
     }
 
     if(name === 'height'){
       setHeight(value)
+      setWidth(Math.round(value*originalRatio))
     }
   }
 

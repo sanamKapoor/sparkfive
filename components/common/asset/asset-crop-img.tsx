@@ -168,7 +168,6 @@ const AssetCropImg = ({ assetImg, type = 'image', name, opaque = false, width = 
 				id={'download-crop-image'}
 				className={'position-absolute visibility-hidden'}
 				type="button"
-				disabled={!completedCrop?.width || !completedCrop?.height}
 				onClick={() =>
 					generateDownload(previewCanvasRef.current, completedCrop)
 				}
