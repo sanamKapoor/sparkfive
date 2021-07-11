@@ -55,9 +55,10 @@ const CropSidePanel = ({ asset,
             let payload = {
                 assetIds: [asset.id],
                 sizeId: sizeValue.value === 'none' ? null : sizeValue.id,
-                customSize: width !== asset.dimensionWidth || height !== asset.dimensionHeight,
+                customSize: true,
                 width,
-                height
+                height,
+                format: imageType
             };
 
             let totalDownloadingAssets = 1;
