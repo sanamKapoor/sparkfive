@@ -8,7 +8,7 @@
   color: white;
   max-width: 550px;
   width: 60%;
-  z-index: 100;
+  z-index: 10000;
   min-height: 40px;
 }
 

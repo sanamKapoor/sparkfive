@@ -43,12 +43,12 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
   const [presetTypes, setPresetTypes] = useState([{ label: 'None', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight}])
   const [preset, setPreset] = useState<any>(presetTypes[0])
 
-  const [sizes, setSizes] = useState([{ label: 'None', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight}])
+  const [sizes, setSizes] = useState([{ label: 'Original', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight}])
   const [tempSize, setTempSizes] = useState([]) // Keep size list value when user choose preset. This will reduce number of API calls
   const [size, setSize] = useState<any>(sizes[0])
 
-  const [width, setWidth] = useState(asset.dimensionWidth)
-  const [height, setHeight] = useState(asset.dimensionHeight)
+  const [width, setWidth] = useState<number>(asset.dimensionWidth)
+  const [height, setHeight] = useState<number>(asset.dimensionHeight)
 
 
 
@@ -178,7 +178,7 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
         setHeight(asset.dimensionHeight)
 
         // Set default size to none
-        setSize({ label: 'None', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight})
+        setSize({ label: 'Original', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight})
 
         // Restore size back to temp size
         setSizes(tempSize)
@@ -208,10 +208,36 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
     }
   }
 
+  // On width, height input change
+  const onSizeInputChange = (name, value) => {
+    if(name === 'width'){
+      setWidth(value)
+    }
+
+    if(name === 'height'){
+      setHeight(value)
+    }
+  }
+
   const lockCropping = () => {
     // Only lock if user is choose specific preset
     return (preset && preset.value !== 'none') || (size && size.value !== 'none')
   }
+
+  // Subscribe mode change, if user back/enter to detail page, should reset all size value do default
+  useEffect(()=>{
+    if(mode === 'detail'){
+      // Set default size to none
+      setSizes([{ label: 'Original', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight}])
+      setPresetTypes([{ label: 'None', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight}])
+
+      setSize({ label: 'Original', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight})
+      setPreset({ label: 'None', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight})
+
+      setWidth(asset.dimensionWidth)
+      setHeight(asset.dimensionHeight)
+    }
+  },[mode])
 
   return (
     <div className={`app-overlay ${styles.container}`}>
@@ -281,6 +307,7 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
                   height={height}
                   onModeChange={(mode)=>{setMode(mode)}}
                   onSelectChange={onSelectChange}
+                  onSizeInputChange={onSizeInputChange}
                   asset={assetDetail}
                  />}
               </>

@@ -1,43 +1,21 @@
 // External
 import styles from './crop-side-panel.module.css'
-import update from 'immutability-helper'
-import ReactCreatableSelect from 'react-select/creatable'
-import ReactSelect from 'react-select'
-import { useEffect, useState, useContext } from 'react'
-import { format } from 'date-fns'
-import { capitalCase } from 'change-case'
-import filesize from 'filesize'
+import fileDownload from 'js-file-download';
 
 // APIs
-import tagApi from '../../../server-api/tag'
-import customFieldsApi from '../../../server-api/attribute'
-import assetApi from '../../../server-api/asset'
-import projectApi from '../../../server-api/project'
-import campaignApi from '../../../server-api/campaign'
-import folderApi from '../../../server-api/folder'
+import sizeApi from '../../../server-api/size'
+
+import { Utilities } from '../../../assets'
 
 // Contexts
-import { AssetContext, UserContext, FilterContext, LoadingContext } from '../../../context'
-
-// Utils
-import { getParsedExtension } from '../../../utils/asset'
-import { Utilities } from '../../../assets'
-import channelSocialOptions from '../../../resources/data/channels-social.json'
-import {
-    CALENDAR_ACCESS
-} from '../../../constants/permissions'
+import { AssetContext } from '../../../context'
 
 // Components
-import Tag from '../misc/tag'
 import IconClickable from '../buttons/icon-clickable'
-import ChannelSelector from '../items/channel-selector'
-import CustomFieldSelector from "../items/custom-field-selector"
-import CreatableSelect from '../inputs/creatable-select'
-import ProjectCreationModal from '../modals/project-creation-modal'
-import ProductAddition from './product-addition'
 import Input from "../inputs/input";
 import SizeSelect from "../inputs/size-select";
 import Button from "../buttons/button";
+import {useContext} from "react";
 
 
 const CropSidePanel = ({ asset,
@@ -51,9 +29,14 @@ const CropSidePanel = ({ asset,
                            sizes,
                            sizeValue,
                            onSelectChange,
+                           onSizeInputChange,
                            width,
                            height
                        }) => {
+
+    const {
+        updateDownloadingStatus
+    } = useContext(AssetContext)
 
 
 
@@ -61,9 +44,54 @@ const CropSidePanel = ({ asset,
         onModeChange(data)
     }
 
+    // Check if should lock cropping
     const lockCropping = () => {
         // Only lock if user is choose specific preset
         return (sizeValue && sizeValue.value !== 'none')
+    }
+
+    const downloadSelectedAssets = async () => {
+        try{
+            let payload = {
+                assetIds: [asset.id],
+                sizeId: sizeValue.value === 'none' ? null : sizeValue.id,
+                customSize: width !== asset.dimensionWidth || height !== asset.dimensionHeight,
+                width,
+                height
+            };
+
+            let totalDownloadingAssets = 1;
+            let filters = {
+                estimateTime: 1
+            }
+
+            // Add sharePath property if user is at share collection page
+            // if(sharePath){
+            //     filters['sharePath'] = sharePath
+            // }
+
+
+            // Show processing bar
+            updateDownloadingStatus('zipping', 0, totalDownloadingAssets)
+
+            let api = sizeApi;
+
+            // if(isShare){
+            //     api = shareApi
+            // }
+
+            const { data } = await api.download(payload,filters)
+
+            // Download file to storage
+            fileDownload(data, 'assets.zip');
+
+            updateDownloadingStatus('done', 0, 0)
+        }catch (e){
+            updateDownloadingStatus('error', 0, 0, 'Internal Server Error. Please try again.')
+        }
+
+
+        // downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets')
     }
 
     return (
@@ -131,11 +159,12 @@ const CropSidePanel = ({ asset,
                             </label>
                             <Input
                                 disabled={lockCropping()}
-                                onChange={(e)=>{}}
+                                onChange={(e)=>{onSizeInputChange('width', parseInt(e.target.value))}}
                                 placeholder={'Width'}
                                 additionalClasses={'center-input'}
                                 type={'number'}
-                                value={width || asset.dimensionWidth}
+                                defaultValue
+                                value={width}
                                 styleType={'regular-height-short'} />
                         </div>
                         <div className={'col-50'}>
@@ -144,10 +173,10 @@ const CropSidePanel = ({ asset,
                             </label>
                             <Input
                                 disabled={lockCropping()}
-                                onChange={(e)=>{}}
+                                onChange={(e)=>{onSizeInputChange('height', parseInt(e.target.value))}}
                                 placeholder={'Height'}
                                 type={'number'}
-                                value={height || asset.dimensionHeight}
+                                value={height}
                                 additionalClasses={'center-input'}
                                 styleType={'regular-height-short'} />
                         </div>
@@ -197,9 +226,11 @@ const CropSidePanel = ({ asset,
                         onClick={()=>{
                             if(mode === 'crop'){
                                 document.getElementById('download-crop-image').click()
+                            }else{
+                                downloadSelectedAssets()
                             }
                         }}
-                        disabled={false}
+                        disabled={!width || !height}
                 />
             </div>
 

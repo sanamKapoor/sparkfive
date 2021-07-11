@@ -3,6 +3,7 @@ import querystring from 'querystring'
 
 const customFileSize = `${process.env.SERVER_BASE_URL}/sizes/customs`
 const sizePreset = `${process.env.SERVER_BASE_URL}/sizes/presets`
+const downloadAsset = `${process.env.SERVER_BASE_URL}/sizes/download`
 
 export default {
     // For custom sizes
@@ -16,4 +17,13 @@ export default {
     getSizePresetsByGroup: (queryParams) => axios.get(`${sizePreset}/group?${querystring.stringify(queryParams)}`),
     createPresetSize: (data) => axios.post(sizePreset, data),
     deletePresetSize: (payload) => axios.delete(`${sizePreset}`, {data: payload}),
+
+    download: (data, filters) => {
+        return axios({
+            url: `${downloadAsset}?${querystring.encode(filters)}`,
+            method: 'POST',
+            responseType: 'blob', // Important
+            data
+        })
+    }
 }
