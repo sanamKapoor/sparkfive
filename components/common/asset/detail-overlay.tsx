@@ -44,7 +44,6 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
   const [preset, setPreset] = useState<any>(presetTypes[0])
 
   const [sizes, setSizes] = useState([{ label: 'Original', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight}])
-  const [tempSize, setTempSizes] = useState([]) // Keep size list value when user choose preset. This will reduce number of API calls
   const [size, setSize] = useState<any>(sizes[0])
 
   const [width, setWidth] = useState<number>(asset.dimensionWidth)
@@ -53,10 +52,6 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
 
 
   const downloadImageTypes = [
-    {
-      value: 'bmp',
-      label: 'BMP (original)'
-    },
     {
       value: 'png',
       label: 'PNG'
@@ -72,15 +67,10 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
   ]
 
   const getCropResizeOptions = async () => {
-    const results = await Promise.all([
-        customFileSizeApi.getCustomFileSizes(),
-        customFileSizeApi.getSizePresetsByGroup()
-    ])
+    const { data } = await customFileSizeApi.getSizePresetsByGroup()
 
     // @ts-ignore
-    setSizes(sizes.concat(results[0].data))
-    // @ts-ignore
-    setPresetTypes(presetTypes.concat(results[1].data))
+    setPresetTypes(presetTypes.concat(data))
   }
 
   useEffect(() => {
@@ -181,18 +171,11 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
         setSize({ label: 'Original', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight})
 
         // Restore size back to temp size
-        setSizes(tempSize)
+        setSizes([{ label: 'Original', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight}])
 
-        // Clear temp size
-        setTempSizes([])
       }else{
         // Reset size value
         setSize(undefined)
-
-        if(tempSize.length === 0){
-          // Store temp sizes
-          setTempSizes(sizes)
-        }
 
         // Set size list by preset data
         setSizes(value.data)
