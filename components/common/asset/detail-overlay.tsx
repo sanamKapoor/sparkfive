@@ -24,7 +24,36 @@ import RenameModal from '../modals/rename-modal'
 import CropSidePanel from './crop-side-panel'
 import AssetCropImg from './asset-crop-img'
 
-const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { }, openDeleteAsset = () => { }, isShare = false, initialParams }) => {
+const defaultDownloadImageTypes = [
+  {
+    value: 'png',
+    label: 'PNG'
+  },
+  {
+    value: 'jpg',
+    label: 'JPG'
+  },
+  {
+    value: 'tiff',
+    label: 'TIFF'
+  }
+]
+
+const getDefaultDownloadImageType = (extension) => {
+  const existingExtension = defaultDownloadImageTypes.filter(type => type.value === extension)
+
+  // Already existed
+  if(existingExtension.length > 0){
+    return defaultDownloadImageTypes
+  }else{
+    return defaultDownloadImageTypes.concat([{
+      value: extension,
+      label: `${extension.toUpperCase()} (original)`
+    }])
+  }
+}
+
+const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { }, openDeleteAsset = () => { }, isShare = false, sharePath = '', initialParams }) => {
 
   const [assetDetail, setAssetDetail] = useState(undefined)
 
@@ -37,8 +66,9 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
   const [sideOpen, setSideOpen] = useState(true)
 
   // For resize and cropping
+  const [downloadImageTypes, setDownloadImageTypes] = useState(getDefaultDownloadImageType(asset.extension))
   const [mode, setMode] = useState('detail') // Available options: resize, crop, detail
-  const [imageType, setImageType] = useState('bmp') // Available options: bmp, png, jpg, tiff
+  const [imageType, setImageType] = useState(asset.extension)
 
   const [presetTypes, setPresetTypes] = useState([{ label: 'None', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight}])
   const [preset, setPreset] = useState<any>(presetTypes[0])
@@ -50,27 +80,23 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
   const [height, setHeight] = useState<number>(asset.dimensionHeight)
 
 
-
-  const downloadImageTypes = [
-    {
-      value: 'png',
-      label: 'PNG'
-    },
-    {
-      value: 'jpg',
-      label: 'JPG'
-    },
-    {
-      value: 'tiff',
-      label: 'TIFF'
-    }
-  ]
-
   const getCropResizeOptions = async () => {
-    const { data } = await customFileSizeApi.getSizePresetsByGroup()
+    try {
+      if(isShare){
+        const { data } = await customFileSizeApi.getSharedSizePresetsByGroup()
 
-    // @ts-ignore
-    setPresetTypes(presetTypes.concat(data))
+        // @ts-ignore
+        setPresetTypes(presetTypes.concat(data))
+      }else{
+        const { data } = await customFileSizeApi.getSizePresetsByGroup()
+
+        // @ts-ignore
+        setPresetTypes(presetTypes.concat(data))
+      }
+    }catch (e){
+
+    }
+
   }
 
   useEffect(() => {
@@ -276,6 +302,8 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
               <>
               {mode === 'detail' && <SidePanel asset={assetDetail} updateAsset={updateAsset} setAssetDetail={setAssetDetail} isShare={isShare} />}
               {mode !== 'detail' && <CropSidePanel
+                  isShare={isShare}
+                  sharePath={sharePath}
                   imageType={imageType}
                   onImageTypeChange={(type)=>{
                     setImageType(type)

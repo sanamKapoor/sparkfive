@@ -1,9 +1,11 @@
 // External
 import styles from './crop-side-panel.module.css'
 import fileDownload from 'js-file-download';
+import urlUtils from '../../../utils/url'
 
 // APIs
 import sizeApi from '../../../server-api/size'
+import shareCollectionApi from '../../../server-api/share-collection'
 
 import { Utilities } from '../../../assets'
 
@@ -31,7 +33,9 @@ const CropSidePanel = ({ asset,
                            onSelectChange,
                            onSizeInputChange,
                            width,
-                           height
+                           height,
+                           isShare,
+                           sharePath
                        }) => {
 
     const {
@@ -61,9 +65,13 @@ const CropSidePanel = ({ asset,
                 format: imageType
             };
 
+            const { shareJWT } = urlUtils.getQueryParameters()
+
             let totalDownloadingAssets = 1;
             let filters = {
-                estimateTime: 1
+                estimateTime: 1,
+                shareJWT,
+                sharePath
             }
 
             // Add sharePath property if user is at share collection page
@@ -75,13 +83,24 @@ const CropSidePanel = ({ asset,
             // Show processing bar
             updateDownloadingStatus('zipping', 0, totalDownloadingAssets)
 
-            let api = sizeApi;
+            let download = null
+
+            if(isShare){
+                console.log(`sharePath: ${sharePath}`)
+                if(sharePath){
+                    download = shareCollectionApi.downloadWithCustomSize
+                }else{
+                    download = sizeApi.shareDownload
+                }
+            }else{
+                download = sizeApi.download
+            }
 
             // if(isShare){
             //     api = shareApi
             // }
 
-            const { data } = await api.download(payload,filters)
+            const { data } = await download(payload,filters)
 
             // Download file to storage
             fileDownload(data, 'assets.zip');
