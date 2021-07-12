@@ -3,6 +3,7 @@ import { Utilities } from '../../../assets'
 import { saveAs } from 'file-saver'
 import { useState, useEffect, useContext } from 'react'
 import assetApi from '../../../server-api/asset'
+import shareApi from '../../../server-api/share-collection'
 import customFileSizeApi from '../../../server-api/size'
 import { AssetContext } from '../../../context'
 import toastUtils from '../../../utils/toast'
@@ -23,6 +24,7 @@ import AssetText from './asset-text'
 import RenameModal from '../modals/rename-modal'
 import CropSidePanel from './crop-side-panel'
 import AssetCropImg from './asset-crop-img'
+import fileDownload from "js-file-download";
 
 const defaultDownloadImageTypes = [
   {
@@ -54,6 +56,10 @@ const getDefaultDownloadImageType = (extension) => {
 }
 
 const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { }, openDeleteAsset = () => { }, isShare = false, sharePath = '', initialParams }) => {
+
+  const {
+    updateDownloadingStatus
+  } = useContext(AssetContext)
 
   const [assetDetail, setAssetDetail] = useState(undefined)
 
@@ -252,6 +258,46 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
     }
   },[mode])
 
+  const downloadSelectedAssets = async (id) => {
+    try{
+      let payload = {
+        assetIds: [id]
+      };
+
+      let totalDownloadingAssets = 1;
+      let filters = {
+        estimateTime: 1
+      }
+
+      // Add sharePath property if user is at share collection page
+      if(sharePath){
+        filters['sharePath'] = sharePath
+      }
+
+
+      // Show processing bar
+      updateDownloadingStatus('zipping', 0, totalDownloadingAssets)
+
+      let api: any = assetApi;
+
+      if(isShare){
+        api = shareApi
+      }
+
+      const { data } = await api.downloadAll(payload,filters)
+
+      // Download file to storage
+      fileDownload(data, 'assets.zip');
+
+      updateDownloadingStatus('done', 0, 0)
+    }catch (e){
+      updateDownloadingStatus('error', 0, 0, 'Internal Server Error. Please try again.')
+    }
+
+
+    // downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets')
+  }
+
   return (
     <div className={`app-overlay ${styles.container}`}>
       {assetDetail &&
@@ -276,7 +322,11 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
                       styleType={'secondary'}
                       onClick={
                         () => {
-                          setMode('resize')
+                          if(asset.type === 'image'){
+                            setMode('resize')
+                          }else{
+                            downloadSelectedAssets(asset.id)
+                          }
                         }
                       } />}
             </div>
