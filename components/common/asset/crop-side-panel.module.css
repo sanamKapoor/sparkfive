@@ -108,6 +108,11 @@
   font-size: 12px;
 }
 
+.radio-button-wrapper{
+  display: flex;
+  align-items: center;
+}
+
 @media screen and (max-width: 800px) {
   .item-list {
     flex-direction: column;

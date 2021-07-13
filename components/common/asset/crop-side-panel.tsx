@@ -18,6 +18,7 @@ import Input from "../inputs/input";
 import SizeSelect from "../inputs/size-select";
 import Button from "../buttons/button";
 import {useContext} from "react";
+import ReactTooltip from "react-tooltip";
 
 
 const CropSidePanel = ({ asset,
@@ -86,7 +87,6 @@ const CropSidePanel = ({ asset,
             let download = null
 
             if(isShare){
-                console.log(`sharePath: ${sharePath}`)
                 if(sharePath){
                     download = shareCollectionApi.downloadWithCustomSize
                 }else{
@@ -122,20 +122,22 @@ const CropSidePanel = ({ asset,
                 <div className={`${styles.title}`}>Mode</div>
                 <div className={styles['field-content']}>
                     <div className={styles['field-radio-wrapper']}>
-                        <div className={'m-r-15'}>
+                        <div className={`${styles['radio-button-wrapper']} m-r-15`} data-tip data-for={'resize'}>
                             <IconClickable
                                 src={mode === 'resize' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                 additionalClass={styles['select-icon']}
                                 onClick={() => setMode('resize')} />
-                            <div className={'font-12'}>Resize</div>
+                            <div className={'font-12 m-l-15'}>Resize</div>
                         </div>
-                        <div>
+                        <ReactTooltip place={'bottom'} id={'resize'} delayShow={300} effect='solid'>{'Resize image at desired dimensions when ratio is maintained'}</ReactTooltip>
+                        <div className={`${styles['radio-button-wrapper']}`} data-tip data-for={'crop'}>
                             <IconClickable
                                 src={mode === 'crop' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                 additionalClass={styles['select-icon']}
                                 onClick={() => setMode('crop')} />
-                            <div className={'font-12'}>Crop</div>
+                            <div className={'font-12 m-l-15'}>Crop</div>
                         </div>
+                        <ReactTooltip place={'bottom'} id={'crop'} delayShow={300} effect='solid'>{'Crop image at desired ratio'}</ReactTooltip>
                     </div>
                 </div>
             </div>
