@@ -17,3 +17,9 @@
   background-color: var(--color-sec-lightivory);
   min-height: 48px;
 }
+
+.regular-height-short{
+  background-color: var(--color-sec-lightivory);
+  min-height: auto;
+  font-size: 12px;
+}

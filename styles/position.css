@@ -40,6 +40,14 @@
     margin-bottom: 25px;
 }
 
+.m-r-15{
+    margin-right: 15px;
+}
+
+.m-l-15{
+    margin-left: 15px;
+}
+
 .m-b-40{
     margin-bottom: 40px;
 }
@@ -52,6 +60,9 @@
     padding-bottom: 0
 }
 
+.m-l-abs-15{
+    margin-left: -15px;
+}
 
 .p-r-0{
     padding-right: 0
