@@ -182,6 +182,7 @@ const ShareFolderMain = () => {
                         loadMore={() => getAssets(false)}
                         openFilter={openFilter}
                         isShare={true}
+                        sharePath={sharePath}
                     />
                     {openFilter &&
                         <FilterContainer
