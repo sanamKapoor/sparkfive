@@ -229,12 +229,19 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
 
     if(name === 'width'){
       setWidth(value)
-      setHeight(Math.round(value/originalRatio))
+      // Only keep ratio in resize mode
+      if(mode === 'resize'){
+        setHeight(Math.round(value/originalRatio))
+      }
+
     }
 
     if(name === 'height'){
       setHeight(value)
-      setWidth(Math.round(value*originalRatio))
+      // Only keep ratio in resize mode
+      if(mode === 'resize') {
+        setWidth(Math.round(value * originalRatio))
+      }
     }
   }
 
@@ -335,7 +342,7 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
             {assetDetail.type === 'image' &&
                 <>
                 {(mode === 'detail' || mode === 'resize') && <AssetImg name={assetDetail.name} assetImg={realUrl} />}
-                {mode === 'crop' && <AssetCropImg  locked={lockCropping()} name={assetDetail.name} assetImg={realUrl} width={width} height={height} />}
+                {mode === 'crop' && <AssetCropImg setWidth={setWidth} setHeight={setHeight}  locked={lockCropping()} name={assetDetail.name} assetImg={realUrl} width={width} height={height} />}
                 </>
             }
             {assetDetail.type === 'application' && <AssetApplication extension={assetDetail.extension} />}

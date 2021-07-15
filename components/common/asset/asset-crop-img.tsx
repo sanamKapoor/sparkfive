@@ -6,7 +6,7 @@ import styles from './asset-img.module.css'
 
 import { Assets } from "../../../assets"
 
-const AssetCropImg = ({ assetImg, type = 'image', name, opaque = false, width = 100, height = 100 , locked = true}) => {
+const AssetCropImg = ({ assetImg, setWidth, setHeight, type = 'image', name, opaque = false, width = 100, height = 100 , locked = true}) => {
 
 	const previewCanvasRef = useRef(null);
 	const imgRef = useRef(null);
@@ -107,6 +107,14 @@ const AssetCropImg = ({ assetImg, type = 'image', name, opaque = false, width = 
 		}
 	},[width, height])
 
+	const onCropChange = (c) => {
+		setCrop(c)
+	}
+
+	const onCropMoveComplete = (c) => {
+		setCompletedCrop(c)
+	}
+
 	const imageComponent = (
 		<img
 				crossOrigin={'anonymous'}
@@ -149,8 +157,8 @@ const AssetCropImg = ({ assetImg, type = 'image', name, opaque = false, width = 
 				locked={locked}
 				ruleOfThirds={true}
 				className={`${styles.asset} ${opaque && styles.opaque}`}
-				onChange={(c) => setCrop(c)}
-				onComplete={(c) => setCompletedCrop(c)}
+				onChange={(c) => onCropChange(c)}
+				onComplete={(c) => onCropMoveComplete(c)}
 				keepSelection={true}
 			/>
 			<div className={'position-absolute visibility-hidden'}>
