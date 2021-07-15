@@ -95,6 +95,14 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
   const [width, setWidth] = useState<number>(asset.dimensionWidth)
   const [height, setHeight] = useState<number>(asset.dimensionHeight)
 
+  const resetValues = () => {
+    setPreset({ label: 'None', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight})
+    setSize({ label: 'Original', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight})
+    setWidth(asset.dimensionWidth)
+    setHeight(asset.dimensionHeight)
+    setImageType(asset.extension)
+  }
+
 
   const getCropResizeOptions = async () => {
     try {
@@ -387,7 +395,7 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
                   mode={mode}
                   width={width}
                   height={height}
-                  onModeChange={(mode)=>{setMode(mode)}}
+                  onModeChange={(mode)=>{resetValues();setMode(mode)}}
                   onSelectChange={onSelectChange}
                   onSizeInputChange={onSizeInputChange}
                   asset={assetDetail}
