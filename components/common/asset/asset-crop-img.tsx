@@ -31,7 +31,8 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 		const scaleX = image.naturalWidth / image.width;
 		const scaleY = image.naturalHeight / image.height;
 		const ctx = canvas.getContext('2d');
-		const pixelRatio = window.devicePixelRatio;
+		// const pixelRatio = window.devicePixelRatio;
+		const pixelRatio = 1;
 
 		canvas.width = crop.width * pixelRatio;
 		canvas.height = crop.height * pixelRatio;
@@ -85,17 +86,21 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 			const scaleX = image.naturalWidth / image.width;
 			const scaleY = image.naturalHeight / image.height;
 
-
-			const widthPercent = width / (image.width) * scaleX * 100
-			const heightPercent = height/ (image.height) * scaleY * 100
-
 			setCrop({
-				unit: '%',
-				width: widthPercent,
-				height: heightPercent,
-				x: (100 - widthPercent)/2,
-				y: (100 - heightPercent)/2,
+				unit: 'px',
+				width: width/scaleX,
+				height: height/scaleY,
+				x: (image.width/2 - (width/scaleX)/2),
+				y: (image.height/2 - (height)/scaleY/2),
 			});
+
+			setCompletedCrop({
+				unit: 'px',
+				width: width,
+				height: height,
+				x: (image.width/2 - (width)/2),
+				y: (image.height/2 - (height)/2),
+			})
 		}else{
 			setCrop({
 				unit: '%',
@@ -104,6 +109,14 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 				x: 0,
 				y: 0,
 			});
+
+			// setCompletedCrop({
+			// 	unit: 'px',
+			// 	width: width,
+			// 	height: height,
+			// 	x: 0,
+			// 	y: 0,
+			// });
 		}
 	},[width, height])
 
@@ -125,6 +138,7 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 				imgRef.current = e.target;
 
 			 	setLoaded(true)
+
 				e.target.dispatchEvent(new Event('medialoaded', { bubbles: true }));
 
 				 setCrop({
@@ -134,6 +148,15 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 					 x: 0,
 					 y: 0,
 				 });
+
+				 setCompletedCrop({
+					 unit: 'px',
+					 width: width,
+					 height: height,
+					 x: 0,
+					 y: 0,
+				 });
+
 			 }}
 			 style={loaded ? {} : {
 				opacity: 0,
