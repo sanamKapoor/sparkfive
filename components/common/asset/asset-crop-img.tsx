@@ -6,7 +6,7 @@ import styles from './asset-img.module.css'
 
 import { Assets } from "../../../assets"
 
-const AssetCropImg = ({ assetImg, setWidth, setHeight, type = 'image', name, opaque = false, width = 100, height = 100 , locked = true}) => {
+const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image', name, opaque = false, width = 100, height = 100 , locked = true}) => {
 
 	const previewCanvasRef = useRef(null);
 	const imgRef = useRef(null);
@@ -64,13 +64,13 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, type = 'image', name, opa
 				const previewUrl = window.URL.createObjectURL(blob);
 
 				const anchor = document.createElement('a');
-				anchor.download = name;
+				anchor.download = `${name.substring(0, name.lastIndexOf('.'))}.${imageType}`;
 				anchor.href = URL.createObjectURL(blob);
 				anchor.click();
 
 				window.URL.revokeObjectURL(previewUrl);
 			},
-			'image/png',
+			`image/${imageType}`,
 			1
 		);
 	}

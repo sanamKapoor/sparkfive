@@ -147,7 +147,7 @@ const CropSidePanel = ({ asset,
                 <div className={styles['field-content']}>
                     <ul className={`${styles['item-list']}`}>
                         {downloadImageTypes.map((type, index) => {
-                            const isSelected = imageType === type.value
+                            const isSelected = (imageType === 'jpeg' ? 'jpg' : imageType) === type.value
                             return (
                                 <li key={index} className={`${styles['select-item']}`}>
                                     <div className={`${styles['selectable-wrapper']} ${isSelected && styles['selected-wrapper']}`}>

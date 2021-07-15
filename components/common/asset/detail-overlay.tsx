@@ -42,15 +42,25 @@ const defaultDownloadImageTypes = [
 ]
 
 const getDefaultDownloadImageType = (extension) => {
-  const existingExtension = defaultDownloadImageTypes.filter(type => type.value === extension)
+  let foundExtension = extension;
+  if(extension === 'jpeg'){
+    foundExtension = 'jpg'
+  }
+  const existingExtension = defaultDownloadImageTypes.filter(type => type.value === foundExtension)
 
   // Already existed
   if(existingExtension.length > 0){
-    return defaultDownloadImageTypes
+    return defaultDownloadImageTypes.map((type)=>{
+      if(type.value === foundExtension){
+        type.label = `${foundExtension.toUpperCase()} (original)`
+      }
+
+      return type
+    })
   }else{
     return defaultDownloadImageTypes.concat([{
-      value: extension,
-      label: `${extension.toUpperCase()} (original)`
+      value: foundExtension,
+      label: `${foundExtension.toUpperCase()} (original)`
     }])
   }
 }
@@ -342,7 +352,7 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
             {assetDetail.type === 'image' &&
                 <>
                 {(mode === 'detail' || mode === 'resize') && <AssetImg name={assetDetail.name} assetImg={realUrl} />}
-                {mode === 'crop' && <AssetCropImg setWidth={setWidth} setHeight={setHeight}  locked={lockCropping()} name={assetDetail.name} assetImg={realUrl} width={width} height={height} />}
+                {mode === 'crop' && <AssetCropImg imageType={imageType} setWidth={setWidth} setHeight={setHeight}  locked={lockCropping()} name={assetDetail.name} assetImg={realUrl} width={width} height={height} />}
                 </>
             }
             {assetDetail.type === 'application' && <AssetApplication extension={assetDetail.extension} />}
