@@ -43,8 +43,6 @@ const CropSidePanel = ({ asset,
         updateDownloadingStatus
     } = useContext(AssetContext)
 
-    console.log(presetTypes)
-
 
 
     const setMode = (data) => {

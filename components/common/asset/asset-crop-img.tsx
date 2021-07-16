@@ -13,6 +13,7 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 	const [loaded, setLoaded] = useState(false)
 	const [crop, setCrop] = useState<any>({ unit: '%', width: 100, height: 100, x: 0, y: 0 });
 	const [completedCrop, setCompletedCrop] = useState(null);
+	const [cropping, setCropping] = useState(false);
 
 	let finalImg = assetImg
 	if (!finalImg && type === 'video') finalImg = Assets.videoThumbnail
@@ -80,35 +81,39 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 
 		if(imgRef.current){
 
-			// Center crop box
-			const image = imgRef.current;
+			if(!cropping){
+				// Center crop box
+				const image = imgRef.current;
 
-			const scaleX = image.naturalWidth / image.width;
-			const scaleY = image.naturalHeight / image.height;
+				const scaleX = image.naturalWidth / image.width;
+				const scaleY = image.naturalHeight / image.height;
 
-			setCrop({
-				unit: 'px',
-				width: width/scaleX,
-				height: height/scaleY,
-				x: (image.width/2 - (width/scaleX)/2),
-				y: (image.height/2 - (height)/scaleY/2),
-			});
+				setCrop({
+					unit: 'px',
+					width: width/scaleX,
+					height: height/scaleY,
+					x: (image.width/2 - (width/scaleX)/2),
+					y: (image.height/2 - (height)/scaleY/2),
+				});
 
-			setCompletedCrop({
-				unit: 'px',
-				width: width,
-				height: height,
-				x: (image.width/2 - (width)/2),
-				y: (image.height/2 - (height)/2),
-			})
+				setCompletedCrop({
+					unit: 'px',
+					width: width,
+					height: height,
+					x: (image.width/2 - (width)/2),
+					y: (image.height/2 - (height)/2),
+				})
+			}
 		}else{
-			setCrop({
-				unit: '%',
-				width: 100,
-				height: 100,
-				x: 0,
-				y: 0,
-			});
+			if(!cropping){
+				setCrop({
+					unit: '%',
+					width: 100,
+					height: 100,
+					x: 0,
+					y: 0,
+				});
+			}
 
 			// setCompletedCrop({
 			// 	unit: 'px',
@@ -121,10 +126,22 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 	},[width, height])
 
 	const onCropChange = (c) => {
+		setCropping(true)
+		if(c.width > 0 && c.height > 0){
+			const image = imgRef.current;
+
+			const scaleX = image.naturalWidth / image.width;
+			const scaleY = image.naturalHeight / image.height;
+
+			setWidth(Math.round(c.width*scaleX))
+			setHeight(Math.round(c.height*scaleY))
+		}
+
 		setCrop(c)
 	}
 
 	const onCropMoveComplete = (c) => {
+		setCropping(false)
 		setCompletedCrop(c)
 	}
 
