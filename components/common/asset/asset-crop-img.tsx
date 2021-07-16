@@ -34,8 +34,8 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 		// const pixelRatio = window.devicePixelRatio;
 		const pixelRatio = 1;
 
-		canvas.width = crop.width * pixelRatio;
-		canvas.height = crop.height * pixelRatio;
+		canvas.width = crop.width * pixelRatio*scaleX;
+		canvas.height = crop.height * pixelRatio*scaleY;
 
 
 		ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
