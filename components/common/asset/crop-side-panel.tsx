@@ -130,7 +130,7 @@ const CropSidePanel = ({ asset,
                             <div className={'font-12 m-l-15'}>Resize</div>
                         </div>
                         <ReactTooltip place={'bottom'} id={'resize'} delayShow={300} effect='solid'>{'Resize image at desired dimensions when ratio is maintained'}</ReactTooltip>
-                        {imageType !== 'svg' && <>
+                        {asset.extension !== 'svg' && <>
                             <div className={`${styles['radio-button-wrapper']}`} data-tip data-for={'crop'}>
                                 <IconClickable
                                     src={mode === 'crop' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
@@ -174,7 +174,7 @@ const CropSidePanel = ({ asset,
             </div>
 
 
-            {imageType !== 'svg' && <>
+            {asset.extension !== 'svg' && <>
                 <div className={styles['field-wrapper']} >
                     <div className={`${styles.title}`}>Resize</div>
                     <div className={styles['field-content']}>
