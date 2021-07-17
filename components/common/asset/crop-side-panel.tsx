@@ -105,7 +105,7 @@ const CropSidePanel = ({ asset,
             // Download file to storage
             fileDownload(data, 'assets.zip');
 
-            updateDownloadingStatus('done', 0, 0)
+            updateDownloadingStatus('none', 0, 0, '')
         }catch (e){
             updateDownloadingStatus('error', 0, 0, 'Internal Server Error. Please try again.')
         }
@@ -130,14 +130,16 @@ const CropSidePanel = ({ asset,
                             <div className={'font-12 m-l-15'}>Resize</div>
                         </div>
                         <ReactTooltip place={'bottom'} id={'resize'} delayShow={300} effect='solid'>{'Resize image at desired dimensions when ratio is maintained'}</ReactTooltip>
-                        <div className={`${styles['radio-button-wrapper']}`} data-tip data-for={'crop'}>
-                            <IconClickable
-                                src={mode === 'crop' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-                                additionalClass={styles['select-icon']}
-                                onClick={() => setMode('crop')} />
-                            <div className={'font-12 m-l-15'}>Crop</div>
-                        </div>
-                        <ReactTooltip place={'bottom'} id={'crop'} delayShow={300} effect='solid'>{'Crop image at desired ratio'}</ReactTooltip>
+                        {imageType !== 'svg' && <>
+                            <div className={`${styles['radio-button-wrapper']}`} data-tip data-for={'crop'}>
+                                <IconClickable
+                                    src={mode === 'crop' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                                    additionalClass={styles['select-icon']}
+                                    onClick={() => setMode('crop')} />
+                                <div className={'font-12 m-l-15'}>Crop</div>
+                            </div>
+                            <ReactTooltip place={'bottom'} id={'crop'} delayShow={300} effect='solid'>{'Crop image at desired ratio'}</ReactTooltip>
+                        </>}
                     </div>
                 </div>
             </div>
@@ -171,70 +173,75 @@ const CropSidePanel = ({ asset,
                 </div>
             </div>
 
-            <div className={styles['field-wrapper']} >
-                <div className={`${styles.title}`}>Resize</div>
-                <div className={styles['field-content']}>
-                    <div className={'row'}>
-                        <div className={'col-50 m-l-abs-15'}>
-                            <label className={styles['input-label']}>
-                                Width (px)
-                            </label>
-                            <Input
-                                disabled={lockCropping()}
-                                onChange={(e)=>{onSizeInputChange('width', parseInt(e.target.value))}}
-                                placeholder={'Width'}
-                                additionalClasses={'center-input'}
-                                type={'number'}
-                                defaultValue
-                                value={width}
-                                styleType={'regular-height-short'} />
-                        </div>
-                        <div className={'col-50'}>
-                            <label className={styles['input-label']}>
-                                Height (px)
-                            </label>
-                            <Input
-                                disabled={lockCropping()}
-                                onChange={(e)=>{onSizeInputChange('height', parseInt(e.target.value))}}
-                                placeholder={'Height'}
-                                type={'number'}
-                                value={height}
-                                additionalClasses={'center-input'}
-                                styleType={'regular-height-short'} />
+
+            {imageType !== 'svg' && <>
+                <div className={styles['field-wrapper']} >
+                    <div className={`${styles.title}`}>Resize</div>
+                    <div className={styles['field-content']}>
+                        <div className={'row'}>
+                            <div className={'col-50 m-l-abs-15'}>
+                                <label className={styles['input-label']}>
+                                    Width (px)
+                                </label>
+                                <Input
+                                    disabled={lockCropping()}
+                                    onChange={(e)=>{onSizeInputChange('width', parseInt(e.target.value))}}
+                                    placeholder={'Width'}
+                                    additionalClasses={'center-input'}
+                                    type={'number'}
+                                    defaultValue
+                                    value={width}
+                                    styleType={'regular-height-short'} />
+                            </div>
+                            <div className={'col-50'}>
+                                <label className={styles['input-label']}>
+                                    Height (px)
+                                </label>
+                                <Input
+                                    disabled={lockCropping()}
+                                    onChange={(e)=>{onSizeInputChange('height', parseInt(e.target.value))}}
+                                    placeholder={'Height'}
+                                    type={'number'}
+                                    value={height}
+                                    additionalClasses={'center-input'}
+                                    styleType={'regular-height-short'} />
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div className={styles['field-wrapper']} >
-                <div className={`${styles.title}`}>Preset Type</div>
-                <div className={styles['field-content']}>
-                    <SizeSelect
-                        options={presetTypes}
-                        placeholder='Select preset'
-                        styleType='filter'
-                        onChange={(value)=>{onSelectChange('preset', value)}}
-                        value={presetTypeValue}
-                        isClearable={false}
-                        additionalClass={'font-weight-normal m-l-0'}
-                    />
+                <div className={styles['field-wrapper']} >
+                    <div className={`${styles.title}`}>Preset Type</div>
+                    <div className={styles['field-content']}>
+                        <SizeSelect
+                            options={presetTypes}
+                            placeholder='Select preset'
+                            styleType='filter'
+                            onChange={(value)=>{onSelectChange('preset', value)}}
+                            value={presetTypeValue}
+                            isClearable={false}
+                            additionalClass={'font-weight-normal m-l-0'}
+                        />
+                    </div>
                 </div>
-            </div>
 
-            <div className={styles['field-wrapper']} >
-                <div className={`${styles.title}`}>Size</div>
-                <div className={styles['field-content']}>
-                    <SizeSelect
-                        options={sizes.map((size) => { size.label = size.label || size.name; size.value = size.value || size.name; return size})}
-                        placeholder='Select size'
-                        styleType='filter'
-                        onChange={(value)=>{onSelectChange('size', value)}}
-                        value={sizeValue}
-                        isClearable={false}
-                        additionalClass={'font-weight-normal m-l-0'}
-                    />
+                <div className={styles['field-wrapper']} >
+                    <div className={`${styles.title}`}>Size</div>
+                    <div className={styles['field-content']}>
+                        <SizeSelect
+                            options={sizes.map((size) => { size.label = size.label || size.name; size.value = size.value || size.name; return size})}
+                            placeholder='Select size'
+                            styleType='filter'
+                            onChange={(value)=>{onSelectChange('size', value)}}
+                            value={sizeValue}
+                            isClearable={false}
+                            additionalClass={'font-weight-normal m-l-0'}
+                        />
+                    </div>
                 </div>
-            </div>
+            </>}
+
+
 
             <div className={styles['save-changes']}>
                 <Button className={'m-r-15'}
