@@ -6,13 +6,14 @@ import styles from './asset-img.module.css'
 
 import { Assets } from "../../../assets"
 
-const AssetCropImg = ({ assetImg, type = 'image', name, opaque = false, width = 100, height = 100 , locked = true}) => {
+const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image', name, opaque = false, width = 100, height = 100 , locked = true}) => {
 
 	const previewCanvasRef = useRef(null);
 	const imgRef = useRef(null);
 	const [loaded, setLoaded] = useState(false)
 	const [crop, setCrop] = useState<any>({ unit: '%', width: 100, height: 100, x: 0, y: 0 });
 	const [completedCrop, setCompletedCrop] = useState(null);
+	const [cropping, setCropping] = useState(false);
 
 	let finalImg = assetImg
 	if (!finalImg && type === 'video') finalImg = Assets.videoThumbnail
@@ -31,10 +32,11 @@ const AssetCropImg = ({ assetImg, type = 'image', name, opaque = false, width = 
 		const scaleX = image.naturalWidth / image.width;
 		const scaleY = image.naturalHeight / image.height;
 		const ctx = canvas.getContext('2d');
-		const pixelRatio = window.devicePixelRatio;
+		// const pixelRatio = window.devicePixelRatio;
+		const pixelRatio = 1;
 
-		canvas.width = crop.width * pixelRatio;
-		canvas.height = crop.height * pixelRatio;
+		canvas.width = crop.width * pixelRatio*scaleX;
+		canvas.height = crop.height * pixelRatio*scaleY;
 
 
 		ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
@@ -64,13 +66,13 @@ const AssetCropImg = ({ assetImg, type = 'image', name, opaque = false, width = 
 				const previewUrl = window.URL.createObjectURL(blob);
 
 				const anchor = document.createElement('a');
-				anchor.download = name;
+				anchor.download = `${name.substring(0, name.lastIndexOf('.'))}.${imageType}`;
 				anchor.href = URL.createObjectURL(blob);
 				anchor.click();
 
 				window.URL.revokeObjectURL(previewUrl);
 			},
-			'image/png',
+			`image/${imageType}`,
 			1
 		);
 	}
@@ -79,33 +81,69 @@ const AssetCropImg = ({ assetImg, type = 'image', name, opaque = false, width = 
 
 		if(imgRef.current){
 
-			// Center crop box
+			if(!cropping){
+				// Center crop box
+				const image = imgRef.current;
+
+				const scaleX = image.naturalWidth / image.width;
+				const scaleY = image.naturalHeight / image.height;
+
+				setCrop({
+					unit: 'px',
+					width: width/scaleX,
+					height: height/scaleY,
+					x: (image.width/2 - (width/scaleX)/2),
+					y: (image.height/2 - (height)/scaleY/2),
+				});
+
+				setCompletedCrop({
+					unit: 'px',
+					width: width,
+					height: height,
+					x: (image.width/2 - (width)/2),
+					y: (image.height/2 - (height)/2),
+				})
+			}
+		}else{
+			if(!cropping){
+				setCrop({
+					unit: '%',
+					width: 100,
+					height: 100,
+					x: 0,
+					y: 0,
+				});
+			}
+
+			// setCompletedCrop({
+			// 	unit: 'px',
+			// 	width: width,
+			// 	height: height,
+			// 	x: 0,
+			// 	y: 0,
+			// });
+		}
+	},[width, height])
+
+	const onCropChange = (c) => {
+		setCropping(true)
+		if(c.width > 0 && c.height > 0){
 			const image = imgRef.current;
 
 			const scaleX = image.naturalWidth / image.width;
 			const scaleY = image.naturalHeight / image.height;
 
-
-			const widthPercent = width / (image.width) * scaleX * 100
-			const heightPercent = height/ (image.height) * scaleY * 100
-
-			setCrop({
-				unit: '%',
-				width: widthPercent,
-				height: heightPercent,
-				x: (100 - widthPercent)/2,
-				y: (100 - heightPercent)/2,
-			});
-		}else{
-			setCrop({
-				unit: '%',
-				width: 100,
-				height: 100,
-				x: 0,
-				y: 0,
-			});
+			setWidth(Math.round(c.width*scaleX))
+			setHeight(Math.round(c.height*scaleY))
 		}
-	},[width, height])
+
+		setCrop(c)
+	}
+
+	const onCropMoveComplete = (c) => {
+		setCropping(false)
+		setCompletedCrop(c)
+	}
 
 	const imageComponent = (
 		<img
@@ -117,6 +155,7 @@ const AssetCropImg = ({ assetImg, type = 'image', name, opaque = false, width = 
 				imgRef.current = e.target;
 
 			 	setLoaded(true)
+
 				e.target.dispatchEvent(new Event('medialoaded', { bubbles: true }));
 
 				 setCrop({
@@ -126,6 +165,15 @@ const AssetCropImg = ({ assetImg, type = 'image', name, opaque = false, width = 
 					 x: 0,
 					 y: 0,
 				 });
+
+				 setCompletedCrop({
+					 unit: 'px',
+					 width: width,
+					 height: height,
+					 x: 0,
+					 y: 0,
+				 });
+
 			 }}
 			 style={loaded ? {} : {
 				opacity: 0,
@@ -149,8 +197,8 @@ const AssetCropImg = ({ assetImg, type = 'image', name, opaque = false, width = 
 				locked={locked}
 				ruleOfThirds={true}
 				className={`${styles.asset} ${opaque && styles.opaque}`}
-				onChange={(c) => setCrop(c)}
-				onComplete={(c) => setCompletedCrop(c)}
+				onChange={(c) => onCropChange(c)}
+				onComplete={(c) => onCropMoveComplete(c)}
 				keepSelection={true}
 			/>
 			<div className={'position-absolute visibility-hidden'}>
