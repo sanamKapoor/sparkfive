@@ -35,8 +35,8 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 		// const pixelRatio = window.devicePixelRatio;
 		const pixelRatio = 1;
 
-		canvas.width = crop.width * pixelRatio*scaleX;
-		canvas.height = crop.height * pixelRatio*scaleY;
+		canvas.width = Math.round(crop.width * pixelRatio*scaleX);
+		canvas.height = Math.round(crop.height * pixelRatio*scaleY);
 
 
 		ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
@@ -50,8 +50,8 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 			crop.height * scaleY,
 			0,
 			0,
-			crop.width,
-			crop.height
+			Math.round(crop.width*scaleX),
+			Math.round(crop.height*scaleY)
 		);
 	}, [completedCrop]);
 
@@ -98,10 +98,10 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 
 				setCompletedCrop({
 					unit: 'px',
-					width: width,
-					height: height,
-					x: (image.width/2 - (width)/2),
-					y: (image.height/2 - (height)/2),
+					width: width/scaleX,
+					height: height/scaleY,
+					x: (image.width/2 - (width/scaleX)/2),
+					y: (image.height/2 - (height)/scaleY/2),
 				})
 			}
 		}else{
@@ -137,11 +137,15 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 			setHeight(Math.round(c.height*scaleY))
 		}
 
+		c.width = Math.round(c.width)
+		c.height = Math.round(c.height)
 		setCrop(c)
 	}
 
 	const onCropMoveComplete = (c) => {
 		setCropping(false)
+		c.width = Math.round(c.width)
+		c.height = Math.round(c.height)
 		setCompletedCrop(c)
 	}
 

@@ -1,5 +1,5 @@
 import styles from './detail-overlay.module.css'
-import { Utilities } from '../../../assets'
+import { Utilities, AssetOps } from '../../../assets'
 import { saveAs } from 'file-saver'
 import { useState, useEffect, useContext } from 'react'
 import assetApi from '../../../server-api/asset'
@@ -26,22 +26,22 @@ import CropSidePanel from './crop-side-panel'
 import AssetCropImg from './asset-crop-img'
 import fileDownload from "js-file-download";
 
-const defaultDownloadImageTypes = [
-  {
-    value: 'png',
-    label: 'PNG'
-  },
-  {
-    value: 'jpg',
-    label: 'JPG'
-  },
-  {
-    value: 'tiff',
-    label: 'TIFF'
-  }
-]
-
 const getDefaultDownloadImageType = (extension) => {
+  const defaultDownloadImageTypes = [
+    {
+      value: 'png',
+      label: 'PNG'
+    },
+    {
+      value: 'jpg',
+      label: 'JPG'
+    },
+    {
+      value: 'tiff',
+      label: 'TIFF'
+    }
+  ]
+
   let foundExtension = extension;
   if(extension === 'jpeg'){
     foundExtension = 'jpg'
@@ -66,7 +66,6 @@ const getDefaultDownloadImageType = (extension) => {
 }
 
 const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { }, openDeleteAsset = () => { }, isShare = false, sharePath = '', initialParams }) => {
-
   const {
     updateDownloadingStatus
   } = useContext(AssetContext)
@@ -243,26 +242,35 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
 
   // On width, height input change
   const onSizeInputChange = (name, value) => {
+    console.log(value)
     const originalRatio = asset.dimensionWidth / asset.dimensionHeight
 
     if (name === 'width') {
-      if (value <= asset.dimensionWidth) {
-        setWidth(value)
+      if(value){
+        if (value <= asset.dimensionWidth) {
+          setWidth(value)
 
-        if (mode === 'resize') {
-          setHeight(Math.round(value / originalRatio))
+          if (mode === 'resize') {
+            setHeight(Math.round(value / originalRatio))
+          }
         }
+      }else{
+        setWidth(value)
       }
     }
 
     if (name === 'height') {
-      if (value <= asset.dimensionHeight) {
-        setHeight(value)
+      if(value){
+        if (value <= asset.dimensionHeight) {
+          setHeight(value)
 
-        if (mode === 'resize') {
-          setWidth(Math.round(value * originalRatio))
+          if (mode === 'resize') {
+            setWidth(Math.round(value * originalRatio))
+          }
+
         }
-
+      }else{
+        setHeight(value)
       }
     }
   }
@@ -348,11 +356,13 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
                 }
                 {mode === 'detail' && <Button text={'Download'}
                                               type={'button'}
+                                              className={styles['only-desktop-button']}
                                               styleType={'secondary'}
                                               onClick={
                                                 () => {
                                                   if(asset.type === 'image'){
                                                     setMode('resize')
+                                                    changeActiveSide('detail')
                                                   }else{
                                                     downloadSelectedAssets(asset.id)
                                                   }
@@ -424,11 +434,20 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
             <IconClickable
                 src={Utilities.info}
                 additionalClass={styles['menu-icon']}
-                onClick={() => changeActiveSide('detail')} />
+                onClick={() => {setMode('detail');resetValues();changeActiveSide('detail')}} />
             <IconClickable
                 src={Utilities.comment}
                 additionalClass={styles['menu-icon']}
-                onClick={() => changeActiveSide('comments')} />
+                onClick={() => { setMode('detail');resetValues();changeActiveSide('comments')}} />
+            <IconClickable
+                src={AssetOps.download}
+                additionalClass={styles['menu-icon']}
+                onClick={() => {
+                  if(mode !== 'resize' && mode !== 'crop'){
+                    setMode('resize')
+                  }
+                  changeActiveSide('detail')}}
+            />
 
           </section>
           }

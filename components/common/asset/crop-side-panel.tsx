@@ -131,7 +131,7 @@ const CropSidePanel = ({ asset,
                         </div>
                         <ReactTooltip place={'bottom'} id={'resize'} delayShow={300} effect='solid'>{'Resize image at desired dimensions when ratio is maintained'}</ReactTooltip>
                         {asset.extension !== 'svg' && <>
-                            <div className={`${styles['radio-button-wrapper']}`} data-tip data-for={'crop'}>
+                            <div className={`${styles['radio-button-wrapper']} ${styles['hide-on-mobile']}`} data-tip data-for={'crop'}>
                                 <IconClickable
                                     src={mode === 'crop' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                     additionalClass={styles['select-icon']}
@@ -175,7 +175,7 @@ const CropSidePanel = ({ asset,
 
 
             {asset.extension !== 'svg' && <>
-                <div className={styles['field-wrapper']} >
+                <div className={`${styles['field-wrapper']} ${styles['hide-on-mobile']}`} >
                     <div className={`${styles.title}`}>Resize</div>
                     <div className={styles['field-content']}>
                         <div className={'row'}>
@@ -210,7 +210,7 @@ const CropSidePanel = ({ asset,
                     </div>
                 </div>
 
-                <div className={styles['field-wrapper']} >
+                <div className={`${styles['field-wrapper']} ${styles['hide-on-mobile']}`} >
                     <div className={`${styles.title}`}>Preset Type</div>
                     <div className={styles['field-content']}>
                         <SizeSelect
@@ -225,7 +225,7 @@ const CropSidePanel = ({ asset,
                     </div>
                 </div>
 
-                <div className={styles['field-wrapper']} >
+                <div className={`${styles['field-wrapper']} ${styles['hide-on-mobile']}`} >
                     <div className={`${styles.title}`}>Size</div>
                     <div className={styles['field-content']}>
                         <SizeSelect
