@@ -143,4 +143,12 @@
     grid-column-start: 1;
     grid-column-end: 3;
   }
+
+  .hide-on-mobile{
+    display: none;
+  }
+
+  .save-changes {
+    width: calc(100% - 110px);
+  }
 }
