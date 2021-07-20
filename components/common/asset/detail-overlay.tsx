@@ -26,22 +26,22 @@ import CropSidePanel from './crop-side-panel'
 import AssetCropImg from './asset-crop-img'
 import fileDownload from "js-file-download";
 
-const defaultDownloadImageTypes = [
-  {
-    value: 'png',
-    label: 'PNG'
-  },
-  {
-    value: 'jpg',
-    label: 'JPG'
-  },
-  {
-    value: 'tiff',
-    label: 'TIFF'
-  }
-]
-
 const getDefaultDownloadImageType = (extension) => {
+  const defaultDownloadImageTypes = [
+    {
+      value: 'png',
+      label: 'PNG'
+    },
+    {
+      value: 'jpg',
+      label: 'JPG'
+    },
+    {
+      value: 'tiff',
+      label: 'TIFF'
+    }
+  ]
+
   let foundExtension = extension;
   if(extension === 'jpeg'){
     foundExtension = 'jpg'
@@ -66,7 +66,6 @@ const getDefaultDownloadImageType = (extension) => {
 }
 
 const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { }, openDeleteAsset = () => { }, isShare = false, sharePath = '', initialParams }) => {
-
   const {
     updateDownloadingStatus
   } = useContext(AssetContext)
