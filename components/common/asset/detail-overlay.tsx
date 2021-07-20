@@ -443,10 +443,16 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
                 src={AssetOps.download}
                 additionalClass={styles['menu-icon']}
                 onClick={() => {
-                  if(mode !== 'resize' && mode !== 'crop'){
-                    setMode('resize')
+                  if(asset.type === 'image'){
+                    if(mode !== 'resize' && mode !== 'crop'){
+                      setMode('resize')
+                    }
+                    changeActiveSide('detail')
+                  }else{
+                    downloadSelectedAssets(asset.id)
                   }
-                  changeActiveSide('detail')}}
+                }
+                }
             />
 
           </section>
