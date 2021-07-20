@@ -53,13 +53,15 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 			Math.round(crop.width*scaleX),
 			Math.round(crop.height*scaleY)
 		);
-	}, [completedCrop]);
+	}, [completedCrop, imgRef.current]);
 
 
 	const generateDownload = (canvas, crop) => {
 		if (!crop || !canvas) {
 			return;
 		}
+
+		console.log(`image/${imageType}`)
 
 		canvas.toBlob(
 			(blob) => {
@@ -114,14 +116,6 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 					y: 0,
 				});
 			}
-
-			// setCompletedCrop({
-			// 	unit: 'px',
-			// 	width: width,
-			// 	height: height,
-			// 	x: 0,
-			// 	y: 0,
-			// });
 		}
 	},[width, height])
 
@@ -151,6 +145,7 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 
 	const imageComponent = (
 		<img
+			id={'crop-image'}
 				crossOrigin={'anonymous'}
 			 src={finalImg}
 			 alt={name}
@@ -170,13 +165,21 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 					 y: 0,
 				 });
 
-				 setCompletedCrop({
-					 unit: 'px',
-					 width: width,
-					 height: height,
-					 x: 0,
-					 y: 0,
-				 });
+				 setTimeout(()=>{
+					 const currentLoadedImage = document.getElementById('crop-image')
+
+
+					 const scaleX = currentLoadedImage.naturalWidth / currentLoadedImage.width;
+					 const scaleY = currentLoadedImage.naturalHeight / currentLoadedImage.height;
+
+					 setCompletedCrop({
+						 unit: 'px',
+						 width: width/scaleX,
+						 height: height/scaleY,
+						 x: (currentLoadedImage.width/2 - (width/scaleX)/2),
+						 y: (currentLoadedImage.height/2 - (height)/scaleY/2),
+					 })
+				 },100)
 
 			 }}
 			 style={loaded ? {} : {
