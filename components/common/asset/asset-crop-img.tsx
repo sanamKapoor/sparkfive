@@ -55,16 +55,25 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 		);
 	}, [completedCrop, imgRef.current]);
 
+	const convertImageType = (type) => {
+		if(type === 'jpg'){
+			return 'jpeg'
+		}else{
+			return type
+		}
+	}
+
 
 	const generateDownload = (canvas, crop) => {
 		if (!crop || !canvas) {
 			return;
 		}
 
-		console.log(`image/${imageType}`)
+		console.log(`image/${convertImageType(imageType)}`)
 
 		canvas.toBlob(
 			(blob) => {
+				console.warn(`Export image under image/${imageType} type`)
 				const previewUrl = window.URL.createObjectURL(blob);
 
 				const anchor = document.createElement('a');
@@ -74,7 +83,7 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 
 				window.URL.revokeObjectURL(previewUrl);
 			},
-			`image/${imageType}`,
+			`image/${convertImageType(imageType)}`,
 			1
 		);
 	}
