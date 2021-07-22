@@ -55,6 +55,20 @@ const CropSidePanel = ({ asset,
         return (sizeValue && sizeValue.value !== 'none')
     }
 
+    const getImageType = (imageType) => {
+        switch (imageType){
+            case 'jpeg': {
+                return 'jpg'
+            }
+            case 'tif': {
+                return 'tiff'
+            }
+            default: {
+                return imageType
+            }
+        }
+    }
+
     const downloadSelectedAssets = async () => {
         try{
             let payload = {
@@ -63,7 +77,7 @@ const CropSidePanel = ({ asset,
                 customSize: true,
                 width,
                 height,
-                format: imageType
+                format: getImageType(imageType)
             };
 
             const { shareJWT } = urlUtils.getQueryParameters()
@@ -149,7 +163,7 @@ const CropSidePanel = ({ asset,
                 <div className={styles['field-content']}>
                     <ul className={`${styles['item-list']}`}>
                         {downloadImageTypes.map((type, index) => {
-                            const isSelected = (imageType === 'jpeg' ? 'jpg' : imageType) === type.value
+                            const isSelected = (getImageType(imageType)) === type.value
                             return (
                                 <li key={index} className={`${styles['select-item']}`}>
                                     <div className={`${styles['selectable-wrapper']} ${isSelected && styles['selected-wrapper']}`}>

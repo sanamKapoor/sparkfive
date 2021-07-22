@@ -46,6 +46,11 @@ const getDefaultDownloadImageType = (extension) => {
   if(extension === 'jpeg'){
     foundExtension = 'jpg'
   }
+
+  if(extension === 'tif'){
+    foundExtension = 'tiff'
+  }
+
   const existingExtension = defaultDownloadImageTypes.filter(type => type.value === foundExtension)
 
   // Already existed
