@@ -23,5 +23,13 @@ export default {
       responseType: 'blob', // Important
       data
     })
+  },
+  downloadWithCustomSize: (data, filters) => {
+    return axios({
+      url: `${shareCollectionsUrl}/download/custom-size?${querystring.encode(filters)}`,
+      method: 'POST',
+      responseType: 'blob', // Important
+      data
+    })
   }
 }

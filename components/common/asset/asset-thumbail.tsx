@@ -17,6 +17,7 @@ const DEFAULT_DETAIL_PROPS = { visible: false, side: 'detail' }
 
 const AssetThumbail = ({
   isShare,
+  sharePath,
   type,
   asset,
   thumbailUrl,
@@ -102,9 +103,10 @@ const AssetThumbail = ({
       </div>
       {overlayProperties.visible &&
         <DetailOverlay
+          sharePath={sharePath}
           isShare={isShare}
           asset={asset}
-          realUrl={realUrl}
+          realUrl={(asset.extension === 'tiff' || asset.extension === 'tif') ? thumbailUrl : realUrl}
           initiaParams={overlayProperties}
           openShareAsset={openShareAsset}
           openDeleteAsset={openDeleteAsset}
