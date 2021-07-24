@@ -363,7 +363,7 @@ const AssetAddition = ({
 			linkType: 'preview',
 			multiselect: true,
 			folderselect: true,
-			sizeLimit: 1000 * 1024 * 1024
+			sizeLimit: 1000 * 1024 * 1024 * 2
 		}
 		// Ignore this annoying warning
 		Dropbox.choose(options)
