@@ -19,7 +19,8 @@ const AssetUploadProcess = () => {
         uploadingFileName,
         dropboxUploadingFile,
         uploadSourceType,
-        retryListCount
+        retryListCount,
+        folderImport
     } = useContext(AssetContext)
 
     const uploadedAssets = uploadingAssets.filter(asset => asset.status === 'done')
@@ -41,7 +42,7 @@ const AssetUploadProcess = () => {
             <span className={styles['processing-file-count']}>{uploadingFile+1} of {uploadingStatus === 're-uploading' ? retryListCount : uploadingAssets.length} assets</span>}
             </>}
 
-            {(uploadingStatus === 'uploading' || uploadingStatus === 're-uploading') && <>
+            {(!folderImport && (uploadingStatus === 'uploading' || uploadingStatus === 're-uploading')) && <>
                 {uploadSourceType === 'dropbox' && !isNaN(dropboxUploadingFile) &&
                 <span className={styles['processing-file-count']}>{dropboxUploadingFile+1} of {uploadingAssets.length} assets</span>}
             </>}

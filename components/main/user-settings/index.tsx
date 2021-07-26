@@ -1,7 +1,5 @@
 import styles from './index.module.css'
 import { useState, useEffect, useContext } from 'react'
-import update from 'immutability-helper'
-import toastUtils from '../../../utils/toast'
 import urlUtils from '../../../utils/url'
 import { UserContext } from '../../../context'
 import { capitalCase } from 'change-case'
@@ -31,7 +29,8 @@ import SuperAdmin from './super-admin'
 import Notifications from './notifications'
 import NoPermissionNotice from '../../common/misc/no-permission-notice'
 import Button from '../../common/buttons/button'
-import GuestUpload from "./guest-upload";
+import GuestUpload from "./guest-upload"
+import CustomSettings from "./custom-settings"
 
 
 const SETTING_OPTIONS = {
@@ -45,6 +44,7 @@ const SETTING_OPTIONS = {
   ['guest-upload']: { label: 'Guest Upload', contentTitle: 'Guest Upload', permissions: [SETTINGS_TEAM, SETTINGS_COMPANY], content: GuestUpload },
   integrations: { label: 'Integrations', permissions: [], content: Integrations },
   attributes: { label: 'Attributes', contentTitle: 'Custom Attributes', permissions: [SETTINGS_TEAM, SETTINGS_COMPANY], content: Attributes },
+  ['custom-settings']: { label: 'Custom Settings', contentTitle: 'Custom Settings', permissions: [SETTINGS_TEAM, SETTINGS_COMPANY], content: CustomSettings },
   ['super-admin']: { label: 'Super Admin', permissions: [SUPERADMIN_ACCESS], content: SuperAdmin },
 }
 

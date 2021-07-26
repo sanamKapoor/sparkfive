@@ -1,6 +1,6 @@
 .container {
   position: fixed;
-  top: 25px;
+  top: 24px;
   right: 17%;
   padding: 15px 20px;
   border-radius: 20px;
@@ -8,7 +8,7 @@
   color: white;
   max-width: 550px;
   width: 60%;
-  z-index: 100;
+  z-index: 10000;
   min-height: 40px;
 }
 

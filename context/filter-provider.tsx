@@ -37,7 +37,8 @@ export default ({ children, isPublic = false }) => {
   const [productFields, setProductFields] = useState({
     categories: [],
     vendors: [],
-    retailers: []
+    retailers: [],
+    sku: []
   })
   const [term, setTerm] = useState("")
 
@@ -122,10 +123,12 @@ export default ({ children, isPublic = false }) => {
       const { data: categories } = await fetchMethod({ type: 'product_category', sharePath, ...getCommonParams() })
       const { data: vendors } = await fetchMethod({ type: 'product_vendor', sharePath, ...getCommonParams() })
       const { data: retailers } = await fetchMethod({ type: 'product_retailer', sharePath, ...getCommonParams() })
+      const { data: sku } = await fetchMethod({ type: 'sku', sharePath, ...getCommonParams() })
       setProductFields({
         categories,
         vendors,
-        retailers
+        retailers,
+        sku
       })
     } catch (err) {
       console.log(err)

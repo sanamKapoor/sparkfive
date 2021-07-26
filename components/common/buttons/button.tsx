@@ -1,6 +1,6 @@
 import styles from './button.module.css'
 
-const Button = ({ text, type, onClick = (e) => { }, disabled = false, styleType = '', styleTypes = [], className = '', form }) => {
+const Button = ({ text, type, onClick = (e) => { }, disabled = false, styleType = '', styleTypes = [], className = '', form = null }) => {
   const props: any = {}
   if(form){
     props.form = form
