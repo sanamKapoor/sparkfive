@@ -391,15 +391,15 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
         ))}
       </div>
 
-      <div className={styles['field-wrapper']} >
-        <div className={`secondary-text ${styles.field}`}>Channel</div>
-        <ChannelSelector
-          channel={channel || undefined}
-          isShare={isShare}
-          onLabelClick={() => { }}
-          handleChannelChange={(option) => updateChannel(option)}
-        />
-      </div>
+      {/*<div className={styles['field-wrapper']} >*/}
+      {/*  <div className={`secondary-text ${styles.field}`}>Channel</div>*/}
+      {/*  <ChannelSelector*/}
+      {/*    channel={channel || undefined}*/}
+      {/*    isShare={isShare}*/}
+      {/*    onLabelClick={() => { }}*/}
+      {/*    handleChannelChange={(option) => updateChannel(option)}*/}
+      {/*  />*/}
+      {/*</div>*/}
 
       <div className={styles['field-wrapper']} >
         <CreatableSelect

@@ -23,6 +23,7 @@ const AssetThumbail = ({
   thumbailUrl,
   realUrl,
   isUploading,
+  showAssetOption = true,
   isSelected = false,
   isLoading = false,
   toggleSelected = () => { },
@@ -83,7 +84,7 @@ const AssetThumbail = ({
           <div className='normal-text'>{asset.name}</div>
           <div className={styles['details-wrapper']}>
             <div className='secondary-text'>{format(new Date(asset.createdAt), 'MMM d, yyyy, p')}</div>
-            {!isUploading &&
+            {!isUploading && showAssetOption &&
               <AssetOptions
                 itemType={type}
                 asset={asset}
@@ -106,7 +107,7 @@ const AssetThumbail = ({
           sharePath={sharePath}
           isShare={isShare}
           asset={asset}
-          realUrl={realUrl}
+          realUrl={(asset.extension === 'tiff' || asset.extension === 'tif') ? thumbailUrl : realUrl}
           initiaParams={overlayProperties}
           openShareAsset={openShareAsset}
           openDeleteAsset={openDeleteAsset}

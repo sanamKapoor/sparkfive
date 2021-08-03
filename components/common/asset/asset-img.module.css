@@ -6,3 +6,11 @@
 .opaque {
     opacity: 0.2;
 }
+
+.react-crop{
+    height: 100%
+}
+
+.react-crop > div{
+    height: 100%
+}
