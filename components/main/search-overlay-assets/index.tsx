@@ -101,7 +101,7 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
         </h2>
         <div className={'search-cont'}>
           <Search
-            placeholder={'Find Assets by Name, Extension, Collection, Campaign, Channel, Tag, Custom Fields (min 3 characters)'}
+            placeholder={'Find Assets by Name, Extension, Collection, Campaign, Tag, Custom Fields (min 3 characters)'}
             onSubmit={(inputTerm) => getData(inputTerm)}
           />
         </div>
