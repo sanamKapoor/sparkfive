@@ -212,7 +212,7 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 				crop={crop}
 				locked={locked}
 				ruleOfThirds={true}
-				className={`${styles.asset} ${opaque && styles.opaque}`}
+				className={`${styles['react-crop']} ${styles.asset} ${opaque && styles.opaque}`}
 				onChange={(c) => onCropChange(c)}
 				onComplete={(c) => onCropMoveComplete(c)}
 				keepSelection={true}

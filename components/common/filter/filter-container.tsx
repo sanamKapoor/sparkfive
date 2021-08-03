@@ -172,26 +172,26 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                         }
                     </div>
                 })}
-                {!isFolder &&
-                    <section>
-                        <div className={styles['expand-bar']} onClick={() => handleExpand('channels')}>
-                            <h4>Channels</h4>
-                            {expandedMenus.includes('channels') ?
-                                <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :
-                                <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
-                        </div>
-                        {expandedMenus.includes('channels') &&
-                            <FilterSelector
-                                capitalize={true}
-                                searchBar={false}
-                                numItems={8}
-                                loadFn={loadChannels}
-                                filters={channels.map(channel => ({ ...channel, label: channel.name, value: channel.name }))}
-                                value={activeSortFilter.filterChannels}
-                                setValue={(selected) => setSortFilterValue('filterChannels', selected)}
-                            />}
-                    </section>
-                }
+                {/*{!isFolder &&*/}
+                {/*    <section>*/}
+                {/*        <div className={styles['expand-bar']} onClick={() => handleExpand('channels')}>*/}
+                {/*            <h4>Channels</h4>*/}
+                {/*            {expandedMenus.includes('channels') ?*/}
+                {/*                <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :*/}
+                {/*                <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}*/}
+                {/*        </div>*/}
+                {/*        {expandedMenus.includes('channels') &&*/}
+                {/*            <FilterSelector*/}
+                {/*                capitalize={true}*/}
+                {/*                searchBar={false}*/}
+                {/*                numItems={8}*/}
+                {/*                loadFn={loadChannels}*/}
+                {/*                filters={channels.map(channel => ({ ...channel, label: channel.name, value: channel.name }))}*/}
+                {/*                value={activeSortFilter.filterChannels}*/}
+                {/*                setValue={(selected) => setSortFilterValue('filterChannels', selected)}*/}
+                {/*            />}*/}
+                {/*    </section>*/}
+                {/*}*/}
                 {!isFolder &&
                     <section>
                         <div className={styles['expand-bar']} onClick={() => handleExpand('campaigns')}>

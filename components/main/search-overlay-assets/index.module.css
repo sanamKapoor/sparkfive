@@ -32,3 +32,11 @@
 .select-only-shown-items-text:hover{
     text-decoration: underline;
 }
+
+.view-icon{
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    margin: 0 15px;
+    align-self: center;
+}
