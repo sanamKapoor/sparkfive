@@ -20,7 +20,7 @@ import { AssetOps } from '../../../assets'
 import IconClickable from "../buttons/icon-clickable";
 
 // Maximum custom fields
-const maximumCustomFields = 3;
+const maximumCustomFields = 6;
 
 const defaultCustomFields = [
     {
