@@ -40,6 +40,24 @@ const defaultCustomFields = [
         name: '',
         type: 'selectOne',
         values: []
+    },
+    {
+        id: null,
+        name: '',
+        type: 'selectOne',
+        values: []
+    },
+    {
+        id: null,
+        name: '',
+        type: 'selectOne',
+        values: []
+    },
+    {
+        id: null,
+        name: '',
+        type: 'selectOne',
+        values: []
     }
 ]
 
@@ -95,6 +113,24 @@ const CustomFieldsManagement = () => {
             setCustomFieldList(data)
         }else{
             setCustomFieldList([
+                {
+                    id: null,
+                    name: '',
+                    type: 'selectOne',
+                    values: []
+                },
+                {
+                    id: null,
+                    name: '',
+                    type: 'selectOne',
+                    values: []
+                },
+                {
+                    id: null,
+                    name: '',
+                    type: 'selectOne',
+                    values: []
+                },
                 {
                     id: null,
                     name: '',
