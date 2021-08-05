@@ -203,8 +203,14 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 	);
 
 	const fullHeight = () => {
-		// Image has height larger than box, do a max height now
-		return document.getElementById("detail-overlay").offsetHeight < originalHeight;
+		const image = imgRef.current;
+		if(image){
+			console.log(`Real height: ${image.height}`)
+			// Image has height larger than box, do a max height now
+			return document.getElementById("detail-overlay").offsetHeight < image.height;
+		}else{
+			return true
+		}
 	}
 
 	return (
