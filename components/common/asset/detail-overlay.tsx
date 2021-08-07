@@ -343,7 +343,7 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
     return (
         <div className={`app-overlay ${styles.container}`}>
           {assetDetail &&
-          <section className={styles.content}>
+          <section id={"detail-overlay"} className={styles.content}>
             <div className={styles['top-wrapper']}>
               <div className={styles.back} onClick={closeOverlay}>
                 <IconClickable src={Utilities.back} />
@@ -379,7 +379,7 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
               {assetDetail.type === 'image' &&
               <>
                 {(mode === 'detail' || mode === 'resize') && <AssetImg name={assetDetail.name} assetImg={realUrl} />}
-                {mode === 'crop' && <AssetCropImg imageType={imageType} setWidth={setWidth} setHeight={setHeight}  locked={lockCropping()} name={assetDetail.name} assetImg={realUrl} width={width} height={height} />}
+                {mode === 'crop' && <AssetCropImg imageType={imageType} setWidth={setWidth} setHeight={setHeight}  locked={lockCropping()} name={assetDetail.name} assetImg={realUrl} width={width} height={height} originalHeight={asset.dimensionHeight}/>}
               </>
               }
               {assetDetail.type === 'application' && <AssetApplication extension={assetDetail.extension} />}

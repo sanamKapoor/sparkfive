@@ -6,7 +6,7 @@ import styles from './asset-img.module.css'
 
 import { Assets } from "../../../assets"
 
-const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image', name, opaque = false, width = 100, height = 100 , locked = true}) => {
+const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image', name, opaque = false, width = 100, height = 100 , locked = true, originalHeight = 0}) => {
 
 	const previewCanvasRef = useRef(null);
 	const imgRef = useRef(null);
@@ -202,6 +202,17 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 		}} />
 	);
 
+	const fullHeight = () => {
+		const image = imgRef.current;
+		if(image){
+			console.log(`Real height: ${image.height}`)
+			// Image has height larger than box, do a max height now
+			return document.getElementById("detail-overlay").offsetHeight < image.height;
+		}else{
+			return true
+		}
+	}
+
 	return (
 		<>
 			<img src={Assets.empty} alt={'blank'} style={loaded ? { display: "none" } : {}} />
@@ -212,7 +223,7 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 				crop={crop}
 				locked={locked}
 				ruleOfThirds={true}
-				className={`${styles.asset} ${opaque && styles.opaque}`}
+				className={`${fullHeight() ? styles['react-crop'] : ''} ${styles.asset} ${opaque && styles.opaque}`}
 				onChange={(c) => onCropChange(c)}
 				onComplete={(c) => onCropMoveComplete(c)}
 				keepSelection={true}
