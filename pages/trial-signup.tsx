@@ -11,7 +11,7 @@ const SignupPage = () => (
       <link rel="icon" href="/favicon.ico" />
     </Head>
     <AuthLayout>
-      <Signup />
+      <Signup onlyWorkEmail={true}/>
     </AuthLayout>
   </>
 )
