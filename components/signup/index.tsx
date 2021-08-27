@@ -11,7 +11,7 @@ import AuthContainer from '../common/containers/auth-container'
 import SignupForm from './signup-form'
 import ProvidersAuth from '../common/containers/providers-auth'
 
-const Signup = () => {
+const Signup = ({ onlyWorkEmail = false}) => {
   const { query } = useRouter()
 
   const [shareInviteCode, setShareInviteCode] = useState(undefined)
@@ -57,7 +57,7 @@ const Signup = () => {
         title={query.inviteCode ? 'Get started with Sparkfive today' : 'Get started for FREE today'}
         subtitle={query.inviteCode ? '' : 'No credit card required - 14 day free trial'}
       >
-        <SignupForm inviteCode={shareInviteCode} priceData={priceData} email={defaultEmail} />
+        <SignupForm inviteCode={shareInviteCode} priceData={priceData} email={defaultEmail} onlyWorkEmail={onlyWorkEmail}/>
         <div className={styles.or}>OR</div>
         <ProvidersAuth inviteCode={shareInviteCode} priceData={priceData} />
       </AuthContainer>
