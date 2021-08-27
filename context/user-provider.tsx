@@ -6,7 +6,7 @@ import requestsUtils from '../utils/requests'
 
 import userApi from '../server-api/user'
 
-const allowedBase = ['/signup', '/share', '/reset-password', '/forgot-password', '/two-factor', '/collections']
+const allowedBase = ['/signup', 'trial-signup', '/share', '/reset-password', '/forgot-password', '/two-factor', '/collections']
 
 export default ({ children }) => {
   const [user, setUser] = useState(null)
