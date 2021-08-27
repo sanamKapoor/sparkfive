@@ -74,8 +74,8 @@ const SignupForm = ({ inviteCode = '', priceData, email }) => {
           }
           name='email'
           control={control}
-          rules={{ required: true, pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,15}$/i }}
-          message={'Invalid email address'}
+          rules={{ required: true, pattern: /^([\w-\.]+@(?!gmail.com)(?!yahoo.com)(?!hotmail.com)(?!yahoo.co.in)(?!aol.com)(?!abc.com)(?!xyz.com)(?!pqr.com)(?!rediffmail.com)(?!live.com)(?!outlook.com)(?!me.com)(?!msn.com)(?!ymail.com)([\w-]+\.)+[\w-]{2,4})?$/i }}
+          message={'Please enter your work email address'}
           errors={errors}
         />
       </div>
