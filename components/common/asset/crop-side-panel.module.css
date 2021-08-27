@@ -1,0 +1,154 @@
+.container {
+  padding: 0 20px;
+}
+
+.field {
+  margin-bottom: 0.2rem;
+}
+
+.field-wrapper {
+  margin-top: 1.5rem;
+}
+
+.meta-text{
+  font-size: 12px;
+}
+
+.first-section {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+/*.first-section .field-wrapper:first-child {*/
+/*  grid-column-start: 1;*/
+/*  grid-column-end: 3;*/
+/*}*/
+
+.container .field-wrapper .tags-list {
+  margin-top: 0.7rem;
+}
+
+.select-add {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-left: 8px;
+  margin-top: 10px;
+}
+
+.select-add img {
+  margin-right: 5px;
+}
+
+.collection-container .label {
+  font-weight: 600;
+  margin: 0.5rem 0 0.5rem 8px;
+}
+
+.remove {
+  cursor: pointer;
+  font-weight: 600;
+  margin-left: 0.5rem;
+  color: var(--color-sec-text);
+}
+.remove:hover {
+  color: var(--color-prim-turquoise);
+}
+
+.field-content{
+  padding-left: 30px;
+}
+
+.field-radio-wrapper{
+  display: flex;
+}
+
+.item-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.select-item {
+  width: 33%;
+  display: grid;
+  grid-template-columns: 20px auto 20%;
+  margin-top: 10px;
+  align-items: center;
+}
+.select-item p {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.select-item p {
+  margin: 0 5px;
+}
+
+.title{
+  margin-bottom: 15px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.input-label{
+  width: 100%;
+  display: block;
+  text-align: center;
+  padding-bottom: 5px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.save-changes {
+  width: 100%;
+  text-align: center;
+  margin-top: 50px;
+}
+
+.item-name{
+  font-size: 12px;
+}
+
+.radio-button-wrapper{
+  display: flex;
+  align-items: center;
+}
+
+@media screen and (max-width: 800px) {
+  .item-list {
+    flex-direction: column;
+  }
+  .select-item {
+    width: 100%;
+  }
+  .item-list .tags-container:nth-last-child(-n + 5) {
+    display: none;
+  }
+  .select-item p {
+    font-size: 13px;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .container {
+    min-width: 25rem;
+  }
+
+  .first-section {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .field-wrapper {
+    grid-column-start: 1;
+    grid-column-end: 3;
+  }
+
+  .hide-on-mobile{
+    display: none;
+  }
+
+  .save-changes {
+    width: calc(100% - 110px);
+  }
+}

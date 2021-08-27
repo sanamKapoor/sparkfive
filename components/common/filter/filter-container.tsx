@@ -62,8 +62,8 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
             let filter = {}
             let fieldValues = {}
             data.map((value, index)=>{
-                // Select on wont use `all-px` query field
-                filter[`all-p${value.id}`] = {$set: value.type === 'selectOne' ? 'none' :  'all'}
+                // Select one will use `all-px` query field also
+                filter[`all-p${value.id}`] = {$set: value.type === 'selectOne' ? 'all' :  'all'} // Available: none, all
                 filter[`custom-p${value.id}`] = {$set: []}
                 fieldValues[value.id] = []
             })
@@ -172,26 +172,26 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                         }
                     </div>
                 })}
-                {!isFolder &&
-                    <section>
-                        <div className={styles['expand-bar']} onClick={() => handleExpand('channels')}>
-                            <h4>Channels</h4>
-                            {expandedMenus.includes('channels') ?
-                                <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :
-                                <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
-                        </div>
-                        {expandedMenus.includes('channels') &&
-                            <FilterSelector
-                                capitalize={true}
-                                searchBar={false}
-                                numItems={8}
-                                loadFn={loadChannels}
-                                filters={channels.map(channel => ({ ...channel, label: channel.name, value: channel.name }))}
-                                value={activeSortFilter.filterChannels}
-                                setValue={(selected) => setSortFilterValue('filterChannels', selected)}
-                            />}
-                    </section>
-                }
+                {/*{!isFolder &&*/}
+                {/*    <section>*/}
+                {/*        <div className={styles['expand-bar']} onClick={() => handleExpand('channels')}>*/}
+                {/*            <h4>Channels</h4>*/}
+                {/*            {expandedMenus.includes('channels') ?*/}
+                {/*                <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :*/}
+                {/*                <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}*/}
+                {/*        </div>*/}
+                {/*        {expandedMenus.includes('channels') &&*/}
+                {/*            <FilterSelector*/}
+                {/*                capitalize={true}*/}
+                {/*                searchBar={false}*/}
+                {/*                numItems={8}*/}
+                {/*                loadFn={loadChannels}*/}
+                {/*                filters={channels.map(channel => ({ ...channel, label: channel.name, value: channel.name }))}*/}
+                {/*                value={activeSortFilter.filterChannels}*/}
+                {/*                setValue={(selected) => setSortFilterValue('filterChannels', selected)}*/}
+                {/*            />}*/}
+                {/*    </section>*/}
+                {/*}*/}
                 {!isFolder &&
                     <section>
                         <div className={styles['expand-bar']} onClick={() => handleExpand('campaigns')}>
@@ -284,6 +284,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                                 productFilters={productFields}
                                 setSortFilterValue={setSortFilterValue}
                                 fieldsValue={activeSortFilter.filterProductFields}
+                                skuValue={activeSortFilter.filterProductSku}
                             />
                         }
                     </section>

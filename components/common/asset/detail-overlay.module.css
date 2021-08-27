@@ -10,6 +10,10 @@
   padding-bottom: 15px;
 }
 
+.only-desktop-button{
+  display: block;
+}
+
 @media screen and (max-height: 760px) {
   .container {
     overflow-y: auto;
@@ -134,7 +138,7 @@
     border-bottom: 1px solid var(--color-secondary-border);
     min-height: 50vh;
   }
-  
+
   .top-wrapper {
     margin-right: 60px;
   }
@@ -151,5 +155,15 @@
 @media screen and (max-width: 460px) {
   .side {
     width: 280px;
+  }
+
+  .hide-on-mobile{
+    display: none;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .only-desktop-button{
+    display: none;
   }
 }

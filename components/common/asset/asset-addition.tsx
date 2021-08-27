@@ -54,7 +54,8 @@ const AssetAddition = ({
 		setFolderGroups,
 		setUploadSourceType,
 		setTotalAssets,
-		totalAssets
+		totalAssets,
+		setFolderImport
 	} = useContext(AssetContext)
 
 
@@ -277,7 +278,7 @@ const AssetAddition = ({
 	const onDropboxFilesSelection = async (files) => {
 		const currentDataClone = [...assets]
 		try {
-			let totalSize = 0;
+			let totalSize = 0
 			const newPlaceholders = []
 			files.forEach(file => {
 				totalSize += file.bytes
@@ -304,7 +305,13 @@ const AssetAddition = ({
 			setUploadingFileName('Importing files from Drop Box')
 
 			setUploadSourceType('dropbox')
-			const { data } = await assetApi.importAssets('dropbox', files.map(file => ({ link: file.link, name: file.name, size: file.bytes })), getCreationParameters({estimateTime: 1, totalSize}))
+
+			// Check if there is 1 folder in upload links
+			const containFolderUrl = files.filter(file => file.isDir)
+
+			setFolderImport(containFolderUrl.length > 0)
+
+			const { data } = await assetApi.importAssets('dropbox', files.map(file => ({ link: file.link, isDir: file.isDir, name: file.name, size: file.bytes })), getCreationParameters({estimateTime: 1, totalSize}))
 			setAssets([...data, ...currentDataClone])
 			setAddedIds(data.id)
 
@@ -321,7 +328,11 @@ const AssetAddition = ({
 			setUploadSourceType('')
 			// toastUtils.success('Assets imported.')
 		} catch (err) {
-			//TODO: Handle error
+			// Finish uploading process
+			showUploadProcess('done')
+
+			setAssets(currentDataClone)
+
 			setAssets(currentDataClone)
 			console.log(err)
 			if (err.response?.status === 402) toastUtils.error(err.response.data.message)
@@ -349,9 +360,9 @@ const AssetAddition = ({
 	const openDropboxSelector = (files) => {
 		const options = {
 			success: onDropboxFilesSelection,
-			linkType: 'direct',
+			linkType: 'preview',
 			multiselect: true,
-			folderselect: false,
+			folderselect: true,
 			sizeLimit: 1000 * 1024 * 1024
 		}
 		// Ignore this annoying warning
@@ -362,8 +373,10 @@ const AssetAddition = ({
 		const googleAuthToken = cookiesUtils.get('gdriveToken')
 		const currentDataClone = [...assets]
 		try {
+			let totalSize = 0
 			const newPlaceholders = []
 			files.forEach(file => {
+				totalSize += file.sizeBytes
 				newPlaceholders.push({
 					asset: {
 						name: file.name,
@@ -375,19 +388,56 @@ const AssetAddition = ({
 					isUploading: true
 				})
 			})
+
 			setAssets([...newPlaceholders, ...currentDataClone])
+
+			// Update uploading assets
+			setUploadingAssets(newPlaceholders)
+
+			// Show uploading process
+			showUploadProcess('uploading')
+
+			// Show message
+			setUploadingFileName('Importing files from Google Drive')
+
+			setUploadSourceType('dropbox')
+
+			// Check if there is 1 folder in upload links
+			const containFolderUrl = files.filter(file => file.type === 'folder')
+
+			setFolderImport(containFolderUrl.length > 0)
+
 			const { data } = await assetApi.importAssets('drive', files.map(file => ({
 				googleAuthToken,
 				id: file.id,
 				name: file.name,
 				size: file.sizeBytes,
-				mimeType: file.mimeType
-			})), getCreationParameters())
+				mimeType: file.mimeType,
+				type: file.type
+			})), getCreationParameters({estimateTime: 1, totalSize}))
+
 			setAssets([...data, ...currentDataClone])
-			toastUtils.success('Assets imported.')
+			setAddedIds(data.id)
+
+			// Mark done
+			const updatedAssets = data.map(asset => { return {...asset, status: 'done'}});
+
+			// Update uploading assets
+			setUploadingAssets(updatedAssets)
+
+			// Mark process as done
+			showUploadProcess('done')
+
+			// Reset upload source type
+			setUploadSourceType('')
+
+			// toastUtils.success('Assets imported.')
 		} catch (err) {
-			//TODO: Handle error
+			// Finish uploading process
+			showUploadProcess('done')
+
 			setAssets(currentDataClone)
+
 			console.log(err)
 			if (err.response?.status === 402) toastUtils.error(err.response.data.message)
 			else toastUtils.error('Could not import assets, please try again later.')
@@ -435,19 +485,19 @@ const AssetAddition = ({
 			onClick: openDropboxSelector,
 			icon: Assets.dropbox
 		},
-		// {
-		// 	label: 'Google Drive',
-		// 	text: 'Import files',
-		// 	onClick: () => { },
-		// 	icon: Assets.gdrive,
-		// 	CustomContent: ({ children }) => (
-		// 		<DriveSelector
-		// 			onFilesSelect={onDriveFilesSelection}
-		// 		>
-		// 			{children}
-		// 		</DriveSelector>
-		// 	)
-		// }
+		{
+			label: 'Google Drive',
+			text: 'Import files',
+			onClick: () => { },
+			icon: Assets.gdrive,
+			CustomContent: ({ children }) => (
+				<DriveSelector
+					onFilesSelect={onDriveFilesSelection}
+				>
+					{children}
+				</DriveSelector>
+			)
+		}
 	]
 
 	if (folderAdd) {

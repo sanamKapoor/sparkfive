@@ -94,6 +94,10 @@
   font-weight: 500;
 }
 
+.font-weight-normal .select-prefix__placeholder {
+  font-weight: normal;
+}
+
 .search-filters .filter .select-prefix__indicators {
   display: none;
 }
@@ -131,6 +135,10 @@
   margin-left: 1.3rem;
 }
 
+.m-l-0 .select-prefix__value-container {
+  margin-left: 0;
+}
+
 /* filter-schedule */
 
 .filter-schedule {
@@ -141,6 +149,10 @@
   width: 140%;
   margin-left: -30%;
   font-size: 12px;
+}
+
+.dropdown{
+  position: relative;
 }
 
 @media screen and (max-width: 1000px) {

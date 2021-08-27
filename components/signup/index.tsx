@@ -1,3 +1,4 @@
+import { useRouter} from "next/router";
 import styles from './index.module.css'
 import Link from 'next/link'
 import { useEffect, useState, useContext } from 'react'
@@ -11,6 +12,7 @@ import SignupForm from './signup-form'
 import ProvidersAuth from '../common/containers/providers-auth'
 
 const Signup = ({ onlyWorkEmail = false}) => {
+  const { query } = useRouter()
 
   const [shareInviteCode, setShareInviteCode] = useState(undefined)
   const [priceData, setPriceData] = useState(undefined)
@@ -52,8 +54,8 @@ const Signup = ({ onlyWorkEmail = false}) => {
   return (
     <main className={`${styles.container} container-centered`}>
       <AuthContainer
-        title='Get started for FREE today'
-        subtitle='No credit card required - 14 day free trial'
+        title={query.inviteCode ? 'Get started with Sparkfive today' : 'Get started for FREE today'}
+        subtitle={query.inviteCode ? '' : 'No credit card required - 14 day free trial'}
       >
         <SignupForm inviteCode={shareInviteCode} priceData={priceData} email={defaultEmail} onlyWorkEmail={onlyWorkEmail}/>
         <div className={styles.or}>OR</div>

@@ -47,10 +47,7 @@ const MemberDetail = ({ member, type = 'member', mappedRoles, onSaveChanges }) =
     if (member.role.id !== memberRole.id) {
       saveData.roleId = memberRole.id
     }
-    onSaveChanges(member.id, {
-      permissions: memberPermissions,
-      updatePermissions: true
-    })
+    onSaveChanges(member.id, saveData)
   }
 
   return (

@@ -36,6 +36,7 @@ const AssetGrid = ({
   getFolders = () => { },
   loadMore = () => { },
   viewFolder = (id) => { },
+  sharePath = '',
   openFilter }) => {
 
   let isDragging
@@ -154,6 +155,7 @@ const AssetGrid = ({
                     <li className={styles['grid-item']} key={assetItem.asset.id || index}>
                       <AssetThumbail
                           {...assetItem}
+                          sharePath={sharePath}
                           isShare={isShare}
                           type={type}
                           toggleSelected={() => toggleSelected(assetItem.asset.id)}
@@ -286,6 +288,7 @@ const AssetGrid = ({
       {initAsset &&
         <DetailOverlay
           isShare={isShare}
+          sharePath={sharePath}
           asset={initAsset.asset}
           realUrl={initAsset.realUrl}
           initiaParams={{ side: 'comments' }}
