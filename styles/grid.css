@@ -58,6 +58,19 @@
     padding-left: 15px;
 }
 
+.col-40{
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 40%;
+    flex: 0 0 40%;
+    max-width: 40%;
+
+    position: relative;
+    width: 100%;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
 .col-45{
     -webkit-box-flex: 0;
     -ms-flex: 0 0 45%;

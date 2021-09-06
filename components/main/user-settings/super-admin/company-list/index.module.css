@@ -8,39 +8,6 @@
   margin-top: 2rem;
 }
 
-.buttons{
-  display: flex;
-  padding-bottom: 3rem;
-  padding-top: 1rem;
-}
-
-.buttons button{
-  margin-right: 3rem;
-}
-
-.back {
-  padding-top: 5px;
-  display: flex;
-  cursor: pointer;
-  align-items: center;
-  font-weight: 600;
-  width: fit-content;
-}
-
-.back img {
-  margin-right: 0.5rem;
-}
-
-.list{
-  margin-top: 2rem;
-}
-
-.action{
-  display: flex;
-  justify-content: center;
-  margin-top: 2rem;
-}
-
 .name-email {
   width: 12rem;
   margin-right: 1rem;
@@ -56,10 +23,6 @@
 
 .company{
   flex: 1;
-}
-
-.company>div:first-child{
-  font-weight: 600;
 }
 
 .no-comp{
@@ -82,4 +45,3 @@
 .invisible{
   visibility: hidden;
 }
-

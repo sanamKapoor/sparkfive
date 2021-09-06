@@ -3,6 +3,15 @@
     display: flex;
 }
 
+.align-flex-start{
+    align-items: flex-start;
+    display: flex;
+}
+
+.align-self-flex-end{
+    align-self: flex-end;
+}
+
 .justify-center{
     justify-content: center;
 }
@@ -34,6 +43,10 @@
 
 .m-b-15{
     margin-bottom: 15px;
+}
+
+.m-b-20{
+    margin-bottom: 20px;
 }
 
 .m-b-25{

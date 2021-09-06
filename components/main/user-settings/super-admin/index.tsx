@@ -1,86 +1,172 @@
 import styles from './index.module.css'
-import { UserContext } from '../../../../context'
-import { useState, useContext, useEffect } from 'react'
-import Router from 'next/router'
-import cookiesUtils from '../../../../utils/cookies'
-import superAdminApi from '../../../../server-api/super-admin'
+import { useState } from 'react'
 
 // Components
-import UserItem from './user-item'
-import Search from '../../../common/inputs/search'
-import Button from '../../../common/buttons/button'
+import SectionButton from "../../../common/buttons/section-button";
+import UserList from "./user-list";
+import CompanyList from "./company-list";
+import IconClickable from "../../../common/buttons/icon-clickable";
+import { Utilities } from '../../../../assets'
+import Input from "../../../common/inputs/input";
+import Button from "../../../common/buttons/button";
+import OptionList from "./option-list";
+
+import superAdminApi from '../../../../server-api/super-admin'
+import toastUtils from '../../../../utils/toast'
+import SpinnerOverlay from "../../../common/spinners/spinner-overlay";
+
+
+const type = [
+    {
+        label: 'On',
+        value: true,
+    },
+    {
+        label: 'Off',
+        value: false,
+    }
+]
 
 const SuperAdmin = () => {
 
-  const [term, setTerm] = useState('')
+  const [activeList, setActiveList] = useState('allAccounts') // Available options: allUsers, allAccounts
+    const [viewCompanyDetail, setViewCompanyDetail] = useState()
+    const [vanity, setVanity] = useState(type[1].value)
+    const [subdomain, setSubdomain] = useState('')
+    const [loading, setLoading] = useState(false)
 
-  const [userData, setUserData] = useState({
-    users: [],
-    currentPage: 1,
-    total: 0
-  })
-
-  useEffect(() => {
-    getUsers()
-  }, [])
-
-  const getUsers = async ({ page = 1, searchTerm = term, reset = false } = {}) => {
-    try {
-      let newUsers = userData.users
-      if (reset) newUsers = []
-      const { data } = await superAdminApi.getUsers({ term: searchTerm, page })
-      setUserData({
-        users: [...newUsers, ...data.users],
-        currentPage: page,
-        total: data.total
-      })
-    } catch (err) {
-      console.log(err)
+    const onViewCompanySettings =  (data) => {
+        setViewCompanyDetail(data)
+        setVanity(data.vanity)
+        setSubdomain(data.subdomain ? `${data.subdomain || ""}.${window.location.hostname}` : "")
     }
-  }
 
-  const searchAndGetUsers = (searchTerm) => {
-    getUsers({
-      searchTerm,
-      page: 1,
-      reset: true
-    })
-    setTerm(searchTerm)
-  }
-
-  const getUserJWT = async (user) => {
-    try {
-      const { data } = await superAdminApi.getUserJWT(user.id)
-      // Place tokens in cookies to be able to return      
-      const adminJwt = cookiesUtils.get('jwt')
-      cookiesUtils.set('adminToken', adminJwt)
-      cookiesUtils.setUserJWT(data.token)
-      await Router.replace('/main/overview')
-      Router.reload()
-    } catch (err) {
-      console.log(err)
+    const onBack = () => {
+        setViewCompanyDetail(undefined)
     }
-  }
 
-  const getMore = () => {
-    getUsers({ page: userData.currentPage + 1 })
-  }
+    const updateTeam = async() => {
+      if(viewCompanyDetail){
+          try{
+              setLoading(true)
+              await superAdminApi.updateCompanyConfig(viewCompanyDetail.id, { vanity, subdomain: vanity ? subdomain.split(".")[0] : ""})
+              setLoading(false)
+
+              toastUtils.success('Setting changes saved')
+          }catch (e){
+              setLoading(false)
+              console.log(e.response.data?.message)
+              toastUtils.error(e.response.data?.message || "Internal server error")
+          }
+
+      }
+    }
 
   return (
     <div className={styles.container}>
-      <Search onSubmit={searchAndGetUsers} placeholder={'Search users by name or email'} />
-      <ul className={styles.list}>
-        {userData.users.map(user => (
-          <li key={user.id}>
-            <UserItem getUserToken={() => getUserJWT(user)} user={user} />
-          </li>
-        ))}
-      </ul>
-      {userData.total > userData.users.length &&
-        <div className={styles.action}>
-          <Button text={'Load more'} onClick={getMore} type={'button'} styleType={'primary'} />
-        </div>
-      }
+        {!viewCompanyDetail && <>
+            <div className={styles.buttons}>
+                <SectionButton
+                    text='All Users'
+                    active={activeList === 'allUsers'}
+                    onClick={() => setActiveList('allUsers')}
+                />
+                <SectionButton
+                    text='All Accounts'
+                    active={activeList === 'allAccounts'}
+                    onClick={() => setActiveList('allAccounts')}
+                />
+            </div>
+
+            {activeList === 'allUsers' && <UserList />}
+            {activeList === 'allAccounts' && <CompanyList onViewCompanySettings={onViewCompanySettings}/>}
+        </>}
+
+        {viewCompanyDetail && <>
+            <div className={styles.back} onClick={onBack}>
+                <IconClickable src={Utilities.back} />
+                <span>Back</span>
+            </div>
+
+            <div className={styles.container}>
+                <ul className={styles.list}>
+                    <li>
+                        <div className={styles.row}>
+                            <div className={`${styles['name-email']} ${styles['header-title']}`}>
+                                <div>
+                                    Company Name
+                                </div>
+                            </div>
+                            <div className={`${styles.company} ${styles['header-title']}`}>
+                                Account Senior Admin
+                            </div>
+                            <div className={`${styles.role} ${styles['header-title']}`}>
+                                Plan
+                            </div>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div className={styles.row}>
+                            <div className={`${styles['name-email']}`}>
+                                <div>
+                                    {viewCompanyDetail?.company}
+                                </div>
+                            </div>
+                            <div className={`${styles.company}`}>
+                                <div>
+                                    {viewCompanyDetail?.users[0]?.name}
+                                </div>
+                                <div>
+                                    {viewCompanyDetail?.users[0]?.email}
+                                </div>
+                            </div>
+                            <div className={`${styles.role}`}>
+                                {viewCompanyDetail?.plan?.name}
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div className={`${styles['header-title']} m-t-40 m-b-20`}>
+                Added Features
+            </div>
+            <div className={"row align-flex-start"}>
+                <div className={"col-20 font-weight-600"}>
+                    Vanity Url
+                </div>
+                <div className={"col-20"}>
+                    <OptionList data={type} oneColumn={false} value={vanity} setValue={(value)=>{setVanity(value)}}/>
+                </div>
+                {vanity && <>
+                    <div className={"col-40"}>
+                        <label className={styles.label} htmlFor={"link"}>Custom Subdomain Name</label>
+                        <Input
+                            id={"link"}
+                            onChange={(e)=>{setSubdomain(e.target.value)}}
+                            value={subdomain}
+                            additionalClasses={"font-14"}
+                            placeholder={'Link URL'}
+                            styleType={'regular-height-short'} />
+                    </div>
+                </>}
+
+                <div className={"col-20 align-self-flex-end"}>
+                    <Button
+                        styleTypes={['exclude-min-height']}
+                        type={'button'}
+                        text='Save'
+                        styleType='primary'
+                        onClick={updateTeam}
+                        disabled={false}
+                    />
+                </div>
+
+            </div>
+        </>}
+
+        {loading && <SpinnerOverlay />}
     </div>
   )
 }

@@ -24,6 +24,10 @@
   font-size: 12px;
 }
 
+.font-14{
+  font-size: 14px !important;
+}
+
 .font-weight-600{
   font-weight: 600;
 }
