@@ -1,0 +1,32 @@
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 1rem 0;
+  margin-top: 1rem 0;
+  border-bottom: 1px solid var(--color-secondary-border);
+}
+
+.name-email {
+  width: 12rem;
+  margin-right: 1rem;
+}
+
+.name-email>div:first-child{
+  font-weight: 600;
+}
+
+.role{
+  width: 7rem;
+}
+
+.company{
+  flex: 1;
+}
+
+.company>div:first-child{
+  font-weight: 600;
+}
+
+.no-comp{
+  color: var(--color-sec-blue);
+}

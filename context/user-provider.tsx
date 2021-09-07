@@ -5,6 +5,7 @@ import cookiesUtils from '../utils/cookies'
 import requestsUtils from '../utils/requests'
 
 import userApi from '../server-api/user'
+import teamApi from '../server-api/team'
 
 const allowedBase = ['/signup', 'trial-signup', '/share', '/reset-password', '/forgot-password', '/two-factor', '/collections']
 
@@ -90,6 +91,11 @@ export default ({ children }) => {
       getUserData()
     }
   }, [router.route])
+
+  useEffect(()=>{
+    console.log(`here`)
+    teamApi.verifyDomain()
+  },[])
 
   const getUserData = async () => {
     await fetchUser()
