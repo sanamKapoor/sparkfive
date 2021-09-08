@@ -111,6 +111,7 @@ export default ({ children }) => {
         setWaitToVerifyDomain(false)
         console.log(process.env.CLIENT_BASE_URL)
         // back to login page
+        window.open(`${process.env.CLIENT_BASE_URL}/login`,"_self")
         // router.replace(`${process.env.CLIENT_BASE_URL}/login`)
       }
     }else{
