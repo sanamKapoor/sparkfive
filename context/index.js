@@ -12,7 +12,8 @@ export const UserContext = createContext({
     fetchUser: (redirectUser) => { },
     logOut: () => { },
     hasPermission: (requiredPermissions) => { return true },
-    afterAuth: ({ twoFactor, token }) => { }
+    afterAuth: ({ twoFactor, token }) => { },
+    vanityCompanyInfo: undefined
 })
 
 export const ThemeContext = createContext({

@@ -1,0 +1,10 @@
+.or{
+  color: var(--color-ghost-text);
+  font-weight: 600;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.container{
+  margin-top: 1rem;
+}
