@@ -98,6 +98,8 @@ export default ({ children }) => {
 
   const verifyDomain = async () => {
     const subdomain = getSubdomain();
+
+    console.log(`Sub domain`, subdomain)
     if(subdomain){
       setWaitToVerifyDomain(true)
 
@@ -111,7 +113,7 @@ export default ({ children }) => {
         setWaitToVerifyDomain(false)
         console.log(process.env.CLIENT_BASE_URL)
         // back to login page
-        window.open(`${process.env.CLIENT_BASE_URL}/login`,"_self")
+        // window.open(`${process.env.CLIENT_BASE_URL}/login`,"_self")
         // router.replace(`${process.env.CLIENT_BASE_URL}/login`)
       }
     }else{
