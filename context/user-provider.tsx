@@ -108,7 +108,6 @@ export default ({ children }) => {
 
         setWaitToVerifyDomain(false)
       }catch(e){ // Cant verify domain
-        console.log('here')
         setWaitToVerifyDomain(false)
         // back to login page
         router.replace(`${process.env.CLIENT_BASE_URL}/login`)

@@ -17,6 +17,8 @@ import ConfirmModal from '../../../common/modals/confirm-modal'
 import RequestAccessList from "./request-access-list";
 import RequestForm from "./request-form";
 import SpinnerOverlay from "../../../common/spinners/spinner-overlay";
+import IconClickable from "../../../common/buttons/icon-clickable";
+import { Utilities } from '../../../../assets'
 
 const Team = () => {
 
@@ -152,6 +154,11 @@ const Team = () => {
     <div className={styles.container}>
       {selectedMember && <MemberDetail mappedRoles={mappedRoles} member={selectedMember.member} type={selectedMember.type}
                                        onSaveChanges={onDetailSaveChanges} />}
+
+      {selectedRequest && <div className={styles.back} onClick={()=>{setSelectedRequest(undefined)}}>
+        <IconClickable src={Utilities.back} />
+        <span>Back</span>
+      </div>}
 
       {selectedRequest && <RequestForm
           data={selectedRequest}

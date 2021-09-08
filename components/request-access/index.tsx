@@ -11,7 +11,7 @@ import { UserContext } from "../../context"
 
 import urlUtils from '../../utils/url'
 
-const RequestAccess = ({ onlyWorkEmail = true}) => {
+const RequestAccess = ({ onlyWorkEmail = false}) => {
   const { query } = useRouter()
   const { vanityCompanyInfo } = useContext(UserContext)
   const [shareInviteCode, setShareInviteCode] = useState(undefined)
