@@ -13,3 +13,17 @@
 .main-headers>h3:first-child{
   width: 80%;
 }
+
+.back {
+  padding-top: 5px;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  font-weight: 600;
+  width: fit-content;
+  margin-bottom: 25px;
+}
+
+.back img {
+  margin-right: 0.5rem;
+}
