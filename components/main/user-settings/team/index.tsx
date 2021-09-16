@@ -86,19 +86,30 @@ const Team = () => {
 
   const onDetailSaveChanges = async (id, { roleId, permissions, updatePermissions }) => {
     try {
+      setLoading(true)
       if (selectedMember.type === 'member')
         await teamApi.patchTeamMember(id, { roleId, permissions, updatePermissions })
       else
         await inviteApi.patchInvite(id, { roleId, permissions, updatePermissions })
 
+
+      await getTeamMembers()
+
+      setLoading(false)
+
+      setSelectedMember(undefined)
+
       toastUtils.success('Changes saved successfully')
     } catch (err) {
-      console.log(err)
+      setLoading(false)
+
+      toastUtils.error(err.response.data?.message || 'Internal server error')
     }
   }
 
   const deleteMember = async () => {
     try {
+      setLoading(true)
       const { id } = selectedDeleteMember.member
       if (selectedDeleteMember.type === 'member') {
         await teamApi.disableTeamMember(id)
@@ -111,8 +122,10 @@ const Team = () => {
           $splice: [[invites.findIndex(invite => invite.id === id), 1]]
         }))
       }
+      setLoading(false)
       toastUtils.success('Member deleted successfully')
     } catch (err) {
+      setLoading(false)
       console.log(err)
     } finally {
       setSelectedDeleteMember(undefined)
