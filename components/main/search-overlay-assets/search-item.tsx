@@ -20,6 +20,8 @@ const SearchItem = ({ assetItem, term, openShareAsset, openDeleteAsset, toggleSe
   const { asset, thumbailUrl, realUrl, isLoading = false, isSelected } = assetItem
   const [visibleOverlay, setVisibleOVerlay] = useState(false)
 
+  const searchWords = term.split(" ");
+
   return (
     <>
       <li
@@ -42,7 +44,7 @@ const SearchItem = ({ assetItem, term, openShareAsset, openDeleteAsset, toggleSe
         <div className={`${styles.name} ${isLoading && 'loadable'}`} onClick={() => !isLoading ? setVisibleOVerlay(true) : () => { }}>
           <Highlighter
             highlightClassName={'search-highlight'}
-            searchWords={[term]}
+            searchWords={searchWords}
             autoEscape={true}
             textToHighlight={asset.name}
           />
@@ -51,7 +53,7 @@ const SearchItem = ({ assetItem, term, openShareAsset, openDeleteAsset, toggleSe
           {!isLoading &&
             <Highlighter
               highlightClassName={'search-highlight'}
-              searchWords={[term]}
+              searchWords={searchWords}
               autoEscape={true}
               textToHighlight={(asset?.campaigns && asset.campaigns.length > 0) ? asset.campaigns.map(({ name }) => name).join(', ') : 'No Campaigns'}
             />
@@ -60,7 +62,7 @@ const SearchItem = ({ assetItem, term, openShareAsset, openDeleteAsset, toggleSe
         <div className={`${styles.extension} ${isLoading && 'loadable'}`}>
           <Highlighter
             highlightClassName={'search-highlight'}
-            searchWords={[term]}
+            searchWords={searchWords}
             autoEscape={true}
             textToHighlight={getParsedExtension(asset.extension)}
           />
@@ -69,7 +71,7 @@ const SearchItem = ({ assetItem, term, openShareAsset, openDeleteAsset, toggleSe
           {!isLoading &&
             <Highlighter
               highlightClassName={'search-highlight'}
-              searchWords={[term]}
+              searchWords={searchWords}
               autoEscape={true}
               textToHighlight={asset.folder?.name || 'No Collection'}
             />

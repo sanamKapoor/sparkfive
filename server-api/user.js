@@ -5,7 +5,7 @@ const userUrl = `${process.env.SERVER_BASE_URL}/users`
 
 export default {
   getUserData: () => axios.get(userUrl),
-  signIn: (data) => axios.post(`${userUrl}/signin`, data),
+  signIn: (data, teamId) => axios.post(`${userUrl}/signin?${querystring.encode({teamId})}`, data),
   signUp: (data, queryData = {}) => axios.post(`${userUrl}/signup?${querystring.encode(queryData)}`, data),
   validateTwoFactor: ({ twoFactorCode }) => axios.post(`${userUrl}/two-factor`, { twoFactorCode }),
   requestPasswordreset: (data) => axios.post(`${userUrl}/generate-password-reset`, data),
@@ -25,5 +25,8 @@ export default {
   getIntegrations: () => axios.get(`${userUrl}/integrations`),
   modifyIntegration: (id, data) => axios.patch(`${userUrl}/integrations/${id}`, data),
 
-  getsubscriptionHeaders: () => axios.get(`${userUrl}/subscription-headers`)
+  getsubscriptionHeaders: () => axios.get(`${userUrl}/subscription-headers`),
+
+  requestAccess: (data) => axios.post(`${userUrl}/request-access`, data),
+  completeRequestAccess: (data) => axios.post(`${userUrl}/complete-request-access`, data),
 }

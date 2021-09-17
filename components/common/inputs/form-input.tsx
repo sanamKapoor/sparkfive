@@ -2,10 +2,10 @@ import { Controller, ErrorMessage } from 'react-hook-form'
 
 import styles from './form-input.module.css'
 
-const FormInput = ({ label = '', labId = '', name, control, rules, InputComponent, errors, message = '', defaultValue = '' }) => {
+const FormInput = ({ label = '', labelClass = '', labId = '', name, control, rules, InputComponent, errors, message = '', defaultValue = '' }) => {
   return <>
     {label &&
-      <label htmlFor={labId}>{label}</label>
+      <label className={labelClass} htmlFor={labId}>{label}</label>
     }
     <Controller as={InputComponent}
       name={name}

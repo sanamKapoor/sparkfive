@@ -12,7 +12,7 @@ import AuthButton from '../common/buttons/auth-button'
 import FormInput from '../common/inputs/form-input'
 import Input from '../common/inputs/input'
 
-const Form = () => {
+const Form = ({ teamId }) => {
   const { control, handleSubmit, errors } = useForm()
   const [submitError, setSubmitError] = useState('')
   const { afterAuth } = useContext(UserContext)
@@ -24,9 +24,9 @@ const Form = () => {
         email: loginData.email,
         password: loginData.password
       }
-      const { data } = await userApi.signIn(signInData)
+      const { data } = await userApi.signIn(signInData, teamId)
       await afterAuth(data)
-    } catch (err) {      
+    } catch (err) {
       // TODO: Show error message
       if (err.response?.data?.message) {
         setSubmitError(err.response.data.message)
