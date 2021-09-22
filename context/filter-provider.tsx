@@ -87,6 +87,11 @@ export default ({ children, isPublic = false }) => {
     loadFromEndpoint(fetchMethod(({ assetsCount: 'yes', ...getCommonParams() })), setFolders)
   }
 
+  const loadAllFolders = () => {
+    const fetchMethod = fodlerApi.getFoldersSimple
+    loadFromEndpoint(fetchMethod(({ assetsCount: 'yes', ...getCommonParams(), selectAll: 1 })), setFolders)
+  }
+
   const loadCampaigns = () => {
     const fetchMethod = isPublic ? shareCollectionApi.getCampaigns : campaignApi.getCampaigns
     loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath, ...getCommonParams(activeSortFilter.allCampaigns !== 'any') }), setCampaigns)
@@ -246,6 +251,7 @@ export default ({ children, isPublic = false }) => {
     loadProductFields,
     folders,
     loadFolders,
+    loadAllFolders,
     activeSortFilter,
     setActiveSortFilter,
     setSharePath,
