@@ -11,5 +11,6 @@ export default {
   updateFolder: (id, data) => axios.patch(`${folderUrl}/${id}`, data),
   deleteFolder: (id) => axios.delete(`${folderUrl}/${id}`),
   shareFolder: (id, data) => axios.put(`${folderUrl}/${id}/share`, data),
-  authenticateCollection: (data) => axios.post(`${folderUrl}/collection-auth`, data)
+  authenticateCollection: (data) => axios.post(`${folderUrl}/collection-auth`, data),
+  getInfoToDownloadFolder: (id) => axios.get(`${folderUrl}/${id}/download`),
 }

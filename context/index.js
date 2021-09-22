@@ -149,6 +149,7 @@ export const FilterContext = createContext({
 
     folders: [],
     loadFolders: () => { },
+    loadAllFolders: () => { },
 
     campaigns: [],
     loadCampaigns: () => { },

@@ -10,6 +10,8 @@ import FolderOptions from './folder-options'
 import IconClickable from '../buttons/icon-clickable'
 import ConfirmModal from '../modals/confirm-modal'
 
+import folderApi from '../../../server-api/folder'
+
 const FolderGridItem = ({
 	id,
 	name,
@@ -35,8 +37,10 @@ const FolderGridItem = ({
 
 	const [deleteOpen, setDeleteOpen] = useState(false)
 
-	const downloadFoldercontents = () => {
-		zipDownloadUtils.zipAndDownload(assets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.name })), name)
+	const downloadFoldercontents = async() => {
+		const { data } = await folderApi.getInfoToDownloadFolder(id)
+		// Get full assets url, because currently, it just get maximum 4 real url in thumbnail
+		zipDownloadUtils.zipAndDownload(data, name)
 	}
 
 	return (
