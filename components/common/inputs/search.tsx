@@ -25,7 +25,7 @@ const Search = (props) => {
         />
       </div>
       <Button
-        disabled={term.length < 3}
+        disabled={term.length < 1}
         type={'submit'}
         text='Search'
         styleType='primary'
