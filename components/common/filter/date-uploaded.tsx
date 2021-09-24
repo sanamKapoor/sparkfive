@@ -39,9 +39,6 @@ const DateUploaded = ({ handleBeginDate, handleEndDate, beginDate, endDate }) =>
 
     const FORMAT = 'MM/dd/yyyy';
 
-    const tomorrow = new Date(beginDate);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-
     return (
         <div className={`${styles.container}`}>
             <img src={ItemFields.date} className={`${styles.icon}`} />
@@ -77,7 +74,7 @@ const DateUploaded = ({ handleBeginDate, handleEndDate, beginDate, endDate }) =>
                         dayPickerProps={{
                             className: styles.calendar,
                             disabledDays: {
-                                before: tomorrow
+                                before: beginDate
                             },
                         }}
                     />
