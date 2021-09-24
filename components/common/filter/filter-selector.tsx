@@ -28,7 +28,9 @@ const FilterSelector = ({
     const [internalFilters, setInternalFilters] = useState([])
 
     const getFilterList = async () => {
-        setInternalFilters(await loadFn())
+         let filterValues = await loadFn()
+        filterValues = filterValues.map(value => ({ ...value, label: value.name, value: value.id }))
+        setInternalFilters(filterValues)
     }
 
     useEffect(() => {
@@ -60,6 +62,8 @@ const FilterSelector = ({
     if (value)
         visibleFilters = [...visibleFilters, ...value.filter(selected => !visibleFilters.map(({ value }) => value).includes(selected.value))]
 
+
+    console.log(internalFilters)
     return (
         <div className={`${styles.container}`}>
             {anyAllSelection !== '' &&
