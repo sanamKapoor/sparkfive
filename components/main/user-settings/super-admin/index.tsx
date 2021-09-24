@@ -38,7 +38,7 @@ const SuperAdmin = () => {
     const onViewCompanySettings =  (data) => {
         setViewCompanyDetail(data)
         setVanity(data.vanity)
-        setSubdomain(data.subdomain ? `${data.subdomain || ""}.${window.location.hostname}` : "")
+        setSubdomain(data.subdomain ? `${data.subdomain || ""}.${window.location.hostname.replace("www.","")}` : "")
     }
 
     const onBack = () => {
@@ -50,7 +50,10 @@ const SuperAdmin = () => {
           try{
               setLoading(true)
               await superAdminApi.updateCompanyConfig(viewCompanyDetail.id, { vanity, subdomain: vanity ? subdomain.split(".")[0] : ""})
+
               setLoading(false)
+
+              onBack();
 
               toastUtils.success('Setting changes saved')
           }catch (e){
