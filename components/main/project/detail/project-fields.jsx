@@ -170,8 +170,6 @@ const ProjectFields = ({
     editFields('publishDate', currentDate)
   }
 
-  console.log(publishDate)
-
   return (
     <div className='item-detail-cont'>
       <div className={'field'}>

@@ -159,7 +159,6 @@ const ProjectDetail = () => {
     if (!isNew) newCampaign.id = campaign.value
     try {
       const { data } = await projectApi.addCampaign(project.id, newCampaign)
-      console.log(data)
       if (!isNew) {
         editFields('campaign', update(editableFields.campaign, { $set: campaign }))
       } else {

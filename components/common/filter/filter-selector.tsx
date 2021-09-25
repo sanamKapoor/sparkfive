@@ -62,8 +62,6 @@ const FilterSelector = ({
     if (value)
         visibleFilters = [...visibleFilters, ...value.filter(selected => !visibleFilters.map(({ value }) => value).includes(selected.value))]
 
-
-    console.log(internalFilters)
     return (
         <div className={`${styles.container}`}>
             {anyAllSelection !== '' &&

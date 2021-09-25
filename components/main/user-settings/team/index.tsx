@@ -135,7 +135,6 @@ const Team = () => {
   const mappedRoles = roles.map((role) => ({ ...role, label: capitalCase(role.name), value: role.id }))
 
   const onRequestChange = async (type: string, request) => {
-    console.log(type)
     switch (type){
       case 'review': {
         setSelectedRequest(request)

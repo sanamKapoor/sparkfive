@@ -199,13 +199,26 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
         filters.dimensionHeight = `${dimensionHeight.min},${dimensionHeight.max}`
     }
 
-    if (beginDate) {
-        filters.beginDate = beginDate.toISOString()
+    // a range in different day
+    if( beginDate && endDate && beginDate.toDateString() !== endDate.toDateString()){
+        if (beginDate) {
+            filters.beginDate = beginDate.toISOString()
+        }
+
+        if (endDate) {
+            filters.endDate = endDate.toISOString()
+        }
+    }else{ // same day
+        if (beginDate) {
+            filters.beginDate = beginDate.toISOString()
+        }
+
+        if (endDate) {
+            filters.beginDate = endDate.toISOString()
+        }
     }
 
-    if (endDate) {
-        filters.endDate = endDate.toISOString()
-    }
+
 
     if (fileModifiedBeginDate) {
         filters.fileModifiedBeginDate = fileModifiedBeginDate.toISOString()
