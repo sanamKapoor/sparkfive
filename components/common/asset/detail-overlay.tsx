@@ -247,7 +247,6 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
 
   // On width, height input change
   const onSizeInputChange = (name, value) => {
-    console.log(value)
     const originalRatio = asset.dimensionWidth / asset.dimensionHeight
 
     if (name === 'width') {

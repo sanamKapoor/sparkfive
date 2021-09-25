@@ -28,7 +28,9 @@ const FilterSelector = ({
     const [internalFilters, setInternalFilters] = useState([])
 
     const getFilterList = async () => {
-        setInternalFilters(await loadFn())
+         let filterValues = await loadFn()
+        filterValues = filterValues.map(value => ({ ...value, label: value.name, value: value.id }))
+        setInternalFilters(filterValues)
     }
 
     useEffect(() => {

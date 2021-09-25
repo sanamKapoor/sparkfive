@@ -41,7 +41,7 @@ const Setup = () => {
       // No more steps, redirect to main menu
       try {
         await userApi.patchUser({ firstTimeLogin: true })
-      } catch (err) {        
+      } catch (err) {
         console.log(err)
       } finally {
         Router.replace('/main/overview')
@@ -51,7 +51,6 @@ const Setup = () => {
 
   useEffect(() => {
     const { step } = urlUtils.getQueryParameters()
-    console.log(step)
     if (step) {
       setCurrentStep(AVAILABLE_STEPS[step as string])
     }
