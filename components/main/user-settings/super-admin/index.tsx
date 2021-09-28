@@ -29,7 +29,7 @@ const type = [
 
 const SuperAdmin = () => {
 
-  const [activeList, setActiveList] = useState('allAccounts') // Available options: allUsers, allAccounts
+  const [activeList, setActiveList] = useState('allUsers') // Available options: allUsers, allAccounts
     const [viewCompanyDetail, setViewCompanyDetail] = useState()
     const [vanity, setVanity] = useState(type[1].value)
     const [subdomain, setSubdomain] = useState('')
