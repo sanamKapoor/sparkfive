@@ -128,6 +128,9 @@ export const Assets = {
   msppt: require('./Icons/Assets/msppt.svg'),
   pdf: require('./Icons/Assets/pdf.svg'),
   html: require('./Icons/Assets/html.svg'),
+  zip: require('./Icons/Assets/zip.png'),
+  db: require('./Icons/Assets/db.png'),
+  bak: require('./Icons/Assets/bak.png'),
   unknown: require('./Icons/Assets/unknown.svg')
 }
 
