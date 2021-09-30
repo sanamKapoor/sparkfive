@@ -64,7 +64,7 @@ const AssetThumbail = ({
           {thumbailUrl ? (
             <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} opaque={isUploading} />
           ) : (
-            <AssetIcon name={asset.name} opaque={isUploading} extension={asset.extension} realUrl={realUrl} />
+            <AssetIcon extension={asset.extension} />
           )}
           {/* {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} opaque={isUploading} />}
           {asset.type === 'video' && <AssetVideo assetImg={thumbailUrl} asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} />}
