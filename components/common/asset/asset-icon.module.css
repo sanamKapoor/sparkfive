@@ -1,0 +1,22 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem;
+  }
+  
+  .container .icon {
+    width: 10rem;
+  }
+  
+  .small{
+    margin: 0;
+  }
+  
+  .small .icon{
+    width: 30px;
+  }
+  
+  .bulk-size .icon{
+    width: auto;
+  }
