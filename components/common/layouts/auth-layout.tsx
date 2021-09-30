@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { LoadingContext } from '../../../context'
+import { LoadingContext, UserContext } from '../../../context'
 import styles from './auth-layout.module.css'
 import Link from 'next/link'
 import { GeneralImg } from '../../../assets'
@@ -10,17 +10,19 @@ import SpinnerOverlay from '../spinners/spinner-overlay'
 const AuthLayout = ({ children }) => {
 
   const { isLoading } = useContext(LoadingContext)
+    const { vanityCompanyInfo } = useContext(UserContext)
 
-  return (
+
+    return (
     <>
       <header className={styles.header}>
-        <Link href='/main/overview'>
+          {!vanityCompanyInfo && <Link href='/main/overview'>
           <a>
             <img
               className={styles['logo-img']}
               src={GeneralImg.logoHorizontal} />
           </a>
-        </Link>
+        </Link>}
       </header>
       {isLoading && <SpinnerOverlay />}
       {children}
