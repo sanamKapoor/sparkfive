@@ -19,6 +19,9 @@ import RequestForm from "./request-form";
 import SpinnerOverlay from "../../../common/spinners/spinner-overlay";
 import IconClickable from "../../../common/buttons/icon-clickable";
 import { Utilities } from '../../../../assets'
+import SectionButton from "../../../common/buttons/section-button";
+import Roles from "./roles";
+import AddCustomRole from "./add-custom-role";
 
 const Team = () => {
 
@@ -34,6 +37,8 @@ const Team = () => {
   const [selectedRequest, setSelectedRequest] = useState(undefined)
 
   const [loading, setLoading] = useState(false)
+
+  const [tab, setTab] = useState(0)
 
 
   useEffect(() => {
@@ -162,40 +167,71 @@ const Team = () => {
 
   }
 
+  const onAddCustomRole = () => {
+    setTab(1)
+  }
+
   return (
     <div className={styles.container}>
-      {selectedMember && <MemberDetail mappedRoles={mappedRoles} member={selectedMember.member} type={selectedMember.type}
-                                       onSaveChanges={onDetailSaveChanges} />}
 
-      {selectedRequest && <div className={styles.back} onClick={()=>{setSelectedRequest(undefined)}}>
-        <IconClickable src={Utilities.back} />
-        <span>Back</span>
-      </div>}
+      <div className={styles.buttons}>
+        <SectionButton
+            text='Members'
+            active={tab === 0}
+            onClick={() => setTab(0)}
+        />
+        <SectionButton
+            text='Roles'
+            active={tab === 1}
+            onClick={() => setTab(1)}
+        />
+        {tab === 2 && <SectionButton
+            text='Add Custom Role'
+            active={tab === 2}
+            onClick={() => setTab(2)}
+        />}
+      </div>
 
-      {selectedRequest && <RequestForm
-          data={selectedRequest}
-          onApprove={()=>{onRequestChange('accept', selectedRequest)}}
-          onReject={()=>{onRequestChange('reject', selectedRequest)}}
-      />}
+      {tab === 0 && <>
+        {selectedMember && <MemberDetail mappedRoles={mappedRoles} member={selectedMember.member} type={selectedMember.type}
+                                         onSaveChanges={onDetailSaveChanges} />}
 
-      {!selectedMember && !selectedRequest && <>
-        <TeamInviteForm
-            onInviteSend={sendInvitation}
-            mappedRoles={mappedRoles} />
-        <div className={styles['main-headers']}>
-          <h3>Members</h3>
-          <h3>Role</h3>
-        </div>
+        {selectedRequest && <div className={styles.back} onClick={()=>{setSelectedRequest(undefined)}}>
+          <IconClickable src={Utilities.back} />
+          <span>Back</span>
+        </div>}
 
-        <MemberList members={teamMembers} type='member' setSelectedMember={setSelectedMember} setSelectedDeleteMember={setSelectedDeleteMember} />
+        {selectedRequest && <RequestForm
+            data={selectedRequest}
+            onApprove={()=>{onRequestChange('accept', selectedRequest)}}
+            onReject={()=>{onRequestChange('reject', selectedRequest)}}
+        />}
 
-        <h3>Pending Invites</h3>
-        <MemberList members={invites} type='invite' setSelectedMember={setSelectedMember} setSelectedDeleteMember={setSelectedDeleteMember} />
+        {!selectedMember && !selectedRequest && <>
+          <TeamInviteForm
+              onInviteSend={sendInvitation}
+              mappedRoles={mappedRoles} />
+          <div className={styles['main-headers']}>
+            <h3>Members</h3>
+            <h3>Role</h3>
+          </div>
+
+          <MemberList members={teamMembers} type='member' setSelectedMember={setSelectedMember} setSelectedDeleteMember={setSelectedDeleteMember} />
+
+          <h3>Pending Invites</h3>
+          <MemberList members={invites} type='invite' setSelectedMember={setSelectedMember} setSelectedDeleteMember={setSelectedDeleteMember} />
 
 
-        <h3>Access Requests</h3>
-        <RequestAccessList members={requests} type='invite' onChange={onRequestChange} />
+          <h3>Access Requests</h3>
+          <RequestAccessList members={requests} type='invite' onChange={onRequestChange} />
+        </>}
       </>}
+
+      {tab === 1 && <Roles onAdd={()=>{setTab(2)}}/>}
+
+      {tab === 2 && <AddCustomRole onSave={onAddCustomRole}/>}
+
+
       <ConfirmModal
         modalIsOpen={selectedDeleteMember !== undefined}
         closeModal={() => setSelectedDeleteMember(undefined)}
