@@ -520,6 +520,21 @@ export default () => {
 		}
 	}
 
+	const generateAssetsThumbnails = async () => {
+		try {
+			const assetIds = selectedAssets.map(assetItem => assetItem.asset.id)
+			const { data } = await assetApi.generateThumbnails({ assetIds })
+			setAssets([...assets.map(item => ({
+				...item,
+				thumbailUrl: data[item.asset.id] ? data[item.asset.id] : item.thumbailUrl,
+			}))])
+			closeModalAndClearOpAsset()
+		} catch (err) {
+			console.log(err)
+			toastUtils.error('Could not proceed with generation of thumbnails, please try again later.')
+		}
+	}
+
 	let operationLength = 0
 	if (operationAsset) {
 		operationLength = 1
@@ -587,6 +602,13 @@ export default () => {
 				confirmAction={removeSelectedAssetsFromItem}
 				confirmText={'Remove'}
 				message={`Remove ${operationLength} item(s) from ${currentItem.type}?`}
+			/>
+			<ConfirmModal
+				modalIsOpen={activeOperation === 'generate_thumbnails'}
+				closeModal={closeModalAndClearOpAsset}
+				confirmAction={generateAssetsThumbnails}
+				confirmText={'Recreate Thumbnail'}
+				message={`Recreate thumbnails for ${operationLength} asset(s)`}
 			/>
 			{activeOperation === 'edit' &&
 				<BulkEditOverlay handleBackButton={() => setActiveOperation('')} selectedAssets={selectedAllAssets ? completedAssets : selectedAssets} />
