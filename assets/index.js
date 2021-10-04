@@ -161,4 +161,5 @@ export const AssetOps = {
   moveWhite: require('./Icons/Utilities/Move Folder/icn-utilities-movefolder-white.svg'),
   copyWhite: require('./Icons/Asset Actions/copy-white.svg'),
   shareWhite: require('./Icons/Asset Actions/share-white.svg'),
+  generateThumbnail: require('./Icons/Asset Actions/wrench.svg')
 }
