@@ -6,6 +6,8 @@ import SectionButton from '../../common/buttons/section-button'
 import TagManagement from "./tag-management";
 import CampaignManagement from "./campaign-management";
 import CustomFieldsManagement from "./custom-fields-management"
+import ProductManagment from "./product-management";
+import CollectionManagement from "./collection-management";
 
 const Main = () => {
     const [activeList, setActiveList] = useState('tags')
@@ -28,11 +30,24 @@ const Main = () => {
                     active={activeList === 'customFields'}
                     onClick={() => setActiveList('customFields')}
                 />
+                <SectionButton
+                    text='Products'
+                    active={activeList === 'products'}
+                    onClick={() => setActiveList('products')}
+                />
+
+                <SectionButton
+                    text='Collections'
+                    active={activeList === 'collections'}
+                    onClick={() => setActiveList('collections')}
+                />
             </div>
 
             {activeList === 'tags' && <TagManagement />}
             {activeList === 'campaigns' && <CampaignManagement />}
             {activeList === 'customFields' && <CustomFieldsManagement />}
+            {activeList === 'products' && <ProductManagment />}
+            {activeList === 'collections' && <CollectionManagement />}
         </>
     )
 }
