@@ -146,9 +146,9 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 
 	return (
 		<>
-			{!isFolder && <IconClickable additionalClass={styles['action-button']}  src={AssetOps.generateThumbnail}  tooltipText={'Generate thumbnail'} onClick={() => setActiveOperation('generate_thumbnails')} />}
 			{!isShare && <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`edit${iconColor}`]} tooltipText={'Edit'} tooltipId={'Edit'} onClick={() => setActiveOperation('edit')} />}
 			{!isFolder && !isShare && <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`delete${iconColor}`]}  tooltipText={'Delete'} tooltipId={'Delete'} onClick={() => setActiveOperation('delete')} />}
+			{!isFolder && <IconClickable additionalClass={styles['action-button']}  src={AssetOps.generateThumbnail}  tooltipText={'Generate thumbnail'} onClick={() => setActiveOperation('generate_thumbnails')} />}
 			{!isFolder && !isShare && <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`archive${iconColor}`]}  tooltipText={isUnarchive ? 'Unarchive' : 'Archive'} tooltipId={isUnarchive ? 'Unarchive' : 'Archive'} onClick={() => setActiveOperation(isUnarchive ? 'unarchive' : 'archive')} />}
 			{!isFolder && (isShare || hasPermission([ASSET_DOWNLOAD])) && <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`download${iconColor}`]}  tooltipId={'Download'} tooltipText={'Download'} onClick={downloadSelectedAssets} />}
 			{!isFolder && !isShare && <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`move${iconColor}`]}  tooltipText={'Move'} tooltipId={'Move'} onClick={() => setActiveOperation('move')} />}

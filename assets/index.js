@@ -131,6 +131,9 @@ export const Assets = {
   zip: require('./Icons/Assets/zip.png'),
   db: require('./Icons/Assets/db.png'),
   bak: require('./Icons/Assets/bak.png'),
+  indd: require('./Icons/Assets/indd.svg'),
+  ai: require('./Icons/Assets/ai.svg'),
+  dwg: require('./Icons/Assets/dwg.png'),
   unknown: require('./Icons/Assets/unknown.svg')
 }
 
