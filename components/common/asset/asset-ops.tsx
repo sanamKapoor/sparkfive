@@ -529,6 +529,7 @@ export default () => {
 				thumbailUrl: data[item.asset.id] ? data[item.asset.id] : item.thumbailUrl,
 			}))])
 			closeModalAndClearOpAsset()
+			toastUtils.success('Thumbnails generated successfully')
 		} catch (err) {
 			console.log(err)
 			toastUtils.error('Could not proceed with generation of thumbnails, please try again later.')

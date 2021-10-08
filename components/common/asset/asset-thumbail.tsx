@@ -114,6 +114,7 @@ const AssetThumbail = ({
           isShare={isShare}
           asset={asset}
           realUrl={(asset.extension === 'tiff' || asset.extension === 'tif') ? thumbailUrl : realUrl}
+          thumbailUrl={thumbailUrl}
           initiaParams={overlayProperties}
           openShareAsset={openShareAsset}
           openDeleteAsset={openDeleteAsset}
