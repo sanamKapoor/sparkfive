@@ -16,6 +16,7 @@ import IconClickable from '../buttons/icon-clickable'
 import Button from '../buttons/button'
 import DetailOverlay from './detail-overlay'
 import AssetOptions from './asset-options'
+import AssetIcon from "./asset-icon"
 
 const DEFAULT_DETAIL_PROPS = { visible: false, side: 'detail' }
 
@@ -91,7 +92,12 @@ const ListItem = ({
               }
             </div>
             <div className={`${styles.thumbnail} ${isLoading && 'loadable'}`}>
-              {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} />}
+              {thumbailUrl ? (
+                <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} />
+              ) : (
+                <AssetIcon extension={asset.extension} />
+              )}
+              {/* {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} />}
               {asset.type === 'video' &&
                 <video preload='metadata'>
                   <source src={realUrl}
@@ -99,7 +105,7 @@ const ListItem = ({
                 </video>
               }
               {asset.type === 'application' && <AssetApplication extension={asset.extension} onList={true} />}
-              {asset.type === 'text' && <AssetText extension={asset.extension} onList={true} />}
+              {asset.type === 'text' && <AssetText extension={asset.extension} onList={true} />} */}
             </div>
           </div>
           <div className={styles.info}>

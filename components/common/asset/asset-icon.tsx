@@ -24,7 +24,7 @@ const extensionToType = ext => {
 
 const AssetIcon = ({ extension, onList = false, bulkSize = false, onClick }) => {
   return (
-    <div onClick={onClick} className={`${styles.container} ${onList && styles.small} ${bulkSize && styles['bulk-size']}`}>
+    <div onClick={onClick} className={`${onList && styles.small} ${bulkSize && styles['bulk-size']}`}>
         <img src={extensionToType(extension) ?? unknown} className={styles.icon} />
     </div>
   )
