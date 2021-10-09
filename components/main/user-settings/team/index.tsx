@@ -39,6 +39,7 @@ const Team = () => {
   const [loading, setLoading] = useState(false)
 
   const [tab, setTab] = useState(0)
+  const [selectedRole, setSelectedRole] = useState()
 
 
   useEffect(() => {
@@ -46,7 +47,7 @@ const Team = () => {
     getTeamMembers()
     getInvites()
     getAccessRequest()
-  }, [])
+  }, [tab])
 
   const getRoles = async () => {
     try {
@@ -99,6 +100,7 @@ const Team = () => {
 
 
       await getTeamMembers()
+      await getInvites()
 
       setLoading(false)
 
@@ -169,6 +171,7 @@ const Team = () => {
 
   const onAddCustomRole = () => {
     setTab(1)
+    setSelectedRole(undefined)
   }
 
   return (
@@ -178,12 +181,12 @@ const Team = () => {
         <SectionButton
             text='Members'
             active={tab === 0}
-            onClick={() => setTab(0)}
+            onClick={() => {setTab(0);setSelectedRole(undefined)}}
         />
         <SectionButton
             text='Roles'
             active={tab === 1}
-            onClick={() => setTab(1)}
+            onClick={() => {setTab(1);setSelectedRole(undefined)}}
         />
         {tab === 2 && <SectionButton
             text='Add Custom Role'
@@ -227,9 +230,9 @@ const Team = () => {
         </>}
       </>}
 
-      {tab === 1 && <Roles onAdd={()=>{setTab(2)}}/>}
+      {tab === 1 && <Roles onAdd={()=>{setTab(2)}} onEdit={(id)=>{setTab(2);setSelectedRole(id)}} />}
 
-      {tab === 2 && <AddCustomRole onSave={onAddCustomRole}/>}
+      {tab === 2 && <AddCustomRole onSave={onAddCustomRole} role={selectedRole} />}
 
 
       <ConfirmModal

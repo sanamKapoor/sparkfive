@@ -13,5 +13,10 @@ export default {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
-  })
+  }),
+  getRoles: () => axios.get(`${teamUrl}/roles`),
+  getRoleDetail: (id) => axios.get(`${teamUrl}/roles/${id}`),
+  deleteRole: (id) => axios.delete(`${teamUrl}/roles/${id}`),
+  createCustomRole: (data) => axios.post(`${teamUrl}/roles`, data),
+  editRole: (id, data) => axios.put(`${teamUrl}/roles/${id}`, data),
 }
