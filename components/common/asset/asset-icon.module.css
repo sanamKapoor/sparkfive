@@ -4,7 +4,10 @@
     align-items: center;
     margin: 2rem;
   }
-  
+  .icon {
+    width: 100%;
+    object-fit: scale-down;
+  }
   .container .icon {
     width: 10rem;
   }
