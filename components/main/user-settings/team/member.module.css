@@ -33,6 +33,20 @@
   display: flex;
 }
 
+.expire-date{
+  display: flex;
+  width: 35%
+}
+
+.operation-buttons{
+  display: flex;
+  width: 50px;
+}
+
+.hidden{
+  visibility: hidden;
+}
+
 .action{
   margin-left: 1rem;
   color: var(--color-sec-text);

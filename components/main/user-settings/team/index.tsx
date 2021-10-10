@@ -219,10 +219,18 @@ const Team = () => {
             <h3>Role</h3>
           </div>
 
-          <MemberList members={teamMembers} type='member' setSelectedMember={setSelectedMember} setSelectedDeleteMember={setSelectedDeleteMember} />
+          <MemberList members={teamMembers}
+                      type='member'
+                      setSelectedMember={setSelectedMember}
+                      setSelectedDeleteMember={setSelectedDeleteMember}
+          />
 
           <h3>Pending Invites</h3>
-          <MemberList members={invites} type='invite' setSelectedMember={setSelectedMember} setSelectedDeleteMember={setSelectedDeleteMember} />
+          <MemberList members={invites} type='invite'
+                      setSelectedMember={setSelectedMember}
+                      setSelectedDeleteMember={setSelectedDeleteMember}
+                      onReload={()=>{getInvites()}}
+          />
 
 
           <h3>Access Requests</h3>
