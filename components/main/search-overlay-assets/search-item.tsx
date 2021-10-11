@@ -40,7 +40,7 @@ const SearchItem = ({ assetItem, term, openShareAsset, openDeleteAsset, toggleSe
           {thumbailUrl ? (
             <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} />
           ) : (
-            <AssetIcon extension={asset.extension} />
+            <AssetIcon extension={asset.extension} onList={true}/>
           )}
           {/* {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} />}
           {asset.type === 'video' && <AssetVideo asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} />}
