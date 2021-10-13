@@ -4,6 +4,12 @@
     align-items: center;
     margin: 5.5rem;
   }
+  .container.bulk-size {
+    margin: 0;
+  }
+  .container.collection {
+    margin: 0;
+  }
   .icon {
     width: 100%;
     object-fit: scale-down;
@@ -21,5 +27,9 @@
   }
   
   .bulk-size .icon{
-    width: auto;
+    width: 50%;
+  }
+
+  .collection .icon {
+    width: 100%;
   }
