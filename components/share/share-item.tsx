@@ -12,6 +12,7 @@ import AssetText from '../common/asset/asset-text'
 import Button from '../common/buttons/button'
 import DetailOverlay from '../common/asset/detail-overlay'
 import IconClickable from "../common/buttons/icon-clickable"
+import AssetIcon from '../common/asset/asset-icon'
 
 const ShareItem = ({
 	asset,
@@ -35,10 +36,15 @@ const ShareItem = ({
 		<>
 			<div className={styles.container}>
 				<div className={styles['image-wrapper']}>
-					{asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} opaque={false} />}
+					{thumbailUrl ? (
+						<AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} opaque={false} />
+					) : (
+						<AssetIcon extension={asset.extension} />
+					)}
+					{/* {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} opaque={false} />}
 					{asset.type === 'video' && <AssetVideo asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} />}
 					{asset.type === 'application' && <AssetApplication extension={asset.extension} />}
-					{asset.type === 'text' && <AssetText extension={asset.extension} />}
+					{asset.type === 'text' && <AssetText extension={asset.extension} />} */}
 					<div className={`${styles['selectable-wrapper']} ${isSelected && styles['selected-wrapper']}`}>
 						{isSelected ?
 							<IconClickable src={Utilities.radioButtonEnabled} additionalClass={styles['select-icon']} onClick={toggleSelected} />
