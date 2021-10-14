@@ -69,6 +69,7 @@ const ShareItem = ({
 					initiaParams={{ side: 'detail' }}
 					asset={asset}
 					realUrl={realUrl}
+					thumbailUrl={thumbailUrl}
 					isShare={true}
 					closeOverlay={() => setVisibleOVerlay(false)} />
 			}
