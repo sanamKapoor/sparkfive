@@ -69,7 +69,7 @@ const ListItem = ({
             <h4> </h4>
             <div className={styles['headers-content']}>
               <h4>Name</h4>
-              <h4>Stage</h4>
+              {/*<h4>Stage</h4>*/}
               <h4>Type</h4>
               <h4>Extension</h4>
               <h4>Size</h4>
@@ -112,10 +112,10 @@ const ListItem = ({
             <div className={`${styles.name} ${isLoading && 'loadable'}`} onClick={() => setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: !overlayProperties.visible })}>
               {asset.name}
             </div>
-            <div className={styles.status}>
-              {isUploading && 'Uplaoding...'}
-              {!isLoading && !isUploading && <StatusBadge status={asset.stage} />}
-            </div>
+            {/*<div className={styles.status}>*/}
+            {/*  {isUploading && 'Uplaoding...'}*/}
+            {/*  {!isLoading && !isUploading && <StatusBadge status={asset.stage} />}*/}
+            {/*</div>*/}
             <div className={`${styles.field_name} ${isLoading && 'loadable'}`}>
               {!isUploading && asset.type}
             </div>
