@@ -4,6 +4,7 @@ const teamUrl = `${process.env.SERVER_BASE_URL}/teams`
 
 export default {
   getTeam: () => axios.get(teamUrl),
+  verifyDomain: (subdomain) => axios.post(`${teamUrl}/verify-domain`, { subdomain }),
   patchTeam: (patchData) => axios.patch(teamUrl, patchData),
   getTeamMembers: () => axios.get(`${teamUrl}/members`),
   patchTeamMember: (id, updatedata) => axios.patch(`${teamUrl}/members/${id}`, updatedata),

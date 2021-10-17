@@ -44,8 +44,10 @@ export default ({ children }) => {
     try {
       const { data } = await teamApi.getTeamMembers()
       setTeamMembers(data)
+      return data
     } catch (err) {
       console.log(err)
+      return null
     }
   }
 

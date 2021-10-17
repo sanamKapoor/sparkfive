@@ -3,14 +3,19 @@ import { useState, useEffect, useContext } from 'react'
 import { LoadingContext, UserContext } from '../context'
 import cookiesUtils from '../utils/cookies'
 import requestsUtils from '../utils/requests'
+import { getSubdomain } from '../utils/domain'
 
 import userApi from '../server-api/user'
+import teamApi from '../server-api/team'
+import SpinnerOverlay from "../components/common/spinners/spinner-overlay";
 
-const allowedBase = ['/signup', '/share', '/reset-password', '/forgot-password', '/two-factor', '/collections']
+const allowedBase = ['/signup', 'trial-signup', 'request-access', '/share', '/reset-password', '/forgot-password', '/two-factor', '/collections']
 
 export default ({ children }) => {
   const [user, setUser] = useState(null)
   const [initialLoadFinished, setInitialLoadFinished] = useState(false)
+  const [waitToVerifyDomain, setWaitToVerifyDomain] = useState(false)
+  const [vanityCompanyInfo, setVanityCompanyInfo] = useState()
 
   const { setIsLoading } = useContext(LoadingContext)
 
@@ -91,6 +96,35 @@ export default ({ children }) => {
     }
   }, [router.route])
 
+  const verifyDomain = async () => {
+    const subdomain = getSubdomain();
+
+    console.log(`Sub domain`, subdomain)
+    if(subdomain){
+      setWaitToVerifyDomain(true)
+
+      try{
+        const results  = await teamApi.verifyDomain(subdomain)
+
+        setVanityCompanyInfo(results.data)
+
+        setWaitToVerifyDomain(false)
+      }catch(e){ // Cant verify domain
+        setWaitToVerifyDomain(false)
+        // console.log(process.env.CLIENT_BASE_URL)
+        // back to login page
+        // window.open(`${process.env.CLIENT_BASE_URL}/login`,"_self")
+        router.replace(`${process.env.CLIENT_BASE_URL}/login`)
+      }
+    }else{
+      setWaitToVerifyDomain(false)
+    }
+  }
+
+  useEffect(()=>{
+    verifyDomain()
+  },[])
+
   const getUserData = async () => {
     await fetchUser()
     setInitialLoadFinished(true)
@@ -103,12 +137,16 @@ export default ({ children }) => {
     logOut,
     hasPermission,
     initialLoadFinished,
-    afterAuth
+    afterAuth,
+    vanityCompanyInfo
   }
 
   return (
     <UserContext.Provider value={userValue}>
+      <>
       {initialLoadFinished && children}
+        {waitToVerifyDomain && <SpinnerOverlay /> }
+      </>
     </UserContext.Provider>
   )
 }

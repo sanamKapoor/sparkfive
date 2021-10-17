@@ -1,8 +1,7 @@
-import styles from './user-item.module.css'
-import { useState } from 'react'
+import styles from './index.module.css'
 
 // Components
-import Button from '../../../common/buttons/button'
+import Button from '../../../../common/buttons/button'
 
 const UserItem = ({ user, getUserToken }) => {
   return (

@@ -229,8 +229,10 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
 
   let formattedDimension
   if (dimension) {
-    const splitDimension = dimension.split(',')
-    formattedDimension = `${splitDimension[0]} x  ${splitDimension[1]} px`
+    const [width, height] = dimension.split(',')
+    if(!isNaN(width) || !isNaN(height)) {
+      formattedDimension = `${width} x  ${height} px`
+    }
   }
 
   const fieldValues = [
@@ -391,15 +393,15 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
         ))}
       </div>
 
-      <div className={styles['field-wrapper']} >
-        <div className={`secondary-text ${styles.field}`}>Channel</div>
-        <ChannelSelector
-          channel={channel || undefined}
-          isShare={isShare}
-          onLabelClick={() => { }}
-          handleChannelChange={(option) => updateChannel(option)}
-        />
-      </div>
+      {/*<div className={styles['field-wrapper']} >*/}
+      {/*  <div className={`secondary-text ${styles.field}`}>Channel</div>*/}
+      {/*  <ChannelSelector*/}
+      {/*    channel={channel || undefined}*/}
+      {/*    isShare={isShare}*/}
+      {/*    onLabelClick={() => { }}*/}
+      {/*    handleChannelChange={(option) => updateChannel(option)}*/}
+      {/*  />*/}
+      {/*</div>*/}
 
       <div className={styles['field-wrapper']} >
         <CreatableSelect

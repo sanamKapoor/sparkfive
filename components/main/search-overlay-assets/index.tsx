@@ -5,17 +5,23 @@ import assetApi from '../../../server-api/asset'
 import shareCollectionApi from '../../../server-api/share-collection'
 import { Waypoint } from 'react-waypoint'
 import update from 'immutability-helper'
+import { Utilities } from '../../../assets'
+
+import gridStyle from '../../common/asset/asset-grid.module.css'
 
 // Components
 import Search from '../../common/inputs/search'
 import SearchItem from './search-item'
 import Button from '../../common/buttons/button'
 import AssetHeaderOps from '../../common/asset/asset-header-ops'
+import AssetThumbail from "../../common/asset/asset-thumbail";
 
 const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEnabled = false, importAssets = () => { }, sharePath = '' }) => {
 
   const { assets, setAssets, setActiveOperation, setOperationAsset, setPlaceHolders, nextPage, selectAllAssets, selectedAllAssets, totalAssets } = useContext(AssetContext)
   const { term, setSearchTerm } = useContext(FilterContext)
+
+  const [activeView, setActiveView] = useState('list')
 
 
   const getData = async (inputTerm, replace = true) => {
@@ -101,7 +107,7 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
         </h2>
         <div className={'search-cont'}>
           <Search
-            placeholder={'Find Assets by Name, Extension, Collection, Campaign, Channel, Tag, Custom Fields (min 3 characters)'}
+            placeholder={'Find Assets by Name, Extension, Collection, Campaign, Tag, Custom Fields (min 3 characters)'}
             onSubmit={(inputTerm) => getData(inputTerm)}
           />
         </div>
@@ -110,6 +116,9 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
           {selectedAssets.length > 0 && <Button text={`Deselect All (${totalSelectAssets})`} type='button' styleType='primary' onClick={deselectAll} />}
           {selectedAllAssets && <span className={styles['select-only-shown-items-text']} onClick={toggleSelectAll}>Select only 25 assets shown</span>}
           {selectedAssets.length > 0 && <AssetHeaderOps deselectHidden={true} buttonStyleType={'tertiary-blue'} />}
+
+          <img className={styles['view-icon']} src={Utilities.gridView} onClick={() => setActiveView('grid')} />
+          <img className={styles['view-icon']} src={Utilities.listView} onClick={() => setActiveView('list')} />
         </div>
         {importEnabled &&
           <div className={styles['import-wrapper']}>
@@ -122,7 +131,7 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
             />
           </div>
         }
-        <ul className={'search-content-list'}>
+        {activeView === "list" && <ul className={'search-content-list'}>
           {assets.map((assetItem, index) => (
             <SearchItem
               isShare={sharePath}
@@ -135,7 +144,28 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
               openDeleteAsset={() => beginAssetOperation(assetItem, 'delete')}
             />
           ))}
-        </ul>
+        </ul>}
+
+        {activeView === "grid" && <div className={`${gridStyle['list-wrapper']} search-content-list`}>
+          <ul className={`${gridStyle['grid-list-small']} ${gridStyle['regular']}`}>
+            {assets.map((assetItem, index) => {
+              return (
+                  <li className={gridStyle['grid-item']} key={assetItem.asset.id || index}>
+                    <AssetThumbail
+                        {...assetItem}
+                        showAssetOption={false}
+                        sharePath={sharePath}
+                        isShare={false}
+                        type={""}
+                        toggleSelected={() => toggleSelected(assetItem.asset.id)}
+                    />
+                  </li>
+              )
+            })}
+          </ul>
+        </div>}
+
+
         {assets.length > 0 && nextPage !== -1 &&
           <>
             {nextPage > 2 ?

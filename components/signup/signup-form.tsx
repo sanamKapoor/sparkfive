@@ -12,7 +12,7 @@ import Select from '../common/inputs/select'
 
 import companySizeOptions from '../../resources/data/company-sizes.json'
 
-const SignupForm = ({ inviteCode = '', priceData, email }) => {
+const SignupForm = ({ inviteCode = '', priceData, email, onlyWorkEmail = false }) => {
 
   const { control, handleSubmit, errors, getValues, setValue } = useForm()
   const [companySize, setCompanySize] = useState(undefined)
@@ -74,8 +74,8 @@ const SignupForm = ({ inviteCode = '', priceData, email }) => {
           }
           name='email'
           control={control}
-          rules={{ required: true, pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,15}$/i }}
-          message={'Invalid email address'}
+          rules={{ required: true, pattern: onlyWorkEmail ?  /^([\w-\.]+@(?!gmail.com)(?!yahoo.com)(?!hotmail.com)(?!yahoo.co.in)(?!aol.com)(?!abc.com)(?!xyz.com)(?!pqr.com)(?!rediffmail.com)(?!live.com)(?!outlook.com)(?!me.com)(?!msn.com)(?!ymail.com)([\w-]+\.)+[\w-]{2,4})?$/i : /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,15}$/i }}
+          message={onlyWorkEmail ? 'Please enter your work email address' : 'Invalid email address'}
           errors={errors}
         />
       </div>

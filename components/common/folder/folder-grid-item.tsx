@@ -10,6 +10,9 @@ import FolderOptions from './folder-options'
 import IconClickable from '../buttons/icon-clickable'
 import ConfirmModal from '../modals/confirm-modal'
 
+import folderApi from '../../../server-api/folder'
+import AssetIcon from '../asset/asset-icon'
+
 const FolderGridItem = ({
 	id,
 	name,
@@ -25,18 +28,20 @@ const FolderGridItem = ({
 	toggleSelected,
 	copyEnabled
 }) => {
-
 	const previews = [1, 2, 3, 4]
 		.map((_, index) => ({
 			name: assets[index]?.name || 'empty',
 			assetImg: assets[index]?.thumbailUrl || '',
-			type: assets[index]?.type || 'empty'
+			type: assets[index]?.type || 'empty',
+			extension: assets[index]?.extension,
 		}))
 
 	const [deleteOpen, setDeleteOpen] = useState(false)
 
-	const downloadFoldercontents = () => {
-		zipDownloadUtils.zipAndDownload(assets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.name })), name)
+	const downloadFoldercontents = async() => {
+		const { data } = await folderApi.getInfoToDownloadFolder(id)
+		// Get full assets url, because currently, it just get maximum 4 real url in thumbnail
+		zipDownloadUtils.zipAndDownload(data, name)
 	}
 
 	return (
@@ -45,7 +50,10 @@ const FolderGridItem = ({
 				<>
 					{previews.map((preview) => (
 						<div className={styles['sub-image-wrapper']}>
-							<AssetImg {...preview} />
+							{(preview.assetImg || preview.name === 'empty') 
+								? <AssetImg {...preview} /> 
+								: <AssetIcon extension={preview.extension} isCollection={true}/>
+							}
 						</div>
 					))}
 					<div className={styles['image-button-wrapper']}>

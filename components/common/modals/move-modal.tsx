@@ -1,7 +1,7 @@
 import styles from './move-modal.module.css'
-import { useState, useContext, useEffect } from 'react'
-import { FilterContext } from '../../../context'
+import { useState, useEffect } from 'react'
 import { Assets } from '../../../assets'
+import folderApi from '../../../server-api/folder'
 
 // Components
 import Base from '../../common/modals/base'
@@ -11,17 +11,25 @@ import IconClickable from '../../common/buttons/icon-clickable'
 
 const MoveModal = ({ modalIsOpen, closeModal, itemsAmount, moveAssets, createFolder, confirmText = 'Move' }) => {
 
+  const [folders, setFolders] = useState([])
   const [selectedFolder, setSelectedFolder] = useState('')
   const [newFolderName, setNewFolderName] = useState('')
   const [folderInputActive, setFolderInputActive] = useState(false)
 
-  const { loadFolders, folders } = useContext(FilterContext)
-
   useEffect(() => {
     if (modalIsOpen) {
-      loadFolders()
+      getFolders()
     }
   }, [modalIsOpen])
+
+  const getFolders = async () => {
+    try {
+      const { data } = await folderApi.getFoldersSimple()
+      setFolders(data)
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   const closemoveModal = () => {
     setSelectedFolder('')

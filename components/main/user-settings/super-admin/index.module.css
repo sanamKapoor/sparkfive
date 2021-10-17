@@ -7,3 +7,79 @@
   justify-content: center;
   margin-top: 2rem;
 }
+
+.buttons{
+  display: flex;
+  padding-bottom: 3rem;
+  padding-top: 1rem;
+}
+
+.buttons button{
+  margin-right: 3rem;
+}
+
+.back {
+  padding-top: 5px;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.back img {
+  margin-right: 0.5rem;
+}
+
+.list{
+  margin-top: 2rem;
+}
+
+.action{
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.name-email {
+  width: 12rem;
+  margin-right: 1rem;
+}
+
+.name-email>div:first-child{
+  font-weight: 600;
+}
+
+.role{
+  width: 7rem;
+}
+
+.company{
+  flex: 1;
+}
+
+.company>div:first-child{
+  font-weight: 600;
+}
+
+.no-comp{
+  color: var(--color-sec-blue);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 1rem 0;
+  margin-top: 1rem 0;
+  border-bottom: 1px solid var(--color-secondary-border);
+}
+
+.header-title{
+  color: #a7adbb;
+  font-weight: 600;
+}
+
+.invisible{
+  visibility: hidden;
+}
+

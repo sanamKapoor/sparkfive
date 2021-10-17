@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 
 // Components
 import AssetImg from './asset-img'
+import AssetIcon from './asset-icon'
 import AssetVideo from './asset-video'
 import AssetApplication from './asset-application'
 import AssetText from './asset-text'
@@ -23,6 +24,7 @@ const AssetThumbail = ({
   thumbailUrl,
   realUrl,
   isUploading,
+  showAssetOption = true,
   isSelected = false,
   isLoading = false,
   toggleSelected = () => { },
@@ -59,10 +61,15 @@ const AssetThumbail = ({
               <p className={styles.uploading}>Uploading...</p>
             </>
           }
-          {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} opaque={isUploading} />}
-          {asset.type === 'video' && <AssetVideo asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} />}
-          {asset.type === 'application' && <AssetApplication extension={asset.extension} />}
-          {asset.type === 'text' && <AssetText extension={asset.extension} />}
+          {thumbailUrl ? (
+            <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} opaque={isUploading} />
+          ) : (
+            <AssetIcon extension={asset.extension} />
+          )}
+          {/* {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} opaque={isUploading} />}
+          {asset.type === 'video' && <AssetVideo assetImg={thumbailUrl} asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} />}
+          {asset.type === 'application' && <AssetApplication assetImg={thumbailUrl} extension={asset.extension} />}
+          {asset.type === 'text' && <AssetText assetImg={thumbailUrl} extension={asset.extension} />} */}
           {!isUploading && !isLoading &&
             <>
               <div className={`${styles['selectable-wrapper']} ${isSelected && styles['selected-wrapper']}`}>
@@ -83,7 +90,7 @@ const AssetThumbail = ({
           <div className='normal-text'>{asset.name}</div>
           <div className={styles['details-wrapper']}>
             <div className='secondary-text'>{format(new Date(asset.createdAt), 'MMM d, yyyy, p')}</div>
-            {!isUploading &&
+            {!isUploading && showAssetOption &&
               <AssetOptions
                 itemType={type}
                 asset={asset}
@@ -106,7 +113,8 @@ const AssetThumbail = ({
           sharePath={sharePath}
           isShare={isShare}
           asset={asset}
-          realUrl={realUrl}
+          realUrl={(asset.extension === 'tiff' || asset.extension === 'tif') ? thumbailUrl : realUrl}
+          thumbailUrl={thumbailUrl}
           initiaParams={overlayProperties}
           openShareAsset={openShareAsset}
           openDeleteAsset={openDeleteAsset}
