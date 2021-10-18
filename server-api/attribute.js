@@ -5,6 +5,8 @@ const tagUrl = `${process.env.SERVER_BASE_URL}/attribute/tags`
 const campaignUrl = `${process.env.SERVER_BASE_URL}/attribute/campaigns`
 const customFieldsUrl = `${process.env.SERVER_BASE_URL}/attribute/custom-fields`
 const customFieldsWithCountUrl = `${process.env.SERVER_BASE_URL}/custom-fields`
+const productUrl = `${process.env.SERVER_BASE_URL}/attribute/products`
+const folderUrl = `${process.env.SERVER_BASE_URL}/attribute/folders`
 
 export default {
     // For tag management
@@ -27,4 +29,15 @@ export default {
     getCustomFieldWithCount: (id, queryParams) => axios.get(`${customFieldsWithCountUrl}/${id}?${querystring.stringify(queryParams)}`),
     createCustomField: (payload) => axios.post(`${customFieldsUrl}`, payload),
     deleteCustomField: (payload) => axios.delete(`${customFieldsUrl}`, {data: payload}),
+
+    getProducts: (queryParams) => axios.get(`${productUrl}?${querystring.stringify(queryParams)}`),
+    createProducts: (payload) => axios.post(`${productUrl}`, payload),
+    deletProducts: (payload) => axios.delete(`${productUrl}`, {data: payload}),
+    updateProducts: (payload) => axios.patch(`${productUrl}`, payload),
+
+
+    getFolders: (queryParams) => axios.get(`${folderUrl}?${querystring.stringify(queryParams)}`),
+    createFolders: (payload) => axios.post(`${folderUrl}`, payload),
+    deleteFolders: (payload) => axios.delete(`${folderUrl}`, {data: payload}),
+    updateFolders: (payload) => axios.patch(`${folderUrl}`, payload),
 }
