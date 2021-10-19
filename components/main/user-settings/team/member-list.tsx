@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 // Components
 import Member from './member'
 
-const MemberList = ({ members, type = 'member', setSelectedMember, setSelectedDeleteMember }) => {
+const MemberList = ({ members, type = 'member', setSelectedMember, setSelectedDeleteMember, onReload = () => {} }) => {
 
   const selectMember = (member) => {
     setSelectedMember({
@@ -32,8 +32,11 @@ const MemberList = ({ members, type = 'member', setSelectedMember, setSelectedDe
             profilePhoto={member.profilePhoto}
             role={member.role}
             type={type}
+            code={member.code}
+            expirationDate={member.expirationDate}
             editAction={() => selectMember(member)}
             deleteAction={() => selectForDelete(member)}
+            onReload={onReload}
           />
         ))}
       </ul>

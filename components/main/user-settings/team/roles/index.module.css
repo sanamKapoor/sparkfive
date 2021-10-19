@@ -1,0 +1,22 @@
+.data-row{
+    /*padding: 30px 0;*/
+}
+
+.ghost-line{
+    border-bottom: solid 1px var(--color-secondary-border);
+}
+
+.action{
+    color: var(--color-sec-text);
+}
+
+.select-add{
+    align-items: center;
+    display: flex;
+    margin-top: 50px;
+    cursor: pointer;
+}
+
+.select-add img{
+    margin-right: 5px;
+}
