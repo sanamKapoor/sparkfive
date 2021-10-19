@@ -4,13 +4,13 @@ import { Utilities } from '../../../../assets'
 import { useEffect, useState, useContext } from 'react'
 import { TeamContext } from '../../../../context'
 
-const MemberPermissions = ({ memberPermissions, permissions, setMemberPermissions }) => {
+const MemberPermissions = ({ memberPermissions, permissions, setMemberPermissions, listOnly = false }) => {
 
   const [mappedPermissions, setMappedPermissions] = useState([])
   const { plan } = useContext(TeamContext)
 
   useEffect(() => {
-    if (memberPermissions.length > 0 && permissions.length > 0) {
+    if (listOnly || (memberPermissions.length > 0 && permissions.length > 0)) {
       const groups = {}
       permissions.forEach(permission => {
         const { category, id } = permission
@@ -50,8 +50,8 @@ const MemberPermissions = ({ memberPermissions, permissions, setMemberPermission
   }
 
   return (
-    <div className={styles.container}>
-      <h3>Permissions</h3>
+    <div className={`${styles.container} ${listOnly ? styles['flex-row'] : ''}`}>
+      {!listOnly && <h3>Permissions</h3>}
       {permissionsList.map(({ category, features }) => (
         <div key={category} className={styles.group}>
           <h4>{category}</h4>

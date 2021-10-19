@@ -70,8 +70,8 @@ const MemberDetail = ({ member, type = 'member', mappedRoles, onSaveChanges }) =
           />
         </div>
       </div>
-      <MemberPermissions memberPermissions={memberPermissions}
-        permissions={permissions} setMemberPermissions={setMemberPermissions} />
+      {memberRole && memberRole.type === 'preset' && <MemberPermissions memberPermissions={memberPermissions}
+        permissions={permissions} setMemberPermissions={setMemberPermissions} listOnly={true}/>}
       <div className={styles['button-wrapper']}>
         <Button
           text='Save Changes'
