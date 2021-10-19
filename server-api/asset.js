@@ -37,6 +37,8 @@ export default {
   addCustomFields: (id, data) => axios.post(`${assetUrl}/${id}/custom-fields`, data),
   removeCustomFields: (id, tagId) => axios.delete(`${assetUrl}/${id}/custom-fields/${tagId}`),
 
+  generateThumbnails: ({assetIds}) => axios.post(`${assetUrl}/generate-thumbnails`, { assetIds }),
+
 
   downloadAll: (data, filters) => {
     return axios({

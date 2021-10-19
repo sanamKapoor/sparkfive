@@ -131,6 +131,9 @@ export const Assets = {
   zip: require('./Icons/Assets/zip.png'),
   db: require('./Icons/Assets/db.png'),
   bak: require('./Icons/Assets/bak.png'),
+  indd: require('./Icons/Assets/indd.svg'),
+  ai: require('./Icons/Assets/ai.svg'),
+  dwg: require('./Icons/Assets/dwg.png'),
   unknown: require('./Icons/Assets/unknown.svg')
 }
 
@@ -161,4 +164,5 @@ export const AssetOps = {
   moveWhite: require('./Icons/Utilities/Move Folder/icn-utilities-movefolder-white.svg'),
   copyWhite: require('./Icons/Asset Actions/copy-white.svg'),
   shareWhite: require('./Icons/Asset Actions/share-white.svg'),
+  generateThumbnail: require('./Icons/Asset Actions/wrench.svg')
 }

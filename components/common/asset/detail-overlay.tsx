@@ -25,6 +25,7 @@ import RenameModal from '../modals/rename-modal'
 import CropSidePanel from './crop-side-panel'
 import AssetCropImg from './asset-crop-img'
 import fileDownload from "js-file-download";
+import AssetIcon from './asset-icon'
 
 const getDefaultDownloadImageType = (extension) => {
   const defaultDownloadImageTypes = [
@@ -70,7 +71,7 @@ const getDefaultDownloadImageType = (extension) => {
   }
 }
 
-const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { }, openDeleteAsset = () => { }, isShare = false, sharePath = '', initialParams }) => {
+const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAsset = () => { }, openDeleteAsset = () => { }, isShare = false, sharePath = '', initialParams }) => {
   const {
     updateDownloadingStatus
   } = useContext(AssetContext)
@@ -381,8 +382,8 @@ const DetailOverlay = ({ asset, realUrl, closeOverlay, openShareAsset = () => { 
                 {mode === 'crop' && <AssetCropImg imageType={imageType} setWidth={setWidth} setHeight={setHeight}  locked={lockCropping()} name={assetDetail.name} assetImg={realUrl} width={width} height={height} originalHeight={asset.dimensionHeight}/>}
               </>
               }
-              {assetDetail.type === 'application' && <AssetApplication extension={assetDetail.extension} />}
-              {assetDetail.type === 'text' && <AssetText extension={assetDetail.extension} />}
+              {assetDetail.type !== 'image' && assetDetail.type !== 'video' && thumbailUrl && <AssetImg name={assetDetail.name} assetImg={thumbailUrl} />}
+              {assetDetail.type !== 'image' && assetDetail.type !== 'video' && !thumbailUrl && <AssetIcon extension={asset.extension} />}
               {assetDetail.type === 'video' &&
               <video controls>
                 <source src={realUrl}

@@ -14,6 +14,7 @@ import AssetApplication from '../../common/asset/asset-application'
 import AssetText from '../../common/asset/asset-text'
 import DetailOverlay from '../../common/asset/detail-overlay'
 import IconClickable from '../../common/buttons/icon-clickable'
+import AssetIcon from '../../common/asset/asset-icon'
 
 const SearchItem = ({ assetItem, term, openShareAsset, openDeleteAsset, toggleSelected, enabledSelect = false, isShare }) => {
 
@@ -36,10 +37,15 @@ const SearchItem = ({ assetItem, term, openShareAsset, openDeleteAsset, toggleSe
           </>
         }
         <div className={`${styles['image-wrapper']} ${isLoading && 'loadable'} ${enabledSelect && styles['image-selectable']}`}>
-          {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} />}
+          {thumbailUrl ? (
+            <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} />
+          ) : (
+            <AssetIcon extension={asset.extension} onList={true}/>
+          )}
+          {/* {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} />}
           {asset.type === 'video' && <AssetVideo asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} />}
           {asset.type === 'application' && <AssetApplication extension={asset.extension} onList={true} />}
-          {asset.type === 'text' && <AssetText extension={asset.extension} onList={true} />}
+          {asset.type === 'text' && <AssetText extension={asset.extension} onList={true} />} */}
         </div>
         <div className={`${styles.name} ${isLoading && 'loadable'}`} onClick={() => !isLoading ? setVisibleOVerlay(true) : () => { }}>
           <Highlighter

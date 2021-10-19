@@ -2,15 +2,24 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 2rem;
+    margin: 5.5rem;
   }
-  
+  .container.bulk-size {
+    margin: 0;
+  }
+  .container.collection {
+    margin: 0;
+  }
+  .icon {
+    width: 100%;
+    object-fit: scale-down;
+  }
   .container .icon {
     width: 10rem;
   }
   
   .small{
-    margin: 0;
+    margin: .6rem;
   }
   
   .small .icon{
@@ -18,5 +27,9 @@
   }
   
   .bulk-size .icon{
-    width: auto;
+    width: 4rem;
+  }
+
+  .collection .icon {
+    width: 100%;
   }
