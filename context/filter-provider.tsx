@@ -34,6 +34,7 @@ export default ({ children, isPublic = false }) => {
   const [fileTypes, setFileTypes] = useState([])
   const [assetDimensionLimits, setAssetDimensionLimits] = useState({})
   const [assetOrientations, setAssetOrientations] = useState([])
+  const [assetResolutions,setAssetResolutions] = useState([])
   const [productFields, setProductFields] = useState({
     categories: [],
     vendors: [],
@@ -122,6 +123,10 @@ export default ({ children, isPublic = false }) => {
     loadFromEndpoint(fetchMethod({ sharePath, ...getCommonParams() }), setAssetOrientations)
   }
 
+  const loadAssetResolutions = () =>{
+    const fetchMethod = isPublic ? shareCollectionApi.getAssetResolutions : filterApi.getAssetResolutions
+    loadFromEndpoint(fetchMethod({sharePath, ...getCommonParams() }), setAssetResolutions)
+  }
   const loadProductFields = async () => {
     try {
       const fetchMethod = isPublic ? shareCollectionApi.getTags : tagApi.getTags
@@ -258,7 +263,9 @@ export default ({ children, isPublic = false }) => {
     term,
     setSearchTerm,
     isPublic,
-    sharePath
+    sharePath,
+    loadAssetResolutions,
+    assetResolutions
   }
   return (
     <FilterContext.Provider value={filterValue}>

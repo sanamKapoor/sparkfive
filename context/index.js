@@ -169,6 +169,9 @@ export const FilterContext = createContext({
     assetOrientations: [],
     loadAssetOrientations: () => { },
 
+    assetResolutions: [],
+    loadAssetResolutions: () => { },
+
     productFields: {
         categories: [],
         vendors: [],
