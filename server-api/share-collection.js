@@ -16,6 +16,7 @@ export default {
   getAssetFileExtensions: (queryParams) => axios.get(`${shareCollectionsUrl}/file-extensions?${querystring.encode(queryParams)}`),
   getAssetDimensionLimits: (queryParams) => axios.get(`${shareCollectionsUrl}/asset-dimension-limits?${querystring.encode(queryParams)}`),
   getAssetOrientations: (queryParams) => axios.get(`${shareCollectionsUrl}/asset-orientations?${querystring.encode(queryParams)}`),
+  getAssetResolutions: (queryParams) => axios.get(`${shareCollectionsUrl}/asset-resolutions?${querystring.encode(queryParams)}`),
   downloadAll: (data, filters) => {
     return axios({
       url: `${shareCollectionsUrl}/download?${querystring.encode(filters)}`,

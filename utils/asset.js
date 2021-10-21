@@ -12,6 +12,7 @@ export const DEFAULT_FILTERS = {
     filterProductSku: undefined,
     filterProductType: [],
     filterCustomFields: [],
+    filterResolutions:[],
     allTags: 'all',
     allCampaigns: 'all',
     allProjects: 'all',
@@ -133,6 +134,7 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
         filterProjects,
         filterFileTypes,
         filterOrientations,
+        filterResolutions,
         dimensionWidth,
         dimensionHeight,
         dimensionsActive,
@@ -170,6 +172,7 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
     addFilterToQuery(filters, filterTags, 'tags')
     addFilterToQuery(filters, filterFileTypes, 'fileTypes')
     addFilterToQuery(filters, filterOrientations, 'orientations')
+    addFilterToQuery(filters, filterResolutions, 'resolutions')
 
     Object.keys(userFilterObject).map((key)=>{
         // Custom fields key

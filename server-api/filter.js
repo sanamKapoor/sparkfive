@@ -8,4 +8,5 @@ export default {
   getAssetFileExtensions: (queryParams) => axios.get(`${filterUrl}/file-extensions?${queryString.stringify(queryParams)}`),
   getAssetDimensionLimits: (queryParams) => axios.get(`${filterUrl}/asset-dimension-limits?${queryString.stringify(queryParams)}`),
   getAssetOrientations: (queryParams) => axios.get(`${filterUrl}/asset-orientations?${queryString.stringify(queryParams)}`),
+  getAssetResolutions: (queryParams) => axios.get(`${filterUrl}/asset-resolutions?${queryString.stringify(queryParams)}`),
 }
