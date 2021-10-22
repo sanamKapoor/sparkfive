@@ -29,9 +29,11 @@ const mappingCustomFieldData = (list, valueList) => {
         let value = valueList.filter(valueField => valueField.id === field.id)
 
         if(value.length > 0){
+            field.required = value[0].required;
             rs.push(value[0])
         }else{
             let customField = { ...field }
+            customField.required = true; // Default is true
             customField.values = []
             rs.push(customField)
         }
@@ -62,6 +64,11 @@ const AddCustomRole = ({ onSave, role }) => {
 
     const [permissions, setPermissions] = useState([])
     const [selectedPermissions, setSelectedPermissions] = useState([])
+
+    const [roleConfigs, setRoleConfigs] = useState({
+        andMainField: true,
+        andCustomAttribute: true
+    })
 
     const [loading, setLoading] = useState(true)
 
@@ -152,6 +159,10 @@ const AddCustomRole = ({ onSave, role }) => {
             setSelectedPermissions(data.permissions)
             setName(data.name)
 
+            if(data.configs?.configs){
+                setRoleConfigs(JSON.parse(data.configs?.configs))
+            }
+
             const updatedMappingCustomFieldData =  mappingCustomFieldData(inputCustomFields, data.customs)
 
             setAssetCustomFields(update(assetCustomFields, {
@@ -186,6 +197,7 @@ const AddCustomRole = ({ onSave, role }) => {
                 campaigns: selectedCampaigns.map((campaign)=>campaign.id),
                 customFieldValues: customFieldValueIds,
                 permissions: selectedPermissions.map((permission)=>permission.id),
+                configs: roleConfigs
             })
         }else{ // Create new one
             await teamApi.createCustomRole({
@@ -194,6 +206,7 @@ const AddCustomRole = ({ onSave, role }) => {
                 campaigns: selectedCampaigns.map((campaign)=>campaign.id),
                 customFieldValues: customFieldValueIds,
                 permissions: selectedPermissions.map((permission)=>permission.id),
+                configs: roleConfigs
             })
         }
 
@@ -201,6 +214,21 @@ const AddCustomRole = ({ onSave, role }) => {
         setLoading(false)
 
         onSave()
+    }
+
+    // Check to decide with radio button is selected
+    const isCustomAttributesRequired = (config, id) => {
+        if(config[id] !== undefined){
+            return config[id]
+        }else{
+            return true // Default is true
+        }
+    }
+
+    const updateRoleConfigs = (name, value) => {
+        const currentRoleConfigs = {...roleConfigs}
+        currentRoleConfigs[name] = value
+        setRoleConfigs(currentRoleConfigs)
     }
 
     useEffect(() => {
@@ -265,6 +293,25 @@ const AddCustomRole = ({ onSave, role }) => {
               </div>
           </div>
 
+          {mode === 'customRestriction' && <div className={styles['role-config-content']}>
+              <div className={styles['field-radio-wrapper']}>
+                  <div className={`${styles['radio-button-wrapper']} m-r-30`}>
+                      <div className={'m-r-15 font-12'}>Require</div>
+                      <IconClickable
+                          src={roleConfigs.andMainField ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                          additionalClass={styles['select-icon']}
+                          onClick={() => {updateRoleConfigs('andMainField', true)}} />
+                  </div>
+                  <div className={`${styles['radio-button-wrapper']}`}>
+                      <div className={'m-r-15 font-12'}>Optional</div>
+                      <IconClickable
+                          src={!roleConfigs.andMainField ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                          additionalClass={styles['select-icon']}
+                          onClick={() => {updateRoleConfigs('andMainField', false)}} />
+                  </div>
+              </div>
+          </div>}
+
           {mode === 'customRestriction' && <div className={'m-l-30 m-t-30'}>
               <span className={styles['field-title']} >Collections</span>
               <div className={styles['field-wrapper']} >
@@ -299,6 +346,24 @@ const AddCustomRole = ({ onSave, role }) => {
               </div>
 
               <span className={styles['field-title']} >Custom Fields</span>
+              <div className={styles['role-config-content']}>
+                  <div className={styles['field-radio-wrapper']}>
+                      <div className={`${styles['radio-button-wrapper']} m-r-30`}>
+                          <div className={'m-r-15 font-12'}>Require</div>
+                          <IconClickable
+                              src={roleConfigs.andCustomAttribute ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                              additionalClass={styles['select-icon']}
+                              onClick={() => {updateRoleConfigs('andCustomAttribute', true)}} />
+                      </div>
+                      <div className={`${styles['radio-button-wrapper']}`}>
+                          <div className={'m-r-15 font-12'}>Optional</div>
+                          <IconClickable
+                              src={!roleConfigs.andCustomAttribute ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                              additionalClass={styles['select-icon']}
+                              onClick={() => {updateRoleConfigs('andCustomAttribute', false)}} />
+                      </div>
+                  </div>
+              </div>
               <div className={styles['custom-field-wrapper']}>
                   {inputCustomFields.map((field, index)=>{
                       if(field.type === 'selectOne'){
