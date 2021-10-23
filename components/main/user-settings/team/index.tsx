@@ -38,7 +38,7 @@ const Team = () => {
 
   const [loading, setLoading] = useState(false)
 
-  const [tab, setTab] = useState(1)
+  const [tab, setTab] = useState(0)
   const [selectedRole, setSelectedRole] = useState()
 
 

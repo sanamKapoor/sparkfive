@@ -20,6 +20,7 @@ import campaignApi from '../../../../../server-api/campaign'
 import teamApi from '../../../../../server-api/team'
 import MemberPermissions from "../member-permissions";
 import SpinnerOverlay from "../../../../common/spinners/spinner-overlay";
+import ReactTooltip from "react-tooltip";
 
 // Server DO NOT return full custom field slots including empty array, so we will generate empty array here
 // The order of result should be match with order of custom field list
@@ -295,20 +296,23 @@ const AddCustomRole = ({ onSave, role }) => {
 
           {mode === 'customRestriction' && <div className={styles['role-config-content']}>
               <div className={styles['field-radio-wrapper']}>
-                  <div className={`${styles['radio-button-wrapper']} m-r-30`}>
-                      <div className={'m-r-15 font-12'}>Require</div>
+                  <div className={`${styles['radio-button-wrapper']} m-r-30`} data-tip data-for={'require-all-main'}>
+                      <div className={'m-r-15 font-12'}>Require All</div>
                       <IconClickable
                           src={roleConfigs.andMainField ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                           additionalClass={styles['select-icon']}
                           onClick={() => {updateRoleConfigs('andMainField', true)}} />
                   </div>
-                  <div className={`${styles['radio-button-wrapper']}`}>
-                      <div className={'m-r-15 font-12'}>Optional</div>
+
+                  <ReactTooltip place={'bottom'} id={'require-all-main'} delayShow={300} effect='solid'>{'Require all these following fields'}</ReactTooltip>
+                  <div className={`${styles['radio-button-wrapper']}`}  data-tip data-for={'require-any-main'}>
+                      <div className={'m-r-15 font-12'}>Require Any</div>
                       <IconClickable
                           src={!roleConfigs.andMainField ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                           additionalClass={styles['select-icon']}
                           onClick={() => {updateRoleConfigs('andMainField', false)}} />
                   </div>
+                  <ReactTooltip place={'bottom'} id={'require-any-main'} delayShow={300} effect='solid'>{'Require at least 1 of these following fields'}</ReactTooltip>
               </div>
           </div>}
 
@@ -348,20 +352,22 @@ const AddCustomRole = ({ onSave, role }) => {
               <span className={styles['field-title']} >Custom Fields</span>
               <div className={styles['role-config-content']}>
                   <div className={styles['field-radio-wrapper']}>
-                      <div className={`${styles['radio-button-wrapper']} m-r-30`}>
+                      <div className={`${styles['radio-button-wrapper']} m-r-30`} data-tip data-for={'require-all-custom'}>
                           <div className={'m-r-15 font-12'}>Require</div>
                           <IconClickable
                               src={roleConfigs.andCustomAttribute ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                               additionalClass={styles['select-icon']}
                               onClick={() => {updateRoleConfigs('andCustomAttribute', true)}} />
                       </div>
-                      <div className={`${styles['radio-button-wrapper']}`}>
+                      <ReactTooltip place={'bottom'} id={'require-all-custom'} delayShow={300} effect='solid'>{'Require all these following fields'}</ReactTooltip>
+                      <div className={`${styles['radio-button-wrapper']}`} data-tip data-for={'require-any-custom'}>
                           <div className={'m-r-15 font-12'}>Optional</div>
                           <IconClickable
                               src={!roleConfigs.andCustomAttribute ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                               additionalClass={styles['select-icon']}
                               onClick={() => {updateRoleConfigs('andCustomAttribute', false)}} />
                       </div>
+                      <ReactTooltip place={'bottom'} id={'require-any-custom'} delayShow={300} effect='solid'>{'Require at least 1 of these following fields'}</ReactTooltip>
                   </div>
               </div>
               <div className={styles['custom-field-wrapper']}>
