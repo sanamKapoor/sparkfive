@@ -237,10 +237,10 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
   }
 
   let formattedDPI
-  if(dpi !== 0 && dpi !== null){
+  if(dpi !== 0){
     formattedDPI = dpi +" DPI"
   }else{
-    formattedDPI = "N/A"
+    formattedDPI = ""
   }
 
   const fieldValues = [
