@@ -74,7 +74,7 @@ const ResolutionFilter = ({
                         src={(value && value.findIndex((item) => item[mappingValueName] === anyHighRes[mappingValueName]) !== -1) ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                         additionalClass={styles['select-icon']}
                         onClick={() => toggleSelected(anyHighRes)} />
-                    <div className={styles['any-all-text']}>All High-res (above 250 DPI)</div>
+                    <div className={styles['any-all-text']}>All High-Res (above 250 DPI)</div>
                 </div>
             </div>
             <ul className={`${styles['item-list']} ${oneColumn && styles['one-column']} ${capitalize && 'capitalize'}`}>
