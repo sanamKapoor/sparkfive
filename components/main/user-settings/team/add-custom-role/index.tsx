@@ -353,7 +353,7 @@ const AddCustomRole = ({ onSave, role }) => {
               <div className={styles['role-config-content']}>
                   <div className={styles['field-radio-wrapper']}>
                       <div className={`${styles['radio-button-wrapper']} m-r-30`} data-tip data-for={'require-all-custom'}>
-                          <div className={'m-r-15 font-12'}>Require</div>
+                          <div className={'m-r-15 font-12'}>Require All</div>
                           <IconClickable
                               src={roleConfigs.andCustomAttribute ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                               additionalClass={styles['select-icon']}
@@ -361,7 +361,7 @@ const AddCustomRole = ({ onSave, role }) => {
                       </div>
                       <ReactTooltip place={'bottom'} id={'require-all-custom'} delayShow={300} effect='solid'>{'Require all these following fields'}</ReactTooltip>
                       <div className={`${styles['radio-button-wrapper']}`} data-tip data-for={'require-any-custom'}>
-                          <div className={'m-r-15 font-12'}>Optional</div>
+                          <div className={'m-r-15 font-12'}>Require Any</div>
                           <IconClickable
                               src={!roleConfigs.andCustomAttribute ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                               additionalClass={styles['select-icon']}
