@@ -181,12 +181,12 @@ const Team = () => {
         <SectionButton
             text='Members'
             active={tab === 0}
-            onClick={() => {setTab(0);setSelectedRole(undefined)}}
+            onClick={() => {setTab(0);setSelectedRole(undefined);setSelectedMember(undefined)}}
         />
         <SectionButton
             text='Roles'
             active={tab === 1}
-            onClick={() => {setTab(1);setSelectedRole(undefined)}}
+            onClick={() => {setTab(1);setSelectedRole(undefined);setSelectedMember(undefined)}}
         />
         {tab === 2 && <SectionButton
             text='Add Custom Role'
@@ -197,7 +197,7 @@ const Team = () => {
 
       {tab === 0 && <>
         {selectedMember && <MemberDetail mappedRoles={mappedRoles} member={selectedMember.member} type={selectedMember.type}
-                                         onSaveChanges={onDetailSaveChanges} />}
+                                         onSaveChanges={onDetailSaveChanges} onCancel={()=>{setSelectedMember(undefined)}}/>}
 
         {selectedRequest && <div className={styles.back} onClick={()=>{setSelectedRequest(undefined)}}>
           <IconClickable src={Utilities.back} />

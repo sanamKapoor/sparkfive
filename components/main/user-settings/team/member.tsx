@@ -23,11 +23,11 @@ const Member = ({ id, email, role, name, profilePhoto, type, editAction, deleteA
       return new Date() > new Date(date);
   }
 
-    const getExpireDate = (date) => {
+    const getExpireDate = (date, boolean = false) => {
         if(new Date() > new Date(date)){
-            return 'Expired'
+            return boolean ? true : 'Invite Link Expired'
         }else{
-            return `Expired ${moment(date).format("MMM Do YY")}`
+            return boolean ? false : `Invite Link Active`
         }
     }
 
@@ -49,14 +49,14 @@ const Member = ({ id, email, role, name, profilePhoto, type, editAction, deleteA
         {type === 'member' && <div>{name}</div>}
         <div>{email}</div>
       </div>
-        {type === 'invite' && <div className={styles['expire-date']}>
+        {type === 'invite' && <div className={`${styles['expire-date']} ${getExpireDate(expirationDate, true) ? styles['red-text'] : styles['grey-text']}`}>
             {getExpireDate(expirationDate)}
-        </div>}
-        {type === 'invite' && <div className={`${styles['operation-buttons']} ${!checkExpireDate(expirationDate) ? styles['hidden'] : ''}`}>
-            <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`share${''}`]}  tooltipText={'Resend'} tooltipId={'Resend'} onClick={() => {resend(id)}} />
+            {type === 'invite' && <div className={`${styles['operation-buttons']} ${styles['resend-button']} ${!checkExpireDate(expirationDate) ? styles['hidden'] : ''}`}>
+                <IconClickable additionalClass={styles['resend-image']}  src={AssetOps[`reload${''}`]}  tooltipText={'Resend'} tooltipId={'Resend'} onClick={() => {resend(id)}} />
+            </div>}
         </div>}
         {type === 'invite' && <div className={styles['operation-buttons']}>
-            <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`copy${''}`]}  tooltipText={'Copy'} tooltipId={'Copy'} onClick={() => {copyLink(code)}} />
+            <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`copy${''}`]}  tooltipText={'Copy Link'} tooltipId={'Copy'} onClick={() => {copyLink(code)}} />
         </div>}
       <div className={styles.details}>
         <div className={styles.role}>{capitalCase(role.name)}</div>
