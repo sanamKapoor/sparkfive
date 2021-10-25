@@ -3,7 +3,7 @@
 }
 
 .role-config-content{
-    margin: 15px 0 25px 0;
+    margin: 30px 0 25px 20px;
 }
 
 .field-radio-wrapper{
@@ -16,14 +16,15 @@
 }
 
 .field-wrapper {
-    margin-top: 1.5rem;
-    margin-bottom: 3rem;
+    margin-top: 3.5rem;
+    margin-bottom: 3.5rem;
 }
 
 .field-title{
-    font-weight: 600;
+    font-weight: bold;
     margin-top: 25px;
     display: block;
+    font-size: 16px;
 }
 
 .custom-field-wrapper{
