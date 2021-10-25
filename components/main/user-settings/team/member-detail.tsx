@@ -9,7 +9,7 @@ import Button from '../../../common/buttons/button'
 import Select from '../../../common/inputs/select'
 import MemberPermissions from './member-permissions'
 
-const MemberDetail = ({ member, type = 'member', mappedRoles, onSaveChanges }) => {
+const MemberDetail = ({ member, type = 'member', mappedRoles, onSaveChanges, onCancel }) => {
 
   const [memberRole, setMemberRole] = useState(undefined)
   const [memberPermissions, setMemberPermissions] = useState([])
@@ -79,6 +79,14 @@ const MemberDetail = ({ member, type = 'member', mappedRoles, onSaveChanges }) =
           onClick={onSaveMemberChanges}
           styleType={'primary'}
         />
+
+        <Button className={'m-l-15'}
+                text='Cancel'
+                type='button'
+                styleType='secondary'
+                onClick={onCancel} />
+
+
       </div>
     </div>
   )
