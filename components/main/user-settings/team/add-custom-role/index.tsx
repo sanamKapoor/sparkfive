@@ -264,7 +264,7 @@ const AddCustomRole = ({ onSave, role }) => {
                 name={'name'}
                 value={name}
                 onChange={(e)=>{setName(e.target.value)}}
-                placeholder={'Field name'}
+                placeholder={'Role name'}
                 type={'text'}
                 styleType={'regular-short'} />
           </div>
