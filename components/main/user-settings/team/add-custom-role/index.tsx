@@ -146,6 +146,9 @@ const AddCustomRole = ({ onSave, role }) => {
         try {
             const { data } = await permissionApi.getPermissions()
             setPermissions(data)
+
+            // In default, all permission will be selected
+            setSelectedPermissions(data)
             return data
         } catch (err) {
             console.log(err)
