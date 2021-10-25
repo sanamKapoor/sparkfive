@@ -67,8 +67,8 @@ const AddCustomRole = ({ onSave, role }) => {
     const [selectedPermissions, setSelectedPermissions] = useState([])
 
     const [roleConfigs, setRoleConfigs] = useState({
-        andMainField: true,
-        andCustomAttribute: true
+        andMainField: false,
+        andCustomAttribute: false
     })
 
     const [loading, setLoading] = useState(true)
@@ -179,7 +179,7 @@ const AddCustomRole = ({ onSave, role }) => {
     }
 
     const getAll = async() => {
-        const [folderData, permissionData, inputCustomFieldsData] = await Promise.all([getFolders(),  getPermissions(),  getCustomFieldsInputData(), getCampaigns()])
+        const [folderData, permissionData, inputCustomFieldsData] = await Promise.all([getFolders(),  getPermissions(),  getCustomFieldsInputData()])
         await getDefaultValue(inputCustomFieldsData)
         setLoading(false)
     }
@@ -299,16 +299,8 @@ const AddCustomRole = ({ onSave, role }) => {
 
           {mode === 'customRestriction' && <div className={styles['role-config-content']}>
               <div className={styles['field-radio-wrapper']}>
-                  <div className={`${styles['radio-button-wrapper']} m-r-30`} data-tip data-for={'require-all-main'}>
-                      <div className={'m-r-15 font-12'}>Require All</div>
-                      <IconClickable
-                          src={roleConfigs.andMainField ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-                          additionalClass={styles['select-icon']}
-                          onClick={() => {updateRoleConfigs('andMainField', true)}} />
-                  </div>
 
-                  <ReactTooltip place={'bottom'} id={'require-all-main'} delayShow={300} effect='solid'>{'Require all these following fields'}</ReactTooltip>
-                  <div className={`${styles['radio-button-wrapper']}`}  data-tip data-for={'require-any-main'}>
+                  <div className={`${styles['radio-button-wrapper']} m-r-30`}  data-tip data-for={'require-any-main'}>
                       <div className={'m-r-15 font-12'}>Require Any</div>
                       <IconClickable
                           src={!roleConfigs.andMainField ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
@@ -316,12 +308,23 @@ const AddCustomRole = ({ onSave, role }) => {
                           onClick={() => {updateRoleConfigs('andMainField', false)}} />
                   </div>
                   <ReactTooltip place={'bottom'} id={'require-any-main'} delayShow={300} effect='solid'>{'Require at least 1 of these following fields'}</ReactTooltip>
+
+
+                  <div className={`${styles['radio-button-wrapper']}`} data-tip data-for={'require-all-main'}>
+                      <div className={'m-r-15 font-12'}>Require All</div>
+                      <IconClickable
+                          src={roleConfigs.andMainField ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                          additionalClass={styles['select-icon']}
+                          onClick={() => {updateRoleConfigs('andMainField', true)}} />
+                  </div>
+                  <ReactTooltip place={'bottom'} id={'require-all-main'} delayShow={300} effect='solid'>{'Require all these following fields'}</ReactTooltip>
+
               </div>
           </div>}
 
-          {mode === 'customRestriction' && <div className={'m-l-30 m-t-30'}>
+          {mode === 'customRestriction' && <div className={'m-l-30 m-t-50'}>
               <span className={styles['field-title']} >Collections</span>
-              <div className={styles['field-wrapper']} >
+              <div className={`${styles['field-wrapper']} m-l-30`} >
                   <CreatableSelect
                       creatable={false}
                       title=''
@@ -333,6 +336,7 @@ const AddCustomRole = ({ onSave, role }) => {
                       selectedItems={selectedCollections}
                       setSelectedItems={setSelectedCollection}
                       onAddOperationFinished={(stateUpdate) => {
+                          setActiveDropdown('')
                           // console.log('here2')
                           // updateAssetState({
                           //     tags: { $set: stateUpdate }
@@ -353,17 +357,9 @@ const AddCustomRole = ({ onSave, role }) => {
               </div>
 
               <span className={styles['field-title']} >Custom Fields</span>
-              <div className={styles['role-config-content']}>
+              <div className={`${styles['role-config-content']} m-l-20`}>
                   <div className={styles['field-radio-wrapper']}>
-                      <div className={`${styles['radio-button-wrapper']} m-r-30`} data-tip data-for={'require-all-custom'}>
-                          <div className={'m-r-15 font-12'}>Require All</div>
-                          <IconClickable
-                              src={roleConfigs.andCustomAttribute ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-                              additionalClass={styles['select-icon']}
-                              onClick={() => {updateRoleConfigs('andCustomAttribute', true)}} />
-                      </div>
-                      <ReactTooltip place={'bottom'} id={'require-all-custom'} delayShow={300} effect='solid'>{'Require all these following fields'}</ReactTooltip>
-                      <div className={`${styles['radio-button-wrapper']}`} data-tip data-for={'require-any-custom'}>
+                      <div className={`${styles['radio-button-wrapper']} m-r-30`} data-tip data-for={'require-any-custom'}>
                           <div className={'m-r-15 font-12'}>Require Any</div>
                           <IconClickable
                               src={!roleConfigs.andCustomAttribute ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
@@ -371,9 +367,17 @@ const AddCustomRole = ({ onSave, role }) => {
                               onClick={() => {updateRoleConfigs('andCustomAttribute', false)}} />
                       </div>
                       <ReactTooltip place={'bottom'} id={'require-any-custom'} delayShow={300} effect='solid'>{'Require at least 1 of these following fields'}</ReactTooltip>
+                      <div className={`${styles['radio-button-wrapper']}`} data-tip data-for={'require-all-custom'}>
+                          <div className={'m-r-15 font-12'}>Require All</div>
+                          <IconClickable
+                              src={roleConfigs.andCustomAttribute ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                              additionalClass={styles['select-icon']}
+                              onClick={() => {updateRoleConfigs('andCustomAttribute', true)}} />
+                      </div>
+                      <ReactTooltip place={'bottom'} id={'require-all-custom'} delayShow={300} effect='solid'>{'Require all these following fields'}</ReactTooltip>
                   </div>
               </div>
-              <div className={styles['custom-field-wrapper']}>
+              <div className={`${styles['custom-field-wrapper']} m-l-30 m-t-50`}>
                   {inputCustomFields.map((field, index)=>{
                       if(field.type === 'selectOne'){
 
@@ -432,38 +436,38 @@ const AddCustomRole = ({ onSave, role }) => {
               </div>
 
 
-              <span className={styles['field-title']} >Campaigns</span>
-              <div className={styles['field-wrapper']} >
-                  <CreatableSelect
-                      creatable={false}
-                      title=''
-                      addText='Add Campaigns'
-                      onAddClick={() => setActiveDropdown('campaigns')}
-                      selectPlaceholder={'Select an existing one'}
-                      avilableItems={campaigns}
-                      setAvailableItems={setCampaigns}
-                      selectedItems={selectedCampaigns}
-                      setSelectedItems={setSelectedCampaigns}
-                      onAddOperationFinished={(stateUpdate) => {
-                          // console.log('here2')
-                          // updateAssetState({
-                          //     tags: { $set: stateUpdate }
-                          // })
-                          // loadTags()
-                      }}
-                      onRemoveOperationFinished={async (index, stateUpdate) => {
-                          // await assetApi.removeTag(id, assetTags[index].id)
-                          // updateAssetState({
-                          //     tags: { $set: stateUpdate }
-                          // })
-                      }}
-                      onOperationFailedSkipped={() => setActiveDropdown('')}
-                      isShare={false}
-                      asyncCreateFn={(newItem) => {return true}}
-                      dropdownIsActive={activeDropdown === 'campaigns'}
-                      altColor='yellow'
-                  />
-              </div>
+              {/*<span className={styles['field-title']} >Campaigns</span>*/}
+              {/*<div className={styles['field-wrapper']} >*/}
+              {/*    <CreatableSelect*/}
+              {/*        creatable={false}*/}
+              {/*        title=''*/}
+              {/*        addText='Add Campaigns'*/}
+              {/*        onAddClick={() => setActiveDropdown('campaigns')}*/}
+              {/*        selectPlaceholder={'Select an existing one'}*/}
+              {/*        avilableItems={campaigns}*/}
+              {/*        setAvailableItems={setCampaigns}*/}
+              {/*        selectedItems={selectedCampaigns}*/}
+              {/*        setSelectedItems={setSelectedCampaigns}*/}
+              {/*        onAddOperationFinished={(stateUpdate) => {*/}
+              {/*            // console.log('here2')*/}
+              {/*            // updateAssetState({*/}
+              {/*            //     tags: { $set: stateUpdate }*/}
+              {/*            // })*/}
+              {/*            // loadTags()*/}
+              {/*        }}*/}
+              {/*        onRemoveOperationFinished={async (index, stateUpdate) => {*/}
+              {/*            // await assetApi.removeTag(id, assetTags[index].id)*/}
+              {/*            // updateAssetState({*/}
+              {/*            //     tags: { $set: stateUpdate }*/}
+              {/*            // })*/}
+              {/*        }}*/}
+              {/*        onOperationFailedSkipped={() => setActiveDropdown('')}*/}
+              {/*        isShare={false}*/}
+              {/*        asyncCreateFn={(newItem) => {return true}}*/}
+              {/*        dropdownIsActive={activeDropdown === 'campaigns'}*/}
+              {/*        altColor='yellow'*/}
+              {/*    />*/}
+              {/*</div>*/}
           </div>}
 
 
