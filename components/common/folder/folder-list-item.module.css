@@ -6,6 +6,19 @@
     width: 14%;
     font-weight: 550;
     color: var(--color-prim-nav);
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .header h4 .sort-icon {
+    margin-left: 24px;
+    display: none;
+  }
+
+  .header h4:hover .sort-icon,
+  .header h4 .sort-icon.active {
+    display: block;
   }
   
   .header h4:first-child {
