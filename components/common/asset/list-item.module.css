@@ -35,6 +35,9 @@
 
 .headers-content h4 {
   width: 14%;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 }
 
 .header h4:first-child {
@@ -47,6 +50,16 @@
 
 .headers-content h4:last-child {
   flex: 1;
+}
+
+.headers-content h4 .sort-icon {
+  margin-left: 24px;
+  display: none;
+}
+
+.headers-content h4:hover .sort-icon,
+.headers-content h4 .sort-icon.active {
+  display: block;
 }
 
 .thumbnail {
