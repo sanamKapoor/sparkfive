@@ -1,5 +1,5 @@
 // External
-import {useContext, useEffect, useState} from 'react'
+import { useContext, useEffect, useState } from 'react'
 import fileDownload from 'js-file-download';
 
 
@@ -22,7 +22,7 @@ import { AssetOps } from '../../../assets'
 // Components
 import Button from '../../common/buttons/button'
 import IconClickable from '../../common/buttons/icon-clickable'
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 
 const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, isFolder = false, deselectHidden = false, iconColor = '' }) => {
 	const {
@@ -42,24 +42,24 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 
 	const { hasPermission } = useContext(UserContext)
 
-	const {  activeSortFilter, term } = useContext(FilterContext)
+	const { activeSortFilter, term } = useContext(FilterContext)
 	const [sharePath, setSharePath] = useState('')
 
 	const selectedAssets = assets.filter(asset => asset.isSelected)
 	let totalSelectAssets = selectedAssets.length;
 
 	// Hidden pagination assets are selected
-	if(selectedAllAssets){
+	if (selectedAllAssets) {
 		// Get assets is not selected on screen
 		const currentUnSelectedAssets = assets.filter(asset => !asset.isSelected)
-		totalSelectAssets  = totalAssets - currentUnSelectedAssets.length
+		totalSelectAssets = totalAssets - currentUnSelectedAssets.length
 	}
 
 
 	const selectedFolders = folders.filter(folder => folder.isSelected)
 
 	const downloadSelectedAssets = async () => {
-		try{
+		try {
 			let payload = {
 				assetIds: []
 			};
@@ -69,7 +69,7 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 				estimateTime: 1
 			}
 
-			if(selectedAllAssets){
+			if (selectedAllAssets) {
 				totalDownloadingAssets = totalAssets
 				// Download all assets without pagination
 				filters = {
@@ -84,19 +84,19 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 					estimateTime: 1
 				};
 
-				if(term){
+				if (term) {
 					// @ts-ignore
 					filters.term = term;
 				}
 				// @ts-ignore
 				delete filters.page
-			}else{
+			} else {
 				totalDownloadingAssets = selectedAssets.length
 				payload.assetIds = selectedAssets.map(assetItem => assetItem.asset.id)
 			}
 
 			// Add sharePath property if user is at share collection page
-			if(sharePath){
+			if (sharePath) {
 				filters['sharePath'] = sharePath
 			}
 
@@ -106,17 +106,17 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 
 			let api = assetApi;
 
-			if(isShare){
+			if (isShare) {
 				api = shareApi
 			}
 
-			const { data } = await api.downloadAll(payload,filters)
+			const { data } = await api.downloadAll(payload, filters)
 
 			// Download file to storage
 			fileDownload(data, 'assets.zip');
 
 			updateDownloadingStatus('done', 0, 0)
-		}catch (e){
+		} catch (e) {
 			updateDownloadingStatus('error', 0, 0, 'Internal Server Error. Please try again.')
 		}
 
@@ -146,15 +146,15 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 
 	return (
 		<>
-			{!isShare && <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`edit${iconColor}`]} tooltipText={'Edit'} tooltipId={'Edit'} onClick={() => setActiveOperation('edit')} />}
-			{!isFolder && !isShare && <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`delete${iconColor}`]}  tooltipText={'Delete'} tooltipId={'Delete'} onClick={() => setActiveOperation('delete')} />}
-			{!isFolder && <IconClickable additionalClass={styles['action-button']}  src={AssetOps.generateThumbnail}  tooltipText={'Generate thumbnail'} onClick={() => setActiveOperation('generate_thumbnails')} />}
-			{!isFolder && !isShare && <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`archive${iconColor}`]}  tooltipText={isUnarchive ? 'Unarchive' : 'Archive'} tooltipId={isUnarchive ? 'Unarchive' : 'Archive'} onClick={() => setActiveOperation(isUnarchive ? 'unarchive' : 'archive')} />}
-			{!isFolder && (isShare || hasPermission([ASSET_DOWNLOAD])) && <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`download${iconColor}`]}  tooltipId={'Download'} tooltipText={'Download'} onClick={downloadSelectedAssets} />}
-			{!isFolder && !isShare && <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`move${iconColor}`]}  tooltipText={'Move'} tooltipId={'Move'} onClick={() => setActiveOperation('move')} />}
-			{!isFolder && !isShare && <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`copy${iconColor}`]}  tooltipText={'Copy'} tooltipId={'Copy'} onClick={() => setActiveOperation('copy')} />}
-			{!isFolder && !isShare && <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`share${iconColor}`]}  tooltipText={'Share'} tooltipId={'Share'} onClick={() => setActiveOperation('share')} />}
-			{!isFolder && itemType && !isShare && <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`delete${iconColor}`]}  tooltipText={'Remove'} onClick={() => setActiveOperation('remove_item')} />}
+			{!isShare && <IconClickable additionalClass={styles['action-button']} src={AssetOps[`edit${iconColor}`]} tooltipText={'Edit'} tooltipId={'Edit'} onClick={() => setActiveOperation('edit')} />}
+			{!isFolder && !isShare && <IconClickable additionalClass={styles['action-button']} src={AssetOps[`delete${iconColor}`]} tooltipText={'Delete'} tooltipId={'Delete'} onClick={() => setActiveOperation('delete')} />}
+			{!isFolder && !isShare && <IconClickable additionalClass={styles['action-button']} src={AssetOps.generateThumbnail} tooltipText={'Generate thumbnail'} onClick={() => setActiveOperation('generate_thumbnails')} />}
+			{!isFolder && !isShare && <IconClickable additionalClass={styles['action-button']} src={AssetOps[`archive${iconColor}`]} tooltipText={isUnarchive ? 'Unarchive' : 'Archive'} tooltipId={isUnarchive ? 'Unarchive' : 'Archive'} onClick={() => setActiveOperation(isUnarchive ? 'unarchive' : 'archive')} />}
+			{!isFolder && (isShare || hasPermission([ASSET_DOWNLOAD])) && <IconClickable additionalClass={styles['action-button']} src={AssetOps[`download${iconColor}`]} tooltipId={'Download'} tooltipText={'Download'} onClick={downloadSelectedAssets} />}
+			{!isFolder && !isShare && <IconClickable additionalClass={styles['action-button']} src={AssetOps[`move${iconColor}`]} tooltipText={'Move'} tooltipId={'Move'} onClick={() => setActiveOperation('move')} />}
+			{!isFolder && !isShare && <IconClickable additionalClass={styles['action-button']} src={AssetOps[`copy${iconColor}`]} tooltipText={'Copy'} tooltipId={'Copy'} onClick={() => setActiveOperation('copy')} />}
+			{!isFolder && !isShare && <IconClickable additionalClass={styles['action-button']} src={AssetOps[`share${iconColor}`]} tooltipText={'Share'} tooltipId={'Share'} onClick={() => setActiveOperation('share')} />}
+			{!isFolder && itemType && !isShare && <IconClickable additionalClass={styles['action-button']} src={AssetOps[`delete${iconColor}`]} tooltipText={'Remove'} onClick={() => setActiveOperation('remove_item')} />}
 			{!deselectHidden && <Button text={`Deselect All (${!isFolder ? (totalSelectAssets) : selectedFolders.length})`} type='button' styleType='primary' onClick={deselectAll} />}
 		</>
 	)
