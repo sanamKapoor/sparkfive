@@ -22,9 +22,11 @@ const FolderListItem = ({
 	deleteFolder = () => { },
 	shareAssets = (folder) => { },
 	copyShareLink = (folder) => { },
+	setCurrentSortAttribute = (attribute) => { },
 	copyEnabled,
 	toggleSelected,
-	isSelected
+	isSelected,
+	sortAttribute
 }) => {
 
 	const dateFormat = 'MMM do, yyyy h:mm a'
@@ -35,14 +37,26 @@ const FolderListItem = ({
 		zipDownloadUtils.zipAndDownload(assets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.name })), name)
 	}
 
+	const getSortAttributeClassName = attribute => sortAttribute === attribute && styles['active']
+	const setSortAttribute = attribute => setCurrentSortAttribute(sortAttribute === attribute ? '' : attribute)
+
 	return (
 		<>
 			<div className={styles.list}>
 				{index === 0 &&
 					<div className={styles.header}>
-						<h4>Name</h4>
-						<h4>Assets</h4>
-						<h4>Created At</h4>
+						<h4 onClick={() => setSortAttribute('folder.name')} >
+							Name
+							<IconClickable src={Utilities.arrowGrey} additionalClass={`${styles['sort-icon']} ${getSortAttributeClassName('folder.name')}`} />
+						</h4>
+						<h4 onClick={() => setSortAttribute('folder.length')} >
+							Assets
+							<IconClickable src={Utilities.arrowGrey} additionalClass={`${styles['sort-icon']} ${getSortAttributeClassName('folder.length')}`} />
+						</h4>
+						<h4 onClick={() => setSortAttribute('folder.created-at')} >
+							Created At
+							<IconClickable src={Utilities.arrowGrey} additionalClass={`${styles['sort-icon']} ${getSortAttributeClassName('folder.created-at')}`} />
+						</h4>
 						<h4></h4>
 					</div>
 				}
