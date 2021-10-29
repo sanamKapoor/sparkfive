@@ -12,7 +12,7 @@ export const DEFAULT_FILTERS = {
     filterProductSku: undefined,
     filterProductType: [],
     filterCustomFields: [],
-    filterResolutions:[],
+    filterResolutions: [],
     allTags: 'all',
     allCampaigns: 'all',
     allProjects: 'all',
@@ -26,15 +26,15 @@ export const DEFAULT_FILTERS = {
 
 export const DEFAULT_CUSTOM_FIELD_FILTERS = (userFilterObject) => {
     let filters = {}
-    Object.keys(userFilterObject).map((key)=>{
+    Object.keys(userFilterObject).map((key) => {
         // Custom fields key
-        if(key.includes('custom-p')){
+        if (key.includes('custom-p')) {
             // Get all keys
             const index = key.split('custom-p')[1]
             filters[`custom-p${index}`] = []
         }
 
-        if(key.includes('all-p')){
+        if (key.includes('all-p')) {
             // Get all keys
             const index = key.split("all-p")[1]
             filters[`all-p${index}`] = 'all'
@@ -163,6 +163,9 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
         }
         else if (mainFilter === 'archived') filters.stage = 'archived'
         else filters.stage = 'draft'
+    } else {
+        filters.type = 'folder'
+        filters.stage = 'draft'
     }
 
     addFilterToQuery(filters, filterCampaigns, 'campaigns')
@@ -174,12 +177,12 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
     addFilterToQuery(filters, filterOrientations, 'orientations')
     addFilterToQuery(filters, filterResolutions, 'resolutions')
 
-    Object.keys(userFilterObject).map((key)=>{
+    Object.keys(userFilterObject).map((key) => {
         // Custom fields key
-        if(key.includes('custom-p')){
+        if (key.includes('custom-p')) {
             // Get all keys
             const index = key.split("custom-p")[1]
-            if (userFilterObject[key] && userFilterObject[key].length > 0 && userFilterObject[`all-p${index}`] && userFilterObject[`all-p${index}`] !== 'none'){
+            if (userFilterObject[key] && userFilterObject[key].length > 0 && userFilterObject[`all-p${index}`] && userFilterObject[`all-p${index}`] !== 'none') {
                 filters[`all-p${index}`] = userFilterObject[`all-p${index}`]
             }
             addFilterToQuery(filters, userFilterObject[key], key, 'id')
@@ -203,7 +206,7 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
     }
 
     // a range in different day
-    if( beginDate && endDate && beginDate.toDateString() !== endDate.toDateString()){
+    if (beginDate && endDate && beginDate.toDateString() !== endDate.toDateString()) {
         if (beginDate) {
             filters.beginDate = beginDate.toISOString()
         }
@@ -211,7 +214,7 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
         if (endDate) {
             filters.endDate = endDate.toISOString()
         }
-    }else{ // same day
+    } else { // same day
         if (beginDate) {
             filters.beginDate = beginDate.toISOString()
         }
