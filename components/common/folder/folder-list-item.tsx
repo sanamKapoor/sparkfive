@@ -37,8 +37,16 @@ const FolderListItem = ({
 		zipDownloadUtils.zipAndDownload(assets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.name })), name)
 	}
 
-	const getSortAttributeClassName = attribute => sortAttribute === attribute && styles['active']
-	const setSortAttribute = attribute => setCurrentSortAttribute(sortAttribute === attribute ? '' : attribute)
+
+	const getSortAttributeClassName = attribute => sortAttribute.replace('-', '') === attribute && styles['active']
+	const setSortAttribute = attribute => {
+		if (attribute === sortAttribute) {
+			setCurrentSortAttribute('-' + attribute)
+		} else {
+			setCurrentSortAttribute(sortAttribute.startsWith('-') ? '' : attribute)
+		}
+	}
+	const arrowIcon = sortAttribute.startsWith('-') ? Utilities.arrowUpGrey : Utilities.arrowGrey
 
 	return (
 		<>
@@ -47,15 +55,15 @@ const FolderListItem = ({
 					<div className={styles.header}>
 						<h4 onClick={() => setSortAttribute('folder.name')} >
 							Name
-							<IconClickable src={Utilities.arrowGrey} additionalClass={`${styles['sort-icon']} ${getSortAttributeClassName('folder.name')}`} />
+							<IconClickable src={arrowIcon} additionalClass={`${styles['sort-icon']} ${getSortAttributeClassName('folder.name')}`} />
 						</h4>
 						<h4 onClick={() => setSortAttribute('folder.length')} >
 							Assets
-							<IconClickable src={Utilities.arrowGrey} additionalClass={`${styles['sort-icon']} ${getSortAttributeClassName('folder.length')}`} />
+							<IconClickable src={arrowIcon} additionalClass={`${styles['sort-icon']} ${getSortAttributeClassName('folder.length')}`} />
 						</h4>
 						<h4 onClick={() => setSortAttribute('folder.created-at')} >
 							Created At
-							<IconClickable src={Utilities.arrowGrey} additionalClass={`${styles['sort-icon']} ${getSortAttributeClassName('folder.created-at')}`} />
+							<IconClickable src={arrowIcon} additionalClass={`${styles['sort-icon']} ${getSortAttributeClassName('folder.created-at')}`} />
 						</h4>
 						<h4></h4>
 					</div>

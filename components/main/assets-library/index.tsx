@@ -444,6 +444,7 @@ const AssetsLibrary = () => {
   const selectedFolders = folders.filter(folder => folder.isSelected)
 
   const viewFolder = async (id) => {
+    console.log(`View folder`)
     setActiveFolder(id)
   }
 
