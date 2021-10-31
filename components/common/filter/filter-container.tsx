@@ -347,7 +347,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                             />}
                     </section>
                 }
-                
+
 
                 {!isFolder &&
                     <section>
