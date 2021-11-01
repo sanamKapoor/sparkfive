@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import {useState, useEffect, useContext} from 'react'
 import update from 'immutability-helper'
 
-import { FilterContext } from '../context'
+import { FilterContext, AssetContext } from '../context'
 
 // APIs
 import campaignApi from '../server-api/campaign'
@@ -17,6 +17,8 @@ import selectOptions from '../utils/select-options'
 import { DEFAULT_FILTERS, getAssetsFilters } from '../utils/asset'
 
 export default ({ children, isPublic = false }) => {
+
+  const { activeFolder } = useContext(AssetContext)
 
   const [activeSortFilter, setActiveSortFilter] = useState({
     sort: selectOptions.sort[1],
@@ -34,6 +36,7 @@ export default ({ children, isPublic = false }) => {
   const [fileTypes, setFileTypes] = useState([])
   const [assetDimensionLimits, setAssetDimensionLimits] = useState({})
   const [assetOrientations, setAssetOrientations] = useState([])
+  const [assetResolutions,setAssetResolutions] = useState([])
   const [productFields, setProductFields] = useState({
     categories: [],
     vendors: [],
@@ -63,7 +66,12 @@ export default ({ children, isPublic = false }) => {
 
   const loadTags = () => {
     const fetchMethod = isPublic ? shareCollectionApi.getTags : tagApi.getTags
-    loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath, ...getCommonParams(activeSortFilter.allTags !== 'any') }), setTags)
+    let basicFilter = {assetsCount: 'yes', sharePath}
+    if(activeFolder){
+      // @ts-ignore
+      basicFilter = { ...basicFilter, folderId:activeFolder }
+    }
+    loadFromEndpoint(fetchMethod({ ...basicFilter,  ...getCommonParams(activeSortFilter.allTags !== 'any') }), setTags)
   }
 
   const loadCustomFields = (id) => {
@@ -78,7 +86,13 @@ export default ({ children, isPublic = false }) => {
         }
       }
 
-      loadFromEndpoint(fetchMethod(id, { assetsCount: 'yes', sharePath, ...getCommonParams(activeSortFilter[`all-p${id}`] !== 'any') }), setCustomFieldsValue)
+      let basicFilter = {assetsCount: 'yes', sharePath}
+      if(activeFolder){
+        // @ts-ignore
+        basicFilter = { ...basicFilter, folderId:activeFolder }
+      }
+
+      loadFromEndpoint(fetchMethod(id, { ...basicFilter, ...getCommonParams(activeSortFilter[`all-p${id}`] !== 'any') }), setCustomFieldsValue)
     })
   }
 
@@ -94,34 +108,87 @@ export default ({ children, isPublic = false }) => {
 
   const loadCampaigns = () => {
     const fetchMethod = isPublic ? shareCollectionApi.getCampaigns : campaignApi.getCampaigns
-    loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath, ...getCommonParams(activeSortFilter.allCampaigns !== 'any') }), setCampaigns)
+
+    let basicFilter = {assetsCount: 'yes', sharePath}
+    if(activeFolder){
+      // @ts-ignore
+      basicFilter = { ...basicFilter, folderId:activeFolder }
+    }
+
+    loadFromEndpoint(fetchMethod({ ...basicFilter, ...getCommonParams(activeSortFilter.allCampaigns !== 'any') }), setCampaigns)
   }
 
   const loadChannels = () => {
     const fetchMethod = isPublic ? shareCollectionApi.getAssetChannels : filterApi.getAssetChannels
-    loadFromEndpoint(fetchMethod({ sharePath, ...getCommonParams() }), setChannels)
+
+    let basicFilter = {sharePath}
+    if(activeFolder){
+      // @ts-ignore
+      basicFilter = { ...basicFilter, folderId:activeFolder }
+    }
+
+    loadFromEndpoint(fetchMethod({ ...basicFilter, ...getCommonParams() }), setChannels)
   }
 
   const loadProjects = () => {
     const fetchMethod = isPublic ? shareCollectionApi.getProjects : projectApi.getProjects
-    loadFromEndpoint(fetchMethod({ assetsCount: 'yes', sharePath, ...getCommonParams(activeSortFilter.allProjects !== 'any') }), setProjects)
+
+    let basicFilter = {assetsCount: 'yes', sharePath}
+    if(activeFolder){
+      // @ts-ignore
+      basicFilter = { ...basicFilter, folderId:activeFolder }
+    }
+
+    loadFromEndpoint(fetchMethod({ ...basicFilter, ...getCommonParams(activeSortFilter.allProjects !== 'any') }), setProjects)
   }
 
   const loadFileTypes = () => {
     const fetchMethod = isPublic ? shareCollectionApi.getAssetFileExtensions : filterApi.getAssetFileExtensions
-    loadFromEndpoint(fetchMethod({ sharePath, ...getCommonParams() }), setFileTypes)
+
+    let basicFilter = {sharePath}
+    if(activeFolder){
+      // @ts-ignore
+      basicFilter = { ...basicFilter, folderId:activeFolder }
+    }
+
+    loadFromEndpoint(fetchMethod({ ...basicFilter, ...getCommonParams() }), setFileTypes)
   }
 
   const loadAssetDimensionLimits = () => {
     const fetchMethod = isPublic ? shareCollectionApi.getAssetDimensionLimits : filterApi.getAssetDimensionLimits
-    loadFromEndpoint(fetchMethod({ sharePath, ...getCommonParams() }), setAssetDimensionLimits)
+
+    let basicFilter = {sharePath}
+    if(activeFolder){
+      // @ts-ignore
+      basicFilter = { ...basicFilter, folderId:activeFolder }
+    }
+
+    loadFromEndpoint(fetchMethod({ ...basicFilter, ...getCommonParams() }), setAssetDimensionLimits)
   }
 
   const loadAssetOrientations = () => {
     const fetchMethod = isPublic ? shareCollectionApi.getAssetOrientations : filterApi.getAssetOrientations
-    loadFromEndpoint(fetchMethod({ sharePath, ...getCommonParams() }), setAssetOrientations)
+
+    let basicFilter = {sharePath}
+    if(activeFolder){
+      // @ts-ignore
+      basicFilter = { ...basicFilter, folderId:activeFolder }
+    }
+
+    loadFromEndpoint(fetchMethod({ ...basicFilter, ...getCommonParams() }), setAssetOrientations)
   }
 
+  const loadAssetResolutions = () =>{
+    const fetchMethod = isPublic ? shareCollectionApi.getAssetResolutions : filterApi.getAssetResolutions
+
+    let basicFilter = {sharePath}
+    if(activeFolder){
+      // @ts-ignore
+      basicFilter = { ...basicFilter, folderId:activeFolder }
+    }
+
+    loadFromEndpoint(fetchMethod({...basicFilter, ...getCommonParams() }), setAssetResolutions)
+  }
   const loadProductFields = async () => {
     try {
       const fetchMethod = isPublic ? shareCollectionApi.getTags : tagApi.getTags
@@ -258,7 +325,9 @@ export default ({ children, isPublic = false }) => {
     term,
     setSearchTerm,
     isPublic,
-    sharePath
+    sharePath,
+    loadAssetResolutions,
+    assetResolutions
   }
   return (
     <FilterContext.Provider value={filterValue}>

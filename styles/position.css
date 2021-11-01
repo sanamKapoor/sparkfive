@@ -28,8 +28,16 @@
     margin-top: 20px
 }
 
+.m-t-30{
+    margin-top: 30px
+}
+
 .m-t-40{
     margin-top: 40px;
+}
+
+.m-t-50{
+    margin-top: 50px;
 }
 
 
@@ -57,8 +65,20 @@
     margin-right: 15px;
 }
 
+.m-r-25{
+    margin-right: 25px;
+}
+
+.m-r-30{
+    margin-right: 30px;
+}
+
 .m-l-15{
     margin-left: 15px;
+}
+
+.m-l-30{
+    margin-left: 30px;
 }
 
 .m-b-40{

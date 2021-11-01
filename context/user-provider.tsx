@@ -42,6 +42,10 @@ export default ({ children }) => {
       try {
         setIsLoading(true)
         const { data } = await userApi.getUserData()
+        // Custom role will use custom permission here
+        if(data.role.type === 'custom'){
+          data.permissions = data.role.permissions
+        }
         setUser(data)
         if (!data.firstTimeLogin && Router.pathname.indexOf('/main/setup') === -1) {
           await Router.replace('/main/setup')
@@ -78,6 +82,7 @@ export default ({ children }) => {
   }
 
   const hasPermission = (requiredPermissions = []) => {
+    // console.warn(`Check permission: `, requiredPermissions, user?.permissions)
     if (requiredPermissions.length === 0) return true
     return requiredPermissions.some(perm => user?.permissions.map(userPerm => userPerm.id).includes(perm))
   }

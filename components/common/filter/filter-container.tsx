@@ -12,6 +12,7 @@ import FilterSelector from './filter-selector'
 import DateUploaded from './date-uploaded'
 import ProductFilter from './product-filter'
 import DimensionsFilter from './dimensions-filter'
+import ResolutionFilter from './resolution-filter'
 
 
 const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiveSortFilter, clearFilters, isFolder = false }) => {
@@ -28,6 +29,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
         projects,
         tags,
         assetOrientations,
+        assetResolutions,
         assetDimensionLimits: {
             maxHeight,
             minHeight,
@@ -44,6 +46,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
         loadTags,
         loadProductFields,
         loadFolders,
+        loadAssetResolutions,
         isPublic,
         sharePath,
         customFields,
@@ -344,6 +347,28 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                             />}
                     </section>
                 }
+
+
+                {!isFolder &&
+                    <section>
+                        <div className={styles['expand-bar']} onClick={() => handleExpand('resolution')}>
+                            <h4>Resolution</h4>
+                            {expandedMenus.includes('resolution') ?
+                                <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :
+                                <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
+                        </div>
+                        {expandedMenus.includes('resolution') &&
+                            <ResolutionFilter
+                                searchBar={true}
+                                loadFn={loadAssetResolutions}
+                                numItems={4}
+                                filters={assetResolutions.map(resolutions => ({ ...resolutions, value: resolutions.dpi }))}
+                                value={activeSortFilter.filterResolutions}
+                                setValue={(selected) => setSortFilterValue('filterResolutions', selected)}
+                            />}
+                    </section>
+                }
+
                 {!isFolder &&
                     <section>
                         <div className={styles['expand-bar']} onClick={() => {

@@ -32,6 +32,7 @@ const ListItem = ({
     isLoading = false
   },
   index,
+  sortAttribute,
   toggleSelected = () => { },
   openDeleteAsset = () => { },
   openMoveAsset = () => { },
@@ -39,7 +40,8 @@ const ListItem = ({
   openCopyAsset = () => { },
   openArchiveAsset = () => { },
   downloadAsset = () => { },
-  openRemoveAsset = () => { }
+  openRemoveAsset = () => { },
+  setCurrentSortAttribute = (attribute) => { },
 }) => {
 
   const dateFormat = 'MMM do, yyyy h:mm a'
@@ -60,20 +62,44 @@ const ListItem = ({
     setOverlayProperties({ visible: true, side: 'comments' })
   }
 
+  const getSortAttributeClassName = attribute => sortAttribute.replace('-', '') === attribute && styles['active']
+  const setSortAttribute = attribute => {
+    if (attribute === sortAttribute) {
+      setCurrentSortAttribute('-' + attribute)
+    } else {
+      setCurrentSortAttribute(sortAttribute.startsWith('-') ? '' : attribute)
+    }
+  }
+  const arrowIcon = sortAttribute.startsWith('-') ? Utilities.arrowUpGrey : Utilities.arrowGrey
+
   return (
     <>
       <div className={styles.list}>
         {index === 0 &&
           <div className={styles.header}>
-
             <h4> </h4>
             <div className={styles['headers-content']}>
-              <h4>Name</h4>
+              <h4 onClick={() => setSortAttribute('asset.name')} >
+                Name
+                <IconClickable src={arrowIcon} additionalClass={`${styles['sort-icon']} ${getSortAttributeClassName('asset.name')}`} />
+              </h4>
               {/*<h4>Stage</h4>*/}
-              <h4>Type</h4>
-              <h4>Extension</h4>
-              <h4>Size</h4>
-              <h4>Created At</h4>
+              <h4 onClick={() => setSortAttribute('asset.type')} >
+                Type
+                <IconClickable src={arrowIcon} additionalClass={`${styles['sort-icon']} ${getSortAttributeClassName('asset.type')}`} />
+              </h4>
+              <h4 onClick={() => setSortAttribute('asset.extension')} >
+                Extension
+                <IconClickable src={arrowIcon} additionalClass={`${styles['sort-icon']} ${getSortAttributeClassName('asset.extension')}`} />
+              </h4>
+              <h4 onClick={() => setSortAttribute('asset.size')} >
+                Size
+                <IconClickable src={arrowIcon} additionalClass={`${styles['sort-icon']} ${getSortAttributeClassName('asset.size')}`} />
+              </h4>
+              <h4 onClick={() => setSortAttribute('asset.created-at')} >
+                Created At
+                <IconClickable src={arrowIcon} additionalClass={`${styles['sort-icon']} ${getSortAttributeClassName('asset.created-at')}`} />
+              </h4>
               <h4></h4>
             </div>
           </div>
@@ -95,7 +121,7 @@ const ListItem = ({
               {thumbailUrl ? (
                 <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} />
               ) : (
-                <AssetIcon extension={asset.extension} onList={true}/>
+                <AssetIcon extension={asset.extension} onList={true} />
               )}
               {/* {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} />}
               {asset.type === 'video' &&

@@ -157,6 +157,7 @@ export const AssetOps = {
   move: require('./Icons/Utilities/Move Folder/icn-utilities-movefolder.svg'),
   copy: require('./Icons/Asset Actions/copy.svg'),
   share: require('./Icons/Asset Actions/share.svg'),
+  reload: require('./Icons/Asset Actions/reload.png'),
   editWhite: require('./Icons/Utilities/Description-Edit/icn-utilities-description_edit-fill-white.svg'),
   deleteWhite: require('./Icons/Utilities/Delete/icn-utilities-delete-white.svg'),
   archiveWhite: require('./Icons/Asset Actions/archive-white.svg'),
