@@ -3,11 +3,6 @@
     padding: 30px 32px;
     display: flex;
     align-items: center;
-    position: relative;
-}
-
-.image-wrapper {
-    flex: 1;
 }
 
 .logo-img {
@@ -17,14 +12,12 @@
     cursor: pointer;
 }
 .collection-name {
+    flex: 1;
     font-size: 22px;
     height: 75px;
-    position: absolute;
     display: flex;
     align-items: center;
     justify-content: center;
-    right: 300px;
-    left: 300px;
 }
 
 .navigation-links {
@@ -85,8 +78,14 @@
         top: 1.5rem;
     }
 
+    .logo-img {
+        max-height: 48px;
+        width: auto;
+        cursor: pointer;
+        margin-right: 18px;
+    }
+
     .collection-name {
-        right: 0;
-        left: 0;
+        font-size: 1em;
     }
 }
