@@ -3,6 +3,7 @@
     padding: 30px 32px;
     display: flex;
     align-items: center;
+    position: relative;
 }
 
 .logo-img {
@@ -58,13 +59,16 @@
     color: var(--color-prim-navy);
     font-weight: 600;
     flex: 1;
+    position: absolute;
+    left: 0;
+    right: 0;
 }
 
 .ops-wrapper button {
     margin-left: 1rem;
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 600px) {
     .header {
         padding: 17.5px 16px;
         flex-wrap: wrap;
@@ -75,7 +79,14 @@
     }
 
     .header h1 {
-        top: 1.5rem;
+        position: relative;
+    }
+
+    .logo-img {
+        max-height: 48px;
+        width: auto;
+        cursor: pointer;
+        margin-right: 18px;
     }
 
     .logo-img {
