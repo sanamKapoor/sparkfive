@@ -6,10 +6,6 @@
     position: relative;
 }
 
-.image-wrapper {
-    flex: 1;
-}
-
 .logo-img {
     max-height: 75px;
     width: auto;
@@ -17,14 +13,12 @@
     cursor: pointer;
 }
 .collection-name {
+    flex: 1;
     font-size: 22px;
     height: 75px;
-    position: absolute;
     display: flex;
     align-items: center;
     justify-content: center;
-    right: 300px;
-    left: 300px;
 }
 
 .navigation-links {
@@ -65,13 +59,16 @@
     color: var(--color-prim-navy);
     font-weight: 600;
     flex: 1;
+    position: absolute;
+    left: 0;
+    right: 0;
 }
 
 .ops-wrapper button {
     margin-left: 1rem;
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 600px) {
     .header {
         padding: 17.5px 16px;
         flex-wrap: wrap;
@@ -82,11 +79,17 @@
     }
 
     .header h1 {
-        top: 1.5rem;
+        position: relative;
+    }
+
+    .logo-img {
+        max-height: 48px;
+        width: auto;
+        cursor: pointer;
+        margin-right: 18px;
     }
 
     .collection-name {
-        right: 0;
-        left: 0;
+        font-size: 1em;
     }
 }
