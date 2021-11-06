@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import {useContext} from "react"
+import { useContext, useEffect } from "react"
 import FilterProvider from '../../context/filter-provider'
 import { ASSET_ACCESS } from '../../constants/permissions'
 
@@ -17,12 +17,12 @@ const AssetsPage = () => {
     return <FilterProvider>
         <Head>
             <title>Assets</title>
-            <link rel="icon" href="/favicon.ico"/>
+            <link rel="icon" href="/favicon.ico" />
         </Head>
         <MainLayout requiredPermissions={[ASSET_ACCESS]}>
-            {uploadingStatus !== 'none' && uploadingAssets.length > 0 && <AssetUploadProcess/>}
-            {downloadingStatus !== 'none' && <AssetDownloadProcess/>}
-            <AssetsLibrary/>
+            {uploadingStatus !== 'none' && uploadingAssets.length > 0 && <AssetUploadProcess />}
+            {downloadingStatus !== 'none' && <AssetDownloadProcess />}
+            <AssetsLibrary />
         </MainLayout>
     </FilterProvider>
 }

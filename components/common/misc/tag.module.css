@@ -39,3 +39,9 @@
 .pointer{
   cursor: pointer;
 }
+
+.tag-icon {
+  margin-right: 10px;
+  font-size: 13px;
+  background-color: var(--color-sec-lightblue);
+}
