@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import { useEffect, useState } from 'react'
 import styles from './tag-management.module.css'
 
 
@@ -52,11 +52,11 @@ const TagManagement = () => {
 
     // Create the new tag
     const createTag = async (item) => {
-        try{
+        try {
             // Show loading
             setLoading(true)
 
-            await tagApi.createTags({tags: [item]})
+            await tagApi.createTags({ tags: [item] })
 
             // Reload the list
             getTagList();
@@ -74,14 +74,14 @@ const TagManagement = () => {
         // Show loading
         setLoading(true)
 
-        let { data } = await tagApi.getTags({isAll: 1, sensitive: 0, sort: sort.value, searchType, searchKey})
+        let { data } = await tagApi.getTags({ isAll: 1, sensitive: 0, sort: sort.value, searchType, searchKey })
         setTagList(data)
 
         // Hide loading
         setLoading(false)
     }
 
-    const deleteTagList = async(id) => {
+    const deleteTagList = async (id) => {
         // Hide confirm modal
         setConfirmDeleteModal(false)
 
@@ -89,7 +89,7 @@ const TagManagement = () => {
         setLoading(true)
 
         // Call API to delete tag
-        await tagApi.deleteTags({tagIds: [id]})
+        await tagApi.deleteTags({ tagIds: [id] })
 
         // Refresh the list
         getTagList();
@@ -123,9 +123,9 @@ const TagManagement = () => {
         getTagList();
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getTagList();
-    },[sort, searchKey])
+    }, [sort, searchKey])
 
     return (
         <div className={styles['main-wrapper']}>
@@ -136,11 +136,11 @@ const TagManagement = () => {
                     onAddClick={() => setActiveDropdown('tags')}
                     selectPlaceholder={'Enter a new tag'}
                     avilableItems={[]}
-                    setAvailableItems={()=>{}}
+                    setAvailableItems={() => { }}
                     selectedItems={[]}
-                    setSelectedItems={()=>{}}
-                    onAddOperationFinished={()=>{}}
-                    onRemoveOperationFinished={()=>{}}
+                    setSelectedItems={() => { }}
+                    onAddOperationFinished={() => { }}
+                    onRemoveOperationFinished={() => { }}
                     onOperationFailedSkipped={() => setActiveDropdown('')}
                     isShare={false}
                     asyncCreateFn={createTag}
@@ -150,7 +150,7 @@ const TagManagement = () => {
 
                 <Select
                     options={sorts}
-                    onChange={(value)=>{setSort(value)}}
+                    onChange={(value) => { setSort(value) }}
                     placeholder={'Select to sort'}
                     styleType={`regular ${styles['sort-select']}`}
                     value={sort}
@@ -163,8 +163,8 @@ const TagManagement = () => {
                         name={'start'}
                         searchType={searchType}
                         placeholder={'Starts with'}
-                        onSubmit={(key)=>{setSearchType('start');setSearchKey(key);}}
-                        onClear={()=>{setSearchKey('')}}
+                        onSubmit={(key) => { setSearchType('start'); setSearchKey(key); }}
+                        onClear={() => { setSearchKey('') }}
                     />
                 </div>
                 <div className={styles['search-column-2']}>
@@ -172,8 +172,8 @@ const TagManagement = () => {
                         name={'exact'}
                         searchType={searchType}
                         placeholder={'Exact Match'}
-                        onSubmit={(key)=>{setSearchType('exact');setSearchKey(key);}}
-                        onClear={()=>{setSearchKey('')}}
+                        onSubmit={(key) => { setSearchType('exact'); setSearchKey(key); }}
+                        onClear={() => { setSearchKey('') }}
                     />
                 </div>
                 <div className={styles['search-column-3']}>
@@ -181,18 +181,19 @@ const TagManagement = () => {
                         name={'contain'}
                         searchType={searchType}
                         placeholder={'Contains'}
-                        onSubmit={(key)=>{setSearchType('contain');setSearchKey(key);}}
-                        onClear={()=>{setSearchKey('')}}
+                        onSubmit={(key) => { setSearchType('contain'); setSearchKey(key); }}
+                        onClear={() => { setSearchKey('') }}
                     />
                 </div>
             </div>
-
             <ul className={styles['tag-wrapper']}>
                 {tagList.map((tag, index) => <li key={index} className={styles['tag-item']}>
                     {(editMode === false || (editMode === true && currentEditIndex !== index)) && <Tag
                         tag={<><span className={styles['tag-item-text']}>{tag.numberOfFiles}</span> <span>{tag.name}</span></>}
+                        data={tag}
+                        type="tag"
                         canRemove={true}
-                        editFunction={()=>{
+                        editFunction={() => {
                             setCurrentEditIndex(index)
                             setCurrentEditValue(tag.name)
                             setEditMode(true)
@@ -200,13 +201,14 @@ const TagManagement = () => {
                         }}
                         removeFunction={() => {
                             setCurrentDeleteId(tag.id)
-                            setConfirmDeleteModal(true)}
+                            setConfirmDeleteModal(true)
+                        }
                         }
                     />}
                     {editMode === true && currentEditIndex === index && <div>
                         <Input
                             placeholder={'Edit name'}
-                            onChange={(e)=>{setCurrentEditValue(e.target.value)}}
+                            onChange={(e) => { setCurrentEditValue(e.target.value) }}
                             additionalClasses={styles['edit-input']}
                             value={currentEditValue}
                             styleType={'regular-short'} />
@@ -216,7 +218,7 @@ const TagManagement = () => {
                             className={styles['edit-submit-btn']}
                             text='Save changes'
                             styleType='primary'
-                            onClick={()=>{saveChanges(tag.id)}}
+                            onClick={() => { saveChanges(tag.id) }}
                         />
                         <Button
                             styleTypes={['secondary']}
@@ -234,8 +236,8 @@ const TagManagement = () => {
 
             <ConfirmModal
                 modalIsOpen={confirmDeleteModal}
-                closeModal={()=>{setConfirmDeleteModal(false)}}
-                confirmAction={()=>{deleteTagList(currentDeleteId)}}
+                closeModal={() => { setConfirmDeleteModal(false) }}
+                confirmAction={() => { deleteTagList(currentDeleteId) }}
                 confirmText={'Delete'}
                 message={<span>This tag will be deleted and removed from any file that has it.&nbsp; Are you sure you want to delete these?</span>}
                 closeButtonClass={styles['close-modal-btn']}
