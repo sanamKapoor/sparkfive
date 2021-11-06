@@ -1,4 +1,4 @@
-import {useState, useEffect, useContext} from 'react'
+import { useState, useEffect, useContext } from 'react'
 import update from 'immutability-helper'
 
 import { FilterContext, AssetContext } from '../context'
@@ -15,6 +15,7 @@ import customFieldsApi from '../server-api/attribute'
 // Utils
 import selectOptions from '../utils/select-options'
 import { DEFAULT_FILTERS, getAssetsFilters } from '../utils/asset'
+import { useRouter } from 'next/router'
 
 export default ({ children, isPublic = false }) => {
 
@@ -36,7 +37,7 @@ export default ({ children, isPublic = false }) => {
   const [fileTypes, setFileTypes] = useState([])
   const [assetDimensionLimits, setAssetDimensionLimits] = useState({})
   const [assetOrientations, setAssetOrientations] = useState([])
-  const [assetResolutions,setAssetResolutions] = useState([])
+  const [assetResolutions, setAssetResolutions] = useState([])
   const [productFields, setProductFields] = useState({
     categories: [],
     vendors: [],
@@ -66,30 +67,30 @@ export default ({ children, isPublic = false }) => {
 
   const loadTags = () => {
     const fetchMethod = isPublic ? shareCollectionApi.getTags : tagApi.getTags
-    let basicFilter = {assetsCount: 'yes', sharePath}
-    if(activeFolder){
+    let basicFilter = { assetsCount: 'yes', sharePath }
+    if (activeFolder) {
       // @ts-ignore
-      basicFilter = { ...basicFilter, folderId:activeFolder }
+      basicFilter = { ...basicFilter, folderId: activeFolder }
     }
-    loadFromEndpoint(fetchMethod({ ...basicFilter,  ...getCommonParams(activeSortFilter.allTags !== 'any') }), setTags)
+    loadFromEndpoint(fetchMethod({ ...basicFilter, ...getCommonParams(activeSortFilter.allTags !== 'any') }), setTags)
   }
 
   const loadCustomFields = (id) => {
-    return new Promise((resolve)=>{
+    return new Promise((resolve) => {
       const fetchMethod = isPublic ? shareCollectionApi.getCustomField : customFieldsApi.getCustomFieldWithCount
 
       const setCustomFieldsValue = (values) => {
-        if(typeof values === 'object') {
+        if (typeof values === 'object') {
           resolve(values)
-        }else{
+        } else {
           resolve([])
         }
       }
 
-      let basicFilter = {assetsCount: 'yes', sharePath}
-      if(activeFolder){
+      let basicFilter = { assetsCount: 'yes', sharePath }
+      if (activeFolder) {
         // @ts-ignore
-        basicFilter = { ...basicFilter, folderId:activeFolder }
+        basicFilter = { ...basicFilter, folderId: activeFolder }
       }
 
       loadFromEndpoint(fetchMethod(id, { ...basicFilter, ...getCommonParams(activeSortFilter[`all-p${id}`] !== 'any') }), setCustomFieldsValue)
@@ -109,10 +110,10 @@ export default ({ children, isPublic = false }) => {
   const loadCampaigns = () => {
     const fetchMethod = isPublic ? shareCollectionApi.getCampaigns : campaignApi.getCampaigns
 
-    let basicFilter = {assetsCount: 'yes', sharePath}
-    if(activeFolder){
+    let basicFilter = { assetsCount: 'yes', sharePath }
+    if (activeFolder) {
       // @ts-ignore
-      basicFilter = { ...basicFilter, folderId:activeFolder }
+      basicFilter = { ...basicFilter, folderId: activeFolder }
     }
 
     loadFromEndpoint(fetchMethod({ ...basicFilter, ...getCommonParams(activeSortFilter.allCampaigns !== 'any') }), setCampaigns)
@@ -121,10 +122,10 @@ export default ({ children, isPublic = false }) => {
   const loadChannels = () => {
     const fetchMethod = isPublic ? shareCollectionApi.getAssetChannels : filterApi.getAssetChannels
 
-    let basicFilter = {sharePath}
-    if(activeFolder){
+    let basicFilter = { sharePath }
+    if (activeFolder) {
       // @ts-ignore
-      basicFilter = { ...basicFilter, folderId:activeFolder }
+      basicFilter = { ...basicFilter, folderId: activeFolder }
     }
 
     loadFromEndpoint(fetchMethod({ ...basicFilter, ...getCommonParams() }), setChannels)
@@ -133,10 +134,10 @@ export default ({ children, isPublic = false }) => {
   const loadProjects = () => {
     const fetchMethod = isPublic ? shareCollectionApi.getProjects : projectApi.getProjects
 
-    let basicFilter = {assetsCount: 'yes', sharePath}
-    if(activeFolder){
+    let basicFilter = { assetsCount: 'yes', sharePath }
+    if (activeFolder) {
       // @ts-ignore
-      basicFilter = { ...basicFilter, folderId:activeFolder }
+      basicFilter = { ...basicFilter, folderId: activeFolder }
     }
 
     loadFromEndpoint(fetchMethod({ ...basicFilter, ...getCommonParams(activeSortFilter.allProjects !== 'any') }), setProjects)
@@ -145,10 +146,10 @@ export default ({ children, isPublic = false }) => {
   const loadFileTypes = () => {
     const fetchMethod = isPublic ? shareCollectionApi.getAssetFileExtensions : filterApi.getAssetFileExtensions
 
-    let basicFilter = {sharePath}
-    if(activeFolder){
+    let basicFilter = { sharePath }
+    if (activeFolder) {
       // @ts-ignore
-      basicFilter = { ...basicFilter, folderId:activeFolder }
+      basicFilter = { ...basicFilter, folderId: activeFolder }
     }
 
     loadFromEndpoint(fetchMethod({ ...basicFilter, ...getCommonParams() }), setFileTypes)
@@ -157,10 +158,10 @@ export default ({ children, isPublic = false }) => {
   const loadAssetDimensionLimits = () => {
     const fetchMethod = isPublic ? shareCollectionApi.getAssetDimensionLimits : filterApi.getAssetDimensionLimits
 
-    let basicFilter = {sharePath}
-    if(activeFolder){
+    let basicFilter = { sharePath }
+    if (activeFolder) {
       // @ts-ignore
-      basicFilter = { ...basicFilter, folderId:activeFolder }
+      basicFilter = { ...basicFilter, folderId: activeFolder }
     }
 
     loadFromEndpoint(fetchMethod({ ...basicFilter, ...getCommonParams() }), setAssetDimensionLimits)
@@ -169,25 +170,25 @@ export default ({ children, isPublic = false }) => {
   const loadAssetOrientations = () => {
     const fetchMethod = isPublic ? shareCollectionApi.getAssetOrientations : filterApi.getAssetOrientations
 
-    let basicFilter = {sharePath}
-    if(activeFolder){
+    let basicFilter = { sharePath }
+    if (activeFolder) {
       // @ts-ignore
-      basicFilter = { ...basicFilter, folderId:activeFolder }
+      basicFilter = { ...basicFilter, folderId: activeFolder }
     }
 
     loadFromEndpoint(fetchMethod({ ...basicFilter, ...getCommonParams() }), setAssetOrientations)
   }
 
-  const loadAssetResolutions = () =>{
+  const loadAssetResolutions = () => {
     const fetchMethod = isPublic ? shareCollectionApi.getAssetResolutions : filterApi.getAssetResolutions
 
-    let basicFilter = {sharePath}
-    if(activeFolder){
+    let basicFilter = { sharePath }
+    if (activeFolder) {
       // @ts-ignore
-      basicFilter = { ...basicFilter, folderId:activeFolder }
+      basicFilter = { ...basicFilter, folderId: activeFolder }
     }
 
-    loadFromEndpoint(fetchMethod({...basicFilter, ...getCommonParams() }), setAssetResolutions)
+    loadFromEndpoint(fetchMethod({ ...basicFilter, ...getCommonParams() }), setAssetResolutions)
   }
   const loadProductFields = async () => {
     try {
@@ -214,13 +215,13 @@ export default ({ children, isPublic = false }) => {
       let check = false
 
       // For custom fields
-      Object.keys(activeSortFilter).map((key)=>{
+      Object.keys(activeSortFilter).map((key) => {
         // Custom fields key
-        if(key.includes('custom-p')){
+        if (key.includes('custom-p')) {
           // Get all keys
           const index = key.split("custom-p")[1]
 
-          if(activeSortFilter[`all-p${index}`] !== 'any' && activeSortFilter[`custom-p${index}`].length > 0){
+          if (activeSortFilter[`all-p${index}`] !== 'any' && activeSortFilter[`custom-p${index}`].length > 0) {
             check = true
           }
         }
@@ -263,13 +264,13 @@ export default ({ children, isPublic = false }) => {
       let check = false
 
       // For custom fields
-      Object.keys(activeSortFilter).map((key)=>{
+      Object.keys(activeSortFilter).map((key) => {
         // Custom fields key
-        if(key.includes('custom-p')){
+        if (key.includes('custom-p')) {
           // Get all keys
           const index = key.split("custom-p")[1]
 
-          if(activeSortFilter[`custom-p${index}`].length > 0){
+          if (activeSortFilter[`custom-p${index}`].length > 0) {
             check = true
           }
         }
@@ -287,7 +288,7 @@ export default ({ children, isPublic = false }) => {
     if (filterOrientations?.length > 0) return true
     if (filterProductFields?.length > 0) return true
     if (filterProductType?.length > 0) return true
-    if(checkAnyCustomFieldsFilter()) return true
+    if (checkAnyCustomFieldsFilter()) return true
     return false
   }
 

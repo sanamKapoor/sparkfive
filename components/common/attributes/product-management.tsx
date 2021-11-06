@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import { useEffect, useState } from 'react'
 import styles from './tag-management.module.css'
 
 
@@ -53,16 +53,16 @@ const ProductManagement = () => {
 
     // Create the new tag
     const createProduct = async (item) => {
-        try{
+        try {
             // Show loading
             item.sku = item.name
             delete item.name
             setLoading(true)
-            await productApi.createProducts({products: [item]})
+            await productApi.createProducts({ products: [item] })
 
             // Reload the list
             getProductList();
-        }catch (err) {
+        } catch (err) {
             if (err.response?.status === 400) toastUtils.error(err.response.data.message)
             else toastUtils.error('Could not create folder, please try again later.')
 
@@ -77,21 +77,21 @@ const ProductManagement = () => {
         // Show loading
         setLoading(true)
 
-        let { data } = await productApi.getProducts({isAll: 1, sort: sort.value, searchType, searchKey})
+        let { data } = await productApi.getProducts({ isAll: 1, sort: sort.value, searchType, searchKey })
         setProductList(data)
 
         // Hide loading
         setLoading(false)
     }
 
-    const deleteProductList = async(id) => {
+    const deleteProductList = async (id) => {
         // Hide confirm modal
         setConfirmDeleteModal(false)
 
         // Show loading
         setLoading(true)
         // Call API to delete folder
-        await productApi.deletProducts({productIds: [id]})
+        await productApi.deletProducts({ productIds: [id] })
 
         // Refresh the list
         getProductList();
@@ -125,24 +125,24 @@ const ProductManagement = () => {
         getProductList();
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getProductList();
-    },[sort, searchKey])
+    }, [sort, searchKey])
 
     return (
         <div className={styles['main-wrapper']}>
             <div className={styles['operation-row']}>
-            <CreatableSelect
+                <CreatableSelect
                     title=''
                     addText='Add Product'
                     onAddClick={() => setActiveDropdown('products')}
                     selectPlaceholder={'Enter a product sku'}
                     avilableItems={[]}
-                    setAvailableItems={()=>{}}
+                    setAvailableItems={() => { }}
                     selectedItems={[]}
-                    setSelectedItems={()=>{}}
-                    onAddOperationFinished={()=>{}}
-                    onRemoveOperationFinished={()=>{}}
+                    setSelectedItems={() => { }}
+                    onAddOperationFinished={() => { }}
+                    onRemoveOperationFinished={() => { }}
                     onOperationFailedSkipped={() => setActiveDropdown('')}
                     isShare={false}
                     asyncCreateFn={createProduct}
@@ -152,7 +152,7 @@ const ProductManagement = () => {
 
                 <Select
                     options={sorts}
-                    onChange={(value)=>{setSort(value)}}
+                    onChange={(value) => { setSort(value) }}
                     placeholder={'Select to sort'}
                     styleType={`regular ${styles['sort-select']}`}
                     value={sort}
@@ -165,8 +165,8 @@ const ProductManagement = () => {
                         name={'start'}
                         searchType={searchType}
                         placeholder={'Starts with'}
-                        onSubmit={(key)=>{setSearchType('start');setSearchKey(key);}}
-                        onClear={()=>{setSearchKey('')}}
+                        onSubmit={(key) => { setSearchType('start'); setSearchKey(key); }}
+                        onClear={() => { setSearchKey('') }}
                     />
                 </div>
                 <div className={styles['search-column-2']}>
@@ -174,8 +174,8 @@ const ProductManagement = () => {
                         name={'exact'}
                         searchType={searchType}
                         placeholder={'Exact Match'}
-                        onSubmit={(key)=>{setSearchType('exact');setSearchKey(key);}}
-                        onClear={()=>{setSearchKey('')}}
+                        onSubmit={(key) => { setSearchType('exact'); setSearchKey(key); }}
+                        onClear={() => { setSearchKey('') }}
                     />
                 </div>
                 <div className={styles['search-column-3']}>
@@ -183,8 +183,8 @@ const ProductManagement = () => {
                         name={'contain'}
                         searchType={searchType}
                         placeholder={'Contains'}
-                        onSubmit={(key)=>{setSearchType('contain');setSearchKey(key);}}
-                        onClear={()=>{setSearchKey('')}}
+                        onSubmit={(key) => { setSearchType('contain'); setSearchKey(key); }}
+                        onClear={() => { setSearchKey('') }}
                     />
                 </div>
             </div>
@@ -193,8 +193,10 @@ const ProductManagement = () => {
                 {productList.map((folder, index) => <li key={index} className={styles['tag-item']}>
                     {(editMode === false || (editMode === true && currentEditIndex !== index)) && <Tag
                         tag={<><span className={styles['tag-item-text']}>{folder.numberOfFiles}</span> <span>{folder.sku}</span></>}
+                        data={folder}
+                        type="product"
                         canRemove={true}
-                        editFunction={()=>{
+                        editFunction={() => {
                             setCurrentEditIndex(index);
                             setCurrentEditValue(folder.name);
                             setEditMode(true);
@@ -213,7 +215,7 @@ const ProductManagement = () => {
                             className={styles['edit-submit-btn']}
                             text='Save changes'
                             styleType='primary'
-                            onClick={()=>{saveChanges(folder.id)}}
+                            onClick={() => { saveChanges(folder.id) }}
                         />
                         <Button
                             styleTypes={['secondary']}
@@ -231,8 +233,8 @@ const ProductManagement = () => {
 
             <ConfirmModal
                 modalIsOpen={confirmDeleteModal}
-                closeModal={()=>{setConfirmDeleteModal(false)}}
-                confirmAction={()=>{deleteProductList(currentDeleteId)}}
+                closeModal={() => { setConfirmDeleteModal(false) }}
+                confirmAction={() => { deleteProductList(currentDeleteId) }}
                 confirmText={'Delete'}
                 message={<span>This folder will be deleted and removed from any file that has it.&nbsp; Are you sure you want to delete these?</span>}
                 closeButtonClass={styles['close-modal-btn']}
