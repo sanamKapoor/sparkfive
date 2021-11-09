@@ -366,6 +366,7 @@ const ProjectFields = ({
             {tags.map((tag, index) => (
               <li key={index}>
                 <Tag
+                  data={tag}
                   tag={tag.name}
                   canRemove={true}
                   removeFunction={() => removeTag(index)}
