@@ -64,6 +64,12 @@
     right: 0;
 }
 
+.ops-wrapper {
+    position: absolute;
+    right: 0;
+    margin-right: 2rem;
+}
+
 .ops-wrapper button {
     margin-left: 1rem;
 }
@@ -98,5 +104,13 @@
 
     .collection-name {
         font-size: 1em;
+    }
+
+    .ops-wrapper {
+        position: static;
+        display: flex;
+        justify-content: flex-end;
+        width: 100%;
+        margin-right: 0;
     }
 }
