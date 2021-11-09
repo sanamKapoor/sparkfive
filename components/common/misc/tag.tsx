@@ -12,7 +12,7 @@ import {
 import IconClickable from '../buttons/icon-clickable';
 
 const Tag = ({
-    tag, data, type, canRemove = false, removeFunction = () => { }, editFunction = () => { }, altColor = '' }) => {
+    tag, data, type = null, canRemove = false, removeFunction = () => { }, editFunction = () => { }, altColor = '' }) => {
     const { push, asPath } = useRouter()
     const { hasPermission } = useContext(UserContext)
 
@@ -24,12 +24,12 @@ const Tag = ({
             if (asPath !== "/main/user-settings/attributes") {
                 push("/main/user-settings/attributes")
             } else {
-                push(`/main/assets?${type}=${data.name || data.sku}`)
+                type && data.numberOfFiles !== "0" && push(`/main/assets?${type}=${data.name || data.sku}`)
             }
         }
     }
 
-    const tagRender = mouseOver ? (<span>
+    const tagRender = (type && mouseOver) ? (<span>
         {type !== "custom-fields" && <IconClickable additionalClass={styles['tag-icon']} src={Utilities.edit} onClick={editFunction} tooltipId='Edit' tooltipText='Edit' />}
         <span onClick={type !== "custom-fields" ? goToTagManagement : null}>{data.name || data.sku}</span>
     </span>) : tag
