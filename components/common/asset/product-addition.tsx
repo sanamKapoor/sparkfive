@@ -211,6 +211,7 @@ const ProductAddition = ({
       {valueList.map((value) => (
         <li key={value.id} className={styles['multi-item']}>
           <Tag
+            data={value}
             altColor='orange'
             tag={value.name}
             canRemove={!isShare}

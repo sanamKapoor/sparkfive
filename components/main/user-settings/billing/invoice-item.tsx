@@ -20,7 +20,7 @@ const InvoiceItem = ({ invoice, type = 'invoice' }) => {
       <div>
         {invoice.product}
       </div>
-      {type === 'invoice' && <div><Tag tag={invoice.status} altColor={invoice.status === 'paid' && 'turquoise'} /></div>}
+      {type === 'invoice' && <div><Tag data={invoice} tag={invoice.status} altColor={invoice.status === 'paid' && 'turquoise'} /></div>}
       <div>
         {formatCurrency(invoice.amount / 100)}
       </div>
