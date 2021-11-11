@@ -177,6 +177,7 @@ const CampaignFields = ({
             {tags.map((tag, index) => (
               <li>
                 <Tag
+                  data={tag}
                   tag={tag.name}
                   canRemove={true}
                   removeFunction={() => removeTag(index)}

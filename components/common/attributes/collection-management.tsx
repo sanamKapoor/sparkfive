@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import { useEffect, useState } from 'react'
 import styles from './tag-management.module.css'
 
 
@@ -52,15 +52,15 @@ const CollectionManagement = () => {
     // Create the new tag
     const createFolder = async (item) => {
         console.log(item)
-        try{
+        try {
             // Show loading
             setLoading(true)
 
-            await folderApi.createFolders({folders: [item]})
+            await folderApi.createFolders({ folders: [item] })
 
             // Reload the list
             getFolderList();
-        }catch (err) {
+        } catch (err) {
             if (err.response?.status === 400) toastUtils.error(err.response.data.message)
             else toastUtils.error('Could not create folder, please try again later.')
 
@@ -75,14 +75,14 @@ const CollectionManagement = () => {
         // Show loading
         setLoading(true)
 
-        let { data } = await folderApi.getFolders({isAll: 1, sort: sort.value, searchType, searchKey})
+        let { data } = await folderApi.getFolders({ isAll: 1, sort: sort.value, searchType, searchKey })
         setFolderList(data)
 
         // Hide loading
         setLoading(false)
     }
 
-    const deleteFolderList = async(id) => {
+    const deleteFolderList = async (id) => {
         // Hide confirm modal
         setConfirmDeleteModal(false)
 
@@ -90,7 +90,7 @@ const CollectionManagement = () => {
         setLoading(true)
         console.log(id)
         // Call API to delete folder
-        await folderApi.deleteFolders({folderIds:[id]})
+        await folderApi.deleteFolders({ folderIds: [id] })
 
         // Refresh the list
         getFolderList();
@@ -124,24 +124,24 @@ const CollectionManagement = () => {
         getFolderList();
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getFolderList();
-    },[sort, searchKey])
+    }, [sort, searchKey])
 
     return (
         <div className={styles['main-wrapper']}>
             <div className={styles['operation-row']}>
-            <CreatableSelect
+                <CreatableSelect
                     title=''
                     addText='Add Collection'
                     onAddClick={() => setActiveDropdown('folders')}
                     selectPlaceholder={'Enter a new collection'}
                     avilableItems={[]}
-                    setAvailableItems={()=>{}}
+                    setAvailableItems={() => { }}
                     selectedItems={[]}
-                    setSelectedItems={()=>{}}
-                    onAddOperationFinished={()=>{}}
-                    onRemoveOperationFinished={()=>{}}
+                    setSelectedItems={() => { }}
+                    onAddOperationFinished={() => { }}
+                    onRemoveOperationFinished={() => { }}
                     onOperationFailedSkipped={() => setActiveDropdown('')}
                     isShare={false}
                     asyncCreateFn={createFolder}
@@ -151,7 +151,7 @@ const CollectionManagement = () => {
 
                 <Select
                     options={sorts}
-                    onChange={(value)=>{setSort(value)}}
+                    onChange={(value) => { setSort(value) }}
                     placeholder={'Select to sort'}
                     styleType={`regular ${styles['sort-select']}`}
                     value={sort}
@@ -164,8 +164,8 @@ const CollectionManagement = () => {
                         name={'start'}
                         searchType={searchType}
                         placeholder={'Starts with'}
-                        onSubmit={(key)=>{setSearchType('start');setSearchKey(key);}}
-                        onClear={()=>{setSearchKey('')}}
+                        onSubmit={(key) => { setSearchType('start'); setSearchKey(key); }}
+                        onClear={() => { setSearchKey('') }}
                     />
                 </div>
                 <div className={styles['search-column-2']}>
@@ -173,8 +173,8 @@ const CollectionManagement = () => {
                         name={'exact'}
                         searchType={searchType}
                         placeholder={'Exact Match'}
-                        onSubmit={(key)=>{setSearchType('exact');setSearchKey(key);}}
-                        onClear={()=>{setSearchKey('')}}
+                        onSubmit={(key) => { setSearchType('exact'); setSearchKey(key); }}
+                        onClear={() => { setSearchKey('') }}
                     />
                 </div>
                 <div className={styles['search-column-3']}>
@@ -182,8 +182,8 @@ const CollectionManagement = () => {
                         name={'contain'}
                         searchType={searchType}
                         placeholder={'Contains'}
-                        onSubmit={(key)=>{setSearchType('contain');setSearchKey(key);}}
-                        onClear={()=>{setSearchKey('')}}
+                        onSubmit={(key) => { setSearchType('contain'); setSearchKey(key); }}
+                        onClear={() => { setSearchKey('') }}
                     />
                 </div>
             </div>
@@ -192,8 +192,10 @@ const CollectionManagement = () => {
                 {folderList.map((folder, index) => <li key={index} className={styles['tag-item']}>
                     {(editMode === false || (editMode === true && currentEditIndex !== index)) && <Tag
                         tag={<><span className={styles['tag-item-text']}>{folder.numberOfFiles}</span> <span>{folder.name}</span></>}
+                        data={folder}
+                        type="collection"
                         canRemove={true}
-                        editFunction={()=>{
+                        editFunction={() => {
                             setCurrentEditIndex(index);
                             setCurrentEditValue(folder.name);
                             setEditMode(true);
@@ -212,7 +214,7 @@ const CollectionManagement = () => {
                             className={styles['edit-submit-btn']}
                             text='Save changes'
                             styleType='primary'
-                            onClick={()=>{saveChanges(folder.id)}}
+                            onClick={() => { saveChanges(folder.id) }}
                         />
                         <Button
                             styleTypes={['secondary']}
@@ -230,8 +232,8 @@ const CollectionManagement = () => {
 
             <ConfirmModal
                 modalIsOpen={confirmDeleteModal}
-                closeModal={()=>{setConfirmDeleteModal(false)}}
-                confirmAction={()=>{deleteFolderList(currentDeleteId)}}
+                closeModal={() => { setConfirmDeleteModal(false) }}
+                confirmAction={() => { deleteFolderList(currentDeleteId) }}
                 confirmText={'Delete'}
                 message={<span>This folder will be deleted and removed from any file that has it.&nbsp; Are you sure you want to delete these?</span>}
                 closeButtonClass={styles['close-modal-btn']}

@@ -9,10 +9,8 @@ import IconClickable from '../buttons/icon-clickable'
 import FiltersSelect from '../inputs/filters-select'
 
 const ResolutionFilter = ({
-    searchBar = true,
     filters,
     oneColumn = false,
-    numItems,
     setValue,
     value,
     loadFn,
@@ -61,7 +59,8 @@ const ResolutionFilter = ({
     }
 
     // Set value and filters as selected
-    let visibleFilters = internalFilter ? internalFilters.slice(0, numItems) : filters.slice(0, numItems)
+    //let visibleFilters = internalFilter ? internalFilters.slice(0, numItems) : filters.slice(0, numItems)
+    let visibleFilters = internalFilter ? internalFilters : filters
 
     if (value)
         visibleFilters = [...visibleFilters, ...value.filter(selected => !visibleFilters.map(({ value }) => value).includes(selected.value))]
@@ -107,7 +106,7 @@ const ResolutionFilter = ({
                     )
                 })}
             </ul>
-            {searchBar &&
+            {/* {searchBar &&
                 <div className={`${styles['select-filter']} search-filters`}>
                     <FiltersSelect
                         options={internalFilter ? internalFilters : filters}
@@ -118,7 +117,7 @@ const ResolutionFilter = ({
                         isClearable={true}
                         hasCount={true}
                     />
-                </div>}
+                </div>} */}
         </div>
 
     )

@@ -100,6 +100,7 @@ const CreatableSelect = ({
           {selectedItems?.map((item, index) => (
             <li key={item.id || item.value}>
               <Tag
+                data={item}
                 altColor={altColor}
                 tag={item.name}
                 canRemove={!isShare}
