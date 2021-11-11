@@ -1,27 +1,27 @@
 import styles from './index.module.css'
 import { useState, useEffect, useContext, useRef } from 'react'
-import { AssetContext, FilterContext } from '../../../context'
+import { AssetContext, FilterContext } from '../../../../context'
 import update from 'immutability-helper'
-import assetApi from '../../../server-api/asset'
-import folderApi from '../../../server-api/folder'
-import toastUtils from '../../../utils/toast'
-import { getFolderKeyAndNewNameByFileName } from '../../../utils/upload'
-import { getAssetsFilters, getAssetsSort, DEFAULT_FILTERS, DEFAULT_CUSTOM_FIELD_FILTERS, getFoldersFromUploads } from '../../../utils/asset'
+import assetApi from '../../../../server-api/asset'
+import folderApi from '../../../../server-api/folder'
+import toastUtils from '../../../../utils/toast'
+import { getFolderKeyAndNewNameByFileName } from '../../../../utils/upload'
+import { getAssetsFilters, getAssetsSort, DEFAULT_FILTERS, DEFAULT_CUSTOM_FIELD_FILTERS, getFoldersFromUploads } from '../../../../utils/asset'
 
 // Components
-import AssetOps from '../../common/asset/asset-ops'
-import SearchOverlay from '../search-overlay-assets'
-import AssetSubheader from '../../common/asset/asset-subheader'
-import AssetGrid from '../../common/asset/asset-grid'
-import TopBar from '../../common/asset/top-bar'
-import FilterContainer from '../../common/filter/filter-container'
-import { DropzoneProvider } from '../../common/misc/dropzone'
-import RenameModal from '../../common/modals/rename-modal'
-import UploadStatusOverlayAssets from "../../upload-status-overlay-assets";
-import { validation } from "../../../constants/file-validation";
+import AssetOps from '../../../common/asset/asset-ops'
+import SearchOverlay from '../../../main/search-overlay-assets'
+import AssetSubheader from '../../../common/asset/asset-subheader'
+import TopBar from '../../../common/asset/top-bar'
+import FilterContainer from '../../../common/filter/filter-container'
+import { DropzoneProvider } from '../../../common/misc/dropzone'
+import RenameModal from '../../../common/modals/rename-modal'
+import UploadStatusOverlayAssets from "../../../upload-status-overlay-assets";
+import { validation } from "../../../../constants/file-validation";
 import { useRouter } from 'next/router'
+import DeletedAssets from './deleted-assets'
 
-const AssetsLibrary = () => {
+const DeletedAssetsLibrary = () => {
 
   const [activeView, setActiveView] = useState('grid')
   const {
@@ -49,10 +49,6 @@ const AssetsLibrary = () => {
     totalAssets,
     setTotalAssets
   } = useContext(AssetContext)
-
-  const [activeMode, setActiveMode] = useState('assets')
-
-  const [activeSearchOverlay, setActiveSearchOverlay] = useState(false)
 
   const [firstLoaded, setFirstLoaded] = useState(false)
 
@@ -156,14 +152,6 @@ const AssetsLibrary = () => {
       return
     }
     setActivePageMode('library')
-    if (activeSortFilter.mainFilter === 'folders') {
-      setActiveMode('folders')
-      getFolders()
-    } else {
-      setActiveMode('assets')
-      setAssets([])
-      getAssets()
-    }
   }, [activeSortFilter])
 
   useEffect(() => {
@@ -175,21 +163,8 @@ const AssetsLibrary = () => {
   }, [activeFolder])
 
   useEffect(() => {
-    if (needsFetch === 'assets') {
       getAssets()
-    } else if (needsFetch === 'folders') {
-      getFolders()
-    }
-    setNeedsFetch('')
   }, [needsFetch])
-
-  useEffect(() => {
-    if (activeMode === 'folders') {
-      setAssets(assets.map(asset => ({ ...asset, isSelected: false })))
-    } else if (activeMode === 'assets') {
-      setFolders(folders.map(folder => ({ ...folder, isSelected: false })))
-    }
-  }, [activeMode])
 
   const clearFilters = () => {
     setActiveSortFilter({
@@ -472,54 +447,9 @@ const AssetsLibrary = () => {
     }
   }
 
-  const getFolders = async (replace = true) => {
-    try {
-      if (replace) {
-        setAddedIds([])
-      }
-      setPlaceHolders('folder', replace)
-      const queryParams = { page: replace ? 1 : nextPage }
-      if (!replace && addedIds.length > 0) {
-        queryParams.excludeIds = addedIds.join(',')
-      }
-      if (activeSortFilter.filterFolders?.length > 0) {
-        queryParams.folders = activeSortFilter.filterFolders.map(item => item.value).join(',')
-      }
-      const { data } = await folderApi.getFolders(queryParams)
-      setFolders({ ...data, results: data.results }, replace)
-    } catch (err) {
-      //TODO: Handle error
-      console.log(err)
-    }
-  }
-
-  const toggleSelected = (id) => {
-    if (activeMode === 'assets') {
-      const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
-      setAssets(update(assets, {
-        [assetIndex]: {
-          isSelected: { $set: !assets[assetIndex].isSelected }
-        }
-      }))
-    } else if (activeMode === 'folders') {
-      const folderIndex = folders.findIndex(folder => folder.id === id)
-      setFolders(update(folders, {
-        [folderIndex]: {
-          isSelected: { $set: !folders[folderIndex].isSelected }
-        }
-      }))
-    }
-  }
-
   const selectAll = () => {
-    if (activeMode === 'assets') {
-      // Mark select all
       selectAllAssets()
-
       setAssets(assets.map(assetItem => ({ ...assetItem, isSelected: true })))
-    } else if (activeMode === 'folders') {
-      setFolders(folders.map(folder => ({ ...folder, isSelected: true })))
-    }
   }
 
   const mapWithToggleSelection = asset => ({ ...asset, toggleSelected })
@@ -534,29 +464,9 @@ const AssetsLibrary = () => {
 
   const selectedAssets = assets.filter(asset => asset.isSelected)
 
-  const selectedFolders = folders.filter(folder => folder.isSelected)
-
   const viewFolder = async (id) => {
     console.log(`View folder`)
     setActiveFolder(id)
-  }
-
-  const deleteFolder = async (id) => {
-    try {
-      await folderApi.deleteFolder(id)
-      const modFolderIndex = folders.findIndex(folder => folder.id === id)
-      setFolders(update(folders, {
-        $splice: [[modFolderIndex, 1]]
-      }))
-      toastUtils.success('Collection deleted successfully')
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  const closeSearchOverlay = () => {
-    getAssets()
-    setActiveSearchOverlay(false)
   }
 
   const confirmFolderRename = async (newValue) => {
@@ -575,25 +485,33 @@ const AssetsLibrary = () => {
     }
   }
 
+  const toggleSelected = (id) => { 
+    const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
+    setAssets(update(assets, {
+      [assetIndex]: {
+        isSelected: { $set: !assets[assetIndex].isSelected }
+      }
+    }))
+  }
+    
+      
+
   const loadMore = () => {
-    if (activeMode === 'assets') {
       getAssets(false)
-    } else {
-      getFolders(false)
-    }
   }
 
   return (
     <>
       <AssetSubheader
-        activeFolder={activeFolder}
-        getFolders={getFolders}
-        mode={activeMode}
-        amountSelected={activeMode === 'assets' ? selectedAssets.length : selectedFolders.length}
-        activeFolderData={activeFolder && folders.find(folder => folder.id === activeFolder)}
+        activeFolder={null}
+        getFolders={null}
+        mode={'asset'}
+        amountSelected={selectedAssets.length}
+        activeFolderData={null}
         backToFolders={backToFolders}
         setRenameModalOpen={setRenameModalOpen}
         activeSortFilter={activeSortFilter}
+        deletedAssets={true}
       />
       <main className={`${styles.container}`}>
         <TopBar
@@ -601,23 +519,22 @@ const AssetsLibrary = () => {
           setActiveSortFilter={setActiveSortFilter}
           setActiveView={setActiveView}
           activeFolder={activeFolder}
-          setActiveSearchOverlay={() => { selectAllAssets(false); setActiveSearchOverlay(true) }}
+          setActiveSearchOverlay={false}
           selectAll={selectAll}
           setOpenFilter={setOpenFilter}
           openFilter={openFilter}
-          deletedAssets={false} />
+          deletedAssets={true}
+        />
         <div className={`${openFilter && styles['col-wrapper']}`}>
           <DropzoneProvider>
-            <AssetGrid
+            <DeletedAssets
               activeFolder={activeFolder}
-              getFolders={getFolders}
               activeView={activeView}
               activeSortFilter={activeSortFilter}
               onFilesDataGet={onFilesDataGet}
               toggleSelected={toggleSelected}
-              mode={activeMode}
+              mode={null}
               viewFolder={viewFolder}
-              deleteFolder={deleteFolder}
               loadMore={loadMore}
               openFilter={openFilter}
             />
@@ -642,15 +559,9 @@ const AssetsLibrary = () => {
         type={'Folder'}
         initialValue={activeFolder && folders.find(folder => folder.id === activeFolder).name}
       />
-      {activeSearchOverlay &&
-        <SearchOverlay
-          closeOverlay={closeSearchOverlay}
-          operationsEnabled={true}
-        />
-      }
       {uploadDetailOverlay && <UploadStatusOverlayAssets closeOverlay={() => { setUploadDetailOverlay(false) }} />}
     </>
   )
 }
 
-export default AssetsLibrary
+export default DeletedAssetsLibrary
