@@ -435,7 +435,8 @@ const DeletedAssetsLibrary = () => {
           userFilterObject: activeSortFilter
         }),
         complete,
-        ...getAssetsSort(activeSortFilter)
+        ...getAssetsSort(activeSortFilter),
+        deletedAssets: true
       })
       setAssets({ ...data, results: data.results.map(mapWithToggleSelection) }, replace)
       setFirstLoaded(true)

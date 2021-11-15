@@ -54,7 +54,7 @@ const AssetGrid = ({
 
   const [sortedAssets, currentSortAttribute, setCurrentSortAttribute] = useSortedAssets(assets)
   const [sortedFolders, currentSortFolderAttribute, setCurrentSortFolderAttribute] = useSortedAssets(folders)
-
+  
   useEffect(() => {
     const { assetId } = urlUtils.getQueryParameters()
     if (assetId)
@@ -82,11 +82,12 @@ const AssetGrid = ({
 
   const deleteAsset = async id => {
     try {
-      await assetsApi.deleteAsset(id)
-      const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
-      setAssets(update(assets, {
-        $splice: [[assetIndex, 1]]
-      }))
+      await assetsApi.updateAsset(id, { updateData: {status: 'deleted', deletedAt: new Date((new Date().toUTCString())).toISOString()} })
+				const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
+				if (assetIndex !== -1)
+					setAssets(update(assets, {
+						$splice: [[assetIndex, 1]]
+					}))
       toastUtils.success('Assets deleted successfully')
     }
     catch (err) {

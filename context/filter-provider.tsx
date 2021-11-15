@@ -18,11 +18,11 @@ import { DEFAULT_FILTERS, getAssetsFilters } from '../utils/asset'
 import { useRouter } from 'next/router'
 
 export default ({ children, isPublic = false }) => {
-
+  const location = useRouter()
   const { activeFolder } = useContext(AssetContext)
 
   const [activeSortFilter, setActiveSortFilter] = useState({
-    sort: selectOptions.sort[1],
+    sort: location.pathname.indexOf('deleted-assets-list') !== -1 ? selectOptions.sort[5] : selectOptions.sort[1],
     mainFilter: 'all',
     ...DEFAULT_FILTERS,
     dimensionsActive: false

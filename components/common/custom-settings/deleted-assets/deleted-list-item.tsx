@@ -33,12 +33,9 @@ const DeletedListItem = ({
   sortAttribute,
   toggleSelected = () => { },
   openDeleteAsset = () => { },
-  openRemoveAsset = () => { },
+  openRecoverAsset = () => { },
   setCurrentSortAttribute = (attribute) => { },
 }) => {
-
-  const { setActiveOperation } = useContext(AssetContext)
-
   const dateFormat = 'MMM do, yyyy h:mm a'
 
   const [overlayProperties, setOverlayProperties] = useState(DEFAULT_DETAIL_PROPS)
@@ -52,10 +49,6 @@ const DeletedListItem = ({
 
     return () => document.body.classList.remove('no-overflow')
   }, [overlayProperties.visible])
-
-  const openComments = () => {
-    setOverlayProperties({ visible: true, side: 'comments' })
-  }
 
   const getSortAttributeClassName = attribute => sortAttribute.replace('-', '') === attribute && styles['active']
   const setSortAttribute = attribute => {
@@ -91,9 +84,9 @@ const DeletedListItem = ({
                 Size
                 <IconClickable src={arrowIcon} additionalClass={`${styles['sort-icon']} ${getSortAttributeClassName('asset.size')}`} />
               </h4>
-              <h4 onClick={() => setSortAttribute('asset.created-at')} >
+              <h4 onClick={() => setSortAttribute('asset.deleted-at')} >
                 Date Deleted
-                <IconClickable src={arrowIcon} additionalClass={`${styles['sort-icon']} ${getSortAttributeClassName('asset.created-at')}`} />
+                <IconClickable src={arrowIcon} additionalClass={`${styles['sort-icon']} ${getSortAttributeClassName('asset.deleted-at')}`} />
               </h4>
               <h4></h4>
             </div>
@@ -147,11 +140,11 @@ const DeletedListItem = ({
               {asset.size && filesize(asset.size)}
             </div>
             <div className={`${styles.field_name} ${isLoading && 'loadable'}`}>
-              {format(new Date(asset.createdAt), dateFormat)}
+              {asset?.deletedAt && format(new Date(asset.deletedAt), dateFormat)}
             </div>
             {!isLoading && !isUploading &&
               <div>
-                <span className={styles.span}><IconClickable additionalClass={styles['action-button']} src={AssetOps[`move`]} tooltipText={'Resend'} tooltipId={'Move'} onClick={openDeleteAsset} /></span>
+                <span className={styles.span}><IconClickable additionalClass={styles['action-button']} src={AssetOps[`move`]} tooltipText={'Recover'} tooltipId={'Recover'} onClick={openRecoverAsset} /></span>
                 <span className={styles.span}><IconClickable additionalClass={styles['action-button']} src={AssetOps[`delete`]} tooltipText={'Delete'} tooltipId={'Delete'} onClick={openDeleteAsset} /></span>
               </div>
             }

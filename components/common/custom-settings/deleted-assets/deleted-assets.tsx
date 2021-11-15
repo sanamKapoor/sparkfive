@@ -35,12 +35,13 @@ const DeletedAssets = ({
 
   const { assets, setAssets, setActiveOperation, setOperationAsset, nextPage, setOperationFolder, folders } = useContext(AssetContext)
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
-  const [activeArchiveAsset, setActiveArchiveAsset] = useState(undefined)
+  const [recoverModalOpen, setRecoverModalOpen] = useState(false)
   const [activeAssetId, setActiveAssetId] = useState('')
 
   const [initAsset, setInitAsset] = useState(undefined)
 
   const [sortedAssets, currentSortAttribute, setCurrentSortAttribute] = useSortedAssets(assets)
+
   useEffect(() => {
     const { assetId } = urlUtils.getQueryParameters()
     if (assetId)
@@ -56,14 +57,14 @@ const DeletedAssets = ({
     }
   }
 
-  const openArchiveAsset = asset => {
-    setActiveAssetId(asset.id)
-    setActiveArchiveAsset(asset)
-  }
-
   const openDeleteAsset = id => {
     setActiveAssetId(id)
     setDeleteModalOpen(true)
+  }
+
+  const openRecoverAsset = id => {
+    setActiveAssetId(id)
+    setRecoverModalOpen(true)
   }
 
   const deleteAsset = async id => {
@@ -81,19 +82,19 @@ const DeletedAssets = ({
     }
   }
 
-  const archiveAsset = async id => {
-    const newState = activeArchiveAsset?.stage !== 'archived' ? 'archived' : 'draft'
+    const recoverAsset = async id => {
     try {
-      await assetsApi.updateAsset(id, { updateData: { stage: newState } })
-      const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
-      setAssets(update(assets, {
-        $splice: [[assetIndex, 1]]
-      }))
-      toastUtils.success(`Assets ${newState === 'archived' ? 'archived' : 'unarchived'} successfully`)
+      await assetsApi.updateAsset(id, { updateData: {status: 'approved', deletedAt: null} })
+				const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
+				if (assetIndex !== -1)
+					setAssets(update(assets, {
+						$splice: [[assetIndex, 1]]
+					}))
+      toastUtils.success('Assets recover successfully')
     }
     catch (err) {
       // TODO: Error handling
-      toastUtils.error(`Could not ${newState === 'archived' ? 'archive' : 'unarchive'} assets, please try again later.`)
+      toastUtils.error('Could not recover assets, please try again later.')
     }
   }
 
@@ -101,10 +102,6 @@ const DeletedAssets = ({
     if (asset) setOperationAsset(asset)
     if (folder) setOperationFolder(folder)
     setActiveOperation(operation)
-  }
-
-  const downloadAsset = (assetItem) => {
-    downloadUtils.downloadFile(assetItem.realUrl, assetItem.asset.name)
   }
 
   const showLoadMore = ((mode === 'assets' && assets.length > 0))
@@ -123,7 +120,7 @@ const DeletedAssets = ({
                 index={index}
                 toggleSelected={() => toggleSelected(assetItem.asset.id)}
                 openDeleteAsset={() => openDeleteAsset(assetItem.asset.id)}
-                openRemoveAsset={() => beginAssetOperation({ asset: assetItem }, 'remove_item')}
+                openRecoverAsset={() => openRecoverAsset(assetItem.asset.id)}
                 setCurrentSortAttribute={setCurrentSortAttribute}
                 sortAttribute={currentSortAttribute}
               />
@@ -173,21 +170,20 @@ const DeletedAssets = ({
         modalIsOpen={deleteModalOpen}
       />
 
-      {/* Archive modal */}
       <ConfirmModal
-        closeModal={() => setActiveArchiveAsset(undefined)}
+        closeModal={() => setRecoverModalOpen(false)}
         confirmAction={() => {
-          archiveAsset(activeAssetId)
+          recoverAsset(activeAssetId)
           setActiveAssetId('')
-          setActiveArchiveAsset(undefined)
+          setRecoverModalOpen(false)
         }}
-        confirmText={`${activeArchiveAsset?.stage !== 'archived' ? 'Archive' : 'Unarchive'}`}
+        confirmText={'Recover'}
         message={
           <span>
-            Are you sure you want to &nbsp;<strong>{`${activeArchiveAsset?.stage !== 'archived' ? 'Archive' : 'Unarchive'}`}</strong>&nbsp; this asset?
+            Are you sure you want to &nbsp;<strong>Recover</strong>&nbsp; this asset?
           </span>
         }
-        modalIsOpen={activeArchiveAsset}
+        modalIsOpen={recoverModalOpen}
       />
 
       {/* Overlay exclusive to page load assets */}
