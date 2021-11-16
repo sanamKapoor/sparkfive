@@ -9,6 +9,14 @@
   display: flex;
   flex-wrap: wrap;
   flex: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+   font-size: 10px;
+   margin-left: 20px;
 }
 
 .filters > img,
