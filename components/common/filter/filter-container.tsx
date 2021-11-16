@@ -359,9 +359,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                         </div>
                         {expandedMenus.includes('resolution') &&
                             <ResolutionFilter
-                                searchBar={true}
                                 loadFn={loadAssetResolutions}
-                                numItems={4}
                                 filters={assetResolutions.map(resolutions => ({ ...resolutions, value: resolutions.dpi }))}
                                 value={activeSortFilter.filterResolutions}
                                 setValue={(selected) => setSortFilterValue('filterResolutions', selected)}
