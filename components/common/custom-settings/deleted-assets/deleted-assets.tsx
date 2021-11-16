@@ -82,15 +82,15 @@ const DeletedAssets = ({
     }
   }
 
-    const recoverAsset = async id => {
+  const recoverAsset = async id => {
     try {
       await assetsApi.updateAsset(id, { updateData: {status: 'approved', deletedAt: null} })
-				const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
-				if (assetIndex !== -1)
-					setAssets(update(assets, {
-						$splice: [[assetIndex, 1]]
-					}))
-      toastUtils.success('Assets recover successfully')
+        const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
+        if (assetIndex !== -1)
+          setAssets(update(assets, {
+            $splice: [[assetIndex, 1]]
+          }))
+        toastUtils.success('Assets recover successfully')
     }
     catch (err) {
       // TODO: Error handling
@@ -136,7 +136,6 @@ const DeletedAssets = ({
                   <Waypoint onEnter={loadMore} fireOnRapidScroll={false} />
                 }
               </>
-
               :
               <>
                 {!loadingAssetsFolders &&

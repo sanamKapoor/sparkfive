@@ -19,7 +19,6 @@ import folderApi from '../../../server-api/folder'
 // Components
 import { AssetOps } from '../../../assets'
 
-
 // Components
 import Button from '../../common/buttons/button'
 import IconClickable from '../../common/buttons/icon-clickable'
@@ -68,7 +67,6 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
                 assetIds: [],
                 folderIds: [],
 			};
-
 			let totalDownloadingAssets = 0;
 			let filters = {
 				estimateTime: 1
@@ -108,12 +106,9 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 				filters['sharePath'] = sharePath
 			}
 
-
 			// Show processing bar
 			updateDownloadingStatus('zipping', 0, totalDownloadingAssets)
-
 			let api = assetApi;
-
 			if (isShare) {
 				api = shareApi
 			}
@@ -137,7 +132,6 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 		} catch (e) {
 			updateDownloadingStatus('error', 0, 0, 'Internal Server Error. Please try again.')
 		}
-
 
 		// downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets')
 	}

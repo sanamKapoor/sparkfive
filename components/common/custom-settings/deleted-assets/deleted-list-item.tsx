@@ -9,11 +9,8 @@ import { getParsedExtension } from '../../../../utils/asset'
 // Components
 import AssetImg from '../../asset/asset-img'
 import IconClickable from '../../buttons/icon-clickable'
-import Button from '../../buttons/button'
 import DetailOverlay from '../../asset/detail-overlay'
-import AssetOptions from '../../asset/asset-options'
 import AssetIcon from "../../asset/asset-icon"
-import { AssetContext } from "../../../../context"
 import { AssetOps } from '../../../../assets'
 
 const DEFAULT_DETAIL_PROPS = { visible: false, side: 'detail' }
@@ -111,25 +108,12 @@ const DeletedListItem = ({
               ) : (
                 <AssetIcon extension={asset.extension} onList={true} onClick={undefined} />
               )}
-              {/* {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} />}
-              {asset.type === 'video' &&
-                <video preload='metadata'>
-                  <source src={realUrl}
-                    type={`video/${asset.extension}`} />
-                </video>
-              }
-              {asset.type === 'application' && <AssetApplication extension={asset.extension} onList={true} />}
-              {asset.type === 'text' && <AssetText extension={asset.extension} onList={true} />} */}
-            </div>
+              </div>
           </div>
           <div className={styles.info}>
             <div className={`${styles.name} ${isLoading && 'loadable'}`} onClick={() => setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: !overlayProperties.visible })}>
               {asset.name}
             </div>
-            {/*<div className={styles.status}>*/}
-            {/*  {isUploading && 'Uplaoding...'}*/}
-            {/*  {!isLoading && !isUploading && <StatusBadge status={asset.stage} />}*/}
-            {/*</div>*/}
             <div className={`${styles.field_name} ${isLoading && 'loadable'}`}>
               {!isUploading && asset.type}
             </div>
