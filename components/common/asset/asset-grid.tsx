@@ -81,7 +81,7 @@ const AssetGrid = ({
 
   const deleteAsset = async id => {
     try {
-      await assetsApi.updateAsset(id, { updateData: {status: 'deleted', deletedAt: new Date((new Date().toUTCString())).toISOString()} })
+      await assetsApi.updateAsset(id, { updateData: {status: 'deleted', stage: 'draft', deletedAt: new Date((new Date().toUTCString())).toISOString()} })
       const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
       if (assetIndex !== -1)
         setAssets(update(assets, {
