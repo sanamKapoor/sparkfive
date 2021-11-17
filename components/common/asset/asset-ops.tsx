@@ -308,37 +308,20 @@ export default () => {
 		}
 	}
 
-	const deleteSelectedFolders = async () => {
-		try {
-			await assetApi.deleteMultipleAssets({ assetIds: selectedAssets.map(assetItem => assetItem.asset.id) })
-			const newAssets = assets.filter(existingAsset => {
-				const searchedAssetIndex = selectedAssets.findIndex(assetListItem => existingAsset.asset.id === assetListItem.asset.id)
-				return searchedAssetIndex === -1
-			})
-			setAssets(newAssets)
-
-
-			closeModalAndClearOpAsset()
-			toastUtils.success('Assets deleted successfully')
-		} catch (err) {
-			console.log(err)
-			toastUtils.error('Could not delete assets, please try again later.')
-		}
-	}
-
 	const updateAssetStatus = async () => {
 		try {
 			let updateAssets
 			let filters = {}
 			if (selectedAssets.length > 1) {
 				updateAssets = selectedAssets.map(assetItem => (
-					{ id: assetItem.asset.id, changes: { status: 'deleted', deletedAt: new Date().toISOString() } }
+					{ id: assetItem.asset.id, changes: { status: 'deleted', stage: 'draft', deletedAt: new Date().toISOString() } }
 				))
 			} else {
 				updateAssets = {
 					id: selectedAssets[0].asset.id,
 					updateData: {
 						status: 'deleted',
+						stage: 'draft',
 						deletedAt: new Date().toISOString()
 					}
 				}
@@ -602,28 +585,6 @@ export default () => {
 					}
 				}
 			}
-
-			// Select all assets without pagination
-			if(selectedAllAssets){
-				filters = {
-					...getAssetsFilters({
-						replace: false,
-						activeFolder,
-						addedIds: [],
-						nextPage: 1,
-						userFilterObject: activeSortFilter
-					}),
-					selectedAll: '1',
-				};
-
-				if(term){
-					// @ts-ignore
-					filters.term = term;
-				}
-				// @ts-ignore
-				delete filters.page
-			}
-
 			if (updateAssets.length > 1) {
 				await assetApi.updateMultiple(updateAssets, filters)
 				const newAssets = assets.filter(existingAsset => {

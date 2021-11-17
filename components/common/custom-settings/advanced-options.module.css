@@ -121,6 +121,12 @@
     padding-left: 100px;
 }
 
+.anchor{
+    font-size: 11px;
+}
+.anchor:hover{
+    text-decoration: underline;
+}
 .font-weight-600{
     font-weight: 600;
 }
@@ -172,7 +178,6 @@
 .deleted-assets{
     display: flex;
     align-items: center;
-    cursor: pointer;
     margin-left: 8px;
     margin-top: 10px;
 }
