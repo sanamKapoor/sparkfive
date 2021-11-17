@@ -38,6 +38,9 @@ export default function useSortedAssets(assets): [any[], string, any] {
             case 'asset.created-at':
                 newSortedAssets.sort((a, b) => dateCompare(a.asset.createdAt, b.asset.createdAt) * direction)
                 break
+            case 'asset.deleted-at':
+                newSortedAssets.sort((a, b) => dateCompare(a.asset.deletedAt, b.asset.deletedAt) * direction)
+                break
             case 'folder.name':
                 newSortedAssets.sort((a, b) => a.name.localeCompare(b.name) * direction)
                 break
