@@ -123,7 +123,7 @@ const DeletedListItem = ({
             <div className={styles.field_name}>
               {asset.size && filesize(asset.size)}
             </div>
-            <div className={`${styles.field_name} ${isLoading && 'loadable'}`}>
+            <div className={`${styles.field_name} ${styles.dateHide} ${isLoading && 'loadable'}`}>
               {asset?.deletedAt && format(new Date(asset.deletedAt), dateFormat)}
             </div>
             {!isLoading && !isUploading &&

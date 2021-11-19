@@ -83,12 +83,15 @@
   padding-right: 0.5rem;
   font-weight: 600;
   position: relative;
+  text-overflow: ellipsis;
 }
 
 .field_name {
   width: 14%;
   font-size: 13px;
   position: relative;
+  align-content: flex-start;
+  white-space: nowrap;
 }
 
 .status {
@@ -109,15 +112,26 @@
   margin-right: 10px;
 }
 
+@media screen and (max-width: 1024px) {
+  .dateHide {
+    width: 90px !important;
+    overflow: hidden;
+  }
+}
+
 @media screen and (max-width: 900px) {
   .item {
     min-height: 71px;
     height: auto;
   }
-  .header {
-    display: none;
+
+  .headers-content h4:first-child {
+    width: 150px;
   }
 
+  .headers-content h4 {
+    width: 100px;
+  }
   .info {
     flex-wrap: wrap;
   }
@@ -126,12 +140,63 @@
     margin-bottom: 10px;
   }
 
+  .info>div:last-child{
+  margin-left: 0;
+  position: absolute;
+  right: 0;
+  }
+
   .name {
-    width: 200px;
+    width: 150px;
   }
 
   .field_name,
   .status {
-    width: 130px;
+    width: 100px;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 750px) {
+
+  .header {
+    display: none;
+  }
+
+  .field_name {
+    width: 11%;
+  }
+
+}
+@media screen and (max-width: 600px) {
+  .item{
+    position: relative;
+  }
+
+  .header {
+    display: none;
+  }
+
+  .info {
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: 30px;
+  }
+
+  .info>div:last-child{
+    top: 44%;
+    margin-right: 20px;
+  }
+  
+  .name{
+    width: 185px;
+    position: absolute;
+    left: 34px;
+    top: 8px;
+  }
+
+  .field_name{
+    padding-left: 25px;
+    width: 115px !important;
   }
 }
