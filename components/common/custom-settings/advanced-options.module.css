@@ -123,10 +123,9 @@
 
 .anchor{
     font-size: 11px;
-}
-.anchor:hover{
     text-decoration: underline;
 }
+
 .font-weight-600{
     font-weight: 600;
 }
@@ -197,5 +196,14 @@
 
     .button-row{
        justify-content: center;
+    }
+
+    .p-l-100{
+    padding-left: 50px;
+    }
+}
+@media screen and (max-width: 1280px){
+    .p-l-100{
+        padding-left: 25px;
     }
 }
