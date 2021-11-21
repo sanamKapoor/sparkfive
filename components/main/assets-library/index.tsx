@@ -605,7 +605,7 @@ const AssetsLibrary = () => {
           selectAll={selectAll}
           setOpenFilter={setOpenFilter}
           openFilter={openFilter}
-        />
+          deletedAssets={false} />
         <div className={`${openFilter && styles['col-wrapper']}`}>
           <DropzoneProvider>
             <AssetGrid

@@ -9,6 +9,14 @@
   display: flex;
   flex-wrap: wrap;
   flex: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+}
+
+.content {
+   font-size: 10px;
+   margin-left: 20px;
 }
 
 .filters > img,
@@ -52,7 +60,7 @@
   margin-left: 0;
 }
 
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1210px) {
   .container {
     margin-bottom: 1rem;
   }
@@ -73,6 +81,7 @@
     right: 0;
     width: 20px !important;
     height: auto;
+    justify-content: center;
   }
 
   .calendar {
@@ -119,4 +128,22 @@
     margin: 0 4px;
     font-size: small;
   }
+
+  .content{
+    width: 100%;
+    max-width: 290px;
+  }
+}
+
+@media screen and (max-width: 1024px){
+  .content{
+    margin-left: 0 !important;
+    text-align: center;
+    align-items: flex-start;
+  }
+  .filters {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 }
