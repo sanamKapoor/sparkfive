@@ -2,6 +2,7 @@
   display: flex;
   flex-wrap: wrap;
   max-width: 40rem;
+  align-items: center;
 }
 
 .form input{
@@ -15,18 +16,26 @@
 }
 
 .form button{
-  
+
+}
+
+.input{
+  min-height: inherit;
+}
+
+.button{
+  min-height: inherit;
 }
 
 @media screen and (max-width: 630px){
   .form input{
     margin-bottom: 10px;
   }
-  
+
   .form .role-select-wrapper{
-    margin-bottom: 10px;    
+    margin-bottom: 10px;
   }
-  
+
   .form button{
     margin-bottom: 10px;
   }
@@ -34,7 +43,7 @@
 
 @media screen and (max-width: 477px){
   .form .role-select-wrapper{
-    margin-right: 0;   
-    margin-left: 0;     
+    margin-right: 0;
+    margin-left: 0;
   }
 }

@@ -14,7 +14,8 @@ const AssetSubheader = ({
   setRenameModalOpen,
   getFolders,
   activeSortFilter,
-  mode
+  mode,
+  deletedAssets
 }) => {
 
   return (
@@ -32,7 +33,7 @@ const AssetSubheader = ({
       <div className={styles.padding}>
       </div>
       {amountSelected > 0 ?
-        <AssetHeaderOps isUnarchive={activeSortFilter.mainFilter === 'archived'} isFolder={mode === 'folders'} iconColor='White'/>
+        <AssetHeaderOps isUnarchive={activeSortFilter.mainFilter === 'archived'} isFolder={mode === 'folders'} iconColor='White' deletedAssets={deletedAssets}/>
         :
         <AssetAddition activeFolder={activeFolder} getFolders={getFolders} />
       }

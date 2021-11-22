@@ -10,14 +10,20 @@ import { UserContext } from '../../../context'
 import {
     SUPERADMIN_ACCESS
 } from '../../../constants/permissions'
+import AdvancedOptions from './advanced-options'
 
 const Main = () => {
     const { hasPermission } = useContext(UserContext)
-    const [activeList, setActiveList] = useState('customFileSizes')
+    const [activeList, setActiveList] = useState('advancedOptions')
 
     return (
         <>
             <div className={styles.buttons}>
+                <SectionButton
+                    text='Advanced Options'
+                    active={activeList === 'advancedOptions'}
+                    onClick={() => setActiveList('advancedOptions')}
+                />
                 <SectionButton
                     text='Custom File Sizes'
                     active={activeList === 'customFileSizes'}
@@ -30,6 +36,7 @@ const Main = () => {
                 />}
             </div>
 
+            {activeList === 'advancedOptions' && <AdvancedOptions />}
             {activeList === 'customFileSizes' && <CustomFileSizes />}
             {activeList === 'sizeSaPresets' && hasPermission([SUPERADMIN_ACCESS]) && <SizeSaPresets />}
         </>

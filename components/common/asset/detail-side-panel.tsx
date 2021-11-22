@@ -70,7 +70,8 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     channel,
     product,
     folder,
-    customs
+    customs,
+    dpi
   } = asset
 
   const { assets, setAssets } = useContext(AssetContext)
@@ -235,6 +236,13 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     }
   }
 
+  let formattedDPI
+  if(dpi !== 0){
+    formattedDPI = dpi +" DPI"
+  }else{
+    formattedDPI = ""
+  }
+
   const fieldValues = [
     {
       field: 'Last Updated',
@@ -244,13 +252,17 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
       field: 'Uploaded',
       value: format(new Date(createdAt), 'P')
     },
-    {
-      field: 'Type',
-      value: capitalCase(type)
-    },
+    // {
+    //   field: 'Type',
+    //   value: capitalCase(type)
+    // },
     {
       field: 'Extension',
       value: getParsedExtension(extension)
+    },
+    {
+      field: 'Resolution',
+      value: formattedDPI
     },
     {
       field: 'Dimension',

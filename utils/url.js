@@ -17,5 +17,9 @@ export default {
       const splitPath = window.location.pathname.split('/')
       return splitPath[splitPath.length - 1]
     }
+  },
+
+  getQueryStringFromObject: (obj) => {
+    return queryString.stringify(obj)
   }
 }

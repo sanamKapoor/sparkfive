@@ -26,6 +26,7 @@ const TeamInvite = ({ mappedRoles, onInviteSend }) => {
           styleType='regular'
           value={inviteEmail}
           placeholder='Email'
+          additionalClasses={styles.input}
           onChange={(e) => setInviteEmail(e.target.value)}
         />
         <div className={styles['role-select-wrapper']}>
@@ -38,6 +39,7 @@ const TeamInvite = ({ mappedRoles, onInviteSend }) => {
           />
         </div>
         <Button
+          className={styles.button}
           text='Send invitation'
           type='submit'
           styleType='primary'

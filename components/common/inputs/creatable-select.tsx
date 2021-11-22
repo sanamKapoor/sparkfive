@@ -27,7 +27,8 @@ const CreatableSelect = ({
   isBulkEdit = false,
   canAdd = true,
   selectClass = '',
-  creatable = true
+  creatable = true,
+  selectOneComponent = <></>
 }) => {
 
   const onChange = async (selected, actionMeta) => {
@@ -93,11 +94,13 @@ const CreatableSelect = ({
   return (
     <>
       <div className={`secondary-text ${styles.field}`}>{title}</div>
+      {selectOneComponent}
       <div className={'normal-text'}>
         <ul className={`tags-list ${styles['tags-list']}`}>
           {selectedItems?.map((item, index) => (
             <li key={item.id || item.value}>
               <Tag
+                data={item}
                 altColor={altColor}
                 tag={item.name}
                 canRemove={!isShare}

@@ -8,6 +8,7 @@ import { getSubdomain } from '../utils/domain'
 import userApi from '../server-api/user'
 import teamApi from '../server-api/team'
 import SpinnerOverlay from "../components/common/spinners/spinner-overlay";
+import url from '../utils/url'
 
 const allowedBase = ['/signup', 'trial-signup', 'request-access', '/share', '/reset-password', '/forgot-password', '/two-factor', '/collections']
 
@@ -41,19 +42,25 @@ export default ({ children }) => {
     if (jwt && !needTwoFactor) {
       try {
         setIsLoading(true)
+        const query = url.getQueryStringFromObject(Router.query)
+        console.log(query === '')
         const { data } = await userApi.getUserData()
+        // Custom role will use custom permission here
+        if (data.role.type === 'custom') {
+          data.permissions = data.role.permissions
+        }
         setUser(data)
         if (!data.firstTimeLogin && Router.pathname.indexOf('/main/setup') === -1) {
           await Router.replace('/main/setup')
         }
         else if (Router.pathname.indexOf('/main') === -1) {
           if (data.team.plan.type === 'dam') {
-            await Router.replace('/main/assets')
+            await Router.replace('/main/assets' + (query === '' ? '' : `?${query}`))
           } else {
             await Router.replace('/main/overview')
           }
         } else if (data.firstTimeLogin && data.team.plan.type === 'dam' && Router.pathname.indexOf('/user-settings') === -1) {
-          await Router.replace('/main/assets')
+          await Router.replace('/main/assets' + (query === '' ? '' : `?${query}`))
         }
       } catch (err) {
         console.log(err)
@@ -78,6 +85,7 @@ export default ({ children }) => {
   }
 
   const hasPermission = (requiredPermissions = []) => {
+    // console.warn(`Check permission: `, requiredPermissions, user?.permissions)
     if (requiredPermissions.length === 0) return true
     return requiredPermissions.some(perm => user?.permissions.map(userPerm => userPerm.id).includes(perm))
   }
@@ -100,30 +108,30 @@ export default ({ children }) => {
     const subdomain = getSubdomain();
 
     console.log(`Sub domain`, subdomain)
-    if(subdomain){
+    if (subdomain) {
       setWaitToVerifyDomain(true)
 
-      try{
-        const results  = await teamApi.verifyDomain(subdomain)
+      try {
+        const results = await teamApi.verifyDomain(subdomain)
 
         setVanityCompanyInfo(results.data)
 
         setWaitToVerifyDomain(false)
-      }catch(e){ // Cant verify domain
+      } catch (e) { // Cant verify domain
         setWaitToVerifyDomain(false)
         // console.log(process.env.CLIENT_BASE_URL)
         // back to login page
         // window.open(`${process.env.CLIENT_BASE_URL}/login`,"_self")
         router.replace(`${process.env.CLIENT_BASE_URL}/login`)
       }
-    }else{
+    } else {
       setWaitToVerifyDomain(false)
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     verifyDomain()
-  },[])
+  }, [])
 
   const getUserData = async () => {
     await fetchUser()
@@ -144,8 +152,8 @@ export default ({ children }) => {
   return (
     <UserContext.Provider value={userValue}>
       <>
-      {initialLoadFinished && children}
-        {waitToVerifyDomain && <SpinnerOverlay /> }
+        {initialLoadFinished && children}
+        {waitToVerifyDomain && <SpinnerOverlay />}
       </>
     </UserContext.Provider>
   )

@@ -20,6 +20,7 @@ import AssetUpload from './asset-upload'
 import DetailOverlay from './detail-overlay'
 import ConfirmModal from '../modals/confirm-modal'
 import Button from '../buttons/button'
+import useSortedAssets from '../../../hooks/use-sorted-assets'
 
 const AssetGrid = ({
   activeView = 'grid',
@@ -51,6 +52,8 @@ const AssetGrid = ({
 
   const [initAsset, setInitAsset] = useState(undefined)
 
+  const [sortedAssets, currentSortAttribute, setCurrentSortAttribute] = useSortedAssets(assets)
+  const [sortedFolders, currentSortFolderAttribute, setCurrentSortFolderAttribute] = useSortedAssets(folders)
   useEffect(() => {
     const { assetId } = urlUtils.getQueryParameters()
     if (assetId)
@@ -78,11 +81,12 @@ const AssetGrid = ({
 
   const deleteAsset = async id => {
     try {
-      await assetsApi.deleteAsset(id)
+      await assetsApi.updateAsset(id, { updateData: {status: 'deleted', stage: 'draft', deletedAt: new Date((new Date().toUTCString())).toISOString()} })
       const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
-      setAssets(update(assets, {
-        $splice: [[assetIndex, 1]]
-      }))
+      if (assetIndex !== -1)
+        setAssets(update(assets, {
+          $splice: [[assetIndex, 1]]
+        }))
       toastUtils.success('Assets deleted successfully')
     }
     catch (err) {
@@ -150,24 +154,24 @@ const AssetGrid = ({
         {activeView === 'grid' &&
           <ul className={`${styles['grid-list']} ${styles[itemSize]}`}>
             {mode === 'assets' && assets.map((assetItem, index) => {
-              if(assetItem.status !== 'fail'){
+              if (assetItem.status !== 'fail') {
                 return (
-                    <li className={styles['grid-item']} key={assetItem.asset.id || index}>
-                      <AssetThumbail
-                          {...assetItem}
-                          sharePath={sharePath}
-                          isShare={isShare}
-                          type={type}
-                          toggleSelected={() => toggleSelected(assetItem.asset.id)}
-                          openArchiveAsset={() => openArchiveAsset(assetItem.asset)}
-                          openDeleteAsset={() => openDeleteAsset(assetItem.asset.id)}
-                          openMoveAsset={() => beginAssetOperation({ asset: assetItem }, 'move')}
-                          openCopyAsset={() => beginAssetOperation({ asset: assetItem }, 'copy')}
-                          openShareAsset={() => beginAssetOperation({ asset: assetItem }, 'share')}
-                          downloadAsset={() => downloadAsset(assetItem)}
-                          openRemoveAsset={() => beginAssetOperation({ asset: assetItem }, 'remove_item')}
-                      />
-                    </li>
+                  <li className={styles['grid-item']} key={assetItem.asset.id || index}>
+                    <AssetThumbail
+                      {...assetItem}
+                      sharePath={sharePath}
+                      isShare={isShare}
+                      type={type}
+                      toggleSelected={() => toggleSelected(assetItem.asset.id)}
+                      openArchiveAsset={() => openArchiveAsset(assetItem.asset)}
+                      openDeleteAsset={() => openDeleteAsset(assetItem.asset.id)}
+                      openMoveAsset={() => beginAssetOperation({ asset: assetItem }, 'move')}
+                      openCopyAsset={() => beginAssetOperation({ asset: assetItem }, 'copy')}
+                      openShareAsset={() => beginAssetOperation({ asset: assetItem }, 'share')}
+                      downloadAsset={() => downloadAsset(assetItem)}
+                      openRemoveAsset={() => beginAssetOperation({ asset: assetItem }, 'remove_item')}
+                    />
+                  </li>
                 )
               }
             })}
@@ -189,7 +193,7 @@ const AssetGrid = ({
         }
         {activeView === 'list' &&
           <ul className={'regular-list'}>
-            {mode === 'assets' && assets.map((assetItem, index) => {
+            {mode === 'assets' && sortedAssets.map((assetItem, index) => {
               return (
                 <li className={styles['regular-item']} key={assetItem.asset.id || index}>
                   <ListItem
@@ -205,11 +209,13 @@ const AssetGrid = ({
                     openShareAsset={() => beginAssetOperation({ asset: assetItem }, 'share')}
                     downloadAsset={() => downloadAsset(assetItem)}
                     openRemoveAsset={() => beginAssetOperation({ asset: assetItem }, 'remove_item')}
+                    setCurrentSortAttribute={setCurrentSortAttribute}
+                    sortAttribute={currentSortAttribute}
                   />
                 </li>
               )
             })}
-            {mode === 'folders' && !isShare && folders.map((folder, index) => {
+            {mode === 'folders' && !isShare && sortedFolders.map((folder, index) => {
               return (
                 <li className={styles['grid-item']} key={folder.id || index}>
                   <FolderListItem {...folder}
@@ -218,7 +224,10 @@ const AssetGrid = ({
                     deleteFolder={() => deleteFolder(folder.id)} index={index}
                     copyShareLink={() => copyShareLink(folder)}
                     copyEnabled={getShareIsEnabled(folder)}
-                    shareAssets={() => beginAssetOperation({ folder }, 'shareFolders')} />
+                    shareAssets={() => beginAssetOperation({ folder }, 'shareFolders')}
+                    setCurrentSortAttribute={setCurrentSortFolderAttribute}
+                    sortAttribute={currentSortFolderAttribute}
+                  />
                 </li>
               )
             })}
@@ -262,7 +271,7 @@ const AssetGrid = ({
         message={
           <span>
             Are you sure you want to &nbsp;<strong>Delete</strong>&nbsp; this asset?
-        </span>
+          </span>
         }
         modalIsOpen={deleteModalOpen}
       />
@@ -279,7 +288,7 @@ const AssetGrid = ({
         message={
           <span>
             Are you sure you want to &nbsp;<strong>{`${activeArchiveAsset?.stage !== 'archived' ? 'Archive' : 'Unarchive'}`}</strong>&nbsp; this asset?
-        </span>
+          </span>
         }
         modalIsOpen={activeArchiveAsset}
       />
@@ -291,7 +300,7 @@ const AssetGrid = ({
           sharePath={sharePath}
           asset={initAsset.asset}
           realUrl={initAsset.realUrl}
-          initiaParams={{ side: 'comments' }}
+          initialParams={{ side: 'comments' }}
           openShareAsset={() => beginAssetOperation({ asset: initAsset }, 'share')}
           openDeleteAsset={() => openDeleteAsset(initAsset.asset.id)}
           closeOverlay={() => setInitAsset(undefined)} />

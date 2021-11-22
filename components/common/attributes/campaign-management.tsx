@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import { useEffect, useState } from 'react'
 import styles from './tag-management.module.css'
 
 
@@ -52,15 +52,15 @@ const CampaignManagement = () => {
 
     // Create the new tag
     const createTag = async (item) => {
-        try{
+        try {
             // Show loading
             setLoading(true)
 
-            await campaignApi.createCampaigns({campaigns: [item]})
+            await campaignApi.createCampaigns({ campaigns: [item] })
 
             // Reload the list
             getCampaignList();
-        }catch (err) {
+        } catch (err) {
             if (err.response?.status === 400) toastUtils.error(err.response.data.message)
             else toastUtils.error('Could not create campaign, please try again later.')
 
@@ -75,14 +75,14 @@ const CampaignManagement = () => {
         // Show loading
         setLoading(true)
 
-        let { data } = await campaignApi.getCampaigns({isAll: 1, sort: sort.value, searchType, searchKey})
+        let { data } = await campaignApi.getCampaigns({ isAll: 1, sort: sort.value, searchType, searchKey })
         setCampaignList(data)
 
         // Hide loading
         setLoading(false)
     }
 
-    const deleteCampaignList = async(id) => {
+    const deleteCampaignList = async (id) => {
         // Hide confirm modal
         setConfirmDeleteModal(false)
 
@@ -90,7 +90,7 @@ const CampaignManagement = () => {
         setLoading(true)
 
         // Call API to delete tag
-        await campaignApi.deleteCampaigns({campaignIds: [id]})
+        await campaignApi.deleteCampaigns({ campaignIds: [id] })
 
         // Refresh the list
         getCampaignList();
@@ -124,9 +124,9 @@ const CampaignManagement = () => {
         getCampaignList();
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getCampaignList();
-    },[sort, searchKey])
+    }, [sort, searchKey])
 
     return (
         <div className={styles['main-wrapper']}>
@@ -137,11 +137,11 @@ const CampaignManagement = () => {
                     onAddClick={() => setActiveDropdown('campaigns')}
                     selectPlaceholder={'Enter a new campaign'}
                     avilableItems={[]}
-                    setAvailableItems={()=>{}}
+                    setAvailableItems={() => { }}
                     selectedItems={[]}
-                    setSelectedItems={()=>{}}
-                    onAddOperationFinished={()=>{}}
-                    onRemoveOperationFinished={()=>{}}
+                    setSelectedItems={() => { }}
+                    onAddOperationFinished={() => { }}
+                    onRemoveOperationFinished={() => { }}
                     onOperationFailedSkipped={() => setActiveDropdown('')}
                     isShare={false}
                     asyncCreateFn={createTag}
@@ -151,7 +151,7 @@ const CampaignManagement = () => {
 
                 <Select
                     options={sorts}
-                    onChange={(value)=>{setSort(value)}}
+                    onChange={(value) => { setSort(value) }}
                     placeholder={'Select to sort'}
                     styleType={`regular ${styles['sort-select']}`}
                     value={sort}
@@ -164,8 +164,8 @@ const CampaignManagement = () => {
                         name={'start'}
                         searchType={searchType}
                         placeholder={'Starts with'}
-                        onSubmit={(key)=>{setSearchType('start');setSearchKey(key);}}
-                        onClear={()=>{setSearchKey('')}}
+                        onSubmit={(key) => { setSearchType('start'); setSearchKey(key); }}
+                        onClear={() => { setSearchKey('') }}
                     />
                 </div>
                 <div className={styles['search-column-2']}>
@@ -173,8 +173,8 @@ const CampaignManagement = () => {
                         name={'exact'}
                         searchType={searchType}
                         placeholder={'Exact Match'}
-                        onSubmit={(key)=>{setSearchType('exact');setSearchKey(key);}}
-                        onClear={()=>{setSearchKey('')}}
+                        onSubmit={(key) => { setSearchType('exact'); setSearchKey(key); }}
+                        onClear={() => { setSearchKey('') }}
                     />
                 </div>
                 <div className={styles['search-column-3']}>
@@ -182,8 +182,8 @@ const CampaignManagement = () => {
                         name={'contain'}
                         searchType={searchType}
                         placeholder={'Contains'}
-                        onSubmit={(key)=>{setSearchType('contain');setSearchKey(key);}}
-                        onClear={()=>{setSearchKey('')}}
+                        onSubmit={(key) => { setSearchType('contain'); setSearchKey(key); }}
+                        onClear={() => { setSearchKey('') }}
                     />
                 </div>
             </div>
@@ -192,8 +192,10 @@ const CampaignManagement = () => {
                 {campaignList.map((campaign, index) => <li key={index} className={styles['tag-item']}>
                     {(editMode === false || (editMode === true && currentEditIndex !== index)) && <Tag
                         tag={<><span className={styles['tag-item-text']}>{campaign.numberOfFiles}</span> <span>{campaign.name}</span></>}
+                        data={campaign}
+                        type="campaign"
                         canRemove={true}
-                        editFunction={()=>{
+                        editFunction={() => {
                             setCurrentEditIndex(index);
                             setCurrentEditValue(campaign.name);
                             setEditMode(true);
@@ -207,7 +209,7 @@ const CampaignManagement = () => {
                     {editMode === true && currentEditIndex === index && <div>
                         <Input
                             placeholder={'Edit name'}
-                            onChange={(e)=>{setCurrentEditValue(e.target.value)}}
+                            onChange={(e) => { setCurrentEditValue(e.target.value) }}
                             additionalClasses={styles['edit-input']}
                             value={currentEditValue}
                             styleType={'regular-short'} />
@@ -217,7 +219,7 @@ const CampaignManagement = () => {
                             className={styles['edit-submit-btn']}
                             text='Save changes'
                             styleType='primary'
-                            onClick={()=>{saveChanges(campaign.id)}}
+                            onClick={() => { saveChanges(campaign.id) }}
                         />
                         <Button
                             styleTypes={['secondary']}
@@ -235,8 +237,8 @@ const CampaignManagement = () => {
 
             <ConfirmModal
                 modalIsOpen={confirmDeleteModal}
-                closeModal={()=>{setConfirmDeleteModal(false)}}
-                confirmAction={()=>{deleteCampaignList(currentDeleteId)}}
+                closeModal={() => { setConfirmDeleteModal(false) }}
+                confirmAction={() => { deleteCampaignList(currentDeleteId) }}
                 confirmText={'Delete'}
                 message={<span>This campaign will be deleted and removed from any file that has it.&nbsp; Are you sure you want to delete these?</span>}
                 closeButtonClass={styles['close-modal-btn']}

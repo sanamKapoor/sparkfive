@@ -21,7 +21,8 @@ const TopBar = ({
   activeFolder = '',
   setOpenFilter,
   openFilter,
-  isShare = false
+  isShare = false,
+  deletedAssets
 }) => {
 
   const {
@@ -60,10 +61,9 @@ const TopBar = ({
   const toggleSelectAll = () => {
     selectAllAssets(!selectedAllAssets)
   }
-
   return (
     <section className={styles.container}>
-      <div className={styles.filters} >
+      {!deletedAssets ? <div className={styles.filters} >
         <img src={Utilities.search} onClick={setActiveSearchOverlay} className={styles.search} />
         {selectOptions.views.map(view => (
           <>
@@ -77,15 +77,20 @@ const TopBar = ({
             }
           </>
         ))}
-      </div>
+      </div> :
+        <div className={styles.filters}>
+          <h2>Deleted Assets</h2>
+          <div></div>
+          <span className={styles['content']}>Deleted assets are retained for 60 days before permanent removal. Admin can recover deleted assets within 60 days</span>
+        </div>}
       <IconClickable src={Utilities.filter} additionalClass={styles.filter} onClick={toggleHamurgerList} />
 
       <div className={styles['sec-filters']} ref={filtersRef}>
         {selectedAllAssets && <span className={styles['select-only-shown-items-text']} onClick={toggleSelectAll}>Select only 25 assets shown</span>}
         <Button type='button' text='Select All' styleType='secondary' onClick={selectAll} />
-        <img src={Utilities.gridView} onClick={() => setActiveView('grid')} />
+        {!deletedAssets && <img src={Utilities.gridView} onClick={() => setActiveView('grid')} />}
         <img src={Utilities.listView} onClick={() => setActiveView('list')} />
-        <div className={styles['nested-wrapper']}>
+        {!deletedAssets && <div className={styles['nested-wrapper']}>
           <Button
             text='Filters'
             type='button'
@@ -93,7 +98,7 @@ const TopBar = ({
             onClick={() => {
               handleOpenFilter()
             }} />
-        </div>
+        </div>}
         {activeSortFilter.mainFilter !== 'folders' &&
           <div className={styles['sort-wrapper']}>
             <Select
