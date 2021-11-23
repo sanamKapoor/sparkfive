@@ -111,7 +111,7 @@ const DeletedListItem = ({
               </div>
           </div>
           <div className={styles.info}>
-            <div className={`${styles.name} ${isLoading && 'loadable'}`} onClick={() => setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: !overlayProperties.visible })}>
+            <div className={`${styles.name} ${isLoading && 'loadable'}`}>
               {asset.name}
             </div>
             <div className={`${styles.field_name} ${isLoading && 'loadable'}`}>
@@ -123,7 +123,7 @@ const DeletedListItem = ({
             <div className={styles.field_name}>
               {asset.size && filesize(asset.size)}
             </div>
-            <div className={`${styles.field_name} ${isLoading && 'loadable'}`}>
+            <div className={`${styles.field_name} ${styles.dateHide} ${isLoading && 'loadable'}`}>
               {asset?.deletedAt && format(new Date(asset.deletedAt), dateFormat)}
             </div>
             {!isLoading && !isUploading &&
@@ -135,16 +135,6 @@ const DeletedListItem = ({
           </div>
         </div>
       </div>
-      {overlayProperties.visible &&
-        <DetailOverlay
-        isShare={isShare}
-        asset={asset}
-        realUrl={realUrl}
-        initialParams={overlayProperties}
-        openShareAsset={openShareAsset}
-        openDeleteAsset={openDeleteAsset}
-        closeOverlay={() => setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: false })} thumbailUrl={undefined} />
-      }
     </>
   )
 }

@@ -90,7 +90,7 @@ const TopBar = ({
         <Button type='button' text='Select All' styleType='secondary' onClick={selectAll} />
         {!deletedAssets && <img src={Utilities.gridView} onClick={() => setActiveView('grid')} />}
         <img src={Utilities.listView} onClick={() => setActiveView('list')} />
-        <div className={styles['nested-wrapper']}>
+        {!deletedAssets && <div className={styles['nested-wrapper']}>
           <Button
             text='Filters'
             type='button'
@@ -98,7 +98,7 @@ const TopBar = ({
             onClick={() => {
               handleOpenFilter()
             }} />
-        </div>
+        </div>}
         {activeSortFilter.mainFilter !== 'folders' &&
           <div className={styles['sort-wrapper']}>
             <Select
