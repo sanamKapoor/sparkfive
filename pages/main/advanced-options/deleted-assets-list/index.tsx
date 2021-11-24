@@ -1,15 +1,15 @@
 import Head from 'next/head'
 
-import FilterProvider from '../../../context/filter-provider'
-import { ASSET_ACCESS } from '../../../constants/permissions'
+import FilterProvider from '../../../../context/filter-provider'
+import { ASSET_ACCESS } from '../../../../constants/permissions'
 
 // Components
-import MainLayout from '../../../components/common/layouts/main-layout'
+import MainLayout from '../../../../components/common/layouts/main-layout'
 
-import DeletedAssetsLibrary from '../../../components/common/custom-settings/deleted-assets'
+import DeletedAssetsLibrary from '../../../../components/common/custom-settings/deleted-assets'
 import { useContext } from 'react'
-import { UserContext } from '../../../context'
-import NoPermissionNotice from '../../../components/common/misc/no-permission-notice'
+import { UserContext } from '../../../../context'
+import NoPermissionNotice from '../../../../components/common/misc/no-permission-notice'
 
 const AssetsPage = () => {
 

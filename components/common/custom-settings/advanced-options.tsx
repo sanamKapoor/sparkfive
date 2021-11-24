@@ -17,7 +17,7 @@ const AdvancedOptions = () => {
                         <div className={`${styles['deleted-assets']}`}>
                             <span className={'font-weight-500'}>Deleted Assets</span>
                             <div className={`${styles['p-l-100']}`}></div>
-                            <a className={`${styles['anchor']}`} href={'/main/user-settings/deleted-assets-list'}>Manage Deleted Assets</a>
+                            <a className={`${styles['anchor']}`} href={'/main/advanced-options/deleted-assets-list'}>Manage Deleted Assets</a>
                         </div>
                     </div>
                 </div>
