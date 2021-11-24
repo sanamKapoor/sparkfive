@@ -164,11 +164,11 @@ export default () => {
 			let filters = {}
 			if (!operationAsset) {
 				updateAssets = selectedAssets.map(selectedAsset => (
-					{ id: selectedAsset.asset.id, changes: { folderId: selectedFolder } }
+					{ id: selectedAsset.asset.id, userId:selectedAsset.asset.userId, changes: { folderId: selectedFolder } }
 				))
 			} else {
 				updateAssets = [{
-					id: operationAsset.asset.id, changes: { folderId: selectedFolder }
+					id: operationAsset.asset.id, userId:operationAsset.asset.userId, changes: { folderId: selectedFolder }
 				}]
 			}
 
@@ -703,14 +703,14 @@ export default () => {
 				message={`Recreate thumbnails for ${operationLength} asset(s)`}
 			/>
 			<ConfirmModal
-				modalIsOpen={activeOperation === 'update'}   
+				modalIsOpen={activeOperation === 'update'}
 				closeModal={closeModalAndClearOpAsset}
 				confirmAction={updateAssetStatus}
 				confirmText={'Delete'}
 				message={`Delete ${operationLength} item(s)?`}
 			/>
 			<ConfirmModal
-				modalIsOpen={activeOperation === 'recover'}   
+				modalIsOpen={activeOperation === 'recover'}
 				closeModal={closeModalAndClearOpAsset}
 				confirmAction={recoverAssetStatus}
 				confirmText={'Recover'}

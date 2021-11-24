@@ -2,6 +2,7 @@ import styles from './move-modal.module.css'
 import { useState, useEffect } from 'react'
 import { Assets } from '../../../assets'
 import folderApi from '../../../server-api/folder'
+import { Utilities } from '../../../assets'
 
 // Components
 import Base from '../../common/modals/base'
@@ -12,7 +13,7 @@ import IconClickable from '../../common/buttons/icon-clickable'
 const MoveModal = ({ modalIsOpen, closeModal, itemsAmount, moveAssets, createFolder, confirmText = 'Move' }) => {
 
   const [folders, setFolders] = useState([])
-  const [selectedFolder, setSelectedFolder] = useState('')
+  const [selectedFolder, setSelectedFolder] = useState([])
   const [newFolderName, setNewFolderName] = useState('')
   const [folderInputActive, setFolderInputActive] = useState(false)
 
@@ -32,7 +33,7 @@ const MoveModal = ({ modalIsOpen, closeModal, itemsAmount, moveAssets, createFol
   }
 
   const closemoveModal = () => {
-    setSelectedFolder('')
+    setSelectedFolder([])
     closeModal()
   }
 
@@ -43,12 +44,23 @@ const MoveModal = ({ modalIsOpen, closeModal, itemsAmount, moveAssets, createFol
     setFolderInputActive(false)
   }
 
+  const toggleSelected = (folderId: string, selected: boolean) => {
+    if(selected){
+      setSelectedFolder([...selectedFolder, folderId])
+    }else{
+      setSelectedFolder(selectedFolder.filter((item)=>item !== folderId))
+    }
+
+  }
+
+  const selectedFolderName = folders.filter((folder)=>selectedFolder.includes(folder.id)).map((item)=>item.name)
+
   return (
     <Base
       modalIsOpen={modalIsOpen}
       closeModal={closemoveModal}
       confirmText={confirmText}
-      headText={`${confirmText} ${itemsAmount} item(s) to...`}
+      headText={`${confirmText} ${itemsAmount} item(s) to ${selectedFolder.length > 0 ? selectedFolderName.join(', ') : '...'}`}
       disabledConfirm={!selectedFolder}
       confirmAction={() => {
         moveAssets(selectedFolder)
@@ -56,7 +68,18 @@ const MoveModal = ({ modalIsOpen, closeModal, itemsAmount, moveAssets, createFol
       }} >
       <ul className={styles.list}>
         {folders.map(folder => (
-          <li key={folder.id} onClick={() => setSelectedFolder(folder.id)} className={selectedFolder === folder.id && styles.selected}>
+          <li key={folder.id} onClick={() => toggleSelected(folder.id, !selectedFolder.includes(folder.id))}>
+            {selectedFolder.includes(folder.id) ?
+                <IconClickable
+                    src={Utilities.radioButtonEnabled}
+                    additionalClass={styles['select-icon']}
+                />
+                :
+                <IconClickable
+                    src={Utilities.radioButtonNormal}
+                    additionalClass={styles['select-icon']}
+                     />
+            }
             <IconClickable src={Assets.folder} />
             <div className={styles.name}>
               {folder.name}

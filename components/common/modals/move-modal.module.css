@@ -44,3 +44,9 @@
     cursor: pointer;
     font-weight: bold;
 }
+
+.select-icon {
+    width: 25px;
+    height: auto;
+    margin-right: 15px;
+}

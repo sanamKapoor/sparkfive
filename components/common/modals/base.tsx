@@ -33,7 +33,7 @@ const Base = ({
     >
       {headText &&
         <div className={`${styles.text} ${textWidth && styles['full-width']}`}>
-          <p>{headText}</p>
+          <p className={styles['overflow-text']}>{headText}</p>
           <span className={styles.close} onClick={closeModal}>x</span>
         </div>
       }

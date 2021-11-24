@@ -70,6 +70,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     channel,
     product,
     folder,
+    folders,
     customs,
     dpi
   } = asset
@@ -89,6 +90,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
   const [assetTags, setTags] = useState(tags)
   const [assetCampaigns, setCampaigns] = useState(campaigns)
   const [assetProjects, setProjects] = useState(projects)
+  const [selectedFolder, setSelectedFolders] = useState([])
 
   const [activeDropdown, setActiveDropdown] = useState('')
 
@@ -103,6 +105,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     setTags(tags)
     setCampaigns(campaigns)
     setProjects(projects)
+    setSelectedFolders(folders)
 
     // setAssetCustomFields(update(assetCustomFields, {
     //   $set: mappingCustomFieldData(inputCustomFields, customs)
@@ -282,11 +285,19 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     }
   }
 
-  const addFolder = async (folderName) => {
+  const addFolder = async (folderData) => {
     try {
-      const { data: newFolder } = await assetApi.addFolder(id, { name: folderName })
-      changeFolderState(newFolder)
-      setInputFolders(update(inputFolders, { $push: [newFolder] }))
+      return assetApi.addFolder(id, folderData)
+      // console.log(newFolder)
+      // changeFolderState(newFolder)
+      //
+      // // Create the new one
+      // if(!folderData.id){
+      //   setInputFolders(update(inputFolders, { $push: [newFolder] }))
+      // }
+
+      // return newFolder
+
     } catch (err) {
       console.log(err)
     }
@@ -310,19 +321,21 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     }
   }
 
-  const changeFolderState = (folder) => {
-    let stateUpdate
-    if (!folder) {
-      stateUpdate = {
-        folderId: { $set: undefined },
-        folder: { $set: undefined }
-      }
-    } else {
-      stateUpdate = {
-        folderId: { $set: folder.id },
-        folder: { $set: folder }
-      }
+  const changeFolderState = (folders) => {
+    let stateUpdate = {
+      folders: { $set: folders }
     }
+    // if (!folder) {
+    //   stateUpdate = {
+    //     folderId: { $set: undefined },
+    //     folder: { $set: undefined }
+    //   }
+    // } else {
+    //   stateUpdate = {
+    //     folderId: { $set: folder.id },
+    //     folder: { $set: folder }
+    //   }
+    // }
     updateAssetState(stateUpdate)
   }
 
@@ -610,39 +623,71 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
       {/*</div>*/}
 
       <div className={styles['field-wrapper']} >
-        <div className={`secondary-text ${styles.field}`}>Collection</div>
-        <div className={`normal-text ${styles['collection-container']}`}>
-          <p className={styles['collection-name']}>
-            {folder && <span className={styles.label}>{folder.name}</span>}
-            {folder && !isShare && <span className={styles.remove} onClick={deleteFolder}>x</span>}
-          </p>
-          {!isShare &&
-            <>
-              {activeDropdown === 'collection' ?
-                <div className={`tag-select ${styles['select-wrapper']}`}>
-                  <ReactCreatableSelect
-                    options={inputFolders.map(folder => ({ ...folder, label: folder.name, value: folder.id }))}
-                    placeholder={'Enter new collection or select an existing one'}
-                    onChange={(selected, actionMeta) => onValueChange(selected, actionMeta, addFolder, changeFolder)}
-                    styleType={'regular item'}
-                    menuPlacement={'top'}
-                    isClearable={true}
-                  />
-                </div>
-                :
-                <>
-                  {!folder &&
-                    <div className={`add ${styles['select-add']}`} onClick={() => setActiveDropdown('collection')}>
-                      <IconClickable src={Utilities.add} />
-                      <span>Add Collection</span>
-                    </div>
-                  }
-                </>
-              }
-            </>
-          }
-        </div>
+        <CreatableSelect
+            title='Collections'
+            addText='Add to Collections'
+            onAddClick={() => setActiveDropdown('collections')}
+            selectPlaceholder={'Enter a new collection or select an existing one'}
+            avilableItems={inputFolders}
+            setAvailableItems={setInputFolders}
+            selectedItems={selectedFolder}
+            setSelectedItems={setSelectedFolders}
+            onAddOperationFinished={(stateUpdate) => {
+              // updateAssetState({
+              //   campaigns: { $set: stateUpdate }
+              // })
+              // loadCampaigns()
+            }}
+            onRemoveOperationFinished={async (index, stateUpdate) => {
+              console.log(index)
+              // return deleteFolder(index)
+              // await assetApi.removeCampaign(id, assetCampaigns[index].id)
+              // updateAssetState({
+              //   campaigns: { $set: stateUpdate }
+              // })
+            }}
+            onOperationFailedSkipped={() => setActiveDropdown('')}
+            isShare={isShare}
+            asyncCreateFn={(newItem)=>{ return addFolder(newItem)}}
+            dropdownIsActive={activeDropdown === 'collections'}
+            altColor='yellow'
+        />
       </div>
+
+      {/*<div className={styles['field-wrapper']} >*/}
+      {/*  <div className={`secondary-text ${styles.field}`}>Collection</div>*/}
+      {/*  <div className={`normal-text ${styles['collection-container']}`}>*/}
+      {/*    <p className={styles['collection-name']}>*/}
+      {/*      {folder && <span className={styles.label}>{folder.name}</span>}*/}
+      {/*      {folder && !isShare && <span className={styles.remove} onClick={deleteFolder}>x</span>}*/}
+      {/*    </p>*/}
+      {/*    {!isShare &&*/}
+      {/*      <>*/}
+      {/*        {activeDropdown === 'collection' ?*/}
+      {/*          <div className={`tag-select ${styles['select-wrapper']}`}>*/}
+      {/*            <ReactCreatableSelect*/}
+      {/*              options={inputFolders.map(folder => ({ ...folder, label: folder.name, value: folder.id }))}*/}
+      {/*              placeholder={'Enter new collection or select an existing one'}*/}
+      {/*              onChange={(selected, actionMeta) => onValueChange(selected, actionMeta, addFolder, changeFolder)}*/}
+      {/*              styleType={'regular item'}*/}
+      {/*              menuPlacement={'top'}*/}
+      {/*              isClearable={true}*/}
+      {/*            />*/}
+      {/*          </div>*/}
+      {/*          :*/}
+      {/*          <>*/}
+      {/*            {!folder &&*/}
+      {/*              <div className={`add ${styles['select-add']}`} onClick={() => setActiveDropdown('collection')}>*/}
+      {/*                <IconClickable src={Utilities.add} />*/}
+      {/*                <span>Add Collection</span>*/}
+      {/*              </div>*/}
+      {/*            }*/}
+      {/*          </>*/}
+      {/*        }*/}
+      {/*      </>*/}
+      {/*    }*/}
+      {/*  </div>*/}
+      {/*</div>*/}
 
       <ProductAddition
         FieldWrapper={({ children }) => (
