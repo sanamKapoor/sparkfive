@@ -1,4 +1,4 @@
-import { AssetContext, FilterContext } from '../../../context'
+import { AssetContext, FilterContext, LoadingContext } from '../../../context'
 import { useState, useContext, useEffect } from 'react'
 import assetApi from '../../../server-api/asset'
 import projectApi from '../../../server-api/project'
@@ -38,6 +38,8 @@ export default () => {
 		setCompletedAssets,
 		totalAssets,
 	} = useContext(AssetContext)
+
+	const { setIsLoading }  = useContext(LoadingContext)
 
 	const { loadFolders, activeSortFilter, term } = useContext(FilterContext)
 
@@ -161,6 +163,7 @@ export default () => {
 
 	const moveAssets = async (selectedFolder) => {
 		try {
+			setIsLoading(true)
 			let updateAssets
 			let filters = {}
 			if (!operationAsset) {
@@ -199,6 +202,8 @@ export default () => {
 			if (activeFolder && activeFolder !== selectedFolder) {
 				removeSelectedFromList()
 			}
+
+			setIsLoading(false)
 			toastUtils.success('Assets moved successfully')
 		} catch (err) {
 			console.log(err)

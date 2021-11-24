@@ -43,7 +43,7 @@ export default ({ children }) => {
       try {
         setIsLoading(true)
         const query = url.getQueryStringFromObject(Router.query)
-        console.log(query === '')
+
         const { data } = await userApi.getUserData()
         // Custom role will use custom permission here
         if (data.role.type === 'custom') {
@@ -107,7 +107,6 @@ export default ({ children }) => {
   const verifyDomain = async () => {
     const subdomain = getSubdomain();
 
-    console.log(`Sub domain`, subdomain)
     if (subdomain) {
       setWaitToVerifyDomain(true)
 

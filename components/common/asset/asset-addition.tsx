@@ -31,7 +31,7 @@ const AssetAddition = ({
 	folderAdd = true,
 	type = '',
 	itemId = '',
-	displayMode = 'dropdown'
+	displayMode = 'dropdown',
 }) => {
 
 	const fileBrowserRef = useRef(undefined)
@@ -204,22 +204,29 @@ const AssetAddition = ({
 		const currentDataClone = [...assets]
 		const currenFolderClone = [...folders]
 		try {
+			const selectedFolderToUpload = folders.filter((folder)=>folder.isSelected)
 			let needsFolderFetch
 			const newPlaceholders = []
 			const folderPlaceholders = []
 			const foldersUploaded = getFoldersFromUploads(files, true)
-			if (foldersUploaded.length > 0) {
+
+			// Refetch after upload when uploading folder directly or upload assets to multi folders
+			if (foldersUploaded.length > 0 || selectedFolderToUpload.length > 0) {
 				needsFolderFetch = true
 			}
-			foldersUploaded.forEach(folder => {
-				folderPlaceholders.push({
-					name: folder,
-					length: 10,
-					assets: [],
-					isLoading: true,
-					createdAt: new Date()
+
+			// Only show uploading folder placeholder when not selecting multi folders to upload
+			if(selectedFolderToUpload.length === 0){
+				foldersUploaded.forEach(folder => {
+					folderPlaceholders.push({
+						name: folder,
+						length: 10,
+						assets: [],
+						isLoading: true,
+						createdAt: new Date()
+					})
 				})
-			})
+			}
 
 			let totalSize = 0;
 			files.forEach(file => {
@@ -248,8 +255,18 @@ const AssetAddition = ({
 			setAssets([...newPlaceholders, ...currentDataClone])
 			setFolders([...folderPlaceholders, ...currenFolderClone])
 
+			let uploadToFolders = []
+
+			if(activeFolder){
+				uploadToFolders = [activeFolder]
+			}
+
+			if(selectedFolderToUpload.length > 0){
+				uploadToFolders = selectedFolderToUpload.map((folder)=>folder.id)
+			}
+
 			// Start to upload assets
-			let folderGroups =  await uploadAsset(0, newPlaceholders, currentDataClone, totalSize, activeFolder)
+			let folderGroups =  await uploadAsset(0, newPlaceholders, currentDataClone, totalSize, uploadToFolders.join(","))
 
 			// Save this for retry failure files later
 			setFolderGroups(folderGroups)
@@ -520,9 +537,19 @@ const AssetAddition = ({
 
 	const getCreationParameters = (attachQuery?: any) => {
 		let queryData: any = {}
-		if (activeFolder) {
-			queryData.folderId = activeFolder
+
+		let uploadToFolders = []
+
+		if(activeFolder){
+			uploadToFolders = [activeFolder]
 		}
+
+		if(folders.filter((folder)=>folder.isSelected).length > 0){
+			uploadToFolders = folders.filter((folder)=>folder.isSelected).map((folder)=>folder.id)
+		}
+
+		queryData.folderId = uploadToFolders.join(",")
+
 		if (type === 'project') queryData.projectId = itemId
 		if (type === 'task') queryData.taskId = itemId
 		// Attach extra query

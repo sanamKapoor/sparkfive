@@ -32,7 +32,7 @@ const AssetSubheader = ({
     >
       <div className={styles.padding}>
       </div>
-      {amountSelected > 0 ?
+      {(amountSelected > 0 && mode !== 'folders') ?
         <AssetHeaderOps isUnarchive={activeSortFilter.mainFilter === 'archived'} isFolder={mode === 'folders'} iconColor='White' deletedAssets={deletedAssets}/>
         :
         <AssetAddition activeFolder={activeFolder} getFolders={getFolders} />
