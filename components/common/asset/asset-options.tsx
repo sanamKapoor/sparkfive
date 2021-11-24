@@ -25,7 +25,7 @@ const AssetOptions = ({
 	const options = [
 		{ label: 'Download', onClick: downloadAsset, permissions: [ASSET_DOWNLOAD] },
 		{ label: 'Comment', onClick: openComments },
-		{ label: 'Add to Collection', onClick: openMoveAsset },
+		{ label: 'Add to', onClick: openMoveAsset },
 		{ label: 'Copy', onClick: openCopyAsset },
 		{ label: asset.stage !== 'archived' ? 'Archive' : 'Unarchive', onClick: openArchiveAsset },
 		{ label: 'Delete', onClick: openDeleteAsset },

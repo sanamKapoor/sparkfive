@@ -60,7 +60,7 @@ const MoveModal = ({ modalIsOpen, closeModal, itemsAmount, moveAssets, createFol
       modalIsOpen={modalIsOpen}
       closeModal={closemoveModal}
       confirmText={confirmText}
-      headText={`${confirmText} ${itemsAmount} item(s) to ${selectedFolder.length > 0 ? selectedFolderName.join(', ') : '...'}`}
+      headText={`${confirmText} ${itemsAmount} item(s) to Collection`}
       disabledConfirm={!selectedFolder}
       confirmAction={() => {
         moveAssets(selectedFolder)
