@@ -60,7 +60,9 @@ const SidePanelBulk = ({
   assetTags,
   setTags,
   assetCustomFields,
+  assetFolders,
   setCustomFields,
+  setFolders,
   originalInputs,
   setLoading,
   loading,
@@ -209,15 +211,16 @@ const SidePanelBulk = ({
       const projects = assetProjects.map(mapAttributes)
       const tags = assetTags.map(mapAttributes)
       const customs = customFieldAttributes(assetCustomFields).map(mapAttributes)
+      const folders = assetFolders.map(mapAttributes)
       const updateObject = {
-        assetIds: elementsSelected.map(({ asset: { id } }) => id),
+        assetIds: elementsSelected.map(({ asset }) => asset),
         attributes: {}
       }
 
       if (addMode) {
         updateObject.attributes = {
           channel,
-          folders: [],
+          folders,
           campaigns,
           projects,
           tags,
@@ -226,9 +229,9 @@ const SidePanelBulk = ({
         }
 
         if (assetProduct) updateObject.attributes.products = [{ product: assetProduct, productTags: assetProduct.tags }]
-        if (assetFolder) updateObject.attributes.folders = [{ name: assetFolder.name, id: assetFolder.id }]
+        // if (assetFolder) updateObject.attributes.folders = [{ name: assetFolder.name, id: assetFolder.id }]
       } else {
-        updateObject.attributes = getRemoveAttributes({ campaigns, projects, tags, customs })
+        updateObject.attributes = getRemoveAttributes({ campaigns, projects, tags, customs, folders })
       }
 
       await assetApi.updateMultipleAttributes(updateObject, filters)
@@ -242,13 +245,14 @@ const SidePanelBulk = ({
     }
   }
 
-  const getRemoveAttributes = ({ campaigns, projects, tags, customs }) => {
+  const getRemoveAttributes = ({ campaigns, projects, tags, customs, folders }) => {
     const filterFn = (chosenList) => origItem => chosenList.findIndex(chosenItem => chosenItem.id === origItem.id) === -1
     return {
       removeCampaigns: originalInputs.campaigns.filter(filterFn(campaigns)),
       removeProjects: originalInputs.projects.filter(filterFn(projects)),
       removeTags: originalInputs.tags.filter(filterFn(tags)),
-      removeCustoms: customFieldAttributes(originalInputs.customs).filter(filterFn(customs))
+      removeCustoms: customFieldAttributes(originalInputs.customs).filter(filterFn(customs)),
+      removeFolders: originalInputs.folders.filter(filterFn(folders)),
     }
   }
 
@@ -270,39 +274,61 @@ const SidePanelBulk = ({
       {/*  </section>*/}
       {/*}*/}
 
-      {addMode &&
-        <section className={styles['field-wrapper']} >
-          <div className={`secondary-text ${styles.field}`}>Collection</div>
-          <div className={`normal-text ${styles['collection-container']}`}>
-            <p className={styles['collection-name']}>
-              {assetFolder && <span className={styles.label}>{assetFolder.name}</span>}
-            </p>
-            <>
-              {activeDropdown === 'collection' ?
-                <div className={`tag-select ${styles['select-wrapper']}`}>
-                  <ReactCreatableSelect
-                    options={inputFolders.map(folder => ({ ...folder, label: folder.name, value: folder.id }))}
-                    placeholder={'Enter new collection or select an existing one'}
-                    onChange={onValueChange}
-                    styleType={'regular item'}
-                    menuPlacement={'top'}
-                    isClearable={true}
-                  />
-                </div>
-                :
-                <>
-                  {activeDropdown !== 'collection' &&
-                    <div className={`add ${styles['select-add']}`} onClick={() => setActiveDropdown('collection')}>
-                      <IconClickable src={Utilities.add} />
-                      <span>Add to Collection</span>
-                    </div>
-                  }
-                </>
-              }
-            </>
-          </div>
-        </section>
-      }
+      {/*{addMode &&*/}
+      {/*  <section className={styles['field-wrapper']} >*/}
+      {/*    <div className={`secondary-text ${styles.field}`}>Collection</div>*/}
+      {/*    <div className={`normal-text ${styles['collection-container']}`}>*/}
+      {/*      <p className={styles['collection-name']}>*/}
+      {/*        {assetFolder && <span className={styles.label}>{assetFolder.name}</span>}*/}
+      {/*      </p>*/}
+      {/*      <>*/}
+      {/*        {activeDropdown === 'collection' ?*/}
+      {/*          <div className={`tag-select ${styles['select-wrapper']}`}>*/}
+      {/*            <ReactCreatableSelect*/}
+      {/*              options={inputFolders.map(folder => ({ ...folder, label: folder.name, value: folder.id }))}*/}
+      {/*              placeholder={'Enter new collection or select an existing one'}*/}
+      {/*              onChange={onValueChange}*/}
+      {/*              styleType={'regular item'}*/}
+      {/*              menuPlacement={'top'}*/}
+      {/*              isClearable={true}*/}
+      {/*            />*/}
+      {/*          </div>*/}
+      {/*          :*/}
+      {/*          <>*/}
+      {/*            {activeDropdown !== 'collection' &&*/}
+      {/*              <div className={`add ${styles['select-add']}`} onClick={() => setActiveDropdown('collection')}>*/}
+      {/*                <IconClickable src={Utilities.add} />*/}
+      {/*                <span>Add to Collection</span>*/}
+      {/*              </div>*/}
+      {/*            }*/}
+      {/*          </>*/}
+      {/*        }*/}
+      {/*      </>*/}
+      {/*    </div>*/}
+      {/*  </section>*/}
+      {/*}*/}
+
+      <section className={styles['field-wrapper']} >
+        <CreatableSelect
+            title='Collections'
+            addText='Add to Collection'
+            onAddClick={() => setActiveDropdown('collections')}
+            selectPlaceholder={'Enter a new collection or select an existing one'}
+            avilableItems={inputFolders}
+            setAvailableItems={setInputFolders}
+            selectedItems={assetFolders}
+            setSelectedItems={setFolders}
+            onAddOperationFinished={() => setActiveDropdown('')}
+            onRemoveOperationFinished={() => null}
+            onOperationFailedSkipped={() => setActiveDropdown('')}
+            asyncCreateFn={() => null}
+            dropdownIsActive={activeDropdown === 'collections'}
+            altColor='yellow'
+            isShare={false}
+            isBulkEdit={true}
+            canAdd={addMode}
+        />
+      </section>
 
       <section className={styles['field-wrapper']} >
         <CreatableSelect
