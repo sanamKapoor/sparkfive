@@ -11,6 +11,7 @@ import update from 'immutability-helper'
 
 // Components
 import MoveModal from '../modals/move-modal'
+import CopyModal from '../modals/copy-modal'
 import ShareModal from '../modals/share-modal'
 import ShareFolderModal from '../modals/share-folder-modal'
 import ConfirmModal from '../modals/confirm-modal'
@@ -647,7 +648,7 @@ export default () => {
 				moveAssets={moveAssets}
 				createFolder={createFolder}
 			/>
-			<MoveModal
+			<CopyModal
 				modalIsOpen={activeOperation === 'copy'}
 				closeModal={closeModalAndClearOpAsset}
 				itemsAmount={operationLength}

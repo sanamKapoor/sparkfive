@@ -287,7 +287,13 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
 
   const addFolder = async (folderData) => {
     try {
-      return assetApi.addFolder(id, folderData)
+      // Show loading
+      setIsLoading(true)
+      const rs = await assetApi.addFolder(id, folderData)
+
+      setIsLoading(false)
+
+      return rs
       // console.log(newFolder)
       // changeFolderState(newFolder)
       //
@@ -303,10 +309,14 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     }
   }
 
-  const deleteFolder = async () => {
+  const deleteFolder = async (folderId, stateUpdate) => {
     try {
-      await assetApi.updateAsset(id, { updateData: { folderId: null } })
-      changeFolderState(null)
+      // Show loading
+      setIsLoading(true)
+      await assetApi.removeFolder(id, folderId)
+      // Show loading
+      setIsLoading(false)
+      changeFolderState(stateUpdate)
     } catch (err) {
       console.log(err)
     }
@@ -638,8 +648,8 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
               // })
               // loadCampaigns()
             }}
-            onRemoveOperationFinished={async (index, stateUpdate) => {
-              console.log(index)
+            onRemoveOperationFinished={async (index, stateUpdate, id) => {
+              deleteFolder(id, stateUpdate)
               // return deleteFolder(index)
               // await assetApi.removeCampaign(id, assetCampaigns[index].id)
               // updateAssetState({

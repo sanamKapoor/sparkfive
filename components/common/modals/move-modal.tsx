@@ -10,7 +10,7 @@ import Button from '../../common/buttons/button'
 import Input from '../../common/inputs/input'
 import IconClickable from '../../common/buttons/icon-clickable'
 
-const MoveModal = ({ modalIsOpen, closeModal, itemsAmount, moveAssets, createFolder, confirmText = 'Move' }) => {
+const MoveModal = ({ modalIsOpen, closeModal, itemsAmount, moveAssets, createFolder, confirmText = 'Add' }) => {
 
   const [folders, setFolders] = useState([])
   const [selectedFolder, setSelectedFolder] = useState([])
