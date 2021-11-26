@@ -10,6 +10,7 @@ import DeletedAssetsLibrary from '../../../../components/common/custom-settings/
 import { useContext } from 'react'
 import { UserContext } from '../../../../context'
 import NoPermissionNotice from '../../../../components/common/misc/no-permission-notice'
+import LoginPage from '../../../login'
 
 const AssetsPage = () => {
 
@@ -20,9 +21,12 @@ const AssetsPage = () => {
             <link rel="icon" href="/favicon.ico" />
         </Head>
         <MainLayout requiredPermissions={[ASSET_ACCESS]}>
-            {
-                (user.roleId === 'admin' || user.roleId === 'super_admin') ? <DeletedAssetsLibrary /> : <NoPermissionNotice />
+            {user ?
+                ((user.roleId === 'admin' || user.roleId === 'super_admin') ? <DeletedAssetsLibrary /> : <NoPermissionNotice />)
+                :
+                <LoginPage />
             }
+            
         </MainLayout>
     </FilterProvider>
 }
