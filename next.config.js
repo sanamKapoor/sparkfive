@@ -10,7 +10,7 @@ const sentryWebpackPluginOptions = {
   url: 'https://sentry.io/',
   org: 'sparkfive',
   project: 'sparkfive-client',
-  authToken: '898702f850ab11ecabab2650141439ca',
+  authToken: '30797f831ca8489fb038d2a1aa850c246b888b5ffbe94d798ca91c1666898bdf',
   silent: true, // Suppresses all logs
   // For all available options, see:
   // https://github.com/getsentry/sentry-webpack-plugin#options.
