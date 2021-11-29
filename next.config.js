@@ -1,5 +1,19 @@
 const withImages = require("next-images");
-module.exports = withImages({
+const { withSentryConfig } = require('@sentry/nextjs');
+
+const sentryWebpackPluginOptions = {
+  // Additional config options for the Sentry Webpack plugin. Keep in mind that
+  // the following options are set automatically, and overriding them is not
+  // recommended:
+  //   release, url, org, project, authToken, configFile, stripPrefix,
+  //   urlPrefix, include, ignore
+
+  silent: true, // Suppresses all logs
+  // For all available options, see:
+  // https://github.com/getsentry/sentry-webpack-plugin#options.
+};
+
+module.exports = withSentryConfig(withImages({
   env: {
     SERVER_BASE_URL: process.env.SERVER_BASE_URL || "http://localhost:8080",
     SOCKET_BASE_URL: process.env.SERVER_BASE_URL ? `${process.env.SERVER_BASE_URL}/` : "http://localhost:8080/",
@@ -27,4 +41,6 @@ module.exports = withImages({
     INCLUDE_PIXEL: process.env.INCLUDE_PIXEL || "no",
     INCLUDE_GOOGLE_ANALYTICS: process.env.INCLUDE_GOOGLE_ANALYTICS || "no",
   },
-});
+}), sentryWebpackPluginOptions);
+
+
