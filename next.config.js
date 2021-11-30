@@ -1,5 +1,22 @@
 const withImages = require("next-images");
-module.exports = withImages({
+const { withSentryConfig } = require('@sentry/nextjs');
+
+const sentryWebpackPluginOptions = {
+  // Additional config options for the Sentry Webpack plugin. Keep in mind that
+  // the following options are set automatically, and overriding them is not
+  // recommended:
+  //   release, url, org, project, authToken, configFile, stripPrefix,
+  //   urlPrefix, include, ignore
+  url: 'https://sentry.io/',
+  org: 'sparkfive',
+  project: 'sparkfive-client',
+  authToken: '30797f831ca8489fb038d2a1aa850c246b888b5ffbe94d798ca91c1666898bdf',
+  silent: true, // Suppresses all logs
+  // For all available options, see:
+  // https://github.com/getsentry/sentry-webpack-plugin#options.
+};
+
+module.exports = withSentryConfig(withImages({
   env: {
     SERVER_BASE_URL: process.env.SERVER_BASE_URL || "http://localhost:8080",
     SOCKET_BASE_URL: process.env.SERVER_BASE_URL ? `${process.env.SERVER_BASE_URL}/` : "http://localhost:8080/",
@@ -26,5 +43,8 @@ module.exports = withImages({
       "wss://it7l2l7v25dvhhet4izohabywu.appsync-realtime-api.us-east-1.amazonaws.com/graphql",
     INCLUDE_PIXEL: process.env.INCLUDE_PIXEL || "no",
     INCLUDE_GOOGLE_ANALYTICS: process.env.INCLUDE_GOOGLE_ANALYTICS || "no",
+    SENTRY_ENV: process.env.SENTRY_ENV || "dev",
   },
-});
+}), sentryWebpackPluginOptions);
+
+
