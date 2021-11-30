@@ -8,6 +8,7 @@
     display: flex;
     padding: 1rem;
     border-bottom: 1px solid var(--color-secondary-border);
+    align-items: center;
 }
 
 .list li:last-child {
@@ -43,4 +44,10 @@
 .folder-wrapper .create-new {
     cursor: pointer;
     font-weight: bold;
+}
+
+.select-icon {
+    width: 25px;
+    height: auto;
+    margin-right: 15px;
 }
