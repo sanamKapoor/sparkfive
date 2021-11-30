@@ -48,6 +48,7 @@ const GuestUploadApprovalOverlay = ({ handleBackButton, selectedAssets, loadingA
 	const [assetProjects, setAssetProjects] = useState([])
 	const [assetTags, setTags] = useState([])
 	const [assetCampaigns, setCampaigns] = useState([])
+	const [assetFolders, setFolders] = useState([])
 
 	const [editAssets, setEditAssets] = useState([])
 
@@ -59,7 +60,8 @@ const GuestUploadApprovalOverlay = ({ handleBackButton, selectedAssets, loadingA
 		campaigns: [],
 		projects: [],
 		tags: [],
-		customs: []
+		customs: [],
+		folders: []
 	})
 
 	// Custom fields
@@ -84,6 +86,7 @@ const GuestUploadApprovalOverlay = ({ handleBackButton, selectedAssets, loadingA
 		setAssetProjects([])
 		setTags([])
 		setCampaigns([])
+		setFolders([])
 
 
 		// Default custom field values
@@ -102,6 +105,7 @@ const GuestUploadApprovalOverlay = ({ handleBackButton, selectedAssets, loadingA
 			setAssetProjects(originalInputs.projects)
 			setTags(originalInputs.tags)
 			setAssetCustomFields(originalInputs.customs)
+			setFolders(originalInputs.folders)
 
 			// Custom fields
 			if(inputCustomFields.length > 0){
@@ -144,7 +148,8 @@ const GuestUploadApprovalOverlay = ({ handleBackButton, selectedAssets, loadingA
 				campaigns,
 				projects,
 				tags,
-				customs
+				customs,
+				folders,
 			})
 		} catch (err) {
 			// TODO: Maybe show error?
@@ -248,11 +253,13 @@ const GuestUploadApprovalOverlay = ({ handleBackButton, selectedAssets, loadingA
 						assetProjects={assetProjects}
 						assetTags={assetTags}
 						assetCustomFields={assetCustomFields}
+						assetFolders={assetFolders}
 						originalInputs={originalInputs}
 						setAssetProjects={setAssetProjects}
 						setCampaigns={setCampaigns}
 						setTags={setTags}
 						setCustomFields={onChangeCustomField}
+						setFolders={setFolders}
 						setLoading={setLoading}
 						loading={loading}
 						addMode={addMode}

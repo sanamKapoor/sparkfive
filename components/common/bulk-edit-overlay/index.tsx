@@ -45,6 +45,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 	const [assetProjects, setAssetProjects] = useState([])
 	const [assetTags, setTags] = useState([])
 	const [assetCampaigns, setCampaigns] = useState([])
+	const [assetFolders, setFolders] = useState([])
 
 	const [editAssets, setEditAssets] = useState([])
 
@@ -54,7 +55,8 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 		campaigns: [],
 		projects: [],
 		tags: [],
-		customs: []
+		customs: [],
+		folders: []
 	})
 
 	// Custom fields
@@ -79,6 +81,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 		setAssetProjects([])
 		setTags([])
 		setCampaigns([])
+		setFolders([])
 
 
 		// Default custom field values
@@ -97,6 +100,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 			setAssetProjects(originalInputs.projects)
 			setTags(originalInputs.tags)
 			setAssetCustomFields(originalInputs.customs)
+			setFolders(originalInputs.folders)
 
 			// Custom fields
 			if(inputCustomFields.length > 0){
@@ -133,13 +137,14 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 			// Get custom fields list
 			await getCustomFieldsInputData();
 
-			const { data: { tags, projects, campaigns, customs } } = await assetApi.getBulkProperties({ assetIds: selectedAssets.map(({ asset: { id } }) => id) })
+			const { data: { tags, projects, campaigns, customs, folders } } = await assetApi.getBulkProperties({ assetIds: selectedAssets.map(({ asset: { id } }) => id) })
 
 			setOriginalInputs({
 				campaigns,
 				projects,
 				tags,
-				customs
+				customs,
+				folders,
 			})
 		} catch (err) {
 			// TODO: Maybe show error?
@@ -240,11 +245,13 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 						assetProjects={assetProjects}
 						assetTags={assetTags}
 						assetCustomFields={assetCustomFields}
+						assetFolders={assetFolders}
 						originalInputs={originalInputs}
 						setAssetProjects={setAssetProjects}
 						setCampaigns={setCampaigns}
 						setTags={setTags}
 						setCustomFields={onChangeCustomField}
+						setFolders={setFolders}
 						setLoading={setLoading}
 						loading={loading}
 						addMode={addMode}

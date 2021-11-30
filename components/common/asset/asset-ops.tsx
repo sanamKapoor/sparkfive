@@ -1,4 +1,4 @@
-import { AssetContext, FilterContext } from '../../../context'
+import { AssetContext, FilterContext, LoadingContext } from '../../../context'
 import { useState, useContext, useEffect } from 'react'
 import assetApi from '../../../server-api/asset'
 import projectApi from '../../../server-api/project'
@@ -11,6 +11,7 @@ import update from 'immutability-helper'
 
 // Components
 import MoveModal from '../modals/move-modal'
+import CopyModal from '../modals/copy-modal'
 import ShareModal from '../modals/share-modal'
 import ShareFolderModal from '../modals/share-folder-modal'
 import ConfirmModal from '../modals/confirm-modal'
@@ -37,6 +38,8 @@ export default () => {
 		setCompletedAssets,
 		totalAssets,
 	} = useContext(AssetContext)
+
+	const { setIsLoading }  = useContext(LoadingContext)
 
 	const { loadFolders, activeSortFilter, term } = useContext(FilterContext)
 
@@ -160,15 +163,16 @@ export default () => {
 
 	const moveAssets = async (selectedFolder) => {
 		try {
+			setIsLoading(true)
 			let updateAssets
 			let filters = {}
 			if (!operationAsset) {
 				updateAssets = selectedAssets.map(selectedAsset => (
-					{ id: selectedAsset.asset.id, changes: { folderId: selectedFolder } }
+					{ id: selectedAsset.asset.id, userId:selectedAsset.asset.userId, changes: { folderId: selectedFolder } }
 				))
 			} else {
 				updateAssets = [{
-					id: operationAsset.asset.id, changes: { folderId: selectedFolder }
+					id: operationAsset.asset.id, userId:operationAsset.asset.userId, changes: { folderId: selectedFolder }
 				}]
 			}
 
@@ -198,6 +202,8 @@ export default () => {
 			if (activeFolder && activeFolder !== selectedFolder) {
 				removeSelectedFromList()
 			}
+
+			setIsLoading(false)
 			toastUtils.success('Assets moved successfully')
 		} catch (err) {
 			console.log(err)
@@ -628,7 +634,7 @@ export default () => {
 				moveAssets={moveAssets}
 				createFolder={createFolder}
 			/>
-			<MoveModal
+			<CopyModal
 				modalIsOpen={activeOperation === 'copy'}
 				closeModal={closeModalAndClearOpAsset}
 				itemsAmount={operationLength}
@@ -684,14 +690,14 @@ export default () => {
 				message={`Recreate thumbnails for ${operationLength} asset(s)`}
 			/>
 			<ConfirmModal
-				modalIsOpen={activeOperation === 'update'}   
+				modalIsOpen={activeOperation === 'update'}
 				closeModal={closeModalAndClearOpAsset}
 				confirmAction={updateAssetStatus}
 				confirmText={'Delete'}
 				message={`Delete ${operationLength} item(s)?`}
 			/>
 			<ConfirmModal
-				modalIsOpen={activeOperation === 'recover'}   
+				modalIsOpen={activeOperation === 'recover'}
 				closeModal={closeModalAndClearOpAsset}
 				confirmAction={recoverAssetStatus}
 				confirmText={'Recover'}
