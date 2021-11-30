@@ -263,27 +263,8 @@ export default () => {
 			let filters = {}
 
 			// Select all assets without pagination
-			if(selectedAllAssets){
-				filters = {
-					...getAssetsFilters({
-						replace: false,
-						activeFolder,
-						addedIds: [],
-						nextPage: 1,
-						userFilterObject: activeSortFilter
-					}),
-					selectedAll: '1',
-				};
 
-				if(term){
-					// @ts-ignore
-					filters.term = term;
-				}
-				// @ts-ignore
-				delete filters.page
-			}
-
-			if (!operationAsset) {
+			if (selectedAssets.length > 1) {
 				await assetApi.deleteMultipleAssets({ assetIds: selectedAssets.map(assetItem => assetItem.asset.id), filters })
 				const newAssets = assets.filter(existingAsset => {
 					const searchedAssetIndex = selectedAssets.findIndex(assetListItem => existingAsset.asset.id === assetListItem.asset.id)
