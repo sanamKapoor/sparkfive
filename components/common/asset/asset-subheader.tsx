@@ -15,7 +15,7 @@ const AssetSubheader = ({
   getFolders,
   activeSortFilter,
   mode,
-  deletedAssets
+  deletedAssets = false
 }) => {
 
   return (

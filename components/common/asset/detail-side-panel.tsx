@@ -500,7 +500,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
       {inputCustomFields.map((field, index)=>{
         if(field.type === 'selectOne'){
 
-          return <div className={styles['field-wrapper']} >
+          return <div className={styles['field-wrapper']} key={index}>
             <div className={`secondary-text ${styles.field}`}>{field.name}</div>
             <CustomFieldSelector
                 data={assetCustomFields[index]?.values[0]?.name}
@@ -643,9 +643,10 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
             selectedItems={selectedFolder}
             setSelectedItems={setSelectedFolders}
             onAddOperationFinished={(stateUpdate) => {
-              // updateAssetState({
-              //   campaigns: { $set: stateUpdate }
-              // })
+              console.log(stateUpdate)
+              updateAssetState({
+                folders: { $set: stateUpdate }
+              })
               // loadCampaigns()
             }}
             onRemoveOperationFinished={async (index, stateUpdate, id) => {
