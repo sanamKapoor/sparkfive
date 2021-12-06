@@ -70,6 +70,8 @@ const AssetAddition = ({
 			// Get file group info, this returns folderKey and newName of file
 			let fileGroupInfo = getFolderKeyAndNewNameByFileName(file.webkitRelativePath)
 
+			console.log(`file group info`, fileGroupInfo)
+
 			// Do validation
 			if(assets[i].asset.size > validation.UPLOAD.MAX_SIZE.VALUE){
 				// Violate validation, mark failure
@@ -146,7 +148,7 @@ const AssetAddition = ({
 				if(fileGroupInfo.folderKey && !folderId){
 					/// If user is uploading new folder and this one still does not have folder Id, add it to folder group
 					if(!folderGroup[fileGroupInfo.folderKey]){
-						folderGroup[fileGroupInfo.folderKey] = data[0].asset.folderId
+						folderGroup[fileGroupInfo.folderKey] = data[0].asset.folders[0]
 					}
 				}
 
