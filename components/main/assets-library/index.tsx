@@ -289,7 +289,7 @@ const AssetsLibrary = () => {
 
           /// If user is uploading new folder and this one still does not have folder Id, add it to folder group
           if (fileGroupInfo.folderKey && !folderGroup[fileGroupInfo.folderKey]) {
-            folderGroup[fileGroupInfo.folderKey] = data[0].asset.folderId
+            folderGroup[fileGroupInfo.folderKey] = data[0].asset.folders[0]
           }
         }
 
