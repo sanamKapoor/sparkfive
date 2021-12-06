@@ -269,8 +269,6 @@ export default () => {
 			let filters = {}
 
 			// Select all assets without pagination
-			console.log(selectedAssets)
-
 			if (selectedAssets.length > 0) {
 				await assetApi.deleteMultipleAssets({ assetIds: selectedAssets.map(assetItem => assetItem.asset.id), filters })
 				const newAssets = assets.filter(existingAsset => {
