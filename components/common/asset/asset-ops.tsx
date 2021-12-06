@@ -269,8 +269,9 @@ export default () => {
 			let filters = {}
 
 			// Select all assets without pagination
+			console.log(selectedAssets)
 
-			if (selectedAssets.length > 1) {
+			if (selectedAssets.length > 0) {
 				await assetApi.deleteMultipleAssets({ assetIds: selectedAssets.map(assetItem => assetItem.asset.id), filters })
 				const newAssets = assets.filter(existingAsset => {
 					const searchedAssetIndex = selectedAssets.findIndex(assetListItem => existingAsset.asset.id === assetListItem.asset.id)
