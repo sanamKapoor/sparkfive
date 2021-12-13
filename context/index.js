@@ -77,7 +77,7 @@ export const AssetContext = createContext({
     setUploadingAssets: (assets) => { },
     uploadDetailOverlay: false,
     setUploadDetailOverlay: (show) => { },
-    reUploadAsset: (i, assets, currentDataClone, totalSize, retryList, folderId, folderGroups) => { },
+    reUploadAsset: (i, assets, currentDataClone, totalSize, retryList, folderId, folderGroups, subFolderAutoTag) => { },
 
     uploadingFileName: '',
     setUploadingFileName: (name) => { },

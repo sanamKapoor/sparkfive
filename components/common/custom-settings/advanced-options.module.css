@@ -130,8 +130,15 @@
     font-weight: 600;
 }
 
+.first-field-block{
+    border-bottom: solid 1px #dddad4;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
 .field-block{
-    margin-bottom: 75px;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
 }
 
 .tag-wrapper{
@@ -176,9 +183,17 @@
 
 .deleted-assets{
     display: flex;
-    align-items: center;
-    margin-left: 8px;
     margin-top: 10px;
+    width: 100%;
+}
+
+.radio-button-wrapper{
+    display: flex;
+    align-items: center;
+}
+
+.field-radio-wrapper{
+    display: flex;
 }
 
 @media screen and (max-width: 1280px){

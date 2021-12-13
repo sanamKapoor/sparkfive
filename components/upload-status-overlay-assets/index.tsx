@@ -8,6 +8,8 @@ import update from 'immutability-helper'
 import AssetItem from './asset-item'
 import Button from '../common/buttons/button'
 
+import teamApi from '../../server-api/team'
+
 
 const UploadStatusOverlayAssets = ({ closeOverlay }) => {
 
@@ -42,6 +44,11 @@ const UploadStatusOverlayAssets = ({ closeOverlay }) => {
     closeOverlay();
   }
 
+  const getAdvanceConfigurations = async () => {
+    const { data } = await teamApi.getAdvanceOptions()
+    return data
+  }
+
   const onRetry = async (index) => {
     let size = 0;
     // Calculate the rest of size
@@ -49,8 +56,11 @@ const UploadStatusOverlayAssets = ({ closeOverlay }) => {
       size += asset.asset.size
     })
 
+    // Get team advance configurations first
+    const { subFolderAutoTag } =  await getAdvanceConfigurations();
+
     // Start to upload assets
-    reUploadAsset(0, uploadingAssets, assets, size, [uploadingAssets[index]], activeFolder, folderGroups)
+    reUploadAsset(0, uploadingAssets, assets, size, [uploadingAssets[index]], activeFolder, folderGroups, subFolderAutoTag)
 
     closeOverlay();
   }
@@ -63,8 +73,12 @@ const UploadStatusOverlayAssets = ({ closeOverlay }) => {
     uploadingAssets.map((asset)=>{
       totalSize += asset.asset.size
     })
+
+    // Get team advance configurations first
+    const { subFolderAutoTag } =  await getAdvanceConfigurations();
+
     // Start to upload assets
-    reUploadAsset(0, uploadingAssets, assets, totalSize, selectedAssets, activeFolder, folderGroups)
+    reUploadAsset(0, uploadingAssets, assets, totalSize, selectedAssets, activeFolder, folderGroups, subFolderAutoTag)
 
     closeOverlay();
   }
