@@ -49,10 +49,12 @@ export const  getFolderIdByFileName = (groups: FolderGroups[], fileName: string)
 }
 
 // Get folder key and new name (without splash) by original file name
-export const  getFolderKeyAndNewNameByFileName = (fileName: string) => {
+export const  getFolderKeyAndNewNameByFileName = (fileName: string, onlyKeepParent: boolean = false) => {
+	console.log(`onlyKeepParent: ${onlyKeepParent}`)
+	console.log(fileName)
 	const lastSeparator = fileName.lastIndexOf('/')
 	return {
-		folderKey: fileName.substring(0, lastSeparator),
+		folderKey: onlyKeepParent ? fileName.split("/")[0] : fileName.substring(0, lastSeparator),
 		newName: fileName.substring(lastSeparator + 1, fileName.length)
 	}
 }
