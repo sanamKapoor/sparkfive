@@ -174,7 +174,7 @@ export default ({ children }) => {
     }
 
     // Upload asset
-    const reUploadAsset  = async (i: number, assets: any, currentDataClone: any, totalSize: number, retryList: any[], folderId, folderGroup = {}) => {
+    const reUploadAsset  = async (i: number, assets: any, currentDataClone: any, totalSize: number, retryList: any[], folderId, folderGroup = {}, subFolderAutoTag = true) => {
         try{
             const formData = new FormData()
             let file = retryList[i].file.originalFile
@@ -183,7 +183,7 @@ export default ({ children }) => {
             let currentUploadingFolderId = null
 
             // Get file group info, this returns folderKey and newName of file
-            let fileGroupInfo = getFolderKeyAndNewNameByFileName(file.webkitRelativePath)
+            let fileGroupInfo = getFolderKeyAndNewNameByFileName(file.webkitRelativePath, subFolderAutoTag)
 
             // Do validation
             if(retryList[i].asset.size > validation.UPLOAD.MAX_SIZE.VALUE){
@@ -197,7 +197,7 @@ export default ({ children }) => {
                 if(i === retryList.length - 1){
                     return
                 }else{ // Keep going
-                    await reUploadAsset(i+1, updatedAssets, currentDataClone, totalSize, retryList, folderId, folderGroup)
+                    await reUploadAsset(i+1, updatedAssets, currentDataClone, totalSize, retryList, folderId, folderGroup, subFolderAutoTag)
                 }
             }
 
@@ -217,9 +217,9 @@ export default ({ children }) => {
                 if(folderGroup[fileGroupInfo.folderKey]){
                     currentUploadingFolderId = folderGroup[fileGroupInfo.folderKey]
                     // Assign new file name without splash
-                    file = new File([file.slice(0, file.size, file.type)],
-                        fileGroupInfo.newName
-                        , { type: file.type })
+                    // file = new File([file.slice(0, file.size, file.type)],
+                    //     fileGroupInfo.newName
+                    //     , { type: file.type })
                 }
             }
 
@@ -285,7 +285,7 @@ export default ({ children }) => {
                 // Finish uploading process
                 showUploadProcess('done')
             }else{ // Keep going
-                await reUploadAsset(i+1, updatedAssets, currentDataClone, totalSize, retryList, folderId, folderGroup)
+                await reUploadAsset(i+1, updatedAssets, currentDataClone, totalSize, retryList, folderId, folderGroup, subFolderAutoTag)
             }
         }catch (e){
             // Violate validation, mark failure
@@ -299,7 +299,7 @@ export default ({ children }) => {
                 // Finish uploading process
                 showUploadProcess('done')
             }else{ // Keep going
-                await reUploadAsset(i+1, updatedAssets, currentDataClone, totalSize, retryList, folderId, folderGroup)
+                await reUploadAsset(i+1, updatedAssets, currentDataClone, totalSize, retryList, folderId, folderGroup, subFolderAutoTag)
             }
         }
     }

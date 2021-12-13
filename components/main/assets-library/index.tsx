@@ -4,6 +4,7 @@ import { AssetContext, FilterContext } from '../../../context'
 import update from 'immutability-helper'
 import assetApi from '../../../server-api/asset'
 import folderApi from '../../../server-api/folder'
+import teamApi from '../../../server-api/team'
 import toastUtils from '../../../utils/toast'
 import { getFolderKeyAndNewNameByFileName } from '../../../utils/upload'
 import { getAssetsFilters, getAssetsSort, DEFAULT_FILTERS, DEFAULT_CUSTOM_FIELD_FILTERS, getFoldersFromUploads } from '../../../utils/asset'
@@ -200,7 +201,7 @@ const AssetsLibrary = () => {
   }
 
   // Upload asset
-  const uploadAsset = async (i: number, assets: any, currentDataClone: any, totalSize: number, folderId, folderGroup = {}) => {
+  const uploadAsset = async (i: number, assets: any, currentDataClone: any, totalSize: number, folderId, folderGroup = {}, subFolderAutoTag = true) => {
     try {
       const formData = new FormData()
       let file = assets[i].file
@@ -226,7 +227,7 @@ const AssetsLibrary = () => {
         if (i === assets.length - 1) {
           return folderGroup
         } else { // Keep going
-          await uploadAsset(i + 1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup)
+          await uploadAsset(i + 1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, subFolderAutoTag)
         }
       } else {
         // Show uploading toast
@@ -237,15 +238,15 @@ const AssetsLibrary = () => {
         // If user is uploading files in folder which is not saved from server yet
         if (assets[i].dragDropFolderUpload && !folderId) {
           // Get file group info, this returns folderKey and newName of file
-          let fileGroupInfo = getFolderKeyAndNewNameByFileName(file.name)
+          let fileGroupInfo = getFolderKeyAndNewNameByFileName(file.name, subFolderAutoTag)
 
           // Current folder Group have the key
           if (fileGroupInfo.folderKey && folderGroup[fileGroupInfo.folderKey]) {
             currentUploadingFolderId = folderGroup[fileGroupInfo.folderKey]
             // Assign new file name without splash
-            file = new File([file.slice(0, file.size, file.type)],
-              fileGroupInfo.newName
-              , { type: file.type, lastModified: (file.lastModifiedDate || new Date(file.lastModified)) })
+            // file = new File([file.slice(0, file.size, file.type)],
+            //   fileGroupInfo.newName
+            //   , { type: file.type, lastModified: (file.lastModifiedDate || new Date(file.lastModified)) })
           }
         }
 
@@ -285,7 +286,7 @@ const AssetsLibrary = () => {
         // If user is uploading files in folder which is not saved from server yet
         if (assets[i].dragDropFolderUpload && !folderId) {
           // Get file group info, this returns folderKey and newName of file
-          let fileGroupInfo = getFolderKeyAndNewNameByFileName(file.name)
+          let fileGroupInfo = getFolderKeyAndNewNameByFileName(file.name, subFolderAutoTag)
 
           /// If user is uploading new folder and this one still does not have folder Id, add it to folder group
           if (fileGroupInfo.folderKey && !folderGroup[fileGroupInfo.folderKey]) {
@@ -317,7 +318,7 @@ const AssetsLibrary = () => {
         if (i === assets.length - 1) {
           return folderGroup
         } else { // Keep going
-          await uploadAsset(i + 1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup)
+          await uploadAsset(i + 1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, subFolderAutoTag)
         }
       }
     } catch (e) {
@@ -339,9 +340,14 @@ const AssetsLibrary = () => {
       if (i === assets.length - 1) {
         return folderGroup
       } else { // Keep going
-        await uploadAsset(i + 1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup)
+        await uploadAsset(i + 1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, subFolderAutoTag)
       }
     }
+  }
+
+  const getAdvanceConfigurations = async () => {
+    const { data } = await teamApi.getAdvanceOptions()
+    return data
   }
 
   const onFilesDataGet = async (files) => {
@@ -405,8 +411,11 @@ const AssetsLibrary = () => {
       setAssets([...newPlaceholders, ...currentDataClone])
       setFolders([...folderPlaceholders, ...currenFolderClone])
 
+      // Get team advance configurations first
+      const { subFolderAutoTag } =  await getAdvanceConfigurations();
+
       // Start to upload assets
-      let folderGroups = await uploadAsset(0, newPlaceholders, currentDataClone, totalSize, activeFolder)
+      let folderGroups = await uploadAsset(0, newPlaceholders, currentDataClone, totalSize, activeFolder, undefined, subFolderAutoTag)
 
       // Save this for retry failure files later
       setFolderGroups(folderGroups)
