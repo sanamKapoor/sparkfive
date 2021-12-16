@@ -148,25 +148,21 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
         filterProductType,
         filterProductSku
     } = userFilterObject
-    if (mainFilter !== 'folders') {
-        if (mainFilter === 'images') {
-            filters.type = 'image'
-            filters.stage = 'draft'
-        }
-        else if (mainFilter === 'videos') {
-            filters.type = 'video'
-            filters.stage = 'draft'
-        }
-        else if (mainFilter === 'product') {
-            filters.hasProducts = 'product'
-            filters.stage = 'draft'
-        }
-        else if (mainFilter === 'archived') filters.stage = 'archived'
-        else filters.stage = 'draft'
-    } else {
-        filters.type = 'folder'
+
+    if (mainFilter === 'images') {
+        filters.type = 'image'
         filters.stage = 'draft'
     }
+    else if (mainFilter === 'videos') {
+        filters.type = 'video'
+        filters.stage = 'draft'
+    }
+    else if (mainFilter === 'product') {
+        filters.hasProducts = 'product'
+        filters.stage = 'draft'
+    }
+    else if (mainFilter === 'archived') filters.stage = 'archived'
+    else filters.stage = 'draft'
 
     addFilterToQuery(filters, filterCampaigns, 'campaigns')
     addFilterToQuery(filters, filterProjects, 'projects')
