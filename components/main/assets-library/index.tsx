@@ -412,7 +412,7 @@ const AssetsLibrary = () => {
       setFolders([...folderPlaceholders, ...currenFolderClone])
 
       // Get team advance configurations first
-      const { subFolderAutoTag } =  await getAdvanceConfigurations();
+      const { subFolderAutoTag } = await getAdvanceConfigurations();
 
       // Start to upload assets
       let folderGroups = await uploadAsset(0, newPlaceholders, currentDataClone, totalSize, activeFolder, undefined, subFolderAutoTag)
@@ -495,7 +495,15 @@ const AssetsLibrary = () => {
         queryParams.folders = activeSortFilter.filterFolders.map(item => item.value).join(',')
       }
       const { data } = await folderApi.getFolders(queryParams)
-      setFolders({ ...data, results: data.results }, replace)
+      const temp = []
+      if (data.results) {
+        data.results.map((folder) => {
+          if (folder.assets.length) {
+            temp.push(folder)
+          }
+        })
+      }
+      setFolders({ ...data, results: temp }, replace)
     } catch (err) {
       //TODO: Handle error
       console.log(err)
