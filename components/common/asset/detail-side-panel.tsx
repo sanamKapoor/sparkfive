@@ -117,6 +117,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     if (!isShare) {
       getTagsInputData()
       getCustomFieldsInputData()
+      getFolderData()
       if (hasPermission([CALENDAR_ACCESS])) {
         getInputData()
         getCustomFieldsInputData()
@@ -144,13 +145,16 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     try {
       const projectsResponse = await projectApi.getProjects()
       const campaignsResponse = await campaignApi.getCampaigns()
-      const folderResponse = await folderApi.getFoldersSimple()
       setInputProjects(projectsResponse.data)
       setInputCampaigns(campaignsResponse.data)
-      setInputFolders(folderResponse.data)
     } catch (err) {
       // TODO: Maybe show error?
     }
+  }
+
+  const getFolderData = async () => {
+    const folderResponse = await folderApi.getFoldersSimple()
+    setInputFolders(folderResponse.data)
   }
 
   const getTagsInputData = async () => {
