@@ -235,7 +235,7 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
     }
 
     if (filterProductSku) {
-        filters.filterProductSku = filterProductSku.sku
+        filters.filterProductSku = filterProductSku.map((item)=>item.sku).join(",")
     }
 
     if (filterTags.length > 0 && allTags) filters.allTags = allTags
