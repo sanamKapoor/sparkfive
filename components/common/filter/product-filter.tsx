@@ -28,8 +28,8 @@ const ProductFilter = ({ loadFn, productFilters, setSortFilterValue, fieldsValue
                 <Select
                     options={productFilters.sku.map((field) => ({ ...field, value: field.sku, label: field.sku }))}
                     value={skuValue}
+                    isMulti={true}
                     styleType='regular'
-                    isClearable={true}
                     onChange={(selected) => setSortFilterValue('filterProductSku', selected)}
                     placeholder='Select Value'
                 />

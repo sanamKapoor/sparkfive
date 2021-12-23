@@ -91,6 +91,7 @@ const SidePanelBulk = ({
   const [newProjectName, setNewProjectName] = useState('')
 
   const [assetProduct, setAssetProduct] = useState(null)
+  const [assetProducts, setAssetProducts] = useState([])
 
   const [warningMessage, setWarningMessage] = useState('')
 
@@ -108,6 +109,7 @@ const SidePanelBulk = ({
       setAssetFolder(null)
       setChannel(null)
       setAssetProduct(null)
+      setAssetProducts([])
     }
   }, [addMode, originalInputs])
 
@@ -228,11 +230,13 @@ const SidePanelBulk = ({
           products: []
         }
 
-        if (assetProduct) updateObject.attributes.products = [{ product: assetProduct, productTags: assetProduct.tags }]
+        if (assetProducts.length > 0) updateObject.attributes.products = assetProducts.map((item)=>{return { product: item, productTags: item.tags }})
         // if (assetFolder) updateObject.attributes.folders = [{ name: assetFolder.name, id: assetFolder.id }]
       } else {
         updateObject.attributes = getRemoveAttributes({ campaigns, projects, tags, customs, folders })
       }
+
+      console.log(updateObject)
 
       await assetApi.updateMultipleAttributes(updateObject, filters)
       await onUpdate()
@@ -254,6 +258,11 @@ const SidePanelBulk = ({
       removeCustoms: customFieldAttributes(originalInputs.customs).filter(filterFn(customs)),
       removeFolders: originalInputs.folders.filter(filterFn(folders)),
     }
+  }
+
+
+  const addProductBlock = () => {
+    setAssetProducts([...assetProducts, null])
   }
 
   return (
@@ -501,19 +510,54 @@ const SidePanelBulk = ({
 
       {addMode &&
         <section>
-          <ProductAddition
-            FieldWrapper={({ children }) => (
-              <div className={styles['field-wrapper']} >{children}</div>
-            )}
-            activeDropdown={activeDropdown}
-            setActiveDropdown={setActiveDropdown}
-            assetId={null}
-            updateAssetState={() => null}
-            product={assetProduct}
-            isShare={false}
-            isBulkEdit={true}
-            setAssetProduct={setAssetProduct}
-          />
+          <div className={styles['field-wrapper']} >
+            <div className={`secondary-text ${styles.field}`}>Products</div>
+          </div>
+
+          {assetProducts.map((product, index)=>{
+            return <div className={styles['product-wrapper']} key={index}>
+              <ProductAddition
+                  noTitle
+                  skuActiveDropdownValue={`sku-${index}`}
+                  productFieldActiveDropdownValue={`product_field-${index}`}
+                  productVendorActiveDropdownValue={`product_vendor-${index}`}
+                  productCategoryActiveDropdownValue={`product_category-${index}`}
+                  productRetailerActiveDropdownValue={`product_retailer-${index}`}
+                  FieldWrapper={({ children }) => (
+                      <div className={styles['field-wrapper']} >{children}</div>
+                  )}
+                  isShare={false}
+                  activeDropdown={activeDropdown}
+                  setActiveDropdown={(value)=>{console.log(value);setActiveDropdown(`${value}-${index}`)}}
+                  assetId={null}
+                  updateAssetState={() => null}
+                  product={product}
+                  isBulkEdit={true}
+                  setAssetProduct={(data)=>{
+                    setAssetProducts(update(assetProducts, {
+                      [index]: { $set: data }
+                    }))
+                  }}
+              />
+            </div>
+          })}
+          {/*<ProductAddition*/}
+          {/*  FieldWrapper={({ children }) => (*/}
+          {/*    <div className={styles['field-wrapper']} >{children}</div>*/}
+          {/*  )}*/}
+          {/*  activeDropdown={activeDropdown}*/}
+          {/*  setActiveDropdown={setActiveDropdown}*/}
+          {/*  assetId={null}*/}
+          {/*  updateAssetState={() => null}*/}
+          {/*  product={assetProduct}*/}
+          {/*  isShare={false}*/}
+          {/*  isBulkEdit={true}*/}
+          {/*  setAssetProduct={setAssetProduct}*/}
+          {/*/>*/}
+          <div className={`add ${styles['select-add']}`} onClick={addProductBlock}>
+            <IconClickable src={Utilities.add} />
+            <span className={"normal-text"}>Add Product</span>
+          </div>
         </section>
       }
 

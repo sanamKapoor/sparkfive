@@ -54,6 +54,21 @@
   color: var(--color-prim-turquoise);
 }
 
+.select-add{
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-left: 0;
+  /*margin-left: 8px;*/
+  margin-top: 1.5rem;
+}
+
+.product-wrapper{
+  margin-left: 8px;
+  padding-bottom: 8px;
+  border-bottom: solid 1px #dddad4;
+}
+
 @media screen and (max-width: 1200px) {
   .container {
     min-width: 25rem;

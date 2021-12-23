@@ -21,10 +21,18 @@ const ProductAddition = ({
   activeDropdown,
   setActiveDropdown,
   assetId,
-  updateAssetState,
+  updateAssetState = () => {},
   product,
   isBulkEdit = false,
-  setAssetProduct = (prod) => { }
+  noTitle = false,
+  onAdd = (product) => {},
+  onDelete = () => {},
+  setAssetProduct = (prod) => { },
+  skuActiveDropdownValue = "sku",
+  productFieldActiveDropdownValue = "product_field",
+  productVendorActiveDropdownValue = "product_vendor",
+  productCategoryActiveDropdownValue = "product_category",
+  productRetailerActiveDropdownValue = "product_retailer"
 }) => {
 
   const [inputProducts, setInputProducts] = useState([])
@@ -38,9 +46,9 @@ const ProductAddition = ({
   useEffect(() => {
     // Get input data
     getData(productApi.getProducts(), setInputProducts)
-    getData(tagApi.getTags({ type: 'product_category' }), setInputCategories)
-    getData(tagApi.getTags({ type: 'product_vendor' }), setInputVendors)
-    getData(tagApi.getTags({ type: 'product_retailer' }), setInputRetailers)
+    getData(tagApi.getTags({ type: productCategoryActiveDropdownValue }), setInputCategories)
+    getData(tagApi.getTags({ type: productVendorActiveDropdownValue }), setInputVendors)
+    getData(tagApi.getTags({ type: productRetailerActiveDropdownValue }), setInputRetailers)
   }, [])
 
   const getData = async (asyncDataFn, setFn) => {
@@ -68,6 +76,7 @@ const ProductAddition = ({
       try {
         const sku = productSku
         const { data: newProduct } = await assetApi.addProduct(assetId, { sku })
+        onAdd(newProduct)
         changeProductState(newProduct)
         setInputProducts(update(inputProducts, { $push: [newProduct] }))
       } catch (err) {
@@ -82,6 +91,7 @@ const ProductAddition = ({
     } else {
       try {
         await assetApi.updateAsset(assetId, { updateData: { productId: null } })
+        onDelete()
         changeProductState(null)
       } catch (err) {
         console.log(err)
@@ -96,6 +106,7 @@ const ProductAddition = ({
     } else {
       try {
         await assetApi.addProduct(assetId, { id: product.id })
+        onAdd(product)
         changeProductState(product)
       } catch (err) {
         console.log(err)
@@ -175,13 +186,13 @@ const ProductAddition = ({
         tags: { $push: [tag] }
       }
     }
-    if (activeDropdown === 'product_vendor') {
+    if (activeDropdown === productVendorActiveDropdownValue) {
       if (isNew) setInputVendors(update(inputVendors, { $push: [tag] }))
     }
-    if (activeDropdown === 'product_category') {
+    if (activeDropdown === productCategoryActiveDropdownValue) {
       if (isNew) setInputCategories(update(inputCategories, { $push: [tag] }))
     }
-    if (activeDropdown === 'product_retailer') {
+    if (activeDropdown === productRetailerActiveDropdownValue) {
       if (isNew) setInputRetailers(update(inputRetailers, { $push: [tag] }))
     }
     updateAssetState(stateUpdateObj)
@@ -224,33 +235,33 @@ const ProductAddition = ({
   )
 
   let valueInput = undefined
-  if (activeDropdown === 'product_category') valueInput = inputCategories
-  if (activeDropdown === 'product_vendor') valueInput = inputVendors
-  if (activeDropdown === 'product_retailer') valueInput = inputRetailers
+  if (activeDropdown === productCategoryActiveDropdownValue) valueInput = inputCategories
+  if (activeDropdown === productVendorActiveDropdownValue) valueInput = inputVendors
+  if (activeDropdown === productRetailerActiveDropdownValue) valueInput = inputRetailers
 
-  const categories = product?.tags.filter(({ type }) => type === 'product_category')
-  const vendors = product?.tags.filter(({ type }) => type === 'product_vendor')
-  const retailers = product?.tags.filter(({ type }) => type === 'product_retailer')
+  const categories = product?.tags.filter(({ type }) => type === productCategoryActiveDropdownValue)
+  const vendors = product?.tags.filter(({ type }) => type === productVendorActiveDropdownValue)
+  const retailers = product?.tags.filter(({ type }) => type === productRetailerActiveDropdownValue)
 
   // Filter out fields if they are already present on the product
   const filteredFields = productFields.filter(({ value }) => {
-    if (value === 'product_category' && categories?.length > 0) return false
-    if (value === 'product_vendor' && vendors?.length > 0) return false
+    if (value === productCategoryActiveDropdownValue && categories?.length > 0) return false
+    if (value === productVendorActiveDropdownValue && vendors?.length > 0) return false
 
     return true
   })
 
   return (
     <FieldWrapper>
-      <div className={`secondary-text ${styles.field}`}>Product</div>
+      {noTitle === false && <div className={`secondary-text ${styles.field}`}>Product</div>}
       <div className={`normal-text ${styles['sku-container']}`}>
         <p className={styles['sku-name']}>
-          {product && <span className={styles.label}>{product.sku}</span>}
-          {product && !isShare && <span className={styles.remove} onClick={deleteProduct}>x</span>}
+          {product && product.sku && <span className={styles.label}>{product.sku}</span>}
+          {product && product.sku && !isShare && <span className={styles.remove} onClick={deleteProduct}>x</span>}
         </p>
         {!isShare &&
           <>
-            {activeDropdown === 'sku' ?
+            {activeDropdown === skuActiveDropdownValue ?
               <div className={`tag-select ${styles['select-wrapper']}`}>
                 <ReactCreatableSelect
                   options={inputProducts.map(product => ({ ...product, label: product.sku, value: product.id }))}
@@ -282,7 +293,7 @@ const ProductAddition = ({
 
           {!isShare &&
             <>
-              {activeDropdown === 'product_field' ?
+              {activeDropdown === productFieldActiveDropdownValue ?
                 <div className={`tag-select ${styles['select-wrapper']}`}>
                   <ReactSelect
                     options={filteredFields}

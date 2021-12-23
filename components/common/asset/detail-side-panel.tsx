@@ -69,6 +69,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     projects,
     channel,
     product,
+      products,
     folder,
     folders,
     customs,
@@ -100,6 +101,9 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
   const [activeCustomField, setActiveCustomField] = useState<number>()
   const [inputCustomFields, setInputCustomFields] = useState([])
   const [assetCustomFields, setAssetCustomFields] = useState(mappingCustomFieldData(inputCustomFields, customs))
+
+  // Products
+  const [productList, setProductList] = useState(products)
 
   useEffect(() => {
     setTags(tags)
@@ -420,6 +424,14 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     setIsLoading(false)
   }
 
+  const addProductBlock = () => {
+    setProductList([...productList, null])
+  }
+
+  useEffect(()=>{
+    setProductList(products)
+  },[products])
+
   return (
     <div className={styles.container}>
       <h2>Details</h2>
@@ -704,17 +716,53 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
       {/*  </div>*/}
       {/*</div>*/}
 
-      <ProductAddition
-        FieldWrapper={({ children }) => (
-          <div className={styles['field-wrapper']} >{children}</div>
-        )}
-        isShare={isShare}
-        activeDropdown={activeDropdown}
-        setActiveDropdown={setActiveDropdown}
-        assetId={id}
-        updateAssetState={updateAssetState}
-        product={product}
-      />
+      <div className={styles['field-wrapper']} >
+        <div className={`secondary-text ${styles.field}`}>Products</div>
+      </div>
+
+
+      {productList.map((product, index)=>{
+        return <div className={styles['product-wrapper']} key={index}>
+          <ProductAddition
+              noTitle
+              skuActiveDropdownValue={`sku-${index}`}
+              productFieldActiveDropdownValue={`product_field-${index}`}
+              productVendorActiveDropdownValue={`product_vendor-${index}`}
+              productCategoryActiveDropdownValue={`product_category-${index}`}
+              productRetailerActiveDropdownValue={`product_retailer-${index}`}
+              FieldWrapper={({ children }) => (
+                  <div className={styles['field-wrapper']} >{children}</div>
+              )}
+              isShare={isShare}
+              activeDropdown={activeDropdown}
+              setActiveDropdown={(value)=>{console.log(value);setActiveDropdown(`${value}-${index}`)}}
+              assetId={id}
+              onAdd={(item) => {
+                let arr = [...products]
+                arr.push(item)
+                updateAssetState({
+                  products: { $set: arr }
+                })
+              }}
+              onDelete={() => {
+                let arr = [...products]
+                arr.splice(index, 1)
+                updateAssetState({
+                  products: { $set: arr }
+                })
+              }}
+              // updateAssetState={updateAssetState}
+              product={product}
+          />
+        </div>
+      })}
+
+
+
+      <div className={`add ${styles['select-add']}`} onClick={addProductBlock}>
+        <IconClickable src={Utilities.add} />
+        <span className={"normal-text"}>Add Product</span>
+      </div>
 
       <ProjectCreationModal
         initialValue={newProjectName}
