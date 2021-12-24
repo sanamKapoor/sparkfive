@@ -127,10 +127,10 @@ const AssetsLibrary = () => {
     if (router.query.product) {
       const foundProduct = productFields.sku.find(({ sku }) => sku === router.query.product)
       if (foundProduct) {
-        newSortFilter.filterProductSku = {
+        newSortFilter.filterProductSku = [{
           ...foundProduct,
           value: foundProduct.sku
-        }
+        }]
       }
       canLoad.current = true
       setActiveSortFilter(newSortFilter)

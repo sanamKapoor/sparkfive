@@ -234,7 +234,7 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
         filters.productFields = filterProductFields.map(item => item.value).join(',')
     }
 
-    if (filterProductSku) {
+    if (filterProductSku && filterProductSku.length > 0) {
         filters.filterProductSku = filterProductSku.map((item)=>item.sku).join(",")
     }
 
