@@ -495,15 +495,8 @@ const AssetsLibrary = () => {
         queryParams.folders = activeSortFilter.filterFolders.map(item => item.value).join(',')
       }
       const { data } = await folderApi.getFolders(queryParams)
-      const temp = []
-      if (data.results) {
-        data.results.map((folder) => {
-          if (folder.assets.length) {
-            temp.push(folder)
-          }
-        })
-      }
-      setFolders({ ...data, results: temp }, replace)
+
+      setFolders({ ...data, results: data.results }, replace)
     } catch (err) {
       //TODO: Handle error
       console.log(err)

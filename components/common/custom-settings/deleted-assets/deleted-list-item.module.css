@@ -105,6 +105,7 @@
 
 .info>div:last-child{
   margin-left: 2rem;
+  display: flex;
 }
 
 .span {
@@ -114,7 +115,7 @@
 
 @media screen and (max-width: 1024px) {
   .dateHide {
-    width: 90px !important;
+    width: 95px !important;
     overflow: hidden;
   }
 }
@@ -197,6 +198,6 @@
 
   .field_name{
     padding-left: 25px;
-    width: 115px !important;
+    width: 120px !important;
   }
 }
