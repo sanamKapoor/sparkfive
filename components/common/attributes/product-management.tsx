@@ -9,7 +9,6 @@ import Search from "./search-input"
 import Tag from "../misc/tag"
 
 // APIs
-import campaignApi from '../../../server-api/attribute'
 import productApi from '../../../server-api/attribute'
 import SpinnerOverlay from "../spinners/spinner-overlay";
 import Input from "../inputs/input";
@@ -110,11 +109,11 @@ const ProductManagement = () => {
         setLoading(true)
 
         // Call API to delete tag
-        await campaignApi.updateCampaigns({
-            campaigns: [
+        await productApi.updateProducts({
+            products: [
                 {
                     id: id,
-                    name: currentEditValue
+                    sku: currentEditValue
                 }
             ]
         })
@@ -198,7 +197,7 @@ const ProductManagement = () => {
                         canRemove={true}
                         editFunction={() => {
                             setCurrentEditIndex(index);
-                            setCurrentEditValue(folder.name);
+                            setCurrentEditValue(folder.sku);
                             setEditMode(true);
 
                         }}
@@ -208,7 +207,12 @@ const ProductManagement = () => {
                         }}
                     />}
                     {editMode === true && currentEditIndex === index && <div>
-
+                        <Input
+                            placeholder={'Edit name'}
+                            onChange={(e) => { setCurrentEditValue(e.target.value) }}
+                            additionalClasses={styles['edit-input']}
+                            value={currentEditValue}
+                            styleType={'regular-short'} />
                         <Button
                             styleTypes={['exclude-min-height']}
                             type={'submit'}
