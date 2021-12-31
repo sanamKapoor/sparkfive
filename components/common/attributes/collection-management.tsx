@@ -16,6 +16,7 @@ import ConfirmModal from "../modals/confirm-modal";
 
 // Utils
 import toastUtils from '../../../utils/toast'
+import Input from "../inputs/input";
 
 const sorts = [
     {
@@ -109,8 +110,8 @@ const CollectionManagement = () => {
         setLoading(true)
 
         // Call API to delete tag
-        await campaignApi.updateCampaigns({
-            campaigns: [
+        await folderApi.updateFolders({
+            folders: [
                 {
                     id: id,
                     name: currentEditValue
@@ -207,7 +208,12 @@ const CollectionManagement = () => {
                         }}
                     />}
                     {editMode === true && currentEditIndex === index && <div>
-
+                        <Input
+                            placeholder={'Edit name'}
+                            onChange={(e) => { setCurrentEditValue(e.target.value) }}
+                            additionalClasses={styles['edit-input']}
+                            value={currentEditValue}
+                            styleType={'regular-short'} />
                         <Button
                             styleTypes={['exclude-min-height']}
                             type={'submit'}
