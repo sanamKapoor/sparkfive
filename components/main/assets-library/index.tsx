@@ -106,7 +106,7 @@ const AssetsLibrary = () => {
           value: foundCampaign.id
         }]
       }
-      // canLoad.current = true
+      preparingAssets.current = false
       setActiveSortFilter(newSortFilter)
       return
     }
