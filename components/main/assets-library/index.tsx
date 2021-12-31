@@ -64,12 +64,13 @@ const AssetsLibrary = () => {
   const { activeSortFilter, setActiveSortFilter, tags, loadTags, loadProductFields, productFields, folders: collection, loadFolders, campaigns, loadCampaigns } = useContext(FilterContext)
 
   const router = useRouter()
-  const canLoad = useRef(false)
+  const preparingAssets = useRef(true)
 
+  // When tag, campaigns, collection changes, used for click on tag/campaigns/collection in admin attribute management
   useEffect(() => {
-    if (canLoad.current) return
+    if (!preparingAssets.current) return
     if (!router.query.tag && !router.query.product && !router.query.collection && !router.query.campaign) {
-      canLoad.current = true
+      preparingAssets.current = false
       return;
     }
     if (router.query.tag && !tags.length) {
@@ -105,11 +106,12 @@ const AssetsLibrary = () => {
           value: foundCampaign.id
         }]
       }
-      canLoad.current = true
+      // canLoad.current = true
       setActiveSortFilter(newSortFilter)
       return
     }
 
+    // Query folder
     if (router.query.collection) {
       const foundCollection = collection.find(({ name }) => name === router.query.collection)
       if (foundCollection) {
@@ -119,7 +121,7 @@ const AssetsLibrary = () => {
         }]
         newSortFilter.mainFilter = 'folders'
       }
-      canLoad.current = true
+      preparingAssets.current = false
       setActiveSortFilter(newSortFilter)
       return
     }
@@ -132,7 +134,7 @@ const AssetsLibrary = () => {
           value: foundProduct.sku
         }]
       }
-      canLoad.current = true
+      preparingAssets.current = false
       setActiveSortFilter(newSortFilter)
       return
     }
@@ -145,7 +147,7 @@ const AssetsLibrary = () => {
           value: foundTag.id
         }]
       }
-      canLoad.current = true
+      preparingAssets.current = false
       setActiveSortFilter(newSortFilter)
       return
     }
@@ -153,9 +155,16 @@ const AssetsLibrary = () => {
   }, [tags, productFields.sku, collection, campaigns])
 
   useEffect(() => {
-    if (!canLoad.current) {
+    // Assets are under preparing (for query etc)
+    if (preparingAssets.current) {
+      // setActivePageMode('library')
+      // setLoadingAssets(true)
+      // setFirstLoaded(true)
       return
+    }else{
+      setFirstLoaded(true)
     }
+
     setActivePageMode('library')
     if (activeSortFilter.mainFilter === 'folders') {
       setActiveMode('folders')
@@ -168,11 +177,13 @@ const AssetsLibrary = () => {
   }, [activeSortFilter])
 
   useEffect(() => {
-    if (firstLoaded && activeFolder !== '')
+    if (firstLoaded && activeFolder !== '') {
       setActiveSortFilter({
         ...activeSortFilter,
         mainFilter: 'all',
       })
+    }
+
   }, [activeFolder])
 
   useEffect(() => {
@@ -545,6 +556,7 @@ const AssetsLibrary = () => {
     setActiveFolder('')
     setActiveSortFilter({
       ...activeSortFilter,
+      // filterFolders: [], // Open this comment to reset filter folders
       mainFilter: 'folders'
     })
   }
@@ -554,8 +566,23 @@ const AssetsLibrary = () => {
   const selectedFolders = folders.filter(folder => folder.isSelected)
 
   const viewFolder = async (id) => {
-    console.log(`View folder`)
+
+    // setActiveSortFilter({
+    //   ...activeSortFilter,
+    //   ...DEFAULT_FILTERS,
+    //   ...DEFAULT_CUSTOM_FIELD_FILTERS(activeSortFilter),
+    //   mainFilter: 'folders'
+    // })
+
+    // router.replace("/main/assets") // Open this comment to reset query string url
     setActiveFolder(id)
+
+
+    // setTimeout(()=>{
+    //   setActiveFolder(id)
+    //   router.replace("/main/assets")
+    // },2000)
+
   }
 
   const deleteFolder = async (id) => {
@@ -657,7 +684,7 @@ const AssetsLibrary = () => {
         modalIsOpen={renameModalOpen}
         renameConfirm={confirmFolderRename}
         type={'Folder'}
-        initialValue={activeFolder && folders.find(folder => folder.id === activeFolder).name}
+        initialValue={activeFolder && folders.find(folder => folder.id === activeFolder)?.name}
       />
       {activeSearchOverlay &&
         <SearchOverlay
