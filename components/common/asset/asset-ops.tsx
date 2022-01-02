@@ -267,6 +267,12 @@ export default () => {
 	const deleteSelectedAssets = async () => {
 		try {
 			let filters = {}
+			if (selectedAllAssets) {
+				filters = {
+					selectedAll: '1',
+					deletedAssets: true
+				}
+			}
 
 			// Select all assets without pagination
 			if (selectedAssets.length > 0) {
@@ -570,6 +576,13 @@ export default () => {
 						deletedAt: null
 					}
 				}
+			}
+
+			if (selectedAllAssets) {
+				filters = {
+					selectedAll: '1',
+					deletedAssets: true
+				};
 			}
 			if (updateAssets.length > 1) {
 				await assetApi.updateMultiple(updateAssets, filters)
