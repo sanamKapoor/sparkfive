@@ -151,7 +151,9 @@ const DeletedAssetsLibrary = () => {
 	if (!canLoad.current) {
 	  return
 	}
-	setActivePageMode('library')
+    setActivePageMode('library')
+     setAssets([])
+      getAssets()
   }, [activeSortFilter])
 
   useEffect(() => {
@@ -540,7 +542,7 @@ const DeletedAssetsLibrary = () => {
 		  }
 		</div>
 	  </main>
-	  <AssetOps />
+      <AssetOps getAssets={getAssets}/>
 	  <RenameModal
 		closeModal={() => setRenameModalOpen(false)}
 		modalIsOpen={renameModalOpen}
