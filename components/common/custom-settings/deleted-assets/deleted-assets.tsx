@@ -104,7 +104,7 @@ const DeletedAssets = ({
     setActiveOperation(operation)
   }
 
-  const showLoadMore = ((mode === 'assets' && assets.length > 0))
+  const showLoadMore = assets.length > 0
   const loadingAssetsFolders = ((assets.length > 0 && assets[assets.length - 1].isLoading))
 
   return (
