@@ -17,7 +17,7 @@ import ShareFolderModal from '../modals/share-folder-modal'
 import ConfirmModal from '../modals/confirm-modal'
 import BulkEditOverlay from '../bulk-edit-overlay'
 
-export default () => {
+export default ({getAssets}) => {
 
 	const {
 		assets,
@@ -294,6 +294,7 @@ export default () => {
 
 			closeModalAndClearOpAsset()
 			toastUtils.success('Assets deleted successfully')
+			getAssets()
 		} catch (err) {
 			console.log(err)
 			toastUtils.error('Could not delete assets, please try again later.')
@@ -603,7 +604,7 @@ export default () => {
 
 			closeModalAndClearOpAsset()
 			toastUtils.success('Assets restored successfully')
-
+			getAssets()
 		} catch (err) {
 			console.log(err)
 			toastUtils.error('Could not restore assets, please try again later.')
