@@ -113,7 +113,7 @@ const SignupForm = ({ teamId, inviteCode = '', email = '', onlyWorkEmail = false
                         }
                         name='phone'
                         control={control}
-                        rules={{ required: true, pattern: /\d/i }}
+                        rules={{ required: true, pattern: /\d/i, maxLength: 20 }}
                         message={'Invalid phone number'}
                         errors={errors}
                     />

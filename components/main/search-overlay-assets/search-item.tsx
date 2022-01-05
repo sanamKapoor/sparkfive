@@ -79,7 +79,7 @@ const SearchItem = ({ assetItem, term, openShareAsset, openDeleteAsset, toggleSe
               highlightClassName={'search-highlight'}
               searchWords={searchWords}
               autoEscape={true}
-              textToHighlight={asset.folder?.name || 'No Collection'}
+              textToHighlight={asset.folders.map((folder)=>folder.name).join(", ") || 'No Collection'}
             />
           }
         </div>
