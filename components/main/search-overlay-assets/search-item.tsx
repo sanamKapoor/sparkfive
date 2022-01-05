@@ -23,6 +23,8 @@ const SearchItem = ({ assetItem, term, openShareAsset, openDeleteAsset, toggleSe
 
   const searchWords = term.split(" ");
 
+  console.log(asset)
+
   return (
     <>
       <li
@@ -79,7 +81,7 @@ const SearchItem = ({ assetItem, term, openShareAsset, openDeleteAsset, toggleSe
               highlightClassName={'search-highlight'}
               searchWords={searchWords}
               autoEscape={true}
-              textToHighlight={asset.folders.map((folder)=>folder.name).join(", ") || 'No Collection'}
+              textToHighlight={(asset &&asset.folders.map((folder)=>folder.name).join(", ")) || 'No Collection'}
             />
           }
         </div>
