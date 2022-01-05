@@ -60,18 +60,16 @@ const Member = ({ id, email, role, name, profilePhoto, type, editAction, deleteA
         </div>}
       <div className={styles.details}>
         <div className={styles.role}>{capitalCase(role.name)}</div>
-        {user.id !== id &&
           <>
-            <div onClick={editAction}
-              className={styles.action}>
-              edit
-            </div>
-            <div onClick={deleteAction}
-              className={styles.action}>
-              delete
-            </div>
+              <div onClick={editAction}
+                   className={`${styles.action} ${user.id === id ? styles.hidden: ''}`}>
+                  edit
+              </div>
+              <div onClick={deleteAction}
+                   className={`${styles.action} ${user.id === id ? styles.hidden: ''}`}>
+                  delete
+              </div>
           </>
-        }
       </div>
     </li>
   )
