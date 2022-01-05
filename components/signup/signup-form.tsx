@@ -89,7 +89,7 @@ const SignupForm = ({ inviteCode = '', priceData, email, onlyWorkEmail = false }
           }
           name='phone'
           control={control}
-          rules={{ required: true, pattern: /\d/i, maxLength: 10 }}
+          rules={{ required: true, pattern: /\d/i, maxLength: 20 }}
           message={'Invalid phone number'}
           errors={errors}
         />
