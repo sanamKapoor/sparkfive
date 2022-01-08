@@ -1,5 +1,9 @@
-import { useCallback } from 'react'
+import {useCallback, useContext} from 'react'
 import { useDropzone } from 'react-dropzone'
+
+import { UserContext } from "../../../context"
+
+import { ASSET_UPLOAD_NO_APPROVAL } from '../../../constants/permissions'
 
 import styles from './asset-upload.module.css'
 
@@ -13,9 +17,14 @@ const AssetUpload = ({
   onDragText = ''
 }) => {
 
+  const { hasPermission } = useContext(UserContext)
+
   const onDrop = useCallback(acceptedFiles => {
-    // Do something with the files
-    readFilesContent(acceptedFiles)
+    if(hasPermission([ASSET_UPLOAD_NO_APPROVAL])){
+      // Do something with the files
+      readFilesContent(acceptedFiles)
+    }
+
   }, [])
 
   const readFilesContent = async (files) => {

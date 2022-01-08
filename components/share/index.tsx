@@ -56,7 +56,7 @@ const AssetShare = () => {
 	const downloadSelectedAssets = async () => {
 		const selectedAssets = assets.filter(asset => asset.isSelected)
 
-		downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets')
+		downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets.zip')
 	}
 
 	useEffect(() => {

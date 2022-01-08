@@ -1,10 +1,15 @@
 import styles from './asset-subheader.module.css'
-import { useState } from 'react'
+import {useContext, useState} from 'react'
 
 // Components
 import SubHeader from '../../common/layouts/sub-header'
 import AssetHeaderOps from '../../common/asset/asset-header-ops'
 import AssetAddition from '../../common/asset/asset-addition'
+
+// Context
+import { UserContext} from '../../../context'
+
+import { ASSET_UPLOAD_NO_APPROVAL } from '../../../constants/permissions'
 
 const AssetSubheader = ({
   amountSelected = 0,
@@ -17,6 +22,9 @@ const AssetSubheader = ({
   mode,
   deletedAssets = false
 }) => {
+
+    const {  hasPermission } = useContext(UserContext)
+
 
   return (
     <SubHeader pageTitle={activeFolderData ? activeFolderData.name : 'Asset Library'} additionalClass={styles['asset-subheader']}
@@ -33,7 +41,7 @@ const AssetSubheader = ({
       <div className={styles.padding}>
       </div>
         {amountSelected > 0  && <AssetHeaderOps isUnarchive={activeSortFilter.mainFilter === 'archived'} isFolder={mode === 'folders'} iconColor='White' deletedAssets={deletedAssets}/>}
-        {(amountSelected === 0 || mode === 'folders') && <AssetAddition activeFolder={activeFolder} getFolders={getFolders} />}
+        {(amountSelected === 0 || mode === 'folders') && hasPermission([ASSET_UPLOAD_NO_APPROVAL]) && <AssetAddition activeFolder={activeFolder} getFolders={getFolders} />}
     </SubHeader>
   )
 }
