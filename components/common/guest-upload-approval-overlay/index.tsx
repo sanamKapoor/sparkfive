@@ -97,7 +97,12 @@ const GuestUploadApprovalOverlay = ({ handleBackButton, selectedAssets, loadingA
 		}))
 	}
 
+	useEffect(()=>{
+		console.log(assetCustomFields)
+	},[assetCustomFields])
+
 	const initialize = () => {
+		console.log(`Initialized: ${addMode}`)
 		if (addMode) {
 			resetSelectedFieldValue()
 		} else if (!addMode) {
@@ -134,10 +139,13 @@ const GuestUploadApprovalOverlay = ({ handleBackButton, selectedAssets, loadingA
 	}, [selectedAssets, loadingAssets])
 
 	useEffect(() => {
-		initialize()
-	}, [addMode, originalInputs])
+		if(inputCustomFields.length > 0){
+			initialize()
+		}
+	}, [addMode, originalInputs, inputCustomFields])
 
 	const getInitialAttributes = async () => {
+		console.log(`getInitialAttributes`)
 		try {
 			// Get custom fields list
 			await getCustomFieldsInputData();
@@ -190,6 +198,9 @@ const GuestUploadApprovalOverlay = ({ handleBackButton, selectedAssets, loadingA
 
 	// On change custom fields (add/remove)
 	const onChangeCustomField = (index, data) => {
+		console.log(index)
+		console.log(data)
+		console.log(assetCustomFields)
 		// Show loading
 		// setIsLoading(true)
 

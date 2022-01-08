@@ -62,6 +62,7 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
     }
 
 	const downloadSelectedAssets = async () => {
+    	console.log(`selectedAllAssets: ${selectedAllAssets}`)
 		try {
 			let payload = {
                 assetIds: [],
@@ -113,7 +114,7 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 				api = shareApi
 			}
 
-			if (payload.assetIds.length > 0) {
+			if (payload.assetIds.length > 0 || selectedAllAssets) {
                 const { data } = await api.downloadAll(payload, filters);
                 // Download file to storage
                 fileDownload(data, "assets.zip");
