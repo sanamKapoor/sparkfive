@@ -9,6 +9,11 @@ const MemberPermissions = ({ memberPermissions, permissions, setMemberPermission
   const [mappedPermissions, setMappedPermissions] = useState([])
   const { plan } = useContext(TeamContext)
 
+  console.log(`========`)
+  console.log(memberPermissions)
+  console.log(permissions)
+  console.log(`========`)
+
   useEffect(() => {
     if (listOnly || (memberPermissions.length > 0 && permissions.length > 0)) {
       const groups = {}
