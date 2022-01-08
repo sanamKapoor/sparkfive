@@ -204,30 +204,52 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
     // a range in different day
     if (beginDate && endDate && beginDate.toDateString() !== endDate.toDateString()) {
         if (beginDate) {
-            filters.beginDate = beginDate.toISOString()
+            const d = new Date(beginDate)
+            const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate())
+
+            filters.beginDate = new Date(newDate.toUTCString()).toISOString()
         }
 
         if (endDate) {
-            filters.endDate = endDate.toISOString()
+            const d = new Date(endDate)
+            const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate())
+
+            newDate.setDate(newDate.getDate() + 1)
+
+            filters.endDate = new Date(newDate.toUTCString()).toISOString()
         }
     } else { // same day
         if (beginDate) {
-            filters.beginDate = beginDate.toISOString()
+            const d = new Date(beginDate)
+            const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate())
+
+            filters.beginDate = new Date(newDate.toUTCString()).toISOString()
         }
 
         if (endDate) {
-            filters.beginDate = endDate.toISOString()
+            const d = new Date(endDate)
+            const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate())
+
+            newDate.setDate(newDate.getDate() + 1)
+
+            filters.beginDate = new Date(newDate.toUTCString()).toISOString()
         }
     }
 
 
 
     if (fileModifiedBeginDate) {
-        filters.fileModifiedBeginDate = fileModifiedBeginDate.toISOString()
+        const d = new Date(fileModifiedBeginDate)
+        const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate())
+
+        filters.fileModifiedBeginDate = new Date(newDate.toUTCString()).toISOString()
     }
 
     if (fileModifiedEndDate) {
-        filters.fileModifiedEndDate = fileModifiedEndDate.toISOString()
+        const d = new Date(fileModifiedEndDate)
+        const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate())
+
+        filters.fileModifiedEndDate = new Date(newDate.toUTCString()).toISOString()
     }
 
     if (filterProductType && filterProductFields?.length > 0) {
