@@ -235,7 +235,7 @@ const AssetGrid = ({
         }
         {(showLoadMore) && nextPage !== -1 &&
           <>
-            {nextPage > 2 ?
+            {(nextPage > 2 || mode === 'folders') ?
               <>
                 {!loadingAssetsFolders &&
                   <Waypoint onEnter={loadMore} fireOnRapidScroll={false} />

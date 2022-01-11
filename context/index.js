@@ -148,7 +148,7 @@ export const FilterContext = createContext({
     setCustomFields: (val) => { },
 
     folders: [],
-    loadFolders: () => { },
+    loadFolders: (ignoreCurrentSelectedFolder) => { },
     loadAllFolders: () => { },
 
     campaigns: [],

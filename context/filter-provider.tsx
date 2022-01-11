@@ -97,9 +97,9 @@ export default ({ children, isPublic = false }) => {
     })
   }
 
-  const loadFolders = () => {
+  const loadFolders = (ignoreCurrentSelectedFolder = false) => {
     const fetchMethod = fodlerApi.getFoldersSimple
-    loadFromEndpoint(fetchMethod(({ assetsCount: 'yes', ...getCommonParams() })), setFolders)
+    loadFromEndpoint(fetchMethod(({ assetsCount: 'yes', ...getCommonParams(false, ignoreCurrentSelectedFolder) })), setFolders)
   }
 
   const loadAllFolders = () => {
@@ -235,12 +235,18 @@ export default ({ children, isPublic = false }) => {
       || (allProjects !== 'any' && filterProjects.length > 0) || isAnyAllForCustomFields()
   }
 
-  const getCommonParams = (assetLim = false) => {
+  const getCommonParams = (assetLim = false, ignoreCurrentSelectedFolder = false) => {
+    const filterData = {...activeSortFilter}
+
+    // This ignore apply current folder filter to filter APIs
+    if(ignoreCurrentSelectedFolder){
+      filterData.filterFolders = []
+    }
     const params = getAssetsFilters({
       replace: false,
       addedIds: [],
       nextPage: 0,
-      userFilterObject: activeSortFilter
+      userFilterObject: filterData
     })
     if (assetLim || (isAnyAll() && anyFilters())) params.assetLim = 'yes'
     return params

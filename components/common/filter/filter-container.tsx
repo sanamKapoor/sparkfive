@@ -125,7 +125,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                 <div className={`${styles['close-container']}`}
                     onClick={() => { handleOpenFilter() }}>&#10005;</div>
             </section>
-            <div className={styles['section-container']}>
+            <div className={`${styles['section-container']} ${isFolder ? styles['limit-height-container'] : ''}`}>
                 {!isFolder &&
                     <section>
                         <div className={styles['expand-bar']} onClick={() => handleExpand('tags')}>
@@ -226,8 +226,8 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                     {expandedMenus.includes('folders') &&
                         <FilterSelector
                             oneColumn={true}
-                            loadFn={loadFolders}
-                            numItems={5}
+                            loadFn={()=>{loadFolders(isFolder)}}
+                            numItems={isFolder ? folders.length :  5}
                             filters={folders.map(folder => ({ ...folder, label: folder.name, value: folder.id }))}
                             value={activeSortFilter.filterFolders}
                             setValue={(selected) => setSortFilterValue('filterFolders', selected)}
