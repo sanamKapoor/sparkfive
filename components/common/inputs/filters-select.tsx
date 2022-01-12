@@ -12,6 +12,7 @@ const FiltersSelect = ({
   isClearable = false,
   closeMenuOnSelect = false,
   hasCount = false,
+  scrollBottomAfterSearch = false
 }) => {
 
   const [optionsVisible, setOptionsVisible] = useState(false)
@@ -23,6 +24,15 @@ const FiltersSelect = ({
     else if (!optionsVisible && value.length > 0) {
       setOptionsVisible(true)
     }
+
+    // Scroll bottom
+    if(scrollBottomAfterSearch){
+        setTimeout(()=>{
+            var objDiv = document.getElementById("scroll-search-bottom-container");
+            objDiv.scrollTop = objDiv.scrollHeight;
+        },100)
+    }
+
   }
 
   const Option = props => (

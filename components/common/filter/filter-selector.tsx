@@ -21,7 +21,8 @@ const FilterSelector = ({
     addtionalClass = '',
     capitalize = false,
     internalFilter = false, // Filter list will be get from loadFn resolve directly (useful for custom fields),
-    mappingValueName = 'value'
+    mappingValueName = 'value',
+    scrollBottomAfterSearch = false // When typing in search input, scrolling down to bottom of container to prevent list is hidden
 }) => {
 
     const { activeSortFilter } = useContext(FilterContext)
@@ -116,6 +117,7 @@ const FilterSelector = ({
                         value={value}
                         isClearable={true}
                         hasCount={true}
+                        scrollBottomAfterSearch={scrollBottomAfterSearch}
                     />
                 </div>}
         </div>

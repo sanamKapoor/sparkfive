@@ -125,7 +125,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                 <div className={`${styles['close-container']}`}
                     onClick={() => { handleOpenFilter() }}>&#10005;</div>
             </section>
-            <div className={`${styles['section-container']} ${isFolder ? styles['limit-height-container'] : ''}`}>
+            <div className={`${styles['section-container']} ${isFolder ? styles['limit-height-container'] : ''}`} id={"scroll-search-bottom-container"}>
                 {!isFolder &&
                     <section>
                         <div className={styles['expand-bar']} onClick={() => handleExpand('tags')}>
@@ -231,6 +231,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                             filters={folders.map(folder => ({ ...folder, label: folder.name, value: folder.id }))}
                             value={activeSortFilter.filterFolders}
                             setValue={(selected) => setSortFilterValue('filterFolders', selected)}
+                            scrollBottomAfterSearch={isFolder}
                         />}
                 </section>
                 {/*{!isFolder &&*/}
