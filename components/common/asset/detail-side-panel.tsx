@@ -36,6 +36,9 @@ import CreatableSelect from '../inputs/creatable-select'
 import ProjectCreationModal from '../modals/project-creation-modal'
 import ProductAddition from './product-addition'
 
+// Constants
+import { ASSET_EDIT } from '../../../constants/permissions'
+
 // Server DO NOT return full custom field slots including empty array, so we will generate empty array here
 // The order of result should be match with order of custom field list
 const mappingCustomFieldData = (list, valueList) => {
@@ -733,7 +736,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
               FieldWrapper={({ children }) => (
                   <div className={styles['field-wrapper']} >{children}</div>
               )}
-              isShare={isShare}
+              isShare={isShare || !hasPermission([ASSET_EDIT])}
               activeDropdown={activeDropdown}
               setActiveDropdown={(value)=>{console.log(value);setActiveDropdown(`${value}-${index}`)}}
               assetId={id}
@@ -759,7 +762,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
 
 
 
-      {!isShare && <div className={`add ${styles['select-add']}`} onClick={addProductBlock}>
+      {!isShare && hasPermission([ASSET_EDIT]) && <div className={`add ${styles['select-add']}`} onClick={addProductBlock}>
         <IconClickable src={Utilities.add} />
         <span className={"normal-text"}>Add Product</span>
       </div>}

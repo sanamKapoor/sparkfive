@@ -1,12 +1,20 @@
 import styles from './creatable-select.module.css'
 import update from 'immutability-helper'
 import ReactCreatableSelect from 'react-select/creatable'
+import {useContext} from "react";
 import ReactSelect from 'react-select'
 import { Utilities } from '../../../assets'
+
+// Constants
+import { ASSET_EDIT } from '../../../constants/permissions'
 
 // Components
 import Tag from '../misc/tag'
 import IconClickable from '../buttons/icon-clickable'
+
+// Contexts
+import {  UserContext } from '../../../context'
+
 
 const CreatableSelect = ({
   title,
@@ -30,6 +38,8 @@ const CreatableSelect = ({
   creatable = true,
   selectOneComponent = <></>
 }) => {
+
+  const { hasPermission } = useContext(UserContext)
 
   const onChange = async (selected, actionMeta) => {
     if(actionMeta.action !== 'clear'){
@@ -103,13 +113,13 @@ const CreatableSelect = ({
                 data={item}
                 altColor={altColor}
                 tag={item.name}
-                canRemove={!isShare}
+                canRemove={!isShare && hasPermission([ASSET_EDIT])}
                 removeFunction={() => removeItem(index, item.id)}
               />
             </li>
           ))}
         </ul>
-        {!isShare && canAdd &&
+        {!isShare && canAdd && hasPermission([ASSET_EDIT]) &&
           <>
             {dropdownIsActive ?
               <div className={`tag-select ${selectClass}`}>
