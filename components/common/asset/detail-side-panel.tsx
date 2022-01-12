@@ -759,10 +759,10 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
 
 
 
-      <div className={`add ${styles['select-add']}`} onClick={addProductBlock}>
+      {!isShare && <div className={`add ${styles['select-add']}`} onClick={addProductBlock}>
         <IconClickable src={Utilities.add} />
         <span className={"normal-text"}>Add Product</span>
-      </div>
+      </div>}
 
       <ProjectCreationModal
         initialValue={newProjectName}
