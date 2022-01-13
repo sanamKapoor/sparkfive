@@ -9,6 +9,8 @@ import FolderOptions from './folder-options'
 import ConfirmModal from '../modals/confirm-modal'
 import IconClickable from '../buttons/icon-clickable'
 
+import folderApi from '../../../server-api/folder'
+
 const FolderListItem = ({
 	index,
 	id,
@@ -33,8 +35,14 @@ const FolderListItem = ({
 
 	const [deleteOpen, setDeleteOpen] = useState(false)
 
-	const downloadFoldercontents = () => {
-		zipDownloadUtils.zipAndDownload(assets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.name })), name)
+	const downloadFoldercontents = async () => {
+		const { data } = await folderApi.getInfoToDownloadFolder(id)
+		// Get full assets url, because currently, it just get maximum 4 real url in thumbnail
+		zipDownloadUtils.zipAndDownload(data, name)
+
+		// Old Approach:
+		// zipDownloadUtils.zipAndDownload(assets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.name })), name)
+
 	}
 
 
