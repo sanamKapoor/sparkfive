@@ -99,7 +99,12 @@ export default ({ children, isPublic = false }) => {
 
   const loadFolders = (ignoreCurrentSelectedFolder = false) => {
     const fetchMethod = fodlerApi.getFoldersSimple
-    loadFromEndpoint(fetchMethod(({ assetsCount: 'yes', ...getCommonParams(false, ignoreCurrentSelectedFolder) })), setFolders)
+    let basicFilter = { assetsCount: 'yes' }
+    if (activeFolder) {
+      // @ts-ignore
+      basicFilter = { ...basicFilter, folderId: activeFolder }
+    }
+    loadFromEndpoint(fetchMethod(({ ...basicFilter, ...getCommonParams(false, ignoreCurrentSelectedFolder) })), setFolders)
   }
 
   const loadAllFolders = () => {
@@ -238,7 +243,7 @@ export default ({ children, isPublic = false }) => {
   const getCommonParams = (assetLim = false, ignoreCurrentSelectedFolder = false) => {
     const filterData = {...activeSortFilter}
 
-    // This ignore apply current folder filter to filter APIs
+    // This ignore apply current folder filter to filter APIs. because in Collection views, just have folders, we want to select multiple without apply new filters
     if(ignoreCurrentSelectedFolder){
       filterData.filterFolders = []
     }
