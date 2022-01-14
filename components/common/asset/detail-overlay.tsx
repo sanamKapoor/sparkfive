@@ -340,6 +340,11 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
       // downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets')
     }
 
+    const manualDownloadAsset = (asset) => {
+      // downloadUtils.zipAndDownload([{ url: realUrl, name: asset.name }], 'assets.zip')
+      downloadUtils.downloadFile(realUrl, asset.name)
+    }
+
     return (
         <div className={`app-overlay ${styles.container}`}>
           {assetDetail &&
@@ -369,7 +374,8 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
                                                     setMode('resize')
                                                     changeActiveSide('detail')
                                                   }else{
-                                                    downloadSelectedAssets(asset.id)
+                                                    // downloadSelectedAssets(asset.id)
+                                                    manualDownloadAsset(asset)
                                                   }
                                                 }
                                               } />}
