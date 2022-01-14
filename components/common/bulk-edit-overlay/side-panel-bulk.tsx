@@ -230,7 +230,13 @@ const SidePanelBulk = ({
           products: []
         }
 
-        if (assetProducts.length > 0) updateObject.attributes.products = assetProducts.map((item)=>{return { product: item, productTags: item.tags }})
+        if (assetProducts.length > 0) updateObject.attributes.products = assetProducts.map((item)=>{
+          if(item){
+            return { product: item, productTags: item.tags }
+          }else{
+            return null
+          }
+        }).filter((item) => item !== null)
         // if (assetFolder) updateObject.attributes.folders = [{ name: assetFolder.name, id: assetFolder.id }]
       } else {
         updateObject.attributes = getRemoveAttributes({ campaigns, projects, tags, customs, folders })
