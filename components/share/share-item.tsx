@@ -58,7 +58,7 @@ const ShareItem = ({
 					</div>
 				</div>
 				<div className={styles.info}>
-					<div className='normal-text'>{asset.name}</div>
+					<div className={`normal-text ${styles['text-wrap']}`}>{asset.name}</div>
 					<div className={styles['details-wrapper']}>
 						<div className='secondary-text'>{format(new Date(asset.createdAt), 'MMM d, yyyy, p')}</div>
 					</div>
