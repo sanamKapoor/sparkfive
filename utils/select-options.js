@@ -1,3 +1,5 @@
+import permission from "../constants/permissions";
+
 export default {
   sort: [
     {
@@ -47,29 +49,35 @@ export default {
       text: 'Collections',
       name: 'folders',
       omitFolder: true,
-      omitShare: true
+      omitShare: true,
+      requirePermissions: []
     },
     {
       text: 'All',
       name: 'all',
+      requirePermissions: []
     },
     {
       text: 'Images',
-      name: 'images'
+      name: 'images',
+      requirePermissions: []
     },
     {
       text: 'Products',
-      name: 'product'
+      name: 'product',
+      requirePermissions: []
     },
     {
       text: 'Videos',
-      name: 'videos'
+      name: 'videos',
+      requirePermissions: []
     },
     {
       text: 'Archived',
       name: 'archived',
       omitFolder: true,
-      omitShare: true
+      omitShare: true,
+      requirePermissions: [permission.ASSET_EDIT]
     }
   ],
 

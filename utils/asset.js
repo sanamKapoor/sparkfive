@@ -201,8 +201,33 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
         filters.dimensionHeight = `${dimensionHeight.min},${dimensionHeight.max}`
     }
 
-    // a range in different day
-    if (beginDate && endDate && beginDate.toDateString() !== endDate.toDateString()) {
+
+    if (beginDate && endDate) {
+        // a range in different day
+        if(beginDate.toDateString() !== endDate.toDateString()){
+            if (beginDate) {
+                const d = new Date(beginDate)
+                const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate())
+
+                filters.beginDate = new Date(newDate.toUTCString()).toISOString()
+            }
+
+            if (endDate) {
+                const d = new Date(endDate)
+                const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate())
+
+                newDate.setDate(newDate.getDate() + 1)
+
+                filters.endDate = new Date(newDate.toUTCString()).toISOString()
+            }
+        }else{ // same day
+            const d = new Date(beginDate)
+            const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate())
+
+            filters.beginDate = new Date(newDate.toUTCString()).toISOString()
+        }
+    } else {
+        // Only have begin date
         if (beginDate) {
             const d = new Date(beginDate)
             const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate())
@@ -210,6 +235,7 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
             filters.beginDate = new Date(newDate.toUTCString()).toISOString()
         }
 
+        // Only have end date
         if (endDate) {
             const d = new Date(endDate)
             const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate())
@@ -218,38 +244,45 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
 
             filters.endDate = new Date(newDate.toUTCString()).toISOString()
         }
-    } else { // same day
-        if (beginDate) {
-            const d = new Date(beginDate)
-            const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate())
-
-            filters.beginDate = new Date(newDate.toUTCString()).toISOString()
-        }
-
-        if (endDate) {
-            const d = new Date(endDate)
-            const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate())
-
-            newDate.setDate(newDate.getDate() + 1)
-
-            filters.beginDate = new Date(newDate.toUTCString()).toISOString()
-        }
     }
 
+    if(fileModifiedBeginDate && fileModifiedEndDate){
+        // a range in different day
+        if(fileModifiedBeginDate.toDateString() !== fileModifiedEndDate.toDateString()){
+            if (fileModifiedBeginDate) {
+                const d = new Date(fileModifiedBeginDate)
+                const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate())
 
+                filters.fileModifiedBeginDate = new Date(newDate.toUTCString()).toISOString()
+            }
 
-    if (fileModifiedBeginDate) {
-        const d = new Date(fileModifiedBeginDate)
-        const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate())
+            if (fileModifiedEndDate) {
+                const d = new Date(fileModifiedEndDate)
+                const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate())
 
-        filters.fileModifiedBeginDate = new Date(newDate.toUTCString()).toISOString()
-    }
+                filters.fileModifiedEndDate = new Date(newDate.toUTCString()).toISOString()
+            }
 
-    if (fileModifiedEndDate) {
-        const d = new Date(fileModifiedEndDate)
-        const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate())
+        }else{ // Same date
+            const d = new Date(fileModifiedBeginDate)
+            const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate())
 
-        filters.fileModifiedEndDate = new Date(newDate.toUTCString()).toISOString()
+            filters.fileModifiedBeginDate = new Date(newDate.toUTCString()).toISOString()
+        }
+    }else{
+        if (fileModifiedBeginDate) {
+            const d = new Date(fileModifiedBeginDate)
+            const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate())
+
+            filters.fileModifiedBeginDate = new Date(newDate.toUTCString()).toISOString()
+        }
+
+        if (fileModifiedEndDate) {
+            const d = new Date(fileModifiedEndDate)
+            const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate())
+
+            filters.fileModifiedEndDate = new Date(newDate.toUTCString()).toISOString()
+        }
     }
 
     if (filterProductType && filterProductFields?.length > 0) {
