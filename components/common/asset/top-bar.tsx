@@ -10,7 +10,7 @@ import Button from '../buttons/button'
 import IconClickable from '../buttons/icon-clickable'
 
 // Context
-import { AssetContext } from '../../../context'
+import { AssetContext, UserContext } from '../../../context'
 
 const TopBar = ({
   activeSortFilter,
@@ -29,6 +29,8 @@ const TopBar = ({
     selectedAllAssets,
     selectAllAssets
   } = useContext(AssetContext)
+
+  const {hasPermission} = useContext(UserContext)
 
   const setSortFilterValue = (key, value) => {
     // Reset select all status
@@ -68,6 +70,7 @@ const TopBar = ({
         {selectOptions.views.map(view => (
           <>
             {(!activeFolder || !view.omitFolder) && (!isShare || (isShare && !view.omitShare)) &&
+            (view.requirePermissions.length === 0 || (view.requirePermissions.length > 0 && hasPermission(view.requirePermissions))) &&
               <SectionButton
                 key={view.name}
                 text={view.text}
