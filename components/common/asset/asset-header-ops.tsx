@@ -96,7 +96,7 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 				delete filters.page
             } else if (selectedFolders.length > 0) {
                 totalDownloadingAssets = selectedFolders.length;
-                payload.folderIds = selectedFolders.map((folder) => folder);
+                payload.folderIds = selectedFolders.map((folder) => folder.id);
             } else {
 				totalDownloadingAssets = selectedAssets.length
 				payload.assetIds = selectedAssets.map(assetItem => assetItem.asset.id)
@@ -121,14 +121,20 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 
                 updateDownloadingStatus("done", 0, 0);
             } else if (payload.folderIds.length > 0) {
-                let filedata = [];
-                for await (const folderId of payload.folderIds) {
-                let { data } = await folderApi.getInfoToDownloadFolder(folderId.id);
-                data["name"] = folderId.name;
-                filedata.push(data);
-                }
-                zipDownloadUtils.zipAndDownloadCollection(filedata, "collection");
-                updateDownloadingStatus("done", 0, 0);
+				const { data } = await folderApi.downloadFoldersAsZip(payload, filters);
+
+				// Download file to storage
+				fileDownload(data, "assets.zip");
+
+				updateDownloadingStatus("done", 0, 0);
+                // let filedata = [];
+                // for await (const folderId of payload.folderIds) {
+                // let { data } = await folderApi.getInfoToDownloadFolder(folderId.id);
+                // data["name"] = folderId.name;
+                // filedata.push(data);
+                // }
+                // zipDownloadUtils.zipAndDownloadCollection(filedata, "collection");
+                // updateDownloadingStatus("done", 0, 0);
             }
 		} catch (e) {
 			updateDownloadingStatus('error', 0, 0, 'Internal Server Error. Please try again.')

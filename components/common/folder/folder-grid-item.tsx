@@ -1,7 +1,11 @@
 import styles from './folder-grid-item.module.css'
 import { Utilities, Assets } from '../../../assets'
-import { useState } from 'react'
+import {useContext, useState} from 'react'
+import fileDownload from 'js-file-download';
 import zipDownloadUtils from '../../../utils/download'
+
+// Context
+import { AssetContext } from '../../../context'
 
 // Components
 import AssetImg from '../asset/asset-img'
@@ -28,6 +32,10 @@ const FolderGridItem = ({
 	toggleSelected,
 	copyEnabled
 }) => {
+	const {
+		updateDownloadingStatus
+	} = useContext(AssetContext)
+
 	const previews = [1, 2, 3, 4]
 		.map((_, index) => ({
 			name: assets[index]?.name || 'empty',
@@ -39,9 +47,26 @@ const FolderGridItem = ({
 	const [deleteOpen, setDeleteOpen] = useState(false)
 
 	const downloadFoldercontents = async() => {
-		const { data } = await folderApi.getInfoToDownloadFolder(id)
-		// Get full assets url, because currently, it just get maximum 4 real url in thumbnail
-		zipDownloadUtils.zipAndDownload(data, name)
+		// const { data } = await folderApi.getInfoToDownloadFolder(id)
+		// // Get full assets url, because currently, it just get maximum 4 real url in thumbnail
+		// zipDownloadUtils.zipAndDownload(data, name)
+
+		// Show processing bar
+		updateDownloadingStatus('zipping', 0, 1)
+
+		let payload = {
+			folderIds: [id],
+		};
+		let filters = {
+			estimateTime: 1
+		}
+
+		const { data } = await folderApi.downloadFoldersAsZip(payload, filters);
+
+		// Download file to storage
+		fileDownload(data, "assets.zip");
+
+		updateDownloadingStatus("done", 0, 0);
 	}
 
 	return (
@@ -50,8 +75,8 @@ const FolderGridItem = ({
 				<>
 					{previews.map((preview) => (
 						<div className={styles['sub-image-wrapper']}>
-							{(preview.assetImg || preview.name === 'empty') 
-								? <AssetImg {...preview} /> 
+							{(preview.assetImg || preview.name === 'empty')
+								? <AssetImg {...preview} />
 								: <AssetIcon extension={preview.extension} isCollection={true}/>
 							}
 						</div>

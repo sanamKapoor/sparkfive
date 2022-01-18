@@ -47,5 +47,14 @@ export default {
       responseType: 'blob', // Important
       data
     })
+  },
+
+  shareDownload: (data, filters) => {
+    return axios({
+      url: `${assetUrl}/share/download?${querystring.encode(filters)}`,
+      method: 'POST',
+      responseType: 'blob', // Important
+      data
+    })
   }
 }

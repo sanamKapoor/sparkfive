@@ -1,6 +1,6 @@
 // External import
 import update from "immutability-helper"
-import { useEffect, useState } from 'react'
+import {useContext, useEffect, useState, useRef} from 'react'
 
 // Styles
 import styles from './index.module.css'
@@ -15,11 +15,25 @@ import downloadUtils from '../../utils/download'
 // Components
 import ShareItem from './share-item'
 import ShareOperationButtons from "./share-operation-buttons"
+import fileDownload from "js-file-download";
+import AssetDownloadProcess from "./asset-download-process"
+
+
+// Contexts
+import { AssetContext } from '../../context'
 
 const AssetShare = () => {
 
+	const {
+		updateDownloadingStatus
+	} = useContext(AssetContext)
+
 	const [assets, setAssets] = useState([])
 	const [selectedAsset, setSelectedAsset] = useState(0)
+	const [showDownloadPopup, setShowDownloadPopup] = useState(false)
+	const [downloadStatus, setDownloadStatus] = useState("")
+	const [downloadingPercent, setDownloadingPercent] = useState(30)
+	const interval = useRef()
 
 	// Toggle select asset
 	const toggleSelected = (id) => {
@@ -52,11 +66,61 @@ const AssetShare = () => {
 
 	}
 
+	const zipping = () => {
+		setDownloadStatus("zipping")
+		setShowDownloadPopup(true)
+		// simulateProcess();
+	}
+
+	const done = () => {
+		setDownloadStatus("done")
+		// cancelSimulatedProcess
+	}
+
+	const simulateProcess = () => {
+		// @ts-ignore
+		interval.current = setInterval(()=>{
+			if(downloadingPercent < 100){
+				setDownloadingPercent(downloadingPercent+10)
+			}
+
+		},1000)
+	}
+
+	const cancelSimulatedProcess = () => {
+		if(interval.current){
+			clearInterval(interval.current)
+			setDownloadingPercent(0)
+		}
+
+	}
+
 	// Download select assets
 	const downloadSelectedAssets = async () => {
-		const selectedAssets = assets.filter(asset => asset.isSelected)
+		try{
 
-		downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets.zip')
+			const { shareJWT } = urlUtils.getQueryParameters()
+
+			const selectedAssets = assets.filter(asset => asset.isSelected)
+
+			let payload = {
+				assetIds: selectedAssets.map((item)=>item.asset.id),
+			};
+
+			// Show processing bar
+			zipping()
+
+			const { data } = await assetApi.shareDownload(payload, {shareJWT});
+			// Download file to storage
+			fileDownload(data, "assets.zip");
+
+			done();
+
+			// downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets.zip')
+		}catch (e){
+
+		}
+
 	}
 
 	useEffect(() => {
@@ -89,6 +153,8 @@ const AssetShare = () => {
 					})}
 				</ul>
 			</div>
+
+			{showDownloadPopup && <AssetDownloadProcess downloadingStatus={downloadStatus} onClose={()=>{setShowDownloadPopup(false)}} downloadingPercent={downloadingPercent} selectedAsset={selectedAsset}/>}
 		</section >
 	)
 }
