@@ -1,5 +1,6 @@
 import axios from 'axios'
 import queryString from 'querystring'
+import querystring from "querystring";
 
 const folderUrl = `${process.env.SERVER_BASE_URL}/folders`
 
@@ -13,4 +14,12 @@ export default {
   shareFolder: (id, data) => axios.put(`${folderUrl}/${id}/share`, data),
   authenticateCollection: (data) => axios.post(`${folderUrl}/collection-auth`, data),
   getInfoToDownloadFolder: (id) => axios.get(`${folderUrl}/${id}/download`),
+  downloadFoldersAsZip: (data, filters) => {
+    return axios({
+      url: `${folderUrl}/download-as-zip?${querystring.encode(filters)}`,
+      method: 'POST',
+      responseType: 'blob', // Important
+      data
+    })
+  }
 }
