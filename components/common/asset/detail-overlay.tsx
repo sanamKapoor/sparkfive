@@ -27,6 +27,8 @@ import AssetCropImg from './asset-crop-img'
 import fileDownload from "js-file-download";
 import AssetIcon from './asset-icon'
 
+import { isImageType } from '../../../utils/file'
+
 const getDefaultDownloadImageType = (extension) => {
   const defaultDownloadImageTypes = [
     {
@@ -370,7 +372,7 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
                                               styleType={'secondary'}
                                               onClick={
                                                 () => {
-                                                  if(asset.type === 'image'){
+                                                  if(asset.type === 'image' && isImageType(assetDetail.name)){
                                                     setMode('resize')
                                                     changeActiveSide('detail')
                                                   }else{
@@ -454,7 +456,7 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
                 src={AssetOps.download}
                 additionalClass={styles['menu-icon']}
                 onClick={() => {
-                  if(asset.type === 'image'){
+                  if(asset.type === 'image' && isImageType(asset.name)){
                     if(mode !== 'resize' && mode !== 'crop'){
                       setMode('resize')
                     }
