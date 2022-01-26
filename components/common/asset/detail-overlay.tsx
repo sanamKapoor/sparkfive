@@ -372,7 +372,7 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
                                               styleType={'secondary'}
                                               onClick={
                                                 () => {
-                                                  if(asset.type === 'image' && isImageType(assetDetail.name)){
+                                                  if(asset.type === 'image' && isImageType(assetDetail.extension)){
                                                     setMode('resize')
                                                     changeActiveSide('detail')
                                                   }else{
@@ -456,7 +456,7 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
                 src={AssetOps.download}
                 additionalClass={styles['menu-icon']}
                 onClick={() => {
-                  if(asset.type === 'image' && isImageType(asset.name)){
+                  if(asset.type === 'image' && isImageType(asset.extension)){
                     if(mode !== 'resize' && mode !== 'crop'){
                       setMode('resize')
                     }
