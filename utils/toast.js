@@ -6,8 +6,8 @@ const ToastMessage = ({ message }) => (
   </div>
 )
 
-const toastOptions = (type) => ({
-  position: toast.POSITION.TOP_RIGHT,
+const toastOptions = (type, position = toast.POSITION.TOP_RIGHT) => ({
+  position,
   transition: Zoom,
   // autoClose: 400000,
   className: `toast-base-${type}`,
@@ -17,6 +17,10 @@ const toastOptions = (type) => ({
 export default {
   success: (message) => {
     toast(<ToastMessage message={message} />, toastOptions('success'));
+  },
+
+  bottomSuccess: (message) => {
+    toast(<ToastMessage message={message} />, toastOptions('success', toast.POSITION.BOTTOM_CENTER));
   },
 
   error: (message) => {

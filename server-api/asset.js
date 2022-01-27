@@ -17,6 +17,7 @@ export default {
   updateMultipleAttributes: (updateData, filters = {}) => axios.patch(`${assetUrl}/attributes?${querystring.encode(filters)}`, updateData),
   getSharedAssets: (shareJWT) => axios.get(`${assetUrl}/share?shareJWT=${shareJWT}`),
   generateAndSendShareUrl: (data, filters = {}) => axios.post(`${assetUrl}/share?${querystring.encode(filters)}`, data),
+  getShareUrl: (data, filters = {}) => axios.post(`${assetUrl}/share-url?${querystring.encode(filters)}`, data),
   getById: id => axios.get(`${assetUrl}/${id}`),
   updateAsset: (id, { updateData, associations = {} }) => axios.patch(`${assetUrl}/${id}`, { updateData, associations }),
   deleteAsset: (id, filters = {}) => axios.delete(`${assetUrl}/${id}?${querystring.encode(filters)}`),
