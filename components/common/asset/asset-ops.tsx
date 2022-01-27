@@ -1,12 +1,12 @@
-import { AssetContext, FilterContext, LoadingContext } from '../../../context'
-import { useState, useContext, useEffect } from 'react'
+import {AssetContext, FilterContext, LoadingContext} from '../../../context'
+import {useContext, useEffect, useState} from 'react'
 import assetApi from '../../../server-api/asset'
 import projectApi from '../../../server-api/project'
 import taskApi from '../../../server-api/task'
 import folderApi from '../../../server-api/folder'
 import toastUtils from '../../../utils/toast'
-import { getAssetsFilters } from '../../../utils/asset'
-import { useRouter } from 'next/router'
+import {getAssetsFilters} from '../../../utils/asset'
+import {useRouter} from 'next/router'
 import update from 'immutability-helper'
 
 // Components
@@ -414,6 +414,50 @@ export default ({getAssets}) => {
 		}
 	}
 
+
+	const getShareLink = async () => {
+		try {
+			let assetIds
+			let filters = {}
+			if (operationAsset) {
+				assetIds = operationAsset.asset.id
+			}
+			else if (operationFolder) {
+				assetIds = operationFolder.assets.map(asset => asset.id).join(',')
+			}
+			else {
+				assetIds = selectedAssets.map(assetItem => assetItem.asset.id).join(',')
+			}
+
+			// Select all assets without pagination
+			if(selectedAllAssets){
+				filters = {
+					...getAssetsFilters({
+						replace: false,
+						activeFolder,
+						addedIds: [],
+						nextPage: 1,
+						userFilterObject: activeSortFilter
+					}),
+					selectedAll: '1',
+				};
+
+				if(term){
+					// @ts-ignore
+					filters.term = term;
+				}
+				// @ts-ignore
+				delete filters.page
+			}
+			return await assetApi.getShareUrl({
+				assetIds
+			}, filters)
+		} catch (err) {
+			console.log(err)
+			return ""
+		}
+	}
+
 	const shareFolders = async ({ shareStatus, newPassword, customUrl, notificationSettings }) => {
 		try {
 			const { data } = await folderApi.shareFolder(operationFolder.id, {
@@ -660,6 +704,7 @@ export default ({getAssets}) => {
 				closeModal={closeModalAndClearOpAsset}
 				itemsAmount={operationLength}
 				shareAssets={shareAssets}
+				getShareLink={getShareLink}
 			/>
 			<ShareFolderModal
 				modalIsOpen={activeOperation === 'shareFolders'}
