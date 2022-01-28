@@ -86,6 +86,7 @@ const SearchItem = ({ assetItem, term, openShareAsset, openDeleteAsset, toggleSe
       </li >
       {visibleOverlay &&
         <DetailOverlay
+          thumbailUrl={thumbailUrl}
           isShare={isShare}
           initialParams={{}}
           asset={asset}
