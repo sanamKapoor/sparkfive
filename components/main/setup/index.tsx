@@ -44,7 +44,7 @@ const Setup = () => {
       } catch (err) {
         console.log(err)
       } finally {
-        Router.replace('/main/overview')
+        Router.replace('/main/assets')
       }
     }
   }
