@@ -40,6 +40,7 @@ const MoveModal = ({ modalIsOpen, closeModal, itemsAmount, moveAssets, createFol
   const onSubmit = async (e) => {
     e.preventDefault()
     await createFolder(newFolderName)
+    getFolders()
     setNewFolderName('')
     setFolderInputActive(false)
   }
