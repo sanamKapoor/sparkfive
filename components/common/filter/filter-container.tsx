@@ -1,6 +1,6 @@
 import styles from './filter-container.module.css'
 import update from 'immutability-helper'
-import { FilterContext } from '../../../context'
+import { FilterContext, AssetContext } from '../../../context'
 import { useState, useEffect, useContext } from 'react'
 import { Utilities } from '../../../assets'
 
@@ -53,6 +53,8 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
         loadCustomFields,
         setCustomFields
     } = useContext(FilterContext)
+
+    const { activeFolder } = useContext(AssetContext)
 
     const getCustomFields = async () => {
         try {
@@ -216,7 +218,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                             />}
                     </section>
                 }
-                <section>
+                {!activeFolder && <section>
                     <div className={styles['expand-bar']} onClick={() => handleExpand('folders')}>
                         <h4>Collections</h4>
                         {expandedMenus.includes('folders') ?
@@ -233,7 +235,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                             setValue={(selected) => setSortFilterValue('filterFolders', selected)}
                             scrollBottomAfterSearch={isFolder}
                         />}
-                </section>
+                </section>}
                 {/*{!isFolder &&*/}
                 {/*    <section>*/}
                 {/*        <div className={styles['expand-bar']} onClick={() => handleExpand('projects')}>*/}
