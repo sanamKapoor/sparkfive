@@ -56,7 +56,7 @@ const AssetAddition = ({
 		setUploadSourceType,
 		setTotalAssets,
 		totalAssets,
-		setFolderImport
+		setFolderImport,
 	} = useContext(AssetContext)
 
 
@@ -352,6 +352,8 @@ const AssetAddition = ({
 			// Mark process as done
 			showUploadProcess('done')
 
+			setNeedsFetch('folders')
+
 			// Reset upload source type
 			setUploadSourceType('')
 			// toastUtils.success('Assets imported.')
@@ -455,6 +457,8 @@ const AssetAddition = ({
 
 			// Mark process as done
 			showUploadProcess('done')
+
+			setNeedsFetch('folders')
 
 			// Reset upload source type
 			setUploadSourceType('')
