@@ -55,7 +55,7 @@ const AssetThumbail = ({
   return (
     <>
       <div className={`${styles.container} ${isLoading && 'loadable'}`}>
-        <div className={styles['image-wrapper']}>
+        <div className={`${styles['image-wrapper']} ${styles['thumbnail-image-wrapper']}`}>
           {isUploading &&
             <>
               <p className={styles.uploading}>Uploading...</p>
