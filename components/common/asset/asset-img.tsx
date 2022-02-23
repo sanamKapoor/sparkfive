@@ -14,7 +14,7 @@ const AssetImg = ({ assetImg, type = 'image', name, opaque = false, onClick = ()
 	return (
 		<>
 			<img src={Assets.empty} alt={'blank'} style={loaded ? { display: "none" } : {}} />
-			<img  crossOrigin={'anonymous'} onClick={onClick} src={finalImg} alt={name} className={`${styles.asset} ${opaque && styles.opaque}`} onLoad={() => setLoaded(true)} style={loaded ? {} : {
+			<img onClick={onClick} src={finalImg} alt={name} className={`${styles.asset} ${opaque && styles.opaque}`} onLoad={() => setLoaded(true)} style={loaded ? {} : {
 				opacity: 0,
 				overflow: 'hidden',
 				height: 0,
