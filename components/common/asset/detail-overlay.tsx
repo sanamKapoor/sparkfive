@@ -346,7 +346,7 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
       // downloadUtils.zipAndDownload([{ url: realUrl, name: asset.name }], 'assets.zip')
       downloadUtils.downloadFile(realUrl, asset.name)
     }
-
+    
     return (
         <div className={`app-overlay ${styles.container}`}>
           {assetDetail &&
