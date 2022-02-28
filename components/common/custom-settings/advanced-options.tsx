@@ -3,6 +3,7 @@ import {useEffect, useState} from 'react'
 import { Utilities } from '../../../assets'
 
 import styles from './advanced-options.module.css'
+import Router from 'next/router'
 
 // Components
 import SpinnerOverlay from "../spinners/spinner-overlay";
@@ -29,6 +30,12 @@ const AdvancedOptions = () => {
         return true
     }
 
+    const navigateToDeletedList = (ev) => {
+        ev.stopPropagation()
+        Router.push('/main/advanced-options/deleted-assets-list')
+        return false;
+    }
+
     useEffect(()=>{
         getAdvanceConfigurations();
     },[])
@@ -43,7 +50,7 @@ const AdvancedOptions = () => {
                                 <span className={'font-weight-500'}>Deleted Assets</span>
                             </div>
                             <div className={"col-60"}>
-                                <a className={`${styles['anchor']}`} href={'/main/advanced-options/deleted-assets-list'}>Manage Deleted Assets</a>
+                            <a className={`${styles['anchor']}`} href='#' onClick={(ev) => navigateToDeletedList(ev)}>Manage Deleted Assets</a>
                             </div>
                         </div>
                     </div>
