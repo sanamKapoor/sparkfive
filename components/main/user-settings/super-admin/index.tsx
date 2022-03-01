@@ -14,7 +14,9 @@ import OptionList from "./option-list";
 import superAdminApi from '../../../../server-api/super-admin'
 import toastUtils from '../../../../utils/toast'
 import SpinnerOverlay from "../../../common/spinners/spinner-overlay";
+import { useQueryStrings } from '../../../../hooks/use-query-strings';
 
+import { defaultSortData as companyDefaultSortData } from './company-list-header/types'
 
 const type = [
     {
@@ -27,13 +29,19 @@ const type = [
     }
 ]
 
+const defaultValues = {
+    activeList: 'allUsers',
+    sortBy: 'users.lastLogin',
+    sortDirection: 'ASC'
+}
+
 const SuperAdmin = () => {
 
-  const [activeList, setActiveList] = useState('allUsers') // Available options: allUsers, allAccounts
     const [viewCompanyDetail, setViewCompanyDetail] = useState()
     const [vanity, setVanity] = useState(type[1].value)
     const [subdomain, setSubdomain] = useState('')
     const [loading, setLoading] = useState(false)
+    const [sortData, setSortData] = useQueryStrings(defaultValues)
 
     const onViewCompanySettings =  (data) => {
         setViewCompanyDetail(data)
@@ -71,18 +79,18 @@ const SuperAdmin = () => {
             <div className={styles.buttons}>
                 <SectionButton
                     text='All Users'
-                    active={activeList === 'allUsers'}
-                    onClick={() => setActiveList('allUsers')}
+                    active={sortData.activeList === 'allUsers'}
+                    onClick={() => setSortData(defaultValues)}
                 />
                 <SectionButton
                     text='All Accounts'
-                    active={activeList === 'allAccounts'}
-                    onClick={() => setActiveList('allAccounts')}
+                    active={sortData.activeList === 'allAccounts'}
+                    onClick={() => setSortData(companyDefaultSortData)}
                 />
             </div>
 
-            {activeList === 'allUsers' && <UserList />}
-            {activeList === 'allAccounts' && <CompanyList onViewCompanySettings={onViewCompanySettings}/>}
+            {sortData.activeList === 'allUsers' && <UserList />}
+            {sortData.activeList === 'allAccounts' && <CompanyList onViewCompanySettings={onViewCompanySettings}/>}
         </>}
 
         {viewCompanyDetail && <>

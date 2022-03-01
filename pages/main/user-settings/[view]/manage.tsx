@@ -14,6 +14,7 @@ import NoPermissionNotice from '../../../../components/common/misc/no-permission
 const AssetsPage = () => {
 
     const {user} = useContext(UserContext)
+    
     return <FilterProvider>
         <Head>
             <title>User Settings</title>

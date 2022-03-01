@@ -9,6 +9,9 @@ import CompanyItem from '../company-item'
 import Search from '../../../../common/inputs/search'
 import Button from '../../../../common/buttons/button'
 import SpinnerOverlay from "../../../../common/spinners/spinner-overlay";
+import CompanyListHeader from '../company-list-header'
+import { defaultSortData } from '../company-list-header/types'
+import { useQueryStrings } from '../../../../../hooks/use-query-strings'
 
 
 const CompanyList = ({onViewCompanySettings}) => {
@@ -21,17 +24,28 @@ const CompanyList = ({onViewCompanySettings}) => {
     currentPage: 1,
     total: 0
   })
+  const [sortData, setSortData] = useQueryStrings(defaultSortData)
 
   useEffect(() => {
-    getCompany()
-  }, [])
+    console.log('sortData:', sortData)
 
-  const getCompany = async ({ page = 1, searchTerm = term, reset = false } = {}) => {
+    if (Object.keys(sortData).length > 0) {
+      getCompany({
+        sortBy: sortData.sortBy,
+        sortDirection: sortData.sortDirection,
+        reset: true
+      })
+    } 
+  }, [sortData])
+
+  const getCompany = async ({ page = 1, searchTerm = term, reset = false, sortBy = 'teams.company', sortDirection = 'ASC' } = {}) => {
     try {
       setLoading(true)
       let newTeams = companyData.teams
       if (reset) newTeams = []
-      const { data } = await superAdminApi.getCompanies({ term: searchTerm, page })
+
+      const { data } = await superAdminApi.getCompanies({ term: searchTerm, page, sortBy, sortOrder: sortDirection })
+
       setCompanyData({
         teams: [...newTeams, ...data.teams],
         currentPage: page,
@@ -49,7 +63,7 @@ const CompanyList = ({onViewCompanySettings}) => {
     getCompany({
       searchTerm,
       page: 1,
-      reset: true
+      reset: true,
     })
     setTerm(searchTerm)
   }
@@ -65,17 +79,30 @@ const CompanyList = ({onViewCompanySettings}) => {
         <li>
           <div className={styles.row}>
             <div className={`${styles['name-email']} ${styles['header-title']}`}>
-              <div>
-                Company Name
-              </div>
+              <CompanyListHeader setSortData={setSortData} sortData={sortData} sortId='teams.company' title='Company' />
             </div>
             <div className={`${styles.company} ${styles['header-title']}`}>
-              Account Senior Admin
+              <CompanyListHeader setSortData={setSortData} sortData={sortData} sortId='users.name' title='Senior Admin' />
             </div>
-            <div className={`${styles.role} ${styles['header-title']}`}>
-              Plan
+            <div className={`${styles.date} ${styles['header-title']}`}>
+              <CompanyListHeader setSortData={setSortData} sortData={sortData} sortId='users.lastLogin' title='Last Login' />
             </div>
-            <Button className={styles.invisible} type={'button'} styleType={'secondary'} text={'Settings'} />
+            <div className={`${styles.date} ${styles['header-title']}`}>
+              <CompanyListHeader setSortData={setSortData} sortData={sortData} sortId='users.createdAt' title='Created Date' />
+            </div>
+            <div className={`${styles.date} ${styles['header-title']}`}>
+              <CompanyListHeader setSortData={setSortData} sortData={sortData} sortId='users.lastUpload' title='Last Upload' />
+            </div>
+            <div className={`${styles.storage} ${styles['header-title']}`}>
+              <CompanyListHeader setSortData={setSortData} sortData={sortData} sortId='users.storageUsed' title='Storage Used' />
+            </div>
+            <div className={`${styles.files} ${styles['header-title']}`}>
+              <CompanyListHeader setSortData={setSortData} sortData={sortData} big sortId='users.filesCount' title='Files Upload' />
+            </div>
+            <div className={`${styles.plan} ${styles['header-title']}`}>
+              <CompanyListHeader setSortData={setSortData} sortData={sortData} sortId='plan.name' title='Plan' />
+            </div>
+            <div className={styles.btn} />
           </div>
         </li>
         {companyData.teams.map(user => (
