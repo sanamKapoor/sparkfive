@@ -3,12 +3,18 @@ import { useState, useEffect } from 'react'
 import Router from 'next/router'
 import cookiesUtils from '../../../../../utils/cookies'
 import superAdminApi from '../../../../../server-api/super-admin'
+import { defaultSortData } from './types'
+import { useQueryStrings } from '../../../../../hooks/use-query-strings'
 
 // Components
+import UserListHeader from '../user-list-header'
 import UserItem from '../user-item'
 import Search from '../../../../common/inputs/search'
 import Button from '../../../../common/buttons/button'
 import SpinnerOverlay from "../../../../common/spinners/spinner-overlay";
+import { Assets } from '../../../../../assets'
+
+
 
 const UserList = () => {
 
@@ -18,23 +24,38 @@ const UserList = () => {
   const [userData, setUserData] = useState({
     users: [],
     currentPage: 1,
-    total: 0
+    total: 0,
   })
+  const [sortData, setSortData] = useQueryStrings(defaultSortData)
 
   useEffect(() => {
-    getUsers()
-  }, [])
 
-  const getUsers = async ({ page = 1, searchTerm = term, reset = false } = {}) => {
+    console.log('sortData:', sortData)
+
+    if (Object.keys(sortData).length) {
+      getUsers({
+        sortBy: sortData.sortBy,
+        sortDirection: sortData.sortDirection,
+        reset: true
+      })
+    }
+  }, [sortData])
+
+  useEffect(() => {
+    console.log('userData: ', userData)
+  }, [userData])
+
+  const getUsers = async ({ page = 1, searchTerm = term, reset = false, sortBy = 'users.lastLogin', sortDirection = 'ASC' } = {}) => {
     try {
       setLoading(true)
       let newUsers = userData.users
       if (reset) newUsers = []
-      const { data } = await superAdminApi.getUsers({ term: searchTerm, page })
+
+      const { data } = await superAdminApi.getUsers({ term: searchTerm, page, sortBy, sortOrder: sortDirection })
       setUserData({
         users: [...newUsers, ...data.users],
         currentPage: page,
-        total: data.total
+        total: data.total,
       })
 
       setLoading(false)
@@ -44,11 +65,13 @@ const UserList = () => {
     }
   }
 
-  const searchAndGetUsers = (searchTerm) => {
+  const searchAndGetUsers = (searchTerm, sortBy = 'users.lastLogin', sortDirection = 'ASC') => {
     getUsers({
       searchTerm,
       page: 1,
-      reset: true
+      reset: true,
+      sortBy,
+      sortDirection
     })
     setTerm(searchTerm)
   }
@@ -75,6 +98,26 @@ const UserList = () => {
     <div className={styles.container}>
       <Search onSubmit={searchAndGetUsers} placeholder={'Search users by name or email'} />
       <ul className={styles.list}>
+        <li>
+          <div className={styles['header-container']}>
+            <div className={`${styles['centered-cell']} ${styles['name-email']}`}>
+              <UserListHeader setSortData={setSortData} sortData={sortData} sortId='users.name' title='User' />
+            </div>
+            <div className={`${styles['centered-cell']} ${styles.date}`}>
+              <UserListHeader setSortData={setSortData} sortData={sortData} sortId='users.lastLogin' title='Last Login' />
+            </div>
+            <div className={`${styles['centered-cell']} ${styles.date}`}>
+              <UserListHeader setSortData={setSortData} sortData={sortData} sortId='users.createdAt' title='Created At' />
+            </div>
+            <div className={`${styles['centered-cell']} ${styles.role}`}>
+              <UserListHeader setSortData={setSortData} sortData={sortData} sortId='users.roleId' title='Role' />
+            </div>
+            <div className={`${styles['centered-cell']} ${styles.company}`}>
+              <UserListHeader setSortData={setSortData} sortData={sortData} sortId='team.company' title='Company' />
+            </div>
+            <div className={styles.button}/> {/*it needs to implement button column width*/}
+          </div>
+        </li>
         {userData.users.map(user => (
           <li key={user.id}>
             <UserItem getUserToken={() => getUserJWT(user)} user={user} />

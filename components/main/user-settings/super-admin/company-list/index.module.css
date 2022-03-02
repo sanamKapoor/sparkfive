@@ -8,21 +8,8 @@
   margin-top: 2rem;
 }
 
-.name-email {
-  width: 12rem;
-  margin-right: 1rem;
-}
-
 .name-email>div:first-child{
   font-weight: 600;
-}
-
-.role{
-  width: 7rem;
-}
-
-.company{
-  flex: 1;
 }
 
 .no-comp{
@@ -38,8 +25,28 @@
 }
 
 .header-title{
-  color: #a7adbb;
   font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.name-email {
+  width: 11%;
+}
+
+.company {
+  width: 24%;
+}
+
+.date, .storage, .btn, .plan, .files {
+  width: 10%;
+}
+
+.files {
+  width: 5%;
 }
 
 .invisible{

@@ -8,6 +8,7 @@ export default {
   getQueryParameters: (url = '') => {
     if (!url) {
       const search = window.location.search
+
       return queryString.decode(search.substring(1, search.length))
     }
   },

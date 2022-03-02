@@ -134,7 +134,8 @@ export const Assets = {
   indd: require('./Icons/Assets/indd.svg'),
   ai: require('./Icons/Assets/ai.svg'),
   dwg: require('./Icons/Assets/dwg.png'),
-  unknown: require('./Icons/Assets/unknown.svg')
+  unknown: require('./Icons/Assets/unknown.svg'),
+  arrowDown: require('./Icons/Assets/arrow-down.svg')
 }
 
 export const Comments = {
