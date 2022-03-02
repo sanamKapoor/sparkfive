@@ -10,22 +10,11 @@ const UserListHeader: React.FC<UserListHeaderProps> = ({ title, setSortData, sor
 
   const isActive = sortData.sortBy === sortId
 
-  const toggleSortHandler = () => {
-
-    if (sortData.sortBy !== sortId) return setSortData({
-      sortBy: sortId,
-      sortDirection: 'ASC',
-      activeList: 'allUsers'
-    })
-
-    if (sortData.sortDirection === 'ASC') return setSortData({
-      sortBy: sortId,
-      sortDirection: 'DESC',
-      activeList: 'allUsers'
-    })
-
-    setSortData(defaultSortData)
-  }
+  const toggleSortHandler = () => setSortData({
+    ...defaultSortData,
+    sortBy: sortId,
+    sortDirection: sortId !== sortData.sortBy ? 'ASC' : (sortData.sortDirection === 'ASC' ? 'DESC' : 'ASC')
+  })
 
   return (
     <span onClick={toggleSortHandler} className={styles.container}>

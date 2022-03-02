@@ -6,22 +6,11 @@ import { CompanyListHeaderProps, defaultSortData } from './types'
 const CompanyListHeader: React.FC<CompanyListHeaderProps> = ({ setSortData, sortData, sortId, title, big }) => {
   const isActive = sortData.sortBy === sortId
 
-  const toggleSortHandler = () => {
-
-    if (sortData.sortBy !== sortId) return setSortData({
-      sortBy: sortId,
-      sortDirection: 'ASC',
-      activeList: 'allAccounts'
-    })
-
-    if (sortData.sortDirection === 'ASC') return setSortData({
-      sortBy: sortId,
-      sortDirection: 'DESC',
-      activeList: 'allAccounts'
-    })
-
-    setSortData(defaultSortData)
-  }
+  const toggleSortHandler = () => setSortData({
+    ...defaultSortData,
+    sortBy: sortId,
+    sortDirection: sortId !== sortData.sortBy ? 'ASC' : (sortData.sortDirection === 'ASC' ? 'DESC' : 'ASC')
+  })
 
   return (
     <span onClick={toggleSortHandler} className={styles.container}>
