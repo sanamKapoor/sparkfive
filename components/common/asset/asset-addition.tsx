@@ -620,7 +620,7 @@ const AssetAddition = ({
 		<>
 			<input multiple={true} id="file-input-id" ref={fileBrowserRef} style={{ display: 'none' }} type='file'
 				onChange={onFileChange} />
-			<input multiple={true} webkitdirectory='' webkitRelativePath='' id="file-input-id" ref={folderBrowserRef} style={{ display: 'none' }} type='file'
+			<input multiple={true} webkitdirectory='' id="file-input-id" ref={folderBrowserRef} style={{ display: 'none' }} type='file'
 				onChange={onFileChange} />
 			{displayMode === 'dropdown' ?
 				<ToggleAbleAbsoluteWrapper

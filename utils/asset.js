@@ -303,7 +303,7 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
 
 export const getAssetsSort = (userFilterObject) => {
     // /ori/PXL_20210215_215652102.MP.jpg
-    if (userFilterObject.sort.value !== 'none') {
+    if (userFilterObject.sort && userFilterObject.sort.value !== 'none') {
         const { field, order } = userFilterObject.sort
         return {
             sort: `${field},${order}`
