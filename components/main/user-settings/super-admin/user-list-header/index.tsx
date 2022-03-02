@@ -1,7 +1,6 @@
 import React from 'react' 
 import { UserListHeaderProps } from './types'
 import { Assets } from '../../../../../assets'
-import { useQueryStrings } from '../../../../../hooks/use-query-strings'
 
 import styles from './index.module.css'
 import { defaultSortData } from '../user-list/types'
