@@ -44,6 +44,7 @@ module.exports = withSentryConfig(withImages({
     INCLUDE_PIXEL: process.env.INCLUDE_PIXEL || "no",
     INCLUDE_GOOGLE_ANALYTICS: process.env.INCLUDE_GOOGLE_ANALYTICS || "no",
     SENTRY_ENV: process.env.SENTRY_ENV || "dev",
+    
   },
 }), sentryWebpackPluginOptions);
 

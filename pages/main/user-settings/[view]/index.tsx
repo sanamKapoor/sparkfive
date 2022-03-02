@@ -5,6 +5,7 @@ import MainLayout from '../../../../components/common/layouts/main-layout'
 import UserSettings from '../../../../components/main/user-settings'
 
 const UserSettingsPage = () => {
+
     return <>
         <Head>
             <title>User Settings</title>

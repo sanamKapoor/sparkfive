@@ -8,6 +8,24 @@ const getDateKey = (date) => {
   return `${date.getDate()}-${date.getMonth()}-${date.getYear()}`
 }
 
+const parseDateToString = (d) => {
+  const date = new Date(d)
+
+  if (!d) return 'No date'
+
+  const isDoubleDigit = (num) => {
+    if (num > 9) return num
+    
+    return `0${num}`
+  }
+
+  const year = date.getFullYear()
+  const month = isDoubleDigit(date.getMonth())
+  const day = isDoubleDigit(date.getDay())
+
+  return `${day}/${month}/${year}`
+}
+
 export default {
   areSameDates,
   getDateKey,
@@ -117,7 +135,8 @@ export default {
       }
     })
     return newItems
-  }
+  },
+  parseDateToString
 }
 
 const parseItem = (item, date, type, socialChannel, dayKey, mappedItems, isMultiple, Component) => {
@@ -155,4 +174,3 @@ const getAvailablePosition = (currentWeekOrder) => {
 
   return position || orderedWeekPos.length
 }
-

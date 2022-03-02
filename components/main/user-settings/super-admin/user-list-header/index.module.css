@@ -1,0 +1,34 @@
+.title {
+  font-weight: 600;
+}
+
+.icon {
+  margin-left: 5px;
+  width: 14px;
+  height: 14px;
+  color: var(--color-secondary-border);
+  opacity: 0;
+  transition: all ease 0.3s;
+}
+
+.icon_active {
+  opacity: 1;
+}
+
+.desc {
+  transform: rotate(180deg);
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.container:hover .icon {
+  opacity: 0.4;
+}
+
+.container:hover .icon_active {
+  opacity: 1;
+}
