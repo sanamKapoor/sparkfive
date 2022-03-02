@@ -8,8 +8,8 @@ const CompanyListHeader: React.FC<CompanyListHeaderProps> = ({ setSortData, sort
 
   const toggleSortHandler = () => setSortData({
     ...defaultSortData,
-    sortBy: sortId,
-    sortDirection: sortId !== sortData.sortBy ? 'ASC' : (sortData.sortDirection === 'ASC' ? 'DESC' : 'ASC')
+    sortBy: isActive && sortData.sortDirection === 'DESC' ? defaultSortData.sortBy : sortId,
+    sortDirection: !isActive ? 'ASC' : (sortData.sortDirection === 'ASC' ? 'DESC' : 'ASC')
   })
 
   return (
