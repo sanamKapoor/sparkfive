@@ -26,8 +26,10 @@ import CropSidePanel from './crop-side-panel'
 import AssetCropImg from './asset-crop-img'
 import fileDownload from "js-file-download";
 import AssetIcon from './asset-icon'
+import CdnPanel from './cdn-panel'
 
 import { isImageType } from '../../../utils/file'
+
 
 const getDefaultDownloadImageType = (extension) => {
   const defaultDownloadImageTypes = [
@@ -432,6 +434,7 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
             {!isShare && activeSideComponent === 'comments' &&
             <ConversationList itemId={asset?.id} itemType='assets' />
             }
+            {activeSideComponent === 'cdn' && <CdnPanel assetDetail={assetDetail} />}
           </section>
           }
           {!isShare &&
@@ -452,6 +455,14 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
                 src={Utilities.comment}
                 additionalClass={styles['menu-icon']}
                 onClick={() => { setMode('detail');resetValues();changeActiveSide('comments')}} />
+            {
+              assetDetail?.type === 'video' || assetDetail?.type === 'image' && 
+              <IconClickable
+                src={Utilities.edit}
+                additionalClass={styles['menu-icon']}
+                onClick={() => { setMode('detail');resetValues();changeActiveSide('cdn')}} 
+              />
+            }
             <IconClickable
                 src={AssetOps.download}
                 additionalClass={styles['menu-icon']}

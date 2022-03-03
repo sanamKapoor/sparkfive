@@ -1,0 +1,86 @@
+.container {
+  padding: 0 20px;
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.block:first-child {
+  margin-bottom: 45px;
+}
+
+.subtitle {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.input {
+  cursor: text;
+}
+
+.blockInput {
+  width: 100%;
+  padding: 15px 20px;
+  border-radius: 5px;
+  border: 1px solid var(--color-secondary-border);
+  overflow-wrap: break-word;
+}
+
+.input, .select {
+  background: none;
+  color: rgb(199, 199, 199);
+} 
+
+.description {
+  color: rgb(199, 199, 199);
+  font-size: 14px;
+}
+
+.mb {
+  margin-bottom: 45px;
+}
+
+.ratioInput, .btn, .controlTitle, .blockInput_active {
+  color: var(--color-prim-navy);
+}
+
+.btn {
+  padding: 5px 10px;
+  margin-top: 10px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  align-self: flex-end;
+  font-weight: 500;
+}
+
+.controlTitle {
+  margin: 10px 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+span.select {
+  display: none;
+}
+
+.selectContainer {
+  margin-bottom: 25px;
+  width: 95px;
+}
+
+.lock {
+  cursor: pointer;
+  padding-top: 50px;
+  margin: 0 25px;
+}
+
+.aspectRatioContainer {
+  margin: 25px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
