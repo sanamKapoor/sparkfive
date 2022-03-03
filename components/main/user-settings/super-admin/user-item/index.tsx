@@ -13,7 +13,7 @@ const UserItem = ({ user, getUserToken }) => {
         <div>
           {user.name}
         </div>
-        <div>
+        <div className={styles.email}>
           {user.email} 
         </div>
       </div>
@@ -24,7 +24,7 @@ const UserItem = ({ user, getUserToken }) => {
         {dateUtils.parseDateToString(user.createdAt)}
       </div>
       <div className={`${styles['centered-cell']} ${styles.role}`}>
-        {user.roleId}
+        {user.roleId !== 'user' && user.roleId !== 'admin' && user.roleId !== 'super_admin' ? 'Custom Role' : user.roleId}
       </div>
       <div className={`${styles.company} ${styles['centered-cell']}`}>
         <div className={!user.team.company && styles['no-comp']}>

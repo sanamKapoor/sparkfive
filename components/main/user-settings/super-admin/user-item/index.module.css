@@ -9,7 +9,10 @@
   font-weight: 500;
 }
 
-.name-email, .role, .company, .date {
+.email {
+  margin-right: 10px;
+  font-size: 12px;
+  overflow: hidden;
 }
 
 .name-email {
@@ -27,7 +30,7 @@
 }
 
 .role{
-  flex: 1;
+  width: 150px;
 }
 
 .company{

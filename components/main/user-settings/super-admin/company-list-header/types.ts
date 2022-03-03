@@ -1,15 +1,4 @@
-import { Dispatch } from "react";
 import { SortData } from "../user-list/types";
-
-interface _CompanyListHeaderProps {
-  title: string
-  sortId: string
-
-  sortData: SortData
-  setSortData: (values: Partial<SortData>) => void
-
-  big?: boolean
-}
 
 export const defaultSortData: SortData = {
   sortBy: 'users.lastLogin',
@@ -17,4 +6,12 @@ export const defaultSortData: SortData = {
   activeList: 'allAccounts'
 }
 
-export type CompanyListHeaderProps = Readonly<_CompanyListHeaderProps>
+export type CompanyListHeaderProps = Readonly<{
+  title: string
+  sortId: string
+
+  sortData: SortData
+  setSortData: (values: Partial<SortData>) => void
+
+  big?: boolean
+}>

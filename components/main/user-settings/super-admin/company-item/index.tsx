@@ -20,7 +20,7 @@ const CompanyItem = ({ team, onViewCompanySettings }) => {
           <div>
               {team.users[0]?.name}
           </div>
-          <div>
+          <div className={styles.email}>
               {team.users[0]?.email}
           </div>
       </div>
