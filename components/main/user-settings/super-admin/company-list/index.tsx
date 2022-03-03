@@ -106,9 +106,9 @@ const CompanyList = ({onViewCompanySettings}) => {
             <div className={styles.btn} />
           </div>
         </li>
-        {companyData.teams.map(user => (
-            <li key={user.id}>
-              <CompanyItem team={user} onViewCompanySettings={()=>{onViewCompanySettings(user)}}/>
+        {companyData.teams.map(team => (
+            <li key={`${team.id}-${team.users[0].id}`}>
+              <CompanyItem team={team} onViewCompanySettings={()=>{onViewCompanySettings(team)}}/>
             </li>
         ))}
       </ul>
