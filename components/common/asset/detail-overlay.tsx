@@ -5,7 +5,7 @@ import { useState, useEffect, useContext } from 'react'
 import assetApi from '../../../server-api/asset'
 import shareApi from '../../../server-api/share-collection'
 import customFileSizeApi from '../../../server-api/size'
-import { AssetContext } from '../../../context'
+import { AssetContext, UserContext } from '../../../context'
 import toastUtils from '../../../utils/toast'
 import update from 'immutability-helper'
 import downloadUtils from '../../../utils/download'
@@ -79,6 +79,9 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
   const {
     updateDownloadingStatus
   } = useContext(AssetContext)
+  const {
+    user
+  } = useContext(UserContext)
 
   const [assetDetail, setAssetDetail] = useState(undefined)
 
@@ -345,8 +348,33 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
     }
 
     const manualDownloadAsset = (asset) => {
-      // downloadUtils.zipAndDownload([{ url: realUrl, name: asset.name }], 'assets.zip')
+      // downloadUtils.zipAndDownload([{ url: realUrl, name: asset. name }], 'assets.zip')
       downloadUtils.downloadFile(realUrl, asset.name)
+    }
+
+    const shouldRenderCdnTabButton = () => {    
+      
+      console.log('user:', user)
+
+      const checkValid = (stringsToCheck: string[], paramToCheck: string) => {
+        let result = false;
+
+        if (!paramToCheck) return false
+      
+        stringsToCheck.forEach(str => {
+          const isValid = str.toLowerCase() === paramToCheck.toLowerCase()
+      
+          if (!result) result = isValid
+        })
+      
+        return result
+      }
+
+      const isTypeValid = checkValid(['image', 'video'], assetDetail?.type)
+      const isExtensionValid = checkValid(['png', 'jpg', 'gif', 'tif', 'tiff', 'webp', 'svg', 'mp4', 'mov', 'avi'], assetDetail?.extension)
+      const isUserValid = user.roleId === 'admin' || user.roleId === 'super_admin'
+
+      return isTypeValid && isExtensionValid && isUserValid
     }
     
     return (
@@ -456,9 +484,9 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
                 additionalClass={styles['menu-icon']}
                 onClick={() => { setMode('detail');resetValues();changeActiveSide('comments')}} />
             {
-              assetDetail?.type === 'video' || assetDetail?.type === 'image' && 
+              shouldRenderCdnTabButton() && 
               <IconClickable
-                src={Utilities.edit}
+                src={Utilities.embedCdn}
                 additionalClass={styles['menu-icon']}
                 onClick={() => { setMode('detail');resetValues();changeActiveSide('cdn')}} 
               />

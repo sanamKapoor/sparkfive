@@ -173,7 +173,26 @@ const SuperAdmin = () => {
                         disabled={false}
                     />
                 </div>
+            </div>
 
+            <div className={`row align-flex-start ${styles.cdnEmbedding}`}>
+                <div className={"col-20 font-weight-600"}>
+                    (MOCK) CDN Embedding (MOCK)
+                </div>
+
+                <div className={"col-20"}>
+                    <OptionList setValue={() => ''} data={type} oneColumn={false} value={false}/>
+                </div>
+
+                <div className={"col-20 align-self-flex-end"}>
+                    <Button
+                        styleTypes={['exclude-min-height']}
+                        type={'button'}
+                        text='Save'
+                        styleType='primary'
+                        disabled
+                    />
+                </div>
             </div>
         </>}
 

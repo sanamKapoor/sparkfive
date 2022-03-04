@@ -1,49 +1,59 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import Input from '../inputs/input'
 import Select from '../inputs/select'
 
 import urlUtils from '../../../utils/url'
-import generalUtilns from '../../../utils/general'
+import generalUtils from '../../../utils/general'
+import { Utilities } from '../../../assets'
 
 import styles from './cdn-panel.module.css'
 
 const options = {
   image: [
-    { label: 'PNG', value: 'PNG' },
-    { label: 'JPG', value: 'JPG'},
-    { label: 'Webp', value: 'Webp'},
-    { label: 'SVG', value: 'SVG'}
+    { label: 'PNG', value: 'png' },
+    { label: 'JPG', value: 'jpg'},
+    { label: 'Webp', value: 'webp'},  
+    { label: 'SVG', value: 'svg'},
+    { label: 'Tiff', value: 'tiff'},
+    { label: 'Tif', value: 'tif'},
+    { label: 'Gif', value: 'gif'}
   ],
   video: [
-    { label: 'Mp4', value: 'Mp4'},
-    { label: 'MOV', value: 'MOV'},
-    { label: 'Avi', value: 'Avi'}
+    { label: 'Mp4', value: 'mp4'},
+    { label: 'MOV', value: 'mov'},
+    { label: 'Avi', value: 'avi'}
   ]
 }
 
-const mainUrl = 'https://cdn.sparkfive.com/'
+const mainUrl = 'https://cdn.sparkfive.com'
 
 const CdnPanel = ({ assetDetail }) => {
-  const [link, setLink] = useState(mainUrl)
-  const [type, setType] = useState(options[assetDetail.type][0])
+  const [link, setLink] = useState(encodeURI(`${mainUrl}/assets/${assetDetail.storageId}`))
+  const [type, setType] = useState({label: 'Select', value: ''})
   const [dimension, setDimension] = useState({
     height: assetDetail.dimensionHeight,
     width: assetDetail.dimensionWidth,
     aspectRatio: assetDetail.aspectRatio
   })
   const [isLocked, setIsLocked] = useState(true)
-  
+
   const makeLink = ({ _type, value = 0, secondValue = null, format = null}) => {
     const secondType = _type === 'height' ? 'width' : 'height'
 
-    const qs = urlUtils.getQueryStringFromObject({
+    const qs = (type.value !== '' || format) ? 
+    urlUtils.getQueryStringFromObject({
       [_type]: format ? dimension[_type] : value,
       [secondType]: !secondValue ? dimension[secondType] : secondValue,
       format: format ? format : type.value
     })
+    :
+    urlUtils.getQueryStringFromObject({
+      [_type]: format ? dimension[_type] : value,
+      [secondType]: !secondValue ? dimension[secondType] : secondValue,
+    })
 
-    setLink(`${mainUrl}?${qs}`)
+    setLink(encodeURI(`${mainUrl}/assets/${assetDetail.storageId}?${qs}`))
 
     setDimension({
       ...dimension,
@@ -53,6 +63,8 @@ const CdnPanel = ({ assetDetail }) => {
   }
   
   const onInputChange = (value: number, _type: 'height' | 'width') => {
+    if (String(value) === 'NaN') return 
+
     if (!isLocked) return makeLink({_type, value})
 
     if (_type === 'height') return makeLink({_type, value, secondValue: Math.round(value * dimension.aspectRatio)})
@@ -60,9 +72,7 @@ const CdnPanel = ({ assetDetail }) => {
     return makeLink({_type, value, secondValue: Math.round(value / dimension.aspectRatio)})
   }
 
-  const copyToClipboard = () => {
-    generalUtilns.copyToClipboard(link)
-  }
+  const copyToClipboard = () => generalUtils.copyToClipboard(link)
 
   return (
     <div className={styles.container}>
@@ -87,7 +97,11 @@ const CdnPanel = ({ assetDetail }) => {
             <Input onChange={(e) => onInputChange(Number(e.target.value), 'width')} value={dimension.width} additionalClasses={`${styles.input} ${styles.ratioInput}`} />
           </div>
           
-          <div onClick={() => setIsLocked(!isLocked)} className={styles.lock}>{isLocked ? 'Locked' : 'Not Locked'}</div>
+          <div onClick={() => setIsLocked(!isLocked)} className={styles.lock}>
+            <img width='30px' height='30px' src={isLocked ? Utilities.lockClosed : Utilities.lockOpened} alt={isLocked ? 'Locked' : 'Not Locked'} />
+          </div>
+
+          
 
           <div>
             <h4 className={styles.controlTitle}>Height (px)</h4>
@@ -95,24 +109,27 @@ const CdnPanel = ({ assetDetail }) => {
           </div>  
         </div>
 
-        <div>
-          <h4 className={styles.controlTitle}>Type</h4>
+        {
+          assetDetail.type === 'image' &&
+          <div>
+            <h4 className={styles.controlTitle}>Type</h4>
 
-          <Select 
-            options={options[assetDetail.type]}
-            value={type}
-            onChange={(value) => {
-              setType(value)
-              makeLink({
-                _type: 'width',
-                format: value.value
-              })
-            }}
-            placeholder='File Type'
-            additionalClass={styles.select}
-            containerClass={styles.selectContainer}
-          />
-        </div>
+            <Select 
+              options={options[assetDetail.type]}
+              value={type}
+              onChange={(value) => {
+                setType(value)
+                makeLink({
+                  _type: 'width',
+                  format: value.value
+                })
+              }}
+              placeholder='File Type'
+              additionalClass={styles.select}
+              containerClass={styles.selectContainer}
+            />
+          </div>
+        } 
 
         <div className={styles.description}>
           Any time you update the asset these links will auto update to capture these changes
