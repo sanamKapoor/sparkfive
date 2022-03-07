@@ -32,6 +32,7 @@ import NoPermissionNotice from '../../common/misc/no-permission-notice'
 import Button from '../../common/buttons/button'
 import GuestUpload from "./guest-upload"
 import CustomSettings from "./custom-settings"
+import ShareLinks from "./share-links"
 
 
 const SETTING_OPTIONS = {
@@ -47,6 +48,7 @@ const SETTING_OPTIONS = {
   attributes: { label: 'Attributes', contentTitle: 'Custom Attributes', permissions: [SETTINGS_TEAM, SETTINGS_COMPANY], content: Attributes },
   ['custom-settings']: { label: 'Custom Settings', contentTitle: 'Custom Settings', permissions: [SETTINGS_TEAM, SETTINGS_COMPANY], content: CustomSettings },
   ['super-admin']: { label: 'Super Admin', permissions: [SUPERADMIN_ACCESS], content: SuperAdmin },
+  ['shared-links']: { label: 'Shared Links', contentTitle: 'Shared Links', permissions: [SETTINGS_TEAM, SETTINGS_COMPANY], content: ShareLinks },
 }
 
 const UserSettings = () => {

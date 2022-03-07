@@ -81,6 +81,14 @@
     margin-right: 30px;
 }
 
+.m-l-5{
+    margin-left: 5px;
+}
+
+.m-l-10{
+    margin-left: 10px;
+}
+
 .m-l-15{
     margin-left: 15px;
 }
@@ -94,7 +102,7 @@
 }
 
 .p-t-0{
-    padding-top: 0
+    padding-top: 0 !important;
 }
 
 .p-b-0{

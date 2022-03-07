@@ -1,3 +1,21 @@
 .input-wrapper{
     padding: 1rem;
 }
+
+.radio-button-wrapper{
+    display: flex;
+    align-items: center;
+}
+
+.field-content{
+    padding-left: 30px;
+}
+
+.field-radio-wrapper{
+    display: flex;
+}
+
+.title{
+    margin-bottom: 15px;
+    font-weight: 600;
+}
