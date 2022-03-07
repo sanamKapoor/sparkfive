@@ -4,21 +4,11 @@
     align-items: center;
     margin: 5.5rem;
   }
-  .container:not(.small):not(.details):not(.empty) img {
-    position: absolute;
-    width: 50% !important;
-    object-fit: scale-down !important;
-    object-position: center center !important;
-    left: 50% !important;
-    top: 50% !important;
-    transform: translate(-50%, -50%);
-  }
   .container.bulk-size {
     margin: 0;
   }
   .container.collection {
     margin: 0;
-    aspect-ratio: 1;
   }
   .icon {
     width: 100%;
@@ -29,7 +19,7 @@
   }
   
   .small{
-    margin: 0;
+    margin: .6rem;
   }
   
   .small .icon{
@@ -42,24 +32,4 @@
 
   .collection .icon {
     width: 100%;
-    position: relative;
-  }
-
-  .empty {
-    height: 100%;
-    padding-right: 2px;
-  }
-  .empty img{
-    width: 100%;
-    height: 100%;
-  }
-
-  .search-list {
-    width: 50px;
-    height: 50px;
-  }
-
-  .search-list img {
-    width: 50px;
-    height: 50px;
   }
