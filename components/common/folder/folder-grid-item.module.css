@@ -19,10 +19,6 @@
     position: relative;
 }
 
-.sub-image-wrapper img {
-    aspect-ratio: 1/1;
-}
-
 .image-button-wrapper {
     position: absolute;
     top: 50%;

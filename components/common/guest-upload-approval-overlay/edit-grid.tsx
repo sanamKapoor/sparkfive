@@ -10,7 +10,6 @@ import AssetText from '../asset/asset-text'
 import IconClickable from '../buttons/icon-clickable'
 import ImagePreviewModal from '../modals/image-preview-modal'
 import {useState} from "react";
-import AssetIcon from '../asset/asset-icon'
 
 const getStatusClass = (status: string) => {
     switch (status){
@@ -38,6 +37,7 @@ const EditGrid = ({ assets, toggleSelectedEdit }) => {
         setPreviewModalOpen(true)
     }
 
+
   return <div className={styles['list-wrapper']}>
     <ul className={`${styles['grid-list']}`}>
       {assets.map(({ asset, thumbailUrl, realUrl, isEditSelected }, index) => (
@@ -58,23 +58,7 @@ const EditGrid = ({ assets, toggleSelectedEdit }) => {
                     bulkSize={true}
                     onClick={()=>{showPreviewImage(realUrl)}}
                 />}
-                {
-                  asset.type !== 'image' && asset.type !== 'video' && thumbailUrl && (
-                    <AssetImg
-                      assetImg={thumbailUrl}
-                      type={asset.type}
-                      name={asset.name}
-                      onClick={()=>{showPreviewImage(realUrl)}}
-                  />
-                  )
-                }
-                {
-                  asset.type !== 'image' && asset.type !== 'video' && !thumbailUrl && (
-                    <AssetIcon extension={asset.extension} />
-                  )
-                }
-                
-                {/* {asset.type === 'application' && <AssetApplication
+                {asset.type === 'application' && <AssetApplication
                     extension={asset.extension}
                     bulkSize={true}
                     onClick={()=>{showPreviewImage(realUrl)}}
@@ -83,7 +67,7 @@ const EditGrid = ({ assets, toggleSelectedEdit }) => {
                     extension={asset.extension}
                     bulkSize={true}
                     onClick={()=>{showPreviewImage(realUrl)}}
-                />} */}
+                />}
                 <>
                   <div id={`button-${index}`} className={`${styles['selectable-wrapper']} ${isEditSelected && styles['selected-wrapper']}`} onClick={() => toggleSelectedEdit(asset.id)}>
                     <IconClickable src={isEditSelected ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal} additionalClass={styles['select-icon']} />
