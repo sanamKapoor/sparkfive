@@ -103,10 +103,6 @@
   padding-top: 100%;
 }
 
-/* 
-This is the css added for resolve the thumbail box loading view show long,
-If we create css class and add into div tag it wont work somehow so we have to use div base style instead of style base div.
- */
 .thumbnail-image-wrapper > div{
   margin: 0 !important;
 }
