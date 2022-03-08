@@ -25,8 +25,8 @@ const options = {
     { label: 'Avi', value: 'avi'}
   ]
 }
-
-const mainUrl = 'https://cdn.sparkfive.com'
+// prod main url: https://cdn.sparkfive.com 
+const mainUrl = 'http://localhost:8080'
 
 const CdnPanel = ({ assetDetail }) => {
   const [link, setLink] = useState(encodeURI(`${mainUrl}/assets/${assetDetail.storageId}`))
@@ -84,57 +84,60 @@ const CdnPanel = ({ assetDetail }) => {
         <button onClick={copyToClipboard} className={styles.btn}>Copy Link</button>
       </div>
 
-      <div className={styles.block}>
-        <h3 className={styles.subtitle}>Intelligent CDN</h3>
+      {
+        assetDetail.type !== 'video' &&
+        <div className={styles.block}>
+          <h3 className={styles.subtitle}>Intelligent CDN</h3>
 
-        <div className={styles.description}>
-          Modify the size and/or format and the CDN link will update for various use cases
-        </div>
-
-        <div className={styles.aspectRatioContainer}>
-          <div>
-            <h4 className={styles.controlTitle}>Width (px)</h4>
-            <Input onChange={(e) => onInputChange(Number(e.target.value), 'width')} value={dimension.width} additionalClasses={`${styles.input} ${styles.ratioInput}`} />
-          </div>
-          
-          <div onClick={() => setIsLocked(!isLocked)} className={styles.lock}>
-            <img width='30px' height='30px' src={isLocked ? Utilities.lockClosed : Utilities.lockOpened} alt={isLocked ? 'Locked' : 'Not Locked'} />
+          <div className={styles.description}>
+            Modify the size and/or format and the CDN link will update for various use cases
           </div>
 
-          
+          <div className={styles.aspectRatioContainer}>
+            <div>
+              <h4 className={styles.controlTitle}>Width (px)</h4>
+              <Input onChange={(e) => onInputChange(Number(e.target.value), 'width')} value={dimension.width} additionalClasses={`${styles.input} ${styles.ratioInput}`} />
+            </div>
+            
+            <div onClick={() => setIsLocked(!isLocked)} className={styles.lock}>
+              <img width='30px' height='30px' src={isLocked ? Utilities.lockClosed : Utilities.lockOpened} alt={isLocked ? 'Locked' : 'Not Locked'} />
+            </div>
 
-          <div>
-            <h4 className={styles.controlTitle}>Height (px)</h4>
-            <Input onChange={(e) => onInputChange(Number(e.target.value), 'height')} value={dimension.height} additionalClasses={`${styles.input} ${styles.ratioInput}`} />
-          </div>  
-        </div>
+            
 
-        {
-          assetDetail.type === 'image' &&
-          <div>
-            <h4 className={styles.controlTitle}>Type</h4>
-
-            <Select 
-              options={options[assetDetail.type]}
-              value={type}
-              onChange={(value) => {
-                setType(value)
-                makeLink({
-                  _type: 'width',
-                  format: value.value
-                })
-              }}
-              placeholder='File Type'
-              additionalClass={styles.select}
-              containerClass={styles.selectContainer}
-            />
+            <div>
+              <h4 className={styles.controlTitle}>Height (px)</h4>
+              <Input onChange={(e) => onInputChange(Number(e.target.value), 'height')} value={dimension.height} additionalClasses={`${styles.input} ${styles.ratioInput}`} />
+            </div>  
           </div>
-        } 
 
-        <div className={styles.description}>
-          Any time you update the asset these links will auto update to capture these changes
+          {
+            assetDetail.type === 'image' &&
+            <div>
+              <h4 className={styles.controlTitle}>Type</h4>
+
+              <Select 
+                options={options[assetDetail.type]}
+                value={type}
+                onChange={(value) => {
+                  setType(value)
+                  makeLink({
+                    _type: 'width',
+                    format: value.value
+                  })
+                }}
+                placeholder='File Type'
+                additionalClass={styles.select}
+                containerClass={styles.selectContainer}
+              />
+            </div>
+          } 
+
+          <div className={styles.description}>
+            Any time you update the asset these links will auto update to capture these changes
+          </div>
         </div>
-      </div>
+      }
     </div>
   )
 }
