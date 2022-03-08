@@ -22,10 +22,17 @@ const extensionToType = (ext, canBeEmpty) => {
     return canBeEmpty ? empty : unknown
 }
 
-const AssetIcon = ({ extension, onList = false, bulkSize = false, isCollection = false, onClick }) => {
+const AssetIcon = ({ extension, onList = false, bulkSize = false, isCollection = false, onClick, disableContainer = false }) => {
+
+  if (disableContainer) return (
+      <>
+          <img src={extensionToType(extension, isCollection)} style={{height: '100%'}} />
+      </>
+  )
+
   return (
     <div onClick={onClick} className={`${styles.container} ${onList && styles.small} ${bulkSize && styles['bulk-size']} ${isCollection && styles.collection}`}>
-        <img src={extensionToType(extension, isCollection)} style={{height: '100%'}}/>
+        <img src={extensionToType(extension, isCollection)} style={{height: '100%'}} />
     </div>
   )
 }
