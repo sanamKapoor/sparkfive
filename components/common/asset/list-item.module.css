@@ -65,6 +65,7 @@
 .thumbnail {
   margin: 0 10px;
   position: relative;
+  max-height: 50px;
 }
 
 .thumbnail > img,

@@ -136,7 +136,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 			closeModal={closemoveModal}
 			confirmText={currentShareLink ? 'Save Changes' : 'Share'}
 			headText={title ? title : `Share ${itemsAmount} item(s)`}
-			disabledConfirm={!name || (sharable ? (!recipients || !name) : false)}
+			disabledConfirm={!name}
 			additionalClasses={['visible-block']}
 			confirmAction={() => {
 				shareAssets(
