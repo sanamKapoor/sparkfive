@@ -29,7 +29,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 	const [message, setMessage] = useState('')
 	const [url, setUrl] = useState("")
 	const [name, setName] = useState("")
-	const [isPublic, setIsPublic] = useState(false)
+	const [isPublic, setIsPublic] = useState(true)
 	const [expired, setExpired] = useState(true)
 	const [expiredPeriod, setExpiredPeriod] = useState(expireOptions[1])
 	const [expiredAt, setExpiredAt] = useState(getDayToCurrentDate(expireOptions[1].value))
