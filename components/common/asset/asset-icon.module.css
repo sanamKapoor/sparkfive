@@ -17,6 +17,10 @@
   .container .icon {
     width: 10rem;
   }
+
+  .noMargin {
+    margin: 0;
+  }
   
   .small{
     margin: .6rem;
