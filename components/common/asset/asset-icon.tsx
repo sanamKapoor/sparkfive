@@ -25,7 +25,7 @@ const extensionToType = (ext, canBeEmpty) => {
 const AssetIcon = ({ extension, onList = false, bulkSize = false, isCollection = false, onClick }) => {
   return (
     <div onClick={onClick} className={`${styles.container} ${onList && styles.small} ${bulkSize && styles['bulk-size']} ${isCollection && styles.collection}`}>
-        <img src={extensionToType(extension, isCollection)} style={{height: '100%'}}/>
+        <img src={extensionToType(extension, isCollection)}/>
     </div>
   )
 }
