@@ -19,3 +19,8 @@
     margin-bottom: 15px;
     font-weight: 600;
 }
+
+.spinner{
+    margin: 15px auto;
+    display: block;
+}
