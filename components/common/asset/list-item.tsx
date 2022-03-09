@@ -121,7 +121,7 @@ const ListItem = ({
               {thumbailUrl ? (
                 <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} />
               ) : (
-                <AssetIcon extension={asset.extension} onList={true} />
+                <AssetIcon disableContainer extension={asset.extension} onList={true} />
               )}
               {/* {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} />}
               {asset.type === 'video' &&
@@ -177,7 +177,6 @@ const ListItem = ({
       {overlayProperties.visible &&
         <DetailOverlay
           isShare={isShare}
-          thumbailUrl={thumbailUrl}
           asset={asset}
           realUrl={realUrl}
           initiaParams={overlayProperties}

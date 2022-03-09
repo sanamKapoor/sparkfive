@@ -24,8 +24,6 @@
   color: var(--color-secondary-border);
 }
 
-
-
 .button {
   width: 115.14px;
 }
@@ -45,7 +43,7 @@
 }
 
 .role{
-  flex: 1;
+  width: 150px;
 }
 
 .company{
