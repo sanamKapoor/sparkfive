@@ -24,6 +24,10 @@
     margin-top: 10px
 }
 
+.m-t-15{
+    margin-top: 15px
+}
+
 .m-t-20{
     margin-top: 20px
 }
@@ -81,6 +85,14 @@
     margin-right: 30px;
 }
 
+.m-l-5{
+    margin-left: 5px;
+}
+
+.m-l-10{
+    margin-left: 10px;
+}
+
 .m-l-15{
     margin-left: 15px;
 }
@@ -94,7 +106,7 @@
 }
 
 .p-t-0{
-    padding-top: 0
+    padding-top: 0 !important;
 }
 
 .p-b-0{
