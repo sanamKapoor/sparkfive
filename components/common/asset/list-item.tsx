@@ -177,7 +177,6 @@ const ListItem = ({
       {overlayProperties.visible &&
         <DetailOverlay
           isShare={isShare}
-          thumbailUrl={thumbailUrl}
           asset={asset}
           realUrl={realUrl}
           initiaParams={overlayProperties}
