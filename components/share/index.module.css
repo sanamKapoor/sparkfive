@@ -5,15 +5,22 @@
     min-height: 60vh;
     padding: 5rem;
   }
-  
+
   .list-wrapper{
     width: 100%;
     max-width: 1800px;
   }
-  
+
   .grid-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     grid-gap: 2rem;
   }
-  
+
+.logo{
+    padding-bottom: 1rem;
+    width: 13rem;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+}
