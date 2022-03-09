@@ -70,7 +70,7 @@ const EditGrid = ({ assets, toggleSelectedEdit }) => {
                 }
                 {
                   asset.type !== 'image' && asset.type !== 'video' && !thumbailUrl && (
-                    <AssetIcon extension={asset.extension} />
+                    <AssetIcon padding extension={asset.extension} />
                   )
                 }
                 
