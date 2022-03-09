@@ -13,7 +13,8 @@ export const UserContext = createContext({
     logOut: () => { },
     hasPermission: (requiredPermissions) => { return true },
     afterAuth: ({ twoFactor, token }) => { },
-    vanityCompanyInfo: undefined
+    vanityCompanyInfo: undefined,
+    cdnAccess: false
 })
 
 export const ThemeContext = createContext({

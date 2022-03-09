@@ -80,8 +80,11 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
     updateDownloadingStatus
   } = useContext(AssetContext)
   const {
-    user
+    user,
+    cdnAccess
   } = useContext(UserContext)
+
+  console.log('userCtx', {user, cdnAccess})
 
   const [assetDetail, setAssetDetail] = useState(undefined)
 
@@ -353,9 +356,6 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
     }
 
     const shouldRenderCdnTabButton = () => {    
-      
-      console.log('user:', user)
-
       const checkValid = (stringsToCheck: string[], paramToCheck: string) => {
         let result = false;
 
@@ -372,7 +372,7 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
 
       const isTypeValid = checkValid(['image', 'video'], assetDetail?.type)
       const isExtensionValid = checkValid(['png', 'jpg', 'gif', 'tif', 'tiff', 'webp', 'svg', 'mp4', 'mov', 'avi'], assetDetail?.extension)
-      const isUserValid = user.roleId === 'admin' || user.roleId === 'super_admin'
+      const isUserValid = (user.roleId === 'admin' || user.roleId === 'super_admin') && cdnAccess
 
       return isTypeValid && isExtensionValid && isUserValid
     }

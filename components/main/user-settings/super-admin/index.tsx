@@ -39,6 +39,7 @@ const SuperAdmin = () => {
 
     const [viewCompanyDetail, setViewCompanyDetail] = useState()
     const [vanity, setVanity] = useState(type[1].value)
+    const [cdnAccess, setCdnAcces] = useState(type[1].value)
     const [subdomain, setSubdomain] = useState('')
     const [loading, setLoading] = useState(false)
     const [sortData, setSortData] = useQueryStrings(defaultValues)
@@ -47,17 +48,18 @@ const SuperAdmin = () => {
         setViewCompanyDetail(data)
         setVanity(data.vanity)
         setSubdomain(data.subdomain ? `${data.subdomain || ""}.${window.location.hostname.replace("www.","")}` : "")
+        setCdnAcces(data.cdnAccess)
     }
 
     const onBack = () => {
         setViewCompanyDetail(undefined)
     }
 
-    const updateTeam = async() => {
+    const updateTeam = async (data: any) => {
       if(viewCompanyDetail){
           try{
               setLoading(true)
-              await superAdminApi.updateCompanyConfig(viewCompanyDetail.id, { vanity, subdomain: vanity ? subdomain.split(".")[0] : ""})
+              await superAdminApi.updateCompanyConfig(viewCompanyDetail.id, data)
 
               setLoading(false)
 
@@ -169,7 +171,7 @@ const SuperAdmin = () => {
                         type={'button'}
                         text='Save'
                         styleType='primary'
-                        onClick={updateTeam}
+                        onClick={() => updateTeam({ vanity, subdomain: vanity ? subdomain.split(".")[0] : ""})}
                         disabled={false}
                     />
                 </div>
@@ -177,11 +179,11 @@ const SuperAdmin = () => {
 
             <div className={`row align-flex-start ${styles.cdnEmbedding}`}>
                 <div className={"col-20 font-weight-600"}>
-                    (MOCK) CDN Embedding (MOCK)
+                    CDN Embedding
                 </div>
 
                 <div className={"col-20"}>
-                    <OptionList setValue={() => ''} data={type} oneColumn={false} value={false}/>
+                    <OptionList setValue={(value) => setCdnAcces(value)} data={type} oneColumn={false} value={cdnAccess }/>
                 </div>
 
                 <div className={"col-20 align-self-flex-end"}>
@@ -190,7 +192,7 @@ const SuperAdmin = () => {
                         type={'button'}
                         text='Save'
                         styleType='primary'
-                        disabled
+                        onClick={() => updateTeam({ cdnAccess })}
                     />
                 </div>
             </div>
