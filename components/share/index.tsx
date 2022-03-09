@@ -144,6 +144,7 @@ const AssetShare = () => {
 					setError(true)
 					setLoading(false)
 					setLogo(data.data.workspaceIcon)
+					toastUtils.error(data.errorMessage)
 				}else{
 					setError(false)
 					setLoading(false)
