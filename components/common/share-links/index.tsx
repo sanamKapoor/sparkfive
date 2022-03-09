@@ -40,7 +40,7 @@ export default function ShareLinks(){
     const [page, setPage] = useState(0)
     const [nextPage, setNextPage] = useState(0)
 
-    const getFilterObject = () => {
+    const getFilterObject = (page) => {
         let filters: any = {page}
         if(sharedBy){
             filters.sharedBy = sharedBy ? sharedBy.map((item)=>item.value).join(",") : ""
@@ -86,7 +86,7 @@ export default function ShareLinks(){
 
         await sharedLinksApi.deleteLink(deleteId)
 
-        getLinks(getFilterObject());
+        getLinks(getFilterObject(1));
     }
 
     const updateLink = async (recipients, message, sharedLinkData) => {
@@ -105,7 +105,7 @@ export default function ShareLinks(){
                 expiredPeriod: sharedLinkData.expiredPeriod.value,
             })
 
-            getLinks(getFilterObject());
+            getLinks(getFilterObject(1));
         }
 
     }
