@@ -35,7 +35,7 @@ const ShareItem = ({
 	return (
 		<>
 			<div className={styles.container}>
-				<div className={`${styles['image-wrapper']} ${styles['thumbnail-image-wrapper']}`}>
+				<div className={styles['image-wrapper']}>
 					{thumbailUrl ? (
 						<AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} opaque={false} />
 					) : (

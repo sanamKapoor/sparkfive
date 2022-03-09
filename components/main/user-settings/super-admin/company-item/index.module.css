@@ -12,6 +12,12 @@
   font-weight: 600;
 }
 
+.email {
+  font-size: 12px;
+  overflow: hidden;
+  margin-right: 10px;
+}
+
 .name-email, .role, .date, .files, .company {
   display: flex;
   flex-direction: column;

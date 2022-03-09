@@ -15,7 +15,7 @@ export default {
   importAssets: (provider, assetData, queryData) => axios.post(`${assetUrl}/import/${provider}?${querystring.encode(queryData)}`, assetData),
   updateMultiple: (updateData, filters = {}) => axios.patch(`${assetUrl}?${querystring.encode(filters)}`, updateData),
   updateMultipleAttributes: (updateData, filters = {}) => axios.patch(`${assetUrl}/attributes?${querystring.encode(filters)}`, updateData),
-  getSharedAssets: (shareJWT) => axios.get(`${assetUrl}/share?shareJWT=${shareJWT}`),
+  getSharedAssets: (queryData) => axios.get(`${assetUrl}/share?${querystring.encode(queryData)}`),
   generateAndSendShareUrl: (data, filters = {}) => axios.post(`${assetUrl}/share?${querystring.encode(filters)}`, data),
   getShareUrl: (data, filters = {}) => axios.post(`${assetUrl}/share-url?${querystring.encode(filters)}`, data),
   getById: id => axios.get(`${assetUrl}/${id}`),

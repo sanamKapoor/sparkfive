@@ -1,0 +1,59 @@
+.header{
+  border-top: 1px solid var(--color-secondary-border);
+  padding-top: 2rem;
+  margin-top: 2rem;
+}
+
+.time-col{
+  color: var(--color-ghost-text);
+  font-size: 12px;
+}
+
+.name-col{
+  line-height: 5px;
+}
+
+.description-text{
+  color: var(--color-ghost-text);
+  font-size: 12px;
+  line-height: 12px;
+}
+
+.data-row{
+  padding: 5px;
+  margin-top: 25px;
+}
+
+.ghost-line{
+  border-bottom: solid 1px var(--color-secondary-border);
+}
+
+.row-heading{
+  margin-top: 40px;
+  background-color: #fff8eb;
+  padding: 5px;
+}
+
+.name-tag-pink{
+  padding: 5px;
+  border-radius: 10px;
+  background-color: #f7d1d7;
+}
+
+.name-tag-green{
+  padding: 5px;
+  border-radius: 10px;
+  background-color: #cee9ce;
+}
+
+.name-tag-yellow{
+  padding: 5px;
+  border-radius: 10px;
+  background-color: #e9e9c0;
+}
+
+.name-tag-orange{
+  padding: 5px;
+  border-radius: 10px;
+  background-color: #ffe1aa;
+}

@@ -12,7 +12,7 @@ export const useQueryStrings = (defaultValues: any) => {
   useEffect(() => {
     setParams(urlUtils.getQueryParameters())
     setIsLoaded(true)
-  }, [window.location.search])
+  }, [router.query])
 
   useEffect(() => {
     if (Object.keys(params).length > 0) {

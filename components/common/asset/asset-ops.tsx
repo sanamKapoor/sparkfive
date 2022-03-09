@@ -367,7 +367,7 @@ export default ({getAssets}) => {
 		}
 	}
 
-	const shareAssets = async (recipients, message) => {
+	const shareAssets = async (recipients, message, sharedLinkData) => {
 		try {
 			let assetIds
 			let filters = {}
@@ -401,9 +401,12 @@ export default ({getAssets}) => {
 				// @ts-ignore
 				delete filters.page
 			}
+
 			await assetApi.generateAndSendShareUrl({
 				recipients,
 				message,
+				...sharedLinkData,
+				expiredPeriod: sharedLinkData.expiredPeriod.value,
 				assetIds
 			},filters)
 			toastUtils.success('Assets shared succesfully')
