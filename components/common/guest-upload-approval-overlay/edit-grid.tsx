@@ -83,7 +83,7 @@ const EditGrid = ({ assets, toggleSelectedEdit }) => {
                     extension={asset.extension}
                     bulkSize={true}
                     onClick={()=>{showPreviewImage(realUrl)}}
-                />}
+              /> */}
                 <>
                   <div id={`button-${index}`} className={`${styles['selectable-wrapper']} ${isEditSelected && styles['selected-wrapper']}`} onClick={() => toggleSelectedEdit(asset.id)}>
                     <IconClickable src={isEditSelected ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal} additionalClass={styles['select-icon']} />
