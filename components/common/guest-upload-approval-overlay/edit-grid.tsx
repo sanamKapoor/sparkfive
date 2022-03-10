@@ -58,7 +58,23 @@ const EditGrid = ({ assets, toggleSelectedEdit }) => {
                     bulkSize={true}
                     onClick={()=>{showPreviewImage(realUrl)}}
                 />}
-                {asset.type === 'application' && <AssetApplication
+                {
+                  asset.type !== 'image' && asset.type !== 'video' && thumbailUrl && (
+                    <AssetImg
+                      assetImg={thumbailUrl}
+                      type={asset.type}
+                      name={asset.name}
+                      onClick={()=>{showPreviewImage(realUrl)}}
+                  />
+                  )
+                }
+                {
+                  asset.type !== 'image' && asset.type !== 'video' && !thumbailUrl && (
+                    <AssetIcon padding extension={asset.extension} />
+                  )
+                }
+                
+                {/* {asset.type === 'application' && <AssetApplication
                     extension={asset.extension}
                     bulkSize={true}
                     onClick={()=>{showPreviewImage(realUrl)}}

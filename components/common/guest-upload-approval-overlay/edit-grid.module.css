@@ -15,6 +15,10 @@
   position: relative;
 }
 
+.grid-list li div img, .grid-list li {
+  height: 9rem;
+}
+
 .container {
   border: 1px solid var(--color-secondary-border);
   display: flex;
