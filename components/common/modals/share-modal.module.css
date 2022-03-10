@@ -11,6 +11,10 @@
     padding-left: 30px;
 }
 
+.row-field-content{
+    padding-left: 15px;
+}
+
 .field-radio-wrapper{
     display: flex;
 }

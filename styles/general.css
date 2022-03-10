@@ -255,6 +255,10 @@ ul {
   cursor: pointer;
 }
 
+.w-100{
+  width: 100%
+}
+
 @media screen and (max-width: 1280px){
   .p-l-0-mobile{
     padding-left: 0 !important;

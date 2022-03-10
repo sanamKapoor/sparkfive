@@ -2,6 +2,8 @@ import styles from './share-modal.module.css'
 import {useEffect, useState} from 'react'
 import copy from 'copy-to-clipboard'
 import moment from 'moment'
+import dateFnsFormat from 'date-fns/format';
+import dateFnsParse from 'date-fns/parse';
 
 // Components
 import Base from '../../common/modals/base'
@@ -16,12 +18,18 @@ import Select from "../inputs/select";
 
 import { expireOptions} from "../../../constants/shared-links";
 import Spinner from "../spinners/spinner";
+import DayPickerInput from "react-day-picker/DayPickerInput";
+import {DateUtils} from "react-day-picker";
+
+import dateStyles from '../filter/date-uploaded.module.css'
 
 const getDayToCurrentDate = (day: number = 1) => {
 	return new Date(moment()
 		.add(day,'d')
 		.toDate());
 }
+
+const FORMAT = 'MM/dd/yyyy';
 
 const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, title = '', getShareLink = () => {}, currentShareLink = undefined  }) => {
 
@@ -112,6 +120,18 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 		setIsPublic(data.isPublic)
 		setMessage(data.message)
 		setSharable(data.sharable)
+	}
+
+	const formatDate = (date, format, locale) => {
+		return dateFnsFormat(date, format, { locale });
+	}
+
+	const parseDate = (str, format, locale) => {
+		const parsed = dateFnsParse(str, format, new Date(), { locale });
+		if (DateUtils.isDate(parsed)) {
+			return parsed;
+		}
+		return undefined;
 	}
 
 	useEffect(()=>{
@@ -236,16 +256,37 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 				</div>
 
 				{expired && <div className={`${styles['input-wrapper']} d-flex align-items-center`}>
-					<div className={`${styles['field-content']} w-50 align-center`}>
-						<Select
-							options={expireOptions}
-							onChange={(value)=>{setExpiredPeriod(value); setExpiredAt(getDayToCurrentDate(value.value))}}
-							placeholder={'Select expire time'}
-							styleType='regular'
-							value={expiredPeriod}
-						/>
-						{/*<Input additionalClasses={"w-50 m-r-15"} disabled={!url} placeholder={'Loading share link...'} value={url} styleType={'regular-short'} />*/}
-						<span className={"font-12 m-l-15"}>{expiredAt.toDateString()}</span>
+					<div className={`${styles['row-field-content']} row w-100`}>
+						<div className={"col-50"}>
+							<Select
+								options={expireOptions}
+								onChange={(value)=>{setExpiredPeriod(value); setExpiredAt(getDayToCurrentDate(value.value))}}
+								placeholder={'Select expire time'}
+								styleType='regular'
+								value={expiredPeriod}
+							/>
+						</div>
+						<div className={`col-50 d-flex align-items-center ${expiredPeriod.value === 0 ? "flex-direction-column" : ""}`}>
+							{expiredPeriod.value === 0 && <div className={"row w-100 m-b-5"}>
+								<DayPickerInput
+									value={expiredAt}
+									formatDate={formatDate}
+									format={FORMAT}
+									parseDate={parseDate}
+									classNames={{
+										container: dateStyles.input
+									}}
+									onDayChange={(day) => {setExpiredAt(day)}}
+									placeholder={'mm/dd/yyyy'}
+									dayPickerProps={{
+										className: dateStyles.calendar
+									}}
+								/>
+							</div>}
+
+							{/*<Input additionalClasses={"w-50 m-r-15"} disabled={!url} placeholder={'Loading share link...'} value={url} styleType={'regular-short'} />*/}
+							<span className={"font-12 m-l-15 w-100"}>{expiredAt.toDateString()}</span>
+						</div>
 					</div>
 				</div>}
 

@@ -24,6 +24,10 @@
   margin-top: 25px;
 }
 
+.data-row:nth-child(even){
+  background-color: #ececed;
+}
+
 .ghost-line{
   border-bottom: solid 1px var(--color-secondary-border);
 }
