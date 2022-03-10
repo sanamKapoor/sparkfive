@@ -27,8 +27,6 @@ const CompanyList = ({onViewCompanySettings}) => {
   const [sortData, setSortData] = useQueryStrings(defaultSortData)
 
   useEffect(() => {
-    console.log('sortData:', sortData)
-
     if (Object.keys(sortData).length > 0) {
       getCompany({
         sortBy: sortData.sortBy,
@@ -45,9 +43,10 @@ const CompanyList = ({onViewCompanySettings}) => {
       if (reset) newTeams = []
 
       const { data } = await superAdminApi.getCompanies({ term: searchTerm, page, sortBy, sortOrder: sortDirection })
+      const teams = [...newTeams, ...data.teams]
 
       setCompanyData({
-        teams: [...newTeams, ...data.teams],
+        teams,
         currentPage: page,
         total: data.total
       })
@@ -64,12 +63,14 @@ const CompanyList = ({onViewCompanySettings}) => {
       searchTerm,
       page: 1,
       reset: true,
+      sortBy: sortData.sortBy,
+      sortDirection: sortData.sortDirection
     })
     setTerm(searchTerm)
   }
 
   const getMore = () => {
-    getCompany({ page: companyData.currentPage + 1 })
+    getCompany({ page: companyData.currentPage + 1, sortBy: sortData.sortBy, sortDirection: sortData.sortDirection })
   }
 
   return (
@@ -105,9 +106,9 @@ const CompanyList = ({onViewCompanySettings}) => {
             <div className={styles.btn} />
           </div>
         </li>
-        {companyData.teams.map(user => (
-            <li key={user.id}>
-              <CompanyItem team={user} onViewCompanySettings={()=>{onViewCompanySettings(user)}}/>
+        {companyData.teams.map(team => (
+            <li key={`${team.id}-${team.users[0].id}`}>
+              <CompanyItem team={team} onViewCompanySettings={()=>{onViewCompanySettings(team)}}/>
             </li>
         ))}
       </ul>

@@ -17,13 +17,17 @@ import ShareItem from './share-item'
 import ShareOperationButtons from "./share-operation-buttons"
 import fileDownload from "js-file-download";
 import AssetDownloadProcess from "./asset-download-process"
+import AuthContainer from '../common/containers/auth-container'
+import { GeneralImg } from '../../assets'
 
 
 // Contexts
 import { AssetContext } from '../../context'
+import Spinner from "../common/spinners/spinner";
+import Input from "../common/inputs/input";
+import AuthButton from "../common/buttons/auth-button";
 
 const AssetShare = () => {
-
 	const {
 		updateDownloadingStatus
 	} = useContext(AssetContext)
@@ -34,6 +38,10 @@ const AssetShare = () => {
 	const [downloadStatus, setDownloadStatus] = useState("")
 	const [downloadingPercent, setDownloadingPercent] = useState(30)
 	const interval = useRef()
+	const [email, setEmail] = useState("")
+	const [logo, setLogo] = useState("")
+	const [loading, setLoading] = useState(true)
+	const [error, setError] = useState(false)
 
 	// Toggle select asset
 	const toggleSelected = (id) => {
@@ -131,28 +139,83 @@ const AssetShare = () => {
 		try {
 			const { shareJWT } = urlUtils.getQueryParameters()
 			if (shareJWT) {
-				const { data } = await assetApi.getSharedAssets(shareJWT)
-				setAssets(data)
+				const { data } = await assetApi.getSharedAssets({ shareJWT })
+				if(data.error){
+					setError(true)
+					setLoading(false)
+					setLogo(data.data.workspaceIcon)
+					toastUtils.error(data.errorMessage)
+				}else{
+					setError(false)
+					setLoading(false)
+					setAssets(data.data)
+				}
 			}
 		} catch (err) {
 			toastUtils.error('Could not get assets from server')
 		}
 	}
 
+	const onSubmitAuth = async (e) => {
+		e.preventDefault();
+		setLoading(true)
+		const { shareJWT } = urlUtils.getQueryParameters()
+		const { data } = await assetApi.getSharedAssets( {shareJWT, email })
+
+		if(data.error){
+			toastUtils.error(data.errorMessage)
+			setError(true)
+			setLoading(false)
+		}else{
+			setError(false)
+			setLoading(false)
+			setAssets(data.data)
+		}
+	}
+
 	return (
 		<section className={styles.container}>
-			<ShareOperationButtons selectAll={selectAll} selectedAsset={selectedAsset} downloadSelectedAssets={downloadSelectedAssets}/>
-			<div className={styles['list-wrapper']}>
-				<ul className={styles['grid-list']}>
-					{assets.map((assetItem) => {
-						return (
-							<li className={styles['grid-item']} key={assetItem.asset.id}>
-								<ShareItem {...assetItem} toggleSelected={()=>{toggleSelected(assetItem.asset.id)}} selectAll={selectAll}/>
-							</li>
-						)
-					})}
-				</ul>
-			</div>
+			{loading && <Spinner className={styles['spinner']}/>}
+			{!loading && error &&
+				<div>
+					<img alt={"logo"} src={logo || GeneralImg.logoHorizontal} className={styles.logo} />
+					<AuthContainer
+						title='Private share link'
+						additionalClass={'color-secondary'}
+						subtitle={'Enter email to proceed'}>
+						<form onSubmit={onSubmitAuth} className={styles['password-form']}>
+							<Input
+								placeholder={'Email'}
+								value={email}
+								onChange={(e) => {setEmail(e.target.value)}}
+								styleType={'regular-short'}
+								type='text'
+							/>
+							<div className={"m-t-15"}>
+								<AuthButton
+									text={'Submit'}
+									type={'submit'}
+								/>
+							</div>
+
+						</form>
+					</AuthContainer>
+				</div>
+			}
+			{!loading && !error && <>
+				<ShareOperationButtons selectAll={selectAll} selectedAsset={selectedAsset} downloadSelectedAssets={downloadSelectedAssets}/>
+				<div className={styles['list-wrapper']}>
+					<ul className={styles['grid-list']}>
+						{assets.map((assetItem) => {
+							return (
+								<li className={styles['grid-item']} key={assetItem.asset.id}>
+									<ShareItem {...assetItem} toggleSelected={()=>{toggleSelected(assetItem.asset.id)}} selectAll={selectAll}/>
+								</li>
+							)
+						})}
+					</ul>
+				</div>
+			</>}
 
 			{showDownloadPopup && <AssetDownloadProcess downloadingStatus={downloadStatus} onClose={()=>{setShowDownloadPopup(false)}} downloadingPercent={downloadingPercent} selectedAsset={selectedAsset}/>}
 		</section >

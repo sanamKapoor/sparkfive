@@ -29,9 +29,6 @@ const UserList = () => {
   const [sortData, setSortData] = useQueryStrings(defaultSortData)
 
   useEffect(() => {
-
-    console.log('sortData:', sortData)
-
     if (Object.keys(sortData).length) {
       getUsers({
         sortBy: sortData.sortBy,
@@ -41,10 +38,6 @@ const UserList = () => {
     }
   }, [sortData])
 
-  useEffect(() => {
-    console.log('userData: ', userData)
-  }, [userData])
-
   const getUsers = async ({ page = 1, searchTerm = term, reset = false, sortBy = 'users.lastLogin', sortDirection = 'ASC' } = {}) => {
     try {
       setLoading(true)
@@ -52,12 +45,14 @@ const UserList = () => {
       if (reset) newUsers = []
 
       const { data } = await superAdminApi.getUsers({ term: searchTerm, page, sortBy, sortOrder: sortDirection })
+      const users = [...newUsers, ...data.users]
+
       setUserData({
-        users: [...newUsers, ...data.users],
+        users,
         currentPage: page,
         total: data.total,
       })
-
+      console.groupEnd()
       setLoading(false)
     } catch (err) {
       setLoading(false)
@@ -65,13 +60,13 @@ const UserList = () => {
     }
   }
 
-  const searchAndGetUsers = (searchTerm, sortBy = 'users.lastLogin', sortDirection = 'ASC') => {
+  const searchAndGetUsers = (searchTerm) => {
     getUsers({
       searchTerm,
       page: 1,
       reset: true,
-      sortBy,
-      sortDirection
+      sortBy: sortData.sortBy,
+      sortDirection: sortData.sortDirection
     })
     setTerm(searchTerm)
   }
@@ -91,7 +86,7 @@ const UserList = () => {
   }
 
   const getMore = () => {
-    getUsers({ page: userData.currentPage + 1 })
+    getUsers({ page: userData.currentPage + 1, sortBy: sortData.sortBy, sortDirection: sortData.sortDirection })
   }
 
   return (

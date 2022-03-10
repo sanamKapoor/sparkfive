@@ -13,17 +13,7 @@ const parseDateToString = (d) => {
 
   if (!d) return 'No date'
 
-  const isDoubleDigit = (num) => {
-    if (num > 9) return num
-    
-    return `0${num}`
-  }
-
-  const year = date.getFullYear()
-  const month = isDoubleDigit(date.getMonth())
-  const day = isDoubleDigit(date.getDay())
-
-  return `${day}/${month}/${year}`
+  return format(date, 'MM/dd/yyyy')
 }
 
 export default {

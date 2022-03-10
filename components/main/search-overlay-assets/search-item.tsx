@@ -40,7 +40,7 @@ const SearchItem = ({ assetItem, term, openShareAsset, openDeleteAsset, toggleSe
           {thumbailUrl ? (
             <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} />
           ) : (
-            <AssetIcon extension={asset.extension} onList={true}/>
+            <AssetIcon noMargin extension={asset.extension} onList={true}/>
           )}
           {/* {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} />}
           {asset.type === 'video' && <AssetVideo asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} />}
@@ -91,7 +91,6 @@ const SearchItem = ({ assetItem, term, openShareAsset, openDeleteAsset, toggleSe
           initialParams={{}}
           asset={asset}
           realUrl={realUrl}
-          thumbailUrl={thumbailUrl}
           openShareAsset={openShareAsset}
           openDeleteAsset={openDeleteAsset}
           closeOverlay={() => setVisibleOVerlay(false)} />

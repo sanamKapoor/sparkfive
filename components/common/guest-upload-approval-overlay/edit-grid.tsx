@@ -10,7 +10,6 @@ import AssetText from '../asset/asset-text'
 import IconClickable from '../buttons/icon-clickable'
 import ImagePreviewModal from '../modals/image-preview-modal'
 import {useState} from "react";
-import AssetIcon from '../asset/asset-icon'
 
 const getStatusClass = (status: string) => {
     switch (status){
@@ -37,6 +36,7 @@ const EditGrid = ({ assets, toggleSelectedEdit }) => {
         setPreviewUrl(url)
         setPreviewModalOpen(true)
     }
+
 
   return <div className={styles['list-wrapper']}>
     <ul className={`${styles['grid-list']}`}>
@@ -70,7 +70,7 @@ const EditGrid = ({ assets, toggleSelectedEdit }) => {
                 }
                 {
                   asset.type !== 'image' && asset.type !== 'video' && !thumbailUrl && (
-                    <AssetIcon extension={asset.extension} />
+                    <AssetIcon padding extension={asset.extension} />
                   )
                 }
                 
@@ -83,7 +83,7 @@ const EditGrid = ({ assets, toggleSelectedEdit }) => {
                     extension={asset.extension}
                     bulkSize={true}
                     onClick={()=>{showPreviewImage(realUrl)}}
-                />} */}
+                />}
                 <>
                   <div id={`button-${index}`} className={`${styles['selectable-wrapper']} ${isEditSelected && styles['selected-wrapper']}`} onClick={() => toggleSelectedEdit(asset.id)}>
                     <IconClickable src={isEditSelected ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal} additionalClass={styles['select-icon']} />

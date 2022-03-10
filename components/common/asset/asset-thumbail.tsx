@@ -55,7 +55,7 @@ const AssetThumbail = ({
   return (
     <>
       <div className={`${styles.container} ${isLoading && 'loadable'}`}>
-        <div className={`${styles['image-wrapper']} ${styles['thumbnail-image-wrapper']}`}>
+        <div className={styles['image-wrapper']}>
           {isUploading &&
             <>
               <p className={styles.uploading}>Uploading...</p>
@@ -64,7 +64,7 @@ const AssetThumbail = ({
           {thumbailUrl ? (
             <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} opaque={isUploading} />
           ) : (
-            <AssetIcon  extension={asset.extension} />
+            <AssetIcon padding extension={asset.extension} />
           )}
           {/* {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} opaque={isUploading} />}
           {asset.type === 'video' && <AssetVideo assetImg={thumbailUrl} asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} />}
