@@ -197,6 +197,7 @@ const AssetGrid = ({
               return (
                 <li className={styles['regular-item']} key={assetItem.asset.id || index}>
                   <ListItem
+                    sharePath={sharePath}
                     isShare={isShare}
                     type={type}
                     assetItem={assetItem}
