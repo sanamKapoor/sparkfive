@@ -77,7 +77,7 @@ const FolderGridItem = ({
 						<div className={styles['sub-image-wrapper']}>
 							{(preview.assetImg || preview.name === 'empty')
 								? <AssetImg {...preview} />
-								: <AssetIcon disableContainer extension={preview.extension} isCollection={true}/>
+								: <AssetIcon extension={preview.extension} isCollection={true}/>
 							}
 						</div>
 					))}

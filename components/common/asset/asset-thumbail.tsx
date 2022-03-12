@@ -64,7 +64,7 @@ const AssetThumbail = ({
           {thumbailUrl ? (
             <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} opaque={isUploading} />
           ) : (
-            <AssetIcon padding extension={asset.extension} />
+            <AssetIcon extension={asset.extension} />
           )}
           {/* {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} opaque={isUploading} />}
           {asset.type === 'video' && <AssetVideo assetImg={thumbailUrl} asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} />}
@@ -115,7 +115,7 @@ const AssetThumbail = ({
           asset={asset}
           realUrl={(asset.extension === 'tiff' || asset.extension === 'tif') ? thumbailUrl : realUrl}
           thumbailUrl={thumbailUrl}
-          initiaParams={overlayProperties}
+          initialParams={overlayProperties}
           openShareAsset={openShareAsset}
           openDeleteAsset={openDeleteAsset}
           closeOverlay={() => setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: false })} />

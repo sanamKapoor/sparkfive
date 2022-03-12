@@ -391,7 +391,7 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
               </>
               }
               {assetDetail.type !== 'image' && assetDetail.type !== 'video' && thumbailUrl && <AssetImg name={assetDetail.name} assetImg={thumbailUrl} />}
-              {assetDetail.type !== 'image' && assetDetail.type !== 'video' && !thumbailUrl && <AssetIcon padding extension={asset.extension} />}
+              {assetDetail.type !== 'image' && assetDetail.type !== 'video' && !thumbailUrl && <AssetIcon extension={asset.extension} />}
               {assetDetail.type === 'video' &&
               <video controls>
                 <source src={realUrl}
