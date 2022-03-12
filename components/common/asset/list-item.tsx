@@ -21,6 +21,7 @@ import AssetIcon from "./asset-icon"
 const DEFAULT_DETAIL_PROPS = { visible: false, side: 'detail' }
 
 const ListItem = ({
+  sharePath,
   isShare,
   type,
   assetItem: {
@@ -121,7 +122,7 @@ const ListItem = ({
               {thumbailUrl ? (
                 <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} />
               ) : (
-                <AssetIcon disableContainer extension={asset.extension} onList={true} />
+                <AssetIcon extension={asset.extension} onList={true} />
               )}
               {/* {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} />}
               {asset.type === 'video' &&
@@ -176,10 +177,12 @@ const ListItem = ({
       </div>
       {overlayProperties.visible &&
         <DetailOverlay
+          sharePath={sharePath}
           isShare={isShare}
           asset={asset}
-          realUrl={realUrl}
-          initiaParams={overlayProperties}
+          realUrl={(asset.extension === 'tiff' || asset.extension === 'tif') ? thumbailUrl : realUrl}
+          thumbailUrl={thumbailUrl}
+          initialParams={overlayProperties}
           openShareAsset={openShareAsset}
           openDeleteAsset={openDeleteAsset}
           closeOverlay={() => setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: false })} />
