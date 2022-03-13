@@ -53,7 +53,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 	const [sharable, setSharable] = useState(false)
 	const [shareId, setShareId] = useState("")
 
-	const firstInit = useRef(false)
+	const [firstInit, setFirstInit] = useState(false)
 	// const [name, setName]
 	//
 	// recipients,
@@ -82,7 +82,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 		setHash("")
 		setSharable(false)
 		setShareId("")
-		firstInit.current = false
+		setFirstInit(false)
 		setLoading(true)
 		closeModal()
 	}
@@ -110,8 +110,9 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 
 				setLoading(false)
 
-				firstInit.current = true
+				setFirstInit(true)
 			}else{
+				setFirstInit(false)
 				setLoading(false)
 			}
 		}catch (e){
@@ -138,7 +139,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 		setMessage(data.message)
 		setSharable(data.sharable)
 
-		firstInit.current = true
+		setFirstInit(true)
 
 		setLoading(false)
 	}
@@ -187,7 +188,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 
 	// Listen radio button change to call api saving automatically
 	useEffect(()=>{
-		if(url && firstInit.current && !loading){
+		if(url && firstInit && !loading){
 			saveChanges();
 		}
 
@@ -225,7 +226,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 						text={"Save"}
 						onClick={()=>{
 							// Already init, call save changes
-							if(firstInit.current){
+							if(firstInit){
 								saveChanges()
 							}else{ // Else, call api to get link again, it will create link automatically
 								getInitialSharedLink()
@@ -238,7 +239,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 					<span className={'m-l-10'}>(required)</span>
 				</div>
 
-				{firstInit.current && <>
+				{firstInit && <>
 					<div className={`${styles['input-wrapper']} d-flex align-items-center p-t-0`}>
 						<Input additionalClasses={"w-50 m-r-15"} disabled={!url} placeholder={'Loading share link...'} value={url} styleType={'regular-short'} />
 						<IconClickable additionalClass={`${styles['action-button']} m-r-5 cursor-pointer`}
