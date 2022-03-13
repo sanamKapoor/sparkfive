@@ -47,7 +47,7 @@ const SETTING_OPTIONS = {
   integrations: { label: 'Integrations', permissions: [], content: Integrations },
   attributes: { label: 'Attributes', contentTitle: 'Custom Attributes', permissions: [SETTINGS_TEAM, SETTINGS_COMPANY], content: Attributes },
   ['custom-settings']: { label: 'Custom Settings', contentTitle: 'Custom Settings', permissions: [SETTINGS_TEAM, SETTINGS_COMPANY], content: CustomSettings },
-  ['shared-links']: { label: 'Shared Links', contentTitle: 'Shared Links', permissions: [SETTINGS_TEAM, SETTINGS_COMPANY], content: ShareLinks },
+  ['shared-links']: { label: 'Shared Links', contentTitle: 'Shared Links', permissions: [], content: ShareLinks },
   ['super-admin']: { label: 'Super Admin', permissions: [SUPERADMIN_ACCESS], content: SuperAdmin },
 }
 
