@@ -42,6 +42,7 @@ const AssetShare = () => {
 	const [logo, setLogo] = useState("")
 	const [loading, setLoading] = useState(true)
 	const [error, setError] = useState(false)
+	const [shareUserName, setShareUserName] = useState("")
 
 	// Toggle select asset
 	const toggleSelected = (id) => {
@@ -143,7 +144,8 @@ const AssetShare = () => {
 				if(data.error){
 					setError(true)
 					setLoading(false)
-					setLogo(data.data.workspaceIcon)
+					setLogo(data.data.team.workspaceIcon)
+					setShareUserName(data.data.user.name)
 					toastUtils.error(data.errorMessage)
 				}else{
 					setError(false)
@@ -180,9 +182,11 @@ const AssetShare = () => {
 				<div>
 					<img alt={"logo"} src={logo || GeneralImg.logoHorizontal} className={styles.logo} />
 					<AuthContainer
-						title='Private share link'
+						title='Spencer Mo has shared files with you'
+						titleComponent={<p className={"normal-text font-16"}>{shareUserName} has shared files with you</p>}
+						subTitleComponent={<p className={"normal-text m-b-32"}>Please enter your email to access the shared files</p>}
 						additionalClass={'color-secondary'}
-						subtitle={'Enter email to proceed'}>
+						subtitle={'Please enter your email to access the shared files'}>
 						<form onSubmit={onSubmitAuth} className={styles['password-form']}>
 							<Input
 								placeholder={'Email'}

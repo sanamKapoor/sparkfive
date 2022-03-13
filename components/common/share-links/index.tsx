@@ -1,5 +1,5 @@
 import styles from './index.module.css'
-import {useEffect, useState} from "react"
+import React, {useEffect, useState} from "react"
 import moment from 'moment'
 import copy from 'copy-to-clipboard'
 
@@ -12,6 +12,7 @@ import IconClickable from "../buttons/icon-clickable";
 import { AssetOps } from '../../../assets'
 import UserPhoto from "../user/user-photo";
 import SpinnerOverlay from "../spinners/spinner-overlay";
+import { Assets } from '../../../assets'
 
 // Utils
 import toastUtils from '../../../utils/toast'
@@ -19,12 +20,11 @@ import ConfirmModal from "../modals/confirm-modal";
 import ShareModal from "../modals/share-modal";
 
 // Constants
-import { statusList } from "../../../constants/shared-links";
+import { statusList, colorList } from "../../../constants/shared-links";
 import {Waypoint} from "react-waypoint";
 
 
 export default function ShareLinks(){
-    const availableColors = ['pink', 'green', 'yellow', 'orange']
 
     const [links, setLinks] = useState([])
     const [loading, setLoading] = useState(true)
@@ -39,6 +39,10 @@ export default function ShareLinks(){
     const [shareWithList, setShareWithList] = useState([])
     const [page, setPage] = useState(0)
     const [nextPage, setNextPage] = useState(0)
+    const [sortData, setSortData] = useState({
+        sortField: "createdAt",
+        sortType: "desc"
+    })
 
     const getFilterObject = (page) => {
         let filters: any = {page}
@@ -57,12 +61,43 @@ export default function ShareLinks(){
         return filters
     }
 
-    const getRandomColor = () => {
-        const index =  Math.floor(Math.random() * (availableColors.length ? availableColors.length-1 : 0));
-        return availableColors[index]
+    const getRandomFromArr = (arr) => {
+        const index =  Math.floor(Math.random() * (arr.length ? arr.length-1 : 0));
+        return arr[index]
     }
 
-    const getLinks  = async (filter) => {
+    const formatDataColor = (data) => {
+        let groups = {}
+
+        const assignColor = () => {
+            let availableColors = []
+            // Check if color is already in use
+            Object.keys(groups).map((key)=>{
+                availableColors = colorList.filter((color)=>color !== groups[key])
+            })
+
+            // Has color to choose
+            if(availableColors.length > 0){
+                return getRandomFromArr(availableColors)
+            }else{// Not having, do random
+                return getRandomFromArr(colorList)
+            }
+        }
+
+        data.map((item)=>{
+            // Already have color, use it
+            if(groups[item.user.name]){
+                item.color = groups[item.user.name]
+            }else{ // Not having yet
+                item.color = assignColor();
+                groups[item.user.name] = item.color
+            }
+        })
+
+        return data
+    }
+
+    const getLinks  = async (filter, refresh = true) => {
         // Show loading
         setLoading(true)
         const promises = [sharedLinksApi.getSharedByList(), sharedLinksApi.getSharedWithList() , sharedLinksApi.getSharedLinks(filter)]
@@ -75,7 +110,15 @@ export default function ShareLinks(){
 
         setShareByList(results[0].data.map((item)=>{return {label: item, value: item}}))
         setShareWithList(results[1].data.map((item)=>{return {label: item, value: item}}))
-        setLinks(data.results)
+
+        if(refresh){
+            let dataWithColor = formatDataColor(data.results)
+            setLinks(dataWithColor)
+        }else{
+            let dataWithColor = formatDataColor(links.concat(data.results))
+            setLinks(dataWithColor)
+        }
+
 
         setLoading(false)
     }
@@ -102,7 +145,7 @@ export default function ShareLinks(){
                 sharedEmails: recipients,
                 message,
                 ...sharedLinkData,
-                expiredPeriod: sharedLinkData.expiredPeriod.value,
+                expiredPeriod: sharedLinkData.expiredPeriod?.value,
             })
 
             getLinks(getFilterObject(1));
@@ -119,9 +162,30 @@ export default function ShareLinks(){
                 sharedWith: sharedWith ? sharedWith.map((item)=>item.value).join(","): "",
                 status: status ? status?.value : "",
                 page: page + 1
-            })
+            }, false)
         }
+    }
 
+    const sort = (field, type) => {
+        const data = {...sortData}
+        setSortData({
+            ...data,
+            sortField: field,
+            sortType: type
+        })
+    }
+
+    const getSortType = (field) => {
+        // Sort on different field
+        if(sortData.sortField !== field){
+            return "desc" // DESC as default
+        }else{
+            if(sortData.sortType === "asc"){
+                return "desc"
+            }else{
+                return "asc"
+            }
+        }
     }
 
     // useEffect(()=>{
@@ -135,9 +199,24 @@ export default function ShareLinks(){
             sharedBy: sharedBy ? sharedBy.map((item)=>item.value).join(",") : "",
             sharedWith: sharedWith ? sharedWith.map((item)=>item.value).join(","): "",
             status: status ? status?.value : "",
-            page: 1
+            page: 1,
+            ...sortData
         })
     },[sharedBy, sharedWith, status])
+
+
+    // Listen sort
+    useEffect(()=>{
+        if(links.length > 0){
+            getLinks({
+                sharedBy: sharedBy ? sharedBy.map((item)=>item.value).join(",") : "",
+                sharedWith: sharedWith ? sharedWith.map((item)=>item.value).join(","): "",
+                status: status ? status?.value : "",
+                page: 1,
+                ...sortData
+            })
+        }
+    },[sortData])
 
     return <>
        <div className={`row ${styles['header']}`}>
@@ -181,23 +260,95 @@ export default function ShareLinks(){
             No data
         </div>}
         {links.length > 0 && <div className={`row align-center ${styles['row-heading']} font-weight-600`}>
-            <div className={"col-10 col-md-100"}>
-                Date Created
+            <div className={"col-10 col-md-100 cursor-pointer d-flex align-items-center"}
+                 onClick={()=>{sort("createdAt", sortData.sortType === "asc" ? "desc" : "asc")}}
+            >
+                <span className={"font-12"}>Date Created</span>
+                <img
+                    src={Assets.arrowDown}
+                    className={
+                        `
+                          ${styles['sort-icon']} 
+                          ${sortData.sortField === "createdAt" ? styles['sort-icon-active'] : ""} 
+                          ${sortData.sortType === 'asc' ? '' : styles.desc}
+                        `
+                    }
+                />
             </div>
-            <div className={"col-20 col-md-100"}>
-                Name
+            <div className={"col-20 col-md-100 cursor-pointer d-flex align-items-center"}
+                 onClick={()=>{sort("name", getSortType("name"))}}
+            >
+                <span className={"font-12"}>Name</span>
+                <img
+                    src={Assets.arrowDown}
+                    className={
+                        `
+                          ${styles['sort-icon']} 
+                          ${sortData.sortField === "name" ? styles['sort-icon-active'] : ""} 
+                          ${sortData.sortType === 'asc' ? '' : styles.desc}
+                        `
+                    }
+                />
             </div>
-            <div className={"col-20 col-md-100"}>
-                Shared By
+            <div className={"col-15 col-md-100 cursor-pointer d-flex align-items-center"}
+                 onClick={()=>{sort("user.name", getSortType("user.name"))}}
+            >
+                <span className={"font-12"}>Shared By</span>
+                <img
+                    src={Assets.arrowDown}
+                    className={
+                        `
+                          ${styles['sort-icon']} 
+                          ${sortData.sortField === "user.name" ? styles['sort-icon-active'] : ""} 
+                          ${sortData.sortType === 'asc' ? '' : styles.desc}
+                        `
+                    }
+                />
             </div>
-            <div className={"col-20 col-md-100"}>
-                Link
+            <div className={"col-25 col-md-100 cursor-pointer d-flex align-items-center"}
+                 onClick={()=>{sort("sharedLink", getSortType("sharedLink"))}}
+            >
+                <span className={"font-12"}>Link</span>
+                <img
+                    src={Assets.arrowDown}
+                    className={
+                        `
+                          ${styles['sort-icon']} 
+                          ${sortData.sortField === "sharedLink" ? styles['sort-icon-active'] : ""} 
+                          ${sortData.sortType === 'asc' ? '' : styles.desc}
+                        `
+                    }
+                />
             </div>
-            <div className={"col-10 col-md-100"}>
-                Share With
+            <div className={"col-10 col-md-100 cursor-pointer d-flex align-items-center"}
+                 onClick={()=>{sort("sharedCount", getSortType("sharedCount"))}}
+            >
+                <span className={"font-12"}>Share With</span>
+                <img
+                    src={Assets.arrowDown}
+                    className={
+                        `
+                          ${styles['sort-icon']} 
+                          ${sortData.sortField === "sharedCount" ? styles['sort-icon-active'] : ""} 
+                          ${sortData.sortType === 'asc' ? '' : styles.desc}
+                        `
+                    }
+                />
             </div>
-            <div className={"col-10 col-md-100"}>
-                Expiration Date
+            <div className={"col-10 col-md-100 cursor-pointer d-flex align-items-center"}
+                 onClick={()=>{sort("expiredAt", getSortType("expiredAt"))}}
+            >
+                <span className={"font-12"}>Expiration Date</span>
+                <img
+                    src={Assets.arrowDown}
+                    className={
+                        `
+                          ${styles['sort-icon']} 
+                          ${sortData.sortField === "expiredAt" ? styles['sort-icon-active'] : ""} 
+                          ${sortData.sortType === 'asc' ? '' : styles.desc}
+                        `
+                    }
+                />
             </div>
             <div className={"col-10"}>
 
@@ -207,17 +358,21 @@ export default function ShareLinks(){
         {links.map((link, index)=>{
             return <div className={`row align-center ${styles['data-row']}`} key={index}>
                 <div className={"col-10 d-flex align-items-center col-md-100"}>
-                    {moment(link.createdAt).format('MM/DD/YY')}
+                    <span className={"font-12"}>{moment(link.createdAt).format('MM/DD/YY')}</span>
                 </div>
                 <div className={"col-20 d-flex align-items-center col-md-100"}>
-                    <span className={`${styles[`name-tag-${getRandomColor()}`]}`}>{link.name}</span>
+                    <span
+                        style={{backgroundColor: link.color}}
+                        className={`${styles['name-tag']} font-12`}>
+                        {link.name}
+                    </span>
                 </div>
-                <div className={"col-20 d-flex align-items-center col-md-100"}>
-                    <UserPhoto photoUrl={""} extraClass={styles.profile} sizePx={18} />
-                    <span className={"m-l-5"}>{link.user.name}</span>
+                <div className={"col-15 d-flex align-items-center col-md-100"}>
+                    <UserPhoto photoUrl={link.user.profilePhoto || ""} extraClass={styles.profile} sizePx={18} />
+                    <span className={"m-l-5 font-12"}>{link.user.name}</span>
                 </div>
-                <div className={"col-20 d-flex align-items-center word-break-text col-md-100"}>
-                    <span>{link.sharedLink}</span>
+                <div className={"col-25 d-flex align-items-center word-break-text col-md-100"}>
+                    <span className={"font-12"}>{link.sharedLink}</span>
                     <IconClickable additionalClass={`${styles['action-button']} m-l-5 cursor-pointer`}
                                    src={AssetOps[`copy${''}`]}
                                    tooltipText={'Copy'}
@@ -229,10 +384,10 @@ export default function ShareLinks(){
                 </div>
                 <div className={"col-10 d-flex align-items-center col-md-100"}>
                     <UserPhoto photoUrl={""} extraClass={styles.profile} sizePx={18} />
-                    <span className={"m-l-5 font-weight-600"}>{link.sharedCount}</span>
+                    <span className={"m-l-5 font-weight-600 font-12"}>{link.sharedCount}</span>
                 </div>
                 <div className={"col-10 d-flex align-items-center col-md-100"}>
-                    {moment(link.expiredAt).format('MM/DD/YY')}
+                    <span className={"font-12"}>{moment(link.expiredAt).format('MM/DD/YY')}</span>
                 </div>
                 <div className={"col-10 d-flex align-items-center col-md-100"}>
                     <IconClickable

@@ -367,7 +367,7 @@ export default ({getAssets}) => {
 		}
 	}
 
-	const shareAssets = async (recipients, message, sharedLinkData) => {
+	const shareAssets = async (recipients, message, sharedLinkData, closeAfterDone = true,  showStatusToast = true) => {
 		try {
 			let assetIds
 			let filters = {}
@@ -406,19 +406,30 @@ export default ({getAssets}) => {
 				recipients,
 				message,
 				...sharedLinkData,
-				expiredPeriod: sharedLinkData.expiredPeriod.value,
+				expiredPeriod: sharedLinkData.expiredPeriod?.value || "",
 				assetIds
 			},filters)
-			toastUtils.success('Assets shared succesfully')
-			closeModalAndClearOpAsset()
+
+			if(showStatusToast){
+				toastUtils.success('Assets shared succesfully')
+			}
+
+			if(closeAfterDone){
+				closeModalAndClearOpAsset()
+			}
+
+			return;
 		} catch (err) {
 			console.log(err)
-			toastUtils.error('Could not share assets, please try again later.')
+			if(showStatusToast){
+				toastUtils.error('Could not share assets, please try again later.')
+			}
+			return;
 		}
 	}
 
 
-	const getShareLink = async () => {
+	const getShareLink = async (name = "") => {
 		try {
 			let assetIds
 			let filters = {}
@@ -452,6 +463,8 @@ export default ({getAssets}) => {
 				// @ts-ignore
 				delete filters.page
 			}
+
+			filters["name"] = name
 			return await assetApi.getShareUrl({
 				assetIds
 			}, filters)

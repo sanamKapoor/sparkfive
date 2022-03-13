@@ -19,7 +19,8 @@ const Base = ({
   textWidth = false,
   disabledConfirm = false,
   noHeightMax = false,
-  additionalClasses = ['']
+  additionalClasses = [''],
+    showCancel = true
 }) => {
 
   return (
@@ -40,14 +41,14 @@ const Base = ({
       {children}
       {confirmText &&
         <div className={styles.buttons}>
-          <div>
+          {showCancel && <div>
             <Button
               text='Cancel'
               onClick={closeModal}
               type='button'
               styleType='secondary'
             />
-          </div>
+          </div>}
           <div>
             <Button
               text={confirmText}
