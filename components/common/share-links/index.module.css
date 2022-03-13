@@ -25,7 +25,7 @@
 }
 
 .data-row:nth-child(even){
-  background-color: #ececed;
+  background-color: #E9EEFA;
 }
 
 .ghost-line{
@@ -34,8 +34,13 @@
 
 .row-heading{
   margin-top: 40px;
-  background-color: #fff8eb;
+  background-color: #F6EFE4;
   padding: 5px;
+}
+
+.name-tag{
+  padding: 5px;
+  border-radius: 10px;
 }
 
 .name-tag-pink{
@@ -60,4 +65,23 @@
   padding: 5px;
   border-radius: 10px;
   background-color: #ffe1aa;
+}
+
+.desc{
+  transform: rotate(0deg) !important;
+}
+
+
+.sort-icon{
+  margin-left: 5px;
+  width: 14px;
+  height: 14px;
+  color: var(--color-secondary-border);
+  visibility: hidden;
+  transition: all ease 0.3s;
+  transform: rotate(180deg);
+}
+
+.sort-icon-active{
+  visibility: visible;
 }
