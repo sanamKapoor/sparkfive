@@ -100,13 +100,13 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 					(item)=>item.value === parseInt(data.currentSharedLinks.expiredPeriod))[0]
 				)
 				setExpiredAt(new Date(data.currentSharedLinks.expiredAt))
-				setExpired(data.currentSharedLinks.expired)
+				setExpired(data.currentSharedLinks.expired !== undefined ? data.currentSharedLinks.expired : false) // default is false
 				setName(data.currentSharedLinks.name)
 				setRecipients(data.currentSharedLinks.sharedEmails)
 				setShareId(data.currentSharedLinks.id)
-				setIsPublic(data.currentSharedLinks.isPublic)
+				setIsPublic(data.currentSharedLinks.isPublic !== undefined ? data.currentSharedLinks.isPublic : true) // default is true
 				setMessage(data.currentSharedLinks.message)
-				setSharable(data.currentSharedLinks.sharable)
+				setSharable(data.currentSharedLinks.sharable !== undefined ? data.currentSharedLinks.sharable : false) // default is false
 
 				setLoading(false)
 
