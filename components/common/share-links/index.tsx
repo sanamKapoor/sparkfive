@@ -227,7 +227,7 @@ export default function ShareLinks(){
                 <Select
                     options={shareByList}
                     onChange={(value)=>{setSharedBy(value)}}
-                    placeholder={'Share by'}
+                    placeholder={'Shared by'}
                     styleType='regular'
                     value={sharedBy}
                     isMulti={true}

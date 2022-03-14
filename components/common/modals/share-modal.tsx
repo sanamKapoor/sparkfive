@@ -171,6 +171,19 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 		setIsLoading(false);
 	}
 
+	const changeExpired =  (currentValue, nextValue) => {
+		// Toggle
+		if(currentValue!==nextValue){
+			setExpired(nextValue)
+			// Switch from off
+			if(currentValue === false){
+				// Set 60 days expired as default
+				setExpiredPeriod(expireOptions[1])
+				setExpiredAt(getDayToCurrentDate(expireOptions[1].value))
+			}
+		}
+	}
+
 	useEffect(()=>{
 		if(modalIsOpen){
 			// Show to edit
@@ -192,7 +205,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 			saveChanges();
 		}
 
-	},[isPublic, expired, expiredPeriod, expiredAt, sharable])
+	},[isPublic, expiredPeriod, expiredAt, sharable])
 
 	return (
 		<Base
@@ -313,7 +326,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 									<IconClickable
 										src={expired ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
 										additionalClass={styles['select-icon']}
-										onClick={()=>{setExpired(true)}} />
+										onClick={()=>{changeExpired(expired, true)}} />
 									<div className={'font-12 m-l-15'}>On</div>
 								</div>
 
@@ -321,7 +334,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 									<IconClickable
 										src={!expired ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
 										additionalClass={styles['select-icon']}
-										onClick={()=>{setExpired(false)}} />
+										onClick={()=>{changeExpired(expired, false)}} />
 									<div className={'font-12 m-l-15'}>Off</div>
 								</div>
 							</div>
