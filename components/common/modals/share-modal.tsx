@@ -52,6 +52,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 	const [hash, setHash] = useState("")
 	const [sharable, setSharable] = useState(false)
 	const [shareId, setShareId] = useState("")
+	const [currentName, setCurrentName] = useState("") // To decide user can copy link or not
 
 	const [firstInit, setFirstInit] = useState(false)
 	// const [name, setName]
@@ -82,6 +83,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 		setHash("")
 		setSharable(false)
 		setShareId("")
+		setCurrentName("")
 		setFirstInit(false)
 		setLoading(true)
 		closeModal()
@@ -100,13 +102,18 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 					(item)=>item.value === parseInt(data.currentSharedLinks.expiredPeriod))[0]
 				)
 				setExpiredAt(new Date(data.currentSharedLinks.expiredAt))
-				setExpired(data.currentSharedLinks.expired)
+				setExpired(data.currentSharedLinks.expired !== undefined ? data.currentSharedLinks.expired : false) // default is false
 				setName(data.currentSharedLinks.name)
+
+				if(data.currentSharedLinks.name){
+					setCurrentName(data.currentSharedLinks.name)
+				}
+
 				setRecipients(data.currentSharedLinks.sharedEmails)
 				setShareId(data.currentSharedLinks.id)
-				setIsPublic(data.currentSharedLinks.isPublic)
+				setIsPublic(data.currentSharedLinks.isPublic !== undefined ? data.currentSharedLinks.isPublic : true) // default is true
 				setMessage(data.currentSharedLinks.message)
-				setSharable(data.currentSharedLinks.sharable)
+				setSharable(data.currentSharedLinks.sharable !== undefined ? data.currentSharedLinks.sharable : false) // default is false
 
 				setLoading(false)
 
@@ -133,6 +140,9 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 		setExpiredAt(new Date(data.expiredAt))
 		setExpired(data.expired)
 		setName(data.name)
+		if(data.name){
+			setCurrentName(data.name)
+		}
 		setRecipients(data.sharedEmails)
 		setShareId(data.id)
 		setIsPublic(data.isPublic)
@@ -157,10 +167,10 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 	}
 
 	// Save changes
-	const saveChanges = async () => {
+	const saveChanges = async (field = "") => {
 		setIsLoading(true);
 
-		await shareAssets(
+		const { data } = await shareAssets(
 			recipients,
 			message,
 			{sharedLink: url, shareJWT, hash, name, isPublic, expired, expiredPeriod, expiredAt, sharable, shareId},
@@ -168,7 +178,26 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 			false
 		)
 
+		if(field === "name"){
+			if(data.name){
+				setCurrentName(data.name)
+			}
+		}
+
 		setIsLoading(false);
+	}
+
+	const changeExpired =  (currentValue, nextValue) => {
+		// Toggle
+		if(currentValue!==nextValue){
+			setExpired(nextValue)
+			// Switch from off
+			if(currentValue === false){
+				// Set 60 days expired as default
+				setExpiredPeriod(expireOptions[1])
+				setExpiredAt(getDayToCurrentDate(expireOptions[1].value))
+			}
+		}
 	}
 
 	useEffect(()=>{
@@ -192,7 +221,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 			saveChanges();
 		}
 
-	},[isPublic, expired, expiredPeriod, expiredAt, sharable])
+	},[isPublic, expiredPeriod, expiredAt, sharable])
 
 	return (
 		<Base
@@ -224,14 +253,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 					/>
 					<Button
 						text={"Save"}
-						onClick={()=>{
-							// Already init, call save changes
-							if(firstInit){
-								saveChanges()
-							}else{ // Else, call api to get link again, it will create link automatically
-								getInitialSharedLink()
-							}
-						}}
+						onClick={()=>{saveChanges("name")}}
 						type='button'
 						styleType='primary'
 						disabled={name === ''}
@@ -239,166 +261,173 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 					<span className={'m-l-10'}>(required)</span>
 				</div>
 
-				{firstInit && <>
-					<div className={`${styles['input-wrapper']} d-flex align-items-center p-t-0`}>
-						<Input additionalClasses={"w-50 m-r-15"} disabled={!url} placeholder={'Loading share link...'} value={url} styleType={'regular-short'} />
-						<IconClickable additionalClass={`${styles['action-button']} m-r-5 cursor-pointer`}
-									   src={AssetOps[`copy${''}`]}
-									   tooltipText={'Copy'}
-									   tooltipId={'Copy'}
-									   onClick={()=>{
-										   copy(url)
-										   toastUtils.bottomSuccess('Link copied')
-									   }}/>
-						<span className={"cursor-pointer"} onClick={()=>{
+				<div className={`${styles['input-wrapper']} d-flex align-items-center p-t-0`}>
+					<Input
+						additionalClasses={"w-50 m-r-15"}
+						disabled={!url || !currentName}
+						placeholder={''}
+						value={currentName ? url: ""}
+						styleType={'regular-short'} />
+					<IconClickable additionalClass={`${styles['action-button']} m-r-5 cursor-pointer`}
+								   src={AssetOps[`copy${''}`]}
+								   tooltipText={'Copy'}
+								   tooltipId={'Copy'}
+								   onClick={()=>{
+								   	if(currentName){
+										copy(url)
+										toastUtils.bottomSuccess('Link copied')
+									}
+								   }}/>
+					<span className={"cursor-pointer"} onClick={()=>{
+						if(currentName){
 							copy(url)
 							toastUtils.bottomSuccess('Link copied')
-						}}>Copy Link</span>
-					</div>
+						}
+					}}>Copy Link</span>
+				</div>
 
-					<div className={styles['input-wrapper']} >
-						<div className={`${styles.title}`}>Permission Settings</div>
-						<div className={styles['field-content']}>
-							<div className={styles['field-radio-wrapper']}>
-								<div className={`${styles['radio-button-wrapper']} m-r-15`}>
-									<IconClickable
-										src={isPublic ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-										additionalClass={styles['select-icon']}
-										onClick={()=>{setIsPublic(true)}} />
-									<div className={'font-12 m-l-15'}>Anyone with link</div>
-								</div>
+				<div className={styles['input-wrapper']} >
+					<div className={`${styles.title}`}>Permission Settings</div>
+					<div className={styles['field-content']}>
+						<div className={styles['field-radio-wrapper']}>
+							<div className={`${styles['radio-button-wrapper']} m-r-15`}>
+								<IconClickable
+									src={isPublic ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+									additionalClass={styles['select-icon']}
+									onClick={()=>{setIsPublic(true)}} />
+								<div className={'font-12 m-l-15'}>Anyone with link</div>
+							</div>
 
-								<div className={`${styles['radio-button-wrapper']} m-r-15`}>
-									<IconClickable
-										src={!isPublic ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-										additionalClass={styles['select-icon']}
-										onClick={()=>{setIsPublic(false)}} />
-									<div className={'font-12 m-l-15'}>Restrict access by email address</div>
-								</div>
+							<div className={`${styles['radio-button-wrapper']} m-r-15`}>
+								<IconClickable
+									src={!isPublic ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+									additionalClass={styles['select-icon']}
+									onClick={()=>{setIsPublic(false)}} />
+								<div className={'font-12 m-l-15'}>Restrict access by email address</div>
 							</div>
 						</div>
 					</div>
+				</div>
 
-					{!isPublic && <div className={`${styles['input-wrapper']} d-flex align-items-center p-l-30`}>
+				{!isPublic && <div className={`${styles['input-wrapper']} d-flex align-items-center p-l-30`}>
+					<TextArea
+						value={recipients}
+						placeholder={'Emails separated with comma'}
+						rows={5}
+						onChange={e => setRecipients(e.target.value)}
+						additionalClasses={"m-r-15 m-l-30 font-12"}
+						styleType={'regular-short'}
+						noResize={true}
+					/>
+					{/*<Input*/}
+					{/*	value={recipients}*/}
+					{/*	placeholder={'Emails separated with comma'}*/}
+					{/*	onChange={e => setRecipients(e.target.value)}*/}
+					{/*	additionalClasses={"m-r-15 m-l-30"}*/}
+					{/*	styleType={'regular-short'} />*/}
+
+					<Button
+						text={"Save"}
+						onClick={saveChanges}
+						type='button'
+						styleType='primary'
+						disabled={recipients === ''}
+					/>
+				</div>}
+
+				<div className={styles['input-wrapper']} >
+					<div className={`${styles.title}`}>Expiration Settings</div>
+					<div className={styles['field-content']}>
+						<div className={styles['field-radio-wrapper']}>
+							<div className={`${styles['radio-button-wrapper']} m-r-15`}>
+								<IconClickable
+									src={expired ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+									additionalClass={styles['select-icon']}
+									onClick={()=>{changeExpired(expired, true)}} />
+								<div className={'font-12 m-l-15'}>On</div>
+							</div>
+
+							<div className={`${styles['radio-button-wrapper']} m-r-15`}>
+								<IconClickable
+									src={!expired ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+									additionalClass={styles['select-icon']}
+									onClick={()=>{changeExpired(expired, false)}} />
+								<div className={'font-12 m-l-15'}>Off</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				{expired && <div className={`${styles['input-wrapper']} d-flex align-items-center`}>
+					<div className={`${styles['row-field-content']} row w-100`}>
+						<div className={"col-50"}>
+							<Select
+								options={expireOptions}
+								onChange={(value)=>{setExpiredPeriod(value); setExpiredAt(getDayToCurrentDate(value.value))}}
+								placeholder={'Select expire time'}
+								styleType='regular'
+								value={expiredPeriod}
+							/>
+						</div>
+						<div className={`col-50 d-flex align-items-center ${expiredPeriod?.value === 0 ? "flex-direction-column" : ""}`}>
+							{expiredPeriod?.value === 0 && <div className={"row w-100 m-b-5"}>
+								<DayPickerInput
+									value={expiredAt}
+									formatDate={formatDate}
+									format={FORMAT}
+									parseDate={parseDate}
+									classNames={{
+										container: dateStyles.input
+									}}
+									onDayChange={(day) => {setExpiredAt(day)}}
+									placeholder={'mm/dd/yyyy'}
+									dayPickerProps={{
+										className: dateStyles.calendar
+									}}
+								/>
+							</div>}
+
+							{/*<Input additionalClasses={"w-50 m-r-15"} disabled={!url} placeholder={'Loading share link...'} value={url} styleType={'regular-short'} />*/}
+							<span className={"font-12 m-l-15 w-100"}>{expiredAt.toDateString()}</span>
+						</div>
+					</div>
+				</div>}
+
+				<div className={`${styles['input-wrapper']} ${sharable ? "" : "m-b-6rem"}`} >
+					<div className={`${styles.title}`}>Share from Sparkfive</div>
+					<div className={styles['field-content']}>
+						<div className={styles['field-radio-wrapper']}>
+							<div className={`${styles['radio-button-wrapper']} m-r-15`}>
+								<IconClickable
+									src={sharable ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+									additionalClass={styles['select-icon']}
+									onClick={()=>{setSharable(true)}} />
+								<div className={'font-12 m-l-15'}>On</div>
+							</div>
+
+							<div className={`${styles['radio-button-wrapper']} m-r-15`}>
+								<IconClickable
+									src={!sharable ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+									additionalClass={styles['select-icon']}
+									onClick={()=>{setSharable(false)}} />
+								<div className={'font-12 m-l-15'}>Off</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				{sharable && <div className={styles['input-wrapper']}>
+					<div className={styles['field-content']}>
 						<TextArea
-							value={recipients}
-							placeholder={'Emails separated with comma'}
-							rows={5}
-							onChange={e => setRecipients(e.target.value)}
-							additionalClasses={"m-r-15 m-l-30 font-12"}
+							value={message}
+							placeholder={'Add a message (optional)'}
+							rows={7}
+							onChange={e => setMessage(e.target.value)}
 							styleType={'regular-short'}
 							noResize={true}
 						/>
-						{/*<Input*/}
-						{/*	value={recipients}*/}
-						{/*	placeholder={'Emails separated with comma'}*/}
-						{/*	onChange={e => setRecipients(e.target.value)}*/}
-						{/*	additionalClasses={"m-r-15 m-l-30"}*/}
-						{/*	styleType={'regular-short'} />*/}
-
-						<Button
-							text={"Save"}
-							onClick={saveChanges}
-							type='button'
-							styleType='primary'
-							disabled={recipients === ''}
-						/>
-					</div>}
-
-					<div className={styles['input-wrapper']} >
-						<div className={`${styles.title}`}>Expiration Settings</div>
-						<div className={styles['field-content']}>
-							<div className={styles['field-radio-wrapper']}>
-								<div className={`${styles['radio-button-wrapper']} m-r-15`}>
-									<IconClickable
-										src={expired ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-										additionalClass={styles['select-icon']}
-										onClick={()=>{setExpired(true)}} />
-									<div className={'font-12 m-l-15'}>On</div>
-								</div>
-
-								<div className={`${styles['radio-button-wrapper']} m-r-15`}>
-									<IconClickable
-										src={!expired ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-										additionalClass={styles['select-icon']}
-										onClick={()=>{setExpired(false)}} />
-									<div className={'font-12 m-l-15'}>Off</div>
-								</div>
-							</div>
-						</div>
 					</div>
-
-					{expired && <div className={`${styles['input-wrapper']} d-flex align-items-center`}>
-						<div className={`${styles['row-field-content']} row w-100`}>
-							<div className={"col-50"}>
-								<Select
-									options={expireOptions}
-									onChange={(value)=>{setExpiredPeriod(value); setExpiredAt(getDayToCurrentDate(value.value))}}
-									placeholder={'Select expire time'}
-									styleType='regular'
-									value={expiredPeriod}
-								/>
-							</div>
-							<div className={`col-50 d-flex align-items-center ${expiredPeriod?.value === 0 ? "flex-direction-column" : ""}`}>
-								{expiredPeriod?.value === 0 && <div className={"row w-100 m-b-5"}>
-									<DayPickerInput
-										value={expiredAt}
-										formatDate={formatDate}
-										format={FORMAT}
-										parseDate={parseDate}
-										classNames={{
-											container: dateStyles.input
-										}}
-										onDayChange={(day) => {setExpiredAt(day)}}
-										placeholder={'mm/dd/yyyy'}
-										dayPickerProps={{
-											className: dateStyles.calendar
-										}}
-									/>
-								</div>}
-
-								{/*<Input additionalClasses={"w-50 m-r-15"} disabled={!url} placeholder={'Loading share link...'} value={url} styleType={'regular-short'} />*/}
-								<span className={"font-12 m-l-15 w-100"}>{expiredAt.toDateString()}</span>
-							</div>
-						</div>
-					</div>}
-
-					<div className={`${styles['input-wrapper']} ${sharable ? "" : "m-b-6rem"}`} >
-						<div className={`${styles.title}`}>Share from Sparkfive</div>
-						<div className={styles['field-content']}>
-							<div className={styles['field-radio-wrapper']}>
-								<div className={`${styles['radio-button-wrapper']} m-r-15`}>
-									<IconClickable
-										src={sharable ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-										additionalClass={styles['select-icon']}
-										onClick={()=>{setSharable(true)}} />
-									<div className={'font-12 m-l-15'}>On</div>
-								</div>
-
-								<div className={`${styles['radio-button-wrapper']} m-r-15`}>
-									<IconClickable
-										src={!sharable ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-										additionalClass={styles['select-icon']}
-										onClick={()=>{setSharable(false)}} />
-									<div className={'font-12 m-l-15'}>Off</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					{sharable && <div className={styles['input-wrapper']}>
-						<div className={styles['field-content']}>
-							<TextArea
-								value={message}
-								placeholder={'Add a message (optional)'}
-								rows={7}
-								onChange={e => setMessage(e.target.value)}
-								styleType={'regular-short'}
-								noResize={true}
-							/>
-						</div>
-					</div>}
-				</>}
+				</div>}
 
 
 			</>}
