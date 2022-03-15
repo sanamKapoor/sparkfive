@@ -141,7 +141,7 @@ export default function ShareLinks(){
             delete sharedLinkData.shareId
 
             // @ts-ignore
-            await sharedLinksApi.updateLink(currentLink?.id, {
+            const result  = await sharedLinksApi.updateLink(currentLink?.id, {
                 sharedEmails: recipients,
                 message,
                 ...sharedLinkData,
@@ -149,6 +149,8 @@ export default function ShareLinks(){
             })
 
             getLinks(getFilterObject(1));
+
+            return result
         }
 
     }
@@ -364,7 +366,7 @@ export default function ShareLinks(){
                     <span
                         style={{backgroundColor: link.color}}
                         className={`${styles['name-tag']} font-12`}>
-                        {link.name}
+                        {link.name || "None"}
                     </span>
                 </div>
                 <div className={"col-15 d-flex align-items-center col-sm-100"}>
