@@ -223,7 +223,7 @@ export default function ShareLinks(){
             <div className={"col-10 d-flex align-items-center"}>
                 Filters
             </div>
-            <div className={"col-30 col-md-100"}>
+            <div className={"col-30 col-sm-100"}>
                 <Select
                     options={shareByList}
                     onChange={(value)=>{setSharedBy(value)}}
@@ -234,7 +234,7 @@ export default function ShareLinks(){
                     isClearable={true}
                 />
             </div>
-            <div className={"col-30 col-md-100"}>
+            <div className={"col-30 col-sm-100"}>
                 <Select
                     options={shareWithList}
                     onChange={(value)=>{setSharedWith(value)}}
@@ -245,7 +245,7 @@ export default function ShareLinks(){
                     isClearable={true}
                 />
             </div>
-            <div className={"col-30 col-md-100"}>
+            <div className={"col-30 col-sm-100"}>
                 <Select
                     isClearable={true}
                     options={statusList}
@@ -260,7 +260,7 @@ export default function ShareLinks(){
             No data
         </div>}
         {links.length > 0 && <div className={`row align-center ${styles['row-heading']} font-weight-600`}>
-            <div className={"col-10 col-md-100 cursor-pointer d-flex align-items-center"}
+            <div className={"col-10 col-sm-100 cursor-pointer d-flex align-items-center"}
                  onClick={()=>{sort("createdAt", sortData.sortType === "asc" ? "desc" : "asc")}}
             >
                 <span className={"font-12"}>Date Created</span>
@@ -275,7 +275,7 @@ export default function ShareLinks(){
                     }
                 />
             </div>
-            <div className={"col-20 col-md-100 cursor-pointer d-flex align-items-center"}
+            <div className={"col-20 col-sm-100 cursor-pointer d-flex align-items-center"}
                  onClick={()=>{sort("name", getSortType("name"))}}
             >
                 <span className={"font-12"}>Name</span>
@@ -290,7 +290,7 @@ export default function ShareLinks(){
                     }
                 />
             </div>
-            <div className={"col-15 col-md-100 cursor-pointer d-flex align-items-center"}
+            <div className={"col-15 col-sm-100 cursor-pointer d-flex align-items-center"}
                  onClick={()=>{sort("user.name", getSortType("user.name"))}}
             >
                 <span className={"font-12"}>Shared By</span>
@@ -305,7 +305,7 @@ export default function ShareLinks(){
                     }
                 />
             </div>
-            <div className={"col-25 col-md-100 cursor-pointer d-flex align-items-center"}
+            <div className={"col-25 col-sm-100 cursor-pointer d-flex align-items-center"}
                  onClick={()=>{sort("sharedLink", getSortType("sharedLink"))}}
             >
                 <span className={"font-12"}>Link</span>
@@ -320,7 +320,7 @@ export default function ShareLinks(){
                     }
                 />
             </div>
-            <div className={"col-10 col-md-100 cursor-pointer d-flex align-items-center"}
+            <div className={"col-10 col-sm-100 cursor-pointer d-flex align-items-center"}
                  onClick={()=>{sort("sharedCount", getSortType("sharedCount"))}}
             >
                 <span className={"font-12"}>Share With</span>
@@ -335,7 +335,7 @@ export default function ShareLinks(){
                     }
                 />
             </div>
-            <div className={"col-10 col-md-100 cursor-pointer d-flex align-items-center"}
+            <div className={"col-10 col-sm-100 cursor-pointer d-flex align-items-center"}
                  onClick={()=>{sort("expiredAt", getSortType("expiredAt"))}}
             >
                 <span className={"font-12"}>Expiration Date</span>
@@ -357,21 +357,21 @@ export default function ShareLinks(){
 
         {links.map((link, index)=>{
             return <div className={`row align-center ${styles['data-row']}`} key={index}>
-                <div className={"col-10 d-flex align-items-center col-md-100"}>
+                <div className={"col-10 d-flex align-items-center col-sm-100"}>
                     <span className={"font-12"}>{moment(link.createdAt).format('MM/DD/YY')}</span>
                 </div>
-                <div className={"col-20 d-flex align-items-center col-md-100"}>
+                <div className={"col-20 d-flex align-items-center col-sm-100"}>
                     <span
                         style={{backgroundColor: link.color}}
                         className={`${styles['name-tag']} font-12`}>
                         {link.name}
                     </span>
                 </div>
-                <div className={"col-15 d-flex align-items-center col-md-100"}>
+                <div className={"col-15 d-flex align-items-center col-sm-100"}>
                     <UserPhoto photoUrl={link.user.profilePhoto || ""} extraClass={styles.profile} sizePx={18} />
                     <span className={"m-l-5 font-12"}>{link.user.name}</span>
                 </div>
-                <div className={"col-25 d-flex align-items-center word-break-text col-md-100"}>
+                <div className={"col-25 d-flex align-items-center word-break-text col-sm-100"}>
                     <span className={"font-12"}>{link.sharedLink}</span>
                     <IconClickable additionalClass={`${styles['action-button']} m-l-5 cursor-pointer`}
                                    src={AssetOps[`copy${''}`]}
@@ -382,14 +382,14 @@ export default function ShareLinks(){
                                        toastUtils.bottomSuccess('Link copied')
                                    }}/>
                 </div>
-                <div className={"col-10 d-flex align-items-center col-md-100"}>
+                <div className={"col-10 d-flex align-items-center col-sm-100"}>
                     <UserPhoto photoUrl={""} extraClass={styles.profile} sizePx={18} />
                     <span className={"m-l-5 font-weight-600 font-12"}>{link.sharedCount}</span>
                 </div>
-                <div className={"col-10 d-flex align-items-center col-md-100"}>
+                <div className={"col-10 d-flex align-items-center col-sm-100"}>
                     <span className={"font-12"}>{link.expiredAt ? moment(link.expiredAt).format('MM/DD/YY') : "None"}</span>
                 </div>
-                <div className={"col-10 d-flex align-items-center col-md-100"}>
+                <div className={"col-10 d-flex align-items-center col-sm-100"}>
                     <IconClickable
                         additionalClass={styles['action-button']}
                         src={AssetOps[`edit`]}

@@ -180,5 +180,23 @@
         max-width: 80%;
         margin: 15px 0;
     }
+
+    .col-sm-100{
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin: 15px 0;
+    }
+
+    .col-sm-80{
+        flex: 0 0 80%;
+        max-width: 80%;
+        margin: 15px 0;
+    }
+
+    .col-sm-20{
+        flex: 0 0 20%;
+        max-width: 20%;
+        margin: 15px 0;
+    }
 }
 
