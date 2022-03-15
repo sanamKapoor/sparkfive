@@ -368,64 +368,66 @@ export default ({getAssets}) => {
 	}
 
 	const shareAssets = async (recipients, message, sharedLinkData, closeAfterDone = true,  showStatusToast = true) => {
-		try {
-			let assetIds
-			let filters = {}
-			if (operationAsset) {
-				assetIds = operationAsset.asset.id
-			}
-			else if (operationFolder) {
-				assetIds = operationFolder.assets.map(asset => asset.id).join(',')
-			}
-			else {
-				assetIds = selectedAssets.map(assetItem => assetItem.asset.id).join(',')
-			}
-
-			// Select all assets without pagination
-			if(selectedAllAssets){
-				filters = {
-					...getAssetsFilters({
-						replace: false,
-						activeFolder,
-						addedIds: [],
-						nextPage: 1,
-						userFilterObject: activeSortFilter
-					}),
-					selectedAll: '1',
-				};
-
-				if(term){
-					// @ts-ignore
-					filters.term = term;
+		return new Promise<any>(async (resolve)=>{
+			try {
+				let assetIds
+				let filters = {}
+				if (operationAsset) {
+					assetIds = operationAsset.asset.id
 				}
-				// @ts-ignore
-				delete filters.page
-			}
+				else if (operationFolder) {
+					assetIds = operationFolder.assets.map(asset => asset.id).join(',')
+				}
+				else {
+					assetIds = selectedAssets.map(assetItem => assetItem.asset.id).join(',')
+				}
 
-			await assetApi.generateAndSendShareUrl({
-				recipients,
-				message,
-				...sharedLinkData,
-				expiredPeriod: sharedLinkData.expiredPeriod?.value || "",
-				assetIds
-			},filters)
+				// Select all assets without pagination
+				if(selectedAllAssets){
+					filters = {
+						...getAssetsFilters({
+							replace: false,
+							activeFolder,
+							addedIds: [],
+							nextPage: 1,
+							userFilterObject: activeSortFilter
+						}),
+						selectedAll: '1',
+					};
 
-			if(showStatusToast){
-				toastUtils.success('Assets shared succesfully')
-			}
+					if(term){
+						// @ts-ignore
+						filters.term = term;
+					}
+					// @ts-ignore
+					delete filters.page
+				}
 
-			if(closeAfterDone){
-				closeModalAndClearOpAsset()
-			}
+				const result =  await assetApi.generateAndSendShareUrl({
+					recipients,
+					message,
+					...sharedLinkData,
+					expiredPeriod: sharedLinkData.expiredPeriod?.value || "",
+					assetIds
+				},filters)
 
-			return;
-		} catch (err) {
-			console.log(err)
-			if(showStatusToast){
-				toastUtils.error('Could not share assets, please try again later.')
+				if(showStatusToast){
+					toastUtils.success('Assets shared succesfully')
+				}
+
+				if(closeAfterDone){
+					closeModalAndClearOpAsset()
+				}
+
+				resolve(result);
+			} catch (err) {
+				console.log(err)
+				if(showStatusToast){
+					toastUtils.error('Could not share assets, please try again later.')
+				}
+				resolve({})
 			}
-			return;
-		}
+		})
 	}
 
 

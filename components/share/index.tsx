@@ -146,7 +146,11 @@ const AssetShare = () => {
 					setLoading(false)
 					setLogo(data.data.team.workspaceIcon)
 					setShareUserName(data.data.user.name)
-					toastUtils.error(data.errorMessage)
+
+					if(data.errorMessage !== "Email is required"){
+						toastUtils.error(data.errorMessage)
+					}
+
 				}else{
 					setError(false)
 					setLoading(false)
