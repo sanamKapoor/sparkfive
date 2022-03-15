@@ -136,6 +136,9 @@ const AssetAddition = ({
 					attachedQuery['folderId'] = folderId
 				}
 
+				// attachedQuery['versionGroup'] = 'f7b82330-fd1a-478e-8e54-73d7d9c9ad3f'
+
+
 				// Uploading the new folder where it's folderId has been created earlier in previous API call
 				if(currentUploadingFolderId){
 					attachedQuery['folderId'] = currentUploadingFolderId

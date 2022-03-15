@@ -1,0 +1,13 @@
+.container {
+  min-width: 25rem;
+  width: 20%;
+  padding: 1.5rem 1rem;
+}
+
+.container li {
+  line-height: 2rem;
+  border-bottom: 1px solid #f4f4f4;
+  display: grid;
+  grid-template-columns: 50% 30% 20%;
+}
+

@@ -10,6 +10,8 @@ export default {
     }
   }),
   getAssets: (queryData = {}) => axios.get(`${assetUrl}?${querystring.encode(queryData)}`),
+  getVersions: (versionGroup) => axios.get(`${assetUrl}/versions-of/${versionGroup}`),
+  revertVersion: ({ revertAssetId, versionGroup } = {}) => axios.post(`${assetUrl}/revert-version`, { revertAssetId, versionGroup }),
   copyAssets: ({ idList, folderId }, filters = {}) => axios.post(`${assetUrl}/copy?${querystring.encode(filters)}`, { idList, folderId }),
   getRealUrl: (assetId) => axios.get(`${assetUrl}/${assetId}/real-url`),
   importAssets: (provider, assetData, queryData) => axios.post(`${assetUrl}/import/${provider}?${querystring.encode(queryData)}`, assetData),

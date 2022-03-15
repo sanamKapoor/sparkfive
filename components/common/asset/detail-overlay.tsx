@@ -9,6 +9,8 @@ import { AssetContext } from '../../../context'
 import toastUtils from '../../../utils/toast'
 import update from 'immutability-helper'
 import downloadUtils from '../../../utils/download'
+import VersionList from './version-list'
+
 import {
   isMobile
 } from "react-device-detect"
@@ -432,6 +434,9 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
             {!isShare && activeSideComponent === 'comments' &&
             <ConversationList itemId={asset?.id} itemType='assets' />
             }
+            {!isShare && activeSideComponent === 'versions' &&
+            <VersionList versionGroup={asset?.versionGroup} />
+            }
           </section>
           }
           {!isShare &&
@@ -452,6 +457,10 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
                 src={Utilities.comment}
                 additionalClass={styles['menu-icon']}
                 onClick={() => { setMode('detail');resetValues();changeActiveSide('comments')}} />
+            <IconClickable
+                src={Utilities.listView}
+                additionalClass={styles['menu-icon']}
+                onClick={() => { setMode('detail');resetValues();changeActiveSide('versions')}} />
             <IconClickable
                 src={AssetOps.download}
                 additionalClass={styles['menu-icon']}
