@@ -31,6 +31,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  aspect-ratio: 1 / 1;
 }
 
 .image-wrapper .selectable-wrapper .select-icon {

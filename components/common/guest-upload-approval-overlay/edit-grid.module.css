@@ -17,6 +17,7 @@
 
 .grid-list li div img, .grid-list li {
   height: 9rem;
+  aspect-ratio: 1 / 1;
 }
 
 .container {
