@@ -108,6 +108,20 @@
   margin-bottom: 20px;
 }
 
+.add-version-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 26px;
+}
+
+.versions-number {
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 9px;
+  margin-left: 32px;
+  font-weight: 300;
+}
+
 .separator {
   margin-bottom: 20px;
   height: 1px;
