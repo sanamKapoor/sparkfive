@@ -24,3 +24,16 @@
     margin: 0 auto;
     display: block;
 }
+
+.logo-img {
+    height: 48px;
+    width: auto;
+    margin-right: 48px;
+    cursor: pointer;
+}
+
+.header {
+    background-color: var(--color-prim-navy);
+    padding: 30px 32px;
+    display: flex;
+}

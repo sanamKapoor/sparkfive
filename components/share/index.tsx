@@ -180,9 +180,15 @@ const AssetShare = () => {
 	}
 
 	return (
-		<section className={styles.container}>
-			{loading && <Spinner className={styles['spinner']}/>}
-			{!loading && error &&
+		<>
+			{!loading && !error && <header className={styles.header}>
+				<img
+					className={styles['logo-img']}
+					src={GeneralImg.logo} />
+			</header>}
+			<section className={styles.container}>
+				{loading && <Spinner className={styles['spinner']}/>}
+				{!loading && error &&
 				<div>
 					<img alt={"logo"} src={logo || GeneralImg.logoHorizontal} className={styles.logo} />
 					<AuthContainer
@@ -209,24 +215,26 @@ const AssetShare = () => {
 						</form>
 					</AuthContainer>
 				</div>
-			}
-			{!loading && !error && <>
-				<ShareOperationButtons selectAll={selectAll} selectedAsset={selectedAsset} downloadSelectedAssets={downloadSelectedAssets}/>
-				<div className={styles['list-wrapper']}>
-					<ul className={styles['grid-list']}>
-						{assets.map((assetItem) => {
-							return (
-								<li className={styles['grid-item']} key={assetItem.asset.id}>
-									<ShareItem {...assetItem} toggleSelected={()=>{toggleSelected(assetItem.asset.id)}} selectAll={selectAll}/>
-								</li>
-							)
-						})}
-					</ul>
-				</div>
-			</>}
+				}
+				{!loading && !error && <>
+					<ShareOperationButtons selectAll={selectAll} selectedAsset={selectedAsset} downloadSelectedAssets={downloadSelectedAssets}/>
+					<div className={styles['list-wrapper']}>
+						<ul className={styles['grid-list']}>
+							{assets.map((assetItem) => {
+								return (
+									<li className={styles['grid-item']} key={assetItem.asset.id}>
+										<ShareItem {...assetItem} toggleSelected={()=>{toggleSelected(assetItem.asset.id)}} selectAll={selectAll}/>
+									</li>
+								)
+							})}
+						</ul>
+					</div>
+				</>}
 
-			{showDownloadPopup && <AssetDownloadProcess downloadingStatus={downloadStatus} onClose={()=>{setShowDownloadPopup(false)}} downloadingPercent={downloadingPercent} selectedAsset={selectedAsset}/>}
-		</section >
+				{showDownloadPopup && <AssetDownloadProcess downloadingStatus={downloadStatus} onClose={()=>{setShowDownloadPopup(false)}} downloadingPercent={downloadingPercent} selectedAsset={selectedAsset}/>}
+			</section >
+
+		</>
 	)
 }
 
