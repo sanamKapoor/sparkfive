@@ -134,9 +134,13 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 		setUrl(data.sharedLink)
 		setShareJWT(data.shareJwt)
 		setHash(data.hash)
-		setExpiredPeriod(expireOptions.filter(
-			(item)=>item.value === parseInt(data.expiredPeriod))[0]
-		)
+		if(!data.expiredPeriod){
+			setExpiredPeriod(expireOptions[expireOptions.length-1])
+		}else{
+			setExpiredPeriod(expireOptions.filter(
+				(item)=>item.value === parseInt(data.expiredPeriod))[0]
+			)
+		}
 		setExpiredAt(new Date(data.expiredAt))
 		setExpired(data.expired)
 		setName(data.name)
@@ -167,13 +171,24 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 	}
 
 	// Save changes
-	const saveChanges = async (field = "") => {
+	const saveChanges = async (field = "", isPublicValue = undefined, expiredValue = undefined, expiredPeriodValue = undefined, expiredAtValue = undefined, sharableValue = undefined) => {
 		setIsLoading(true);
 
 		const { data } = await shareAssets(
 			recipients,
 			message,
-			{sharedLink: url, shareJWT, hash, name, isPublic, expired, expiredPeriod, expiredAt, sharable, shareId},
+			{
+				sharedLink: url,
+				shareJWT,
+				hash,
+				name,
+				isPublic: isPublicValue === undefined ? isPublic : isPublicValue,
+				expired: expiredValue === undefined ? expired : expiredValue,
+				expiredPeriod: expiredPeriodValue === undefined ? expiredPeriod : expiredPeriodValue,
+				expiredAt: expiredAtValue === undefined ? expiredAt : expiredAtValue,
+				sharable: sharableValue === undefined ? sharable : sharableValue,
+				shareId
+			},
 			false,
 			false
 		)
@@ -194,10 +209,30 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 			// Switch from off
 			if(currentValue === false){
 				// Set 60 days expired as default
+				saveChanges("", undefined,nextValue, expireOptions[1], getDayToCurrentDate(expireOptions[1].value))
 				setExpiredPeriod(expireOptions[1])
 				setExpiredAt(getDayToCurrentDate(expireOptions[1].value))
+			}else{
+				saveChanges("", undefined,nextValue)
 			}
 		}
+	}
+
+	const changeIsPublic = (value) => {
+		setIsPublic(value)
+
+		saveChanges("", value)
+	}
+
+	const changeSharable = (value) => {
+		setSharable(value)
+
+		saveChanges("", undefined, undefined, undefined, undefined, value)
+	}
+
+	const changeExpiredAt  = (value) => {
+		setExpiredAt(value)
+		saveChanges("", undefined, undefined, undefined, value)
 	}
 
 	useEffect(()=>{
@@ -216,12 +251,12 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 	},[modalIsOpen])
 
 	// Listen radio button change to call api saving automatically
-	useEffect(()=>{
-		if(url && firstInit && !loading){
-			saveChanges();
-		}
-
-	},[isPublic, expiredPeriod, expiredAt, sharable])
+	// useEffect(()=>{
+	// 	if(url && firstInit && !loading){
+	// 		saveChanges();
+	// 	}
+	//
+	// },[ expiredPeriod, expiredAt, sharable])
 
 	return (
 		<Base
@@ -294,7 +329,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 								<IconClickable
 									src={isPublic ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
 									additionalClass={styles['select-icon']}
-									onClick={()=>{setIsPublic(true)}} />
+									onClick={()=>{changeIsPublic(true)}} />
 								<div className={'font-12 m-l-15'}>Anyone with link</div>
 							</div>
 
@@ -302,7 +337,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 								<IconClickable
 									src={!isPublic ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
 									additionalClass={styles['select-icon']}
-									onClick={()=>{setIsPublic(false)}} />
+									onClick={()=>{changeIsPublic(false)}} />
 								<div className={'font-12 m-l-15'}>Restrict access by email address</div>
 							</div>
 						</div>
@@ -379,7 +414,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 									classNames={{
 										container: dateStyles.input
 									}}
-									onDayChange={(day) => {setExpiredAt(day)}}
+									onDayChange={(day) => {changeExpiredAt(day)}}
 									placeholder={'mm/dd/yyyy'}
 									dayPickerProps={{
 										className: dateStyles.calendar
@@ -401,7 +436,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 								<IconClickable
 									src={sharable ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
 									additionalClass={styles['select-icon']}
-									onClick={()=>{setSharable(true)}} />
+									onClick={()=>{changeSharable(true)}} />
 								<div className={'font-12 m-l-15'}>On</div>
 							</div>
 
@@ -409,7 +444,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 								<IconClickable
 									src={!sharable ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
 									additionalClass={styles['select-icon']}
-									onClick={()=>{setSharable(false)}} />
+									onClick={()=>{changeSharable(false)}} />
 								<div className={'font-12 m-l-15'}>Off</div>
 							</div>
 						</div>
