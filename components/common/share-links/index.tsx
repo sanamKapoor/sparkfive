@@ -106,6 +106,10 @@ export default function ShareLinks(){
 
         let { data } = results[2]
 
+        if(data.next !== -1) {
+            setPage(data.next-1)
+        }
+
         setNextPage(data.next)
 
         setShareByList(results[0].data.map((item)=>{return {label: item, value: item}}))
@@ -158,12 +162,14 @@ export default function ShareLinks(){
     const loadMore = () => {
         // still have page to load
         if(nextPage !== -1){
+            console.log(`load more`)
             setPage(page + 1)
             getLinks({
                 sharedBy: sharedBy ? sharedBy.map((item)=>item.value).join(",") : "",
                 sharedWith: sharedWith ? sharedWith.map((item)=>item.value).join(","): "",
                 status: status ? status?.value : "",
-                page: page + 1
+                page: page + 1,
+                ...sortData
             }, false)
         }
     }
@@ -195,6 +201,7 @@ export default function ShareLinks(){
     // },[])
 
     useEffect(()=>{
+        console.log(`Load due to filter`)
         setPage(0)
         setNextPage(-1)
         getLinks({
