@@ -43,6 +43,7 @@ export default function ShareLinks(){
         sortField: "createdAt",
         sortType: "desc"
     })
+    const [colorGroups, setColorGroups] = useState<any>({})
 
     const getFilterObject = (page) => {
         let filters: any = {page}
@@ -66,9 +67,8 @@ export default function ShareLinks(){
         return arr[index]
     }
 
-    const formatDataColor = (data) => {
-        let groups = {}
-
+    const formatDataColor = (data, groupData) => {
+        const groups = groupData;
         const assignColor = () => {
             let availableColors = []
             // Check if color is already in use
@@ -94,6 +94,8 @@ export default function ShareLinks(){
             }
         })
 
+        setColorGroups(groups)
+
         return data
     }
 
@@ -116,10 +118,11 @@ export default function ShareLinks(){
         setShareWithList(results[1].data.map((item)=>{return {label: item, value: item}}))
 
         if(refresh){
-            let dataWithColor = formatDataColor(data.results)
+            setColorGroups({})
+            let dataWithColor = formatDataColor(data.results, {})
             setLinks(dataWithColor)
         }else{
-            let dataWithColor = formatDataColor(links.concat(data.results))
+            let dataWithColor = formatDataColor(links.concat(data.results), colorGroups)
             setLinks(dataWithColor)
         }
 
