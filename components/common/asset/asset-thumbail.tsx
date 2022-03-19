@@ -55,7 +55,6 @@ const AssetThumbail = ({
   }
 
   const onCloseOverlay = (changedVersion) => {
-    debugger
     if (changedVersion) {
       handleVersionChange(changedVersion)
     }

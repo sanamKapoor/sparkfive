@@ -370,7 +370,7 @@ const DetailOverlay = ({ asset, realUrl, thumbnailUrl, closeOverlay,
     downloadUtils.downloadFile(versionRealUrl, asset.name)
   }
 
-  const updateList = (versionAssets, curAsset) => {
+  const setDisplayVersions = (versionAssets) => {
     const versionCount = versionAssets.length
     versionAssets = versionAssets.map((asset, indx) => {
       // For architectural reason versions are stored in database in 
@@ -379,6 +379,11 @@ const DetailOverlay = ({ asset, realUrl, thumbnailUrl, closeOverlay,
       asset.displayVersion = versionCount - indx + 1
       return asset
     })
+    return versionAssets
+  }
+
+  const updateList = (versionAssets, curAsset) => {
+    versionAssets = setDisplayVersions(versionAssets)
     setCurrentAsset(curAsset)
     setVersions(versionAssets)
     setVersionCount(versionAssets.length)
@@ -409,6 +414,7 @@ const DetailOverlay = ({ asset, realUrl, thumbnailUrl, closeOverlay,
     await assetApi.deleteAsset(version.id)
     let clonedVersions = [...versions]
     clonedVersions = clonedVersions.filter(asset => asset.id !== version.id)
+    clonedVersions = setDisplayVersions(clonedVersions)
     setVersions(clonedVersions)
     toastUtils.success('Version deleted successfully.')
   }

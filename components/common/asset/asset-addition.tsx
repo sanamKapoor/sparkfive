@@ -52,6 +52,7 @@ const AssetAddition = ({
 		folders,
 		setFolders,
 		showUploadProcess,
+		setUploadingType,
 		setUploadingAssets,
 		setUploadingFileName,
 		setFolderGroups,
@@ -78,7 +79,7 @@ const AssetAddition = ({
 				const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', index, error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE} : asset);
 
 				// Update uploading assets
-				setUploadingAssets(updatedAssets)
+				setUploadUpdate(versionGroup, updatedAssets)
 
 				// Remove current asset from asset placeholder
 				let newAssetPlaceholder = updatedAssets.filter(asset => asset.status !== 'fail')
@@ -179,7 +180,8 @@ const AssetAddition = ({
 				// Mark this asset as done
 				const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'done'} : asset);
 
-				setUploadingAssets(updatedAssets)
+				// Update uploading assets
+				setUploadUpdate(versionGroup, updatedAssets)
 
 				// The final one
 				if(i === assets.length - 1){
@@ -193,7 +195,7 @@ const AssetAddition = ({
 			const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, index, status: 'fail', error: 'Processing file error'} : asset);
 
 			// Update uploading assets
-			setUploadingAssets(updatedAssets)
+			setUploadUpdate(versionGroup, updatedAssets)
 
 			// Remove current asset from asset placeholder
 			let newAssetPlaceholder = updatedAssets.filter(asset => asset.status !== 'fail')
@@ -210,6 +212,11 @@ const AssetAddition = ({
 				await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, subFolderAutoTag)
 			}
 		}
+	}
+
+	const setUploadUpdate = (versionGroup, updatedAssets) => {
+		setUploadingType(versionGroup ? 'version' : 'assets')
+		setUploadingAssets(updatedAssets)
 	}
 
 	const updateAssetList = (newAssetPlaceholder, currentDataClone) => {
@@ -304,10 +311,6 @@ const AssetAddition = ({
 
 			if (needsFolderFetch) {
 				setNeedsFetch('folders')
-			}
-
-			if (versionGroup) {
-				setNeedsFetch('versions')
 			}
 
 			// Do not need toast here because we have already process toast
