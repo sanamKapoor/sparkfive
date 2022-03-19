@@ -4,39 +4,44 @@ import IconClickable from '../buttons/icon-clickable'
 import Dropdown from '../inputs/dropdown'
 import ToggleableAbsoluteWrapper from '../misc/toggleable-absolute-wrapper'
 import { Utilities } from '../../../assets'
+import assetApi from '../../../server-api/asset'
 import ConfirmModal from '../modals/confirm-modal'
 import { useState } from 'react'
+import { format } from 'date-fns'
+import fileSize from 'filesize'
+
 
 const VersionListItem = ({
     current,
-    version,
+    asset,
     currentAction,
     downloadAction,
     deleteAction
 }) => {
 
     const [ currentModaOpen, setCurrentModalOpen ] = useState(false)
+    const [ deleteModaOpen, setDeleteModalOpen ] = useState(false)
 
-    const { name, src, author, date, size, versionNumber } = version
+    const { name, realUrl, user, createdAt, size, displayVersion } = asset
 
     const options = [
         { label: 'Make Current', onClick: () => setCurrentModalOpen(true) },
         { label: 'Download', onClick: downloadAction },
-        { label: 'Delete', onClick: deleteAction }
+        { label: 'Delete', onClick: () => setDeleteModalOpen(true) }
     ]
 
     return (
         <li className={styles.item}>
-            <h6>{current ? 'Current Version' : versionNumber}</h6>
+            <h6>{current ? 'Current Version' : ('V' + (displayVersion-1))}</h6>
             <div className={styles['item-wrapper']}>
                 <div className={styles.thumbnail}>
-                    <img src={src || Assets.unknown} alt={name} />
+                    <img src={realUrl || Assets.unknown} alt={name} />
                 </div>
                 <div className={styles['info-wrapper']}>
                     <div>
                         <div className={styles.name}>{name}</div>
-                        <div className={styles.author}>by: {author}</div>
-                        <div className={styles.info}>{date}<span></span>{size}</div>
+                        <div className={styles.author}>by: {user?.name}</div>
+                        <div className={styles.info}>{createdAt && format(new Date(createdAt), 'MM/dd/yyyy')}<span></span>{fileSize((size || 0).toString())}</div>
                     </div>
                     {!current &&
 
@@ -69,6 +74,18 @@ const VersionListItem = ({
                                     </span>
                                 }
                                 modalIsOpen={currentModaOpen}
+                            />
+
+                            <ConfirmModal
+                                closeModal={() => setDeleteModalOpen(false)}
+                                confirmAction={deleteAction}
+                                confirmText={'Yes'}
+                                message={
+                                    <span>
+                                        Are you sure you want to Delete?
+                                    </span>
+                                }
+                                modalIsOpen={deleteModaOpen}
                             />
                         </>
 

@@ -130,6 +130,24 @@ const AssetGrid = ({
   const showLoadMore = ((mode === 'assets' && assets.length > 0) || (mode === 'folders' && folders.length > 0))
   const loadingAssetsFolders = ((assets.length > 0 && assets[assets.length - 1].isLoading) || (folders.length > 0 && folders[folders.length - 1].isLoading))
 
+  const refreshVersion = (currentVersion) => {
+    if (currentVersion) {
+      const clonedAssets = [...assets].filter(asset => !asset.isUploading)
+      const versionIndex = clonedAssets.findIndex(item => item.asset.versionGroup === currentVersion.versionGroup)
+      const oldAsset = clonedAssets[versionIndex]
+      const newVersionAsset = {
+        asset: currentVersion,
+        realUrl: currentVersion.realUrl,
+        thumbnailUrl: currentVersion.thumbnailUrl,
+        toggleSelected: {...oldAsset.toggleSelected}
+      }
+      clonedAssets[versionIndex] = newVersionAsset
+      setAssets(clonedAssets)
+    }
+    
+    // setAssetDetail({...newVersionAsset})
+  }
+
   return (
     <section className={`${styles.container} ${openFilter && styles.filter}`}>
       {(shouldShowUpload || isDragging) && !isShare &&
@@ -170,6 +188,7 @@ const AssetGrid = ({
                       openShareAsset={() => beginAssetOperation({ asset: assetItem }, 'share')}
                       downloadAsset={() => downloadAsset(assetItem)}
                       openRemoveAsset={() => beginAssetOperation({ asset: assetItem }, 'remove_item')}
+                      handleVersionChange={refreshVersion}
                     />
                   </li>
                 )

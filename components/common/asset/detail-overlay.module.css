@@ -114,6 +114,19 @@
   margin-right: 26px;
 }
 
+.add-version-override button{
+  background: transparent;
+  border: 1px solid var(--color-prim-turquoise);
+  height: 17px;
+  width: 17px;
+  color: var(--color-prim-turquoise);
+  font-size: 15px;
+}
+
+.add-version-override button:hover{
+  background-color: transparent;
+}
+
 .versions-number {
   text-decoration: underline;
   cursor: pointer;

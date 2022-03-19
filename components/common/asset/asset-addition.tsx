@@ -33,6 +33,8 @@ const AssetAddition = ({
 	type = '',
 	itemId = '',
 	displayMode = 'dropdown',
+	versionGroup='',
+	triggerUploadComplete
 }) => {
 
 	const fileBrowserRef = useRef(undefined)
@@ -59,7 +61,6 @@ const AssetAddition = ({
 		setFolderImport,
 	} = useContext(AssetContext)
 
-
 	// Upload asset
 	const uploadAsset  = async (i: number, assets: any, currentDataClone: any, totalSize: number, folderId, folderGroup = {}, subFolderAutoTag = true) => {
 		try{
@@ -84,7 +85,8 @@ const AssetAddition = ({
 
 
 				// At this point, file place holder will be removed
-				setAssets([...newAssetPlaceholder, ...currentDataClone])
+				updateAssetList(newAssetPlaceholder, currentDataClone)
+
 
 				// The final one
 				if(i === assets.length - 1){
@@ -136,7 +138,9 @@ const AssetAddition = ({
 					attachedQuery['folderId'] = folderId
 				}
 
-				// attachedQuery['versionGroup'] = 'f7b82330-fd1a-478e-8e54-73d7d9c9ad3f'
+				if (versionGroup) {
+					attachedQuery['versionGroup'] = versionGroup
+				}
 
 
 				// Uploading the new folder where it's folderId has been created earlier in previous API call
@@ -165,7 +169,8 @@ const AssetAddition = ({
 				assets[i] = data[0]
 
 				// At this point, file place holder will be removed
-				setAssets([...assets, ...currentDataClone])
+				updateAssetList(assets, currentDataClone)
+
 				setAddedIds(data.map(assetItem => assetItem.asset.id))
 
 				// Update total assets
@@ -179,7 +184,7 @@ const AssetAddition = ({
 				// The final one
 				if(i === assets.length - 1){
 					return
-				}else{ // Keep going
+				} else { // Keep going
 					await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, subFolderAutoTag)
 				}
 			}
@@ -195,14 +200,23 @@ const AssetAddition = ({
 
 
 			// At this point, file place holder will be removed
-			setAssets([...newAssetPlaceholder, ...currentDataClone])
+			updateAssetList(newAssetPlaceholder, currentDataClone)
+
 
 			// The final one
-			if(i === assets.length - 1){
+			if (i === assets.length - 1) {
 				return folderGroup
-			}else{ // Keep going
+			} else { // Keep going
 				await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, subFolderAutoTag)
 			}
+		}
+	}
+
+	const updateAssetList = (newAssetPlaceholder, currentDataClone) => {
+		if (versionGroup) {
+			triggerUploadComplete('upload', newAssetPlaceholder[0].asset)
+		} else {
+			setAssets([...newAssetPlaceholder, ...currentDataClone])
 		}
 	}
 
@@ -290,6 +304,10 @@ const AssetAddition = ({
 
 			if (needsFolderFetch) {
 				setNeedsFetch('folders')
+			}
+
+			if (versionGroup) {
+				setNeedsFetch('versions')
 			}
 
 			// Do not need toast here because we have already process toast

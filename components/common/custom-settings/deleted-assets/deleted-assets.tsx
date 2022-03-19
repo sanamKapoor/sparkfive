@@ -195,7 +195,7 @@ const DeletedAssets = ({
               initialParams={{ side: 'comments' }}
               openShareAsset={() => beginAssetOperation({ asset: initAsset }, 'share')}
               openDeleteAsset={() => openDeleteAsset(initAsset.asset.id)}
-              closeOverlay={() => setInitAsset(undefined)} thumbailUrl={undefined} />
+              closeOverlay={() => setInitAsset(undefined)} thumbnailUrl={undefined} />
       }
     </section >
   )
