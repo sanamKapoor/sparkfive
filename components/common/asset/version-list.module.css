@@ -28,10 +28,14 @@
 .thumbnail {
   width: 45px;
   height: 45px;
+  overflow: hidden;
 }
 
 .thumbnail img {
   width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
 }
 
 .item-wrapper {
