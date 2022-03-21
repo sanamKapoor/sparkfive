@@ -5,7 +5,7 @@ import { useState, useEffect, useContext } from 'react'
 import assetApi from '../../../server-api/asset'
 import shareApi from '../../../server-api/share-collection'
 import customFileSizeApi from '../../../server-api/size'
-import { AssetContext } from '../../../context'
+import { AssetContext, UserContext } from '../../../context'
 import toastUtils from '../../../utils/toast'
 import update from 'immutability-helper'
 import downloadUtils from '../../../utils/download'
@@ -26,8 +26,10 @@ import CropSidePanel from './crop-side-panel'
 import AssetCropImg from './asset-crop-img'
 import fileDownload from "js-file-download";
 import AssetIcon from './asset-icon'
+import CdnPanel from './cdn-panel'
 
 import { isImageType } from '../../../utils/file'
+
 
 const getDefaultDownloadImageType = (extension) => {
   const defaultDownloadImageTypes = [
@@ -77,6 +79,12 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
   const {
     updateDownloadingStatus
   } = useContext(AssetContext)
+  const {
+    user,
+    cdnAccess
+  } = useContext(UserContext)
+
+  console.log('userCtx', {user, cdnAccess})
 
   const [assetDetail, setAssetDetail] = useState(undefined)
 
@@ -343,10 +351,32 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
     }
 
     const manualDownloadAsset = (asset) => {
-      // downloadUtils.zipAndDownload([{ url: realUrl, name: asset.name }], 'assets.zip')
+      // downloadUtils.zipAndDownload([{ url: realUrl, name: asset. name }], 'assets.zip')
       downloadUtils.downloadFile(realUrl, asset.name)
     }
 
+    const shouldRenderCdnTabButton = () => {    
+      const checkValid = (stringsToCheck: string[], paramToCheck: string) => {
+        let result = false;
+
+        if (!paramToCheck) return false
+      
+        stringsToCheck.forEach(str => {
+          const isValid = str.toLowerCase() === paramToCheck.toLowerCase()
+      
+          if (!result) result = isValid
+        })
+      
+        return result
+      }
+
+      const isTypeValid = checkValid(['image', 'video'], assetDetail?.type)
+      const isExtensionValid = checkValid(['png', 'jpg', 'gif', 'tif', 'tiff', 'webp', 'svg', 'mp4', 'mov', 'avi'], assetDetail?.extension)
+      const isUserValid = (user.roleId === 'admin' || user.roleId === 'super_admin') && cdnAccess
+
+      return isTypeValid && isExtensionValid && isUserValid
+    }
+    
     return (
         <div className={`app-overlay ${styles.container}`}>
           {assetDetail &&
@@ -432,6 +462,7 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
             {!isShare && activeSideComponent === 'comments' &&
             <ConversationList itemId={asset?.id} itemType='assets' />
             }
+            {activeSideComponent === 'cdn' && <CdnPanel assetDetail={assetDetail} />}
           </section>
           }
           {!isShare &&
@@ -452,6 +483,14 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
                 src={Utilities.comment}
                 additionalClass={styles['menu-icon']}
                 onClick={() => { setMode('detail');resetValues();changeActiveSide('comments')}} />
+            {
+              shouldRenderCdnTabButton() && 
+              <IconClickable
+                src={Utilities.embedCdn}
+                additionalClass={styles['menu-icon']}
+                onClick={() => { setMode('detail');resetValues();changeActiveSide('cdn')}} 
+              />
+            }
             <IconClickable
                 src={AssetOps.download}
                 additionalClass={styles['menu-icon']}

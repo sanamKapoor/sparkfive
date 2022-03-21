@@ -58,7 +58,10 @@ export const Utilities = {
   listView: require('./Icons/Utilities/View List/icn-utilities-listview.svg'),
   info: require('./Icons/Utilities/Information/icn-utilities-information.svg'),
   filter: require('./Icons/External/filter.svg'),
-  calendar:  require('./Icons/Navigation/icn-nav-schedule-alt.svg')
+  calendar:  require('./Icons/Navigation/icn-nav-schedule-alt.svg'),
+  embedCdn: require('./Icons/Utilities/EmbedCDN/embed-cdn.svg'),
+  lockClosed: require('./Icons/Utilities/Lock/lock-closed.svg'),
+  lockOpened: require('./Icons/Utilities/Lock/lock-opened.svg')
 }
 
 export const ProjectTypes = {

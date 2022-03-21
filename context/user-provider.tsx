@@ -17,6 +17,7 @@ export default ({ children }) => {
   const [initialLoadFinished, setInitialLoadFinished] = useState(false)
   const [waitToVerifyDomain, setWaitToVerifyDomain] = useState(false)
   const [vanityCompanyInfo, setVanityCompanyInfo] = useState()
+  const [cdnAccess, setCdnAccess] = useState(false)
 
   const { setIsLoading } = useContext(LoadingContext)
 
@@ -45,6 +46,9 @@ export default ({ children }) => {
         const query = url.getQueryStringFromObject(Router.query)
 
         const { data } = await userApi.getUserData()
+        const teamResponse = await teamApi.getTeam()
+        setCdnAccess(teamResponse.data.cdnAccess)
+
         // Custom role will use custom permission here
         if (data.role.type === 'custom') {
           data.permissions = data.role.permissions
@@ -149,7 +153,8 @@ export default ({ children }) => {
     hasPermission,
     initialLoadFinished,
     afterAuth,
-    vanityCompanyInfo
+    vanityCompanyInfo,
+    cdnAccess
   }
 
   return (
