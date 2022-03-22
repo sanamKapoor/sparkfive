@@ -81,25 +81,16 @@ const getDefaultDownloadImageType = (extension) => {
   }
 }
 
-<<<<<<< HEAD
 const DetailOverlay = ({ asset, realUrl, thumbnailUrl, closeOverlay,
   openShareAsset = () => { },
   openDeleteAsset = () => { },
   isShare = false, sharePath = '', initialParams }) => {
 
   const { hasPermission } = useContext(UserContext)
-=======
-const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAsset = () => { }, openDeleteAsset = () => { }, isShare = false, sharePath = '', initialParams }) => {
-  const {
-    updateDownloadingStatus
-  } = useContext(AssetContext)
   const {
     user,
     cdnAccess
   } = useContext(UserContext)
-
-  console.log('userCtx', {user, cdnAccess})
->>>>>>> development
 
   const [assetDetail, setAssetDetail] = useState(undefined)
 
@@ -423,7 +414,28 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
     toastUtils.success('Version successfully reverted to current')
   }
 
-<<<<<<< HEAD
+  const shouldRenderCdnTabButton = () => {
+    const checkValid = (stringsToCheck: string[], paramToCheck: string) => {
+      let result = false;
+
+      if (!paramToCheck) return false
+
+      stringsToCheck.forEach(str => {
+        const isValid = str.toLowerCase() === paramToCheck.toLowerCase()
+
+        if (!result) result = isValid
+      })
+
+      return result
+    }
+
+    const isTypeValid = checkValid(['image', 'video'], assetDetail?.type)
+    const isExtensionValid = checkValid(['png', 'jpg', 'gif', 'tif', 'tiff', 'webp', 'svg', 'mp4', 'mov', 'avi'], assetDetail?.extension)
+    const isUserValid = (user.roleId === 'admin' || user.roleId === 'super_admin') && cdnAccess
+
+    return isTypeValid && isExtensionValid && isUserValid
+  }
+
   const deleteVersion = async (version) => {
     await assetApi.deleteAsset(version.id)
     let clonedVersions = [...versions]
@@ -456,7 +468,6 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
     }
   }
 
-
   return (
     <div className={`app-overlay ${styles.container}`}>
       {assetDetail &&
@@ -487,56 +498,7 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
                   <AssetAddition folderAdd={false} versionGroup={assetDetail.versionGroup} triggerUploadComplete={onUserEvent} />
                 </div>
               }
-
-
-
               {!isShare &&
-=======
-    const manualDownloadAsset = (asset) => {
-      // downloadUtils.zipAndDownload([{ url: realUrl, name: asset. name }], 'assets.zip')
-      downloadUtils.downloadFile(realUrl, asset.name)
-    }
-
-    const shouldRenderCdnTabButton = () => {
-      const checkValid = (stringsToCheck: string[], paramToCheck: string) => {
-        let result = false;
-
-        if (!paramToCheck) return false
-
-        stringsToCheck.forEach(str => {
-          const isValid = str.toLowerCase() === paramToCheck.toLowerCase()
-
-          if (!result) result = isValid
-        })
-
-        return result
-      }
-
-      const isTypeValid = checkValid(['image', 'video'], assetDetail?.type)
-      const isExtensionValid = checkValid(['png', 'jpg', 'gif', 'tif', 'tiff', 'webp', 'svg', 'mp4', 'mov', 'avi'], assetDetail?.extension)
-      const isUserValid = (user.roleId === 'admin' || user.roleId === 'super_admin') && cdnAccess
-
-      return isTypeValid && isExtensionValid && isUserValid
-    }
-
-    return (
-        <div className={`app-overlay ${styles.container}`}>
-          {assetDetail &&
-          <section id={"detail-overlay"} className={styles.content}>
-            <div className={styles['top-wrapper']}>
-              <div className={styles.back} onClick={closeOverlay}>
-                <IconClickable src={Utilities.back} />
-                <span>Back</span>
-              </div>
-              <div className={styles.name}>
-                <h3>
-                  {assetDetail.name}
-                </h3>
-                {!isShare && <IconClickable src={Utilities.edit} onClick={() => setRenameModalOpen(true)} />}
-              </div>
-              <div className={styles['asset-actions']}>
-                {!isShare &&
->>>>>>> development
                 <Button text={'Share'} type={'button'} styleType={'primary'} onClick={openShareAsset} />
               }
               {mode === 'detail' && <Button text={'Download'}
@@ -604,6 +566,9 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
           }
           {!isShare && activeSideComponent === 'comments' &&
             <ConversationList itemId={asset?.id} itemType='assets' />
+          }
+          {!isShare && activeSideComponent === 'versions' &&
+            <VersionList versions={versions} currentAsset={currentAsset} triggerUserEvent={onUserEvent}/>
           }
           {activeSideComponent === 'cdn' && <CdnPanel assetDetail={assetDetail} />}
         </section>
