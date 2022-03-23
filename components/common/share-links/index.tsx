@@ -399,7 +399,7 @@ export default function ShareLinks(){
                     <span className={"m-l-5 font-weight-600 font-12"}>{link.sharedCount}</span>
                 </div>
                 <div className={"col-10 d-flex align-items-center col-sm-100"}>
-                    <span className={"font-12"}>{link.expiredAt ? moment(link.expiredAt).format('MM/DD/YY') : "None"}</span>
+                    <span className={"font-12"}>{(link.expiredAt && link.expired) ? moment(link.expiredAt).format('MM/DD/YY') : "None"}</span>
                 </div>
                 <div className={"col-10 d-flex align-items-center col-sm-100"}>
                     <IconClickable
