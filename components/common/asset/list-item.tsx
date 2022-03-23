@@ -26,7 +26,7 @@ const ListItem = ({
   type,
   assetItem: {
     asset,
-    thumbailUrl,
+    thumbnailUrl,
     realUrl,
     isUploading,
     isSelected = false,
@@ -119,12 +119,12 @@ const ListItem = ({
               }
             </div>
             <div className={`${styles.thumbnail} ${isLoading && 'loadable'}`}>
-              {thumbailUrl ? (
-                <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} />
+              {thumbnailUrl ? (
+                <AssetImg assetImg={thumbnailUrl} type={asset.type} name={asset.name} />
               ) : (
                 <AssetIcon extension={asset.extension} onList={true} />
               )}
-              {/* {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} />}
+              {/* {asset.type === 'image' && <AssetImg assetImg={thumbnailUrl} type={asset.type} name={asset.name} />}
               {asset.type === 'video' &&
                 <video preload='metadata'>
                   <source src={realUrl}
@@ -180,8 +180,8 @@ const ListItem = ({
           sharePath={sharePath}
           isShare={isShare}
           asset={asset}
-          realUrl={(asset.extension === 'tiff' || asset.extension === 'tif') ? thumbailUrl : realUrl}
-          thumbailUrl={thumbailUrl}
+          realUrl={(asset.extension === 'tiff' || asset.extension === 'tif') ? thumbnailUrl : realUrl}
+          thumbnailUrl={thumbnailUrl}
           initialParams={overlayProperties}
           openShareAsset={openShareAsset}
           openDeleteAsset={openDeleteAsset}

@@ -16,7 +16,7 @@ import AssetIcon from '../common/asset/asset-icon'
 
 const ShareItem = ({
 	asset,
-	thumbailUrl,
+	thumbnailUrl,
 	realUrl,
 	isSelected = false,
 	toggleSelected = () => { },
@@ -36,12 +36,12 @@ const ShareItem = ({
 		<>
 			<div className={styles.container}>
 				<div className={styles['image-wrapper']}>
-					{thumbailUrl ? (
-						<AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} opaque={false} />
+					{thumbnailUrl ? (
+						<AssetImg assetImg={thumbnailUrl} type={asset.type} name={asset.name} opaque={false} />
 					) : (
 						<AssetIcon extension={asset.extension} />
 					)}
-					{/* {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} opaque={false} />}
+					{/* {asset.type === 'image' && <AssetImg assetImg={thumbnailUrl} type={asset.type} name={asset.name} opaque={false} />}
 					{asset.type === 'video' && <AssetVideo asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} />}
 					{asset.type === 'application' && <AssetApplication extension={asset.extension} />}
 					{asset.type === 'text' && <AssetText extension={asset.extension} />} */}
@@ -69,7 +69,7 @@ const ShareItem = ({
 					initiaParams={{ side: 'detail' }}
 					asset={asset}
 					realUrl={realUrl}
-					thumbailUrl={thumbailUrl}
+					thumbnailUrl={thumbnailUrl}
 					isShare={true}
 					closeOverlay={() => setVisibleOVerlay(false)} />
 			}

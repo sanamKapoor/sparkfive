@@ -39,7 +39,7 @@ const FolderGridItem = ({
 	const previews = [1, 2, 3, 4]
 		.map((_, index) => ({
 			name: assets[index]?.name || 'empty',
-			assetImg: assets[index]?.thumbailUrl || '',
+			assetImg: assets[index]?.thumbnailUrl || '',
 			type: assets[index]?.type || 'empty',
 			extension: assets[index]?.extension,
 		}))

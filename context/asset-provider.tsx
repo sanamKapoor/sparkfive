@@ -52,6 +52,7 @@ export default ({ children }) => {
 
     // Upload process
     const [uploadingAssets, setUploadingAssets] = useState([])
+    const [uploadingType, setUploadingType] = useState()
     const [uploadingStatus, setUploadingStatus] = useState("none") // Allowed value: "none", "uploading", "done"
     const [uploadingPercent, setUploadingPercent] = useState(0) // Percent of uploading process: 0 - 100
     const [uploadingFile, setUploadingFile] = useState<number>() // Current uploading file index
@@ -402,6 +403,8 @@ export default ({ children }) => {
         uploadingPercent,
         uploadingAssets,
         setUploadingAssets: setUploadingAssetItems,
+        uploadingType,
+        setUploadingType,
         uploadDetailOverlay,
         setUploadDetailOverlay: openUploadDetailOverlay,
         reUploadAsset,

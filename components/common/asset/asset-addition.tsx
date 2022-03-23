@@ -33,6 +33,8 @@ const AssetAddition = ({
 	type = '',
 	itemId = '',
 	displayMode = 'dropdown',
+	versionGroup='',
+	triggerUploadComplete
 }) => {
 
 	const fileBrowserRef = useRef(undefined)
@@ -50,6 +52,7 @@ const AssetAddition = ({
 		folders,
 		setFolders,
 		showUploadProcess,
+		setUploadingType,
 		setUploadingAssets,
 		setUploadingFileName,
 		setFolderGroups,
@@ -58,7 +61,6 @@ const AssetAddition = ({
 		totalAssets,
 		setFolderImport,
 	} = useContext(AssetContext)
-
 
 	// Upload asset
 	const uploadAsset  = async (i: number, assets: any, currentDataClone: any, totalSize: number, folderId, folderGroup = {}, subFolderAutoTag = true) => {
@@ -77,14 +79,15 @@ const AssetAddition = ({
 				const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', index, error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE} : asset);
 
 				// Update uploading assets
-				setUploadingAssets(updatedAssets)
+				setUploadUpdate(versionGroup, updatedAssets)
 
 				// Remove current asset from asset placeholder
 				let newAssetPlaceholder = updatedAssets.filter(asset => asset.status !== 'fail')
 
 
 				// At this point, file place holder will be removed
-				setAssets([...newAssetPlaceholder, ...currentDataClone])
+				updateAssetList(newAssetPlaceholder, currentDataClone)
+
 
 				// The final one
 				if(i === assets.length - 1){
@@ -136,6 +139,11 @@ const AssetAddition = ({
 					attachedQuery['folderId'] = folderId
 				}
 
+				if (versionGroup) {
+					attachedQuery['versionGroup'] = versionGroup
+				}
+
+
 				// Uploading the new folder where it's folderId has been created earlier in previous API call
 				if(currentUploadingFolderId){
 					attachedQuery['folderId'] = currentUploadingFolderId
@@ -162,7 +170,8 @@ const AssetAddition = ({
 				assets[i] = data[0]
 
 				// At this point, file place holder will be removed
-				setAssets([...assets, ...currentDataClone])
+				updateAssetList(assets, currentDataClone)
+
 				setAddedIds(data.map(assetItem => assetItem.asset.id))
 
 				// Update total assets
@@ -171,12 +180,13 @@ const AssetAddition = ({
 				// Mark this asset as done
 				const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'done'} : asset);
 
-				setUploadingAssets(updatedAssets)
+				// Update uploading assets
+				setUploadUpdate(versionGroup, updatedAssets)
 
 				// The final one
 				if(i === assets.length - 1){
 					return
-				}else{ // Keep going
+				} else { // Keep going
 					await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, subFolderAutoTag)
 				}
 			}
@@ -185,21 +195,35 @@ const AssetAddition = ({
 			const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, index, status: 'fail', error: 'Processing file error'} : asset);
 
 			// Update uploading assets
-			setUploadingAssets(updatedAssets)
+			setUploadUpdate(versionGroup, updatedAssets)
 
 			// Remove current asset from asset placeholder
 			let newAssetPlaceholder = updatedAssets.filter(asset => asset.status !== 'fail')
 
 
 			// At this point, file place holder will be removed
-			setAssets([...newAssetPlaceholder, ...currentDataClone])
+			updateAssetList(newAssetPlaceholder, currentDataClone)
+
 
 			// The final one
-			if(i === assets.length - 1){
+			if (i === assets.length - 1) {
 				return folderGroup
-			}else{ // Keep going
+			} else { // Keep going
 				await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, subFolderAutoTag)
 			}
+		}
+	}
+
+	const setUploadUpdate = (versionGroup, updatedAssets) => {
+		setUploadingType(versionGroup ? 'version' : 'assets')
+		setUploadingAssets(updatedAssets)
+	}
+
+	const updateAssetList = (newAssetPlaceholder, currentDataClone) => {
+		if (versionGroup) {
+			triggerUploadComplete('upload', newAssetPlaceholder[0].asset)
+		} else {
+			setAssets([...newAssetPlaceholder, ...currentDataClone])
 		}
 	}
 

@@ -31,6 +31,7 @@ const Base = ({
       onRequestClose={closeModal}
       shouldCloseOnOverlayClick={true}
       shouldFocusAfterRender={false}
+      ariaHideApp={false}
     >
       {headText &&
         <div className={`${styles.text} ${textWidth && styles['full-width']}`}>

@@ -6,6 +6,7 @@ import styles from './upload-process.module.css'
 
 const AssetUploadProcess = (props) => {
     const {
+        uploadType,
         uploadingAssets,
         uploadingStatus,
         showUploadProcess,
