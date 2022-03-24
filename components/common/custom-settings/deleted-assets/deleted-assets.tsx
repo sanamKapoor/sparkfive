@@ -1,118 +1,138 @@
-import styles from './deleted-assets.module.css'
-import update from 'immutability-helper'
-import { useEffect, useContext, useState } from 'react'
-import { AssetContext } from '../../../../context'
-import toastUtils from '../../../../utils/toast'
-import { Waypoint } from 'react-waypoint'
-import urlUtils from '../../../../utils/url'
-import downloadUtils from '../../../../utils/download'
-import assetsApi from '../../../../server-api/asset'
+import styles from "./deleted-assets.module.css";
+import update from "immutability-helper";
+import { useEffect, useContext, useState } from "react";
+import { AssetContext } from "../../../../context";
+import toastUtils from "../../../../utils/toast";
+import { Waypoint } from "react-waypoint";
+import urlUtils from "../../../../utils/url";
+import downloadUtils from "../../../../utils/download";
+import assetsApi from "../../../../server-api/asset";
 
 // Components
-import DetailOverlay from '../../asset/detail-overlay'
-import ConfirmModal from '../../modals/confirm-modal'
-import Button from '../../buttons/button'
-import useSortedAssets from '../../../../hooks/use-sorted-assets'
-import DeletedListItem from './deleted-list-item'
+import DetailOverlay from "../../asset/detail-overlay";
+import ConfirmModal from "../../modals/confirm-modal";
+import Button from "../../buttons/button";
+import useSortedAssets from "../../../../hooks/use-sorted-assets";
+import DeletedListItem from "./deleted-list-item";
 
 const DeletedAssets = ({
-  activeView = 'grid',
+  activeView = "grid",
   isShare = false,
-  onFilesDataGet = (files) => { },
+  onFilesDataGet = (files) => {},
   toggleSelected,
-  mode = 'assets',
+  mode = "assets",
   activeSortFilter = {},
-  deleteFolder = (id) => { },
-  itemSize = 'regular',
-  activeFolder = '',
-  type = '',
-  itemId = '',
-  getFolders = () => { },
-  loadMore = () => { },
-  viewFolder = (id) => { },
-  sharePath = '',
-  openFilter }) => {
+  deleteFolder = (id) => {},
+  itemSize = "regular",
+  activeFolder = "",
+  type = "",
+  itemId = "",
+  getFolders = () => {},
+  loadMore = () => {},
+  viewFolder = (id) => {},
+  sharePath = "",
+  openFilter,
+}) => {
+  const {
+    assets,
+    setAssets,
+    setActiveOperation,
+    setOperationAsset,
+    nextPage,
+    setOperationFolder,
+    folders,
+  } = useContext(AssetContext);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [recoverModalOpen, setRecoverModalOpen] = useState(false);
+  const [activeAssetId, setActiveAssetId] = useState("");
 
-  const { assets, setAssets, setActiveOperation, setOperationAsset, nextPage, setOperationFolder, folders } = useContext(AssetContext)
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false)
-  const [recoverModalOpen, setRecoverModalOpen] = useState(false)
-  const [activeAssetId, setActiveAssetId] = useState('')
+  const [initAsset, setInitAsset] = useState(undefined);
 
-  const [initAsset, setInitAsset] = useState(undefined)
-
-  const [sortedAssets, currentSortAttribute, setCurrentSortAttribute] = useSortedAssets(assets)
+  const [sortedAssets, currentSortAttribute, setCurrentSortAttribute] =
+    useSortedAssets(assets);
 
   useEffect(() => {
-    const { assetId } = urlUtils.getQueryParameters()
-    if (assetId)
-      getInitialAsset(assetId)
-  }, [])
+    const { assetId } = urlUtils.getQueryParameters();
+    if (assetId) getInitialAsset(assetId);
+  }, []);
 
   const getInitialAsset = async (id) => {
     try {
-      const { data } = await assetsApi.getById(id)
-      setInitAsset(data)
+      const { data } = await assetsApi.getById(id);
+      setInitAsset(data);
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
-  }
+  };
 
-  const openDeleteAsset = id => {
-    setActiveAssetId(id)
-    setDeleteModalOpen(true)
-  }
+  const openDeleteAsset = (id) => {
+    setActiveAssetId(id);
+    setDeleteModalOpen(true);
+  };
 
-  const openRecoverAsset = id => {
-    setActiveAssetId(id)
-    setRecoverModalOpen(true)
-  }
+  const openRecoverAsset = (id) => {
+    setActiveAssetId(id);
+    setRecoverModalOpen(true);
+  };
 
-  const deleteAsset = async id => {
+  const deleteAsset = async (id) => {
     try {
-      await assetsApi.deleteAsset(id)
-      const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
-      setAssets(update(assets, {
-        $splice: [[assetIndex, 1]]
-      }))
-      toastUtils.success('Assets deleted successfully')
-    }
-    catch (err) {
+      await assetsApi.deleteAsset(id);
+      const assetIndex = assets.findIndex(
+        (assetItem) => assetItem.asset.id === id
+      );
+      setAssets(
+        update(assets, {
+          $splice: [[assetIndex, 1]],
+        })
+      );
+      toastUtils.success("Assets deleted successfully");
+    } catch (err) {
       // TODO: Error handling
-      toastUtils.error('Could not delete assets, please try again later.')
+      toastUtils.error("Could not delete assets, please try again later.");
     }
-  }
+  };
 
-  const recoverAsset = async id => {
+  const recoverAsset = async (id) => {
     try {
-      await assetsApi.updateAsset(id, { updateData: {status: 'approved', deletedAt: null} })
-        const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
-        if (assetIndex !== -1)
-          setAssets(update(assets, {
-            $splice: [[assetIndex, 1]]
-          }))
-        toastUtils.success('Assets recover successfully')
-    }
-    catch (err) {
+      await assetsApi.updateAsset(id, {
+        updateData: { status: "approved", deletedAt: null },
+      });
+      const assetIndex = assets.findIndex(
+        (assetItem) => assetItem.asset.id === id
+      );
+      if (assetIndex !== -1)
+        setAssets(
+          update(assets, {
+            $splice: [[assetIndex, 1]],
+          })
+        );
+      toastUtils.success("Assets recover successfully");
+    } catch (err) {
       // TODO: Error handling
-      toastUtils.error('Could not recover assets, please try again later.')
+      toastUtils.error("Could not recover assets, please try again later.");
     }
-  }
+  };
 
   const beginAssetOperation = ({ asset = null, folder = null }, operation) => {
-    if (asset) setOperationAsset(asset)
-    if (folder) setOperationFolder(folder)
-    setActiveOperation(operation)
-  }
+    if (asset) setOperationAsset(asset);
+    if (folder) setOperationFolder(folder);
+    setActiveOperation(operation);
+  };
 
-  const showLoadMore = assets.length > 0
-  const loadingAssetsFolders = ((assets.length > 0 && assets[assets.length - 1].isLoading))
+  const showLoadMore = assets.length > 0;
+  const loadingAssetsFolders =
+    assets.length > 0 && assets[assets.length - 1].isLoading;
 
   return (
     <section className={`${styles.container} ${openFilter && styles.filter}`}>
-      <ul className={styles['list-wrapper']}>
+      <ul className={styles["list-wrapper"]}>
         {sortedAssets.map((assetItem, index) => {
           return (
-            <li className={styles['regular-item']} key={assetItem.asset.id || index}>
+            <li
+              className={styles["regular-item"]}
+              key={assetItem.asset.id || index}
+            >
               <DeletedListItem
                 isShare={isShare}
                 type={type}
@@ -125,45 +145,47 @@ const DeletedAssets = ({
                 sortAttribute={currentSortAttribute}
               />
             </li>
-          )
+          );
         })}
       </ul>
-        {(showLoadMore) && nextPage !== -1 &&
-          <>
-            {nextPage > 2 ?
-              <>
-                {!loadingAssetsFolders &&
-                  <Waypoint onEnter={loadMore} fireOnRapidScroll={false} />
-                }
-              </>
-              :
-              <>
-                {!loadingAssetsFolders &&
-                  <div className={styles['button-wrapper']}>
-                    <Button
-                      text='Load More'
-                      type='button'
-                      styleType='primary'
-                      onClick={loadMore} />
-                  </div>
-                }
-              </>
-            }
-          </>
-        }
+      {showLoadMore && nextPage !== -1 && (
+        <>
+          {nextPage > 2 ? (
+            <>
+              {!loadingAssetsFolders && (
+                <Waypoint onEnter={loadMore} fireOnRapidScroll={false} />
+              )}
+            </>
+          ) : (
+            <>
+              {!loadingAssetsFolders && (
+                <div className={styles["button-wrapper"]}>
+                  <Button
+                    text="Load More"
+                    type="button"
+                    styleType="primary"
+                    onClick={loadMore}
+                  />
+                </div>
+              )}
+            </>
+          )}
+        </>
+      )}
 
       {/* Delete modal */}
       <ConfirmModal
         closeModal={() => setDeleteModalOpen(false)}
         confirmAction={() => {
-          deleteAsset(activeAssetId)
-          setActiveAssetId('')
-          setDeleteModalOpen(false)
+          deleteAsset(activeAssetId);
+          setActiveAssetId("");
+          setDeleteModalOpen(false);
         }}
-        confirmText={'Delete'}
+        confirmText={"Delete"}
         message={
           <span>
-            Are you sure you want to &nbsp;<strong>Delete</strong>&nbsp; this asset?
+            Are you sure you want to &nbsp;<strong>Delete</strong>&nbsp; this
+            asset?
           </span>
         }
         modalIsOpen={deleteModalOpen}
@@ -172,33 +194,38 @@ const DeletedAssets = ({
       <ConfirmModal
         closeModal={() => setRecoverModalOpen(false)}
         confirmAction={() => {
-          recoverAsset(activeAssetId)
-          setActiveAssetId('')
-          setRecoverModalOpen(false)
+          recoverAsset(activeAssetId);
+          setActiveAssetId("");
+          setRecoverModalOpen(false);
         }}
-        confirmText={'Recover'}
+        confirmText={"Recover"}
         message={
           <span>
-            Are you sure you want to &nbsp;<strong>Recover</strong>&nbsp; this asset?
+            Are you sure you want to &nbsp;<strong>Recover</strong>&nbsp; this
+            asset?
           </span>
         }
         modalIsOpen={recoverModalOpen}
       />
 
       {/* Overlay exclusive to page load assets */}
-      {initAsset &&
+      {initAsset && (
         <DetailOverlay
-              isShare={isShare}
-              sharePath={sharePath}
-              asset={initAsset.asset}
-              realUrl={initAsset.realUrl}
-              initialParams={{ side: 'comments' }}
-              openShareAsset={() => beginAssetOperation({ asset: initAsset }, 'share')}
-              openDeleteAsset={() => openDeleteAsset(initAsset.asset.id)}
-              closeOverlay={() => setInitAsset(undefined)} thumbnailUrl={undefined} />
-      }
-    </section >
-  )
-}
+          isShare={isShare}
+          sharePath={sharePath}
+          asset={initAsset.asset}
+          realUrl={initAsset.realUrl}
+          initialParams={{ side: "comments" }}
+          openShareAsset={() =>
+            beginAssetOperation({ asset: initAsset }, "share")
+          }
+          openDeleteAsset={() => openDeleteAsset(initAsset.asset.id)}
+          closeOverlay={() => setInitAsset(undefined)}
+          thumbailUrl={undefined}
+        />
+      )}
+    </section>
+  );
+};
 
-export default DeletedAssets
+export default DeletedAssets;
