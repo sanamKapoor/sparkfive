@@ -29,7 +29,7 @@ const options = {
 }
 
 const CdnPanel = ({ assetDetail }) => {
-  const mainUrl = window.location.origin
+  const mainUrl = process.env.SERVER_BASE_URL
   const [link, setLink] = useState(encodeURI(`${mainUrl}/assets/${assetDetail.storageId}`))
   const [type, setType] = useState({label: 'Select', value: ''})
   const [dimension, setDimension] = useState({
