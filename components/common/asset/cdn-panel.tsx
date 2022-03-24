@@ -84,7 +84,7 @@ const CdnPanel = ({ assetDetail }) => {
 
       <div className={`${styles.block} ${styles.mb}`}>
         <h3 className={styles.subtitle}>CDN Link</h3>
-        <div className={`${styles.input} ${styles.blockInput}`}>{link}..</div>
+        <div className={`${styles.input} ${styles.blockInput}`}>{link}</div>
         <button onClick={copyToClipboard} className={styles.btn}>Copy Link</button>
       </div>
 
