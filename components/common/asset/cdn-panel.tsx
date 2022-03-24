@@ -29,7 +29,7 @@ const options = {
 }
 
 const CdnPanel = ({ assetDetail }) => {
-  const mainUrl = window.location.origin
+  const mainUrl = process.env.SERVER_BASE_URL
   const [link, setLink] = useState(encodeURI(`${mainUrl}/assets/${assetDetail.storageId}`))
   const [type, setType] = useState({label: 'Select', value: ''})
   const [dimension, setDimension] = useState({
@@ -84,7 +84,7 @@ const CdnPanel = ({ assetDetail }) => {
 
       <div className={`${styles.block} ${styles.mb}`}>
         <h3 className={styles.subtitle}>CDN Link</h3>
-        <div className={`${styles.input} ${styles.blockInput}`}>{link}..</div>
+        <div className={`${styles.input} ${styles.blockInput}`}>{link}</div>
         <button onClick={copyToClipboard} className={styles.btn}>Copy Link</button>
       </div>
 
