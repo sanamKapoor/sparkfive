@@ -190,7 +190,7 @@ const AssetsLibrary = () => {
     if (firstLoaded && activeFolder !== '') {
       setActiveSortFilter({
         ...activeSortFilter,
-        mainFilter: getDefaultTab()
+        mainFilter: 'all'
       })
     }
 
