@@ -19,6 +19,6 @@ export default {
   deleteRole: (id) => axios.delete(`${teamUrl}/roles/${id}`),
   createCustomRole: (data) => axios.post(`${teamUrl}/roles`, data),
   editRole: (id, data) => axios.put(`${teamUrl}/roles/${id}`, data),
-  configureAutoTagSubFolders:(data) => axios.put(`${teamUrl}/autoTagSubFolders`, data),
+  saveAdvanceConfigurations:(data) => axios.put(`${teamUrl}/saveAdvanceConfigurations`, data),
   getAdvanceOptions:() => axios.get(`${teamUrl}/advanceConfigurations`),
 }

@@ -37,6 +37,8 @@ export const AssetContext = createContext({
     totalAssets: 0,
     assets: [],
     setAssets: (assets, replace) => { },
+    lastUploadedFolder: undefined,
+	setLastUploadedFolder: (folder) => {},
     completedAssets: [],
     setCompletedAssets: (assets, replace) => { },
     folders: [],

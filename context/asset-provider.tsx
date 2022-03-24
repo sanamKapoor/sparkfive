@@ -28,6 +28,7 @@ export default ({ children }) => {
     const { socket, connected, globalListener } = useContext(SocketContext);
 
     const [assets, setAssets] = useState([])
+    const [lastUploadedFolder, setLastUploadedFolder] = useState()
     const [folders, setFolders] = useState([])
 
     const [operationAsset, setOperationAsset] = useState(null)
@@ -371,6 +372,8 @@ export default ({ children }) => {
     const assetsValue = {
         assets,
         setAssets: setAssetItems,
+        lastUploadedFolder,
+        setLastUploadedFolder,
         completedAssets,
         setCompletedAssets: setCompletedAssetItems,
         nextPage,

@@ -22,6 +22,10 @@ import UploadStatusOverlayAssets from "../../upload-status-overlay-assets";
 import { validation } from "../../../constants/file-validation";
 import { useRouter } from 'next/router'
 
+// utils
+import selectOptions from '../../../utils/select-options'
+import advancedConfigParams from '../../../utils/advance-config-params'
+
 const AssetsLibrary = () => {
 
   const [activeView, setActiveView] = useState('grid')
@@ -30,6 +34,7 @@ const AssetsLibrary = () => {
     setAssets,
     folders,
     setFolders,
+    lastUploadedFolder,
     setPlaceHolders,
     activeFolder,
     setActiveFolder,
@@ -60,6 +65,8 @@ const AssetsLibrary = () => {
   const [renameModalOpen, setRenameModalOpen] = useState(false)
 
   const [openFilter, setOpenFilter] = useState(false)
+
+  const [advancedConfig, setAdvancedConfig] = useState(advancedConfigParams)
 
   const { activeSortFilter, setActiveSortFilter, tags, loadTags, loadProductFields, productFields, folders: collection, loadFolders, campaigns, loadCampaigns } = useContext(FilterContext)
 
@@ -154,6 +161,7 @@ const AssetsLibrary = () => {
 
   }, [tags, productFields.sku, collection, campaigns])
 
+
   useEffect(() => {
     // Assets are under preparing (for query etc)
     if (preparingAssets.current) {
@@ -161,26 +169,28 @@ const AssetsLibrary = () => {
       // setLoadingAssets(true)
       // setFirstLoaded(true)
       return
-    }else{
-      setFirstLoaded(true)
+    } else {
+      setInitialLoad()
     }
 
-    setActivePageMode('library')
-    if (activeSortFilter.mainFilter === 'folders') {
-      setActiveMode('folders')
-      getFolders()
-    } else {
-      setActiveMode('assets')
-      setAssets([])
-      getAssets()
-    }
+    if (firstLoaded) {
+        setActivePageMode('library')
+        if (activeSortFilter.mainFilter === 'folders') {
+          setActiveMode('folders')
+          getFolders()
+        } else {
+          setActiveMode('assets')
+          setAssets([])
+          getAssets()
+        }
+      }
   }, [activeSortFilter])
 
   useEffect(() => {
     if (firstLoaded && activeFolder !== '') {
       setActiveSortFilter({
         ...activeSortFilter,
-        mainFilter: 'all',
+        mainFilter: getDefaultTab()
       })
     }
 
@@ -209,6 +219,36 @@ const AssetsLibrary = () => {
       ...DEFAULT_FILTERS,
       ...DEFAULT_CUSTOM_FIELD_FILTERS(activeSortFilter)
     })
+  }
+
+
+  const setInitialLoad = async () => {
+    if (!firstLoaded) {
+      setFirstLoaded(true)
+      await updateAdvancedConfig()
+    }
+  }
+
+  const updateAdvancedConfig = async () => {
+    const { data } = await teamApi.getAdvanceOptions()
+    setAdvancedConfig(data)
+    const defaultTab = getDefaultTab(data)
+    let sort = {...activeSortFilter.sort}
+    if (defaultTab === 'folders') {
+      sort = data.collectionSortView === 'newest' ? selectOptions.sort[1] : selectOptions.sort[3]
+    }
+    setActiveSortFilter({
+      ...activeSortFilter,
+      mainFilter: defaultTab,
+      sort
+    })
+    
+  }
+
+  const getDefaultTab = (advConf?) => {
+    const config = advConf || advancedConfig
+    const defaultTab = config.defaultLandingPage === 'allTab' ? 'all' : 'folders'
+    return defaultTab
   }
 
   // Upload asset
@@ -356,11 +396,6 @@ const AssetsLibrary = () => {
     }
   }
 
-  const getAdvanceConfigurations = async () => {
-    const { data } = await teamApi.getAdvanceOptions()
-    return data
-  }
-
   const onFilesDataGet = async (files) => {
     const currentDataClone = [...assets]
     const currenFolderClone = [...folders]
@@ -423,7 +458,7 @@ const AssetsLibrary = () => {
       setFolders([...folderPlaceholders, ...currenFolderClone])
 
       // Get team advance configurations first
-      const { subFolderAutoTag } = await getAdvanceConfigurations();
+      const subFolderAutoTag = advancedConfig.autoTagSubFolder;
 
       // Start to upload assets
       let folderGroups = await uploadAsset(0, newPlaceholders, currentDataClone, totalSize, activeFolder, undefined, subFolderAutoTag)
@@ -494,11 +529,14 @@ const AssetsLibrary = () => {
 
   const getFolders = async (replace = true) => {
     try {
+
       if (replace) {
         setAddedIds([])
       }
       setPlaceHolders('folder', replace)
-      const queryParams = { page: replace ? 1 : nextPage }
+      const {field, order} = activeSortFilter.sort
+      const queryParams = { page: replace ? 1 : nextPage,  sortField: field, sortOrder: order}
+
       if (!replace && addedIds.length > 0) {
         queryParams.excludeIds = addedIds.join(',')
       }
@@ -507,7 +545,13 @@ const AssetsLibrary = () => {
       }
       const { data } = await folderApi.getFolders(queryParams)
 
-      setFolders({ ...data, results: data.results }, replace)
+      let assetList = { ...data, results: data.results }
+      if (lastUploadedFolder && activeSortFilter.mainFilter === "folders" && activeSortFilter.sort.value === "alphabetical") { 
+        const lastFolder = {...lastUploadedFolder}
+        assetList.results.unshift(lastFolder)
+      }
+
+      setFolders(assetList, replace)
     } catch (err) {
       //TODO: Handle error
       console.log(err)
@@ -559,14 +603,12 @@ const AssetsLibrary = () => {
   const selectedFolders = folders.filter(folder => folder.isSelected)
 
   const viewFolder = async (id) => {
-
     // setActiveSortFilter({
     //   ...activeSortFilter,
     //   ...DEFAULT_FILTERS,
     //   ...DEFAULT_CUSTOM_FIELD_FILTERS(activeSortFilter),
     //   mainFilter: 'folders'
     // })
-
     // router.replace("/main/assets") // Open this comment to reset query string url
     setActiveFolder(id)
 

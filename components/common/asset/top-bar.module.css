@@ -14,6 +14,14 @@
   justify-content: start;
 }
 
+.tab-list{
+  display: flex;
+}
+
+.tab-list-item{
+  padding: 15px;
+}
+
 .content {
    font-size: 10px;
    margin-left: 20px;
