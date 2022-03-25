@@ -20,7 +20,7 @@ const DeletedListItem = ({
   type,
   assetItem: {
     asset,
-    thumbailUrl,
+    thumbnailUrl,
     realUrl,
     isUploading,
     isSelected = false,
@@ -103,8 +103,8 @@ const DeletedListItem = ({
               }
             </div>
             <div className={`${styles.thumbnail} ${isLoading && 'loadable'}`}>
-              {thumbailUrl ? (
-                <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} />
+              {thumbnailUrl ? (
+                <AssetImg assetImg={thumbnailUrl} type={asset.type} name={asset.name} />
               ) : (
                 <AssetIcon extension={asset.extension} onList={true} onClick={undefined} />
               )}

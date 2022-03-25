@@ -431,7 +431,7 @@ export default ({getAssets}) => {
 	}
 
 
-	const getShareLink = async (name = "") => {
+	const getShareLink = async () => {
 		try {
 			let assetIds
 			let filters = {}
@@ -465,7 +465,6 @@ export default ({getAssets}) => {
 				// @ts-ignore
 				delete filters.page
 			}
-
 			filters["name"] = name
 			return await assetApi.getShareUrl({
 				assetIds
@@ -679,7 +678,7 @@ export default ({getAssets}) => {
 			const { data } = await assetApi.generateThumbnails({ assetIds })
 			setAssets([...assets.map(item => ({
 				...item,
-				thumbailUrl: data[item.asset.id] ? data[item.asset.id] : item.thumbailUrl,
+				thumbnailUrl: data[item.asset.id] ? data[item.asset.id] : item.thumbnailUrl,
 			}))])
 			closeModalAndClearOpAsset()
 			toastUtils.success('Thumbnails generated successfully')

@@ -19,13 +19,13 @@ const AssetUploadProcess = () => {
         uploadingFileName,
         dropboxUploadingFile,
         uploadSourceType,
+        uploadingType,
         retryListCount,
         folderImport
     } = useContext(AssetContext)
 
     const uploadedAssets = uploadingAssets.filter(asset => asset.status === 'done')
     const failAssetsCount = uploadingAssets.filter(asset => asset.status === 'fail').length
-
 
     return <div className={clsx(styles.container, {[styles['center-align']]: uploadingStatus === 'done', [styles['less-margin-bottom']]: uploadingStatus === 'uploading'})}>
         <div className={clsx(styles.row, styles['no-margin'])}>
@@ -48,7 +48,7 @@ const AssetUploadProcess = () => {
             </>}
 
             {uploadingStatus === 'done' &&
-                <span>{uploadedAssets.length} assets uploaded successfully.
+                <span>{uploadingType==='version' ? 'Recent version ' : (uploadedAssets.length + ' assets')} uploaded successfully.
                     {failAssetsCount > 0 && <span className={`${styles['fail-text']} ${styles['no-max-min-width']}`}>{failAssetsCount} failed</span>}
                 </span>
             }

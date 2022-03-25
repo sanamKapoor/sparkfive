@@ -39,7 +39,7 @@ const FolderGridItem = ({
 	const previews = [1, 2, 3, 4]
 		.map((_, index) => ({
 			name: assets[index]?.name || 'empty',
-			assetImg: assets[index]?.thumbailUrl || '',
+			assetImg: assets[index]?.thumbnailUrl || '',
 			type: assets[index]?.type || 'empty',
 			extension: assets[index]?.extension,
 		}))
@@ -73,8 +73,8 @@ const FolderGridItem = ({
 		<div className={`${styles.container} ${isLoading && 'loadable'}`}>
 			<div className={styles['image-wrapper']}>
 				<>
-					{previews.map((preview) => (
-						<div className={styles['sub-image-wrapper']}>
+					{previews.map((preview, indx) => (
+						<div className={styles['sub-image-wrapper']} key={indx.toString()}>
 							{(preview.assetImg || preview.name === 'empty')
 								? <AssetImg {...preview} />
 								: <AssetIcon extension={preview.extension} isCollection={true}/>

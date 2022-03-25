@@ -59,6 +59,8 @@ export const Utilities = {
   info: require('./Icons/Utilities/Information/icn-utilities-information.svg'),
   filter: require('./Icons/External/filter.svg'),
   calendar:  require('./Icons/Navigation/icn-nav-schedule-alt.svg'),
+  versions: require('./Icons/Utilities/Versions/VersioningLatest.svg'),
+  addVersion: require('./Icons/Utilities/Versions/add-version.svg'),
   embedCdn: require('./Icons/Utilities/EmbedCDN/embed-cdn.svg'),
   lockClosed: require('./Icons/Utilities/Lock/lock-closed.svg'),
   lockOpened: require('./Icons/Utilities/Lock/lock-opened.svg')

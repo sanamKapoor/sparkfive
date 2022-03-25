@@ -10,7 +10,12 @@
 
 .text p {
   flex: 1;
-  margin: 0;
+  margin: 0 16px 0 0;
+}
+
+.text b,
+.text strong {
+  font-weight: 500;
 }
 
 .text span {
@@ -19,9 +24,12 @@
 
 .close {
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 400;
   color: var(--color-sec-blue);
   cursor: pointer;
+  position: absolute;
+  top: 8px;
+  right: 10px
 }
 
 .buttons {

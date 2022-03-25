@@ -571,7 +571,7 @@ const SidePanelBulk = ({
         initialValue={newProjectName}
         closeModal={() => setNewProjectName('')}
         confirmCreation={(project) => handleProjectChange({ ...project, label: project.name }, 'create-option')}
-        modalIsOpen={newProjectName}
+        modalIsOpen={newProjectName ? true: false}
       />
 
       <div className={styles['save-changes']}>

@@ -13,6 +13,7 @@ import IconClickable from '../buttons/icon-clickable'
 import Button from '../buttons/button'
 import DetailOverlay from './detail-overlay'
 import AssetOptions from './asset-options'
+import AssetAddition from './asset-addition'
 
 const DEFAULT_DETAIL_PROPS = { visible: false, side: 'detail' }
 
@@ -21,7 +22,7 @@ const AssetThumbail = ({
   sharePath,
   type,
   asset,
-  thumbailUrl,
+  thumbnailUrl,
   realUrl,
   isUploading,
   showAssetOption = true,
@@ -34,7 +35,8 @@ const AssetThumbail = ({
   openShareAsset = () => { },
   openArchiveAsset = () => { },
   downloadAsset = () => { },
-  openRemoveAsset = () => { }
+  openRemoveAsset = () => { },
+  handleVersionChange
 }) => {
 
   const [overlayProperties, setOverlayProperties] = useState(DEFAULT_DETAIL_PROPS)
@@ -52,6 +54,13 @@ const AssetThumbail = ({
     setOverlayProperties({ visible: true, side: 'comments' })
   }
 
+  const onCloseOverlay = (changedVersion) => {
+    if (changedVersion) {
+      handleVersionChange(changedVersion)
+    }
+    setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: false })
+  }
+
   return (
     <>
       <div className={`${styles.container} ${isLoading && 'loadable'}`}>
@@ -61,15 +70,15 @@ const AssetThumbail = ({
               <p className={styles.uploading}>Uploading...</p>
             </>
           }
-          {thumbailUrl ? (
-            <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} opaque={isUploading} />
+          {thumbnailUrl ? (
+            <AssetImg assetImg={thumbnailUrl} type={asset.type} name={asset.name} opaque={isUploading} />
           ) : (
             <AssetIcon extension={asset.extension} />
           )}
-          {/* {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} opaque={isUploading} />}
-          {asset.type === 'video' && <AssetVideo assetImg={thumbailUrl} asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} />}
-          {asset.type === 'application' && <AssetApplication assetImg={thumbailUrl} extension={asset.extension} />}
-          {asset.type === 'text' && <AssetText assetImg={thumbailUrl} extension={asset.extension} />} */}
+          {/* {asset.type === 'image' && <AssetImg assetImg={thumbnailUrl} type={asset.type} name={asset.name} opaque={isUploading} />}
+          {asset.type === 'video' && <AssetVideo assetImg={thumbnailUrl} asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} />}
+          {asset.type === 'application' && <AssetApplication assetImg={thumbnailUrl} extension={asset.extension} />}
+          {asset.type === 'text' && <AssetText assetImg={thumbnailUrl} extension={asset.extension} />} */}
           {!isUploading && !isLoading &&
             <>
               <div className={`${styles['selectable-wrapper']} ${isSelected && styles['selected-wrapper']}`}>
@@ -113,12 +122,12 @@ const AssetThumbail = ({
           sharePath={sharePath}
           isShare={isShare}
           asset={asset}
-          realUrl={(asset.extension === 'tiff' || asset.extension === 'tif') ? thumbailUrl : realUrl}
-          thumbailUrl={thumbailUrl}
+          realUrl={(asset.extension === 'tiff' || asset.extension === 'tif') ? thumbnailUrl : realUrl}
+          thumbnailUrl={thumbnailUrl}
           initialParams={overlayProperties}
           openShareAsset={openShareAsset}
           openDeleteAsset={openDeleteAsset}
-          closeOverlay={() => setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: false })} />
+          closeOverlay={onCloseOverlay} />
       }
     </>
   )

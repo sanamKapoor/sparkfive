@@ -72,7 +72,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     projects,
     channel,
     product,
-      products,
+    products,
     folder,
     folders,
     customs,
@@ -204,12 +204,15 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
 
   const updateAssetState = (updatedata) => {
     const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
-    setAssets(update(assets, {
-      [assetIndex]: {
-        asset: updatedata
-      }
-    }))
-    setAssetDetail(update(asset, updatedata))
+    if (assetIndex >= 0) {
+      setAssets(update(assets, {
+        [assetIndex]: {
+          asset: updatedata
+        }
+      }))
+      setAssetDetail(update(asset, updatedata))
+    }
+    
     setActiveDropdown('')
   }
 
@@ -724,7 +727,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
       </div>
 
 
-      {productList.map((product, index)=>{
+      {productList && productList.map((product, index)=>{
         return <div className={styles['product-wrapper']} key={index}>
           <ProductAddition
               noTitle
@@ -771,7 +774,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
         initialValue={newProjectName}
         closeModal={() => setNewProjectName('')}
         confirmCreation={addNewProject}
-        modalIsOpen={newProjectName}
+        modalIsOpen={newProjectName ? true : false}
       />
     </div >
   )

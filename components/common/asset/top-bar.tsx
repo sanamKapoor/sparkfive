@@ -27,7 +27,8 @@ const TopBar = ({
 
   const {
     selectedAllAssets,
-    selectAllAssets
+    selectAllAssets,
+    setLastUploadedFolder
   } = useContext(AssetContext)
 
   const {hasPermission} = useContext(UserContext)
@@ -35,6 +36,13 @@ const TopBar = ({
   const setSortFilterValue = (key, value) => {
     // Reset select all status
     selectAllAssets(false);
+    setActiveSortFilter({
+      ...activeSortFilter
+    })
+
+    // Needed to reset because it is set for collection upload when alpha sort active
+    // And uploaded folder needed to show at first
+    setLastUploadedFolder(undefined)
 
     setActiveSortFilter({
       ...activeSortFilter,
@@ -67,19 +75,21 @@ const TopBar = ({
     <section className={styles.container}>
       {!deletedAssets ? <div className={styles.filters} >
         <img src={Utilities.search} onClick={setActiveSearchOverlay} className={styles.search} />
+        <ul className={styles['tab-list']}>
         {selectOptions.views.map(view => (
-          <>
+          <li key={view.name} className={styles['tab-list-item']}>
             {(!activeFolder || !view.omitFolder) && (!isShare || (isShare && !view.omitShare)) &&
             (view.requirePermissions.length === 0 || (view.requirePermissions.length > 0 && hasPermission(view.requirePermissions))) &&
               <SectionButton
-                key={view.name}
+                keyProp={view.name}
                 text={view.text}
                 active={activeSortFilter.mainFilter === view.name}
                 onClick={() => setSortFilterValue('mainFilter', view.name)}
               />
             }
-          </>
+          </li>
         ))}
+        </ul>
       </div> :
         <div className={styles.filters}>
           <h2>Deleted Assets</h2>
@@ -102,7 +112,7 @@ const TopBar = ({
               handleOpenFilter()
             }} />
         </div>}
-        {activeSortFilter.mainFilter !== 'folders' &&
+        {
           <div className={styles['sort-wrapper']}>
             <Select
               options={selectOptions.sort}

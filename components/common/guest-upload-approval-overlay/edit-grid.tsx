@@ -40,13 +40,13 @@ const EditGrid = ({ assets, toggleSelectedEdit }) => {
 
   return <div className={styles['list-wrapper']}>
     <ul className={`${styles['grid-list']}`}>
-      {assets.map(({ asset, thumbailUrl, realUrl, isEditSelected }, index) => (
+      {assets.map(({ asset, thumbnailUrl, realUrl, isEditSelected }, index) => (
         <li key={asset.id || index}>
           <>
             <div className={`${styles.container}`}>
               <div className={styles['image-wrapper']}>
                 {asset.type === 'image' && <AssetImg
-                    assetImg={thumbailUrl}
+                    assetImg={thumbnailUrl}
                     type={asset.type}
                     name={asset.name}
                     onClick={()=>{showPreviewImage(realUrl)}}
@@ -59,9 +59,9 @@ const EditGrid = ({ assets, toggleSelectedEdit }) => {
                     onClick={()=>{showPreviewImage(realUrl)}}
                 />}
                 {
-                  asset.type !== 'image' && asset.type !== 'video' && thumbailUrl && (
+                  asset.type !== 'image' && asset.type !== 'video' && thumbnailUrl && (
                     <AssetImg
-                      assetImg={thumbailUrl}
+                      assetImg={thumbnailUrl}
                       type={asset.type}
                       name={asset.name}
                       onClick={()=>{showPreviewImage(realUrl)}}
@@ -69,7 +69,7 @@ const EditGrid = ({ assets, toggleSelectedEdit }) => {
                   )
                 }
                 {
-                  asset.type !== 'image' && asset.type !== 'video' && !thumbailUrl && (
+                  asset.type !== 'image' && asset.type !== 'video' && !thumbnailUrl && (
                     <AssetIcon padding extension={asset.extension} />
                   )
                 }
