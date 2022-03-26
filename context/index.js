@@ -37,6 +37,8 @@ export const AssetContext = createContext({
     totalAssets: 0,
     assets: [],
     setAssets: (assets, replace) => { },
+    lastUploadedFolder: undefined,
+	setLastUploadedFolder: (folder) => {},
     completedAssets: [],
     setCompletedAssets: (assets, replace) => { },
     folders: [],
@@ -76,12 +78,15 @@ export const AssetContext = createContext({
     uploadingPercent: 0,
     uploadingAssets: [],
     setUploadingAssets: (assets) => { },
+    uploadingType: '',
+    setUploadingType: (uploadingType) => { },
     uploadDetailOverlay: false,
     setUploadDetailOverlay: (show) => { },
     reUploadAsset: (i, assets, currentDataClone, totalSize, retryList, folderId, folderGroups, subFolderAutoTag) => { },
 
     uploadingFileName: '',
     setUploadingFileName: (name) => { },
+
 
     folderGroups: {},
     setFolderGroups: (value) => { },

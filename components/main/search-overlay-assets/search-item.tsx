@@ -18,7 +18,7 @@ import AssetIcon from '../../common/asset/asset-icon'
 
 const SearchItem = ({ assetItem, term, openShareAsset, openDeleteAsset, toggleSelected, enabledSelect = false, isShare }) => {
 
-  const { asset, thumbailUrl, realUrl, isLoading = false, isSelected } = assetItem
+  const { asset, thumbnailUrl, realUrl, isLoading = false, isSelected } = assetItem
   const [visibleOverlay, setVisibleOVerlay] = useState(false)
 
   const searchWords = term.split(" ");
@@ -37,12 +37,12 @@ const SearchItem = ({ assetItem, term, openShareAsset, openDeleteAsset, toggleSe
           </>
         }
         <div className={`${styles['image-wrapper']} ${isLoading && 'loadable'} ${enabledSelect && styles['image-selectable']}`}>
-          {thumbailUrl ? (
-            <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} />
+          {thumbnailUrl ? (
+            <AssetImg assetImg={thumbnailUrl} type={asset.type} name={asset.name} />
           ) : (
             <AssetIcon noMargin extension={asset.extension} onList={true}/>
           )}
-          {/* {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} />}
+          {/* {asset.type === 'image' && <AssetImg assetImg={thumbnailUrl} type={asset.type} name={asset.name} />}
           {asset.type === 'video' && <AssetVideo asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} />}
           {asset.type === 'application' && <AssetApplication extension={asset.extension} onList={true} />}
           {asset.type === 'text' && <AssetText extension={asset.extension} onList={true} />} */}
@@ -86,7 +86,7 @@ const SearchItem = ({ assetItem, term, openShareAsset, openDeleteAsset, toggleSe
       </li >
       {visibleOverlay &&
         <DetailOverlay
-          thumbailUrl={thumbailUrl}
+          thumbnailUrl={thumbnailUrl}
           isShare={isShare}
           initialParams={{}}
           asset={asset}

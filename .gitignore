@@ -50,3 +50,7 @@ sketch
 
 # Sentry
 .sentryclirc
+
+#vscode settings
+.vscode/
+

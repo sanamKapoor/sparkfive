@@ -9,6 +9,9 @@ import { AssetContext, UserContext } from '../../../context'
 import toastUtils from '../../../utils/toast'
 import update from 'immutability-helper'
 import downloadUtils from '../../../utils/download'
+import VersionList from './version-list'
+import AssetAddition from './asset-addition'
+
 import {
   isMobile
 } from "react-device-detect"
@@ -30,6 +33,9 @@ import CdnPanel from './cdn-panel'
 
 import { isImageType } from '../../../utils/file'
 
+import {
+  SUPERADMIN_ACCESS
+} from '../../../constants/permissions'
 
 const getDefaultDownloadImageType = (extension) => {
   const defaultDownloadImageTypes = [
@@ -48,26 +54,26 @@ const getDefaultDownloadImageType = (extension) => {
   ]
 
   let foundExtension = extension;
-  if(extension === 'jpeg'){
+  if (extension === 'jpeg') {
     foundExtension = 'jpg'
   }
 
-  if(extension === 'tif'){
+  if (extension === 'tif') {
     foundExtension = 'tiff'
   }
 
   const existingExtension = defaultDownloadImageTypes.filter(type => type.value === foundExtension)
 
   // Already existed
-  if(existingExtension.length > 0){
-    return defaultDownloadImageTypes.map((type)=>{
-      if(type.value === foundExtension){
+  if (existingExtension.length > 0) {
+    return defaultDownloadImageTypes.map((type) => {
+      if (type.value === foundExtension) {
         type.label = `${foundExtension.toUpperCase()} (original)`
       }
 
       return type
     })
-  }else{
+  } else {
     return defaultDownloadImageTypes.concat([{
       value: foundExtension,
       label: `${foundExtension.toUpperCase()} (original)`
@@ -75,16 +81,16 @@ const getDefaultDownloadImageType = (extension) => {
   }
 }
 
-const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAsset = () => { }, openDeleteAsset = () => { }, isShare = false, sharePath = '', initialParams }) => {
-  const {
-    updateDownloadingStatus
-  } = useContext(AssetContext)
+const DetailOverlay = ({ asset, realUrl, thumbnailUrl, closeOverlay,
+  openShareAsset = () => { },
+  openDeleteAsset = () => { },
+  isShare = false, sharePath = '', initialParams }) => {
+
+  const { hasPermission } = useContext(UserContext)
   const {
     user,
     cdnAccess
   } = useContext(UserContext)
-
-  console.log('userCtx', {user, cdnAccess})
 
   const [assetDetail, setAssetDetail] = useState(undefined)
 
@@ -92,58 +98,68 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
 
   const [activeSideComponent, setActiveSidecomponent] = useState('detail')
 
-  const { assets, setAssets } = useContext(AssetContext)
+  const { assets, setAssets, needsFetch, updateDownloadingStatus } = useContext(AssetContext)
 
   const [sideOpen, setSideOpen] = useState(true)
 
-  // For resize and cropping
-  const [downloadImageTypes, setDownloadImageTypes] = useState(getDefaultDownloadImageType(asset.extension))
-  const [mode, setMode] = useState('detail') // Available options: resize, crop, detail
-  const [imageType, setImageType] = useState(asset.extension)
+  const [versionCount, setVersionCount] = useState(0)
+  const [versions, setVersions] = useState([])
+  const [currentAsset, setCurrentAsset] = useState(asset)
+  const [changedVersion, setChangedVersion] = useState(false) // to track version uploaded on overlay close 
+  const [versionRealUrl, setVersionRealUrl] = useState(realUrl)
+  const [versionThumbnailUrl, setVersionThumbnailUrl] = useState(thumbnailUrl)
 
-  const [presetTypes, setPresetTypes] = useState([{ label: 'None', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight}])
+
+  // For resize and cropping
+  const [downloadImageTypes, setDownloadImageTypes] = useState(getDefaultDownloadImageType(currentAsset.extension))
+  const [mode, setMode] = useState('detail') // Available options: resize, crop, detail
+  const [imageType, setImageType] = useState(currentAsset.extension)
+
+  const [presetTypes, setPresetTypes] = useState([{ label: 'None', value: 'none', width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight }])
   const [preset, setPreset] = useState<any>(presetTypes[0])
 
-  const [sizes, setSizes] = useState([{ label: 'Original', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight}])
+  const [sizes, setSizes] = useState([{ label: 'Original', value: 'none', width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight }])
   const [size, setSize] = useState<any>(sizes[0])
 
-  const [width, setWidth] = useState<number>(asset.dimensionWidth)
-  const [height, setHeight] = useState<number>(asset.dimensionHeight)
+  const [width, setWidth] = useState<number>(currentAsset.dimensionWidth)
+  const [height, setHeight] = useState<number>(currentAsset.dimensionHeight)
 
   const resetValues = () => {
-    setPreset({ label: 'None', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight})
-    setSize({ label: 'Original', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight})
-    setWidth(asset.dimensionWidth)
-    setHeight(asset.dimensionHeight)
-    setImageType(asset.extension)
+    setPreset({ label: 'None', value: 'none', width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight })
+    setSize({ label: 'Original', value: 'none', width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight })
+    setWidth(currentAsset.dimensionWidth)
+    setHeight(currentAsset.dimensionHeight)
+    setImageType(currentAsset.extension)
   }
 
 
   const getCropResizeOptions = async () => {
     try {
-      if(isShare){
+      if (isShare) {
         const { data } = await customFileSizeApi.getSharedSizePresetsByGroup()
 
         // @ts-ignore
         setPresetTypes(presetTypes.concat(data))
-      }else{
+      } else {
         const { data } = await customFileSizeApi.getSizePresetsByGroup()
 
         // @ts-ignore
         setPresetTypes(presetTypes.concat(data))
       }
-    }catch (e){
+    } catch (e) {
 
     }
-
   }
+
 
   useEffect(() => {
     getCropResizeOptions()
     getDetail()
     checkInitialParams()
-    if (isMobile)
+    if (isMobile) {
       toggleSideMenu()
+    }
+
   }, [])
 
   // useEffect(() => {
@@ -158,13 +174,17 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
     }
   }
 
-  const getDetail = async () => {
+  const getDetail = async (curAsset?) => {
     try {
-      if (isShare)
+      const asset = curAsset || currentAsset
+      if (isShare) {
         setAssetDetail(asset)
-      else {
+      } else {
         const { data } = await assetApi.getById(asset.id)
         setAssetDetail(data.asset)
+
+        setVersionRealUrl(data.realUrl)
+        setVersionThumbnailUrl(data.versionThumbnailUrl)
       }
     } catch (err) {
       console.log(err)
@@ -178,7 +198,7 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
         ...assetDetail,
         ...inputData.updateData
       })
-      const { data } = await assetApi.updateAsset(asset.id, inputData)
+      const { data } = await assetApi.updateAsset(currentAsset.id, inputData)
       setAssetDetail(data)
     } catch (err) {
       console.log(err)
@@ -188,8 +208,8 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
   const confirmAssetRename = async (newValue) => {
     try {
       const editedName = `${newValue}.${assetDetail.extension}`
-      await assetApi.updateAsset(asset.id, { updateData: { name: editedName } })
-      const modAssetIndex = assets.findIndex(assetItem => assetItem.asset.id === asset.id)
+      await assetApi.updateAsset(currentAsset.id, { updateData: { name: editedName } })
+      const modAssetIndex = assets.findIndex(assetItem => assetItem.asset.id === currentAsset.id)
       setAssets(update(assets, {
         [modAssetIndex]: {
           asset: {
@@ -198,9 +218,9 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
         }
       }))
       setAssetDetail(update(assetDetail,
-          {
-            name: { $set: editedName }
-          }))
+        {
+          name: { $set: editedName }
+        }))
       toastUtils.success('Asset name updated')
     } catch (err) {
       console.log(err)
@@ -223,22 +243,22 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
   // On Crop/Resize select change
   const onSelectChange = (type, value) => {
 
-    if(type === 'preset'){
+    if (type === 'preset') {
       setPreset(value)
 
       // Restore values
-      if(value.value === 'none'){
+      if (value.value === 'none') {
         // Set width, height as their original size
-        setWidth(asset.dimensionWidth)
-        setHeight(asset.dimensionHeight)
+        setWidth(currentAsset.dimensionWidth)
+        setHeight(currentAsset.dimensionHeight)
 
         // Set default size to none
-        setSize({ label: 'Original', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight})
+        setSize({ label: 'Original', value: 'none', width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight })
 
         // Restore size back to temp size
-        setSizes([{ label: 'Original', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight}])
+        setSizes([{ label: 'Original', value: 'none', width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight }])
 
-      }else{
+      } else {
         // Reset size value
         setSize(undefined)
 
@@ -248,7 +268,7 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
 
     }
 
-    if(type === 'size'){
+    if (type === 'size') {
       setWidth(value.width)
       setHeight(value.height)
 
@@ -258,25 +278,25 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
 
   // On width, height input change
   const onSizeInputChange = (name, value) => {
-    const originalRatio = asset.dimensionWidth / asset.dimensionHeight
+    const originalRatio = currentAsset.dimensionWidth / currentAsset.dimensionHeight
 
     if (name === 'width') {
-      if(value){
-        if (value <= asset.dimensionWidth) {
+      if (value) {
+        if (value <= currentAsset.dimensionWidth) {
           setWidth(value)
 
           if (mode === 'resize') {
             setHeight(Math.round(value / originalRatio))
           }
         }
-      }else{
+      } else {
         setWidth(value)
       }
     }
 
     if (name === 'height') {
-      if(value){
-        if (value <= asset.dimensionHeight) {
+      if (value) {
+        if (value <= currentAsset.dimensionHeight) {
           setHeight(value)
 
           if (mode === 'resize') {
@@ -284,240 +304,334 @@ const DetailOverlay = ({ asset, realUrl, thumbailUrl, closeOverlay, openShareAss
           }
 
         }
-      }else{
+      } else {
         setHeight(value)
       }
     }
   }
 
-    const lockCropping = () => {
-      // Only lock if user is choose specific preset
-      return (preset && preset.value !== 'none') || (size && size.value !== 'none')
+  const lockCropping = () => {
+    // Only lock if user is choose specific preset
+    return (preset && preset.value !== 'none') || (size && size.value !== 'none')
+  }
+
+  // Subscribe mode change, if user back/enter to detail page, should reset all size value do default
+  useEffect(() => {
+    if (mode === 'detail') {
+      // Set default size to none
+      setSizes([{ label: 'Original', value: 'none', width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight }])
+      // setPresetTypes([{ label: 'None', value: 'none', width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight}])
+
+      setSize({ label: 'Original', value: 'none', width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight })
+      setPreset({ label: 'None', value: 'none', width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight })
+
+      setWidth(currentAsset.dimensionWidth)
+      setHeight(currentAsset.dimensionHeight)
     }
+  }, [mode, currentAsset])
 
-    // Subscribe mode change, if user back/enter to detail page, should reset all size value do default
-    useEffect(()=>{
-      if(mode === 'detail'){
-        // Set default size to none
-        setSizes([{ label: 'Original', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight}])
-        // setPresetTypes([{ label: 'None', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight}])
+  const downloadSelectedAssets = async (id) => {
+    try {
+      let payload = {
+        assetIds: [id]
+      };
 
-        setSize({ label: 'Original', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight})
-        setPreset({ label: 'None', value: 'none', width: asset.dimensionWidth, height: asset.dimensionHeight})
-
-        setWidth(asset.dimensionWidth)
-        setHeight(asset.dimensionHeight)
+      let totalDownloadingAssets = 1;
+      let filters = {
+        estimateTime: 1
       }
-    },[mode])
 
-    const downloadSelectedAssets = async (id) => {
-      try{
-        let payload = {
-          assetIds: [id]
-        };
-
-        let totalDownloadingAssets = 1;
-        let filters = {
-          estimateTime: 1
-        }
-
-        // Add sharePath property if user is at share collection page
-        if(sharePath){
-          filters['sharePath'] = sharePath
-        }
-
-
-        // Show processing bar
-        updateDownloadingStatus('zipping', 0, totalDownloadingAssets)
-
-        let api: any = assetApi;
-
-        if(isShare){
-          api = shareApi
-        }
-
-        const { data } = await api.downloadAll(payload,filters)
-
-        // Download file to storage
-        fileDownload(data, 'assets.zip');
-
-        updateDownloadingStatus('done', 0, 0)
-      }catch (e){
-        updateDownloadingStatus('error', 0, 0, 'Internal Server Error. Please try again.')
+      // Add sharePath property if user is at share collection page
+      if (sharePath) {
+        filters['sharePath'] = sharePath
       }
 
 
-      // downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets')
-    }
+      // Show processing bar
+      updateDownloadingStatus('zipping', 0, totalDownloadingAssets)
 
-    const manualDownloadAsset = (asset) => {
-      // downloadUtils.zipAndDownload([{ url: realUrl, name: asset. name }], 'assets.zip')
-      downloadUtils.downloadFile(realUrl, asset.name)
-    }
+      let api: any = assetApi;
 
-    const shouldRenderCdnTabButton = () => {    
-      const checkValid = (stringsToCheck: string[], paramToCheck: string) => {
-        let result = false;
-
-        if (!paramToCheck) return false
-      
-        stringsToCheck.forEach(str => {
-          const isValid = str.toLowerCase() === paramToCheck.toLowerCase()
-      
-          if (!result) result = isValid
-        })
-      
-        return result
+      if (isShare) {
+        api = shareApi
       }
 
-      const isTypeValid = checkValid(['image', 'video'], assetDetail?.type)
-      const isExtensionValid = checkValid(['png', 'jpg', 'gif', 'tif', 'tiff', 'webp', 'svg', 'mp4', 'mov', 'avi'], assetDetail?.extension)
-      const isUserValid = (user.roleId === 'admin' || user.roleId === 'super_admin') && cdnAccess
+      const { data } = await api.downloadAll(payload, filters)
 
-      return isTypeValid && isExtensionValid && isUserValid
+      // Download file to storage
+      fileDownload(data, 'assets.zip');
+
+      updateDownloadingStatus('done', 0, 0)
+    } catch (e) {
+      updateDownloadingStatus('error', 0, 0, 'Internal Server Error. Please try again.')
     }
-    
-    return (
-        <div className={`app-overlay ${styles.container}`}>
-          {assetDetail &&
-          <section id={"detail-overlay"} className={styles.content}>
-            <div className={styles['top-wrapper']}>
-              <div className={styles.back} onClick={closeOverlay}>
-                <IconClickable src={Utilities.back} />
-                <span>Back</span>
-              </div>
-              <div className={styles.name}>
-                <h3>
-                  {assetDetail.name}
-                </h3>
-                {!isShare && <IconClickable src={Utilities.edit} onClick={() => setRenameModalOpen(true)} />}
-              </div>
-              <div className={styles['asset-actions']}>
-                {!isShare &&
-                <Button text={'Share'} type={'button'} styleType={'primary'} onClick={openShareAsset} />
-                }
-                {mode === 'detail' && <Button text={'Download'}
-                                              type={'button'}
-                                              className={styles['only-desktop-button']}
-                                              styleType={'secondary'}
-                                              onClick={
-                                                () => {
-                                                  if(asset.type === 'image' && isImageType(assetDetail.extension)){
-                                                    setMode('resize')
-                                                    changeActiveSide('detail')
-                                                  }else{
-                                                    // downloadSelectedAssets(asset.id)
-                                                    manualDownloadAsset(asset)
-                                                  }
-                                                }
-                                              } />}
-              </div>
+
+
+    // downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets')
+  }
+
+  const manualDownloadAsset = (asset) => {
+    downloadUtils.downloadFile(versionRealUrl, asset.name)
+  }
+
+  const setDisplayVersions = (versionAssets) => {
+    const versionCount = versionAssets.length
+    versionAssets = versionAssets.map((asset, indx) => {
+      // For architectural reason versions are stored in database in 
+      // the order 1(current), 2, 3, 4 ( recent to oldest)
+      // So need to display in reverse order
+      asset.displayVersion = versionCount - indx + 1
+      return asset
+    })
+    return versionAssets
+  }
+
+  const updateList = (versionAssets, curAsset) => {
+    versionAssets = setDisplayVersions(versionAssets)
+    setCurrentAsset(curAsset)
+    setVersions(versionAssets)
+    setVersionCount(versionAssets.length)
+  }
+
+  const loadVersions = async () => {
+    const { data } = await assetApi.getVersions(currentAsset.versionGroup)
+    updateList(data.versions, data.currentAsset)
+    getDetail(data.currentAsset)
+  }
+
+  useEffect(() => {
+    if (!needsFetch || needsFetch === 'versions') {
+      loadVersions()
+    }
+  }, [needsFetch])
+
+  const revertToCurrent = async (version) => {
+    const { data: newOrderedAssts } = await assetApi.revertVersion({ revertAssetId: version.id, versionGroup: version.versionGroup })
+    const curAsset = newOrderedAssts[0]
+    const versionAssets = newOrderedAssts.splice(1)
+
+    updateList(versionAssets, curAsset)
+    toastUtils.success('Version successfully reverted to current')
+  }
+
+  const shouldRenderCdnTabButton = () => {
+    const checkValid = (stringsToCheck: string[], paramToCheck: string) => {
+      let result = false;
+
+      if (!paramToCheck) return false
+
+      stringsToCheck.forEach(str => {
+        const isValid = str.toLowerCase() === paramToCheck.toLowerCase()
+
+        if (!result) result = isValid
+      })
+
+      return result
+    }
+
+    const isTypeValid = checkValid(['image', 'video'], assetDetail?.type)
+    const isExtensionValid = checkValid(['png', 'jpg', 'gif', 'tif', 'tiff', 'webp', 'svg', 'mp4', 'mov', 'avi'], assetDetail?.extension)
+    const isUserValid = (user.roleId === 'admin' || user.roleId === 'super_admin') && cdnAccess
+
+    return isTypeValid && isExtensionValid && isUserValid
+  }
+
+  const deleteVersion = async (version) => {
+    await assetApi.deleteAsset(version.id)
+    let clonedVersions = [...versions]
+    clonedVersions = clonedVersions.filter(asset => asset.id !== version.id)
+    clonedVersions = setDisplayVersions(clonedVersions)
+    setVersions(clonedVersions)
+    toastUtils.success('Version deleted successfully.')
+  }
+
+
+  const onUserEvent = (eventName, currentVersion) => {
+    if (eventName !== 'delete') {
+      setVersionRealUrl(currentVersion.realUrl)
+      setVersionThumbnailUrl(currentVersion.thumbnailUrl)
+    }
+
+    switch (eventName) {
+      case 'delete':
+        deleteVersion(currentVersion)
+        break
+      case 'revert':
+        revertToCurrent(currentVersion)
+        setChangedVersion(true) // to track version uploaded on overlay close 
+        getDetail(currentVersion)
+        break
+      case 'upload':
+        setChangedVersion(true) // to track version uploaded on overlay close 
+        loadVersions()
+        break
+    }
+  }
+
+  return (
+    <div className={`app-overlay ${styles.container}`}>
+      {assetDetail &&
+        <section id={"detail-overlay"} className={styles.content}>
+          <div className={styles['top-wrapper']}>
+            <div className={styles.back} onClick={() => closeOverlay(changedVersion ? currentAsset : undefined)}>
+              <IconClickable src={Utilities.back} />
+              <span>Back</span>
             </div>
-            <div className={styles['img-wrapper']}>
-              {assetDetail.type === 'image' &&
-              <>
-                {(mode === 'detail' || mode === 'resize') && <AssetImg name={assetDetail.name} assetImg={realUrl} />}
-                {mode === 'crop' && <AssetCropImg imageType={imageType} setWidth={setWidth} setHeight={setHeight}  locked={lockCropping()} name={assetDetail.name} assetImg={realUrl} width={width} height={height} originalHeight={asset.dimensionHeight}/>}
-              </>
+            <div className={styles.name}>
+              <h3>
+                {assetDetail.name}
+              </h3>
+              {!isShare && <IconClickable src={Utilities.edit} onClick={() => setRenameModalOpen(true)} />}
+
+              {hasPermission([SUPERADMIN_ACCESS]) &&
+                <div
+                  className={styles['versions-number']}
+                  onClick={() => { setMode('detail'); resetValues(); changeActiveSide('versions') }}
+                >
+                  {versionCount} versions
+                </div>
               }
-              {assetDetail.type !== 'image' && assetDetail.type !== 'video' && thumbailUrl && <AssetImg name={assetDetail.name} assetImg={thumbailUrl} />}
-              {assetDetail.type !== 'image' && assetDetail.type !== 'video' && !thumbailUrl && <AssetIcon extension={asset.extension} />}
-              {assetDetail.type === 'video' &&
+            </div>
+            <div className={styles['asset-actions']}>
+              {hasPermission([SUPERADMIN_ACCESS]) &&
+                <div className={styles['add-version-override']}>
+                  <AssetAddition folderAdd={false} versionGroup={assetDetail.versionGroup} triggerUploadComplete={onUserEvent} />
+                </div>
+              }
+              {!isShare &&
+                <Button text={'Share'} type={'button'} styleType={'primary'} onClick={openShareAsset} />
+              }
+              {mode === 'detail' && <Button text={'Download'}
+                type={'button'}
+                className={styles['only-desktop-button']}
+                styleType={'secondary'}
+                onClick={
+                  () => {
+                    if (currentAsset.type === 'image' && isImageType(assetDetail.extension)) {
+                      setMode('resize')
+                      changeActiveSide('detail')
+                    } else {
+                      // downloadSelectedAssets(currentAsset.id)
+                      manualDownloadAsset(currentAsset)
+                    }
+                  }
+                } />}
+            </div>
+          </div>
+          <div className={styles['img-wrapper']}>
+            {assetDetail.type === 'image' &&
+              <>
+                {(mode === 'detail' || mode === 'resize') && <AssetImg name={assetDetail.name} assetImg={versionRealUrl} />}
+                {mode === 'crop' && <AssetCropImg imageType={imageType} setWidth={setWidth} setHeight={setHeight} locked={lockCropping()} name={assetDetail.name} assetImg={realUrl} width={width} height={height} originalHeight={currentAsset.dimensionHeight} />}
+              </>
+            }
+            {assetDetail.type !== 'image' && assetDetail.type !== 'video' && versionThumbnailUrl && <AssetImg name={assetDetail.name} assetImg={versionThumbnailUrl} />}
+            {assetDetail.type !== 'image' && assetDetail.type !== 'video' && !versionThumbnailUrl && <AssetIcon extension={currentAsset.extension} />}
+            {assetDetail.type === 'video' &&
               <video controls>
-                <source src={realUrl}
-                        type={`video/${assetDetail.extension}`} />
+                <source src={versionRealUrl}
+                  type={`video/${assetDetail.extension}`} />
                 Sorry, your browser doesn't support video playback.
               </video>
-              }
-            </div>
-          </section>
-          }
-          {sideOpen &&
-          <section className={styles.side}>
-            {assetDetail && activeSideComponent === 'detail' &&
+            }
+          </div>
+        </section>
+      }
+      {sideOpen &&
+        <section className={styles.side}>
+          {assetDetail && activeSideComponent === 'detail' &&
             <>
               {mode === 'detail' && <SidePanel asset={assetDetail} updateAsset={updateAsset} setAssetDetail={setAssetDetail} isShare={isShare} />}
               {mode !== 'detail' && <CropSidePanel
-                  isShare={isShare}
-                  sharePath={sharePath}
-                  imageType={imageType}
-                  onImageTypeChange={(type)=>{
-                    setImageType(type)
-                  }}
-                  downloadImageTypes={downloadImageTypes}
-                  presetTypes={presetTypes}
-                  presetTypeValue={preset}
-                  sizes={sizes}
-                  sizeValue={size}
-                  mode={mode}
-                  width={width}
-                  height={height}
-                  onModeChange={(mode)=>{resetValues();setMode(mode)}}
-                  onSelectChange={onSelectChange}
-                  onSizeInputChange={onSizeInputChange}
-                  asset={assetDetail}
+                isShare={isShare}
+                sharePath={sharePath}
+                imageType={imageType}
+                onImageTypeChange={(type) => {
+                  setImageType(type)
+                }}
+                downloadImageTypes={downloadImageTypes}
+                presetTypes={presetTypes}
+                presetTypeValue={preset}
+                sizes={sizes}
+                sizeValue={size}
+                mode={mode}
+                width={width}
+                height={height}
+                onModeChange={(mode) => { resetValues(); setMode(mode) }}
+                onSelectChange={onSelectChange}
+                onSizeInputChange={onSizeInputChange}
+                asset={assetDetail}
               />}
             </>
-            }
-            {!isShare && activeSideComponent === 'comments' &&
+          }
+          {!isShare && activeSideComponent === 'comments' &&
             <ConversationList itemId={asset?.id} itemType='assets' />
-            }
-            {activeSideComponent === 'cdn' && <CdnPanel assetDetail={assetDetail} />}
-          </section>
           }
-          {!isShare &&
-          <section className={styles.menu}>
-            <IconClickable src={Utilities.closePanelLight} onClick={() => toggleSideMenu()}
-                           additionalClass={`${styles['menu-icon']} ${!sideOpen && 'mirror'} ${styles.expand}`} />
-            <div className={`${styles.separator} ${styles.expand}`}></div>
+          {!isShare && activeSideComponent === 'versions' &&
+            <VersionList versions={versions} currentAsset={currentAsset} triggerUserEvent={onUserEvent}/>
+          }
+          {activeSideComponent === 'cdn' && <CdnPanel assetDetail={assetDetail} />}
+        </section>
+      }
+      {!isShare &&
+        <section className={styles.menu}>
+          <IconClickable src={Utilities.closePanelLight} onClick={() => toggleSideMenu()}
+            additionalClass={`${styles['menu-icon']} ${!sideOpen && 'mirror'} ${styles.expand}`} />
+          <div className={`${styles.separator} ${styles.expand}`}></div>
+          <IconClickable
+            src={Utilities.delete}
+            additionalClass={styles['menu-icon']}
+            onClick={openDeleteAsset} />
+          <div className={styles.separator}></div>
+          <IconClickable
+            src={Utilities.info}
+            additionalClass={styles['menu-icon']}
+            onClick={() => { setMode('detail'); resetValues(); changeActiveSide('detail') }} />
+          <IconClickable
+            src={Utilities.comment}
+            additionalClass={styles['menu-icon']}
+            onClick={() => { setMode('detail'); resetValues(); changeActiveSide('comments') }} />
+          {
+            shouldRenderCdnTabButton() &&
             <IconClickable
-                src={Utilities.delete}
-                additionalClass={styles['menu-icon']}
-                onClick={openDeleteAsset} />
-            <div className={styles.separator}></div>
-            <IconClickable
-                src={Utilities.info}
-                additionalClass={styles['menu-icon']}
-                onClick={() => {setMode('detail');resetValues();changeActiveSide('detail')}} />
-            <IconClickable
-                src={Utilities.comment}
-                additionalClass={styles['menu-icon']}
-                onClick={() => { setMode('detail');resetValues();changeActiveSide('comments')}} />
-            {
-              shouldRenderCdnTabButton() && 
-              <IconClickable
-                src={Utilities.embedCdn}
-                additionalClass={styles['menu-icon']}
-                onClick={() => { setMode('detail');resetValues();changeActiveSide('cdn')}} 
-              />
-            }
-            <IconClickable
-                src={AssetOps.download}
-                additionalClass={styles['menu-icon']}
-                onClick={() => {
-                  if(asset.type === 'image' && isImageType(asset.extension)){
-                    if(mode !== 'resize' && mode !== 'crop'){
-                      setMode('resize')
-                    }
-                    changeActiveSide('detail')
-                  }else{
-                    downloadSelectedAssets(asset.id)
-                  }
-                }
-                }
+              src={Utilities.embedCdn}
+              additionalClass={styles['menu-icon']}
+              onClick={() => { setMode('detail'); resetValues(); changeActiveSide('cdn') }}
             />
-
-          </section>
           }
-          <RenameModal
-              closeModal={() => setRenameModalOpen(false)}
-              modalIsOpen={renameModalOpen}
-              renameConfirm={confirmAssetRename}
-              type={'Asset'}
-              initialValue={assetDetail?.name.substring(0, assetDetail.name.lastIndexOf('.'))}
+          {hasPermission([SUPERADMIN_ACCESS]) &&
+            <IconClickable
+              src={Utilities.versions}
+              additionalClass={styles['menu-icon']}
+              onClick={() => { setMode('detail'); resetValues(); changeActiveSide('versions') }} />
+          }
+          <IconClickable
+            src={AssetOps.download}
+            additionalClass={styles['menu-icon']}
+            onClick={() => {
+              if (currentAsset.type === 'image' && isImageType(currentAsset.extension)) {
+                if (mode !== 'resize' && mode !== 'crop') {
+                  setMode('resize')
+                }
+                changeActiveSide('detail')
+              } else {
+                downloadSelectedAssets(currentAsset.id)
+              }
+            }
+            }
           />
-        </div>
-    )
-  }
 
-  export default DetailOverlay
+        </section>
+      }
+      <RenameModal
+        closeModal={() => setRenameModalOpen(false)}
+        modalIsOpen={renameModalOpen}
+        renameConfirm={confirmAssetRename}
+        type={'Asset'}
+        initialValue={assetDetail?.name?.substring(0, assetDetail?.name.lastIndexOf('.'))}
+      />
+    </div>
+  )
+}
+
+export default DetailOverlay
