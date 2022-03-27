@@ -231,18 +231,20 @@ const AssetsLibrary = () => {
 
   const updateAdvancedConfig = async () => {
     const { data } = await teamApi.getAdvanceOptions()
-    setAdvancedConfig(data)
+    setAdvancedConfig({...data, set: true})
     const defaultTab = getDefaultTab(data)
     let sort = {...activeSortFilter.sort}
+
     if (defaultTab === 'folders') {
-      sort = data.collectionSortView === 'newest' ? selectOptions.sort[1] : selectOptions.sort[3]
+      sort = data.collectionSortView === 'alphabetical' ? selectOptions.sort[3] : selectOptions.sort[1]
     }
+
     setActiveSortFilter({
       ...activeSortFilter,
       mainFilter: defaultTab,
       sort
     })
-    
+  
   }
 
   const getDefaultTab = (advConf?) => {
@@ -675,7 +677,7 @@ const AssetsLibrary = () => {
         activeSortFilter={activeSortFilter}
       />
       <main className={`${styles.container}`}>
-        <TopBar
+      {advancedConfig.set && <TopBar
           activeSortFilter={activeSortFilter}
           setActiveSortFilter={setActiveSortFilter}
           setActiveView={setActiveView}
@@ -685,9 +687,10 @@ const AssetsLibrary = () => {
           setOpenFilter={setOpenFilter}
           openFilter={openFilter}
           deletedAssets={false} />
+        }
         <div className={`${openFilter && styles['col-wrapper']}`}>
           <DropzoneProvider>
-            <AssetGrid
+            {advancedConfig.set && <AssetGrid
               activeFolder={activeFolder}
               getFolders={getFolders}
               activeView={activeView}
@@ -700,6 +703,7 @@ const AssetsLibrary = () => {
               loadMore={loadMore}
               openFilter={openFilter}
             />
+          }
           </DropzoneProvider>
           {openFilter &&
             <FilterContainer
