@@ -25,6 +25,7 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 			return;
 		}
 
+
 		const image = imgRef.current;
 		const canvas = previewCanvasRef.current;
 		const crop = completedCrop;
@@ -205,7 +206,7 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 	const fullHeight = () => {
 		const image = imgRef.current;
 		if(image){
-			console.log(`Real height: ${image.height}`)
+			// console.log(`Real height x width: ${image.height} x ${image.width}`)
 			// Image has height larger than box, do a max height now
 			return document.getElementById("detail-overlay").offsetHeight < image.height;
 		}else{
@@ -224,7 +225,8 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 				locked={locked}
 				ruleOfThirds={true}
 				className={`${fullHeight() ? styles['react-crop'] : ''} ${styles.asset} ${opaque && styles.opaque}`}
-				onChange={(c) => onCropChange(c)}
+				onChange={setCrop}
+				// onChange={(c) => onCropChange(c)}
 				onComplete={(c) => onCropMoveComplete(c)}
 				keepSelection={true}
 			/>
