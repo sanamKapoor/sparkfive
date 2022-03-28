@@ -101,7 +101,12 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 				setExpiredPeriod(expireOptions.filter(
 					(item)=>item.value === parseInt(data.currentSharedLinks.expiredPeriod))[0]
 				)
-				setExpiredAt(new Date(data.currentSharedLinks.expiredAt))
+				if(data.currentSharedLinks.expiredAt){
+					setExpiredAt(new Date(data.currentSharedLinks.expiredAt))
+				}else{
+					setExpiredAt(null)
+				}
+
 				setExpired(data.currentSharedLinks.expired !== undefined ? data.currentSharedLinks.expired : false) // default is false
 				setName(data.currentSharedLinks.name)
 
@@ -141,7 +146,15 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 				(item)=>item.value === parseInt(data.expiredPeriod))[0]
 			)
 		}
-		setExpiredAt(new Date(data.expiredAt))
+
+		if(data.expiredAt){
+			setExpiredAt(new Date(data.expiredAt))
+		}else{
+			setExpiredAt(null)
+		}
+
+
+		// setExpiredAt(new Date(data.expiredAt))
 		setExpired(data.expired)
 		setName(data.name)
 		if(data.name){

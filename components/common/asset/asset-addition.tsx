@@ -22,6 +22,8 @@ import IconClickable from '../buttons/icon-clickable'
 import { validation } from '../../../constants/file-validation'
 import {getFolderKeyAndNewNameByFileName} from "../../../utils/upload";
 
+// Context
+import { FilterContext } from '../../../context'
 
 
 const AssetAddition = ({
@@ -43,9 +45,13 @@ const AssetAddition = ({
 	const [activeModal, setActiveModal] = useState('')
 	const [submitError, setSubmitError] = useState('')
 
+	const { activeSortFilter, setActiveSortFilter } = useContext(FilterContext)
+
 	const {
 		assets,
 		setAssets,
+		lastUploadedFolder,
+		setLastUploadedFolder,
 		setNeedsFetch,
 		setAddedIds,
 		activePageMode,
@@ -64,6 +70,7 @@ const AssetAddition = ({
 
 	// Upload asset
 	const uploadAsset  = async (i: number, assets: any, currentDataClone: any, totalSize: number, folderId, folderGroup = {}, subFolderAutoTag = true) => {
+		let folderUploadInfo
 		try{
 			const formData = new FormData()
 			let file = assets[i].file.originalFile
@@ -72,6 +79,7 @@ const AssetAddition = ({
 
 			// Get file group info, this returns folderKey and newName of file
 			let fileGroupInfo = getFolderKeyAndNewNameByFileName(file.webkitRelativePath, subFolderAutoTag)
+			folderUploadInfo = {name: fileGroupInfo.folderKey, size: totalSize}
 
 			// Do validation
 			if(assets[i].asset.size > validation.UPLOAD.MAX_SIZE.VALUE){
@@ -86,16 +94,16 @@ const AssetAddition = ({
 
 
 				// At this point, file place holder will be removed
-				updateAssetList(newAssetPlaceholder, currentDataClone)
+				updateAssetList(newAssetPlaceholder, currentDataClone, folderUploadInfo)
 
 
 				// The final one
-				if(i === assets.length - 1){
+				if (i === assets.length - 1) {
 					return folderGroup
-				}else{ // Keep going
+				} else { // Keep going
 					await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, subFolderAutoTag)
 				}
-			}else{
+			} else {
 				// Show uploading toast
 				showUploadProcess('uploading', i)
 
@@ -170,7 +178,7 @@ const AssetAddition = ({
 				assets[i] = data[0]
 
 				// At this point, file place holder will be removed
-				updateAssetList(assets, currentDataClone)
+				updateAssetList(assets, currentDataClone, folderUploadInfo)
 
 				setAddedIds(data.map(assetItem => assetItem.asset.id))
 
@@ -190,7 +198,7 @@ const AssetAddition = ({
 					await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, subFolderAutoTag)
 				}
 			}
-		}catch (e){
+		} catch (e){
 			// Violate validation, mark failure
 			const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, index, status: 'fail', error: 'Processing file error'} : asset);
 
@@ -202,7 +210,7 @@ const AssetAddition = ({
 
 
 			// At this point, file place holder will be removed
-			updateAssetList(newAssetPlaceholder, currentDataClone)
+			updateAssetList(newAssetPlaceholder, currentDataClone, folderUploadInfo)
 
 
 			// The final one
@@ -219,11 +227,18 @@ const AssetAddition = ({
 		setUploadingAssets(updatedAssets)
 	}
 
-	const updateAssetList = (newAssetPlaceholder, currentDataClone) => {
+	const updateAssetList = (newAssetPlaceholder, currentDataClone, folderUploadInfo) => {
 		if (versionGroup) {
 			triggerUploadComplete('upload', newAssetPlaceholder[0].asset)
 		} else {
-			setAssets([...newAssetPlaceholder, ...currentDataClone])
+			const lastAsset = newAssetPlaceholder[newAssetPlaceholder.length-1]
+			if (lastAsset) {
+				if (activeSortFilter.mainFilter === "folders" && activeSortFilter.sort.value === "alphabetical") { 
+					const id = newAssetPlaceholder[0].asset.folders[0]
+					setLastUploadedFolder({assets: [...newAssetPlaceholder], ...folderUploadInfo, id, length: newAssetPlaceholder.length})
+				}
+				setAssets([...newAssetPlaceholder, ...currentDataClone])
+			}
 		}
 	}
 
@@ -614,19 +629,19 @@ const AssetAddition = ({
 
 		const Content = (option) => {
 			return (
-				<li className={styles.option}
+				<span className={styles.option}
 					onClick={option.onClick}>
 					<IconClickable src={option.icon} additionalClass={styles.icon} />
 					<div className={styles['option-label']}>{option.label}</div>
 					<div className={styles['option-text']}>{option.text}</div>
-				</li>
+				</span>
 			)
 		}
 
 		return (
 			<ul className={`${styles['options-list']} ${styles[displayMode]}`}>
-				{dropdownOptions.map(option => (
-					<>
+				{dropdownOptions.map((option, indx) => (
+					<li key={indx.toString()}>
 						{option.CustomContent ?
 							<option.CustomContent>
 								<Content {...option} />
@@ -634,7 +649,7 @@ const AssetAddition = ({
 							:
 							<Content {...option} />
 						}
-					</>
+					</li>
 				))}
 			</ul>
 		)

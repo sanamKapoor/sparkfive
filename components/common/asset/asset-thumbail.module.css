@@ -15,7 +15,8 @@
 }
 
 .image-wrapper, .image-wrapper img {
-  height: 17rem;
+  aspect-ratio: 1 / 1;
+  padding: 5px;
 }
 
 .image-button-wrapper, .uploading {
@@ -50,7 +51,7 @@
 .image-wrapper>img, .image-wrapper>.video-wrapper {
   width: inherit;
   height: inherit;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .image-wrapper:hover>img, .image-wrapper:hover>.video-wrapper {

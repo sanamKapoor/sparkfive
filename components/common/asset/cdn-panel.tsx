@@ -6,15 +6,17 @@ import Select from '../inputs/select'
 import urlUtils from '../../../utils/url'
 import generalUtils from '../../../utils/general'
 import { Utilities } from '../../../assets'
-
+import copy from 'copy-to-clipboard'
+import toastUtils from '../../../utils/toast'
 import styles from './cdn-panel.module.css'
 
 const options = {
   image: [
     { label: 'PNG', value: 'png' },
     { label: 'JPG', value: 'jpg'},
-    { label: 'Webp', value: 'webp'},  
-    { label: 'SVG', value: 'svg'},
+    { label: 'JPEG', value: 'jpeg'},
+    // { label: 'Webp', value: 'webp'},  
+    // { label: 'SVG', value: 'svg'},
     { label: 'Tiff', value: 'tiff'},
     { label: 'Tif', value: 'tif'},
     { label: 'Gif', value: 'gif'}
@@ -22,13 +24,12 @@ const options = {
   video: [
     { label: 'Mp4', value: 'mp4'},
     { label: 'MOV', value: 'mov'},
-    { label: 'Avi', value: 'avi'}
+    // { label: 'Avi', value: 'avi'}
   ]
 }
-// prod main url: https://cdn.sparkfive.com 
-const mainUrl = 'http://localhost:8080'
 
 const CdnPanel = ({ assetDetail }) => {
+  const mainUrl = process.env.SERVER_BASE_URL
   const [link, setLink] = useState(encodeURI(`${mainUrl}/assets/${assetDetail.storageId}`))
   const [type, setType] = useState({label: 'Select', value: ''})
   const [dimension, setDimension] = useState({
@@ -72,7 +73,10 @@ const CdnPanel = ({ assetDetail }) => {
     return makeLink({_type, value, secondValue: Math.round(value / dimension.aspectRatio)})
   }
 
-  const copyToClipboard = () => generalUtils.copyToClipboard(link)
+  const copyToClipboard = () => {
+    copy(link)
+		toastUtils.bottomSuccess('Link copied')
+  }
 
   return (
     <div className={styles.container}>

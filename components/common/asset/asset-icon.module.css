@@ -2,7 +2,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 5.5rem;
   }
   .container.bulk-size {
     margin: 0;

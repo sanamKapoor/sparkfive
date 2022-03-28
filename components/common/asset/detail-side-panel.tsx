@@ -774,7 +774,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
         initialValue={newProjectName}
         closeModal={() => setNewProjectName('')}
         confirmCreation={addNewProject}
-        modalIsOpen={newProjectName}
+        modalIsOpen={newProjectName ? true : false}
       />
     </div >
   )
