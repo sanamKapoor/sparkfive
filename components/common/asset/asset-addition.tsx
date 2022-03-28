@@ -24,6 +24,7 @@ import {getFolderKeyAndNewNameByFileName} from "../../../utils/upload";
 
 // Context
 import { FilterContext } from '../../../context'
+import AssetDuplicateModal from './asset-duplicate-modal'
 
 
 const AssetAddition = ({
@@ -44,6 +45,7 @@ const AssetAddition = ({
 
 	const [activeModal, setActiveModal] = useState('')
 	const [submitError, setSubmitError] = useState('')
+	const [duplicateModalOpen, setDuplicateModalOpen] = useState(true)
 
 	const { activeSortFilter, setActiveSortFilter } = useContext(FilterContext)
 
@@ -681,6 +683,11 @@ const AssetAddition = ({
 					importEnabled={true}
 				/>
 			}
+
+			<AssetDuplicateModal
+				modalIsOpen={duplicateModalOpen}
+				closeModal={() => setDuplicateModalOpen(false)}
+			/>
 		</>
 	)
 }

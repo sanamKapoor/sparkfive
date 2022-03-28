@@ -1,0 +1,28 @@
+.wrapper {
+    margin-top: 24px;
+    font-size: 12px;
+}
+
+.actions {
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: flex-start;
+    gap: 16px;
+}
+
+.actions span {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.actions span img {
+    margin-right: 4px;
+    width: 11px;
+}
+
+.file {
+    margin-bottom: 8px;
+    font-weight: 500;
+    word-break: break-all;
+}

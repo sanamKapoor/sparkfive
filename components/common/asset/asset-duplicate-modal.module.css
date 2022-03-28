@@ -1,0 +1,10 @@
+.container {
+    padding: 1rem 2rem;
+    max-width: 600px;
+    width: 100%;
+}
+
+.container p {
+    font-weight: 500;
+    font-size: 12px;
+}
