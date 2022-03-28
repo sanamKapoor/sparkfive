@@ -1,105 +1,133 @@
-import styles from './asset-thumbail.module.css'
-import { Utilities, Assets } from '../../../assets'
-import { format } from 'date-fns'
-import { useState, useEffect } from 'react'
+import styles from "./asset-thumbail.module.css";
+import { Utilities, Assets } from "../../../assets";
+import { format } from "date-fns";
+import { useState, useEffect } from "react";
 
 // Components
-import AssetImg from './asset-img'
-import AssetIcon from './asset-icon'
-import AssetVideo from './asset-video'
-import AssetApplication from './asset-application'
-import AssetText from './asset-text'
-import IconClickable from '../buttons/icon-clickable'
-import Button from '../buttons/button'
-import DetailOverlay from './detail-overlay'
-import AssetOptions from './asset-options'
-import AssetAddition from './asset-addition'
+import AssetImg from "./asset-img";
+import AssetIcon from "./asset-icon";
+import AssetVideo from "./asset-video";
+import AssetApplication from "./asset-application";
+import AssetText from "./asset-text";
+import IconClickable from "../buttons/icon-clickable";
+import Button from "../buttons/button";
+import DetailOverlay from "./detail-overlay";
+import AssetOptions from "./asset-options";
+import AssetAddition from "./asset-addition";
 
-const DEFAULT_DETAIL_PROPS = { visible: false, side: 'detail' }
+const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
 
 const AssetThumbail = ({
   isShare,
   sharePath,
   type,
   asset,
-  thumbnailUrl,
+  thumbailUrl,
   realUrl,
   isUploading,
   showAssetOption = true,
   isSelected = false,
   isLoading = false,
-  toggleSelected = () => { },
-  openDeleteAsset = () => { },
-  openMoveAsset = () => { },
-  openCopyAsset = () => { },
-  openShareAsset = () => { },
-  openArchiveAsset = () => { },
-  downloadAsset = () => { },
-  openRemoveAsset = () => { },
-  handleVersionChange
+  toggleSelected = () => {},
+  openDeleteAsset = () => {},
+  openMoveAsset = () => {},
+  openCopyAsset = () => {},
+  openShareAsset = () => {},
+  openArchiveAsset = () => {},
+  downloadAsset = () => {},
+  openRemoveAsset = () => {},
+  handleVersionChange,
 }) => {
-
-  const [overlayProperties, setOverlayProperties] = useState(DEFAULT_DETAIL_PROPS)
+  const [overlayProperties, setOverlayProperties] =
+    useState(DEFAULT_DETAIL_PROPS);
 
   useEffect(() => {
     if (overlayProperties.visible) {
-      document.body.classList.add('no-overflow')
+      document.body.classList.add("no-overflow");
     } else {
-      document.body.classList.remove('no-overflow')
+      document.body.classList.remove("no-overflow");
     }
-    return () => document.body.classList.remove('no-overflow')
-  }, [overlayProperties.visible])
+    return () => document.body.classList.remove("no-overflow");
+  }, [overlayProperties.visible]);
 
   const openComments = () => {
-    setOverlayProperties({ visible: true, side: 'comments' })
-  }
+    setOverlayProperties({ visible: true, side: "comments" });
+  };
 
   const onCloseOverlay = (changedVersion) => {
     if (changedVersion) {
-      handleVersionChange(changedVersion)
+      handleVersionChange(changedVersion);
     }
-    setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: false })
-  }
+    setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: false });
+  };
 
   return (
     <>
-      <div className={`${styles.container} ${isLoading && 'loadable'}`}>
-        <div className={styles['image-wrapper']}>
-          {isUploading &&
+      <div className={`${styles.container} ${isLoading && "loadable"}`}>
+        <div className={styles["image-wrapper"]}>
+          {isUploading && (
             <>
               <p className={styles.uploading}>Uploading...</p>
             </>
-          }
-          {thumbnailUrl ? (
-            <AssetImg assetImg={thumbnailUrl} type={asset.type} name={asset.name} opaque={isUploading} />
+          )}
+          {thumbailUrl ? (
+            <AssetImg
+              assetImg={thumbailUrl}
+              type={asset.type}
+              name={asset.name}
+              opaque={isUploading}
+            />
           ) : (
             <AssetIcon extension={asset.extension} />
           )}
-          {/* {asset.type === 'image' && <AssetImg assetImg={thumbnailUrl} type={asset.type} name={asset.name} opaque={isUploading} />}
-          {asset.type === 'video' && <AssetVideo assetImg={thumbnailUrl} asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} />}
-          {asset.type === 'application' && <AssetApplication assetImg={thumbnailUrl} extension={asset.extension} />}
-          {asset.type === 'text' && <AssetText assetImg={thumbnailUrl} extension={asset.extension} />} */}
-          {!isUploading && !isLoading &&
+          {/* {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} opaque={isUploading} />}
+          {asset.type === 'video' && <AssetVideo assetImg={thumbailUrl} asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} />}
+          {asset.type === 'application' && <AssetApplication assetImg={thumbailUrl} extension={asset.extension} />}
+          {asset.type === 'text' && <AssetText assetImg={thumbailUrl} extension={asset.extension} />} */}
+          {!isUploading && !isLoading && (
             <>
-              <div className={`${styles['selectable-wrapper']} ${isSelected && styles['selected-wrapper']}`}>
-                {isSelected ?
-                  <IconClickable src={Utilities.radioButtonEnabled} additionalClass={styles['select-icon']} onClick={toggleSelected} />
-                  :
-                  <IconClickable src={Utilities.radioButtonNormal} additionalClass={styles['select-icon']} onClick={toggleSelected} />
-                }
+              <div
+                className={`${styles["selectable-wrapper"]} ${
+                  isSelected && styles["selected-wrapper"]
+                }`}
+              >
+                {isSelected ? (
+                  <IconClickable
+                    src={Utilities.radioButtonEnabled}
+                    additionalClass={styles["select-icon"]}
+                    onClick={toggleSelected}
+                  />
+                ) : (
+                  <IconClickable
+                    src={Utilities.radioButtonNormal}
+                    additionalClass={styles["select-icon"]}
+                    onClick={toggleSelected}
+                  />
+                )}
               </div>
-              <div className={styles['image-button-wrapper']}>
-                <Button styleType={'primary'} text={'View Details'} type={'button'}
-                  onClick={() => setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: !overlayProperties.visible })} />
+              <div className={styles["image-button-wrapper"]}>
+                <Button
+                  styleType={"primary"}
+                  text={"View Details"}
+                  type={"button"}
+                  onClick={() =>
+                    setOverlayProperties({
+                      ...DEFAULT_DETAIL_PROPS,
+                      visible: !overlayProperties.visible,
+                    })
+                  }
+                />
               </div>
             </>
-          }
+          )}
         </div>
         <div className={styles.info}>
-          <div className='normal-text'>{asset.name}</div>
-          <div className={styles['details-wrapper']}>
-            <div className='secondary-text'>{format(new Date(asset.createdAt), 'MMM d, yyyy, p')}</div>
-            {!isUploading && showAssetOption &&
+          <div className="normal-text">{asset.name}</div>
+          <div className={styles["details-wrapper"]}>
+            <div className="secondary-text">
+              {format(new Date(asset.createdAt), "MMM d, yyyy, p")}
+            </div>
+            {!isUploading && showAssetOption && (
               <AssetOptions
                 itemType={type}
                 asset={asset}
@@ -113,24 +141,29 @@ const AssetThumbail = ({
                 openRemoveAsset={openRemoveAsset}
                 isShare={isShare}
               />
-            }
+            )}
           </div>
         </div>
       </div>
-      {overlayProperties.visible &&
+      {overlayProperties.visible && (
         <DetailOverlay
           sharePath={sharePath}
           isShare={isShare}
           asset={asset}
-          realUrl={(asset.extension === 'tiff' || asset.extension === 'tif') ? thumbnailUrl : realUrl}
-          thumbnailUrl={thumbnailUrl}
+          realUrl={
+            asset.extension === "tiff" || asset.extension === "tif"
+              ? thumbailUrl
+              : realUrl
+          }
+          thumbailUrl={thumbailUrl}
           initialParams={overlayProperties}
           openShareAsset={openShareAsset}
           openDeleteAsset={openDeleteAsset}
-          closeOverlay={onCloseOverlay} />
-      }
+          closeOverlay={onCloseOverlay}
+        />
+      )}
     </>
-  )
-}
+  );
+};
 
-export default AssetThumbail
+export default AssetThumbail;
