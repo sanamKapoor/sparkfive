@@ -687,6 +687,7 @@ const AssetAddition = ({
 			<AssetDuplicateModal
 				modalIsOpen={duplicateModalOpen}
 				closeModal={() => setDuplicateModalOpen(false)}
+				confirmAction={() => setDuplicateModalOpen(false)}
 			/>
 		</>
 	)

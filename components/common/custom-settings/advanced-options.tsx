@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import { useEffect, useState } from 'react'
 
 import { Utilities } from '../../../assets'
 
@@ -17,6 +17,7 @@ const AdvancedOptions = () => {
     const [autoTagSubFolder, setAutoTagSubFolder] = useState(true)
     const [defaultLandingPage, setDefaultLandingPage] = useState()
     const [collectionSortView, setCollectionSortView] = useState()
+    const [checkDuplicate, setCheckDuplicate] = useState(false)
 
     const saveAdvanceConfig = async (config) => {
         setLoading(true)
@@ -41,9 +42,9 @@ const AdvancedOptions = () => {
         return false;
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getAdvanceConfigurations();
-    },[])
+    }, [])
 
     return (
         <div className={styles['main-wrapper']}>
@@ -55,7 +56,7 @@ const AdvancedOptions = () => {
                                 <span className={'font-weight-500'}>Deleted Assets</span>
                             </div>
                             <div className={"col-60"}>
-                            <a className={`${styles['anchor']}`} href='#' onClick={(ev) => navigateToDeletedList(ev)}>Manage Deleted Assets</a>
+                                <a className={`${styles['anchor']}`} href='#' onClick={(ev) => navigateToDeletedList(ev)}>Manage Deleted Assets</a>
                             </div>
                         </div>
                     </div>
@@ -75,15 +76,15 @@ const AdvancedOptions = () => {
                                             <IconClickable
                                                 src={autoTagSubFolder ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
-                                                onClick={() => saveAdvanceConfig({subFolderAutoTag: true})} />
-                                            <div className={'font-12 m-l-15'}>Subfolders as Tags (Default)</div>
+                                                onClick={() => saveAdvanceConfig({ subFolderAutoTag: true })} />
+                                            <div className={'font-12 m-l-10'}>Subfolders as Tags (Default)</div>
                                         </div>
                                         <div className={`${styles['radio-button-wrapper']} ${styles['hide-on-mobile']}`}>
                                             <IconClickable
                                                 src={!autoTagSubFolder ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
-                                                onClick={() => saveAdvanceConfig({subFolderAutoTag: false})} />
-                                            <div className={'font-12 m-l-15'}>Subfolders as Separate Collections</div>
+                                                onClick={() => saveAdvanceConfig({ subFolderAutoTag: false })} />
+                                            <div className={'font-12 m-l-10'}>Subfolders as Separate Collections</div>
                                         </div>
                                     </div>
                                 </div>
@@ -106,15 +107,15 @@ const AdvancedOptions = () => {
                                             <IconClickable
                                                 src={defaultLandingPage === 'allTab' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
-                                                onClick={() => saveAdvanceConfig({defaultLandingPage: 'allTab'})} />
-                                            <div className={'font-12 m-l-15'}>All Tab</div>
+                                                onClick={() => saveAdvanceConfig({ defaultLandingPage: 'allTab' })} />
+                                            <div className={'font-12 m-l-10'}>All Tab</div>
                                         </div>
                                         <div className={`${styles['radio-button-wrapper']} ${styles['hide-on-mobile']}`}>
                                             <IconClickable
                                                 src={defaultLandingPage !== 'allTab' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
-                                                onClick={() => saveAdvanceConfig({defaultLandingPage: 'collection'})} />
-                                            <div className={'font-12 m-l-15'}>Collection Tab</div>
+                                                onClick={() => saveAdvanceConfig({ defaultLandingPage: 'collection' })} />
+                                            <div className={'font-12 m-l-10'}>Collection Tab</div>
                                         </div>
                                     </div>
                                 </div>
@@ -137,15 +138,50 @@ const AdvancedOptions = () => {
                                             <IconClickable
                                                 src={collectionSortView === 'alphabetical' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
-                                                onClick={() => saveAdvanceConfig({collectionSortView: 'alphabetical'})} />
-                                            <div className={'font-12 m-l-15'}>Alphabetical</div>
+                                                onClick={() => saveAdvanceConfig({ collectionSortView: 'alphabetical' })} />
+                                            <div className={'font-12 m-l-10'}>Alphabetical</div>
                                         </div>
                                         <div className={`${styles['radio-button-wrapper']} ${styles['hide-on-mobile']}`}>
                                             <IconClickable
                                                 src={collectionSortView !== 'alphabetical' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
-                                                onClick={() => saveAdvanceConfig({collectionSortView: 'newest'})} />
-                                            <div className={'font-12 m-l-15'}>Newest</div>
+                                                onClick={() => saveAdvanceConfig({ collectionSortView: 'newest' })} />
+                                            <div className={'font-12 m-l-10'}>Newest</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className={`${styles['row']} ${styles['field-block']}`}>
+                <div className={`${styles['col-100']}`}>
+                    <div className={`${styles['row']}`}>
+                        <div className={`${styles['deleted-assets']} row`}>
+                            <div className={"col-40 col-md-100"}>
+                                <span className={'font-weight-500'}>Duplicate Management</span>
+                            </div>
+                            <div className={"col-60 col-md-100"}>
+                                <div>
+                                    <div className={styles['field-radio-wrapper']}>
+                                        <div className={"col-40 p-l-r-0"}>
+                                            <a className={`${styles['anchor']}`} href='#' onClick={() => {}}>Manage Duplicates</a>
+                                        </div>
+                                        <div className={'font-12 m-r-15'}>Check Uploads</div>
+                                        <div className={`${styles['radio-button-wrapper']} m-r-15`}>
+                                            <IconClickable
+                                                src={checkDuplicate ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                                                additionalClass={styles['select-icon']}
+                                                onClick={() => setCheckDuplicate(true)} />
+                                            <div className={'font-12 m-l-10'}>On</div>
+                                        </div>
+                                        <div className={`${styles['radio-button-wrapper']} ${styles['hide-on-mobile']}`}>
+                                            <IconClickable
+                                                src={!checkDuplicate ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                                                additionalClass={styles['select-icon']}
+                                                onClick={() => setCheckDuplicate(false)} />
+                                            <div className={'font-12 m-l-10'}>Off (Default)</div>
                                         </div>
                                     </div>
                                 </div>

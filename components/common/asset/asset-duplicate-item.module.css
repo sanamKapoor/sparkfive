@@ -26,3 +26,16 @@
     font-weight: 500;
     word-break: break-all;
 }
+
+.input {
+    display: grid;
+    grid-auto-flow: column;
+    gap: 8px;
+}
+
+@media screen and (max-width: 500px) {
+    .actions {
+        grid-auto-flow: row;
+        gap: 8px;
+    }
+}

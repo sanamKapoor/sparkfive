@@ -47,7 +47,8 @@
   padding: 20px;
   border-bottom: 1px solid var(--color-secondary-border);
   font-size: 17px;
-  width: 35rem;
+  min-width: 35rem;
+  width: 100%;
   align-items: center;
 }
 
@@ -88,14 +89,8 @@
   text-overflow: ellipsis;
 }
 
-@media screen and (max-width: 717px) {
-  .text {
-    width: 25rem;
-  }
-}
-
 @media screen and (max-width: 500px) {
   .text {
-    width: 15rem;
+    min-width: 100%;
   }
 }

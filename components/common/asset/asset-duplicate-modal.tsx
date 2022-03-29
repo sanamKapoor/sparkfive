@@ -3,6 +3,7 @@ import AssetDuplicateItem from './asset-duplicate-item'
 import styles from './asset-duplicate-modal.module.css'
 
 const AssetDuplicateModal = ({modalIsOpen, closeModal, confirmAction}) => {
+
     return (
         <Base
             modalIsOpen={modalIsOpen}
@@ -17,10 +18,10 @@ const AssetDuplicateModal = ({modalIsOpen, closeModal, confirmAction}) => {
             <div className={styles.container}>
                 <p>
                     The following file(s) already exists in your account.
-                    Do you want to use this uploaded version as the current version, replace the filename or cancel the upload of these specific files?
+                    Do you want to use this uploaded version as the current version, change the filename or cancel the upload of these specific files?
                 </p>
-                <AssetDuplicateItem />
-                <AssetDuplicateItem />
+                <AssetDuplicateItem file={'ImageExample_1.png'} />
+                <AssetDuplicateItem file={'ImageExample__2.png'} />
             </div>
         </Base>
     )
