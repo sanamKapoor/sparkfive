@@ -1,10 +1,9 @@
 import styles from './index.module.css'
 import { useState, useEffect, useContext, useRef } from 'react'
-import { AssetContext, FilterContext } from '../../../context'
+import { AssetContext, FilterContext, UserContext } from '../../../context'
 import update from 'immutability-helper'
 import assetApi from '../../../server-api/asset'
 import folderApi from '../../../server-api/folder'
-import teamApi from '../../../server-api/team'
 import toastUtils from '../../../utils/toast'
 import { getFolderKeyAndNewNameByFileName } from '../../../utils/upload'
 import { getAssetsFilters, getAssetsSort, DEFAULT_FILTERS, DEFAULT_CUSTOM_FIELD_FILTERS, getFoldersFromUploads } from '../../../utils/asset'
@@ -24,7 +23,7 @@ import { useRouter } from 'next/router'
 
 // utils
 import selectOptions from '../../../utils/select-options'
-import advancedConfigParams from '../../../utils/advance-config-params'
+// import advancedConfigParams from '../../../utils/advance-config-params'
 
 const AssetsLibrary = () => {
 
@@ -56,6 +55,8 @@ const AssetsLibrary = () => {
     setTotalAssets
   } = useContext(AssetContext)
 
+  const { advancedConfig, setAdvancedConfig } = useContext(UserContext)
+
   const [activeMode, setActiveMode] = useState('assets')
 
   const [activeSearchOverlay, setActiveSearchOverlay] = useState(false)
@@ -66,7 +67,7 @@ const AssetsLibrary = () => {
 
   const [openFilter, setOpenFilter] = useState(false)
 
-  const [advancedConfig, setAdvancedConfig] = useState(advancedConfigParams)
+  // const [advancedConfig, setAdvancedConfig] = useState(advancedConfigParams)
 
   const { activeSortFilter, setActiveSortFilter, tags, loadTags, loadProductFields, productFields, folders: collection, loadFolders, campaigns, loadCampaigns } = useContext(FilterContext)
 
@@ -170,7 +171,10 @@ const AssetsLibrary = () => {
       // setFirstLoaded(true)
       return
     } else {
-      setInitialLoad()
+      if (!firstLoaded) {
+        setFirstLoaded(true)
+      }
+      // setInitialLoad()
     }
 
     if (firstLoaded) {
@@ -213,6 +217,10 @@ const AssetsLibrary = () => {
     }
   }, [activeMode])
 
+  useEffect(() => {
+    updateAdvancedConfig()
+  }, [advancedConfig])
+
   const clearFilters = () => {
     setActiveSortFilter({
       ...activeSortFilter,
@@ -221,22 +229,12 @@ const AssetsLibrary = () => {
     })
   }
 
-
-  const setInitialLoad = async () => {
-    if (!firstLoaded) {
-      setFirstLoaded(true)
-      await updateAdvancedConfig()
-    }
-  }
-
   const updateAdvancedConfig = async () => {
-    const { data } = await teamApi.getAdvanceOptions()
-    setAdvancedConfig({...data, set: true})
-    const defaultTab = getDefaultTab(data)
+    const defaultTab = getDefaultTab(advancedConfig)
     let sort = {...activeSortFilter.sort}
 
     if (defaultTab === 'folders') {
-      sort = data.collectionSortView === 'alphabetical' ? selectOptions.sort[3] : selectOptions.sort[1]
+      sort = advancedConfig.collectionSortView === 'alphabetical' ? selectOptions.sort[3] : selectOptions.sort[1]
     }
 
     setActiveSortFilter({

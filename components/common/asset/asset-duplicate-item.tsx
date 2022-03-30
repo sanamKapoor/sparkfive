@@ -5,23 +5,47 @@ import { useState } from 'react'
 import Input from '../inputs/input'
 import Button from '../buttons/button'
 
-const AssetDuplicateItem = ({ file }) => {
-
+const AssetDuplicateItem = ({ file, onFileNameUpdate }) => {
     const [cancel, setCancel] = useState(false)
     const [current, setCurrent] = useState(false)
-    const [changeFileName, setChangeFileName] = useState(false)
-    const [savedFileName, setSavedFileName] = useState(false)
+    const [edit, setEdit] = useState(false)
+    const [changedFileName, setChangedFileName] = useState(false)
     const [fileName, setFileName] = useState(file)
+    const [oldName, setOldName] = useState(file)
+
+    const setAction = (action, flag) => {
+        switch (action) {
+            case 'edit':
+                setEdit(flag)
+                if (flag) {
+                    setFileName(oldName)
+                    setChangedFileName(false)
+                }
+                break;
+            case 'change':
+                setChangedFileName(flag)
+                break;
+            case 'current':
+                setCurrent(flag)
+                break;
+            case 'cancel':
+                setCancel(flag)
+                break;
+        }
+        if (action !== 'edit') {
+            onFileNameUpdate(action, oldName, fileName)
+        }
+    }
 
     return (
         <div className={styles.wrapper}>
             <div className={styles.file}>
-                {savedFileName ? fileName : file}
+                {changedFileName ? fileName : file}
             </div>
             <div className={styles.actions}>
 
-                {!current && !changeFileName &&
-                    <span onClick={() => setCancel(true)}>
+                {!current && !edit &&
+                    <span onClick={() => setAction('cancel', !cancel)}>
                         <IconClickable
                             tooltipText={'Cancel'}
                             tooltipId={'Cancel'}
@@ -31,8 +55,8 @@ const AssetDuplicateItem = ({ file }) => {
                     </span>
                 }
 
-                {!cancel && !changeFileName &&
-                    <span onClick={() => setCurrent(true)}>
+                {!cancel && !edit &&
+                    <span onClick={() => setAction('current', !current)}>
                         <IconClickable
                             tooltipText={'Save'}
                             tooltipId={'Save'}
@@ -43,7 +67,7 @@ const AssetDuplicateItem = ({ file }) => {
                 }
 
                 {!cancel && !current &&
-                    changeFileName && !savedFileName ? (
+                    edit && !changedFileName ? (
                         <div className={styles.input}>
                             <Input
                                 styleType={'regular-height-short'}
@@ -53,21 +77,22 @@ const AssetDuplicateItem = ({ file }) => {
                             />
                             <Button
                                 styleTypes={['exclude-min-height']}
-                                text="Save"
+                                text="Set"
                                 styleType='primary'
-                                onClick={() => setSavedFileName(true)}
+                                onClick={() => setAction('change', true)}
                             />
+                            <span onClick={() => setAction('edit', false)}>Cancel</span>
                         </div>
 
                     ) : (
                         !cancel && !current &&
-                            <span onClick={() => setChangeFileName(true)}>
+                            <span onClick={() => setAction('edit', !edit)}>
                                 <IconClickable
                                     tooltipText={'Edit'}
                                     tooltipId={'Edit'}
-                                    src={savedFileName ? Utilities['check'] : AssetOps[`edit`]}
+                                    src={changedFileName ? Utilities['check'] : AssetOps[`edit`]}
                                 />
-                                Change{savedFileName && 'd'} filename
+                                Change{changedFileName && 'd'} filename
                             </span>
                     )
                 }

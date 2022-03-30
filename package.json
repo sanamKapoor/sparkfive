@@ -27,6 +27,7 @@
     "immutability-helper": "^3.0.2",
     "js-file-download": "^0.4.12",
     "jszip": "^3.5.0",
+    "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2",
     "next": "^10.0.9",

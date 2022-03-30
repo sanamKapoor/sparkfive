@@ -109,7 +109,7 @@ const AddCustomRole = ({ onSave, role }) => {
 
     // On custom field select one changes
     const onChangeSelectOneCustomField = async (selected, index) => {
-        console.log(selected)
+        // console.log(selected)
         // Show loading
         // setIsLoading(true)
 

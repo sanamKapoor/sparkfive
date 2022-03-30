@@ -392,7 +392,7 @@ const GuestUpload = () => {
         try {
             const { data } = await shareUploadLinkApi.getLinkDetail({ url: query.code })
 
-            console.log(data)
+            // console.log(data)
 
             // Show team name and logo
             updateLogo(data.logo)
@@ -436,7 +436,7 @@ const GuestUpload = () => {
             console.log(`Register socket listener...`)
             // Listen upload file process event
             socket.on('uploadFilesProgress', function(data){
-                console.log(data)
+                // console.log(data)
                 setUploadingPercent(data.percent)
                 setUploadRemainingTime(`${convertTimeFromSeconds(data.timeLeft)} remaining`)
 

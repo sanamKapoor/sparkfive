@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 
 import { Utilities } from '../../../assets'
 
 import styles from './advanced-options.module.css'
 import Router from 'next/router'
+import { UserContext } from '../../../context'
 
 // Components
 import SpinnerOverlay from "../spinners/spinner-overlay";
@@ -18,6 +19,7 @@ const AdvancedOptions = () => {
     const [defaultLandingPage, setDefaultLandingPage] = useState()
     const [collectionSortView, setCollectionSortView] = useState()
     const [checkDuplicate, setCheckDuplicate] = useState(false)
+    const { advancedConfig, setAdvancedConfig } = useContext(UserContext)
 
     const saveAdvanceConfig = async (config) => {
         setLoading(true)
@@ -31,6 +33,8 @@ const AdvancedOptions = () => {
         setAutoTagSubFolder(data.subFolderAutoTag)
         setDefaultLandingPage(data.defaultLandingPage)
         setCollectionSortView(data.collectionSortView)
+        setCheckDuplicate(data.duplicateCheck)
+        setAdvancedConfig(data)
 
         setLoading(false)
         return true
@@ -173,14 +177,14 @@ const AdvancedOptions = () => {
                                             <IconClickable
                                                 src={checkDuplicate ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
-                                                onClick={() => setCheckDuplicate(true)} />
+                                                onClick={() => saveAdvanceConfig({ duplicate_check: true })} />
                                             <div className={'font-12 m-l-10'}>On</div>
                                         </div>
                                         <div className={`${styles['radio-button-wrapper']} ${styles['hide-on-mobile']}`}>
                                             <IconClickable
                                                 src={!checkDuplicate ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
-                                                onClick={() => setCheckDuplicate(false)} />
+                                                onClick={() => saveAdvanceConfig({ duplicate_check: false })} />
                                             <div className={'font-12 m-l-10'}>Off (Default)</div>
                                         </div>
                                     </div>

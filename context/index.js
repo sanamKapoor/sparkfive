@@ -9,6 +9,8 @@ export const LoadingContext = createContext({
 export const UserContext = createContext({
     user: null,
     setUser: (user) => { },
+    advancedConfig: null,
+    setAdvancedConfig: (config) => { },
     fetchUser: (redirectUser) => { },
     logOut: () => { },
     hasPermission: (requiredPermissions) => { return true },
