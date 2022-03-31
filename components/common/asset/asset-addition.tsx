@@ -545,12 +545,6 @@ const AssetAddition = ({
 			icon: Assets.file
 		},
 		{
-			label: 'Upload',
-			text: 'folder',
-			onClick: () => folderBrowserRef.current.click(),
-			icon: Assets.folder
-		},
-		{
 			label: 'Dropbox',
 			text: 'Import files',
 			onClick: openDropboxSelector,
@@ -577,7 +571,13 @@ const AssetAddition = ({
 			text: 'Organized Files',
 			onClick: () => setActiveModal('folder'),
 			icon: Assets.folder
-		})
+		},
+		{
+			label: 'Upload',
+			text: 'folder',
+			onClick: () => folderBrowserRef.current.click(),
+			icon: Assets.folder
+		},)
 	}
 
 	if (activePageMode !== 'library') {
