@@ -95,7 +95,14 @@ export default ({ children }) => {
   const hasPermission = (requiredPermissions = []) => {
     // console.warn(`Check permission: `, requiredPermissions, user?.permissions)
     if (requiredPermissions.length === 0) return true
-    return requiredPermissions.some(perm => user?.permissions.map(userPerm => userPerm.id).includes(perm))
+    // check by features/permissions
+    let allowed = requiredPermissions.some(perm => user?.permissions.map(userPerm => userPerm.id).includes(perm))
+
+    // check by roleId
+    if (!allowed) {
+      allowed = requiredPermissions.some(role => user && role === user.roleId)
+    }
+    return allowed;
   }
 
   const afterAuth = async ({ twoFactor, token }) => {

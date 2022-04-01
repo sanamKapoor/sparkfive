@@ -500,15 +500,15 @@ export default ({ getAssets }) => {
 
   const getShareLink = async () => {
     try {
-      let assetIds;
+      let versionGroups;
       let filters = {};
       if (operationAsset) {
-        assetIds = operationAsset.asset.id;
+        versionGroups = operationAsset.asset.versionGroup;
       } else if (operationFolder) {
-        assetIds = operationFolder.assets.map((asset) => asset.id).join(",");
+        versionGroups = operationFolder.assets.map((asset) => asset.versionGroup).join(",");
       } else {
-        assetIds = selectedAssets
-          .map((assetItem) => assetItem.asset.id)
+        versionGroups = selectedAssets
+          .map((assetItem) => assetItem.asset.versionGroup)
           .join(",");
       }
 
@@ -535,7 +535,7 @@ export default ({ getAssets }) => {
       filters["name"] = name;
       return await assetApi.getShareUrl(
         {
-          assetIds,
+          versionGroups,
         },
         filters
       );
