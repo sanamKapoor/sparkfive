@@ -430,8 +430,8 @@ const AssetAddition = ({
 		const options = {
 			success: onDropboxFilesSelection,
 			linkType: 'preview',
-			multiselect: true,
-			folderselect: true,
+			multiselect: versionGroup ? false : true,
+			folderselect: versionGroup ? false : true,
 			sizeLimit: 1000 * 1024 * 1024 * 2
 		}
 		// Ignore this annoying warning
@@ -537,56 +537,68 @@ const AssetAddition = ({
 		setActiveSearchOverlay(false)
 	}
 
-	const dropdownOptions = [
+	let dropdownOptions = [
 		{
+			id: 'library',
+			label: 'Asset Library',
+			text: 'Import from library',
+			onClick: () => setActiveSearchOverlay(true),
+			icon: Assets.asset
+		},
+		{
+			id: 'collection',
+			label: 'Add Collection',
+			text: 'Organized Files',
+			onClick: () => setActiveModal('folder'),
+			icon: Assets.folder
+		},
+		{
+			id: 'file',
 			label: 'Upload',
 			text: 'png, jpg, mp4 and more',
 			onClick: () => fileBrowserRef.current.click(),
 			icon: Assets.file
 		},
 		{
+			id: 'folder',
 			label: 'Upload',
 			text: 'folder',
 			onClick: () => folderBrowserRef.current.click(),
 			icon: Assets.folder
 		},
 		{
+			id: 'dropbox',
 			label: 'Dropbox',
 			text: 'Import files',
 			onClick: openDropboxSelector,
 			icon: Assets.dropbox
 		},
 		{
+			id: 'gdrive',
 			label: 'Google Drive',
 			text: 'Import files',
 			onClick: () => { },
 			icon: Assets.gdrive,
-			CustomContent: ({ children }) => (
+			CustomContent: ({ children }) => {
+				return (
 				<DriveSelector
+					multiSelect={versionGroup ? false : true}
+					folderSelect={versionGroup ? false : true}
 					onFilesSelect={onDriveFilesSelection}
 				>
 					{children}
 				</DriveSelector>
 			)
+			}
 		}
 	]
 
-	if (folderAdd) {
-		dropdownOptions.unshift({
-			label: 'Add Collection',
-			text: 'Organized Files',
-			onClick: () => setActiveModal('folder'),
-			icon: Assets.folder
-		})
+	if (!folderAdd) {
+		dropdownOptions = dropdownOptions.filter(item => ['collection', 'folder'].indexOf(item.id) === -1)
 	}
 
-	if (activePageMode !== 'library') {
-		dropdownOptions.unshift({
-			label: 'Asset Library',
-			text: 'Import from library',
-			onClick: () => setActiveSearchOverlay(true),
-			icon: Assets.asset
-		})
+	if (activePageMode === 'library') {
+		dropdownOptions = dropdownOptions.filter(item => ['library'].indexOf(item.id) === -1)
 	}
 
 	const getCreationParameters = (attachQuery?: any) => {
@@ -657,7 +669,7 @@ const AssetAddition = ({
 
 	return (
 		<>
-			<input multiple={true} id="file-input-id" ref={fileBrowserRef} style={{ display: 'none' }} type='file'
+			<input multiple={versionGroup ? false : true} id="file-input-id" ref={fileBrowserRef} style={{ display: 'none' }} type='file'
 				onChange={onFileChange} />
 			<input multiple={true} webkitdirectory='' id="file-input-id" ref={folderBrowserRef} style={{ display: 'none' }} type='file'
 				onChange={onFileChange} />

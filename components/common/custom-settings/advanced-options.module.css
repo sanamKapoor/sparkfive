@@ -131,14 +131,15 @@
 }
 
 .first-field-block{
-    border-bottom: solid 1px #dddad4;
     padding-top: 2rem;
     padding-bottom: 2rem;
+    border-bottom: solid 1px #dddad4;
 }
 
 .field-block{
     padding-top: 2rem;
     padding-bottom: 2rem;
+    border-bottom: solid 1px #dddad4;
 }
 
 .tag-wrapper{
