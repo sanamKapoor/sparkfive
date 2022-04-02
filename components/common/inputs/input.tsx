@@ -1,11 +1,12 @@
 import styles from './input.module.css'
 
-const Input = (props) => (
-  <input
-    {...props}
-    className={`${styles.container} ${props.styleType && styles[props.styleType]} ${props.additionalClasses}`}
-
-  />
-)
+const Input = (props) => {
+  const {styleType, additionalClasses, ...rest} = props
+  return (
+    <input
+      {...rest}
+      className={`${styles.container} ${styleType && styles[styleType]} ${additionalClasses}`}
+    />
+  )}
 
 export default Input
