@@ -35,11 +35,13 @@ const TopBar = ({
   const {hasPermission} = useContext(UserContext)
 
   const setSortFilterValue = (key, value) => {
-    let sort 
-    if (value === 'folders' && advancedConfigParams.collectionSortView === 'alphabetical') {
-       sort = selectOptions.sort[3]
-    } else {
-      sort = selectOptions.sort[1]
+    let sort = value
+    if (key === 'mainFilter') {
+      if (value === 'folders' && advancedConfigParams.collectionSortView === 'alphabetical') {
+        sort = selectOptions.sort[3]
+      } else {
+        sort = selectOptions.sort[1]
+      }
     }
 
     // Reset select all status
