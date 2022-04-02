@@ -31,7 +31,7 @@ import CdnPanel from "./cdn-panel";
 
 import { isImageType } from "../../../utils/file";
 
-import { SUPERADMIN_ACCESS } from "../../../constants/permissions";
+import { ASSET_ACCESS } from "../../../constants/permissions";
 
 const getDefaultDownloadImageType = (extension) => {
   const defaultDownloadImageTypes = [
@@ -208,7 +208,7 @@ const DetailOverlay = ({
         setAssetDetail(data.asset);
 
         setVersionRealUrl(data.realUrl);
-        setVersionThumbnailUrl(data.versionThumbnailUrl);
+        setVersionThumbnailUrl(data.thumbailUrl);
       }
     } catch (err) {
       console.log(err);
@@ -557,7 +557,7 @@ const DetailOverlay = ({
                 />
               )}
 
-              {hasPermission([SUPERADMIN_ACCESS]) && (
+              {hasPermission(['admin', 'super_admin']) && versionCount>0 && (
                 <div
                   className={styles["versions-number"]}
                   onClick={() => {
@@ -566,12 +566,12 @@ const DetailOverlay = ({
                     changeActiveSide("versions");
                   }}
                 >
-                  {versionCount} versions
+                  {versionCount + 1} versions
                 </div>
               )}
             </div>
             <div className={styles["asset-actions"]}>
-              {hasPermission([SUPERADMIN_ACCESS]) && (
+              {hasPermission(['admin', 'super_admin']) && (
                 <div className={styles["add-version-override"]}>
                   <AssetAddition
                     folderAdd={false}
@@ -755,7 +755,7 @@ const DetailOverlay = ({
               }}
             />
           )}
-          {hasPermission([SUPERADMIN_ACCESS]) && (
+          {hasPermission(['admin', 'super_admin']) && versionCount > 0 && (
             <IconClickable
               src={Utilities.versions}
               additionalClass={styles["menu-icon"]}

@@ -55,6 +55,10 @@ body.no-overflow {
   overflow: hidden;
 }
 
+.picker-dialog{
+  z-index: 9999!important;
+}
+
 a {
   color: inherit;
   /* blue colors for links too */

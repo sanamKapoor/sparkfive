@@ -153,7 +153,6 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 			setExpiredAt(null)
 		}
 
-
 		// setExpiredAt(new Date(data.expiredAt))
 		setExpired(data.expired)
 		setName(data.name)

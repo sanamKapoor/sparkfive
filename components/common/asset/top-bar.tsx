@@ -11,6 +11,7 @@ import IconClickable from '../buttons/icon-clickable'
 
 // Context
 import { AssetContext, UserContext } from '../../../context'
+import advancedConfigParams from '../../../utils/advance-config-params'
 
 const TopBar = ({
   activeSortFilter,
@@ -34,6 +35,15 @@ const TopBar = ({
   const {hasPermission} = useContext(UserContext)
 
   const setSortFilterValue = (key, value) => {
+    let sort = value
+    if (key === 'mainFilter') {
+      if (value === 'folders' && advancedConfigParams.collectionSortView === 'alphabetical') {
+        sort = selectOptions.sort[3]
+      } else {
+        sort = selectOptions.sort[1]
+      }
+    }
+
     // Reset select all status
     selectAllAssets(false);
     setActiveSortFilter({
@@ -46,7 +56,8 @@ const TopBar = ({
 
     setActiveSortFilter({
       ...activeSortFilter,
-      [key]: value
+      [key]: value,
+      sort
     })
   }
 
@@ -71,6 +82,7 @@ const TopBar = ({
   const toggleSelectAll = () => {
     selectAllAssets(!selectedAllAssets)
   }
+
   return (
     <section className={styles.container}>
       {!deletedAssets ? <div className={styles.filters} >
@@ -115,7 +127,9 @@ const TopBar = ({
         {
           <div className={styles['sort-wrapper']}>
             <Select
-              options={selectOptions.sort}
+              options={selectOptions.sort.filter(item => {
+                return activeSortFilter.mainFilter === 'folders' && item.value==='none' ? !item : item
+              })}
               value={activeSortFilter.sort}
               styleType='filter filter-schedule'
               onChange={(selected) => setSortFilterValue('sort', selected)}

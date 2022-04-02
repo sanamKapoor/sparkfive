@@ -368,7 +368,7 @@ const AssetAddition = ({
 	}
 
 	const onDropboxFilesSelection = async (files) => {
-		const currentDataClone = [...assets]
+		let currentDataClone = [...assets]
 		try {
 			let totalSize = 0
 			const newPlaceholders = []
@@ -385,10 +385,13 @@ const AssetAddition = ({
 					isUploading: true
 				})
 			})
-			setAssets([...newPlaceholders, ...currentDataClone])
 
-			// Update uploading assets
-			setUploadingAssets(newPlaceholders)
+			if (!versionGroup) {
+				setAssets([...newPlaceholders, ...currentDataClone])
+
+				// Update uploading assets
+				setUploadingAssets(newPlaceholders)
+			}
 
 			// Show uploading process
 			showUploadProcess('uploading')
@@ -403,20 +406,30 @@ const AssetAddition = ({
 
 			setFolderImport(containFolderUrl.length > 0)
 
-			const { data } = await assetApi.importAssets('dropbox', files.map(file => ({ link: file.link, isDir: file.isDir, name: file.name, size: file.bytes })), getCreationParameters({estimateTime: 1, totalSize}))
-			setAssets([...data, ...currentDataClone])
+			const { data } = await assetApi.importAssets('dropbox', files.map(file => ({ link: file.link, isDir: file.isDir, name: file.name, size: file.bytes })), getCreationParameters({estimateTime: 1, totalSize, versionGroup}))
+
+			// clean old version for main grid
+			if (versionGroup) {
+				currentDataClone = currentDataClone.filter(item => {
+					return item.asset.versionGroup !== versionGroup
+				})
+			}
+
+			updateAssetList(data, currentDataClone, undefined)
+
 			setAddedIds(data.id)
 
 			// Mark done
 			const updatedAssets = data.map(asset => { return {...asset, status: 'done'}});
 
 			// Update uploading assets
-			setUploadingAssets(updatedAssets)
+			setUploadUpdate(versionGroup, updatedAssets)
 
 			// Mark process as done
 			showUploadProcess('done')
-
-			setNeedsFetch('folders')
+			if (!versionGroup) {
+				setNeedsFetch('folders')
+			}
 
 			// Reset upload source type
 			setUploadSourceType('')
@@ -455,8 +468,8 @@ const AssetAddition = ({
 		const options = {
 			success: onDropboxFilesSelection,
 			linkType: 'preview',
-			multiselect: true,
-			folderselect: true,
+			multiselect: versionGroup ? false : true,
+			folderselect: versionGroup ? false : true,
 			sizeLimit: 1000 * 1024 * 1024 * 2
 		}
 		// Ignore this annoying warning
@@ -465,7 +478,7 @@ const AssetAddition = ({
 
 	const onDriveFilesSelection = async (files) => {
 		const googleAuthToken = cookiesUtils.get('gdriveToken')
-		const currentDataClone = [...assets]
+		let currentDataClone = [...assets]
 		try {
 			let totalSize = 0
 			const newPlaceholders = []
@@ -483,10 +496,11 @@ const AssetAddition = ({
 				})
 			})
 
-			setAssets([...newPlaceholders, ...currentDataClone])
-
-			// Update uploading assets
-			setUploadingAssets(newPlaceholders)
+			if (!versionGroup) {
+				setAssets([...newPlaceholders, ...currentDataClone])
+				// Update uploading assets
+				setUploadingAssets(newPlaceholders)
+			}
 
 			// Show uploading process
 			showUploadProcess('uploading')
@@ -508,16 +522,24 @@ const AssetAddition = ({
 				size: file.sizeBytes,
 				mimeType: file.mimeType,
 				type: file.type
-			})), getCreationParameters({estimateTime: 1, totalSize}))
+			})), getCreationParameters({estimateTime: 1, totalSize, versionGroup}))
 
-			setAssets([...data, ...currentDataClone])
+			// clean old version for main grid
+			if (versionGroup) {
+				currentDataClone = currentDataClone.filter(item => {
+					return item.asset.versionGroup !== versionGroup
+				})
+			}
+
+			updateAssetList(data, currentDataClone, undefined)
+
 			setAddedIds(data.id)
 
 			// Mark done
 			const updatedAssets = data.map(asset => { return {...asset, status: 'done'}});
 
 			// Update uploading assets
-			setUploadingAssets(updatedAssets)
+			setUploadUpdate(versionGroup, updatedAssets)
 
 			// Mark process as done
 			showUploadProcess('done')
@@ -562,56 +584,68 @@ const AssetAddition = ({
 		setActiveSearchOverlay(false)
 	}
 
-	const dropdownOptions = [
+	let dropdownOptions = [
 		{
+			id: 'library',
+			label: 'Asset Library',
+			text: 'Import from library',
+			onClick: () => setActiveSearchOverlay(true),
+			icon: Assets.asset
+		},
+		{
+			id: 'collection',
+			label: 'Add Collection',
+			text: 'Organized Files',
+			onClick: () => setActiveModal('folder'),
+			icon: Assets.folder
+		},
+		{
+			id: 'file',
 			label: 'Upload',
 			text: 'png, jpg, mp4 and more',
 			onClick: () => fileBrowserRef.current.click(),
 			icon: Assets.file
 		},
 		{
+			id: 'folder',
 			label: 'Upload',
 			text: 'folder',
 			onClick: () => folderBrowserRef.current.click(),
 			icon: Assets.folder
 		},
 		{
+			id: 'dropbox',
 			label: 'Dropbox',
 			text: 'Import files',
 			onClick: openDropboxSelector,
 			icon: Assets.dropbox
 		},
 		{
+			id: 'gdrive',
 			label: 'Google Drive',
 			text: 'Import files',
 			onClick: () => { },
 			icon: Assets.gdrive,
-			CustomContent: ({ children }) => (
+			CustomContent: ({ children }) => {
+				return (
 				<DriveSelector
+					multiSelect={versionGroup ? false : true}
+					folderSelect={versionGroup ? false : true}
 					onFilesSelect={onDriveFilesSelection}
 				>
 					{children}
 				</DriveSelector>
 			)
+			}
 		}
 	]
 
-	if (folderAdd) {
-		dropdownOptions.unshift({
-			label: 'Add Collection',
-			text: 'Organized Files',
-			onClick: () => setActiveModal('folder'),
-			icon: Assets.folder
-		})
+	if (!folderAdd) {
+		dropdownOptions = dropdownOptions.filter(item => ['collection', 'folder'].indexOf(item.id) === -1)
 	}
 
-	if (activePageMode !== 'library') {
-		dropdownOptions.unshift({
-			label: 'Asset Library',
-			text: 'Import from library',
-			onClick: () => setActiveSearchOverlay(true),
-			icon: Assets.asset
-		})
+	if (activePageMode === 'library') {
+		dropdownOptions = dropdownOptions.filter(item => ['library'].indexOf(item.id) === -1)
 	}
 
 	const getCreationParameters = (attachQuery?: any) => {
@@ -725,7 +759,7 @@ const AssetAddition = ({
 
 	return (
 		<>
-			<input multiple={true} id="file-input-id" ref={fileBrowserRef} style={{ display: 'none' }} type='file'
+			<input multiple={versionGroup ? false : true} id="file-input-id" ref={fileBrowserRef} style={{ display: 'none' }} type='file'
 				onChange={onFileChange} />
 			<input multiple={true} webkitdirectory='' id="file-input-id" ref={folderBrowserRef} style={{ display: 'none' }} type='file'
 				onChange={onFileChange} />
