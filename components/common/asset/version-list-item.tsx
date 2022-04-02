@@ -22,7 +22,7 @@ const VersionListItem = ({
     const [ currentModaOpen, setCurrentModalOpen ] = useState(false)
     const [ deleteModaOpen, setDeleteModalOpen ] = useState(false)
 
-    const { name, realUrl, user, createdAt, size, displayVersion } = asset
+    const { name, realUrl, thumbailUrl, user, createdAt, size, displayVersion } = asset
 
     const options = [
         { label: 'Make Current', onClick: () => setCurrentModalOpen(true) },
@@ -35,7 +35,7 @@ const VersionListItem = ({
             <h6>{current ? 'Current Version' : ('V' + (displayVersion-1))}</h6>
             <div className={styles['item-wrapper']}>
                 <div className={styles.thumbnail}>
-                    <img src={realUrl || Assets.unknown} alt={name} />
+                    <img src={thumbailUrl || Assets.unknown} alt={name} />
                 </div>
                 <div className={styles['info-wrapper']}>
                     <div>
