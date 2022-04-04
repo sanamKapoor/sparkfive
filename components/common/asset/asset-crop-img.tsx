@@ -1,4 +1,4 @@
-import ReactCrop from 'react-image-crop';
+import ReactCrop, {Crop} from 'react-image-crop';
 import { useState, useCallback, useRef, useEffect } from 'react'
 import 'react-image-crop/dist/ReactCrop.css';
 
@@ -8,10 +8,17 @@ import { Assets } from "../../../assets"
 
 const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image', name, opaque = false, width = 100, height = 100 , locked = true, originalHeight = 0}) => {
 
+	const defaultCrop = {
+		unit: '%' as const,
+		x: 25,
+		y: 25,
+		width: 50,
+		height: 50
+	}
 	const previewCanvasRef = useRef(null);
 	const imgRef = useRef(null);
 	const [loaded, setLoaded] = useState(false)
-	const [crop, setCrop] = useState<any>({ unit: '%', width: 100, height: 100, x: 0, y: 0 });
+	const [crop, setCrop] = useState<Crop>(defaultCrop);
 	const [completedCrop, setCompletedCrop] = useState(null);
 	const [cropping, setCropping] = useState(false);
 
@@ -70,7 +77,7 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 			return;
 		}
 
-		console.log(`image/${convertImageType(imageType)}`)
+		// console.log(`image/${convertImageType(imageType)}`)
 
 		canvas.toBlob(
 			(blob) => {
@@ -100,13 +107,7 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 				const scaleX = image.naturalWidth / image.width;
 				const scaleY = image.naturalHeight / image.height;
 
-				setCrop({
-					unit: 'px',
-					width: width/scaleX,
-					height: height/scaleY,
-					x: (image.width/2 - (width/scaleX)/2),
-					y: (image.height/2 - (height)/scaleY/2),
-				});
+				setCrop(defaultCrop);
 
 				setCompletedCrop({
 					unit: 'px',
@@ -118,13 +119,7 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 			}
 		}else{
 			if(!cropping){
-				setCrop({
-					unit: '%',
-					width: 100,
-					height: 100,
-					x: 0,
-					y: 0,
-				});
+				setCrop(defaultCrop);
 			}
 		}
 	},[width, height])
@@ -153,83 +148,61 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 		setCompletedCrop(c)
 	}
 
-	const imageComponent = (
-		<img
-			id={'crop-image'}
-				crossOrigin={'anonymous'}
-			 src={finalImg}
-			 alt={name}
-			 className={`${styles.asset} ${opaque && styles.opaque}`}
-			 onLoad={(e) => {
-				imgRef.current = e.target;
-
-			 	setLoaded(true)
-
-				e.target.dispatchEvent(new Event('medialoaded', { bubbles: true }));
-
-				 setCrop({
-					 unit: '%',
-					 width: 100,
-					 height: 100,
-					 x: 0,
-					 y: 0,
-				 });
-
-				 setTimeout(()=>{
-					 const currentLoadedImage = document.getElementById('crop-image')
-
-
-					 const scaleX = currentLoadedImage.naturalWidth / currentLoadedImage.width;
-					 const scaleY = currentLoadedImage.naturalHeight / currentLoadedImage.height;
-
-					 setCompletedCrop({
-						 unit: 'px',
-						 width: width/scaleX,
-						 height: height/scaleY,
-						 x: (currentLoadedImage.width/2 - (width/scaleX)/2),
-						 y: (currentLoadedImage.height/2 - (height)/scaleY/2),
-					 })
-				 },100)
-
-			 }}
-			 style={loaded ? {} : {
-				opacity: 0,
-				overflow: 'hidden',
-				height: 0,
-				width: 0,
-				margin: 0,
-				padding: 0,
-				border: 'none'
-		}} />
-	);
-
-	const fullHeight = () => {
-		const image = imgRef.current;
-		if(image){
-			// console.log(`Real height x width: ${image.height} x ${image.width}`)
-			// Image has height larger than box, do a max height now
-			return document.getElementById("detail-overlay").offsetHeight < image.height;
-		}else{
-			return true
-		}
-	}
-
 	return (
 		<>
-			<img src={Assets.empty} alt={'blank'} style={loaded ? { display: "none" } : {}} />
+			{!loaded && <img src={Assets.empty} alt={'blank'} style={{position: 'absolute'}} />}
 			<ReactCrop
-				src={finalImg}
-				// onImageLoaded={onLoad}
-				renderComponent={imageComponent}
 				crop={crop}
 				locked={locked}
 				ruleOfThirds={true}
-				className={`${fullHeight() ? styles['react-crop'] : ''} ${styles.asset} ${opaque && styles.opaque}`}
+				className={`${styles['react-crop']}`}
 				onChange={setCrop}
 				// onChange={(c) => onCropChange(c)}
 				onComplete={(c) => onCropMoveComplete(c)}
 				keepSelection={true}
-			/>
+			>
+			<img
+				id={'crop-image'}
+				crossOrigin={'anonymous'}
+				src={finalImg}
+				alt={name}
+				className={`${styles.asset} ${opaque && styles.opaque}`}
+				onLoad={(e) => {
+					imgRef.current = e.target;
+
+					setLoaded(true)
+
+					e.target.dispatchEvent(new Event('medialoaded', { bubbles: true }));
+
+					setCrop(defaultCrop);
+
+					setTimeout(()=>{
+						const currentLoadedImage = document.getElementById('crop-image')
+
+
+						const scaleX = currentLoadedImage.naturalWidth / currentLoadedImage.width;
+						const scaleY = currentLoadedImage.naturalHeight / currentLoadedImage.height;
+
+						setCompletedCrop({
+							unit: 'px',
+							width: width/scaleX,
+							height: height/scaleY,
+							x: (currentLoadedImage.width/2 - (width/scaleX)/2),
+							y: (currentLoadedImage.height/2 - (height)/scaleY/2),
+						})
+					},100)
+
+				}}
+				style={loaded ? {} : {
+					opacity: 0,
+					overflow: 'hidden',
+					height: 0,
+					width: 0,
+					margin: 0,
+					padding: 0,
+					border: 'none'
+			}} />
+			</ReactCrop>
 			<div className={'position-absolute visibility-hidden'}>
 				<canvas
 					ref={previewCanvasRef}
