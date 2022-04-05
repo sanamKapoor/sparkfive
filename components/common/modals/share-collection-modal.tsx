@@ -46,6 +46,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 	const [url, setUrl] = useState("")
 	const [collectionLink, setCollectionLink] = useState("")
 	const [name, setName] = useState("")
+	const [basic, setBasic] = useState(true)
 	const [isPublic, setIsPublic] = useState(true)
 	const [expired, setExpired] = useState(false)
 	const [expiredPeriod, setExpiredPeriod] = useState(expireOptions[1])
@@ -80,6 +81,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 		setCollectionLink("")
 		setName('')
 		setIsPublic(false)
+		setBasic(true)
 		setExpired(true)
 		setExpiredPeriod(expireOptions[1])
 		setExpiredAt(getDayToCurrentDate(expireOptions[1].value))
@@ -125,6 +127,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 				setRecipients(data.currentSharedLinks.sharedEmails)
 				setShareId(data.currentSharedLinks.id)
 				setIsPublic(data.currentSharedLinks.isPublic !== undefined ? data.currentSharedLinks.isPublic : true) // default is true
+				setBasic(data.currentSharedLinks.basic !== undefined ? data.currentSharedLinks.basic : true) // default is true
 				setMessage(data.currentSharedLinks.message)
 				setSharable(data.currentSharedLinks.sharable !== undefined ? data.currentSharedLinks.sharable : false) // default is false
 
@@ -183,6 +186,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 		setRecipients(data.sharedEmails)
 		setShareId(data.id)
 		setIsPublic(data.isPublic)
+		setBasic(data.basic)
 		setMessage(data.message)
 		setSharable(data.sharable)
 
@@ -204,7 +208,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 	}
 
 	// Save changes
-	const saveChanges = async (field = "", isPublicValue = undefined, expiredValue = undefined, expiredPeriodValue = undefined, expiredAtValue = undefined, sharableValue = undefined) => {
+	const saveChanges = async (field = "", isPublicValue = undefined, expiredValue = undefined, expiredPeriodValue = undefined, expiredAtValue = undefined, sharableValue = undefined, basicValue = undefined) => {
 		setIsLoading(true);
 
 		// Link is not created yet due to lacking name, saving name then getting url back
@@ -220,6 +224,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 					hash,
 					name,
 					password,
+					basic: basic === undefined ? basic : basicValue,
 					isPublic: isPublicValue === undefined ? isPublic : isPublicValue,
 					expired: expiredValue === undefined ? expired : expiredValue,
 					expiredPeriod: expiredPeriodValue === undefined ? expiredPeriod : expiredPeriodValue,
@@ -263,6 +268,12 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 		setIsPublic(value)
 
 		saveChanges("", value)
+	}
+
+	const changeIsBasic = (value) => {
+		setBasic(value)
+
+		saveChanges("", undefined, undefined, undefined, undefined, undefined, value)
 	}
 
 	const changeSharable = (value) => {
@@ -338,7 +349,27 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 					<span className={'m-l-10'}>(required)</span>
 				</div>
 
-				<div className={`${styles['input-wrapper']} d-flex align-items-center p-t-0`}>
+			{currentName && <div className={`${styles['field-content']} m-b-15`}>
+					<div className={styles['field-radio-wrapper']}>
+						<div className={`${styles['radio-button-wrapper']} m-r-15`}>
+							<IconClickable
+								src={basic ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+								additionalClass={styles['select-icon']}
+								onClick={()=>{changeIsBasic(true)}} />
+							<div className={'font-12 m-l-15'}>Basic</div>
+						</div>
+
+						<div className={`${styles['radio-button-wrapper']} m-r-15`}>
+							<IconClickable
+								src={!basic ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+								additionalClass={styles['select-icon']}
+								onClick={()=>{changeIsBasic(false)}} />
+							<div className={'font-12 m-l-15'}>Advanced</div>
+						</div>
+					</div>
+				</div>}
+
+			{basic && <div className={`${styles['input-wrapper']} d-flex align-items-center p-t-0`}>
 					<Input
 						additionalClasses={"w-50 m-r-15"}
 						disabled={!collectionLink || !currentName}
@@ -362,12 +393,10 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 						}
 					}}>Copy Link</span>
 
-				</div>
+				</div>}
 
-				<div className={`${styles['input-wrapper']} d-flex align-items-center p-y-0`}>
-					<div className={`${styles.title}`}>Advanced Link</div>
-				</div>
-				<div className={`${styles['input-wrapper']} d-flex align-items-center p-t-0`}>
+
+			{!basic && <div className={`${styles['input-wrapper']} d-flex align-items-center p-t-0`}>
 					<Input
 						additionalClasses={"w-50 m-r-15"}
 						disabled={!url || !currentName}
@@ -391,7 +420,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 						}
 					}}>Copy Link</span>
 
-				</div>
+				</div>}
 
 				<div className={styles['input-wrapper']} >
 					<div className={`${styles.title}`}>Permission Settings</div>
