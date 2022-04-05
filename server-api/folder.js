@@ -21,5 +21,7 @@ export default {
       responseType: 'blob', // Important
       data
     })
-  }
+  },
+  getShareUrl: (data, filters = {}) => axios.post(`${folderUrl}/share-url?${querystring.encode(filters)}`, data),
+  generateAndSendShareUrl: (data, filters = {}) => axios.post(`${folderUrl}/share?${querystring.encode(filters)}`, data),
 }

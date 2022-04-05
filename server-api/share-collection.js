@@ -7,6 +7,7 @@ export default {
   getFolderInfo: (queryParams) => axios.get(`${shareCollectionsUrl}?${querystring.encode(queryParams)}`),
   getAssetById: (id) => axios.get(`${shareCollectionsUrl}/assets/${id}`),
   getAssets: (queryParams = {}) => axios.get(`${shareCollectionsUrl}/assets?${querystring.encode(queryParams)}`),
+  getFolders: (queryParams = {}) => axios.get(`${shareCollectionsUrl}/folders?${querystring.encode(queryParams)}`),
   getCampaigns: (queryParams) => axios.get(`${shareCollectionsUrl}/campaigns?${querystring.stringify(queryParams)}`),
   getProjects: (queryParams) => axios.get(`${shareCollectionsUrl}/projects?${querystring.stringify(queryParams)}`),
   getTags: (queryParams) => axios.get(`${shareCollectionsUrl}/tags?${querystring.stringify(queryParams)}`),

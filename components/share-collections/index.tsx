@@ -17,7 +17,11 @@ import AssetGrid from '../common/asset/asset-grid'
 import SearchOverlay from '../main/search-overlay-assets'
 import FilterContainer from '../common/filter/filter-container'
 
-const ShareFolderMain = () => {
+
+// Utils
+import { getSubdomain } from '../../utils/domain'
+
+const ShareCollectionMain = () => {
     const router = useRouter()
 
     const {
@@ -45,18 +49,178 @@ const ShareFolderMain = () => {
     const [activeSearchOverlay, setActiveSearchOverlay] = useState(false)
     const [openFilter, setOpenFilter] = useState(false)
     const [activeView, setActiveView] = useState('grid')
-    const [sharePath, setSharePath] = useState('')
+    const [sharePath, setSharePath] = useState("")
     const [activeMode, setActiveMode] = useState('assets')
 
-    const submitPassword = async (password) => {
+    const processSubdomain = () => {
+        return getSubdomain() || "sparkfive"
+    }
+
+    const submitPassword = async (password, email) => {
         try {
-            const { data } = await folderApi.authenticateCollection({ password, sharePath })
+            const { data } = await folderApi.authenticateCollection({ password, email, sharePath })
             // Set axios headers
             requestUtils.setAuthToken(data.token, 'share-authorization')
-            getFolderInfo(true)
+
+            getShareInfo(true)
         } catch (err) {
             console.log(err)
             toastUtils.error('Wrong password or invalid link, please try again')
+        }
+    }
+
+    // Listen getting folder info change, if no error, get assets here
+    useEffect(() => {
+        if (folderInfo && !folderInfo.error) {
+            setActivePageMode('library')
+            setAssets([])
+            getAssets()
+        }
+    }, [activeSortFilter, folderInfo])
+
+    useEffect(() => {
+        if (needsFetch === 'assets') {
+            getAssets()
+        }
+        setNeedsFetch('')
+    }, [needsFetch])
+
+    // Get share info
+    const getShareInfo = async (displayError = false) => {
+        try {
+
+            const { data } = await shareCollectionApi.getFolderInfo({sharePath})
+
+            setFolderInfo(data)
+            setActivePasswordOverlay(false)
+        } catch (err) {
+            // If not 500, must be auth error, request user password
+            if (err.response.status !== 500) {
+                setFolderInfo(err.response.data)
+                setActivePasswordOverlay(true)
+            }
+            console.log(err)
+            if (displayError) {
+                toastUtils.error('Wrong email/password or invalid link, please try again')
+            }
+        }
+    }
+
+    useEffect(() => {
+        const { asPath } = router
+        // TODO: Optimize exact path
+        const splitPath = asPath.split('/collections/')
+
+        const idPath = splitPath[1].split('/')
+
+        if (idPath && !idPath[0].includes("[team]") && !idPath[1].includes("[id]")) {
+            const path = `${processSubdomain()}/${idPath[1]}/${idPath[0]}`
+            setSharePath(path)
+            setContextPath(path)
+        }
+    }, [router.asPath])
+
+    useEffect(() => {
+        if (sharePath) {
+            getShareInfo()
+        }
+    }, [sharePath])
+
+    const clearFilters = () => {
+        setActiveSortFilter({
+            ...activeSortFilter,
+            ...DEFAULT_FILTERS,
+            ...DEFAULT_CUSTOM_FIELD_FILTERS(activeSortFilter)
+        })
+    }
+
+    const setInitialLoad = async () => {
+        if (!firstLoaded) {
+            setFirstLoaded(true)
+
+            let sort = {...activeSortFilter.sort}
+
+            setActiveSortFilter({
+                ...activeSortFilter,
+                mainFilter: "folders",
+                sort
+            })
+        }
+    }
+
+
+    useEffect(() => {
+        // setInitialLoad();
+
+        console.log(activeSortFilter)
+        if (firstLoaded) {
+            setActivePageMode('library')
+            if (activeSortFilter.mainFilter === 'folders') {
+                setActiveMode('folders')
+                getFolders()
+            } else {
+                setActiveMode('assets')
+                setAssets([])
+                getAssets()
+            }
+        }
+    }, [activeSortFilter])
+
+    useEffect(() => {
+        if (firstLoaded && activeFolder !== '') {
+            setActiveSortFilter({
+                ...activeSortFilter,
+                mainFilter: 'all'
+            })
+        }
+
+    }, [activeFolder])
+
+    const selectAll = () => {
+        // Mark select all
+        selectAllAssets()
+
+        setAssets(assets.map(assetItem => ({ ...assetItem, isSelected: true })))
+    }
+
+    const closeSearchOverlay = () => {
+        getAssets()
+        setActiveSearchOverlay(false)
+    }
+
+    const toggleSelected = (id) => {
+        const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
+        setAssets(update(assets, {
+            [assetIndex]: {
+                isSelected: { $set: !assets[assetIndex].isSelected }
+            }
+        }))
+    }
+
+    const mapWithToggleSelection = asset => ({ ...asset, toggleSelected })
+
+    const getAssets = async (replace = true) => {
+        try {
+            if (replace) {
+                setAddedIds([])
+            }
+            setPlaceHolders('asset', replace)
+            const { data } = await shareCollectionApi.getAssets({
+                ...getAssetsFilters({
+                    replace,
+                    nextPage,
+                    addedIds,
+                    activeFolder,
+                    userFilterObject: activeSortFilter
+                }),
+                ...getAssetsSort(activeSortFilter),
+                sharePath
+            })
+            setAssets({ ...data, results: data.results.map(mapWithToggleSelection) }, replace)
+            setFirstLoaded(true)
+        } catch (err) {
+            //TODO: Handle error
+            console.log(err)
         }
     }
 
@@ -94,152 +258,8 @@ const ShareFolderMain = () => {
         }
     }
 
-    const setInitialLoad = async () => {
-        if (!firstLoaded) {
-            setFirstLoaded(true)
-
-            let sort = {...activeSortFilter.sort}
-
-            // setActiveSortFilter({
-            //     ...activeSortFilter,
-            //     mainFilter: "folders",
-            //     sort
-            // })
-        }
-    }
-
-    useEffect(() => {
-        const { asPath } = router
-        if (asPath) {
-            // Get shareUrl from path
-            const splitPath = asPath.split('collections/')
-            setSharePath(splitPath[1])
-            setContextPath(splitPath[1])
-        }
-    }, [router.asPath])
-
-    useEffect(() => {
-        if (sharePath) {
-            getFolderInfo()
-        }
-    }, [sharePath])
-
-    useEffect(() => {
-        if (folderInfo && !folderInfo.error) {
-            setActivePageMode('library')
-            setAssets([])
-            getAssets()
-        }
-    }, [activeSortFilter, folderInfo])
-
-    useEffect(() => {
-        if (needsFetch === 'assets') {
-            getAssets()
-        }
-        setNeedsFetch('')
-    }, [needsFetch])
-
-    useEffect(() => {
-        setInitialLoad();
-
-
-        if (firstLoaded) {
-            setActivePageMode('library')
-            if (activeSortFilter.mainFilter === 'folders') {
-                setActiveMode('folders')
-                getFolders()
-            } else {
-                setActiveMode('assets')
-                setAssets([])
-                getAssets()
-            }
-        }
-    }, [activeSortFilter])
-
-    useEffect(() => {
-        if (firstLoaded && activeFolder !== '') {
-            setActiveSortFilter({
-                ...activeSortFilter,
-                mainFilter: 'all'
-            })
-        }
-
-    }, [activeFolder])
-
-    const getFolderInfo = async (displayError = false) => {
-        try {
-            const { data } = await shareCollectionApi.getFolderInfo({ sharePath })
-            setFolderInfo(data)
-            setActivePasswordOverlay(false)
-        } catch (err) {
-            // If not 500, must be auth error, request user password
-            if (err.response.status !== 500) {
-                setFolderInfo(err.response.data)
-                setActivePasswordOverlay(true)
-            }
-            console.log(err)
-            if (displayError) {
-                toastUtils.error('Wrong password or invalid link, please try again')
-            }
-        }
-    }
-
-    const clearFilters = () => {
-        setActiveSortFilter({
-            ...activeSortFilter,
-            ...DEFAULT_FILTERS,
-            ...DEFAULT_CUSTOM_FIELD_FILTERS(activeSortFilter)
-        })
-    }
-
-    const selectAll = () => {
-        // Mark select all
-        selectAllAssets()
-
-        setAssets(assets.map(assetItem => ({ ...assetItem, isSelected: true })))
-    }
-
-    const closeSearchOverlay = () => {
-        getAssets()
-        setActiveSearchOverlay(false)
-    }
-
-    const toggleSelected = (id) => {
-        const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
-        setAssets(update(assets, {
-            [assetIndex]: {
-                isSelected: { $set: !assets[assetIndex].isSelected }
-            }
-        }))
-    }
-
-    const mapWithToggleSelection = asset => ({ ...asset, toggleSelected })
-
-    const getAssets = async (replace = true) => {
-        try {
-            if (replace) {
-                setAddedIds([])
-            }
-            setPlaceHolders('asset', replace)
-            const { data } = await shareCollectionApi.getAssets({
-                ...getAssetsFilters({
-                    replace,
-                    nextPage,
-                    addedIds,
-                    userFilterObject: activeSortFilter
-                }),
-                ...getAssetsSort(activeSortFilter),
-                sharePath
-            })
-            setAssets({ ...data, results: data.results.map(mapWithToggleSelection) }, replace)
-            setFirstLoaded(true)
-        } catch (err) {
-            //TODO: Handle error
-            console.log(err)
-        }
-    }
-
     const loadMore = () => {
+        console.log(`load more`)
         if (activeMode === 'assets') {
             getAssets(false)
         } else {
@@ -284,6 +304,7 @@ const ShareFolderMain = () => {
                             setOpenFilter={setOpenFilter}
                             activeSortFilter={activeSortFilter}
                             setActiveSortFilter={setActiveSortFilter}
+                            isFolder={activeSortFilter.mainFilter === 'folders'}
                         />
                     }
                 </div>
@@ -291,6 +312,7 @@ const ShareFolderMain = () => {
             <AssetOps />
             {activePasswordOverlay &&
                 <PasswordOverlay
+                    fields={folderInfo?.requiredFields?.length > 0 ? folderInfo?.requiredFields : ["password"]}
                     onPasswordSubmit={submitPassword}
                     logo={folderInfo?.teamIcon}
                 />
@@ -305,4 +327,4 @@ const ShareFolderMain = () => {
     )
 }
 
-export default ShareFolderMain
+export default ShareCollectionMain

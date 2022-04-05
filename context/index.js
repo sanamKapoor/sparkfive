@@ -50,6 +50,9 @@ export const AssetContext = createContext({
     selectedAllAssets: false,
     selectAllAssets: (isSelected) => { },
 
+    selectedAllFolders: false,
+    selectAllFolders: (isSelected) => { },
+
     loadingAssets: false,
     setLoadingAssets: (loading) => { },
 

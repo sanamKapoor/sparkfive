@@ -29,13 +29,14 @@ const TopBar = ({
   const {
     selectedAllAssets,
     selectAllAssets,
+    selectAllFolders,
     setLastUploadedFolder
   } = useContext(AssetContext)
 
   const {hasPermission} = useContext(UserContext)
 
   const setSortFilterValue = (key, value) => {
-    let sort 
+    let sort
     if (value === 'folders' && advancedConfigParams.collectionSortView === 'alphabetical') {
        sort = selectOptions.sort[3]
     } else {
@@ -44,6 +45,7 @@ const TopBar = ({
 
     // Reset select all status
     selectAllAssets(false);
+    selectAllFolders(false);
     setActiveSortFilter({
       ...activeSortFilter
     })
