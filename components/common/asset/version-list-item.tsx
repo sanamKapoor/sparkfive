@@ -9,6 +9,7 @@ import ConfirmModal from '../modals/confirm-modal'
 import { useState } from 'react'
 import { format } from 'date-fns'
 import fileSize from 'filesize'
+import AssetIcon from "./asset-icon";
 
 
 const VersionListItem = ({
@@ -35,7 +36,8 @@ const VersionListItem = ({
             <h6>{current ? 'Current Version' : ('V' + (displayVersion-1))}</h6>
             <div className={styles['item-wrapper']}>
                 <div className={styles.thumbnail}>
-                    <img src={thumbailUrl || Assets.unknown} alt={name} />
+                    {thumbailUrl && <img src={thumbailUrl || Assets.unknown} alt={name} />}
+                    {!thumbailUrl && <AssetIcon extension={asset.extension} />}
                 </div>
                 <div className={styles['info-wrapper']}>
                     <div>
