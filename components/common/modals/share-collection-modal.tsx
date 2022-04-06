@@ -80,7 +80,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 		setUrl('')
 		setCollectionLink("")
 		setName('')
-		setIsPublic(false)
+		setIsPublic(true)
 		setBasic(true)
 		setExpired(true)
 		setExpiredPeriod(expireOptions[1])
