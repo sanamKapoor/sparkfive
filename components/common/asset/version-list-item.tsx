@@ -37,7 +37,7 @@ const VersionListItem = ({
             <div className={styles['item-wrapper']}>
                 <div className={styles.thumbnail}>
                     {thumbailUrl && <img src={thumbailUrl || Assets.unknown} alt={name} />}
-                    {!thumbailUrl && <AssetIcon extension={asset.extension} />}
+                    {!thumbailUrl && <AssetIcon extension={asset.extension} onList={true} />}
                 </div>
                 <div className={styles['info-wrapper']}>
                     <div>

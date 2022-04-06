@@ -1,4 +1,9 @@
-import ReactCrop, {Crop} from 'react-image-crop';
+import ReactCrop, {
+  centerCrop,
+  makeAspectCrop,
+  Crop,
+  PixelCrop,
+} from 'react-image-crop'
 import { useState, useCallback, useRef, useEffect } from 'react'
 import 'react-image-crop/dist/ReactCrop.css';
 
@@ -12,15 +17,16 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 		unit: '%' as const,
 		x: 25,
 		y: 25,
-		width: 50,
+		width:50,
 		height: 50
 	}
+
 	const previewCanvasRef = useRef(null);
 	const imgRef = useRef(null);
 	const [loaded, setLoaded] = useState(false)
-	const [crop, setCrop] = useState<Crop>(defaultCrop);
-	const [completedCrop, setCompletedCrop] = useState(null);
-	const [cropping, setCropping] = useState(false);
+	const [crop, setCrop] = useState<Crop>()
+  const [completedCrop, setCompletedCrop] = useState<PixelCrop>()
+  const [cropping, setCropping] = useState(false);
 
 	let finalImg = assetImg
 	if (!finalImg && type === 'video') finalImg = Assets.videoThumbnail
@@ -32,35 +38,63 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 			return;
 		}
 
-
 		const image = imgRef.current;
 		const canvas = previewCanvasRef.current;
 		const crop = completedCrop;
 
-		const scaleX = image.naturalWidth / image.width;
-		const scaleY = image.naturalHeight / image.height;
-		const ctx = canvas.getContext('2d');
-		// const pixelRatio = window.devicePixelRatio;
-		const pixelRatio = 1;
+		const ctx = canvas.getContext('2d')
 
-		canvas.width = Math.round(crop.width * pixelRatio*scaleX);
-		canvas.height = Math.round(crop.height * pixelRatio*scaleY);
+		if (!ctx) {
+			throw new Error('No 2d context')
+		}
 
+		const scale = 1
+		const scaleX = image.naturalWidth / image.width
+		const scaleY = image.naturalHeight / image.height
+		// devicePixelRatio slightly increases sharpness on retina devices
+		// at the expense of slightly slower render times and needing to
+		// size the image back down if you want to download/upload and be
+		// true to the images natural size.
+		// const pixelRatio = window.devicePixelRatio
+		const pixelRatio = 1
 
-		ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-		ctx.imageSmoothingQuality = 'high';
+		canvas.width = Math.floor(crop.width * scaleX * pixelRatio)
+		canvas.height = Math.floor(crop.height * scaleY * pixelRatio)
 
+		ctx.scale(pixelRatio, pixelRatio)
+		ctx.imageSmoothingQuality = 'high'
+
+		const cropX = crop.x * scaleX
+		const cropY = crop.y * scaleY
+
+		const centerX = image.naturalWidth / 2
+		const centerY = image.naturalHeight / 2
+
+		ctx.save()
+
+		// Move the crop origin to the canvas origin (0,0)
+		ctx.translate(-cropX, -cropY)
+		// Move the origin to the center of the original position
+		ctx.translate(centerX, centerY)
+
+		// Scale the image
+		ctx.scale(scale, scale)
+		// Move the center of the image to the origin (0,0)
+		ctx.translate(-centerX, -centerY)
 		ctx.drawImage(
 			image,
-			crop.x * scaleX,
-			crop.y * scaleY,
-			crop.width * scaleX,
-			crop.height * scaleY,
 			0,
 			0,
-			Math.round(crop.width*scaleX),
-			Math.round(crop.height*scaleY)
-		);
+			image.naturalWidth,
+			image.naturalHeight,
+			0,
+			0,
+			image.naturalWidth,
+			image.naturalHeight,
+		)
+
+		ctx.restore()
+
 	}, [completedCrop, imgRef.current]);
 
 	const convertImageType = (type) => {
@@ -96,50 +130,39 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 		);
 	}
 
-	useEffect(()=>{
+	// useEffect(()=>{
 
-		if(imgRef.current){
+	// 	if(imgRef.current){
 
-			if(!cropping){
-				// Center crop box
-				const image = imgRef.current;
+	// 		if(!cropping){
+	// 			// Center crop box
+	// 			const image = imgRef.current;
 
-				const scaleX = image.naturalWidth / image.width;
-				const scaleY = image.naturalHeight / image.height;
+	// 			const scaleX = image.naturalWidth / image.width;
+	// 			const scaleY = image.naturalHeight / image.height;
 
-				setCrop(defaultCrop);
+	// 			setCrop({
+	// 				unit: 'px',
+	// 				width: width/scaleX,
+	// 				height: height/scaleY,
+	// 				x: (image.width/2 - (width/scaleX)/2),
+	// 				y: (image.height/2 - (height)/scaleY/2),
+	// 			});
 
-				setCompletedCrop({
-					unit: 'px',
-					width: width/scaleX,
-					height: height/scaleY,
-					x: (image.width/2 - (width/scaleX)/2),
-					y: (image.height/2 - (height)/scaleY/2),
-				})
-			}
-		}else{
-			if(!cropping){
-				setCrop(defaultCrop);
-			}
-		}
-	},[width, height])
-
-	const onCropChange = (c) => {
-		setCropping(true)
-		if(c.width > 0 && c.height > 0){
-			const image = imgRef.current;
-
-			const scaleX = image.naturalWidth / image.width;
-			const scaleY = image.naturalHeight / image.height;
-
-			setWidth(Math.round(c.width*scaleX))
-			setHeight(Math.round(c.height*scaleY))
-		}
-
-		c.width = Math.round(c.width)
-		c.height = Math.round(c.height)
-		setCrop(c)
-	}
+	// 			setCompletedCrop({
+	// 				unit: 'px',
+	// 				width: width/scaleX,
+	// 				height: height/scaleY,
+	// 				x: (image.width/2 - (width/scaleX)/2),
+	// 				y: (image.height/2 - (height)/scaleY/2),
+	// 			})
+	// 		}
+	// 	}else{
+	// 		if(!cropping){
+	// 			setCrop(defaultCrop);
+	// 		}
+	// 	}
+	// },[width, height])
 
 	const onCropMoveComplete = (c) => {
 		setCropping(false)
@@ -147,6 +170,7 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 		c.height = Math.round(c.height)
 		setCompletedCrop(c)
 	}
+	
 
 	return (
 		<>
@@ -157,7 +181,6 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 				ruleOfThirds={true}
 				className={`${styles['react-crop']}`}
 				onChange={setCrop}
-				// onChange={(c) => onCropChange(c)}
 				onComplete={(c) => onCropMoveComplete(c)}
 				keepSelection={true}
 			>
@@ -176,21 +199,21 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 
 					setCrop(defaultCrop);
 
-					setTimeout(()=>{
-						const currentLoadedImage = document.getElementById('crop-image')
+					// setTimeout(()=>{
+					// 	const currentLoadedImage = document.getElementById('crop-image')
 
 
-						const scaleX = currentLoadedImage.naturalWidth / currentLoadedImage.width;
-						const scaleY = currentLoadedImage.naturalHeight / currentLoadedImage.height;
+					// 	const scaleX = currentLoadedImage.naturalWidth / currentLoadedImage.width;
+					// 	const scaleY = currentLoadedImage.naturalHeight / currentLoadedImage.height;
 
-						setCompletedCrop({
-							unit: 'px',
-							width: width/scaleX,
-							height: height/scaleY,
-							x: (currentLoadedImage.width/2 - (width/scaleX)/2),
-							y: (currentLoadedImage.height/2 - (height)/scaleY/2),
-						})
-					},100)
+					// 	setCompletedCrop({
+					// 		unit: 'px',
+					// 		width: width/scaleX,
+					// 		height: height/scaleY,
+					// 		x: (currentLoadedImage.width/2 - (width/scaleX)/2),
+					// 		y: (currentLoadedImage.height/2 - (height)/scaleY/2),
+					// 	})
+					// },100)
 
 				}}
 				style={loaded ? {} : {
@@ -204,14 +227,15 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 			}} />
 			</ReactCrop>
 			<div className={'position-absolute visibility-hidden'}>
-				<canvas
+				{completedCrop && <canvas
 					ref={previewCanvasRef}
 					// Rounding is important so the canvas width and height matches/is a multiple for sharpness.
 					style={{
 						width: Math.round(completedCrop?.width ?? 0),
-						height: Math.round(completedCrop?.height ?? 0)
+						height: Math.round(completedCrop?.height ?? 0),
+            objectFit: 'contain'
 					}}
-				/>
+				/>}
 			</div>
 
 			<button
