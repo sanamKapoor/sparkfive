@@ -460,7 +460,7 @@ const DetailOverlay = ({
   };
 
   useEffect(() => {
-    if (!needsFetch || needsFetch === "versions") {
+    if ((!needsFetch || needsFetch === "versions") && !isShare) {
       loadVersions();
     }
   }, [needsFetch]);
