@@ -232,9 +232,13 @@ const AssetsLibrary = () => {
   const updateAdvancedConfig = async () => {
     const { data } = await teamApi.getAdvanceOptions()
     setAdvancedConfig({...data, set: true})
-    const defaultTab = getDefaultTab(data)
+    let defaultTab = getDefaultTab(data)
+    const filters = Object.keys(router.query)
+    if (filters && filters.length) {
+      defaultTab = filters[0] === 'collection' ? 'folders' : 'all';
+    }
+    
     let sort = {...activeSortFilter.sort}
-
     if (defaultTab === 'folders') {
       sort = data.collectionSortView === 'alphabetical' ? selectOptions.sort[3] : selectOptions.sort[1]
     }
