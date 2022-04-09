@@ -53,7 +53,7 @@ const ShareCollectionMain = () => {
     const [activeMode, setActiveMode] = useState('assets')
 
     const processSubdomain = () => {
-        return getSubdomain() || "sparkfive"
+        return getSubdomain() || "danner"
     }
 
     const submitPassword = async (password, email) => {

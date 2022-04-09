@@ -203,7 +203,7 @@ const CropSidePanel = ({ asset,
                                     placeholder={'Width'}
                                     additionalClasses={'center-input'}
                                     type={'number'}
-                                    defaultValue
+                                    // defaultValue
                                     value={width}
                                     styleType={'regular-height-short'} />
                             </div>

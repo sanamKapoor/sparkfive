@@ -151,7 +151,6 @@ const AssetAddition = ({
 					attachedQuery['versionGroup'] = versionGroup
 				}
 
-
 				// Uploading the new folder where it's folderId has been created earlier in previous API call
 				if(currentUploadingFolderId){
 					attachedQuery['folderId'] = currentUploadingFolderId
@@ -343,7 +342,7 @@ const AssetAddition = ({
 	}
 
 	const onDropboxFilesSelection = async (files) => {
-		const currentDataClone = [...assets]
+		let currentDataClone = [...assets]
 		try {
 			let totalSize = 0
 			const newPlaceholders = []
@@ -360,10 +359,13 @@ const AssetAddition = ({
 					isUploading: true
 				})
 			})
-			setAssets([...newPlaceholders, ...currentDataClone])
 
-			// Update uploading assets
-			setUploadingAssets(newPlaceholders)
+			if (!versionGroup) {
+				setAssets([...newPlaceholders, ...currentDataClone])
+
+				// Update uploading assets
+				setUploadingAssets(newPlaceholders)
+			}
 
 			// Show uploading process
 			showUploadProcess('uploading')
@@ -378,20 +380,30 @@ const AssetAddition = ({
 
 			setFolderImport(containFolderUrl.length > 0)
 
-			const { data } = await assetApi.importAssets('dropbox', files.map(file => ({ link: file.link, isDir: file.isDir, name: file.name, size: file.bytes })), getCreationParameters({estimateTime: 1, totalSize}))
-			setAssets([...data, ...currentDataClone])
+			const { data } = await assetApi.importAssets('dropbox', files.map(file => ({ link: file.link, isDir: file.isDir, name: file.name, size: file.bytes })), getCreationParameters({estimateTime: 1, totalSize, versionGroup}))
+
+			// clean old version for main grid
+			if (versionGroup) {
+				currentDataClone = currentDataClone.filter(item => {
+					return item.asset.versionGroup !== versionGroup
+				})
+			}
+
+			updateAssetList(data, currentDataClone, undefined)
+
 			setAddedIds(data.id)
 
 			// Mark done
 			const updatedAssets = data.map(asset => { return {...asset, status: 'done'}});
 
 			// Update uploading assets
-			setUploadingAssets(updatedAssets)
+			setUploadUpdate(versionGroup, updatedAssets)
 
 			// Mark process as done
 			showUploadProcess('done')
-
-			setNeedsFetch('folders')
+			if (!versionGroup) {
+				setNeedsFetch('folders')
+			}
 
 			// Reset upload source type
 			setUploadSourceType('')
@@ -440,7 +452,7 @@ const AssetAddition = ({
 
 	const onDriveFilesSelection = async (files) => {
 		const googleAuthToken = cookiesUtils.get('gdriveToken')
-		const currentDataClone = [...assets]
+		let currentDataClone = [...assets]
 		try {
 			let totalSize = 0
 			const newPlaceholders = []
@@ -458,10 +470,11 @@ const AssetAddition = ({
 				})
 			})
 
-			setAssets([...newPlaceholders, ...currentDataClone])
-
-			// Update uploading assets
-			setUploadingAssets(newPlaceholders)
+			if (!versionGroup) {
+				setAssets([...newPlaceholders, ...currentDataClone])
+				// Update uploading assets
+				setUploadingAssets(newPlaceholders)
+			}
 
 			// Show uploading process
 			showUploadProcess('uploading')
@@ -483,16 +496,24 @@ const AssetAddition = ({
 				size: file.sizeBytes,
 				mimeType: file.mimeType,
 				type: file.type
-			})), getCreationParameters({estimateTime: 1, totalSize}))
+			})), getCreationParameters({estimateTime: 1, totalSize, versionGroup}))
 
-			setAssets([...data, ...currentDataClone])
+			// clean old version for main grid
+			if (versionGroup) {
+				currentDataClone = currentDataClone.filter(item => {
+					return item.asset.versionGroup !== versionGroup
+				})
+			}
+
+			updateAssetList(data, currentDataClone, undefined)
+
 			setAddedIds(data.id)
 
 			// Mark done
 			const updatedAssets = data.map(asset => { return {...asset, status: 'done'}});
 
 			// Update uploading assets
-			setUploadingAssets(updatedAssets)
+			setUploadUpdate(versionGroup, updatedAssets)
 
 			// Mark process as done
 			showUploadProcess('done')
