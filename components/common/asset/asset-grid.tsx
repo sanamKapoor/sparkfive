@@ -268,7 +268,6 @@ const AssetGrid = ({
               })}
 
             {mode === "folders" &&
-              !isShare &&
               folders.map((folder, index) => {
                 return (
                   <li className={styles["grid-item"]} key={folder.id || index}>

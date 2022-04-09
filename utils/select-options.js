@@ -49,7 +49,7 @@ export default {
       text: 'Collections',
       name: 'folders',
       omitFolder: true,
-      omitShare: true,
+      omitShare: false,
       requirePermissions: []
     },
     {

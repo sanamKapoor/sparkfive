@@ -46,6 +46,7 @@ const AssetsLibrary = () => {
     setAddedIds,
     setLoadingAssets,
     selectAllAssets,
+    selectAllFolders,
     uploadDetailOverlay,
     setUploadDetailOverlay,
     setUploadingAssets,
@@ -248,7 +249,7 @@ const AssetsLibrary = () => {
       mainFilter: defaultTab,
       sort
     })
-  
+
   }
 
   const getDefaultTab = (advConf?) => {
@@ -552,7 +553,7 @@ const AssetsLibrary = () => {
       const { data } = await folderApi.getFolders(queryParams)
 
       let assetList = { ...data, results: data.results }
-      if (lastUploadedFolder && activeSortFilter.mainFilter === "folders" && activeSortFilter.sort.value === "alphabetical") { 
+      if (lastUploadedFolder && activeSortFilter.mainFilter === "folders" && activeSortFilter.sort.value === "alphabetical") {
         const lastFolder = {...lastUploadedFolder}
         assetList.results.unshift(lastFolder)
       }
@@ -589,6 +590,8 @@ const AssetsLibrary = () => {
 
       setAssets(assets.map(assetItem => ({ ...assetItem, isSelected: true })))
     } else if (activeMode === 'folders') {
+      selectAllFolders()
+
       setFolders(folders.map(folder => ({ ...folder, isSelected: true })))
     }
   }

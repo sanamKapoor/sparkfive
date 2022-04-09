@@ -29,6 +29,7 @@ const TopBar = ({
   const {
     selectedAllAssets,
     selectAllAssets,
+    selectAllFolders,
     setLastUploadedFolder
   } = useContext(AssetContext)
 
@@ -46,6 +47,7 @@ const TopBar = ({
 
     // Reset select all status
     selectAllAssets(false);
+    selectAllFolders(false);
     setActiveSortFilter({
       ...activeSortFilter
     })
