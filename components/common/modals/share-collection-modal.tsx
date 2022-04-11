@@ -316,7 +316,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 			modalIsOpen={modalIsOpen}
 			closeModal={closemoveModal}
 			confirmText={sharable ? (currentShareLink ? 'Save Changes' : 'Send Email') : ''}
-			headText={title ? title : `Share ${itemsAmount} item(s)`}
+			headText={title ? title : (itemsAmount === 1 ? `Share 1 collection` : `Share portal`)}
 			disabledConfirm={!name}
 			additionalClasses={['visible-block']}
 			showCancel={false}
