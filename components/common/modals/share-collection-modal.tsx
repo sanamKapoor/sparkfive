@@ -207,6 +207,12 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 		return undefined;
 	}
 
+	const isUndefined = (value) => {
+		console.log(`isUndefined`)
+		console.log(value)
+		return value === undefined || value === ""
+	}
+
 	// Save changes
 	const saveChanges = async (field = "", isPublicValue = undefined, expiredValue = undefined, expiredPeriodValue = undefined, expiredAtValue = undefined, sharableValue = undefined, basicValue = undefined) => {
 		setIsLoading(true);
@@ -242,6 +248,18 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 					setCurrentName(data.name)
 				}
 			}
+
+			if(isUndefined(field) &&
+				isUndefined(isPublicValue) &&
+				isUndefined(expiredValue) &&
+				isUndefined(expiredPeriodValue) &&
+				isUndefined(expiredAtValue) &&
+				isUndefined(sharableValue) &&
+				isUndefined(basicValue)
+			){
+				toastUtils.success('Save successfully')
+			}
+
 
 			setIsLoading(false);
 
@@ -455,14 +473,6 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 						styleType={'regular-short'}
 						noResize={true}
 					/>
-
-					<Button
-						text={"Save"}
-						onClick={saveChanges}
-						type='button'
-						styleType='primary'
-						disabled={recipients === ''}
-					/>
 				</div>}
 
 				{!isPublic && <div className={`${styles['input-wrapper']} d-flex align-items-center p-l-30`}>
@@ -473,13 +483,15 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 						type={"password"}
 						additionalClasses={"m-r-15 m-l-30"}
 						styleType={'regular-short'} />
+				</div>}
 
+				{!isPublic && <div className={`${styles['save-wrapper']}`}>
 					<Button
 						text={"Save"}
-						onClick={saveChanges}
+						onClick={()=>{saveChanges()}}
 						type='button'
 						styleType='primary'
-						disabled={password === ''}
+						disabled={!recipients || !password}
 					/>
 				</div>}
 
