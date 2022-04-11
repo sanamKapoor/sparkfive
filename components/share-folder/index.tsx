@@ -154,7 +154,7 @@ const ShareFolderMain = () => {
                 getAssets()
             }
         }
-    }, [activeSortFilter,sharePath])
+    }, [activeSortFilter,sharePath, folderInfo])
 
     useEffect(() => {
         if (firstLoaded && activeFolder !== '') {
