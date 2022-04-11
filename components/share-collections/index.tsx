@@ -70,13 +70,13 @@ const ShareCollectionMain = () => {
     }
 
     // Listen getting folder info change, if no error, get assets here
-    useEffect(() => {
-        if (folderInfo && !folderInfo.error) {
-            setActivePageMode('library')
-            setAssets([])
-            getAssets()
-        }
-    }, [activeSortFilter, folderInfo])
+    // useEffect(() => {
+    //     if (folderInfo && !folderInfo.error) {
+    //         setActivePageMode('library')
+    //         setAssets([])
+    //         getAssets()
+    //     }
+    // }, [activeSortFilter, folderInfo])
 
     useEffect(() => {
         if (needsFetch === 'assets') {
@@ -150,10 +150,9 @@ const ShareCollectionMain = () => {
 
 
     useEffect(() => {
-        // setInitialLoad();
+        setInitialLoad();
 
-        console.log(activeSortFilter)
-        if (firstLoaded) {
+        if (firstLoaded && sharePath) {
             setActivePageMode('library')
             if (activeSortFilter.mainFilter === 'folders') {
                 setActiveMode('folders')
@@ -164,7 +163,7 @@ const ShareCollectionMain = () => {
                 getAssets()
             }
         }
-    }, [activeSortFilter])
+    }, [activeSortFilter,sharePath])
 
     useEffect(() => {
         if (firstLoaded && activeFolder !== '') {
@@ -175,6 +174,13 @@ const ShareCollectionMain = () => {
         }
 
     }, [activeFolder])
+
+    useEffect(()=>{
+        setActiveSortFilter({
+            ...activeSortFilter,
+            mainFilter: 'folders'
+        })
+    },[])
 
     const selectAll = () => {
         // Mark select all
@@ -259,7 +265,6 @@ const ShareCollectionMain = () => {
     }
 
     const loadMore = () => {
-        console.log(`load more`)
         if (activeMode === 'assets') {
             getAssets(false)
         } else {

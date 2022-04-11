@@ -48,11 +48,12 @@ const ShareFolderMain = () => {
     const [sharePath, setSharePath] = useState('')
     const [activeMode, setActiveMode] = useState('assets')
 
-    const submitPassword = async (password) => {
+    const submitPassword = async (password, email) => {
         try {
-            const { data } = await folderApi.authenticateCollection({ password, sharePath })
+            const { data } = await folderApi.authenticateCollection({ password, email, sharePath })
             // Set axios headers
             requestUtils.setAuthToken(data.token, 'share-authorization')
+
             getFolderInfo(true)
         } catch (err) {
             console.log(err)
@@ -100,11 +101,11 @@ const ShareFolderMain = () => {
 
             let sort = {...activeSortFilter.sort}
 
-            // setActiveSortFilter({
-            //     ...activeSortFilter,
-            //     mainFilter: "folders",
-            //     sort
-            // })
+            setActiveSortFilter({
+                ...activeSortFilter,
+                mainFilter: "folders",
+                sort
+            })
         }
     }
 
@@ -124,13 +125,13 @@ const ShareFolderMain = () => {
         }
     }, [sharePath])
 
-    useEffect(() => {
-        if (folderInfo && !folderInfo.error) {
-            setActivePageMode('library')
-            setAssets([])
-            getAssets()
-        }
-    }, [activeSortFilter, folderInfo])
+    // useEffect(() => {
+    //     if (folderInfo && !folderInfo.error) {
+    //         setActivePageMode('library')
+    //         setAssets([])
+    //         getAssets()
+    //     }
+    // }, [activeSortFilter, folderInfo])
 
     useEffect(() => {
         if (needsFetch === 'assets') {
@@ -142,8 +143,7 @@ const ShareFolderMain = () => {
     useEffect(() => {
         setInitialLoad();
 
-
-        if (firstLoaded) {
+        if (firstLoaded && sharePath) {
             setActivePageMode('library')
             if (activeSortFilter.mainFilter === 'folders') {
                 setActiveMode('folders')
@@ -154,7 +154,7 @@ const ShareFolderMain = () => {
                 getAssets()
             }
         }
-    }, [activeSortFilter])
+    }, [activeSortFilter,sharePath])
 
     useEffect(() => {
         if (firstLoaded && activeFolder !== '') {
@@ -226,6 +226,7 @@ const ShareFolderMain = () => {
                     replace,
                     nextPage,
                     addedIds,
+                    activeFolder,
                     userFilterObject: activeSortFilter
                 }),
                 ...getAssetsSort(activeSortFilter),
@@ -291,6 +292,7 @@ const ShareFolderMain = () => {
             <AssetOps />
             {activePasswordOverlay &&
                 <PasswordOverlay
+                    fields={folderInfo?.requiredFields?.length > 0 ? folderInfo?.requiredFields : ["password"]}
                     onPasswordSubmit={submitPassword}
                     logo={folderInfo?.teamIcon}
                 />
