@@ -101,11 +101,11 @@ const ShareFolderMain = () => {
 
             let sort = {...activeSortFilter.sort}
 
-            // setActiveSortFilter({
-            //     ...activeSortFilter,
-            //     mainFilter: "folders",
-            //     sort
-            // })
+            setActiveSortFilter({
+                ...activeSortFilter,
+                mainFilter: "folders",
+                sort
+            })
         }
     }
 
@@ -125,13 +125,13 @@ const ShareFolderMain = () => {
         }
     }, [sharePath])
 
-    useEffect(() => {
-        if (folderInfo && !folderInfo.error) {
-            setActivePageMode('library')
-            setAssets([])
-            getAssets()
-        }
-    }, [activeSortFilter, folderInfo])
+    // useEffect(() => {
+    //     if (folderInfo && !folderInfo.error) {
+    //         setActivePageMode('library')
+    //         setAssets([])
+    //         getAssets()
+    //     }
+    // }, [activeSortFilter, folderInfo])
 
     useEffect(() => {
         if (needsFetch === 'assets') {
@@ -143,8 +143,7 @@ const ShareFolderMain = () => {
     useEffect(() => {
         setInitialLoad();
 
-
-        if (firstLoaded) {
+        if (firstLoaded && sharePath) {
             setActivePageMode('library')
             if (activeSortFilter.mainFilter === 'folders') {
                 setActiveMode('folders')
@@ -155,7 +154,7 @@ const ShareFolderMain = () => {
                 getAssets()
             }
         }
-    }, [activeSortFilter])
+    }, [activeSortFilter,sharePath])
 
     useEffect(() => {
         if (firstLoaded && activeFolder !== '') {
@@ -227,6 +226,7 @@ const ShareFolderMain = () => {
                     replace,
                     nextPage,
                     addedIds,
+                    activeFolder,
                     userFilterObject: activeSortFilter
                 }),
                 ...getAssetsSort(activeSortFilter),
