@@ -33,6 +33,7 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 		setActiveOperation,
 		selectedAllAssets,
 		selectAllAssets,
+		selectAllFolders,
 		totalAssets,
 		activeFolder,
 		updateDownloadingStatus
@@ -150,6 +151,7 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 
 			setAssets(assets.map(asset => ({ ...asset, isSelected: false })))
 		} else {
+			selectAllFolders(false)
 			setFolders(folders.map(folder => ({ ...folder, isSelected: false })))
 		}
 	}
