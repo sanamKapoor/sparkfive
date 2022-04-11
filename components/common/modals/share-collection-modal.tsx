@@ -208,8 +208,6 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 	}
 
 	const isUndefined = (value) => {
-		console.log(`isUndefined`)
-		console.log(value)
 		return value === undefined || value === ""
 	}
 
