@@ -159,13 +159,19 @@ const AssetGrid = ({
     (mode === "assets" && assets.length === 0) ||
     (mode === "folders" && folders.length === 0);
 
-  const copyShareLink = (folder) =>
-    copyClipboard(
-      `${process.env.CLIENT_BASE_URL}/collections/${folder.sharePath}`
-    );
+  const copyShareLink = (folder) => {
+    const link = folder.sharedLinks[0]
+    const sharedLink = !link.team.advancedCollectionShareLink ?
+        `${process.env.CLIENT_BASE_URL}/collections/${link.collectionLink}` :
+        link.sharedLink
 
-  const getShareIsEnabled = ({ shareStatus }) =>
-    shareStatus === "public" || shareStatus === "private";
+
+    copyClipboard(sharedLink);
+  }
+
+  const getShareIsEnabled = ({ sharedLinks }) => {
+    return sharedLinks && sharedLinks.length > 0
+  }
 
   const showLoadMore =
     (mode === "assets" && assets.length > 0) ||
