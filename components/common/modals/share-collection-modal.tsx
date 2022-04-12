@@ -103,7 +103,6 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 			// @ts-ignore
 			const { data } = await getShareLink(name)
 			if(data.currentSharedLinks){
-				console.log(data.currentSharedLinks.collectionLink)
 				setUrl(data.currentSharedLinks.sharedLink || "")
 				setCollectionLink(data.currentSharedLinks.collectionLink || "")
 				setShareJWT(data.currentSharedLinks.sharedJwt)
