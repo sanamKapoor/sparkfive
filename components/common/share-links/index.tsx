@@ -205,10 +205,10 @@ export default function ShareLinks(){
     //     getLinks(getFilterObject())
     // },[])
 
-    const parseTypeName = (type: string, basic = true) => {
+    const parseTypeName = (type: string, folderId) => {
         switch(type){
             case "folder": {
-                if(basic){
+                if(folderId){
                     return "Collection"
                 }else{
                     return "Portal"
@@ -418,7 +418,7 @@ export default function ShareLinks(){
                 <div className={"col-10 d-flex align-items-center col-sm-100 word-break-text"}>
                     <span
                         className={`${styles['name-tag']} font-12`}>
-                        {parseTypeName(link.type, link.basic)}
+                        {parseTypeName(link.type, link.singleSharedCollectionId)}
                     </span>
                 </div>
                 <div className={"col-15 d-flex align-items-center col-sm-100"}>
@@ -426,15 +426,23 @@ export default function ShareLinks(){
                     <span className={"m-l-5 font-12"}>{link.user.name}</span>
                 </div>
                 <div className={"col-25 d-flex align-items-center word-break-text col-sm-100"}>
-                    <span className={"font-12"}>{link.type === "folder" ?
-                        (link.basic ? `${process.env.CLIENT_BASE_URL}/collections/${link.collectionLink}` : link.sharedLink) : link.sharedLink}
+                    <span className={"font-12"}>
+                        {link.type === "folder" ?
+                        (!link.team.advancedCollectionShareLink ?
+                            `${process.env.CLIENT_BASE_URL}/collections/${link.collectionLink}` :
+                            link.sharedLink) :
+                            link.sharedLink}
                     </span>
                     <IconClickable additionalClass={`${styles['action-button']} m-l-5 cursor-pointer`}
                                    src={AssetOps[`copy${''}`]}
                                    tooltipText={'Copy'}
                                    tooltipId={'Copy'}
                                    onClick={()=>{
-                                       copy(`${process.env.CLIENT_BASE_URL}/collections/${link.collectionLink}`)
+                                       copy(link.type === "folder" ?
+                                           (!link.team.advancedCollectionShareLink ?
+                                               `${process.env.CLIENT_BASE_URL}/collections/${link.collectionLink}` :
+                                               link.sharedLink) :
+                                           link.sharedLink)
                                        toastUtils.bottomSuccess('Link copied')
                                    }}/>
                 </div>

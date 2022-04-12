@@ -545,7 +545,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 							</div>}
 
 							{/*<Input additionalClasses={"w-50 m-r-15"} disabled={!url} placeholder={'Loading share link...'} value={url} styleType={'regular-short'} />*/}
-							<span className={"font-12 m-l-15 w-100"}>{expiredAt.toDateString()}</span>
+							<span className={"font-12 m-l-15 w-100"}>{expiredAt?.toDateString()}</span>
 						</div>
 					</div>
 				</div>}
