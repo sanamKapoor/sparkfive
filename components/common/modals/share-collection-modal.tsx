@@ -103,6 +103,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 			// @ts-ignore
 			const { data } = await getShareLink(name)
 			if(data.currentSharedLinks){
+				console.log(data.currentSharedLinks.collectionLink)
 				setUrl(data.currentSharedLinks.sharedLink || "")
 				setCollectionLink(data.currentSharedLinks.collectionLink || "")
 				setShareJWT(data.currentSharedLinks.sharedJwt)
@@ -127,7 +128,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 				setRecipients(data.currentSharedLinks.sharedEmails)
 				setShareId(data.currentSharedLinks.id)
 				setIsPublic(data.currentSharedLinks.isPublic !== undefined ? data.currentSharedLinks.isPublic : true) // default is true
-				setBasic(data.currentSharedLinks.basic !== undefined ? data.currentSharedLinks.basic : true) // default is true
+				setBasic(!data.currentSharedLinks.team.advancedCollectionShareLink) // default is true
 				setMessage(data.currentSharedLinks.message)
 				setSharable(data.currentSharedLinks.sharable !== undefined ? data.currentSharedLinks.sharable : false) // default is false
 
@@ -212,7 +213,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 	}
 
 	// Save changes
-	const saveChanges = async (field = "", isPublicValue = undefined, expiredValue = undefined, expiredPeriodValue = undefined, expiredAtValue = undefined, sharableValue = undefined, basicValue = undefined) => {
+	const saveChanges = async (field = "", isPublicValue = undefined, expiredValue = undefined, expiredPeriodValue = undefined, expiredAtValue = undefined, sharableValue = undefined) => {
 		setIsLoading(true);
 
 		// Link is not created yet due to lacking name, saving name then getting url back
@@ -228,7 +229,6 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 					hash,
 					name,
 					password,
-					basic: basic === undefined ? basic : basicValue,
 					isPublic: isPublicValue === undefined ? isPublic : isPublicValue,
 					expired: expiredValue === undefined ? expired : expiredValue,
 					expiredPeriod: expiredPeriodValue === undefined ? expiredPeriod : expiredPeriodValue,
@@ -252,8 +252,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 				isUndefined(expiredValue) &&
 				isUndefined(expiredPeriodValue) &&
 				isUndefined(expiredAtValue) &&
-				isUndefined(sharableValue) &&
-				isUndefined(basicValue)
+				isUndefined(sharableValue)
 			){
 				toastUtils.success('Save successfully')
 			}
@@ -286,11 +285,11 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 		saveChanges("", value)
 	}
 
-	const changeIsBasic = (value) => {
-		setBasic(value)
-
-		saveChanges("", undefined, undefined, undefined, undefined, undefined, value)
-	}
+	// const changeIsBasic = (value) => {
+	// 	setBasic(value)
+	//
+	// 	saveChanges("", undefined, undefined, undefined, undefined, undefined, value)
+	// }
 
 	const changeSharable = (value) => {
 		setSharable(value)
@@ -365,25 +364,25 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 					<span className={'m-l-10'}>(required)</span>
 				</div>
 
-			{currentName && <div className={`${styles['field-content']} m-b-15`}>
-					<div className={styles['field-radio-wrapper']}>
-						<div className={`${styles['radio-button-wrapper']} m-r-15`}>
-							<IconClickable
-								src={basic ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-								additionalClass={styles['select-icon']}
-								onClick={()=>{changeIsBasic(true)}} />
-							<div className={'font-12 m-l-15'}>Basic</div>
-						</div>
+			{/*{currentName && <div className={`${styles['field-content']} m-b-15`}>*/}
+			{/*		<div className={styles['field-radio-wrapper']}>*/}
+			{/*			<div className={`${styles['radio-button-wrapper']} m-r-15`}>*/}
+			{/*				<IconClickable*/}
+			{/*					src={basic ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}*/}
+			{/*					additionalClass={styles['select-icon']}*/}
+			{/*					onClick={()=>{changeIsBasic(true)}} />*/}
+			{/*				<div className={'font-12 m-l-15'}>Basic</div>*/}
+			{/*			</div>*/}
 
-						<div className={`${styles['radio-button-wrapper']} m-r-15`}>
-							<IconClickable
-								src={!basic ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-								additionalClass={styles['select-icon']}
-								onClick={()=>{changeIsBasic(false)}} />
-							<div className={'font-12 m-l-15'}>Advanced</div>
-						</div>
-					</div>
-				</div>}
+			{/*			<div className={`${styles['radio-button-wrapper']} m-r-15`}>*/}
+			{/*				<IconClickable*/}
+			{/*					src={!basic ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}*/}
+			{/*					additionalClass={styles['select-icon']}*/}
+			{/*					onClick={()=>{changeIsBasic(false)}} />*/}
+			{/*				<div className={'font-12 m-l-15'}>Advanced</div>*/}
+			{/*			</div>*/}
+			{/*		</div>*/}
+			{/*	</div>}*/}
 
 			{basic && <div className={`${styles['input-wrapper']} d-flex align-items-center p-t-0`}>
 					<Input
@@ -546,7 +545,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 							</div>}
 
 							{/*<Input additionalClasses={"w-50 m-r-15"} disabled={!url} placeholder={'Loading share link...'} value={url} styleType={'regular-short'} />*/}
-							<span className={"font-12 m-l-15 w-100"}>{expiredAt.toDateString()}</span>
+							<span className={"font-12 m-l-15 w-100"}>{expiredAt?.toDateString()}</span>
 						</div>
 					</div>
 				</div>}
