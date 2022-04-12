@@ -186,7 +186,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 		setRecipients(data.sharedEmails)
 		setShareId(data.id)
 		setIsPublic(data.isPublic)
-		setBasic(data.basic)
+		setBasic(!data.team?.advancedCollectionShareLink) // default is true
 		setMessage(data.message)
 		setSharable(data.sharable)
 
