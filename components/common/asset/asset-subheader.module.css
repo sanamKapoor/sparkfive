@@ -1,12 +1,9 @@
 .additional-folder-wrapper {
-  position: relative;
-  margin-right: 4rem;
-}
-
-.additional-folder-wrapper h4 {
-  position: absolute;
-  bottom: 0.4rem;
-  left: 4rem;
+  margin-right: auto;
+  display: grid;
+  grid-auto-flow: column;
+  gap: 16px;
+  align-items: center;
 }
 
 .asset-subheader{
@@ -26,6 +23,4 @@
   font-size: 25px;
   font-family: monospace;
   cursor: pointer;
-  position: absolute;
-  bottom: 1rem;
 }

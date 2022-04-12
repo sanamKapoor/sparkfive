@@ -30,8 +30,8 @@ const AssetSubheader = ({
     <SubHeader pageTitle={activeFolderData ? activeFolderData.name : 'Asset Library'} additionalClass={styles['asset-subheader']}
       editable={activeFolderData} onAltEditionClick={() => setRenameModalOpen(true)}
       PreComponent={activeFolderData ? () => (
-        <div className={styles['additional-folder-wrapper']}>
-          <div className={styles.back} onClick={backToFolders}>
+        <div className={styles['additional-folder-wrapper']} onClick={backToFolders}>
+          <div className={styles.back}>
             {'<'}
           </div>
           <h4>Collection</h4>
