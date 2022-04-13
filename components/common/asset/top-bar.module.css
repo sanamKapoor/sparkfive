@@ -156,5 +156,10 @@
 @media screen and (max-width: 650px) {
   .tab-list {
     flex-wrap: wrap;
+    margin-top: 10px;
+  }
+
+  .tab-list-item{
+    padding: 6px 8px;
   }
 }
