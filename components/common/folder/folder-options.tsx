@@ -11,10 +11,11 @@ const FolderOptions = ({
 	setDeleteOpen,
 	shareAssets,
 	copyShareLink,
-	copyEnabled
+	copyEnabled,
+	isShare = false
 }) => {
 
-	const options = [
+	const options = isShare ? []: [
 		{ label: 'Download', onClick: downloadFoldercontents },
 		{ label: 'Delete', onClick: () => setDeleteOpen(true) },
 		{ label: 'Share', onClick: shareAssets }
@@ -34,9 +35,9 @@ const FolderOptions = ({
 			)}
 			Content={() => (
 				<div className={styles.more} >
-					<Dropdown
+					{options.length > 0 && <Dropdown
 						options={options}
-					/>
+					/>}
 				</div>
 			)}
 		/>

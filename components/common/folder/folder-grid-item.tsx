@@ -31,6 +31,7 @@ const FolderGridItem = ({
   copyShareLink = (folder) => {},
   toggleSelected,
   copyEnabled,
+  isShare = false
 }) => {
   const { updateDownloadingStatus } = useContext(AssetContext);
 
@@ -109,6 +110,7 @@ const FolderGridItem = ({
         <div className={styles["details-wrapper"]}>
           <div className="secondary-text">{`${length} Assets`}</div>
           <FolderOptions
+            isShare={isShare}
             downloadFoldercontents={downloadFoldercontents}
             setDeleteOpen={setDeleteOpen}
             shareAssets={shareAssets}
