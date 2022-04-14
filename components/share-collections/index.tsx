@@ -172,7 +172,7 @@ const ShareCollectionMain = () => {
         if (firstLoaded && activeFolder !== '') {
             setActiveSortFilter({
                 ...activeSortFilter,
-                mainFilter: folderInfo.singleSharedCollectionId ? "all" : "folders"
+                mainFilter: "all"
             })
         }
 
