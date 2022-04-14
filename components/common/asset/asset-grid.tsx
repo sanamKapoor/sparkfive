@@ -280,6 +280,7 @@ const AssetGrid = ({
                     <FolderGridItem
                       {...folder}
                         isShare={isShare}
+                      sharePath={sharePath}
                       toggleSelected={() => toggleSelected(folder.id)}
                       viewFolder={() => viewFolder(folder.id)}
                       deleteFolder={() => deleteFolder(folder.id)}
