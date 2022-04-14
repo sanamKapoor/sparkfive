@@ -15,6 +15,7 @@ import IconClickable from "../buttons/icon-clickable";
 import ConfirmModal from "../modals/confirm-modal";
 
 import folderApi from "../../../server-api/folder";
+import shareFolderApi from "../../../server-api/share-collection";
 import AssetIcon from "../asset/asset-icon";
 
 const FolderGridItem = ({
@@ -31,6 +32,7 @@ const FolderGridItem = ({
   copyShareLink = (folder) => {},
   toggleSelected,
   copyEnabled,
+  sharePath = '',
   isShare = false
 }) => {
   const { updateDownloadingStatus } = useContext(AssetContext);
@@ -59,7 +61,18 @@ const FolderGridItem = ({
       estimateTime: 1,
     };
 
-    const { data } = await folderApi.downloadFoldersAsZip(payload, filters);
+    let api = folderApi;
+
+    if(isShare){
+      api = shareFolderApi
+    }
+
+    // Add sharePath property if user is at share collection page
+    if (sharePath) {
+      filters['sharePath'] = sharePath
+    }
+
+    const { data } = await api.downloadFoldersAsZip(payload, filters);
 
     // Download file to storage
     fileDownload(data, "assets.zip");
