@@ -99,7 +99,6 @@ const ShareFolderMain = () => {
 
     const setInitialLoad = async (folderInfo) => {
         if (!firstLoaded && folderInfo) {
-            console.log(folderInfo.singleSharedCollectionId ? "all" : "folders")
 
             setFirstLoaded(true)
 
@@ -301,11 +300,13 @@ const ShareFolderMain = () => {
                     />
                     {openFilter &&
                         <FilterContainer
+                            isShare={true}
                             clearFilters={clearFilters}
                             openFilter={openFilter}
                             setOpenFilter={setOpenFilter}
                             activeSortFilter={activeSortFilter}
                             setActiveSortFilter={setActiveSortFilter}
+                            isFolder={activeSortFilter.mainFilter === 'folders'}
                         />
                     }
                 </div>

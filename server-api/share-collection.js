@@ -1,5 +1,6 @@
 import axios from 'axios'
 import querystring from 'querystring'
+import queryString from "querystring";
 const shareCollectionsUrl = `${process.env.SERVER_BASE_URL}/share-collections`
 
 export default {
@@ -42,4 +43,5 @@ export default {
       data
     })
   },
+  getFoldersSimple: (queryParams = {}) => axios.get(`${shareCollectionsUrl}/folders/simple?${queryString.stringify(queryParams)}`),
 }
