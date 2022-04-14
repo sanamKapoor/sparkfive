@@ -31,6 +31,7 @@ const TopBar = ({
     selectedAllAssets,
     selectAllAssets,
     selectAllFolders,
+    selectedAllFolders,
     setLastUploadedFolder
   } = useContext(AssetContext)
 
@@ -115,6 +116,7 @@ const TopBar = ({
 
       <div className={styles['sec-filters']} ref={filtersRef}>
         {selectedAllAssets && <span className={styles['select-only-shown-items-text']} onClick={toggleSelectAll}>Select only 25 assets shown</span>}
+        {selectedAllFolders && <span className={styles['select-only-shown-items-text']} onClick={toggleSelectAll}>Select only 25 collections shown</span>}
         <Button type='button' text='Select All' styleType='secondary' onClick={selectAll} />
         {!deletedAssets && <img src={Utilities.gridView} onClick={() => setActiveView('grid')} />}
         <img src={Utilities.listView} onClick={() => setActiveView('list')} />
