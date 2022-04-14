@@ -136,15 +136,17 @@ const ShareCollectionMain = () => {
         })
     }
 
-    const setInitialLoad = async () => {
-        if (!firstLoaded) {
+    const setInitialLoad = async (folderInfo) => {
+        if (!firstLoaded && folderInfo) {
+            console.log(folderInfo.singleSharedCollectionId ? "all" : "folders")
+
             setFirstLoaded(true)
 
             let sort = {...activeSortFilter.sort}
 
             setActiveSortFilter({
                 ...activeSortFilter,
-                mainFilter: "folders",
+                mainFilter: folderInfo.singleSharedCollectionId ? "all" : "folders", // Set to all if only folder is shared
                 sort
             })
         }
@@ -152,7 +154,7 @@ const ShareCollectionMain = () => {
 
 
     useEffect(() => {
-        setInitialLoad();
+        setInitialLoad(folderInfo);
 
         if (firstLoaded && sharePath) {
             setActivePageMode('library')
@@ -171,18 +173,18 @@ const ShareCollectionMain = () => {
         if (firstLoaded && activeFolder !== '') {
             setActiveSortFilter({
                 ...activeSortFilter,
-                mainFilter: 'all'
+                mainFilter: folderInfo.singleSharedCollectionId ? "all" : "folders"
             })
         }
 
     }, [activeFolder])
 
-    useEffect(()=>{
-        setActiveSortFilter({
-            ...activeSortFilter,
-            mainFilter: 'folders'
-        })
-    },[])
+    // useEffect(()=>{
+    //     setActiveSortFilter({
+    //         ...activeSortFilter,
+    //         mainFilter: 'folders'
+    //     })
+    // },[])
 
     const selectAll = () => {
         if (activeMode === 'assets') {
@@ -305,6 +307,7 @@ const ShareCollectionMain = () => {
                     setOpenFilter={setOpenFilter}
                     openFilter={openFilter}
                     isShare={true}
+                    singleCollection={!!folderInfo.singleSharedCollectionId}
                 />
                 <div className={`${openFilter && styles['col-wrapper']}`}>
                     <AssetGrid

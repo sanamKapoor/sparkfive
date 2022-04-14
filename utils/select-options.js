@@ -50,7 +50,8 @@ export default {
       name: 'folders',
       omitFolder: true,
       omitShare: false,
-      requirePermissions: []
+      requirePermissions: [],
+      hideOnSingle: true,
     },
     {
       text: 'All',

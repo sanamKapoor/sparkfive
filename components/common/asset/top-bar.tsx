@@ -23,7 +23,8 @@ const TopBar = ({
   setOpenFilter,
   openFilter,
   isShare = false,
-  deletedAssets
+  deletedAssets,
+  singleCollection = false
 }) => {
 
   const {
@@ -92,7 +93,7 @@ const TopBar = ({
         <ul className={styles['tab-list']}>
         {selectOptions.views.map(view => (
           <li key={view.name} className={styles['tab-list-item']}>
-            {(!activeFolder || !view.omitFolder) && (!isShare || (isShare && !view.omitShare)) &&
+            {(!activeFolder || !view.omitFolder) && (!isShare || (isShare && !view.omitShare && view.hideOnSingle !== singleCollection)) &&
             (view.requirePermissions.length === 0 || (view.requirePermissions.length > 0 && hasPermission(view.requirePermissions))) &&
               <SectionButton
                 keyProp={view.name}

@@ -97,15 +97,17 @@ const ShareFolderMain = () => {
         }
     }
 
-    const setInitialLoad = async () => {
-        if (!firstLoaded) {
+    const setInitialLoad = async (folderInfo) => {
+        if (!firstLoaded && folderInfo) {
+            console.log(folderInfo.singleSharedCollectionId ? "all" : "folders")
+
             setFirstLoaded(true)
 
             let sort = {...activeSortFilter.sort}
 
             setActiveSortFilter({
                 ...activeSortFilter,
-                mainFilter: "folders",
+                mainFilter: folderInfo.singleSharedCollectionId ? "all" : "folders", // Set to all if only folder is shared
                 sort
             })
         }
@@ -143,7 +145,7 @@ const ShareFolderMain = () => {
     }, [needsFetch])
 
     useEffect(() => {
-        setInitialLoad();
+        setInitialLoad(folderInfo);
 
         if (firstLoaded && sharePath) {
             setActivePageMode('library')
@@ -162,7 +164,7 @@ const ShareFolderMain = () => {
         if (firstLoaded && activeFolder !== '') {
             setActiveSortFilter({
                 ...activeSortFilter,
-                mainFilter: 'all'
+                mainFilter: folderInfo.singleSharedCollectionId ? "all" : "folders"
             })
         }
 
@@ -281,6 +283,7 @@ const ShareFolderMain = () => {
                     setOpenFilter={setOpenFilter}
                     openFilter={openFilter}
                     isShare={true}
+                    singleCollection={!!folderInfo.singleSharedCollectionId}
                 />
                 <div className={`${openFilter && styles['col-wrapper']}`}>
                     <AssetGrid
