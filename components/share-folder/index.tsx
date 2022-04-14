@@ -23,6 +23,7 @@ const ShareFolderMain = () => {
     const {
         assets,
         setAssets,
+        folders,
         setPlaceHolders,
         setActivePageMode,
         needsFetch,
@@ -31,6 +32,7 @@ const ShareFolderMain = () => {
         setAddedIds,
         nextPage,
         selectAllAssets,
+        selectAllFolders,
         setFolders,
         activeFolder,
         setActiveFolder
@@ -193,10 +195,16 @@ const ShareFolderMain = () => {
     }
 
     const selectAll = () => {
-        // Mark select all
-        selectAllAssets()
+        if (activeMode === 'assets') {
+            // Mark select all
+            selectAllAssets()
 
-        setAssets(assets.map(assetItem => ({ ...assetItem, isSelected: true })))
+            setAssets(assets.map(assetItem => ({ ...assetItem, isSelected: true })))
+        } else if (activeMode === 'folders') {
+            selectAllFolders()
+
+            setFolders(folders.map(folder => ({ ...folder, isSelected: true })))
+        }
     }
 
     const closeSearchOverlay = () => {
@@ -205,12 +213,21 @@ const ShareFolderMain = () => {
     }
 
     const toggleSelected = (id) => {
-        const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
-        setAssets(update(assets, {
-            [assetIndex]: {
-                isSelected: { $set: !assets[assetIndex].isSelected }
-            }
-        }))
+        if (activeMode === 'assets') {
+            const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
+            setAssets(update(assets, {
+                [assetIndex]: {
+                    isSelected: { $set: !assets[assetIndex].isSelected }
+                }
+            }))
+        } else if (activeMode === 'folders') {
+            const folderIndex = folders.findIndex(folder => folder.id === id)
+            setFolders(update(folders, {
+                [folderIndex]: {
+                    isSelected: { $set: !folders[folderIndex].isSelected }
+                }
+            }))
+        }
     }
 
     const mapWithToggleSelection = asset => ({ ...asset, toggleSelected })

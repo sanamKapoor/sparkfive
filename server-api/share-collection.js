@@ -33,5 +33,13 @@ export default {
       responseType: 'blob', // Important
       data
     })
-  }
+  },
+  downloadFoldersAsZip: (data, filters) => {
+    return axios({
+      url: `${shareCollectionsUrl}/download-as-zip?${querystring.encode(filters)}`,
+      method: 'POST',
+      responseType: 'blob', // Important
+      data
+    })
+  },
 }

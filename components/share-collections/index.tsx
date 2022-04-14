@@ -37,7 +37,9 @@ const ShareCollectionMain = () => {
         selectAllAssets,
         setFolders,
         activeFolder,
-        setActiveFolder
+        setActiveFolder,
+        folders,
+        selectAllFolders,
     } = useContext(AssetContext)
 
     const { folderInfo, setFolderInfo } = useContext(ShareContext)
@@ -183,10 +185,16 @@ const ShareCollectionMain = () => {
     },[])
 
     const selectAll = () => {
-        // Mark select all
-        selectAllAssets()
+        if (activeMode === 'assets') {
+            // Mark select all
+            selectAllAssets()
 
-        setAssets(assets.map(assetItem => ({ ...assetItem, isSelected: true })))
+            setAssets(assets.map(assetItem => ({ ...assetItem, isSelected: true })))
+        } else if (activeMode === 'folders') {
+            selectAllFolders()
+
+            setFolders(folders.map(folder => ({ ...folder, isSelected: true })))
+        }
     }
 
     const closeSearchOverlay = () => {
@@ -195,12 +203,21 @@ const ShareCollectionMain = () => {
     }
 
     const toggleSelected = (id) => {
-        const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
-        setAssets(update(assets, {
-            [assetIndex]: {
-                isSelected: { $set: !assets[assetIndex].isSelected }
-            }
-        }))
+        if (activeMode === 'assets') {
+            const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
+            setAssets(update(assets, {
+                [assetIndex]: {
+                    isSelected: { $set: !assets[assetIndex].isSelected }
+                }
+            }))
+        } else if (activeMode === 'folders') {
+            const folderIndex = folders.findIndex(folder => folder.id === id)
+            setFolders(update(folders, {
+                [folderIndex]: {
+                    isSelected: { $set: !folders[folderIndex].isSelected }
+                }
+            }))
+        }
     }
 
     const mapWithToggleSelection = asset => ({ ...asset, toggleSelected })
