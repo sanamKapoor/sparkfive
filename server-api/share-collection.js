@@ -1,5 +1,6 @@
 import axios from 'axios'
 import querystring from 'querystring'
+import queryString from "querystring";
 const shareCollectionsUrl = `${process.env.SERVER_BASE_URL}/share-collections`
 
 export default {
@@ -33,5 +34,14 @@ export default {
       responseType: 'blob', // Important
       data
     })
-  }
+  },
+  downloadFoldersAsZip: (data, filters) => {
+    return axios({
+      url: `${shareCollectionsUrl}/download-as-zip?${querystring.encode(filters)}`,
+      method: 'POST',
+      responseType: 'blob', // Important
+      data
+    })
+  },
+  getFoldersSimple: (queryParams = {}) => axios.get(`${shareCollectionsUrl}/folders/simple?${queryString.stringify(queryParams)}`),
 }

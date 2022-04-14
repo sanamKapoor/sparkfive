@@ -279,6 +279,7 @@ const AssetGrid = ({
                   <li className={styles["grid-item"]} key={folder.id || index}>
                     <FolderGridItem
                       {...folder}
+                        isShare={isShare}
                       toggleSelected={() => toggleSelected(folder.id)}
                       viewFolder={() => viewFolder(folder.id)}
                       deleteFolder={() => deleteFolder(folder.id)}
@@ -335,7 +336,6 @@ const AssetGrid = ({
                 );
               })}
             {mode === "folders" &&
-              !isShare &&
               sortedFolders.map((folder, index) => {
                 return (
                   <li className={styles["grid-item"]} key={folder.id || index}>

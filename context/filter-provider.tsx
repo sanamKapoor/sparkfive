@@ -107,6 +107,16 @@ export default ({ children, isPublic = false }) => {
     loadFromEndpoint(fetchMethod(({ ...basicFilter, ...getCommonParams(false, ignoreCurrentSelectedFolder) })), setFolders)
   }
 
+  const loadSharedFolders = (ignoreCurrentSelectedFolder = false, sharePath = '') => {
+    const fetchMethod = shareCollectionApi.getFoldersSimple
+    let basicFilter = { assetsCount: 'yes' }
+    if (activeFolder) {
+      // @ts-ignore
+      basicFilter = { ...basicFilter, folderId: activeFolder }
+    }
+    loadFromEndpoint(fetchMethod(({ ...basicFilter, ...getCommonParams(false, ignoreCurrentSelectedFolder) , sharePath})), setFolders)
+  }
+
   const loadAllFolders = () => {
     const fetchMethod = fodlerApi.getFoldersSimple
     loadFromEndpoint(fetchMethod(({ assetsCount: 'yes', ...getCommonParams(), selectAll: 1 })), setFolders)
@@ -339,7 +349,8 @@ export default ({ children, isPublic = false }) => {
     isPublic,
     sharePath,
     loadAssetResolutions,
-    assetResolutions
+    assetResolutions,
+    loadSharedFolders
   }
   return (
     <FilterContext.Provider value={filterValue}>

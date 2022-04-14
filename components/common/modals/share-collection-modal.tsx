@@ -253,7 +253,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 				isUndefined(expiredAtValue) &&
 				isUndefined(sharableValue)
 			){
-				toastUtils.success('Save successfully')
+				toastUtils.success('Saved successfully')
 			}
 
 

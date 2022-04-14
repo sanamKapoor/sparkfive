@@ -19,7 +19,7 @@ const ShareFolder = () => {
       <title>Shared Collections</title>
       <link rel="icon" href="/favicon.ico" />
     </Head>
-    <ShareFolderLayout>
+    <ShareFolderLayout advancedLink={true}>
         {downloadingStatus !== 'none' && <AssetDownloadProcess/>}
       <ShareCollectionMain />
     </ShareFolderLayout>

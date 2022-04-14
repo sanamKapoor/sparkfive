@@ -190,6 +190,8 @@ export const FilterContext = createContext({
     setSharePath: (path) => { },
     loadAll: () => { },
 
+    loadSharedFolders: (ignoreCurrentSelectedFolder, sharePath) => { },
+
     isPublic: false,
     sharePath: ''
 })
