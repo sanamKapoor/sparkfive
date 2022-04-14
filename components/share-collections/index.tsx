@@ -318,6 +318,7 @@ const ShareCollectionMain = () => {
                         viewFolder={viewFolder}
                         loadMore={loadMore}
                         openFilter={openFilter}
+                        sharePath={sharePath}
                     />
                     {openFilter &&
                         <FilterContainer
