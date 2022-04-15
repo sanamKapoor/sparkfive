@@ -17,6 +17,8 @@ import AssetGrid from '../common/asset/asset-grid'
 import SearchOverlay from '../main/search-overlay-assets'
 import FilterContainer from '../common/filter/filter-container'
 
+import selectOptions from '../../utils/select-options'
+
 
 // Utils
 import { getSubdomain } from '../../utils/domain'
@@ -146,7 +148,7 @@ const ShareCollectionMain = () => {
             setActiveSortFilter({
                 ...activeSortFilter,
                 mainFilter: folderInfo.singleSharedCollectionId ? "all" : "folders", // Set to all if only folder is shared
-                sort
+                sort: selectOptions.sort[3]
             })
         }
     }
