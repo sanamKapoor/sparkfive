@@ -9,6 +9,7 @@ import userApi from '../server-api/user'
 import teamApi from '../server-api/team'
 import SpinnerOverlay from "../components/common/spinners/spinner-overlay";
 import url from '../utils/url'
+import advancedConfigParams from '../utils/advance-config-params'
 
 const allowedBase = ['/signup', 'trial-signup', 'request-access', '/share', '/reset-password', '/forgot-password', '/two-factor', '/collections']
 
@@ -18,6 +19,7 @@ export default ({ children }) => {
   const [waitToVerifyDomain, setWaitToVerifyDomain] = useState(false)
   const [vanityCompanyInfo, setVanityCompanyInfo] = useState()
   const [cdnAccess, setCdnAccess] = useState(false)
+  const [advancedConfig, setAdvancedConfig] = useState(advancedConfigParams)
 
   const { setIsLoading } = useContext(LoadingContext)
 
@@ -48,6 +50,9 @@ export default ({ children }) => {
         const { data } = await userApi.getUserData()
         const teamResponse = await teamApi.getTeam()
         setCdnAccess(teamResponse.data.cdnAccess)
+
+        const { data: advOptions } = await teamApi.getAdvanceOptions()
+        setAdvancedConfig({...advOptions, set: true})
 
         // Custom role will use custom permission here
         if (data.role.type === 'custom') {
@@ -161,7 +166,9 @@ export default ({ children }) => {
     initialLoadFinished,
     afterAuth,
     vanityCompanyInfo,
-    cdnAccess
+    cdnAccess,
+    advancedConfig,
+    setAdvancedConfig
   }
 
   return (

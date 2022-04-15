@@ -1,6 +1,6 @@
 import styles from './index.module.css'
 import { useState, useEffect, useContext, useRef } from 'react'
-import { AssetContext, FilterContext } from '../../../context'
+import { AssetContext, FilterContext, UserContext } from '../../../context'
 import update from 'immutability-helper'
 import assetApi from '../../../server-api/asset'
 import folderApi from '../../../server-api/folder'
@@ -24,7 +24,7 @@ import { useRouter } from 'next/router'
 
 // utils
 import selectOptions from '../../../utils/select-options'
-import advancedConfigParams from '../../../utils/advance-config-params'
+// import advancedConfigParams from '../../../utils/advance-config-params'
 
 const AssetsLibrary = () => {
 
@@ -56,6 +56,8 @@ const AssetsLibrary = () => {
     setTotalAssets
   } = useContext(AssetContext)
 
+  const {advancedConfig} = useContext(UserContext)
+
   const [activeMode, setActiveMode] = useState('assets')
 
   const [activeSearchOverlay, setActiveSearchOverlay] = useState(false)
@@ -65,8 +67,6 @@ const AssetsLibrary = () => {
   const [renameModalOpen, setRenameModalOpen] = useState(false)
 
   const [openFilter, setOpenFilter] = useState(false)
-
-  const [advancedConfig, setAdvancedConfig] = useState(advancedConfigParams)
 
   const { activeSortFilter, setActiveSortFilter, tags, loadTags, loadProductFields, productFields, folders: collection, loadFolders, campaigns, loadCampaigns } = useContext(FilterContext)
 
@@ -225,23 +225,27 @@ const AssetsLibrary = () => {
   const setInitialLoad = async () => {
     if (!firstLoaded) {
       setFirstLoaded(true)
-      await updateAdvancedConfig()
+      await updateSortFilterByAdvConfig()
     }
   }
 
-  const updateAdvancedConfig = async () => {
-    const { data } = await teamApi.getAdvanceOptions()
-    setAdvancedConfig({...data, set: true})
-    let defaultTab = getDefaultTab(data)
+  const updateSortFilterByAdvConfig = async (params: any = {}) => {
+    let defaultTab = getDefaultTab()
     const filters = Object.keys(router.query)
     if (filters && filters.length) {
       defaultTab = filters[0] === 'collection' ? 'folders' : 'all';
+    } else if (params.mainFilter) {
+      defaultTab = params.mainFilter
     }
-    
+
     let sort = {...activeSortFilter.sort}
     if (defaultTab === 'folders') {
-      sort = data.collectionSortView === 'alphabetical' ? selectOptions.sort[3] : selectOptions.sort[1]
+      sort = advancedConfig.collectionSortView === 'alphabetical' ? selectOptions.sort[3] : selectOptions.sort[1]
+    } else {
+      sort = advancedConfig.assetSortView === 'newest' ? selectOptions.sort[1] : selectOptions.sort[3]
     }
+    // debugger
+    console.log(advancedConfig.assetSortView, sort.name)
 
     setActiveSortFilter({
       ...activeSortFilter,
@@ -464,7 +468,7 @@ const AssetsLibrary = () => {
       setFolders([...folderPlaceholders, ...currenFolderClone])
 
       // Get team advance configurations first
-      const subFolderAutoTag = advancedConfig.autoTagSubFolder;
+      const subFolderAutoTag = advancedConfig.subFolderAutoTag;
 
       // Start to upload assets
       let folderGroups = await uploadAsset(0, newPlaceholders, currentDataClone, totalSize, activeFolder, undefined, subFolderAutoTag)
@@ -597,11 +601,12 @@ const AssetsLibrary = () => {
 
   const backToFolders = () => {
     setActiveFolder('')
-    setActiveSortFilter({
-      ...activeSortFilter,
-      // filterFolders: [], // Open this comment to reset filter folders
-      mainFilter: 'folders'
-    })
+    // setActiveSortFilter({
+    //   ...activeSortFilter,
+    //   // filterFolders: [], // Open this comment to reset filter folders
+    //   mainFilter: 'folders'
+    // })
+    updateSortFilterByAdvConfig({mainFilter: 'folders'})
   }
 
   const selectedAssets = assets.filter(asset => asset.isSelected)
@@ -617,12 +622,7 @@ const AssetsLibrary = () => {
     // })
     // router.replace("/main/assets") // Open this comment to reset query string url
     setActiveFolder(id)
-
-
-    // setTimeout(()=>{
-    //   setActiveFolder(id)
-    //   router.replace("/main/assets")
-    // },2000)
+    updateSortFilterByAdvConfig({folderId: id})
 
   }
 

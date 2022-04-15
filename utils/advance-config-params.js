@@ -1,7 +1,8 @@
 const advancedConfigParams = {
-  autoTagSubFolder: true,
+  subFolderAutoTag: true,
   defaultLandingPage: 'allTab',
   collectionSortView: 'alphabetical',
+  assetSortView: 'newest',
   set: false
 }
 

@@ -14,7 +14,9 @@ export const UserContext = createContext({
     hasPermission: (requiredPermissions) => { return true },
     afterAuth: ({ twoFactor, token }) => { },
     vanityCompanyInfo: undefined,
-    cdnAccess: false
+    cdnAccess: false,
+    advancedConfig: {},
+    setAdvancedConfig: (conf) => {}
 })
 
 export const ThemeContext = createContext({
