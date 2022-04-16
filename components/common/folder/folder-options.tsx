@@ -11,16 +11,17 @@ const FolderOptions = ({
 	setDeleteOpen,
 	shareAssets,
 	copyShareLink,
-	copyEnabled
+	copyEnabled,
+	isShare = false
 }) => {
 
-	const options = [
+	const options = isShare ? [{ label: 'Download', onClick: downloadFoldercontents }]: [
 		{ label: 'Download', onClick: downloadFoldercontents },
 		{ label: 'Delete', onClick: () => setDeleteOpen(true) },
 		{ label: 'Share', onClick: shareAssets }
 	]
 
-	if (copyEnabled) options.push({ label: 'Copy Link', onClick: copyShareLink })
+	if (copyEnabled && !isShare) options.push({ label: 'Copy Link', onClick: copyShareLink })
 
 	return (
 		<ToggleableAbsoluteWrapper
@@ -34,9 +35,9 @@ const FolderOptions = ({
 			)}
 			Content={() => (
 				<div className={styles.more} >
-					<Dropdown
+					{options.length > 0 && <Dropdown
 						options={options}
-					/>
+					/>}
 				</div>
 			)}
 		/>

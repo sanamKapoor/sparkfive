@@ -22,12 +22,15 @@ const TopBar = ({
   setOpenFilter,
   openFilter,
   isShare = false,
-  deletedAssets
+  deletedAssets,
+  singleCollection = false
 }) => {
 
   const {
     selectedAllAssets,
     selectAllAssets,
+    selectAllFolders,
+    selectedAllFolders,
     setLastUploadedFolder
   } = useContext(AssetContext)
 
@@ -47,6 +50,7 @@ const TopBar = ({
 
     // Reset select all status
     selectAllAssets(false);
+    selectAllFolders(false);
     setActiveSortFilter({
       ...activeSortFilter
     })
@@ -91,7 +95,7 @@ const TopBar = ({
         <ul className={styles['tab-list']}>
         {selectOptions.views.map(view => (
           <li key={view.name} className={styles['tab-list-item']}>
-            {(!activeFolder || !view.omitFolder) && (!isShare || (isShare && !view.omitShare)) &&
+            {(!activeFolder || !view.omitFolder) && (!isShare || (isShare && !view.omitShare && view.hideOnSingle !== singleCollection)) &&
             (view.requirePermissions.length === 0 || (view.requirePermissions.length > 0 && hasPermission(view.requirePermissions))) &&
               <SectionButton
                 keyProp={view.name}
@@ -113,6 +117,7 @@ const TopBar = ({
 
       <div className={styles['sec-filters']} ref={filtersRef}>
         {selectedAllAssets && <span className={styles['select-only-shown-items-text']} onClick={toggleSelectAll}>Select only 25 assets shown</span>}
+        {selectedAllFolders && <span className={styles['select-only-shown-items-text']} onClick={toggleSelectAll}>Select only 25 collections shown</span>}
         <Button type='button' text='Select All' styleType='secondary' onClick={selectAll} />
         {!deletedAssets && <img src={Utilities.gridView} onClick={() => setActiveView('grid')} />}
         <img src={Utilities.listView} onClick={() => setActiveView('list')} />

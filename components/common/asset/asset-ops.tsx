@@ -13,6 +13,7 @@ import update from "immutability-helper";
 import MoveModal from "../modals/move-modal";
 import CopyModal from "../modals/copy-modal";
 import ShareModal from "../modals/share-modal";
+import ShareCollectionModal from "../modals/share-collection-modal";
 import ShareFolderModal from "../modals/share-folder-modal";
 import ConfirmModal from "../modals/confirm-modal";
 import BulkEditOverlay from "../bulk-edit-overlay";
@@ -33,6 +34,7 @@ export default ({ getAssets }) => {
     activePageMode,
     setLoadingAssets,
     selectedAllAssets,
+    selectedAllFolders,
     completedAssets,
     setCompletedAssets,
     totalAssets,
@@ -498,6 +500,44 @@ export default ({ getAssets }) => {
     });
   };
 
+  const shareCollections = async (
+      recipients,
+      message,
+      sharedLinkData,
+      closeAfterDone = true,
+      showStatusToast = true
+  ) => {
+    return new Promise<any>(async (resolve) => {
+      try {
+
+        const result = await folderApi.generateAndSendShareUrl(
+            {
+              recipients,
+              message,
+              ...sharedLinkData,
+              expiredPeriod: sharedLinkData.expiredPeriod?.value || "",
+            },
+        );
+
+        if (showStatusToast) {
+          toastUtils.success("Collections shared succesfully");
+        }
+
+        if (closeAfterDone) {
+          closeModalAndClearOpAsset();
+        }
+
+        resolve(result);
+      } catch (err) {
+        console.log(err);
+        if (showStatusToast) {
+          toastUtils.error("Could not share collections, please try again later.");
+        }
+        resolve({});
+      }
+    });
+  };
+
   const getShareLink = async () => {
     try {
       let versionGroups;
@@ -545,6 +585,54 @@ export default ({ getAssets }) => {
     }
   };
 
+  const getShareCollectionLink = async (name) => {
+    try {
+      let folderIds;
+      let filters = {};
+
+      if(operationFolder){
+        folderIds = operationFolder.id
+      }else{
+        folderIds = folders
+            .filter((folder) => folder.isSelected)
+            .map((item)=>item.id)
+            .join(",");
+      }
+
+
+      // Select all assets without pagination
+      if (selectedAllFolders) {
+        filters = {
+          ...getAssetsFilters({
+            replace: false,
+            activeFolder,
+            addedIds: [],
+            nextPage: 1,
+            userFilterObject: activeSortFilter,
+          }),
+          selectedAll: "1",
+        };
+
+        if (term) {
+          // @ts-ignore
+          filters.term = term;
+        }
+        // @ts-ignore
+        delete filters.page;
+      }
+      filters["name"] = name;
+      return await folderApi.getShareUrl(
+          {
+            folderIds,
+          },
+          filters
+      );
+    } catch (err) {
+      console.log(err);
+      return "";
+    }
+  };
+
   const shareFolders = async ({
     shareStatus,
     newPassword,
@@ -568,6 +656,18 @@ export default ({ getAssets }) => {
       toastUtils.error("Could not share collection, please try again later.");
     }
   };
+
+  const getSharedCollectionCount = () => {
+      let count = 1;
+
+    if(!operationFolder){
+      count = folders
+          .filter((folder) => folder.isSelected).length
+    }
+
+    return count
+
+  }
 
   const copyAssets = async (selectedFolder) => {
     try {
@@ -845,12 +945,19 @@ export default ({ getAssets }) => {
         shareAssets={shareAssets}
         getShareLink={getShareLink}
       />
-      <ShareFolderModal
-        modalIsOpen={activeOperation === "shareFolders"}
-        closeModal={closeModalAndClearOpAsset}
-        folder={operationFolder}
-        shareAssets={shareFolders}
+      <ShareCollectionModal
+          modalIsOpen={activeOperation === "shareCollections" || activeOperation === "shareFolders"}
+          closeModal={closeModalAndClearOpAsset}
+          itemsAmount={getSharedCollectionCount()}
+          shareAssets={shareCollections}
+          getShareLink={getShareCollectionLink}
       />
+      {/*<ShareFolderModal*/}
+      {/*  modalIsOpen={activeOperation === "shareFolders"}*/}
+      {/*  closeModal={closeModalAndClearOpAsset}*/}
+      {/*  folder={operationFolder}*/}
+      {/*  shareAssets={shareFolders}*/}
+      {/*/>*/}
       <ConfirmModal
         modalIsOpen={activeOperation === "archive"}
         closeModal={closeModalAndClearOpAsset}

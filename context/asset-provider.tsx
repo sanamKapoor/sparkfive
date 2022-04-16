@@ -49,6 +49,7 @@ export default ({ children }) => {
     const [addedIds, setAddedIds] = useState([])
 
     const [selectedAllAssets, setSelectedAllAssets] = useState(false)
+    const [selectedAllFolders, setSelectedAllFolders] = useState(false)
     const [completedAssets, setCompletedAssets] = useState([])
 
     // Upload process
@@ -126,6 +127,11 @@ export default ({ children }) => {
     // Mark assets have been selected all even assets do not exist in pagination
     const selectAllAssets = (isSelectedAll = true) => {
         setSelectedAllAssets(isSelectedAll)
+    }
+
+    // Mark all folders have been selected all even folders do not exist in pagination
+    const selectAllFolders = (isSelectedAll = true) => {
+        setSelectedAllFolders(isSelectedAll)
     }
 
     // Show upload process toast
@@ -399,6 +405,8 @@ export default ({ children }) => {
         setLoadingAssets,
         selectedAllAssets,
         selectAllAssets,
+        selectedAllFolders,
+        selectAllFolders,
         uploadingStatus,
         showUploadProcess,
         uploadingFile,

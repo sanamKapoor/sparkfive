@@ -16,6 +16,9 @@ import assetApi from '../../../server-api/asset'
 import shareApi from '../../../server-api/share-collection'
 import folderApi from '../../../server-api/folder'
 
+// Utils
+import { getSubdomain } from '../../../utils/domain'
+
 // Components
 import { AssetOps } from '../../../assets'
 
@@ -24,7 +27,7 @@ import Button from '../../common/buttons/button'
 import IconClickable from '../../common/buttons/icon-clickable'
 import { useRouter } from "next/router";
 
-const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, isFolder = false, deselectHidden = false, iconColor = '', deletedAssets = false }) => {
+const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, isFolder = false, deselectHidden = false, iconColor = '', deletedAssets = false, advancedLink = false }) => {
 	const {
 		assets,
 		setAssets,
@@ -33,6 +36,7 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 		setActiveOperation,
 		selectedAllAssets,
 		selectAllAssets,
+		selectAllFolders,
 		totalAssets,
 		activeFolder,
 		updateDownloadingStatus
@@ -42,7 +46,7 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 
 	const { hasPermission } = useContext(UserContext)
 
-	const { activeSortFilter, term } = useContext(FilterContext)
+	const { activeSortFilter, term, setSharePath: setContextPath } = useContext(FilterContext)
 	const [sharePath, setSharePath] = useState('')
 
 	const selectedAssets = assets.filter(asset => asset.isSelected)
@@ -110,18 +114,22 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 			// Show processing bar
 			updateDownloadingStatus('zipping', 0, totalDownloadingAssets)
 			let api = assetApi;
-			if (isShare) {
-				api = shareApi
-			}
 
 			if (payload.assetIds.length > 0 || selectedAllAssets) {
+				if (isShare) {
+					api = shareApi
+				}
                 const { data } = await api.downloadAll(payload, filters);
                 // Download file to storage
                 fileDownload(data, "assets.zip");
 
                 updateDownloadingStatus("done", 0, 0);
             } else if (payload.folderIds.length > 0) {
-				const { data } = await folderApi.downloadFoldersAsZip(payload, filters);
+				api = folderApi
+				if (isShare) {
+					api = shareApi
+				}
+				const { data } = await api.downloadFoldersAsZip(payload, filters);
 
 				// Download file to storage
 				fileDownload(data, "assets.zip");
@@ -137,6 +145,7 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
                 // updateDownloadingStatus("done", 0, 0);
             }
 		} catch (e) {
+    		console.error(e)
 			updateDownloadingStatus('error', 0, 0, 'Internal Server Error. Please try again.')
 		}
 
@@ -150,16 +159,35 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 
 			setAssets(assets.map(asset => ({ ...asset, isSelected: false })))
 		} else {
+			selectAllFolders(false)
 			setFolders(folders.map(folder => ({ ...folder, isSelected: false })))
 		}
+	}
+
+	const processSubdomain = () => {
+		return getSubdomain() || "danner"
 	}
 
 	useEffect(() => {
 		const { asPath } = router
 		if (asPath) {
-			// Get shareUrl from path
-			const splitPath = asPath.split('collections/')
-			setSharePath(splitPath[1])
+			if(advancedLink){
+				// TODO: Optimize exact path
+				const splitPath = asPath.split('/collections/')
+
+				const idPath = splitPath[1].split('/')
+
+				if (idPath && !idPath[0].includes("[team]") && !idPath[1].includes("[id]")) {
+					const path = `${processSubdomain()}/${idPath[1]}/${idPath[0]}`
+					setSharePath(path)
+					setContextPath(path)
+				}
+			}else{
+				// Get shareUrl from path
+				const splitPath = asPath.split('collections/')
+				setSharePath(splitPath[1])
+			}
+
 		}
 	}, [router.asPath])
 
@@ -173,6 +201,7 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 			{((!isFolder && !isShare) && !deletedAssets) && <IconClickable additionalClass={styles['action-button']} src={AssetOps[`move${iconColor}`]} tooltipText={'Add to Collection'} tooltipId={'Move'} onClick={() => setActiveOperation('move')} />}
 			{((!isFolder && !isShare) && !deletedAssets) && <IconClickable additionalClass={styles['action-button']} src={AssetOps[`copy${iconColor}`]} tooltipText={'Copy'} tooltipId={'Copy'} onClick={() => setActiveOperation('copy')} />}
 			{((!isFolder && !isShare) && !deletedAssets) && <IconClickable additionalClass={styles['action-button']} src={AssetOps[`share${iconColor}`]} tooltipText={'Share'} tooltipId={'Share'} onClick={() => setActiveOperation('share')} />}
+			{((isFolder && !isShare) && !deletedAssets) && <IconClickable additionalClass={styles['action-button']} src={AssetOps[`share${iconColor}`]} tooltipText={'Share'} tooltipId={'Share'} onClick={() => setActiveOperation('shareCollections')} />}
 			{((!isFolder && itemType && !isShare) && !deletedAssets) && <IconClickable additionalClass={styles['action-button']} src={AssetOps[`delete${iconColor}`]} tooltipText={'Remove'} onClick={() => setActiveOperation('remove_item')} />}
 			{deletedAssets && <IconClickable additionalClass={styles['action-button']} src={AssetOps[`move${iconColor}`]} tooltipText={'Recover Asset'} tooltipId={'Recover'} onClick={() => setActiveOperation('recover')} />}
 			{deletedAssets && <IconClickable additionalClass={styles['action-button']} src={AssetOps[`delete${iconColor}`]} tooltipText={'Delete'} tooltipId={'Delete'} onClick={() => setActiveOperation('delete')} />}

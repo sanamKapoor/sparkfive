@@ -29,6 +29,17 @@ const type = [
     }
 ]
 
+const collectionSharedLink = [
+    {
+        label: 'On',
+        value: true,
+    },
+    {
+        label: 'Off',
+        value: false,
+    }
+]
+
 const defaultValues = {
     activeList: 'allUsers',
     sortBy: 'users.lastLogin',
@@ -40,6 +51,7 @@ const SuperAdmin = () => {
     const [viewCompanyDetail, setViewCompanyDetail] = useState()
     const [vanity, setVanity] = useState(type[1].value)
     const [cdnAccess, setCdnAcces] = useState(type[1].value)
+    const [advancedCollectionShareLink, setAdvanceShareLink] = useState(collectionSharedLink[1].value)
     const [subdomain, setSubdomain] = useState('')
     const [loading, setLoading] = useState(false)
     const [sortData, setSortData] = useQueryStrings(defaultValues)
@@ -49,6 +61,7 @@ const SuperAdmin = () => {
         setVanity(data.vanity)
         setSubdomain(data.subdomain ? `${data.subdomain || ""}.${window.location.hostname.replace("www.","")}` : "")
         setCdnAcces(data.cdnAccess)
+        setAdvanceShareLink(data.advancedCollectionShareLink)
     }
 
     const onBack = () => {
@@ -59,6 +72,7 @@ const SuperAdmin = () => {
       if(viewCompanyDetail){
           try{
               setLoading(true)
+              // @ts-ignore
               await superAdminApi.updateCompanyConfig(viewCompanyDetail.id, data)
 
               setLoading(false)
@@ -193,6 +207,30 @@ const SuperAdmin = () => {
                         text='Save'
                         styleType='primary'
                         onClick={() => updateTeam({ cdnAccess })}
+                    />
+                </div>
+            </div>
+
+            <div className={`row align-flex-start ${styles.cdnEmbedding}`}>
+                <div className={"col-20 font-weight-600"}>
+                    Advance Collection Shared Links
+                </div>
+
+                <div className={"col-20"}>
+                    <OptionList
+                        setValue={(value) => setAdvanceShareLink(value)}
+                        data={collectionSharedLink}
+                        oneColumn={false}
+                        value={advancedCollectionShareLink }/>
+                </div>
+
+                <div className={"col-20 align-self-flex-end"}>
+                    <Button
+                        styleTypes={['exclude-min-height']}
+                        type={'button'}
+                        text='Save'
+                        styleType='primary'
+                        onClick={() => updateTeam({ advancedCollectionShareLink })}
                     />
                 </div>
             </div>
