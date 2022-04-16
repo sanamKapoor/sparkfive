@@ -240,13 +240,12 @@ const AssetsLibrary = () => {
     }
 
     let sort = {...activeSortFilter.sort}
-    if (defaultTab === 'folders') {
+    if (defaultTab === 'folders' && !params.folderId) {
       sort = advancedConfig.collectionSortView === 'alphabetical' ? selectOptions.sort[3] : selectOptions.sort[1]
     } else {
       sort = advancedConfig.assetSortView === 'newest' ? selectOptions.sort[1] : selectOptions.sort[3]
     }
-    // debugger
-    console.log(advancedConfig.assetSortView, sort.name)
+    // console.log(advancedConfig.assetSortView, sort.name)
 
     setActiveSortFilter({
       ...activeSortFilter,
