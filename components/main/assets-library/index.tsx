@@ -540,6 +540,11 @@ const AssetsLibrary = () => {
   const getFolders = async (replace = true) => {
     try {
 
+      // don't reload folder on active detail folder/collection
+      if (activeFolder) {
+        return
+      }
+
       if (replace) {
         setAddedIds([])
       }
@@ -553,6 +558,7 @@ const AssetsLibrary = () => {
       if (activeSortFilter.filterFolders?.length > 0) {
         queryParams.folders = activeSortFilter.filterFolders.map(item => item.value).join(',')
       }
+
       const { data } = await folderApi.getFolders(queryParams)
 
       let assetList = { ...data, results: data.results }
@@ -669,6 +675,7 @@ const AssetsLibrary = () => {
       getFolders(false)
     }
   }
+  console.log(folders.length, folders.find(folder => folder.id === activeFolder))
 
   return (
     <>
