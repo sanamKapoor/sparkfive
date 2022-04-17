@@ -174,7 +174,8 @@ const ShareCollectionMain = () => {
         if (firstLoaded && activeFolder !== '') {
             setActiveSortFilter({
                 ...activeSortFilter,
-                mainFilter: "all"
+                mainFilter: "all",
+                sort: selectOptions.sort[1]
             })
         }
 
