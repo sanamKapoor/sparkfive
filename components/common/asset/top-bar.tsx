@@ -1,5 +1,5 @@
 import styles from './top-bar.module.css'
-import {useContext, useRef} from 'react'
+import {useContext, useState, useRef} from 'react'
 import { Utilities } from '../../../assets'
 import selectOptions from '../../../utils/select-options'
 
@@ -11,7 +11,6 @@ import IconClickable from '../buttons/icon-clickable'
 
 // Context
 import { AssetContext, UserContext } from '../../../context'
-import advancedConfigParams from '../../../utils/advance-config-params'
 
 const TopBar = ({
   activeSortFilter,
@@ -37,13 +36,15 @@ const TopBar = ({
 
   const {hasPermission} = useContext(UserContext)
 
+  const {advancedConfig} = useContext(UserContext)
+
   const setSortFilterValue = (key, value) => {
-    let sort = value
+    let sort = key === 'sort' ? value : activeSortFilter.sort
     if (key === 'mainFilter') {
-      if (value === 'folders' && advancedConfigParams.collectionSortView === 'alphabetical') {
-        sort = selectOptions.sort[3]
+      if (value === 'folders') {
+        sort = advancedConfig.collectionSortView === 'alphabetical' ? selectOptions.sort[3] : selectOptions.sort[1]
       } else {
-        sort = selectOptions.sort[1]
+        sort = advancedConfig.assetSortView === 'newest' ? selectOptions.sort[1] : selectOptions.sort[3]
       }
     }
 
@@ -54,7 +55,7 @@ const TopBar = ({
       ...activeSortFilter
     })
 
-    // Needed to reset because it is set for collection upload when alpha sort active
+    // Needed to reset because it is set for collection upload when alphabetical sort active
     // And uploaded folder needed to show at first
     setLastUploadedFolder(undefined)
 
