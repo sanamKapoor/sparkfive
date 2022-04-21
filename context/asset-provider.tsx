@@ -71,7 +71,7 @@ export default ({ children }) => {
 
     // Download process
     const [totalDownloadingAssets, setTotalDownloadingAssets] = useState(0)
-    const [downloadingStatus, setDownloadingStatus] = useState("none") // Allowed value: "none", "zipping", "done", "error"
+    const [downloadingStatus, setDownloadingStatus] = useState("none") // Allowed value: "none", "zipping", "preparing", "done", "error"
     const [downloadingPercent, setDownloadingPercent] = useState(0) // Percent of uploading process: 0 - 100
     const [downloadingError, setDownloadingError] = useState('') // Percent of uploading process: 0 - 100
 
