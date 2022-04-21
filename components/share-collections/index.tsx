@@ -7,7 +7,7 @@ import { useRouter } from 'next/router'
 import update from 'immutability-helper'
 import shareCollectionApi from '../../server-api/share-collection'
 import folderApi from '../../server-api/folder'
-import { AssetContext, ShareContext, FilterContext } from '../../context'
+import { AssetContext, ShareContext, FilterContext, UserContext } from '../../context'
 
 // Components
 import AssetOps from '../common/asset/asset-ops'
@@ -43,6 +43,8 @@ const ShareCollectionMain = () => {
         folders,
         selectAllFolders,
     } = useContext(AssetContext)
+
+    const { setAdvancedConfig } = useContext(UserContext)
 
     const { folderInfo, setFolderInfo } = useContext(ShareContext)
 
@@ -85,6 +87,8 @@ const ShareCollectionMain = () => {
     useEffect(() => {
         if (needsFetch === 'assets') {
             getAssets()
+        } else if (needsFetch === 'folders') {
+            getFolders()
         }
         setNeedsFetch('')
     }, [needsFetch])
@@ -96,6 +100,7 @@ const ShareCollectionMain = () => {
             const { data } = await shareCollectionApi.getFolderInfo({sharePath})
 
             setFolderInfo(data)
+            setAdvancedConfig(data.customAdvanceOptions)
             setActivePasswordOverlay(false)
         } catch (err) {
             // If not 500, must be auth error, request user password
@@ -143,12 +148,17 @@ const ShareCollectionMain = () => {
 
             setFirstLoaded(true)
 
+            const mode = folderInfo.singleSharedCollectionId ? "all" : "folders"
+
             let sort = {...activeSortFilter.sort}
+            if (mode === 'folders') {
+                sort = folderInfo.customAdvanceOptions.collectionSortView === 'alphabetical' ? selectOptions.sort[3] : selectOptions.sort[1]
+            }
 
             setActiveSortFilter({
                 ...activeSortFilter,
                 mainFilter: folderInfo.singleSharedCollectionId ? "all" : "folders", // Set to all if only folder is shared
-                sort: selectOptions.sort[3]
+                sort: sort
             })
         }
     }
@@ -172,10 +182,12 @@ const ShareCollectionMain = () => {
 
     useEffect(() => {
         if (firstLoaded && activeFolder !== '') {
+            let sort = folderInfo.customAdvanceOptions.assetSortView === 'alphabetical' ? selectOptions.sort[3] : selectOptions.sort[1]
+
             setActiveSortFilter({
                 ...activeSortFilter,
                 mainFilter: "all",
-                sort: selectOptions.sort[1]
+                sort: sort
             })
         }
 
