@@ -17,10 +17,14 @@ const AssetDownloadProcess = () => {
     } = useContext(AssetContext)
 
 
-    return <div className={clsx(styles.container, {[styles['center-align']]: downloadingStatus === 'done', [styles['less-margin-bottom']]: downloadingStatus === 'zipping'})}>
+    return <div className={clsx(styles.container,
+        {
+            [styles['center-align']]: downloadingStatus === 'done',
+            [styles['less-margin-bottom']]: (downloadingStatus === 'zipping' || downloadingStatus === 'preparing')
+        })}>
         <div className={clsx(styles.row, styles['no-margin'])}>
             {
-                downloadingStatus === 'zipping' && <>
+                (downloadingStatus === 'zipping' || downloadingStatus === 'preparing') && <>
                         <span>
                             {<span className={styles['no-wrap-text']}>
                                 Preparing download
@@ -45,7 +49,7 @@ const AssetDownloadProcess = () => {
                 </div>
             }
 
-            {downloadingStatus === 'zipping' && <Line percent={downloadingPercent} strokeWidth={1} strokeColor="#fff" trailColor={"#9597a6"}/>}
+            {(downloadingStatus === 'zipping' || downloadingStatus === 'preparing') && <Line percent={downloadingPercent} strokeWidth={1} strokeColor="#fff" trailColor={"#9597a6"}/>}
         </div>
 
     </div>
