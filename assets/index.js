@@ -63,7 +63,11 @@ export const Utilities = {
   addVersion: require('./Icons/Utilities/Versions/add-version.svg'),
   embedCdn: require('./Icons/Utilities/EmbedCDN/embed-cdn.svg'),
   lockClosed: require('./Icons/Utilities/Lock/lock-closed.svg'),
-  lockOpened: require('./Icons/Utilities/Lock/lock-opened.svg')
+  lockOpened: require('./Icons/Utilities/Lock/lock-opened.svg'),
+  tags: require('./Icons/Utilities/FiltersTags/tags.svg'),
+  custom: require('./Icons/Utilities/FiltersTags/custom.svg'),
+  collections: require('./Icons/Utilities/FiltersTags/collections.svg'),
+  file: require('./Icons/Utilities/FiltersTags/file.svg'),
 }
 
 export const ProjectTypes = {
