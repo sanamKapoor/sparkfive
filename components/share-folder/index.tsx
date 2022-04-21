@@ -111,6 +111,8 @@ const ShareFolderMain = () => {
             let sort = {...activeSortFilter.sort}
             if (mode === 'folders') {
                 sort = folderInfo.customAdvanceOptions.collectionSortView === 'alphabetical' ? selectOptions.sort[3] : selectOptions.sort[1]
+            }else{
+                sort = folderInfo.customAdvanceOptions.assetSortView === 'alphabetical' ? selectOptions.sort[3] : selectOptions.sort[1]
             }
 
             setActiveSortFilter({
