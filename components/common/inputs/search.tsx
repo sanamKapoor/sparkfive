@@ -9,6 +9,7 @@ const Search = (props) => {
 
   const [term, setTerm] = useState('')
   const [filtersTags, setFiltersTags] = useState([])
+  const [filtersVisible, setFiltersVisible] = useState(true)
 
   const filters = [
     {
@@ -52,13 +53,13 @@ const Search = (props) => {
     },
   ]
 
-  const addTag = ( tag ) => {
-    if(filtersTags.some(filter => filter.value === tag.value)) {
+  const addTag = (tag) => {
+    if (filtersTags.some(filter => filter.value === tag.value)) {
       return
     } else {
       setFiltersTags([...filtersTags, tag])
     }
-  }  
+  }
 
   const removeTag = (index) => {
     const newTags = filtersTags.filter((tag, i) => index !== i)
@@ -75,15 +76,57 @@ const Search = (props) => {
       <div className={styles.form}>
         <div className={styles['input-container']}>
           <img src={Utilities.search} />
+          {filtersTags.length > 0 &&
+            <div className={styles.tags}>
+              {filtersTags.map((tag, index) => (
+                <div className={styles.tag} key={index}>
+                  {tag.icon &&
+                    <img src={tag.icon} />
+                  }
+                  {tag.label}
+                  <span onClick={() => removeTag(index)}>
+                    <img src={Utilities.close} />
+                  </span>
+                </div>
+              ))}
+            </div>
+          }
           <input
-            onFocus={() => console.log('focused')}
-            onBlur={() => console.log('blur')}
+            onFocus={() => setFiltersVisible(true)}
+            onBlur={() => setFiltersVisible(false)}
             {...props}
             onChange={(e) => setTerm(e.target.value)}
             value={term}
             placeholder={props.placeholder || 'Search'}
             className={`${styles.container} ${props.styleType && styles[props.styleType]}`}
           />
+          {filtersVisible &&
+            <div className={styles.filters}>
+              <h5>Search Filter</h5>
+              <ul>
+                {filters.map((filter, index) => {
+
+                  let active = filtersTags.some(tag => tag.value === filter.value) ? true : false
+
+                  return (
+                    <li key={`filter-${index}`} className={`${styles.filter} ${active ? styles['filter-active'] :  ''}`} onClick={() => addTag(filter)}>
+                      {filter.label}
+                    </li>
+                  )
+                })}
+
+              </ul>
+              <h5>Limit by</h5>
+              <ul>
+                {limitBy.map((item, index) => (
+                  <li key={`limit-by-${index}`} className={styles.limit} onClick={() => addTag(item)}>
+                    <img src={item.icon} />
+                    {item.label}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          }
         </div>
         <Button
           disabled={term.length < 1}
@@ -91,20 +134,6 @@ const Search = (props) => {
           text='Search'
           styleType='primary'
         />
-      </div>
-      <div>
-        {filters.map((filter, index) => (
-          <div key={index} onClick={() => addTag(filter)}>
-            {filter.label}
-          </div>
-        ))}
-
-        {limitBy.map((item, index) => (
-          <div key={index}>
-            <img src={item.icon} />
-            {item.label}
-          </div>
-        ))}
       </div>
     </form>
   )

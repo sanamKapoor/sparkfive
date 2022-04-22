@@ -3,24 +3,126 @@
   position: relative;
 }
 
-.container {
+.input-container {
+  margin-right: 9px;
   width: 100%;
-  padding: 8px 12px 8px 42px;
+  padding: 8px 20px;
   border-radius: 5px;
   border: 1px solid var(--color-secondary-border);
   background-color: var(--color-sec-lightivory);
   min-height: 70px;
   color: var(--color-prim-navy);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
 }
 
-.input-container {
+.input-container input {
+  height: 100%;
   width: 100%;
-  margin-right: 9px;
+  background-color: transparent;
+  border: none;
+  font-size: 12px;
 }
 
 .input-container img {
-  margin: 25px 10px;
-  position: absolute;
   width: 20px;
   height: 20px;
+}
+
+.tags {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tag {
+  background-color: var(--color-prim-navy);
+  border-radius: 5px;
+  color: white;
+  padding: 5px 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: max-content;
+  font-size: 12px;
+}
+
+.tag > img {
+  width: 10px;
+  height: auto;
+  filter: grayscale(1) invert(1) brightness(500%);
+}
+
+.tag > span {
+  cursor: pointer;
+}
+
+.tag > span img {
+  width: 8px;
+  height: auto;
+}
+
+.filters {
+  border-radius: 5px;
+  border: 1px solid var(--color-secondary-border);
+  background-color: var(--color-sec-lightivory);
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 84px;
+  padding: 20px 24px;
+  z-index: 9;
+  display: grid;
+  grid-auto-flow: row;
+  gap: 24px;
+}
+
+.filters h5 {
+  margin: 0;
+}
+
+.filters ul {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.filter {
+  background-color: #E5E5E5;
+  border-radius: 23px;
+  padding: 7px 28px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: max-content;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.filter-active {
+  background-color: var(--color-prim-navy);
+  color: white;
+  font-weight: 700;
+}
+
+.limit {
+  background-color: rgba(8, 19, 94, 0.2);
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.limit img {
+  width: 12px;
+  height: auto;
+  cursor: pointer;
+  /* filter: grayscale(1) invert(1) brightness(500%); */
 }
