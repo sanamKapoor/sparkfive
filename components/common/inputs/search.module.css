@@ -16,11 +16,13 @@
   align-items: center;
   gap: 14px;
   position: relative;
+  flex-wrap: wrap;
+  height: fit-content;
 }
 
 .input-container input {
   height: 100%;
-  width: 100%;
+  width: 76%;
   background-color: transparent;
   border: none;
   font-size: 12px;
@@ -34,7 +36,7 @@
 .tags {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .tag {
@@ -124,5 +126,12 @@
   width: 12px;
   height: auto;
   cursor: pointer;
-  /* filter: grayscale(1) invert(1) brightness(500%); */
+}
+
+.limit-active {
+  background-color: var(--color-prim-navy);
+  color: white;
+}
+.limit-active img {
+  filter: grayscale(1) invert(1) brightness(500%);
 }

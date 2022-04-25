@@ -13,9 +13,34 @@
 .operations{
     display: flex;
     align-items: center;
+    justify-content: space-between;
     margin-top: 2rem;
     width: 100%;
     max-width: 55rem;
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+    width: 45%;
+}
+
+.tags {
+    text-align: center;
+    font-weight: 600;
+    width: 28%;
+}
+
+.type {
+    text-align: center;
+    font-weight: 600;
+    width: 7%;
+}
+
+.collection {
+    text-align: center;
+    font-weight: 600;
+    width: 20%;
 }
 
 .operations button:first-child{

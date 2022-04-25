@@ -195,6 +195,37 @@ const AdvancedOptions = () => {
                     </div>
                 </div>
             </div>
+            <div className={`${styles['row']} ${styles['field-block']}`}>
+                <div className={`${styles['col-100']}`}>
+                    <div className={`${styles['row']}`}>
+                        <div className={`${styles['deleted-assets']} row`}>
+                            <div className={"col-40 col-md-100"}>
+                                <span className={'font-weight-500'}>Search Default</span>
+                            </div>
+                            <div className={"col-60 col-md-100"}>
+                                <div>
+                                    <div className={styles['field-radio-wrapper']}>
+                                        <div className={`${styles['radio-button-wrapper']} m-r-15`}>
+                                            <IconClickable
+                                                src={Utilities.radioButtonEnabled}
+                                                additionalClass={styles['select-icon']}
+                                                onClick={() => console.log('search default: ALL')} />
+                                            <div className={'font-12 m-l-15'}>All (Default)</div>
+                                        </div>
+                                        <div className={`${styles['radio-button-wrapper']} ${styles['hide-on-mobile']}`}>
+                                            <IconClickable
+                                                src={Utilities.radioButtonNormal}
+                                                additionalClass={styles['select-icon']}
+                                                onClick={() => console.log('search default: TAGS ONLY')} />
+                                            <div className={'font-12 m-l-15'}>Tags ONly</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             {loading && <SpinnerOverlay />}
         </div>
     )
