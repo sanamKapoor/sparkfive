@@ -2,6 +2,7 @@ import styles from './input.module.css'
 
 const Input = (props) => {
   const { styleType, additionalClasses, ...rest } = props
+
   return (
     <input
       {...rest}

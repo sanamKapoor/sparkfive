@@ -18,11 +18,26 @@ import { Assets } from '../../../assets'
 import toastUtils from '../../../utils/toast'
 import ConfirmModal from "../modals/confirm-modal";
 import ShareModal from "../modals/share-modal";
+import ShareCollectionModal from "../modals/share-collection-modal";
 
 // Constants
 import { statusList, colorList } from "../../../constants/shared-links";
 import {Waypoint} from "react-waypoint";
 
+const typeList = [
+    {
+        label: "Asset",
+        value: "asset"
+    },
+    {
+        label: "Collection",
+        value: "collection"
+    },
+    {
+        label: "Portal",
+        value: "portal"
+    }
+]
 
 export default function ShareLinks(){
 
@@ -34,6 +49,7 @@ export default function ShareLinks(){
     const [currentLink, setCurrentLink] = useState()
     const [status, setStatus] = useState(null)
     const [sharedBy, setSharedBy] = useState(null)
+    const [type, setType] = useState(null)
     const [sharedWith, setSharedWith] = useState(null)
     const [shareByList, setShareByList] = useState([])
     const [shareWithList, setShareWithList] = useState([])
@@ -44,11 +60,16 @@ export default function ShareLinks(){
         sortType: "desc"
     })
     const [colorGroups, setColorGroups] = useState<any>({})
+    const [editType, setEditType] = useState("asset")
 
     const getFilterObject = (page) => {
         let filters: any = {page}
         if(sharedBy){
             filters.sharedBy = sharedBy ? sharedBy.map((item)=>item.value).join(",") : ""
+        }
+
+        if(type){
+            filters.type = type ? type.map((item)=>item.value).join(",") : ""
         }
 
         if(sharedWith){
@@ -170,6 +191,7 @@ export default function ShareLinks(){
             getLinks({
                 sharedBy: sharedBy ? sharedBy.map((item)=>item.value).join(",") : "",
                 sharedWith: sharedWith ? sharedWith.map((item)=>item.value).join(","): "",
+                type: type ? type.map((item)=>item.value).join(","): "",
                 status: status ? status?.value : "",
                 page: page + 1,
                 ...sortData
@@ -203,18 +225,37 @@ export default function ShareLinks(){
     //     getLinks(getFilterObject())
     // },[])
 
+    const parseTypeName = (type: string, folderId) => {
+        switch(type){
+            case "folder": {
+                if(folderId){
+                    return "Collection"
+                }else{
+                    return "Portal"
+                }
+
+            }
+            case "asset": {
+                return "Files"
+            }
+            default: {
+                return "Files"
+            }
+        }
+    }
+
     useEffect(()=>{
-        console.log(`Load due to filter`)
         setPage(0)
         setNextPage(-1)
         getLinks({
             sharedBy: sharedBy ? sharedBy.map((item)=>item.value).join(",") : "",
             sharedWith: sharedWith ? sharedWith.map((item)=>item.value).join(","): "",
+            type: type ? type.map((item)=>item.value).join(","): "",
             status: status ? status?.value : "",
             page: 1,
             ...sortData
         })
-    },[sharedBy, sharedWith, status])
+    },[sharedBy, sharedWith, status,type])
 
 
     // Listen sort
@@ -223,6 +264,7 @@ export default function ShareLinks(){
             getLinks({
                 sharedBy: sharedBy ? sharedBy.map((item)=>item.value).join(",") : "",
                 sharedWith: sharedWith ? sharedWith.map((item)=>item.value).join(","): "",
+                type: type ? type.map((item)=>item.value).join(","): "",
                 status: status ? status?.value : "",
                 page: 1,
                 ...sortData
@@ -235,7 +277,7 @@ export default function ShareLinks(){
             <div className={"col-10 d-flex align-items-center"}>
                 Filters
             </div>
-            <div className={"col-30 col-sm-100"}>
+            <div className={"col-20 col-sm-100"}>
                 <Select
                     options={shareByList}
                     onChange={(value)=>{setSharedBy(value)}}
@@ -246,7 +288,18 @@ export default function ShareLinks(){
                     isClearable={true}
                 />
             </div>
-            <div className={"col-30 col-sm-100"}>
+           <div className={"col-20 col-sm-100"}>
+               <Select
+                   options={typeList}
+                   onChange={(value)=>{setType(value)}}
+                   placeholder={'Type'}
+                   styleType='regular'
+                   value={type}
+                   isMulti={true}
+                   isClearable={true}
+               />
+           </div>
+            <div className={"col-20 col-sm-100"}>
                 <Select
                     options={shareWithList}
                     onChange={(value)=>{setSharedWith(value)}}
@@ -257,7 +310,7 @@ export default function ShareLinks(){
                     isClearable={true}
                 />
             </div>
-            <div className={"col-30 col-sm-100"}>
+            <div className={"col-20 col-sm-100"}>
                 <Select
                     isClearable={true}
                     options={statusList}
@@ -287,7 +340,7 @@ export default function ShareLinks(){
                     }
                 />
             </div>
-            <div className={"col-20 col-sm-100 cursor-pointer d-flex align-items-center"}
+            <div className={"col-10 col-sm-100 cursor-pointer d-flex align-items-center"}
                  onClick={()=>{sort("name", getSortType("name"))}}
             >
                 <span className={"font-12"}>Name</span>
@@ -297,6 +350,21 @@ export default function ShareLinks(){
                         `
                           ${styles['sort-icon']} 
                           ${sortData.sortField === "name" ? styles['sort-icon-active'] : ""} 
+                          ${sortData.sortType === 'asc' ? '' : styles.desc}
+                        `
+                    }
+                />
+            </div>
+            <div className={"col-10 col-sm-100 cursor-pointer d-flex align-items-center"}
+                 onClick={()=>{sort("type", getSortType("type"))}}
+            >
+                <span className={"font-12"}>Type</span>
+                <img
+                    src={Assets.arrowDown}
+                    className={
+                        `
+                          ${styles['sort-icon']} 
+                          ${sortData.sortField === "type" ? styles['sort-icon-active'] : ""} 
                           ${sortData.sortType === 'asc' ? '' : styles.desc}
                         `
                     }
@@ -372,11 +440,17 @@ export default function ShareLinks(){
                 <div className={"col-10 d-flex align-items-center col-sm-100"}>
                     <span className={"font-12"}>{moment(link.createdAt).format('MM/DD/YY')}</span>
                 </div>
-                <div className={"col-20 d-flex align-items-center col-sm-100"}>
+                <div className={"col-10 d-flex align-items-center col-sm-100"}>
                     <span
                         style={{backgroundColor: link.color}}
                         className={`${styles['name-tag']} font-12`}>
                         {link.name || "None"}
+                    </span>
+                </div>
+                <div className={"col-10 d-flex align-items-center col-sm-100 word-break-text"}>
+                    <span
+                        className={`${styles['name-tag']} font-12`}>
+                        {parseTypeName(link.type, link.singleSharedCollectionId)}
                     </span>
                 </div>
                 <div className={"col-15 d-flex align-items-center col-sm-100"}>
@@ -384,13 +458,23 @@ export default function ShareLinks(){
                     <span className={"m-l-5 font-12"}>{link.user.name}</span>
                 </div>
                 <div className={"col-25 d-flex align-items-center word-break-text col-sm-100"}>
-                    <span className={"font-12"}>{link.sharedLink}</span>
+                    <span className={"font-12"}>
+                        {link.type === "folder" ?
+                        (!link.team.advancedCollectionShareLink ?
+                            `${process.env.CLIENT_BASE_URL}/collections/${link.collectionLink}` :
+                            link.sharedLink) :
+                            link.sharedLink}
+                    </span>
                     <IconClickable additionalClass={`${styles['action-button']} m-l-5 cursor-pointer`}
                                    src={AssetOps[`copy${''}`]}
                                    tooltipText={'Copy'}
                                    tooltipId={'Copy'}
                                    onClick={()=>{
-                                       copy(link.sharedLink)
+                                       copy(link.type === "folder" ?
+                                           (!link.team.advancedCollectionShareLink ?
+                                               `${process.env.CLIENT_BASE_URL}/collections/${link.collectionLink}` :
+                                               link.sharedLink) :
+                                           link.sharedLink)
                                        toastUtils.bottomSuccess('Link copied')
                                    }}/>
                 </div>
@@ -408,6 +492,7 @@ export default function ShareLinks(){
                         tooltipText={'Edit'}
                         tooltipId={'Edit'}
                         onClick={() => {
+                            setEditType(link.type)
                             setCurrentLink(link)
                             setShowEditModal(true)
                         }}
@@ -444,13 +529,21 @@ export default function ShareLinks(){
             modalIsOpen={deleteOpen}
         />
 
-        <ShareModal
+        {editType === "asset" && <ShareModal
             modalIsOpen={showEditModal}
             closeModal={()=>{setShowEditModal(false)}}
             shareAssets={updateLink}
             getShareLink={()=>{}}
             currentShareLink={currentLink}
             title={'Update shared link'}
-        />
+        />}
+        {editType === "folder" && <ShareCollectionModal
+            modalIsOpen={showEditModal}
+            closeModal={()=>{setShowEditModal(false)}}
+            shareAssets={updateLink}
+            getShareLink={()=>{}}
+            currentShareLink={currentLink}
+            title={'Update shared link'}
+        />}
     </>
 }

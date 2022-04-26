@@ -49,6 +49,7 @@ export default ({ children }) => {
     const [addedIds, setAddedIds] = useState([])
 
     const [selectedAllAssets, setSelectedAllAssets] = useState(false)
+    const [selectedAllFolders, setSelectedAllFolders] = useState(false)
     const [completedAssets, setCompletedAssets] = useState([])
 
     // Upload process
@@ -70,7 +71,7 @@ export default ({ children }) => {
 
     // Download process
     const [totalDownloadingAssets, setTotalDownloadingAssets] = useState(0)
-    const [downloadingStatus, setDownloadingStatus] = useState("none") // Allowed value: "none", "zipping", "done", "error"
+    const [downloadingStatus, setDownloadingStatus] = useState("none") // Allowed value: "none", "zipping", "preparing", "done", "error"
     const [downloadingPercent, setDownloadingPercent] = useState(0) // Percent of uploading process: 0 - 100
     const [downloadingError, setDownloadingError] = useState('') // Percent of uploading process: 0 - 100
 
@@ -126,6 +127,11 @@ export default ({ children }) => {
     // Mark assets have been selected all even assets do not exist in pagination
     const selectAllAssets = (isSelectedAll = true) => {
         setSelectedAllAssets(isSelectedAll)
+    }
+
+    // Mark all folders have been selected all even folders do not exist in pagination
+    const selectAllFolders = (isSelectedAll = true) => {
+        setSelectedAllFolders(isSelectedAll)
     }
 
     // Show upload process toast
@@ -399,6 +405,8 @@ export default ({ children }) => {
         setLoadingAssets,
         selectedAllAssets,
         selectAllAssets,
+        selectedAllFolders,
+        selectAllFolders,
         uploadingStatus,
         showUploadProcess,
         uploadingFile,

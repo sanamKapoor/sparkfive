@@ -1,5 +1,4 @@
 import { useEffect, useState, useContext } from 'react'
-
 import { Utilities } from '../../../assets'
 
 import styles from './advanced-options.module.css'
@@ -15,26 +14,32 @@ import teamAPI from "../../../server-api/team"
 
 const AdvancedOptions = () => {
     const [loading, setLoading] = useState(false)
-    const [autoTagSubFolder, setAutoTagSubFolder] = useState(true)
-    const [defaultLandingPage, setDefaultLandingPage] = useState()
-    const [collectionSortView, setCollectionSortView] = useState()
-    const [checkDuplicate, setCheckDuplicate] = useState(false)
-    const { advancedConfig, setAdvancedConfig } = useContext(UserContext)
+
+    const [subFolderAutoTag, setSubFolderAutoTag] = useState(true)
+    const [defaultLandingPage, setDefaultLandingPage] = useState('')
+    const [collectionSortView, setCollectionSortView] = useState('')
+    const [duplicateCheck, setDuplicateCheck] = useState(false)
+    const [assetSortView, setAssetSortView] = useState('')
+
+    const {advancedConfig, setAdvancedConfig} = useContext(UserContext)
+
 
     const saveAdvanceConfig = async (config) => {
         setLoading(true)
         await teamAPI.saveAdvanceConfigurations({ config })
-        await getAdvanceConfigurations();
+        
+        const updatedConfig = {...advancedConfig, ...config}
+        setAdvancedConfig(updatedConfig)
+
+        await getAdvanceConfigurations(updatedConfig);
     }
 
-    const getAdvanceConfigurations = async () => {
-        setLoading(true)
-        const { data } = await teamAPI.getAdvanceOptions()
-        setAutoTagSubFolder(data.subFolderAutoTag)
-        setDefaultLandingPage(data.defaultLandingPage)
-        setCollectionSortView(data.collectionSortView)
-        setCheckDuplicate(data.duplicateCheck)
-        setAdvancedConfig(data)
+    const getAdvanceConfigurations = async (conf = advancedConfig) => {
+        setSubFolderAutoTag(conf.subFolderAutoTag)
+        setDefaultLandingPage(conf.defaultLandingPage)
+        setCollectionSortView(conf.collectionSortView)
+        setAssetSortView(conf.assetSortView)
+        setDuplicateCheck(conf.duplicateCheck)
 
         setLoading(false)
         return true
@@ -78,14 +83,14 @@ const AdvancedOptions = () => {
                                     <div className={styles['field-radio-wrapper']}>
                                         <div className={`${styles['radio-button-wrapper']} m-r-15`}>
                                             <IconClickable
-                                                src={autoTagSubFolder ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                                                src={subFolderAutoTag ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
                                                 onClick={() => saveAdvanceConfig({ subFolderAutoTag: true })} />
                                             <div className={'font-12 m-l-10'}>Subfolders as Tags (Default)</div>
                                         </div>
                                         <div className={`${styles['radio-button-wrapper']} ${styles['hide-on-mobile']}`}>
                                             <IconClickable
-                                                src={!autoTagSubFolder ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                                                src={!subFolderAutoTag ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
                                                 onClick={() => saveAdvanceConfig({ subFolderAutoTag: false })} />
                                             <div className={'font-12 m-l-10'}>Subfolders as Separate Collections</div>
@@ -164,6 +169,37 @@ const AdvancedOptions = () => {
                     <div className={`${styles['row']}`}>
                         <div className={`${styles['deleted-assets']} row`}>
                             <div className={"col-40 col-md-100"}>
+                                <span className={'font-weight-500'}>Asset Sort View</span>
+                            </div>
+                            <div className={"col-60 col-md-100"}>
+                                <div>
+                                    <div className={styles['field-radio-wrapper']}>
+                                        <div className={`${styles['radio-button-wrapper']} m-r-15`}>
+                                            <IconClickable
+                                                src={assetSortView === 'alphabetical' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                                                additionalClass={styles['select-icon']}
+                                                onClick={() => saveAdvanceConfig({assetSortView: 'alphabetical'})} />
+                                            <div className={'font-12 m-l-15'}>Alphabetical</div>
+                                        </div>
+                                        <div className={`${styles['radio-button-wrapper']} ${styles['hide-on-mobile']}`}>
+                                            <IconClickable
+                                                src={assetSortView !== 'alphabetical' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                                                additionalClass={styles['select-icon']}
+                                                onClick={() => saveAdvanceConfig({assetSortView: 'newest'})} />
+                                            <div className={'font-12 m-l-15'}>Newest</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className={`${styles['row']} ${styles['field-block']}`}>
+                <div className={`${styles['col-100']}`}>
+                    <div className={`${styles['row']}`}>
+                        <div className={`${styles['deleted-assets']} row`}>
+                            <div className={"col-40 col-md-100"}>
                                 <span className={'font-weight-500'}>Duplicate Management</span>
                             </div>
                             <div className={"col-60 col-md-100"}>
@@ -175,16 +211,16 @@ const AdvancedOptions = () => {
                                         <div className={'font-12 m-r-15'}>Check Uploads</div>
                                         <div className={`${styles['radio-button-wrapper']} m-r-15`}>
                                             <IconClickable
-                                                src={checkDuplicate ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                                                src={duplicateCheck ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
-                                                onClick={() => saveAdvanceConfig({ duplicate_check: true })} />
+                                                onClick={() => saveAdvanceConfig({ duplicateCheck: true })} />
                                             <div className={'font-12 m-l-10'}>On</div>
                                         </div>
                                         <div className={`${styles['radio-button-wrapper']} ${styles['hide-on-mobile']}`}>
                                             <IconClickable
-                                                src={!checkDuplicate ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                                                src={!duplicateCheck ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
-                                                onClick={() => saveAdvanceConfig({ duplicate_check: false })} />
+                                                onClick={() => saveAdvanceConfig({ duplicateCheck: false })} />
                                             <div className={'font-12 m-l-10'}>Off (Default)</div>
                                         </div>
                                     </div>
@@ -194,6 +230,7 @@ const AdvancedOptions = () => {
                     </div>
                 </div>
             </div>
+
             {loading && <SpinnerOverlay />}
         </div>
     )

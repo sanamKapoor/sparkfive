@@ -15,7 +15,7 @@ import DimensionsFilter from './dimensions-filter'
 import ResolutionFilter from './resolution-filter'
 
 
-const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiveSortFilter, clearFilters, isFolder = false }) => {
+const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiveSortFilter, clearFilters, isFolder = false, isShare = false }) => {
 
     const [expandedMenus, setExpandedMenus] = useState(isFolder ? ['folders'] : ['tags', 'customFields', 'channels', 'campaigns'])
     const [stickyMenuScroll, setStickyMenuScroll] = useState(false)
@@ -46,6 +46,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
         loadTags,
         loadProductFields,
         loadFolders,
+        loadSharedFolders,
         loadAssetResolutions,
         isPublic,
         sharePath,
@@ -228,7 +229,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                     {expandedMenus.includes('folders') &&
                         <FilterSelector
                             oneColumn={true}
-                            loadFn={()=>{loadFolders(isFolder)}}
+                            loadFn={()=>{isShare ? loadSharedFolders(isFolder, sharePath) : loadFolders(isFolder)}}
                             numItems={isFolder ? folders.length :  5}
                             filters={folders.map(folder => ({ ...folder, label: folder.name, value: folder.id }))}
                             value={activeSortFilter.filterFolders}

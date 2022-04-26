@@ -45,6 +45,7 @@ const AssetsLibrary = () => {
     setAddedIds,
     setLoadingAssets,
     selectAllAssets,
+    selectAllFolders,
     uploadDetailOverlay,
     setUploadDetailOverlay,
     setUploadingAssets,
@@ -55,7 +56,8 @@ const AssetsLibrary = () => {
     setTotalAssets
   } = useContext(AssetContext)
 
-  const { advancedConfig, setAdvancedConfig } = useContext(UserContext)
+
+  const {advancedConfig} = useContext(UserContext)
 
   const [activeMode, setActiveMode] = useState('assets')
 
@@ -66,8 +68,6 @@ const AssetsLibrary = () => {
   const [renameModalOpen, setRenameModalOpen] = useState(false)
 
   const [openFilter, setOpenFilter] = useState(false)
-
-  // const [advancedConfig, setAdvancedConfig] = useState(advancedConfigParams)
 
   const { activeSortFilter, setActiveSortFilter, tags, loadTags, loadProductFields, productFields, folders: collection, loadFolders, campaigns, loadCampaigns } = useContext(FilterContext)
 
@@ -174,7 +174,6 @@ const AssetsLibrary = () => {
       if (!firstLoaded) {
         setFirstLoaded(true)
       }
-      // setInitialLoad()
     }
 
     if (firstLoaded) {
@@ -218,8 +217,8 @@ const AssetsLibrary = () => {
   }, [activeMode])
 
   useEffect(() => {
-    updateAdvancedConfig()
-  }, [advancedConfig])
+    updateSortFilterByAdvConfig()
+  }, [advancedConfig.set])
 
   const clearFilters = () => {
     setActiveSortFilter({
@@ -229,20 +228,29 @@ const AssetsLibrary = () => {
     })
   }
 
-  const updateAdvancedConfig = async () => {
-    const defaultTab = getDefaultTab(advancedConfig)
-    let sort = {...activeSortFilter.sort}
-
-    if (defaultTab === 'folders') {
-      sort = advancedConfig.collectionSortView === 'alphabetical' ? selectOptions.sort[3] : selectOptions.sort[1]
+  const updateSortFilterByAdvConfig = async (params: any = {}) => {
+    let defaultTab = getDefaultTab()
+    const filters = Object.keys(router.query)
+    if (filters && filters.length) {
+      defaultTab = filters[0] === 'collection' ? 'folders' : 'all';
+    } else if (params.mainFilter) {
+      defaultTab = params.mainFilter
     }
+
+    let sort = {...activeSortFilter.sort}
+    if (defaultTab === 'folders' && !params.folderId) {
+      sort = advancedConfig.collectionSortView === 'alphabetical' ? selectOptions.sort[3] : selectOptions.sort[1]
+    } else {
+      sort = advancedConfig.assetSortView === 'newest' ? selectOptions.sort[1] : selectOptions.sort[3]
+    }
+    // console.log(advancedConfig.assetSortView, sort.name)
 
     setActiveSortFilter({
       ...activeSortFilter,
       mainFilter: defaultTab,
       sort
     })
-  
+
   }
 
   const getDefaultTab = (advConf?) => {
@@ -458,7 +466,7 @@ const AssetsLibrary = () => {
       setFolders([...folderPlaceholders, ...currenFolderClone])
 
       // Get team advance configurations first
-      const subFolderAutoTag = advancedConfig.autoTagSubFolder;
+      const subFolderAutoTag = advancedConfig.subFolderAutoTag;
 
       // Start to upload assets
       let folderGroups = await uploadAsset(0, newPlaceholders, currentDataClone, totalSize, activeFolder, undefined, subFolderAutoTag)
@@ -530,6 +538,11 @@ const AssetsLibrary = () => {
   const getFolders = async (replace = true) => {
     try {
 
+      // don't reload folder on active detail folder/collection
+      if (activeFolder) {
+        return
+      }
+
       if (replace) {
         setAddedIds([])
       }
@@ -543,10 +556,11 @@ const AssetsLibrary = () => {
       if (activeSortFilter.filterFolders?.length > 0) {
         queryParams.folders = activeSortFilter.filterFolders.map(item => item.value).join(',')
       }
+
       const { data } = await folderApi.getFolders(queryParams)
 
       let assetList = { ...data, results: data.results }
-      if (lastUploadedFolder && activeSortFilter.mainFilter === "folders" && activeSortFilter.sort.value === "alphabetical") { 
+      if (lastUploadedFolder && activeSortFilter.mainFilter === "folders" && activeSortFilter.sort.value === "alphabetical") {
         const lastFolder = {...lastUploadedFolder}
         assetList.results.unshift(lastFolder)
       }
@@ -583,6 +597,8 @@ const AssetsLibrary = () => {
 
       setAssets(assets.map(assetItem => ({ ...assetItem, isSelected: true })))
     } else if (activeMode === 'folders') {
+      selectAllFolders()
+
       setFolders(folders.map(folder => ({ ...folder, isSelected: true })))
     }
   }
@@ -591,11 +607,12 @@ const AssetsLibrary = () => {
 
   const backToFolders = () => {
     setActiveFolder('')
-    setActiveSortFilter({
-      ...activeSortFilter,
-      // filterFolders: [], // Open this comment to reset filter folders
-      mainFilter: 'folders'
-    })
+    // setActiveSortFilter({
+    //   ...activeSortFilter,
+    //   // filterFolders: [], // Open this comment to reset filter folders
+    //   mainFilter: 'folders'
+    // })
+    updateSortFilterByAdvConfig({mainFilter: 'folders'})
   }
 
   const selectedAssets = assets.filter(asset => asset.isSelected)
@@ -611,12 +628,7 @@ const AssetsLibrary = () => {
     // })
     // router.replace("/main/assets") // Open this comment to reset query string url
     setActiveFolder(id)
-
-
-    // setTimeout(()=>{
-    //   setActiveFolder(id)
-    //   router.replace("/main/assets")
-    // },2000)
+    updateSortFilterByAdvConfig({folderId: id})
 
   }
 

@@ -45,10 +45,12 @@ const ProductAddition = ({
 
   useEffect(() => {
     // Get input data
-    getData(productApi.getProducts(), setInputProducts)
-    getData(tagApi.getTags({ type: productCategoryActiveDropdownValue }), setInputCategories)
-    getData(tagApi.getTags({ type: productVendorActiveDropdownValue }), setInputVendors)
-    getData(tagApi.getTags({ type: productRetailerActiveDropdownValue }), setInputRetailers)
+    if (!isShare) {
+      getData(productApi.getProducts(), setInputProducts)
+      getData(tagApi.getTags({ type: productCategoryActiveDropdownValue }), setInputCategories)
+      getData(tagApi.getTags({ type: productVendorActiveDropdownValue }), setInputVendors)
+      getData(tagApi.getTags({ type: productRetailerActiveDropdownValue }), setInputRetailers)
+    }
   }, [])
 
   const getData = async (asyncDataFn, setFn) => {

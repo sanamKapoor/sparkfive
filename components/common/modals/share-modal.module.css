@@ -2,6 +2,12 @@
     padding: 1rem 2rem;
 }
 
+.save-wrapper{
+    padding: 0 calc(2rem + 8px);
+    justify-content: flex-end;
+    display: flex;
+}
+
 .radio-button-wrapper{
     display: flex;
     align-items: center;

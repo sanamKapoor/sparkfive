@@ -46,9 +46,6 @@
   align-items: center;
 }
 
-.multifilter-wrapper {
-}
-
 .sort-wrapper {
   margin: 0 5px;
   z-index: 1000;
@@ -91,6 +88,7 @@
     width: 20px !important;
     height: auto;
     justify-content: center;
+    top: 0;
   }
 
   .calendar {
@@ -152,7 +150,17 @@
   }
   .filters {
   display: flex;
-  flex-direction: column;
   align-items: center;
 }
+}
+
+@media screen and (max-width: 650px) {
+  .tab-list {
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+
+  .tab-list-item{
+    padding: 6px 8px;
+  }
 }

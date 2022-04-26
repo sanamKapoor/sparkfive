@@ -51,8 +51,8 @@ export default ({ children }) => {
         const teamResponse = await teamApi.getTeam()
         setCdnAccess(teamResponse.data.cdnAccess)
 
-        // set advanced config of user
-        loadAdvanceConfig()
+        const { data: advOptions } = await teamApi.getAdvanceOptions()
+        setAdvancedConfig({...advOptions, set: true})
 
         // Custom role will use custom permission here
         if (data.role.type === 'custom') {
@@ -124,12 +124,6 @@ export default ({ children }) => {
     }
   }, [router.route])
 
-
-  const loadAdvanceConfig = async() => {
-    const { data } = await teamApi.getAdvanceOptions()
-    setAdvancedConfig({...data, set: true})
-  }
-
   const verifyDomain = async () => {
     const subdomain = getSubdomain();
 
@@ -174,7 +168,9 @@ export default ({ children }) => {
     initialLoadFinished,
     afterAuth,
     vanityCompanyInfo,
-    cdnAccess
+    cdnAccess,
+    advancedConfig,
+    setAdvancedConfig
   }
 
   return (

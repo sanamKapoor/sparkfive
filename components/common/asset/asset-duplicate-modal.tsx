@@ -35,9 +35,9 @@ const AssetDuplicateModal = ({duplicateNames=[], modalIsOpen, closeModal, confir
                     Do you want to use this uploaded version as the current version, change the filename or cancel the upload of these specific files?
                 </p>
                 {
-                    duplicateNames.map((fileName) => {
+                    duplicateNames.map((fileName, indx) => {
                         return (
-                            <AssetDuplicateItem file={fileName} onFileNameUpdate={onFileNameUpdate} key={fileName} />
+                            <AssetDuplicateItem file={fileName} onFileNameUpdate={onFileNameUpdate} key={fileName+indx} />
                         )
                     })
                 }

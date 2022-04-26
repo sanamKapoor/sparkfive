@@ -52,6 +52,7 @@ const AssetAddition = ({
 	const [duplicateModalOpen, setDuplicateModalOpen] = useState(false)
 	const [selectedFiles, setSelectedFiles] = useState([]);
 	const [duplicateAssets, setDuplicateAssets] = useState([]);
+	const [uploadFrom, setUploadFrom] = useState('');
 
 	const { activeSortFilter, setActiveSortFilter } = useContext(FilterContext)
 	const { advancedConfig, setAdvancedConfig } = useContext(UserContext)
@@ -368,6 +369,29 @@ const AssetAddition = ({
 	}
 
 	const onDropboxFilesSelection = async (files) => {
+		if (advancedConfig.duplicateCheck) {
+			const names = files.map(file => file['name'])
+			const {data: { duplicateAssets }} = await assetApi.checkDuplicates(names)
+			if (duplicateAssets.length) {
+				setSelectedFiles(files)
+				setDuplicateAssets(duplicateAssets)
+				setDuplicateModalOpen(true)
+				setUploadFrom('dropbox')
+				if (fileBrowserRef.current.value) {
+					fileBrowserRef.current.value = ''
+				}
+				if (folderBrowserRef.current.value) {
+					folderBrowserRef.current.value
+				}
+			} else {
+				onDropboxFilesGet(files)
+			}
+		} else {
+			onDropboxFilesGet(files)
+		}
+	}
+
+	const onDropboxFilesGet = async (files) => {
 		let currentDataClone = [...assets]
 		try {
 			let totalSize = 0
@@ -406,7 +430,15 @@ const AssetAddition = ({
 
 			setFolderImport(containFolderUrl.length > 0)
 
-			const { data } = await assetApi.importAssets('dropbox', files.map(file => ({ link: file.link, isDir: file.isDir, name: file.name, size: file.bytes })), getCreationParameters({estimateTime: 1, totalSize, versionGroup}))
+			const { data } = await assetApi.importAssets('dropbox', files.map(file => ({
+					link: file.link,
+					isDir: file.isDir,
+					name: file.name,
+					size: file.bytes,
+					versionGroup: (file.versionGroup || versionGroup),
+					changedName: file.changedName
+				})),
+				getCreationParameters({estimateTime: 1, totalSize}))
 
 			// clean old version for main grid
 			if (versionGroup) {
@@ -477,6 +509,29 @@ const AssetAddition = ({
 	}
 
 	const onDriveFilesSelection = async (files) => {
+		if (advancedConfig.duplicateCheck) {
+			const names = files.map(file => file['name'])
+			const {data: { duplicateAssets }} = await assetApi.checkDuplicates(names)
+			if (duplicateAssets.length) {
+				setSelectedFiles(files)
+				setDuplicateAssets(duplicateAssets)
+				setDuplicateModalOpen(true)
+				setUploadFrom('gdrive')
+				if (fileBrowserRef.current.value) {
+					fileBrowserRef.current.value = ''
+				}
+				if (folderBrowserRef.current.value) {
+					folderBrowserRef.current.value
+				}
+			} else {
+				onGdriveFilesGet(files)
+			}
+		} else {
+			onGdriveFilesGet(files)
+		}
+	}
+
+	const onGdriveFilesGet = async (files) => {
 		const googleAuthToken = cookiesUtils.get('gdriveToken')
 		let currentDataClone = [...assets]
 		try {
@@ -521,8 +576,10 @@ const AssetAddition = ({
 				name: file.name,
 				size: file.sizeBytes,
 				mimeType: file.mimeType,
-				type: file.type
-			})), getCreationParameters({estimateTime: 1, totalSize, versionGroup}))
+				type: file.type,
+				versionGroup: file.versionGroup || versionGroup,
+				changedName: file.changedName
+			})), getCreationParameters({estimateTime: 1, totalSize}))
 
 			// clean old version for main grid
 			if (versionGroup) {
@@ -674,18 +731,22 @@ const AssetAddition = ({
 
 	const onFileChange = async (e) => {
 		const files = Array.from(e.target.files).map(originalFile => ({ originalFile }))
-		setSelectedFiles(files)
 		if (advancedConfig.duplicateCheck) {
 			const names = files.map(file => file.originalFile['name'])
 			const {data: { duplicateAssets }} = await assetApi.checkDuplicates(names)
-			setDuplicateAssets(duplicateAssets)
-
-			setDuplicateModalOpen(true)
-			if (fileBrowserRef.current.value) {
-				fileBrowserRef.current.value = ''
-			}
-			if (folderBrowserRef.current.value) {
-				folderBrowserRef.current.value
+			if (duplicateAssets.length) {
+				setSelectedFiles(files)
+				setDuplicateAssets(duplicateAssets)
+				setDuplicateModalOpen(true)
+				setUploadFrom('browser')
+				if (fileBrowserRef.current.value) {
+					fileBrowserRef.current.value = ''
+				}
+				if (folderBrowserRef.current.value) {
+					folderBrowserRef.current.value
+				}
+			} else {
+				onFilesDataGet(files)
 			}
 		} else {
 			onFilesDataGet(files)
@@ -695,28 +756,46 @@ const AssetAddition = ({
 	const onConfirmDuplicates = (nameHistories) => {
 		setDuplicateModalOpen(false)
 		let files = [...selectedFiles]
+		if (uploadFrom === 'browser') {
+			files = files.map(file => {
+				file.name = file.originalFile.name
+				return file
+			})
+		}
 		const mappedDuplicates = _.keyBy(duplicateAssets, 'name')
 
 		// eliminate canceled 
 		files = files.filter(file => {
-			const cancelledItem = nameHistories.find(item => item.oldName === file.originalFile.name && item.action === 'cancel')
+			const cancelledItem = nameHistories.find(item => item.oldName === file.name && item.action === 'cancel')
 			return !cancelledItem
 		})
 
 		files = files.map(file => {
-			const handledItem = nameHistories.find(histItem => histItem.oldName === file.originalFile.name)
+			const handledItem = nameHistories.find(histItem => histItem.oldName === file.name)
 			if (handledItem) {
 				if (handledItem.action === 'change') {
 					file.changedName = handledItem.newName
 				}
 				if (handledItem.action === 'current') {
-					file.versionGroup = mappedDuplicates[file.originalFile.name].versionGroup
+					file.versionGroup = mappedDuplicates[file.name].versionGroup
 				}
 			}
 			return file
 		})
+
 		if (files.length) {
-			onFilesDataGet(files)
+			switch (uploadFrom) {
+				case 'browser':
+					onFilesDataGet(files)
+					break;
+				case 'dropbox':
+					onDropboxFilesGet(files)
+					break;
+				case 'gdrive':
+					onGdriveFilesGet(files)
+					break;
+			}
+			
 		}
 	}
 
@@ -783,7 +862,7 @@ const AssetAddition = ({
 					importEnabled={true}
 				/>
 			}
-			{selectedFiles?.length &&
+			{duplicateAssets?.length > 0 &&
 			<AssetDuplicateModal
 				duplicateNames={duplicateAssets.map(asset => asset.name)}
 				modalIsOpen={duplicateModalOpen}

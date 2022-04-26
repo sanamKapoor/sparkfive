@@ -1,16 +1,20 @@
 import styles from './share-folder-layout.module.css'
 import { GeneralImg } from '../../../assets'
 import { useState, useEffect, useContext } from "react"
-import { AssetContext, ShareContext } from '../../../context'
+import { AssetContext, ShareContext, FilterContext } from '../../../context'
 
 import AssetHeaderOps from '../asset/asset-header-ops'
 
-const ShareFolderLayout = ({ children }) => {
+const ShareFolderLayout = ({ children, advancedLink = false }) => {
 
 	const { folderInfo } = useContext(ShareContext)
-	const { assets } = useContext(AssetContext)
+	const { assets, folders } = useContext(AssetContext)
+	const { activeSortFilter } = useContext(FilterContext)
 
 	const selectedAssets = assets.filter(asset => asset.isSelected)
+	const selectedFolders = folders.filter(folder => folder.isSelected)
+
+	const amountSelected= activeSortFilter.mainFilter === 'folders' ? selectedFolders.length : selectedAssets.length
 
 	return (
 		<>
@@ -21,9 +25,9 @@ const ShareFolderLayout = ({ children }) => {
 						src={folderInfo?.teamIcon || GeneralImg.logo} />
 				</div>
 				<h1 className={styles['collection-name']}>{folderInfo?.folderName}</h1>
-				{selectedAssets.length > 0 &&
+				{amountSelected > 0 &&
 					<div className={styles['ops-wrapper']}>
-						<AssetHeaderOps isShare={true} />
+						<AssetHeaderOps isShare={true} advancedLink={advancedLink} isFolder={activeSortFilter.mainFilter === 'folders'}/>
 					</div>
 				}
 			</header>

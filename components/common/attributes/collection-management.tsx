@@ -52,7 +52,6 @@ const CollectionManagement = () => {
 
     // Create the new tag
     const createFolder = async (item) => {
-        console.log(item)
         try {
             // Show loading
             setLoading(true)
@@ -89,7 +88,7 @@ const CollectionManagement = () => {
 
         // Show loading
         setLoading(true)
-        console.log(id)
+
         // Call API to delete folder
         await folderApi.deleteFolders({ folderIds: [id] })
 

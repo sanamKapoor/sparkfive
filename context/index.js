@@ -16,7 +16,9 @@ export const UserContext = createContext({
     hasPermission: (requiredPermissions) => { return true },
     afterAuth: ({ twoFactor, token }) => { },
     vanityCompanyInfo: undefined,
-    cdnAccess: false
+    cdnAccess: false,
+    advancedConfig: {},
+    setAdvancedConfig: (conf) => {}
 })
 
 export const ThemeContext = createContext({
@@ -51,6 +53,9 @@ export const AssetContext = createContext({
 
     selectedAllAssets: false,
     selectAllAssets: (isSelected) => { },
+
+    selectedAllFolders: false,
+    selectAllFolders: (isSelected) => { },
 
     loadingAssets: false,
     setLoadingAssets: (loading) => { },
@@ -188,6 +193,8 @@ export const FilterContext = createContext({
     loadProductFields: () => { },
     setSharePath: (path) => { },
     loadAll: () => { },
+
+    loadSharedFolders: (ignoreCurrentSelectedFolder, sharePath) => { },
 
     isPublic: false,
     sharePath: ''

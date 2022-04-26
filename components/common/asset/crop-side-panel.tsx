@@ -96,7 +96,7 @@ const CropSidePanel = ({ asset,
 
 
             // Show processing bar
-            updateDownloadingStatus('zipping', 0, totalDownloadingAssets)
+            updateDownloadingStatus('preparing', 0, totalDownloadingAssets)
 
             let download = null
 
@@ -117,7 +117,7 @@ const CropSidePanel = ({ asset,
             const { data } = await download(payload,filters)
 
             // Download file to storage
-            fileDownload(data, 'assets.zip');
+            fileDownload(data, asset.name);
 
             updateDownloadingStatus('none', 0, 0, '')
         }catch (e){
@@ -203,7 +203,7 @@ const CropSidePanel = ({ asset,
                                     placeholder={'Width'}
                                     additionalClasses={'center-input'}
                                     type={'number'}
-                                    defaultValue
+                                    // defaultValue
                                     value={width}
                                     styleType={'regular-height-short'} />
                             </div>

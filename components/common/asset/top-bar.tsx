@@ -1,5 +1,5 @@
 import styles from './top-bar.module.css'
-import {useContext, useRef} from 'react'
+import {useContext, useState, useRef} from 'react'
 import { Utilities } from '../../../assets'
 import selectOptions from '../../../utils/select-options'
 
@@ -11,7 +11,6 @@ import IconClickable from '../buttons/icon-clickable'
 
 // Context
 import { AssetContext, UserContext } from '../../../context'
-import advancedConfigParams from '../../../utils/advance-config-params'
 
 const TopBar = ({
   activeSortFilter,
@@ -23,34 +22,40 @@ const TopBar = ({
   setOpenFilter,
   openFilter,
   isShare = false,
-  deletedAssets
+  deletedAssets,
+  singleCollection = false
 }) => {
 
   const {
     selectedAllAssets,
     selectAllAssets,
+    selectAllFolders,
+    selectedAllFolders,
     setLastUploadedFolder
   } = useContext(AssetContext)
 
   const {hasPermission} = useContext(UserContext)
 
+  const {advancedConfig} = useContext(UserContext)
+
   const setSortFilterValue = (key, value) => {
-    let sort = value
+    let sort = key === 'sort' ? value : activeSortFilter.sort
     if (key === 'mainFilter') {
-      if (value === 'folders' && advancedConfigParams.collectionSortView === 'alphabetical') {
-        sort = selectOptions.sort[3]
+      if (value === 'folders') {
+        sort = advancedConfig.collectionSortView === 'alphabetical' ? selectOptions.sort[3] : selectOptions.sort[1]
       } else {
-        sort = selectOptions.sort[1]
+        sort = advancedConfig.assetSortView === 'newest' ? selectOptions.sort[1] : selectOptions.sort[3]
       }
     }
 
     // Reset select all status
     selectAllAssets(false);
+    selectAllFolders(false);
     setActiveSortFilter({
       ...activeSortFilter
     })
 
-    // Needed to reset because it is set for collection upload when alpha sort active
+    // Needed to reset because it is set for collection upload when alphabetical sort active
     // And uploaded folder needed to show at first
     setLastUploadedFolder(undefined)
 
@@ -90,7 +95,7 @@ const TopBar = ({
         <ul className={styles['tab-list']}>
         {selectOptions.views.map(view => (
           <li key={view.name} className={styles['tab-list-item']}>
-            {(!activeFolder || !view.omitFolder) && (!isShare || (isShare && !view.omitShare)) &&
+            {(!activeFolder || !view.omitFolder) && (!isShare || (isShare && !view.omitShare && view.hideOnSingle !== singleCollection)) &&
             (view.requirePermissions.length === 0 || (view.requirePermissions.length > 0 && hasPermission(view.requirePermissions))) &&
               <SectionButton
                 keyProp={view.name}
@@ -112,6 +117,7 @@ const TopBar = ({
 
       <div className={styles['sec-filters']} ref={filtersRef}>
         {selectedAllAssets && <span className={styles['select-only-shown-items-text']} onClick={toggleSelectAll}>Select only 25 assets shown</span>}
+        {selectedAllFolders && <span className={styles['select-only-shown-items-text']} onClick={toggleSelectAll}>Select only 25 collections shown</span>}
         <Button type='button' text='Select All' styleType='secondary' onClick={selectAll} />
         {!deletedAssets && <img src={Utilities.gridView} onClick={() => setActiveView('grid')} />}
         <img src={Utilities.listView} onClick={() => setActiveView('list')} />
