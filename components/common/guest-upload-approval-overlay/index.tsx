@@ -198,9 +198,9 @@ const GuestUploadApprovalOverlay = ({ handleBackButton, selectedAssets, loadingA
 
 	// On change custom fields (add/remove)
 	const onChangeCustomField = (index, data) => {
-		console.log(index)
-		console.log(data)
-		console.log(assetCustomFields)
+		// console.log(index)
+		// console.log(data)
+		// console.log(assetCustomFields)
 		// Show loading
 		// setIsLoading(true)
 

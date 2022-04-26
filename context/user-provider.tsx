@@ -160,6 +160,8 @@ export default ({ children }) => {
   const userValue = {
     user,
     setUser,
+    advancedConfig,
+    setAdvancedConfig,
     fetchUser,
     logOut,
     hasPermission,

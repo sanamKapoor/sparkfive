@@ -1,5 +1,4 @@
 import styles from './asset-addition.module.css'
-import { useRef, useState, useContext } from 'react'
 import { Assets } from '../../../assets'
 import { AssetContext } from '../../../context'
 import { getFoldersFromUploads } from '../../../utils/asset'
@@ -10,6 +9,10 @@ import taskApi from '../../../server-api/task'
 import projectApi from '../../../server-api/project'
 import folderApi from '../../../server-api/folder'
 import teamAPI from "../../../server-api/team"
+
+// libraries
+import { useRef, useState, useContext } from 'react'
+import _ from 'lodash'
 
 // Components
 import SearchOverlay from '../../main/search-overlay-assets'
@@ -23,7 +26,9 @@ import { validation } from '../../../constants/file-validation'
 import {getFolderKeyAndNewNameByFileName} from "../../../utils/upload";
 
 // Context
-import { FilterContext } from '../../../context'
+import { FilterContext, UserContext } from '../../../context'
+import AssetDuplicateModal from './asset-duplicate-modal'
+
 
 
 const AssetAddition = ({
@@ -44,8 +49,13 @@ const AssetAddition = ({
 
 	const [activeModal, setActiveModal] = useState('')
 	const [submitError, setSubmitError] = useState('')
+	const [duplicateModalOpen, setDuplicateModalOpen] = useState(false)
+	const [selectedFiles, setSelectedFiles] = useState([]);
+	const [duplicateAssets, setDuplicateAssets] = useState([]);
+	const [uploadFrom, setUploadFrom] = useState('');
 
 	const { activeSortFilter, setActiveSortFilter } = useContext(FilterContext)
+	const { advancedConfig, setAdvancedConfig } = useContext(UserContext)
 
 	const {
 		assets,
@@ -151,6 +161,15 @@ const AssetAddition = ({
 					attachedQuery['versionGroup'] = versionGroup
 				}
 
+				// For duplicate asset upload
+				if (assets[i].asset && assets[i].asset.versionGroup) {
+					attachedQuery['versionGroup'] = assets[i].asset.versionGroup
+				}
+
+				if (assets[i].asset && assets[i].asset.changedName) {
+					attachedQuery['changedName'] = assets[i].asset.changedName
+				}
+
 				// Uploading the new folder where it's folderId has been created earlier in previous API call
 				if(currentUploadingFolderId){
 					attachedQuery['folderId'] = currentUploadingFolderId
@@ -236,14 +255,12 @@ const AssetAddition = ({
 					const id = newAssetPlaceholder[0].asset.folders[0]
 					setLastUploadedFolder({assets: [...newAssetPlaceholder], ...folderUploadInfo, id, length: newAssetPlaceholder.length})
 				}
-				setAssets([...newAssetPlaceholder, ...currentDataClone])
+				let allAssets = [...newAssetPlaceholder, ...currentDataClone]
+				allAssets = _.uniqBy(allAssets, 'asset.versionGroup')
+
+				setAssets(allAssets)
 			}
 		}
-	}
-
-	const getAdvanceConfigurations = async () => {
-		const { data } = await teamAPI.getAdvanceOptions()
-		return data
 	}
 
 	const onFilesDataGet = async (files) => {
@@ -277,16 +294,26 @@ const AssetAddition = ({
 			let totalSize = 0;
 			files.forEach(file => {
 				totalSize+=file.originalFile.size
+				const asset = {
+					name: file.originalFile.name,
+					createdAt: new Date(),
+					size: file.originalFile.size,
+					stage: 'draft',
+					type: 'image',
+					mimeType: file.originalFile.type,
+					fileModifiedAt: file.originalFile.lastModifiedDate || new Date(file.originalFile.lastModified),
+					// from duplicate handle
+					versionGroup: file.versionGroup,
+					changedName: file.changedName
+				}
+				if (file.versionGroup) {
+					asset.versionGroup = file.versionGroup
+				}
+				if (file.changedName) {
+					asset.changedName = file.changedName
+				}
 				newPlaceholders.push({
-					asset: {
-						name: file.originalFile.name,
-						createdAt: new Date(),
-						size: file.originalFile.size,
-						stage: 'draft',
-						type: 'image',
-						mimeType: file.originalFile.type,
-						fileModifiedAt: file.originalFile.lastModifiedDate || new Date(file.originalFile.lastModified)
-					},
+					asset,
 					file,
 					status: 'queued',
 					isUploading: true
@@ -312,7 +339,7 @@ const AssetAddition = ({
 			}
 
 			// Get team advance configurations first
-			const { subFolderAutoTag } =  await getAdvanceConfigurations();
+			const { subFolderAutoTag } =  advancedConfig;
 
 			// Start to upload assets
 			let folderGroups =  await uploadAsset(0, newPlaceholders, currentDataClone, totalSize, uploadToFolders.join(","), undefined, subFolderAutoTag)
@@ -342,6 +369,29 @@ const AssetAddition = ({
 	}
 
 	const onDropboxFilesSelection = async (files) => {
+		if (advancedConfig.duplicateCheck) {
+			const names = files.map(file => file['name'])
+			const {data: { duplicateAssets }} = await assetApi.checkDuplicates(names)
+			if (duplicateAssets.length) {
+				setSelectedFiles(files)
+				setDuplicateAssets(duplicateAssets)
+				setDuplicateModalOpen(true)
+				setUploadFrom('dropbox')
+				if (fileBrowserRef.current.value) {
+					fileBrowserRef.current.value = ''
+				}
+				if (folderBrowserRef.current.value) {
+					folderBrowserRef.current.value
+				}
+			} else {
+				onDropboxFilesGet(files)
+			}
+		} else {
+			onDropboxFilesGet(files)
+		}
+	}
+
+	const onDropboxFilesGet = async (files) => {
 		let currentDataClone = [...assets]
 		try {
 			let totalSize = 0
@@ -380,7 +430,15 @@ const AssetAddition = ({
 
 			setFolderImport(containFolderUrl.length > 0)
 
-			const { data } = await assetApi.importAssets('dropbox', files.map(file => ({ link: file.link, isDir: file.isDir, name: file.name, size: file.bytes })), getCreationParameters({estimateTime: 1, totalSize, versionGroup}))
+			const { data } = await assetApi.importAssets('dropbox', files.map(file => ({
+					link: file.link,
+					isDir: file.isDir,
+					name: file.name,
+					size: file.bytes,
+					versionGroup: (file.versionGroup || versionGroup),
+					changedName: file.changedName
+				})),
+				getCreationParameters({estimateTime: 1, totalSize}))
 
 			// clean old version for main grid
 			if (versionGroup) {
@@ -451,6 +509,29 @@ const AssetAddition = ({
 	}
 
 	const onDriveFilesSelection = async (files) => {
+		if (advancedConfig.duplicateCheck) {
+			const names = files.map(file => file['name'])
+			const {data: { duplicateAssets }} = await assetApi.checkDuplicates(names)
+			if (duplicateAssets.length) {
+				setSelectedFiles(files)
+				setDuplicateAssets(duplicateAssets)
+				setDuplicateModalOpen(true)
+				setUploadFrom('gdrive')
+				if (fileBrowserRef.current.value) {
+					fileBrowserRef.current.value = ''
+				}
+				if (folderBrowserRef.current.value) {
+					folderBrowserRef.current.value
+				}
+			} else {
+				onGdriveFilesGet(files)
+			}
+		} else {
+			onGdriveFilesGet(files)
+		}
+	}
+
+	const onGdriveFilesGet = async (files) => {
 		const googleAuthToken = cookiesUtils.get('gdriveToken')
 		let currentDataClone = [...assets]
 		try {
@@ -495,8 +576,10 @@ const AssetAddition = ({
 				name: file.name,
 				size: file.sizeBytes,
 				mimeType: file.mimeType,
-				type: file.type
-			})), getCreationParameters({estimateTime: 1, totalSize, versionGroup}))
+				type: file.type,
+				versionGroup: file.versionGroup || versionGroup,
+				changedName: file.changedName
+			})), getCreationParameters({estimateTime: 1, totalSize}))
 
 			// clean old version for main grid
 			if (versionGroup) {
@@ -646,10 +729,75 @@ const AssetAddition = ({
 		return queryData
 	}
 
-	const onFileChange = (e) => {
-		onFilesDataGet(Array.from(e.target.files).map(originalFile => ({ originalFile })))
+	const onFileChange = async (e) => {
+		const files = Array.from(e.target.files).map(originalFile => ({ originalFile }))
+		if (advancedConfig.duplicateCheck) {
+			const names = files.map(file => file.originalFile['name'])
+			const {data: { duplicateAssets }} = await assetApi.checkDuplicates(names)
+			if (duplicateAssets.length) {
+				setSelectedFiles(files)
+				setDuplicateAssets(duplicateAssets)
+				setDuplicateModalOpen(true)
+				setUploadFrom('browser')
+				if (fileBrowserRef.current.value) {
+					fileBrowserRef.current.value = ''
+				}
+				if (folderBrowserRef.current.value) {
+					folderBrowserRef.current.value
+				}
+			} else {
+				onFilesDataGet(files)
+			}
+		} else {
+			onFilesDataGet(files)
+		}
 	}
 
+	const onConfirmDuplicates = (nameHistories) => {
+		setDuplicateModalOpen(false)
+		let files = [...selectedFiles]
+		if (uploadFrom === 'browser') {
+			files = files.map(file => {
+				file.name = file.originalFile.name
+				return file
+			})
+		}
+		const mappedDuplicates = _.keyBy(duplicateAssets, 'name')
+
+		// eliminate canceled 
+		files = files.filter(file => {
+			const cancelledItem = nameHistories.find(item => item.oldName === file.name && item.action === 'cancel')
+			return !cancelledItem
+		})
+
+		files = files.map(file => {
+			const handledItem = nameHistories.find(histItem => histItem.oldName === file.name)
+			if (handledItem) {
+				if (handledItem.action === 'change') {
+					file.changedName = handledItem.newName
+				}
+				if (handledItem.action === 'current') {
+					file.versionGroup = mappedDuplicates[file.name].versionGroup
+				}
+			}
+			return file
+		})
+
+		if (files.length) {
+			switch (uploadFrom) {
+				case 'browser':
+					onFilesDataGet(files)
+					break;
+				case 'dropbox':
+					onDropboxFilesGet(files)
+					break;
+				case 'gdrive':
+					onGdriveFilesGet(files)
+					break;
+			}
+			
+		}
+	}
 
 	const SimpleButtonWrapper = ({ children }) => (
 		<div className={`${styles['button-wrapper']} ${!folderAdd && styles['button-wrapper-displaced']}`}>
@@ -713,6 +861,14 @@ const AssetAddition = ({
 					importAssets={onLibraryImport}
 					importEnabled={true}
 				/>
+			}
+			{duplicateAssets?.length > 0 &&
+			<AssetDuplicateModal
+				duplicateNames={duplicateAssets.map(asset => asset.name)}
+				modalIsOpen={duplicateModalOpen}
+				closeModal={() => setDuplicateModalOpen(false)}
+				confirmAction={onConfirmDuplicates}
+			/>
 			}
 		</>
 	)

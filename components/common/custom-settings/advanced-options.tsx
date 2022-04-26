@@ -1,10 +1,8 @@
-import {useEffect, useState, useContext} from 'react'
-
+import { useEffect, useState, useContext } from 'react'
 import { Utilities } from '../../../assets'
 
 import styles from './advanced-options.module.css'
 import Router from 'next/router'
-import advancedConfigParams from '../../../utils/advance-config-params'
 import { UserContext } from '../../../context'
 
 // Components
@@ -16,9 +14,11 @@ import teamAPI from "../../../server-api/team"
 
 const AdvancedOptions = () => {
     const [loading, setLoading] = useState(false)
+
     const [subFolderAutoTag, setSubFolderAutoTag] = useState(true)
     const [defaultLandingPage, setDefaultLandingPage] = useState('')
     const [collectionSortView, setCollectionSortView] = useState('')
+    const [duplicateCheck, setDuplicateCheck] = useState(false)
     const [assetSortView, setAssetSortView] = useState('')
 
     const {advancedConfig, setAdvancedConfig} = useContext(UserContext)
@@ -35,11 +35,11 @@ const AdvancedOptions = () => {
     }
 
     const getAdvanceConfigurations = async (conf = advancedConfig) => {
-        setLoading(true)
         setSubFolderAutoTag(conf.subFolderAutoTag)
         setDefaultLandingPage(conf.defaultLandingPage)
         setCollectionSortView(conf.collectionSortView)
         setAssetSortView(conf.assetSortView)
+        setDuplicateCheck(conf.duplicateCheck)
 
         setLoading(false)
         return true
@@ -51,9 +51,9 @@ const AdvancedOptions = () => {
         return false;
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getAdvanceConfigurations();
-    },[])
+    }, [])
 
     return (
         <div className={styles['main-wrapper']}>
@@ -65,7 +65,7 @@ const AdvancedOptions = () => {
                                 <span className={'font-weight-500'}>Deleted Assets</span>
                             </div>
                             <div className={"col-60"}>
-                            <a className={`${styles['anchor']}`} href='#' onClick={(ev) => navigateToDeletedList(ev)}>Manage Deleted Assets</a>
+                                <a className={`${styles['anchor']}`} href='#' onClick={(ev) => navigateToDeletedList(ev)}>Manage Deleted Assets</a>
                             </div>
                         </div>
                     </div>
@@ -85,15 +85,15 @@ const AdvancedOptions = () => {
                                             <IconClickable
                                                 src={subFolderAutoTag ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
-                                                onClick={() => saveAdvanceConfig({subFolderAutoTag: true})} />
-                                            <div className={'font-12 m-l-15'}>Subfolders as Tags (Default)</div>
+                                                onClick={() => saveAdvanceConfig({ subFolderAutoTag: true })} />
+                                            <div className={'font-12 m-l-10'}>Subfolders as Tags (Default)</div>
                                         </div>
                                         <div className={`${styles['radio-button-wrapper']} ${styles['hide-on-mobile']}`}>
                                             <IconClickable
                                                 src={!subFolderAutoTag ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
-                                                onClick={() => saveAdvanceConfig({subFolderAutoTag: false})} />
-                                            <div className={'font-12 m-l-15'}>Subfolders as Separate Collections</div>
+                                                onClick={() => saveAdvanceConfig({ subFolderAutoTag: false })} />
+                                            <div className={'font-12 m-l-10'}>Subfolders as Separate Collections</div>
                                         </div>
                                     </div>
                                 </div>
@@ -116,15 +116,15 @@ const AdvancedOptions = () => {
                                             <IconClickable
                                                 src={defaultLandingPage === 'allTab' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
-                                                onClick={() => saveAdvanceConfig({defaultLandingPage: 'allTab'})} />
-                                            <div className={'font-12 m-l-15'}>All Tab</div>
+                                                onClick={() => saveAdvanceConfig({ defaultLandingPage: 'allTab' })} />
+                                            <div className={'font-12 m-l-10'}>All Tab</div>
                                         </div>
                                         <div className={`${styles['radio-button-wrapper']} ${styles['hide-on-mobile']}`}>
                                             <IconClickable
                                                 src={defaultLandingPage !== 'allTab' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
-                                                onClick={() => saveAdvanceConfig({defaultLandingPage: 'collection'})} />
-                                            <div className={'font-12 m-l-15'}>Collection Tab</div>
+                                                onClick={() => saveAdvanceConfig({ defaultLandingPage: 'collection' })} />
+                                            <div className={'font-12 m-l-10'}>Collection Tab</div>
                                         </div>
                                     </div>
                                 </div>
@@ -147,15 +147,15 @@ const AdvancedOptions = () => {
                                             <IconClickable
                                                 src={collectionSortView === 'alphabetical' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
-                                                onClick={() => saveAdvanceConfig({collectionSortView: 'alphabetical'})} />
-                                            <div className={'font-12 m-l-15'}>Alphabetical</div>
+                                                onClick={() => saveAdvanceConfig({ collectionSortView: 'alphabetical' })} />
+                                            <div className={'font-12 m-l-10'}>Alphabetical</div>
                                         </div>
                                         <div className={`${styles['radio-button-wrapper']} ${styles['hide-on-mobile']}`}>
                                             <IconClickable
                                                 src={collectionSortView !== 'alphabetical' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
-                                                onClick={() => saveAdvanceConfig({collectionSortView: 'newest'})} />
-                                            <div className={'font-12 m-l-15'}>Newest</div>
+                                                onClick={() => saveAdvanceConfig({ collectionSortView: 'newest' })} />
+                                            <div className={'font-12 m-l-10'}>Newest</div>
                                         </div>
                                     </div>
                                 </div>
@@ -195,6 +195,42 @@ const AdvancedOptions = () => {
                     </div>
                 </div>
             </div>
+            <div className={`${styles['row']} ${styles['field-block']}`}>
+                <div className={`${styles['col-100']}`}>
+                    <div className={`${styles['row']}`}>
+                        <div className={`${styles['deleted-assets']} row`}>
+                            <div className={"col-40 col-md-100"}>
+                                <span className={'font-weight-500'}>Duplicate Management</span>
+                            </div>
+                            <div className={"col-60 col-md-100"}>
+                                <div>
+                                    <div className={styles['field-radio-wrapper']}>
+                                        <div className={"col-40 p-l-r-0"}>
+                                            <a className={`${styles['anchor']}`} href='#' onClick={() => {}}>Manage Duplicates</a>
+                                        </div>
+                                        <div className={'font-12 m-r-15'}>Check Uploads</div>
+                                        <div className={`${styles['radio-button-wrapper']} m-r-15`}>
+                                            <IconClickable
+                                                src={duplicateCheck ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                                                additionalClass={styles['select-icon']}
+                                                onClick={() => saveAdvanceConfig({ duplicateCheck: true })} />
+                                            <div className={'font-12 m-l-10'}>On</div>
+                                        </div>
+                                        <div className={`${styles['radio-button-wrapper']} ${styles['hide-on-mobile']}`}>
+                                            <IconClickable
+                                                src={!duplicateCheck ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                                                additionalClass={styles['select-icon']}
+                                                onClick={() => saveAdvanceConfig({ duplicateCheck: false })} />
+                                            <div className={'font-12 m-l-10'}>Off (Default)</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {loading && <SpinnerOverlay />}
         </div>
     )

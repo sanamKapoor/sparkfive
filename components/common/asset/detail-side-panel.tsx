@@ -385,7 +385,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
 
   // On custom field select one changes
   const onChangeSelectOneCustomField = async (selected, index) => {
-    console.log(selected)
+    // console.log(selected)
     // Show loading
     setIsLoading(true)
 
@@ -665,7 +665,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
             selectedItems={selectedFolder}
             setSelectedItems={setSelectedFolders}
             onAddOperationFinished={(stateUpdate) => {
-              console.log(stateUpdate)
+              // console.log(stateUpdate)
               updateAssetState({
                 folders: { $set: stateUpdate }
               })

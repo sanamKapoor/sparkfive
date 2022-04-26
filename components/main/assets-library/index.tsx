@@ -4,7 +4,6 @@ import { AssetContext, FilterContext, UserContext } from '../../../context'
 import update from 'immutability-helper'
 import assetApi from '../../../server-api/asset'
 import folderApi from '../../../server-api/folder'
-import teamApi from '../../../server-api/team'
 import toastUtils from '../../../utils/toast'
 import { getFolderKeyAndNewNameByFileName } from '../../../utils/upload'
 import { getAssetsFilters, getAssetsSort, DEFAULT_FILTERS, DEFAULT_CUSTOM_FIELD_FILTERS, getFoldersFromUploads } from '../../../utils/asset'
@@ -56,6 +55,7 @@ const AssetsLibrary = () => {
     totalAssets,
     setTotalAssets
   } = useContext(AssetContext)
+
 
   const {advancedConfig} = useContext(UserContext)
 
@@ -171,7 +171,9 @@ const AssetsLibrary = () => {
       // setFirstLoaded(true)
       return
     } else {
-      setInitialLoad()
+      if (!firstLoaded) {
+        setFirstLoaded(true)
+      }
     }
 
     if (firstLoaded) {
@@ -214,20 +216,16 @@ const AssetsLibrary = () => {
     }
   }, [activeMode])
 
+  useEffect(() => {
+    updateSortFilterByAdvConfig()
+  }, [advancedConfig.set])
+
   const clearFilters = () => {
     setActiveSortFilter({
       ...activeSortFilter,
       ...DEFAULT_FILTERS,
       ...DEFAULT_CUSTOM_FIELD_FILTERS(activeSortFilter)
     })
-  }
-
-
-  const setInitialLoad = async () => {
-    if (!firstLoaded) {
-      setFirstLoaded(true)
-      await updateSortFilterByAdvConfig()
-    }
   }
 
   const updateSortFilterByAdvConfig = async (params: any = {}) => {
@@ -675,7 +673,6 @@ const AssetsLibrary = () => {
       getFolders(false)
     }
   }
-  console.log(folders.length, folders.find(folder => folder.id === activeFolder))
 
   return (
     <>
