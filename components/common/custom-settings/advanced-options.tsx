@@ -4,7 +4,6 @@ import { Utilities } from '../../../assets'
 
 import styles from './advanced-options.module.css'
 import Router from 'next/router'
-import advancedConfigParams from '../../../utils/advance-config-params'
 import { UserContext } from '../../../context'
 
 // Components
@@ -20,6 +19,7 @@ const AdvancedOptions = () => {
     const [defaultLandingPage, setDefaultLandingPage] = useState('')
     const [collectionSortView, setCollectionSortView] = useState('')
     const [assetSortView, setAssetSortView] = useState('')
+    const [searchDefault, setSearchDefault] = useState('')
 
     const {advancedConfig, setAdvancedConfig} = useContext(UserContext)
 
@@ -40,6 +40,7 @@ const AdvancedOptions = () => {
         setDefaultLandingPage(conf.defaultLandingPage)
         setCollectionSortView(conf.collectionSortView)
         setAssetSortView(conf.assetSortView)
+        setSearchDefault(conf.searchDefault)
 
         setLoading(false)
         return true
@@ -207,17 +208,17 @@ const AdvancedOptions = () => {
                                     <div className={styles['field-radio-wrapper']}>
                                         <div className={`${styles['radio-button-wrapper']} m-r-15`}>
                                             <IconClickable
-                                                src={Utilities.radioButtonEnabled}
+                                                src={searchDefault === 'all' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
-                                                onClick={() => console.log('search default: ALL')} />
-                                            <div className={'font-12 m-l-15'}>All (Default)</div>
+                                                onClick={() => saveAdvanceConfig({searchDefault: 'all'})} />
+                                            <div className={'font-12 m-l-15'}>All</div>
                                         </div>
                                         <div className={`${styles['radio-button-wrapper']} ${styles['hide-on-mobile']}`}>
                                             <IconClickable
-                                                src={Utilities.radioButtonNormal}
+                                                src={searchDefault === 'tags_only' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
-                                                onClick={() => console.log('search default: TAGS ONLY')} />
-                                            <div className={'font-12 m-l-15'}>Tags ONly</div>
+                                                onClick={() => saveAdvanceConfig({searchDefault: 'tags_only'})} />
+                                            <div className={'font-12 m-l-15'}>Tags Only</div>
                                         </div>
                                     </div>
                                 </div>

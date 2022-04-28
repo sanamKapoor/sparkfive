@@ -1,6 +1,7 @@
 import styles from './search.module.css'
 import { Utilities } from '../../../assets'
-import { useRef, useState } from 'react'
+import { useRef, useState, useContext } from 'react'
+import { UserContext } from '../../../context'
 
 // Components
 import Button from '../buttons/button'
@@ -12,7 +13,9 @@ const Search = (props) => {
   const [isOpen, setIsOpen] = useState(false)
   const contentRef = useRef(null)
 
-  const filters = [
+  const {advancedConfig} = useContext(UserContext)
+
+  const searchModes = [
     {
       label: 'Any',
       value: 'any'
@@ -31,35 +34,45 @@ const Search = (props) => {
     }
   ]
 
-  const limitBy = [
+  const searchFrom = [
     {
-      label: 'Tags only',
-      value: 'tags',
+      label: 'Tags',
+      value: 'tags.name',
       icon: Utilities.tags
     },
     {
-      label: 'Custom fields only',
-      value: 'custom',
+      label: 'Custom fields',
+      value: 'attributes.name',
       icon: Utilities.custom
     },
     {
-      label: 'Collections only',
-      value: 'collections',
+      label: 'Collections',
+      value: 'folders.name',
       icon: Utilities.collections
     },
     {
-      label: 'Files name only',
-      value: 'filesName',
+      label: 'Files name',
+      value: 'assets.name',
       icon: Utilities.file
-    },
+    }
   ]
 
-  const addTag = (tag) => {
-    if (filtersTags.some(filter => filter.value === tag.value)) {
-      return
+  if (filtersTags.length === 0 && advancedConfig.searchDefault==='tags_only') {
+    setFiltersTags([...filtersTags, searchFrom[0]])
+  }
+
+  const addTag = (tag, isFilter) => {
+    let selectedItems = [...filtersTags]
+    if (isFilter) {
+      selectedItems = selectedItems.filter(item => {
+        const isSelected = searchModes.some(fItem => fItem.value === item.value)
+        return !isSelected
+      })
     } else {
-      setFiltersTags([...filtersTags, tag])
+      selectedItems = selectedItems.filter(filter => filter.value !== tag.value)
     }
+
+    setFiltersTags([...selectedItems, tag])
   }
 
   const removeTag = (index) => {
@@ -88,10 +101,18 @@ const Search = (props) => {
   return (
     <form onSubmit={(e) => {
       e.preventDefault()
-      props.onSubmit(term)
+      const selectedModes = searchModes.filter((filter) => {
+        return filtersTags.some(tag => tag.value === filter.value)
+      }).map(item => item.value)
+    
+      const from = searchFrom.filter((filter) => {
+        return filtersTags.some(tag => tag.value === filter.value)
+      }).map(item => item.value)
+
+      props.onSubmit(term, {advSearchMode: selectedModes, advSearchFrom: from})
     }}>
       <div className={styles.form}>
-        <div className={styles['input-container']} ref={contentRef}>
+        <div className={styles['input-container']} ref={contentRef} onClick={() => setFiltersVisible(null, true)}>
           <img src={Utilities.search} />
           {filtersTags.length > 0 &&
             <div className={styles.tags}>
@@ -108,9 +129,7 @@ const Search = (props) => {
               ))}
             </div>
           }
-          <input
-            onFocus={() => setFiltersVisible(null, true)}
-            {...props}
+          <input {...props}
             onChange={(e) => setTerm(e.target.value)}
             value={term}
             placeholder={props.placeholder || 'Search'}
@@ -118,28 +137,28 @@ const Search = (props) => {
           />
           {isOpen &&
             <div className={styles.filters}>
-              <h5>Search Filter</h5>
+              <h5>Search Mode</h5>
               <ul>
-                {filters.map((filter, index) => {
+                {searchModes.map((filter, index) => {
 
                   let active = filtersTags.some(tag => tag.value === filter.value) ? true : false
 
                   return (
-                    <li key={`filter-${index}`} className={`${styles.filter} ${active ? styles['filter-active'] : ''}`} onClick={() => addTag(filter)}>
+                    <li key={`filter-${index}`} className={`${styles.filter} ${active ? styles['filter-active'] : ''}`} onClick={() => addTag(filter, true)}>
                       {filter.label}
                     </li>
                   )
                 })}
 
               </ul>
-              <h5>Limit by</h5>
+              <h5>Search from</h5>
               <ul>
-                {limitBy.map((item, index) => {
+                {searchFrom.map((item, index) => {
 
                   let active = filtersTags.some(tag => tag.value === item.value) ? true : false
 
                   return (
-                    <li key={`limit-by-${index}`} className={`${styles.limit} ${active ? styles['limit-active'] : ''}`} onClick={() => addTag(item)}>
+                    <li key={`limit-by-${index}`} className={`${styles.limit} ${active ? styles['limit-active'] : ''}`} onClick={() => addTag(item, false)}>
                       <img src={item.icon} />
                       {item.label}
                     </li>

@@ -24,13 +24,14 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
   const [activeView, setActiveView] = useState('list')
 
 
-  const getData = async (inputTerm, replace = true) => {
+  const getData = async (inputTerm, replace = true, filterParams={}) => {
     setSearchTerm(inputTerm)
     try {
       let fetchFn = assetApi.getAssets
       if (sharePath) fetchFn = shareCollectionApi.getAssets
       setPlaceHolders('asset', replace)
-      const { data } = await fetchFn({ term: inputTerm, page: replace ? 1 : nextPage, sharePath })
+      
+      const { data } = await fetchFn({ term: inputTerm, page: replace ? 1 : nextPage, sharePath, ...filterParams })
       setAssets(data, replace)
     } catch (err) {
       // TODO: Handle this error
@@ -108,7 +109,7 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
         <div className={'search-cont'}>
           <Search
             placeholder={'Find Assets by Name, Extension, Collection, Campaign, Tag, Custom Fields (min 3 characters)'}
-            onSubmit={(inputTerm) => getData(inputTerm)}
+            onSubmit={(inputTerm, filterParams) => getData(inputTerm, true, filterParams)}
           />
         </div>
         <div className={styles.operations}>
