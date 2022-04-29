@@ -4,6 +4,9 @@
   grid-auto-flow: column;
   gap: 16px;
   align-items: center;
+  justify-content: flex-start;
+  flex: 0 0 100%;
+  cursor: pointer;
 }
 
 .asset-subheader{
@@ -22,5 +25,4 @@
   color: var(--color-sec-blue);
   font-size: 25px;
   font-family: monospace;
-  cursor: pointer;
 }

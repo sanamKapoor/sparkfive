@@ -86,8 +86,8 @@ const DetailOverlay = ({
   realUrl,
   thumbailUrl,
   closeOverlay,
-  openShareAsset = () => {},
-  openDeleteAsset = () => {},
+  openShareAsset = () => { },
+  openDeleteAsset = () => { },
   isShare = false,
   sharePath = "",
   initialParams,
@@ -174,7 +174,7 @@ const DetailOverlay = ({
         // @ts-ignore
         setPresetTypes(presetTypes.concat(data));
       }
-    } catch (e) {}
+    } catch (e) { }
   };
 
   useEffect(() => {
@@ -557,7 +557,7 @@ const DetailOverlay = ({
                 />
               )}
 
-              {hasPermission(['admin', 'super_admin']) && versionCount>0 && (
+              {hasPermission(['admin', 'super_admin']) && versionCount > 0 && (
                 <div
                   className={styles["versions-number"]}
                   onClick={() => {
@@ -653,6 +653,17 @@ const DetailOverlay = ({
                 Sorry, your browser doesn't support video playback.
               </video>
             )}
+
+            <div className={styles.arrows}>
+              <span>1 of 4 in factory collection</span>
+              <span className={styles['arrow-prev']}>
+                <IconClickable src={Utilities.arrowPrev} />
+              </span>
+              <span className={styles['arrrow-next']}>
+                <IconClickable src={Utilities.arrowNext} />
+              </span>
+            </div>
+
           </div>
         </section>
       )}
@@ -715,9 +726,8 @@ const DetailOverlay = ({
           <IconClickable
             src={Utilities.closePanelLight}
             onClick={() => toggleSideMenu()}
-            additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"} ${
-              styles.expand
-            }`}
+            additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"} ${styles.expand
+              }`}
           />
           <div className={`${styles.separator} ${styles.expand}`}></div>
           <IconClickable
