@@ -9,6 +9,10 @@
   cursor: pointer;
 }
 
+.additional-folder-wrapper  h4 {
+  margin: 0;
+}
+
 .asset-subheader{
   justify-content: flex-end;
 }
