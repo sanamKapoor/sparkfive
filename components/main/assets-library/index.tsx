@@ -187,7 +187,7 @@ const AssetsLibrary = () => {
           getAssets()
         }
       }
-  }, [activeSortFilter])
+  }, [activeSortFilter, firstLoaded])
 
   useEffect(() => {
     if (firstLoaded && activeFolder !== '') {
