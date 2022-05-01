@@ -117,7 +117,9 @@ const CropSidePanel = ({ asset,
             const { data } = await download(payload,filters)
 
             // Download file to storage
-            fileDownload(data, asset.name);
+            const nameWords = asset.name.split('.')
+            nameWords[nameWords.length-1] = payload.format
+            fileDownload(data, nameWords.join('.'));
 
             updateDownloadingStatus('none', 0, 0, '')
         }catch (e){
