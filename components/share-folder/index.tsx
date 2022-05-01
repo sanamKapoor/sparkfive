@@ -191,6 +191,15 @@ const ShareFolderMain = () => {
             setFolderInfo(data)
             setAdvancedConfig(data.customAdvanceOptions)
             setActivePasswordOverlay(false)
+            const sharedFolder = data.sharedFolder
+
+            // Needed for navigation(arrows) information in detail-overlay 
+            if (sharedFolder) {
+                const folders = [{...sharedFolder, assets: [...assets]}]
+                setFolders(folders)
+                setActiveFolder(sharedFolder.id)
+            }
+
         } catch (err) {
             // If not 500, must be auth error, request user password
             if (err.response.status !== 500) {
@@ -256,6 +265,7 @@ const ShareFolderMain = () => {
                 setAddedIds([])
             }
             setPlaceHolders('asset', replace)
+
             const { data } = await shareCollectionApi.getAssets({
                 ...getAssetsFilters({
                     replace,
@@ -268,6 +278,7 @@ const ShareFolderMain = () => {
                 sharePath
             })
             setAssets({ ...data, results: data.results.map(mapWithToggleSelection) }, replace)
+
             setFirstLoaded(true)
         } catch (err) {
             //TODO: Handle error

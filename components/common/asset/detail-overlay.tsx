@@ -49,7 +49,7 @@ const getDefaultDownloadImageType = (extension) => {
     },
   ];
 
-  let foundExtension = extension;
+  let foundExtension = extension || '';
   if (extension === "jpeg") {
     foundExtension = "jpg";
   }
@@ -90,6 +90,7 @@ const DetailOverlay = ({
   openDeleteAsset = () => { },
   isShare = false,
   sharePath = "",
+  activeFolder = '',
   initialParams,
 }) => {
   const { hasPermission } = useContext(UserContext);
@@ -99,9 +100,12 @@ const DetailOverlay = ({
 
   const [renameModalOpen, setRenameModalOpen] = useState(false);
 
+  const [activeCollection, setActiveCollection] = useState({name: '', assets: [], });
+  const [assetIndex, setAssetIndex] = useState(0);
+
   const [activeSideComponent, setActiveSidecomponent] = useState("detail");
 
-  const { assets, setAssets, needsFetch, updateDownloadingStatus } =
+  const { assets, setAssets, folders, needsFetch, updateDownloadingStatus, setDetailOverlayId } =
     useContext(AssetContext);
 
   const [sideOpen, setSideOpen] = useState(true);
@@ -177,6 +181,16 @@ const DetailOverlay = ({
     } catch (e) { }
   };
 
+
+  const _setActiveCollection = () => {
+    if (activeFolder) {
+      const folder = folders.find(folder => folder.id === activeFolder);
+      setActiveCollection(folder);
+      const assetIndx = assets.findIndex(item => item.asset && item.asset.id === asset.id)
+      setAssetIndex(assetIndx);
+    }
+  }
+
   useEffect(() => {
     getCropResizeOptions();
     getDetail();
@@ -184,6 +198,7 @@ const DetailOverlay = ({
     if (isMobile) {
       toggleSideMenu();
     }
+    _setActiveCollection()
   }, []);
 
   // useEffect(() => {
@@ -534,6 +549,20 @@ const DetailOverlay = ({
     }
   };
 
+  const navigateOverlay = (navBy) => {
+    const currentIndx = assets.findIndex(asset => currentAsset && asset && asset.asset && asset.asset.id === currentAsset.id)
+    const newIndx = currentIndx + navBy
+    if (assets[newIndx]) {
+      closeOverlay();
+      setDetailOverlayId(assets[newIndx].asset.id)
+    }
+  }
+
+  const _closeOverlay = () => {
+    closeOverlay(changedVersion ? currentAsset : undefined)
+    setDetailOverlayId(undefined)
+  }
+
   return (
     <div className={`app-overlay ${styles.container}`}>
       {assetDetail && (
@@ -541,9 +570,7 @@ const DetailOverlay = ({
           <div className={styles["top-wrapper"]}>
             <div
               className={styles.back}
-              onClick={() =>
-                closeOverlay(changedVersion ? currentAsset : undefined)
-              }
+              onClick={_closeOverlay}
             >
               <IconClickable src={Utilities.back} />
               <span>Back</span>
@@ -654,16 +681,21 @@ const DetailOverlay = ({
               </video>
             )}
 
+          { activeFolder &&
             <div className={styles.arrows}>
-              <span>1 of 4 in factory collection</span>
+              <span>{assetIndex} of {activeCollection.assets.length} in {activeCollection?.name} collection</span>
+              {assets.length && assets[0].asset && assets[0].asset.id!==asset.id && 
               <span className={styles['arrow-prev']}>
-                <IconClickable src={Utilities.arrowPrev} />
+                <IconClickable src={Utilities.arrowPrev} onClick={() => navigateOverlay(-1)}/>
               </span>
+              }
+              {assets.length && assets[assets.length-1].asset && assets[assets.length-1].asset.id!==asset.id && 
               <span className={styles['arrrow-next']}>
-                <IconClickable src={Utilities.arrowNext} />
+                <IconClickable src={Utilities.arrowNext} onClick={() => navigateOverlay(1)}/>
               </span>
+              }
             </div>
-
+          }
           </div>
         </section>
       )}

@@ -239,6 +239,7 @@ const AssetGrid = ({
                       <AssetThumbail
                         {...assetItem}
                         sharePath={sharePath}
+                        activeFolder={activeFolder}
                         isShare={isShare}
                         type={type}
                         toggleSelected={() =>
@@ -309,6 +310,7 @@ const AssetGrid = ({
                       isShare={isShare}
                       type={type}
                       assetItem={assetItem}
+                      activeFolder={activeFolder}
                       index={index}
                       toggleSelected={() => toggleSelected(assetItem.asset.id)}
                       openArchiveAsset={() =>
