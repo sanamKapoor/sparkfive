@@ -32,6 +32,8 @@ import CdnPanel from "./cdn-panel";
 import { isImageType } from "../../../utils/file";
 
 import { ASSET_ACCESS } from "../../../constants/permissions";
+import AssetNotes from './asset-notes';
+import AssetNote from './asset-note';
 
 const getDefaultDownloadImageType = (extension) => {
   const defaultDownloadImageTypes = [
@@ -86,8 +88,8 @@ const DetailOverlay = ({
   realUrl,
   thumbailUrl,
   closeOverlay,
-  openShareAsset = () => {},
-  openDeleteAsset = () => {},
+  openShareAsset = () => { },
+  openDeleteAsset = () => { },
   isShare = false,
   sharePath = "",
   initialParams,
@@ -174,7 +176,7 @@ const DetailOverlay = ({
         // @ts-ignore
         setPresetTypes(presetTypes.concat(data));
       }
-    } catch (e) {}
+    } catch (e) { }
   };
 
   useEffect(() => {
@@ -557,7 +559,7 @@ const DetailOverlay = ({
                 />
               )}
 
-              {hasPermission(['admin', 'super_admin']) && versionCount>0 && (
+              {hasPermission(['admin', 'super_admin']) && versionCount > 0 && (
                 <div
                   className={styles["versions-number"]}
                   onClick={() => {
@@ -611,6 +613,16 @@ const DetailOverlay = ({
             </div>
           </div>
           <div className={styles["img-wrapper"]}>
+            <div className={styles["notes-wrapper"]}>
+              <AssetNote
+                title="Note 1"
+                note="A simple text to give an example of a how note would look after they have been saved."
+              />
+              <AssetNote
+                title="Note 2"
+                note="A simple text to give an example of a how note would look after they have been saved."
+              />
+            </div>
             {assetDetail.type === "image" && (
               <>
                 {(mode === "detail" || mode === "resize") && (
@@ -708,6 +720,11 @@ const DetailOverlay = ({
           {activeSideComponent === "cdn" && (
             <CdnPanel assetDetail={assetDetail} />
           )}
+
+          {activeSideComponent === "notes" && (
+            <AssetNotes />
+          )}
+
         </section>
       )}
       {!isShare && (
@@ -715,9 +732,8 @@ const DetailOverlay = ({
           <IconClickable
             src={Utilities.closePanelLight}
             onClick={() => toggleSideMenu()}
-            additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"} ${
-              styles.expand
-            }`}
+            additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"} ${styles.expand
+              }`}
           />
           <div className={`${styles.separator} ${styles.expand}`}></div>
           <IconClickable
@@ -783,6 +799,17 @@ const DetailOverlay = ({
               }
             }}
           />
+          {hasPermission(['admin', 'super_admin']) && versionCount > 0 && (
+            <IconClickable
+              src={Utilities.notes}
+              additionalClass={styles["menu-icon"]}
+              onClick={() => {
+                setMode("detail");
+                resetValues();
+                changeActiveSide("notes");
+              }}
+            />
+          )}
         </section>
       )}
       <RenameModal

@@ -1,0 +1,37 @@
+.container {
+    background-color: var(--color-sec-lightivory);
+    border: 1px solid var(--color-secondary-border);
+    padding: 10px 20px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    gap: 20px;
+}
+
+.container.hidden {
+    width: max-content;
+    margin-right: 12px;
+    gap: 0;
+}
+
+.wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.wrapper h4 {
+    font-weight: 500;
+    color: var(--color-prim-navy);
+    margin: 0 20px 0 0;
+}
+
+.wrapper p {
+    font-size: 12px;
+    margin: 0;
+}
+
+.container img {
+    width: 18px;
+}
