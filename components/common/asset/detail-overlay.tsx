@@ -690,7 +690,7 @@ const DetailOverlay = ({
               </span>
               }
               {assets.length && assets[assets.length-1].asset && assets[assets.length-1].asset.id!==asset.id && 
-              <span className={styles['arrrow-next']}>
+              <span className={styles['arrow-next']}>
                 <IconClickable src={Utilities.arrowNext} onClick={() => navigateOverlay(1)}/>
               </span>
               }
