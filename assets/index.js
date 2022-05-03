@@ -48,6 +48,8 @@ export const Utilities = {
   arrowBlue: require('./Icons/Utilities/arrow/arrow-down-blue.svg'),
   arrowDark: require('./Icons/Utilities/arrow/arrow-down-dark.svg'),
   arrowUpDark: require('./Icons/Utilities/arrow/arrow-up-dark.svg'),
+  arrowNext: require('./Icons/Utilities/arrow/arrow-next.svg'),
+  arrowPrev: require('./Icons/Utilities/arrow/arrow-prev.svg'),
   back: require('./Icons/Utilities/Back/icn-utilities-back.svg'),
   memberProfile: require('./Icons/Utilities/Member Profile/icn-nav-memberprofile.svg'),
   radioButtonNormal: require('./Icons/Utilities/Radio Button/Normal/icn-utilities-radionormal.svg'),

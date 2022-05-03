@@ -1,7 +1,7 @@
 import styles from "./asset-thumbail.module.css";
 import { Utilities, Assets } from "../../../assets";
 import { format } from "date-fns";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 
 // Components
 import AssetImg from "./asset-img";
@@ -13,7 +13,7 @@ import IconClickable from "../buttons/icon-clickable";
 import Button from "../buttons/button";
 import DetailOverlay from "./detail-overlay";
 import AssetOptions from "./asset-options";
-import AssetAddition from "./asset-addition";
+import { AssetContext } from "../../../context";
 
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
 
@@ -28,6 +28,7 @@ const AssetThumbail = ({
   showAssetOption = true,
   isSelected = false,
   isLoading = false,
+  activeFolder = '',
   toggleSelected = () => {},
   openDeleteAsset = () => {},
   openMoveAsset = () => {},
@@ -38,8 +39,8 @@ const AssetThumbail = ({
   openRemoveAsset = () => {},
   handleVersionChange,
 }) => {
-  const [overlayProperties, setOverlayProperties] =
-    useState(DEFAULT_DETAIL_PROPS);
+  const [overlayProperties, setOverlayProperties] = useState(DEFAULT_DETAIL_PROPS);
+  const { detailOverlayId } = useContext(AssetContext);
 
   useEffect(() => {
     if (overlayProperties.visible) {
@@ -49,6 +50,12 @@ const AssetThumbail = ({
     }
     return () => document.body.classList.remove("no-overflow");
   }, [overlayProperties.visible]);
+
+  useEffect(() => {
+    if (asset && detailOverlayId && detailOverlayId === asset.id) {
+      setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: true });
+    }
+  }, [detailOverlayId]);
 
   const openComments = () => {
     setOverlayProperties({ visible: true, side: "comments" });
@@ -155,6 +162,7 @@ const AssetThumbail = ({
               ? thumbailUrl
               : realUrl
           }
+          activeFolder={activeFolder}
           thumbailUrl={thumbailUrl}
           initialParams={overlayProperties}
           openShareAsset={openShareAsset}

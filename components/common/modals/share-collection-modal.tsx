@@ -389,6 +389,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 						disabled={!collectionLink || !currentName}
 						placeholder={''}
 						value={currentName ? `${process.env.CLIENT_BASE_URL}/collections/${collectionLink}`: ""}
+						onChange={()=>{}}
 						styleType={'regular-short'} />
 					<IconClickable additionalClass={`${styles['action-button']} m-r-5 cursor-pointer`}
 								   src={AssetOps[`copy${''}`]}

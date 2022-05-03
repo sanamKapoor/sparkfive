@@ -2,7 +2,6 @@
     /* animation: assetintoview 0.5s; */
     transition: opacity 0.5s ease;
     width: 100%;
-    height: 100%;
     object-fit: contain;
 }
 

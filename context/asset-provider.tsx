@@ -75,6 +75,8 @@ export default ({ children }) => {
     const [downloadingPercent, setDownloadingPercent] = useState(0) // Percent of uploading process: 0 - 100
     const [downloadingError, setDownloadingError] = useState('') // Percent of uploading process: 0 - 100
 
+    // Asset navigation
+    const [detailOverlayId, setDetailOverlayId] = useState(undefined)
 
     const setPlaceHolders = (type, replace = true) => {
         if (type === 'asset') {
@@ -434,9 +436,9 @@ export default ({ children }) => {
         updateDownloadingStatus,
         retryListCount,
         folderImport,
-        setFolderImport
-
-
+        setFolderImport,
+        detailOverlayId,
+        setDetailOverlayId
     }
     return (
         <AssetContext.Provider value={assetsValue}>
