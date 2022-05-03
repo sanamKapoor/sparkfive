@@ -86,16 +86,16 @@ const SearchItem = ({
             textToHighlight={asset.name}
           />
         </div>
-        <div className={styles.campaign}>
+        <div className={styles.tag}>
           {!isLoading && (
             <Highlighter
               highlightClassName={"search-highlight"}
               searchWords={searchWords}
               autoEscape={true}
               textToHighlight={
-                asset?.campaigns && asset.campaigns.length > 0
-                  ? asset.campaigns.map(({ name }) => name).join(", ")
-                  : "No Campaigns"
+                asset?.tags && asset.tags.length > 0
+                  ? asset.tags.map(({ name }) => name).join(", ")
+                  : "No Tags"
               }
             />
           )}
@@ -115,7 +115,7 @@ const SearchItem = ({
               searchWords={searchWords}
               autoEscape={true}
               textToHighlight={
-                (asset &&
+                (asset && asset.folders &&
                   asset.folders.map((folder) => folder.name).join(", ")) ||
                 "No Collection"
               }

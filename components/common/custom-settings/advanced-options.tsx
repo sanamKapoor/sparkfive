@@ -20,6 +20,7 @@ const AdvancedOptions = () => {
     const [collectionSortView, setCollectionSortView] = useState('')
     const [duplicateCheck, setDuplicateCheck] = useState(false)
     const [assetSortView, setAssetSortView] = useState('')
+    const [searchDefault, setSearchDefault] = useState('')
 
     const {advancedConfig, setAdvancedConfig} = useContext(UserContext)
 
@@ -40,6 +41,7 @@ const AdvancedOptions = () => {
         setCollectionSortView(conf.collectionSortView)
         setAssetSortView(conf.assetSortView)
         setDuplicateCheck(conf.duplicateCheck)
+        setSearchDefault(conf.searchDefault)
 
         setLoading(false)
         return true
@@ -200,6 +202,37 @@ const AdvancedOptions = () => {
                     <div className={`${styles['row']}`}>
                         <div className={`${styles['deleted-assets']} row`}>
                             <div className={"col-40 col-md-100"}>
+                                <span className={'font-weight-500'}>Search Default</span>
+                            </div>
+                            <div className={"col-60 col-md-100"}>
+                                <div>
+                                    <div className={styles['field-radio-wrapper']}>
+                                        <div className={`${styles['radio-button-wrapper']} m-r-15`}>
+                                            <IconClickable
+                                                src={searchDefault === 'all' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                                                additionalClass={styles['select-icon']}
+                                                onClick={() => saveAdvanceConfig({searchDefault: 'all'})} />
+                                            <div className={'font-12 m-l-15'}>All</div>
+                                        </div>
+                                        <div className={`${styles['radio-button-wrapper']} ${styles['hide-on-mobile']}`}>
+                                            <IconClickable
+                                                src={searchDefault === 'tags_only' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                                                additionalClass={styles['select-icon']}
+                                                onClick={() => saveAdvanceConfig({searchDefault: 'tags_only'})} />
+                                            <div className={'font-12 m-l-15'}>Tags Only</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className={`${styles['row']} ${styles['field-block']}`}>
+                <div className={`${styles['col-100']}`}>
+                    <div className={`${styles['row']}`}>
+                        <div className={`${styles['deleted-assets']} row`}>
+                            <div className={"col-40 col-md-100"}>
                                 <span className={'font-weight-500'}>Duplicate Management</span>
                             </div>
                             <div className={"col-60 col-md-100"}>
@@ -230,7 +263,6 @@ const AdvancedOptions = () => {
                     </div>
                 </div>
             </div>
-
             {loading && <SpinnerOverlay />}
         </div>
     )

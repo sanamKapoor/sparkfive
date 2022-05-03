@@ -68,6 +68,11 @@ export const Utilities = {
   lockOpened: require('./Icons/Utilities/Lock/lock-opened.svg'),
   xMark: require('./Icons/Utilities/X-Mark/xmark-solid.svg'),
   check: require('./Icons/Utilities/Check/check-solid.svg'),
+  tags: require('./Icons/Utilities/FiltersTags/tags.svg'),
+  custom: require('./Icons/Utilities/FiltersTags/custom.svg'),
+  collections: require('./Icons/Utilities/FiltersTags/collections.svg'),
+  file: require('./Icons/Utilities/FiltersTags/file.svg'),
+  close: require('./Icons/Utilities/Close/close.svg')
 }
 
 export const ProjectTypes = {
