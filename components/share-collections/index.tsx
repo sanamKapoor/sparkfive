@@ -96,13 +96,13 @@ const ShareCollectionMain = () => {
     // Get share info
     const getShareInfo = async (displayError = false) => {
         try {
-
             const { data } = await shareCollectionApi.getFolderInfo({sharePath})
 
             setFolderInfo(data)
             setAdvancedConfig(data.customAdvanceOptions)
             setActivePasswordOverlay(false)
         } catch (err) {
+            
             // If not 500, must be auth error, request user password
             if (err.response.status !== 500) {
                 setFolderInfo(err.response.data)

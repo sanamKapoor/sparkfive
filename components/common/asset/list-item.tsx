@@ -34,6 +34,7 @@ const ListItem = ({
   },
   index,
   sortAttribute,
+  activeFolder = '',
   toggleSelected = () => {},
   openDeleteAsset = () => {},
   openMoveAsset = () => {},
@@ -238,6 +239,7 @@ const ListItem = ({
               : realUrl
           }
           thumbailUrl={thumbailUrl}
+          activeFolder={activeFolder}
           initialParams={overlayProperties}
           openShareAsset={openShareAsset}
           openDeleteAsset={openDeleteAsset}

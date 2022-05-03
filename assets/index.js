@@ -48,6 +48,8 @@ export const Utilities = {
   arrowBlue: require('./Icons/Utilities/arrow/arrow-down-blue.svg'),
   arrowDark: require('./Icons/Utilities/arrow/arrow-down-dark.svg'),
   arrowUpDark: require('./Icons/Utilities/arrow/arrow-up-dark.svg'),
+  arrowNext: require('./Icons/Utilities/arrow/arrow-next.svg'),
+  arrowPrev: require('./Icons/Utilities/arrow/arrow-prev.svg'),
   back: require('./Icons/Utilities/Back/icn-utilities-back.svg'),
   memberProfile: require('./Icons/Utilities/Member Profile/icn-nav-memberprofile.svg'),
   radioButtonNormal: require('./Icons/Utilities/Radio Button/Normal/icn-utilities-radionormal.svg'),
@@ -68,6 +70,11 @@ export const Utilities = {
   check: require('./Icons/Utilities/Check/check-solid.svg'),
   notes: require('./Icons/Utilities/Notes/notes.svg'),
   hide: require('./Icons/Utilities/Hide/hide.svg'),
+  tags: require('./Icons/Utilities/FiltersTags/tags.svg'),
+  custom: require('./Icons/Utilities/FiltersTags/custom.svg'),
+  collections: require('./Icons/Utilities/FiltersTags/collections.svg'),
+  file: require('./Icons/Utilities/FiltersTags/file.svg'),
+  close: require('./Icons/Utilities/Close/close.svg')
 }
 
 export const ProjectTypes = {

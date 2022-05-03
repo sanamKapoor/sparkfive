@@ -24,13 +24,14 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
   const [activeView, setActiveView] = useState('list')
 
 
-  const getData = async (inputTerm, replace = true) => {
+  const getData = async (inputTerm, replace = true, filterParams={}) => {
     setSearchTerm(inputTerm)
     try {
       let fetchFn = assetApi.getAssets
       if (sharePath) fetchFn = shareCollectionApi.getAssets
       setPlaceHolders('asset', replace)
-      const { data } = await fetchFn({ term: inputTerm, page: replace ? 1 : nextPage, sharePath })
+      
+      const { data } = await fetchFn({ term: inputTerm, page: replace ? 1 : nextPage, sharePath, ...filterParams })
       setAssets(data, replace)
     } catch (err) {
       // TODO: Handle this error
@@ -74,10 +75,10 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
   let totalSelectAssets = selectedAssets.length;
 
   // Hidden pagination assets are selected
-  if(selectedAllAssets){
+  if (selectedAllAssets) {
     // Get assets is not selected on screen
     const currentUnSelectedAssets = assets.filter(asset => !asset.isSelected)
-    totalSelectAssets  = totalAssets - currentUnSelectedAssets.length
+    totalSelectAssets = totalAssets - currentUnSelectedAssets.length
   }
 
   const toggleSelectAll = () => {
@@ -108,17 +109,26 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
         <div className={'search-cont'}>
           <Search
             placeholder={'Find Assets by Name, Extension, Collection, Campaign, Tag, Custom Fields (min 3 characters)'}
-            onSubmit={(inputTerm) => getData(inputTerm)}
+            onSubmit={(inputTerm, filterParams) => getData(inputTerm, true, filterParams)}
           />
         </div>
         <div className={styles.operations}>
-          <Button type='button' text='Select All' styleType='secondary' onClick={selectAll} />
-          {selectedAssets.length > 0 && <Button text={`Deselect All (${totalSelectAssets})`} type='button' styleType='primary' onClick={deselectAll} />}
-          {selectedAllAssets && <span className={styles['select-only-shown-items-text']} onClick={toggleSelectAll}>Select only 25 assets shown</span>}
-          {selectedAssets.length > 0 && <AssetHeaderOps deselectHidden={true} buttonStyleType={'tertiary-blue'} />}
+          <div className={styles.buttons}>
+            <Button type='button' text='Select All' styleType='secondary' onClick={selectAll} />
+            {selectedAssets.length > 0 && <Button text={`Deselect All (${totalSelectAssets})`} type='button' styleType='primary' onClick={deselectAll} />}
+            {selectedAllAssets && <span className={styles['select-only-shown-items-text']} onClick={toggleSelectAll}>Select only 25 assets shown</span>}
+            {selectedAssets.length > 0 && <AssetHeaderOps deselectHidden={true} buttonStyleType={'tertiary-blue'} />}
 
-          <img className={styles['view-icon']} src={Utilities.gridView} onClick={() => setActiveView('grid')} />
-          <img className={styles['view-icon']} src={Utilities.listView} onClick={() => setActiveView('list')} />
+            <img className={styles['view-icon']} src={Utilities.gridView} onClick={() => setActiveView('grid')} />
+            <img className={styles['view-icon']} src={Utilities.listView} onClick={() => setActiveView('list')} />
+          </div>
+          {(activeView === "list" && assets.length > 0) &&
+            <>
+              <div className={styles.tags}>Tags</div>
+              <div className={styles.type}>Type</div>
+              <div className={styles.collection}>Collection</div>
+            </>
+          }
         </div>
         {importEnabled &&
           <div className={styles['import-wrapper']}>
@@ -150,16 +160,16 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
           <ul className={`${gridStyle['grid-list-small']} ${gridStyle['regular']}`}>
             {assets.map((assetItem, index) => {
               return (
-                  <li className={gridStyle['grid-item']} key={assetItem.asset.id || index}>
-                    <AssetThumbail
-                        {...assetItem}
-                        showAssetOption={false}
-                        sharePath={sharePath}
-                        isShare={false}
-                        type={""}
-                        toggleSelected={() => toggleSelected(assetItem.asset.id)}
-                    />
-                  </li>
+                <li className={gridStyle['grid-item']} key={assetItem.asset.id || index}>
+                  <AssetThumbail
+                    {...assetItem}
+                    showAssetOption={false}
+                    sharePath={sharePath}
+                    isShare={false}
+                    type={""}
+                    toggleSelected={() => toggleSelected(assetItem.asset.id)}
+                  />
+                </li>
               )
             })}
           </ul>

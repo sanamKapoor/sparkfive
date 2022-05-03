@@ -111,7 +111,9 @@ export const AssetContext = createContext({
     totalDownloadingAssets: 0,
     downloadingError: '',
     updateDownloadingStatus: (status, percent, totalAssets, error) => { },
-    retryListCount: 0
+    retryListCount: 0,
+    detailOverlayId: undefined,
+    setDetailOverlayId: (id) => {}
 })
 
 export const TeamContext = createContext({
