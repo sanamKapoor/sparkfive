@@ -115,6 +115,8 @@ const DetailOverlay = ({
   const [versionRealUrl, setVersionRealUrl] = useState(realUrl);
   const [versionThumbnailUrl, setVersionThumbnailUrl] = useState(thumbailUrl);
 
+  const [notes, setNotes] = useState([])
+
   // For resize and cropping
   const [downloadImageTypes, setDownloadImageTypes] = useState(
     getDefaultDownloadImageType(currentAsset.extension)
@@ -461,9 +463,18 @@ const DetailOverlay = ({
     getDetail(data.currentAsset);
   };
 
+  const loadNotes = async () => {
+    const assetId = currentAsset.id
+    const { data } = await assetApi.getNotes(assetId)
+    setNotes(data || [])
+  };
+
   useEffect(() => {
     if ((!needsFetch || needsFetch === "versions") && !isShare) {
       loadVersions();
+    }
+    if (!needsFetch) {
+      loadNotes();
     }
   }, [needsFetch]);
 
@@ -535,6 +546,29 @@ const DetailOverlay = ({
         break;
     }
   };
+
+  const applyCrud = (action, note) => {
+    switch (action) {
+      case 'add':
+      setNotes([...notes, note])
+      break
+
+      case 'edit':
+      const _notes = notes.map(_note => {
+        if (_note.id === note.id) {
+          _note.text = note.text
+        }
+        return _note
+      })
+      setNotes(_notes)
+      break;
+
+      case 'delete':
+      const restNotes = notes.filter(_note => _note.id !== note.id)
+      setNotes(restNotes)
+      break
+    }
+  }
 
   return (
     <div className={`app-overlay ${styles.container}`}>
@@ -614,14 +648,14 @@ const DetailOverlay = ({
           </div>
           <div className={styles["img-wrapper"]}>
             <div className={styles["notes-wrapper"]}>
-              <AssetNote
-                title="Note 1"
-                note="A simple text to give an example of a how note would look after they have been saved."
-              />
-              <AssetNote
-                title="Note 2"
-                note="A simple text to give an example of a how note would look after they have been saved."
-              />
+            {
+              notes.map((note, indx) => (
+                ((isShare && !note.internal) || (!isShare)) && <AssetNote key={indx.toString()}
+                  title={`Note ${indx+1}`}
+                  note={note.text}
+                />
+              ))
+            }
             </div>
             {assetDetail.type === "image" && (
               <>
@@ -721,8 +755,11 @@ const DetailOverlay = ({
             <CdnPanel assetDetail={assetDetail} />
           )}
 
-          {activeSideComponent === "notes" && (
-            <AssetNotes />
+          {activeSideComponent === "notes" && notes && (
+            <AssetNotes 
+            asset={currentAsset} 
+            notes={notes} 
+            applyCrud={applyCrud} />
           )}
 
         </section>
@@ -799,7 +836,7 @@ const DetailOverlay = ({
               }
             }}
           />
-          {hasPermission(['admin', 'super_admin']) && versionCount > 0 && (
+          {hasPermission(['admin', 'super_admin']) && (
             <IconClickable
               src={Utilities.notes}
               additionalClass={styles["menu-icon"]}

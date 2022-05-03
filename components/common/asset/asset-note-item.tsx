@@ -6,10 +6,25 @@ import TextArea from '../inputs/text-area'
 import styles from './asset-note-item.module.css'
 import BaseModal from '../modals/base'
 
-const AssetNoteItem = ({ title, note }) => {
+const AssetNoteItem = ({ title, note, saveChanges, deleteNote }) => {
 
     const [editMode, setEditMode] = useState(false)
     const [modalOpen, setModalOpen] = useState(false)
+    const [noteText, setNoteText] = useState(note.text)
+
+    const _saveChanges = async (note, text) => {
+        const success = await saveChanges(note, text)
+        if (success) {
+            setEditMode(false)
+        }
+    }
+
+    const _deleteNote = async (note) => {
+        const success = await deleteNote(note)
+        if (success) {
+            setModalOpen(false)
+        }
+    }
 
     return (
         <div className={styles.container}>
@@ -18,15 +33,16 @@ const AssetNoteItem = ({ title, note }) => {
             {editMode ? (
                 <>
                     <TextArea
-                        value={note}
+                        value={noteText}
                         rows={4}
+                        onChange={(e)=> setNoteText(e.target.value)}
                     />
                     <div className={styles.buttons}>
                         <Button
                             text={'Save changes'}
                             type={'button'}
                             styleType={'primary'}
-                            onClick={() => setEditMode(false)}
+                            onClick={() => _saveChanges(note, noteText)}
                         />
                         <Button
                             text={'Cancel'}
@@ -38,7 +54,7 @@ const AssetNoteItem = ({ title, note }) => {
                 </>
             ) : (
                 <div className={styles.wrapper}>
-                    <p>{note}</p>
+                    <p>{note.text}</p>
                     <div className={styles.actions}>
                         <IconClickable
                             src={Utilities.edit}
@@ -60,6 +76,7 @@ const AssetNoteItem = ({ title, note }) => {
                 modalIsOpen={modalOpen}
                 headText="Are you sure you want to delete this note?"
                 confirmText="Delete"
+                confirmAction={()=> _deleteNote(note)}
                 children={undefined}
             />
         </div>
