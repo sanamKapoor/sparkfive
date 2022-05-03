@@ -88,6 +88,7 @@ const DetailOverlay = ({
   closeOverlay,
   openShareAsset = () => { },
   openDeleteAsset = () => { },
+  loadMore = () => { },
   isShare = false,
   sharePath = "",
   activeFolder = '',
@@ -555,6 +556,9 @@ const DetailOverlay = ({
     if (assets[newIndx]) {
       closeOverlay();
       setDetailOverlayId(assets[newIndx].asset.id)
+      if (newIndx === (assets.length - 1) && assets.length < activeCollection.assets.length) {
+        loadMore()
+      }
     }
   }
 
