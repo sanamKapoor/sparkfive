@@ -3,9 +3,10 @@ import { Utilities, Assets } from "../../../assets";
 import { useContext, useState } from "react";
 import fileDownload from "js-file-download";
 import zipDownloadUtils from "../../../utils/download";
+import _ from 'lodash'
 
 // Context
-import { AssetContext } from "../../../context";
+import { AssetContext, FilterContext } from "../../../context";
 
 // Components
 import AssetImg from "../asset/asset-img";
@@ -36,12 +37,20 @@ const FolderGridItem = ({
   isShare = false
 }) => {
   const { updateDownloadingStatus } = useContext(AssetContext);
+  const { activeSortFilter } = useContext(FilterContext)
+
+  const alphaSort = activeSortFilter.sort.value === 'alphabetical'
+  let _assets = assets.filter(asset => asset.thumbailUrl)
+  _assets = _.orderBy(_assets, [(asset) => {
+    const value = alphaSort ? asset.name : new Date(asset.createdAt).getTime()
+    return value
+  }], [alphaSort ? 'asc' : 'desc'])
 
   const previews = [1, 2, 3, 4].map((_, index) => ({
-    name: assets[index]?.name || "empty",
-    assetImg: assets[index]?.thumbailUrl || "",
-    type: assets[index]?.type || "empty",
-    extension: assets[index]?.extension,
+    name: _assets[index]?.name || "empty",
+    assetImg: _assets[index]?.thumbailUrl || "",
+    type: _assets[index]?.type || "empty",
+    extension: _assets[index]?.extension,
   }));
 
   const [deleteOpen, setDeleteOpen] = useState(false);
