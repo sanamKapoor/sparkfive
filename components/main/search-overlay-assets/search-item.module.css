@@ -24,13 +24,14 @@
   width: 40%;
   position: relative;
   cursor: pointer;
+  word-break: break-all;
 }
 
 .name:hover {
   opacity: 0.5;
 }
 
-.campaign {
+.tag {
   width: 28%;
   display: flex;
   flex-wrap: wrap;
@@ -38,7 +39,7 @@
   justify-content: center;
 }
 
-.campaign > span {
+.tag > span {
   border: 1px solid var(--color-secondary-border);
   border-radius: 4px;
   padding: 4px 8px;
@@ -65,6 +66,8 @@
   border-radius: 19px;
   padding: 2px 8px;
   margin: 3px;
+  text-align: center;
+  width: max-content;
 }
 
 .search-item {

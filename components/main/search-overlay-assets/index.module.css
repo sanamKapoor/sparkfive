@@ -22,7 +22,7 @@
 .buttons {
     display: flex;
     align-items: center;
-    width: 45%;
+    margin-bottom: 24px;
 }
 
 .tags {
@@ -64,4 +64,18 @@
     cursor: pointer;
     margin: 0 15px;
     align-self: center;
+}
+
+.list-head {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    max-width: 55rem;
+}
+
+@media screen and (max-width: 690px) {
+    .list-head {
+        display: none;
+    }
 }

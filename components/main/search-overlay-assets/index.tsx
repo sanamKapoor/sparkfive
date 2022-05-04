@@ -122,14 +122,14 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
             <img className={styles['view-icon']} src={Utilities.gridView} onClick={() => setActiveView('grid')} />
             <img className={styles['view-icon']} src={Utilities.listView} onClick={() => setActiveView('list')} />
           </div>
+        </div>
           {(activeView === "list" && assets.length > 0) &&
-            <>
+            <div  className={styles["list-head"]}>
               <div className={styles.tags}>Tags</div>
               <div className={styles.type}>Type</div>
               <div className={styles.collection}>Collection</div>
-            </>
+            </div>
           }
-        </div>
         {importEnabled &&
           <div className={styles['import-wrapper']}>
             <Button

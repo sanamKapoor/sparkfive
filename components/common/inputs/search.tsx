@@ -51,7 +51,7 @@ const Search = (props) => {
       icon: Utilities.collections
     },
     {
-      label: 'Files name',
+      label: 'File name',
       value: 'assets.name',
       icon: Utilities.file
     }
