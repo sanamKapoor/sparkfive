@@ -268,6 +268,7 @@ const AssetGrid = ({
                           )
                         }
                         handleVersionChange={refreshVersion}
+                        loadMore={loadMore}
                       />
                     </li>
                   );

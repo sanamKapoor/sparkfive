@@ -26,14 +26,15 @@
 }
 
 .top-wrapper {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  display: grid;
+  align-items: center;
+  grid-template-columns: repeat(3, 1fr);
 }
 
 .top-wrapper .name {
   display: flex;
   align-items: center;
+  justify-self: center;
 }
 
 .top-wrapper .name h3 {
@@ -89,6 +90,7 @@
 .asset-actions {
   display: flex;
   align-items: center;
+  justify-self: flex-end;
 }
 
 .asset-actions button {
@@ -148,18 +150,23 @@
 }
 
 .arrows {
-  align-self: flex-end;
+  align-self: center;
   margin-top: 16px;
   color: var(--color-sec-blue);
 }
 
-.arrow-prev {
-  margin-left: 16px;
+.arrows > div {
+  text-align: center;
 }
 
-.arrows-next {
-  margin-right: 16px;
+.arrow-prev {
+  margin: 16px 10px;
+  display: inline-block;
+}
 
+.arrow-next {
+  margin: 16px 10px;
+  display: inline-block;
 }
 
 .notes-wrapper {
@@ -204,6 +211,7 @@
   }
 } */
 @media screen and (max-width: 460px) {
+  
   .side {
     width: 280px;
   }
@@ -214,6 +222,19 @@
 }
 
 @media screen and (max-width: 768px) {
+
+  .top-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .top-wrapper .name,
+  .asset-actions {
+    justify-self: flex-start;
+  }
+
   .only-desktop-button{
     display: none;
   }
