@@ -40,9 +40,9 @@ const FolderGridItem = ({
   const { activeSortFilter } = useContext(FilterContext)
 
   const alphaSort = activeSortFilter.sort.value === 'alphabetical'
-  let _assets = assets.filter(asset => asset.thumbailUrl)
+  let _assets = [...assets]
   _assets = _.orderBy(_assets, [(asset) => {
-    const value = alphaSort ? asset.name : new Date(asset.createdAt).getTime()
+    const value = alphaSort ? (asset.name || '').toUpperCase() : new Date(asset.createdAt).getTime()
     return value
   }], [alphaSort ? 'asc' : 'desc'])
 
