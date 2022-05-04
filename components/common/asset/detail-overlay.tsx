@@ -101,7 +101,7 @@ const DetailOverlay = ({
 
   const [renameModalOpen, setRenameModalOpen] = useState(false);
 
-  const [activeCollection, setActiveCollection] = useState({name: '', assets: [], });
+  const [activeCollection, setActiveCollection] = useState({ name: '', assets: [], });
   const [assetIndex, setAssetIndex] = useState(0);
 
   const [activeSideComponent, setActiveSidecomponent] = useState("detail");
@@ -685,21 +685,23 @@ const DetailOverlay = ({
               </video>
             )}
 
-          { activeFolder &&
-            <div className={styles.arrows}>
-              <span>{assetIndex} of {activeCollection.assets.length} in {activeCollection?.name} collection</span>
-              {assets.length && assets[0].asset && assets[0].asset.id!==asset.id && 
-              <span className={styles['arrow-prev']}>
-                <IconClickable src={Utilities.arrowPrev} onClick={() => navigateOverlay(-1)}/>
-              </span>
-              }
-              {assets.length && assets[assets.length-1].asset && assets[assets.length-1].asset.id!==asset.id && 
-              <span className={styles['arrow-next']}>
-                <IconClickable src={Utilities.arrowNext} onClick={() => navigateOverlay(1)}/>
-              </span>
-              }
-            </div>
-          }
+            {activeFolder &&
+              <div className={styles.arrows}>
+                <div>
+                  {assets.length && assets[0].asset && assets[0].asset.id !== asset.id &&
+                    <span className={styles['arrow-prev']}>
+                      <IconClickable src={Utilities.arrowPrev} onClick={() => navigateOverlay(-1)} />
+                    </span>
+                  }
+                  {assets.length && assets[assets.length - 1].asset && assets[assets.length - 1].asset.id !== asset.id &&
+                    <span className={styles['arrow-next']}>
+                      <IconClickable src={Utilities.arrowNext} onClick={() => navigateOverlay(1)} />
+                    </span>
+                  }
+                </div>
+                <span>{assetIndex} of {activeCollection.assets.length} in {activeCollection?.name} collection</span>
+              </div>
+            }
           </div>
         </section>
       )}
