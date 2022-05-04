@@ -106,7 +106,7 @@ const SearchItem = ({
             highlightClassName={"search-highlight"}
             searchWords={searchWords}
             autoEscape={true}
-            textToHighlight={getParsedExtension(asset.extension)}
+            textToHighlight={getParsedExtension(asset.extension) || 'na'}
           />
         </div>
         <div className={styles.folder}>

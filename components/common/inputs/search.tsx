@@ -86,6 +86,12 @@ const Search = (props) => {
     }
   }
 
+  const hideSearchOnEnter = (ev) => {
+    if (ev.keyCode === 13) {
+      setFiltersVisible(null, false)
+    }
+  }
+
   const setFiltersVisible = (e, visible) => {
     if (e) {
       e.stopPropagation()
@@ -131,6 +137,7 @@ const Search = (props) => {
           }
           <input {...props}
             onChange={(e) => setTerm(e.target.value)}
+            onKeyUp={(e) => hideSearchOnEnter(e)}
             value={term}
             placeholder={props.placeholder || 'Search'}
             className={`${styles.container} ${props.styleType && styles[props.styleType]}`}

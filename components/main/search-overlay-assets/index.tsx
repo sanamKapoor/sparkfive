@@ -22,16 +22,22 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
   const { term, setSearchTerm } = useContext(FilterContext)
 
   const [activeView, setActiveView] = useState('list')
+  const [filterParams, setFilterParams] = useState({})
 
 
-  const getData = async (inputTerm, replace = true, filterParams={}) => {
+  const getData = async (inputTerm, replace = true, _filterParams=filterParams) => {
     setSearchTerm(inputTerm)
     try {
       let fetchFn = assetApi.getAssets
-      if (sharePath) fetchFn = shareCollectionApi.getAssets
+      if (sharePath) {
+        fetchFn = shareCollectionApi.getAssets
+      }
       setPlaceHolders('asset', replace)
-      
-      const { data } = await fetchFn({ term: inputTerm, page: replace ? 1 : nextPage, sharePath, ...filterParams })
+      if (Object.keys(_filterParams).length > 0) {
+        setFilterParams(_filterParams)
+      }
+
+      const { data } = await fetchFn({ term: inputTerm, page: replace ? 4 : nextPage, sharePath, ..._filterParams })
       setAssets(data, replace)
     } catch (err) {
       // TODO: Handle this error
@@ -145,7 +151,7 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
           {assets.map((assetItem, index) => (
             <SearchItem
               isShare={sharePath}
-              key={index}
+              key={index.toString()}
               enabledSelect={importEnabled || operationsEnabled}
               toggleSelected={() => toggleSelected(assetItem.asset.id)}
               assetItem={assetItem}
