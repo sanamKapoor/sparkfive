@@ -37,6 +37,7 @@ const AssetThumbail = ({
   openArchiveAsset = () => {},
   downloadAsset = () => {},
   openRemoveAsset = () => {},
+  loadMore = () => {},
   handleVersionChange,
 }) => {
   const [overlayProperties, setOverlayProperties] = useState(DEFAULT_DETAIL_PROPS);
@@ -168,6 +169,7 @@ const AssetThumbail = ({
           openShareAsset={openShareAsset}
           openDeleteAsset={openDeleteAsset}
           closeOverlay={onCloseOverlay}
+          loadMore={loadMore}
         />
       )}
     </>
