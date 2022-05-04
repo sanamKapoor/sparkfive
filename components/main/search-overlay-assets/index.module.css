@@ -29,12 +29,14 @@
     text-align: center;
     font-weight: 600;
     width: 28%;
+    margin-right: 15px;
 }
 
 .type {
     text-align: center;
     font-weight: 600;
     width: 7%;
+    margin-right: 15px;
 }
 
 .collection {
