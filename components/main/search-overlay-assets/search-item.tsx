@@ -111,7 +111,7 @@ const SearchItem = ({
         </div>
         <div className={styles.folder}>
           {!isLoading && (
-            asset && asset.folders.length > 0 ? (
+            asset && asset.folders && asset.folders.length > 0 ? (
               asset.folders.map((folder) => (
                 <Highlighter
                   highlightClassName={"search-highlight"}
