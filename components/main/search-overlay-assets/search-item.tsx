@@ -57,9 +57,8 @@ const SearchItem = ({
           </>
         )}
         <div
-          className={`${styles["image-wrapper"]} ${isLoading && "loadable"} ${
-            enabledSelect && styles["image-selectable"]
-          }`}
+          className={`${styles["image-wrapper"]} ${isLoading && "loadable"} ${enabledSelect && styles["image-selectable"]
+            }`}
         >
           {thumbailUrl ? (
             <AssetImg
@@ -77,7 +76,7 @@ const SearchItem = ({
         </div>
         <div
           className={`${styles.name} ${isLoading && "loadable"}`}
-          onClick={() => (!isLoading ? setVisibleOVerlay(true) : () => {})}
+          onClick={() => (!isLoading ? setVisibleOVerlay(true) : () => { })}
         >
           <Highlighter
             highlightClassName={"search-highlight"}
@@ -88,16 +87,18 @@ const SearchItem = ({
         </div>
         <div className={styles.tag}>
           {!isLoading && (
-            <Highlighter
-              highlightClassName={"search-highlight"}
-              searchWords={searchWords}
-              autoEscape={true}
-              textToHighlight={
-                asset?.tags && asset.tags.length > 0
-                  ? asset.tags.map(({ name }) => name).join(", ")
-                  : "No Tags"
-              }
-            />
+            asset?.tags && asset.tags.length > 0 ? (
+              asset.tags.map(({ name }) => (
+                <Highlighter
+                  highlightClassName={"search-highlight"}
+                  searchWords={searchWords}
+                  autoEscape={true}
+                  textToHighlight={name}
+                />
+              ))
+            ) : (
+              "No Tags"
+            )
           )}
         </div>
         <div className={`${styles.extension} ${isLoading && "loadable"}`}>
@@ -105,21 +106,23 @@ const SearchItem = ({
             highlightClassName={"search-highlight"}
             searchWords={searchWords}
             autoEscape={true}
-            textToHighlight={getParsedExtension(asset.extension)}
+            textToHighlight={getParsedExtension(asset.extension) || 'na'}
           />
         </div>
         <div className={styles.folder}>
           {!isLoading && (
-            <Highlighter
-              highlightClassName={"search-highlight"}
-              searchWords={searchWords}
-              autoEscape={true}
-              textToHighlight={
-                (asset && asset.folders &&
-                  asset.folders.map((folder) => folder.name).join(", ")) ||
-                "No Collection"
-              }
-            />
+            asset && asset.folders.length > 0 ? (
+              asset.folders.map((folder) => (
+                <Highlighter
+                  highlightClassName={"search-highlight"}
+                  searchWords={searchWords}
+                  autoEscape={true}
+                  textToHighlight={folder.name}
+                />
+              ))
+            ) : (
+              "No Collection"
+            )
           )}
         </div>
       </li>

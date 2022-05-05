@@ -76,8 +76,8 @@
   top: 82px;
   padding: 20px 24px;
   z-index: 9;
-  display: grid;
-  grid-auto-flow: row;
+  display: flex;
+  flex-direction: column;
   gap: 24px;
 }
 
@@ -89,6 +89,7 @@
   display: flex;
   align-items: center;
   gap: 11px;
+  flex-wrap: wrap;
 }
 
 .filter {

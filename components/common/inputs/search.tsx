@@ -51,7 +51,7 @@ const Search = (props) => {
       icon: Utilities.collections
     },
     {
-      label: 'Files name',
+      label: 'File name',
       value: 'assets.name',
       icon: Utilities.file
     }
@@ -82,6 +82,12 @@ const Search = (props) => {
 
   const handleClickOutside = (event) => {
     if (contentRef.current && !contentRef.current.contains(event.target)) {
+      setFiltersVisible(null, false)
+    }
+  }
+
+  const hideSearchOnEnter = (ev) => {
+    if (ev.keyCode === 13) {
       setFiltersVisible(null, false)
     }
   }
@@ -131,6 +137,7 @@ const Search = (props) => {
           }
           <input {...props}
             onChange={(e) => setTerm(e.target.value)}
+            onKeyUp={(e) => hideSearchOnEnter(e)}
             value={term}
             placeholder={props.placeholder || 'Search'}
             className={`${styles.container} ${props.styleType && styles[props.styleType]}`}
