@@ -186,6 +186,9 @@ const DetailOverlay = ({
   const _setActiveCollection = () => {
     if (activeFolder) {
       const folder = folders.find(folder => folder.id === activeFolder);
+      if (folder.assets.length === 0 && assets && assets.length) {
+        folder.assets = [...assets];
+      }
       setActiveCollection(folder);
       const assetIndx = assets.findIndex(item => item.asset && item.asset.id === asset.id) + 1
       setAssetIndex(assetIndx);
@@ -567,6 +570,7 @@ const DetailOverlay = ({
     closeOverlay(changedVersion ? currentAsset : undefined)
     setDetailOverlayId(undefined)
   }
+  
 
   return (
     <div className={`app-overlay ${styles.container}`}>
