@@ -551,8 +551,9 @@ const DetailOverlay = ({
   };
 
   const navigateOverlay = (navBy) => {
-    const currentIndx = assets.findIndex(asset => currentAsset && asset && asset.asset && asset.asset.id === currentAsset.id)
+    const currentIndx = assets.findIndex(item => asset && item.asset && item.asset.id === asset.id)
     const newIndx = currentIndx + navBy
+    setAssetIndex(newIndx);
     if (assets[newIndx]) {
       closeOverlay();
       setDetailOverlayId(assets[newIndx].asset.id)
