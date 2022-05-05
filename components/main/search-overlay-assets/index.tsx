@@ -37,7 +37,7 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
         setFilterParams(_filterParams)
       }
 
-      const { data } = await fetchFn({ term: inputTerm, page: replace ? 4 : nextPage, sharePath, ..._filterParams })
+      const { data } = await fetchFn({ term: inputTerm, page: replace ? 1 : nextPage, sharePath, ..._filterParams })
       setAssets(data, replace)
     } catch (err) {
       // TODO: Handle this error
