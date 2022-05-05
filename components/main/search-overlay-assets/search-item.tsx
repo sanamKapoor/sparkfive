@@ -89,12 +89,7 @@ const SearchItem = ({
           {!isLoading && (
             asset?.tags && asset.tags.length > 0 ? (
               asset.tags.map(({ name }) => (
-                <Highlighter
-                  highlightClassName={"search-highlight"}
-                  searchWords={searchWords}
-                  autoEscape={true}
-                  textToHighlight={name}
-                />
+                <span>{name}</span>
               ))
             ) : (
               "No Tags"
@@ -113,12 +108,7 @@ const SearchItem = ({
           {!isLoading && (
             asset && asset.folders && asset.folders.length > 0 ? (
               asset.folders.map((folder) => (
-                <Highlighter
-                  highlightClassName={"search-highlight"}
-                  searchWords={searchWords}
-                  autoEscape={true}
-                  textToHighlight={folder.name}
-                />
+                <span>{folder.name}</span>
               ))
             ) : (
               "No Collection"
