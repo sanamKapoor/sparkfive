@@ -44,6 +44,9 @@
   border-radius: 4px;
   padding: 4px 8px;
   margin: 3px;
+  text-align: center;
+  max-width: fit-content;
+  width: fit-content;
 }
 
 .extension {
@@ -67,7 +70,8 @@
   padding: 2px 8px;
   margin: 3px;
   text-align: center;
-  width: max-content;
+  width: fit-content;
+  max-width: fit-content;
 }
 
 .search-item {
