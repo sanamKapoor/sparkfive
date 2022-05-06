@@ -82,3 +82,31 @@
   width: 25px;
   height: auto;
 }
+
+@media screen and (max-width: 690px) {
+  .search-item .select-icon {
+    margin-bottom: 24px;
+  }
+
+  .name {
+    width: 50%;
+  }
+
+  .search-item .tag {
+    width: 33%;
+    margin-right: 0;
+    margin-bottom: 0;
+  }
+
+  .search-item .extension {
+    width: 33%;
+    margin-right: 0;
+    margin-bottom: 0;
+  }
+
+  .search-item .folder {
+    width: 33%;
+    margin-right: 0;
+    margin-bottom: 0;
+  }
+}
