@@ -68,6 +68,8 @@ export const Utilities = {
   lockOpened: require('./Icons/Utilities/Lock/lock-opened.svg'),
   xMark: require('./Icons/Utilities/X-Mark/xmark-solid.svg'),
   check: require('./Icons/Utilities/Check/check-solid.svg'),
+  notes: require('./Icons/Utilities/Notes/notes.svg'),
+  hide: require('./Icons/Utilities/Hide/hide.svg'),
   tags: require('./Icons/Utilities/FiltersTags/tags.svg'),
   custom: require('./Icons/Utilities/FiltersTags/custom.svg'),
   collections: require('./Icons/Utilities/FiltersTags/collections.svg'),

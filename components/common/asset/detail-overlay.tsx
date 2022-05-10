@@ -32,6 +32,8 @@ import CdnPanel from "./cdn-panel";
 import { isImageType } from "../../../utils/file";
 
 import { ASSET_ACCESS } from "../../../constants/permissions";
+import AssetNotes from './asset-notes';
+import AssetNote from './asset-note';
 
 const getDefaultDownloadImageType = (extension) => {
   const defaultDownloadImageTypes = [
@@ -117,6 +119,8 @@ const DetailOverlay = ({
   const [changedVersion, setChangedVersion] = useState(false); // to track version uploaded on overlay close
   const [versionRealUrl, setVersionRealUrl] = useState(realUrl);
   const [versionThumbnailUrl, setVersionThumbnailUrl] = useState(thumbailUrl);
+
+  const [notes, setNotes] = useState([])
 
   // For resize and cropping
   const [downloadImageTypes, setDownloadImageTypes] = useState(
@@ -478,9 +482,18 @@ const DetailOverlay = ({
     getDetail(data.currentAsset);
   };
 
+  const loadNotes = async () => {
+    const assetId = currentAsset.id
+    const { data } = await assetApi.getNotes(assetId)
+    setNotes(data || [])
+  };
+
   useEffect(() => {
     if ((!needsFetch || needsFetch === "versions") && !isShare) {
       loadVersions();
+    }
+    if (!needsFetch) {
+      loadNotes();
     }
   }, [needsFetch]);
 
@@ -552,6 +565,29 @@ const DetailOverlay = ({
         break;
     }
   };
+
+  const applyCrud = (action, note) => {
+    switch (action) {
+      case 'add':
+      setNotes([...notes, note])
+      break
+
+      case 'edit':
+      const _notes = notes.map(_note => {
+        if (_note.id === note.id) {
+          _note.text = note.text
+        }
+        return _note
+      })
+      setNotes(_notes)
+      break;
+
+      case 'delete':
+      const restNotes = notes.filter(_note => _note.id !== note.id)
+      setNotes(restNotes)
+      break
+    }
+  }
 
   const navigateOverlay = (navBy) => {
     const currentIndx = assets.findIndex(item => asset && item.asset && item.asset.id === asset.id)
@@ -647,6 +683,16 @@ const DetailOverlay = ({
             </div>
           </div>
           <div className={styles["img-wrapper"]}>
+            <div className={styles["notes-wrapper"]}>
+            {
+              notes.map((note, indx) => (
+                ((isShare && !note.internal) || (!isShare)) && <AssetNote key={indx.toString()}
+                  title={`Note ${indx+1}`}
+                  note={note.text}
+                />
+              ))
+            }
+            </div>
             {assetDetail.type === "image" && (
               <>
                 {(mode === "detail" || mode === "resize") && (
@@ -762,6 +808,14 @@ const DetailOverlay = ({
           {activeSideComponent === "cdn" && (
             <CdnPanel assetDetail={assetDetail} />
           )}
+
+          {activeSideComponent === "notes" && notes && (
+            <AssetNotes 
+            asset={currentAsset} 
+            notes={notes} 
+            applyCrud={applyCrud} />
+          )}
+
         </section>
       )}
       {!isShare && (
@@ -836,6 +890,17 @@ const DetailOverlay = ({
               }
             }}
           />
+          {hasPermission(['admin', 'super_admin']) && (
+            <IconClickable
+              src={Utilities.notes}
+              additionalClass={styles["menu-icon"]}
+              onClick={() => {
+                setMode("detail");
+                resetValues();
+                changeActiveSide("notes");
+              }}
+            />
+          )}
         </section>
       )}
       <RenameModal

@@ -1,0 +1,39 @@
+.container h4 {
+    font-weight: 400;
+    margin-bottom: 12px;
+}
+
+.container p {
+    font-size: 12px;
+    margin: 0;
+}
+
+.wrapper {
+    display: grid;
+    grid-auto-flow: column;
+    gap: 18px;
+}
+
+.actions {
+    display: grid;
+    grid-auto-flow: column;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.buttons {
+    display: grid;
+    grid-auto-flow: column;
+    gap: 10px;
+    justify-content: flex-start;
+    margin-top: 12px;
+}
+
+.actions img {
+    width: 16px;
+}
+
+.divider {
+    margin: 24px 0;
+    border: 1px solid var(--color-secondary-border);
+}

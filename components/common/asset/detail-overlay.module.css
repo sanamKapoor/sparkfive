@@ -169,6 +169,14 @@
   display: inline-block;
 }
 
+.notes-wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
 @media screen and (max-width: 1200px) {
   .container {
     display: flex;

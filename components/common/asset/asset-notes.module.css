@@ -1,0 +1,35 @@
+.container {
+    padding: 0 20px;
+}
+
+.head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.radios {
+    display: grid;
+    grid-auto-flow: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin: 12px 0;
+    gap: 32px;
+}
+
+.divider {
+    border: 1px solid var(--color-secondary-border);
+    margin-top: 34px;
+}
+
+.radio-wrapper {
+    display: flex;
+    align-items: flex-start;
+}
+
+@media screen and (max-width: 1200px) {
+    .container {
+        min-width: 0;
+        width: 100%;
+    }
+}

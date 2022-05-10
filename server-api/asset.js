@@ -13,6 +13,9 @@ export default {
   getVersions: (versionGroup) => axios.get(`${assetUrl}/versions-of/${versionGroup}`),
   checkDuplicates: (fileNames) => axios.post(`${assetUrl}/check-duplicates`, {fileNames}),
   revertVersion: ({ revertAssetId, versionGroup } = {}) => axios.post(`${assetUrl}/revert-version`, { revertAssetId, versionGroup }),
+  getNotes: (id) => axios.get(`${assetUrl}/get-notes/${id}`),
+  saveNote: (note = {}) => axios.post(`${assetUrl}/save-note`, note),
+  deleteNote: (id) => axios.delete(`${assetUrl}/delete-note/${id}`),
   copyAssets: ({ idList, folderId }, filters = {}) => axios.post(`${assetUrl}/copy?${querystring.encode(filters)}`, { idList, folderId }),
   getRealUrl: (assetId) => axios.get(`${assetUrl}/${assetId}/real-url`),
   importAssets: (provider, assetData, queryData) => axios.post(`${assetUrl}/import/${provider}?${querystring.encode(queryData)}`, assetData),
@@ -62,3 +65,4 @@ export default {
     })
   }
 }
+
