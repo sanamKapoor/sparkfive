@@ -1,5 +1,5 @@
 // External
-import { useContext, useEffect, useState } from 'react'
+import {useContext, useEffect, useRef, useState} from 'react'
 import fileDownload from 'js-file-download';
 import zipDownloadUtils from '../../../utils/download'
 
@@ -15,6 +15,7 @@ import { getAssetsFilters } from '../../../utils/asset'
 import assetApi from '../../../server-api/asset'
 import shareApi from '../../../server-api/share-collection'
 import folderApi from '../../../server-api/folder'
+import { Utilities } from '../../../assets'
 
 // Utils
 import { getSubdomain } from '../../../utils/domain'
@@ -48,6 +49,8 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 
 	const { activeSortFilter, term, setSharePath: setContextPath } = useContext(FilterContext)
 	const [sharePath, setSharePath] = useState('')
+	const [showShareAction, setShowShareAction] = useState(false)
+	const contentRef = useRef(null)
 
 	const selectedAssets = assets.filter(asset => asset.isSelected)
 	let totalSelectAssets = selectedAssets.length;
@@ -191,6 +194,58 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 		}
 	}, [router.asPath])
 
+	const handleClickOutside = (event) => {
+		if (contentRef.current && !contentRef.current.contains(event.target)) {
+			showShareActionList(null, false)
+		}
+	}
+
+	const showShareActionList = (e, visible) => {
+		if (e) {
+			e.stopPropagation()
+		}
+
+		const getCustomFields = (filters) => {
+			let fields = ''
+			Object.keys(filters).map((key)=>{
+				if(key.includes('custom-p')){
+					if(fields){
+						fields = `${fields},${filters[key]}`
+					}else{
+						fields = `${filters[key]}`
+					}
+				}
+			})
+
+			return fields
+		}
+
+		const filters = {
+			...getAssetsFilters({
+				replace: false,
+				activeFolder,
+				addedIds: [],
+				nextPage: 1,
+				userFilterObject: activeSortFilter,
+			}),
+			selectedAll: "1",
+		};
+
+		const customFields = getCustomFields(filters)
+
+		// Select all assets in folder
+		if(filters['folderId'] && (customFields || filters['tags']) && filters['selectedAll']){
+			setShowShareAction(visible)
+			if (visible) {
+				document.addEventListener("mousedown", handleClickOutside);
+			} else {
+				document.removeEventListener("mousedown", handleClickOutside);
+			}
+		}else{
+			setActiveOperation('share')
+		}
+	}
+
 	return (
 		<>
 			{(!isShare && !deletedAssets) && <IconClickable additionalClass={styles['action-button']} src={AssetOps[`edit${iconColor}`]} tooltipText={'Edit'} tooltipId={'Edit'} onClick={() => setActiveOperation('edit')} />}
@@ -200,7 +255,53 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 			{(isShare || hasPermission([ASSET_DOWNLOAD]) && !deletedAssets) && <IconClickable additionalClass={styles['action-button']} src={AssetOps[`download${iconColor}`]} tooltipId={'Download'} tooltipText={'Download'} onClick={downloadSelectedAssets} />}
 			{((!isFolder && !isShare) && !deletedAssets) && <IconClickable additionalClass={styles['action-button']} src={AssetOps[`move${iconColor}`]} tooltipText={'Add to Collection'} tooltipId={'Move'} onClick={() => setActiveOperation('move')} />}
 			{((!isFolder && !isShare) && !deletedAssets) && <IconClickable additionalClass={styles['action-button']} src={AssetOps[`copy${iconColor}`]} tooltipText={'Copy'} tooltipId={'Copy'} onClick={() => setActiveOperation('copy')} />}
-			{((!isFolder && !isShare) && !deletedAssets) && <IconClickable additionalClass={styles['action-button']} src={AssetOps[`share${iconColor}`]} tooltipText={'Share'} tooltipId={'Share'} onClick={() => setActiveOperation('share')} />}
+			{((!isFolder && !isShare) && !deletedAssets) &&
+			<div className={styles['share-wrapper']} ref={contentRef}>
+				<IconClickable
+					additionalClass={`${styles['action-button']} m-l-0`}
+					src={AssetOps[`share${iconColor}`]}
+					tooltipText={'Share'}
+					tooltipId={'Share'}
+					onClick={(e) => {
+						showShareActionList(e, true)
+						// setActiveOperation('share')
+					}}
+				/>
+				{showShareAction && <div className={styles['share-popover']}>
+					<div className={styles['share-title']}>
+						Share
+
+						<img src={Utilities.blueClose} alt={"close"} onClick={(e)=>{
+							showShareActionList(e, false)
+						}}/>
+					</div>
+					<ul>
+						<li className={styles['share-item']} onClick={()=>{
+							setShowShareAction(false)
+							setActiveOperation('share-as-subcollection')
+						}}>
+							<img src={Utilities.gridView} alt={"share-collection"}/>
+							<span className={"font-weight-500"}>Share as Collection</span>
+							<p>
+								Create a branded collection with filters
+							</p>
+						</li>
+						<li className={styles['share-item']}
+							onClick={()=>{
+								setShowShareAction(false)
+							setActiveOperation('share')
+						}}>
+							<img src={Utilities.share} alt={"share-file"}/>
+							<span className={"font-weight-500"}>Share Files</span>
+							<p>
+								Create a link to shared file
+							</p>
+						</li>
+					</ul>
+
+				</div>}
+			</div>
+			}
 			{((isFolder && !isShare) && !deletedAssets) && <IconClickable additionalClass={styles['action-button']} src={AssetOps[`share${iconColor}`]} tooltipText={'Share'} tooltipId={'Share'} onClick={() => setActiveOperation('shareCollections')} />}
 			{((!isFolder && itemType && !isShare) && !deletedAssets) && <IconClickable additionalClass={styles['action-button']} src={AssetOps[`delete${iconColor}`]} tooltipText={'Remove'} onClick={() => setActiveOperation('remove_item')} />}
 			{deletedAssets && <IconClickable additionalClass={styles['action-button']} src={AssetOps[`move${iconColor}`]} tooltipText={'Recover Asset'} tooltipId={'Recover'} onClick={() => setActiveOperation('recover')} />}

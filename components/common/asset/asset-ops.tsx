@@ -538,18 +538,25 @@ export default ({ getAssets }) => {
     });
   };
 
-  const getShareLink = async () => {
+  const getShareLink = async (name, subCollectionShare = false) => {
     try {
       let versionGroups;
+      let assetIds;
       let filters = {};
       if (operationAsset) {
         versionGroups = operationAsset.asset.versionGroup;
+        assetIds = operationAsset.asset.id;
       } else if (operationFolder) {
         versionGroups = operationFolder.assets.map((asset) => asset.versionGroup).join(",");
+        assetIds = operationFolder.assets.map((asset) => asset.id).join(",");
       } else {
         versionGroups = selectedAssets
           .map((assetItem) => assetItem.asset.versionGroup)
           .join(",");
+
+        assetIds = selectedAssets
+            .map((assetItem) => assetItem.asset.id)
+            .join(",");
       }
 
       // Select all assets without pagination
@@ -573,10 +580,42 @@ export default ({ getAssets }) => {
         delete filters.page;
       }
       filters["name"] = name;
+      console.log(filters)
+
+      const getCustomFields = (filters) => {
+        let fields = ''
+        Object.keys(filters).map((key)=>{
+          if(key.includes('custom-p')){
+            if(fields){
+              fields = `${fields},${filters[key]}`
+            }else{
+              fields = `${filters[key]}`
+            }
+          }
+        })
+
+        return fields
+      }
+
+      const customFields = getCustomFields(filters)
+
+      const params = {
+        versionGroups,
+        assetIds
+      }
+
+      // Create sub collection from tags/custom fields (only create sub colleciton if all filtered assets selected)
+      if(filters['folderId'] && (customFields || filters['tags']) && filters['selectedAll'] && subCollectionShare){
+
+        params['customFields'] = customFields
+        params['folderId'] = filters['folderId']
+        params['tags'] = filters['tags']
+
+        filters['subCollection'] = '1'
+      }
+
       return await assetApi.getShareUrl(
-        {
-          versionGroups,
-        },
+        params,
         filters
       );
     } catch (err) {
@@ -944,6 +983,14 @@ export default ({ getAssets }) => {
         itemsAmount={operationLength}
         shareAssets={shareAssets}
         getShareLink={getShareLink}
+      />
+      <ShareModal
+          modalIsOpen={activeOperation === "share-as-subcollection"}
+          closeModal={closeModalAndClearOpAsset}
+          itemsAmount={operationLength}
+          shareAssets={shareAssets}
+          getShareLink={getShareLink}
+          subCollectionShare={true}
       />
       <ShareCollectionModal
           modalIsOpen={activeOperation === "shareCollections" || activeOperation === "shareFolders"}

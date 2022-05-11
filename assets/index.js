@@ -72,7 +72,9 @@ export const Utilities = {
   custom: require('./Icons/Utilities/FiltersTags/custom.svg'),
   collections: require('./Icons/Utilities/FiltersTags/collections.svg'),
   file: require('./Icons/Utilities/FiltersTags/file.svg'),
-  close: require('./Icons/Utilities/Close/close.svg')
+  close: require('./Icons/Utilities/Close/close.svg'),
+  share: require('./Icons/Utilities/Share/share.svg'),
+  blueClose: require('./Icons/Utilities/Close/blue-close.svg'),
 }
 
 export const ProjectTypes = {
