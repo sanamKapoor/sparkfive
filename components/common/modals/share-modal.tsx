@@ -36,7 +36,7 @@ const getDayToCurrentDate = (day: number = 1) => {
 
 const FORMAT = 'MM/dd/yyyy';
 
-const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, title = '', getShareLink = () => {}, currentShareLink = undefined  }) => {
+const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, title = '', getShareLink = async(name, subCollection) => {}, currentShareLink = undefined, subCollectionShare = false  }) => {
 	const { setIsLoading } = useContext(LoadingContext)
 
 	const [recipients, setRecipients] = useState('')
@@ -53,6 +53,8 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 	const [sharable, setSharable] = useState(false)
 	const [shareId, setShareId] = useState("")
 	const [currentName, setCurrentName] = useState("") // To decide user can copy link or not
+	const [basic, setBasic] = useState(true)
+	const [collectionLink, setCollectionLink] = useState("")
 
 	const [firstInit, setFirstInit] = useState(false)
 	// const [name, setName]
@@ -75,6 +77,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 		setMessage('')
 		setUrl('')
 		setName('')
+		setBasic(true)
 		setIsPublic(false)
 		setExpired(true)
 		setExpiredPeriod(expireOptions[1])
@@ -84,18 +87,22 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 		setSharable(false)
 		setShareId("")
 		setCurrentName("")
+		setCollectionLink("")
 		setFirstInit(false)
 		setLoading(true)
 		closeModal()
 	}
 
-	const getInitialSharedLink = async () => {
+	const getInitialSharedLink = async (showInternalLoading = true) => {
 		try{
-			setLoading(true)
+			if(showInternalLoading){
+				setLoading(true)
+			}
 			// @ts-ignore
-			const { data } = await getShareLink(name)
+			const { data } = await getShareLink(name, subCollectionShare)
 			if(data.currentSharedLinks){
 				setUrl(data.currentSharedLinks.sharedLink || "")
+				setCollectionLink(data.currentSharedLinks.collectionLink || "")
 				setShareJWT(data.currentSharedLinks.sharedJwt)
 				setHash(data.currentSharedLinks.hash)
 				setExpiredPeriod(expireOptions.filter(
@@ -117,19 +124,35 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 				setRecipients(data.currentSharedLinks.sharedEmails)
 				setShareId(data.currentSharedLinks.id)
 				setIsPublic(data.currentSharedLinks.isPublic !== undefined ? data.currentSharedLinks.isPublic : true) // default is true
+
+				if(subCollectionShare){
+					setBasic(!data.currentSharedLinks.team.advancedCollectionShareLink) // default is true
+				}
+
 				setMessage(data.currentSharedLinks.message)
 				setSharable(data.currentSharedLinks.sharable !== undefined ? data.currentSharedLinks.sharable : false) // default is false
 
-				setLoading(false)
+				if(showInternalLoading){
+					setLoading(false)
+				}
+
+				setIsLoading(false);
 
 				setFirstInit(true)
 			}else{
 				setFirstInit(false)
-				setLoading(false)
+				setIsLoading(false);
+				if(showInternalLoading){
+					setLoading(false)
+				}
 			}
 		}catch (e){
 			setUrl("")
-			setLoading(false)
+			setCollectionLink("")
+			setIsLoading(false);
+			if(showInternalLoading){
+				setLoading(false)
+			}
 		}
 
 	}
@@ -137,6 +160,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 	const loadExistedShareLink = (data) => {
 		// @ts-ignore
 		setUrl(data.sharedLink)
+		setCollectionLink(data.collectionLink)
 		setShareJWT(data.shareJwt)
 		setHash(data.hash)
 		if(!data.expiredPeriod){
@@ -162,6 +186,10 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 		setRecipients(data.sharedEmails)
 		setShareId(data.id)
 		setIsPublic(data.isPublic)
+		if(subCollectionShare){
+			setBasic(!data.team?.advancedCollectionShareLink) // default is true
+		}
+
 		setMessage(data.message)
 		setSharable(data.sharable)
 
@@ -186,32 +214,37 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 	const saveChanges = async (field = "", isPublicValue = undefined, expiredValue = undefined, expiredPeriodValue = undefined, expiredAtValue = undefined, sharableValue = undefined) => {
 		setIsLoading(true);
 
-		const { data } = await shareAssets(
-			recipients,
-			message,
-			{
-				sharedLink: url,
-				shareJWT,
-				hash,
-				name,
-				isPublic: isPublicValue === undefined ? isPublic : isPublicValue,
-				expired: expiredValue === undefined ? expired : expiredValue,
-				expiredPeriod: expiredPeriodValue === undefined ? expiredPeriod : expiredPeriodValue,
-				expiredAt: expiredAtValue === undefined ? expiredAt : expiredAtValue,
-				sharable: sharableValue === undefined ? sharable : sharableValue,
-				shareId
-			},
-			false,
-			false
-		)
+		// Link is not created yet due to lacking name, saving name then getting url back
+		if(firstInit === false && field === "name"){
+			getInitialSharedLink(false)
+		}else{
+			const { data } = await shareAssets(
+				recipients,
+				message,
+				{
+					sharedLink: url,
+					shareJWT,
+					hash,
+					name,
+					isPublic: isPublicValue === undefined ? isPublic : isPublicValue,
+					expired: expiredValue === undefined ? expired : expiredValue,
+					expiredPeriod: expiredPeriodValue === undefined ? expiredPeriod : expiredPeriodValue,
+					expiredAt: expiredAtValue === undefined ? expiredAt : expiredAtValue,
+					sharable: sharableValue === undefined ? sharable : sharableValue,
+					shareId
+				},
+				false,
+				false
+			)
 
-		if(field === "name"){
-			if(data.name){
-				setCurrentName(data.name)
+			if(field === "name"){
+				if(data.name){
+					setCurrentName(data.name)
+				}
 			}
-		}
 
-		setIsLoading(false);
+			setIsLoading(false);
+		}
 	}
 
 	const changeExpired =  (currentValue, nextValue) => {
@@ -308,7 +341,32 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 					<span className={'m-l-10'}>(required)</span>
 				</div>
 
-				<div className={`${styles['input-wrapper']} d-flex align-items-center p-t-0`}>
+			{basic && subCollectionShare && <div className={`${styles['input-wrapper']} d-flex align-items-center p-t-0`}>
+					<Input
+						additionalClasses={"w-50 m-r-15"}
+						disabled={!collectionLink || !currentName}
+						placeholder={''}
+						value={currentName ? `${process.env.CLIENT_BASE_URL}/collections/${collectionLink}`: ""}
+						styleType={'regular-short'} />
+					<IconClickable additionalClass={`${styles['action-button']} m-r-5 cursor-pointer`}
+								   src={AssetOps[`copy${''}`]}
+								   tooltipText={'Copy'}
+								   tooltipId={'Copy'}
+								   onClick={()=>{
+								   	if(currentName){
+										copy(`${process.env.CLIENT_BASE_URL}/collections/${collectionLink}`)
+										toastUtils.bottomSuccess('Link copied')
+									}
+								   }}/>
+					<span className={"cursor-pointer"} onClick={()=>{
+						if(currentName){
+							copy(`${process.env.CLIENT_BASE_URL}/collections/${collectionLink}`)
+							toastUtils.bottomSuccess('Link copied')
+						}
+					}}>Copy Link</span>
+				</div>}
+
+				{!basic && <div className={`${styles['input-wrapper']} d-flex align-items-center p-t-0`}>
 					<Input
 						additionalClasses={"w-50 m-r-15"}
 						disabled={!url || !currentName}
@@ -320,10 +378,10 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 								   tooltipText={'Copy'}
 								   tooltipId={'Copy'}
 								   onClick={()=>{
-								   	if(currentName){
-										copy(url)
-										toastUtils.bottomSuccess('Link copied')
-									}
+									   if(currentName){
+										   copy(url)
+										   toastUtils.bottomSuccess('Link copied')
+									   }
 								   }}/>
 					<span className={"cursor-pointer"} onClick={()=>{
 						if(currentName){
@@ -331,7 +389,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 							toastUtils.bottomSuccess('Link copied')
 						}
 					}}>Copy Link</span>
-				</div>
+				</div>}
 
 				<div className={styles['input-wrapper']} >
 					<div className={`${styles.title}`}>Permission Settings</div>
@@ -435,7 +493,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 							</div>}
 
 							{/*<Input additionalClasses={"w-50 m-r-15"} disabled={!url} placeholder={'Loading share link...'} value={url} styleType={'regular-short'} />*/}
-							<span className={"font-12 m-l-15 w-100"}>{expiredAt.toDateString()}</span>
+							<span className={"font-12 m-l-15 w-100"}>{expiredAt ? expiredAt.toDateString() : ""}</span>
 						</div>
 					</div>
 				</div>}

@@ -21,3 +21,54 @@
 .select-only-shown-items-text:hover{
   text-decoration: underline;
 }
+
+.share-wrapper{
+  position: relative;
+  width: auto;
+  display: flex;
+}
+
+.share-title{
+  padding: 10px;
+  border-bottom: solid 1px #DEDAD4;
+  display: flex;
+  justify-content: center;
+}
+
+.share-title img{
+  cursor: pointer;
+  position: absolute;
+  right: 8px;
+}
+
+.share-item{
+  padding: 8px 4px 6px 15px;
+  cursor: pointer;
+}
+
+.share-item img{
+  width: 13px;
+  height: 13px;
+  margin-right: 8px;
+}
+
+.share-item p{
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+
+.share-item:hover{
+  background-color: #FAF8F5;;
+}
+
+.share-popover{
+  position: absolute;
+  color: #08135E;
+  top: 35px;
+  z-index: 99999;
+  left: -100px;
+  width: 205px;
+  background-color: white;
+  border: 1px solid #DEDAD4;
+  border-radius: 4px;
+}

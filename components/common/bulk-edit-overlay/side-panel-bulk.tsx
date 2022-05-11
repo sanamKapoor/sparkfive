@@ -242,6 +242,8 @@ const SidePanelBulk = ({
         updateObject.attributes = getRemoveAttributes({ campaigns, projects, tags, customs, folders })
       }
 
+      updateObject.activeFolder = activeFolder
+
       console.log(updateObject)
 
       await assetApi.updateMultipleAttributes(updateObject, filters)
