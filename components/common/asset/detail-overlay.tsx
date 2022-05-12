@@ -811,7 +811,7 @@ const DetailOverlay = ({
 
           {activeSideComponent === "notes" && notes && (
             <AssetNotes 
-            asset={currentAsset} 
+            asset={asset} 
             notes={notes} 
             applyCrud={applyCrud} />
           )}
