@@ -80,12 +80,13 @@ const CropSidePanel = ({ asset,
                 format: getImageType(imageType)
             };
 
-            const { shareJWT } = urlUtils.getQueryParameters()
+            const { shareJWT, code } = urlUtils.getQueryParameters()
 
             let totalDownloadingAssets = 1;
             let filters = {
                 estimateTime: 1,
                 shareJWT,
+                code,
                 sharePath
             }
 
@@ -101,9 +102,10 @@ const CropSidePanel = ({ asset,
             let download = null
 
             if(isShare){
+                // Download assets in shared collections
                 if(sharePath){
                     download = shareCollectionApi.downloadWithCustomSize
-                }else{
+                }else{ // Download assets in sharing assets
                     download = sizeApi.shareDownload
                 }
             }else{

@@ -108,7 +108,7 @@ const AssetShare = () => {
 	const downloadSelectedAssets = async () => {
 		try{
 
-			const { shareJWT } = urlUtils.getQueryParameters()
+			const { shareJWT, code } = urlUtils.getQueryParameters()
 
 			const selectedAssets = assets.filter(asset => asset.isSelected)
 
@@ -119,7 +119,7 @@ const AssetShare = () => {
 			// Show processing bar
 			zipping()
 
-			const { data } = await assetApi.shareDownload(payload, {shareJWT});
+			const { data } = await assetApi.shareDownload(payload, {shareJWT, code});
 			// Download file to storage
 			fileDownload(data, "assets.zip");
 
@@ -138,9 +138,11 @@ const AssetShare = () => {
 
 	const getAssets = async () => {
 		try {
-			const { shareJWT } = urlUtils.getQueryParameters()
-			if (shareJWT) {
-				const { data } = await assetApi.getSharedAssets({ shareJWT })
+			const { shareJWT, code } = urlUtils.getQueryParameters()
+
+			// Allow get by both shareJWT or code (shareJWT has problem with very long at url issue)
+			if (shareJWT || code) {
+				const { data } = await assetApi.getSharedAssets({ shareJWT, code })
 				if(data.error){
 					setError(true)
 					setLoading(false)
@@ -165,8 +167,8 @@ const AssetShare = () => {
 	const onSubmitAuth = async (e) => {
 		e.preventDefault();
 		setLoading(true)
-		const { shareJWT } = urlUtils.getQueryParameters()
-		const { data } = await assetApi.getSharedAssets( {shareJWT, email })
+		const { shareJWT, code } = urlUtils.getQueryParameters()
+		const { data } = await assetApi.getSharedAssets( {shareJWT, email, code })
 
 		if(data.error){
 			toastUtils.error(data.errorMessage)
