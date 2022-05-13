@@ -17,8 +17,9 @@
 }
 
 .wrapper {
-    display: flex;
+    display: grid;
     align-items: center;
+    grid-template-columns: auto auto;
 }
 
 .wrapper h4 {
@@ -34,4 +35,10 @@
 
 .container img {
     width: 18px;
+}
+
+@media screen and (max-width: 460px) {
+    .wrapper {
+        grid-template-columns: auto;
+    }
 }
