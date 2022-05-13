@@ -28,7 +28,18 @@
     justify-content: flex-start;
     margin-top: 12px;
 }
-
+.radios {
+    display: grid;
+    grid-auto-flow: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin: 12px 0;
+    gap: 32px;
+}
+.radio-wrapper {
+    display: flex;
+    align-items: flex-start;
+}
 .actions img {
     width: 16px;
 }

@@ -11,8 +11,10 @@ const AssetNoteItem = ({ title, note, saveChanges, deleteNote }) => {
     const [editMode, setEditMode] = useState(false)
     const [modalOpen, setModalOpen] = useState(false)
     const [noteText, setNoteText] = useState(note.text)
+    const [internal, setInternal] = useState(note.internal)
 
     const _saveChanges = async (note, text) => {
+        note.internal = internal
         const success = await saveChanges(note, text)
         if (success) {
             setEditMode(false)
@@ -37,6 +39,20 @@ const AssetNoteItem = ({ title, note, saveChanges, deleteNote }) => {
                         rows={4}
                         onChange={(e)=> setNoteText(e.target.value)}
                     />
+                    <div className={styles.radios}>
+                        <div className={styles['radio-wrapper']}>
+                            <IconClickable
+                                src={internal ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                                onClick={() => setInternal(true)} />
+                            <div className={'font-12 m-l-10'}>For internal use only</div>
+                        </div>
+                        <div className={styles['radio-wrapper']}>
+                            <IconClickable
+                                src={!internal ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                                onClick={() => setInternal(false)} />
+                            <div className={'font-12 m-l-10'}>Display internally and externally</div>
+                        </div>
+                    </div>
                     <div className={styles.buttons}>
                         <Button
                             text={'Save changes'}
