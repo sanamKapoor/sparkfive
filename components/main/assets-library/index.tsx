@@ -45,6 +45,7 @@ const AssetsLibrary = () => {
     setAddedIds,
     setLoadingAssets,
     selectAllAssets,
+    selectedAllAssets,
     selectAllFolders,
     uploadDetailOverlay,
     setUploadDetailOverlay,
@@ -575,6 +576,11 @@ const AssetsLibrary = () => {
   const toggleSelected = (id) => {
     if (activeMode === 'assets') {
       const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
+      const selectedValue = !assets[assetIndex].isSelected
+      // Toggle unselect when selected all will disable selected all
+      if(!selectedValue && selectedAllAssets){
+        selectAllAssets(false)
+      }
       setAssets(update(assets, {
         [assetIndex]: {
           isSelected: { $set: !assets[assetIndex].isSelected }
