@@ -78,7 +78,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 		setUrl('')
 		setName('')
 		setBasic(true)
-		setIsPublic(false)
+		setIsPublic(true)
 		setExpired(true)
 		setExpiredPeriod(expireOptions[1])
 		setExpiredAt(getDayToCurrentDate(expireOptions[1].value))
@@ -366,7 +366,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 					}}>Copy Link</span>
 				</div>}
 
-				{!basic && <div className={`${styles['input-wrapper']} d-flex align-items-center p-t-0`}>
+				{(!basic || (!subCollectionShare)) && <div className={`${styles['input-wrapper']} d-flex align-items-center p-t-0`}>
 					<Input
 						additionalClasses={"w-50 m-r-15"}
 						disabled={!url || !currentName}

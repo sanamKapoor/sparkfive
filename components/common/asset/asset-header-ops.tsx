@@ -234,7 +234,7 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 		const customFields = getCustomFields(filters)
 
 		// Select all assets in folder
-		if(filters['folderId'] && (customFields || filters['tags']) && filters['selectedAll']){
+		if(filters['folderId'] && (customFields || filters['tags']) && selectedAllAssets){
 			setShowShareAction(visible)
 			if (visible) {
 				document.addEventListener("mousedown", handleClickOutside);
@@ -282,8 +282,8 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 						}}>
 							<img src={Utilities.gridView} alt={"share-collection"}/>
 							<span className={"font-weight-500"}>Share as Collection</span>
-							<p>
-								Create a branded collection with filters
+							<p className={styles['share-description']}>
+								Create a branded collection
 							</p>
 						</li>
 						<li className={styles['share-item']}
@@ -293,8 +293,8 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 						}}>
 							<img src={Utilities.share} alt={"share-file"}/>
 							<span className={"font-weight-500"}>Share Files</span>
-							<p>
-								Create a link to shared file
+							<p className={styles['share-description']}>
+								Create a link to shared file(s)
 							</p>
 						</li>
 					</ul>
