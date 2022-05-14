@@ -17,6 +17,9 @@ const AssetNotes = ({asset, notes, applyCrud}) => {
 
     const createNote = async () => {
         try{
+            if (!noteText) {
+                return;
+            }
             const { data } = await assetApi.saveNote({
                 assetId: asset.id,
                 text: noteText,
@@ -88,6 +91,7 @@ const AssetNotes = ({asset, notes, applyCrud}) => {
                     text={'Save'}
                     type={'button'}
                     styleType={'primary'}
+                    disabled={!noteText}
                     onClick={createNote}
                 />
             </span>
