@@ -10,7 +10,7 @@ const AssetNote = ({ title, note }) => {
     return (
         <div className={`${styles.container} ${!show ? styles.hidden : ''}`}>
             <div className={styles.wrapper}>
-                <h4>{title}</h4>
+                <h4>{title}:</h4>
 
                 {show &&
                     <p>{note}</p>

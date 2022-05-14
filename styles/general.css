@@ -53,10 +53,6 @@ body {
   overflow-x: hidden;
 }
 
-body.no-overflow {
-  overflow: hidden;
-}
-
 .picker-dialog{
   z-index: 9999!important;
 }
