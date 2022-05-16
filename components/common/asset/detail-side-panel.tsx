@@ -79,7 +79,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     dpi
   } = asset
 
-  const { assets, setAssets } = useContext(AssetContext)
+  const { assets, setAssets, activeFolder } = useContext(AssetContext)
 
   const { hasPermission } = useContext(UserContext)
   const { loadCampaigns, loadProjects, loadTags } = useContext(FilterContext)
@@ -212,7 +212,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
       }))
       setAssetDetail(update(asset, updatedata))
     }
-    
+
     setActiveDropdown('')
   }
 
@@ -390,7 +390,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     setIsLoading(true)
 
     // Call API to add custom fields
-    await assetApi.addCustomFields(id, selected)
+    await assetApi.addCustomFields(id, {...selected, folderId: activeFolder})
 
     // Hide select list
     setActiveCustomField(undefined)
@@ -607,7 +607,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                 onOperationFailedSkipped={() => setActiveCustomField(undefined)}
                 isShare={isShare}
                 asyncCreateFn={(newItem) => { // Show loading
-                  setIsLoading(true); return assetApi.addCustomFields(id, newItem)}}
+                  setIsLoading(true); return assetApi.addCustomFields(id, {...newItem, folderId: activeFolder})}}
                 dropdownIsActive={activeCustomField === index}
             />
           </div>

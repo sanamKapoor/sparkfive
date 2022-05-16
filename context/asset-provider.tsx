@@ -1,5 +1,6 @@
 import {useContext, useEffect, useState} from 'react'
 import { AssetContext, SocketContext } from '../context'
+import {useRouter} from "next/router";
 
 import {convertTimeFromSeconds, getFolderKeyAndNewNameByFileName} from "../utils/upload"
 
@@ -25,6 +26,7 @@ const loadingDefaultFolder = {
 }
 
 export default ({ children }) => {
+    const router = useRouter()
     const { socket, connected, globalListener } = useContext(SocketContext);
 
     const [assets, setAssets] = useState([])
@@ -376,6 +378,21 @@ export default ({ children }) => {
             })
         }
     },[socket, connected])
+
+    // Reset active folders if user navigate to other pages
+    useEffect(() => {
+        const handleRouteChange = (url, { shallow }) => {
+            setActiveFolder("")
+        }
+
+        router.events.on('routeChangeStart', handleRouteChange)
+
+        // If the component is unmounted, unsubscribe
+        // from the event with the `off` method:
+        return () => {
+            router.events.off('routeChangeStart', handleRouteChange)
+        }
+    }, [])
 
     const assetsValue = {
         assets,
