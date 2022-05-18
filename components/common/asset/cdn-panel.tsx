@@ -19,7 +19,8 @@ const options = {
     // { label: 'SVG', value: 'svg'},
     { label: 'Tiff', value: 'tiff'},
     { label: 'Tif', value: 'tif'},
-    { label: 'Gif', value: 'gif'}
+    { label: 'Gif', value: 'gif'},
+    { label: 'PDF', value: 'pdf'} // pdf works in the same way of image, so included in the same list
   ],
   video: [
     { label: 'Mp4', value: 'mp4'},
@@ -30,7 +31,7 @@ const options = {
 
 const CdnPanel = ({ assetDetail }) => {
   const mainUrl = process.env.SERVER_BASE_URL
-  const [link, setLink] = useState(encodeURI(`${mainUrl}/assets/${assetDetail.storageId}`))
+  const [link, setLink] = useState(encodeURI(`${mainUrl}/assets/cdn/${assetDetail.storageId}`))
   const [type, setType] = useState({label: 'Select', value: ''})
   const [dimension, setDimension] = useState({
     height: assetDetail.dimensionHeight,
@@ -54,7 +55,7 @@ const CdnPanel = ({ assetDetail }) => {
       [secondType]: !secondValue ? dimension[secondType] : secondValue,
     })
 
-    setLink(encodeURI(`${mainUrl}/assets/${assetDetail.storageId}?${qs}`))
+    setLink(encodeURI(`${mainUrl}/assets/cdn/${assetDetail.storageId}?${qs}`))
 
     setDimension({
       ...dimension,

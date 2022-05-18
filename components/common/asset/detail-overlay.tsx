@@ -19,6 +19,7 @@ import SidePanel from "./detail-side-panel";
 import ConversationList from "../conversation/conversation-list";
 import IconClickable from "../buttons/icon-clickable";
 import Button from "../buttons/button";
+import AssetPdf from "./asset-pdf";
 import AssetImg from "./asset-img";
 import AssetApplication from "./asset-application";
 import AssetText from "./asset-text";
@@ -606,6 +607,10 @@ const DetailOverlay = ({
     closeOverlay(changedVersion ? currentAsset : undefined)
     setDetailOverlayId(undefined)
   }
+
+  if (assetDetail) {
+    console.log(assetDetail.type, mode)
+  }
   
 
   return (
@@ -716,6 +721,11 @@ const DetailOverlay = ({
             {assetDetail.type !== "image" &&
               assetDetail.type !== "video" &&
               versionThumbnailUrl && (
+                assetDetail.type === "application" ?
+                <AssetPdf
+                  asset={asset}
+                />
+                :
                 <AssetImg
                   name={assetDetail.name}
                   assetImg={versionThumbnailUrl}
