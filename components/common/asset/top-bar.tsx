@@ -38,6 +38,19 @@ const TopBar = ({
 
   const {advancedConfig} = useContext(UserContext)
 
+  const [hideFilterElements] = useState(advancedConfig.hideFilterElements)
+
+  const [tabs, setTabs] = useState(selectOptions.views.filter(tab => {
+    let tabName = tab.text.toLowerCase()
+    let shouldShow = true
+    if (hideFilterElements.hasOwnProperty(tabName)) {
+      shouldShow = !hideFilterElements[tabName]
+    }
+    return shouldShow
+  }))
+
+
+
   const setSortFilterValue = (key, value) => {
     let sort = key === 'sort' ? value : activeSortFilter.sort
     if (key === 'mainFilter') {
@@ -93,7 +106,7 @@ const TopBar = ({
       {!deletedAssets ? <div className={styles.filters} >
         <img src={Utilities.search} onClick={setActiveSearchOverlay} className={styles.search} />
         <ul className={styles['tab-list']}>
-        {selectOptions.views.map(view => (
+        {tabs.map(view => (
           <li key={view.name} className={styles['tab-list-item']}>
             {(!activeFolder || !view.omitFolder) && (!isShare || (isShare && !view.omitShare && view.hideOnSingle !== singleCollection)) &&
             (view.requirePermissions.length === 0 || (view.requirePermissions.length > 0 && hasPermission(view.requirePermissions))) &&

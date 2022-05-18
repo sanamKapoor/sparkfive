@@ -1,6 +1,6 @@
 import styles from './filter-container.module.css'
 import update from 'immutability-helper'
-import { FilterContext, AssetContext } from '../../../context'
+import { FilterContext, AssetContext, UserContext } from '../../../context'
 import { useState, useEffect, useContext } from 'react'
 import { Utilities } from '../../../assets'
 
@@ -20,6 +20,8 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
     const [expandedMenus, setExpandedMenus] = useState(isFolder ? ['folders'] : ['tags', 'customFields', 'channels', 'campaigns'])
     const [stickyMenuScroll, setStickyMenuScroll] = useState(false)
     const [customFieldList, setCustomFieldList] = useState([])
+    const {advancedConfig} = useContext(UserContext)
+    const [hideFilterElements] = useState(advancedConfig.hideFilterElements)
 
     const {
         folders,
@@ -198,7 +200,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                 {/*            />}*/}
                 {/*    </section>*/}
                 {/*}*/}
-                {!isFolder &&
+                {!isFolder && !hideFilterElements.campaigns &&
                     <section>
                         <div className={styles['expand-bar']} onClick={() => handleExpand('campaigns')}>
                             <h4>Campaigns</h4>
@@ -277,7 +279,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                             />}
                     </section>
                 }
-                {!isFolder &&
+                {!isFolder && !hideFilterElements.products &&
                     <section>
                         <div className={styles['expand-bar']} onClick={() => handleExpand('product')}>
                             <h4>Product</h4>

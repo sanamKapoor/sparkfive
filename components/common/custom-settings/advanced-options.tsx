@@ -12,6 +12,8 @@ import IconClickable from "../buttons/icon-clickable";
 // APIs
 import teamAPI from "../../../server-api/team"
 
+import advancedConfigParams from '../../../utils/advance-config-params'
+
 const AdvancedOptions = () => {
     const [loading, setLoading] = useState(false)
 
@@ -21,6 +23,7 @@ const AdvancedOptions = () => {
     const [duplicateCheck, setDuplicateCheck] = useState(false)
     const [assetSortView, setAssetSortView] = useState('')
     const [searchDefault, setSearchDefault] = useState('')
+    const [hideFilterElements, setHideFilterElements] = useState(advancedConfigParams.hideFilterElements)
 
     const {advancedConfig, setAdvancedConfig} = useContext(UserContext)
 
@@ -32,16 +35,17 @@ const AdvancedOptions = () => {
         const updatedConfig = {...advancedConfig, ...config}
         setAdvancedConfig(updatedConfig)
 
-        await getAdvanceConfigurations(updatedConfig);
+        getAdvanceConfigurations(updatedConfig);
     }
 
-    const getAdvanceConfigurations = async (conf = advancedConfig) => {
+    const getAdvanceConfigurations = (conf = advancedConfig) => {
         setSubFolderAutoTag(conf.subFolderAutoTag)
         setDefaultLandingPage(conf.defaultLandingPage)
         setCollectionSortView(conf.collectionSortView)
         setAssetSortView(conf.assetSortView)
         setDuplicateCheck(conf.duplicateCheck)
         setSearchDefault(conf.searchDefault)
+        setHideFilterElements(conf.hideFilterElements)
 
         setLoading(false)
         return true
@@ -53,9 +57,16 @@ const AdvancedOptions = () => {
         return false;
     }
 
+    const toggleHideElementProperty = (prop) => {
+        const elemsState = {...hideFilterElements}
+        elemsState[prop] = !elemsState[prop]
+        saveAdvanceConfig({hideFilterElements: elemsState})
+    }
+
     useEffect(() => {
         getAdvanceConfigurations();
     }, [])
+
 
     return (
         <div className={styles['main-wrapper']}>
@@ -255,6 +266,44 @@ const AdvancedOptions = () => {
                                                 additionalClass={styles['select-icon']}
                                                 onClick={() => saveAdvanceConfig({ duplicateCheck: false })} />
                                             <div className={'font-12 m-l-10'}>Off (Default)</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className={`${styles['row']} ${styles['field-block']}`}>
+                <div className={`${styles['col-100']}`}>
+                    <div className={`${styles['row']}`}>
+                        <div className={`${styles['deleted-assets']} row`}>
+                            <div className={"col-40 col-md-100"}>
+                                <span className={'font-weight-500'}>Hide Filter Elements</span>
+                            </div>
+                            <div className={"col-60 col-md-100"}>
+                                <div>
+                                    <div className={styles['field-radio-wrapper']}>
+                                        <div className={`${styles['radio-button-wrapper']} m-r-15`}>
+                                            <IconClickable
+                                                src={hideFilterElements.campaigns ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                                                additionalClass={styles['select-icon']}
+                                                onClick={() => toggleHideElementProperty('campaigns')} />
+                                            <div className={'font-12 m-l-10'}>Campaigns</div>
+                                        </div>
+                                        <div className={`${styles['radio-button-wrapper']} m-r-15 ${styles['hide-on-mobile']}`}>
+                                            <IconClickable
+                                                src={hideFilterElements.products ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                                                additionalClass={styles['select-icon']}
+                                                onClick={() => toggleHideElementProperty('products')} />
+                                            <div className={'font-12 m-l-10'}>Products</div>
+                                        </div>
+                                        <div className={`${styles['radio-button-wrapper']} m-r-15 ${styles['hide-on-mobile']}`}>
+                                            <IconClickable
+                                                src={hideFilterElements.videos ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                                                additionalClass={styles['select-icon']}
+                                                onClick={() => toggleHideElementProperty('videos')} />
+                                            <div className={'font-12 m-l-10'}>Videos</div>
                                         </div>
                                     </div>
                                 </div>

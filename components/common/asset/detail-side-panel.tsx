@@ -81,8 +81,10 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
 
   const { assets, setAssets, activeFolder } = useContext(AssetContext)
 
-  const { hasPermission } = useContext(UserContext)
+  const { hasPermission, advancedConfig } = useContext(UserContext)
   const { loadCampaigns, loadProjects, loadTags } = useContext(FilterContext)
+  
+  const [hideFilterElements] = useState(advancedConfig.hideFilterElements)
 
   const { setIsLoading }  = useContext(LoadingContext)
 
@@ -460,6 +462,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
       {/*  />*/}
       {/*</div>*/}
 
+      {!hideFilterElements.campaigns &&
       <div className={styles['field-wrapper']} >
         <CreatableSelect
           title='Campaigns'
@@ -488,7 +491,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
           dropdownIsActive={activeDropdown === 'campaigns'}
           altColor='yellow'
         />
-      </div>
+      </div>}
 
       <div className={styles['field-wrapper']} >
         <CreatableSelect
@@ -722,60 +725,62 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
       {/*  </div>*/}
       {/*</div>*/}
 
-      <div className={styles['field-wrapper']} >
-        <div className={`secondary-text ${styles.field}`}>Products</div>
-      </div>
-
-
-      {productList && productList.map((product, index)=>{
-        return <div className={styles['product-wrapper']} key={index}>
-          <ProductAddition
-              noTitle
-              skuActiveDropdownValue={`sku-${index}`}
-              productFieldActiveDropdownValue={`product_field-${index}`}
-              productVendorActiveDropdownValue={`product_vendor-${index}`}
-              productCategoryActiveDropdownValue={`product_category-${index}`}
-              productRetailerActiveDropdownValue={`product_retailer-${index}`}
-              FieldWrapper={({ children }) => (
-                  <div className={styles['field-wrapper']} >{children}</div>
-              )}
-              isShare={isShare || !hasPermission([ASSET_EDIT])}
-              activeDropdown={activeDropdown}
-              setActiveDropdown={(value)=>{console.log(value);setActiveDropdown(`${value}-${index}`)}}
-              assetId={id}
-              onAdd={(item) => {
-                let arr = [...products]
-                arr.push(item)
-                updateAssetState({
-                  products: { $set: arr }
-                })
-              }}
-              onDelete={() => {
-                let arr = [...products]
-                arr.splice(index, 1)
-                updateAssetState({
-                  products: { $set: arr }
-                })
-              }}
-              // updateAssetState={updateAssetState}
-              product={product}
-          />
+      { !hideFilterElements.products && 
+      <>
+        <div className={styles['field-wrapper']} >
+          <div className={`secondary-text ${styles.field}`}>Products</div>
         </div>
-      })}
+
+        {productList && productList.map((product, index)=>{
+          return <div className={styles['product-wrapper']} key={index}>
+            <ProductAddition
+                noTitle
+                skuActiveDropdownValue={`sku-${index}`}
+                productFieldActiveDropdownValue={`product_field-${index}`}
+                productVendorActiveDropdownValue={`product_vendor-${index}`}
+                productCategoryActiveDropdownValue={`product_category-${index}`}
+                productRetailerActiveDropdownValue={`product_retailer-${index}`}
+                FieldWrapper={({ children }) => (
+                    <div className={styles['field-wrapper']} >{children}</div>
+                )}
+                isShare={isShare || !hasPermission([ASSET_EDIT])}
+                activeDropdown={activeDropdown}
+                setActiveDropdown={(value)=>{console.log(value);setActiveDropdown(`${value}-${index}`)}}
+                assetId={id}
+                onAdd={(item) => {
+                  let arr = [...products]
+                  arr.push(item)
+                  updateAssetState({
+                    products: { $set: arr }
+                  })
+                }}
+                onDelete={() => {
+                  let arr = [...products]
+                  arr.splice(index, 1)
+                  updateAssetState({
+                    products: { $set: arr }
+                  })
+                }}
+                // updateAssetState={updateAssetState}
+                product={product}
+            />
+          </div>
+        })}
 
 
 
-      {!isShare && hasPermission([ASSET_EDIT]) && <div className={`add ${styles['select-add']}`} onClick={addProductBlock}>
-        <IconClickable src={Utilities.add} />
-        <span className={"normal-text"}>Add Product</span>
-      </div>}
+        {!isShare && hasPermission([ASSET_EDIT]) && <div className={`add ${styles['select-add']}`} onClick={addProductBlock}>
+          <IconClickable src={Utilities.add} />
+          <span className={"normal-text"}>Add Product</span>
+        </div>}
 
-      <ProjectCreationModal
-        initialValue={newProjectName}
-        closeModal={() => setNewProjectName('')}
-        confirmCreation={addNewProject}
-        modalIsOpen={newProjectName ? true : false}
-      />
+        <ProjectCreationModal
+          initialValue={newProjectName}
+          closeModal={() => setNewProjectName('')}
+          confirmCreation={addNewProject}
+          modalIsOpen={newProjectName ? true : false}
+        />
+      </>}
     </div >
   )
 }

@@ -3,6 +3,7 @@ const advancedConfigParams = {
   defaultLandingPage: 'allTab',
   collectionSortView: 'alphabetical',
   assetSortView: 'newest',
+  hideFilterElements: { campaigns: false, products: false, videos: false },
   set: false
 }
 
