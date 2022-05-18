@@ -608,11 +608,6 @@ const DetailOverlay = ({
     setDetailOverlayId(undefined)
   }
 
-  if (assetDetail) {
-    console.log(assetDetail.type, mode)
-  }
-  
-
   return (
     <div className={`app-overlay ${styles.container}`}>
       {assetDetail && (
