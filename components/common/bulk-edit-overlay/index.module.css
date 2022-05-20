@@ -4,7 +4,16 @@
     grid-template-columns: 1fr 26.5rem;
     z-index: 3500;
 }
-.content, .side {
+.content {
+    background-color: white;
+    padding-top: 0;
+    margin-top: 15px;
+    height: 100vh;
+    padding-bottom: 15px;
+    overflow-y: auto;
+}
+
+.side {
     height: 100vh;
     padding-top: 15px;
     padding-bottom: 15px;
@@ -26,7 +35,13 @@
 }
 
 .top-wrapper {
-    position: relative;
+    /*position: relative;*/
+
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 999;
+    padding-bottom: 2rem;
 }
 .top-wrapper .name {
     text-align: center;
@@ -34,7 +49,7 @@
 .top-wrapper .name h3 {
     margin-right: 1rem;
 }
-  
+
 .back {
     padding-top: 5px;
     display: flex;
@@ -117,7 +132,7 @@
       width: 60px;
       height: 100%;
   }
-  
+
     .side {
       grid-area: unset;
       position: absolute;
@@ -127,7 +142,7 @@
       border-bottom: 1px solid var(--color-secondary-border);
       min-height: 50vh;
     }
-    
+
     .top-wrapper {
       margin-right: 60px;
     }
