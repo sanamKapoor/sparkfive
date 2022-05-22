@@ -14,7 +14,7 @@ import toastUtils from '../../../utils/toast'
 import { Utilities } from '../../../assets'
 
 // Contexts
-import { AssetContext, FilterContext } from '../../../context'
+import { AssetContext, FilterContext, UserContext } from '../../../context'
 
 import { getAssetsFilters } from '../../../utils/asset'
 
@@ -75,6 +75,8 @@ const SidePanelBulk = ({
   } = useContext(AssetContext)
 
   const { activeSortFilter, term } = useContext(FilterContext)
+  const { advancedConfig } = useContext(UserContext)
+  const [hideFilterElements] = useState(advancedConfig.hideFilterElements)
 
   const [channel, setChannel] = useState(null)
   const [activeDropdown, setActiveDropdown] = useState('')
@@ -347,6 +349,7 @@ const SidePanelBulk = ({
         />
       </section>
 
+    {!hideFilterElements.campaigns &&
       <section className={styles['field-wrapper']} >
         <CreatableSelect
           title='Campaigns'
@@ -367,7 +370,7 @@ const SidePanelBulk = ({
           isBulkEdit={true}
           canAdd={addMode}
         />
-      </section>
+      </section>}
 
       <section className={styles['field-wrapper']} >
         <CreatableSelect
@@ -516,7 +519,7 @@ const SidePanelBulk = ({
       {/*  </div>*/}
       {/*</section>*/}
 
-      {addMode &&
+      {addMode && !hideFilterElements.products &&
         <section>
           <div className={styles['field-wrapper']} >
             <div className={`secondary-text ${styles.field}`}>Products</div>
