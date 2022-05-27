@@ -235,7 +235,7 @@ const DetailOverlay = ({
         setVersionThumbnailUrl(data.thumbailUrl);
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 
@@ -249,7 +249,7 @@ const DetailOverlay = ({
       const { data } = await assetApi.updateAsset(currentAsset.id, inputData);
       setAssetDetail(data);
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 
@@ -278,7 +278,7 @@ const DetailOverlay = ({
       );
       toastUtils.success("Asset name updated");
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       toastUtils.error("Could not update asset name");
     }
   };
@@ -478,15 +478,23 @@ const DetailOverlay = ({
   };
 
   const loadVersions = async () => {
-    const { data } = await assetApi.getVersions(currentAsset.versionGroup);
-    updateList(data.versions, data.currentAsset);
-    getDetail(data.currentAsset);
+    try {
+      const { data } = await assetApi.getVersions(currentAsset.versionGroup);
+      updateList(data.versions, data.currentAsset);
+      getDetail(data.currentAsset);
+    } catch (err) {
+      // console.log(err)
+    }
   };
 
   const loadNotes = async () => {
-    const assetId = currentAsset.id
-    const { data } = await assetApi.getNotes(assetId)
-    setNotes(data || [])
+    try {
+      const assetId = currentAsset.id
+      const { data } = await assetApi.getNotes(assetId)
+      setNotes(data || [])
+    } catch (err) {
+      // console.log(err)
+    }
   };
 
   useEffect(() => {
@@ -499,15 +507,19 @@ const DetailOverlay = ({
   }, [needsFetch]);
 
   const revertToCurrent = async (version) => {
-    const { data: newOrderedAssts } = await assetApi.revertVersion({
-      revertAssetId: version.id,
-      versionGroup: version.versionGroup,
-    });
-    const curAsset = newOrderedAssts[0];
-    const versionAssets = newOrderedAssts.splice(1);
+    try {
+      const { data: newOrderedAssts } = await assetApi.revertVersion({
+        revertAssetId: version.id,
+        versionGroup: version.versionGroup,
+      });
+      const curAsset = newOrderedAssts[0];
+      const versionAssets = newOrderedAssts.splice(1);
 
-    updateList(versionAssets, curAsset);
-    toastUtils.success("Version successfully reverted to current");
+      updateList(versionAssets, curAsset);
+      toastUtils.success("Version successfully reverted to current");
+    } catch (err) {
+      // console.log(err)
+    }
   };
 
   const shouldRenderCdnTabButton = () => {
@@ -537,12 +549,16 @@ const DetailOverlay = ({
   };
 
   const deleteVersion = async (version) => {
-    await assetApi.deleteAsset(version.id);
-    let clonedVersions = [...versions];
-    clonedVersions = clonedVersions.filter((asset) => asset.id !== version.id);
-    clonedVersions = setDisplayVersions(clonedVersions);
-    setVersions(clonedVersions);
-    toastUtils.success("Version deleted successfully.");
+    try {
+      await assetApi.deleteAsset(version.id);
+      let clonedVersions = [...versions];
+      clonedVersions = clonedVersions.filter((asset) => asset.id !== version.id);
+      clonedVersions = setDisplayVersions(clonedVersions);
+      setVersions(clonedVersions);
+      toastUtils.success("Version deleted successfully.");
+    } catch (err) {
+      // console.log(err)
+    }
   };
 
   const onUserEvent = (eventName, currentVersion) => {
@@ -667,10 +683,7 @@ const DetailOverlay = ({
                   className={styles["only-desktop-button"]}
                   styleType={"secondary"}
                   onClick={() => {
-                    if (
-                      currentAsset.type === "image" &&
-                      isImageType(assetDetail.extension)
-                    ) {
+                    if (currentAsset.extension !== 'gif' && currentAsset.type === "image" && isImageType(assetDetail.extension)) {
                       setMode("resize");
                       changeActiveSide("detail");
                     } else {
@@ -882,8 +895,7 @@ const DetailOverlay = ({
             src={AssetOps.download}
             additionalClass={styles["menu-icon"]}
             onClick={() => {
-              if (
-                currentAsset.type === "image" &&
+              if (currentAsset.type === "image" &&
                 isImageType(currentAsset.extension)
               ) {
                 if (mode !== "resize" && mode !== "crop") {

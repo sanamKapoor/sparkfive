@@ -259,8 +259,6 @@ const CropSidePanel = ({ asset,
                 </div>
             </>}
 
-
-
             <div className={styles['save-changes']}>
                 <Button className={'m-r-15'}
                         text='Cancel'
