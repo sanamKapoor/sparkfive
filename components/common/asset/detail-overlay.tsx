@@ -683,10 +683,7 @@ const DetailOverlay = ({
                   className={styles["only-desktop-button"]}
                   styleType={"secondary"}
                   onClick={() => {
-                    if (
-                      currentAsset.type === "image" &&
-                      isImageType(assetDetail.extension)
-                    ) {
+                    if (currentAsset.extension !== 'gif' && currentAsset.type === "image" && isImageType(assetDetail.extension)) {
                       setMode("resize");
                       changeActiveSide("detail");
                     } else {
@@ -898,8 +895,7 @@ const DetailOverlay = ({
             src={AssetOps.download}
             additionalClass={styles["menu-icon"]}
             onClick={() => {
-              if (
-                currentAsset.type === "image" &&
+              if (currentAsset.type === "image" &&
                 isImageType(currentAsset.extension)
               ) {
                 if (mode !== "resize" && mode !== "crop") {

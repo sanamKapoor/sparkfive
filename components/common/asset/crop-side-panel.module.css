@@ -57,13 +57,6 @@
 .field-content{
   padding-left: 30px;
 }
-.animation-lost-msg{
-  margin: 0px 0 10px 0px;
-  font-size: 12px;
-  color: #08af34;
-  text-align: left;
-  font-style: italic;
-}
 
 .field-radio-wrapper{
   display: flex;
