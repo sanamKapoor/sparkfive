@@ -33,24 +33,33 @@ const AssetNotes = ({asset, notes, applyCrud}) => {
                 return true
             }
         } catch (err) {
+            // console.log(err)
         }
     }
 
     const saveChanges = async (note, newText) => {
-        const { data } = await assetApi.saveNote({...note, text: newText})
-        if (data.text_too_long) {
-            toastUtils.error(note_long_error)
-        } else {
-            note.text = newText
-            applyCrud('edit', note)
-            return true
+        try {
+            const { data } = await assetApi.saveNote({...note, text: newText})
+            if (data.text_too_long) {
+                toastUtils.error(note_long_error)
+            } else {
+                note.text = newText
+                applyCrud('edit', note)
+                return true
+            }
+        } catch (err) {
+            // console.log(err)
         }
     }
 
     const deleteNote = async (note) => {
-        const { data } = await assetApi.deleteNote(note.id)
-        if (data.deleted) {
-            applyCrud('delete', note)
+        try {
+            const { data } = await assetApi.deleteNote(note.id)
+            if (data.deleted) {
+                applyCrud('delete', note)
+            }
+        } catch (err) {
+            // console.log(err)
         }
     }
     const updateText = (e) => {

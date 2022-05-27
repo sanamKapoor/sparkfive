@@ -262,6 +262,7 @@ const CropSidePanel = ({ asset,
 
 
             <div className={styles['save-changes']}>
+            {asset.extension && asset.extension.toLowerCase()==='gif' && <div className={styles['animation-lost-msg']}>Animation will not be included in the download</div>}
                 <Button className={'m-r-15'}
                         text='Cancel'
                         type='button'
