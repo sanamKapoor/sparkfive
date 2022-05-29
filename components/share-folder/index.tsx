@@ -40,7 +40,7 @@ const ShareFolderMain = () => {
         setActiveFolder
     } = useContext(AssetContext)
 
-    const { setAdvancedConfig } = useContext(UserContext)
+    const { user, advancedConfig, setAdvancedConfig } = useContext(UserContext)
 
     const { folderInfo, setFolderInfo } = useContext(ShareContext)
 
@@ -102,7 +102,7 @@ const ShareFolderMain = () => {
     }
 
     const setInitialLoad = async (folderInfo) => {
-        if (!firstLoaded && folderInfo) {
+        if (!firstLoaded && folderInfo && folderInfo.customAdvanceOptions) {
 
             setFirstLoaded(true)
 
@@ -311,6 +311,7 @@ const ShareFolderMain = () => {
                     openFilter={openFilter}
                     isShare={true}
                     singleCollection={!!folderInfo.singleSharedCollectionId}
+                    sharedAdvanceConfig={user ? undefined : advancedConfig}
                 />
                 <div className={`${openFilter && styles['col-wrapper']}`}>
                     <AssetGrid
