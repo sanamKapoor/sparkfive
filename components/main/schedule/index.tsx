@@ -435,6 +435,8 @@ const Schedule = () => {
 
   const [activeView, setActiveView] = useState("month")
 
+  console.log('schedule...')
+
   return (
     <>
       <ScheduleSubHeader

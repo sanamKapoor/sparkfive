@@ -44,7 +44,7 @@ const ShareCollectionMain = () => {
         selectAllFolders,
     } = useContext(AssetContext)
 
-    const { setAdvancedConfig } = useContext(UserContext)
+    const { user, advancedConfig, setAdvancedConfig } = useContext(UserContext)
 
     const { folderInfo, setFolderInfo } = useContext(ShareContext)
 
@@ -102,7 +102,6 @@ const ShareCollectionMain = () => {
             setAdvancedConfig(data.customAdvanceOptions)
             setActivePasswordOverlay(false)
         } catch (err) {
-            
             // If not 500, must be auth error, request user password
             if (err.response.status !== 500) {
                 setFolderInfo(err.response.data)
@@ -309,6 +308,9 @@ const ShareCollectionMain = () => {
         setActiveFolder(id)
     }
 
+    console.log('collections:', location.pathname)
+
+
     return (
         <>
             <main className={styles.container}>
@@ -322,6 +324,7 @@ const ShareCollectionMain = () => {
                     openFilter={openFilter}
                     isShare={true}
                     singleCollection={!!folderInfo.singleSharedCollectionId}
+                    sharedAdvanceConfig={user ? undefined : advancedConfig}
                 />
                 <div className={`${openFilter && styles['col-wrapper']}`}>
                     <AssetGrid

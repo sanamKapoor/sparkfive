@@ -1,5 +1,5 @@
 import styles from './top-bar.module.css'
-import {useContext, useState, useRef} from 'react'
+import {useContext, useState, useRef, useEffect} from 'react'
 import { Utilities } from '../../../assets'
 import selectOptions from '../../../utils/select-options'
 
@@ -23,7 +23,8 @@ const TopBar = ({
   openFilter,
   isShare = false,
   deletedAssets,
-  singleCollection = false
+  singleCollection = false,
+  sharedAdvanceConfig
 }) => {
 
   const {
@@ -34,22 +35,10 @@ const TopBar = ({
     setLastUploadedFolder
   } = useContext(AssetContext)
 
-  const {hasPermission} = useContext(UserContext)
+  const {user, hasPermission, advancedConfig, setAdvancedConfig} = useContext(UserContext)
+  const [hideFilterElements, setHideFilterElements] = useState(advancedConfig.hideFilterElements)
 
-  const {advancedConfig} = useContext(UserContext)
-
-  const [hideFilterElements] = useState(advancedConfig.hideFilterElements)
-
-  const [tabs, setTabs] = useState(selectOptions.views.filter(tab => {
-    let tabName = tab.text.toLowerCase()
-    let shouldShow = true
-    if (hideFilterElements.hasOwnProperty(tabName)) {
-      shouldShow = !hideFilterElements[tabName]
-    }
-    return shouldShow
-  }))
-
-
+  const [tabs, setTabs] = useState(selectOptions.views)
 
   const setSortFilterValue = (key, value) => {
     let sort = key === 'sort' ? value : activeSortFilter.sort
@@ -100,6 +89,24 @@ const TopBar = ({
   const toggleSelectAll = () => {
     selectAllAssets(!selectedAllAssets)
   }
+
+  const setTabsVisibility = () => {
+    const filterElements = sharedAdvanceConfig ? sharedAdvanceConfig.hideFilterElements : hideFilterElements
+    const _tabs = selectOptions.views.filter(tab => {
+      let tabName = tab.text.toLowerCase()
+      let shouldShow = true
+      if (filterElements && filterElements.hasOwnProperty(tabName)) {
+        shouldShow = !filterElements[tabName]
+      }
+      return shouldShow
+    })
+    setTabs(_tabs)
+  }
+
+  useEffect(() => {
+    setTabsVisibility();
+}, [sharedAdvanceConfig])
+
 
   return (
     <section className={styles.container}>
