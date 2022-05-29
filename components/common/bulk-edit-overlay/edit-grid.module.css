@@ -7,8 +7,13 @@
 
 .grid-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, 120px);
-  grid-gap: 3rem;
+  grid-template-columns: repeat(5, minmax(165px, 1fr));
+  grid-template-rows: 200px;
+  grid-gap: 45px;
+}
+
+.grid-list li{
+  height: 200px;
 }
 
 .grid-list li{
@@ -43,7 +48,7 @@
 .image-wrapper > .video-wrapper {
   width: inherit;
   height: inherit;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .text-wrapper{
