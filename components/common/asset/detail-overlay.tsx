@@ -891,7 +891,7 @@ const DetailOverlay = ({
               }}
             />
           )}
-          <IconClickable
+          {currentAsset.extension !== 'gif' && <IconClickable
             src={AssetOps.download}
             additionalClass={styles["menu-icon"]}
             onClick={() => {
@@ -906,7 +906,7 @@ const DetailOverlay = ({
                 downloadSelectedAssets(currentAsset.id);
               }
             }}
-          />
+          />}
           {hasPermission(['admin', 'super_admin']) && (
             <IconClickable
               src={Utilities.notes}
