@@ -24,6 +24,8 @@ const AdvancedOptions = () => {
     const [assetSortView, setAssetSortView] = useState('')
     const [searchDefault, setSearchDefault] = useState('')
     const [hideFilterElements, setHideFilterElements] = useState(advancedConfigParams.hideFilterElements)
+    const [aiTagging, setaiTagging] = useState(false)
+    
 
     const {advancedConfig, setAdvancedConfig} = useContext(UserContext)
 
@@ -46,6 +48,7 @@ const AdvancedOptions = () => {
         setDuplicateCheck(conf.duplicateCheck)
         setSearchDefault(conf.searchDefault)
         setHideFilterElements(conf.hideFilterElements)
+        setaiTagging(conf.aiTagging)
 
         setLoading(false)
         return true
@@ -312,6 +315,37 @@ const AdvancedOptions = () => {
                     </div>
                 </div>
             </div>
+            {/* <div className={`${styles['row']} ${styles['field-block']}`}>
+                <div className={`${styles['col-100']}`}>
+                    <div className={`${styles['row']}`}>
+                        <div className={`${styles['deleted-assets']} row`}>
+                            <div className={"col-40 col-md-100"}>
+                                <span className={'font-weight-500'}>Auto Tagging</span>
+                            </div>
+                            <div className={"col-60 col-md-100"}>
+                                <div>
+                                    <div className={styles['field-radio-wrapper']}>
+                                        <div className={`${styles['radio-button-wrapper']} m-r-15`}>
+                                            <IconClickable
+                                                src={aiTagging ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                                                additionalClass={styles['select-icon']}
+                                                onClick={() => saveAdvanceConfig({ aiTagging: true })} />
+                                            <div className={'font-12 m-l-10'}>On</div>
+                                        </div>
+                                        <div className={`${styles['radio-button-wrapper']} ${styles['hide-on-mobile']}`}>
+                                            <IconClickable
+                                                src={!aiTagging ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                                                additionalClass={styles['select-icon']}
+                                                onClick={() => saveAdvanceConfig({ aiTagging: false })} />
+                                            <div className={'font-12 m-l-10'}>Off</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> */}
             {loading && <SpinnerOverlay />}
         </div>
     )
