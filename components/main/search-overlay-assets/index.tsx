@@ -16,7 +16,7 @@ import Button from '../../common/buttons/button'
 import AssetHeaderOps from '../../common/asset/asset-header-ops'
 import AssetThumbail from "../../common/asset/asset-thumbail";
 
-const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEnabled = false, importAssets = () => { }, sharePath = '' }) => {
+const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEnabled = false, importAssets = () => { }, sharePath = '', activeFolder = '' }) => {
 
   const { assets, setAssets, setActiveOperation, setOperationAsset, setPlaceHolders, nextPage, selectAllAssets, selectedAllAssets, totalAssets } = useContext(AssetContext)
   const { term, setSearchTerm } = useContext(FilterContext)
@@ -36,8 +36,12 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
       if (Object.keys(_filterParams).length > 0) {
         setFilterParams(_filterParams)
       }
-
-      const { data } = await fetchFn({ term: inputTerm, page: replace ? 1 : nextPage, sharePath, ..._filterParams })
+      const params: any = { term: inputTerm, page: replace ? 1 : nextPage, sharePath, ..._filterParams }
+      // search from inside collection
+      if (activeFolder) {
+        params.folderId = activeFolder
+      }
+      const { data } = await fetchFn(params)
       setAssets(data, replace)
     } catch (err) {
       // TODO: Handle this error
