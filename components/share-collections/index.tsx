@@ -1,3 +1,6 @@
+// I heard this component is used for old shared-links but I have not found such shared-links yet.
+// That might have in production. Not sure though.
+
 import styles from './index.module.css'
 import { useState, useContext, useEffect } from 'react'
 import { getAssetsFilters, getAssetsSort, DEFAULT_FILTERS, DEFAULT_CUSTOM_FIELD_FILTERS } from '../../utils/asset'
@@ -189,7 +192,6 @@ const ShareCollectionMain = () => {
                 sort: sort
             })
         }
-
     }, [activeFolder])
 
     // useEffect(()=>{
@@ -365,6 +367,7 @@ const ShareCollectionMain = () => {
                 <SearchOverlay
                     sharePath={sharePath}
                     closeOverlay={closeSearchOverlay}
+                    activeFolder={activeFolder}
                 />
             }
         </>

@@ -10,7 +10,6 @@ import { getAssetsFilters, getAssetsSort, DEFAULT_FILTERS, DEFAULT_CUSTOM_FIELD_
 
 // Components
 import AssetOps from '../../../common/asset/asset-ops'
-import SearchOverlay from '../../../main/search-overlay-assets'
 import AssetSubheader from '../../../common/asset/asset-subheader'
 import TopBar from '../../../common/asset/top-bar'
 import FilterContainer from '../../../common/filter/filter-container'

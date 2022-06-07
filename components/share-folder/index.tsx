@@ -352,6 +352,7 @@ const ShareFolderMain = () => {
                 <SearchOverlay
                     sharePath={sharePath}
                     closeOverlay={closeSearchOverlay}
+                    activeFolder={activeFolder}
                 />
             }
         </>
