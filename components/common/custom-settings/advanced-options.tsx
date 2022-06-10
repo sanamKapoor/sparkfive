@@ -315,7 +315,7 @@ const AdvancedOptions = () => {
                     </div>
                 </div>
             </div>
-            {/* <div className={`${styles['row']} ${styles['field-block']}`}>
+            <div className={`${styles['row']} ${styles['field-block']}`}>
                 <div className={`${styles['col-100']}`}>
                     <div className={`${styles['row']}`}>
                         <div className={`${styles['deleted-assets']} row`}>
@@ -345,7 +345,7 @@ const AdvancedOptions = () => {
                         </div>
                     </div>
                 </div>
-            </div> */}
+            </div>
             {loading && <SpinnerOverlay />}
         </div>
     )
