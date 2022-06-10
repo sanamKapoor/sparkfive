@@ -18,7 +18,8 @@ import {  UserContext } from '../../../context'
 
 const CreatableSelect = ({
   title,
-  addText,
+  addText='',
+  type='',
   onAddClick,
   selectPlaceholder = '',
   avilableItems,
@@ -64,6 +65,9 @@ const CreatableSelect = ({
       if (selectedItems.findIndex(selectedItem => item.label === selectedItem.name) === -1) {
         const newItem = { name: item.label }
         if (!isNew) newItem.id = item.value
+        if (type) {
+          newItem.type = type
+        }
         try {
           const { data } = await asyncCreateFn(newItem)
           let stateItemsUpdate

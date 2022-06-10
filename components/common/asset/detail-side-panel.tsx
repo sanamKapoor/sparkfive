@@ -79,6 +79,9 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     dpi
   } = asset
 
+  const _regularTags = tags.filter(tag => tag.type !== 'AI')
+  const _aiTags = tags.filter(tag => tag.type === 'AI')
+
   const { assets, setAssets, activeFolder } = useContext(AssetContext)
 
   const { hasPermission, advancedConfig } = useContext(UserContext)
@@ -89,11 +92,13 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
   const { setIsLoading }  = useContext(LoadingContext)
 
   const [inputCampaigns, setInputCampaigns] = useState([])
-  const [inputTags, setInputTags] = useState([])
+  const [availRegTags, setAvailRegTags] = useState([])
+  const [availAiTags, setAvailAiTags] = useState([])
   const [inputProjects, setInputProjects] = useState([])
   const [inputFolders, setInputFolders] = useState([])
 
-  const [assetTags, setTags] = useState(tags)
+  const [regularTags, setRegularTags] = useState(_regularTags)
+  const [aiTags, setAiTags] = useState(_aiTags)
   const [assetCampaigns, setCampaigns] = useState(campaigns)
   const [assetProjects, setProjects] = useState(projects)
   const [selectedFolder, setSelectedFolders] = useState([])
@@ -111,7 +116,8 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
   const [productList, setProductList] = useState(products)
 
   useEffect(() => {
-    setTags(tags)
+    setRegularTags(_regularTags)
+    setAiTags(_aiTags)
     setCampaigns(campaigns)
     setProjects(projects)
     setSelectedFolders(folders)
@@ -168,8 +174,11 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
 
   const getTagsInputData = async () => {
     try {
-      const tagsResponse = await tagApi.getTags()
-      setInputTags(tagsResponse.data)
+      const tagsResponse = await tagApi.getTags({includeAi: true})
+      const regTags = tagsResponse.data.filter(tag => tag.type !== 'AI')
+      const aiTags = tagsResponse.data.filter(tag => tag.type === 'AI')
+      setAvailRegTags(regTags)
+      setAvailAiTags(aiTags)
     } catch (err) {
       // TODO: Maybe show error?
     }
@@ -440,6 +449,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     setProductList(products)
   },[products])
 
+
   return (
     <div className={styles.container}>
       <h2>Details</h2>
@@ -499,20 +509,20 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
           addText='Add Tags'
           onAddClick={() => setActiveDropdown('tags')}
           selectPlaceholder={'Enter a new tag or select an existing one'}
-          avilableItems={inputTags}
-          setAvailableItems={setInputTags}
-          selectedItems={assetTags}
-          setSelectedItems={setTags}
+          avilableItems={availRegTags}
+          setAvailableItems={setAvailRegTags}
+          selectedItems={regularTags}
+          setSelectedItems={setRegularTags}
           onAddOperationFinished={(stateUpdate) => {
             updateAssetState({
-              tags: { $set: stateUpdate }
+              tags: { $set: stateUpdate.concat(aiTags) }
             })
             loadTags()
           }}
           onRemoveOperationFinished={async (index, stateUpdate) => {
-            await assetApi.removeTag(id, assetTags[index].id)
+            await assetApi.removeTag(id, regularTags[index].id)
             updateAssetState({
-              tags: { $set: stateUpdate }
+              tags: { $set: stateUpdate.concat(aiTags) }
             })
           }}
           onOperationFailedSkipped={() => setActiveDropdown('')}
@@ -521,6 +531,39 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
           dropdownIsActive={activeDropdown === 'tags'}
         />
       </div>
+
+      {advancedConfig.aiTagging && ['png', 'jpg', 'jpeg'].indexOf(asset.extension.toLowerCase()) > -1 && 
+      <div className={styles['field-wrapper']} >
+        <CreatableSelect
+          title='AI Tags'
+          addText='Add AI Tags'
+          type='AI'
+          creatable = {false}
+          onAddClick={() => setActiveDropdown('ai-tags')}
+          selectPlaceholder={'Select an existing one'}
+          avilableItems={availAiTags}
+          setAvailableItems={setAvailRegTags}
+          selectedItems={aiTags}
+          setSelectedItems={setAiTags}
+          onAddOperationFinished={(stateUpdate) => {
+            updateAssetState({
+              tags: { $set: stateUpdate.concat(regularTags) }
+            })
+            loadTags()
+          }}
+          onRemoveOperationFinished={async (index, stateUpdate) => {
+            await assetApi.removeTag(id, aiTags[index].id)
+            updateAssetState({
+              tags: { $set: stateUpdate.concat(regularTags) }
+            })
+          }}
+          onOperationFailedSkipped={() => setActiveDropdown('')}
+          isShare={isShare}
+          asyncCreateFn={(newItem) => assetApi.addTag(id, {...newItem, type: 'AI'})}
+          dropdownIsActive={activeDropdown === 'ai-tags'}
+        />
+      </div>
+      }
 
       {inputCustomFields.map((field, index)=>{
         if(field.type === 'selectOne'){
