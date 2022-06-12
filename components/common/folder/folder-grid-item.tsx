@@ -37,20 +37,12 @@ const FolderGridItem = ({
   isShare = false
 }) => {
   const { updateDownloadingStatus } = useContext(AssetContext);
-  const { activeSortFilter } = useContext(FilterContext)
-
-  const alphaSort = activeSortFilter.sort.value === 'alphabetical'
-  let _assets = [...assets]
-  _assets = _.orderBy(_assets, [(asset) => {
-    const value = alphaSort ? (asset.name || '').toUpperCase() : new Date(asset.createdAt).getTime()
-    return value
-  }], [alphaSort ? 'asc' : 'desc'])
 
   const previews = [1, 2, 3, 4].map((_, index) => ({
-    name: _assets[index]?.name || "empty",
-    assetImg: _assets[index]?.thumbailUrl || "",
-    type: _assets[index]?.type || "empty",
-    extension: _assets[index]?.extension,
+    name: assets[index]?.name || "empty",
+    assetImg: assets[index]?.thumbailUrl || "",
+    type: assets[index]?.type || "empty",
+    extension: assets[index]?.extension,
   }));
 
   const [deleteOpen, setDeleteOpen] = useState(false);
