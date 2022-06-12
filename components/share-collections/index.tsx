@@ -1,5 +1,5 @@
 // I heard this component is used for old shared-links but I have not found such shared-links yet.
-// That might have in production. Not sure though.
+// That might have in production. Not sure though, so let's keep this component.
 
 import styles from './index.module.css'
 import { useState, useContext, useEffect } from 'react'

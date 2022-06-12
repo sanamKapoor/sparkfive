@@ -79,9 +79,6 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     dpi
   } = asset
 
-  const _regularTags = tags.filter(tag => tag.type !== 'AI')
-  const _aiTags = tags.filter(tag => tag.type === 'AI')
-
   const { assets, setAssets, activeFolder } = useContext(AssetContext)
 
   const { hasPermission, advancedConfig } = useContext(UserContext)
@@ -97,8 +94,8 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
   const [inputProjects, setInputProjects] = useState([])
   const [inputFolders, setInputFolders] = useState([])
 
-  const [regularTags, setRegularTags] = useState(_regularTags)
-  const [aiTags, setAiTags] = useState(_aiTags)
+  const [regularTags, setRegularTags] = useState([])
+  const [aiTags, setAiTags] = useState([])
   const [assetCampaigns, setCampaigns] = useState(campaigns)
   const [assetProjects, setProjects] = useState(projects)
   const [selectedFolder, setSelectedFolders] = useState([])
@@ -116,6 +113,8 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
   const [productList, setProductList] = useState(products)
 
   useEffect(() => {
+    const _regularTags = (tags || []).filter(tag => tag.type !== 'AI')
+    const _aiTags = (tags || []).filter(tag => tag.type === 'AI')
     setRegularTags(_regularTags)
     setAiTags(_aiTags)
     setCampaigns(campaigns)
