@@ -149,6 +149,19 @@
     padding-left: 15px;
 }
 
+.col-70{
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 70%;
+    flex: 0 0 70%;
+    max-width: 70%;
+
+    position: relative;
+    width: 100%;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
 .justify-content-center{
     justify-content: center;
 }

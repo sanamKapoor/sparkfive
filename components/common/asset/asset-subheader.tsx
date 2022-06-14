@@ -9,7 +9,7 @@ import AssetAddition from '../../common/asset/asset-addition'
 // Context
 import { UserContext} from '../../../context'
 
-import { ASSET_UPLOAD_NO_APPROVAL } from '../../../constants/permissions'
+import { ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL } from '../../../constants/permissions'
 
 const AssetSubheader = ({
   amountSelected = 0,
@@ -20,14 +20,16 @@ const AssetSubheader = ({
   getFolders,
   activeSortFilter,
   mode,
-  deletedAssets = false
+  deletedAssets = false,
+    titleText = "",
+    showAssetAddition = true,
 }) => {
 
     const {  hasPermission } = useContext(UserContext)
 
 
   return (
-    <SubHeader pageTitle={activeFolderData ? activeFolderData.name : 'Asset Library'} additionalClass={styles['asset-subheader']}
+    <SubHeader pageTitle={activeFolderData ? activeFolderData.name : (titleText ||'Asset Library')} additionalClass={styles['asset-subheader']}
       editable={activeFolderData} onAltEditionClick={() => setRenameModalOpen(true)}
       PreComponent={activeFolderData ? () => (
         <div className={styles['additional-folder-wrapper']} onClick={backToFolders}>
@@ -41,7 +43,7 @@ const AssetSubheader = ({
       <div className={styles.padding}>
       </div>
         {amountSelected > 0  && <AssetHeaderOps isUnarchive={activeSortFilter.mainFilter === 'archived'} isFolder={mode === 'folders'} iconColor='White' deletedAssets={deletedAssets}/>}
-        {(amountSelected === 0 || mode === 'folders') && hasPermission([ASSET_UPLOAD_NO_APPROVAL]) && <AssetAddition activeFolder={activeFolder} getFolders={getFolders} />}
+        {(amountSelected === 0 || mode === 'folders') && showAssetAddition && hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL]) && <AssetAddition activeFolder={activeFolder} getFolders={getFolders} />}
     </SubHeader>
   )
 }

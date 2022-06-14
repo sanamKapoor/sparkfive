@@ -1,3 +1,5 @@
+import { useEffect} from "react";
+
 import styles from "./asset-img.module.css";
 
 import { Assets } from "../../../assets";
@@ -9,6 +11,7 @@ const AssetImg = ({
   name,
   opaque = false,
   onClick = () => {},
+  imgClass = ""
 }) => {
   const [loaded, setLoaded] = useState(false);
 
@@ -16,6 +19,10 @@ const AssetImg = ({
   if (!finalImg && type === "video") finalImg = Assets.videoThumbnail;
 
   if (!finalImg) finalImg = Assets.empty;
+
+    useEffect(()=>{
+        setLoaded(false)
+    },[assetImg])
   return (
     <>
       <img
@@ -28,7 +35,7 @@ const AssetImg = ({
         onClick={onClick}
         src={finalImg}
         alt={name}
-        className={`${styles.asset} ${opaque && styles.opaque}`}
+        className={`${styles.asset} ${opaque && styles.opaque} ${imgClass}`}
         onLoad={() => setLoaded(true)}
         style={
           loaded
