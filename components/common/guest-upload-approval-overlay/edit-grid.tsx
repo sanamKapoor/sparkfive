@@ -1,6 +1,9 @@
+import { useState } from "react";
+import ReactTooltip from "react-tooltip";
+
 import styles from "./edit-grid.module.css";
 import { Utilities } from "../../../assets";
-import ReactTooltip from "react-tooltip";
+
 
 // Components
 import AssetImg from "../asset/asset-img";
@@ -9,7 +12,9 @@ import AssetApplication from "../asset/asset-application";
 import AssetText from "../asset/asset-text";
 import IconClickable from "../buttons/icon-clickable";
 import ImagePreviewModal from "../modals/image-preview-modal";
-import { useState } from "react";
+
+
+import AssetIcon from "../../common/asset/asset-icon";
 
 const getStatusClass = (status: string) => {
   switch (status) {
