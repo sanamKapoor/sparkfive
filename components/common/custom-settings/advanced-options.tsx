@@ -320,7 +320,7 @@ const AdvancedOptions = () => {
                     <div className={`${styles['row']}`}>
                         <div className={`${styles['deleted-assets']} row`}>
                             <div className={"col-40 col-md-100"}>
-                                <span className={'font-weight-500'}>Auto Tagging</span>
+                                <span className={'font-weight-500'}>AI Tagging</span>
                             </div>
                             <div className={"col-60 col-md-100"}>
                                 <div>
