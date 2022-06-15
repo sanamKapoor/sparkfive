@@ -39,6 +39,11 @@ const AssetThumbail = ({
   openRemoveAsset = () => {},
   loadMore = () => {},
   handleVersionChange,
+  onView = null,
+  customComponent = <></>,
+  infoWrapperClass = "",
+  textWrapperClass = "",
+  customIconComponent = <></>
 }) => {
   const [overlayProperties, setOverlayProperties] = useState(DEFAULT_DETAIL_PROPS);
   const { detailOverlayId } = useContext(AssetContext);
@@ -118,39 +123,54 @@ const AssetThumbail = ({
                   styleType={"primary"}
                   text={"View Details"}
                   type={"button"}
-                  onClick={() =>
-                    setOverlayProperties({
-                      ...DEFAULT_DETAIL_PROPS,
-                      visible: !overlayProperties.visible,
-                    })
-                  }
+                  onClick={() =>{
+                    if(onView){
+                      onView()
+                    }else{
+                      setOverlayProperties({
+                        ...DEFAULT_DETAIL_PROPS,
+                        visible: !overlayProperties.visible,
+                      })
+                    }
+
+                  }}
                 />
               </div>
             </>
           )}
         </div>
         <div className={styles.info}>
-          <div className="normal-text">{asset.name}</div>
-          <div className={styles["details-wrapper"]}>
-            <div className="secondary-text">
-              {format(new Date(asset.createdAt), "MMM d, yyyy, p")}
+          <div className={infoWrapperClass}>
+            <div className={textWrapperClass}>
+              <div className={`normal-text ${styles['wrap-text']}`}>{asset.name}</div>
+              <div className={styles["details-wrapper"]}>
+                <div className="secondary-text">
+                  {format(new Date(asset.createdAt), "MMM d, yyyy, p")}
+                </div>
+                {!isUploading && showAssetOption && (
+                    <AssetOptions
+                        itemType={type}
+                        asset={asset}
+                        openArchiveAsset={openArchiveAsset}
+                        openDeleteAsset={openDeleteAsset}
+                        openMoveAsset={openMoveAsset}
+                        openCopyAsset={openCopyAsset}
+                        downloadAsset={downloadAsset}
+                        openShareAsset={openShareAsset}
+                        openComments={openComments}
+                        openRemoveAsset={openRemoveAsset}
+                        isShare={isShare}
+                    />
+                )}
+              </div>
             </div>
-            {!isUploading && showAssetOption && (
-              <AssetOptions
-                itemType={type}
-                asset={asset}
-                openArchiveAsset={openArchiveAsset}
-                openDeleteAsset={openDeleteAsset}
-                openMoveAsset={openMoveAsset}
-                openCopyAsset={openCopyAsset}
-                downloadAsset={downloadAsset}
-                openShareAsset={openShareAsset}
-                openComments={openComments}
-                openRemoveAsset={openRemoveAsset}
-                isShare={isShare}
-              />
-            )}
+
+
+            {customIconComponent}
+
           </div>
+
+          <div>{customComponent}</div>
         </div>
       </div>
       {overlayProperties.visible && (

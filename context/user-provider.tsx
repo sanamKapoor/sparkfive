@@ -68,9 +68,9 @@ export default ({ children }) => {
           } else {
             await Router.replace('/main/overview')
           }
-        } else if (data.firstTimeLogin && 
-          data.team.plan.type === 'dam' && 
-          Router.pathname.indexOf('/user-settings') === -1 && 
+        } else if (data.firstTimeLogin &&
+          data.team.plan.type === 'dam' &&
+          Router.pathname.indexOf('/user-settings') === -1 &&
           Router.pathname.indexOf('/advanced-options') !== -1 &&
           Router.pathname.indexOf('/deleted-assets-list') === -1) {
           await Router.replace('/main/assets' + (query === '' ? '' : `?${query}`))

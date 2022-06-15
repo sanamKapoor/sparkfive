@@ -44,6 +44,17 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
     </Link>
   )
 
+  const MainLink = ({ settingRef, name }) => (
+      <Link href={`/main/${settingRef}`}>
+        <a>
+          <li>
+            <span></span>
+            <span>{name}</span>
+          </li>
+        </a>
+      </Link>
+  )
+
   const adminJWT = cookiesUtils.get('adminToken')
 
   const getBackToAdmin = async () => {
@@ -53,7 +64,8 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
   }
 
   const dropdownOptions = [
-    { OverrideComp: () => <SettingsLink name='Profile' settingRef='profile' /> }
+    { OverrideComp: () => <SettingsLink name='Profile' settingRef='profile' /> },
+    { OverrideComp: () => <MainLink name='Upload Approvals' settingRef='upload-approvals' /> }
   ]
   if (hasPermission([SETTINGS_COMPANY])) dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Company' settingRef='company' /> })
   if (hasPermission([SETTINGS_BILLING])) dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Billing' settingRef='billing' /> })

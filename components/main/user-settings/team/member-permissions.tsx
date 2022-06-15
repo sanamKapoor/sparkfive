@@ -9,6 +9,16 @@ const MemberPermissions = ({ memberPermissions, permissions, setMemberPermission
   const [mappedPermissions, setMappedPermissions] = useState([])
   const { plan } = useContext(TeamContext)
 
+  // Filter apply to only show asset library for dam plan
+  const filter = (data) => {
+    let permissionsList = data
+    if (plan?.type === 'dam') {
+      permissionsList = data.filter(damPermission => damPermission.category === 'Asset Library')
+    }
+
+    return permissionsList
+  }
+
   useEffect(() => {
     if (listOnly || (memberPermissions.length > 0 && permissions.length > 0)) {
       const groups = {}
@@ -27,32 +37,43 @@ const MemberPermissions = ({ memberPermissions, permissions, setMemberPermission
           }
         }
       })
-      setMappedPermissions(Object.values(groups))
+      setMappedPermissions(filter(Object.values(groups)))
     }
   }, [memberPermissions, permissions])
 
   const togglePermission = (permission) => {
     const permissionIndex = memberPermissions.findIndex(memberPer => memberPer.id === permission.id)
+
+    // Check if any fields need to be switched to off due to this toggle
+    const toggleOffPermissionIndex = permission.toggleOffFields ? memberPermissions.findIndex(memberPer => permission.toggleOffFields.split(",").includes(memberPer.id)) : -1
+
+    // Already added, toggle off
     if (permissionIndex !== -1) {
       setMemberPermissions(update(memberPermissions, {
         $splice: [[permissionIndex, 1]]
       }))
-    } else {
-      setMemberPermissions(update(memberPermissions, {
-        $push: [permission]
-      }))
-    }
-  }
+    } else { // Not added yet
 
-  let permissionsList = mappedPermissions
-  if (plan?.type === 'dam') {
-    permissionsList = mappedPermissions.filter(damPermission => damPermission.category === 'Asset Library')
+      const arr = [...memberPermissions];
+
+      // If there is field need to be switched off
+      if(toggleOffPermissionIndex !== -1){
+        // Remove it
+        arr.splice(toggleOffPermissionIndex, 1)
+      }
+
+      // Add the new one
+      arr.push(permission)
+
+      setMemberPermissions(arr)
+
+    }
   }
 
   return (
     <div className={`${styles.container} ${listOnly ? styles['flex-row'] : ''}`}>
       {!listOnly && <h3>Permissions</h3>}
-      {permissionsList.map(({ category, features }) => (
+      {mappedPermissions.map(({ category, features }) => (
         <div key={category} className={styles.group}>
           <h4>{category}</h4>
           <ul>

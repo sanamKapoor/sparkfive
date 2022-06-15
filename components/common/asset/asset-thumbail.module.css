@@ -64,6 +64,12 @@
   animation: intoview 0.5s;
 }
 
+.wrap-text{
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
 @keyframes halfopacity {
   0% {
     opacity: 1;

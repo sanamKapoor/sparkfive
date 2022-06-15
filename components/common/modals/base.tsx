@@ -20,7 +20,8 @@ const Base = ({
   disabledConfirm = false,
   noHeightMax = false,
   additionalClasses = [''],
-    showCancel = true
+    showCancel = true,
+    closeButtonOnly = false
 }) => {
 
   return (
@@ -33,9 +34,9 @@ const Base = ({
       shouldFocusAfterRender={false}
       ariaHideApp={false}
     >
-      {headText &&
-        <div className={`${styles.text} ${textWidth && styles['full-width']}`}>
-          <p className={styles['overflow-text']}>{headText}</p>
+      {(headText || closeButtonOnly) &&
+        <div className={`${styles.text} ${closeButtonOnly ? styles['no-border'] : "" } ${textWidth && styles['full-width']}`}>
+          {<p className={styles['overflow-text']}>{!closeButtonOnly ? headText : ""}</p>}
           <span className={styles.close} onClick={closeModal}>x</span>
         </div>
       }

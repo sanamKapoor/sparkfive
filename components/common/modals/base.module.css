@@ -89,6 +89,10 @@
   text-overflow: ellipsis;
 }
 
+.no-border{
+  border-bottom: none;
+}
+
 @media screen and (max-width: 500px) {
   .text {
     min-width: 100%;

@@ -33,6 +33,7 @@ import Button from '../../common/buttons/button'
 import GuestUpload from "./guest-upload"
 import CustomSettings from "./custom-settings"
 import ShareLinks from "./share-links"
+import UploadApprovals from "./upload-approvals"
 
 
 const SETTING_OPTIONS = {

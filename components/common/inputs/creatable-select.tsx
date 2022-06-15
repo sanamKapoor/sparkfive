@@ -37,7 +37,8 @@ const CreatableSelect = ({
   canAdd = true,
   selectClass = '',
   creatable = true,
-  selectOneComponent = <></>
+  selectOneComponent = <></>,
+  allowEdit = true,
 }) => {
 
   const { hasPermission } = useContext(UserContext)
@@ -117,7 +118,7 @@ const CreatableSelect = ({
                 data={item}
                 altColor={altColor}
                 tag={item.name}
-                canRemove={!isShare && hasPermission([ASSET_EDIT])}
+                canRemove={!isShare && allowEdit && hasPermission([ASSET_EDIT])}
                 removeFunction={() => removeItem(index, item.id)}
               />
             </li>
@@ -148,10 +149,10 @@ const CreatableSelect = ({
                 }
               </div>
               :
-              <div className={`add ${styles['select-add']}`} onClick={onAddClick}>
+                <>{allowEdit && <div className={`add ${styles['select-add']}`} onClick={onAddClick}>
                 <IconClickable src={Utilities.add} />
                 <span>{addText}</span>
-              </div>
+              </div>}</>
             }
           </>
         }

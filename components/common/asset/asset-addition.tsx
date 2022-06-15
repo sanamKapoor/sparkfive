@@ -29,6 +29,8 @@ import {getFolderKeyAndNewNameByFileName} from "../../../utils/upload";
 import { FilterContext, UserContext } from '../../../context'
 import AssetDuplicateModal from './asset-duplicate-modal'
 
+import { ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL } from '../../../constants/permissions'
+
 
 
 const AssetAddition = ({
@@ -55,7 +57,7 @@ const AssetAddition = ({
 	const [uploadFrom, setUploadFrom] = useState('');
 
 	const { activeSortFilter, setActiveSortFilter } = useContext(FilterContext)
-	const { advancedConfig, setAdvancedConfig } = useContext(UserContext)
+	const { advancedConfig, setAdvancedConfig, hasPermission } = useContext(UserContext)
 
 	const {
 		assets,
@@ -251,7 +253,7 @@ const AssetAddition = ({
 		} else {
 			const lastAsset = newAssetPlaceholder[newAssetPlaceholder.length-1]
 			if (lastAsset) {
-				if (activeSortFilter.mainFilter === "folders" && activeSortFilter.sort.value === "alphabetical") { 
+				if (activeSortFilter.mainFilter === "folders" && activeSortFilter.sort.value === "alphabetical") {
 					const id = newAssetPlaceholder[0].asset.folders[0]
 					setLastUploadedFolder({assets: [...newAssetPlaceholder], ...folderUploadInfo, id, length: newAssetPlaceholder.length})
 				}
@@ -764,7 +766,7 @@ const AssetAddition = ({
 		}
 		const mappedDuplicates = _.keyBy(duplicateAssets, 'name')
 
-		// eliminate canceled 
+		// eliminate canceled
 		files = files.filter(file => {
 			const cancelledItem = nameHistories.find(item => item.oldName === file.name && item.action === 'cancel')
 			return !cancelledItem
@@ -795,12 +797,13 @@ const AssetAddition = ({
 					onGdriveFilesGet(files)
 					break;
 			}
-			
+
 		}
 	}
 
 	const SimpleButtonWrapper = ({ children }) => (
 		<div className={`${styles['button-wrapper']} ${!folderAdd && styles['button-wrapper-displaced']}`}>
+			{hasPermission([ASSET_UPLOAD_APPROVAL]) && <span className={styles['approval-text']}>Upload for approval</span>}
 			<SimpleButton text='+' />
 			{children}
 		</div>
@@ -846,6 +849,7 @@ const AssetAddition = ({
 				<ToggleAbleAbsoluteWrapper
 					Wrapper={SimpleButtonWrapper}
 					Content={DropDownOptions}
+					uploadApproval={true}
 				/>
 				:
 				<DropDownOptions />
