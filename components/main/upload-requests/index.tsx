@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef } from 'react'
+import React, { useState, useEffect, useContext, useRef } from 'react'
 import moment from "moment";
 import _ from "lodash"
 import update from "immutability-helper";
@@ -34,6 +34,7 @@ import uploadApprovalApi from '../../../server-api/upload-approvals'
 import tagApi from '../../../server-api/tag'
 import approvalApi from '../../../server-api/upload-approvals'
 import assetApi from '../../../server-api/asset'
+import ConfirmModal from "../../common/modals/confirm-modal";
 
 const UploadRequest = () => {
 
@@ -77,6 +78,10 @@ const UploadRequest = () => {
 
     const [selectedAllAssets, setSelectedAllAssets] = useState(false)
 
+    const [showApproveConfirm, setShowApproveConfirm] = useState(false)
+    const [showRejectConfirm, setShowRejectConfirm] = useState(false)
+    const [tempAssets, setTempAssets] = useState([])
+
     const toggleSelected = (index) => {
         let approvalList = [...approvals]
         approvalList.map((item, itemIndex)=>{
@@ -115,6 +120,7 @@ const UploadRequest = () => {
         setNeedRefresh(false)
         setBatchName("")
         setSelectedAllAssets(false)
+        setTempAssets([])
 
         if(refresh === true || needRefresh){
             fetchApprovals();
@@ -369,6 +375,11 @@ const UploadRequest = () => {
 
         setAssets(assetList)
 
+        // Reset temp assets
+        if(value === false){
+            setTempAssets([])
+        }
+
     }
 
     // Toggle select assets
@@ -448,6 +459,60 @@ const UploadRequest = () => {
         toastUtils.success("Update tag successfully")
     }
 
+    const approve = async(approvalId, assetIds) => {
+        setIsLoading(true)
+
+        await approvalApi.approve(approvalId, { assetIds })
+
+        // Update status to assets list
+        let assetArrData = [...assets]
+        // @ts-ignore
+        assetArrData.map((asset)=>{
+            if(assetIds.includes(asset.asset.id)){
+                asset.asset.status = 2
+            }
+        })
+
+        setAssets(assetArrData)
+
+        setNeedRefresh(true)
+
+        setIsLoading(false)
+
+        setDetailModal(false)
+
+        toastUtils.success("Approve asset successfully")
+    }
+
+    const reject = async(approvalId, assetIds) => {
+        setIsLoading(true)
+
+        await approvalApi.reject(approvalId, { assetIds })
+
+        // Update status to assets list
+        let assetArrData = [...assets]
+        // @ts-ignore
+        assetArrData.map((asset)=>{
+            if(assetIds.includes(asset.asset.id)){
+                asset.asset.status = -1
+            }
+        })
+
+        setAssets(assetArrData)
+
+        setNeedRefresh(true)
+
+        setIsLoading(false)
+
+        setDetailModal(false)
+
+        toastUtils.success("Reject asset successfully")
+    }
+
+    const getSelectedAssets = () => {
+        return assets.filter((asset)=>asset.isSelected).map((asset)=>asset.asset.id)
+    }
+
     useEffect(()=>{
         fetchApprovals();
         getTagsInputData();
@@ -482,7 +547,7 @@ const UploadRequest = () => {
 
                         <div className={"m-l-auto"}>
                             {assets.length > 0 && (currentViewStatus === 0 || isAdmin()) && hasSelectedAssets() && <Button type='button' text='Deselect' styleType='secondary' onClick={()=>{selectAllAssets(false)}} />}
-                            {assets.length > 0 && (currentViewStatus === 0 || isAdmin()) && <Button type='button' text='Select All' styleType='secondary' onClick={selectAllAssets} />}
+                            {assets.length > 0 && (currentViewStatus === 0 || isAdmin()) && !selectedAllAssets && <Button type='button' text='Select All' styleType='secondary' onClick={selectAllAssets} />}
                             {assets.length > 0 && currentViewStatus === 0 &&
                                 <Button
                                 type='button'
@@ -504,6 +569,8 @@ const UploadRequest = () => {
                                     text='Reject Selected'
                                     styleType='primary'
                                     onClick={()=>{
+                                        setTempAssets(getSelectedAssets())
+                                        setShowRejectConfirm(true)
                                     }
 
                                     }
@@ -515,6 +582,8 @@ const UploadRequest = () => {
                                     text='Approve Selected'
                                     styleType='primary'
                                     onClick={()=>{
+                                        setTempAssets(getSelectedAssets())
+                                        setShowApproveConfirm(true)
                                     }
 
                                     }
@@ -528,6 +597,7 @@ const UploadRequest = () => {
                     {mode === "list" && <div className={styles["asset-list"]}>
                         <div className={assetGridStyles["list-wrapper"]}>
                             <ul className={"regular-list"}>
+                                {approvals.length === 0 && <p>There is no any request yet</p>}
                                 {
                                     approvals.map((approval, index) => {
                                         return (
@@ -650,7 +720,7 @@ const UploadRequest = () => {
                                     setAvailableItems={setInputTags}
                                     selectedItems={assetTags}
                                     setSelectedItems={setTags}
-                                    allowEdit={currentViewStatus === 0}
+                                    allowEdit={currentViewStatus === 0 || isAdmin()}
                                     creatable={false}
                                     onAddOperationFinished={(stateUpdate) => {
                                         setActiveDropdown("")
@@ -780,9 +850,26 @@ const UploadRequest = () => {
 
 
                         {(isAdmin()) && <div className={styles['admin-button-wrapper']}>
-                            <Button className={styles['add-tag-btn']} type='button' text='Reject' styleType='secondary' onClick={onSaveSingleAsset} />
+                            <Button
+                                className={styles['add-tag-btn']}
+                                type='button'
+                                text='Reject'
+                                styleType='secondary'
+                                onClick={()=>{
+                                    setTempAssets([assets[selectedAsset]?.asset.id])
+                                    setShowRejectConfirm(true)}
+                            }/>
 
-                            <Button className={styles['add-tag-btn']} type='button' text='Approve' styleType='primary' onClick={onSaveSingleAsset} />
+                            <Button
+                                className={styles['add-tag-btn']}
+                                type='button'
+                                text='Approve'
+                                styleType='primary'
+                                onClick={()=> {
+                                    setTempAssets([assets[selectedAsset]?.asset.id])
+                                    setShowApproveConfirm(true)
+                                }
+                            } />
                         </div>}
 
 
@@ -844,6 +931,29 @@ const UploadRequest = () => {
                 0,
                 assets[selectedAsset]?.asset?.name.lastIndexOf(".")
             )}
+        />
+
+
+        <ConfirmModal
+            closeModal={() => setShowApproveConfirm(false)}
+            confirmAction={() => {
+                approve(approvalId, tempAssets)
+                setShowApproveConfirm(false)
+            }}
+            confirmText={'Approve'}
+            message={'Are you sure you would like to approve this asset?'}
+            modalIsOpen={showApproveConfirm}
+        />
+
+        <ConfirmModal
+            closeModal={() => setShowRejectConfirm(false)}
+            confirmAction={() => {
+                reject(approvalId, tempAssets)
+                setShowRejectConfirm(false)
+            }}
+            confirmText={'Reject'}
+            message={'Are you sure you would like to reject this asset?'}
+            modalIsOpen={showRejectConfirm}
         />
 
     </>
