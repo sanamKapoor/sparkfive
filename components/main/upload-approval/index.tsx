@@ -355,7 +355,7 @@ const UploadApproval = () => {
                     versionGroup: (file.versionGroup || versionGroup),
                     changedName: file.changedName
                 })),
-                getCreationParameters({estimateTime: 1, totalSize}))
+                getCreationParameters({estimateTime: 1, totalSize, requireApproval: 1}))
 
             // clean old version for main grid
             if (versionGroup) {
@@ -376,9 +376,6 @@ const UploadApproval = () => {
 
             // Mark process as done
             showUploadProcess('done')
-            if (!versionGroup) {
-                setNeedsFetch('folders')
-            }
 
             // Reset upload source type
             setUploadSourceType('')
@@ -484,7 +481,7 @@ const UploadApproval = () => {
                 type: file.type,
                 versionGroup: file.versionGroup || versionGroup,
                 changedName: file.changedName
-            })), getCreationParameters({estimateTime: 1, totalSize}))
+            })), getCreationParameters({estimateTime: 1, totalSize, requireApproval: 1}))
 
             // clean old version for main grid
             if (versionGroup) {
@@ -505,8 +502,6 @@ const UploadApproval = () => {
 
             // Mark process as done
             showUploadProcess('done')
-
-            setNeedsFetch('folders')
 
             // Reset upload source type
             setUploadSourceType('')
@@ -742,15 +737,25 @@ const UploadApproval = () => {
     const saveBulkTag = async () => {
         setIsLoading(true)
 
-        for(const { asset, isSelected } of assets){
+        for(const { asset, isSelected, tags } of assets){
             let tagPromises = []
+            let removeTagPromises = []
 
             if(isSelected){
-                for( const tag of assetTags){
+                const newTags = _.differenceBy(assetTags, tags || [])
+                const removeTags = _.differenceBy(tags || [], assetTags)
+
+                for( const tag of removeTags){
+                    removeTagPromises.push(assetApi.removeTag(asset.id, tag.id))
+                }
+
+                for( const tag of newTags){
                     tagPromises.push(assetApi.addTag(asset.id, tag))
                 }
             }
+
             await Promise.all(tagPromises)
+            await Promise.all(removeTagPromises)
         }
 
         // Save tags to asset
@@ -871,11 +876,23 @@ const UploadApproval = () => {
             const saveTag = async () => {
 
                 let promises = []
+                let removeTagPromises = []
 
                 for(const { asset } of assetArr){
                     let tagPromises = []
-                    for( const tag of tempTags){
+
+                    // Find the new tags
+                    // @ts-ignore
+                    const newTags = _.differenceBy(tempTags, assets[selectedAsset]?.tags || [])
+                    const removeTags = _.differenceBy(assets[selectedAsset]?.tags || [], tempTags)
+
+                    for( const tag of newTags){
                         tagPromises.push(assetApi.addTag(asset.id, tag))
+                    }
+
+                    for( const tag of removeTags){
+                        removeTagPromises.push(assetApi.removeTag(asset.id, tag.id))
+
                     }
 
                     await Promise.all(tagPromises)

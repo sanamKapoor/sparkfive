@@ -35,6 +35,23 @@ import tagApi from '../../../server-api/tag'
 import approvalApi from '../../../server-api/upload-approvals'
 import assetApi from '../../../server-api/asset'
 import ConfirmModal from "../../common/modals/confirm-modal";
+import {statusList} from "../../../constants/shared-links";
+import Select from "../../common/inputs/select";
+
+const filterOptions = [
+    {
+        label: "Approved",
+        value: 2
+    },
+    {
+        label: "Pending",
+        value: 0
+    },
+    {
+        label: "Rejected",
+        value: -1
+    },
+]
 
 const UploadRequest = () => {
 
@@ -82,6 +99,9 @@ const UploadRequest = () => {
     const [showRejectConfirm, setShowRejectConfirm] = useState(false)
     const [tempAssets, setTempAssets] = useState([])
 
+    const [filter, setFilter] = useState()
+    const [approvalIndex, setApprovalIndex]  = useState()
+
     const toggleSelected = (index) => {
         let approvalList = [...approvals]
         approvalList.map((item, itemIndex)=>{
@@ -107,6 +127,7 @@ const UploadRequest = () => {
         setApprovalId(approvals[index].id)
         setCurrentViewStatus(approvals[index]?.status)
         setCurrentApproval(approvals[index])
+        setApprovalIndex(index)
     }
 
 
@@ -121,6 +142,7 @@ const UploadRequest = () => {
         setBatchName("")
         setSelectedAllAssets(false)
         setTempAssets([])
+        setApprovalIndex(undefined)
 
         if(refresh === true || needRefresh){
             fetchApprovals();
@@ -189,17 +211,25 @@ const UploadRequest = () => {
 
                 for(const { asset } of assetArr){
                     let tagPromises = []
+                    let removeTagPromises = []
 
                     // Find the new tags
                     // @ts-ignore
                     const newTags = _.differenceBy(tempTags, assets[selectedAsset]?.asset?.tags || [])
+                    const removeTags = _.differenceBy(assets[selectedAsset]?.asset?.tags || [], tempTags)
 
                     for( const tag of newTags){
                         tagPromises.push(assetApi.addTag(asset.id, tag))
 
                     }
 
+                    for( const tag of removeTags){
+                        removeTagPromises.push(assetApi.removeTag(asset.id, tag.id))
+
+                    }
+
                     await Promise.all(tagPromises)
+                    await Promise.all(removeTagPromises)
                 }
 
                 return await Promise.all(promises)
@@ -221,9 +251,9 @@ const UploadRequest = () => {
             // Update these tag and comments to asset
             let assetArrData = [...assets]
             // @ts-ignore
-            assetArrData[selectedAsset].tags = tempTags
+            assetArrData[selectedAsset].asset.tags = tempTags
             // @ts-ignore
-            assetArrData[selectedAsset].comments = tempComments
+            assetArrData[selectedAsset].asset.comments = tempComments
 
             setIsLoading(false);
 
@@ -234,25 +264,36 @@ const UploadRequest = () => {
 
     }
 
+    // Save bulk tag from right pannel
     const saveBulkTag = async () => {
         setIsLoading(true)
 
         for(const { asset, isSelected } of assets){
             let tagPromises = []
+            let removeTagPromises = []
 
             if(isSelected){
-                for( const tag of assetTags){
+                const newTags = _.differenceBy(assetTags, asset?.tags || [])
+                const removeTags = _.differenceBy(asset?.tags || [], assetTags)
+
+                for( const tag of removeTags){
+                    removeTagPromises.push(assetApi.removeTag(asset.id, tag.id))
+                }
+
+                for( const tag of newTags){
                     tagPromises.push(assetApi.addTag(asset.id, tag))
                 }
             }
+
             await Promise.all(tagPromises)
+            await Promise.all(removeTagPromises)
         }
 
         // Save tags to asset
         let assetArr = [...assets];
         assetArr.map((asset)=>{
             if(asset.isSelected){
-                asset.tags = assetTags
+                asset.asset.tags = assetTags
             }
         })
 
@@ -262,9 +303,12 @@ const UploadRequest = () => {
         // Reset tags
         setTags([])
 
+        setNeedRefresh(true)
+
         setIsLoading(false)
     }
 
+    // Save comment  from right panel
     const saveComment = async () => {
         setIsLoading(true)
 
@@ -282,7 +326,7 @@ const UploadRequest = () => {
         let assetArr = [...assets];
         assetArr.map((asset)=>{
             if(asset.isSelected){
-                asset.comments = comments
+                asset.asset.comments = comments
             }
         })
 
@@ -292,6 +336,8 @@ const UploadRequest = () => {
 
         // Reset comments
         setComments("")
+
+        setNeedRefresh(true)
 
         setIsLoading(false)
     }
@@ -518,6 +564,39 @@ const UploadRequest = () => {
         getTagsInputData();
     },[])
 
+    useEffect(()=>{
+        if(approvalIndex !== undefined){
+            // @ts-ignore
+            const currentData = approvals[approvalIndex] ? approvals[approvalIndex].assets : []
+            if(filter && currentData.length > 0){
+                // @ts-ignore
+                switch (filter.value) {
+                    case -1: {
+                        const newAssets = [...currentData].filter(({asset})=>asset.status === -1)
+                        setAssets(newAssets)
+                        break;
+                    }
+                    case 0: {
+                        const newAssets = [...currentData].filter(({asset})=>asset.status === 0)
+                        setAssets(newAssets)
+                        break;
+                    }
+                    case 2: {
+                        const newAssets = [...currentData].filter(({asset})=>asset.status === 2)
+                        setAssets(newAssets)
+                        break;
+                    }
+                }
+            }else{
+                // @ts-ignore
+                setAssets(currentData)
+            }
+        }
+
+
+
+    },[filter])
+
   return (
     <>
       <AssetSubheader
@@ -594,8 +673,22 @@ const UploadRequest = () => {
 
                     </div>}
 
+                    {
+                        mode === "view" && isAdmin() && <div className={styles['filter-wrapper']}>
+                            <Select
+                                containerClass={styles['filter-input']}
+                                isClearable={true}
+                                options={filterOptions}
+                                onChange={(value)=>{setFilter(value)}}
+                                placeholder={'Filter By Status'}
+                                styleType='regular'
+                                value={filter}
+                            />
+                        </div>
+                    }
+
                     {mode === "list" && <div className={styles["asset-list"]}>
-                        <div className={assetGridStyles["list-wrapper"]}>
+                        <div className={`${assetGridStyles["list-wrapper"]} ${approvals.length === 0 ? "mb-32" : ""}`}>
                             <ul className={"regular-list"}>
                                 {approvals.length === 0 && <p>There is no any request yet</p>}
                                 {

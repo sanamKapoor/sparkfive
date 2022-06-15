@@ -25,6 +25,8 @@ import { useRouter } from 'next/router'
 import selectOptions from '../../../utils/select-options'
 // import advancedConfigParams from '../../../utils/advance-config-params'
 
+import { ASSET_UPLOAD_APPROVAL } from '../../../constants/permissions'
+
 const AssetsLibrary = () => {
 
   const [activeView, setActiveView] = useState('grid')
@@ -58,7 +60,7 @@ const AssetsLibrary = () => {
   } = useContext(AssetContext)
 
 
-  const {advancedConfig} = useContext(UserContext)
+  const {advancedConfig, hasPermission} = useContext(UserContext)
 
   const [activeMode, setActiveMode] = useState('assets')
 
@@ -406,94 +408,97 @@ const AssetsLibrary = () => {
   }
 
   const onFilesDataGet = async (files) => {
-    const currentDataClone = [...assets]
-    const currenFolderClone = [...folders]
-    try {
-      let needsFolderFetch
-      const newPlaceholders = []
-      const folderPlaceholders = []
-      const foldersUploaded = getFoldersFromUploads(files)
-      if (foldersUploaded.length > 0) {
-        needsFolderFetch = true
-      }
-      foldersUploaded.forEach(folder => {
-        folderPlaceholders.push({
-          name: folder,
-          length: 10,
-          assets: [],
-          isLoading: true,
-          createdAt: new Date()
+    if(!hasPermission([ASSET_UPLOAD_APPROVAL])){
+      const currentDataClone = [...assets]
+      const currenFolderClone = [...folders]
+      try {
+        let needsFolderFetch
+        const newPlaceholders = []
+        const folderPlaceholders = []
+        const foldersUploaded = getFoldersFromUploads(files)
+        if (foldersUploaded.length > 0) {
+          needsFolderFetch = true
+        }
+        foldersUploaded.forEach(folder => {
+          folderPlaceholders.push({
+            name: folder,
+            length: 10,
+            assets: [],
+            isLoading: true,
+            createdAt: new Date()
+          })
         })
-      })
 
-      let totalSize = 0;
-      files.forEach(file => {
+        let totalSize = 0;
+        files.forEach(file => {
 
-        let fileToUpload = file;
-        let dragDropFolderUpload = false;
+          let fileToUpload = file;
+          let dragDropFolderUpload = false;
 
-        // Upload folder
-        if (file.originalFile.path.includes('/')) {
-          dragDropFolderUpload = true;
-          fileToUpload = new File([file.originalFile.slice(0, file.originalFile.size, file.originalFile.type)],
-            file.originalFile.path.substring(1, file.originalFile.path.length)
-            , { type: file.originalFile.type, lastModified: (file.originalFile.lastModifiedDate || new Date(file.originalFile.lastModified)) })
-        } else {
-          fileToUpload.path = null;
+          // Upload folder
+          if (file.originalFile.path.includes('/')) {
+            dragDropFolderUpload = true;
+            fileToUpload = new File([file.originalFile.slice(0, file.originalFile.size, file.originalFile.type)],
+                file.originalFile.path.substring(1, file.originalFile.path.length)
+                , { type: file.originalFile.type, lastModified: (file.originalFile.lastModifiedDate || new Date(file.originalFile.lastModified)) })
+          } else {
+            fileToUpload.path = null;
+          }
+
+          totalSize += file.originalFile.size
+          newPlaceholders.push({
+            asset: {
+              name: file.originalFile.name,
+              createdAt: new Date(),
+              size: file.originalFile.size,
+              stage: 'draft',
+              type: 'image',
+              mimeType: file.originalFile.type,
+            },
+            file: fileToUpload,
+            status: 'queued',
+            isUploading: true,
+            dragDropFolderUpload, // Drag and drop folder will have different process a bit here
+          })
+        })
+
+        // Store current uploading assets for calculation
+        setUploadingAssets(newPlaceholders)
+
+        // Showing assets = uploading assets + existing assets
+        setAssets([...newPlaceholders, ...currentDataClone])
+        setFolders([...folderPlaceholders, ...currenFolderClone])
+
+        // Get team advance configurations first
+        const subFolderAutoTag = advancedConfig.subFolderAutoTag;
+
+        // Start to upload assets
+        let folderGroups = await uploadAsset(0, newPlaceholders, currentDataClone, totalSize, activeFolder, undefined, subFolderAutoTag)
+
+        // Save this for retry failure files later
+        setFolderGroups(folderGroups)
+
+        // Finish uploading process
+        showUploadProcess('done')
+
+        if (needsFolderFetch) {
+          setNeedsFetch('folders')
         }
 
-        totalSize += file.originalFile.size
-        newPlaceholders.push({
-          asset: {
-            name: file.originalFile.name,
-            createdAt: new Date(),
-            size: file.originalFile.size,
-            stage: 'draft',
-            type: 'image',
-            mimeType: file.originalFile.type,
-          },
-          file: fileToUpload,
-          status: 'queued',
-          isUploading: true,
-          dragDropFolderUpload, // Drag and drop folder will have different process a bit here
-        })
-      })
+        // Do not need toast here because we have already process toast
+        // toastUtils.success(`${data.length} Asset(s) uploaded.`)
+      } catch (err) {
+        // Finish uploading process
+        showUploadProcess('done')
 
-      // Store current uploading assets for calculation
-      setUploadingAssets(newPlaceholders)
-
-      // Showing assets = uploading assets + existing assets
-      setAssets([...newPlaceholders, ...currentDataClone])
-      setFolders([...folderPlaceholders, ...currenFolderClone])
-
-      // Get team advance configurations first
-      const subFolderAutoTag = advancedConfig.subFolderAutoTag;
-
-      // Start to upload assets
-      let folderGroups = await uploadAsset(0, newPlaceholders, currentDataClone, totalSize, activeFolder, undefined, subFolderAutoTag)
-
-      // Save this for retry failure files later
-      setFolderGroups(folderGroups)
-
-      // Finish uploading process
-      showUploadProcess('done')
-
-      if (needsFolderFetch) {
-        setNeedsFetch('folders')
+        setAssets(currentDataClone)
+        setFolders(currenFolderClone)
+        console.log(err)
+        if (err.response?.status === 402) toastUtils.error(err.response.data.message)
+        else toastUtils.error('Could not upload assets, please try again later.')
       }
-
-      // Do not need toast here because we have already process toast
-      // toastUtils.success(`${data.length} Asset(s) uploaded.`)
-    } catch (err) {
-      // Finish uploading process
-      showUploadProcess('done')
-
-      setAssets(currentDataClone)
-      setFolders(currenFolderClone)
-      console.log(err)
-      if (err.response?.status === 402) toastUtils.error(err.response.data.message)
-      else toastUtils.error('Could not upload assets, please try again later.')
     }
+
   }
 
   const getCreationParameters = (attachQuery?: any) => {

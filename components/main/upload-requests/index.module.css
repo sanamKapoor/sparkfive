@@ -51,6 +51,10 @@
   margin-top: 18px;
 }
 
+.button-wrapper button:last-child{
+  margin-right: 0;
+}
+
 .detail-title{
   margin-bottom: 18px;
 }
@@ -107,6 +111,16 @@
 
 .admin-button-wrapper button{
   margin-right: 16px;
+}
+
+.filter-wrapper{
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.filter-input{
+  max-width: 185px;
 }
 
 @media screen and (max-width: 900px) {

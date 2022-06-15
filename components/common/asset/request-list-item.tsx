@@ -81,9 +81,9 @@ const RequestListItem = ({
                 Upload Name
               </h4>
               {/*<h4>Stage</h4>*/}
-              <h4>
+              {isAdmin && <h4>
                 Submitted By
-              </h4>
+              </h4>}
               <h4>
                 Time
               </h4>
@@ -129,11 +129,11 @@ const RequestListItem = ({
               className={`${requestListStyles.name} ${isLoading && "loadable"} align-center`}
             >
               {getThumbnail(assets[0])}
-              <span className={"font-weight-500"}>Test0</span>
+              <span className={"font-weight-500"}>{name || "Untitled"}</span>
             </div>
-            <div className={`${requestListStyles.field_name} ${isLoading && "loadable"} font-weight-500`}>
+            {isAdmin && <div className={`${requestListStyles.field_name} ${isLoading && "loadable"} font-weight-500`}>
               {user?.name}
-            </div>
+            </div>}
             <div className={requestListStyles.field_time}>
               {moment(createdAt).format("MMM DD, YYYY hh:mm a")}
             </div>
