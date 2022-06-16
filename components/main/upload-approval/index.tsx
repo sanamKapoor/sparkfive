@@ -108,11 +108,11 @@ const UploadApproval = () => {
             uploadToFolders = [activeFolder]
         }
 
-        if(folders.filter((folder)=>folder.isSelected).length > 0){
-            uploadToFolders = folders.filter((folder)=>folder.isSelected).map((folder)=>folder.id)
-        }
+        // if(folders.filter((folder)=>folder.isSelected).length > 0){
+        //     uploadToFolders = folders.filter((folder)=>folder.isSelected).map((folder)=>folder.id)
+        // }
 
-        queryData.folderId = uploadToFolders.join(",")
+        // queryData.folderId = uploadToFolders.join(",")
 
         // Attach extra query
         if(attachQuery){
@@ -211,9 +211,9 @@ const UploadApproval = () => {
 
 
                 // Uploading inside specific folders which already existed in server
-                if(folderId){
-                    attachedQuery['folderId'] = folderId
-                }
+                // if(folderId){
+                //     attachedQuery['folderId'] = folderId
+                // }
 
                 if (versionGroup) {
                     attachedQuery['versionGroup'] = versionGroup
@@ -229,9 +229,9 @@ const UploadApproval = () => {
                 }
 
                 // Uploading the new folder where it's folderId has been created earlier in previous API call
-                if(currentUploadingFolderId){
-                    attachedQuery['folderId'] = currentUploadingFolderId
-                }
+                // if(currentUploadingFolderId){
+                //     attachedQuery['folderId'] = currentUploadingFolderId
+                // }
 
                 if(requestId){
                     attachedQuery['approvalId'] = requestId
