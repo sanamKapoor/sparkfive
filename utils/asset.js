@@ -293,7 +293,7 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
         filters.filterProductSku = filterProductSku.map((item)=>item.sku).join(",")
     }
 
-    if (filterTags.length > 0 && allTags) filters.allTags = allTags
+    if (filterTags && filterTags.length > 0 && allTags) filters.allTags = allTags
     if (filterCampaigns.length > 0 && allCampaigns) filters.allCampaigns = allCampaigns
 
     filters.page = replace ? 1 : nextPage
