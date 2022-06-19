@@ -134,7 +134,7 @@ const DeletedAssetsLibrary = () => {
 	if (router.query.tag) {
 	  const foundTag = tags.find(({ name }) => name === router.query.tag)
 	  if (foundTag) {
-		newSortFilter.filterTags = [{
+		newSortFilter.filterNonAiTags = [{
 		  ...foundTag,
 		  value: foundTag.id
 		}]
