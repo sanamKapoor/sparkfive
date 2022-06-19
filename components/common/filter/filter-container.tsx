@@ -17,11 +17,13 @@ import ResolutionFilter from './resolution-filter'
 
 const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiveSortFilter, clearFilters, isFolder = false, isShare = false }) => {
 
-    const [expandedMenus, setExpandedMenus] = useState(isFolder ? ['folders'] : ['tags', 'customFields', 'channels', 'campaigns'])
+    const [expandedMenus, setExpandedMenus] = useState(isFolder ? ['folders'] : ['tags', 'aiTags', 'customFields', 'channels', 'campaigns'])
     const [stickyMenuScroll, setStickyMenuScroll] = useState(false)
     const [customFieldList, setCustomFieldList] = useState([])
     const {advancedConfig} = useContext(UserContext)
     const [hideFilterElements] = useState(advancedConfig.hideFilterElements)
+    const [nonAiTags, setNonAiTags] = useState([])
+    const [aiTags, setAiTags] = useState([])
 
     const {
         folders,
@@ -93,6 +95,13 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
         getCustomFields()
     }, [])
 
+    useEffect(() => {
+        const _nonAiTags = (tags || []).filter(tag => tag.type !== 'AI')
+        const _aiTags = (tags || []).filter(tag => tag.type === 'AI')
+        setNonAiTags(_nonAiTags)
+        setAiTags(_aiTags)
+    }, [tags])
+
     const handleOpenFilter = () => {
         if (openFilter) {
             setOpenFilter(false)
@@ -121,6 +130,10 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
         }
     }
 
+    const reloadTags = () => {
+        loadTags({includeAi: true})
+    }
+
     return (
         <div className={`${styles.container} ${stickyMenuScroll && styles['sticky-menu']}`}>
             <section className={styles['top-bar']}>
@@ -142,12 +155,33 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                         {expandedMenus.includes('tags') &&
                             <FilterSelector
                                 numItems={10}
-                                anyAllSelection={activeSortFilter.allTags}
-                                setAnyAll={(value) => setActiveSortFilter(update(activeSortFilter, { allTags: { $set: value } }))}
-                                loadFn={loadTags}
-                                filters={tags.map(tag => ({ ...tag, label: tag.name, value: tag.id }))}
-                                value={activeSortFilter.filterTags}
-                                setValue={(selected) => setSortFilterValue('filterTags', selected)}
+                                anyAllSelection={activeSortFilter.allNonAiTags}
+                                setAnyAll={(value) => setActiveSortFilter(update(activeSortFilter, { allNonAiTags: { $set: value } }))}
+                                loadFn={reloadTags}
+                                filters={nonAiTags.map(tag => ({ ...tag, label: tag.name, value: tag.id }))}
+                                value={activeSortFilter.filterNonAiTags}
+                                setValue={(selected) => setSortFilterValue('filterNonAiTags', selected)}
+                                addtionalClass={'tags-container'}
+                            />}
+                    </section>
+                }
+                {!isFolder &&
+                    <section>
+                        <div className={styles['expand-bar']} onClick={() => handleExpand('aiTags')}>
+                            <h4>AI Tags</h4>
+                            {expandedMenus.includes('aiTags') ?
+                                <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :
+                                <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
+                        </div>
+                        {expandedMenus.includes('aiTags') &&
+                            <FilterSelector
+                                numItems={10}
+                                anyAllSelection={activeSortFilter.allAiTags}
+                                setAnyAll={(value) => setActiveSortFilter(update(activeSortFilter, { allAiTags: { $set: value } }))}
+                                loadFn={reloadTags}
+                                filters={aiTags.map(tag => ({ ...tag, label: tag.name, value: tag.id }))}
+                                value={activeSortFilter.filterAiTags}
+                                setValue={(selected) => setSortFilterValue('filterAiTags', selected)}
                                 addtionalClass={'tags-container'}
                             />}
                     </section>

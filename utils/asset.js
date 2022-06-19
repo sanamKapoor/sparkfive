@@ -3,7 +3,8 @@ import { capitalCase } from 'change-case'
 export const DEFAULT_FILTERS = {
     filterCampaigns: [],
     filterChannels: [],
-    filterTags: [],
+    filterNonAiTags: [],
+    filterAiTags: [],
     filterFolders: [],
     filterProjects: [],
     filterFileTypes: [],
@@ -13,7 +14,8 @@ export const DEFAULT_FILTERS = {
     filterProductType: [],
     filterCustomFields: [],
     filterResolutions: [],
-    allTags: 'all',
+    allNonAiTags: 'all',
+    allAiTags: 'all',
     allCampaigns: 'all',
     allProjects: 'all',
     dimensionWidth: undefined,
@@ -128,7 +130,8 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
     const {
         mainFilter,
         filterCampaigns = [],
-        filterTags = [],
+        filterNonAiTags = [],
+        filterAiTags = [],
         filterFolders,
         filterChannels,
         filterProjects,
@@ -142,7 +145,8 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
         endDate,
         fileModifiedBeginDate,
         fileModifiedEndDate,
-        allTags,
+        allNonAiTags,
+        allAiTags,
         allCampaigns,
         filterProductFields,
         filterProductType,
@@ -168,7 +172,8 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
     addFilterToQuery(filters, filterProjects, 'projects')
     addFilterToQuery(filters, filterFolders, 'folders')
     addFilterToQuery(filters, filterChannels, 'channels')
-    addFilterToQuery(filters, filterTags, 'tags')
+    addFilterToQuery(filters, filterNonAiTags, 'tags')
+    addFilterToQuery(filters, filterAiTags, 'tags')
     addFilterToQuery(filters, filterFileTypes, 'fileTypes')
     addFilterToQuery(filters, filterOrientations, 'orientations')
     addFilterToQuery(filters, filterResolutions, 'resolutions')
@@ -293,7 +298,8 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
         filters.filterProductSku = filterProductSku.map((item)=>item.sku).join(",")
     }
 
-    if (filterTags && filterTags.length > 0 && allTags) filters.allTags = allTags
+    if (filterNonAiTags && filterNonAiTags.length > 0 && allNonAiTags) filters.allNonAiTags = allNonAiTags
+    if (filterAiTags && filterAiTags.length > 0 && allAiTags) filters.allAiTags = allAiTags
     if (filterCampaigns.length > 0 && allCampaigns) filters.allCampaigns = allCampaigns
 
     filters.page = replace ? 1 : nextPage

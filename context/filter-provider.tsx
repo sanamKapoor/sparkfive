@@ -65,14 +65,17 @@ export default ({ children, isPublic = false }) => {
     }
   }
 
-  const loadTags = () => {
+  const loadTags = (params?) => {
     const fetchMethod = isPublic ? shareCollectionApi.getTags : tagApi.getTags
     let basicFilter = { assetsCount: 'yes', sharePath }
     if (activeFolder) {
       // @ts-ignore
       basicFilter = { ...basicFilter, folderId: activeFolder }
     }
-    loadFromEndpoint(fetchMethod({ ...basicFilter, ...getCommonParams(activeSortFilter.allTags !== 'any') }), setTags)
+    if (params && Object.keys(params).length) {
+      Object.assign(basicFilter, params)
+    }
+    loadFromEndpoint(fetchMethod({ ...basicFilter, ...getCommonParams(activeSortFilter.allNonAiTags !== 'any') }), setTags)
   }
 
   const loadCustomFields = (id) => {
@@ -224,7 +227,7 @@ export default ({ children, isPublic = false }) => {
   }
 
   const isAnyAll = () => {
-    const { allTags, allCampaigns, allProjects, filterCampaigns, filterTags, filterProjects } = activeSortFilter
+    const { allNonAiTags, allAiTags, allCampaigns, allProjects, filterCampaigns, filterNonAiTags, filterAiTags, filterProjects } = activeSortFilter
 
     const isAnyAllForCustomFields = () => {
       let check = false
@@ -245,7 +248,8 @@ export default ({ children, isPublic = false }) => {
       return check
     }
 
-    return (allTags !== 'any' && filterTags.length > 0)
+    return (allNonAiTags !== 'any' && filterNonAiTags.length > 0)
+      || (allAiTags !== 'any' && allAiTags !== 'any' && filterAiTags.length > 0)
       || (allCampaigns !== 'any' && filterCampaigns.length > 0)
       || (allProjects !== 'any' && filterProjects.length > 0) || isAnyAllForCustomFields()
   }
@@ -271,7 +275,8 @@ export default ({ children, isPublic = false }) => {
     const {
       filterCampaigns,
       filterChannels,
-      filterTags,
+      filterNonAiTags,
+      filterAiTags,
       filterFolders,
       filterProjects,
       filterFileTypes,
@@ -302,7 +307,8 @@ export default ({ children, isPublic = false }) => {
 
     if (filterCampaigns?.length > 0) return true
     if (filterChannels?.length > 0) return true
-    if (filterTags?.length > 0) return true
+    if (filterNonAiTags?.length > 0) return true
+    if (filterAiTags?.length > 0) return true
     if (filterFolders?.length > 0) return true
     if (filterProjects?.length > 0) return true
     if (filterFileTypes?.length > 0) return true

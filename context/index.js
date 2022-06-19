@@ -156,7 +156,7 @@ export const FilterContext = createContext({
     setSearchTerm: (value) => {},
 
     tags: [],
-    loadTags: () => { },
+    loadTags: (params) => { },
 
     customFields: [],
     loadCustomFields: (id, customFields) => { },
