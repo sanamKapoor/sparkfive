@@ -308,6 +308,15 @@ const AdvancedOptions = () => {
                                                 onClick={() => toggleHideElementProperty('videos')} />
                                             <div className={'font-12 m-l-10'}>Videos</div>
                                         </div>
+                                        <div className={`${styles['radio-button-wrapper']} m-r-15 ${styles['hide-on-mobile']}`}>
+                                            <IconClickable
+                                                src={hideFilterElements.aiTags ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                                                additionalClass={styles['select-icon']}
+                                                onClick={() => toggleHideElementProperty('aiTags')} />
+                                            <div className={'font-12 m-l-10'}>AI Tags</div>
+                                        </div>
+
+                                        
                                     </div>
                                 </div>
                             </div>

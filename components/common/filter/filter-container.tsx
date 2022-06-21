@@ -165,7 +165,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                             />}
                     </section>
                 }
-                {!isFolder &&
+                {!isFolder && !hideFilterElements.aiTags &&
                     <section>
                         <div className={styles['expand-bar']} onClick={() => handleExpand('aiTags')}>
                             <h4>AI Tags</h4>
