@@ -729,7 +729,7 @@ const DetailOverlay = ({
             {assetDetail.type !== "image" &&
               assetDetail.type !== "video" &&
               versionThumbnailUrl && (
-                assetDetail.type === "application" ?
+                assetDetail.extension.toLowerCase() === "pdf" ?
                 <AssetPdf
                   asset={asset}
                 />

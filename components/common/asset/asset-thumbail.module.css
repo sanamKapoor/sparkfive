@@ -93,12 +93,6 @@
   border-top: 1px solid var(--color-secondary-border);
 }
 
-.info>div:first-child {
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
 .details-wrapper {
   display: flex;
 }
