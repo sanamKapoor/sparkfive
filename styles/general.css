@@ -261,6 +261,10 @@ ul {
   width: 100%
 }
 
+.overflow--visible{
+  overflow: visible !important;
+}
+
 @media screen and (max-width: 1280px){
   .p-l-0-mobile{
     padding-left: 0 !important;

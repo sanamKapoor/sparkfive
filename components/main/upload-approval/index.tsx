@@ -49,7 +49,7 @@ import {  ASSET_UPLOAD_APPROVAL } from '../../../constants/permissions'
 
 const UploadApproval = () => {
 
-    const { advancedConfig, setAdvancedConfig, hasPermission } = useContext(UserContext)
+    const { advancedConfig, hasPermission, user } = useContext(UserContext)
 
     const {
         setNeedsFetch,
@@ -973,6 +973,10 @@ const UploadApproval = () => {
         return (asset.tags && asset.tags.length > 0 )|| asset.comments
     }
 
+    const isAdmin = () => {
+        return user.role.id === "admin" || user.role.id === "super_admin"
+    }
+
     useEffect(() => {
         checkValidUser()
         getTagsInputData()
@@ -1182,7 +1186,7 @@ const UploadApproval = () => {
                     {/*<img alt={"test"} src={assets[selectedAsset]?.realUrl} />*/}
                     <div className={styles['file-name']}>
                         <span>{assets[selectedAsset]?.asset.name}</span>
-                        <IconClickable additionalClass={styles['edit-icon']} src={Utilities.edit} onClick={()=> {setShowRenameModal(true)}} />
+                        {isAdmin() && <IconClickable additionalClass={styles['edit-icon']} src={Utilities.edit} onClick={()=> {setShowRenameModal(true)}} />}
                     </div>
                     <div className={styles['date']}>{moment(assets[selectedAsset]?.asset?.createdAt).format('MMM DD, YYYY, hh:mm a')}</div>
                 </div>
