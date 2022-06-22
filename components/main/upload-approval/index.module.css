@@ -143,6 +143,7 @@
 
 .options-list.dropdown {
   right: 0;
+  z-index: auto;
 }
 
 .option {

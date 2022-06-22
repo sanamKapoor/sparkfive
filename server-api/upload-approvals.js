@@ -10,4 +10,5 @@ export default {
     submit: (approvalId, params) => axios.post(`${linkUrl}/submit/${approvalId}`, params),
     approve: (approvalId, params) => axios.put(`${linkUrl}/approve/${approvalId}`, params),
     reject: (approvalId, params) => axios.put(`${linkUrl}/reject/${approvalId}`, params),
+    update: (approvalId, params) => axios.put(`${linkUrl}/${approvalId}`, params),
 }

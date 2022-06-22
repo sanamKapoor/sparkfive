@@ -44,6 +44,9 @@ import approvalApi from '../../../server-api/upload-approvals'
 
 import {  ASSET_UPLOAD_APPROVAL } from '../../../constants/permissions'
 
+// Hooks
+import { useDebounce } from "../../../hooks/useDebounce";
+
 
 
 
@@ -94,7 +97,18 @@ const UploadApproval = () => {
 
     const [batchName, setBatchName] = useState("")
 
+    const debouncedBatchName = useDebounce(batchName, 500);
+
+
+
     const fileBrowserRef = useRef(undefined)
+
+    const updateName = async (value) => {
+        if(approvalId){
+            approvalApi.update(approvalId, { name: value})
+            // toastUtils.success("Name is saved successfully")
+        }
+    }
 
     const getCreationParameters = (attachQuery?: any) => {
         const activeFolder = "";
@@ -982,6 +996,10 @@ const UploadApproval = () => {
         getTagsInputData()
     }, [])
 
+    useEffect( () => {
+        updateName(debouncedBatchName)
+    }, [debouncedBatchName]);
+
   return (
     <>
       <AssetSubheader
@@ -1122,7 +1140,7 @@ const UploadApproval = () => {
                                 setAvailableItems={setInputTags}
                                 selectedItems={assetTags}
                                 setSelectedItems={setTags}
-                                creatable={false}
+                                creatable={isAdmin()}
                                 onAddOperationFinished={(stateUpdate) => {
                                     setActiveDropdown("")
                                     // updateAssetState({
@@ -1143,6 +1161,7 @@ const UploadApproval = () => {
                                     // assetApi.addTag(id, newItem)
                                 }}
                                 dropdownIsActive={activeDropdown === 'tags'}
+                                ignorePermission={true}
                             />
                         </div>
 
@@ -1204,7 +1223,7 @@ const UploadApproval = () => {
                                 setAvailableItems={setInputTags}
                                 selectedItems={tempTags}
                                 setSelectedItems={setTempTags}
-                                creatable={false}
+                                creatable={isAdmin()}
                                 onAddOperationFinished={(stateUpdate) => {
                                     setActiveDropdown("")
                                     // updateAssetState({
@@ -1224,6 +1243,7 @@ const UploadApproval = () => {
                                     return { data: newItem }
                                 }}
                                 dropdownIsActive={activeDropdown === 'tags'}
+                                ignorePermission={true}
                             />
                         </div>
 
@@ -1276,7 +1296,7 @@ const UploadApproval = () => {
 
                 <div>
                     {!submitted && <>
-                        <Button className={styles['keep-edit-btn']} type='button' text='Keep editting' styleType='secondary' onClick={()=>{setShowConfirmModal(false); setMessage("")}} />
+                        <Button className={styles['keep-edit-btn']} type='button' text='Keep editing' styleType='secondary' onClick={()=>{setShowConfirmModal(false); setMessage("")}} />
                         <Button className={styles['add-tag-btn']} type='button' text='Submit' styleType='primary' onClick={submit} />
                     </>}
                     {submitted &&  <Button className={styles['add-tag-btn']}

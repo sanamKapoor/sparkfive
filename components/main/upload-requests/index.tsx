@@ -38,6 +38,9 @@ import ConfirmModal from "../../common/modals/confirm-modal";
 import {statusList} from "../../../constants/shared-links";
 import Select from "../../common/inputs/select";
 
+// Hooks
+import {useDebounce} from "../../../hooks/useDebounce";
+
 const filterOptions = [
     {
         label: "Approved",
@@ -102,6 +105,31 @@ const UploadRequest = () => {
     const [filter, setFilter] = useState()
     const [approvalIndex, setApprovalIndex]  = useState()
 
+    const debouncedBatchName = useDebounce(batchName, 500);
+
+    const updateName = async (value) => {
+        if(approvalId){
+            await approvalApi.update(approvalId, { name: value})
+
+            // @ts-ignore
+            let currentApprovalData = {...currentApproval}
+            currentApprovalData.name = value;
+
+            setCurrentApproval(currentApprovalData)
+
+            // let approvalList = [...approvals]
+            // approvalList.map((item)=>{
+            //     if(item.id === approvalId){
+            //         item.name = value
+            //     }
+            // })
+            //
+            // setApprovals(approvalList)
+
+            // toastUtils.success("Name is saved successfully")
+        }
+    }
+
     const toggleSelected = (index) => {
         let approvalList = [...approvals]
         approvalList.map((item, itemIndex)=>{
@@ -127,6 +155,7 @@ const UploadRequest = () => {
         setApprovalId(approvals[index].id)
         setCurrentViewStatus(approvals[index]?.status)
         setCurrentApproval(approvals[index])
+        setBatchName(approvals[index].name || "")
         setApprovalIndex(index)
     }
 
@@ -274,7 +303,9 @@ const UploadRequest = () => {
 
             if(isSelected){
                 const newTags = _.differenceBy(assetTags, asset?.tags || [])
-                const removeTags = _.differenceBy(asset?.tags || [], assetTags)
+
+                // Save bulk by admin wont override any tag, it will add extra tags
+                const removeTags = isAdmin() ? [] : _.differenceBy(asset?.tags || [], assetTags)
 
                 for( const tag of removeTags){
                     removeTagPromises.push(assetApi.removeTag(asset.id, tag.id))
@@ -293,7 +324,14 @@ const UploadRequest = () => {
         let assetArr = [...assets];
         assetArr.map((asset)=>{
             if(asset.isSelected){
-                asset.asset.tags = assetTags
+                // Admin update does not override the tags
+                if(isAdmin()){
+                    const newTags = _.differenceBy(assetTags, asset.asset.tags || [])
+                    asset.asset.tags = asset.asset.tags.concat(newTags)
+                }else{
+                    asset.asset.tags = assetTags
+                }
+
             }
         })
 
@@ -597,6 +635,11 @@ const UploadRequest = () => {
 
     },[filter])
 
+
+    useEffect( () => {
+        updateName(debouncedBatchName)
+    }, [debouncedBatchName]);
+
   return (
     <>
       <AssetSubheader
@@ -668,7 +711,7 @@ const UploadRequest = () => {
                                     }
                                 />
                             }
-                            <Button type='button' text={currentViewStatus !== 1 ? 'Cancel'  : 'Back'} styleType='secondary' onClick={onCancelView} />
+                            <Button type='button' text={'Back'} styleType='secondary' onClick={onCancelView} />
                         </div>
 
                     </div>}
@@ -788,10 +831,18 @@ const UploadRequest = () => {
             </div>
 
             {
-                mode === "view" && (currentViewStatus === 0 || isAdmin()) &&  assets.length > 0 && <div className={`col-30 ${styles['right-panel']}`}>
+                mode === "view" &&  assets.length > 0 && <div className={`col-30 ${styles['right-panel']}`}>
                     <div className={detailPanelStyles.container}>
                         <h2 className={styles['detail-title']}>Tagging</h2>
-                        {!isAdmin() && <div className={detailPanelStyles['first-section']}>
+
+                        {
+                            (currentViewStatus !== 0 || isAdmin()) && <div className={detailPanelStyles['field-wrapper']} >
+                                <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Message</div>
+                                <p>{currentApproval?.message}</p>
+                            </div>
+                        }
+
+                        {!isAdmin() && currentViewStatus == 0 && <div className={detailPanelStyles['first-section']}>
                             <div className={detailPanelStyles['field-wrapper']}>
                                 <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Batch Name</div>
                                 <Input
@@ -802,7 +853,7 @@ const UploadRequest = () => {
                             </div>
                         </div>}
 
-                        {hasSelectedAssets() && <>
+                        {hasSelectedAssets() && (currentViewStatus === 0 || isAdmin()) && <>
                             <div className={detailPanelStyles['field-wrapper']} >
                                 <CreatableSelect
                                     title='Tags'
@@ -814,7 +865,7 @@ const UploadRequest = () => {
                                     selectedItems={assetTags}
                                     setSelectedItems={setTags}
                                     allowEdit={currentViewStatus === 0 || isAdmin()}
-                                    creatable={false}
+                                    creatable={isAdmin()}
                                     onAddOperationFinished={(stateUpdate) => {
                                         setActiveDropdown("")
                                         // updateAssetState({
@@ -832,21 +883,27 @@ const UploadRequest = () => {
                                     isShare={false}
                                     asyncCreateFn={(newItem) => {
                                         return { data: newItem }
+
                                         // assetApi.addTag(id, newItem)
                                     }}
                                     dropdownIsActive={activeDropdown === 'tags'}
+                                    ignorePermission={true}
                                 />
                             </div>
 
                             <Button className={styles['add-tag-btn']} type='button' text='Bulk Add Tag' styleType='secondary' onClick={saveBulkTag} />
+                            {
+                                !isAdmin() && <>
+                                    <div className={detailPanelStyles['field-wrapper']} >
+                                        <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>
+                                        <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={comments}
+                                                  onChange={e => {setComments(e.target.value)}} styleType={'regular-short'} />
+                                    </div>
 
-                            <div className={detailPanelStyles['field-wrapper']} >
-                                <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>
-                                <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={comments}
-                                          onChange={e => {setComments(e.target.value)}} styleType={'regular-short'} />
-                            </div>
+                                    <Button className={styles['add-tag-btn']} type='button' text='Add comments' styleType='secondary' onClick={saveComment} />
+                                </>
+                            }
 
-                            <Button className={styles['add-tag-btn']} type='button' text='Add comments' styleType='secondary' onClick={saveComment} />
                         </>}
 
 
@@ -902,7 +959,7 @@ const UploadRequest = () => {
                                 selectedItems={tempTags}
                                 setSelectedItems={setTempTags}
                                 allowEdit={currentViewStatus === 0 || isAdmin()}
-                                creatable={false}
+                                creatable={isAdmin()}
                                 onAddOperationFinished={(stateUpdate) => {
                                     setActiveDropdown("")
 
@@ -930,13 +987,17 @@ const UploadRequest = () => {
 
                                 }}
                                 dropdownIsActive={activeDropdown === 'tags'}
+                                ignorePermission={true}
                             />
                         </div>
 
                         <div className={detailPanelStyles['field-wrapper']} >
                             <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>
-                            <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={tempComments}
-                                      onChange={e => {setTempComments(e.target.value)}} styleType={'regular-short'} disabled={currentViewStatus !== 0}/>
+                            {(isAdmin() || currentViewStatus !== 0) && <p>
+                                {tempComments}
+                            </p>}
+                            {!isAdmin() && currentViewStatus === 0 && <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={tempComments}
+                                      onChange={e => {setTempComments(e.target.value)}} styleType={'regular-short'} disabled={currentViewStatus !== 0}/>}
                         </div>
 
                         {(currentViewStatus === 0) && <Button className={styles['add-tag-btn']} type='button' text='Save changes' styleType='primary' onClick={onSaveSingleAsset} />}
@@ -1006,7 +1067,7 @@ const UploadRequest = () => {
 
                 <div>
                     {!submitted && <>
-                        <Button className={styles['keep-edit-btn']} type='button' text='Keep editting' styleType='secondary' onClick={()=>{setShowConfirmModal(false); setMessage("")}} />
+                        <Button className={styles['keep-edit-btn']} type='button' text='Keep editing' styleType='secondary' onClick={()=>{setShowConfirmModal(false); setMessage("")}} />
                         <Button className={styles['add-tag-btn']} type='button' text='Submit' styleType='primary' onClick={submit} />
                     </>}
                     {submitted &&  <Button className={styles['add-tag-btn']} type='button' text='Back to Sparkfive' styleType='primary' onClick={()=>{onCancelView(true)}} />}
