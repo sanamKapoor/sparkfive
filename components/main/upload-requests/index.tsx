@@ -97,10 +97,13 @@ const UploadRequest = () => {
     const [batchName, setBatchName] = useState("")
 
     const [selectedAllAssets, setSelectedAllAssets] = useState(false)
+    const [selectedAllApprovals, setSelectedAllApprovals] = useState(false)
 
     const [showApproveConfirm, setShowApproveConfirm] = useState(false)
     const [showRejectConfirm, setShowRejectConfirm] = useState(false)
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
     const [tempAssets, setTempAssets] = useState([])
+    const [tempApprovals, setTempApprovals] = useState([])
 
     const [filter, setFilter] = useState()
     const [approvalIndex, setApprovalIndex]  = useState()
@@ -481,6 +484,49 @@ const UploadRequest = () => {
         }))
     }
 
+    // Check if there is any approval is selected
+    const hasSelectedApprovals = () => {
+        if(selectedAllApprovals){
+            return true
+        }
+
+        const selectedArr = approvals.filter((approval)=>approval.isSelected)
+
+        return selectedArr.length > 0
+    }
+
+    // Select all approvals
+    const selectAllApprovals = (value = true) => {
+        setSelectedAllApprovals(value)
+        let approvalList = [...approvals]
+        approvalList.map((approval)=>{
+            approval.isSelected = value
+        })
+
+        setApprovals(approvalList)
+
+        // Reset temp assets
+        if(value === false){
+            setTempApprovals([])
+        }
+
+    }
+
+    // Toggle select approval
+    const toggleSelectedApproval = (id) => {
+        const approvalIndex = approvals.findIndex(approvalItem => approvalItem.id === id)
+        const selectedValue = !approvals[approvalIndex].isSelected
+        // Toggle unselect when selected all will disable selected all
+        if(!selectedValue && selectedAllApprovals){
+            setSelectedAllApprovals(false)
+        }
+        setApprovals(update(approvals, {
+            [approvalIndex]: {
+                isSelected: { $set: !approvals[approvalIndex].isSelected }
+            }
+        }))
+    }
+
     const TagWrapper = ({status}) => {
         const getStatusName = (status) => {
             switch (status){
@@ -568,6 +614,29 @@ const UploadRequest = () => {
         toastUtils.success("Approve asset successfully")
     }
 
+    const bulkApprove = async(approvalIds) => {
+        setIsLoading(true)
+
+        await approvalApi.bulkApprove({approvalIds})
+
+        // Update status to approval list
+        let approvalArrData = [...approvals]
+        // @ts-ignore
+        approvalArrData.map((approval)=>{
+            if(approvalIds.includes(approval.id)){
+                approval.status = 2
+            }
+        })
+
+        setApprovals(approvalArrData)
+
+        setIsLoading(false)
+
+        setDetailModal(false)
+
+        toastUtils.success("Approve asset successfully")
+    }
+
     const reject = async(approvalId, assetIds) => {
         setIsLoading(true)
 
@@ -590,11 +659,57 @@ const UploadRequest = () => {
 
         setDetailModal(false)
 
-        toastUtils.success("Reject asset successfully")
+        toastUtils.success("Reject assets successfully")
+    }
+
+    const bulkReject = async(rejectIds) => {
+        setIsLoading(true)
+
+        await approvalApi.bulkReject({rejectIds})
+
+        // Update status to approval list
+        let approvalArrData = [...approvals]
+        // @ts-ignore
+        approvalArrData.map((approval)=>{
+            if(rejectIds.includes(approval.id)){
+                approval.status = -1
+            }
+        })
+
+        setApprovals(approvalArrData)
+
+        setIsLoading(false)
+
+        setDetailModal(false)
+
+        toastUtils.success("Reject assets successfully")
+    }
+
+    const bulkDelete = async(deleteIds) => {
+        setIsLoading(true)
+
+        await approvalApi.bulkDelete({deleteIds})
+
+        // Update status to approval list
+        let approvalArrData = [...approvals]
+
+        approvalArrData = approvalArrData.filter((approval)=> !deleteIds.includes(approval.id))
+
+        setApprovals(approvalArrData)
+
+        setIsLoading(false)
+
+        setDetailModal(false)
+
+        toastUtils.success("Delete approval successfully")
     }
 
     const getSelectedAssets = () => {
         return assets.filter((asset)=>asset.isSelected).map((asset)=>asset.asset.id)
+    }
+
+    const getSelectedApprovals = () => {
+        return approvals.filter((approval)=>approval.isSelected).map((approval)=>approval.id)
     }
 
     useEffect(()=>{
@@ -731,6 +846,54 @@ const UploadRequest = () => {
                     }
 
                     {mode === "list" && <div className={styles["asset-list"]}>
+                        {isAdmin() && <div className={`${styles['button-wrapper']} m-b-25`}>
+                            <div className={"m-l-auto"}>
+                                {approvals.length > 0 && hasSelectedApprovals() && <Button type='button' text='Deselect' styleType='secondary' onClick={()=>{selectAllApprovals(false)}} />}
+                                {approvals.length > 0 && !selectedAllApprovals && <Button type='button' text='Select All' styleType='secondary' onClick={selectAllApprovals} />}
+
+                                {approvals.length > 0 && isAdmin() && hasSelectedApprovals() &&
+                                    <Button
+                                        type='button'
+                                        text='Delete'
+                                        styleType='primary'
+                                        onClick={()=>{
+                                            setTempApprovals(getSelectedApprovals())
+                                            setShowDeleteConfirm(true)
+                                        }
+
+                                        }
+                                    />
+                                }
+
+                                {approvals.length > 0 && isAdmin() && hasSelectedApprovals() &&
+                                    <Button
+                                        type='button'
+                                        text='Reject Selected'
+                                        styleType='primary'
+                                        onClick={()=>{
+                                            setTempApprovals(getSelectedApprovals())
+                                            setShowRejectConfirm(true)
+                                        }
+
+                                        }
+                                    />
+                                }
+                                {approvals.length > 0 && isAdmin() && hasSelectedApprovals() &&
+                                    <Button
+                                        type='button'
+                                        text='Approve Selected'
+                                        styleType='primary'
+                                        onClick={()=>{
+                                            setTempApprovals(getSelectedApprovals())
+                                            setShowApproveConfirm(true)
+                                        }
+
+                                        }
+                                    />
+                                }
+                            </div>
+
+                        </div>}
                         <div className={`${assetGridStyles["list-wrapper"]} ${approvals.length === 0 ? "mb-32" : ""}`}>
                             <ul className={"regular-list"}>
                                 {approvals.length === 0 && <p>There is no any request yet</p>}
@@ -1091,8 +1254,14 @@ const UploadRequest = () => {
         <ConfirmModal
             closeModal={() => setShowApproveConfirm(false)}
             confirmAction={() => {
-                approve(approvalId, tempAssets)
-                setShowApproveConfirm(false)
+                if(mode === "list"){
+                    bulkApprove(tempApprovals)
+                    setShowApproveConfirm(false)
+                }else{
+                    approve(approvalId, tempAssets)
+                    setShowApproveConfirm(false)
+                }
+
             }}
             confirmText={'Approve'}
             message={'Are you sure you would like to approve this asset?'}
@@ -1102,12 +1271,30 @@ const UploadRequest = () => {
         <ConfirmModal
             closeModal={() => setShowRejectConfirm(false)}
             confirmAction={() => {
-                reject(approvalId, tempAssets)
-                setShowRejectConfirm(false)
+                if(mode === "list"){
+                    bulkReject(tempApprovals)
+                    setShowRejectConfirm(false)
+                }else{
+                    reject(approvalId, tempAssets)
+                    setShowRejectConfirm(false)
+                }
+
             }}
             confirmText={'Reject'}
             message={'Are you sure you would like to reject this asset?'}
             modalIsOpen={showRejectConfirm}
+        />
+
+        <ConfirmModal
+            closeModal={() => setShowDeleteConfirm(false)}
+            confirmAction={() => {
+                bulkDelete(tempApprovals)
+                setShowDeleteConfirm(false)
+
+            }}
+            confirmText={'Delete'}
+            message={'Are you sure you would like to delete this asset?'}
+            modalIsOpen={showDeleteConfirm}
         />
 
     </>

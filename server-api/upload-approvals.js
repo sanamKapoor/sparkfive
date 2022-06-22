@@ -10,5 +10,8 @@ export default {
     submit: (approvalId, params) => axios.post(`${linkUrl}/submit/${approvalId}`, params),
     approve: (approvalId, params) => axios.put(`${linkUrl}/approve/${approvalId}`, params),
     reject: (approvalId, params) => axios.put(`${linkUrl}/reject/${approvalId}`, params),
+    bulkApprove: (params) => axios.put(`${linkUrl}/bulk-approve`, params),
+    bulkReject: (params) => axios.put(`${linkUrl}/bulk-reject`, params),
+    bulkDelete: (params) => axios.put(`${linkUrl}/bulk-delete`, params),
     update: (approvalId, params) => axios.put(`${linkUrl}/${approvalId}`, params),
 }
