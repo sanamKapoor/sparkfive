@@ -25,7 +25,8 @@ import { useRouter } from 'next/router'
 import selectOptions from '../../../utils/select-options'
 // import advancedConfigParams from '../../../utils/advance-config-params'
 
-import { ASSET_UPLOAD_APPROVAL } from '../../../constants/permissions'
+import { ASSET_UPLOAD_APPROVAL, ASSET_ACCESS } from '../../../constants/permissions'
+import NoPermissionNotice from "../../common/misc/no-permission-notice";
 
 const AssetsLibrary = () => {
 
@@ -167,19 +168,20 @@ const AssetsLibrary = () => {
 
 
   useEffect(() => {
-    // Assets are under preparing (for query etc)
-    if (preparingAssets.current) {
-      // setActivePageMode('library')
-      // setLoadingAssets(true)
-      // setFirstLoaded(true)
-      return
-    } else {
-      if (!firstLoaded) {
-        setFirstLoaded(true)
+    if(hasPermission([ASSET_ACCESS])){
+      // Assets are under preparing (for query etc)
+      if (preparingAssets.current) {
+        // setActivePageMode('library')
+        // setLoadingAssets(true)
+        // setFirstLoaded(true)
+        return
+      } else {
+        if (!firstLoaded) {
+          setFirstLoaded(true)
+        }
       }
-    }
 
-    if (firstLoaded) {
+      if (firstLoaded) {
         setActivePageMode('library')
         if (activeSortFilter.mainFilter === 'folders') {
           setActiveMode('folders')
@@ -190,6 +192,8 @@ const AssetsLibrary = () => {
           getAssets()
         }
       }
+    }
+
   }, [activeSortFilter, firstLoaded])
 
   useEffect(() => {
@@ -697,48 +701,55 @@ const AssetsLibrary = () => {
         setRenameModalOpen={setRenameModalOpen}
         activeSortFilter={activeSortFilter}
       />
-      <main className={`${styles.container}`}>
-      {advancedConfig.set && <TopBar
-          activeSortFilter={activeSortFilter}
-          setActiveSortFilter={setActiveSortFilter}
-          setActiveView={setActiveView}
-          activeFolder={activeFolder}
-          setActiveSearchOverlay={() => { selectAllAssets(false); setActiveSearchOverlay(true) }}
-          selectAll={selectAll}
-          setOpenFilter={setOpenFilter}
-          openFilter={openFilter}
-          deletedAssets={false} />
-        }
-        <div className={`${openFilter && styles['col-wrapper']}`}>
-          <DropzoneProvider>
-            {advancedConfig.set && <AssetGrid
-              activeFolder={activeFolder}
-              getFolders={getFolders}
-              activeView={activeView}
-              activeSortFilter={activeSortFilter}
-              onFilesDataGet={onFilesDataGet}
-              toggleSelected={toggleSelected}
-              mode={activeMode}
-              viewFolder={viewFolder}
-              deleteFolder={deleteFolder}
-              loadMore={loadMore}
-              openFilter={openFilter}
-            />
-          }
-          </DropzoneProvider>
-          {openFilter &&
-            <FilterContainer
-              clearFilters={clearFilters}
-              openFilter={openFilter}
-              setOpenFilter={setOpenFilter}
-              activeSortFilter={activeSortFilter}
-              setActiveSortFilter={setActiveSortFilter}
-              isFolder={activeSortFilter.mainFilter === 'folders'}
-            />
-          }
-        </div>
-      </main>
-      <AssetOps />
+      {hasPermission([ASSET_ACCESS]) ?
+          <>
+            <main className={`${styles.container}`}>
+              {advancedConfig.set && <TopBar
+                  activeSortFilter={activeSortFilter}
+                  setActiveSortFilter={setActiveSortFilter}
+                  setActiveView={setActiveView}
+                  activeFolder={activeFolder}
+                  setActiveSearchOverlay={() => { selectAllAssets(false); setActiveSearchOverlay(true) }}
+                  selectAll={selectAll}
+                  setOpenFilter={setOpenFilter}
+                  openFilter={openFilter}
+                  deletedAssets={false} />
+              }
+              <div className={`${openFilter && styles['col-wrapper']}`}>
+                <DropzoneProvider>
+                  {advancedConfig.set && <AssetGrid
+                      activeFolder={activeFolder}
+                      getFolders={getFolders}
+                      activeView={activeView}
+                      activeSortFilter={activeSortFilter}
+                      onFilesDataGet={onFilesDataGet}
+                      toggleSelected={toggleSelected}
+                      mode={activeMode}
+                      viewFolder={viewFolder}
+                      deleteFolder={deleteFolder}
+                      loadMore={loadMore}
+                      openFilter={openFilter}
+                  />
+                  }
+                </DropzoneProvider>
+                {openFilter &&
+                    <FilterContainer
+                        clearFilters={clearFilters}
+                        openFilter={openFilter}
+                        setOpenFilter={setOpenFilter}
+                        activeSortFilter={activeSortFilter}
+                        setActiveSortFilter={setActiveSortFilter}
+                        isFolder={activeSortFilter.mainFilter === 'folders'}
+                    />
+                }
+              </div>
+            </main>
+            <AssetOps />
+          </>
+          :
+          <NoPermissionNotice />
+      }
+
       <RenameModal
         closeModal={() => setRenameModalOpen(false)}
         modalIsOpen={renameModalOpen}

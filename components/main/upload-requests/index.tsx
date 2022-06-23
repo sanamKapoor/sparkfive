@@ -1282,7 +1282,7 @@ const UploadRequest = () => {
                                         creatable={isAdmin()}
                                         onAddOperationFinished={(stateUpdate) => {
                                             setActiveDropdown("")
-                                            
+
                                             // updateAssetState({
                                             //     campaigns: { $set: stateUpdate }
                                             // })

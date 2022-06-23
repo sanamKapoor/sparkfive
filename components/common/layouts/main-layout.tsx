@@ -11,7 +11,8 @@ import {
   SETTINGS_TEAM,
   SETTINGS_COMPANY,
   SETTINGS_PLAN,
-  SUPERADMIN_ACCESS
+  SUPERADMIN_ACCESS,
+  ASSET_UPLOAD_APPROVAL
 } from '../../../constants/permissions'
 import { TeamContext } from '../../../context'
 
@@ -148,7 +149,7 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
             />
           </header>
           {isLoading && <SpinnerOverlay />}
-          {hasPermission(requiredPermissions) ?
+          {hasPermission(requiredPermissions) || hasPermission([ASSET_UPLOAD_APPROVAL]) ?
             children
             :
             <NoPermissionNotice />
