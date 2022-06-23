@@ -39,6 +39,7 @@ const CreatableSelect = ({
   creatable = true,
   selectOneComponent = <></>,
   allowEdit = true,
+  ignorePermission = false,
 }) => {
 
   const { hasPermission } = useContext(UserContext)
@@ -124,7 +125,7 @@ const CreatableSelect = ({
             </li>
           ))}
         </ul>
-        {!isShare && canAdd && hasPermission([ASSET_EDIT]) &&
+        {((!isShare && canAdd && hasPermission([ASSET_EDIT])) || ignorePermission) &&
           <>
             {dropdownIsActive ?
               <div className={`tag-select ${selectClass}`}>

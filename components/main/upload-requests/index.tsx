@@ -12,6 +12,9 @@ import AssetThumbail from "../../common/asset/asset-thumbail";
 import RenameModal from "../../common/modals/rename-modal";
 import AssetImg from "../../common/asset/asset-img";
 import Input from "../../common/inputs/input";
+import ConfirmModal from "../../common/modals/confirm-modal";
+import Select from "../../common/inputs/select";
+import CustomFieldSelector from "../../common/items/custom-field-selector";
 
 // Styles
 import styles from './index.module.css'
@@ -34,9 +37,13 @@ import uploadApprovalApi from '../../../server-api/upload-approvals'
 import tagApi from '../../../server-api/tag'
 import approvalApi from '../../../server-api/upload-approvals'
 import assetApi from '../../../server-api/asset'
-import ConfirmModal from "../../common/modals/confirm-modal";
-import {statusList} from "../../../constants/shared-links";
-import Select from "../../common/inputs/select";
+import customFieldsApi from '../../../server-api/attribute'
+import campaignApi from '../../../server-api/campaign'
+
+
+// Hooks
+import {useDebounce} from "../../../hooks/useDebounce";
+
 
 const filterOptions = [
     {
@@ -52,6 +59,25 @@ const filterOptions = [
         value: -1
     },
 ]
+
+// Server DO NOT return full custom field slots including empty array, so we will generate empty array here
+// The order of result should be match with order of custom field list
+const mappingCustomFieldData = (list, valueList) => {
+    let rs = []
+    list.map((field)=>{
+        let value = valueList.filter(valueField => valueField.id === field.id)
+
+        if(value.length > 0){
+            rs.push(value[0])
+        }else{
+            let customField = { ...field }
+            customField.values = []
+            rs.push(customField)
+        }
+    })
+
+    return rs
+}
 
 const UploadRequest = () => {
 
@@ -80,6 +106,7 @@ const UploadRequest = () => {
     const [selectedAsset, setSelectedAsset] = useState()
 
     const [tempTags, setTempTags] = useState([]) // For update tag in each asset
+    const [tempCustoms, setTempCustoms] = useState([]) // For update custom in each asset
     const [tempComments, setTempComments] = useState("") // For update tag in each asset
 
     const [currentApproval, setCurrentApproval] = useState()
@@ -94,13 +121,53 @@ const UploadRequest = () => {
     const [batchName, setBatchName] = useState("")
 
     const [selectedAllAssets, setSelectedAllAssets] = useState(false)
+    const [selectedAllApprovals, setSelectedAllApprovals] = useState(false)
 
     const [showApproveConfirm, setShowApproveConfirm] = useState(false)
     const [showRejectConfirm, setShowRejectConfirm] = useState(false)
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
     const [tempAssets, setTempAssets] = useState([])
+    const [tempApprovals, setTempApprovals] = useState([])
+    const [tempCampaigns, setTempCampaigns] = useState([])
 
     const [filter, setFilter] = useState()
     const [approvalIndex, setApprovalIndex]  = useState()
+
+    // Custom fields
+    const [customs, setCustoms] = useState([])
+    const [activeCustomField, setActiveCustomField] = useState<number>()
+    const [inputCustomFields, setInputCustomFields] = useState([])
+    const [assetCustomFields, setAssetCustomFields] = useState(mappingCustomFieldData(inputCustomFields, customs))
+
+
+    // Campaigns
+    const [inputCampaigns, setInputCampaigns] = useState([])
+    const [assetCampaigns, setCampaigns] = useState([])
+
+    const debouncedBatchName = useDebounce(batchName, 500);
+
+    const updateName = async (value) => {
+        if(approvalId){
+            await approvalApi.update(approvalId, { name: value})
+
+            // @ts-ignore
+            let currentApprovalData = {...currentApproval}
+            currentApprovalData.name = value;
+
+            setCurrentApproval(currentApprovalData)
+
+            // let approvalList = [...approvals]
+            // approvalList.map((item)=>{
+            //     if(item.id === approvalId){
+            //         item.name = value
+            //     }
+            // })
+            //
+            // setApprovals(approvalList)
+
+            // toastUtils.success("Name is saved successfully")
+        }
+    }
 
     const toggleSelected = (index) => {
         let approvalList = [...approvals]
@@ -127,6 +194,7 @@ const UploadRequest = () => {
         setApprovalId(approvals[index].id)
         setCurrentViewStatus(approvals[index]?.status)
         setCurrentApproval(approvals[index])
+        setBatchName(approvals[index].name || "")
         setApprovalIndex(index)
     }
 
@@ -143,6 +211,8 @@ const UploadRequest = () => {
         setSelectedAllAssets(false)
         setTempAssets([])
         setApprovalIndex(undefined)
+        setTempCustoms([])
+        setTempCampaigns([])
 
         if(refresh === true || needRefresh){
             fetchApprovals();
@@ -156,6 +226,13 @@ const UploadRequest = () => {
 
         // @ts-ignore
         setTempTags(assets[index]?.asset?.tags || [])
+
+        // @ts-ignore
+        setTempCustoms( mappingCustomFieldData(inputCustomFields, assets[index]?.asset?.customs || []))
+
+        // @ts-ignore
+        setTempCampaigns( assets[index]?.asset?.campaigns || [])
+
         // @ts-ignore
         setTempComments(assets[index]?.asset?.comments || "")
     }
@@ -163,6 +240,7 @@ const UploadRequest = () => {
     const goNext = () => {
         if((selectedAsset || 0) < assets.length-1){
             setTempTags([])
+            setTempCustoms([])
             setTempComments("")
 
             const next = (selectedAsset || 0) + 1
@@ -171,6 +249,8 @@ const UploadRequest = () => {
 
             // @ts-ignore
             setTempTags(assets[next]?.asset?.tags || [])
+            // @ts-ignore
+            setTempCustoms(assets[next]?.asset?.customs || [])
             // @ts-ignore
             setTempComments(assets[next]?.asset?.comments || "")
 
@@ -182,6 +262,7 @@ const UploadRequest = () => {
     const goPrev = () => {
         if((selectedAsset || 0) > 0){
             setTempTags([])
+            setTempCustoms([])
             setTempComments("")
 
             const next = (selectedAsset || 0) -1
@@ -190,6 +271,8 @@ const UploadRequest = () => {
 
             // @ts-ignore
             setTempTags(assets[next]?.asset?.tags || [])
+            // @ts-ignore
+            setTempCustoms(assets[next]?.asset?.customs || [])
             // @ts-ignore
             setTempComments(assets[next]?.asset?.comments || "")
 
@@ -272,9 +355,38 @@ const UploadRequest = () => {
             let tagPromises = []
             let removeTagPromises = []
 
+            let campaignPromises = []
+            let removeCampaignPromises = []
+
             if(isSelected){
                 const newTags = _.differenceBy(assetTags, asset?.tags || [])
-                const removeTags = _.differenceBy(asset?.tags || [], assetTags)
+                const newCampaigns = _.differenceBy(assetCampaigns, asset?.campaigns || [])
+
+                // Online admin can add custom fields
+                if(isAdmin()){
+                    for (const customField of assetCustomFields){
+                        // Find corresponding custom field in asset
+                        const assetField = asset.customs.filter((custom)=>custom.id === customField.id)
+                        const oldCustoms = assetField[0]?.values || []
+
+                        const newCustoms = _.differenceBy(customField.values, oldCustoms || [])
+
+                        const customPromises = []
+
+                        for( const custom of newCustoms){
+                            customPromises.push(assetApi.addCustomFields(asset.id, custom))
+                        }
+
+                        await Promise.all(customPromises)
+
+                    }
+                }
+
+                // Save bulk by admin wont override any tag, it will add extra tags
+                const removeTags = isAdmin() ? [] : _.differenceBy(asset?.tags || [], assetTags)
+
+                // Save bulk by admin wont override any capaign, it will add extra campaigns
+                const removeCampaigns = isAdmin() ? [] : _.differenceBy(asset?.campaigns || [], assetCampaigns)
 
                 for( const tag of removeTags){
                     removeTagPromises.push(assetApi.removeTag(asset.id, tag.id))
@@ -283,17 +395,46 @@ const UploadRequest = () => {
                 for( const tag of newTags){
                     tagPromises.push(assetApi.addTag(asset.id, tag))
                 }
+
+                // Only admin can modify campaign
+                if(isAdmin()){
+                    for( const campaign of removeCampaigns){
+                        removeCampaignPromises.push(assetApi.removeCampaign(asset.id, campaign.id))
+                    }
+
+                    for( const campaign of newCampaigns){
+                        campaignPromises.push( assetApi.addCampaign(asset.id, campaign))
+                    }
+                }
+
             }
 
             await Promise.all(tagPromises)
             await Promise.all(removeTagPromises)
+
+            // Only admin can modify campaign
+            if(isAdmin()){
+                await Promise.all(campaignPromises)
+                await Promise.all(removeCampaignPromises)
+            }
+
         }
 
         // Save tags to asset
         let assetArr = [...assets];
         assetArr.map((asset)=>{
             if(asset.isSelected){
-                asset.asset.tags = assetTags
+                // Admin update does not override the tags
+                if(isAdmin()){
+                    const newTags = _.differenceBy(assetTags, asset.asset.tags || [])
+                    asset.asset.tags = asset.asset.tags.concat(newTags)
+
+                    const newCampaigns = _.differenceBy(assetCampaigns, asset.asset.campaigns || [])
+                    asset.asset.campaigns = asset.asset.campaigns.concat(newCampaigns)
+                }else{
+                    asset.asset.tags = assetTags
+                }
+
             }
         })
 
@@ -359,6 +500,28 @@ const UploadRequest = () => {
         try {
             const tagsResponse = await tagApi.getTags()
             setInputTags(tagsResponse.data)
+        } catch (err) {
+            // TODO: Maybe show error?
+        }
+    }
+
+    const getCustomFieldsInputData = async () => {
+        try {
+            const { data } = await customFieldsApi.getCustomFields({isAll: 1, sort: 'createdAt,asc'})
+
+            setInputCustomFields(data)
+
+        } catch (err) {
+            // TODO: Maybe show error?
+        }
+    }
+
+    const getCampaignsInputData = async () => {
+        try {
+            const { data } = await campaignApi.getCampaigns()
+
+            setInputCampaigns(data)
+
         } catch (err) {
             // TODO: Maybe show error?
         }
@@ -443,6 +606,49 @@ const UploadRequest = () => {
         }))
     }
 
+    // Check if there is any approval is selected
+    const hasSelectedApprovals = () => {
+        if(selectedAllApprovals){
+            return true
+        }
+
+        const selectedArr = approvals.filter((approval)=>approval.isSelected)
+
+        return selectedArr.length > 0
+    }
+
+    // Select all approvals
+    const selectAllApprovals = (value = true) => {
+        setSelectedAllApprovals(value)
+        let approvalList = [...approvals]
+        approvalList.map((approval)=>{
+            approval.isSelected = value
+        })
+
+        setApprovals(approvalList)
+
+        // Reset temp assets
+        if(value === false){
+            setTempApprovals([])
+        }
+
+    }
+
+    // Toggle select approval
+    const toggleSelectedApproval = (id) => {
+        const approvalIndex = approvals.findIndex(approvalItem => approvalItem.id === id)
+        const selectedValue = !approvals[approvalIndex].isSelected
+        // Toggle unselect when selected all will disable selected all
+        if(!selectedValue && selectedAllApprovals){
+            setSelectedAllApprovals(false)
+        }
+        setApprovals(update(approvals, {
+            [approvalIndex]: {
+                isSelected: { $set: !approvals[approvalIndex].isSelected }
+            }
+        }))
+    }
+
     const TagWrapper = ({status}) => {
         const getStatusName = (status) => {
             switch (status){
@@ -505,6 +711,23 @@ const UploadRequest = () => {
         toastUtils.success("Update tag successfully")
     }
 
+    const updateAssetState = (updatedData) => {
+        setIsLoading(false);
+
+        // @ts-ignore
+        if (selectedAsset >= 0) {
+            // @ts-ignore
+            setAssets(update(assets, {[selectedAsset]: {asset: updatedData}
+            }))
+        }
+
+        setActiveDropdown('')
+
+        setNeedRefresh(true)
+
+        toastUtils.success("Update custom fields successfully")
+    }
+
     const approve = async(approvalId, assetIds) => {
         setIsLoading(true)
 
@@ -522,6 +745,29 @@ const UploadRequest = () => {
         setAssets(assetArrData)
 
         setNeedRefresh(true)
+
+        setIsLoading(false)
+
+        setDetailModal(false)
+
+        toastUtils.success("Approve asset successfully")
+    }
+
+    const bulkApprove = async(approvalIds) => {
+        setIsLoading(true)
+
+        await approvalApi.bulkApprove({approvalIds})
+
+        // Update status to approval list
+        let approvalArrData = [...approvals]
+        // @ts-ignore
+        approvalArrData.map((approval)=>{
+            if(approvalIds.includes(approval.id)){
+                approval.status = 2
+            }
+        })
+
+        setApprovals(approvalArrData)
 
         setIsLoading(false)
 
@@ -552,16 +798,122 @@ const UploadRequest = () => {
 
         setDetailModal(false)
 
-        toastUtils.success("Reject asset successfully")
+        toastUtils.success("Reject assets successfully")
+    }
+
+    const bulkReject = async(rejectIds) => {
+        setIsLoading(true)
+
+        await approvalApi.bulkReject({rejectIds})
+
+        // Update status to approval list
+        let approvalArrData = [...approvals]
+        // @ts-ignore
+        approvalArrData.map((approval)=>{
+            if(rejectIds.includes(approval.id)){
+                approval.status = -1
+            }
+        })
+
+        setApprovals(approvalArrData)
+
+        setIsLoading(false)
+
+        setDetailModal(false)
+
+        toastUtils.success("Reject assets successfully")
+    }
+
+    const bulkDelete = async(deleteIds) => {
+        setIsLoading(true)
+
+        await approvalApi.bulkDelete({deleteIds})
+
+        // Update status to approval list
+        let approvalArrData = [...approvals]
+
+        approvalArrData = approvalArrData.filter((approval)=> !deleteIds.includes(approval.id))
+
+        setApprovals(approvalArrData)
+
+        setIsLoading(false)
+
+        setDetailModal(false)
+
+        toastUtils.success("Delete approval successfully")
     }
 
     const getSelectedAssets = () => {
         return assets.filter((asset)=>asset.isSelected).map((asset)=>asset.asset.id)
     }
 
+    const getSelectedApprovals = () => {
+        return approvals.filter((approval)=>approval.isSelected).map((approval)=>approval.id)
+    }
+
+    // On change custom fields (add/remove)
+    const onChangeCustomField = (index, data) => {
+        // // Show loading
+        // setIsLoading(true)
+        //
+        // Hide select list
+        setActiveCustomField(undefined)
+        //
+        //
+        // Update asset custom field (local)
+        setAssetCustomFields(update(assetCustomFields, {
+            [index]: {
+                values: {$set: data}
+            }
+        }))
+        //
+        // // Show loading
+        // setIsLoading(false)
+    }
+
+    const onChangeTempCustomField = (index, data) => {
+        // Hide select list
+        setActiveCustomField(undefined)
+
+        // Update asset custom field (local)
+        setTempCustoms(update(tempCustoms, {
+            [index]: {
+                values: {$set: data}
+            }
+        }))
+    }
+
+    // On custom field select one changes
+    const onChangeSelectOneCustomField = async (selected, index) => {
+        // Hide select list
+        setActiveCustomField(undefined)
+
+        // Update asset custom field (local)
+        setAssetCustomFields(update(assetCustomFields, {
+            [index]: {
+                values: {$set: [selected]}
+            }
+        }))
+    }
+
+    // On temp custom field select one changes
+    const onChangeSelectOneTempCustomField = async (selected, index) => {
+        // Hide select list
+        setActiveCustomField(undefined)
+
+        // Update asset custom field (local)
+        setTempCustoms(update(tempCustoms, {
+            [index]: {
+                values: {$set: [selected]}
+            }
+        }))
+    }
+
     useEffect(()=>{
         fetchApprovals();
         getTagsInputData();
+        getCampaignsInputData();
+        getCustomFieldsInputData();
     },[])
 
     useEffect(()=>{
@@ -596,6 +948,23 @@ const UploadRequest = () => {
 
 
     },[filter])
+
+
+    useEffect( () => {
+        updateName(debouncedBatchName)
+    }, [debouncedBatchName]);
+
+    useEffect(()=>{
+        if(inputCustomFields.length > 0){
+            const updatedMappingCustomFieldData =  mappingCustomFieldData(inputCustomFields, customs)
+
+            setAssetCustomFields(update(assetCustomFields, {
+                $set: updatedMappingCustomFieldData
+            }))
+
+            setCustoms(updatedMappingCustomFieldData)
+        }
+    },[inputCustomFields])
 
   return (
     <>
@@ -668,7 +1037,7 @@ const UploadRequest = () => {
                                     }
                                 />
                             }
-                            <Button type='button' text={currentViewStatus !== 1 ? 'Cancel'  : 'Back'} styleType='secondary' onClick={onCancelView} />
+                            <Button type='button' text={'Back'} styleType='secondary' onClick={onCancelView} />
                         </div>
 
                     </div>}
@@ -688,6 +1057,54 @@ const UploadRequest = () => {
                     }
 
                     {mode === "list" && <div className={styles["asset-list"]}>
+                        {isAdmin() && <div className={`${styles['button-wrapper']} m-b-25`}>
+                            <div className={"m-l-auto"}>
+                                {approvals.length > 0 && hasSelectedApprovals() && <Button type='button' text='Deselect' styleType='secondary' onClick={()=>{selectAllApprovals(false)}} />}
+                                {approvals.length > 0 && !selectedAllApprovals && <Button type='button' text='Select All' styleType='secondary' onClick={selectAllApprovals} />}
+
+                                {approvals.length > 0 && isAdmin() && hasSelectedApprovals() &&
+                                    <Button
+                                        type='button'
+                                        text='Delete'
+                                        styleType='primary'
+                                        onClick={()=>{
+                                            setTempApprovals(getSelectedApprovals())
+                                            setShowDeleteConfirm(true)
+                                        }
+
+                                        }
+                                    />
+                                }
+
+                                {approvals.length > 0 && isAdmin() && hasSelectedApprovals() &&
+                                    <Button
+                                        type='button'
+                                        text='Reject Selected'
+                                        styleType='primary'
+                                        onClick={()=>{
+                                            setTempApprovals(getSelectedApprovals())
+                                            setShowRejectConfirm(true)
+                                        }
+
+                                        }
+                                    />
+                                }
+                                {approvals.length > 0 && isAdmin() && hasSelectedApprovals() &&
+                                    <Button
+                                        type='button'
+                                        text='Approve Selected'
+                                        styleType='primary'
+                                        onClick={()=>{
+                                            setTempApprovals(getSelectedApprovals())
+                                            setShowApproveConfirm(true)
+                                        }
+
+                                        }
+                                    />
+                                }
+                            </div>
+
+                        </div>}
                         <div className={`${assetGridStyles["list-wrapper"]} ${approvals.length === 0 ? "mb-32" : ""}`}>
                             <ul className={"regular-list"}>
                                 {approvals.length === 0 && <p>There is no any request yet</p>}
@@ -788,10 +1205,20 @@ const UploadRequest = () => {
             </div>
 
             {
-                mode === "view" && (currentViewStatus === 0 || isAdmin()) &&  assets.length > 0 && <div className={`col-30 ${styles['right-panel']}`}>
+                mode === "view" &&  assets.length > 0 && <div className={`col-30 ${styles['right-panel']}`}>
                     <div className={detailPanelStyles.container}>
-                        <h2 className={styles['detail-title']}>Tagging</h2>
-                        {!isAdmin() && <div className={detailPanelStyles['first-section']}>
+                        <h2 className={styles['detail-title']}>
+                            {isAdmin()  ? "User Tags" : "Tagging"}
+                        </h2>
+
+                        {
+                            (currentViewStatus !== 0 || isAdmin()) && <div className={detailPanelStyles['field-wrapper']} >
+                                <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Message</div>
+                                <p>{currentApproval?.message}</p>
+                            </div>
+                        }
+
+                        {!isAdmin() && currentViewStatus == 0 && <div className={detailPanelStyles['first-section']}>
                             <div className={detailPanelStyles['field-wrapper']}>
                                 <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Batch Name</div>
                                 <Input
@@ -802,7 +1229,7 @@ const UploadRequest = () => {
                             </div>
                         </div>}
 
-                        {hasSelectedAssets() && <>
+                        {hasSelectedAssets() && (currentViewStatus === 0 || isAdmin()) && <>
                             <div className={detailPanelStyles['field-wrapper']} >
                                 <CreatableSelect
                                     title='Tags'
@@ -814,7 +1241,7 @@ const UploadRequest = () => {
                                     selectedItems={assetTags}
                                     setSelectedItems={setTags}
                                     allowEdit={currentViewStatus === 0 || isAdmin()}
-                                    creatable={false}
+                                    creatable={isAdmin()}
                                     onAddOperationFinished={(stateUpdate) => {
                                         setActiveDropdown("")
                                         // updateAssetState({
@@ -832,21 +1259,129 @@ const UploadRequest = () => {
                                     isShare={false}
                                     asyncCreateFn={(newItem) => {
                                         return { data: newItem }
+
                                         // assetApi.addTag(id, newItem)
                                     }}
                                     dropdownIsActive={activeDropdown === 'tags'}
+                                    ignorePermission={true}
                                 />
                             </div>
 
+
+                            {
+                                isAdmin() && <div className={detailPanelStyles['field-wrapper']} >
+                                    <CreatableSelect
+                                        title='Campaigns'
+                                        addText='Add to Campaign'
+                                        onAddClick={() => setActiveDropdown('campaigns')}
+                                        selectPlaceholder={'Enter a new campaign or select an existing one'}
+                                        avilableItems={inputCampaigns}
+                                        setAvailableItems={setInputCampaigns}
+                                        selectedItems={assetCampaigns}
+                                        setSelectedItems={setCampaigns}
+                                        creatable={isAdmin()}
+                                        onAddOperationFinished={(stateUpdate) => {
+                                            setActiveDropdown("")
+
+                                            // updateAssetState({
+                                            //     campaigns: { $set: stateUpdate }
+                                            // })
+                                            // loadCampaigns()
+                                        }}
+                                        onRemoveOperationFinished={async (index, stateUpdate) => {
+                                            // await assetApi.removeCampaign(id, assetCampaigns[index].id)
+                                            // updateAssetState({
+                                            //     campaigns: { $set: stateUpdate }
+                                            // })
+                                        }}
+                                        onOperationFailedSkipped={() => setActiveDropdown('')}
+                                        isShare={false}
+                                        asyncCreateFn={
+                                            (newItem)=>{
+                                                // (newItem) => assetApi.addCampaign(id, newItem)
+                                                return { data: newItem }
+                                            }
+                                        }
+                                        dropdownIsActive={activeDropdown === 'campaigns'}
+                                        altColor='yellow'
+                                        ignorePermission={true}
+                                    />
+                                </div>
+                            }
+
+
+                            {isAdmin() && inputCustomFields.map((field, index)=>{
+                                if(field.type === 'selectOne'){
+
+                                    return <div className={detailPanelStyles['field-wrapper']} key={index}>
+                                        <div className={`secondary-text ${styles.field}`}>{field.name}</div>
+                                        <CustomFieldSelector
+                                            data={assetCustomFields[index]?.values[0]?.name}
+                                            options={field.values}
+                                            isShare={false}
+                                            onLabelClick={() => { }}
+                                            handleFieldChange={(option)=>{onChangeSelectOneCustomField(option, index)}}
+                                        />
+                                    </div>
+                                }
+
+                                if(field.type === 'selectMultiple'){
+                                    return <div className={detailPanelStyles['field-wrapper']} key={index}>
+                                        <CreatableSelect
+                                            creatable={false}
+                                            title={field.name}
+                                            addText={`Add ${field.name}`}
+                                            onAddClick={() => setActiveCustomField(index)}
+                                            selectPlaceholder={'Select an existing one'}
+                                            avilableItems={field.values}
+                                            setAvailableItems={()=>{}}
+                                            selectedItems={(assetCustomFields.filter((assetField)=>assetField.id === field.id))[0]?.values || []}
+                                            setSelectedItems={(data)=>{onChangeCustomField(index, data)}}
+                                            onAddOperationFinished={(stateUpdate) => {
+                                                // updateAssetState({
+                                                //     customs: {[index]: {values: { $set: stateUpdate }}}
+                                                // })
+                                            }}
+                                            onRemoveOperationFinished={async (index, stateUpdate, removeId) => {
+                                                // setIsLoading(true);
+                                                //
+                                                // await assetApi.removeCustomFields(id, removeId)
+                                                //
+                                                // updateAssetState({
+                                                //     customs: {[index]: {values: { $set: stateUpdate }}}
+                                                // })
+                                                //
+                                                // setIsLoading(false);
+                                            }}
+                                            onOperationFailedSkipped={() => setActiveCustomField(undefined)}
+                                            isShare={false}
+                                            asyncCreateFn={(newItem) => { // Show loading
+                                                return { data: newItem }
+                                                // setIsLoading(true);
+                                                // return assetApi.addCustomFields(id, {...newItem, folderId: activeFolder})
+                                            }}
+                                            dropdownIsActive={activeCustomField === index}
+                                            ignorePermission={true}
+                                        />
+                                    </div>
+                                }
+                            })}
+
+
+
                             <Button className={styles['add-tag-btn']} type='button' text='Bulk Add Tag' styleType='secondary' onClick={saveBulkTag} />
+                            {
+                                !isAdmin() && <>
+                                    <div className={detailPanelStyles['field-wrapper']} >
+                                        <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>
+                                        <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={comments}
+                                                  onChange={e => {setComments(e.target.value)}} styleType={'regular-short'} />
+                                    </div>
 
-                            <div className={detailPanelStyles['field-wrapper']} >
-                                <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>
-                                <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={comments}
-                                          onChange={e => {setComments(e.target.value)}} styleType={'regular-short'} />
-                            </div>
+                                    <Button className={styles['add-tag-btn']} type='button' text='Add comments' styleType='secondary' onClick={saveComment} />
+                                </>
+                            }
 
-                            <Button className={styles['add-tag-btn']} type='button' text='Add comments' styleType='secondary' onClick={saveComment} />
                         </>}
 
 
@@ -902,7 +1437,7 @@ const UploadRequest = () => {
                                 selectedItems={tempTags}
                                 setSelectedItems={setTempTags}
                                 allowEdit={currentViewStatus === 0 || isAdmin()}
-                                creatable={false}
+                                creatable={isAdmin()}
                                 onAddOperationFinished={(stateUpdate) => {
                                     setActiveDropdown("")
 
@@ -930,13 +1465,129 @@ const UploadRequest = () => {
 
                                 }}
                                 dropdownIsActive={activeDropdown === 'tags'}
+                                ignorePermission={true}
                             />
                         </div>
 
+                        {
+                            isAdmin() && <div className={detailPanelStyles['field-wrapper']} >
+                                <CreatableSelect
+                                    title='Campaigns'
+                                    addText='Add to Campaign'
+                                    onAddClick={() => setActiveDropdown('campaigns')}
+                                    selectPlaceholder={'Enter a new campaign or select an existing one'}
+                                    avilableItems={inputCampaigns}
+                                    setAvailableItems={setInputCampaigns}
+                                    selectedItems={tempCampaigns}
+                                    setSelectedItems={setTempCampaigns}
+                                    creatable={isAdmin()}
+                                    onAddOperationFinished={(stateUpdate) => {
+                                        updateAssetState({
+                                            campaigns: { $set: stateUpdate }
+                                        })
+                                        // loadCampaigns()
+                                    }}
+                                    onRemoveOperationFinished={async (index, stateUpdate) => {
+                                        await assetApi.removeCampaign(assets[selectedAsset]?.asset.id, assetCampaigns[index].id)
+                                        updateAssetState({
+                                            campaigns: { $set: stateUpdate }
+                                        })
+                                    }}
+                                    onOperationFailedSkipped={() => setActiveDropdown('')}
+                                    isShare={false}
+                                    asyncCreateFn={
+                                        (newItem)=>{
+                                            if(isAdmin()) { // Admin can edit inline, dont need to hit save button
+                                                setIsLoading(true)
+
+                                                return assetApi.addCampaign(assets[selectedAsset]?.asset.id, newItem)
+                                            }else{
+                                                return { data: newItem }
+                                            }
+                                        }
+                                    }
+                                    dropdownIsActive={activeDropdown === 'campaigns'}
+                                    altColor='yellow'
+                                    ignorePermission={true}
+                                />
+                            </div>
+                        }
+
+
+                        {isAdmin() && inputCustomFields.map((field, index)=>{
+                            if(field.type === 'selectOne'){
+
+                                return <div className={detailPanelStyles['field-wrapper']} key={index}>
+                                    <div className={`secondary-text ${styles.field}`}>{field.name}</div>
+                                    <CustomFieldSelector
+                                        data={tempCustoms[index]?.values[0]?.name}
+                                        options={field.values}
+                                        isShare={false}
+                                        onLabelClick={() => { }}
+                                        handleFieldChange={(option)=>{onChangeSelectOneTempCustomField(option, index)}}
+                                    />
+                                </div>
+                            }
+
+                            if(field.type === 'selectMultiple'){
+                                return <div className={detailPanelStyles['field-wrapper']} key={index}>
+                                    <CreatableSelect
+                                        creatable={false}
+                                        title={field.name}
+                                        addText={`Add ${field.name}`}
+                                        onAddClick={() => setActiveCustomField(index)}
+                                        selectPlaceholder={'Select an existing one'}
+                                        avilableItems={field.values}
+                                        setAvailableItems={()=>{}}
+                                        selectedItems={(tempCustoms.filter((assetField)=>assetField.id === field.id))[0]?.values || []}
+                                        setSelectedItems={(data)=>{onChangeTempCustomField(index, data)}}
+                                        onAddOperationFinished={(stateUpdate) => {
+                                            setActiveDropdown("")
+
+                                            if(isAdmin()){
+                                                updateAssetState({
+                                                    customs: {[index]: {values: { $set: stateUpdate }}}
+                                                })
+                                            }
+
+                                        }}
+                                        onRemoveOperationFinished={async (index, stateUpdate, removeId) => {
+                                            if(isAdmin()){
+                                                setIsLoading(true)
+                                                await assetApi.removeCustomFields(assets[selectedAsset]?.asset.id, removeId)
+
+                                                updateAssetState({
+                                                    customs: {[index]: {values: { $set: stateUpdate }}}
+                                                })
+
+                                                setIsLoading(false);
+                                            }
+                                        }}
+                                        onOperationFailedSkipped={() => setActiveCustomField(undefined)}
+                                        isShare={false}
+                                        asyncCreateFn={(newItem) => { // Show loading
+                                            setNeedRefresh(true)
+                                            if(isAdmin()){ // Admin can edit inline, dont need to hit save button
+                                                setIsLoading(true)
+                                                return assetApi.addCustomFields(assets[selectedAsset]?.asset.id, {...newItem})
+                                            }else{
+                                                return { data: newItem }
+                                            }
+                                        }}
+                                        dropdownIsActive={activeCustomField === index}
+                                        ignorePermission={true}
+                                    />
+                                </div>
+                            }
+                        })}
+
                         <div className={detailPanelStyles['field-wrapper']} >
                             <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>
-                            <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={tempComments}
-                                      onChange={e => {setTempComments(e.target.value)}} styleType={'regular-short'} disabled={currentViewStatus !== 0}/>
+                            {(isAdmin() || currentViewStatus !== 0) && <p>
+                                {tempComments}
+                            </p>}
+                            {!isAdmin() && currentViewStatus === 0 && <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={tempComments}
+                                      onChange={e => {setTempComments(e.target.value)}} styleType={'regular-short'} disabled={currentViewStatus !== 0}/>}
                         </div>
 
                         {(currentViewStatus === 0) && <Button className={styles['add-tag-btn']} type='button' text='Save changes' styleType='primary' onClick={onSaveSingleAsset} />}
@@ -1006,7 +1657,7 @@ const UploadRequest = () => {
 
                 <div>
                     {!submitted && <>
-                        <Button className={styles['keep-edit-btn']} type='button' text='Keep editting' styleType='secondary' onClick={()=>{setShowConfirmModal(false); setMessage("")}} />
+                        <Button className={styles['keep-edit-btn']} type='button' text='Keep editing' styleType='secondary' onClick={()=>{setShowConfirmModal(false); setMessage("")}} />
                         <Button className={styles['add-tag-btn']} type='button' text='Submit' styleType='primary' onClick={submit} />
                     </>}
                     {submitted &&  <Button className={styles['add-tag-btn']} type='button' text='Back to Sparkfive' styleType='primary' onClick={()=>{onCancelView(true)}} />}
@@ -1030,8 +1681,14 @@ const UploadRequest = () => {
         <ConfirmModal
             closeModal={() => setShowApproveConfirm(false)}
             confirmAction={() => {
-                approve(approvalId, tempAssets)
-                setShowApproveConfirm(false)
+                if(mode === "list"){
+                    bulkApprove(tempApprovals)
+                    setShowApproveConfirm(false)
+                }else{
+                    approve(approvalId, tempAssets)
+                    setShowApproveConfirm(false)
+                }
+
             }}
             confirmText={'Approve'}
             message={'Are you sure you would like to approve this asset?'}
@@ -1041,12 +1698,30 @@ const UploadRequest = () => {
         <ConfirmModal
             closeModal={() => setShowRejectConfirm(false)}
             confirmAction={() => {
-                reject(approvalId, tempAssets)
-                setShowRejectConfirm(false)
+                if(mode === "list"){
+                    bulkReject(tempApprovals)
+                    setShowRejectConfirm(false)
+                }else{
+                    reject(approvalId, tempAssets)
+                    setShowRejectConfirm(false)
+                }
+
             }}
             confirmText={'Reject'}
             message={'Are you sure you would like to reject this asset?'}
             modalIsOpen={showRejectConfirm}
+        />
+
+        <ConfirmModal
+            closeModal={() => setShowDeleteConfirm(false)}
+            confirmAction={() => {
+                bulkDelete(tempApprovals)
+                setShowDeleteConfirm(false)
+
+            }}
+            confirmText={'Delete'}
+            message={'Are you sure you would like to delete this asset?'}
+            modalIsOpen={showDeleteConfirm}
         />
 
     </>

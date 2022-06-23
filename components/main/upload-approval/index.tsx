@@ -44,12 +44,15 @@ import approvalApi from '../../../server-api/upload-approvals'
 
 import {  ASSET_UPLOAD_APPROVAL } from '../../../constants/permissions'
 
+// Hooks
+import { useDebounce } from "../../../hooks/useDebounce";
+
 
 
 
 const UploadApproval = () => {
 
-    const { advancedConfig, setAdvancedConfig, hasPermission } = useContext(UserContext)
+    const { advancedConfig, hasPermission, user } = useContext(UserContext)
 
     const {
         setNeedsFetch,
@@ -94,7 +97,18 @@ const UploadApproval = () => {
 
     const [batchName, setBatchName] = useState("")
 
+    const debouncedBatchName = useDebounce(batchName, 500);
+
+
+
     const fileBrowserRef = useRef(undefined)
+
+    const updateName = async (value) => {
+        if(approvalId){
+            approvalApi.update(approvalId, { name: value})
+            // toastUtils.success("Name is saved successfully")
+        }
+    }
 
     const getCreationParameters = (attachQuery?: any) => {
         const activeFolder = "";
@@ -973,10 +987,18 @@ const UploadApproval = () => {
         return (asset.tags && asset.tags.length > 0 )|| asset.comments
     }
 
+    const isAdmin = () => {
+        return user.role.id === "admin" || user.role.id === "super_admin"
+    }
+
     useEffect(() => {
         checkValidUser()
         getTagsInputData()
     }, [])
+
+    useEffect( () => {
+        updateName(debouncedBatchName)
+    }, [debouncedBatchName]);
 
   return (
     <>
@@ -1118,7 +1140,7 @@ const UploadApproval = () => {
                                 setAvailableItems={setInputTags}
                                 selectedItems={assetTags}
                                 setSelectedItems={setTags}
-                                creatable={false}
+                                creatable={isAdmin()}
                                 onAddOperationFinished={(stateUpdate) => {
                                     setActiveDropdown("")
                                     // updateAssetState({
@@ -1139,6 +1161,7 @@ const UploadApproval = () => {
                                     // assetApi.addTag(id, newItem)
                                 }}
                                 dropdownIsActive={activeDropdown === 'tags'}
+                                ignorePermission={true}
                             />
                         </div>
 
@@ -1182,7 +1205,7 @@ const UploadApproval = () => {
                     {/*<img alt={"test"} src={assets[selectedAsset]?.realUrl} />*/}
                     <div className={styles['file-name']}>
                         <span>{assets[selectedAsset]?.asset.name}</span>
-                        <IconClickable additionalClass={styles['edit-icon']} src={Utilities.edit} onClick={()=> {setShowRenameModal(true)}} />
+                        {isAdmin() && <IconClickable additionalClass={styles['edit-icon']} src={Utilities.edit} onClick={()=> {setShowRenameModal(true)}} />}
                     </div>
                     <div className={styles['date']}>{moment(assets[selectedAsset]?.asset?.createdAt).format('MMM DD, YYYY, hh:mm a')}</div>
                 </div>
@@ -1200,7 +1223,7 @@ const UploadApproval = () => {
                                 setAvailableItems={setInputTags}
                                 selectedItems={tempTags}
                                 setSelectedItems={setTempTags}
-                                creatable={false}
+                                creatable={isAdmin()}
                                 onAddOperationFinished={(stateUpdate) => {
                                     setActiveDropdown("")
                                     // updateAssetState({
@@ -1220,6 +1243,7 @@ const UploadApproval = () => {
                                     return { data: newItem }
                                 }}
                                 dropdownIsActive={activeDropdown === 'tags'}
+                                ignorePermission={true}
                             />
                         </div>
 
@@ -1272,7 +1296,7 @@ const UploadApproval = () => {
 
                 <div>
                     {!submitted && <>
-                        <Button className={styles['keep-edit-btn']} type='button' text='Keep editting' styleType='secondary' onClick={()=>{setShowConfirmModal(false); setMessage("")}} />
+                        <Button className={styles['keep-edit-btn']} type='button' text='Keep editing' styleType='secondary' onClick={()=>{setShowConfirmModal(false); setMessage("")}} />
                         <Button className={styles['add-tag-btn']} type='button' text='Submit' styleType='primary' onClick={submit} />
                     </>}
                     {submitted &&  <Button className={styles['add-tag-btn']}

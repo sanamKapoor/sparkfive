@@ -11,7 +11,8 @@ import {
   SETTINGS_TEAM,
   SETTINGS_COMPANY,
   SETTINGS_PLAN,
-  SUPERADMIN_ACCESS
+  SUPERADMIN_ACCESS,
+  ASSET_UPLOAD_APPROVAL
 } from '../../../constants/permissions'
 import { TeamContext } from '../../../context'
 
@@ -65,7 +66,6 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
 
   const dropdownOptions = [
     { OverrideComp: () => <SettingsLink name='Profile' settingRef='profile' /> },
-    { OverrideComp: () => <MainLink name='Upload Approvals' settingRef='upload-approvals' /> }
   ]
   if (hasPermission([SETTINGS_COMPANY])) dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Company' settingRef='company' /> })
   if (hasPermission([SETTINGS_BILLING])) dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Billing' settingRef='billing' /> })
@@ -75,6 +75,7 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
   if (hasPermission([SETTINGS_TEAM])) dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Attributes' settingRef='attributes' /> })
   dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Notifications' settingRef='notifications' /> })
   if (hasPermission([SETTINGS_TEAM])) dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Guest Upload' settingRef='guest-upload' /> })
+  dropdownOptions.push({ OverrideComp: () => <MainLink name='Upload Approvals' settingRef='upload-approvals' /> })
   if (hasPermission([SETTINGS_TEAM])) dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Custom Settings' settingRef='custom-settings' /> })
   dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Integrations' settingRef='integrations' /> })
   dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Shared Links' settingRef='shared-links' /> })
@@ -148,7 +149,7 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
             />
           </header>
           {isLoading && <SpinnerOverlay />}
-          {hasPermission(requiredPermissions) ?
+          {hasPermission(requiredPermissions) || hasPermission([ASSET_UPLOAD_APPROVAL]) ?
             children
             :
             <NoPermissionNotice />

@@ -140,8 +140,8 @@ const AssetThumbail = ({
           )}
         </div>
         <div className={styles.info}>
-          <div className={infoWrapperClass}>
-            <div className={textWrapperClass}>
+          <div className={`${infoWrapperClass} overflow--visible`}>
+            <div className={`${textWrapperClass} overflow--visible`}>
               <div className={`normal-text ${styles['wrap-text']}`}>{asset.name}</div>
               <div className={styles["details-wrapper"]}>
                 <div className="secondary-text">
