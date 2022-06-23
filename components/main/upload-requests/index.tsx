@@ -12,6 +12,9 @@ import AssetThumbail from "../../common/asset/asset-thumbail";
 import RenameModal from "../../common/modals/rename-modal";
 import AssetImg from "../../common/asset/asset-img";
 import Input from "../../common/inputs/input";
+import ConfirmModal from "../../common/modals/confirm-modal";
+import Select from "../../common/inputs/select";
+import CustomFieldSelector from "../../common/items/custom-field-selector";
 
 // Styles
 import styles from './index.module.css'
@@ -34,12 +37,12 @@ import uploadApprovalApi from '../../../server-api/upload-approvals'
 import tagApi from '../../../server-api/tag'
 import approvalApi from '../../../server-api/upload-approvals'
 import assetApi from '../../../server-api/asset'
-import ConfirmModal from "../../common/modals/confirm-modal";
-import {statusList} from "../../../constants/shared-links";
-import Select from "../../common/inputs/select";
+import customFieldsApi from '../../../server-api/attribute'
+
 
 // Hooks
 import {useDebounce} from "../../../hooks/useDebounce";
+
 
 const filterOptions = [
     {
@@ -55,6 +58,25 @@ const filterOptions = [
         value: -1
     },
 ]
+
+// Server DO NOT return full custom field slots including empty array, so we will generate empty array here
+// The order of result should be match with order of custom field list
+const mappingCustomFieldData = (list, valueList) => {
+    let rs = []
+    list.map((field)=>{
+        let value = valueList.filter(valueField => valueField.id === field.id)
+
+        if(value.length > 0){
+            rs.push(value[0])
+        }else{
+            let customField = { ...field }
+            customField.values = []
+            rs.push(customField)
+        }
+    })
+
+    return rs
+}
 
 const UploadRequest = () => {
 
@@ -83,6 +105,7 @@ const UploadRequest = () => {
     const [selectedAsset, setSelectedAsset] = useState()
 
     const [tempTags, setTempTags] = useState([]) // For update tag in each asset
+    const [tempCustoms, setTempCustoms] = useState([]) // For update custom in each asset
     const [tempComments, setTempComments] = useState("") // For update tag in each asset
 
     const [currentApproval, setCurrentApproval] = useState()
@@ -107,6 +130,12 @@ const UploadRequest = () => {
 
     const [filter, setFilter] = useState()
     const [approvalIndex, setApprovalIndex]  = useState()
+
+    // Custom fields
+    const [customs, setCustoms] = useState([])
+    const [activeCustomField, setActiveCustomField] = useState<number>()
+    const [inputCustomFields, setInputCustomFields] = useState([])
+    const [assetCustomFields, setAssetCustomFields] = useState(mappingCustomFieldData(inputCustomFields, customs))
 
     const debouncedBatchName = useDebounce(batchName, 500);
 
@@ -189,12 +218,15 @@ const UploadRequest = () => {
         // @ts-ignore
         setTempTags(assets[index]?.asset?.tags || [])
         // @ts-ignore
+        setTempCustoms( mappingCustomFieldData(inputCustomFields, assets[index]?.asset?.customs || []))
+        // @ts-ignore
         setTempComments(assets[index]?.asset?.comments || "")
     }
 
     const goNext = () => {
         if((selectedAsset || 0) < assets.length-1){
             setTempTags([])
+            setTempCustoms([])
             setTempComments("")
 
             const next = (selectedAsset || 0) + 1
@@ -203,6 +235,8 @@ const UploadRequest = () => {
 
             // @ts-ignore
             setTempTags(assets[next]?.asset?.tags || [])
+            // @ts-ignore
+            setTempCustoms(assets[next]?.asset?.customs || [])
             // @ts-ignore
             setTempComments(assets[next]?.asset?.comments || "")
 
@@ -214,6 +248,7 @@ const UploadRequest = () => {
     const goPrev = () => {
         if((selectedAsset || 0) > 0){
             setTempTags([])
+            setTempCustoms([])
             setTempComments("")
 
             const next = (selectedAsset || 0) -1
@@ -222,6 +257,8 @@ const UploadRequest = () => {
 
             // @ts-ignore
             setTempTags(assets[next]?.asset?.tags || [])
+            // @ts-ignore
+            setTempCustoms(assets[next]?.asset?.customs || [])
             // @ts-ignore
             setTempComments(assets[next]?.asset?.comments || "")
 
@@ -306,6 +343,26 @@ const UploadRequest = () => {
 
             if(isSelected){
                 const newTags = _.differenceBy(assetTags, asset?.tags || [])
+
+                // Online admin can add custom fields
+                if(isAdmin()){
+                    for (const customField of assetCustomFields){
+                        // Find corresponding custom field in asset
+                        const assetField = asset.customs.filter((custom)=>custom.id === customField.id)
+                        const oldCustoms = assetField[0]?.values || []
+
+                        const newCustoms = _.differenceBy(customField.values, oldCustoms || [])
+
+                        const customPromises = []
+
+                        for( const custom of newCustoms){
+                            customPromises.push(assetApi.addCustomFields(asset.id, custom))
+                        }
+
+                        await Promise.all(customPromises)
+
+                    }
+                }
 
                 // Save bulk by admin wont override any tag, it will add extra tags
                 const removeTags = isAdmin() ? [] : _.differenceBy(asset?.tags || [], assetTags)
@@ -400,6 +457,17 @@ const UploadRequest = () => {
         try {
             const tagsResponse = await tagApi.getTags()
             setInputTags(tagsResponse.data)
+        } catch (err) {
+            // TODO: Maybe show error?
+        }
+    }
+
+    const getCustomFieldsInputData = async () => {
+        try {
+            const { data } = await customFieldsApi.getCustomFields({isAll: 1, sort: 'createdAt,asc'})
+
+            setInputCustomFields(data)
+
         } catch (err) {
             // TODO: Maybe show error?
         }
@@ -589,6 +657,23 @@ const UploadRequest = () => {
         toastUtils.success("Update tag successfully")
     }
 
+    const updateAssetState = (updatedData) => {
+        setIsLoading(false);
+
+        // @ts-ignore
+        if (selectedAsset >= 0) {
+            // @ts-ignore
+            setAssets(update(assets, {[selectedAsset]: {asset: updatedData}
+            }))
+        }
+
+        setActiveDropdown('')
+
+        setNeedRefresh(true)
+
+        toastUtils.success("Update custom fields successfully")
+    }
+
     const approve = async(approvalId, assetIds) => {
         setIsLoading(true)
 
@@ -712,9 +797,68 @@ const UploadRequest = () => {
         return approvals.filter((approval)=>approval.isSelected).map((approval)=>approval.id)
     }
 
+    // On change custom fields (add/remove)
+    const onChangeCustomField = (index, data) => {
+        // // Show loading
+        // setIsLoading(true)
+        //
+        // Hide select list
+        setActiveCustomField(undefined)
+        //
+        //
+        // Update asset custom field (local)
+        setAssetCustomFields(update(assetCustomFields, {
+            [index]: {
+                values: {$set: data}
+            }
+        }))
+        //
+        // // Show loading
+        // setIsLoading(false)
+    }
+
+    const onChangeTempCustomField = (index, data) => {
+        // Hide select list
+        setActiveCustomField(undefined)
+
+        // Update asset custom field (local)
+        setTempCustoms(update(tempCustoms, {
+            [index]: {
+                values: {$set: data}
+            }
+        }))
+    }
+
+    // On custom field select one changes
+    const onChangeSelectOneCustomField = async (selected, index) => {
+        // Hide select list
+        setActiveCustomField(undefined)
+
+        // Update asset custom field (local)
+        setAssetCustomFields(update(assetCustomFields, {
+            [index]: {
+                values: {$set: [selected]}
+            }
+        }))
+    }
+
+    // On temp custom field select one changes
+    const onChangeSelectOneTempCustomField = async (selected, index) => {
+        // Hide select list
+        setActiveCustomField(undefined)
+
+        // Update asset custom field (local)
+        setTempCustoms(update(tempCustoms, {
+            [index]: {
+                values: {$set: [selected]}
+            }
+        }))
+    }
+
     useEffect(()=>{
         fetchApprovals();
         getTagsInputData();
+        getCustomFieldsInputData();
     },[])
 
     useEffect(()=>{
@@ -754,6 +898,18 @@ const UploadRequest = () => {
     useEffect( () => {
         updateName(debouncedBatchName)
     }, [debouncedBatchName]);
+
+    useEffect(()=>{
+        if(inputCustomFields.length > 0){
+            const updatedMappingCustomFieldData =  mappingCustomFieldData(inputCustomFields, customs)
+
+            setAssetCustomFields(update(assetCustomFields, {
+                $set: updatedMappingCustomFieldData
+            }))
+
+            setCustoms(updatedMappingCustomFieldData)
+        }
+    },[inputCustomFields])
 
   return (
     <>
@@ -1054,6 +1210,66 @@ const UploadRequest = () => {
                                 />
                             </div>
 
+
+                            {isAdmin() && inputCustomFields.map((field, index)=>{
+                                if(field.type === 'selectOne'){
+
+                                    return <div className={detailPanelStyles['field-wrapper']} key={index}>
+                                        <div className={`secondary-text ${styles.field}`}>{field.name}</div>
+                                        <CustomFieldSelector
+                                            data={assetCustomFields[index]?.values[0]?.name}
+                                            options={field.values}
+                                            isShare={false}
+                                            onLabelClick={() => { }}
+                                            handleFieldChange={(option)=>{onChangeSelectOneCustomField(option, index)}}
+                                        />
+                                    </div>
+                                }
+
+                                if(field.type === 'selectMultiple'){
+                                    return <div className={detailPanelStyles['field-wrapper']} key={index}>
+                                        <CreatableSelect
+                                            creatable={false}
+                                            title={field.name}
+                                            addText={`Add ${field.name}`}
+                                            onAddClick={() => setActiveCustomField(index)}
+                                            selectPlaceholder={'Select an existing one'}
+                                            avilableItems={field.values}
+                                            setAvailableItems={()=>{}}
+                                            selectedItems={(assetCustomFields.filter((assetField)=>assetField.id === field.id))[0]?.values || []}
+                                            setSelectedItems={(data)=>{onChangeCustomField(index, data)}}
+                                            onAddOperationFinished={(stateUpdate) => {
+                                                // updateAssetState({
+                                                //     customs: {[index]: {values: { $set: stateUpdate }}}
+                                                // })
+                                            }}
+                                            onRemoveOperationFinished={async (index, stateUpdate, removeId) => {
+                                                // setIsLoading(true);
+                                                //
+                                                // await assetApi.removeCustomFields(id, removeId)
+                                                //
+                                                // updateAssetState({
+                                                //     customs: {[index]: {values: { $set: stateUpdate }}}
+                                                // })
+                                                //
+                                                // setIsLoading(false);
+                                            }}
+                                            onOperationFailedSkipped={() => setActiveCustomField(undefined)}
+                                            isShare={false}
+                                            asyncCreateFn={(newItem) => { // Show loading
+                                                return { data: newItem }
+                                                // setIsLoading(true);
+                                                // return assetApi.addCustomFields(id, {...newItem, folderId: activeFolder})
+                                            }}
+                                            dropdownIsActive={activeCustomField === index}
+                                            ignorePermission={true}
+                                        />
+                                    </div>
+                                }
+                            })}
+
+
+
                             <Button className={styles['add-tag-btn']} type='button' text='Bulk Add Tag' styleType='secondary' onClick={saveBulkTag} />
                             {
                                 !isAdmin() && <>
@@ -1153,6 +1369,74 @@ const UploadRequest = () => {
                                 ignorePermission={true}
                             />
                         </div>
+
+
+                        {isAdmin() && inputCustomFields.map((field, index)=>{
+                            if(field.type === 'selectOne'){
+
+                                return <div className={detailPanelStyles['field-wrapper']} key={index}>
+                                    <div className={`secondary-text ${styles.field}`}>{field.name}</div>
+                                    <CustomFieldSelector
+                                        data={tempCustoms[index]?.values[0]?.name}
+                                        options={field.values}
+                                        isShare={false}
+                                        onLabelClick={() => { }}
+                                        handleFieldChange={(option)=>{onChangeSelectOneTempCustomField(option, index)}}
+                                    />
+                                </div>
+                            }
+
+                            if(field.type === 'selectMultiple'){
+                                return <div className={detailPanelStyles['field-wrapper']} key={index}>
+                                    <CreatableSelect
+                                        creatable={false}
+                                        title={field.name}
+                                        addText={`Add ${field.name}`}
+                                        onAddClick={() => setActiveCustomField(index)}
+                                        selectPlaceholder={'Select an existing one'}
+                                        avilableItems={field.values}
+                                        setAvailableItems={()=>{}}
+                                        selectedItems={(tempCustoms.filter((assetField)=>assetField.id === field.id))[0]?.values || []}
+                                        setSelectedItems={(data)=>{onChangeTempCustomField(index, data)}}
+                                        onAddOperationFinished={(stateUpdate) => {
+                                            setActiveDropdown("")
+
+                                            if(isAdmin()){
+                                                updateAssetState({
+                                                    customs: {[index]: {values: { $set: stateUpdate }}}
+                                                })
+                                            }
+
+                                        }}
+                                        onRemoveOperationFinished={async (index, stateUpdate, removeId) => {
+                                            if(isAdmin()){
+                                                setIsLoading(true)
+                                                await assetApi.removeCustomFields(assets[selectedAsset]?.asset.id, removeId)
+
+                                                updateAssetState({
+                                                    customs: {[index]: {values: { $set: stateUpdate }}}
+                                                })
+
+                                                setIsLoading(false);
+                                            }
+                                        }}
+                                        onOperationFailedSkipped={() => setActiveCustomField(undefined)}
+                                        isShare={false}
+                                        asyncCreateFn={(newItem) => { // Show loading
+                                            setNeedRefresh(true)
+                                            if(isAdmin()){ // Admin can edit inline, dont need to hit save button
+                                                setIsLoading(true)
+                                                return assetApi.addCustomFields(assets[selectedAsset]?.asset.id, {...newItem})
+                                            }else{
+                                                return { data: newItem }
+                                            }
+                                        }}
+                                        dropdownIsActive={activeCustomField === index}
+                                        ignorePermission={true}
+                                    />
+                                </div>
+                            }
+                        })}
 
                         <div className={detailPanelStyles['field-wrapper']} >
                             <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>
