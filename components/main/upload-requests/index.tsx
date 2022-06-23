@@ -38,6 +38,7 @@ import tagApi from '../../../server-api/tag'
 import approvalApi from '../../../server-api/upload-approvals'
 import assetApi from '../../../server-api/asset'
 import customFieldsApi from '../../../server-api/attribute'
+import campaignApi from '../../../server-api/campaign'
 
 
 // Hooks
@@ -127,6 +128,7 @@ const UploadRequest = () => {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
     const [tempAssets, setTempAssets] = useState([])
     const [tempApprovals, setTempApprovals] = useState([])
+    const [tempCampaigns, setTempCampaigns] = useState([])
 
     const [filter, setFilter] = useState()
     const [approvalIndex, setApprovalIndex]  = useState()
@@ -136,6 +138,11 @@ const UploadRequest = () => {
     const [activeCustomField, setActiveCustomField] = useState<number>()
     const [inputCustomFields, setInputCustomFields] = useState([])
     const [assetCustomFields, setAssetCustomFields] = useState(mappingCustomFieldData(inputCustomFields, customs))
+
+
+    // Campaigns
+    const [inputCampaigns, setInputCampaigns] = useState([])
+    const [assetCampaigns, setCampaigns] = useState([])
 
     const debouncedBatchName = useDebounce(batchName, 500);
 
@@ -204,6 +211,8 @@ const UploadRequest = () => {
         setSelectedAllAssets(false)
         setTempAssets([])
         setApprovalIndex(undefined)
+        setTempCustoms([])
+        setTempCampaigns([])
 
         if(refresh === true || needRefresh){
             fetchApprovals();
@@ -217,8 +226,13 @@ const UploadRequest = () => {
 
         // @ts-ignore
         setTempTags(assets[index]?.asset?.tags || [])
+
         // @ts-ignore
         setTempCustoms( mappingCustomFieldData(inputCustomFields, assets[index]?.asset?.customs || []))
+
+        // @ts-ignore
+        setTempCampaigns( assets[index]?.asset?.campaigns || [])
+
         // @ts-ignore
         setTempComments(assets[index]?.asset?.comments || "")
     }
@@ -341,8 +355,12 @@ const UploadRequest = () => {
             let tagPromises = []
             let removeTagPromises = []
 
+            let campaignPromises = []
+            let removeCampaignPromises = []
+
             if(isSelected){
                 const newTags = _.differenceBy(assetTags, asset?.tags || [])
+                const newCampaigns = _.differenceBy(assetCampaigns, asset?.campaigns || [])
 
                 // Online admin can add custom fields
                 if(isAdmin()){
@@ -367,6 +385,9 @@ const UploadRequest = () => {
                 // Save bulk by admin wont override any tag, it will add extra tags
                 const removeTags = isAdmin() ? [] : _.differenceBy(asset?.tags || [], assetTags)
 
+                // Save bulk by admin wont override any capaign, it will add extra campaigns
+                const removeCampaigns = isAdmin() ? [] : _.differenceBy(asset?.campaigns || [], assetCampaigns)
+
                 for( const tag of removeTags){
                     removeTagPromises.push(assetApi.removeTag(asset.id, tag.id))
                 }
@@ -374,10 +395,29 @@ const UploadRequest = () => {
                 for( const tag of newTags){
                     tagPromises.push(assetApi.addTag(asset.id, tag))
                 }
+
+                // Only admin can modify campaign
+                if(isAdmin()){
+                    for( const campaign of removeCampaigns){
+                        removeCampaignPromises.push(assetApi.removeCampaign(asset.id, campaign.id))
+                    }
+
+                    for( const campaign of newCampaigns){
+                        campaignPromises.push( assetApi.addCampaign(asset.id, campaign))
+                    }
+                }
+
             }
 
             await Promise.all(tagPromises)
             await Promise.all(removeTagPromises)
+
+            // Only admin can modify campaign
+            if(isAdmin()){
+                await Promise.all(campaignPromises)
+                await Promise.all(removeCampaignPromises)
+            }
+
         }
 
         // Save tags to asset
@@ -388,6 +428,9 @@ const UploadRequest = () => {
                 if(isAdmin()){
                     const newTags = _.differenceBy(assetTags, asset.asset.tags || [])
                     asset.asset.tags = asset.asset.tags.concat(newTags)
+
+                    const newCampaigns = _.differenceBy(assetCampaigns, asset.asset.campaigns || [])
+                    asset.asset.campaigns = asset.asset.campaigns.concat(newCampaigns)
                 }else{
                     asset.asset.tags = assetTags
                 }
@@ -467,6 +510,17 @@ const UploadRequest = () => {
             const { data } = await customFieldsApi.getCustomFields({isAll: 1, sort: 'createdAt,asc'})
 
             setInputCustomFields(data)
+
+        } catch (err) {
+            // TODO: Maybe show error?
+        }
+    }
+
+    const getCampaignsInputData = async () => {
+        try {
+            const { data } = await campaignApi.getCampaigns()
+
+            setInputCampaigns(data)
 
         } catch (err) {
             // TODO: Maybe show error?
@@ -858,6 +912,7 @@ const UploadRequest = () => {
     useEffect(()=>{
         fetchApprovals();
         getTagsInputData();
+        getCampaignsInputData();
         getCustomFieldsInputData();
     },[])
 
@@ -1152,7 +1207,9 @@ const UploadRequest = () => {
             {
                 mode === "view" &&  assets.length > 0 && <div className={`col-30 ${styles['right-panel']}`}>
                     <div className={detailPanelStyles.container}>
-                        <h2 className={styles['detail-title']}>Tagging</h2>
+                        <h2 className={styles['detail-title']}>
+                            {isAdmin()  ? "User Tags" : "Tagging"}
+                        </h2>
 
                         {
                             (currentViewStatus !== 0 || isAdmin()) && <div className={detailPanelStyles['field-wrapper']} >
@@ -1209,6 +1266,48 @@ const UploadRequest = () => {
                                     ignorePermission={true}
                                 />
                             </div>
+
+
+                            {
+                                isAdmin() && <div className={detailPanelStyles['field-wrapper']} >
+                                    <CreatableSelect
+                                        title='Campaigns'
+                                        addText='Add to Campaign'
+                                        onAddClick={() => setActiveDropdown('campaigns')}
+                                        selectPlaceholder={'Enter a new campaign or select an existing one'}
+                                        avilableItems={inputCampaigns}
+                                        setAvailableItems={setInputCampaigns}
+                                        selectedItems={assetCampaigns}
+                                        setSelectedItems={setCampaigns}
+                                        creatable={isAdmin()}
+                                        onAddOperationFinished={(stateUpdate) => {
+                                            setActiveDropdown("")
+                                            
+                                            // updateAssetState({
+                                            //     campaigns: { $set: stateUpdate }
+                                            // })
+                                            // loadCampaigns()
+                                        }}
+                                        onRemoveOperationFinished={async (index, stateUpdate) => {
+                                            // await assetApi.removeCampaign(id, assetCampaigns[index].id)
+                                            // updateAssetState({
+                                            //     campaigns: { $set: stateUpdate }
+                                            // })
+                                        }}
+                                        onOperationFailedSkipped={() => setActiveDropdown('')}
+                                        isShare={false}
+                                        asyncCreateFn={
+                                            (newItem)=>{
+                                                // (newItem) => assetApi.addCampaign(id, newItem)
+                                                return { data: newItem }
+                                            }
+                                        }
+                                        dropdownIsActive={activeDropdown === 'campaigns'}
+                                        altColor='yellow'
+                                        ignorePermission={true}
+                                    />
+                                </div>
+                            }
 
 
                             {isAdmin() && inputCustomFields.map((field, index)=>{
@@ -1369,6 +1468,50 @@ const UploadRequest = () => {
                                 ignorePermission={true}
                             />
                         </div>
+
+                        {
+                            isAdmin() && <div className={detailPanelStyles['field-wrapper']} >
+                                <CreatableSelect
+                                    title='Campaigns'
+                                    addText='Add to Campaign'
+                                    onAddClick={() => setActiveDropdown('campaigns')}
+                                    selectPlaceholder={'Enter a new campaign or select an existing one'}
+                                    avilableItems={inputCampaigns}
+                                    setAvailableItems={setInputCampaigns}
+                                    selectedItems={tempCampaigns}
+                                    setSelectedItems={setTempCampaigns}
+                                    creatable={isAdmin()}
+                                    onAddOperationFinished={(stateUpdate) => {
+                                        updateAssetState({
+                                            campaigns: { $set: stateUpdate }
+                                        })
+                                        // loadCampaigns()
+                                    }}
+                                    onRemoveOperationFinished={async (index, stateUpdate) => {
+                                        await assetApi.removeCampaign(assets[selectedAsset]?.asset.id, assetCampaigns[index].id)
+                                        updateAssetState({
+                                            campaigns: { $set: stateUpdate }
+                                        })
+                                    }}
+                                    onOperationFailedSkipped={() => setActiveDropdown('')}
+                                    isShare={false}
+                                    asyncCreateFn={
+                                        (newItem)=>{
+                                            if(isAdmin()) { // Admin can edit inline, dont need to hit save button
+                                                setIsLoading(true)
+
+                                                return assetApi.addCampaign(assets[selectedAsset]?.asset.id, newItem)
+                                            }else{
+                                                return { data: newItem }
+                                            }
+                                        }
+                                    }
+                                    dropdownIsActive={activeDropdown === 'campaigns'}
+                                    altColor='yellow'
+                                    ignorePermission={true}
+                                />
+                            </div>
+                        }
 
 
                         {isAdmin() && inputCustomFields.map((field, index)=>{
