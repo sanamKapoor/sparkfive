@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef } from 'react'
+import React, { useState, useEffect, useContext, useRef } from 'react'
 import _ from 'lodash'
 import Router from "next/router"
 import moment from "moment";
@@ -46,6 +46,8 @@ import {  ASSET_UPLOAD_APPROVAL } from '../../../constants/permissions'
 
 // Hooks
 import { useDebounce } from "../../../hooks/useDebounce";
+import AssetPdf from "../../common/asset/asset-pdf";
+import AssetIcon from "../../common/asset/asset-icon";
 
 
 
@@ -1206,12 +1208,39 @@ const UploadApproval = () => {
             }} >
             <div className={`row ${styles['modal-wrapper']} height-100`}>
                 <div className={`col-60 ${styles["left-bar"]}`}>
-                    <AssetImg
-                        imgClass={""}
-                        assetImg={assets[selectedAsset]?.realUrl}
-                        type={""}
-                        name={"image"}
-                    />
+                    {assets[selectedAsset]?.asset.type !== "image" &&
+                        assets[selectedAsset]?.asset.type !== "video" &&
+                        assets[selectedAsset]?.thumbailUrl && (
+                            assets[selectedAsset]?.asset.extension.toLowerCase() === "pdf" ?
+                                <AssetPdf
+                                    asset={assets[selectedAsset]?.asset}
+                                />
+                                :
+                                <AssetImg
+                                    name={assets[selectedAsset]?.asset.name}
+                                    assetImg={assets[selectedAsset]?.realUrl}
+                                />
+                        )}
+                    {assets[selectedAsset]?.asset.type !== "image" &&
+                        assets[selectedAsset]?.asset.type !== "video" &&
+                        !assets[selectedAsset]?.thumbailUrl && (
+                            <AssetIcon extension={assets[selectedAsset]?.asset.extension} />
+                        )}
+                    {assets[selectedAsset]?.asset.type === "video" && (
+                        <video controls>
+                            <source
+                                src={assets[selectedAsset]?.realUrl}
+                                type={`video/${assets[selectedAsset]?.asset.extension}`}
+                            />
+                            Sorry, your browser doesn't support video playback.
+                        </video>
+                    )}
+                    {/*<AssetImg*/}
+                    {/*    imgClass={""}*/}
+                    {/*    assetImg={assets[selectedAsset]?.realUrl}*/}
+                    {/*    type={""}*/}
+                    {/*    name={"image"}*/}
+                    {/*/>*/}
                     {/*<img alt={"test"} src={assets[selectedAsset]?.realUrl} />*/}
                     <div className={styles['file-name']}>
                         <span>{assets[selectedAsset]?.asset.name}</span>
