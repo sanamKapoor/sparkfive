@@ -28,7 +28,7 @@ const RequestListItem = ({
   const Tag = ({ status }) => {
     switch (status){
       case -1: {
-        return <span className={requestListStyles['pending-tag']}>Rejected</span>
+        return <span className={requestListStyles['reject-tag']}>Rejected</span>
       }
       case 0: {
         return <span className={requestListStyles['pending-tag']}>Pending</span>

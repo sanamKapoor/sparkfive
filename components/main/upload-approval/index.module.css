@@ -3,7 +3,8 @@
 }
 
 .approval-detail-modal{
-  height: 90%
+  height: 90%;
+  overflow: hidden;
 }
 
 .container ul{
@@ -57,7 +58,7 @@
 .modal-wrapper{
   width: 75vw;
   max-width: 1385px;
-  padding: 30px 100px 100px 100px;
+  padding: 30px 0 100px 29px;
 }
 
 .modal-field-title{
@@ -223,12 +224,19 @@
   margin-right: 16px;
 }
 
+.left-bar{
+  max-height: calc(100% - 200px);
+}
+
 .left-bar img{
   width: 100%;
   height: auto;
-  /*max-height: 90vh;*/
-  max-width: 705px;
-  max-height: 738px;
+  max-height: 100%;
+}
+
+.right-form{
+  overflow-y: scroll;
+  max-height: calc(100% - 200px);
 }
 
 .file-name{
