@@ -54,7 +54,7 @@ const RequestListItem = ({
 
   const getThumbnail = (asset) => {
     if(asset){
-      const { thumbailUrl,  extension} = asset
+      const { thumbailUrl,  asset: { extension }} = asset
       return thumbailUrl ? (
           <AssetImg
               imgClass={requestListStyles.thumbnail}

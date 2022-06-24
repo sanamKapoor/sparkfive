@@ -1422,7 +1422,7 @@ const UploadRequest = () => {
                 <div className={`col-60 ${styles["left-bar"]}`}>
                     {assets[selectedAsset]?.asset.type !== "image" &&
                         assets[selectedAsset]?.asset.type !== "video" &&
-                        assets[selectedAsset]?.realUrl && (
+                        assets[selectedAsset]?.thumbailUrl && (
                             assets[selectedAsset]?.asset.extension.toLowerCase() === "pdf" ?
                                 <AssetPdf
                                     asset={assets[selectedAsset]?.asset}
@@ -1435,7 +1435,7 @@ const UploadRequest = () => {
                         )}
                     {assets[selectedAsset]?.asset.type !== "image" &&
                         assets[selectedAsset]?.asset.type !== "video" &&
-                        !assets[selectedAsset]?.realUrl && (
+                        !assets[selectedAsset]?.thumbailUrl && (
                             <AssetIcon extension={assets[selectedAsset]?.asset.extension} />
                         )}
                     {assets[selectedAsset]?.asset.type === "video" && (
