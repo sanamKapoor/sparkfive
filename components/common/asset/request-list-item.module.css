@@ -88,6 +88,7 @@
 
 .name img{
   max-width: 48px;
+  margin: 0 10px;
 }
 
 .name:hover {

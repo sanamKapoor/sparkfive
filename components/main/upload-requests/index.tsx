@@ -43,6 +43,8 @@ import campaignApi from '../../../server-api/campaign'
 
 // Hooks
 import {useDebounce} from "../../../hooks/useDebounce";
+import AssetPdf from "../../common/asset/asset-pdf";
+import AssetIcon from "../../common/asset/asset-icon";
 
 
 const filterOptions = [
@@ -1418,12 +1420,39 @@ const UploadRequest = () => {
             }} >
             <div className={`row ${styles['modal-wrapper']} height-100`}>
                 <div className={`col-60 ${styles["left-bar"]}`}>
-                    <AssetImg
-                        imgClass={""}
-                        assetImg={assets[selectedAsset]?.realUrl}
-                        type={""}
-                        name={"image"}
-                    />
+                    {assets[selectedAsset]?.asset.type !== "image" &&
+                        assets[selectedAsset]?.asset.type !== "video" &&
+                        assets[selectedAsset]?.realUrl && (
+                            assets[selectedAsset]?.asset.extension.toLowerCase() === "pdf" ?
+                                <AssetPdf
+                                    asset={assets[selectedAsset]?.asset}
+                                />
+                                :
+                                <AssetImg
+                                    name={assets[selectedAsset]?.asset.name}
+                                    assetImg={assets[selectedAsset]?.realUrl}
+                                />
+                        )}
+                    {assets[selectedAsset]?.asset.type !== "image" &&
+                        assets[selectedAsset]?.asset.type !== "video" &&
+                        !assets[selectedAsset]?.realUrl && (
+                            <AssetIcon extension={assets[selectedAsset]?.asset.extension} />
+                        )}
+                    {assets[selectedAsset]?.asset.type === "video" && (
+                        <video controls>
+                            <source
+                                src={assets[selectedAsset]?.realUrl}
+                                type={`video/${assets[selectedAsset]?.asset.extension}`}
+                            />
+                            Sorry, your browser doesn't support video playback.
+                        </video>
+                    )}
+                    {/*<AssetImg*/}
+                    {/*    imgClass={""}*/}
+                    {/*    assetImg={assets[selectedAsset]?.realUrl}*/}
+                    {/*    type={""}*/}
+                    {/*    name={"image"}*/}
+                    {/*/>*/}
                     {/*<img alt={"test"} src={assets[selectedAsset]?.realUrl} />*/}
                     <div className={styles['file-name']}>
                         <span>{assets[selectedAsset]?.asset.name}</span>
