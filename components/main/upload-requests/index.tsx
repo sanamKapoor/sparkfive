@@ -43,6 +43,8 @@ import campaignApi from '../../../server-api/campaign'
 
 // Hooks
 import {useDebounce} from "../../../hooks/useDebounce";
+import AssetPdf from "../../common/asset/asset-pdf";
+import AssetIcon from "../../common/asset/asset-icon";
 
 
 const filterOptions = [
@@ -155,6 +157,8 @@ const UploadRequest = () => {
             currentApprovalData.name = value;
 
             setCurrentApproval(currentApprovalData)
+
+            setNeedRefresh(true)
 
             // let approvalList = [...approvals]
             // approvalList.map((item)=>{
@@ -898,8 +902,17 @@ const UploadRequest = () => {
 
     // On temp custom field select one changes
     const onChangeSelectOneTempCustomField = async (selected, index) => {
+
+        // Show loading
+        setIsLoading(true)
+
+        // Call API to add custom fields
+        await assetApi.addCustomFields(assets[selectedAsset]?.asset.id, {...selected})
+
+
         // Hide select list
         setActiveCustomField(undefined)
+
 
         // Update asset custom field (local)
         setTempCustoms(update(tempCustoms, {
@@ -907,6 +920,9 @@ const UploadRequest = () => {
                 values: {$set: [selected]}
             }
         }))
+
+        // Hide loading
+        setIsLoading(false)
     }
 
     useEffect(()=>{
@@ -1057,12 +1073,12 @@ const UploadRequest = () => {
                     }
 
                     {mode === "list" && <div className={styles["asset-list"]}>
-                        {isAdmin() && <div className={`${styles['button-wrapper']} m-b-25`}>
+                        <div className={`${styles['button-wrapper']} m-b-25`}>
                             <div className={"m-l-auto"}>
                                 {approvals.length > 0 && hasSelectedApprovals() && <Button type='button' text='Deselect' styleType='secondary' onClick={()=>{selectAllApprovals(false)}} />}
                                 {approvals.length > 0 && !selectedAllApprovals && <Button type='button' text='Select All' styleType='secondary' onClick={selectAllApprovals} />}
 
-                                {approvals.length > 0 && isAdmin() && hasSelectedApprovals() &&
+                                {approvals.length > 0 && hasSelectedApprovals() &&
                                     <Button
                                         type='button'
                                         text='Delete'
@@ -1076,7 +1092,7 @@ const UploadRequest = () => {
                                     />
                                 }
 
-                                {approvals.length > 0 && isAdmin() && hasSelectedApprovals() &&
+                                {isAdmin() && approvals.length > 0 && isAdmin() && hasSelectedApprovals() &&
                                     <Button
                                         type='button'
                                         text='Reject Selected'
@@ -1089,7 +1105,7 @@ const UploadRequest = () => {
                                         }
                                     />
                                 }
-                                {approvals.length > 0 && isAdmin() && hasSelectedApprovals() &&
+                                {isAdmin() && approvals.length > 0 && isAdmin() && hasSelectedApprovals() &&
                                     <Button
                                         type='button'
                                         text='Approve Selected'
@@ -1104,7 +1120,7 @@ const UploadRequest = () => {
                                 }
                             </div>
 
-                        </div>}
+                        </div>
                         <div className={`${assetGridStyles["list-wrapper"]} ${approvals.length === 0 ? "mb-32" : ""}`}>
                             <ul className={"regular-list"}>
                                 {approvals.length === 0 && <p>There is no any request yet</p>}
@@ -1370,17 +1386,17 @@ const UploadRequest = () => {
 
 
                             <Button className={styles['add-tag-btn']} type='button' text='Bulk Add Tag' styleType='secondary' onClick={saveBulkTag} />
-                            {
-                                !isAdmin() && <>
-                                    <div className={detailPanelStyles['field-wrapper']} >
-                                        <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>
-                                        <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={comments}
-                                                  onChange={e => {setComments(e.target.value)}} styleType={'regular-short'} />
-                                    </div>
+                            {/*{*/}
+                            {/*    !isAdmin() && <>*/}
+                            {/*        <div className={detailPanelStyles['field-wrapper']} >*/}
+                            {/*            <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>*/}
+                            {/*            <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={comments}*/}
+                            {/*                      onChange={e => {setComments(e.target.value)}} styleType={'regular-short'} />*/}
+                            {/*        </div>*/}
 
-                                    <Button className={styles['add-tag-btn']} type='button' text='Add comments' styleType='secondary' onClick={saveComment} />
-                                </>
-                            }
+                            {/*        <Button className={styles['add-tag-btn']} type='button' text='Add comments' styleType='secondary' onClick={saveComment} />*/}
+                            {/*    </>*/}
+                            {/*}*/}
 
                         </>}
 
@@ -1404,21 +1420,55 @@ const UploadRequest = () => {
             }} >
             <div className={`row ${styles['modal-wrapper']} height-100`}>
                 <div className={`col-60 ${styles["left-bar"]}`}>
-                    <AssetImg
-                        imgClass={""}
-                        assetImg={assets[selectedAsset]?.realUrl}
-                        type={""}
-                        name={"image"}
-                    />
+                    {assets[selectedAsset]?.asset.type !== "image" &&
+                        assets[selectedAsset]?.asset.type !== "video" &&
+                        assets[selectedAsset]?.realUrl && (
+                            assets[selectedAsset]?.asset.extension.toLowerCase() === "pdf" ?
+                                <AssetPdf
+                                    asset={assets[selectedAsset]?.asset}
+                                />
+                                :
+                                <AssetImg
+                                    name={assets[selectedAsset]?.asset.name}
+                                    assetImg={assets[selectedAsset]?.realUrl}
+                                />
+                        )}
+                    {assets[selectedAsset]?.asset.type !== "image" &&
+                        assets[selectedAsset]?.asset.type !== "video" &&
+                        !assets[selectedAsset]?.realUrl && (
+                            <AssetIcon extension={assets[selectedAsset]?.asset.extension} />
+                        )}
+                    {assets[selectedAsset]?.asset.type === "video" && (
+                        <video controls>
+                            <source
+                                src={assets[selectedAsset]?.realUrl}
+                                type={`video/${assets[selectedAsset]?.asset.extension}`}
+                            />
+                            Sorry, your browser doesn't support video playback.
+                        </video>
+                    )}
+                    {/*<AssetImg*/}
+                    {/*    imgClass={""}*/}
+                    {/*    assetImg={assets[selectedAsset]?.realUrl}*/}
+                    {/*    type={""}*/}
+                    {/*    name={"image"}*/}
+                    {/*/>*/}
                     {/*<img alt={"test"} src={assets[selectedAsset]?.realUrl} />*/}
                     <div className={styles['file-name']}>
                         <span>{assets[selectedAsset]?.asset.name}</span>
                         {(currentViewStatus === 0 || isAdmin()) && <IconClickable additionalClass={styles['edit-icon']} src={Utilities.edit} onClick={()=> {setShowRenameModal(true)}} />}
                     </div>
                     <div className={styles['date']}>{moment(assets[selectedAsset]?.asset?.createdAt).format('MMM DD, YYYY, hh:mm a')}</div>
+
+                    {(isAdmin() || currentViewStatus !== 0) && <div className={detailPanelStyles['field-wrapper']} >
+                        <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>
+                        <p>
+                            {tempComments}
+                        </p>
+                    </div>}
                 </div>
                 <div className={"col-40"}>
-                    <div className={detailPanelStyles.container}>
+                    <div className={`${detailPanelStyles.container} ${styles['right-form']}`}>
                         <h2 className={styles['detail-title']}>Add Attributes to Selected Assets</h2>
 
                         <div className={detailPanelStyles['field-wrapper']} >
@@ -1581,43 +1631,40 @@ const UploadRequest = () => {
                             }
                         })}
 
-                        <div className={detailPanelStyles['field-wrapper']} >
+                        {!isAdmin() && currentViewStatus === 0 && <div className={detailPanelStyles['field-wrapper']} >
                             <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>
-                            {(isAdmin() || currentViewStatus !== 0) && <p>
-                                {tempComments}
-                            </p>}
-                            {!isAdmin() && currentViewStatus === 0 && <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={tempComments}
-                                      onChange={e => {setTempComments(e.target.value)}} styleType={'regular-short'} disabled={currentViewStatus !== 0}/>}
-                        </div>
-
-                        {(currentViewStatus === 0) && <Button className={styles['add-tag-btn']} type='button' text='Save changes' styleType='primary' onClick={onSaveSingleAsset} />}
-
-
-                        {(isAdmin()) && <div className={styles['admin-button-wrapper']}>
-                            <Button
-                                className={styles['add-tag-btn']}
-                                type='button'
-                                text='Reject'
-                                styleType='secondary'
-                                onClick={()=>{
-                                    setTempAssets([assets[selectedAsset]?.asset.id])
-                                    setShowRejectConfirm(true)}
-                            }/>
-
-                            <Button
-                                className={styles['add-tag-btn']}
-                                type='button'
-                                text='Approve'
-                                styleType='primary'
-                                onClick={()=> {
-                                    setTempAssets([assets[selectedAsset]?.asset.id])
-                                    setShowApproveConfirm(true)
-                                }
-                            } />
+                          <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={tempComments}
+                                      onChange={e => {setTempComments(e.target.value)}} styleType={'regular-short'} disabled={currentViewStatus !== 0}/>
                         </div>}
 
-
+                        <div className={"m-b-25"}></div>
                     </div>
+
+                    {(currentViewStatus === 0) && <Button className={`${styles['add-tag-btn']} m-l-20`} type='button' text='Save changes' styleType='primary' onClick={onSaveSingleAsset} />}
+
+
+                    {(isAdmin()) && <div className={`${styles['admin-button-wrapper']} m-l-20`}>
+                        <Button
+                            className={styles['add-tag-btn']}
+                            type='button'
+                            text='Reject'
+                            styleType='secondary'
+                            onClick={()=>{
+                                setTempAssets([assets[selectedAsset]?.asset.id])
+                                setShowRejectConfirm(true)}
+                            }/>
+
+                        <Button
+                            className={styles['add-tag-btn']}
+                            type='button'
+                            text='Approve'
+                            styleType='primary'
+                            onClick={()=> {
+                                setTempAssets([assets[selectedAsset]?.asset.id])
+                                setShowApproveConfirm(true)
+                            }
+                            } />
+                    </div>}
                 </div>
             </div>
             <div className={styles["navigation-wrapper"]}>
@@ -1720,7 +1767,7 @@ const UploadRequest = () => {
 
             }}
             confirmText={'Delete'}
-            message={'Are you sure you would like to delete this asset?'}
+            message={'Are you sure you would like to delete this batch?'}
             modalIsOpen={showDeleteConfirm}
         />
 

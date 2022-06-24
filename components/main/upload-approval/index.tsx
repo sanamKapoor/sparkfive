@@ -371,6 +371,11 @@ const UploadApproval = () => {
                 })),
                 getCreationParameters({estimateTime: 1, totalSize, requireApproval: 1}))
 
+            // Save this approval id for saving name automatically
+            if(data[0]?.requestId){
+                setApprovalId(data[0]?.requestId)
+            }
+
             // clean old version for main grid
             if (versionGroup) {
                 currentDataClone = currentDataClone.filter(item => {
@@ -496,6 +501,11 @@ const UploadApproval = () => {
                 versionGroup: file.versionGroup || versionGroup,
                 changedName: file.changedName
             })), getCreationParameters({estimateTime: 1, totalSize, requireApproval: 1}))
+
+            // Save this approval id for saving name automatically
+            if(data[0]?.requestId){
+                setApprovalId(data[0]?.requestId)
+            }
 
             // clean old version for main grid
             if (versionGroup) {
@@ -1167,13 +1177,13 @@ const UploadApproval = () => {
 
                         <Button className={styles['add-tag-btn']} type='button' text='Bulk Add Tag' styleType='secondary' onClick={saveBulkTag} />
 
-                        <div className={detailPanelStyles['field-wrapper']} >
-                            <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>
-                            <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={comments}
-                                      onChange={e => {setComments(e.target.value)}} styleType={'regular-short'} />
-                        </div>
+                        {/*<div className={detailPanelStyles['field-wrapper']} >*/}
+                        {/*    <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>*/}
+                        {/*    <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={comments}*/}
+                        {/*              onChange={e => {setComments(e.target.value)}} styleType={'regular-short'} />*/}
+                        {/*</div>*/}
 
-                        <Button className={styles['add-tag-btn']} type='button' text='Add comments' styleType='secondary' onClick={saveComment} />
+                        {/*<Button className={styles['add-tag-btn']} type='button' text='Add comments' styleType='secondary' onClick={saveComment} />*/}
                     </>}
 
 
@@ -1210,7 +1220,7 @@ const UploadApproval = () => {
                     <div className={styles['date']}>{moment(assets[selectedAsset]?.asset?.createdAt).format('MMM DD, YYYY, hh:mm a')}</div>
                 </div>
                 <div className={"col-40"}>
-                    <div className={detailPanelStyles.container}>
+                    <div className={`${detailPanelStyles.container} ${styles['right-form']}`}>
                         <h2 className={styles['detail-title']}>Add Attributes to Selected Assets</h2>
 
                         <div className={detailPanelStyles['field-wrapper']} >
@@ -1252,11 +1262,9 @@ const UploadApproval = () => {
                             <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={tempComments}
                                    onChange={e => {setTempComments(e.target.value)}} styleType={'regular-short'} />
                         </div>
-
-                        <Button className={styles['add-tag-btn']} type='button' text='Save changes' styleType='primary' onClick={onSaveSingleAsset} />
-
-
                     </div>
+
+                    <Button className={`${styles['add-tag-btn']} m-l-20`} type='button' text='Save changes' styleType='primary' onClick={onSaveSingleAsset} />
                 </div>
             </div>
             <div className={styles["navigation-wrapper"]}>
