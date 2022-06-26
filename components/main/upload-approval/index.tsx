@@ -1003,6 +1003,20 @@ const UploadApproval = () => {
         return user.role.id === "admin" || user.role.id === "super_admin"
     }
 
+    const updateAssetTagsState = (updatedTags) => {
+        setIsLoading(false);
+
+
+        // Update these tag and comments to asset
+        let assetArrData = [...assets]
+        // @ts-ignore
+        assetArrData[selectedAsset].tags = updatedTags
+
+        setAssets(assetArrData)
+
+        toastUtils.success("Update tag successfully")
+    }
+
     useEffect(() => {
         checkValidUser()
         getTagsInputData()
@@ -1152,7 +1166,7 @@ const UploadApproval = () => {
                                 setAvailableItems={setInputTags}
                                 selectedItems={assetTags}
                                 setSelectedItems={setTags}
-                                creatable={isAdmin()}
+                                creatable={true}
                                 onAddOperationFinished={(stateUpdate) => {
                                     setActiveDropdown("")
                                     // updateAssetState({
@@ -1208,6 +1222,10 @@ const UploadApproval = () => {
             }} >
             <div className={`row ${styles['modal-wrapper']} height-100`}>
                 <div className={`col-60 ${styles["left-bar"]}`}>
+                    {assets[selectedAsset]?.asset.type === "image" && (
+                        <AssetImg name={assets[selectedAsset]?.asset.name} assetImg={assets[selectedAsset]?.realUrl} />
+                    )}
+
                     {assets[selectedAsset]?.asset.type !== "image" &&
                         assets[selectedAsset]?.asset.type !== "video" &&
                         assets[selectedAsset]?.thumbailUrl && (
@@ -1262,15 +1280,22 @@ const UploadApproval = () => {
                                 setAvailableItems={setInputTags}
                                 selectedItems={tempTags}
                                 setSelectedItems={setTempTags}
-                                creatable={isAdmin()}
+                                creatable={true}
                                 onAddOperationFinished={(stateUpdate) => {
                                     setActiveDropdown("")
+
+                                    updateAssetTagsState(stateUpdate)
+
                                     // updateAssetState({
                                     //     tags: { $set: stateUpdate }
                                     // })
                                     // loadTags()
                                 }}
                                 onRemoveOperationFinished={async (index, stateUpdate) => {
+                                    setIsLoading(true)
+                                    await assetApi.removeTag(assets[selectedAsset]?.asset.id, tempTags[index].id)
+                                    updateAssetTagsState(stateUpdate)
+
                                     // await assetApi.removeTag(id, assetTags[index].id)
                                     // updateAssetState({
                                     //     tags: { $set: stateUpdate }
@@ -1279,7 +1304,8 @@ const UploadApproval = () => {
                                 onOperationFailedSkipped={() => setActiveDropdown('')}
                                 isShare={false}
                                 asyncCreateFn={(newItem) => {
-                                    return { data: newItem }
+                                    setIsLoading(true)
+                                    return assetApi.addTag(assets[selectedAsset]?.asset.id, newItem)
                                 }}
                                 dropdownIsActive={activeDropdown === 'tags'}
                                 ignorePermission={true}
@@ -1289,7 +1315,7 @@ const UploadApproval = () => {
                         <div className={detailPanelStyles['field-wrapper']} >
                             <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>
                             <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={tempComments}
-                                   onChange={e => {setTempComments(e.target.value)}} styleType={'regular-short'} />
+                                   onChange={e => {setTempComments(e.target.value)}} styleType={'regular-short'} maxLength={200} />
                         </div>
                     </div>
 
@@ -1320,7 +1346,7 @@ const UploadApproval = () => {
                     <div className={styles['modal-field-title']}>Message for Admin</div>
 
                     <TextArea type={"textarea"} rows={4} placeholder={'Add message'} value={message}
-                              onChange={e => {setMessage(e.target.value)}} styleType={'regular-short'} />
+                              onChange={e => {setMessage(e.target.value)}} styleType={'regular-short'} maxLength={200} />
 
                     <div className={styles['modal-field-subtitle']}>Are you sure you want to submit your assets for approval?</div>
                 </>}

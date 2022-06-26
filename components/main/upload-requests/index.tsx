@@ -45,6 +45,7 @@ import campaignApi from '../../../server-api/campaign'
 import {useDebounce} from "../../../hooks/useDebounce";
 import AssetPdf from "../../common/asset/asset-pdf";
 import AssetIcon from "../../common/asset/asset-icon";
+import AssetCropImg from "../../common/asset/asset-crop-img";
 
 
 const filterOptions = [
@@ -1257,7 +1258,7 @@ const UploadRequest = () => {
                                     selectedItems={assetTags}
                                     setSelectedItems={setTags}
                                     allowEdit={currentViewStatus === 0 || isAdmin()}
-                                    creatable={isAdmin()}
+                                    creatable={true}
                                     onAddOperationFinished={(stateUpdate) => {
                                         setActiveDropdown("")
                                         // updateAssetState({
@@ -1420,6 +1421,10 @@ const UploadRequest = () => {
             }} >
             <div className={`row ${styles['modal-wrapper']} height-100`}>
                 <div className={`col-60 ${styles["left-bar"]}`}>
+                    {assets[selectedAsset]?.asset.type === "image" && (
+                        <AssetImg name={assets[selectedAsset]?.asset.name} assetImg={assets[selectedAsset]?.realUrl} />
+                    )}
+
                     {assets[selectedAsset]?.asset.type !== "image" &&
                         assets[selectedAsset]?.asset.type !== "video" &&
                         assets[selectedAsset]?.thumbailUrl && (
@@ -1487,7 +1492,7 @@ const UploadRequest = () => {
                                 selectedItems={tempTags}
                                 setSelectedItems={setTempTags}
                                 allowEdit={currentViewStatus === 0 || isAdmin()}
-                                creatable={isAdmin()}
+                                creatable={true}
                                 onAddOperationFinished={(stateUpdate) => {
                                     setActiveDropdown("")
 
@@ -1634,7 +1639,7 @@ const UploadRequest = () => {
                         {!isAdmin() && currentViewStatus === 0 && <div className={detailPanelStyles['field-wrapper']} >
                             <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>
                           <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={tempComments}
-                                      onChange={e => {setTempComments(e.target.value)}} styleType={'regular-short'} disabled={currentViewStatus !== 0}/>
+                                      onChange={e => {setTempComments(e.target.value)}} styleType={'regular-short'} disabled={currentViewStatus !== 0} maxLength={200} />
                         </div>}
 
                         <div className={"m-b-25"}></div>
@@ -1691,7 +1696,7 @@ const UploadRequest = () => {
                     <div className={styles['modal-field-title']}>Message for Admin</div>
 
                     <TextArea type={"textarea"} rows={4} placeholder={'Add message'} value={message}
-                              onChange={e => {setMessage(e.target.value)}} styleType={'regular-short'} />
+                              onChange={e => {setMessage(e.target.value)}} styleType={'regular-short'} maxLength={200}/>
 
                     <div className={styles['modal-field-subtitle']}>Are you sure you want to submit your assets for approval?</div>
                 </>}
