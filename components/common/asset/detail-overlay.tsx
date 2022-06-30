@@ -1,6 +1,7 @@
 import styles from "./detail-overlay.module.css";
 import { Utilities, AssetOps } from "../../../assets";
 import { saveAs } from "file-saver";
+import { Rnd } from 'react-rnd';
 import { useState, useEffect, useContext } from "react";
 import assetApi from "../../../server-api/asset";
 import shareApi from "../../../server-api/share-collection";
@@ -624,6 +625,14 @@ const DetailOverlay = ({
     setDetailOverlayId(undefined)
   }
 
+  const dragStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    border: 'solid 1px #ddd',
+    background: '#f0f0f0',
+  };
+
   return (
     <div className={`app-overlay ${styles.container}`}>
       {assetDetail && (
@@ -709,7 +718,9 @@ const DetailOverlay = ({
             {assetDetail.type === "image" && (
               <>
                 {(mode === "detail" || mode === "resize") && (
-                  <AssetImg name={assetDetail.name} assetImg={versionRealUrl} />
+                  // <Rnd style={dragStyle} default={{ x: 0, y: 0, width: '100%', height: '100%'}} lockAspectRatio={true}>
+                    <AssetImg name={assetDetail.name} assetImg={versionRealUrl} />
+                  // </Rnd>
                 )}
                 {mode === "crop" && (
                   <AssetCropImg

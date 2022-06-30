@@ -13,6 +13,9 @@
 .only-desktop-button{
   display: block;
 }
+.react-draggable{
+  position: relative;
+}
 
 @media screen and (max-height: 760px) {
   .container {
