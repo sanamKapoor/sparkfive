@@ -1,5 +1,18 @@
+.root-row{
+  position: relative;
+  height: calc(100vh - 200px);
+  max-height: calc(100vh - 200px);
+  overflow: hidden;
+  /*background-color: wheat;*/
+}
+
+.root-row .col-70{
+  height: 100%;
+}
+
 .container {
   padding: 35px 32px;
+  height: 100%;
 }
 
 .approval-detail-modal{
@@ -20,6 +33,11 @@
 
 .asset-list{
   margin-top: 55px;
+  overflow-y: scroll;
+  max-height: calc(100% - 200px);
+  height: auto;
+  overflow-x: hidden;
+  height: -webkit-fill-available;
 }
 
 .operation-wrapper{
@@ -99,6 +117,10 @@
 
 .icon-wrapper{
 
+}
+
+.grid-list{
+  grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
 }
 
 @media screen and (max-width: 900px) {

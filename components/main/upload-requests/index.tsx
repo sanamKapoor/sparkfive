@@ -997,9 +997,9 @@ const UploadRequest = () => {
         titleText={"Upload Requests"}
         showAssetAddition={false}
       />
-        <div className={"row"}>
-            <div className={"col-70"}>
-                <main className={`${styles.container}`}>
+        <div className={`row ${mode === "view" ? styles['root-row'] : ""}`}>
+            <div className={`col-70 height-100`}>
+                <main className={`${styles.container} p-r-0`}>
                     {mode === "view" && <div className={`${styles['button-wrapper']}`}>
                         <div>
                             <div className={styles['main-title']}>
@@ -1149,72 +1149,70 @@ const UploadRequest = () => {
                         </div>
                     </div>}
 
-                    {mode === "view" && <div>
-                        <div className={styles["asset-view-list"]}>
-                            <div className={assetGridStyles["list-wrapper"]}>
-                                <ul className={`${assetGridStyles["grid-list"]} ${assetGridStyles["regular"]}`}>
-                                    {
-                                        assets.map((assetItem, index) => {
-                                            if (assetItem.status !== "fail") {
-                                                return (
-                                                    <li
-                                                        className={assetGridStyles["grid-item"]}
-                                                        key={assetItem.asset.id || index}
-                                                    >
-                                                        <AssetThumbail
-                                                            {...assetItem}
-                                                            sharePath={""}
-                                                            activeFolder={""}
-                                                            showAssetOption={false}
-                                                            isShare={false}
-                                                            type={""}
-                                                            toggleSelected={() =>{
-                                                                toggleSelectedAsset(assetItem.asset.id)
-                                                            }}
-                                                            openArchiveAsset={() =>{
-                                                                // openArchiveAsset(assetItem.asset)
-                                                            }}
-                                                            openDeleteAsset={() =>{
-                                                                // openDeleteAsset(assetItem.asset.id)
-                                                            }}
-                                                            openMoveAsset={() =>{
-                                                                // beginAssetOperation({ asset: assetItem }, "move")
-                                                            }}
-                                                            openCopyAsset={() =>{
-                                                                // beginAssetOperation({ asset: assetItem }, "copy")
-                                                            }}
-                                                            openShareAsset={() =>{
-                                                                // beginAssetOperation({ asset: assetItem }, "share")
-                                                            }}
-                                                            downloadAsset={() => {
-                                                                // downloadAsset(assetItem)}
-                                                            }}
-                                                            openRemoveAsset={() =>{
-                                                                // beginAssetOperation(
-                                                                //     { asset: assetItem },
-                                                                //     "remove_item"
-                                                                // )
-                                                            }}
-                                                            handleVersionChange={()=>{}}
-                                                            loadMore={()=>{}}
-                                                            onView={()=>{onViewAsset(index)}}
-                                                            customComponent={<TagWrapper status={assetItem.asset.status}/>}
-                                                            infoWrapperClass={styles['asset-grid-info-wrapper']}
-                                                            textWrapperClass={
+                    {mode === "view" && <div className={styles["asset-view-list"]}>
+                        <div className={assetGridStyles["list-wrapper"]}>
+                            <ul className={`${assetGridStyles["grid-list"]} ${assetGridStyles["regular"]} ${styles["grid-list"]}`}>
+                                {
+                                    assets.map((assetItem, index) => {
+                                        if (assetItem.status !== "fail") {
+                                            return (
+                                                <li
+                                                    className={assetGridStyles["grid-item"]}
+                                                    key={assetItem.asset.id || index}
+                                                >
+                                                    <AssetThumbail
+                                                        {...assetItem}
+                                                        sharePath={""}
+                                                        activeFolder={""}
+                                                        showAssetOption={false}
+                                                        isShare={false}
+                                                        type={""}
+                                                        toggleSelected={() =>{
+                                                            toggleSelectedAsset(assetItem.asset.id)
+                                                        }}
+                                                        openArchiveAsset={() =>{
+                                                            // openArchiveAsset(assetItem.asset)
+                                                        }}
+                                                        openDeleteAsset={() =>{
+                                                            // openDeleteAsset(assetItem.asset.id)
+                                                        }}
+                                                        openMoveAsset={() =>{
+                                                            // beginAssetOperation({ asset: assetItem }, "move")
+                                                        }}
+                                                        openCopyAsset={() =>{
+                                                            // beginAssetOperation({ asset: assetItem }, "copy")
+                                                        }}
+                                                        openShareAsset={() =>{
+                                                            // beginAssetOperation({ asset: assetItem }, "share")
+                                                        }}
+                                                        downloadAsset={() => {
+                                                            // downloadAsset(assetItem)}
+                                                        }}
+                                                        openRemoveAsset={() =>{
+                                                            // beginAssetOperation(
+                                                            //     { asset: assetItem },
+                                                            //     "remove_item"
+                                                            // )
+                                                        }}
+                                                        handleVersionChange={()=>{}}
+                                                        loadMore={()=>{}}
+                                                        onView={()=>{onViewAsset(index)}}
+                                                        customComponent={<TagWrapper status={assetItem.asset.status}/>}
+                                                        infoWrapperClass={styles['asset-grid-info-wrapper']}
+                                                        textWrapperClass={
                                                             hasTagOrComments(assetItem.asset) ?
                                                                 (hasBothTagAndComments(assetItem.asset) ? styles['asset-grid-text-wrapper-2-icon'] : styles['asset-grid-text-wrapper'] ) :
                                                                 "w-100"}
-                                                            customIconComponent={<div className={`${styles['icon-wrapper']} d-flex`}>
-                                                                {assetItem.asset.comments && <IconClickable additionalClass={styles['edit-icon']} src={Utilities.comment} onClick={()=> {}} />}
-                                                                {assetItem.asset.tags.length > 0 && <IconClickable additionalClass={styles['edit-icon']} src={Utilities.greenTag} onClick={()=> {}} />}
-                                                            </div>}
-                                                        />
-                                                    </li>
-                                                );
-                                            }
-                                        })}
-                                </ul>
-                            </div>
+                                                        customIconComponent={<div className={`${styles['icon-wrapper']} d-flex`}>
+                                                            {assetItem.asset.comments && <IconClickable additionalClass={styles['edit-icon']} src={Utilities.comment} onClick={()=> {}} />}
+                                                            {assetItem.asset.tags.length > 0 && <IconClickable additionalClass={styles['edit-icon']} src={Utilities.greenTag} onClick={()=> {}} />}
+                                                        </div>}
+                                                    />
+                                                </li>
+                                            );
+                                        }
+                                    })}
+                            </ul>
                         </div>
                     </div>}
 
