@@ -1,5 +1,14 @@
+.root-row{
+  position: relative;
+  height: calc(100vh - 200px);
+  max-height: calc(100vh - 200px);
+  overflow: hidden;
+  /*background-color: wheat;*/
+}
+
 .container {
   padding: 35px 32px;
+  height: 100%;
 }
 
 .approval-detail-modal{
@@ -32,10 +41,20 @@
 }
 
 .asset-list{
+
 }
 
 .asset-view-list{
   margin-top: 55px;
+
+  overflow-y: scroll;
+  max-height: calc(100% - 160px);;
+  overflow-x: hidden;
+  height: inherit;
+}
+
+.grid-list{
+  grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
 }
 
 .operation-wrapper{

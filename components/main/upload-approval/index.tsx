@@ -49,7 +49,8 @@ import { useDebounce } from "../../../hooks/useDebounce";
 import AssetPdf from "../../common/asset/asset-pdf";
 import AssetIcon from "../../common/asset/asset-icon";
 
-
+// Constants
+import { maxAssetsUpload} from "../../../constants/upload-approvals";
 
 
 const UploadApproval = () => {
@@ -363,6 +364,12 @@ const UploadApproval = () => {
 
             setFolderImport(containFolderUrl.length > 0)
 
+            let attachedQuery = {estimateTime: 1, totalSize, requireApproval: 1}
+
+            if(approvalId){
+                attachedQuery['approvalId'] = approvalId
+            }
+
             const { data } = await assetApi.importAssets('dropbox', files.map(file => ({
                     link: file.link,
                     isDir: file.isDir,
@@ -371,7 +378,7 @@ const UploadApproval = () => {
                     versionGroup: (file.versionGroup || versionGroup),
                     changedName: file.changedName
                 })),
-                getCreationParameters({estimateTime: 1, totalSize, requireApproval: 1}))
+                getCreationParameters(attachedQuery))
 
             // Save this approval id for saving name automatically
             if(data[0]?.requestId){
@@ -415,42 +422,51 @@ const UploadApproval = () => {
     }
 
     const onDropboxFilesSelection = async (files) => {
-        if (advancedConfig.duplicateCheck) {
-            const names = files.map(file => file['name'])
-            const {data: { duplicateAssets }} = await assetApi.checkDuplicates(names)
-            if (duplicateAssets.length) {
-                setSelectedFiles(files)
-                setDuplicateAssets(duplicateAssets)
-                setDuplicateModalOpen(true)
-                setUploadFrom('dropbox')
-                if (fileBrowserRef.current.value) {
-                    fileBrowserRef.current.value = ''
+        if(files.length <= maxAssetsUpload){
+            if (advancedConfig.duplicateCheck) {
+                const names = files.map(file => file['name'])
+                const {data: { duplicateAssets }} = await assetApi.checkDuplicates(names)
+                if (duplicateAssets.length) {
+                    setSelectedFiles(files)
+                    setDuplicateAssets(duplicateAssets)
+                    setDuplicateModalOpen(true)
+                    setUploadFrom('dropbox')
+                    if (fileBrowserRef.current.value) {
+                        fileBrowserRef.current.value = ''
+                    }
+                } else {
+                    onDropboxFilesGet(files)
                 }
             } else {
                 onDropboxFilesGet(files)
             }
-        } else {
-            onDropboxFilesGet(files)
+        }else{
+            toastUtils.error(`Maximum assets to upload is ${maxAssetsUpload}`)
         }
+
     }
 
     const onDriveFilesSelection = async (files) => {
-        if (advancedConfig.duplicateCheck) {
-            const names = files.map(file => file['name'])
-            const {data: { duplicateAssets }} = await assetApi.checkDuplicates(names)
-            if (duplicateAssets.length) {
-                setSelectedFiles(files)
-                setDuplicateAssets(duplicateAssets)
-                setDuplicateModalOpen(true)
-                setUploadFrom('gdrive')
-                if (fileBrowserRef.current.value) {
-                    fileBrowserRef.current.value = ''
+        if(files.length <= maxAssetsUpload) {
+            if (advancedConfig.duplicateCheck) {
+                const names = files.map(file => file['name'])
+                const {data: {duplicateAssets}} = await assetApi.checkDuplicates(names)
+                if (duplicateAssets.length) {
+                    setSelectedFiles(files)
+                    setDuplicateAssets(duplicateAssets)
+                    setDuplicateModalOpen(true)
+                    setUploadFrom('gdrive')
+                    if (fileBrowserRef.current.value) {
+                        fileBrowserRef.current.value = ''
+                    }
+                } else {
+                    onGdriveFilesGet(files)
                 }
             } else {
                 onGdriveFilesGet(files)
             }
-        } else {
-            onGdriveFilesGet(files)
+        }else{
+            toastUtils.error(`Maximum assets to upload is ${maxAssetsUpload}`)
         }
     }
 
@@ -493,6 +509,14 @@ const UploadApproval = () => {
 
             setFolderImport(containFolderUrl.length > 0)
 
+            let attachedQuery = {estimateTime: 1, totalSize, requireApproval: 1}
+
+            if(approvalId){
+                attachedQuery['approvalId'] = approvalId
+            }
+
+
+
             const { data } = await assetApi.importAssets('drive', files.map(file => ({
                 googleAuthToken,
                 id: file.id,
@@ -502,7 +526,7 @@ const UploadApproval = () => {
                 type: file.type,
                 versionGroup: file.versionGroup || versionGroup,
                 changedName: file.changedName
-            })), getCreationParameters({estimateTime: 1, totalSize, requireApproval: 1}))
+            })), getCreationParameters(attachedQuery))
 
             // Save this approval id for saving name automatically
             if(data[0]?.requestId){
@@ -667,7 +691,7 @@ const UploadApproval = () => {
             const { subFolderAutoTag } =  advancedConfig;
 
             // Start to upload assets
-            await uploadAsset(0, newPlaceholders, currentDataClone, totalSize, "", undefined, subFolderAutoTag)
+            await uploadAsset(0, newPlaceholders, currentDataClone, totalSize, "", undefined, subFolderAutoTag, approvalId)
 
             // Finish uploading process
             showUploadProcess('done')
@@ -687,23 +711,28 @@ const UploadApproval = () => {
 
     const onFileChange = async (e) => {
         const files = Array.from(e.target.files).map(originalFile => ({ originalFile }))
-        // if (advancedConfig.duplicateCheck) {
-        //     const names = files.map(file => file.originalFile['name'])
-        //     const {data: { duplicateAssets }} = await assetApi.checkDuplicates(names)
-        //     if (duplicateAssets.length) {
-        //         setSelectedFiles(files)
-        //         setDuplicateAssets(duplicateAssets)
-        //         setDuplicateModalOpen(true)
-        //         setUploadFrom('browser')
-        //         if (fileBrowserRef.current.value) {
-        //             fileBrowserRef.current.value = ''
-        //         }
-        //     } else {
-        //         onFilesDataGet(files)
-        //     }
-        // } else {
+        if(files.length <= maxAssetsUpload){
+            // if (advancedConfig.duplicateCheck) {
+            //     const names = files.map(file => file.originalFile['name'])
+            //     const {data: { duplicateAssets }} = await assetApi.checkDuplicates(names)
+            //     if (duplicateAssets.length) {
+            //         setSelectedFiles(files)
+            //         setDuplicateAssets(duplicateAssets)
+            //         setDuplicateModalOpen(true)
+            //         setUploadFrom('browser')
+            //         if (fileBrowserRef.current.value) {
+            //             fileBrowserRef.current.value = ''
+            //         }
+            //     } else {
+            //         onFilesDataGet(files)
+            //     }
+            // } else {
             onFilesDataGet(files)
-        // }
+            // }
+        }else{
+            toastUtils.error(`Maximum assets to upload is ${maxAssetsUpload}`)
+        }
+
     }
 
     const toggleSelected = (id) => {
@@ -769,7 +798,8 @@ const UploadApproval = () => {
 
             if(isSelected){
                 const newTags = _.differenceBy(assetTags, tags || [])
-                const removeTags = _.differenceBy(tags || [], assetTags)
+                // Dont need to remove tags because it will override existing ones
+                const removeTags = [] // _.differenceBy(tags || [], assetTags)
 
                 for( const tag of removeTags){
                     removeTagPromises.push(assetApi.removeTag(asset.id, tag.id))
@@ -788,7 +818,7 @@ const UploadApproval = () => {
         let assetArr = [...assets];
         assetArr.map((asset)=>{
             if(asset.isSelected){
-                asset.tags = assetTags
+                asset.tags = (asset.tags || []).concat(assetTags)
             }
         })
 
@@ -1040,9 +1070,9 @@ const UploadApproval = () => {
         titleText={"File Upload Page"}
         showAssetAddition={false}
       />
-        <div className={"row"}>
-            <div className={"col-70"}>
-                <main className={`${styles.container}`}>
+        <div className={`row ${styles['root-row']}`}>
+            <div className={`col-70 height-100`}>
+                <main className={`${styles.container} p-r-0`}>
                     { <>
                         <p className={styles.title}>Upload a file or a batch, tag or comment</p>
                         <input multiple={versionGroup ? false : true} id="file-input-id" ref={fileBrowserRef} style={{ display: 'none' }} type='file'
@@ -1074,7 +1104,7 @@ const UploadApproval = () => {
 
                     <div className={styles["asset-list"]}>
                         <div className={assetGridStyles["list-wrapper"]}>
-                            <ul className={`${assetGridStyles["grid-list"]} ${assetGridStyles["regular"]}`}>
+                            <ul className={`${assetGridStyles["grid-list"]} ${assetGridStyles["regular"]} ${styles["grid-list"]}`}>
                                 {
                                     assets.map((assetItem, index) => {
                                         if (assetItem.status !== "fail") {
@@ -1284,7 +1314,7 @@ const UploadApproval = () => {
                                 onAddOperationFinished={(stateUpdate) => {
                                     setActiveDropdown("")
 
-                                    updateAssetTagsState(stateUpdate)
+                                    // updateAssetTagsState(stateUpdate)
 
                                     // updateAssetState({
                                     //     tags: { $set: stateUpdate }
@@ -1292,9 +1322,9 @@ const UploadApproval = () => {
                                     // loadTags()
                                 }}
                                 onRemoveOperationFinished={async (index, stateUpdate) => {
-                                    setIsLoading(true)
-                                    await assetApi.removeTag(assets[selectedAsset]?.asset.id, tempTags[index].id)
-                                    updateAssetTagsState(stateUpdate)
+                                    // setIsLoading(true)
+                                    // await assetApi.removeTag(assets[selectedAsset]?.asset.id, tempTags[index].id)
+                                    // updateAssetTagsState(stateUpdate)
 
                                     // await assetApi.removeTag(id, assetTags[index].id)
                                     // updateAssetState({
@@ -1304,8 +1334,9 @@ const UploadApproval = () => {
                                 onOperationFailedSkipped={() => setActiveDropdown('')}
                                 isShare={false}
                                 asyncCreateFn={(newItem) => {
-                                    setIsLoading(true)
-                                    return assetApi.addTag(assets[selectedAsset]?.asset.id, newItem)
+                                    return { data: newItem }
+                                    // setIsLoading(true)
+                                    // return assetApi.addTag(assets[selectedAsset]?.asset.id, newItem)
                                 }}
                                 dropdownIsActive={activeDropdown === 'tags'}
                                 ignorePermission={true}
