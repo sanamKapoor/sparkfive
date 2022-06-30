@@ -388,10 +388,10 @@ const UploadRequest = () => {
                 }
 
                 // Save bulk by admin wont override any tag, it will add extra tags
-                const removeTags = isAdmin() ? [] : _.differenceBy(asset?.tags || [], assetTags)
+                const removeTags = [] //isAdmin() ? [] : _.differenceBy(asset?.tags || [], assetTags)
 
                 // Save bulk by admin wont override any capaign, it will add extra campaigns
-                const removeCampaigns = isAdmin() ? [] : _.differenceBy(asset?.campaigns || [], assetCampaigns)
+                const removeCampaigns = [] //isAdmin() ? [] : _.differenceBy(asset?.campaigns || [], assetCampaigns)
 
                 for( const tag of removeTags){
                     removeTagPromises.push(assetApi.removeTag(asset.id, tag.id))
