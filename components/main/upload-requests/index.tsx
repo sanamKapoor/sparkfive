@@ -356,6 +356,10 @@ const UploadRequest = () => {
     const saveBulkTag = async () => {
         setIsLoading(true)
 
+        let currentAssetTags =  [...assetTags]
+        let currentAssetCampaigns =  [...assetCampaigns]
+        let currentAssetCustomFields =  [...assetCustomFields]
+
         for(const { asset, isSelected } of assets){
             let tagPromises = []
             let removeTagPromises = []
@@ -364,12 +368,12 @@ const UploadRequest = () => {
             let removeCampaignPromises = []
 
             if(isSelected){
-                const newTags = _.differenceBy(assetTags, asset?.tags || [])
-                const newCampaigns = _.differenceBy(assetCampaigns, asset?.campaigns || [])
+                const newTags = _.differenceBy(currentAssetTags, asset?.tags || [])
+                const newCampaigns = _.differenceBy(currentAssetCampaigns, asset?.campaigns || [])
 
                 // Online admin can add custom fields
                 if(isAdmin()){
-                    for (const customField of assetCustomFields){
+                    for (const customField of currentAssetCustomFields){
                         // Find corresponding custom field in asset
                         const assetField = asset.customs.filter((custom)=>custom.id === customField.id)
                         const oldCustoms = assetField[0]?.values || []
@@ -379,7 +383,25 @@ const UploadRequest = () => {
                         const customPromises = []
 
                         for( const custom of newCustoms){
-                            customPromises.push(assetApi.addCustomFields(asset.id, custom))
+                            // Old custom, dont need to create the new one
+                            if(custom.id){
+                                customPromises.push(assetApi.addCustomFields(asset.id, custom))
+                            }else{ // Have to insert immediately here to prevent duplicate custom created due to multi asset handling
+                                const rs = await assetApi.addCustomFields(asset.id, custom)
+                                // Update back to asset tags array for the next asset usage
+                                currentAssetCustomFields = currentAssetCustomFields.map((assetCustom)=>{
+                                    if(assetCustom.id === customField.id){
+                                        assetCustom = assetCustom.values.map((value)=>{
+                                            if(value.name === custom.name){
+                                                value = rs
+                                            }
+
+                                            return value
+                                        })
+                                    }
+                                    return assetCustom
+                                })
+                            }
                         }
 
                         await Promise.all(customPromises)
@@ -398,7 +420,19 @@ const UploadRequest = () => {
                 }
 
                 for( const tag of newTags){
-                    tagPromises.push(assetApi.addTag(asset.id, tag))
+                    // Old tag, dont need to create the new one
+                    if(tag.id){
+                        tagPromises.push(assetApi.addTag(asset.id, tag))
+                    }else{ // Have to insert immediately here to prevent duplicate tag created due to multi asset handling
+                        const rs = await assetApi.addTag(asset.id, tag)
+                        // Update back to asset tags array for the next asset usage
+                        currentAssetTags = currentAssetTags.map((assetTag)=>{
+                            if(assetTag.name === tag.name){
+                                assetTag = rs.data
+                            }
+                            return assetTag
+                        })
+                    }
                 }
 
                 // Only admin can modify campaign
@@ -408,7 +442,20 @@ const UploadRequest = () => {
                     }
 
                     for( const campaign of newCampaigns){
-                        campaignPromises.push( assetApi.addCampaign(asset.id, campaign))
+                        // Old campaign, dont need to create the new one
+                        if(campaign.id){
+                            campaignPromises.push(assetApi.addCampaign(asset.id, campaign))
+                        }else{ // Have to insert immediately here to prevent duplicate campaign created due to multi asset handling
+                            const rs = await assetApi.addCampaign(asset.id, campaign)
+                            // Update back to asset tags array for the next asset usage
+                            currentAssetCampaigns = currentAssetCampaigns.map((assetCampaign)=>{
+                                if(assetCampaign.name === campaign.name){
+                                    assetCampaign = rs.data
+                                }
+                                return assetCampaign
+                            })
+                        }
+
                     }
                 }
 
@@ -431,13 +478,13 @@ const UploadRequest = () => {
             if(asset.isSelected){
                 // Admin update does not override the tags
                 if(isAdmin()){
-                    const newTags = _.differenceBy(assetTags, asset.asset.tags || [])
+                    const newTags = _.differenceBy(currentAssetTags, asset.asset.tags || [])
                     asset.asset.tags = asset.asset.tags.concat(newTags)
 
-                    const newCampaigns = _.differenceBy(assetCampaigns, asset.asset.campaigns || [])
+                    const newCampaigns = _.differenceBy(currentAssetCampaigns, asset.asset.campaigns || [])
                     asset.asset.campaigns = asset.asset.campaigns.concat(newCampaigns)
                 }else{
-                    asset.asset.tags = assetTags
+                    asset.asset.tags = currentAssetTags
                 }
 
             }

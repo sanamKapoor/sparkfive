@@ -792,12 +792,14 @@ const UploadApproval = () => {
     const saveBulkTag = async () => {
         setIsLoading(true)
 
+        let currentAssetTags =  [...assetTags]
+
         for(const { asset, isSelected, tags } of assets){
             let tagPromises = []
             let removeTagPromises = []
 
             if(isSelected){
-                const newTags = _.differenceBy(assetTags, tags || [])
+                const newTags = _.differenceBy(currentAssetTags, tags || [])
                 // Dont need to remove tags because it will override existing ones
                 const removeTags = [] // _.differenceBy(tags || [], assetTags)
 
@@ -806,7 +808,20 @@ const UploadApproval = () => {
                 }
 
                 for( const tag of newTags){
-                    tagPromises.push(assetApi.addTag(asset.id, tag))
+                    // Old tag, dont need to create the new one
+                    if(tag.id){
+                        tagPromises.push(assetApi.addTag(asset.id, tag))
+                    }else{ // Have to insert immediately here to prevent duplicate tag created due to multi asset handling
+                        const rs = await assetApi.addTag(asset.id, tag)
+                        // Update back to asset tags array for the next asset usage
+                        currentAssetTags = currentAssetTags.map((assetTag)=>{
+                            if(assetTag.name === tag.name){
+                                assetTag = rs.data
+                            }
+                            return assetTag
+                        })
+                    }
+
                 }
             }
 
@@ -818,7 +833,7 @@ const UploadApproval = () => {
         let assetArr = [...assets];
         assetArr.map((asset)=>{
             if(asset.isSelected){
-                asset.tags = (asset.tags || []).concat(assetTags)
+                asset.tags = (asset.tags || []).concat(currentAssetTags)
             }
         })
 
