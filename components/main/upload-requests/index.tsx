@@ -1517,7 +1517,7 @@ const UploadRequest = () => {
                         </p>
                     </div>}
                 </div>
-                <div className={"col-40"}>
+                <div className={"col-40 height-100"}>
                     <div className={`${detailPanelStyles.container} ${styles['right-form']}`}>
                         <h2 className={styles['detail-title']}>Add Attributes to Selected Assets</h2>
 
@@ -1538,6 +1538,7 @@ const UploadRequest = () => {
                                 setSelectedItems={setTempTags}
                                 allowEdit={currentViewStatus === 0 || isAdmin()}
                                 creatable={true}
+                                menuPosition={"fixed"}
                                 onAddOperationFinished={(stateUpdate) => {
                                     setActiveDropdown("")
 
@@ -1581,6 +1582,7 @@ const UploadRequest = () => {
                                     selectedItems={tempCampaigns}
                                     setSelectedItems={setTempCampaigns}
                                     creatable={isAdmin()}
+                                    menuPosition={"fixed"}
                                     onAddOperationFinished={(stateUpdate) => {
                                         updateAssetState({
                                             campaigns: { $set: stateUpdate }
@@ -1639,6 +1641,7 @@ const UploadRequest = () => {
                                         selectPlaceholder={'Select an existing one'}
                                         avilableItems={field.values}
                                         setAvailableItems={()=>{}}
+                                        menuPosition={"fixed"}
                                         selectedItems={(tempCustoms.filter((assetField)=>assetField.id === field.id))[0]?.values || []}
                                         setSelectedItems={(data)=>{onChangeTempCustomField(index, data)}}
                                         onAddOperationFinished={(stateUpdate) => {

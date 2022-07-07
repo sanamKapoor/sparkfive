@@ -40,6 +40,7 @@ const CreatableSelect = ({
   selectOneComponent = <></>,
   allowEdit = true,
   ignorePermission = false,
+  menuPosition= 'absolute'
 }) => {
 
   const { hasPermission } = useContext(UserContext)
@@ -134,7 +135,8 @@ const CreatableSelect = ({
                     options={avilableItems.map(item => ({...item, label: item.name, value: item.id}))}
                     onChange={onChange}
                     styleType={'regular item'}
-                    menuPlacement={'top'}
+                    menuPlacement={'auto'}
+                    menuPosition={menuPosition}
                     isClearable={true}
                 />
                 }
@@ -144,7 +146,8 @@ const CreatableSelect = ({
                   options={avilableItems.map(item => ({ ...item, label: item.name, value: item.id }))}
                   onChange={onChange}
                   styleType={'regular item'}
-                  menuPlacement={'top'}
+                  menuPlacement={'auto'}
+                  menuPosition={menuPosition}
                   isClearable={true}
                   />
                 }
