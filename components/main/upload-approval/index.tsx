@@ -1311,7 +1311,7 @@ const UploadApproval = () => {
                     </div>
                     <div className={styles['date']}>{moment(assets[selectedAsset]?.asset?.createdAt).format('MMM DD, YYYY, hh:mm a')}</div>
                 </div>
-                <div className={"col-40"}>
+                <div className={"col-40 height-100"}>
                     <div className={`${detailPanelStyles.container} ${styles['right-form']}`}>
                         <h2 className={styles['detail-title']}>Add Attributes to Selected Assets</h2>
 
@@ -1326,6 +1326,7 @@ const UploadApproval = () => {
                                 selectedItems={tempTags}
                                 setSelectedItems={setTempTags}
                                 creatable={true}
+                                menuPosition={"fixed"}
                                 onAddOperationFinished={(stateUpdate) => {
                                     setActiveDropdown("")
 
