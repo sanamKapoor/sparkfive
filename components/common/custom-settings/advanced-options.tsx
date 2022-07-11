@@ -25,7 +25,7 @@ const AdvancedOptions = () => {
     const [searchDefault, setSearchDefault] = useState('')
     const [hideFilterElements, setHideFilterElements] = useState(advancedConfigParams.hideFilterElements)
     const [aiTagging, setaiTagging] = useState(false)
-    
+
 
     const {advancedConfig, setAdvancedConfig} = useContext(UserContext)
 
@@ -33,7 +33,7 @@ const AdvancedOptions = () => {
     const saveAdvanceConfig = async (config) => {
         setLoading(true)
         await teamAPI.saveAdvanceConfigurations({ config })
-        
+
         const updatedConfig = {...advancedConfig, ...config}
         setAdvancedConfig(updatedConfig)
 
@@ -316,7 +316,7 @@ const AdvancedOptions = () => {
                                             <div className={'font-12 m-l-10'}>AI Tags</div>
                                         </div>
 
-                                        
+
                                     </div>
                                 </div>
                             </div>
