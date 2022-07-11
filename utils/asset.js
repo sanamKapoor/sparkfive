@@ -298,7 +298,9 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
         filters.filterProductSku = filterProductSku.map((item)=>item.sku).join(",")
     }
 
-    if (filterNonAiTags && filterNonAiTags.length > 0 && allNonAiTags) filters.allNonAiTags = allNonAiTags
+    if ((filterNonAiTags && filterNonAiTags.length > 0 && allNonAiTags) || allNonAiTags === 'none') filters.allNonAiTags = allNonAiTags
+
+
     if (filterAiTags && filterAiTags.length > 0 && allAiTags) filters.allAiTags = allAiTags
     if (filterCampaigns.length > 0 && allCampaigns) filters.allCampaigns = allCampaigns
 

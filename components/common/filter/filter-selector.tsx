@@ -22,7 +22,8 @@ const FilterSelector = ({
     capitalize = false,
     internalFilter = false, // Filter list will be get from loadFn resolve directly (useful for custom fields),
     mappingValueName = 'value',
-    scrollBottomAfterSearch = false // When typing in search input, scrolling down to bottom of container to prevent list is hidden
+    scrollBottomAfterSearch = false, // When typing in search input, scrolling down to bottom of container to prevent list is hidden
+    noneOption = false // Show none option or not
 }) => {
 
     const { activeSortFilter } = useContext(FilterContext)
@@ -75,13 +76,22 @@ const FilterSelector = ({
                             onClick={() => setAnyAll('all')} />
                         <div className={styles['any-all-text']}>All selected</div>
                     </div>
-                    <div>
+                    <div className={"m-r-17"}>
                         <IconClickable
                             src={anyAllSelection === 'any' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                             additionalClass={styles['select-icon']}
                             onClick={() => setAnyAll('any')} />
-                        <div className={styles['any-all-text']}>Any selected</div>
+                        <div className={styles['any-all-text']}>Any {noneOption ? '' : 'selected'}</div>
                     </div>
+                    {
+                        noneOption &&  <div>
+                            <IconClickable
+                                src={anyAllSelection === 'none' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                                additionalClass={styles['select-icon']}
+                                onClick={() => setAnyAll('none')} />
+                            <div className={styles['any-all-text']}>None</div>
+                        </div>
+                    }
                 </div>
             }
             <ul className={`${styles['item-list']} ${oneColumn && styles['one-column']} ${capitalize && 'capitalize'}`}>

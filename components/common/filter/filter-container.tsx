@@ -162,6 +162,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                                 value={activeSortFilter.filterNonAiTags}
                                 setValue={(selected) => setSortFilterValue('filterNonAiTags', selected)}
                                 addtionalClass={'tags-container'}
+                                noneOption={true}
                             />}
                     </section>
                 }
