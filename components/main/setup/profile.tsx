@@ -31,7 +31,7 @@ const Profile = ({ ActionButtons }) => {
       <div className={styles.container}>
         <div className={styles['profile-photo']}>
           <p>1. Upload a New Profile Photo</p>
-          <PhotoUpload userPhoto={user.profilePhoto} />
+          <PhotoUpload userPhoto={user?.profilePhoto} />
         </div>
         <div className={styles['client-name']}>
           <p>2. Confirm Your Name</p>

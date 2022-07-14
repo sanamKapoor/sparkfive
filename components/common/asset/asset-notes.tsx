@@ -8,7 +8,10 @@ import styles from './asset-notes.module.css'
 import assetApi from "../../../server-api/asset";
 import toastUtils from '../../../utils/toast'
 
-const note_long_error = 'Text longer than 250 letters.'
+import { maximumNoteLength} from "../../../constants/notes";
+
+const note_long_error = `Text longer than ${maximumNoteLength} letters.`
+
 
 const AssetNotes = ({asset, notes, applyCrud}) => {
 
@@ -73,7 +76,7 @@ const AssetNotes = ({asset, notes, applyCrud}) => {
                 <h2>Notes</h2>
                 <h3>{notes.length} Note(s)</h3>
             </div>
-            { notes.length < 2 && 
+            { notes.length < 2 &&
             <span>
                 <TextArea
                     placeholder="Add a note"
@@ -81,6 +84,7 @@ const AssetNotes = ({asset, notes, applyCrud}) => {
                     className={styles.input}
                     value={noteText}
                     onChange={updateText}
+                    maxlength={maximumNoteLength}
                 />
                 <div className={styles.radios}>
                     <div className={styles['radio-wrapper']}>
@@ -107,7 +111,7 @@ const AssetNotes = ({asset, notes, applyCrud}) => {
             }
             <div className={styles.divider}></div>
             {
-                notes && notes.length>0 && 
+                notes && notes.length>0 &&
                 notes.map((note, indx) => (
                     <AssetNoteItem
                         title={`Note ${indx+1}`}

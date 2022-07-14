@@ -58,8 +58,8 @@ const Signup = ({ onlyWorkEmail = false}) => {
         subtitle={query.inviteCode ? '' : 'No credit card required - 14 day free trial'}
       >
         <SignupForm inviteCode={shareInviteCode} priceData={priceData} email={defaultEmail} onlyWorkEmail={onlyWorkEmail}/>
-        <div className={styles.or}>OR</div>
-        <ProvidersAuth inviteCode={shareInviteCode} priceData={priceData} />
+        {/*<div className={styles.or}>OR</div>*/}
+        {/*<ProvidersAuth inviteCode={shareInviteCode} priceData={priceData} />*/}
       </AuthContainer>
       {!shareInviteCode && <p className='nav-text'>Already have an account? <Link href='/login'><span>Log In</span></Link></p>}
     </main>

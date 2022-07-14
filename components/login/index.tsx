@@ -19,8 +19,8 @@ const SignIn = () => {
             subtitle='Log In to Sparkfive'
         >
             <LoginForm teamId={vanityCompanyInfo ? vanityCompanyInfo.id : null}/>
-            <div className={styles.or}>OR</div>
-            <ProvidersAuth/>
+            {/*<div className={styles.or}>OR</div>*/}
+            {/*<ProvidersAuth/>*/}
         </AuthContainer>
         <p className='nav-text'>Don't have an account?
             {!vanityCompanyInfo && <Link href='/signup'><span>Sign Up</span></Link>}

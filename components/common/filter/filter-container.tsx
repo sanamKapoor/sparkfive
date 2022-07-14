@@ -17,7 +17,7 @@ import ResolutionFilter from './resolution-filter'
 
 const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiveSortFilter, clearFilters, isFolder = false, isShare = false }) => {
 
-    const [expandedMenus, setExpandedMenus] = useState(isFolder ? ['folders'] : ['tags', 'aiTags', 'customFields', 'channels', 'campaigns'])
+    const [expandedMenus, setExpandedMenus] = useState(isFolder ? ['folders'] : ['tags', 'aiTags', 'channels', 'campaigns'])
     const [stickyMenuScroll, setStickyMenuScroll] = useState(false)
     const [customFieldList, setCustomFieldList] = useState([])
     const {advancedConfig} = useContext(UserContext)
@@ -68,6 +68,18 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                 await customFieldsApi.getCustomFieldsWithCount({assetsCount: 'yes', assetLim: 'yes', sharePath})
 
             setCustomFieldList(data)
+
+            let fields = []
+
+            // Expand those custom field
+            data.map((item, index)=>{
+                fields.push(`customFields-${index}`)
+
+            })
+
+            setExpandedMenus(update(expandedMenus, {
+                $push: fields
+            }))
 
             let filter = {}
             let fieldValues = {}
@@ -192,13 +204,13 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                     return <div key={index}>
                         {!isFolder &&
                         <section>
-                            <div className={styles['expand-bar']} onClick={() => handleExpand('customFields')}>
+                            <div className={styles['expand-bar']} onClick={() => handleExpand(`customFields-${index}`)}>
                                 <h4>{field.name}</h4>
-                                {expandedMenus.includes('customFields') ?
+                                {expandedMenus.includes(`customFields-${index}`) ?
                                     <img src={Utilities.arrowUpGrey} className={styles['expand-icon']} /> :
                                     <img src={Utilities.arrowGrey} className={styles['expand-icon']} />}
                             </div>
-                            {expandedMenus.includes('customFields') &&
+                            {expandedMenus.includes(`customFields-${index}`) &&
                             <FilterSelector
                                 numItems={10}
                                 anyAllSelection={field.type === 'selectMultiple' ? activeSortFilter[`all-p${field.id}`] : ''}
