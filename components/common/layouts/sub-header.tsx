@@ -6,13 +6,27 @@ const SubHeader = ({
   pageTitle,
   children,
   editable = false,
-  additionalClass = '',  
+  additionalClass = '',
   PreComponent = null,
   onAltEditionClick = () => { }
 }) => {
+  const [top, setTop] = useState(112 - 0.5)
+
+  const onChangeWidth = () => {
+    const headerTop = (document.getElementById('main-header')?.offsetHeight || 112) - 0.5
+    setTop(headerTop)
+  }
+
+  useEffect(()=>{
+    onChangeWidth()
+
+    window.addEventListener('resize', onChangeWidth);
+
+    return () => window.removeEventListener("resize", onChangeWidth);
+  },[])
 
   return (
-    <section className={`${styles.container} ${additionalClass}`}>
+    <section className={`${styles.container} ${additionalClass}`} style={{top: top}}>
       {PreComponent &&
         <PreComponent />
       }

@@ -1,3 +1,4 @@
+import _ from "lodash"
 import styles from './creatable-select.module.css'
 import update from 'immutability-helper'
 import ReactCreatableSelect from 'react-select/creatable'
@@ -40,7 +41,8 @@ const CreatableSelect = ({
   selectOneComponent = <></>,
   allowEdit = true,
   ignorePermission = false,
-  menuPosition= 'absolute'
+  menuPosition= 'absolute',
+  sortDisplayValue = false
 }) => {
 
   const { hasPermission } = useContext(UserContext)
@@ -108,13 +110,22 @@ const CreatableSelect = ({
     }
   }
 
+  const sort = (data) => {
+    if(sortDisplayValue){
+      return _.orderBy(data, ['name'],['asc']);
+    }else{
+      return data
+    }
+  }
+
+
   return (
     <>
       <div className={`secondary-text ${styles.field}`}>{title}</div>
       {selectOneComponent}
       <div className={'normal-text'}>
         <ul className={`tags-list ${styles['tags-list']}`}>
-          {selectedItems?.map((item, index) => (
+          {sort(selectedItems || []).map((item, index) => (
             <li key={item.id || item.value}>
               <Tag
                 data={item}

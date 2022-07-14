@@ -9,11 +9,24 @@ import Button from '../../../common/buttons/button'
 import Select from '../../../common/inputs/select'
 import MemberPermissions from './member-permissions'
 
+import {default as permissionList}  from "../../../../constants/permissions"
+
 const MemberDetail = ({ member, type = 'member', mappedRoles, onSaveChanges, onCancel }) => {
 
   const [memberRole, setMemberRole] = useState(undefined)
   const [memberPermissions, setMemberPermissions] = useState([])
   const [permissions, setPermissions] = useState([])
+
+  const onRoleChange = (role) => {
+    if(role.id === 'user'){
+      let permission = permissions.filter((item, index)=>{
+        return [permissionList.ASSET_ACCESS, permissionList.ASSET_DOWNLOAD, permissionList.ASSET_SHARE].includes(item.id)
+      })
+      setMemberPermissions(permission)
+    }
+
+    setMemberRole(role)
+  }
 
   useEffect(() => {
     getPermissions()
@@ -64,7 +77,7 @@ const MemberDetail = ({ member, type = 'member', mappedRoles, onSaveChanges, onC
         <div>
           <Select
             options={mappedRoles}
-            onChange={(selected) => setMemberRole(selected)}
+            onChange={(selected) => onRoleChange(selected)}
             placeholder={'Select a role'}
             styleType='regular'
             value={memberRole}

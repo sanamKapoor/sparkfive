@@ -2,6 +2,7 @@
   display: grid;
   grid-template-areas: "content-asset side asset-menu";
   grid-template-columns: 1fr 26.5rem 60px;
+  z-index: 1500;
 }
 
 .content, .side, .menu {
@@ -213,7 +214,7 @@
   }
 } */
 @media screen and (max-width: 460px) {
-  
+
   .side {
     width: 280px;
   }

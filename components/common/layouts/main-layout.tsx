@@ -93,7 +93,7 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
     <>
       {user &&
         <>
-          <header className={styles.header}>
+          <header id={'main-header'} className={styles.header}>
             <Link href={plan?.type === 'marketing_hub' ? '/main/overview' : '/main/assets'}>
               <a>
                 <img

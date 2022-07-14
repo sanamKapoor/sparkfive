@@ -83,7 +83,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
 
   const { hasPermission, advancedConfig } = useContext(UserContext)
   const { loadCampaigns, loadProjects, loadTags } = useContext(FilterContext)
-  
+
   const [hideFilterElements] = useState(advancedConfig.hideFilterElements)
 
   const { setIsLoading }  = useContext(LoadingContext)
@@ -528,10 +528,11 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
           isShare={isShare}
           asyncCreateFn={(newItem) => assetApi.addTag(id, newItem)}
           dropdownIsActive={activeDropdown === 'tags'}
+          sortDisplayValue={true}
         />
       </div>
 
-      {advancedConfig.aiTagging && ['png', 'jpg', 'jpeg'].indexOf(asset.extension.toLowerCase()) > -1 && 
+      {advancedConfig.aiTagging && ['png', 'jpg', 'jpeg'].indexOf(asset.extension.toLowerCase()) > -1 &&
       <div className={styles['field-wrapper']} >
         <CreatableSelect
           title='AI Tags'
@@ -767,7 +768,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
       {/*  </div>*/}
       {/*</div>*/}
 
-      { !hideFilterElements.products && 
+      { !hideFilterElements.products &&
       <>
         <div className={styles['field-wrapper']} >
           <div className={`secondary-text ${styles.field}`}>Products</div>
