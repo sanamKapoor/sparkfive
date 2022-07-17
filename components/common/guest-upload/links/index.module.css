@@ -202,8 +202,8 @@
     padding-top: 30px;
 }
 
-.visibility-hidden{
-    visibility: hidden;
+.display-none{
+    display: none!important;
 }
 
 .select-add{

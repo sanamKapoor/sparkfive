@@ -239,6 +239,9 @@ ul {
 .visibility-hidden{
   visibility: hidden;
 }
+.display-none{
+  display: none!important;
+}
 
 .p-l-r-10{
   padding-left: 10px;
