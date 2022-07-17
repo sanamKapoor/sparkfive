@@ -49,16 +49,17 @@ const CropSidePanel = ({ asset,
     const [previewActive, setPreviewActive] = useState(false)
 
     const setMode = (mode) => {
-        onModeChange(mode)
+        onModeChange(mode);
         if (mode === 'resize') {
-            setPreviewActive(false)
+            setPreviewActive(false);
         }
     }
 
     // Check if should lock cropping
     const lockCropping = () => {
         // Only lock if user is choose specific preset
-        return (sizeValue && sizeValue.value !== 'none')
+        // return (sizeValue && sizeValue.value !== 'none')
+        return mode === 'crop'
     }
 
     const getImageType = (imageType) => {
@@ -141,11 +142,6 @@ const CropSidePanel = ({ asset,
         setResizeOption(option);
     }
 
-    const _setSelectedSize = (value) => {
-        setLastSelectedSize(value);
-        setSelectedSize(value);
-    }
-
     const togglePreview = () => {
         if (mode === 'crop') {
             document.getElementById('crop-preview').click()
@@ -165,7 +161,6 @@ const CropSidePanel = ({ asset,
         setSelectedSize(sizeValue)
     }, [sizeValue]);
 
-console.log(sizeValue)
 
     return (
         <div className={styles.container}>
@@ -241,7 +236,7 @@ console.log(sizeValue)
                                 </label>
                                 <Input
                                     disabled={lockCropping()}
-                                    onChange={(e)=>{onSizeInputChange('width', parseInt(e.target.value))}}
+                                    onChange={(e)=>{onSizeInputChange('width', parseInt(e.target.value), resizeOption)}}
                                     placeholder={'Width'}
                                     additionalClasses={'center-input'}
                                     type={'number'}
@@ -255,7 +250,7 @@ console.log(sizeValue)
                                 </label>
                                 <Input
                                     disabled={lockCropping()}
-                                    onChange={(e)=>{onSizeInputChange('height', parseInt(e.target.value))}}
+                                    onChange={(e)=>{onSizeInputChange('height', parseInt(e.target.value), resizeOption)}}
                                     placeholder={'Height'}
                                     type={'number'}
                                     value={resizeOption === "%" ? percentHeight : height}
@@ -278,27 +273,29 @@ console.log(sizeValue)
                             value={presetTypeValue}
                             isClearable={false}
                             additionalClass={'font-weight-normal m-l-0'}
+                            disabled={lockCropping()}
                         />
                     </div>
                 </div>
 
                 <div className={`${styles['field-wrapper']} ${styles['hide-on-mobile']}`} >
-                    <div className={`${styles.title}`}>Size {sizeValue && sizeValue.value !== 'none' ? 'yes' : 'no'}..</div>
+                    <div className={`${styles.title}`}>Size</div>
                     <div className={styles['field-content']}>
                         <SizeSelect
                             options={sizes.map((size) => { size.label = size.label || size.name; size.value = size.value || size.name; return size})}
                             placeholder='Select size'
                             styleType='filter'
-                            onChange={(value)=>{_setSelectedSize(value)}}
+                            onChange={(value)=>{onSelectChange('size', value)}}
                             value={selectedSize}
                             isClearable={false}
                             additionalClass={'font-weight-normal m-l-0'}
+                            disabled={lockCropping()}
                         />
                     </div>
                 </div>
             </>}
 
-            {selectedSize && selectedSize.value!=='none' || mode === 'crop' && 
+            {mode === 'crop' && 
             <div className={`${styles['save-changes']} ${styles['save-preview-btn-row']}`}>
                 <Button className={'m-r-15'}
                         text={previewActive ? 'Close Preview' : 'View Preview'}

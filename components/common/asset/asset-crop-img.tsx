@@ -17,7 +17,7 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 		unit: '%' as const,
 		x: 25,
 		y: 25,
-		width:50,
+		width: 50,
 		height: 50
 	}
 
@@ -203,11 +203,11 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 
 	return (
 		<>
-			{!loaded && <img src={Assets.empty} alt={'blank'} style={{position: 'absolute'}} />}
+			{!loaded && <img src={Assets.empty} alt={'blank'} style={{position: 'absolute', width: width, height: height}} />}
 			
 			<ReactCrop
 				crop={crop}
-				locked={locked}
+				// locked={locked}
 				ruleOfThirds={true}
 				className={`${styles['react-crop']} ${mode == 'preview' ? "display-none" : ""}`}
 				onChange={setCrop}
