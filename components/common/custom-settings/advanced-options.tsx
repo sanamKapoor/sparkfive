@@ -3,19 +3,25 @@ import { Utilities } from '../../../assets'
 
 import styles from './advanced-options.module.css'
 import Router from 'next/router'
+
+// Contexts
 import { UserContext } from '../../../context'
+import { SocketContext } from '../../../context'
 
 // Components
 import SpinnerOverlay from "../spinners/spinner-overlay";
 import IconClickable from "../buttons/icon-clickable";
+import Button from '../buttons/button'
 
 // APIs
 import teamAPI from "../../../server-api/team"
+import assetAPI from "../../../server-api/asset"
 
 import advancedConfigParams from '../../../utils/advance-config-params'
 
 const AdvancedOptions = () => {
     const [loading, setLoading] = useState(false)
+    const { socket, connected, connectSocket } = useContext(SocketContext)
 
     const [subFolderAutoTag, setSubFolderAutoTag] = useState(true)
     const [defaultLandingPage, setDefaultLandingPage] = useState('')
@@ -25,9 +31,9 @@ const AdvancedOptions = () => {
     const [searchDefault, setSearchDefault] = useState('')
     const [hideFilterElements, setHideFilterElements] = useState(advancedConfigParams.hideFilterElements)
     const [aiTagging, setaiTagging] = useState(false)
-    
-
     const {advancedConfig, setAdvancedConfig} = useContext(UserContext)
+    const [nonAiTagAssetCount, setNonAiTagAssetCount] = useState(0)
+    const [aiTaggingProgress, setAiTaggingProgress] = useState(false)
 
 
     const saveAdvanceConfig = async (config) => {
@@ -66,13 +72,49 @@ const AdvancedOptions = () => {
         saveAdvanceConfig({hideFilterElements: elemsState})
     }
 
+    const findNonAiTagAssetCount = async () => {
+        const {data: {count} } = await assetAPI.nonAiTagAssetsCount();
+        setNonAiTagAssetCount(count)
+    }
+
+    const startBulkAiTagging = async () => {
+        await assetAPI.startBulkAiTagging();
+        setAiTaggingProgress(true)
+    }
+
     useEffect(() => {
         getAdvanceConfigurations();
+        findNonAiTagAssetCount();
     }, [])
+
+    // Init socket listener
+    useEffect(() => {
+        // Socket is available and connected
+        if(socket && connected){
+            // Listen upload file process event
+            socket.on('BulkAiTaggingProgress', function(data){
+                setNonAiTagAssetCount(data.pendingCount)
+                setAiTaggingProgress(true)
+            })
+        }
+    },[socket, connected])
 
 
     return (
         <div className={styles['main-wrapper']}>
+            <div className={`${styles['row']} ${styles['first-field-block']}`}>
+                <div className={`${styles['col-100']}`}>
+                    <div className={`${styles['row']}`}>
+                        <div className={`${styles['deleted-assets']} row`}>
+                            <div className={"col-60"}>
+                                {!aiTaggingProgress && <span className={'font-weight-500'}>Yet {nonAiTagAssetCount} Assets to adapt AI Tagging </span>}
+                                {!aiTaggingProgress && <Button text="Start Bulk Tagging" type='button' styleType='primary' onClick={startBulkAiTagging}/>}
+                                {aiTaggingProgress && <span>Tagging In-progress... <strong>{nonAiTagAssetCount}</strong> remaining</span>}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div className={`${styles['row']} ${styles['first-field-block']}`}>
                 <div className={`${styles['col-100']}`}>
                     <div className={`${styles['row']}`}>
