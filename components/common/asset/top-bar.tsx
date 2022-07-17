@@ -38,6 +38,22 @@ const TopBar = ({
   const {user, hasPermission, advancedConfig, setAdvancedConfig} = useContext(UserContext)
   const [hideFilterElements, setHideFilterElements] = useState(advancedConfig.hideFilterElements)
 
+  const [top, setTop] = useState(112 + 83 - 0.5)
+
+  const onChangeWidth = () => {
+    const headerTop = (document.getElementById('main-header')?.offsetHeight || 112) - 0.5
+    const subHeader = (document.getElementById('sub-header')?.offsetHeight || 83) - 0.5
+    setTop(headerTop+subHeader)
+  }
+
+  useEffect(()=>{
+    onChangeWidth()
+
+    window.addEventListener('resize', onChangeWidth);
+
+    return () => window.removeEventListener("resize", onChangeWidth);
+  },[])
+
   const [tabs, setTabs] = useState(selectOptions.views)
 
   const setSortFilterValue = (key, value) => {
@@ -109,7 +125,7 @@ const TopBar = ({
 
 
   return (
-    <section className={styles.container}>
+    <section className={styles.container} style={{top}}>
       {!deletedAssets ? <div className={styles.filters} >
         <img src={Utilities.search} onClick={setActiveSearchOverlay} className={styles.search} />
         <ul className={styles['tab-list']}>

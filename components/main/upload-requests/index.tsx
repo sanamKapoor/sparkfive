@@ -1171,7 +1171,7 @@ const UploadRequest = () => {
                         </div>
                         <div className={`${assetGridStyles["list-wrapper"]} ${approvals.length === 0 ? "mb-32" : ""}`}>
                             <ul className={"regular-list"}>
-                                {approvals.length === 0 && <p>There is no any request yet</p>}
+                                {approvals.length === 0 && <p>There are no upload requests for you to review</p>}
                                 {
                                     approvals.map((approval, index) => {
                                         return (

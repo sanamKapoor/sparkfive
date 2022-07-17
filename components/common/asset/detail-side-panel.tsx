@@ -561,6 +561,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
           isShare={isShare}
           asyncCreateFn={(newItem) => assetApi.addTag(id, {...newItem, type: 'AI'})}
           dropdownIsActive={activeDropdown === 'ai-tags'}
+          sortDisplayValue={true}
         />
       </div>
       }
@@ -655,6 +656,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                 asyncCreateFn={(newItem) => { // Show loading
                   setIsLoading(true); return assetApi.addCustomFields(id, {...newItem, folderId: activeFolder})}}
                 dropdownIsActive={activeCustomField === index}
+                sortDisplayValue={true}
             />
           </div>
         }
@@ -730,6 +732,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
             asyncCreateFn={(newItem)=>{ return addFolder(newItem)}}
             dropdownIsActive={activeDropdown === 'collections'}
             altColor='yellow'
+            sortDisplayValue={true}
         />
       </div>
 

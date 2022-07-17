@@ -26,7 +26,7 @@ const SubHeader = ({
   },[])
 
   return (
-    <section className={`${styles.container} ${additionalClass}`} style={{top: top}}>
+    <section id={"sub-header"} className={`${styles.container} ${additionalClass}`} style={{top: top}}>
       {PreComponent &&
         <PreComponent />
       }
