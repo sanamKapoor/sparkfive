@@ -2,9 +2,17 @@
   padding: 35px 32px;
 }
 
+.grid-wrapper{
+  margin-top: calc(55px + 3rem);
+}
+
 @media screen and (max-width: 900px) {
   .container {
     padding: 17.5px 16px;
+  }
+
+  .grid-wrapper{
+    margin-top: calc(55px + 1rem);
   }
 }
 

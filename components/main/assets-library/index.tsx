@@ -60,6 +60,7 @@ const AssetsLibrary = () => {
     setTotalAssets
   } = useContext(AssetContext)
 
+  const [top, setTop] = useState('calc(55px + 3rem)')
 
   const {advancedConfig, hasPermission} = useContext(UserContext)
 
@@ -689,6 +690,27 @@ const AssetsLibrary = () => {
     }
   }
 
+  const onChangeWidth = () => {
+    let remValue = '3rem'
+    if(window.innerWidth <= 900){
+      remValue = '1rem + 1px'
+    }
+
+    let el = document.getElementById('top-bar');
+    let style = getComputedStyle(el);
+
+    const headerTop = (document.getElementById('top-bar')?.offsetHeight || 55)
+    setTop(`calc(${headerTop}px + ${remValue} - ${style.paddingBottom} - ${style.paddingTop})`)
+  }
+
+  useEffect(()=>{
+    onChangeWidth()
+
+    window.addEventListener('resize', onChangeWidth);
+
+    return () => window.removeEventListener("resize", onChangeWidth);
+  },[])
+
   return (
     <>
       <AssetSubheader
@@ -715,7 +737,7 @@ const AssetsLibrary = () => {
                   openFilter={openFilter}
                   deletedAssets={false} />
               }
-              <div className={`${openFilter && styles['col-wrapper']}`}>
+              <div className={`${openFilter && styles['col-wrapper']} ${styles['grid-wrapper']}`} style={{marginTop: top}}>
                 <DropzoneProvider>
                   {advancedConfig.set && <AssetGrid
                       activeFolder={activeFolder}

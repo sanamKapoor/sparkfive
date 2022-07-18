@@ -3,11 +3,19 @@
   align-items: center;
   margin-bottom: 3rem;
   /*position: relative;*/
-  position: sticky;
+  position: fixed;
+  width: 100%;
   top: 0;
   left: 0;
   z-index: 1400;
   background-color: white;
+  padding: 35px 32px;
+}
+
+@media screen and (max-width: 900px) {
+  .container {
+    padding: 17.5px 16px;
+  }
 }
 
 .filters {
@@ -89,11 +97,11 @@
   .filter {
     display: flex;
     position: absolute;
-    right: 0;
+    right: 16px;
     width: 20px !important;
     height: auto;
     justify-content: center;
-    top: 0;
+    top: 17.5px;
   }
 
   .calendar {

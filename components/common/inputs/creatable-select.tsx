@@ -112,7 +112,7 @@ const CreatableSelect = ({
 
   const sort = (data) => {
     if(sortDisplayValue){
-      return _.orderBy(data, ['name'],['asc']);
+      return _.orderBy(data, [item => item.name.toLowerCase()],['asc']);
     }else{
       return data
     }

@@ -125,7 +125,7 @@ const TopBar = ({
 
 
   return (
-    <section className={styles.container} style={{top}}>
+    <section className={styles.container} style={{top}} id={'top-bar'}>
       {!deletedAssets ? <div className={styles.filters} >
         <img src={Utilities.search} onClick={setActiveSearchOverlay} className={styles.search} />
         <ul className={styles['tab-list']}>
