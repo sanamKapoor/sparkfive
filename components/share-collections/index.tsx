@@ -61,6 +61,8 @@ const ShareCollectionMain = () => {
     const [sharePath, setSharePath] = useState("")
     const [activeMode, setActiveMode] = useState('assets')
 
+    const [top, setTop] = useState('calc(55px + 3rem)')
+
     const processSubdomain = () => {
         return getSubdomain() || "danner"
     }
@@ -310,7 +312,26 @@ const ShareCollectionMain = () => {
         setActiveFolder(id)
     }
 
-    console.log('collections:', location.pathname)
+    const onChangeWidth = () => {
+        let remValue = '3rem'
+        if(window.innerWidth <= 900){
+            remValue = '1rem + 1px'
+        }
+
+        let el = document.getElementById('top-bar');
+        let style = getComputedStyle(el);
+
+        const headerTop = (document.getElementById('top-bar')?.offsetHeight || 55)
+        setTop(`calc(${headerTop}px + ${remValue} - ${style.paddingBottom} - ${style.paddingTop})`)
+    }
+
+    useEffect(()=>{
+        onChangeWidth()
+
+        window.addEventListener('resize', onChangeWidth);
+
+        return () => window.removeEventListener("resize", onChangeWidth);
+    },[])
 
 
     return (
@@ -328,7 +349,7 @@ const ShareCollectionMain = () => {
                     singleCollection={!!folderInfo.singleSharedCollectionId}
                     sharedAdvanceConfig={user ? undefined : advancedConfig}
                 />
-                <div className={`${openFilter && styles['col-wrapper']}`}>
+                <div className={`${openFilter && styles['col-wrapper']}`} style={{marginTop: top}}>
                     <AssetGrid
                         activeFolder={activeFolder}
                         getFolders={getFolders}
