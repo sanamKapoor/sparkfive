@@ -54,6 +54,8 @@ const ShareFolderMain = () => {
     const [sharePath, setSharePath] = useState('')
     const [activeMode, setActiveMode] = useState('assets')
 
+    const [top, setTop] = useState('calc(55px + 3rem)')
+
     const submitPassword = async (password, email) => {
         try {
             const { data } = await folderApi.authenticateCollection({ password, email, sharePath })
@@ -193,7 +195,7 @@ const ShareFolderMain = () => {
             setActivePasswordOverlay(false)
             const sharedFolder = data.sharedFolder
 
-            // Needed for navigation(arrows) information in detail-overlay 
+            // Needed for navigation(arrows) information in detail-overlay
             if (sharedFolder) {
                 const folders = [{...sharedFolder, assets: [...assets]}]
                 setFolders(folders)
@@ -298,6 +300,28 @@ const ShareFolderMain = () => {
         setActiveFolder(id)
     }
 
+
+    const onChangeWidth = () => {
+        let remValue = '3rem'
+        if(window.innerWidth <= 900){
+            remValue = '1rem + 1px'
+        }
+
+        let el = document.getElementById('top-bar');
+        let style = getComputedStyle(el);
+
+        const headerTop = (document.getElementById('top-bar')?.offsetHeight || 55)
+        setTop(`calc(${headerTop}px + ${remValue} - ${style.paddingBottom} - ${style.paddingTop})`)
+    }
+
+    useEffect(()=>{
+        onChangeWidth()
+
+        window.addEventListener('resize', onChangeWidth);
+
+        return () => window.removeEventListener("resize", onChangeWidth);
+    },[])
+
     return (
         <>
             <main className={styles.container}>
@@ -313,7 +337,7 @@ const ShareFolderMain = () => {
                     singleCollection={!!folderInfo.singleSharedCollectionId}
                     sharedAdvanceConfig={user ? undefined : advancedConfig}
                 />
-                <div className={`${openFilter && styles['col-wrapper']}`}>
+                <div className={`${openFilter && styles['col-wrapper']}`} style={{marginTop: top}}>
                     <AssetGrid
                         activeFolder={activeFolder}
                         getFolders={getFolders}
