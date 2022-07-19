@@ -18,7 +18,7 @@ const ShareFolderLayout = ({ children, advancedLink = false }) => {
 
 	return (
 		<>
-			<header className={styles.header}>
+			<header className={styles.header} id={"share-header"}>
 				<div className={styles['image-wrapper']}>
 					<img
 						className={styles['logo-img']}
