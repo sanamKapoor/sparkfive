@@ -1,4 +1,5 @@
 // External
+import _ from "lodash"
 import styles from './detail-side-panel.module.css'
 import update from 'immutability-helper'
 import ReactCreatableSelect from 'react-select/creatable'
@@ -39,6 +40,10 @@ import ProductAddition from './product-addition'
 // Constants
 import { ASSET_EDIT } from '../../../constants/permissions'
 
+const sort = (data) => {
+  return _.orderBy(data, [item => (item.name || "")?.toLowerCase()],['asc']);
+}
+
 // Server DO NOT return full custom field slots including empty array, so we will generate empty array here
 // The order of result should be match with order of custom field list
 const mappingCustomFieldData = (list, valueList) => {
@@ -47,6 +52,7 @@ const mappingCustomFieldData = (list, valueList) => {
     let value = valueList.filter(valueField => valueField.id === field.id)
 
     if(value.length > 0){
+      value[0].values = sort(value[0].values);
       rs.push(value[0])
     }else{
       let customField = { ...field }
@@ -115,9 +121,9 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
   useEffect(() => {
     const _nonAiTags = (tags || []).filter(tag => tag.type !== 'AI')
     const _aiTags = (tags || []).filter(tag => tag.type === 'AI')
-    setNonAiTags(_nonAiTags)
-    setAiTags(_aiTags)
-    setCampaigns(campaigns)
+    setNonAiTags(sort(_nonAiTags))
+    setAiTags(sort(_aiTags))
+    setCampaigns(sort(campaigns))
     setProjects(projects)
     setSelectedFolders(folders)
 
@@ -481,7 +487,10 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
           avilableItems={inputCampaigns}
           setAvailableItems={setInputCampaigns}
           selectedItems={assetCampaigns}
-          setSelectedItems={setCampaigns}
+          setSelectedItems={(value)=>{
+            setIsLoading(false)
+            setCampaigns(value)
+          }}
           onAddOperationFinished={(stateUpdate) => {
             updateAssetState({
               campaigns: { $set: stateUpdate }
@@ -489,14 +498,21 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
             loadCampaigns()
           }}
           onRemoveOperationFinished={async (index, stateUpdate) => {
+            setIsLoading(true);
+
             await assetApi.removeCampaign(id, assetCampaigns[index].id)
             updateAssetState({
               campaigns: { $set: stateUpdate }
             })
+
+            setIsLoading(false);
           }}
           onOperationFailedSkipped={() => setActiveDropdown('')}
           isShare={isShare}
-          asyncCreateFn={(newItem) => assetApi.addCampaign(id, newItem)}
+          asyncCreateFn={(newItem) => {
+            setIsLoading(true);
+            return assetApi.addCampaign(id, newItem)
+          }}
           dropdownIsActive={activeDropdown === 'campaigns'}
           altColor='yellow'
         />
@@ -511,7 +527,10 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
           avilableItems={availNonAiTags}
           setAvailableItems={setAvailNonAiTags}
           selectedItems={nonAiTags}
-          setSelectedItems={setNonAiTags}
+          setSelectedItems={(value)=>{
+            setIsLoading(false)
+            setNonAiTags(value)}
+        }
           onAddOperationFinished={(stateUpdate) => {
             updateAssetState({
               tags: { $set: stateUpdate.concat(aiTags) }
@@ -519,14 +538,22 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
             loadTags()
           }}
           onRemoveOperationFinished={async (index, stateUpdate) => {
+            setIsLoading(true);
+
             await assetApi.removeTag(id, nonAiTags[index].id)
             updateAssetState({
               tags: { $set: stateUpdate.concat(aiTags) }
             })
+
+            setIsLoading(false);
           }}
           onOperationFailedSkipped={() => setActiveDropdown('')}
           isShare={isShare}
-          asyncCreateFn={(newItem) => assetApi.addTag(id, newItem)}
+          asyncCreateFn={(newItem) => {
+            setIsLoading(true);
+
+            return assetApi.addTag(id, newItem)
+          }}
           dropdownIsActive={activeDropdown === 'tags'}
           sortDisplayValue={true}
         />
@@ -544,7 +571,10 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
           avilableItems={availAiTags}
           setAvailableItems={setAvailNonAiTags}
           selectedItems={aiTags}
-          setSelectedItems={setAiTags}
+          setSelectedItems={(value)=>{
+            setIsLoading(false)
+            setAiTags(value)
+          }}
           onAddOperationFinished={(stateUpdate) => {
             updateAssetState({
               tags: { $set: stateUpdate.concat(nonAiTags) }
@@ -552,14 +582,22 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
             loadTags()
           }}
           onRemoveOperationFinished={async (index, stateUpdate) => {
+            setIsLoading(true);
+
             await assetApi.removeTag(id, aiTags[index].id)
             updateAssetState({
               tags: { $set: stateUpdate.concat(nonAiTags) }
             })
+
+            setIsLoading(false);
           }}
           onOperationFailedSkipped={() => setActiveDropdown('')}
           isShare={isShare}
-          asyncCreateFn={(newItem) => assetApi.addTag(id, {...newItem, type: 'AI'})}
+          asyncCreateFn={(newItem) => {
+            setIsLoading(true);
+
+            return assetApi.addTag(id, {...newItem, type: 'AI'})}
+        }
           dropdownIsActive={activeDropdown === 'ai-tags'}
           sortDisplayValue={true}
         />
