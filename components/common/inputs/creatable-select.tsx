@@ -47,6 +47,17 @@ const CreatableSelect = ({
 
   const { hasPermission } = useContext(UserContext)
 
+  const sort = (data) => {
+    if(sortDisplayValue){
+      data.map((item)=>{
+        item.values = _.orderBy(item.values, [item => item.name.toLowerCase()],['asc']);
+      })
+      return data
+    }else{
+      return data
+    }
+  }
+
   const onChange = async (selected, actionMeta) => {
     if(actionMeta.action !== 'clear'){
       const newItem = await addItem(selected, actionMeta.action === 'create-option')
@@ -60,9 +71,9 @@ const CreatableSelect = ({
     if (isBulkEdit) {
       if (!item || selectedItems.findIndex(selectedItem => item.label === selectedItem.name) !== -1) return
       if (!isNew) {
-        setSelectedItems(update(selectedItems, { $push: [item] }))
+        setSelectedItems(sort(update(selectedItems, { $push: [item] })))
       } else {
-        setSelectedItems(update(selectedItems, { $push: [{ ...item, name: item.value }] }))
+        setSelectedItems(sort(update(selectedItems, { $push: [{ ...item, name: item.value }] })))
       }
       onAddOperationFinished()
       return item
@@ -78,10 +89,10 @@ const CreatableSelect = ({
           let stateItemsUpdate
           if (!isNew) {
             stateItemsUpdate = update(selectedItems, { $push: [newItem] })
-            setSelectedItems(stateItemsUpdate)
+            setSelectedItems(sort(stateItemsUpdate))
           } else {
             stateItemsUpdate = update(selectedItems, { $push: [data] })
-            setSelectedItems(stateItemsUpdate)
+            setSelectedItems(sort(stateItemsUpdate))
             setAvailableItems(update(avilableItems, { $push: [data] }))
           }
           onAddOperationFinished(stateItemsUpdate)
@@ -98,23 +109,15 @@ const CreatableSelect = ({
 
   const removeItem = async (index, id) => {
     if (isBulkEdit) {
-      setSelectedItems(update(selectedItems, { $splice: [[index, 1]] }))
+      setSelectedItems(sort(update(selectedItems, { $splice: [[index, 1]] })))
     } else {
       try {
         let stateItemsUpdate = update(selectedItems, { $splice: [[index, 1]] })
-        setSelectedItems(stateItemsUpdate)
+        setSelectedItems(sort(stateItemsUpdate))
         onRemoveOperationFinished(index, stateItemsUpdate, id)
       } catch (err) {
         // TODO: Error if failure for whatever reason
       }
-    }
-  }
-
-  const sort = (data) => {
-    if(sortDisplayValue){
-      return _.orderBy(data, [item => item.name.toLowerCase()],['asc']);
-    }else{
-      return data
     }
   }
 
@@ -125,7 +128,7 @@ const CreatableSelect = ({
       {selectOneComponent}
       <div className={'normal-text'}>
         <ul className={`tags-list ${styles['tags-list']}`}>
-          {sort(selectedItems || []).map((item, index) => (
+          {(selectedItems || []).map((item, index) => (
             <li key={item.id || item.value}>
               <Tag
                 data={item}
