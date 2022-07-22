@@ -697,10 +697,12 @@ const AssetsLibrary = () => {
     }
 
     let el = document.getElementById('top-bar');
+    let header = document.getElementById('main-header');
+    let subHeader = document.getElementById('sub-header');
     let style = getComputedStyle(el);
 
     const headerTop = (document.getElementById('top-bar')?.offsetHeight || 55)
-    setTop(`calc(${headerTop}px + ${remValue} - ${style.paddingBottom} - ${style.paddingTop})`)
+    setTop(`calc(${headerTop}px + ${header?.clientHeight || 0}px + ${remValue} - ${style.paddingBottom} - ${style.paddingTop})`)
   }
 
   useEffect(()=>{

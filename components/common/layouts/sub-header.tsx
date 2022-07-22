@@ -20,6 +20,10 @@ const SubHeader = ({
   useEffect(()=>{
     onChangeWidth()
 
+    setTimeout(()=>{
+      onChangeWidth()
+    },500)
+
     window.addEventListener('resize', onChangeWidth);
 
     return () => window.removeEventListener("resize", onChangeWidth);
