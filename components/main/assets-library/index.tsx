@@ -699,10 +699,14 @@ const AssetsLibrary = () => {
     let el = document.getElementById('top-bar');
     let header = document.getElementById('main-header');
     let subHeader = document.getElementById('sub-header');
-    let style = getComputedStyle(el);
 
-    const headerTop = (document.getElementById('top-bar')?.offsetHeight || 55)
-    setTop(`calc(${headerTop}px + ${header?.clientHeight || 0}px + ${remValue} - ${style.paddingBottom} - ${style.paddingTop})`)
+    if(el){
+      let style = getComputedStyle(el);
+
+      const headerTop = (document.getElementById('top-bar')?.offsetHeight || 55)
+      setTop(`calc(${headerTop}px + ${header?.clientHeight || 0}px + ${remValue} - ${style.paddingBottom} - ${style.paddingTop})`)
+    }
+
   }
 
   useEffect(()=>{
@@ -725,10 +729,10 @@ const AssetsLibrary = () => {
         setRenameModalOpen={setRenameModalOpen}
         activeSortFilter={activeSortFilter}
       />
-      {hasPermission([ASSET_ACCESS]) ?
+      {(hasPermission([ASSET_ACCESS])  || hasPermission([ASSET_UPLOAD_APPROVAL]))?
           <>
             <main className={`${styles.container}`}>
-              {advancedConfig.set && <TopBar
+              {advancedConfig.set && hasPermission([ASSET_ACCESS]) && <TopBar
                   activeSortFilter={activeSortFilter}
                   setActiveSortFilter={setActiveSortFilter}
                   setActiveView={setActiveView}
