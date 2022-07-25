@@ -72,7 +72,7 @@ const UploadApproval = () => {
     } = useContext(AssetContext)
 
     const { setIsLoading } = useContext(LoadingContext);
-
+    const [top, setTop] = useState('calc(55px + 3rem)')
     const [assets, setAssets] = useState([])
     const [selectedAssets, setSelectedAssets] = useState([])
     const [duplicateAssets, setDuplicateAssets] = useState([]);
@@ -1085,7 +1085,7 @@ const UploadApproval = () => {
         titleText={"File Upload Page"}
         showAssetAddition={false}
       />
-        <div className={`row ${styles['root-row']}`}>
+        <div className={`row ${styles['root-row']}`} style={{marginTop: top}}>
             <div className={`col-70 height-100`}>
                 <main className={`${styles.container} p-r-0`}>
                     { <>
