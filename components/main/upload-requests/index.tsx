@@ -89,6 +89,8 @@ const UploadRequest = () => {
     const {
     } = useContext(AssetContext)
 
+    const [top, setTop] = useState('calc(55px + 3rem)')
+
     const { setIsLoading } = useContext(LoadingContext);
 
     const [approvals, setApprovals] = useState( [])
@@ -1030,6 +1032,36 @@ const UploadRequest = () => {
         }
     },[inputCustomFields])
 
+    const onChangeWidth = () => {
+        let remValue = '3rem'
+        if(window.innerWidth <= 900){
+            remValue = '1rem + 1px'
+        }
+
+        let el = document.getElementById('top-bar');
+        let header = document.getElementById('main-header');
+        let subHeader = document.getElementById('sub-header');
+        if(el){
+            let style = getComputedStyle(el);
+
+            const headerTop = (document.getElementById('top-bar')?.offsetHeight || 55)
+            setTop(`calc(${headerTop}px + ${header?.clientHeight || 0}px + ${remValue} - ${style.paddingBottom} - ${style.paddingTop})`)
+        }
+
+    }
+
+    useEffect(()=>{
+        onChangeWidth()
+
+        setTimeout(()=>{
+            onChangeWidth()
+        },500)
+
+        window.addEventListener('resize', onChangeWidth);
+
+        return () => window.removeEventListener("resize", onChangeWidth);
+    },[])
+
   return (
     <>
       <AssetSubheader
@@ -1044,7 +1076,7 @@ const UploadRequest = () => {
         titleText={"Upload Requests"}
         showAssetAddition={false}
       />
-        <div className={`row ${mode === "view" ? styles['root-row'] : ""}`}>
+        <div className={`row ${mode === "view" ? styles['root-row'] : ""}`} style={{marginTop: top}}>
             <div className={`col-70 height-100`}>
                 <main className={`${styles.container} p-r-0`}>
                     {mode === "view" && <div className={`${styles['button-wrapper']}`}>
