@@ -587,10 +587,11 @@ const AssetsLibrary = () => {
     if (activeMode === 'assets') {
       const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
       const selectedValue = !assets[assetIndex].isSelected
+      // Comment this because this will return wrong couting selected asset if user select all then unselect some assets
       // Toggle unselect when selected all will disable selected all
-      if(!selectedValue && selectedAllAssets){
-        selectAllAssets(false)
-      }
+      // if(!selectedValue && selectedAllAssets){
+      //   selectAllAssets(false)
+      // }
       setAssets(update(assets, {
         [assetIndex]: {
           isSelected: { $set: !assets[assetIndex].isSelected }

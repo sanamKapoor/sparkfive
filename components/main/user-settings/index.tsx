@@ -40,7 +40,7 @@ const SETTING_OPTIONS = {
   profile: { label: 'Profile', permissions: [], content: Profile },
   billing: { label: 'Billing', permissions: [SETTINGS_BILLING], content: Billing },
   company: { label: 'Company', permissions: [SETTINGS_COMPANY], content: Company },
-  plan: { label: 'Plan', permissions: [SETTINGS_PLAN], content: Plan },
+  // plan: { label: 'Plan', permissions: [SETTINGS_PLAN], content: Plan },
   security: { label: 'Security', permissions: [SETTINGS_SECURITY], content: Security },
   team: { label: 'Team', permissions: [SETTINGS_TEAM], content: Team },
   notifications: { label: 'Notifications', permissions: [], content: Notifications },
