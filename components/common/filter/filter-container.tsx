@@ -17,7 +17,7 @@ import ResolutionFilter from './resolution-filter'
 
 const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiveSortFilter, clearFilters, isFolder = false, isShare = false }) => {
 
-    const [expandedMenus, setExpandedMenus] = useState(isFolder ? ['folders'] : ['tags', 'aiTags', 'channels', 'campaigns'])
+    const [expandedMenus, setExpandedMenus] = useState(isFolder ? ['folders'] : ['tags'])
     const [stickyMenuScroll, setStickyMenuScroll] = useState(false)
     const [customFieldList, setCustomFieldList] = useState([])
     const {advancedConfig} = useContext(UserContext)
@@ -76,10 +76,10 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                 fields.push(`customFields-${index}`)
 
             })
-
-            setExpandedMenus(update(expandedMenus, {
-                $push: fields
-            }))
+            //
+            // setExpandedMenus(update(expandedMenus, {
+            //     $push: fields
+            // }))
 
             let filter = {}
             let fieldValues = {}
