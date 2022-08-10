@@ -446,6 +446,8 @@ const AssetGrid = ({
           }
           openDeleteAsset={() => openDeleteAsset(initAsset.asset.id)}
           closeOverlay={() => setInitAsset(undefined)}
+          loadMore={loadMore}
+          availableNext={nextPage !== -1}
         />
       )}
     </section>
