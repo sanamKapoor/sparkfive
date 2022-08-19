@@ -274,17 +274,17 @@ const SidePanelBulk = ({
       <section className={styles['first-section']}>
         <p>{`Editing (${elementsSelected.length}) files`}</p>
       </section>
-      {addMode &&
-        <section className={styles['field-wrapper']} >
-          <div className={`secondary-text ${styles.field}`}>Channel</div>
-          <ChannelSelector
-            channel={channel || undefined}
-            isShare={false}
-            onLabelClick={() => { }}
-            handleChannelChange={(option) => updateChannel(option)}
-          />
-        </section>
-      }
+      {/*{addMode &&*/}
+      {/*  <section className={styles['field-wrapper']} >*/}
+      {/*    <div className={`secondary-text ${styles.field}`}>Channel</div>*/}
+      {/*    <ChannelSelector*/}
+      {/*      channel={channel || undefined}*/}
+      {/*      isShare={false}*/}
+      {/*      onLabelClick={() => { }}*/}
+      {/*      handleChannelChange={(option) => updateChannel(option)}*/}
+      {/*    />*/}
+      {/*  </section>*/}
+      {/*}*/}
 
       {/*{addMode &&*/}
       {/*  <section className={styles['field-wrapper']} >*/}
