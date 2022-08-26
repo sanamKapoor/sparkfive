@@ -25,6 +25,7 @@ import selectOptions from '../../utils/select-options'
 
 // Utils
 import { getSubdomain } from '../../utils/domain'
+import Spinner from "../common/spinners/spinner";
 
 const ShareCollectionMain = () => {
     const router = useRouter()
@@ -60,6 +61,7 @@ const ShareCollectionMain = () => {
     const [activeView, setActiveView] = useState('grid')
     const [sharePath, setSharePath] = useState("")
     const [activeMode, setActiveMode] = useState('assets')
+    const [loading, setLoading] = useState(true)
 
     const [top, setTop] = useState('calc(55px + 3rem)')
 
@@ -106,6 +108,8 @@ const ShareCollectionMain = () => {
             setFolderInfo(data)
             setAdvancedConfig(data.customAdvanceOptions)
             setActivePasswordOverlay(false)
+
+            setLoading(false)
         } catch (err) {
             // If not 500, must be auth error, request user password
             if (err.response.status !== 500) {
@@ -116,6 +120,8 @@ const ShareCollectionMain = () => {
             if (displayError) {
                 toastUtils.error('Wrong email/password or invalid link, please try again')
             }
+
+            setLoading(false)
         }
     }
 
@@ -134,7 +140,7 @@ const ShareCollectionMain = () => {
     }, [router.asPath])
 
     useEffect(() => {
-        if (sharePath) {
+        if (sharePath && sharePath !== '[team]/[id]') {
             getShareInfo()
         }
     }, [sharePath])
@@ -313,16 +319,18 @@ const ShareCollectionMain = () => {
     }
 
     const onChangeWidth = () => {
-        let remValue = '3rem'
-        if(window.innerWidth <= 900){
-            remValue = '1rem + 1px'
+        if(!loading){
+            let remValue = '3rem'
+            if(window.innerWidth <= 900){
+                remValue = '1rem + 1px'
+            }
+
+            let el = document.getElementById('top-bar');
+            let style = getComputedStyle(el);
+
+            const headerTop = (document.getElementById('top-bar')?.offsetHeight || 55)
+            setTop(`calc(${headerTop}px + ${remValue} - ${style.paddingBottom} - ${style.paddingTop})`)
         }
-
-        let el = document.getElementById('top-bar');
-        let style = getComputedStyle(el);
-
-        const headerTop = (document.getElementById('top-bar')?.offsetHeight || 55)
-        setTop(`calc(${headerTop}px + ${remValue} - ${style.paddingBottom} - ${style.paddingTop})`)
     }
 
     useEffect(()=>{
@@ -333,10 +341,14 @@ const ShareCollectionMain = () => {
         return () => window.removeEventListener("resize", onChangeWidth);
     },[])
 
+    useEffect(()=>{
+        onChangeWidth()
+    },[loading])
+
 
     return (
         <>
-            <main className={styles.container}>
+            {!loading && <main className={styles.container}>
                 <TopBar
                     activeSortFilter={activeSortFilter}
                     setActiveSortFilter={setActiveSortFilter}
@@ -375,16 +387,17 @@ const ShareCollectionMain = () => {
                     />
                     }
                 </div>
-            </main >
-            <AssetOps />
-            {activePasswordOverlay &&
+            </main >}
+            {!loading && <AssetOps />}
+            {loading && <div className={"row justify-center"}><Spinner /></div>}
+            {activePasswordOverlay && !loading &&
                 <PasswordOverlay
                     fields={folderInfo?.requiredFields?.length > 0 ? folderInfo?.requiredFields : ["password"]}
                     onPasswordSubmit={submitPassword}
                     logo={folderInfo?.teamIcon}
                 />
             }
-            {activeSearchOverlay &&
+            {activeSearchOverlay && !loading &&
                 <SearchOverlay
                     sharePath={sharePath}
                     closeOverlay={closeSearchOverlay}
