@@ -82,7 +82,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 		setName('')
 		setIsPublic(true)
 		setBasic(true)
-		setExpired(true)
+		setExpired(false)
 		setExpiredPeriod(expireOptions[1])
 		setExpiredAt(getDayToCurrentDate(expireOptions[1].value))
 		setShareJWT("")
