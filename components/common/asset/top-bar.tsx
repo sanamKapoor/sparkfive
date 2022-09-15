@@ -41,13 +41,19 @@ const TopBar = ({
   const [top, setTop] = useState(112 + 83 - 0.5)
 
   const onChangeWidth = () => {
-    const headerTop = (document.getElementById('main-header')?.offsetHeight || 112) - 0.5
-    const subHeader = (document.getElementById('sub-header')?.offsetHeight || 83) - 0.5
+    const headerTop = ((document.getElementById('main-header') || document.getElementById('share-header'))?.offsetHeight || 112) - 0.5
+    const subHeader = (document.getElementById('sub-header')?.offsetHeight || 0) - 0.5
+
     setTop(headerTop+subHeader)
   }
 
   useEffect(()=>{
     onChangeWidth()
+
+    // Sometime, header with logo is not loaded fully so to make sure logo is loaded, we add more change here
+    setTimeout(()=>{
+      onChangeWidth()
+    },500)
 
     window.addEventListener('resize', onChangeWidth);
 
@@ -125,7 +131,7 @@ const TopBar = ({
 
 
   return (
-    <section className={styles.container} style={{top}}>
+    <section className={styles.container} style={{top}} id={'top-bar'}>
       {!deletedAssets ? <div className={styles.filters} >
         <img src={Utilities.search} onClick={setActiveSearchOverlay} className={styles.search} />
         <ul className={styles['tab-list']}>

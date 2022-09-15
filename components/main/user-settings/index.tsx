@@ -40,7 +40,7 @@ const SETTING_OPTIONS = {
   profile: { label: 'Profile', permissions: [], content: Profile },
   billing: { label: 'Billing', permissions: [SETTINGS_BILLING], content: Billing },
   company: { label: 'Company', permissions: [SETTINGS_COMPANY], content: Company },
-  plan: { label: 'Plan', permissions: [SETTINGS_PLAN], content: Plan },
+  // plan: { label: 'Plan', permissions: [SETTINGS_PLAN], content: Plan },
   security: { label: 'Security', permissions: [SETTINGS_SECURITY], content: Security },
   team: { label: 'Team', permissions: [SETTINGS_TEAM], content: Team },
   notifications: { label: 'Notifications', permissions: [], content: Notifications },
@@ -57,6 +57,8 @@ const UserSettings = () => {
   const { hasPermission } = useContext(UserContext)
 
   const router = useRouter()
+
+  const [top, setTop] = useState('calc(55px + 3rem)')
 
   useEffect(() => {
     const activeView = urlUtils.getPathId()
@@ -87,8 +89,38 @@ const UserSettings = () => {
     }
   }
 
+  const onChangeWidth = () => {
+    let remValue = '3rem'
+    if(window.innerWidth <= 900){
+      remValue = '1rem + 1px'
+    }
+
+    let el = document.getElementById('top-bar');
+    let header = document.getElementById('main-header');
+    let subHeader = document.getElementById('sub-header');
+    if(el){
+      let style = getComputedStyle(el);
+
+      const headerTop = (document.getElementById('top-bar')?.offsetHeight || 55)
+      setTop(`calc(${headerTop}px + ${header?.clientHeight || 0}px + ${remValue} - ${style.paddingBottom} - ${style.paddingTop})`)
+    }
+
+  }
+
+  useEffect(()=>{
+    onChangeWidth()
+
+    setTimeout(()=>{
+      onChangeWidth()
+    },500)
+
+    window.addEventListener('resize', onChangeWidth);
+
+    return () => window.removeEventListener("resize", onChangeWidth);
+  },[])
+
   return (
-    <main className={`${styles.container}`}>
+    <main className={`${styles.container}`} style={{marginTop: top}}>
       <div className={styles.settings}>
         <Button text={'Settings'} onClick={toggleSettings} type='button' styleTypes={['secondary']} />
       </div>

@@ -60,6 +60,7 @@ const AssetsLibrary = () => {
     setTotalAssets
   } = useContext(AssetContext)
 
+  const [top, setTop] = useState('calc(55px + 3rem)')
 
   const {advancedConfig, hasPermission} = useContext(UserContext)
 
@@ -586,10 +587,11 @@ const AssetsLibrary = () => {
     if (activeMode === 'assets') {
       const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
       const selectedValue = !assets[assetIndex].isSelected
+      // Comment this because this will return wrong couting selected asset if user select all then unselect some assets
       // Toggle unselect when selected all will disable selected all
-      if(!selectedValue && selectedAllAssets){
-        selectAllAssets(false)
-      }
+      // if(!selectedValue && selectedAllAssets){
+      //   selectAllAssets(false)
+      // }
       setAssets(update(assets, {
         [assetIndex]: {
           isSelected: { $set: !assets[assetIndex].isSelected }
@@ -689,6 +691,33 @@ const AssetsLibrary = () => {
     }
   }
 
+  const onChangeWidth = () => {
+    let remValue = '3rem'
+    if(window.innerWidth <= 900){
+      remValue = '1rem + 1px'
+    }
+
+    let el = document.getElementById('top-bar');
+    let header = document.getElementById('main-header');
+    let subHeader = document.getElementById('sub-header');
+
+    if(el){
+      let style = getComputedStyle(el);
+
+      const headerTop = (document.getElementById('top-bar')?.offsetHeight || 55)
+      setTop(`calc(${headerTop}px + ${header?.clientHeight || 0}px + ${remValue} - ${style.paddingBottom} - ${style.paddingTop})`)
+    }
+
+  }
+
+  useEffect(()=>{
+    onChangeWidth()
+
+    window.addEventListener('resize', onChangeWidth);
+
+    return () => window.removeEventListener("resize", onChangeWidth);
+  },[])
+
   return (
     <>
       <AssetSubheader
@@ -701,10 +730,10 @@ const AssetsLibrary = () => {
         setRenameModalOpen={setRenameModalOpen}
         activeSortFilter={activeSortFilter}
       />
-      {hasPermission([ASSET_ACCESS]) ?
+      {(hasPermission([ASSET_ACCESS])  || hasPermission([ASSET_UPLOAD_APPROVAL]))?
           <>
             <main className={`${styles.container}`}>
-              {advancedConfig.set && <TopBar
+              {advancedConfig.set && hasPermission([ASSET_ACCESS]) && <TopBar
                   activeSortFilter={activeSortFilter}
                   setActiveSortFilter={setActiveSortFilter}
                   setActiveView={setActiveView}
@@ -715,7 +744,7 @@ const AssetsLibrary = () => {
                   openFilter={openFilter}
                   deletedAssets={false} />
               }
-              <div className={`${openFilter && styles['col-wrapper']}`}>
+              <div className={`${openFilter && styles['col-wrapper']} ${styles['grid-wrapper']}`} style={{marginTop: top}}>
                 <DropzoneProvider>
                   {advancedConfig.set && <AssetGrid
                       activeFolder={activeFolder}

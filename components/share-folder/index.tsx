@@ -18,6 +18,7 @@ import SearchOverlay from '../main/search-overlay-assets'
 import FilterContainer from '../common/filter/filter-container'
 
 import selectOptions from '../../utils/select-options'
+import Spinner from "../common/spinners/spinner";
 
 const ShareFolderMain = () => {
     const router = useRouter()
@@ -48,11 +49,14 @@ const ShareFolderMain = () => {
 
     const [firstLoaded, setFirstLoaded] = useState(false)
     const [activePasswordOverlay, setActivePasswordOverlay] = useState(true)
+    const [loading, setLoading] = useState(true)
     const [activeSearchOverlay, setActiveSearchOverlay] = useState(false)
     const [openFilter, setOpenFilter] = useState(false)
     const [activeView, setActiveView] = useState('grid')
     const [sharePath, setSharePath] = useState('')
     const [activeMode, setActiveMode] = useState('assets')
+
+    const [top, setTop] = useState('calc(55px + 3rem)')
 
     const submitPassword = async (password, email) => {
         try {
@@ -134,7 +138,7 @@ const ShareFolderMain = () => {
     }, [router.asPath])
 
     useEffect(() => {
-        if (sharePath) {
+        if (sharePath && sharePath !== '[team]/[id]/[name]') {
             getFolderInfo()
         }
     }, [sharePath])
@@ -193,12 +197,14 @@ const ShareFolderMain = () => {
             setActivePasswordOverlay(false)
             const sharedFolder = data.sharedFolder
 
-            // Needed for navigation(arrows) information in detail-overlay 
+            // Needed for navigation(arrows) information in detail-overlay
             if (sharedFolder) {
                 const folders = [{...sharedFolder, assets: [...assets]}]
                 setFolders(folders)
                 setActiveFolder(sharedFolder.id)
             }
+
+            setLoading(false)
 
         } catch (err) {
             // If not 500, must be auth error, request user password
@@ -210,6 +216,8 @@ const ShareFolderMain = () => {
             if (displayError) {
                 toastUtils.error('Wrong password or invalid link, please try again')
             }
+
+            setLoading(false)
         }
     }
 
@@ -298,9 +306,37 @@ const ShareFolderMain = () => {
         setActiveFolder(id)
     }
 
+
+    const onChangeWidth = () => {
+        if(!loading){
+            let remValue = '3rem'
+            if(window.innerWidth <= 900){
+                remValue = '1rem + 1px'
+            }
+
+            let el = document.getElementById('top-bar');
+            let style = getComputedStyle(el);
+
+            const headerTop = (document.getElementById('top-bar')?.offsetHeight || 55)
+            setTop(`calc(${headerTop}px + ${remValue} - ${style.paddingBottom} - ${style.paddingTop})`)
+        }
+    }
+
+    useEffect(()=>{
+        onChangeWidth()
+
+        window.addEventListener('resize', onChangeWidth);
+
+        return () => window.removeEventListener("resize", onChangeWidth);
+    },[])
+
+    useEffect(()=>{
+        onChangeWidth()
+    },[loading])
+
     return (
         <>
-            <main className={styles.container}>
+            {!loading && <main className={styles.container}>
                 <TopBar
                     activeSortFilter={activeSortFilter}
                     setActiveSortFilter={setActiveSortFilter}
@@ -313,7 +349,7 @@ const ShareFolderMain = () => {
                     singleCollection={!!folderInfo.singleSharedCollectionId}
                     sharedAdvanceConfig={user ? undefined : advancedConfig}
                 />
-                <div className={`${openFilter && styles['col-wrapper']}`}>
+                <div className={`${openFilter && styles['col-wrapper']}`} style={{marginTop: top}}>
                     <AssetGrid
                         activeFolder={activeFolder}
                         getFolders={getFolders}
@@ -339,16 +375,17 @@ const ShareFolderMain = () => {
                         />
                     }
                 </div>
-            </main >
-            <AssetOps />
-            {activePasswordOverlay &&
+            </main >}
+            {!loading && <AssetOps />}
+            {loading && <div className={"row justify-center"}><Spinner /></div>}
+            {activePasswordOverlay && !loading  &&
                 <PasswordOverlay
                     fields={folderInfo?.requiredFields?.length > 0 ? folderInfo?.requiredFields : ["password"]}
                     onPasswordSubmit={submitPassword}
                     logo={folderInfo?.teamIcon}
                 />
             }
-            {activeSearchOverlay &&
+            {activeSearchOverlay && !loading &&
                 <SearchOverlay
                     sharePath={sharePath}
                     closeOverlay={closeSearchOverlay}

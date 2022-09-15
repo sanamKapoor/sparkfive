@@ -419,7 +419,7 @@ const GuestUpload = () => {
     }
     useEffect(()=>{
         // If code is declared, use it to get link info
-        if(query.code){
+        if(query?.code){
             // Get link info
             getLinkInfo()
         }

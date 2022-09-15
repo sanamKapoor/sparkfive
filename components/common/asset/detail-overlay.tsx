@@ -97,6 +97,7 @@ const DetailOverlay = ({
   sharePath = "",
   activeFolder = '',
   initialParams,
+  availableNext = true
 }) => {
   const { hasPermission } = useContext(UserContext);
   const { user, cdnAccess } = useContext(UserContext);
@@ -110,7 +111,7 @@ const DetailOverlay = ({
 
   const [activeSideComponent, setActiveSidecomponent] = useState("detail");
 
-  const { assets, setAssets, folders, needsFetch, updateDownloadingStatus, setDetailOverlayId } =
+  const { assets, setAssets, folders, needsFetch, updateDownloadingStatus, setDetailOverlayId, totalAssets } =
     useContext(AssetContext);
 
   const [sideOpen, setSideOpen] = useState(true);
@@ -198,9 +199,9 @@ const DetailOverlay = ({
   const _setActiveCollection = () => {
     if (activeFolder) {
       const folder = folders.find(folder => folder.id === activeFolder);
-      if (folder.assets.length === 0 && assets && assets.length) {
+      // if (folder.assets.length === 0 && assets && assets.length) {
         folder.assets = [...assets];
-      }
+      // }
       setActiveCollection(folder);
       const assetIndx = assets.findIndex(item => item.asset && item.asset.id === asset.id) + 1
       setAssetIndex(assetIndx);
@@ -350,6 +351,18 @@ const DetailOverlay = ({
       
       // set new rendering size in the container
       setDetailPosSize({...detailPosSize, width: newW, height: newH });
+
+      // const {newW, newH} = calculateRenderSize(value.width, value.height);
+      //
+      // // calculate actual height/width with respect to display size
+      // const pixelW = currentAsset.dimensionWidth/defaultSize.width;
+      // const pixelH = currentAsset.dimensionHeight/defaultSize.height;
+      // setWidth(Math.round(newW*pixelW));
+      // setHeight(Math.round(newH*pixelH));
+      //
+      // // set new rendering size in the container
+      // setDetailPosSize({...detailPosSize, width: newW, height: newH });
+
 
       setSize(value);
     }
@@ -666,7 +679,8 @@ const DetailOverlay = ({
     if (assets[newIndx]) {
       closeOverlay();
       setDetailOverlayId(assets[newIndx].asset.id)
-      if (newIndx === (assets.length - 1) && assets.length < activeCollection.assets.length) {
+      if (newIndx === (assets.length - 1)) {
+        console.log(`Load more`)
         loadMore()
       }
     }
@@ -873,13 +887,13 @@ const DetailOverlay = ({
                       <IconClickable src={Utilities.arrowPrev} onClick={() => navigateOverlay(-1)} />
                     </span>
                   }
-                  {assets.length && assets[assets.length - 1].asset && assets[assets.length - 1].asset.id !== asset.id &&
+                  {availableNext &&
                     <span className={styles['arrow-next']}>
                       <IconClickable src={Utilities.arrowNext} onClick={() => navigateOverlay(1)} />
                     </span>
                   }
                 </div>
-                <span>{assetIndex} of {activeCollection.assets.length} in {activeCollection?.name} collection</span>
+                <span>{assetIndex} of {totalAssets} in {activeCollection?.name} collection</span>
               </div>
             }
           </div>
@@ -939,9 +953,9 @@ const DetailOverlay = ({
           )}
 
           {activeSideComponent === "notes" && notes && (
-            <AssetNotes 
-            asset={asset} 
-            notes={notes} 
+            <AssetNotes
+            asset={asset}
+            notes={notes}
             applyCrud={applyCrud} />
           )}
 

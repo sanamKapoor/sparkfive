@@ -22,6 +22,8 @@ import ConfirmModal from "../modals/confirm-modal";
 import Button from "../buttons/button";
 import useSortedAssets from "../../../hooks/use-sorted-assets";
 
+import { ASSET_UPLOAD_APPROVAL, ASSET_ACCESS } from '../../../constants/permissions'
+
 const AssetGrid = ({
   activeView = "grid",
   isShare = false,
@@ -51,6 +53,8 @@ const AssetGrid = ({
     setOperationFolder,
     folders,
   } = useContext(AssetContext);
+
+  const {advancedConfig, hasPermission} = useContext(UserContext)
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [activeArchiveAsset, setActiveArchiveAsset] = useState(undefined);
@@ -155,9 +159,9 @@ const AssetGrid = ({
   };
 
   const shouldShowUpload =
-    activeSearchOverlay ||
+      (activeSearchOverlay ||
     (mode === "assets" && assets.length === 0) ||
-    (mode === "folders" && folders.length === 0);
+    (mode === "folders" && folders.length === 0) )&& (hasPermission([ASSET_ACCESS]));
 
   const copyShareLink = (folder) => {
     const link = folder.sharedLinks[0]
@@ -442,6 +446,8 @@ const AssetGrid = ({
           }
           openDeleteAsset={() => openDeleteAsset(initAsset.asset.id)}
           closeOverlay={() => setInitAsset(undefined)}
+          loadMore={loadMore}
+          availableNext={nextPage !== -1}
         />
       )}
     </section>
