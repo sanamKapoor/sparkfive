@@ -29,6 +29,8 @@ export default {
   deleteAsset: (id, filters = {}) => axios.delete(`${assetUrl}/${id}?${querystring.encode(filters)}`),
   deleteMultipleAssets: ({ assetIds, filters = {} }) => axios.delete(`${assetUrl}?${querystring.encode(filters)}`, { data: { assetIds } }),
   addTag: (id, data) => axios.post(`${assetUrl}/${id}/tags`, data),
+  nonAiTagAssetsCount: () => axios.get(`${assetUrl}/nonAiTagAssetsCount`),
+  startBulkAiTagging: () => axios.post(`${assetUrl}/startBulkAiTagging`),
   removeTag: (id, tagId) => axios.delete(`${assetUrl}/${id}/tags/${tagId}`),
   addCampaign: (id, data) => axios.post(`${assetUrl}/${id}/campaigns`, data),
   removeCampaign: (id, campaignId) => axios.delete(`${assetUrl}/${id}/campaigns/${campaignId}`),
