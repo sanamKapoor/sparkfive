@@ -12,6 +12,7 @@ const SizeSelect = ({
   isClearable = false,
   closeMenuOnSelect = true,
   additionalClass = '',
+  disabled=false,
 }) => {
 
   return (
@@ -27,6 +28,7 @@ const SizeSelect = ({
         classNamePrefix={`select-prefix`}
         isClearable={isClearable}
         isSearchable={false}
+        isDisabled={disabled}
       />
     </>
   )

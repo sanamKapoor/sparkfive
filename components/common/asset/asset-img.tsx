@@ -4,6 +4,7 @@ import styles from "./asset-img.module.css";
 
 import { Assets } from "../../../assets";
 import { useState } from "react";
+import asset from "../../../server-api/asset";
 
 const AssetImg = ({
   assetImg,
@@ -20,9 +21,10 @@ const AssetImg = ({
 
   if (!finalImg) finalImg = Assets.empty;
 
-    useEffect(()=>{
-        setLoaded(false)
-    },[assetImg])
+  useEffect(()=>{
+      setLoaded(false)
+  },[assetImg])
+
   return (
     <>
       <img
@@ -35,7 +37,7 @@ const AssetImg = ({
         onClick={onClick}
         src={finalImg}
         alt={name}
-        className={`${styles.asset} ${opaque && styles.opaque} ${imgClass}`}
+        className={`asset-img ${styles.asset} ${opaque && styles.opaque} ${imgClass}`}
         onLoad={() => setLoaded(true)}
         style={
           loaded
