@@ -37,6 +37,11 @@
   color: white;
 }
 
+.primary-navy {
+  background-color: var(--color-prim-navy);
+  color: white;
+}
+
 .secondary,
 .input-height-secondary {
   background-color: white;
@@ -50,10 +55,19 @@
   background-color: var(--color-prim-turquoise-hover);
 }
 
+.primary-navy:hover{
+  background-color: var(--color-prim-navy-hover);
+}
+
 .primary:disabled,
 .normal-height-primary:disabled,
 .input-height-primary:disabled {
   background-color: var(--color-prim-turquoise-hover);
+  cursor: default;
+}
+
+.primary-navy:disabled{
+  background-color: var(--color-prim-navy-hover);
   cursor: default;
 }
 

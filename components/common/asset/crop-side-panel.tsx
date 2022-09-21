@@ -33,17 +33,25 @@ const CropSidePanel = ({ asset,
                            sizeValue,
                            onSelectChange,
                            onSizeInputChange,
-                           width,
-                           height,
+                           widthOriginal,
+                           heightOriginal,
                            isShare,
-                           sharePath
+                           sharePath,
+                           onResetImageSize,
+                           sizeOfCrop,
+                           setSizeOfCrop,
+                           detailPosSize
                        }) => {
 
     const { updateDownloadingStatus } = useContext(AssetContext)
 
     const [resizeOption, setResizeOption] = useState('px')
-    const [percentWidth, setPercentWidth] = useState(Math.round(width*100/asset.dimensionWidth))
-    const [percentHeight, setPercentHeight] = useState(Math.round(height*100/asset.dimensionHeight))
+    const [sizesValue, setSizesValue] = useState({
+      percentWidth: Math.round(widthOriginal*100/asset.dimensionWidth),
+      percentHeight: Math.round(heightOriginal*100/asset.dimensionHeight),
+      width: widthOriginal,
+      height: heightOriginal
+    })
     const [lastSelectedSize, setLastSelectedSize] = useState(sizeValue)
     const [selectedSize, setSelectedSize] = useState(sizeValue)
     const [previewActive, setPreviewActive] = useState(false)
@@ -59,6 +67,11 @@ const CropSidePanel = ({ asset,
     const lockCropping = () => {
         // Only lock if user is choose specific preset
         // return (sizeValue && sizeValue.value !== 'none')
+        // return mode === 'crop'
+        return false
+    }
+
+    const isCroppingMode = () => {
         return mode === 'crop'
     }
 
@@ -82,8 +95,8 @@ const CropSidePanel = ({ asset,
                 assetIds: [asset.id],
                 sizeId: (sizeValue && sizeValue.value === 'none') || dlSize === 'original' ? null : sizeValue.id,
                 customSize: true,
-                width: dlSize === 'original' ? asset.dimensionWidth : width,
-                height: dlSize === 'original' ? asset.dimensionHeight : height,
+                width: dlSize === 'original' ? asset.dimensionWidth : widthOriginal,
+                height: dlSize === 'original' ? asset.dimensionHeight : heightOriginal,
                 format: getImageType(imageType)
             };
 
@@ -152,15 +165,39 @@ const CropSidePanel = ({ asset,
     }
 
     useEffect(() => {
-        setPercentWidth(Math.round(width*100/asset.dimensionWidth));
-        setPercentHeight(Math.round(height*100/asset.dimensionHeight));
-    }, [width, height]);
+        const width = mode === 'crop' ? sizeOfCrop.width : widthOriginal;
+        const height = mode === 'crop' ? sizeOfCrop.height : heightOriginal;
+        const dimensionWidth = mode === 'crop' ? asset.dimensionWidth : detailPosSize.width
+        const dimensionHeight = mode === 'crop' ? asset.dimensionHeight : detailPosSize.height
+        setSizesValue({
+            percentWidth: Math.round(width*100/dimensionWidth),
+            percentHeight: Math.round(height*100/dimensionHeight),
+            width: width,
+            height: height
+        })
+    }, [widthOriginal, heightOriginal, mode, sizeOfCrop, detailPosSize, presetTypeValue]);
 
 
     useEffect(() => {
         setSelectedSize(sizeValue)
     }, [sizeValue]);
 
+    const onChangeResize = (value, name) => {
+        if(isCroppingMode()) {
+            if (resizeOption === '%') {
+                value = name === 'width' ? Math.round(value*detailPosSize.width/100) : Math.round(value*detailPosSize.height/100)
+            }
+            if (value > detailPosSize.width) {
+                value = name === 'width' ? detailPosSize.width :  detailPosSize.height
+            }
+            setSizeOfCrop({
+                ...sizeOfCrop,
+                [name]: value || 0
+            })
+        }else {
+            onSizeInputChange(name, value, resizeOption)
+        }
+    }
 
     return (
         <div className={styles.container}>
@@ -236,12 +273,12 @@ const CropSidePanel = ({ asset,
                                 </label>
                                 <Input
                                     disabled={lockCropping()}
-                                    onChange={(e)=>{onSizeInputChange('width', parseInt(e.target.value), resizeOption)}}
+                                    onChange={(e)=>{onChangeResize(parseInt(e.target.value), 'width')}}
                                     placeholder={'Width'}
                                     additionalClasses={'center-input'}
                                     type={'number'}
                                     // defaultValue
-                                    value={resizeOption === "%" ? percentWidth : width}
+                                    value={resizeOption === "%" ? sizesValue.percentWidth : sizesValue.width}
                                     styleType={'regular-height-short'} />
                             </div>
                             <div className={'col-50'}>
@@ -250,10 +287,10 @@ const CropSidePanel = ({ asset,
                                 </label>
                                 <Input
                                     disabled={lockCropping()}
-                                    onChange={(e)=>{onSizeInputChange('height', parseInt(e.target.value), resizeOption)}}
+                                    onChange={(e)=>{onChangeResize(parseInt(e.target.value), 'height')}}
                                     placeholder={'Height'}
                                     type={'number'}
-                                    value={resizeOption === "%" ? percentHeight : height}
+                                    value={resizeOption === "%" ? sizesValue.percentHeight : sizesValue.height}
                                     additionalClasses={'center-input'}
                                     styleType={'regular-height-short'}/>
                                     
@@ -295,16 +332,25 @@ const CropSidePanel = ({ asset,
                 </div>
             </>}
 
-            {mode === 'crop' && 
             <div className={`${styles['save-changes']} ${styles['save-preview-btn-row']}`}>
-                <Button className={'m-r-15'}
+                {mode === 'crop' ?
+                    <Button className={'m-r-15'}
                         text={previewActive ? 'Close Preview' : 'View Preview'}
                         type='button'
                         styleType='secondary'
-                        onClick={() => togglePreview()} />
+                        onClick={() => togglePreview()} /> 
+                    :
+                    <Button className={'m-r-15'}
+                        text='Reset Changes'
+                        type='button'
+                        styleType='secondary'
+                        onClick={() => 
+                            onResetImageSize()
+                        } />
+                }
                 <Button text={'Download Edited'}
                         type={'button'}
-                        styleType={'primary'}
+                        styleType={'primary-navy'}
                         onClick={()=>{
                             if(mode === 'crop'){
                                 document.getElementById('download-crop-image').click()
@@ -312,9 +358,9 @@ const CropSidePanel = ({ asset,
                                 downloadImage('resized')
                             }
                         }}
-                        disabled={!width || !height || !sizeValue}
+                        disabled={!widthOriginal || !heightOriginal || !sizeValue}
                 />
-            </div>}
+            </div>
             
             <div className={styles['save-changes']}>
                 <Button className={'m-r-15'}
@@ -328,7 +374,7 @@ const CropSidePanel = ({ asset,
                         onClick={()=>{
                             downloadImage('original')
                         }}
-                        disabled={!width || !height}
+                        disabled={!widthOriginal || !heightOriginal}
                 />
             </div>
 
