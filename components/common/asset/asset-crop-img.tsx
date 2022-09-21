@@ -11,15 +11,7 @@ import styles from './asset-img.module.css'
 
 import { Assets } from "../../../assets"
 
-const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image', name, opaque = false, width = 100, height = 100 , locked = true}) => {
-
-	const defaultCrop = {
-		unit: '%' as const,
-		x: 25,
-		y: 25,
-		width: 50,
-		height: 50
-	}
+const AssetCropImg = ({sizeOfCrop, setSizeOfCrop, assetImg, setWidth, setHeight, imageType, type = 'image', name, opaque = false, width = 100, height = 100 , locked = true}) => {
 
 	const previewCanvasRef = useRef(null);
 	const imgRef = useRef(null);
@@ -33,6 +25,21 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 	if (!finalImg && type === 'video') finalImg = Assets.videoThumbnail
 
 	if (!finalImg) finalImg = Assets.empty
+
+	useEffect(() => {
+		const cropState = (prevState) => {
+			return {
+				...prevState,
+				x: sizeOfCrop.width >= width ? 0 : prevState?.x,
+				y: sizeOfCrop.height >= height ? 0 : prevState?.y,
+				width: sizeOfCrop.width,
+				height: sizeOfCrop.height
+			}
+		}
+		setCrop(prev => cropState(prev))
+		setCompletedCrop(prev => cropState(prev))
+		
+	},[sizeOfCrop])
 
 	useEffect(() => {
 		if (!completedCrop || !previewCanvasRef.current || !imgRef.current) {
@@ -96,7 +103,7 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 
 		ctx.restore()
 
-	}, [completedCrop, imgRef.current]);
+	}, [completedCrop, imgRef.current, crop]);
 
 	const canvasPreview = (
 		image: HTMLImageElement,
@@ -197,10 +204,12 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 		setCropping(false)
 		c.width = Math.round(c.width)
 		c.height = Math.round(c.height)
+		setSizeOfCrop({
+			width: c.width,
+			height: c.height
+		})
 		setCompletedCrop(c)
 	}
-	
-
 	return (
 		<>
 			{!loaded && <img src={Assets.empty} alt={'blank'} style={{position: 'absolute', width: width, height: height}} />}
@@ -229,8 +238,16 @@ const AssetCropImg = ({ assetImg, setWidth, setHeight, imageType, type = 'image'
 
 					e.target.dispatchEvent(new Event('medialoaded', { bubbles: true }));
 
-					setCrop(defaultCrop);
-
+					const initWidth = sizeOfCrop.width
+					const initHeight = sizeOfCrop.height
+					setCrop({
+						unit: 'px',
+  					x: 0,
+  					y: 0,
+  					width: initWidth,
+  					height: initHeight
+					});
+					setSizeOfCrop({width:initWidth, height:initHeight})
 				}}
 				style={loaded ? {} : {
 					opacity: 0,

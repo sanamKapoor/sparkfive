@@ -126,6 +126,7 @@ const DetailOverlay = ({
   const [detailPosSize, setDetailPosSize] = useState({ x: 0, y: 0, width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight});
   const [defaultSize, setDefaultSize] = useState({width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight});
   const [notes, setNotes] = useState([])
+  const [sizeOfCrop, setSizeOfCrop] = useState({width: defaultSize.width, height: defaultSize.height})
 
   // For resize and cropping
   const [downloadImageTypes, setDownloadImageTypes] = useState(
@@ -158,8 +159,8 @@ const DetailOverlay = ({
   const [height, setHeight] = useState<number>(currentAsset.dimensionHeight);
 
   const resetValues = () => {
-    const width = detailPosSize.width;
-    const height = detailPosSize.height;
+    const width = currentAsset.dimensionWidth;
+    const height = currentAsset.dimensionHeight;
     // debugger
     setPreset({
       label: "None",
@@ -303,7 +304,7 @@ const DetailOverlay = ({
 
   // On Crop/Resize select change
   const onSelectChange = (type, value) => {
-
+    const originalRatio = currentAsset.dimensionWidth / currentAsset.dimensionHeight
     if (type === "preset") {
       setPreset(value);
       // Restore values
@@ -330,7 +331,14 @@ const DetailOverlay = ({
           },
         ]);
 
-        setDetailPosSize({...detailPosSize, width: defaultSize.width, height: defaultSize.height });
+        if (mode === 'crop') {
+          setSizeOfCrop({
+            width: detailPosSize.width,
+            height: detailPosSize.height
+          })
+        } else {
+          setDetailPosSize({...detailPosSize, width: defaultSize.width, height: defaultSize.height });
+        }
       } else {
         // Reset size value
         setSize(undefined);
@@ -349,9 +357,19 @@ const DetailOverlay = ({
       setWidth(Math.round(newW*pixelW));
       setHeight(Math.round(newH*pixelH));
       
-      // set new rendering size in the container
-      setDetailPosSize({...detailPosSize, width: newW, height: newH });
+      if (mode === 'crop') {
+        const width = Math.round(newW*pixelW*originalRatio)
+        const height = Math.round(newH*pixelH*originalRatio)
+        
+        setSizeOfCrop({
+          width: width > detailPosSize.width ? detailPosSize.width : width,
+          height: height > detailPosSize.height ? detailPosSize.height : height
+        })
+      } else {
+        // set new rendering size in the <container></container>
+        setDetailPosSize({...detailPosSize, width: newW, height: newH });
 
+      }
       // const {newW, newH} = calculateRenderSize(value.width, value.height);
       //
       // // calculate actual height/width with respect to display size
@@ -393,7 +411,7 @@ const DetailOverlay = ({
     const originalRatio = currentAsset.dimensionWidth / currentAsset.dimensionHeight;
     let _width = width, _height = height;
     if (resizeOption === '%') {
-      value = Math.round(value*asset.dimensionWidth/100)
+      value = name === 'width' ? Math.round(value*asset.dimensionWidth/100) : Math.round(value*asset.dimensionHeight/100)
     }
 
     if (name === "width") {
@@ -847,6 +865,8 @@ const DetailOverlay = ({
                     assetImg={realUrl}
                     width={detailPosSize.width}
                     height={detailPosSize.height}
+                    sizeOfCrop={sizeOfCrop}
+                    setSizeOfCrop={setSizeOfCrop}
                   />
                 )}
               </>
@@ -925,15 +945,25 @@ const DetailOverlay = ({
                   sizes={sizes}
                   sizeValue={size}
                   mode={mode}
-                  width={width}
-                  height={height}
+                  widthOriginal={width}
+                  heightOriginal={height}
                   onModeChange={(mode) => {
                     // resetValues();
                     setMode(mode);
+                    if(mode === 'crop') {
+                      setSizeOfCrop({width: detailPosSize.width/2, height: detailPosSize.height/2})
+                    }
                   }}
                   onSelectChange={onSelectChange}
                   onSizeInputChange={onSizeInputChange}
                   asset={assetDetail}
+                  onResetImageSize={() => {
+                    resetValues();
+                    setDetailPosSize({...detailPosSize, width: defaultSize.width, height: defaultSize.height });
+                  }}
+                  sizeOfCrop={sizeOfCrop}
+                  setSizeOfCrop={setSizeOfCrop}
+                  detailPosSize={detailPosSize}
                 />
               )}
             </>
