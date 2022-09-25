@@ -68,7 +68,7 @@ const CropSidePanel = ({ asset,
         // Only lock if user is choose specific preset
         // return (sizeValue && sizeValue.value !== 'none')
         // return mode === 'crop'
-        return false
+        return previewActive
     }
 
     const isCroppingMode = () => {
@@ -167,8 +167,8 @@ const CropSidePanel = ({ asset,
     useEffect(() => {
         const width = mode === 'crop' ? sizeOfCrop.width : widthOriginal;
         const height = mode === 'crop' ? sizeOfCrop.height : heightOriginal;
-        const dimensionWidth = mode === 'crop' ? asset.dimensionWidth : detailPosSize.width
-        const dimensionHeight = mode === 'crop' ? asset.dimensionHeight : detailPosSize.height
+        const dimensionWidth = mode === 'crop' ? detailPosSize.width : asset.dimensionWidth
+        const dimensionHeight = mode === 'crop' ? detailPosSize.height : asset.dimensionHeight
         setSizesValue({
             percentWidth: Math.round(width*100/dimensionWidth),
             percentHeight: Math.round(height*100/dimensionHeight),
@@ -187,13 +187,16 @@ const CropSidePanel = ({ asset,
             if (resizeOption === '%') {
                 value = name === 'width' ? Math.round(value*detailPosSize.width/100) : Math.round(value*detailPosSize.height/100)
             }
-            if (value > detailPosSize.width) {
-                value = name === 'width' ? detailPosSize.width :  detailPosSize.height
+            if (name === "width" && value > detailPosSize.width) {
+                value = detailPosSize.width
             }
-            setSizeOfCrop({
-                ...sizeOfCrop,
-                [name]: value || 0
-            })
+            if (name === "height" && value > detailPosSize.height) {
+                value = detailPosSize.height
+            }
+            setSizeOfCrop(prev => ({
+                ...prev,
+                [name]: Math.round(value) || 0
+            }))
         }else {
             onSizeInputChange(name, value, resizeOption)
         }
