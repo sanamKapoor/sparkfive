@@ -332,8 +332,8 @@ const DetailOverlay = ({
 
         if (mode === 'crop') {
           setSizeOfCrop({
-            width: detailPosSize.width,
-            height: detailPosSize.height
+            width: width,
+            height: height
           })
         } else {
           setDetailPosSize({...detailPosSize, width: defaultSize.width, height: defaultSize.height });
@@ -351,7 +351,7 @@ const DetailOverlay = ({
       if (mode === 'crop') {
         setSizeOfCrop({
           width: value.width > detailPosSize.width ? detailPosSize.width : value.width,
-          height: value.height > detailPosSize.height ? detailPosSize.height : value.height
+          height: value.height > detailPosSize.height ? detailPosSize.height : value.height       
         })
       } else {
         setWidth(value.width);
@@ -857,10 +857,11 @@ const DetailOverlay = ({
                     locked={lockCropping()}
                     name={assetDetail.name}
                     assetImg={realUrl}
-                    width={detailPosSize.width}
-                    height={detailPosSize.height}
+                    width={width}
+                    height={height}
                     sizeOfCrop={sizeOfCrop}
                     setSizeOfCrop={setSizeOfCrop}
+                    detailPosSize={detailPosSize}
                   />
                 )}
               </>
@@ -945,7 +946,7 @@ const DetailOverlay = ({
                     // resetValues();
                     setMode(mode);
                     if(mode === 'crop') {
-                      setSizeOfCrop({ width: Math.round(detailPosSize.width / 2), height: Math.round(detailPosSize.height / 2) })
+                      setSizeOfCrop({ width: Math.round(width / 2), height: Math.round(height / 2) })
                     }
                   }}
                   onSelectChange={onSelectChange}
