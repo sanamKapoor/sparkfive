@@ -54,8 +54,8 @@ const AssetCropImg = ({ sizeOfCrop, setSizeOfCrop, assetImg, setWidth, setHeight
 			throw new Error('No 2d context')
 		}
 
-		const scaleX = Math.round(image.naturalWidth / image.width)
-		const scaleY = Math.round(image.naturalHeight / image.height)
+		const scaleX = image.naturalWidth / image.width
+		const scaleY = image.naturalHeight / image.height
 		// devicePixelRatio slightly increases sharpness on retina devices
 		// at the expense of slightly slower render times and needing to
 		// size the image back down if you want to download/upload and be
@@ -68,7 +68,7 @@ const AssetCropImg = ({ sizeOfCrop, setSizeOfCrop, assetImg, setWidth, setHeight
 
 		// ctx.scale(pixelRatio, pixelRatio)
 		ctx.imageSmoothingQuality = 'high'
-
+	
 		ctx.drawImage(
 			image,
 			crop.x * scaleX,
@@ -80,6 +80,7 @@ const AssetCropImg = ({ sizeOfCrop, setSizeOfCrop, assetImg, setWidth, setHeight
 			sizeOfCrop.width,
 			sizeOfCrop.height,
 		)
+		ctx.restore()
 
 	}, [completedCrop, imgRef.current, crop]);
 
