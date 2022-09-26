@@ -109,7 +109,6 @@ const AssetCropImg = ({ sizeOfCrop, setSizeOfCrop, assetImg, setWidth, setHeight
 		canvas.height = Math.floor(sizeOfCrop.height * pixelRatio)
 
 		ctx.imageSmoothingQuality = 'high'
-		
 		ctx.drawImage(
 			image,
 			crop.x * scaleX,
@@ -163,10 +162,12 @@ const AssetCropImg = ({ sizeOfCrop, setSizeOfCrop, assetImg, setWidth, setHeight
 		c.height = Math.round(c.height)
 		const scaleWidth = c.width / detailPosSize.width;
 		const scaleHeight = c.height / detailPosSize.height;
-		setSizeOfCrop({
-			width: Math.round(width * scaleWidth),
-			height: Math.round(height * scaleHeight)
-		})
+		if (c.width !== crop.width || c.height !== crop.height) {
+			setSizeOfCrop({
+				width: Math.round(width * scaleWidth),
+				height: Math.round(height * scaleHeight)
+			})
+		}
 	}
 	return (
 		<>
@@ -210,7 +211,7 @@ const AssetCropImg = ({ sizeOfCrop, setSizeOfCrop, assetImg, setWidth, setHeight
 						setSizeOfCrop({ width: initWidth, height: initHeight })
 					}}
 					style={loaded ? {
-						objectFit:'fill'
+						objectFit: 'fill'
 					} : {
 						opacity: 0,
 						overflow: 'hidden',

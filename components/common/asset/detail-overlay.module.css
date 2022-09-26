@@ -27,7 +27,7 @@
 }
 .react-draggable img{
   height: 100%;
-  width: 100%;
+  width: auto;
 }
 
 @media screen and (max-height: 760px) {
@@ -89,7 +89,7 @@
 }
 
 .img-wrapper {
-  height: 100%;
+  height: calc(100vh - 90px);
   width: 100%;
   padding: 3rem 3rem 4rem 3rem;
   display: flex;
