@@ -304,7 +304,6 @@ const DetailOverlay = ({
 
   // On Crop/Resize select change
   const onSelectChange = (type, value) => {
-    const originalRatio = currentAsset.dimensionWidth / currentAsset.dimensionHeight
     if (type === "preset") {
       setPreset(value);
       // Restore values
@@ -333,8 +332,8 @@ const DetailOverlay = ({
 
         if (mode === 'crop') {
           setSizeOfCrop({
-            width: detailPosSize.width,
-            height: detailPosSize.height
+            width: width,
+            height: height
           })
         } else {
           setDetailPosSize({...detailPosSize, width: defaultSize.width, height: defaultSize.height });
@@ -349,26 +348,20 @@ const DetailOverlay = ({
     }
 
     if (type === "size") {
-      const {newW, newH} = calculateRenderSize(value.width, value.height);
-
-      // calculate actual height/width with respect to display size
-      const pixelW = currentAsset.dimensionWidth/defaultSize.width;
-      const pixelH = currentAsset.dimensionHeight/defaultSize.height;
-      setWidth(Math.round(newW*pixelW));
-      setHeight(Math.round(newH*pixelH));
-      
       if (mode === 'crop') {
-        const width = Math.round(newW*pixelW*originalRatio)
-        const height = Math.round(newH*pixelH*originalRatio)
-        
         setSizeOfCrop({
-          width: width > detailPosSize.width ? detailPosSize.width : width,
-          height: height > detailPosSize.height ? detailPosSize.height : height
+          width: value.width > detailPosSize.width ? detailPosSize.width : value.width,
+          height: value.height > detailPosSize.height ? detailPosSize.height : value.height       
         })
       } else {
+        setWidth(value.width);
+        setHeight(value.height);
         // set new rendering size in the <container></container>
-        setDetailPosSize({...detailPosSize, width: newW, height: newH });
-
+        setDetailPosSize({
+          ...detailPosSize,
+          width: value.width > defaultSize.width ? defaultSize.width : value.width,
+          height: value.height > defaultSize.height ? defaultSize.height : value.height
+        });
       }
       // const {newW, newH} = calculateRenderSize(value.width, value.height);
       //
@@ -411,6 +404,7 @@ const DetailOverlay = ({
     const originalRatio = currentAsset.dimensionWidth / currentAsset.dimensionHeight;
     let _width = width, _height = height;
     if (resizeOption === '%') {
+      if(value > 100) { value = 100 }
       value = name === 'width' ? Math.round(value*asset.dimensionWidth/100) : Math.round(value*asset.dimensionHeight/100)
     }
 
@@ -721,7 +715,7 @@ const DetailOverlay = ({
       let nh = img.naturalHeight;
       var oRatio = nw / nh,
         cRatio = cWidth / cHeight;
-      
+
       let width, height;
       if (oRatio > cRatio) {
         width = cWidth;
@@ -863,10 +857,11 @@ const DetailOverlay = ({
                     locked={lockCropping()}
                     name={assetDetail.name}
                     assetImg={realUrl}
-                    width={detailPosSize.width}
-                    height={detailPosSize.height}
+                    width={width}
+                    height={height}
                     sizeOfCrop={sizeOfCrop}
                     setSizeOfCrop={setSizeOfCrop}
+                    detailPosSize={detailPosSize}
                   />
                 )}
               </>
@@ -951,7 +946,7 @@ const DetailOverlay = ({
                     // resetValues();
                     setMode(mode);
                     if(mode === 'crop') {
-                      setSizeOfCrop({width: detailPosSize.width/2, height: detailPosSize.height/2})
+                      setSizeOfCrop({ width: Math.round(width / 2), height: Math.round(height / 2) })
                     }
                   }}
                   onSelectChange={onSelectChange}

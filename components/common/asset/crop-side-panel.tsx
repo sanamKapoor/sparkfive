@@ -68,7 +68,7 @@ const CropSidePanel = ({ asset,
         // Only lock if user is choose specific preset
         // return (sizeValue && sizeValue.value !== 'none')
         // return mode === 'crop'
-        return false
+        return previewActive
     }
 
     const isCroppingMode = () => {
@@ -167,8 +167,8 @@ const CropSidePanel = ({ asset,
     useEffect(() => {
         const width = mode === 'crop' ? sizeOfCrop.width : widthOriginal;
         const height = mode === 'crop' ? sizeOfCrop.height : heightOriginal;
-        const dimensionWidth = mode === 'crop' ? asset.dimensionWidth : detailPosSize.width
-        const dimensionHeight = mode === 'crop' ? asset.dimensionHeight : detailPosSize.height
+        const dimensionWidth = mode === 'crop' ? widthOriginal : asset.dimensionWidth
+        const dimensionHeight = mode === 'crop' ? heightOriginal : asset.dimensionHeight
         setSizesValue({
             percentWidth: Math.round(width*100/dimensionWidth),
             percentHeight: Math.round(height*100/dimensionHeight),
@@ -184,16 +184,20 @@ const CropSidePanel = ({ asset,
 
     const onChangeResize = (value, name) => {
         if(isCroppingMode()) {
+
             if (resizeOption === '%') {
-                value = name === 'width' ? Math.round(value*detailPosSize.width/100) : Math.round(value*detailPosSize.height/100)
+                value = name === 'width' ? Math.round(value*widthOriginal/100) : Math.round(value*heightOriginal/100)
             }
-            if (value > detailPosSize.width) {
-                value = name === 'width' ? detailPosSize.width :  detailPosSize.height
+            if (name === "width" && value > widthOriginal) {
+                value = widthOriginal
             }
-            setSizeOfCrop({
-                ...sizeOfCrop,
-                [name]: value || 0
-            })
+            if (name === "height" && value > heightOriginal) {
+                value = heightOriginal
+            }
+            setSizeOfCrop(prev => ({
+                ...prev,
+                [name]: Math.round(value) || 0
+            }))
         }else {
             onSizeInputChange(name, value, resizeOption)
         }
