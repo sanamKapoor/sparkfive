@@ -17,7 +17,7 @@ import IconClickable from '../buttons/icon-clickable'
 import Input from "../inputs/input";
 import SizeSelect from "../inputs/size-select";
 import Button from "../buttons/button";
-import {useContext} from "react";
+import {useContext, useState, useEffect} from "react";
 import ReactTooltip from "react-tooltip";
 
 
@@ -33,26 +33,46 @@ const CropSidePanel = ({ asset,
                            sizeValue,
                            onSelectChange,
                            onSizeInputChange,
-                           width,
-                           height,
+                           widthOriginal,
+                           heightOriginal,
                            isShare,
-                           sharePath
+                           sharePath,
+                           onResetImageSize,
+                           sizeOfCrop,
+                           setSizeOfCrop,
+                           detailPosSize
                        }) => {
 
-    const {
-        updateDownloadingStatus
-    } = useContext(AssetContext)
+    const { updateDownloadingStatus } = useContext(AssetContext)
 
+    const [resizeOption, setResizeOption] = useState('px')
+    const [sizesValue, setSizesValue] = useState({
+      percentWidth: Math.round(widthOriginal*100/asset.dimensionWidth),
+      percentHeight: Math.round(heightOriginal*100/asset.dimensionHeight),
+      width: widthOriginal,
+      height: heightOriginal
+    })
+    const [lastSelectedSize, setLastSelectedSize] = useState(sizeValue)
+    const [selectedSize, setSelectedSize] = useState(sizeValue)
+    const [previewActive, setPreviewActive] = useState(false)
 
-
-    const setMode = (data) => {
-        onModeChange(data)
+    const setMode = (mode) => {
+        onModeChange(mode);
+        if (mode === 'resize') {
+            setPreviewActive(false);
+        }
     }
 
     // Check if should lock cropping
     const lockCropping = () => {
         // Only lock if user is choose specific preset
-        return (sizeValue && sizeValue.value !== 'none')
+        // return (sizeValue && sizeValue.value !== 'none')
+        // return mode === 'crop'
+        return previewActive
+    }
+
+    const isCroppingMode = () => {
+        return mode === 'crop'
     }
 
     const getImageType = (imageType) => {
@@ -69,14 +89,14 @@ const CropSidePanel = ({ asset,
         }
     }
 
-    const downloadSelectedAssets = async () => {
+    const downloadImage = async (dlSize) => {
         try{
             let payload = {
                 assetIds: [asset.id],
-                sizeId: sizeValue.value === 'none' ? null : sizeValue.id,
+                sizeId: (sizeValue && sizeValue.value === 'none') || dlSize === 'original' ? null : sizeValue.id,
                 customSize: true,
-                width,
-                height,
+                width: dlSize === 'original' ? asset.dimensionWidth : widthOriginal,
+                height: dlSize === 'original' ? asset.dimensionHeight : heightOriginal,
                 format: getImageType(imageType)
             };
 
@@ -94,7 +114,6 @@ const CropSidePanel = ({ asset,
             // if(sharePath){
             //     filters['sharePath'] = sharePath
             // }
-
 
             // Show processing bar
             updateDownloadingStatus('preparing', 0, totalDownloadingAssets)
@@ -132,11 +151,63 @@ const CropSidePanel = ({ asset,
         // downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets')
     }
 
+    const resetResizeOption = (option) => {
+        setResizeOption(option);
+    }
+
+    const togglePreview = () => {
+        if (mode === 'crop') {
+            document.getElementById('crop-preview').click()
+            setPreviewActive(!previewActive)
+        } else {
+            onSelectChange('size', lastSelectedSize)
+        }
+    }
+
+    useEffect(() => {
+        const width = mode === 'crop' ? sizeOfCrop.width : widthOriginal;
+        const height = mode === 'crop' ? sizeOfCrop.height : heightOriginal;
+        const dimensionWidth = mode === 'crop' ? widthOriginal : asset.dimensionWidth
+        const dimensionHeight = mode === 'crop' ? heightOriginal : asset.dimensionHeight
+        setSizesValue({
+            percentWidth: Math.round(width*100/dimensionWidth),
+            percentHeight: Math.round(height*100/dimensionHeight),
+            width: width,
+            height: height
+        })
+    }, [widthOriginal, heightOriginal, mode, sizeOfCrop, detailPosSize, presetTypeValue]);
+
+
+    useEffect(() => {
+        setSelectedSize(sizeValue)
+    }, [sizeValue]);
+
+    const onChangeResize = (value, name) => {
+        if(isCroppingMode()) {
+
+            if (resizeOption === '%') {
+                value = name === 'width' ? Math.round(value*widthOriginal/100) : Math.round(value*heightOriginal/100)
+            }
+            if (name === "width" && value > widthOriginal) {
+                value = widthOriginal
+            }
+            if (name === "height" && value > heightOriginal) {
+                value = heightOriginal
+            }
+            setSizeOfCrop(prev => ({
+                ...prev,
+                [name]: Math.round(value) || 0
+            }))
+        }else {
+            onSizeInputChange(name, value, resizeOption)
+        }
+    }
+
     return (
         <div className={styles.container}>
             <h2>Download Options</h2>
 
-            <div className={styles['field-wrapper']} >
+            <div className={styles['field-wrapper']}>
                 <div className={`${styles.title}`}>Mode</div>
                 <div className={styles['field-content']}>
                     <div className={styles['field-radio-wrapper']}>
@@ -191,38 +262,42 @@ const CropSidePanel = ({ asset,
                 </div>
             </div>
 
-
             {asset.extension !== 'svg' && <>
                 <div className={`${styles['field-wrapper']} ${styles['hide-on-mobile']}`} >
-                    <div className={`${styles.title}`}>Resize</div>
+                    <div className={`${styles.title}`}>
+                        <span>Resize</span>
+                        <span className={`${styles['resize-option']} ${resizeOption === "px" ? styles['selected'] : ""}`} onClick={() => resetResizeOption('px')}>px</span>
+                        <span className={`${styles['resize-option']} ${resizeOption === "%" ? styles['selected'] : ""}`} onClick={() => resetResizeOption('%')}>%</span>
+                    </div>
                     <div className={styles['field-content']}>
                         <div className={'row'}>
                             <div className={'col-50 m-l-abs-15'}>
                                 <label className={styles['input-label']}>
-                                    Width (px)
+                                    Width ({resizeOption})
                                 </label>
                                 <Input
                                     disabled={lockCropping()}
-                                    onChange={(e)=>{onSizeInputChange('width', parseInt(e.target.value))}}
+                                    onChange={(e)=>{onChangeResize(parseInt(e.target.value), 'width')}}
                                     placeholder={'Width'}
                                     additionalClasses={'center-input'}
                                     type={'number'}
                                     // defaultValue
-                                    value={width}
+                                    value={resizeOption === "%" ? sizesValue.percentWidth : sizesValue.width}
                                     styleType={'regular-height-short'} />
                             </div>
                             <div className={'col-50'}>
                                 <label className={styles['input-label']}>
-                                    Height (px)
+                                    Height ({resizeOption})
                                 </label>
                                 <Input
                                     disabled={lockCropping()}
-                                    onChange={(e)=>{onSizeInputChange('height', parseInt(e.target.value))}}
+                                    onChange={(e)=>{onChangeResize(parseInt(e.target.value), 'height')}}
                                     placeholder={'Height'}
                                     type={'number'}
-                                    value={height}
+                                    value={resizeOption === "%" ? sizesValue.percentHeight : sizesValue.height}
                                     additionalClasses={'center-input'}
-                                    styleType={'regular-height-short'} />
+                                    styleType={'regular-height-short'}/>
+                                    
                             </div>
                         </div>
                     </div>
@@ -239,6 +314,7 @@ const CropSidePanel = ({ asset,
                             value={presetTypeValue}
                             isClearable={false}
                             additionalClass={'font-weight-normal m-l-0'}
+                            disabled={lockCropping()}
                         />
                     </div>
                 </div>
@@ -251,31 +327,58 @@ const CropSidePanel = ({ asset,
                             placeholder='Select size'
                             styleType='filter'
                             onChange={(value)=>{onSelectChange('size', value)}}
-                            value={sizeValue}
+                            value={selectedSize}
                             isClearable={false}
                             additionalClass={'font-weight-normal m-l-0'}
+                            disabled={lockCropping()}
                         />
                     </div>
                 </div>
             </>}
 
+            <div className={`${styles['save-changes']} ${styles['save-preview-btn-row']}`}>
+                {mode === 'crop' ?
+                    <Button className={'m-r-15'}
+                        text={previewActive ? 'Close Preview' : 'View Preview'}
+                        type='button'
+                        styleType='secondary'
+                        onClick={() => togglePreview()} /> 
+                    :
+                    <Button className={'m-r-15'}
+                        text='Reset Changes'
+                        type='button'
+                        styleType='secondary'
+                        onClick={() => 
+                            onResetImageSize()
+                        } />
+                }
+                <Button text={'Download Edited'}
+                        type={'button'}
+                        styleType={'primary-navy'}
+                        onClick={()=>{
+                            if(mode === 'crop'){
+                                document.getElementById('download-crop-image').click()
+                            }else{
+                                downloadImage('resized')
+                            }
+                        }}
+                        disabled={!widthOriginal || !heightOriginal || !sizeValue}
+                />
+            </div>
+            
             <div className={styles['save-changes']}>
                 <Button className={'m-r-15'}
                         text='Cancel'
                         type='button'
                         styleType='secondary'
                         onClick={() => setMode('detail')} />
-                <Button text={'Download'}
+                <Button text={'Download Original'}
                         type={'button'}
                         styleType={'primary'}
                         onClick={()=>{
-                            if(mode === 'crop'){
-                                document.getElementById('download-crop-image').click()
-                            }else{
-                                downloadSelectedAssets()
-                            }
+                            downloadImage('original')
                         }}
-                        disabled={!width || !height}
+                        disabled={!widthOriginal || !heightOriginal}
                 />
             </div>
 

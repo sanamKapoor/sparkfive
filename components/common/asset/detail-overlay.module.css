@@ -14,6 +14,21 @@
 .only-desktop-button{
   display: block;
 }
+.react-draggable{
+  border: none!important;
+  background-color: transparent;
+  display: flex;
+  alignItems: center;
+  justifyContent: center;
+  border: 2px dotted #100d0f!important;
+  position: relative!important;
+  transform: none!important;
+  overflow: hidden;
+}
+.react-draggable img{
+  height: 100%;
+  width: auto;
+}
 
 @media screen and (max-height: 760px) {
   .container {
@@ -74,13 +89,14 @@
 }
 
 .img-wrapper {
-  height: 100%;
+  height: calc(100vh - 90px);
   width: 100%;
   padding: 3rem 3rem 4rem 3rem;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
+  position: relative;
 }
 
 .img-wrapper > img, .img-wrapper video {
