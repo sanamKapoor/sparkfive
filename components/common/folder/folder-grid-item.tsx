@@ -29,12 +29,14 @@ const FolderGridItem = ({
   viewFolder,
   isLoading = false,
   deleteFolder,
-  shareAssets = (folder) => {},
-  copyShareLink = (folder) => {},
+  shareAssets = (folder) => { },
+  changeThumbnail = (folder) => { },
+  copyShareLink = (folder) => { },
   toggleSelected,
   copyEnabled,
   sharePath = '',
-  isShare = false
+  isShare = false,
+  thumbnailPath,
 }) => {
   const { updateDownloadingStatus } = useContext(AssetContext);
 
@@ -64,7 +66,7 @@ const FolderGridItem = ({
 
     let api = folderApi;
 
-    if(isShare){
+    if (isShare) {
       api = shareFolderApi
     }
 
@@ -83,9 +85,10 @@ const FolderGridItem = ({
 
   return (
     <div className={`${styles.container} ${isLoading && "loadable"}`}>
-      <div className={styles["image-wrapper"]}>
+      <div className={thumbnailPath ? styles.grid_border : styles["image-wrapper"]}>
         <>
-          {previews.map((preview, index) => (
+          {thumbnailPath &&  <AssetImg assetImg={thumbnailPath} isCollection={false}/>}
+          {!thumbnailPath && previews.map((preview, index) => (
             <div className={styles["sub-image-wrapper"]} key={index.toString()}>
               {preview.assetImg || preview.name === "empty" ? (
                 <AssetImg {...preview} />
@@ -103,9 +106,8 @@ const FolderGridItem = ({
             />
           </div>
           <div
-            className={`${styles["selectable-wrapper"]} ${
-              isSelected && styles["selected-wrapper"]
-            }`}
+            className={`${styles["selectable-wrapper"]} ${isSelected && styles["selected-wrapper"]
+              }`}
           >
             <IconClickable
               src={
@@ -128,6 +130,7 @@ const FolderGridItem = ({
             downloadFoldercontents={downloadFoldercontents}
             setDeleteOpen={setDeleteOpen}
             shareAssets={shareAssets}
+            changeThumbnail={changeThumbnail}
             copyShareLink={copyShareLink}
             copyEnabled={copyEnabled}
           />
