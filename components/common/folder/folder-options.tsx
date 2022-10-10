@@ -12,13 +12,15 @@ const FolderOptions = ({
 	shareAssets,
 	copyShareLink,
 	copyEnabled,
+	changeThumbnail,
 	isShare = false
 }) => {
 
 	const options = isShare ? [{ label: 'Download', onClick: downloadFoldercontents }]: [
 		{ label: 'Download', onClick: downloadFoldercontents },
 		{ label: 'Delete', onClick: () => setDeleteOpen(true) },
-		{ label: 'Share', onClick: shareAssets }
+		{ label: 'Share', onClick: shareAssets },
+		{ label: 'Change Thumbnail', onClick: changeThumbnail }
 	]
 
 	if (copyEnabled && !isShare) options.push({ label: 'Copy Link', onClick: copyShareLink })

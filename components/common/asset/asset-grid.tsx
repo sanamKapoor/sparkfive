@@ -1,7 +1,7 @@
 import styles from "./asset-grid.module.css";
 import useDropzone from "../misc/dropzone";
 import update from "immutability-helper";
-import { useEffect, useContext, useState } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { AssetContext, UserContext } from "../../../context";
 import toastUtils from "../../../utils/toast";
 import { Waypoint } from "react-waypoint";
@@ -23,6 +23,7 @@ import Button from "../buttons/button";
 import useSortedAssets from "../../../hooks/use-sorted-assets";
 
 import { ASSET_UPLOAD_APPROVAL, ASSET_ACCESS } from '../../../constants/permissions'
+import ChangeThumbnail from "../modals/change-thumnail-modal";
 
 const AssetGrid = ({
   activeView = "grid",
@@ -61,6 +62,10 @@ const AssetGrid = ({
   const [activeAssetId, setActiveAssetId] = useState("");
 
   const [activeSearchOverlay, setActiveSearchOverlay] = useState(false);
+
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const [modalData, setModalData] = useState()
 
   const [initAsset, setInitAsset] = useState(undefined);
 
@@ -152,6 +157,12 @@ const AssetGrid = ({
     if (asset) setOperationAsset(asset);
     if (folder) setOperationFolder(folder);
     setActiveOperation(operation);
+  };
+
+  const beginChangeThumbnailOperation = ({ folder }, operation) => {
+    console.log("folderfolderfolder", folder);
+    setModalData(folder);
+    setModalOpen(true);
   };
 
   const downloadAsset = (assetItem) => {
@@ -285,7 +296,7 @@ const AssetGrid = ({
                   <li className={styles["grid-item"]} key={folder.id || index}>
                     <FolderGridItem
                       {...folder}
-                        isShare={isShare}
+                      isShare={isShare}
                       sharePath={sharePath}
                       toggleSelected={() => toggleSelected(folder.id)}
                       viewFolder={() => viewFolder(folder.id)}
@@ -294,6 +305,12 @@ const AssetGrid = ({
                       copyEnabled={getShareIsEnabled(folder)}
                       shareAssets={() =>
                         beginAssetOperation({ folder }, "shareFolders")
+                      }
+                      changeThumbnail={() =>
+                        beginChangeThumbnailOperation(
+                          { folder },
+                          "shareFolders"
+                        )
                       }
                     />
                   </li>
@@ -391,6 +408,16 @@ const AssetGrid = ({
           </>
         )}
       </div>
+
+      {/* Change thumbnail modal */}
+      <ChangeThumbnail
+        closeModal={() => {setModalOpen(false)}}
+        additionalClasses={["visible-block"]}
+        modalData={modalData}
+        modalIsOpen={modalOpen}
+        confirmAction={() => {console.log("_deleteNote(note)_deleteNote(note)")}}
+        children={undefined}
+      />
 
       {/* Delete modal */}
       <ConfirmModal
