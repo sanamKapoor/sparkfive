@@ -63,9 +63,9 @@ const AssetGrid = ({
 
   const [activeSearchOverlay, setActiveSearchOverlay] = useState(false);
 
-  const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false); // Open or close modal of change thumbnail
 
-  const [modalData, setModalData] = useState()
+  const [modalData, setModalData] = useState() // load or unload data for change thumbnail modal
 
   const [initAsset, setInitAsset] = useState(undefined);
 
@@ -159,8 +159,8 @@ const AssetGrid = ({
     setActiveOperation(operation);
   };
 
+  //Use for upload thumbnail
   const beginChangeThumbnailOperation = ({ folder }, operation) => {
-    console.log("folderfolderfolder", folder);
     setModalData(folder);
     setModalOpen(true);
   };
@@ -415,8 +415,7 @@ const AssetGrid = ({
         additionalClasses={["visible-block"]}
         modalData={modalData}
         modalIsOpen={modalOpen}
-        confirmAction={() => {console.log("_deleteNote(note)_deleteNote(note)")}}
-        children={undefined}
+        confirmAction={() => {}}
       />
 
       {/* Delete modal */}

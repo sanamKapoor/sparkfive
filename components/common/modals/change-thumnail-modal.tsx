@@ -33,8 +33,7 @@ const ChangeThumbnail = ({
   const [imagePreview, setImagePreview] = useState(false);
   const [imageName, setImageName] = useState('');
   const [fileForUpload, setFileForUpload] = useState('');
-
-  const ALLOWED_TYPES = 'image/png, image/jpeg'
+  const ALLOWED_TYPES = 'image/*'
   const { setIsLoading } = useContext(LoadingContext)
   const { setFolders } = useContext(AssetContext);
 
@@ -47,13 +46,14 @@ const ChangeThumbnail = ({
     setImagePath(e.target.value)
   }
 
+  //remove file if file not valid
   const onRemove = () => {
     setImagePreview(false);
     setImageName('');
     setFileForUpload('');
   }
 
-
+//Upload image and validate
   const saveChanges = async (uploadImg) => {
     try {
       var reader = new FileReader();
@@ -62,6 +62,7 @@ const ChangeThumbnail = ({
       reader.onload = (event: any) => {
         imgtag.src = event.target.result;
         imgtag.onerror = () => {
+          onRemove();
           toastUtils.error('Please upload correct image.')
         }
         imgtag.onload = () => {
@@ -72,13 +73,14 @@ const ChangeThumbnail = ({
       reader.readAsDataURL(uploadImg);
       setFileForUpload(uploadImg);
     } catch (err) {
-      console.log(err)
+      onRemove();
       toastUtils.error('Could not update photo, please try again later.')
     } finally {
       setIsUploading(false)
     }
   }
 
+  //called by save button
   const saveClick = async () => {
     try {
       setIsLoading(true);
@@ -91,13 +93,14 @@ const ChangeThumbnail = ({
         getFolders();
       }
     } catch (err) {
-      console.log(err)
+      onRemove();
       toastUtils.error('Could not update photo, please try again later.')
     } finally {
       setIsUploading(false)
     }
   }
 
+  //Check if image is valid or not
   const imageExists = async (image_url, cb) => {
     try {
       const request = new XMLHttpRequest();
@@ -117,7 +120,7 @@ const ChangeThumbnail = ({
       cb(false)
     }
   }
-
+  //Refresh data after thumbnail changed
   const getFolders = async () => {
     let query = {
       page: 1,
@@ -133,6 +136,7 @@ const ChangeThumbnail = ({
     closeModal();
   }
 
+  //Link thumbnail URL for a collection
   const saveLinkChanges = async () => {
     try {
       if (imagePath) {
@@ -144,22 +148,24 @@ const ChangeThumbnail = ({
             setImagePath(null);
             getFolders();
           } else {
+            onRemove();
             toastUtils.error('Please enter valid Image url.')
           }
         });
       } else {
         setIsLoading(false);
+        onRemove();
         toastUtils.error('Please enter file path.')
       }
     } catch (err) {
-      console.log(err)
+      onRemove();
       toastUtils.error('Could not update photo, please try again later.')
     } finally {
       setIsUploading(false)
     }
   }
 
-  const openFile = async (e) => {
+  const openFile = async (e) => { // Open file picker
     fileBrowserRef.current.click();
   }
 
