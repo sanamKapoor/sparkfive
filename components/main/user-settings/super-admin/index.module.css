@@ -70,7 +70,7 @@
   display: flex;
   flex-wrap: wrap;
   padding: 1rem 0;
-  margin-top: 1rem 0;
+  margin-top: 1rem;
   border-bottom: 1px solid var(--color-secondary-border);
 }
 
@@ -85,4 +85,56 @@
 
 .cdnEmbedding {
   margin-top: 50px;
+}
+
+.base-plan-modal{
+  overflow: visible;
+}
+
+.plan-modal{
+  width: 25em;
+  height: 35em;
+  padding: 32px
+}
+
+.input-wrapper{
+  padding: 1rem 2rem;
+}
+
+.form-field{
+  margin-bottom: 16px;
+}
+
+.form-title{
+  margin-bottom: 4px;
+  color: grey;
+}
+
+.date-wrapper input{
+  padding: 14px 16px !important;
+  width: 100%;
+}
+
+.close{
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--color-sec-blue);
+  cursor: pointer;
+  position: absolute;
+  top: 8px;
+  right: 10px
+}
+
+.active-badge{
+  padding: 4px 8px;
+  background-color: #13bda6;
+  color: white;
+  border-radius: 4px;
+}
+
+.trial-badge{
+  padding: 4px 8px;
+  background-color: #d19f24;
+  color: white;
+  border-radius: 4px;
 }
