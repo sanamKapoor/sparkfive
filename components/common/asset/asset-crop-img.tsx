@@ -68,7 +68,7 @@ const AssetCropImg = ({ sizeOfCrop, setSizeOfCrop, assetImg, setWidth, setHeight
 
 		// ctx.scale(pixelRatio, pixelRatio)
 		ctx.imageSmoothingQuality = 'high'
-	
+
 		ctx.drawImage(
 			image,
 			crop.x * scaleX,
@@ -163,7 +163,7 @@ const AssetCropImg = ({ sizeOfCrop, setSizeOfCrop, assetImg, setWidth, setHeight
 		c.height = Math.round(c.height)
 		const scaleWidth = c.width / detailPosSize.width;
 		const scaleHeight = c.height / detailPosSize.height;
-		if (c.width !== crop.width || c.height !== crop.height) {
+		if (c.width !== crop.width || c.height !== crop.height || scaleWidth === 1 || scaleHeight === 1) {
 			setSizeOfCrop({
 				width: Math.round(width * scaleWidth),
 				height: Math.round(height * scaleHeight)
