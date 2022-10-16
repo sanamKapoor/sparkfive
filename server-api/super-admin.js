@@ -7,4 +7,6 @@ export default {
   getUserJWT: (userId) => axios.get(`${superAdminUrl}/users/${userId}/token`),
   getCompanies: (queryParams = {}) => axios.get(`${superAdminUrl}/teams?${querystring.encode(queryParams)}`),
   updateCompanyConfig: (id, data) => axios.put(`${superAdminUrl}/teams/${id}`, data),
+  getBenefits: () => axios.get(`${superAdminUrl}/benefits`),
+  updateCompanyPlan: (id, data) => axios.put(`${superAdminUrl}/teams/${id}/plan`, data),
 }

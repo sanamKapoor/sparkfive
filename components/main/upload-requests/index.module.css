@@ -89,10 +89,13 @@
 
 .add-tag-btn{
   margin-top: 33px;
+  margin-bottom: 32px;
 }
 
 .right-panel{
   border-left: solid 1px #E5E5E5;
+  height: 100%;
+  overflow: scroll;
 }
 
 .modal-wrapper{
