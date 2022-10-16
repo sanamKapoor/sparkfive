@@ -9,12 +9,6 @@ export default {
       'Content-Type': 'multipart/form-data'
     }
   }),
-  uploadThumbnail: (formData, queryData = {}) => axios.post(`${assetUrl}/upload/thumbnail`, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-  }),
-  
   getAssets: (queryData = {}) => axios.get(`${assetUrl}?${querystring.encode(queryData)}`),
   getVersions: (versionGroup) => axios.get(`${assetUrl}/versions-of/${versionGroup}`),
   checkDuplicates: (fileNames) => axios.post(`${assetUrl}/check-duplicates`, {fileNames}),
