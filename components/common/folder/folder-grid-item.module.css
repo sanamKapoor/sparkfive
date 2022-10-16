@@ -50,9 +50,7 @@
 }
 
 .image-wrapper:hover .image-button-wrapper,
-.image-wrapper:hover .selectable-wrapper:not(.selected-wrapper),
-.grid_border:hover .image-button-wrapper,
-.grid_border:hover .selectable-wrapper:not(.selected-wrapper){
+.image-wrapper:hover .selectable-wrapper:not(.selected-wrapper) {
     display: block;
     animation: intoview 0.5s;
 }
@@ -105,14 +103,4 @@
 .image-wrapper .selectable-wrapper .select-icon {
     width: 25px;
     height: auto;
-}
-
-.thumbnailPath {
-    max-width: 100%;
-    max-height: 100%;
-}
-
-.grid_border{
-    border: 1px solid var(--color-secondary-border);
-    padding: 5px;
 }
