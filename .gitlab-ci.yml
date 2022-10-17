@@ -1,0 +1,13 @@
+stages:
+  - esdev_build
+build_esdev:
+ stage: esdev_build
+ before_script:
+   - echo $server_key >>  serverkey.pem
+   - chmod 400 serverkey.pem
+ script:
+   - rsync -auvz -e 'ssh -o StrictHostKeyChecking=no -i serverkey.pem -p 22' --stats --exclude-from=deployment-exclude-list.txt . $staging_es_user@$staging_es_host:$staging_es_path;
+   - ssh -o StrictHostKeyChecking=no -i serverkey.pem -t $staging_es_user@$staging_es_host -p 22 "cd $staging_es_path && npm install && npm run build && pm2 restart all"
+ when: manual
+ only:
+   - elasticsearch-dev
