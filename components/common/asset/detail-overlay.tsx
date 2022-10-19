@@ -1052,6 +1052,7 @@ const DetailOverlay = ({
                   setMode("resize");
                 }
                 changeActiveSide("detail");
+                resetImageSettings(undefined, undefined);
               } else {
                 downloadSelectedAssets(currentAsset.id);
               }
