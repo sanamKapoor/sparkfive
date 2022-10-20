@@ -1,8 +1,13 @@
 import styles from "./asset-grid.module.css";
 import useDropzone from "../misc/dropzone";
 import update from "immutability-helper";
+<<<<<<< HEAD
 import { useEffect, useContext, useState } from "react";
 import { AssetContext, UserContext } from "../../../context";
+=======
+import React, { useEffect, useContext, useState } from "react";
+import { AssetContext, LoadingContext, UserContext } from "../../../context";
+>>>>>>> c5c300d (Thumbnail Task completed)
 import toastUtils from "../../../utils/toast";
 import { Waypoint } from "react-waypoint";
 import copyClipboard from "copy-to-clipboard";
@@ -21,6 +26,7 @@ import DetailOverlay from "./detail-overlay";
 import ConfirmModal from "../modals/confirm-modal";
 import Button from "../buttons/button";
 import useSortedAssets from "../../../hooks/use-sorted-assets";
+import folderApi from "../../../server-api/folder";
 
 import { ASSET_UPLOAD_APPROVAL, ASSET_ACCESS } from '../../../constants/permissions'
 
@@ -71,6 +77,10 @@ const AssetGrid = ({
     currentSortFolderAttribute,
     setCurrentSortFolderAttribute,
   ] = useSortedAssets(folders);
+
+  const { setIsLoading } = useContext(LoadingContext);
+  const { setFolders } = useContext(AssetContext);
+
   useEffect(() => {
     const { assetId } = urlUtils.getQueryParameters();
     if (assetId) getInitialAsset(assetId);
@@ -154,6 +164,30 @@ const AssetGrid = ({
     setActiveOperation(operation);
   };
 
+<<<<<<< HEAD
+=======
+  //Use for upload thumbnail
+  const beginChangeThumbnailOperation = ({ folder }, operation) => {
+    setModalData(folder);
+    setModalOpen(true);
+  };
+
+  const deleteThumbnail = async ({ folder }, operation) => {
+    setIsLoading(true);
+    try {
+      const data = await folderApi.updateFolder(folder.id, {
+        thumbnailPath: null,
+      });
+      if (data) {
+        setIsLoading(false);
+        getFolders();
+      }
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
+
+>>>>>>> c5c300d (Thumbnail Task completed)
   const downloadAsset = (assetItem) => {
     downloadUtils.downloadFile(assetItem.realUrl, assetItem.asset.name);
   };
@@ -295,6 +329,18 @@ const AssetGrid = ({
                       shareAssets={() =>
                         beginAssetOperation({ folder }, "shareFolders")
                       }
+<<<<<<< HEAD
+=======
+                      changeThumbnail={() =>
+                        beginChangeThumbnailOperation(
+                          { folder },
+                          "shareFolders"
+                        )
+                      }
+                      deleteThumbnail={() =>
+                        deleteThumbnail({ folder }, "shareFolders")
+                      }
+>>>>>>> c5c300d (Thumbnail Task completed)
                     />
                   </li>
                 );
@@ -392,6 +438,21 @@ const AssetGrid = ({
         )}
       </div>
 
+<<<<<<< HEAD
+=======
+      {/* Change thumbnail modal */}
+      <ChangeThumbnail
+        closeModal={() => {
+          setModalOpen(false);
+        }}
+        cleareProps={modalData}
+        additionalClasses={["visible-block"]}
+        modalData={modalData}
+        modalIsOpen={modalOpen}
+        confirmAction={() => {}}
+      />
+
+>>>>>>> c5c300d (Thumbnail Task completed)
       {/* Delete modal */}
       <ConfirmModal
         closeModal={() => setDeleteModalOpen(false)}

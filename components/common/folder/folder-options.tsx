@@ -1,47 +1,105 @@
-import styles from './folder-options.module.css'
-import { Utilities } from '../../../assets'
+import styles from "./folder-options.module.css";
+import { Utilities } from "../../../assets";
 
 // Components
-import IconClickable from '../buttons/icon-clickable'
-import Dropdown from '../inputs/dropdown'
-import ToggleableAbsoluteWrapper from '../misc/toggleable-absolute-wrapper'
+import IconClickable from "../buttons/icon-clickable";
+import Dropdown from "../inputs/dropdown";
+import ToggleableAbsoluteWrapper from "../misc/toggleable-absolute-wrapper";
+import { UserContext } from "../../../context";
+import { useContext, useEffect, useState } from "react";
 
 const FolderOptions = ({
+<<<<<<< HEAD
 	downloadFoldercontents,
 	setDeleteOpen,
 	shareAssets,
 	copyShareLink,
 	copyEnabled,
 	isShare = false
+=======
+  downloadFoldercontents,
+  setDeleteOpen,
+  shareAssets,
+  copyShareLink,
+  copyEnabled,
+  changeThumbnail,
+  deleteThumbnail,
+  isShare = false,
+  thumbnailPath,
+>>>>>>> c5c300d (Thumbnail Task completed)
 }) => {
+  const { user } = useContext(UserContext);
+  const options = isShare
+    ? [{ label: "Download", onClick: downloadFoldercontents }]
+    : [
+        { label: "Download", onClick: downloadFoldercontents },
+        { label: "Delete", onClick: () => setDeleteOpen(true) },
+        { label: "Share", onClick: shareAssets },
+      ];
+  const [adminOption, setAdminOption] = useState(options);
 
+<<<<<<< HEAD
 	const options = isShare ? [{ label: 'Download', onClick: downloadFoldercontents }]: [
 		{ label: 'Download', onClick: downloadFoldercontents },
 		{ label: 'Delete', onClick: () => setDeleteOpen(true) },
 		{ label: 'Share', onClick: shareAssets }
 	]
+=======
+  useEffect(() => {
+    let userDetails: any = user;
+    if (thumbnailPath) {
+      if (
+        adminOption.filter((ele) => ele.label == "Delete Thumbnail").length == 0
+      ) {
+        setAdminOption([
+          ...adminOption,
+          {
+            label: "Delete Thumbnail",
+            onClick: deleteThumbnail,
+          },
+        ]);
+      }
+    }
+    if (userDetails && userDetails.roleId == "admin") {
+      if (
+        adminOption.filter((ele) => ele.label == "Change Thumbnail").length == 0
+      ) {
+        setAdminOption([
+          ...adminOption,
+          {
+            label: "Change Thumbnail",
+            onClick: changeThumbnail,
+          },
+        ]);
+      }
+    }
+  }, [user, thumbnailPath]);
+>>>>>>> c5c300d (Thumbnail Task completed)
 
-	if (copyEnabled && !isShare) options.push({ label: 'Copy Link', onClick: copyShareLink })
+  if (copyEnabled && !isShare) {
+    setAdminOption([
+      ...adminOption,
+      { label: "Copy Link", onClick: copyShareLink },
+    ]);
+  }
 
-	return (
-		<ToggleableAbsoluteWrapper
-			contentClass={styles['asset-actions']}
-			wrapperClass={styles['asset-actions-wrapper']}
-			Wrapper={({ children }) => (
-				<>
-					<IconClickable src={Utilities.moreLight} />
-					{children}
-				</>
-			)}
-			Content={() => (
-				<div className={styles.more} >
-					{options.length > 0 && <Dropdown
-						options={options}
-					/>}
-				</div>
-			)}
-		/>
-	)
-}
+  return (
+    <ToggleableAbsoluteWrapper
+      contentClass={styles["asset-actions"]}
+      wrapperClass={styles["asset-actions-wrapper"]}
+      Wrapper={({ children }) => (
+        <>
+          <IconClickable src={Utilities.moreLight} />
+          {children}
+        </>
+      )}
+      Content={() => (
+        <div className={styles.more}>
+          {adminOption.length > 0 && <Dropdown options={adminOption} />}
+        </div>
+      )}
+    />
+  );
+};
 
-export default FolderOptions
+export default FolderOptions;

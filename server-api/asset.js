@@ -10,6 +10,7 @@ export default {
     }
   }),
   getAssets: (queryData = {}) => axios.get(`${assetUrl}?${querystring.encode(queryData)}`),
+  searchAssets: (queryData = {}) => axios.get(`${assetUrl}/search/filename?${querystring.encode(queryData)}`),
   getVersions: (versionGroup) => axios.get(`${assetUrl}/versions-of/${versionGroup}`),
   checkDuplicates: (fileNames) => axios.post(`${assetUrl}/check-duplicates`, {fileNames}),
   revertVersion: ({ revertAssetId, versionGroup } = {}) => axios.post(`${assetUrl}/revert-version`, { revertAssetId, versionGroup }),
