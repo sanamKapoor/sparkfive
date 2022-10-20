@@ -30,11 +30,10 @@ const FolderGridItem = ({
   isLoading = false,
   deleteFolder,
   shareAssets = (folder) => {},
-
   copyShareLink = (folder) => {},
   toggleSelected,
   copyEnabled,
-  sharePath = '',
+  sharePath = "",
   isShare = false,
   changeThumbnail = (folder) => {},
   deleteThumbnail = (folder) => {},

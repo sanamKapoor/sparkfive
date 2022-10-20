@@ -22,7 +22,10 @@ import ConfirmModal from "../modals/confirm-modal";
 import Button from "../buttons/button";
 import useSortedAssets from "../../../hooks/use-sorted-assets";
 import folderApi from "../../../server-api/folder";
+<<<<<<< HEAD
 import ChangeThumbnail from "../modals/change-thumnail-modal";
+=======
+>>>>>>> c5c300d (Thumbnail Task completed)
 
 import { ASSET_UPLOAD_APPROVAL, ASSET_ACCESS } from '../../../constants/permissions'
 

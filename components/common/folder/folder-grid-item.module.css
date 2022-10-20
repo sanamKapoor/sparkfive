@@ -111,7 +111,13 @@
 }
 
 .grid_border {
+<<<<<<< HEAD
     border: 1px solid var(--color-secondary-border);
     padding: 5px;
     height: 100%;
+=======
+  border: 1px solid var(--color-secondary-border);
+  padding: 5px;
+  height: 100%;
+>>>>>>> c5c300d (Thumbnail Task completed)
 }
