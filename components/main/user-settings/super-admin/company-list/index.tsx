@@ -22,7 +22,8 @@ const CompanyList = ({onViewCompanySettings}) => {
   const [companyData, setCompanyData] = useState({
     teams: [],
     currentPage: 1,
-    total: 0
+    total: 0,
+    benefits: []
   })
   const [sortData, setSortData] = useQueryStrings(defaultSortData)
 
@@ -33,7 +34,7 @@ const CompanyList = ({onViewCompanySettings}) => {
         sortDirection: sortData.sortDirection,
         reset: true
       })
-    } 
+    }
   }, [sortData])
 
   const getCompany = async ({ page = 1, searchTerm = term, reset = false, sortBy = 'teams.company', sortDirection = 'ASC' } = {}) => {
@@ -43,12 +44,14 @@ const CompanyList = ({onViewCompanySettings}) => {
       if (reset) newTeams = []
 
       const { data } = await superAdminApi.getCompanies({ term: searchTerm, page, sortBy, sortOrder: sortDirection })
+      const { data: benefitData } = await superAdminApi.getBenefits()
       const teams = [...newTeams, ...data.teams]
 
       setCompanyData({
         teams,
         currentPage: page,
-        total: data.total
+        total: data.total,
+        benefits: benefitData
       })
 
       setLoading(false)
@@ -108,7 +111,7 @@ const CompanyList = ({onViewCompanySettings}) => {
         </li>
         {companyData.teams.map(team => (
             <li key={`${team.id}-${team.users[0].id}`}>
-              <CompanyItem team={team} onViewCompanySettings={()=>{onViewCompanySettings(team)}}/>
+              <CompanyItem team={team} onViewCompanySettings={()=>{onViewCompanySettings(team, companyData.benefits)}}/>
             </li>
         ))}
       </ul>
