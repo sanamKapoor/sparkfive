@@ -95,6 +95,7 @@
 
 .details-wrapper {
   display: flex;
+  align-items: flex-end;
 }
 
 .details-wrapper>div:first-child {

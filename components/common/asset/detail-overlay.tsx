@@ -36,6 +36,7 @@ import { isImageType } from "../../../utils/file";
 import { ASSET_ACCESS } from "../../../constants/permissions";
 import AssetNotes from './asset-notes';
 import AssetNote from './asset-note';
+import AssetRelatedFIles from './asset-related-files';
 
 const getDefaultDownloadImageType = (extension) => {
   const defaultDownloadImageTypes = [
@@ -123,10 +124,10 @@ const DetailOverlay = ({
   const [versionRealUrl, setVersionRealUrl] = useState(realUrl);
   const [versionThumbnailUrl, setVersionThumbnailUrl] = useState(thumbailUrl);
 
-  const [detailPosSize, setDetailPosSize] = useState({ x: 0, y: 0, width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight});
-  const [defaultSize, setDefaultSize] = useState({width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight});
+  const [detailPosSize, setDetailPosSize] = useState({ x: 0, y: 0, width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight });
+  const [defaultSize, setDefaultSize] = useState({ width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight });
   const [notes, setNotes] = useState([])
-  const [sizeOfCrop, setSizeOfCrop] = useState({width: defaultSize.width, height: defaultSize.height})
+  const [sizeOfCrop, setSizeOfCrop] = useState({ width: defaultSize.width, height: defaultSize.height })
 
   // For resize and cropping
   const [downloadImageTypes, setDownloadImageTypes] = useState(
@@ -201,7 +202,7 @@ const DetailOverlay = ({
     if (activeFolder) {
       const folder = folders.find(folder => folder.id === activeFolder);
       // if (folder.assets.length === 0 && assets && assets.length) {
-        folder.assets = [...assets];
+      folder.assets = [...assets];
       // }
       setActiveCollection(folder);
       const assetIndx = assets.findIndex(item => item.asset && item.asset.id === asset.id) + 1
@@ -336,7 +337,7 @@ const DetailOverlay = ({
             height: height
           })
         } else {
-          setDetailPosSize({...detailPosSize, width: defaultSize.width, height: defaultSize.height });
+          setDetailPosSize({ ...detailPosSize, width: defaultSize.width, height: defaultSize.height });
         }
       } else {
         // Reset size value
@@ -351,7 +352,7 @@ const DetailOverlay = ({
       if (mode === 'crop') {
         setSizeOfCrop({
           width: value.width > detailPosSize.width ? detailPosSize.width : value.width,
-          height: value.height > detailPosSize.height ? detailPosSize.height : value.height       
+          height: value.height > detailPosSize.height ? detailPosSize.height : value.height
         })
       } else {
         setWidth(value.width);
@@ -382,21 +383,21 @@ const DetailOverlay = ({
   const calculateRenderSize = (newW, newH) => {
     // calculate renderable height width based on provided value(preset size)
     if (defaultSize.height > defaultSize.width) {
-        if (newH > defaultSize.height) {
-          newH = defaultSize.height;
-          newW = defaultSize.width;
-        } else {
-          newW =  Math.round(newH * defaultSize.width / defaultSize.height);
-        }
+      if (newH > defaultSize.height) {
+        newH = defaultSize.height;
+        newW = defaultSize.width;
+      } else {
+        newW = Math.round(newH * defaultSize.width / defaultSize.height);
+      }
     } else {
       if (newW > defaultSize.width) {
         newH = defaultSize.height;
         newW = defaultSize.width;
       } else {
-        newH =  Math.round(newW * defaultSize.height / defaultSize.width);
+        newH = Math.round(newW * defaultSize.height / defaultSize.width);
       }
     }
-    return {newH, newW};
+    return { newH, newW };
   }
 
   // On width, height input change
@@ -404,8 +405,8 @@ const DetailOverlay = ({
     const originalRatio = currentAsset.dimensionWidth / currentAsset.dimensionHeight;
     let _width = width, _height = height;
     if (resizeOption === '%') {
-      if(value > 100) { value = 100 }
-      value = name === 'width' ? Math.round(value*asset.dimensionWidth/100) : Math.round(value*asset.dimensionHeight/100)
+      if (value > 100) { value = 100 }
+      value = name === 'width' ? Math.round(value * asset.dimensionWidth / 100) : Math.round(value * asset.dimensionHeight / 100)
     }
 
     if (name === "width") {
@@ -436,13 +437,13 @@ const DetailOverlay = ({
       }
     }
 
-    const {newW, newH} = calculateRenderSize(_width, _height);
+    const { newW, newH } = calculateRenderSize(_width, _height);
 
     setWidth(_width);
     setHeight(_height);
 
 
-    setDetailPosSize({...detailPosSize, width: newW, height: newH });
+    setDetailPosSize({ ...detailPosSize, width: newW, height: newH });
 
   };
 
@@ -664,23 +665,23 @@ const DetailOverlay = ({
   const applyCrud = (action, note) => {
     switch (action) {
       case 'add':
-      setNotes([...notes, note])
-      break
+        setNotes([...notes, note])
+        break
 
       case 'edit':
-      const _notes = notes.map(_note => {
-        if (_note.id === note.id) {
-          _note.text = note.text
-        }
-        return _note
-      })
-      setNotes(_notes)
-      break;
+        const _notes = notes.map(_note => {
+          if (_note.id === note.id) {
+            _note.text = note.text
+          }
+          return _note
+        })
+        setNotes(_notes)
+        break;
 
       case 'delete':
-      const restNotes = notes.filter(_note => _note.id !== note.id)
-      setNotes(restNotes)
-      break
+        const restNotes = notes.filter(_note => _note.id !== note.id)
+        setNotes(restNotes)
+        break
     }
   }
 
@@ -705,46 +706,46 @@ const DetailOverlay = ({
 
 
   const resetImageSettings = (newWidth, newHeight) => {
-      const img = document.querySelector('.app-overlay img.asset-img') as HTMLImageElement;
-      // const draggable = document.querySelector('.app-overlay .react-draggable') as HTMLDivElement;
-      var positions = window.getComputedStyle(img).getPropertyValue('object-position').split(' ');
-      const pos = parseInt(positions[0]);
-      const cWidth = newWidth || img.width;
-      const cHeight = newHeight || img.height;
-      let nw = img.naturalWidth;
-      let nh = img.naturalHeight;
-      var oRatio = nw / nh,
-        cRatio = cWidth / cHeight;
+    const img = document.querySelector('.app-overlay img.asset-img') as HTMLImageElement;
+    // const draggable = document.querySelector('.app-overlay .react-draggable') as HTMLDivElement;
+    var positions = window.getComputedStyle(img).getPropertyValue('object-position').split(' ');
+    const pos = parseInt(positions[0]);
+    const cWidth = newWidth || img.width;
+    const cHeight = newHeight || img.height;
+    let nw = img.naturalWidth;
+    let nh = img.naturalHeight;
+    var oRatio = nw / nh,
+      cRatio = cWidth / cHeight;
 
-      let width, height;
-      if (oRatio > cRatio) {
-        width = cWidth;
-        height = cWidth / oRatio;
-      } else {
-        width = cHeight * oRatio;
-        height = cHeight;
-      }
+    let width, height;
+    if (oRatio > cRatio) {
+      width = cWidth;
+      height = cWidth / oRatio;
+    } else {
+      width = cHeight * oRatio;
+      height = cHeight;
+    }
 
-      width = Math.round(width);
-      height = Math.round(height);
+    width = Math.round(width);
+    height = Math.round(height);
 
-      setDetailPosSize(Object.assign({...detailPosSize}, {height, width}));
-      if (!newWidth && !newHeight) {
-        setDefaultSize({height, width});
-      }
+    setDetailPosSize(Object.assign({ ...detailPosSize }, { height, width }));
+    if (!newWidth && !newHeight) {
+      setDefaultSize({ height, width });
+    }
   }
 
-  const onResizeStop = (w, h, position={}) => {
-      w = parseInt(w)
-      h = parseInt(h)
-      setDetailPosSize(Object.assign({...detailPosSize}, {
-        width: w,
-        height: h,
-        ...position
-      }));
+  const onResizeStop = (w, h, position = {}) => {
+    w = parseInt(w)
+    h = parseInt(h)
+    setDetailPosSize(Object.assign({ ...detailPosSize }, {
+      width: w,
+      height: h,
+      ...position
+    }));
 
-      setWidth(w);
-      setHeight(h);
+    setWidth(w);
+    setHeight(h);
   }
 
   return (
@@ -801,54 +802,58 @@ const DetailOverlay = ({
               )}
               {mode === "detail" && (
                 <>
-                <Button
-                  text={"Download"}
-                  type={"button"}
-                  className={styles["only-desktop-button"]}
-                  styleType={"secondary"}
-                  onClick={() => {
-                    if (currentAsset.extension !== 'gif' && currentAsset.type === "image" && isImageType(assetDetail.extension)) {
-                      setMode("resize");
-                      changeActiveSide("detail");
-                      resetImageSettings(undefined, undefined);
-                    } else {
-                      // downloadSelectedAssets(currentAsset.id)
-                      manualDownloadAsset(currentAsset);
-                    }
-                  }}
-                />
+                  <Button
+                    text={"Download"}
+                    type={"button"}
+                    className={styles["only-desktop-button"]}
+                    styleType={"secondary"}
+                    onClick={() => {
+                      if (currentAsset.extension !== 'gif' && currentAsset.type === "image" && isImageType(assetDetail.extension)) {
+                        setMode("resize");
+                        changeActiveSide("detail");
+                        resetImageSettings(undefined, undefined);
+                      } else {
+                        // downloadSelectedAssets(currentAsset.id)
+                        manualDownloadAsset(currentAsset);
+                      }
+                    }}
+                  />
                 </>
               )}
             </div>
           </div>
           <div className={styles["img-wrapper"]}>
             <div className={styles["notes-wrapper"]}>
-            {
-              notes.map((note, indx) => (
-                ((isShare && !note.internal) || (!isShare)) && <AssetNote key={indx.toString()}
-                  title={`Note ${indx+1}`}
-                  note={note.text}
-                />
-              ))
-            }
+              {
+                notes.map((note, indx) => (
+                  ((isShare && !note.internal) || (!isShare)) && <AssetNote key={indx.toString()}
+                    title={`Note ${indx + 1}`}
+                    note={note.text}
+                  />
+                ))
+              }
             </div>
             {assetDetail.type === "image" && (
               <>
                 {mode === "detail" && (
-                    <AssetImg name={assetDetail.name} assetImg={versionRealUrl} />
+                  <AssetImg name={assetDetail.name} assetImg={versionRealUrl} />
                 )}
                 {mode === "resize" && (
-                  <Rnd position={{ x: detailPosSize.x, y: detailPosSize.y}}
-                    size={{ width: detailPosSize.width,  height: detailPosSize.height }}
+                  <Rnd position={{ x: detailPosSize.x, y: detailPosSize.y }}
+                    size={{ width: detailPosSize.width, height: detailPosSize.height }}
                     className={`${styles["react-draggable"]}`} lockAspectRatio={true}
                     // onDragStop={(e, d) => {
                     //   setDetailPosSize(Object.assign({...detailPosSize}, { x: d.x, y: d.y}))
                     // }}
                     onResizeStop={(e, direction, ref, delta, position) => onResizeStop(ref.style.width, ref.style.height, position)}
-                    >
+                  >
                     <AssetImg name={assetDetail.name} assetImg={versionRealUrl} />
                   </Rnd>
                 )}
+
+                {/* Related Files */}
+                <AssetRelatedFIles />
+
                 {mode === "crop" && (
                   <AssetCropImg
                     imageType={imageType}
@@ -870,14 +875,14 @@ const DetailOverlay = ({
               assetDetail.type !== "video" &&
               versionThumbnailUrl && (
                 assetDetail.extension.toLowerCase() === "pdf" ?
-                <AssetPdf
-                  asset={asset}
-                />
-                :
-                <AssetImg
-                  name={assetDetail.name}
-                  assetImg={versionThumbnailUrl}
-                />
+                  <AssetPdf
+                    asset={asset}
+                  />
+                  :
+                  <AssetImg
+                    name={assetDetail.name}
+                    assetImg={versionThumbnailUrl}
+                  />
               )}
             {assetDetail.type !== "image" &&
               assetDetail.type !== "video" &&
@@ -945,7 +950,7 @@ const DetailOverlay = ({
                   onModeChange={(mode) => {
                     // resetValues();
                     setMode(mode);
-                    if(mode === 'crop') {
+                    if (mode === 'crop') {
                       setSizeOfCrop({ width: Math.round(width / 2), height: Math.round(height / 2) })
                     }
                   }}
@@ -954,7 +959,7 @@ const DetailOverlay = ({
                   asset={assetDetail}
                   onResetImageSize={() => {
                     resetValues();
-                    setDetailPosSize({...detailPosSize, width: defaultSize.width, height: defaultSize.height });
+                    setDetailPosSize({ ...detailPosSize, width: defaultSize.width, height: defaultSize.height });
                   }}
                   sizeOfCrop={sizeOfCrop}
                   setSizeOfCrop={setSizeOfCrop}
@@ -979,9 +984,9 @@ const DetailOverlay = ({
 
           {activeSideComponent === "notes" && notes && (
             <AssetNotes
-            asset={asset}
-            notes={notes}
-            applyCrud={applyCrud} />
+              asset={asset}
+              notes={notes}
+              applyCrud={applyCrud} />
           )}
 
         </section>

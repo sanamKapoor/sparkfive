@@ -1,0 +1,9 @@
+.slick-slider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slick-slide {
+    padding: 0 12px;
+}

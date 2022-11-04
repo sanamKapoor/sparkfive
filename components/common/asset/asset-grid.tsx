@@ -239,7 +239,7 @@ const AssetGrid = ({
 
     // setAssetDetail({...newVersionAsset})
   };
-
+  
   return (
     <section className={`${styles.container} ${openFilter && styles.filter}`}>
       {(shouldShowUpload || isDragging) && !isShare && (

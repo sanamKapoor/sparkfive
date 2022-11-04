@@ -1,0 +1,104 @@
+.container {
+    width: 100%;
+}
+
+.container h3 {
+    text-align: left;
+    margin: 48px 0 60px 46px;
+}
+
+.slider {
+    margin-bottom: 100px;
+}
+
+.arrow {
+    cursor: pointer;
+}
+
+.buttons-wrapper {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 26px;
+    padding-bottom: 36px;
+    border-bottom: 0.5px solid #E5E5E5;
+    margin-bottom: 60px;
+}
+
+.upload-wrapper {
+    margin-top: 14px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.modal-upload {
+    max-width: 940px;
+    width: 100%;
+    max-height: 455px;
+    height: 100%;
+    justify-content: space-between;
+}
+
+.modal-upload-content {
+    padding: 0 80px;
+    height: 100%;
+}
+
+.modal-upload-content > div:last-child {
+    position: static;
+    height: 175px;
+    background-color: #E9EEFA;
+    border: 1px dashed #08135E;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.upload-icon {
+    width: 50px;
+    height: auto;
+}
+
+.upload-icon-wrapper {
+    border: 1px solid #08135E;
+    border-radius: 4px;
+    text-align: center;
+    height: 100px;
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.upload-icon-wrapper p {
+    margin: 12px 0 0;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.upload-icons-wrapper {
+    display: flex;
+    gap: 76px;
+    margin-bottom: 36px;
+    align-items: center;
+
+}
+
+@media screen and (max-width: 768px) {
+    .modal-upload {
+        max-width: 90%;
+    }
+
+    .modal-upload-content {
+        padding: 0 16px;
+        max-width: 100%;
+    }
+
+    .upload-icons-wrapper {
+        gap: 24px;
+    }
+
+    .buttons-wrapper {
+        flex-direction: column;
+    }
+}
