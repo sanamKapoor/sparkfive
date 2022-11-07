@@ -3323,6 +3323,13 @@ react-slick@^0.29.0:
     lodash.debounce "^4.0.8"
     resize-observer-polyfill "^1.5.0"
 
+react-sweet-progress@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/react-sweet-progress/-/react-sweet-progress-1.1.2.tgz#b27c6baa7c08a12cf0896565431ba477af249892"
+  integrity sha512-FUfiKpox5LJ9YTeK/HsaLp/oOsuxWBJQir6oAYKLY5nsa2pb04PtxzddSy6Y1fn8osaILpXIcItJRQYnHp42CA==
+  dependencies:
+    classnames "^2.2.5"
+
 react-time-picker@^4.0.1:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/react-time-picker/-/react-time-picker-4.5.0.tgz#661624ce8e0fde583e143f4b30fb9f8a3f78036b"

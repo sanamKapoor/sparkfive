@@ -52,6 +52,7 @@
     "react-rnd": "^10.3.7",
     "react-select": "^3.1.0",
     "react-slick": "^0.29.0",
+    "react-sweet-progress": "^1.1.2",
     "react-time-picker": "^4.0.1",
     "react-toastify": "^5.5.0",
     "react-tooltip": "^4.2.10",

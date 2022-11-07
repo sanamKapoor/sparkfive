@@ -5,7 +5,7 @@ import { AssetContext } from '../../../context'
 import downloadUtils from "../../../utils/download"
 import toastUtils from "../../../utils/toast"
 import update from "immutability-helper"
-
+import { Line } from 'rc-progress'
 import Slider from 'react-slick'
 import ConfirmModal from "../modals/confirm-modal"
 import AssetThumbail from './asset-thumbail'
@@ -15,6 +15,8 @@ import ReactTooltip from 'react-tooltip'
 import AssetUpload from './asset-upload'
 import BaseModal from '../modals/base'
 import IconClickable from '../buttons/icon-clickable'
+import { Progress } from 'react-sweet-progress';
+import "react-sweet-progress/lib/style.css";
 
 const NextArrow = ({ onClick }) => (
     <img className={styles.arrow} src={Utilities.circleArrowRight} alt="Arrow next" onClick={onClick} />
@@ -372,8 +374,8 @@ const AssetRelatedFIles = () => {
     }
 
     const deleteAsset = async (id) => {
-    const [previewActive, setPreviewActive] = useState(false)
-    try {
+        const [previewActive, setPreviewActive] = useState(false)
+        try {
             await assetsApi.updateAsset(id, {
                 updateData: {
                     status: "deleted",
@@ -457,20 +459,51 @@ const AssetRelatedFIles = () => {
                             />
                         </div>
                     </BaseModal>
-
-                    <ConfirmModal
+                    <BaseModal
+                        showCancel={false}
+                        closeButtonOnly
                         closeModal={() => setConfirmUploadModalOpen(false)}
+                        confirmText="Add Related Files"
                         confirmAction={() => {
                             setConfirmUploadModalOpen(false)
                         }}
-                        confirmText={"Add Related Files"}
-                        message={
-                            <span>
-                                Are you sure you want to Add (4) Related Files?
-                            </span>
-                        }
                         modalIsOpen={confirmUploadModalOpen}
-                    />
+                    >
+                        <div className={styles['confirm-modal']}>
+                            <h2>Add (4) Related Files</h2>
+                            <div className={styles['file-progress']}>
+                                <span className={styles['file-name']}>Orange_Title_example_0505055200_6615155551515641545.jpg</span>
+                                <Progress
+                                style={{fontWeight: 'bold'}}
+                                    percent={50}
+                                    theme={
+                                        {
+                                            active: {
+                                                trailColor: '#D9D9D9 ',
+                                                color: '#10BDA5',
+                                            },
+                                        }
+                                    }
+                                />
+                            </div>
+                            <div className={styles['file-progress']}>
+                                <span className={styles['file-name']}>Orange_Title_example_01.jpg</span>
+                                <span className={styles['done-badge']}>Done</span>
+                            </div>
+                            <div className={styles['file-progress']}>
+                                <span className={styles['file-name']}>Orange_Title_example-AB_023.jpg</span>
+                                <span className={styles.fail}>
+                                    <span className={styles['fail-badge']}>Fail</span>
+                                    <span className={styles['reload-btn']}>Reload</span>
+                                </span>
+                            </div>
+                            <div className={styles['file-progress']}>
+                                <span className={styles['file-name']}>Orange_Title_example.jpg</span>
+                                <span className={styles['done-badge']}>Done</span>
+                            </div>
+                        </div>
+
+                    </BaseModal>
                 </div>
                 <h3>Related Files</h3>
                 <div className={styles.slider}>

@@ -47,8 +47,8 @@
 .modal-upload-content > div:last-child {
     position: static;
     height: 175px;
-    background-color: #E9EEFA;
-    border: 1px dashed #08135E;
+    background-color: var(--olor-sec-lightblue);
+    border: 1px dashed var(--color-prim-navy);
     border-radius: 12px;
     font-weight: 600;
 }
@@ -59,7 +59,7 @@
 }
 
 .upload-icon-wrapper {
-    border: 1px solid #08135E;
+    border: 1px solid var(--color-prim-navy);
     border-radius: 4px;
     text-align: center;
     height: 100px;
@@ -84,6 +84,75 @@
 
 }
 
+.confirm-modal {
+    padding: 0 52px 32px;
+    min-width: 50rem;
+    width: 100%;
+}
+
+.confirm-modal h2 {
+    font-size: 20px;
+    margin: 0 0 54px;
+}
+
+.file-progress {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    margin-bottom: 45px;
+}
+
+.file-progress:last-child {
+    margin-bottom: 0;
+}
+
+.file-progress span {
+    font-size: 12px;
+}
+
+.file-name {
+    max-width: 50%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.done-badge {
+    color: var(--color-prim-turquoise);
+    background-color: #CFF2ED;
+    width: 76px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.fail-badge {
+    color: var(--color-prim-red);
+    background-color: rgba(250, 55, 61, 0.2);;
+    width: 76px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.fail {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.reload-btn {
+    font-weight: 600;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 @media screen and (max-width: 768px) {
     .modal-upload {
         max-width: 90%;
@@ -101,4 +170,25 @@
     .buttons-wrapper {
         flex-direction: column;
     }
+
+    .confirm-modal {
+        min-width: 100%;
+    }
+
+    .file-progress {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+        margin-bottom: 24px;
+    }
+
+    .file-name {
+        max-width: 100%;
+    }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1200px) {
+ .confirm-modal {
+    min-width: 35rem;
+ }
 }

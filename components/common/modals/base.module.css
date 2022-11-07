@@ -93,6 +93,10 @@
   border-bottom: none;
 }
 
+.button-center {
+  justify-content: center;
+}
+
 @media screen and (max-width: 500px) {
   .text {
     min-width: 100%;
