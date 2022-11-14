@@ -1,9 +1,19 @@
 .slick-slider {
     display: flex;
     align-items: center;
-    justify-content: center;
 }
+
+.slick-list {
+    width: 100%;
+}
+
 
 .slick-slide {
     padding: 0 12px;
 }
+
+.slick-track {
+    margin-right: auto;
+    margin-left: 0;
+}
+

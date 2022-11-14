@@ -11,7 +11,7 @@ import shareCollectionApi from '../../../server-api/share-collection'
 import { Utilities } from '../../../assets'
 
 // Contexts
-import { AssetContext } from '../../../context'
+import { AssetContext, LoadingContext } from '../../../context'
 
 // Components
 import IconClickable from '../buttons/icon-clickable'
@@ -41,10 +41,12 @@ const CropSidePanel = ({ asset,
     onResetImageSize,
     sizeOfCrop,
     setSizeOfCrop,
-    detailPosSize
+    detailPosSize,
+    onAddAssociate = (data) => {}
 }) => {
 
     const { updateDownloadingStatus } = useContext(AssetContext)
+    const { setIsLoading } = useContext(LoadingContext)
 
     const [resizeOption, setResizeOption] = useState('px')
     const [sizesValue, setSizesValue] = useState({
@@ -151,6 +153,56 @@ const CropSidePanel = ({ asset,
 
 
         // downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets')
+    }
+
+    const saveResizedImageAsAssociate = async (dlSize) => {
+        try {
+            setIsLoading(true)
+
+            let payload = {
+                assetIds: [asset.id],
+                sizeId: (sizeValue && sizeValue.value === 'none') || dlSize === 'original' ? null : sizeValue.id,
+                customSize: true,
+                width: dlSize === 'original' ? asset.dimensionWidth : widthOriginal,
+                height: dlSize === 'original' ? asset.dimensionHeight : heightOriginal,
+                format: getImageType(imageType),
+                associateFile: asset.id
+            };
+
+            const { shareJWT, code } = urlUtils.getQueryParameters()
+
+            let totalDownloadingAssets = 1;
+            let filters = {
+                estimateTime: 1,
+                shareJWT,
+                code,
+                sharePath
+            }
+
+            let download = null
+
+            if (isShare) {
+                // Download assets in shared collections
+                if (sharePath) {
+                    download = shareCollectionApi.downloadWithCustomSize
+                } else { // Download assets in sharing assets
+                    download = sizeApi.shareDownload
+                }
+            } else {
+                download = sizeApi.download
+            }
+
+            const { data } = await download(payload, filters)
+
+            console.log(data)
+
+
+
+            onAddAssociate(data)
+
+            setIsLoading(false)
+        } catch (e) {
+        }
     }
 
     const resetResizeOption = (option) => {
@@ -376,12 +428,18 @@ const CropSidePanel = ({ asset,
                 <ConfirmModal
                     closeModal={() => setRelatedModalOpen(false)}
                     confirmAction={() => {
+                        if (mode === 'crop') {
+                            document.getElementById('associate-crop-image').click()
+                        } else {
+                            saveResizedImageAsAssociate('resized');
+                            // downloadImage('resized')
+                        }
                         setRelatedModalOpen(false)
                     }}
                     confirmText={"Confirm"}
                     message={
                         <span className={'text-center'}>
-                            Are you sure you want to save Dumpling.jpg as Related File?
+                            Are you sure you want to save {asset.name} as Related File?
                         </span>
                     }
                     modalIsOpen={relatedModalOpen}

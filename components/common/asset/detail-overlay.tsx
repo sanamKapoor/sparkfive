@@ -112,7 +112,7 @@ const DetailOverlay = ({
 
   const [activeSideComponent, setActiveSidecomponent] = useState("detail");
 
-  const { assets, setAssets, folders, needsFetch, updateDownloadingStatus, setDetailOverlayId, totalAssets } =
+  const { assets, setAssets, folders, needsFetch, updateDownloadingStatus, setDetailOverlayId, totalAssets, setOperationAssets } =
     useContext(AssetContext);
 
   const [sideOpen, setSideOpen] = useState(true);
@@ -700,6 +700,7 @@ const DetailOverlay = ({
   }
 
   const _closeOverlay = () => {
+    setOperationAssets([])
     closeOverlay(changedVersion ? currentAsset : undefined)
     setDetailOverlayId(undefined)
   }
@@ -746,6 +747,10 @@ const DetailOverlay = ({
 
     setWidth(w);
     setHeight(h);
+  }
+
+  const onChangeRelatedFiles = (fileAssociations) => {
+    setAssetDetail({...assetDetail, fileAssociations})
   }
 
   return (
@@ -851,9 +856,6 @@ const DetailOverlay = ({
                   </Rnd>
                 )}
 
-                {/* Related Files */}
-                <AssetRelatedFIles />
-
                 {mode === "crop" && (
                   <AssetCropImg
                     imageType={imageType}
@@ -867,6 +869,13 @@ const DetailOverlay = ({
                     sizeOfCrop={sizeOfCrop}
                     setSizeOfCrop={setSizeOfCrop}
                     detailPosSize={detailPosSize}
+                    associateFileId={currentAsset.id}
+                    onAddAssociate={(asset)=>{
+                      const detail = {...assetDetail}
+                      detail.fileAssociations.push(asset)
+
+                      setAssetDetail(detail)
+                    }}
                   />
                 )}
               </>
@@ -916,6 +925,14 @@ const DetailOverlay = ({
                 <span>{assetIndex} of {totalAssets} in {activeCollection?.name} collection</span>
               </div>
             }
+
+            {/* Related Files */}
+            <AssetRelatedFIles assets={assetDetail.fileAssociations || []} associateFileId={currentAsset.id} onChangeRelatedFiles={onChangeRelatedFiles} onAddRelatedFiles={(data)=>{
+              console.log(data)
+              let updatedAssets = [...assetDetail.fileAssociations]
+              updatedAssets = updatedAssets.concat(data)
+              setAssetDetail({...assetDetail, fileAssociations: updatedAssets})
+            }}/>
           </div>
         </section>
       )}
@@ -964,6 +981,12 @@ const DetailOverlay = ({
                   sizeOfCrop={sizeOfCrop}
                   setSizeOfCrop={setSizeOfCrop}
                   detailPosSize={detailPosSize}
+                  onAddAssociate={(asset)=>{
+                    const detail = {...assetDetail}
+                    detail.fileAssociations.push(asset)
+
+                    setAssetDetail(detail)
+                  }}
                 />
               )}
             </>

@@ -44,7 +44,8 @@ const AssetThumbail = ({
   customComponent = <></>,
   infoWrapperClass = "",
   textWrapperClass = "",
-  customIconComponent = <></>
+  customIconComponent = <></>,
+  onDisassociate = () => {}
 }) => {
   const [overlayProperties, setOverlayProperties] = useState(DEFAULT_DETAIL_PROPS);
   const { detailOverlayId } = useContext(AssetContext);
@@ -98,7 +99,7 @@ const AssetThumbail = ({
           {asset.type === 'video' && <AssetVideo assetImg={thumbailUrl} asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} />}
           {asset.type === 'application' && <AssetApplication assetImg={thumbailUrl} extension={asset.extension} />}
           {asset.type === 'text' && <AssetText assetImg={thumbailUrl} extension={asset.extension} />} */}
-          {!isUploading && !isLoading && (
+          {!isUploading && !isLoading && showAssetOption && (
             <>
               <div
                 className={`${styles["selectable-wrapper"]} ${isSelected && styles["selected-wrapper"]
@@ -160,6 +161,7 @@ const AssetThumbail = ({
                     openComments={openComments}
                     openRemoveAsset={openRemoveAsset}
                     isShare={isShare}
+                    dissociateAsset={onDisassociate}
                   />
                 )}
                 {showAssetRelatedOption && (
@@ -169,6 +171,7 @@ const AssetThumbail = ({
                     openDeleteAsset={openDeleteAsset}
                     downloadAsset={downloadAsset}
                     isAssetRelated
+                    dissociateAsset={onDisassociate}
                   />
                 )}
               </div>

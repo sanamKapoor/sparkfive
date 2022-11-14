@@ -66,6 +66,10 @@ export default {
       responseType: 'blob', // Important
       data
     })
-  }
+  },
+
+  associate: (assetIds) => axios.post(`${assetUrl}/associate`, { assetIds }),
+  disassociate: (assetIds) => axios.post(`${assetUrl}/disassociate`, { assetIds }),
+
 }
 

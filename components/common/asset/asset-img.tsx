@@ -30,7 +30,7 @@ const AssetImg = ({
       <img
         src={Assets.empty}
         alt={"blank"}
-        style={loaded ? { display: "none" } : {}}
+        style={loaded ? { display: "none" } : { width: '100%', height: "100%", objectFit: "contain"}}
       />
       <img
         crossOrigin={"anonymous"}

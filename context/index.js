@@ -83,6 +83,7 @@ export const AssetContext = createContext({
     uploadingFile: undefined,
     uploadRemainingTime: '',
     uploadingPercent: 0,
+    setUploadingPercent: (value) => { },
     uploadingAssets: [],
     setUploadingAssets: (assets) => { },
     uploadingType: '',
@@ -113,7 +114,10 @@ export const AssetContext = createContext({
     updateDownloadingStatus: (status, percent, totalAssets, error) => { },
     retryListCount: 0,
     detailOverlayId: undefined,
-    setDetailOverlayId: (id) => {}
+    setDetailOverlayId: (id) => {},
+
+    operationAssets: [],
+    setOperationAssets: (value) => {}
 })
 
 export const TeamContext = createContext({

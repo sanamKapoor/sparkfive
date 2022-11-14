@@ -6,7 +6,7 @@ import zipDownloadUtils from '../../../utils/download'
 import styles from './asset-header-ops.module.css'
 
 // Contexts
-import { AssetContext, UserContext, FilterContext } from '../../../context'
+import { AssetContext, UserContext, FilterContext, LoadingContext } from '../../../context'
 
 // Utils
 import downloadUtils from '../../../utils/download'
@@ -43,6 +43,8 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 		activeFolder,
 		updateDownloadingStatus
 	} = useContext(AssetContext)
+
+	const { setIsLoading } = useContext(LoadingContext);
 
 	const router = useRouter()
 
@@ -156,6 +158,15 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 		}
 
 		// downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets')
+	}
+
+	const associateAssets = async () => {
+		if (!isFolder) {
+			setIsLoading(true)
+			const assetIds = selectedAssets.map(assetItem => assetItem.asset.id)
+			await assetApi.associate(assetIds)
+			setIsLoading(false)
+		}
 	}
 
 	const deselectAll = () => {
@@ -319,11 +330,13 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 								confirmAction={() => {
 									setActiveOperation('associate')
 									setShowAssociateModalOpen(false)
+
+									associateAssets()
 								}}
 								confirmText={"Associate"}
 								message={
 									<span className='text-center'>
-										Are you sure you would like to associate these (4) files with each other?
+										Are you sure you would like to associate these ({totalSelectAssets}) files with each other?
 									</span>
 								}
 								modalIsOpen={showAssociateModalOpen}
