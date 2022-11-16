@@ -194,10 +194,6 @@ const CropSidePanel = ({ asset,
 
             const { data } = await download(payload, filters)
 
-            console.log(data)
-
-
-
             onAddAssociate(data)
 
             setIsLoading(false)

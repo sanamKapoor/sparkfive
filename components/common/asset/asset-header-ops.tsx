@@ -19,6 +19,7 @@ import { Utilities } from '../../../assets'
 
 // Utils
 import { getSubdomain } from '../../../utils/domain'
+import toastUtils from '../../../utils/toast'
 
 // Components
 import { AssetOps } from '../../../assets'
@@ -28,6 +29,9 @@ import Button from '../../common/buttons/button'
 import IconClickable from '../../common/buttons/icon-clickable'
 import { useRouter } from "next/router";
 import ConfirmModal from "../modals/confirm-modal"
+
+// Constants
+import { maximumAssociateFiles} from "../../../constants/asset-associate";
 
 const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, isFolder = false, deselectHidden = false, iconColor = '', deletedAssets = false, advancedLink = false }) => {
 	const {
@@ -41,7 +45,8 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 		selectAllFolders,
 		totalAssets,
 		activeFolder,
-		updateDownloadingStatus
+		updateDownloadingStatus,
+		setNeedsFetch
 	} = useContext(AssetContext)
 
 	const { setIsLoading } = useContext(LoadingContext);
@@ -164,8 +169,23 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 		if (!isFolder) {
 			setIsLoading(true)
 			const assetIds = selectedAssets.map(assetItem => assetItem.asset.id)
-			await assetApi.associate(assetIds)
-			setIsLoading(false)
+
+			if(assetIds.length > 1){
+				const assetsToAssociate = selectedAssets.filter(assetItem => (assetItem.asset.fileAssociations.length + selectedAssets.length-1) <= maximumAssociateFiles)
+				if(assetsToAssociate.length !== selectedAssets.length){
+					setIsLoading(false)
+					toastUtils.error('Some of your selected assets have already maximum 10 associated files. Please change your selected assets then try again')
+				}else{
+					await assetApi.associate(assetIds)
+					setNeedsFetch('asset')
+					toastUtils.success('Associate successfully')
+					setIsLoading(false)
+				}
+			}else{
+				setIsLoading(false)
+				toastUtils.error('Please select at least 2 assets to associate')
+			}
+
 		}
 	}
 
