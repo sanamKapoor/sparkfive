@@ -10,6 +10,9 @@ import urlUtils from "../../../utils/url";
 import downloadUtils from "../../../utils/download";
 import assetsApi from "../../../server-api/asset";
 
+import assetApi from "../../../server-api/asset";
+import shareApi from "../../../server-api/share-collection";
+
 // Components
 import AssetAddition from "./asset-addition";
 import FolderGridItem from "../folder/folder-grid-item";
@@ -24,7 +27,14 @@ import useSortedAssets from "../../../hooks/use-sorted-assets";
 import folderApi from "../../../server-api/folder";
 import ChangeThumbnail from "../modals/change-thumnail-modal";
 
-import { ASSET_UPLOAD_APPROVAL, ASSET_ACCESS } from '../../../constants/permissions'
+import {
+  ASSET_UPLOAD_APPROVAL,
+  ASSET_ACCESS,
+} from "../../../constants/permissions";
+import fileDownload from "js-file-download";
+
+
+import {sizeToZipDownload} from "../../../constants/download";
 
 const AssetGrid = ({
   activeView = "grid",
@@ -54,6 +64,7 @@ const AssetGrid = ({
     nextPage,
     setOperationFolder,
     folders,
+    updateDownloadingStatus
   } = useContext(AssetContext);
 
   const {advancedConfig, hasPermission} = useContext(UserContext)
@@ -166,6 +177,11 @@ const AssetGrid = ({
     setActiveOperation(operation);
   };
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> 6c2bd4f (Limit manual download at < 50MB in asset grid)
   //Use for upload thumbnail
   const beginChangeThumbnailOperation = ({ folder }, operation) => {
     setModalData(folder);
@@ -177,6 +193,10 @@ const AssetGrid = ({
     try {
       const data = await folderApi.updateFolder(folder.id, {
         thumbnailPath: null,
+<<<<<<< HEAD
+=======
+        thumbnailExtension: null
+>>>>>>> 6c2bd4f (Limit manual download at < 50MB in asset grid)
       });
       if (data) {
         setIsLoading(false);
@@ -187,8 +207,57 @@ const AssetGrid = ({
     }
   };
 
+<<<<<<< HEAD
+=======
+  const downloadSelectedAssets = async (id) => {
+    try {
+      let payload = {
+        assetIds: [id],
+      };
+
+      let totalDownloadingAssets = 1;
+      let filters = {
+        estimateTime: 1,
+      };
+
+      // Add sharePath property if user is at share collection page
+      if (sharePath) {
+        filters["sharePath"] = sharePath;
+      }
+
+      // Show processing bar
+      updateDownloadingStatus("zipping", 0, totalDownloadingAssets);
+
+      let api: any = assetApi;
+
+      if (isShare) {
+        api = shareApi;
+      }
+
+      const { data } = await api.downloadAll(payload, filters);
+
+      // Download file to storage
+      fileDownload(data, "assets.zip");
+
+      updateDownloadingStatus("done", 0, 0);
+    } catch (e) {
+      updateDownloadingStatus(
+          "error",
+          0,
+          0,
+          "Internal Server Error. Please try again."
+      );
+    }
+
+    // downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets')
+  };
+
   const downloadAsset = (assetItem) => {
-    downloadUtils.downloadFile(assetItem.realUrl, assetItem.asset.name);
+    if(assetItem.asset.size >= sizeToZipDownload){
+      downloadSelectedAssets(assetItem.asset.id)
+    }else{
+      downloadUtils.downloadFile(assetItem.realUrl, assetItem.asset.name);
+    }
   };
 
   const shouldShowUpload =
