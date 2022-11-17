@@ -14,6 +14,7 @@ import VersionList from "./version-list";
 import AssetAddition from "./asset-addition";
 
 import { isMobile } from "react-device-detect";
+import { sizeToZipDownload } from "../../../constants/download";
 
 import { ASSET_DOWNLOAD } from '../../../constants/permissions'
 
@@ -819,8 +820,11 @@ const DetailOverlay = ({
                       changeActiveSide("detail");
                       resetImageSettings(undefined, undefined);
                     } else {
-                      // downloadSelectedAssets(currentAsset.id)
-                      manualDownloadAsset(currentAsset);
+                      if(currentAsset.size >= sizeToZipDownload){
+                        downloadSelectedAssets(currentAsset.id)
+                      }else{
+                        manualDownloadAsset(currentAsset);
+                      }
                     }
                   }}
                 />
