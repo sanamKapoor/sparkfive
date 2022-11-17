@@ -620,7 +620,7 @@ const AssetsLibrary = () => {
     }
   }
 
-  const mapWithToggleSelection = asset => ({ ...asset, toggleSelected })
+  const mapWithToggleSelection = asset => ({ ...asset, isSelected: selectedAllAssets, toggleSelected })
 
   const backToFolders = () => {
     setActiveFolder('')
