@@ -35,14 +35,9 @@ const FolderGridItem = ({
   toggleSelected,
   copyEnabled,
   sharePath = '',
-  isShare = false
+  isShare = false,
   changeThumbnail = (folder) => {},
   deleteThumbnail = (folder) => {},
-  copyShareLink = (folder) => {},
-  toggleSelected,
-  copyEnabled,
-  sharePath = "",
-  isShare = false,
   thumbnailPath,
 }) => {
   const { updateDownloadingStatus } = useContext(AssetContext);
