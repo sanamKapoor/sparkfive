@@ -9,14 +9,6 @@ import { UserContext } from "../../../context";
 import { useContext, useEffect, useState } from "react";
 
 const FolderOptions = ({
-<<<<<<< HEAD
-	downloadFoldercontents,
-	setDeleteOpen,
-	shareAssets,
-	copyShareLink,
-	copyEnabled,
-	isShare = false
-=======
   downloadFoldercontents,
   setDeleteOpen,
   shareAssets,
@@ -26,7 +18,6 @@ const FolderOptions = ({
   deleteThumbnail,
   isShare = false,
   thumbnailPath,
->>>>>>> c5c300d (Thumbnail Task completed)
 }) => {
   const { user } = useContext(UserContext);
   const options = isShare
@@ -38,13 +29,6 @@ const FolderOptions = ({
       ];
   const [adminOption, setAdminOption] = useState(options);
 
-<<<<<<< HEAD
-	const options = isShare ? [{ label: 'Download', onClick: downloadFoldercontents }]: [
-		{ label: 'Download', onClick: downloadFoldercontents },
-		{ label: 'Delete', onClick: () => setDeleteOpen(true) },
-		{ label: 'Share', onClick: shareAssets }
-	]
-=======
   useEffect(() => {
     let userDetails: any = user;
     if (thumbnailPath) {
@@ -74,7 +58,6 @@ const FolderOptions = ({
       }
     }
   }, [user, thumbnailPath]);
->>>>>>> c5c300d (Thumbnail Task completed)
 
   if (copyEnabled && !isShare) {
     setAdminOption([

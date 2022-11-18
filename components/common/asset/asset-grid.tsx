@@ -1,13 +1,8 @@
 import styles from "./asset-grid.module.css";
 import useDropzone from "../misc/dropzone";
 import update from "immutability-helper";
-<<<<<<< HEAD
-import { useEffect, useContext, useState } from "react";
-import { AssetContext, UserContext } from "../../../context";
-=======
 import React, { useEffect, useContext, useState } from "react";
 import { AssetContext, LoadingContext, UserContext } from "../../../context";
->>>>>>> c5c300d (Thumbnail Task completed)
 import toastUtils from "../../../utils/toast";
 import { Waypoint } from "react-waypoint";
 import copyClipboard from "copy-to-clipboard";
@@ -27,6 +22,7 @@ import ConfirmModal from "../modals/confirm-modal";
 import Button from "../buttons/button";
 import useSortedAssets from "../../../hooks/use-sorted-assets";
 import folderApi from "../../../server-api/folder";
+import ChangeThumbnail from "../modals/change-thumnail-modal";
 
 import { ASSET_UPLOAD_APPROVAL, ASSET_ACCESS } from '../../../constants/permissions'
 
@@ -69,6 +65,12 @@ const AssetGrid = ({
   const [activeSearchOverlay, setActiveSearchOverlay] = useState(false);
 
   const [initAsset, setInitAsset] = useState(undefined);
+
+  const [modalOpen, setModalOpen] = useState(false); // Open or close modal of change thumbnail
+
+  const [modalData, setModalData] = useState(); // load or unload data for change thumbnail modal
+
+
 
   const [sortedAssets, currentSortAttribute, setCurrentSortAttribute] =
     useSortedAssets(assets);
@@ -164,8 +166,6 @@ const AssetGrid = ({
     setActiveOperation(operation);
   };
 
-<<<<<<< HEAD
-=======
   //Use for upload thumbnail
   const beginChangeThumbnailOperation = ({ folder }, operation) => {
     setModalData(folder);
@@ -187,7 +187,6 @@ const AssetGrid = ({
     }
   };
 
->>>>>>> c5c300d (Thumbnail Task completed)
   const downloadAsset = (assetItem) => {
     downloadUtils.downloadFile(assetItem.realUrl, assetItem.asset.name);
   };
@@ -329,8 +328,6 @@ const AssetGrid = ({
                       shareAssets={() =>
                         beginAssetOperation({ folder }, "shareFolders")
                       }
-<<<<<<< HEAD
-=======
                       changeThumbnail={() =>
                         beginChangeThumbnailOperation(
                           { folder },
@@ -340,7 +337,6 @@ const AssetGrid = ({
                       deleteThumbnail={() =>
                         deleteThumbnail({ folder }, "shareFolders")
                       }
->>>>>>> c5c300d (Thumbnail Task completed)
                     />
                   </li>
                 );
@@ -438,8 +434,6 @@ const AssetGrid = ({
         )}
       </div>
 
-<<<<<<< HEAD
-=======
       {/* Change thumbnail modal */}
       <ChangeThumbnail
         closeModal={() => {
@@ -451,8 +445,6 @@ const AssetGrid = ({
         modalIsOpen={modalOpen}
         confirmAction={() => {}}
       />
-
->>>>>>> c5c300d (Thumbnail Task completed)
       {/* Delete modal */}
       <ConfirmModal
         closeModal={() => setDeleteModalOpen(false)}

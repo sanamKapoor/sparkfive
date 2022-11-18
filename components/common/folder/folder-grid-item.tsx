@@ -30,13 +30,12 @@ const FolderGridItem = ({
   isLoading = false,
   deleteFolder,
   shareAssets = (folder) => {},
-<<<<<<< HEAD
+
   copyShareLink = (folder) => {},
   toggleSelected,
   copyEnabled,
   sharePath = '',
   isShare = false
-=======
   changeThumbnail = (folder) => {},
   deleteThumbnail = (folder) => {},
   copyShareLink = (folder) => {},
@@ -45,7 +44,6 @@ const FolderGridItem = ({
   sharePath = "",
   isShare = false,
   thumbnailPath,
->>>>>>> c5c300d (Thumbnail Task completed)
 }) => {
   const { updateDownloadingStatus } = useContext(AssetContext);
 
@@ -139,11 +137,8 @@ const FolderGridItem = ({
             downloadFoldercontents={downloadFoldercontents}
             setDeleteOpen={setDeleteOpen}
             shareAssets={shareAssets}
-<<<<<<< HEAD
-=======
             changeThumbnail={changeThumbnail}
             deleteThumbnail={deleteThumbnail}
->>>>>>> c5c300d (Thumbnail Task completed)
             copyShareLink={copyShareLink}
             copyEnabled={copyEnabled}
             thumbnailPath={thumbnailPath}
