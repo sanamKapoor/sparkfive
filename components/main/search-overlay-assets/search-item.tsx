@@ -15,6 +15,7 @@ import AssetText from "../../common/asset/asset-text";
 import DetailOverlay from "../../common/asset/detail-overlay";
 import IconClickable from "../../common/buttons/icon-clickable";
 import AssetIcon from "../../common/asset/asset-icon";
+const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
 
 const SearchItem = ({
   assetItem,
@@ -24,6 +25,7 @@ const SearchItem = ({
   toggleSelected,
   enabledSelect = false,
   isShare,
+  activeFolder = ''
 }) => {
   const {
     asset,
@@ -33,6 +35,7 @@ const SearchItem = ({
     isSelected,
   } = assetItem;
   const [visibleOverlay, setVisibleOVerlay] = useState(false);
+  const [overlayProperties, setOverlayProperties] = useState(DEFAULT_DETAIL_PROPS);
 
   const searchWords = term.split(" ");
 
@@ -118,14 +121,20 @@ const SearchItem = ({
       </li>
       {visibleOverlay && (
         <DetailOverlay
-          thumbailUrl={thumbailUrl}
           isShare={isShare}
-          initialParams={{}}
+          sharePath={isShare}
+          initialParams={overlayProperties}
+          thumbailUrl={thumbailUrl}
           asset={asset}
-          realUrl={realUrl}
+          realUrl={
+            asset.extension === "tiff" || asset.extension === "tif"
+              ? thumbailUrl
+              : realUrl
+          }
           openShareAsset={openShareAsset}
           openDeleteAsset={openDeleteAsset}
           closeOverlay={() => setVisibleOVerlay(false)}
+          activeFolder={activeFolder}
         />
       )}
     </>

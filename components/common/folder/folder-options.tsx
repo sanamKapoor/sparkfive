@@ -9,21 +9,21 @@ import { UserContext } from "../../../context";
 import { useContext, useEffect, useState } from "react";
 
 const FolderOptions = ({
-   downloadFoldercontents,
-   setDeleteOpen,
-   shareAssets,
-   copyShareLink,
-   copyEnabled,
-   changeThumbnail,
-   deleteThumbnail,
-   isShare = false,
-   thumbnailPath,
-   assetsData = [],
+  downloadFoldercontents,
+  setDeleteOpen,
+  shareAssets,
+  copyShareLink,
+  copyEnabled,
+  changeThumbnail,
+  deleteThumbnail,
+  isShare = false,
+  thumbnailPath,
+  assetsData = [],
 }) => {
   const { user } = useContext(UserContext);
   const options = isShare
-      ? [{ label: "Download", onClick: downloadFoldercontents }]
-      : [
+    ? [{ label: "Download", onClick: downloadFoldercontents }]
+    : [
         { label: "Download", onClick: downloadFoldercontents },
         { label: "Delete", onClick: () => setDeleteOpen(true) },
         { label: "Share", onClick: shareAssets },
@@ -34,7 +34,7 @@ const FolderOptions = ({
     let userDetails: any = user;
     if (thumbnailPath) {
       if (
-          adminOption.filter((ele) => ele.label == "Delete Thumbnail").length == 0
+        adminOption.filter((ele) => ele.label == "Delete Thumbnail").length == 0
       ) {
         setAdminOption([
           ...adminOption,
@@ -47,10 +47,10 @@ const FolderOptions = ({
     }
     if (userDetails && userDetails.roleId == "admin") {
       if (
-          adminOption.filter(
-              (ele) =>
-                  ele.label == "Change Thumbnail"
-          ).length == 0
+        adminOption.filter(
+          (ele) =>
+            ele.label == "Change Thumbnail"
+        ).length == 0
       ) {
         setAdminOption([
           ...adminOption,
@@ -61,7 +61,7 @@ const FolderOptions = ({
         ]);
       }
     }
-
+   
     // if (thumbnailPath == null) {
     //   if (
     //     adminOption.filter(
@@ -93,10 +93,10 @@ const FolderOptions = ({
     // }
     if (copyEnabled && !isShare) {
       if (
-          adminOption.filter(
-              (ele) =>
-                  ele.label == "Copy Link"
-          ).length == 0
+        adminOption.filter(
+          (ele) =>
+            ele.label == "Copy Link"
+        ).length == 0
       ) {
         setAdminOption([
           ...adminOption,
@@ -107,21 +107,21 @@ const FolderOptions = ({
   }, [user, thumbnailPath, downloadFoldercontents, copyShareLink]);
 
   return (
-      <ToggleableAbsoluteWrapper
-          contentClass={styles["asset-actions"]}
-          wrapperClass={styles["asset-actions-wrapper"]}
-          Wrapper={({ children }) => (
-              <>
-                <IconClickable src={Utilities.moreLight} />
-                {children}
-              </>
-          )}
-          Content={() => (
-              <div className={styles.more}>
-                {adminOption.length > 0 && <Dropdown options={adminOption} />}
-              </div>
-          )}
-      />
+    <ToggleableAbsoluteWrapper
+      contentClass={styles["asset-actions"]}
+      wrapperClass={styles["asset-actions-wrapper"]}
+      Wrapper={({ children }) => (
+        <>
+          <IconClickable src={Utilities.moreLight} />
+          {children}
+        </>
+      )}
+      Content={() => (
+        <div className={styles.more}>
+          {adminOption.length > 0 && <Dropdown options={adminOption} />}
+        </div>
+      )}
+    />
   );
 };
 
