@@ -4,6 +4,7 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
+    /* max-height: 330px; */
 }
 
 .opaque {
@@ -18,3 +19,4 @@
 .react-crop > div{
     height: 100%;
 }
+
