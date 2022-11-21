@@ -12,6 +12,7 @@ import React from "react";
 import { LoadingContext, AssetContext } from "../../../context";
 import { AssetOps } from "../../../assets";
 import Autocomplete from "react-autocomplete";
+import AssetIcon from "../asset/asset-icon";
 ReactModal.defaultStyles = {};
 
 // Used for the upload thumbnail for collection
@@ -35,12 +36,27 @@ const ChangeThumbnail = ({
   const [searchData, setSearchData] = useState([]);
   const [searching, setSearching] = useState(false);
   const [isSearched, setIsSearched] = useState(false);
+  const [extension, setExtentions] = useState("");
+  const [isImage, setIsImage] = useState(false);
 
   const [isUrl, setisUrl] = useState("");
 
   const ALLOWED_TYPES = "image/*";
   const { setIsLoading } = useContext(LoadingContext);
   const { setFolders } = useContext(AssetContext);
+
+  useEffect(() => {
+    const cols: any = document.getElementsByTagName("html");
+    if (modalIsOpen) {
+      for (let i = 0; i < cols.length; i++) {
+        cols[i].style.overflow = "hidden";
+      }
+    } else {
+      for (let i = 0; i < cols.length; i++) {
+        cols[i].style.overflow = "auto";
+      }
+    }
+  }, [modalIsOpen]);
 
   useEffect(() => {
     onRemove();
@@ -61,8 +77,12 @@ const ChangeThumbnail = ({
 
   const onChangeEvent = async (e) => {
     setValue(e.target.value);
-    if (e.target.value.length > 3) {
+    if (e.target.value.length >= 2) {
       onSearch(e.target.value);
+    } else if (e.target.value.length == 0) {
+      setIsSearched(false);
+      setSearchData([]);
+      setSearching(false);
     }
   };
 
@@ -82,6 +102,7 @@ const ChangeThumbnail = ({
       page: 1,
       sharePath: searchKey,
       advSearchFrom: "folders.name",
+      folderId: modalData.id,
     };
     try {
       const { data } = await assetApi.searchAssets(queryParams);
@@ -102,7 +123,16 @@ const ChangeThumbnail = ({
     setImageName("");
     setFileForUpload("");
     setisUrl("");
+    setExtentions("");
     setIsSearched(false);
+    setIsImage(false);
+    if (
+      fileBrowserRef &&
+      fileBrowserRef.current &&
+      fileBrowserRef.current.value
+    ) {
+      fileBrowserRef.current.value = "";
+    }
   };
 
   //Upload image and validate
@@ -112,19 +142,29 @@ const ChangeThumbnail = ({
       var imgtag: any = document.getElementById("myimage");
       imgtag.title = uploadImg.name;
       reader.onload = (event: any) => {
-        imgtag.src = event.target.result;
-        imgtag.onerror = () => {
-          onRemove();
-          toastUtils.error("Please upload correct image.");
-        };
-        imgtag.onload = () => {
+        if (uploadImg.type.includes("image")) {
+          imgtag.src = event.target.result;
+          imgtag.onerror = () => {
+            onRemove();
+            toastUtils.error("Please upload correct image.");
+            setExtentions("");
+          };
+          imgtag.onload = () => {
+            setImagePreview(true);
+            setImageName(uploadImg.name);
+            setExtentions("");
+          };
+        } else {
           setImagePreview(true);
+          setIsImage(uploadImg.type.includes("image"));
           setImageName(uploadImg.name);
-        };
+          setExtentions(uploadImg.type.split("/")[1]);
+        }
       };
       reader.readAsDataURL(uploadImg);
       setFileForUpload(uploadImg);
     } catch (err) {
+      console.log("errerr", err);
       onRemove();
       toastUtils.error("Could not update photo, please try again later.");
     } finally {
@@ -140,14 +180,32 @@ const ChangeThumbnail = ({
       setIsUploading(true);
       const formData = new FormData();
       formData.append("thumbnail", fileForUpload);
-      const { data } = await assetApi.uploadThumbnail(formData);
-      if (data) {
-        await folderApi.updateFolder(modalData.id, {
-          thumbnailPath: data[0].realUrl,
-        });
+      if (extension) {
+        await folderApi.updateFolder(
+          modalData.id + `?folderId=${modalData.id}`,
+          {
+            thumbnailPath: "",
+            thumbnailExtension: extension,
+          }
+        );
         getFolders();
+      } else {
+        const { data } = await assetApi.uploadThumbnail(formData, {
+          folderId: modalData.id,
+        });
+        if (data) {
+          await folderApi.updateFolder(
+            modalData.id + `?folderId=${modalData.id}`,
+            {
+              thumbnailPath: data[0].realUrl,
+              thumbnailExtension: data[0].asset.extension,
+            }
+          );
+          getFolders();
+        }
       }
     } catch (err) {
+      console.log("errerrerr", err);
       onRemove();
       toastUtils.error("Could not update photo, please try again later.");
     } finally {
@@ -174,13 +232,19 @@ const ChangeThumbnail = ({
   //Link thumbnail URL for a collection
   const saveLinkChanges = async () => {
     try {
-      if (imagePath) {
+      const files = isUrl ? isUrl.split(",") : [];
+      if (files.length > 0) {
         setIsLoading(true);
         setIsUploading(true);
-        await folderApi.updateFolder(modalData.id, {
-          thumbnailPath: imagePath,
-        });
+        await folderApi.updateFolder(
+          modalData.id + `?folderId=${modalData.id}`,
+          {
+            thumbnailPath: imagePath,
+            thumbnail_extension: files[2],
+          }
+        );
         setImagePath(null);
+        setisUrl("");
         getFolders();
       } else {
         onRemove();
@@ -224,14 +288,16 @@ const ChangeThumbnail = ({
       <div style={{ padding: "10px 20px" }}>
         <div style={{ width: "100%", maxWidth: "300px" }}>
           <p>
-            Copy and paste here the link to the image you want to use as
-            thumbnail
+            Search for file to use as the thumbnail or copy and paste the
+            filename
           </p>
         </div>
         <div className={styles.disaplay_box}>
           {!imagePreview && (
             <Autocomplete
-              getItemValue={(item) => [item.name, item.value].join(",")}
+              getItemValue={(item) =>
+                [item.name, item.value, item.extension].join(",")
+              }
               items={
                 searching
                   ? [{ name: "0", value: "0" }]
@@ -240,6 +306,7 @@ const ChangeThumbnail = ({
                   : searchData.map((ele: any) => ({
                       name: ele.asset.name,
                       value: ele.thumbailUrl,
+                      extension: ele.asset.extension,
                     }))
               }
               value={value}
@@ -267,7 +334,17 @@ const ChangeThumbnail = ({
                 } else {
                   return (
                     <div className={styles.disaplay_box_item}>
-                      <img src={item.value} alt="" className={styles.imgicon} />
+                      {item.value !== "" ? (
+                        <img
+                          src={item.value}
+                          alt=""
+                          className={styles.imgicon}
+                        />
+                      ) : (
+                        <div className={styles.imgicon}>
+                          <AssetIcon extension={item.extension} />
+                        </div>
+                      )}
                       <span className={styles.heading}>{item.name}</span>
                     </div>
                   );
@@ -283,6 +360,7 @@ const ChangeThumbnail = ({
                 overflowY: "auto",
                 overflowX: "hidden",
                 maxHeight: "185px",
+                maxWidth: "358px",
                 margin: "0px 10px 0px 0px",
               }}
             />
@@ -294,14 +372,29 @@ const ChangeThumbnail = ({
               <img
                 id="myimage"
                 className={styles.img_file}
-                style={{ display: imagePreview ? "block" : "none" }}
+                style={{
+                  display:
+                    imagePreview && !isImage && !extension ? "block" : "none",
+                }}
               />
             )}
-            {isUrl && (
+            {!isImage && extension && (
+              <AssetIcon
+                extension={extension}
+                style={{ width: "5rem", padding: "10px" }}
+              />
+            )}
+            {isUrl && isUrl.split(",")[1] && (
               <img
                 src={isUrl.split(",")[1]}
                 className={styles.img_file}
                 style={{ display: imagePreview ? "block" : "none" }}
+              />
+            )}
+            {isUrl && !isUrl.split(",")[1] && (
+              <AssetIcon
+                extension={isUrl.split(",")[2]}
+                style={{ width: "5rem", padding: "10px" }}
               />
             )}
             {imagePreview && <label>{imageName}</label>}
@@ -330,7 +423,6 @@ const ChangeThumbnail = ({
             style={{ display: "none" }}
             type="file"
             onChange={onFileChange}
-            accept={ALLOWED_TYPES}
           />
         </div>
         <div className={styles.padding_div}>

@@ -31,10 +31,7 @@
 .overlay {
   position: fixed;
   z-index: 999999;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  inset: 0;
   background: rgba(0, 0, 0, 0.2);
   /* background: rgba(0, 0, 0, 0.5); */
   display: flex;
@@ -75,6 +72,12 @@
   display: flex;
   justify-content: flex-end;
   padding: 20px;
+}
+
+.button {
+  width: 100%;
+  max-width: 150px !important;
+  margin: 7px 0px;
 }
 
 .buttons > div {
@@ -122,6 +125,7 @@
   .button {
     display: block;
     margin-top: 10px;
+    width: 100% !important;
   }
 
   .div {
@@ -145,6 +149,9 @@
   .text {
     min-width: 100%;
   }
+  .button {
+    width: 100% !important;
+  }
   .div {
     width: 52%;
   }
@@ -166,6 +173,10 @@
 
 .preview label {
   padding-top: 36px;
+  white-space: nowrap;
+  width: 59%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .disaplay_box {
@@ -179,12 +190,17 @@
 .deleteIcon {
   padding: 11px;
   cursor: pointer;
+  max-width: 45px;
 }
 
 .disaplay_box_item {
   padding: 2px 0px;
   cursor: pointer;
   padding: 3px 12px;
+  white-space: nowrap;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .disaplay_box_item:hover {
@@ -195,10 +211,22 @@
   width: 30px;
   height: 30px;
   border-radius: 5px;
+  display: inline-block;
 }
 
 .heading {
   padding: 0px 8px;
   position: relative;
   top: -10px;
+}
+.imgicon > .icon {
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 5px !important;
+}
+
+
+.icon {
+  width: 5rem !important;
+  padding: 10px !important;
 }

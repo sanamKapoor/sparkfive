@@ -12,7 +12,8 @@ const AssetImg = ({
   name,
   opaque = false,
   onClick = () => {},
-  imgClass = ""
+  imgClass = "",
+  style={}
 }) => {
   const [loaded, setLoaded] = useState(false);
 
@@ -30,10 +31,9 @@ const AssetImg = ({
       <img
         src={Assets.empty}
         alt={"blank"}
-        style={loaded ? { display: "none" } : {}}
+        style={loaded ? { display: "none" } : { width: '100%', height: "100%", "object-fit": "contain"}}
       />
       <img
-        crossOrigin={"anonymous"}
         onClick={onClick}
         src={finalImg}
         alt={name}
@@ -41,7 +41,7 @@ const AssetImg = ({
         onLoad={() => setLoaded(true)}
         style={
           loaded
-            ? {}
+            ? {...style}
             : {
                 opacity: 0,
                 overflow: "hidden",
