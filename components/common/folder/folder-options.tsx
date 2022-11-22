@@ -19,6 +19,7 @@ const FolderOptions = ({
   isShare = false,
   thumbnailPath,
   assetsData = [],
+  thumbnails = null
 }) => {
   const { user } = useContext(UserContext);
   const options = isShare
@@ -44,6 +45,14 @@ const FolderOptions = ({
           },
         ]);
       }
+    } else {
+      if (
+        adminOption.filter((ele) => ele.label == "Delete Thumbnail").length > 0
+      ) {
+        setAdminOption([
+          ...adminOption.filter((ele) => ele.label !== "Delete Thumbnail"),
+        ]);
+      }
     }
     if (userDetails && userDetails.roleId == "admin") {
       if (
@@ -62,35 +71,6 @@ const FolderOptions = ({
       }
     }
    
-    // if (thumbnailPath == null) {
-    //   if (
-    //     adminOption.filter(
-    //       (ele) =>
-    //         ele.label == "Change Thumbnail" || ele.label == "Add Thumbnail"
-    //     ).length == 0
-    //   ) {
-    //     setAdminOption([
-    //       ...adminOption,
-    //       {
-    //         label: "Add Thumbnail",
-    //         onClick: changeThumbnail,
-    //       },
-    //     ]);
-    //   } else {
-    //     setAdminOption([
-    //       ...adminOption.map((ele) => {
-    //         if (ele.label == "Add Thumbnail") {
-    //           return {
-    //             label: "Add Thumbnail",
-    //             onClick: changeThumbnail,
-    //           };
-    //         } else {
-    //           return ele;
-    //         }
-    //       }),
-    //     ]);
-    //   }
-    // }
     if (copyEnabled && !isShare) {
       if (
         adminOption.filter(
@@ -104,7 +84,7 @@ const FolderOptions = ({
         ]);
       }
     }
-  }, [user, thumbnailPath, downloadFoldercontents, copyShareLink]);
+  }, [user, thumbnailPath, downloadFoldercontents, copyShareLink, thumbnails]);
 
   return (
     <ToggleableAbsoluteWrapper

@@ -40,15 +40,25 @@ const FolderGridItem = ({
   isShare = false,
   thumbnailPath,
   thumbnailExtension,
+  thumbnails,
 }) => {
   const { updateDownloadingStatus } = useContext(AssetContext);
-
-  const previews = [1, 2, 3, 4].map((_, index) => ({
-    name: assets[index]?.name || "empty",
-    assetImg: assets[index]?.thumbailUrl || "",
-    type: assets[index]?.type || "empty",
-    extension: assets[index]?.extension,
-  }));
+  let previews;
+  if (thumbnails && thumbnails.thumbnails) {
+    previews = thumbnails.thumbnails.map((thumb: any, index) => ({
+      name: "thumbnail",
+      assetImg: thumb?.filePath || "",
+      type: thumb?.type || "thumbnail",
+      extension: thumb?.extension,
+    }));
+  } else {
+    previews = [1, 2, 3, 4].map((_, index) => ({
+      name: assets[index]?.name || "empty",
+      assetImg: assets[index]?.thumbailUrl || "",
+      type: assets[index]?.type || "empty",
+      extension: assets[index]?.extension,
+    }));
+  }
 
   const [deleteOpen, setDeleteOpen] = useState(false);
 
@@ -97,7 +107,11 @@ const FolderGridItem = ({
       >
         <>
           {thumbnailPath && (
-            <AssetImg assetImg={thumbnailPath} isCollection={false} style={{maxWidth: '330px'}} />
+            <AssetImg
+              assetImg={thumbnailPath}
+              isCollection={false}
+              style={{ maxWidth: "330px" }}
+            />
           )}
           {thumbnailExtension && !thumbnailPath && (
             <AssetIcon extension={thumbnailExtension} />
@@ -159,6 +173,7 @@ const FolderGridItem = ({
             copyEnabled={copyEnabled}
             thumbnailPath={thumbnailPath || thumbnailExtension}
             assetsData={assets}
+            thumbnails={thumbnails}
           />
         </div>
       </div>
