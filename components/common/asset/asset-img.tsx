@@ -37,7 +37,7 @@ const AssetImg = ({
         onClick={onClick}
         src={finalImg}
         alt={name}
-        className={`asset-img ${styles.asset} ${opaque && styles.opaque} ${imgClass}`}
+        className={`asset-img ${styles.asset} ${opaque && styles.opaque} ${imgClass} ${styles[imgClass]}`}
         onLoad={() => setLoaded(true)}
         style={
           loaded
