@@ -41,7 +41,6 @@ const ChangeThumbnail = ({
 
   const [isUrl, setisUrl] = useState("");
 
-  const ALLOWED_TYPES = "image/*";
   const { setIsLoading } = useContext(LoadingContext);
   const { setFolders } = useContext(AssetContext);
 
@@ -118,7 +117,7 @@ const ChangeThumbnail = ({
   };
 
   //remove file if file not valid
-  const onRemove = () => {
+  const onRemove = (removeFileRef = true) => {
     setImagePreview(false);
     setImageName("");
     setFileForUpload("");
@@ -126,12 +125,14 @@ const ChangeThumbnail = ({
     setExtentions("");
     setIsSearched(false);
     setIsImage(false);
-    if (
-      fileBrowserRef &&
-      fileBrowserRef.current &&
-      fileBrowserRef.current.value
-    ) {
-      fileBrowserRef.current.value = "";
+    if (removeFileRef) {
+      if (
+        fileBrowserRef &&
+        fileBrowserRef.current &&
+        fileBrowserRef.current.value
+      ) {
+        fileBrowserRef.current.value = "";
+      }
     }
   };
 
@@ -260,6 +261,7 @@ const ChangeThumbnail = ({
 
   const openFile = async (e) => {
     // Open file picker
+    onRemove();
     fileBrowserRef.current.click();
   };
 
