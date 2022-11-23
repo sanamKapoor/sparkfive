@@ -55,6 +55,17 @@
     animation: intoview 0.5s;
 }
 
+.grid_border:hover img {
+    animation: halfopacity 0.5s;
+    opacity: 0.5;
+}
+
+.grid_border:hover .image-button-wrapper,
+.grid_border:hover .selectable-wrapper:not(.selected-wrapper) {
+    display: block;
+    animation: intoview 0.5s;
+}
+
 @keyframes halfopacity {
     0% {
         opacity: 1;

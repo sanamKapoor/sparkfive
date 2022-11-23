@@ -54,12 +54,12 @@ const FolderOptions = ({
         ]);
       }
     }
-    if (userDetails && userDetails.roleId == "admin") {
+    if (
+      userDetails &&
+      (userDetails.roleId == "admin" || userDetails.roleId == "super_admin")
+    ) {
       if (
-        adminOption.filter(
-          (ele) =>
-            ele.label == "Change Thumbnail"
-        ).length == 0
+        adminOption.filter((ele) => ele.label == "Change Thumbnail").length == 0
       ) {
         setAdminOption([
           ...adminOption,
@@ -70,14 +70,8 @@ const FolderOptions = ({
         ]);
       }
     }
-   
     if (copyEnabled && !isShare) {
-      if (
-        adminOption.filter(
-          (ele) =>
-            ele.label == "Copy Link"
-        ).length == 0
-      ) {
+      if (adminOption.filter((ele) => ele.label == "Copy Link").length == 0) {
         setAdminOption([
           ...adminOption,
           { label: "Copy Link", onClick: copyShareLink },

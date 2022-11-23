@@ -599,6 +599,7 @@ const ChangeThumbnail = ({
 
   const openFile = async (index) => {
     // Open file picker
+    onRemove();
     if (index == 1) fileBrowseForFirstIndex.current.click();
     else if (index == 2) fileBrowseForSecondtIndex.current.click();
     else if (index == 3) fileBrowseForThirdtIndex.current.click();

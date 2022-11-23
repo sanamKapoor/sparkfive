@@ -27,7 +27,8 @@ const AssetApplication = ({ assetImg, extension, onList = false, bulkSize = fals
         </div>
       ) : extension === 'vnd.ms-excel' ||
         extension ===
-          'xlsx' ? (
+          'xlsx' || extension ===
+          'xls' ? (
             <div onClick={onClick} className={`${styles.container} ${onList && styles.small} ${bulkSize && styles['bulk-size']}`}>
           <img src={assetImg ||msexcel} className={styles.icon} />
         </div>
