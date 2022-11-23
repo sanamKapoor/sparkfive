@@ -100,7 +100,7 @@ const FolderGridItem = ({
             <AssetImg assetImg={thumbnailPath} isCollection={false} imgClass="maxHeight" style={{maxWidth: '330px !important'}} />
           )}
           {thumbnailExtension && !thumbnailPath && (
-            <AssetIcon extension={thumbnailExtension} />
+            <AssetIcon extension={thumbnailExtension} imgClass="maxHeight"/>
           )}
           {!thumbnailPath &&
             !thumbnailExtension &&
