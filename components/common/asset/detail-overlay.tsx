@@ -807,7 +807,7 @@ const DetailOverlay = ({
                   className={styles["only-desktop-button"]}
                   styleType={"secondary"}
                   onClick={() => {
-                    if (currentAsset.extension !== 'gif' && currentAsset.extension !== 'tiff' && currentAsset.extension !== 'tif' && currentAsset.type === "image" && isImageType(assetDetail.extension)) {
+                    if (currentAsset.extension !== 'gif' && currentAsset.extension !== 'tiff' && currentAsset.extension !== 'tif' && currentAsset.extension !== "svg" && currentAsset.type === "image" && isImageType(assetDetail.extension)) {
                       setMode("resize");
                       changeActiveSide("detail");
                       resetImageSettings(undefined, undefined);
@@ -835,7 +835,7 @@ const DetailOverlay = ({
             {assetDetail.type === "image" && (
               <>
                 {mode === "detail" && (
-                    <AssetImg name={assetDetail.name} assetImg={(assetDetail.extension === "tiff" || assetDetail.extension === "tif") ? versionThumbnailUrl :  versionRealUrl} />
+                    <AssetImg name={assetDetail.name} assetImg={(assetDetail.extension === "tiff" || assetDetail.extension === "tif" || assetDetail.extension === "svg") ? versionThumbnailUrl :  versionRealUrl} />
                 )}
                 {mode === "resize" && (
                   <Rnd position={{ x: detailPosSize.x, y: detailPosSize.y}}
