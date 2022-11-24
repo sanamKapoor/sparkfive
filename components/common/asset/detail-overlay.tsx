@@ -14,7 +14,6 @@ import VersionList from "./version-list";
 import AssetAddition from "./asset-addition";
 
 import { isMobile } from "react-device-detect";
-import { sizeToZipDownload } from "../../../constants/download";
 
 import { ASSET_DOWNLOAD } from '../../../constants/permissions'
 
@@ -212,11 +211,6 @@ const DetailOverlay = ({
     }
   }
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 325a710 (Hide download button in detail modal if user does not have permission)
   useEffect(() => {
     getCropResizeOptions();
     getDetail();
@@ -820,11 +814,8 @@ const DetailOverlay = ({
                       changeActiveSide("detail");
                       resetImageSettings(undefined, undefined);
                     } else {
-                      if(currentAsset.size >= sizeToZipDownload){
-                        downloadSelectedAssets(currentAsset.id)
-                      }else{
-                        manualDownloadAsset(currentAsset);
-                      }
+                      // downloadSelectedAssets(currentAsset.id)
+                      manualDownloadAsset(currentAsset);
                     }
                   }}
                 />

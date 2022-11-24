@@ -177,11 +177,7 @@ const AssetGrid = ({
     setActiveOperation(operation);
   };
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
->>>>>>> 6c2bd4f (Limit manual download at < 50MB in asset grid)
+
   //Use for upload thumbnail
   const beginChangeThumbnailOperation = ({ folder }, operation) => {
     setModalData(folder);
@@ -193,10 +189,7 @@ const AssetGrid = ({
     try {
       const data = await folderApi.updateFolder(folder.id, {
         thumbnailPath: null,
-<<<<<<< HEAD
-=======
         thumbnailExtension: null
->>>>>>> 6c2bd4f (Limit manual download at < 50MB in asset grid)
       });
       if (data) {
         setIsLoading(false);
@@ -207,8 +200,6 @@ const AssetGrid = ({
     }
   };
 
-<<<<<<< HEAD
-=======
   const downloadSelectedAssets = async (id) => {
     try {
       let payload = {
