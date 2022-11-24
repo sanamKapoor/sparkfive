@@ -40,7 +40,9 @@ const FolderGridItem = ({
   isShare = false,
   thumbnailPath,
   thumbnailExtension,
+  openFilter = false
 }) => {
+  console.log("openFilteropenFilter", openFilter)
   const { updateDownloadingStatus } = useContext(AssetContext);
 
   const previews = [1, 2, 3, 4].map((_, index) => ({
@@ -91,8 +93,8 @@ const FolderGridItem = ({
       <div
         className={
           thumbnailPath || thumbnailExtension
-            ? styles.grid_border
-            : styles["image-wrapper"]
+            ? `${styles.grid_border} ${openFilter ? styles['filter_open'] : ''}`
+            : `${styles["image-wrapper"]} ${openFilter ? styles['filter_open'] : ''}`
         }
       >
         <>

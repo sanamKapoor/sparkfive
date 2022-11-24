@@ -327,6 +327,7 @@ const AssetGrid = ({
                       deleteFolder={() => deleteFolder(folder.id)}
                       copyShareLink={() => copyShareLink(folder)}
                       copyEnabled={getShareIsEnabled(folder)}
+                      openFilter={openFilter}
                       shareAssets={() =>
                         beginAssetOperation({ folder }, "shareFolders")
                       }
