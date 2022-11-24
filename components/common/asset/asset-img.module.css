@@ -11,17 +11,21 @@
     opacity: 0.2;
 }
 
-.react-crop{
+.react-crop {
     height: 100%;
     flex-shrink: 0;
 }
 
-.react-crop > div{
+.react-crop>div {
     height: 100%;
 }
 
 .maxHeight {
-    max-height: 330px !important;
-    height: 330px;
-  }
-  
+    height: inherit;
+    max-height: 100%;
+}
+
+.filter_open {
+    height: 270px;
+    max-height: 270px;
+}
