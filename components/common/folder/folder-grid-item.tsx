@@ -41,7 +41,9 @@ const FolderGridItem = ({
   thumbnailPath,
   thumbnailExtension,
   thumbnails,
+  openFilter = false
 }) => {
+  console.log("openFilteropenFilter", openFilter)
   const { updateDownloadingStatus } = useContext(AssetContext);
   let previews;
   if (thumbnails && thumbnails.thumbnails) {
@@ -101,8 +103,8 @@ const FolderGridItem = ({
       <div
         className={
           thumbnailPath || thumbnailExtension
-            ? styles.grid_border
-            : styles["image-wrapper"]
+            ? `${styles.grid_border} ${openFilter ? styles['filter_open'] : ''}`
+            : `${styles["image-wrapper"]} ${openFilter ? styles['filter_open'] : ''}`
         }
       >
         <>

@@ -1,6 +1,10 @@
 .normal-text {
   color: var(--color-prim-navy);
   font-weight: 500;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
 }
 
 .secondary-text {
