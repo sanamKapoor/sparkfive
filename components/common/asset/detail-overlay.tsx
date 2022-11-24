@@ -615,9 +615,9 @@ const DetailOverlay = ({
       return result;
     };
 
-    const isTypeValid = checkValid(["image", "video"], assetDetail?.type);
+    const isTypeValid = checkValid(["image", "video", "pdf"], assetDetail?.type);
     const isExtensionValid = checkValid(
-      ["png", "jpg", "gif", "tif", "tiff", "webp", "svg", "mp4", "mov", "avi"],
+      ["png", "jpg", "gif", "tif", "tiff", "webp", "svg", "mp4", "mov", "avi", "pdf"],
       assetDetail?.extension
     );
     const isUserValid =
@@ -807,7 +807,7 @@ const DetailOverlay = ({
                   className={styles["only-desktop-button"]}
                   styleType={"secondary"}
                   onClick={() => {
-                    if (currentAsset.extension !== 'gif' && currentAsset.type === "image" && isImageType(assetDetail.extension)) {
+                    if (currentAsset.extension !== 'gif' && currentAsset.extension !== 'tiff' && currentAsset.extension !== 'tif' && currentAsset.type === "image" && isImageType(assetDetail.extension)) {
                       setMode("resize");
                       changeActiveSide("detail");
                       resetImageSettings(undefined, undefined);
@@ -835,7 +835,7 @@ const DetailOverlay = ({
             {assetDetail.type === "image" && (
               <>
                 {mode === "detail" && (
-                    <AssetImg name={assetDetail.name} assetImg={versionRealUrl} />
+                    <AssetImg name={assetDetail.name} assetImg={(assetDetail.extension === "tiff" || assetDetail.extension === "tif") ? versionThumbnailUrl :  versionRealUrl} />
                 )}
                 {mode === "resize" && (
                   <Rnd position={{ x: detailPosSize.x, y: detailPosSize.y}}
