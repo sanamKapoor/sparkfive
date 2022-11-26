@@ -19,6 +19,7 @@ const FolderOptions = ({
   isShare = false,
   thumbnailPath,
   assetsData = [],
+  thumbnails = null
 }) => {
   const { user } = useContext(UserContext);
   const options = isShare
@@ -42,6 +43,14 @@ const FolderOptions = ({
             label: "Delete Thumbnail",
             onClick: deleteThumbnail,
           },
+        ]);
+      }
+    } else {
+      if (
+        adminOption.filter((ele) => ele.label == "Delete Thumbnail").length > 0
+      ) {
+        setAdminOption([
+          ...adminOption.filter((ele) => ele.label !== "Delete Thumbnail"),
         ]);
       }
     }
@@ -69,7 +78,7 @@ const FolderOptions = ({
         ]);
       }
     }
-  }, [user, thumbnailPath, downloadFoldercontents, copyShareLink]);
+  }, [user, thumbnailPath, downloadFoldercontents, copyShareLink, thumbnails]);
 
   return (
     <ToggleableAbsoluteWrapper
