@@ -40,17 +40,27 @@ const FolderGridItem = ({
   isShare = false,
   thumbnailPath,
   thumbnailExtension,
+  thumbnails,
   openFilter = false
 }) => {
   console.log("openFilteropenFilter", openFilter)
   const { updateDownloadingStatus } = useContext(AssetContext);
-
-  const previews = [1, 2, 3, 4].map((_, index) => ({
-    name: assets[index]?.name || "empty",
-    assetImg: assets[index]?.thumbailUrl || "",
-    type: assets[index]?.type || "empty",
-    extension: assets[index]?.extension,
-  }));
+  let previews;
+  if (thumbnails && thumbnails.thumbnails) {
+    previews = thumbnails.thumbnails.map((thumb: any, index) => ({
+      name: "thumbnail",
+      assetImg: thumb?.filePath || "",
+      type: thumb?.type || "thumbnail",
+      extension: thumb?.extension,
+    }));
+  } else {
+    previews = [1, 2, 3, 4].map((_, index) => ({
+      name: assets[index]?.name || "empty",
+      assetImg: assets[index]?.thumbailUrl || "",
+      type: assets[index]?.type || "empty",
+      extension: assets[index]?.extension,
+    }));
+  }
 
   const [deleteOpen, setDeleteOpen] = useState(false);
 
@@ -161,6 +171,7 @@ const FolderGridItem = ({
             copyEnabled={copyEnabled}
             thumbnailPath={thumbnailPath || thumbnailExtension}
             assetsData={assets}
+            thumbnails={thumbnails}
           />
         </div>
       </div>

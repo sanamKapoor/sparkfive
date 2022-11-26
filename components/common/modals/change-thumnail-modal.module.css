@@ -23,7 +23,7 @@
 
 @media screen and (max-width: 1200px) {
   .modal {
-    max-width: 80vw;
+    /* max-width: 80vw; */
     max-height: 80vh;
   }
 }
@@ -114,9 +114,17 @@
   padding: 28px 0px;
 }
 
+.header_checkbox {
+  display: flex;
+}
+
 @media screen and (max-width: 500px) {
   .text {
     min-width: 100%;
+  }
+
+  .save_button {
+    margin-left: 0px !important;
   }
 
   .input {
@@ -143,9 +151,22 @@
   .margin_t {
     margin-top: 10px !important;
   }
+  .header {
+    display: block !important;
+  }
+
+  .checkbox4 {
+    padding: 16px 0px;
+    font-size: 14px;
+  }
+
+  .checkbox1 {
+    padding: 5px 0px !important;
+    font-size: 14px;
+  }
 }
 
-@media screen and (max-width: 717px) {
+@media screen and (max-width: 768px) {
   .text {
     min-width: 100%;
   }
@@ -157,6 +178,20 @@
   }
   .input {
     width: 50%;
+  }
+  .save_button {
+    margin-left: 30px;
+  }
+  .header_checkbox {
+    display: flex;
+    flex-direction: column;
+  }
+  .checkbox1 {
+    padding: 0px !important;
+  }
+
+  .modal input[role="combobox"] {
+    width: 100%;
   }
 }
 
@@ -174,9 +209,10 @@
 .preview label {
   padding-top: 36px;
   white-space: nowrap;
-  width: 59%;
+  width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 400px;
 }
 
 .disaplay_box {
@@ -190,7 +226,7 @@
 .deleteIcon {
   padding: 11px;
   cursor: pointer;
-  max-width: 45px;
+  max-width: 36px;
 }
 
 .disaplay_box_item {
@@ -225,8 +261,61 @@
   border-radius: 5px !important;
 }
 
-
 .icon {
   width: 5rem !important;
   padding: 10px !important;
+}
+
+.header {
+  display: flex;
+}
+
+.checkbox4 {
+  padding: 16px 0px;
+  font-size: 14px;
+}
+
+.checkbox1 {
+  padding: 16px;
+  font-size: 14px;
+}
+
+.row-div {
+  display: flex;
+}
+.or-class {
+  padding: 14px;
+}
+
+.m4 {
+  margin: 6px 5px;
+  background: #ffffff;
+  border: 1px solid #dedad4;
+  border-radius: 4px;
+  font-weight: 500;
+  color: #08135e;
+  font-weight: 500;
+}
+
+.mr {
+  margin: 7px 10px;
+}
+
+.cancel {
+  background: #ffffff;
+  border: 1px solid #dedad4;
+  border-radius: 4px;
+  font-weight: 500;
+  color: #08135e;
+  font-weight: 500;
+}
+
+.wrapper {
+  width: auto !important;
+}
+
+.modal input[role="combobox"] {
+  background: #faf8f5;
+  border: 1px solid #dedad4;
+  border-radius: 4px;
 }
