@@ -42,17 +42,31 @@ const FolderGridItem = ({
   thumbnailExtension,
   thumbnails,
   openFilter = false,
-  activeView
+  activeView,
 }) => {
   const { updateDownloadingStatus } = useContext(AssetContext);
   let previews;
+
+  function GetSortOrder(prop) {
+    return function (a, b) {
+      if (a[prop] > b[prop]) {
+        return 1;
+      } else if (a[prop] < b[prop]) {
+        return -1;
+      }
+      return 0;
+    };
+  }
+
   if (thumbnails && thumbnails.thumbnails) {
-    previews = thumbnails.thumbnails.map((thumb: any, index) => ({
-      name: "thumbnail",
-      assetImg: thumb?.filePath || "",
-      type: thumb?.type || "thumbnail",
-      extension: thumb?.extension,
-    }));
+    previews = thumbnails.thumbnails
+      .sort(GetSortOrder("index"))
+      .map((thumb: any, index) => ({
+        name: "thumbnail",
+        assetImg: thumb?.filePath || "",
+        type: thumb?.type || "thumbnail",
+        extension: thumb?.extension,
+      }));
   } else {
     previews = [1, 2, 3, 4].map((_, index) => ({
       name: assets[index]?.name || "empty",
@@ -103,16 +117,23 @@ const FolderGridItem = ({
       <div
         className={
           thumbnailPath || thumbnailExtension
-            ? `${styles.grid_border} ${openFilter ? styles['filter_open'] : ''}`
-            : `${styles["image-wrapper"]} ${openFilter ? styles['filter_open'] : ''}`
+            ? `${styles.grid_border} ${openFilter ? styles["filter_open"] : ""}`
+            : `${styles["image-wrapper"]} ${
+                openFilter ? styles["filter_open"] : ""
+              }`
         }
       >
         <>
           {thumbnailPath && (
-            <AssetImg assetImg={thumbnailPath} isCollection={false} imgClass="maxHeight" style={{maxWidth: '330px !important'}} />
+            <AssetImg
+              assetImg={thumbnailPath}
+              isCollection={false}
+              imgClass="maxHeight"
+              style={{ maxWidth: "330px !important" }}
+            />
           )}
           {thumbnailExtension && !thumbnailPath && (
-            <AssetIcon extension={thumbnailExtension} imgClass="maxHeight"/>
+            <AssetIcon extension={thumbnailExtension} imgClass="maxHeight" />
           )}
           {!thumbnailPath &&
             !thumbnailExtension &&

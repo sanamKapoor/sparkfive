@@ -34,23 +34,23 @@ const FolderOptions = ({
 
   useEffect(() => {
     let userDetails: any = user;
-    let options = adminOption;
+    let opts = adminOption;
     if (
       userDetails &&
       (userDetails.roleId == "admin" || userDetails.roleId == "super_admin")
     ) {
       if (
-        adminOption.filter((ele) => ele.label == "Change Thumbnail").length == 0
+        opts.filter((ele) => ele.label == "Change Thumbnail").length == 0
       ) {
         setAdminOption([
-          ...adminOption,
+          ...opts,
           {
             label: "Change Thumbnail",
             onClick: changeThumbnail,
           },
         ]);
-        options = [
-          ...adminOption,
+        opts = [
+          ...opts,
           {
             label: "Change Thumbnail",
             onClick: changeThumbnail,
@@ -60,35 +60,49 @@ const FolderOptions = ({
       setTimeout(() => {
         if (thumbnailPath) {
           if (
-            adminOption.filter((ele) => ele.label == "Delete Thumbnail")
+            opts.filter((ele) => ele.label == "Delete Thumbnail")
               .length == 0
           ) {
             setAdminOption([
-              ...options,
+              ...opts,
               {
                 label: "Delete Thumbnail",
                 onClick: deleteThumbnail,
               },
             ]);
+            opts = [
+              ...opts,
+              {
+                label: "Delete Thumbnail",
+                onClick: deleteThumbnail,
+              },
+            ];
           }
         } else {
           if (
-            adminOption.filter((ele) => ele.label == "Delete Thumbnail")
+            opts.filter((ele) => ele.label == "Delete Thumbnail")
               .length > 0
           ) {
             setAdminOption([
-              ...adminOption.filter((ele) => ele.label !== "Delete Thumbnail"),
+              ...opts.filter((ele) => ele.label !== "Delete Thumbnail"),
             ]);
+            opts = [
+              ...opts.filter((ele) => ele.label !== "Delete Thumbnail")
+            ];
           }
         }
       });
     }
     if (copyEnabled && !isShare) {
-      if (adminOption.filter((ele) => ele.label == "Copy Link").length == 0) {
+      if (opts.filter((ele) => ele.label == "Copy Link").length == 0) {
         setAdminOption([
-          ...adminOption,
+          ...opts,
           { label: "Copy Link", onClick: copyShareLink },
         ]);
+        opts = [
+          ...opts,
+          { label: "Copy Link", onClick: copyShareLink },
+        ];
       }
     }
   }, [
@@ -99,6 +113,7 @@ const FolderOptions = ({
     thumbnails,
     activeView,
   ]);
+
 
   return (
     <ToggleableAbsoluteWrapper

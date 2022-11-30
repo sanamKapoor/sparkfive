@@ -565,7 +565,7 @@ const ChangeThumbnail = ({
           fileUrls.push(...ext);
         }
 
-        var unique = fileUrls.filter(
+        var unique = fileUrls.filter(({extension, filePath}) => (extension || filePath)).filter(
           (arr, index, self) =>
             index ===
             self.findIndex(
@@ -651,7 +651,11 @@ const ChangeThumbnail = ({
                 onRemove();
               }}
             />
-            <label style={{ paddingLeft: "5px" }}>4 Thumbnail Preview</label>
+            <label
+              style={{ paddingLeft: "5px", position: "relative", top: "-2px" }}
+            >
+              4 Thumbnail Preview
+            </label>
           </div>
           <div className={styles.checkbox1}>
             <IconClickable
@@ -667,12 +671,19 @@ const ChangeThumbnail = ({
                 onRemove();
               }}
             />
-            <label style={{ paddingLeft: "5px" }}>1 Thumbnail Preview</label>
+            <label
+              style={{ paddingLeft: "5px", position: "relative", top: "-1px" }}
+            >
+              1 Thumbnail Preview
+            </label>
           </div>
         </div>
         {checkBoxForSingleThumbView && (
           <>
-            <div className={styles.disaplay_box} style={{padding: '15px 0px'}}>
+            <div
+              className={styles.disaplay_box}
+              style={{ padding: "15px 0px" }}
+            >
               {!imagePreview && (
                 <Autocomplete
                   getItemValue={(item) =>
