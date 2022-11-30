@@ -41,9 +41,9 @@ const FolderGridItem = ({
   thumbnailPath,
   thumbnailExtension,
   thumbnails,
-  openFilter = false
+  openFilter = false,
+  activeView
 }) => {
-  console.log("openFilteropenFilter", openFilter)
   const { updateDownloadingStatus } = useContext(AssetContext);
   let previews;
   if (thumbnails && thumbnails.thumbnails) {
@@ -157,7 +157,7 @@ const FolderGridItem = ({
         </>
       </div>
       <div className={styles.info}>
-        <div className="normal-text">{name}</div>
+        <div className="normal-text wrap_text">{name}</div>
         <div className={styles["details-wrapper"]}>
           <div className="secondary-text">{`${length} Assets`}</div>
           <FolderOptions
@@ -172,6 +172,7 @@ const FolderGridItem = ({
             thumbnailPath={thumbnailPath || thumbnailExtension}
             assetsData={assets}
             thumbnails={thumbnails}
+            activeView={activeView}
           />
         </div>
       </div>
