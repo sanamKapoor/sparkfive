@@ -57,6 +57,7 @@
 .text span {
   display: inline-flex;
 }
+
 .full-width {
   width: 100% !important;
 }
@@ -80,7 +81,7 @@
   margin: 7px 0px;
 }
 
-.buttons > div {
+.buttons>div {
   margin-left: 5px;
 }
 
@@ -130,6 +131,7 @@
   .input {
     width: 100% !important;
   }
+
   .button {
     display: block;
     margin-top: 10px;
@@ -148,9 +150,11 @@
     display: block !important;
     padding: 28px 0px !important;
   }
+
   .margin_t {
     margin-top: 10px !important;
   }
+
   .header {
     display: block !important;
   }
@@ -166,26 +170,32 @@
   }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   .text {
     min-width: 100%;
   }
+
   .button {
     width: 100% !important;
   }
+
   .div {
     width: 52%;
   }
+
   .input {
     width: 50%;
   }
+
   .save_button {
     margin-left: 30px;
   }
+
   .header_checkbox {
     display: flex;
     flex-direction: column;
   }
+
   .checkbox1 {
     padding: 0px !important;
   }
@@ -255,7 +265,8 @@
   position: relative;
   top: -10px;
 }
-.imgicon > .icon {
+
+.imgicon>.icon {
   width: 30px !important;
   height: 30px !important;
   border-radius: 5px !important;
@@ -283,6 +294,7 @@
 .row-div {
   display: flex;
 }
+
 .or-class {
   padding: 14px;
 }
@@ -318,4 +330,22 @@
   background: #faf8f5;
   border: 1px solid #dedad4;
   border-radius: 4px;
+}
+
+.custom_button {
+  background: #ffffff;
+  border: 1px solid #dedad4;
+  border-radius: 4px;
+  font-weight: 500;
+  color: #08135e;
+  font-weight: 500;
+}
+
+.custom_button:hover {
+  background: #ffffff;
+  border: 1px solid #dedad4;
+  border-radius: 4px;
+  font-weight: 500;
+  color: #08135e;
+  font-weight: 500;
 }
