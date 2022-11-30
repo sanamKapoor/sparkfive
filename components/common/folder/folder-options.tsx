@@ -19,7 +19,8 @@ const FolderOptions = ({
   isShare = false,
   thumbnailPath,
   assetsData = [],
-  thumbnails = null
+  thumbnails = null,
+  activeView,
 }) => {
   const { user } = useContext(UserContext);
   const options = isShare
@@ -33,27 +34,7 @@ const FolderOptions = ({
 
   useEffect(() => {
     let userDetails: any = user;
-    if (thumbnailPath) {
-      if (
-        adminOption.filter((ele) => ele.label == "Delete Thumbnail").length == 0
-      ) {
-        setAdminOption([
-          ...adminOption,
-          {
-            label: "Delete Thumbnail",
-            onClick: deleteThumbnail,
-          },
-        ]);
-      }
-    } else {
-      if (
-        adminOption.filter((ele) => ele.label == "Delete Thumbnail").length > 0
-      ) {
-        setAdminOption([
-          ...adminOption.filter((ele) => ele.label !== "Delete Thumbnail"),
-        ]);
-      }
-    }
+    let options = adminOption;
     if (
       userDetails &&
       (userDetails.roleId == "admin" || userDetails.roleId == "super_admin")
@@ -68,7 +49,39 @@ const FolderOptions = ({
             onClick: changeThumbnail,
           },
         ]);
+        options = [
+          ...adminOption,
+          {
+            label: "Change Thumbnail",
+            onClick: changeThumbnail,
+          },
+        ];
       }
+      setTimeout(() => {
+        if (thumbnailPath) {
+          if (
+            adminOption.filter((ele) => ele.label == "Delete Thumbnail")
+              .length == 0
+          ) {
+            setAdminOption([
+              ...options,
+              {
+                label: "Delete Thumbnail",
+                onClick: deleteThumbnail,
+              },
+            ]);
+          }
+        } else {
+          if (
+            adminOption.filter((ele) => ele.label == "Delete Thumbnail")
+              .length > 0
+          ) {
+            setAdminOption([
+              ...adminOption.filter((ele) => ele.label !== "Delete Thumbnail"),
+            ]);
+          }
+        }
+      });
     }
     if (copyEnabled && !isShare) {
       if (adminOption.filter((ele) => ele.label == "Copy Link").length == 0) {
@@ -78,7 +91,14 @@ const FolderOptions = ({
         ]);
       }
     }
-  }, [user, thumbnailPath, downloadFoldercontents, copyShareLink, thumbnails]);
+  }, [
+    user,
+    thumbnailPath,
+    downloadFoldercontents,
+    copyShareLink,
+    thumbnails,
+    activeView,
+  ]);
 
   return (
     <ToggleableAbsoluteWrapper

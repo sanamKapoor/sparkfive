@@ -599,7 +599,7 @@ const ChangeThumbnail = ({
 
   const openFile = async (index) => {
     // Open file picker
-    onRemove();
+    // onRemove();
     if (index == 1) fileBrowseForFirstIndex.current.click();
     else if (index == 2) fileBrowseForSecondtIndex.current.click();
     else if (index == 3) fileBrowseForThirdtIndex.current.click();
@@ -831,7 +831,7 @@ const ChangeThumbnail = ({
               <Button
                 text="Upload Image"
                 onClick={openFile}
-                className={styles.button}
+                className={`${styles.button} ${styles.custom_button}`}
                 disabled={IsUploading}
                 type="button"
                 styleType="primary"

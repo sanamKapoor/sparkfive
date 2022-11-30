@@ -340,6 +340,7 @@ const AssetGrid = ({
                       deleteThumbnail={() =>
                         deleteThumbnail({ folder }, "shareFolders")
                       }
+                      activeView={activeView || mode}
                     />
                   </li>
                 );
@@ -405,6 +406,16 @@ const AssetGrid = ({
                       }
                       setCurrentSortAttribute={setCurrentSortFolderAttribute}
                       sortAttribute={currentSortFolderAttribute}
+                      changeThumbnail={() =>
+                        beginChangeThumbnailOperation(
+                          { folder },
+                          "shareFolders"
+                        )
+                      }
+                      deleteThumbnail={() =>
+                        deleteThumbnail({ folder }, "shareFolders")
+                      }
+                      activeView={activeView || mode}
                     />
                   </li>
                 );

@@ -38,9 +38,9 @@ const AssetImg = ({
       <img
         onClick={onClick}
         src={finalImg}
-        alt={name}
         className={`asset-img ${styles.asset} ${opaque && styles.opaque} ${imgClass} ${styles[imgClass]} ${styles[activeFilter]}`}
         onLoad={() => setLoaded(true)}
+        onError={(e) => {setLoaded(false)}}
         style={
           loaded
             ? {...style}
