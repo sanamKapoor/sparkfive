@@ -172,6 +172,7 @@ export const Integrations = {
 export const AssetOps = {
   edit: require('./Icons/Utilities/Description-Edit/icn-utilities-description_edit-fill.svg'),
   delete: require('./Icons/Utilities/Delete/icn-utilities-delete.svg'),
+  deleteRed: require('./Icons/Utilities/Delete/icn-utilities-delete-red.svg'),
   archive: require('./Icons/Asset Actions/archive.svg'),
   download: require('./Icons/Utilities/Download/icn-utilities-download.svg'),
   move: require('./Icons/Utilities/Move Folder/icn-utilities-movefolder.svg'),

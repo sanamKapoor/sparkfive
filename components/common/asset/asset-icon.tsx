@@ -45,6 +45,9 @@ const AssetIcon = ({
   onClick = undefined,
   noMargin = false,
   padding = false,
+  style = {},
+  imgClass = {},
+  activeFilter=""
 }) => {
   return (
     <div
@@ -55,7 +58,7 @@ const AssetIcon = ({
         isCollection && styles.collection
       }`}
     >
-      <img className={styles.icon} src={extensionToType(extension, isCollection)} />
+      <img className={`${styles.icon} ${styles[imgClass]} ${styles[activeFilter]}`} style={style} src={extensionToType(extension, isCollection)} />
     </div>
   );
 };
