@@ -25,7 +25,6 @@ import ConfirmModal from "../modals/confirm-modal";
 import Button from "../buttons/button";
 import useSortedAssets from "../../../hooks/use-sorted-assets";
 import folderApi from "../../../server-api/folder";
-import ChangeThumbnail from "../modals/change-thumnail-modal";
 
 import {
   ASSET_UPLOAD_APPROVAL,
@@ -35,6 +34,7 @@ import fileDownload from "js-file-download";
 
 
 import {sizeToZipDownload} from "../../../constants/download";
+import ChangeThumbnail from "../modals/change-thumnail-modal";
 
 const AssetGrid = ({
   activeView = "grid",
@@ -67,7 +67,7 @@ const AssetGrid = ({
     updateDownloadingStatus
   } = useContext(AssetContext);
 
-  const {advancedConfig, hasPermission} = useContext(UserContext)
+  const { advancedConfig, hasPermission } = useContext(UserContext);
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [activeArchiveAsset, setActiveArchiveAsset] = useState(undefined);
@@ -80,8 +80,6 @@ const AssetGrid = ({
   const [modalOpen, setModalOpen] = useState(false); // Open or close modal of change thumbnail
 
   const [modalData, setModalData] = useState(); // load or unload data for change thumbnail modal
-
-
 
   const [sortedAssets, currentSortAttribute, setCurrentSortAttribute] =
     useSortedAssets(assets);
@@ -252,23 +250,23 @@ const AssetGrid = ({
   };
 
   const shouldShowUpload =
-      (activeSearchOverlay ||
-    (mode === "assets" && assets.length === 0) ||
-    (mode === "folders" && folders.length === 0) )&& (hasPermission([ASSET_ACCESS]));
+    (activeSearchOverlay ||
+      (mode === "assets" && assets.length === 0) ||
+      (mode === "folders" && folders.length === 0)) &&
+    hasPermission([ASSET_ACCESS]);
 
   const copyShareLink = (folder) => {
-    const link = folder.sharedLinks[0]
-    const sharedLink = !link.team.advancedCollectionShareLink ?
-        `${process.env.CLIENT_BASE_URL}/collections/${link.collectionLink}` :
-        link.sharedLink
-
+    const link = folder.sharedLinks[0];
+    const sharedLink = !link.team.advancedCollectionShareLink
+      ? `${process.env.CLIENT_BASE_URL}/collections/${link.collectionLink}`
+      : link.sharedLink;
 
     copyClipboard(sharedLink);
-  }
+  };
 
   const getShareIsEnabled = ({ sharedLinks }) => {
-    return sharedLinks && sharedLinks.length > 0
-  }
+    return sharedLinks && sharedLinks.length > 0;
+  };
 
   const showLoadMore =
     (mode === "assets" && assets.length > 0) ||
@@ -378,13 +376,14 @@ const AssetGrid = ({
                   <li className={styles["grid-item"]} key={folder.id || index}>
                     <FolderGridItem
                       {...folder}
-                        isShare={isShare}
+                      isShare={isShare}
                       sharePath={sharePath}
                       toggleSelected={() => toggleSelected(folder.id)}
                       viewFolder={() => viewFolder(folder.id)}
                       deleteFolder={() => deleteFolder(folder.id)}
                       copyShareLink={() => copyShareLink(folder)}
                       copyEnabled={getShareIsEnabled(folder)}
+                      openFilter={openFilter}
                       shareAssets={() =>
                         beginAssetOperation({ folder }, "shareFolders")
                       }
@@ -397,6 +396,7 @@ const AssetGrid = ({
                       deleteThumbnail={() =>
                         deleteThumbnail({ folder }, "shareFolders")
                       }
+                      activeView={activeView || mode}
                     />
                   </li>
                 );
@@ -462,6 +462,16 @@ const AssetGrid = ({
                       }
                       setCurrentSortAttribute={setCurrentSortFolderAttribute}
                       sortAttribute={currentSortFolderAttribute}
+                      changeThumbnail={() =>
+                        beginChangeThumbnailOperation(
+                          { folder },
+                          "shareFolders"
+                        )
+                      }
+                      deleteThumbnail={() =>
+                        deleteThumbnail({ folder }, "shareFolders")
+                      }
+                      activeView={activeView || mode}
                     />
                   </li>
                 );
@@ -497,6 +507,7 @@ const AssetGrid = ({
       {/* Change thumbnail modal */}
       <ChangeThumbnail
         closeModal={() => {
+          setModalData({});
           setModalOpen(false);
         }}
         cleareProps={modalData}
@@ -505,6 +516,7 @@ const AssetGrid = ({
         modalIsOpen={modalOpen}
         confirmAction={() => {}}
       />
+
       {/* Delete modal */}
       <ConfirmModal
         closeModal={() => setDeleteModalOpen(false)}

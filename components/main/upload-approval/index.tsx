@@ -72,7 +72,7 @@ const UploadApproval = () => {
     } = useContext(AssetContext)
 
     const { setIsLoading } = useContext(LoadingContext);
-    const [top, setTop] = useState('calc(55px + 3rem)')
+    const [top, setTop] = useState('calc(55px + 7rem)')
     const [assets, setAssets] = useState([])
     const [selectedAssets, setSelectedAssets] = useState([])
     const [duplicateAssets, setDuplicateAssets] = useState([]);

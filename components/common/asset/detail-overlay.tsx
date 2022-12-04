@@ -211,6 +211,8 @@ const DetailOverlay = ({
     }
   }
 
+ 
+
   useEffect(() => {
     getCropResizeOptions();
     getDetail();
@@ -707,10 +709,10 @@ const DetailOverlay = ({
 
 
   const resetImageSettings = (newWidth, newHeight) => {
-      const img = document.querySelector('.app-overlay img.asset-img') as HTMLImageElement;
+      const img = document.querySelector('.app-overlay img.img-preview') as HTMLImageElement;
       // const draggable = document.querySelector('.app-overlay .react-draggable') as HTMLDivElement;
-      var positions = window.getComputedStyle(img).getPropertyValue('object-position').split(' ');
-      const pos = parseInt(positions[0]);
+      // var positions = window.getComputedStyle(img).getPropertyValue('object-position').split(' ');
+      // const pos = parseInt(positions[0]);
       const cWidth = newWidth || img.width;
       const cHeight = newHeight || img.height;
       let nw = img.naturalWidth;
@@ -837,7 +839,7 @@ const DetailOverlay = ({
             {assetDetail.type === "image" && (
               <>
                 {mode === "detail" && (
-                    <AssetImg name={assetDetail.name} assetImg={versionRealUrl} />
+                    <AssetImg name={assetDetail.name} assetImg={versionRealUrl} imgClass="img-preview"/>
                 )}
                 {mode === "resize" && (
                   <Rnd position={{ x: detailPosSize.x, y: detailPosSize.y}}
@@ -848,7 +850,7 @@ const DetailOverlay = ({
                     // }}
                     onResizeStop={(e, direction, ref, delta, position) => onResizeStop(ref.style.width, ref.style.height, position)}
                     >
-                    <AssetImg name={assetDetail.name} assetImg={versionRealUrl} />
+                    <AssetImg name={assetDetail.name} assetImg={versionRealUrl} imgClass="img-preview"/>
                   </Rnd>
                 )}
                 {mode === "crop" && (
@@ -879,6 +881,7 @@ const DetailOverlay = ({
                 <AssetImg
                   name={assetDetail.name}
                   assetImg={versionThumbnailUrl}
+                  imgClass="img-preview"
                 />
               )}
             {assetDetail.type !== "image" &&

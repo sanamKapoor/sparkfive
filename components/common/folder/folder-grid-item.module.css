@@ -10,7 +10,8 @@
     display: grid;
     grid-template-columns: 50% 50%;
     grid-template-rows: 50% 50%;
-    height: 100%;
+    height: 330px;
+    max-height: 330px;
 }
 
 .sub-image-wrapper {
@@ -51,6 +52,17 @@
 
 .image-wrapper:hover .image-button-wrapper,
 .image-wrapper:hover .selectable-wrapper:not(.selected-wrapper) {
+    display: block;
+    animation: intoview 0.5s;
+}
+
+.grid_border:hover img {
+    animation: halfopacity 0.5s;
+    opacity: 0.5;
+}
+
+.grid_border:hover .image-button-wrapper,
+.grid_border:hover .selectable-wrapper:not(.selected-wrapper) {
     display: block;
     animation: intoview 0.5s;
 }
@@ -113,5 +125,77 @@
 .grid_border {
     border: 1px solid var(--color-secondary-border);
     padding: 5px;
-    height: 100%;
+    height: 330px;
+    max-height: 330px;
 }
+
+.filter_open {
+    height: 270px;
+    max-height: 270px;
+}
+
+
+@media only screen and (max-width:371px) {
+
+    .image-wrapper,
+    .grid_border {
+        height: 337px;
+        max-height: 337px;
+    }
+}
+
+@media only screen and (min-width:372px) and (max-width:767px) {
+
+    .image-wrapper,
+    .grid_border {
+        height: 166px;
+        max-height: 166px;
+    }
+}
+
+@media only screen and (min-width:768px)  and (max-width:1024px) { 
+
+    .image-wrapper,
+    .grid_border {
+        height: 180px;
+        max-height: 180px;
+    }
+ }
+
+ @media only screen and (min-width:1025px)  and (max-width:1199px) { 
+    .image-wrapper,
+    .grid_border {
+        height: 200px;
+        max-height: 200px;
+    }
+  }
+
+
+@media only screen and (min-width:1200px)  and (max-width:1440px) { 
+    .image-wrapper,
+    .grid_border {
+        height: 250px;
+        max-height: 250px;
+    }
+ } 
+
+ @media only screen and (min-width:1441px)  and (max-width:1640px) { 
+    .image-wrapper,
+    .grid_border {
+        height: 285px;
+        max-height: 285px;
+    }
+ } 
+ @media only screen and (min-width:1400px) and (max-width:1740px) { 
+    .filter_open {
+        height: 230px;
+        max-height: 230px;
+    }
+ }
+
+ @media only screen and (min-width:1741px) { 
+    .filter_open {
+        height: 250px;
+        max-height: 250px;
+    }
+ }
