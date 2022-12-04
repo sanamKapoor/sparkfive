@@ -15,6 +15,8 @@ import AssetAddition from "./asset-addition";
 
 import { isMobile } from "react-device-detect";
 
+import { ASSET_DOWNLOAD } from '../../../constants/permissions'
+
 // Components
 import SidePanel from "./detail-side-panel";
 import ConversationList from "../conversation/conversation-list";
@@ -353,7 +355,7 @@ const DetailOverlay = ({
       if (mode === 'crop') {
         setSizeOfCrop({
           width: value.width > detailPosSize.width ? detailPosSize.width : value.width,
-          height: value.height > detailPosSize.height ? detailPosSize.height : value.height       
+          height: value.height > detailPosSize.height ? detailPosSize.height : value.height
         })
       } else {
         setWidth(value.width);
@@ -801,7 +803,7 @@ const DetailOverlay = ({
                   onClick={openShareAsset}
                 />
               )}
-              {mode === "detail" && (
+              {mode === "detail" && hasPermission([ASSET_DOWNLOAD]) && (
                 <>
                 <Button
                   text={"Download"}
@@ -1044,7 +1046,7 @@ const DetailOverlay = ({
               }}
             />
           )}
-          {currentAsset.extension !== 'gif' && <IconClickable
+          {currentAsset.extension !== 'gif' && hasPermission([ASSET_DOWNLOAD]) && <IconClickable
             src={AssetOps.download}
             additionalClass={styles["menu-icon"]}
             onClick={() => {
