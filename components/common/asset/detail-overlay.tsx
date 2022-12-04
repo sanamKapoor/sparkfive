@@ -15,6 +15,8 @@ import AssetAddition from "./asset-addition";
 
 import { isMobile } from "react-device-detect";
 
+import { ASSET_DOWNLOAD } from '../../../constants/permissions'
+
 // Components
 import SidePanel from "./detail-side-panel";
 import ConversationList from "../conversation/conversation-list";
@@ -209,7 +211,7 @@ const DetailOverlay = ({
     }
   }
 
- 
+
 
   useEffect(() => {
     getCropResizeOptions();
@@ -353,7 +355,7 @@ const DetailOverlay = ({
       if (mode === 'crop') {
         setSizeOfCrop({
           width: value.width > detailPosSize.width ? detailPosSize.width : value.width,
-          height: value.height > detailPosSize.height ? detailPosSize.height : value.height       
+          height: value.height > detailPosSize.height ? detailPosSize.height : value.height
         })
       } else {
         setWidth(value.width);
@@ -617,9 +619,9 @@ const DetailOverlay = ({
       return result;
     };
 
-    const isTypeValid = checkValid(["image", "video"], assetDetail?.type);
+    const isTypeValid = checkValid(["image", "video", "pdf"], assetDetail?.type);
     const isExtensionValid = checkValid(
-      ["png", "jpg", "gif", "tif", "tiff", "webp", "svg", "mp4", "mov", "avi"],
+      ["png", "jpg", "gif", "tif", "tiff", "webp", "svg", "mp4", "mov", "avi", "pdf"],
       assetDetail?.extension
     );
     const isUserValid =
@@ -801,7 +803,7 @@ const DetailOverlay = ({
                   onClick={openShareAsset}
                 />
               )}
-              {mode === "detail" && (
+              {mode === "detail" && hasPermission([ASSET_DOWNLOAD]) && (
                 <>
                 <Button
                   text={"Download"}
@@ -809,7 +811,7 @@ const DetailOverlay = ({
                   className={styles["only-desktop-button"]}
                   styleType={"secondary"}
                   onClick={() => {
-                    if (currentAsset.extension !== 'gif' && currentAsset.type === "image" && isImageType(assetDetail.extension)) {
+                    if (currentAsset.extension !== 'gif' && currentAsset.extension !== 'tiff' && currentAsset.extension !== 'tif' && currentAsset.extension !== "svg" && currentAsset.type === "image" && isImageType(assetDetail.extension)) {
                       setMode("resize");
                       changeActiveSide("detail");
                       resetImageSettings(undefined, undefined);
@@ -837,7 +839,7 @@ const DetailOverlay = ({
             {assetDetail.type === "image" && (
               <>
                 {mode === "detail" && (
-                    <AssetImg name={assetDetail.name} assetImg={versionRealUrl} imgClass="img-preview"/>
+                    <AssetImg name={assetDetail.name} assetImg={(assetDetail.extension === "tiff" || assetDetail.extension === "tif" || assetDetail.extension === "svg") ? versionThumbnailUrl :  versionRealUrl} />
                 )}
                 {mode === "resize" && (
                   <Rnd position={{ x: detailPosSize.x, y: detailPosSize.y}}
@@ -1044,7 +1046,7 @@ const DetailOverlay = ({
               }}
             />
           )}
-          {currentAsset.extension !== 'gif' && <IconClickable
+          {currentAsset.extension !== 'gif' && hasPermission([ASSET_DOWNLOAD]) && <IconClickable
             src={AssetOps.download}
             additionalClass={styles["menu-icon"]}
             onClick={() => {
