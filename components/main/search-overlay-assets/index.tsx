@@ -127,7 +127,7 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
             <Button type='button' text='Select All' styleType='secondary' onClick={selectAll} />
             {selectedAssets.length > 0 && <Button text={`Deselect All (${totalSelectAssets})`} type='button' styleType='primary' onClick={deselectAll} />}
             {selectedAllAssets && <span className={styles['select-only-shown-items-text']} onClick={toggleSelectAll}>Select only 25 assets shown</span>}
-            {selectedAssets.length > 0 && <AssetHeaderOps deselectHidden={true} buttonStyleType={'tertiary-blue'} />}
+            {selectedAssets.length > 0 && <AssetHeaderOps deselectHidden={true} buttonStyleType={'tertiary-blue'} isSearch={true}/>}
 
             <img className={styles['view-icon']} src={Utilities.gridView} onClick={() => setActiveView('grid')} />
             <img className={styles['view-icon']} src={Utilities.listView} onClick={() => setActiveView('list')} />

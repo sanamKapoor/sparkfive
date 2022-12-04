@@ -28,7 +28,7 @@ import Button from '../../common/buttons/button'
 import IconClickable from '../../common/buttons/icon-clickable'
 import { useRouter } from "next/router";
 
-const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, isFolder = false, deselectHidden = false, iconColor = '', deletedAssets = false, advancedLink = false }) => {
+const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, isFolder = false, deselectHidden = false, iconColor = '', deletedAssets = false, advancedLink = false, isSearch = false }) => {
 	const {
 		assets,
 		setAssets,
@@ -259,7 +259,7 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 			<div className={styles['share-wrapper']} ref={contentRef}>
 				<IconClickable
 					place={'bottom'}
-					additionalClass={`${styles['action-button']} m-l-0`}
+					additionalClass={`${styles['action-button']} ${!isSearch ? "m-l-0" : ""}`}
 					src={AssetOps[`share${iconColor}`]}
 					tooltipText={'Share'}
 					tooltipId={'Share'}

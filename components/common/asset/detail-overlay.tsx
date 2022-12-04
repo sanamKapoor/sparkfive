@@ -15,6 +15,8 @@ import AssetAddition from "./asset-addition";
 
 import { isMobile } from "react-device-detect";
 
+import { ASSET_DOWNLOAD } from '../../../constants/permissions'
+
 // Components
 import SidePanel from "./detail-side-panel";
 import ConversationList from "../conversation/conversation-list";
@@ -209,6 +211,8 @@ const DetailOverlay = ({
     }
   }
 
+
+
   useEffect(() => {
     getCropResizeOptions();
     getDetail();
@@ -351,7 +355,7 @@ const DetailOverlay = ({
       if (mode === 'crop') {
         setSizeOfCrop({
           width: value.width > detailPosSize.width ? detailPosSize.width : value.width,
-          height: value.height > detailPosSize.height ? detailPosSize.height : value.height       
+          height: value.height > detailPosSize.height ? detailPosSize.height : value.height
         })
       } else {
         setWidth(value.width);
@@ -705,10 +709,10 @@ const DetailOverlay = ({
 
 
   const resetImageSettings = (newWidth, newHeight) => {
-      const img = document.querySelector('.app-overlay img.asset-img') as HTMLImageElement;
+      const img = document.querySelector('.app-overlay img.img-preview') as HTMLImageElement;
       // const draggable = document.querySelector('.app-overlay .react-draggable') as HTMLDivElement;
-      var positions = window.getComputedStyle(img).getPropertyValue('object-position').split(' ');
-      const pos = parseInt(positions[0]);
+      // var positions = window.getComputedStyle(img).getPropertyValue('object-position').split(' ');
+      // const pos = parseInt(positions[0]);
       const cWidth = newWidth || img.width;
       const cHeight = newHeight || img.height;
       let nw = img.naturalWidth;
@@ -799,7 +803,7 @@ const DetailOverlay = ({
                   onClick={openShareAsset}
                 />
               )}
-              {mode === "detail" && (
+              {mode === "detail" && hasPermission([ASSET_DOWNLOAD]) && (
                 <>
                 <Button
                   text={"Download"}
@@ -846,7 +850,7 @@ const DetailOverlay = ({
                     // }}
                     onResizeStop={(e, direction, ref, delta, position) => onResizeStop(ref.style.width, ref.style.height, position)}
                     >
-                    <AssetImg name={assetDetail.name} assetImg={versionRealUrl} />
+                    <AssetImg name={assetDetail.name} assetImg={versionRealUrl} imgClass="img-preview"/>
                   </Rnd>
                 )}
                 {mode === "crop" && (
@@ -877,6 +881,7 @@ const DetailOverlay = ({
                 <AssetImg
                   name={assetDetail.name}
                   assetImg={versionThumbnailUrl}
+                  imgClass="img-preview"
                 />
               )}
             {assetDetail.type !== "image" &&
@@ -1041,7 +1046,7 @@ const DetailOverlay = ({
               }}
             />
           )}
-          {currentAsset.extension !== 'gif' && <IconClickable
+          {currentAsset.extension !== 'gif' && hasPermission([ASSET_DOWNLOAD]) && <IconClickable
             src={AssetOps.download}
             additionalClass={styles["menu-icon"]}
             onClick={() => {

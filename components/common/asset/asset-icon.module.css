@@ -11,8 +11,8 @@
     margin: 0;
   }
   .icon {
-    object-fit: scale-down;
     width: 10rem;
+    object-fit: contain;
   }
   
   .noMargin {
@@ -35,3 +35,11 @@
     width: 100%;
   }
   
+  .maxHeight {
+    max-height: 100%;
+  }
+  
+  .filter_open {
+    height: 270px;
+    max-height: 270px;
+}

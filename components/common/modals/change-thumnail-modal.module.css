@@ -23,7 +23,7 @@
 
 @media screen and (max-width: 1200px) {
   .modal {
-    max-width: 80vw;
+    /* max-width: 80vw; */
     max-height: 80vh;
   }
 }
@@ -31,10 +31,7 @@
 .overlay {
   position: fixed;
   z-index: 999999;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  inset: 0;
   background: rgba(0, 0, 0, 0.2);
   /* background: rgba(0, 0, 0, 0.5); */
   display: flex;
@@ -60,6 +57,7 @@
 .text span {
   display: inline-flex;
 }
+
 .full-width {
   width: 100% !important;
 }
@@ -77,7 +75,13 @@
   padding: 20px;
 }
 
-.buttons > div {
+.button {
+  width: 100%;
+  max-width: 150px !important;
+  margin: 7px 0px;
+}
+
+.buttons>div {
   margin-left: 5px;
 }
 
@@ -111,17 +115,27 @@
   padding: 28px 0px;
 }
 
+.header_checkbox {
+  display: flex;
+}
+
 @media screen and (max-width: 500px) {
   .text {
     min-width: 100%;
   }
 
+  .save_button {
+    margin-left: 0px !important;
+  }
+
   .input {
     width: 100% !important;
   }
+
   .button {
     display: block;
     margin-top: 10px;
+    width: 100% !important;
   }
 
   .div {
@@ -136,20 +150,58 @@
     display: block !important;
     padding: 28px 0px !important;
   }
+
   .margin_t {
     margin-top: 10px !important;
   }
+
+  .header {
+    display: block !important;
+  }
+
+  .checkbox4 {
+    padding: 16px 0px;
+    font-size: 14px;
+  }
+
+  .checkbox1 {
+    padding: 5px 0px !important;
+    font-size: 14px;
+  }
 }
 
-@media screen and (max-width: 717px) {
+@media screen and (max-width: 800px) {
   .text {
     min-width: 100%;
   }
+
+  .button {
+    width: 100% !important;
+  }
+
   .div {
     width: 52%;
   }
+
   .input {
     width: 50%;
+  }
+
+  .save_button {
+    margin-left: 30px;
+  }
+
+  .header_checkbox {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .checkbox1 {
+    padding: 0px !important;
+  }
+
+  .modal input[role="combobox"] {
+    width: 100%;
   }
 }
 
@@ -166,6 +218,11 @@
 
 .preview label {
   padding-top: 36px;
+  white-space: nowrap;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 400px;
 }
 
 .disaplay_box {
@@ -179,12 +236,17 @@
 .deleteIcon {
   padding: 11px;
   cursor: pointer;
+  max-width: 36px;
 }
 
 .disaplay_box_item {
   padding: 2px 0px;
   cursor: pointer;
   padding: 3px 12px;
+  white-space: nowrap;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .disaplay_box_item:hover {
@@ -195,10 +257,95 @@
   width: 30px;
   height: 30px;
   border-radius: 5px;
+  display: inline-block;
 }
 
 .heading {
   padding: 0px 8px;
   position: relative;
   top: -10px;
+}
+
+.imgicon>.icon {
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 5px !important;
+}
+
+.icon {
+  width: 5rem !important;
+  padding: 10px !important;
+}
+
+.header {
+  display: flex;
+}
+
+.checkbox4 {
+  padding: 16px 0px;
+  font-size: 14px;
+}
+
+.checkbox1 {
+  padding: 16px;
+  font-size: 14px;
+}
+
+.row-div {
+  display: flex;
+}
+
+.or-class {
+  padding: 14px;
+}
+
+.m4 {
+  margin: 6px 5px;
+  background: #ffffff;
+  border: 1px solid #dedad4;
+  border-radius: 4px;
+  font-weight: 500;
+  color: #08135e;
+  font-weight: 500;
+}
+
+.mr {
+  margin: 7px 10px;
+}
+
+.cancel {
+  background: #ffffff;
+  border: 1px solid #dedad4;
+  border-radius: 4px;
+  font-weight: 500;
+  color: #08135e;
+  font-weight: 500;
+}
+
+.wrapper {
+  width: auto !important;
+}
+
+.modal input[role="combobox"] {
+  background: #faf8f5;
+  border: 1px solid #dedad4;
+  border-radius: 4px;
+}
+
+.custom_button {
+  background: #ffffff;
+  border: 1px solid #dedad4;
+  border-radius: 4px;
+  font-weight: 500;
+  color: #08135e;
+  font-weight: 500;
+}
+
+.custom_button:hover {
+  background: #ffffff;
+  border: 1px solid #dedad4;
+  border-radius: 4px;
+  font-weight: 500;
+  color: #08135e;
+  font-weight: 500;
 }
