@@ -1,1 +1,1 @@
-export const sizeToZipDownload = 1024 * 1024 * 2;
+export const sizeToZipDownload = 1024 * 1024 * 50;

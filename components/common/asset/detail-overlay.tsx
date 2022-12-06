@@ -39,6 +39,8 @@ import { ASSET_ACCESS } from "../../../constants/permissions";
 import AssetNotes from './asset-notes';
 import AssetNote from './asset-note';
 
+import { sizeToZipDownload } from "../../../constants/download";
+
 const getDefaultDownloadImageType = (extension) => {
   const defaultDownloadImageTypes = [
     {
@@ -816,8 +818,12 @@ const DetailOverlay = ({
                       changeActiveSide("detail");
                       resetImageSettings(undefined, undefined);
                     } else {
-                      // downloadSelectedAssets(currentAsset.id)
-                      manualDownloadAsset(currentAsset);
+                      if(currentAsset.size >= sizeToZipDownload){
+                        downloadSelectedAssets(currentAsset.id)
+                      }else{
+                        manualDownloadAsset(currentAsset);
+                      }
+
                     }
                   }}
                 />
