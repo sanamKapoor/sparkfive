@@ -729,8 +729,8 @@ const DetailOverlay = ({
         height = cHeight;
       }
 
-      width = Math.round(width);
-      height = Math.round(height);
+      width = width > currentAsset.dimensionWidth ? currentAsset.dimensionWidth :  Math.round(width);
+      height = height > currentAsset.dimensionHeight ? currentAsset.dimensionHeight :  Math.round(height);
 
       setDetailPosSize(Object.assign({...detailPosSize}, {height, width}));
       if (!newWidth && !newHeight) {
@@ -839,7 +839,7 @@ const DetailOverlay = ({
             {assetDetail.type === "image" && (
               <>
                 {mode === "detail" && (
-                    <AssetImg name={assetDetail.name} assetImg={(assetDetail.extension === "tiff" || assetDetail.extension === "tif" || assetDetail.extension === "svg") ? versionThumbnailUrl :  versionRealUrl} />
+                    <AssetImg  imgClass="img-preview" name={assetDetail.name} assetImg={(assetDetail.extension === "tiff" || assetDetail.extension === "tif" || assetDetail.extension === "svg") ? versionThumbnailUrl :  versionRealUrl} />
                 )}
                 {mode === "resize" && (
                   <Rnd position={{ x: detailPosSize.x, y: detailPosSize.y}}
