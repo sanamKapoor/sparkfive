@@ -39,6 +39,8 @@ import { ASSET_ACCESS } from "../../../constants/permissions";
 import AssetNotes from './asset-notes';
 import AssetNote from './asset-note';
 
+import { sizeToZipDownload } from "../../../constants/download";
+
 const getDefaultDownloadImageType = (extension) => {
   const defaultDownloadImageTypes = [
     {
@@ -729,8 +731,8 @@ const DetailOverlay = ({
         height = cHeight;
       }
 
-      width = Math.round(width);
-      height = Math.round(height);
+      width = width > currentAsset.dimensionWidth ? currentAsset.dimensionWidth :  Math.round(width);
+      height = height > currentAsset.dimensionHeight ? currentAsset.dimensionHeight :  Math.round(height);
 
       setDetailPosSize(Object.assign({...detailPosSize}, {height, width}));
       if (!newWidth && !newHeight) {
@@ -816,8 +818,12 @@ const DetailOverlay = ({
                       changeActiveSide("detail");
                       resetImageSettings(undefined, undefined);
                     } else {
-                      // downloadSelectedAssets(currentAsset.id)
-                      manualDownloadAsset(currentAsset);
+                      if(currentAsset.size >= sizeToZipDownload){
+                        downloadSelectedAssets(currentAsset.id)
+                      }else{
+                        manualDownloadAsset(currentAsset);
+                      }
+
                     }
                   }}
                 />
@@ -839,7 +845,7 @@ const DetailOverlay = ({
             {assetDetail.type === "image" && (
               <>
                 {mode === "detail" && (
-                    <AssetImg name={assetDetail.name} assetImg={(assetDetail.extension === "tiff" || assetDetail.extension === "tif" || assetDetail.extension === "svg") ? versionThumbnailUrl :  versionRealUrl} />
+                    <AssetImg  imgClass="img-preview" name={assetDetail.name} assetImg={(assetDetail.extension === "tiff" || assetDetail.extension === "tif" || assetDetail.extension === "svg") ? versionThumbnailUrl :  versionRealUrl} />
                 )}
                 {mode === "resize" && (
                   <Rnd position={{ x: detailPosSize.x, y: detailPosSize.y}}
