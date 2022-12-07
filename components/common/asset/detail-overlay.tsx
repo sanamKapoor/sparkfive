@@ -12,6 +12,7 @@ import update from "immutability-helper";
 import downloadUtils from "../../../utils/download";
 import VersionList from "./version-list";
 import AssetAddition from "./asset-addition";
+import urlUtils from '../../../utils/url'
 
 import { isMobile } from "react-device-detect";
 
@@ -496,6 +497,8 @@ const DetailOverlay = ({
   }, [width, height]);
 
   const downloadSelectedAssets = async (id) => {
+    const { shareJWT, code } = urlUtils.getQueryParameters()
+
     try {
       let payload = {
         assetIds: [id],
@@ -506,26 +509,44 @@ const DetailOverlay = ({
         estimateTime: 1,
       };
 
-      // Add sharePath property if user is at share collection page
-      if (sharePath) {
-        filters["sharePath"] = sharePath;
+      // Download files in shared collection or normal download (not share)
+      if((isShare && sharePath && !code) || (!isShare)){
+
+        // Add sharePath property if user is at share collection page
+        if (sharePath) {
+          filters["sharePath"] = sharePath;
+        }
+
+        // Show processing bar
+        updateDownloadingStatus("zipping", 0, totalDownloadingAssets);
+
+        let api: any = assetApi;
+
+        if (isShare) {
+          api = shareApi;
+        }
+
+        const { data } = await api.downloadAll(payload, filters);
+
+        // Download file to storage
+        fileDownload(data, "assets.zip");
+
+        updateDownloadingStatus("done", 0, 0);
+      }else{ // Download shared single asset
+        if(isShare && !sharePath && code){
+          // Show processing bar
+          updateDownloadingStatus("zipping", 0, totalDownloadingAssets);
+
+          const { data } = await assetApi.shareDownload(payload, {shareJWT, code});
+
+          // Download file to storage
+          fileDownload(data, "assets.zip");
+
+          updateDownloadingStatus("done", 0, 0);
+        }
+
       }
 
-      // Show processing bar
-      updateDownloadingStatus("zipping", 0, totalDownloadingAssets);
-
-      let api: any = assetApi;
-
-      if (isShare) {
-        api = shareApi;
-      }
-
-      const { data } = await api.downloadAll(payload, filters);
-
-      // Download file to storage
-      fileDownload(data, "assets.zip");
-
-      updateDownloadingStatus("done", 0, 0);
     } catch (e) {
       updateDownloadingStatus(
         "error",
@@ -805,7 +826,7 @@ const DetailOverlay = ({
                   onClick={openShareAsset}
                 />
               )}
-              {mode === "detail" && hasPermission([ASSET_DOWNLOAD]) && (
+              {mode === "detail" && (isShare || hasPermission([ASSET_DOWNLOAD])) && (
                 <>
                 <Button
                   text={"Download"}
@@ -818,11 +839,12 @@ const DetailOverlay = ({
                       changeActiveSide("detail");
                       resetImageSettings(undefined, undefined);
                     } else {
-                      if(currentAsset.size >= sizeToZipDownload){
-                        downloadSelectedAssets(currentAsset.id)
-                      }else{
-                        manualDownloadAsset(currentAsset);
-                      }
+                      downloadSelectedAssets(currentAsset.id)
+                      // if(currentAsset.size >= sizeToZipDownload){
+                      //   downloadSelectedAssets(currentAsset.id)
+                      // }else{
+                      //   manualDownloadAsset(currentAsset);
+                      // }
 
                     }
                   }}
