@@ -93,27 +93,50 @@ const FolderOptions = ({
         }
       });
     }
+
+    // if (thumbnailPath == null) {
+    //   if (
+    //     adminOption.filter(
+    //       (ele) =>
+    //         ele.label == "Change Thumbnail" || ele.label == "Add Thumbnail"
+    //     ).length == 0
+    //   ) {
+    //     setAdminOption([
+    //       ...adminOption,
+    //       {
+    //         label: "Add Thumbnail",
+    //         onClick: changeThumbnail,
+    //       },
+    //     ]);
+    //   } else {
+    //     setAdminOption([
+    //       ...adminOption.map((ele) => {
+    //         if (ele.label == "Add Thumbnail") {
+    //           return {
+    //             label: "Add Thumbnail",
+    //             onClick: changeThumbnail,
+    //           };
+    //         } else {
+    //           return ele;
+    //         }
+    //       }),
+    //     ]);
+    //   }
+    // }
     if (copyEnabled && !isShare) {
-      if (opts.filter((ele) => ele.label == "Copy Link").length == 0) {
+      if (
+          adminOption.filter(
+              (ele) =>
+                  ele.label == "Copy Link"
+          ).length == 0
+      ) {
         setAdminOption([
-          ...opts,
+          ...adminOption,
           { label: "Copy Link", onClick: copyShareLink },
         ]);
-        opts = [
-          ...opts,
-          { label: "Copy Link", onClick: copyShareLink },
-        ];
       }
     }
-  }, [
-    user,
-    thumbnailPath,
-    downloadFoldercontents,
-    copyShareLink,
-    thumbnails,
-    activeView,
-  ]);
-
+  }, [user, thumbnailPath, downloadFoldercontents, copyShareLink]);
 
   return (
     <ToggleableAbsoluteWrapper

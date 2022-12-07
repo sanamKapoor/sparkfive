@@ -25,20 +25,30 @@ export default {
     getSharedSizePresetsByGroup: (queryParams) => axios.get(`${shareFilePreset}?${querystring.stringify(queryParams)}`),
 
     download: (data, filters) => {
-        return axios({
-            url: `${downloadAsset}?${querystring.encode(filters)}`,
-            method: 'POST',
-            responseType: 'blob', // Important
-            data
-        })
+        // Resize to create associate files
+        if(data.associateFile){
+            return axios.post(`${downloadAsset}?${querystring.encode(filters)}`, data)
+        }else{ // Resize to download, need blob return
+            return axios({
+                url: `${downloadAsset}?${querystring.encode(filters)}`,
+                method: 'POST',
+                responseType: 'blob', // Important
+                data
+            })
+        }
     },
 
     shareDownload: (data, filters) => {
-        return axios({
-            url: `${shareDownloadAsset}?${querystring.encode(filters)}`,
-            method: 'POST',
-            responseType: 'blob', // Important
-            data
-        })
+        // Resize to create associate files
+        if(data.associateFile){
+            return axios.post(`${shareDownloadAsset}?${querystring.encode(filters)}`, data)
+        }else{// Resize to download, need blob return
+            return axios({
+                url: `${shareDownloadAsset}?${querystring.encode(filters)}`,
+                method: 'POST',
+                responseType: 'blob', // Important
+                data
+            })
+        }
     }
 }

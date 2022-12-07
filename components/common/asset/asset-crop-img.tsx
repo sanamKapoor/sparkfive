@@ -2,13 +2,17 @@ import ReactCrop, {
 	Crop,
 	PixelCrop,
 } from 'react-image-crop'
-import { useState, useRef, useEffect } from 'react'
+import {useState, useRef, useEffect, useContext} from 'react'
 import 'react-image-crop/dist/ReactCrop.css';
 import styles from './asset-img.module.css'
 import { Assets } from "../../../assets"
 import React from 'react';
+import assetApi from '../../../server-api/asset'
+import {  LoadingContext } from '../../../context'
 
-const AssetCropImg = ({ sizeOfCrop, setSizeOfCrop, assetImg, setWidth, setHeight, imageType, type = 'image', name, opaque = false, width = 100, height = 100, locked = true, detailPosSize }) => {
+
+const AssetCropImg = ({ sizeOfCrop, setSizeOfCrop, assetImg, setWidth, setHeight, imageType, type = 'image', name, opaque = false, width = 100, height = 100, locked = true, detailPosSize, associateFileId, onAddAssociate }) => {
+	const { setIsLoading } = useContext(LoadingContext);
 
 	const previewCanvasRef = useRef(null);
 	const imgRef = useRef(null);
@@ -157,6 +161,52 @@ const AssetCropImg = ({ sizeOfCrop, setSizeOfCrop, assetImg, setWidth, setHeight
 		);
 	}
 
+	const getCreationParameters = (attachQuery?: any) => {
+		let queryData: any = {}
+
+		if(associateFileId){
+			queryData.associateFile = associateFileId
+		}
+
+		if(attachQuery){
+			queryData = {...queryData, ...attachQuery}
+		}
+		return queryData
+	}
+
+	const generateToUpload = (canvas, crop) => {
+		if (!crop || !canvas) {
+			return;
+		}
+
+		setIsLoading(true)
+
+		canvas.toBlob(
+			async (blob) => {
+				console.warn(`Export image under image/${imageType} type`)
+
+				const file = new File([blob.slice(0, blob.size, blob.type)],
+					`${name}-crop-${new Date().getTime()}`
+					, { type: blob.type })
+
+				let attachedQuery = {estimateTime: 1, size: blob.size, totalSize: blob.size}
+
+				const formData = new FormData()
+
+				formData.append('asset', file)
+
+				let { data } = await assetApi.uploadAssets(formData, getCreationParameters(attachedQuery))
+
+				onAddAssociate(data[0])
+
+				setIsLoading(false)
+
+			},
+			`image/${convertImageType(imageType)}`,
+			1
+		);
+	}
+
 	const onCropMoveComplete = (c) => {
 		setCropping(false)
 		c.width = Math.round(c.width)
@@ -243,6 +293,15 @@ const AssetCropImg = ({ sizeOfCrop, setSizeOfCrop, assetImg, setWidth, setHeight
 					generateDownload(previewCanvasRef.current, completedCrop)
 				}
 			>Download cropped image</button>
+
+			<button
+				id={'associate-crop-image'}
+				className={'position-absolute visibility-hidden'}
+				type="button"
+				onClick={() =>
+					generateToUpload(previewCanvasRef.current, completedCrop)
+				}
+			>Save as associated file</button>
 
 			<button
 				id={'crop-preview'}

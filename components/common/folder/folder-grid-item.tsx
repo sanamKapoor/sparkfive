@@ -36,7 +36,7 @@ const FolderGridItem = ({
   copyShareLink = (folder) => {},
   toggleSelected,
   copyEnabled,
-  sharePath = "",
+  sharePath = '',
   isShare = false,
   thumbnailPath,
   thumbnailExtension,
@@ -178,7 +178,7 @@ const FolderGridItem = ({
         </>
       </div>
       <div className={styles.info}>
-        <div className="normal-text wrap_text">{name}</div>
+        <div className="normal-text">{name}</div>
         <div className={styles["details-wrapper"]}>
           <div className="secondary-text">{`${length} Assets`}</div>
           <FolderOptions
