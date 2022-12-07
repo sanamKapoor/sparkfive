@@ -33,7 +33,7 @@ import ConfirmModal from "../modals/confirm-modal"
 // Constants
 import { maximumAssociateFiles} from "../../../constants/asset-associate";
 
-const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, isFolder = false, deselectHidden = false, iconColor = '', deletedAssets = false, advancedLink = false }) => {
+const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, isFolder = false, deselectHidden = false, iconColor = '', deletedAssets = false, advancedLink = false, isSearch = false }) => {
 	const {
 		assets,
 		setAssets,

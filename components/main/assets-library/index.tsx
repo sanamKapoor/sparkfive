@@ -60,7 +60,7 @@ const AssetsLibrary = () => {
     setTotalAssets
   } = useContext(AssetContext)
 
-  const [top, setTop] = useState('calc(55px + 3rem)')
+  const [top, setTop] = useState('calc(55px + 8rem)')
 
   const {advancedConfig, hasPermission} = useContext(UserContext)
 
@@ -620,7 +620,7 @@ const AssetsLibrary = () => {
     }
   }
 
-  const mapWithToggleSelection = asset => ({ ...asset, toggleSelected })
+  const mapWithToggleSelection = asset => ({ ...asset, isSelected: selectedAllAssets, toggleSelected })
 
   const backToFolders = () => {
     setActiveFolder('')
@@ -692,9 +692,9 @@ const AssetsLibrary = () => {
   }
 
   const onChangeWidth = () => {
-    let remValue = '3rem'
+    let remValue = '8rem'
     if(window.innerWidth <= 900){
-      remValue = '1rem + 1px'
+      remValue = '7rem + 1px'
     }
 
     let el = document.getElementById('top-bar');

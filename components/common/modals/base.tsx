@@ -24,6 +24,19 @@ const Base = ({
     closeButtonOnly = false
 }) => {
 
+  useEffect(() => {
+    const cols: any = document.getElementsByTagName("html");
+    if (modalIsOpen) {
+      for (let i = 0; i < cols.length; i++) {
+        cols[i].style.overflow = "hidden";
+      }
+    } else {
+      for (let i = 0; i < cols.length; i++) {
+        cols[i].style.overflow = "auto";
+      }
+    }
+  }, [modalIsOpen]);
+
   return (
     <ReactModal
       isOpen={modalIsOpen}

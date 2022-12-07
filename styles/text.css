@@ -3,6 +3,13 @@
   font-weight: 500;
 }
 
+.wrap_text{
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+}
+
 .secondary-text {
   color: var(--color-sec-blue);
   font-size: 12px;

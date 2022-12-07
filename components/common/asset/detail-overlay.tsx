@@ -12,8 +12,11 @@ import update from "immutability-helper";
 import downloadUtils from "../../../utils/download";
 import VersionList from "./version-list";
 import AssetAddition from "./asset-addition";
+import urlUtils from '../../../utils/url'
 
 import { isMobile } from "react-device-detect";
+
+import { ASSET_DOWNLOAD } from '../../../constants/permissions'
 
 // Components
 import SidePanel from "./detail-side-panel";
@@ -37,6 +40,8 @@ import { ASSET_ACCESS } from "../../../constants/permissions";
 import AssetNotes from './asset-notes';
 import AssetNote from './asset-note';
 import AssetRelatedFIles from './asset-related-files';
+
+import { sizeToZipDownload } from "../../../constants/download";
 
 const getDefaultDownloadImageType = (extension) => {
   const defaultDownloadImageTypes = [
@@ -209,6 +214,8 @@ const DetailOverlay = ({
       setAssetIndex(assetIndx);
     }
   }
+
+
 
   useEffect(() => {
     getCropResizeOptions();
@@ -491,6 +498,8 @@ const DetailOverlay = ({
   }, [width, height]);
 
   const downloadSelectedAssets = async (id) => {
+    const { shareJWT, code } = urlUtils.getQueryParameters()
+
     try {
       let payload = {
         assetIds: [id],
@@ -501,26 +510,44 @@ const DetailOverlay = ({
         estimateTime: 1,
       };
 
-      // Add sharePath property if user is at share collection page
-      if (sharePath) {
-        filters["sharePath"] = sharePath;
+      // Download files in shared collection or normal download (not share)
+      if((isShare && sharePath && !code) || (!isShare)){
+
+        // Add sharePath property if user is at share collection page
+        if (sharePath) {
+          filters["sharePath"] = sharePath;
+        }
+
+        // Show processing bar
+        updateDownloadingStatus("zipping", 0, totalDownloadingAssets);
+
+        let api: any = assetApi;
+
+        if (isShare) {
+          api = shareApi;
+        }
+
+        const { data } = await api.downloadAll(payload, filters);
+
+        // Download file to storage
+        fileDownload(data, "assets.zip");
+
+        updateDownloadingStatus("done", 0, 0);
+      }else{ // Download shared single asset
+        if(isShare && !sharePath && code){
+          // Show processing bar
+          updateDownloadingStatus("zipping", 0, totalDownloadingAssets);
+
+          const { data } = await assetApi.shareDownload(payload, {shareJWT, code});
+
+          // Download file to storage
+          fileDownload(data, "assets.zip");
+
+          updateDownloadingStatus("done", 0, 0);
+        }
+
       }
 
-      // Show processing bar
-      updateDownloadingStatus("zipping", 0, totalDownloadingAssets);
-
-      let api: any = assetApi;
-
-      if (isShare) {
-        api = shareApi;
-      }
-
-      const { data } = await api.downloadAll(payload, filters);
-
-      // Download file to storage
-      fileDownload(data, "assets.zip");
-
-      updateDownloadingStatus("done", 0, 0);
     } catch (e) {
       updateDownloadingStatus(
         "error",
@@ -616,9 +643,9 @@ const DetailOverlay = ({
       return result;
     };
 
-    const isTypeValid = checkValid(["image", "video"], assetDetail?.type);
+    const isTypeValid = checkValid(["image", "video", "pdf"], assetDetail?.type);
     const isExtensionValid = checkValid(
-      ["png", "jpg", "gif", "tif", "tiff", "webp", "svg", "mp4", "mov", "avi"],
+      ["png", "jpg", "gif", "tif", "tiff", "webp", "svg", "mp4", "mov", "avi", "pdf"],
       assetDetail?.extension
     );
     const isUserValid =
@@ -707,16 +734,16 @@ const DetailOverlay = ({
 
 
   const resetImageSettings = (newWidth, newHeight) => {
-    const img = document.querySelector('.app-overlay img.asset-img') as HTMLImageElement;
-    // const draggable = document.querySelector('.app-overlay .react-draggable') as HTMLDivElement;
-    var positions = window.getComputedStyle(img).getPropertyValue('object-position').split(' ');
-    const pos = parseInt(positions[0]);
-    const cWidth = newWidth || img.width;
-    const cHeight = newHeight || img.height;
-    let nw = img.naturalWidth;
-    let nh = img.naturalHeight;
-    var oRatio = nw / nh,
-      cRatio = cWidth / cHeight;
+      const img = document.querySelector('.app-overlay img.img-preview') as HTMLImageElement;
+      // const draggable = document.querySelector('.app-overlay .react-draggable') as HTMLDivElement;
+      // var positions = window.getComputedStyle(img).getPropertyValue('object-position').split(' ');
+      // const pos = parseInt(positions[0]);
+      const cWidth = newWidth || img.width;
+      const cHeight = newHeight || img.height;
+      let nw = img.naturalWidth;
+      let nh = img.naturalHeight;
+      var oRatio = nw / nh,
+        cRatio = cWidth / cHeight;
 
     let width, height;
     if (oRatio > cRatio) {
@@ -727,8 +754,8 @@ const DetailOverlay = ({
       height = cHeight;
     }
 
-    width = Math.round(width);
-    height = Math.round(height);
+      width = width > currentAsset.dimensionWidth ? currentAsset.dimensionWidth :  Math.round(width);
+      height = height > currentAsset.dimensionHeight ? currentAsset.dimensionHeight :  Math.round(height);
 
     setDetailPosSize(Object.assign({ ...detailPosSize }, { height, width }));
     if (!newWidth && !newHeight) {
@@ -805,24 +832,29 @@ const DetailOverlay = ({
                   onClick={openShareAsset}
                 />
               )}
-              {mode === "detail" && (
+              {mode === "detail" && (isShare || hasPermission([ASSET_DOWNLOAD])) && (
                 <>
-                  <Button
-                    text={"Download"}
-                    type={"button"}
-                    className={styles["only-desktop-button"]}
-                    styleType={"secondary"}
-                    onClick={() => {
-                      if (currentAsset.extension !== 'gif' && currentAsset.type === "image" && isImageType(assetDetail.extension)) {
-                        setMode("resize");
-                        changeActiveSide("detail");
-                        resetImageSettings(undefined, undefined);
-                      } else {
-                        // downloadSelectedAssets(currentAsset.id)
-                        manualDownloadAsset(currentAsset);
-                      }
-                    }}
-                  />
+                <Button
+                  text={"Download"}
+                  type={"button"}
+                  className={styles["only-desktop-button"]}
+                  styleType={"secondary"}
+                  onClick={() => {
+                    if (currentAsset.extension !== 'gif' && currentAsset.extension !== 'tiff' && currentAsset.extension !== 'tif' && currentAsset.extension !== "svg" && currentAsset.type === "image" && isImageType(assetDetail.extension)) {
+                      setMode("resize");
+                      changeActiveSide("detail");
+                      resetImageSettings(undefined, undefined);
+                    } else {
+                      downloadSelectedAssets(currentAsset.id)
+                      // if(currentAsset.size >= sizeToZipDownload){
+                      //   downloadSelectedAssets(currentAsset.id)
+                      // }else{
+                      //   manualDownloadAsset(currentAsset);
+                      // }
+
+                    }
+                  }}
+                />
                 </>
               )}
             </div>
@@ -841,7 +873,8 @@ const DetailOverlay = ({
             {assetDetail.type === "image" && (
               <>
                 {mode === "detail" && (
-                  <AssetImg name={assetDetail.name} assetImg={versionRealUrl} />
+
+                    <AssetImg  imgClass="img-preview" name={assetDetail.name} assetImg={(assetDetail.extension === "tiff" || assetDetail.extension === "tif" || assetDetail.extension === "svg") ? versionThumbnailUrl :  versionRealUrl} />
                 )}
                 {mode === "resize" && (
                   <Rnd position={{ x: detailPosSize.x, y: detailPosSize.y }}
@@ -852,7 +885,7 @@ const DetailOverlay = ({
                     // }}
                     onResizeStop={(e, direction, ref, delta, position) => onResizeStop(ref.style.width, ref.style.height, position)}
                   >
-                    <AssetImg name={assetDetail.name} assetImg={versionRealUrl} />
+                    <AssetImg name={assetDetail.name} assetImg={versionRealUrl} imgClass="img-preview"/>
                   </Rnd>
                 )}
 
@@ -884,14 +917,15 @@ const DetailOverlay = ({
               assetDetail.type !== "video" &&
               versionThumbnailUrl && (
                 assetDetail.extension.toLowerCase() === "pdf" ?
-                  <AssetPdf
-                    asset={asset}
-                  />
-                  :
-                  <AssetImg
-                    name={assetDetail.name}
-                    assetImg={versionThumbnailUrl}
-                  />
+                <AssetPdf
+                  asset={asset}
+                />
+                :
+                <AssetImg
+                  name={assetDetail.name}
+                  assetImg={versionThumbnailUrl}
+                  imgClass="img-preview"
+                />
               )}
             {assetDetail.type !== "image" &&
               assetDetail.type !== "video" &&
@@ -1069,7 +1103,7 @@ const DetailOverlay = ({
               }}
             />
           )}
-          {currentAsset.extension !== 'gif' && <IconClickable
+          {currentAsset.extension !== 'gif' && hasPermission([ASSET_DOWNLOAD]) && <IconClickable
             src={AssetOps.download}
             additionalClass={styles["menu-icon"]}
             onClick={() => {

@@ -12,7 +12,9 @@ const AssetImg = ({
   name,
   opaque = false,
   onClick = () => {},
-  imgClass = ""
+  imgClass = "",
+  style={},
+  activeFilter=""
 }) => {
   const [loaded, setLoaded] = useState(false);
 
@@ -30,18 +32,18 @@ const AssetImg = ({
       <img
         src={Assets.empty}
         alt={"blank"}
-        style={loaded ? { display: "none" } : { width: '100%', height: "100%", objectFit: "contain"}}
+        className={`${styles[activeFilter]}`}
+        style={loaded ? { display: "none" } : { width: '100%', height: "100%", "object-fit": "contain"}}
       />
       <img
-        crossOrigin={"anonymous"}
         onClick={onClick}
         src={finalImg}
-        alt={name}
-        className={`asset-img ${styles.asset} ${opaque && styles.opaque} ${imgClass}`}
+        className={`asset-img ${styles.asset} ${opaque && styles.opaque} ${imgClass} ${styles[imgClass]} ${styles[activeFilter]}`}
         onLoad={() => setLoaded(true)}
+        onError={(e) => {setLoaded(false)}}
         style={
           loaded
-            ? {}
+            ? {...style}
             : {
                 opacity: 0,
                 overflow: "hidden",

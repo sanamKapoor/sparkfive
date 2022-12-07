@@ -9,6 +9,11 @@ export default {
       'Content-Type': 'multipart/form-data'
     }
   }),
+  uploadThumbnail: (formData, queryData = {}) => axios.post(`${assetUrl}/upload/thumbnail?${querystring.encode(queryData)}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  }),
   getAssets: (queryData = {}) => axios.get(`${assetUrl}?${querystring.encode(queryData)}`),
   searchAssets: (queryData = {}) => axios.get(`${assetUrl}/search/filename?${querystring.encode(queryData)}`),
   getVersions: (versionGroup) => axios.get(`${assetUrl}/versions-of/${versionGroup}`),

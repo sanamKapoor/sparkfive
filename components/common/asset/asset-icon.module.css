@@ -14,19 +14,19 @@
     object-fit: scale-down;
     width: 100%;
   }
-  
+
   .noMargin {
     margin: 0;
   }
-  
+
   .small{
     margin: .6rem;
   }
-  
+
   .small .icon{
     width: 30px;
   }
-  
+
   .bulk-size .icon{
     width: 4rem;
   }
@@ -34,4 +34,12 @@
   .collection .icon {
     width: 100%;
   }
-  
+
+  .maxHeight {
+    max-height: 100%;
+  }
+
+  .filter_open {
+    height: 270px;
+    max-height: 270px;
+}
