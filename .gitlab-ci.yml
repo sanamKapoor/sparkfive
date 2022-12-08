@@ -5,7 +5,8 @@ build_esdev:
  before_script:
    - echo $develop_key >>  develop_key.pem
    - chmod 400 develop_key.pem
-   - apt install rsync
+   - apt-get update
+   - apt-get --yes --force-yes install rsync
  script:
    - rsync -auvz -e 'ssh -o StrictHostKeyChecking=no -i develop_key.pem -p 22' --stats --exclude-from=deployment-exclude-list.txt . $deveop_user@$develop_host:$develop_path_client;
    - ssh -o StrictHostKeyChecking=no -i develop_key.pem -t $deveop_user@$develop_host -p 22 "cd $develop_path_client && npm install && pm2 restart all"
