@@ -3,6 +3,8 @@ stages:
 build_dev:
  stage: esdev_build
  before_script:
+   - apt-get update
+   - apt-get --yes --force-yes install rsync
    - echo $server_key >>  serverkey.pem
    - chmod 400 serverkey.pem
  script:
