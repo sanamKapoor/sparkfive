@@ -5,14 +5,16 @@ build_dev:
  before_script:
    - apt-get update
    - apt-get --yes --force-yes install rsync
-   - apt-get --yes --force-yes install sshpass
-   - echo $develop_key >>  develop_key
-   - chmod 400 develop_key
+   - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+   - eval $(ssh-agent -s)
+   - echo "$develop_key" | tr -d '\r' | ssh-add -
+   - mkdir -p ~/.ssh
+   - chmod 700 ~/.ssh
+   - eval $(ssh-agent -s)
  script:
-   - echo develop_key
-   - cat develop_key
-   - rsync -avh --delete --rsh="sshpass -p $develop_password ssh -o StrictHostKeyChecking=no "  . $deveop_user@$develop_host:/
-   
+   - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+   - rsync -avrc --delete --exclude= .gitignore . $deveop_user@$deveop_host:/var/www/sparkfive-client
+   - ssh $deveop_user@$deveop_host "pm2 restart all"
 
  only:
    - dev
