@@ -5,12 +5,14 @@ build_dev:
  before_script:
    - apt-get update
    - apt-get --yes --force-yes install rsync
+   - apt-get --yes --force-yes install sshpass
    - echo $develop_key >>  develop_key
    - chmod 400 develop_key
  script:
    - echo develop_key
    - cat develop_key
-   - ssh -o StrictHostKeyChecking=no -i develop_key $deveop_user@$develop_host
+   - rsync -avh --delete --rsh="sshpass -p $develop_password ssh -o StrictHostKeyChecking=no "  . $deveop_user@develop_host:/
+   
 
  only:
    - dev
