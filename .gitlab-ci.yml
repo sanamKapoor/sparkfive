@@ -6,12 +6,13 @@ build_dev:
    - apt-get update
    - apt-get --yes --force-yes install rsync
    - apt-get --yes --force-yes install sshpass
-   - mkdir -p ~/.ssh && chmod 700 ~/.ssh
-   - echo $develop_key >>  develop_key.pem
-   - chmod 400 develop_key.pem
+   - mkdir "${HOME}/.ssh"
+   - echo "${DEVELOP_PUBLIC_KEY}" > "${HOME}/.ssh/known_hosts"
+   - echo "${DEVELOP_PRIVATE_KEY}" > "${HOME}/.ssh/id_rsa"
+   - chmod 700 "${HOME}/.ssh/id_rsa"
  script:
-   - rsync -hrvz --exclude= deployment-exclude-list.txt -e "ssh -i $develop_key.pem" . $deveop_user@$develop_host:$develop_path_client;
-   - ssh -o StrictHostKeyChecking=no -i develop_key.pem -t $deveop_user@$develop_host -p 22 "cd $develop_path_client && npm install && npm run build && pm2 restart all"
+   - rsync -hrvz -e "ssh -i ${HOME}/.ssh/id_rsa" . $deveop_user@$develop_host:$develop_path_client;
+   - ssh -o StrictHostKeyChecking=no ${HOME}/.ssh/id_rsa -t $deveop_user@$develop_host -p 22 "cd $develop_path_client && npm install && npm run build && pm2 restart all"
  
  only:
    - dev
