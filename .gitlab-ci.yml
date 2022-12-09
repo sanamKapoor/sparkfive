@@ -11,7 +11,7 @@ build_dev:
  script:
    - echo develop_key
    - cat develop_key
-   - rsync -avh --delete --rsh="sshpass -p $develop_password ssh -o StrictHostKeyChecking=no "  . $deveop_user@develop_host:/
+   - rsync -avh --delete --rsh="sshpass -p $develop_password ssh -o StrictHostKeyChecking=no "  . $deveop_user@$develop_host:/
    
 
  only:
