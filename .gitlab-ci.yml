@@ -9,6 +9,7 @@ build_dev:
    - chmod 400 develop_key
  script:
    - echo develop_key
+   - cat develop_key
 
  only:
    - dev
