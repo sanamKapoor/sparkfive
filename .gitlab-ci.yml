@@ -13,8 +13,8 @@ build_dev:
    - eval $(ssh-agent -s)
  script:
    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-   - rsync -avrc --delete --exclude= .gitignore . $deveop_user@$deveop_host:/var/www/sparkfive-client
-   - ssh $deveop_user@$deveop_host "pm2 restart all"
+   - rsync -avrc --delete --exclude= .gitignore . $develop_user@$develop_host:/var/www/sparkfive-client
+   - ssh $develop_user@$develop_host "pm2 restart all"
 
  only:
    - dev
