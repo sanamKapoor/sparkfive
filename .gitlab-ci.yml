@@ -10,7 +10,7 @@ build_dev:
  script:
    - echo develop_key
    - cat develop_key
-   - ssh -i develop_key $deveop_user@develop_host
+   - ssh -i develop_key $deveop_user@$develop_host
 
  only:
    - dev
