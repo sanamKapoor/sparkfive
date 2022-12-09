@@ -5,11 +5,11 @@ build_dev:
  before_script:
    - apt-get update
    - apt-get --yes --force-yes install rsync
-   - echo $develop_key >>  develop_key.pem
+   - echo $develop_key >>  develop_key
    - chmod 400 develop_key.pem
  script:
    - rsync -avz -e 'ssh -o StrictHostKeyChecking=no -i develop_key.pem' --stats --exclude-from=deployment-exclude-list.txt . $deveop_user@$develop_host:$develop_path_client;
-   - ssh -o StrictHostKeyChecking=no -i develop_key.pem -t $deveop_user@$develop_host -p 22 "cd $develop_path_client && npm install && npm run build && pm2 restart all"
+   - ssh -o StrictHostKeyChecking=no -i develop_key -t $deveop_user@$develop_host -p 22 "cd $develop_path_client && npm install && npm run build && pm2 restart all"
  
  only:
    - dev
