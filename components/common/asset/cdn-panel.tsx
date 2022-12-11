@@ -90,7 +90,7 @@ const CdnPanel = ({ assetDetail }) => {
       </div>
 
       {
-        assetDetail.type !== 'video' &&
+        assetDetail.type !== 'video'  && assetDetail.type !== 'pdf'&&
         <div className={styles.block}>
           <h3 className={styles.subtitle}>Intelligent CDN</h3>
 
