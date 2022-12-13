@@ -2,13 +2,10 @@ import styles from "./share-item.module.css";
 import { format } from "date-fns";
 import { useState, useEffect } from "react";
 
-import { Utilities, Assets } from "../../assets";
+import { Utilities } from "../../assets";
 
 // Component
 import AssetImg from "../common/asset/asset-img";
-import AssetVideo from "../common/asset/asset-video";
-import AssetApplication from "../common/asset/asset-application";
-import AssetText from "../common/asset/asset-text";
 import Button from "../common/buttons/button";
 import DetailOverlay from "../common/asset/detail-overlay";
 import IconClickable from "../common/buttons/icon-clickable";
@@ -38,12 +35,12 @@ const ShareItem = ({
           {thumbailUrl ? (
             <AssetImg
               assetImg={thumbailUrl}
-              type={asset.type}
-              name={asset.name}
+              type={asset?.type}
+              name={asset?.name}
               opaque={false}
             />
           ) : (
-            <AssetIcon extension={asset.extension} />
+            <AssetIcon extension={asset?.extension} />
           )}
           {/* {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} opaque={false} />}
 					{asset.type === 'video' && <AssetVideo asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} />}

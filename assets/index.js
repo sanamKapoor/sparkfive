@@ -37,6 +37,7 @@ export const Utilities = {
   assignMemberLight: require('./Icons/Utilities/Assign Member/icn-utilities-assignmember-light.svg'),
   more: require('./Icons/Utilities/More/icn-utilities-more.svg'),
   moreLight: require('./Icons/Utilities/More/icn-utilities-more-light.svg'),
+  moreWhite: require('./Icons/Utilities/More/icn-utilities-more-white.svg'),
   moreLighter: require('./Icons/Utilities/More/icn-utilities-more-lighter.svg'),
   closePanel: require('./Icons/Utilities/Close Panel/icn-utilities-closepanel.svg'),
   closePanelLight: require('./Icons/Utilities/Close Panel/icn-utilities-closepanel-light.svg'),
@@ -50,6 +51,8 @@ export const Utilities = {
   arrowUpDark: require('./Icons/Utilities/arrow/arrow-up-dark.svg'),
   arrowNext: require('./Icons/Utilities/arrow/arrow-next.svg'),
   arrowPrev: require('./Icons/Utilities/arrow/arrow-prev.svg'),
+  circleArrowRight: require('./Icons/Utilities/arrow/arrow-circle-right.svg'),
+  circleArrowLeft: require('./Icons/Utilities/arrow/arrow-circle-left.svg'),
   back: require('./Icons/Utilities/Back/icn-utilities-back.svg'),
   memberProfile: require('./Icons/Utilities/Member Profile/icn-nav-memberprofile.svg'),
   radioButtonNormal: require('./Icons/Utilities/Radio Button/Normal/icn-utilities-radionormal.svg'),
@@ -154,7 +157,8 @@ export const Assets = {
   ai: require('./Icons/Assets/ai.svg'),
   dwg: require('./Icons/Assets/dwg.png'),
   unknown: require('./Icons/Assets/unknown.svg'),
-  arrowDown: require('./Icons/Assets/arrow-down.svg')
+  arrowDown: require('./Icons/Assets/arrow-down.svg'),
+  computer: require('./Icons/Assets/computer.svg')
 }
 
 export const Comments = {
@@ -186,5 +190,7 @@ export const AssetOps = {
   moveWhite: require('./Icons/Utilities/Move Folder/icn-utilities-movefolder-white.svg'),
   copyWhite: require('./Icons/Asset Actions/copy-white.svg'),
   shareWhite: require('./Icons/Asset Actions/share-white.svg'),
-  generateThumbnail: require('./Icons/Asset Actions/wrench.svg')
+  generateThumbnail: require('./Icons/Asset Actions/wrench.svg'),
+  upload: require('./Icons/Asset Actions/upload.svg'),
+  associate: require('./Icons/Asset Actions/associate.svg')
 }

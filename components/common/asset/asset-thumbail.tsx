@@ -26,24 +26,27 @@ const AssetThumbail = ({
   realUrl,
   isUploading,
   showAssetOption = true,
+  showViewButtonOnly = false,
+  showAssetRelatedOption = false,
   isSelected = false,
   isLoading = false,
   activeFolder = '',
-  toggleSelected = () => {},
-  openDeleteAsset = () => {},
-  openMoveAsset = () => {},
-  openCopyAsset = () => {},
-  openShareAsset = () => {},
-  openArchiveAsset = () => {},
-  downloadAsset = () => {},
-  openRemoveAsset = () => {},
-  loadMore = () => {},
+  toggleSelected = () => { },
+  openDeleteAsset = () => { },
+  openMoveAsset = () => { },
+  openCopyAsset = () => { },
+  openShareAsset = () => { },
+  openArchiveAsset = () => { },
+  downloadAsset = () => { },
+  openRemoveAsset = () => { },
+  loadMore = () => { },
   handleVersionChange,
   onView = null,
   customComponent = <></>,
   infoWrapperClass = "",
   textWrapperClass = "",
-  customIconComponent = <></>
+  customIconComponent = <></>,
+  onDisassociate = () => {}
 }) => {
   const [overlayProperties, setOverlayProperties] = useState(DEFAULT_DETAIL_PROPS);
   const { detailOverlayId } = useContext(AssetContext);
@@ -97,12 +100,11 @@ const AssetThumbail = ({
           {asset.type === 'video' && <AssetVideo assetImg={thumbailUrl} asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} />}
           {asset.type === 'application' && <AssetApplication assetImg={thumbailUrl} extension={asset.extension} />}
           {asset.type === 'text' && <AssetText assetImg={thumbailUrl} extension={asset.extension} />} */}
-          {!isUploading && !isLoading && (
+          {!isUploading && !isLoading && (showAssetOption || showViewButtonOnly) && (
             <>
-              <div
-                className={`${styles["selectable-wrapper"]} ${
-                  isSelected && styles["selected-wrapper"]
-                }`}
+            {!showViewButtonOnly && <div
+                className={`${styles["selectable-wrapper"]} ${isSelected && styles["selected-wrapper"]
+                  }`}
               >
                 {isSelected ? (
                   <IconClickable
@@ -117,16 +119,16 @@ const AssetThumbail = ({
                     onClick={toggleSelected}
                   />
                 )}
-              </div>
+              </div>}
               <div className={styles["image-button-wrapper"]}>
                 <Button
                   styleType={"primary"}
                   text={"View Details"}
                   type={"button"}
-                  onClick={() =>{
-                    if(onView){
-                      onView()
-                    }else{
+                  onClick={() => {
+                    if (onView) {
+                      onView(asset.id)
+                    } else {
                       setOverlayProperties({
                         ...DEFAULT_DETAIL_PROPS,
                         visible: !overlayProperties.visible,
@@ -148,19 +150,30 @@ const AssetThumbail = ({
                   {format(new Date(asset.createdAt), "MMM d, yyyy, p")}
                 </div>
                 {!isUploading && showAssetOption && (
-                    <AssetOptions
-                        itemType={type}
-                        asset={asset}
-                        openArchiveAsset={openArchiveAsset}
-                        openDeleteAsset={openDeleteAsset}
-                        openMoveAsset={openMoveAsset}
-                        openCopyAsset={openCopyAsset}
-                        downloadAsset={downloadAsset}
-                        openShareAsset={openShareAsset}
-                        openComments={openComments}
-                        openRemoveAsset={openRemoveAsset}
-                        isShare={isShare}
-                    />
+                  <AssetOptions
+                    itemType={type}
+                    asset={asset}
+                    openArchiveAsset={openArchiveAsset}
+                    openDeleteAsset={openDeleteAsset}
+                    openMoveAsset={openMoveAsset}
+                    openCopyAsset={openCopyAsset}
+                    downloadAsset={downloadAsset}
+                    openShareAsset={openShareAsset}
+                    openComments={openComments}
+                    openRemoveAsset={openRemoveAsset}
+                    isShare={isShare}
+                    dissociateAsset={onDisassociate}
+                  />
+                )}
+                {showAssetRelatedOption && (
+                  <AssetOptions
+                    itemType={type}
+                    asset={asset}
+                    openDeleteAsset={openDeleteAsset}
+                    downloadAsset={downloadAsset}
+                    isAssetRelated
+                    dissociateAsset={onDisassociate}
+                  />
                 )}
               </div>
             </div>

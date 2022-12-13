@@ -35,6 +35,7 @@ export default ({ children }) => {
 
     const [operationAsset, setOperationAsset] = useState(null)
     const [operationFolder, setOperationFolder] = useState('')
+    const [operationAssets, setOperationAssets] = useState([]) // Hold assets to be operated without affecting to asset list in main grid
 
     const [activeOperation, setActiveOperation] = useState('')
 
@@ -431,6 +432,7 @@ export default ({ children }) => {
         uploadingFile,
         uploadRemainingTime,
         uploadingPercent,
+        setUploadingPercent,
         uploadingAssets,
         setUploadingAssets: setUploadingAssetItems,
         uploadingType,
@@ -455,7 +457,9 @@ export default ({ children }) => {
         folderImport,
         setFolderImport,
         detailOverlayId,
-        setDetailOverlayId
+        setDetailOverlayId,
+        operationAssets,
+        setOperationAssets
     }
     return (
         <AssetContext.Provider value={assetsValue}>

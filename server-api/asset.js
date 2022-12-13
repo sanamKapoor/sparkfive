@@ -71,6 +71,10 @@ export default {
       responseType: 'blob', // Important
       data
     })
-  }
+  },
+
+  associate: (assetIds, queryData) => axios.post(`${assetUrl}/associate?${querystring.encode(queryData)}`, { assetIds }),
+  disassociate: (assetIds) => axios.post(`${assetUrl}/disassociate`, { assetIds }),
+
 }
 

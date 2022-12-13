@@ -61,3 +61,7 @@
   word-break: break-all;
   white-space: normal;
 }
+
+.text-center {
+  text-align: center;
+}

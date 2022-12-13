@@ -1,0 +1,24 @@
+.slick-slider {
+    display: flex;
+    align-items: center;
+
+}
+
+.slick-list {
+    width: 100%;
+}
+
+
+.slick-slide {
+    padding: 0 12px;
+}
+
+.slick-track {
+    margin-right: auto;
+    margin-left: 0;
+}
+
+.slick-slide:first-child{
+    padding-left: 0 !important;
+}
+
