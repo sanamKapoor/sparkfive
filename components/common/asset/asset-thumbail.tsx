@@ -26,6 +26,7 @@ const AssetThumbail = ({
   realUrl,
   isUploading,
   showAssetOption = true,
+  showViewButtonOnly = false,
   showAssetRelatedOption = false,
   isSelected = false,
   isLoading = false,
@@ -99,9 +100,9 @@ const AssetThumbail = ({
           {asset.type === 'video' && <AssetVideo assetImg={thumbailUrl} asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} />}
           {asset.type === 'application' && <AssetApplication assetImg={thumbailUrl} extension={asset.extension} />}
           {asset.type === 'text' && <AssetText assetImg={thumbailUrl} extension={asset.extension} />} */}
-          {!isUploading && !isLoading && showAssetOption && (
+          {!isUploading && !isLoading && (showAssetOption || showViewButtonOnly) && (
             <>
-              <div
+            {!showViewButtonOnly && <div
                 className={`${styles["selectable-wrapper"]} ${isSelected && styles["selected-wrapper"]
                   }`}
               >
@@ -118,7 +119,7 @@ const AssetThumbail = ({
                     onClick={toggleSelected}
                   />
                 )}
-              </div>
+              </div>}
               <div className={styles["image-button-wrapper"]}>
                 <Button
                   styleType={"primary"}
@@ -126,7 +127,7 @@ const AssetThumbail = ({
                   type={"button"}
                   onClick={() => {
                     if (onView) {
-                      onView()
+                      onView(asset.id)
                     } else {
                       setOverlayProperties({
                         ...DEFAULT_DETAIL_PROPS,

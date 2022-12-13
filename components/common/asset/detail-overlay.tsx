@@ -204,14 +204,17 @@ const DetailOverlay = ({
 
 
   const _setActiveCollection = () => {
+    // TODO: ? What is purpose of this ?
     if (activeFolder) {
       const folder = folders.find(folder => folder.id === activeFolder);
-      // if (folder.assets.length === 0 && assets && assets.length) {
-      folder.assets = [...assets];
-      // }
-      setActiveCollection(folder);
-      const assetIndx = assets.findIndex(item => item.asset && item.asset.id === asset.id) + 1
-      setAssetIndex(assetIndx);
+      if(folder){
+        // if (folder.assets.length === 0 && assets && assets.length) {
+        folder.assets = [...assets];
+        // }
+        setActiveCollection(folder);
+        const assetIndx = assets.findIndex(item => item.asset && item.asset.id === asset.id) + 1
+        setAssetIndex(assetIndx);
+      }
     }
   }
 
@@ -960,13 +963,13 @@ const DetailOverlay = ({
               </div>
             }
 
-            {/* Related Files */}
-            <AssetRelatedFIles assets={assetDetail.fileAssociations || []} associateFileId={currentAsset.id} onChangeRelatedFiles={onChangeRelatedFiles} onAddRelatedFiles={(data)=>{
-              console.log(data)
-              let updatedAssets = [...assetDetail.fileAssociations]
-              updatedAssets = updatedAssets.concat(data)
-              setAssetDetail({...assetDetail, fileAssociations: updatedAssets})
-            }}/>
+            {!isShare && <>
+              <AssetRelatedFIles closeOverlay={closeOverlay} assets={assetDetail.fileAssociations || []} associateFileId={currentAsset.id} onChangeRelatedFiles={onChangeRelatedFiles} onAddRelatedFiles={(data)=>{
+                let updatedAssets = [...assetDetail.fileAssociations]
+                updatedAssets = updatedAssets.concat(data)
+                setAssetDetail({...assetDetail, fileAssociations: updatedAssets})
+              }}/>
+            </>}
           </div>
         </section>
       )}

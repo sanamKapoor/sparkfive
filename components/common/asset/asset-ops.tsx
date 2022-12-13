@@ -553,7 +553,10 @@ export default ({ getAssets }) => {
       } else if (operationFolder) {
         versionGroups = operationFolder.assets.map((asset) => asset.versionGroup).join(",");
         assetIds = operationFolder.assets.map((asset) => asset.id).join(",");
-      } else {
+      } else if(operationAssets.length > 0){
+        versionGroups = operationAssets.map((item) => item.asset.versionGroup).join(",");
+        assetIds = operationAssets.map((item) => item.asset.id).join(",");
+      } else{
         versionGroups = selectedAssets
           .map((assetItem) => assetItem.asset.versionGroup)
           .join(",");

@@ -1,6 +1,7 @@
 import styles from './search-input.module.css'
 import { Utilities } from '../../../assets'
 import {useEffect, useState} from 'react'
+import {useDebounce} from "../../../hooks/useDebounce";
 
 // Components
 import Button from '../buttons/button'
@@ -8,6 +9,13 @@ import Button from '../buttons/button'
 const Search = (props) => {
 
     const [term, setTerm] = useState('')
+    const debouncedTerm = useDebounce(term, 500);
+
+    useEffect(()=>{
+        if(props.onlyInput && props.onChange){
+            props.onChange(debouncedTerm)
+        }
+    },[debouncedTerm])
 
     useEffect(()=>{
         // Clear search value if user do submit in another search input
@@ -21,23 +29,25 @@ const Search = (props) => {
             e.preventDefault()
             props.onSubmit(term)
         }}>
-            <div className={styles['input-container']}>
+            <div className={`${styles['input-container']} ${props.inputContainerStyle || ""}`}>
                 <img src={Utilities.search} />
                 <input
                     {...props}
-                    onChange={(e) => setTerm(e.target.value)}
+                    onChange={(e) => {
+                        setTerm(e.target.value)}
+                    }
                     value={term}
                     placeholder={props.placeholder || 'Search'}
                     className={`${styles.container} ${props.styleType && styles[props.styleType]}`}
                 />
                 <span className={styles.remove} onClick={()=>{setTerm(''); props.onClear()}}>x</span>
             </div>
-            <Button
+            {!props.onlyInput && <Button
                 styleTypes={['exclude-min-height']}
                 type={'submit'}
                 text='Search'
                 styleType='primary'
-            />
+            />}
         </form>
     )
 }

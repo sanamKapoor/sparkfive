@@ -11,6 +11,10 @@
     margin-bottom: 100px;
 }
 
+.slider .slick-slide:first-child{
+    padding-left: 0 !important;
+}
+
 .arrow {
     cursor: pointer;
 }

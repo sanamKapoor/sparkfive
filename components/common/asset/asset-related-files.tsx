@@ -26,11 +26,12 @@ const PrevArrow = ({ onClick }) => (
     <img className={styles.arrow} src={Utilities.circleArrowLeft} alt="Arrow previous" onClick={onClick} />
 )
 
-const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAddRelatedFiles }) => {
+const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAddRelatedFiles, closeOverlay }) => {
     const {
         updateDownloadingStatus,
         setActiveOperation,
-        setOperationAssets
+        setOperationAssets,
+        setDetailOverlayId
     } = useContext(AssetContext)
 
     const { setIsLoading } = useContext(LoadingContext);
@@ -299,8 +300,13 @@ const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAd
                             <AssetThumbail
                                 {...assetItem}
                                 key={index}
+                                onView={(id)=>{
+                                    closeOverlay();
+                                    setDetailOverlayId(id)
+                                }}
                                 // sharePath={sharePath}
                                 showAssetOption={false}
+                                showViewButtonOnly={true}
                                 showAssetRelatedOption={true}
                                 downloadAsset={() => downloadAsset(assetItem)}
                                 openDeleteAsset={() =>
@@ -358,10 +364,7 @@ const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAd
                 }}
                 confirmText={"Delete"}
                 message={
-                    <span>
-                        Are you sure you want to &nbsp;<strong>Dis-associate</strong>&nbsp; this
-                        asset?
-                    </span>
+                   <div>Are you sure you want to <strong>Disassociate</strong> this asset?</div>
                 }
                 modalIsOpen={disassociateModal}
             />

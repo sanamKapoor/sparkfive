@@ -1,6 +1,7 @@
 import React, {useContext, useEffect, useRef, useState} from "react";
 import { Progress } from 'react-sweet-progress';
 import "react-sweet-progress/lib/style.css";
+import _ from 'lodash'
 
 import IconClickable from '../buttons/icon-clickable'
 
@@ -17,6 +18,8 @@ import {getFolderKeyAndNewNameByFileName} from "../../../utils/upload";
 import {validation} from "../../../constants/file-validation";
 import DriveSelector from "./drive-selector";
 import cookiesUtils from '../../../utils/cookies'
+import AssetDuplicateModal from "./asset-duplicate-modal";
+import AssetRelatedFilesSearch from "./asset-related-files-search";
 
 export default function AssetRelatedFileUpload({ assets: assetData  = [], associateFileId, onUploadFinish = (assets) => {}}){
 
@@ -29,6 +32,12 @@ export default function AssetRelatedFileUpload({ assets: assetData  = [], associ
     const [assets, setAssets] = useState(assetData)
     const [uploading, setUploading] = useState(false)
     const [uploadingIndex, setUploadingIndex] = useState(0)
+
+    // Duplicated upload handle variables
+    const [duplicateModalOpen, setDuplicateModalOpen] = useState(false)
+    const [selectedFiles, setSelectedFiles] = useState([]);
+    const [duplicateAssets, setDuplicateAssets] = useState([]);
+    const [uploadFrom, setUploadFrom] = useState('');
 
     const getCreationParameters = (attachQuery?: any) => {
         let queryData: any = {associateFile: associateFileId}
@@ -423,7 +432,49 @@ export default function AssetRelatedFileUpload({ assets: assetData  = [], associ
 
     const onFileChange = async (e) => {
         const files = Array.from(e.target.files).map(originalFile => ({ originalFile }))
-        onFilesDataGet(files)
+        if (advancedConfig.duplicateCheck) {
+            const names = files.map(file => file.originalFile['name'])
+            const {data: { duplicateAssets }} = await assetApi.checkDuplicates(names)
+            if (duplicateAssets.length) {
+                setSelectedFiles(files)
+                setDuplicateAssets(duplicateAssets)
+                setDuplicateModalOpen(true)
+                setUploadFrom('browser')
+                if (fileBrowserRef.current.value) {
+                    fileBrowserRef.current.value = ''
+                }
+                if (folderBrowserRef.current.value) {
+                    folderBrowserRef.current.value
+                }
+            } else {
+                onFilesDataGet(files)
+            }
+        } else {
+            onFilesDataGet(files)
+        }
+    }
+
+    const onDragFile = async (files) => {
+        if (advancedConfig.duplicateCheck) {
+            const names = files.map(file => file.originalFile['name'])
+            const {data: { duplicateAssets }} = await assetApi.checkDuplicates(names)
+            if (duplicateAssets.length) {
+                setSelectedFiles(files)
+                setDuplicateAssets(duplicateAssets)
+                setDuplicateModalOpen(true)
+                setUploadFrom('browser')
+                if (fileBrowserRef.current.value) {
+                    fileBrowserRef.current.value = ''
+                }
+                if (folderBrowserRef.current.value) {
+                    folderBrowserRef.current.value
+                }
+            } else {
+                onFilesDataGet(files)
+            }
+        } else {
+            onFilesDataGet(files)
+        }
     }
 
     const getBadgeClassByStatus = (status) => {
@@ -575,6 +626,72 @@ export default function AssetRelatedFileUpload({ assets: assetData  = [], associ
         Dropbox.choose(options)
     }
 
+    const onConfirmDuplicates = (nameHistories) => {
+        setDuplicateModalOpen(false)
+        let files = [...selectedFiles]
+        if (uploadFrom === 'browser') {
+            files = files.map(file => {
+                file.name = file.originalFile.name
+                return file
+            })
+        }
+        const mappedDuplicates = _.keyBy(duplicateAssets, 'name')
+
+        // eliminate canceled
+        files = files.filter(file => {
+            const cancelledItem = nameHistories.find(item => item.oldName === file.name && item.action === 'cancel')
+            return !cancelledItem
+        })
+
+        files = files.map(file => {
+            const handledItem = nameHistories.find(histItem => histItem.oldName === file.name)
+            if (handledItem) {
+                if (handledItem.action === 'change') {
+                    file.changedName = handledItem.newName
+                }
+                if (handledItem.action === 'current') {
+                    file.versionGroup = mappedDuplicates[file.name].versionGroup
+                }
+            }
+            return file
+        })
+
+        if (files.length) {
+            switch (uploadFrom) {
+                case 'browser':
+                    onFilesDataGet(files)
+                    break;
+                case 'dropbox':
+                    onDropboxFilesGet(files)
+                    break;
+                case 'gdrive':
+                    onGdriveFilesGet(files)
+                    break;
+            }
+
+        }
+    }
+
+    const onAssetImport = async (asset) => {
+        setUploading(true);
+
+        setAssets([{
+            asset: {
+                name: asset.name,
+                createdAt: new Date(),
+                size: asset.size,
+                stage: 'draft',
+                type: 'image'
+            },
+            status: 'queued',
+            isUploading: true
+        }])
+
+        const { data } = await assetApi.associate([asset.id, associateFileId], { assetToReturnInfo: asset.id})
+
+        setUploadUpdate([{...data, status: "done"}])
+    }
+
 
     return <>
         {!uploading && <div className={styles['modal-upload-content']}>
@@ -616,10 +733,15 @@ export default function AssetRelatedFileUpload({ assets: assetData  = [], associ
                     <p>Dropbox</p>
                 </div>
             </div>
+
+          <div className={"m-b-25"}>
+            <AssetRelatedFilesSearch onSelect={onAssetImport}/>
+          </div>
+
             <AssetUpload
                 onDragText={"Drop files here to upload"}
                 preDragText={`Upload Images / Drag and Drop`}
-                onFilesDataGet={onFilesDataGet}
+                onFilesDataGet={onDragFile}
             />
         </div>}
 
@@ -649,5 +771,14 @@ export default function AssetRelatedFileUpload({ assets: assetData  = [], associ
                 </div>
             })}
         </div>}
+
+        {duplicateAssets?.length > 0 &&
+          <AssetDuplicateModal
+            duplicateNames={duplicateAssets.map(asset => asset.name)}
+            modalIsOpen={duplicateModalOpen}
+            closeModal={() => setDuplicateModalOpen(false)}
+            confirmAction={onConfirmDuplicates}
+          />
+        }
     </>
 }
