@@ -36,7 +36,7 @@ const AssetOptions = ({
 
 	const assetRelatedOptions = [
 		{ label: 'Download', onClick: downloadAsset, permissions: [ASSET_DOWNLOAD] },
-		{ label: 'Dissociate', onClick: dissociateAsset },
+		{ label: 'Disassociate', onClick: dissociateAsset },
 		{ label: 'Delete', onClick: openDeleteAsset },
 	]
 

@@ -178,7 +178,7 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 				}else{
 					await assetApi.associate(assetIds)
 					setNeedsFetch('asset')
-					toastUtils.success('Associate successfully')
+					toastUtils.success('Association successful')
 					setIsLoading(false)
 				}
 			}else{
@@ -355,7 +355,7 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 								}}
 								confirmText={"Associate"}
 								message={
-									<span className='text-center'>
+									<span className=''>
 										Are you sure you would like to associate these ({totalSelectAssets}) files with each other?
 									</span>
 								}

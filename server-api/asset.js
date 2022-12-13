@@ -73,7 +73,7 @@ export default {
     })
   },
 
-  associate: (assetIds) => axios.post(`${assetUrl}/associate`, { assetIds }),
+  associate: (assetIds, queryData) => axios.post(`${assetUrl}/associate?${querystring.encode(queryData)}`, { assetIds }),
   disassociate: (assetIds) => axios.post(`${assetUrl}/disassociate`, { assetIds }),
 
 }
