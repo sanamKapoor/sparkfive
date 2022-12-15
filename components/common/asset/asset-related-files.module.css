@@ -4,7 +4,7 @@
 
 .container h3 {
     text-align: left;
-    margin: 48px 0 60px;
+    /*margin: 48px 0 60px;*/
 }
 
 .slider {
@@ -32,7 +32,8 @@
 .upload-wrapper {
     margin-top: 14px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .modal-upload {
