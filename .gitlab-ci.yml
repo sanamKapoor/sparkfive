@@ -8,6 +8,7 @@ build_dev:
    - mkdir -p ~/.ssh
    - chmod 700 ~/.ssh
    - echo $develop_key >> develop_key
+   - chmod 400 develop_key
    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
    - apt-get update -y
    - apt-get -y install rsync
