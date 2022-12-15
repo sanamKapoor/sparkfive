@@ -3,18 +3,15 @@ stages:
 build_dev:
  stage: esdev_build
  before_script:
-   - apt-get update
-   - apt-get --yes --force-yes install rsync
-   - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+   - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
    - eval $(ssh-agent -s)
-   - echo "$develop_key" | tr -d '\r' | ssh-add -
    - mkdir -p ~/.ssh
    - chmod 700 ~/.ssh
-   - eval $(ssh-agent -s)
+   - chmod 400 $develop_key
+   - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+   - apt-get update -y
+   - apt-get -y install rsync
  script:
-   - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-   - rsync -avrc -e "ssh -o StrictHostKeyChecking=no" --delete --exclude= .gitignore . $develop_user@$develop_host:/var/www/sparkfive-client
-   - ssh $develop_user@$develop_host "pm2 restart all"
-
+   - ssh -i $develop_key $develop_user@$develop_host
  only:
    - dev
