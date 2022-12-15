@@ -267,6 +267,8 @@ const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAd
             <div className={styles.container}>
 
                 <div data-tip data-for={'upload'} className={styles['upload-wrapper']}>
+                    <h3>Related Files</h3>
+
                     <Button
                         text={<img src={AssetOps.upload} />}
                         type='button'
@@ -275,25 +277,24 @@ const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAd
                     >
                     </Button>
                     <ReactTooltip id={'upload'} delayShow={300} effect='solid' place={'right'}>Upload related files</ReactTooltip>
-
-                    <BaseModal
-                        showCancel={false}
-                        closeButtonOnly
-                        additionalClasses={[styles['modal-upload']]}
-                        closeModal={() => setUploadModalOpen(false)}
-                        modalIsOpen={uploadModalOpen}
-                        confirmText=""
-                        confirmAction={() => {
-                            // setUploadModalOpen(false)
-                            // setConfirmUploadModalOpen(true)
-                        }}
-                    >
-                        <AssetRelatedFileUpload associateFileId={associateFileId} onUploadFinish={onAddRelatedFiles}/>
-                    </BaseModal>
                 </div>
 
+                <BaseModal
+                    showCancel={false}
+                    closeButtonOnly
+                    additionalClasses={[styles['modal-upload']]}
+                    closeModal={() => setUploadModalOpen(false)}
+                    modalIsOpen={uploadModalOpen}
+                    confirmText=""
+                    confirmAction={() => {
+                        // setUploadModalOpen(false)
+                        // setConfirmUploadModalOpen(true)
+                    }}
+                >
+                    <AssetRelatedFileUpload associateFileId={associateFileId} onUploadFinish={onAddRelatedFiles}/>
+                </BaseModal>
+
                 {assets.length > 0 && <>
-                  <h3>Related Files</h3>
                   <div className={styles.slider}>
                     <Slider {...settings}>
                         {assets.map((assetItem, index) => (
