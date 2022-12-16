@@ -1,18 +1,19 @@
 stages:
-  - esdev_build
+  - dev_build
 build_dev:
- stage: esdev_build
+ stage: dev_build
  before_script:
    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
    - eval $(ssh-agent -s)
    - mkdir -p ~/.ssh
    - chmod 700 ~/.ssh
-   - echo $develop_key >> develop_key
-   - chmod 400 develop_key
    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-   - apt-get update -y
-   - apt-get -y install rsync
+   - apt-get --yes --force-yes install rsync
+   - echo $develop_key >>  develop_key
+   - chmod 400 develop_key
+
  script:
-   - ssh -i develop_key $develop_user@$develop_host
+   - rsync -avz -e 'ssh -o StrictHostKeyChecking=no -i develop_key' --stats --exclude-from=deployment-exclude-list.txt . $deveop_user@$develop_host:$develop_path_client;
+   - ssh -o StrictHostKeyChecking=no -i develop_key -t $deveop_user@$develop_host -p 22 "cd $develop_path_client && npm install && npm run build && pm2 restart all"
  only:
    - dev
