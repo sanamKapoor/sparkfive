@@ -21,7 +21,9 @@ import cookiesUtils from '../../../utils/cookies'
 import AssetDuplicateModal from "./asset-duplicate-modal";
 import AssetRelatedFilesSearch from "./asset-related-files-search";
 
-export default function AssetRelatedFileUpload({ assets: assetData  = [], associateFileId, onUploadFinish = (assets) => {}}){
+import { maximumAssociateFiles} from "../../../constants/asset-associate";
+
+export default function AssetRelatedFileUpload({ assets: assetData  = [], associateFileId, onUploadFinish = (assets) => {}, currentRelatedAssets = []}){
 
     const { advancedConfig } = useContext(UserContext)
     const { uploadingPercent, setUploadingPercent } = useContext(AssetContext)
@@ -349,72 +351,76 @@ export default function AssetRelatedFileUpload({ assets: assetData  = [], associ
     }
 
     const onFilesDataGet = async (files) => {
-        const currentDataClone = [...assets]
-        try {
-            const newPlaceholders = []
+        if(maximumAssociateFiles - currentRelatedAssets.length >= files.length){
+            const currentDataClone = [...assets]
+            try {
+                const newPlaceholders = []
 
 
-            let totalSize = 0;
-            files.forEach(file => {
-                totalSize+=file.originalFile.size
-                const asset = {
-                    name: file.originalFile.name,
-                    createdAt: new Date(),
-                    size: file.originalFile.size,
-                    stage: 'draft',
-                    type: 'image',
-                    mimeType: file.originalFile.type,
-                    fileModifiedAt: file.originalFile.lastModifiedDate || new Date(file.originalFile.lastModified),
-                    // from duplicate handle
-                    versionGroup: file.versionGroup,
-                    changedName: file.changedName
-                }
-                if (file.versionGroup) {
-                    asset.versionGroup = file.versionGroup
-                }
-                if (file.changedName) {
-                    asset.changedName = file.changedName
-                }
-                newPlaceholders.push({
-                    asset,
-                    file,
-                    status: 'queued',
-                    isUploading: true
+                let totalSize = 0;
+                files.forEach(file => {
+                    totalSize+=file.originalFile.size
+                    const asset = {
+                        name: file.originalFile.name,
+                        createdAt: new Date(),
+                        size: file.originalFile.size,
+                        stage: 'draft',
+                        type: 'image',
+                        mimeType: file.originalFile.type,
+                        fileModifiedAt: file.originalFile.lastModifiedDate || new Date(file.originalFile.lastModified),
+                        // from duplicate handle
+                        versionGroup: file.versionGroup,
+                        changedName: file.changedName
+                    }
+                    if (file.versionGroup) {
+                        asset.versionGroup = file.versionGroup
+                    }
+                    if (file.changedName) {
+                        asset.changedName = file.changedName
+                    }
+                    newPlaceholders.push({
+                        asset,
+                        file,
+                        status: 'queued',
+                        isUploading: true
+                    })
+                    // formData.append('asset', file.path || file.originalFile)
                 })
-                // formData.append('asset', file.path || file.originalFile)
-            })
 
-            // Store current uploading assets for calculation
-            // setUploadingAssets(newPlaceholders)
+                // Store current uploading assets for calculation
+                // setUploadingAssets(newPlaceholders)
 
-            // Showing assets = uploading assets + existing assets
-            setAssets([...newPlaceholders, ...currentDataClone])
+                // Showing assets = uploading assets + existing assets
+                setAssets([...newPlaceholders, ...currentDataClone])
 
-            console.log([...newPlaceholders, ...currentDataClone])
+                console.log([...newPlaceholders, ...currentDataClone])
 
 
-            // Get team advance configurations first
-            const { subFolderAutoTag } =  advancedConfig;
+                // Get team advance configurations first
+                const { subFolderAutoTag } =  advancedConfig;
 
-            setUploading(true)
+                setUploading(true)
 
-            // Start to upload assets
+                // Start to upload assets
 
-            await uploadAsset(0, newPlaceholders, currentDataClone, totalSize, undefined, undefined, subFolderAutoTag)
+                await uploadAsset(0, newPlaceholders, currentDataClone, totalSize, undefined, undefined, subFolderAutoTag)
 
-            setUploadingPercent(0)
+                setUploadingPercent(0)
 
-            // Finish uploading process
-            // showUploadProcess('done')
+                // Finish uploading process
+                // showUploadProcess('done')
 
-        } catch (err) {
-            // Finish uploading process
-            // showUploadProcess('done')
+            } catch (err) {
+                // Finish uploading process
+                // showUploadProcess('done')
 
-            setAssets(currentDataClone)
-            console.log(err)
-            if (err.response?.status === 402) toastUtils.error(err.response.data.message)
-            else toastUtils.error('Could not upload assets, please try again later.')
+                setAssets(currentDataClone)
+                console.log(err)
+                if (err.response?.status === 402) toastUtils.error(err.response.data.message)
+                else toastUtils.error('Could not upload assets, please try again later.')
+            }
+        }else{
+            toastUtils.error(`You already reached the maximum ${maximumAssociateFiles} associated files`)
         }
     }
 
@@ -492,117 +498,125 @@ export default function AssetRelatedFileUpload({ assets: assetData  = [], associ
     }
 
     const onGdriveFilesGet = async (files) => {
-        const googleAuthToken = cookiesUtils.get('gdriveToken')
-        let currentDataClone = [...assets]
-        try {
-            let totalSize = 0
-            const newPlaceholders = []
-            files.forEach(file => {
-                totalSize += file.sizeBytes
-                newPlaceholders.push({
-                    asset: {
-                        name: file.name,
-                        createdAt: new Date(),
-                        size: file.sizeBytes,
-                        stage: 'draft',
-                        type: 'image'
-                    },
-                    status: 'queued',
-                    isUploading: true
+        if(maximumAssociateFiles - currentRelatedAssets.length >= files.length){
+            const googleAuthToken = cookiesUtils.get('gdriveToken')
+            let currentDataClone = [...assets]
+            try {
+                let totalSize = 0
+                const newPlaceholders = []
+                files.forEach(file => {
+                    totalSize += file.sizeBytes
+                    newPlaceholders.push({
+                        asset: {
+                            name: file.name,
+                            createdAt: new Date(),
+                            size: file.sizeBytes,
+                            stage: 'draft',
+                            type: 'image'
+                        },
+                        status: 'queued',
+                        isUploading: true
+                    })
                 })
-            })
 
-            setAssets([...newPlaceholders, ...currentDataClone])
+                setAssets([...newPlaceholders, ...currentDataClone])
 
-            setUploading(true)
-
-
-            // setUploadSourceType('dropbox')
-
-            // Check if there is 1 folder in upload links
-            // const containFolderUrl = files.filter(file => file.type === 'folder')
-
-            // setFolderImport(containFolderUrl.length > 0)
-
-            const { data } = await assetApi.importAssets('drive', files.map(file => ({
-                googleAuthToken,
-                id: file.id,
-                name: file.name,
-                size: file.sizeBytes,
-                mimeType: file.mimeType,
-                type: file.type,
-                versionGroup: file.versionGroup,
-                changedName: file.changedName
-            })), getCreationParameters({estimateTime: 1, totalSize}))
-
-            setUploadingPercent(0)
+                setUploading(true)
 
 
-            // Mark done
-            const updatedAssets = data.map(asset => { return {...asset, status: 'done'}});
+                // setUploadSourceType('dropbox')
 
-            // Update uploading assets
-            setUploadUpdate(updatedAssets)
+                // Check if there is 1 folder in upload links
+                // const containFolderUrl = files.filter(file => file.type === 'folder')
 
-            // toastUtils.success('Assets imported.')
-        } catch (err) {
-            setAssets(currentDataClone)
+                // setFolderImport(containFolderUrl.length > 0)
 
-            console.log(err)
-            if (err.response?.status === 402) toastUtils.error(err.response.data.message)
-            else toastUtils.error('Could not import assets, please try again later.')
+                const { data } = await assetApi.importAssets('drive', files.map(file => ({
+                    googleAuthToken,
+                    id: file.id,
+                    name: file.name,
+                    size: file.sizeBytes,
+                    mimeType: file.mimeType,
+                    type: file.type,
+                    versionGroup: file.versionGroup,
+                    changedName: file.changedName
+                })), getCreationParameters({estimateTime: 1, totalSize}))
+
+                setUploadingPercent(0)
+
+
+                // Mark done
+                const updatedAssets = data.map(asset => { return {...asset, status: 'done'}});
+
+                // Update uploading assets
+                setUploadUpdate(updatedAssets)
+
+                // toastUtils.success('Assets imported.')
+            } catch (err) {
+                setAssets(currentDataClone)
+
+                console.log(err)
+                if (err.response?.status === 402) toastUtils.error(err.response.data.message)
+                else toastUtils.error('Could not import assets, please try again later.')
+            }
+        }else{
+            toastUtils.error(`You already reached the maximum ${maximumAssociateFiles} associated files`)
         }
     }
 
     const onDropboxFilesGet = async (files) => {
-        let currentDataClone = [...assets]
-        try {
-            let totalSize = 0
-            const newPlaceholders = []
-            files.forEach(file => {
-                totalSize += file.bytes
-                newPlaceholders.push({
-                    asset: {
-                        name: file.name,
-                        createdAt: new Date(),
-                        size: file.bytes,
-                        stage: 'draft',
-                        type: 'image'
-                    },
-                    status: 'queued',
-                    isUploading: true
+        if(maximumAssociateFiles - currentRelatedAssets.length >= files.length){
+            let currentDataClone = [...assets]
+            try {
+                let totalSize = 0
+                const newPlaceholders = []
+                files.forEach(file => {
+                    totalSize += file.bytes
+                    newPlaceholders.push({
+                        asset: {
+                            name: file.name,
+                            createdAt: new Date(),
+                            size: file.bytes,
+                            stage: 'draft',
+                            type: 'image'
+                        },
+                        status: 'queued',
+                        isUploading: true
+                    })
                 })
-            })
 
-            setAssets([...newPlaceholders, ...currentDataClone])
+                setAssets([...newPlaceholders, ...currentDataClone])
 
-            setUploading(true)
-
-
-            const { data } = await assetApi.importAssets('dropbox', files.map(file => ({
-                    link: file.link,
-                    isDir: file.isDir,
-                    name: file.name,
-                    size: file.bytes,
-                    versionGroup: (file.versionGroup),
-                    changedName: file.changedName
-                })),
-                getCreationParameters({estimateTime: 1, totalSize}))
+                setUploading(true)
 
 
-            // Mark done
-            const updatedAssets = data.map(asset => { return {...asset, status: 'done'}});
+                const { data } = await assetApi.importAssets('dropbox', files.map(file => ({
+                        link: file.link,
+                        isDir: file.isDir,
+                        name: file.name,
+                        size: file.bytes,
+                        versionGroup: (file.versionGroup),
+                        changedName: file.changedName
+                    })),
+                    getCreationParameters({estimateTime: 1, totalSize}))
 
-            // Update uploading assets
-            setUploadUpdate(updatedAssets)
 
-        } catch (err) {
-            setAssets(currentDataClone)
+                // Mark done
+                const updatedAssets = data.map(asset => { return {...asset, status: 'done'}});
 
-            setAssets(currentDataClone)
-            console.log(err)
-            if (err.response?.status === 402) toastUtils.error(err.response.data.message)
-            else toastUtils.error('Could not import assets, please try again later.')
+                // Update uploading assets
+                setUploadUpdate(updatedAssets)
+
+            } catch (err) {
+                setAssets(currentDataClone)
+
+                setAssets(currentDataClone)
+                console.log(err)
+                if (err.response?.status === 402) toastUtils.error(err.response.data.message)
+                else toastUtils.error('Could not import assets, please try again later.')
+            }
+        }else{
+            toastUtils.error(`You already reached the maximum ${maximumAssociateFiles} associated files`)
         }
     }
 
