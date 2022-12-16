@@ -215,11 +215,11 @@ const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAd
                 )
 
             setIsLoading(false)
-            toastUtils.success("Assets dis-associated successfully")
+            toastUtils.success("Assets disassociated successfully")
         } catch (err) {
             // TODO: Error handling
             setIsLoading(false)
-            toastUtils.error("Could not dis-associate assets, please try again later.")
+            toastUtils.error("Could not disassociate assets, please try again later.")
         }
     }
 
@@ -266,8 +266,8 @@ const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAd
         <>
             <div className={styles.container}>
 
-                <div data-tip data-for={'upload'} className={styles['upload-wrapper']}>
-                    <h3>Related Files</h3>
+                <div data-tip data-for={'upload'} className={assets.length > 0 ? styles['upload-wrapper'] : styles['upload-wrapper-no-asset']}>
+                    {assets.length > 0 && <h3>Related Files</h3>}
 
                     <Button
                         text={<img src={AssetOps.upload} />}
@@ -291,7 +291,7 @@ const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAd
                         // setConfirmUploadModalOpen(true)
                     }}
                 >
-                    <AssetRelatedFileUpload associateFileId={associateFileId} onUploadFinish={onAddRelatedFiles}/>
+                    <AssetRelatedFileUpload currentRelatedAssets={assets} associateFileId={associateFileId} onUploadFinish={onAddRelatedFiles}/>
                 </BaseModal>
 
                 {assets.length > 0 && <>
@@ -363,7 +363,7 @@ const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAd
                     setActiveAssetId("")
                     setDisassociateModal(false)
                 }}
-                confirmText={"Delete"}
+                confirmText={"Disassociate"}
                 message={
                    <div>Are you sure you want to <strong>Disassociate</strong> this asset?</div>
                 }

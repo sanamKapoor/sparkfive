@@ -174,7 +174,7 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 				const assetsToAssociate = selectedAssets.filter(assetItem => (assetItem.asset.fileAssociations.length + selectedAssets.length-1) <= maximumAssociateFiles)
 				if(assetsToAssociate.length !== selectedAssets.length){
 					setIsLoading(false)
-					toastUtils.error('Some of your selected assets have already maximum 10 associated files. Please change your selected assets then try again')
+					toastUtils.error(`Some of your selected assets have already maximum ${maximumAssociateFiles} associated files`)
 				}else{
 					await assetApi.associate(assetIds)
 					setNeedsFetch('asset')
