@@ -3,11 +3,13 @@ stages:
 build_esdev:
  stage: dev_build
  before_script:
-   - echo $develop_key >>  develop_key.pem
-   - chmod 400 develop_key.pem
+   - mkdir -p ~/.ssh
+   - echo -e "$develop_key" > ~/.ssh/id_rsa
+   - chmod 600 ~/.ssh/id_rsa
+   - '[[ -f /.dockerenv ]] & echo -e "Host * \n\StrictHostKeyChecking no\n\n" > ~/.ssh/config'
  script:
-   - apt-get update -y && apt-get install -y rsync
-   - ssh -o StrictHostKeyChecking=no -i develop_key.pem -t $deveop_user@$develop_host -p 22 "cd $develop_path_client && npm install && npm run build && pm2 restart all"
+   - rsync -auvz -e 'ssh -o StrictHostKeyChecking=no' --stats --exclude-from=deployment-exclude-list.txt . $deveop_user@$develop_host:$develop_path_client;
+   - ssh -o StrictHostKeyChecking=no $deveop_user@$develop_host -p 22 "cd $develop_path_client && npm install && npm run build && pm2 restart all"
  when: manual
  only:
    - dev
