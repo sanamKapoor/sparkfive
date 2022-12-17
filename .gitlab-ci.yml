@@ -1,20 +1,15 @@
 stages:
-  - dev_build
+  - develop_build
 build_dev:
- stage: dev_build
+ stage: develop_build
  before_script:
-   - apt-get update -y
-   - apt-get -y install rsync
-   - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-   - eval $(ssh-agent -s)
-   - mkdir -p ~/.ssh
-   - chmod 700 ~/.ssh
-   - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-   - echo $develop_key >>  develop_key
-   - chmod 400 develop_key
-
+    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+    - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    - chmod 600 ${SSH_KEY}
+    - export COMMIT_TIME=$(git show -s --format=%ct $CI_COMMIT_SHA)
  script:
-   - rsync -avz -e 'ssh -o StrictHostKeyChecking=no -i develop_key' --stats --exclude-from=deployment-exclude-list.txt . $deveop_user@$develop_host:$develop_path_client;
-   - ssh -o StrictHostKeyChecking=no -i develop_key -t $deveop_user@$develop_host -p 22 "cd $develop_path_client && npm install && npm run build && pm2 restart all"
+   - apt-get update -y && apt-get install -y rsync
+   - rsync -aHv --delete -e "ssh -i ${SSH_KEY} ${SSH_OPTS}" . ${deveop_user}@${develop_host}:${develop_path_client}
  only:
    - dev
