@@ -9,7 +9,7 @@ build_esdev:
    - chmod 600 ~/.ssh/id_rsa
    - '[[ -f /.dockerenv ]] & echo -e "Host * \n\StrictHostKeyChecking no\n\n" > ~/.ssh/config'
  script:
-   - rsync -e 'ssh -o "NumberOfPasswordPrompts 0"' --exclude-from=deployment-exclude-list.txt . $deveop_user@$develop_host:$develop_path_client;
+   - rsync -e . $deveop_user@$develop_host:$develop_path_client;
    - ssh -o StrictHostKeyChecking=no $deveop_user@$develop_host -p 22 "cd $develop_path_client && npm install && npm run build && pm2 restart all"
  when: manual
  only:
