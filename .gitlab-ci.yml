@@ -1,15 +1,13 @@
 stages:
-  - develop_build
-build_dev:
- stage: develop_build
+  - dev_build
+build_esdev:
+ stage: dev_build
  before_script:
-    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
-    - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
-    - chmod 644 ~/.ssh/known_hosts
-    - chmod 600 ${SSH_KEY}
-    - export COMMIT_TIME=$(git show -s --format=%ct $CI_COMMIT_SHA)
+   - echo $develop_key >>  develop_key.pem
+   - chmod 400 develop_key.pem
  script:
-   - apt-get update -y && apt-get install -y rsync
-   - rsync -aHv --delete -e "ssh -i ${SSH_KEY} ${SSH_OPTS}" . ${deveop_user}@${develop_host}:${develop_path_client}
+   - rsync -auvz -e 'ssh -o StrictHostKeyChecking=no -i develop_key.pem -p 22' --stats --exclude-from=deployment-exclude-list.txt . $deveop_user@$develop_host:$develop_path_client;
+   - ssh -o StrictHostKeyChecking=no -i develop_key.pem -t $deveop_user@$develop_host -p 22 "cd $develop_path_client && npm install && npm run build && pm2 restart all"
+ when: manual
  only:
    - dev
