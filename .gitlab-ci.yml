@@ -7,7 +7,6 @@ build_esdev:
    - chmod 400 develop_key.pem
  script:
    - apt-get update -y && apt-get install -y rsync
-   - rsync -auvz -e 'ssh -o StrictHostKeyChecking=no -i develop_key.pem -p 22' --stats --exclude-from=deployment-exclude-list.txt . $deveop_user@$develop_host:$develop_path_client;
    - ssh -o StrictHostKeyChecking=no -i develop_key.pem -t $deveop_user@$develop_host -p 22 "cd $develop_path_client && npm install && npm run build && pm2 restart all"
  when: manual
  only:
