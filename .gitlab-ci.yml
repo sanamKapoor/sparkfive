@@ -3,7 +3,7 @@ stages:
 build_esdev:
  stage: dev_build
  before_script:
-   - apt-get update -y && apt-get install -y rsync
+   - apt-get update -y && apt-get install -y sshpass
    - mkdir -p ~/.ssh
    - echo -e "$develop_key" > ~/.ssh/id_rsa
    - chmod 600 ~/.ssh/id_rsa
