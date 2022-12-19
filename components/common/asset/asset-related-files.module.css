@@ -17,6 +17,7 @@
 
 .arrow {
     cursor: pointer;
+    margin-right: 12px;
 }
 
 .buttons-wrapper {

@@ -46,7 +46,9 @@ const AssetThumbail = ({
   infoWrapperClass = "",
   textWrapperClass = "",
   customIconComponent = <></>,
-  onDisassociate = () => {}
+  onDisassociate = () => {},
+  detailOverlay = true,
+  onCloseDetailOverlay = (asset) => {}
 }) => {
   const [overlayProperties, setOverlayProperties] = useState(DEFAULT_DETAIL_PROPS);
   const { detailOverlayId } = useContext(AssetContext);
@@ -70,11 +72,17 @@ const AssetThumbail = ({
     setOverlayProperties({ visible: true, side: "comments" });
   };
 
-  const onCloseOverlay = (changedVersion) => {
-    if (changedVersion) {
-      handleVersionChange(changedVersion);
+  const onCloseOverlay = (changedVersion, outsideDetailOverlayAsset) => {
+    if(outsideDetailOverlayAsset){
+      setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: false });
+      onCloseDetailOverlay(outsideDetailOverlayAsset)
+    }else{
+      if (changedVersion) {
+        handleVersionChange(changedVersion);
+      }
+      setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: false });
     }
-    setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: false });
+
   };
 
   return (
