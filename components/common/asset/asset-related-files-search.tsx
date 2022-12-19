@@ -4,6 +4,8 @@ import Search from "../attributes/search-input";
 import styles from "./asset-related-files-search.module.css"
 
 import assetApi from "../../../server-api/asset";
+import AssetImg from "./asset-img";
+import AssetIcon from "./asset-icon";
 
 export default function AssetRelatedFilesSearch({ onSelect }){
     const [options, setOptions] = useState([])
@@ -57,7 +59,16 @@ export default function AssetRelatedFilesSearch({ onSelect }){
             {!searching && options.map(({asset, thumbailUrl}, index)=>{
                 return  <div className={styles["search-item"]} key={index} onClick={()=>{onSelectItem(asset)}}>
                     <div className={styles["search-item-thumbnail"]}>
-                        <img src={thumbailUrl} alt={"thumbnail"}/>
+                        {thumbailUrl ? (
+                            <AssetImg
+                                assetImg={thumbailUrl}
+                                type={asset.type}
+                                name={asset.name}
+                            />
+                        ) : (
+                            <AssetIcon noMargin extension={asset.extension} onList={true} />
+                        )}
+                        {/*<img src={thumbailUrl} alt={"thumbnail"}/>*/}
                     </div>
                     <div>
                         {asset.name}

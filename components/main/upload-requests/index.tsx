@@ -1306,6 +1306,7 @@ const UploadRequest = () => {
                                                         sharePath={""}
                                                         activeFolder={""}
                                                         showAssetOption={false}
+                                                        showViewButtonOnly={true}
                                                         isShare={false}
                                                         type={""}
                                                         toggleSelected={() =>{

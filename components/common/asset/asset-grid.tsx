@@ -53,6 +53,7 @@ const AssetGrid = ({
   viewFolder = (id) => {},
   sharePath = "",
   openFilter,
+  onCloseDetailOverlay = (assetData) => {}
 }) => {
   let isDragging;
   if (!isShare) isDragging = useDropzone();
@@ -364,6 +365,7 @@ const AssetGrid = ({
                         }
                         handleVersionChange={refreshVersion}
                         loadMore={loadMore}
+                        onCloseDetailOverlay={onCloseDetailOverlay}
                       />
                     </li>
                   );

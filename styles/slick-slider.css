@@ -6,6 +6,7 @@
 
 .slick-list {
     width: 100%;
+    margin-left: -12px;
 }
 
 
@@ -25,5 +26,5 @@
 }
 
 .slick-slide:first-child{
-    padding-left: 0 !important;
+    /*padding-left: 0 !important;*/
 }
