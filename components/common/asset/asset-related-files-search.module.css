@@ -46,6 +46,7 @@
 }
 
 .search-item-thumbnail{
+    width: 10rem;
     max-width: 75px;
     max-height: 75px;
     margin-right: 16px;

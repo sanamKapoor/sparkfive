@@ -103,7 +103,8 @@ const DetailOverlay = ({
   sharePath = "",
   activeFolder = '',
   initialParams,
-  availableNext = true
+  availableNext = true,
+  outsideDetailOverlay = false
 }) => {
   const { hasPermission } = useContext(UserContext);
   const { user, cdnAccess } = useContext(UserContext);
@@ -228,7 +229,11 @@ const DetailOverlay = ({
       toggleSideMenu();
     }
     _setActiveCollection()
-  }, []);
+  }, [currentAsset]);
+
+  useEffect(()=>{
+    setCurrentAsset(asset)
+  },[asset])
 
   // useEffect(() => {
   //   const modAssetIndex = assets.findIndex(assetItem => assetItem.asset.id === assetDetail?.id)
@@ -964,7 +969,7 @@ const DetailOverlay = ({
             }
 
             {!isShare && <>
-              <AssetRelatedFIles closeOverlay={closeOverlay} assets={assetDetail.fileAssociations || []} associateFileId={currentAsset.id} onChangeRelatedFiles={onChangeRelatedFiles} onAddRelatedFiles={(data)=>{
+              <AssetRelatedFIles outsideDetailOverlay={outsideDetailOverlay} closeOverlay={closeOverlay} assets={assetDetail.fileAssociations || []} associateFileId={currentAsset.id} onChangeRelatedFiles={onChangeRelatedFiles} onAddRelatedFiles={(data)=>{
                 let updatedAssets = [...assetDetail.fileAssociations]
                 updatedAssets = updatedAssets.concat(data)
                 setAssetDetail({...assetDetail, fileAssociations: updatedAssets})

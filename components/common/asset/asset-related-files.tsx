@@ -26,12 +26,13 @@ const PrevArrow = ({ onClick }) => (
     <img className={styles.arrow} src={Utilities.circleArrowLeft} alt="Arrow previous" onClick={onClick} />
 )
 
-const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAddRelatedFiles, closeOverlay }) => {
+const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAddRelatedFiles, closeOverlay, outsideDetailOverlay = false }) => {
     const {
         updateDownloadingStatus,
         setActiveOperation,
         setOperationAssets,
-        setDetailOverlayId
+        setDetailOverlayId,
+        setCurrentViewAsset
     } = useContext(AssetContext)
 
     const { setIsLoading } = useContext(LoadingContext);
@@ -302,8 +303,19 @@ const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAd
                                 {...assetItem}
                                 key={index}
                                 onView={(id)=>{
-                                    closeOverlay();
-                                    setDetailOverlayId(id)
+                                    setDetailOverlayId(undefined)
+                                    if(outsideDetailOverlay){
+                                        closeOverlay(assetItem);
+                                    }else{
+                                        closeOverlay(null, assetItem);
+                                    }
+
+                                    // setDetailOverlayId(id)
+                                    // setTimeout(()=>{
+                                    //     console.log(assetItem)
+                                    //     setCurrentViewAsset(assetItem)
+                                    // },100)
+
                                 }}
                                 // sharePath={sharePath}
                                 showAssetOption={false}
@@ -316,6 +328,7 @@ const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAd
                                 onDisassociate={()=>{
                                     openDisassociateModal(assetItem.asset.id)
                                 }}
+                                detailOverlay={false}
                             />
                         ))}
                     </Slider>
