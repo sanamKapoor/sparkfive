@@ -7,6 +7,7 @@ build_dev:
    - mkdir -p ~/.ssh
    - echo -e "$develop_key" > ~/.ssh/id_rsa
    - chmod 600 ~/.ssh/id_rsa
+   - ssh-keygen -R $develop_host
 
  script:
    - rsync -atv --delete --progress ./ $deveop_user@$develop_host:$develop_path_client;
