@@ -1,16 +1,21 @@
-stages:
-  - dev_build
-build_dev:
- stage: dev_build
- before_script:
-   - apt-get update -y && apt-get install -y rsync
-   - mkdir -p ~/.ssh
-   - echo -e "$develop_key" > ~/.ssh/id_rsa
-   - chmod 600 ~/.ssh/id_rsa
-
- script:
-
-   - ssh -o StrictHostKeyChecking=no $deveop_user@$develop_host -p 22 "cd $develop_path_client && npm install && npm run build && pm2 restart all"
- when: manual
- only:
-   - dev
+image: node:latest
+dev_server:
+  before_script:
+    - apt-get update
+    - apt-get --yes --force-yes install rsync
+  only:
+    refs:
+      - dev
+  script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install    
+      openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$develop_key")
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host 
+       *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - rsync -atv --delete --progress ./ $deveop_user@$develop_host:$develop_path_client;
+    - ssh -o StrictHostKeyChecking=no $deveop_user@$develop_host -p 22 "cd $develop_path_client && npm install && npm run build && pm2 restart all"
+  when: manual
+  only:
+    - dev
