@@ -609,7 +609,11 @@ const DetailOverlay = ({
     try {
       const { data } = await assetApi.getVersions(currentAsset.versionGroup);
       updateList(data.versions, data.currentAsset);
-      getDetail(data.currentAsset);
+
+      if(data.currentAsset.id !== currentAsset.id){
+        getDetail(data.currentAsset);
+      }
+
     } catch (err) {
       // console.log(err)
     }
@@ -626,6 +630,7 @@ const DetailOverlay = ({
   };
 
   useEffect(() => {
+    console.log(`Need fetch: ${needsFetch}`)
     if ((!needsFetch || needsFetch === "versions") && !isShare) {
       loadVersions();
     }
