@@ -222,6 +222,7 @@ const DetailOverlay = ({
 
 
   useEffect(() => {
+    console.log(`Current asset change`, currentAsset)
     getCropResizeOptions();
     getDetail();
     checkInitialParams();
@@ -232,7 +233,11 @@ const DetailOverlay = ({
   }, [currentAsset]);
 
   useEffect(()=>{
-    setCurrentAsset(asset)
+    if(currentAsset.id !== asset.id){
+      console.log(`Asset changes`, asset)
+      setCurrentAsset(asset)
+    }
+
   },[asset])
 
   // useEffect(() => {
@@ -254,10 +259,15 @@ const DetailOverlay = ({
         setAssetDetail(asset);
       } else {
         const { data } = await assetApi.getById(asset.id);
-        setAssetDetail(data.asset);
 
-        setVersionRealUrl(data.realUrl);
-        setVersionThumbnailUrl(data.thumbailUrl);
+        if(data.asset.id !== assetDetail?.id){
+          console.log(`Set asset`, {curAsset, asset: data.asset})
+          setAssetDetail(data.asset);
+
+          setVersionRealUrl(data.realUrl);
+          setVersionThumbnailUrl(data.thumbailUrl);
+        }
+
       }
     } catch (err) {
       // console.log(err);
@@ -586,12 +596,16 @@ const DetailOverlay = ({
 
   const updateList = (versionAssets, curAsset) => {
     versionAssets = setDisplayVersions(versionAssets);
-    setCurrentAsset(curAsset);
+    if(currentAsset.id !== curAsset.id){
+      setCurrentAsset(curAsset);
+    }
+
     setVersions(versionAssets);
     setVersionCount(versionAssets.length);
   };
 
   const loadVersions = async () => {
+    console.log(`Load versions`)
     try {
       const { data } = await assetApi.getVersions(currentAsset.versionGroup);
       updateList(data.versions, data.currentAsset);
@@ -848,7 +862,7 @@ const DetailOverlay = ({
                   className={styles["only-desktop-button"]}
                   styleType={"secondary"}
                   onClick={() => {
-                    if (currentAsset.extension !== 'gif' && currentAsset.extension !== 'tiff' && currentAsset.extension !== 'tif' && currentAsset.extension !== "svg" && currentAsset.type === "image" && isImageType(assetDetail.extension)) {
+                    if (currentAsset.extension !== 'gif' && currentAsset.extension !== 'tiff' && currentAsset.extension !== 'tif' && currentAsset.extension !== "svg" && currentAsset.extension !== "svg+xml" && currentAsset.type === "image" && isImageType(assetDetail.extension)) {
                       setMode("resize");
                       changeActiveSide("detail");
                       resetImageSettings(undefined, undefined);
@@ -882,7 +896,7 @@ const DetailOverlay = ({
               <>
                 {mode === "detail" && (
 
-                    <AssetImg  imgClass="img-preview" name={assetDetail.name} assetImg={(assetDetail.extension === "tiff" || assetDetail.extension === "tif" || assetDetail.extension === "svg") ? versionThumbnailUrl :  versionRealUrl} />
+                    <AssetImg  imgClass="img-preview" name={assetDetail.name} assetImg={(assetDetail.extension === "tiff" || assetDetail.extension === "tif" || assetDetail.extension === "svg" || assetDetail.extension === "svg+xml") ? versionThumbnailUrl :  versionRealUrl} />
                 )}
                 {mode === "resize" && (
                   <Rnd position={{ x: detailPosSize.x, y: detailPosSize.y }}
