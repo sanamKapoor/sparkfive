@@ -799,6 +799,12 @@ const AssetsLibrary = () => {
           closeOverlay={closeSearchOverlay}
           operationsEnabled={true}
           activeFolder={activeFolder}
+          onCloseDetailOverlay={(assetData)=>{
+            closeSearchOverlay()
+            // setActiveSearchOverlay(false)
+            setDetailOverlayId(undefined)
+            setCurrentViewAsset(assetData)
+          }}
         />
       }
       {uploadDetailOverlay && <UploadStatusOverlayAssets closeOverlay={() => { setUploadDetailOverlay(false) }} />}

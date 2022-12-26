@@ -104,7 +104,7 @@ const DetailOverlay = ({
   activeFolder = '',
   initialParams,
   availableNext = true,
-  outsideDetailOverlay = false
+  outsideDetailOverlay = false,
 }) => {
   const { hasPermission } = useContext(UserContext);
   const { user, cdnAccess } = useContext(UserContext);
@@ -988,7 +988,7 @@ const DetailOverlay = ({
             }
 
             {!isShare && <>
-              <AssetRelatedFIles outsideDetailOverlay={outsideDetailOverlay} closeOverlay={closeOverlay} assets={assetDetail.fileAssociations || []} associateFileId={currentAsset.id} onChangeRelatedFiles={onChangeRelatedFiles} onAddRelatedFiles={(data)=>{
+              <AssetRelatedFIles outsideDetailOverlay={outsideDetailOverlay} closeOverlay={closeOverlay}  assets={assetDetail.fileAssociations || []} associateFileId={currentAsset.id} onChangeRelatedFiles={onChangeRelatedFiles} onAddRelatedFiles={(data)=>{
                 let updatedAssets = [...assetDetail.fileAssociations]
                 updatedAssets = updatedAssets.concat(data)
                 setAssetDetail({...assetDetail, fileAssociations: updatedAssets})
