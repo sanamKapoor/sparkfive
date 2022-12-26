@@ -25,7 +25,8 @@ const SearchItem = ({
   toggleSelected,
   enabledSelect = false,
   isShare,
-  activeFolder = ''
+  activeFolder = '',
+  onCloseDetailOverlay = (assetData) => {}
 }) => {
   const {
     asset,
@@ -133,7 +134,10 @@ const SearchItem = ({
           }
           openShareAsset={openShareAsset}
           openDeleteAsset={openDeleteAsset}
-          closeOverlay={() => setVisibleOVerlay(false)}
+          closeOverlay={(value, assetData) => {
+            setVisibleOVerlay(false)
+            onCloseDetailOverlay(assetData)
+          }}
           activeFolder={activeFolder}
         />
       )}
