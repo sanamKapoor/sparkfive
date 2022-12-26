@@ -1,0 +1,46 @@
+.text {
+  padding: 20px;
+  font-size: 17px;
+  max-width: 35rem;
+  width: 100%;
+  align-items: center;
+}
+
+.text p {
+  margin: 0 16px 0 0;
+}
+
+.text b,
+.text strong {
+  font-weight: 500;
+}
+
+.text span {
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.text input {
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.close {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--color-sec-blue);
+  cursor: pointer;
+  position: absolute;
+  top: 8px;
+  right: 10px
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px;
+}
+
+.buttons > div {
+  margin-left: 5px;
+}
