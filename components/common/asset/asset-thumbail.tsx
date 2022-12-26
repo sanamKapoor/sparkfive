@@ -27,6 +27,7 @@ const AssetThumbail = ({
   isUploading,
   showAssetOption = true,
   showViewButtonOnly = false,
+  showSelectedAsset = false,
   showAssetRelatedOption = false,
   isSelected = false,
   isLoading = false,
@@ -110,7 +111,7 @@ const AssetThumbail = ({
           {asset.type === 'text' && <AssetText assetImg={thumbailUrl} extension={asset.extension} />} */}
           {!isUploading && !isLoading && (showAssetOption || showViewButtonOnly) && (
             <>
-            {!showViewButtonOnly && <div
+            {(!showViewButtonOnly || (showViewButtonOnly && showSelectedAsset)) && <div
                 className={`${styles["selectable-wrapper"]} ${isSelected && styles["selected-wrapper"]
                   }`}
               >

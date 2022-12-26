@@ -1307,6 +1307,7 @@ const UploadRequest = () => {
                                                         activeFolder={""}
                                                         showAssetOption={false}
                                                         showViewButtonOnly={true}
+                                                        showSelectedAsset={true}
                                                         isShare={false}
                                                         type={""}
                                                         toggleSelected={() =>{
