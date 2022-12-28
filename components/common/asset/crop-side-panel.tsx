@@ -430,7 +430,7 @@ const CropSidePanel = ({ asset,
                     () => {
                         let name = asset.name.substring(0, asset.name.lastIndexOf('.')) || asset.name;
                         let extension = asset.name.substring(asset.name.lastIndexOf('.'), asset.name.length) || "";
-                        setRenameValue(`${name}-crop-${new Date().getTime()}${extension}`)
+                        setRenameValue(`${name}-${mode}-${new Date().getTime()}${extension}`)
                         setRelatedModalOpen(true)
                     }
                 }
