@@ -55,7 +55,7 @@ const Base = ({
       }
       {children}
       {confirmText &&
-        <div className={styles.buttons}>
+        <div className={`${styles.buttons} ${!showCancel ? styles['button-center'] : ''}`}>
           {showCancel && <div>
             <Button
               text='Cancel'

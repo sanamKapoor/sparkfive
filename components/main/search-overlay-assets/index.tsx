@@ -16,7 +16,7 @@ import Button from '../../common/buttons/button'
 import AssetHeaderOps from '../../common/asset/asset-header-ops'
 import AssetThumbail from "../../common/asset/asset-thumbail";
 
-const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEnabled = false, importAssets = () => { }, sharePath = '', activeFolder = '' }) => {
+const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEnabled = false, importAssets = () => { }, sharePath = '', activeFolder = '', onCloseDetailOverlay = (assetData) => {} }) => {
 
   const { assets, setAssets, setActiveOperation, setOperationAsset, setPlaceHolders, nextPage, selectAllAssets, selectedAllAssets, totalAssets } = useContext(AssetContext)
   const { term, setSearchTerm } = useContext(FilterContext)
@@ -162,6 +162,7 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
               term={term}
               openShareAsset={() => beginAssetOperation(assetItem, 'share')}
               openDeleteAsset={() => beginAssetOperation(assetItem, 'delete')}
+              onCloseDetailOverlay={onCloseDetailOverlay}
             />
           ))}
         </ul>}
@@ -178,6 +179,7 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
                     isShare={false}
                     type={""}
                     toggleSelected={() => toggleSelected(assetItem.asset.id)}
+                    onCloseDetailOverlay={onCloseDetailOverlay}
                   />
                 </li>
               )

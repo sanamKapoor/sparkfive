@@ -27,6 +27,8 @@ export default ({ getAssets }) => {
     activeOperation,
     setActiveOperation,
     operationAsset,
+    operationAssets,
+    setOperationAssets,
     setOperationAsset,
     operationFolder,
     setOperationFolder,
@@ -443,6 +445,8 @@ export default ({ getAssets }) => {
           assetIds = operationAsset.asset.id;
         } else if (operationFolder) {
           assetIds = operationFolder.assets.map((asset) => asset.id).join(",");
+        } else if (operationAssets.length > 0){
+          assetIds = operationAssets.map((item) => item.asset.id).join(",");
         } else {
           assetIds = selectedAssets
             .map((assetItem) => assetItem.asset.id)
@@ -549,7 +553,10 @@ export default ({ getAssets }) => {
       } else if (operationFolder) {
         versionGroups = operationFolder.assets.map((asset) => asset.versionGroup).join(",");
         assetIds = operationFolder.assets.map((asset) => asset.id).join(",");
-      } else {
+      } else if(operationAssets.length > 0){
+        versionGroups = operationAssets.map((item) => item.asset.versionGroup).join(",");
+        assetIds = operationAssets.map((item) => item.asset.id).join(",");
+      } else{
         versionGroups = selectedAssets
           .map((assetItem) => assetItem.asset.versionGroup)
           .join(",");
@@ -952,10 +959,14 @@ export default ({ getAssets }) => {
   };
 
   let operationLength = 0;
+
+  // Check selected assets to be operated
   if (operationAsset) {
     operationLength = 1;
   } else if (operationFolder) {
     operationLength = operationFolder.assets.length;
+  } else if (operationAssets.length > 0) {
+    operationLength = operationAssets.length
   } else {
     operationLength = selectedAllAssets ? totalAssets : selectedAssets.length;
   }
