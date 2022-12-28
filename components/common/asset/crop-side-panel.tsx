@@ -458,9 +458,8 @@ const CropSidePanel = ({ asset,
                     }}
                     confirmText={"Confirm"}
                     message={
-                       "Are you sure you want to save"
+                       "Are you sure you want to save as a related file"
                     }
-                    secondMessage={" as Related File?"}
                     modalIsOpen={relatedModalOpen}
                     initialValue={renameValue}
                 />
