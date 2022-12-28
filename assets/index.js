@@ -192,5 +192,6 @@ export const AssetOps = {
   shareWhite: require('./Icons/Asset Actions/share-white.svg'),
   generateThumbnail: require('./Icons/Asset Actions/wrench.svg'),
   upload: require('./Icons/Asset Actions/upload.svg'),
-  associate: require('./Icons/Asset Actions/associate.svg')
+  associate: require('./Icons/Asset Actions/associate.svg'),
+  associateBlue: require('./Icons/Asset Actions/associate-blue.svg')
 }
