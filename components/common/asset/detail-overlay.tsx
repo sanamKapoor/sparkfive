@@ -222,7 +222,6 @@ const DetailOverlay = ({
 
 
   useEffect(() => {
-    console.log(`Current asset change`, currentAsset)
     getCropResizeOptions();
     getDetail();
     checkInitialParams();
@@ -234,7 +233,6 @@ const DetailOverlay = ({
 
   useEffect(()=>{
     if(currentAsset.id !== asset.id){
-      console.log(`Asset changes`, asset)
       setCurrentAsset(asset)
     }
 
@@ -261,7 +259,6 @@ const DetailOverlay = ({
         const { data } = await assetApi.getById(asset.id);
 
         if(data.asset.id !== assetDetail?.id){
-          console.log(`Set asset`, {curAsset, asset: data.asset})
           setAssetDetail(data.asset);
 
           setVersionRealUrl(data.realUrl);
@@ -605,7 +602,6 @@ const DetailOverlay = ({
   };
 
   const loadVersions = async () => {
-    console.log(`Load versions`)
     try {
       const { data } = await assetApi.getVersions(currentAsset.versionGroup);
       updateList(data.versions, data.currentAsset);
@@ -630,7 +626,6 @@ const DetailOverlay = ({
   };
 
   useEffect(() => {
-    console.log(`Need fetch: ${needsFetch}`)
     if ((!needsFetch || needsFetch === "versions") && !isShare) {
       loadVersions();
     }
@@ -747,7 +742,6 @@ const DetailOverlay = ({
       closeOverlay();
       setDetailOverlayId(assets[newIndx].asset.id)
       if (newIndx === (assets.length - 1)) {
-        console.log(`Load more`)
         loadMore()
       }
     }
@@ -919,6 +913,7 @@ const DetailOverlay = ({
                 {mode === "crop" && (
                   <AssetCropImg
                     imageType={imageType}
+                    assetExtension={assetDetail.extension}
                     setWidth={setWidth}
                     setHeight={setHeight}
                     locked={lockCropping()}

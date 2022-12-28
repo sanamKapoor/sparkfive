@@ -812,8 +812,8 @@ const AssetsLibrary = () => {
       {currentViewAsset && <DetailOverlay
           initiaParams={{ side: "detail" }}
           asset={currentViewAsset.asset}
-          realUrl={currentViewAsset?.asset.realUrl}
-          thumbailUrl={currentViewAsset?.asset.thumbailUrl}
+          realUrl={currentViewAsset?.realUrl}
+          thumbailUrl={currentViewAsset?.thumbailUrl}
           isShare={false}
           closeOverlay={(assetData) => {
             setDetailOverlayId(undefined)

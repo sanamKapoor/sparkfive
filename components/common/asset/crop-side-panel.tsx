@@ -161,6 +161,15 @@ const CropSidePanel = ({ asset,
         // downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets')
     }
 
+    const getFileNameWithExtension = (fileName) => {
+        const extension = fileName.slice((fileName.lastIndexOf(".") - 1 >>> 0) + 2)
+        if(extension){
+            return fileName
+        }else{
+            return `${fileName}.${asset.extension}`
+        }
+    }
+
     const saveResizedImageAsAssociate = async (dlSize, renameValue) => {
         try {
             setIsLoading(true)
@@ -173,7 +182,7 @@ const CropSidePanel = ({ asset,
                 height: dlSize === 'original' ? asset.dimensionHeight : heightOriginal,
                 format: getImageType(imageType),
                 associateFile: asset.id,
-                associateFileName: renameValue
+                associateFileName: getFileNameWithExtension(renameValue)
             };
 
             const { shareJWT, code } = urlUtils.getQueryParameters()
@@ -430,7 +439,7 @@ const CropSidePanel = ({ asset,
                     () => {
                         let name = asset.name.substring(0, asset.name.lastIndexOf('.')) || asset.name;
                         let extension = asset.name.substring(asset.name.lastIndexOf('.'), asset.name.length) || "";
-                        setRenameValue(`${name}-crop-${new Date().getTime()}${extension}`)
+                        setRenameValue(`${name}-${mode}-${new Date().getTime()}${extension}`)
                         setRelatedModalOpen(true)
                     }
                 }
@@ -449,9 +458,8 @@ const CropSidePanel = ({ asset,
                     }}
                     confirmText={"Confirm"}
                     message={
-                       "Are you sure you want to save"
+                       "Are you sure you want to save as a related file"
                     }
-                    secondMessage={" as Related File?"}
                     modalIsOpen={relatedModalOpen}
                     initialValue={renameValue}
                 />

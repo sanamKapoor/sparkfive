@@ -33,7 +33,17 @@ import ConfirmModal from "../modals/confirm-modal"
 // Constants
 import { maximumAssociateFiles} from "../../../constants/asset-associate";
 
-const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, isFolder = false, deselectHidden = false, iconColor = '', deletedAssets = false, advancedLink = false, isSearch = false }) => {
+const AssetHeaderOps = ({
+							isUnarchive = false,
+							itemType = '',
+							isShare = false,
+							isFolder = false,
+							deselectHidden = false,
+							iconColor = '',
+							deletedAssets = false,
+							advancedLink = false,
+							isSearch = false,
+}) => {
 	const {
 		assets,
 		setAssets,
@@ -343,7 +353,7 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 					{((!isFolder && !isShare) && !deletedAssets) && <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`copy${iconColor}`]} tooltipText={'Copy'} tooltipId={'Copy'} onClick={() => setActiveOperation('copy')} />}
 					{((!isFolder && !isShare) && !deletedAssets) && (
 						<>
-							<IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps.associate} tooltipText={'Associate'} tooltipId={'Associate'} onClick={() => setShowAssociateModalOpen(true)} />
+							<IconClickable place={'bottom'} additionalClass={styles['action-button']} src={isSearch ? AssetOps.associateBlue : AssetOps.associate} tooltipText={'Associate'} tooltipId={'Associate'} onClick={() => setShowAssociateModalOpen(true)} />
 
 							<ConfirmModal
 								closeModal={() => setShowAssociateModalOpen(false)}
@@ -372,9 +382,9 @@ const AssetHeaderOps = ({ isUnarchive = false, itemType = '', isShare = false, i
 			{deletedAssets && <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`delete${iconColor}`]} tooltipText={'Delete'} tooltipId={'Delete'} onClick={() => setActiveOperation('delete')} />}
 
 			{showMoreActions ? (
-				<span className={styles['less-icons-button']} onClick={() => setShowMoreActions(false)}>Less Icons</span>
+				<span className={isSearch ? styles['search-less-icons-button'] : styles['less-icons-button']} onClick={() => setShowMoreActions(false)}>Less Icons</span>
 			) : (
-				<IconClickable place={'bottom'} additionalClass={`${styles['action-button']} m-l-0`} src={Utilities.moreWhite} tooltipText={'More'} tooltipId={'More'} onClick={() => setShowMoreActions(true)} />
+				<IconClickable place={'bottom'} additionalClass={`${styles['action-button']} m-l-0`} src={isSearch  ? Utilities.more :  Utilities.moreWhite} tooltipText={'More'} tooltipId={'More'} onClick={() => setShowMoreActions(true)} />
 			)}
 
 			{!deselectHidden && <Button className={styles['deselect-button']} text={`Deselect All (${!isFolder ? (totalSelectAssets) : selectedFolders.length})`} type='button' styleType='primary' onClick={deselectAll} />}

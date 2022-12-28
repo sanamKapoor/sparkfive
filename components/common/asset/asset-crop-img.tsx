@@ -14,7 +14,7 @@ import {  LoadingContext } from '../../../context'
 import EventBus from "../../../utils/event-bus";
 
 
-const AssetCropImg = ({ sizeOfCrop, setSizeOfCrop, assetImg, setWidth, setHeight, imageType, type = 'image', name, opaque = false, width = 100, height = 100, locked = true, detailPosSize, associateFileId, onAddAssociate }) => {
+const AssetCropImg = ({ sizeOfCrop, setSizeOfCrop, assetImg, setWidth, setHeight, imageType, type = 'image', name, opaque = false, width = 100, height = 100, locked = true, detailPosSize, associateFileId, onAddAssociate, assetExtension = "" }) => {
 	const { setIsLoading } = useContext(LoadingContext);
 
 	const previewCanvasRef = useRef(null);
@@ -179,6 +179,15 @@ const AssetCropImg = ({ sizeOfCrop, setSizeOfCrop, assetImg, setWidth, setHeight
 		return queryData
 	}
 
+	const getFileNameWithExtension = (fileName) => {
+		const extension = fileName.slice((fileName.lastIndexOf(".") - 1 >>> 0) + 2)
+		if(extension){
+			return fileName
+		}else{
+			return `${fileName}.${assetExtension}`
+		}
+	}
+
 	const generateToUpload = (canvas, crop) => {
 		if (!crop || !canvas) {
 			return;
@@ -191,7 +200,7 @@ const AssetCropImg = ({ sizeOfCrop, setSizeOfCrop, assetImg, setWidth, setHeight
 				console.warn(`Export image under image/${imageType} type`)
 
 				const file = new File([blob.slice(0, blob.size, blob.type)],
-					renameValue.current || `${name}-crop-${new Date().getTime()}`
+					getFileNameWithExtension(renameValue.current || `${name}-crop-${new Date().getTime()}`)
 					, { type: blob.type })
 
 				let attachedQuery = {estimateTime: 1, size: blob.size, totalSize: blob.size}
