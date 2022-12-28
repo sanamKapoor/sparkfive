@@ -919,6 +919,7 @@ const DetailOverlay = ({
                 {mode === "crop" && (
                   <AssetCropImg
                     imageType={imageType}
+                    assetExtension={assetDetail.extension}
                     setWidth={setWidth}
                     setHeight={setHeight}
                     locked={lockCropping()}

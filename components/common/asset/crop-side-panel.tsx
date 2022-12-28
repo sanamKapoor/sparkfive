@@ -161,6 +161,15 @@ const CropSidePanel = ({ asset,
         // downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets')
     }
 
+    const getFileNameWithExtension = (fileName) => {
+        const extension = fileName.slice((fileName.lastIndexOf(".") - 1 >>> 0) + 2)
+        if(extension){
+            return fileName
+        }else{
+            return `${fileName}.${asset.extension}`
+        }
+    }
+
     const saveResizedImageAsAssociate = async (dlSize, renameValue) => {
         try {
             setIsLoading(true)
@@ -173,7 +182,7 @@ const CropSidePanel = ({ asset,
                 height: dlSize === 'original' ? asset.dimensionHeight : heightOriginal,
                 format: getImageType(imageType),
                 associateFile: asset.id,
-                associateFileName: renameValue
+                associateFileName: getFileNameWithExtension(renameValue)
             };
 
             const { shareJWT, code } = urlUtils.getQueryParameters()
