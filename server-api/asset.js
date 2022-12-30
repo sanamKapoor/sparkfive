@@ -23,6 +23,7 @@ export default {
   saveNote: (note = {}) => axios.post(`${assetUrl}/save-note`, note),
   deleteNote: (id) => axios.delete(`${assetUrl}/delete-note/${id}`),
   copyAssets: ({ idList, folderId }, filters = {}) => axios.post(`${assetUrl}/copy?${querystring.encode(filters)}`, { idList, folderId }),
+  moveAssets: ({ idList, folderId }, filters = {}) => axios.post(`${assetUrl}/move?${querystring.encode(filters)}`, { idList, folderId }),
   getRealUrl: (assetId) => axios.get(`${assetUrl}/${assetId}/real-url`),
   importAssets: (provider, assetData, queryData) => axios.post(`${assetUrl}/import/${provider}?${querystring.encode(queryData)}`, assetData),
   updateMultiple: (updateData, filters = {}) => axios.patch(`${assetUrl}?${querystring.encode(filters)}`, updateData),
