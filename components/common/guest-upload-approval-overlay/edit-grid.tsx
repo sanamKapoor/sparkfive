@@ -34,10 +34,10 @@ const getStatusClass = (status: string) => {
 
 const EditGrid = ({ assets, toggleSelectedEdit }) => {
   const [previewModalOpen, setPreviewModalOpen] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState("");
+  const [previewAsset, setPreviewAsset] = useState({ asset: {}});
 
-  const showPreviewImage = (url) => {
-    setPreviewUrl(url);
+  const showPreviewImage = (asset) => {
+    setPreviewAsset(asset);
     setPreviewModalOpen(true);
   };
 
@@ -45,7 +45,9 @@ const EditGrid = ({ assets, toggleSelectedEdit }) => {
     <div className={styles["list-wrapper"]}>
       <ul className={`${styles["grid-list"]}`}>
         {assets.map(
-          ({ asset, thumbailUrl, realUrl, isEditSelected }, index) => (
+          (item, index) => {
+            const {  asset, thumbailUrl, realUrl, isEditSelected } = item
+            return (
             <li key={asset.id || index}>
               <>
                 <div className={`${styles.container}`}>
@@ -56,7 +58,7 @@ const EditGrid = ({ assets, toggleSelectedEdit }) => {
                         type={asset.type}
                         name={asset.name}
                         onClick={() => {
-                          showPreviewImage(realUrl);
+                          showPreviewImage(item);
                         }}
                       />
                     )}
@@ -67,7 +69,7 @@ const EditGrid = ({ assets, toggleSelectedEdit }) => {
                         additionalClass={styles["video-wrapper"]}
                         bulkSize={true}
                         onClick={() => {
-                          showPreviewImage(realUrl);
+                          showPreviewImage(item);
                         }}
                       />
                     )}
@@ -79,14 +81,16 @@ const EditGrid = ({ assets, toggleSelectedEdit }) => {
                           type={asset.type}
                           name={asset.name}
                           onClick={() => {
-                            showPreviewImage(realUrl);
+                            showPreviewImage(item);
                           }}
                         />
                       )}
                     {asset.type !== "image" &&
                       asset.type !== "video" &&
                       !thumbailUrl && (
-                        <AssetIcon padding extension={asset.extension} />
+                        <AssetIcon padding extension={asset.extension} onClick={() => {
+                          showPreviewImage(item);
+                        }}/>
                       )}
 
                     {/* {asset.type === 'application' && <AssetApplication
@@ -142,12 +146,12 @@ const EditGrid = ({ assets, toggleSelectedEdit }) => {
                 </ReactTooltip>
               </>
             </li>
-          )
+          )}
         )}
       </ul>
 
       <ImagePreviewModal
-        url={previewUrl}
+        asset={previewAsset}
         modalIsOpen={previewModalOpen}
         closeModal={() => {
           setPreviewModalOpen(false);
