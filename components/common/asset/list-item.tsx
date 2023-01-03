@@ -203,7 +203,7 @@ const ListItem = ({
               {!isLoading && getParsedExtension(asset.extension)}
             </div>
             <div className={styles.field_name}>
-              {asset.size && filesize(asset.size)}
+              {parseInt(asset.size) !== 0 && asset.size && filesize(asset.size)}
             </div>
             <div className={`${styles.field_name} ${isLoading && "loadable"}`}>
               {format(new Date(asset.createdAt), dateFormat)}
