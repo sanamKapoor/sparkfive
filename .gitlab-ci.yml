@@ -3,10 +3,15 @@ stages:
 build_esdev:
  stage: esdev_build
  before_script:
+     before_script:
+    - apt-get update
+    - apt-get --yes --force-yes install rsync
    - echo $server_key >>  serverkey.pem
    - chmod 400 serverkey.pem
- script:
-   
+  only:
+    refs:
+      - elasticsearch-dev
+ script:  
    - ssh -o StrictHostKeyChecking=no -i serverkey.pem -t $staging_es_user@$staging_es_host -p 22 "cd $staging_es_path && npm install && npm run build && pm2 restart all"
  when: manual
  only:
