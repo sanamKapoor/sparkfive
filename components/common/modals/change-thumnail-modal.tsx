@@ -445,6 +445,7 @@ const ChangeThumbnail = ({
               thumbnailPath: data[0].realUrl,
               thumbnailExtension: data[0].asset.extension,
               thumbnails: { thumbnails: null },
+              thumbnailStorageId: data[0].asset.storageId
             }
           );
           getFolders();
@@ -557,6 +558,7 @@ const ChangeThumbnail = ({
             if (fileForUploadOfFourThumbView[ele]) {
               ext.push({
                 filePath: data[index].thumbailUrl,
+                storageId: data[index].asset.storageId,
                 extension: data[index].asset.extension,
                 index: ele,
               });
