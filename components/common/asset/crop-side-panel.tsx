@@ -2,6 +2,7 @@
 import styles from './crop-side-panel.module.css'
 import fileDownload from 'js-file-download';
 import urlUtils from '../../../utils/url'
+import ReactTooltip from "react-tooltip"
 
 // APIs
 import sizeApi from '../../../server-api/size'
@@ -10,53 +11,82 @@ import shareCollectionApi from '../../../server-api/share-collection'
 import { Utilities } from '../../../assets'
 
 // Contexts
-import { AssetContext } from '../../../context'
+import { AssetContext, LoadingContext } from '../../../context'
 
 // Components
 import IconClickable from '../buttons/icon-clickable'
 import Input from "../inputs/input";
 import SizeSelect from "../inputs/size-select";
 import Button from "../buttons/button";
-import {useContext} from "react";
-import ReactTooltip from "react-tooltip";
+import { useContext, useState, useEffect } from "react";
+import ConfirmModal from "../modals/confirm-with-rename-modal"
+
+// Utils
+import EventBus from "../../../utils/event-bus"
 
 
 const CropSidePanel = ({ asset,
-                           onModeChange,
-                           mode,
-                           downloadImageTypes,
-                           imageType,
-                           onImageTypeChange ,
-                           presetTypes,
-                           presetTypeValue,
-                           sizes,
-                           sizeValue,
-                           onSelectChange,
-                           onSizeInputChange,
-                           width,
-                           height,
-                           isShare,
-                           sharePath
-                       }) => {
+    onModeChange,
+    mode,
+    downloadImageTypes,
+    imageType,
+    onImageTypeChange,
+    presetTypes,
+    presetTypeValue,
+    sizes,
+    sizeValue,
+    onSelectChange,
+    onSizeInputChange,
+    widthOriginal,
+    heightOriginal,
+    isShare,
+    sharePath,
+    onResetImageSize,
+    sizeOfCrop,
+    setSizeOfCrop,
+    detailPosSize,
+    onAddAssociate = (data) => {}
+}) => {
 
-    const {
-        updateDownloadingStatus
-    } = useContext(AssetContext)
+    const { updateDownloadingStatus } = useContext(AssetContext)
+    const { setIsLoading } = useContext(LoadingContext)
 
+    const [resizeOption, setResizeOption] = useState('px')
+    const [sizesValue, setSizesValue] = useState({
+        percentWidth: Math.round(widthOriginal * 100 / asset.dimensionWidth),
+        percentHeight: Math.round(heightOriginal * 100 / asset.dimensionHeight),
+        width: widthOriginal,
+        height: heightOriginal
+    })
+    const [lastSelectedSize, setLastSelectedSize] = useState(sizeValue)
+    const [selectedSize, setSelectedSize] = useState(sizeValue)
+    const [previewActive, setPreviewActive] = useState(false)
+    const [relatedModalOpen, setRelatedModalOpen] = useState(false)
 
+    const [renameValue, setRenameValue] = useState(asset.name)
+    const [renameModalOpen, setRenameModalOpen] = useState(false);
 
-    const setMode = (data) => {
-        onModeChange(data)
+    const setMode = (mode) => {
+        onModeChange(mode);
+        if (mode === 'resize') {
+            setPreviewActive(false);
+        }
     }
 
     // Check if should lock cropping
     const lockCropping = () => {
         // Only lock if user is choose specific preset
-        return (sizeValue && sizeValue.value !== 'none')
+        // return (sizeValue && sizeValue.value !== 'none')
+        // return mode === 'crop'
+        return previewActive
+    }
+
+    const isCroppingMode = () => {
+        return mode === 'crop'
     }
 
     const getImageType = (imageType) => {
-        switch (imageType){
+        switch (imageType) {
             case 'jpeg': {
                 return 'jpg'
             }
@@ -69,14 +99,14 @@ const CropSidePanel = ({ asset,
         }
     }
 
-    const downloadSelectedAssets = async () => {
-        try{
+    const downloadImage = async (dlSize) => {
+        try {
             let payload = {
                 assetIds: [asset.id],
-                sizeId: sizeValue.value === 'none' ? null : sizeValue.id,
+                sizeId: (sizeValue && sizeValue.value === 'none') || dlSize === 'original' ? null : sizeValue.id,
                 customSize: true,
-                width,
-                height,
+                width: dlSize === 'original' ? asset.dimensionWidth : widthOriginal,
+                height: dlSize === 'original' ? asset.dimensionHeight : heightOriginal,
                 format: getImageType(imageType)
             };
 
@@ -95,20 +125,19 @@ const CropSidePanel = ({ asset,
             //     filters['sharePath'] = sharePath
             // }
 
-
             // Show processing bar
             updateDownloadingStatus('preparing', 0, totalDownloadingAssets)
 
             let download = null
 
-            if(isShare){
+            if (isShare) {
                 // Download assets in shared collections
-                if(sharePath){
+                if (sharePath) {
                     download = shareCollectionApi.downloadWithCustomSize
-                }else{ // Download assets in sharing assets
+                } else { // Download assets in sharing assets
                     download = sizeApi.shareDownload
                 }
-            }else{
+            } else {
                 download = sizeApi.download
             }
 
@@ -116,15 +145,15 @@ const CropSidePanel = ({ asset,
             //     api = shareApi
             // }
 
-            const { data } = await download(payload,filters)
+            const { data } = await download(payload, filters)
 
             // Download file to storage
             const nameWords = asset.name.split('.')
-            nameWords[nameWords.length-1] = payload.format
+            nameWords[nameWords.length - 1] = payload.format
             fileDownload(data, nameWords.join('.'));
 
             updateDownloadingStatus('none', 0, 0, '')
-        }catch (e){
+        } catch (e) {
             updateDownloadingStatus('error', 0, 0, 'Internal Server Error. Please try again.')
         }
 
@@ -132,11 +161,119 @@ const CropSidePanel = ({ asset,
         // downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets')
     }
 
+    const getFileNameWithExtension = (fileName) => {
+        const extension = fileName.slice((fileName.lastIndexOf(".") - 1 >>> 0) + 2)
+        if(extension){
+            return fileName
+        }else{
+            return `${fileName}.${asset.extension}`
+        }
+    }
+
+    const saveResizedImageAsAssociate = async (dlSize, renameValue) => {
+        try {
+            setIsLoading(true)
+
+            let payload = {
+                assetIds: [asset.id],
+                sizeId: (sizeValue && sizeValue.value === 'none') || dlSize === 'original' ? null : sizeValue.id,
+                customSize: true,
+                width: dlSize === 'original' ? asset.dimensionWidth : widthOriginal,
+                height: dlSize === 'original' ? asset.dimensionHeight : heightOriginal,
+                format: getImageType(imageType),
+                associateFile: asset.id,
+                associateFileName: getFileNameWithExtension(renameValue)
+            };
+
+            const { shareJWT, code } = urlUtils.getQueryParameters()
+
+            let totalDownloadingAssets = 1;
+            let filters = {
+                estimateTime: 1,
+                shareJWT,
+                code,
+                sharePath
+            }
+
+            let download = null
+
+            if (isShare) {
+                // Download assets in shared collections
+                if (sharePath) {
+                    download = shareCollectionApi.downloadWithCustomSize
+                } else { // Download assets in sharing assets
+                    download = sizeApi.shareDownload
+                }
+            } else {
+                download = sizeApi.download
+            }
+
+            const { data } = await download(payload, filters)
+
+            onAddAssociate(data)
+
+            setIsLoading(false)
+        } catch (e) {
+        }
+    }
+
+    const resetResizeOption = (option) => {
+        setResizeOption(option);
+    }
+
+    const togglePreview = () => {
+        if (mode === 'crop') {
+            document.getElementById('crop-preview').click()
+            setPreviewActive(!previewActive)
+        } else {
+            onSelectChange('size', lastSelectedSize)
+        }
+    }
+
+    useEffect(() => {
+        const width = mode === 'crop' ? sizeOfCrop.width : widthOriginal;
+        const height = mode === 'crop' ? sizeOfCrop.height : heightOriginal;
+        const dimensionWidth = mode === 'crop' ? widthOriginal : asset.dimensionWidth
+        const dimensionHeight = mode === 'crop' ? heightOriginal : asset.dimensionHeight
+        setSizesValue({
+            percentWidth: Math.round(width * 100 / dimensionWidth),
+            percentHeight: Math.round(height * 100 / dimensionHeight),
+            width: width,
+            height: height
+        })
+    }, [widthOriginal, heightOriginal, mode, sizeOfCrop, detailPosSize, presetTypeValue]);
+
+
+    useEffect(() => {
+        setSelectedSize(sizeValue)
+    }, [sizeValue]);
+
+    const onChangeResize = (value, name) => {
+        if (isCroppingMode()) {
+
+            if (resizeOption === '%') {
+                value = name === 'width' ? Math.round(value * widthOriginal / 100) : Math.round(value * heightOriginal / 100)
+            }
+            if (name === "width" && value > widthOriginal) {
+                value = widthOriginal
+            }
+            if (name === "height" && value > heightOriginal) {
+                value = heightOriginal
+            }
+            setSizeOfCrop(prev => ({
+                ...prev,
+                [name]: Math.round(value) || 0
+            }))
+        } else {
+            onSizeInputChange(name, value, resizeOption)
+        }
+    }
+
     return (
         <div className={styles.container}>
             <h2>Download Options</h2>
 
-            <div className={styles['field-wrapper']} >
+            <div className={styles['field-wrapper']}>
                 <div className={`${styles.title}`}>Mode</div>
                 <div className={styles['field-content']}>
                     <div className={styles['field-radio-wrapper']}>
@@ -180,7 +317,7 @@ const CropSidePanel = ({ asset,
                                             <IconClickable
                                                 src={Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
-                                                onClick={()=>{onImageTypeChange(type.value)}} />
+                                                onClick={() => { onImageTypeChange(type.value) }} />
                                         }
                                     </div>
                                     <p className={styles['item-name']}>{type.label}</p>
@@ -191,38 +328,42 @@ const CropSidePanel = ({ asset,
                 </div>
             </div>
 
-
             {asset.extension !== 'svg' && <>
                 <div className={`${styles['field-wrapper']} ${styles['hide-on-mobile']}`} >
-                    <div className={`${styles.title}`}>Resize</div>
+                    <div className={`${styles.title}`}>
+                        <span>Resize</span>
+                        <span className={`${styles['resize-option']} ${resizeOption === "px" ? styles['selected'] : ""}`} onClick={() => resetResizeOption('px')}>px</span>
+                        <span className={`${styles['resize-option']} ${resizeOption === "%" ? styles['selected'] : ""}`} onClick={() => resetResizeOption('%')}>%</span>
+                    </div>
                     <div className={styles['field-content']}>
                         <div className={'row'}>
                             <div className={'col-50 m-l-abs-15'}>
                                 <label className={styles['input-label']}>
-                                    Width (px)
+                                    Width ({resizeOption})
                                 </label>
                                 <Input
                                     disabled={lockCropping()}
-                                    onChange={(e)=>{onSizeInputChange('width', parseInt(e.target.value))}}
+                                    onChange={(e) => { onChangeResize(parseInt(e.target.value), 'width') }}
                                     placeholder={'Width'}
                                     additionalClasses={'center-input'}
                                     type={'number'}
                                     // defaultValue
-                                    value={width}
+                                    value={resizeOption === "%" ? sizesValue.percentWidth : sizesValue.width}
                                     styleType={'regular-height-short'} />
                             </div>
                             <div className={'col-50'}>
                                 <label className={styles['input-label']}>
-                                    Height (px)
+                                    Height ({resizeOption})
                                 </label>
                                 <Input
                                     disabled={lockCropping()}
-                                    onChange={(e)=>{onSizeInputChange('height', parseInt(e.target.value))}}
+                                    onChange={(e) => { onChangeResize(parseInt(e.target.value), 'height') }}
                                     placeholder={'Height'}
                                     type={'number'}
-                                    value={height}
+                                    value={resizeOption === "%" ? sizesValue.percentHeight : sizesValue.height}
                                     additionalClasses={'center-input'}
                                     styleType={'regular-height-short'} />
+
                             </div>
                         </div>
                     </div>
@@ -235,10 +376,11 @@ const CropSidePanel = ({ asset,
                             options={presetTypes}
                             placeholder='Select preset'
                             styleType='filter'
-                            onChange={(value)=>{onSelectChange('preset', value)}}
+                            onChange={(value) => { onSelectChange('preset', value) }}
                             value={presetTypeValue}
                             isClearable={false}
                             additionalClass={'font-weight-normal m-l-0'}
+                            disabled={lockCropping()}
                         />
                     </div>
                 </div>
@@ -247,39 +389,99 @@ const CropSidePanel = ({ asset,
                     <div className={`${styles.title}`}>Size</div>
                     <div className={styles['field-content']}>
                         <SizeSelect
-                            options={sizes.map((size) => { size.label = size.label || size.name; size.value = size.value || size.name; return size})}
+                            options={sizes.map((size) => { size.label = size.label || size.name; size.value = size.value || size.name; return size })}
                             placeholder='Select size'
                             styleType='filter'
-                            onChange={(value)=>{onSelectChange('size', value)}}
-                            value={sizeValue}
+                            onChange={(value) => { onSelectChange('size', value) }}
+                            value={selectedSize}
                             isClearable={false}
                             additionalClass={'font-weight-normal m-l-0'}
+                            disabled={lockCropping()}
                         />
                     </div>
                 </div>
             </>}
 
-            <div className={styles['save-changes']}>
-                <Button className={'m-r-15'}
-                        text='Cancel'
+            <div className={`${styles['save-changes']} ${styles['save-preview-btn-row']}`}>
+                {mode === 'crop' ?
+                    <Button className={'m-r-15'}
+                        text={previewActive ? 'Close Preview' : 'View Preview'}
                         type='button'
                         styleType='secondary'
-                        onClick={() => setMode('detail')} />
-                <Button text={'Download'}
-                        type={'button'}
-                        styleType={'primary'}
-                        onClick={()=>{
-                            if(mode === 'crop'){
-                                document.getElementById('download-crop-image').click()
-                            }else{
-                                downloadSelectedAssets()
-                            }
-                        }}
-                        disabled={!width || !height}
+                        onClick={() => togglePreview()} />
+                    :
+                    <Button className={'m-r-15'}
+                        text='Reset Changes'
+                        type='button'
+                        styleType='secondary'
+                        onClick={() =>
+                            onResetImageSize()
+                        } />
+                }
+                <Button text={'Download Edited'}
+                    type={'button'}
+                    styleType={'primary-navy'}
+                    onClick={() => {
+                        if (mode === 'crop') {
+                            document.getElementById('download-crop-image').click()
+                        } else {
+                            downloadImage('resized')
+                        }
+                    }}
+                    disabled={!widthOriginal || !heightOriginal || !sizeValue}
+                />
+                <Button
+                    className={'m-t-40'}
+                    text='Save as Related File'
+                    type='button'
+                    styleType='secondary'
+                    onClick={
+                    () => {
+                        let name = asset.name.substring(0, asset.name.lastIndexOf('.')) || asset.name;
+                        let extension = asset.name.substring(asset.name.lastIndexOf('.'), asset.name.length) || "";
+                        setRenameValue(`${name}-${mode}-${new Date().getTime()}${extension}`)
+                        setRelatedModalOpen(true)
+                    }
+                }
+                />
+                <ConfirmModal
+                    closeModal={() => setRelatedModalOpen(false)}
+                    confirmAction={(data) => {
+                        if (mode === 'crop') {
+                            EventBus.dispatch(EventBus.Event.SAVE_CROP_RELATED_FILE, { renameValue: data})
+                            // document.getElementById('associate-crop-image').click()
+                        } else {
+                            saveResizedImageAsAssociate('resized', data);
+                            // downloadImage('resized')
+                        }
+                        setRelatedModalOpen(false)
+                    }}
+                    confirmText={"Confirm"}
+                    message={
+                       "Are you sure you want to save as a related file"
+                    }
+                    modalIsOpen={relatedModalOpen}
+                    initialValue={renameValue}
                 />
             </div>
 
-        </div >
+            <div className={styles['save-changes']}>
+                <Button className={'m-r-15'}
+                    text='Cancel'
+                    type='button'
+                    styleType='secondary'
+                    onClick={() => setMode('detail')} />
+                <Button text={'Download Original'}
+                    type={'button'}
+                    styleType={'primary'}
+                    onClick={() => {
+                        downloadImage('original')
+                    }}
+                    disabled={!widthOriginal || !heightOriginal}
+                />
+            </div>
+
+        </div>
     )
 }
 

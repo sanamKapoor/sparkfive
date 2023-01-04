@@ -42,6 +42,7 @@ const DeletedAssets = ({
     setOperationFolder,
     folders,
   } = useContext(AssetContext);
+
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [recoverModalOpen, setRecoverModalOpen] = useState(false);
   const [activeAssetId, setActiveAssetId] = useState("");

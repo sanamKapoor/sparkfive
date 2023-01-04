@@ -31,9 +31,6 @@ import uploadLinkApi from "../../server-api/guest-upload"
 import shareUploadLinkApi from "../../server-api/share-upload-link"
 
 
-
-
-
 const GuestUpload = () => {
     const { socket, connected, connectSocket } = useContext(SocketContext)
     const { updateLogo, logo } = useContext(GuestUploadContext)
@@ -422,7 +419,7 @@ const GuestUpload = () => {
     }
     useEffect(()=>{
         // If code is declared, use it to get link info
-        if(query.code){
+        if(query?.code){
             // Get link info
             getLinkInfo()
         }

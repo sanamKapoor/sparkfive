@@ -27,6 +27,7 @@ import selectOptions from '../../../utils/select-options'
 
 import { ASSET_UPLOAD_APPROVAL, ASSET_ACCESS } from '../../../constants/permissions'
 import NoPermissionNotice from "../../common/misc/no-permission-notice";
+import DetailOverlay from "../../common/asset/detail-overlay";
 
 const AssetsLibrary = () => {
 
@@ -57,10 +58,13 @@ const AssetsLibrary = () => {
     setUploadingFileName,
     setFolderGroups,
     totalAssets,
-    setTotalAssets
+    setTotalAssets,
+    currentViewAsset,
+    setCurrentViewAsset,
+    setDetailOverlayId
   } = useContext(AssetContext)
 
-  const [top, setTop] = useState('calc(55px + 3rem)')
+  const [top, setTop] = useState('calc(55px + 8rem)')
 
   const {advancedConfig, hasPermission} = useContext(UserContext)
 
@@ -620,7 +624,7 @@ const AssetsLibrary = () => {
     }
   }
 
-  const mapWithToggleSelection = asset => ({ ...asset, toggleSelected })
+  const mapWithToggleSelection = asset => ({ ...asset, isSelected: selectedAllAssets, toggleSelected })
 
   const backToFolders = () => {
     setActiveFolder('')
@@ -692,9 +696,9 @@ const AssetsLibrary = () => {
   }
 
   const onChangeWidth = () => {
-    let remValue = '3rem'
+    let remValue = '8rem'
     if(window.innerWidth <= 900){
-      remValue = '1rem + 1px'
+      remValue = '7rem + 1px'
     }
 
     let el = document.getElementById('top-bar');
@@ -758,6 +762,10 @@ const AssetsLibrary = () => {
                       deleteFolder={deleteFolder}
                       loadMore={loadMore}
                       openFilter={openFilter}
+                      onCloseDetailOverlay={(assetData)=>{
+                        setDetailOverlayId(undefined)
+                        setCurrentViewAsset(assetData)
+                      }}
                   />
                   }
                 </DropzoneProvider>
@@ -791,9 +799,28 @@ const AssetsLibrary = () => {
           closeOverlay={closeSearchOverlay}
           operationsEnabled={true}
           activeFolder={activeFolder}
+          onCloseDetailOverlay={(assetData)=>{
+            closeSearchOverlay()
+            // setActiveSearchOverlay(false)
+            setDetailOverlayId(undefined)
+            setCurrentViewAsset(assetData)
+          }}
         />
       }
       {uploadDetailOverlay && <UploadStatusOverlayAssets closeOverlay={() => { setUploadDetailOverlay(false) }} />}
+
+      {currentViewAsset && <DetailOverlay
+          initiaParams={{ side: "detail" }}
+          asset={currentViewAsset.asset}
+          realUrl={currentViewAsset?.realUrl}
+          thumbailUrl={currentViewAsset?.thumbailUrl}
+          isShare={false}
+          closeOverlay={(assetData) => {
+            setDetailOverlayId(undefined)
+            setCurrentViewAsset(assetData)
+          }}
+          outsideDetailOverlay={true}
+      />}
     </>
   )
 }

@@ -1,5 +1,13 @@
 import styles from './index.module.css'
 import { useState } from 'react'
+import moment from "moment";
+import DayPickerInput from 'react-day-picker/DayPickerInput';
+import { DateUtils } from 'react-day-picker';
+import dateFnsFormat from 'date-fns/format';
+import dateFnsParse from 'date-fns/parse';
+
+import dateStyles from '../../../common/filter/date-uploaded.module.css'
+
 
 // Components
 import SectionButton from "../../../common/buttons/section-button";
@@ -17,6 +25,12 @@ import SpinnerOverlay from "../../../common/spinners/spinner-overlay";
 import { useQueryStrings } from '../../../../hooks/use-query-strings';
 
 import { defaultSortData as companyDefaultSortData } from './company-list-header/types'
+import FormInput from "../../../common/inputs/form-input";
+import Base from "../../../common/modals/base";
+import {approvalList} from "../../../../constants/guest-upload";
+import Select from "../../../common/inputs/select";
+
+import { statuses} from "../../../../constants/plans";
 
 const type = [
     {
@@ -55,13 +69,20 @@ const SuperAdmin = () => {
     const [subdomain, setSubdomain] = useState('')
     const [loading, setLoading] = useState(false)
     const [sortData, setSortData] = useQueryStrings(defaultValues)
+    const [showPlanModal, setShowPlanModal] = useState(false)
+    const [planDetail, setPlanDetail] = useState({})
+    const [benefits, setBenefits] = useState([])
 
-    const onViewCompanySettings =  (data) => {
+    const onViewCompanySettings =  (data, benefits) => {
         setViewCompanyDetail(data)
         setVanity(data.vanity)
         setSubdomain(data.subdomain ? `${data.subdomain || ""}.${window.location.hostname.replace("www.","")}` : "")
         setCdnAcces(data.cdnAccess)
         setAdvanceShareLink(data.advancedCollectionShareLink)
+        setBenefits(benefits.map((benefit)=>{ return {
+            label: benefit.id,
+            value: benefit.id
+        }}))
     }
 
     const onBack = () => {
@@ -87,6 +108,72 @@ const SuperAdmin = () => {
           }
 
       }
+    }
+
+    const updateTeamPlan = async (data: any) => {
+        if(viewCompanyDetail){
+            try{
+                setLoading(true)
+                // @ts-ignore
+                await superAdminApi.updateCompanyPlan(viewCompanyDetail.id, data)
+
+                setLoading(false)
+
+                onBack();
+
+                setShowPlanModal(false)
+
+                toastUtils.success('Setting changes saved')
+            }catch (e){
+                setLoading(false)
+                console.log(e.response.data?.message)
+                toastUtils.error(e.response.data?.message || "Internal server error")
+            }
+
+        }
+    }
+
+    const parseDate = (str, format, locale) => {
+        const parsed = dateFnsParse(str, format, new Date(), { locale });
+        if (DateUtils.isDate(parsed)) {
+            return parsed;
+        }
+        return undefined;
+    }
+    const formatDate = (date, format, locale) => {
+        return dateFnsFormat(date, format, { locale });
+    }
+
+    const FORMAT = 'MM/dd/yyyy';
+
+    const onSelectBenefit = (selected) => {
+        setPlanDetail({...planDetail, benefitId: selected.value})
+    }
+
+    const onSelectStatus = (selected) => {
+        setPlanDetail({...planDetail, status: selected.value})
+    }
+
+    const onSelectDate = (key, value) => {
+        setPlanDetail({...planDetail, [key]: value})
+    }
+
+    const updatePlan = () => {
+        // @ts-ignore
+        const { status, benefitId, endDate } = planDetail
+        updateTeamPlan({
+            status,
+            benefitId,
+            endDate,
+        })
+    }
+
+    const getStatusBadge = (status) => {
+        if(status === "active"){
+            return <span  className={styles['active-badge']}>{status}</span>
+        }
+
+        return <span  className={styles['trial-badge']}>{status}</span>
     }
 
   return (
@@ -149,7 +236,22 @@ const SuperAdmin = () => {
                                 </div>
                             </div>
                             <div className={`${styles.role}`}>
-                                {viewCompanyDetail?.plan?.name}
+                              <p>{viewCompanyDetail?.plan?.name}</p>
+                              <p>{getStatusBadge(viewCompanyDetail?.plan?.status)}</p>
+                                {viewCompanyDetail?.plan?.endDate && <p>End at {moment(viewCompanyDetail?.plan?.endDate).format("DD/MM/YYYY")}</p>}
+                                {/*{viewCompanyDetail?.plan?.renewalDate && <p>Renew at {moment(viewCompanyDetail?.plan?.renewalDate).format("DD/MM/YYYY")}</p>}*/}
+
+                              <Button
+                                styleTypes={['exclude-min-height']}
+                                type={'button'}
+                                text='Edit'
+                                styleType='primary'
+                                onClick={() => {
+                                    setPlanDetail(viewCompanyDetail?.plan)
+                                    setShowPlanModal(true)}
+                              }
+                                disabled={false}
+                              />
                             </div>
                         </div>
                     </li>
@@ -235,6 +337,97 @@ const SuperAdmin = () => {
                 </div>
             </div>
         </>}
+
+        <Base
+            modalIsOpen={showPlanModal}
+            closeModal={()=>{
+                setShowPlanModal(false)
+            }}
+            additionalClasses={[styles['base-plan-modal']]}
+        >
+            <div className={styles['plan-modal']}>
+                <span className={`${styles.close}`} onClick={() => {setShowPlanModal(false)}}>x</span>
+                <div className={styles["form-field"]}>
+                    <div className={styles["form-title"]}>Plan</div>
+                    <Select
+                        options={benefits}
+                        additionalClass={'font-weight-normal primary-input-height'}
+                        onChange={(selected) => {onSelectBenefit(selected)}}
+                        placeholder={`Select the plan`}
+                        styleType='regular'
+                        value={benefits.filter((benefit)=>benefit.value === planDetail?.benefitId)[0]}
+                    />
+                </div>
+
+                <div className={styles["form-field"]}>
+                    <div className={styles["form-title"]}>Status</div>
+                    <Select
+                        options={statuses}
+                        additionalClass={'font-weight-normal primary-input-height'}
+                        onChange={(selected) => {onSelectStatus(selected)}}
+                        placeholder={`Status`}
+                        styleType='regular'
+                        value={statuses.filter((status)=>status.value === planDetail?.status)[0]}
+                    />
+                </div>
+
+                <div className={`${styles["form-field"]} ${styles['date-wrapper']}`}>
+                    <div className={styles["form-title"]}>Expired At</div>
+                    <DayPickerInput
+                        formatDate={formatDate}
+                        format={FORMAT}
+                        parseDate={parseDate}
+                        onDayChange={(day) => {onSelectDate("endDate", day)}}
+                        placeholder={'mm/dd/yyyy'}
+                        classNames={{
+                            container: dateStyles.input,
+                        }}
+                        dayPickerProps={{
+                            className: dateStyles.calendar
+                        }}
+                        value={planDetail?.endDate ? new Date(planDetail?.endDate) : ""}
+                    />
+                </div>
+
+                {/*<div className={`${styles["form-field"]} ${styles['date-wrapper']}`}>*/}
+                {/*    <div className={styles["form-title"]}>Reniew At</div>*/}
+                {/*    <DayPickerInput*/}
+                {/*        formatDate={formatDate}*/}
+                {/*        format={FORMAT}*/}
+                {/*        parseDate={parseDate}*/}
+                {/*        onDayChange={(day) => {onSelectDate("renewalDate", day)}}*/}
+                {/*        placeholder={'mm/dd/yyyy'}*/}
+                {/*        classNames={{*/}
+                {/*            container: dateStyles.input*/}
+                {/*        }}*/}
+                {/*        dayPickerProps={{*/}
+                {/*            className: dateStyles.calendar*/}
+                {/*        }}*/}
+                {/*        value={planDetail?.renewalDate ? new Date(planDetail?.renewalDate) : ""}*/}
+                {/*    />*/}
+                {/*</div>*/}
+
+                <div className={"d-flex justify--flex-end"}>
+                    <Button
+                        styleTypes={['exclude-min-height']}
+                        type={'button'}
+                        text='Cancel'
+                        styleType='secondary'
+                        onClick={() => {setShowPlanModal(false)}}
+                    />
+                    <Button
+                        className={"m-l-10"}
+                        styleTypes={['exclude-min-height']}
+                        type={'button'}
+                        text='Save Changes'
+                        styleType='primary'
+                        onClick={() => {updatePlan()}}
+                    />
+                </div>
+
+
+            </div>
+        </Base >
 
         {loading && <SpinnerOverlay />}
     </div>

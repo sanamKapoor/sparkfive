@@ -172,8 +172,7 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
     addFilterToQuery(filters, filterProjects, 'projects')
     addFilterToQuery(filters, filterFolders, 'folders')
     addFilterToQuery(filters, filterChannels, 'channels')
-    addFilterToQuery(filters, filterNonAiTags, 'tags')
-    addFilterToQuery(filters, filterAiTags, 'tags')
+    addFilterTagsToQuery(filters, filterNonAiTags,filterAiTags, 'tags')
     addFilterToQuery(filters, filterFileTypes, 'fileTypes')
     addFilterToQuery(filters, filterOrientations, 'orientations')
     addFilterToQuery(filters, filterResolutions, 'resolutions')
@@ -342,3 +341,17 @@ const addFilterToQuery = (filters, filterItems, key, valueKey = 'value') => {
         filters[key] = filterItems.map(item => item[valueKey]).join(',')
     }
 }
+
+const addFilterTagsToQuery = (filters, filterItems1,  filterItems2, key, valueKey = 'value') => {
+    const items = [];
+    if (filterItems1?.length > 0) {
+        items.push(...filterItems1.map(item => item[valueKey]))
+    }
+    if (filterItems2?.length > 0) {
+        items.push(...filterItems2.map(item => item[valueKey]))
+    }
+    if(items.length){
+        filters[key] = items.join(',')
+    }
+}
+

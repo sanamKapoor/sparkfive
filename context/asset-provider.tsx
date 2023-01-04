@@ -35,6 +35,7 @@ export default ({ children }) => {
 
     const [operationAsset, setOperationAsset] = useState(null)
     const [operationFolder, setOperationFolder] = useState('')
+    const [operationAssets, setOperationAssets] = useState([]) // Hold assets to be operated without affecting to asset list in main grid
 
     const [activeOperation, setActiveOperation] = useState('')
 
@@ -79,6 +80,9 @@ export default ({ children }) => {
 
     // Asset navigation
     const [detailOverlayId, setDetailOverlayId] = useState(undefined)
+
+    // For viewing asset in file associations
+    const [currentViewAsset, setCurrentViewAsset] = useState()
 
     const setPlaceHolders = (type, replace = true) => {
         if (type === 'asset') {
@@ -431,6 +435,7 @@ export default ({ children }) => {
         uploadingFile,
         uploadRemainingTime,
         uploadingPercent,
+        setUploadingPercent,
         uploadingAssets,
         setUploadingAssets: setUploadingAssetItems,
         uploadingType,
@@ -455,7 +460,11 @@ export default ({ children }) => {
         folderImport,
         setFolderImport,
         detailOverlayId,
-        setDetailOverlayId
+        setDetailOverlayId,
+        operationAssets,
+        setOperationAssets,
+        currentViewAsset,
+        setCurrentViewAsset,
     }
     return (
         <AssetContext.Provider value={assetsValue}>

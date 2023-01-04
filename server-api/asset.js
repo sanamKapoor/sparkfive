@@ -9,7 +9,13 @@ export default {
       'Content-Type': 'multipart/form-data'
     }
   }),
+  uploadThumbnail: (formData, queryData = {}) => axios.post(`${assetUrl}/upload/thumbnail?${querystring.encode(queryData)}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  }),
   getAssets: (queryData = {}) => axios.get(`${assetUrl}?${querystring.encode(queryData)}`),
+  searchAssets: (queryData = {}) => axios.get(`${assetUrl}/search/filename?${querystring.encode(queryData)}`),
   getVersions: (versionGroup) => axios.get(`${assetUrl}/versions-of/${versionGroup}`),
   checkDuplicates: (fileNames) => axios.post(`${assetUrl}/check-duplicates`, {fileNames}),
   revertVersion: ({ revertAssetId, versionGroup } = {}) => axios.post(`${assetUrl}/revert-version`, { revertAssetId, versionGroup }),
@@ -17,6 +23,7 @@ export default {
   saveNote: (note = {}) => axios.post(`${assetUrl}/save-note`, note),
   deleteNote: (id) => axios.delete(`${assetUrl}/delete-note/${id}`),
   copyAssets: ({ idList, folderId }, filters = {}) => axios.post(`${assetUrl}/copy?${querystring.encode(filters)}`, { idList, folderId }),
+  moveAssets: ({ idList, folderId }, filters = {}) => axios.post(`${assetUrl}/move?${querystring.encode(filters)}`, { idList, folderId }),
   getRealUrl: (assetId) => axios.get(`${assetUrl}/${assetId}/real-url`),
   importAssets: (provider, assetData, queryData) => axios.post(`${assetUrl}/import/${provider}?${querystring.encode(queryData)}`, assetData),
   updateMultiple: (updateData, filters = {}) => axios.patch(`${assetUrl}?${querystring.encode(filters)}`, updateData),
@@ -29,6 +36,8 @@ export default {
   deleteAsset: (id, filters = {}) => axios.delete(`${assetUrl}/${id}?${querystring.encode(filters)}`),
   deleteMultipleAssets: ({ assetIds, filters = {} }) => axios.delete(`${assetUrl}?${querystring.encode(filters)}`, { data: { assetIds } }),
   addTag: (id, data) => axios.post(`${assetUrl}/${id}/tags`, data),
+  nonAiTagAssetsCount: () => axios.get(`${assetUrl}/nonAiTagAssetsCount`),
+  startBulkAiTagging: () => axios.post(`${assetUrl}/startBulkAiTagging`),
   removeTag: (id, tagId) => axios.delete(`${assetUrl}/${id}/tags/${tagId}`),
   addCampaign: (id, data) => axios.post(`${assetUrl}/${id}/campaigns`, data),
   removeCampaign: (id, campaignId) => axios.delete(`${assetUrl}/${id}/campaigns/${campaignId}`),
@@ -63,6 +72,10 @@ export default {
       responseType: 'blob', // Important
       data
     })
-  }
+  },
+
+  associate: (assetIds, queryData) => axios.post(`${assetUrl}/associate?${querystring.encode(queryData)}`, { assetIds }),
+  disassociate: (assetIds) => axios.post(`${assetUrl}/disassociate`, { assetIds }),
+
 }
 

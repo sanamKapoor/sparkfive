@@ -54,7 +54,12 @@ const Search = (props) => {
       label: 'File name',
       value: 'assets.name',
       icon: Utilities.file
-    }
+    },
+    {
+      label: "Notes",
+      value: "notes.text",
+      icon: Utilities.notes,
+    },
   ]
 
   if (filtersTags.length === 0 && advancedConfig.searchDefault==='tags_only') {

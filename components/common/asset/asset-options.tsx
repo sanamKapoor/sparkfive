@@ -19,7 +19,9 @@ const AssetOptions = ({
 	openShareAsset,
 	openComments,
 	openRemoveAsset,
-	isShare = false
+	dissociateAsset,
+	isShare = false,
+	isAssetRelated = false
 }) => {
 
 	const options = [
@@ -30,6 +32,12 @@ const AssetOptions = ({
 		{ label: asset.stage !== 'archived' ? 'Archive' : 'Unarchive', onClick: openArchiveAsset },
 		{ label: 'Delete', onClick: openDeleteAsset },
 		{ label: 'Share', onClick: openShareAsset }
+	]
+
+	const assetRelatedOptions = [
+		{ label: 'Download', onClick: downloadAsset, permissions: [ASSET_DOWNLOAD] },
+		{ label: 'Disassociate', onClick: dissociateAsset },
+		{ label: 'Delete', onClick: openDeleteAsset },
 	]
 
 	if (itemType) {
@@ -49,7 +57,7 @@ const AssetOptions = ({
 			Content={() => (
 				<div className={styles.more} >
 					<Dropdown
-						options={isShare ? [{ label: 'Download', onClick: downloadAsset }] : options}
+						options={isShare ? [{ label: 'Download', onClick: downloadAsset }] : isAssetRelated ? assetRelatedOptions : options}
 					/>
 				</div>
 			)}

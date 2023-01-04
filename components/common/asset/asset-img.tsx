@@ -4,6 +4,7 @@ import styles from "./asset-img.module.css";
 
 import { Assets } from "../../../assets";
 import { useState } from "react";
+import asset from "../../../server-api/asset";
 
 const AssetImg = ({
   assetImg,
@@ -11,7 +12,9 @@ const AssetImg = ({
   name,
   opaque = false,
   onClick = () => {},
-  imgClass = ""
+  imgClass = "",
+  style={},
+  activeFilter=""
 }) => {
   const [loaded, setLoaded] = useState(false);
 
@@ -20,26 +23,27 @@ const AssetImg = ({
 
   if (!finalImg) finalImg = Assets.empty;
 
-    useEffect(()=>{
-        setLoaded(false)
-    },[assetImg])
+  useEffect(()=>{
+      setLoaded(false)
+  },[assetImg])
+
   return (
     <>
       <img
         src={Assets.empty}
         alt={"blank"}
-        style={loaded ? { display: "none" } : {}}
+        className={`${styles[activeFilter]}`}
+        style={loaded ? { display: "none" } : { width: '100%', height: "100%", "object-fit": "contain"}}
       />
       <img
-        crossOrigin={"anonymous"}
         onClick={onClick}
         src={finalImg}
-        alt={name}
-        className={`${styles.asset} ${opaque && styles.opaque} ${imgClass}`}
+        className={`asset-img ${styles.asset} ${opaque && styles.opaque} ${imgClass} ${styles[imgClass]} ${styles[activeFilter]}`}
         onLoad={() => setLoaded(true)}
+        onError={(e) => {setLoaded(false)}}
         style={
           loaded
-            ? {}
+            ? {...style}
             : {
                 opacity: 0,
                 overflow: "hidden",

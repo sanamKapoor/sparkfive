@@ -2,6 +2,7 @@
 :root {
   /* Colors */
   --color-prim-navy: #08135e;
+  --color-prim-navy-hover: #817D9D;
   --color-prim-wine: #800356;
   --color-prim-magenta: #c70c4a;
   --color-prim-red: #fa373d;
@@ -239,6 +240,9 @@ ul {
 .visibility-hidden{
   visibility: hidden;
 }
+.display-none{
+  display: none!important;
+}
 
 .p-l-r-10{
   padding-left: 10px;
@@ -277,4 +281,27 @@ ul {
 
 .ReactCrop{
   max-height: 100%;
+}
+
+input[role="combobox"] {
+  width: 358px;
+  margin: 0px 10px 0px 0px;
+  min-height: 48px;
+  padding: 8px 12px;
+  border-radius: 5px;
+  border: 1px solid #dedad4;
+  background-color: var(--color-sec-ivory);
+  color: var(--color-prim-navy);
+}
+
+@media screen and (max-width: 500px) {
+  input[role="combobox"] {
+    width: 100% !important;
+  }
+}
+
+@media screen and (max-width: 717px) {
+  input[role="combobox"] {
+    width: 50%;
+  }
 }

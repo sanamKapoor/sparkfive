@@ -1,6 +1,7 @@
 import styles from "./detail-overlay.module.css";
 import { Utilities, AssetOps } from "../../../assets";
 import { saveAs } from "file-saver";
+import { Rnd } from 'react-rnd';
 import { useState, useEffect, useContext } from "react";
 import assetApi from "../../../server-api/asset";
 import shareApi from "../../../server-api/share-collection";
@@ -11,8 +12,11 @@ import update from "immutability-helper";
 import downloadUtils from "../../../utils/download";
 import VersionList from "./version-list";
 import AssetAddition from "./asset-addition";
+import urlUtils from '../../../utils/url'
 
 import { isMobile } from "react-device-detect";
+
+import { ASSET_DOWNLOAD } from '../../../constants/permissions'
 
 // Components
 import SidePanel from "./detail-side-panel";
@@ -35,6 +39,9 @@ import { isImageType } from "../../../utils/file";
 import { ASSET_ACCESS } from "../../../constants/permissions";
 import AssetNotes from './asset-notes';
 import AssetNote from './asset-note';
+import AssetRelatedFIles from './asset-related-files';
+
+import { sizeToZipDownload } from "../../../constants/download";
 
 const getDefaultDownloadImageType = (extension) => {
   const defaultDownloadImageTypes = [
@@ -96,7 +103,8 @@ const DetailOverlay = ({
   sharePath = "",
   activeFolder = '',
   initialParams,
-  availableNext = true
+  availableNext = true,
+  outsideDetailOverlay = false,
 }) => {
   const { hasPermission } = useContext(UserContext);
   const { user, cdnAccess } = useContext(UserContext);
@@ -110,7 +118,7 @@ const DetailOverlay = ({
 
   const [activeSideComponent, setActiveSidecomponent] = useState("detail");
 
-  const { assets, setAssets, folders, needsFetch, updateDownloadingStatus, setDetailOverlayId, totalAssets } =
+  const { assets, setAssets, folders, needsFetch, updateDownloadingStatus, setDetailOverlayId, totalAssets, setOperationAssets } =
     useContext(AssetContext);
 
   const [sideOpen, setSideOpen] = useState(true);
@@ -122,7 +130,10 @@ const DetailOverlay = ({
   const [versionRealUrl, setVersionRealUrl] = useState(realUrl);
   const [versionThumbnailUrl, setVersionThumbnailUrl] = useState(thumbailUrl);
 
+  const [detailPosSize, setDetailPosSize] = useState({ x: 0, y: 0, width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight });
+  const [defaultSize, setDefaultSize] = useState({ width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight });
   const [notes, setNotes] = useState([])
+  const [sizeOfCrop, setSizeOfCrop] = useState({ width: defaultSize.width, height: defaultSize.height })
 
   // For resize and cropping
   const [downloadImageTypes, setDownloadImageTypes] = useState(
@@ -155,20 +166,23 @@ const DetailOverlay = ({
   const [height, setHeight] = useState<number>(currentAsset.dimensionHeight);
 
   const resetValues = () => {
+    const width = currentAsset.dimensionWidth;
+    const height = currentAsset.dimensionHeight;
+    // debugger
     setPreset({
       label: "None",
       value: "none",
-      width: currentAsset.dimensionWidth,
-      height: currentAsset.dimensionHeight,
+      width: width,
+      height: height,
     });
     setSize({
       label: "Original",
       value: "none",
-      width: currentAsset.dimensionWidth,
-      height: currentAsset.dimensionHeight,
+      width: width,
+      height: height,
     });
-    setWidth(currentAsset.dimensionWidth);
-    setHeight(currentAsset.dimensionHeight);
+    setWidth(width);
+    setHeight(height);
     setImageType(currentAsset.extension);
   };
 
@@ -181,25 +195,31 @@ const DetailOverlay = ({
         setPresetTypes(presetTypes.concat(data));
       } else {
         const { data } = await customFileSizeApi.getSizePresetsByGroup();
-
-        // @ts-ignore
-        setPresetTypes(presetTypes.concat(data));
+        if (data) {
+          // @ts-ignore
+          setPresetTypes(presetTypes.concat(data));
+        }
       }
     } catch (e) { }
   };
 
 
   const _setActiveCollection = () => {
+    // TODO: ? What is purpose of this ?
     if (activeFolder) {
       const folder = folders.find(folder => folder.id === activeFolder);
-      // if (folder.assets.length === 0 && assets && assets.length) {
+      if(folder){
+        // if (folder.assets.length === 0 && assets && assets.length) {
         folder.assets = [...assets];
-      // }
-      setActiveCollection(folder);
-      const assetIndx = assets.findIndex(item => item.asset && item.asset.id === asset.id) + 1
-      setAssetIndex(assetIndx);
+        // }
+        setActiveCollection(folder);
+        const assetIndx = assets.findIndex(item => item.asset && item.asset.id === asset.id) + 1
+        setAssetIndex(assetIndx);
+      }
     }
   }
+
+
 
   useEffect(() => {
     getCropResizeOptions();
@@ -209,7 +229,14 @@ const DetailOverlay = ({
       toggleSideMenu();
     }
     _setActiveCollection()
-  }, []);
+  }, [currentAsset]);
+
+  useEffect(()=>{
+    if(currentAsset.id !== asset.id){
+      setCurrentAsset(asset)
+    }
+
+  },[asset])
 
   // useEffect(() => {
   //   const modAssetIndex = assets.findIndex(assetItem => assetItem.asset.id === assetDetail?.id)
@@ -230,10 +257,14 @@ const DetailOverlay = ({
         setAssetDetail(asset);
       } else {
         const { data } = await assetApi.getById(asset.id);
-        setAssetDetail(data.asset);
 
-        setVersionRealUrl(data.realUrl);
-        setVersionThumbnailUrl(data.thumbailUrl);
+        if(data.asset.id !== assetDetail?.id){
+          setAssetDetail(data.asset);
+
+          setVersionRealUrl(data.realUrl);
+          setVersionThumbnailUrl(data.thumbailUrl);
+        }
+
       }
     } catch (err) {
       // console.log(err);
@@ -298,7 +329,6 @@ const DetailOverlay = ({
   const onSelectChange = (type, value) => {
     if (type === "preset") {
       setPreset(value);
-
       // Restore values
       if (value.value === "none") {
         // Set width, height as their original size
@@ -322,6 +352,15 @@ const DetailOverlay = ({
             height: currentAsset.dimensionHeight,
           },
         ]);
+
+        if (mode === 'crop') {
+          setSizeOfCrop({
+            width: width,
+            height: height
+          })
+        } else {
+          setDetailPosSize({ ...detailPosSize, width: defaultSize.width, height: defaultSize.height });
+        }
       } else {
         // Reset size value
         setSize(undefined);
@@ -332,10 +371,21 @@ const DetailOverlay = ({
     }
 
     if (type === "size") {
-
-      setWidth(value.width);
-      setHeight(value.height);
-
+      if (mode === 'crop') {
+        setSizeOfCrop({
+          width: value.width > detailPosSize.width ? detailPosSize.width : value.width,
+          height: value.height > detailPosSize.height ? detailPosSize.height : value.height
+        })
+      } else {
+        setWidth(value.width);
+        setHeight(value.height);
+        // set new rendering size in the <container></container>
+        setDetailPosSize({
+          ...detailPosSize,
+          width: value.width > defaultSize.width ? defaultSize.width : value.width,
+          height: value.height > defaultSize.height ? defaultSize.height : value.height
+        });
+      }
       // const {newW, newH} = calculateRenderSize(value.width, value.height);
       //
       // // calculate actual height/width with respect to display size
@@ -352,38 +402,71 @@ const DetailOverlay = ({
     }
   };
 
+  const calculateRenderSize = (newW, newH) => {
+    // calculate renderable height width based on provided value(preset size)
+    if (defaultSize.height > defaultSize.width) {
+      if (newH > defaultSize.height) {
+        newH = defaultSize.height;
+        newW = defaultSize.width;
+      } else {
+        newW = Math.round(newH * defaultSize.width / defaultSize.height);
+      }
+    } else {
+      if (newW > defaultSize.width) {
+        newH = defaultSize.height;
+        newW = defaultSize.width;
+      } else {
+        newH = Math.round(newW * defaultSize.height / defaultSize.width);
+      }
+    }
+    return { newH, newW };
+  }
+
   // On width, height input change
-  const onSizeInputChange = (name, value) => {
-    const originalRatio =
-      currentAsset.dimensionWidth / currentAsset.dimensionHeight;
+  const onSizeInputChange = (name, value, resizeOption) => {
+    const originalRatio = currentAsset.dimensionWidth / currentAsset.dimensionHeight;
+    let _width = width, _height = height;
+    if (resizeOption === '%') {
+      if (value > 100) { value = 100 }
+      value = name === 'width' ? Math.round(value * asset.dimensionWidth / 100) : Math.round(value * asset.dimensionHeight / 100)
+    }
 
     if (name === "width") {
       if (value) {
         if (value <= currentAsset.dimensionWidth) {
-          setWidth(value);
+          _width = value;
 
           if (mode === "resize") {
-            setHeight(Math.round(value / originalRatio));
+            _height = Math.round(value / originalRatio);
           }
         }
       } else {
-        setWidth(value);
+        _width = value;
       }
     }
 
     if (name === "height") {
       if (value) {
         if (value <= currentAsset.dimensionHeight) {
-          setHeight(value);
+          _height = value;
 
           if (mode === "resize") {
-            setWidth(Math.round(value * originalRatio));
+            _width = Math.round(value * originalRatio);
           }
         }
       } else {
-        setHeight(value);
+        _height = value;
       }
     }
+
+    const { newW, newH } = calculateRenderSize(_width, _height);
+
+    setWidth(_width);
+    setHeight(_height);
+
+
+    setDetailPosSize({ ...detailPosSize, width: newW, height: newH });
+
   };
 
   const lockCropping = () => {
@@ -425,7 +508,13 @@ const DetailOverlay = ({
     }
   }, [mode, currentAsset]);
 
+  useEffect(() => {
+    // setDetailPosSize(Object.assign({...detailPosSize}, {height, width}));
+  }, [width, height]);
+
   const downloadSelectedAssets = async (id) => {
+    const { shareJWT, code } = urlUtils.getQueryParameters()
+
     try {
       let payload = {
         assetIds: [id],
@@ -436,26 +525,44 @@ const DetailOverlay = ({
         estimateTime: 1,
       };
 
-      // Add sharePath property if user is at share collection page
-      if (sharePath) {
-        filters["sharePath"] = sharePath;
+      // Download files in shared collection or normal download (not share)
+      if((isShare && sharePath && !code) || (!isShare)){
+
+        // Add sharePath property if user is at share collection page
+        if (sharePath) {
+          filters["sharePath"] = sharePath;
+        }
+
+        // Show processing bar
+        updateDownloadingStatus("zipping", 0, totalDownloadingAssets);
+
+        let api: any = assetApi;
+
+        if (isShare) {
+          api = shareApi;
+        }
+
+        const { data } = await api.downloadAll(payload, filters);
+
+        // Download file to storage
+        fileDownload(data, "assets.zip");
+
+        updateDownloadingStatus("done", 0, 0);
+      }else{ // Download shared single asset
+        if(isShare && !sharePath && code){
+          // Show processing bar
+          updateDownloadingStatus("zipping", 0, totalDownloadingAssets);
+
+          const { data } = await assetApi.shareDownload(payload, {shareJWT, code});
+
+          // Download file to storage
+          fileDownload(data, "assets.zip");
+
+          updateDownloadingStatus("done", 0, 0);
+        }
+
       }
 
-      // Show processing bar
-      updateDownloadingStatus("zipping", 0, totalDownloadingAssets);
-
-      let api: any = assetApi;
-
-      if (isShare) {
-        api = shareApi;
-      }
-
-      const { data } = await api.downloadAll(payload, filters);
-
-      // Download file to storage
-      fileDownload(data, "assets.zip");
-
-      updateDownloadingStatus("done", 0, 0);
     } catch (e) {
       updateDownloadingStatus(
         "error",
@@ -486,7 +593,10 @@ const DetailOverlay = ({
 
   const updateList = (versionAssets, curAsset) => {
     versionAssets = setDisplayVersions(versionAssets);
-    setCurrentAsset(curAsset);
+    if(currentAsset.id !== curAsset.id){
+      setCurrentAsset(curAsset);
+    }
+
     setVersions(versionAssets);
     setVersionCount(versionAssets.length);
   };
@@ -495,7 +605,11 @@ const DetailOverlay = ({
     try {
       const { data } = await assetApi.getVersions(currentAsset.versionGroup);
       updateList(data.versions, data.currentAsset);
-      getDetail(data.currentAsset);
+
+      if(data.currentAsset.id !== currentAsset.id){
+        getDetail(data.currentAsset);
+      }
+
     } catch (err) {
       // console.log(err)
     }
@@ -551,9 +665,9 @@ const DetailOverlay = ({
       return result;
     };
 
-    const isTypeValid = checkValid(["image", "video"], assetDetail?.type);
+    const isTypeValid = checkValid(["image", "video", "pdf"], assetDetail?.type);
     const isExtensionValid = checkValid(
-      ["png", "jpg", "gif", "tif", "tiff", "webp", "svg", "mp4", "mov", "avi"],
+      ["png", "jpg", "gif", "tif", "tiff", "webp", "svg", "mp4", "mov", "avi", "pdf"],
       assetDetail?.extension
     );
     const isUserValid =
@@ -600,23 +714,23 @@ const DetailOverlay = ({
   const applyCrud = (action, note) => {
     switch (action) {
       case 'add':
-      setNotes([...notes, note])
-      break
+        setNotes([...notes, note])
+        break
 
       case 'edit':
-      const _notes = notes.map(_note => {
-        if (_note.id === note.id) {
-          _note.text = note.text
-        }
-        return _note
-      })
-      setNotes(_notes)
-      break;
+        const _notes = notes.map(_note => {
+          if (_note.id === note.id) {
+            _note.text = note.text
+          }
+          return _note
+        })
+        setNotes(_notes)
+        break;
 
       case 'delete':
-      const restNotes = notes.filter(_note => _note.id !== note.id)
-      setNotes(restNotes)
-      break
+        const restNotes = notes.filter(_note => _note.id !== note.id)
+        setNotes(restNotes)
+        break
     }
   }
 
@@ -628,60 +742,64 @@ const DetailOverlay = ({
       closeOverlay();
       setDetailOverlayId(assets[newIndx].asset.id)
       if (newIndx === (assets.length - 1)) {
-        console.log(`Load more`)
         loadMore()
       }
     }
   }
 
   const _closeOverlay = () => {
+    setOperationAssets([])
     closeOverlay(changedVersion ? currentAsset : undefined)
     setDetailOverlayId(undefined)
   }
 
 
-  // const resetImageSettings = (newWidth, newHeight) => {
-  //     const img = document.querySelector('.app-overlay img.asset-img') as HTMLImageElement;
-  //     // const draggable = document.querySelector('.app-overlay .react-draggable') as HTMLDivElement;
-  //     var positions = window.getComputedStyle(img).getPropertyValue('object-position').split(' ');
-  //     const pos = parseInt(positions[0]);
-  //     const cWidth = newWidth || img.width;
-  //     const cHeight = newHeight || img.height;
-  //     let nw = img.naturalWidth;
-  //     let nh = img.naturalHeight;
-  //     var oRatio = nw / nh,
-  //       cRatio = cWidth / cHeight;
-  //
-  //     let width, height;
-  //     if (oRatio > cRatio) {
-  //       width = cWidth;
-  //       height = cWidth / oRatio;
-  //     } else {
-  //       width = cHeight * oRatio;
-  //       height = cHeight;
-  //     }
-  //
-  //     width = Math.round(width);
-  //     height = Math.round(height);
-  //
-  //     setDetailPosSize(Object.assign({...detailPosSize}, {height, width}));
-  //     if (!newWidth && !newHeight) {
-  //       setDefaultSize({height, width});
-  //     }
-  // }
-  //
-  // const onResizeStop = (w, h, position={}) => {
-  //     w = parseInt(w)
-  //     h = parseInt(h)
-  //     setDetailPosSize(Object.assign({...detailPosSize}, {
-  //       width: w,
-  //       height: h,
-  //       ...position
-  //     }));
-  //
-  //     setWidth(w);
-  //     setHeight(h);
-  // }
+  const resetImageSettings = (newWidth, newHeight) => {
+      const img = document.querySelector('.app-overlay img.img-preview') as HTMLImageElement;
+      // const draggable = document.querySelector('.app-overlay .react-draggable') as HTMLDivElement;
+      // var positions = window.getComputedStyle(img).getPropertyValue('object-position').split(' ');
+      // const pos = parseInt(positions[0]);
+      const cWidth = newWidth || img.width;
+      const cHeight = newHeight || img.height;
+      let nw = img.naturalWidth;
+      let nh = img.naturalHeight;
+      var oRatio = nw / nh,
+        cRatio = cWidth / cHeight;
+
+    let width, height;
+    if (oRatio > cRatio) {
+      width = cWidth;
+      height = cWidth / oRatio;
+    } else {
+      width = cHeight * oRatio;
+      height = cHeight;
+    }
+
+      width = width > currentAsset.dimensionWidth ? currentAsset.dimensionWidth :  Math.round(width);
+      height = height > currentAsset.dimensionHeight ? currentAsset.dimensionHeight :  Math.round(height);
+
+    setDetailPosSize(Object.assign({ ...detailPosSize }, { height, width }));
+    if (!newWidth && !newHeight) {
+      setDefaultSize({ height, width });
+    }
+  }
+
+  const onResizeStop = (w, h, position = {}) => {
+    w = parseInt(w)
+    h = parseInt(h)
+    setDetailPosSize(Object.assign({ ...detailPosSize }, {
+      width: w,
+      height: h,
+      ...position
+    }));
+
+    setWidth(w);
+    setHeight(h);
+  }
+
+  const onChangeRelatedFiles = (fileAssociations) => {
+    setAssetDetail({...assetDetail, fileAssociations})
+  }
 
   return (
     <div className={`app-overlay ${styles.container}`}>
@@ -735,44 +853,67 @@ const DetailOverlay = ({
                   onClick={openShareAsset}
                 />
               )}
-              {mode === "detail" && (
+              {mode === "detail" && (isShare || hasPermission([ASSET_DOWNLOAD])) && (
+                <>
                 <Button
                   text={"Download"}
                   type={"button"}
                   className={styles["only-desktop-button"]}
                   styleType={"secondary"}
                   onClick={() => {
-                    if (currentAsset.extension !== 'gif' && currentAsset.type === "image" && isImageType(assetDetail.extension)) {
+                    if (currentAsset.extension !== 'gif' && currentAsset.extension !== 'tiff' && currentAsset.extension !== 'tif' && currentAsset.extension !== "svg" && currentAsset.extension !== "svg+xml" && currentAsset.type === "image" && isImageType(assetDetail.extension)) {
                       setMode("resize");
                       changeActiveSide("detail");
+                      resetImageSettings(undefined, undefined);
                     } else {
-                      // downloadSelectedAssets(currentAsset.id)
-                      manualDownloadAsset(currentAsset);
+                      downloadSelectedAssets(currentAsset.id)
+                      // if(currentAsset.size >= sizeToZipDownload){
+                      //   downloadSelectedAssets(currentAsset.id)
+                      // }else{
+                      //   manualDownloadAsset(currentAsset);
+                      // }
+
                     }
                   }}
                 />
+                </>
               )}
             </div>
           </div>
           <div className={styles["img-wrapper"]}>
             <div className={styles["notes-wrapper"]}>
-            {
-              notes.map((note, indx) => (
-                ((isShare && !note.internal) || (!isShare)) && <AssetNote key={indx.toString()}
-                  title={`Note ${indx+1}`}
-                  note={note.text}
-                />
-              ))
-            }
+              {
+                notes.map((note, indx) => (
+                  ((isShare && !note.internal) || (!isShare)) && <AssetNote key={indx.toString()}
+                    title={`Note ${indx + 1}`}
+                    note={note.text}
+                  />
+                ))
+              }
             </div>
             {assetDetail.type === "image" && (
               <>
-                {(mode === "detail" || mode === "resize") && (
-                  <AssetImg name={assetDetail.name} assetImg={versionRealUrl} />
+                {mode === "detail" && (
+
+                    <AssetImg  imgClass="img-preview" name={assetDetail.name} assetImg={(assetDetail.extension === "tiff" || assetDetail.extension === "tif" || assetDetail.extension === "svg" || assetDetail.extension === "svg+xml") ? versionThumbnailUrl :  versionRealUrl} />
                 )}
+                {mode === "resize" && (
+                  <Rnd position={{ x: detailPosSize.x, y: detailPosSize.y }}
+                    size={{ width: detailPosSize.width, height: detailPosSize.height }}
+                    className={`${styles["react-draggable"]}`} lockAspectRatio={true}
+                    // onDragStop={(e, d) => {
+                    //   setDetailPosSize(Object.assign({...detailPosSize}, { x: d.x, y: d.y}))
+                    // }}
+                    onResizeStop={(e, direction, ref, delta, position) => onResizeStop(ref.style.width, ref.style.height, position)}
+                  >
+                    <AssetImg name={assetDetail.name} assetImg={versionRealUrl} imgClass="img-preview"/>
+                  </Rnd>
+                )}
+
                 {mode === "crop" && (
                   <AssetCropImg
                     imageType={imageType}
+                    assetExtension={assetDetail.extension}
                     setWidth={setWidth}
                     setHeight={setHeight}
                     locked={lockCropping()}
@@ -780,7 +921,16 @@ const DetailOverlay = ({
                     assetImg={realUrl}
                     width={width}
                     height={height}
-                    originalHeight={currentAsset.dimensionHeight}
+                    sizeOfCrop={sizeOfCrop}
+                    setSizeOfCrop={setSizeOfCrop}
+                    detailPosSize={detailPosSize}
+                    associateFileId={currentAsset.id}
+                    onAddAssociate={(asset)=>{
+                      const detail = {...assetDetail}
+                      detail.fileAssociations.push(asset)
+
+                      setAssetDetail(detail)
+                    }}
                   />
                 )}
               </>
@@ -796,6 +946,7 @@ const DetailOverlay = ({
                 <AssetImg
                   name={assetDetail.name}
                   assetImg={versionThumbnailUrl}
+                  imgClass="img-preview"
                 />
               )}
             {assetDetail.type !== "image" &&
@@ -830,6 +981,14 @@ const DetailOverlay = ({
                 <span>{assetIndex} of {totalAssets} in {activeCollection?.name} collection</span>
               </div>
             }
+
+            {!isShare && <>
+              <AssetRelatedFIles outsideDetailOverlay={outsideDetailOverlay} closeOverlay={closeOverlay}  assets={assetDetail.fileAssociations || []} associateFileId={currentAsset.id} onChangeRelatedFiles={onChangeRelatedFiles} onAddRelatedFiles={(data)=>{
+                let updatedAssets = [...assetDetail.fileAssociations]
+                updatedAssets = updatedAssets.concat(data)
+                setAssetDetail({...assetDetail, fileAssociations: updatedAssets})
+              }}/>
+            </>}
           </div>
         </section>
       )}
@@ -859,15 +1018,31 @@ const DetailOverlay = ({
                   sizes={sizes}
                   sizeValue={size}
                   mode={mode}
-                  width={width}
-                  height={height}
+                  widthOriginal={width}
+                  heightOriginal={height}
                   onModeChange={(mode) => {
-                    resetValues();
+                    // resetValues();
                     setMode(mode);
+                    if (mode === 'crop') {
+                      setSizeOfCrop({ width: Math.round(width / 2), height: Math.round(height / 2) })
+                    }
                   }}
                   onSelectChange={onSelectChange}
                   onSizeInputChange={onSizeInputChange}
                   asset={assetDetail}
+                  onResetImageSize={() => {
+                    resetValues();
+                    setDetailPosSize({ ...detailPosSize, width: defaultSize.width, height: defaultSize.height });
+                  }}
+                  sizeOfCrop={sizeOfCrop}
+                  setSizeOfCrop={setSizeOfCrop}
+                  detailPosSize={detailPosSize}
+                  onAddAssociate={(asset)=>{
+                    const detail = {...assetDetail}
+                    detail.fileAssociations.push(asset)
+
+                    setAssetDetail(detail)
+                  }}
                 />
               )}
             </>
@@ -888,9 +1063,9 @@ const DetailOverlay = ({
 
           {activeSideComponent === "notes" && notes && (
             <AssetNotes
-            asset={asset}
-            notes={notes}
-            applyCrud={applyCrud} />
+              asset={asset}
+              notes={notes}
+              applyCrud={applyCrud} />
           )}
 
         </section>
@@ -950,7 +1125,7 @@ const DetailOverlay = ({
               }}
             />
           )}
-          {currentAsset.extension !== 'gif' && <IconClickable
+          {currentAsset.extension !== 'gif' && hasPermission([ASSET_DOWNLOAD]) && <IconClickable
             src={AssetOps.download}
             additionalClass={styles["menu-icon"]}
             onClick={() => {
@@ -961,6 +1136,7 @@ const DetailOverlay = ({
                   setMode("resize");
                 }
                 changeActiveSide("detail");
+                resetImageSettings(undefined, undefined);
               } else {
                 downloadSelectedAssets(currentAsset.id);
               }

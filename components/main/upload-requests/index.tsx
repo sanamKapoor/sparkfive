@@ -39,6 +39,7 @@ import approvalApi from '../../../server-api/upload-approvals'
 import assetApi from '../../../server-api/asset'
 import customFieldsApi from '../../../server-api/attribute'
 import campaignApi from '../../../server-api/campaign'
+import folderApi from '../../../server-api/folder'
 
 
 // Hooks
@@ -89,7 +90,7 @@ const UploadRequest = () => {
     const {
     } = useContext(AssetContext)
 
-    const [top, setTop] = useState('calc(55px + 3rem)')
+    const [top, setTop] = useState('calc(55px + 8rem)')
 
     const { setIsLoading } = useContext(LoadingContext);
 
@@ -134,6 +135,7 @@ const UploadRequest = () => {
     const [tempAssets, setTempAssets] = useState([])
     const [tempApprovals, setTempApprovals] = useState([])
     const [tempCampaigns, setTempCampaigns] = useState([])
+    const [tempFolders, setTempFolders] = useState([])
 
     const [filter, setFilter] = useState()
     const [approvalIndex, setApprovalIndex]  = useState()
@@ -148,6 +150,10 @@ const UploadRequest = () => {
     // Campaigns
     const [inputCampaigns, setInputCampaigns] = useState([])
     const [assetCampaigns, setCampaigns] = useState([])
+
+    // Folders
+    const [inputFolders, setInputFolders] = useState([])
+    const [assetFolders, setFolders] = useState([])
 
     const debouncedBatchName = useDebounce(batchName, 500);
 
@@ -220,6 +226,7 @@ const UploadRequest = () => {
         setApprovalIndex(undefined)
         setTempCustoms([])
         setTempCampaigns([])
+        setTempFolders([])
 
         if(refresh === true || needRefresh){
             fetchApprovals();
@@ -239,6 +246,9 @@ const UploadRequest = () => {
 
         // @ts-ignore
         setTempCampaigns( assets[index]?.asset?.campaigns || [])
+
+        // @ts-ignore
+        setTempFolders( assets[index]?.asset?.folders || [])
 
         // @ts-ignore
         setTempComments(assets[index]?.asset?.comments || "")
@@ -361,6 +371,7 @@ const UploadRequest = () => {
         let currentAssetTags =  [...assetTags]
         let currentAssetCampaigns =  [...assetCampaigns]
         let currentAssetCustomFields =  [...assetCustomFields]
+        let currentAssetFolders =  [...assetFolders]
 
         for(const { asset, isSelected } of assets){
             let tagPromises = []
@@ -368,10 +379,13 @@ const UploadRequest = () => {
 
             let campaignPromises = []
             let removeCampaignPromises = []
+            let removeFolderPromises = []
+            let folderPromises = []
 
             if(isSelected){
                 const newTags = _.differenceBy(currentAssetTags, asset?.tags || [])
                 const newCampaigns = _.differenceBy(currentAssetCampaigns, asset?.campaigns || [])
+                const newFolders = _.differenceBy(currentAssetFolders, asset?.folders || [])
 
                 // Online admin can add custom fields
                 if(isAdmin()){
@@ -417,6 +431,9 @@ const UploadRequest = () => {
                 // Save bulk by admin wont override any capaign, it will add extra campaigns
                 const removeCampaigns = [] //isAdmin() ? [] : _.differenceBy(asset?.campaigns || [], assetCampaigns)
 
+                // Save bulk by admin wont override any folders, it will add extra folders
+                const removeFolders = [] //isAdmin() ? [] : _.differenceBy(asset?.campaigns || [], assetCampaigns)
+
                 for( const tag of removeTags){
                     removeTagPromises.push(assetApi.removeTag(asset.id, tag.id))
                 }
@@ -461,6 +478,30 @@ const UploadRequest = () => {
                     }
                 }
 
+                // Only admin can modify folders
+                if(isAdmin()){
+                    for( const folder of removeFolders){
+                        removeFolderPromises.push(assetApi.removeFolder(asset.id, folder.id))
+                    }
+
+                    for( const folder of newFolders){
+                        // Old folder, dont need to create the new one
+                        if(folder.id){
+                            folderPromises.push(assetApi.addFolder(asset.id, folder))
+                        }else{ // Have to insert immediately here to prevent duplicate campaign created due to multi asset handling
+                            const rs = await assetApi.addFolder(asset.id, folder)
+                            // Update back to asset tags array for the next asset usage
+                            currentAssetFolders = currentAssetFolders.map((assetFolder)=>{
+                                if(assetFolder.name === folder.name){
+                                    assetFolder = rs.data
+                                }
+                                return assetFolder
+                            })
+                        }
+
+                    }
+                }
+
             }
 
             await Promise.all(tagPromises)
@@ -470,6 +511,12 @@ const UploadRequest = () => {
             if(isAdmin()){
                 await Promise.all(campaignPromises)
                 await Promise.all(removeCampaignPromises)
+            }
+
+            // Only admin can modify folder
+            if(isAdmin()){
+                await Promise.all(folderPromises)
+                await Promise.all(removeFolderPromises)
             }
 
         }
@@ -485,6 +532,9 @@ const UploadRequest = () => {
 
                     const newCampaigns = _.differenceBy(currentAssetCampaigns, asset.asset.campaigns || [])
                     asset.asset.campaigns = asset.asset.campaigns.concat(newCampaigns)
+
+                    const newFolders = _.differenceBy(currentAssetFolders, asset.asset.folders || [])
+                    asset.asset.folders = asset.asset.folders.concat(newFolders)
                 }else{
                     asset.asset.tags = currentAssetTags
                 }
@@ -575,6 +625,17 @@ const UploadRequest = () => {
             const { data } = await campaignApi.getCampaigns()
 
             setInputCampaigns(data)
+
+        } catch (err) {
+            // TODO: Maybe show error?
+        }
+    }
+
+    const getFoldersInputData = async () => {
+        try {
+            const { data } = await folderApi.getFoldersSimple()
+
+            setInputFolders(data)
 
         } catch (err) {
             // TODO: Maybe show error?
@@ -979,6 +1040,7 @@ const UploadRequest = () => {
         fetchApprovals();
         getTagsInputData();
         getCampaignsInputData();
+        getFoldersInputData();
         getCustomFieldsInputData();
     },[])
 
@@ -1033,7 +1095,7 @@ const UploadRequest = () => {
     },[inputCustomFields])
 
     const onChangeWidth = () => {
-        let remValue = '3rem'
+        let remValue = '7rem'
         if(window.innerWidth <= 900){
             remValue = '1rem + 1px'
         }
@@ -1244,6 +1306,8 @@ const UploadRequest = () => {
                                                         sharePath={""}
                                                         activeFolder={""}
                                                         showAssetOption={false}
+                                                        showViewButtonOnly={true}
+                                                        showSelectedAsset={true}
                                                         isShare={false}
                                                         type={""}
                                                         toggleSelected={() =>{
@@ -1360,6 +1424,37 @@ const UploadRequest = () => {
                                     ignorePermission={true}
                                 />
                             </div>
+
+                            {isAdmin() && <div className={detailPanelStyles['field-wrapper']} >
+                            <CreatableSelect
+                              title='Collections'
+                              addText='Add to Collections'
+                              onAddClick={() => setActiveDropdown('collections')}
+                              selectPlaceholder={'Enter a new collection or select an existing one'}
+                              avilableItems={inputFolders}
+                              setAvailableItems={setInputFolders}
+                              selectedItems={assetFolders}
+                              setSelectedItems={setFolders}
+                              onAddOperationFinished={(stateUpdate) => {
+                                  setActiveDropdown("")
+                              }}
+                              creatable={isAdmin()}
+                              onRemoveOperationFinished={async (index, stateUpdate, id) => {
+                              }}
+                              onOperationFailedSkipped={() => setActiveDropdown('')}
+                              isShare={false}
+                              asyncCreateFn={
+                                  (newItem)=>{
+                                      // (newItem) => assetApi.addCampaign(id, newItem)
+                                      return { data: newItem }
+                                  }
+                              }
+                              dropdownIsActive={activeDropdown === 'collections'}
+                              altColor='yellow'
+                              sortDisplayValue={true}
+                              ignorePermission={true}
+                            />
+                          </div>}
 
 
                             {
@@ -1601,6 +1696,49 @@ const UploadRequest = () => {
                                 ignorePermission={true}
                             />
                         </div>
+
+                        {isAdmin() && <div className={detailPanelStyles['field-wrapper']} >
+                          <CreatableSelect
+                            title='Collections'
+                            addText='Add to Collections'
+                            onAddClick={() => setActiveDropdown('collections')}
+                            selectPlaceholder={'Enter a new collection or select an existing one'}
+                            avilableItems={inputFolders}
+                            setAvailableItems={setInputFolders}
+                            selectedItems={tempFolders}
+                            setSelectedItems={setTempFolders}
+                            menuPosition={"fixed"}
+                            onAddOperationFinished={(stateUpdate) => {
+                                updateAssetState({
+                                    folders: { $set: stateUpdate }
+                                })
+                            }}
+                            creatable={isAdmin()}
+                            onRemoveOperationFinished={async (index, stateUpdate, id) => {
+                                await assetApi.removeFolder(assets[selectedAsset]?.asset.id, assetFolders[index].id)
+                                updateAssetState({
+                                    folders: { $set: stateUpdate }
+                                })
+                            }}
+                            onOperationFailedSkipped={() => setActiveDropdown('')}
+                            isShare={false}
+                            asyncCreateFn={
+                                (newItem)=>{
+                                    if(isAdmin()) { // Admin can edit inline, dont need to hit save button
+                                        setIsLoading(true)
+
+                                        return assetApi.addFolder(assets[selectedAsset]?.asset.id, newItem)
+                                    }else{
+                                        return { data: newItem }
+                                    }
+                                }
+                            }
+                            dropdownIsActive={activeDropdown === 'collections'}
+                            altColor='yellow'
+                            sortDisplayValue={true}
+                            ignorePermission={true}
+                          />
+                        </div>}
 
                         {
                             isAdmin() && <div className={detailPanelStyles['field-wrapper']} >

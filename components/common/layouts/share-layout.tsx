@@ -6,11 +6,11 @@ import AssetHeaderOps from "../asset/asset-header-ops";
 const ShareLayout = ({ children }) => {
 	return (
 		<>
-			<AssetContextProvider>
+			{/*<AssetContextProvider>*/}
 				{children}
 				<footer className={styles.footer}>
 				</footer>
-			</AssetContextProvider>
+			{/*</AssetContextProvider>*/}
 		</>
 	)
 }

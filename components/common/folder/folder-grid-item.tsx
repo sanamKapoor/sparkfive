@@ -3,7 +3,7 @@ import { Utilities, Assets } from "../../../assets";
 import { useContext, useState } from "react";
 import fileDownload from "js-file-download";
 import zipDownloadUtils from "../../../utils/download";
-import _ from 'lodash'
+import _ from "lodash";
 
 // Context
 import { AssetContext, FilterContext } from "../../../context";
@@ -18,6 +18,7 @@ import ConfirmModal from "../modals/confirm-modal";
 import folderApi from "../../../server-api/folder";
 import shareFolderApi from "../../../server-api/share-collection";
 import AssetIcon from "../asset/asset-icon";
+import React from "react";
 
 const FolderGridItem = ({
   id,
@@ -30,20 +31,50 @@ const FolderGridItem = ({
   isLoading = false,
   deleteFolder,
   shareAssets = (folder) => {},
+  changeThumbnail = (folder) => {},
+  deleteThumbnail = (folder) => {},
   copyShareLink = (folder) => {},
   toggleSelected,
   copyEnabled,
   sharePath = '',
-  isShare = false
+  isShare = false,
+  thumbnailPath,
+  thumbnailExtension,
+  thumbnails,
+  openFilter = false,
+  activeView,
 }) => {
   const { updateDownloadingStatus } = useContext(AssetContext);
+  let previews;
 
-  const previews = [1, 2, 3, 4].map((_, index) => ({
-    name: assets[index]?.name || "empty",
-    assetImg: assets[index]?.thumbailUrl || "",
-    type: assets[index]?.type || "empty",
-    extension: assets[index]?.extension,
-  }));
+  function GetSortOrder(prop) {
+    return function (a, b) {
+      if (a[prop] > b[prop]) {
+        return 1;
+      } else if (a[prop] < b[prop]) {
+        return -1;
+      }
+      return 0;
+    };
+  }
+
+  if (thumbnails && thumbnails.thumbnails) {
+    previews = thumbnails.thumbnails
+      .sort(GetSortOrder("index"))
+      .map((thumb: any, index) => ({
+        name: "thumbnail",
+        assetImg: thumb?.filePath || "",
+        type: thumb?.type || "thumbnail",
+        extension: thumb?.extension,
+      }));
+  } else {
+    previews = [1, 2, 3, 4].map((_, index) => ({
+      name: assets[index]?.name || "empty",
+      assetImg: assets[index]?.thumbailUrl || "",
+      type: assets[index]?.type || "empty",
+      extension: assets[index]?.extension,
+    }));
+  }
 
   const [deleteOpen, setDeleteOpen] = useState(false);
 
@@ -64,13 +95,13 @@ const FolderGridItem = ({
 
     let api = folderApi;
 
-    if(isShare){
-      api = shareFolderApi
+    if (isShare) {
+      api = shareFolderApi;
     }
 
     // Add sharePath property if user is at share collection page
     if (sharePath) {
-      filters['sharePath'] = sharePath
+      filters["sharePath"] = sharePath;
     }
 
     const { data } = await api.downloadFoldersAsZip(payload, filters);
@@ -83,17 +114,44 @@ const FolderGridItem = ({
 
   return (
     <div className={`${styles.container} ${isLoading && "loadable"}`}>
-      <div className={styles["image-wrapper"]}>
+      <div
+        className={
+          thumbnailPath || thumbnailExtension
+            ? `${styles.grid_border} ${openFilter ? styles["filter_open"] : ""}`
+            : `${styles["image-wrapper"]} ${
+                openFilter ? styles["filter_open"] : ""
+              }`
+        }
+      >
         <>
-          {previews.map((preview, index) => (
-            <div className={styles["sub-image-wrapper"]} key={index.toString()}>
-              {preview.assetImg || preview.name === "empty" ? (
-                <AssetImg {...preview} />
-              ) : (
-                <AssetIcon extension={preview.extension} isCollection={true} />
-              )}
-            </div>
-          ))}
+          {thumbnailPath && (
+            <AssetImg
+              assetImg={thumbnailPath}
+              isCollection={false}
+              imgClass="maxHeight"
+              style={{ maxWidth: "330px !important" }}
+            />
+          )}
+          {thumbnailExtension && !thumbnailPath && (
+            <AssetIcon extension={thumbnailExtension} imgClass="maxHeight" />
+          )}
+          {!thumbnailPath &&
+            !thumbnailExtension &&
+            previews.map((preview, index) => (
+              <div
+                className={styles["sub-image-wrapper"]}
+                key={index.toString()}
+              >
+                {preview.assetImg || preview.name === "empty" ? (
+                  <AssetImg {...preview} />
+                ) : (
+                  <AssetIcon
+                    extension={preview.extension}
+                    isCollection={true}
+                  />
+                )}
+              </div>
+            ))}
           <div className={styles["image-button-wrapper"]}>
             <Button
               styleType={"primary"}
@@ -128,8 +186,14 @@ const FolderGridItem = ({
             downloadFoldercontents={downloadFoldercontents}
             setDeleteOpen={setDeleteOpen}
             shareAssets={shareAssets}
+            changeThumbnail={changeThumbnail}
+            deleteThumbnail={deleteThumbnail}
             copyShareLink={copyShareLink}
             copyEnabled={copyEnabled}
+            thumbnailPath={thumbnailPath || thumbnailExtension}
+            assetsData={assets}
+            thumbnails={thumbnails}
+            activeView={activeView}
           />
         </div>
       </div>
