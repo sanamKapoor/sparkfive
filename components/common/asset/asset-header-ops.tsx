@@ -296,7 +296,6 @@ const AssetHeaderOps = ({
 			{((!isFolder && !isShare) && !deletedAssets) && <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`delete${iconColor}`]} tooltipText={'Delete'} tooltipId={'Delete'} onClick={() => setActiveOperation('update')} />}
 			{(isShare || hasPermission([ASSET_DOWNLOAD]) && !deletedAssets) && <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`download${iconColor}`]} tooltipId={'Download'} tooltipText={'Download'} onClick={downloadSelectedAssets} />}
 			{((!isFolder && !isShare) && !deletedAssets) && <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`move${iconColor}`]} tooltipText={'Add to Collection'} tooltipId={'Move'} onClick={() => setActiveOperation('move')} />}
-			{((!isFolder && !isShare) && !deletedAssets) && <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`moveReplace${iconColor}`]} tooltipText={'Move'} tooltipId={'MoveReplace'} onClick={() => setActiveOperation('moveReplace')} />}
 			{((!isFolder && !isShare) && !deletedAssets) &&
 				<div className={styles['share-wrapper']} ref={contentRef}>
 					<IconClickable
@@ -352,6 +351,7 @@ const AssetHeaderOps = ({
 					{((!isFolder && !isShare) && !deletedAssets) && <IconClickable place={'bottom'} additionalClass={`${styles['action-button']} m-l-0`} src={AssetOps.generateThumbnail} tooltipText={'Generate thumbnail'} onClick={() => setActiveOperation('generate_thumbnails')} />}
 					{((!isFolder && !isShare) && !deletedAssets) && <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`archive${iconColor}`]} tooltipText={isUnarchive ? 'Unarchive' : 'Archive'} tooltipId={isUnarchive ? 'Unarchive' : 'Archive'} onClick={() => setActiveOperation(isUnarchive ? 'unarchive' : 'archive')} />}
 					{((!isFolder && !isShare) && !deletedAssets) && <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`copy${iconColor}`]} tooltipText={'Copy'} tooltipId={'Copy'} onClick={() => setActiveOperation('copy')} />}
+					{((!isFolder && !isShare) && !deletedAssets) && <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`moveReplace${iconColor}`]} tooltipText={'Move'} tooltipId={'MoveReplace'} onClick={() => setActiveOperation('moveReplace')} />}
 					{((!isFolder && !isShare) && !deletedAssets) && (
 						<>
 							<IconClickable place={'bottom'} additionalClass={styles['action-button']} src={isSearch ? AssetOps.associateBlue : AssetOps.associate} tooltipText={'Associate'} tooltipId={'Associate'} onClick={() => setShowAssociateModalOpen(true)} />
