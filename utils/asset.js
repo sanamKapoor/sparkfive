@@ -264,6 +264,7 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
             if (fileModifiedEndDate) {
                 const d = new Date(fileModifiedEndDate)
                 const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate())
+                newDate.setDate(newDate.getDate() + 1)
 
                 filters.fileModifiedEndDate = new Date(newDate.toUTCString()).toISOString()
             }
@@ -285,7 +286,7 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = '',
         if (fileModifiedEndDate) {
             const d = new Date(fileModifiedEndDate)
             const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate())
-
+            newDate.setDate(newDate.getDate() + 1)
             filters.fileModifiedEndDate = new Date(newDate.toUTCString()).toISOString()
         }
     }
