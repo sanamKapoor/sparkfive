@@ -26,11 +26,18 @@ let ProvidersAuth = ({ inviteCode = '', priceData }) => {
     <div className={styles.container}>
       <div>
         <ProviderAuthButton
+          provider='sso'
+          icon=''
+          onClick={() => initiateOAuth('okta')}
+        />
+      </div>
+      {/* <div>
+        <ProviderAuthButton
           provider='google'
           icon={LoginImg.google}
           onClick={() => initiateOAuth('google')}
         />
-      </div>
+      </div> */}
     </div>
   )
 }
