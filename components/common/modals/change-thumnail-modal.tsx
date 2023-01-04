@@ -489,6 +489,7 @@ const ChangeThumbnail = ({
             thumbnailPath: imagePath,
             thumbnail_extension: files[2],
             thumbnails: { thumbnails: null },
+            thumbnailStorageId: files[3]
           }
         );
         setImagePath(null);
@@ -533,10 +534,11 @@ const ChangeThumbnail = ({
           filePath: urlsForFourThumbView[ele].split(",")[1],
           extension: urlsForFourThumbView[ele].split(",")[2],
           index: ele,
+          storageId: urlsForFourThumbView[ele].split(",")[3],
         }));
-
         let response;
         if (Object.keys(extentionsForFourThumbView).length) {
+          
           let ext: any = [];
           Object.keys(extentionsForFourThumbView).forEach((ele) => {
             if (extentionsForFourThumbView[ele]) {
@@ -689,7 +691,7 @@ const ChangeThumbnail = ({
               {!imagePreview && (
                 <Autocomplete
                   getItemValue={(item) =>
-                    [item.name, item.value, item.extension].join(",")
+                    [item.name, item.value, item.extension, item.storageId].join(",")
                   }
                   items={
                     searching
@@ -700,6 +702,7 @@ const ChangeThumbnail = ({
                           name: ele.asset.name,
                           value: ele.thumbailUrl,
                           extension: ele.asset.extension,
+                          storageId: ele.asset.storageId
                         }))
                   }
                   value={value}
@@ -872,7 +875,7 @@ const ChangeThumbnail = ({
                       <div style={{ display: "inline-flex" }}>
                         <Autocomplete
                           getItemValue={(item) =>
-                            [item.name, item.value, item.extension].join(",")
+                            [item.name, item.value, item.extension, item.storageId].join(",")
                           }
                           items={
                             searchingForFourThumbView &&
@@ -889,6 +892,7 @@ const ChangeThumbnail = ({
                                     name: ele.asset.name,
                                     value: ele.thumbailUrl,
                                     extension: ele.asset.extension,
+                                    storageId: ele.asset.storageId
                                   })
                                 )
                           }
