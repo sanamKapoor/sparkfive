@@ -281,14 +281,14 @@ export default ({ getAssets }) => {
       );
       closeModalAndClearOpAsset();
       toastUtils.success("Assets moved successfully");
-      if (!activeFolder && activePageMode === "library") {
-        setAssets(update(assets, { $unshift: data }));
-      }
+      // if (!activeFolder && activePageMode === "library") {
+      //   setAssets(update(assets, { $unshift: data }));
+      // }
     } catch (err) {
       console.log(err);
       if (err.response?.status === 402)
         toastUtils.error(err.response.data.message);
-      else toastUtils.error("Could not copy assets, please try again later.");
+      else toastUtils.error("Could not move assets, please try again later.");
     }
   };
 
