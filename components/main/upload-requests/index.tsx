@@ -90,7 +90,7 @@ const UploadRequest = () => {
     const {
     } = useContext(AssetContext)
 
-    const [top, setTop] = useState('calc(55px + 3rem)')
+    const [top, setTop] = useState('calc(55px + 8rem)')
 
     const { setIsLoading } = useContext(LoadingContext);
 
@@ -1095,7 +1095,7 @@ const UploadRequest = () => {
     },[inputCustomFields])
 
     const onChangeWidth = () => {
-        let remValue = '3rem'
+        let remValue = '7rem'
         if(window.innerWidth <= 900){
             remValue = '1rem + 1px'
         }
@@ -1306,6 +1306,8 @@ const UploadRequest = () => {
                                                         sharePath={""}
                                                         activeFolder={""}
                                                         showAssetOption={false}
+                                                        showViewButtonOnly={true}
+                                                        showSelectedAsset={true}
                                                         isShare={false}
                                                         type={""}
                                                         toggleSelected={() =>{

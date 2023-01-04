@@ -17,7 +17,7 @@ interface Props{
     additionalClass?: string;
     tooltipId?: string;
     tooltipText?: string;
-    place: string;
+    place?: string;
 }
 
 export default IconClickable

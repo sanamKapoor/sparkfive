@@ -282,3 +282,26 @@ ul {
 .ReactCrop{
   max-height: 100%;
 }
+
+input[role="combobox"] {
+  width: 358px;
+  margin: 0px 10px 0px 0px;
+  min-height: 48px;
+  padding: 8px 12px;
+  border-radius: 5px;
+  border: 1px solid #dedad4;
+  background-color: var(--color-sec-ivory);
+  color: var(--color-prim-navy);
+}
+
+@media screen and (max-width: 500px) {
+  input[role="combobox"] {
+    width: 100% !important;
+  }
+}
+
+@media screen and (max-width: 717px) {
+  input[role="combobox"] {
+    width: 50%;
+  }
+}

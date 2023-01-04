@@ -98,6 +98,10 @@ Container for modifying campaigns
   margin-bottom: 10px;
 }
 
+.picker-dialog{
+  z-index: 99999 !important;
+}
+
 @media screen and (max-width: 1350px) {
   .item-detail-cont {
     width: 100%;

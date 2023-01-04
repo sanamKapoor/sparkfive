@@ -77,3 +77,33 @@
   border: 1px solid #DEDAD4;
   border-radius: 4px;
 }
+
+.less-icons-button {
+  color: var(--color-sec-lightblue);
+  font-size: 12px;
+  cursor: pointer;
+  margin-right: 25px;
+}
+
+.search-less-icons-button {
+  color: #08135E;
+  font-size: 12px;
+  cursor: pointer;
+  margin-right: 25px;
+  margin-left: 14px;
+}
+
+.less-icons-button:hover {
+  text-decoration: underline;
+}
+
+@media screen and (max-width: 625px) {
+
+  .deselect-button {
+    margin-top: 24px;
+  }
+
+  .less-icons-button {
+    margin-top: 24px;
+  }
+}
