@@ -21,7 +21,19 @@ export default function useSortedAssets(assets): [any[], string, any] {
             setSortedAssets(assets)
             return
         }
-        const newSortedAssets = [...assets]
+        const newSortedAssets = [...assets].map((item)=>{
+            // If this is placeholder, make it as the final items
+            if(item.asset.name === "placeholder"){
+                item.asset.name = "z";
+                item.asset.type = "z";
+                item.asset.extension = "z";
+                item.asset.size = 0;
+                item.asset.createdAt = new Date("1977-01-01");
+                item.asset.deletedAt = new Date("1977-01-01");
+            }
+
+            return item
+        })
         switch (currentSortAttributeType) {
             case 'asset.name':
                 newSortedAssets.sort((a, b) => a.asset.name.localeCompare(b.asset.name) * direction)
