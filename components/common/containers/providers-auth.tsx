@@ -28,7 +28,7 @@ let ProvidersAuth = ({ inviteCode = '', priceData }) => {
         <ProviderAuthButton
           provider='sso'
           icon=''
-          onClick={() => initiateOAuth('okta')}
+          onClick={() => initiateOAuth('oauth')}
         />
       </div>
       {/* <div>
