@@ -8,7 +8,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 // Components
 import Button from "../buttons/button";
 import React from "react";
-import { LoadingContext, AssetContext } from "../../../context";
+import { LoadingContext, AssetContext, FilterContext } from "../../../context";
 import { AssetOps, Utilities } from "../../../assets";
 import Autocomplete from "react-autocomplete";
 import AssetIcon from "../asset/asset-icon";
@@ -86,6 +86,7 @@ const ChangeThumbnail = ({
   const [isImageForFourThumbView, setIsImageForFourThumbView] = useState({});
   const { setIsLoading } = useContext(LoadingContext);
   const { setFolders } = useContext(AssetContext);
+  const { activeSortFilter } = useContext(FilterContext)
 
   useEffect(() => {
     const cols: any = document.getElementsByTagName("html");
@@ -464,8 +465,8 @@ const ChangeThumbnail = ({
   const getFolders = async () => {
     let query = {
       page: 1,
-      sortField: "createdAt",
-      sortOrder: "desc",
+      sortField: activeSortFilter.sort?.field || "createdAt",
+      sortOrder: activeSortFilter.sort?.order || "desc",
     };
     const { data } = await folderApi.getFolders(query);
     setFolders(data, true, true);
@@ -538,7 +539,7 @@ const ChangeThumbnail = ({
         }));
         let response;
         if (Object.keys(extentionsForFourThumbView).length) {
-          
+
           let ext: any = [];
           Object.keys(extentionsForFourThumbView).forEach((ele) => {
             if (extentionsForFourThumbView[ele]) {
