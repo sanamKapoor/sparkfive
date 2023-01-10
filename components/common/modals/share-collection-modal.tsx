@@ -14,6 +14,7 @@ import TextArea from '../../common/inputs/text-area'
 import IconClickable from '../../common/buttons/icon-clickable'
 import { AssetOps } from '../../../assets'
 import Button from "../buttons/button";
+import ShareIconFilesSearch from "../asset/share-icon-files-search";
 
 import toastUtils from '../../../utils/toast'
 import { Utilities } from '../../../assets'
@@ -26,7 +27,7 @@ import Spinner from "../spinners/spinner";
 import dateStyles from '../filter/date-uploaded.module.css'
 
 // Contexts
-import { LoadingContext } from '../../../context'
+import { LoadingContext, UserContext } from '../../../context'
 
 const getDayToCurrentDate = (day: number = 1) => {
 	return new Date(moment()
@@ -38,6 +39,7 @@ const FORMAT = 'MM/dd/yyyy';
 
 const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, title = '', getShareLink = (name) => {}, currentShareLink = undefined  }) => {
 	const { setIsLoading } = useContext(LoadingContext)
+	const { user } = useContext(UserContext);
 
 	const [recipients, setRecipients] = useState('')
 	const [password, setPassword] = useState('')
@@ -56,6 +58,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 	const [sharable, setSharable] = useState(false)
 	const [shareId, setShareId] = useState("")
 	const [currentName, setCurrentName] = useState("") // To decide user can copy link or not
+	const [logo, setLogo] = useState("")
 
 	const [firstInit, setFirstInit] = useState(false)
 	// const [name, setName]
@@ -72,6 +75,10 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 	// 	sharable,
 	// 	status,
 	// 	shareId
+
+	const isAdmin = () => {
+		return user?.role?.id === "admin" || user?.role?.id === "super_admin"
+	}
 
 	const closemoveModal = () => {
 		setRecipients('')
@@ -92,6 +99,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 		setCurrentName("")
 		setFirstInit(false)
 		setLoading(true)
+		setLogo("")
 		closeModal()
 	}
 
@@ -130,6 +138,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 				setBasic(!data.currentSharedLinks.team.advancedCollectionShareLink) // default is true
 				setMessage(data.currentSharedLinks.message)
 				setSharable(data.currentSharedLinks.sharable !== undefined ? data.currentSharedLinks.sharable : false) // default is false
+				setLogo(data.currentSharedLinks.logo)
 
 				if(showInternalLoading){
 					setLoading(false)
@@ -189,6 +198,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 		setBasic(!data.team?.advancedCollectionShareLink) // default is true
 		setMessage(data.message)
 		setSharable(data.sharable)
+		setLogo(data.logo)
 
 		setFirstInit(true)
 
@@ -212,7 +222,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 	}
 
 	// Save changes
-	const saveChanges = async (field = "", isPublicValue = undefined, expiredValue = undefined, expiredPeriodValue = undefined, expiredAtValue = undefined, sharableValue = undefined) => {
+	const saveChanges = async (field = "", isPublicValue = undefined, expiredValue = undefined, expiredPeriodValue = undefined, expiredAtValue = undefined, sharableValue = undefined, logo = {}) => {
 		setIsLoading(true);
 
 		// Link is not created yet due to lacking name, saving name then getting url back
@@ -234,7 +244,8 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 					expiredAt: expiredAtValue === undefined ? expiredAt : expiredAtValue,
 					sharable: sharableValue === undefined ? sharable : sharableValue,
 					shareId,
-					type: "folder"
+					type: "folder",
+					logoId: logo?.id || ""
 				},
 				false,
 				false
@@ -245,6 +256,8 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 					setCurrentName(data.name)
 				}
 			}
+
+			setLogo(data?.logo)
 
 			if(isUndefined(field) &&
 				isUndefined(isPublicValue) &&
@@ -300,6 +313,11 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 		setExpiredAt(value)
 		saveChanges("", undefined, undefined, undefined, value)
 	}
+
+	const changeLogo = (value) => {
+		saveChanges("", undefined, undefined, undefined, undefined, undefined, value)
+	}
+
 
 	useEffect(()=>{
 		if(modalIsOpen){
@@ -550,7 +568,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 					</div>
 				</div>}
 
-				<div className={`${styles['input-wrapper']} ${sharable ? "" : "m-b-6rem"}`} >
+				<div className={`${styles['input-wrapper']} ${(sharable || isAdmin()) ? "" : "m-b-6rem"}`} >
 					<div className={`${styles.title}`}>Share from Sparkfive</div>
 					<div className={styles['field-content']}>
 						<div className={styles['field-radio-wrapper']}>
@@ -585,6 +603,12 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 						/>
 					</div>
 				</div>}
+
+			{isAdmin() && <div className={`${styles['input-wrapper']} ${sharable ? "m-b-6rem" : "m-b-6rem"}`} >
+					<div className={`${styles.title}`}>Find Logo via Filename</div>
+					<ShareIconFilesSearch onSelect={changeLogo} logo={logo}/>
+				</div>
+			}
 
 
 			</>}
