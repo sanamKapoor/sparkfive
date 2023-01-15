@@ -1,6 +1,7 @@
 const EventBus = {
   Event: {
     SAVE_CROP_RELATED_FILE: "SAVE_CROP_RELATED_FILE",
+    DESTROY_CROP_EVENT: "DESTROY_CROP_EVENT",
   },
 
   on(event: any, callback: any) {

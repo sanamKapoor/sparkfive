@@ -65,3 +65,9 @@
     width: 100%;
     height: auto;
 }
+
+.thumbnail-image{
+    width: 100%;
+    max-width: 94px;
+    height: auto;
+}

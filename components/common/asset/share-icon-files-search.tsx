@@ -27,6 +27,7 @@ export default function ShareIconFilesSearch({ onSelect = (asset) => {}, logo = 
             const queryParams = {
                 term: value,
                 page: 1,
+                onlyLogo: 1
             };
             try {
                 setShowList(true);
@@ -118,7 +119,7 @@ export default function ShareIconFilesSearch({ onSelect = (asset) => {}, logo = 
 
         <div className={"row m-t-30"}>
             <div className={"col-25"}>
-                <img src={logo?.thumbailUrl || team?.workspaceIcon} className={"w-100"}/>
+                <img src={logo?.thumbailUrl || team?.workspaceIcon} className={styles["thumbnail-image"]}/>
             </div>
             <div className={"col-75"}>
                 <div>Image must be minimum 300x200px</div>
