@@ -27,6 +27,7 @@ export default function ShareIconFilesSearch({ onSelect = (asset) => {}, logo = 
             const queryParams = {
                 term: value,
                 page: 1,
+                onlyLogo: 1
             };
             try {
                 setShowList(true);
