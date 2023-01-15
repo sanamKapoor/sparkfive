@@ -2,7 +2,7 @@ import styles from "./detail-overlay.module.css";
 import { Utilities, AssetOps } from "../../../assets";
 import { saveAs } from "file-saver";
 import { Rnd } from 'react-rnd';
-import { useState, useEffect, useContext } from "react";
+import {useState, useEffect, useContext, useRef} from "react";
 import assetApi from "../../../server-api/asset";
 import shareApi from "../../../server-api/share-collection";
 import customFileSizeApi from "../../../server-api/size";
@@ -42,6 +42,7 @@ import AssetNote from './asset-note';
 import AssetRelatedFIles from './asset-related-files';
 
 import { sizeToZipDownload } from "../../../constants/download";
+import EventBus from "../../../utils/event-bus";
 
 const getDefaultDownloadImageType = (extension) => {
   const defaultDownloadImageTypes = [
@@ -134,6 +135,9 @@ const DetailOverlay = ({
   const [defaultSize, setDefaultSize] = useState({ width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight });
   const [notes, setNotes] = useState([])
   const [sizeOfCrop, setSizeOfCrop] = useState({ width: defaultSize.width, height: defaultSize.height })
+
+  const renameValue = useRef("")
+  const setRenameValue = (value) => {renameValue.current = value}
 
   // For resize and cropping
   const [downloadImageTypes, setDownloadImageTypes] = useState(
@@ -931,6 +935,7 @@ const DetailOverlay = ({
 
                       setAssetDetail(detail)
                     }}
+                    renameValue={renameValue}
                   />
                 )}
               </>
@@ -1043,6 +1048,7 @@ const DetailOverlay = ({
 
                     setAssetDetail(detail)
                   }}
+                  setRenameData={setRenameValue}
                 />
               )}
             </>
