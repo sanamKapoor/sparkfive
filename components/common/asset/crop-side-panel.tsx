@@ -45,7 +45,8 @@ const CropSidePanel = ({ asset,
     sizeOfCrop,
     setSizeOfCrop,
     detailPosSize,
-    onAddAssociate = (data) => {}
+    onAddAssociate = (data) => {},
+    setRenameData = (data) => {}
 }) => {
 
     const { updateDownloadingStatus } = useContext(AssetContext)
@@ -448,8 +449,9 @@ const CropSidePanel = ({ asset,
                     closeModal={() => setRelatedModalOpen(false)}
                     confirmAction={(data) => {
                         if (mode === 'crop') {
-                            EventBus.dispatch(EventBus.Event.SAVE_CROP_RELATED_FILE, { renameValue: data})
-                            // document.getElementById('associate-crop-image').click()
+                            setRenameData(data)
+                            // EventBus.dispatch(EventBus.Event.SAVE_CROP_RELATED_FILE, { renameValue: data})
+                            document.getElementById('associate-crop-image').click()
                         } else {
                             saveResizedImageAsAssociate('resized', data);
                             // downloadImage('resized')

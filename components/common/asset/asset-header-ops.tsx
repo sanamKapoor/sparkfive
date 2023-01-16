@@ -382,11 +382,14 @@ const AssetHeaderOps = ({
 			{deletedAssets && <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`move${iconColor}`]} tooltipText={'Recover Asset'} tooltipId={'Recover'} onClick={() => setActiveOperation('recover')} />}
 			{deletedAssets && <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`delete${iconColor}`]} tooltipText={'Delete'} tooltipId={'Delete'} onClick={() => setActiveOperation('delete')} />}
 
-			{showMoreActions ? (
-				<span className={isSearch ? styles['search-less-icons-button'] : styles['less-icons-button']} onClick={() => setShowMoreActions(false)}>Less Icons</span>
-			) : (
-				<IconClickable place={'bottom'} additionalClass={`${styles['action-button']} m-l-0`} src={isSearch  ? Utilities.more :  Utilities.moreWhite} tooltipText={'More'} tooltipId={'More'} onClick={() => setShowMoreActions(true)} />
-			)}
+			{!isFolder && <>
+				{showMoreActions ? (
+					<span className={isSearch ? styles['search-less-icons-button'] : styles['less-icons-button']} onClick={() => setShowMoreActions(false)}>Less Icons</span>
+				) : (
+					<IconClickable place={'bottom'} additionalClass={`${styles['action-button']} m-l-0`} src={isSearch  ? Utilities.more :  Utilities.moreWhite} tooltipText={'More'} tooltipId={'More'} onClick={() => setShowMoreActions(true)} />
+				)}
+			</>}
+
 
 			{!deselectHidden && <Button className={styles['deselect-button']} text={`Deselect All (${!isFolder ? (totalSelectAssets) : selectedFolders.length})`} type='button' styleType='primary' onClick={deselectAll} />}
 		</>
