@@ -25,11 +25,7 @@ let ProvidersAuth = ({ inviteCode = '', priceData }) => {
   return (
     <div className={styles.container}>
       <div>
-        <ProviderAuthButton
-          provider='sso'
-          icon=''
-          onClick={() => initiateOAuth('oauth')}
-        />
+        <a className={styles.ssolink} href='#' onClick={() => initiateOAuth('oauth')}>or login with SSO</a>
       </div>
       {/* <div>
         <ProviderAuthButton
