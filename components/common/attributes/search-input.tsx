@@ -30,7 +30,7 @@ const Search = (props) => {
             props.onSubmit(term)
         }}>
             <div className={`${styles['input-container']} ${props.inputContainerStyle || ""}`}>
-                <img src={Utilities.search} />
+                {!props?.nonIcon && <img src={Utilities.search} />}
                 <input
                     {...props}
                     onChange={(e) => {
