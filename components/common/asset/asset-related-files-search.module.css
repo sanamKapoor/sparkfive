@@ -13,10 +13,19 @@
     padding: 8px 0;
     overflow-y: scroll;
     max-height: 200px;
+    z-index: 1;
 }
 
 .input-container{
     margin-right: 0;
+}
+
+.search-input-container{
+    margin-right: 0;
+}
+
+.search-input-container input{
+    padding-left: 16px;
 }
 
 .search-input{
@@ -54,5 +63,11 @@
 
 .search-item-thumbnail img{
     width: 100%;
+    height: auto;
+}
+
+.thumbnail-image{
+    width: 100%;
+    max-width: 94px;
     height: auto;
 }
