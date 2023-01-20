@@ -1,6 +1,6 @@
 import { useEffect, useContext } from 'react'
 import Router from 'next/router'
-import { UserContext } from '../context'
+import { UserContext, LoadingContext } from '../context'
 import authApi from '../server-api/auth'
 import cookiesUtil from '../utils/cookies'
 import urlUtils from '../utils/url'
@@ -13,6 +13,7 @@ import Spinner from '../components/common/spinners/spinner'
 const OauthCbPage = () => {
 
   const { afterAuth } = useContext(UserContext)
+  const { setIsLoading } = useContext(LoadingContext)
   useEffect(() => {
     // TODO: Include state string verification
     const { code } = urlUtils.getQueryParameters()
@@ -24,6 +25,7 @@ const OauthCbPage = () => {
     const cookieInviteCode = cookiesUtil.get('inviteCode')
     const signupPrice = cookiesUtil.get('signupPrice')
     try {
+      setIsLoading(true)
       let inviteCode
       // Check if inviteCode is valid
       if (cookieInviteCode && cookieInviteCode !== 'undefined') {
@@ -40,6 +42,7 @@ const OauthCbPage = () => {
         Router.replace('/login')
       }
     } finally {
+      setIsLoading(false)
       cookiesUtil.remove('inviteCode')
       cookiesUtil.remove('signupPrice')
     }
