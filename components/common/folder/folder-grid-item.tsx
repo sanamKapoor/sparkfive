@@ -1,6 +1,6 @@
 import styles from "./folder-grid-item.module.css";
 import { Utilities, Assets } from "../../../assets";
-import { useContext, useState } from "react";
+import { FocusEventHandler, useContext, useState } from "react";
 import fileDownload from "js-file-download";
 import zipDownloadUtils from "../../../utils/download";
 import _ from "lodash";
@@ -36,15 +36,19 @@ const FolderGridItem = ({
   copyShareLink = (folder) => {},
   toggleSelected,
   copyEnabled,
-  sharePath = '',
+  sharePath = "",
   isShare = false,
   thumbnailPath,
   thumbnailExtension,
   thumbnails,
   openFilter = false,
   activeView,
+  isThumbnailNameEditable = false,
 }) => {
   const { updateDownloadingStatus } = useContext(AssetContext);
+
+  const [thumbnailName, setThumbnailName] = useState(name);
+
   let previews;
 
   function GetSortOrder(prop) {
@@ -110,6 +114,17 @@ const FolderGridItem = ({
     fileDownload(data, "assets.zip");
 
     updateDownloadingStatus("done", 0, 0);
+  };
+
+  const updateThumbnailName = async (
+    e: FocusEventHandler<HTMLInputElement>
+  ) => {
+    //fire api only if name is changed
+    if (name.toLowerCase() !== thumbnailName) {
+      await await folderApi.updateFolder(id, {
+        name: thumbnailName,
+      });
+    }
   };
 
   return (
@@ -178,7 +193,15 @@ const FolderGridItem = ({
         </>
       </div>
       <div className={styles.info}>
-        <div className="normal-text">{name}</div>
+        {isThumbnailNameEditable ? (
+          <input
+            value={thumbnailName}
+            onChange={(e) => setThumbnailName(e.target.value)}
+            onBlur={updateThumbnailName}
+          />
+        ) : (
+          <div className="normal-text">{name}</div>
+        )}
         <div className={styles["details-wrapper"]}>
           <div className="secondary-text">{`${length} Assets`}</div>
           <FolderOptions

@@ -1,7 +1,7 @@
 import styles from "./asset-thumbail.module.css";
 import { Utilities, Assets } from "../../../assets";
 import { format } from "date-fns";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, FocusEventHandler } from "react";
 
 // Components
 import AssetImg from "./asset-img";
@@ -14,6 +14,7 @@ import Button from "../buttons/button";
 import DetailOverlay from "./detail-overlay";
 import AssetOptions from "./asset-options";
 import { AssetContext } from "../../../context";
+import assetApi from "../../../server-api/asset";
 
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
 
@@ -31,16 +32,16 @@ const AssetThumbail = ({
   showAssetRelatedOption = false,
   isSelected = false,
   isLoading = false,
-  activeFolder = '',
-  toggleSelected = () => { },
-  openDeleteAsset = () => { },
-  openMoveAsset = () => { },
-  openCopyAsset = () => { },
-  openShareAsset = () => { },
-  openArchiveAsset = () => { },
-  downloadAsset = () => { },
-  openRemoveAsset = () => { },
-  loadMore = () => { },
+  activeFolder = "",
+  toggleSelected = () => {},
+  openDeleteAsset = () => {},
+  openMoveAsset = () => {},
+  openCopyAsset = () => {},
+  openShareAsset = () => {},
+  openArchiveAsset = () => {},
+  downloadAsset = () => {},
+  openRemoveAsset = () => {},
+  loadMore = () => {},
   handleVersionChange,
   onView = null,
   customComponent = <></>,
@@ -49,10 +50,16 @@ const AssetThumbail = ({
   customIconComponent = <></>,
   onDisassociate = () => {},
   detailOverlay = true,
-  onCloseDetailOverlay = (asset) => {}
+  onCloseDetailOverlay = (asset) => {},
+  isThumbnailNameEditable = false,
 }) => {
-  const [overlayProperties, setOverlayProperties] = useState(DEFAULT_DETAIL_PROPS);
+  const [overlayProperties, setOverlayProperties] =
+    useState(DEFAULT_DETAIL_PROPS);
   const { detailOverlayId } = useContext(AssetContext);
+
+  const [thumbnailName, setThumbnailName] = useState(
+    asset.name.replace(/\.[^/.]+$/, "")
+  );
 
   useEffect(() => {
     if (overlayProperties.visible) {
@@ -74,16 +81,27 @@ const AssetThumbail = ({
   };
 
   const onCloseOverlay = (changedVersion, outsideDetailOverlayAsset) => {
-    if(outsideDetailOverlayAsset){
+    if (outsideDetailOverlayAsset) {
       setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: false });
-      onCloseDetailOverlay(outsideDetailOverlayAsset)
-    }else{
+      onCloseDetailOverlay(outsideDetailOverlayAsset);
+    } else {
       if (changedVersion) {
         handleVersionChange(changedVersion);
       }
       setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: false });
     }
+  };
 
+  const updateThumbnailName = async (
+    e: FocusEventHandler<HTMLInputElement>
+  ) => {
+    //fire api only if name is changed
+    if (asset.name.toLowerCase() !== thumbnailName) {
+      await assetApi.updateAsset(asset.id, {
+        updateData: { name: thumbnailName + "." + asset.extension },
+        associations: {},
+      });
+    }
   };
 
   return (
@@ -109,51 +127,69 @@ const AssetThumbail = ({
           {asset.type === 'video' && <AssetVideo assetImg={thumbailUrl} asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} />}
           {asset.type === 'application' && <AssetApplication assetImg={thumbailUrl} extension={asset.extension} />}
           {asset.type === 'text' && <AssetText assetImg={thumbailUrl} extension={asset.extension} />} */}
-          {!isUploading && !isLoading && (showAssetOption || showViewButtonOnly) && (
-            <>
-            {(!showViewButtonOnly || (showViewButtonOnly && showSelectedAsset)) && <div
-                className={`${styles["selectable-wrapper"]} ${isSelected && styles["selected-wrapper"]
-                  }`}
-              >
-                {isSelected ? (
-                  <IconClickable
-                    src={Utilities.radioButtonEnabled}
-                    additionalClass={styles["select-icon"]}
-                    onClick={toggleSelected}
-                  />
-                ) : (
-                  <IconClickable
-                    src={Utilities.radioButtonNormal}
-                    additionalClass={styles["select-icon"]}
-                    onClick={toggleSelected}
-                  />
+          {!isUploading &&
+            !isLoading &&
+            (showAssetOption || showViewButtonOnly) && (
+              <>
+                {(!showViewButtonOnly ||
+                  (showViewButtonOnly && showSelectedAsset)) && (
+                  <div
+                    className={`${styles["selectable-wrapper"]} ${
+                      isSelected && styles["selected-wrapper"]
+                    }`}
+                  >
+                    {isSelected ? (
+                      <IconClickable
+                        src={Utilities.radioButtonEnabled}
+                        additionalClass={styles["select-icon"]}
+                        onClick={toggleSelected}
+                      />
+                    ) : (
+                      <IconClickable
+                        src={Utilities.radioButtonNormal}
+                        additionalClass={styles["select-icon"]}
+                        onClick={toggleSelected}
+                      />
+                    )}
+                  </div>
                 )}
-              </div>}
-              <div className={styles["image-button-wrapper"]}>
-                <Button
-                  styleType={"primary"}
-                  text={"View Details"}
-                  type={"button"}
-                  onClick={() => {
-                    if (onView) {
-                      onView(asset.id)
-                    } else {
-                      setOverlayProperties({
-                        ...DEFAULT_DETAIL_PROPS,
-                        visible: !overlayProperties.visible,
-                      })
-                    }
-
-                  }}
-                />
-              </div>
-            </>
-          )}
+                <div className={styles["image-button-wrapper"]}>
+                  <Button
+                    styleType={"primary"}
+                    text={"View Details"}
+                    type={"button"}
+                    onClick={() => {
+                      if (onView) {
+                        onView(asset.id);
+                      } else {
+                        setOverlayProperties({
+                          ...DEFAULT_DETAIL_PROPS,
+                          visible: !overlayProperties.visible,
+                        });
+                      }
+                    }}
+                  />
+                </div>
+              </>
+            )}
         </div>
         <div className={styles.info}>
           <div className={`${infoWrapperClass} overflow--visible`}>
             <div className={`${textWrapperClass} overflow--visible`}>
-              <div className={`normal-text ${styles['wrap-text']}`}>{asset.name}</div>
+              {isThumbnailNameEditable ? (
+                <div className={`normal-text ${styles["wrap-text"]}`}>
+                  <input
+                    value={thumbnailName}
+                    onChange={(e) => setThumbnailName(e.target.value)}
+                    onBlur={updateThumbnailName}
+                  />
+                  <div>.{asset.extension}</div>
+                </div>
+              ) : (
+                <div className={`normal-text ${styles["wrap-text"]}`}>
+                  {asset.name}
+                </div>
+              )}
               <div className={styles["details-wrapper"]}>
                 <div className="secondary-text">
                   {format(new Date(asset.createdAt), "MMM d, yyyy, p")}
@@ -187,9 +223,7 @@ const AssetThumbail = ({
               </div>
             </div>
 
-
             {customIconComponent}
-
           </div>
 
           <div>{customComponent}</div>

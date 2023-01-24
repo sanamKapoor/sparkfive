@@ -32,9 +32,9 @@ import {
 } from "../../../constants/permissions";
 import fileDownload from "js-file-download";
 
-
-import {sizeToZipDownload} from "../../../constants/download";
+import { sizeToZipDownload } from "../../../constants/download";
 import ChangeThumbnail from "../modals/change-thumnail-modal";
+import { checkIfUserCanEditThumbnail } from "../../../utils/asset";
 
 const AssetGrid = ({
   activeView = "grid",
@@ -53,7 +53,7 @@ const AssetGrid = ({
   viewFolder = (id) => {},
   sharePath = "",
   openFilter,
-  onCloseDetailOverlay = (assetData) => {}
+  onCloseDetailOverlay = (assetData) => {},
 }) => {
   let isDragging;
   if (!isShare) isDragging = useDropzone();
@@ -65,10 +65,12 @@ const AssetGrid = ({
     nextPage,
     setOperationFolder,
     folders,
-    updateDownloadingStatus
+    updateDownloadingStatus,
   } = useContext(AssetContext);
 
-  const { advancedConfig, hasPermission } = useContext(UserContext);
+  const { advancedConfig, hasPermission, user } = useContext(UserContext);
+
+  console.log("user: ", user);
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [activeArchiveAsset, setActiveArchiveAsset] = useState(undefined);
@@ -176,7 +178,6 @@ const AssetGrid = ({
     setActiveOperation(operation);
   };
 
-
   //Use for upload thumbnail
   const beginChangeThumbnailOperation = ({ folder }, operation) => {
     setModalData(folder);
@@ -188,7 +189,7 @@ const AssetGrid = ({
     try {
       const data = await folderApi.updateFolder(folder.id, {
         thumbnailPath: null,
-        thumbnailExtension: null
+        thumbnailExtension: null,
       });
       if (data) {
         setIsLoading(false);
@@ -232,10 +233,10 @@ const AssetGrid = ({
       updateDownloadingStatus("done", 0, 0);
     } catch (e) {
       updateDownloadingStatus(
-          "error",
-          0,
-          0,
-          "Internal Server Error. Please try again."
+        "error",
+        0,
+        0,
+        "Internal Server Error. Please try again."
       );
     }
 
@@ -243,9 +244,9 @@ const AssetGrid = ({
   };
 
   const downloadAsset = (assetItem) => {
-    if(assetItem.asset.size >= sizeToZipDownload){
-      downloadSelectedAssets(assetItem.asset.id)
-    }else{
+    if (assetItem.asset.size >= sizeToZipDownload) {
+      downloadSelectedAssets(assetItem.asset.id);
+    } else {
       downloadUtils.downloadFile(assetItem.realUrl, assetItem.asset.name);
     }
   };
@@ -295,6 +296,8 @@ const AssetGrid = ({
 
     // setAssetDetail({...newVersionAsset})
   };
+
+  const isThumbnailNameEditable = checkIfUserCanEditThumbnail(user?.roleId);
 
   return (
     <section className={`${styles.container} ${openFilter && styles.filter}`}>
@@ -366,6 +369,7 @@ const AssetGrid = ({
                         handleVersionChange={refreshVersion}
                         loadMore={loadMore}
                         onCloseDetailOverlay={onCloseDetailOverlay}
+                        isThumbnailNameEditable={isThumbnailNameEditable}
                       />
                     </li>
                   );
@@ -399,6 +403,7 @@ const AssetGrid = ({
                         deleteThumbnail({ folder }, "shareFolders")
                       }
                       activeView={activeView || mode}
+                      isThumbnailNameEditable={isThumbnailNameEditable}
                     />
                   </li>
                 );
