@@ -3,8 +3,8 @@ import styles from "./list-item.module.css";
 import { Utilities, Assets } from "../../../assets";
 import filesize from "filesize";
 import { format } from "date-fns";
-import { useState, useEffect } from "react";
-import { getParsedExtension } from "../../../utils/asset";
+import { useState, useEffect, ChangeEvent } from "react";
+import { getParsedExtension, removeExtension } from "../../../utils/asset";
 
 import StatusBadge from "../../common/misc/status-badge";
 
@@ -17,6 +17,12 @@ import Button from "../buttons/button";
 import DetailOverlay from "./detail-overlay";
 import AssetOptions from "./asset-options";
 import AssetIcon from "./asset-icon";
+import assetApi from "../../../server-api/asset";
+import toastUtils from "../../../utils/toast";
+import {
+  FAILED_TO_UPDATE_ASSET_NAME,
+  ASSET_NAME_UPDATED,
+} from "../../../constants/messages";
 
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
 
@@ -34,7 +40,7 @@ const ListItem = ({
   },
   index,
   sortAttribute,
-  activeFolder = '',
+  activeFolder = "",
   toggleSelected = () => {},
   openDeleteAsset = () => {},
   openMoveAsset = () => {},
@@ -44,11 +50,20 @@ const ListItem = ({
   downloadAsset = () => {},
   openRemoveAsset = () => {},
   setCurrentSortAttribute = (attribute) => {},
+  isNameEditable = false,
 }) => {
   const dateFormat = "MMM do, yyyy h:mm a";
 
   const [overlayProperties, setOverlayProperties] =
     useState(DEFAULT_DETAIL_PROPS);
+
+  const assetName = removeExtension(asset.name);
+
+  const [fileName, setFileName] = useState(assetName);
+
+  useEffect(() => {
+    setFileName(assetName);
+  }, [assetName]);
 
   useEffect(() => {
     if (overlayProperties.visible) {
@@ -76,6 +91,25 @@ const ListItem = ({
   const arrowIcon = sortAttribute.startsWith("-")
     ? Utilities.arrowUpGrey
     : Utilities.arrowGrey;
+
+  const handleAssetNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFileName(e.target.value);
+  };
+
+  const updateAssetNameOnBlur = async () => {
+    //fire api only if name is changed
+    if (assetName !== fileName) {
+      try {
+        await assetApi.updateAsset(asset.id, {
+          updateData: { name: fileName + "." + asset.extension },
+          associations: {},
+        });
+        toastUtils.success(ASSET_NAME_UPDATED);
+      } catch (e) {
+        toastUtils.error(FAILED_TO_UPDATE_ASSET_NAME);
+      }
+    }
+  };
 
   return (
     <>
@@ -159,7 +193,15 @@ const ListItem = ({
                 </>
               )}
             </div>
-            <div className={`${styles.thumbnail} ${isLoading && "loadable"}`}>
+            <div
+              className={`${styles.thumbnail} ${isLoading && "loadable"}`}
+              onClick={() =>
+                setOverlayProperties({
+                  ...DEFAULT_DETAIL_PROPS,
+                  visible: !overlayProperties.visible,
+                })
+              }
+            >
               {thumbailUrl ? (
                 <AssetImg
                   assetImg={thumbailUrl}
@@ -181,16 +223,19 @@ const ListItem = ({
             </div>
           </div>
           <div className={styles.info}>
-            <div
-              className={`${styles.name} ${isLoading && "loadable"}`}
-              onClick={() =>
-                setOverlayProperties({
-                  ...DEFAULT_DETAIL_PROPS,
-                  visible: !overlayProperties.visible,
-                })
-              }
-            >
-              {asset.name}
+            <div className={`${styles.name} ${isLoading && "loadable"}`}>
+              {isNameEditable ? (
+                <p>
+                  <input
+                    value={fileName}
+                    onChange={handleAssetNameChange}
+                    onBlur={updateAssetNameOnBlur}
+                  />
+                  .{asset.extension}
+                </p>
+              ) : (
+                <p>{asset.name}</p>
+              )}
             </div>
             {/*<div className={styles.status}>*/}
             {/*  {isUploading && 'Uplaoding...'}*/}

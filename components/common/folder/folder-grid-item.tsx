@@ -1,6 +1,6 @@
 import styles from "./folder-grid-item.module.css";
 import { Utilities, Assets } from "../../../assets";
-import { FocusEventHandler, useContext, useState } from "react";
+import { ChangeEvent, FocusEventHandler, useContext, useState } from "react";
 import fileDownload from "js-file-download";
 import zipDownloadUtils from "../../../utils/download";
 import _ from "lodash";
@@ -19,6 +19,11 @@ import folderApi from "../../../server-api/folder";
 import shareFolderApi from "../../../server-api/share-collection";
 import AssetIcon from "../asset/asset-icon";
 import React from "react";
+import toastUtils from "../../../utils/toast";
+import {
+  FAILED_TO_UPDATE_COLLECTION_NAME,
+  COLLECTION_NAME_UPDATED,
+} from "../../../constants/messages";
 
 const FolderGridItem = ({
   id,
@@ -116,14 +121,22 @@ const FolderGridItem = ({
     updateDownloadingStatus("done", 0, 0);
   };
 
-  const updateThumbnailName = async (
-    e: FocusEventHandler<HTMLInputElement>
-  ) => {
+  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setThumbnailName(e.target.value);
+  };
+
+  const updateNameOnBlur = async () => {
     //fire api only if name is changed
-    if (name.toLowerCase() !== thumbnailName) {
-      await await folderApi.updateFolder(id, {
-        name: thumbnailName,
-      });
+    if (name !== thumbnailName) {
+      try {
+        await folderApi.updateFolder(id, {
+          name: thumbnailName,
+        });
+
+        toastUtils.success(COLLECTION_NAME_UPDATED);
+      } catch (e) {
+        toastUtils.error(FAILED_TO_UPDATE_COLLECTION_NAME);
+      }
     }
   };
 
@@ -196,8 +209,8 @@ const FolderGridItem = ({
         {isThumbnailNameEditable ? (
           <input
             value={thumbnailName}
-            onChange={(e) => setThumbnailName(e.target.value)}
-            onBlur={updateThumbnailName}
+            onChange={handleNameChange}
+            onBlur={updateNameOnBlur}
           />
         ) : (
           <div className="normal-text">{name}</div>

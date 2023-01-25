@@ -387,3 +387,7 @@ const addFilterTagsToQuery = (
 export const checkIfUserCanEditThumbnail = (userRoleId) => {
   return (userRoleId && userRoleId === "admin") || userRoleId === "super_admin";
 };
+
+export const removeExtension = (fileName) => {
+  return fileName.replace(/\.[^/.]+$/, "");
+};

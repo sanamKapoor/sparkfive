@@ -1,7 +1,13 @@
 import fileDownload from "js-file-download";
 import styles from "./folder-list-item.module.css";
 import { Utilities, Assets } from "../../../assets";
-import { useContext, useState } from "react";
+import {
+  ChangeEvent,
+  ChangeEventHandler,
+  MouseEventHandler,
+  useContext,
+  useState,
+} from "react";
 import { format } from "date-fns";
 import zipDownloadUtils from "../../../utils/download";
 
@@ -14,6 +20,12 @@ import folderApi from "../../../server-api/folder";
 
 // Context
 import { AssetContext } from "../../../context";
+
+import toastUtils from "../../../utils/toast";
+import {
+  FAILED_TO_UPDATE_COLLECTION_NAME,
+  COLLECTION_NAME_UPDATED,
+} from "../../../constants/messages";
 
 const FolderListItem = ({
   index,
@@ -38,13 +50,15 @@ const FolderListItem = ({
   thumbnailPath,
   thumbnailExtension,
   thumbnails,
-  activeView
+  activeView,
+  isNameEditable = false,
 }) => {
   const { updateDownloadingStatus } = useContext(AssetContext);
 
   const dateFormat = "MMM do, yyyy h:mm a";
 
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [collectionName, setCollectionName] = useState(name);
 
   const downloadFoldercontents = async () => {
     // const { data } = await folderApi.getInfoToDownloadFolder(id)
@@ -84,6 +98,35 @@ const FolderListItem = ({
   const arrowIcon = sortAttribute.startsWith("-")
     ? Utilities.arrowUpGrey
     : Utilities.arrowGrey;
+
+  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    setCollectionName(e.target.value);
+  };
+
+  const viewFolderWrapper = (e: MouseEvent) => {
+    const isTargetDiv = e?.target?.tagName.toLowerCase() === "div";
+    if (isTargetDiv || !isNameEditable) {
+      viewFolder();
+    } else {
+      setCollectionName(e?.target?.value);
+    }
+  };
+
+  const updateCollectionNameOnBlur = async () => {
+    //fire api only if name is changed
+    if (name !== collectionName) {
+      try {
+        await folderApi.updateFolder(id, {
+          name: collectionName,
+        });
+
+        toastUtils.success(COLLECTION_NAME_UPDATED);
+      } catch (e) {
+        toastUtils.error(FAILED_TO_UPDATE_COLLECTION_NAME);
+      }
+    }
+  };
 
   return (
     <>
@@ -140,9 +183,17 @@ const FolderListItem = ({
           </div>
           <div
             className={`${styles.name} ${isLoading && "loadable"}`}
-            onClick={viewFolder}
+            onClick={viewFolderWrapper}
           >
-            {name}
+            {isNameEditable ? (
+              <input
+                value={collectionName}
+                onChange={handleNameChange}
+                onBlur={updateCollectionNameOnBlur}
+              />
+            ) : (
+              <p>{name}</p>
+            )}
           </div>
           <div className={styles.field_name}>
             {!isLoading && `${length} Assets`}
@@ -162,7 +213,7 @@ const FolderListItem = ({
                 deleteThumbnail={deleteThumbnail}
                 thumbnailPath={thumbnailPath || thumbnailExtension}
                 thumbnails={thumbnails}
-				activeView={activeView}
+                activeView={activeView}
               />
             </div>
           )}

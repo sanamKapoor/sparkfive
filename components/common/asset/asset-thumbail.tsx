@@ -1,7 +1,13 @@
 import styles from "./asset-thumbail.module.css";
 import { Utilities, Assets } from "../../../assets";
 import { format } from "date-fns";
-import { useState, useEffect, useContext, FocusEventHandler } from "react";
+import {
+  useState,
+  useEffect,
+  useContext,
+  FocusEventHandler,
+  ChangeEvent,
+} from "react";
 
 // Components
 import AssetImg from "./asset-img";
@@ -15,6 +21,12 @@ import DetailOverlay from "./detail-overlay";
 import AssetOptions from "./asset-options";
 import { AssetContext } from "../../../context";
 import assetApi from "../../../server-api/asset";
+import { removeExtension } from "../../../utils/asset";
+import toastUtils from "../../../utils/toast";
+import {
+  FAILED_TO_UPDATE_ASSET_NAME,
+  ASSET_NAME_UPDATED,
+} from "../../../constants/messages";
 
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
 
@@ -57,9 +69,13 @@ const AssetThumbail = ({
     useState(DEFAULT_DETAIL_PROPS);
   const { detailOverlayId } = useContext(AssetContext);
 
-  const [thumbnailName, setThumbnailName] = useState(
-    asset.name.replace(/\.[^/.]+$/, "")
-  );
+  const assetName = removeExtension(asset.name);
+
+  const [thumbnailName, setThumbnailName] = useState(assetName);
+
+  useEffect(() => {
+    setThumbnailName(assetName);
+  }, [assetName]);
 
   useEffect(() => {
     if (overlayProperties.visible) {
@@ -92,15 +108,22 @@ const AssetThumbail = ({
     }
   };
 
-  const updateThumbnailName = async (
-    e: FocusEventHandler<HTMLInputElement>
-  ) => {
+  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setThumbnailName(e.target.value);
+  };
+
+  const updateNameOnBlur = async () => {
     //fire api only if name is changed
-    if (asset.name.toLowerCase() !== thumbnailName) {
-      await assetApi.updateAsset(asset.id, {
-        updateData: { name: thumbnailName + "." + asset.extension },
-        associations: {},
-      });
+    if (assetName !== thumbnailName) {
+      try {
+        await assetApi.updateAsset(asset.id, {
+          updateData: { name: thumbnailName + "." + asset.extension },
+          associations: {},
+        });
+        toastUtils.success(ASSET_NAME_UPDATED);
+      } catch (e) {
+        toastUtils.error(FAILED_TO_UPDATE_ASSET_NAME);
+      }
     }
   };
 
@@ -180,8 +203,8 @@ const AssetThumbail = ({
                 <div className={`normal-text ${styles["wrap-text"]}`}>
                   <input
                     value={thumbnailName}
-                    onChange={(e) => setThumbnailName(e.target.value)}
-                    onBlur={updateThumbnailName}
+                    onChange={handleNameChange}
+                    onBlur={updateNameOnBlur}
                   />
                   <div>.{asset.extension}</div>
                 </div>

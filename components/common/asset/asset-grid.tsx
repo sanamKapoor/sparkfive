@@ -70,8 +70,6 @@ const AssetGrid = ({
 
   const { advancedConfig, hasPermission, user } = useContext(UserContext);
 
-  console.log("user: ", user);
-
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [activeArchiveAsset, setActiveArchiveAsset] = useState(undefined);
   const [activeAssetId, setActiveAssetId] = useState("");
@@ -448,6 +446,7 @@ const AssetGrid = ({
                       }
                       setCurrentSortAttribute={setCurrentSortAttribute}
                       sortAttribute={currentSortAttribute}
+                      isNameEditable={isThumbnailNameEditable}
                     />
                   </li>
                 );
@@ -479,6 +478,7 @@ const AssetGrid = ({
                         deleteThumbnail({ folder }, "shareFolders")
                       }
                       activeView={activeView || mode}
+                      isNameEditable={isThumbnailNameEditable}
                     />
                   </li>
                 );
