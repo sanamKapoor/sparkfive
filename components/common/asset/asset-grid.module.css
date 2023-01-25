@@ -8,7 +8,7 @@
   width: 80%;
 }
 
-.list-wrapper{
+.list-wrapper {
   width: 100%;
   max-width: 1800px;
 }
@@ -26,11 +26,11 @@
   grid-gap: 2rem;
 }
 
-.grid-list.medium{
+.grid-list.medium {
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 }
 
-.button-wrapper{
+.button-wrapper {
   margin-top: 1.5rem;
   display: flex;
   justify-content: center;
@@ -44,11 +44,19 @@
   }
 }
 
-
 @media screen and (max-width: 1200px) {
   .grid-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     grid-gap: 1.25rem;
   }
+}
+
+.editable-input {
+  border: none;
+  width: auto;
+}
+
+.editable-preview {
+  cursor: pointer;
 }

@@ -93,6 +93,8 @@ const AssetGrid = ({
   const { setIsLoading } = useContext(LoadingContext);
   const { setFolders } = useContext(AssetContext);
 
+  const [focusedItem, setFocusedItem] = useState(null);
+
   useEffect(() => {
     const { assetId } = urlUtils.getQueryParameters();
     if (assetId) getInitialAsset(assetId);
@@ -297,6 +299,14 @@ const AssetGrid = ({
 
   const isThumbnailNameEditable = checkIfUserCanEditThumbnail(user?.roleId);
 
+  const handleFocusChange = (e, id) => {
+    if (focusedItem === id && e.target.tagName.toLowerCase() !== "input") {
+      setFocusedItem(null);
+    } else if (e.target.id === "editable-preview") {
+      setFocusedItem(id);
+    }
+  };
+
   return (
     <section className={`${styles.container} ${openFilter && styles.filter}`}>
       {(shouldShowUpload || isDragging) && !isShare && (
@@ -332,6 +342,7 @@ const AssetGrid = ({
                     <li
                       className={styles["grid-item"]}
                       key={assetItem.asset.id || index}
+                      onClick={(e) => handleFocusChange(e, assetItem.asset.id)}
                     >
                       <AssetThumbail
                         {...assetItem}
@@ -368,6 +379,8 @@ const AssetGrid = ({
                         loadMore={loadMore}
                         onCloseDetailOverlay={onCloseDetailOverlay}
                         isThumbnailNameEditable={isThumbnailNameEditable}
+                        focusedItem={focusedItem}
+                        setFocusedItem={setFocusedItem}
                       />
                     </li>
                   );
@@ -377,7 +390,11 @@ const AssetGrid = ({
             {mode === "folders" &&
               folders.map((folder, index) => {
                 return (
-                  <li className={styles["grid-item"]} key={folder.id || index}>
+                  <li
+                    className={styles["grid-item"]}
+                    key={folder.id || index}
+                    onClick={(e) => handleFocusChange(e, folder.id)}
+                  >
                     <FolderGridItem
                       {...folder}
                       isShare={isShare}
@@ -402,6 +419,8 @@ const AssetGrid = ({
                       }
                       activeView={activeView || mode}
                       isThumbnailNameEditable={isThumbnailNameEditable}
+                      focusedItem={focusedItem}
+                      setFocusedItem={setFocusedItem}
                     />
                   </li>
                 );
@@ -416,6 +435,7 @@ const AssetGrid = ({
                   <li
                     className={styles["regular-item"]}
                     key={assetItem.asset.id || index}
+                    onClick={(e) => handleFocusChange(e, assetItem.asset.id)}
                   >
                     <ListItem
                       sharePath={sharePath}
@@ -447,6 +467,8 @@ const AssetGrid = ({
                       setCurrentSortAttribute={setCurrentSortAttribute}
                       sortAttribute={currentSortAttribute}
                       isNameEditable={isThumbnailNameEditable}
+                      focusedItem={focusedItem}
+                      setFocusedItem={setFocusedItem}
                     />
                   </li>
                 );
@@ -454,7 +476,11 @@ const AssetGrid = ({
             {mode === "folders" &&
               sortedFolders.map((folder, index) => {
                 return (
-                  <li className={styles["grid-item"]} key={folder.id || index}>
+                  <li
+                    className={styles["grid-item"]}
+                    key={folder.id || index}
+                    onClick={(e) => handleFocusChange(e, folder.id)}
+                  >
                     <FolderListItem
                       {...folder}
                       toggleSelected={() => toggleSelected(folder.id)}
@@ -478,7 +504,9 @@ const AssetGrid = ({
                         deleteThumbnail({ folder }, "shareFolders")
                       }
                       activeView={activeView || mode}
-                      isNameEditable={isThumbnailNameEditable}
+                      isNameEditable={true}
+                      focusedItem={focusedItem}
+                      setFocusedItem={setFocusedItem}
                     />
                   </li>
                 );

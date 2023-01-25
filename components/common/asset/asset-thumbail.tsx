@@ -1,4 +1,5 @@
 import styles from "./asset-thumbail.module.css";
+import gridStyles from "./asset-grid.module.css";
 import { Utilities, Assets } from "../../../assets";
 import { format } from "date-fns";
 import {
@@ -64,14 +65,17 @@ const AssetThumbail = ({
   detailOverlay = true,
   onCloseDetailOverlay = (asset) => {},
   isThumbnailNameEditable = false,
+  focusedItem,
+  setFocusedItem,
 }) => {
   const [overlayProperties, setOverlayProperties] =
     useState(DEFAULT_DETAIL_PROPS);
-  const { detailOverlayId } = useContext(AssetContext);
+  const { detailOverlayId, assets, setAssets } = useContext(AssetContext);
 
   const assetName = removeExtension(asset.name);
 
   const [thumbnailName, setThumbnailName] = useState(assetName);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     setThumbnailName(assetName);
@@ -112,19 +116,40 @@ const AssetThumbail = ({
     setThumbnailName(e.target.value);
   };
 
-  const updateNameOnBlur = async () => {
+  const updateNameOnBlur = async (e) => {
+    setIsEditing(false);
+    setFocusedItem(null);
     //fire api only if name is changed
     if (assetName !== thumbnailName) {
       try {
-        await assetApi.updateAsset(asset.id, {
-          updateData: { name: thumbnailName + "." + asset.extension },
+        const fileName = thumbnailName + "." + asset.extension;
+        const data = await assetApi.updateAsset(asset.id, {
+          updateData: { name: fileName },
           associations: {},
         });
+
+        if (data) {
+          setAssets(
+            assets.map((asset) => {
+              if (asset.id === data.id) {
+                console.log("coming inside if condition");
+                return { ...asset, name: fileName };
+              } else {
+                return asset;
+              }
+            })
+          );
+        }
+
         toastUtils.success(ASSET_NAME_UPDATED);
       } catch (e) {
         toastUtils.error(FAILED_TO_UPDATE_ASSET_NAME);
       }
     }
+  };
+
+  const handleOnFocus = () => {
+    setIsEditing(true);
   };
 
   return (
@@ -199,18 +224,26 @@ const AssetThumbail = ({
         <div className={styles.info}>
           <div className={`${infoWrapperClass} overflow--visible`}>
             <div className={`${textWrapperClass} overflow--visible`}>
-              {isThumbnailNameEditable ? (
-                <div className={`normal-text ${styles["wrap-text"]}`}>
-                  <input
-                    value={thumbnailName}
-                    onChange={handleNameChange}
-                    onBlur={updateNameOnBlur}
-                  />
-                  <div>.{asset.extension}</div>
-                </div>
+              {isThumbnailNameEditable &&
+              isEditing &&
+              focusedItem &&
+              focusedItem === asset.id ? (
+                <input
+                  autoFocus
+                  className={`normal-text ${gridStyles["editable-input"]} ${styles["wrap-text"]}`}
+                  value={thumbnailName}
+                  onChange={handleNameChange}
+                  onBlur={updateNameOnBlur}
+                />
               ) : (
                 <div className={`normal-text ${styles["wrap-text"]}`}>
-                  {asset.name}
+                  <span
+                    id="editable-preview"
+                    onClick={handleOnFocus}
+                    className={`${gridStyles["editable-preview"]}`}
+                  >
+                    {thumbnailName}.{asset.extension}
+                  </span>
                 </div>
               )}
               <div className={styles["details-wrapper"]}>

@@ -1,6 +1,13 @@
 import styles from "./folder-grid-item.module.css";
+import gridStyles from "../asset//asset-grid.module.css";
 import { Utilities, Assets } from "../../../assets";
-import { ChangeEvent, FocusEventHandler, useContext, useState } from "react";
+import {
+  ChangeEvent,
+  FocusEventHandler,
+  useContext,
+  useRef,
+  useState,
+} from "react";
 import fileDownload from "js-file-download";
 import zipDownloadUtils from "../../../utils/download";
 import _ from "lodash";
@@ -49,10 +56,14 @@ const FolderGridItem = ({
   openFilter = false,
   activeView,
   isThumbnailNameEditable = false,
+  focusedItem,
+  setFocusedItem,
 }) => {
-  const { updateDownloadingStatus } = useContext(AssetContext);
+  const { updateDownloadingStatus, folders, setFolders } =
+    useContext(AssetContext);
 
   const [thumbnailName, setThumbnailName] = useState(name);
+  const [isEditing, setIsEditing] = useState(false);
 
   let previews;
 
@@ -125,19 +136,38 @@ const FolderGridItem = ({
     setThumbnailName(e.target.value);
   };
 
-  const updateNameOnBlur = async () => {
+  const updateNameOnBlur = async (e) => {
+    setFocusedItem(null);
+    setIsEditing(false);
     //fire api only if name is changed
+
     if (name !== thumbnailName) {
       try {
-        await folderApi.updateFolder(id, {
-          name: thumbnailName,
+        const data = await folderApi.updateFolder(id, {
+          name: e.target.value,
         });
+
+        if (data) {
+          setFolders(
+            folders.map((folder) => {
+              if (folder.id === data.id) {
+                return { ...folder, name: data.name };
+              } else {
+                return folder;
+              }
+            })
+          );
+        }
 
         toastUtils.success(COLLECTION_NAME_UPDATED);
       } catch (e) {
         toastUtils.error(FAILED_TO_UPDATE_COLLECTION_NAME);
       }
     }
+  };
+
+  const handleOnFocus = () => {
+    setIsEditing(true);
   };
 
   return (
@@ -205,15 +235,26 @@ const FolderGridItem = ({
           </div>
         </>
       </div>
-      <div className={styles.info}>
-        {isThumbnailNameEditable ? (
+      <div className={styles.info} onClick={handleOnFocus}>
+        {isThumbnailNameEditable &&
+        isEditing &&
+        focusedItem &&
+        focusedItem === id ? (
           <input
+            className={`normal-text ${gridStyles["editable-input"]}`}
             value={thumbnailName}
             onChange={handleNameChange}
             onBlur={updateNameOnBlur}
+            autoFocus
           />
         ) : (
-          <div className="normal-text">{name}</div>
+          <span
+            id="editable-preview"
+            onClick={handleOnFocus}
+            className={`normal-text ${gridStyles["editable-preview"]}`}
+          >
+            {thumbnailName}
+          </span>
         )}
         <div className={styles["details-wrapper"]}>
           <div className="secondary-text">{`${length} Assets`}</div>
