@@ -19,7 +19,10 @@ import Input from "../inputs/input";
 import SizeSelect from "../inputs/size-select";
 import Button from "../buttons/button";
 import { useContext, useState, useEffect } from "react";
-import ConfirmModal from "../modals/confirm-modal"
+import ConfirmModal from "../modals/confirm-with-rename-modal"
+
+// Utils
+import EventBus from "../../../utils/event-bus"
 
 
 const CropSidePanel = ({ asset,
@@ -42,7 +45,8 @@ const CropSidePanel = ({ asset,
     sizeOfCrop,
     setSizeOfCrop,
     detailPosSize,
-    onAddAssociate = (data) => {}
+    onAddAssociate = (data) => {},
+    setRenameData = (data) => {}
 }) => {
 
     const { updateDownloadingStatus } = useContext(AssetContext)
@@ -59,6 +63,9 @@ const CropSidePanel = ({ asset,
     const [selectedSize, setSelectedSize] = useState(sizeValue)
     const [previewActive, setPreviewActive] = useState(false)
     const [relatedModalOpen, setRelatedModalOpen] = useState(false)
+
+    const [renameValue, setRenameValue] = useState(asset.name)
+    const [renameModalOpen, setRenameModalOpen] = useState(false);
 
     const setMode = (mode) => {
         onModeChange(mode);
@@ -155,7 +162,16 @@ const CropSidePanel = ({ asset,
         // downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets')
     }
 
-    const saveResizedImageAsAssociate = async (dlSize) => {
+    const getFileNameWithExtension = (fileName) => {
+        const extension = fileName.slice((fileName.lastIndexOf(".") - 1 >>> 0) + 2)
+        if(extension){
+            return fileName
+        }else{
+            return `${fileName}.${asset.extension}`
+        }
+    }
+
+    const saveResizedImageAsAssociate = async (dlSize, renameValue) => {
         try {
             setIsLoading(true)
 
@@ -166,7 +182,8 @@ const CropSidePanel = ({ asset,
                 width: dlSize === 'original' ? asset.dimensionWidth : widthOriginal,
                 height: dlSize === 'original' ? asset.dimensionHeight : heightOriginal,
                 format: getImageType(imageType),
-                associateFile: asset.id
+                associateFile: asset.id,
+                associateFileName: getFileNameWithExtension(renameValue)
             };
 
             const { shareJWT, code } = urlUtils.getQueryParameters()
@@ -419,26 +436,34 @@ const CropSidePanel = ({ asset,
                     text='Save as Related File'
                     type='button'
                     styleType='secondary'
-                    onClick={() => setRelatedModalOpen(true)}
+                    onClick={
+                    () => {
+                        let name = asset.name.substring(0, asset.name.lastIndexOf('.')) || asset.name;
+                        let extension = asset.name.substring(asset.name.lastIndexOf('.'), asset.name.length) || "";
+                        setRenameValue(`${name}-${mode}-${new Date().getTime()}${extension}`)
+                        setRelatedModalOpen(true)
+                    }
+                }
                 />
                 <ConfirmModal
                     closeModal={() => setRelatedModalOpen(false)}
-                    confirmAction={() => {
+                    confirmAction={(data) => {
                         if (mode === 'crop') {
+                            setRenameData(data)
+                            // EventBus.dispatch(EventBus.Event.SAVE_CROP_RELATED_FILE, { renameValue: data})
                             document.getElementById('associate-crop-image').click()
                         } else {
-                            saveResizedImageAsAssociate('resized');
+                            saveResizedImageAsAssociate('resized', data);
                             // downloadImage('resized')
                         }
                         setRelatedModalOpen(false)
                     }}
                     confirmText={"Confirm"}
                     message={
-                        <span className={'text-center'}>
-                            Are you sure you want to save {asset.name} as Related File?
-                        </span>
+                       "Are you sure you want to save as a related file"
                     }
                     modalIsOpen={relatedModalOpen}
+                    initialValue={renameValue}
                 />
             </div>
 

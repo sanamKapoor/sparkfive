@@ -6,15 +6,25 @@
 
 .slick-list {
     width: 100%;
+    margin-left: -12px;
 }
 
 
 .slick-slide {
     padding: 0 12px;
+    height: inherit !important;
+}
+
+.slick-slide > div{
+    height: 100%;
 }
 
 .slick-track {
     margin-right: auto;
     margin-left: 0;
+    display: flex !important;
 }
 
+.slick-slide:first-child{
+    /*padding-left: 0 !important;*/
+}

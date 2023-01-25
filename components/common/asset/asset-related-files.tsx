@@ -26,11 +26,13 @@ const PrevArrow = ({ onClick }) => (
     <img className={styles.arrow} src={Utilities.circleArrowLeft} alt="Arrow previous" onClick={onClick} />
 )
 
-const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAddRelatedFiles }) => {
+const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAddRelatedFiles, closeOverlay, outsideDetailOverlay = false }) => {
     const {
         updateDownloadingStatus,
         setActiveOperation,
-        setOperationAssets
+        setOperationAssets,
+        setDetailOverlayId,
+        setCurrentViewAsset
     } = useContext(AssetContext)
 
     const { setIsLoading } = useContext(LoadingContext);
@@ -214,11 +216,11 @@ const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAd
                 )
 
             setIsLoading(false)
-            toastUtils.success("Assets dis-associated successfully")
+            toastUtils.success("Assets disassociated successfully")
         } catch (err) {
             // TODO: Error handling
             setIsLoading(false)
-            toastUtils.error("Could not dis-associate assets, please try again later.")
+            toastUtils.error("Could not disassociate assets, please try again later.")
         }
     }
 
@@ -265,7 +267,9 @@ const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAd
         <>
             <div className={styles.container}>
 
-                <div data-tip data-for={'upload'} className={styles['upload-wrapper']}>
+                <div data-tip data-for={'upload'} className={assets.length > 0 ? styles['upload-wrapper'] : styles['upload-wrapper-no-asset']}>
+                    {assets.length > 0 && <h3>Related Files</h3>}
+
                     <Button
                         text={<img src={AssetOps.upload} />}
                         type='button'
@@ -274,33 +278,48 @@ const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAd
                     >
                     </Button>
                     <ReactTooltip id={'upload'} delayShow={300} effect='solid' place={'right'}>Upload related files</ReactTooltip>
-
-                    <BaseModal
-                        showCancel={false}
-                        closeButtonOnly
-                        additionalClasses={[styles['modal-upload']]}
-                        closeModal={() => setUploadModalOpen(false)}
-                        modalIsOpen={uploadModalOpen}
-                        confirmText=""
-                        confirmAction={() => {
-                            // setUploadModalOpen(false)
-                            // setConfirmUploadModalOpen(true)
-                        }}
-                    >
-                        <AssetRelatedFileUpload associateFileId={associateFileId} onUploadFinish={onAddRelatedFiles}/>
-                    </BaseModal>
                 </div>
 
+                <BaseModal
+                    showCancel={false}
+                    closeButtonOnly
+                    additionalClasses={[styles['modal-upload']]}
+                    closeModal={() => setUploadModalOpen(false)}
+                    modalIsOpen={uploadModalOpen}
+                    confirmText=""
+                    confirmAction={() => {
+                        // setUploadModalOpen(false)
+                        // setConfirmUploadModalOpen(true)
+                    }}
+                >
+                    <AssetRelatedFileUpload currentRelatedAssets={assets} associateFileId={associateFileId} onUploadFinish={onAddRelatedFiles}/>
+                </BaseModal>
+
                 {assets.length > 0 && <>
-                  <h3>Related Files</h3>
                   <div className={styles.slider}>
                     <Slider {...settings}>
                         {assets.map((assetItem, index) => (
                             <AssetThumbail
                                 {...assetItem}
                                 key={index}
+                                onView={(id)=>{
+                                    setDetailOverlayId(undefined)
+                                    if(outsideDetailOverlay){
+                                        closeOverlay(assetItem);
+                                    }else{
+                                        closeOverlay(null, assetItem);
+                                    }
+
+                                    // setDetailOverlayId(id)
+                                    // setTimeout(()=>{
+                                    //     console.log(assetItem)
+                                    //     setCurrentViewAsset(assetItem)
+                                    // },100)
+
+                                }}
                                 // sharePath={sharePath}
                                 showAssetOption={false}
+                                showViewButtonOnly={true}
                                 showAssetRelatedOption={true}
                                 downloadAsset={() => downloadAsset(assetItem)}
                                 openDeleteAsset={() =>
@@ -309,6 +328,7 @@ const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAd
                                 onDisassociate={()=>{
                                     openDisassociateModal(assetItem.asset.id)
                                 }}
+                                detailOverlay={false}
                             />
                         ))}
                     </Slider>
@@ -356,12 +376,9 @@ const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAd
                     setActiveAssetId("")
                     setDisassociateModal(false)
                 }}
-                confirmText={"Delete"}
+                confirmText={"Disassociate"}
                 message={
-                    <span>
-                        Are you sure you want to &nbsp;<strong>Dis-associate</strong>&nbsp; this
-                        asset?
-                    </span>
+                   <div>Are you sure you want to <strong>Disassociate</strong> this asset?</div>
                 }
                 modalIsOpen={disassociateModal}
             />

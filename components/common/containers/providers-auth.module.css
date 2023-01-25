@@ -1,3 +1,13 @@
 .container {
   width: 100%;
 }
+
+.ssolink {
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.ssolink:hover {
+  opacity: 0.5;
+  text-decoration: underline;
+}

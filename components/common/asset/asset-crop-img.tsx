@@ -10,8 +10,11 @@ import React from 'react';
 import assetApi from '../../../server-api/asset'
 import {  LoadingContext } from '../../../context'
 
+// Utils
+import EventBus from "../../../utils/event-bus";
 
-const AssetCropImg = ({ sizeOfCrop, setSizeOfCrop, assetImg, setWidth, setHeight, imageType, type = 'image', name, opaque = false, width = 100, height = 100, locked = true, detailPosSize, associateFileId, onAddAssociate }) => {
+
+const AssetCropImg = ({ sizeOfCrop, setSizeOfCrop, assetImg, setWidth, setHeight, imageType, type = 'image', name, opaque = false, width = 100, height = 100, locked = true, detailPosSize, associateFileId, onAddAssociate, assetExtension = "", renameValue = {} }) => {
 	const { setIsLoading } = useContext(LoadingContext);
 
 	const previewCanvasRef = useRef(null);
@@ -22,6 +25,12 @@ const AssetCropImg = ({ sizeOfCrop, setSizeOfCrop, assetImg, setWidth, setHeight
 	const [cropping, setCropping] = useState(false);
 	const [mode, setMode] = useState('edit');
 	const [scaleCrop, setScaleCrop] = useState<{ scaleWidth: number, scaleHeight: number } | null>(null)
+	// const [renameData, setRenameData] = useState(renameValue.current || "")
+	//
+	//
+	// useEffect(()=>{
+	// 	setRenameData(renameValue.current || "")
+	// },[renameValue.current])
 
 	let finalImg = assetImg
 	if (!finalImg && type === 'video') finalImg = Assets.videoThumbnail
@@ -174,6 +183,15 @@ const AssetCropImg = ({ sizeOfCrop, setSizeOfCrop, assetImg, setWidth, setHeight
 		return queryData
 	}
 
+	const getFileNameWithExtension = (fileName) => {
+		const extension = fileName.slice((fileName.lastIndexOf(".") - 1 >>> 0) + 2)
+		if(extension){
+			return fileName
+		}else{
+			return `${fileName}.${assetExtension}`
+		}
+	}
+
 	const generateToUpload = (canvas, crop) => {
 		if (!crop || !canvas) {
 			return;
@@ -186,7 +204,7 @@ const AssetCropImg = ({ sizeOfCrop, setSizeOfCrop, assetImg, setWidth, setHeight
 				console.warn(`Export image under image/${imageType} type`)
 
 				const file = new File([blob.slice(0, blob.size, blob.type)],
-					`${name}-crop-${new Date().getTime()}`
+					getFileNameWithExtension(renameValue?.current || `${name}-crop-${new Date().getTime()}`)
 					, { type: blob.type })
 
 				let attachedQuery = {estimateTime: 1, size: blob.size, totalSize: blob.size}
@@ -220,6 +238,20 @@ const AssetCropImg = ({ sizeOfCrop, setSizeOfCrop, assetImg, setWidth, setHeight
 			})
 		}
 	}
+
+	// const onSaveCropRelatedFile = (data) => {
+	// 	console.log(data)
+	// 	setRenameValue(data.renameValue)
+	// 	document.getElementById('associate-crop-image').click()
+	// }
+
+	// Listen show login popup event
+	// useEffect(() => {
+	// 	console.log(`Init again`)
+	//
+	// 	EventBus.on(EventBus.Event.SAVE_CROP_RELATED_FILE, onSaveCropRelatedFile);
+	// 	return () => EventBus.remove(EventBus.Event.SAVE_CROP_RELATED_FILE, onSaveCropRelatedFile);
+	// }, []);
 	return (
 		<>
 			{!loaded && <img src={Assets.empty} alt={'blank'} style={{ position: 'absolute', width: width, height: height }} />}

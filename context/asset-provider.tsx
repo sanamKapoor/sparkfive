@@ -81,6 +81,9 @@ export default ({ children }) => {
     // Asset navigation
     const [detailOverlayId, setDetailOverlayId] = useState(undefined)
 
+    // For viewing asset in file associations
+    const [currentViewAsset, setCurrentViewAsset] = useState()
+
     const setPlaceHolders = (type, replace = true) => {
         if (type === 'asset') {
             if (replace)
@@ -459,7 +462,9 @@ export default ({ children }) => {
         detailOverlayId,
         setDetailOverlayId,
         operationAssets,
-        setOperationAssets
+        setOperationAssets,
+        currentViewAsset,
+        setCurrentViewAsset,
     }
     return (
         <AssetContext.Provider value={assetsValue}>

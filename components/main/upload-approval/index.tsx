@@ -72,7 +72,7 @@ const UploadApproval = () => {
     } = useContext(AssetContext)
 
     const { setIsLoading } = useContext(LoadingContext);
-    const [top, setTop] = useState('calc(55px + 7rem)')
+    const [top, setTop] = useState('calc(55px + 8rem)')
     const [assets, setAssets] = useState([])
     const [selectedAssets, setSelectedAssets] = useState([])
     const [duplicateAssets, setDuplicateAssets] = useState([]);
@@ -1062,6 +1062,33 @@ const UploadApproval = () => {
         toastUtils.success("Update tag successfully")
     }
 
+    const onChangeWidth = () => {
+        let remValue = '8rem'
+        if(window.innerWidth <= 900){
+            remValue = '7rem + 1px'
+        }
+
+        let el = document.getElementById('top-bar');
+        let header = document.getElementById('main-header');
+        let subHeader = document.getElementById('sub-header');
+
+        if(el){
+            let style = getComputedStyle(el);
+
+            const headerTop = (document.getElementById('top-bar')?.offsetHeight || 55)
+            setTop(`calc(${headerTop}px + ${header?.clientHeight || 0}px + ${remValue} - ${style.paddingBottom} - ${style.paddingTop})`)
+        }
+
+    }
+
+    useEffect(()=>{
+        onChangeWidth()
+
+        window.addEventListener('resize', onChangeWidth);
+
+        return () => window.removeEventListener("resize", onChangeWidth);
+    },[])
+
     useEffect(() => {
         checkValidUser()
         getTagsInputData()
@@ -1174,6 +1201,8 @@ const UploadApproval = () => {
                                                             {assetItem.comments && <IconClickable additionalClass={styles['edit-icon']} src={Utilities.comment} onClick={()=> {}} />}
                                                             {assetItem.tags && assetItem.tags.length > 0 && <IconClickable additionalClass={styles['edit-icon']} src={Utilities.greenTag} onClick={()=> {}} />}
                                                         </div>}
+                                                        showViewButtonOnly={true}
+                                                        showSelectedAsset={true}
                                                     />
                                                 </li>
                                             );

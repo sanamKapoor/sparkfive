@@ -12,7 +12,8 @@
   }
   .icon {
     object-fit: scale-down;
-    width: 100%;
+    width: 10rem;
+    max-width: 100%;
   }
 
   .noMargin {

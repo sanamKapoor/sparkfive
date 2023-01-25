@@ -117,7 +117,10 @@ export const AssetContext = createContext({
     setDetailOverlayId: (id) => {},
 
     operationAssets: [],
-    setOperationAssets: (value) => {}
+    setOperationAssets: (value) => {},
+
+    currentViewAsset: undefined,
+    setCurrentViewAsset: (asset) => {}
 })
 
 export const TeamContext = createContext({

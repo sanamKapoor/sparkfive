@@ -26,6 +26,8 @@ const AssetThumbail = ({
   realUrl,
   isUploading,
   showAssetOption = true,
+  showViewButtonOnly = false,
+  showSelectedAsset = false,
   showAssetRelatedOption = false,
   isSelected = false,
   isLoading = false,
@@ -45,7 +47,9 @@ const AssetThumbail = ({
   infoWrapperClass = "",
   textWrapperClass = "",
   customIconComponent = <></>,
-  onDisassociate = () => {}
+  onDisassociate = () => {},
+  detailOverlay = true,
+  onCloseDetailOverlay = (asset) => {}
 }) => {
   const [overlayProperties, setOverlayProperties] = useState(DEFAULT_DETAIL_PROPS);
   const { detailOverlayId } = useContext(AssetContext);
@@ -69,11 +73,17 @@ const AssetThumbail = ({
     setOverlayProperties({ visible: true, side: "comments" });
   };
 
-  const onCloseOverlay = (changedVersion) => {
-    if (changedVersion) {
-      handleVersionChange(changedVersion);
+  const onCloseOverlay = (changedVersion, outsideDetailOverlayAsset) => {
+    if(outsideDetailOverlayAsset){
+      setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: false });
+      onCloseDetailOverlay(outsideDetailOverlayAsset)
+    }else{
+      if (changedVersion) {
+        handleVersionChange(changedVersion);
+      }
+      setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: false });
     }
-    setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: false });
+
   };
 
   return (
@@ -99,9 +109,9 @@ const AssetThumbail = ({
           {asset.type === 'video' && <AssetVideo assetImg={thumbailUrl} asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} />}
           {asset.type === 'application' && <AssetApplication assetImg={thumbailUrl} extension={asset.extension} />}
           {asset.type === 'text' && <AssetText assetImg={thumbailUrl} extension={asset.extension} />} */}
-          {!isUploading && !isLoading && showAssetOption && (
+          {!isUploading && !isLoading && (showAssetOption || showViewButtonOnly) && (
             <>
-              <div
+            {(!showViewButtonOnly || (showViewButtonOnly && showSelectedAsset)) && <div
                 className={`${styles["selectable-wrapper"]} ${isSelected && styles["selected-wrapper"]
                   }`}
               >
@@ -118,7 +128,7 @@ const AssetThumbail = ({
                     onClick={toggleSelected}
                   />
                 )}
-              </div>
+              </div>}
               <div className={styles["image-button-wrapper"]}>
                 <Button
                   styleType={"primary"}
@@ -126,7 +136,7 @@ const AssetThumbail = ({
                   type={"button"}
                   onClick={() => {
                     if (onView) {
-                      onView()
+                      onView(asset.id)
                     } else {
                       setOverlayProperties({
                         ...DEFAULT_DETAIL_PROPS,

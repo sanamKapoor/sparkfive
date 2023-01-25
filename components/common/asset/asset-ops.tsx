@@ -11,6 +11,7 @@ import update from "immutability-helper";
 
 // Components
 import MoveModal from "../modals/move-modal";
+import MoveReplaceModal from "../modals/move-replace-modal";
 import CopyModal from "../modals/copy-modal";
 import ShareModal from "../modals/share-modal";
 import ShareCollectionModal from "../modals/share-collection-modal";
@@ -59,7 +60,7 @@ export default ({ getAssets }) => {
   });
 
   useEffect(() => {
-    if (activeOperation === "move" || activeOperation === "copy") {
+    if (activeOperation === "move" || activeOperation === "copy" || activeOperation === "moveReplace") {
       getFolders(true);
     }
 
@@ -238,6 +239,56 @@ export default ({ getAssets }) => {
     } catch (err) {
       console.log(err);
       toastUtils.error("Could not move assets, please try again later.");
+    }
+  };
+
+  const moveReplaceAssets = async (selectedFolder) => {
+    try {
+      let copyAssetIds;
+      let filters = {};
+      if (!operationAsset) {
+        copyAssetIds = selectedAssets.map(
+            (selectedAsset) => selectedAsset.asset.id
+        );
+      } else {
+        copyAssetIds = [operationAsset.asset.id];
+      }
+
+      // Select all assets without pagination
+      if (selectedAllAssets) {
+        filters = {
+          ...getAssetsFilters({
+            replace: false,
+            activeFolder,
+            addedIds: [],
+            nextPage: 1,
+            userFilterObject: activeSortFilter,
+          }),
+          selectedAll: "1",
+        };
+
+        if (term) {
+          // @ts-ignore
+          filters.term = term;
+        }
+        // @ts-ignore
+        delete filters.page;
+      }
+
+      const { data } = await assetApi.moveAssets(
+          { idList: copyAssetIds, folderId: selectedFolder },
+          filters
+      );
+      closeModalAndClearOpAsset();
+      toastUtils.success("Assets moved successfully");
+      // if (!activeFolder && activePageMode === "library") {
+      //   setAssets(update(assets, { $unshift: data }));
+      // }
+    } catch (err) {
+      console.log(err);
+      if (err.response?.status === 402)
+        toastUtils.error(err.response.data.message);
+      else toastUtils.error("Could not move assets, please try again later.");
     }
   };
 
@@ -553,7 +604,10 @@ export default ({ getAssets }) => {
       } else if (operationFolder) {
         versionGroups = operationFolder.assets.map((asset) => asset.versionGroup).join(",");
         assetIds = operationFolder.assets.map((asset) => asset.id).join(",");
-      } else {
+      } else if(operationAssets.length > 0){
+        versionGroups = operationAssets.map((item) => item.asset.versionGroup).join(",");
+        assetIds = operationAssets.map((item) => item.asset.id).join(",");
+      } else{
         versionGroups = selectedAssets
           .map((assetItem) => assetItem.asset.versionGroup)
           .join(",");
@@ -970,6 +1024,14 @@ export default ({ getAssets }) => {
 
   return (
     <>
+      <MoveReplaceModal
+          modalIsOpen={activeOperation === "moveReplace"}
+          closeModal={closeModalAndClearOpAsset}
+          itemsAmount={operationLength}
+          moveAssets={moveReplaceAssets}
+          confirmText={"Move"}
+          createFolder={createFolder}
+      />
       <MoveModal
         modalIsOpen={activeOperation === "move"}
         closeModal={closeModalAndClearOpAsset}

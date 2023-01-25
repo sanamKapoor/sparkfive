@@ -2,7 +2,7 @@ import styles from "./detail-overlay.module.css";
 import { Utilities, AssetOps } from "../../../assets";
 import { saveAs } from "file-saver";
 import { Rnd } from 'react-rnd';
-import { useState, useEffect, useContext } from "react";
+import {useState, useEffect, useContext, useRef} from "react";
 import assetApi from "../../../server-api/asset";
 import shareApi from "../../../server-api/share-collection";
 import customFileSizeApi from "../../../server-api/size";
@@ -42,6 +42,7 @@ import AssetNote from './asset-note';
 import AssetRelatedFIles from './asset-related-files';
 
 import { sizeToZipDownload } from "../../../constants/download";
+import EventBus from "../../../utils/event-bus";
 
 const getDefaultDownloadImageType = (extension) => {
   const defaultDownloadImageTypes = [
@@ -103,7 +104,8 @@ const DetailOverlay = ({
   sharePath = "",
   activeFolder = '',
   initialParams,
-  availableNext = true
+  availableNext = true,
+  outsideDetailOverlay = false,
 }) => {
   const { hasPermission } = useContext(UserContext);
   const { user, cdnAccess } = useContext(UserContext);
@@ -133,6 +135,9 @@ const DetailOverlay = ({
   const [defaultSize, setDefaultSize] = useState({ width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight });
   const [notes, setNotes] = useState([])
   const [sizeOfCrop, setSizeOfCrop] = useState({ width: defaultSize.width, height: defaultSize.height })
+
+  const renameValue = useRef("")
+  const setRenameValue = (value) => {renameValue.current = value}
 
   // For resize and cropping
   const [downloadImageTypes, setDownloadImageTypes] = useState(
@@ -204,14 +209,17 @@ const DetailOverlay = ({
 
 
   const _setActiveCollection = () => {
+    // TODO: ? What is purpose of this ?
     if (activeFolder) {
       const folder = folders.find(folder => folder.id === activeFolder);
-      // if (folder.assets.length === 0 && assets && assets.length) {
-      folder.assets = [...assets];
-      // }
-      setActiveCollection(folder);
-      const assetIndx = assets.findIndex(item => item.asset && item.asset.id === asset.id) + 1
-      setAssetIndex(assetIndx);
+      if(folder){
+        // if (folder.assets.length === 0 && assets && assets.length) {
+        folder.assets = [...assets];
+        // }
+        setActiveCollection(folder);
+        const assetIndx = assets.findIndex(item => item.asset && item.asset.id === asset.id) + 1
+        setAssetIndex(assetIndx);
+      }
     }
   }
 
@@ -225,7 +233,14 @@ const DetailOverlay = ({
       toggleSideMenu();
     }
     _setActiveCollection()
-  }, []);
+  }, [currentAsset]);
+
+  useEffect(()=>{
+    if(currentAsset.id !== asset.id){
+      setCurrentAsset(asset)
+    }
+
+  },[asset])
 
   // useEffect(() => {
   //   const modAssetIndex = assets.findIndex(assetItem => assetItem.asset.id === assetDetail?.id)
@@ -246,10 +261,14 @@ const DetailOverlay = ({
         setAssetDetail(asset);
       } else {
         const { data } = await assetApi.getById(asset.id);
-        setAssetDetail(data.asset);
 
-        setVersionRealUrl(data.realUrl);
-        setVersionThumbnailUrl(data.thumbailUrl);
+        if(data.asset.id !== assetDetail?.id){
+          setAssetDetail(data.asset);
+
+          setVersionRealUrl(data.realUrl);
+          setVersionThumbnailUrl(data.thumbailUrl);
+        }
+
       }
     } catch (err) {
       // console.log(err);
@@ -578,7 +597,10 @@ const DetailOverlay = ({
 
   const updateList = (versionAssets, curAsset) => {
     versionAssets = setDisplayVersions(versionAssets);
-    setCurrentAsset(curAsset);
+    if(currentAsset.id !== curAsset.id){
+      setCurrentAsset(curAsset);
+    }
+
     setVersions(versionAssets);
     setVersionCount(versionAssets.length);
   };
@@ -587,7 +609,11 @@ const DetailOverlay = ({
     try {
       const { data } = await assetApi.getVersions(currentAsset.versionGroup);
       updateList(data.versions, data.currentAsset);
-      getDetail(data.currentAsset);
+
+      if(data.currentAsset.id !== currentAsset.id){
+        getDetail(data.currentAsset);
+      }
+
     } catch (err) {
       // console.log(err)
     }
@@ -720,7 +746,6 @@ const DetailOverlay = ({
       closeOverlay();
       setDetailOverlayId(assets[newIndx].asset.id)
       if (newIndx === (assets.length - 1)) {
-        console.log(`Load more`)
         loadMore()
       }
     }
@@ -840,7 +865,7 @@ const DetailOverlay = ({
                   className={styles["only-desktop-button"]}
                   styleType={"secondary"}
                   onClick={() => {
-                    if (currentAsset.extension !== 'gif' && currentAsset.extension !== 'tiff' && currentAsset.extension !== 'tif' && currentAsset.extension !== "svg" && currentAsset.type === "image" && isImageType(assetDetail.extension)) {
+                    if (currentAsset.extension !== 'gif' && currentAsset.extension !== 'tiff' && currentAsset.extension !== 'tif' && currentAsset.extension !== "svg" && currentAsset.extension !== "svg+xml" && currentAsset.type === "image" && isImageType(assetDetail.extension)) {
                       setMode("resize");
                       changeActiveSide("detail");
                       resetImageSettings(undefined, undefined);
@@ -874,7 +899,7 @@ const DetailOverlay = ({
               <>
                 {mode === "detail" && (
 
-                    <AssetImg  imgClass="img-preview" name={assetDetail.name} assetImg={(assetDetail.extension === "tiff" || assetDetail.extension === "tif" || assetDetail.extension === "svg") ? versionThumbnailUrl :  versionRealUrl} />
+                    <AssetImg  imgClass="img-preview" name={assetDetail.name} assetImg={(assetDetail.extension === "tiff" || assetDetail.extension === "tif" || assetDetail.extension === "svg" || assetDetail.extension === "svg+xml") ? versionThumbnailUrl :  versionRealUrl} />
                 )}
                 {mode === "resize" && (
                   <Rnd position={{ x: detailPosSize.x, y: detailPosSize.y }}
@@ -892,6 +917,7 @@ const DetailOverlay = ({
                 {mode === "crop" && (
                   <AssetCropImg
                     imageType={imageType}
+                    assetExtension={assetDetail.extension}
                     setWidth={setWidth}
                     setHeight={setHeight}
                     locked={lockCropping()}
@@ -909,6 +935,7 @@ const DetailOverlay = ({
 
                       setAssetDetail(detail)
                     }}
+                    renameValue={renameValue}
                   />
                 )}
               </>
@@ -960,13 +987,13 @@ const DetailOverlay = ({
               </div>
             }
 
-            {/* Related Files */}
-            <AssetRelatedFIles assets={assetDetail.fileAssociations || []} associateFileId={currentAsset.id} onChangeRelatedFiles={onChangeRelatedFiles} onAddRelatedFiles={(data)=>{
-              console.log(data)
-              let updatedAssets = [...assetDetail.fileAssociations]
-              updatedAssets = updatedAssets.concat(data)
-              setAssetDetail({...assetDetail, fileAssociations: updatedAssets})
-            }}/>
+            {!isShare && <>
+              <AssetRelatedFIles outsideDetailOverlay={outsideDetailOverlay} closeOverlay={closeOverlay}  assets={assetDetail.fileAssociations || []} associateFileId={currentAsset.id} onChangeRelatedFiles={onChangeRelatedFiles} onAddRelatedFiles={(data)=>{
+                let updatedAssets = [...assetDetail.fileAssociations]
+                updatedAssets = updatedAssets.concat(data)
+                setAssetDetail({...assetDetail, fileAssociations: updatedAssets})
+              }}/>
+            </>}
           </div>
         </section>
       )}
@@ -1021,6 +1048,7 @@ const DetailOverlay = ({
 
                     setAssetDetail(detail)
                   }}
+                  setRenameData={setRenameValue}
                 />
               )}
             </>
