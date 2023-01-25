@@ -5,7 +5,7 @@ dev_server:
     - apt-get --yes --force-yes install rsync
   only:
     refs:
-      - dev
+      - NA-dev-UAT
   script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install    
       openssh-client -y )'
@@ -18,4 +18,4 @@ dev_server:
     - ssh -o StrictHostKeyChecking=no $deveop_user@$develop_host -p 22 "cd $develop_path_client && npm install && npm run build && pm2 restart all"
   when: manual
   only:
-    - dev
+    - NA-dev-UAT
