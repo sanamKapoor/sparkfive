@@ -53,8 +53,14 @@
 }
 
 .editable-input {
-  border: none;
+  outline: 0;
   width: auto;
+  max-width: 100%;
+  background-color: #ffffff;
+  border-radius: 4px;
+  border: 2px solid #dedad4;
+  padding: 3px 6px;
+  box-sizing: border-box;
 }
 
 .editable-preview {
