@@ -141,7 +141,7 @@ const FolderGridItem = ({
     setIsEditing(false);
     //fire api only if name is changed
 
-    if (name !== thumbnailName) {
+    if (thumbnailName && name !== thumbnailName) {
       try {
         const data = await folderApi.updateFolder(id, {
           name: e.target.value,
@@ -150,8 +150,8 @@ const FolderGridItem = ({
         if (data) {
           setFolders(
             folders.map((folder) => {
-              if (folder.id === data.id) {
-                return { ...folder, name: data.name };
+              if (folder.id === data.data.id) {
+                return { ...folder, name: data.data.name };
               } else {
                 return folder;
               }
@@ -163,6 +163,8 @@ const FolderGridItem = ({
       } catch (e) {
         toastUtils.error(FAILED_TO_UPDATE_COLLECTION_NAME);
       }
+    } else {
+      setThumbnailName(name);
     }
   };
 
