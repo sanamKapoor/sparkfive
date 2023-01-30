@@ -65,4 +65,8 @@
 
 .editable-preview {
   cursor: pointer;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: block;
 }
