@@ -107,7 +107,7 @@ const ListItem = ({
     setFocusedItem(null);
     setIsEditing(false);
     //fire api only if name is changed
-    if (assetName !== fileName) {
+    if (fileName && assetName !== fileName) {
       try {
         const data = await assetApi.updateAsset(asset.id, {
           updateData: { name: fileName + "." + asset.extension },
@@ -116,12 +116,14 @@ const ListItem = ({
 
         if (data) {
           setAssets(
-            assets.map((asset) => {
-              if (asset.id === data.id) {
-                console.log("coming inside if condition");
-                return { ...asset, name: fileName };
+            assets.map((item) => {
+              if (item.asset.id === data.data.id) {
+                return {
+                  ...item,
+                  asset: { ...item.asset, name: data.data.name },
+                };
               } else {
-                return asset;
+                return item;
               }
             })
           );
@@ -131,6 +133,8 @@ const ListItem = ({
       } catch (e) {
         toastUtils.error(FAILED_TO_UPDATE_ASSET_NAME);
       }
+    } else {
+      setFileName(assetName);
     }
   };
 

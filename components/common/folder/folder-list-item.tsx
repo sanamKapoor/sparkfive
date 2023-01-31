@@ -113,7 +113,7 @@ const FolderListItem = ({
     setFocusedItem(null);
     setIsEditing(false);
     //fire api only if name is changed
-    if (name !== collectionName) {
+    if (collectionName && name !== collectionName) {
       try {
         const data = await folderApi.updateFolder(id, {
           name: collectionName,
@@ -122,8 +122,8 @@ const FolderListItem = ({
         if (data) {
           setFolders(
             folders.map((folder) => {
-              if (folder.id === data.id) {
-                return { ...folder, name: data.name };
+              if (folder.id === data.data.id) {
+                return { ...folder, name: data.data.name };
               } else {
                 return folder;
               }
@@ -135,6 +135,8 @@ const FolderListItem = ({
       } catch (e) {
         toastUtils.error(FAILED_TO_UPDATE_COLLECTION_NAME);
       }
+    } else {
+      setCollectionName(name);
     }
   };
 
