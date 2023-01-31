@@ -75,6 +75,7 @@ const AssetThumbail = ({
   const assetName = removeExtension(asset.name);
 
   const [thumbnailName, setThumbnailName] = useState(assetName);
+
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
@@ -119,8 +120,8 @@ const AssetThumbail = ({
   const updateNameOnBlur = async (e) => {
     setIsEditing(false);
     setFocusedItem(null);
-    //fire api only if name is changed
-    if (assetName !== thumbnailName) {
+
+    if (thumbnailName && assetName !== thumbnailName) {
       try {
         const fileName = thumbnailName + "." + asset.extension;
         const data = await assetApi.updateAsset(asset.id, {
@@ -128,23 +129,30 @@ const AssetThumbail = ({
           associations: {},
         });
 
-        if (data) {
-          setAssets(
-            assets.map((asset) => {
-              if (asset.id === data.id) {
-                console.log("coming inside if condition");
-                return { ...asset, name: fileName };
+        if (data && removeExtension(data?.data?.name) !== assetName) {
+          const updatedAssets = [
+            ...assets.map((item) => {
+              if (item.asset.id === data?.data?.id) {
+                return {
+                  ...item,
+                  asset: {
+                    ...item.asset,
+                    name: fileName,
+                  },
+                };
               } else {
-                return asset;
+                return item;
               }
-            })
-          );
+            }),
+          ];
+          setAssets(updatedAssets);
         }
-
         toastUtils.success(ASSET_NAME_UPDATED);
       } catch (e) {
         toastUtils.error(FAILED_TO_UPDATE_ASSET_NAME);
       }
+    } else {
+      setThumbnailName(assetName);
     }
   };
 
