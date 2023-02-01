@@ -116,13 +116,7 @@ const CompanyList = ({ onViewCompanySettings }) => {
     <div className={styles.container}>
       <div className={styles.listIcon}>
         <img src={AssetOps.download} width={22} onClick={downloadAccountDetails} />
-      </div>
-      {/* <Button
-        styleType={"primary"}
-        text={"Download Accounts"}
-        type={"button"}
-        onClick={downloadAccountDetails}
-      /> */}
+      </div>      
       <Search
         onSubmit={searchAndGetUsers}
         placeholder={"Search accounts by company name, admin name or email"}

@@ -129,13 +129,7 @@ const UserList = () => {
     <div className={styles.container}>
       <div className={styles.listIcon}>
         <img src={AssetOps.download} width={22} onClick={downloadUserDetails} />
-      </div>
-      {/* <Button
-        styleType={"primary"}
-        text={"Download Users"}
-        type={"button"}
-        onClick={downloadUserDetails}
-      /> */}
+      </div>      
       <Search
         onSubmit={searchAndGetUsers}
         placeholder={"Search users by name or email"}

@@ -8,7 +8,11 @@
   right: 0;
 }
 .listIcon img {
-  margin-right: 10px;
+  margin-right: 1.2rem;
+  cursor: pointer;
+}
+.listIcon img:hover {
+  opacity: 0.5;
 }
 .listIcon img:last-child {
   margin-right: 0px;
