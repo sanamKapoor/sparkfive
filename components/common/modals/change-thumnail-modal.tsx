@@ -13,6 +13,7 @@ import { AssetOps, Utilities } from "../../../assets";
 import Autocomplete from "react-autocomplete";
 import AssetIcon from "../asset/asset-icon";
 import IconClickable from "../buttons/icon-clickable";
+import ChangeCollectionThumbnailRow from "../folder/change-collection-thumbnail-row";
 ReactModal.defaultStyles = {};
 
 // Used for the upload thumbnail for collection
@@ -86,7 +87,20 @@ const ChangeThumbnail = ({
   const [isImageForFourThumbView, setIsImageForFourThumbView] = useState({});
   const { setIsLoading } = useContext(LoadingContext);
   const { setFolders } = useContext(AssetContext);
-  const { activeSortFilter } = useContext(FilterContext)
+  const { activeSortFilter } = useContext(FilterContext);
+
+  const defaultModalView = "MULTI_THUMBNAIL_VIEW";
+
+  const initialModalView =
+    !modalData?.thumbnailPath && !modalData?.thumbnailExtension
+      ? defaultModalView
+      : "ONE_THUMBNAIL_VIEW";
+
+  const [modalView, setModalView] = useState(initialModalView);
+
+  useEffect(() => {
+    setModalView(initialModalView);
+  }, [modalData]);
 
   useEffect(() => {
     const cols: any = document.getElementsByTagName("html");
@@ -446,7 +460,7 @@ const ChangeThumbnail = ({
               thumbnailPath: data[0].realUrl,
               thumbnailExtension: data[0].asset.extension,
               thumbnails: { thumbnails: null },
-              thumbnailStorageId: data[0].asset.storageId
+              thumbnailStorageId: data[0].asset.storageId,
             }
           );
           getFolders();
@@ -490,7 +504,7 @@ const ChangeThumbnail = ({
             thumbnailPath: imagePath,
             thumbnail_extension: files[2],
             thumbnails: { thumbnails: null },
-            thumbnailStorageId: files[3]
+            thumbnailStorageId: files[3],
           }
         );
         setImagePath(null);
@@ -539,7 +553,6 @@ const ChangeThumbnail = ({
         }));
         let response;
         if (Object.keys(extentionsForFourThumbView).length) {
-
           let ext: any = [];
           Object.keys(extentionsForFourThumbView).forEach((ele) => {
             if (extentionsForFourThumbView[ele]) {
@@ -570,13 +583,15 @@ const ChangeThumbnail = ({
           fileUrls.push(...ext);
         }
 
-        var unique = fileUrls.filter(({extension, filePath}) => (extension || filePath)).filter(
-          (arr, index, self) =>
-            index ===
-            self.findIndex(
-              (t) => t.index === arr.index && t.index === arr.index
-            )
-        );
+        var unique = fileUrls
+          .filter(({ extension, filePath }) => extension || filePath)
+          .filter(
+            (arr, index, self) =>
+              index ===
+              self.findIndex(
+                (t) => t.index === arr.index && t.index === arr.index
+              )
+          );
         if (unique.length == 4) {
           await folderApi.updateFolder(
             modalData.id + `?folderId=${modalData.id}`,
@@ -645,15 +660,16 @@ const ChangeThumbnail = ({
           <div className={styles.checkbox4}>
             <IconClickable
               src={
-                checkBoxForFourThumbView
+                modalView === "MULTI_THUMBNAIL_VIEW"
                   ? Utilities.radioButtonEnabled
                   : Utilities.radioButtonNormal
               }
               additionalClass={styles["select-icon"]}
               onClick={() => {
-                setCheckBoxForFourThumbView(!checkBoxForFourThumbView);
-                setCheckBoxForSingleThumbView(checkBoxForFourThumbView);
-                onRemove();
+                // setCheckBoxForFourThumbView(!checkBoxForFourThumbView);
+                // setCheckBoxForSingleThumbView(checkBoxForFourThumbView);
+                setModalView("MULTI_THUMBNAIL_VIEW");
+                // onRemove();
               }}
             />
             <label
@@ -665,15 +681,16 @@ const ChangeThumbnail = ({
           <div className={styles.checkbox1}>
             <IconClickable
               src={
-                checkBoxForSingleThumbView
+                modalView === "ONE_THUMBNAIL_VIEW"
                   ? Utilities.radioButtonEnabled
                   : Utilities.radioButtonNormal
               }
               additionalClass={styles["select-icon"]}
               onClick={() => {
-                setCheckBoxForSingleThumbView(!checkBoxForSingleThumbView);
-                setCheckBoxForFourThumbView(checkBoxForSingleThumbView);
-                onRemove();
+                // setCheckBoxForSingleThumbView(!checkBoxForSingleThumbView);
+                // setCheckBoxForFourThumbView(checkBoxForSingleThumbView);
+                // onRemove();
+                setModalView("ONE_THUMBNAIL_VIEW");
               }}
             />
             <label
@@ -683,7 +700,77 @@ const ChangeThumbnail = ({
             </label>
           </div>
         </div>
-        {checkBoxForSingleThumbView && (
+        <div>
+          {modalView === "ONE_THUMBNAIL_VIEW" ? (
+            <ChangeCollectionThumbnailRow
+              index={1}
+              imgSrc={modalData?.thumbnailPath}
+              imgName="my-image.png"
+              onUpload={openFile}
+              isUploading={IsUploading}
+            />
+          ) : (
+            <>
+              <ChangeCollectionThumbnailRow
+                index={1}
+                // imgSrc={}
+                imgName="my-image.png"
+                onUpload={openFile}
+                isUploading={IsUploading}
+              />
+              <ChangeCollectionThumbnailRow
+                index={2}
+                // imgSrc={}
+                imgName="my-image.png"
+                onUpload={openFile}
+                isUploading={IsUploading}
+              />
+              <ChangeCollectionThumbnailRow
+                index={3}
+                // imgSrc={}
+                imgName="my-image.png"
+                onUpload={openFile}
+                isUploading={IsUploading}
+              />
+              <ChangeCollectionThumbnailRow
+                index={4}
+                // imgSrc={}
+                imgName="my-image.png"
+                onUpload={openFile}
+                isUploading={IsUploading}
+              />
+            </>
+          )}
+        </div>
+        <div className="row">
+          <div className="col-12" style={{ width: "100%" }}>
+            <div style={{ display: "flex", margin: "10px 26%" }}>
+              <Button
+                text="Save"
+                onClick={saveClick4}
+                type="button"
+                styleType="primary"
+                className={`${styles.button} ${
+                  imagePreview ? styles.margin_t : ""
+                } ${styles.mr}`}
+                disabled={IsUploading}
+              />
+              <Button
+                text="Cancel"
+                onClick={(e) => {
+                  onRemove();
+                  closeModal();
+                }}
+                type="button"
+                className={`${styles.button} ${
+                  imagePreview ? styles.margin_t : ""
+                } ${styles.mr} ${styles.cancel}`}
+                disabled={IsUploading}
+              />
+            </div>
+          </div>
+        </div>
+        {/*checkBoxForSingleThumbView && (
           <>
             <div
               className={styles.disaplay_box}
@@ -692,7 +779,12 @@ const ChangeThumbnail = ({
               {!imagePreview && (
                 <Autocomplete
                   getItemValue={(item) =>
-                    [item.name, item.value, item.extension, item.storageId].join(",")
+                    [
+                      item.name,
+                      item.value,
+                      item.extension,
+                      item.storageId,
+                    ].join(",")
                   }
                   items={
                     searching
@@ -703,7 +795,7 @@ const ChangeThumbnail = ({
                           name: ele.asset.name,
                           value: ele.thumbailUrl,
                           extension: ele.asset.extension,
-                          storageId: ele.asset.storageId
+                          storageId: ele.asset.storageId,
                         }))
                   }
                   value={value}
@@ -840,12 +932,12 @@ const ChangeThumbnail = ({
               />
             </div>
             <div className={styles.padding_div}>
-              <div className={styles.div}>
+              {/* <div className={styles.div}>
                 <p className={styles.paragrap}>
                   Or upload the image you want to use as thumbnail
                 </p>
-              </div>
-              <Button
+              </div> */}
+        {/* <Button
                 text="Upload Image"
                 onClick={openFile}
                 className={`${styles.button} ${styles.custom_button}`}
@@ -855,9 +947,9 @@ const ChangeThumbnail = ({
               />
             </div>
           </>
-        )}
+        )} */}
 
-        {checkBoxForFourThumbView && (
+        {/* {checkBoxForFourThumbView && (
           <>
             {[1, 2, 3, 4].map((ele, index) => (
               <div className="row" key={index} style={{ padding: "15px 21px" }}>
@@ -876,7 +968,12 @@ const ChangeThumbnail = ({
                       <div style={{ display: "inline-flex" }}>
                         <Autocomplete
                           getItemValue={(item) =>
-                            [item.name, item.value, item.extension, item.storageId].join(",")
+                            [
+                              item.name,
+                              item.value,
+                              item.extension,
+                              item.storageId,
+                            ].join(",")
                           }
                           items={
                             searchingForFourThumbView &&
@@ -893,7 +990,7 @@ const ChangeThumbnail = ({
                                     name: ele.asset.name,
                                     value: ele.thumbailUrl,
                                     extension: ele.asset.extension,
-                                    storageId: ele.asset.storageId
+                                    storageId: ele.asset.storageId,
                                   })
                                 )
                           }
@@ -1069,36 +1166,10 @@ const ChangeThumbnail = ({
                 </div>
               </div>
             ))}
-            <div className="row">
-              <div className="col-12" style={{ width: "100%" }}>
-                <div style={{ display: "flex", margin: "10px 26%" }}>
-                  <Button
-                    text="Save"
-                    onClick={saveClick4}
-                    type="button"
-                    styleType="primary"
-                    className={`${styles.button} ${
-                      imagePreview ? styles.margin_t : ""
-                    } ${styles.mr}`}
-                    disabled={IsUploading}
-                  />
-                  <Button
-                    text="Cancel"
-                    onClick={(e) => {
-                      onRemove();
-                      closeModal();
-                    }}
-                    type="button"
-                    className={`${styles.button} ${
-                      imagePreview ? styles.margin_t : ""
-                    } ${styles.mr} ${styles.cancel}`}
-                    disabled={IsUploading}
-                  />
-                </div>
               </div>
             </div>
           </>
-        )}
+        )}*/}
       </div>
     </ReactModal>
   );
