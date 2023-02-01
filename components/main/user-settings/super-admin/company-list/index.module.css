@@ -1,7 +1,17 @@
 .list{
   margin-top: 2rem;
 }
-
+.listIcon {
+  position: absolute;
+  top: 1rem;
+  right: 0;
+}
+.listIcon img {
+  margin-right: 10px;
+}
+.listIcon img:last-child {
+  margin-right: 0px;
+}
 .action{
   display: flex;
   justify-content: center;
