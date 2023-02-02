@@ -10,16 +10,18 @@ import classes from "./change-collection-thumbnail-row.module.css";
 const ChangeCollectionThumbnailRow = ({
   index,
   imgSrc,
-  imgName,
+  storageId,
   onUpload,
   isUploading,
 }) => {
+  const imgName = decodeURI(storageId?.split("/").at(-1));
+
   return (
     <div className={classes["row-wrapper"]}>
       <p>{index}</p>
       <div className={classes["img-preview-wrapper"]}>
-        <img src={imgSrc} alt={imgName} className={classes["img-preview"]} />
-        <p>{imgName}</p>
+        <img src={imgSrc} alt={"preview"} className={classes["img-preview"]} />
+        {imgName && storageId && <p>{imgName}</p>}
       </div>
       <IconClickable src={redDeleteIconSrc} />
       <p>or</p>

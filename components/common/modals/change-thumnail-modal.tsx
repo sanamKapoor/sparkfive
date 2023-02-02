@@ -666,10 +666,7 @@ const ChangeThumbnail = ({
               }
               additionalClass={styles["select-icon"]}
               onClick={() => {
-                // setCheckBoxForFourThumbView(!checkBoxForFourThumbView);
-                // setCheckBoxForSingleThumbView(checkBoxForFourThumbView);
                 setModalView("MULTI_THUMBNAIL_VIEW");
-                // onRemove();
               }}
             />
             <label
@@ -687,9 +684,6 @@ const ChangeThumbnail = ({
               }
               additionalClass={styles["select-icon"]}
               onClick={() => {
-                // setCheckBoxForSingleThumbView(!checkBoxForSingleThumbView);
-                // setCheckBoxForFourThumbView(checkBoxForSingleThumbView);
-                // onRemove();
                 setModalView("ONE_THUMBNAIL_VIEW");
               }}
             />
@@ -702,474 +696,464 @@ const ChangeThumbnail = ({
         </div>
         <div>
           {modalView === "ONE_THUMBNAIL_VIEW" ? (
-            <ChangeCollectionThumbnailRow
-              index={1}
-              imgSrc={modalData?.thumbnailPath}
-              imgName="my-image.png"
-              onUpload={openFile}
-              isUploading={IsUploading}
-            />
-          ) : (
-            <>
+            modalData?.thumbnailPath ? (
               <ChangeCollectionThumbnailRow
                 index={1}
-                // imgSrc={}
-                imgName="my-image.png"
+                imgSrc={modalData?.thumbnailPath}
+                storageId={modalData?.storageId}
                 onUpload={openFile}
                 isUploading={IsUploading}
               />
-              <ChangeCollectionThumbnailRow
-                index={2}
-                // imgSrc={}
-                imgName="my-image.png"
-                onUpload={openFile}
-                isUploading={IsUploading}
-              />
-              <ChangeCollectionThumbnailRow
-                index={3}
-                // imgSrc={}
-                imgName="my-image.png"
-                onUpload={openFile}
-                isUploading={IsUploading}
-              />
-              <ChangeCollectionThumbnailRow
-                index={4}
-                // imgSrc={}
-                imgName="my-image.png"
-                onUpload={openFile}
-                isUploading={IsUploading}
-              />
-            </>
-          )}
-        </div>
-        <div className="row">
-          <div className="col-12" style={{ width: "100%" }}>
-            <div style={{ display: "flex", margin: "10px 26%" }}>
-              <Button
-                text="Save"
-                onClick={saveClick4}
-                type="button"
-                styleType="primary"
-                className={`${styles.button} ${
-                  imagePreview ? styles.margin_t : ""
-                } ${styles.mr}`}
-                disabled={IsUploading}
-              />
-              <Button
-                text="Cancel"
-                onClick={(e) => {
-                  onRemove();
-                  closeModal();
-                }}
-                type="button"
-                className={`${styles.button} ${
-                  imagePreview ? styles.margin_t : ""
-                } ${styles.mr} ${styles.cancel}`}
-                disabled={IsUploading}
-              />
-            </div>
-          </div>
-        </div>
-        {/*checkBoxForSingleThumbView && (
-          <>
-            <div
-              className={styles.disaplay_box}
-              style={{ padding: "15px 0px" }}
-            >
-              {!imagePreview && (
-                <Autocomplete
-                  getItemValue={(item) =>
-                    [
-                      item.name,
-                      item.value,
-                      item.extension,
-                      item.storageId,
-                    ].join(",")
-                  }
-                  items={
-                    searching
-                      ? [{ name: "0", value: "0" }]
-                      : searchData.length == 0 && isSearched
-                      ? [{ name: "1", value: "1" }]
-                      : searchData.map((ele: any) => ({
-                          name: ele.asset.name,
-                          value: ele.thumbailUrl,
-                          extension: ele.asset.extension,
-                          storageId: ele.asset.storageId,
-                        }))
-                  }
-                  value={value}
-                  renderItem={(item, isHighlighted) => {
-                    if (item.name == "0") {
-                      return (
-                        <div
-                          className={styles.disaplay_box_item}
-                          style={{
-                            pointerEvents: "none",
-                            cursor: "not-allowed",
-                          }}
-                        >
-                          <br />
-                          <span className={styles.heading}>Searching...</span>
-                        </div>
-                      );
-                    } else if (item.name == "1") {
-                      return (
-                        <div
-                          className={styles.disaplay_box_item}
-                          style={{
-                            pointerEvents: "none",
-                            cursor: "not-allowed",
-                          }}
-                        >
-                          <br />
-                          <span className={styles.heading}>
-                            No Result Found.
-                          </span>
-                        </div>
-                      );
-                    } else {
-                      return (
-                        <div className={styles.disaplay_box_item}>
-                          {item.value !== "" ? (
-                            <img
-                              src={item.value}
-                              alt=""
-                              className={styles.imgicon}
-                            />
-                          ) : (
-                            <div className={styles.imgicon}>
-                              <AssetIcon extension={item.extension} />
-                            </div>
-                          )}
-                          <span className={styles.heading}>{item.name}</span>
-                        </div>
-                      );
-                    }
-                  }}
-                  onChange={(e) => onChangeEvent(e.target.value, 0)}
-                  onSelect={(e) => onSelectImage(e, 0)}
-                  menuStyle={{
-                    minWidth: "180px",
-                    borderRadius: "3px",
-                    boxShadow: "#f7ebdc",
-                    background: "#f7ebdc",
-                    overflowY: "auto",
-                    overflowX: "hidden",
-                    maxHeight: "185px",
-                    maxWidth: "358px",
-                    margin: "0px 10px 0px 0px",
-                    left: "auto",
-                    top: "auto",
-                    zIndex: "500",
-                    position: "fixed",
-                    width: "100%",
-                  }}
-                />
-              )}
-              <div
-                className={`${styles.preview} ${
-                  imagePreview ? styles.input : ""
-                }`}
-              >
-                {!isUrl && (
-                  <img
-                    id="myimage"
-                    className={styles.img_file}
-                    style={{
-                      display:
-                        imagePreview && !isImage && !extension
-                          ? "block"
-                          : "none",
-                    }}
-                  />
-                )}
-                {!isImage && extension && (
-                  <AssetIcon
-                    extension={extension}
-                    style={{ width: "5rem", padding: "10px" }}
-                  />
-                )}
-                {isUrl && isUrl.split(",")[1] && (
-                  <img
-                    src={isUrl.split(",")[1]}
-                    className={styles.img_file}
-                    style={{ display: imagePreview ? "block" : "none" }}
-                  />
-                )}
-                {isUrl && !isUrl.split(",")[1] && (
-                  <AssetIcon
-                    extension={isUrl.split(",")[2]}
-                    style={{ width: "5rem", padding: "10px" }}
-                  />
-                )}
-                {imagePreview && <label>{imageName}</label>}
-                {imagePreview && (
-                  <img
-                    src={AssetOps.deleteRed}
-                    alt=""
-                    onClick={onRemove}
-                    className={styles.deleteIcon}
-                  />
-                )}
-              </div>
-              <Button
-                text="Save"
-                onClick={imagePreview && !isUrl ? saveClick : saveLinkChanges}
-                type="button"
-                styleType="primary"
-                className={`${styles.button} ${
-                  imagePreview ? styles.margin_t : ""
-                } ${styles.save_button}`}
-                disabled={IsUploading}
-              />
-              <input
-                id="file-input-id"
-                ref={fileBrowserRef}
-                style={{ display: "none" }}
-                type="file"
-                onChange={onFileChange}
-              />
-            </div>
-            <div className={styles.padding_div}>
-              {/* <div className={styles.div}>
-                <p className={styles.paragrap}>
-                  Or upload the image you want to use as thumbnail
-                </p>
-              </div> */}
-        {/* <Button
-                text="Upload Image"
-                onClick={openFile}
-                className={`${styles.button} ${styles.custom_button}`}
-                disabled={IsUploading}
-                type="button"
-                styleType="primary"
-              />
-            </div>
-          </>
-        )} */}
-
-        {/* {checkBoxForFourThumbView && (
-          <>
-            {[1, 2, 3, 4].map((ele, index) => (
-              <div className="row" key={index} style={{ padding: "15px 21px" }}>
-                {imagePreviewForFourThumbView &&
-                  !imagePreviewForFourThumbView[ele] && (
-                    <div className="col-6 row-div">
-                      <p
-                        style={{
-                          display: "inline-flex",
-                          width: "10px",
-                          marginRight: "10px",
-                        }}
-                      >
-                        {ele}
-                      </p>{" "}
-                      <div style={{ display: "inline-flex" }}>
-                        <Autocomplete
-                          getItemValue={(item) =>
-                            [
-                              item.name,
-                              item.value,
-                              item.extension,
-                              item.storageId,
-                            ].join(",")
-                          }
-                          items={
-                            searchingForFourThumbView &&
-                            searchingForFourThumbView[ele]
-                              ? [{ name: "0", value: "0" }]
-                              : searchDataForFourThumbView[ele] &&
-                                searchDataForFourThumbView[ele].length == 0 &&
-                                isSearchedForFourThumbView &&
-                                isSearchedForFourThumbView[ele]
-                              ? [{ name: "1", value: "1" }]
-                              : searchDataForFourThumbView[ele] &&
-                                searchDataForFourThumbView[ele].map(
-                                  (ele: any) => ({
-                                    name: ele.asset.name,
-                                    value: ele.thumbailUrl,
-                                    extension: ele.asset.extension,
-                                    storageId: ele.asset.storageId,
-                                  })
-                                )
-                          }
-                          value={valueOfFourThumbnailView[ele]}
-                          renderItem={(item, isHighlighted) => {
-                            if (item.name == "0") {
-                              return (
-                                <div
-                                  className={styles.disaplay_box_item}
-                                  style={{
-                                    pointerEvents: "none",
-                                    cursor: "not-allowed",
-                                  }}
-                                >
-                                  <br />
-                                  <span className={styles.heading}>
-                                    Searching...
-                                  </span>
-                                </div>
-                              );
-                            } else if (item.name == "1") {
-                              return (
-                                <div
-                                  className={styles.disaplay_box_item}
-                                  style={{
-                                    pointerEvents: "none",
-                                    cursor: "not-allowed",
-                                  }}
-                                >
-                                  <br />
-                                  <span className={styles.heading}>
-                                    No Result Found.
-                                  </span>
-                                </div>
-                              );
-                            } else {
-                              return (
-                                <div className={styles.disaplay_box_item}>
-                                  {item.value !== "" ? (
-                                    <img
-                                      src={item.value}
-                                      alt=""
-                                      className={styles.imgicon}
-                                    />
-                                  ) : (
-                                    <div className={styles.imgicon}>
-                                      <AssetIcon extension={item.extension} />
-                                    </div>
-                                  )}
-                                  <span className={styles.heading}>
-                                    {item.name}
-                                  </span>
-                                </div>
-                              );
-                            }
-                          }}
-                          onChange={(e) => onChangeEvent(e.target.value, ele)}
-                          onSelect={(e) => onSelectImage(e, ele)}
-                          disablePortal={false}
-                          menuStyle={{
-                            minWidth: "180px",
-                            borderRadius: "3px",
-                            boxShadow: "#f7ebdc",
-                            background: "#f7ebdc",
-                            overflowY: "auto",
-                            overflowX: "hidden",
-                            maxHeight: "185px",
-                            maxWidth: "358px",
-                            margin: "0px 10px 0px 0px",
-                            left: "auto",
-                            top: "auto",
-                            zIndex: "500",
-                            position: "fixed",
-                            width: "100%",
-                          }}
-                        />
-                      </div>
-                    </div>
-                  )}
-                {imagePreviewForFourThumbView &&
-                  !imagePreviewForFourThumbView[ele] && (
-                    <div className={`${styles["or-class"]}`}>or</div>
-                  )}
-                {imagePreviewForFourThumbView &&
-                  !imagePreviewForFourThumbView[ele] && (
-                    <div className="col-4">
-                      <Button
-                        text="Upload Image"
-                        onClick={(e) => openFile(ele)}
-                        disabled={IsUploading}
-                        type="button"
-                        className={`${styles.m4}`}
-                      />
-                    </div>
-                  )}
+            ) : (
+              <>
                 <div
-                  className={`${styles.preview} ${
-                    imagePreviewForFourThumbView &&
-                    imagePreviewForFourThumbView[ele]
-                      ? styles.input
-                      : ""
-                  }`}
+                  className={styles.disaplay_box}
+                  style={{ padding: "15px 0px" }}
                 >
-                  {urlsForFourThumbView && !urlsForFourThumbView[ele] && (
-                    <img
-                      id={"myimage" + ele}
-                      className={styles.img_file}
-                      style={{
-                        display:
-                          imagePreviewForFourThumbView &&
-                          imagePreviewForFourThumbView[ele] &&
-                          isImageForFourThumbView &&
-                          !isImageForFourThumbView[ele] &&
-                          extentionsForFourThumbView &&
-                          !extentionsForFourThumbView[ele]
-                            ? "block"
-                            : "none",
+                  {!imagePreview && (
+                    <Autocomplete
+                      getItemValue={(item) =>
+                        [
+                          item.name,
+                          item.value,
+                          item.extension,
+                          item.storageId,
+                        ].join(",")
+                      }
+                      items={
+                        searching
+                          ? [{ name: "0", value: "0" }]
+                          : searchData.length == 0 && isSearched
+                          ? [{ name: "1", value: "1" }]
+                          : searchData.map((ele: any) => ({
+                              name: ele.asset.name,
+                              value: ele.thumbailUrl,
+                              extension: ele.asset.extension,
+                              storageId: ele.asset.storageId,
+                            }))
+                      }
+                      value={value}
+                      renderItem={(item, isHighlighted) => {
+                        if (item.name == "0") {
+                          return (
+                            <div
+                              className={styles.disaplay_box_item}
+                              style={{
+                                pointerEvents: "none",
+                                cursor: "not-allowed",
+                              }}
+                            >
+                              <br />
+                              <span className={styles.heading}>
+                                Searching...
+                              </span>
+                            </div>
+                          );
+                        } else if (item.name == "1") {
+                          return (
+                            <div
+                              className={styles.disaplay_box_item}
+                              style={{
+                                pointerEvents: "none",
+                                cursor: "not-allowed",
+                              }}
+                            >
+                              <br />
+                              <span className={styles.heading}>
+                                No Result Found.
+                              </span>
+                            </div>
+                          );
+                        } else {
+                          return (
+                            <div className={styles.disaplay_box_item}>
+                              {item.value !== "" ? (
+                                <img
+                                  src={item.value}
+                                  alt=""
+                                  className={styles.imgicon}
+                                />
+                              ) : (
+                                <div className={styles.imgicon}>
+                                  <AssetIcon extension={item.extension} />
+                                </div>
+                              )}
+                              <span className={styles.heading}>
+                                {item.name}
+                              </span>
+                            </div>
+                          );
+                        }
+                      }}
+                      onChange={(e) => onChangeEvent(e.target.value, 0)}
+                      onSelect={(e) => onSelectImage(e, 0)}
+                      menuStyle={{
+                        minWidth: "180px",
+                        borderRadius: "3px",
+                        boxShadow: "#f7ebdc",
+                        background: "#f7ebdc",
+                        overflowY: "auto",
+                        overflowX: "hidden",
+                        maxHeight: "185px",
+                        maxWidth: "358px",
+                        margin: "0px 10px 0px 0px",
+                        left: "auto",
+                        top: "auto",
+                        zIndex: "500",
+                        position: "fixed",
+                        width: "100%",
                       }}
                     />
                   )}
-                  {isImageForFourThumbView &&
-                    !isImageForFourThumbView[ele] &&
-                    extentionsForFourThumbView &&
-                    extentionsForFourThumbView[ele] && (
-                      <AssetIcon
-                        extension={extentionsForFourThumbView[ele]}
-                        style={{ width: "5rem", padding: "10px" }}
-                      />
-                    )}
-                  {urlsForFourThumbView &&
-                    urlsForFourThumbView[ele] &&
-                    urlsForFourThumbView[ele].split(",")[1] && (
+                  <div
+                    className={`${styles.preview} ${
+                      imagePreview ? styles.input : ""
+                    }`}
+                  >
+                    {!isUrl && (
                       <img
-                        src={urlsForFourThumbView[ele].split(",")[1]}
+                        id="myimage"
                         className={styles.img_file}
                         style={{
                           display:
-                            imagePreviewForFourThumbView &&
-                            imagePreviewForFourThumbView[ele]
+                            imagePreview && !isImage && !extension
                               ? "block"
                               : "none",
                         }}
                       />
                     )}
-                  {urlsForFourThumbView &&
-                    urlsForFourThumbView[ele] &&
-                    !urlsForFourThumbView[ele].split(",")[1] && (
+                    {!isImage && extension && (
                       <AssetIcon
-                        extension={urlsForFourThumbView[ele].split(",")[2]}
+                        extension={extension}
                         style={{ width: "5rem", padding: "10px" }}
                       />
                     )}
-                  {imagePreviewForFourThumbView &&
-                    imagePreviewForFourThumbView[ele] && (
-                      <label>{imageNameForFourThumbView[ele]}</label>
+                    {isUrl && isUrl.split(",")[1] && (
+                      <img
+                        src={isUrl.split(",")[1]}
+                        className={styles.img_file}
+                        style={{ display: imagePreview ? "block" : "none" }}
+                      />
                     )}
-                  {imagePreviewForFourThumbView &&
-                    imagePreviewForFourThumbView[ele] && (
+                    {isUrl && !isUrl.split(",")[1] && (
+                      <AssetIcon
+                        extension={isUrl.split(",")[2]}
+                        style={{ width: "5rem", padding: "10px" }}
+                      />
+                    )}
+                    {imagePreview && <label>{imageName}</label>}
+                    {imagePreview && (
                       <img
                         src={AssetOps.deleteRed}
                         alt=""
-                        onClick={(e) => onRemove(ele)}
+                        onClick={onRemove}
                         className={styles.deleteIcon}
                       />
                     )}
+                  </div>
+                  <Button
+                    text="Save"
+                    onClick={
+                      imagePreview && !isUrl ? saveClick : saveLinkChanges
+                    }
+                    type="button"
+                    styleType="primary"
+                    className={`${styles.button} ${
+                      imagePreview ? styles.margin_t : ""
+                    } ${styles.save_button}`}
+                    disabled={IsUploading}
+                  />
                   <input
                     id="file-input-id"
-                    ref={FileBrowser[ele]}
+                    ref={fileBrowserRef}
                     style={{ display: "none" }}
                     type="file"
-                    onChange={(e) => onFileChange(e, ele)}
+                    onChange={onFileChange}
                   />
                 </div>
+                <div className={styles.padding_div}>
+                  <div className={styles.div}>
+                    <p className={styles.paragrap}>
+                      Or upload the image you want to use as thumbnail
+                    </p>
+                  </div>
+                  <Button
+                    text="Upload Image"
+                    onClick={openFile}
+                    className={`${styles.button} ${styles.custom_button}`}
+                    disabled={IsUploading}
+                    type="button"
+                    styleType="primary"
+                  />
+                </div>
+              </>
+            )
+          ) : modalData?.thumbnails && modalData?.thumbnails?.thumbnails ? (
+            <>
+              {modalData?.thumbnails?.thumbnails.map((thumbnail) => {
+                return (
+                  <ChangeCollectionThumbnailRow
+                    index={thumbnail.index}
+                    imgSrc={thumbnail.filePath}
+                    storageId={thumbnail.storageId}
+                    onUpload={openFile}
+                    isUploading={IsUploading}
+                  />
+                );
+              })}
+            </>
+          ) : (
+            <>
+              {[1, 2, 3, 4].map((ele, index) => (
+                <div
+                  className="row"
+                  key={index}
+                  style={{ padding: "15px 21px" }}
+                >
+                  {imagePreviewForFourThumbView &&
+                    !imagePreviewForFourThumbView[ele] && (
+                      <div className="col-6 row-div">
+                        <p
+                          style={{
+                            display: "inline-flex",
+                            width: "10px",
+                            marginRight: "10px",
+                          }}
+                        >
+                          {ele}
+                        </p>{" "}
+                        <div style={{ display: "inline-flex" }}>
+                          <Autocomplete
+                            getItemValue={(item) =>
+                              [
+                                item.name,
+                                item.value,
+                                item.extension,
+                                item.storageId,
+                              ].join(",")
+                            }
+                            items={
+                              searchingForFourThumbView &&
+                              searchingForFourThumbView[ele]
+                                ? [{ name: "0", value: "0" }]
+                                : searchDataForFourThumbView[ele] &&
+                                  searchDataForFourThumbView[ele].length == 0 &&
+                                  isSearchedForFourThumbView &&
+                                  isSearchedForFourThumbView[ele]
+                                ? [{ name: "1", value: "1" }]
+                                : searchDataForFourThumbView[ele] &&
+                                  searchDataForFourThumbView[ele].map(
+                                    (ele: any) => ({
+                                      name: ele.asset.name,
+                                      value: ele.thumbailUrl,
+                                      extension: ele.asset.extension,
+                                      storageId: ele.asset.storageId,
+                                    })
+                                  )
+                            }
+                            value={valueOfFourThumbnailView[ele]}
+                            renderItem={(item, isHighlighted) => {
+                              if (item.name == "0") {
+                                return (
+                                  <div
+                                    className={styles.disaplay_box_item}
+                                    style={{
+                                      pointerEvents: "none",
+                                      cursor: "not-allowed",
+                                    }}
+                                  >
+                                    <br />
+                                    <span className={styles.heading}>
+                                      Searching...
+                                    </span>
+                                  </div>
+                                );
+                              } else if (item.name == "1") {
+                                return (
+                                  <div
+                                    className={styles.disaplay_box_item}
+                                    style={{
+                                      pointerEvents: "none",
+                                      cursor: "not-allowed",
+                                    }}
+                                  >
+                                    <br />
+                                    <span className={styles.heading}>
+                                      No Result Found.
+                                    </span>
+                                  </div>
+                                );
+                              } else {
+                                return (
+                                  <div className={styles.disaplay_box_item}>
+                                    {item.value !== "" ? (
+                                      <img
+                                        src={item.value}
+                                        alt=""
+                                        className={styles.imgicon}
+                                      />
+                                    ) : (
+                                      <div className={styles.imgicon}>
+                                        <AssetIcon extension={item.extension} />
+                                      </div>
+                                    )}
+                                    <span className={styles.heading}>
+                                      {item.name}
+                                    </span>
+                                  </div>
+                                );
+                              }
+                            }}
+                            onChange={(e) => onChangeEvent(e.target.value, ele)}
+                            onSelect={(e) => onSelectImage(e, ele)}
+                            disablePortal={false}
+                            menuStyle={{
+                              minWidth: "180px",
+                              borderRadius: "3px",
+                              boxShadow: "#f7ebdc",
+                              background: "#f7ebdc",
+                              overflowY: "auto",
+                              overflowX: "hidden",
+                              maxHeight: "185px",
+                              maxWidth: "358px",
+                              margin: "0px 10px 0px 0px",
+                              left: "auto",
+                              top: "auto",
+                              zIndex: "500",
+                              position: "fixed",
+                              width: "100%",
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  {imagePreviewForFourThumbView &&
+                    !imagePreviewForFourThumbView[ele] && (
+                      <div className={`${styles["or-class"]}`}>or</div>
+                    )}
+                  {imagePreviewForFourThumbView &&
+                    !imagePreviewForFourThumbView[ele] && (
+                      <div className="col-4">
+                        <Button
+                          text="Upload Image"
+                          onClick={(e) => openFile(ele)}
+                          disabled={IsUploading}
+                          type="button"
+                          className={`${styles.m4}`}
+                        />
+                      </div>
+                    )}
+                  <div
+                    className={`${styles.preview} ${
+                      imagePreviewForFourThumbView &&
+                      imagePreviewForFourThumbView[ele]
+                        ? styles.input
+                        : ""
+                    }`}
+                  >
+                    {urlsForFourThumbView && !urlsForFourThumbView[ele] && (
+                      <img
+                        id={"myimage" + ele}
+                        className={styles.img_file}
+                        style={{
+                          display:
+                            imagePreviewForFourThumbView &&
+                            imagePreviewForFourThumbView[ele] &&
+                            isImageForFourThumbView &&
+                            !isImageForFourThumbView[ele] &&
+                            extentionsForFourThumbView &&
+                            !extentionsForFourThumbView[ele]
+                              ? "block"
+                              : "none",
+                        }}
+                      />
+                    )}
+                    {isImageForFourThumbView &&
+                      !isImageForFourThumbView[ele] &&
+                      extentionsForFourThumbView &&
+                      extentionsForFourThumbView[ele] && (
+                        <AssetIcon
+                          extension={extentionsForFourThumbView[ele]}
+                          style={{ width: "5rem", padding: "10px" }}
+                        />
+                      )}
+                    {urlsForFourThumbView &&
+                      urlsForFourThumbView[ele] &&
+                      urlsForFourThumbView[ele].split(",")[1] && (
+                        <img
+                          src={urlsForFourThumbView[ele].split(",")[1]}
+                          className={styles.img_file}
+                          style={{
+                            display:
+                              imagePreviewForFourThumbView &&
+                              imagePreviewForFourThumbView[ele]
+                                ? "block"
+                                : "none",
+                          }}
+                        />
+                      )}
+                    {urlsForFourThumbView &&
+                      urlsForFourThumbView[ele] &&
+                      !urlsForFourThumbView[ele].split(",")[1] && (
+                        <AssetIcon
+                          extension={urlsForFourThumbView[ele].split(",")[2]}
+                          style={{ width: "5rem", padding: "10px" }}
+                        />
+                      )}
+                    {imagePreviewForFourThumbView &&
+                      imagePreviewForFourThumbView[ele] && (
+                        <label>{imageNameForFourThumbView[ele]}</label>
+                      )}
+                    {imagePreviewForFourThumbView &&
+                      imagePreviewForFourThumbView[ele] && (
+                        <img
+                          src={AssetOps.deleteRed}
+                          alt=""
+                          onClick={(e) => onRemove(ele)}
+                          className={styles.deleteIcon}
+                        />
+                      )}
+                    <input
+                      id="file-input-id"
+                      ref={FileBrowser[ele]}
+                      style={{ display: "none" }}
+                      type="file"
+                      onChange={(e) => onFileChange(e, ele)}
+                    />
+                  </div>
+                </div>
+              ))}
+              <div className="row">
+                <div className="col-12" style={{ width: "100%" }}>
+                  <div style={{ display: "flex", margin: "10px 26%" }}>
+                    <Button
+                      text="Save"
+                      onClick={saveClick4}
+                      type="button"
+                      styleType="primary"
+                      className={`${styles.button} ${
+                        imagePreview ? styles.margin_t : ""
+                      } ${styles.mr}`}
+                      disabled={IsUploading}
+                    />
+                    <Button
+                      text="Cancel"
+                      onClick={(e) => {
+                        onRemove();
+                        closeModal();
+                      }}
+                      type="button"
+                      className={`${styles.button} ${
+                        imagePreview ? styles.margin_t : ""
+                      } ${styles.mr} ${styles.cancel}`}
+                      disabled={IsUploading}
+                    />
+                  </div>
+                </div>
               </div>
-            ))}
-              </div>
-            </div>
-          </>
-        )}*/}
+            </>
+          )}
+        </div>
       </div>
     </ReactModal>
   );
