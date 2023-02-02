@@ -177,7 +177,7 @@ const SuperAdmin = () => {
     }
 
   return (
-    <div className={styles.container}>
+    <div className={(styles.container, styles.posRelative)}>
         {!viewCompanyDetail && <>
             <div className={styles.buttons}>
                 <SectionButton

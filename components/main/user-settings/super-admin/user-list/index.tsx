@@ -13,6 +13,7 @@ import Search from "../../../../common/inputs/search";
 import Button from "../../../../common/buttons/button";
 import SpinnerOverlay from "../../../../common/spinners/spinner-overlay";
 import { Assets } from "../../../../../assets";
+import { AssetOps } from "../../../../../assets";
 
 import { saveAs } from "file-saver";
 import toastUtils from "../../../../../utils/toast";
@@ -126,16 +127,12 @@ const UserList = () => {
 
   return (
     <div className={styles.container}>
+      <div className={styles.listIcon}>
+        <img src={AssetOps.download} width={22} onClick={downloadUserDetails} />
+      </div>      
       <Search
         onSubmit={searchAndGetUsers}
         placeholder={"Search users by name or email"}
-      />
-
-      <Button
-        styleType={"primary"}
-        text={"Download Users"}
-        type={"button"}
-        onClick={downloadUserDetails}
       />
       <ul className={styles.list}>
         <li>

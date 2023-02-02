@@ -18,6 +18,7 @@ import {
   ACCOUNTS_DOWNLOADED,
   FAILED_TO_DOWNLOAD_ACCOUNTS,
 } from "../../../../../constants/messages";
+import { AssetOps } from "../../../../../assets";
 
 const CompanyList = ({ onViewCompanySettings }) => {
   const [term, setTerm] = useState("");
@@ -113,15 +114,12 @@ const CompanyList = ({ onViewCompanySettings }) => {
 
   return (
     <div className={styles.container}>
+      <div className={styles.listIcon}>
+        <img src={AssetOps.download} width={22} onClick={downloadAccountDetails} />
+      </div>      
       <Search
         onSubmit={searchAndGetUsers}
         placeholder={"Search accounts by company name, admin name or email"}
-      />
-      <Button
-        styleType={"primary"}
-        text={"Download Accounts"}
-        type={"button"}
-        onClick={downloadAccountDetails}
       />
       <ul className={styles.list}>
         <li>
