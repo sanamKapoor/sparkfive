@@ -7,33 +7,43 @@ import Button from "../buttons/button";
 import styles from "../../common/modals/change-thumnail-modal.module.css";
 import classes from "./change-collection-thumbnail-row.module.css";
 
+import { Assets } from "../../../assets";
+
 const ChangeCollectionThumbnailRow = ({
   index,
   imgSrc,
-  storageId,
+  imgName,
   onUpload,
   isUploading,
+  onDelete,
+  fileInputRef,
+  onChangeThisOnly,
 }) => {
-  const imgName = decodeURI(storageId?.split("/").at(-1));
-
+  console.log("fileInputRef: ", fileInputRef);
   return (
     <div className={classes["row-wrapper"]}>
-      <p>{index}</p>
+      {index !== "0" && <p>{index}</p>}
       <div className={classes["img-preview-wrapper"]}>
         <img src={imgSrc} alt={"preview"} className={classes["img-preview"]} />
-        {imgName && storageId && <p>{imgName}</p>}
+        {imgName && imgName !== "undefined" && <p>{imgName}</p>}
       </div>
-      <IconClickable src={redDeleteIconSrc} />
+      <IconClickable src={redDeleteIconSrc} onClick={onDelete} />
       <p>or</p>
+      <label onChange={onUpload} htmlFor={`upload-file-${index}`}>
+        <input
+          name=""
+          type="file"
+          id={`upload-file-${index}`}
+          hidden
+          ref={fileInputRef}
+        />
+        Upload Image
+      </label>
       <Button
-        text="Upload Image"
-        onClick={onUpload}
-        className={`${styles.button} ${styles.custom_button}`}
-        disabled={isUploading}
+        onClick={onChangeThisOnly}
+        text="Change this image only"
         type="button"
-        styleType="primary"
       />
-      <p>Change this image only</p>
     </div>
   );
 };
