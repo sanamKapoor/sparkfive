@@ -248,7 +248,11 @@ const AssetThumbail = ({
                   <span
                     id="editable-preview"
                     onClick={handleOnFocus}
-                    className={`${gridStyles["editable-preview"]}`}
+                    className={
+                      isThumbnailNameEditable
+                        ? gridStyles["editable-preview"]
+                        : `${gridStyles["editable-preview"]} ${gridStyles["non-editable-preview"]}`
+                    }
                   >
                     {thumbnailName}.{asset.extension}
                   </span>
