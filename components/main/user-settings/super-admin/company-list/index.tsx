@@ -23,6 +23,7 @@ import IconClickable from "../../../../common/buttons/icon-clickable";
 
 const CompanyList = ({ onViewCompanySettings }) => {
   const [term, setTerm] = useState("");
+  const [termForDownload, setTermForDownload] = useState("");
   const [loading, setLoading] = useState(true);
 
   const [companyData, setCompanyData] = useState({
@@ -87,6 +88,7 @@ const CompanyList = ({ onViewCompanySettings }) => {
       sortDirection: sortData.sortDirection,
     });
     setTerm(searchTerm);
+    setTermForDownload(searchTerm);
   };
 
   const getMore = () => {
@@ -102,6 +104,7 @@ const CompanyList = ({ onViewCompanySettings }) => {
       setLoading(true);
       const res = await superAdminApi.downloadDetails({
         type: "accounts",
+        term: termForDownload,
         sortBy: sortData.sortBy,
         sortOrder: sortData.sortDirection,
       });

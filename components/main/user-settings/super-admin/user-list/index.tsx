@@ -25,6 +25,8 @@ import IconClickable from "../../../../common/buttons/icon-clickable";
 
 const UserList = () => {
   const [term, setTerm] = useState("");
+  const [termForDownload, setTermForDownload] = useState("");
+
   const [loading, setLoading] = useState(true);
 
   const [userData, setUserData] = useState({
@@ -86,6 +88,7 @@ const UserList = () => {
       sortDirection: sortData.sortDirection,
     });
     setTerm(searchTerm);
+    setTermForDownload(searchTerm);
   };
 
   const getUserJWT = async (user) => {
@@ -115,6 +118,7 @@ const UserList = () => {
       setLoading(true);
       const res = await superAdminApi.downloadDetails({
         type: "users",
+        term: termForDownload,
         sortBy: sortData.sortBy,
         sortOrder: sortData.sortDirection,
       });
