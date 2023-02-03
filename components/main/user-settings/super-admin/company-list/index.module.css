@@ -1,4 +1,4 @@
-.list{
+.list {
   margin-top: 2rem;
 }
 .listIcon {
@@ -16,17 +16,17 @@
 .listIcon img:last-child {
   margin-right: 0px;
 }
-.action{
+.action {
   display: flex;
   justify-content: center;
   margin-top: 2rem;
 }
 
-.name-email>div:first-child{
+.name-email > div:first-child {
   font-weight: 600;
 }
 
-.no-comp{
+.no-comp {
   color: var(--color-sec-blue);
 }
 
@@ -38,7 +38,7 @@
   border-bottom: 1px solid var(--color-secondary-border);
 }
 
-.header-title{
+.header-title {
   font-weight: 600;
   font-size: 14px;
   display: flex;
@@ -55,7 +55,11 @@
   width: 24%;
 }
 
-.date, .storage, .btn, .plan, .files {
+.date,
+.storage,
+.btn,
+.plan,
+.files {
   width: 10%;
 }
 
@@ -63,6 +67,10 @@
   width: 5%;
 }
 
-.invisible{
+.invisible {
   visibility: hidden;
+}
+
+.download-icon {
+  scale: 1.4;
 }
