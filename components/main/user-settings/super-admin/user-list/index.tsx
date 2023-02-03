@@ -21,6 +21,7 @@ import {
   FAILED_TO_DOWNLOAD_USERS,
   USERS_DOWNLOADED,
 } from "../../../../../constants/messages";
+import IconClickable from "../../../../common/buttons/icon-clickable";
 
 const UserList = () => {
   const [term, setTerm] = useState("");
@@ -112,7 +113,11 @@ const UserList = () => {
   const downloadUserDetails = async () => {
     try {
       setLoading(true);
-      const res = await superAdminApi.downloadDetails({ type: "users" });
+      const res = await superAdminApi.downloadDetails({
+        type: "users",
+        sortBy: sortData.sortBy,
+        sortOrder: sortData.sortDirection,
+      });
       const fileData = new Blob([res.data], {
         type: "text/csv;charset=utf-8",
       });
@@ -128,8 +133,15 @@ const UserList = () => {
   return (
     <div className={styles.container}>
       <div className={styles.listIcon}>
-        <img src={AssetOps.download} width={22} onClick={downloadUserDetails} />
-      </div>      
+        <IconClickable
+          src={AssetOps.download}
+          onClick={downloadUserDetails}
+          tooltipText={"Download All"}
+          tooltipId={"download_users"}
+          place="bottom"
+          additionalClass={styles["download-icon"]}
+        />
+      </div>
       <Search
         onSubmit={searchAndGetUsers}
         placeholder={"Search users by name or email"}

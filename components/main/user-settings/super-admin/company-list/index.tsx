@@ -19,6 +19,7 @@ import {
   FAILED_TO_DOWNLOAD_ACCOUNTS,
 } from "../../../../../constants/messages";
 import { AssetOps } from "../../../../../assets";
+import IconClickable from "../../../../common/buttons/icon-clickable";
 
 const CompanyList = ({ onViewCompanySettings }) => {
   const [term, setTerm] = useState("");
@@ -99,7 +100,11 @@ const CompanyList = ({ onViewCompanySettings }) => {
   const downloadAccountDetails = async () => {
     try {
       setLoading(true);
-      const res = await superAdminApi.downloadDetails({ type: "accounts" });
+      const res = await superAdminApi.downloadDetails({
+        type: "accounts",
+        sortBy: sortData.sortBy,
+        sortOrder: sortData.sortDirection,
+      });
       const fileData = new Blob([res.data], {
         type: "text/csv;charset=utf-8",
       });
@@ -115,8 +120,15 @@ const CompanyList = ({ onViewCompanySettings }) => {
   return (
     <div className={styles.container}>
       <div className={styles.listIcon}>
-        <img src={AssetOps.download} width={22} onClick={downloadAccountDetails} />
-      </div>      
+        <IconClickable
+          tooltipId={"download_accounts"}
+          src={AssetOps.download}
+          onClick={downloadAccountDetails}
+          tooltipText="Download All"
+          place="bottom"
+          additionalClass={styles["download-icon"]}
+        />
+      </div>
       <Search
         onSubmit={searchAndGetUsers}
         placeholder={"Search accounts by company name, admin name or email"}
