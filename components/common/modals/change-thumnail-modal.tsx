@@ -648,6 +648,9 @@ const ChangeThumbnail = ({
   const [localThumbnails, setLocalThumbnails] = useState(initialThumbnailsData);
   const [localThumbnail, setLocalThumbnail] = useState(initialLocalThumbnail);
 
+  const [uploadFile, setUploadFile] = useState("");
+  const [uploadFiles, setUploadFiles] = useState(["", "", "", ""]);
+
   const fileBrowserRef = useRef(undefined);
   const fileBrowseForFirstIndex = useRef(undefined);
   const fileBrowseForSecondtIndex = useRef(undefined);
@@ -705,6 +708,7 @@ const ChangeThumbnail = ({
   const handleUploadThumbnail = (e, index) => {
     openFile(index);
     if (index === "0") {
+      setUploadFile(e.target.files[0]);
       setLocalThumbnail({
         ...localThumbnail,
         name: e.target.files[0].name,
@@ -713,6 +717,11 @@ const ChangeThumbnail = ({
         isChanging: false,
       });
     } else {
+      const uploadFilesCopy = [...uploadFiles];
+      uploadFilesCopy.splice(index, 1, e.target.files[0]);
+
+      setUploadFiles(uploadFilesCopy);
+
       const localThumbnailsCopy = [...localThumbnails];
       const findThumbnail = localThumbnails.findIndex((thumb) => {
         console.log(thumb.index === index);
@@ -756,7 +765,39 @@ const ChangeThumbnail = ({
     closeModal();
   };
 
-  const handleSave = () => {};
+  const handleSave = async () => {
+    try {
+      if (modalView === "ONE_THUMBNAIL_VIEW") {
+        console.log("uploaded file: ", uploadFile);
+        if (localThumbnail.isEmpty) {
+          toastUtils.error("Please select a thumbnail!");
+        } else {
+          const formData = new FormData();
+          formData.append("thumbnail", uploadFile);
+          const { data } = await assetApi.uploadThumbnail(formData, {
+            folderId: modalData.id,
+          });
+
+          if (data) {
+            await folderApi.updateFolder(
+              modalData.id + `?folderId=${modalData.id}`,
+              {
+                thumbnailPath: data[0].realUrl,
+                thumbnailExtension: data[0].asset.extension,
+                thumbnails: { thumbnails: null },
+                thumbnailStorageId: data[0].asset.storageId,
+              }
+            );
+            getFolders();
+          }
+        }
+      } else if (modalView === "MULTI_THUMBNAIL_VIEW") {
+      }
+    } catch (error) {
+      console.log("error: ", error);
+      toastUtils.error("Could not update photo, please try again later.");
+    }
+  };
 
   console.log("localThumbnails: ", localThumbnails);
   console.log("single local thumbnail: ", localThumbnail);
@@ -774,8 +815,8 @@ const ChangeThumbnail = ({
       style={{
         content: {
           maxWidth: "702px",
-          width: "90%"
-        }
+          width: "90%",
+        },
       }}
     >
       <div
@@ -797,44 +838,35 @@ const ChangeThumbnail = ({
             </p>
           </div>
           <div className={styles.checkbox_option}>
-          <div className={styles.checkbox4}>
-            <IconClickable
-              src={
-                modalView === "MULTI_THUMBNAIL_VIEW"
-                  ? Utilities.radioButtonEnabled
-                  : Utilities.radioButtonNormal
-              }
-              additionalClass={styles["select-icon"]}
-              onClick={() => {
-                setModalView("MULTI_THUMBNAIL_VIEW");
-              }}
-            />
-            <label
-              style={{ paddingLeft: "13px" }}
-            >
-              4 Thumbnail Preview
-            </label>
+            <div className={styles.checkbox4}>
+              <IconClickable
+                src={
+                  modalView === "MULTI_THUMBNAIL_VIEW"
+                    ? Utilities.radioButtonEnabled
+                    : Utilities.radioButtonNormal
+                }
+                additionalClass={styles["select-icon"]}
+                onClick={() => {
+                  setModalView("MULTI_THUMBNAIL_VIEW");
+                }}
+              />
+              <label style={{ paddingLeft: "13px" }}>4 Thumbnail Preview</label>
+            </div>
+            <div className={styles.checkbox1}>
+              <IconClickable
+                src={
+                  modalView === "ONE_THUMBNAIL_VIEW"
+                    ? Utilities.radioButtonEnabled
+                    : Utilities.radioButtonNormal
+                }
+                additionalClass={styles["select-icon"]}
+                onClick={() => {
+                  setModalView("ONE_THUMBNAIL_VIEW");
+                }}
+              />
+              <label style={{ paddingLeft: "13px" }}>1 Thumbnail Preview</label>
+            </div>
           </div>
-          <div className={styles.checkbox1}>
-            <IconClickable
-              src={
-                modalView === "ONE_THUMBNAIL_VIEW"
-                  ? Utilities.radioButtonEnabled
-                  : Utilities.radioButtonNormal
-              }
-              additionalClass={styles["select-icon"]}
-              onClick={() => {
-                setModalView("ONE_THUMBNAIL_VIEW");
-              }}
-            />
-            <label
-              style={{ paddingLeft: "13px" }}
-            >
-              1 Thumbnail Preview
-            </label>
-          </div>
-          </div>
-
         </div>
         <div>
           {modalView === "ONE_THUMBNAIL_VIEW" ? (
@@ -844,6 +876,8 @@ const ChangeThumbnail = ({
                 onUpload={(e) => handleUploadThumbnail(e, localThumbnail.index)}
                 fileInputRef={fileBrowserRef}
                 folderId={modalData.id}
+                thumbnailState={localThumbnail}
+                setThumbnailState={setLocalThumbnail}
               />
             ) : (
               <ChangeCollectionThumbnailRow

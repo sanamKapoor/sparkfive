@@ -54,23 +54,31 @@ const SearchThumbnail = ({
 
   const handleSelection = (e) => {
     const data = JSON.parse(e);
-
-    console.log("data: ", data);
-    const localThumbnailsCopy = [...thumbnailState];
-    const findThumbnail = thumbnailState.findIndex(
-      (thumb) => thumb.index === index
-    );
-    if (findThumbnail !== -1) {
-      localThumbnailsCopy[findThumbnail] = {
-        index,
-        src: data.value,
+    if (index === "0") {
+      setThumbnailState({
+        ...thumbnailState,
         name: data.name,
+        src: data.value,
         isEmpty: false,
         isChanging: false,
-      };
-    }
+      });
+    } else {
+      const localThumbnailsCopy = [...thumbnailState];
+      const findThumbnail = thumbnailState.findIndex(
+        (thumb) => thumb.index === index
+      );
+      if (findThumbnail !== -1) {
+        localThumbnailsCopy[findThumbnail] = {
+          index,
+          src: data.value,
+          name: data.name,
+          isEmpty: false,
+          isChanging: false,
+        };
+      }
 
-    setThumbnailState(localThumbnailsCopy);
+      setThumbnailState(localThumbnailsCopy);
+    }
   };
 
   return (
@@ -153,8 +161,21 @@ const SearchThumbnail = ({
         }}
       />
 
-      <p style={{ margin: '0 16px 0 0' }}>or</p>
-      <label onChange={onUpload} htmlFor={`upload-file-${index}`} style={{display: 'flex', alignItems: 'center', border: '1px solid #dedad4', borderRadius: '4px', background: 'rgba(255, 255, 255, 0.38)', padding: '8px 16px', fontWeight: 600, cursor: 'pointer'}}>
+      <p style={{ margin: "0 16px 0 0" }}>or</p>
+      <label
+        onChange={onUpload}
+        htmlFor={`upload-file-${index}`}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          border: "1px solid #dedad4",
+          borderRadius: "4px",
+          background: "rgba(255, 255, 255, 0.38)",
+          padding: "8px 16px",
+          fontWeight: 600,
+          cursor: "pointer",
+        }}
+      >
         <input
           name=""
           type="file"
