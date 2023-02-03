@@ -153,8 +153,8 @@ const SearchThumbnail = ({
         }}
       />
 
-      <p>or</p>
-      <label onChange={onUpload} htmlFor={`upload-file-${index}`}>
+      <p style={{ margin: '0 16px 0 0' }}>or</p>
+      <label onChange={onUpload} htmlFor={`upload-file-${index}`} style={{display: 'flex', alignItems: 'center', border: '1px solid #dedad4', borderRadius: '4px', background: 'rgba(255, 255, 255, 0.38)', padding: '8px 16px', fontWeight: 600, cursor: 'pointer'}}>
         <input
           name=""
           type="file"

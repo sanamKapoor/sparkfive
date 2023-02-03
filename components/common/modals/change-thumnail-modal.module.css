@@ -117,6 +117,14 @@
 
 .header_checkbox {
   display: flex;
+  flex-direction: column;
+}
+
+.checkbox_option {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 10px 0 30px 0;
+  gap: 10px;
 }
 
 @media screen and (max-width: 500px) {
@@ -161,7 +169,7 @@
 
   .checkbox4 {
     padding: 16px 0px;
-    font-size: 14px;
+    font-size: 14px;    
   }
 
   .checkbox1 {
@@ -282,13 +290,26 @@
 }
 
 .checkbox4 {
-  padding: 16px 0px;
+  padding: 0px;
   font-size: 14px;
+  display: flex;
+  align-items: center;
+  margin-right: 25px;
+}
+
+.checkbox4 img {
+  width: 19px;
+}
+
+.checkbox1 img {
+  width: 19px;
 }
 
 .checkbox1 {
-  padding: 16px;
+  padding: 0px;
   font-size: 14px;
+  display: flex;
+  align-items: center;
 }
 
 .row-div {
@@ -330,6 +351,7 @@
   background: #faf8f5;
   border: 1px solid #dedad4;
   border-radius: 4px;
+  margin: 0 16px;
 }
 
 .custom_button {

@@ -771,6 +771,12 @@ const ChangeThumbnail = ({
       shouldCloseOnOverlayClick={true}
       shouldFocusAfterRender={false}
       ariaHideApp={false}
+      style={{
+        content: {
+          maxWidth: "702px",
+          width: "90%"
+        }
+      }}
     >
       <div
         className={`${styles.text} ${
@@ -784,12 +790,13 @@ const ChangeThumbnail = ({
       </div>
       <div style={{ padding: "10px 20px" }}>
         <div className={styles.header_checkbox}>
-          <div style={{ width: "100%", maxWidth: "300px" }}>
+          <div>
             <p>
               Search for file to use as the thumbnail or copy and paste the
               filename
             </p>
           </div>
+          <div className={styles.checkbox_option}>
           <div className={styles.checkbox4}>
             <IconClickable
               src={
@@ -803,7 +810,7 @@ const ChangeThumbnail = ({
               }}
             />
             <label
-              style={{ paddingLeft: "5px", position: "relative", top: "-2px" }}
+              style={{ paddingLeft: "13px" }}
             >
               4 Thumbnail Preview
             </label>
@@ -821,11 +828,13 @@ const ChangeThumbnail = ({
               }}
             />
             <label
-              style={{ paddingLeft: "5px", position: "relative", top: "-1px" }}
+              style={{ paddingLeft: "13px" }}
             >
               1 Thumbnail Preview
             </label>
           </div>
+          </div>
+
         </div>
         <div>
           {modalView === "ONE_THUMBNAIL_VIEW" ? (

@@ -25,11 +25,11 @@ const ChangeCollectionThumbnailRow = ({
       {index !== "0" && <p>{index}</p>}
       <div className={classes["img-preview-wrapper"]}>
         <img src={imgSrc} alt={"preview"} className={classes["img-preview"]} />
-        {imgName && imgName !== "undefined" && <p>{imgName}</p>}
+        {imgName && imgName !== "undefined" && <p style={{margin: '4px 0 0 0', fontSize: '10px'}}>{imgName}</p>}
       </div>
       <IconClickable src={redDeleteIconSrc} onClick={onDelete} />
       <p>or</p>
-      <label onChange={onUpload} htmlFor={`upload-file-${index}`}>
+      <label onChange={onUpload} htmlFor={`upload-file-${index}`} style={{display: 'flex', alignItems: 'center', border: '1px solid #dedad4', borderRadius: '4px', background: 'rgba(255, 255, 255, 0.38)', padding: '8px 16px', fontWeight: 600, cursor: 'pointer'}}>
         <input
           name=""
           type="file"
@@ -39,11 +39,16 @@ const ChangeCollectionThumbnailRow = ({
         />
         Upload Image
       </label>
-      <Button
-        onClick={onChangeThisOnly}
-        text="Change this image only"
-        type="button"
-      />
+      <button 
+        type="button" 
+        onClick={onChangeThisOnly} 
+        style={{
+          cursor: 'pointer',
+          padding: '0',
+          textDecoration: 'underline',
+          color: '#08135E',
+          fontWeight: 600,
+          backgroundColor: 'transparent'}}>Change this Image Only</button>        
     </div>
   );
 };
