@@ -504,7 +504,7 @@ const AssetGrid = ({
                         deleteThumbnail({ folder }, "shareFolders")
                       }
                       activeView={activeView || mode}
-                      isNameEditable={true}
+                      isNameEditable={isThumbnailNameEditable}
                       focusedItem={focusedItem}
                       setFocusedItem={setFocusedItem}
                     />

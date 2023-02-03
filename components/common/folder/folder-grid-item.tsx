@@ -253,7 +253,11 @@ const FolderGridItem = ({
           <span
             id="editable-preview"
             onClick={handleOnFocus}
-            className={`normal-text ${gridStyles["editable-preview"]}`}
+            className={
+              isThumbnailNameEditable
+                ? `normal-text ${gridStyles["editable-preview"]}`
+                : `${gridStyles["editable-preview"]} ${gridStyles["non-editable-preview"]}`
+            }
           >
             {thumbnailName}
           </span>
