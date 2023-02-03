@@ -70,3 +70,7 @@
   overflow: hidden;
   display: block;
 }
+
+.non-editable-preview {
+  cursor: default;
+}
