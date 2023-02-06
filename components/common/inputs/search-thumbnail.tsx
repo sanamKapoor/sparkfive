@@ -61,6 +61,8 @@ const SearchThumbnail = ({
         src: data.value,
         isEmpty: false,
         isChanging: false,
+        mode: "URL",
+        data,
       });
     } else {
       const localThumbnailsCopy = [...thumbnailState];
@@ -74,6 +76,8 @@ const SearchThumbnail = ({
           name: data.name,
           isEmpty: false,
           isChanging: false,
+          mode: "URL",
+          data,
         };
       }
 

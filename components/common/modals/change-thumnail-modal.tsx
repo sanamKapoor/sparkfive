@@ -614,6 +614,8 @@ const ChangeThumbnail = ({
           src: thumb.filePath ? thumb.filePath : Assets.empty,
           isEmpty: false,
           isChanging: false,
+          mode: "",
+          data: null,
         };
       })
     : ["1", "2", "3", "4"].map((index) => {
@@ -623,6 +625,8 @@ const ChangeThumbnail = ({
           src: "",
           isEmpty: true,
           isChanging: false,
+          mode: "",
+          data: null,
         };
       });
 
@@ -635,6 +639,8 @@ const ChangeThumbnail = ({
         src: modalData?.thumbnailPath,
         isEmpty: false,
         isChanging: false,
+        mode: "",
+        data: null,
       }
     : {
         index: "0",
@@ -642,6 +648,8 @@ const ChangeThumbnail = ({
         src: "",
         isEmpty: true,
         isChanging: false,
+        mode: "",
+        data: null,
       };
 
   const [modalView, setModalView] = useState(initialModalView);
@@ -706,25 +714,28 @@ const ChangeThumbnail = ({
   };
 
   const handleUploadThumbnail = (e, index) => {
+    const file = e.target.files[0];
+
     openFile(index);
     if (index === "0") {
-      setUploadFile(e.target.files[0]);
+      setUploadFile(file);
       setLocalThumbnail({
         ...localThumbnail,
-        name: e.target.files[0].name,
-        src: URL.createObjectURL(e.target.files[0]),
+        name: file.name,
+        src: URL.createObjectURL(file),
         isEmpty: false,
         isChanging: false,
+        mode: "UPLOAD",
+        data: file,
       });
     } else {
       const uploadFilesCopy = [...uploadFiles];
-      uploadFilesCopy.splice(index, 1, e.target.files[0]);
+      uploadFilesCopy.splice(index, 1, file);
 
       setUploadFiles(uploadFilesCopy);
 
       const localThumbnailsCopy = [...localThumbnails];
       const findThumbnail = localThumbnails.findIndex((thumb) => {
-        console.log(thumb.index === index);
         return thumb.index === index;
       });
 
@@ -732,9 +743,11 @@ const ChangeThumbnail = ({
         localThumbnailsCopy[findThumbnail] = {
           index,
           name: e.target.files[0].name,
-          src: URL.createObjectURL(e.target.files[0]),
+          src: URL.createObjectURL(file),
           isEmpty: false,
           isChanging: false,
+          mode: "UPLOAD",
+          data: file,
         };
       }
       setLocalThumbnails(localThumbnailsCopy);
@@ -769,29 +782,97 @@ const ChangeThumbnail = ({
     try {
       if (modalView === "ONE_THUMBNAIL_VIEW") {
         console.log("uploaded file: ", uploadFile);
-        if (localThumbnail.isEmpty) {
+        if (localThumbnail && localThumbnail.isEmpty) {
           toastUtils.error("Please select a thumbnail!");
         } else {
-          const formData = new FormData();
-          formData.append("thumbnail", uploadFile);
-          const { data } = await assetApi.uploadThumbnail(formData, {
-            folderId: modalData.id,
-          });
+          if (localThumbnail.mode === "UPLOAD") {
+            const formData = new FormData();
+            formData.append("thumbnail", localThumbnail.data);
+            const { data } = await assetApi.uploadThumbnail(formData, {
+              folderId: modalData.id,
+            });
 
-          if (data) {
+            if (data) {
+              await folderApi.updateFolder(
+                modalData.id + `?folderId=${modalData.id}`,
+                {
+                  thumbnailPath: data[0].realUrl,
+                  thumbnailExtension: data[0].asset.extension,
+                  thumbnails: { thumbnails: null },
+                  thumbnailStorageId: data[0].asset.storageId,
+                }
+              );
+              getFolders();
+            }
+          } else {
             await folderApi.updateFolder(
               modalData.id + `?folderId=${modalData.id}`,
               {
-                thumbnailPath: data[0].realUrl,
-                thumbnailExtension: data[0].asset.extension,
+                thumbnailPath: localThumbnail.data?.value,
+                thumbnail_extension: localThumbnail.data?.extension,
                 thumbnails: { thumbnails: null },
-                thumbnailStorageId: data[0].asset.storageId,
+                thumbnailStorageId: localThumbnail.data?.storageId,
               }
             );
-            getFolders();
           }
         }
       } else if (modalView === "MULTI_THUMBNAIL_VIEW") {
+        if (localThumbnails.length !== 4) {
+          toastUtils.error("Please select all thumbnails.");
+        } else {
+          const thumbnails = [
+            { index: "1", filePath: "", extension: "", storageId: "" },
+            { index: "2", filePath: "", extension: "", storageId: "" },
+            { index: "3", filePath: "", extension: "", storageId: "" },
+            { index: "4", filePath: "", extension: "", storageId: "" },
+          ];
+
+          // loop through array
+          localThumbnails.forEach(async (thumb) => {
+            if (thumb.mode === "UPLOAD") {
+              const formData = new FormData();
+              formData.append("thumbnail", thumb.data);
+              const { data } = await assetApi.uploadThumbnail(formData, {
+                folderId: modalData.id,
+              });
+
+              const thumbnailIndex = thumbnails.findIndex(
+                (item) => item.index === thumb.index
+              );
+              if (thumbnailIndex !== -1) {
+                thumbnails[thumbnailIndex] = {
+                  index: thumb.index,
+                  filePath: data[0].realUrl,
+                  extension: data[0].asset.extension,
+                  storageId: data[0].asset.storageId,
+                };
+              }
+            } else {
+              const thumbnailIndex = thumbnails.findIndex(
+                (item) => item.index === thumb.index
+              );
+              if (thumbnailIndex !== -1) {
+                thumbnails[thumbnailIndex] = {
+                  index: thumb.index,
+                  filePath: thumb.data?.value,
+                  extension: thumb.data?.extension,
+                  storageId: thumb.data?.storageId,
+                };
+              }
+            }
+          });
+
+          //update on the backend
+          await folderApi.updateFolder(
+            modalData.id + `?folderId=${modalData.id}`,
+            {
+              thumbnailPath: null,
+              thumbnailExtension: null,
+              thumbnails: { thumbnails },
+            }
+          );
+          getFolders();
+        }
       }
     } catch (error) {
       console.log("error: ", error);
@@ -935,10 +1016,7 @@ const ChangeThumbnail = ({
                 />
                 <Button
                   text="Cancel"
-                  onClick={(e) => {
-                    onRemove();
-                    closeModal();
-                  }}
+                  onClick={handleCancel}
                   type="button"
                   className={`${styles.button} ${
                     imagePreview ? styles.margin_t : ""
