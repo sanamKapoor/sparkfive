@@ -24,8 +24,14 @@ const ChangeCollectionThumbnailRow = ({
     <div className={classes["row-wrapper"]}>
       {index !== "0" && <p>{index}</p>}
       <div className={classes["img-preview-wrapper"]}>
-        <img src={imgSrc} alt={"preview"} className={classes["img-preview"]} />
-        {imgName && imgName !== "undefined" && <p style={{margin: '4px 0 0 0', fontSize: '10px'}}>{imgName}</p>}
+        <div className={classes['img-box']}><img src={imgSrc} alt={"preview"} className={classes["img-preview"]} /></div>
+        {imgName && imgName !== "undefined" && <p style={{
+            margin: '4px 0 0 0', 
+            fontSize: '10px',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            width: 'inherit'}}>{imgName}</p>}
       </div>
       <IconClickable src={redDeleteIconSrc} onClick={onDelete} />
       <p>or</p>
