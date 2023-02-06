@@ -27,8 +27,6 @@ const ChangeThumbnail = ({
   additionalClasses = [""],
   closeButtonOnly = false,
 }) => {
-  const [IsUploading, setIsUploading] = useState(false);
-
   const { setIsLoading } = useContext(LoadingContext);
   const { setFolders, folders } = useContext(AssetContext);
   const { activeSortFilter } = useContext(FilterContext);
@@ -55,10 +53,8 @@ const ChangeThumbnail = ({
     };
     const { data } = await folderApi.getFolders(query);
     setFolders(data, true, true);
-    onRemove();
     setIsLoading(false);
     toastUtils.success(`Thumbnail updated.`);
-    setIsUploading(false);
     closeModal();
   };
 
@@ -236,6 +232,7 @@ const ChangeThumbnail = ({
 
   const handleSave = async () => {
     try {
+      setIsLoading(true);
       if (modalView === "ONE_THUMBNAIL_VIEW") {
         if (localThumbnail && localThumbnail.isEmpty) {
           toastUtils.error("Please select a thumbnail!");
@@ -276,7 +273,6 @@ const ChangeThumbnail = ({
         const promises = [];
         let isDataChanged = false;
         for (let i = 0; i < localThumbnails.length; i++) {
-          console.log("isDataChanged inside: ", isDataChanged);
           let obj;
           if (localThumbnails[i].mode === "URL") {
             obj = {
@@ -298,9 +294,12 @@ const ChangeThumbnail = ({
               })
             );
           } else {
-            thumbnails.push(
-              modalData?.thumbnails?.thumbnails[localThumbnails[i]]
+            const findExisting = modalData?.thumbnails?.thumbnails.findIndex(
+              (data) => data.index === localThumbnails[i].index
             );
+            if (findExisting !== -1) {
+              thumbnails.push(modalData?.thumbnails?.thumbnails[findExisting]);
+            }
           }
         }
 
@@ -318,27 +317,28 @@ const ChangeThumbnail = ({
           }
         });
 
-        console.log("isDataChanged: ", isDataChanged);
+        if (thumbnails.length !== 4 || !modalData?.thumbnails?.thumbnails) {
+          toastUtils.error("Please select all thumbnails.");
+        }
+
         if (isDataChanged) {
-          if (thumbnails.length !== 4) {
-            toastUtils.error("Please select all thumbnails.");
-          } else {
-            //update on the backend
-            await folderApi.updateFolder(
-              modalData.id + `?folderId=${modalData.id}`,
-              {
-                thumbnailPath: null,
-                thumbnailExtension: null,
-                thumbnails: { thumbnails },
-              }
-            );
-            getFolders();
-          }
+          //update on the backend
+          await folderApi.updateFolder(
+            modalData.id + `?folderId=${modalData.id}`,
+            {
+              thumbnailPath: null,
+              thumbnailExtension: null,
+              thumbnails: { thumbnails },
+            }
+          );
+          getFolders();
         }
       }
+
+      setIsLoading(false);
       closeModal();
     } catch (error) {
-      console.log("error: ", error);
+      setIsLoading(false);
       toastUtils.error("Could not update photo, please try again later.");
     }
   };
@@ -451,7 +451,6 @@ const ChangeThumbnail = ({
                     imgSrc={thumbnail.src}
                     imgName={thumbnail.name}
                     onUpload={(e) => handleUploadThumbnail(e, thumbnail.index)}
-                    isUploading={IsUploading}
                     onDelete={(e) => handleDeleteThumbnail(e, thumbnail.index)}
                     fileInputRef={FileBrowser[thumbnail.index]}
                     onChangeThisOnly={(e) =>
@@ -471,14 +470,12 @@ const ChangeThumbnail = ({
                   type="button"
                   styleType="primary"
                   className={`${styles.button} ${styles.mr}`}
-                  disabled={IsUploading}
                 />
                 <Button
                   text="Cancel"
                   onClick={handleCancel}
                   type="button"
                   className={`${styles.button} ${styles.mr} ${styles.cancel}`}
-                  disabled={IsUploading}
                 />
               </div>
             </div>
