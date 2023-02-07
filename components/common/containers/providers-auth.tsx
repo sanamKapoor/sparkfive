@@ -25,12 +25,15 @@ let ProvidersAuth = ({ inviteCode = '', priceData }) => {
   return (
     <div className={styles.container}>
       <div>
+        <a className={styles.ssolink} href='#' onClick={() => initiateOAuth('oauth')}>or login with SSO</a>
+      </div>
+      {/* <div>
         <ProviderAuthButton
           provider='google'
           icon={LoginImg.google}
           onClick={() => initiateOAuth('google')}
         />
-      </div>
+      </div> */}
     </div>
   )
 }
