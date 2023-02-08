@@ -179,7 +179,7 @@ const AssetGrid = ({
   };
 
   //Use for upload thumbnail
-  const beginChangeThumbnailOperation = ({ folder }, operation) => {
+  const beginChangeThumbnailOperation = (folder, operation) => {
     setModalData(folder);
     setModalOpen(true);
   };
@@ -408,12 +408,7 @@ const AssetGrid = ({
                       shareAssets={() =>
                         beginAssetOperation({ folder }, "shareFolders")
                       }
-                      changeThumbnail={() =>
-                        beginChangeThumbnailOperation(
-                          { folder },
-                          "shareFolders"
-                        )
-                      }
+                      changeThumbnail={beginChangeThumbnailOperation}
                       deleteThumbnail={() =>
                         deleteThumbnail({ folder }, "shareFolders")
                       }
@@ -494,12 +489,7 @@ const AssetGrid = ({
                       }
                       setCurrentSortAttribute={setCurrentSortFolderAttribute}
                       sortAttribute={currentSortFolderAttribute}
-                      changeThumbnail={() =>
-                        beginChangeThumbnailOperation(
-                          { folder },
-                          "shareFolders"
-                        )
-                      }
+                      changeThumbnail={beginChangeThumbnailOperation}
                       deleteThumbnail={() =>
                         deleteThumbnail({ folder }, "shareFolders")
                       }
