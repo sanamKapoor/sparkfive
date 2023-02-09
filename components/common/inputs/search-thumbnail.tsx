@@ -30,9 +30,9 @@ const SearchThumbnail = ({
       setSearchData([]);
     } else if (currentValue.length >= 2) {
       const queryParams = {
-        term: value,
+        term: currentValue,
         page: 1,
-        sharePath: value,
+        sharePath: currentValue,
         advSearchFrom: "folders.name",
         folderId,
       };
