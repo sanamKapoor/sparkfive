@@ -274,6 +274,7 @@ const ChangeThumbnail = ({
 
     if (itemUndefined || isUpdating) {
       toastUtils.error(ALL_THUMBNAILS_REQUIRED);
+      setIsLoading(false);
       return false;
     } else if (
       JSON.stringify(thumbnails) ===
