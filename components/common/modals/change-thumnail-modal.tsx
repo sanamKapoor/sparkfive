@@ -8,7 +8,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 // Components
 import Button from "../buttons/button";
 import React from "react";
-import { LoadingContext, AssetContext } from "../../../context";
+import { LoadingContext, AssetContext, FilterContext } from "../../../context";
 import { Utilities, Assets } from "../../../assets";
 import IconClickable from "../buttons/icon-clickable";
 
@@ -105,6 +105,7 @@ const ChangeThumbnail = ({
 
   const { setIsLoading } = useContext(LoadingContext);
   const { setFolders, folders } = useContext(AssetContext);
+  const { activeSortFilter } = useContext(FilterContext);
 
   useEffect(() => {
     const cols: any = document.getElementsByTagName("html");
@@ -123,7 +124,21 @@ const ChangeThumbnail = ({
     setModalView(initialModalView);
     setLocalThumbnails(initialThumbnailsData);
     setLocalThumbnail(initialLocalThumbnail);
-  }, [modalData, folders]);
+  }, [modalData]);
+
+  //Refresh data after thumbnail changed
+  const getFolders = async () => {
+    let query = {
+      page: 1,
+      sortField: activeSortFilter.sort?.field || "createdAt",
+      sortOrder: activeSortFilter.sort?.order || "desc",
+    };
+    const { data } = await folderApi.getFolders(query);
+    setFolders(data, true, true);
+    toastUtils.success(THUMBNAIL_UPDATED);
+    setIsLoading(false);
+    closeModal();
+  };
 
   const openFile = async (index) => {
     if (index == 1) fileBrowseForFirstIndex.current?.click();
@@ -220,6 +235,7 @@ const ChangeThumbnail = ({
   };
 
   const saveSingleThumbnail = async () => {
+    setIsLoading(true);
     if (localThumbnail.mode === "UPLOAD") {
       const formData = new FormData();
       formData.append("thumbnail", localThumbnail.data);
@@ -237,20 +253,6 @@ const ChangeThumbnail = ({
             thumbnailStorageId: data[0].asset.storageId,
           }
         );
-        setFolders(
-          folders.map((folder) => {
-            if (folder.id === modalData.id) {
-              return {
-                ...folder,
-                thumbnailPath: data[0].realUrl,
-                thumbnailExtension: data[0].asset.extension,
-                thumbnails: { thumbnails: null },
-                thumbnailStorageId: data[0].asset.storageId,
-              };
-            }
-            return folder;
-          })
-        );
       }
     } else {
       await folderApi.updateFolder(modalData.id + `?folderId=${modalData.id}`, {
@@ -259,30 +261,35 @@ const ChangeThumbnail = ({
         thumbnails: { thumbnails: null },
         thumbnailStorageId: localThumbnail.data?.storageId,
       });
-
-      setFolders(
-        folders.map((folder) => {
-          if (folder.id === modalData.id) {
-            return {
-              ...folder,
-              thumbnailPath: localThumbnail.data?.value,
-              thumbnail_extension: localThumbnail.data?.extension,
-              thumbnails: { thumbnails: null },
-              thumbnailStorageId: localThumbnail.data?.storageId,
-            };
-          }
-          return folder;
-        })
-      );
     }
-    setIsLoading(false);
-    toastUtils.success("Thumbnail updated.");
+    getFolders();
+  };
+
+  const validateSave = (thumbnails) => {
+    const itemUndefined = thumbnails.some((item) => !item);
+
+    const isUpdating = localThumbnails.some(
+      (item) => item.isChanging || item.isEmpty
+    );
+
+    if (itemUndefined || isUpdating) {
+      toastUtils.error(ALL_THUMBNAILS_REQUIRED);
+      return false;
+    } else if (
+      JSON.stringify(thumbnails) ===
+      JSON.stringify(modalData?.thumbnails?.thumbnails)
+    ) {
+      closeModal();
+      return false;
+    }
+
+    return true;
   };
 
   const saveMultiThumbnails = async () => {
     let thumbnails = [];
     const promises = [];
-    let isDataChanged = false;
+    const indexes = [];
 
     for (let i = 0; i < localThumbnails.length; i++) {
       let obj;
@@ -295,11 +302,9 @@ const ChangeThumbnail = ({
           storageId: localThumbnails[i].data?.storageId,
         };
 
-        isDataChanged = true;
         thumbnails.push(obj);
       } else if (localThumbnails[i].mode === "UPLOAD") {
-        isDataChanged = true;
-
+        setIsLoading(true);
         const formData = new FormData();
         formData.append("thumbnail", localThumbnails[i].data);
 
@@ -308,6 +313,8 @@ const ChangeThumbnail = ({
             folderId: modalData.id,
           })
         );
+
+        indexes.push(localThumbnails[i].index);
       } else {
         const findExisting = modalData?.thumbnails?.thumbnails.findIndex(
           (data) => data.index === localThumbnails[i].index
@@ -324,7 +331,7 @@ const ChangeThumbnail = ({
     promisesResolved.forEach((promise, i) => {
       if (promise.data.length > 0) {
         const obj = {
-          index: localThumbnails[i].index,
+          index: indexes[i],
           filePath: promise.data[0]?.thumbailUrl,
           extension: promise.data[0]?.asset.extension,
           storageId: promise.data[0]?.asset.storageId,
@@ -333,38 +340,25 @@ const ChangeThumbnail = ({
       }
     });
 
-    if (isDataChanged && thumbnails.length !== 4) {
-      toastUtils.error(ALL_THUMBNAILS_REQUIRED);
-    }
+    const isSaveValid = validateSave(thumbnails);
 
-    if (isDataChanged) {
+    if (isSaveValid) {
+      setIsLoading(true);
+      thumbnails.sort(
+        (first, second) => Number(first.index) - Number(second.index)
+      );
       //update on the backend
       await folderApi.updateFolder(modalData.id + `?folderId=${modalData.id}`, {
         thumbnailPath: null,
         thumbnailExtension: null,
         thumbnails: { thumbnails },
       });
-      setFolders(
-        folders.map((folder) => {
-          if (folder.id === modalData.id) {
-            return {
-              ...folder,
-              thumbnailPath: null,
-              thumbnailExtension: null,
-              thumbnails: { thumbnails },
-            };
-          }
-          return folder;
-        })
-      );
-      setIsLoading(false);
-      toastUtils.success(THUMBNAIL_UPDATED);
+      getFolders();
     }
   };
 
   const handleSave = async () => {
     try {
-      setIsLoading(true);
       if (modalView === "ONE_THUMBNAIL_VIEW") {
         if (localThumbnail && localThumbnail.isEmpty) {
           toastUtils.error(THUMBNAIL_REQUIRED);
@@ -374,8 +368,6 @@ const ChangeThumbnail = ({
       } else if (modalView === "MULTI_THUMBNAIL_VIEW") {
         saveMultiThumbnails();
       }
-
-      closeModal();
     } catch (error) {
       setIsLoading(false);
       toastUtils.error(ERR_IN_UPDATING_THUMBNAIL);
@@ -479,6 +471,7 @@ const ChangeThumbnail = ({
               {localThumbnails.map((thumbnail) => {
                 return thumbnail.isEmpty || thumbnail.isChanging ? (
                   <SearchThumbnail
+                    key={thumbnail.index}
                     index={thumbnail.index}
                     onUpload={(e) => handleUploadThumbnail(e, thumbnail.index)}
                     fileInputRef={FileBrowser[thumbnail.index]}
@@ -488,6 +481,7 @@ const ChangeThumbnail = ({
                   />
                 ) : (
                   <ChangeCollectionThumbnailRow
+                    key={thumbnail.index}
                     index={thumbnail.index}
                     imgSrc={thumbnail.src}
                     imgName={thumbnail.name}

@@ -43,7 +43,7 @@ const FolderGridItem = ({
   isLoading = false,
   deleteFolder,
   shareAssets = (folder) => {},
-  changeThumbnail = (folder) => {},
+  changeThumbnail,
   deleteThumbnail = (folder) => {},
   copyShareLink = (folder) => {},
   toggleSelected,
@@ -265,6 +265,7 @@ const FolderGridItem = ({
         <div className={styles["details-wrapper"]}>
           <div className="secondary-text">{`${length} Assets`}</div>
           <FolderOptions
+            activeFolderId={id}
             isShare={isShare}
             downloadFoldercontents={downloadFoldercontents}
             setDeleteOpen={setDeleteOpen}
