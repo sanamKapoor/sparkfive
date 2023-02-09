@@ -240,6 +240,7 @@ const FolderListItem = ({
           {!isLoading && (
             <div>
               <FolderOptions
+              activeFolderId={id}
                 downloadFoldercontents={downloadFoldercontents}
                 shareAssets={shareAssets}
                 setDeleteOpen={setDeleteOpen}
