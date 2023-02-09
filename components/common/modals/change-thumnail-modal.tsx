@@ -128,7 +128,6 @@ const ChangeThumbnail = ({
 
   //Refresh data after thumbnail changed
   const getFolders = async () => {
-    setIsLoading(true);
     let query = {
       page: 1,
       sortField: activeSortFilter.sort?.field || "createdAt",
@@ -236,6 +235,7 @@ const ChangeThumbnail = ({
   };
 
   const saveSingleThumbnail = async () => {
+    setIsLoading(true);
     if (localThumbnail.mode === "UPLOAD") {
       const formData = new FormData();
       formData.append("thumbnail", localThumbnail.data);
@@ -263,7 +263,6 @@ const ChangeThumbnail = ({
       });
     }
     getFolders();
-    closeModal();
   };
 
   const validateSave = (thumbnails) => {
@@ -305,6 +304,7 @@ const ChangeThumbnail = ({
 
         thumbnails.push(obj);
       } else if (localThumbnails[i].mode === "UPLOAD") {
+        setIsLoading(true);
         const formData = new FormData();
         formData.append("thumbnail", localThumbnails[i].data);
 
@@ -343,6 +343,7 @@ const ChangeThumbnail = ({
     const isSaveValid = validateSave(thumbnails);
 
     if (isSaveValid) {
+      setIsLoading(true);
       thumbnails.sort(
         (first, second) => Number(first.index) - Number(second.index)
       );
@@ -358,7 +359,6 @@ const ChangeThumbnail = ({
 
   const handleSave = async () => {
     try {
-      setIsLoading(true);
       if (modalView === "ONE_THUMBNAIL_VIEW") {
         if (localThumbnail && localThumbnail.isEmpty) {
           toastUtils.error(THUMBNAIL_REQUIRED);
@@ -368,7 +368,6 @@ const ChangeThumbnail = ({
       } else if (modalView === "MULTI_THUMBNAIL_VIEW") {
         saveMultiThumbnails();
       }
-      setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
       toastUtils.error(ERR_IN_UPDATING_THUMBNAIL);
