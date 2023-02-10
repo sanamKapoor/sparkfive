@@ -371,3 +371,9 @@
   color: #08135e;
   font-weight: 500;
 }
+
+@media only screen and (max-width:800px) {
+  .modal input[role="combobox"] {
+    width: inherit !important;
+  }
+}
