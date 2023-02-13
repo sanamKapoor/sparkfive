@@ -4,3 +4,15 @@
   margin: 19px auto;
   align-items: center;
 }
+
+@media only screen and (max-width: 479px) {
+  .wrapper {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin: 0 0 19px 0;
+  } 
+  .wrapper p:first-child {
+    margin: 0;
+  }
+}

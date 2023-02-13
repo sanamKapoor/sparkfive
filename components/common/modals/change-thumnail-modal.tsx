@@ -500,7 +500,7 @@ const ChangeThumbnail = ({
           )}
           <div className="row">
             <div className="col-12" style={{ width: "100%" }}>
-              <div style={{ display: "flex", margin: "10px 26%" }}>
+              <div style={{ display: "flex", margin: "10px 0", justifyContent: "center" }}>
                 <Button
                   text="Save"
                   onClick={handleSave}
