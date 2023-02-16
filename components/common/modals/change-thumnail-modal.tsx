@@ -45,7 +45,7 @@ const ChangeThumbnail = ({
 
         return {
           index: thumb.index,
-          name: name ? (name === "undefined" ? "" : name) : "",
+          name: thumb.name,
           src: thumb.filePath ? thumb.filePath : Assets.empty,
           isEmpty: false,
           isChanging: false,
@@ -68,9 +68,7 @@ const ChangeThumbnail = ({
   const initialLocalThumbnail = modalData?.thumbnailPath
     ? {
         index: "0",
-        name: modalData?.thumbnailStorageId
-          ? decodeURI(modalData?.thumbnailStorageId?.split("/").at(-1))
-          : "",
+        name: modalData?.thumbnailName,
         src: modalData?.thumbnailPath,
         isEmpty: false,
         isChanging: false,
@@ -251,6 +249,7 @@ const ChangeThumbnail = ({
             thumbnailExtension: data[0].asset.extension,
             thumbnails: { thumbnails: null },
             thumbnailStorageId: data[0].asset.storageId,
+            thumbnailName: data[0].asset.name
           }
         );
       }
@@ -260,6 +259,7 @@ const ChangeThumbnail = ({
         thumbnail_extension: localThumbnail.data?.extension,
         thumbnails: { thumbnails: null },
         thumbnailStorageId: localThumbnail.data?.storageId,
+        thumbnailName: localThumbnail.data?.name
       });
     }
     getFolders();
@@ -301,6 +301,7 @@ const ChangeThumbnail = ({
           filePath: localThumbnails[i].data?.value,
           extension: localThumbnails[i].data?.extension,
           storageId: localThumbnails[i].data?.storageId,
+          name: localThumbnails[i].data?.name
         };
 
         thumbnails.push(obj);
@@ -336,6 +337,7 @@ const ChangeThumbnail = ({
           filePath: promise.data[0]?.thumbailUrl,
           extension: promise.data[0]?.asset.extension,
           storageId: promise.data[0]?.asset.storageId,
+          name: promise.data[0]?.asset.name
         };
         thumbnails.push(obj);
       }
@@ -353,6 +355,7 @@ const ChangeThumbnail = ({
         thumbnailPath: null,
         thumbnailExtension: null,
         thumbnails: { thumbnails },
+        thumbnailName: null
       });
       getFolders();
     }
