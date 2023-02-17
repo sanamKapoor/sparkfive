@@ -216,7 +216,7 @@ const DetailOverlay = ({
       const folder = folders.find(folder => folder.id === activeFolder);
       if(folder){
         // if (folder.assets.length === 0 && assets && assets.length) {
-        folder.assets = [...assets];
+        // folder.assets = [...assets];
         // }
         setActiveCollection(folder);
         const assetIndx = assets.findIndex(item => item.asset && item.asset.id === asset.id) + 1
@@ -225,8 +225,6 @@ const DetailOverlay = ({
     }
   }
 
-
-
   useEffect(() => {
     getCropResizeOptions();
     getDetail();
@@ -234,7 +232,7 @@ const DetailOverlay = ({
     if (isMobile) {
       toggleSideMenu();
     }
-    _setActiveCollection()
+    _setActiveCollection();
   }, [currentAsset]);
 
   useEffect(()=>{
@@ -984,7 +982,7 @@ const DetailOverlay = ({
                     </span>
                   }
                 </div>
-                <span>{assetIndex} of {totalAssets} in {activeCollection?.name} collection</span>
+                <span>{assetIndex} of {activeCollection?.assetsCount} in {activeCollection?.name} collection</span>
               </div>
             }
 
