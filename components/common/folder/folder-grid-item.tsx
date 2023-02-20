@@ -88,11 +88,23 @@ const FolderGridItem = ({
         extension: thumb?.extension,
       }));
   } else {
+    const assetsCopy = [];
+    let maxCount = 4;
+    for (let i = 0; i < assets.length; i++) {
+      if (maxCount === 0) {
+        break;
+      }
+      if (assets[i].version === 1) {
+        assetsCopy.push(assets[i]);
+        maxCount = maxCount - 1;
+      }
+    }
+
     previews = [1, 2, 3, 4].map((_, index) => ({
-      name: assets[index]?.name || "empty",
-      assetImg: assets[index]?.thumbailUrl || "",
-      type: assets[index]?.type || "empty",
-      extension: assets[index]?.extension,
+      name: assetsCopy[index]?.name || "empty",
+      assetImg: assetsCopy[index]?.thumbailUrl || "",
+      type: assetsCopy[index]?.type || "empty",
+      extension: assetsCopy[index]?.extension,
     }));
   }
 
