@@ -38,6 +38,7 @@ const FolderGridItem = ({
   size,
   isSelected,
   length,
+  assetsCount,
   assets,
   viewFolder,
   isLoading = false,
@@ -275,7 +276,7 @@ const FolderGridItem = ({
           </span>
         )}
         <div className={styles["details-wrapper"]}>
-          <div className="secondary-text">{`${length} Assets`}</div>
+          <div className="secondary-text">{`${assetsCount} Assets`}</div>
           <FolderOptions
             activeFolderId={id}
             isShare={isShare}

@@ -982,7 +982,7 @@ const DetailOverlay = ({
                     </span>
                   }
                 </div>
-                <span>{assetIndex} of {activeCollection?.assetsCount} in {activeCollection?.name} collection</span>
+                <span>{(assetIndex % activeCollection?.assetsCount) + 1} of {activeCollection?.assetsCount} in {activeCollection?.name} collection</span>
               </div>
             }
 
