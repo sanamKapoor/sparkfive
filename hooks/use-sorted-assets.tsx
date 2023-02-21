@@ -23,7 +23,7 @@ export default function useSortedAssets(assets): [any[], string, any] {
         }
         const newSortedAssets = [...assets].map((item)=>{
             // If this is placeholder, make it as the final items
-            if(item.asset.name === "placeholder"){
+            if(item?.asset?.name === "placeholder"){
                 item.asset.name = "z";
                 item.asset.type = "z";
                 item.asset.extension = "z";
@@ -39,10 +39,10 @@ export default function useSortedAssets(assets): [any[], string, any] {
                 newSortedAssets.sort((a, b) => a.asset.name.localeCompare(b.asset.name) * direction)
                 break
             case 'asset.type':
-                newSortedAssets.sort((a, b) => a.asset.type.localeCompare(b.asset.type) * direction)
+                newSortedAssets.sort((a, b) => a.asset.type?.localeCompare(b.asset.type) * direction)
                 break
             case 'asset.extension':
-                newSortedAssets.sort((a, b) => a.asset.extension.localeCompare(b.asset.extension) * direction)
+                newSortedAssets.sort((a, b) => a.asset.extension?.localeCompare(b.asset.extension) * direction)
                 break
             case 'asset.size':
                 newSortedAssets.sort((a, b) => (parseInt(a.asset.size) - parseInt(b.asset.size)) * direction)
