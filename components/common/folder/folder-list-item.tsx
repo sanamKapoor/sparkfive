@@ -34,6 +34,7 @@ const FolderListItem = ({
   name,
   size,
   length,
+  assetsCount,
   createdAt,
   assets,
   viewFolder,
@@ -232,7 +233,7 @@ const FolderListItem = ({
             }
             onClick={isNameEditable ? viewFolder : () => {}}
           >
-            {!isLoading && `${length} Assets`}
+            {!isLoading && `${assetsCount} Assets`}
           </div>
           <div className={`${styles.field_name} ${isLoading && "loadable"}`}>
             {format(new Date(createdAt), dateFormat)}
