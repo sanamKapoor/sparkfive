@@ -334,7 +334,7 @@ const AssetGrid = ({
       )}
       <div className={styles["list-wrapper"]}>
         {activeView === "grid" && (
-          <ul className={`${styles["grid-list"]} ${styles[itemSize]}`}>
+          <ul className={`${styles["grid-list"]} ${styles[itemSize]} ${mode === "assets" ? !openFilter ? styles["grid-" + advancedConfig.assetThumbnail] : styles["grid-filter-" + advancedConfig.assetThumbnail] : !openFilter ? styles["grid-" + advancedConfig.collectionThumbnail] : styles["grid-filter-" + advancedConfig.collectionThumbnail]}`}>
             {mode === "assets" &&
               assets.map((assetItem, index) => {
                 if (assetItem.status !== "fail") {
@@ -472,7 +472,7 @@ const AssetGrid = ({
               sortedFolders.map((folder, index) => {
                 return (
                   <li
-                    className={styles["grid-item"]}
+                    className={`${styles["grid-item"]} ${!openFilter ? styles[" grid-" + advancedConfig.collectionThumbnail] : styles["grid-filter-" + advancedConfig.collectionThumbnail]}`} 
                     key={folder.id || index}
                     onClick={(e) => handleFocusChange(e, folder.id)}
                   >

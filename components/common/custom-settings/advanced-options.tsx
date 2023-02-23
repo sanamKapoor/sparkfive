@@ -410,18 +410,18 @@ const AdvancedOptions = () => {
                             <div className={"col-40 col-md-100 d-flex align-items-center"}>
                                 <span className={'font-weight-500'}>Thumbnail Size Setting</span>
                             </div>
-                            <div className={"col-60 col-md-100 thumb-size"}>
-                                <div className='col'>
-                                    <div className='title-thumb'>Assets Thubmnail size</div>
-                                    <div className='row'>
+                            <div className= {`${styles['thumb-size']} col-60 col-md-100 `}>
+                                <div className={`${styles['col']}`}>
+                                    <div className={`${styles['title-thumb']}`}>Assets Thumbnail size</div>
+                                    <div className={`${styles['row']}`}>
                                         {/* <div className={`${styles['field-radio-wrapper']} col-30`}> */}
-                                        <div className={`${styles['radio-button-wrapper']} m-r-15`}>
+                                        <div className={`${styles['radio-button-wrapper']}`}>
                                             <IconClickable
                                                 src={assetThumbnail == 100 ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
                                                 onClick={() => { saveAdvanceConfig({ asset_thumbnail: 100 }); setassetThumbnail(100) }}
                                             />
-                                            <div className={'font-12 m-l-10 thumb-val-img wd-100'}>
+                                            <div className={`${styles['thumb-val-img']} ${styles['wd-100']} font-12 m-l-10 `}>
                                                 <div><img src={rectangeIcon} /></div>
                                                 <div>100 %</div>
                                             </div>
@@ -431,7 +431,7 @@ const AdvancedOptions = () => {
                                                 src={assetThumbnail == 75 ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
                                                 onClick={() => { saveAdvanceConfig({ asset_thumbnail: 75 }); setassetThumbnail(75) }} />
-                                            <div className={'font-12 m-l-10 thumb-val-img wd-75'}>
+                                            <div className={`${styles['thumb-val-img']} ${styles['wd-75']} font-12 m-l-10 `}>
                                                 <div><img src={rectangeIcon} /></div>
                                                 <div>75 %</div>
                                             </div>
@@ -441,7 +441,7 @@ const AdvancedOptions = () => {
                                                 src={assetThumbnail == 50 ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
                                                 onClick={() => { saveAdvanceConfig({ asset_thumbnail: 50 }); setassetThumbnail(50) }} />
-                                            <div className={'font-12 m-l-10 thumb-val-img wd-50'}>
+                                            <div className={`${styles['thumb-val-img']} ${styles['wd-50']} font-12 m-l-10 `} >
                                                 <div><img src={rectangeIcon} /></div>
                                                 <div>50 %</div>
                                             </div>
@@ -456,17 +456,17 @@ const AdvancedOptions = () => {
                                 </div>
 
 
-                                <div className='col'>
-                                    <div className='title-thumb'>Collection Thubmnail size</div>
-                                    <div className='row'>
+                                <div className={`${styles['col']}`}>
+                                    <div className={`${styles['title-thumb']}`}>Collection Thubmnail size</div>
+                                    <div className={`${styles['row']}`}>
                                         {/* <div className={`${styles['field-radio-wrapper']} col-30`}> */}
-                                        <div className={`${styles['radio-button-wrapper']} m-r-15`}>
+                                        <div className={`${styles['radio-button-wrapper']}`}>
                                             <IconClickable
                                                 src={collectionThumbnail == 100 ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
                                                 onClick={() => { saveAdvanceConfig({ collection_thumbnail: 100 }); setcollectionThumbnail(100) }}
                                             />
-                                            <div className={'font-12 m-l-10 thumb-val-img wd-100'}>
+                                            <div className={`${styles['thumb-val-img']} ${styles['wd-100']} font-12 m-l-10 `}>
                                                 <div><img src={rectangeIcon} /></div>
                                                 <div>100 %</div>
                                             </div>
@@ -476,7 +476,7 @@ const AdvancedOptions = () => {
                                                 src={collectionThumbnail == 75 ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
                                                 onClick={() => { saveAdvanceConfig({ collection_thumbnail: 75 }); setcollectionThumbnail(75) }} />
-                                            <div className={'font-12 m-l-10 thumb-val-img wd-75'}>
+                                            <div className={`${styles['thumb-val-img']} ${styles['wd-75']} font-12 m-l-10 `}>
                                                 <div><img src={rectangeIcon} /></div>
                                                 <div>75 %</div>
                                             </div>
@@ -486,7 +486,7 @@ const AdvancedOptions = () => {
                                                 src={collectionThumbnail == 50 ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
                                                 onClick={() => { saveAdvanceConfig({ collection_thumbnail: 50 }); setcollectionThumbnail(50) }} />
-                                            <div className={'font-12 m-l-10 thumb-val-img wd-50'}>
+                                            <div className={`${styles['thumb-val-img']} ${styles['wd-50']} font-12 m-l-10 `}>
                                                 <div><img src={rectangeIcon} /></div>
                                                 <div>50 %</div>
                                             </div>
