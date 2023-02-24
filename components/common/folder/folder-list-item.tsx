@@ -94,13 +94,15 @@ const FolderListItem = ({
 
   const getSortAttributeClassName = (attribute) =>
     sortAttribute.replace("-", "") === attribute && styles["active"];
-  const setSortAttribute = (attribute) => {
+
+    const setSortAttribute = (attribute) => {
     if (attribute === sortAttribute) {
       setCurrentSortAttribute("-" + attribute);
     } else {
-      setCurrentSortAttribute(sortAttribute.startsWith("-") ? "" : attribute);
+      setCurrentSortAttribute(sortAttribute.startsWith("-") ? attribute : "-" + attribute);
     }
   };
+
   const arrowIcon = sortAttribute.startsWith("-")
     ? Utilities.arrowUpGrey
     : Utilities.arrowGrey;
