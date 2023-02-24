@@ -34,14 +34,14 @@ const SubHeader = ({
       {PreComponent &&
         <PreComponent />
       }
-      <div className={styles['header-wrapper']}>
+      {/* <div className={styles['header-wrapper']}>
         <h1>
           <span>{pageTitle}</span>
         </h1>
         {editable &&
           <img onClick={onAltEditionClick} className={styles.edit} src={Utilities.editWhite} />
         }
-      </div>
+      </div> */}
       {children}
     </section>
   )

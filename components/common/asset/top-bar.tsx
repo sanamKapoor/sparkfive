@@ -1,5 +1,5 @@
 import styles from './top-bar.module.css'
-import {useContext, useState, useRef, useEffect} from 'react'
+import { useContext, useState, useRef, useEffect } from 'react'
 import { Utilities } from '../../../assets'
 import selectOptions from '../../../utils/select-options'
 
@@ -8,9 +8,12 @@ import SectionButton from '../buttons/section-button'
 import Select from '../inputs/select'
 import Button from '../buttons/button'
 import IconClickable from '../buttons/icon-clickable'
+import AssetAddition from '../../common/asset/asset-addition'
 
 // Context
 import { AssetContext, UserContext } from '../../../context'
+
+import { ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL } from '../../../constants/permissions'
 
 const TopBar = ({
   activeSortFilter,
@@ -19,12 +22,17 @@ const TopBar = ({
   setActiveView,
   selectAll,
   activeFolder = '',
+  getFolders,
   setOpenFilter,
   openFilter,
   isShare = false,
   deletedAssets,
   singleCollection = false,
-  sharedAdvanceConfig
+  sharedAdvanceConfig,
+  amountSelected = 0,
+  mode,
+  showAssetAddition = true,
+
 }) => {
 
   const {
@@ -35,7 +43,7 @@ const TopBar = ({
     setLastUploadedFolder
   } = useContext(AssetContext)
 
-  const {user, hasPermission, advancedConfig, setAdvancedConfig} = useContext(UserContext)
+  const { user, hasPermission, advancedConfig, setAdvancedConfig } = useContext(UserContext)
   const [hideFilterElements, setHideFilterElements] = useState(advancedConfig.hideFilterElements)
 
   const [top, setTop] = useState(112 + 83 - 0.5)
@@ -44,21 +52,21 @@ const TopBar = ({
     const headerTop = ((document.getElementById('main-header') || document.getElementById('share-header'))?.offsetHeight || 112) - 0.5
     const subHeader = (document.getElementById('sub-header')?.offsetHeight || 0) - 0.5
 
-    setTop(headerTop+subHeader)
+    setTop(headerTop + subHeader)
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     onChangeWidth()
 
     // Sometime, header with logo is not loaded fully so to make sure logo is loaded, we add more change here
-    setTimeout(()=>{
+    setTimeout(() => {
       onChangeWidth()
-    },500)
+    }, 500)
 
     window.addEventListener('resize', onChangeWidth);
 
     return () => window.removeEventListener("resize", onChangeWidth);
-  },[])
+  }, [])
 
   const [tabs, setTabs] = useState(selectOptions.views)
 
@@ -127,27 +135,27 @@ const TopBar = ({
 
   useEffect(() => {
     setTabsVisibility();
-}, [sharedAdvanceConfig])
+  }, [sharedAdvanceConfig])
 
 
   return (
-    <section className={styles.container} style={{top}} id={'top-bar'}>
+    <section className={styles.container} style={{ top }} id={'top-bar'}>
+
       {!deletedAssets ? <div className={styles.filters} >
-        <img src={Utilities.search} onClick={setActiveSearchOverlay} className={styles.search} />
         <ul className={styles['tab-list']}>
-        {tabs.map(view => (
-          <li key={view.name} className={styles['tab-list-item']}>
-            {(!activeFolder || !view.omitFolder) && (!isShare || (isShare && !view.omitShare && view.hideOnSingle !== singleCollection)) &&
-            (view.requirePermissions.length === 0 || (view.requirePermissions.length > 0 && hasPermission(view.requirePermissions))) &&
-              <SectionButton
-                keyProp={view.name}
-                text={view.text}
-                active={activeSortFilter.mainFilter === view.name}
-                onClick={() => setSortFilterValue('mainFilter', view.name)}
-              />
-            }
-          </li>
-        ))}
+          {tabs.map(view => (
+            <li key={view.name} className={styles['tab-list-item']}>
+              {(!activeFolder || !view.omitFolder) && (!isShare || (isShare && !view.omitShare && view.hideOnSingle !== singleCollection)) &&
+                (view.requirePermissions.length === 0 || (view.requirePermissions.length > 0 && hasPermission(view.requirePermissions))) &&
+                <SectionButton
+                  keyProp={view.name}
+                  text={view.text}
+                  active={activeSortFilter.mainFilter === view.name}
+                  onClick={() => setSortFilterValue('mainFilter', view.name)}
+                />
+              }
+            </li>
+          ))}
         </ul>
       </div> :
         <div className={styles.filters}>
@@ -158,11 +166,13 @@ const TopBar = ({
       <IconClickable src={Utilities.filter} additionalClass={styles.filter} onClick={toggleHamurgerList} />
 
       <div className={styles['sec-filters']} ref={filtersRef}>
+        <img src={Utilities.search} onClick={setActiveSearchOverlay} className={styles.search} />
+        {(amountSelected === 0 || mode === 'folders') && showAssetAddition && hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL]) && <AssetAddition activeFolder={activeFolder} getFolders={getFolders} />}
         {selectedAllAssets && <span className={styles['select-only-shown-items-text']} onClick={toggleSelectAll}>Select only 25 assets shown</span>}
         {selectedAllFolders && <span className={styles['select-only-shown-items-text']} onClick={toggleSelectAll}>Select only 25 collections shown</span>}
-        <Button type='button' text='Select All' styleType='secondary' onClick={selectAll} />
         {!deletedAssets && <img src={Utilities.gridView} onClick={() => setActiveView('grid')} />}
         <img src={Utilities.listView} onClick={() => setActiveView('list')} />
+        <Button type='button' text='Select All' styleType='secondary' onClick={selectAll} />
         {!deletedAssets && <div className={styles['nested-wrapper']}>
           <Button
             text='Filters'
@@ -176,7 +186,7 @@ const TopBar = ({
           <div className={styles['sort-wrapper']}>
             <Select
               options={selectOptions.sort.filter(item => {
-                return activeSortFilter.mainFilter === 'folders' && item.value==='none' ? !item : item
+                return activeSortFilter.mainFilter === 'folders' && item.value === 'none' ? !item : item
               })}
               value={activeSortFilter.sort}
               styleType='filter filter-schedule'

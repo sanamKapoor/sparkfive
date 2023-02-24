@@ -47,9 +47,9 @@ const AssetThumbail = ({
   infoWrapperClass = "",
   textWrapperClass = "",
   customIconComponent = <></>,
-  onDisassociate = () => {},
+  onDisassociate = () => { },
   detailOverlay = true,
-  onCloseDetailOverlay = (asset) => {}
+  onCloseDetailOverlay = (asset) => { }
 }) => {
   const [overlayProperties, setOverlayProperties] = useState(DEFAULT_DETAIL_PROPS);
   const { detailOverlayId } = useContext(AssetContext);
@@ -74,10 +74,10 @@ const AssetThumbail = ({
   };
 
   const onCloseOverlay = (changedVersion, outsideDetailOverlayAsset) => {
-    if(outsideDetailOverlayAsset){
+    if (outsideDetailOverlayAsset) {
       setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: false });
       onCloseDetailOverlay(outsideDetailOverlayAsset)
-    }else{
+    } else {
       if (changedVersion) {
         handleVersionChange(changedVersion);
       }
@@ -111,7 +111,7 @@ const AssetThumbail = ({
           {asset.type === 'text' && <AssetText assetImg={thumbailUrl} extension={asset.extension} />} */}
           {!isUploading && !isLoading && (showAssetOption || showViewButtonOnly) && (
             <>
-            {(!showViewButtonOnly || (showViewButtonOnly && showSelectedAsset)) && <div
+              {(!showViewButtonOnly || (showViewButtonOnly && showSelectedAsset)) && <div
                 className={`${styles["selectable-wrapper"]} ${isSelected && styles["selected-wrapper"]
                   }`}
               >
@@ -151,42 +151,41 @@ const AssetThumbail = ({
           )}
         </div>
         <div className={styles.info}>
-          <div className={`${infoWrapperClass} overflow--visible`}>
-            <div className={`${textWrapperClass} overflow--visible`}>
+          <div className={`${infoWrapperClass} ${styles["details-wrapper"]}`}>
+            <div className={`${textWrapperClass} overflow--hidden`}>
               <div className={`normal-text ${styles['wrap-text']}`}>{asset.name}</div>
-              <div className={styles["details-wrapper"]}>
-                <div className="secondary-text">
-                  {format(new Date(asset.createdAt), "MMM d, yyyy, p")}
-                </div>
-                {!isUploading && showAssetOption && (
-                  <AssetOptions
-                    itemType={type}
-                    asset={asset}
-                    openArchiveAsset={openArchiveAsset}
-                    openDeleteAsset={openDeleteAsset}
-                    openMoveAsset={openMoveAsset}
-                    openCopyAsset={openCopyAsset}
-                    downloadAsset={downloadAsset}
-                    openShareAsset={openShareAsset}
-                    openComments={openComments}
-                    openRemoveAsset={openRemoveAsset}
-                    isShare={isShare}
-                    dissociateAsset={onDisassociate}
-                  />
-                )}
-                {showAssetRelatedOption && (
-                  <AssetOptions
-                    itemType={type}
-                    asset={asset}
-                    openDeleteAsset={openDeleteAsset}
-                    downloadAsset={downloadAsset}
-                    isAssetRelated
-                    dissociateAsset={onDisassociate}
-                  />
-                )}
+              {/* <div className={styles["details-wrapper"]}> */}
+              <div className="secondary-text">
+                {format(new Date(asset.createdAt), "MMM d, yyyy, p")}
               </div>
+              {/* </div> */}
             </div>
-
+            {!isUploading && showAssetOption && (
+              <AssetOptions
+                itemType={type}
+                asset={asset}
+                openArchiveAsset={openArchiveAsset}
+                openDeleteAsset={openDeleteAsset}
+                openMoveAsset={openMoveAsset}
+                openCopyAsset={openCopyAsset}
+                downloadAsset={downloadAsset}
+                openShareAsset={openShareAsset}
+                openComments={openComments}
+                openRemoveAsset={openRemoveAsset}
+                isShare={isShare}
+                dissociateAsset={onDisassociate}
+              />
+            )}
+            {showAssetRelatedOption && (
+              <AssetOptions
+                itemType={type}
+                asset={asset}
+                openDeleteAsset={openDeleteAsset}
+                downloadAsset={downloadAsset}
+                isAssetRelated
+                dissociateAsset={onDisassociate}
+              />
+            )}
 
             {customIconComponent}
 

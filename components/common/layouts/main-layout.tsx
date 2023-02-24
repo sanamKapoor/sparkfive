@@ -64,23 +64,25 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
     Router.reload()
   }
 
-  const dropdownOptions = [
+  const admDropdownOptions = [
     { OverrideComp: () => <SettingsLink name='Profile' settingRef='profile' /> },
   ]
-  if (hasPermission([SETTINGS_COMPANY])) dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Company' settingRef='company' /> })
-  if (hasPermission([SETTINGS_BILLING])) dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Billing' settingRef='billing' /> })
-  // if (hasPermission([SETTINGS_PLAN])) dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Plan' settingRef='plan' /> })
-  if (hasPermission([SETTINGS_SECURITY])) dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Security' settingRef='security' /> })
-  if (hasPermission([SETTINGS_TEAM])) dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Team' settingRef='team' /> })
-  if (hasPermission([SETTINGS_TEAM])) dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Attributes' settingRef='attributes' /> })
-  dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Notifications' settingRef='notifications' /> })
-  if (hasPermission([SETTINGS_TEAM])) dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Guest Upload' settingRef='guest-upload' /> })
-  dropdownOptions.push({ OverrideComp: () => <MainLink name='Upload Approvals' settingRef='upload-approvals' /> })
-  if (hasPermission([SETTINGS_TEAM])) dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Custom Settings' settingRef='custom-settings' /> })
-  dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Integrations' settingRef='integrations' /> })
-  dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Shared Links' settingRef='shared-links' /> })
-  dropdownOptions.push({ label: 'Log Out', onClick: logOut })
-  if (hasPermission([SUPERADMIN_ACCESS])) dropdownOptions.push({ OverrideComp: () => <SettingsLink name='Super Admin' settingRef='super-admin' /> })
+
+  const settingsDropdownOptions = []
+
+  if (hasPermission([SETTINGS_COMPANY])) admDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Company' settingRef='company' /> })
+  if (hasPermission([SETTINGS_BILLING])) admDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Billing' settingRef='billing' /> })
+  // if (hasPermission([SETTINGS_PLAN])) admDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Plan' settingRef='plan' /> })
+  if (hasPermission([SETTINGS_SECURITY])) admDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Security' settingRef='security' /> })
+  if (hasPermission([SETTINGS_TEAM])) admDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Team' settingRef='team' /> })
+  if (hasPermission([SETTINGS_TEAM])) settingsDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Attributes' settingRef='attributes' /> })
+  settingsDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Notifications' settingRef='notifications' /> })
+  if (hasPermission([SETTINGS_TEAM])) settingsDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Guest Upload' settingRef='guest-upload' /> })
+  settingsDropdownOptions.push({ OverrideComp: () => <MainLink name='Upload Approvals' settingRef='upload-approvals' /> })
+  if (hasPermission([SETTINGS_TEAM])) settingsDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Custom Settings' settingRef='custom-settings' /> })
+  settingsDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Integrations' settingRef='integrations' /> })
+  settingsDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Shared Links' settingRef='shared-links' /> })
+  if (hasPermission([SUPERADMIN_ACCESS])) settingsDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Super Admin' settingRef='super-admin' /> })
 
   const toggleHamurgerList = () => {
     const classType = `visible-block`
@@ -136,14 +138,16 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
               Wrapper={({ children }) => (
                 <>
                   <UserPhoto photoUrl={user.profilePhoto} extraClass={styles.profile} sizePx={35} />
-                  <span className={styles.name}>{user?.name}</span>
                   {children}
                 </>
               )}
               contentClass={styles['user-dropdown']}
               Content={() => (
                 <Dropdown
-                  options={dropdownOptions}
+                  admOptions={admDropdownOptions}
+                  settingsOptions={settingsDropdownOptions}
+                  user={user}
+                  logout={{ label: 'Log Out', onClick: logOut }}
                 />
               )}
             />

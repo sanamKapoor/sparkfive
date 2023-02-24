@@ -3,7 +3,7 @@
 }
 
 .grid-wrapper{
-  margin-top: calc(55px + 3rem);
+  margin-top: 205px
 }
 
 @media screen and (max-width: 900px) {
