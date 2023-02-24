@@ -66,11 +66,6 @@ const AddCustomRole = ({ onSave, role }) => {
     const [permissions, setPermissions] = useState([])
     const [selectedPermissions, setSelectedPermissions] = useState([])
 
-    const [roleConfigs, setRoleConfigs] = useState({
-        andMainField: false,
-        andCustomAttribute: false
-    })
-
     const [loading, setLoading] = useState(true)
 
     const getCustomFieldsInputData = async () => {
@@ -162,10 +157,6 @@ const AddCustomRole = ({ onSave, role }) => {
             setSelectedPermissions(data.permissions)
             setName(data.name)
 
-            if(data.configs?.configs){
-                setRoleConfigs(JSON.parse(data.configs?.configs))
-            }
-
             const updatedMappingCustomFieldData =  mappingCustomFieldData(inputCustomFields, data.customs)
 
             setAssetCustomFields(update(assetCustomFields, {
@@ -194,23 +185,31 @@ const AddCustomRole = ({ onSave, role }) => {
 
         // Update
         if(role){
-            await teamApi.editRole(role,{
-                name,
-                collections: selectedCollections.map((collection)=>collection.id),
-                campaigns: selectedCampaigns.map((campaign)=>campaign.id),
-                customFieldValues: customFieldValueIds,
-                permissions: selectedPermissions.map((permission)=>permission.id),
-                configs: roleConfigs
-            })
+            await teamApi.editRole(role, {
+              name,
+              collections: selectedCollections.map(
+                (collection) => collection.id
+              ),
+              campaigns: selectedCampaigns.map((campaign) => campaign.id),
+              customFieldValues: customFieldValueIds,
+              permissions: selectedPermissions.map(
+                (permission) => permission.id
+              ),
+              configs: { andMainField: false, andCustomAttribute: false },
+            });
         }else{ // Create new one
             await teamApi.createCustomRole({
-                name,
-                collections: selectedCollections.map((collection)=>collection.id),
-                campaigns: selectedCampaigns.map((campaign)=>campaign.id),
-                customFieldValues: customFieldValueIds,
-                permissions: selectedPermissions.map((permission)=>permission.id),
-                configs: roleConfigs
-            })
+              name,
+              collections: selectedCollections.map(
+                (collection) => collection.id
+              ),
+              campaigns: selectedCampaigns.map((campaign) => campaign.id),
+              customFieldValues: customFieldValueIds,
+              permissions: selectedPermissions.map(
+                (permission) => permission.id
+              ),
+              configs: { andMainField: false, andCustomAttribute: false },
+            });
         }
 
 
@@ -226,12 +225,6 @@ const AddCustomRole = ({ onSave, role }) => {
         }else{
             return true // Default is true
         }
-    }
-
-    const updateRoleConfigs = (name, value) => {
-        const currentRoleConfigs = {...roleConfigs}
-        currentRoleConfigs[name] = value
-        setRoleConfigs(currentRoleConfigs)
     }
 
     useEffect(() => {
@@ -295,32 +288,6 @@ const AddCustomRole = ({ onSave, role }) => {
                   </div>
               </div>
           </div>
-
-          {mode === 'customRestriction' && <div className={styles['role-config-content']}>
-              <div className={styles['field-radio-wrapper']}>
-
-                  <div className={`${styles['radio-button-wrapper']} m-r-30`}  data-tip data-for={'require-any-main'}>
-                      <div className={'m-r-15 font-12'}>Require Any</div>
-                      <IconClickable
-                          src={!roleConfigs.andMainField ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-                          additionalClass={styles['select-icon']}
-                          onClick={() => {updateRoleConfigs('andMainField', false)}} />
-                  </div>
-                  <ReactTooltip place={'bottom'} id={'require-any-main'} delayShow={300} effect='solid'>{'Require at least 1 of these following fields'}</ReactTooltip>
-
-
-                  <div className={`${styles['radio-button-wrapper']}`} data-tip data-for={'require-all-main'}>
-                      <div className={'m-r-15 font-12'}>Require All</div>
-                      <IconClickable
-                          src={roleConfigs.andMainField ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-                          additionalClass={styles['select-icon']}
-                          onClick={() => {updateRoleConfigs('andMainField', true)}} />
-                  </div>
-                  <ReactTooltip place={'bottom'} id={'require-all-main'} delayShow={300} effect='solid'>{'Require all these following fields'}</ReactTooltip>
-
-              </div>
-          </div>}
-
           {mode === 'customRestriction' && <div className={'m-l-30 m-t-50'}>
               <span className={styles['field-title']} >Collections</span>
               <div className={`${styles['field-wrapper']} m-l-30`} >
@@ -356,26 +323,6 @@ const AddCustomRole = ({ onSave, role }) => {
               </div>
 
               <span className={styles['field-title']} >Custom Fields</span>
-              <div className={`${styles['role-config-content']} m-l-20`}>
-                  <div className={styles['field-radio-wrapper']}>
-                      <div className={`${styles['radio-button-wrapper']} m-r-30`} data-tip data-for={'require-any-custom'}>
-                          <div className={'m-r-15 font-12'}>Require Any</div>
-                          <IconClickable
-                              src={!roleConfigs.andCustomAttribute ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-                              additionalClass={styles['select-icon']}
-                              onClick={() => {updateRoleConfigs('andCustomAttribute', false)}} />
-                      </div>
-                      <ReactTooltip place={'bottom'} id={'require-any-custom'} delayShow={300} effect='solid'>{'Require at least 1 of these following fields'}</ReactTooltip>
-                      <div className={`${styles['radio-button-wrapper']}`} data-tip data-for={'require-all-custom'}>
-                          <div className={'m-r-15 font-12'}>Require All</div>
-                          <IconClickable
-                              src={roleConfigs.andCustomAttribute ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-                              additionalClass={styles['select-icon']}
-                              onClick={() => {updateRoleConfigs('andCustomAttribute', true)}} />
-                      </div>
-                      <ReactTooltip place={'bottom'} id={'require-all-custom'} delayShow={300} effect='solid'>{'Require all these following fields'}</ReactTooltip>
-                  </div>
-              </div>
               <div className={`${styles['custom-field-wrapper']} m-l-30 m-t-50`}>
                   {inputCustomFields.map((field, index)=>{
                       if(field.type === 'selectOne'){
