@@ -70,9 +70,9 @@
 }
 
 .wrap-text {
-  /* text-overflow: ellipsis;
+  text-overflow: ellipsis;
   white-space: nowrap;
-  overflow: hidden; */
+  overflow: hidden;
 }
 
 @keyframes halfopacity {
@@ -104,6 +104,6 @@
 }
 
 .details-wrapper > div:first-child {
-  margin-top: 0.5rem;
+  /* margin-top: 0.5rem; */
   flex: 1;
 }
