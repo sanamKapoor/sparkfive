@@ -268,7 +268,7 @@ const FolderGridItem = ({
             onClick={handleOnFocus}
             className={
               isThumbnailNameEditable
-                ? `normal-text ${gridStyles["editable-preview"]}`
+                ? `normal-text ${styles["wrap-text"]} ${gridStyles["editable-preview"]}`
                 : `${gridStyles["editable-preview"]} ${gridStyles["non-editable-preview"]}`
             }
           >

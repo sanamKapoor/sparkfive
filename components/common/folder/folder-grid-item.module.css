@@ -10,6 +10,7 @@
     display: grid;
     grid-template-columns: 50% 50%;
     grid-template-rows: 50% 50%;
+    height: 100%;
     /* height: 330px;
     max-height: 330px; */
   }
@@ -97,7 +98,6 @@
   }
   
   .details-wrapper > div:first-child {
-    margin-top: 0.5rem;
     flex: 1;
   }
   
@@ -125,6 +125,7 @@
   .grid_border {
     border: 1px solid var(--color-secondary-border);
     padding: 5px;
+    height: 100%;
     /* height: 330px;
     max-height: 330px; */
   }
@@ -198,5 +199,6 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    display: block;
   }
   
