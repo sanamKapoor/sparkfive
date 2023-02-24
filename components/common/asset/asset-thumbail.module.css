@@ -101,6 +101,7 @@
 .details-wrapper {
   display: flex;
   align-items: flex-end;
+  margin-top: 0.5em;
 }
 
 .details-wrapper > div:first-child {
