@@ -19,7 +19,7 @@ import { TeamContext } from '../../../context'
 // Components
 import HeaderLink from '../layouts/header-link'
 import ToggleableAbsoluteWrapper from '../misc/toggleable-absolute-wrapper'
-import Dropdown from '../inputs/dropdown'
+import AdmDropdown from '../inputs/adm-dropdown'
 import TrialReminderModal from '../modals/trial-reminder-modal'
 import UserPhoto from '../user/user-photo'
 import NoPermissionNotice from '../misc/no-permission-notice'
@@ -143,7 +143,7 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
               )}
               contentClass={styles['user-dropdown']}
               Content={() => (
-                <Dropdown
+                <AdmDropdown
                   admOptions={admDropdownOptions}
                   settingsOptions={settingsDropdownOptions}
                   user={user}

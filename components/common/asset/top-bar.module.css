@@ -1,15 +1,15 @@
 .container {
   display: flex;
   align-items: center;
-  margin-bottom: 3rem;
   /*position: relative;*/
   position: fixed;
   width: 100%;
-  top: 0;
+  top: 81px;
   left: 0;
   z-index: 1399; /* To be lower than top bar so that upoad popup is not hidden*/
   background-color: white;
   padding: 35px 32px;
+  min-height: 110px;
 }
 
 @media screen and (max-width: 900px) {
@@ -30,10 +30,8 @@
 .tab-list{
   display: flex;
   flex-wrap: wrap;
-}
-
-.tab-list-item{
-  padding: 15px;
+  align-items: center;
+  gap: 30px;
 }
 
 .content {
@@ -60,15 +58,13 @@
 }
 
 .sort-wrapper {
-  margin: 0 5px;
   z-index: 1000;
-  min-width: 160px;
+  min-width: 127px;
 }
 
 .nested-wrapper {
   display: flex;
   align-items: center;
-  margin: 0 5px;
 }
 
 .filter {
@@ -80,9 +76,6 @@
 }
 
 @media screen and (max-width: 1210px) {
-  .container {
-    margin-bottom: 1rem;
-  }
 
   .options {
     flex-wrap: wrap;
@@ -112,22 +105,6 @@
     height: auto;
   }
 
-  .sec-filters {
-    display: none;
-    right: 0;
-    flex-wrap: wrap;
-    position: absolute;
-    top: 2rem;
-    z-index: 300;
-    background-color: white;
-    padding: 20px;
-    border: 1px solid var(--color-secondary-border);
-  }
-
-  .sec-filters > * {
-    margin-bottom: 10px;
-  }
-
   .print {
     display: none;
   }
@@ -155,25 +132,31 @@
   }
 }
 
-@media screen and (max-width: 1024px){
-  .content{
-    margin-left: 0 !important;
-    text-align: center;
-    align-items: flex-start;
+@media screen and (min-width: 810px){
+  .hamburger {
+    display: none;
   }
-  .filters {
-  display: flex;
-  align-items: center;
-}
 }
 
-@media screen and (max-width: 650px) {
+
+@media screen and (max-width: 810px){
+  .sec-filters {
+    gap: 8px;
+  }
+}
+
+@media screen and (max-width: 600px) {
   .tab-list {
     flex-wrap: wrap;
-    margin-top: 10px;
+    gap: 8px;
   }
 
   .tab-list-item{
     padding: 6px 8px;
+  }
+
+  .container {
+    top: calc(55px + 36px);
+    min-height: 75px;
   }
 }

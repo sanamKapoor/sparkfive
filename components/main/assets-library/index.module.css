@@ -3,20 +3,33 @@
 }
 
 .grid-wrapper{
-  margin-top: 205px
+  margin-top: calc(81px  + 110px)
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 600px) {
   .container {
     padding: 17.5px 16px;
   }
 
   .grid-wrapper{
-    margin-top: calc(55px + 1rem);
+    margin-top: calc(55px + 36px + 75px);
   }
 }
 
 .col-wrapper {
   display: flex;
   justify-content: space-between;
+}
+
+
+@media screen and (max-width: 600px){
+  .search-desktop {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 601px){
+  .search-mobile {
+    display: none;
+  }
 }

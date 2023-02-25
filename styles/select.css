@@ -20,7 +20,7 @@
 
 .select-prefix__single-value {
   color: var(--color-prim-navy) !important;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .select-prefix__indicators {
@@ -91,7 +91,7 @@
 .search-filters .filter .select-prefix__placeholder,
 .product-select .select-prefix__placeholder {
   color: var(--color-sec-text);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .font-weight-normal .select-prefix__placeholder {
@@ -131,9 +131,6 @@
   background-color: #deebff;
 }
 
-.filter .select-prefix__value-container {
-  margin-left: 1.3rem;
-}
 
 .m-l-0 .select-prefix__value-container {
   margin-left: 0;

@@ -701,19 +701,51 @@ const AssetsLibrary = () => {
       {(hasPermission([ASSET_ACCESS]) || hasPermission([ASSET_UPLOAD_APPROVAL])) ?
         <>
           <main className={`${styles.container}`}>
-            {advancedConfig.set && hasPermission([ASSET_ACCESS]) && <TopBar
-              activeFolder={activeFolder}
-              getFolders={getFolders}
-              mode={activeMode}
-              activeSortFilter={activeSortFilter}
-              setActiveSortFilter={setActiveSortFilter}
-              setActiveView={setActiveView}
-              setActiveSearchOverlay={() => { selectAllAssets(false); setActiveSearchOverlay(true) }}
-              selectAll={selectAll}
-              setOpenFilter={setOpenFilter}
-              openFilter={openFilter}
-              deletedAssets={false} />
-            }
+            <div className='position-relative'>
+              <div className={styles["search-mobile"]}>
+                <SearchOverlay
+                  closeOverlay={closeSearchOverlay}
+                  operationsEnabled={true}
+                  activeFolder={activeFolder}
+                  onCloseDetailOverlay={(assetData) => {
+                    closeSearchOverlay()
+                    // setActiveSearchOverlay(false)
+                    setDetailOverlayId(undefined)
+                    setCurrentViewAsset(assetData)
+                  }}
+                />
+              </div>
+              {advancedConfig.set && hasPermission([ASSET_ACCESS]) &&
+                <TopBar
+                  activeFolder={activeFolder}
+                  getFolders={getFolders}
+                  mode={activeMode}
+                  activeSortFilter={activeSortFilter}
+                  setActiveSortFilter={setActiveSortFilter}
+                  setActiveView={setActiveView}
+                  setActiveSearchOverlay={() => { selectAllAssets(false); setActiveSearchOverlay(true) }}
+                  selectAll={selectAll}
+                  setOpenFilter={setOpenFilter}
+                  openFilter={openFilter}
+                  deletedAssets={false} />
+              }
+              <div className={styles["search-desktop"]}>
+                {activeSearchOverlay &&
+                  <SearchOverlay
+                    closeOverlay={closeSearchOverlay}
+                    operationsEnabled={true}
+                    activeFolder={activeFolder}
+                    onCloseDetailOverlay={(assetData) => {
+                      closeSearchOverlay()
+                      // setActiveSearchOverlay(false)
+                      setDetailOverlayId(undefined)
+                      setCurrentViewAsset(assetData)
+                    }}
+                  />
+                }
+              </div>
+
+            </div>
             <div className={`${openFilter && styles['col-wrapper']} ${styles['grid-wrapper']}`}>
               <DropzoneProvider>
                 {advancedConfig.set && <AssetGrid
@@ -760,19 +792,7 @@ const AssetsLibrary = () => {
         type={'Folder'}
         initialValue={activeFolder && folders.find(folder => folder.id === activeFolder)?.name}
       />
-      {activeSearchOverlay &&
-        <SearchOverlay
-          closeOverlay={closeSearchOverlay}
-          operationsEnabled={true}
-          activeFolder={activeFolder}
-          onCloseDetailOverlay={(assetData) => {
-            closeSearchOverlay()
-            // setActiveSearchOverlay(false)
-            setDetailOverlayId(undefined)
-            setCurrentViewAsset(assetData)
-          }}
-        />
-      }
+
       {uploadDetailOverlay && <UploadStatusOverlayAssets closeOverlay={() => { setUploadDetailOverlay(false) }} />}
 
       {currentViewAsset && <DetailOverlay

@@ -16,7 +16,7 @@ import Button from '../../common/buttons/button'
 import AssetHeaderOps from '../../common/asset/asset-header-ops'
 import AssetThumbail from "../../common/asset/asset-thumbail";
 
-const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEnabled = false, importAssets = () => { }, sharePath = '', activeFolder = '', onCloseDetailOverlay = (assetData) => {} }) => {
+const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEnabled = false, importAssets = () => { }, sharePath = '', activeFolder = '', onCloseDetailOverlay = (assetData) => { } }) => {
 
   const { assets, setAssets, setActiveOperation, setOperationAsset, setPlaceHolders, nextPage, selectAllAssets, selectedAllAssets, totalAssets } = useContext(AssetContext)
   const { term, setSearchTerm } = useContext(FilterContext)
@@ -25,7 +25,7 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
   const [filterParams, setFilterParams] = useState({})
 
 
-  const getData = async (inputTerm, replace = true, _filterParams=filterParams) => {
+  const getData = async (inputTerm, replace = true, _filterParams = filterParams) => {
     setSearchTerm(inputTerm)
     try {
       let fetchFn = assetApi.getAssets
@@ -105,41 +105,26 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
   }
 
   return (
-    <div className={`app-overlay search-container`}>
-      <div className={'search-top'}>
-        <div className={'search-close'} onClick={closeSearchModal}>
-          <span className={'search-x'}>X</span>
-          <span>esc</span>
-        </div>
-      </div>
+    <div>
       <div className={'search-content'}>
-        <h2 >
-          {`Search ${importEnabled ? 'and Import ' : ''}Assets`}
-        </h2>
+
         <div className={'search-cont'}>
+          <div className={'search-close'} onClick={closeSearchModal}>
+            <img src={Utilities.grayClose} alt={"close"} />
+          </div>
           <Search
-            placeholder={'Find Assets by Name, Extension, Collection, Campaign, Tag, Custom Fields (min 3 characters)'}
+            placeholder={'Search Assets'}
             onSubmit={(inputTerm, filterParams) => getData(inputTerm, true, filterParams)}
           />
         </div>
-        <div className={styles.operations}>
-          <div className={styles.buttons}>
-            <Button type='button' text='Select All' styleType='secondary' onClick={selectAll} />
-            {selectedAssets.length > 0 && <Button text={`Deselect All (${totalSelectAssets})`} type='button' styleType='primary' onClick={deselectAll} />}
-            {selectedAllAssets && <span className={styles['select-only-shown-items-text']} onClick={toggleSelectAll}>Select only 25 assets shown</span>}
-            {selectedAssets.length > 0 && <AssetHeaderOps deselectHidden={true} buttonStyleType={'tertiary-blue'} isSearch={true}/>}
 
-            <img className={styles['view-icon']} src={Utilities.gridView} onClick={() => setActiveView('grid')} />
-            <img className={styles['view-icon']} src={Utilities.listView} onClick={() => setActiveView('list')} />
+        {(activeView === "list" && assets.length > 0) &&
+          <div className={styles["list-head"]}>
+            <div className={styles.tags}>Tags</div>
+            <div className={styles.type}>Type</div>
+            <div className={styles.collection}>Collection</div>
           </div>
-        </div>
-          {(activeView === "list" && assets.length > 0) &&
-            <div  className={styles["list-head"]}>
-              <div className={styles.tags}>Tags</div>
-              <div className={styles.type}>Type</div>
-              <div className={styles.collection}>Collection</div>
-            </div>
-          }
+        }
         {importEnabled &&
           <div className={styles['import-wrapper']}>
             <Button
@@ -151,7 +136,7 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
             />
           </div>
         }
-        {activeView === "list" && <ul className={'search-content-list'}>
+        {/* {activeView === "list" && <ul className={'search-content-list'}>
           {assets.map((assetItem, index) => (
             <SearchItem
               isShare={sharePath}
@@ -165,9 +150,9 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
               onCloseDetailOverlay={onCloseDetailOverlay}
             />
           ))}
-        </ul>}
+        </ul>} */}
 
-        {activeView === "grid" && <div className={`${gridStyle['list-wrapper']} search-content-list`}>
+        {/* {activeView === "grid" && <div className={`${gridStyle['list-wrapper']} search-content-list`}>
           <ul className={`${gridStyle['grid-list-small']} ${gridStyle['regular']}`}>
             {assets.map((assetItem, index) => {
               return (
@@ -185,10 +170,10 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
               )
             })}
           </ul>
-        </div>}
+        </div>} */}
 
 
-        {assets.length > 0 && nextPage !== -1 &&
+        {/* {assets.length > 0 && nextPage !== -1 &&
           <>
             {nextPage > 2 ?
               <>
@@ -211,7 +196,7 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
               </>
             }
           </>
-        }
+        } */}
       </div>
     </div >
   )

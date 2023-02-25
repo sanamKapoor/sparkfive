@@ -7,10 +7,13 @@
   left: 0;
   z-index: 1500;
   width: 100%;
+  height: 81px;
+  display: flex;
+  align-items: center;
 }
 
 .logo-img {
-  height: 48px;
+  height: 40px;
   width: auto;
   margin-right: 48px;
   cursor: pointer;
@@ -96,5 +99,17 @@
 
   .navigation-links li {
     padding: 1rem;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .header {
+    height: 55px;
+    padding: 10px 16px;
+  }
+
+  .logo-img {
+    width: 35px;
+    height: auto;
   }
 }

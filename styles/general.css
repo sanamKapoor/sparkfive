@@ -30,7 +30,7 @@
   --color-secondary-border: #dedad4;
   --color-secondary-hover: var(--color-sec-lightivory);
   --color-ghost-text: #9597a6;
-  --color-prim-blue: #4AA4FF;
+
 }
 
 .color-secondary{
@@ -254,6 +254,11 @@ ul {
 
 .d-flex{
   display: flex;
+}
+
+
+.position-relative{
+  position: relative;
 }
 
 .position-absolute{

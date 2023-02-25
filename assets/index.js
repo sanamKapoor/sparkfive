@@ -78,10 +78,12 @@ export const Utilities = {
   collections: require('./Icons/Utilities/FiltersTags/collections.svg'),
   file: require('./Icons/Utilities/FiltersTags/file.svg'),
   close: require('./Icons/Utilities/Close/close.svg'),
-  share: require('./Icons/Utilities/Share/share.svg'),
   blueClose: require('./Icons/Utilities/Close/blue-close.svg'),
+  grayClose: require('./Icons/Utilities/Close/gray-close.svg'),
+  share: require('./Icons/Utilities/Share/share.svg'),
   greenTag: require('./Icons/Utilities/green-tag.svg'),
   thumbsUp: require('./Icons/Utilities/Thumbs Up/thumbs-up.svg'),
+  menu: require('./Icons/Utilities/Menu/menu.svg'),
 }
 
 export const ProjectTypes = {
