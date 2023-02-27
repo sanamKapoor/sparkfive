@@ -51,6 +51,7 @@ const AssetThumbail = ({
   detailOverlay = true,
   onCloseDetailOverlay = (asset) => {}
 }) => {
+  //console.log(asset, '---------------asset')
   const [overlayProperties, setOverlayProperties] = useState(DEFAULT_DETAIL_PROPS);
   const { detailOverlayId } = useContext(AssetContext);
 
