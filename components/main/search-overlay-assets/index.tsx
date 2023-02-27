@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react'
+import { useState, useContext, useEffect, useRef } from 'react'
 import { AssetContext, FilterContext } from '../../../context'
 import styles from './index.module.css'
 import assetApi from '../../../server-api/asset'
@@ -16,13 +16,14 @@ import Button from '../../common/buttons/button'
 import AssetHeaderOps from '../../common/asset/asset-header-ops'
 import AssetThumbail from "../../common/asset/asset-thumbail";
 
-const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEnabled = false, importAssets = () => { }, sharePath = '', activeFolder = '', onCloseDetailOverlay = (assetData) => { } }) => {
+const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEnabled = false, importAssets = () => { }, sharePath = '', activeFolder = '', onCloseDetailOverlay = (assetData) => { }, onClickOutside }) => {
 
   const { assets, setAssets, setActiveOperation, setOperationAsset, setPlaceHolders, nextPage, selectAllAssets, selectedAllAssets, totalAssets } = useContext(AssetContext)
   const { term, setSearchTerm } = useContext(FilterContext)
 
   const [activeView, setActiveView] = useState('list')
   const [filterParams, setFilterParams] = useState({})
+  const [openFilters, setOpenFilters] = useState(false)
 
 
   const getData = async (inputTerm, replace = true, _filterParams = filterParams) => {
@@ -105,26 +106,25 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
   }
 
   return (
-    <div>
-      <div className={'search-content'}>
+    <div >
+      <div className={'search-content'} >
 
         <div className={'search-cont'}>
-          <div className={'search-close'} onClick={closeSearchModal}>
-            <img src={Utilities.grayClose} alt={"close"} />
+          <div className={"search-actions"}>
+            <div className={'search-filter'} onClick={() => setOpenFilters(!openFilters)}>
+              <img src={Utilities.filterGray} alt={"filter"} />
+            </div>
+            <div className={'search-close'} onClick={closeSearchModal}>
+              <img src={Utilities.grayClose} alt={"close"} />
+            </div>
           </div>
           <Search
             placeholder={'Search Assets'}
             onSubmit={(inputTerm, filterParams) => getData(inputTerm, true, filterParams)}
+            openFilters={openFilters}
           />
         </div>
 
-        {(activeView === "list" && assets.length > 0) &&
-          <div className={styles["list-head"]}>
-            <div className={styles.tags}>Tags</div>
-            <div className={styles.type}>Type</div>
-            <div className={styles.collection}>Collection</div>
-          </div>
-        }
         {importEnabled &&
           <div className={styles['import-wrapper']}>
             <Button

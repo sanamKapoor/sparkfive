@@ -18,7 +18,7 @@
     align-items: center;
     position: fixed;
     top: 107px;
-    z-index: 200;
+    z-index: 2000;
     background-color: var(--color-sec-lightivory);
     left: 50%;
     transform: translate(-50%);
@@ -34,15 +34,22 @@
     justify-content: flex-end;
 }
 
-.search-close {
+.search-actions {
     cursor: pointer;
     position: absolute;
     right: 12px;
     top: 18px;
     z-index: 2000;
+    display: flex;
+    align-items: center;
+    gap: 16px;
 }
 
 .search-close:hover {
+    opacity: 0.7;
+}
+
+.search-filter:hover {
     opacity: 0.7;
 }
 
@@ -122,11 +129,17 @@
         box-shadow: none;
         border-radius: 0;
         height: 36px;
+        z-index: 200;
     }
 
     .search-close {
         display: none;
     }
+
+    .search-filter {
+        display: none;
+    }
+
 
     .search-item {
       flex-wrap: wrap;

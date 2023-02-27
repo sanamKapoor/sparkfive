@@ -6,7 +6,7 @@
 
 .select-prefix__control {
   border-style: none !important;
-  /* height: 34px; */
+  max-height: 34px;
   min-height: 34px !important;
 }
 
@@ -41,12 +41,20 @@
   background-color: var(--color-sec-ivory);
   color: var(--color-prim-navy);
   text-align: left;
+  padding: 0 !important;
 }
 
 .select-prefix__option {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  font-size: 12px !important;
+}
+
+.select-prefix__option--is-disabled {
+  background-color: var(--color-sec-lightblue) !important;
+  color: var(--color-prim-navy) !important;
+  border-bottom: 1px solid var(--color-sec-border) !important;
 }
 
 /* Regular */
@@ -110,6 +118,7 @@
   background-color: white;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
+  max-height: 34px;
 }
 
 .filter .select-prefix__indicators span,

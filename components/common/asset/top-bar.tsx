@@ -109,7 +109,7 @@ const TopBar = ({
       (view.requirePermissions.length === 0 || (view.requirePermissions.length > 0 && hasPermission(view.requirePermissions)))
   })
 
-  
+
   return (
     <section className={styles.container} id={'top-bar'}>
 
@@ -189,7 +189,7 @@ const TopBar = ({
                 id: "grid",
                 icon: Utilities.gridView,
                 onClick: () => {
-                  setActiveView('grid') 
+                  setActiveView('grid')
                 }
               },
               {
@@ -216,6 +216,7 @@ const TopBar = ({
         {
           <div className={styles['sort-wrapper']}>
             <Select
+              label={"Sort By"}
               options={selectOptions.sort.filter(item => {
                 return activeSortFilter.mainFilter === 'folders' && item.value === 'none' ? !item : item
               })}

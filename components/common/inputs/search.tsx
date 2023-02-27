@@ -8,10 +8,12 @@ import Button from '../buttons/button'
 
 const Search = (props) => {
 
+  const { openFilters } = props
+
   const [term, setTerm] = useState('')
   const [filtersTags, setFiltersTags] = useState([])
-  const [isOpen, setIsOpen] = useState(false)
   const contentRef = useRef(null)
+  let isOpen = openFilters
 
   const { advancedConfig } = useContext(UserContext)
 
@@ -101,7 +103,7 @@ const Search = (props) => {
     if (e) {
       e.stopPropagation()
     }
-    setIsOpen(visible)
+    isOpen = visible
     if (visible) {
       document.addEventListener("mousedown", handleClickOutside);
     } else {
@@ -136,7 +138,7 @@ const Search = (props) => {
           </div>
           {filtersTags.length > 0 &&
             <div className={styles.tags}>
-              {filtersTags.map((tag, index) => (
+            {filtersTags.map((tag, index) => (
                 <div className={styles.tag} key={index}>
                   {tag.icon &&
                     <img src={tag.icon} />

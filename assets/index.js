@@ -84,6 +84,7 @@ export const Utilities = {
   greenTag: require('./Icons/Utilities/green-tag.svg'),
   thumbsUp: require('./Icons/Utilities/Thumbs Up/thumbs-up.svg'),
   menu: require('./Icons/Utilities/Menu/menu.svg'),
+  filterGray: require('./Icons/Utilities/Filter/filter.svg'),
 }
 
 export const ProjectTypes = {
