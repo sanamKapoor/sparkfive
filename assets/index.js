@@ -198,5 +198,8 @@ export const AssetOps = {
   associate: require('./Icons/Asset Actions/associate.svg'),
   associateBlue: require('./Icons/Asset Actions/associate-blue.svg'),
   moveReplace: require('./Icons/Asset Actions/move.svg'),
-  moveReplaceWhite: require('./Icons/Asset Actions/white-move.svg')
+  moveReplaceWhite: require('./Icons/Asset Actions/white-move.svg'),
+  newCollection: require('./Icons/Asset Addition/new-collection.svg'),
+  uploadFiles: require('./Icons/Asset Addition/upload-files.svg'),
+  uploadFolder: require('./Icons/Asset Addition/upload-folder.svg'),
 }

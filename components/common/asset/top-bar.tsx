@@ -15,6 +15,7 @@ import AssetAddition from '../../common/asset/asset-addition'
 import { AssetContext, UserContext } from '../../../context'
 
 import { ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL } from '../../../constants/permissions'
+import Dropdown from '../inputs/dropdown'
 
 const TopBar = ({
   activeSortFilter,
@@ -47,6 +48,7 @@ const TopBar = ({
   const { user, hasPermission, advancedConfig, setAdvancedConfig } = useContext(UserContext)
   const [hideFilterElements, setHideFilterElements] = useState(advancedConfig.hideFilterElements)
   const [showTabs, setShowTabs] = useState(isMobile ? false : true)
+  const [showViewDropdown, setShowViewDropdown] = useState(false)
 
   const [tabs, setTabs] = useState(selectOptions.views)
 
@@ -101,29 +103,57 @@ const TopBar = ({
   }, [sharedAdvanceConfig])
 
 
+  const mobileTabs = tabs.filter((view) => {
+    return (!activeFolder || !view.omitFolder) && (!isShare || (isShare && !view.omitShare && view.hideOnSingle !== singleCollection)) &&
+      (view.requirePermissions.length === 0 || (view.requirePermissions.length > 0 && hasPermission(view.requirePermissions)))
+  })
+
+  
   return (
-    <section className={styles.container}  id={'top-bar'}>
+    <section className={styles.container} id={'top-bar'}>
 
       {!deletedAssets ? <div className={styles.filters} >
         <ul className={styles['tab-list']}>
-          {isMobile &&
-            <IconClickable src={Utilities.menu} additionalClass={styles.hamburger} onClick={() => setShowTabs(!showTabs)} />
-          }
-
-          {tabs.map(view => (
-            (showTabs || view.name === "all") &&
-            <li key={view.name} className={styles['tab-list-item']}>
-              {(!activeFolder || !view.omitFolder) && (!isShare || (isShare && !view.omitShare && view.hideOnSingle !== singleCollection)) &&
-                (view.requirePermissions.length === 0 || (view.requirePermissions.length > 0 && hasPermission(view.requirePermissions))) &&
+          {isMobile ? (
+            <div className={styles["mobile-tabs"]}>
+              <IconClickable src={Utilities.menu} additionalClass={styles.hamburger} onClick={() => setShowTabs(!showTabs)} />
+              <li className={styles['tab-list-item']}>
                 <SectionButton
-                  keyProp={view.name}
-                  text={view.text}
-                  active={activeSortFilter.mainFilter === view.name}
-                  onClick={() => setSortFilterValue('mainFilter', view.name)}
+                  keyProp={"all"}
+                  text={"All"}
+                  active={activeSortFilter.mainFilter === "all"}
+                  onClick={() => setSortFilterValue('mainFilter', "all")}
+                />
+              </li>
+              {showTabs &&
+                <Dropdown
+                  additionalClass={styles.dropdown}
+                  options={mobileTabs.map((tab) => ({
+                    label: tab.text,
+                    id: tab.name,
+                    onClick: () => {
+                      setSortFilterValue('mainFilter', tab.name)
+                    },
+                  }))}
                 />
               }
-            </li>
-          ))}
+            </div>
+
+          ) : (
+            tabs.map(view => (
+              <li key={view.name} className={styles['tab-list-item']}>
+                {(!activeFolder || !view.omitFolder) && (!isShare || (isShare && !view.omitShare && view.hideOnSingle !== singleCollection)) &&
+                  (view.requirePermissions.length === 0 || (view.requirePermissions.length > 0 && hasPermission(view.requirePermissions))) &&
+                  <SectionButton
+                    keyProp={view.name}
+                    text={view.text}
+                    active={activeSortFilter.mainFilter === view.name}
+                    onClick={() => setSortFilterValue('mainFilter', view.name)}
+                  />
+                }
+              </li>
+            ))
+          )}
         </ul>
       </div> :
         <div className={styles.filters}>
@@ -138,12 +168,44 @@ const TopBar = ({
         {!isMobile &&
           <img src={Utilities.search} onClick={setActiveSearchOverlay} className={styles.search} />
         }
-        {(amountSelected === 0 || mode === 'folders') && showAssetAddition && hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL]) && !isMobile && (
+        {(amountSelected === 0 || mode === 'folders') && showAssetAddition && hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL]) && (
           <AssetAddition activeFolder={activeFolder} getFolders={getFolders} />
         )}
+        {!deletedAssets && <img src={setActiveView === "grid" ? Utilities.gridView : Utilities.listView} onClick={() => setShowViewDropdown(true)} />}
+        {showViewDropdown &&
+          <Dropdown
+            additionalClass={styles["view-dropdown"]}
+            onClickOutside={() => setShowViewDropdown(false)}
+            options={[
+              {
+                id: "view",
+                OverrideComp: () => (
+                  <li className={styles["dropdown-title"]}>View</li>
+                )
+              },
+              {
+                label: "Grid",
+                id: "grid",
+                icon: Utilities.gridView,
+                onClick: () => {
+                  setActiveView('grid') 
+                  setShowViewDropdown(false)
+                }
+              },
+              {
+                label: "List",
+                id: "list",
+                icon: Utilities.listView,
+                onClick: () => {
+                  setActiveView('list')
+                  setShowViewDropdown(false)
+                }
+              },
+            ]}
+          />
+        }
         {selectedAllAssets && <span className={styles['select-only-shown-items-text']} onClick={toggleSelectAll}>Select only 25 assets shown</span>}
         {selectedAllFolders && <span className={styles['select-only-shown-items-text']} onClick={toggleSelectAll}>Select only 25 collections shown</span>}
-        {!deletedAssets && <img src={Utilities.gridView} onClick={() => setActiveView('grid')} />}
         <Button type='button' text='Select All' styleType='secondary' onClick={selectAll} />
         {(!deletedAssets && !isMobile) && <div className={styles['nested-wrapper']}>
           <Button
