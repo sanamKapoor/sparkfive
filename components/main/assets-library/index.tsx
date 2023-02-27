@@ -28,6 +28,9 @@ import selectOptions from '../../../utils/select-options'
 import { ASSET_UPLOAD_APPROVAL, ASSET_ACCESS } from '../../../constants/permissions'
 import NoPermissionNotice from "../../common/misc/no-permission-notice";
 import DetailOverlay from "../../common/asset/detail-overlay";
+import React from 'react'
+import AssetHeaderOps from '../../common/asset/asset-header-ops'
+import deletedAssets from '../../common/custom-settings/deleted-assets'
 
 const AssetsLibrary = () => {
 
@@ -697,7 +700,13 @@ const AssetsLibrary = () => {
 
   return (
     <>
-
+      {(activeMode === 'assets' ? selectedAssets.length : selectedFolders.length) > 0 &&
+        <AssetHeaderOps
+          isUnarchive={activeSortFilter.mainFilter === 'archived'}
+          isFolder={activeMode === 'folders'}
+          deletedAssets={false}
+        />
+      }
       {(hasPermission([ASSET_ACCESS]) || hasPermission([ASSET_UPLOAD_APPROVAL])) ?
         <>
           <main className={`${styles.container}`}>

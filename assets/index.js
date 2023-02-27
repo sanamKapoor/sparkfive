@@ -178,7 +178,7 @@ export const Integrations = {
 }
 
 export const AssetOps = {
-  edit: require('./Icons/Utilities/Description-Edit/icn-utilities-description_edit-fill.svg'),
+  edit: require('./Icons/Utilities/Description-Edit/icn-utilities-description_edit.svg'),
   delete: require('./Icons/Utilities/Delete/icn-utilities-delete.svg'),
   deleteRed: require('./Icons/Utilities/Delete/icn-utilities-delete-red.svg'),
   archive: require('./Icons/Asset Actions/archive.svg'),
@@ -195,6 +195,7 @@ export const AssetOps = {
   copyWhite: require('./Icons/Asset Actions/copy-white.svg'),
   shareWhite: require('./Icons/Asset Actions/share-white.svg'),
   generateThumbnail: require('./Icons/Asset Actions/wrench.svg'),
+  recreateThumbnail: require('./Icons/Asset Actions/wrench-blue.svg'),
   upload: require('./Icons/Asset Actions/upload.svg'),
   associate: require('./Icons/Asset Actions/associate.svg'),
   associateBlue: require('./Icons/Asset Actions/associate-blue.svg'),

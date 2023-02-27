@@ -106,7 +106,7 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
   }
 
   return (
-    <div >
+    <div>
       <div className={'search-content'} >
 
         <div className={'search-cont'}>
