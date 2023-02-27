@@ -15,7 +15,7 @@
 .logo-img {
   height: 40px;
   width: auto;
-  margin-right: 48px;
+  margin-right: 40px;
   cursor: pointer;
 }
 
@@ -74,31 +74,11 @@
   right: 1rem;
 }
 
-@media screen and (max-width: 1000px) {
-  .hamburger {
-    display: flex;
-  }
 
-  .header {
-    padding: 15px 16px;
-  }
 
-  .logo-img {
-    margin-right: 20px;
-  }
-
-  .navigation-links {
+@media screen and (min-width: 601px) {
+  .mobile-navigation-links {
     display: none;
-    position: absolute;
-    top: 5rem;
-    background-color: var(--color-prim-navy);
-    width: 100%;
-    left: 0;
-    z-index: 1;
-  }
-
-  .navigation-links li {
-    padding: 1rem;
   }
 }
 
@@ -111,5 +91,18 @@
   .logo-img {
     width: 35px;
     height: auto;
+    margin-right: 10px;
+  }
+
+  .navigation-links {
+    display: none;
+  }
+
+  .mobile-navigation-links {
+    flex: 1 1;
+  }
+  .menu-dropdown {
+    left: 56px;
+    top: 44px;
   }
 }

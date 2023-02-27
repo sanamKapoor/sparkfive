@@ -22,6 +22,7 @@ const TopBar = ({
   setActiveSearchOverlay,
   setActiveSortFilter,
   setActiveView,
+  activeView,
   selectAll,
   activeFolder = '',
   getFolders,
@@ -171,7 +172,7 @@ const TopBar = ({
         {(amountSelected === 0 || mode === 'folders') && showAssetAddition && hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL]) && (
           <AssetAddition activeFolder={activeFolder} getFolders={getFolders} />
         )}
-        {!deletedAssets && <img src={setActiveView === "grid" ? Utilities.gridView : Utilities.listView} onClick={() => setShowViewDropdown(true)} />}
+        {!deletedAssets && <img src={activeView === "grid" ? Utilities.gridView : Utilities.listView} onClick={() => setShowViewDropdown(true)} />}
         {showViewDropdown &&
           <Dropdown
             additionalClass={styles["view-dropdown"]}
@@ -189,7 +190,6 @@ const TopBar = ({
                 icon: Utilities.gridView,
                 onClick: () => {
                   setActiveView('grid') 
-                  setShowViewDropdown(false)
                 }
               },
               {
@@ -198,7 +198,6 @@ const TopBar = ({
                 icon: Utilities.listView,
                 onClick: () => {
                   setActiveView('list')
-                  setShowViewDropdown(false)
                 }
               },
             ]}

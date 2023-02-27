@@ -1,4 +1,4 @@
-import { useContext, useRef } from 'react'
+import { useContext, useRef, useState } from 'react'
 import styles from './main-layout.module.css'
 import Link from 'next/link'
 import { GeneralImg, Navigation } from '../../../assets'
@@ -26,6 +26,7 @@ import NoPermissionNotice from '../misc/no-permission-notice'
 import Notification from '../notifications/notification'
 import SpinnerOverlay from '../spinners/spinner-overlay'
 import Button from '../buttons/button'
+import Dropdown from '../inputs/dropdown'
 
 const MainLayout = ({ children, requiredPermissions = [] }) => {
   const { user, logOut, hasPermission } = useContext(UserContext)
@@ -33,6 +34,8 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
   const pageListRef = useRef(null)
 
   const { plan } = useContext(TeamContext)
+
+  const [menuOpen, setMenuOpen] = useState(false)
 
   const SettingsLink = ({ settingRef, name }) => (
     <Link href={`/main/user-settings/${settingRef}`}>
@@ -46,14 +49,14 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
   )
 
   const MainLink = ({ settingRef, name }) => (
-      <Link href={`/main/${settingRef}`}>
-        <a>
-          <li>
-            <span></span>
-            <span>{name}</span>
-          </li>
-        </a>
-      </Link>
+    <Link href={`/main/${settingRef}`}>
+      <a>
+        <li>
+          <span></span>
+          <span>{name}</span>
+        </li>
+      </a>
+    </Link>
   )
 
   const adminJWT = cookiesUtils.get('adminToken')
@@ -84,12 +87,6 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
   settingsDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Shared Links' settingRef='shared-links' /> })
   if (hasPermission([SUPERADMIN_ACCESS])) settingsDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Super Admin' settingRef='super-admin' /> })
 
-  const toggleHamurgerList = () => {
-    const classType = `visible-block`
-    const { current } = pageListRef
-    if (current?.classList.contains(classType)) current.classList.remove(classType)
-    else current.classList.add(classType)
-  }
 
   return (
     <>
@@ -103,16 +100,49 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
                   src={GeneralImg.logo} />
               </a>
             </Link>
-            <div className={styles.hamburger} onClick={toggleHamurgerList}>&#9776;</div>
+            <div className={styles["mobile-navigation-links"]}>
+              <div onClick={() => setMenuOpen(true)}>
+                <HeaderLink
+                  href={""}
+                  active={Router.pathname.indexOf('assets') !== -1}
+                  img={Router.pathname.indexOf('assets') !== -1 ? Navigation.assetsSelected : Navigation.assets}
+                  imgHover={Navigation.assetsSelected}
+                  text='Assets'
+                />
+              </div>
+              {menuOpen &&
+                <Dropdown
+                  additionalClass={styles["menu-dropdown"]}
+                  onClickOutside={() => setMenuOpen(false)}
+                  options={[
+                    {
+                      id: "assets",
+                      label: "Assets",
+                      onClick: () => { }
+                    },
+                    {
+                      id: "insights",
+                      label: "Insights",
+                      onClick: () => { }
+                    },
+                    {
+                      id: "templates",
+                      label: "Templates",
+                      onClick: () => { }
+                    }
+                  ]}
+                />
+              }
+            </div>
             <ul className={styles['navigation-links']} ref={pageListRef}>
               {plan?.type === 'marketing_hub' &&
-              <HeaderLink
-                active={Router.pathname.indexOf('overview') !== -1}
-                href='/main/overview'
-                img={Router.pathname.indexOf('overview') !== -1 ? Navigation.overviewSelected : Navigation.overview}
-                imgHover={Navigation.overviewSelected}
-                text='Overview'
-              />}
+                <HeaderLink
+                  active={Router.pathname.indexOf('overview') !== -1}
+                  href='/main/overview'
+                  img={Router.pathname.indexOf('overview') !== -1 ? Navigation.overviewSelected : Navigation.overview}
+                  imgHover={Navigation.overviewSelected}
+                  text='Overview'
+                />}
               <HeaderLink
                 active={Router.pathname.indexOf('assets') !== -1}
                 href='/main/assets'
@@ -120,14 +150,28 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
                 imgHover={Navigation.assetsSelected}
                 text='Assets'
               />
-              {plan?.type === 'marketing_hub' &&
               <HeaderLink
-                active={Router.pathname.indexOf('schedule') !== -1}
-                href='/main/schedule'
-                img={Router.pathname.indexOf('schedule') !== -1 ? Navigation.scheduleSelected : Navigation.schedule}
-                imgHover={Navigation.scheduleSelected}
-                text='Schedule'
-              />}
+                active={Router.pathname.indexOf('insights') !== -1}
+                href='/main/insights'
+                img={Router.pathname.indexOf('insights') !== -1 ? Navigation.assetsSelected : Navigation.assets}
+                imgHover={Navigation.assetsSelected}
+                text='Insights'
+              />
+              <HeaderLink
+                active={Router.pathname.indexOf('templates') !== -1}
+                href='/main/templates'
+                img={Router.pathname.indexOf('templates') !== -1 ? Navigation.assetsSelected : Navigation.assets}
+                imgHover={Navigation.assetsSelected}
+                text='Templates'
+              />
+              {plan?.type === 'marketing_hub' &&
+                <HeaderLink
+                  active={Router.pathname.indexOf('schedule') !== -1}
+                  href='/main/schedule'
+                  img={Router.pathname.indexOf('schedule') !== -1 ? Navigation.scheduleSelected : Navigation.schedule}
+                  imgHover={Navigation.scheduleSelected}
+                  text='Schedule'
+                />}
             </ul>
             <div className={styles['notifications-wrapper']}>
               <Notification />

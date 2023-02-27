@@ -16,7 +16,7 @@ const Dropdown = ({ options = [], additionalClass = '', onClickOutside }) => {
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
     };
-  }, [ onClickOutside ])
+  }, [onClickOutside])
 
 
   return (
@@ -30,6 +30,7 @@ const Dropdown = ({ options = [], additionalClass = '', onClickOutside }) => {
                 :
                 <li onClick={() => {
                   option.onClick()
+                  onClickOutside && onClickOutside()
                 }}>
                   <span>
                     {option.icon &&

@@ -18,7 +18,7 @@
     align-items: center;
     position: fixed;
     top: 107px;
-    z-index: 2000;
+    z-index: 200;
     background-color: var(--color-sec-lightivory);
     left: 50%;
     transform: translate(-50%);

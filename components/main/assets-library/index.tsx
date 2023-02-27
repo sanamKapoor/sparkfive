@@ -723,6 +723,7 @@ const AssetsLibrary = () => {
                   activeSortFilter={activeSortFilter}
                   setActiveSortFilter={setActiveSortFilter}
                   setActiveView={setActiveView}
+                  activeView={activeView}
                   setActiveSearchOverlay={() => { selectAllAssets(false); setActiveSearchOverlay(true) }}
                   selectAll={selectAll}
                   setOpenFilter={setOpenFilter}
