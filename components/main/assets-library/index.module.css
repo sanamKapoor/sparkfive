@@ -7,10 +7,6 @@
 }
 
 @media screen and (max-width: 600px) {
-  .container {
-    padding: 17.5px 16px;
-  }
-
   .grid-wrapper{
     margin-top: calc(55px + 36px + 75px);
   }
@@ -26,10 +22,21 @@
   .search-desktop {
     display: none;
   }
+
+  .container {
+    padding: 0;
+  }
 }
 
 @media screen and (min-width: 601px){
   .search-mobile {
     display: none;
+  }
+}
+
+@media screen and (max-width: 810px){
+
+  .container {
+    padding: 20px;
   }
 }
