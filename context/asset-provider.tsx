@@ -142,8 +142,8 @@ export default ({ children }) => {
   };
 
   // Mark assets have been selected all even assets do not exist in pagination
-  const selectAllAssets = (isSelectedAll = true) => {
-    setSelectedAllAssets(isSelectedAll);
+  const selectAllAssets = (isSelectedAll) => {
+    setSelectedAllAssets(!selectAllAssets);
   };
 
   // Mark all folders have been selected all even folders do not exist in pagination
