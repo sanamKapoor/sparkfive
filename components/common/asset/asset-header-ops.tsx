@@ -380,7 +380,7 @@ const AssetHeaderOps = ({
 										{
 											id: "move",
 											label: "Move",
-											icon: AssetOps.move,
+											icon: AssetOps.moveReplace,
 											onClick: () => setActiveOperation('moveReplace')
 										},
 										{
@@ -417,9 +417,11 @@ const AssetHeaderOps = ({
 											confirmText={"Associate"}
 											message={
 												<span className=''>
-													Are you sure you would like to associate these ({totalSelectAssets}) files with each other?
+													Associate ({totalSelectAssets}) asset(s)
 												</span>
 											}
+											subText="Associate 2 Asset(s)
+											Associating allows you see all related assets together on the asset detail pages"
 											modalIsOpen={showAssociateModalOpen}
 										/>
 									</>
