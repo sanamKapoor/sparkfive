@@ -63,6 +63,7 @@ export const Utilities = {
   listView: require('./Icons/Utilities/View List/icn-utilities-listview.svg'),
   info: require('./Icons/Utilities/Information/icn-utilities-information.svg'),
   filter: require('./Icons/External/filter.svg'),
+  filterBlue: require('./Icons/Utilities/Filter/filter-blue.svg'),
   calendar:  require('./Icons/Navigation/icn-nav-schedule-alt.svg'),
   versions: require('./Icons/Utilities/Versions/VersioningLatest.svg'),
   addVersion: require('./Icons/Utilities/Versions/add-version.svg'),

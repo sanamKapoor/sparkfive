@@ -150,8 +150,20 @@ li.dropdown-title {
   .hamburger {
     display: none;
   }
+
+
 }
 
+@media screen and (min-width: 601px) {
+  .search-filter--mobile {
+      display: none;
+  }
+
+  .filter-mobile {
+    display: none;
+  }
+
+}
 
 @media screen and (max-width: 810px) {
   .sec-filters {
@@ -183,5 +195,12 @@ li.dropdown-title {
   .container {
     top: calc(55px + 36px);
     min-height: 75px;
+  }
+
+  .filter-mobile {
+    position: absolute;
+    top: -26px;
+    right: 8px;
+    cursor: pointer;
   }
 }

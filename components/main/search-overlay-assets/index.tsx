@@ -16,7 +16,7 @@ import Button from '../../common/buttons/button'
 import AssetHeaderOps from '../../common/asset/asset-header-ops'
 import AssetThumbail from "../../common/asset/asset-thumbail";
 
-const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEnabled = false, importAssets = () => { }, sharePath = '', activeFolder = '', onCloseDetailOverlay = (assetData) => { }, onClickOutside }) => {
+const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEnabled = false, importAssets = () => { }, sharePath = '', activeFolder = '', onCloseDetailOverlay = (assetData) => { }, onClickOutside, isFolder }) => {
 
   const { assets, setAssets, setActiveOperation, setOperationAsset, setPlaceHolders, nextPage, selectAllAssets, selectedAllAssets, totalAssets } = useContext(AssetContext)
   const { term, setSearchTerm } = useContext(FilterContext)
@@ -111,15 +111,19 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
 
         <div className={'search-cont'}>
           <div className={"search-actions"}>
-            <div className={'search-filter'} onClick={() => setOpenFilters(!openFilters)}>
-              <img src={Utilities.filterGray} alt={"filter"} />
-            </div>
+            
+            {!isFolder &&
+              <div className={'search-filter'} onClick={() => setOpenFilters(!openFilters)}>
+                <img src={Utilities.filterGray} alt={"filter"} />
+              </div>
+            }
             <div className={'search-close'} onClick={closeSearchModal}>
               <img src={Utilities.grayClose} alt={"close"} />
             </div>
           </div>
+          {/* TODO: When is a collecttion change placeholter to "Search Collections" */}
           <Search
-            placeholder={'Search Assets'}
+            placeholder={`Search ${isFolder ? 'Collections' : 'Assets'}`}
             onSubmit={(inputTerm, filterParams) => getData(inputTerm, true, filterParams)}
             openFilters={openFilters}
           />

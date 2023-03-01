@@ -103,15 +103,25 @@ const TopBar = ({
     setTabsVisibility();
   }, [sharedAdvanceConfig])
 
+  const handleOpenFilter = () => {
+    if (openFilter) {
+      setOpenFilter(false)
+    } else {
+      setOpenFilter(true)
+    }
+  }
+
 
   const mobileTabs = tabs.filter((view) => {
     return (!activeFolder || !view.omitFolder) && (!isShare || (isShare && !view.omitShare && view.hideOnSingle !== singleCollection)) &&
       (view.requirePermissions.length === 0 || (view.requirePermissions.length > 0 && hasPermission(view.requirePermissions)))
   })
 
-
   return (
     <section className={styles.container} id={'top-bar'}>
+      <div className={styles['filter-mobile']} onClick={() => handleOpenFilter()}>
+        <img src={Utilities.filterBlue} alt={"filter"} />
+      </div>
 
       {!deletedAssets ? <div className={styles.filters} >
         <ul className={styles['tab-list']}>
@@ -119,15 +129,18 @@ const TopBar = ({
             <div className={styles["mobile-tabs"]}>
               <IconClickable src={Utilities.menu} additionalClass={styles.hamburger} onClick={() => setShowTabs(!showTabs)} />
               <li className={styles['tab-list-item']}>
-                <SectionButton
-                  keyProp={"all"}
-                  text={"All"}
-                  active={activeSortFilter.mainFilter === "all"}
-                  onClick={() => setSortFilterValue('mainFilter', "all")}
-                />
+                {tabs.filter((view) => activeSortFilter.mainFilter === view.name).map(view => (
+                  <SectionButton
+                    keyProp={view.name}
+                    text={view.text}
+                    active={activeSortFilter.mainFilter === view.name}
+                    onClick={() => setSortFilterValue('mainFilter', view.name)}
+                  />
+                ))}
               </li>
               {showTabs &&
                 <Dropdown
+                  onClickOutside={() => setShowTabs(false)}
                   additionalClass={styles.dropdown}
                   options={mobileTabs.map((tab) => ({
                     label: tab.text,
@@ -143,7 +156,7 @@ const TopBar = ({
           ) : (
             tabs.map(view => (
               <li key={view.name} className={styles['tab-list-item']}>
-                {(!activeFolder || !view.omitFolder) && (!isShare || (isShare && !view.omitShare && view.hideOnSingle !== singleCollection)) &&
+                {(!isShare || (isShare && !view.omitShare && view.hideOnSingle !== singleCollection)) &&
                   (view.requirePermissions.length === 0 || (view.requirePermissions.length > 0 && hasPermission(view.requirePermissions))) &&
                   <SectionButton
                     keyProp={view.name}
@@ -166,6 +179,7 @@ const TopBar = ({
 
       }
       <div className={styles['sec-filters']}>
+
         {!isMobile &&
           <img src={Utilities.search} onClick={setActiveSearchOverlay} className={styles.search} />
         }
@@ -211,22 +225,23 @@ const TopBar = ({
             text='Filters'
             type='button'
             styleType='secondary'
+            onClick={() => {
+              handleOpenFilter()
+            }}
           />
         </div>}
-        {
-          <div className={styles['sort-wrapper']}>
-            <Select
-              label={"Sort By"}
-              options={selectOptions.sort.filter(item => {
-                return activeSortFilter.mainFilter === 'folders' && item.value === 'none' ? !item : item
-              })}
-              value={activeSortFilter.sort}
-              styleType='filter filter-schedule'
-              onChange={(selected) => setSortFilterValue('sort', selected)}
-              placeholder='Sort By'
-            />
-          </div>
-        }
+        <div className={styles['sort-wrapper']}>
+          <Select
+            label={"Sort By"}
+            options={selectOptions.sort.filter(item => {
+              return activeSortFilter.mainFilter === 'folders' && item.value === 'none' ? !item : item
+            })}
+            value={activeSortFilter.sort}
+            styleType='filter filter-schedule'
+            onChange={(selected) => setSortFilterValue('sort', selected)}
+            placeholder='Sort By'
+          />
+        </div>
       </div>
     </section >
   )

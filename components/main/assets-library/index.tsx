@@ -67,7 +67,6 @@ const AssetsLibrary = () => {
     setDetailOverlayId
   } = useContext(AssetContext)
 
-
   const { advancedConfig, hasPermission } = useContext(UserContext)
 
   const [activeMode, setActiveMode] = useState('assets')
@@ -722,6 +721,7 @@ const AssetsLibrary = () => {
                     setDetailOverlayId(undefined)
                     setCurrentViewAsset(assetData)
                   }}
+                  isFolder={activeMode === 'folders'}
                 />
               </div>
               {advancedConfig.set && hasPermission([ASSET_ACCESS]) &&
@@ -751,6 +751,7 @@ const AssetsLibrary = () => {
                       setDetailOverlayId(undefined)
                       setCurrentViewAsset(assetData)
                     }}
+                    isFolder={activeMode === 'folders'}
                   />
                 }
               </div>
