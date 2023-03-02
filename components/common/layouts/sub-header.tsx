@@ -1,5 +1,4 @@
 import styles from './sub-header.module.css'
-import { useRef, useEffect, useState } from 'react'
 import { Utilities } from '../../../assets'
 
 const SubHeader = ({
@@ -7,42 +6,25 @@ const SubHeader = ({
   children,
   editable = false,
   additionalClass = '',
-  PreComponent = null,
   onAltEditionClick = () => { }
 }) => {
-  const [top, setTop] = useState(112 - 0.5)
 
-  const onChangeWidth = () => {
-    const headerTop = (document.getElementById('main-header')?.offsetHeight || 112) - 0.5
-    setTop(headerTop)
-  }
-
-  useEffect(()=>{
-    onChangeWidth()
-
-    setTimeout(()=>{
-      onChangeWidth()
-    },500)
-
-    window.addEventListener('resize', onChangeWidth);
-
-    return () => window.removeEventListener("resize", onChangeWidth);
-  },[])
 
   return (
-    <section id={"sub-header"} className={`${styles.container} ${additionalClass}`} style={{top: top}}>
-      {PreComponent &&
-        <PreComponent />
-      }
-      {/* <div className={styles['header-wrapper']}>
-        <h1>
+    <section id={"sub-header"} className={`${styles.container} ${additionalClass}`}>
+      <div className={styles['header-wrapper']}>
+        <h1 className={styles.title}>
           <span>{pageTitle}</span>
         </h1>
         {editable &&
           <img onClick={onAltEditionClick} className={styles.edit} src={Utilities.editWhite} />
         }
-      </div> */}
-      {children}
+      </div>
+      {children &&
+        <div className='m-t-20'>
+          {children}
+        </div>
+      }
     </section>
   )
 }

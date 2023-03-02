@@ -1,4 +1,3 @@
-import asset from "../../../server-api/asset";
 import styles from "./list-item.module.css";
 import { Utilities, Assets, AssetOps } from "../../../assets";
 import filesize from "filesize";
@@ -6,18 +5,14 @@ import { format } from "date-fns";
 import { useState, useEffect } from "react";
 import { getParsedExtension } from "../../../utils/asset";
 
-import StatusBadge from "../../common/misc/status-badge";
 
 // Components
 import AssetImg from "./asset-img";
-import AssetApplication from "./asset-application";
-import AssetText from "./asset-text";
 import IconClickable from "../buttons/icon-clickable";
-import Button from "../buttons/button";
 import DetailOverlay from "./detail-overlay";
 import AssetOptions from "./asset-options";
 import AssetIcon from "./asset-icon";
-import CollectionTag from '../collection/collection-tag';
+import CollectionBadge from '../collection/collection-badge';
 import React from 'react';
 
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
@@ -215,7 +210,7 @@ const ListItem = ({
             </div>
 
             <div className={`${styles.field_name} ${styles.collection}`}>
-              <CollectionTag collection={"NorthFace"} />
+              <CollectionBadge collection={"NorthFace"} />
             </div>
         </div>
       </div>

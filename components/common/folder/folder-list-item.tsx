@@ -1,6 +1,6 @@
 import fileDownload from "js-file-download";
 import styles from "./folder-list-item.module.css";
-import { Utilities, Assets } from "../../../assets";
+import { Utilities, Assets, AssetOps } from "../../../assets";
 import { useContext, useState } from "react";
 import { format } from "date-fns";
 import zipDownloadUtils from "../../../utils/download";
@@ -25,16 +25,16 @@ const FolderListItem = ({
   assets,
   viewFolder,
   isLoading = false,
-  deleteFolder = () => {},
-  shareAssets = (folder) => {},
-  copyShareLink = (folder) => {},
-  setCurrentSortAttribute = (attribute) => {},
+  deleteFolder = () => { },
+  shareAssets = (folder) => { },
+  copyShareLink = (folder) => { },
+  setCurrentSortAttribute = (attribute) => { },
   copyEnabled,
   toggleSelected,
   isSelected,
   sortAttribute,
-  changeThumbnail = (folder) => {},
-  deleteThumbnail = (folder) => {},
+  changeThumbnail = (folder) => { },
+  deleteThumbnail = (folder) => { },
   thumbnailPath,
   thumbnailExtension,
   thumbnails,
@@ -90,82 +90,69 @@ const FolderListItem = ({
       <div className={styles.list}>
         {index === 0 && (
           <div className={styles.header}>
-            <h4 onClick={() => setSortAttribute("folder.name")}>
-              Name
-              <IconClickable
-                src={arrowIcon}
-                additionalClass={`${
-                  styles["sort-icon"]
-                } ${getSortAttributeClassName("folder.name")}`}
-              />
-            </h4>
-            <h4 onClick={() => setSortAttribute("folder.length")}>
-              Assets
-              <IconClickable
-                src={arrowIcon}
-                additionalClass={`${
-                  styles["sort-icon"]
-                } ${getSortAttributeClassName("folder.length")}`}
-              />
-            </h4>
-            <h4 onClick={() => setSortAttribute("folder.created-at")}>
-              Created At
-              <IconClickable
-                src={arrowIcon}
-                additionalClass={`${
-                  styles["sort-icon"]
-                } ${getSortAttributeClassName("folder.created-at")}`}
-              />
-            </h4>
-            <h4></h4>
+            <div className={styles["headers-content"]}>
+              <h4 onClick={() => setSortAttribute("folder.name")}>
+                Name
+                <IconClickable
+                  src={arrowIcon}
+                  additionalClass={`${styles["sort-icon"]
+                    } ${getSortAttributeClassName("folder.name")}`}
+                />
+              </h4>
+              <h4></h4>
+              <h4 onClick={() => setSortAttribute("folder.length")}>
+                Assets
+                <IconClickable
+                  src={arrowIcon}
+                  additionalClass={`${styles["sort-icon"]
+                    } ${getSortAttributeClassName("folder.length")}`}
+                />
+              </h4>
+              <h4 onClick={() => setSortAttribute("folder.created-at")}>
+                Create Date
+                <IconClickable
+                  src={arrowIcon}
+                  additionalClass={`${styles["sort-icon"]
+                    } ${getSortAttributeClassName("folder.created-at")}`}
+                />
+              </h4>
+            </div>
           </div>
         )}
-        <div className={styles.item}>
-          <div
-            className={`${styles["selectable-wrapper"]} ${
-              isSelected && styles["selected-wrapper"]
-            }`}
-          >
-            {!isLoading && (
-              <IconClickable
-                src={
-                  isSelected
-                    ? Utilities.radioButtonEnabled
-                    : Utilities.radioButtonNormal
-                }
-                additionalClass={styles["select-icon"]}
-                onClick={toggleSelected}
-              />
-            )}
-          </div>
+        <div className={`${styles.item} ${isSelected ? styles["item--selected"] : ""}`} onClick={toggleSelected}>
           <div
             className={`${styles.name} ${isLoading && "loadable"}`}
             onClick={viewFolder}
           >
             {name}
           </div>
-          <div className={styles.field_name}>
+
+          <div className={`${styles.field_name} ${styles.actions}`}>
+            <img className={styles.edit} src={AssetOps.editGray} alt="edit" />
+            {!isLoading && (
+              <div>
+                <FolderOptions
+                  downloadFoldercontents={downloadFoldercontents}
+                  shareAssets={shareAssets}
+                  setDeleteOpen={setDeleteOpen}
+                  copyShareLink={copyShareLink}
+                  copyEnabled={copyEnabled}
+                  changeThumbnail={changeThumbnail}
+                  deleteThumbnail={deleteThumbnail}
+                  thumbnailPath={thumbnailPath || thumbnailExtension}
+                  thumbnails={thumbnails}
+                  activeView={activeView}
+                />
+              </div>
+            )}
+          </div>
+
+          <div className={`${styles.field_name} ${styles.assets}`}>
             {!isLoading && `${length} Assets`}
           </div>
-          <div className={`${styles.field_name} ${isLoading && "loadable"}`}>
+          <div className={`${styles.field_name} ${isLoading && "loadable"} ${styles['date-created']}`}>
             {format(new Date(createdAt), dateFormat)}
           </div>
-          {!isLoading && (
-            <div>
-              <FolderOptions
-                downloadFoldercontents={downloadFoldercontents}
-                shareAssets={shareAssets}
-                setDeleteOpen={setDeleteOpen}
-                copyShareLink={copyShareLink}
-                copyEnabled={copyEnabled}
-                changeThumbnail={changeThumbnail}
-                deleteThumbnail={deleteThumbnail}
-                thumbnailPath={thumbnailPath || thumbnailExtension}
-                thumbnails={thumbnails}
-				activeView={activeView}
-              />
-            </div>
-          )}
         </div>
       </div>
       <ConfirmModal
