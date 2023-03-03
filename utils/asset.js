@@ -324,7 +324,7 @@ export const getAssetsFilters = ({
 
   if (filterAiTags && filterAiTags.length > 0 && allAiTags)
     filters.allAiTags = allAiTags;
-  if (filterCampaigns.length > 0 && allCampaigns)
+  if (filterCampaigns?.length > 0 && allCampaigns)
     filters.allCampaigns = allCampaigns;
 
   filters.page = replace ? 1 : nextPage;
