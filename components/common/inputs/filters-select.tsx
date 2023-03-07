@@ -15,9 +15,11 @@ const FiltersSelect = ({
   scrollBottomAfterSearch = false
 }) => {
 
-  const [optionsVisible, setOptionsVisible] = useState(false)
+  const [optionsVisible, setOptionsVisible] = useState(false);
+  const [inputValue, setInputValue] = useState('');
 
   const onInputChange = (value) => {
+    setInputValue(value);
     if (!value || value.length === 0) {
       setOptionsVisible(false)
     }
@@ -32,7 +34,12 @@ const FiltersSelect = ({
             objDiv.scrollTop = objDiv.scrollHeight;
         },100)
     }
+  }
 
+  const onChangeWrapper = (selected) => {
+    if(inputValue){
+      onChange(selected);
+    }
   }
 
   const Option = props => (
@@ -58,7 +65,7 @@ const FiltersSelect = ({
         value={value}
         isMulti={true}
         hideSelectedOptions={false}
-        onChange={onChange}
+        onChange={(selected) => onChangeWrapper(selected)}
         classNamePrefix={`select-prefix`}
         isClearable={isClearable}
         menuIsOpen={optionsVisible}
