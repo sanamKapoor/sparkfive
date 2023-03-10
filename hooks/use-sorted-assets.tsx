@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import dateCompare from "../utils/date-compare";
 
-export default function useSortedAssets(assets): [any[], string, any] {
+export default function useSortedAssets(assets, initialSortValue = ''): [any[], string, any] {
     const [sortedAssets, setSortedAssets] = useState([])
-    const [currentSortAttribute, setCurrentSortAttribute] = useState('')
+    const [currentSortAttribute, setCurrentSortAttribute] = useState(initialSortValue)
 
     useEffect(() => {
         setSortedAssets(assets)
