@@ -174,7 +174,7 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
                 <li className={gridStyle['grid-item']} key={assetItem.asset.id || index}>
                   <AssetThumbail
                     {...assetItem}
-                    showAssetOption={false}
+                    showAssetOption={true }
                     sharePath={sharePath}
                     isShare={false}
                     type={""}
