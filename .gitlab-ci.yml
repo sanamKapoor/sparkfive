@@ -16,7 +16,7 @@ dev_server:
        *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - rsync -atv --delete --progress --stats --exclude-from=deployment-exclude-list.txt ./ $deveop_user@$develop_host:$develop_path_client;
     - ssh -o StrictHostKeyChecking=no $deveop_user@$develop_host -p 22 "cd $develop_path_client && npm install && npm run build && pm2 restart all"
-
+  timeout: 3h 30m
   when: manual
   only:
     - NA-dev-UAT
