@@ -50,6 +50,7 @@ const AssetsLibrary = () => {
     setLoadingAssets,
     selectAllAssets,
     selectedAllAssets,
+    selectedAllFolders,
     selectAllFolders,
     uploadDetailOverlay,
     setUploadDetailOverlay,
@@ -721,6 +722,16 @@ const AssetsLibrary = () => {
 
     return () => window.removeEventListener("resize", onChangeWidth);
   },[])
+
+  useEffect(() => {
+    if (selectedAllAssets) {
+      selectAllAssets(false);
+    }
+
+    if (selectedAllFolders) {
+      selectAllFolders(false);
+    }
+  }, [activeMode]);
 
   return (
     <>
