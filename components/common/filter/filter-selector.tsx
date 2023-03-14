@@ -52,7 +52,7 @@ const FilterSelector = ({
           (item) => item[mappingValueName] === selected[mappingValueName]
         );
 
-      if (index === -1 || index === null) {
+      if (index === -1 || index === null || !value) {
         setValue(
           update(value ?? [], {
             $push: [selected],
