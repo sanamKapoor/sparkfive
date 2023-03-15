@@ -196,6 +196,7 @@ const AssetThumbail = ({
                 type={asset.type}
                 name={asset.name}
                 opaque={isUploading}
+                imgClass={styles['video-thumbnail']}
               />
               }
               loadingOverlay={
