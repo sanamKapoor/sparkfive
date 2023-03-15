@@ -3,199 +3,203 @@
     flex-direction: column;
     height: 100%;
     position: relative;
-}
-
-.image-wrapper {
+  }
+  
+  .image-wrapper {
     position: relative;
     display: grid;
     grid-template-columns: 50% 50%;
     grid-template-rows: 50% 50%;
-    height: 330px;
-    max-height: 330px;
-}
-
-.sub-image-wrapper {
+    height: 100%;
+    /* height: 330px;
+    max-height: 330px; */
+  }
+  
+  .sub-image-wrapper {
     aspect-ratio: 1 / 1;
     width: 100%;
     height: 100%;
     position: relative;
-}
-
-.sub-image-wrapper img {
+  }
+  
+  .sub-image-wrapper img {
     aspect-ratio: 1 / 1;
     height: 100%;
     width: 100%;
     object-fit: contain;
-}
-
-.image-button-wrapper {
+  }
+  
+  .image-button-wrapper {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     display: none;
-}
-
-.sub-image-wrapper {
+  }
+  
+  .sub-image-wrapper {
     border: 1px solid var(--color-secondary-border);
     padding: 5px;
-}
-
-.sub-image-wrapper > img {
+  }
+  
+  .sub-image-wrapper > img {
     object-fit: contain;
-}
-
-.image-wrapper:hover img {
+  }
+  
+  .image-wrapper:hover img {
     animation: halfopacity 0.5s;
     opacity: 0.5;
-}
-
-.image-wrapper:hover .image-button-wrapper,
-.image-wrapper:hover .selectable-wrapper:not(.selected-wrapper) {
+  }
+  
+  .image-wrapper:hover .image-button-wrapper,
+  .image-wrapper:hover .selectable-wrapper:not(.selected-wrapper) {
     display: block;
     animation: intoview 0.5s;
-}
-
-.grid_border:hover img {
+  }
+  
+  .grid_border:hover img {
     animation: halfopacity 0.5s;
     opacity: 0.5;
-}
-
-.grid_border:hover .image-button-wrapper,
-.grid_border:hover .selectable-wrapper:not(.selected-wrapper) {
+  }
+  
+  .grid_border:hover .image-button-wrapper,
+  .grid_border:hover .selectable-wrapper:not(.selected-wrapper) {
     display: block;
     animation: intoview 0.5s;
-}
-
-@keyframes halfopacity {
+  }
+  
+  @keyframes halfopacity {
     0% {
-        opacity: 1;
+      opacity: 1;
     }
     100% {
-        opacity: 0.5;
+      opacity: 0.5;
     }
-}
-
-@keyframes intoview {
+  }
+  
+  @keyframes intoview {
     0% {
-        opacity: 0;
+      opacity: 0;
     }
     100% {
-        opacity: 1;
+      opacity: 1;
     }
-}
-
-.info {
+  }
+  
+  .info {
     padding: 10px;
     border-left: 1px solid var(--color-secondary-border);
     border-right: 1px solid var(--color-secondary-border);
     border-bottom: 1px solid var(--color-secondary-border);
-}
-
-.details-wrapper {
+  }
+  
+  .details-wrapper {
     display: flex;
-}
-
-.details-wrapper > div:first-child {
-    margin-top: 0.5rem;
+    margin-top: 0.5em;
+  }
+  
+  .details-wrapper > div:first-child {
     flex: 1;
-}
-
-.selectable-wrapper {
+  }
+  
+  .selectable-wrapper {
     position: absolute;
     top: 0.5rem;
     left: 0.5rem;
     display: none;
-}
-
-.selectable-wrapper.selected-wrapper {
+  }
+  
+  .selectable-wrapper.selected-wrapper {
     display: block;
-}
-
-.image-wrapper .selectable-wrapper .select-icon {
+  }
+  
+  .image-wrapper .selectable-wrapper .select-icon {
     width: 25px;
     height: auto;
-}
-
-.thumbnailPath {
+  }
+  
+  .thumbnailPath {
     max-width: 100%;
     max-height: 100%;
-}
-
-.grid_border {
+  }
+  
+  .grid_border {
     border: 1px solid var(--color-secondary-border);
     padding: 5px;
-    height: 330px;
-    max-height: 330px;
-}
-
-.filter_open {
-    height: 270px;
-    max-height: 270px;
-}
-
-
-@media only screen and (max-width:371px) {
-
+    height: 100%;
+    /* height: 330px;
+    max-height: 330px; */
+  }
+  
+  .filter_open {
+    /* height: 270px;
+    max-height: 270px; */
+  }
+  
+  @media only screen and (max-width: 371px) {
     .image-wrapper,
     .grid_border {
-        height: 337px;
-        max-height: 337px;
-    }
-}
-
-@media only screen and (min-width:372px) and (max-width:767px) {
-
-    .image-wrapper,
-    .grid_border {
-        height: 166px;
-        max-height: 166px;
-    }
-}
-
-@media only screen and (min-width:768px)  and (max-width:1024px) {
-
-    .image-wrapper,
-    .grid_border {
-        height: 180px;
-        max-height: 180px;
-    }
- }
-
- @media only screen and (min-width:1025px)  and (max-width:1199px) {
-    .image-wrapper,
-    .grid_border {
-        height: 200px;
-        max-height: 200px;
+      /* height: 337px;
+      max-height: 337px; */
     }
   }
-
-
-@media only screen and (min-width:1200px)  and (max-width:1440px) {
+  
+  @media only screen and (min-width: 372px) and (max-width: 767px) {
     .image-wrapper,
     .grid_border {
-        height: 250px;
-        max-height: 250px;
+      /* height: 166px;
+      max-height: 166px; */
     }
- }
-
- @media only screen and (min-width:1441px)  and (max-width:1640px) {
+  }
+  
+  @media only screen and (min-width: 768px) and (max-width: 1024px) {
     .image-wrapper,
     .grid_border {
-        height: 285px;
-        max-height: 285px;
+      /* height: 180px;
+      max-height: 180px; */
     }
- }
- @media only screen and (min-width:1400px) and (max-width:1740px) {
+  }
+  
+  @media only screen and (min-width: 1025px) and (max-width: 1199px) {
+    .image-wrapper,
+    .grid_border {
+      /* height: 200px;
+      max-height: 200px; */
+    }
+  }
+  
+  @media only screen and (min-width: 1200px) and (max-width: 1440px) {
+    .image-wrapper,
+    .grid_border {
+      /* height: 250px;
+      max-height: 250px; */
+    }
+  }
+  
+  @media only screen and (min-width: 1441px) and (max-width: 1640px) {
+    .image-wrapper,
+    .grid_border {
+      /* height: 285px;
+      max-height: 285px; */
+    }
+  }
+  @media only screen and (min-width: 1400px) and (max-width: 1740px) {
     .filter_open {
-        height: 230px;
-        max-height: 230px;
+      /* height: 230px;
+      max-height: 230px; */
     }
- }
-
- @media only screen and (min-width:1741px) {
+  }
+  
+  @media only screen and (min-width: 1741px) {
     .filter_open {
-        height: 250px;
-        max-height: 250px;
+      /* height: 250px;
+      max-height: 250px; */
     }
- }
+  }
+  .wrap-text {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    display: block;
+  }
+  

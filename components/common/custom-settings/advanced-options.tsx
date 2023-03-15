@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { Utilities } from '../../../assets'
 
 import styles from './advanced-options.module.css'
@@ -31,20 +31,22 @@ const AdvancedOptions = () => {
     const [searchDefault, setSearchDefault] = useState('')
     const [hideFilterElements, setHideFilterElements] = useState(advancedConfigParams.hideFilterElements)
     const [aiTagging, setaiTagging] = useState(false)
-    const {advancedConfig, setAdvancedConfig} = useContext(UserContext)
+    const { advancedConfig, setAdvancedConfig } = useContext(UserContext)
     const [nonAiTagAssetCount, setNonAiTagAssetCount] = useState(0)
     const [aiTaggingProgress, setAiTaggingProgress] = useState(false)
-
-
+    const [assetThumbnail, setassetThumbnail] = useState(0)
+    const [collectionThumbnail, setcollectionThumbnail] = useState(0)
     const saveAdvanceConfig = async (config) => {
         setLoading(true)
         await teamAPI.saveAdvanceConfigurations({ config })
 
-        const updatedConfig = {...advancedConfig, ...config}
+        const updatedConfig = { ...advancedConfig, ...config }
         setAdvancedConfig(updatedConfig)
 
         getAdvanceConfigurations(updatedConfig);
     }
+
+
 
     const getAdvanceConfigurations = (conf = advancedConfig) => {
         setSubFolderAutoTag(conf.subFolderAutoTag)
@@ -55,7 +57,12 @@ const AdvancedOptions = () => {
         setSearchDefault(conf.searchDefault)
         setHideFilterElements(conf.hideFilterElements)
         setaiTagging(conf.aiTagging)
-
+        if (!assetThumbnail) {
+            setassetThumbnail(conf.assetThumbnail || 100)
+        }
+        if (!collectionThumbnail) {
+            setcollectionThumbnail(conf.collectionThumbnail || 100)
+        }
         setLoading(false)
         return true
     }
@@ -67,13 +74,13 @@ const AdvancedOptions = () => {
     }
 
     const toggleHideElementProperty = (prop) => {
-        const elemsState = {...hideFilterElements}
+        const elemsState = { ...hideFilterElements }
         elemsState[prop] = !elemsState[prop]
-        saveAdvanceConfig({hideFilterElements: elemsState})
+        saveAdvanceConfig({ hideFilterElements: elemsState })
     }
 
     const findNonAiTagAssetCount = async () => {
-        const {data: {count} } = await assetAPI.nonAiTagAssetsCount();
+        const { data: { count } } = await assetAPI.nonAiTagAssetsCount();
         setNonAiTagAssetCount(count)
     }
 
@@ -83,21 +90,24 @@ const AdvancedOptions = () => {
     }
 
     useEffect(() => {
-        getAdvanceConfigurations();
         findNonAiTagAssetCount();
     }, [])
+
+    useEffect(() => {
+        getAdvanceConfigurations();
+    }, [collectionThumbnail])
 
     // Init socket listener
     useEffect(() => {
         // Socket is available and connected
-        if(socket && connected){
+        if (socket && connected) {
             // Listen upload file process event
-            socket.on('BulkAiTaggingProgress', function(data){
+            socket.on('BulkAiTaggingProgress', function (data) {
                 setNonAiTagAssetCount(data.pendingCount)
                 setAiTaggingProgress(true)
             })
         }
-    },[socket, connected])
+    }, [socket, connected])
 
 
     return (
@@ -223,14 +233,14 @@ const AdvancedOptions = () => {
                                             <IconClickable
                                                 src={assetSortView === 'alphabetical' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
-                                                onClick={() => saveAdvanceConfig({assetSortView: 'alphabetical'})} />
+                                                onClick={() => saveAdvanceConfig({ assetSortView: 'alphabetical' })} />
                                             <div className={'font-12 m-l-15'}>Alphabetical</div>
                                         </div>
                                         <div className={`${styles['radio-button-wrapper']} ${styles['hide-on-mobile']}`}>
                                             <IconClickable
                                                 src={assetSortView !== 'alphabetical' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
-                                                onClick={() => saveAdvanceConfig({assetSortView: 'newest'})} />
+                                                onClick={() => saveAdvanceConfig({ assetSortView: 'newest' })} />
                                             <div className={'font-12 m-l-15'}>Newest</div>
                                         </div>
                                     </div>
@@ -254,14 +264,14 @@ const AdvancedOptions = () => {
                                             <IconClickable
                                                 src={searchDefault === 'all' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
-                                                onClick={() => saveAdvanceConfig({searchDefault: 'all'})} />
+                                                onClick={() => saveAdvanceConfig({ searchDefault: 'all' })} />
                                             <div className={'font-12 m-l-15'}>All</div>
                                         </div>
                                         <div className={`${styles['radio-button-wrapper']} ${styles['hide-on-mobile']}`}>
                                             <IconClickable
                                                 src={searchDefault === 'tags_only' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                                 additionalClass={styles['select-icon']}
-                                                onClick={() => saveAdvanceConfig({searchDefault: 'tags_only'})} />
+                                                onClick={() => saveAdvanceConfig({ searchDefault: 'tags_only' })} />
                                             <div className={'font-12 m-l-15'}>Tags Only</div>
                                         </div>
                                     </div>
@@ -282,7 +292,7 @@ const AdvancedOptions = () => {
                                 <div>
                                     <div className={styles['field-radio-wrapper']}>
                                         <div className={"col-40 p-l-r-0"}>
-                                            <a className={`${styles['anchor']}`} href='#' onClick={() => {}}>Manage Duplicates</a>
+                                            <a className={`${styles['anchor']}`} href='#' onClick={() => { }}>Manage Duplicates</a>
                                         </div>
                                         <div className={'font-12 m-r-15'}>Check Uploads</div>
                                         <div className={`${styles['radio-button-wrapper']} m-r-15`}>
@@ -363,21 +373,21 @@ const AdvancedOptions = () => {
                             <div className={"col-60 col-md-100"}>
                                 <div className='row'>
                                     {/* <div className={`${styles['field-radio-wrapper']} col-30`}> */}
-                                        <div className={`${styles['radio-button-wrapper']} m-r-15`}>
-                                            <IconClickable
-                                                src={aiTagging ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-                                                additionalClass={styles['select-icon']}
-                                                onClick={() => saveAdvanceConfig({ aiTagging: true })} 
-                                            />
-                                            <div className={'font-12 m-l-10'}>On</div>
-                                            </div>
-                                            <div className={`${styles['radio-button-wrapper']} ${styles['hide-on-mobile']}`}>
-                                            <IconClickable
-                                                src={!aiTagging ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-                                                additionalClass={styles['select-icon']}
-                                                onClick={() => saveAdvanceConfig({ aiTagging: false })} />
-                                            <div className={'font-12 m-l-10'}>Off</div>
-                                        </div>
+                                    <div className={`${styles['radio-button-wrapper']} m-r-15`}>
+                                        <IconClickable
+                                            src={aiTagging ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                                            additionalClass={styles['select-icon']}
+                                            onClick={() => saveAdvanceConfig({ aiTagging: true })}
+                                        />
+                                        <div className={'font-12 m-l-10'}>On</div>
+                                    </div>
+                                    <div className={`${styles['radio-button-wrapper']} ${styles['hide-on-mobile']}`}>
+                                        <IconClickable
+                                            src={!aiTagging ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                                            additionalClass={styles['select-icon']}
+                                            onClick={() => saveAdvanceConfig({ aiTagging: false })} />
+                                        <div className={'font-12 m-l-10'}>Off</div>
+                                    </div>
                                     {/* </div> */}
                                     {/* <div className='col-70'>
                                         {!aiTaggingProgress && <span className={'font-weight-500 m-b-8'}>Yet {nonAiTagAssetCount} Assets to adapt AI Tagging </span>}

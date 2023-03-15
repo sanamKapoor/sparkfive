@@ -1,17 +1,15 @@
-import { useState } from 'react'
-import { LoadingContext } from '../context'
+import { useState } from "react";
+import { ShareContext } from "../context";
 
 export default ({ children }) => {
-  const [isLoading, setIsLoading] = useState(false)
+  const [folderInfo, setFolderInfo] = useState(false);
 
-  const loadingValue = {
-    isLoading,
-    setIsLoading
-  }
+  const shareValue = {
+    folderInfo,
+    setFolderInfo,
+  };
 
   return (
-    <LoadingContext.Provider value={loadingValue}>
-      {children}
-    </LoadingContext.Provider>
-  )
-}
+    <ShareContext.Provider value={shareValue}>{children}</ShareContext.Provider>
+  );
+};
