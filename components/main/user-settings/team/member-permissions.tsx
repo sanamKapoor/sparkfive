@@ -26,7 +26,7 @@ const MemberPermissions = ({ memberPermissions, permissions, setMemberPermission
         const { category, id } = permission
         const permissionObj = {
           ...permission,
-          enabled: memberPermissions.findIndex(memberPer => memberPer.id === id) !== -1
+          enabled: memberPermissions?.findIndex(memberPer => memberPer.id === id) !== -1
         }
         if (groups[category]) {
           groups[category].features.push(permissionObj)

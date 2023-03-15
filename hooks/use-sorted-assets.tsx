@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import dateCompare from "../utils/date-compare";
 
-export default function useSortedAssets(assets): [any[], string, any] {
+export default function useSortedAssets(assets, initialSortValue = ''): [any[], string, any] {
     const [sortedAssets, setSortedAssets] = useState([])
-    const [currentSortAttribute, setCurrentSortAttribute] = useState('')
+    const [currentSortAttribute, setCurrentSortAttribute] = useState(initialSortValue)
 
     useEffect(() => {
         setSortedAssets(assets)
@@ -23,7 +23,7 @@ export default function useSortedAssets(assets): [any[], string, any] {
         }
         const newSortedAssets = [...assets].map((item)=>{
             // If this is placeholder, make it as the final items
-            if(item.asset.name === "placeholder"){
+            if(item?.asset?.name === "placeholder"){
                 item.asset.name = "z";
                 item.asset.type = "z";
                 item.asset.extension = "z";
@@ -39,10 +39,10 @@ export default function useSortedAssets(assets): [any[], string, any] {
                 newSortedAssets.sort((a, b) => a.asset.name.localeCompare(b.asset.name) * direction)
                 break
             case 'asset.type':
-                newSortedAssets.sort((a, b) => a.asset.type.localeCompare(b.asset.type) * direction)
+                newSortedAssets.sort((a, b) => a.asset.type?.localeCompare(b.asset.type) * direction)
                 break
             case 'asset.extension':
-                newSortedAssets.sort((a, b) => a.asset.extension.localeCompare(b.asset.extension) * direction)
+                newSortedAssets.sort((a, b) => a.asset.extension?.localeCompare(b.asset.extension) * direction)
                 break
             case 'asset.size':
                 newSortedAssets.sort((a, b) => (parseInt(a.asset.size) - parseInt(b.asset.size)) * direction)
@@ -54,16 +54,18 @@ export default function useSortedAssets(assets): [any[], string, any] {
                 newSortedAssets.sort((a, b) => dateCompare(a.asset.deletedAt, b.asset.deletedAt) * direction)
                 break
             case 'folder.name':
-                newSortedAssets.sort((a, b) => a.name.localeCompare(b.name) * direction)
+                newSortedAssets.sort((a, b) => b.name.trim().localeCompare(a.name.trim()) * direction)
                 break
             case 'folder.length':
-                newSortedAssets.sort((a, b) => (a.length - b.length) * direction)
+                newSortedAssets.sort((a, b) => (b.assetsCount - a.assetsCount) * direction)
                 break
             case 'folder.created-at':
-                newSortedAssets.sort((a, b) => dateCompare(a.createdAt, b.createdAt) * direction)
-                break
+                newSortedAssets.sort((a, b) => dateCompare(b.createdAt, a.createdAt) * direction)
+                break;
         }
-        setSortedAssets(newSortedAssets)
+
+        setSortedAssets(newSortedAssets);
+            
     }, [currentSortAttribute, assets])
 
     return [sortedAssets, currentSortAttribute, setCurrentSortAttribute]

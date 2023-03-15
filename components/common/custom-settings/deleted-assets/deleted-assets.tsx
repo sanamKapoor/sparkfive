@@ -50,7 +50,7 @@ const DeletedAssets = ({
   const [initAsset, setInitAsset] = useState(undefined);
 
   const [sortedAssets, currentSortAttribute, setCurrentSortAttribute] =
-    useSortedAssets(assets);
+    useSortedAssets(assets, "-assets.deleted-at");
 
   useEffect(() => {
     const { assetId } = urlUtils.getQueryParameters();
