@@ -17,9 +17,6 @@ import Button from '../buttons/button'
 import teamAPI from "../../../server-api/team"
 import assetAPI from "../../../server-api/asset"
 
-// IMAGE
-import rectangeIcon from './rectange.png'
-
 import advancedConfigParams from '../../../utils/advance-config-params'
 
 const AdvancedOptions = () => {
@@ -398,110 +395,6 @@ const AdvancedOptions = () => {
                                         {aiTaggingProgress && <span>Tagging In-progress... <strong>{nonAiTagAssetCount}</strong> remaining</span>}
                                     </div> */}
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div className={`${styles['row']} ${styles['field-block']}`}>
-                <div className={`${styles['col-100']}`}>
-                    <div className={`${styles['row']}`}>
-                        <div className={`${styles['deleted-assets']} row`}>
-                            <div className={"col-40 col-md-100 d-flex align-items-center"}>
-                                <span className={'font-weight-500'}>Thumbnail Size Setting</span>
-                            </div>
-                            <div className= {`${styles['thumb-size']} col-60 col-md-100 `}>
-                                <div className={`${styles['col']}`}>
-                                    <div className={`${styles['title-thumb']}`}>Assets Thumbnail size</div>
-                                    <div className={`${styles['row']}`}>
-                                        {/* <div className={`${styles['field-radio-wrapper']} col-30`}> */}
-                                        <div className={`${styles['radio-button-wrapper']}`}>
-                                            <IconClickable
-                                                src={assetThumbnail == 100 ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-                                                additionalClass={styles['select-icon']}
-                                                onClick={() => { saveAdvanceConfig({ asset_thumbnail: 100 }); setassetThumbnail(100) }}
-                                            />
-                                            <div className={`${styles['thumb-val-img']} ${styles['wd-100']} font-12 m-l-10 `}>
-                                                <div><img src={rectangeIcon} /></div>
-                                                <div>100 %</div>
-                                            </div>
-                                        </div>
-                                        <div className={`${styles['radio-button-wrapper']} ${styles['hide-on-mobile']}`}>
-                                            <IconClickable
-                                                src={assetThumbnail == 75 ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-                                                additionalClass={styles['select-icon']}
-                                                onClick={() => { saveAdvanceConfig({ asset_thumbnail: 75 }); setassetThumbnail(75) }} />
-                                            <div className={`${styles['thumb-val-img']} ${styles['wd-75']} font-12 m-l-10 `}>
-                                                <div><img src={rectangeIcon} /></div>
-                                                <div>75 %</div>
-                                            </div>
-                                        </div>
-                                        <div className={`${styles['radio-button-wrapper']} ${styles['hide-on-mobile']}`}>
-                                            <IconClickable
-                                                src={assetThumbnail == 50 ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-                                                additionalClass={styles['select-icon']}
-                                                onClick={() => { saveAdvanceConfig({ asset_thumbnail: 50 }); setassetThumbnail(50) }} />
-                                            <div className={`${styles['thumb-val-img']} ${styles['wd-50']} font-12 m-l-10 `} >
-                                                <div><img src={rectangeIcon} /></div>
-                                                <div>50 %</div>
-                                            </div>
-                                        </div>
-                                        {/* </div> */}
-                                        {/* <div className='col-70'>
-                                        {!aiTaggingProgress && <span className={'font-weight-500 m-b-8'}>Yet {nonAiTagAssetCount} Assets to adapt AI Tagging </span>}
-                                        {!aiTaggingProgress && <Button text="Start Bulk Tagging" type='button' styleType='primary' onClick={startBulkAiTagging}/>}
-                                        {aiTaggingProgress && <span>Tagging In-progress... <strong>{nonAiTagAssetCount}</strong> remaining</span>}
-                                    </div> */}
-                                    </div>
-                                </div>
-
-
-                                <div className={`${styles['col']}`}>
-                                    <div className={`${styles['title-thumb']}`}>Collection Thubmnail size</div>
-                                    <div className={`${styles['row']}`}>
-                                        {/* <div className={`${styles['field-radio-wrapper']} col-30`}> */}
-                                        <div className={`${styles['radio-button-wrapper']}`}>
-                                            <IconClickable
-                                                src={collectionThumbnail == 100 ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-                                                additionalClass={styles['select-icon']}
-                                                onClick={() => { saveAdvanceConfig({ collection_thumbnail: 100 }); setcollectionThumbnail(100) }}
-                                            />
-                                            <div className={`${styles['thumb-val-img']} ${styles['wd-100']} font-12 m-l-10 `}>
-                                                <div><img src={rectangeIcon} /></div>
-                                                <div>100 %</div>
-                                            </div>
-                                        </div>
-                                        <div className={`${styles['radio-button-wrapper']} ${styles['hide-on-mobile']}`}>
-                                            <IconClickable
-                                                src={collectionThumbnail == 75 ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-                                                additionalClass={styles['select-icon']}
-                                                onClick={() => { saveAdvanceConfig({ collection_thumbnail: 75 }); setcollectionThumbnail(75) }} />
-                                            <div className={`${styles['thumb-val-img']} ${styles['wd-75']} font-12 m-l-10 `}>
-                                                <div><img src={rectangeIcon} /></div>
-                                                <div>75 %</div>
-                                            </div>
-                                        </div>
-                                        <div className={`${styles['radio-button-wrapper']} ${styles['hide-on-mobile']}`}>
-                                            <IconClickable
-                                                src={collectionThumbnail == 50 ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-                                                additionalClass={styles['select-icon']}
-                                                onClick={() => { saveAdvanceConfig({ collection_thumbnail: 50 }); setcollectionThumbnail(50) }} />
-                                            <div className={`${styles['thumb-val-img']} ${styles['wd-50']} font-12 m-l-10 `}>
-                                                <div><img src={rectangeIcon} /></div>
-                                                <div>50 %</div>
-                                            </div>
-                                        </div>
-                                        {/* </div> */}
-                                        {/* <div className='col-70'>
-                                        {!aiTaggingProgress && <span className={'font-weight-500 m-b-8'}>Yet {nonAiTagAssetCount} Assets to adapt AI Tagging </span>}
-                                        {!aiTaggingProgress && <Button text="Start Bulk Tagging" type='button' styleType='primary' onClick={startBulkAiTagging}/>}
-                                        {aiTaggingProgress && <span>Tagging In-progress... <strong>{nonAiTagAssetCount}</strong> remaining</span>}
-                                    </div> */}
-                                    </div>
-                                </div>
-
-
-
                             </div>
                         </div>
                     </div>
