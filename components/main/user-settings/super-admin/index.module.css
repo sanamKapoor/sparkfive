@@ -2,6 +2,10 @@
   margin-top: 2rem;
 }
 
+.posRelative {
+  position: relative;
+}
+
 .action{
   display: flex;
   justify-content: center;

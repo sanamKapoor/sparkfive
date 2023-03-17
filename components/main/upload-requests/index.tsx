@@ -1594,7 +1594,7 @@ const UploadRequest = () => {
             <div className={`row ${styles['modal-wrapper']} height-100`}>
                 <div className={`col-60 ${styles["left-bar"]}`}>
                     {assets[selectedAsset]?.asset.type === "image" && (
-                        <AssetImg name={assets[selectedAsset]?.asset.name} assetImg={assets[selectedAsset]?.realUrl} />
+                        <AssetImg name={assets[selectedAsset]?.asset.name} assetImg={assets[selectedAsset]?.thumbailUrl} />
                     )}
 
                     {assets[selectedAsset]?.asset.type !== "image" &&
@@ -1607,7 +1607,7 @@ const UploadRequest = () => {
                                 :
                                 <AssetImg
                                     name={assets[selectedAsset]?.asset.name}
-                                    assetImg={assets[selectedAsset]?.realUrl}
+                                    assetImg={assets[selectedAsset]?.thumbailUrl}
                                 />
                         )}
                     {assets[selectedAsset]?.asset.type !== "image" &&
@@ -1618,8 +1618,8 @@ const UploadRequest = () => {
                     {assets[selectedAsset]?.asset.type === "video" && (
                         <video controls>
                             <source
-                                src={assets[selectedAsset]?.realUrl}
-                                type={`video/${assets[selectedAsset]?.asset.extension}`}
+                                src={assets[selectedAsset]?.previewUrl ?? assets[selectedAsset]?.realUrl}
+                                type={assets[selectedAsset]?.previewUrl ? 'video/mp4' : `video/${assets[selectedAsset]?.asset.extension}`}
                             />
                             Sorry, your browser doesn't support video playback.
                         </video>

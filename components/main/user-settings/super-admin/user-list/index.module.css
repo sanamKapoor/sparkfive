@@ -1,8 +1,27 @@
-.list{
+.list {
   margin-top: 2rem;
 }
 
-.action{
+.listIcon {
+  position: absolute;
+  top: 1rem;
+  right: 0;
+  width: 22;
+}
+
+.listIcon img {
+  margin-right: 1.2rem;
+  width: 22;
+  cursor: pointer;
+}
+.listIcon img:hover {
+  opacity: 0.5;
+}
+.listIcon img:last-child {
+  margin-right: 0px;
+}
+
+.action {
   display: flex;
   justify-content: center;
   margin-top: 2rem;
@@ -32,7 +51,7 @@
   width: 250px;
 }
 
-.name-email>div:first-child{
+.name-email > div:first-child {
   font-weight: 600;
 }
 
@@ -42,14 +61,18 @@
   justify-content: center;
 }
 
-.role{
+.role {
   width: 150px;
 }
 
-.company{
+.company {
   flex: 2;
 }
 
 .date {
   flex: 1;
+}
+
+.download-icon {
+  scale: 1.4;
 }

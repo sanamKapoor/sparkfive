@@ -46,17 +46,26 @@ const FilterSelector = ({
     }, [activeSortFilter])
 
     const toggleSelected = (selected) => {
-        let index = value && value.findIndex((item) => item[mappingValueName] === selected[mappingValueName])
-        if (!value || index !== -1) {
-            setValue(update(value, {
-                $splice: [[index, 1]]
-            }))
-        } else {
-            setValue(update(value, {
-                $push: [selected]
-            }))
-        }
-    }
+      let index =
+        value &&
+        value.findIndex(
+          (item) => item[mappingValueName] === selected[mappingValueName]
+        );
+
+      if (index === -1 || index === null || !value) {
+        setValue(
+          update(value ?? [], {
+            $push: [selected],
+          })
+        );
+      } else if (index > -1) {
+        setValue(
+          update(value, {
+            $splice: [[index, 1]],
+          })
+        );
+      }
+    };
 
     // Set value and filters as selected
     let visibleFilters = internalFilter ? internalFilters.slice(0, numItems) : filters.slice(0, numItems)

@@ -1,7 +1,2 @@
-.git
-.gitignore
-.prettierrc.json
-.env
-next.config.js
 /node_modules
 .env
