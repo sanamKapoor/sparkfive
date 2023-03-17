@@ -245,7 +245,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 					sharable: sharableValue === undefined ? sharable : sharableValue,
 					shareId,
 					type: "folder",
-					logoId: logo?.id || ""
+					logoId: logo?.id || null
 				},
 				false,
 				false
