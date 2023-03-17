@@ -21,6 +21,7 @@ export default ({ children, isPublic = false }) => {
   const location = useRouter()
   const { activeFolder } = useContext(AssetContext)
 
+  const [searchFilterParams, setSearchFilterParams] = useState({});
   const [activeSortFilter, setActiveSortFilter] = useState({
     sort: location.pathname.indexOf('deleted-assets-list') !== -1 ? selectOptions.sort[5] : selectOptions.sort[1],
     mainFilter: 'all',
@@ -356,7 +357,9 @@ export default ({ children, isPublic = false }) => {
     sharePath,
     loadAssetResolutions,
     assetResolutions,
-    loadSharedFolders
+    loadSharedFolders,
+    searchFilterParams,
+    setSearchFilterParams
   }
   return (
     <FilterContext.Provider value={filterValue}>
