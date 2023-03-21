@@ -18,9 +18,9 @@ const sentryWebpackPluginOptions = {
 
 module.exports = withSentryConfig(withImages({
   env: {
-    SERVER_BASE_URL: process.env.SERVER_BASE_URL || "https://esapi.sparkfivetest.com/",
-    SOCKET_BASE_URL: process.env.SERVER_BASE_URL ? `${process.env.SERVER_BASE_URL}/` : "https://esapi.sparkfivetest.com/",
-    CLIENT_BASE_URL: process.env.CLIENT_BASE_URL || "http://esdev.sparkfivetest.com/",
+    SERVER_BASE_URL: process.env.SERVER_BASE_URL || "http://esapi.sparkfivetest.com",
+    SOCKET_BASE_URL: process.env.SERVER_BASE_URL ? `${process.env.SERVER_BASE_URL}` : "http://esapi.sparkfivetest.com",
+    CLIENT_BASE_URL: process.env.CLIENT_BASE_URL || "http://esdev.sparkfivetest.com",
     // SERVER_BASE_URL: "https://d13c3bdc9413.ngrok.io",
     // DROPBOX_API_KEY: process.env.DROPBOX_API_KEY || "gtwo80vc34l8vjd",
     DROPBOX_API_KEY: process.env.DROPBOX_API_KEY || "6rimytfrzluesfn",
