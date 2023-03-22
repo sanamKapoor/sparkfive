@@ -176,6 +176,9 @@ const TopBar = ({
           <div className={styles['sort-wrapper']}>
             <Select
               options={selectOptions.sort.filter(item => {
+                if(activeSortFilter.mainFilter === 'folders' && item.value==='size'){
+                  return !item;
+                }
                 return activeSortFilter.mainFilter === 'folders' && item.value==='none' ? !item : item
               })}
               value={activeSortFilter.sort}

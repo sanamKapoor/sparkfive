@@ -1,6 +1,13 @@
 import styles from "./folder-grid-item.module.css";
+import gridStyles from "../asset//asset-grid.module.css";
 import { Utilities, Assets } from "../../../assets";
-import { useContext, useState } from "react";
+import {
+  ChangeEvent,
+  FocusEventHandler,
+  useContext,
+  useRef,
+  useState,
+} from "react";
 import fileDownload from "js-file-download";
 import zipDownloadUtils from "../../../utils/download";
 import _ from "lodash";
@@ -19,6 +26,11 @@ import folderApi from "../../../server-api/folder";
 import shareFolderApi from "../../../server-api/share-collection";
 import AssetIcon from "../asset/asset-icon";
 import React from "react";
+import toastUtils from "../../../utils/toast";
+import {
+  FAILED_TO_UPDATE_COLLECTION_NAME,
+  COLLECTION_NAME_UPDATED,
+} from "../../../constants/messages";
 
 const FolderGridItem = ({
   id,
@@ -26,25 +38,34 @@ const FolderGridItem = ({
   size,
   isSelected,
   length,
+  assetsCount,
   assets,
   viewFolder,
   isLoading = false,
   deleteFolder,
   shareAssets = (folder) => {},
-  changeThumbnail = (folder) => {},
+  changeThumbnail,
   deleteThumbnail = (folder) => {},
   copyShareLink = (folder) => {},
   toggleSelected,
   copyEnabled,
-  sharePath = '',
+  sharePath = "",
   isShare = false,
   thumbnailPath,
   thumbnailExtension,
   thumbnails,
   openFilter = false,
   activeView,
+  isThumbnailNameEditable = false,
+  focusedItem,
+  setFocusedItem,
 }) => {
-  const { updateDownloadingStatus } = useContext(AssetContext);
+  const { updateDownloadingStatus, folders, setFolders } =
+    useContext(AssetContext);
+
+  const [thumbnailName, setThumbnailName] = useState(name);
+  const [isEditing, setIsEditing] = useState(false);
+
   let previews;
 
   function GetSortOrder(prop) {
@@ -68,11 +89,23 @@ const FolderGridItem = ({
         extension: thumb?.extension,
       }));
   } else {
+    const assetsCopy = [];
+    let maxCount = 4;
+    for (let i = 0; i < assets.length; i++) {
+      if (maxCount === 0) {
+        break;
+      }
+      if (assets[i].version === 1) {
+        assetsCopy.push(assets[i]);
+        maxCount = maxCount - 1;
+      }
+    }
+
     previews = [1, 2, 3, 4].map((_, index) => ({
-      name: assets[index]?.name || "empty",
-      assetImg: assets[index]?.thumbailUrl || "",
-      type: assets[index]?.type || "empty",
-      extension: assets[index]?.extension,
+      name: assetsCopy[index]?.name || "empty",
+      assetImg: assetsCopy[index]?.thumbailUrl || "",
+      type: assetsCopy[index]?.type || "empty",
+      extension: assetsCopy[index]?.extension,
     }));
   }
 
@@ -110,6 +143,46 @@ const FolderGridItem = ({
     fileDownload(data, "assets.zip");
 
     updateDownloadingStatus("done", 0, 0);
+  };
+
+  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setThumbnailName(e.target.value);
+  };
+
+  const updateNameOnBlur = async (e) => {
+    setFocusedItem(null);
+    setIsEditing(false);
+    //fire api only if name is changed
+
+    if (thumbnailName && name !== thumbnailName) {
+      try {
+        const data = await folderApi.updateFolder(id, {
+          name: e.target.value,
+        });
+
+        if (data) {
+          setFolders(
+            folders.map((folder) => {
+              if (folder.id === data.data.id) {
+                return { ...folder, name: data.data.name };
+              } else {
+                return folder;
+              }
+            })
+          );
+        }
+
+        toastUtils.success(COLLECTION_NAME_UPDATED);
+      } catch (e) {
+        toastUtils.error(FAILED_TO_UPDATE_COLLECTION_NAME);
+      }
+    } else {
+      setThumbnailName(name);
+    }
+  };
+
+  const handleOnFocus = () => {
+    setIsEditing(true);
   };
 
   return (
@@ -177,11 +250,35 @@ const FolderGridItem = ({
           </div>
         </>
       </div>
-      <div className={styles.info}>
-        <div className="normal-text">{name}</div>
+      <div className={styles.info} onClick={handleOnFocus}>
+        {isThumbnailNameEditable &&
+        isEditing &&
+        focusedItem &&
+        focusedItem === id ? (
+          <input
+            className={`normal-text ${gridStyles["editable-input"]}`}
+            value={thumbnailName}
+            onChange={handleNameChange}
+            onBlur={updateNameOnBlur}
+            autoFocus
+          />
+        ) : (
+          <span
+            id="editable-preview"
+            onClick={handleOnFocus}
+            className={
+              isThumbnailNameEditable
+                ? `normal-text ${styles["wrap-text"]} ${gridStyles["editable-preview"]}`
+                : `${gridStyles["editable-preview"]} ${gridStyles["non-editable-preview"]}`
+            }
+          >
+            {thumbnailName}
+          </span>
+        )}
         <div className={styles["details-wrapper"]}>
-          <div className="secondary-text">{`${length} Assets`}</div>
+          <div className="secondary-text">{`${assetsCount} Assets`}</div>
           <FolderOptions
+            activeFolderId={id}
             isShare={isShare}
             downloadFoldercontents={downloadFoldercontents}
             setDeleteOpen={setDeleteOpen}

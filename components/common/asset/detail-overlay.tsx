@@ -107,6 +107,7 @@ const DetailOverlay = ({
   availableNext = true,
   outsideDetailOverlay = false,
 }) => {
+
   const { hasPermission } = useContext(UserContext);
   const { user, cdnAccess } = useContext(UserContext);
 
@@ -130,6 +131,7 @@ const DetailOverlay = ({
   const [changedVersion, setChangedVersion] = useState(false); // to track version uploaded on overlay close
   const [versionRealUrl, setVersionRealUrl] = useState(realUrl);
   const [versionThumbnailUrl, setVersionThumbnailUrl] = useState(thumbailUrl);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   const [detailPosSize, setDetailPosSize] = useState({ x: 0, y: 0, width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight });
   const [defaultSize, setDefaultSize] = useState({ width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight });
@@ -214,7 +216,7 @@ const DetailOverlay = ({
       const folder = folders.find(folder => folder.id === activeFolder);
       if(folder){
         // if (folder.assets.length === 0 && assets && assets.length) {
-        folder.assets = [...assets];
+        // folder.assets = [...assets];
         // }
         setActiveCollection(folder);
         const assetIndx = assets.findIndex(item => item.asset && item.asset.id === asset.id) + 1
@@ -223,8 +225,6 @@ const DetailOverlay = ({
     }
   }
 
-
-
   useEffect(() => {
     getCropResizeOptions();
     getDetail();
@@ -232,7 +232,7 @@ const DetailOverlay = ({
     if (isMobile) {
       toggleSideMenu();
     }
-    _setActiveCollection()
+    _setActiveCollection();
   }, [currentAsset]);
 
   useEffect(()=>{
@@ -264,7 +264,7 @@ const DetailOverlay = ({
 
         if(data.asset.id !== assetDetail?.id){
           setAssetDetail(data.asset);
-
+          setPreviewUrl(data.previewUrl)
           setVersionRealUrl(data.realUrl);
           setVersionThumbnailUrl(data.thumbailUrl);
         }
@@ -899,7 +899,7 @@ const DetailOverlay = ({
               <>
                 {mode === "detail" && (
 
-                    <AssetImg  imgClass="img-preview" name={assetDetail.name} assetImg={(assetDetail.extension === "tiff" || assetDetail.extension === "tif" || assetDetail.extension === "svg" || assetDetail.extension === "svg+xml") ? versionThumbnailUrl :  versionRealUrl} />
+                    <AssetImg  imgClass="img-preview" name={assetDetail.name} assetImg={(assetDetail.extension === "tiff" || assetDetail.extension === "tif" || assetDetail.extension === "svg" || assetDetail.extension === "svg+xml" || assetDetail.extension === "heif" || assetDetail.extension === 'heic' || assetDetail.extension === 'cr2') ? versionThumbnailUrl :  versionRealUrl} />
                 )}
                 {mode === "resize" && (
                   <Rnd position={{ x: detailPosSize.x, y: detailPosSize.y }}
@@ -962,13 +962,12 @@ const DetailOverlay = ({
             {assetDetail.type === "video" && (
               <video controls>
                 <source
-                  src={versionRealUrl}
-                  type={`video/${assetDetail.extension}`}
+                  src={previewUrl ?? versionRealUrl}
+                  type={previewUrl ? 'video/mp4' : `video/${assetDetail.extension}`}
                 />
                 Sorry, your browser doesn't support video playback.
               </video>
             )}
-
             {activeFolder &&
               <div className={styles.arrows}>
                 <div>
@@ -983,7 +982,7 @@ const DetailOverlay = ({
                     </span>
                   }
                 </div>
-                <span>{assetIndex} of {totalAssets} in {activeCollection?.name} collection</span>
+                <span>{(assetIndex % activeCollection?.assetsCount) + 1} of {activeCollection?.assetsCount} in {activeCollection?.name} collection</span>
               </div>
             }
 

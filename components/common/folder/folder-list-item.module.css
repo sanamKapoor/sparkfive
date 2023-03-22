@@ -1,84 +1,88 @@
 .header {
-    display: flex;
-  }
-  
-  .header h4 {
-    width: 14%;
-    font-weight: 550;
-    color: var(--color-prim-nav);
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-  }
+  display: flex;
+}
 
-  .header h4 .sort-icon {
-    margin-left: 24px;
+.header h4 {
+  width: 14%;
+  font-weight: 550;
+  color: var(--color-prim-nav);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.header h4 .sort-icon {
+  margin-left: 24px;
+  display: none;
+}
+
+.header h4:hover .sort-icon,
+.header h4 .sort-icon.active {
+  display: block;
+}
+
+.header h4:first-child {
+  width: 21%;
+  margin-left: 45px;
+}
+
+.header h4:last-child {
+  flex: 1;
+}
+
+.name {
+  width: 21%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  padding-right: 0.5rem;
+  /* cursor: pointer; */
+  font-weight: 600;
+  position: relative;
+  margin-left: 20px;
+}
+
+.name:hover {
+  opacity: 0.6;
+}
+
+.field_name {
+  width: 14%;
+  font-size: 13px;
+  position: relative;
+}
+
+.item {
+  display: flex;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--color-secondary-border);
+  align-items: center;
+  height: 71px;
+}
+
+.item > *:last-child {
+  margin-left: 2rem;
+}
+
+.select-icon {
+  width: 25px;
+  height: auto;
+}
+
+@media screen and (max-width: 900px) {
+  .header {
     display: none;
   }
 
-  .header h4:hover .sort-icon,
-  .header h4 .sort-icon.active {
-    display: block;
+  .name {
+    width: 42%;
   }
-  
-  .header h4:first-child {
-    width: 21%;
-    margin-left: 45px;
-  }
-  
-  .header h4:last-child {
-    flex: 1;
-  }
-  
-  .name{
-    width: 21%;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    padding-right: 0.5rem;
-    cursor: pointer;
-    font-weight: 600;
-    position: relative;
-    margin-left: 20px;
-  }
-  
-  .name:hover{
-    opacity: 0.6
-  }
-  
+
   .field_name {
-    width: 14%;
-    font-size: 13px;  
-    position: relative;    
+    width: 28%;
   }
-  
-  .item {
-    display: flex;
-    padding: 0.5rem 0;
-    border-top: 1px solid var(--color-secondary-border);
-    align-items: center;
-    height: 71px;
-  }
+}
 
-  .item>*:last-child{
-    margin-left: 2rem;
-  }
-
-  .select-icon {
-    width: 25px;
-    height: auto;
-  }
-
-  @media screen and (max-width: 900px) {
-    .header {
-      display: none;
-    }
-
-    .name{
-      width: 42%;
-    }
-
-    .field_name{
-      width: 28%;
-    }
-  }
+.editable-preview-collection-list {
+  width: auto;
+}
