@@ -206,6 +206,7 @@ const ListItem = ({
         <div className={`${styles.item} ${isSelected ? styles["item--selected"] : ""}`} onClick={toggleSelected}>
           <div className={styles.photo}>
             <div
+              style={{ display: 'none' }}
               className={`${styles["selectable-wrapper"]} ${
                 isSelected && styles["selected-wrapper"]
               }`}

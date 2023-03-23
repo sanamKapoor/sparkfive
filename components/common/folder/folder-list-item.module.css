@@ -9,6 +9,12 @@
   background-color: var(--color-sec-lightivory);
 }
 
+.textEllipse {
+  white-space: nowrap;
+  overflow: hidden;
+  display: block;
+  text-overflow: ellipsis;
+}
 
 .name {
     width: 55%;

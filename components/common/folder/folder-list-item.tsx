@@ -39,16 +39,16 @@ const FolderListItem = ({
   assets,
   viewFolder,
   isLoading = false,
-  deleteFolder = () => { },
-  shareAssets = (folder) => { },
-  copyShareLink = (folder) => { },
-  setCurrentSortAttribute = (attribute) => { },
+  deleteFolder = () => {},
+  shareAssets = (folder) => {},
+  copyShareLink = (folder) => {},
+  setCurrentSortAttribute = (attribute) => {},
   copyEnabled,
   toggleSelected,
   isSelected,
   sortAttribute,
-  changeThumbnail = (folder) => { },
-  deleteThumbnail = (folder) => { },
+  changeThumbnail = (folder) => {},
+  deleteThumbnail = (folder) => {},
   thumbnailPath,
   thumbnailExtension,
   thumbnails,
@@ -95,11 +95,13 @@ const FolderListItem = ({
   const getSortAttributeClassName = (attribute) =>
     sortAttribute.replace("-", "") === attribute && styles["active"];
 
-    const setSortAttribute = (attribute) => {
+  const setSortAttribute = (attribute) => {
     if (attribute === sortAttribute) {
       setCurrentSortAttribute("-" + attribute);
     } else {
-      setCurrentSortAttribute(sortAttribute.startsWith("-") ? attribute : "-" + attribute);
+      setCurrentSortAttribute(
+        sortAttribute.startsWith("-") ? attribute : "-" + attribute
+      );
     }
   };
 
@@ -157,8 +159,9 @@ const FolderListItem = ({
                 Name
                 <IconClickable
                   src={arrowIcon}
-                  additionalClass={`${styles["sort-icon"]
-                    } ${getSortAttributeClassName("folder.name")}`}
+                  additionalClass={`${
+                    styles["sort-icon"]
+                  } ${getSortAttributeClassName("folder.name")}`}
                 />
               </h4>
               <h4></h4>
@@ -166,23 +169,30 @@ const FolderListItem = ({
                 Assets
                 <IconClickable
                   src={arrowIcon}
-                  additionalClass={`${styles["sort-icon"]
-                    } ${getSortAttributeClassName("folder.length")}`}
+                  additionalClass={`${
+                    styles["sort-icon"]
+                  } ${getSortAttributeClassName("folder.length")}`}
                 />
               </h4>
               <h4 onClick={() => setSortAttribute("folder.created-at")}>
                 Create Date
                 <IconClickable
                   src={arrowIcon}
-                  additionalClass={`${styles["sort-icon"]
-                    } ${getSortAttributeClassName("folder.created-at")}`}
+                  additionalClass={`${
+                    styles["sort-icon"]
+                  } ${getSortAttributeClassName("folder.created-at")}`}
                 />
               </h4>
             </div>
           </div>
         )}
-        <div className={`${styles.item} ${isSelected ? styles["item--selected"] : ""}`}>
+        <div
+          className={`${styles.item} ${
+            isSelected ? styles["item--selected"] : ""
+          }`}
+        >
           <div
+            style={{ display: "none" }}
             className={`${styles["selectable-wrapper"]} ${
               isSelected && styles["selected-wrapper"]
             }`}
@@ -218,7 +228,7 @@ const FolderListItem = ({
             ) : (
               <span
                 id="editable-preview"
-                className={`normal-text ${gridStyles["editable-preview"]}`}
+                className={`normal-text ${styles.textEllipse} ${gridStyles["editable-preview"]}`}
                 onClick={handleOnFocus}
               >
                 {collectionName}
@@ -227,24 +237,25 @@ const FolderListItem = ({
           </div>
           <div className={`${styles.field_name} ${styles.actions}`}>
             <img className={styles.edit} src={AssetOps.editGray} alt="edit" />
-{!isLoading && (
-            <div>
-              <FolderOptions
-              activeFolderId={id}
-                downloadFoldercontents={downloadFoldercontents}
-                shareAssets={shareAssets}
-                setDeleteOpen={setDeleteOpen}
-                copyShareLink={copyShareLink}
-                copyEnabled={copyEnabled}
-                changeThumbnail={changeThumbnail}
-                deleteThumbnail={deleteThumbnail}
-                thumbnailPath={thumbnailPath || thumbnailExtension}
-                thumbnails={thumbnails}
-                activeView={activeView}
-              />
-            </div>
-          )}
-<div
+            {!isLoading && (
+              <div>
+                <FolderOptions
+                  activeFolderId={id}
+                  downloadFoldercontents={downloadFoldercontents}
+                  shareAssets={shareAssets}
+                  setDeleteOpen={setDeleteOpen}
+                  copyShareLink={copyShareLink}
+                  copyEnabled={copyEnabled}
+                  changeThumbnail={changeThumbnail}
+                  deleteThumbnail={deleteThumbnail}
+                  thumbnailPath={thumbnailPath || thumbnailExtension}
+                  thumbnails={thumbnails}
+                  activeView={activeView}
+                />
+              </div>
+            )}
+          </div>
+          <div
             className={
               !isNameEditable
                 ? styles.field_name
@@ -254,11 +265,13 @@ const FolderListItem = ({
           >
             {!isLoading && `${assetsCount} Assets`}
           </div>
-          <div className={`${styles.field_name} ${isLoading && "loadable"} ${styles['date-created']}`}>
+          <div
+            className={`${styles.field_name} ${isLoading && "loadable"} ${
+              styles["date-created"]
+            }`}
+          >
             {format(new Date(createdAt), dateFormat)}
           </div>
-</div>
-          
         </div>
       </div>
       <ConfirmModal

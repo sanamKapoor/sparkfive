@@ -9,6 +9,11 @@
   background-color: var(--color-sec-lightivory);
 }
 
+.photo {
+  width: 30%;
+  display: flex;
+}
+
 .photo-name {
   width: 30%;
   display: flex;
@@ -79,7 +84,7 @@
 
 .thumbnail {
   overflow: hidden;
-  margin: 0 10px;
+  margin: 0 10px 0 0;
   position: relative;
   max-height: 50px;
 }
