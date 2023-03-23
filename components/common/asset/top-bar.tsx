@@ -260,7 +260,10 @@ const TopBar = ({
             <Select
               label={"Sort By"}
               options={selectOptions.sort.filter(item => {
-                return activeSortFilter.mainFilter === 'folders' && item.value === 'none' ? !item : item
+                if(activeSortFilter.mainFilter === 'folders' && item.value==='size'){
+                  return !item;
+                }
+                return activeSortFilter.mainFilter === 'folders' && item.value==='none' ? !item : item
               })}
               value={activeSortFilter.sort}
               styleType='filter filter-schedule'

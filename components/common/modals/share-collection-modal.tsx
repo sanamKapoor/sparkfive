@@ -60,6 +60,8 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 	const [currentName, setCurrentName] = useState("") // To decide user can copy link or not
 	const [logo, setLogo] = useState("")
 
+	console.log('logo: ', logo);
+
 	const [firstInit, setFirstInit] = useState(false)
 	// const [name, setName]
 	//
@@ -222,9 +224,10 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 	}
 
 	// Save changes
-	const saveChanges = async (field = "", isPublicValue = undefined, expiredValue = undefined, expiredPeriodValue = undefined, expiredAtValue = undefined, sharableValue = undefined, logo = {}) => {
+	const saveChanges = async (field = "", isPublicValue = undefined, expiredValue = undefined, expiredPeriodValue = undefined, expiredAtValue = undefined, sharableValue = undefined, logoA = {}) => {
 		setIsLoading(true);
 
+		console.log('logo inside save changes: ', logo);
 		// Link is not created yet due to lacking name, saving name then getting url back
 		if(firstInit === false && field === "name"){
 			getInitialSharedLink(false)
@@ -245,7 +248,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 					sharable: sharableValue === undefined ? sharable : sharableValue,
 					shareId,
 					type: "folder",
-					logoId: logo?.id || ""
+					logoId: Object.keys(logoA).length !== 0 ? logoA?.id : logo?.asset?.id ?? null
 				},
 				false,
 				false

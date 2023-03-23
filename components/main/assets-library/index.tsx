@@ -53,6 +53,7 @@ const AssetsLibrary = () => {
     setLoadingAssets,
     selectAllAssets,
     selectedAllAssets,
+    selectedAllFolders,
     selectAllFolders,
     uploadDetailOverlay,
     setUploadDetailOverlay,
@@ -696,6 +697,16 @@ const AssetsLibrary = () => {
     }
   }
 
+
+  useEffect(() => {
+    if (selectedAllAssets) {
+      selectAllAssets(false);
+    }
+
+    if (selectedAllFolders) {
+      selectAllFolders(false);
+    }
+  }, [activeMode]);
 
   return (
     <>

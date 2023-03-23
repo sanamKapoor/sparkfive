@@ -991,11 +991,12 @@ export default ({ getAssets }) => {
     try {
       const assetIds = selectedAssets.map((assetItem) => assetItem.asset.id);
       const { data } = await assetApi.generateThumbnails({ assetIds });
+
       setAssets([
         ...assets.map((item) => ({
           ...item,
           thumbailUrl: data[item.asset.id]
-            ? data[item.asset.id]
+            ? data[item.asset.id]?.thumbailUrl
             : item.thumbailUrl,
         })),
       ]);

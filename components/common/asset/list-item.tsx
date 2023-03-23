@@ -1,9 +1,10 @@
 import styles from "./list-item.module.css";
 import { Utilities, Assets, AssetOps } from "../../../assets";
+import gridStyles from "./asset-grid.module.css";
 import filesize from "filesize";
 import { format } from "date-fns";
-import { useState, useEffect } from "react";
-import { getParsedExtension } from "../../../utils/asset";
+import { useState, useEffect, ChangeEvent, useContext } from "react";
+import { getParsedExtension, removeExtension } from "../../../utils/asset";
 
 
 // Components
@@ -14,6 +15,13 @@ import AssetOptions from "./asset-options";
 import AssetIcon from "./asset-icon";
 import CollectionBadge from '../collection/collection-badge';
 import React from 'react';
+import assetApi from "../../../server-api/asset";
+import toastUtils from "../../../utils/toast";
+import {
+  FAILED_TO_UPDATE_ASSET_NAME,
+  ASSET_NAME_UPDATED,
+} from "../../../constants/messages";
+import { AssetContext } from "../../../context";
 
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
 
@@ -31,21 +39,35 @@ const ListItem = ({
   },
   index,
   sortAttribute,
-  activeFolder = '',
-  toggleSelected = () => { },
-  openDeleteAsset = () => { },
-  openMoveAsset = () => { },
-  openShareAsset = () => { },
-  openCopyAsset = () => { },
-  openArchiveAsset = () => { },
-  downloadAsset = () => { },
-  openRemoveAsset = () => { },
-  setCurrentSortAttribute = (attribute) => { },
+  activeFolder = "",
+  toggleSelected = () => {},
+  openDeleteAsset = () => {},
+  openMoveAsset = () => {},
+  openShareAsset = () => {},
+  openCopyAsset = () => {},
+  openArchiveAsset = () => {},
+  downloadAsset = () => {},
+  openRemoveAsset = () => {},
+  setCurrentSortAttribute = (attribute) => {},
+  isNameEditable = false,
+  focusedItem,
+  setFocusedItem,
 }) => {
   const dateFormat = "MMM do, yyyy h:mm a";
 
   const [overlayProperties, setOverlayProperties] =
     useState(DEFAULT_DETAIL_PROPS);
+
+  const assetName = removeExtension(asset.name);
+
+  const [fileName, setFileName] = useState(assetName);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const { assets, setAssets } = useContext(AssetContext);
+
+  useEffect(() => {
+    setFileName(assetName);
+  }, [assetName]);
 
   useEffect(() => {
     if (overlayProperties.visible) {
@@ -73,6 +95,56 @@ const ListItem = ({
   const arrowIcon = sortAttribute.startsWith("-")
     ? Utilities.arrowUpGrey
     : Utilities.arrowGrey;
+
+  const handleAssetNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFileName(e.target.value);
+  };
+
+  const updateAssetNameOnBlur = async () => {
+    setFocusedItem(null);
+    setIsEditing(false);
+    //fire api only if name is changed
+    if (fileName && assetName !== fileName) {
+      try {
+        const data = await assetApi.updateAsset(asset.id, {
+          updateData: { name: fileName + "." + asset.extension },
+          associations: {},
+        });
+
+        if (data) {
+          setAssets(
+            assets.map((item) => {
+              if (item.asset.id === data.data.id) {
+                return {
+                  ...item,
+                  asset: { ...item.asset, name: data.data.name },
+                };
+              } else {
+                return item;
+              }
+            })
+          );
+        }
+
+        toastUtils.success(ASSET_NAME_UPDATED);
+      } catch (e) {
+        toastUtils.error(FAILED_TO_UPDATE_ASSET_NAME);
+      }
+    } else {
+      setFileName(assetName);
+    }
+  };
+
+  const handleOnFocus = () => {
+    setIsEditing(true);
+  };
+
+  const handleClick = () => {
+    setOverlayProperties({
+      ...DEFAULT_DETAIL_PROPS,
+      visible: !overlayProperties.visible,
+    });
+  };
 
   return (
     <>
@@ -132,9 +204,40 @@ const ListItem = ({
           </div>
         )}
         <div className={`${styles.item} ${isSelected ? styles["item--selected"] : ""}`} onClick={toggleSelected}>
-
-          <div className={styles["photo-name"]}>
-            <div className={`${styles.thumbnail} ${isLoading && "loadable"}`}>
+          <div className={styles.photo}>
+            <div
+              className={`${styles["selectable-wrapper"]} ${
+                isSelected && styles["selected-wrapper"]
+              }`}
+            >
+              {!isLoading && (
+                <>
+                  {isSelected ? (
+                    <IconClickable
+                      src={Utilities.radioButtonEnabled}
+                      additionalClass={styles["select-icon"]}
+                      onClick={toggleSelected}
+                    />
+                  ) : (
+                    <IconClickable
+                      src={Utilities.radioButtonNormal}
+                      additionalClass={styles["select-icon"]}
+                      onClick={toggleSelected}
+                    />
+                  )}
+                </>
+              )}
+            </div>
+            <div
+              className={
+                isNameEditable
+                  ? `${styles.thumbnail} ${
+                      isLoading && "loadable"
+                    } cursor: pointer`
+                  : `${styles.thumbnail} ${isLoading && "loadable"}`
+              }
+              onClick={isNameEditable ? handleClick : () => {}}
+            >
               {thumbailUrl ? (
                 <AssetImg
                   assetImg={thumbailUrl}
@@ -155,15 +258,33 @@ const ListItem = ({
               {asset.type === 'text' && <AssetText extension={asset.extension} onList={true} />} */}
             </div>
             <div
-              className={`${styles.name} ${isLoading && "loadable"}`}
-              onClick={() =>
-                setOverlayProperties({
-                  ...DEFAULT_DETAIL_PROPS,
-                  visible: !overlayProperties.visible,
-                })
+              className={
+                !isNameEditable
+                  ? `${styles.name} ${isLoading && "loadable"}`
+                  : `${styles.name} ${isLoading && "loadable"} cursor: default`
               }
+              onClick={!isNameEditable ? handleClick : () => {}}
             >
-              {asset.name}
+              {isNameEditable &&
+              isEditing &&
+              focusedItem &&
+              focusedItem === asset.id ? (
+                <input
+                  autoFocus
+                  className={`normal-text ${gridStyles["editable-input"]} ${styles["wrap-text"]}`}
+                  value={fileName}
+                  onChange={handleAssetNameChange}
+                  onBlur={updateAssetNameOnBlur}
+                />
+              ) : (
+                <span
+                  id="editable-preview"
+                  className={`${gridStyles["editable-preview"]}`}
+                  onClick={handleOnFocus}
+                >
+                  {fileName}.{asset.extension}
+                </span>
+              )}
             </div>
           </div>
 
