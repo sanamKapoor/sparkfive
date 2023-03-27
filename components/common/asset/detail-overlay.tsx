@@ -16,7 +16,7 @@ import urlUtils from '../../../utils/url'
 
 import { isMobile } from "react-device-detect";
 
-import { ASSET_DOWNLOAD } from '../../../constants/permissions'
+import { ASSET_DOWNLOAD, ASSET_EDIT } from '../../../constants/permissions'
 
 // Components
 import SidePanel from "./detail-side-panel";
@@ -819,7 +819,7 @@ const DetailOverlay = ({
             </div>
             <div className={styles.name}>
               <h3>{assetDetail.name}</h3>
-              {!isShare && (
+              {!isShare && hasPermission([ASSET_EDIT]) && (
                 <IconClickable
                   src={Utilities.edit}
                   onClick={() => setRenameModalOpen(true)}
@@ -1085,12 +1085,12 @@ const DetailOverlay = ({
               }`}
           />
           <div className={`${styles.separator} ${styles.expand}`}></div>
-          <IconClickable
+          {hasPermission([ASSET_EDIT]) && <IconClickable
             src={Utilities.delete}
             additionalClass={styles["menu-icon"]}
             onClick={openDeleteAsset}
-          />
-          <div className={styles.separator}></div>
+          />}
+          {hasPermission([ASSET_EDIT]) && <div className={styles.separator}></div>}
           <IconClickable
             src={Utilities.info}
             additionalClass={styles["menu-icon"]}
@@ -1100,7 +1100,7 @@ const DetailOverlay = ({
               changeActiveSide("detail");
             }}
           />
-          <IconClickable
+          {hasPermission([ASSET_EDIT]) && <IconClickable
             src={Utilities.comment}
             additionalClass={styles["menu-icon"]}
             onClick={() => {
@@ -1108,7 +1108,7 @@ const DetailOverlay = ({
               resetValues();
               changeActiveSide("comments");
             }}
-          />
+          />}
           {shouldRenderCdnTabButton() && (
             <IconClickable
               src={Utilities.embedCdn}
