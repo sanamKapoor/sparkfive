@@ -60,8 +60,6 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 	const [currentName, setCurrentName] = useState("") // To decide user can copy link or not
 	const [logo, setLogo] = useState("")
 
-	console.log('logo: ', logo);
-
 	const [firstInit, setFirstInit] = useState(false)
 	// const [name, setName]
 	//

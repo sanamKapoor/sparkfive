@@ -332,7 +332,7 @@ const ListItem = ({
             </div>
 
             <div className={`${styles.field_name} ${styles.collection}`}>
-              {asset?.folders.map(folder => <CollectionBadge collection={folder?.name} />)}
+              {asset?.folders?.map(folder => <CollectionBadge collection={folder?.name} />)}
             </div>
         </div>
       </div>

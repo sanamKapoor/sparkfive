@@ -190,6 +190,7 @@ const FolderListItem = ({
           className={`${styles.item} ${
             isSelected ? styles["item--selected"] : ""
           }`}
+          onClick={toggleSelected}
         >
           <div
             style={{ display: "none" }}
