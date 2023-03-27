@@ -328,11 +328,11 @@ const ListItem = ({
             </div>
 
             <div className={`${styles.field_name} ${styles.dimension}`}>
-              2500x3350
+              {asset?.dimensionWidth && asset?.dimensionWidth && `${asset?.dimensionWidth}x${asset?.dimensionHeight}`}
             </div>
 
             <div className={`${styles.field_name} ${styles.collection}`}>
-              <CollectionBadge collection={"NorthFace"} />
+              {asset?.folders.map(folder => <CollectionBadge collection={folder?.name} />)}
             </div>
         </div>
       </div>
