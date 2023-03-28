@@ -96,6 +96,10 @@
   font-weight: 600;
 }
 
+.search-filters .select-prefix__value-container {
+  padding-left: 35px;
+}
+
 .filter .select-prefix__placeholder,
 .regular .select-prefix__placeholder {
   color: var(--color-prim-navy);

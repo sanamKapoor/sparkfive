@@ -2,7 +2,7 @@
   display: grid;
   grid-template-areas: "content-asset side asset-menu";
   grid-template-columns: 1fr 26.5rem 60px;
-  z-index: 1500;
+  z-index: 20001;
 }
 
 .content, .side, .menu {
