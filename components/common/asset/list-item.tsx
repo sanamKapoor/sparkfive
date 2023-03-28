@@ -5,7 +5,7 @@ import filesize from "filesize";
 import { format } from "date-fns";
 import { useState, useEffect, ChangeEvent, useContext } from "react";
 import { getParsedExtension, removeExtension } from "../../../utils/asset";
-
+import update from "immutability-helper";
 
 // Components
 import AssetImg from "./asset-img";
@@ -22,6 +22,8 @@ import {
   ASSET_NAME_UPDATED,
 } from "../../../constants/messages";
 import { AssetContext } from "../../../context";
+
+import RenameModal from '../../common/modals/rename-modal'
 
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
 
@@ -62,6 +64,8 @@ const ListItem = ({
 
   const [fileName, setFileName] = useState(assetName);
   const [isEditing, setIsEditing] = useState(false);
+
+  const [assetRenameModalOpen, setAssetRenameModalOpen] = useState(false);
 
   const { assets, setAssets } = useContext(AssetContext);
 
@@ -146,6 +150,34 @@ const ListItem = ({
     });
   };
 
+  const confirmAssetRename = async (newValue) => {
+    try {
+      const activeAsset = assets.find(asst => asst?.asset?.id === asset?.id);
+
+      const editedName = `${newValue}.${activeAsset?.extension}`;
+      await assetApi.updateAsset(asset?.id, {
+        updateData: { name: editedName },
+      });
+      const modAssetIndex = assets.findIndex(
+        (assetItem) => assetItem.asset.id === asset?.id
+      );
+      setAssets(
+        update(assets, {
+          [modAssetIndex]: {
+            asset: {
+              name: { $set: editedName },
+            },
+          },
+        })
+      );
+      toastUtils.success("Asset name updated");
+    } catch (err) {
+      // console.log(err);
+      toastUtils.error("Could not update asset name");
+    }
+  };
+
+
   return (
     <>
       <div className={styles.list}>
@@ -156,57 +188,78 @@ const ListItem = ({
                 Name
                 <IconClickable
                   src={arrowIcon}
-                  additionalClass={`${styles["sort-icon"]
-                    } ${getSortAttributeClassName("asset.name")}`}
+                  additionalClass={`${
+                    styles["sort-icon"]
+                  } ${getSortAttributeClassName("asset.name")}`}
                 />
               </h4>
               {/*<h4>Stage</h4>*/}
               <h4></h4>
-              <h4 className={styles.size} onClick={() => setSortAttribute("asset.size")}>
+              <h4
+                className={styles.size}
+                onClick={() => setSortAttribute("asset.size")}
+              >
                 Size
                 <IconClickable
                   src={arrowIcon}
-                  additionalClass={`${styles["sort-icon"]
-                    } ${getSortAttributeClassName("asset.size")}`}
+                  additionalClass={`${
+                    styles["sort-icon"]
+                  } ${getSortAttributeClassName("asset.size")}`}
                 />
               </h4>
-              <h4 className={styles["date-created"]} onClick={() => setSortAttribute("asset.created-at")}>
+              <h4
+                className={styles["date-created"]}
+                onClick={() => setSortAttribute("asset.created-at")}
+              >
                 Create Date
                 <IconClickable
                   src={arrowIcon}
-                  additionalClass={`${styles["sort-icon"]
-                    } ${getSortAttributeClassName("asset.created-at")}`}
+                  additionalClass={`${
+                    styles["sort-icon"]
+                  } ${getSortAttributeClassName("asset.created-at")}`}
                 />
               </h4>
-              <h4 className={styles["date-modified"]} onClick={() => setSortAttribute("asset.created-at")}>
+              <h4
+                className={styles["date-modified"]}
+                onClick={() => setSortAttribute("asset.created-at")}
+              >
                 Date Modified
                 <IconClickable
                   src={arrowIcon}
-                  additionalClass={`${styles["sort-icon"]
-                    } ${getSortAttributeClassName("asset.created-at")}`}
+                  additionalClass={`${
+                    styles["sort-icon"]
+                  } ${getSortAttributeClassName("asset.created-at")}`}
                 />
               </h4>
 
-              <h4 className={styles.extension} onClick={() => setSortAttribute("asset.extension")}>
+              <h4
+                className={styles.extension}
+                onClick={() => setSortAttribute("asset.extension")}
+              >
                 Extension
                 <IconClickable
                   src={arrowIcon}
-                  additionalClass={`${styles["sort-icon"]
-                    } ${getSortAttributeClassName("asset.extension")}`}
+                  additionalClass={`${
+                    styles["sort-icon"]
+                  } ${getSortAttributeClassName("asset.extension")}`}
                 />
               </h4>
 
               <h4 className={styles.dimension}>Dimensions</h4>
-              
-              <h4 className={styles.collection}>Collection</h4>
 
+              <h4 className={styles.collection}>Collection</h4>
             </div>
           </div>
         )}
-        <div className={`${styles.item} ${isSelected ? styles["item--selected"] : ""}`} onClick={toggleSelected}>
+        <div
+          className={`${styles.item} ${
+            isSelected ? styles["item--selected"] : ""
+          }`}
+          onClick={toggleSelected}
+        >
           <div className={styles.photo}>
             <div
-              style={{ display: 'none' }}
+              style={{ display: "none" }}
               className={`${styles["selectable-wrapper"]} ${
                 isSelected && styles["selected-wrapper"]
               }`}
@@ -289,51 +342,68 @@ const ListItem = ({
             </div>
           </div>
 
-            <div className={`${styles.field_name} ${styles.actions}`}>
-              <img className={styles.edit} src={AssetOps.editGray} alt="edit" />
-              {!isLoading && !isUploading && (
-                <div className={styles.options}>
-                  <AssetOptions
-                    itemType={type}
-                    asset={asset}
-                    openArchiveAsset={openArchiveAsset}
-                    openDeleteAsset={openDeleteAsset}
-                    openMoveAsset={openMoveAsset}
-                    isShare={isShare}
-                    downloadAsset={downloadAsset}
-                    openShareAsset={openShareAsset}
-                    openCopyAsset={openCopyAsset}
-                    openComments={openComments}
-                    openRemoveAsset={openRemoveAsset}
-                  />
-                </div>
-              )}
-            </div>
-            <div className={`${styles.field_name} ${styles.size}`}>
-              {parseInt(asset.size) !== 0 && asset.size && filesize(asset.size)}
-            </div>
-            <div className={`${styles.field_name} ${isLoading && "loadable"} ${styles["date-created"]}`}>
-              {format(new Date(asset.createdAt), dateFormat)}
-            </div>
-            <div className={`${styles.field_name} ${isLoading && "loadable"} ${styles["date-modified"]}`}>
-              {format(new Date(asset.createdAt), dateFormat)}
-            </div>
-            {/*<div className={styles.status}>*/}
-            {/*  {isUploading && 'Uplaoding...'}*/}
-            {/*  {!isLoading && !isUploading && <StatusBadge status={asset.stage} />}*/}
-            {/*</div>*/}
+          <div className={`${styles.field_name} ${styles.actions}`}>
+            <img
+              className={styles.edit}
+              src={AssetOps.editGray}
+              alt="edit"
+              onClick={(e) => {e.stopPropagation(); setAssetRenameModalOpen(true);}}
+            />
+            {!isLoading && !isUploading && (
+              <div className={styles.options}>
+                <AssetOptions
+                  itemType={type}
+                  asset={asset}
+                  openArchiveAsset={openArchiveAsset}
+                  openDeleteAsset={openDeleteAsset}
+                  openMoveAsset={openMoveAsset}
+                  isShare={isShare}
+                  downloadAsset={downloadAsset}
+                  openShareAsset={openShareAsset}
+                  openCopyAsset={openCopyAsset}
+                  openComments={openComments}
+                  openRemoveAsset={openRemoveAsset}
+                />
+              </div>
+            )}
+          </div>
+          <div className={`${styles.field_name} ${styles.size}`}>
+            {parseInt(asset.size) !== 0 && asset.size && filesize(asset.size)}
+          </div>
+          <div
+            className={`${styles.field_name} ${isLoading && "loadable"} ${
+              styles["date-created"]
+            }`}
+          >
+            {format(new Date(asset.createdAt), dateFormat)}
+          </div>
+          <div
+            className={`${styles.field_name} ${isLoading && "loadable"} ${
+              styles["date-modified"]
+            }`}
+          >
+            {format(new Date(asset.createdAt), dateFormat)}
+          </div>
+          {/*<div className={styles.status}>*/}
+          {/*  {isUploading && 'Uplaoding...'}*/}
+          {/*  {!isLoading && !isUploading && <StatusBadge status={asset.stage} />}*/}
+          {/*</div>*/}
 
-            <div className={`${styles.field_name} ${styles.extension}`}>
-              {!isLoading && getParsedExtension(asset.extension)}
-            </div>
+          <div className={`${styles.field_name} ${styles.extension}`}>
+            {!isLoading && getParsedExtension(asset.extension)}
+          </div>
 
-            <div className={`${styles.field_name} ${styles.dimension}`}>
-              {asset?.dimensionWidth && asset?.dimensionWidth && `${asset?.dimensionWidth}x${asset?.dimensionHeight}`}
-            </div>
+          <div className={`${styles.field_name} ${styles.dimension}`}>
+            {asset?.dimensionWidth &&
+              asset?.dimensionWidth &&
+              `${asset?.dimensionWidth}x${asset?.dimensionHeight}`}
+          </div>
 
-            <div className={`${styles.field_name} ${styles.collection}`}>
-              {asset?.folders?.map(folder => <CollectionBadge collection={folder?.name} />)}
-            </div>
+          <div className={`${styles.field_name} ${styles.collection}`}>
+            {asset?.folders?.map((folder) => (
+              <CollectionBadge collection={folder?.name} />
+            ))}
+          </div>
         </div>
       </div>
       {overlayProperties.visible && (
@@ -356,6 +426,16 @@ const ListItem = ({
           }
         />
       )}
+
+      <RenameModal
+        closeModal={() => setAssetRenameModalOpen(false)}
+        modalIsOpen={assetRenameModalOpen}
+        renameConfirm={confirmAssetRename}
+        type={"Asset"}
+        initialValue={
+         assetName
+        }
+      />
     </>
   );
 };

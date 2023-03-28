@@ -531,7 +531,6 @@ const AssetsLibrary = () => {
       if (replace) {
         setAddedIds([])
       }
-      console.log('activeFolder: ', activeFolder)
       setPlaceHolders('asset', replace)
       const { data } = await assetApi.getAssets({
         ...getAssetsFilters({

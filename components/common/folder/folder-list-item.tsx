@@ -8,6 +8,7 @@ import {
   MouseEventHandler,
   useContext,
   useState,
+  useEffect
 } from "react";
 import { format } from "date-fns";
 import zipDownloadUtils from "../../../utils/download";
@@ -27,6 +28,8 @@ import {
   FAILED_TO_UPDATE_COLLECTION_NAME,
   COLLECTION_NAME_UPDATED,
 } from "../../../constants/messages";
+import RenameModal from '../../common/modals/rename-modal'
+import update from "immutability-helper";
 
 const FolderListItem = ({
   index,
@@ -65,6 +68,12 @@ const FolderListItem = ({
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [collectionName, setCollectionName] = useState(name);
   const [isEditing, setIsEditing] = useState(false);
+
+  const [folderRenameModalOpen, setFolderRenameModalOpen] = useState(false);
+
+  useEffect(() => {
+    setCollectionName(name);
+  }, [name]);
 
   const downloadFoldercontents = async () => {
     // const { data } = await folderApi.getInfoToDownloadFolder(id)
@@ -148,6 +157,27 @@ const FolderListItem = ({
   const handleOnFocus = () => {
     setIsEditing(true);
   };
+
+  const confirmFolderRename = async (newValue) => {
+    try {
+      await folderApi.updateFolder(id, { name: newValue });
+      const modFolderIndex = folders.findIndex((folder) => folder.id === id);
+
+      setFolders(
+        update(folders, {
+          [modFolderIndex]: {
+            name: { $set: newValue },
+          },
+        })
+      );
+
+      toastUtils.success("Collection name updated");
+    } catch (err) {
+      console.log(err);
+      toastUtils.error("Could not update collection name");
+    }
+  };
+
 
   return (
     <>
@@ -237,7 +267,7 @@ const FolderListItem = ({
             )}
           </div>
           <div className={`${styles.field_name} ${styles.actions}`}>
-            <img className={styles.edit} src={AssetOps.editGray} alt="edit" />
+            <img id="edit-icon" className={styles.edit} src={AssetOps.editGray} alt="edit" onClick={(e) => {e.stopPropagation(); setFolderRenameModalOpen(true)}} />
             {!isLoading && (
               <div>
                 <FolderOptions
@@ -285,7 +315,17 @@ const FolderListItem = ({
         message={"Are you sure you want to delete this folder?"}
         modalIsOpen={deleteOpen}
       />
+      <RenameModal
+        closeModal={() => setFolderRenameModalOpen(false)}
+        modalIsOpen={folderRenameModalOpen}
+        renameConfirm={confirmFolderRename}
+        type={"Folder"}
+        initialValue={
+          name
+        }
+      />
     </>
+    
   );
 };
 
