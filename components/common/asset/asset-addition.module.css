@@ -32,9 +32,9 @@
     border-bottom: 1px solid var(--color-secondary-border);
 }
 
-.options-list.regular {
+/* .options-list.regular {
     bottom: 1rem;
-}
+} */
 
 .options-list.dropdown {
     right: 0;
@@ -112,6 +112,8 @@
         top: inherit;
         left: 50%;
         transform: translate(-50%);
+        bottom: 58px;
+        width: 195px;
     }
 }
 
