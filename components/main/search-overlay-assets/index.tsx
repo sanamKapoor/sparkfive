@@ -50,9 +50,9 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
     }
   }
 
-  useEffect(() => {
-    setAssets([])
-  }, [])
+  // useEffect(() => {
+  //   setAssets([])
+  // }, [])
 
   const beginAssetOperation = (asset, operation) => {
     setOperationAsset(asset)
