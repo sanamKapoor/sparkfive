@@ -93,7 +93,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
             setCustomFields(fieldValues)
 
             // Add filter
-            // setActiveSortFilter(update(activeSortFilter, filter))
+            setActiveSortFilter(update(activeSortFilter, filter))
         } catch (err) {
             // TODO: Maybe show error?
         }
