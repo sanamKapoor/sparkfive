@@ -96,8 +96,6 @@ const FolderListItem = ({
     }
 
     const { data } = await api.downloadFoldersAsZip(payload, filters);
-
-    console.log('response data: ', data);
     
     // Download file to storage
     fileDownload(data, "assets.zip");
