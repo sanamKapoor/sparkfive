@@ -1,22 +1,21 @@
 image: node:latest
-dev_server:
+esdev_deploy:
   before_script:
     - apt-get update
     - apt-get --yes --force-yes install rsync
   only:
     refs:
-      - NA-dev-UAT
+      - elasticsearch-dev
   script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install    
       openssh-client -y )'
     - eval $(ssh-agent -s)
-    - ssh-add <(echo "$develop_key")
+    - ssh-add <(echo "$server_key")
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host 
        *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-    - rsync -atv --delete --progress --stats --exclude-from=deployment-exclude-list.txt ./ $deveop_user@$develop_host:$develop_path_client;
-    - ssh -o StrictHostKeyChecking=no $deveop_user@$develop_host -p 22 "cd $develop_path_client && npm install && npm run build && pm2 restart all"
-  timeout: 30m
+    - rsync -atv --delete --progress --stats --exclude-from=deployment-exclude-list.txt ./ $staging_es_user@$staging_es_host:$staging_es_path;
+    - ssh -o StrictHostKeyChecking=no -i serverkey.pem -t $staging_es_user@$staging_es_host -p 22 "cd $staging_es_path && npm install && npm run build && pm2 restart all"
   when: manual
   only:
-    - NA-dev-UAT
+    - elasticsearch-dev
