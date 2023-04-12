@@ -61,6 +61,7 @@ const ListItem = ({
   const [overlayProperties, setOverlayProperties] =
     useState(DEFAULT_DETAIL_PROPS);
 
+  const isAssetACopy = asset.name.endsWith(' - COPY');
   const assetName = removeExtension(asset.name);
 
   const [fileName, setFileName] = useState(assetName);
@@ -110,7 +111,7 @@ const ListItem = ({
     if (fileName && assetName !== fileName) {
       try {
         const data = await assetApi.updateAsset(asset.id, {
-          updateData: { name: fileName + "." + asset.extension },
+          updateData: { name: isAssetACopy ? fileName + "." + asset.extension + " - COPY" : fileName + "." + asset.extension},
           associations: {},
         });
 
@@ -287,7 +288,7 @@ const ListItem = ({
                   className={`${gridStyles["editable-preview"]}`}
                   onClick={handleOnFocus}
                 >
-                  {fileName}.{asset.extension}
+                  {fileName}.{asset.extension}{isAssetACopy && ` - COPY`}
                 </span>
               )}
             </div>
