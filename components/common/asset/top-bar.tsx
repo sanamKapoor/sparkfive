@@ -209,7 +209,7 @@ const TopBar = ({
           {!isMobile &&
             <img src={Utilities.search} onClick={setActiveSearchOverlay} className={styles.search} />
           }
-          {(amountSelected === 0 || mode === 'folders') && showAssetAddition && hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL]) && (
+          {!isMobile && (amountSelected === 0 || mode === 'folders') && showAssetAddition && hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL]) && (
             <AssetAddition activeFolder={activeFolder} getFolders={getFolders} />
           )}
           {!deletedAssets && <img src={activeView === "grid" ? Utilities.gridView : Utilities.listView} onClick={() => setShowViewDropdown(true)} />}
@@ -260,10 +260,10 @@ const TopBar = ({
             <Select
               label={"Sort By"}
               options={selectOptions.sort.filter(item => {
-                if(activeSortFilter.mainFilter === 'folders' && item.value==='size'){
+                if (activeSortFilter.mainFilter === 'folders' && item.value === 'size') {
                   return !item;
                 }
-                return activeSortFilter.mainFilter === 'folders' && item.value==='none' ? !item : item
+                return activeSortFilter.mainFilter === 'folders' && item.value === 'none' ? !item : item
               })}
               value={activeSortFilter.sort}
               styleType='filter filter-schedule'
@@ -272,6 +272,12 @@ const TopBar = ({
             />
           </div>
         </div>
+      </div>
+
+      <div className={styles["mobile-bottom"]}>
+        {(amountSelected === 0 || mode === 'folders') && showAssetAddition && hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL]) && (
+          <AssetAddition activeFolder={activeFolder} getFolders={getFolders} />
+        )}
       </div>
     </section>
   )

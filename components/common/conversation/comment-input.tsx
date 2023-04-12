@@ -132,9 +132,6 @@ const CommentInput = ({ style = 'comment', onSubmit }) => {
   return (
     <form onSubmit={submitComment}>
       <div className={styles['input-container']}>
-        {style === 'reply' &&
-          <UserPhoto photoUrl={user?.profilePhoto} sizePx={27} />
-        }
         <textarea
           ref={inputRef}
           onChange={updateContent}

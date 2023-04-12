@@ -23,6 +23,7 @@ import '../styles/slider.css'
 import '../styles/input.css'
 import '../styles/slick-slider.css'
 import '../styles/progress.css'
+import '../styles/creatable-select.css'
 // Import stripe as a side effect so it helps detect fraudulent activy
 import '@stripe/stripe-js';
 import dragndropPolyfill from '../polyfills/dragndroptouch'

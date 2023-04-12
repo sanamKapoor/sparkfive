@@ -13,10 +13,6 @@
     cursor: pointer;
 }
 
-.button-wrapper-displaced {
-    margin-right: 1rem;
-}
-
 .options-list {
     position: absolute;
     top: 40px;
@@ -41,7 +37,7 @@
 }
 
 .option {
-    width: 200px;
+    width: 202px;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -93,20 +89,6 @@
 
 
 @media screen and (max-width: 600px) {
-    .option {
-        width: 195px;
-    }
-
-    .button-wrapper {
-        background-color: var(--color-prim-navy);
-        height: 36px;
-        width: 100%;
-        justify-content: center;
-        position: fixed;
-        right: 0;
-        left: 0;
-        bottom: 0;
-    }
 
     .options-list.dropdown {
         top: inherit;

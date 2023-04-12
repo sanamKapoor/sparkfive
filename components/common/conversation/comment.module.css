@@ -1,32 +1,29 @@
 .container {
-  padding: 18px;
-  margin-top: 1.3rem;
+  padding: 16px;
 }
 
 .container:last-child {
-  padding: 5px 14px;
-  margin-bottom: 1.3rem;
+  padding: 16px;
 }
 
 .main-content {
   display: flex;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
+  align-items: center;
+  margin-bottom: 5px;
 }
 
 .main-content > img {
   width: 27px;
   height: 27px;
   margin-right: 10px;
-  margin-top: -5px;
 }
 
 .author-date {
-  margin-top: 5px;
   display: flex;
-  font-size: 12px;
-  font-weight: 500;
-  margin-left: 37px;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .author-date > span:first-child {
@@ -36,6 +33,7 @@
 
 .author-date > span:last-child {
   color: var(--color-sec-blue);
+  font-size: 12px;
 }
 
 .mention {

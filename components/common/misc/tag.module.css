@@ -1,19 +1,20 @@
 .container {
   display: flex;
   align-items: center;
-  font-weight: 500;
+  font-weight: 400;
   height: 24px;
   border-radius: 50px;
   padding: 0 13px;
   width: fit-content;
-  background-color: var(--color-sec-lightblue);
+  background-color: var(--color-sec-ivory);
+  font-size: 12px;
 }
 
 .remove {
   display: inline-flex;
   margin-left: 8px;
-  color: var(--color-sec-blue);
   cursor: pointer;
+  width: 6px;
 }
 
 .remove:hover{
@@ -25,7 +26,7 @@
 }
 
 .alt-color-yellow{
-  background-color: var(--color-sec-lightyellow);
+  /* background-color: var(--color-sec-lightyellow); */
 }
 
 .alt-color-wine{

@@ -660,10 +660,10 @@ const AssetAddition = ({
 		},
 		{
 			id: 'file',
-			label: 'Upload Files',
+			label: 'Upload From Computer',
 			text: 'png, jpg, mp4 and more',
 			onClick: () => fileBrowserRef.current.click(),
-			icon: AssetOps.uploadFiles
+			icon: AssetOps.newCollection
 		},
 		{
 			id: 'folder',
@@ -674,14 +674,14 @@ const AssetAddition = ({
 		},
 		{
 			id: 'dropbox',
-			label: 'Dropbox',
+			label: 'Upload from Dropbox',
 			text: 'Import files',
 			onClick: openDropboxSelector,
 			icon: Assets.dropbox
 		},
 		{
 			id: 'gdrive',
-			label: 'Google Drive',
+			label: 'Upload from Drive',
 			text: 'Import files',
 			onClick: () => { },
 			icon: Assets.gdrive,
@@ -802,7 +802,7 @@ const AssetAddition = ({
 	}
 
 	const SimpleButtonWrapper = ({ children }) => (
-		<div className={`${styles['button-wrapper']} ${!folderAdd && styles['button-wrapper-displaced']}`}>
+		<div className={`${styles['button-wrapper']} ${!folderAdd && styles['button-wrapper-displaced']} asset-addition`}>
 			{hasPermission([ASSET_UPLOAD_APPROVAL]) && <span className={styles['approval-text']}>Upload for approval</span>}
 			{!hasPermission([ASSET_UPLOAD_APPROVAL]) &&<SimpleButton text='+' />}
 			{children}
