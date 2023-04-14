@@ -68,8 +68,13 @@
 
 .top-wrapper .name h3 {
   margin: 0;
+  margin-right: 8px;
   font-size: 16px;
   font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
 }
 
 .back {
@@ -129,6 +134,11 @@
 
 .asset-actions button {
   margin-left: 0.5rem;
+}
+
+.asset-actions ul {
+  top: 60px;
+  right: 10px;
 }
 
 .menu {
@@ -293,7 +303,10 @@
   .asset-actions {
     gap: 12px
   }
-
+  .asset-actions ul {
+    top: 40px;
+  }
+  
   .menu {
     position: fixed;
     background-color: var(--color-prim-navy);
@@ -327,6 +340,10 @@
 
   .expand {
     display: none;
+  }
+
+  .top-wrapper .name h3 {
+    max-width: 200px;
   }
 }
 

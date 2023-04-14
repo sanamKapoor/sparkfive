@@ -43,6 +43,8 @@ import AssetRelatedFIles from './asset-related-files';
 
 import { sizeToZipDownload } from "../../../constants/download";
 import EventBus from "../../../utils/event-bus";
+import AssetRelatedFilesList from './asset-related-files-list';
+import Dropdown from '../inputs/dropdown';
 
 const getDefaultDownloadImageType = (extension) => {
   const defaultDownloadImageTypes = [
@@ -114,6 +116,9 @@ const DetailOverlay = ({
   const [assetDetail, setAssetDetail] = useState(undefined);
 
   const [renameModalOpen, setRenameModalOpen] = useState(false);
+
+  const [downloadDropdownOpen, setDownloadDropdownOpen] = useState(false);
+
 
   const [activeCollection, setActiveCollection] = useState({ name: '', assets: [], });
   const [assetIndex, setAssetIndex] = useState(0);
@@ -820,7 +825,7 @@ const DetailOverlay = ({
                   <h3>{assetDetail.name}</h3>
                   {!isShare && (
                     <IconClickable
-                      src={Utilities.edit}
+                      src={Utilities.editLight}
                       onClick={() => setRenameModalOpen(true)}
                     />
                   )}
@@ -884,43 +889,48 @@ const DetailOverlay = ({
                     type={"button"}
                     className={styles["only-desktop-button"]}
                     styleType={"secondary"}
-                    onClick={() => {
-                      if (currentAsset.extension !== 'gif' && currentAsset.extension !== 'tiff' && currentAsset.extension !== 'tif' && currentAsset.extension !== "svg" && currentAsset.extension !== "svg+xml" && currentAsset.type === "image" && isImageType(assetDetail.extension)) {
-                        setMode("resize");
-                        changeActiveSide("detail");
-                        resetImageSettings(undefined, undefined);
-                      } else {
-                        downloadSelectedAssets(currentAsset.id)
-                        // if(currentAsset.size >= sizeToZipDownload){
-                        //   downloadSelectedAssets(currentAsset.id)
-                        // }else{
-                        //   manualDownloadAsset(currentAsset);
-                        // }
-
-                      }
-                    }}
+                    onClick={() => setDownloadDropdownOpen(true)}
                   />
                   <div className={styles["only-mobile-button"]}>
                     <IconClickable
                       className={styles["only-mobile-button"]}
                       src={AssetOps.downloadWhite}
-                      onClick={() => {
-                        if (currentAsset.extension !== 'gif' && currentAsset.extension !== 'tiff' && currentAsset.extension !== 'tif' && currentAsset.extension !== "svg" && currentAsset.extension !== "svg+xml" && currentAsset.type === "image" && isImageType(assetDetail.extension)) {
-                          setMode("resize");
-                          changeActiveSide("detail");
-                          resetImageSettings(undefined, undefined);
-                        } else {
-                          downloadSelectedAssets(currentAsset.id)
-                          // if(currentAsset.size >= sizeToZipDownload){
-                          //   downloadSelectedAssets(currentAsset.id)
-                          // }else{
-                          //   manualDownloadAsset(currentAsset);
-                          // }
-
-                        }
-                      }}
+                      onClick={() => setDownloadDropdownOpen(true)}
                     />
                   </div>
+
+                  {downloadDropdownOpen &&
+                    <Dropdown
+                      onClickOutside={() => setDownloadDropdownOpen(false)}
+                      additionalClass={styles["more-dropdown"]}
+                      options={[
+                        {
+                          id: "download",
+                          label: "Download Original",
+                          onClick: () => {
+                            if (currentAsset.extension !== 'gif' && currentAsset.extension !== 'tiff' && currentAsset.extension !== 'tif' && currentAsset.extension !== "svg" && currentAsset.extension !== "svg+xml" && currentAsset.type === "image" && isImageType(assetDetail.extension)) {
+                              setMode("resize");
+                              changeActiveSide("detail");
+                              resetImageSettings(undefined, undefined);
+                            } else {
+                              downloadSelectedAssets(currentAsset.id)
+                              // if(currentAsset.size >= sizeToZipDownload){
+                              //   downloadSelectedAssets(currentAsset.id)
+                              // }else{
+                              //   manualDownloadAsset(currentAsset);
+                              // }
+
+                            }
+                          }
+                        },
+                        {
+                          id: "edit",
+                          label: "Edit then Download",
+                          onClick: () => changeActiveSide("download")
+                        }
+                      ]}
+                    />
+                  }
                 </>
               )}
             </div>
@@ -1051,49 +1061,49 @@ const DetailOverlay = ({
                   isShare={isShare}
                 />
               )}
-              {mode !== "detail" && (
-                <CropSidePanel
-                  isShare={isShare}
-                  sharePath={sharePath}
-                  imageType={imageType}
-                  onImageTypeChange={(type) => {
-                    setImageType(type);
-                  }}
-                  downloadImageTypes={downloadImageTypes}
-                  presetTypes={presetTypes}
-                  presetTypeValue={preset}
-                  sizes={sizes}
-                  sizeValue={size}
-                  mode={mode}
-                  widthOriginal={width}
-                  heightOriginal={height}
-                  onModeChange={(mode) => {
-                    // resetValues();
-                    setMode(mode);
-                    if (mode === 'crop') {
-                      setSizeOfCrop({ width: Math.round(width / 2), height: Math.round(height / 2) })
-                    }
-                  }}
-                  onSelectChange={onSelectChange}
-                  onSizeInputChange={onSizeInputChange}
-                  asset={assetDetail}
-                  onResetImageSize={() => {
-                    resetValues();
-                    setDetailPosSize({ ...detailPosSize, width: defaultSize.width, height: defaultSize.height });
-                  }}
-                  sizeOfCrop={sizeOfCrop}
-                  setSizeOfCrop={setSizeOfCrop}
-                  detailPosSize={detailPosSize}
-                  onAddAssociate={(asset) => {
-                    const detail = { ...assetDetail }
-                    detail.fileAssociations.push(asset)
-
-                    setAssetDetail(detail)
-                  }}
-                  setRenameData={setRenameValue}
-                />
-              )}
             </>
+          )}
+          {!isShare && activeSideComponent === "download" && (
+            <CropSidePanel
+              isShare={isShare}
+              sharePath={sharePath}
+              imageType={imageType}
+              onImageTypeChange={(type) => {
+                setImageType(type);
+              }}
+              downloadImageTypes={downloadImageTypes}
+              presetTypes={presetTypes}
+              presetTypeValue={preset}
+              sizes={sizes}
+              sizeValue={size}
+              mode={mode}
+              widthOriginal={width}
+              heightOriginal={height}
+              onModeChange={(mode) => {
+                // resetValues();
+                setMode(mode);
+                if (mode === 'crop') {
+                  setSizeOfCrop({ width: Math.round(width / 2), height: Math.round(height / 2) })
+                }
+              }}
+              onSelectChange={onSelectChange}
+              onSizeInputChange={onSizeInputChange}
+              asset={assetDetail}
+              onResetImageSize={() => {
+                resetValues();
+                setDetailPosSize({ ...detailPosSize, width: defaultSize.width, height: defaultSize.height });
+              }}
+              sizeOfCrop={sizeOfCrop}
+              setSizeOfCrop={setSizeOfCrop}
+              detailPosSize={detailPosSize}
+              onAddAssociate={(asset) => {
+                const detail = { ...assetDetail }
+                detail.fileAssociations.push(asset)
+
+                setAssetDetail(detail)
+              }}
+              setRenameData={setRenameValue}
+            />
           )}
           {!isShare && activeSideComponent === "comments" && (
             <ConversationList itemId={asset?.id} itemType="assets" />
@@ -1115,6 +1125,11 @@ const DetailOverlay = ({
               notes={notes}
               applyCrud={applyCrud} />
           )}
+
+          {activeSideComponent === "related" && (
+            <AssetRelatedFilesList />
+          )}
+
 
         </section>
       )}
@@ -1178,27 +1193,6 @@ const DetailOverlay = ({
             />
           )}
 
-          <IconClickable
-            src={Utilities.relatedLight}
-            additionalClass={styles["menu-icon"] + ' ' + styles['only-mobile-button']}
-            onClick={() => {
-              setMode("detail");
-              resetValues();
-              changeActiveSide("related");
-            }}
-          />
-
-          {hasPermission(['admin', 'super_admin']) && versionCount > 0 && (
-            <IconClickable
-              src={Utilities.versions}
-              additionalClass={styles["menu-icon"] + ' ' + styles['only-desktop-button']}
-              onClick={() => {
-                setMode("detail");
-                resetValues();
-                changeActiveSide("versions");
-              }}
-            />
-          )}
           {currentAsset.extension !== 'gif' && hasPermission([ASSET_DOWNLOAD]) && <IconClickable
             src={AssetOps.download}
             additionalClass={styles["menu-icon"] + ' ' + styles['only-desktop-button']}
@@ -1216,6 +1210,16 @@ const DetailOverlay = ({
               }
             }}
           />}
+
+          <IconClickable
+            src={isMobile ? Utilities.relatedLight : Utilities.related}
+            additionalClass={styles["menu-icon"]}
+            onClick={() => {
+              setMode("detail");
+              resetValues();
+              changeActiveSide("related");
+            }}
+          />
           {hasPermission(['admin', 'super_admin']) && (
             <IconClickable
               src={isMobile ? Utilities.notesLight : Utilities.notes}
@@ -1228,15 +1232,17 @@ const DetailOverlay = ({
             />
           )}
 
-          <IconClickable
-            src={Utilities.versionsLight}
-            additionalClass={styles["menu-icon"] + ' ' + styles['only-mobile-button']}
-            onClick={() => {
-              setMode("detail");
-              resetValues();
-              changeActiveSide("versions");
-            }}
-          />
+          {hasPermission(['admin', 'super_admin']) && versionCount > 0 && (
+            <IconClickable
+              src={isMobile ? Utilities.versionsLight : Utilities.versions}
+              additionalClass={styles["menu-icon"]}
+              onClick={() => {
+                setMode("detail");
+                resetValues();
+                changeActiveSide("versions");
+              }}
+            />
+          )}
         </section>
       )}
       <RenameModal

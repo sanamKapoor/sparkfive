@@ -25,6 +25,7 @@ export const Navigation = {
 
 export const Utilities = {
   edit: require('./Icons/Utilities/Description-Edit/icn-utilities-description_edit-fill.svg'),
+  editLight: require('./Icons/Utilities/Description-Edit/icn-utilities-description_edit-light.svg'),
   editWhite: require('./Icons/Utilities/Description-Edit/icn-utilities-description_edit-fill-white.svg'),
   delete: require('./Icons/Utilities/Delete/icn-utilities-delete.svg'),
   add: require('./Icons/Utilities/Add +/icn-utilities-add+.svg'),
@@ -94,6 +95,7 @@ export const Utilities = {
   filterGray: require('./Icons/Utilities/Filter/filter.svg'),
   ellipse: require('./Icons/Utilities/Ellipse/ellipse.svg'),
   tagGray: require('./Icons/Utilities/Tags/icn-utilities-tag-gray.svg'),
+  related: require('./Icons/Utilities/Related/related.svg'),
   relatedLight: require('./Icons/Utilities/Related/related-light.svg'),
 }
 

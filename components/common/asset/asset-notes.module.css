@@ -8,6 +8,10 @@
     justify-content: space-between;
 }
 
+.head h3 {
+    font-size: 14px;
+}
+
 .radios {
     display: grid;
     grid-auto-flow: column;
@@ -31,5 +35,11 @@
     .container {
         min-width: 0;
         width: 100%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .divider {
+        display: none;
     }
 }
