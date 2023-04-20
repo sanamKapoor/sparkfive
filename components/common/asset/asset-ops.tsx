@@ -45,7 +45,7 @@ export default ({ getAssets }) => {
 
   const { setIsLoading } = useContext(LoadingContext);
 
-  const { loadFolders, activeSortFilter, term } = useContext(FilterContext);
+  const { loadFolders, activeSortFilter, term , searchFilterParams} = useContext(FilterContext);
 
   // We need this for all selected asset ignore pagination
   const unSelectedAssets = selectedAllAssets
@@ -521,6 +521,9 @@ export default ({ getAssets }) => {
             // @ts-ignore
             filters.term = term;
           }
+
+          filters.advSearchFrom = searchFilterParams?.advSearchFrom;
+          
           // @ts-ignore
           delete filters.page;
         }
@@ -617,6 +620,7 @@ export default ({ getAssets }) => {
             .join(",");
       }
 
+
       // Select all assets without pagination
       if (selectedAllAssets) {
         filters = {
@@ -634,11 +638,11 @@ export default ({ getAssets }) => {
           // @ts-ignore
           filters.term = term;
         }
+
         // @ts-ignore
         delete filters.page;
       }
       filters["name"] = name;
-      console.log(filters)
 
       const getCustomFields = (filters) => {
         let fields = ''
@@ -659,7 +663,7 @@ export default ({ getAssets }) => {
 
       const params = {
         versionGroups,
-        assetIds
+        assetIds,
       }
 
       // Create sub collection from tags/custom fields (only create sub colleciton if all filtered assets selected)
@@ -1081,7 +1085,8 @@ export default ({ getAssets }) => {
         closeModal={closeModalAndClearOpAsset}
         confirmAction={archiveAssets}
         confirmText={"Archive"}
-        message={`Archive ${operationLength} item(s)?`}
+        message={`Archive ${operationLength} asset(s)?`}
+        subText="Archiving a asset removes it from view/searches but allows you to restore it at anytime. "
       />
       <ConfirmModal
         modalIsOpen={activeOperation === "unarchive"}
@@ -1095,7 +1100,8 @@ export default ({ getAssets }) => {
         closeModal={closeModalAndClearOpAsset}
         confirmAction={deleteSelectedAssets}
         confirmText={"Delete"}
-        message={`Delete ${operationLength} item(s)?`}
+        message={`Delete ${operationLength} asset(s)?`}
+        subText="Are you sure you want to delete these assets?"
       />
       <ConfirmModal
         modalIsOpen={activeOperation === "remove_item"}
@@ -1108,15 +1114,17 @@ export default ({ getAssets }) => {
         modalIsOpen={activeOperation === "generate_thumbnails"}
         closeModal={closeModalAndClearOpAsset}
         confirmAction={generateAssetsThumbnails}
-        confirmText={"Recreate Thumbnail"}
-        message={`Recreate thumbnails for ${operationLength} asset(s)`}
+        confirmText={"Recreate"}
+        message={`Recreate ${operationLength} thumbnail(s)`}
+        subText="Recreate the thumbnail preview for all selected assets"
       />
       <ConfirmModal
         modalIsOpen={activeOperation === "update"}
         closeModal={closeModalAndClearOpAsset}
         confirmAction={updateAssetStatus}
         confirmText={"Delete"}
-        message={`Delete ${operationLength} item(s)?`}
+        message={`Delete ${operationLength} asset(s)?`}
+        subText="Are you sure you want to delete these assets?"
       />
       <ConfirmModal
         modalIsOpen={activeOperation === "recover"}

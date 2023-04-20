@@ -1760,7 +1760,7 @@ const UploadRequest = () => {
                                         // loadCampaigns()
                                     }}
                                     onRemoveOperationFinished={async (index, stateUpdate) => {
-                                        await assetApi.removeCampaign(assets[selectedAsset]?.asset.id, assetCampaigns[index].id)
+                                        await assetApi.removeCampaign(assets[selectedAsset]?.asset?.id, tempCampaigns[index]?.id)
                                         updateAssetState({
                                             campaigns: { $set: stateUpdate }
                                         })

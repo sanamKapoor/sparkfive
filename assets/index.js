@@ -63,6 +63,7 @@ export const Utilities = {
   listView: require('./Icons/Utilities/View List/icn-utilities-listview.svg'),
   info: require('./Icons/Utilities/Information/icn-utilities-information.svg'),
   filter: require('./Icons/External/filter.svg'),
+  filterBlue: require('./Icons/Utilities/Filter/filter-blue.svg'),
   calendar:  require('./Icons/Navigation/icn-nav-schedule-alt.svg'),
   versions: require('./Icons/Utilities/Versions/VersioningLatest.svg'),
   addVersion: require('./Icons/Utilities/Versions/add-version.svg'),
@@ -78,9 +79,13 @@ export const Utilities = {
   collections: require('./Icons/Utilities/FiltersTags/collections.svg'),
   file: require('./Icons/Utilities/FiltersTags/file.svg'),
   close: require('./Icons/Utilities/Close/close.svg'),
-  share: require('./Icons/Utilities/Share/share.svg'),
   blueClose: require('./Icons/Utilities/Close/blue-close.svg'),
+  grayClose: require('./Icons/Utilities/Close/gray-close.svg'),
+  share: require('./Icons/Utilities/Share/share.svg'),
   greenTag: require('./Icons/Utilities/green-tag.svg'),
+  thumbsUp: require('./Icons/Utilities/Thumbs Up/thumbs-up.svg'),
+  menu: require('./Icons/Utilities/Menu/menu.svg'),
+  filterGray: require('./Icons/Utilities/Filter/filter.svg'),
 }
 
 export const ProjectTypes = {
@@ -174,7 +179,7 @@ export const Integrations = {
 }
 
 export const AssetOps = {
-  edit: require('./Icons/Utilities/Description-Edit/icn-utilities-description_edit-fill.svg'),
+  edit: require('./Icons/Utilities/Description-Edit/icn-utilities-description_edit.svg'),
   delete: require('./Icons/Utilities/Delete/icn-utilities-delete.svg'),
   deleteRed: require('./Icons/Utilities/Delete/icn-utilities-delete-red.svg'),
   archive: require('./Icons/Asset Actions/archive.svg'),
@@ -191,9 +196,14 @@ export const AssetOps = {
   copyWhite: require('./Icons/Asset Actions/copy-white.svg'),
   shareWhite: require('./Icons/Asset Actions/share-white.svg'),
   generateThumbnail: require('./Icons/Asset Actions/wrench.svg'),
+  recreateThumbnail: require('./Icons/Asset Actions/wrench-blue.svg'),
   upload: require('./Icons/Asset Actions/upload.svg'),
   associate: require('./Icons/Asset Actions/associate.svg'),
   associateBlue: require('./Icons/Asset Actions/associate-blue.svg'),
   moveReplace: require('./Icons/Asset Actions/move.svg'),
-  moveReplaceWhite: require('./Icons/Asset Actions/white-move.svg')
+  moveReplaceWhite: require('./Icons/Asset Actions/white-move.svg'),
+  newCollection: require('./Icons/Asset Addition/new-collection.svg'),
+  uploadFiles: require('./Icons/Asset Addition/upload-files.svg'),
+  uploadFolder: require('./Icons/Asset Addition/upload-folder.svg'),
+  editGray: require('./Icons/Asset Actions/edit-gray.svg'),
 }

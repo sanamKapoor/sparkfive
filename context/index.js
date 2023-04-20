@@ -155,6 +155,8 @@ export const ScheduleContext = createContext({
 })
 
 export const FilterContext = createContext({
+    searchFilterParams: {},
+    setSearchFilterParams: (val) => {},
 
     activeSortFilter: {},
     setActiveSortFilter: (val) => { },

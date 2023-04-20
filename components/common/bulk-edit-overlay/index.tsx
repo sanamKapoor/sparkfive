@@ -47,7 +47,9 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 	const [assetCampaigns, setCampaigns] = useState([])
 	const [assetFolders, setFolders] = useState([])
 
-	const [editAssets, setEditAssets] = useState([])
+	const initialEditAssets = selectedAssets.map(assetItem => ({ ...assetItem, isEditSelected: true }));
+
+	const [editAssets, setEditAssets] = useState(initialEditAssets);
 
 	const [addMode, setAddMode] = useState(true)
 
@@ -119,7 +121,6 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 	useEffect(() => {
 		if (!loadingAssets && !initialSelect && selectedAssets.length > 0) {
 			setInitialSelect(true)
-			setEditAssets(selectedAssets.map(assetItem => ({ ...assetItem, isEditSelected: true })))
 			getInitialAttributes()
 		}
 		if (loadingAssets) {
@@ -132,12 +133,18 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 		initialize()
 	}, [addMode, originalInputs])
 
+	useEffect(() => {
+    getInitialAttributes();
+  }, [editAssets]);
+
 	const getInitialAttributes = async () => {
 		try {
 			// Get custom fields list
 			await getCustomFieldsInputData();
 
-			const { data: { tags, projects, campaigns, customs, folders } } = await assetApi.getBulkProperties({ assetIds: selectedAssets.map(({ asset: { id } }) => id) })
+			const assetIds = editAssets.filter(({ isEditSelected }) => isEditSelected).map(({ asset: { id } }) => id) ;
+			
+			const { data: { tags, projects, campaigns, customs, folders } } = await assetApi.getBulkProperties({ assetIds})
 
 			setOriginalInputs({
 				campaigns,

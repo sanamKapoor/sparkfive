@@ -1,5 +1,5 @@
 .input-wrapper{
-    padding: 1rem 2rem;
+    padding: 16px 28px;
 }
 
 .save-wrapper{
@@ -13,9 +13,6 @@
     align-items: center;
 }
 
-.field-content{
-    padding-left: 30px;
-}
 
 .row-field-content{
     padding-left: 15px;
@@ -33,4 +30,9 @@
 .spinner{
     margin: 15px auto;
     display: block;
+}
+
+.helper-text {
+    font-size: 12px;
+    font-weight: 300;
 }

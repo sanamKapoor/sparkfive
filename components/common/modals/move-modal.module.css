@@ -1,12 +1,11 @@
 .list {
-    padding: 1rem;
     overflow-y: auto;
 }
 
 .list li {
     cursor: pointer;
     display: flex;
-    padding: 1rem;
+    padding: 20px;
     border-bottom: 1px solid var(--color-secondary-border);
     align-items: center;
 }
@@ -22,10 +21,11 @@
 .name {
     margin-left: 0.5rem;
     font-weight: 500;
+    font-size: 12px;
 }
 
 .folder-wrapper {
-    padding: 0.5rem 2rem;
+    padding: 20px;
 }
 
 .folder-wrapper button{
@@ -47,7 +47,7 @@
 }
 
 .select-icon {
-    width: 25px;
+    width: 14px;
     height: auto;
     margin-right: 15px;
 }

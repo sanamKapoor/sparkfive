@@ -1,20 +1,27 @@
 .list {
-  width: 40rem;
+  width: 447px;
   position: absolute;
   background-color: white;
   z-index: 1000;
   right: 0;
-  padding: 15px;
   border: 1px solid var(--color-secondary-border);
-  border-radius: 5px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
+
+/* .list ul {
+  padding: 16px;
+} */
 
 .notification {
   display: flex;
-  margin-bottom: 5px;
-  padding-bottom: 5px;
-  padding-top: 5px;
   border-bottom: 1px solid var(--color-secondary-border);
+  align-items: baseline;
+  padding: 16px;
+}
+
+.notification:last-child {
+  border: none;
 }
 
 .page .notification {
@@ -26,10 +33,8 @@
 .message {
   margin-right: 10px;
   cursor: pointer;
-}
-
-.message:hover {
-  opacity: 0.6;
+  font-size: 12px;
+  color: var(--color-sec-blue);
 }
 
 .message > div:first-child {
@@ -37,13 +42,12 @@
 }
 
 .content {
-  font-style: italic;
-  font-size: 13px;
-  color: var(--color-sec-blue);
+  font-size: 12px;
 }
 
+
 .date {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--color-sec-blue);
   margin-right: 10px;
   min-width: 58px;
@@ -78,16 +82,19 @@
   background-color: var(--color-prim-red);
 }
 
+.empty {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+}
+
 .cleared,
 .seen {
   background-color: var(--color-sec-blue);
 }
 
 @media screen and (max-width: 900px) {
-  .list {
-    width: max-content;
-    right: -11rem;
-  }
 
   .page {
     width: 100%;
@@ -98,7 +105,8 @@
 
 @media screen and (max-width: 500px) {
   .list {
-    max-width: 20rem;
+    max-width: 357px;
+    right: -62px;
   }
 
   .page {
@@ -112,4 +120,10 @@
   width: 100%;
   z-index: 0;
   padding: 0;
+}
+
+.title {
+  font-weight: 600;
+  padding: 16px;
+  border-bottom: 1px solid var(--color-border);
 }
