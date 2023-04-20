@@ -8,12 +8,14 @@ import Button from '../buttons/button'
 
 const Search = (props) => {
 
+  const { openFilters } = props
+
   const [term, setTerm] = useState('')
   const [filtersTags, setFiltersTags] = useState([])
-  const [isOpen, setIsOpen] = useState(false)
   const contentRef = useRef(null)
+  let isOpen = openFilters
 
-  const {advancedConfig} = useContext(UserContext)
+  const { advancedConfig } = useContext(UserContext)
 
   const searchModes = [
     {
@@ -36,22 +38,22 @@ const Search = (props) => {
 
   const searchFrom = [
     {
-      label: 'Tags',
+      label: 'Tags only',
       value: 'tags.name',
       icon: Utilities.tags
     },
     {
-      label: 'Custom fields',
+      label: 'Custom fields only',
       value: 'attributes.name',
       icon: Utilities.custom
     },
     {
-      label: 'Collections',
+      label: 'Collections only',
       value: 'folders.name',
       icon: Utilities.collections
     },
     {
-      label: 'File name',
+      label: 'File name only',
       value: 'assets.name',
       icon: Utilities.file
     },
@@ -62,7 +64,7 @@ const Search = (props) => {
     },
   ]
 
-  if (filtersTags.length === 0 && advancedConfig.searchDefault==='tags_only') {
+  if (filtersTags.length === 0 && advancedConfig.searchDefault === 'tags_only') {
     setFiltersTags([...filtersTags, searchFrom[0]])
   }
 
@@ -101,7 +103,7 @@ const Search = (props) => {
     if (e) {
       e.stopPropagation()
     }
-    setIsOpen(visible)
+    isOpen = visible
     if (visible) {
       document.addEventListener("mousedown", handleClickOutside);
     } else {
@@ -115,19 +117,28 @@ const Search = (props) => {
       const selectedModes = searchModes.filter((filter) => {
         return filtersTags.some(tag => tag.value === filter.value)
       }).map(item => item.value)
-    
+
       const from = searchFrom.filter((filter) => {
         return filtersTags.some(tag => tag.value === filter.value)
       }).map(item => item.value)
 
-      props.onSubmit(term, {advSearchMode: selectedModes, advSearchFrom: from})
+      props.onSubmit(term, { advSearchMode: selectedModes, advSearchFrom: from })
     }}>
       <div className={styles.form}>
         <div className={styles['input-container']} ref={contentRef} onClick={() => setFiltersVisible(null, true)}>
-          <img src={Utilities.search} />
+          <div className={styles["input-wrapper"]}>
+            <img src={Utilities.search} />
+            <input {...props}
+              onChange={(e) => setTerm(e.target.value)}
+              onKeyUp={(e) => hideSearchOnEnter(e)}
+              value={term}
+              placeholder={props.placeholder || 'Search'}
+              className={`${styles.container} ${props.styleType && styles[props.styleType]}`}
+            />
+          </div>
           {filtersTags.length > 0 &&
             <div className={styles.tags}>
-              {filtersTags.map((tag, index) => (
+            {filtersTags.map((tag, index) => (
                 <div className={styles.tag} key={index}>
                   {tag.icon &&
                     <img src={tag.icon} />
@@ -140,16 +151,10 @@ const Search = (props) => {
               ))}
             </div>
           }
-          <input {...props}
-            onChange={(e) => setTerm(e.target.value)}
-            onKeyUp={(e) => hideSearchOnEnter(e)}
-            value={term}
-            placeholder={props.placeholder || 'Search'}
-            className={`${styles.container} ${props.styleType && styles[props.styleType]}`}
-          />
+
           {isOpen &&
             <div className={styles.filters}>
-              <h5>Search Mode</h5>
+              <h5>Search Filters</h5>
               <ul>
                 {searchModes.map((filter, index) => {
 
@@ -163,7 +168,6 @@ const Search = (props) => {
                 })}
 
               </ul>
-              <h5>Search from</h5>
               <ul>
                 {searchFrom.map((item, index) => {
 
@@ -180,12 +184,6 @@ const Search = (props) => {
             </div>
           }
         </div>
-        <Button
-          disabled={term.length < 1}
-          type={'submit'}
-          text='Search'
-          styleType='primary'
-        />
       </div>
     </form>
   )

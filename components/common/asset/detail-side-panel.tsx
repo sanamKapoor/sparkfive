@@ -607,7 +607,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
       {inputCustomFields.map((field, index)=>{
         if(field.type === 'selectOne'){
 
-          return <div className={styles['field-wrapper']} key={index}>
+          return <div className={`${styles['field-wrapper']} ${styles['cus-dropdown']}`} key={index}>
             <div className={`secondary-text ${styles.field}`}>{field.name}</div>
             <CustomFieldSelector
                 data={assetCustomFields[index]?.values[0]?.name}

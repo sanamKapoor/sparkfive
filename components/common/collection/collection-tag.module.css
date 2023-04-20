@@ -1,0 +1,12 @@
+.container {
+    border: 1px solid var(--color-prim-navy);
+    border-radius: 28px;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-prim-navy);
+    font-size: 12px;
+    padding: 0 8px;
+    width: fit-content;
+}

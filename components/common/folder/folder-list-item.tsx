@@ -1,13 +1,14 @@
 import fileDownload from "js-file-download";
 import styles from "./folder-list-item.module.css";
+import { Utilities, Assets, AssetOps } from "../../../assets";
 import gridStyles from "../asset/asset-grid.module.css";
-import { Utilities, Assets } from "../../../assets";
 import {
   ChangeEvent,
   ChangeEventHandler,
   MouseEventHandler,
   useContext,
   useState,
+  useEffect
 } from "react";
 import { format } from "date-fns";
 import zipDownloadUtils from "../../../utils/download";
@@ -28,6 +29,8 @@ import {
   FAILED_TO_UPDATE_COLLECTION_NAME,
   COLLECTION_NAME_UPDATED,
 } from "../../../constants/messages";
+import RenameModal from '../../common/modals/rename-modal'
+import update from "immutability-helper";
 
 const FolderListItem = ({
   index,
@@ -69,6 +72,12 @@ const FolderListItem = ({
   const [collectionName, setCollectionName] = useState(name);
   const [isEditing, setIsEditing] = useState(false);
 
+  const [folderRenameModalOpen, setFolderRenameModalOpen] = useState(false);
+
+  useEffect(() => {
+    setCollectionName(name);
+  }, [name]);
+
   const downloadFoldercontents = async () => {
     // const { data } = await folderApi.getInfoToDownloadFolder(id)
     // // Get full assets url, because currently, it just get maximum 4 real url in thumbnail
@@ -106,11 +115,13 @@ const FolderListItem = ({
   const getSortAttributeClassName = (attribute) =>
     sortAttribute.replace("-", "") === attribute && styles["active"];
 
-    const setSortAttribute = (attribute) => {
+  const setSortAttribute = (attribute) => {
     if (attribute === sortAttribute) {
       setCurrentSortAttribute("-" + attribute);
     } else {
-      setCurrentSortAttribute(sortAttribute.startsWith("-") ? attribute : "-" + attribute);
+      setCurrentSortAttribute(
+        sortAttribute.startsWith("-") ? attribute : "-" + attribute
+      );
     }
   };
 
@@ -158,43 +169,72 @@ const FolderListItem = ({
     setIsEditing(true);
   };
 
+  const confirmFolderRename = async (newValue) => {
+    try {
+      await folderApi.updateFolder(id, { name: newValue });
+      const modFolderIndex = folders.findIndex((folder) => folder.id === id);
+
+      setFolders(
+        update(folders, {
+          [modFolderIndex]: {
+            name: { $set: newValue },
+          },
+        })
+      );
+
+      toastUtils.success("Collection name updated");
+    } catch (err) {
+      console.log(err);
+      toastUtils.error("Could not update collection name");
+    }
+  };
+
+
   return (
     <>
       <div className={styles.list}>
         {index === 0 && (
           <div className={styles.header}>
-            <h4 onClick={() => setSortAttribute("folder.name")}>
-              Name
-              <IconClickable
-                src={arrowIcon}
-                additionalClass={`${
-                  styles["sort-icon"]
-                } ${getSortAttributeClassName("folder.name")}`}
-              />
-            </h4>
-            <h4 onClick={() => setSortAttribute("folder.length")}>
-              Assets
-              <IconClickable
-                src={arrowIcon}
-                additionalClass={`${
-                  styles["sort-icon"]
-                } ${getSortAttributeClassName("folder.length")}`}
-              />
-            </h4>
-            <h4 onClick={() => setSortAttribute("folder.created-at")}>
-              Created At
-              <IconClickable
-                src={arrowIcon}
-                additionalClass={`${
-                  styles["sort-icon"]
-                } ${getSortAttributeClassName("folder.created-at")}`}
-              />
-            </h4>
-            <h4></h4>
+            <div className={styles["headers-content"]}>
+              <h4 onClick={() => setSortAttribute("folder.name")}>
+                Name
+                <IconClickable
+                  src={arrowIcon}
+                  additionalClass={`${
+                    styles["sort-icon"]
+                  } ${getSortAttributeClassName("folder.name")}`}
+                />
+              </h4>
+              <h4></h4>
+              <h4 onClick={() => setSortAttribute("folder.length")}>
+                Assets
+                <IconClickable
+                  src={arrowIcon}
+                  additionalClass={`${
+                    styles["sort-icon"]
+                  } ${getSortAttributeClassName("folder.length")}`}
+                />
+              </h4>
+              <h4 onClick={() => setSortAttribute("folder.created-at")}>
+                Create Date
+                <IconClickable
+                  src={arrowIcon}
+                  additionalClass={`${
+                    styles["sort-icon"]
+                  } ${getSortAttributeClassName("folder.created-at")}`}
+                />
+              </h4>
+            </div>
           </div>
         )}
-        <div className={styles.item}>
+        <div
+          className={`${styles.item} ${
+            isSelected ? styles["item--selected"] : ""
+          }`}
+          onClick={toggleSelected}
+        >
           <div
+            style={{ display: "none" }}
             className={`${styles["selectable-wrapper"]} ${
               isSelected && styles["selected-wrapper"]
             }`}
@@ -230,14 +270,33 @@ const FolderListItem = ({
             ) : (
               <span
                 id="editable-preview"
-                className={`normal-text ${gridStyles["editable-preview"]}`}
+                className={`normal-text ${styles.textEllipse} ${gridStyles["editable-preview"]}`}
                 onClick={handleOnFocus}
               >
                 {collectionName}
               </span>
             )}
           </div>
-
+          <div className={`${styles.field_name} ${styles.actions}`}>
+            <img id="edit-icon" className={styles.edit} src={AssetOps.editGray} alt="edit" onClick={(e) => {e.stopPropagation(); setFolderRenameModalOpen(true)}} />
+            {!isLoading && (
+              <div>
+                <FolderOptions
+                  activeFolderId={id}
+                  downloadFoldercontents={downloadFoldercontents}
+                  shareAssets={shareAssets}
+                  setDeleteOpen={setDeleteOpen}
+                  copyShareLink={copyShareLink}
+                  copyEnabled={copyEnabled}
+                  changeThumbnail={changeThumbnail}
+                  deleteThumbnail={deleteThumbnail}
+                  thumbnailPath={thumbnailPath || thumbnailExtension}
+                  thumbnails={thumbnails}
+                  activeView={activeView}
+                />
+              </div>
+            )}
+          </div>
           <div
             className={
               !isNameEditable
@@ -248,26 +307,13 @@ const FolderListItem = ({
           >
             {!isLoading && `${assetsCount} Assets`}
           </div>
-          <div className={`${styles.field_name} ${isLoading && "loadable"}`}>
+          <div
+            className={`${styles.field_name} ${isLoading && "loadable"} ${
+              styles["date-created"]
+            }`}
+          >
             {format(new Date(createdAt), dateFormat)}
           </div>
-          {!isLoading && (
-            <div>
-              <FolderOptions
-              activeFolderId={id}
-                downloadFoldercontents={downloadFoldercontents}
-                shareAssets={shareAssets}
-                setDeleteOpen={setDeleteOpen}
-                copyShareLink={copyShareLink}
-                copyEnabled={copyEnabled}
-                changeThumbnail={changeThumbnail}
-                deleteThumbnail={deleteThumbnail}
-                thumbnailPath={thumbnailPath || thumbnailExtension}
-                thumbnails={thumbnails}
-                activeView={activeView}
-              />
-            </div>
-          )}
         </div>
       </div>
       <ConfirmModal
@@ -280,7 +326,17 @@ const FolderListItem = ({
         message={"Are you sure you want to delete this folder?"}
         modalIsOpen={deleteOpen}
       />
+      <RenameModal
+        closeModal={() => setFolderRenameModalOpen(false)}
+        modalIsOpen={folderRenameModalOpen}
+        renameConfirm={confirmFolderRename}
+        type={"Folder"}
+        initialValue={
+          name
+        }
+      />
     </>
+    
   );
 };
 

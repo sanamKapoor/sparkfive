@@ -1085,7 +1085,8 @@ export default ({ getAssets }) => {
         closeModal={closeModalAndClearOpAsset}
         confirmAction={archiveAssets}
         confirmText={"Archive"}
-        message={`Archive ${operationLength} item(s)?`}
+        message={`Archive ${operationLength} asset(s)?`}
+        subText="Archiving a asset removes it from view/searches but allows you to restore it at anytime. "
       />
       <ConfirmModal
         modalIsOpen={activeOperation === "unarchive"}
@@ -1099,7 +1100,8 @@ export default ({ getAssets }) => {
         closeModal={closeModalAndClearOpAsset}
         confirmAction={deleteSelectedAssets}
         confirmText={"Delete"}
-        message={`Delete ${operationLength} item(s)?`}
+        message={`Delete ${operationLength} asset(s)?`}
+        subText="Are you sure you want to delete these assets?"
       />
       <ConfirmModal
         modalIsOpen={activeOperation === "remove_item"}
@@ -1112,15 +1114,17 @@ export default ({ getAssets }) => {
         modalIsOpen={activeOperation === "generate_thumbnails"}
         closeModal={closeModalAndClearOpAsset}
         confirmAction={generateAssetsThumbnails}
-        confirmText={"Recreate Thumbnail"}
-        message={`Recreate thumbnails for ${operationLength} asset(s)`}
+        confirmText={"Recreate"}
+        message={`Recreate ${operationLength} thumbnail(s)`}
+        subText="Recreate the thumbnail preview for all selected assets"
       />
       <ConfirmModal
         modalIsOpen={activeOperation === "update"}
         closeModal={closeModalAndClearOpAsset}
         confirmAction={updateAssetStatus}
         confirmText={"Delete"}
-        message={`Delete ${operationLength} item(s)?`}
+        message={`Delete ${operationLength} asset(s)?`}
+        subText="Are you sure you want to delete these assets?"
       />
       <ConfirmModal
         modalIsOpen={activeOperation === "recover"}

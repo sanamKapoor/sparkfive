@@ -1,5 +1,5 @@
 import styles from './asset-addition.module.css'
-import { Assets } from '../../../assets'
+import { Assets, AssetOps } from '../../../assets'
 import { AssetContext } from '../../../context'
 import { getFoldersFromUploads } from '../../../utils/asset'
 import toastUtils from '../../../utils/toast'
@@ -653,24 +653,24 @@ const AssetAddition = ({
 		},
 		{
 			id: 'collection',
-			label: 'Add Collection',
+			label: 'New Collection',
 			text: 'Organized Files',
 			onClick: () => setActiveModal('folder'),
-			icon: Assets.folder
+			icon: AssetOps.newCollection
 		},
 		{
 			id: 'file',
-			label: 'Upload',
+			label: 'Upload Files',
 			text: 'png, jpg, mp4 and more',
 			onClick: () => fileBrowserRef.current.click(),
-			icon: Assets.file
+			icon: AssetOps.uploadFiles
 		},
 		{
 			id: 'folder',
-			label: 'Upload',
+			label: 'Upload Folder',
 			text: 'folder',
 			onClick: () => folderBrowserRef.current.click(),
-			icon: Assets.folder
+			icon: AssetOps.uploadFolder
 		},
 		{
 			id: 'dropbox',
@@ -817,7 +817,6 @@ const AssetAddition = ({
 					onClick={option.onClick}>
 					<IconClickable src={option.icon} additionalClass={styles.icon} />
 					<div className={styles['option-label']}>{option.label}</div>
-					<div className={styles['option-text']}>{option.text}</div>
 				</span>
 			)
 		}

@@ -28,6 +28,9 @@ import selectOptions from '../../../utils/select-options'
 import { ASSET_UPLOAD_APPROVAL, ASSET_ACCESS } from '../../../constants/permissions'
 import NoPermissionNotice from "../../common/misc/no-permission-notice";
 import DetailOverlay from "../../common/asset/detail-overlay";
+import React from 'react'
+import AssetHeaderOps from '../../common/asset/asset-header-ops'
+import deletedAssets from '../../common/custom-settings/deleted-assets'
 
 const AssetsLibrary = () => {
 
@@ -65,9 +68,7 @@ const AssetsLibrary = () => {
     setDetailOverlayId
   } = useContext(AssetContext)
 
-  const [top, setTop] = useState('calc(55px + 8rem)')
-
-  const {advancedConfig, hasPermission} = useContext(UserContext)
+  const { advancedConfig, hasPermission } = useContext(UserContext)
 
   const [activeMode, setActiveMode] = useState('assets')
 
@@ -174,7 +175,7 @@ const AssetsLibrary = () => {
 
 
   useEffect(() => {
-    if(hasPermission([ASSET_ACCESS])){
+    if (hasPermission([ASSET_ACCESS])) {
       // Assets are under preparing (for query etc)
       if (preparingAssets.current) {
         // setActivePageMode('library')
@@ -191,6 +192,7 @@ const AssetsLibrary = () => {
         setActivePageMode('library')
         if (activeSortFilter.mainFilter === 'folders') {
           setActiveMode('folders')
+          setActiveFolder('');
           getFolders()
         } else {
           setActiveMode('assets')
@@ -250,7 +252,7 @@ const AssetsLibrary = () => {
       defaultTab = params.mainFilter
     }
 
-    let sort = {...activeSortFilter.sort}
+    let sort = { ...activeSortFilter.sort }
     if (defaultTab === 'folders' && !params.folderId) {
       sort = advancedConfig.collectionSortView === 'alphabetical' ? selectOptions.sort[3] : selectOptions.sort[1]
     } else {
@@ -418,7 +420,7 @@ const AssetsLibrary = () => {
   }
 
   const onFilesDataGet = async (files) => {
-    if(!hasPermission([ASSET_UPLOAD_APPROVAL])){
+    if (!hasPermission([ASSET_UPLOAD_APPROVAL])) {
       const currentDataClone = [...assets]
       const currenFolderClone = [...folders]
       try {
@@ -449,8 +451,8 @@ const AssetsLibrary = () => {
           if (file.originalFile.path.includes('/')) {
             dragDropFolderUpload = true;
             fileToUpload = new File([file.originalFile.slice(0, file.originalFile.size, file.originalFile.type)],
-                file.originalFile.path.substring(1, file.originalFile.path.length)
-                , { type: file.originalFile.type, lastModified: (file.originalFile.lastModifiedDate || new Date(file.originalFile.lastModified)) })
+              file.originalFile.path.substring(1, file.originalFile.path.length)
+              , { type: file.originalFile.type, lastModified: (file.originalFile.lastModifiedDate || new Date(file.originalFile.lastModified)) })
           } else {
             fileToUpload.path = null;
           }
@@ -563,8 +565,8 @@ const AssetsLibrary = () => {
         setAddedIds([])
       }
       setPlaceHolders('folder', replace)
-      const {field, order} = activeSortFilter.sort
-      const queryParams = { page: replace ? 1 : nextPage,  sortField: field, sortOrder: order}
+      const { field, order } = activeSortFilter.sort
+      const queryParams = { page: replace ? 1 : nextPage, sortField: field, sortOrder: order }
 
       if (!replace && addedIds.length > 0) {
         queryParams.excludeIds = addedIds.join(',')
@@ -577,7 +579,7 @@ const AssetsLibrary = () => {
 
       let assetList = { ...data, results: data.results }
       if (lastUploadedFolder && activeSortFilter.mainFilter === "folders" && activeSortFilter.sort.value === "alphabetical") {
-        const lastFolder = {...lastUploadedFolder}
+        const lastFolder = { ...lastUploadedFolder }
         assetList.results.unshift(lastFolder)
       }
 
@@ -634,7 +636,7 @@ const AssetsLibrary = () => {
     //   // filterFolders: [], // Open this comment to reset filter folders
     //   mainFilter: 'folders'
     // })
-    updateSortFilterByAdvConfig({mainFilter: 'folders'})
+    updateSortFilterByAdvConfig({ mainFilter: 'folders' })
   }
 
   const selectedAssets = assets.filter(asset => asset.isSelected)
@@ -650,7 +652,7 @@ const AssetsLibrary = () => {
     // })
     // router.replace("/main/assets") // Open this comment to reset query string url
     setActiveFolder(id)
-    updateSortFilterByAdvConfig({folderId: id})
+    updateSortFilterByAdvConfig({ folderId: id })
 
   }
 
@@ -696,32 +698,6 @@ const AssetsLibrary = () => {
     }
   }
 
-  const onChangeWidth = () => {
-    let remValue = '8rem'
-    if(window.innerWidth <= 900){
-      remValue = '7rem + 1px'
-    }
-
-    let el = document.getElementById('top-bar');
-    let header = document.getElementById('main-header');
-    let subHeader = document.getElementById('sub-header');
-
-    if(el){
-      let style = getComputedStyle(el);
-
-      const headerTop = (document.getElementById('top-bar')?.offsetHeight || 55)
-      setTop(`calc(${headerTop}px + ${header?.clientHeight || 0}px + ${remValue} - ${style.paddingBottom} - ${style.paddingTop})`)
-    }
-
-  }
-
-  useEffect(()=>{
-    onChangeWidth()
-
-    window.addEventListener('resize', onChangeWidth);
-
-    return () => window.removeEventListener("resize", onChangeWidth);
-  },[])
 
   useEffect(() => {
     if (selectedAllAssets) {
@@ -735,67 +711,101 @@ const AssetsLibrary = () => {
 
   return (
     <>
-      <AssetSubheader
-        activeFolder={activeFolder}
-        getFolders={getFolders}
-        mode={activeMode}
-        amountSelected={activeMode === 'assets' ? selectedAssets.length : selectedFolders.length}
-        activeFolderData={activeFolder && folders.find(folder => folder.id === activeFolder)}
-        backToFolders={backToFolders}
-        setRenameModalOpen={setRenameModalOpen}
-        activeSortFilter={activeSortFilter}
-      />
-      {(hasPermission([ASSET_ACCESS])  || hasPermission([ASSET_UPLOAD_APPROVAL]))?
-          <>
-            <main className={`${styles.container}`}>
-              {advancedConfig.set && hasPermission([ASSET_ACCESS]) && <TopBar
+      {(activeMode === 'assets' ? selectedAssets.length : selectedFolders.length) > 0 &&
+        <AssetHeaderOps
+          isUnarchive={activeSortFilter.mainFilter === 'archived'}
+          isFolder={activeMode === 'folders'}
+          deletedAssets={false}
+        />
+      }
+      {(hasPermission([ASSET_ACCESS]) || hasPermission([ASSET_UPLOAD_APPROVAL])) ?
+        <>
+          <main className={`${styles.container}`}>
+            <div className='position-relative'>
+              <div className={styles["search-mobile"]}>
+                <SearchOverlay
+                  closeOverlay={closeSearchOverlay}
+                  operationsEnabled={true}
+                  activeFolder={activeFolder}
+                  onCloseDetailOverlay={(assetData) => {
+                    closeSearchOverlay()
+                    // setActiveSearchOverlay(false)
+                    setDetailOverlayId(undefined)
+                    setCurrentViewAsset(assetData)
+                  }}
+                  isFolder={activeMode === 'folders'}
+                />
+              </div>
+              {advancedConfig.set && hasPermission([ASSET_ACCESS]) &&
+                <TopBar
+                  activeFolder={activeFolder}
+                  getFolders={getFolders}
+                  mode={activeMode}
                   activeSortFilter={activeSortFilter}
                   setActiveSortFilter={setActiveSortFilter}
                   setActiveView={setActiveView}
-                  activeFolder={activeFolder}
+                  activeView={activeView}
                   setActiveSearchOverlay={() => { selectAllAssets(false); setActiveSearchOverlay(true) }}
                   selectAll={selectAll}
                   setOpenFilter={setOpenFilter}
                   openFilter={openFilter}
                   deletedAssets={false} />
               }
-              <div className={`${openFilter && styles['col-wrapper']} ${styles['grid-wrapper']}`} style={{marginTop: top}}>
-                <DropzoneProvider>
-                  {advancedConfig.set && <AssetGrid
-                      activeFolder={activeFolder}
-                      getFolders={getFolders}
-                      activeView={activeView}
-                      activeSortFilter={activeSortFilter}
-                      onFilesDataGet={onFilesDataGet}
-                      toggleSelected={toggleSelected}
-                      mode={activeMode}
-                      viewFolder={viewFolder}
-                      deleteFolder={deleteFolder}
-                      loadMore={loadMore}
-                      openFilter={openFilter}
-                      onCloseDetailOverlay={(assetData)=>{
-                        setDetailOverlayId(undefined)
-                        setCurrentViewAsset(assetData)
-                      }}
+              <div className={styles["search-desktop"]}>
+                {activeSearchOverlay &&
+                  <SearchOverlay
+                    closeOverlay={closeSearchOverlay}
+                    operationsEnabled={true}
+                    activeFolder={activeFolder}
+                    onCloseDetailOverlay={(assetData) => {
+                      closeSearchOverlay()
+                      // setActiveSearchOverlay(false)
+                      setDetailOverlayId(undefined)
+                      setCurrentViewAsset(assetData)
+                    }}
+                    isFolder={activeMode === 'folders'}
                   />
-                  }
-                </DropzoneProvider>
-                {openFilter &&
-                    <FilterContainer
-                        clearFilters={clearFilters}
-                        openFilter={openFilter}
-                        setOpenFilter={setOpenFilter}
-                        activeSortFilter={activeSortFilter}
-                        setActiveSortFilter={setActiveSortFilter}
-                        isFolder={activeSortFilter.mainFilter === 'folders'}
-                    />
                 }
               </div>
-            </main>
-            <AssetOps />
-          </>
-          :
-          <NoPermissionNotice />
+
+            </div>
+            <div className={`${openFilter && styles['col-wrapper']} ${styles['grid-wrapper']}`}>
+              <DropzoneProvider>
+                {advancedConfig.set && <AssetGrid
+                  activeFolder={activeFolder}
+                  getFolders={getFolders}
+                  activeView={activeView}
+                  activeSortFilter={activeSortFilter}
+                  onFilesDataGet={onFilesDataGet}
+                  toggleSelected={toggleSelected}
+                  mode={activeMode}
+                  viewFolder={viewFolder}
+                  deleteFolder={deleteFolder}
+                  loadMore={loadMore}
+                  openFilter={openFilter}
+                  onCloseDetailOverlay={(assetData) => {
+                    setDetailOverlayId(undefined)
+                    setCurrentViewAsset(assetData)
+                  }}
+                />
+                }
+              </DropzoneProvider>
+              {openFilter &&
+                <FilterContainer
+                  clearFilters={clearFilters}
+                  openFilter={openFilter}
+                  setOpenFilter={setOpenFilter}
+                  activeSortFilter={activeSortFilter}
+                  setActiveSortFilter={setActiveSortFilter}
+                  isFolder={activeSortFilter.mainFilter === 'folders'}
+                />
+              }
+            </div>
+          </main>
+          <AssetOps />
+        </>
+        :
+        <NoPermissionNotice />
       }
 
       <RenameModal
@@ -805,32 +815,20 @@ const AssetsLibrary = () => {
         type={'Folder'}
         initialValue={activeFolder && folders.find(folder => folder.id === activeFolder)?.name}
       />
-      {activeSearchOverlay &&
-        <SearchOverlay
-          closeOverlay={closeSearchOverlay}
-          operationsEnabled={true}
-          activeFolder={activeFolder}
-          onCloseDetailOverlay={(assetData)=>{
-            closeSearchOverlay()
-            // setActiveSearchOverlay(false)
-            setDetailOverlayId(undefined)
-            setCurrentViewAsset(assetData)
-          }}
-        />
-      }
+
       {uploadDetailOverlay && <UploadStatusOverlayAssets closeOverlay={() => { setUploadDetailOverlay(false) }} />}
 
       {currentViewAsset && <DetailOverlay
-          initiaParams={{ side: "detail" }}
-          asset={currentViewAsset.asset}
-          realUrl={currentViewAsset?.realUrl}
-          thumbailUrl={currentViewAsset?.thumbailUrl}
-          isShare={false}
-          closeOverlay={(assetData) => {
-            setDetailOverlayId(undefined)
-            setCurrentViewAsset(assetData)
-          }}
-          outsideDetailOverlay={true}
+        initiaParams={{ side: "detail" }}
+        asset={currentViewAsset.asset}
+        realUrl={currentViewAsset?.realUrl}
+        thumbailUrl={currentViewAsset?.thumbailUrl}
+        isShare={false}
+        closeOverlay={(assetData) => {
+          setDetailOverlayId(undefined)
+          setCurrentViewAsset(assetData)
+        }}
+        outsideDetailOverlay={true}
       />}
     </>
   )

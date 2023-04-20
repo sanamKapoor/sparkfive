@@ -1,0 +1,17 @@
+.container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--color-sec-text);
+    font-size: 12px;
+    font-weight: 300;
+    margin-bottom: 16px;
+}
+
+.link {
+    cursor: pointer;
+}
+
+.current {
+    font-weight: 400;
+}

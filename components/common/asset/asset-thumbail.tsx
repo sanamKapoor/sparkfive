@@ -65,7 +65,7 @@ const AssetThumbail = ({
   infoWrapperClass = "",
   textWrapperClass = "",
   customIconComponent = <></>,
-  onDisassociate = () => {},
+  onDisassociate = () => { },
   detailOverlay = true,
   onCloseDetailOverlay = (asset) => {},
   isThumbnailNameEditable = false,
@@ -314,6 +314,7 @@ const AssetThumbail = ({
                   />
                 )}
               </div>
+              {/* </div> */}
             </div>
 
             {customIconComponent}
