@@ -72,6 +72,8 @@ const AssetThumbail = ({
     useState(DEFAULT_DETAIL_PROPS);
   const { detailOverlayId, assets, setAssets } = useContext(AssetContext);
 
+  const isAssetACopy = asset.name.endsWith(' - COPY');
+
   const assetName = removeExtension(asset.name);
 
   const [thumbnailName, setThumbnailName] = useState(assetName);
@@ -125,7 +127,7 @@ const AssetThumbail = ({
       try {
         const fileName = thumbnailName + "." + asset.extension;
         const data = await assetApi.updateAsset(asset.id, {
-          updateData: { name: fileName },
+          updateData: { name: isAssetACopy ? fileName + " - COPY" : fileName},
           associations: {},
         });
 
@@ -137,7 +139,7 @@ const AssetThumbail = ({
                   ...item,
                   asset: {
                     ...item.asset,
-                    name: fileName,
+                    name: isAssetACopy ? fileName + " - COPY" : fileName,
                   },
                 };
               } else {
@@ -254,7 +256,7 @@ const AssetThumbail = ({
                         : `${gridStyles["editable-preview"]} ${gridStyles["non-editable-preview"]}`
                     }
                   >
-                    {thumbnailName}.{asset.extension}
+                    {thumbnailName}.{asset.extension}{isAssetACopy && ` - COPY`}
                   </span>
                 </div>
               )}
