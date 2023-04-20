@@ -19,7 +19,7 @@ import AssetThumbail from "../../common/asset/asset-thumbail";
 const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEnabled = false, importAssets = () => { }, sharePath = '', activeFolder = '', onCloseDetailOverlay = (assetData) => {} }) => {
 
   const { assets, setAssets, setActiveOperation, setOperationAsset, setPlaceHolders, nextPage, selectAllAssets, selectedAllAssets, totalAssets } = useContext(AssetContext)
-  const { term, setSearchTerm } = useContext(FilterContext)
+  const { term, setSearchTerm, setSearchFilterParams } = useContext(FilterContext)
 
   const [activeView, setActiveView] = useState('list')
   const [filterParams, setFilterParams] = useState({})
@@ -35,6 +35,7 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
       setPlaceHolders('asset', replace)
       if (Object.keys(_filterParams).length > 0) {
         setFilterParams(_filterParams)
+        setSearchFilterParams(_filterParams);
       }
       const params: any = { term: inputTerm, page: replace ? 1 : nextPage, sharePath, ..._filterParams }
       // search from inside collection
