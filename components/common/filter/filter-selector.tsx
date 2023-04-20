@@ -25,7 +25,6 @@ const FilterSelector = ({
     scrollBottomAfterSearch = false, // When typing in search input, scrolling down to bottom of container to prevent list is hidden
     noneOption = false // Show none option or not
 }) => {
-
     const { activeSortFilter } = useContext(FilterContext)
     const [internalFilters, setInternalFilters] = useState([])
 

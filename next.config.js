@@ -46,5 +46,3 @@ module.exports = withSentryConfig(withImages({
     SENTRY_ENV: process.env.SENTRY_ENV || "dev",
   },
 }), sentryWebpackPluginOptions);
-
-
