@@ -29,6 +29,9 @@ import {
   ASSET_NAME_UPDATED,
 } from "../../../constants/messages";
 
+import HoverVideoPlayer from 'react-hover-video-player';
+import Spinner from "../spinners/spinner";
+
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
 
 const AssetThumbail = ({
@@ -38,6 +41,7 @@ const AssetThumbail = ({
   asset,
   thumbailUrl,
   realUrl,
+  previewUrl,
   isUploading,
   showAssetOption = true,
   showViewButtonOnly = false,
@@ -171,20 +175,39 @@ const AssetThumbail = ({
               <p className={styles.uploading}>Uploading...</p>
             </>
           )}
-          {thumbailUrl ? (
-            <AssetImg
-              assetImg={thumbailUrl}
-              type={asset.type}
-              name={asset.name}
-              opaque={isUploading}
-            />
+          {asset.type !== "video" ? (
+            thumbailUrl ? (
+              <AssetImg
+                assetImg={thumbailUrl}
+                type={asset.type}
+                name={asset.name}
+                opaque={isUploading}
+              />
+            ) : (
+              <AssetIcon extension={asset.extension} />
+            )
           ) : (
-            <AssetIcon extension={asset.extension} />
+            <HoverVideoPlayer
+              controls
+              className={styles["hover-video-player-wrapper"]}
+              videoClassName={styles["video-style"]}
+              videoSrc={previewUrl ?? realUrl}
+              pausedOverlay={
+                <AssetImg
+                assetImg={thumbailUrl}
+                type={asset.type}
+                name={asset.name}
+                opaque={isUploading}
+                imgClass={styles['video-thumbnail']}
+              />
+              }
+              loadingOverlay={
+                <div className={styles["loading-overlay"]}>
+                  <Spinner />
+                </div>
+              }
+            />
           )}
-          {/* {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} opaque={isUploading} />}
-          {asset.type === 'video' && <AssetVideo assetImg={thumbailUrl} asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} />}
-          {asset.type === 'application' && <AssetApplication assetImg={thumbailUrl} extension={asset.extension} />}
-          {asset.type === 'text' && <AssetText assetImg={thumbailUrl} extension={asset.extension} />} */}
           {!isUploading &&
             !isLoading &&
             (showAssetOption || showViewButtonOnly) && (
