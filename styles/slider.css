@@ -3,7 +3,7 @@
 }
 .input-range__label-container {
     color: var(--color-prim-navy);
-    font-family: "Montserrat", sans-serif;
+    font-family: "Noto Sans", sans-serif;
     font-size: 13px;
 }
 .input-range__label {

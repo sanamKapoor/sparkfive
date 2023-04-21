@@ -52,7 +52,7 @@
   padding-left: calc(1px +  0.54em) !important;
 }
 .react-time-picker__inputGroup__amPm {
-  font-family: "Montserrat", sans-serif;
+  font-family: "Noto Sans", sans-serif;
   color: var(--color-prim-navy);
   font-weight: 500;
   -moz-appearance: menulist;

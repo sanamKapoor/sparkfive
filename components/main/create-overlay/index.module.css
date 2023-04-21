@@ -6,7 +6,7 @@
 .types {
   display: flex;
   justify-content: center;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Noto Sans", sans-serif;
   font-weight: 500;
   flex-wrap: wrap;
 }

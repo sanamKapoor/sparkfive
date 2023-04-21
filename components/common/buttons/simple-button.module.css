@@ -1,7 +1,7 @@
 .container {
   border-radius: 50%;
-  height: 43px;
-  width: 43px;
+  height: 28px;
+  width: 28px;
   font-size: 35px;
   /* max-width: 250px; */
   cursor: pointer;
@@ -19,4 +19,9 @@
 .container:disabled {
   background-color: var(--color-prim-turquoise-hover);
   cursor: default;
+}
+
+.container span {
+  font-size: 24px;
+  font-weight: 500;
 }

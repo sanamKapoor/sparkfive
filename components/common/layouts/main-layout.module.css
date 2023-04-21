@@ -7,12 +7,15 @@
   left: 0;
   z-index: 1500;
   width: 100%;
+  height: 81px;
+  display: flex;
+  align-items: center;
 }
 
 .logo-img {
-  height: 48px;
+  height: 40px;
   width: auto;
-  margin-right: 48px;
+  margin-right: 40px;
   cursor: pointer;
 }
 
@@ -51,10 +54,6 @@
   top: 3rem;
 }
 
-.profile {
-  margin-right: 10px;
-}
-
 .hamburger {
   display: none;
   color: white;
@@ -75,30 +74,35 @@
   right: 1rem;
 }
 
-@media screen and (max-width: 1000px) {
-  .hamburger {
-    display: flex;
-  }
 
+
+@media screen and (min-width: 601px) {
+  .mobile-navigation-links {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 600px) {
   .header {
-    padding: 15px 16px;
+    height: 55px;
+    padding: 10px 16px;
   }
 
   .logo-img {
-    margin-right: 20px;
+    width: 35px;
+    height: auto;
+    margin-right: 10px;
   }
 
   .navigation-links {
     display: none;
-    position: absolute;
-    top: 5rem;
-    background-color: var(--color-prim-navy);
-    width: 100%;
-    left: 0;
-    z-index: 1;
   }
 
-  .navigation-links li {
-    padding: 1rem;
+  .mobile-navigation-links {
+    flex: 1 1;
+  }
+  .menu-dropdown {
+    left: 56px;
+    top: 44px;
   }
 }

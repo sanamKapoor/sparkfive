@@ -29,6 +29,9 @@ import {
   ASSET_NAME_UPDATED,
 } from "../../../constants/messages";
 
+import HoverVideoPlayer from 'react-hover-video-player';
+import Spinner from "../spinners/spinner";
+
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
 
 const AssetThumbail = ({
@@ -38,6 +41,7 @@ const AssetThumbail = ({
   asset,
   thumbailUrl,
   realUrl,
+  previewUrl,
   isUploading,
   showAssetOption = true,
   showViewButtonOnly = false,
@@ -61,7 +65,7 @@ const AssetThumbail = ({
   infoWrapperClass = "",
   textWrapperClass = "",
   customIconComponent = <></>,
-  onDisassociate = () => {},
+  onDisassociate = () => { },
   detailOverlay = true,
   onCloseDetailOverlay = (asset) => {},
   isThumbnailNameEditable = false,
@@ -71,6 +75,8 @@ const AssetThumbail = ({
   const [overlayProperties, setOverlayProperties] =
     useState(DEFAULT_DETAIL_PROPS);
   const { detailOverlayId, assets, setAssets } = useContext(AssetContext);
+
+  const isAssetACopy = asset.name.endsWith(' - COPY');
 
   const assetName = removeExtension(asset.name);
 
@@ -125,7 +131,7 @@ const AssetThumbail = ({
       try {
         const fileName = thumbnailName + "." + asset.extension;
         const data = await assetApi.updateAsset(asset.id, {
-          updateData: { name: fileName },
+          updateData: { name: isAssetACopy ? fileName + " - COPY" : fileName},
           associations: {},
         });
 
@@ -137,7 +143,7 @@ const AssetThumbail = ({
                   ...item,
                   asset: {
                     ...item.asset,
-                    name: fileName,
+                    name: isAssetACopy ? fileName + " - COPY" : fileName,
                   },
                 };
               } else {
@@ -169,20 +175,39 @@ const AssetThumbail = ({
               <p className={styles.uploading}>Uploading...</p>
             </>
           )}
-          {thumbailUrl ? (
-            <AssetImg
-              assetImg={thumbailUrl}
-              type={asset.type}
-              name={asset.name}
-              opaque={isUploading}
-            />
+          {asset.type !== "video" ? (
+            thumbailUrl ? (
+              <AssetImg
+                assetImg={thumbailUrl}
+                type={asset.type}
+                name={asset.name}
+                opaque={isUploading}
+              />
+            ) : (
+              <AssetIcon extension={asset.extension} />
+            )
           ) : (
-            <AssetIcon extension={asset.extension} />
+            <HoverVideoPlayer
+              controls
+              className={styles["hover-video-player-wrapper"]}
+              videoClassName={styles["video-style"]}
+              videoSrc={previewUrl ?? realUrl}
+              pausedOverlay={
+                <AssetImg
+                assetImg={thumbailUrl}
+                type={asset.type}
+                name={asset.name}
+                opaque={isUploading}
+                imgClass={styles['video-thumbnail']}
+              />
+              }
+              loadingOverlay={
+                <div className={styles["loading-overlay"]}>
+                  <Spinner />
+                </div>
+              }
+            />
           )}
-          {/* {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} opaque={isUploading} />}
-          {asset.type === 'video' && <AssetVideo assetImg={thumbailUrl} asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} />}
-          {asset.type === 'application' && <AssetApplication assetImg={thumbailUrl} extension={asset.extension} />}
-          {asset.type === 'text' && <AssetText assetImg={thumbailUrl} extension={asset.extension} />} */}
           {!isUploading &&
             !isLoading &&
             (showAssetOption || showViewButtonOnly) && (
@@ -254,7 +279,7 @@ const AssetThumbail = ({
                         : `${gridStyles["editable-preview"]} ${gridStyles["non-editable-preview"]}`
                     }
                   >
-                    {thumbnailName}.{asset.extension}
+                    {thumbnailName}.{asset.extension}{isAssetACopy && ` - COPY`}
                   </span>
                 </div>
               )}
@@ -289,6 +314,7 @@ const AssetThumbail = ({
                   />
                 )}
               </div>
+              {/* </div> */}
             </div>
 
             {customIconComponent}
