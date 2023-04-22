@@ -3,7 +3,7 @@
     justify-content: center;
     position: relative;
     min-height: 60vh;
-    padding: 5rem;
+    padding: 35px 32px;
   }
 
   .list-wrapper{
@@ -13,8 +13,8 @@
 
   .grid-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    grid-gap: 2rem;
+    grid-template-columns: repeat(5, minmax(328px, 1fr));
+    grid-gap: 45px;
   }
 
 .logo{
@@ -26,7 +26,7 @@
 }
 
 .logo-img {
-    height: 48px;
+    height: 40px;
     width: auto;
     margin-right: 48px;
     cursor: pointer;
@@ -34,6 +34,42 @@
 
 .header {
     background-color: var(--color-prim-navy);
-    padding: 30px 32px;
+    padding: 16px 32px;
     display: flex;
+}
+
+@media screen and (max-width: 800px) {
+  .header {
+    height: 90px;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .grid-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(208px, 1fr));
+    grid-gap: 40px;
+  }
+}
+
+
+@media screen and (max-width: 810px) {
+  .grid-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-gap: 20px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .container {
+    padding: 28px;
+  }
+
+  .grid-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    grid-gap: 8px;
+    padding:  0;
+  }
 }

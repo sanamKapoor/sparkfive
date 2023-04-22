@@ -807,8 +807,10 @@ const DetailOverlay = ({
     setAssetDetail({ ...assetDetail, fileAssociations })
   }
 
+  const showSideMenu = isShare ? isMobile ? true : false : true
+
   return (
-    <div className={`app-overlay ${styles.container}`}>
+    <div className={`app-overlay ${styles.container} ${isShare ? styles.share : ''}`}>
       {assetDetail && (
         <section id={"detail-overlay"} className={styles.content}>
           <div className={styles["top-wrapper"]}>
@@ -830,26 +832,28 @@ const DetailOverlay = ({
                     />
                   )}
                 </div>
-                <div className={styles['versions-related-wrapper']}>
-                  {hasPermission(['admin', 'super_admin']) && versionCount > 0 && (
+                {!isShare &&
+                  <div className={styles['versions-related-wrapper']}>
+                    {hasPermission(['admin', 'super_admin']) && versionCount > 0 && (
+                      <div
+                        className={styles["versions-number"]}
+                        onClick={() => {
+                          setMode("detail");
+                          resetValues();
+                          changeActiveSide("versions");
+                        }}
+                      >
+                        {versionCount + 1} versions
+                      </div>
+                    )}
+                    <img src={Utilities.ellipse} />
                     <div
-                      className={styles["versions-number"]}
-                      onClick={() => {
-                        setMode("detail");
-                        resetValues();
-                        changeActiveSide("versions");
-                      }}
+                      className={styles["related-number"]}
                     >
-                      {versionCount + 1} versions
+                      6 Related files
                     </div>
-                  )}
-                  <img src={Utilities.ellipse} />
-                  <div
-                    className={styles["related-number"]}
-                  >
-                    6 Related files
                   </div>
-                </div>
+                }
               </div>
             </div>
             <div className={styles["asset-actions"]}>
@@ -1141,12 +1145,16 @@ const DetailOverlay = ({
             additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"} ${styles.expand
               }`}
           />
-          <div className={`${styles.separator} ${styles.expand}`}></div>
-          <IconClickable
-            src={Utilities.delete}
-            additionalClass={styles["menu-icon"] + ' ' + styles['only-desktop-button']}
-            onClick={openDeleteAsset}
-          />
+          {!isShare &&
+            <>
+              <div className={`${styles.separator} ${styles.expand}`}></div>
+              <IconClickable
+                src={Utilities.delete}
+                additionalClass={styles["menu-icon"] + ' ' + styles['only-desktop-button']}
+                onClick={openDeleteAsset}
+              />
+            </>
+          }
           <div className={styles.separator + ' ' + styles['only-desktop-button']}></div>
           <IconClickable
             src={isMobile ? Utilities.infoGray : Utilities.info}
@@ -1157,92 +1165,97 @@ const DetailOverlay = ({
               changeActiveSide("detail");
             }}
           />
-          <IconClickable
-            src={Utilities.tagGray}
-            additionalClass={styles["menu-icon"] + ' ' + styles['only-mobile-button']}
-            onClick={() => {
-            }}
-          />
-          <IconClickable
-            src={isMobile ? Utilities.commentLight : Utilities.comment}
-            additionalClass={styles["menu-icon"]}
-            onClick={() => {
-              setMode("detail");
-              resetValues();
-              changeActiveSide("comments");
-            }}
-          />
-          {hasPermission(['admin', 'super_admin']) && (
-            <div className={styles['only-mobile-button']}>
-              <AssetAddition
-                folderAdd={false}
-                // versionGroup={assetDetail.versionGroup}
-                triggerUploadComplete={onUserEvent}
+          {!isShare &&
+            <>
+              <IconClickable
+                src={Utilities.tagGray}
+                additionalClass={styles["menu-icon"] + ' ' + styles['only-mobile-button']}
+                onClick={() => {
+                }}
               />
-            </div>
-          )}
-          {shouldRenderCdnTabButton() && (
-            <IconClickable
-              src={Utilities.embedCdn}
-              additionalClass={styles["menu-icon"] + ' ' + styles['only-desktop-button']}
-              onClick={() => {
-                setMode("detail");
-                resetValues();
-                changeActiveSide("cdn");
-              }}
-            />
-          )}
+              <IconClickable
+                src={isMobile ? Utilities.commentLight : Utilities.comment}
+                additionalClass={styles["menu-icon"]}
+                onClick={() => {
+                  setMode("detail");
+                  resetValues();
+                  changeActiveSide("comments");
+                }}
+              />
+              {hasPermission(['admin', 'super_admin']) && (
+                <div className={styles['only-mobile-button']}>
+                  <AssetAddition
+                    folderAdd={false}
+                    // versionGroup={assetDetail.versionGroup}
+                    triggerUploadComplete={onUserEvent}
+                  />
+                </div>
+              )}
+              {shouldRenderCdnTabButton() && (
+                <IconClickable
+                  src={Utilities.embedCdn}
+                  additionalClass={styles["menu-icon"] + ' ' + styles['only-desktop-button']}
+                  onClick={() => {
+                    setMode("detail");
+                    resetValues();
+                    changeActiveSide("cdn");
+                  }}
+                />
+              )}
 
-          {currentAsset.extension !== 'gif' && hasPermission([ASSET_DOWNLOAD]) && <IconClickable
-            src={AssetOps.download}
-            additionalClass={styles["menu-icon"] + ' ' + styles['only-desktop-button']}
-            onClick={() => {
-              if (currentAsset.type === "image" &&
-                isImageType(currentAsset.extension)
-              ) {
-                if (mode !== "resize" && mode !== "crop") {
-                  setMode("resize");
-                }
-                changeActiveSide("detail");
-                resetImageSettings(undefined, undefined);
-              } else {
-                downloadSelectedAssets(currentAsset.id);
-              }
-            }}
-          />}
+              {currentAsset.extension !== 'gif' && hasPermission([ASSET_DOWNLOAD]) && <IconClickable
+                src={AssetOps.download}
+                additionalClass={styles["menu-icon"] + ' ' + styles['only-desktop-button']}
+                onClick={() => {
+                  if (currentAsset.type === "image" &&
+                    isImageType(currentAsset.extension)
+                  ) {
+                    if (mode !== "resize" && mode !== "crop") {
+                      setMode("resize");
+                    }
+                    changeActiveSide("detail");
+                    resetImageSettings(undefined, undefined);
+                  } else {
+                    downloadSelectedAssets(currentAsset.id);
+                  }
+                }}
+              />}
 
-          <IconClickable
-            src={isMobile ? Utilities.relatedLight : Utilities.related}
-            additionalClass={styles["menu-icon"]}
-            onClick={() => {
-              setMode("detail");
-              resetValues();
-              changeActiveSide("related");
-            }}
-          />
-          {hasPermission(['admin', 'super_admin']) && (
-            <IconClickable
-              src={isMobile ? Utilities.notesLight : Utilities.notes}
-              additionalClass={styles["menu-icon"]}
-              onClick={() => {
-                setMode("detail");
-                resetValues();
-                changeActiveSide("notes");
-              }}
-            />
-          )}
+              <IconClickable
+                src={isMobile ? Utilities.relatedLight : Utilities.related}
+                additionalClass={styles["menu-icon"]}
+                onClick={() => {
+                  setMode("detail");
+                  resetValues();
+                  changeActiveSide("related");
+                }}
+              />
+              {hasPermission(['admin', 'super_admin']) && (
+                <IconClickable
+                  src={isMobile ? Utilities.notesLight : Utilities.notes}
+                  additionalClass={styles["menu-icon"]}
+                  onClick={() => {
+                    setMode("detail");
+                    resetValues();
+                    changeActiveSide("notes");
+                  }}
+                />
+              )}
 
-          {hasPermission(['admin', 'super_admin']) && versionCount > 0 && (
-            <IconClickable
-              src={isMobile ? Utilities.versionsLight : Utilities.versions}
-              additionalClass={styles["menu-icon"]}
-              onClick={() => {
-                setMode("detail");
-                resetValues();
-                changeActiveSide("versions");
-              }}
-            />
-          )}
+              {hasPermission(['admin', 'super_admin']) && versionCount > 0 && (
+                <IconClickable
+                  src={isMobile ? Utilities.versionsLight : Utilities.versions}
+                  additionalClass={styles["menu-icon"]}
+                  onClick={() => {
+                    setMode("detail");
+                    resetValues();
+                    changeActiveSide("versions");
+                  }}
+                />
+              )}
+
+            </>
+          }
         </section>
       )}
       <RenameModal

@@ -12,17 +12,18 @@ import IconClickable from '../buttons/icon-clickable'
 import SidePanelBulk from './side-panel-bulk'
 import EditGrid from './edit-grid'
 import SpinnerOverlay from '../spinners/spinner-overlay'
+import BaseModal from '../modals/base'
 
 // Server DO NOT return full custom field slots including empty array, so we will generate empty array here
 // The order of result should be match with order of custom field list
 const mappingCustomFieldData = (list, valueList) => {
 	let rs = []
-	list.map((field)=>{
+	list.map((field) => {
 		let value = valueList.filter(valueField => valueField.id === field.id)
 
-		if(value.length > 0){
+		if (value.length > 0) {
 			rs.push(value[0])
-		}else{
+		} else {
 			let customField = { ...field }
 			customField.values = []
 			rs.push(customField)
@@ -65,7 +66,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 
 	const getCustomFieldsInputData = async () => {
 		try {
-			const { data } = await customFieldsApi.getCustomFields({isAll: 1, sort: 'createdAt,asc'})
+			const { data } = await customFieldsApi.getCustomFields({ isAll: 1, sort: 'createdAt,asc' })
 
 			setInputCustomFields(data)
 
@@ -85,7 +86,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 
 
 		// Default custom field values
-		const updatedMappingCustomFieldData =  mappingCustomFieldData(inputCustomFields, [])
+		const updatedMappingCustomFieldData = mappingCustomFieldData(inputCustomFields, [])
 
 		setAssetCustomFields(update(assetCustomFields, {
 			$set: updatedMappingCustomFieldData
@@ -103,14 +104,14 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 			setFolders(originalInputs.folders)
 
 			// Custom fields
-			if(inputCustomFields.length > 0){
-				const updatedMappingCustomFieldData =  mappingCustomFieldData(inputCustomFields, originalInputs.customs)
+			if (inputCustomFields.length > 0) {
+				const updatedMappingCustomFieldData = mappingCustomFieldData(inputCustomFields, originalInputs.customs)
 
 				setAssetCustomFields(update(assetCustomFields, {
 					$set: updatedMappingCustomFieldData
 				}))
 
-			}else{
+			} else {
 				setAssetCustomFields(originalInputs.customs)
 			}
 		}
@@ -195,7 +196,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 		// Update asset custom field (local)
 		setAssetCustomFields(update(assetCustomFields, {
 			[index]: {
-				values: {$set: data}
+				values: { $set: data }
 			}
 		}))
 
@@ -204,20 +205,19 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 	}
 
 	return (
-		<div className={`app-overlay ${styles.container}`}>
-			{loading && <SpinnerOverlay />}
-			<section className={styles.content}>
+
+		<BaseModal
+			closeModal={handleBackButton}
+			additionalClasses={['visible-block']}
+			modalIsOpen={true}
+			headText={
 				<div className={styles['top-wrapper']}>
-					<div className={styles.back} onClick={handleBackButton}>
-						<IconClickable src={Utilities.back} />
-						<span>Back</span>
-					</div>
 					<div className={styles.name}>
 						<h3>Edit Assets</h3>
-						<div className={styles['asset-actions']}>
-							<Button text={'Select All'} type={'button'} styleType={'secondary'} onClick={selectAll} />
-							<Button text={`Deselect All (${editSelectedAssets.length})`} type={'button'} styleType={'primary'} onClick={deselectAll} />
-						</div>
+					</div>
+					<div className={styles['asset-actions']}>
+						<Button text={'Select All'} type={'button'} styleType={'secondary'} onClick={selectAll} />
+						<Button text={`Deselect All (${editSelectedAssets.length})`} type={'button'} styleType={'primary'} onClick={deselectAll} />
 					</div>
 					<div className={styles.mode}>
 						<p>Mode: </p>
@@ -225,44 +225,53 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 							<IconClickable src={addMode ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
 								additionalClass={styles['select-icon']}
 							/>
-									Add
-								</div>
+							Add
+						</div>
 						<div className={styles.option} onClick={() => setAddMode(false)}>
 							<IconClickable src={!addMode ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
 								additionalClass={styles['select-icon']} />
-									Remove
-								</div>
+							Remove
+						</div>
 					</div>
 				</div>
-				<EditGrid assets={editAssets} toggleSelectedEdit={toggleSelectedEdit} />
-			</section>
-			{sideOpen &&
-				<section className={styles.side}>
-					<SidePanelBulk
-						elementsSelected={editSelectedAssets}
-						onUpdate={getInitialAttributes}
-						assetCampaigns={assetCampaigns}
-						assetProjects={assetProjects}
-						assetTags={assetTags}
-						assetCustomFields={assetCustomFields}
-						assetFolders={assetFolders}
-						originalInputs={originalInputs}
-						setAssetProjects={setAssetProjects}
-						setCampaigns={setCampaigns}
-						setTags={setTags}
-						setCustomFields={onChangeCustomField}
-						setFolders={setFolders}
-						setLoading={setLoading}
-						loading={loading}
-						addMode={addMode}
-					/>
-				</section>
 			}
-			<section className={styles.menu}>
-				<IconClickable src={Utilities.closePanelLight} onClick={() => toggleSideMenu()}
-					additionalClass={`${styles['menu-icon']} ${!sideOpen && 'mirror'}`} />
-			</section>
-		</div >
+			confirmText="Delete"
+			// confirmAction={() => _deleteNote(note)}
+			children={
+				<div>
+					{loading && <SpinnerOverlay />}
+					<section className={styles.content}>
+						<EditGrid assets={editAssets} toggleSelectedEdit={toggleSelectedEdit} />
+					</section>
+					{sideOpen &&
+						<section className={styles.side}>
+							<SidePanelBulk
+								elementsSelected={editSelectedAssets}
+								onUpdate={getInitialAttributes}
+								assetCampaigns={assetCampaigns}
+								assetProjects={assetProjects}
+								assetTags={assetTags}
+								assetCustomFields={assetCustomFields}
+								assetFolders={assetFolders}
+								originalInputs={originalInputs}
+								setAssetProjects={setAssetProjects}
+								setCampaigns={setCampaigns}
+								setTags={setTags}
+								setCustomFields={onChangeCustomField}
+								setFolders={setFolders}
+								setLoading={setLoading}
+								loading={loading}
+								addMode={addMode}
+							/>
+						</section>
+					}
+					<section className={styles.menu}>
+						<IconClickable src={Utilities.closePanelLight} onClick={() => toggleSideMenu()}
+							additionalClass={`${styles['menu-icon']} ${!sideOpen && 'mirror'}`} />
+					</section>
+				</div >
+			}
+		/>
 	)
 }
 

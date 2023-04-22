@@ -53,6 +53,10 @@
   height: 80px;
 }
 
+.share .top-wrapper {
+  justify-content: flex-start;
+}
+
 .top-wrapper .back-name {
   display: flex;
   align-items: center;
@@ -248,6 +252,11 @@
   width: 421px;
 }
 
+.share .side {
+  right: 0;
+  width: 266px;
+}
+
 @media screen and (max-width: 1200px) {
   .container {
     display: flex;
@@ -288,6 +297,10 @@
     border-top: none;
   }
 
+  .share .side {
+    width: 100%;
+  }
+
   .hide-on-mobile{
     display: none;
   }
@@ -324,6 +337,7 @@
     align-items: center;
     gap: 30px;
   }
+  
 
   .menu-icon {
     margin-bottom: 0;

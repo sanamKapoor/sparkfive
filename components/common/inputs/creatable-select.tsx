@@ -127,7 +127,7 @@ const CreatableSelect = ({
       <div className={`secondary-text ${styles.field}`}>{title}</div>
       {selectOneComponent}
       <div className={'normal-text'}>
-        {selectedItems.length > 0 &&
+        {/* {selectedItems.length > 0 && */}
           <>
             <ul className={`tags-list ${styles['tags-list']}`}>
               {(selectedItems || []).map((item, index) => (
@@ -146,7 +146,7 @@ const CreatableSelect = ({
               Show All 21
             </div>
           </>
-        }
+        {/* } */}
         {((!isShare && canAdd && hasPermission([ASSET_EDIT])) || ignorePermission) &&
           <>
             {dropdownIsActive ?

@@ -35,19 +35,17 @@
 }
 
 .top-wrapper {
-    /*position: relative;*/
-
-    position: sticky;
-    top: 0;
     background-color: white;
     z-index: 999;
-    padding-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 15%;
 }
 .top-wrapper .name {
     text-align: center;
 }
 .top-wrapper .name h3 {
-    margin-right: 1rem;
+    margin: 0;
 }
 
 .back {
@@ -65,9 +63,6 @@
 }
 
 .mode {
-  position: absolute;
-  right: 0;
-  top: 50px;
   display: flex;
   align-items: center;
 }
@@ -79,7 +74,8 @@
   }
 }
 .mode p {
-  font-weight: 700;
+  font-weight: 600;
+  font-size: 16px;
   margin-right: 25px;
 }
 .mode .option {
@@ -87,6 +83,8 @@
   display: flex;
   align-items: center;
   cursor: pointer;
+  font-size: 12px;
+  font-weight: 400;
 }
 .mode .option img {
   margin-right: 5px;
@@ -94,10 +92,9 @@
 
 .asset-actions {
     text-align: center;
-}
-.asset-actions button {
-    margin-right: 20px;
-    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
 }
 
 .content {

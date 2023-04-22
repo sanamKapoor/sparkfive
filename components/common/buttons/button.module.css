@@ -106,3 +106,9 @@
 .round-corners{
   border-radius: 50px;
 }
+
+.outlined {
+  color: white;
+  background-color: transparent;
+  border: 1px solid white;
+}
