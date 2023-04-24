@@ -356,9 +356,9 @@ const ShareFolderMain = () => {
                 />
                 {(activeMode === 'assets' ? selectedAssets.length : selectedFolders.length) > 0 &&
                     <AssetHeaderOps
-                    isUnarchive={activeSortFilter.mainFilter === 'archived'}
-                    isFolder={activeMode === 'folders'}
-                    deletedAssets={false}
+                        isUnarchive={activeSortFilter.mainFilter === 'archived'}
+                        isFolder={activeMode === 'folders'}
+                        deletedAssets={false}
                     />
                 }
                 <div className={`${openFilter && styles['col-wrapper']}`} style={{marginTop: top}}>
