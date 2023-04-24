@@ -340,6 +340,7 @@ const ShareFolderMain = () => {
                 <TopBar
                     activeSortFilter={activeSortFilter}
                     setActiveSortFilter={setActiveSortFilter}
+                    activeView={activeView}
                     setActiveView={setActiveView}
                     setActiveSearchOverlay={() => setActiveSearchOverlay(true)}
                     selectAll={selectAll}
