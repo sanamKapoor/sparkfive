@@ -16,6 +16,7 @@ import PasswordOverlay from './password-overlay'
 import AssetGrid from '../common/asset/asset-grid'
 import SearchOverlay from '../main/search-overlay-assets'
 import FilterContainer from '../common/filter/filter-container'
+import AssetHeaderOps from '../common/asset/asset-header-ops'
 
 import selectOptions from '../../utils/select-options'
 import Spinner from "../common/spinners/spinner";
@@ -334,12 +335,16 @@ const ShareFolderMain = () => {
         onChangeWidth()
     },[loading])
 
+    const selectedAssets = assets.filter(asset => asset.isSelected)
+	const selectedFolders = folders.filter(folder => folder.isSelected)
+    
     return (
         <>
             {!loading && <main className={styles.container}>
                 <TopBar
                     activeSortFilter={activeSortFilter}
                     setActiveSortFilter={setActiveSortFilter}
+                    activeView={activeView}
                     setActiveView={setActiveView}
                     setActiveSearchOverlay={() => setActiveSearchOverlay(true)}
                     selectAll={selectAll}
@@ -349,6 +354,13 @@ const ShareFolderMain = () => {
                     singleCollection={!!folderInfo.singleSharedCollectionId}
                     sharedAdvanceConfig={user ? undefined : advancedConfig}
                 />
+                {(activeMode === 'assets' ? selectedAssets.length : selectedFolders.length) > 0 &&
+                    <AssetHeaderOps
+                        isUnarchive={activeSortFilter.mainFilter === 'archived'}
+                        isFolder={activeMode === 'folders'}
+                        deletedAssets={false}
+                    />
+                }
                 <div className={`${openFilter && styles['col-wrapper']}`} style={{marginTop: top}}>
                     <AssetGrid
                         activeFolder={activeFolder}
