@@ -10,3 +10,7 @@
     padding: 0 8px;
     width: fit-content;
 }
+
+.container span {
+    padding: 5px;
+}
