@@ -5,6 +5,7 @@
   min-width: 380px;
   max-height: calc(100vh - 20%);
   overflow-y: auto;
+  overflow-x: hidden;
   position: relative;
   display: flex;
   flex-direction: column;

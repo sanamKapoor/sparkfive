@@ -2,35 +2,34 @@
     display: grid;
     grid-template-areas: "content-asset side";
     grid-template-columns: 1fr 26.5rem;
-    z-index: 3500;
+    z-index: 35000;
+}
+
+.wrapper {
+  display: flex;
 }
 .content {
     background-color: white;
     padding-top: 0;
-    margin-top: 15px;
-    height: 100vh;
+    height: 100%;
     padding-bottom: 15px;
-    overflow-y: auto;
 }
 
 .side {
-    height: 100vh;
     padding-top: 15px;
     padding-bottom: 15px;
-    overflow-y: auto;
+    min-width: 320px;
 }
 .menu {
   display: none;
 }
 
 @media screen and (max-height: 760px) {
-    .container {
-      overflow-y: auto;
-    }
+
     .side, .menu {
       height: 100%;
       padding-top: 15px;
-      padding-bottom: 60px;
+      padding-bottom: 28px;
     }
 }
 
@@ -55,8 +54,8 @@
     align-items: center;
     font-weight: 600;
     width: fit-content;
-    position: absolute;
-    top: 20px;
+    padding-top: 16px;
+    padding-left: 14px;
 }
 .back img {
     margin-right: 0.5rem;
@@ -70,7 +69,10 @@
   .mode {
    position: unset;
    justify-content: center;
-   margin-top: 15px;
+  }
+
+  .top-wrapper {
+    gap: 32px;
   }
 }
 .mode p {
@@ -99,22 +101,21 @@
 
 .content {
     grid-area: content-asset;
-    padding-right: 25px;
-    padding-left: 25px;
 }
 
 .side {
     grid-area: side;
-    border-left: 1px solid var(--color-secondary-border);
-    overflow-y: auto;
+    border-left: 1px solid var(--color-secondary-border);    
 }
 
-@media screen and (max-width: 1100px) {
+@media screen and (max-width: 600px) {
     .container {
       display: flex;
+      top: 55px;
     }
     .content {
       width: 100%;
+      overflow-y: auto;
     }
     .menu {
       grid-area: asset-menu;
@@ -125,7 +126,6 @@
       border-left: 1px solid var(--color-secondary-border);
       padding: 30px 0;
       right: 0;
-      position: absolute;
       width: 60px;
       height: 100%;
   }
@@ -134,13 +134,39 @@
       grid-area: unset;
       position: absolute;
       background-color: white;
-      right: 60px;
+      right: 55px;
+      left: 0;
       border-top: 1px solid var(--color-secondary-border);
       border-bottom: 1px solid var(--color-secondary-border);
       min-height: 50vh;
+      overflow-y: auto;
+      height: 100vh;
+      padding-bottom: 80px;
     }
 
     .top-wrapper {
       margin-right: 60px;
+      gap: 16px;
+      background-color: var(--color-prim-navy);
+      position: fixed;
+      bottom: 0;
+      padding: 10px 20px;
+    }
+
+    .name h3 {
+      display: none;
+    }
+
+    .mode {
+      color: white;
+    }
+
+    .mode p {
+      font-size: 12px;
+      margin-right: 8px;
+    }
+
+    .option {
+      margin-right: 8px;
     }
 }

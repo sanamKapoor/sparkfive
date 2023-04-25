@@ -7,6 +7,7 @@
   cursor: pointer;
   font-size: 12px;
   min-width: 120px;
+  white-space: nowrap;
 }
 
 .submit {
@@ -111,4 +112,11 @@
   color: white;
   background-color: transparent;
   border: 1px solid white;
+}
+
+@media screen and (max-width: 600px) {
+  .container {
+    padding: 0 8px;
+    min-width: fit-content;
+  }
 }
