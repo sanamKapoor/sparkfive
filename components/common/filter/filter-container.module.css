@@ -94,5 +94,21 @@
 @media screen and (max-width: 400px) {
     .container {
         width: 100%;
+        min-width: 100%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .container {
+        top: 90px;
+        z-index: 9999;
+    }
+}
+
+@media screen and (max-width: 1023px) {
+    .container {
+        position: absolute;
+        right: 20px;
+        height: auto;
     }
 }
