@@ -65,10 +65,12 @@ const AssetsLibrary = () => {
     setTotalAssets,
     currentViewAsset,
     setCurrentViewAsset,
-    setDetailOverlayId
+    setDetailOverlayId,
   } = useContext(AssetContext)
 
   const { advancedConfig, hasPermission } = useContext(UserContext)
+
+  const {term, searchFilterParams} = useContext(FilterContext)
 
   const [activeMode, setActiveMode] = useState('assets')
 
@@ -197,12 +199,12 @@ const AssetsLibrary = () => {
         } else {
           setActiveMode('assets')
           setAssets([])
-          getAssets()
+          getAssets();
         }
       }
     }
 
-  }, [activeSortFilter, firstLoaded])
+  }, [activeSortFilter, firstLoaded, term])
 
   useEffect(() => {
     if (firstLoaded && activeFolder !== '') {
@@ -540,6 +542,8 @@ const AssetsLibrary = () => {
           nextPage,
           userFilterObject: activeSortFilter
         }),
+        term,
+        ...searchFilterParams,
         complete,
         ...getAssetsSort(activeSortFilter)
       })
@@ -727,6 +731,8 @@ const AssetsLibrary = () => {
                   closeOverlay={closeSearchOverlay}
                   operationsEnabled={true}
                   activeFolder={activeFolder}
+                  activeMode={activeMode}
+                  setActiveMode={setActiveMode}
                   onCloseDetailOverlay={(assetData) => {
                     closeSearchOverlay()
                     // setActiveSearchOverlay(false)
