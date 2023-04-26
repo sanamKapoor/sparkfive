@@ -121,7 +121,7 @@ const TopBar = ({
   })
 
   const folderData = folders.filter(folder => folder.id === activeFolder)
-
+  console.log('activeFolder inside top bar component: ', activeFolder);
 
   return (
     <section className={styles.container} id={'top-bar'}>

@@ -547,6 +547,8 @@ const AssetsLibrary = () => {
         complete,
         ...getAssetsSort(activeSortFilter)
       })
+
+      console.log('assets data from api: ', assets);
       setAssets({ ...data, results: data.results.map(mapWithToggleSelection) }, replace)
       setFirstLoaded(true)
     } catch (err) {
@@ -556,6 +558,8 @@ const AssetsLibrary = () => {
       setLoadingAssets(false)
     }
   }
+
+  console.log('activeFolder: ', activeFolder);
 
   const getFolders = async (replace = true) => {
     try {
@@ -655,9 +659,9 @@ const AssetsLibrary = () => {
     //   mainFilter: 'folders'
     // })
     // router.replace("/main/assets") // Open this comment to reset query string url
+    console.log("Folder id: ", id);
     setActiveFolder(id)
     updateSortFilterByAdvConfig({ folderId: id })
-
   }
 
   const deleteFolder = async (id) => {
