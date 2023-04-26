@@ -13,8 +13,8 @@ import IconClickable from "../buttons/icon-clickable";
 import DetailOverlay from "./detail-overlay";
 import AssetOptions from "./asset-options";
 import AssetIcon from "./asset-icon";
-import CollectionBadge from '../collection/collection-badge';
-import React from 'react';
+import CollectionBadge from "../collection/collection-badge";
+import React from "react";
 import assetApi from "../../../server-api/asset";
 import toastUtils from "../../../utils/toast";
 import {
@@ -23,7 +23,7 @@ import {
 } from "../../../constants/messages";
 import { AssetContext } from "../../../context";
 
-import RenameModal from '../../common/modals/rename-modal'
+import RenameModal from "../../common/modals/rename-modal";
 
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
 
@@ -60,7 +60,7 @@ const ListItem = ({
   const [overlayProperties, setOverlayProperties] =
     useState(DEFAULT_DETAIL_PROPS);
 
-  const isAssetACopy = asset.name.endsWith(' - COPY');
+  const isAssetACopy = asset.name.endsWith(" - COPY");
   const assetName = removeExtension(asset.name);
 
   const [fileName, setFileName] = useState(assetName);
@@ -112,7 +112,11 @@ const ListItem = ({
     if (fileName && assetName !== fileName) {
       try {
         const data = await assetApi.updateAsset(asset.id, {
-          updateData: { name: isAssetACopy ? fileName + "." + asset.extension + " - COPY" : fileName + "." + asset.extension},
+          updateData: {
+            name: isAssetACopy
+              ? fileName + "." + asset.extension + " - COPY"
+              : fileName + "." + asset.extension,
+          },
           associations: {},
         });
 
@@ -153,7 +157,7 @@ const ListItem = ({
 
   const confirmAssetRename = async (newValue) => {
     try {
-      const activeAsset = assets.find(asst => asst?.asset?.id === asset?.id);
+      const activeAsset = assets.find((asst) => asst?.asset?.id === asset?.id);
 
       const editedName = `${newValue}.${activeAsset?.extension}`;
       await assetApi.updateAsset(asset?.id, {
@@ -177,7 +181,6 @@ const ListItem = ({
       toastUtils.error("Could not update asset name");
     }
   };
-
 
   return (
     <>
@@ -337,7 +340,8 @@ const ListItem = ({
                   className={`${gridStyles["editable-preview"]}`}
                   onClick={handleOnFocus}
                 >
-                  {fileName}.{asset.extension}{isAssetACopy && ` - COPY`}
+                  {fileName}.{asset.extension}
+                  {isAssetACopy && ` - COPY`}
                 </span>
               )}
             </div>
@@ -348,7 +352,10 @@ const ListItem = ({
               className={styles.edit}
               src={AssetOps.editGray}
               alt="edit"
-              onClick={(e) => {e.stopPropagation(); setAssetRenameModalOpen(true);}}
+              onClick={(e) => {
+                e.stopPropagation();
+                setAssetRenameModalOpen(true);
+              }}
             />
             {!isLoading && !isUploading && (
               <div className={styles.options}>
@@ -401,9 +408,11 @@ const ListItem = ({
           </div>
 
           <div className={`${styles.field_name} ${styles.collection}`}>
-            {asset?.folders?.map((folder) => (
-              <CollectionBadge collection={folder?.name} />
-            ))}
+            <div className={`${styles.listBadge}`}>
+              {asset?.folders?.map((folder) => (
+                <CollectionBadge collection={folder?.name} />
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -433,9 +442,7 @@ const ListItem = ({
         modalIsOpen={assetRenameModalOpen}
         renameConfirm={confirmAssetRename}
         type={"Asset"}
-        initialValue={
-         assetName
-        }
+        initialValue={assetName}
       />
     </>
   );
