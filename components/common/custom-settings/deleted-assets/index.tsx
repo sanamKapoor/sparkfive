@@ -449,6 +449,7 @@ const DeletedAssetsLibrary = () => {
   const mapWithToggleSelection = asset => ({ ...asset, toggleSelected })
 
   const backToFolders = () => {
+    console.log('common/custom-settings/deleted-assets--- backToFolders() --- line:452', 'SET ACTIVE FOLDER');
 	setActiveFolder('')
 	setActiveSortFilter({
 	  ...activeSortFilter,
