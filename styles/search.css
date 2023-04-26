@@ -17,7 +17,7 @@
     flex-direction: column;
     align-items: center;
     position: fixed;
-    top: 107px;
+    top: 157px;
     z-index: 2000;
     background-color: var(--color-sec-lightivory);
     left: 50%;
@@ -112,7 +112,7 @@
 @media screen and (max-width: 810px) {    
     .search-content {
         max-width: 90vw;
-        top: 80px;
+        top: 185px;
         right: 50%;
         left: 50%;
     }

@@ -393,7 +393,7 @@ const AssetHeaderOps = ({
 											id: "copy",
 											label: "Copy",
 											icon: AssetOps.copy,
-											onClick: () => () => setActiveOperation('copy')
+											onClick: () => setActiveOperation('copy')
 										},
 										{
 											id: "thumbnail",

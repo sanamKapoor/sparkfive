@@ -121,7 +121,7 @@ const TopBar = ({
   })
 
   const folderData = folders.filter(folder => folder.id === activeFolder)
-
+  console.log('activeFolder inside top bar component: ', activeFolder);
 
   return (
     <section className={styles.container} id={'top-bar'}>
@@ -206,7 +206,7 @@ const TopBar = ({
 
         <div className={styles['sec-filters']}>
 
-          {!isMobile &&
+          {!isMobile && 
             <img src={Utilities.search} onClick={setActiveSearchOverlay} className={styles.search} />
           }
           {(amountSelected === 0 || mode === 'folders') && showAssetAddition && hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL]) && (

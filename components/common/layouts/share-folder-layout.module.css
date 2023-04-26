@@ -1,13 +1,13 @@
 .header {
     background-color: white;
-    padding: 30px 32px;
+    padding: 25px 32px;
     display: flex;
     align-items: center;
     /*position: relative;*/
     position: sticky;
     top: 0;
     left: 0;
-    z-index: 1500;
+    z-index: 1499;
 }
 
 .logo-img {
