@@ -206,7 +206,7 @@ const TopBar = ({
 
         <div className={styles['sec-filters']}>
 
-          {!isMobile &&
+          {!isMobile && mode === 'assets' && 
             <img src={Utilities.search} onClick={setActiveSearchOverlay} className={styles.search} />
           }
           {(amountSelected === 0 || mode === 'folders') && showAssetAddition && hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL]) && (

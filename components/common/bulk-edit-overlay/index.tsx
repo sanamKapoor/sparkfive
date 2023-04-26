@@ -121,6 +121,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 	useEffect(() => {
 		if (!loadingAssets && !initialSelect && selectedAssets.length > 0) {
 			setInitialSelect(true)
+			setEditAssets(initialEditAssets)
 			getInitialAttributes()
 		}
 		if (loadingAssets) {
@@ -134,8 +135,8 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 	}, [addMode, originalInputs])
 
 	useEffect(() => {
-    getInitialAttributes();
-  }, [editAssets]);
+		getInitialAttributes();
+	}, [editAssets]);
 
 	const getInitialAttributes = async () => {
 		try {
@@ -145,7 +146,6 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 			const assetIds = editAssets.filter(({ isEditSelected }) => isEditSelected).map(({ asset: { id } }) => id) ;
 			
 			const { data: { tags, projects, campaigns, customs, folders } } = await assetApi.getBulkProperties({ assetIds})
-
 			setOriginalInputs({
 				campaigns,
 				projects,
