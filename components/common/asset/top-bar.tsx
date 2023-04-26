@@ -72,6 +72,7 @@ const TopBar = ({
     setActiveSortFilter({
       ...activeSortFilter
     })
+    console.log('activeSortFilter [file: common/asset/top-bar.tsx] [setSortFilterValue] [line:75]: ', activeSortFilter);
 
     // Needed to reset because it is set for collection upload when alphabetical sort active
     // And uploaded folder needed to show at first
@@ -82,6 +83,7 @@ const TopBar = ({
       [key]: value,
       sort
     })
+    console.log('activeSortFilter [file: common/asset/top-bar.tsx] [setSortFilterValue] [line:86]: ', activeSortFilter);
   }
 
 
