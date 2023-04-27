@@ -731,8 +731,6 @@ const AssetsLibrary = () => {
                   closeOverlay={closeSearchOverlay}
                   operationsEnabled={true}
                   activeFolder={activeFolder}
-                  activeMode={activeMode}
-                  setActiveMode={setActiveMode}
                   onCloseDetailOverlay={(assetData) => {
                     closeSearchOverlay()
                     // setActiveSearchOverlay(false)
