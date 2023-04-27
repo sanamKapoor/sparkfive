@@ -192,6 +192,7 @@ const AssetsLibrary = () => {
 
       if (firstLoaded) {
         setActivePageMode('library')
+        console.log('activeSortFilter.mainFilter: [file: components/main/assets-library/index.tsx] [line: 195]', activeSortFilter.mainFilter)
         if (activeSortFilter.mainFilter === 'folders') {
           setActiveMode('folders')
           console.log('components/main/assets-library/index.tsx--- useEffect --- line:197', 'SET ACTIVE FOLDER');
