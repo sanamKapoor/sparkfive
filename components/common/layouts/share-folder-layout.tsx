@@ -25,12 +25,12 @@ const ShareFolderLayout = ({ children, advancedLink = false }) => {
 						src={folderInfo?.teamIcon || GeneralImg.logo} />
 				</div>
 				<h1 className={styles['collection-name']}>{folderInfo?.folderName}</h1>
-				{amountSelected > 0 &&
+			</header>
+			{amountSelected > 0 &&
 					<div className={styles['ops-wrapper']}>
 						<AssetHeaderOps isShare={true} advancedLink={advancedLink} isFolder={activeSortFilter.mainFilter === 'folders'}/>
 					</div>
 				}
-			</header>
 			{children}
 			<footer className={styles.footer}>
 			</footer>

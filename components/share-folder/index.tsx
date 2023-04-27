@@ -355,13 +355,13 @@ const ShareFolderMain = () => {
                     singleCollection={!!folderInfo.singleSharedCollectionId}
                     sharedAdvanceConfig={user ? undefined : advancedConfig}
                 />
-                {(activeMode === 'assets' ? selectedAssets.length : selectedFolders.length) > 0 &&
+                {/* {(activeMode === 'assets' ? selectedAssets.length : selectedFolders.length) > 0 &&
                     <AssetHeaderOps
                         isUnarchive={activeSortFilter.mainFilter === 'archived'}
                         isFolder={activeMode === 'folders'}
                         deletedAssets={false}
                     />
-                }
+                } */}
                 <div className={`${openFilter && styles['col-wrapper']}`} style={{marginTop: top}}>
                     <AssetGrid
                         activeFolder={activeFolder}
