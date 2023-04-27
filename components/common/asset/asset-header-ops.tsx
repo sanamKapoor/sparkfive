@@ -402,9 +402,15 @@ const AssetHeaderOps = ({
 										}
 									]}
 								/>
-								{((!isFolder && !isShare) && !deletedAssets) && (
-									<>
+							</>
 
+						)}
+					</div>
+				}
+			</div>
+			{((!isFolder && !isShare) && !deletedAssets) && (
+				
+				<>
 										<ConfirmModal
 											closeModal={() => setShowAssociateModalOpen(false)}
 											confirmAction={() => {
@@ -419,19 +425,11 @@ const AssetHeaderOps = ({
 													Associate ({totalSelectAssets}) asset(s)
 												</span>
 											}
-											subText="Associate 2 Asset(s)
-											Associating allows you see all related assets together on the asset detail pages"
+											subText="Associating allows you see all related assets together on the asset detail pages"
 											modalIsOpen={showAssociateModalOpen}
 										/>
 									</>
 								)}
-							</>
-
-						)}
-					</div>
-				}
-			</div>
-
 
 		</div>
 	)
