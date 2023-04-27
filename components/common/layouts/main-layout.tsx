@@ -173,6 +173,18 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
                   text='Schedule'
                 />}
             </ul>
+
+            {hasPermission([ASSET_UPLOAD_APPROVAL]) &&
+              <div className={styles['upload-approval']}>
+                <Button
+                  text='Upload for approval'
+                  type='button'
+                  styleType='primary'
+                  onClick={() => Router.push("/main/upload-approval")}
+                />
+              </div>
+            }
+
             <div className={styles['notifications-wrapper']}>
               <Notification />
             </div>

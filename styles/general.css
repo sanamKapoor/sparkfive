@@ -46,6 +46,7 @@ html {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   overflow-x: hidden !important;
+  height: 100%;
 }
 
 body {
@@ -54,7 +55,12 @@ body {
   color: var(--color-prim-navy);
   margin: 0;
   padding: 0;
+  height: 100%;
   /*!*overflow-x: hidden;*! THis prevent sticky*/
+}
+
+#__next {
+  height: 100%;
 }
 
 .picker-dialog{

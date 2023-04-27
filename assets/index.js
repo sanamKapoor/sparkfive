@@ -174,7 +174,8 @@ export const Assets = {
   dwg: require('./Icons/Assets/dwg.png'),
   unknown: require('./Icons/Assets/unknown.svg'),
   arrowDown: require('./Icons/Assets/arrow-down.svg'),
-  computer: require('./Icons/Assets/computer.svg')
+  computer: require('./Icons/Assets/computer.svg'),
+  upload: require('./Icons/Assets/upload.svg')
 }
 
 export const Comments = {

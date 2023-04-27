@@ -23,6 +23,8 @@ import assetGridStyles from "../../common/asset/asset-grid.module.css";
 import detailPanelStyles from "../../common/asset/detail-side-panel.module.css";
 
 import { Assets } from '../../../assets'
+import { DropzoneProvider } from '../../common/misc/dropzone'
+import { isMobile } from "react-device-detect";
 
 // Contexts
 import { UserContext, AssetContext, LoadingContext } from '../../../context'
@@ -31,8 +33,8 @@ import { UserContext, AssetContext, LoadingContext } from '../../../context'
 // Utils
 import toastUtils from '../../../utils/toast'
 import cookiesUtils from '../../../utils/cookies'
-import {getFolderKeyAndNewNameByFileName} from "../../../utils/upload";
-import {validation} from "../../../constants/file-validation";
+import { getFolderKeyAndNewNameByFileName } from "../../../utils/upload";
+import { validation } from "../../../constants/file-validation";
 import { Utilities } from '../../../assets'
 
 
@@ -42,7 +44,7 @@ import tagApi from '../../../server-api/tag'
 import approvalApi from '../../../server-api/upload-approvals'
 
 
-import {  ASSET_UPLOAD_APPROVAL } from '../../../constants/permissions'
+import { ASSET_UPLOAD_APPROVAL } from '../../../constants/permissions'
 
 // Hooks
 import { useDebounce } from "../../../hooks/useDebounce";
@@ -50,7 +52,8 @@ import AssetPdf from "../../common/asset/asset-pdf";
 import AssetIcon from "../../common/asset/asset-icon";
 
 // Constants
-import { maxAssetsUpload} from "../../../constants/upload-approvals";
+import { maxAssetsUpload } from "../../../constants/upload-approvals";
+import AssetUpload from '../../common/asset/asset-upload';
 
 
 const UploadApproval = () => {
@@ -72,7 +75,6 @@ const UploadApproval = () => {
     } = useContext(AssetContext)
 
     const { setIsLoading } = useContext(LoadingContext);
-    const [top, setTop] = useState('calc(55px + 8rem)')
     const [assets, setAssets] = useState([])
     const [selectedAssets, setSelectedAssets] = useState([])
     const [duplicateAssets, setDuplicateAssets] = useState([]);
@@ -101,14 +103,18 @@ const UploadApproval = () => {
     const [batchName, setBatchName] = useState("")
 
     const debouncedBatchName = useDebounce(batchName, 500);
+    const [sideOpen, setSideOpen] = useState(isMobile ? false : true);
 
-
+    const toggleSideMenu = (value = null) => {
+        if (value === null) setSideOpen(!sideOpen);
+        else setSideOpen(value);
+    };
 
     const fileBrowserRef = useRef(undefined)
 
     const updateName = async (value) => {
-        if(approvalId){
-            approvalApi.update(approvalId, { name: value})
+        if (approvalId) {
+            approvalApi.update(approvalId, { name: value })
             // toastUtils.success("Name is saved successfully")
         }
     }
@@ -121,7 +127,7 @@ const UploadApproval = () => {
 
         let uploadToFolders = []
 
-        if(activeFolder){
+        if (activeFolder) {
             uploadToFolders = [activeFolder]
         }
 
@@ -132,14 +138,14 @@ const UploadApproval = () => {
         // queryData.folderId = uploadToFolders.join(",")
 
         // Attach extra query
-        if(attachQuery){
-            queryData = {...queryData, ...attachQuery}
+        if (attachQuery) {
+            queryData = { ...queryData, ...attachQuery }
         }
         return queryData
     }
 
     const updateAssetList = (newAssetPlaceholder, currentDataClone, folderUploadInfo) => {
-        const lastAsset = newAssetPlaceholder[newAssetPlaceholder.length-1]
+        const lastAsset = newAssetPlaceholder[newAssetPlaceholder.length - 1]
         if (lastAsset) {
             let allAssets = [...newAssetPlaceholder, ...currentDataClone]
             allAssets = _.uniqBy(allAssets, 'asset.versionGroup')
@@ -154,9 +160,9 @@ const UploadApproval = () => {
     }
 
     // Upload asset
-    const uploadAsset  = async (i: number, assets: any, currentDataClone: any, totalSize: number, folderId, folderGroup = {}, subFolderAutoTag = true, requestId = "") => {
+    const uploadAsset = async (i: number, assets: any, currentDataClone: any, totalSize: number, folderId, folderGroup = {}, subFolderAutoTag = true, requestId = "") => {
         let folderUploadInfo
-        try{
+        try {
             const formData = new FormData()
             let file = assets[i].file.originalFile
             let currentUploadingFolderId = null
@@ -164,12 +170,12 @@ const UploadApproval = () => {
 
             // Get file group info, this returns folderKey and newName of file
             let fileGroupInfo = getFolderKeyAndNewNameByFileName(file.webkitRelativePath, subFolderAutoTag)
-            folderUploadInfo = {name: fileGroupInfo.folderKey, size: totalSize}
+            folderUploadInfo = { name: fileGroupInfo.folderKey, size: totalSize }
 
             // Do validation
-            if(assets[i].asset.size > validation.UPLOAD.MAX_SIZE.VALUE){
+            if (assets[i].asset.size > validation.UPLOAD.MAX_SIZE.VALUE) {
                 // Violate validation, mark failure
-                const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', index, error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE} : asset);
+                const updatedAssets = assets.map((asset, index) => index === i ? { ...asset, status: 'fail', index, error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE } : asset);
 
                 // Update uploading assets
                 setUploadUpdate(versionGroup, updatedAssets)
@@ -186,7 +192,7 @@ const UploadApproval = () => {
                 if (i === assets.length - 1) {
                     return folderGroup
                 } else { // Keep going
-                    await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, subFolderAutoTag)
+                    await uploadAsset(i + 1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, subFolderAutoTag)
                 }
             } else {
                 // Show uploading toast
@@ -197,9 +203,9 @@ const UploadApproval = () => {
 
 
                 // If user is uploading files in folder which is not saved from server yet
-                if(fileGroupInfo.folderKey && !folderId){
+                if (fileGroupInfo.folderKey && !folderId) {
                     // Current folder Group have the key
-                    if(folderGroup[fileGroupInfo.folderKey]){
+                    if (folderGroup[fileGroupInfo.folderKey]) {
                         // Store this key to use to upload to same folder
                         currentUploadingFolderId = folderGroup[fileGroupInfo.folderKey]
                         // Assign new file name without splash
@@ -216,15 +222,15 @@ const UploadApproval = () => {
 
                 let size = totalSize;
                 // Calculate the rest of size
-                assets.map((asset)=>{
+                assets.map((asset) => {
                     // Exclude done or fail assets
-                    if(asset.status === 'done' || asset.status === 'fail'){
+                    if (asset.status === 'done' || asset.status === 'fail') {
                         size -= asset.asset.size
-                        newAssets+=1
+                        newAssets += 1
                     }
                 })
 
-                let attachedQuery = {estimateTime: 1, size, totalSize, requireApproval: 1}
+                let attachedQuery = { estimateTime: 1, size, totalSize, requireApproval: 1 }
 
 
                 // Uploading inside specific folders which already existed in server
@@ -250,14 +256,14 @@ const UploadApproval = () => {
                 //     attachedQuery['folderId'] = currentUploadingFolderId
                 // }
 
-                if(requestId){
+                if (requestId) {
                     attachedQuery['approvalId'] = requestId
                 }
 
                 // Call API to upload
                 let { data } = await assetApi.uploadAssets(formData, getCreationParameters(attachedQuery))
 
-                if(!requestId){
+                if (!requestId) {
                     setApprovalId(data[0].requestId)
                     requestId = data[0].requestId
                 }
@@ -265,9 +271,9 @@ const UploadApproval = () => {
 
                 // If user is uploading files in folder which is not saved from server yet
                 // Save folders data in response to use for subsequence request so that files in same folder can be located correctly
-                if(fileGroupInfo.folderKey && !folderId){
+                if (fileGroupInfo.folderKey && !folderId) {
                     /// If user is uploading new folder and this one still does not have folder Id, add it to folder group
-                    if(!folderGroup[fileGroupInfo.folderKey]){
+                    if (!folderGroup[fileGroupInfo.folderKey]) {
                         folderGroup[fileGroupInfo.folderKey] = data[0].asset.folders[0]
                     }
                 }
@@ -286,24 +292,24 @@ const UploadApproval = () => {
                 setAddedIds(data.map(assetItem => assetItem.asset.id))
 
                 // Update total assets
-                setTotalAssets(totalAssets + newAssets +1)
+                setTotalAssets(totalAssets + newAssets + 1)
 
                 // Mark this asset as done
-                const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'done'} : asset);
+                const updatedAssets = assets.map((asset, index) => index === i ? { ...asset, status: 'done' } : asset);
 
                 // Update uploading assets
                 setUploadUpdate(versionGroup, updatedAssets)
 
                 // The final one
-                if(i === assets.length - 1){
+                if (i === assets.length - 1) {
                     return
                 } else { // Keep going
-                    await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, subFolderAutoTag, requestId)
+                    await uploadAsset(i + 1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, subFolderAutoTag, requestId)
                 }
             }
-        } catch (e){
+        } catch (e) {
             // Violate validation, mark failure
-            const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, index, status: 'fail', error: 'Processing file error'} : asset);
+            const updatedAssets = assets.map((asset, index) => index === i ? { ...asset, index, status: 'fail', error: 'Processing file error' } : asset);
 
             // Update uploading assets
             setUploadUpdate(versionGroup, updatedAssets)
@@ -320,7 +326,7 @@ const UploadApproval = () => {
             if (i === assets.length - 1) {
                 return folderGroup
             } else { // Keep going
-                await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, subFolderAutoTag, requestId)
+                await uploadAsset(i + 1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, subFolderAutoTag, requestId)
             }
         }
     }
@@ -364,24 +370,24 @@ const UploadApproval = () => {
 
             setFolderImport(containFolderUrl.length > 0)
 
-            let attachedQuery = {estimateTime: 1, totalSize, requireApproval: 1}
+            let attachedQuery = { estimateTime: 1, totalSize, requireApproval: 1 }
 
-            if(approvalId){
+            if (approvalId) {
                 attachedQuery['approvalId'] = approvalId
             }
 
             const { data } = await assetApi.importAssets('dropbox', files.map(file => ({
-                    link: file.link,
-                    isDir: file.isDir,
-                    name: file.name,
-                    size: file.bytes,
-                    versionGroup: (file.versionGroup || versionGroup),
-                    changedName: file.changedName
-                })),
+                link: file.link,
+                isDir: file.isDir,
+                name: file.name,
+                size: file.bytes,
+                versionGroup: (file.versionGroup || versionGroup),
+                changedName: file.changedName
+            })),
                 getCreationParameters(attachedQuery))
 
             // Save this approval id for saving name automatically
-            if(data[0]?.requestId){
+            if (data[0]?.requestId) {
                 setApprovalId(data[0]?.requestId)
             }
 
@@ -397,7 +403,7 @@ const UploadApproval = () => {
             setAddedIds(data.id)
 
             // Mark done
-            const updatedAssets = data.map(asset => { return {...asset, status: 'done'}});
+            const updatedAssets = data.map(asset => { return { ...asset, status: 'done' } });
 
             // Update uploading assets
             setUploadUpdate(versionGroup, updatedAssets)
@@ -422,10 +428,10 @@ const UploadApproval = () => {
     }
 
     const onDropboxFilesSelection = async (files) => {
-        if(files.length <= maxAssetsUpload){
+        if (files.length <= maxAssetsUpload) {
             if (advancedConfig.duplicateCheck) {
                 const names = files.map(file => file['name'])
-                const {data: { duplicateAssets }} = await assetApi.checkDuplicates(names)
+                const { data: { duplicateAssets } } = await assetApi.checkDuplicates(names)
                 if (duplicateAssets.length) {
                     setSelectedFiles(files)
                     setDuplicateAssets(duplicateAssets)
@@ -440,17 +446,17 @@ const UploadApproval = () => {
             } else {
                 onDropboxFilesGet(files)
             }
-        }else{
+        } else {
             toastUtils.error(`Maximum assets to upload is ${maxAssetsUpload}`)
         }
 
     }
 
     const onDriveFilesSelection = async (files) => {
-        if(files.length <= maxAssetsUpload) {
+        if (files.length <= maxAssetsUpload) {
             if (advancedConfig.duplicateCheck) {
                 const names = files.map(file => file['name'])
-                const {data: {duplicateAssets}} = await assetApi.checkDuplicates(names)
+                const { data: { duplicateAssets } } = await assetApi.checkDuplicates(names)
                 if (duplicateAssets.length) {
                     setSelectedFiles(files)
                     setDuplicateAssets(duplicateAssets)
@@ -465,7 +471,7 @@ const UploadApproval = () => {
             } else {
                 onGdriveFilesGet(files)
             }
-        }else{
+        } else {
             toastUtils.error(`Maximum assets to upload is ${maxAssetsUpload}`)
         }
     }
@@ -509,9 +515,9 @@ const UploadApproval = () => {
 
             setFolderImport(containFolderUrl.length > 0)
 
-            let attachedQuery = {estimateTime: 1, totalSize, requireApproval: 1}
+            let attachedQuery = { estimateTime: 1, totalSize, requireApproval: 1 }
 
-            if(approvalId){
+            if (approvalId) {
                 attachedQuery['approvalId'] = approvalId
             }
 
@@ -529,7 +535,7 @@ const UploadApproval = () => {
             })), getCreationParameters(attachedQuery))
 
             // Save this approval id for saving name automatically
-            if(data[0]?.requestId){
+            if (data[0]?.requestId) {
                 setApprovalId(data[0]?.requestId)
             }
 
@@ -545,7 +551,7 @@ const UploadApproval = () => {
             setAddedIds(data.id)
 
             // Mark done
-            const updatedAssets = data.map(asset => { return {...asset, status: 'done'}});
+            const updatedAssets = data.map(asset => { return { ...asset, status: 'done' } });
 
             // Update uploading assets
             setUploadUpdate(versionGroup, updatedAssets)
@@ -587,7 +593,7 @@ const UploadApproval = () => {
             label: 'Upload',
             text: 'png, jpg, mp4 and more',
             onClick: () => fileBrowserRef.current.click(),
-            icon: Assets.file
+            icon: Assets.upload
         },
         {
             id: 'dropbox',
@@ -621,11 +627,10 @@ const UploadApproval = () => {
         const Content = (option) => {
             return (
                 <span className={styles.option}
-                      onClick={option.onClick}>
-					<IconClickable src={option.icon} additionalClass={styles.icon} />
-					<div className={styles['option-label']}>{option.label}</div>
-					<div className={styles['option-text']}>{option.text}</div>
-				</span>
+                    onClick={option.onClick}>
+                    <IconClickable src={option.icon} additionalClass={styles.icon} />
+                    <div className={styles['option-label']}>{option.label}</div>
+                </span>
             )
         }
 
@@ -653,7 +658,7 @@ const UploadApproval = () => {
 
             let totalSize = 0;
             files.forEach(file => {
-                totalSize+=file.originalFile.size
+                totalSize += file.originalFile.size
                 const asset = {
                     name: file.originalFile.name,
                     createdAt: new Date(),
@@ -688,7 +693,7 @@ const UploadApproval = () => {
             setAssets([...newPlaceholders, ...currentDataClone])
 
             // Get team advance configurations first
-            const { subFolderAutoTag } =  advancedConfig;
+            const { subFolderAutoTag } = advancedConfig;
 
             // Start to upload assets
             await uploadAsset(0, newPlaceholders, currentDataClone, totalSize, "", undefined, subFolderAutoTag, approvalId)
@@ -711,7 +716,7 @@ const UploadApproval = () => {
 
     const onFileChange = async (e) => {
         const files = Array.from(e.target.files).map(originalFile => ({ originalFile }))
-        if(files.length <= maxAssetsUpload){
+        if (files.length <= maxAssetsUpload) {
             // if (advancedConfig.duplicateCheck) {
             //     const names = files.map(file => file.originalFile['name'])
             //     const {data: { duplicateAssets }} = await assetApi.checkDuplicates(names)
@@ -729,7 +734,7 @@ const UploadApproval = () => {
             // } else {
             onFilesDataGet(files)
             // }
-        }else{
+        } else {
             toastUtils.error(`Maximum assets to upload is ${maxAssetsUpload}`)
         }
 
@@ -739,7 +744,7 @@ const UploadApproval = () => {
         const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
         const selectedValue = !assets[assetIndex].isSelected
         // Toggle unselect when selected all will disable selected all
-        if(!selectedValue && selectedAllAssets){
+        if (!selectedValue && selectedAllAssets) {
             setSelectedAllAssets(false)
         }
         setAssets(update(assets, {
@@ -753,7 +758,7 @@ const UploadApproval = () => {
     const selectAllAssets = (value = true) => {
         setSelectedAllAssets(value)
         let assetList = [...assets]
-        assetList.map((asset)=>{
+        assetList.map((asset) => {
             asset.isSelected = value
         })
 
@@ -763,18 +768,18 @@ const UploadApproval = () => {
 
     // Check if there is any asset is selected
     const hasSelectedAssets = () => {
-        if(selectedAllAssets){
+        if (selectedAllAssets) {
             return true
         }
 
-        const selectedArr = assets.filter((asset)=>asset.isSelected)
+        const selectedArr = assets.filter((asset) => asset.isSelected)
 
         return selectedArr.length > 0
     }
 
     // Check if there is uploaded asset to submit
     const hasAssetToSubmit = () => {
-        const selectedArr = assets.filter((asset)=>asset.realUrl)
+        const selectedArr = assets.filter((asset) => asset.realUrl)
 
         return selectedArr.length > 0
 
@@ -792,30 +797,30 @@ const UploadApproval = () => {
     const saveBulkTag = async () => {
         setIsLoading(true)
 
-        let currentAssetTags =  [...assetTags]
+        let currentAssetTags = [...assetTags]
 
-        for(const { asset, isSelected, tags } of assets){
+        for (const { asset, isSelected, tags } of assets) {
             let tagPromises = []
             let removeTagPromises = []
 
-            if(isSelected){
+            if (isSelected) {
                 const newTags = _.differenceBy(currentAssetTags, tags || [])
                 // Dont need to remove tags because it will override existing ones
                 const removeTags = [] // _.differenceBy(tags || [], assetTags)
 
-                for( const tag of removeTags){
+                for (const tag of removeTags) {
                     removeTagPromises.push(assetApi.removeTag(asset.id, tag.id))
                 }
 
-                for( const tag of newTags){
+                for (const tag of newTags) {
                     // Old tag, dont need to create the new one
-                    if(tag.id){
+                    if (tag.id) {
                         tagPromises.push(assetApi.addTag(asset.id, tag))
-                    }else{ // Have to insert immediately here to prevent duplicate tag created due to multi asset handling
+                    } else { // Have to insert immediately here to prevent duplicate tag created due to multi asset handling
                         const rs = await assetApi.addTag(asset.id, tag)
                         // Update back to asset tags array for the next asset usage
-                        currentAssetTags = currentAssetTags.map((assetTag)=>{
-                            if(assetTag.name === tag.name){
+                        currentAssetTags = currentAssetTags.map((assetTag) => {
+                            if (assetTag.name === tag.name) {
                                 assetTag = rs.data
                             }
                             return assetTag
@@ -831,8 +836,8 @@ const UploadApproval = () => {
 
         // Save tags to asset
         let assetArr = [...assets];
-        assetArr.map((asset)=>{
-            if(asset.isSelected){
+        assetArr.map((asset) => {
+            if (asset.isSelected) {
                 asset.tags = (asset.tags || []).concat(currentAssetTags)
             }
         })
@@ -851,9 +856,9 @@ const UploadApproval = () => {
 
         let promises = []
 
-        for(const { asset, isSelected } of assets){
-            if(isSelected){
-                promises.push(approvalApi.addComments(asset.id, { comments, approvalId}))
+        for (const { asset, isSelected } of assets) {
+            if (isSelected) {
+                promises.push(approvalApi.addComments(asset.id, { comments, approvalId }))
             }
         }
 
@@ -861,8 +866,8 @@ const UploadApproval = () => {
 
         // Save comments to asset
         let assetArr = [...assets];
-        assetArr.map((asset)=>{
-            if(asset.isSelected){
+        assetArr.map((asset) => {
+            if (asset.isSelected) {
                 asset.comments = comments
             }
         })
@@ -900,7 +905,7 @@ const UploadApproval = () => {
     }
 
     const goNext = () => {
-        if((selectedAsset || 0) < assets.length-1){
+        if ((selectedAsset || 0) < assets.length - 1) {
             setTempTags([])
             setTempComments("")
 
@@ -919,11 +924,11 @@ const UploadApproval = () => {
     }
 
     const goPrev = () => {
-        if((selectedAsset || 0) > 0){
+        if ((selectedAsset || 0) > 0) {
             setTempTags([])
             setTempComments("")
 
-            const next = (selectedAsset || 0) -1
+            const next = (selectedAsset || 0) - 1
             // @ts-ignore
             setSelectedAsset(next)
 
@@ -938,7 +943,7 @@ const UploadApproval = () => {
     }
 
     const onSaveSingleAsset = async () => {
-        if(selectedAsset !== undefined){
+        if (selectedAsset !== undefined) {
 
             setIsLoading(true);
 
@@ -949,7 +954,7 @@ const UploadApproval = () => {
                 let promises = []
                 let removeTagPromises = []
 
-                for(const { asset } of assetArr){
+                for (const { asset } of assetArr) {
                     let tagPromises = []
 
                     // Find the new tags
@@ -957,11 +962,11 @@ const UploadApproval = () => {
                     const newTags = _.differenceBy(tempTags, assets[selectedAsset]?.tags || [])
                     const removeTags = _.differenceBy(assets[selectedAsset]?.tags || [], tempTags)
 
-                    for( const tag of newTags){
+                    for (const tag of newTags) {
                         tagPromises.push(assetApi.addTag(asset.id, tag))
                     }
 
-                    for( const tag of removeTags){
+                    for (const tag of removeTags) {
                         removeTagPromises.push(assetApi.removeTag(asset.id, tag.id))
 
                     }
@@ -975,8 +980,8 @@ const UploadApproval = () => {
             const saveComment = async () => {
                 let promises = []
 
-                for(const { asset } of assetArr){
-                    promises.push(approvalApi.addComments(asset.id, { comments: tempComments, approvalId}))
+                for (const { asset } of assetArr) {
+                    promises.push(approvalApi.addComments(asset.id, { comments: tempComments, approvalId }))
                 }
 
                 return await Promise.all(promises)
@@ -1031,7 +1036,7 @@ const UploadApproval = () => {
     };
 
     const checkValidUser = () => {
-        if(!hasPermission([ASSET_UPLOAD_APPROVAL])){
+        if (!hasPermission([ASSET_UPLOAD_APPROVAL])) {
             Router.replace("/")
         }
     }
@@ -1041,7 +1046,7 @@ const UploadApproval = () => {
     }
 
     const hasTagOrComments = (asset) => {
-        return (asset.tags && asset.tags.length > 0 )|| asset.comments
+        return (asset.tags && asset.tags.length > 0) || asset.comments
     }
 
     const isAdmin = () => {
@@ -1062,406 +1067,448 @@ const UploadApproval = () => {
         toastUtils.success("Update tag successfully")
     }
 
-    const onChangeWidth = () => {
-        let remValue = '8rem'
-        if(window.innerWidth <= 900){
-            remValue = '7rem + 1px'
-        }
-
-        let el = document.getElementById('top-bar');
-        let header = document.getElementById('main-header');
-        let subHeader = document.getElementById('sub-header');
-
-        if(el){
-            let style = getComputedStyle(el);
-
-            const headerTop = (document.getElementById('top-bar')?.offsetHeight || 55)
-            setTop(`calc(${headerTop}px + ${header?.clientHeight || 0}px + ${remValue} - ${style.paddingBottom} - ${style.paddingTop})`)
-        }
-
-    }
-
-    useEffect(()=>{
-        onChangeWidth()
-
-        window.addEventListener('resize', onChangeWidth);
-
-        return () => window.removeEventListener("resize", onChangeWidth);
-    },[])
-
     useEffect(() => {
         checkValidUser()
         getTagsInputData()
     }, [])
 
-    useEffect( () => {
+    useEffect(() => {
         updateName(debouncedBatchName)
     }, [debouncedBatchName]);
 
-  return (
-    <>
-      <AssetSubheader
-        activeFolder={""}
-        getFolders={()=>{}}
-        mode={"assets"}
-        amountSelected={selectedAssets.length }
-        activeFolderData={null}
-        backToFolders={()=>{}}
-        setRenameModalOpen={()=>{}}
-        activeSortFilter={{}}
-        titleText={"File Upload Page"}
-        showAssetAddition={false}
-      />
-        <div className={`row ${styles['root-row']}`} style={{marginTop: top}}>
-            <div className={`col-70 height-100`}>
+
+    const previousBatches = [
+        {
+            name: 'AdobeStock_548798798(1)small.jpeg',
+            thumbailUrl: 'https://picsum.photos/200',
+            status: 'Draft',
+            createdAt: '01/25/2023',
+            size: '1.58 MB'
+        },
+        {
+            name: 'AdobeStock_548798798(1)small.jpeg',
+            thumbailUrl: 'https://picsum.photos/200',
+            status: 'Submitted',
+            createdAt: '01/25/2023',
+            size: '1.58 MB'
+        },
+        {
+            name: 'AdobeStock_548798798(1)small.jpeg',
+            thumbailUrl: 'https://picsum.photos/200',
+            status: 'Draft',
+            createdAt: '01/25/2023',
+            size: '1.58 MB'
+        }
+    ]
+
+
+    return (
+        <>
+            <AssetSubheader
+                activeFolder={""}
+                getFolders={() => { }}
+                mode={"assets"}
+                amountSelected={selectedAssets.length}
+                activeFolderData={null}
+                backToFolders={() => { }}
+                setRenameModalOpen={() => { }}
+                activeSortFilter={{}}
+                titleText={"File Upload Page"}
+                showAssetAddition={false}
+            />
+            <div className={`row ${styles['root-row']}`}>
                 <main className={`${styles.container} p-r-0`}>
-                    { <>
-                        <p className={styles.title}>Upload a file or a batch, tag or comment</p>
-                        <input multiple={versionGroup ? false : true} id="file-input-id" ref={fileBrowserRef} style={{ display: 'none' }} type='file'
-                               onChange={onFileChange} />
 
-                        <div className={styles['operation-wrapper']}>
-                            <DropDownOptions />
+                    <p className={styles.title}>Create Upload Batch for Approval</p>
+                    <p className={styles.subtitle}>Upload a file or multiple files. You’ll then be able to suggest tags and submit to the admin(s) </p>
+                    <input multiple={versionGroup ? false : true} id="file-input-id" ref={fileBrowserRef} style={{ display: 'none' }} type='file'
+                        onChange={onFileChange} />
 
-                            <div className={styles['button-wrapper']}>
-                                {assets.length > 0 && hasSelectedAssets() && <Button type='button' text='Deselect' styleType='secondary' onClick={()=>{selectAllAssets(false)}} />}
-                                {assets.length > 0 && hasAssetToSubmit() && <Button type='button' text='Select All' styleType='secondary' onClick={selectAllAssets} />}
-                                {assets.length > 0 && hasAssetToSubmit() && <Button type='button' text='Submit Batch' styleType='primary' onClick={()=>{
-                                    if(!batchName){
-                                        toastUtils.error('Please enter the batch name to submit')
-                                    }else{
-                                        setShowConfirmModal(true)}
+                    <div className={styles['operation-wrapper']}>
+                        <DropDownOptions />
+
+                        <div className={styles['button-wrapper']}>
+                            {assets.length > 0 && hasSelectedAssets() && <Button type='button' text='Deselect' styleType='secondary' onClick={() => { selectAllAssets(false) }} />}
+                            {assets.length > 0 && hasAssetToSubmit() && <Button type='button' text='Select All' styleType='secondary' onClick={selectAllAssets} />}
+                            {assets.length > 0 && hasAssetToSubmit() && <Button type='button' text='Submit Batch' styleType='primary' onClick={() => {
+                                if (!batchName) {
+                                    toastUtils.error('Please enter the batch name to submit')
+                                } else {
+                                    setShowConfirmModal(true)
                                 }
+                            }
 
-                                } />}
+                            } />}
+                        </div>
+                    </div>
+                    {assets.length > 0 ? (
+                        <div className={styles["asset-list"]}>
+                            <div className={assetGridStyles["list-wrapper"]}>
+                                <ul className={`${assetGridStyles["grid-list"]} ${assetGridStyles["regular"]} ${styles["grid-list"]}`}>
+                                    {
+                                        assets.map((assetItem, index) => {
+                                            if (assetItem.status !== "fail") {
+                                                return (
+                                                    <li
+                                                        className={assetGridStyles["grid-item"]}
+                                                        key={assetItem.asset.id || index}
+                                                    >
+                                                        <AssetThumbail
+                                                            {...assetItem}
+                                                            sharePath={""}
+                                                            activeFolder={""}
+                                                            isShare={false}
+                                                            type={""}
+                                                            showAssetOption={false}
+                                                            toggleSelected={() => {
+                                                                toggleSelected(assetItem.asset.id)
+                                                            }}
+                                                            openArchiveAsset={() => {
+                                                                // openArchiveAsset(assetItem.asset)
+                                                            }}
+                                                            openDeleteAsset={() => {
+                                                                // openDeleteAsset(assetItem.asset.id)
+                                                            }}
+                                                            openMoveAsset={() => {
+                                                                // beginAssetOperation({ asset: assetItem }, "move")
+                                                            }}
+                                                            openCopyAsset={() => {
+                                                                // beginAssetOperation({ asset: assetItem }, "copy")
+                                                            }}
+                                                            openShareAsset={() => {
+                                                                // beginAssetOperation({ asset: assetItem }, "share")
+                                                            }}
+                                                            downloadAsset={() => {
+                                                                // downloadAsset(assetItem)}
+                                                            }}
+                                                            openRemoveAsset={() => {
+                                                                // beginAssetOperation(
+                                                                //     { asset: assetItem },
+                                                                //     "remove_item"
+                                                                // )
+                                                            }}
+                                                            handleVersionChange={() => { }}
+                                                            loadMore={() => { }}
+                                                            onView={() => { onViewAsset(index) }}
+                                                            infoWrapperClass={styles['asset-grid-info-wrapper']}
+                                                            textWrapperClass={
+                                                                hasTagOrComments(assetItem) ?
+                                                                    (hasBothTagAndComments(assetItem) ? styles['asset-grid-text-wrapper-2-icon'] : styles['asset-grid-text-wrapper']) :
+                                                                    "w-100"}
+                                                            customIconComponent={<div className={`${styles['icon-wrapper']} d-flex`}>
+                                                                {assetItem.comments && <IconClickable additionalClass={styles['edit-icon']} src={Utilities.comment} onClick={() => { }} />}
+                                                                {assetItem.tags && assetItem.tags.length > 0 && <IconClickable additionalClass={styles['edit-icon']} src={Utilities.greenTag} onClick={() => { }} />}
+                                                            </div>}
+                                                            showViewButtonOnly={true}
+                                                            showSelectedAsset={true}
+                                                        />
+                                                    </li>
+                                                );
+                                            }
+                                        })}
+                                </ul>
+                            </div>
+                        </div>
+                    ) : (
+                        <DropzoneProvider>
+                            <AssetUpload
+                                onDragText={"Drop files here to upload"}
+                                preDragText={`Or Drag and Drop your file(s) here to upload`}
+                                onFilesDataGet={onFilesDataGet}
+                            />
+                        </DropzoneProvider>
+                    )}
+                </main>
+                {sideOpen &&
+                    <div className={`${styles['right-panel']}`}>
+                        <div className={detailPanelStyles.container}>
+                            {assets.length > 0 && hasAssetToSubmit() ? (
+                                <>
+                                    <h2 className={styles['detail-title']}>Batch Details</h2>
+                                    <div className={detailPanelStyles['first-section']}>
+                                        <div className={detailPanelStyles['field-wrapper']}>
+
+                                            <div className={`${detailPanelStyles.field} ${styles['field-name']}`}>Batch Name</div>
+                                            <Input
+                                                onChange={(e) => { setBatchName(e.target.value) }}
+                                                placeholder={'Batch Name'}
+                                                value={batchName}
+                                                styleType={'regular-height-short'} />
+                                        </div>
+                                    </div>
+
+                                    {hasSelectedAssets() && <>
+                                        <div className={detailPanelStyles['field-wrapper']} >
+                                            <CreatableSelect
+                                                title='Tags'
+                                                addText='Add Tags'
+                                                onAddClick={() => setActiveDropdown('tags')}
+                                                selectPlaceholder={'Enter a new tag or select an existing one'}
+                                                avilableItems={inputTags}
+                                                setAvailableItems={setInputTags}
+                                                selectedItems={assetTags}
+                                                setSelectedItems={setTags}
+                                                creatable={true}
+                                                onAddOperationFinished={(stateUpdate) => {
+                                                    setActiveDropdown("")
+                                                    // updateAssetState({
+                                                    //     tags: { $set: stateUpdate }
+                                                    // })
+                                                    // loadTags()
+                                                }}
+                                                onRemoveOperationFinished={async (index, stateUpdate) => {
+                                                    // await assetApi.removeTag(id, assetTags[index].id)
+                                                    // updateAssetState({
+                                                    //     tags: { $set: stateUpdate }
+                                                    // })
+                                                }}
+                                                onOperationFailedSkipped={() => setActiveDropdown('')}
+                                                isShare={false}
+                                                asyncCreateFn={(newItem) => {
+                                                    return { data: newItem }
+                                                    // assetApi.addTag(id, newItem)
+                                                }}
+                                                dropdownIsActive={activeDropdown === 'tags'}
+                                                ignorePermission={true}
+                                            />
+                                        </div>
+
+                                        <Button className={styles['add-tag-btn']} type='button' text='Save Changes' styleType='primary' onClick={saveBulkTag} />
+
+                                        {/*<div className={detailPanelStyles['field-wrapper']} >*/}
+                                        {/*    <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>*/}
+                                        {/*    <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={comments}*/}
+                                        {/*              onChange={e => {setComments(e.target.value)}} styleType={'regular-short'} />*/}
+                                        {/*</div>*/}
+
+                                        {/*<Button className={styles['add-tag-btn']} type='button' text='Add comments' styleType='secondary' onClick={saveComment} />*/}
+                                    </>}
+                                </>
+
+                            ) : (
+                                <>
+                                    <h2 className={styles['detail-title']}>Previous Batches</h2>
+                                    {previousBatches.length > 0 ? (
+                                        <ul>
+                                            {previousBatches.map((asset, i) => (
+                                                <li className={styles['previous-item']} key={i}>
+                                                    <div className={styles['previous-item-wrapper']}>
+                                                        <div className={styles['previous-thumbnail']}>
+                                                            {asset.thumbailUrl && <img src={asset.thumbailUrl || Assets.unknown} alt={asset.name} />}
+                                                            {!asset.thumbailUrl && <AssetIcon extension={asset.extension} onList={true} />}
+                                                        </div>
+                                                        <div className={styles['info-wrapper']}>
+                                                            <div>
+                                                                <div className={styles['previous-name']}>{asset.name}</div>
+                                                                <div className={styles['previous-status']}>{asset.status}</div>
+                                                                <div className={styles['previous-date']}>{asset.createdAt}</div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    ) : (
+                                        <p>No previous batches have been created</p>
+                                    )}
+                                </>
+                            )
+                            }
+                        </div>
+                    </div>
+                }
+
+                <section className={styles.menu}>
+                    <IconClickable
+                        src={Utilities.closePanelLight}
+                        onClick={() => toggleSideMenu()}
+                        additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"} ${styles.expand
+                            }`}
+                    />
+                </section>
+            </div>
+
+            <Base
+                modalIsOpen={showDetailModal}
+                closeModal={() => { setDetailModal(false) }}
+                confirmText={""}
+                headText={"Test"}
+                closeButtonOnly={true}
+                disabledConfirm={false}
+                additionalClasses={['visible-block', styles['approval-detail-modal']]}
+                showCancel={false}
+                confirmAction={() => {
+                }} >
+                <div className={`row ${styles['modal-wrapper']} height-100`}>
+                    <div className={`col-60 ${styles["left-bar"]}`}>
+                        {assets[selectedAsset]?.asset.type === "image" && (
+                            <AssetImg name={assets[selectedAsset]?.asset.name} assetImg={assets[selectedAsset]?.thumbailUrl} />
+                        )}
+
+                        {assets[selectedAsset]?.asset.type !== "image" &&
+                            assets[selectedAsset]?.asset.type !== "video" &&
+                            assets[selectedAsset]?.thumbailUrl && (
+                                assets[selectedAsset]?.asset.extension.toLowerCase() === "pdf" ?
+                                    <AssetPdf
+                                        asset={assets[selectedAsset]?.asset}
+                                    />
+                                    :
+                                    <AssetImg
+                                        name={assets[selectedAsset]?.asset.name}
+                                        assetImg={assets[selectedAsset]?.thumbailUrl}
+                                    />
+                            )}
+                        {assets[selectedAsset]?.asset.type !== "image" &&
+                            assets[selectedAsset]?.asset.type !== "video" &&
+                            !assets[selectedAsset]?.thumbailUrl && (
+                                <AssetIcon extension={assets[selectedAsset]?.asset.extension} />
+                            )}
+                        {assets[selectedAsset]?.asset.type === "video" && (
+                            <video controls>
+                                <source
+                                    src={assets[selectedAsset]?.previewUrl ?? assets[selectedAsset]?.realUrl}
+                                    type={assets[selectedAsset]?.previewUrl ? 'video/mp4' : `video/${assets[selectedAsset]?.asset.extension}`}
+                                />
+                                Sorry, your browser doesn't support video playback.
+                            </video>
+                        )}
+                        {/*<AssetImg*/}
+                        {/*    imgClass={""}*/}
+                        {/*    assetImg={assets[selectedAsset]?.realUrl}*/}
+                        {/*    type={""}*/}
+                        {/*    name={"image"}*/}
+                        {/*/>*/}
+                        {/*<img alt={"test"} src={assets[selectedAsset]?.realUrl} />*/}
+                        <div className={styles['file-name']}>
+                            <span>{assets[selectedAsset]?.asset.name}</span>
+                            {isAdmin() && <IconClickable additionalClass={styles['edit-icon']} src={Utilities.edit} onClick={() => { setShowRenameModal(true) }} />}
+                        </div>
+                        <div className={styles['date']}>{moment(assets[selectedAsset]?.asset?.createdAt).format('MMM DD, YYYY, hh:mm a')}</div>
+                    </div>
+                    <div className={"col-40 height-100"}>
+                        <div className={`${detailPanelStyles.container} ${styles['right-form']}`}>
+                            <h2 className={styles['detail-title']}>Add Attributes to Selected Assets</h2>
+
+                            <div className={detailPanelStyles['field-wrapper']} >
+                                <CreatableSelect
+                                    title='Tags'
+                                    addText='Add Tags'
+                                    onAddClick={() => setActiveDropdown('tags')}
+                                    selectPlaceholder={'Enter a new tag or select an existing one'}
+                                    avilableItems={inputTags}
+                                    setAvailableItems={setInputTags}
+                                    selectedItems={tempTags}
+                                    setSelectedItems={setTempTags}
+                                    creatable={true}
+                                    menuPosition={"fixed"}
+                                    onAddOperationFinished={(stateUpdate) => {
+                                        setActiveDropdown("")
+
+                                        // updateAssetTagsState(stateUpdate)
+
+                                        // updateAssetState({
+                                        //     tags: { $set: stateUpdate }
+                                        // })
+                                        // loadTags()
+                                    }}
+                                    onRemoveOperationFinished={async (index, stateUpdate) => {
+                                        // setIsLoading(true)
+                                        // await assetApi.removeTag(assets[selectedAsset]?.asset.id, tempTags[index].id)
+                                        // updateAssetTagsState(stateUpdate)
+
+                                        // await assetApi.removeTag(id, assetTags[index].id)
+                                        // updateAssetState({
+                                        //     tags: { $set: stateUpdate }
+                                        // })
+                                    }}
+                                    onOperationFailedSkipped={() => setActiveDropdown('')}
+                                    isShare={false}
+                                    asyncCreateFn={(newItem) => {
+                                        return { data: newItem }
+                                        // setIsLoading(true)
+                                        // return assetApi.addTag(assets[selectedAsset]?.asset.id, newItem)
+                                    }}
+                                    dropdownIsActive={activeDropdown === 'tags'}
+                                    ignorePermission={true}
+                                />
                             </div>
 
-
+                            <div className={detailPanelStyles['field-wrapper']} >
+                                <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>
+                                <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={tempComments}
+                                    onChange={e => { setTempComments(e.target.value) }} styleType={'regular-short'} maxLength={200} />
+                            </div>
                         </div>
-                    </>}
 
-
-
-
-
-                    <div className={styles["asset-list"]}>
-                        <div className={assetGridStyles["list-wrapper"]}>
-                            <ul className={`${assetGridStyles["grid-list"]} ${assetGridStyles["regular"]} ${styles["grid-list"]}`}>
-                                {
-                                    assets.map((assetItem, index) => {
-                                        if (assetItem.status !== "fail") {
-                                            return (
-                                                <li
-                                                    className={assetGridStyles["grid-item"]}
-                                                    key={assetItem.asset.id || index}
-                                                >
-                                                    <AssetThumbail
-                                                        {...assetItem}
-                                                        sharePath={""}
-                                                        activeFolder={""}
-                                                        isShare={false}
-                                                        type={""}
-                                                        showAssetOption={false}
-                                                        toggleSelected={() =>{
-                                                            toggleSelected(assetItem.asset.id)
-                                                        }}
-                                                        openArchiveAsset={() =>{
-                                                            // openArchiveAsset(assetItem.asset)
-                                                        }}
-                                                        openDeleteAsset={() =>{
-                                                            // openDeleteAsset(assetItem.asset.id)
-                                                        }}
-                                                        openMoveAsset={() =>{
-                                                            // beginAssetOperation({ asset: assetItem }, "move")
-                                                        }}
-                                                        openCopyAsset={() =>{
-                                                            // beginAssetOperation({ asset: assetItem }, "copy")
-                                                        }}
-                                                        openShareAsset={() =>{
-                                                            // beginAssetOperation({ asset: assetItem }, "share")
-                                                        }}
-                                                        downloadAsset={() => {
-                                                            // downloadAsset(assetItem)}
-                                                        }}
-                                                        openRemoveAsset={() =>{
-                                                            // beginAssetOperation(
-                                                            //     { asset: assetItem },
-                                                            //     "remove_item"
-                                                            // )
-                                                        }}
-                                                        handleVersionChange={()=>{}}
-                                                        loadMore={()=>{}}
-                                                        onView={()=>{onViewAsset(index)}}
-                                                        infoWrapperClass={styles['asset-grid-info-wrapper']}
-                                                        textWrapperClass={
-                                                            hasTagOrComments(assetItem) ?
-                                                                (hasBothTagAndComments(assetItem) ? styles['asset-grid-text-wrapper-2-icon'] : styles['asset-grid-text-wrapper'] ) :
-                                                                "w-100"}
-                                                        customIconComponent={<div className={`${styles['icon-wrapper']} d-flex`}>
-                                                            {assetItem.comments && <IconClickable additionalClass={styles['edit-icon']} src={Utilities.comment} onClick={()=> {}} />}
-                                                            {assetItem.tags && assetItem.tags.length > 0 && <IconClickable additionalClass={styles['edit-icon']} src={Utilities.greenTag} onClick={()=> {}} />}
-                                                        </div>}
-                                                        showViewButtonOnly={true}
-                                                        showSelectedAsset={true}
-                                                    />
-                                                </li>
-                                            );
-                                        }
-                                    })}
-                            </ul>
-                        </div>
+                        <Button className={`${styles['add-tag-btn']} m-l-20`} type='button' text='Save changes' styleType='primary' onClick={onSaveSingleAsset} />
                     </div>
-
-                </main>
-            </div>
-            {assets.length > 0 && hasAssetToSubmit() && <div className={`col-30 ${styles['right-panel']}`}>
-                <div className={detailPanelStyles.container}>
-                    <h2 className={styles['detail-title']}>Tagging</h2>
-                    <div className={detailPanelStyles['first-section']}>
-                        <div className={detailPanelStyles['field-wrapper']}>
-
-                            <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Batch Name</div>
-                            <Input
-                                onChange={(e)=>{setBatchName(e.target.value)}}
-                                placeholder={'Batch Name'}
-                                value={batchName}
-                                styleType={'regular-height-short'} />
-                        </div>
-                    </div>
-
-                    {hasSelectedAssets() && <>
-                        <div className={detailPanelStyles['field-wrapper']} >
-                            <CreatableSelect
-                                title='Tags'
-                                addText='Add Tags'
-                                onAddClick={() => setActiveDropdown('tags')}
-                                selectPlaceholder={'Enter a new tag or select an existing one'}
-                                avilableItems={inputTags}
-                                setAvailableItems={setInputTags}
-                                selectedItems={assetTags}
-                                setSelectedItems={setTags}
-                                creatable={true}
-                                onAddOperationFinished={(stateUpdate) => {
-                                    setActiveDropdown("")
-                                    // updateAssetState({
-                                    //     tags: { $set: stateUpdate }
-                                    // })
-                                    // loadTags()
-                                }}
-                                onRemoveOperationFinished={async (index, stateUpdate) => {
-                                    // await assetApi.removeTag(id, assetTags[index].id)
-                                    // updateAssetState({
-                                    //     tags: { $set: stateUpdate }
-                                    // })
-                                }}
-                                onOperationFailedSkipped={() => setActiveDropdown('')}
-                                isShare={false}
-                                asyncCreateFn={(newItem) => {
-                                    return { data: newItem }
-                                    // assetApi.addTag(id, newItem)
-                                }}
-                                dropdownIsActive={activeDropdown === 'tags'}
-                                ignorePermission={true}
-                            />
-                        </div>
-
-                        <Button className={styles['add-tag-btn']} type='button' text='Bulk Add Tag' styleType='secondary' onClick={saveBulkTag} />
-
-                        {/*<div className={detailPanelStyles['field-wrapper']} >*/}
-                        {/*    <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>*/}
-                        {/*    <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={comments}*/}
-                        {/*              onChange={e => {setComments(e.target.value)}} styleType={'regular-short'} />*/}
-                        {/*</div>*/}
-
-                        {/*<Button className={styles['add-tag-btn']} type='button' text='Add comments' styleType='secondary' onClick={saveComment} />*/}
-                    </>}
-
-
-
-
                 </div>
-            </div>}
-        </div>
-
-        <Base
-            modalIsOpen={showDetailModal}
-            closeModal={()=>{setDetailModal(false)}}
-            confirmText={""}
-            headText={"Test"}
-            closeButtonOnly={true}
-            disabledConfirm={false}
-            additionalClasses={['visible-block', styles['approval-detail-modal']]}
-            showCancel={false}
-            confirmAction={() => {
-            }} >
-            <div className={`row ${styles['modal-wrapper']} height-100`}>
-                <div className={`col-60 ${styles["left-bar"]}`}>
-                    {assets[selectedAsset]?.asset.type === "image" && (
-                        <AssetImg name={assets[selectedAsset]?.asset.name} assetImg={assets[selectedAsset]?.thumbailUrl} />
-                    )}
-
-                    {assets[selectedAsset]?.asset.type !== "image" &&
-                        assets[selectedAsset]?.asset.type !== "video" &&
-                        assets[selectedAsset]?.thumbailUrl && (
-                            assets[selectedAsset]?.asset.extension.toLowerCase() === "pdf" ?
-                                <AssetPdf
-                                    asset={assets[selectedAsset]?.asset}
-                                />
-                                :
-                                <AssetImg
-                                    name={assets[selectedAsset]?.asset.name}
-                                    assetImg={assets[selectedAsset]?.thumbailUrl}
-                                />
-                        )}
-                    {assets[selectedAsset]?.asset.type !== "image" &&
-                        assets[selectedAsset]?.asset.type !== "video" &&
-                        !assets[selectedAsset]?.thumbailUrl && (
-                            <AssetIcon extension={assets[selectedAsset]?.asset.extension} />
-                        )}
-                    {assets[selectedAsset]?.asset.type === "video" && (
-                        <video controls>
-                           <source
-                                src={assets[selectedAsset]?.previewUrl ?? assets[selectedAsset]?.realUrl}
-                                type={assets[selectedAsset]?.previewUrl ? 'video/mp4' : `video/${assets[selectedAsset]?.asset.extension}`}
-                            />
-                            Sorry, your browser doesn't support video playback.
-                        </video>
-                    )}
-                    {/*<AssetImg*/}
-                    {/*    imgClass={""}*/}
-                    {/*    assetImg={assets[selectedAsset]?.realUrl}*/}
-                    {/*    type={""}*/}
-                    {/*    name={"image"}*/}
-                    {/*/>*/}
-                    {/*<img alt={"test"} src={assets[selectedAsset]?.realUrl} />*/}
-                    <div className={styles['file-name']}>
-                        <span>{assets[selectedAsset]?.asset.name}</span>
-                        {isAdmin() && <IconClickable additionalClass={styles['edit-icon']} src={Utilities.edit} onClick={()=> {setShowRenameModal(true)}} />}
-                    </div>
-                    <div className={styles['date']}>{moment(assets[selectedAsset]?.asset?.createdAt).format('MMM DD, YYYY, hh:mm a')}</div>
+                <div className={styles["navigation-wrapper"]}>
+                    <span>{(selectedAsset || 0) + 1} of {assets.length} collection</span>
+                    <IconClickable src={Utilities.arrowPrev} onClick={() => { goPrev() }} />
+                    <IconClickable src={Utilities.arrowNext} onClick={() => { goNext() }} />
                 </div>
-                <div className={"col-40 height-100"}>
-                    <div className={`${detailPanelStyles.container} ${styles['right-form']}`}>
-                        <h2 className={styles['detail-title']}>Add Attributes to Selected Assets</h2>
-
-                        <div className={detailPanelStyles['field-wrapper']} >
-                            <CreatableSelect
-                                title='Tags'
-                                addText='Add Tags'
-                                onAddClick={() => setActiveDropdown('tags')}
-                                selectPlaceholder={'Enter a new tag or select an existing one'}
-                                avilableItems={inputTags}
-                                setAvailableItems={setInputTags}
-                                selectedItems={tempTags}
-                                setSelectedItems={setTempTags}
-                                creatable={true}
-                                menuPosition={"fixed"}
-                                onAddOperationFinished={(stateUpdate) => {
-                                    setActiveDropdown("")
-
-                                    // updateAssetTagsState(stateUpdate)
-
-                                    // updateAssetState({
-                                    //     tags: { $set: stateUpdate }
-                                    // })
-                                    // loadTags()
-                                }}
-                                onRemoveOperationFinished={async (index, stateUpdate) => {
-                                    // setIsLoading(true)
-                                    // await assetApi.removeTag(assets[selectedAsset]?.asset.id, tempTags[index].id)
-                                    // updateAssetTagsState(stateUpdate)
-
-                                    // await assetApi.removeTag(id, assetTags[index].id)
-                                    // updateAssetState({
-                                    //     tags: { $set: stateUpdate }
-                                    // })
-                                }}
-                                onOperationFailedSkipped={() => setActiveDropdown('')}
-                                isShare={false}
-                                asyncCreateFn={(newItem) => {
-                                    return { data: newItem }
-                                    // setIsLoading(true)
-                                    // return assetApi.addTag(assets[selectedAsset]?.asset.id, newItem)
-                                }}
-                                dropdownIsActive={activeDropdown === 'tags'}
-                                ignorePermission={true}
-                            />
-                        </div>
-
-                        <div className={detailPanelStyles['field-wrapper']} >
-                            <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>
-                            <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={tempComments}
-                                   onChange={e => {setTempComments(e.target.value)}} styleType={'regular-short'} maxLength={200} />
-                        </div>
-                    </div>
-
-                    <Button className={`${styles['add-tag-btn']} m-l-20`} type='button' text='Save changes' styleType='primary' onClick={onSaveSingleAsset} />
-                </div>
-            </div>
-            <div className={styles["navigation-wrapper"]}>
-                <span>{(selectedAsset || 0) + 1} of {assets.length} collection</span>
-                <IconClickable src={Utilities.arrowPrev} onClick={() => {goPrev()}} />
-                <IconClickable src={Utilities.arrowNext} onClick={() => {goNext()}} />
-            </div>
-        </Base>
+            </Base>
 
 
-        <Base
-            modalIsOpen={showConfirmModal}
-            closeModal={()=>{}}
-            confirmText={""}
-            headText={""}
-            disabledConfirm={false}
-            additionalClasses={['visible-block']}
-            showCancel={false}
-            confirmAction={() => {
+            <Base
+                modalIsOpen={showConfirmModal}
+                closeModal={() => { }}
+                confirmText={""}
+                headText={""}
+                disabledConfirm={false}
+                additionalClasses={['visible-block']}
+                showCancel={false}
+                confirmAction={() => {
 
-            }} >
-            <div className={styles['confirm-modal-wrapper']}>
-                {!submitted && <>
-                    <div className={styles['modal-field-title']}>Message for Admin</div>
-
-                    <TextArea type={"textarea"} rows={4} placeholder={'Add message'} value={message}
-                              onChange={e => {setMessage(e.target.value)}} styleType={'regular-short'} maxLength={200} />
-
-                    <div className={styles['modal-field-subtitle']}>Are you sure you want to submit your assets for approval?</div>
-                </>}
-
-                {submitted && <p className={styles['modal-field-title']}>
-                    Thanks for submitting your  assets for approval.  The admin will be notified of your submission and
-                    will be able to review it
-                </p>}
-
-
-                <div>
+                }} >
+                <div className={styles['confirm-modal-wrapper']}>
                     {!submitted && <>
-                        <Button className={styles['keep-edit-btn']} type='button' text='Keep editing' styleType='secondary' onClick={()=>{setShowConfirmModal(false); setMessage("")}} />
-                        <Button className={styles['add-tag-btn']} type='button' text='Submit' styleType='primary' onClick={submit} />
+                        <div className={styles['modal-field-title']}>Message for Admin</div>
+
+                        <TextArea type={"textarea"} rows={4} placeholder={'Add message'} value={message}
+                            onChange={e => { setMessage(e.target.value) }} styleType={'regular-short'} maxLength={200} />
+
+                        <div className={styles['modal-field-subtitle']}>Are you sure you want to submit your assets for approval?</div>
                     </>}
-                    {submitted &&  <Button className={styles['add-tag-btn']}
-                                           type='button' text='Back to Sparkfive'
-                                           styleType='primary'
-                                           onClick={()=>{
-                                               setShowConfirmModal(false);Router.push("/main/upload-approvals")}
-                                            }/>}
 
+                    {submitted && <p className={styles['modal-field-title']}>
+                        Thanks for submitting your  assets for approval.  The admin will be notified of your submission and
+                        will be able to review it
+                    </p>}
+
+
+                    <div>
+                        {!submitted && <>
+                            <Button className={styles['keep-edit-btn']} type='button' text='Keep editing' styleType='secondary' onClick={() => { setShowConfirmModal(false); setMessage("") }} />
+                            <Button className={styles['add-tag-btn']} type='button' text='Submit' styleType='primary' onClick={submit} />
+                        </>}
+                        {submitted && <Button className={styles['add-tag-btn']}
+                            type='button' text='Back to Sparkfive'
+                            styleType='primary'
+                            onClick={() => {
+                                setShowConfirmModal(false); Router.push("/main/upload-approvals")
+                            }
+                            } />}
+
+                    </div>
                 </div>
-            </div>
-        </Base>
+            </Base>
 
-        <RenameModal
-            closeModal={() => setShowRenameModal(false)}
-            modalIsOpen={showRenameModal}
-            renameConfirm={confirmAssetRename}
-            type={"Asset"}
-            initialValue={assets[selectedAsset]?.asset?.name?.substring(
-                0,
-                assets[selectedAsset]?.asset?.name.lastIndexOf(".")
-            )}
-        />
+            <RenameModal
+                closeModal={() => setShowRenameModal(false)}
+                modalIsOpen={showRenameModal}
+                renameConfirm={confirmAssetRename}
+                type={"Asset"}
+                initialValue={assets[selectedAsset]?.asset?.name?.substring(
+                    0,
+                    assets[selectedAsset]?.asset?.name.lastIndexOf(".")
+                )}
+            />
 
-    </>
-  )
+        </>
+    )
 }
 
 export default UploadApproval

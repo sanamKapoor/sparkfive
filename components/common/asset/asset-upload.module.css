@@ -30,12 +30,13 @@
 }
 
 .normal {
-  position: absolute;
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 18px;
-  border: 1px dashed var(--color-secondary-border)
+  border: 1px dashed var(--color-secondary-border);
+  border-radius: 6px;
+  max-height: 50vh;
 }

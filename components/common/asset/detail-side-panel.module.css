@@ -5,12 +5,8 @@
 .container h2 {
   padding-bottom: 16px;
   margin: 20px 0;
-  border-bottom: 1px solid var(--color-secondary-border);
   font-size: 22px;
   line-height: 24px;
-}
-
-.field {
 }
 
 .first-section {
@@ -18,9 +14,6 @@
 }
 
 .first-section .field-wrapper {
-  display: grid;
-  grid-template-columns: 100px 1fr;
-  align-items: center;
   margin-bottom: 8px;
 }
 
@@ -81,10 +74,6 @@
 }
 
 @media screen and (max-width: 1200px) {
-  .container {
-    min-width: 25rem;
-  }
-
   .first-section {
     grid-template-columns: repeat(2, 1fr);
   }
