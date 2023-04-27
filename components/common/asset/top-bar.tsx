@@ -135,7 +135,7 @@ const TopBar = ({
               action: () =>{ setActiveFolder(''); setSortFilterValue('mainFilter', "folders"); }
             }
           ]}
-          current={folderData[0].name}
+          current={folderData[0]?.name}
         />
 
       )}
@@ -143,7 +143,7 @@ const TopBar = ({
         <div>
           {(activeFolder && mode === "assets") && (
             <SubHeader
-              pageTitle={folderData[0].name}
+              pageTitle={folderData[0]?.name}
             />
           )}
 
