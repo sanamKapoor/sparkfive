@@ -16,11 +16,11 @@ import Button from '../../common/buttons/button'
 import AssetHeaderOps from '../../common/asset/asset-header-ops'
 import AssetThumbail from "../../common/asset/asset-thumbail";
 
-const SearchOverlayAssets = ({ activeMode, setActiveMode, closeOverlay, importEnabled = false, operationsEnabled = false, importAssets = () => { }, sharePath = '', activeFolder = '', onCloseDetailOverlay = (assetData) => { }, onClickOutside, isFolder }) => {
+const SearchOverlayAssets = ({  closeOverlay, importEnabled = false, operationsEnabled = false, importAssets = () => { }, sharePath = '', activeFolder = '', onCloseDetailOverlay = (assetData) => { }, onClickOutside, isFolder }) => {
 
   const { assets, setAssets, setActiveOperation, setOperationAsset, setPlaceHolders, nextPage, selectAllAssets, selectedAllAssets, totalAssets} = useContext(AssetContext)
 
-  const { term, setSearchTerm, searchFilterParams, setSearchFilterParams, activeSortFilter, setActiveSortFilter } = useContext(FilterContext)
+  const {  setSearchTerm, setSearchFilterParams, activeSortFilter, setActiveSortFilter } = useContext(FilterContext)
 
   const [activeView, setActiveView] = useState('list')
   const [filterParams, setFilterParams] = useState({})

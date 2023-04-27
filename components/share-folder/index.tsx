@@ -46,7 +46,7 @@ const ShareFolderMain = () => {
 
     const { folderInfo, setFolderInfo } = useContext(ShareContext)
 
-    const { activeSortFilter, setActiveSortFilter, setSharePath: setContextPath } = useContext(FilterContext)
+    const { activeSortFilter, setActiveSortFilter, setSharePath: setContextPath, term, searchFilterParams } = useContext(FilterContext)
 
     const [firstLoaded, setFirstLoaded] = useState(false)
     const [activePasswordOverlay, setActivePasswordOverlay] = useState(true)
@@ -175,7 +175,7 @@ const ShareFolderMain = () => {
                 getAssets()
             }
         }
-    }, [activeSortFilter,sharePath, folderInfo])
+    }, [activeSortFilter,sharePath, folderInfo, term])
 
     useEffect(() => {
         if (firstLoaded && activeFolder !== '') {
@@ -274,7 +274,6 @@ const ShareFolderMain = () => {
                 setAddedIds([])
             }
             setPlaceHolders('asset', replace)
-
             const { data } = await shareCollectionApi.getAssets({
                 ...getAssetsFilters({
                     replace,
@@ -283,6 +282,8 @@ const ShareFolderMain = () => {
                     activeFolder,
                     userFilterObject: activeSortFilter
                 }),
+                ...(term && {term}),
+                ...searchFilterParams,
                 ...getAssetsSort(activeSortFilter),
                 sharePath
             })
@@ -354,13 +355,13 @@ const ShareFolderMain = () => {
                     singleCollection={!!folderInfo.singleSharedCollectionId}
                     sharedAdvanceConfig={user ? undefined : advancedConfig}
                 />
-                {(activeMode === 'assets' ? selectedAssets.length : selectedFolders.length) > 0 &&
+                {/* {(activeMode === 'assets' ? selectedAssets.length : selectedFolders.length) > 0 &&
                     <AssetHeaderOps
                         isUnarchive={activeSortFilter.mainFilter === 'archived'}
                         isFolder={activeMode === 'folders'}
                         deletedAssets={false}
                     />
-                }
+                } */}
                 <div className={`${openFilter && styles['col-wrapper']}`} style={{marginTop: top}}>
                     <AssetGrid
                         activeFolder={activeFolder}
@@ -402,8 +403,6 @@ const ShareFolderMain = () => {
                     sharePath={sharePath}
                     closeOverlay={closeSearchOverlay}
                     activeFolder={activeFolder}
-                    activeMode={activeFolder}
-                    setActiveMode={setActiveMode}
                 />
             }
         </>

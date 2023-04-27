@@ -361,13 +361,12 @@ const AssetHeaderOps = ({
 				{deletedAssets && <IconClickable place={'top'} additionalClass={styles['action-button']} src={AssetOps[`move`]} tooltipText={'Recover Asset'} tooltipId={'Recover'} onClick={() => setActiveOperation('recover')} />}
 				{deletedAssets && <IconClickable place={'top'} additionalClass={styles['action-button']} src={AssetOps[`delete`]} tooltipText={'Delete'} tooltipId={'Delete'} onClick={() => setActiveOperation('delete')} />}
 
-				{!isFolder &&
+				{!isFolder && !isShare &&
 
 					<div className={styles["more-wrapper"]}>
 						<IconClickable place={'top'} additionalClass={`${styles['action-button']}`} src={Utilities.more} tooltipText={'More'} tooltipId={'More'} onClick={() => setShowMoreActions(true)} />
 						{showMoreActions && ((!isFolder && !isShare) && !deletedAssets) && (
-							<>
-								<Dropdown
+							<>								<Dropdown
 									onClickOutside={() => setShowMoreActions(false)}
 									additionalClass={styles["more-dropdown"]}
 									options={[

@@ -192,11 +192,8 @@ const AssetsLibrary = () => {
 
       if (firstLoaded) {
         setActivePageMode('library')
-        console.log('activeSortFilter.mainFilter: [file: components/main/assets-library/index.tsx] [line: 195]', activeSortFilter.mainFilter)
         if (activeSortFilter.mainFilter === 'folders') {
           setActiveMode('folders')
-          console.log('components/main/assets-library/index.tsx--- useEffect --- line:197', 'SET ACTIVE FOLDER');
-          setActiveFolder('');
           getFolders()
         } else {
           setActiveMode('assets')
@@ -550,7 +547,6 @@ const AssetsLibrary = () => {
         ...getAssetsSort(activeSortFilter)
       })
 
-      console.log('assets data from api: ', assets);
       setAssets({ ...data, results: data.results.map(mapWithToggleSelection) }, replace)
       setFirstLoaded(true)
     } catch (err) {
@@ -561,7 +557,6 @@ const AssetsLibrary = () => {
     }
   }
 
-  console.log('activeFolder: ', activeFolder);
 
   const getFolders = async (replace = true) => {
     try {
@@ -661,7 +656,6 @@ const AssetsLibrary = () => {
     //   mainFilter: 'folders'
     // })
     // router.replace("/main/assets") // Open this comment to reset query string url
-    console.log("Folder id: ", id);
     setActiveFolder(id)
     updateSortFilterByAdvConfig({ folderId: id })
   }
@@ -737,8 +731,6 @@ const AssetsLibrary = () => {
                   closeOverlay={closeSearchOverlay}
                   operationsEnabled={true}
                   activeFolder={activeFolder}
-                  activeMode={activeMode}
-                  setActiveMode={setActiveMode}
                   onCloseDetailOverlay={(assetData) => {
                     closeSearchOverlay()
                     // setActiveSearchOverlay(false)

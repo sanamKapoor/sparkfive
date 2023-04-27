@@ -46,7 +46,8 @@ const TopBar = ({
     selectAllFolders,
     selectedAllFolders,
     setLastUploadedFolder,
-    folders
+    folders,
+    setActiveFolder
   } = useContext(AssetContext)
 
   const { user, hasPermission, advancedConfig, setAdvancedConfig } = useContext(UserContext)
@@ -72,8 +73,6 @@ const TopBar = ({
     setActiveSortFilter({
       ...activeSortFilter
     })
-    console.log('activeSortFilter [file: common/asset/top-bar.tsx] [setSortFilterValue] [line:75]: ', activeSortFilter);
-
     // Needed to reset because it is set for collection upload when alphabetical sort active
     // And uploaded folder needed to show at first
     setLastUploadedFolder(undefined)
@@ -83,7 +82,6 @@ const TopBar = ({
       [key]: value,
       sort
     })
-    console.log('activeSortFilter [file: common/asset/top-bar.tsx] [setSortFilterValue] [line:86]: ', activeSortFilter);
   }
 
 
@@ -123,7 +121,6 @@ const TopBar = ({
   })
 
   const folderData = folders.filter(folder => folder.id === activeFolder)
-  console.log('activeFolder inside top bar component: ', activeFolder);
 
   return (
     <section className={styles.container} id={'top-bar'}>
@@ -135,7 +132,7 @@ const TopBar = ({
           links={[
             {
               name: "Collections",
-              action: () => setSortFilterValue('mainFilter', "folders")
+              action: () =>{ setActiveFolder(''); setSortFilterValue('mainFilter', "folders"); }
             }
           ]}
           current={folderData[0].name}
