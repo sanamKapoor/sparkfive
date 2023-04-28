@@ -1,14 +1,16 @@
 .root-row{
   position: relative;
-  height: calc(100vh - 200px);
-  max-height: calc(100vh - 200px);
-  overflow: hidden;
   /*background-color: wheat;*/
+  display: flex;
+  gap: 32px;
+  margin-top: 81px;
+  height: 100%;
 }
 
 .container {
   padding: 35px 32px;
   height: 100%;
+  width: 100%;
 }
 
 .approval-detail-modal{
@@ -21,6 +23,18 @@
   justify-content: flex-start;
 }
 
+.title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.pre-title {
+  font-size: 12px;
+  color: var(--color-sec-text);
+}
+
 .title{
   font-size: 20px;
   color: #08135E;
@@ -28,16 +42,15 @@
 }
 
 .main-title{
-  font-size: 35px;
-  color: #08135E;
-  font-weight: 700;
-  margin-bottom: 20px;
+  font-size: 18px;
+  color: var(--color-prim-navy);
+  font-weight: 500;
 }
 
 .main-subtitle{
-  font-weight: 600;
-  font-size: 20px;
-  color: #08135E;
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--color-sec-text);
 }
 
 .asset-list{
@@ -45,12 +58,6 @@
 }
 
 .asset-view-list{
-  margin-top: 55px;
-
-  overflow-y: scroll;
-  max-height: calc(100% - 160px);;
-  overflow-x: hidden;
-  height: inherit;
 }
 
 .grid-list{
@@ -62,14 +69,23 @@
   align-items: center;
 }
 
-.button-wrapper{
-  /*margin-left: 80px;*/
+.header h2 {
+  margin: 0;
 }
 
-.button-wrapper button{
-  margin-right: 18px;
-  margin-top: 18px;
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 52px;
 }
+
+.header_buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 
 .button-wrapper button:last-child{
   margin-right: 0;
@@ -95,7 +111,7 @@
 .right-panel{
   border-left: solid 1px #E5E5E5;
   height: 100%;
-  overflow: scroll;
+  width: 415px;
 }
 
 .modal-wrapper{
@@ -140,7 +156,7 @@
 .filter-wrapper{
   display: flex;
   justify-content: flex-end;
-  width: 100%;
+  width: 175px;
 }
 
 .filter-input{
@@ -149,7 +165,7 @@
 
 @media screen and (max-width: 900px) {
   .container {
-    padding: 17.5px 16px;
+    padding: 17.5px 16px 80px;
   }
 }
 
@@ -162,6 +178,7 @@
   position: relative;
   display: flex;
   align-items: center;
+  gap: 8px;
 }
 
 .button-wrapper .approval-text{
@@ -361,9 +378,27 @@
   }
 }
 
-@media screen and (max-width: 550px) {
+@media screen and (max-width: 600px) {
   .options-list.dropdown {
     width: calc(160px * 2);
+  }
+
+  .header {
+    margin-bottom: 28px;
+  }
+
+  .button-wrapper {
+    position: fixed;
+    background-color: var(--color-prim-navy);
+    width: 100%;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
   }
 }
 

@@ -49,17 +49,21 @@ const Base = ({
       shouldFocusAfterRender={false}
       ariaHideApp={false}
     >
-      <div className={styles.header}>
-        {(headText || closeButtonOnly) &&
+      {closeButtonOnly &&
+        <img src={Utilities.blueClose} alt="close" className={`${styles.close} ${styles.close_only}`} onClick={closeModal} />
+
+      }
+      {(headText) &&
+        <div className={styles.header}>
           <div className={`${styles.text} ${closeButtonOnly ? styles['no-border'] : ""} ${textWidth && styles['full-width']}`}>
             {<p className={styles['overflow-text']}>{!closeButtonOnly ? headText : ""}</p>}
             <img src={Utilities.blueClose} alt="close" className={styles.close} onClick={closeModal} />
           </div>
-        }
-        {subText &&
-          <p className={styles.subtext}>{subText}</p>
-        }
-      </div>
+          {subText &&
+            <p className={styles.subtext}>{subText}</p>
+          }
+        </div>
+      }
       {children}
       {confirmText &&
         <div className={`${styles.buttons} ${!showCancel ? styles['button-center'] : ''}`}>

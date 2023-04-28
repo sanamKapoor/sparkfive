@@ -1,7 +1,7 @@
 import moment from "moment"
 
 import requestListStyles from "./request-list-item.module.css";
-import { Utilities, Assets } from "../../../assets";
+import { Utilities, AssetOps } from "../../../assets";
 
 // Components
 import AssetImg from "./asset-img";
@@ -16,17 +16,17 @@ const RequestListItem = ({
     status = 0,
     isLoading = false,
     isSelected,
-      createdAt = new Date()
+    createdAt = new Date()
   },
   index,
-  toggleSelected = () => {},
-  onView = (index) => {},
+  toggleSelected = () => { },
+  onView = (index) => { },
   isAdmin = false
 }) => {
 
 
   const Tag = ({ status }) => {
-    switch (status){
+    switch (status) {
       case -1: {
         return <span className={requestListStyles['reject-tag']}>Rejected</span>
       }
@@ -35,9 +35,9 @@ const RequestListItem = ({
       }
       case 1: {
         // Admin role will see submitted tag as pending
-        if(isAdmin){
+        if (isAdmin) {
           return <span className={requestListStyles['pending-tag']}>Pending</span>
-        }else{
+        } else {
           return <span className={requestListStyles['complete-tag']}>Submitted</span>
         }
 
@@ -45,7 +45,7 @@ const RequestListItem = ({
       case 2: {
         return <span className={requestListStyles['complete-tag']}>Completed</span>
       }
-      default : {
+      default: {
         return <span className={requestListStyles['pending-tag']}>Pending</span>
       }
     }
@@ -53,19 +53,19 @@ const RequestListItem = ({
   }
 
   const getThumbnail = (asset) => {
-    if(asset){
-      const { thumbailUrl,  asset: { extension }} = asset
+    if (asset) {
+      const { thumbailUrl, asset: { extension } } = asset
       return thumbailUrl ? (
-          <AssetImg
-              imgClass={requestListStyles.thumbnail}
-              assetImg={thumbailUrl}
-              type={""}
-              name={name}
-          />
+        <AssetImg
+          imgClass={requestListStyles.thumbnail}
+          assetImg={thumbailUrl}
+          type={""}
+          name={name}
+        />
       ) : (
-          <AssetIcon extension={extension} onList={true} />
+        <AssetIcon extension={extension} onList={true} />
       )
-    }else{
+    } else {
       return <AssetIcon extension={""} onList={true} />
     }
   }
@@ -78,20 +78,21 @@ const RequestListItem = ({
             <h4> </h4>
             <div className={requestListStyles["headers-content"]}>
               <h4>
-                Upload Name
+                Batch Name
               </h4>
               {/*<h4>Stage</h4>*/}
               {isAdmin && <h4>
                 Submitted By
               </h4>}
               <h4>
-                Time
+                Date
+                <IconClickable src={Utilities.sort} />
               </h4>
               <h4>
                 Status
               </h4>
               <h4>
-                Admin Actions
+                Actions
               </h4>
             </div>
           </div>
@@ -99,9 +100,8 @@ const RequestListItem = ({
         <div className={requestListStyles.item}>
           <div className={requestListStyles.photo}>
             <div
-              className={`${requestListStyles["selectable-wrapper"]} ${
-                isSelected && requestListStyles["selected-wrapper"]
-              }`}
+              className={`${requestListStyles["selectable-wrapper"]} ${isSelected && requestListStyles["selected-wrapper"]
+                }`}
             >
               {!isLoading && (
                 <>
@@ -126,22 +126,31 @@ const RequestListItem = ({
           </div>
           <div className={requestListStyles.info}>
             <div
-              className={`${requestListStyles.name} ${isLoading && "loadable"} align-center`}
+              className={`${requestListStyles.field_name} ${isLoading && "loadable"} align-center`}
             >
               {getThumbnail(assets[0])}
-              <span className={"font-weight-500"}>{name || "Untitled"}</span>
+              <span>{name || "Untitled"}</span>
+              <div className={requestListStyles.field_mobile}>
+                <div className={requestListStyles.field_time_mobile}>
+                  {moment(createdAt).format("MMM DD, YYYY")}
+                </div>
+                <div className={requestListStyles.field_status_mobile}>
+                  <Tag status={status} />
+                </div>
+              </div>
             </div>
-            {isAdmin && <div className={`${requestListStyles.field_name} ${isLoading && "loadable"} font-weight-500`}>
+            {isAdmin && <div className={`${requestListStyles.field_author} ${isLoading && "loadable"} font-weight-500`}>
               {user?.name}
             </div>}
             <div className={requestListStyles.field_time}>
               {moment(createdAt).format("MMM DD, YYYY hh:mm a")}
             </div>
-            <div className={requestListStyles.field_name}>
-              <Tag status={status}/>
+            <div className={requestListStyles.field_status}>
+              <Tag status={status} />
             </div>
-            <div className={`${requestListStyles.field_name} ${isLoading && "loadable"}`}>
-              <span className={"underline-text cursor-pointer"} onClick={()=>{onView(index)}}>View Batch</span>
+            <div className={`${requestListStyles.field_actions} ${isLoading && "loadable"}`}>
+              <span className={"underline-text cursor-pointer"} onClick={() => { onView(index) }}>View Batch</span>
+              <IconClickable src={AssetOps.deleteGray} onClick={() => alert('delete')} />
             </div>
           </div>
         </div>

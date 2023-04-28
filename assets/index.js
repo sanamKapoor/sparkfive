@@ -97,6 +97,8 @@ export const Utilities = {
   tagGray: require('./Icons/Utilities/Tags/icn-utilities-tag-gray.svg'),
   related: require('./Icons/Utilities/Related/related.svg'),
   relatedLight: require('./Icons/Utilities/Related/related-light.svg'),
+  sort: require('./Icons/Utilities/arrow/sort.svg'),
+  caretRight: require('./Icons/Utilities/Caret/caret-right.svg'),
 }
 
 export const ProjectTypes = {
@@ -193,6 +195,7 @@ export const Integrations = {
 export const AssetOps = {
   edit: require('./Icons/Utilities/Description-Edit/icn-utilities-description_edit.svg'),
   delete: require('./Icons/Utilities/Delete/icn-utilities-delete.svg'),
+  deleteGray: require('./Icons/Utilities/Delete/icn-utilities-delete-gray.svg'),
   deleteRed: require('./Icons/Utilities/Delete/icn-utilities-delete-red.svg'),
   archive: require('./Icons/Asset Actions/archive.svg'),
   download: require('./Icons/Utilities/Download/icn-utilities-download.svg'),

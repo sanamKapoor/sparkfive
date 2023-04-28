@@ -1333,7 +1333,6 @@ const UploadApproval = () => {
                 modalIsOpen={showDetailModal}
                 closeModal={() => { setDetailModal(false) }}
                 confirmText={""}
-                headText={"Test"}
                 closeButtonOnly={true}
                 disabledConfirm={false}
                 additionalClasses={['visible-block', styles['approval-detail-modal']]}
@@ -1341,7 +1340,12 @@ const UploadApproval = () => {
                 confirmAction={() => {
                 }} >
                 <div className={`row ${styles['modal-wrapper']} height-100`}>
-                    <div className={`col-60 ${styles["left-bar"]}`}>
+                    <div className={`${styles["left-bar"]}`}>
+                        <div className={styles['file-name']}>
+                            <span>{assets[selectedAsset]?.asset.name}</span>
+                            {isAdmin() && <IconClickable additionalClass={styles['edit-icon']} src={Utilities.edit} onClick={() => { setShowRenameModal(true) }} />}
+                        </div>
+                        <div className={styles['date']}>{moment(assets[selectedAsset]?.asset?.createdAt).format('MMM DD, YYYY, hh:mm a')}</div>
                         {assets[selectedAsset]?.asset.type === "image" && (
                             <AssetImg name={assets[selectedAsset]?.asset.name} assetImg={assets[selectedAsset]?.thumbailUrl} />
                         )}
@@ -1373,6 +1377,11 @@ const UploadApproval = () => {
                                 Sorry, your browser doesn't support video playback.
                             </video>
                         )}
+                                                <div className={styles["navigation-wrapper"]}>
+                            <span>{(selectedAsset || 0) + 1} of {assets.length} collection</span>
+                            <IconClickable src={Utilities.arrowPrev} onClick={() => { goPrev() }} />
+                            <IconClickable src={Utilities.arrowNext} onClick={() => { goNext() }} />
+                        </div>
                         {/*<AssetImg*/}
                         {/*    imgClass={""}*/}
                         {/*    assetImg={assets[selectedAsset]?.realUrl}*/}
@@ -1380,13 +1389,9 @@ const UploadApproval = () => {
                         {/*    name={"image"}*/}
                         {/*/>*/}
                         {/*<img alt={"test"} src={assets[selectedAsset]?.realUrl} />*/}
-                        <div className={styles['file-name']}>
-                            <span>{assets[selectedAsset]?.asset.name}</span>
-                            {isAdmin() && <IconClickable additionalClass={styles['edit-icon']} src={Utilities.edit} onClick={() => { setShowRenameModal(true) }} />}
-                        </div>
-                        <div className={styles['date']}>{moment(assets[selectedAsset]?.asset?.createdAt).format('MMM DD, YYYY, hh:mm a')}</div>
+                
                     </div>
-                    <div className={"col-40 height-100"}>
+                    <div className={"height-100"}>
                         <div className={`${detailPanelStyles.container} ${styles['right-form']}`}>
                             <h2 className={styles['detail-title']}>Add Attributes to Selected Assets</h2>
 
@@ -1434,6 +1439,8 @@ const UploadApproval = () => {
                                 />
                             </div>
 
+                            <div className={styles.divider}></div>
+
                             <div className={detailPanelStyles['field-wrapper']} >
                                 <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>
                                 <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={tempComments}
@@ -1441,13 +1448,8 @@ const UploadApproval = () => {
                             </div>
                         </div>
 
-                        <Button className={`${styles['add-tag-btn']} m-l-20`} type='button' text='Save changes' styleType='primary' onClick={onSaveSingleAsset} />
+                        <Button className={`${styles['add-tag-btn']} m-t-20 m-b-40`} type='button' text='Save changes' styleType='primary' onClick={onSaveSingleAsset} />
                     </div>
-                </div>
-                <div className={styles["navigation-wrapper"]}>
-                    <span>{(selectedAsset || 0) + 1} of {assets.length} collection</span>
-                    <IconClickable src={Utilities.arrowPrev} onClick={() => { goPrev() }} />
-                    <IconClickable src={Utilities.arrowNext} onClick={() => { goNext() }} />
                 </div>
             </Base>
 
@@ -1456,7 +1458,6 @@ const UploadApproval = () => {
                 modalIsOpen={showConfirmModal}
                 closeModal={() => { }}
                 confirmText={""}
-                headText={""}
                 disabledConfirm={false}
                 additionalClasses={['visible-block']}
                 showCancel={false}
@@ -1465,7 +1466,7 @@ const UploadApproval = () => {
                 }} >
                 <div className={styles['confirm-modal-wrapper']}>
                     {!submitted && <>
-                        <div className={styles['modal-field-title']}>Message for Admin</div>
+                        <div className={styles['modal-field-title']}>Send a Message to the Admin</div>
 
                         <TextArea type={"textarea"} rows={4} placeholder={'Add message'} value={message}
                             onChange={e => { setMessage(e.target.value) }} styleType={'regular-short'} maxLength={200} />
@@ -1474,8 +1475,9 @@ const UploadApproval = () => {
                     </>}
 
                     {submitted && <p className={styles['modal-field-title']}>
-                        Thanks for submitting your  assets for approval.  The admin will be notified of your submission and
-                        will be able to review it
+                        Thanks for submitting your  assets for approval.
+                        <br />
+                        The admin will be notified of your submission and will be able to review it.
                     </p>}
 
 
