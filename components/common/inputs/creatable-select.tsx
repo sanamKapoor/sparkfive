@@ -12,6 +12,7 @@ import { ASSET_EDIT } from '../../../constants/permissions'
 // Components
 import Tag from '../misc/tag'
 import IconClickable from '../buttons/icon-clickable'
+import toastUtils from '../../../utils/toast'
 
 // Contexts
 import {  UserContext } from '../../../context'
@@ -61,7 +62,7 @@ const CreatableSelect = ({
   const onChange = async (selected, actionMeta) => {
     if(actionMeta.action !== 'clear'){
       const newItem = await addItem(selected, actionMeta.action === 'create-option')
-      if (newItem && actionMeta.action === 'create-option') {
+      if (newItem && newItem.status && actionMeta.action === 'create-option') {
         setAvailableItems(update(avilableItems, { $push: [newItem] }))
       }
     }
@@ -86,13 +87,18 @@ const CreatableSelect = ({
         }
         try {
           const { data } = await asyncCreateFn(newItem)
+
+          if(data?.status === false){
+             toastUtils.error(data?.message)
+          }
+
           let stateItemsUpdate
           if (!isNew) {
             stateItemsUpdate = update(selectedItems, { $push: [newItem] })
             setSelectedItems(sort(stateItemsUpdate))
           } else {
             stateItemsUpdate = update(selectedItems, { $push: [data] })
-            setSelectedItems(sort(stateItemsUpdate))
+            setSelectedItems(sort(stateItemsUpdate)) 
             setAvailableItems(update(avilableItems, { $push: [data] }))
           }
           onAddOperationFinished(stateItemsUpdate)
@@ -121,15 +127,15 @@ const CreatableSelect = ({
     }
   }
 
-
   return (
     <>
       <div className={`secondary-text ${styles.field}`}>{title}</div>
       {selectOneComponent}
       <div className={'normal-text'}>
         <ul className={`tags-list ${styles['tags-list']}`}>
-          {(selectedItems || []).map((item, index) => (
-            <li key={item.id || item.value}>
+          {(selectedItems || []).map((item, index) => {
+            return (
+             item?.status === undefined && <li key={item.id || item.value}>
               <Tag
                 data={item}
                 altColor={altColor}
@@ -138,7 +144,8 @@ const CreatableSelect = ({
                 removeFunction={() => removeItem(index, item.id)}
               />
             </li>
-          ))}
+            )
+            })}
         </ul>
         {((!isShare && canAdd && hasPermission([ASSET_EDIT])) || ignorePermission) &&
           <>
