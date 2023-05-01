@@ -131,6 +131,9 @@ const RequestListItem = ({
               {getThumbnail(assets[0])}
               <span>{name || "Untitled"}</span>
               <div className={requestListStyles.field_mobile}>
+                {isAdmin && <div className={`${requestListStyles.field_author_mobile} ${isLoading && "loadable"} font-weight-500`}>
+                  {user?.name}
+                </div>}
                 <div className={requestListStyles.field_time_mobile}>
                   {moment(createdAt).format("MMM DD, YYYY")}
                 </div>

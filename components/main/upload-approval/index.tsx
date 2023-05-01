@@ -1273,7 +1273,7 @@ const UploadApproval = () => {
                                             />
                                         </div>
 
-                                        <Button className={styles['add-tag-btn']} type='button' text='Save Changes' styleType='primary' onClick={saveBulkTag} />
+                                        <Button className={'m-t-20'} type='button' text='Save Changes' styleType='primary' onClick={saveBulkTag} />
 
                                         {/*<div className={detailPanelStyles['field-wrapper']} >*/}
                                         {/*    <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>*/}

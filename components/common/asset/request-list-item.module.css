@@ -174,10 +174,7 @@
 
   .info {
     flex-wrap: wrap;
-  }
-
-  .info > * {
-    margin-bottom: 10px;
+    align-items: flex-end;
   }
 
   .name {
@@ -185,24 +182,28 @@
   }
 
   .field_name {
-    width: 40%;
+    width: 36%;
   }
   .field_time {
-    width: 18%;
+    width: 15%;
   }
   .field_status {
-    width: 18%;
+    width: 15%;
   }
   .field_actions {
-    width: 18%;
+    width: 19%;
+  }
+
+  .field_author {
+    width: 15%;
   }
 
   .headers-content h4 {
-    width: 18%;
+    width: 15%;
   }
 
   .headers-content h4:first-child {
-    width: 40%;
+    width: 36%;
   }
 }
 
@@ -254,6 +255,10 @@
     display: none;
   }
 
+  .field_name img {
+    display: none;
+  }
+
   .headers-content h4:not(:first-child) {
     display: none;
   }
@@ -280,15 +285,26 @@
    display: none;
   }
 
+  .field_author {
+    display: none;
+  }
+
   .field_mobile {
     display: flex;
     align-items: center;
     gap: 8px;
+    margin-top: 8px;
   }
 
   .field_time_mobile {
     font-size: 11px;
     color: var(--color-sec-text);
+  }
+
+  .field_author_mobile {
+    font-size: 11px;
+    color: var(--color-sec-text);
+    font-weight: 400;
   }
 
   .draft-tag{

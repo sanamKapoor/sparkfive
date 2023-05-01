@@ -17,10 +17,6 @@
   height: 100%;
 }
 
-.approval-detail-modal{
-  height: 90%;
-}
-
 .container ul{
   -webkit-justify-content: flex-start;
   justify-content: flex-start;
@@ -40,6 +36,9 @@
 .asset-list{
   margin-top: 16px;
   padding-bottom: 80px;
+  border: 1px solid var(--color-border);
+  padding: 20px;
+  border-radius: 6px;
 }
 
 .operation-wrapper{
@@ -80,7 +79,7 @@
   padding: 64px 32px;
   display: grid;
   grid-template-columns: 1fr 35%;
-  gap: 32px;
+  gap: 60px;
 }
 
 .modal-field-title{
@@ -388,6 +387,10 @@
     width: calc(160px * 2);
   }
 
+  .asset-list {
+    padding: 10px;
+  }
+
   .root-row {
     display: flex;
     flex-direction: row;
@@ -403,7 +406,6 @@
     background-color: var(--color-sec-lightivory);
     padding: 16px;
     width: 70px;
-    height: 108vh;
   }
 
   .right-panel {
@@ -438,6 +440,7 @@
     grid-template-columns: 1fr;
     width: 100%;
     padding: 40px 32px;
+    gap: 32px;
   }
 }
 

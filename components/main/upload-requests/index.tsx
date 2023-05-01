@@ -47,6 +47,7 @@ import { useDebounce } from "../../../hooks/useDebounce";
 import AssetPdf from "../../common/asset/asset-pdf";
 import AssetIcon from "../../common/asset/asset-icon";
 import AssetCropImg from "../../common/asset/asset-crop-img";
+import { isMobile } from 'react-device-detect';
 
 
 const filterOptions = [
@@ -154,6 +155,13 @@ const UploadRequest = () => {
     // Folders
     const [inputFolders, setInputFolders] = useState([])
     const [assetFolders, setFolders] = useState([])
+
+    const [sideOpen, setSideOpen] = useState(isMobile ? false : true);
+
+    const toggleSideMenu = (value = null) => {
+        if (value === null) setSideOpen(!sideOpen);
+        else setSideOpen(value);
+    };
 
     const debouncedBatchName = useDebounce(batchName, 500);
 
@@ -1142,11 +1150,11 @@ const UploadRequest = () => {
                 showAssetAddition={false}
             />
             <div className={styles['root-row']}>
-                <main className={`${styles.container}`}>
+                <main className={`${styles.container} ${mode === "view" ? 'p-r-0' : ''}`}>
                     {mode === "view" && <div className={`${styles.header}`}>
                         <div>
                             <div className={styles['title-wrapper']}>
-                                <div className={styles['pre-title']}>
+                                <div className={styles['pre-title']} onClick={onCancelView}>
                                     Upload Requests
                                 </div>
                                 <img src={Utilities.caretRight} />
@@ -1159,6 +1167,32 @@ const UploadRequest = () => {
                             </div>
                         </div>
                         <div className={styles.header_buttons}>
+                            {assets.length > 0 && isAdmin() && hasSelectedAssets() &&
+                                <Button
+                                    type='button'
+                                    text='Approve'
+                                    styleType='primary'
+                                    onClick={() => {
+                                        setTempAssets(getSelectedAssets())
+                                        setShowApproveConfirm(true)
+                                    }
+
+                                    }
+                                />
+                            }
+                            {assets.length > 0 && isAdmin() && hasSelectedAssets() &&
+                                <Button
+                                    type='button'
+                                    text='Reject'
+                                    styleType='secondary'
+                                    onClick={() => {
+                                        setTempAssets(getSelectedAssets())
+                                        setShowRejectConfirm(true)
+                                    }
+
+                                    }
+                                />
+                            }
                             {assets.length > 0 && (currentViewStatus === 0 || isAdmin()) && hasSelectedAssets() && <Button type='button' text='Deselect' styleType='secondary' onClick={() => { selectAllAssets(false) }} />}
                             {assets.length > 0 && (currentViewStatus === 0 || isAdmin()) && !selectedAllAssets && <Button type='button' text='Select All' styleType='secondary' onClick={selectAllAssets} />}
                             {assets.length > 0 && currentViewStatus === 0 &&
@@ -1177,33 +1211,6 @@ const UploadRequest = () => {
                                     }
                                 />
                             }
-                            {assets.length > 0 && isAdmin() && hasSelectedAssets() &&
-                                <Button
-                                    type='button'
-                                    text='Reject Selected'
-                                    styleType='primary'
-                                    onClick={() => {
-                                        setTempAssets(getSelectedAssets())
-                                        setShowRejectConfirm(true)
-                                    }
-
-                                    }
-                                />
-                            }
-                            {assets.length > 0 && isAdmin() && hasSelectedAssets() &&
-                                <Button
-                                    type='button'
-                                    text='Approve Selected'
-                                    styleType='primary'
-                                    onClick={() => {
-                                        setTempAssets(getSelectedAssets())
-                                        setShowApproveConfirm(true)
-                                    }
-
-                                    }
-                                />
-                            }
-                            <Button type='button' text={'Back'} styleType='secondary' onClick={onCancelView} />
                             {
                                 mode === "view" && isAdmin() && <div className={styles['filter-wrapper']}>
                                     <Select
@@ -1349,7 +1356,7 @@ const UploadRequest = () => {
                                                         handleVersionChange={() => { }}
                                                         loadMore={() => { }}
                                                         onView={() => { onViewAsset(index) }}
-                                                        customComponent={<TagWrapper status={assetItem.asset.status} />}
+                                                        // customComponent={<TagWrapper status={assetItem.asset.status} />}
                                                         infoWrapperClass={styles['asset-grid-info-wrapper']}
                                                         textWrapperClass={
                                                             hasTagOrComments(assetItem.asset) ?
@@ -1370,126 +1377,94 @@ const UploadRequest = () => {
 
                 </main>
 
-                {
-                    mode === "view" && assets.length > 0 && <div className={`${styles['right-panel']}`}>
+                {sideOpen &&
+
+                    mode === "view" && assets.length > 0 &&
+                    <div className={`${styles['right-panel']}`}>
                         <div className={detailPanelStyles.container}>
                             <h2 className={styles['detail-title']}>
                                 {isAdmin() ? "Batch Details" : "Tagging"}
                             </h2>
 
-                            {
-                                (currentViewStatus !== 0 || isAdmin()) && <div className={detailPanelStyles['field-wrapper']} >
-                                    <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Message</div>
-                                    <p>{currentApproval?.message}</p>
-                                </div>
-                            }
+                            <div className={detailPanelStyles['first-section']}>
+                                {
+                                    (currentViewStatus !== 0 || isAdmin()) && <div className={detailPanelStyles['field-wrapper']} >
+                                        <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Message</div>
+                                        <p>{currentApproval?.message}</p>
+                                    </div>
+                                }
+                            </div>
 
-                            {!isAdmin() && currentViewStatus == 0 && <div className={detailPanelStyles['first-section']}>
-                                <div className={detailPanelStyles['field-wrapper']}>
-                                    <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Batch Name</div>
-                                    <Input
-                                        onChange={(e) => { setBatchName(e.target.value) }}
-                                        placeholder={'Batch Name'}
-                                        value={batchName}
-                                        styleType={'regular-height-short'} />
-                                </div>
-                            </div>}
-
-                            {hasSelectedAssets() && (currentViewStatus === 0 || isAdmin()) && <>
-                                <div className={detailPanelStyles['field-wrapper']} >
-                                    <CreatableSelect
-                                        title='Tags'
-                                        addText='Add Tags'
-                                        onAddClick={() => setActiveDropdown('tags')}
-                                        selectPlaceholder={'Enter a new tag or select an existing one'}
-                                        avilableItems={inputTags}
-                                        setAvailableItems={setInputTags}
-                                        selectedItems={assetTags}
-                                        setSelectedItems={setTags}
-                                        allowEdit={currentViewStatus === 0 || isAdmin()}
-                                        creatable={true}
-                                        onAddOperationFinished={(stateUpdate) => {
-                                            setActiveDropdown("")
-                                            // updateAssetState({
-                                            //     tags: { $set: stateUpdate }
-                                            // })
-                                            // loadTags()
-                                        }}
-                                        onRemoveOperationFinished={async (index, stateUpdate) => {
-                                            // await assetApi.removeTag(id, assetTags[index].id)
-                                            // updateAssetState({
-                                            //     tags: { $set: stateUpdate }
-                                            // })
-                                        }}
-                                        onOperationFailedSkipped={() => setActiveDropdown('')}
-                                        isShare={false}
-                                        asyncCreateFn={(newItem) => {
-                                            return { data: newItem }
-
-                                            // assetApi.addTag(id, newItem)
-                                        }}
-                                        dropdownIsActive={activeDropdown === 'tags'}
-                                        ignorePermission={true}
-                                    />
+                            <div className={detailPanelStyles['second-section']}>
+                                <div className={styles.label_info}>
+                                    <h4>Add Attributes to Selected Assets</h4>
+                                    <p>Editing (18) files</p>
                                 </div>
 
-                                {isAdmin() && <div className={detailPanelStyles['field-wrapper']} >
-                                    <CreatableSelect
-                                        title='Collections'
-                                        addText='Add to Collections'
-                                        onAddClick={() => setActiveDropdown('collections')}
-                                        selectPlaceholder={'Enter a new collection or select an existing one'}
-                                        avilableItems={inputFolders}
-                                        setAvailableItems={setInputFolders}
-                                        selectedItems={assetFolders}
-                                        setSelectedItems={setFolders}
-                                        onAddOperationFinished={(stateUpdate) => {
-                                            setActiveDropdown("")
-                                        }}
-                                        creatable={isAdmin()}
-                                        onRemoveOperationFinished={async (index, stateUpdate, id) => {
-                                        }}
-                                        onOperationFailedSkipped={() => setActiveDropdown('')}
-                                        isShare={false}
-                                        asyncCreateFn={
-                                            (newItem) => {
-                                                // (newItem) => assetApi.addCampaign(id, newItem)
-                                                return { data: newItem }
-                                            }
-                                        }
-                                        dropdownIsActive={activeDropdown === 'collections'}
-                                        altColor='yellow'
-                                        sortDisplayValue={true}
-                                        ignorePermission={true}
-                                    />
+                                {!isAdmin() && currentViewStatus == 0 && <div className={detailPanelStyles['first-section']}>
+                                    <div className={detailPanelStyles['field-wrapper']}>
+                                        <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Batch Name</div>
+                                        <Input
+                                            onChange={(e) => { setBatchName(e.target.value) }}
+                                            placeholder={'Batch Name'}
+                                            value={batchName}
+                                            styleType={'regular-height-short'} />
+                                    </div>
                                 </div>}
 
-
-                                {
-                                    isAdmin() && <div className={detailPanelStyles['field-wrapper']} >
+                                {hasSelectedAssets() && (currentViewStatus === 0 || isAdmin()) && <>
+                                    <div className={detailPanelStyles['field-wrapper']} >
                                         <CreatableSelect
-                                            title='Campaigns'
-                                            addText='Add to Campaign'
-                                            onAddClick={() => setActiveDropdown('campaigns')}
-                                            selectPlaceholder={'Enter a new campaign or select an existing one'}
-                                            avilableItems={inputCampaigns}
-                                            setAvailableItems={setInputCampaigns}
-                                            selectedItems={assetCampaigns}
-                                            setSelectedItems={setCampaigns}
-                                            creatable={isAdmin()}
+                                            title='Tags'
+                                            addText='Add Tags'
+                                            onAddClick={() => setActiveDropdown('tags')}
+                                            selectPlaceholder={'Enter a new tag or select an existing one'}
+                                            avilableItems={inputTags}
+                                            setAvailableItems={setInputTags}
+                                            selectedItems={assetTags}
+                                            setSelectedItems={setTags}
+                                            allowEdit={currentViewStatus === 0 || isAdmin()}
+                                            creatable={true}
                                             onAddOperationFinished={(stateUpdate) => {
                                                 setActiveDropdown("")
-
                                                 // updateAssetState({
-                                                //     campaigns: { $set: stateUpdate }
+                                                //     tags: { $set: stateUpdate }
                                                 // })
-                                                // loadCampaigns()
+                                                // loadTags()
                                             }}
                                             onRemoveOperationFinished={async (index, stateUpdate) => {
-                                                // await assetApi.removeCampaign(id, assetCampaigns[index].id)
+                                                // await assetApi.removeTag(id, assetTags[index].id)
                                                 // updateAssetState({
-                                                //     campaigns: { $set: stateUpdate }
+                                                //     tags: { $set: stateUpdate }
                                                 // })
+                                            }}
+                                            onOperationFailedSkipped={() => setActiveDropdown('')}
+                                            isShare={false}
+                                            asyncCreateFn={(newItem) => {
+                                                return { data: newItem }
+
+                                                // assetApi.addTag(id, newItem)
+                                            }}
+                                            dropdownIsActive={activeDropdown === 'tags'}
+                                            ignorePermission={true}
+                                        />
+                                    </div>
+
+                                    {isAdmin() && <div className={detailPanelStyles['field-wrapper']} >
+                                        <CreatableSelect
+                                            title='Collections'
+                                            addText='Add to Collections'
+                                            onAddClick={() => setActiveDropdown('collections')}
+                                            selectPlaceholder={'Enter a new collection or select an existing one'}
+                                            avilableItems={inputFolders}
+                                            setAvailableItems={setInputFolders}
+                                            selectedItems={assetFolders}
+                                            setSelectedItems={setFolders}
+                                            onAddOperationFinished={(stateUpdate) => {
+                                                setActiveDropdown("")
+                                            }}
+                                            creatable={isAdmin()}
+                                            onRemoveOperationFinished={async (index, stateUpdate, id) => {
                                             }}
                                             onOperationFailedSkipped={() => setActiveDropdown('')}
                                             isShare={false}
@@ -1499,92 +1474,147 @@ const UploadRequest = () => {
                                                     return { data: newItem }
                                                 }
                                             }
-                                            dropdownIsActive={activeDropdown === 'campaigns'}
+                                            dropdownIsActive={activeDropdown === 'collections'}
                                             altColor='yellow'
+                                            sortDisplayValue={true}
                                             ignorePermission={true}
                                         />
-                                    </div>
-                                }
+                                    </div>}
 
 
-                                {isAdmin() && inputCustomFields.map((field, index) => {
-                                    if (field.type === 'selectOne') {
-
-                                        return <div className={detailPanelStyles['field-wrapper']} key={index}>
-                                            <div className={`secondary-text ${styles.field}`}>{field.name}</div>
-                                            <CustomFieldSelector
-                                                data={assetCustomFields[index]?.values[0]?.name}
-                                                options={field.values}
-                                                isShare={false}
-                                                onLabelClick={() => { }}
-                                                handleFieldChange={(option) => { onChangeSelectOneCustomField(option, index) }}
-                                            />
-                                        </div>
-                                    }
-
-                                    if (field.type === 'selectMultiple') {
-                                        return <div className={detailPanelStyles['field-wrapper']} key={index}>
+                                    {
+                                        isAdmin() && <div className={detailPanelStyles['field-wrapper']} >
                                             <CreatableSelect
-                                                creatable={false}
-                                                title={field.name}
-                                                addText={`Add ${field.name}`}
-                                                onAddClick={() => setActiveCustomField(index)}
-                                                selectPlaceholder={'Select an existing one'}
-                                                avilableItems={field.values}
-                                                setAvailableItems={() => { }}
-                                                selectedItems={(assetCustomFields.filter((assetField) => assetField.id === field.id))[0]?.values || []}
-                                                setSelectedItems={(data) => { onChangeCustomField(index, data) }}
+                                                title='Campaigns'
+                                                addText='Add to Campaign'
+                                                onAddClick={() => setActiveDropdown('campaigns')}
+                                                selectPlaceholder={'Enter a new campaign or select an existing one'}
+                                                avilableItems={inputCampaigns}
+                                                setAvailableItems={setInputCampaigns}
+                                                selectedItems={assetCampaigns}
+                                                setSelectedItems={setCampaigns}
+                                                creatable={isAdmin()}
                                                 onAddOperationFinished={(stateUpdate) => {
+                                                    setActiveDropdown("")
+
                                                     // updateAssetState({
-                                                    //     customs: {[index]: {values: { $set: stateUpdate }}}
+                                                    //     campaigns: { $set: stateUpdate }
+                                                    // })
+                                                    // loadCampaigns()
+                                                }}
+                                                onRemoveOperationFinished={async (index, stateUpdate) => {
+                                                    // await assetApi.removeCampaign(id, assetCampaigns[index].id)
+                                                    // updateAssetState({
+                                                    //     campaigns: { $set: stateUpdate }
                                                     // })
                                                 }}
-                                                onRemoveOperationFinished={async (index, stateUpdate, removeId) => {
-                                                    // setIsLoading(true);
-                                                    //
-                                                    // await assetApi.removeCustomFields(id, removeId)
-                                                    //
-                                                    // updateAssetState({
-                                                    //     customs: {[index]: {values: { $set: stateUpdate }}}
-                                                    // })
-                                                    //
-                                                    // setIsLoading(false);
-                                                }}
-                                                onOperationFailedSkipped={() => setActiveCustomField(undefined)}
+                                                onOperationFailedSkipped={() => setActiveDropdown('')}
                                                 isShare={false}
-                                                asyncCreateFn={(newItem) => { // Show loading
-                                                    return { data: newItem }
-                                                    // setIsLoading(true);
-                                                    // return assetApi.addCustomFields(id, {...newItem, folderId: activeFolder})
-                                                }}
-                                                dropdownIsActive={activeCustomField === index}
+                                                asyncCreateFn={
+                                                    (newItem) => {
+                                                        // (newItem) => assetApi.addCampaign(id, newItem)
+                                                        return { data: newItem }
+                                                    }
+                                                }
+                                                dropdownIsActive={activeDropdown === 'campaigns'}
+                                                altColor='yellow'
                                                 ignorePermission={true}
                                             />
                                         </div>
                                     }
-                                })}
+
+
+                                    {isAdmin() && inputCustomFields.map((field, index) => {
+                                        if (field.type === 'selectOne') {
+
+                                            return <div className={detailPanelStyles['field-wrapper']} key={index}>
+                                                <div className={`secondary-text ${styles.field}`}>{field.name}</div>
+                                                <CustomFieldSelector
+                                                    data={assetCustomFields[index]?.values[0]?.name}
+                                                    options={field.values}
+                                                    isShare={false}
+                                                    onLabelClick={() => { }}
+                                                    handleFieldChange={(option) => { onChangeSelectOneCustomField(option, index) }}
+                                                />
+                                            </div>
+                                        }
+
+                                        if (field.type === 'selectMultiple') {
+                                            return <div className={detailPanelStyles['field-wrapper']} key={index}>
+                                                <CreatableSelect
+                                                    creatable={false}
+                                                    title={field.name}
+                                                    addText={`Add ${field.name}`}
+                                                    onAddClick={() => setActiveCustomField(index)}
+                                                    selectPlaceholder={'Select an existing one'}
+                                                    avilableItems={field.values}
+                                                    setAvailableItems={() => { }}
+                                                    selectedItems={(assetCustomFields.filter((assetField) => assetField.id === field.id))[0]?.values || []}
+                                                    setSelectedItems={(data) => { onChangeCustomField(index, data) }}
+                                                    onAddOperationFinished={(stateUpdate) => {
+                                                        // updateAssetState({
+                                                        //     customs: {[index]: {values: { $set: stateUpdate }}}
+                                                        // })
+                                                    }}
+                                                    onRemoveOperationFinished={async (index, stateUpdate, removeId) => {
+                                                        // setIsLoading(true);
+                                                        //
+                                                        // await assetApi.removeCustomFields(id, removeId)
+                                                        //
+                                                        // updateAssetState({
+                                                        //     customs: {[index]: {values: { $set: stateUpdate }}}
+                                                        // })
+                                                        //
+                                                        // setIsLoading(false);
+                                                    }}
+                                                    onOperationFailedSkipped={() => setActiveCustomField(undefined)}
+                                                    isShare={false}
+                                                    asyncCreateFn={(newItem) => { // Show loading
+                                                        return { data: newItem }
+                                                        // setIsLoading(true);
+                                                        // return assetApi.addCustomFields(id, {...newItem, folderId: activeFolder})
+                                                    }}
+                                                    dropdownIsActive={activeCustomField === index}
+                                                    ignorePermission={true}
+                                                />
+                                            </div>
+                                        }
+                                    })}
 
 
 
-                                <Button className={styles['add-tag-btn']} type='button' text='Bulk Add Tag' styleType='secondary' onClick={saveBulkTag} />
-                                {/*{*/}
-                                {/*    !isAdmin() && <>*/}
-                                {/*        <div className={detailPanelStyles['field-wrapper']} >*/}
-                                {/*            <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>*/}
-                                {/*            <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={comments}*/}
-                                {/*                      onChange={e => {setComments(e.target.value)}} styleType={'regular-short'} />*/}
-                                {/*        </div>*/}
+                                    <Button className={styles['add-tag-btn']} type='button' text='Save Changes' styleType='primary' onClick={saveBulkTag} />
+                                    {/*{*/}
+                                    {/*    !isAdmin() && <>*/}
+                                    {/*        <div className={detailPanelStyles['field-wrapper']} >*/}
+                                    {/*            <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>*/}
+                                    {/*            <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={comments}*/}
+                                    {/*                      onChange={e => {setComments(e.target.value)}} styleType={'regular-short'} />*/}
+                                    {/*        </div>*/}
 
-                                {/*        <Button className={styles['add-tag-btn']} type='button' text='Add comments' styleType='secondary' onClick={saveComment} />*/}
-                                {/*    </>*/}
-                                {/*}*/}
+                                    {/*        <Button className={styles['add-tag-btn']} type='button' text='Add comments' styleType='secondary' onClick={saveComment} />*/}
+                                    {/*    </>*/}
+                                    {/*}*/}
 
-                            </>}
+                                </>}
+                            </div>
 
 
 
                         </div>
                     </div>
+
+                }
+
+                {mode === "view" &&
+                    <section className={styles.menu}>
+                        <IconClickable
+                            src={Utilities.closePanelLight}
+                            onClick={() => toggleSideMenu()}
+                            additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"} ${styles.expand
+                                }`}
+                        />
+                    </section>
                 }
             </div>
 
@@ -1592,7 +1622,6 @@ const UploadRequest = () => {
                 modalIsOpen={showDetailModal}
                 closeModal={() => { setDetailModal(false) }}
                 confirmText={""}
-                headText={"Test"}
                 closeButtonOnly={true}
                 disabledConfirm={false}
                 additionalClasses={['visible-block', styles['approval-detail-modal']]}
@@ -1600,7 +1629,12 @@ const UploadRequest = () => {
                 confirmAction={() => {
                 }} >
                 <div className={`row ${styles['modal-wrapper']} height-100`}>
-                    <div className={`col-60 ${styles["left-bar"]}`}>
+                    <div className={`${styles["left-bar"]}`}>
+                        <div className={styles['file-name']}>
+                            <span>{assets[selectedAsset]?.asset.name}</span>
+                            {(currentViewStatus === 0 || isAdmin()) && <IconClickable additionalClass={styles['edit-icon']} src={Utilities.edit} onClick={() => { setShowRenameModal(true) }} />}
+                        </div>
+                        <div className={styles['date']}>{moment(assets[selectedAsset]?.asset?.createdAt).format('MMM DD, YYYY, hh:mm a')}</div>
                         {assets[selectedAsset]?.asset.type === "image" && (
                             <AssetImg name={assets[selectedAsset]?.asset.name} assetImg={assets[selectedAsset]?.thumbailUrl} />
                         )}
@@ -1639,139 +1673,96 @@ const UploadRequest = () => {
                         {/*    name={"image"}*/}
                         {/*/>*/}
                         {/*<img alt={"test"} src={assets[selectedAsset]?.realUrl} />*/}
-                        <div className={styles['file-name']}>
-                            <span>{assets[selectedAsset]?.asset.name}</span>
-                            {(currentViewStatus === 0 || isAdmin()) && <IconClickable additionalClass={styles['edit-icon']} src={Utilities.edit} onClick={() => { setShowRenameModal(true) }} />}
-                        </div>
-                        <div className={styles['date']}>{moment(assets[selectedAsset]?.asset?.createdAt).format('MMM DD, YYYY, hh:mm a')}</div>
+
 
                         {(isAdmin() || currentViewStatus !== 0) && <div className={detailPanelStyles['field-wrapper']} >
-                            <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>
-                            <p>
+                            <div className={`${detailPanelStyles.field} ${styles['field-comments']}`}>Comments:</div>
+                            <p className={styles.comment}>
                                 {tempComments}
                             </p>
                         </div>}
+                        <div className={styles["navigation-wrapper"]}>
+                            <span>{(selectedAsset || 0) + 1} of {assets.length} collection</span>
+                            <IconClickable src={Utilities.arrowPrev} onClick={() => { goPrev() }} />
+                            <IconClickable src={Utilities.arrowNext} onClick={() => { goNext() }} />
+                        </div>
                     </div>
-                    <div className={"col-40 height-100"}>
+                    <div className={"height-100"}>
                         <div className={`${detailPanelStyles.container} ${styles['right-form']}`}>
                             <h2 className={styles['detail-title']}>Add Attributes to Selected Assets</h2>
 
-                            <div className={detailPanelStyles['field-wrapper']} >
-                                <CreatableSelect
-                                    title='Tags'
-                                    addText='Add Tags'
-                                    onAddClick={() => {
-                                        if (currentViewStatus === 0 || isAdmin()) {
-                                            setActiveDropdown('tags')
-                                        }
-                                    }
-
-                                    }
-                                    selectPlaceholder={'Enter a new tag or select an existing one'}
-                                    avilableItems={inputTags}
-                                    setAvailableItems={setInputTags}
-                                    selectedItems={tempTags}
-                                    setSelectedItems={setTempTags}
-                                    allowEdit={currentViewStatus === 0 || isAdmin()}
-                                    creatable={true}
-                                    menuPosition={"fixed"}
-                                    onAddOperationFinished={(stateUpdate) => {
-                                        setActiveDropdown("")
-
-                                        if (isAdmin()) {
-                                            updateAssetTagsState(stateUpdate)
-                                        }
-                                    }}
-                                    onRemoveOperationFinished={async (index, stateUpdate) => {
-                                        if (isAdmin()) {
-                                            setIsLoading(true)
-                                            await assetApi.removeTag(assets[selectedAsset]?.asset.id, tempTags[index].id)
-                                            updateAssetTagsState(stateUpdate)
+                            <div className={detailPanelStyles['second-section']}>
+                                <div className={detailPanelStyles['field-wrapper']} >
+                                    <CreatableSelect
+                                        title='Tags'
+                                        addText='Add Tags'
+                                        onAddClick={() => {
+                                            if (currentViewStatus === 0 || isAdmin()) {
+                                                setActiveDropdown('tags')
+                                            }
                                         }
 
-                                    }}
-                                    onOperationFailedSkipped={() => setActiveDropdown('')}
-                                    isShare={false}
-                                    asyncCreateFn={(newItem) => {
-                                        if (isAdmin()) { // Admin can edit inline, dont need to hit save button
-                                            setIsLoading(true)
-                                            return assetApi.addTag(assets[selectedAsset]?.asset.id, newItem)
-                                        } else {
-                                            return { data: newItem }
                                         }
+                                        selectPlaceholder={'Enter a new tag or select an existing one'}
+                                        avilableItems={inputTags}
+                                        setAvailableItems={setInputTags}
+                                        selectedItems={tempTags}
+                                        setSelectedItems={setTempTags}
+                                        allowEdit={currentViewStatus === 0 || isAdmin()}
+                                        creatable={true}
+                                        menuPosition={"fixed"}
+                                        onAddOperationFinished={(stateUpdate) => {
+                                            setActiveDropdown("")
 
-                                    }}
-                                    dropdownIsActive={activeDropdown === 'tags'}
-                                    ignorePermission={true}
-                                />
-                            </div>
+                                            if (isAdmin()) {
+                                                updateAssetTagsState(stateUpdate)
+                                            }
+                                        }}
+                                        onRemoveOperationFinished={async (index, stateUpdate) => {
+                                            if (isAdmin()) {
+                                                setIsLoading(true)
+                                                await assetApi.removeTag(assets[selectedAsset]?.asset.id, tempTags[index].id)
+                                                updateAssetTagsState(stateUpdate)
+                                            }
 
-                            {isAdmin() && <div className={detailPanelStyles['field-wrapper']} >
-                                <CreatableSelect
-                                    title='Collections'
-                                    addText='Add to Collections'
-                                    onAddClick={() => setActiveDropdown('collections')}
-                                    selectPlaceholder={'Enter a new collection or select an existing one'}
-                                    avilableItems={inputFolders}
-                                    setAvailableItems={setInputFolders}
-                                    selectedItems={tempFolders}
-                                    setSelectedItems={setTempFolders}
-                                    menuPosition={"fixed"}
-                                    onAddOperationFinished={(stateUpdate) => {
-                                        updateAssetState({
-                                            folders: { $set: stateUpdate }
-                                        })
-                                    }}
-                                    creatable={isAdmin()}
-                                    onRemoveOperationFinished={async (index, stateUpdate, id) => {
-                                        await assetApi.removeFolder(assets[selectedAsset]?.asset.id, assetFolders[index].id)
-                                        updateAssetState({
-                                            folders: { $set: stateUpdate }
-                                        })
-                                    }}
-                                    onOperationFailedSkipped={() => setActiveDropdown('')}
-                                    isShare={false}
-                                    asyncCreateFn={
-                                        (newItem) => {
+                                        }}
+                                        onOperationFailedSkipped={() => setActiveDropdown('')}
+                                        isShare={false}
+                                        asyncCreateFn={(newItem) => {
                                             if (isAdmin()) { // Admin can edit inline, dont need to hit save button
                                                 setIsLoading(true)
-
-                                                return assetApi.addFolder(assets[selectedAsset]?.asset.id, newItem)
+                                                return assetApi.addTag(assets[selectedAsset]?.asset.id, newItem)
                                             } else {
                                                 return { data: newItem }
                                             }
-                                        }
-                                    }
-                                    dropdownIsActive={activeDropdown === 'collections'}
-                                    altColor='yellow'
-                                    sortDisplayValue={true}
-                                    ignorePermission={true}
-                                />
-                            </div>}
 
-                            {
-                                isAdmin() && <div className={detailPanelStyles['field-wrapper']} >
+                                        }}
+                                        dropdownIsActive={activeDropdown === 'tags'}
+                                        ignorePermission={true}
+                                    />
+                                </div>
+
+                                {isAdmin() && <div className={detailPanelStyles['field-wrapper']} >
                                     <CreatableSelect
-                                        title='Campaigns'
-                                        addText='Add to Campaign'
-                                        onAddClick={() => setActiveDropdown('campaigns')}
-                                        selectPlaceholder={'Enter a new campaign or select an existing one'}
-                                        avilableItems={inputCampaigns}
-                                        setAvailableItems={setInputCampaigns}
-                                        selectedItems={tempCampaigns}
-                                        setSelectedItems={setTempCampaigns}
-                                        creatable={isAdmin()}
+                                        title='Collections'
+                                        addText='Add to Collections'
+                                        onAddClick={() => setActiveDropdown('collections')}
+                                        selectPlaceholder={'Enter a new collection or select an existing one'}
+                                        avilableItems={inputFolders}
+                                        setAvailableItems={setInputFolders}
+                                        selectedItems={tempFolders}
+                                        setSelectedItems={setTempFolders}
                                         menuPosition={"fixed"}
                                         onAddOperationFinished={(stateUpdate) => {
                                             updateAssetState({
-                                                campaigns: { $set: stateUpdate }
+                                                folders: { $set: stateUpdate }
                                             })
-                                            // loadCampaigns()
                                         }}
-                                        onRemoveOperationFinished={async (index, stateUpdate) => {
-                                            await assetApi.removeCampaign(assets[selectedAsset]?.asset.id, assetCampaigns[index].id)
+                                        creatable={isAdmin()}
+                                        onRemoveOperationFinished={async (index, stateUpdate, id) => {
+                                            await assetApi.removeFolder(assets[selectedAsset]?.asset.id, assetFolders[index].id)
                                             updateAssetState({
-                                                campaigns: { $set: stateUpdate }
+                                                folders: { $set: stateUpdate }
                                             })
                                         }}
                                         onOperationFailedSkipped={() => setActiveDropdown('')}
@@ -1781,112 +1772,147 @@ const UploadRequest = () => {
                                                 if (isAdmin()) { // Admin can edit inline, dont need to hit save button
                                                     setIsLoading(true)
 
-                                                    return assetApi.addCampaign(assets[selectedAsset]?.asset.id, newItem)
+                                                    return assetApi.addFolder(assets[selectedAsset]?.asset.id, newItem)
                                                 } else {
                                                     return { data: newItem }
                                                 }
                                             }
                                         }
-                                        dropdownIsActive={activeDropdown === 'campaigns'}
+                                        dropdownIsActive={activeDropdown === 'collections'}
                                         altColor='yellow'
+                                        sortDisplayValue={true}
                                         ignorePermission={true}
                                     />
-                                </div>
-                            }
+                                </div>}
 
-
-                            {isAdmin() && inputCustomFields.map((field, index) => {
-                                if (field.type === 'selectOne') {
-
-                                    return <div className={detailPanelStyles['field-wrapper']} key={index}>
-                                        <div className={`secondary-text ${styles.field}`}>{field.name}</div>
-                                        <CustomFieldSelector
-                                            data={tempCustoms[index]?.values[0]?.name}
-                                            options={field.values}
-                                            isShare={false}
-                                            onLabelClick={() => { }}
-                                            handleFieldChange={(option) => { onChangeSelectOneTempCustomField(option, index) }}
-                                        />
-                                    </div>
-                                }
-
-                                if (field.type === 'selectMultiple') {
-                                    return <div className={detailPanelStyles['field-wrapper']} key={index}>
+                                {
+                                    isAdmin() && <div className={detailPanelStyles['field-wrapper']} >
                                         <CreatableSelect
-                                            creatable={false}
-                                            title={field.name}
-                                            addText={`Add ${field.name}`}
-                                            onAddClick={() => setActiveCustomField(index)}
-                                            selectPlaceholder={'Select an existing one'}
-                                            avilableItems={field.values}
-                                            setAvailableItems={() => { }}
+                                            title='Campaigns'
+                                            addText='Add to Campaign'
+                                            onAddClick={() => setActiveDropdown('campaigns')}
+                                            selectPlaceholder={'Enter a new campaign or select an existing one'}
+                                            avilableItems={inputCampaigns}
+                                            setAvailableItems={setInputCampaigns}
+                                            selectedItems={tempCampaigns}
+                                            setSelectedItems={setTempCampaigns}
+                                            creatable={isAdmin()}
                                             menuPosition={"fixed"}
-                                            selectedItems={(tempCustoms.filter((assetField) => assetField.id === field.id))[0]?.values || []}
-                                            setSelectedItems={(data) => { onChangeTempCustomField(index, data) }}
                                             onAddOperationFinished={(stateUpdate) => {
-                                                setActiveDropdown("")
-
-                                                if (isAdmin()) {
-                                                    updateAssetState({
-                                                        customs: { [index]: { values: { $set: stateUpdate } } }
-                                                    })
-                                                }
-
+                                                updateAssetState({
+                                                    campaigns: { $set: stateUpdate }
+                                                })
+                                                // loadCampaigns()
                                             }}
-                                            onRemoveOperationFinished={async (index, stateUpdate, removeId) => {
-                                                if (isAdmin()) {
-                                                    setIsLoading(true)
-                                                    await assetApi.removeCustomFields(assets[selectedAsset]?.asset.id, removeId)
-
-                                                    updateAssetState({
-                                                        customs: { [index]: { values: { $set: stateUpdate } } }
-                                                    })
-
-                                                    setIsLoading(false);
-                                                }
+                                            onRemoveOperationFinished={async (index, stateUpdate) => {
+                                                await assetApi.removeCampaign(assets[selectedAsset]?.asset.id, assetCampaigns[index].id)
+                                                updateAssetState({
+                                                    campaigns: { $set: stateUpdate }
+                                                })
                                             }}
-                                            onOperationFailedSkipped={() => setActiveCustomField(undefined)}
+                                            onOperationFailedSkipped={() => setActiveDropdown('')}
                                             isShare={false}
-                                            asyncCreateFn={(newItem) => { // Show loading
-                                                setNeedRefresh(true)
-                                                if (isAdmin()) { // Admin can edit inline, dont need to hit save button
-                                                    setIsLoading(true)
-                                                    return assetApi.addCustomFields(assets[selectedAsset]?.asset.id, { ...newItem })
-                                                } else {
-                                                    return { data: newItem }
+                                            asyncCreateFn={
+                                                (newItem) => {
+                                                    if (isAdmin()) { // Admin can edit inline, dont need to hit save button
+                                                        setIsLoading(true)
+
+                                                        return assetApi.addCampaign(assets[selectedAsset]?.asset.id, newItem)
+                                                    } else {
+                                                        return { data: newItem }
+                                                    }
                                                 }
-                                            }}
-                                            dropdownIsActive={activeCustomField === index}
+                                            }
+                                            dropdownIsActive={activeDropdown === 'campaigns'}
+                                            altColor='yellow'
                                             ignorePermission={true}
                                         />
                                     </div>
                                 }
-                            })}
 
-                            {!isAdmin() && currentViewStatus === 0 && <div className={detailPanelStyles['field-wrapper']} >
-                                <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>
-                                <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={tempComments}
-                                    onChange={e => { setTempComments(e.target.value) }} styleType={'regular-short'} disabled={currentViewStatus !== 0} maxLength={200} />
-                            </div>}
 
-                            <div className={"m-b-25"}></div>
+                                {isAdmin() && inputCustomFields.map((field, index) => {
+                                    if (field.type === 'selectOne') {
+
+                                        return <div className={detailPanelStyles['field-wrapper']} key={index}>
+                                            <div className={`secondary-text ${styles.field}`}>{field.name}</div>
+                                            <CustomFieldSelector
+                                                data={tempCustoms[index]?.values[0]?.name}
+                                                options={field.values}
+                                                isShare={false}
+                                                onLabelClick={() => { }}
+                                                handleFieldChange={(option) => { onChangeSelectOneTempCustomField(option, index) }}
+                                            />
+                                        </div>
+                                    }
+
+                                    if (field.type === 'selectMultiple') {
+                                        return <div className={detailPanelStyles['field-wrapper']} key={index}>
+                                            <CreatableSelect
+                                                creatable={false}
+                                                title={field.name}
+                                                addText={`Add ${field.name}`}
+                                                onAddClick={() => setActiveCustomField(index)}
+                                                selectPlaceholder={'Select an existing one'}
+                                                avilableItems={field.values}
+                                                setAvailableItems={() => { }}
+                                                menuPosition={"fixed"}
+                                                selectedItems={(tempCustoms.filter((assetField) => assetField.id === field.id))[0]?.values || []}
+                                                setSelectedItems={(data) => { onChangeTempCustomField(index, data) }}
+                                                onAddOperationFinished={(stateUpdate) => {
+                                                    setActiveDropdown("")
+
+                                                    if (isAdmin()) {
+                                                        updateAssetState({
+                                                            customs: { [index]: { values: { $set: stateUpdate } } }
+                                                        })
+                                                    }
+
+                                                }}
+                                                onRemoveOperationFinished={async (index, stateUpdate, removeId) => {
+                                                    if (isAdmin()) {
+                                                        setIsLoading(true)
+                                                        await assetApi.removeCustomFields(assets[selectedAsset]?.asset.id, removeId)
+
+                                                        updateAssetState({
+                                                            customs: { [index]: { values: { $set: stateUpdate } } }
+                                                        })
+
+                                                        setIsLoading(false);
+                                                    }
+                                                }}
+                                                onOperationFailedSkipped={() => setActiveCustomField(undefined)}
+                                                isShare={false}
+                                                asyncCreateFn={(newItem) => { // Show loading
+                                                    setNeedRefresh(true)
+                                                    if (isAdmin()) { // Admin can edit inline, dont need to hit save button
+                                                        setIsLoading(true)
+                                                        return assetApi.addCustomFields(assets[selectedAsset]?.asset.id, { ...newItem })
+                                                    } else {
+                                                        return { data: newItem }
+                                                    }
+                                                }}
+                                                dropdownIsActive={activeCustomField === index}
+                                                ignorePermission={true}
+                                            />
+                                        </div>
+                                    }
+                                })}
+
+                                {!isAdmin() && currentViewStatus === 0 && <div className={detailPanelStyles['field-wrapper']} >
+                                    <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-comments']}`}>Comments:</div>
+                                    <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={tempComments}
+                                        onChange={e => { setTempComments(e.target.value) }} styleType={'regular-short'} disabled={currentViewStatus !== 0} maxLength={200} />
+                                </div>}
+                            </div>
+
                         </div>
+
 
                         {(currentViewStatus === 0) && <Button className={`${styles['add-tag-btn']} m-l-20`} type='button' text='Save changes' styleType='primary' onClick={onSaveSingleAsset} />}
 
 
-                        {(isAdmin()) && <div className={`${styles['admin-button-wrapper']} m-l-20`}>
-                            <Button
-                                className={styles['add-tag-btn']}
-                                type='button'
-                                text='Reject'
-                                styleType='secondary'
-                                onClick={() => {
-                                    setTempAssets([assets[selectedAsset]?.asset.id])
-                                    setShowRejectConfirm(true)
-                                }
-                                } />
-
+                        {(isAdmin()) && <div className={`${styles['admin-button-wrapper']}`}>
                             <Button
                                 className={styles['add-tag-btn']}
                                 type='button'
@@ -1897,13 +1923,18 @@ const UploadRequest = () => {
                                     setShowApproveConfirm(true)
                                 }
                                 } />
+                            <Button
+                                className={styles['add-tag-btn']}
+                                type='button'
+                                text='Reject'
+                                styleType='secondary'
+                                onClick={() => {
+                                    setTempAssets([assets[selectedAsset]?.asset.id])
+                                    setShowRejectConfirm(true)
+                                }
+                                } />
                         </div>}
                     </div>
-                </div>
-                <div className={styles["navigation-wrapper"]}>
-                    <span>{(selectedAsset || 0) + 1} of {assets.length} collection</span>
-                    <IconClickable src={Utilities.arrowPrev} onClick={() => { goPrev() }} />
-                    <IconClickable src={Utilities.arrowNext} onClick={() => { goNext() }} />
                 </div>
             </Base>
 

@@ -4,7 +4,7 @@
   width: 100%;
   top: 81px;
   left: 0;
-  z-index: 2000; /* To be lower than top bar so that upoad popup is not hidden */
+  z-index: 200; /* To be lower than top bar so that upoad popup is not hidden */
   background-color: white;
   padding: 24px 32px;
   min-height: 110px;

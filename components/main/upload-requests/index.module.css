@@ -4,18 +4,13 @@
   display: flex;
   gap: 32px;
   margin-top: 81px;
-  height: 100%;
+  min-height: 100%;
 }
 
 .container {
   padding: 35px 32px;
   height: 100%;
   width: 100%;
-}
-
-.approval-detail-modal{
-  height: 90%;
-  overflow: hidden;
 }
 
 .container ul{
@@ -33,6 +28,7 @@
 .pre-title {
   font-size: 12px;
   color: var(--color-sec-text);
+  cursor: pointer;
 }
 
 .title{
@@ -58,6 +54,9 @@
 }
 
 .asset-view-list{
+  border: 1px solid var(--color-border);
+  padding: 20px;
+  border-radius: 6px;
 }
 
 .grid-list{
@@ -97,42 +96,66 @@
 
 .field-name{
   margin-bottom: 9px !important;
+  font-size: 14px;
+  color: var(--color-prim-navy);
 }
 
 .field-value{
   font-size: 14px !important;
 }
 
+.field-comments {
+  color: var(--color-sec-text);
+  margin-top: 18px;
+}
+
+.comment {
+  font-size: 12px;
+  color: var(--color-sec-text);
+}
+
 .add-tag-btn{
-  margin-top: 33px;
   margin-bottom: 32px;
 }
 
-.right-panel{
+.menu {
+  display: none;
+}
+
+.menu-icon{
+  width: 20px;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+
+.right-panel {
   border-left: solid 1px #E5E5E5;
-  height: 100%;
   width: 415px;
 }
 
 .modal-wrapper{
   width: 75vw;
   max-width: 1385px;
-  padding: 30px 0 100px 29px;
+  padding: 64px 32px;
+  display: grid;
+  grid-template-columns: 1fr 35%;
+  gap: 60px;
 }
 
 .modal-field-title{
-  font-weight: 700;
+  font-weight: 400;
   font-size: 16px;
-  color: #08135E;
+  color: var(--color-prim-navy);
   margin-bottom: 20px;
+  margin-top: 0;
 }
 
 .modal-field-subtitle{
-  font-weight: 700;
+  font-weight: 600;
   font-size: 16px;
-  color: #08135E;
-  margin-bottom: 20px;
-  margin-top: 46px;
+  color: var(--color-sec-text);
+  margin: 16px 0;
 }
 
 .confirm-modal-wrapper{
@@ -163,9 +186,29 @@
   max-width: 185px;
 }
 
+.label_info h4 {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-prim-navy);
+  margin: 42px 0 8px;
+}
+
+.label_info p {
+  font-size: 12px;
+}
+
 @media screen and (max-width: 900px) {
   .container {
     padding: 17.5px 16px 80px;
+  }
+
+  .modal-wrapper{
+    grid-template-columns: 1fr 40%;
+  }
+
+  h2.detail-title {
+    font-size: 14px;
+    line-height: 18px;
   }
 }
 
@@ -267,12 +310,10 @@
 }
 
 .navigation-wrapper{
-  margin-bottom: 79px;
   display: flex;
   justify-content: flex-end;
-  position: absolute;
-  bottom: 0;
   width: 100%;
+  margin-top: 36px;
 }
 
 .navigation-wrapper span{
@@ -284,6 +325,7 @@
 
 .navigation-wrapper img{
   margin-right: 16px;
+  width: 14px !important;
 }
 
 .left-bar{
@@ -303,25 +345,24 @@
 }
 
 .right-form{
-  overflow-y: scroll;
-  max-height: calc(100% - 200px);
+  padding: 0;
 }
 
 .file-name{
-  font-weight: 500;
+  font-weight: 400;
   font-size: 14px;
   color: #08135E;
-  margin-bottom: 13px;
-  margin-top: 18px;
-  align-items: center;
+  margin-bottom: 4px;
+  margin-top: 0;
   display: flex;
+  align-items: center;
 }
 
 .date{
   font-weight: 400;
   font-size: 12px;
   color: #AEB0C2;
-
+  margin-bottom: 10px;
 }
 
 .edit-icon{
@@ -383,11 +424,19 @@
     width: calc(160px * 2);
   }
 
+  .filter-wrapper {
+    display: none;
+  }
+
+  .asset-view-list{
+    padding: 10px;
+  }
+
   .header {
     margin-bottom: 28px;
   }
 
-  .button-wrapper {
+  .header_buttons {
     position: fixed;
     background-color: var(--color-prim-navy);
     width: 100%;
@@ -400,6 +449,60 @@
     justify-content: center;
     z-index: 9999;
   }
+
+
+  .menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--color-sec-lightivory);
+    padding: 16px;
+    width: 70px;
+  }
+  
+  .right-panel {
+    position: absolute;
+    z-index: 999;
+    width: auto;
+    background-color: white;
+    right: 70px;
+    left: 0;
+    top: 0;
+    bottom: 0;
+  }
+
+  .root-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin-top: 55px;
+    gap: 24px;
+    height: 100%;
+  }
+
+  .grid-list{
+    grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+  }
+
+  .pre-title {
+    font-size: 11px;
+  }
+
+  .main-title {
+    font-size: 12px;
+  }
+
+  .main-subtitle {
+    font-size: 11px;
+  }
+
+  .modal-wrapper {
+    grid-template-columns: 1fr;
+    width: 100%;
+    padding: 40px 32px;
+    gap: 32px;
+  }
+
 }
 
 @media screen and (max-width: 380px) {
