@@ -65,10 +65,12 @@ const AssetsLibrary = () => {
     setTotalAssets,
     currentViewAsset,
     setCurrentViewAsset,
-    setDetailOverlayId
+    setDetailOverlayId,
   } = useContext(AssetContext)
 
   const { advancedConfig, hasPermission } = useContext(UserContext)
+
+  const {term, searchFilterParams} = useContext(FilterContext)
 
   const [activeMode, setActiveMode] = useState('assets')
 
@@ -192,17 +194,16 @@ const AssetsLibrary = () => {
         setActivePageMode('library')
         if (activeSortFilter.mainFilter === 'folders') {
           setActiveMode('folders')
-          setActiveFolder('');
           getFolders()
         } else {
           setActiveMode('assets')
           setAssets([])
-          getAssets()
+          getAssets();
         }
       }
     }
 
-  }, [activeSortFilter, firstLoaded])
+  }, [activeSortFilter, firstLoaded, term])
 
   useEffect(() => {
     if (firstLoaded && activeFolder !== '') {
@@ -540,9 +541,12 @@ const AssetsLibrary = () => {
           nextPage,
           userFilterObject: activeSortFilter
         }),
+        term,
+        ...searchFilterParams,
         complete,
         ...getAssetsSort(activeSortFilter)
       })
+
       setAssets({ ...data, results: data.results.map(mapWithToggleSelection) }, replace)
       setFirstLoaded(true)
     } catch (err) {
@@ -552,6 +556,7 @@ const AssetsLibrary = () => {
       setLoadingAssets(false)
     }
   }
+
 
   const getFolders = async (replace = true) => {
     try {
@@ -653,7 +658,6 @@ const AssetsLibrary = () => {
     // router.replace("/main/assets") // Open this comment to reset query string url
     setActiveFolder(id)
     updateSortFilterByAdvConfig({ folderId: id })
-
   }
 
   const deleteFolder = async (id) => {

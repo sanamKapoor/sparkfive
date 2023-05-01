@@ -1805,7 +1805,7 @@ const UploadRequest = () => {
                                                 // loadCampaigns()
                                             }}
                                             onRemoveOperationFinished={async (index, stateUpdate) => {
-                                                await assetApi.removeCampaign(assets[selectedAsset]?.asset.id, assetCampaigns[index].id)
+                                                await assetApi.removeCampaign(assets[selectedAsset]?.asset?.id, tempCampaigns[index]?.id)
                                                 updateAssetState({
                                                     campaigns: { $set: stateUpdate }
                                                 })
@@ -1900,10 +1900,17 @@ const UploadRequest = () => {
                                 })}
 
                                 {!isAdmin() && currentViewStatus === 0 && <div className={detailPanelStyles['field-wrapper']} >
+                                    <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>
+                                    <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={tempComments}
+                                        onChange={e => { setTempComments(e.target.value) }} styleType={'regular-short'} disabled={currentViewStatus !== 0} maxLength={200} />
+                                </div>}
+
+                                {!isAdmin() && currentViewStatus === 0 && <div className={detailPanelStyles['field-wrapper']} >
                                     <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-comments']}`}>Comments:</div>
                                     <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={tempComments}
                                         onChange={e => { setTempComments(e.target.value) }} styleType={'regular-short'} disabled={currentViewStatus !== 0} maxLength={200} />
                                 </div>}
+
                             </div>
 
                         </div>
@@ -1934,6 +1941,8 @@ const UploadRequest = () => {
                                 }
                                 } />
                         </div>}
+
+
                     </div>
                 </div>
             </Base>

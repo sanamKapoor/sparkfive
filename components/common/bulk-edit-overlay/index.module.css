@@ -7,6 +7,7 @@
 
 .wrapper {
   display: flex;
+    z-index: 20000;
 }
 .content {
     background-color: white;

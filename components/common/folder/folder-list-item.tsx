@@ -19,6 +19,7 @@ import ConfirmModal from "../modals/confirm-modal";
 import IconClickable from "../buttons/icon-clickable";
 
 import folderApi from "../../../server-api/folder";
+import shareFolderApi from "../../../server-api/share-collection";
 
 // Context
 import { AssetContext } from "../../../context";
@@ -59,6 +60,8 @@ const FolderListItem = ({
   isNameEditable = false,
   focusedItem,
   setFocusedItem,
+  isShare=false,
+  sharePath = ""
 }) => {
   const { updateDownloadingStatus, folders, setFolders } =
     useContext(AssetContext);
@@ -77,11 +80,8 @@ const FolderListItem = ({
 
   const downloadFoldercontents = async () => {
     // const { data } = await folderApi.getInfoToDownloadFolder(id)
-    // Get full assets url, because currently, it just get maximum 4 real url in thumbnail
+    // // Get full assets url, because currently, it just get maximum 4 real url in thumbnail
     // zipDownloadUtils.zipAndDownload(data, name)
-
-    // Old Approach:
-    // zipDownloadUtils.zipAndDownload(assets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.name })), name)
 
     // Show processing bar
     updateDownloadingStatus("zipping", 0, 1);
@@ -93,8 +93,19 @@ const FolderListItem = ({
       estimateTime: 1,
     };
 
-    const { data } = await folderApi.downloadFoldersAsZip(payload, filters);
+    let api = folderApi;
 
+    if (isShare) {
+      api = shareFolderApi;
+    }
+
+    // Add sharePath property if user is at share collection page
+    if (sharePath) {
+      filters["sharePath"] = sharePath;
+    }
+
+    const { data } = await api.downloadFoldersAsZip(payload, filters);
+    
     // Download file to storage
     fileDownload(data, "assets.zip");
 

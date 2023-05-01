@@ -16,10 +16,11 @@ import Button from '../../common/buttons/button'
 import AssetHeaderOps from '../../common/asset/asset-header-ops'
 import AssetThumbail from "../../common/asset/asset-thumbail";
 
-const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEnabled = false, importAssets = () => { }, sharePath = '', activeFolder = '', onCloseDetailOverlay = (assetData) => { }, onClickOutside, isFolder }) => {
+const SearchOverlayAssets = ({  closeOverlay, importEnabled = false, operationsEnabled = false, importAssets = () => { }, sharePath = '', activeFolder = '', onCloseDetailOverlay = (assetData) => { }, onClickOutside, isFolder }) => {
 
-  const { assets, setAssets, setActiveOperation, setOperationAsset, setPlaceHolders, nextPage, selectAllAssets, selectedAllAssets, totalAssets } = useContext(AssetContext)
-  const { term, setSearchTerm } = useContext(FilterContext)
+  const { assets, setAssets, setActiveOperation, setOperationAsset, setPlaceHolders, nextPage, selectAllAssets, selectedAllAssets, totalAssets} = useContext(AssetContext)
+
+  const {  setSearchTerm, setSearchFilterParams, activeSortFilter, setActiveSortFilter } = useContext(FilterContext)
 
   const [activeView, setActiveView] = useState('list')
   const [filterParams, setFilterParams] = useState({})
@@ -36,6 +37,7 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
       setPlaceHolders('asset', replace)
       if (Object.keys(_filterParams).length > 0) {
         setFilterParams(_filterParams)
+        setSearchFilterParams(_filterParams);
       }
       const params: any = { term: inputTerm, page: replace ? 1 : nextPage, sharePath, ..._filterParams }
       // search from inside collection
@@ -43,6 +45,10 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
         params.folderId = activeFolder
       }
       const { data } = await fetchFn(params)
+      setActiveSortFilter({
+        ...activeSortFilter,
+        mainFilter: 'all',
+      })
       setAssets(data, replace)
     } catch (err) {
       // TODO: Handle this error
@@ -99,7 +105,8 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
   // Close search modal
   const closeSearchModal = () => {
     // Reset all value
-    setSearchTerm("")
+    setSearchTerm("");
+    setSearchFilterParams({});
     selectAllAssets(false)
 
     closeOverlay();
@@ -111,19 +118,16 @@ const SearchOverlayAssets = ({ closeOverlay, importEnabled = false, operationsEn
 
         <div className={'search-cont'}>
           <div className={"search-actions"}>
-            
-            {!isFolder &&
               <div className={'search-filter'} onClick={() => setOpenFilters(!openFilters)}>
                 <img src={Utilities.filterGray} alt={"filter"} />
               </div>
-            }
             <div className={'search-close'} onClick={closeSearchModal}>
               <img src={Utilities.grayClose} alt={"close"} />
             </div>
           </div>
           {/* TODO: When is a collecttion change placeholter to "Search Collections" */}
           <Search
-            placeholder={`Search ${isFolder ? 'Collections' : 'Assets'}`}
+            placeholder='Search Assets'
             onSubmit={(inputTerm, filterParams) => getData(inputTerm, true, filterParams)}
             openFilters={openFilters}
           />

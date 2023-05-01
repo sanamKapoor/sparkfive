@@ -431,7 +431,7 @@ const CropSidePanel = ({ asset,
                     }}
                     disabled={!widthOriginal || !heightOriginal || !sizeValue}
                 />
-                <Button
+                {!isShare && <Button
                     className={'m-t-40'}
                     text='Save as Related File'
                     type='button'
@@ -444,7 +444,7 @@ const CropSidePanel = ({ asset,
                         setRelatedModalOpen(true)
                     }
                 }
-                />
+                />}
                 <ConfirmModal
                     closeModal={() => setRelatedModalOpen(false)}
                     confirmAction={(data) => {

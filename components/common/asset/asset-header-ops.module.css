@@ -142,6 +142,14 @@
   top: inherit;
 }
 
+@media screen and (min-width: 801px) {
+  .more-dropdown {
+    right: -28px !important;
+    top: 60px !important;
+    bottom: inherit !important;
+  }
+}
+
 .more-dropdown li:hover {
   background-color: var(--color-sec-lightblue);
 }

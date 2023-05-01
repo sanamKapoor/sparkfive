@@ -41,6 +41,7 @@
   top: 0.5rem;
   left: 0.5rem;
   display: none;
+  z-index: 1499;
 }
 
 .selectable-wrapper.selected-wrapper {
@@ -111,4 +112,36 @@
 .details-wrapper > div:first-child {
   /* margin-top: 0.5rem; */
   flex: 1;
+}
+
+.hover-video-player-wrapper{
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  object-fit: cover;
+}
+
+.video-style{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  aspect-ratio: 1 / 1;
+  padding: 5px;
+}
+
+.loading-overlay{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.video-thumbnail{
+  width: 100%;
+  height: 100%;
+  scale: 1.04;
+  padding: 10px !important;
 }

@@ -26,6 +26,7 @@
 .react-draggable img{
   height: 100%;
   width: auto;
+  border: 2px dotted #100d0f !important;
 }
 
 @media screen and (max-height: 760px) {

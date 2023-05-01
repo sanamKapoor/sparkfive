@@ -361,13 +361,12 @@ const AssetHeaderOps = ({
 				{deletedAssets && <IconClickable place={'top'} additionalClass={styles['action-button']} src={AssetOps[`move`]} tooltipText={'Recover Asset'} tooltipId={'Recover'} onClick={() => setActiveOperation('recover')} />}
 				{deletedAssets && <IconClickable place={'top'} additionalClass={styles['action-button']} src={AssetOps[`delete`]} tooltipText={'Delete'} tooltipId={'Delete'} onClick={() => setActiveOperation('delete')} />}
 
-				{!isFolder &&
+				{!isFolder && !isShare &&
 
 					<div className={styles["more-wrapper"]}>
 						<IconClickable place={'top'} additionalClass={`${styles['action-button']}`} src={Utilities.more} tooltipText={'More'} tooltipId={'More'} onClick={() => setShowMoreActions(true)} />
 						{showMoreActions && ((!isFolder && !isShare) && !deletedAssets) && (
-							<>
-								<Dropdown
+							<>								<Dropdown
 									onClickOutside={() => setShowMoreActions(false)}
 									additionalClass={styles["more-dropdown"]}
 									options={[
@@ -393,7 +392,7 @@ const AssetHeaderOps = ({
 											id: "copy",
 											label: "Copy",
 											icon: AssetOps.copy,
-											onClick: () => () => setActiveOperation('copy')
+											onClick: () => setActiveOperation('copy')
 										},
 										{
 											id: "thumbnail",
@@ -403,9 +402,15 @@ const AssetHeaderOps = ({
 										}
 									]}
 								/>
-								{((!isFolder && !isShare) && !deletedAssets) && (
-									<>
+							</>
 
+						)}
+					</div>
+				}
+			</div>
+			{((!isFolder && !isShare) && !deletedAssets) && (
+				
+				<>
 										<ConfirmModal
 											closeModal={() => setShowAssociateModalOpen(false)}
 											confirmAction={() => {
@@ -420,19 +425,11 @@ const AssetHeaderOps = ({
 													Associate ({totalSelectAssets}) asset(s)
 												</span>
 											}
-											subText="Associate 2 Asset(s)
-											Associating allows you see all related assets together on the asset detail pages"
+											subText="Associating allows you see all related assets together on the asset detail pages"
 											modalIsOpen={showAssociateModalOpen}
 										/>
 									</>
 								)}
-							</>
-
-						)}
-					</div>
-				}
-			</div>
-
 
 		</div>
 	)

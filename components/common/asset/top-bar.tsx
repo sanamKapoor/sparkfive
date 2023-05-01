@@ -46,7 +46,8 @@ const TopBar = ({
     selectAllFolders,
     selectedAllFolders,
     setLastUploadedFolder,
-    folders
+    folders,
+    setActiveFolder
   } = useContext(AssetContext)
 
   const { user, hasPermission, advancedConfig, setAdvancedConfig } = useContext(UserContext)
@@ -72,7 +73,6 @@ const TopBar = ({
     setActiveSortFilter({
       ...activeSortFilter
     })
-
     // Needed to reset because it is set for collection upload when alphabetical sort active
     // And uploaded folder needed to show at first
     setLastUploadedFolder(undefined)
@@ -122,7 +122,6 @@ const TopBar = ({
 
   const folderData = folders.filter(folder => folder.id === activeFolder)
 
-
   return (
     <section className={styles.container} id={'top-bar'}>
       <div className={styles['filter-mobile']} onClick={() => handleOpenFilter()}>
@@ -133,10 +132,10 @@ const TopBar = ({
           links={[
             {
               name: "Collections",
-              action: () => setSortFilterValue('mainFilter', "folders")
+              action: () =>{ setActiveFolder(''); setSortFilterValue('mainFilter', "folders"); }
             }
           ]}
-          current={folderData[0].name}
+          current={folderData[0]?.name}
         />
 
       )}
@@ -144,7 +143,7 @@ const TopBar = ({
         <div>
           {(activeFolder && mode === "assets") && (
             <SubHeader
-              pageTitle={folderData[0].name}
+              pageTitle={folderData[0]?.name}
             />
           )}
 
@@ -206,7 +205,7 @@ const TopBar = ({
 
         <div className={styles['sec-filters']}>
 
-          {!isMobile &&
+          {!isMobile && 
             <img src={Utilities.search} onClick={setActiveSearchOverlay} className={styles.search} />
           }
           {!isMobile && (amountSelected === 0 || mode === 'folders') && showAssetAddition && hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL]) && (

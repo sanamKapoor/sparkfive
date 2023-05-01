@@ -21,10 +21,9 @@
   border-radius: 8px;
 }
 
-.no-height-max{
+.no-height-max {
   max-height: 100vh;
 }
-
 
 .overlay {
   position: fixed;
@@ -38,6 +37,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+@media screen and (min-width: 801px) {
+  .overlay {
+    background: transparent;
+    align-items: flex-start;
+    top: 188px;
+    height: auto;
+  }
 }
 
 .header {
@@ -93,11 +101,11 @@
   padding: 20px;
 }
 
-.buttons>div {
+.buttons > div {
   margin-left: 5px;
 }
 
-.overflow-text{
+.overflow-text {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -105,7 +113,7 @@
   text-overflow: ellipsis;
 }
 
-.no-border{
+.no-border {
   border-bottom: none;
 }
 
