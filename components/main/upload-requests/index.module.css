@@ -141,6 +141,8 @@
   display: grid;
   grid-template-columns: 1fr 35%;
   gap: 60px;
+  max-height: 70vh;
+  overflow-y: auto;
 }
 
 .modal-field-title{
