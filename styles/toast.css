@@ -21,6 +21,10 @@
   /* margin: 0.5rem 1rem; */
 }
 
+.Toastify .toast-container{
+  z-index: 9999;
+}
+
 .Toastify .custom-toast-container {
   display: flex;
   align-items: center;
