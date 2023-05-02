@@ -274,7 +274,7 @@ const AssetCropImg = ({ sizeOfCrop, setSizeOfCrop, assetImg, setWidth, setHeight
 					crossOrigin={'anonymous'}
 					src={finalImg}
 					alt={name}
-					className={`${styles.asset} ${opaque && styles.opaque}`}
+					className={`${styles.asset__crop} ${opaque && styles.opaque}`}
 					onLoad={(e) => {
 						imgRef.current = e.target;
 
