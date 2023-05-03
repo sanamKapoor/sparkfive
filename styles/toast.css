@@ -21,8 +21,9 @@
   /* margin: 0.5rem 1rem; */
 }
 
-.Toastify .toast-container{
-  z-index: 9999;
+.Toastify{
+  z-index: 99999;
+  position: relative;
 }
 
 .Toastify .custom-toast-container {
