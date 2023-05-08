@@ -551,8 +551,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
           isShare={isShare}
           asyncCreateFn={(newItem) => {
             setIsLoading(true);
-
-            return assetApi.addTag(id, newItem)
+            return assetApi.addTag(id, {...newItem, type: 'regular'})
           }}
           dropdownIsActive={activeDropdown === 'tags'}
           sortDisplayValue={true}

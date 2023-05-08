@@ -772,6 +772,7 @@ export default ({ getAssets }) => {
 
   const copyAssets = async (selectedFolder) => {
     try {
+      setIsLoading(true);
       let copyAssetIds;
       let filters = {};
       if (!operationAsset) {
@@ -808,10 +809,11 @@ export default ({ getAssets }) => {
         filters
       );
       closeModalAndClearOpAsset();
-      toastUtils.success("Assets copied successfully");
       if (!activeFolder && activePageMode === "library") {
         setAssets(update(assets, { $unshift: data }));
       }
+      setIsLoading(false);
+      toastUtils.success("Assets copied successfully");
     } catch (err) {
       console.log(err);
       if (err.response?.status === 402)
