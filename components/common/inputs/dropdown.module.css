@@ -35,7 +35,7 @@
   gap: 10px;
 }
 
-.menu li:first-child {
+/* .menu li:first-child {
   border-top-right-radius: 8px;
   border-top-left-radius: 8px;
 }
@@ -43,7 +43,7 @@
 .menu li:last-child {
   border-bottom-right-radius: 8px;
   border-bottom-left-radius: 8px;
-}
+} */
 
 
 .menu li a{
@@ -53,7 +53,7 @@
 }
 
 .menu li:hover {
-  background-color: var(--color-secondary-hover);
+  background-color: var(--color-sec-lightblue);
 }
 
 .menu li span {

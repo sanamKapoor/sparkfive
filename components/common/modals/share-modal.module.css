@@ -12,7 +12,9 @@
     display: flex;
     align-items: center;
 }
-
+.radio-button-wrapper img {
+    width: 14px;
+}
 
 .row-field-content{
     padding-left: 15px;
@@ -35,4 +37,10 @@
 .helper-text {
     font-size: 12px;
     font-weight: 300;
+}
+
+@media screen and (min-width: 767px) {
+    .shareModal {
+        width: 605px;
+    }
 }

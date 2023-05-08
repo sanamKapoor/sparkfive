@@ -321,3 +321,15 @@ input[role="combobox"] {
     width: 50%;
   }
 }
+
+@media screen and (min-width: 767px) {
+  .collection-share-modal {
+      width: 605px !important;
+      max-height: 660px !important;
+  }
+}
+
+.sharefolderOuter #top-bar {
+  top: 99px;
+  border-top: 1px solid #E9EEFA;
+}

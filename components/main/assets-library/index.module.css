@@ -1,9 +1,9 @@
 .container {
-  padding: 35px 32px;
+  padding: 35px 40px;
 }
 
 .grid-wrapper{
-  margin-top: calc(81px  + 110px)
+  margin-top: calc(81px  + 68px)
 }
 
 @media screen and (max-width: 600px) {
@@ -39,4 +39,8 @@
   .container {
     padding: 20px;
   }
+}
+
+.active-breadcrumb-item {
+  margin-top: calc(81px  + 166px);
 }

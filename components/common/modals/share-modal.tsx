@@ -309,7 +309,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 			confirmText={sharable ? (currentShareLink ? 'Save Changes' : 'Send Email') : ''}
 			headText={title ? title : `Share ${itemsAmount} asset(s)`}
 			disabledConfirm={!name}
-			additionalClasses={['visible-block']}
+			additionalClasses={[`visible-block ${styles.shareModal}`]}
 			showCancel={false}
 			confirmAction={() => {
 				shareAssets(
@@ -498,7 +498,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 					</div>
 				</div>}
 
-				<div className={`${styles['input-wrapper']} ${sharable ? "" : "m-b-6rem"}`} >
+				<div className={`${styles['input-wrapper']} ${sharable ? "" : ""}`} >
 					<div className={`${styles.title}`}>Share from Sparkfive</div>
 					<div className={styles['field-content']}>
 						<div className={styles['field-radio-wrapper']}>

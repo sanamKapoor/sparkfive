@@ -29,7 +29,7 @@ import {
   ASSET_NAME_UPDATED,
 } from "../../../constants/messages";
 
-import HoverVideoPlayer from 'react-hover-video-player';
+import HoverVideoPlayer from "react-hover-video-player";
 import Spinner from "../spinners/spinner";
 
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
@@ -65,7 +65,7 @@ const AssetThumbail = ({
   infoWrapperClass = "",
   textWrapperClass = "",
   customIconComponent = <></>,
-  onDisassociate = () => { },
+  onDisassociate = () => {},
   detailOverlay = true,
   onCloseDetailOverlay = (asset) => {},
   isThumbnailNameEditable = false,
@@ -76,7 +76,7 @@ const AssetThumbail = ({
     useState(DEFAULT_DETAIL_PROPS);
   const { detailOverlayId, assets, setAssets } = useContext(AssetContext);
 
-  const isAssetACopy = asset.name.endsWith(' - COPY');
+  const isAssetACopy = asset.name.endsWith(" - COPY");
 
   const assetName = removeExtension(asset.name);
 
@@ -131,7 +131,7 @@ const AssetThumbail = ({
       try {
         const fileName = thumbnailName + "." + asset.extension;
         const data = await assetApi.updateAsset(asset.id, {
-          updateData: { name: isAssetACopy ? fileName + " - COPY" : fileName},
+          updateData: { name: isAssetACopy ? fileName + " - COPY" : fileName },
           associations: {},
         });
 
@@ -194,12 +194,12 @@ const AssetThumbail = ({
               videoSrc={previewUrl ?? realUrl}
               pausedOverlay={
                 <AssetImg
-                assetImg={thumbailUrl}
-                type={asset.type}
-                name={asset.name}
-                opaque={isUploading}
-                imgClass={styles['video-thumbnail']}
-              />
+                  assetImg={thumbailUrl}
+                  type={asset.type}
+                  name={asset.name}
+                  opaque={isUploading}
+                  imgClass={styles["video-thumbnail"]}
+                />
               }
               loadingOverlay={
                 <div className={styles["loading-overlay"]}>
@@ -256,64 +256,67 @@ const AssetThumbail = ({
         </div>
         <div className={styles.info}>
           <div className={`${infoWrapperClass} overflow--visible`}>
-            <div className={`${textWrapperClass} overflow--visible`}>
-              {isThumbnailNameEditable &&
-              isEditing &&
-              focusedItem &&
-              focusedItem === asset.id ? (
-                <input
-                  autoFocus
-                  className={`normal-text ${gridStyles["editable-input"]} ${styles["wrap-text"]}`}
-                  value={thumbnailName}
-                  onChange={handleNameChange}
-                  onBlur={updateNameOnBlur}
-                />
-              ) : (
-                <div className={`normal-text ${styles["wrap-text"]}`}>
-                  <span
-                    id="editable-preview"
-                    onClick={handleOnFocus}
-                    className={
-                      isThumbnailNameEditable
-                        ? gridStyles["editable-preview"]
-                        : `${gridStyles["editable-preview"]} ${gridStyles["non-editable-preview"]}`
-                    }
-                  >
-                    {thumbnailName}.{asset.extension}{isAssetACopy && ` - COPY`}
-                  </span>
-                </div>
-              )}
-              <div className={styles["details-wrapper"]}>
-                <div className="secondary-text">
-                  {format(new Date(asset.createdAt), "MMM d, yyyy, p")}
-                </div>
-                {!isUploading && showAssetOption && (
-                  <AssetOptions
-                    itemType={type}
-                    asset={asset}
-                    openArchiveAsset={openArchiveAsset}
-                    openDeleteAsset={openDeleteAsset}
-                    openMoveAsset={openMoveAsset}
-                    openCopyAsset={openCopyAsset}
-                    downloadAsset={downloadAsset}
-                    openShareAsset={openShareAsset}
-                    openComments={openComments}
-                    openRemoveAsset={openRemoveAsset}
-                    isShare={isShare}
-                    dissociateAsset={onDisassociate}
+            <div className={`${textWrapperClass} overflow--visible ${styles.folderItemHeadingOuter}`}>
+              <div className={styles.folderItemHeading}>
+                {isThumbnailNameEditable &&
+                isEditing &&
+                focusedItem &&
+                focusedItem === asset.id ? (
+                  <input
+                    autoFocus
+                    className={`normal-text ${gridStyles["editable-input"]} ${styles["wrap-text"]}`}
+                    value={thumbnailName}
+                    onChange={handleNameChange}
+                    onBlur={updateNameOnBlur}
                   />
+                ) : (
+                  <div className={`normal-text ${styles["wrap-text"]}`}>
+                    <span
+                      id="editable-preview"
+                      onClick={handleOnFocus}
+                      className={
+                        isThumbnailNameEditable
+                          ? gridStyles["editable-preview"]
+                          : `${gridStyles["editable-preview"]} ${gridStyles["non-editable-preview"]}`
+                      }
+                    >
+                      {thumbnailName}.{asset.extension}
+                      {isAssetACopy && ` - COPY`}
+                    </span>
+                  </div>
                 )}
-                {showAssetRelatedOption && (
-                  <AssetOptions
-                    itemType={type}
-                    asset={asset}
-                    openDeleteAsset={openDeleteAsset}
-                    downloadAsset={downloadAsset}
-                    isAssetRelated
-                    dissociateAsset={onDisassociate}
-                  />
-                )}
+                <div className={styles["details-wrapper"]}>
+                  <div className="secondary-text">
+                    {format(new Date(asset.createdAt), "MMM d, yyyy, p")}
+                  </div>
+                </div>
               </div>
+              {!isUploading && showAssetOption && (
+                <AssetOptions
+                  itemType={type}
+                  asset={asset}
+                  openArchiveAsset={openArchiveAsset}
+                  openDeleteAsset={openDeleteAsset}
+                  openMoveAsset={openMoveAsset}
+                  openCopyAsset={openCopyAsset}
+                  downloadAsset={downloadAsset}
+                  openShareAsset={openShareAsset}
+                  openComments={openComments}
+                  openRemoveAsset={openRemoveAsset}
+                  isShare={isShare}
+                  dissociateAsset={onDisassociate}
+                />
+              )}
+              {showAssetRelatedOption && (
+                <AssetOptions
+                  itemType={type}
+                  asset={asset}
+                  openDeleteAsset={openDeleteAsset}
+                  downloadAsset={downloadAsset}
+                  isAssetRelated
+                  dissociateAsset={onDisassociate}
+                />
+              )}
               {/* </div> */}
             </div>
 

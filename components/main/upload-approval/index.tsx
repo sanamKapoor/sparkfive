@@ -1114,6 +1114,7 @@ const UploadApproval = () => {
       />
         <div className={`row ${styles['root-row']}`} style={{marginTop: top}}>
             <div className={`col-70 height-100`}>
+                
                 <main className={`${styles.container} p-r-0`}>
                     { <>
                         <p className={styles.title}>Upload a file or a batch, tag or comment</p>

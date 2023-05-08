@@ -251,32 +251,36 @@ const FolderGridItem = ({
         </>
       </div>
       <div className={styles.info} onClick={handleOnFocus}>
-        {isThumbnailNameEditable &&
-        isEditing &&
-        focusedItem &&
-        focusedItem === id ? (
-          <input
-            className={`normal-text ${gridStyles["editable-input"]}`}
-            value={thumbnailName}
-            onChange={handleNameChange}
-            onBlur={updateNameOnBlur}
-            autoFocus
-          />
-        ) : (
-          <span
-            id="editable-preview"
-            onClick={handleOnFocus}
-            className={
-              isThumbnailNameEditable
-                ? `normal-text ${styles["wrap-text"]} ${gridStyles["editable-preview"]}`
-                : `${gridStyles["editable-preview"]} ${gridStyles["non-editable-preview"]}`
-            }
-          >
-            {thumbnailName}
-          </span>
-        )}
-        <div className={styles["details-wrapper"]}>
-          <div className="secondary-text">{`${assetsCount} Assets`}</div>
+        <div className={styles.folderItemHeadingOuter}>
+          <div className={styles.folderItemHeading}>
+            {isThumbnailNameEditable &&
+            isEditing &&
+            focusedItem &&
+            focusedItem === id ? (
+              <input
+                className={`normal-text ${gridStyles["editable-input"]}`}
+                value={thumbnailName}
+                onChange={handleNameChange}
+                onBlur={updateNameOnBlur}
+                autoFocus
+              />
+            ) : (
+              <span
+                id="editable-preview"
+                onClick={handleOnFocus}
+                className={
+                  isThumbnailNameEditable
+                    ? `normal-text ${styles["wrap-text"]} ${gridStyles["editable-preview"]}`
+                    : `${gridStyles["editable-preview"]} ${gridStyles["non-editable-preview"]}`
+                }
+              >
+                {thumbnailName}
+              </span>
+            )}
+            <div className={styles["details-wrapper"]}>
+              <div className="secondary-text">{`${assetsCount} Assets`}</div>
+            </div>
+          </div>
           <FolderOptions
             activeFolderId={id}
             isShare={isShare}
@@ -301,7 +305,7 @@ const FolderGridItem = ({
           setDeleteOpen(false);
         }}
         confirmText={"Delete"}
-        message={"Are you sure you want to delete this folder?"}
+        message={"Are you sure you want to delete this Collection?"}
         modalIsOpen={deleteOpen}
       />
     </div>

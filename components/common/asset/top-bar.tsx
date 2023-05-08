@@ -127,6 +127,7 @@ const TopBar = ({
       <div className={styles['filter-mobile']} onClick={() => handleOpenFilter()}>
         <img src={Utilities.filterBlue} alt={"filter"} />
       </div>
+      <div className={styles.titleBreadcrumbs}>
       {(activeFolder && mode === "assets") && (
         <Breadcrumbs
           links={[
@@ -139,13 +140,15 @@ const TopBar = ({
         />
 
       )}
-      <div className={styles.wrapper}>
-        <div>
-          {(activeFolder && mode === "assets") && (
+      {(activeFolder && mode === "assets") && (
             <SubHeader
               pageTitle={folderData[0]?.name}
             />
           )}
+      </div>
+      <div className={styles.wrapper}>
+        <div>
+          
 
           {!deletedAssets ? <div className={styles.filters} >
             <ul className={styles['tab-list']}>
@@ -211,7 +214,7 @@ const TopBar = ({
           {(amountSelected === 0 || mode === 'folders') && showAssetAddition && hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL]) && (
             <AssetAddition activeFolder={activeFolder} getFolders={getFolders} />
           )}
-          {!deletedAssets && <img src={activeView === "grid" ? Utilities.gridView : Utilities.listView} onClick={() => setShowViewDropdown(true)} />}
+          {!deletedAssets && <img className={styles.gridList} src={activeView === "grid" ? Utilities.gridView : Utilities.listView} onClick={() => setShowViewDropdown(true)} />}
           {showViewDropdown &&
             <Dropdown
               additionalClass={styles["view-dropdown"]}

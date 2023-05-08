@@ -773,7 +773,7 @@ const AssetsLibrary = () => {
               </div>
 
             </div>
-            <div className={`${openFilter && styles['col-wrapper']} ${styles['grid-wrapper']}`}>
+            <div className={`${openFilter && styles['col-wrapper']} ${styles['grid-wrapper']} ${activeFolder && styles['active-breadcrumb-item']}`}>
               <DropzoneProvider>
                 {advancedConfig.set && <AssetGrid
                   activeFolder={activeFolder}

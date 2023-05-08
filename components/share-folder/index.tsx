@@ -341,7 +341,7 @@ const ShareFolderMain = () => {
     
     return (
         <>
-            {!loading && <main className={styles.container}>
+            {!loading && <main className={`${styles.container} sharefolderOuter`}>
                 <TopBar
                     activeSortFilter={activeSortFilter}
                     setActiveSortFilter={setActiveSortFilter}

@@ -66,6 +66,7 @@
     position: absolute;
     left: 0;
     right: 0;
+    font-size: 32px;
 }
 
 .ops-wrapper {
