@@ -19,6 +19,7 @@ export default ({ children }) => {
   const [waitToVerifyDomain, setWaitToVerifyDomain] = useState(false)
   const [vanityCompanyInfo, setVanityCompanyInfo] = useState()
   const [cdnAccess, setCdnAccess] = useState(false)
+  const [transcriptAccess, setTranscriptAccess] = useState(false)
   const [advancedConfig, setAdvancedConfig] = useState(advancedConfigParams)
 
   const { setIsLoading } = useContext(LoadingContext)
@@ -49,7 +50,9 @@ export default ({ children }) => {
 
         const { data } = await userApi.getUserData()
         const teamResponse = await teamApi.getTeam()
+        console.log(teamResponse.data)
         setCdnAccess(teamResponse.data.cdnAccess)
+        setTranscriptAccess(teamResponse.data.transcript)
 
         const { data: advOptions } = await teamApi.getAdvanceOptions()
         setAdvancedConfig({...advOptions, set: true})
@@ -170,7 +173,8 @@ export default ({ children }) => {
     vanityCompanyInfo,
     cdnAccess,
     advancedConfig,
-    setAdvancedConfig
+    setAdvancedConfig,
+    transcriptAccess
   }
 
   return (

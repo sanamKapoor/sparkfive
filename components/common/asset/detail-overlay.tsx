@@ -39,6 +39,7 @@ import { isImageType } from "../../../utils/file";
 import { ASSET_ACCESS } from "../../../constants/permissions";
 import AssetNotes from './asset-notes';
 import AssetNote from './asset-note';
+import AssetTranscript from './asset-transcript';
 import AssetRelatedFIles from './asset-related-files';
 
 import { sizeToZipDownload } from "../../../constants/download";
@@ -111,7 +112,7 @@ const DetailOverlay = ({
 }) => {
 
   const { hasPermission } = useContext(UserContext);
-  const { user, cdnAccess } = useContext(UserContext);
+  const { user, cdnAccess, transcriptAccess } = useContext(UserContext);
 
   const [assetDetail, setAssetDetail] = useState(undefined);
 
@@ -142,6 +143,7 @@ const DetailOverlay = ({
   const [defaultSize, setDefaultSize] = useState({ width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight });
   const [notes, setNotes] = useState([])
   const [sizeOfCrop, setSizeOfCrop] = useState({ width: defaultSize.width, height: defaultSize.height })
+  const [transcripts, setTranscript] = useState([])
 
   const renameValue = useRef("")
   const setRenameValue = (value) => { renameValue.current = value }
@@ -231,6 +233,10 @@ const DetailOverlay = ({
   }
 
   useEffect(() => {
+    if (transcriptAccess) {
+      getTranscript();
+    }
+
     getCropResizeOptions();
     getDetail();
     checkInitialParams();
@@ -272,6 +278,16 @@ const DetailOverlay = ({
         }
 
       }
+    } catch (err) {
+      // console.log(err);
+    }
+  };
+
+  const getTranscript = async (curAsset?) => {
+    try {
+      const asset = curAsset || currentAsset;
+      const { data } = await assetApi.getTranscript(asset.id);
+      setTranscript(data)
     } catch (err) {
       // console.log(err);
     }
@@ -1130,10 +1146,12 @@ const DetailOverlay = ({
               applyCrud={applyCrud} />
           )}
 
-          {activeSideComponent === "related" && (
-            <AssetRelatedFilesList />
+          {activeSideComponent === "transcript" && transcripts && (
+            <AssetTranscript
+              title={"Transcript"}
+              transcripts={transcripts}
+            />
           )}
-
 
         </section>
       )}
@@ -1256,6 +1274,15 @@ const DetailOverlay = ({
 
             </>
           }
+          {transcriptAccess && <IconClickable
+            src={Utilities.listView}
+            additionalClass={styles["menu-icon"]}
+            onClick={() => {
+              setMode("detail");
+              resetValues();
+              changeActiveSide("transcript");
+            }}
+          />}
         </section>
       )}
       <RenameModal

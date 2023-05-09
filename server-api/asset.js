@@ -1,7 +1,8 @@
 import axios from 'axios'
 import querystring from 'querystring'
 
-const assetUrl = `${process.env.SERVER_BASE_URL}/assets`
+const assetUrl = `${process.env.SERVER_BASE_URL}/assets`;
+const transcriptUrl = `${process.env.SERVER_BASE_URL}/transcribe`
 
 export default {
   uploadAssets: (formData, queryData = {}) => axios.post(`${assetUrl}/upload?${querystring.encode(queryData)}`, formData, {
@@ -76,6 +77,8 @@ export default {
 
   associate: (assetIds, queryData) => axios.post(`${assetUrl}/associate?${querystring.encode(queryData)}`, { assetIds }),
   disassociate: (assetIds) => axios.post(`${assetUrl}/disassociate`, { assetIds }),
+
+  getTranscript: (assetId) => axios.get(`${transcriptUrl}/asset/${assetId}`)
 
 }
 
