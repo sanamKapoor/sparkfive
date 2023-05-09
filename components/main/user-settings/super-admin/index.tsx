@@ -65,6 +65,7 @@ const SuperAdmin = () => {
     const [viewCompanyDetail, setViewCompanyDetail] = useState()
     const [vanity, setVanity] = useState(type[1].value)
     const [cdnAccess, setCdnAcces] = useState(type[1].value)
+    const [transcript, setTranscript] = useState(type[1].value)
     const [advancedCollectionShareLink, setAdvanceShareLink] = useState(collectionSharedLink[1].value)
     const [subdomain, setSubdomain] = useState('')
     const [loading, setLoading] = useState(false)
@@ -336,6 +337,27 @@ const SuperAdmin = () => {
                     />
                 </div>
             </div>
+
+
+          <div className={`row align-flex-start ${styles.cdnEmbedding}`}>
+            <div className={"col-20 font-weight-600"}>
+              Transcription
+            </div>
+
+            <div className={"col-20"}>
+              <OptionList setValue={(value) => setTranscript(value)} data={type} oneColumn={false} value={transcript }/>
+            </div>
+
+            <div className={"col-20 align-self-flex-end"}>
+              <Button
+                styleTypes={['exclude-min-height']}
+                type={'button'}
+                text='Save'
+                styleType='primary'
+                onClick={() => updateTeam({ transcript })}
+              />
+            </div>
+          </div>
         </>}
 
         <Base
