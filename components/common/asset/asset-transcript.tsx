@@ -30,14 +30,15 @@ const AssetTranscript = ({ title, transcripts }) => {
                 <h2>{title}</h2>
             </div>
 
-            <Search placeholder={"Search transcript"}
+            {transcriptData.length > 0 && <Search placeholder={"Search transcript"}
                     onChange={search}
                     onClear={onClear}
                     onlyInput={true}
                     styleType={styles["search-input"]}
-                    inputContainerStyle={styles["input-container"]}/>
+                    inputContainerStyle={styles["input-container"]}/>}
 
             <div className={styles["transcript-row"]}>
+                {transcriptData.length === 0 && <div>Processing...</div>}
                 {transcriptData.map((transcript, index)=>{
                     return <div key={index} className={styles["transcript-item"]}>
                         <span className={styles["time-text"]}>{transcript.startTime.split(",")[0]}</span>
