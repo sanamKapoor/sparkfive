@@ -23,25 +23,33 @@ const AssetDownloadProcess = () => {
             [styles['less-margin-bottom']]: (downloadingStatus === 'zipping' || downloadingStatus === 'preparing')
         })}>
         <div className={clsx(styles.row, styles['no-margin'])}>
+            <div className={styles.zipheading}>
             {
                 (downloadingStatus === 'zipping' || downloadingStatus === 'preparing') && <>
-                        <span>
+                        <div className={styles.zipheadingInner}>
+                            <div className={styles.preHeading}>
                             {<span className={styles['no-wrap-text']}>
                                 Preparing download
                             </span>
                             }
-                        </span>
+                            {downloadingStatus === 'done' && <span>Download ready</span>}
+                            {downloadingStatus === 'error' && <span>{downloadingError}</span>}
+                            <div><strong>Estimated Time:</strong> less than a minute</div>
+                            </div>
+                        </div>
                     </>
+                
             }
 
             {
                 downloadingStatus === 'zipping' &&
-                <span className={styles['processing-file-count']}>Zipping {totalDownloadingAssets} assets</span>
+                <div className={styles['processing-file-count']}>Zipping {totalDownloadingAssets} assets</div>
             }
+            </div>
 
-            {downloadingStatus === 'done' && <span>Download ready</span>}
+            
 
-            {downloadingStatus === 'error' && <span>{downloadingError}</span>}
+            
 
             {(downloadingStatus === 'done' || downloadingStatus === 'error') &&
                 <div className={styles['close-button']} onClick={()=>{updateDownloadingStatus('none', 0, 0, '')}}>
@@ -49,7 +57,7 @@ const AssetDownloadProcess = () => {
                 </div>
             }
 
-            {(downloadingStatus === 'zipping' || downloadingStatus === 'preparing') && <Line percent={downloadingPercent} strokeWidth={1} strokeColor="#fff" trailColor={"#9597a6"}/>}
+            {(downloadingStatus === 'zipping' || downloadingStatus === 'preparing') && <Line percent={downloadingPercent} strokeWidth={1} style={{height: '10px', width: '100%'}} strokeColor="#fff" trailColor={"#9597a6"}/>}
         </div>
 
     </div>

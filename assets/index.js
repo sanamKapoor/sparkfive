@@ -206,4 +206,5 @@ export const AssetOps = {
   uploadFiles: require('./Icons/Asset Addition/upload-files.svg'),
   uploadFolder: require('./Icons/Asset Addition/upload-folder.svg'),
   editGray: require('./Icons/Asset Actions/edit-gray.svg'),
+  cancel: require('./Icons/Utilities/Close/blue-close.svg'),
 }

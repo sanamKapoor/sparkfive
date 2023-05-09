@@ -38,6 +38,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 10px;
+  width: 100%;
 }
 
 .content {
@@ -141,14 +142,27 @@
 
 
 .view-dropdown {
-  left: 0;
-  top: 40px;
+  right: 0;
+  top: 35px;
   width: 160px;
+}
+
+@media screen and (max-width: 409px) {
+  .view-dropdown {
+    right: -50px;
+  }
+}
+
+@media screen and (min-width: 410px) and (max-width: 575px) {
+  .view-dropdown {
+    right: -28px;
+  }
 }
 
 li.dropdown-title {
   padding: 8px 10px;
   background-color: var(--color-sec-lightblue);
+  border-bottom: 1px solid var(--color-secondary-border);
 }
 
 @media screen and (max-width: 600px) {
@@ -187,11 +201,34 @@ li.dropdown-title {
     gap: 8px;
   }
 
+  .sec-filters button {
+    white-space: nowrap;
+    padding: 0 10px;
+  }
+
+  .sort-wrapper {
+    min-width: 97px;
+  }
+
+  .wrapper {
+    gap: 0;
+  }
+
+  .wrapper .innerwrapper {
+    width: calc(100% - 220px);    
+  }
+  .wrapper .innerwrapper .tab-list-item {
+    width: calc(100% - 35px);
+    overflow: hidden;
+  }
+  
+
   .mobile-tabs {
     position: relative;
     display: flex;
     align-items: center;
     gap: 8px;
+    width: 100%;
   }
   .dropdown {
     left: 0;
@@ -224,4 +261,14 @@ li.dropdown-title {
     right: 8px;
     cursor: pointer;
   }
+}
+
+.gridOuter {
+  position: relative;
+  cursor: pointer;
+}
+
+.gridOuter .gridList {
+  width: 20px;
+  height: 20px;
 }

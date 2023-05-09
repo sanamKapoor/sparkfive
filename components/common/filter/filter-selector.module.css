@@ -105,3 +105,30 @@
 .any-all-text {
     margin-left: 5px;
 }
+
+.dropdownOpt {
+    position: relative;
+    margin-top: 25px;
+    display: flex;
+    justify-content: flex-end;
+}
+.dropdownOptHead {
+    display: inline-flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 14px;
+    color: var(--color-sec-text);
+    cursor: pointer;
+}
+.dropdownOptHead img {
+    width: 8px;
+}
+.dropdownOpt .view-dropdown {
+    position: absolute;
+    right: 0;
+    top: 18px;
+    width: 140px;
+}
+.dropdownOpt .view-dropdown li {
+    min-width: 100%;
+}
