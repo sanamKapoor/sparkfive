@@ -1,3 +1,8 @@
+.wrapper{
+    padding-bottom: 40px;
+    height: 100%;
+}
+
 .input-wrapper{
     padding: 16px 28px;
 }
@@ -37,6 +42,11 @@
 .helper-text {
     font-size: 12px;
     font-weight: 300;
+}
+
+.action-button{
+  width: 18px;
+  height: 18px;
 }
 
 @media screen and (min-width: 767px) {

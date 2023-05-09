@@ -55,7 +55,7 @@ const ListItem = ({
   focusedItem,
   setFocusedItem,
 }) => {
-  const dateFormat = "MMM do, yyyy h:mm a";
+  const dateFormat = "MMM do, yyyy";
 
   const [overlayProperties, setOverlayProperties] =
     useState(DEFAULT_DETAIL_PROPS);
@@ -251,7 +251,7 @@ const ListItem = ({
 
               <h4 className={styles.dimension}>Dimensions</h4>
 
-              <h4 className={styles.collection}>Collection</h4>
+              {/* <h4 className={styles.collection}>Collection</h4> */}
             </div>
           </div>
         )}
@@ -407,13 +407,13 @@ const ListItem = ({
               `${asset?.dimensionWidth}x${asset?.dimensionHeight}`}
           </div>
 
-          <div className={`${styles.field_name} ${styles.collection}`}>
+          {/* <div className={`${styles.field_name} ${styles.collection}`}>
             <div className={`${styles.listBadge}`}>
               {asset?.folders?.map((folder) => (
                 <CollectionBadge collection={folder?.name} />
               ))}
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
       {overlayProperties.visible && (

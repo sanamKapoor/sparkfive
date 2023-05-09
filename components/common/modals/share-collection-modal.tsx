@@ -363,7 +363,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 			}} >
 
 			{loading && <Spinner className={styles['spinner']}/>}
-			{!loading && <>
+			{!loading && <div className={styles['wrapper']}>
 			<div className={`${styles['input-wrapper']} d-flex align-items-center`}>
 					<Input
 						value={name}
@@ -612,10 +612,11 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 			}
 
 
-			</>}
+			</div>}
 
 
 
+		
 		</Base >)
 }
 

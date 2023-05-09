@@ -90,7 +90,7 @@ const UploadRequest = () => {
     const {
     } = useContext(AssetContext)
 
-    const [top, setTop] = useState('calc(55px + 8rem)')
+    const [top, setTop] = useState('calc(55px + 2rem)')
 
     const { setIsLoading } = useContext(LoadingContext);
 

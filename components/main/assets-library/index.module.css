@@ -3,7 +3,7 @@
 }
 
 .grid-wrapper{
-  margin-top: calc(81px  + 68px)
+  margin-top: calc(81px + 68px)
 }
 
 @media screen and (max-width: 600px) {
@@ -42,5 +42,5 @@
 }
 
 .active-breadcrumb-item {
-  margin-top: calc(81px  + 166px);
+  margin-top: calc(81px + 166px);
 }

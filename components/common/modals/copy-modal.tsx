@@ -50,6 +50,7 @@ const CopyModal = ({ modalIsOpen, closeModal, itemsAmount, moveAssets, createFol
             closeModal={closemoveModal}
             confirmText={confirmText}
             headText={`${confirmText} ${itemsAmount} item(s) to...`}
+            subText='The assets will be duplicated and added into the new collection(s)'
             disabledConfirm={!selectedFolder}
             confirmAction={() => {
                 moveAssets(selectedFolder)
