@@ -117,7 +117,7 @@ const FolderGridItem = ({
     // zipDownloadUtils.zipAndDownload(data, name)
 
     // Show processing bar
-    updateDownloadingStatus("zipping", 0, 1);
+    updateDownloadingStatus("zipping", 0, assetsCount);
 
     let payload = {
       folderIds: [id],
