@@ -127,8 +127,10 @@
     position: absolute;
     right: 0;
     top: 18px;
-    width: 140px;
+    width: 160px;
 }
 .dropdownOpt .view-dropdown li {
     min-width: 100%;
+    padding: 7.5px 10px;
+    gap: 0;
 }

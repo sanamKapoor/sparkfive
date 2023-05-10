@@ -91,6 +91,7 @@
 
     .header h1 {
         position: relative;
+        height: auto;
     }
 
     .logo-img {
