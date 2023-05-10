@@ -1,16 +1,26 @@
 import styles from './search.module.css'
 import { Utilities } from '../../../assets'
-import { useRef, useState, useContext } from 'react'
-import { UserContext } from '../../../context'
+import { useRef, useState, useContext, useEffect } from 'react'
+import { FilterContext, UserContext } from '../../../context'
 
 // Components
 import Button from '../buttons/button'
+import { useDebounce } from '../../../hooks/useDebounce'
 
 const Search = (props) => {
 
   const { openFilters } = props
 
-  const [term, setTerm] = useState('')
+  const [input, setInput] = useState('');
+
+  const {setSearchTerm} = useContext(FilterContext);
+
+  const debouncedSearchTerm = useDebounce(input, 500);
+
+  useEffect( () => {
+    setSearchTerm(debouncedSearchTerm)
+}, [debouncedSearchTerm]);
+
   const [filtersTags, setFiltersTags] = useState([])
   const contentRef = useRef(null)
   let isOpen = openFilters
@@ -122,16 +132,16 @@ const Search = (props) => {
         return filtersTags.some(tag => tag.value === filter.value)
       }).map(item => item.value)
 
-      props.onSubmit(term, { advSearchMode: selectedModes, advSearchFrom: from })
+      props.onSubmit(input, { advSearchMode: selectedModes, advSearchFrom: from })
     }}>
       <div className={styles.form}>
         <div className={styles['input-container']} ref={contentRef} onClick={() => setFiltersVisible(null, true)}>
           <div className={styles["input-wrapper"]}>
             <img src={Utilities.search} />
             <input {...props}
-              onChange={(e) => setTerm(e.target.value)}
+              onChange={(e) => setInput(e.target.value)}
               onKeyUp={(e) => hideSearchOnEnter(e)}
-              value={term}
+              value={input}
               placeholder={props.placeholder || 'Search'}
               className={`${styles.container} ${props.styleType && styles[props.styleType]}`}
             />

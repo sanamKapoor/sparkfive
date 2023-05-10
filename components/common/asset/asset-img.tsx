@@ -34,7 +34,7 @@ const AssetImg = ({
         src={Assets.empty}
         alt={"blank"}
         className={`${styles[activeFilter]}`}
-        style={loaded ? { display: "none" } : { width: '100%', height: "100%", "object-fit": "contain"}}
+        style={loaded ? { display: "none" } : { width: '100%', height: "100%", "object-fit": "cover"}}
       />
       <img
         onClick={onClick}

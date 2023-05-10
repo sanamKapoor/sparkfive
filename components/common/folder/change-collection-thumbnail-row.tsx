@@ -1,7 +1,7 @@
 import React from "react";
 
 import IconClickable from "../buttons/icon-clickable";
-import redDeleteIconSrc from "../../../assets/Icons/Utilities/Delete/icn-utilities-delete-red.svg";
+import redDeleteIconSrc from "../../../assets/Icons/Utilities/Delete/icn-utilities-delete.svg";
 import classes from "./change-collection-thumbnail-row.module.css";
 
 const ChangeCollectionThumbnailRow = ({
@@ -31,6 +31,14 @@ const ChangeCollectionThumbnailRow = ({
       </div>
       <IconClickable src={redDeleteIconSrc} onClick={onDelete} />
       <p>or</p>
+      
+      <button
+        type="button"
+        onClick={onChangeThisOnly}
+        className={classes["change-this-btn"]}
+      >
+        {changeThisImgText}
+      </button>
       <label
         onChange={onUpload}
         htmlFor={`upload-file-${index}`}
@@ -45,13 +53,6 @@ const ChangeCollectionThumbnailRow = ({
         />
         Upload Image
       </label>
-      <button
-        type="button"
-        onClick={onChangeThisOnly}
-        className={classes["change-this-btn"]}
-      >
-        {changeThisImgText}
-      </button>
     </div>
   );
 };

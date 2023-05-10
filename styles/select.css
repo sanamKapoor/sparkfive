@@ -35,6 +35,9 @@
 .select-prefix__menu {
   border: 1px solid var(--color-secondary-border);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 8px !important;
+  overflow: hidden;
+  right: -1px;
 }
 
 .select-prefix__menu-list {
@@ -97,7 +100,7 @@
 }
 
 .search-filters .select-prefix__value-container {
-  padding-left: 35px;
+  padding-left: 39px;
 }
 
 .filter .select-prefix__placeholder,
@@ -107,7 +110,8 @@
 .search-filters .filter .select-prefix__placeholder,
 .product-select .select-prefix__placeholder {
   color: var(--color-sec-text);
-  font-weight: 600;
+  font-weight: 400;
+  font-size: 14px;
 }
 
 .font-weight-normal .select-prefix__placeholder {
@@ -144,8 +148,12 @@
   color: inherit;
 }
 
+.filter .select-prefix__option:hover {
+  background-color: var(--color-sec-lightblue);
+}
+
 .filter .select-prefix__option--is-selected:hover {
-  background-color: #deebff;
+  background-color: var(--color-sec-lightblue);
 }
 
 
@@ -171,8 +179,6 @@
 
 @media screen and (max-width: 1000px) {
   .filter-schedule .select-prefix__menu {
-    width: 100%;
-    margin-left: 0;
-    font-size: 12px;
+    width: 168px;
   }
 }

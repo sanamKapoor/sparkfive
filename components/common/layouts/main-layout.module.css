@@ -1,6 +1,6 @@
 .header {
   background-color: var(--color-prim-navy);
-  padding: 30px 32px;
+  padding: 20px 40px;
   display: flex;
   position: fixed;
   top: 0;
@@ -27,7 +27,7 @@
 .notifications-wrapper {
   display: flex;
   align-items: center;
-  margin-right: 20px;
+  margin-right: 16px;
 }
 
 .notifications {

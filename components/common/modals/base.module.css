@@ -20,6 +20,12 @@
   border-radius: 8px;
 }
 
+@media screen and (max-width: 410px) {
+  .modal {
+    min-width: 90%;
+  }
+}
+
 .no-height-max {
   max-height: 100vh;
 }
@@ -39,11 +45,9 @@
 }
 
 @media screen and (min-width: 801px) {
-  .overlay {
-    background: transparent;
+  .overlay { 
     align-items: flex-start;
-    top: 188px;
-    height: auto;
+    padding-top: 188px;
   }
 }
 
@@ -61,7 +65,7 @@
 }
 
 .subtext {
-  font-size: 12px;
+  font-size: 13px;
   max-width: 80%;
   margin: 8px 0 0;
   font-weight: 300;

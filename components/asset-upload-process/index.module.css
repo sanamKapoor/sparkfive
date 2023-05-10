@@ -12,40 +12,39 @@
   min-height: 40px;
 }
 
-.center-align{
+.center-align {
   display: flex;
   align-items: center;
 }
 
-.less-margin-bottom{
+.less-margin-bottom {
   padding: 15px 20px 5px 20px;
 }
 
-.no-margin{
+.no-margin {
   margin-bottom: 0 !important;
 }
 
-.underline-text{
+.underline-text {
   text-decoration: underline;
   font-weight: normal !important;
   cursor: pointer;
 }
 
 @media screen and (max-width: 768px) {
-  .container{
+  .container {
     left: 0;
     width: 100%;
     max-width: 100%;
   }
 }
 
-
-.row{
+.row {
   margin-bottom: -7px;
   width: 100%;
 }
 
-.row span{
+.row span {
   margin-right: 10px;
   font-size: 12px;
   font-weight: bold;
@@ -54,24 +53,24 @@
   min-width: 75%;
 }
 
-.row span.processing-file-count{
+.row span.processing-file-count {
   max-width: 20%;
   min-width: 20%;
 }
 
 @media screen and (max-width: 650px) {
-  .row span.processing-file-count{
+  .row span.processing-file-count {
     max-width: 100%;
     min-width: 100%;
   }
 
-  .row span{
+  .row span {
     max-width: 100%;
     min-width: 100%;
   }
 }
 
-.row span .no-wrap-text{
+.row span .no-wrap-text {
   font-size: 12px;
   font-weight: bold;
   display: block;
@@ -82,7 +81,7 @@
   min-width: 100%;
 }
 
-.close-button{
+.close-button {
   position: absolute;
   right: 15px;
   top: 0;
@@ -91,11 +90,134 @@
   cursor: pointer;
 }
 
-.fail-text{
+.fail-text {
   margin-left: 5px;
 }
 
-.no-max-min-width{
+.no-max-min-width {
   max-width: unset !important;
   min-width: unset !important;
+}
+
+.uploadingContainer {
+  position: fixed;
+  bottom: 7px;
+  right: 25px;
+  padding: 0;
+  border: 2px solid var(--color-secondary-border);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  background-color: #fff;
+  color: white;
+  max-width: calc(100% - 48px);
+  width: 460px;
+  z-index: 9999;
+  min-height: 40px;
+  overflow: hidden;
+}
+
+.uploadHeader {
+  display: flex;
+  align-items: center;
+  justify-self: center;
+  padding: 14px 12px 12px;
+  flex-direction: column;
+  border-bottom: 1px solid var(--color-secondary-border);
+  background-color: var(--color-sec-lightblue);
+  position: relative;
+}
+
+.mainHeading {
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--color-prim-navy);
+}
+
+.subHeading {
+  font-weight: 400;
+  font-size: 11px;
+  color: var(--color-sec-text);
+}
+
+.innerUploadList {
+  padding: 20px 24px;
+  max-height: 340px;
+  overflow-y: auto;
+}
+
+.uploadItem {
+  color: var(--color-sec-text);
+  font-weight: 400;
+  font-size: 12px;
+  display: flex;
+  align-items: center;  
+  gap: 30px;
+  margin-bottom: 31px;
+}
+
+.uploadItem:first-child:last-child {
+  margin-bottom: 0;
+}
+
+.uploadItem:last-child {
+  margin-bottom: 0;
+}
+
+.uploadItem div {
+  white-space: nowrap;
+}
+
+.uploadItem div:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.uploadItem div:nth-child(1) {
+  width: 200px;
+}
+.uploadItem div:nth-child(2) {
+  width: 60px;
+}
+.uploadItem div:nth-child(3) {
+  width: 14px;
+}
+.uploadItem div:nth-child(4) {
+  width: 30px;
+}
+
+.flexdiv {
+  display: flex;
+  width: 14px;
+}
+
+.flexdiv {
+  width: 14px;
+  height: 14px;
+}
+
+.closebtn {
+ position: absolute; 
+ right: 22px;
+ top: 14px;
+ width: 20px;
+}
+
+.lineBar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--color-sec-text);
+  width: 100% !important;
+}
+
+@media screen and (max-width: 600px) {
+  .uploadingContainer {
+    margin: 0 24px 53px;
+    right: 0;
+  } 
+  .lineBar {
+    width: 50% !important;
+  }
 }

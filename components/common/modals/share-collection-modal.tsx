@@ -351,7 +351,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 			confirmText={sharable ? (currentShareLink ? 'Save Changes' : 'Send Email') : ''}
 			headText={title ? title : (itemsAmount === 1 ? `Share 1 collection` : `Share portal`)}
 			disabledConfirm={!name}
-			additionalClasses={['visible-block']}
+			additionalClasses={['visible-block collection-share-modal']}
 			showCancel={false}
 			confirmAction={() => {
 				shareAssets(
@@ -363,7 +363,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 			}} >
 
 			{loading && <Spinner className={styles['spinner']}/>}
-			{!loading && <>
+			{!loading && <div className={styles['wrapper']}>
 			<div className={`${styles['input-wrapper']} d-flex align-items-center`}>
 					<Input
 						value={name}
@@ -605,17 +605,18 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 					</div>
 				</div>}
 
-			{isAdmin() && <div className={`${styles['input-wrapper']} ${sharable ? "m-b-6rem" : "m-b-6rem"}`} >
+			{isAdmin() && <div className={`${styles['input-wrapper']}`} >
 					<div className={`${styles.title}`}>Find Logo via Filename</div>
 					<ShareIconFilesSearch onSelect={changeLogo} logo={logo}/>
 				</div>
 			}
 
 
-			</>}
+			</div>}
 
 
 
+		
 		</Base >)
 }
 

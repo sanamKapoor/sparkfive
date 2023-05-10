@@ -302,7 +302,7 @@ const AssetHeaderOps = ({
 			</div>
 
 			<div className={styles.icons}>
-				{(!isShare && !deletedAssets) && <IconClickable place={'top'} additionalClass={styles['action-button']} src={AssetOps[`edit`]} tooltipText={'Edit'} tooltipId={'Edit'} onClick={() => setActiveOperation('edit')} />}
+				{(!isShare && !deletedAssets && !isFolder) && <IconClickable place={'top'} additionalClass={styles['action-button']} src={AssetOps[`edit`]} tooltipText={'Edit'} tooltipId={'Edit'} onClick={() => setActiveOperation('edit')} />}
 				{((!isFolder && !isShare) && !deletedAssets) && <IconClickable place={'top'} additionalClass={styles['action-button']} src={AssetOps[`delete`]} tooltipText={'Delete'} tooltipId={'Delete'} onClick={() => setActiveOperation('update')} />}
 				{(isShare || hasPermission([ASSET_DOWNLOAD]) && !deletedAssets) && <IconClickable place={'top'} additionalClass={styles['action-button']} src={AssetOps[`download`]} tooltipId={'Download'} tooltipText={'Download'} onClick={downloadSelectedAssets} />}
 				{((!isFolder && !isShare) && !deletedAssets) && <IconClickable place={'top'} additionalClass={styles['action-button']} src={AssetOps[`move`]} tooltipText={'Add to Collection'} tooltipId={'Move'} onClick={() => setActiveOperation('move')} />}
@@ -357,7 +357,7 @@ const AssetHeaderOps = ({
 					</div>
 				}
 				{((isFolder && !isShare) && !deletedAssets) && <IconClickable place={'top'} additionalClass={styles['action-button']} src={AssetOps[`share`]} tooltipText={'Share'} tooltipId={'Share'} onClick={() => setActiveOperation('shareCollections')} />}
-				{(!isShare && !deletedAssets) && <IconClickable place={'top'} additionalClass={styles['action-button']} src={AssetOps[`delete`]} tooltipText={'Remove'} onClick={() => setActiveOperation('remove_item')} />}
+				{/* {(!isShare && !deletedAssets && isFolder) && <IconClickable place={'top'} additionalClass={styles['action-button']} src={AssetOps[`delete`]} tooltipText={'Remove'} onClick={() => setActiveOperation('remove_item')} />} */}
 				{deletedAssets && <IconClickable place={'top'} additionalClass={styles['action-button']} src={AssetOps[`move`]} tooltipText={'Recover Asset'} tooltipId={'Recover'} onClick={() => setActiveOperation('recover')} />}
 				{deletedAssets && <IconClickable place={'top'} additionalClass={styles['action-button']} src={AssetOps[`delete`]} tooltipText={'Delete'} tooltipId={'Delete'} onClick={() => setActiveOperation('delete')} />}
 
@@ -422,7 +422,7 @@ const AssetHeaderOps = ({
 											confirmText={"Associate"}
 											message={
 												<span className=''>
-													Associate ({totalSelectAssets}) asset(s)
+													Associate ({totalSelectAssets}) asset(s)?
 												</span>
 											}
 											subText="Associating allows you see all related assets together on the asset detail pages"

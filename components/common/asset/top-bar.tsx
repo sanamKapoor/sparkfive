@@ -127,6 +127,7 @@ const TopBar = ({
       <div className={styles['filter-mobile']} onClick={() => handleOpenFilter()}>
         <img src={Utilities.filterBlue} alt={"filter"} />
       </div>
+      <div className={styles.titleBreadcrumbs}>
       {(activeFolder && mode === "assets") && (
         <Breadcrumbs
           links={[
@@ -139,22 +140,24 @@ const TopBar = ({
         />
 
       )}
-      <div className={styles.wrapper}>
-        <div>
-          {(activeFolder && mode === "assets") && (
+      {(activeFolder && mode === "assets") && (
             <SubHeader
               pageTitle={folderData[0]?.name}
             />
           )}
+      </div>
+      <div className={styles.wrapper}>
+        <div className={styles.innerwrapper}>
+          
 
           {!deletedAssets ? <div className={styles.filters} >
             <ul className={styles['tab-list']}>
               {isMobile ? (
                 <div className={styles["mobile-tabs"]}>
                   <IconClickable src={Utilities.menu} additionalClass={styles.hamburger} onClick={() => setShowTabs(!showTabs)} />
-                  <li className={styles['tab-list-item']}>
+                 <li className={styles['tab-list-item']}>
                     {tabs.filter((view) => activeSortFilter.mainFilter === view.name).map(view => (
-                      <SectionButton
+                        <SectionButton
                         keyProp={view.name}
                         text={(activeFolder && mode === "assets") ? folderData[0].name : view.text}
                         active={activeSortFilter.mainFilter === view.name}
@@ -178,19 +181,21 @@ const TopBar = ({
                 </div>
 
               ) : (
-                tabs.map(view => (
-                  <li key={view.name} className={styles['tab-list-item']}>
-                    {(!isShare || (isShare && !view.omitShare && view.hideOnSingle !== singleCollection)) &&
-                      (view.requirePermissions.length === 0 || (view.requirePermissions.length > 0 && hasPermission(view.requirePermissions))) &&
-                      <SectionButton
-                        keyProp={view.name}
-                        text={view.text}
-                        active={activeSortFilter.mainFilter === view.name}
-                        onClick={() => setSortFilterValue('mainFilter', view.name)}
-                      />
-                    }
-                  </li>
-                ))
+                tabs.map(view => {
+                  return (
+                    <li key={view.name} className={styles['tab-list-item']}>
+                      {(!activeFolder || !view.omitFolder) && (!isShare || (isShare && !view.omitShare && view.hideOnSingle !== singleCollection)) &&
+                       (view.requirePermissions.length === 0 || (view.requirePermissions.length > 0 && hasPermission(view.requirePermissions))) &&
+                        <SectionButton
+                          keyProp={view.name}
+                          text={view.text}
+                          active={activeSortFilter.mainFilter === view.name}
+                          onClick={() => setSortFilterValue('mainFilter', view.name)}
+                        />
+                      }
+                    </li>
+                  )
+                })
               )}
             </ul>
           </div> :
@@ -205,13 +210,14 @@ const TopBar = ({
 
         <div className={styles['sec-filters']}>
 
-          {!isMobile && 
+          {!isMobile && !isShare &&
             <img src={Utilities.search} onClick={setActiveSearchOverlay} className={styles.search} />
           }
           {(amountSelected === 0 || mode === 'folders') && showAssetAddition && hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL]) && (
             <AssetAddition activeFolder={activeFolder} getFolders={getFolders} />
           )}
-          {!deletedAssets && <img src={activeView === "grid" ? Utilities.gridView : Utilities.listView} onClick={() => setShowViewDropdown(true)} />}
+          <div className={styles.gridOuter}>
+          {!deletedAssets && <img className={styles.gridList} src={activeView === "grid" ? Utilities.gridView : Utilities.listView} onClick={() => setShowViewDropdown(true)} />}
           {showViewDropdown &&
             <Dropdown
               additionalClass={styles["view-dropdown"]}
@@ -242,6 +248,7 @@ const TopBar = ({
               ]}
             />
           }
+          </div>
           {selectedAllAssets && <span className={styles['select-only-shown-items-text']} onClick={toggleSelectAll}>Select only 25 assets shown</span>}
           {selectedAllFolders && <span className={styles['select-only-shown-items-text']} onClick={toggleSelectAll}>Select only 25 collections shown</span>}
           <Button type='button' text='Select All' styleType='secondary' onClick={selectAll} />

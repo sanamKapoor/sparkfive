@@ -1,65 +1,128 @@
-import {useContext} from "react"
-import { Line } from 'rc-progress'
+import { useContext, useState } from "react";
+import { Line } from "rc-progress";
 import clsx from "clsx";
 
-import styles from './index.module.css'
+import styles from "./index.module.css";
 
-
-import { AssetContext } from '../../context'
+import { AssetContext } from "../../context";
+import React from "react";
 
 const AssetUploadProcess = () => {
-    const {
-        uploadingAssets,
-        uploadingStatus,
-        showUploadProcess,
-        uploadingFile,
-        uploadRemainingTime,
-        uploadingPercent,
-        setUploadDetailOverlay,
-        uploadingFileName,
-        dropboxUploadingFile,
-        uploadSourceType,
-        uploadingType,
-        retryListCount,
-        folderImport
-    } = useContext(AssetContext)
+  const {
+    uploadingAssets,
+    uploadingStatus,
+    showUploadProcess,
+    uploadingFile,
+    uploadRemainingTime,
+    uploadingPercent,
+    dropboxUploadingFile,
+    uploadSourceType,
+    retryListCount,
+    setUploadingAssets,
+  } = useContext(AssetContext);
 
-    const uploadedAssets = uploadingAssets.filter(asset => asset.status === 'done')
-    const failAssetsCount = uploadingAssets.filter(asset => asset.status === 'fail').length
-
-    return <div className={clsx(styles.container, {[styles['center-align']]: uploadingStatus === 'done', [styles['less-margin-bottom']]: uploadingStatus === 'uploading'})}>
-        <div className={clsx(styles.row, styles['no-margin'])}>
-            {(uploadingStatus === 'uploading' || uploadingStatus === 're-uploading') && <>
-            <span>
-                {<span className={styles['no-wrap-text']}>
-                    {uploadingFileName}
-                </span>
-                }
-            </span>
+  const failAssetsCount = uploadingAssets.filter(
+    (asset) => asset.status === "fail"
+  ).length;
 
 
-            {uploadSourceType !== 'dropbox' && !isNaN(uploadingFile) &&
-            <span className={styles['processing-file-count']}>{uploadingFile+1} of {uploadingStatus === 're-uploading' ? retryListCount : uploadingAssets.length} assets</span>}
-            </>}
+  const handleRetry =  () => {
+    setUploadingAssets(uploadingAssets.filter(
+      (asset) => asset.status === "fail"
+    ))
+    showUploadProcess('re-uploading')
+  };
 
-            {(!folderImport && (uploadingStatus === 'uploading' || uploadingStatus === 're-uploading')) && <>
-                {uploadSourceType === 'dropbox' && !isNaN(dropboxUploadingFile) &&
-                <span className={styles['processing-file-count']}>{dropboxUploadingFile+1} of {uploadingAssets.length} assets</span>}
-            </>}
-
-            {uploadingStatus === 'done' &&
-                <span>{uploadingType==='version' ? 'Recent version ' : (uploadedAssets.length + ' assets')} uploaded successfully.
-                    {failAssetsCount > 0 && <span className={`${styles['fail-text']} ${styles['no-max-min-width']}`}>{failAssetsCount} failed</span>}
-                </span>
-            }
-            {uploadingStatus === 'done' && failAssetsCount > 0 && <span className={`${styles['underline-text']} ${styles['no-max-min-width']}`} onClick={()=>{setUploadDetailOverlay(true)}}>See detail</span>}
+  return (
+    <>
+    <div className={styles.uploadingContainer}>
+      <div className={styles.uploadHeader}>
+        {(uploadingStatus === "uploading" ||
+          uploadingStatus === "re-uploading") &&
+          (uploadSourceType === "dropbox" && dropboxUploadingFile ? (
+            <div className={styles.mainHeading}>
+              Uploading {dropboxUploadingFile! + 1} of {uploadingAssets.length}{" "}
+              assets
+            </div>
+          ) : (
+            <div className={styles.mainHeading}>
+              Uploading {uploadingFile! + 1} of{" "}
+              {uploadingStatus === "re-uploading"
+                ? retryListCount
+                : uploadingAssets.length}
+              assets
+            </div>
+          ))}
+        {uploadingStatus === "done" && (
+          <div className={styles.mainHeading}>
+            {uploadingAssets.length - failAssetsCount} of{" "}
+            {uploadingAssets.length} assets uploaded
+          </div>
+        )}
+        <div className={styles.subHeading}>
+          Estimated Time:{" "}
+          {uploadingStatus === "done" ? "Finished" : uploadRemainingTime}
         </div>
-        {uploadingStatus === 'done' && <div className={styles['close-button']} onClick={()=>{showUploadProcess('none')}}>
-            x
-        </div>}
-        {(uploadingStatus === 'uploading' || uploadingStatus === 're-uploading') && <Line percent={uploadingPercent} strokeWidth={1} strokeColor="#fff" trailColor={"#9597a6"}/>}
+        {uploadingStatus === "done" && (
+          <img
+            src={Utilities.blueClose}
+            alt={"close"}
+            className={styles.closebtn}
+            onClick={() => {
+              showUploadProcess("none");
+            }}
+          />
+        )}
+      </div>
 
+      {uploadingAssets.length > 0 &&
+        uploadingAssets.map((item) => (
+          <div className={styles.innerUploadList}>
+            <div className={styles.uploadItem}>
+              <div>{item?.asset?.name}</div>
+              {item?.status === "done" && uploadingStatus === "done" && (
+                <>
+                  <div>Complete</div>
+                  <div className={styles.flexdiv}>
+                    <img src={Utilities.checkMark} alt={"complete"} />
+                  </div>
+                </>
+              )}
+              {item?.status === "fail" && uploadingStatus === "done" && (
+                <>
+                  <span>Error</span>
+                  <div style={{ color: "red", fontSize: "20px" }}>x</div>
+                  <span
+                    className={`${styles["underline-text"]} ${styles["no-max-min-width"]}`}
+                    onClick={handleRetry}
+                  >
+                    Retry
+                  </span>
+                </>
+              )}
+              {(uploadingStatus === "uploading" ||
+                uploadingStatus === "re-uploading") && (
+                <div className={styles.lineBar}>
+                  <Line
+                    percent={uploadingPercent}
+                    strokeWidth={1}
+                    strokeColor="#10bda5"
+                    style={{
+                      width: "158px",
+                      height: "12px",
+                      borderRadius: "10px",
+                    }}
+                    trailColor={"#9597a6"}
+                  />
+                  {uploadingPercent}%
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
     </div>
-}
+    </>
+  );
+};
 
 export default AssetUploadProcess;

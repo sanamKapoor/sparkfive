@@ -66,6 +66,7 @@
     position: absolute;
     left: 0;
     right: 0;
+    font-size: 32px;
 }
 
 .ops-wrapper {
@@ -90,6 +91,7 @@
 
     .header h1 {
         position: relative;
+        height: auto;
     }
 
     .logo-img {

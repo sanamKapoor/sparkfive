@@ -580,7 +580,7 @@ const AssetsLibrary = () => {
         queryParams.folders = activeSortFilter.filterFolders.map(item => item.value).join(',')
       }
 
-      const { data } = await folderApi.getFolders(queryParams)
+      const { data } = await folderApi.getFolders({...queryParams, ...(term && {term})})
 
       let assetList = { ...data, results: data.results }
       if (lastUploadedFolder && activeSortFilter.mainFilter === "folders" && activeSortFilter.sort.value === "alphabetical") {
@@ -773,7 +773,7 @@ const AssetsLibrary = () => {
               </div>
 
             </div>
-            <div className={`${openFilter && styles['col-wrapper']} ${styles['grid-wrapper']}`}>
+            <div className={`${openFilter && styles['col-wrapper']} ${styles['grid-wrapper']} ${activeFolder && styles['active-breadcrumb-item']}`}>
               <DropzoneProvider>
                 {advancedConfig.set && <AssetGrid
                   activeFolder={activeFolder}
