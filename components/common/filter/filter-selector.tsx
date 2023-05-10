@@ -86,35 +86,19 @@ const FilterSelector = ({
     ];
   }
 
+  const getSelectionLabel = () => {
+    switch(anyAllSelection){
+      case 'all':
+            return 'All Selected'
+      case 'any': 
+            return 'Any'
+      default: 
+            return 'none'
+    } 
+  }
+
   return (
     <div className={`${styles.container}`}>
-      {/* {anyAllSelection !== '' &&
-                <div className={styles['any-all-wrapper']}>
-                    <div>
-                        <IconClickable
-                            src={anyAllSelection === 'all' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-                            additionalClass={styles['select-icon']}
-                            onClick={() => setAnyAll('all')} />
-                        <div className={styles['any-all-text']}>All selected</div>
-                    </div>
-                    <div className={"m-r-17"}>
-                        <IconClickable
-                            src={anyAllSelection === 'any' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-                            additionalClass={styles['select-icon']}
-                            onClick={() => setAnyAll('any')} />
-                        <div className={styles['any-all-text']}>Any {noneOption ? '' : 'selected'}</div>
-                    </div>
-                    {
-                        noneOption &&  <div>
-                            <IconClickable
-                                src={anyAllSelection === 'none' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-                                additionalClass={styles['select-icon']}
-                                onClick={() => setAnyAll('none')} />
-                            <div className={styles['any-all-text']}>None</div>
-                        </div>
-                    }
-                </div>
-            } */}
       <ul
         className={`${styles["item-list"]} ${
           oneColumn && styles["one-column"]
@@ -156,9 +140,9 @@ const FilterSelector = ({
           );
         })}
       </ul>
-      <div className={styles.dropdownOpt}>
+      {anyAllSelection !== '' && <div className={styles.dropdownOpt}>
         <div className={styles.dropdownOptHead} onClick={() => setShowViewDropdown(true)}>
-          All Selected{" "}
+          {getSelectionLabel()}
           <img
             src={Utilities.arrowGrey}            
           />
@@ -169,19 +153,22 @@ const FilterSelector = ({
           options={[
             {
               label: "All selected",
-              id: "view",
+              id: "All selected",
+              onClick: () => setAnyAll('all')
             },
             {
               label: "Any",
-              id: "grid",
+              id: "Any",
+              onClick: () => setAnyAll('any')
             },
             {
                 label: "None",
-                id: "grid",
+                id: "None",
+                onClick: () => setAnyAll('none')
               },
           ]}
         />}
-      </div>
+      </div>}
 
       {searchBar && (
         <div className={`${styles["select-filter"]} search-filters`}>
