@@ -26,7 +26,7 @@ const PrevArrow = ({ onClick }) => (
     <img className={styles.arrow} src={Utilities.circleArrowLeft} alt="Arrow previous" onClick={onClick} />
 )
 
-const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAddRelatedFiles, closeOverlay, outsideDetailOverlay = false }) => {
+const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAddRelatedFiles, closeOverlay, outsideDetailOverlay = false, currentAsset }) => {
     const {
         updateDownloadingStatus,
         setActiveOperation,
@@ -36,6 +36,8 @@ const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAd
     } = useContext(AssetContext)
 
     const { setIsLoading } = useContext(LoadingContext);
+
+    console.log(currentAsset)
 
 
 
@@ -260,7 +262,7 @@ const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAd
     }
 
     useEffect(()=>{
-        setOperationAssets(assets)
+        setOperationAssets([...assets, {asset: currentAsset}])
     },[assets])
 
     return (
