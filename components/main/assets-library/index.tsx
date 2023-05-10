@@ -580,7 +580,7 @@ const AssetsLibrary = () => {
         queryParams.folders = activeSortFilter.filterFolders.map(item => item.value).join(',')
       }
 
-      const { data } = await folderApi.getFolders(queryParams)
+      const { data } = await folderApi.getFolders({...queryParams, ...(term && {term})})
 
       let assetList = { ...data, results: data.results }
       if (lastUploadedFolder && activeSortFilter.mainFilter === "folders" && activeSortFilter.sort.value === "alphabetical") {
