@@ -1007,7 +1007,7 @@ const DetailOverlay = ({
             }
 
             {!isShare && <>
-              <AssetRelatedFIles outsideDetailOverlay={outsideDetailOverlay} closeOverlay={closeOverlay}  assets={assetDetail.fileAssociations || []} associateFileId={currentAsset.id} onChangeRelatedFiles={onChangeRelatedFiles} onAddRelatedFiles={(data)=>{
+              <AssetRelatedFIles currentAsset={currentAsset} outsideDetailOverlay={outsideDetailOverlay} closeOverlay={closeOverlay}  assets={assetDetail.fileAssociations || []} associateFileId={currentAsset.id} onChangeRelatedFiles={onChangeRelatedFiles} onAddRelatedFiles={(data)=>{
                 let updatedAssets = [...assetDetail.fileAssociations]
                 updatedAssets = updatedAssets.concat(data)
                 setAssetDetail({...assetDetail, fileAssociations: updatedAssets})
