@@ -1187,7 +1187,7 @@ const DetailOverlay = ({
             />
           )}
 
-          {transcriptAccess && <IconClickable
+          {currentAsset.type === "video" && transcriptAccess && <IconClickable
               src={Utilities.listView}
               additionalClass={styles["menu-icon"]}
               onClick={() => {
