@@ -91,7 +91,7 @@ const ShareFolderMain = () => {
                 // @ts-ignore
                 queryParams.folders = activeSortFilter.filterFolders.map(item => item.value).join(',')
             }
-            const { data } = await shareCollectionApi.getFolders(queryParams)
+            const { data } = await shareCollectionApi.getFolders({...queryParams, ...(term && {term})})
 
             let assetList = { ...data, results: data.results }
             // if (lastUploadedFolder && activeSortFilter.mainFilter === "folders" && activeSortFilter.sort.value === "alphabetical") {
@@ -396,6 +396,7 @@ const ShareFolderMain = () => {
                     sharePath={sharePath}
                     closeOverlay={closeSearchOverlay}
                     activeFolder={activeFolder}
+                    isFolder={activeSortFilter.mainFilter === 'folders'}
                 />
             }
         </>

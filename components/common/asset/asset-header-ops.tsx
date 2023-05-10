@@ -357,7 +357,7 @@ const AssetHeaderOps = ({
 					</div>
 				}
 				{((isFolder && !isShare) && !deletedAssets) && <IconClickable place={'top'} additionalClass={styles['action-button']} src={AssetOps[`share`]} tooltipText={'Share'} tooltipId={'Share'} onClick={() => setActiveOperation('shareCollections')} />}
-				{(!isShare && !deletedAssets && isFolder) && <IconClickable place={'top'} additionalClass={styles['action-button']} src={AssetOps[`delete`]} tooltipText={'Remove'} onClick={() => setActiveOperation('remove_item')} />}
+				{/* {(!isShare && !deletedAssets && isFolder) && <IconClickable place={'top'} additionalClass={styles['action-button']} src={AssetOps[`delete`]} tooltipText={'Remove'} onClick={() => setActiveOperation('remove_item')} />} */}
 				{deletedAssets && <IconClickable place={'top'} additionalClass={styles['action-button']} src={AssetOps[`move`]} tooltipText={'Recover Asset'} tooltipId={'Recover'} onClick={() => setActiveOperation('recover')} />}
 				{deletedAssets && <IconClickable place={'top'} additionalClass={styles['action-button']} src={AssetOps[`delete`]} tooltipText={'Delete'} tooltipId={'Delete'} onClick={() => setActiveOperation('delete')} />}
 

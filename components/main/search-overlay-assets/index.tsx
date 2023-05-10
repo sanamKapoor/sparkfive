@@ -16,20 +16,20 @@ import SearchItem from './search-item'
 import Button from '../../common/buttons/button'
 import AssetHeaderOps from '../../common/asset/asset-header-ops'
 import AssetThumbail from "../../common/asset/asset-thumbail";
+import { useDebounce } from '../../../hooks/useDebounce'
 
 const SearchOverlayAssets = ({  closeOverlay, importEnabled = false, operationsEnabled = false, importAssets = () => { }, sharePath = '', activeFolder = '', onCloseDetailOverlay = (assetData) => { }, onClickOutside, isFolder }) => {
   const { assets, setAssets, setActiveOperation, setOperationAsset, setPlaceHolders, nextPage, selectAllAssets, selectedAllAssets, totalAssets, setFolders} = useContext(AssetContext)
 
-  const {  setSearchTerm, setSearchFilterParams, activeSortFilter, setActiveSortFilter } = useContext(FilterContext)
+  const {  term, setSearchTerm, setSearchFilterParams, activeSortFilter, setActiveSortFilter } = useContext(FilterContext)
 
   const [activeView, setActiveView] = useState('list')
   const [filterParams, setFilterParams] = useState({})
   const [openFilters, setOpenFilters] = useState(false)
 
-
   const getData = async (inputTerm, replace = true, _filterParams = filterParams) => {
     try {
-      setSearchTerm(inputTerm)
+      // setSearchTerm(inputTerm)
       if(!isFolder){
         let fetchFn = assetApi.getAssets
         if (sharePath) {
