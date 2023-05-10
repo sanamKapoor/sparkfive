@@ -409,7 +409,7 @@ const ChangeThumbnail = ({
         <span className={styles.close} onClick={closeModal}>
         <img
             src={blueClose}
-            alt={"preview"}
+            alt={"close"}
             className={styles.closebtn}
           />
         </span>

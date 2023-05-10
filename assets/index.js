@@ -86,6 +86,7 @@ export const Utilities = {
   thumbsUp: require('./Icons/Utilities/Thumbs Up/thumbs-up.svg'),
   menu: require('./Icons/Utilities/Menu/menu.svg'),
   filterGray: require('./Icons/Utilities/Filter/filter.svg'),
+  checkMark: require('./Icons/Utilities/CheckMark/checkmark.svg'),
 }
 
 export const ProjectTypes = {
