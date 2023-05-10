@@ -132,7 +132,7 @@
 
 .select-only-shown-items-text{
   cursor: pointer;
-  margin-right: 15px;
+  /* margin-right: 15px; */
   font-size: 9px;
 }
 
@@ -211,11 +211,12 @@ li.dropdown-title {
   }
 
   .wrapper .innerwrapper {
-    width: calc(100% - 220px);    
+    /* width: calc(100% - 220px);     */
   }
   .wrapper .innerwrapper .tab-list-item {
-    width: calc(100% - 35px);
-    overflow: hidden;
+    /* width: calc(100% - 35px);
+    overflow: hidden; */
+    padding: 0;
   }
   
 

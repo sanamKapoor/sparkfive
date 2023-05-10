@@ -44,3 +44,10 @@
         width: 605px;
     }
 }
+
+@media screen and (max-width: 575px) {
+    .field-radio-wrapper{
+        flex-direction: column;
+        gap: 20px;
+    }
+}

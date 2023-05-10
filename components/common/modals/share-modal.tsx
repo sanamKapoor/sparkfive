@@ -420,7 +420,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 						placeholder={'Emails separated with comma'}
 						rows={5}
 						onChange={e => setRecipients(e.target.value)}
-						additionalClasses={"m-r-15 m-l-30 font-12"}
+						additionalClasses={"m-r-15 font-12"}
 						styleType={'regular-short'}
 						noResize={true}
 					/>
@@ -464,7 +464,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 				</div>
 
 				{expired && <div className={`${styles['input-wrapper']} d-flex align-items-center`}>
-					<div className={`${styles['row-field-content']} row w-100`}>
+					<div className={`${styles['row-field-content']} row w-100 colOuter`}>
 						<div className={"col-50"}>
 							<Select
 								options={expireOptions}
