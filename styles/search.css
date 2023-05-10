@@ -109,12 +109,10 @@
     justify-content: flex-end;
 }
 
-@media screen and (max-width: 810px) {    
-    .search-content {
-        max-width: 90vw;
-        top: 185px;
-        right: 50%;
-        left: 50%;
+@media screen and (min-width: 601px) and (max-width: 810px) {    
+    .search-content {        
+        top: 115px;
+        width: calc(100% - 50px);
     }
 }
 

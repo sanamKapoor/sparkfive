@@ -86,6 +86,7 @@ export const Utilities = {
   thumbsUp: require('./Icons/Utilities/Thumbs Up/thumbs-up.svg'),
   menu: require('./Icons/Utilities/Menu/menu.svg'),
   filterGray: require('./Icons/Utilities/Filter/filter.svg'),
+  checkMark: require('./Icons/Utilities/CheckMark/checkmark.svg'),
 }
 
 export const ProjectTypes = {
@@ -206,4 +207,5 @@ export const AssetOps = {
   uploadFiles: require('./Icons/Asset Addition/upload-files.svg'),
   uploadFolder: require('./Icons/Asset Addition/upload-folder.svg'),
   editGray: require('./Icons/Asset Actions/edit-gray.svg'),
+  cancel: require('./Icons/Utilities/Close/blue-close.svg'),
 }

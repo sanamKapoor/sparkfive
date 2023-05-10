@@ -20,6 +20,12 @@
   border-radius: 8px;
 }
 
+@media screen and (max-width: 410px) {
+  .modal {
+    min-width: 90%;
+  }
+}
+
 .no-height-max {
   max-height: 100vh;
 }

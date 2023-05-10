@@ -147,7 +147,7 @@ const TopBar = ({
           )}
       </div>
       <div className={styles.wrapper}>
-        <div>
+        <div className={styles.innerwrapper}>
           
 
           {!deletedAssets ? <div className={styles.filters} >
@@ -216,6 +216,7 @@ const TopBar = ({
           {(amountSelected === 0 || mode === 'folders') && showAssetAddition && hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL]) && (
             <AssetAddition activeFolder={activeFolder} getFolders={getFolders} />
           )}
+          <div className={styles.gridOuter}>
           {!deletedAssets && <img className={styles.gridList} src={activeView === "grid" ? Utilities.gridView : Utilities.listView} onClick={() => setShowViewDropdown(true)} />}
           {showViewDropdown &&
             <Dropdown
@@ -247,6 +248,7 @@ const TopBar = ({
               ]}
             />
           }
+          </div>
           {selectedAllAssets && <span className={styles['select-only-shown-items-text']} onClick={toggleSelectAll}>Select only 25 assets shown</span>}
           {selectedAllFolders && <span className={styles['select-only-shown-items-text']} onClick={toggleSelectAll}>Select only 25 collections shown</span>}
           <Button type='button' text='Select All' styleType='secondary' onClick={selectAll} />

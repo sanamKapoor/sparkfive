@@ -7,8 +7,8 @@
   border-radius: 8px;
   position: absolute;
   right: -36px;
-  top: 8px;
-  width: 208px;
+  top: 1px;
+  width: 209px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
@@ -74,4 +74,12 @@
   gap: 10px;
   padding: 8px 10px;
   border-bottom: 1px solid #E5E5E5;
+}
+
+
+@media screen and (max-width:810px) and (orientation: landscape) {
+  .menu {
+    max-height: 77vh;
+    overflow-y: auto;
+  }
 }
