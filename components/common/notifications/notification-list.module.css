@@ -1,5 +1,5 @@
 .list {
-  width: 447px;
+  width: 477px;
   position: absolute;
   background-color: white;
   z-index: 1000;
@@ -104,10 +104,11 @@
   }
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 550px) {
   .list {
-    max-width: 357px;
+    max-width: inherit;
     right: -34px;
+    width: calc(100vw - 58px);
   }
 
   .page {

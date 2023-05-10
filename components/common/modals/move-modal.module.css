@@ -1,6 +1,6 @@
 .list {
     overflow-y: auto;
-    max-height: 400px;
+    max-height: 380px;
 }
 
 .list li {
@@ -34,7 +34,7 @@
 }
 
 .folder-wrapper {
-    padding: 20px;
+    padding: 20px 20px 5px 20px;
 }
 
 .folder-wrapper button{

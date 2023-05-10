@@ -149,15 +149,11 @@
 
 @media screen and (max-width: 409px) {
   .view-dropdown {
-    right: -50px;
+    right: 0;
+    width: 100px;
   }
 }
 
-@media screen and (min-width: 410px) and (max-width: 575px) {
-  .view-dropdown {
-    right: -28px;
-  }
-}
 
 li.dropdown-title {
   padding: 8px 10px;
