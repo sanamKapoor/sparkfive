@@ -138,7 +138,8 @@ const DetailOverlay = ({
   const [defaultSize, setDefaultSize] = useState({ width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight });
   const [notes, setNotes] = useState([])
   const [sizeOfCrop, setSizeOfCrop] = useState({ width: defaultSize.width, height: defaultSize.height })
-  const [transcripts, setTranscript] = useState([])
+  const [transcripts, setTranscript] = useState({})
+  const [transcriptLoading, setTranscriptLoading] = useState(true)
 
   const renameValue = useRef("")
   const setRenameValue = (value) => {renameValue.current = value}
@@ -283,9 +284,12 @@ const DetailOverlay = ({
 
   const getTranscript = async (curAsset?) => {
     try {
+      setTranscriptLoading(true)
       const asset = curAsset || currentAsset;
       const { data } = await assetApi.getTranscript(asset.id);
       setTranscript(data)
+
+      setTranscriptLoading(false)
     } catch (err) {
       // console.log(err);
     }
@@ -1003,7 +1007,7 @@ const DetailOverlay = ({
             }
 
             {!isShare && <>
-              <AssetRelatedFIles outsideDetailOverlay={outsideDetailOverlay} closeOverlay={closeOverlay}  assets={assetDetail.fileAssociations || []} associateFileId={currentAsset.id} onChangeRelatedFiles={onChangeRelatedFiles} onAddRelatedFiles={(data)=>{
+              <AssetRelatedFIles currentAsset={currentAsset} outsideDetailOverlay={outsideDetailOverlay} closeOverlay={closeOverlay}  assets={assetDetail.fileAssociations || []} associateFileId={currentAsset.id} onChangeRelatedFiles={onChangeRelatedFiles} onAddRelatedFiles={(data)=>{
                 let updatedAssets = [...assetDetail.fileAssociations]
                 updatedAssets = updatedAssets.concat(data)
                 setAssetDetail({...assetDetail, fileAssociations: updatedAssets})
@@ -1093,6 +1097,7 @@ const DetailOverlay = ({
               <AssetTranscript
                   title={"Transcript"}
                   transcripts={transcripts}
+                  loading={transcriptLoading}
               />
           )}
 
