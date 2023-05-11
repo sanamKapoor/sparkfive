@@ -32,6 +32,7 @@ import shareUploadLinkApi from "../../server-api/share-upload-link"
 import Input from '../common/inputs/input'
 import TextArea from '../common/inputs/text-area'
 import { Utilities } from '../../assets'
+import ButtonIcon from '../common/buttons/button-icon'
 
 
 const GuestUpload = () => {
@@ -534,10 +535,10 @@ const GuestUpload = () => {
                                                             <div className={styles.files_count}>
                                                                 {files.length} Files Ready to Submit
                                                             </div>
-                                                            <div className={styles.upload_button}>
-                                                                <img src={Utilities.addAlt} alt="add icon" />
-                                                                UPLOAD
-                                                            </div>
+                                                            <ButtonIcon
+                                                                icon={Utilities.addAlt}
+                                                                text='UPLOAD'
+                                                            />
                                                         </div>
                                                         <div className={styles['file-list']}>
                                                             {files.map((file, index) => {

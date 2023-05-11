@@ -1,13 +1,13 @@
 import styles from './address-form.module.css'
 import { useContext, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { LocationContext, TeamContext } from '../../../../context'
+import { LocationContext, TeamContext } from '../../../../../context'
 
 // Components
-import Button from '../../../common/buttons/button'
-import FormInput from '../../../common/inputs/form-input'
-import Input from '../../../common/inputs/input'
-import Select from '../../../common/inputs/select'
+import Button from '../../../../common/buttons/button'
+import FormInput from '../../../../common/inputs/form-input'
+import Input from '../../../../common/inputs/input'
+import Select from '../../../../common/inputs/select'
 
 const AddressForm = () => {
   const { control, handleSubmit, errors } = useForm()
@@ -86,7 +86,7 @@ const AddressForm = () => {
                     value={getSelectedItem('country', country)}
                   />
                 </div>
-                <div >
+                <div className={styles.state}>
                   <label>State</label>
                   <Select
                     placeholder='Select State'

@@ -1,12 +1,12 @@
 import styles from './payment-method.module.css'
 
-import planApi from '../../../../server-api/plan'
+import planApi from '../../../../../server-api/plan'
 import { useState } from 'react'
 
 // Components
-import BaseModal from '../../../common/modals/base'
-import Button from '../../../common/buttons/button'
-import CreditCardForm from '../../../common/payment/credit-card-form'
+import BaseModal from '../../../../common/modals/base'
+import Button from '../../../../common/buttons/button'
+import CreditCardForm from '../../../../common/payment/credit-card-form'
 
 const PaymentMethod = ({paymentMethod, setPaymentMethod}) => {
   const [modalActive, setModalActive] = useState(false)

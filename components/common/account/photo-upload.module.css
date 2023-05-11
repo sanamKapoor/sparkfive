@@ -1,15 +1,13 @@
 .container {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   margin: 2.5rem 0;
-}
-
-.container button:first-of-type, .container button:last-of-type, .description{
-  margin-left: 2rem;
+  gap: 16px
 }
 
 .description{
   margin-bottom: 0;
+  font-weight: 300;
 }
 
 .container button{
@@ -17,8 +15,8 @@
 }
 
 .current, .no-photo, .loading{
-  width: 85px;
-  height: 85px;
+  width: 53px;
+  height: 53px;
 }
 
 .current, .loading {

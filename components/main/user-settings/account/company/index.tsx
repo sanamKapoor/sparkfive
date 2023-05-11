@@ -1,10 +1,10 @@
-import styles from './subscription.module.css'
+import styles from './index.module.css'
 import { useState, useContext, useEffect } from 'react'
-import { TeamContext } from '../../../../context'
+import { TeamContext } from '../../../../../context'
 
 // Components
 import NameForm from './name-form'
-import PhotoUpload from '../../../common/account/photo-upload'
+import PhotoUpload from '../../../../common/account/photo-upload'
 import AddressForm from './address-form'
 
 const Company = () => {
@@ -23,6 +23,8 @@ const Company = () => {
         explainText={`Your company's icon appears in shared collections`} 
         type={'team'}
         />
+
+        <div className={styles.divider}></div>
       <AddressForm />
     </div>
   )

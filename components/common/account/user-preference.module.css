@@ -1,10 +1,26 @@
 .container,
 .radio-options {
   display: flex;
+  align-items: center;
 }
 
 .container{
-  flex-wrap: wrap;
+  width: 80%;
+}
+
+.container h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.container p {
+  font-weight: 300;
+  font-size: 14px;
+}
+
+.option {
+  font-size: 12px;
 }
 
 .radio-options > div:last-child {
@@ -17,4 +33,18 @@
 
 .option > img {
   cursor: pointer;
+}
+
+@media screen and (max-width: 600px) {
+  .container { 
+    width: 100%;
+    display: grid;
+    grid-template-columns: 75% 25%;
+    gap: 20px;
+  }
+
+  .radio-options > div:last-child {
+    margin-left: 38px;
+  }
+
 }

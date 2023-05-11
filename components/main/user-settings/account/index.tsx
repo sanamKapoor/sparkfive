@@ -2,6 +2,10 @@ import { useState } from 'react';
 import styles from './index.module.css'
 
 import SectionButton from '../../../common/buttons/section-button';
+import Profile from './profile';
+import Billing from './billing';
+import Company from './company';
+import Security from './security';
 
 const Account = () => {
 
@@ -32,6 +36,22 @@ const Account = () => {
                     onClick={() => setTab(3)}
                 />
             </div>
+
+            {tab === 0 &&
+                <Profile />
+            }
+
+            {tab === 1 &&
+                <Billing />
+            }
+
+            {tab === 2 &&
+                <Company />
+            }
+
+            {tab === 3 &&
+                <Security />
+            }
         </div>
     )
 }

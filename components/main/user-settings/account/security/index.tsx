@@ -1,11 +1,11 @@
 import styles from './index.module.css'
-import { UserContext } from '../../../../context'
+import { UserContext } from '../../../../../context'
 import { useContext, useState, useEffect } from 'react'
-import userApi from '../../../../server-api/user'
-import toastUtils from '../../../../utils/toast'
+import userApi from '../../../../../server-api/user'
+import toastUtils from '../../../../../utils/toast'
 
 // Components
-import UserPreference from '../../../common/account/user-preference'
+import UserPreference from '../../../../common/account/user-preference'
 
 const Notifications = () => {
 
@@ -40,11 +40,12 @@ const Notifications = () => {
 
   return (
     <div className={styles.container}>
+      <h3>Security</h3>
       <UserPreference
         enabled={enabledTwoFactor}
         setPreference={setTwoFactor}
         title={'Two-Factor Authentication'}
-        description={`Enabling this provides an extra layer of security for all users in your account. A security code will be required in addition to your password`}
+        description={`Enabling this provides an extra layer of security for all users in your account. A security code wil be required in addition to your password`}
       />
     </div>
   )

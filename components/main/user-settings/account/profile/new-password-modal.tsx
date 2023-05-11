@@ -2,10 +2,10 @@ import styles from './new-password-modal.module.css'
 import { useForm } from 'react-hook-form'
 
 // Components
-import BaseModal from '../../../common/modals/base'
-import Button from '../../../common/buttons/button'
-import FormInput from '../../../common/inputs/form-input'
-import Input from '../../../common/inputs/input'
+import BaseModal from '../../../../common/modals/base'
+import Button from '../../../../common/buttons/button'
+import FormInput from '../../../../common/inputs/form-input'
+import Input from '../../../../common/inputs/input'
 
 const NewPasswordModal = ({ closeModal, modalIsOpen, confirmChange }) => {
 

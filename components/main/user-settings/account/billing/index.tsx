@@ -3,10 +3,10 @@ import { loadStripe } from '@stripe/stripe-js'
 import { useState, useEffect } from 'react'
 import { capitalCase } from 'change-case'
 import { Elements } from '@stripe/react-stripe-js'
-import planApi from '../../../../server-api/plan'
+import planApi from '../../../../../server-api/plan'
 
 // Components
-import SectionButton from '../../../common/buttons/section-button'
+import SectionButton from '../../../../common/buttons/section-button'
 import Subscription from './subscription'
 import PaymentMethod from './payment-method'
 import Invoices from './invoices'
@@ -37,11 +37,12 @@ const Billing = () => {
   }
 
   const SectionButtonOption = ({ section }) => (
-    <SectionButton
-      text={capitalCase(section)}
-      active={activeSection === section}
+    <div
+      className={`${styles['section-button']} ${activeSection === section ? styles.active : ''}`}
       onClick={() => setActiveSection(section)}
-    />
+    >
+      {capitalCase(section)}
+    </div>
   )
 
   return (

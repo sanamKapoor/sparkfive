@@ -1,16 +1,19 @@
 .sub-container {
-  display: flex;
-  flex-wrap: wrap;
 }
 
 .subscription-data {
   flex: 1;
   margin-right: 20%;
 }
-
+ 
 .plan {
   width: 100%;
   margin-bottom: 28px;
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 64px;
+
 }
 
 .prop-pair {
@@ -22,9 +25,15 @@
   width: 50%;
 }
 
-.value {
+.label {
+  color: var(--color-prim-navy);
+  font-size: 14px;
   font-weight: 500;
-  font-size: 16px;
+}
+
+.value {
+  font-weight: 300;
+  font-size: 12px;
   margin-top: 5px;
 }
 
@@ -35,4 +44,47 @@
 
 .button-actions button{
   margin-bottom: 26px;
+}
+
+.storage {
+  margin-top: 50px;
+}
+
+.storage h3 {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.bar_wrapper {
+  max-width: 200px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.bar {
+  background-color: var(--color-border);
+  height: 12px;
+  width: 100%;
+  border-radius: 17px;
+  overflow: hidden;
+}
+
+.bar_used {
+  background-color: var(--color-prim-turquoise);
+  height: 12px;
+  width: 100%;
+  border-radius: 17px 0 0 17px;
+}
+
+.bar_wrapper span {
+  color: var(--color-sec-text);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.storage_info {
+  font-size: 12px;
+  font-weight: 300;
+  margin-top: 16px;
 }

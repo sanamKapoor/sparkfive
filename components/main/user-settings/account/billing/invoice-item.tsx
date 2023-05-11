@@ -1,11 +1,11 @@
 import styles from './invoice-item.module.css'
 import { format } from 'date-fns'
-import { formatCurrency } from '../../../../utils/numbers'
-import downloadUtils from '../../../../utils/download'
+import { formatCurrency } from '../../../../../utils/numbers'
+import downloadUtils from '../../../../../utils/download'
 
 // Components
-import Tag from '../../../common/misc/tag'
-import Button from '../../../common/buttons/button'
+import Tag from '../../../../common/misc/tag'
+import Button from '../../../../common/buttons/button'
 
 const InvoiceItem = ({ invoice, type = 'invoice' }) => {
   const downloadInvoice = () => {

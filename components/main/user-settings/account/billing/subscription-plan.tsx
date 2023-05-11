@@ -1,19 +1,19 @@
 import styles from './subscription-plan.module.css'
 import { useContext, useState } from 'react'
-import { TeamContext } from '../../../../context'
+import { TeamContext } from '../../../../../context'
 import { format, differenceInDays } from 'date-fns'
-import { formatCurrency } from '../../../../utils/numbers'
+import { formatCurrency } from '../../../../../utils/numbers'
 import Link from 'next/link'
-import planApi from '../../../../server-api/plan'
-import toastUtils from '../../../../utils/toast'
+import planApi from '../../../../../server-api/plan'
+import toastUtils from '../../../../../utils/toast'
 
 // Components
-import Button from '../../../common/buttons/button'
-import BaseModal from '../../../common/modals/base'
+import Button from '../../../../common/buttons/button'
+import BaseModal from '../../../../common/modals/base'
 
 const SubscriptionData = ({ label, value }) => (
   <div className={styles.item}>
-    <div>{label}</div>
+    <div className={styles.label}>{label}</div>
     <div className={styles.value}>{value}</div>
   </div>
 )
@@ -55,7 +55,6 @@ const SubscriptionPlan = ({ paymentMethod, goCheckout }) => {
 
   return (
     <div className={styles.container}>
-      <h3>Subscription</h3>
       {plan &&
         <div className={styles['sub-container']}>
           <div className={'fields-first'}>
@@ -64,8 +63,6 @@ const SubscriptionPlan = ({ paymentMethod, goCheckout }) => {
                 label={'Plan Name'}
                 value={productName}
               />
-            </div>
-            <div className={styles['prop-pair']}>
               <SubscriptionData
                 label={'Frequency'}
                 value={getFrequency()}
@@ -74,19 +71,28 @@ const SubscriptionPlan = ({ paymentMethod, goCheckout }) => {
                 label={'Amount'}
                 value={getAmount()}
               />
-            </div>
-            <div className={styles['prop-pair']}>
               <SubscriptionData
                 label={'Start Date'}
                 value={format(new Date(plan.startDate), 'MM/dd/yyyy')}
               />
               <SubscriptionData
-                label={'Next Billing Date'}
+                label={'Renewal Date'}
                 value={format(new Date(plan.endDate), 'MM/dd/yyyy')}
               />
             </div>
           </div>
-          <div className={styles['button-actions']}>
+          <div className={styles.storage}>
+            <h3>Account Storage Used</h3>
+            <div className={styles.bar_wrapper}>
+              <div className={styles.bar}>
+                {/* TO DO: the width style should em dynamic accourding to percentage */}
+                <div className={styles.bar_used} style={{width: "65%"}}></div>
+              </div>
+              <span>65%</span>
+            </div>
+            <div className={styles.storage_info}>500 GB out 1TB used</div>
+          </div>
+          {/* <div className={styles['button-actions']}>
             {!paymentMethod && plan.status === 'trialing' &&
               <Button
                 text='Subscribe'
@@ -110,7 +116,7 @@ const SubscriptionPlan = ({ paymentMethod, goCheckout }) => {
               styleType='input-height-secondary'
               onClick={() => setCancelOpen(true)}
             />
-          </div>
+          </div> */}
         </div>
       }
       <BaseModal

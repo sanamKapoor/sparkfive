@@ -1,16 +1,16 @@
 import styles from './basic.module.css'
 import { useContext, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import userApi from '../../../../server-api/user'
-import { UserContext } from '../../../../context'
-import toastUtils from '../../../../utils/toast'
+import userApi from '../../../../../server-api/user'
+import { UserContext } from '../../../../../context'
+import toastUtils from '../../../../../utils/toast'
 import { capitalCase } from 'change-case'
 
 // Components
 import NewPasswordModal from './new-password-modal'
-import Button from '../../../common/buttons/button'
-import FormInput from '../../../common/inputs/form-input'
-import Input from '../../../common/inputs/input'
+import Button from '../../../../common/buttons/button'
+import FormInput from '../../../../common/inputs/form-input'
+import Input from '../../../../common/inputs/input'
 
 const Basic = ({ name, email, provider }) => {
 
@@ -123,7 +123,7 @@ const Basic = ({ name, email, provider }) => {
           />
         </div>
       </form>
-
+      <div className={styles.divider}></div>
       {!provider &&
         <form onSubmit={handlePassword(onPasswordSubmit)} className={`${styles.form} ${styles['password-form']}`}>
           <div className={'fields-first'}>

@@ -1,12 +1,12 @@
 import styles from './name-form.module.css'
 import { useContext, useState, useEffect } from 'react'
-import { TeamContext } from '../../../../context'
+import { TeamContext } from '../../../../../context'
 import { useForm } from 'react-hook-form'
 
 // Components
-import Button from '../../../common/buttons/button'
-import FormInput from '../../../common/inputs/form-input'
-import Input from '../../../common/inputs/input'
+import Button from '../../../../common/buttons/button'
+import FormInput from '../../../../common/inputs/form-input'
+import Input from '../../../../common/inputs/input'
 
 const NameForm = () => {
   const { team, patchTeam } = useContext(TeamContext)
@@ -19,7 +19,7 @@ const NameForm = () => {
   <h3>Company Name</h3>
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.container}>
-      <h3>Company Name</h3>
+      <h3 className={styles.title}>Company Name</h3>
       {team &&
         <div className={styles['form-container']}>
           <div className={'fields-first'}>

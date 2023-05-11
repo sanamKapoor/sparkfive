@@ -1,9 +1,9 @@
 import styles from './index.module.css'
-import { UserContext } from '../../../../context'
+import { UserContext } from '../../../../../context'
 import { useState, useContext, useEffect } from 'react'
 
 // Components
-import PhotoUpload from '../../../common/account/photo-upload'
+import PhotoUpload from '../../../../common/account/photo-upload'
 import Basic from './basic'
 
 const Profile = () => {
@@ -12,6 +12,7 @@ const Profile = () => {
 
   return (
     <div className={styles.container}>
+      <h3>Profile</h3>
       {user &&
         <>
           <PhotoUpload userPhoto={user.profilePhoto} />

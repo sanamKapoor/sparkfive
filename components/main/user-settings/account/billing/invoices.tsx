@@ -1,6 +1,6 @@
 import styles from './invoices.module.css'
 import { useState, useEffect } from 'react'
-import planApi from '../../../../server-api/plan'
+import planApi from '../../../../../server-api/plan'
 
 // Components
 import InvoiceItem from './invoice-item'

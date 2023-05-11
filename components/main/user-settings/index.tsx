@@ -31,14 +31,13 @@ import GuestUpload from "./guest-upload"
 import CustomSettings from "./custom-settings"
 import ShareLinks from "./share-links"
 import UploadApprovals from "./upload-approvals"
+import IconClickable from '../../common/buttons/icon-clickable'
+import { Utilities } from '../../../assets'
 
 
 const SETTING_OPTIONS = {
   account: { label: 'Account', permissions: [], content: Account },
-  // billing: { label: 'Billing', permissions: [SETTINGS_BILLING], content: Billing },
-  // company: { label: 'Company', permissions: [SETTINGS_COMPANY], content: Company },
   // plan: { label: 'Plan', permissions: [SETTINGS_PLAN], content: Plan },
-  // security: { label: 'Security', permissions: [SETTINGS_SECURITY], content: Security },
   team: { label: 'Team', permissions: [SETTINGS_TEAM], content: Team },
   notifications: { label: 'Notifications', permissions: [], content: Notifications },
   ['guest-upload']: { label: 'Guest Upload', contentTitle: 'Guest Upload', permissions: [SETTINGS_TEAM, SETTINGS_COMPANY], content: GuestUpload },
@@ -94,10 +93,13 @@ const UserSettings = () => {
           />
         }
         <section className={styles.content}>
-          <div className={styles.settings}>
-            <Button text={'Settings'} onClick={toggleSettings} type='button' styleTypes={['secondary']} />
+          <div className={styles.header}>
+            <IconClickable
+              src={Utilities.menu}
+              onClick={toggleSettings}
+            />
+            <h2>{capitalCase(getTitle(activeView))}</h2>
           </div>
-          <h2>{capitalCase(getTitle(activeView))}</h2>
           {hasPermission(SETTING_OPTIONS[activeView]?.permissions) ?
             <ActiveContent />
             :
