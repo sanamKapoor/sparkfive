@@ -238,6 +238,7 @@ const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAd
 
             totalDownloadingAssets = assets.length
             payload.assetIds = assets.map(assetItem => assetItem.asset.id)
+            payload.assetIds.push(currentAsset.id)
 
 
             // Show processing bar
