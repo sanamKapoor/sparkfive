@@ -1,12 +1,12 @@
 // External imports
 import styles from './index.module.css'
-import {useContext, useEffect, useRef, useState} from "react"
-import {useRouter} from "next/router"
+import { useContext, useEffect, useRef, useState } from "react"
+import { useRouter } from "next/router"
 import Link from "next/link"
 
 // Contexts
 import { SocketContext } from '../../context'
-import  { GuestUploadContext } from '../../context'
+import { GuestUploadContext } from '../../context'
 
 
 // Components
@@ -22,13 +22,16 @@ import AssetUploadProcess from "./upload-process";
 // Utils
 import toastUtils from '../../utils/toast'
 import requestUtils from '../../utils/requests'
-import {validation} from "../../constants/file-validation"
-import {convertTimeFromSeconds, getFolderKeyAndNewNameByFileName} from "../../utils/upload"
+import { validation } from "../../constants/file-validation"
+import { convertTimeFromSeconds, getFolderKeyAndNewNameByFileName } from "../../utils/upload"
 
 
 // Apis
 import uploadLinkApi from "../../server-api/guest-upload"
 import shareUploadLinkApi from "../../server-api/share-upload-link"
+import Input from '../common/inputs/input'
+import TextArea from '../common/inputs/text-area'
+import { Utilities } from '../../assets'
 
 
 const GuestUpload = () => {
@@ -41,6 +44,8 @@ const GuestUpload = () => {
     const [loading, setLoading] = useState(false)
     const fileBrowserRef = useRef(undefined)
     const folderBrowserRef = useRef(undefined)
+    const [uploadEnabled, setUploadEnabled] = useState(false)
+    const [edit, setEdit] = useState(false)
 
     const [uploading, setUploading] = useState(false)
     const [activePasswordOverlay, setActivePasswordOverlay] = useState(true)
@@ -64,14 +69,14 @@ const GuestUpload = () => {
     const dropdownOptions = [
         {
             label: 'Upload',
-            text: 'files',
+            text: 'Files',
             onClick: () => fileBrowserRef.current.click(),
-            icon: Assets.file,
+            icon: Assets.upload,
             CustomContent: null
         },
         {
             label: 'Upload',
-            text: 'folder',
+            text: 'Folder',
             onClick: () => folderBrowserRef.current.click(),
             icon: Assets.folder,
             CustomContent: null
@@ -111,8 +116,8 @@ const GuestUpload = () => {
     const getCreationParameters = (attachQuery?: any) => {
         let queryData: any = {}
         // Attach extra query
-        if(attachQuery){
-            queryData = {...queryData, ...attachQuery}
+        if (attachQuery) {
+            queryData = { ...queryData, ...attachQuery }
         }
         return queryData
     }
@@ -120,7 +125,7 @@ const GuestUpload = () => {
     // Show upload process toast
     const showUploadProcess = (value: string, fileIndex?: number) => {
         // Set uploading file index
-        if(fileIndex !== undefined){
+        if (fileIndex !== undefined) {
             setUploadingFile(fileIndex)
         }
 
@@ -128,15 +133,15 @@ const GuestUpload = () => {
         setUploadingStatus(value)
 
         // Reset all value
-        if(fileIndex === 0){
+        if (fileIndex === 0) {
             setUploadingPercent(0)
         }
 
     }
 
     // Upload asset
-    const uploadAsset  = async (i: number, assets: any, currentDataClone: any, totalSize: number, folderId, folderGroup = {}, attachedData, requestId) => {
-        try{
+    const uploadAsset = async (i: number, assets: any, currentDataClone: any, totalSize: number, folderId, folderGroup = {}, attachedData, requestId) => {
+        try {
             const formData = new FormData()
             let file = assets[i].file.originalFile
             let currentUploadingFolderId = null
@@ -146,9 +151,9 @@ const GuestUpload = () => {
             let fileGroupInfo = getFolderKeyAndNewNameByFileName(file.webkitRelativePath)
 
             // Do validation
-            if(assets[i].asset.size > validation.UPLOAD.MAX_SIZE.VALUE){
+            if (assets[i].asset.size > validation.UPLOAD.MAX_SIZE.VALUE) {
                 // Violate validation, mark failure
-                const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', index, error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE} : asset);
+                const updatedAssets = assets.map((asset, index) => index === i ? { ...asset, status: 'fail', index, error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE } : asset);
 
                 // Update uploading assets
                 setUploadingAssets(updatedAssets)
@@ -162,12 +167,12 @@ const GuestUpload = () => {
                 // setFiles([...newAssetPlaceholder, ...currentDataClone])
 
                 // The final one
-                if(i === assets.length - 1){
+                if (i === assets.length - 1) {
                     return { folderGroup, updatedAssets }
-                }else{ // Keep going
-                    return await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, attachedData, requestId)
+                } else { // Keep going
+                    return await uploadAsset(i + 1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, attachedData, requestId)
                 }
-            }else{
+            } else {
                 // Show uploading toast
                 showUploadProcess('uploading', i)
 
@@ -176,9 +181,9 @@ const GuestUpload = () => {
 
 
                 // If user is uploading files in folder which is not saved from server yet
-                if(fileGroupInfo.folderKey && !folderId){
+                if (fileGroupInfo.folderKey && !folderId) {
                     // Current folder Group have the key
-                    if(folderGroup[fileGroupInfo.folderKey]){
+                    if (folderGroup[fileGroupInfo.folderKey]) {
                         currentUploadingFolderId = folderGroup[fileGroupInfo.folderKey]
                         // Assign new file name without splash
                         file = new File([file.slice(0, file.size, file.type)],
@@ -194,33 +199,33 @@ const GuestUpload = () => {
 
                 let size = totalSize;
                 // Calculate the rest of size
-                assets.map((asset)=>{
+                assets.map((asset) => {
                     // Exclude done or fail assets
-                    if(asset.status === 'done' || asset.status === 'fail'){
+                    if (asset.status === 'done' || asset.status === 'fail') {
                         size -= asset.asset.size
-                        newAssets+=1
+                        newAssets += 1
                     }
                 })
 
-                let attachedQuery = {estimateTime: 1, size, totalSize, url: query.code, ... attachedData}
+                let attachedQuery = { estimateTime: 1, size, totalSize, url: query.code, ...attachedData }
 
 
                 // Uploading inside specific folders
-                if(folderId){
+                if (folderId) {
                     attachedQuery['folderId'] = folderId
                 }
 
                 // Uploading the new folder
-                if(currentUploadingFolderId){
+                if (currentUploadingFolderId) {
                     attachedQuery['folderId'] = currentUploadingFolderId
                 }
 
-                if(requestId){
+                if (requestId) {
                     attachedQuery['requestId'] = requestId
                 }
 
                 // Alert to admin user, if this is the final one of current request
-                if(i === assets.length - 1){
+                if (i === assets.length - 1) {
                     attachedQuery['alertAdmin'] = true
                 }
 
@@ -228,9 +233,9 @@ const GuestUpload = () => {
                 let { data } = await shareUploadLinkApi.uploadAssets(formData, getCreationParameters(attachedQuery))
 
                 // If user is uploading files in folder which is not saved from server yet
-                if(fileGroupInfo.folderKey && !folderId){
+                if (fileGroupInfo.folderKey && !folderId) {
                     /// If user is uploading new folder and this one still does not have folder Id, add it to folder group
-                    if(!folderGroup[fileGroupInfo.folderKey]){
+                    if (!folderGroup[fileGroupInfo.folderKey]) {
                         folderGroup[fileGroupInfo.folderKey] = data[0].asset.folders[0]
                     }
                 }
@@ -244,7 +249,7 @@ const GuestUpload = () => {
                 assets[i] = data[0]
 
                 // If request id is not updated yet
-                if(!requestId){
+                if (!requestId) {
                     requestId = assets[i].requestId
                 }
 
@@ -256,21 +261,21 @@ const GuestUpload = () => {
                 // setTotalAssets(totalAssets + newAssets +1)
 
                 // Mark this asset as done
-                const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'done'} : asset);
+                const updatedAssets = assets.map((asset, index) => index === i ? { ...asset, status: 'done' } : asset);
 
                 setUploadingAssets(updatedAssets)
                 setFiles(updatedAssets)
 
                 // The final one
-                if(i === assets.length - 1){
+                if (i === assets.length - 1) {
                     return { folderGroup, updatedAssets }
-                }else{ // Keep going
-                    return await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, attachedData, requestId)
+                } else { // Keep going
+                    return await uploadAsset(i + 1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, attachedData, requestId)
                 }
             }
-        }catch (e){
+        } catch (e) {
             // Violate validation, mark failure
-            const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, index, status: 'fail', error: 'Processing file error'} : asset);
+            const updatedAssets = assets.map((asset, index) => index === i ? { ...asset, index, status: 'fail', error: 'Processing file error' } : asset);
 
             // Update uploading assets
             setUploadingAssets(updatedAssets)
@@ -283,10 +288,10 @@ const GuestUpload = () => {
             // setAssets([...newAssetPlaceholder, ...currentDataClone])
 
             // The final one
-            if(i === assets.length - 1){
+            if (i === assets.length - 1) {
                 return { folderGroup, updatedAssets }
-            }else{ // Keep going
-                return await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, attachedData, requestId)
+            } else { // Keep going
+                return await uploadAsset(i + 1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, attachedData, requestId)
             }
         }
     }
@@ -296,7 +301,7 @@ const GuestUpload = () => {
         const fileArr = []
 
         files.forEach(file => {
-            totalSize+=file.originalFile.size
+            totalSize += file.originalFile.size
             fileArr.push({
                 asset: {
                     name: file.originalFile.name,
@@ -327,12 +332,12 @@ const GuestUpload = () => {
         // Finish uploading process
         showUploadProcess('done')
 
-        const failAssets = updatedAssets.filter((updatedAsset)=>updatedAsset.status === 'fail')
+        const failAssets = updatedAssets.filter((updatedAsset) => updatedAsset.status === 'fail')
 
         // If there is any fail asset, keep at current screen
-        if(failAssets.length > 0){
+        if (failAssets.length > 0) {
             setRetryListCount(failAssets.length)
-        }else{ // Else, Show done screen
+        } else { // Else, Show done screen
             setRetryListCount(0)
             setUploading(false)
         }
@@ -344,12 +349,12 @@ const GuestUpload = () => {
         document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 
         // Retry upload
-        if(retryListCount > 0){
-            const failAssets = files.filter((updatedAsset)=>updatedAsset.status === 'fail')
+        if (retryListCount > 0) {
+            const failAssets = files.filter((updatedAsset) => updatedAsset.status === 'fail')
 
             setUploadingAssets(failAssets)
             submitUpload(data, failAssets)
-        }else{
+        } else {
             setUploadingAssets(files)
             submitUpload(data, files)
         }
@@ -357,7 +362,7 @@ const GuestUpload = () => {
 
     const onFileChange = (e) => {
         // Only allow to upload max 200 files
-        if(e.target.files.length <= validation.UPLOAD.MAX_GUEST_UPLOAD_FILES.VALUE){
+        if (e.target.files.length <= validation.UPLOAD.MAX_GUEST_UPLOAD_FILES.VALUE) {
             setUploading(true)
             onFilesDataGet(Array.from(e.target.files).map(originalFile => ({ originalFile })))
         }
@@ -417,142 +422,195 @@ const GuestUpload = () => {
         }
 
     }
-    useEffect(()=>{
+    useEffect(() => {
         // If code is declared, use it to get link info
-        if(query?.code){
+        if (query?.code) {
             // Get link info
             getLinkInfo()
         }
 
-    },[query])
+    }, [query])
 
     // Init socket listener
-    useEffect(()=>{
+    useEffect(() => {
         // Socket is available and connected
-        if(socket && connected){
+        if (socket && connected) {
             console.log(`Register socket listener...`)
             // Listen upload file process event
-            socket.on('uploadFilesProgress', function(data){
+            socket.on('uploadFilesProgress', function (data) {
                 // console.log(data)
                 setUploadingPercent(data.percent)
                 setUploadRemainingTime(`${convertTimeFromSeconds(data.timeLeft)} remaining`)
 
                 // setUploadingFileName("Test.png")
-                if(data.fileName){
+                if (data.fileName) {
                     setUploadingFileName(data.fileName)
                 }
             })
         }
-    },[socket, connected])
+    }, [socket, connected])
 
     return (
         <section className={styles.container}>
-            {!loading && <>
-                <input multiple={true} id="file-input-id" ref={fileBrowserRef} style={{ display: 'none' }} type='file'
-                       onChange={onFileChange} />
-                <input multiple={true} webkitdirectory='' webkitRelativePath='' id="file-input-id" ref={folderBrowserRef} style={{ display: 'none' }} type='file'
-                       onChange={onFileChange} />
-
-                {!uploading && <>
-                    {uploadingStatus === 'none' && <div className={`row justify-center ${styles['row']} font-weight-600`}>
-                        Upload files to {teamName}'s account in Sparkfive
-                    </div>}
-
-                    {uploadingStatus === 'done' && <div className={`justify-center ${styles['success-row']} ${styles['success-text']} font-weight-600`}>
-                        Success!
-                    </div>}
-
-                    {uploadingStatus === 'done' && <div className={`justify-center ${styles['success-row']} font-weight-600`}>
-                        Your files have been uploaded to {teamName}!
-                    </div>}
-
-                    {uploadingStatus === 'done' && <div className={`row justify-center ${styles['row']} ${styles['upload-more-text']} font-weight-600`}>
-                        Need to upload more?
-                    </div>}
-
-                    <div className={`row justify-center ${styles['row']}`}>
-                        Select from the following options:
-                    </div>
-
-                    <div className={`row justify-center ${styles['row']}`}>
-                        <DropDownOptions />
-                    </div>
-
-                    <div className={`row justify-center ${styles['row']} font-12`}>
-                        * 1GB min & 200 files min at once
-                    </div>
-                </>}
-
-                {uploading && <>
-                    {uploadingStatus === 'uploading' && <AssetUploadProcess uploadingAssets={uploadingAssets}
-                    uploadingStatus={uploadingStatus}
-                    showUploadProcess={showUploadProcess}
-                    uploadingFile={uploadingFile}
-                    uploadingPercent={uploadingPercent}
-                    setUploadDetailOverlay={setUploadDetailOverlay}
-                    uploadingFileName={uploadingFileName}
-                    retryListCount={retryListCount}
-                    />}
-
-                    {uploadingStatus === 'none' && <div className={`row justify-center text-align-center m-b-10`}>
-                        Your upload is ready
-                    </div>}
-
-                    {uploadingStatus === 'done' && retryListCount > 0 && <div className={`row justify-center text-align-center m-b-10`}>
-                        {retryListCount} assets uploaded fail
-                    </div>}
-
-                    {uploadingStatus === 'done' && retryListCount > 0 && <div className={`row justify-center text-align-center m-b-25`}>
-                        Press Retry button to try again
-                    </div>}
-
-                    {uploadingStatus === 'none' && <div className={`row justify-center text-align-center m-b-25`}>
-                        Please complete the form below and press Submit button when ready to send your files
-                    </div>}
-
-                    <div className={`row justify-center m-b-10`}>
-                        <div className={'col-45 col-md-100'}>
-                            <div className={styles['file-list']}>
-                                {files.map((file, index)=>{
-                                    return <UploadItem name={file.asset.name} key={index} status={file.status} error={file.error}/>
-                                })}
-                            </div>
+            <div className={styles.wrapper}>
+                {uploadingStatus === "done" ? (
+                    <div className={styles.success}>
+                        <div className={styles.title}>
+                            {teamName} - Upload Success
                         </div>
-                        <div className={'col-55 col-md-100'}>
-                            <ContactForm
-                                id={'contact-form'}
-                                onSubmit={saveChanges}
-                                disabled={uploadingStatus === 'uploading'}
-                                teamName={teamName}
-                            />
+                        <div className={styles.subtitle}>
+                            Thank you for submitting your files to us.  Our team has been notified and will review the files.  Have a great day!
                         </div>
                     </div>
+                ) : (
+                    <>
+                        {!loading && <>
+                            <input multiple={true} id="file-input-id" ref={fileBrowserRef} style={{ display: 'none' }} type='file'
+                                onChange={onFileChange} />
+                            <input multiple={true} webkitdirectory='' webkitRelativePath='' id="file-input-id" ref={folderBrowserRef} style={{ display: 'none' }} type='file'
+                                onChange={onFileChange} />
 
-                    <div className={`row justify-center m-t-40 m-b-40`}>
-                        {uploadingStatus !== 'uploading' && <Button
-                            form="contact-form"
-                            text={retryListCount ? 'Retry' : 'Submit'}
-                            styleType='input-height-primary'
-                        />}
-                    </div>
-                </>}
+                            <>
+                                {uploadingStatus === 'none' &&
+                                    <>
+                                        <div className={styles.title}>
+                                            {teamName} - Guest Upload
+                                        </div>
+                                        <div className={styles.subtitle}>
+                                            Please upload your files or folders that you would like to submit to us.  This is more of text.  Please upload your files or folders that you would like to submit to us
+                                        </div>
+                                    </>
+                                }
 
-                <div className={`row justify-center ${styles['footer']} ${styles['row']}`}>
-                    <p className={'font-weight-600 m-b-0'}>Sparkfive</p>
-                    <p className={'m-b-0'}>Store, organize & distribute your digital assets efficiently with Sparkfive</p>
-                    <p className={'m-t-0'}>Unlease the power of your team</p>
-                    <p className={'m-t-0'}><Link href={'https://www.sparkfive.com'}><a className={styles.link}>Learn More</a></Link></p>
-                </div>
+                                {(uploadEnabled && !edit) &&
+                                    <div className={styles.guest_info}>
+                                        <div className={styles.guest_info_row}>
+                                            <div className={styles.user}>John Smith</div>
+                                            <div className={styles.edit} onClick={() => setEdit(true)}>Edit</div>
+                                        </div>
+                                        <div className={styles.email}>testJohn@gmail.com</div>
+                                        <div className={styles.message}>
+                                            This is my message to the ChampionX team. Please let me know if you get this. I will be standing by waiting for your response. These file are submitted by me and me only
+                                        </div>
+                                    </div>
+                                }
 
-                {activePasswordOverlay &&
-                <PasswordOverlay
-                    onPasswordSubmit={submitPassword}
-                    logo={logo}
-                />
-                }
-            </>}
+                                {(!uploadEnabled || edit) &&
+                                    <div className={styles.form}>
+                                        <ContactForm
+                                            id={'contact-form'}
+                                            onSubmit={saveChanges}
+                                            disabled={uploadingStatus === 'uploading'}
+                                            teamName={teamName}
+                                        />
+                                        <div className={styles.form_button}>
+                                            <Button
+                                                text='Save & Continue'
+                                                styleType='primary'
+                                                onClick={() => {
+                                                    setUploadEnabled(true)
+                                                    setEdit(false)
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                }
 
+                                <div className={styles.upload_area}>
+                                    <div className={styles.upload_title}>
+                                        Upload Files
+                                    </div>
+                                    {uploadEnabled &&
+                                        <>
+                                            <div className={styles.subtitle}>
+                                                Please upload your files or folders that you would like to submit to us.  This is more of text.  Please upload your files or folders that you would like to submit to us
+                                            </div>
+
+                                            {uploading ? (
+                                                <div>
+                                                    <div className={styles.cancel}>Cancel</div>
+                                                    <div className={styles['file-list-wrapper']}>
+                                                        <div className={styles['file-list-header']}>
+                                                            <div className={styles.files_count}>
+                                                                {files.length} Files Ready to Submit
+                                                            </div>
+                                                            <div className={styles.upload_button}>
+                                                                <img src={Utilities.addAlt} alt="add icon" />
+                                                                UPLOAD
+                                                            </div>
+                                                        </div>
+                                                        <div className={styles['file-list']}>
+                                                            {files.map((file, index) => {
+                                                                return <UploadItem name={file.asset.name} key={index} status={file.status} error={file.error} />
+                                                            })}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    <div className={`row justify-center ${styles['row']}`}>
+                                                        <DropDownOptions />
+                                                    </div>
+
+                                                    <div className={styles.option_helpertext}>
+                                                        * 1GB min & 200 files min at once
+                                                    </div>
+                                                </>
+                                            )}
+                                        </>
+                                    }
+
+                                    {uploading && <>
+                                        {uploadingStatus === 'uploading' && <AssetUploadProcess uploadingAssets={uploadingAssets}
+                                            uploadingStatus={uploadingStatus}
+                                            showUploadProcess={showUploadProcess}
+                                            uploadingFile={uploadingFile}
+                                            uploadingPercent={uploadingPercent}
+                                            setUploadDetailOverlay={setUploadDetailOverlay}
+                                            uploadingFileName={uploadingFileName}
+                                            retryListCount={retryListCount}
+                                        />}
+
+                                        {uploadingStatus === 'done' && retryListCount > 0 && <div className={`row justify-center text-align-center m-b-10`}>
+                                            {retryListCount} assets uploaded fail
+                                        </div>}
+
+                                        {uploadingStatus === 'done' && retryListCount > 0 && <div className={`row justify-center text-align-center m-b-25`}>
+                                            Press Retry button to try again
+                                        </div>}
+
+                                        {uploadingStatus !== 'uploading' &&
+                                            <div className={styles.form_button}>
+                                                <Button
+                                                    form="contact-form"
+                                                    text={retryListCount ? 'Retry' : 'Submit'}
+                                                    styleType='input-height-primary'
+                                                    onClick={() => setUploadingStatus("done")}
+                                                />
+                                            </div>
+                                        }
+                                    </>}
+                                </div>
+                            </>
+
+                            {activePasswordOverlay &&
+                                <PasswordOverlay
+                                    onPasswordSubmit={submitPassword}
+                                    logo={logo}
+                                />
+                            }
+                        </>}
+                    </>
+                )}
+            </div>
             {loading && <SpinnerOverlay />}
+
+            <div className={`row justify-center ${styles['footer']} ${styles['row']}`}>
+                <p className={'font-weight-600 m-b-0 font-14'}>Sparkfive</p>
+                <p className={'m-b-0 font-16'}>Store, organize & distribute your digital assets efficiently with Sparkfive</p>
+                <p className={'m-t-0 font-16'}>Unlease the power of your team</p>
+                <p className={`${styles.footer_link} m-t-0 font-16`}><Link href={'https://www.sparkfive.com'}><a className={styles.link}>Learn More</a></Link></p>
+            </div>
         </section >
     )
 }

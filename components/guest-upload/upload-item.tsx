@@ -1,6 +1,6 @@
 import styles from './upload-item.module.css'
 
-import { Utilities, ProjectTypes } from '../../assets'
+import { Utilities, ProjectTypes, AssetOps } from '../../assets'
 
 import IconClickable from "../common/buttons/icon-clickable";
 import ReactTooltip from "react-tooltip";
@@ -8,7 +8,7 @@ import ReactTooltip from "react-tooltip";
 export default function UploadItem({ name, key, status = '', error = '' }: Props){
     return <div className={`row ${styles['file-upload-row']}`} key={key}>
         <IconClickable
-            src={ProjectTypes.campaign}
+            src={AssetOps.uploadFilesGray}
             additionalClass={styles['file-icon']}
             onClick={()=>{}} />
         <span className={styles['file-name']}>{name}</span>

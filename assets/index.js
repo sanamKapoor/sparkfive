@@ -1,6 +1,10 @@
 export const GeneralImg = {
   logoHorizontal: require('./general/logo-horizontal-sparkfive-RGB.png'),
-  logo: require('./general/logo-motif-sparkfive-RGB-scaled.png')
+  logo: require('./general/logo-motif-sparkfive-RGB-scaled.png'),
+}
+
+export const AppImg = {
+  guestCover: require('./app-images/guest-cover.png'),
 }
 
 export const LoginImg = {
@@ -219,6 +223,7 @@ export const AssetOps = {
   moveReplaceWhite: require('./Icons/Asset Actions/white-move.svg'),
   newCollection: require('./Icons/Asset Addition/new-collection.svg'),
   uploadFiles: require('./Icons/Asset Addition/upload-files.svg'),
+  uploadFilesGray: require('./Icons/Asset Addition/upload-files-gray.svg'),
   uploadFolder: require('./Icons/Asset Addition/upload-folder.svg'),
   editGray: require('./Icons/Asset Actions/edit-gray.svg'),
 }

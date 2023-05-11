@@ -3,7 +3,7 @@
 }
 
 .file-icon{
-    margin-right: 15px;
+    margin-right: 10px;
 }
 
 .check-icon{
@@ -16,4 +16,5 @@
     max-width: 75%;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: var(--color-sec-text);
 }

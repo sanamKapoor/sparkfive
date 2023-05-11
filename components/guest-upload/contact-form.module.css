@@ -1,15 +1,7 @@
 .form{
-  border: solid 1px var(--color-secondary-border);
-  padding: 0 20px;
   border-radius: 15px;
-  max-height: 400px;
   height: 100%;
   /*overflow: scroll;*/
-}
-
-.container {
-  display: flex;
-  flex-wrap: wrap;
 }
 
 .container button{
@@ -41,6 +33,19 @@
   margin-top: 5px;
 }
 
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.row > div {
+  width: 100%;
+}
+
 @media screen and (max-width: 1200px) {
   .container{
     flex-direction: column;
@@ -50,17 +55,8 @@
 
 
 
-@media screen and (max-width: 650px) {
-  .fields-pair>div:first-child{
-    width: 100%;
-    margin-right: 0%;
-  }
-
-  .fields-pair>div:last-child{
-    width: 100%;
-  }
-
-  .form{
-    max-height: 100%;
+@media screen and (max-width: 900px) {
+  .row {
+    grid-template-columns: 1fr;
   }
 }
