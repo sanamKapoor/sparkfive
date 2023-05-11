@@ -1,13 +1,22 @@
 .container {
   grid-area: side-nav;
-  min-height: 80vh;
+  min-height: 100vh;
   height: 100%;
-  padding: 42px 0;
+  padding: 26px 0;
   background-color: var(--color-prim-navy);
-  color: white
+  color: white;
+  border-top: 1px solid #2D377E;
+
 }
 
 .container>ul {}
+
+.container h6 {
+  padding: 0 16px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-sec-blue)
+}
 
 .setting {
   font-size: 14px;

@@ -18,12 +18,9 @@ import {
 
 // Components
 import SideNavigation from './side-navigation'
-import Profile from './profile'
+import Account from './account'
 import Team from './team'
-import Company from './company'
-import Billing from './billing'
 import Plan from './plan'
-import Security from './security'
 import Integrations from './integrations'
 import Attributes from "./attributes"
 import SuperAdmin from './super-admin'
@@ -37,11 +34,11 @@ import UploadApprovals from "./upload-approvals"
 
 
 const SETTING_OPTIONS = {
-  profile: { label: 'Profile', permissions: [], content: Profile },
-  billing: { label: 'Billing', permissions: [SETTINGS_BILLING], content: Billing },
-  company: { label: 'Company', permissions: [SETTINGS_COMPANY], content: Company },
+  account: { label: 'Account', permissions: [], content: Account },
+  // billing: { label: 'Billing', permissions: [SETTINGS_BILLING], content: Billing },
+  // company: { label: 'Company', permissions: [SETTINGS_COMPANY], content: Company },
   // plan: { label: 'Plan', permissions: [SETTINGS_PLAN], content: Plan },
-  security: { label: 'Security', permissions: [SETTINGS_SECURITY], content: Security },
+  // security: { label: 'Security', permissions: [SETTINGS_SECURITY], content: Security },
   team: { label: 'Team', permissions: [SETTINGS_TEAM], content: Team },
   notifications: { label: 'Notifications', permissions: [], content: Notifications },
   ['guest-upload']: { label: 'Guest Upload', contentTitle: 'Guest Upload', permissions: [SETTINGS_TEAM, SETTINGS_COMPANY], content: GuestUpload },

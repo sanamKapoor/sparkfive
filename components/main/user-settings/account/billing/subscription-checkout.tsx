@@ -2,13 +2,13 @@ import styles from './subscription-checkout.module.css'
 import { useEffect, useContext, useState } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
 import { Elements } from '@stripe/react-stripe-js'
-import planApi from '../../../../server-api/plan'
-import { TeamContext } from '../../../../context'
-import toastUtils from '../../../../utils/toast'
+import planApi from '../../../../../server-api/plan'
+import { TeamContext } from '../../../../../context'
+import toastUtils from '../../../../../utils/toast'
 
 // Components
-import SubscriptionSummary from '../../../common/payment/subscription-summary'
-import CreditCardForm from '../../../common/payment/credit-card-form'
+import SubscriptionSummary from '../../../../common/payment/subscription-summary'
+import CreditCardForm from '../../../../common/payment/credit-card-form'
 
 const stripePromise = loadStripe('pk_test_bK1C20PBomU24spmlMeg4AXp')
 

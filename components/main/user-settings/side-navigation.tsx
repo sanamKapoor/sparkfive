@@ -4,6 +4,7 @@ import { UserContext } from '../../../context'
 import update from 'immutability-helper'
 import toastUtils from '../../../utils/toast'
 import Link from 'next/link'
+import { setTokenSourceMapRange } from 'typescript'
 
 // Components
 const UserSettings = ({ activeView, SETTING_OPTIONS }) => {
@@ -16,13 +17,21 @@ const UserSettings = ({ activeView, SETTING_OPTIONS }) => {
         {Object.entries(SETTING_OPTIONS)
           .filter(([_, optionProps]) => hasPermission(optionProps.permissions))
           .map(([option, optionProps], index) => (
-            <Link href={`/main/user-settings/${option}`} key={index}>
-              <a>
-                <li className={`${styles.setting} ${activeView === option && styles.selected}`}>
-                  <span>{optionProps.label}</span>
-                </li>
-              </a>
-            </Link>
+            <>
+              {option === 'account' && (
+                <h6>ADMINISTRATION</h6>
+              )}
+              {option === 'attributes' && (
+                <h6>SETTINGS</h6>
+              )}
+              <Link href={`/main/user-settings/${option}`} key={index}>
+                <a>
+                  <li className={`${styles.setting} ${activeView === option && styles.selected}`}>
+                    <span>{optionProps.label}</span>
+                  </li>
+                </a>
+              </Link>
+            </>
           ))}
       </ul>
     </section>
