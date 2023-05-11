@@ -356,6 +356,7 @@ const ShareFolderMain = () => {
                     sharedAdvanceConfig={user ? undefined : advancedConfig}
                 />
                 <div className={`${openFilter && styles['col-wrapper']}`} style={{marginTop: top}}>
+                    <h1>Hello World</h1>
                     <AssetGrid
                         activeFolder={activeFolder}
                         getFolders={getFolders}

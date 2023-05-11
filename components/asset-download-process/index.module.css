@@ -111,6 +111,10 @@
   width: calc(100% - 150px);
 }
 
+.err{
+  background-color: #FA373D;
+}
+
 @media screen and (max-width: 575px) {
   .zipheadingInner {
     width: 100%;

@@ -29,7 +29,7 @@ const ChangeCollectionThumbnailRow = ({
           <p className={classes["img-name"]}>{imgName}</p>
         )}
       </div>
-      <IconClickable src={redDeleteIconSrc} onClick={onDelete} />
+      <IconClickable src={redDeleteIconSrc} onClick={onDelete} additionalClass={classes['delete-icon']} />
       <p>or</p>
       
       <button

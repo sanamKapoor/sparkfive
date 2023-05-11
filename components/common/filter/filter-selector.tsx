@@ -91,9 +91,9 @@ const FilterSelector = ({
       case 'all':
             return 'All Selected'
       case 'any': 
-            return 'Any'
+            return 'Any Selected'
       default: 
-            return 'none'
+            return 'No Tags'
     } 
   }
 
@@ -157,12 +157,12 @@ const FilterSelector = ({
               onClick: () => setAnyAll('all')
             },
             {
-              label: "Any",
+              label: "Any Selected",
               id: "Any",
               onClick: () => setAnyAll('any')
             },
             {
-                label: "None",
+                label: "No Tags",
                 id: "None",
                 onClick: () => setAnyAll('none')
               },

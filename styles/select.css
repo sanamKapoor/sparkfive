@@ -52,6 +52,7 @@
   white-space: nowrap;
   overflow: hidden;
   font-size: 12px !important;
+  cursor: pointer !important;
 }
 
 .select-prefix__option--is-disabled {
@@ -182,3 +183,4 @@
     width: 168px;
   }
 }
+
