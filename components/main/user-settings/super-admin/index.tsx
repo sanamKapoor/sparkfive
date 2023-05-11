@@ -79,6 +79,7 @@ const SuperAdmin = () => {
         setVanity(data.vanity)
         setSubdomain(data.subdomain ? `${data.subdomain || ""}.${window.location.hostname.replace("www.","")}` : "")
         setCdnAcces(data.cdnAccess)
+        setTranscript(data.transcript)
         setAdvanceShareLink(data.advancedCollectionShareLink)
         setBenefits(benefits.map((benefit)=>{ return {
             label: benefit.id,

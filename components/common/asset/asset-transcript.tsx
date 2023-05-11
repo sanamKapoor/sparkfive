@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react'
-import { Utilities } from '../../../assets'
-import IconClickable from '../buttons/icon-clickable'
+
+import dateUtils from "../../../utils/date"
+
 // @ts-ignore
 import styles from './asset-transcript.module.css'
 import Search from "../attributes/search-input";
 
-const AssetTranscript = ({ title, transcripts, loading = true }) => {
+const AssetTranscript = ({ title, transcripts, loading = true, navigateToTime = (time) => {} }) => {
     const [transcriptData, setTranscriptData] = useState(transcripts)
 
     const search = (value) => {
@@ -45,7 +46,9 @@ const AssetTranscript = ({ title, transcripts, loading = true }) => {
                 {!loading && (transcriptData?.error || (!transcriptData?.error && transcriptData?.transcript && transcriptData?.transcript.length === 0)) && <div>A transcript does not exist for this video</div>}
                 {!loading && !transcriptData?.error  && transcriptData?.transcript && transcriptData?.transcript.map((transcript, index)=>{
                     return <div key={index} className={styles["transcript-item"]}>
-                        <span className={styles["time-text"]}>{transcript.startTime.split(",")[0]}</span>
+                        <span className={styles["time-text"]} onClick={()=>{
+                            navigateToTime(dateUtils.getSecondsFromHhMmSs(transcript.startTime.split(",")[0]))
+                        }}>{transcript.startTime.split(",")[0]}</span>
                         <span className={styles["trans-text"]}>{transcript.text}</span>
                     </div>
                 })}

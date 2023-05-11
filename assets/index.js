@@ -81,6 +81,7 @@ export const Utilities = {
   share: require('./Icons/Utilities/Share/share.svg'),
   blueClose: require('./Icons/Utilities/Close/blue-close.svg'),
   greenTag: require('./Icons/Utilities/green-tag.svg'),
+  transcript: require('./Icons/Utilities/Transcript/Transcript.svg'),
 }
 
 export const ProjectTypes = {
