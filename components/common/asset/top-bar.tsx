@@ -37,7 +37,7 @@ const TopBar = ({
   amountSelected = 0,
   mode,
   showAssetAddition = true,
-
+  activeSearchOverlay
 }) => {
 
   const {
@@ -210,7 +210,7 @@ const TopBar = ({
 
         <div className={styles['sec-filters']}>
 
-          {!isMobile && !isShare &&
+          {!isMobile && !isShare && !activeSearchOverlay && 
             <img src={Utilities.search} onClick={setActiveSearchOverlay} className={styles.search} />
           }
           {(amountSelected === 0 || mode === 'folders') && showAssetAddition && hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL]) && (

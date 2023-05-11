@@ -544,7 +544,7 @@ const AssetsLibrary = () => {
         term,
         ...searchFilterParams,
         complete,
-        ...getAssetsSort(activeSortFilter)
+        ...getAssetsSort(activeSortFilter),
       })
 
       setAssets({ ...data, results: data.results.map(mapWithToggleSelection) }, replace)
@@ -753,7 +753,9 @@ const AssetsLibrary = () => {
                   selectAll={selectAll}
                   setOpenFilter={setOpenFilter}
                   openFilter={openFilter}
-                  deletedAssets={false} />
+                  deletedAssets={false} 
+                  activeSearchOverlay={activeSearchOverlay}
+                  />
               }
               <div className={styles["search-desktop"]}>
                 {activeSearchOverlay &&
