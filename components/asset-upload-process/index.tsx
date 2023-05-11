@@ -33,8 +33,6 @@ const AssetUploadProcess = () => {
   ).length;
 
   const handleRetry = async (i) => {
-    console.log('re-upload started...')
-
     const failedAssets = uploadingAssets.filter(
       (asset) => asset.status === "fail"
     ).map(item => ({...item, status: 'queued', isUploading: true, index: i }))
@@ -60,8 +58,6 @@ const AssetUploadProcess = () => {
       folderGroups,
       subFolderAutoTag
     );
-
-    console.log('uploadingAssets: ', uploadingAssets)
   };
 
   return (

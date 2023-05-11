@@ -15,9 +15,6 @@ const AssetDownloadProcess = () => {
     downloadingError,
   } = useContext(AssetContext);
 
-  console.log('downloading Status: ', downloadingStatus);
-  console.log('downloading Error: ', downloadingError);
-
 
   return (
     <div
