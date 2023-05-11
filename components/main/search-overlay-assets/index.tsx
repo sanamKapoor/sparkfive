@@ -125,7 +125,7 @@ const SearchOverlayAssets = ({  closeOverlay, importEnabled = false, operationsE
 
   return (
     <div>
-    <div className={'search-content'} >
+    <div className={sharePath ? `${styles['share-landing-search']} search-content` : 'search-content' } >
 
       <div className={'search-cont'}>
         <div className={"search-actions"}>

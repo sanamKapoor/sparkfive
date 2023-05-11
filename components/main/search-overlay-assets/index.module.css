@@ -76,8 +76,26 @@
     max-width: 55rem;
 }
 
+.share-landing-search{
+   width: 580px;
+}
+
 @media screen and (max-width: 690px) {
     .list-head {
         display: none;
+    }
+
+    .share-landing-search{
+        right: 0;
+    }
+}
+
+@media screen and (min-width: 600px) and (max-width: 1200px) {
+    .share-landing-search{
+        top:20px;
+        width: 400px;
+        right: 0;
+        transform: translateX(30%);
+        position: absolute;
     }
 }

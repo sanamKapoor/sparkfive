@@ -117,32 +117,37 @@ const FolderGridItem = ({
     // zipDownloadUtils.zipAndDownload(data, name)
 
     // Show processing bar
-    updateDownloadingStatus("zipping", 0, assetsCount);
+    try {
+      updateDownloadingStatus("zipping", 0, assetsCount);
 
-    let payload = {
-      folderIds: [id],
-    };
-    let filters = {
-      estimateTime: 1,
-    };
+      let payload = {
+        folderIds: [id],
+      };
+      let filters = {
+        estimateTime: 1,
+      };
 
-    let api = folderApi;
+      let api = folderApi;
 
-    if (isShare) {
-      api = shareFolderApi;
+      if (isShare) {
+        api = shareFolderApi;
+      }
+
+      // Add sharePath property if user is at share collection page
+      if (sharePath) {
+        filters["sharePath"] = sharePath;
+      }
+
+      const { data } = await api.downloadFoldersAsZip(payload, filters);
+
+      // Download file to storage
+      fileDownload(data, "assets.zip");
+
+      updateDownloadingStatus("done", 0, 0);
+    } catch (err) {
+      console.log("err in download: ", err);
+      updateDownloadingStatus("error", 0, 0);
     }
-
-    // Add sharePath property if user is at share collection page
-    if (sharePath) {
-      filters["sharePath"] = sharePath;
-    }
-
-    const { data } = await api.downloadFoldersAsZip(payload, filters);
-
-    // Download file to storage
-    fileDownload(data, "assets.zip");
-
-    updateDownloadingStatus("done", 0, 0);
   };
 
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {

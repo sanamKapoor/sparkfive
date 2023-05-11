@@ -93,6 +93,7 @@
 
 .container .search{
   margin-left: 0;
+  margin-right: -14px;
 }
 
 @media screen and (max-width: 1210px) {
@@ -263,6 +264,8 @@ li.dropdown-title {
 .gridOuter {
   position: relative;
   cursor: pointer;
+  margin-left: -14px;
+  margin-right: 4px;
 }
 
 .gridOuter .gridList {

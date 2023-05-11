@@ -133,6 +133,10 @@
   padding: 15px 24px 0;
 }
 
+.header_checkbox p{
+   font-weight: 300;
+}
+
 .checkbox_option {
   display: flex;
   flex-wrap: wrap;

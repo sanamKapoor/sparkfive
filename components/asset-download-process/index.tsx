@@ -15,12 +15,17 @@ const AssetDownloadProcess = () => {
     downloadingError,
   } = useContext(AssetContext);
 
+  console.log('downloading Status: ', downloadingStatus);
+  console.log('downloading Error: ', downloadingError);
+
+
   return (
     <div
       className={clsx(styles.container, {
         [styles["center-align"]]: downloadingStatus === "done",
         [styles["less-margin-bottom"]]:
           downloadingStatus === "zipping" || downloadingStatus === "preparing",
+          [styles["err"]]: downloadingStatus === 'error'
       })}
     >
       <div className={clsx(styles.row, styles["no-margin"])}>
@@ -44,7 +49,7 @@ const AssetDownloadProcess = () => {
                 )}
                 {downloadingStatus === "error" && (
                   <span className={styles["no-wrap-text"]}>
-                    {downloadingError}
+                    {downloadingError ? downloadingError : 'Something went wrong'}
                   </span>
                 )}
               </div>
