@@ -112,6 +112,10 @@ const DetailOverlay = ({
   const { hasPermission } = useContext(UserContext);
   const { user, cdnAccess, transcriptAccess } = useContext(UserContext);
 
+  console.log({
+    transcriptAccess
+  })
+
   const [assetDetail, setAssetDetail] = useState(undefined);
 
   const [renameModalOpen, setRenameModalOpen] = useState(false);
@@ -224,6 +228,24 @@ const DetailOverlay = ({
         setActiveCollection(folder);
         const assetIndx = assets.findIndex(item => item.asset && item.asset.id === asset.id) + 1
         setAssetIndex(assetIndx);
+      }
+    }
+  }
+
+  const seekVideo = secs => {
+    let myVideo = document.getElementById("video-element");
+    if(myVideo){
+      // @ts-ignore
+      if (myVideo.fastSeek) {
+        // @ts-ignore
+        myVideo.fastSeek(secs)
+        // @ts-ignore
+        myVideo.play()
+      } else {
+        // @ts-ignore
+        myVideo.currentTime = secs
+        // @ts-ignore
+        myVideo.play()
       }
     }
   }
@@ -980,7 +1002,7 @@ const DetailOverlay = ({
                 <AssetIcon extension={currentAsset.extension} />
               )}
             {assetDetail.type === "video" && (
-              <video controls>
+              <video controls id={"video-element"}>
                 <source
                   src={previewUrl ?? versionRealUrl}
                   type={previewUrl ? 'video/mp4' : `video/${assetDetail.extension}`}
@@ -1098,6 +1120,7 @@ const DetailOverlay = ({
                   title={"Transcript"}
                   transcripts={transcripts}
                   loading={transcriptLoading}
+                  navigateToTime={seekVideo}
               />
           )}
 
