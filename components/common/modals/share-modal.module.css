@@ -17,12 +17,17 @@
     display: flex;
     align-items: center;
 }
+
+.radio-button-wrapper:last-child{
+   margin-left: 50px;
+}
+
 .radio-button-wrapper img {
     width: 14px;
 }
 
 .row-field-content{
-    padding-left: 15px;
+    padding: 20px 0 20px 20px;
 }
 
 .field-radio-wrapper{
@@ -32,6 +37,10 @@
 .title{
     margin-bottom: 15px;
     font-weight: 600;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
 }
 
 .spinner{
@@ -64,4 +73,9 @@
         flex-direction: column;
         gap: 20px;
     }
+}
+
+.arrow-icon{
+    height: 14px;
+    width: 14px;
 }

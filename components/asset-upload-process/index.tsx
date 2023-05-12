@@ -100,6 +100,7 @@ const AssetUploadProcess = () => {
             />
         </div>
 
+        <div className={styles.list}>
         {uploadingAssets.length > 0 &&
           uploadingAssets.map((item) => (
             <div className={styles.innerUploadList}>
@@ -145,6 +146,8 @@ const AssetUploadProcess = () => {
               </div>
             </div>
           ))}
+       
+          </div>
       </div>
     </>
   );

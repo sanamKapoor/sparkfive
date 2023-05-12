@@ -16,6 +16,7 @@ const ChangeCollectionThumbnailRow = ({
 }) => {
   return (
     <div className={classes["row-wrapper"]}>
+      <div className={classes['img-wrapper-container']}>
       {index !== "0" && <p>{index}</p>}
       <div className={classes["img-preview-wrapper"]}>
         <div className={classes["img-box"]}>
@@ -29,9 +30,11 @@ const ChangeCollectionThumbnailRow = ({
           <p className={classes["img-name"]}>{imgName}</p>
         )}
       </div>
+      <div className={classes['del-icon-wrapper']}>
       <IconClickable src={redDeleteIconSrc} onClick={onDelete} additionalClass={classes['delete-icon']} />
       <p>or</p>
-      
+      </div>
+      </div>
       <button
         type="button"
         onClick={onChangeThisOnly}

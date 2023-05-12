@@ -544,7 +544,7 @@ const AssetsLibrary = () => {
         term,
         ...searchFilterParams,
         complete,
-        ...getAssetsSort(activeSortFilter)
+        ...getAssetsSort(activeSortFilter),
       })
 
       setAssets({ ...data, results: data.results.map(mapWithToggleSelection) }, replace)
@@ -753,24 +753,15 @@ const AssetsLibrary = () => {
                   selectAll={selectAll}
                   setOpenFilter={setOpenFilter}
                   openFilter={openFilter}
-                  deletedAssets={false} />
-              }
-              <div className={styles["search-desktop"]}>
-                {activeSearchOverlay &&
-                  <SearchOverlay
-                    closeOverlay={closeSearchOverlay}
-                    operationsEnabled={true}
-                    activeFolder={activeFolder}
-                    onCloseDetailOverlay={(assetData) => {
-                      closeSearchOverlay()
-                      // setActiveSearchOverlay(false)
-                      setDetailOverlayId(undefined)
-                      setCurrentViewAsset(assetData)
-                    }}
-                    isFolder={activeMode === 'folders'}
+                  deletedAssets={false} 
+                  activeSearchOverlay={activeSearchOverlay}
+                  closeSearchOverlay={closeSearchOverlay}
+                  setDetailOverlayId={setDetailOverlayId}
+                  setCurrentViewAsset={setCurrentViewAsset}
+                  activeMode={activeMode}
+                  isFolder={activeSortFilter?.mainFilter === 'folders'}
                   />
-                }
-              </div>
+              }
 
             </div>
             <div className={`${openFilter && styles['col-wrapper']} ${styles['grid-wrapper']} ${activeFolder && styles['active-breadcrumb-item']}`}>

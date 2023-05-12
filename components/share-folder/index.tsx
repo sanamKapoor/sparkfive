@@ -51,7 +51,7 @@ const ShareFolderMain = () => {
     const [firstLoaded, setFirstLoaded] = useState(false)
     const [activePasswordOverlay, setActivePasswordOverlay] = useState(true)
     const [loading, setLoading] = useState(true)
-    const [activeSearchOverlay, setActiveSearchOverlay] = useState(false)
+    const [activeSearchOverlay, setActiveSearchOverlay] = useState(true)
     const [openFilter, setOpenFilter] = useState(false)
     const [activeView, setActiveView] = useState('grid')
     const [sharePath, setSharePath] = useState('')
@@ -343,6 +343,7 @@ const ShareFolderMain = () => {
         <>
             {!loading && <main className={`${styles.container} sharefolderOuter`}>
                 <TopBar
+                    activeSearchOverlay={activeSearchOverlay}
                     activeSortFilter={activeSortFilter}
                     setActiveSortFilter={setActiveSortFilter}
                     activeView={activeView}
@@ -354,9 +355,11 @@ const ShareFolderMain = () => {
                     isShare={true}
                     singleCollection={!!folderInfo.singleSharedCollectionId}
                     sharedAdvanceConfig={user ? undefined : advancedConfig}
+                    isFolder={activeSortFilter.mainFilter === 'folders'}
+                    sharePath={sharePath}
                 />
                 <div className={`${openFilter && styles['col-wrapper']}`} style={{marginTop: top}}>
-                    <h1>Hello World</h1>
+                    <h1 style={{color: 'transparent'}}>Hello World</h1>
                     <AssetGrid
                         activeFolder={activeFolder}
                         getFolders={getFolders}
@@ -392,14 +395,14 @@ const ShareFolderMain = () => {
                     logo={folderInfo?.teamIcon}
                 />
             }
-            {!loading &&
+            {/* {!loading &&
                 <SearchOverlay
                     sharePath={sharePath}
                     closeOverlay={closeSearchOverlay}
                     activeFolder={activeFolder}
                     isFolder={activeSortFilter.mainFilter === 'folders'}
                 />
-            }
+            } */}
         </>
     )
 }

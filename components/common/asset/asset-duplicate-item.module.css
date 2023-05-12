@@ -6,10 +6,11 @@
 .actions {
     display: grid;
     grid-auto-flow: column;
-    justify-content: center;
+    /* justify-content: center; */
     gap: 29px;
     padding: 17px 20px;
     flex-wrap: wrap;
+    justify-content: space-evenly;
 }
 
 .actions span {

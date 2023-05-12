@@ -22,11 +22,11 @@ const AssetDuplicateModal = ({duplicateNames=[], modalIsOpen, closeModal, confir
         <Base
             modalIsOpen={modalIsOpen}
             closeModal={closeModal}
-            confirmText={'Done'}
+            confirmText={'Save'}
 			headText={`(${duplicateNames.length}) Duplicates Detected`}
 			// disabledConfirm={}
 			additionalClasses={['visible-block']}
-			showCancel={false}
+			showCancel={true}
 			confirmAction={() => confirmAction(nameHistories)}
         >
             <div className={styles.container}>

@@ -312,6 +312,11 @@ input[role="combobox"] {
   input[role="combobox"] {
     width: 100% !important;
   }
+
+  .sharefolderOuter #top-bar {
+    margin-top: 50px;
+  }
+  
 }
 
 @media screen and (max-width: 717px) {
@@ -331,8 +336,6 @@ input[role="combobox"] {
   top: 99px;
   border-top: 1px solid #e9eefa;
 }
-
-
 
 .colOuter {
   padding: 0 !important;

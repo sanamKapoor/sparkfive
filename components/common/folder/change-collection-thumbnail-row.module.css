@@ -1,9 +1,11 @@
 .row-wrapper {
+  width: 100%;
   display: flex;
-  flex-direction: row;
+  /* flex-direction: row; */
   align-items: center;
+  justify-content: space-evenly;
   gap: 16px;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
   padding: 19px 24px 19px;
   border-bottom: 1px solid var(--color-secondary-border);
 }
@@ -12,8 +14,23 @@
   border-top: 1px solid var(--color-secondary-border);
 }
 
+.img-wrapper-container{
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 30px;
+}
+
+.del-icon-wrapper{
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 15px;
+}
+
 .img-preview-wrapper {
-  width: 84px;
+  width: 78px;
+  height: 78px;
   overflow: hidden;
   border-radius: 8px;
   display: flex;

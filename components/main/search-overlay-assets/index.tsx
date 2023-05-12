@@ -40,16 +40,13 @@ const SearchOverlayAssets = ({  closeOverlay, importEnabled = false, operationsE
           setFilterParams(_filterParams)
           setSearchFilterParams(_filterParams);
         }
-        const params: any = { term: inputTerm, page: replace ? 1 : nextPage, sharePath, ..._filterParams }
+
+        const params: any = {term: inputTerm, stage: activeSortFilter?.mainFilter === 'archived' ? 'archived' : 'draft', page: replace ? 1 : nextPage, sharePath, ..._filterParams }
         // search from inside collection
         if (activeFolder) {
           params.folderId = activeFolder
         }
         const { data } = await fetchFn(params)
-        setActiveSortFilter({
-          ...activeSortFilter,
-          mainFilter: 'all',
-        })
         setAssets(data, replace)
       }else{
         let query = {
@@ -135,9 +132,9 @@ const SearchOverlayAssets = ({  closeOverlay, importEnabled = false, operationsE
               <img src={Utilities.filterGray} alt={"filter"} />
             </div>
           }
-          <div className={'search-close'} onClick={closeSearchModal}>
+          {!sharePath && <div className={'search-close'} onClick={closeSearchModal}>
             <img src={Utilities.grayClose} alt={"close"} />
-          </div>
+          </div>}
         </div>
         {/* TODO: When is a collecttion change placeholter to "Search Collections" */}
         <Search

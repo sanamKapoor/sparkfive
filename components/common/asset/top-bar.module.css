@@ -23,7 +23,6 @@
   }
 }
 
-
 .filters {
   display: flex;
   flex-wrap: wrap;
@@ -79,7 +78,7 @@
 
 .sort-wrapper {
   z-index: 1000;
-  min-width: 127px;
+  min-width: 127px
 }
 
 .nested-wrapper {
@@ -262,6 +261,7 @@ li.dropdown-title {
 }
 
 .gridOuter {
+  display: flex;
   position: relative;
   cursor: pointer;
   margin-left: -14px;

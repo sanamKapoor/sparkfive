@@ -544,6 +544,7 @@ const DeletedAssetsLibrary = () => {
 		  setOpenFilter={setOpenFilter}
 		  openFilter={openFilter}
 		  deletedAssets={true}
+		  isFolder={activeSortFilter?.mainFilter === 'folders'}
 		/>
 		  <div className={`${openFilter && styles['col-wrapper']} ${styles['grid-wrapper']}`} style={{marginTop: top}}>
 		  <DropzoneProvider>
