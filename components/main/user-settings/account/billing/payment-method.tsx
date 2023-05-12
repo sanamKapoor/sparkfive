@@ -8,7 +8,7 @@ import BaseModal from '../../../../common/modals/base'
 import Button from '../../../../common/buttons/button'
 import CreditCardForm from '../../../../common/payment/credit-card-form'
 
-const PaymentMethod = ({paymentMethod, setPaymentMethod}) => {
+const PaymentMethod = ({ paymentMethod, setPaymentMethod }) => {
   const [modalActive, setModalActive] = useState(false)
 
   const updatePaymentMethod = async (paymentMethodId) => {
@@ -25,13 +25,13 @@ const PaymentMethod = ({paymentMethod, setPaymentMethod}) => {
   return (
     <>
       <div className={styles.container}>
-        <h3>Active Card</h3>
+        <h3 className={styles.title}>Active Card</h3>
         <div className={`${styles['card-info']}`}>
           {paymentMethod ?
-            <div className={'fields-first'}>
+            <div>
               <div>{paymentMethod.name}</div>
-              <div>{`Card: ${paymentMethod.brand} ending in ${paymentMethod.last4}`}</div>
-              <div>{`Exp. ${paymentMethod.expMonth}/${paymentMethod.expYear} `}</div>
+              <div>{`${paymentMethod.brand} ending in ${paymentMethod.last4}`}</div>
+              <div>{`Expires ${paymentMethod.expMonth}/${paymentMethod.expYear} `}</div>
             </div>
             :
             <div className={'fields-first'}>
@@ -43,11 +43,13 @@ const PaymentMethod = ({paymentMethod, setPaymentMethod}) => {
               text='Update Card'
               type='button'
               onClick={() => setModalActive(true)}
-              styleType='input-height-primary' />
+              styleType='primary' />
           </div>
         </div>
       </div>
       <BaseModal
+        headText={<span className={styles.modal_title}>Update Credit Card</span>}
+        subText={<span className={styles.modal_title}>Please enter your credit card details below</span>}
         closeModal={() => setModalActive(false)}
         noHeightMax={true}
         additionalClasses={['visible-block']}

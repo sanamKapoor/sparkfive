@@ -6,6 +6,10 @@
   margin-top: 18px;
 }
 
+h3.title {
+  margin-bottom: 24px;
+}
+
 .state-country{
   display: flex;
   flex-wrap: wrap;
@@ -17,6 +21,12 @@
   margin-bottom: 14px;
   margin-top: 28px;
 }
+
+.container label {
+  margin-bottom: 16px;
+  display: block;
+}
+
 
 .fields-pair label {
   margin-bottom: 16px;

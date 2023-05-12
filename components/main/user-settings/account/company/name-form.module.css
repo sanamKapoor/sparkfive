@@ -3,8 +3,9 @@
   width: 50%;
 }
 
-.title { 
+h3.title { 
   font-weight: 600;
+  margin-bottom: 24px;
 }
 
 @media screen and (max-width: 900px) {

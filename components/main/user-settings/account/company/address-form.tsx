@@ -57,7 +57,7 @@ const AddressForm = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       {team &&
         <>
-          <h3>Company Address</h3>
+          <h3 className={styles.title}>Company Address</h3>
           <div className={styles.container}>
             <div className='fields-first'>
               <FormInput

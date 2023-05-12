@@ -40,7 +40,7 @@ const Invoices = () => {
       <div>Plan</div>
       {type === 'invoice' && <div>Status</div>}
       <div>Amount</div>
-      {type === 'invoice' && <div></div>}
+      {type === 'invoice' && <div>Download</div>}
     </li>
   )
 
@@ -58,7 +58,6 @@ const Invoices = () => {
 
   return (
     <div>
-      <h3>Invoices</h3>
       <ul>
         <Headers />
         {parsedInvoices.map((invoice, index) => (

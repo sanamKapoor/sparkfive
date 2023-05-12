@@ -1,8 +1,26 @@
 .card-info{
   display: flex;
   flex-wrap: wrap;
+  gap: 32px;
+  font-size: 12px;
+  font-weight: 300;
+}
+
+h3.title {
+  font-size: 16px;
+  font-weight: 500;
 }
 
 .card-info>*{
   margin-bottom: 10px;
+}
+
+span.modal_title {
+  display: block;
+  text-align: center;
+}
+
+span.modal_subtitle {
+  display: block;
+  text-align: center;
 }

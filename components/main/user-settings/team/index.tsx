@@ -211,31 +211,41 @@ const Team = () => {
         />}
 
         {!selectedMember && !selectedRequest && <>
-          <TeamInviteForm
-            onInviteSend={sendInvitation}
-            mappedRoles={mappedRoles} />
-          <div className={styles['main-headers']}>
-            <h3>Members</h3>
-            <h3>Role</h3>
+          <div className={styles.content}>
+            <TeamInviteForm
+              onInviteSend={sendInvitation}
+              mappedRoles={mappedRoles} />
           </div>
 
-          <MemberList members={teamMembers}
-            type='member'
-            setSelectedMember={setSelectedMember}
-            setSelectedDeleteMember={setSelectedDeleteMember}
-          />
+          <div className={styles.divider}></div>
 
-          <h3>Pending Invites</h3>
-          <MemberList members={invites} type='invite'
-            setSelectedMember={setSelectedMember}
-            setSelectedDeleteMember={setSelectedDeleteMember}
-            onReload={() => { getInvites() }}
-          />
+          <div className={styles.content}>
+
+            <div className={styles['main-headers']}>
+              <h3>Members</h3>
+              <h3>Role</h3>
+            </div>
 
 
-          <h3>Access Requests</h3>
-          <RequestAccessList members={requests} type='invite' onChange={onRequestChange} />
-        </>}
+            <MemberList members={teamMembers}
+              type='member'
+              setSelectedMember={setSelectedMember}
+              setSelectedDeleteMember={setSelectedDeleteMember}
+            />
+
+            <h3>Pending Invites</h3>
+            <MemberList members={invites} type='invite'
+              setSelectedMember={setSelectedMember}
+              setSelectedDeleteMember={setSelectedDeleteMember}
+              onReload={() => { getInvites() }}
+            />
+
+
+            <h3>Access Requests</h3>
+            <RequestAccessList members={requests} type='invite' onChange={onRequestChange} />
+          </div>
+        </>
+        }
       </>}
 
       {tab === 1 && <Roles onAdd={() => { setTab(2) }} onEdit={(id) => { setTab(2); setSelectedRole(id) }} />}

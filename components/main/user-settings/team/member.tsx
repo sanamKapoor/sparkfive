@@ -60,16 +60,16 @@ const Member = ({ id, email, role, name, profilePhoto, type, editAction, deleteA
         </div>}
       <div className={styles.details}>
         <div className={styles.role}>{capitalCase(role.name)}</div>
-          <>
+          <div className={styles.actions}>
               <div onClick={editAction}
                    className={`${styles.action} ${user.id === id ? styles.hidden: ''}`}>
-                  edit
+                  Edit
               </div>
               <div onClick={deleteAction}
                    className={`${styles.action} ${user.id === id ? styles.hidden: ''}`}>
-                  delete
+                  Delete
               </div>
-          </>
+          </div>
       </div>
     </li>
   )

@@ -1,8 +1,7 @@
 .container {
   display: flex;
   width: 100%;
-  margin: 0.8rem 0;
-  padding: 0.8rem 0;
+  padding: 8px 16px;
   border-bottom: 1px solid var(--color-secondary-border);
 }
 
@@ -11,17 +10,18 @@
 }
 
 .name-email {
-  width: 80%;
+  width: 60%;
 }
 
 .name-email > div:first-child {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
 }
 
 .name-email > div:last-child {
   color: var(--color-sec-text);
-  font-weight: 400;
+  font-size: 12px;
+  font-weight: 300;
 }
 
 .grey-text{
@@ -39,12 +39,15 @@
 }
 
 .role{
-  font-weight: 600;
-  width: 98px;
+  font-size: 14px;
+  font-weight: 400;
 }
 
 .details{
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 40%;
 }
 
 .expire-date{
@@ -62,10 +65,17 @@
   visibility: hidden;
 }
 
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 44px;
+}
+
 .action{
-  margin-left: 1rem;
   color: var(--color-sec-text);
   cursor: pointer;
+  font-size: 12px;
+  font-weight: 300;
 }
 
 .resend-image{

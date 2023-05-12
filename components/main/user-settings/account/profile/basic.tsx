@@ -140,7 +140,7 @@ const Basic = ({ name, email, provider }) => {
               errors={errorsPassword}
               message={'This field should be minimun 8 characters long'}
             />
-            <h3>New Password</h3>
+            <h3 className='m-t-40'>New Password</h3>
             <FormInput
               InputComponent={
                 <Input

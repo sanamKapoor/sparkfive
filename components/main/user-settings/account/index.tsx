@@ -37,21 +37,24 @@ const Account = () => {
                 />
             </div>
 
-            {tab === 0 &&
-                <Profile />
-            }
+            <div className={styles.content}>
+                {tab === 0 &&
+                    <Profile />
+                }
 
-            {tab === 1 &&
-                <Billing />
-            }
+                {tab === 1 &&
+                    <Billing />
+                }
 
-            {tab === 2 &&
-                <Company />
-            }
+                {tab === 2 &&
+                    <Company />
+                }
 
-            {tab === 3 &&
-                <Security />
-            }
+                {tab === 3 &&
+                    <Security />
+                }
+            </div>
+
         </div>
     )
 }

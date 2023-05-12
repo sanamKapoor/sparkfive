@@ -5,7 +5,9 @@ import downloadUtils from '../../../../../utils/download'
 
 // Components
 import Tag from '../../../../common/misc/tag'
-import Button from '../../../../common/buttons/button'
+import IconClickable from '../../../../common/buttons/icon-clickable'
+import { AssetOps } from '../../../../../assets'
+import { capitalCase } from 'change-case'
 
 const InvoiceItem = ({ invoice, type = 'invoice' }) => {
   const downloadInvoice = () => {
@@ -20,14 +22,13 @@ const InvoiceItem = ({ invoice, type = 'invoice' }) => {
       <div>
         {invoice.product}
       </div>
-      {type === 'invoice' && <div><Tag data={invoice} tag={invoice.status} altColor={invoice.status === 'paid' && 'turquoise'} /></div>}
+      {type === 'invoice' && <div>{capitalCase(invoice.status)}</div>}
       <div>
         {formatCurrency(invoice.amount / 100)}
       </div>
       {type === 'invoice' &&
-        <Button
-          text='Download'
-          type='primary'
+        <IconClickable
+          src={AssetOps.download}
           onClick={downloadInvoice}
         />
       }
