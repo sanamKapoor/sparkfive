@@ -755,24 +755,12 @@ const AssetsLibrary = () => {
                   openFilter={openFilter}
                   deletedAssets={false} 
                   activeSearchOverlay={activeSearchOverlay}
+                  closeSearchOverlay={closeSearchOverlay}
+                  setDetailOverlayId={setDetailOverlayId}
+                  setCurrentViewAsset={setCurrentViewAsset}
+                  activeMode={activeMode}
                   />
               }
-              <div className={styles["search-desktop"]}>
-                {activeSearchOverlay &&
-                  <SearchOverlay
-                    closeOverlay={closeSearchOverlay}
-                    operationsEnabled={true}
-                    activeFolder={activeFolder}
-                    onCloseDetailOverlay={(assetData) => {
-                      closeSearchOverlay()
-                      // setActiveSearchOverlay(false)
-                      setDetailOverlayId(undefined)
-                      setCurrentViewAsset(assetData)
-                    }}
-                    isFolder={activeMode === 'folders'}
-                  />
-                }
-              </div>
 
             </div>
             <div className={`${openFilter && styles['col-wrapper']} ${styles['grid-wrapper']} ${activeFolder && styles['active-breadcrumb-item']}`}>
