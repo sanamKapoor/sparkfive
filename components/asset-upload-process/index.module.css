@@ -10,6 +10,8 @@
   width: 60%;
   z-index: 9999;
   min-height: 40px;
+  height: 500px;
+  overflow-y: scroll;
 }
 
 .center-align {
@@ -31,11 +33,19 @@
   cursor: pointer;
 }
 
+.list{
+  max-height: 500px;
+  overflow-y: scroll;
+}
+
 @media screen and (max-width: 768px) {
   .container {
     left: 0;
     width: 100%;
     max-width: 100%;
+  }
+  .list{
+    max-height: 300px;
   }
 }
 

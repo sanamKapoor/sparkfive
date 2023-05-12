@@ -77,3 +77,13 @@
    height: 50px;
    object-fit: cover;
 }
+
+.change-btn{
+    padding: 8px 24px;
+    margin-bottom: 20px;
+  }
+
+.upload-logo-txt{
+    font-size: 12px;
+    font-weight: 300;
+}

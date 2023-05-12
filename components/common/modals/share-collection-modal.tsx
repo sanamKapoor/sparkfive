@@ -379,7 +379,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 						styleType='primary'
 						disabled={name === ''}
 					/>
-					<span className={'m-l-10'}>(required)</span>
+					<span className={'m-l-10'}>(Required)</span>
 				</div>
 
 			{/*{currentName && <div className={`${styles['field-content']} m-b-15`}>*/}
@@ -410,7 +410,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 						value={currentName ? `${process.env.CLIENT_BASE_URL}/collections/${collectionLink}`: ""}
 						onChange={()=>{}}
 						styleType={'regular-short'} />
-					<IconClickable additionalClass={`${styles['action-button']} m-r-5 cursor-pointer`}
+					{/* <IconClickable additionalClass={`${styles['action-button']} m-r-5 cursor-pointer`}
 								   src={AssetOps[`copy${''}`]}
 								   tooltipText={'Copy'}
 								   tooltipId={'Copy'}
@@ -419,7 +419,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 										   copy(`${process.env.CLIENT_BASE_URL}/collections/${collectionLink}`)
 										   toastUtils.bottomSuccess('Link copied')
 									   }
-								   }}/>
+								   }}/> */}
 					<span className={"cursor-pointer"} onClick={()=>{
 						if(currentName){
 							copy(`${process.env.CLIENT_BASE_URL}/collections/${collectionLink}`)
@@ -458,7 +458,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 
 				<div className={styles['input-wrapper']} >
 					<div className={`${styles.title}`}>Permission Settings</div>
-					<div className={styles['field-content']}>
+					<div className={styles['row-field-content']}>
 						<div className={styles['field-radio-wrapper']}>
 							<div className={`${styles['radio-button-wrapper']} m-r-15`}>
 								<IconClickable
@@ -513,7 +513,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 
 				<div className={styles['input-wrapper']} >
 					<div className={`${styles.title}`}>Expiration Settings</div>
-					<div className={styles['field-content']}>
+					<div className={styles['row-field-content']}>
 						<div className={styles['field-radio-wrapper']}>
 							<div className={`${styles['radio-button-wrapper']} m-r-15`}>
 								<IconClickable
@@ -571,7 +571,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 
 				<div className={`${styles['input-wrapper']} ${(sharable || isAdmin()) ? "" : "m-b-6rem"}`} >
 					<div className={`${styles.title}`}>Share from Sparkfive</div>
-					<div className={styles['field-content']}>
+					<div className={styles['row-field-content']}>
 						<div className={styles['field-radio-wrapper']}>
 							<div className={`${styles['radio-button-wrapper']} m-r-15`}>
 								<IconClickable
@@ -606,7 +606,7 @@ const ShareCollectionModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareA
 				</div>}
 
 			{isAdmin() && <div className={`${styles['input-wrapper']}`} >
-					<div className={`${styles.title}`}>Find Logo via Filename</div>
+					<div className={`${styles.title}`}><p>Upload Logo</p><IconClickable src={Utilities.arrowBlue}  additionalClass={styles['arrow-icon']}/></div>
 					<ShareIconFilesSearch onSelect={changeLogo} logo={logo}/>
 				</div>
 			}
