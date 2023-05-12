@@ -42,7 +42,8 @@ const TopBar = ({
   closeSearchOverlay,
   setDetailOverlayId,
   setCurrentViewAsset,
-  activeMode
+  sharePath,
+  isFolder
 }) => {
 
   const {
@@ -257,7 +258,8 @@ const TopBar = ({
                   setDetailOverlayId(undefined);
                   setCurrentViewAsset(assetData);
                 }}
-                isFolder={activeMode === "folders"}
+                sharePath={sharePath}
+                isFolder={isFolder}
               />
           )}
           {(amountSelected === 0 || mode === "folders") &&

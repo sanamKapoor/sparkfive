@@ -132,9 +132,9 @@ const SearchOverlayAssets = ({  closeOverlay, importEnabled = false, operationsE
               <img src={Utilities.filterGray} alt={"filter"} />
             </div>
           }
-          <div className={'search-close'} onClick={closeSearchModal}>
+          {!sharePath && <div className={'search-close'} onClick={closeSearchModal}>
             <img src={Utilities.grayClose} alt={"close"} />
-          </div>
+          </div>}
         </div>
         {/* TODO: When is a collecttion change placeholter to "Search Collections" */}
         <Search
