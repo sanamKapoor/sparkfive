@@ -43,7 +43,8 @@ const TopBar = ({
   setDetailOverlayId,
   setCurrentViewAsset,
   sharePath,
-  isFolder
+  isFolder,
+  activeMode
 }) => {
 
   const {

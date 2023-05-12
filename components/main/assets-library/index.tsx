@@ -759,6 +759,7 @@ const AssetsLibrary = () => {
                   setDetailOverlayId={setDetailOverlayId}
                   setCurrentViewAsset={setCurrentViewAsset}
                   activeMode={activeMode}
+                  isFolder={activeSortFilter?.mainFilter === 'folders'}
                   />
               }
 
