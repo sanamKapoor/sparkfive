@@ -76,10 +76,16 @@ const FolderListItem = ({
 
   const [folderRenameModalOpen, setFolderRenameModalOpen] = useState(false);
 
-  const previewImgSrc = thumbnailPath
+  const initialPreviewImgSrc = thumbnailPath
     ??  (thumbnails?.thumbnails && thumbnails?.thumbnails?.length > 0
     ? thumbnails?.thumbnails[0].filePath
     : assets[0]?.realUrl);
+
+  const [previewImgSrc, setPreviewImgSrc] = useState(initialPreviewImgSrc)
+
+  const handleImagePreviewOnError = (e) => {
+   setPreviewImgSrc(Assets.empty)
+  }
     
   useEffect(() => {
     setCollectionName(name);
@@ -243,11 +249,7 @@ const FolderListItem = ({
           <div
             className={`${styles.thumbnail}`}
           >
-             <AssetImg
-                  assetImg={previewImgSrc}
-                  type={assets[0]?.type}
-                  name={assets[0]?.name}
-                />
+           <img src={previewImgSrc ?? Assets.empty} alt="" onError={handleImagePreviewOnError} />
           </div>
 
           <div
