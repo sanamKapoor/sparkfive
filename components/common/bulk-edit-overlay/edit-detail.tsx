@@ -9,9 +9,6 @@ import IconClickable from "../buttons/icon-clickable";
 
 const EditDetail = ({ asset }) => {
 
-    console.log(asset);
-
-
     const [activeDropdown, setActiveDropdown] = useState('')
     const [inputTags, setInputTags] = useState([])
     const [inputFolders, setInputFolders] = useState([])

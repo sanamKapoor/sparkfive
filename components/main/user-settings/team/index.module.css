@@ -71,4 +71,9 @@
   .buttons {
     padding: 32px 16px 16px;
   }
+
+  .main-headers>h3:first-child{
+    width: 52%;
+  }
+  
 }

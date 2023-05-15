@@ -233,15 +233,18 @@ const Team = () => {
               setSelectedDeleteMember={setSelectedDeleteMember}
             />
 
-            <h3>Pending Invites</h3>
+            <div className={`${styles['main-headers']} m-t-40`}>
+              <h3>Pending Invites</h3>
+            </div>
             <MemberList members={invites} type='invite'
               setSelectedMember={setSelectedMember}
               setSelectedDeleteMember={setSelectedDeleteMember}
               onReload={() => { getInvites() }}
             />
 
-
-            <h3>Access Requests</h3>
+            <div className={`${styles['main-headers']} m-t-40`}>
+              <h3>Access Requests</h3>
+            </div>
             <RequestAccessList members={requests} type='invite' onChange={onRequestChange} />
           </div>
         </>

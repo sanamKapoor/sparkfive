@@ -1,5 +1,5 @@
 import styles from './index.module.css'
-import {useContext, useEffect, useState} from "react"
+import { useContext, useEffect, useState } from "react"
 import update from "immutability-helper";
 
 import Input from "../../../../common/inputs/input";
@@ -21,18 +21,19 @@ import teamApi from '../../../../../server-api/team'
 import MemberPermissions from "../member-permissions";
 import SpinnerOverlay from "../../../../common/spinners/spinner-overlay";
 import ReactTooltip from "react-tooltip";
+import Select from '../../../../common/inputs/select';
 
 // Server DO NOT return full custom field slots including empty array, so we will generate empty array here
 // The order of result should be match with order of custom field list
 const mappingCustomFieldData = (list, valueList) => {
     let rs = []
-    list.map((field)=>{
+    list.map((field) => {
         let value = valueList.filter(valueField => valueField.id === field.id)
 
-        if(value.length > 0){
+        if (value.length > 0) {
             field.required = value[0].required;
             rs.push(value[0])
-        }else{
+        } else {
             let customField = { ...field }
             customField.required = true; // Default is true
             customField.values = []
@@ -70,7 +71,7 @@ const AddCustomRole = ({ onSave, role }) => {
 
     const getCustomFieldsInputData = async () => {
         try {
-            const { data } = await customFieldsApi.getCustomFields({isAll: 1, sort: 'createdAt,asc'})
+            const { data } = await customFieldsApi.getCustomFields({ isAll: 1, sort: 'createdAt,asc' })
 
             setInputCustomFields(data)
 
@@ -93,7 +94,7 @@ const AddCustomRole = ({ onSave, role }) => {
         // Update asset custom field (local)
         setAssetCustomFields(update(assetCustomFields, {
             [index]: {
-                values: {$set: data}
+                values: { $set: data }
             }
         }))
 
@@ -116,7 +117,7 @@ const AddCustomRole = ({ onSave, role }) => {
         // Update asset custom field (local)
         setAssetCustomFields(update(assetCustomFields, {
             [index]: {
-                values: {$set: [selected]}
+                values: { $set: [selected] }
             }
         }))
 
@@ -124,14 +125,14 @@ const AddCustomRole = ({ onSave, role }) => {
         // setIsLoading(false)
     }
 
-    const getFolders = async() => {
-        const { data } =  await folderApi.getFoldersSimple();
+    const getFolders = async () => {
+        const { data } = await folderApi.getFoldersSimple();
         setCollections(data)
         return data
     }
 
-    const getCampaigns = async() => {
-        const { data } = await campaignApi.getCampaigns({ stage: 'draft', assetLim: 'yes'});
+    const getCampaigns = async () => {
+        const { data } = await campaignApi.getCampaigns({ stage: 'draft', assetLim: 'yes' });
         setCampaigns(data)
         return data
     }
@@ -150,26 +151,26 @@ const AddCustomRole = ({ onSave, role }) => {
     }
 
     const getDefaultValue = async (inputCustomFields) => {
-        if(role){
+        if (role) {
             const { data } = await teamApi.getRoleDetail(role)
             setSelectedCollection(data.folders)
             setSelectedCampaigns(data.campaigns)
             setSelectedPermissions(data.permissions)
             setName(data.name)
 
-            const updatedMappingCustomFieldData =  mappingCustomFieldData(inputCustomFields, data.customs)
+            const updatedMappingCustomFieldData = mappingCustomFieldData(inputCustomFields, data.customs)
 
             setAssetCustomFields(update(assetCustomFields, {
                 $set: updatedMappingCustomFieldData
             }))
 
-        }else{
+        } else {
 
         }
     }
 
-    const getAll = async() => {
-        const [folderData, permissionData, inputCustomFieldsData] = await Promise.all([getFolders(),  getPermissions(),  getCustomFieldsInputData()])
+    const getAll = async () => {
+        const [folderData, permissionData, inputCustomFieldsData] = await Promise.all([getFolders(), getPermissions(), getCustomFieldsInputData()])
         await getDefaultValue(inputCustomFieldsData)
         setLoading(false)
     }
@@ -178,37 +179,37 @@ const AddCustomRole = ({ onSave, role }) => {
         setLoading(true)
         let customFieldValueIds = [];
 
-        assetCustomFields.map((field)=>{
-            customFieldValueIds = customFieldValueIds.concat(field.values.map((value)=>value.id))
+        assetCustomFields.map((field) => {
+            customFieldValueIds = customFieldValueIds.concat(field.values.map((value) => value.id))
         })
 
 
         // Update
-        if(role){
+        if (role) {
             await teamApi.editRole(role, {
-              name,
-              collections: selectedCollections.map(
-                (collection) => collection.id
-              ),
-              campaigns: selectedCampaigns.map((campaign) => campaign.id),
-              customFieldValues: customFieldValueIds,
-              permissions: selectedPermissions.map(
-                (permission) => permission.id
-              ),
-              configs: { andMainField: false, andCustomAttribute: false },
+                name,
+                collections: selectedCollections.map(
+                    (collection) => collection.id
+                ),
+                campaigns: selectedCampaigns.map((campaign) => campaign.id),
+                customFieldValues: customFieldValueIds,
+                permissions: selectedPermissions.map(
+                    (permission) => permission.id
+                ),
+                configs: { andMainField: false, andCustomAttribute: false },
             });
-        }else{ // Create new one
+        } else { // Create new one
             await teamApi.createCustomRole({
-              name,
-              collections: selectedCollections.map(
-                (collection) => collection.id
-              ),
-              campaigns: selectedCampaigns.map((campaign) => campaign.id),
-              customFieldValues: customFieldValueIds,
-              permissions: selectedPermissions.map(
-                (permission) => permission.id
-              ),
-              configs: { andMainField: false, andCustomAttribute: false },
+                name,
+                collections: selectedCollections.map(
+                    (collection) => collection.id
+                ),
+                campaigns: selectedCampaigns.map((campaign) => campaign.id),
+                customFieldValues: customFieldValueIds,
+                permissions: selectedPermissions.map(
+                    (permission) => permission.id
+                ),
+                configs: { andMainField: false, andCustomAttribute: false },
             });
         }
 
@@ -220,9 +221,9 @@ const AddCustomRole = ({ onSave, role }) => {
 
     // Check to decide with radio button is selected
     const isCustomAttributesRequired = (config, id) => {
-        if(config[id] !== undefined){
+        if (config[id] !== undefined) {
             return config[id]
-        }else{
+        } else {
             return true // Default is true
         }
     }
@@ -231,9 +232,9 @@ const AddCustomRole = ({ onSave, role }) => {
         getAll();
     }, [])
 
-    useEffect(()=>{
-        if(inputCustomFields.length > 0){
-            const updatedMappingCustomFieldData =  mappingCustomFieldData(inputCustomFields, [])
+    useEffect(() => {
+        if (inputCustomFields.length > 0) {
+            const updatedMappingCustomFieldData = mappingCustomFieldData(inputCustomFields, [])
 
             setAssetCustomFields(update(assetCustomFields, {
                 $set: updatedMappingCustomFieldData
@@ -243,200 +244,225 @@ const AddCustomRole = ({ onSave, role }) => {
             //     customs: {$set: updatedMappingCustomFieldData}
             // })
         }
-    },[inputCustomFields])
+    }, [inputCustomFields])
 
 
-  return (
-      <div>
-        <h3>Role</h3>
+    return (
+        <>
+            <div className={styles.content}>
+                <h4>Role Name</h4>
 
-        <div className={'row align-center'}>
-          <div className={'col-50'}>
-            <Input
-                name={'name'}
-                value={name}
-                onChange={(e)=>{setName(e.target.value)}}
-                placeholder={'Role name'}
-                type={'text'}
-                styleType={'regular-short'} />
-          </div>
-          {/*<div className={'col-50'}>*/}
-          {/*  <Button*/}
-          {/*      styleTypes={['exclude-min-height']}*/}
-          {/*      type={'button'}*/}
-          {/*      text='Save'*/}
-          {/*      styleType='primary'*/}
-          {/*  />*/}
-          {/*</div>*/}
-        </div>
-
-          <div className={styles['field-content']}>
-              <div className={styles['field-radio-wrapper']}>
-                  <div className={`${styles['radio-button-wrapper']} m-r-30`}>
-                      <div className={'m-r-15 font-weight-600'}>Custom Restrictions</div>
-                      <IconClickable
-                          src={mode === 'customRestriction' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-                          additionalClass={styles['select-icon']}
-                          onClick={() => setMode('customRestriction')} />
-                  </div>
-                  <div className={`${styles['radio-button-wrapper']}`}>
-                      <div className={'m-r-15 font-weight-600'}>Permissions</div>
-                      <IconClickable
-                          src={mode === 'permission' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-                          additionalClass={styles['select-icon']}
-                          onClick={() => setMode('permission')} />
-                  </div>
-              </div>
-          </div>
-          {mode === 'customRestriction' && <div className={'m-l-30 m-t-50'}>
-              <span className={styles['field-title']} >Collections</span>
-              <div className={`${styles['field-wrapper']} m-l-30`} >
-                  <CreatableSelect
-                      creatable={false}
-                      title=''
-                      addText='Add Collections'
-                      onAddClick={() => setActiveDropdown('collections')}
-                      selectPlaceholder={'Select an existing one'}
-                      avilableItems={collections}
-                      setAvailableItems={setCollections}
-                      selectedItems={selectedCollections}
-                      setSelectedItems={setSelectedCollection}
-                      onAddOperationFinished={(stateUpdate) => {
-                          setActiveDropdown('')
-                          // console.log('here2')
-                          // updateAssetState({
-                          //     tags: { $set: stateUpdate }
-                          // })
-                          // loadTags()
-                      }}
-                      onRemoveOperationFinished={async (index, stateUpdate) => {
-                          // await assetApi.removeTag(id, assetTags[index].id)
-                          // updateAssetState({
-                          //     tags: { $set: stateUpdate }
-                          // })
-                      }}
-                      onOperationFailedSkipped={() => setActiveDropdown('')}
-                      isShare={false}
-                      asyncCreateFn={(newItem) => {return true}}
-                      dropdownIsActive={activeDropdown === 'collections'}
-                  />
-              </div>
-
-              <span className={styles['field-title']} >Custom Fields</span>
-              <div className={`${styles['custom-field-wrapper']} m-l-30 m-t-50`}>
-                  {inputCustomFields.map((field, index)=>{
-                      if(field.type === 'selectOne'){
-
-                          return <div className={styles['custom-field-row']} >
-                              <div className={`secondary-text ${styles.field}`}>{field.name}</div>
-                              <CustomFieldSelector
-                                  data={assetCustomFields[index]?.values[0]?.name}
-                                  options={field.values}
-                                  isShare={false}
-                                  onLabelClick={() => { }}
-                                  handleFieldChange={(option)=>{onChangeSelectOneCustomField(option, index)}}
-                              />
-                          </div>
-                      }
-
-                      if(field.type === 'selectMultiple'){
-                          return <div className={styles['custom-field-row']} key={index}>
-                              <CreatableSelect
-                                  creatable={false}
-                                  title={field.name}
-                                  addText={`Add ${field.name}`}
-                                  onAddClick={() => setActiveCustomField(index)}
-                                  selectPlaceholder={'Select an existing one'}
-                                  avilableItems={field.values}
-                                  setAvailableItems={()=>{}}
-                                  selectedItems={(assetCustomFields.filter((assetField)=>assetField.id === field.id))[0]?.values || []}
-                                  setSelectedItems={(data)=>{onChangeCustomField(index, data)}}
-                                  onAddOperationFinished={(stateUpdate) => {
-                                      // updateAssetState({
-                                      //     customs: {[index]: {values: { $set: stateUpdate }}}
-                                      // })
-                                  }}
-                                  onRemoveOperationFinished={async (index, stateUpdate, removeId) => {
-                                      // setIsLoading(true);
-
-                                      // await assetApi.removeCustomFields(id, removeId)
-
-                                      // updateAssetState({
-                                      //     customs: {[index]: {values: { $set: stateUpdate }}}
-                                      // })
-                                      //
-                                      // setIsLoading(false);
-                                  }}
-                                  onOperationFailedSkipped={() => setActiveCustomField(undefined)}
-                                  isShare={false}
-                                  asyncCreateFn={(newItem) => { // Show loading
-                                      return true;
-                                      // setIsLoading(true); return assetApi.addCustomFields(id, newItem)
-                                  }
-                                  }
-                                  dropdownIsActive={activeCustomField === index}
-                              />
-                          </div>
-                      }
-                  })}
-              </div>
+                <div className={styles.form}>
+                    <div>
+                        <Input
+                            name={'name'}
+                            value={name}
+                            onChange={(e) => { setName(e.target.value) }}
+                            placeholder={'Role name'}
+                            type={'text'}
+                            styleType={'regular-short'} />
+                    </div>
+                    <Button
+                        type={'button'}
+                        text='Save Changes'
+                        styleType='primary'
+                        onClick={onSubmit}
+                        disabled={!name}
+                    />
+                    <Button
+                        type={'button'}
+                        text='Cancel'
+                        styleType='secondary'
+                        onClick={onSubmit}
+                    />
+                </div>
+            </div>
 
 
-              {/*<span className={styles['field-title']} >Campaigns</span>*/}
-              {/*<div className={styles['field-wrapper']} >*/}
-              {/*    <CreatableSelect*/}
-              {/*        creatable={false}*/}
-              {/*        title=''*/}
-              {/*        addText='Add Campaigns'*/}
-              {/*        onAddClick={() => setActiveDropdown('campaigns')}*/}
-              {/*        selectPlaceholder={'Select an existing one'}*/}
-              {/*        avilableItems={campaigns}*/}
-              {/*        setAvailableItems={setCampaigns}*/}
-              {/*        selectedItems={selectedCampaigns}*/}
-              {/*        setSelectedItems={setSelectedCampaigns}*/}
-              {/*        onAddOperationFinished={(stateUpdate) => {*/}
-              {/*            // console.log('here2')*/}
-              {/*            // updateAssetState({*/}
-              {/*            //     tags: { $set: stateUpdate }*/}
-              {/*            // })*/}
-              {/*            // loadTags()*/}
-              {/*        }}*/}
-              {/*        onRemoveOperationFinished={async (index, stateUpdate) => {*/}
-              {/*            // await assetApi.removeTag(id, assetTags[index].id)*/}
-              {/*            // updateAssetState({*/}
-              {/*            //     tags: { $set: stateUpdate }*/}
-              {/*            // })*/}
-              {/*        }}*/}
-              {/*        onOperationFailedSkipped={() => setActiveDropdown('')}*/}
-              {/*        isShare={false}*/}
-              {/*        asyncCreateFn={(newItem) => {return true}}*/}
-              {/*        dropdownIsActive={activeDropdown === 'campaigns'}*/}
-              {/*        altColor='yellow'*/}
-              {/*    />*/}
-              {/*</div>*/}
-          </div>}
+            <div className={styles.divider}></div>
+            <div className={styles.content}>
+                <div className={styles['nav-buttons']}>
+                    <div
+                        className={`${styles['nav-button']} ${mode === 'customRestriction' ? styles.active : ''}`}
+                        onClick={() => setMode('customRestriction')}
+                    >
+                        Content Restrictions
+                    </div>
+                    <div
+                        className={`${styles['nav-button']} ${mode === 'permission' ? styles.active : ''}`}
+                        onClick={() => setMode('permission')}
+                    >
+                        Action Permissions
+                    </div>
+                </div>
+                {mode === 'customRestriction' && <div>
+                    <span className={styles['field-title']} >Collections</span>
+                    <div className={`${styles['field-wrapper']}`} >
+                        <CreatableSelect
+                            altColor='blue'
+                            creatable={false}
+                            title=''
+                            addText='Add Collections'
+                            onAddClick={() => setActiveDropdown('collections')}
+                            selectPlaceholder={'Select an existing one'}
+                            avilableItems={collections}
+                            setAvailableItems={setCollections}
+                            selectedItems={selectedCollections}
+                            setSelectedItems={setSelectedCollection}
+                            onAddOperationFinished={(stateUpdate) => {
+                                setActiveDropdown('')
+                                // console.log('here2')
+                                // updateAssetState({
+                                //     tags: { $set: stateUpdate }
+                                // })
+                                // loadTags()
+                            }}
+                            onRemoveOperationFinished={async (index, stateUpdate) => {
+                                // await assetApi.removeTag(id, assetTags[index].id)
+                                // updateAssetState({
+                                //     tags: { $set: stateUpdate }
+                                // })
+                            }}
+                            onOperationFailedSkipped={() => setActiveDropdown('')}
+                            isShare={false}
+                            asyncCreateFn={(newItem) => { return true }}
+                            dropdownIsActive={activeDropdown === 'collections'}
+                        />
+                    </div>
+
+                    <span className={styles['field-title']} >Custom Fields</span>
+                    <div className={`${styles['custom-field-wrapper']}`}>
+                        {inputCustomFields.map((field, index) => {
+                            if (field.type === 'selectOne') {
+
+                                return <div className={styles['custom-field-row']} >
+                                    <div className={`secondary-text ${styles.field}`}>{field.name}</div>
+                                    <CustomFieldSelector
+                                        data={assetCustomFields[index]?.values[0]?.name}
+                                        options={field.values}
+                                        isShare={false}
+                                        onLabelClick={() => { }}
+                                        handleFieldChange={(option) => { onChangeSelectOneCustomField(option, index) }}
+                                    />
+                                </div>
+                            }
+
+                            if (field.type === 'selectMultiple') {
+                                return <div className={styles['custom-field-row']} key={index}>
+                                    <CreatableSelect
+                                        altColor='blue'
+                                        creatable={false}
+                                        title={field.name}
+                                        addText={`Add ${field.name}`}
+                                        onAddClick={() => setActiveCustomField(index)}
+                                        selectPlaceholder={'Select an existing one'}
+                                        avilableItems={field.values}
+                                        setAvailableItems={() => { }}
+                                        selectedItems={(assetCustomFields.filter((assetField) => assetField.id === field.id))[0]?.values || []}
+                                        setSelectedItems={(data) => { onChangeCustomField(index, data) }}
+                                        onAddOperationFinished={(stateUpdate) => {
+                                            // updateAssetState({
+                                            //     customs: {[index]: {values: { $set: stateUpdate }}}
+                                            // })
+                                        }}
+                                        onRemoveOperationFinished={async (index, stateUpdate, removeId) => {
+                                            // setIsLoading(true);
+
+                                            // await assetApi.removeCustomFields(id, removeId)
+
+                                            // updateAssetState({
+                                            //     customs: {[index]: {values: { $set: stateUpdate }}}
+                                            // })
+                                            //
+                                            // setIsLoading(false);
+                                        }}
+                                        onOperationFailedSkipped={() => setActiveCustomField(undefined)}
+                                        isShare={false}
+                                        asyncCreateFn={(newItem) => { // Show loading
+                                            return true;
+                                            // setIsLoading(true); return assetApi.addCustomFields(id, newItem)
+                                        }
+                                        }
+                                        dropdownIsActive={activeCustomField === index}
+                                    />
+                                </div>
+                            }
+                        })}
+                    </div>
+
+                    <div className={styles.field}>
+                        <span className={styles['field-title']}>Regions</span>
+                        <div className={styles.select}>
+                            <Select
+                                options={['North', 'West']}
+                                onChange={() => console.log('on change')}
+                                placeholder={'Select Field'}
+                                styleType='regular'
+                                value={''}
+                            />
+                        </div>
+                    </div>
 
 
-          {mode === 'permission' && <MemberPermissions memberPermissions={selectedPermissions}
-                             listOnly={true}
-                             permissions={permissions} setMemberPermissions={setSelectedPermissions} />}
+                    {/*<span className={styles['field-title']} >Campaigns</span>*/}
+                    {/*<div className={styles['field-wrapper']} >*/}
+                    {/*    <CreatableSelect*/}
+                    {/*        creatable={false}*/}
+                    {/*        title=''*/}
+                    {/*        addText='Add Campaigns'*/}
+                    {/*        onAddClick={() => setActiveDropdown('campaigns')}*/}
+                    {/*        selectPlaceholder={'Select an existing one'}*/}
+                    {/*        avilableItems={campaigns}*/}
+                    {/*        setAvailableItems={setCampaigns}*/}
+                    {/*        selectedItems={selectedCampaigns}*/}
+                    {/*        setSelectedItems={setSelectedCampaigns}*/}
+                    {/*        onAddOperationFinished={(stateUpdate) => {*/}
+                    {/*            // console.log('here2')*/}
+                    {/*            // updateAssetState({*/}
+                    {/*            //     tags: { $set: stateUpdate }*/}
+                    {/*            // })*/}
+                    {/*            // loadTags()*/}
+                    {/*        }}*/}
+                    {/*        onRemoveOperationFinished={async (index, stateUpdate) => {*/}
+                    {/*            // await assetApi.removeTag(id, assetTags[index].id)*/}
+                    {/*            // updateAssetState({*/}
+                    {/*            //     tags: { $set: stateUpdate }*/}
+                    {/*            // })*/}
+                    {/*        }}*/}
+                    {/*        onOperationFailedSkipped={() => setActiveDropdown('')}*/}
+                    {/*        isShare={false}*/}
+                    {/*        asyncCreateFn={(newItem) => {return true}}*/}
+                    {/*        dropdownIsActive={activeDropdown === 'campaigns'}*/}
+                    {/*        altColor='yellow'*/}
+                    {/*    />*/}
+                    {/*</div>*/}
+                </div>}
 
-          <div className={'row justify-center'}>
-              <Button
-                  styleTypes={['exclude-min-height']}
-                  type={'button'}
-                  text='Save'
-                  styleType='primary'
-                  onClick={onSubmit}
-                  disabled={!name}
-              />
-          </div>
 
+                {mode === 'permission' && <MemberPermissions memberPermissions={selectedPermissions}
+                    listOnly={true}
+                    permissions={permissions} setMemberPermissions={setSelectedPermissions} />}
 
-          {loading && <SpinnerOverlay />}
+                {loading && <SpinnerOverlay />}
 
-      </div>
-  )
+                <div className={styles['buttons-wrapper']}>
+                    <Button
+                        type={'button'}
+                        text='Save Changes'
+                        styleType='primary'
+                        onClick={onSubmit}
+                        disabled={!name}
+                    />
+                    <Button
+                        type={'button'}
+                        text='Cancel'
+                        styleType='secondary'
+                        onClick={onSubmit}
+                    />
+                </div>
+            </div>
+        </>
+    )
 }
 
 export default AddCustomRole

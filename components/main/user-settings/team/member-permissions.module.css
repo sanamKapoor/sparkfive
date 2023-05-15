@@ -1,20 +1,20 @@
 .container{
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .container>h3{
   align-self: flex-start;
 }
 
+.container h4 {
+  margin-bottom: 24px;
+}
+
 .group{
   width: 80%;
   max-width: 25rem;
-}
-
-.group > h4 {
-  color: var(--color-prim-navy);
 }
 
 .feature {
@@ -25,6 +25,7 @@
 .feature > div {
   flex: 1;
   margin-right: 3rem;
+  font-weight: 300;
 }
 
 .feature img {

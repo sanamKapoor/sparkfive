@@ -14,6 +14,7 @@ export const LoginImg = {
 
 export const Navigation = {
   alert: require('./Icons/Navigation/icn-nav-alert-white.svg'),
+  alertBlue: require('./Icons/Navigation/icn-nav-alert.svg'),
   overview: require('./Icons/Navigation/icn-nav-dashboard-#E9EEFA.svg'),
   overviewSelected: require('./Icons/Navigation/icn-nav-dashboard-white.svg'),
   schedulePrimary: require('./Icons/Navigation/icn-nav-schedule.svg'),

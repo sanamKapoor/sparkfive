@@ -1,7 +1,34 @@
+.content {
+    padding: 42px 60px;
+}
+
+.content h4 {
+    color: var(--color-prim-navy);
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0 0 10px;
+}
+
+.form {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.buttons-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px; 
+  margin-top: 32px;
+}
+
+.divider {
+    border-top: 1px solid var(--color-secondary-border);
+  }
+
 .field-content{
     margin-top: 35px;
 }
-
 .role-config-content{
     margin: 30px 0 25px 20px;
 }
@@ -16,19 +43,25 @@
 }
 
 .field-wrapper {
-    margin-top: 3.5rem;
-    margin-bottom: 3.5rem;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--color-secondary-border);
+  margin-bottom: 24px;
 }
 
 .field-title{
-    font-weight: bold;
-    margin-top: 25px;
-    display: block;
-    font-size: 16px;
+  display: block;
+  color: var(--color-prim-navy);
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 0 8px;
 }
 
-.custom-field-wrapper{
-    margin-left: 2rem
+.custom-field-wrapper {
+  margin-bottom: 24px;
+}
+
+.field-wrapper:last-child{
+  border: none;
 }
 
 .custom-field-row{
@@ -37,3 +70,51 @@
     padding-bottom: 1rem;
     border-bottom: solid 1px #ededed;
 }
+
+.nav-buttons {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    border-bottom: 1px solid var(--color-secondary-border);
+    margin: 0 0 24px;
+    width: 100%;
+  }
+  
+  .nav-button {
+    padding: 8px 16px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--color-sec-text);
+    cursor: pointer;
+  
+  }
+  
+  .nav-button.active {
+    color: var(--color-prim-navy);
+    background-color: var(--color-sec-lightivory);
+  }
+
+  .select {
+    width: 188px;
+  }
+
+
+@media screen and (max-width: 900px)  {
+    .content {
+      padding: 42px 30px;
+    }
+  }
+  
+  @media screen and (max-width: 600px) {
+    .content {
+      padding: 42px 16px;
+    }
+
+    .nav-buttons {
+        gap: 0;
+      }
+    
+      .nav-button {
+        font-size: 12px;
+      }
+  }
