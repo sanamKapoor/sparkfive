@@ -27,6 +27,7 @@
     position: relative;
     font-weight: 400;
     color: var(--color-prin-navy);
+    font-size: 12px;
 }
 
 
@@ -52,8 +53,8 @@
 
 .headers-content h4 {
   font-weight: 400;
-  color: var(--color-sec-text);
-  font-size: 12px;
+  color: var(--color-prim-navy);
+  font-size: 13px;
   width: 15%;
   display: flex;
   align-items: center;
@@ -72,6 +73,7 @@
 .headers-content h4 .sort-icon {
   margin-left: 8px;
   display: none;
+  width: 13px;
 }
 
 .headers-content h4:hover .sort-icon,
@@ -84,12 +86,14 @@
   margin: 0 10px;
   position: relative;
   max-height: 50px;
+  width: 50px;
+  height: 50px;
 }
 
 .thumbnail > img,
 .thumbnail > video {
-  width: 50px;
-  height: 50px;
+  width: inherit;
+  height: inherit;
   object-fit: contain;
 }
 
@@ -115,7 +119,7 @@
   position: relative;
   text-align: center;
   font-weight: 400;
-  color: var(--color-sec-text);
+  color: var(--color-prim-navy);
   display: flex;
   align-items: center;
   justify-content: center;

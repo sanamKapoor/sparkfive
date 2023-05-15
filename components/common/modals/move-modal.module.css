@@ -1,5 +1,6 @@
 .list {
     overflow-y: auto;
+    max-height: 380px;
 }
 
 .list li {
@@ -8,6 +9,14 @@
     padding: 20px;
     border-bottom: 1px solid var(--color-secondary-border);
     align-items: center;
+}
+
+.list li img:nth-child(1) {
+    width: 16px;
+}
+
+.list li img:nth-child(2) {
+    width: 16px;
 }
 
 .list li:last-child {
@@ -25,7 +34,7 @@
 }
 
 .folder-wrapper {
-    padding: 20px;
+    padding: 20px 20px 5px 20px;
 }
 
 .folder-wrapper button{
@@ -46,8 +55,13 @@
     font-weight: bold;
 }
 
+.folderMoveIcon {
+    width: 16px;
+    height: 16px;
+}
+
 .select-icon {
-    width: 14px;
+    width: 16px;
     height: auto;
     margin-right: 15px;
 }

@@ -402,6 +402,8 @@ const ShareCollectionMain = () => {
                     sharePath={sharePath}
                     closeOverlay={closeSearchOverlay}
                     activeFolder={activeFolder}
+                    activeMode={activeFolder}
+                    setActiveMode={setActiveMode}
                 />
             }
         </>

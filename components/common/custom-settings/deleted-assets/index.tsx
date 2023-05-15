@@ -449,6 +449,7 @@ const DeletedAssetsLibrary = () => {
   const mapWithToggleSelection = asset => ({ ...asset, toggleSelected })
 
   const backToFolders = () => {
+    console.log('common/custom-settings/deleted-assets--- backToFolders() --- line:452', 'SET ACTIVE FOLDER');
 	setActiveFolder('')
 	setActiveSortFilter({
 	  ...activeSortFilter,
@@ -543,6 +544,7 @@ const DeletedAssetsLibrary = () => {
 		  setOpenFilter={setOpenFilter}
 		  openFilter={openFilter}
 		  deletedAssets={true}
+		  isFolder={activeSortFilter?.mainFilter === 'folders'}
 		/>
 		  <div className={`${openFilter && styles['col-wrapper']} ${styles['grid-wrapper']}`} style={{marginTop: top}}>
 		  <DropzoneProvider>

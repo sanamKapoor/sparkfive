@@ -4,4 +4,9 @@
   
   .more ul {
     right: 0;
+    bottom: 30px;
+    top: inherit;
+  }
+  .folderDots {
+    width: 16px;
   }

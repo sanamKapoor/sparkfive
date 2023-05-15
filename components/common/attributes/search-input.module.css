@@ -13,9 +13,17 @@
 }
 
 .input-container {
-  width: 100%;
+  width: 50%;
   margin-right: 9px;
   position: relative;
+}
+
+.input-container input{
+  padding: 10px;
+}
+
+.input-container input::placeholder{
+  color: #e5e5e5;
 }
 
 .input-container img {

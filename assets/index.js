@@ -99,6 +99,7 @@ export const Utilities = {
   relatedLight: require('./Icons/Utilities/Related/related-light.svg'),
   sort: require('./Icons/Utilities/arrow/sort.svg'),
   caretRight: require('./Icons/Utilities/Caret/caret-right.svg'),
+  checkMark: require('./Icons/Utilities/CheckMark/checkmark.svg'),
 }
 
 export const ProjectTypes = {
@@ -221,4 +222,5 @@ export const AssetOps = {
   uploadFiles: require('./Icons/Asset Addition/upload-files.svg'),
   uploadFolder: require('./Icons/Asset Addition/upload-folder.svg'),
   editGray: require('./Icons/Asset Actions/edit-gray.svg'),
+  cancel: require('./Icons/Utilities/Close/blue-close.svg'),
 }

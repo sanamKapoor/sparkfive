@@ -13,7 +13,7 @@ import React from 'react'
 const MoveReplaceModal = ({ modalIsOpen, closeModal, itemsAmount, moveAssets, createFolder, confirmText = 'Move' }) => {
 
   const [folders, setFolders] = useState([])
-  const [selectedFolder, setSelectedFolder] = useState('')
+  const [selectedFolder, setSelectedFolder] = useState([])
   const [newFolderName, setNewFolderName] = useState('')
   const [folderInputActive, setFolderInputActive] = useState(false)
   const [isSelected, setIsSelected] = useState(false)
@@ -41,9 +41,20 @@ const MoveReplaceModal = ({ modalIsOpen, closeModal, itemsAmount, moveAssets, cr
   const onSubmit = async (e) => {
     e.preventDefault()
     await createFolder(newFolderName)
+    getFolders()
     setNewFolderName('')
     setFolderInputActive(false)
   }
+
+  const toggleSelected = (folderId: string, selected: boolean) => {
+    if(selected){
+      setSelectedFolder([...selectedFolder, folderId])
+    }else{
+      setSelectedFolder(selectedFolder.filter((item)=>item !== folderId))
+    }
+
+  }
+
 
   return (
     <Base
@@ -59,25 +70,23 @@ const MoveReplaceModal = ({ modalIsOpen, closeModal, itemsAmount, moveAssets, cr
       }} >
       <ul className={styles.list}>
         {folders.map(folder => (
-          <li key={folder.id} onClick={() => setSelectedFolder(folder.id)} className={selectedFolder === folder.id && styles.selected}>
-            {isSelected ? (
-              <IconClickable
+        <li key={folder.id} onClick={() => toggleSelected(folder.id, !selectedFolder.includes(folder.id))}>
+        {selectedFolder.includes(folder.id) ?
+            <IconClickable
                 src={Utilities.radioButtonEnabled}
-                additionalClass={styles["select-icon"]}
-                onClick={() => setIsSelected(false)}
-              />
-            ) : (
-              <IconClickable
+                additionalClass={styles['select-icon']}
+            />
+            :
+            <IconClickable
                 src={Utilities.radioButtonNormal}
-                additionalClass={styles["select-icon"]}
-                onClick={() => setIsSelected(true)}
-              />
-            )}
-            <IconClickable src={Assets.folder} />
-            <div className={styles.name}>
-              {folder.name}
-            </div>
-          </li>
+                additionalClass={styles['select-icon']}
+                 />
+        }
+        <IconClickable src={Assets.folder} />
+        <div className={styles.name}>
+          {folder.name}
+        </div>
+      </li>
         ))}
       </ul>
       <div className={styles['folder-wrapper']}>

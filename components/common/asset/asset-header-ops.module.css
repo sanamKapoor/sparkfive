@@ -28,17 +28,17 @@
 }
 
 .close {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
 }
 
 .text {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
 }
 
 .action-button{
-  width: 13px;
+  width: 18px;
 }
 
 
@@ -140,6 +140,20 @@
   bottom: 49px;
   right: 0;
   top: inherit;
+  background-color: var(--color-sec-lightivory);
+}
+
+.more-dropdown span img {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+@media screen and (min-width: 801px) {
+  .more-dropdown {
+    right: -28px !important;
+    top: 60px !important;
+    bottom: inherit !important;
+  }
 }
 
 .more-dropdown li:hover {
@@ -156,5 +170,11 @@
     box-shadow: none;
     /* background: #08135E;
     color: #fff; */
+  }
+}
+
+@media screen and (min-width: 801px) and (max-width: 810px) {
+  .bar {
+    width: calc(100% - 40px);
   }
 }

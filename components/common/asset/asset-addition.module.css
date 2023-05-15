@@ -2,6 +2,13 @@
     position: relative;
     display: flex;
     align-items: center;
+    border-radius: 5px;
+    height: 34px;
+    /* max-width: 250px; */
+    padding: 0 20px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 12px;
 }
 
 .button-wrapper .approval-text{
@@ -16,11 +23,12 @@
 .options-list {
     position: absolute;
     top: 40px;
-    z-index: 10000;
+    z-index: 1900;
     border-radius: 8px;
     border: 1px solid var(--color-secondary-border);
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     background-color: white;
+    overflow: hidden;
 }
 
 .options-list li:first-child span,
@@ -46,7 +54,7 @@
 }
 
 .option:hover {
-    background-color: var(--color-secondary-hover);
+    background-color: var(--color-sec-lightblue);
 }
 
 .option-label {

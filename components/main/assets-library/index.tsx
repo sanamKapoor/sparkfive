@@ -65,10 +65,12 @@ const AssetsLibrary = () => {
     setTotalAssets,
     currentViewAsset,
     setCurrentViewAsset,
-    setDetailOverlayId
+    setDetailOverlayId,
   } = useContext(AssetContext)
 
   const { advancedConfig, hasPermission } = useContext(UserContext)
+
+  const {term, searchFilterParams} = useContext(FilterContext)
 
   const [activeMode, setActiveMode] = useState('assets')
 
@@ -192,17 +194,16 @@ const AssetsLibrary = () => {
         setActivePageMode('library')
         if (activeSortFilter.mainFilter === 'folders') {
           setActiveMode('folders')
-          setActiveFolder('');
           getFolders()
         } else {
           setActiveMode('assets')
           setAssets([])
-          getAssets()
+          getAssets();
         }
       }
     }
 
-  }, [activeSortFilter, firstLoaded])
+  }, [activeSortFilter, firstLoaded, term])
 
   useEffect(() => {
     if (firstLoaded && activeFolder !== '') {
@@ -540,9 +541,12 @@ const AssetsLibrary = () => {
           nextPage,
           userFilterObject: activeSortFilter
         }),
+        term,
+        ...searchFilterParams,
         complete,
-        ...getAssetsSort(activeSortFilter)
+        ...getAssetsSort(activeSortFilter),
       })
+
       setAssets({ ...data, results: data.results.map(mapWithToggleSelection) }, replace)
       setFirstLoaded(true)
     } catch (err) {
@@ -552,6 +556,7 @@ const AssetsLibrary = () => {
       setLoadingAssets(false)
     }
   }
+
 
   const getFolders = async (replace = true) => {
     try {
@@ -575,7 +580,7 @@ const AssetsLibrary = () => {
         queryParams.folders = activeSortFilter.filterFolders.map(item => item.value).join(',')
       }
 
-      const { data } = await folderApi.getFolders(queryParams)
+      const { data } = await folderApi.getFolders({...queryParams, ...(term && {term})})
 
       let assetList = { ...data, results: data.results }
       if (lastUploadedFolder && activeSortFilter.mainFilter === "folders" && activeSortFilter.sort.value === "alphabetical") {
@@ -653,7 +658,6 @@ const AssetsLibrary = () => {
     // router.replace("/main/assets") // Open this comment to reset query string url
     setActiveFolder(id)
     updateSortFilterByAdvConfig({ folderId: id })
-
   }
 
   const deleteFolder = async (id) => {
@@ -749,27 +753,18 @@ const AssetsLibrary = () => {
                   selectAll={selectAll}
                   setOpenFilter={setOpenFilter}
                   openFilter={openFilter}
-                  deletedAssets={false} />
-              }
-              <div className={styles["search-desktop"]}>
-                {activeSearchOverlay &&
-                  <SearchOverlay
-                    closeOverlay={closeSearchOverlay}
-                    operationsEnabled={true}
-                    activeFolder={activeFolder}
-                    onCloseDetailOverlay={(assetData) => {
-                      closeSearchOverlay()
-                      // setActiveSearchOverlay(false)
-                      setDetailOverlayId(undefined)
-                      setCurrentViewAsset(assetData)
-                    }}
-                    isFolder={activeMode === 'folders'}
+                  deletedAssets={false} 
+                  activeSearchOverlay={activeSearchOverlay}
+                  closeSearchOverlay={closeSearchOverlay}
+                  setDetailOverlayId={setDetailOverlayId}
+                  setCurrentViewAsset={setCurrentViewAsset}
+                  activeMode={activeMode}
+                  isFolder={activeSortFilter?.mainFilter === 'folders'}
                   />
-                }
-              </div>
+              }
 
             </div>
-            <div className={`${openFilter && styles['col-wrapper']} ${styles['grid-wrapper']}`}>
+            <div className={`${openFilter && styles['col-wrapper']} ${styles['grid-wrapper']} ${activeFolder && styles['active-breadcrumb-item']}`}>
               <DropzoneProvider>
                 {advancedConfig.set && <AssetGrid
                   activeFolder={activeFolder}

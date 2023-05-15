@@ -149,11 +149,13 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
     return (
         <div className={`${styles.container} ${stickyMenuScroll && styles['sticky-menu']}`}>
             <section className={styles['top-bar']}>
-                <h3>Filters</h3>
+                <div><h3>Filters</h3></div>
+                <div className={styles.closefilter}>
                 <p className={`${styles['clear-container']}`}
                     onClick={clearFilters}>Clear</p>
                 <div className={`${styles['close-container']}`}
                     onClick={() => { handleOpenFilter() }}>&#10005;</div>
+                </div>
             </section>
             <div className={`${styles['section-container']} ${isFolder ? styles['limit-height-container'] : ''}`} id={"scroll-search-bottom-container"}>
                 {!isFolder &&

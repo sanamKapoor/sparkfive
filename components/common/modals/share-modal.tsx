@@ -309,7 +309,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 			confirmText={sharable ? (currentShareLink ? 'Save Changes' : 'Send Email') : ''}
 			headText={title ? title : `Share ${itemsAmount} asset(s)`}
 			disabledConfirm={!name}
-			additionalClasses={['visible-block']}
+			additionalClasses={[`visible-block ${styles.shareModal}`]}
 			showCancel={false}
 			confirmAction={() => {
 				shareAssets(
@@ -420,7 +420,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 						placeholder={'Emails separated with comma'}
 						rows={5}
 						onChange={e => setRecipients(e.target.value)}
-						additionalClasses={"m-r-15 m-l-30 font-12"}
+						additionalClasses={"m-r-15 font-12"}
 						styleType={'regular-short'}
 						noResize={true}
 					/>
@@ -464,7 +464,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 				</div>
 
 				{expired && <div className={`${styles['input-wrapper']} d-flex align-items-center`}>
-					<div className={`${styles['row-field-content']} row w-100`}>
+					<div className={`${styles['row-field-content']} row w-100 colOuter`}>
 						<div className={"col-50"}>
 							<Select
 								options={expireOptions}
@@ -498,7 +498,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 					</div>
 				</div>}
 
-				<div className={`${styles['input-wrapper']} ${sharable ? "" : "m-b-6rem"}`} >
+				<div className={`${styles['input-wrapper']} ${sharable ? "" : ""}`} >
 					<div className={`${styles.title}`}>Share from Sparkfive</div>
 					<div className={styles['field-content']}>
 						<div className={styles['field-radio-wrapper']}>

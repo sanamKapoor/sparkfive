@@ -19,6 +19,7 @@ import ConfirmModal from "../modals/confirm-modal";
 import IconClickable from "../buttons/icon-clickable";
 
 import folderApi from "../../../server-api/folder";
+import shareFolderApi from "../../../server-api/share-collection";
 
 // Context
 import { AssetContext } from "../../../context";
@@ -30,6 +31,8 @@ import {
 } from "../../../constants/messages";
 import RenameModal from '../../common/modals/rename-modal'
 import update from "immutability-helper";
+
+import AssetImg from "../asset/asset-img";
 
 const FolderListItem = ({
   index,
@@ -59,11 +62,13 @@ const FolderListItem = ({
   isNameEditable = false,
   focusedItem,
   setFocusedItem,
+  isShare=false,
+  sharePath = ""
 }) => {
   const { updateDownloadingStatus, folders, setFolders } =
     useContext(AssetContext);
 
-  const dateFormat = "MMM do, yyyy h:mm a";
+  const dateFormat = "MMM do, yyyy";
 
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [collectionName, setCollectionName] = useState(name);
@@ -71,17 +76,25 @@ const FolderListItem = ({
 
   const [folderRenameModalOpen, setFolderRenameModalOpen] = useState(false);
 
+  const initialPreviewImgSrc = thumbnailPath
+    ??  (thumbnails?.thumbnails && thumbnails?.thumbnails?.length > 0
+    ? thumbnails?.thumbnails[0].filePath
+    : assets[0]?.realUrl);
+
+  const [previewImgSrc, setPreviewImgSrc] = useState(initialPreviewImgSrc)
+
+  const handleImagePreviewOnError = (e) => {
+   setPreviewImgSrc(Assets.empty)
+  }
+    
   useEffect(() => {
     setCollectionName(name);
   }, [name]);
 
   const downloadFoldercontents = async () => {
     // const { data } = await folderApi.getInfoToDownloadFolder(id)
-    // Get full assets url, because currently, it just get maximum 4 real url in thumbnail
+    // // Get full assets url, because currently, it just get maximum 4 real url in thumbnail
     // zipDownloadUtils.zipAndDownload(data, name)
-
-    // Old Approach:
-    // zipDownloadUtils.zipAndDownload(assets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.name })), name)
 
     // Show processing bar
     updateDownloadingStatus("zipping", 0, 1);
@@ -93,8 +106,19 @@ const FolderListItem = ({
       estimateTime: 1,
     };
 
-    const { data } = await folderApi.downloadFoldersAsZip(payload, filters);
+    let api = folderApi;
 
+    if (isShare) {
+      api = shareFolderApi;
+    }
+
+    // Add sharePath property if user is at share collection page
+    if (sharePath) {
+      filters["sharePath"] = sharePath;
+    }
+
+    const { data } = await api.downloadFoldersAsZip(payload, filters);
+    
     // Download file to storage
     fileDownload(data, "assets.zip");
 
@@ -223,22 +247,9 @@ const FolderListItem = ({
           onClick={toggleSelected}
         >
           <div
-            style={{ display: "none" }}
-            className={`${styles["selectable-wrapper"]} ${
-              isSelected && styles["selected-wrapper"]
-            }`}
+            className={`${styles.thumbnail}`}
           >
-            {!isLoading && (
-              <IconClickable
-                src={
-                  isSelected
-                    ? Utilities.radioButtonEnabled
-                    : Utilities.radioButtonNormal
-                }
-                additionalClass={styles["select-icon"]}
-                onClick={toggleSelected}
-              />
-            )}
+           <img src={previewImgSrc ?? Assets.empty} alt="" onError={handleImagePreviewOnError} />
           </div>
 
           <div
@@ -262,7 +273,7 @@ const FolderListItem = ({
                 className={`normal-text ${styles.textEllipse} ${gridStyles["editable-preview"]}`}
                 onClick={handleOnFocus}
               >
-                {collectionName}
+                 {collectionName}
               </span>
             )}
           </div>
