@@ -1,12 +1,15 @@
 import styles from './asset-options.module.css'
 import { Utilities } from '../../../assets'
 
-import { ASSET_DOWNLOAD } from '../../../constants/permissions'
+import { ASSET_DOWNLOAD, ASSET_EDIT } from '../../../constants/permissions'
 
 // Components
 import IconClickable from '../buttons/icon-clickable'
 import Dropdown from '../inputs/dropdown'
 import ToggleableAbsoluteWrapper from '../misc/toggleable-absolute-wrapper'
+
+import {useContext} from "react";
+import { UserContext } from '../../../context'
 
 const AssetOptions = ({
 	itemType = '',
@@ -24,21 +27,33 @@ const AssetOptions = ({
 	isAssetRelated = false
 }) => {
 
+	const { hasPermission, user } = useContext(UserContext)
+
+	const isAdmin = () => {
+		return user.role.id === "admin" || user.role.id === "super_admin"
+	}
+
 	const options = [
 		{ label: 'Download', onClick: downloadAsset, permissions: [ASSET_DOWNLOAD] },
-		{ label: 'Comment', onClick: openComments },
-		{ label: 'Add to', onClick: openMoveAsset },
-		{ label: 'Copy', onClick: openCopyAsset },
-		{ label: asset.stage !== 'archived' ? 'Archive' : 'Unarchive', onClick: openArchiveAsset },
-		{ label: 'Delete', onClick: openDeleteAsset },
 		{ label: 'Share', onClick: openShareAsset }
 	]
 
-	const assetRelatedOptions = [
+	const assetRelatedOptions: any = [
 		{ label: 'Download', onClick: downloadAsset, permissions: [ASSET_DOWNLOAD] },
-		{ label: 'Disassociate', onClick: dissociateAsset },
-		{ label: 'Delete', onClick: openDeleteAsset },
 	]
+
+	if(isAdmin()){
+		assetRelatedOptions.push({ label: 'Disassociate', onClick: dissociateAsset })
+	}
+
+	if(hasPermission([ASSET_EDIT])){
+		assetRelatedOptions.push({ label: 'Delete', onClick: openDeleteAsset })
+		options.push({ label: 'Comment', onClick: openComments })
+		options.push({ label: 'Add to', onClick: openMoveAsset })
+		options.push({ label: 'Copy', onClick: openCopyAsset })
+		options.push({ label: asset.stage !== 'archived' ? 'Archive' : 'Unarchive', onClick: openArchiveAsset })
+		options.push({ label: 'Delete', onClick: openDeleteAsset },)
+	}
 
 	if (itemType) {
 		options.push({ label: 'Remove', onClick: openRemoveAsset })
