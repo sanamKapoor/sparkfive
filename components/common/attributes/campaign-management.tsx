@@ -130,33 +130,7 @@ const CampaignManagement = () => {
 
     return (
         <div className={styles['main-wrapper']}>
-            <div className={styles['operation-row']}>
-                <CreatableSelect
-                    title=''
-                    addText='Add Campaign'
-                    onAddClick={() => setActiveDropdown('campaigns')}
-                    selectPlaceholder={'Enter a new campaign'}
-                    avilableItems={[]}
-                    setAvailableItems={() => { }}
-                    selectedItems={[]}
-                    setSelectedItems={() => { }}
-                    onAddOperationFinished={() => { }}
-                    onRemoveOperationFinished={() => { }}
-                    onOperationFailedSkipped={() => setActiveDropdown('')}
-                    isShare={false}
-                    asyncCreateFn={createTag}
-                    dropdownIsActive={activeDropdown === 'campaigns'}
-                    selectClass={styles['campaign-select']}
-                />
-
-                <Select
-                    options={sorts}
-                    onChange={(value) => { setSort(value) }}
-                    placeholder={'Select to sort'}
-                    styleType={`regular ${styles['sort-select']}`}
-                    value={sort}
-                />
-            </div>
+            <h3>Campaigns</h3>
 
             <div className={styles['search-row']}>
                 <div className={styles['search-column-1']}>
@@ -188,24 +162,55 @@ const CampaignManagement = () => {
                 </div>
             </div>
 
+            <div className={styles['operation-row']}>
+                <CreatableSelect
+                    altColor='blue'
+                    title=''
+                    addText='Add Campaign'
+                    onAddClick={() => setActiveDropdown('campaigns')}
+                    selectPlaceholder={'Enter a new campaign'}
+                    avilableItems={[]}
+                    setAvailableItems={() => { }}
+                    selectedItems={[]}
+                    setSelectedItems={() => { }}
+                    onAddOperationFinished={() => { }}
+                    onRemoveOperationFinished={() => { }}
+                    onOperationFailedSkipped={() => setActiveDropdown('')}
+                    isShare={false}
+                    asyncCreateFn={createTag}
+                    dropdownIsActive={activeDropdown === 'campaigns'}
+                    selectClass={styles['campaign-select']}
+                />
+
+                <Select
+                    options={sorts}
+                    onChange={(value) => { setSort(value) }}
+                    placeholder={'Select to sort'}
+                    styleType={`regular ${styles['sort-select']}`}
+                    value={sort}
+                />
+            </div>
+
             <ul className={styles['tag-wrapper']}>
                 {campaignList.map((campaign, index) => <li key={index} className={styles['tag-item']}>
-                    {(editMode === false || (editMode === true && currentEditIndex !== index)) && <Tag
-                        tag={<><span className={styles['tag-item-text']}>{campaign.numberOfFiles}</span> <span>{campaign.name}</span></>}
-                        data={campaign}
-                        type="campaign"
-                        canRemove={true}
-                        editFunction={() => {
-                            setCurrentEditIndex(index);
-                            setCurrentEditValue(campaign.name);
-                            setEditMode(true);
+                    {(editMode === false || (editMode === true && currentEditIndex !== index)) &&
+                        <Tag
+                            altColor='blue'
+                            tag={<><span className={styles['tag-item-text']}>{campaign.numberOfFiles}</span> <span>{campaign.name}</span></>}
+                            data={campaign}
+                            type="campaign"
+                            canRemove={true}
+                            editFunction={() => {
+                                setCurrentEditIndex(index);
+                                setCurrentEditValue(campaign.name);
+                                setEditMode(true);
 
-                        }}
-                        removeFunction={() => {
-                            setCurrentDeleteId(campaign.id)
-                            setConfirmDeleteModal(true)
-                        }}
-                    />}
+                            }}
+                            removeFunction={() => {
+                                setCurrentDeleteId(campaign.id)
+                                setConfirmDeleteModal(true)
+                            }}
+                        />}
                     {editMode === true && currentEditIndex === index && <div>
                         <Input
                             placeholder={'Edit name'}

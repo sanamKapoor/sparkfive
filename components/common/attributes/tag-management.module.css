@@ -1,10 +1,10 @@
-.main.wrapper{
-
+.main-wrapper h3 {
+    margin: 0 0 36px;
 }
 
 .operation-row{
     align-items: center;
-    margin-bottom: 50px;
+    margin-top: 50px;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -31,47 +31,29 @@
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 16px;
 }
 
 .search-column-1{
-    -webkit-box-flex: 0;
-    -ms-flex: 0 0 30%;
-    flex: 0 0 30%;
-    max-width: 30%;
-
+    max-width: 356px;
     position: relative;
     width: 100%;
     min-height: 1px;
-    padding-right: 15px;
-    padding-left: 15px;
 }
 
 .search-column-2{
-    -webkit-box-flex: 0;
-    -ms-flex: 0 0 40%;
-    flex: 0 0 40%;
-    max-width: 40%;
-
+    max-width: 356px;
     position: relative;
     width: 100%;
     min-height: 1px;
-    padding-right: 15px;
-    padding-left: 15px;
 }
 
 .search-column-3{
-    -webkit-box-flex: 0;
-    -ms-flex: 0 0 30%;
-    flex: 0 0 30%;
-    max-width: 30%;
-
+    max-width: 356px;
     position: relative;
     width: 100%;
     min-height: 1px;
-    padding-right: 15px;
-    padding-left: 15px;
 }
 
 
@@ -82,13 +64,13 @@
     display: flex;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
-    margin-top: 90px;
+    margin-top: 36px;
 }
 
 .tag-item{
     display: flex;
     align-items: center;
-    margin: 5px;
+    margin: 12px 5px;
     cursor: pointer;
 }
 
@@ -130,52 +112,22 @@
 }
 
 /*Media queries*/
-@media screen and (max-width: 576px) {
+@media screen and (max-width: 900px) {
+
+    .search-row {
+        flex-direction: column;
+    }
+    
     .search-column-1{
-        -webkit-box-flex: 0;
-        -ms-flex: 0 0 100%;
-        flex: 0 0 100%;
         max-width: 100%;
-        margin-bottom: 15px;
     }
 
     .search-column-2{
-        -webkit-box-flex: 0;
-        -ms-flex: 0 0 100%;
-        flex: 0 0 100%;
         max-width: 100%;
-        margin-bottom: 15px;
     }
 
     .search-column-3{
-        -webkit-box-flex: 0;
-        -ms-flex: 0 0 100%;
-        flex: 0 0 100%;
         max-width: 100%;
     }
 }
 
-@media screen and (max-width: 1280px) and (min-width: 577px) {
-    .search-column-1{
-        -webkit-box-flex: 0;
-        -ms-flex: 0 0 50%;
-        flex: 0 0 50%;
-        max-width: 50%;
-        margin-bottom: 15px;
-    }
-
-    .search-column-2{
-        -webkit-box-flex: 0;
-        -ms-flex: 0 0 50%;
-        flex: 0 0 50%;
-        max-width: 50%;
-        margin-bottom: 15px;
-    }
-
-    .search-column-3{
-        -webkit-box-flex: 0;
-        -ms-flex: 0 0 50%;
-        flex: 0 0 50%;
-        max-width: 50%;
-    }
-}

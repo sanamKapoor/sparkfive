@@ -222,15 +222,16 @@ const CustomFieldsManagement = () => {
 
     return (
         <div className={styles['main-wrapper']}>
+            <h3>Custom Fields</h3>
             {customFieldList.map((field, index) => {
                 return <div className={`${styles['row']} ${styles['field-block']}`} key={index}>
                     <div className={`${styles['col-25']} ${styles['col-md-100']}`}>
                         <div className={styles['row']}>
                             <div className={`${styles['col-100']} ${styles['flex-display']}`}>
                                 <span className={styles['font-weight-600']}>{index + 1}.</span>
-                                <span className={`${styles['row-header']} ${styles['font-weight-600']}`}>Custom Field</span>
+                                <span className={`${styles['row-header']}`}>Custom Field</span>
                             </div>
-                            <div className={`${styles['col-100']} ${styles['p-l-30']}`}>
+                            <div className={`${styles['col-100']}`}>
                                 <Input
                                     onChange={(e) => { onInputChange(e, index) }}
                                     value={field.name}
@@ -239,16 +240,16 @@ const CustomFieldsManagement = () => {
                             </div>
                         </div>
                     </div>
-                    <div className={`${styles['col-35']} ${styles['col-md-100']}`}>
+                    <div className={`${styles['col-35']} ${styles['col-md-100']} ${styles['p-l-30']}`}>
                         <div className={styles['row']}>
                             <div className={`${styles['col-100']} ${styles['flex-display']}`}>
-                                <span className={`${styles['row-header']} ${styles['font-weight-600']}`}>Custom Values</span>
+                                <span className={`${styles['row-header']}`}>Custom Values</span>
                             </div>
-                            <div className={`${styles['col-100']} ${styles['p-l-30']}`}>
+                            <div className={`${styles['col-100']}`}>
                                 <ul className={styles['tag-wrapper']}>
                                     {field.values.map((tag, valueIndex) => <li key={valueIndex} className={styles['tag-item']}>
                                         <Tag
-                                            altColor={(index % 2 !== 0) ? 'yellow' : ''}
+                                            altColor='blue'
                                             tag={<span>{tag.name}</span>}
                                             data={tag}
                                             type="custom-fields"
@@ -282,17 +283,17 @@ const CustomFieldsManagement = () => {
                             </div>
                         </div>
                     </div>
-                    <div className={`${styles['col-25']} ${styles['col-md-100']}`}>
+                    <div className={`${styles['col-25']} ${styles['col-md-100']} ${styles['p-l-30']}`}>
                         <div className={styles['row']}>
                             <div className={`${styles['col-100']}`}>
                                 <span className={styles['row-header']}>Type</span>
                             </div>
-                            <div className={`${styles['col-100']} ${styles['p-l-30']}`}>
+                            <div className={`${styles['col-100']}`}>
                                 <OptionList data={type} oneColumn={true} value={field.type} setValue={(value) => { onSelectChange(value, index) }} />
                             </div>
                         </div>
                     </div>
-                    <div className={`${styles['col-15']} ${styles['col-md-100']} ${styles['button-row']}`}>
+                    <div className={`${styles['col-15']} ${styles['col-md-100']} ${styles['button-row']} ${styles['p-l-30']}`}>
                         <Button
                             styleTypes={['exclude-min-height']}
                             type={'button'}

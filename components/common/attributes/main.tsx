@@ -21,14 +21,14 @@ const Main = () => {
                     onClick={() => setActiveList('tags')}
                 />
                 <SectionButton
-                    text='Campaigns'
-                    active={activeList === 'campaigns'}
-                    onClick={() => setActiveList('campaigns')}
-                />
-                <SectionButton
                     text='Custom Fields'
                     active={activeList === 'customFields'}
                     onClick={() => setActiveList('customFields')}
+                />
+                <SectionButton
+                    text='Collections'
+                    active={activeList === 'collections'}
+                    onClick={() => setActiveList('collections')}
                 />
                 <SectionButton
                     text='Products'
@@ -37,17 +37,19 @@ const Main = () => {
                 />
 
                 <SectionButton
-                    text='Collections'
-                    active={activeList === 'collections'}
-                    onClick={() => setActiveList('collections')}
+                    text='Campaigns'
+                    active={activeList === 'campaigns'}
+                    onClick={() => setActiveList('campaigns')}
                 />
             </div>
 
-            {activeList === 'tags' && <TagManagement />}
-            {activeList === 'campaigns' && <CampaignManagement />}
-            {activeList === 'customFields' && <CustomFieldsManagement />}
-            {activeList === 'products' && <ProductManagment />}
-            {activeList === 'collections' && <CollectionManagement />}
+            <div className={styles.content}>
+                {activeList === 'tags' && <TagManagement />}
+                {activeList === 'customFields' && <CustomFieldsManagement />}
+                {activeList === 'collections' && <CollectionManagement />}
+                {activeList === 'products' && <ProductManagment />}
+                {activeList === 'campaigns' && <CampaignManagement />}
+            </div>
         </>
     )
 }

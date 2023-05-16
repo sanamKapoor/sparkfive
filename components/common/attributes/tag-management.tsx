@@ -129,34 +129,8 @@ const TagManagement = () => {
 
     return (
         <div className={styles['main-wrapper']}>
-            <div className={styles['operation-row']}>
-                <CreatableSelect
-                    title=''
-                    addText='Add Tags'
-                    onAddClick={() => setActiveDropdown('tags')}
-                    selectPlaceholder={'Enter a new tag'}
-                    avilableItems={[]}
-                    setAvailableItems={() => { }}
-                    selectedItems={[]}
-                    setSelectedItems={() => { }}
-                    onAddOperationFinished={() => { }}
-                    onRemoveOperationFinished={() => { }}
-                    onOperationFailedSkipped={() => setActiveDropdown('')}
-                    isShare={false}
-                    asyncCreateFn={createTag}
-                    dropdownIsActive={activeDropdown === 'tags'}
-                    selectClass={styles['tag-select']}
-                />
 
-                <Select
-                    options={sorts}
-                    onChange={(value) => { setSort(value) }}
-                    placeholder={'Select to sort'}
-                    styleType={`regular ${styles['sort-select']}`}
-                    value={sort}
-                />
-            </div>
-
+            <h3>Tags</h3>
             <div className={styles['search-row']}>
                 <div className={styles['search-column-1']}>
                     <Search
@@ -186,25 +160,56 @@ const TagManagement = () => {
                     />
                 </div>
             </div>
+
+            <div className={styles['operation-row']}>
+                <CreatableSelect
+                    altColor='blue'
+                    title=''
+                    addText='Add Tags'
+                    onAddClick={() => setActiveDropdown('tags')}
+                    selectPlaceholder={'Enter a new tag'}
+                    avilableItems={[]}
+                    setAvailableItems={() => { }}
+                    selectedItems={[]}
+                    setSelectedItems={() => { }}
+                    onAddOperationFinished={() => { }}
+                    onRemoveOperationFinished={() => { }}
+                    onOperationFailedSkipped={() => setActiveDropdown('')}
+                    isShare={false}
+                    asyncCreateFn={createTag}
+                    dropdownIsActive={activeDropdown === 'tags'}
+                    selectClass={styles['tag-select']}
+                />
+
+                <Select
+                    options={sorts}
+                    onChange={(value) => { setSort(value) }}
+                    placeholder={'Select to sort'}
+                    styleType={`regular ${styles['sort-select']}`}
+                    value={sort}
+                />
+            </div>
             <ul className={styles['tag-wrapper']}>
                 {tagList.map((tag, index) => <li key={index} className={styles['tag-item']}>
-                    {(editMode === false || (editMode === true && currentEditIndex !== index)) && <Tag
-                        tag={<><span className={styles['tag-item-text']}>{tag.numberOfFiles}</span> <span>{tag.name}</span></>}
-                        data={tag}
-                        type="tag"
-                        canRemove={true}
-                        editFunction={() => {
-                            setCurrentEditIndex(index)
-                            setCurrentEditValue(tag.name)
-                            setEditMode(true)
+                    {(editMode === false || (editMode === true && currentEditIndex !== index)) &&
+                        <Tag
+                            altColor='blue'
+                            tag={<><span className={styles['tag-item-text']}>{tag.numberOfFiles}</span> <span>{tag.name}</span></>}
+                            data={tag}
+                            type="tag"
+                            canRemove={true}
+                            editFunction={() => {
+                                setCurrentEditIndex(index)
+                                setCurrentEditValue(tag.name)
+                                setEditMode(true)
 
-                        }}
-                        removeFunction={() => {
-                            setCurrentDeleteId(tag.id)
-                            setConfirmDeleteModal(true)
-                        }
-                        }
-                    />}
+                            }}
+                            removeFunction={() => {
+                                setCurrentDeleteId(tag.id)
+                                setConfirmDeleteModal(true)
+                            }
+                            }
+                        />}
                     {editMode === true && currentEditIndex === index && <div>
                         <Input
                             placeholder={'Edit name'}

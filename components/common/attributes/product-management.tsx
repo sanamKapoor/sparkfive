@@ -130,34 +130,7 @@ const ProductManagement = () => {
 
     return (
         <div className={styles['main-wrapper']}>
-            <div className={styles['operation-row']}>
-                <CreatableSelect
-                    title=''
-                    addText='Add Product'
-                    onAddClick={() => setActiveDropdown('products')}
-                    selectPlaceholder={'Enter a product sku'}
-                    avilableItems={[]}
-                    setAvailableItems={() => { }}
-                    selectedItems={[]}
-                    setSelectedItems={() => { }}
-                    onAddOperationFinished={() => { }}
-                    onRemoveOperationFinished={() => { }}
-                    onOperationFailedSkipped={() => setActiveDropdown('')}
-                    isShare={false}
-                    asyncCreateFn={createProduct}
-                    dropdownIsActive={activeDropdown === 'products'}
-                    selectClass={styles['campaign-select']}
-                />
-
-                <Select
-                    options={sorts}
-                    onChange={(value) => { setSort(value) }}
-                    placeholder={'Select to sort'}
-                    styleType={`regular ${styles['sort-select']}`}
-                    value={sort}
-                />
-            </div>
-
+            <h3>Products</h3>
             <div className={styles['search-row']}>
                 <div className={styles['search-column-1']}>
                     <Search
@@ -188,24 +161,54 @@ const ProductManagement = () => {
                 </div>
             </div>
 
+            <div className={styles['operation-row']}>
+                <CreatableSelect
+                    altColor='blue'
+                    title=''
+                    addText='Add Product'
+                    onAddClick={() => setActiveDropdown('products')}
+                    selectPlaceholder={'Enter a product sku'}
+                    avilableItems={[]}
+                    setAvailableItems={() => { }}
+                    selectedItems={[]}
+                    setSelectedItems={() => { }}
+                    onAddOperationFinished={() => { }}
+                    onRemoveOperationFinished={() => { }}
+                    onOperationFailedSkipped={() => setActiveDropdown('')}
+                    isShare={false}
+                    asyncCreateFn={createProduct}
+                    dropdownIsActive={activeDropdown === 'products'}
+                    selectClass={styles['campaign-select']}
+                />
+
+                <Select
+                    options={sorts}
+                    onChange={(value) => { setSort(value) }}
+                    placeholder={'Select to sort'}
+                    styleType={`regular ${styles['sort-select']}`}
+                    value={sort}
+                />
+            </div>
             <ul className={styles['tag-wrapper']}>
                 {productList.map((folder, index) => <li key={index} className={styles['tag-item']}>
-                    {(editMode === false || (editMode === true && currentEditIndex !== index)) && <Tag
-                        tag={<><span className={styles['tag-item-text']}>{folder.numberOfFiles}</span> <span>{folder.sku}</span></>}
-                        data={folder}
-                        type="product"
-                        canRemove={true}
-                        editFunction={() => {
-                            setCurrentEditIndex(index);
-                            setCurrentEditValue(folder.sku);
-                            setEditMode(true);
+                    {(editMode === false || (editMode === true && currentEditIndex !== index)) &&
+                        <Tag
+                            altColor='blue'
+                            tag={<><span className={styles['tag-item-text']}>{folder.numberOfFiles}</span> <span>{folder.sku}</span></>}
+                            data={folder}
+                            type="product"
+                            canRemove={true}
+                            editFunction={() => {
+                                setCurrentEditIndex(index);
+                                setCurrentEditValue(folder.sku);
+                                setEditMode(true);
 
-                        }}
-                        removeFunction={() => {
-                            setCurrentDeleteId(folder.id)
-                            setConfirmDeleteModal(true)
-                        }}
-                    />}
+                            }}
+                            removeFunction={() => {
+                                setCurrentDeleteId(folder.id)
+                                setConfirmDeleteModal(true)
+                            }}
+                        />}
                     {editMode === true && currentEditIndex === index && <div>
                         <Input
                             placeholder={'Edit name'}

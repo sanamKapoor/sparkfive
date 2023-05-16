@@ -12,9 +12,11 @@ const IntegrationItem = ({ integrationName, integrationId, onClick, createdAt = 
   return (
     <div className={styles.container}>
       <div className={styles.name}>
-        {integrationName}
+        <img src={Integrations[integrationId]} />
+        <div>
+          {integrationName}
+        </div>
       </div>
-      <img src={Integrations[integrationId]} />
       {existingIntegration ?
         <Button
           text={'Connected'}

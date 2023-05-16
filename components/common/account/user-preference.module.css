@@ -10,8 +10,15 @@
 
 .container h3 {
   margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.container h4 {
   font-size: 16px;
   font-weight: 500;
+  margin-bottom: 24px;
+  color: var(--color-prim-navy);
 }
 
 .container p {
@@ -21,10 +28,11 @@
 
 .option {
   font-size: 12px;
+  font-weight: 300;
 }
 
 .radio-options > div:last-child {
-  margin-left: 3rem;
+  margin-left: 20px;
 }
 
 .option > div:first-child {
@@ -39,8 +47,8 @@
   .container { 
     width: 100%;
     display: grid;
-    grid-template-columns: 75% 25%;
-    gap: 20px;
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
 
   .radio-options > div:last-child {
