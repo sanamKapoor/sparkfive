@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react'
 import styles from './asset-related-files.module.css'
 import { Utilities, AssetOps } from '../../../assets'
-import { AssetContext, LoadingContext } from '../../../context'
+import { AssetContext, LoadingContext, UserContext } from '../../../context'
 import downloadUtils from "../../../utils/download"
 import toastUtils from "../../../utils/toast"
 import update from "immutability-helper"
@@ -35,9 +35,16 @@ const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAd
         setCurrentViewAsset
     } = useContext(AssetContext)
 
+    const { user } = useContext(UserContext)
+
     const { setIsLoading } = useContext(LoadingContext);
 
     console.log(currentAsset)
+
+
+    const isAdmin = () => {
+        return user.role.id === "admin" || user.role.id === "super_admin"
+    }
 
 
 
@@ -273,13 +280,13 @@ const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAd
                 <div data-tip data-for={'upload'} className={assets.length > 0 ? styles['upload-wrapper'] : styles['upload-wrapper-no-asset']}>
                     {assets.length > 0 && <h3>Related Files</h3>}
 
-                    <Button
+                    {isAdmin() && <Button
                         text={<img src={AssetOps.upload} />}
                         type='button'
                         styleType='primary'
                         onClick={() => setUploadModalOpen(true)}
                     >
-                    </Button>
+                    </Button>}
                     <ReactTooltip id={'upload'} delayShow={300} effect='solid' place={'right'}>Upload related files</ReactTooltip>
                 </div>
 
