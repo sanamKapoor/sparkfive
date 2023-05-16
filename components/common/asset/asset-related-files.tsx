@@ -26,7 +26,7 @@ const PrevArrow = ({ onClick }) => (
     <img className={styles.arrow} src={Utilities.circleArrowLeft} alt="Arrow previous" onClick={onClick} />
 )
 
-const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAddRelatedFiles, closeOverlay, outsideDetailOverlay = false }) => {
+const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAddRelatedFiles, closeOverlay, outsideDetailOverlay = false, currentAsset }) => {
     const {
         updateDownloadingStatus,
         setActiveOperation,
@@ -38,6 +38,8 @@ const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAd
     const { user } = useContext(UserContext)
 
     const { setIsLoading } = useContext(LoadingContext);
+
+    console.log(currentAsset)
 
 
     const isAdmin = () => {
@@ -243,6 +245,7 @@ const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAd
 
             totalDownloadingAssets = assets.length
             payload.assetIds = assets.map(assetItem => assetItem.asset.id)
+            payload.assetIds.push(currentAsset.id)
 
 
             // Show processing bar
@@ -267,7 +270,7 @@ const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAd
     }
 
     useEffect(()=>{
-        setOperationAssets(assets)
+        setOperationAssets([...assets, {asset: currentAsset}])
     },[assets])
 
     return (

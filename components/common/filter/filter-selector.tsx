@@ -25,7 +25,6 @@ const FilterSelector = ({
     scrollBottomAfterSearch = false, // When typing in search input, scrolling down to bottom of container to prevent list is hidden
     noneOption = false // Show none option or not
 }) => {
-
     const { activeSortFilter } = useContext(FilterContext)
     const [internalFilters, setInternalFilters] = useState([])
 
@@ -46,17 +45,26 @@ const FilterSelector = ({
     }, [activeSortFilter])
 
     const toggleSelected = (selected) => {
-        let index = value && value.findIndex((item) => item[mappingValueName] === selected[mappingValueName])
-        if (!value || index !== -1) {
-            setValue(update(value, {
-                $splice: [[index, 1]]
-            }))
-        } else {
-            setValue(update(value, {
-                $push: [selected]
-            }))
-        }
-    }
+      let index =
+        value &&
+        value.findIndex(
+          (item) => item[mappingValueName] === selected[mappingValueName]
+        );
+
+      if (index === -1 || index === null || !value) {
+        setValue(
+          update(value ?? [], {
+            $push: [selected],
+          })
+        );
+      } else if (index > -1) {
+        setValue(
+          update(value, {
+            $splice: [[index, 1]],
+          })
+        );
+      }
+    };
 
     // Set value and filters as selected
     let visibleFilters = internalFilter ? internalFilters.slice(0, numItems) : filters.slice(0, numItems)

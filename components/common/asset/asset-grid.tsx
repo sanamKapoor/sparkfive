@@ -32,9 +32,9 @@ import {
 } from "../../../constants/permissions";
 import fileDownload from "js-file-download";
 
-
-import {sizeToZipDownload} from "../../../constants/download";
+import { sizeToZipDownload } from "../../../constants/download";
 import ChangeThumbnail from "../modals/change-thumnail-modal";
+import { checkIfUserCanEditThumbnail } from "../../../utils/asset";
 
 const AssetGrid = ({
   activeView = "grid",
@@ -53,7 +53,7 @@ const AssetGrid = ({
   viewFolder = (id) => {},
   sharePath = "",
   openFilter,
-  onCloseDetailOverlay = (assetData) => {}
+  onCloseDetailOverlay = (assetData) => {},
 }) => {
   let isDragging;
   if (!isShare) isDragging = useDropzone();
@@ -65,10 +65,10 @@ const AssetGrid = ({
     nextPage,
     setOperationFolder,
     folders,
-    updateDownloadingStatus
+    updateDownloadingStatus,
   } = useContext(AssetContext);
 
-  const { advancedConfig, hasPermission } = useContext(UserContext);
+  const { advancedConfig, hasPermission, user } = useContext(UserContext);
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [activeArchiveAsset, setActiveArchiveAsset] = useState(undefined);
@@ -92,6 +92,8 @@ const AssetGrid = ({
 
   const { setIsLoading } = useContext(LoadingContext);
   const { setFolders } = useContext(AssetContext);
+
+  const [focusedItem, setFocusedItem] = useState(null);
 
   useEffect(() => {
     const { assetId } = urlUtils.getQueryParameters();
@@ -176,9 +178,8 @@ const AssetGrid = ({
     setActiveOperation(operation);
   };
 
-
   //Use for upload thumbnail
-  const beginChangeThumbnailOperation = ({ folder }, operation) => {
+  const beginChangeThumbnailOperation = (folder, operation) => {
     setModalData(folder);
     setModalOpen(true);
   };
@@ -188,7 +189,7 @@ const AssetGrid = ({
     try {
       const data = await folderApi.updateFolder(folder.id, {
         thumbnailPath: null,
-        thumbnailExtension: null
+        thumbnailExtension: null,
       });
       if (data) {
         setIsLoading(false);
@@ -232,10 +233,10 @@ const AssetGrid = ({
       updateDownloadingStatus("done", 0, 0);
     } catch (e) {
       updateDownloadingStatus(
-          "error",
-          0,
-          0,
-          "Internal Server Error. Please try again."
+        "error",
+        0,
+        0,
+        "Internal Server Error. Please try again."
       );
     }
 
@@ -243,9 +244,9 @@ const AssetGrid = ({
   };
 
   const downloadAsset = (assetItem) => {
-    if(assetItem.asset.size >= sizeToZipDownload){
-      downloadSelectedAssets(assetItem.asset.id)
-    }else{
+    if (assetItem.asset.size >= sizeToZipDownload) {
+      downloadSelectedAssets(assetItem.asset.id);
+    } else {
       downloadUtils.downloadFile(assetItem.realUrl, assetItem.asset.name);
     }
   };
@@ -296,6 +297,16 @@ const AssetGrid = ({
     // setAssetDetail({...newVersionAsset})
   };
 
+  const isThumbnailNameEditable = checkIfUserCanEditThumbnail(user?.roleId);
+
+  const handleFocusChange = (e, id) => {
+    if (focusedItem === id && e.target.tagName.toLowerCase() !== "input") {
+      setFocusedItem(null);
+    } else if (e.target.id === "editable-preview") {
+      setFocusedItem(id);
+    }
+  };
+
   return (
     <section className={`${styles.container} ${openFilter && styles.filter}`}>
       {(shouldShowUpload || isDragging) && !isShare && (
@@ -323,7 +334,7 @@ const AssetGrid = ({
       )}
       <div className={styles["list-wrapper"]}>
         {activeView === "grid" && (
-          <ul className={`${styles["grid-list"]} ${styles[itemSize]}`}>
+          <ul className={`${styles["grid-list"]} ${styles[itemSize]} ${mode === "assets" ? !openFilter ? styles["grid-" + advancedConfig.assetThumbnail] : styles["grid-filter-" + advancedConfig.assetThumbnail] : !openFilter ? styles["grid-" + advancedConfig.collectionThumbnail] : styles["grid-filter-" + advancedConfig.collectionThumbnail]}`}>
             {mode === "assets" &&
               assets.map((assetItem, index) => {
                 if (assetItem.status !== "fail") {
@@ -331,6 +342,7 @@ const AssetGrid = ({
                     <li
                       className={styles["grid-item"]}
                       key={assetItem.asset.id || index}
+                      onClick={(e) => handleFocusChange(e, assetItem.asset.id)}
                     >
                       <AssetThumbail
                         {...assetItem}
@@ -366,6 +378,9 @@ const AssetGrid = ({
                         handleVersionChange={refreshVersion}
                         loadMore={loadMore}
                         onCloseDetailOverlay={onCloseDetailOverlay}
+                        isThumbnailNameEditable={isThumbnailNameEditable}
+                        focusedItem={focusedItem}
+                        setFocusedItem={setFocusedItem}
                       />
                     </li>
                   );
@@ -375,7 +390,11 @@ const AssetGrid = ({
             {mode === "folders" &&
               folders.map((folder, index) => {
                 return (
-                  <li className={styles["grid-item"]} key={folder.id || index}>
+                  <li
+                    className={styles["grid-item"]}
+                    key={folder.id || index}
+                    onClick={(e) => handleFocusChange(e, folder.id)}
+                  >
                     <FolderGridItem
                       {...folder}
                       isShare={isShare}
@@ -389,16 +408,14 @@ const AssetGrid = ({
                       shareAssets={() =>
                         beginAssetOperation({ folder }, "shareFolders")
                       }
-                      changeThumbnail={() =>
-                        beginChangeThumbnailOperation(
-                          { folder },
-                          "shareFolders"
-                        )
-                      }
+                      changeThumbnail={beginChangeThumbnailOperation}
                       deleteThumbnail={() =>
                         deleteThumbnail({ folder }, "shareFolders")
                       }
                       activeView={activeView || mode}
+                      isThumbnailNameEditable={isThumbnailNameEditable}
+                      focusedItem={focusedItem}
+                      setFocusedItem={setFocusedItem}
                     />
                   </li>
                 );
@@ -413,6 +430,7 @@ const AssetGrid = ({
                   <li
                     className={styles["regular-item"]}
                     key={assetItem.asset.id || index}
+                    onClick={(e) => handleFocusChange(e, assetItem.asset.id)}
                   >
                     <ListItem
                       sharePath={sharePath}
@@ -443,6 +461,9 @@ const AssetGrid = ({
                       }
                       setCurrentSortAttribute={setCurrentSortAttribute}
                       sortAttribute={currentSortAttribute}
+                      isNameEditable={isThumbnailNameEditable}
+                      focusedItem={focusedItem}
+                      setFocusedItem={setFocusedItem}
                     />
                   </li>
                 );
@@ -450,7 +471,11 @@ const AssetGrid = ({
             {mode === "folders" &&
               sortedFolders.map((folder, index) => {
                 return (
-                  <li className={styles["grid-item"]} key={folder.id || index}>
+                  <li
+                    className={`${styles["grid-item"]} ${!openFilter ? styles[" grid-" + advancedConfig.collectionThumbnail] : styles["grid-filter-" + advancedConfig.collectionThumbnail]}`} 
+                    key={folder.id || index}
+                    onClick={(e) => handleFocusChange(e, folder.id)}
+                  >
                     <FolderListItem
                       {...folder}
                       toggleSelected={() => toggleSelected(folder.id)}
@@ -464,16 +489,14 @@ const AssetGrid = ({
                       }
                       setCurrentSortAttribute={setCurrentSortFolderAttribute}
                       sortAttribute={currentSortFolderAttribute}
-                      changeThumbnail={() =>
-                        beginChangeThumbnailOperation(
-                          { folder },
-                          "shareFolders"
-                        )
-                      }
+                      changeThumbnail={beginChangeThumbnailOperation}
                       deleteThumbnail={() =>
                         deleteThumbnail({ folder }, "shareFolders")
                       }
                       activeView={activeView || mode}
+                      isNameEditable={isThumbnailNameEditable}
+                      focusedItem={focusedItem}
+                      setFocusedItem={setFocusedItem}
                     />
                   </li>
                 );

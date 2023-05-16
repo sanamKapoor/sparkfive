@@ -39,6 +39,7 @@ import { isImageType } from "../../../utils/file";
 import { ASSET_ACCESS } from "../../../constants/permissions";
 import AssetNotes from './asset-notes';
 import AssetNote from './asset-note';
+import AssetTranscript from './asset-transcript';
 import AssetRelatedFIles from './asset-related-files';
 
 import { sizeToZipDownload } from "../../../constants/download";
@@ -107,8 +108,13 @@ const DetailOverlay = ({
   availableNext = true,
   outsideDetailOverlay = false,
 }) => {
+
   const { hasPermission } = useContext(UserContext);
-  const { user, cdnAccess } = useContext(UserContext);
+  const { user, cdnAccess, transcriptAccess } = useContext(UserContext);
+
+  console.log({
+    transcriptAccess
+  })
 
   const [assetDetail, setAssetDetail] = useState(undefined);
 
@@ -130,11 +136,14 @@ const DetailOverlay = ({
   const [changedVersion, setChangedVersion] = useState(false); // to track version uploaded on overlay close
   const [versionRealUrl, setVersionRealUrl] = useState(realUrl);
   const [versionThumbnailUrl, setVersionThumbnailUrl] = useState(thumbailUrl);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   const [detailPosSize, setDetailPosSize] = useState({ x: 0, y: 0, width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight });
   const [defaultSize, setDefaultSize] = useState({ width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight });
   const [notes, setNotes] = useState([])
   const [sizeOfCrop, setSizeOfCrop] = useState({ width: defaultSize.width, height: defaultSize.height })
+  const [transcripts, setTranscript] = useState({})
+  const [transcriptLoading, setTranscriptLoading] = useState(true)
 
   const renameValue = useRef("")
   const setRenameValue = (value) => {renameValue.current = value}
@@ -214,7 +223,7 @@ const DetailOverlay = ({
       const folder = folders.find(folder => folder.id === activeFolder);
       if(folder){
         // if (folder.assets.length === 0 && assets && assets.length) {
-        folder.assets = [...assets];
+        // folder.assets = [...assets];
         // }
         setActiveCollection(folder);
         const assetIndx = assets.findIndex(item => item.asset && item.asset.id === asset.id) + 1
@@ -223,16 +232,36 @@ const DetailOverlay = ({
     }
   }
 
-
+  const seekVideo = secs => {
+    let myVideo = document.getElementById("video-element");
+    if(myVideo){
+      // @ts-ignore
+      if (myVideo.fastSeek) {
+        // @ts-ignore
+        myVideo.fastSeek(secs)
+        // @ts-ignore
+        myVideo.play()
+      } else {
+        // @ts-ignore
+        myVideo.currentTime = secs
+        // @ts-ignore
+        myVideo.play()
+      }
+    }
+  }
 
   useEffect(() => {
+    if(transcriptAccess){
+      getTranscript();
+    }
+
     getCropResizeOptions();
     getDetail();
     checkInitialParams();
     if (isMobile) {
       toggleSideMenu();
     }
-    _setActiveCollection()
+    _setActiveCollection();
   }, [currentAsset]);
 
   useEffect(()=>{
@@ -264,12 +293,25 @@ const DetailOverlay = ({
 
         if(data.asset.id !== assetDetail?.id){
           setAssetDetail(data.asset);
-
+          setPreviewUrl(data.previewUrl)
           setVersionRealUrl(data.realUrl);
           setVersionThumbnailUrl(data.thumbailUrl);
         }
 
       }
+    } catch (err) {
+      // console.log(err);
+    }
+  };
+
+  const getTranscript = async (curAsset?) => {
+    try {
+      setTranscriptLoading(true)
+      const asset = curAsset || currentAsset;
+      const { data } = await assetApi.getTranscript(asset.id);
+      setTranscript(data)
+
+      setTranscriptLoading(false)
     } catch (err) {
       // console.log(err);
     }
@@ -899,7 +941,7 @@ const DetailOverlay = ({
               <>
                 {mode === "detail" && (
 
-                    <AssetImg  imgClass="img-preview" name={assetDetail.name} assetImg={(assetDetail.extension === "tiff" || assetDetail.extension === "tif" || assetDetail.extension === "svg" || assetDetail.extension === "svg+xml") ? versionThumbnailUrl :  versionRealUrl} />
+                    <AssetImg  imgClass="img-preview" name={assetDetail.name} assetImg={(assetDetail.extension === "tiff" || assetDetail.extension === "tif" || assetDetail.extension === "svg" || assetDetail.extension === "svg+xml" || assetDetail.extension === "heif" || assetDetail.extension === 'heic' || assetDetail.extension === 'cr2') ? versionThumbnailUrl :  versionRealUrl} />
                 )}
                 {mode === "resize" && (
                   <Rnd position={{ x: detailPosSize.x, y: detailPosSize.y }}
@@ -960,15 +1002,14 @@ const DetailOverlay = ({
                 <AssetIcon extension={currentAsset.extension} />
               )}
             {assetDetail.type === "video" && (
-              <video controls>
+              <video controls id={"video-element"}>
                 <source
-                  src={versionRealUrl}
-                  type={`video/${assetDetail.extension}`}
+                  src={previewUrl ?? versionRealUrl}
+                  type={previewUrl ? 'video/mp4' : `video/${assetDetail.extension}`}
                 />
                 Sorry, your browser doesn't support video playback.
               </video>
             )}
-
             {activeFolder &&
               <div className={styles.arrows}>
                 <div>
@@ -983,12 +1024,12 @@ const DetailOverlay = ({
                     </span>
                   }
                 </div>
-                <span>{assetIndex} of {totalAssets} in {activeCollection?.name} collection</span>
+                <span>{(assetIndex % activeCollection?.assetsCount) + 1} of {activeCollection?.assetsCount} in {activeCollection?.name} collection</span>
               </div>
             }
 
             {!isShare && <>
-              <AssetRelatedFIles outsideDetailOverlay={outsideDetailOverlay} closeOverlay={closeOverlay}  assets={assetDetail.fileAssociations || []} associateFileId={currentAsset.id} onChangeRelatedFiles={onChangeRelatedFiles} onAddRelatedFiles={(data)=>{
+              <AssetRelatedFIles currentAsset={currentAsset} outsideDetailOverlay={outsideDetailOverlay} closeOverlay={closeOverlay}  assets={assetDetail.fileAssociations || []} associateFileId={currentAsset.id} onChangeRelatedFiles={onChangeRelatedFiles} onAddRelatedFiles={(data)=>{
                 let updatedAssets = [...assetDetail.fileAssociations]
                 updatedAssets = updatedAssets.concat(data)
                 setAssetDetail({...assetDetail, fileAssociations: updatedAssets})
@@ -1072,6 +1113,15 @@ const DetailOverlay = ({
               asset={asset}
               notes={notes}
               applyCrud={applyCrud} />
+          )}
+
+          {activeSideComponent === "transcript" && transcripts && (
+              <AssetTranscript
+                  title={"Transcript"}
+                  transcripts={transcripts}
+                  loading={transcriptLoading}
+                  navigateToTime={seekVideo}
+              />
           )}
 
         </section>
@@ -1159,6 +1209,16 @@ const DetailOverlay = ({
               }}
             />
           )}
+
+          {currentAsset.type === "video" && transcriptAccess && <IconClickable
+              src={Utilities.transcript}
+              additionalClass={styles["menu-icon"]}
+              onClick={() => {
+                setMode("detail");
+                resetValues();
+                changeActiveSide("transcript");
+              }}
+          />}
         </section>
       )}
       <RenameModal
