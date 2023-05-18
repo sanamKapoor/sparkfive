@@ -24,7 +24,7 @@ const UserSettings = ({ activeView, SETTING_OPTIONS }) => {
               {option === 'attributes' && (
                 <h6>SETTINGS</h6>
               )}
-              <Link href={`/main/user-settings/${option}`} key={index}>
+              <Link href={option === 'upload-approvals' ? optionProps.path : `/main/user-settings/${option}`} key={index}>
                 <a>
                   <li className={`${styles.setting} ${activeView === option && styles.selected}`}>
                     <span>{optionProps.label}</span>

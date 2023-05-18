@@ -42,9 +42,9 @@ const SETTING_OPTIONS = {
   notifications: { label: 'Notifications', permissions: [], content: Notifications },
   integrations: { label: 'Integrations', permissions: [], content: Integrations },
   attributes: { label: 'Attributes', contentTitle: 'Custom Attributes', permissions: [SETTINGS_TEAM, SETTINGS_COMPANY], content: Attributes },
-  ['guest-upload']: { label: 'Guest Upload', contentTitle: 'Guest Upload', permissions: [SETTINGS_TEAM, SETTINGS_COMPANY], content: GuestUpload },
-  ['custom-settings']: { label: 'Custom Settings', contentTitle: 'Custom Settings', permissions: [SETTINGS_TEAM, SETTINGS_COMPANY], content: CustomSettings },
+  ['upload-approvals']: {label: 'Upload Approvals', path: '/main/upload-approvals'},
   ['shared-links']: { label: 'Shared Links', contentTitle: 'Shared Links', permissions: [], content: ShareLinks },
+  ['custom-settings']: { label: 'Custom Settings', contentTitle: 'Custom Settings', permissions: [SETTINGS_TEAM, SETTINGS_COMPANY], content: CustomSettings },
   ['super-admin']: { label: 'Super Admin', permissions: [SUPERADMIN_ACCESS], content: SuperAdmin },
 }
 
