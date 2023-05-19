@@ -14,22 +14,26 @@ import ConfirmModal from "../../modals/confirm-modal";
 import Button from "../../buttons/button";
 import useSortedAssets from "../../../../hooks/use-sorted-assets";
 import DeletedListItem from "./deleted-list-item";
+import Select from '../../inputs/select';
+import selectOptions from '../../../../utils/select-options';
+import IconClickable from '../../buttons/icon-clickable';
+import { AssetOps } from '../../../../assets';
 
 const DeletedAssets = ({
   activeView = "grid",
   isShare = false,
-  onFilesDataGet = (files) => {},
+  onFilesDataGet = (files) => { },
   toggleSelected,
   mode = "assets",
   activeSortFilter = {},
-  deleteFolder = (id) => {},
+  deleteFolder = (id) => { },
   itemSize = "regular",
   activeFolder = "",
   type = "",
   itemId = "",
-  getFolders = () => {},
-  loadMore = () => {},
-  viewFolder = (id) => {},
+  getFolders = () => { },
+  loadMore = () => { },
+  viewFolder = (id) => { },
   sharePath = "",
   openFilter,
 }) => {
@@ -125,8 +129,47 @@ const DeletedAssets = ({
   const loadingAssetsFolders =
     assets.length > 0 && assets[assets.length - 1].isLoading;
 
+
   return (
     <section className={`${styles.container} ${openFilter && styles.filter}`}>
+      <div className={styles.header}>
+        <h3>Deleted Assets</h3>
+        <p>Deleted assets are retained for 60 days before permanent removal. Admin can recover deleted assets within 60 days</p>
+      </div>
+
+      <div className={styles.header_actions}>
+        <IconClickable
+          src={AssetOps.deleteGray}
+        />
+        <IconClickable
+          src={AssetOps.moveGray}
+        />
+        <Button
+          text="Deselect All"
+          type="button"
+          styleType="primary"
+          onClick={() => alert('deselect all')}
+        />
+        <Button
+          text="Sselect All"
+          type="button"
+          styleType="secondary"
+          onClick={() => alert('select all')}
+        />
+        <div className={styles.select}>
+          <Select
+            label={"Sort By"}
+            options={selectOptions.sort.filter(item => {
+              return item
+            })}
+            value={activeSortFilter.sort}
+            styleType='filter filter-schedule'
+            onChange={() => console.log('on change')
+            }
+            placeholder='Sort By'
+          />
+        </div>
+      </div>
       <ul className={styles["list-wrapper"]}>
         {sortedAssets.map((assetItem, index) => {
           return (
