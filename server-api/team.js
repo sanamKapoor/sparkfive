@@ -21,4 +21,13 @@ export default {
   editRole: (id, data) => axios.put(`${teamUrl}/roles/${id}`, data),
   saveAdvanceConfigurations:(data) => axios.put(`${teamUrl}/saveAdvanceConfigurations`, data),
   getAdvanceOptions:() => axios.get(`${teamUrl}/advanceConfigurations`),
+  getOcrTags: () => axios.get(`${teamUrl}/ocr-tags`),
+  addOcrTag: (data) => axios.post(`${teamUrl}/ocr-tags`, data),
+  removeOcrTag: (id) => axios.delete(`${teamUrl}/ocr-tags/${id}`),
+  getOcrCampaigns: () => axios.get(`${teamUrl}/ocr-campaigns`),
+  addOcrCampaign: (data) => axios.post(`${teamUrl}/ocr-campaigns`, data),
+  removeOcrCampaign: (id) => axios.delete(`${teamUrl}/ocr-campaigns/${id}`),
+  getOcrCustomFields: () => axios.get(`${teamUrl}/ocr-custom-fields`),
+  addOcrCustomFields: (data) => axios.post(`${teamUrl}/ocr-custom-fields`, data),
+  removeOcrCustomFields: (id) => axios.delete(`${teamUrl}/ocr-custom-fields/${id}`),
 }
