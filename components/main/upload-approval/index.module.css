@@ -84,7 +84,7 @@
 
 .modal-field-title{
   font-weight: 400;
-  font-size: 16px;
+  font-size: 14px;
   color: var(--color-prim-navy);
   margin-bottom: 20px;
   margin-top: 0;
@@ -131,6 +131,8 @@
 .grid-list{
   grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
 }
+
+
 
 @media screen and (max-width: 900px) {
   .container {
@@ -283,6 +285,7 @@
 .left-bar img{
   width: 100%;
   height: auto;
+  max-width: fit-content;
 }
 
 .left-bar video{
@@ -349,6 +352,7 @@
   font-weight: 400;
   margin-bottom: 4px;
   font-size: 13px;
+  word-break: break-all;
 }
 
 .previous-status {
@@ -383,6 +387,18 @@
 }
 
 @media screen and (max-width: 600px) {
+  .navigation-wrapper{
+    justify-content: center;
+  }
+  .confirm-action{
+    display: flex;
+    flex-direction: column;
+    max-width: 121px;
+    margin: 0 auto;
+  }
+  .confirm-action button{
+    margin: 5px 0;
+  }
   .options-list.dropdown {
     width: calc(160px * 2);
   }
@@ -410,7 +426,7 @@
 
   .right-panel {
     position: absolute;
-    z-index: 999;
+    z-index: 9999;
     background-color: white;
     right: 70px;
     left: 0;
@@ -446,6 +462,11 @@
 
 @media screen and (max-width: 380px) {
   .options-list.dropdown {
-    width: 160px
+    width: 100%;
+    justify-content: space-between;
   }
+  .options-list.dropdown li {
+    width: calc(100% / 3);
+  }
+  .option {width:auto;text-align: center;}
 }

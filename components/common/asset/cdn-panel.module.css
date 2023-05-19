@@ -88,3 +88,10 @@ span.select {
   justify-content: space-between;
 }
 
+.cdnType .selectContainer >div{
+  max-height: inherit;
+}
+
+.cdnType .select{
+  color: var(--color-prim-navy);
+}

@@ -1443,7 +1443,7 @@ const UploadApproval = () => {
 
                             <div className={detailPanelStyles['field-wrapper']} >
                                 <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>
-                                <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={tempComments}
+                                <TextArea type={"textarea"} rows={8} placeholder={'Add comments'} value={tempComments}
                                     onChange={e => { setTempComments(e.target.value) }} styleType={'regular-short'} maxLength={200} />
                             </div>
                         </div>
@@ -1468,7 +1468,7 @@ const UploadApproval = () => {
                     {!submitted && <>
                         <div className={styles['modal-field-title']}>Send a Message to the Admin</div>
 
-                        <TextArea type={"textarea"} rows={4} placeholder={'Add message'} value={message}
+                        <TextArea type={"textarea"} rows={8} placeholder={'Add message'} value={message}
                             onChange={e => { setMessage(e.target.value) }} styleType={'regular-short'} maxLength={200} />
 
                         <div className={styles['modal-field-subtitle']}>Are you sure you want to submit your assets for approval?</div>
@@ -1481,7 +1481,7 @@ const UploadApproval = () => {
                     </p>}
 
 
-                    <div>
+                    <div className={styles['confirm-action']}>
                         {!submitted && <>
                             <Button className={styles['keep-edit-btn']} type='button' text='Keep editing' styleType='secondary' onClick={() => { setShowConfirmModal(false); setMessage("") }} />
                             <Button className={styles['add-tag-btn']} type='button' text='Submit' styleType='primary' onClick={submit} />

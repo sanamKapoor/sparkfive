@@ -22,6 +22,9 @@
   display: flex;
   flex: 1;
 }
+.upload-approval {
+  margin-right: 15px;
+}
 
 .notifications-wrapper {
   display: flex;
@@ -104,5 +107,9 @@
   .menu-dropdown {
     left: 56px;
     top: 44px;
+  }
+  .upload-approval {
+    margin-left: 10px;
+    margin-right: 10px;
   }
 }

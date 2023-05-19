@@ -147,9 +147,6 @@ const CreatableSelect = ({
             )
             })}
         </ul>
-        <div className={styles["show-all"]}>
-              Show All 21
-            </div>
         {((!isShare && canAdd && hasPermission([ASSET_EDIT])) || ignorePermission) &&
           <>
             {dropdownIsActive ?

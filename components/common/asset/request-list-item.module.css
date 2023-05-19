@@ -48,6 +48,10 @@
   gap: 10px;
 }
 
+.headers-content h4 img{
+  width:12px;
+}
+
 .header h4:first-child {
   width: 35px;
 }
@@ -55,6 +59,7 @@
 .headers-content h4:first-child {
   width: 48%;
   justify-content: flex-start;
+  margin-right: auto;
 }
 
 /*.headers-content h4:last-child {*/
@@ -110,6 +115,7 @@
   font-size: 13px;
   position: relative;
   margin-bottom: 0;
+  margin-right: auto;
 }
 
 .field_author {
@@ -152,7 +158,9 @@
   gap: 24px;
   justify-content: center;
 }
-
+.field_actions img {
+  width: 12px;
+}
 .select-icon {
   width: 25px;
   height: auto;
@@ -175,6 +183,7 @@
   .info {
     flex-wrap: wrap;
     align-items: flex-end;
+    gap: 10px;
   }
 
   .name {
@@ -213,7 +222,7 @@
   border-radius: 12px;
   padding: 4px 12px;
   font-size: 12px;
-  width: 100px;
+  max-width: 100px;
 }
 
 
@@ -223,7 +232,7 @@
   border-radius: 12px;
   padding: 4px 12px;
   font-size: 12px;
-  width: 100px;
+  max-width: 100px;
   display: inline-block;
   text-align: center;
 }
@@ -234,7 +243,7 @@
   border-radius: 12px;
   padding: 4px 12px;
   font-size: 12px;
-  width: 100px;
+  max-width: 100px;
   display: inline-block;
   text-align: center;
 }
@@ -245,7 +254,7 @@
   border-radius: 12px;
   padding: 4px 12px;
   font-size: 12px;
-  width: 100px;
+  max-width: 100px;
   display: inline-block;
   text-align: center;
 }
@@ -264,7 +273,7 @@
   }
 
   .field_name {
-    width: 65%;
+    width: 61%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -274,7 +283,7 @@
   }
 
   .field_actions {
-    width: 30%;
+    width: 32%;
     gap: 16px;
   }
 

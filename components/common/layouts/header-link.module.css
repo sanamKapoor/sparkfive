@@ -27,3 +27,8 @@
 .text {
   padding-left: 10px;
 }
+
+
+@media (max-width:600px){
+  .ref{margin-right: auto;}
+}

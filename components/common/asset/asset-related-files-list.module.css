@@ -54,6 +54,7 @@
     font-weight: 400;
     margin-bottom: 4px;
     font-size: 13px;
+    word-break: break-all;
   }
   
   .dimension {
@@ -80,7 +81,9 @@
   .item-actions-wrapper {
     position: relative;
   }
-  
+  .item-actions-wrapper img{
+    width: 16px;
+  }
   .more ul {
     right: 0;
   }
@@ -97,4 +100,13 @@
         left: -75px !important;
         bottom: inherit !important;
     }
+
+    .head h2{
+      border:none;
+      margin-bottom: 0;
+      }
+
+    .actions img{
+      width: 14px;
+  }
 }

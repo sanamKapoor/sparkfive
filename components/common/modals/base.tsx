@@ -49,10 +49,10 @@ const Base = ({
       shouldFocusAfterRender={false}
       ariaHideApp={false}
     >
-      {closeButtonOnly &&
+      {/* {closeButtonOnly &&
         <img src={Utilities.blueClose} alt="close" className={`${styles.close} ${styles.close_only}`} onClick={closeModal} />
 
-      }
+      } */}
       {(headText) &&
         <div className={styles.header}>
           <div className={`${styles.text} ${closeButtonOnly ? styles['no-border'] : ""} ${textWidth && styles['full-width']}`}>

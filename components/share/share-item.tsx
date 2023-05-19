@@ -88,7 +88,7 @@ const ShareItem = ({
       {visibleOverlay && (
         <DetailOverlay
           initiaParams={{ side: "detail" }}
-          asset={asset}
+          asset={asset} 
           realUrl={realUrl}
           thumbailUrl={thumbailUrl}
           isShare={true}

@@ -803,7 +803,7 @@ const AssetAddition = ({
 
 	const SimpleButtonWrapper = ({ children }) => (
 		<div className={`${styles['button-wrapper']} ${!folderAdd && styles['button-wrapper-displaced']} asset-addition`}>
-			{hasPermission([ASSET_UPLOAD_APPROVAL]) && <span className={styles['approval-text']}>Upload for approval</span>}
+			{/* {hasPermission([ASSET_UPLOAD_APPROVAL]) && <span className={styles['approval-text']}>Upload for approval</span>} */}
 			{!hasPermission([ASSET_UPLOAD_APPROVAL]) &&<SimpleButton text='+' />}
 			{children}
 		</div>

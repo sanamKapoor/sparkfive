@@ -20,6 +20,9 @@
     cursor: pointer;
 }
 
+.button-wrapper:empty{
+    padding: 0 8px;
+}
 .options-list {
     position: absolute;
     top: 40px;

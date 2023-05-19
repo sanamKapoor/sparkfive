@@ -23,12 +23,14 @@
 .author-date {
   display: flex;
   font-size: 14px;
-  font-weight: 600;
+  align-items: center;
 }
 
 .author-date > span:first-child {
   display: inline-flex;
   margin-right: 10px;
+  font-weight: 600;
+
 }
 
 .author-date > span:last-child {

@@ -411,7 +411,7 @@ const CropSidePanel = ({ asset,
                         styleType='secondary'
                         onClick={() => togglePreview()} />
                     :
-                    <Button className={'m-r-15'}
+                    <Button className={'m-r-10'}
                         text='Reset Changes'
                         type='button'
                         styleType='secondary'
@@ -419,7 +419,8 @@ const CropSidePanel = ({ asset,
                             onResetImageSize()
                         } />
                 }
-                <Button text={'Download Edited'}
+                <Button className={'m-r-10'} 
+                    text={'Download Edited'}
                     type={'button'}
                     styleType={'primary'}
                     onClick={() => {

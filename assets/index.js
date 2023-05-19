@@ -73,6 +73,7 @@ export const Utilities = {
   versionsLight: require('./Icons/Utilities/Versions/versions-light.svg'),
   addVersion: require('./Icons/Utilities/Versions/add-version.svg'),
   embedCdn: require('./Icons/Utilities/EmbedCDN/embed-cdn.svg'),
+  embedCdnGrey: require('./Icons/Utilities/EmbedCDN/embed-cdn-grey.svg'),
   lockClosed: require('./Icons/Utilities/Lock/lock-closed.svg'),
   lockOpened: require('./Icons/Utilities/Lock/lock-opened.svg'),
   xMark: require('./Icons/Utilities/X-Mark/xmark-solid.svg'),

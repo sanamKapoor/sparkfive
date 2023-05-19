@@ -13,14 +13,24 @@
 .field-wrapper .resize-option{
   font-weight: bold;
   margin-left: 15px;
-  width: 20px;
-  height: 14px;
-  padding: 1px 5px;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  text-align: center;
+  display: inline-block;
   border: 1px solid #ccc;
   cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height:10px;
 }
-.selected{
+.field-wrapper .resize-option.selected{
   background: #ccc;
+  width: 28px;
+  height: 24px;
+
 }
 
 .meta-text{
@@ -70,16 +80,27 @@
 .field-radio-wrapper{
   display: flex;
 }
+.selectable-wrapper{
+  display: flex;
+  align-items: center;
+}
 
+.field-radio-wrapper img, .selectable-wrapper img{
+  width: 15px;
+}
+.field-radio-wrapper div{
+  margin-left: 8px;
+}
 .item-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  margin-left: 10px;
 }
 .select-item {
   width: 33%;
   display: grid;
-  grid-template-columns: 20px auto 20%;
+  grid-template-columns: 23px auto 15%;
   margin-top: 10px;
   align-items: center;
 }
@@ -89,13 +110,15 @@
 }
 
 .select-item p {
-  margin: 0 5px;
+  margin: 0;
 }
 
 .title{
   margin-bottom: 15px;
   font-size: 16px;
   font-weight: 400;
+  display: flex;
+    align-items: center;
 }
 
 .input-label{

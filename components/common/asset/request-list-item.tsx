@@ -92,7 +92,7 @@ const RequestListItem = ({
                 Status
               </h4>
               <h4>
-                Actions
+                Admin Actions
               </h4>
             </div>
           </div>

@@ -14,6 +14,7 @@ const AssetRelatedFilesList = () => {
 
     const options = [
         { label: 'Download', onClick: () => alert('download') },
+        { label: 'Dissociate', onClick: () => alert('dissociate') },
         { label: 'Delete', onClick: () => setDeleteModalOpen(true) }
     ]
 

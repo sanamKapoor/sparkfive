@@ -75,6 +75,12 @@
     }
 }
 
+@media (max-width:600px){
+    .radio-button-wrapper:last-child{
+        margin-left: 0;
+     }
+}
+
 .arrow-icon{
     height: 14px;
     width: 14px;
