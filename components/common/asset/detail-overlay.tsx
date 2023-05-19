@@ -1150,7 +1150,7 @@ const DetailOverlay = ({
               changeActiveSide("detail");
             }}
           />
-          {hasPermission([ASSET_EDIT]) && <IconClickable
+          {<IconClickable
             src={Utilities.comment}
             additionalClass={styles["menu-icon"]}
             onClick={() => {
