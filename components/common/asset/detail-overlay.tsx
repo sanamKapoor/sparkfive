@@ -981,7 +981,7 @@ const DetailOverlay = ({
                     // }}
                     onResizeStop={(e, direction, ref, delta, position) => onResizeStop(ref.style.width, ref.style.height, position)}
                   >
-                    <AssetImg name={assetDetail.name} assetImg={versionRealUrl} imgClass="img-preview" />
+                    <AssetImg name={assetDetail.name} assetImg={versionRealUrl} imgClass="img-preview" isResize />
                   </Rnd>
                 )}
 

@@ -55,6 +55,7 @@ const AssetGrid = ({
   openFilter,
   onCloseDetailOverlay = (assetData) => {},
 }) => {
+
   let isDragging;
   if (!isShare) isDragging = useDropzone();
   const {
@@ -67,7 +68,6 @@ const AssetGrid = ({
     folders,
     updateDownloadingStatus,
   } = useContext(AssetContext);
-
   const { advancedConfig, hasPermission, user } = useContext(UserContext);
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -91,7 +91,6 @@ const AssetGrid = ({
   ] = useSortedAssets(folders);
 
   const { setIsLoading } = useContext(LoadingContext);
-  const { setFolders } = useContext(AssetContext);
 
   const [focusedItem, setFocusedItem] = useState(null);
 

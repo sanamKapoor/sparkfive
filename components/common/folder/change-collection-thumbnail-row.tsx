@@ -1,7 +1,7 @@
 import React from "react";
 
 import IconClickable from "../buttons/icon-clickable";
-import redDeleteIconSrc from "../../../assets/Icons/Utilities/Delete/icn-utilities-delete-red.svg";
+import redDeleteIconSrc from "../../../assets/Icons/Utilities/Delete/icn-utilities-delete.svg";
 import classes from "./change-collection-thumbnail-row.module.css";
 
 const ChangeCollectionThumbnailRow = ({
@@ -16,6 +16,7 @@ const ChangeCollectionThumbnailRow = ({
 }) => {
   return (
     <div className={classes["row-wrapper"]}>
+      <div className={classes['img-wrapper-container']}>
       {index !== "0" && <p>{index}</p>}
       <div className={classes["img-preview-wrapper"]}>
         <div className={classes["img-box"]}>
@@ -29,8 +30,18 @@ const ChangeCollectionThumbnailRow = ({
           <p className={classes["img-name"]}>{imgName}</p>
         )}
       </div>
-      <IconClickable src={redDeleteIconSrc} onClick={onDelete} />
+      <div className={classes['del-icon-wrapper']}>
+      <IconClickable src={redDeleteIconSrc} onClick={onDelete} additionalClass={classes['delete-icon']} />
       <p>or</p>
+      </div>
+      </div>
+      <button
+        type="button"
+        onClick={onChangeThisOnly}
+        className={classes["change-this-btn"]}
+      >
+        {changeThisImgText}
+      </button>
       <label
         onChange={onUpload}
         htmlFor={`upload-file-${index}`}
@@ -45,13 +56,6 @@ const ChangeCollectionThumbnailRow = ({
         />
         Upload Image
       </label>
-      <button
-        type="button"
-        onClick={onChangeThisOnly}
-        className={classes["change-this-btn"]}
-      >
-        {changeThisImgText}
-      </button>
     </div>
   );
 };

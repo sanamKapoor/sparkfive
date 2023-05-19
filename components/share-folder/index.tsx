@@ -51,7 +51,7 @@ const ShareFolderMain = () => {
     const [firstLoaded, setFirstLoaded] = useState(false)
     const [activePasswordOverlay, setActivePasswordOverlay] = useState(true)
     const [loading, setLoading] = useState(true)
-    const [activeSearchOverlay, setActiveSearchOverlay] = useState(false)
+    const [activeSearchOverlay, setActiveSearchOverlay] = useState(true)
     const [openFilter, setOpenFilter] = useState(false)
     const [activeView, setActiveView] = useState('grid')
     const [sharePath, setSharePath] = useState('')
@@ -91,7 +91,7 @@ const ShareFolderMain = () => {
                 // @ts-ignore
                 queryParams.folders = activeSortFilter.filterFolders.map(item => item.value).join(',')
             }
-            const { data } = await shareCollectionApi.getFolders(queryParams)
+            const { data } = await shareCollectionApi.getFolders({...queryParams, ...(term && {term})})
 
             let assetList = { ...data, results: data.results }
             // if (lastUploadedFolder && activeSortFilter.mainFilter === "folders" && activeSortFilter.sort.value === "alphabetical") {
@@ -341,8 +341,9 @@ const ShareFolderMain = () => {
     
     return (
         <>
-            {!loading && <main className={styles.container}>
+            {!loading && <main className={`${styles.container} sharefolderOuter`}>
                 <TopBar
+                    activeSearchOverlay={activeSearchOverlay}
                     activeSortFilter={activeSortFilter}
                     setActiveSortFilter={setActiveSortFilter}
                     activeView={activeView}
@@ -354,15 +355,11 @@ const ShareFolderMain = () => {
                     isShare={true}
                     singleCollection={!!folderInfo.singleSharedCollectionId}
                     sharedAdvanceConfig={user ? undefined : advancedConfig}
+                    isFolder={activeSortFilter.mainFilter === 'folders'}
+                    sharePath={sharePath}
                 />
-                {/* {(activeMode === 'assets' ? selectedAssets.length : selectedFolders.length) > 0 &&
-                    <AssetHeaderOps
-                        isUnarchive={activeSortFilter.mainFilter === 'archived'}
-                        isFolder={activeMode === 'folders'}
-                        deletedAssets={false}
-                    />
-                } */}
                 <div className={`${openFilter && styles['col-wrapper']}`} style={{marginTop: top}}>
+                    <h1 style={{color: 'transparent'}}>Hello World</h1>
                     <AssetGrid
                         activeFolder={activeFolder}
                         getFolders={getFolders}
@@ -398,13 +395,14 @@ const ShareFolderMain = () => {
                     logo={folderInfo?.teamIcon}
                 />
             }
-            {activeSearchOverlay && !loading &&
+            {/* {!loading &&
                 <SearchOverlay
                     sharePath={sharePath}
                     closeOverlay={closeSearchOverlay}
                     activeFolder={activeFolder}
+                    isFolder={activeSortFilter.mainFilter === 'folders'}
                 />
-            }
+            } */}
         </>
     )
 }

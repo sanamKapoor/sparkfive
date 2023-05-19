@@ -514,10 +514,109 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
               asyncCreateFn={(newItem) => {
                 setIsLoading(true);
 
+<<<<<<< HEAD
                 return assetApi.addTag(id, newItem)
               }}
               dropdownIsActive={activeDropdown === 'tags'}
               sortDisplayValue={true}
+=======
+      <div className={styles['field-wrapper']} >
+        <CreatableSelect
+          title='Tags'
+          addText='Add Tags'
+          onAddClick={() => setActiveDropdown('tags')}
+          selectPlaceholder={'Enter a new tag or select an existing one'}
+          avilableItems={availNonAiTags}
+          setAvailableItems={setAvailNonAiTags}
+          selectedItems={nonAiTags}
+          setSelectedItems={(value)=>{
+            setIsLoading(false)
+            setNonAiTags(value)}
+        }
+          onAddOperationFinished={(stateUpdate) => {
+            updateAssetState({
+              tags: { $set: stateUpdate.concat(aiTags) }
+            })
+            loadTags()
+          }}
+          onRemoveOperationFinished={async (index, stateUpdate) => {
+            setIsLoading(true);
+
+            await assetApi.removeTag(id, nonAiTags[index].id)
+            updateAssetState({
+              tags: { $set: stateUpdate.concat(aiTags) }
+            })
+
+            setIsLoading(false);
+          }}
+          onOperationFailedSkipped={() => setActiveDropdown('')}
+          isShare={isShare}
+          asyncCreateFn={(newItem) => {
+            setIsLoading(true);
+            return assetApi.addTag(id, {...newItem, type: 'regular'})
+          }}
+          dropdownIsActive={activeDropdown === 'tags'}
+          sortDisplayValue={true}
+        />
+      </div>
+
+      {advancedConfig.aiTagging && ['png', 'jpg', 'jpeg'].indexOf(asset.extension.toLowerCase()) > -1 &&
+      <div className={styles['field-wrapper']} >
+        <CreatableSelect
+          title='AI Tags'
+          addText='Add AI Tags'
+          type='AI'
+          creatable = {false}
+          onAddClick={() => setActiveDropdown('ai-tags')}
+          selectPlaceholder={'Select an existing one'}
+          avilableItems={availAiTags}
+          setAvailableItems={setAvailNonAiTags}
+          selectedItems={aiTags}
+          setSelectedItems={(value)=>{
+            setIsLoading(false)
+            setAiTags(value)
+          }}
+          onAddOperationFinished={(stateUpdate) => {
+            updateAssetState({
+              tags: { $set: stateUpdate.concat(nonAiTags) }
+            })
+            loadTags()
+          }}
+          onRemoveOperationFinished={async (index, stateUpdate) => {
+            setIsLoading(true);
+
+            await assetApi.removeTag(id, aiTags[index].id)
+            updateAssetState({
+              tags: { $set: stateUpdate.concat(nonAiTags) }
+            })
+
+            setIsLoading(false);
+          }}
+          onOperationFailedSkipped={() => setActiveDropdown('')}
+          isShare={isShare}
+          asyncCreateFn={(newItem) => {
+            setIsLoading(true);
+
+            return assetApi.addTag(id, {...newItem, type: 'AI'})}
+        }
+          dropdownIsActive={activeDropdown === 'ai-tags'}
+          sortDisplayValue={true}
+        />
+      </div>
+      }
+
+      {inputCustomFields.map((field, index)=>{
+        if(field.type === 'selectOne'){
+
+          return <div className={`${styles['field-wrapper']} ${styles['cus-dropdown']}`} key={index}>
+            <div className={`secondary-text ${styles.field}`}>{field.name}</div>
+            <CustomFieldSelector
+                data={assetCustomFields[index]?.values[0]?.name}
+                options={field.values}
+                isShare={isShare}
+                onLabelClick={() => { }}
+                handleFieldChange={(option)=>{onChangeSelectOneCustomField(option, index)}}
+>>>>>>> elasticsearch-dev
             />
           </div>
 

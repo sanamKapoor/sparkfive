@@ -516,8 +516,14 @@ const DeletedAssetsLibrary = () => {
 		  setOpenFilter={setOpenFilter}
 		  openFilter={openFilter}
 		  deletedAssets={true}
+<<<<<<< HEAD
 		/> */}
 		  <div className={`${openFilter && styles['col-wrapper']} ${styles['grid-wrapper']}`}>
+=======
+		  isFolder={activeSortFilter?.mainFilter === 'folders'}
+		/>
+		  <div className={`${openFilter && styles['col-wrapper']} ${styles['grid-wrapper']}`} style={{marginTop: top}}>
+>>>>>>> elasticsearch-dev
 		  <DropzoneProvider>
 			<DeletedAssets
 			  activeFolder={activeFolder}

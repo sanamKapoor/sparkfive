@@ -32,6 +32,8 @@ import {
 import RenameModal from '../../common/modals/rename-modal'
 import update from "immutability-helper";
 
+import AssetImg from "../asset/asset-img";
+
 const FolderListItem = ({
   index,
   id,
@@ -66,7 +68,7 @@ const FolderListItem = ({
   const { updateDownloadingStatus, folders, setFolders } =
     useContext(AssetContext);
 
-  const dateFormat = "MMM do, yyyy h:mm a";
+  const dateFormat = "MMM do, yyyy";
 
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [collectionName, setCollectionName] = useState(name);
@@ -74,6 +76,17 @@ const FolderListItem = ({
 
   const [folderRenameModalOpen, setFolderRenameModalOpen] = useState(false);
 
+  const initialPreviewImgSrc = thumbnailPath
+    ??  (thumbnails?.thumbnails && thumbnails?.thumbnails?.length > 0
+    ? thumbnails?.thumbnails[0].filePath
+    : assets[0]?.realUrl);
+
+  const [previewImgSrc, setPreviewImgSrc] = useState(initialPreviewImgSrc)
+
+  const handleImagePreviewOnError = (e) => {
+   setPreviewImgSrc(Assets.empty)
+  }
+    
   useEffect(() => {
     setCollectionName(name);
   }, [name]);
@@ -234,22 +247,9 @@ const FolderListItem = ({
           onClick={toggleSelected}
         >
           <div
-            style={{ display: "none" }}
-            className={`${styles["selectable-wrapper"]} ${
-              isSelected && styles["selected-wrapper"]
-            }`}
+            className={`${styles.thumbnail}`}
           >
-            {!isLoading && (
-              <IconClickable
-                src={
-                  isSelected
-                    ? Utilities.radioButtonEnabled
-                    : Utilities.radioButtonNormal
-                }
-                additionalClass={styles["select-icon"]}
-                onClick={toggleSelected}
-              />
-            )}
+           <img src={previewImgSrc ?? Assets.empty} alt="" onError={handleImagePreviewOnError} />
           </div>
 
           <div
@@ -273,7 +273,7 @@ const FolderListItem = ({
                 className={`normal-text ${styles.textEllipse} ${gridStyles["editable-preview"]}`}
                 onClick={handleOnFocus}
               >
-                {collectionName}
+                 {collectionName}
               </span>
             )}
           </div>

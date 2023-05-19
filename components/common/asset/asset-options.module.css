@@ -4,4 +4,10 @@
   
   .more ul {
     right: 0;
+    bottom: 30px;
+    top: inherit;
+  }
+
+  img.thumbnailDots {
+    width: 16px;
   }

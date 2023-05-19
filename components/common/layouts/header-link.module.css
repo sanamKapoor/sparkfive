@@ -7,6 +7,10 @@
   font-weight: 600;
 }
 
+.ref:nth-child(2), .ref:nth-child(3) {
+  display: none;
+}
+
 .link {
   display: flex;
 }

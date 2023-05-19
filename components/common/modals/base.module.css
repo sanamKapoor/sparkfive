@@ -19,6 +19,13 @@
   height: fit-content;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 8px;
+  padding-bottom: 20px;
+}
+
+@media screen and (max-width: 410px) {
+  .modal {
+    min-width: 90%;
+  }
 }
 
 .no-height-max {
@@ -40,11 +47,9 @@
 }
 
 @media screen and (min-width: 801px) {
-  .overlay {
-    background: transparent;
+  .overlay { 
     align-items: flex-start;
-    top: 188px;
-    height: auto;
+    padding-top: 188px;
   }
 }
 

@@ -1076,6 +1076,7 @@ const UploadApproval = () => {
         updateName(debouncedBatchName)
     }, [debouncedBatchName]);
 
+<<<<<<< HEAD
 
     const previousBatches = [
         {
@@ -1117,6 +1118,25 @@ const UploadApproval = () => {
                 showAssetAddition={false}
             />
             <div className={`row ${styles['root-row']}`}>
+=======
+  return (
+    <>
+      <AssetSubheader
+        activeFolder={""}
+        getFolders={()=>{}}
+        mode={"assets"}
+        amountSelected={selectedAssets.length }
+        activeFolderData={null}
+        backToFolders={()=>{}}
+        setRenameModalOpen={()=>{}}
+        activeSortFilter={{}}
+        titleText={"File Upload Page"}
+        showAssetAddition={false}
+      />
+        <div className={`row ${styles['root-row']}`} style={{marginTop: top}}>
+            <div className={`col-70 height-100`}>
+                
+>>>>>>> elasticsearch-dev
                 <main className={`${styles.container} p-r-0`}>
 
                     <p className={styles.title}>Create Upload Batch for Approval</p>

@@ -14,7 +14,8 @@ const AssetImg = ({
   onClick = () => {},
   imgClass = "",
   style={},
-  activeFilter=""
+  activeFilter="",
+  isResize
 }) => {
   const [loaded, setLoaded] = useState(false);
 
@@ -33,12 +34,12 @@ const AssetImg = ({
         src={Assets.empty}
         alt={"blank"}
         className={`${styles[activeFilter]}`}
-        style={loaded ? { display: "none" } : { width: '100%', height: "100%", "object-fit": "contain"}}
+        style={loaded ? { display: "none" } : { width: '100%', height: "100%", "object-fit": "cover"}}
       />
       <img
         onClick={onClick}
         src={finalImg}
-        className={`asset-img ${styles.asset} ${opaque && styles.opaque} ${imgClass} ${styles[imgClass]} ${styles[activeFilter]}`}
+        className={`asset-img ${!isResize ? styles.asset : styles.asset__crop} ${opaque && styles.opaque} ${imgClass} ${styles[imgClass]} ${styles[activeFilter]}`}
         onLoad={() => setLoaded(true)}
         onError={(e) => {setLoaded(false)}}
         style={

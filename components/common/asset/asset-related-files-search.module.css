@@ -71,3 +71,19 @@
     max-width: 94px;
     height: auto;
 }
+
+.thumbnail-image-50{
+   width: 100px;
+   height: 100px;
+   object-fit: cover;
+}
+
+.change-btn{
+    padding: 8px 24px;
+    margin-bottom: 20px;
+  }
+
+.upload-logo-txt{
+    font-size: 12px;
+    font-weight: 300;
+}

@@ -1,3 +1,8 @@
+.wrapper{
+    padding-bottom: 40px;
+    height: 100%;
+}
+
 .input-wrapper{
     padding: 16px 28px;
 }
@@ -13,9 +18,16 @@
     align-items: center;
 }
 
+.radio-button-wrapper:last-child{
+   margin-left: 50px;
+}
+
+.radio-button-wrapper img {
+    width: 14px;
+}
 
 .row-field-content{
-    padding-left: 15px;
+    padding: 20px 0 20px 20px;
 }
 
 .field-radio-wrapper{
@@ -25,6 +37,10 @@
 .title{
     margin-bottom: 15px;
     font-weight: 600;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
 }
 
 .spinner{
@@ -35,4 +51,31 @@
 .helper-text {
     font-size: 12px;
     font-weight: 300;
+}
+
+.action-button{
+  width: 18px;
+  height: 18px;
+}
+
+.shareModal{
+    padding-bottom: 20px;
+}
+
+@media screen and (min-width: 767px) {
+    .shareModal {
+        width: 605px;
+    }
+}
+
+@media screen and (max-width: 575px) {
+    .field-radio-wrapper{
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+.arrow-icon{
+    height: 14px;
+    width: 14px;
 }
