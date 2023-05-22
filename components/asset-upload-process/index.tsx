@@ -1,6 +1,4 @@
-import { useContext, useState } from "react";
-import { Line } from "rc-progress";
-import clsx from "clsx";
+import { useContext } from "react";
 
 import styles from "./index.module.css";
 
@@ -9,6 +7,7 @@ import React from "react";
 
 import { Utilities } from "../../assets";
 import teamApi from "../../server-api/team";
+import AssetUploadItem from "./asset-upload-item";
 
 const AssetUploadProcess = () => {
   const {
@@ -17,7 +16,6 @@ const AssetUploadProcess = () => {
     showUploadProcess,
     uploadingFile,
     uploadRemainingTime,
-    uploadingPercent,
     dropboxUploadingFile,
     uploadSourceType,
     retryListCount,
@@ -25,28 +23,31 @@ const AssetUploadProcess = () => {
     reUploadAsset,
     assets,
     activeFolder,
-    folderGroups
+    folderGroups,
   } = useContext(AssetContext);
 
-  const failAssetsCount = uploadingAssets.filter(
+  const uploadFailedAssets = uploadingAssets.filter(
     (asset) => asset.status === "fail"
-  ).length;
+  );
 
   const handleRetry = async (i) => {
-    const failedAssets = uploadingAssets.filter(
-      (asset) => asset.status === "fail"
-    ).map(item => ({...item, status: 'queued', isUploading: true, index: i }))
+    const failedAssets = uploadFailedAssets.map((item) => ({
+      ...item,
+      status: "queued",
+      isUploading: true,
+      index: i,
+    }));
 
-    showUploadProcess('uploading', i)
-		setUploadingAssets(failedAssets);
+    showUploadProcess("uploading", i);
+    setUploadingAssets(failedAssets);
 
     let totalSize = 0;
-    // Calculate the rest of size
-    uploadingAssets.map((asset)=>{
-      totalSize += asset.asset.size
-    })
 
-    const { data: subFolderAutoTag } = await teamApi.getAdvanceOptions()
+    uploadingAssets.map((asset) => {
+      totalSize += asset.asset.size;
+    });
+
+    const { data: subFolderAutoTag } = await teamApi.getAdvanceOptions();
 
     await reUploadAsset(
       i,
@@ -60,12 +61,14 @@ const AssetUploadProcess = () => {
     );
   };
 
+  const uploadInProgress =
+    uploadingStatus === "uploading" || uploadingStatus === "re-uploading";
+
   return (
     <>
       <div className={styles.uploadingContainer}>
         <div className={styles.uploadHeader}>
-          {(uploadingStatus === "uploading" ||
-            uploadingStatus === "re-uploading") &&
+          {uploadInProgress &&
             (uploadSourceType === "dropbox" && dropboxUploadingFile ? (
               <div className={styles.mainHeading}>
                 Uploading {dropboxUploadingFile! + 1} of{" "}
@@ -76,13 +79,13 @@ const AssetUploadProcess = () => {
                 Uploading {uploadingFile! + 1} of{" "}
                 {uploadingStatus === "re-uploading"
                   ? retryListCount
-                  : uploadingAssets.length}
-                {" "}assets
+                  : uploadingAssets.length}{" "}
+                assets
               </div>
             ))}
           {uploadingStatus === "done" && (
             <div className={styles.mainHeading}>
-              {uploadingAssets.length - failAssetsCount} of{" "}
+              {uploadingAssets.length - uploadFailedAssets.length} of{" "}
               {uploadingAssets.length} assets uploaded
             </div>
           )}
@@ -90,64 +93,27 @@ const AssetUploadProcess = () => {
             Estimated Time:{" "}
             {uploadingStatus === "done" ? "Finished" : uploadRemainingTime}
           </div>
-            <img
-              src={Utilities.blueClose}
-              alt={"close"}
-              className={styles.closebtn}
-              onClick={() => {
-                showUploadProcess("none");
-              }}
-            />
+          <img
+            src={Utilities.blueClose}
+            alt={"close"}
+            className={styles.closebtn}
+            onClick={() => {
+              showUploadProcess("none");
+            }}
+          />
         </div>
 
         <div className={styles.list}>
-        {uploadingAssets.length > 0 &&
-          uploadingAssets.map((item) => (
-            <div className={styles.innerUploadList}>
-              <div className={styles.uploadItem}>
-                <div>{item?.asset?.name}</div>
-                {item?.status === "done" && uploadingStatus === "done" && (
-                  <>
-                    <div>Complete</div>
-                    <div className={styles.flexdiv}>
-                      <img src={Utilities.checkMark} alt={"complete"} />
-                    </div>
-                  </>
-                )}
-                {item?.status === "fail" && uploadingStatus === "done" && (
-                  <>
-                    <span>Error</span>
-                    <div style={{ color: "red", fontSize: "20px" }}>x</div>
-                    <span
-                      className={`${styles["underline-text"]} ${styles["no-max-min-width"]}`}
-                      onClick={() => handleRetry(item?.index)}
-                    >
-                      Retry
-                    </span>
-                  </>
-                )}
-                {(uploadingStatus === "uploading" ||
-                  uploadingStatus === "re-uploading") && (
-                  <div className={styles.lineBar}>
-                    <Line
-                      percent={uploadingPercent}
-                      strokeWidth={1}
-                      strokeColor="#10bda5"
-                      style={{
-                        width: "158px",
-                        height: "12px",
-                        borderRadius: "10px",
-                      }}
-                      trailColor={"#9597a6"}
-                    />
-                    {uploadingPercent ?? 0}%
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-       
-          </div>
+          {uploadingAssets.length > 0 &&
+            uploadingAssets.map((item, index) => (
+              <AssetUploadItem
+                key={index}
+                item={item}
+                index={index}
+                handleRetry={handleRetry}
+              />
+            ))}
+        </div>
       </div>
     </>
   );
