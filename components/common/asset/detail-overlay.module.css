@@ -167,7 +167,8 @@
   padding: 16px 32px;
   width: 100px;
 }
-
+.asset-actions ul li {border-top: 1px solid #DEDAD4 !important;}
+.asset-actions ul li:first-child{border-top: none;}
 .menu-icon {
   width: 20px;
   height: auto;
