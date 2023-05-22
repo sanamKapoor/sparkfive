@@ -18,24 +18,27 @@ const VersionList = ({
         <h2>Version History</h2>
       </div>
       <ul>
-        <VersionListItem
-          current
-          key={currentAsset.id}
-          asset={currentAsset}
-        />
-
-        {versions.map((version, index) => (
-          <VersionListItem
-            key={version.id || index}
-            asset={version}
-            currentAction={() => { triggerUserEvent('revert', version) }}
-            downloadAction={() => { downloadVersion(version) }}
-            deleteAction={() => { triggerUserEvent('delete', version) }}
-          />
-        ))}
+        <VersionListItem current key={currentAsset.id} asset={currentAsset} />
+        {versions
+          .sort((a, b) => a.displayVersion - b.displayVersion)
+          .map((version, index) => (
+            <VersionListItem
+              key={version.id || index}
+              asset={version}
+              currentAction={() => {
+                triggerUserEvent("revert", version);
+              }}
+              downloadAction={() => {
+                downloadVersion(version);
+              }}
+              deleteAction={() => {
+                triggerUserEvent("delete", version);
+              }}
+            />
+          ))}
       </ul>
     </div>
-  )
+  );
 }
 
 export default VersionList
