@@ -30,11 +30,11 @@ const Main = () => {
                     active={activeList === 'customFields'}
                     onClick={() => setActiveList('customFields')}
                 />
-                <SectionButton
-                    text='Products'
-                    active={activeList === 'products'}
-                    onClick={() => setActiveList('products')}
-                />
+                {/*<SectionButton*/}
+                {/*    text='Products'*/}
+                {/*    active={activeList === 'products'}*/}
+                {/*    onClick={() => setActiveList('products')}*/}
+                {/*/>*/}
 
                 <SectionButton
                     text='Collections'
@@ -46,7 +46,7 @@ const Main = () => {
             {activeList === 'tags' && <TagManagement />}
             {activeList === 'campaigns' && <CampaignManagement />}
             {activeList === 'customFields' && <CustomFieldsManagement />}
-            {activeList === 'products' && <ProductManagment />}
+            {/*{activeList === 'products' && <ProductManagment />}*/}
             {activeList === 'collections' && <CollectionManagement />}
         </>
     )

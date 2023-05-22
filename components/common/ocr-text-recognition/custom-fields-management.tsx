@@ -20,42 +20,6 @@ import toastUtils from '../../../utils/toast'
 const maximumCustomFields = 6;
 
 const defaultCustomFields = [
-    {
-        id: null,
-        name: '',
-        type: 'selectOne',
-        values: []
-    },
-    {
-        id: null,
-        name: '',
-        type: 'selectOne',
-        values: []
-    },
-    {
-        id: null,
-        name: '',
-        type: 'selectOne',
-        values: []
-    },
-    {
-        id: null,
-        name: '',
-        type: 'selectOne',
-        values: []
-    },
-    {
-        id: null,
-        name: '',
-        type: 'selectOne',
-        values: []
-    },
-    {
-        id: null,
-        name: '',
-        type: 'selectOne',
-        values: []
-    }
 ]
 
 const sort = (data) => {
@@ -160,21 +124,27 @@ const CustomFieldsManagement = () => {
         }
 
         // Hide loading
-        setLoading(false)
+        // setLoading(false)
     }
 
     const getOcrCustomFields = async () => {
-        let { data } = await teamApi.getOcrCustomFields({ isAll: 1, sort: 'createdAt,asc' })
+        let { data } = await teamApi.getOcrCustomFields()
 
         const mapping = mappingCustomFieldData(customFieldList, data)
         console.log({ data, customFieldList, mapping})
 
 
         setOcrCustomFields(mapping)
+
+        // Show loading
+        setLoading(false)
     }
 
     useEffect(()=>{
-        getOcrCustomFields();
+        if(customFieldList.length > 0){
+            getOcrCustomFields();
+        }
+
     },[customFieldList])
 
     // Save updated changes
@@ -211,7 +181,7 @@ const CustomFieldsManagement = () => {
         setLoading(true)
 
         // Call API to delete tag
-        // await customFieldsApi.deleteCustomField({ attributeIds: [id] })
+        await teamApi.removeOcrCustomFields(id)
 
         // Refresh the list
         getCustomFields();
@@ -219,7 +189,6 @@ const CustomFieldsManagement = () => {
 
     useEffect(() => {
         getCustomFields();
-        getOcrCustomFields();
     }, [])
 
     return (

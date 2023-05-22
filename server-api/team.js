@@ -30,4 +30,7 @@ export default {
   getOcrCustomFields: () => axios.get(`${teamUrl}/ocr-custom-fields`),
   addOcrCustomFields: (data) => axios.post(`${teamUrl}/ocr-custom-fields`, data),
   removeOcrCustomFields: (id) => axios.delete(`${teamUrl}/ocr-custom-fields/${id}`),
+  getOcrCollections: () => axios.get(`${teamUrl}/ocr-folders`),
+  addOcrCollection: (data) => axios.post(`${teamUrl}/ocr-folders`, data),
+  removeOcrCollection: (id) => axios.delete(`${teamUrl}/ocr-folders/${id}`),
 }
