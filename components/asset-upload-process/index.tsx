@@ -59,21 +59,21 @@ const AssetUploadProcess = () => {
       subFolderAutoTag
     );
   };
-
+  
   return (
     <>
       <div className={styles.uploadingContainer}>
         <div className={styles.uploadHeader}>
           {(uploadingStatus === "uploading" ||
             uploadingStatus === "re-uploading") &&
-            (uploadSourceType === "dropbox" && dropboxUploadingFile ? (
+            (uploadSourceType === "dropbox" && dropboxUploadingFile  ? (
               <div className={styles.mainHeading}>
                 Uploading {dropboxUploadingFile! + 1} of{" "}
                 {uploadingAssets.length} assets
               </div>
             ) : (
               <div className={styles.mainHeading}>
-                Uploading {uploadingFile! + 1} of{" "}
+                Uploading {(uploadingFile ?? 0) + 1} of{" "}
                 {uploadingStatus === "re-uploading"
                   ? retryListCount
                   : uploadingAssets.length}
