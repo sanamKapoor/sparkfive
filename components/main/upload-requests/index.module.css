@@ -87,7 +87,9 @@
 .uploadContainer{
   width: 100%;
   padding: 0 40px;
+  display: flex;
 }
+.topTitle{margin-right: auto;}
 .button-wrapper button:last-child{
   margin-right: 0;
 }
@@ -122,6 +124,7 @@
 
 .add-tag-btn{
   margin-bottom: 32px;
+  margin-top: 25px;
 }
 
 .menu {
@@ -205,7 +208,9 @@
   font-size: 12px;
 }
 
-
+.upload-section{
+  display: flex;
+}
 
 @media screen and (max-width: 900px) {
   .container {
@@ -235,6 +240,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  padding: 15px;
   flex-wrap: wrap;
 }
 
@@ -300,11 +306,13 @@
 }
 
 .back {
-  margin-right: 0.3rem;
+  margin-right: 0;
   color: var(--color-sec-ivory);
   font-size: 25px;
   font-family: monospace;
   cursor: pointer;
+  transform: scaleX(-1);
+  display: none
 }
 
 .additional-folder-wrapper {
@@ -327,7 +335,7 @@
   display: flex;
   justify-content: flex-end;
   width: 100%;
-  /* margin-top: 36px; */
+  margin-top: 15px;
 }
 
 .navigation-wrapper span{
@@ -439,7 +447,9 @@
 }
 
 @media screen and (max-width: 600px) {
-
+  .back {
+    display: block
+  }
   .uploadContainer{
     padding-bottom: 70px;
   }
@@ -500,15 +510,16 @@
   }
   
   .right-panel {
-    position: relative;
-    z-index: 999;
+
+    position: absolute;
+    z-index: 99;
     width: auto;
     background-color: white;
-    right: 0;
-    left: 0;
+    right: 44px;
+    left: inherit;
     top: 0;
     bottom: 0;
-    min-width: 100%;
+    min-width: 90%;
   }
 
   .root-row {
