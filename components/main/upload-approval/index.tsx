@@ -102,6 +102,8 @@ const UploadApproval = () => {
 
     const [batchName, setBatchName] = useState("")
 
+    const [prevBatches, setPrevBatches] = useState([]);
+
     const debouncedBatchName = useDebounce(batchName, 500);
     const [sideOpen, setSideOpen] = useState(isMobile ? false : true);
 
@@ -1070,38 +1072,38 @@ const UploadApproval = () => {
     useEffect(() => {
         checkValidUser()
         getTagsInputData()
+        fetchPrevBatches()
     }, [])
 
     useEffect(() => {
         updateName(debouncedBatchName)
     }, [debouncedBatchName]);
 
+    const fetchPrevBatches = async () => {
+        setIsLoading(true);
+        const { data } = await approvalApi.getUploadApprovals();
+        setPrevBatches(data);
+        setIsLoading(false);
+      }
+    
+    const getBatchStatus = (status: number) => {
+            switch (status) {
+              case -1: {
+                return <span>Rejected</span>
+              }
+              case 0: {
+                return <span>Pending</span>
+              }
+              case 2: {
+                return <span>Completed</span>
+              }
+              default: {
+                return <span>Draft</span>
+              }
+            }
 
-    const previousBatches = [
-        {
-            name: 'AdobeStock_548798798(1)small.jpeg',
-            thumbailUrl: 'https://picsum.photos/200',
-            status: 'Draft',
-            createdAt: '01/25/2023',
-            size: '1.58 MB'
-        },
-        {
-            name: 'AdobeStock_548798798(1)small.jpeg',
-            thumbailUrl: 'https://picsum.photos/200',
-            status: 'Submitted',
-            createdAt: '01/25/2023',
-            size: '1.58 MB'
-        },
-        {
-            name: 'AdobeStock_548798798(1)small.jpeg',
-            thumbailUrl: 'https://picsum.photos/200',
-            status: 'Draft',
-            createdAt: '01/25/2023',
-            size: '1.58 MB'
-        }
-    ]
-
-
+    }
+    
     return (
         <>
             <AssetSubheader
@@ -1288,20 +1290,20 @@ const UploadApproval = () => {
                             ) : (
                                 <>
                                     <h2 className={styles['detail-title']}>Previous Batches</h2>
-                                    {previousBatches.length > 0 ? (
+                                    {prevBatches.length > 0 ? (
                                         <ul>
-                                            {previousBatches.map((asset, i) => (
+                                            {prevBatches.map((batch, i) => (
                                                 <li className={styles['previous-item']} key={i}>
                                                     <div className={styles['previous-item-wrapper']}>
                                                         <div className={styles['previous-thumbnail']}>
-                                                            {asset.thumbailUrl && <img src={asset.thumbailUrl || Assets.unknown} alt={asset.name} />}
-                                                            {!asset.thumbailUrl && <AssetIcon extension={asset.extension} onList={true} />}
+                                                            {batch?.assets[0]?.thumbailUrl && <img src={batch?.assets[0]?.thumbailUrl || Assets.unknown} alt={batch?.name} />}
+                                                            {!batch?.assets[0]?.thumbailUrl && <AssetIcon extension={batch?.assets[0]?.asset.extension} onList={true} />}
                                                         </div>
                                                         <div className={styles['info-wrapper']}>
                                                             <div>
-                                                                <div className={styles['previous-name']}>{asset.name}</div>
-                                                                <div className={styles['previous-status']}>{asset.status}</div>
-                                                                <div className={styles['previous-date']}>{asset.createdAt}</div>
+                                                                <div className={styles['previous-name']}>{batch?.name ? batch?.name : 'Untitled'}</div>
+                                                                <div className={styles['previous-status']}>{getBatchStatus(batch?.status)}</div>
+                                                                <div className={styles['previous-date']}>{moment(batch?.createdAt).format("MM/DD/YYYY")}</div>
                                                             </div>
 
                                                         </div>
