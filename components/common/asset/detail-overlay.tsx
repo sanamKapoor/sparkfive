@@ -920,10 +920,18 @@ const DetailOverlay = ({
                           {versionCount + 1} versions
                         </div>
                       )}
-                    <img src={Utilities.ellipse} />
-                    <div className={styles["related-number"]}>
-                      6 Related files
-                    </div>
+                    {asset?.fileAssociations.length > 0 && (
+                      <>
+                        <img src={Utilities.ellipse} />
+                        <div className={styles["related-number"]}  onClick={() => {
+                            setMode("detail");
+                            resetValues();
+                            changeActiveSide("related");
+                          }}>
+                          {asset?.fileAssociations.length} Related files
+                        </div>
+                      </>
+                    )}
                   </div>
                 )}
               </div>
@@ -1252,7 +1260,7 @@ const DetailOverlay = ({
             <AssetNotes asset={asset} notes={notes} applyCrud={applyCrud} />
           )}
 
-          {activeSideComponent === "related" && <AssetRelatedFilesList />}
+          {activeSideComponent === "related" && <AssetRelatedFilesList relatedAssets={asset?.fileAssociations}/>}
         </section>
       )}
       {!isShare && (
@@ -1319,7 +1327,9 @@ const DetailOverlay = ({
                 <IconClickable
                   // src={Utilities.embedCdn}
                   src={isMobile ? Utilities.embedCdnGrey : Utilities.embedCdn}
-                  additionalClass={styles["menu-icon"] + " " + styles["cdn-icon"]}
+                  additionalClass={
+                    styles["menu-icon"] + " " + styles["cdn-icon"]
+                  }
                   onClick={() => {
                     setMode("detail");
                     resetValues();
@@ -1352,7 +1362,7 @@ const DetailOverlay = ({
                   />
                 )}
 
-              <IconClickable
+              {asset?.fileAssociations.length > 0 && <IconClickable
                 src={isMobile ? Utilities.relatedLight : Utilities.related}
                 additionalClass={styles["menu-icon"]}
                 onClick={() => {
@@ -1360,7 +1370,7 @@ const DetailOverlay = ({
                   resetValues();
                   changeActiveSide("related");
                 }}
-              />
+              />}
               {hasPermission(["admin", "super_admin"]) && (
                 <IconClickable
                   src={isMobile ? Utilities.notesLight : Utilities.notes}

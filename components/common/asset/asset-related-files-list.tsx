@@ -8,38 +8,15 @@ import AssetAddition from './asset-addition'
 import styles from './asset-related-files-list.module.css'
 import { format } from 'date-fns'
 import fileSize from 'filesize'
+import AssetIcon from './asset-icon'
 
-const AssetRelatedFilesList = () => {
+const AssetRelatedFilesList = ({relatedAssets}) => {
     const [deleteModaOpen, setDeleteModalOpen] = useState(false)
 
     const options = [
         { label: 'Download', onClick: () => alert('download') },
         { label: 'Dissociate', onClick: () => alert('dissociate') },
         { label: 'Delete', onClick: () => setDeleteModalOpen(true) }
-    ]
-
-    const relaredAssets = [
-        {
-            name: 'AdobeStock_548798798(1)small.jpeg',
-            thumbailUrl: 'https://picsum.photos/200',
-            dimension: '1500 x 1125',
-            createdAt: '01/25/2023',
-            size: '1.58 MB'
-        },
-        {
-            name: 'AdobeStock_548798798(1)small.jpeg',
-            thumbailUrl: 'https://picsum.photos/200',
-            dimension: '1500 x 1125',
-            createdAt: '01/25/2023',
-            size: '1.58 MB'
-        },
-        {
-            name: 'AdobeStock_548798798(1)small.jpeg',
-            thumbailUrl: 'https://picsum.photos/200',
-            dimension: '1500 x 1125',
-            createdAt: '01/25/2023',
-            size: '1.58 MB'
-        }
     ]
 
     return (
@@ -54,7 +31,7 @@ const AssetRelatedFilesList = () => {
             </div>
 
             <ul>
-                {relaredAssets.map((asset, i) => (
+                {relatedAssets?.map((asset, i) => (
                     <li className={styles.item} key={i}>
                         <div className={styles['item-wrapper']}>
                             <div className={styles.thumbnail}>
