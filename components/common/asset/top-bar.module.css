@@ -255,7 +255,7 @@ li.dropdown-title {
   .filter-mobile {
     position: absolute;
     top: -26px;
-    right: 8px;
+    right: 22px;
     cursor: pointer;
   }
 }
