@@ -787,7 +787,7 @@ const AssetsLibrary = () => {
                 />
                 }
               </DropzoneProvider>
-              {openFilter &&
+              {openFilter && hasPermission([ASSET_ACCESS]) &&
                 <FilterContainer
                   clearFilters={clearFilters}
                   openFilter={openFilter}
