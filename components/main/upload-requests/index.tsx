@@ -1209,7 +1209,9 @@ const UploadRequest = () => {
             {mode === "view" && (
               <div className={`${styles["button-wrapper"]} m-b-25`}>
                 <div className={styles["topTitle"]}>
+                
                   <div className={styles["main-title"]}>
+                    <p>Upload Requests<span><img src={Utilities.arrowNav} alt="arrow" className={styles.close} /></span></p>
                     {currentApproval?.name || "Untitled"}
                   </div>
                   <div className={styles["main-subtitle"]}>

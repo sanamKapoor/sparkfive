@@ -1255,6 +1255,8 @@ const DetailOverlay = ({
           {activeSideComponent === "related" && <AssetRelatedFilesList />}
         </section>
       )}
+      {isShare &&  <div className={styles["share-right-button"]}>vijyaaaa</div>}
+     
       {!isShare && (
         <section className={styles.menu}>
           <IconClickable

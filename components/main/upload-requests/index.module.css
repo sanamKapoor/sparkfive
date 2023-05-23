@@ -42,8 +42,19 @@
   color: var(--color-prim-navy);
   font-weight: 500;
   margin-right: auto;
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
 }
-
+.main-title p{
+  margin: 0;
+  color: var(--color-sec-text);
+  font-weight: 400;
+  font-size: 12px;
+}
+.main-title p span{
+  margin:0 10px
+}
 .main-subtitle{
   font-weight: 400;
   font-size: 12px;

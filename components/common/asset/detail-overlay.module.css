@@ -270,9 +270,11 @@
 .share .side {
   right: 0;
   width: 266px;
+  background: #FAF8F5;
 }
-
-
+.share-right-button{
+  display: none;
+}
 
 @media screen and (max-width: 1200px) {
   .container {
@@ -288,6 +290,12 @@
 
   .expand {
     display: block;
+  }
+}
+
+@media (max-width:810px){
+  .share-right-button{
+    display: block
   }
 }
 
