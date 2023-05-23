@@ -111,7 +111,13 @@
 @media screen and (max-width: 500px) {
     .share-landing-search{
         width: 100vw;
-        transform: translate(32%, -170%);
+        transform: translate(52%, -170%);
         z-index: -1
+    }
+}
+
+@media screen and (max-width: 375px) {    
+    .share-landing-search{
+        width: 330px;
     }
 }
