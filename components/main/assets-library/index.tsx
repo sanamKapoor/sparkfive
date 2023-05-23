@@ -80,7 +80,7 @@ const AssetsLibrary = () => {
 
   const [renameModalOpen, setRenameModalOpen] = useState(false)
 
-  const [openFilter, setOpenFilter] = useState(false)
+  const [openFilter, setOpenFilter] = useState(activeMode === 'assets' ? true : false)
 
   const { activeSortFilter, setActiveSortFilter, tags, loadTags, loadProductFields, productFields, folders: collection, loadFolders, campaigns, loadCampaigns } = useContext(FilterContext)
 
@@ -226,8 +226,10 @@ const AssetsLibrary = () => {
 
   useEffect(() => {
     if (activeMode === 'folders') {
+      setOpenFilter(false)
       setAssets(assets.map(asset => ({ ...asset, isSelected: false })))
     } else if (activeMode === 'assets') {
+      setOpenFilter(true)
       setFolders(folders.map(folder => ({ ...folder, isSelected: false })))
     }
   }, [activeMode])

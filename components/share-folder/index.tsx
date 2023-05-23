@@ -52,12 +52,12 @@ const ShareFolderMain = () => {
     const [activePasswordOverlay, setActivePasswordOverlay] = useState(true)
     const [loading, setLoading] = useState(true)
     const [activeSearchOverlay, setActiveSearchOverlay] = useState(true)
-    const [openFilter, setOpenFilter] = useState(false)
     const [activeView, setActiveView] = useState('grid')
     const [sharePath, setSharePath] = useState('')
     const [activeMode, setActiveMode] = useState('assets')
+    const [openFilter, setOpenFilter] = useState(activeMode === 'assets' ? true: false)
 
-    const [top, setTop] = useState('calc(55px + 3rem)')
+    const [top, setTop] = useState('calc(55px + 5rem)')
 
     const submitPassword = async (password, email) => {
         try {
@@ -154,12 +154,22 @@ const ShareFolderMain = () => {
 
     useEffect(() => {
         if (needsFetch === 'assets') {
+            setOpenFilter(true)
             getAssets()
         } else if (needsFetch === 'folders') {
+            setOpenFilter(false)
             getFolders()
         }
         setNeedsFetch('')
     }, [needsFetch])
+
+    useEffect(() => {
+        if (activeMode === 'assets') {
+            setOpenFilter(true)
+        } else if (activeMode === 'folders') {
+            setOpenFilter(false)
+        }
+    }, [activeMode])
 
     useEffect(() => {
         setInitialLoad(folderInfo);
@@ -311,7 +321,7 @@ const ShareFolderMain = () => {
 
     const onChangeWidth = () => {
         if(!loading){
-            let remValue = '3rem'
+            let remValue = '5rem'
             if(window.innerWidth <= 900){
                 remValue = '1rem + 1px'
             }
@@ -359,7 +369,7 @@ const ShareFolderMain = () => {
                     sharePath={sharePath}
                 />
                 <div className={`${openFilter && styles['col-wrapper']}`} style={{marginTop: top}}>
-                    <h1 style={{color: 'transparent'}}>Hello World</h1>
+                    {/* <h1 style={{color: 'transparent'}}>Hello World</h1> */}
                     <AssetGrid
                         activeFolder={activeFolder}
                         getFolders={getFolders}

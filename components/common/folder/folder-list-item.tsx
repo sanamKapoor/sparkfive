@@ -247,7 +247,10 @@ const FolderListItem = ({
           onClick={toggleSelected}
         >
           <div
-            className={`${styles.thumbnail}`}
+            className={  !isNameEditable
+              ? `${styles.thumbnail}`
+              : `${styles.thumbnail} cursor: pointer`}
+            onClick={isNameEditable ? viewFolder : () => {}}
           >
            <img src={previewImgSrc ?? Assets.empty} alt="" onError={handleImagePreviewOnError} />
           </div>
@@ -298,12 +301,7 @@ const FolderListItem = ({
             )}
           </div>
           <div
-            className={
-              !isNameEditable
-                ? styles.field_name
-                : `${styles["field_name"]} cursor: pointer`
-            }
-            onClick={isNameEditable ? viewFolder : () => {}}
+            className={styles.field_name}
           >
             {!isLoading && `${assetsCount} Assets`}
           </div>
