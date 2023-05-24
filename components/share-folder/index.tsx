@@ -39,7 +39,9 @@ const ShareFolderMain = () => {
         selectAllFolders,
         setFolders,
         activeFolder,
-        setActiveFolder
+        setActiveFolder,
+        selectedAllAssets,
+        selectedAllFolders
     } = useContext(AssetContext)
 
     const { user, advancedConfig, setAdvancedConfig } = useContext(UserContext)
@@ -137,6 +139,16 @@ const ShareFolderMain = () => {
             setContextPath(splitPath[1])
         }
     }, [router.asPath])
+
+    useEffect(() => {
+        if (selectedAllAssets) {
+          selectAllAssets(false);
+        }
+    
+        if (selectedAllFolders) {
+          selectAllFolders(false);
+        }
+      }, [activeMode]);
 
     useEffect(() => {
         if (sharePath && sharePath !== '[team]/[id]/[name]') {
@@ -369,7 +381,6 @@ const ShareFolderMain = () => {
                     sharePath={sharePath}
                 />
                 <div className={`${openFilter && styles['col-wrapper']}`} style={{marginTop: top}}>
-                    {/* <h1 style={{color: 'transparent'}}>Hello World</h1> */}
                     <AssetGrid
                         activeFolder={activeFolder}
                         getFolders={getFolders}
