@@ -20,6 +20,7 @@ import AssetHeaderOps from '../common/asset/asset-header-ops'
 
 import selectOptions from '../../utils/select-options'
 import Spinner from "../common/spinners/spinner";
+import { isMobile } from 'react-device-detect'
 
 const ShareFolderMain = () => {
     const router = useRouter()
@@ -57,7 +58,7 @@ const ShareFolderMain = () => {
     const [activeView, setActiveView] = useState('grid')
     const [sharePath, setSharePath] = useState('')
     const [activeMode, setActiveMode] = useState('assets')
-    const [openFilter, setOpenFilter] = useState(activeMode === 'assets' ? true: false)
+    const [openFilter, setOpenFilter] = useState((activeMode === 'assets' && !isMobile) ? true: false)
 
     const [top, setTop] = useState('calc(55px + 5rem)')
 
@@ -166,7 +167,11 @@ const ShareFolderMain = () => {
 
     useEffect(() => {
         if (needsFetch === 'assets') {
-            setOpenFilter(true)
+            if(isMobile){
+                setOpenFilter(false);
+              }else{
+                setOpenFilter(true);
+              }
             getAssets()
         } else if (needsFetch === 'folders') {
             setOpenFilter(false)
