@@ -141,15 +141,17 @@ const ShareFolderMain = () => {
         }
     }, [router.asPath])
 
-    useEffect(() => {
-        if (selectedAllAssets) {
-          selectAllAssets(false);
-        }
+    // useEffect(() => {
+    //     console.log('selectedAllAssets: ', selectedAllAssets)
+    //     console.log('selectedAllFolders: ', selectedAllFolders)
+    //     if (selectedAllAssets) {
+    //       selectAllAssets(false);
+    //     }
     
-        if (selectedAllFolders) {
-          selectAllFolders(false);
-        }
-      }, [activeMode]);
+    //     if (selectedAllFolders) {
+    //       selectAllFolders(false);
+    //     }
+    //   }, [activeMode]);
 
     useEffect(() => {
         if (sharePath && sharePath !== '[team]/[id]/[name]') {
@@ -167,14 +169,8 @@ const ShareFolderMain = () => {
 
     useEffect(() => {
         if (needsFetch === 'assets') {
-            if(isMobile){
-                setOpenFilter(false);
-              }else{
-                setOpenFilter(true);
-              }
             getAssets()
         } else if (needsFetch === 'folders') {
-            setOpenFilter(false)
             getFolders()
         }
         setNeedsFetch('')
@@ -182,7 +178,11 @@ const ShareFolderMain = () => {
 
     useEffect(() => {
         if (activeMode === 'assets') {
-            setOpenFilter(true)
+            if(isMobile){
+                setOpenFilter(false);
+              }else{
+                setOpenFilter(true);
+              }
         } else if (activeMode === 'folders') {
             setOpenFilter(false)
         }
