@@ -53,6 +53,7 @@
   align-items: center;
   gap: 6px;
   padding: 12px;
+  flex-wrap: wrap;
 }
 
 .tag {
@@ -160,6 +161,6 @@
   }
 
   .input-wrapper {
-    padding: 8px 12px;
+    padding: 10px 12px;
   }
 }
