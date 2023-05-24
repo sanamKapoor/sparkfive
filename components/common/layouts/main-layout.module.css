@@ -111,5 +111,11 @@
   .upload-approval {
     margin-left: 10px;
     margin-right: 10px;
+    position: fixed;
+    bottom: 2px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
   }
 }
