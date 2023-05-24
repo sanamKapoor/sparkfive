@@ -472,7 +472,7 @@
     padding: 20px 10px;
   }
   .uploadContainer{
-    padding-bottom: 70px;
+    padding: 0 0 70px
   }
   .upload-request-button{
     padding: 0;
@@ -533,10 +533,10 @@
   .right-panel {
 
     position: absolute;
-    z-index: 99;
+    z-index: 999;
     width: auto;
     background-color: white;
-    right: 44px;
+    right: 46px;
     left: inherit;
     top: 0;
     bottom: 0;

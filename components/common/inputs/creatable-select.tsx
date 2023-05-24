@@ -127,6 +127,16 @@ const CreatableSelect = ({
     }
   }
 
+  const colourStyles = {
+    option: (styles, { isFocused }) => {
+      return {
+        ...styles,
+        backgroundColor: isFocused ? "#FAF8F5" : null,
+        padding: "10px"
+      };
+    }
+  };
+
   return (
     <>
       <div className={`secondary-text ${styles.field}`}>{title}</div>
@@ -155,7 +165,7 @@ const CreatableSelect = ({
                   placeholder={selectPlaceholder}
                   options={avilableItems.map(item => ({ ...item, label: item.name, value: item.id }))}
                   onChange={onChange}
-                  styleType={'regular item'}
+                  styles={colourStyles}
                   menuPlacement={'auto'}
                   menuPosition={menuPosition}
                   isClearable={true}
@@ -167,7 +177,7 @@ const CreatableSelect = ({
                   placeholder={selectPlaceholder}
                   options={avilableItems.map(item => ({ ...item, label: item.name, value: item.id }))}
                   onChange={onChange}
-                  styleType={'regular item'}
+                  styles={colourStyles}
                   menuPlacement={'auto'}
                   menuPosition={menuPosition}
                   isClearable={true}

@@ -335,8 +335,12 @@
 
   .container {
     padding-top: 47px;
+    flex-direction: column;
   }
 
+  .share.container {
+    flex-direction: row;
+  }
 
   .field-wrapper{
     display: flex;
