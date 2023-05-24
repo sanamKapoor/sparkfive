@@ -322,10 +322,12 @@
   font-size: 25px;
   font-family: monospace;
   cursor: pointer;
-  transform: scaleX(-1);
+
   display: none
 }
-
+.back img{
+  transform: scaleX(-1);
+}
 .additional-folder-wrapper {
   position: relative;
   z-index: 9;
@@ -455,11 +457,19 @@
     z-index: 400;
     flex-wrap: wrap;
   }
+  .modal-wrapper{
+    width: 90vw;
+
+  }
 }
+
+
 
 @media screen and (max-width: 600px) {
   .back {
-    display: block
+    display: block;
+    border-left: 1px solid #ccc;
+    padding: 20px 10px;
   }
   .uploadContainer{
     padding-bottom: 70px;

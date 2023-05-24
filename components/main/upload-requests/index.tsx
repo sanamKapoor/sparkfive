@@ -1209,9 +1209,17 @@ const UploadRequest = () => {
             {mode === "view" && (
               <div className={`${styles["button-wrapper"]} m-b-25`}>
                 <div className={styles["topTitle"]}>
-                
                   <div className={styles["main-title"]}>
-                    <p>Upload Requests<span><img src={Utilities.arrowNav} alt="arrow" className={styles.close} /></span></p>
+                    <p>
+                      Upload Requests
+                      <span>
+                        <img
+                          src={Utilities.arrowNav}
+                          alt="arrow"
+                          className={styles.close}
+                        />
+                      </span>
+                    </p>
                     {currentApproval?.name || "Untitled"}
                   </div>
                   <div className={styles["main-subtitle"]}>
@@ -1789,9 +1797,12 @@ const UploadRequest = () => {
               </div>
             </div>
           )}
-          <div className={styles.back}>
-            <IconClickable src={Utilities.closePanelLight}/>
-          </div>
+          
+          {mode === "view" &&
+              <div className={styles.back}>
+                <IconClickable src={Utilities.closePanelLight} />
+              </div>
+            }
         </div>
       </div>
 
@@ -1810,7 +1821,7 @@ const UploadRequest = () => {
       >
         <div className={`row ${styles["modal-wrapper"]}`}>
           <div className={`${styles["left-bar"]}`}>
-          <div className={styles["file-name"]}>
+            <div className={styles["file-name"]}>
               <span>{assets[selectedAsset]?.asset.name}</span>
               {(currentViewStatus === 0 || isAdmin()) && (
                 <IconClickable
@@ -1874,7 +1885,6 @@ const UploadRequest = () => {
             {/*    name={"image"}*/}
             {/*/>*/}
             {/*<img alt={"test"} src={assets[selectedAsset]?.realUrl} />*/}
-
 
             {(isAdmin() || currentViewStatus !== 0) && (
               <div className={detailPanelStyles["field-wrapper"]}>

@@ -295,7 +295,28 @@
 
 @media (max-width:810px){
   .share-right-button{
-    display: block
+    display: flex;
+    background-color: var(--color-sec-lightivory);
+    border-left: 1px solid var(--color-secondary-border);
+    padding: 30px 0;
+    right: 0;
+    width: 60px;
+    height: 100%;
+    justify-content:  flex-start;
+    align-items:center;
+    flex-direction: column;
+    position: relative;
+  }
+  .share-right-button img{
+    margin-bottom: 15px;
+  }
+  .share .side {
+    width: calc(100% - 49px);
+    position: absolute;
+    right: 50px;
+  }
+  .share .content {
+    width: 100%;
   }
 }
 
@@ -314,7 +335,6 @@
 
   .container {
     padding-top: 47px;
-    display: block;
   }
 
 
@@ -336,9 +356,7 @@
     border-top: none;
   }
 
-  .share .side {
-    width: 100%;
-  }
+
 
   .hide-on-mobile {
     display: none;
