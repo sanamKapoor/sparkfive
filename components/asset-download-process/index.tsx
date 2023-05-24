@@ -15,7 +15,6 @@ const AssetDownloadProcess = () => {
     downloadingError,
   } = useContext(AssetContext);
 
-
   return (
     <div
       className={clsx(styles.container, {
@@ -29,7 +28,7 @@ const AssetDownloadProcess = () => {
         <div className={styles.zipheading}>
               <div className={styles.zipheadingInner}>
                 <div className={styles.preHeading}>
-                  {downloadingStatus === "zipping" && (
+                  {(downloadingStatus === "zipping" || downloadingStatus === "preparing") && (
                     <>
                     <span className={styles["no-wrap-text"]}>
                       Preparing download

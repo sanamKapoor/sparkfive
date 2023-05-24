@@ -881,6 +881,14 @@ const DetailOverlay = ({
 
   const showSideMenu = isShare ? (isMobile ? true : false) : true;
 
+  const editThenDownload = currentAsset.extension !== "gif" &&
+  currentAsset.extension !== "tiff" &&
+  currentAsset.extension !== "tif" &&
+  currentAsset.extension !== "svg" &&
+  currentAsset.extension !== "svg+xml" &&
+  currentAsset.type === "image" &&
+  isImageType(assetDetail?.extension)
+
   return (
     <div
       className={`app-overlay ${styles.container} ${
@@ -920,7 +928,7 @@ const DetailOverlay = ({
                           {versionCount + 1} versions
                         </div>
                       )}
-                    {asset?.fileAssociations.length > 0 && (
+                    {assetDetail?.fileAssociations.length > 0 && (
                       <>
                         <img src={Utilities.ellipse} />
                         <div className={styles["related-number"]}  onClick={() => {
@@ -928,7 +936,7 @@ const DetailOverlay = ({
                             resetValues();
                             changeActiveSide("related");
                           }}>
-                          {asset?.fileAssociations.length} Related files
+                          {assetDetail?.fileAssociations.length} Related files
                         </div>
                       </>
                     )}
@@ -973,7 +981,13 @@ const DetailOverlay = ({
                       type={"button"}
                       className={styles["only-desktop-button"]}
                       styleType={"secondary"}
-                      onClick={() => setDownloadDropdownOpen(true)}
+                      onClick={() => {
+                        if(editThenDownload){
+                          setDownloadDropdownOpen(true)
+                        }else{
+                          downloadSelectedAssets(currentAsset.id);
+                        }
+                      }}
                     />
                     <div className={styles["only-mobile-button"]}>
                       <IconClickable
@@ -983,7 +997,7 @@ const DetailOverlay = ({
                       />
                     </div>
 
-                    {downloadDropdownOpen && (
+                    {downloadDropdownOpen &&  (
                       <Dropdown
                         onClickOutside={() => setDownloadDropdownOpen(false)}
                         additionalClass={styles["more-dropdown"]}
@@ -991,33 +1005,12 @@ const DetailOverlay = ({
                           {
                             id: "download",
                             label: "Download Original",
-                            onClick: () => {
-                              if (
-                                currentAsset.extension !== "gif" &&
-                                currentAsset.extension !== "tiff" &&
-                                currentAsset.extension !== "tif" &&
-                                currentAsset.extension !== "svg" &&
-                                currentAsset.extension !== "svg+xml" &&
-                                currentAsset.type === "image" &&
-                                isImageType(assetDetail.extension)
-                              ) {
-                                setMode("resize");
-                                changeActiveSide("detail");
-                                resetImageSettings(undefined, undefined);
-                              } else {
-                                downloadSelectedAssets(currentAsset.id);
-                                // if(currentAsset.size >= sizeToZipDownload){
-                                //   downloadSelectedAssets(currentAsset.id)
-                                // }else{
-                                //   manualDownloadAsset(currentAsset);
-                                // }
-                              }
-                            },
+                            onClick: () => downloadSelectedAssets(currentAsset.id)
                           },
                           {
                             id: "edit",
                             label: "Edit then Download",
-                            onClick: () => changeActiveSide("download"),
+                            onClick: () => changeActiveSide("download")
                           },
                         ]}
                       />
@@ -1260,7 +1253,7 @@ const DetailOverlay = ({
             <AssetNotes asset={asset} notes={notes} applyCrud={applyCrud} />
           )}
 
-          {activeSideComponent === "related" && <AssetRelatedFilesList relatedAssets={asset?.fileAssociations}/>}
+          {activeSideComponent === "related" && <AssetRelatedFilesList relatedAssets={assetDetail?.fileAssociations}/>}
         </section>
       )}
       {!isShare && (
@@ -1338,7 +1331,7 @@ const DetailOverlay = ({
                 />
               )}
 
-              {currentAsset.extension !== "gif" &&
+              {editThenDownload &&
                 hasPermission([ASSET_DOWNLOAD]) && (
                   <IconClickable
                     src={AssetOps.download}
@@ -1353,7 +1346,7 @@ const DetailOverlay = ({
                         if (mode !== "resize" && mode !== "crop") {
                           setMode("resize");
                         }
-                        changeActiveSide("detail");
+                        changeActiveSide("download");
                         resetImageSettings(undefined, undefined);
                       } else {
                         downloadSelectedAssets(currentAsset.id);
