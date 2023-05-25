@@ -364,7 +364,7 @@ const SuperAdmin = () => {
 
           <div className={`row align-flex-start ${styles.cdnEmbedding}`}>
             <div className={"col-20 font-weight-600"}>
-              OCR Text Recognition
+              Text Recognition
             </div>
 
             <div className={"col-20"}>

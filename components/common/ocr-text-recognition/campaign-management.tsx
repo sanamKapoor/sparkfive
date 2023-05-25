@@ -141,7 +141,7 @@ const CampaignManagement = () => {
                 closeModal={() => { setConfirmDeleteModal(false) }}
                 confirmAction={() => { deleteOcrTag(currentDeleteId) }}
                 confirmText={'Delete'}
-                message={<span>This campaign will be removed from OCR Text Recognition List.&nbsp; Are you sure you want to delete it?</span>}
+                message={<span>This campaign will be removed from Text Recognition List.&nbsp; Are you sure you want to delete it?</span>}
                 closeButtonClass={styles['close-modal-btn']}
                 textContentClass={styles['confirm-modal-text']}
             />
