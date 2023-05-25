@@ -31,6 +31,7 @@ import DetailOverlay from "../../common/asset/detail-overlay";
 import React from 'react'
 import AssetHeaderOps from '../../common/asset/asset-header-ops'
 import deletedAssets from '../../common/custom-settings/deleted-assets'
+import { isMobile } from 'react-device-detect'
 
 const AssetsLibrary = () => {
 
@@ -229,7 +230,11 @@ const AssetsLibrary = () => {
       setOpenFilter(false)
       setAssets(assets.map(asset => ({ ...asset, isSelected: false })))
     } else if (activeMode === 'assets') {
-      setOpenFilter(true)
+      if(isMobile){
+        setOpenFilter(false);
+      }else{
+        setOpenFilter(true);
+      }
       setFolders(folders.map(folder => ({ ...folder, isSelected: false })))
     }
   }, [activeMode])

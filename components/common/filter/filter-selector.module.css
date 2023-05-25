@@ -125,6 +125,7 @@
 }
 .dropdownOptHead img {
     width: 8px;
+    filter: contrast(0.5);
 }
 .dropdownOpt .view-dropdown {
     position: absolute;

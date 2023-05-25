@@ -64,9 +64,11 @@ const SearchOverlayAssets = ({  closeOverlay, importEnabled = false, operationsE
     }
   }
 
-  // useEffect(() => {
-  //   setAssets([])
-  // }, [])
+  useEffect(() => {
+    if (openFilters) {
+      setOpenFilters(false);
+    }
+  }, [isFolder]);
 
   const beginAssetOperation = (asset, operation) => {
     setOperationAsset(asset)

@@ -85,6 +85,7 @@
 .expand-icon {
     width: 13px;
     height: 7px;
+    filter: contrast(0.5);
 }
 
 
