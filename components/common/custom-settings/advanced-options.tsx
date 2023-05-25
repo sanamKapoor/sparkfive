@@ -73,6 +73,12 @@ const AdvancedOptions = () => {
         return false;
     }
 
+    const navigateToOcrList = (ev) => {
+        ev.stopPropagation()
+        Router.push('/main/user-settings/ocr-text-recognition')
+        return false;
+    }
+
     const toggleHideElementProperty = (prop) => {
         const elemsState = { ...hideFilterElements }
         elemsState[prop] = !elemsState[prop]
@@ -395,6 +401,20 @@ const AdvancedOptions = () => {
                                         {aiTaggingProgress && <span>Tagging In-progress... <strong>{nonAiTagAssetCount}</strong> remaining</span>}
                                     </div> */}
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className={`${styles['row']} ${styles['first-field-block']}`}>
+                <div className={`${styles['col-100']}`}>
+                    <div className={`${styles['row']}`}>
+                        <div className={`${styles['deleted-assets']} row`}>
+                            <div className={"col-40"}>
+                                <span className={'font-weight-500'}>Text Recognition</span>
+                            </div>
+                            <div className={"col-60"}>
+                                <a className={`${styles['anchor']} cursor-pointer`} onClick={(ev) => navigateToOcrList(ev)}>Manage Text Recognition</a>
                             </div>
                         </div>
                     </div>

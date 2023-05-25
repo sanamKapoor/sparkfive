@@ -141,7 +141,7 @@ const CollectionManagement = () => {
                 closeModal={() => { setConfirmDeleteModal(false) }}
                 confirmAction={() => { deleteCollectionTag(currentDeleteId) }}
                 confirmText={'Delete'}
-                message={<span>This collection will be removed from OCR Text Recognition List.&nbsp; Are you sure you want to delete it?</span>}
+                message={<span>This collection will be removed from Text Recognition List.&nbsp; Are you sure you want to delete it?</span>}
                 closeButtonClass={styles['close-modal-btn']}
                 textContentClass={styles['confirm-modal-text']}
             />
