@@ -50,7 +50,7 @@ const SETTING_OPTIONS = {
   attributes: { label: 'Attributes', contentTitle: 'Custom Attributes', permissions: [SETTINGS_TEAM, SETTINGS_COMPANY], content: Attributes },
   ['custom-settings']: { label: 'Custom Settings', contentTitle: 'Custom Settings', permissions: [SETTINGS_TEAM, SETTINGS_COMPANY], content: CustomSettings },
   ['shared-links']: { label: 'Shared Links', contentTitle: 'Shared Links', permissions: [], content: ShareLinks },
-  ['ocr-text-recognition']: { label: 'OCR Text Recognition', contentTitle: 'OCR Text Recognition', permissions: [SETTINGS_TEAM, SETTINGS_COMPANY], content: OCR },
+  ['ocr-text-recognition']: { label: 'Text Recognition', contentTitle: 'Text Recognition', permissions: [SETTINGS_TEAM, SETTINGS_COMPANY], content: OCR },
   ['super-admin']: { label: 'Super Admin', permissions: [SUPERADMIN_ACCESS], content: SuperAdmin },
 
 }

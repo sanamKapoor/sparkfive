@@ -261,7 +261,7 @@ const CustomFieldsManagement = () => {
                 closeModal={() => { setConfirmDeleteModal(false) }}
                 confirmAction={() => { deleteCustomAttribute(currentDeleteId) }}
                 confirmText={'Delete'}
-                message={<span>This custom field will be deleted from OCR Text Recognition.&nbsp; Are you sure you want to delete it?</span>}
+                message={<span>This custom field will be deleted from Text Recognition.&nbsp; Are you sure you want to delete it?</span>}
                 closeButtonClass={styles['close-modal-btn']}
                 textContentClass={styles['confirm-modal-text']}
             />
