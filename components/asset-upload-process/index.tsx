@@ -89,7 +89,7 @@ const AssetUploadProcess = () => {
               {uploadingAssets.length} assets uploaded
             </div>
           )}
-          <div className={styles.subHeading}>
+          {/* <div className={styles.subHeading}>
             Estimated Time:{" "}
             {uploadingStatus === "done" ? "Finished" : uploadRemainingTime}
           </div>

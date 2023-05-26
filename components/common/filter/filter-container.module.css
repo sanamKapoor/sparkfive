@@ -89,11 +89,21 @@
 }
 
 
+
+
+
 @media (min-width:1306px) and (max-width:1599px){
     .container {
         width: 24.5%;
     }
 }
+@media (min-width:811px) and (max-width:1280px){
+.container {
+    width: 24.7%;
+    margin-right: 24px;
+}
+}
+
 @media screen and (max-width: 800px) {
     .container {
         position: absolute;
