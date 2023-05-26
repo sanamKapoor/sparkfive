@@ -76,7 +76,7 @@ const AssetUploadProcess = () => {
               </div>
             ) : (
               <div className={styles.mainHeading}>
-                Uploading {(uploadingFile ?? 0) + 1} of{" "}
+                Uploading {uploadingFile! + 1} of{" "}
                 {uploadingStatus === "re-uploading"
                   ? retryListCount
                   : uploadingAssets.length}{" "}
@@ -89,10 +89,6 @@ const AssetUploadProcess = () => {
               {uploadingAssets.length} assets uploaded
             </div>
           )}
-          {/* <div className={styles.subHeading}>
-            Estimated Time:{" "}
-            {uploadingStatus === "done" ? "Finished" : uploadRemainingTime}
-          </div>
           <img
             src={Utilities.blueClose}
             alt={"close"}

@@ -2,7 +2,7 @@ import _ from "lodash"
 import styles from './creatable-select.module.css'
 import update from 'immutability-helper'
 import ReactCreatableSelect from 'react-select/creatable'
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import ReactSelect from 'react-select'
 import { Utilities } from '../../../assets'
 
@@ -45,6 +45,8 @@ const CreatableSelect = ({
   menuPosition = 'absolute',
   sortDisplayValue = false
 }) => {
+
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
   const { hasPermission } = useContext(UserContext)
 
@@ -127,15 +129,19 @@ const CreatableSelect = ({
     }
   }
 
+  const handleShowAll = () => {
+      setIsCollapsed(!isCollapsed)
+  }
+
   return (
     <>
       <div className={`secondary-text ${styles.field}`}>{title}</div>
       {selectOneComponent}
-      <div className={'normal-text'}>
-        <ul className={`tags-list ${styles['tags-list']}`}>
-          {(selectedItems || []).map((item, index) => {
+      <div className={"normal-text"}>
+        <ul className={`tags-list ${styles["tags-list"]}`}>
+        { (selectedItems || []).slice(0, 9).map((item, index) => {
             return (
-             item?.status === undefined && <li key={item.id || item.value}>
+            <li key={item.id || item.value}>
               <Tag
                 data={item}
                 altColor={altColor}
@@ -146,46 +152,82 @@ const CreatableSelect = ({
             </li>
             )
             })}
-        </ul>
-        {((!isShare && canAdd && hasPermission([ASSET_EDIT])) || ignorePermission) &&
-          <>
-            {dropdownIsActive ?
-              <div className={`tag-select ${selectClass}`}>
-                {creatable && <ReactCreatableSelect
-                  placeholder={selectPlaceholder}
-                  options={avilableItems.map(item => ({ ...item, label: item.name, value: item.id }))}
-                  onChange={onChange}
-                  styleType={'regular item'}
-                  menuPlacement={'auto'}
-                  menuPosition={menuPosition}
-                  isClearable={true}
-                  className="creatable-select"
-                />
-                }
-
-                {!creatable && <ReactSelect
-                  placeholder={selectPlaceholder}
-                  options={avilableItems.map(item => ({ ...item, label: item.name, value: item.id }))}
-                  onChange={onChange}
-                  styleType={'regular item'}
-                  menuPlacement={'auto'}
-                  menuPosition={menuPosition}
-                  isClearable={true}
-                  className="creatable-select"
-                />
-                }
-              </div>
-              :
-              <>{allowEdit && <div className={`add ${styles['select-add']}`} onClick={onAddClick}>
-                <IconClickable src={Utilities.addLight} />
-                <span>{addText}</span>
-              </div>}</>
+            {
+                selectedItems?.length > 10 && !isCollapsed && (
+                  (selectedItems || []).slice(9, selectedItems?.length).map((item, index) => {
+                    return (
+                    <li key={item.id || item.value}>
+                      <Tag
+                        data={item}
+                        altColor={altColor}
+                        tag={item.name}
+                        canRemove={!isShare && allowEdit && hasPermission([ASSET_EDIT])}
+                        removeFunction={() => removeItem(index, item.id)}
+                      />
+                    </li>
+                    )
+                    })
+                )
             }
+        </ul>
+       <p onClick={handleShowAll} className={styles['show-all']}>{(selectedItems.length > 10) ? (isCollapsed ? `Show all ${selectedItems.length}` : 'Show less') : '' }</p>
+        {((!isShare && canAdd && hasPermission([ASSET_EDIT])) ||
+          ignorePermission) && (
+          <>
+            {dropdownIsActive ? (
+              <div className={`tag-select ${selectClass}`}>
+                {creatable && (
+                  <ReactCreatableSelect
+                    placeholder={selectPlaceholder}
+                    options={avilableItems.map((item) => ({
+                      ...item,
+                      label: item.name,
+                      value: item.id,
+                    }))}
+                    onChange={onChange}
+                    styleType={"regular item"}
+                    menuPlacement={"auto"}
+                    menuPosition={menuPosition}
+                    isClearable={true}
+                    className="creatable-select"
+                  />
+                )}
+
+                {!creatable && (
+                  <ReactSelect
+                    placeholder={selectPlaceholder}
+                    options={avilableItems.map((item) => ({
+                      ...item,
+                      label: item.name,
+                      value: item.id,
+                    }))}
+                    onChange={onChange}
+                    styleType={"regular item"}
+                    menuPlacement={"auto"}
+                    menuPosition={menuPosition}
+                    isClearable={true}
+                    className="creatable-select"
+                  />
+                )}
+              </div>
+            ) : (
+              <>
+                {allowEdit && (
+                  <div
+                    className={`add ${styles["select-add"]}`}
+                    onClick={onAddClick}
+                  >
+                    <IconClickable src={Utilities.addLight} />
+                    <span>{addText}</span>
+                  </div>
+                )}
+              </>
+            )}
           </>
-        }
+        )}
       </div>
     </>
-  )
+  );
 }
 
 export default CreatableSelect
