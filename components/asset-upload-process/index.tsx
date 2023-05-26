@@ -25,7 +25,7 @@ const AssetUploadProcess = () => {
     reUploadAsset,
     assets,
     activeFolder,
-    folderGroups
+    folderGroups,
   } = useContext(AssetContext);
 
   const failAssetsCount = uploadingAssets.filter(
@@ -33,20 +33,25 @@ const AssetUploadProcess = () => {
   ).length;
 
   const handleRetry = async (i) => {
-    const failedAssets = uploadingAssets.filter(
-      (asset) => asset.status === "fail"
-    ).map(item => ({...item, status: 'queued', isUploading: true, index: i }))
+    const failedAssets = uploadingAssets
+      .filter((asset) => asset.status === "fail")
+      .map((item) => ({
+        ...item,
+        status: "queued",
+        isUploading: true,
+        index: i,
+      }));
 
-    showUploadProcess('uploading', i)
-		setUploadingAssets(failedAssets);
+    showUploadProcess("uploading", i);
+    setUploadingAssets(failedAssets);
 
     let totalSize = 0;
     // Calculate the rest of size
-    uploadingAssets.map((asset)=>{
-      totalSize += asset.asset.size
-    })
+    uploadingAssets.map((asset) => {
+      totalSize += asset.asset.size;
+    });
 
-    const { data: subFolderAutoTag } = await teamApi.getAdvanceOptions()
+    const { data: subFolderAutoTag } = await teamApi.getAdvanceOptions();
 
     await reUploadAsset(
       i,
@@ -76,8 +81,8 @@ const AssetUploadProcess = () => {
                 Uploading {uploadingFile! + 1} of{" "}
                 {uploadingStatus === "re-uploading"
                   ? retryListCount
-                  : uploadingAssets.length}
-                {" "}assets
+                  : uploadingAssets.length}{" "}
+                assets
               </div>
             ))}
           {uploadingStatus === "done" && (
@@ -86,68 +91,70 @@ const AssetUploadProcess = () => {
               {uploadingAssets.length} assets uploaded
             </div>
           )}
-          <div className={styles.subHeading}>
-            Estimated Time:{" "}
-            {uploadingStatus === "done" ? "Finished" : uploadRemainingTime}
-          </div>
-            <img
-              src={Utilities.blueClose}
-              alt={"close"}
-              className={styles.closebtn}
-              onClick={() => {
-                showUploadProcess("none");
-              }}
-            />
+
+          <img
+            src={Utilities.blueClose}
+            alt={"close"}
+            className={styles.closebtn}
+            onClick={() => {
+              showUploadProcess("none");
+            }}
+          />
         </div>
 
         <div className={styles.list}>
-        {uploadingAssets.length > 0 &&
-          uploadingAssets.map((item) => (
-            <div className={styles.innerUploadList}>
-              <div className={styles.uploadItem}>
-                <div>{item?.asset?.name}</div>
-                {item?.status === "done" && uploadingStatus === "done" && (
-                  <>
-                    <div>Complete</div>
-                    <div className={styles.flexdiv}>
-                      <img src={Utilities.checkMark} alt={"complete"} />
+          {uploadingAssets.length > 0 &&
+            uploadingAssets.map((item) => (
+              <div className={styles.innerUploadList}>
+                <div className={styles.uploadItem}>
+                  <div>{item?.asset?.name}</div>
+                  {item?.status === "done" && uploadingStatus === "done" && (
+                    <>
+                      <div>Complete</div>
+                      <div className={styles.flexdiv}>
+                        <img src={Utilities.checkMark} alt={"complete"} />
+                      </div>
+                    </>
+                  )}
+                  {item?.status === "fail" && uploadingStatus === "done" && (
+                    <>
+                      <span>Error</span>
+                      <div style={{ color: "red", fontSize: "20px" }}>x</div>
+                      <span
+                        className={`${styles["underline-text"]} ${styles["no-max-min-width"]}`}
+                        onClick={() => handleRetry(item?.index)}
+                      >
+                        Retry
+                      </span>
+                    </>
+                  )}
+                  {(uploadingStatus === "uploading" ||
+                    uploadingStatus === "re-uploading") && (
+                    <div className={styles.lineBar}>
+                      <Line
+                        percent={uploadingPercent}
+                        strokeWidth={1}
+                        strokeColor="#10bda5"
+                        style={{
+                          width: "158px",
+                          height: "12px",
+                          borderRadius: "10px",
+                        }}
+                        trailColor={"#9597a6"}
+                      />
+                      {uploadingPercent ?? 0}%
                     </div>
-                  </>
-                )}
-                {item?.status === "fail" && uploadingStatus === "done" && (
-                  <>
-                    <span>Error</span>
-                    <div style={{ color: "red", fontSize: "20px" }}>x</div>
-                    <span
-                      className={`${styles["underline-text"]} ${styles["no-max-min-width"]}`}
-                      onClick={() => handleRetry(item?.index)}
-                    >
-                      Retry
-                    </span>
-                  </>
-                )}
-                {(uploadingStatus === "uploading" ||
-                  uploadingStatus === "re-uploading") && (
-                  <div className={styles.lineBar}>
-                    <Line
-                      percent={uploadingPercent}
-                      strokeWidth={1}
-                      strokeColor="#10bda5"
-                      style={{
-                        width: "158px",
-                        height: "12px",
-                        borderRadius: "10px",
-                      }}
-                      trailColor={"#9597a6"}
-                    />
-                    {uploadingPercent ?? 0}%
-                  </div>
-                )}
+                  )}
+                </div>
+                <div className={styles.subHeading}>
+                  Estimated Time:{" "}
+                  {uploadingStatus === "done"
+                    ? "Finished"
+                    : uploadRemainingTime}
+                </div>
               </div>
-            </div>
-          ))}
-       
-          </div>
+            ))}
+        </div>
       </div>
     </>
   );

@@ -121,7 +121,7 @@
   color: white;
   max-width: calc(100% - 48px);
   width: 460px;
-  z-index: 9999;
+  z-index: 999999;
   min-height: 40px;
   overflow: hidden;
 }
@@ -162,7 +162,7 @@
   display: flex;
   align-items: center;  
   gap: 30px;
-  margin-bottom: 31px;
+  /* margin-bottom: 31px; */
 }
 
 .uploadItem:first-child:last-child {
