@@ -93,7 +93,7 @@
 
 .detail > div:first-child {
   border: none;
-  position: absolute;
+  /* position: absolute; */
   right: 0;
   top: 0;
 

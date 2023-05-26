@@ -91,7 +91,7 @@ const CreatableSelect = ({
           const { data } = await asyncCreateFn(newItem)
 
           if(data?.status === false){
-             toastUtils.error(data?.message)
+             toastUtils.success(data?.message)
           }
 
           let stateItemsUpdate
@@ -170,7 +170,7 @@ const CreatableSelect = ({
                 )
             }
         </ul>
-       <p onClick={handleShowAll} className={styles['show-all']}>{(selectedItems.length > 10) ? (isCollapsed ? `Show all ${selectedItems.length}` : 'Show less') : '' }</p>
+       <p onClick={handleShowAll} className={styles['show-all']}>{(selectedItems?.length > 10) ? (isCollapsed ? `Show all ${selectedItems.length}` : 'Show less') : '' }</p>
         {((!isShare && canAdd && hasPermission([ASSET_EDIT])) ||
           ignorePermission) && (
           <>

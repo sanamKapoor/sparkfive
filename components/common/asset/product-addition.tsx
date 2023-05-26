@@ -241,9 +241,9 @@ const ProductAddition = ({
   if (activeDropdown === productVendorActiveDropdownValue) valueInput = inputVendors
   if (activeDropdown === productRetailerActiveDropdownValue) valueInput = inputRetailers
 
-  const categories = product?.tags.filter(({ type }) => type === productCategoryActiveDropdownValue)
-  const vendors = product?.tags.filter(({ type }) => type === productVendorActiveDropdownValue)
-  const retailers = product?.tags.filter(({ type }) => type === productRetailerActiveDropdownValue)
+  const categories = product?.tags?.filter(({ type }) => type === productCategoryActiveDropdownValue)
+  const vendors = product?.tags?.filter(({ type }) => type === productVendorActiveDropdownValue)
+  const retailers = product?.tags?.filter(({ type }) => type === productRetailerActiveDropdownValue)
 
   // Filter out fields if they are already present on the product
   const filteredFields = productFields.filter(({ value }) => {
