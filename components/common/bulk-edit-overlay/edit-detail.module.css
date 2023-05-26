@@ -3,6 +3,7 @@
     grid-template-columns: 1fr 415px;
     overflow-y: auto;
     overflow-x: hidden;
+    width: 100%;
 }
 
 .content {

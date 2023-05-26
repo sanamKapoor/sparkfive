@@ -1256,6 +1256,22 @@ const DetailOverlay = ({
           {activeSideComponent === "related" && <AssetRelatedFilesList relatedAssets={assetDetail?.fileAssociations}/>}
         </section>
       )}
+      {/* Share page mobile right button */}
+       {isShare &&  <div className={styles["share-right-button"]}> <IconClickable
+            src={Utilities.closePanelLight}
+               onClick={() => toggleSideMenu()}
+            additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"}`}
+          /> <IconClickable
+          src={isMobile ? Utilities.infoGray : Utilities.info}
+          additionalClass={styles["menu-icon"]}
+          onClick={() => {
+            setMode("detail");
+            resetValues();
+            changeActiveSide("detail");
+          }}
+        /></div>}
+
+
       {!isShare && (
         <section className={styles.menu}>
           <IconClickable

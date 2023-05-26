@@ -132,6 +132,15 @@ const CreatableSelect = ({
   const handleShowAll = () => {
       setIsCollapsed(!isCollapsed)
   }
+  const colourStyles = {
+    option: (styles, { isFocused }) => {
+      return {
+        ...styles,
+        backgroundColor: isFocused ? "#FAF8F5" : null,
+        padding: "10px"
+      };
+    }
+  };
 
   return (
     <>
@@ -168,6 +177,40 @@ const CreatableSelect = ({
                     )
                     })
                 )
+        </ul>
+        {((!isShare && canAdd && hasPermission([ASSET_EDIT])) || ignorePermission) &&
+          <>
+            {dropdownIsActive ?
+              <div className={`tag-select ${selectClass}`}>
+                {creatable && <ReactCreatableSelect
+                  placeholder={selectPlaceholder}
+                  options={avilableItems.map(item => ({ ...item, label: item.name, value: item.id }))}
+                  onChange={onChange}
+                  styles={colourStyles}
+                  menuPlacement={'auto'}
+                  menuPosition={menuPosition}
+                  isClearable={true}
+                  className="creatable-select"
+                />
+                }
+
+                {!creatable && <ReactSelect
+                  placeholder={selectPlaceholder}
+                  options={avilableItems.map(item => ({ ...item, label: item.name, value: item.id }))}
+                  onChange={onChange}
+                  styles={colourStyles}
+                  menuPlacement={'auto'}
+                  menuPosition={menuPosition}
+                  isClearable={true}
+                  className="creatable-select"
+                />
+                }
+              </div>
+              :
+              <>{allowEdit && <div className={`add ${styles['select-add']}`} onClick={onAddClick}>
+                <IconClickable src={Utilities.addLight} />
+                <span>{addText}</span>
+              </div>}</>
             }
         </ul>
        <p onClick={handleShowAll} className={styles['show-all']}>{(selectedItems?.length > 10) ? (isCollapsed ? `Show all ${selectedItems.length}` : 'Show less') : '' }</p>

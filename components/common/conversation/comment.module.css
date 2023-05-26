@@ -36,6 +36,7 @@
 .author-date > span:last-child {
   color: var(--color-sec-blue);
   font-size: 12px;
+  font-weight: 400;
 }
 
 .mention {

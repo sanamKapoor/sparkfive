@@ -253,6 +253,16 @@ const ProductAddition = ({
     return true
   })
 
+  const colourStyles = {
+    option: (styles, { isFocused }) => {
+      return {
+        ...styles,
+        backgroundColor: isFocused ? "#FAF8F5" : null,
+        padding: "10px"
+      };
+    }
+  };
+
   return (
     <FieldWrapper>
       {noTitle === false && <div className={`secondary-text ${styles.field}`}>Product</div>}
@@ -269,7 +279,7 @@ const ProductAddition = ({
                   options={inputProducts.map(product => ({ ...product, label: product.sku, value: product.id }))}
                   placeholder={'Enter new SKU or select an existing one'}
                   onChange={(selected, actionMeta) => onValueChange(selected, actionMeta, addProduct, changeProduct)}
-                  styleType={'regular item'}
+                  styles={colourStyles}
                   menuPlacement={'top'}
                   isClearable={true}
                 />
@@ -301,7 +311,7 @@ const ProductAddition = ({
                     options={filteredFields}
                     placeholder={'Select Field'}
                     onChange={onFieldChange}
-                    styleType={'regular item'}
+                    styles={colourStyles}
                     menuPlacement={'top'}
                     isClearable={true}
                   />
@@ -319,7 +329,7 @@ const ProductAddition = ({
                     options={valueInput.map(tag => ({ ...tag, label: tag.name, value: tag.id }))}
                     placeholder={'Enter new value or select an existing one'}
                     onChange={(selected, actionMeta) => onValueChange(selected, actionMeta, addProductTag, changeProductTag)}
-                    styleType={'regular item'}
+                    styles={colourStyles}
                     menuPlacement={'top'}
                     isClearable={true}
                   />
