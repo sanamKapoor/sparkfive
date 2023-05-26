@@ -3,11 +3,12 @@
     align-items: center;
     gap: 6px;
     color: var(--color-sec-text);
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 500;
     margin-bottom: 13px;
 }
 
 .link {
     cursor: pointer;
+    text-decoration: underline;
 }

@@ -20,6 +20,7 @@ import AssetHeaderOps from '../common/asset/asset-header-ops'
 
 import selectOptions from '../../utils/select-options'
 import Spinner from "../common/spinners/spinner";
+import { isMobile } from 'react-device-detect'
 
 const ShareFolderMain = () => {
     const router = useRouter()
@@ -39,7 +40,9 @@ const ShareFolderMain = () => {
         selectAllFolders,
         setFolders,
         activeFolder,
-        setActiveFolder
+        setActiveFolder,
+        selectedAllAssets,
+        selectedAllFolders
     } = useContext(AssetContext)
 
     const { user, advancedConfig, setAdvancedConfig } = useContext(UserContext)
@@ -52,12 +55,12 @@ const ShareFolderMain = () => {
     const [activePasswordOverlay, setActivePasswordOverlay] = useState(true)
     const [loading, setLoading] = useState(true)
     const [activeSearchOverlay, setActiveSearchOverlay] = useState(true)
-    const [openFilter, setOpenFilter] = useState(false)
     const [activeView, setActiveView] = useState('grid')
     const [sharePath, setSharePath] = useState('')
     const [activeMode, setActiveMode] = useState('assets')
+    const [openFilter, setOpenFilter] = useState((activeMode === 'assets' && !isMobile) ? true: false)
 
-    const [top, setTop] = useState('calc(55px + 3rem)')
+    const [top, setTop] = useState('calc(55px + 5rem)')
 
     const submitPassword = async (password, email) => {
         try {
@@ -138,6 +141,18 @@ const ShareFolderMain = () => {
         }
     }, [router.asPath])
 
+    // useEffect(() => {
+    //     console.log('selectedAllAssets: ', selectedAllAssets)
+    //     console.log('selectedAllFolders: ', selectedAllFolders)
+    //     if (selectedAllAssets) {
+    //       selectAllAssets(false);
+    //     }
+    
+    //     if (selectedAllFolders) {
+    //       selectAllFolders(false);
+    //     }
+    //   }, [activeMode]);
+
     useEffect(() => {
         if (sharePath && sharePath !== '[team]/[id]/[name]') {
             getFolderInfo()
@@ -160,6 +175,18 @@ const ShareFolderMain = () => {
         }
         setNeedsFetch('')
     }, [needsFetch])
+
+    useEffect(() => {
+        if (activeMode === 'assets') {
+            if(isMobile){
+                setOpenFilter(false);
+              }else{
+                setOpenFilter(true);
+              }
+        } else if (activeMode === 'folders') {
+            setOpenFilter(false)
+        }
+    }, [activeMode])
 
     useEffect(() => {
         setInitialLoad(folderInfo);
@@ -311,7 +338,7 @@ const ShareFolderMain = () => {
 
     const onChangeWidth = () => {
         if(!loading){
-            let remValue = '3rem'
+            let remValue = '5rem'
             if(window.innerWidth <= 900){
                 remValue = '1rem + 1px'
             }
@@ -359,7 +386,6 @@ const ShareFolderMain = () => {
                     sharePath={sharePath}
                 />
                 <div className={`${openFilter && styles['col-wrapper']}`} style={{marginTop: top}}>
-                    <h1 style={{color: 'transparent'}}>Hello World</h1>
                     <AssetGrid
                         activeFolder={activeFolder}
                         getFolders={getFolders}

@@ -31,6 +31,7 @@ import DetailOverlay from "../../common/asset/detail-overlay";
 import React from 'react'
 import AssetHeaderOps from '../../common/asset/asset-header-ops'
 import deletedAssets from '../../common/custom-settings/deleted-assets'
+import { isMobile } from 'react-device-detect'
 
 const AssetsLibrary = () => {
 
@@ -80,7 +81,7 @@ const AssetsLibrary = () => {
 
   const [renameModalOpen, setRenameModalOpen] = useState(false)
 
-  const [openFilter, setOpenFilter] = useState(false)
+  const [openFilter, setOpenFilter] = useState(activeMode === 'assets' ? true : false)
 
   const { activeSortFilter, setActiveSortFilter, tags, loadTags, loadProductFields, productFields, folders: collection, loadFolders, campaigns, loadCampaigns } = useContext(FilterContext)
 
@@ -226,8 +227,14 @@ const AssetsLibrary = () => {
 
   useEffect(() => {
     if (activeMode === 'folders') {
+      setOpenFilter(false)
       setAssets(assets.map(asset => ({ ...asset, isSelected: false })))
     } else if (activeMode === 'assets') {
+      if(isMobile){
+        setOpenFilter(false);
+      }else{
+        setOpenFilter(true);
+      }
       setFolders(folders.map(folder => ({ ...folder, isSelected: false })))
     }
   }, [activeMode])
@@ -785,7 +792,7 @@ const AssetsLibrary = () => {
                 />
                 }
               </DropzoneProvider>
-              {openFilter &&
+              {openFilter && hasPermission([ASSET_ACCESS]) &&
                 <FilterContainer
                   clearFilters={clearFilters}
                   openFilter={openFilter}

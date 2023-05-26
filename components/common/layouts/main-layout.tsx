@@ -173,7 +173,6 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
                   text='Schedule'
                 />}
             </ul>
-
             {hasPermission([ASSET_UPLOAD_APPROVAL]) &&
               <div className={styles['upload-approval']}>
                 <Button
@@ -184,7 +183,6 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
                 />
               </div>
             }
-
             <div className={styles['notifications-wrapper']}>
               <Notification />
             </div>

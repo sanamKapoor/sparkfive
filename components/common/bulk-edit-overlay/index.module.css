@@ -64,8 +64,8 @@
 }
 
 .back img {
-  margin-right: 0.5rem;
-  width: 14px;
+    margin-right: 0.5rem;
+    width: 14px;
 }
 
 .mode {
@@ -101,7 +101,7 @@
 
 .mode .option img {
   margin-right: 5px;
-  width: 15px;
+  width: 17px;
 }
 
 .asset-actions {

@@ -78,12 +78,13 @@
 
 .share-landing-search{
     position: absolute;
-    transform: translate(-100%);
+    /* transform: translate(-100%); */
+    right: 105%;
 }
 
 @media screen and (max-width: 1800px) {
     .share-landing-search{
-        transform: translate(-20%);
+        /* transform: translate(-20%); */
     }
 }
 
@@ -96,23 +97,27 @@
 @media screen and (max-width: 1300px) {
     .share-landing-search{
         width: 400px;
-        transform: translate(-10%);
     }
 }
 
 @media screen and (max-width: 810px) {    
     .share-landing-search{
         top:0;
-        width: 400px;
-        right: 50%;
-        transform: translate(40%);
+        width: 365px;
+        right: 91%;
     }
 }
 
 @media screen and (max-width: 500px) {
     .share-landing-search{
         width: 100vw;
-        transform: translate(32%, -170%);
+        transform: translate(52%, -170%);
         z-index: -1
+    }
+}
+
+@media screen and (max-width: 375px) {    
+    .share-landing-search{
+        width: 352px;
     }
 }

@@ -215,7 +215,7 @@ const ListItem = ({
                 className={styles["date-created"]}
                 onClick={() => setSortAttribute("asset.created-at")}
               >
-                Create Date
+                Uploaded Date
                 <IconClickable
                   src={arrowIcon}
                   additionalClass={`${

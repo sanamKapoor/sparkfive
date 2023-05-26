@@ -1,13 +1,11 @@
 .container {
-    width: 30%;
-    min-width: 320px;
-    margin-right: 20px;
-    border: 3px var(--color-secondary-border) solid;
+    width: 18.7%;
+    margin-right: 40px;
+    border: 1px var(--color-secondary-border) solid;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 6px;
     height: 100%;
     background-color: #fff;
-    max-width: 380px;
     z-index: 999;
 }
 .section-container {
@@ -28,7 +26,7 @@
 .container section h4 {
     margin-top: 0;
     margin-bottom: 0;
-    font-weight: 400;
+    font-weight: 500;
     font-size: 14px;
     color: var(--color-prim-navy);
     text-align: left;
@@ -87,8 +85,15 @@
 .expand-icon {
     width: 13px;
     height: 7px;
+    filter: contrast(0.5);
 }
 
+
+@media (min-width:1306px) and (max-width:1599px){
+    .container {
+        width: 24.5%;
+    }
+}
 @media screen and (max-width: 800px) {
     .container {
         position: absolute;
@@ -120,7 +125,7 @@
         height: auto;
         width: calc(100% - 40px);
         min-width: calc(100% - 40px);
-        top: 167px;
+        top: 200px;
         z-index: 99;
     }
 }

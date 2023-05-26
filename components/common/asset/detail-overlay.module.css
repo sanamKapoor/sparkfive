@@ -74,6 +74,9 @@
   align-items: center;
   justify-self: center;
 }
+.name img{
+  width: 14px;
+}
 
 .top-wrapper .name h3 {
   margin: 0;
@@ -103,7 +106,7 @@
 
 .back img {
   margin-right: 0.5rem;
-  width: 12px;
+  width: 14px;
 }
 
 .content {

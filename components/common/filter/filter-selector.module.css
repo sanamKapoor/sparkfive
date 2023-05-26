@@ -53,13 +53,15 @@
 .select-item p {
     margin: 0 10px;
     font-size: 13px;
+    font-weight: 400;
 }
 .item-name {
     text-align: left;
 }
 .item-total {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--color-sec-text);
+    font-weight: 300;
 }
 
 .container form {
@@ -119,9 +121,11 @@
     gap: 14px;
     color: var(--color-sec-text);
     cursor: pointer;
+    font-size: 12px;
 }
 .dropdownOptHead img {
     width: 8px;
+    filter: contrast(0.5);
 }
 .dropdownOpt .view-dropdown {
     position: absolute;
