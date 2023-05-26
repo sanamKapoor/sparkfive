@@ -86,10 +86,10 @@ const AssetUploadProcess = () => {
               {uploadingAssets.length} assets uploaded
             </div>
           )}
-          <div className={styles.subHeading}>
+          {/* <div className={styles.subHeading}>
             Estimated Time:{" "}
             {uploadingStatus === "done" ? "Finished" : uploadRemainingTime}
-          </div>
+          </div> */}
             <img
               src={Utilities.blueClose}
               alt={"close"}
@@ -103,6 +103,7 @@ const AssetUploadProcess = () => {
         <div className={styles.list}>
         {uploadingAssets.length > 0 &&
           uploadingAssets.map((item) => (
+            <>
             <div className={styles.innerUploadList}>
               <div className={styles.uploadItem}>
                 <div>{item?.asset?.name}</div>
@@ -144,7 +145,13 @@ const AssetUploadProcess = () => {
                   </div>
                 )}
               </div>
+              <div className={styles.subHeading}>
+                      Estimated Time:{" "}
+                      {uploadingStatus === "done" ? "Finished" : uploadRemainingTime}
+                    </div>
             </div>
+
+                    </>
           ))}
        
           </div>
