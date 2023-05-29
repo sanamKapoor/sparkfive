@@ -2,7 +2,6 @@ import styles from './index.module.css'
 import {useEffect, useState} from "react"
 import moment from "moment"
 
-import GuestUploadApprovalOverlay from "../../guest-upload-approval-overlay";
 import SpinnerOverlay from "../../spinners/spinner-overlay";
 
 // APIs
@@ -82,13 +81,6 @@ export default function Requests(){
         })}
 
         {loading && <SpinnerOverlay />}
-
-        {showReviewModal && <GuestUploadApprovalOverlay
-            handleBackButton={()=>{getRequests(); setShowReviewModal(false)}}
-            selectedAssets={assets}
-            loadingAssets={loadingAssets}
-            requestInfo={requestInfo}
-        />}
 
     </>
 }

@@ -34,15 +34,15 @@ const GuestUpload = () => {
                     active={activeList === 'links'}
                     onClick={() => setActiveList('links')}
                 />
-                <SectionButton
+                {/* <SectionButton
                     text='Requests'
                     active={activeList === 'requests'}
                     onClick={() => setActiveList('requests')}
-                />
+                /> */}
             </div>
 
             {activeList === 'links' && <Links />}
-            {activeList === 'requests' && <Requests />}
+            {/* {activeList === 'requests' && <Requests />} */}
         </>
     )
 }

@@ -46,6 +46,7 @@ import { useDebounce } from "../../../hooks/useDebounce";
 import AssetPdf from "../../common/asset/asset-pdf";
 import AssetIcon from "../../common/asset/asset-icon";
 import AssetCropImg from "../../common/asset/asset-crop-img";
+import GuestUploadApprovalOverlay from "../../../components/common/guest-upload-approval-overlay";
 
 const filterOptions = [
   {
@@ -152,6 +153,9 @@ const UploadRequest = () => {
   const [inputFolders, setInputFolders] = useState([]);
   const [assetFolders, setFolders] = useState([]);
 
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [requestInfo, setRequestInfo] = useState('')
+
   const debouncedBatchName = useDebounce(batchName, 500);
 
   const updateName = async (value) => {
@@ -198,14 +202,20 @@ const UploadRequest = () => {
   };
 
   // On view approval requests
-  const onView = (index) => {
-    setAssets(approvals[index] ? approvals[index].assets : []);
-    setMode("view");
-    setApprovalId(approvals[index].id);
-    setCurrentViewStatus(approvals[index]?.status);
-    setCurrentApproval(approvals[index]);
-    setBatchName(approvals[index].name || "");
-    setApprovalIndex(index);
+  const onView = (index, uploadType) => {
+    if(uploadType === 'guest'){
+      setRequestInfo(approvals[index]);
+      setAssets(approvals[index] ? approvals[index].assets : []);
+      setShowReviewModal(true)
+    }else{
+      setAssets(approvals[index] ? approvals[index].assets : []);
+      setMode("view");
+      setApprovalId(approvals[index].id);
+      setCurrentViewStatus(approvals[index]?.status);
+      setCurrentApproval(approvals[index]);
+      setBatchName(approvals[index].name || "");
+      setApprovalIndex(index);
+    }
   };
 
   const onCancelView = (refresh = false) => {
@@ -905,17 +915,36 @@ const UploadRequest = () => {
     toastUtils.success("Approve asset successfully");
   };
 
-  const bulkApprove = async (approvalIds) => {
-    setIsLoading(true);
+  const filterUploadItems = (data) =>{
+    const approvalIds = data.filter(item => item.uploadType === 'approval').map(item => item.id);
+    const guestUploadIds = data.filter(item => item.uploadType === 'guest').map(item => ({id: item.id, assets: item.assets}));
+    return {approvalIds, guestUploadIds}
+  }
 
-    await approvalApi.bulkApprove({ approvalIds });
+  const bulkApprove = async (data) => {
+    setIsLoading(true);
+    const ids = filterUploadItems(data);
+
+    const assetIds =ids['guestUploadIds'].map(item => item.assets.map(a => a.asset)).flat(2)
+
+    const updateObject = {
+      assetIds,
+      attributes: {},
+      status: 'approved'
+    }
+
+    await approvalApi.bulkApprove({approvalIds: ids.approvalIds});
+    await assetApi.updateMultipleAttributes(updateObject, {})
 
     // Update status to approval list
     let approvalArrData = [...approvals];
     // @ts-ignore
     approvalArrData.map((approval) => {
-      if (approvalIds.includes(approval.id)) {
+      const approvalId = ids['approvalIds'].includes(approval.id) || ids['guestUploadIds'].includes(approval.id)
+      if (approvalId && approval.uploadType === 'approval') {
         approval.status = 2;
+      }else if(approvalId && approval.uploadType === 'guest'){
+        approval.status = 'Completed';
       }
     });
 
@@ -953,19 +982,35 @@ const UploadRequest = () => {
     toastUtils.success("Reject assets successfully");
   };
 
-  const bulkReject = async (rejectIds) => {
+  const bulkReject = async (data) => {
     setIsLoading(true);
 
-    await approvalApi.bulkReject({ rejectIds });
+    const ids = filterUploadItems(data);
+
+    await approvalApi.bulkReject({ rejectIds: ids.approvalIds });
+
+    const assetIds =ids['guestUploadIds'].map(item => item.assets.map(a => a.asset)).flat(2)
+
+    const updateObject = {
+      assetIds,
+      attributes: {},
+      status: 'rejected'
+    }
+
+    await assetApi.updateMultipleAttributes(updateObject, {});
 
     // Update status to approval list
     let approvalArrData = [...approvals];
+
     // @ts-ignore
     approvalArrData.map((approval) => {
-      if (rejectIds.includes(approval.id)) {
-        approval.status = -1;
-      }
-    });
+    const approvalId = ids['approvalIds'].includes(approval.id) || ids['guestUploadIds'].includes(approval.id)
+    if (approvalId && approval.uploadType === 'approval') {
+      approval.status = -1;
+    }else if(approvalId && approval.uploadType === 'guest'){
+      approval.status = 'Rejected';
+    }
+  });
 
     setApprovals(approvalArrData);
 
@@ -976,16 +1021,30 @@ const UploadRequest = () => {
     toastUtils.success("Reject assets successfully");
   };
 
-  const bulkDelete = async (deleteIds) => {
+  const bulkDelete = async (data) => {
+    //use status: 'deleted' for guest bulk delete
     setIsLoading(true);
+    const ids = filterUploadItems(data);
 
-    await approvalApi.bulkDelete({ deleteIds });
+    const assetIds =ids['guestUploadIds'].map(item => item.assets.map(a => a.asset)).flat(2)
+  
+    const updateObject = {
+      assetIds,
+      attributes: {},
+      status: 'deleted'
+    }
 
+    await approvalApi.bulkDelete({ deleteIds:  ids['approvalIds']});
+    await assetApi.updateMultipleAttributes(updateObject, {});
+    
     // Update status to approval list
     let approvalArrData = [...approvals];
 
     approvalArrData = approvalArrData.filter(
-      (approval) => !deleteIds.includes(approval.id)
+      (approval) => {
+        const approvalId = ids['approvalIds'].includes(approval.id) || ids['guestUploadIds'].includes(approval.id)
+        return !approvalId
+      }
     );
 
     setApprovals(approvalArrData);
@@ -1006,7 +1065,7 @@ const UploadRequest = () => {
   const getSelectedApprovals = () => {
     return approvals
       .filter((approval) => approval.isSelected)
-      .map((approval) => approval.id);
+      .map((approval) => ({id: approval.id, uploadType: approval.uploadType, assets: approval.assets}));
   };
 
   // On change custom fields (add/remove)
@@ -1186,6 +1245,38 @@ const UploadRequest = () => {
     return () => window.removeEventListener("resize", onChangeWidth);
   }, []);
 
+  const handleDeleteApproval = async (data, uploadType) => {
+
+    setIsLoading(true);
+    if(uploadType === 'guest'){
+       
+    const updateObject = {
+      assetIds: data.assets.map(item => item.asset),
+      attributes: {},
+      status: 'deleted'
+    }
+    await assetApi.updateMultipleAttributes(updateObject, {});
+
+    }else{
+      await approvalApi.bulkDelete({ deleteIds:  [data.id]});
+    }
+  
+    
+    // Update status to approval list
+    let approvalArrData = [...approvals];
+
+    approvalArrData = approvalArrData.filter(
+      (approval) => approval.id !== data.id
+    );
+    
+    setApprovals(approvalArrData);
+
+    setIsLoading(false);
+
+    setDetailModal(false);
+
+    toastUtils.success("Delete approval successfully");
+  };
   return (
     <>
       <AssetSubheader
@@ -1405,6 +1496,7 @@ const UploadRequest = () => {
                           key={approval.id || index}
                         >
                           <ListItem
+                            handleDeleteApproval={handleDeleteApproval}
                             data={approval}
                             index={index}
                             toggleSelected={() => {
@@ -2386,6 +2478,13 @@ const UploadRequest = () => {
         message={"Are you sure you would like to delete this batch?"}
         modalIsOpen={showDeleteConfirm}
       />
+
+      {showReviewModal && <GuestUploadApprovalOverlay
+            handleBackButton={()=>{fetchApprovals(); setShowReviewModal(false)}}
+            selectedAssets={assets}
+            loadingAssets={false}
+            requestInfo={requestInfo}
+        />}
     </>
   );
 };

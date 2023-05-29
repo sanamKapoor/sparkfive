@@ -7,50 +7,26 @@ import { Utilities, AssetOps } from "../../../assets";
 import AssetImg from "./asset-img";
 import IconClickable from "../buttons/icon-clickable";
 import AssetIcon from "./asset-icon";
+import RequestStatusBadge from "./RequestStatusBadge";
 
 const RequestListItem = ({
+handleDeleteApproval,
   data: {
     assets,
+    id,
     name = "",
     user = {},
     status = 0,
     isLoading = false,
     isSelected,
-    createdAt = new Date()
+    createdAt = new Date(),
+    uploadType,
   },
   index,
   toggleSelected = () => { },
   onView = (index) => { },
   isAdmin = false
 }) => {
-
-
-  const Tag = ({ status }) => {
-    switch (status) {
-      case -1: {
-        return <span className={requestListStyles['reject-tag']}>Rejected</span>
-      }
-      case 0: {
-        return <span className={requestListStyles['pending-tag']}>Pending</span>
-      }
-      case 1: {
-        // Admin role will see submitted tag as pending
-        if (isAdmin) {
-          return <span className={requestListStyles['pending-tag']}>Pending</span>
-        } else {
-          return <span className={requestListStyles['complete-tag']}>Submitted</span>
-        }
-
-      }
-      case 2: {
-        return <span className={requestListStyles['complete-tag']}>Completed</span>
-      }
-      default: {
-        return <span className={requestListStyles['pending-tag']}>Pending</span>
-      }
-    }
-
-  }
 
   const getThumbnail = (asset) => {
     if (asset) {
@@ -69,6 +45,8 @@ const RequestListItem = ({
       return <AssetIcon extension={""} onList={true} />
     }
   }
+
+
 
   return (
     <>
@@ -129,7 +107,7 @@ const RequestListItem = ({
               className={`${requestListStyles.field_name} ${isLoading && "loadable"} align-center`}
             >
               {getThumbnail(assets[0])}
-              <span>{name || "Untitled"}</span>
+              <span>{(uploadType === 'approval' ? name : `${name} - Guest Upload`) || "Untitled"}</span>
               <div className={requestListStyles.field_mobile}>
                 {isAdmin && <div className={`${requestListStyles.field_author_mobile} ${isLoading && "loadable"} font-weight-500`}>
                   {user?.name}
@@ -138,7 +116,7 @@ const RequestListItem = ({
                   {moment(createdAt).format("MMM DD, YYYY")}
                 </div>
                 <div className={requestListStyles.field_status_mobile}>
-                  <Tag status={status} />
+                  <RequestStatusBadge status={status} uploadType={uploadType} isAdmin={isAdmin}/>
                 </div>
               </div>
             </div>
@@ -149,11 +127,11 @@ const RequestListItem = ({
               {moment(createdAt).format("MMM DD, YYYY hh:mm a")}
             </div>
             <div className={requestListStyles.field_status}>
-              <Tag status={status} />
+            <RequestStatusBadge status={status} uploadType={uploadType} isAdmin={isAdmin}/>
             </div>
             <div className={`${requestListStyles.field_actions} ${isLoading && "loadable"}`}>
               <span className={"underline-text cursor-pointer"} onClick={() => { onView(index) }}>View Batch</span>
-              <IconClickable src={AssetOps.deleteGray} onClick={() => alert('delete')} />
+              <IconClickable src={AssetOps.deleteGray} onClick={() => handleDeleteApproval({assets, id}, uploadType)} />
             </div>
           </div>
         </div>
