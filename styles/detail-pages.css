@@ -91,11 +91,8 @@ Container for modifying campaigns
   flex-wrap: wrap;
   max-height: 12rem;
   overflow-y: auto;
-}
-
-.tags-list li {
-  margin-left: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 16px;
+  gap: 4px;
 }
 
 .picker-dialog{

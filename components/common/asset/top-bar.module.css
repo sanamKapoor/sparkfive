@@ -4,6 +4,7 @@
   width: 100%;
   top: 81px;
   left: 0;
+  /* z-index: 200; To be lower than top bar so that upoad popup is not hidden  */
   z-index: 1499; /* To be lower than top bar so that upoad popup is not hidden */
   background-color: white;
   padding: 33.5px 40px;
@@ -190,6 +191,10 @@ li.dropdown-title {
     display: none;
   }
 
+  .mobile-bottom {
+    display: none;
+  }
+
 }
 
 @media screen and (max-width: 810px) {
@@ -257,6 +262,20 @@ li.dropdown-title {
     top: -26px;
     right: 22px;
     cursor: pointer;
+  }
+
+  .mobile-bottom {
+    background-color: var(--color-prim-navy);
+    height: 36px;
+    width: 100%;
+    justify-content: center;
+    position: fixed;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 

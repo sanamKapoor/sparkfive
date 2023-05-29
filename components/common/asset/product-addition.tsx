@@ -241,9 +241,9 @@ const ProductAddition = ({
   if (activeDropdown === productVendorActiveDropdownValue) valueInput = inputVendors
   if (activeDropdown === productRetailerActiveDropdownValue) valueInput = inputRetailers
 
-  const categories = product?.tags.filter(({ type }) => type === productCategoryActiveDropdownValue)
-  const vendors = product?.tags.filter(({ type }) => type === productVendorActiveDropdownValue)
-  const retailers = product?.tags.filter(({ type }) => type === productRetailerActiveDropdownValue)
+  const categories = product?.tags?.filter(({ type }) => type === productCategoryActiveDropdownValue)
+  const vendors = product?.tags?.filter(({ type }) => type === productVendorActiveDropdownValue)
+  const retailers = product?.tags?.filter(({ type }) => type === productRetailerActiveDropdownValue)
 
   // Filter out fields if they are already present on the product
   const filteredFields = productFields.filter(({ value }) => {
@@ -252,6 +252,16 @@ const ProductAddition = ({
 
     return true
   })
+
+  const colourStyles = {
+    option: (styles, { isFocused }) => {
+      return {
+        ...styles,
+        backgroundColor: isFocused ? "#FAF8F5" : null,
+        padding: "10px"
+      };
+    }
+  };
 
   return (
     <FieldWrapper>
@@ -269,7 +279,7 @@ const ProductAddition = ({
                   options={inputProducts.map(product => ({ ...product, label: product.sku, value: product.id }))}
                   placeholder={'Enter new SKU or select an existing one'}
                   onChange={(selected, actionMeta) => onValueChange(selected, actionMeta, addProduct, changeProduct)}
-                  styleType={'regular item'}
+                  styles={colourStyles}
                   menuPlacement={'top'}
                   isClearable={true}
                 />
@@ -301,7 +311,7 @@ const ProductAddition = ({
                     options={filteredFields}
                     placeholder={'Select Field'}
                     onChange={onFieldChange}
-                    styleType={'regular item'}
+                    styles={colourStyles}
                     menuPlacement={'top'}
                     isClearable={true}
                   />
@@ -319,7 +329,7 @@ const ProductAddition = ({
                     options={valueInput.map(tag => ({ ...tag, label: tag.name, value: tag.id }))}
                     placeholder={'Enter new value or select an existing one'}
                     onChange={(selected, actionMeta) => onValueChange(selected, actionMeta, addProductTag, changeProductTag)}
-                    styleType={'regular item'}
+                    styles={colourStyles}
                     menuPlacement={'top'}
                     isClearable={true}
                   />

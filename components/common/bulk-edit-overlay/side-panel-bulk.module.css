@@ -2,15 +2,20 @@
     padding: 0 20px;
 }
 .container h2 {
-    font-size: 22px;
-    margin: 15px 0 30px 0;
+    font-size: 14px;
+    margin: 15px 0 15px 0;
 }
-.container section {
-    padding-left: 10px;
+
+.first-section p {
+    font-size: 12px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--color-border);
 }
 
 .field-wrapper {
     margin-top: 1.5rem;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--color-border);
 }
 .container .field-wrapper .tags-list{
     margin-top: 0.7rem;

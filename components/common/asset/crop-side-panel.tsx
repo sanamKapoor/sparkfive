@@ -287,7 +287,7 @@ const CropSidePanel = ({ asset,
                         </div>
                         <ReactTooltip place={'bottom'} id={'resize'} delayShow={300} effect='solid'>{'Resize image at desired dimensions when ratio is maintained'}</ReactTooltip>
                         {asset.extension !== 'svg' && asset.extension !== 'tiff' && asset.extension !== 'tif' && <>
-                            <div className={`${styles['radio-button-wrapper']} ${styles['hide-on-mobile']}`} data-tip data-for={'crop'}>
+                            <div className={`${styles['radio-button-wrapper']}`} data-tip data-for={'crop'}>
                                 <IconClickable
                                     src={mode === 'crop' ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                                     additionalClass={styles['select-icon']}
@@ -330,14 +330,14 @@ const CropSidePanel = ({ asset,
             </div>
 
             {asset.extension !== 'svg' && <>
-                <div className={`${styles['field-wrapper']} ${styles['hide-on-mobile']}`} >
+                <div className={`${styles['field-wrapper']}`} >
                     <div className={`${styles.title}`}>
                         <span>Resize</span>
                         <span className={`${styles['resize-option']} ${resizeOption === "px" ? styles['selected'] : ""}`} onClick={() => resetResizeOption('px')}>px</span>
                         <span className={`${styles['resize-option']} ${resizeOption === "%" ? styles['selected'] : ""}`} onClick={() => resetResizeOption('%')}>%</span>
                     </div>
                     <div className={styles['field-content']}>
-                        <div className={'row'}>
+                        <div className={'row m-t-30'}>
                             <div className={'col-50 m-l-abs-15'}>
                                 <label className={styles['input-label']}>
                                     Width ({resizeOption})
@@ -370,7 +370,7 @@ const CropSidePanel = ({ asset,
                     </div>
                 </div>
 
-                <div className={`${styles['field-wrapper']} ${styles['hide-on-mobile']}`} >
+                <div className={`${styles['field-wrapper']}`} >
                     <div className={`${styles.title}`}>Preset Type</div>
                     <div className={styles['field-content']}>
                         <SizeSelect
@@ -386,7 +386,7 @@ const CropSidePanel = ({ asset,
                     </div>
                 </div>
 
-                <div className={`${styles['field-wrapper']} ${styles['hide-on-mobile']}`} >
+                <div className={`${styles['field-wrapper']}`} >
                     <div className={`${styles.title}`}>Size</div>
                     <div className={styles['field-content']}>
                         <SizeSelect
@@ -411,7 +411,7 @@ const CropSidePanel = ({ asset,
                         styleType='secondary'
                         onClick={() => togglePreview()} />
                     :
-                    <Button className={'m-r-15'}
+                    <Button className={'m-r-10'}
                         text='Reset Changes'
                         type='button'
                         styleType='secondary'
@@ -419,9 +419,10 @@ const CropSidePanel = ({ asset,
                             onResetImageSize()
                         } />
                 }
-                <Button text={'Download Edited'}
+                <Button className={'m-r-10'} 
+                    text={'Download Edited'}
                     type={'button'}
-                    styleType={'primary-navy'}
+                    styleType={'primary'}
                     onClick={() => {
                         if (mode === 'crop') {
                             document.getElementById('download-crop-image').click()
@@ -435,7 +436,7 @@ const CropSidePanel = ({ asset,
                     className={'m-t-40'}
                     text='Save as Related File'
                     type='button'
-                    styleType='secondary'
+                    styleType='primary-navy'
                     onClick={
                     () => {
                         let name = asset.name.substring(0, asset.name.lastIndexOf('.')) || asset.name;
@@ -464,22 +465,6 @@ const CropSidePanel = ({ asset,
                     }
                     modalIsOpen={relatedModalOpen}
                     initialValue={renameValue}
-                />
-            </div>
-
-            <div className={styles['save-changes']}>
-                <Button className={'m-r-15'}
-                    text='Cancel'
-                    type='button'
-                    styleType='secondary'
-                    onClick={() => setMode('detail')} />
-                <Button text={'Download Original'}
-                    type={'button'}
-                    styleType={'primary'}
-                    onClick={() => {
-                        downloadImage('original')
-                    }}
-                    disabled={!widthOriginal || !heightOriginal}
                 />
             </div>
 

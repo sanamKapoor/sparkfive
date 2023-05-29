@@ -38,7 +38,7 @@ const Tag = ({
         <span>{tagRender}</span>
 
         {canRemove &&
-            <span onClick={removeFunction} className={styles.remove}>x</span>
+            <IconClickable additionalClass={styles.remove} onClick={removeFunction} src={Utilities.closeTag} />
         }
     </div>
 }

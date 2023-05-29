@@ -89,10 +89,6 @@ const AssetUploadProcess = () => {
               {uploadingAssets.length} assets uploaded
             </div>
           )}
-          <div className={styles.subHeading}>
-            Estimated Time:{" "}
-            {uploadingStatus === "done" ? "Finished" : uploadRemainingTime}
-          </div>
           <img
             src={Utilities.blueClose}
             alt={"close"}

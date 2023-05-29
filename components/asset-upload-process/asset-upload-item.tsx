@@ -6,7 +6,7 @@ import { Utilities } from "../../assets";
 import { AssetContext } from "../../context";
 
 const AssetUploadItem = ({ item, index, handleRetry }) => {
-  const { uploadingStatus, uploadingPercent, uploadingFile } =
+  const { uploadingStatus, uploadingPercent, uploadingFile, uploadRemainingTime } =
     useContext(AssetContext);
 
   const uploadSuccess = item?.status === "done" && uploadingStatus === "done";
@@ -58,6 +58,12 @@ const AssetUploadItem = ({ item, index, handleRetry }) => {
           </div>
         )}
       </div>
+     {(uploadInProgress || item?.status === "done" || item?.status === "fail") && <div className={styles.subHeading}>
+        Estimated Time:{" "}
+        {item?.status === "done" || item?.status === "fail"
+          ? "Finished"
+          : (uploadRemainingTime === '0 seconds remaining' ? '1 second remaining' : uploadRemainingTime)}
+      </div>}
     </div>
   );
 };

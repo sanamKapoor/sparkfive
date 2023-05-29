@@ -8,7 +8,7 @@
   color: white;
   max-width: 550px;
   width: 60%;
-  z-index: 9999999;
+  z-index: 999999;
   min-height: 40px;
   height: 500px;
   overflow-y: scroll;
@@ -132,7 +132,7 @@
   color: white;
   max-width: calc(100% - 48px);
   width: 460px;
-  z-index: 9999999;
+  z-index: 999999;
   min-height: 40px;
   overflow: hidden;
 }
@@ -173,7 +173,7 @@
   display: flex;
   align-items: center;  
   gap: 30px;
-  margin-bottom: 31px;
+  /* margin-bottom: 31px; */
 }
 
 .uploadItem:first-child:last-child {

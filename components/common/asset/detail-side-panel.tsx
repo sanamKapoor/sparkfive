@@ -456,8 +456,10 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
 
 
   return (
-    <div className={styles.container}>
-      <h2>Details</h2>
+    <>
+    <div className={` ${!isShare ? styles.fieldWrapper : styles.shareWrapper}`}>
+      <h2 className={styles['details-heading']}>Details</h2>
+      
       <div className={styles['first-section']}>
         {fieldValues.map(fieldvalue => (
           <div className={styles['field-wrapper']} key={fieldvalue.field}>
@@ -466,6 +468,11 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
           </div>
         ))}
       </div>
+
+
+
+
+
 
       {/*<div className={styles['field-wrapper']} >*/}
       {/*  <div className={`secondary-text ${styles.field}`}>Channel</div>*/}
@@ -865,6 +872,9 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
         />
       </>}
     </div >
+
+
+</>
   )
 }
 

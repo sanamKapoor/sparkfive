@@ -1,5 +1,5 @@
 .container {
-  padding: 0 20px;
+  padding: 0 20px 60px;
 }
 
 .block {
@@ -14,7 +14,7 @@
 
 .subtitle {
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .input {
@@ -35,12 +35,12 @@
 } 
 
 .description {
-  color: rgb(199, 199, 199);
+  color: var(--color-sec-text);
   font-size: 14px;
 }
 
 .mb {
-  margin-bottom: 45px;
+  margin-bottom: 12px;
 }
 
 .ratioInput, .btn, .controlTitle, .blockInput_active {
@@ -54,7 +54,7 @@
   background: none;
   cursor: pointer;
   align-self: flex-end;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .controlTitle {
@@ -74,8 +74,12 @@ span.select {
 
 .lock {
   cursor: pointer;
-  padding-top: 50px;
+  padding-top: 45px;
   margin: 0 25px;
+}
+
+.lock img {
+  width: 20px;
 }
 
 .aspectRatioContainer {
@@ -84,3 +88,10 @@ span.select {
   justify-content: space-between;
 }
 
+.cdnType .selectContainer >div{
+  max-height: inherit;
+}
+
+.cdnType .select{
+  color: var(--color-prim-navy);
+}

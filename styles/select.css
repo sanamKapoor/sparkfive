@@ -22,7 +22,7 @@
 
 .select-prefix__single-value {
   color: var(--color-prim-navy) !important;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .select-prefix__indicators {

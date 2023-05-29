@@ -1,8 +1,8 @@
 import styles from "./detail-overlay.module.css";
 import { Utilities, AssetOps } from "../../../assets";
 import { saveAs } from "file-saver";
-import { Rnd } from 'react-rnd';
-import {useState, useEffect, useContext, useRef} from "react";
+import { Rnd } from "react-rnd";
+import { useState, useEffect, useContext, useRef } from "react";
 import assetApi from "../../../server-api/asset";
 import shareApi from "../../../server-api/share-collection";
 import customFileSizeApi from "../../../server-api/size";
@@ -12,11 +12,11 @@ import update from "immutability-helper";
 import downloadUtils from "../../../utils/download";
 import VersionList from "./version-list";
 import AssetAddition from "./asset-addition";
-import urlUtils from '../../../utils/url'
+import urlUtils from "../../../utils/url";
 
 import { isMobile } from "react-device-detect";
 
-import { ASSET_DOWNLOAD } from '../../../constants/permissions'
+import { ASSET_DOWNLOAD } from "../../../constants/permissions";
 
 // Components
 import SidePanel from "./detail-side-panel";
@@ -37,14 +37,18 @@ import CdnPanel from "./cdn-panel";
 import { isImageType } from "../../../utils/file";
 
 import { ASSET_ACCESS } from "../../../constants/permissions";
-import AssetNotes from './asset-notes';
-import AssetNote from './asset-note';
-import AssetRelatedFIles from './asset-related-files';
+import AssetNotes from "./asset-notes";
+import AssetNote from "./asset-note";
+import AssetRelatedFIles from "./asset-related-files";
 
 import { sizeToZipDownload } from "../../../constants/download";
 import EventBus from "../../../utils/event-bus";
+import AssetRelatedFilesList from "./asset-related-files-list";
+import Dropdown from "../inputs/dropdown";
 
 const getDefaultDownloadImageType = (extension) => {
+  console.log("isMobile", isMobile);
+
   const defaultDownloadImageTypes = [
     {
       value: "png",
@@ -60,7 +64,7 @@ const getDefaultDownloadImageType = (extension) => {
     },
   ];
 
-  let foundExtension = extension || '';
+  let foundExtension = extension || "";
   if (extension === "jpeg") {
     foundExtension = "jpg";
   }
@@ -97,17 +101,16 @@ const DetailOverlay = ({
   realUrl,
   thumbailUrl,
   closeOverlay,
-  openShareAsset = () => { },
-  openDeleteAsset = () => { },
-  loadMore = () => { },
+  openShareAsset = () => {},
+  openDeleteAsset = () => {},
+  loadMore = () => {},
   isShare = false,
   sharePath = "",
-  activeFolder = '',
+  activeFolder = "",
   initialParams,
   availableNext = true,
   outsideDetailOverlay = false,
 }) => {
-
   const { hasPermission } = useContext(UserContext);
   const { user, cdnAccess } = useContext(UserContext);
 
@@ -115,13 +118,26 @@ const DetailOverlay = ({
 
   const [renameModalOpen, setRenameModalOpen] = useState(false);
 
-  const [activeCollection, setActiveCollection] = useState({ name: '', assets: [], });
+  const [downloadDropdownOpen, setDownloadDropdownOpen] = useState(false);
+
+  const [activeCollection, setActiveCollection] = useState({
+    name: "",
+    assets: [],
+  });
   const [assetIndex, setAssetIndex] = useState(0);
 
   const [activeSideComponent, setActiveSidecomponent] = useState("detail");
 
-  const { assets, setAssets, folders, needsFetch, updateDownloadingStatus, setDetailOverlayId, totalAssets, setOperationAssets } =
-    useContext(AssetContext);
+  const {
+    assets,
+    setAssets,
+    folders,
+    needsFetch,
+    updateDownloadingStatus,
+    setDetailOverlayId,
+    totalAssets,
+    setOperationAssets,
+  } = useContext(AssetContext);
 
   const [sideOpen, setSideOpen] = useState(true);
 
@@ -133,13 +149,26 @@ const DetailOverlay = ({
   const [versionThumbnailUrl, setVersionThumbnailUrl] = useState(thumbailUrl);
   const [previewUrl, setPreviewUrl] = useState(null);
 
-  const [detailPosSize, setDetailPosSize] = useState({ x: 0, y: 0, width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight });
-  const [defaultSize, setDefaultSize] = useState({ width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight });
-  const [notes, setNotes] = useState([])
-  const [sizeOfCrop, setSizeOfCrop] = useState({ width: defaultSize.width, height: defaultSize.height })
+  const [detailPosSize, setDetailPosSize] = useState({
+    x: 0,
+    y: 0,
+    width: currentAsset.dimensionWidth,
+    height: currentAsset.dimensionHeight,
+  });
+  const [defaultSize, setDefaultSize] = useState({
+    width: currentAsset.dimensionWidth,
+    height: currentAsset.dimensionHeight,
+  });
+  const [notes, setNotes] = useState([]);
+  const [sizeOfCrop, setSizeOfCrop] = useState({
+    width: defaultSize.width,
+    height: defaultSize.height,
+  });
 
-  const renameValue = useRef("")
-  const setRenameValue = (value) => {renameValue.current = value}
+  const renameValue = useRef("");
+  const setRenameValue = (value) => {
+    renameValue.current = value;
+  };
 
   // For resize and cropping
   const [downloadImageTypes, setDownloadImageTypes] = useState(
@@ -206,41 +235,38 @@ const DetailOverlay = ({
           setPresetTypes(presetTypes.concat(data));
         }
       }
-    } catch (e) { }
+    } catch (e) {}
   };
-
 
   const _setActiveCollection = () => {
     // TODO: ? What is purpose of this ?
     if (activeFolder) {
-      const folder = folders.find(folder => folder.id === activeFolder);
-      if(folder){
+      const folder = folders.find((folder) => folder.id === activeFolder);
+      if (folder) {
         // if (folder.assets.length === 0 && assets && assets.length) {
         // folder.assets = [...assets];
         // }
         setActiveCollection(folder);
-        const assetIndx = assets.findIndex(item => item.asset && item.asset.id === asset.id) + 1
+        const assetIndx =
+          assets.findIndex((item) => item.asset && item.asset.id === asset.id) +
+          1;
         setAssetIndex(assetIndx);
       }
     }
-  }
+  };
 
   useEffect(() => {
     getCropResizeOptions();
     getDetail();
     checkInitialParams();
-    if (isMobile) {
-      toggleSideMenu();
-    }
     _setActiveCollection();
   }, [currentAsset]);
 
-  useEffect(()=>{
-    if(currentAsset.id !== asset.id){
-      setCurrentAsset(asset)
+  useEffect(() => {
+    if (currentAsset.id !== asset.id) {
+      setCurrentAsset(asset);
     }
-
-  },[asset])
+  }, [asset]);
 
   // useEffect(() => {
   //   const modAssetIndex = assets.findIndex(assetItem => assetItem.asset.id === assetDetail?.id)
@@ -262,13 +288,12 @@ const DetailOverlay = ({
       } else {
         const { data } = await assetApi.getById(asset.id);
 
-        if(data.asset.id !== assetDetail?.id){
+        if (data.asset.id !== assetDetail?.id) {
           setAssetDetail(data.asset);
-          setPreviewUrl(data.previewUrl)
+          setPreviewUrl(data.previewUrl);
           setVersionRealUrl(data.realUrl);
           setVersionThumbnailUrl(data.thumbailUrl);
         }
-
       }
     } catch (err) {
       // console.log(err);
@@ -357,13 +382,17 @@ const DetailOverlay = ({
           },
         ]);
 
-        if (mode === 'crop') {
+        if (mode === "crop") {
           setSizeOfCrop({
             width: width,
-            height: height
-          })
+            height: height,
+          });
         } else {
-          setDetailPosSize({ ...detailPosSize, width: defaultSize.width, height: defaultSize.height });
+          setDetailPosSize({
+            ...detailPosSize,
+            width: defaultSize.width,
+            height: defaultSize.height,
+          });
         }
       } else {
         // Reset size value
@@ -375,19 +404,29 @@ const DetailOverlay = ({
     }
 
     if (type === "size") {
-      if (mode === 'crop') {
+      if (mode === "crop") {
         setSizeOfCrop({
-          width: value.width > detailPosSize.width ? detailPosSize.width : value.width,
-          height: value.height > detailPosSize.height ? detailPosSize.height : value.height
-        })
+          width:
+            value.width > detailPosSize.width
+              ? detailPosSize.width
+              : value.width,
+          height:
+            value.height > detailPosSize.height
+              ? detailPosSize.height
+              : value.height,
+        });
       } else {
         setWidth(value.width);
         setHeight(value.height);
         // set new rendering size in the <container></container>
         setDetailPosSize({
           ...detailPosSize,
-          width: value.width > defaultSize.width ? defaultSize.width : value.width,
-          height: value.height > defaultSize.height ? defaultSize.height : value.height
+          width:
+            value.width > defaultSize.width ? defaultSize.width : value.width,
+          height:
+            value.height > defaultSize.height
+              ? defaultSize.height
+              : value.height,
         });
       }
       // const {newW, newH} = calculateRenderSize(value.width, value.height);
@@ -401,7 +440,6 @@ const DetailOverlay = ({
       // // set new rendering size in the container
       // setDetailPosSize({...detailPosSize, width: newW, height: newH });
 
-
       setSize(value);
     }
   };
@@ -413,26 +451,33 @@ const DetailOverlay = ({
         newH = defaultSize.height;
         newW = defaultSize.width;
       } else {
-        newW = Math.round(newH * defaultSize.width / defaultSize.height);
+        newW = Math.round((newH * defaultSize.width) / defaultSize.height);
       }
     } else {
       if (newW > defaultSize.width) {
         newH = defaultSize.height;
         newW = defaultSize.width;
       } else {
-        newH = Math.round(newW * defaultSize.height / defaultSize.width);
+        newH = Math.round((newW * defaultSize.height) / defaultSize.width);
       }
     }
     return { newH, newW };
-  }
+  };
 
   // On width, height input change
   const onSizeInputChange = (name, value, resizeOption) => {
-    const originalRatio = currentAsset.dimensionWidth / currentAsset.dimensionHeight;
-    let _width = width, _height = height;
-    if (resizeOption === '%') {
-      if (value > 100) { value = 100 }
-      value = name === 'width' ? Math.round(value * asset.dimensionWidth / 100) : Math.round(value * asset.dimensionHeight / 100)
+    const originalRatio =
+      currentAsset.dimensionWidth / currentAsset.dimensionHeight;
+    let _width = width,
+      _height = height;
+    if (resizeOption === "%") {
+      if (value > 100) {
+        value = 100;
+      }
+      value =
+        name === "width"
+          ? Math.round((value * asset.dimensionWidth) / 100)
+          : Math.round((value * asset.dimensionHeight) / 100);
     }
 
     if (name === "width") {
@@ -468,9 +513,7 @@ const DetailOverlay = ({
     setWidth(_width);
     setHeight(_height);
 
-
     setDetailPosSize({ ...detailPosSize, width: newW, height: newH });
-
   };
 
   const lockCropping = () => {
@@ -517,7 +560,7 @@ const DetailOverlay = ({
   }, [width, height]);
 
   const downloadSelectedAssets = async (id) => {
-    const { shareJWT, code } = urlUtils.getQueryParameters()
+    const { shareJWT, code } = urlUtils.getQueryParameters();
 
     try {
       let payload = {
@@ -530,8 +573,7 @@ const DetailOverlay = ({
       };
 
       // Download files in shared collection or normal download (not share)
-      if((isShare && sharePath && !code) || (!isShare)){
-
+      if ((isShare && sharePath && !code) || !isShare) {
         // Add sharePath property if user is at share collection page
         if (sharePath) {
           filters["sharePath"] = sharePath;
@@ -552,21 +594,23 @@ const DetailOverlay = ({
         fileDownload(data, "assets.zip");
 
         updateDownloadingStatus("done", 0, 0);
-      }else{ // Download shared single asset
-        if(isShare && !sharePath && code){
+      } else {
+        // Download shared single asset
+        if (isShare && !sharePath && code) {
           // Show processing bar
           updateDownloadingStatus("zipping", 0, totalDownloadingAssets);
 
-          const { data } = await assetApi.shareDownload(payload, {shareJWT, code});
+          const { data } = await assetApi.shareDownload(payload, {
+            shareJWT,
+            code,
+          });
 
           // Download file to storage
           fileDownload(data, "assets.zip");
 
           updateDownloadingStatus("done", 0, 0);
         }
-
       }
-
     } catch (e) {
       updateDownloadingStatus(
         "error",
@@ -597,7 +641,7 @@ const DetailOverlay = ({
 
   const updateList = (versionAssets, curAsset) => {
     versionAssets = setDisplayVersions(versionAssets);
-    if(currentAsset.id !== curAsset.id){
+    if (currentAsset.id !== curAsset.id) {
       setCurrentAsset(curAsset);
     }
 
@@ -610,10 +654,9 @@ const DetailOverlay = ({
       const { data } = await assetApi.getVersions(currentAsset.versionGroup);
       updateList(data.versions, data.currentAsset);
 
-      if(data.currentAsset.id !== currentAsset.id){
+      if (data.currentAsset.id !== currentAsset.id) {
         getDetail(data.currentAsset);
       }
-
     } catch (err) {
       // console.log(err)
     }
@@ -621,9 +664,9 @@ const DetailOverlay = ({
 
   const loadNotes = async () => {
     try {
-      const assetId = currentAsset.id
-      const { data } = await assetApi.getNotes(assetId)
-      setNotes(data || [])
+      const assetId = currentAsset.id;
+      const { data } = await assetApi.getNotes(assetId);
+      setNotes(data || []);
     } catch (err) {
       // console.log(err)
     }
@@ -669,9 +712,24 @@ const DetailOverlay = ({
       return result;
     };
 
-    const isTypeValid = checkValid(["image", "video", "pdf"], assetDetail?.type);
+    const isTypeValid = checkValid(
+      ["image", "video", "pdf"],
+      assetDetail?.type
+    );
     const isExtensionValid = checkValid(
-      ["png", "jpg", "gif", "tif", "tiff", "webp", "svg", "mp4", "mov", "avi", "pdf"],
+      [
+        "png",
+        "jpg",
+        "gif",
+        "tif",
+        "tiff",
+        "webp",
+        "svg",
+        "mp4",
+        "mov",
+        "avi",
+        "pdf",
+      ],
       assetDetail?.extension
     );
     const isUserValid =
@@ -684,7 +742,9 @@ const DetailOverlay = ({
     try {
       await assetApi.deleteAsset(version.id);
       let clonedVersions = [...versions];
-      clonedVersions = clonedVersions.filter((asset) => asset.id !== version.id);
+      clonedVersions = clonedVersions.filter(
+        (asset) => asset.id !== version.id
+      );
       clonedVersions = setDisplayVersions(clonedVersions);
       setVersions(clonedVersions);
       toastUtils.success("Version deleted successfully.");
@@ -717,58 +777,61 @@ const DetailOverlay = ({
 
   const applyCrud = (action, note) => {
     switch (action) {
-      case 'add':
-        setNotes([...notes, note])
-        break
-
-      case 'edit':
-        const _notes = notes.map(_note => {
-          if (_note.id === note.id) {
-            _note.text = note.text
-          }
-          return _note
-        })
-        setNotes(_notes)
+      case "add":
+        setNotes([...notes, note]);
         break;
 
-      case 'delete':
-        const restNotes = notes.filter(_note => _note.id !== note.id)
-        setNotes(restNotes)
-        break
+      case "edit":
+        const _notes = notes.map((_note) => {
+          if (_note.id === note.id) {
+            _note.text = note.text;
+          }
+          return _note;
+        });
+        setNotes(_notes);
+        break;
+
+      case "delete":
+        const restNotes = notes.filter((_note) => _note.id !== note.id);
+        setNotes(restNotes);
+        break;
     }
-  }
+  };
 
   const navigateOverlay = (navBy) => {
-    const currentIndx = assets.findIndex(item => asset && item.asset && item.asset.id === asset.id)
-    const newIndx = currentIndx + navBy
+    const currentIndx = assets.findIndex(
+      (item) => asset && item.asset && item.asset.id === asset.id
+    );
+    const newIndx = currentIndx + navBy;
     setAssetIndex(newIndx);
     if (assets[newIndx]) {
       closeOverlay();
-      setDetailOverlayId(assets[newIndx].asset.id)
-      if (newIndx === (assets.length - 1)) {
-        loadMore()
+      setDetailOverlayId(assets[newIndx].asset.id);
+      if (newIndx === assets.length - 1) {
+        loadMore();
       }
     }
-  }
+  };
 
   const _closeOverlay = () => {
-    setOperationAssets([])
-    closeOverlay(changedVersion ? currentAsset : undefined)
-    setDetailOverlayId(undefined)
-  }
-
+    setOperationAssets([]);
+    closeOverlay(changedVersion ? currentAsset : undefined);
+    setDetailOverlayId(undefined);
+  };
 
   const resetImageSettings = (newWidth, newHeight) => {
-      const img = document.querySelector('.app-overlay img.img-preview') as HTMLImageElement;
-      // const draggable = document.querySelector('.app-overlay .react-draggable') as HTMLDivElement;
-      // var positions = window.getComputedStyle(img).getPropertyValue('object-position').split(' ');
-      // const pos = parseInt(positions[0]);
-      const cWidth = newWidth || img.width;
-      const cHeight = newHeight || img.height;
-      let nw = img.naturalWidth;
-      let nh = img.naturalHeight;
-      var oRatio = nw / nh,
-        cRatio = cWidth / cHeight;
+    const img = document.querySelector(
+      ".app-overlay img.img-preview"
+    ) as HTMLImageElement;
+    // const draggable = document.querySelector('.app-overlay .react-draggable') as HTMLDivElement;
+    // var positions = window.getComputedStyle(img).getPropertyValue('object-position').split(' ');
+    // const pos = parseInt(positions[0]);
+    const cWidth = newWidth || img.width;
+    const cHeight = newHeight || img.height;
+    let nw = img.naturalWidth;
+    let nh = img.naturalHeight;
+    var oRatio = nw / nh,
+      cRatio = cWidth / cHeight;
 
     let width, height;
     if (oRatio > cRatio) {
@@ -779,69 +842,111 @@ const DetailOverlay = ({
       height = cHeight;
     }
 
-      width = width > currentAsset.dimensionWidth ? currentAsset.dimensionWidth :  Math.round(width);
-      height = height > currentAsset.dimensionHeight ? currentAsset.dimensionHeight :  Math.round(height);
+    width =
+      width > currentAsset.dimensionWidth
+        ? currentAsset.dimensionWidth
+        : Math.round(width);
+    height =
+      height > currentAsset.dimensionHeight
+        ? currentAsset.dimensionHeight
+        : Math.round(height);
 
     setDetailPosSize(Object.assign({ ...detailPosSize }, { height, width }));
     if (!newWidth && !newHeight) {
       setDefaultSize({ height, width });
     }
-  }
+  };
 
   const onResizeStop = (w, h, position = {}) => {
-    w = parseInt(w)
-    h = parseInt(h)
-    setDetailPosSize(Object.assign({ ...detailPosSize }, {
-      width: w,
-      height: h,
-      ...position
-    }));
+    w = parseInt(w);
+    h = parseInt(h);
+    setDetailPosSize(
+      Object.assign(
+        { ...detailPosSize },
+        {
+          width: w,
+          height: h,
+          ...position,
+        }
+      )
+    );
 
     setWidth(w);
     setHeight(h);
-  }
+  };
 
   const onChangeRelatedFiles = (fileAssociations) => {
-    setAssetDetail({...assetDetail, fileAssociations})
-  }
+    setAssetDetail({ ...assetDetail, fileAssociations });
+  };
+
+  const showSideMenu = isShare ? (isMobile ? true : false) : true;
+
+  const editThenDownload = currentAsset.extension !== "gif" &&
+  currentAsset.extension !== "tiff" &&
+  currentAsset.extension !== "tif" &&
+  currentAsset.extension !== "svg" &&
+  currentAsset.extension !== "svg+xml" &&
+  currentAsset.type === "image" &&
+  isImageType(assetDetail?.extension)
 
   return (
-    <div className={`app-overlay ${styles.container}`}>
+    <div
+      className={`app-overlay ${styles.container} ${
+        isShare ? styles.share : ""
+      }`}
+    >
       {assetDetail && (
         <section id={"detail-overlay"} className={styles.content}>
           <div className={styles["top-wrapper"]}>
-            <div
-              className={styles.back}
-              onClick={_closeOverlay}
-            >
-              <IconClickable src={Utilities.back} />
-              <span>Back</span>
-            </div>
-            <div className={styles.name}>
-              <h3>{assetDetail.name}</h3>
-              {!isShare && (
-                <IconClickable
-                  src={Utilities.edit}
-                  onClick={() => setRenameModalOpen(true)}
-                />
-              )}
-
-              {hasPermission(['admin', 'super_admin']) && versionCount > 0 && (
-                <div
-                  className={styles["versions-number"]}
-                  onClick={() => {
-                    setMode("detail");
-                    resetValues();
-                    changeActiveSide("versions");
-                  }}
-                >
-                  {versionCount + 1} versions
+            <div className={styles["back-name"]}>
+              <div className={styles.back} onClick={_closeOverlay}>
+                <IconClickable src={Utilities.backWhite} />
+                <span>Back</span>
+              </div>
+              <div>
+                <div className={styles.name}>
+                  <h3>{assetDetail.name}</h3>
+                  {!isShare && (
+                    <IconClickable
+                      src={Utilities.editLight}
+                      onClick={() => setRenameModalOpen(true)}
+                    />
+                  )}
                 </div>
-              )}
+                {!isShare && (
+                  <div className={styles["versions-related-wrapper"]}>
+                    {hasPermission(["admin", "super_admin"]) &&
+                      versionCount > 0 && (
+                        <div
+                          className={styles["versions-number"]}
+                          onClick={() => {
+                            setMode("detail");
+                            resetValues();
+                            changeActiveSide("versions");
+                          }}
+                        >
+                          {versionCount + 1} versions
+                        </div>
+                      )}
+                    {assetDetail?.fileAssociations.length > 0 && (
+                      <>
+                        <img src={Utilities.ellipse} />
+                        <div className={styles["related-number"]}  onClick={() => {
+                            setMode("detail");
+                            resetValues();
+                            changeActiveSide("related");
+                          }}>
+                          {assetDetail?.fileAssociations.length} Related files
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
             <div className={styles["asset-actions"]}>
-              {hasPermission(['admin', 'super_admin']) && (
-                <div className={styles["add-version-override"]}>
+              {hasPermission(["admin", "super_admin"]) && (
+                <div className={styles["only-desktop-button"]}>
                   <AssetAddition
                     folderAdd={false}
                     versionGroup={assetDetail.versionGroup}
@@ -850,67 +955,124 @@ const DetailOverlay = ({
                 </div>
               )}
               {!isShare && (
-                <Button
-                  text={"Share"}
-                  type={"button"}
-                  styleType={"primary"}
-                  onClick={openShareAsset}
-                />
-              )}
-              {mode === "detail" && (isShare || hasPermission([ASSET_DOWNLOAD])) && (
                 <>
-                <Button
-                  text={"Download"}
-                  type={"button"}
-                  className={styles["only-desktop-button"]}
-                  styleType={"secondary"}
-                  onClick={() => {
-                    if (currentAsset.extension !== 'gif' && currentAsset.extension !== 'tiff' && currentAsset.extension !== 'tif' && currentAsset.extension !== "svg" && currentAsset.extension !== "svg+xml" && currentAsset.type === "image" && isImageType(assetDetail.extension)) {
-                      setMode("resize");
-                      changeActiveSide("detail");
-                      resetImageSettings(undefined, undefined);
-                    } else {
-                      downloadSelectedAssets(currentAsset.id)
-                      // if(currentAsset.size >= sizeToZipDownload){
-                      //   downloadSelectedAssets(currentAsset.id)
-                      // }else{
-                      //   manualDownloadAsset(currentAsset);
-                      // }
+                  <Button
+                    text={"Share"}
+                    type={"button"}
+                    styleType={"primary"}
+                    className={styles["only-desktop-button"]}
+                    onClick={openShareAsset}
+                  />
 
-                    }
-                  }}
-                />
+                  <div className={styles["only-mobile-button"]}>
+                    <IconClickable
+                      className={styles["only-mobile-button"]}
+                      src={AssetOps.shareWhite}
+                      onClick={openShareAsset}
+                    />
+                  </div>
                 </>
               )}
+              {mode === "detail" &&
+                (isShare || hasPermission([ASSET_DOWNLOAD])) && (
+                  <>
+                    <Button
+                      text={"Download"}
+                      type={"button"}
+                      className={styles["only-desktop-button"]}
+                      styleType={"secondary"}
+                      onClick={() => {
+                        if(editThenDownload){
+                          setDownloadDropdownOpen(true)
+                        }else{
+                          downloadSelectedAssets(currentAsset.id);
+                        }
+                      }}
+                    />
+                    <div className={styles["only-mobile-button"]}>
+                      <IconClickable
+                        className={styles["only-mobile-button"]}
+                        src={AssetOps.downloadWhite}
+                        onClick={() => setDownloadDropdownOpen(true)}
+                      />
+                    </div>
+
+                    {downloadDropdownOpen &&  (
+                      <Dropdown
+                        onClickOutside={() => setDownloadDropdownOpen(false)}
+                        additionalClass={styles["more-dropdown"]}
+                        options={[
+                          {
+                            id: "download",
+                            label: "Download Original",
+                            onClick: () => downloadSelectedAssets(currentAsset.id)
+                          },
+                          {
+                            id: "edit",
+                            label: "Edit then Download",
+                            onClick: () => changeActiveSide("download")
+                          },
+                        ]}
+                      />
+                    )}
+                  </>
+                )}
             </div>
           </div>
           <div className={styles["img-wrapper"]}>
             <div className={styles["notes-wrapper"]}>
-              {
-                notes.map((note, indx) => (
-                  ((isShare && !note.internal) || (!isShare)) && <AssetNote key={indx.toString()}
-                    title={`Note ${indx + 1}`}
-                    note={note.text}
-                  />
-                ))
-              }
+              {notes.map(
+                (note, indx) =>
+                  ((isShare && !note.internal) || !isShare) && (
+                    <AssetNote
+                      key={indx.toString()}
+                      title={`Note ${indx + 1}`}
+                      note={note.text}
+                    />
+                  )
+              )}
             </div>
             {assetDetail.type === "image" && (
               <>
                 {mode === "detail" && (
-
-                    <AssetImg  imgClass="img-preview" name={assetDetail.name} assetImg={(assetDetail.extension === "tiff" || assetDetail.extension === "tif" || assetDetail.extension === "svg" || assetDetail.extension === "svg+xml" || assetDetail.extension === "heif" || assetDetail.extension === 'heic' || assetDetail.extension === 'cr2') ? versionThumbnailUrl :  versionRealUrl} />
+                  <AssetImg
+                    imgClass="img-preview"
+                    name={assetDetail.name}
+                    assetImg={
+                      assetDetail.extension === "tiff" ||
+                      assetDetail.extension === "tif" ||
+                      assetDetail.extension === "svg" ||
+                      assetDetail.extension === "svg+xml" ||
+                      assetDetail.extension === "heif" ||
+                      assetDetail.extension === "heic" ||
+                      assetDetail.extension === "cr2"
+                        ? versionThumbnailUrl
+                        : versionRealUrl
+                    }
+                  />
                 )}
                 {mode === "resize" && (
-                  <Rnd position={{ x: detailPosSize.x, y: detailPosSize.y }}
-                    size={{ width: detailPosSize.width, height: detailPosSize.height }}
-                    className={`${styles["react-draggable"]}`} lockAspectRatio={true}
+                  <Rnd
+                    position={{ x: detailPosSize.x, y: detailPosSize.y }}
+                    size={{
+                      width: detailPosSize.width,
+                      height: detailPosSize.height,
+                    }}
+                    className={`${styles["react-draggable"]}`}
+                    lockAspectRatio={true}
                     // onDragStop={(e, d) => {
                     //   setDetailPosSize(Object.assign({...detailPosSize}, { x: d.x, y: d.y}))
                     // }}
-                    onResizeStop={(e, direction, ref, delta, position) => onResizeStop(ref.style.width, ref.style.height, position)}
+                    onResizeStop={(e, direction, ref, delta, position) =>
+                      onResizeStop(ref.style.width, ref.style.height, position)
+                    }
                   >
-                    <AssetImg name={assetDetail.name} assetImg={versionRealUrl} imgClass="img-preview" isResize />
+                    <AssetImg
+                      name={assetDetail.name}
+                      assetImg={versionRealUrl}
+                      imgClass="img-preview"
+                      isResize
+                    />
                   </Rnd>
                 )}
 
@@ -929,11 +1091,11 @@ const DetailOverlay = ({
                     setSizeOfCrop={setSizeOfCrop}
                     detailPosSize={detailPosSize}
                     associateFileId={currentAsset.id}
-                    onAddAssociate={(asset)=>{
-                      const detail = {...assetDetail}
-                      detail.fileAssociations.push(asset)
+                    onAddAssociate={(asset) => {
+                      const detail = { ...assetDetail };
+                      detail.fileAssociations.push(asset);
 
-                      setAssetDetail(detail)
+                      setAssetDetail(detail);
                     }}
                     renameValue={renameValue}
                   />
@@ -942,18 +1104,16 @@ const DetailOverlay = ({
             )}
             {assetDetail.type !== "image" &&
               assetDetail.type !== "video" &&
-              versionThumbnailUrl && (
-                assetDetail.extension.toLowerCase() === "pdf" ?
-                <AssetPdf
-                  asset={asset}
-                />
-                :
+              versionThumbnailUrl &&
+              (assetDetail.extension.toLowerCase() === "pdf" ? (
+                <AssetPdf asset={asset} />
+              ) : (
                 <AssetImg
                   name={assetDetail.name}
                   assetImg={versionThumbnailUrl}
                   imgClass="img-preview"
                 />
-              )}
+              ))}
             {assetDetail.type !== "image" &&
               assetDetail.type !== "video" &&
               !versionThumbnailUrl && (
@@ -963,36 +1123,52 @@ const DetailOverlay = ({
               <video controls>
                 <source
                   src={previewUrl ?? versionRealUrl}
-                  type={previewUrl ? 'video/mp4' : `video/${assetDetail.extension}`}
+                  type={
+                    previewUrl ? "video/mp4" : `video/${assetDetail.extension}`
+                  }
                 />
                 Sorry, your browser doesn't support video playback.
               </video>
             )}
-            {activeFolder &&
+            {activeFolder && (
               <div className={styles.arrows}>
                 <div>
-                  {assets.length && assets[0].asset && assets[0].asset.id !== asset.id &&
-                    <span className={styles['arrow-prev']}>
-                      <IconClickable src={Utilities.arrowPrev} onClick={() => navigateOverlay(-1)} />
+                  {assets.length &&
+                    assets[0].asset &&
+                    assets[0].asset.id !== asset.id && (
+                      <span className={styles["arrow-prev"]}>
+                        <IconClickable
+                          src={Utilities.arrowPrev}
+                          onClick={() => navigateOverlay(-1)}
+                        />
+                      </span>
+                    )}
+                  {availableNext && (
+                    <span className={styles["arrow-next"]}>
+                      <IconClickable
+                        src={Utilities.arrowNext}
+                        onClick={() => navigateOverlay(1)}
+                      />
                     </span>
-                  }
-                  {availableNext &&
-                    <span className={styles['arrow-next']}>
-                      <IconClickable src={Utilities.arrowNext} onClick={() => navigateOverlay(1)} />
-                    </span>
-                  }
+                  )}
                 </div>
-                <span>{(assetIndex % activeCollection?.assetsCount) + 1} of {activeCollection?.assetsCount} in {activeCollection?.name} collection</span>
+                <span>
+                  {(assetIndex % activeCollection?.assetsCount) + 1} of{" "}
+                  {activeCollection?.assetsCount} in {activeCollection?.name}{" "}
+                  collection
+                </span>
               </div>
-            }
+            )}
 
-            {!isShare && <>
-              <AssetRelatedFIles outsideDetailOverlay={outsideDetailOverlay} closeOverlay={closeOverlay}  assets={assetDetail.fileAssociations || []} associateFileId={currentAsset.id} onChangeRelatedFiles={onChangeRelatedFiles} onAddRelatedFiles={(data)=>{
-                let updatedAssets = [...assetDetail.fileAssociations]
-                updatedAssets = updatedAssets.concat(data)
-                setAssetDetail({...assetDetail, fileAssociations: updatedAssets})
-              }}/>
-            </>}
+            {/* {!isShare &&
+              <>
+                <AssetRelatedFIles outsideDetailOverlay={outsideDetailOverlay} closeOverlay={closeOverlay} assets={assetDetail.fileAssociations || []} associateFileId={currentAsset.id} onChangeRelatedFiles={onChangeRelatedFiles} onAddRelatedFiles={(data) => {
+                  let updatedAssets = [...assetDetail.fileAssociations]
+                  updatedAssets = updatedAssets.concat(data)
+                  setAssetDetail({ ...assetDetail, fileAssociations: updatedAssets })
+                }} />
+              </>
+            } */}
           </div>
         </section>
       )}
@@ -1008,49 +1184,56 @@ const DetailOverlay = ({
                   isShare={isShare}
                 />
               )}
-              {mode !== "detail" && (
-                <CropSidePanel
-                  isShare={isShare}
-                  sharePath={sharePath}
-                  imageType={imageType}
-                  onImageTypeChange={(type) => {
-                    setImageType(type);
-                  }}
-                  downloadImageTypes={downloadImageTypes}
-                  presetTypes={presetTypes}
-                  presetTypeValue={preset}
-                  sizes={sizes}
-                  sizeValue={size}
-                  mode={mode}
-                  widthOriginal={width}
-                  heightOriginal={height}
-                  onModeChange={(mode) => {
-                    // resetValues();
-                    setMode(mode);
-                    if (mode === 'crop') {
-                      setSizeOfCrop({ width: Math.round(width / 2), height: Math.round(height / 2) })
-                    }
-                  }}
-                  onSelectChange={onSelectChange}
-                  onSizeInputChange={onSizeInputChange}
-                  asset={assetDetail}
-                  onResetImageSize={() => {
-                    resetValues();
-                    setDetailPosSize({ ...detailPosSize, width: defaultSize.width, height: defaultSize.height });
-                  }}
-                  sizeOfCrop={sizeOfCrop}
-                  setSizeOfCrop={setSizeOfCrop}
-                  detailPosSize={detailPosSize}
-                  onAddAssociate={(asset)=>{
-                    const detail = {...assetDetail}
-                    detail.fileAssociations.push(asset)
-
-                    setAssetDetail(detail)
-                  }}
-                  setRenameData={setRenameValue}
-                />
-              )}
             </>
+          )}
+          {!isShare && activeSideComponent === "download" && (
+            <CropSidePanel
+              isShare={isShare}
+              sharePath={sharePath}
+              imageType={imageType}
+              onImageTypeChange={(type) => {
+                setImageType(type);
+              }}
+              downloadImageTypes={downloadImageTypes}
+              presetTypes={presetTypes}
+              presetTypeValue={preset}
+              sizes={sizes}
+              sizeValue={size}
+              mode={mode}
+              widthOriginal={width}
+              heightOriginal={height}
+              onModeChange={(mode) => {
+                // resetValues();
+                setMode(mode);
+                if (mode === "crop") {
+                  setSizeOfCrop({
+                    width: Math.round(width / 2),
+                    height: Math.round(height / 2),
+                  });
+                }
+              }}
+              onSelectChange={onSelectChange}
+              onSizeInputChange={onSizeInputChange}
+              asset={assetDetail}
+              onResetImageSize={() => {
+                resetValues();
+                setDetailPosSize({
+                  ...detailPosSize,
+                  width: defaultSize.width,
+                  height: defaultSize.height,
+                });
+              }}
+              sizeOfCrop={sizeOfCrop}
+              setSizeOfCrop={setSizeOfCrop}
+              detailPosSize={detailPosSize}
+              onAddAssociate={(asset) => {
+                const detail = { ...assetDetail };
+                detail.fileAssociations.push(asset);
+
+                setAssetDetail(detail);
+              }}
+              setRenameData={setRenameValue}
+            />
           )}
           {!isShare && activeSideComponent === "comments" && (
             <ConversationList itemId={asset?.id} itemType="assets" />
@@ -1067,31 +1250,54 @@ const DetailOverlay = ({
           )}
 
           {activeSideComponent === "notes" && notes && (
-            <AssetNotes
-              asset={asset}
-              notes={notes}
-              applyCrud={applyCrud} />
+            <AssetNotes asset={asset} notes={notes} applyCrud={applyCrud} />
           )}
 
+          {activeSideComponent === "related" && <AssetRelatedFilesList relatedAssets={assetDetail?.fileAssociations}/>}
         </section>
       )}
+      {/* Share page mobile right button */}
+       {isShare &&  <div className={styles["share-right-button"]}> <IconClickable
+            src={Utilities.closePanelLight}
+               onClick={() => toggleSideMenu()}
+            additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"}`}
+          /> <IconClickable
+          src={isMobile ? Utilities.infoGray : Utilities.info}
+          additionalClass={styles["menu-icon"]}
+          onClick={() => {
+            setMode("detail");
+            resetValues();
+            changeActiveSide("detail");
+          }}
+        /></div>}
+
+
       {!isShare && (
         <section className={styles.menu}>
           <IconClickable
             src={Utilities.closePanelLight}
             onClick={() => toggleSideMenu()}
-            additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"} ${styles.expand
-              }`}
+            additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"} ${
+              styles.expand
+            }`}
           />
-          <div className={`${styles.separator} ${styles.expand}`}></div>
+          {!isShare && (
+            <>
+              <div className={`${styles.separator} ${styles.expand}`}></div>
+              <IconClickable
+                src={Utilities.delete}
+                additionalClass={
+                  styles["menu-icon"] + " " + styles["only-desktop-button"]
+                }
+                onClick={openDeleteAsset}
+              />
+            </>
+          )}
+          <div
+            className={styles.separator + " " + styles["only-desktop-button"]}
+          ></div>
           <IconClickable
-            src={Utilities.delete}
-            additionalClass={styles["menu-icon"]}
-            onClick={openDeleteAsset}
-          />
-          <div className={styles.separator}></div>
-          <IconClickable
-            src={Utilities.info}
+            src={isMobile ? Utilities.infoGray : Utilities.info}
             additionalClass={styles["menu-icon"]}
             onClick={() => {
               setMode("detail");
@@ -1099,64 +1305,105 @@ const DetailOverlay = ({
               changeActiveSide("detail");
             }}
           />
-          <IconClickable
-            src={Utilities.comment}
-            additionalClass={styles["menu-icon"]}
-            onClick={() => {
-              setMode("detail");
-              resetValues();
-              changeActiveSide("comments");
-            }}
-          />
-          {shouldRenderCdnTabButton() && (
-            <IconClickable
-              src={Utilities.embedCdn}
-              additionalClass={styles["menu-icon"]}
-              onClick={() => {
-                setMode("detail");
-                resetValues();
-                changeActiveSide("cdn");
-              }}
-            />
-          )}
-          {hasPermission(['admin', 'super_admin']) && versionCount > 0 && (
-            <IconClickable
-              src={Utilities.versions}
-              additionalClass={styles["menu-icon"]}
-              onClick={() => {
-                setMode("detail");
-                resetValues();
-                changeActiveSide("versions");
-              }}
-            />
-          )}
-          {currentAsset.extension !== 'gif' && hasPermission([ASSET_DOWNLOAD]) && <IconClickable
-            src={AssetOps.download}
-            additionalClass={styles["menu-icon"]}
-            onClick={() => {
-              if (currentAsset.type === "image" &&
-                isImageType(currentAsset.extension)
-              ) {
-                if (mode !== "resize" && mode !== "crop") {
-                  setMode("resize");
+          {!isShare && (
+            <>
+              <IconClickable
+                src={Utilities.tagGray}
+                additionalClass={
+                  styles["menu-icon"] + " " + styles["only-mobile-button"]
                 }
-                changeActiveSide("detail");
-                resetImageSettings(undefined, undefined);
-              } else {
-                downloadSelectedAssets(currentAsset.id);
-              }
-            }}
-          />}
-          {hasPermission(['admin', 'super_admin']) && (
-            <IconClickable
-              src={Utilities.notes}
-              additionalClass={styles["menu-icon"]}
-              onClick={() => {
-                setMode("detail");
-                resetValues();
-                changeActiveSide("notes");
-              }}
-            />
+                onClick={() => {}}
+              />
+              <IconClickable
+                src={isMobile ? Utilities.commentLight : Utilities.comment}
+                additionalClass={styles["menu-icon"]}
+                onClick={() => {
+                  setMode("detail");
+                  resetValues();
+                  changeActiveSide("comments");
+                }}
+              />
+              {hasPermission(["admin", "super_admin"]) && (
+                <div className={styles["only-mobile-button"]}>
+                  <AssetAddition
+                    folderAdd={false}
+                    // versionGroup={assetDetail.versionGroup}
+                    triggerUploadComplete={onUserEvent}
+                  />
+                </div>
+              )}
+              {shouldRenderCdnTabButton() && (
+                <IconClickable
+                  // src={Utilities.embedCdn}
+                  src={isMobile ? Utilities.embedCdnGrey : Utilities.embedCdn}
+                  additionalClass={
+                    styles["menu-icon"] + " " + styles["cdn-icon"]
+                  }
+                  onClick={() => {
+                    setMode("detail");
+                    resetValues();
+                    changeActiveSide("cdn");
+                  }}
+                />
+              )}
+
+              {editThenDownload &&
+                hasPermission([ASSET_DOWNLOAD]) && (
+                  <IconClickable
+                    src={AssetOps.download}
+                    additionalClass={
+                      styles["menu-icon"] + " " + styles["only-desktop-button"]
+                    }
+                    onClick={() => {
+                      if (
+                        currentAsset.type === "image" &&
+                        isImageType(currentAsset.extension)
+                      ) {
+                        if (mode !== "resize" && mode !== "crop") {
+                          setMode("resize");
+                        }
+                        changeActiveSide("download");
+                        resetImageSettings(undefined, undefined);
+                      } else {
+                        downloadSelectedAssets(currentAsset.id);
+                      }
+                    }}
+                  />
+                )}
+
+              {asset?.fileAssociations.length > 0 && <IconClickable
+                src={isMobile ? Utilities.relatedLight : Utilities.related}
+                additionalClass={styles["menu-icon"]}
+                onClick={() => {
+                  setMode("detail");
+                  resetValues();
+                  changeActiveSide("related");
+                }}
+              />}
+              {hasPermission(["admin", "super_admin"]) && (
+                <IconClickable
+                  src={isMobile ? Utilities.notesLight : Utilities.notes}
+                  additionalClass={styles["menu-icon"]}
+                  onClick={() => {
+                    setMode("detail");
+                    resetValues();
+                    changeActiveSide("notes");
+                  }}
+                />
+              )}
+
+              {hasPermission(["admin", "super_admin"]) && versionCount > 0 && (
+                <IconClickable
+                  src={isMobile ? Utilities.versionsLight : Utilities.versions}
+                  additionalClass={styles["menu-icon"]}
+                  onClick={() => {
+                    setMode("detail");
+                    resetValues();
+                    changeActiveSide("versions");
+                  }}
+                />
+              )}
+            </>
           )}
         </section>
       )}
