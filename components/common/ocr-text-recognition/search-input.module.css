@@ -1,0 +1,40 @@
+.form {
+  display: flex;
+  position: relative;
+}
+
+.container {
+  width: 100%;
+  padding: 8px 24px 8px 42px;
+  border-radius: 5px;
+  border: 1px solid var(--color-secondary-border);
+  background-color: var(--color-sec-lightivory);
+  color: var(--color-prim-navy);
+}
+
+.input-container {
+  width: 100%;
+  margin-right: 9px;
+  position: relative;
+}
+
+.input-container img {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 10px;
+  width: 15px;
+  height: 15px;
+}
+
+.remove {
+  display: inline-flex;
+  margin-left: 8px;
+  color: var(--color-sec-blue);
+  cursor: pointer;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+}

@@ -16,7 +16,7 @@ import urlUtils from '../../../utils/url'
 
 import { isMobile } from "react-device-detect";
 
-import { ASSET_DOWNLOAD } from '../../../constants/permissions'
+import { ASSET_DOWNLOAD, ASSET_EDIT } from '../../../constants/permissions'
 
 // Components
 import SidePanel from "./detail-side-panel";
@@ -39,6 +39,7 @@ import { isImageType } from "../../../utils/file";
 import { ASSET_ACCESS } from "../../../constants/permissions";
 import AssetNotes from './asset-notes';
 import AssetNote from './asset-note';
+import AssetTranscript from './asset-transcript';
 import AssetRelatedFIles from './asset-related-files';
 
 import { sizeToZipDownload } from "../../../constants/download";
@@ -109,7 +110,11 @@ const DetailOverlay = ({
 }) => {
 
   const { hasPermission } = useContext(UserContext);
-  const { user, cdnAccess } = useContext(UserContext);
+  const { user, cdnAccess, transcriptAccess } = useContext(UserContext);
+
+  console.log({
+    transcriptAccess
+  })
 
   const [assetDetail, setAssetDetail] = useState(undefined);
 
@@ -137,6 +142,8 @@ const DetailOverlay = ({
   const [defaultSize, setDefaultSize] = useState({ width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight });
   const [notes, setNotes] = useState([])
   const [sizeOfCrop, setSizeOfCrop] = useState({ width: defaultSize.width, height: defaultSize.height })
+  const [transcripts, setTranscript] = useState({})
+  const [transcriptLoading, setTranscriptLoading] = useState(true)
 
   const renameValue = useRef("")
   const setRenameValue = (value) => {renameValue.current = value}
@@ -225,7 +232,29 @@ const DetailOverlay = ({
     }
   }
 
+  const seekVideo = secs => {
+    let myVideo = document.getElementById("video-element");
+    if(myVideo){
+      // @ts-ignore
+      if (myVideo.fastSeek) {
+        // @ts-ignore
+        myVideo.fastSeek(secs)
+        // @ts-ignore
+        myVideo.play()
+      } else {
+        // @ts-ignore
+        myVideo.currentTime = secs
+        // @ts-ignore
+        myVideo.play()
+      }
+    }
+  }
+
   useEffect(() => {
+    if(transcriptAccess){
+      getTranscript();
+    }
+
     getCropResizeOptions();
     getDetail();
     checkInitialParams();
@@ -270,6 +299,19 @@ const DetailOverlay = ({
         }
 
       }
+    } catch (err) {
+      // console.log(err);
+    }
+  };
+
+  const getTranscript = async (curAsset?) => {
+    try {
+      setTranscriptLoading(true)
+      const asset = curAsset || currentAsset;
+      const { data } = await assetApi.getTranscript(asset.id);
+      setTranscript(data)
+
+      setTranscriptLoading(false)
     } catch (err) {
       // console.log(err);
     }
@@ -819,7 +861,7 @@ const DetailOverlay = ({
             </div>
             <div className={styles.name}>
               <h3>{assetDetail.name}</h3>
-              {!isShare && (
+              {!isShare && hasPermission([ASSET_EDIT]) && (
                 <IconClickable
                   src={Utilities.edit}
                   onClick={() => setRenameModalOpen(true)}
@@ -960,7 +1002,7 @@ const DetailOverlay = ({
                 <AssetIcon extension={currentAsset.extension} />
               )}
             {assetDetail.type === "video" && (
-              <video controls>
+              <video controls id={"video-element"}>
                 <source
                   src={previewUrl ?? versionRealUrl}
                   type={previewUrl ? 'video/mp4' : `video/${assetDetail.extension}`}
@@ -987,7 +1029,7 @@ const DetailOverlay = ({
             }
 
             {!isShare && <>
-              <AssetRelatedFIles outsideDetailOverlay={outsideDetailOverlay} closeOverlay={closeOverlay}  assets={assetDetail.fileAssociations || []} associateFileId={currentAsset.id} onChangeRelatedFiles={onChangeRelatedFiles} onAddRelatedFiles={(data)=>{
+              <AssetRelatedFIles currentAsset={currentAsset} outsideDetailOverlay={outsideDetailOverlay} closeOverlay={closeOverlay}  assets={assetDetail.fileAssociations || []} associateFileId={currentAsset.id} onChangeRelatedFiles={onChangeRelatedFiles} onAddRelatedFiles={(data)=>{
                 let updatedAssets = [...assetDetail.fileAssociations]
                 updatedAssets = updatedAssets.concat(data)
                 setAssetDetail({...assetDetail, fileAssociations: updatedAssets})
@@ -1073,6 +1115,15 @@ const DetailOverlay = ({
               applyCrud={applyCrud} />
           )}
 
+          {activeSideComponent === "transcript" && transcripts && (
+              <AssetTranscript
+                  title={"Transcript"}
+                  transcripts={transcripts}
+                  loading={transcriptLoading}
+                  navigateToTime={seekVideo}
+              />
+          )}
+
         </section>
       )}
       {!isShare && (
@@ -1084,12 +1135,12 @@ const DetailOverlay = ({
               }`}
           />
           <div className={`${styles.separator} ${styles.expand}`}></div>
-          <IconClickable
+          {hasPermission([ASSET_EDIT]) && <IconClickable
             src={Utilities.delete}
             additionalClass={styles["menu-icon"]}
             onClick={openDeleteAsset}
-          />
-          <div className={styles.separator}></div>
+          />}
+          {hasPermission([ASSET_EDIT]) && <div className={styles.separator}></div>}
           <IconClickable
             src={Utilities.info}
             additionalClass={styles["menu-icon"]}
@@ -1099,7 +1150,7 @@ const DetailOverlay = ({
               changeActiveSide("detail");
             }}
           />
-          <IconClickable
+          {<IconClickable
             src={Utilities.comment}
             additionalClass={styles["menu-icon"]}
             onClick={() => {
@@ -1107,7 +1158,7 @@ const DetailOverlay = ({
               resetValues();
               changeActiveSide("comments");
             }}
-          />
+          />}
           {shouldRenderCdnTabButton() && (
             <IconClickable
               src={Utilities.embedCdn}
@@ -1158,6 +1209,16 @@ const DetailOverlay = ({
               }}
             />
           )}
+
+          {currentAsset.type === "video" && transcriptAccess && <IconClickable
+              src={Utilities.transcript}
+              additionalClass={styles["menu-icon"]}
+              onClick={() => {
+                setMode("detail");
+                resetValues();
+                changeActiveSide("transcript");
+              }}
+          />}
         </section>
       )}
       <RenameModal

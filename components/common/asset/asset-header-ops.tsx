@@ -10,7 +10,7 @@ import { AssetContext, UserContext, FilterContext, LoadingContext } from '../../
 
 // Utils
 import downloadUtils from '../../../utils/download'
-import { ASSET_DOWNLOAD } from '../../../constants/permissions'
+import { ASSET_DOWNLOAD, ASSET_EDIT } from '../../../constants/permissions'
 import { getAssetsFilters } from '../../../utils/asset'
 import assetApi from '../../../server-api/asset'
 import shareApi from '../../../server-api/share-collection'
@@ -292,10 +292,10 @@ const AssetHeaderOps = ({
 
 	return (
 		<>
-			{(!isShare && !deletedAssets) && <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`edit${iconColor}`]} tooltipText={'Edit'} tooltipId={'Edit'} onClick={() => setActiveOperation('edit')} />}
-			{((!isFolder && !isShare) && !deletedAssets) && <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`delete${iconColor}`]} tooltipText={'Delete'} tooltipId={'Delete'} onClick={() => setActiveOperation('update')} />}
-			{(isShare || hasPermission([ASSET_DOWNLOAD]) && !deletedAssets) && <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`download${iconColor}`]} tooltipId={'Download'} tooltipText={'Download'} onClick={downloadSelectedAssets} />}
-			{((!isFolder && !isShare) && !deletedAssets) && <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`move${iconColor}`]} tooltipText={'Add to Collection'} tooltipId={'Move'} onClick={() => setActiveOperation('move')} />}
+			{(!isShare && !deletedAssets) && hasPermission([ASSET_EDIT]) && <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`edit${iconColor}`]} tooltipText={'Edit'} tooltipId={'Edit'} onClick={() => setActiveOperation('edit')} />}
+			{((!isFolder && !isShare) && !deletedAssets) && hasPermission([ASSET_EDIT]) &&  <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`delete${iconColor}`]} tooltipText={'Delete'} tooltipId={'Delete'} onClick={() => setActiveOperation('update')} />}
+			{(isShare || hasPermission([ASSET_DOWNLOAD]) && !deletedAssets) && <IconClickable place={'bottom'} additionalClass={`${styles['action-button']} ${hasPermission[ASSET_EDIT] ? "" : "m-r-0"}`} src={AssetOps[`download${iconColor}`]} tooltipId={'Download'} tooltipText={'Download'} onClick={downloadSelectedAssets} />}
+			{((!isFolder && !isShare) && !deletedAssets) && hasPermission([ASSET_EDIT]) &&  <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`move${iconColor}`]} tooltipText={'Add to Collection'} tooltipId={'Move'} onClick={() => setActiveOperation('move')} />}
 			{((!isFolder && !isShare) && !deletedAssets) &&
 				<div className={styles['share-wrapper']} ref={contentRef}>
 					<IconClickable
@@ -348,11 +348,11 @@ const AssetHeaderOps = ({
 			}
 			{showMoreActions && (
 				<>
-					{((!isFolder && !isShare) && !deletedAssets) && <IconClickable place={'bottom'} additionalClass={`${styles['action-button']} m-l-0`} src={AssetOps.generateThumbnail} tooltipText={'Generate thumbnail'} onClick={() => setActiveOperation('generate_thumbnails')} />}
-					{((!isFolder && !isShare) && !deletedAssets) && <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`archive${iconColor}`]} tooltipText={isUnarchive ? 'Unarchive' : 'Archive'} tooltipId={isUnarchive ? 'Unarchive' : 'Archive'} onClick={() => setActiveOperation(isUnarchive ? 'unarchive' : 'archive')} />}
-					{((!isFolder && !isShare) && !deletedAssets) && <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`copy${iconColor}`]} tooltipText={'Copy'} tooltipId={'Copy'} onClick={() => setActiveOperation('copy')} />}
-					{((!isFolder && !isShare) && !deletedAssets) && <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`moveReplace${iconColor}`]} tooltipText={'Move'} tooltipId={'MoveReplace'} onClick={() => setActiveOperation('moveReplace')} />}
-					{((!isFolder && !isShare) && !deletedAssets) && (
+					{((!isFolder && !isShare) && !deletedAssets) && hasPermission([ASSET_EDIT]) &&  <IconClickable place={'bottom'} additionalClass={`${styles['action-button']} m-l-0`} src={AssetOps.generateThumbnail} tooltipText={'Generate thumbnail'} onClick={() => setActiveOperation('generate_thumbnails')} />}
+					{((!isFolder && !isShare) && !deletedAssets) && hasPermission([ASSET_EDIT]) &&  <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`archive${iconColor}`]} tooltipText={isUnarchive ? 'Unarchive' : 'Archive'} tooltipId={isUnarchive ? 'Unarchive' : 'Archive'} onClick={() => setActiveOperation(isUnarchive ? 'unarchive' : 'archive')} />}
+					{((!isFolder && !isShare) && !deletedAssets) && hasPermission([ASSET_EDIT]) &&  <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`copy${iconColor}`]} tooltipText={'Copy'} tooltipId={'Copy'} onClick={() => setActiveOperation('copy')} />}
+					{((!isFolder && !isShare) && !deletedAssets) && hasPermission([ASSET_EDIT]) &&  <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`moveReplace${iconColor}`]} tooltipText={'Move'} tooltipId={'MoveReplace'} onClick={() => setActiveOperation('moveReplace')} />}
+					{((!isFolder && !isShare) && !deletedAssets) && hasPermission([ASSET_EDIT]) &&  (
 						<>
 							<IconClickable place={'bottom'} additionalClass={styles['action-button']} src={isSearch ? AssetOps.associateBlue : AssetOps.associate} tooltipText={'Associate'} tooltipId={'Associate'} onClick={() => setShowAssociateModalOpen(true)} />
 
@@ -378,11 +378,11 @@ const AssetHeaderOps = ({
 
 			)}
 			{((isFolder && !isShare) && !deletedAssets) && <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`share${iconColor}`]} tooltipText={'Share'} tooltipId={'Share'} onClick={() => setActiveOperation('shareCollections')} />}
-			{((!isFolder && itemType && !isShare) && !deletedAssets) && <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`delete${iconColor}`]} tooltipText={'Remove'} onClick={() => setActiveOperation('remove_item')} />}
-			{deletedAssets && <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`move${iconColor}`]} tooltipText={'Recover Asset'} tooltipId={'Recover'} onClick={() => setActiveOperation('recover')} />}
-			{deletedAssets && <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`delete${iconColor}`]} tooltipText={'Delete'} tooltipId={'Delete'} onClick={() => setActiveOperation('delete')} />}
+			{((!isFolder && itemType && !isShare) && !deletedAssets) && hasPermission([ASSET_EDIT]) &&  <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`delete${iconColor}`]} tooltipText={'Remove'} onClick={() => setActiveOperation('remove_item')} />}
+			{deletedAssets && hasPermission([ASSET_EDIT]) &&  <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`move${iconColor}`]} tooltipText={'Recover Asset'} tooltipId={'Recover'} onClick={() => setActiveOperation('recover')} />}
+			{deletedAssets && hasPermission([ASSET_EDIT]) && <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`delete${iconColor}`]} tooltipText={'Delete'} tooltipId={'Delete'} onClick={() => setActiveOperation('delete')} />}
 
-			{!isFolder && <>
+			{!isFolder && hasPermission([ASSET_EDIT]) &&  <>
 				{showMoreActions ? (
 					<span className={isSearch ? styles['search-less-icons-button'] : styles['less-icons-button']} onClick={() => setShowMoreActions(false)}>Less Icons</span>
 				) : (
