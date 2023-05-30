@@ -107,6 +107,7 @@
 .back img {
   margin-right: 0.5rem;
   width: 14px;
+  height: 12px;
 }
 
 .content {
@@ -173,7 +174,7 @@
 .asset-actions ul li {border-top: 1px solid #DEDAD4 !important;}
 .asset-actions ul li:first-child{border-top: none;}
 .menu-icon {
-  width: 20px;
+  width: 21px;
   height: auto;
   margin-bottom: 20px;
 }
