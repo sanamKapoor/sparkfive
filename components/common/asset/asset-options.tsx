@@ -30,7 +30,7 @@ const AssetOptions = ({
 	const { hasPermission, user } = useContext(UserContext)
 
 	const isAdmin = () => {
-		return user.role.id === "admin" || user.role.id === "super_admin"
+		return user?.role?.id === "admin" || user?.role?.id === "super_admin"
 	}
 
 	const options = [

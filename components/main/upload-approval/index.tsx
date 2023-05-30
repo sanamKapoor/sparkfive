@@ -1045,7 +1045,7 @@ const UploadApproval = () => {
     }
 
     const isAdmin = () => {
-        return user.role.id === "admin" || user.role.id === "super_admin"
+        return user?.role?.id === "admin" || user?.role?.id === "super_admin"
     }
 
     const updateAssetTagsState = (updatedTags) => {
