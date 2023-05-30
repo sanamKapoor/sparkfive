@@ -72,7 +72,9 @@ const AssetRelatedFilesList = ({relatedAssets}) => {
           <div className={styles.actions}>
             <IconClickable src={AssetOps.download} onClick={downloadAllRelatedAssets}/>
             <IconClickable src={AssetOps.share} onClick={shareAllRelatedAssets} />
+            <div className={styles.actionsplus}>
             <AssetAddition />
+            </div>
           </div>
         </div>
 
