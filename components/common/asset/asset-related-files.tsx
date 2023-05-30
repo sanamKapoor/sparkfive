@@ -43,7 +43,7 @@ const AssetRelatedFIles = ({ assets, associateFileId, onChangeRelatedFiles, onAd
 
 
     const isAdmin = () => {
-        return user.role.id === "admin" || user.role.id === "super_admin"
+        return user?.role?.id === "admin" || user?.role?.id === "super_admin"
     }
 
 
