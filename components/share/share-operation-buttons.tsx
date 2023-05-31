@@ -11,7 +11,7 @@ const ShareOperationButtons = ({ selectAll, selectedAsset, downloadSelectedAsset
             {selectedAsset > 0 &&
                 <Button className={styles.download} text={'Download'} type='button' styleType='outlined' onClick={downloadSelectedAssets} />
             }
-            <Button text={selectedAsset ? `Deselect All (${selectedAsset})` : `Select All`} type='button' styleType='primary' onClick={selectAll} />
+            <Button className={styles.deselectAll} text={selectedAsset ? `Deselect All (${selectedAsset})` : `Select All`} type='button' styleType='primary' onClick={selectAll} />
         </div>
     </div>
 

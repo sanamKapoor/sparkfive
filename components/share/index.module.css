@@ -8,13 +8,12 @@
 
   .list-wrapper{
     width: 100%;
-    max-width: 1800px;
   }
 
   .grid-list {
     display: grid;
-    grid-template-columns: repeat(5, minmax(328px, 1fr));
-    grid-gap: 45px;
+    grid-template-columns: repeat(auto-fill, minmax(328px, 1fr));
+    grid-gap: 24px;
   }
 
 .logo{

@@ -50,6 +50,8 @@
 
 .top-wrapper .name h3 {
   margin: 0;
+  font-size: 24px;
+  font-weight: 600;
 }
 
 .back {
@@ -196,4 +198,8 @@
     gap: 9px;
     padding: 10px 0px;
   }
+}
+
+.edit-modal-outer {
+  padding: 38px 25px;
 }

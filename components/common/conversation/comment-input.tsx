@@ -28,7 +28,7 @@ const CommentInput = ({ style = 'comment', onSubmit }) => {
         closeOnAction={false}
         Wrapper={({ children }) =>
           <>
-            <img src={Comments.smileLight} />
+            <img src={Comments.smileDisable} />
             {children}
           </>
         }
@@ -49,7 +49,7 @@ const CommentInput = ({ style = 'comment', onSubmit }) => {
         closeOnAction={false}
         Wrapper={({ children }) =>
           <>
-            <img src={Comments.mentionLight} />
+            <img src={Comments.mentionDisable} />
             {children}
           </>
         }

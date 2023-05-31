@@ -11,6 +11,10 @@
   margin-right: 15px;
 }
 
+.deselectAll, .download {
+  border-radius: 4px;
+}
+
 .files-shared {
   color: white;
   font-size: 18px;

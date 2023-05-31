@@ -23,7 +23,8 @@ const Base = ({
   noHeightMax = false,
   additionalClasses = [''],
   showCancel = true,
-  closeButtonOnly = false
+  closeButtonOnly = false,
+  overlayAdditionalClass
 }) => {
 
   useEffect(() => {
@@ -43,7 +44,7 @@ const Base = ({
     <ReactModal
       isOpen={modalIsOpen}
       className={`${styles.modal} ${noHeightMax && styles['no-height-max']} ${additionalClasses.join(' ')}`}
-      overlayClassName={styles.overlay}
+      overlayClassName={`${styles.overlay} ${overlayAdditionalClass}`}
       onRequestClose={closeModal}
       shouldCloseOnOverlayClick={true}
       shouldFocusAfterRender={false}

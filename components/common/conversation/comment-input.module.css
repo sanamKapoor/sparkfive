@@ -17,6 +17,22 @@
   position: relative;
 }
 
+textarea.content-input::-webkit-input-placeholder {
+  color: #817D9D;
+}
+
+textarea.content-input::-moz-placeholder {
+  color: #817D9D;
+}
+
+textarea.content-input.reply::-webkit-input-placeholder {
+  color: #AEB0C2;
+}
+
+textarea.content-input.reply::-moz-placeholder {
+  color: #AEB0C2;
+}
+
 .content-input.reply {
   border-radius: 5px;
   background-color: inherit;
@@ -30,6 +46,8 @@
   margin-right: 9px;
   position: relative;
 }
+
+
 
 .input-container > img {
   /* margin: 25px 10px; */
