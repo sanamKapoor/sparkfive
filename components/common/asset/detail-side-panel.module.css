@@ -57,6 +57,10 @@
   min-width: 100px;
 }
 
+.first-section .field-wrapper > div:first-child{
+  min-width: 100px;
+}
+
 .meta-text {
   font-size: 12px;
 }

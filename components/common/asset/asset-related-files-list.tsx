@@ -115,7 +115,7 @@ const AssetRelatedFilesList = ({relatedAssets}) => {
                       wrapperClass={styles["item-actions-wrapper"]}
                       Wrapper={({ children }) => (
                         <>
-                          <IconClickable src={Utilities.moreLight} />
+                          <IconClickable src={Utilities.more} />
                           {children}
                         </>
                       )}

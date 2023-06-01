@@ -161,9 +161,11 @@
 .asset-actions ul {
   top: 41px;
   right: 0px;
+  /* width: 168px; */
+}
+.download-list-dropdown ul {
   width: 168px;
 }
-
 .menu {
   display: flex;
   flex-direction: column;

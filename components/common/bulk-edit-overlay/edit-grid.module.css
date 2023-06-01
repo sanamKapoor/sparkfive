@@ -8,7 +8,7 @@
 .grid-list {
   display: grid;
   grid-template-columns: repeat(6, minmax(165px, 1fr));
-  grid-gap: 45px;
+  grid-gap: 40px;
 }
 
 .container {
@@ -38,6 +38,7 @@
 .image-wrapper .selectable-wrapper .select-icon {
   width: 25px;
   height: auto;
+  padding: 0;
 }
 
 .image-wrapper > img,
