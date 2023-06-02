@@ -1228,7 +1228,7 @@ const UploadApproval = () => {
                                 <>
                                     <h2 className={styles['detail-title']}>Batch Details</h2>
                                     <div className={detailPanelStyles['first-section']}>
-                                        <div className={detailPanelStyles['field-wrapper']}>
+                                        <div className={`${detailPanelStyles['field-wrapper']} ${styles['batchSidePanel']}`}>
 
                                             <div className={`${detailPanelStyles.field} ${styles['field-name']}`}>Batch Name</div>
                                             <Input
@@ -1334,6 +1334,7 @@ const UploadApproval = () => {
             <Base
                 modalIsOpen={showDetailModal}
                 closeModal={() => { setDetailModal(false) }}
+                headText={""}
                 confirmText={""}
                 closeButtonOnly={true}
                 disabledConfirm={false}
@@ -1348,10 +1349,11 @@ const UploadApproval = () => {
                             {isAdmin() && <IconClickable additionalClass={styles['edit-icon']} src={Utilities.edit} onClick={() => { setShowRenameModal(true) }} />}
                         </div>
                         <div className={styles['date']}>{moment(assets[selectedAsset]?.asset?.createdAt).format('MMM DD, YYYY, hh:mm a')}</div>
-                        {assets[selectedAsset]?.asset.type === "image" && (
-                            <AssetImg name={assets[selectedAsset]?.asset.name} assetImg={assets[selectedAsset]?.thumbailUrl} />
-                        )}
-
+                        <div className={styles['batchImg']}>
+                            {assets[selectedAsset]?.asset.type === "image" && (
+                                <AssetImg name={assets[selectedAsset]?.asset.name} assetImg={assets[selectedAsset]?.thumbailUrl} />
+                            )}
+                        </div>
                         {assets[selectedAsset]?.asset.type !== "image" &&
                             assets[selectedAsset]?.asset.type !== "video" &&
                             assets[selectedAsset]?.thumbailUrl && (
@@ -1380,7 +1382,7 @@ const UploadApproval = () => {
                             </video>
                         )}
                                                 <div className={styles["navigation-wrapper"]}>
-                            <span>{(selectedAsset || 0) + 1} of {assets.length} collection</span>
+                            <span>{(selectedAsset || 0) + 1} of {assets.length} in Batch</span>
                             <IconClickable src={Utilities.arrowPrev} onClick={() => { goPrev() }} />
                             <IconClickable src={Utilities.arrowNext} onClick={() => { goNext() }} />
                         </div>
@@ -1397,7 +1399,7 @@ const UploadApproval = () => {
                         <div className={`${detailPanelStyles.container} ${styles['right-form']}`}>
                             <h2 className={styles['detail-title']}>Add Attributes to Selected Assets</h2>
 
-                            <div className={detailPanelStyles['field-wrapper']} >
+                            <div className={`${detailPanelStyles['field-wrapper']}`}>
                                 <CreatableSelect
                                     title='Tags'
                                     addText='Add Tags'
@@ -1407,8 +1409,8 @@ const UploadApproval = () => {
                                     setAvailableItems={setInputTags}
                                     selectedItems={tempTags}
                                     setSelectedItems={setTempTags}
-                                    creatable={true}
-                                    menuPosition={"fixed"}
+                                    // creatable={true}
+                                    // menuPosition={"fixed"}
                                     onAddOperationFinished={(stateUpdate) => {
                                         setActiveDropdown("")
 
@@ -1438,10 +1440,11 @@ const UploadApproval = () => {
                                     }}
                                     dropdownIsActive={activeDropdown === 'tags'}
                                     ignorePermission={true}
+                                    sortDisplayValue={true}
                                 />
                             </div>
 
-                            <div className={styles.divider}></div>
+                            {/* <div className={styles.divider}></div> */}
 
                             <div className={detailPanelStyles['field-wrapper']} >
                                 <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>
@@ -1463,6 +1466,7 @@ const UploadApproval = () => {
                 disabledConfirm={false}
                 additionalClasses={['visible-block']}
                 showCancel={false}
+                overlayAdditionalClass={styles['sendMsgModal']}
                 confirmAction={() => {
 
                 }} >
@@ -1475,8 +1479,10 @@ const UploadApproval = () => {
 
                         <div className={styles['modal-field-subtitle']}>Are you sure you want to submit your assets for approval?</div>
                     </>}
-
-                    {submitted && <p className={styles['modal-field-title']}>
+                    {
+                        submitted &&  <img src={Utilities.grayClose} alt={"close"} className={styles['modalClose']} />
+                    }
+                    {submitted && <p className={`${styles['modal-field-title']} ${styles['thanksSubmit']}`}>
                         Thanks for submitting your  assets for approval.
                         <br />
                         The admin will be notified of your submission and will be able to review it.

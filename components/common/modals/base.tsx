@@ -24,7 +24,7 @@ const Base = ({
   additionalClasses = [''],
   showCancel = true,
   closeButtonOnly = false,
-  overlayAdditionalClass
+  overlayAdditionalClass,
 }) => {
 
   useEffect(() => {
@@ -55,7 +55,7 @@ const Base = ({
 
       } */}
       {(headText) &&
-        <div className={styles.header}>
+        <div className={closeButtonOnly ? `${styles.header} ${styles['no-border']}` : styles.header}>
           <div className={`${styles.text} ${closeButtonOnly ? styles['no-border'] : ""} ${textWidth && styles['full-width']}`}>
             {<p className={styles['overflow-text']}>{!closeButtonOnly ? headText : ""}</p>}
             <img src={Utilities.bigblueClose} alt="close" className={styles.close} onClick={closeModal} />

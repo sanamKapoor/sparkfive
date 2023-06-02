@@ -39,6 +39,7 @@ import ProductAddition from '../../common/asset/product-addition'
 
 // Constants
 import { ASSET_EDIT } from '../../../constants/permissions'
+import Button from "../buttons/button"
 
 const sort = (data) => {
   return _.orderBy(data, [item => (item.name || "")?.toLowerCase()],['asc']);
@@ -729,6 +730,10 @@ const EditSidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
           modalIsOpen={newProjectName ? true : false}
         />
       </>}
+
+      <div className={styles['save-submodal-btn']}>
+          <Button text={'Save Changes'} type={'button'} styleType={'primary'} />
+      </div>
     </div >
   )
 }

@@ -149,3 +149,12 @@
   right: inherit;
   left: 0;
 }
+
+.save-submodal-btn {
+  text-align: center;
+  margin-top: 25px;
+}
+
+.comments-wrapper {
+  border-top: 0;
+}

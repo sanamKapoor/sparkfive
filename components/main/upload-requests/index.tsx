@@ -1663,7 +1663,7 @@ const UploadRequest = () => {
 
                 {!isAdmin() && currentViewStatus == 0 && (
                   <div className={detailPanelStyles["first-section"]}>
-                    <div className={detailPanelStyles["field-wrapper"]}>
+                    <div className={`${detailPanelStyles["field-wrapper"]} ${styles['batchSidePanel']}`}>
                       <div
                         className={`secondary-text ${detailPanelStyles.field} ${styles["field-name"]}`}
                       >
@@ -1963,12 +1963,14 @@ const UploadRequest = () => {
                 "MMM DD, YYYY, hh:mm a"
               )}
             </div>
+            <div className={styles['centerImg']}>
             {assets[selectedAsset]?.asset.type === "image" && (
               <AssetImg
                 name={assets[selectedAsset]?.asset.name}
                 assetImg={assets[selectedAsset]?.thumbailUrl}
               />
             )}
+            </div>
 
             {assets[selectedAsset]?.asset.type !== "image" &&
               assets[selectedAsset]?.asset.type !== "video" &&
@@ -2012,7 +2014,7 @@ const UploadRequest = () => {
             {/*<img alt={"test"} src={assets[selectedAsset]?.realUrl} />*/}
 
             {(isAdmin() || currentViewStatus !== 0) && (
-              <div className={detailPanelStyles["field-wrapper"]}>
+              <div className={`${detailPanelStyles["field-wrapper"]} ${detailPanelStyles["comments-wrapper"]}`}>
                 <div
                   className={`secondary-text ${detailPanelStyles.field} ${styles["field-name"]}`}
                 >
@@ -2388,11 +2390,12 @@ const UploadRequest = () => {
         additionalClasses={["visible-block"]}
         showCancel={false}
         confirmAction={() => {}}
+        overlayAdditionalClass={styles['msgAdminModal']}
       >
         <div className={styles["confirm-modal-wrapper"]}>
           {!submitted && (
             <>
-              <div className={styles["modal-field-title"]}>
+              <div className={`${styles["modal-field-title"]} ${styles["titleAdmin"]}`}>
                 Message for Admin
               </div>
 
@@ -2414,9 +2417,12 @@ const UploadRequest = () => {
             </>
           )}
 
+          {
+            submitted &&  <img src={Utilities.grayClose} alt={"close"} className={styles['modalClose']} />
+          }
           {submitted && (
             <p className={styles["modal-field-title"]}>
-              Thanks for submitting your assets for approval. The admin will be
+              Thanks for submitting your assets for approval. <br/>The admin will be
               notified of your submission and will be able to review it
             </p>
           )}
