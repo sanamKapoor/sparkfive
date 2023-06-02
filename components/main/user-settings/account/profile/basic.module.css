@@ -1,0 +1,42 @@
+.container, .password-form{
+}
+
+.container button{
+  min-width: 170px;
+}
+
+.divider {
+  padding-top: 2rem;
+  border-top: 1px solid var(--color-secondary-border);
+  margin-top: 2rem;
+}
+
+.container h3 {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.form{
+  display: flex;
+  width: 50%;
+  margin-bottom: 24px;
+}
+.change-password-button{
+  align-self: flex-end;
+  margin-bottom: 15px;
+}
+
+
+@media screen and (max-width: 900px) {
+ .form {
+    width: 100%;
+    flex-wrap: wrap;
+ }
+}
+
+@media screen and (max-width: 600px)  {
+  .form {
+    margin-bottom: 28px;
+  }
+}

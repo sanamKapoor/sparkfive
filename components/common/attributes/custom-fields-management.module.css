@@ -1,3 +1,7 @@
+.main-wrapper h3 {
+    margin: 0 0 36px;
+}
+
 .row{
     display: -webkit-box;
     display: -ms-flexbox;
@@ -15,8 +19,6 @@
     position: relative;
     width: 100%;
     min-height: 1px;
-    padding-right: 15px;
-    padding-left: 15px;
 }
 
 .col-20{
@@ -28,8 +30,6 @@
     position: relative;
     width: 100%;
     min-height: 1px;
-    padding-right: 15px;
-    padding-left: 15px;
 }
 
 .col-25{
@@ -41,8 +41,6 @@
     position: relative;
     width: 100%;
     min-height: 1px;
-    padding-right: 15px;
-    padding-left: 15px;
 }
 
 .col-35{
@@ -54,8 +52,6 @@
     position: relative;
     width: 100%;
     min-height: 1px;
-    padding-right: 15px;
-    padding-left: 15px;
 }
 
 
@@ -68,8 +64,6 @@
     position: relative;
     width: 100%;
     min-height: 1px;
-    padding-right: 15px;
-    padding-left: 15px;
 }
 
 .col-100{
@@ -81,8 +75,6 @@
     position: relative;
     width: 100%;
     min-height: 1px;
-    padding-right: 15px;
-    padding-left: 15px;
 }
 
 .action-button{
@@ -109,16 +101,12 @@
 }
 
 .row-header{
-    margin: 0 0 15px 15px;
+    margin: 0 0 15px 0;
     display: block;
     border-bottom: solid 1px #dddad4;
     padding-bottom: 5px;
-    padding-right: 15px;
-    /*font-weight: 600;*/
-}
-
-.p-l-30{
-    padding-left: 30px;
+    font-weight: 500;
+    width: 100%;
 }
 
 .font-weight-600{
@@ -161,7 +149,7 @@
 }
 
 
-@media screen and (max-width: 1280px){
+@media screen and (max-width: 900px){
     .col-md-100{
         flex: 0 0 100%;
         max-width: 100%;
@@ -177,4 +165,12 @@
     .button-row{
        justify-content: center;
     }
+}
+
+
+@media screen and (min-width: 901px) {
+    .p-l-30{
+        padding-left: 30px;
+    }
+    
 }

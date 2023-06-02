@@ -18,12 +18,9 @@ import {
 
 // Components
 import SideNavigation from './side-navigation'
-import Profile from './profile'
+import Account from './account'
 import Team from './team'
-import Company from './company'
-import Billing from './billing'
 import Plan from './plan'
-import Security from './security'
 import Integrations from './integrations'
 import Attributes from "./attributes"
 import SuperAdmin from './super-admin'
@@ -34,21 +31,20 @@ import GuestUpload from "./guest-upload"
 import CustomSettings from "./custom-settings"
 import ShareLinks from "./share-links"
 import UploadApprovals from "./upload-approvals"
+import IconClickable from '../../common/buttons/icon-clickable'
+import { Utilities } from '../../../assets'
 
 
 const SETTING_OPTIONS = {
-  profile: { label: 'Profile', permissions: [], content: Profile },
-  billing: { label: 'Billing', permissions: [SETTINGS_BILLING], content: Billing },
-  company: { label: 'Company', permissions: [SETTINGS_COMPANY], content: Company },
+  account: { label: 'Account', permissions: [], content: Account },
   // plan: { label: 'Plan', permissions: [SETTINGS_PLAN], content: Plan },
-  security: { label: 'Security', permissions: [SETTINGS_SECURITY], content: Security },
   team: { label: 'Team', permissions: [SETTINGS_TEAM], content: Team },
   notifications: { label: 'Notifications', permissions: [], content: Notifications },
-  ['guest-upload']: { label: 'Guest Upload', contentTitle: 'Guest Upload', permissions: [SETTINGS_TEAM, SETTINGS_COMPANY], content: GuestUpload },
   integrations: { label: 'Integrations', permissions: [], content: Integrations },
   attributes: { label: 'Attributes', contentTitle: 'Custom Attributes', permissions: [SETTINGS_TEAM, SETTINGS_COMPANY], content: Attributes },
-  ['custom-settings']: { label: 'Custom Settings', contentTitle: 'Custom Settings', permissions: [SETTINGS_TEAM, SETTINGS_COMPANY], content: CustomSettings },
+  ['upload-approvals']: {label: 'Upload Approvals', path: '/main/upload-approvals'},
   ['shared-links']: { label: 'Shared Links', contentTitle: 'Shared Links', permissions: [], content: ShareLinks },
+  ['custom-settings']: { label: 'Custom Settings', contentTitle: 'Custom Settings', permissions: [SETTINGS_TEAM, SETTINGS_COMPANY], content: CustomSettings },
   ['super-admin']: { label: 'Super Admin', permissions: [SUPERADMIN_ACCESS], content: SuperAdmin },
 }
 
@@ -57,8 +53,6 @@ const UserSettings = () => {
   const { hasPermission } = useContext(UserContext)
 
   const router = useRouter()
-
-  const [top, setTop] = useState('calc(55px + 3rem)')
 
   useEffect(() => {
     const activeView = urlUtils.getPathId()
@@ -82,48 +76,15 @@ const UserSettings = () => {
   }, [])
 
   const getTitle = (activeView) => {
-    if(SETTING_OPTIONS[activeView]){
+    if (SETTING_OPTIONS[activeView]) {
       return SETTING_OPTIONS[activeView].contentTitle ? SETTING_OPTIONS[activeView].contentTitle : activeView
-    }else{
+    } else {
       return activeView
     }
   }
 
-  const onChangeWidth = () => {
-    let remValue = '3rem'
-    if(window.innerWidth <= 900){
-      remValue = '1rem + 1px'
-    }
-
-    let el = document.getElementById('top-bar');
-    let header = document.getElementById('main-header');
-    let subHeader = document.getElementById('sub-header');
-    if(el){
-      let style = getComputedStyle(el);
-
-      const headerTop = (document.getElementById('top-bar')?.offsetHeight || 55)
-      setTop(`calc(${headerTop}px + ${header?.clientHeight || 0}px + ${remValue} - ${style.paddingBottom} - ${style.paddingTop})`)
-    }
-
-  }
-
-  useEffect(()=>{
-    onChangeWidth()
-
-    setTimeout(()=>{
-      onChangeWidth()
-    },500)
-
-    window.addEventListener('resize', onChangeWidth);
-
-    return () => window.removeEventListener("resize", onChangeWidth);
-  },[])
-
   return (
-    <main className={`${styles.container}`} style={{marginTop: top}}>
-      <div className={styles.settings}>
-        <Button text={'Settings'} onClick={toggleSettings} type='button' styleTypes={['secondary']} />
-      </div>
+    <main className={`${styles.container}`}>
       <LocationContextProvider>
         {menuActive &&
           <SideNavigation
@@ -132,7 +93,13 @@ const UserSettings = () => {
           />
         }
         <section className={styles.content}>
-          <h2>{capitalCase(getTitle(activeView))}</h2>
+          <div className={styles.header}>
+            <IconClickable
+              src={Utilities.menu}
+              onClick={toggleSettings}
+            />
+            <h2>{capitalCase(getTitle(activeView))}</h2>
+          </div>
           {hasPermission(SETTING_OPTIONS[activeView]?.permissions) ?
             <ActiveContent />
             :

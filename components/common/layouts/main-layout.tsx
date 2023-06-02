@@ -68,23 +68,19 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
   }
 
   const admDropdownOptions = [
-    { OverrideComp: () => <SettingsLink name='Profile' settingRef='profile' /> },
+    { OverrideComp: () => <SettingsLink name='Account' settingRef='account' /> },
   ]
 
   const settingsDropdownOptions = []
 
-  if (hasPermission([SETTINGS_COMPANY])) admDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Company' settingRef='company' /> })
-  if (hasPermission([SETTINGS_BILLING])) admDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Billing' settingRef='billing' /> })
   // if (hasPermission([SETTINGS_PLAN])) admDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Plan' settingRef='plan' /> })
-  if (hasPermission([SETTINGS_SECURITY])) admDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Security' settingRef='security' /> })
   if (hasPermission([SETTINGS_TEAM])) admDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Team' settingRef='team' /> })
+  admDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Notifications' settingRef='notifications' /> })
+  admDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Integrations' settingRef='integrations' /> })
   if (hasPermission([SETTINGS_TEAM])) settingsDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Attributes' settingRef='attributes' /> })
-  settingsDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Notifications' settingRef='notifications' /> })
-  if (hasPermission([SETTINGS_TEAM])) settingsDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Guest Upload' settingRef='guest-upload' /> })
   settingsDropdownOptions.push({ OverrideComp: () => <MainLink name='Upload Approvals' settingRef='upload-approvals' /> })
-  if (hasPermission([SETTINGS_TEAM])) settingsDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Custom Settings' settingRef='custom-settings' /> })
-  settingsDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Integrations' settingRef='integrations' /> })
   settingsDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Shared Links' settingRef='shared-links' /> })
+  if (hasPermission([SETTINGS_TEAM])) settingsDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Custom Settings' settingRef='custom-settings' /> })
   if (hasPermission([SUPERADMIN_ACCESS])) settingsDropdownOptions.push({ OverrideComp: () => <SettingsLink name='Super Admin' settingRef='super-admin' /> })
 
 

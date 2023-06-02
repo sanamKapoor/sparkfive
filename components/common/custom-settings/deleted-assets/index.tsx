@@ -49,7 +49,6 @@ const DeletedAssetsLibrary = () => {
 	setTotalAssets
   } = useContext(AssetContext)
 
-	const [top, setTop] = useState('calc(55px + 8rem)')
 
   const [firstLoaded, setFirstLoaded] = useState(false)
 
@@ -493,33 +492,6 @@ const DeletedAssetsLibrary = () => {
 	  getAssets(false)
   }
 
-	const onChangeWidth = () => {
-		let remValue = '8rem'
-		if(window.innerWidth <= 900){
-			remValue = '7rem + 1px'
-		}
-
-		let el = document.getElementById('top-bar');
-		let header = document.getElementById('main-header');
-		let subHeader = document.getElementById('sub-header');
-
-		if(el){
-			let style = getComputedStyle(el);
-
-			const headerTop = (document.getElementById('top-bar')?.offsetHeight || 55)
-			setTop(`calc(${headerTop}px + ${header?.clientHeight || 0}px + ${remValue} - ${style.paddingBottom} - ${style.paddingTop})`)
-		}
-
-	}
-
-	useEffect(()=>{
-		onChangeWidth()
-
-		window.addEventListener('resize', onChangeWidth);
-
-		return () => window.removeEventListener("resize", onChangeWidth);
-	},[])
-
   return (
 	<>
 	  <AssetSubheader
@@ -534,7 +506,7 @@ const DeletedAssetsLibrary = () => {
 		deletedAssets={true}
 	  />
 	  <main className={`${styles.container}`}>
-		<TopBar
+		{/* <TopBar
 		  activeSortFilter={activeSortFilter}
 		  setActiveSortFilter={setActiveSortFilter}
 		  setActiveView={setActiveView}
@@ -544,9 +516,14 @@ const DeletedAssetsLibrary = () => {
 		  setOpenFilter={setOpenFilter}
 		  openFilter={openFilter}
 		  deletedAssets={true}
+<<<<<<< HEAD
+		/> */}
+		  <div className={`${openFilter && styles['col-wrapper']} ${styles['grid-wrapper']}`}>
+=======
 		  isFolder={activeSortFilter?.mainFilter === 'folders'}
 		/>
 		  <div className={`${openFilter && styles['col-wrapper']} ${styles['grid-wrapper']}`} style={{marginTop: top}}>
+>>>>>>> elasticsearch-dev
 		  <DropzoneProvider>
 			<DeletedAssets
 			  activeFolder={activeFolder}

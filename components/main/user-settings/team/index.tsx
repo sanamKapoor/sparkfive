@@ -142,7 +142,7 @@ const Team = () => {
   const mappedRoles = roles.map((role) => ({ ...role, label: capitalCase(role.name), value: role.id }))
 
   const onRequestChange = async (type: string, request) => {
-    switch (type){
+    switch (type) {
       case 'review': {
         setSelectedRequest(request)
         break;
@@ -179,66 +179,79 @@ const Team = () => {
 
       <div className={styles.buttons}>
         <SectionButton
-            text='Members'
-            active={tab === 0}
-            onClick={() => {setTab(0);setSelectedRole(undefined);setSelectedMember(undefined)}}
+          text='Members'
+          active={tab === 0}
+          onClick={() => { setTab(0); setSelectedRole(undefined); setSelectedMember(undefined) }}
         />
         <SectionButton
-            text='Roles'
-            active={tab === 1}
-            onClick={() => {setTab(1);setSelectedRole(undefined);setSelectedMember(undefined)}}
+          text='Roles'
+          active={tab === 1}
+          onClick={() => { setTab(1); setSelectedRole(undefined); setSelectedMember(undefined) }}
         />
         {tab === 2 && <SectionButton
-            text='Add Custom Role'
-            active={tab === 2}
-            onClick={() => setTab(2)}
+          text='Add Custom Role'
+          active={tab === 2}
+          onClick={() => setTab(2)}
         />}
       </div>
 
       {tab === 0 && <>
         {selectedMember && <MemberDetail mappedRoles={mappedRoles} member={selectedMember.member} type={selectedMember.type}
-                                         onSaveChanges={onDetailSaveChanges} onCancel={()=>{setSelectedMember(undefined)}}/>}
+          onSaveChanges={onDetailSaveChanges} onCancel={() => { setSelectedMember(undefined) }} />}
 
-        {selectedRequest && <div className={styles.back} onClick={()=>{setSelectedRequest(undefined)}}>
+        {selectedRequest && <div className={styles.back} onClick={() => { setSelectedRequest(undefined) }}>
           <IconClickable src={Utilities.back} />
           <span>Back</span>
         </div>}
 
         {selectedRequest && <RequestForm
-            data={selectedRequest}
-            onApprove={()=>{onRequestChange('accept', selectedRequest)}}
-            onReject={()=>{onRequestChange('reject', selectedRequest)}}
+          data={selectedRequest}
+          onApprove={() => { onRequestChange('accept', selectedRequest) }}
+          onReject={() => { onRequestChange('reject', selectedRequest) }}
         />}
 
         {!selectedMember && !selectedRequest && <>
-          <TeamInviteForm
+          <div className={styles.content}>
+            <TeamInviteForm
               onInviteSend={sendInvitation}
               mappedRoles={mappedRoles} />
-          <div className={styles['main-headers']}>
-            <h3>Members</h3>
-            <h3>Role</h3>
           </div>
 
-          <MemberList members={teamMembers}
-                      type='member'
-                      setSelectedMember={setSelectedMember}
-                      setSelectedDeleteMember={setSelectedDeleteMember}
-          />
+          <div className={styles.divider}></div>
 
-          <h3>Pending Invites</h3>
-          <MemberList members={invites} type='invite'
-                      setSelectedMember={setSelectedMember}
-                      setSelectedDeleteMember={setSelectedDeleteMember}
-                      onReload={()=>{getInvites()}}
-          />
+          <div className={styles.content}>
+
+            <div className={styles['main-headers']}>
+              <h3>Members</h3>
+              <h3>Role</h3>
+            </div>
 
 
-          <h3>Access Requests</h3>
-          <RequestAccessList members={requests} type='invite' onChange={onRequestChange} />
-        </>}
+            <MemberList members={teamMembers}
+              type='member'
+              setSelectedMember={setSelectedMember}
+              setSelectedDeleteMember={setSelectedDeleteMember}
+            />
+
+            <div className={`${styles['main-headers']} m-t-40`}>
+              <h3>Pending Invites</h3>
+            </div>
+            <MemberList members={invites} type='invite'
+              setSelectedMember={setSelectedMember}
+              setSelectedDeleteMember={setSelectedDeleteMember}
+              onReload={() => { getInvites() }}
+            />
+
+            <div className={`${styles['main-headers']} m-t-40`}>
+              <h3>Access Requests</h3>
+            </div>
+            <RequestAccessList members={requests} type='invite' onChange={onRequestChange} />
+          </div>
+        </>
+        }
       </>}
 
-      {tab === 1 && <Roles onAdd={()=>{setTab(2)}} onEdit={(id)=>{setTab(2);setSelectedRole(id)}} />}
+      {tab === 1 && <Roles onAdd={() => { setTab(2) }} onEdit={(id) => { setTab(2); setSelectedRole(id) }} />}
 
       {tab === 2 && <AddCustomRole onSave={onAddCustomRole} role={selectedRole} />}
 

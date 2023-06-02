@@ -76,23 +76,31 @@ const Integrations = ({ mode = 'setup' }) => {
           />
         </div>
       }
-      <ul className={styles['integration-list']}>
-        {userIntegrations.map(integration => (
-          <li key={integration.type}>
-            <IntegrationItem
-              integrationName={integration.name}
-              integrationId={integration.type}
-              onClick={() => addIntegration(integration)}
-              createdAt={integration.createdAt}
-            />
-          </li>
-        ))}
-        {userIntegrations.length === 0 &&
-          <p>
-            {`No ${activeList} integrations`}
-          </p>
+      <div className={styles.content}>
+        {(userIntegrations.length > 0 && activeList === 'enabled') &&
+          <>
+            <h3>Enabled Integrations</h3>
+            <div className={styles.header}><h3>Name</h3></div>
+          </>
         }
-      </ul>
+        <ul className={styles['integration-list']}>
+          {userIntegrations.map(integration => (
+            <li key={integration.type}>
+              <IntegrationItem
+                integrationName={integration.name}
+                integrationId={integration.type}
+                onClick={() => addIntegration(integration)}
+                createdAt={integration.createdAt}
+              />
+            </li>
+          ))}
+          {userIntegrations.length === 0 &&
+            <p>
+              {`No ${activeList} integrations`}
+            </p>
+          }
+        </ul>
+      </div>
     </>
   )
 }

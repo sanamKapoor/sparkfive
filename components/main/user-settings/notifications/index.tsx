@@ -69,11 +69,13 @@ const Notifications = () => {
 
   return (
     <div className={styles.container}>
+      <div className={styles.divider}></div>
       <div className={styles.preferences}>
         <UserPreference
           enabled={enabledEmailNotif}
           setPreference={setEmailNotif}
           title={'Email notifications'}
+          subtitle={'Two-Factor Authentification'}
           description={`Enabling this will enable your account's email to recieve notifications whenever you are tagged in a comment`}
         />
       </div>

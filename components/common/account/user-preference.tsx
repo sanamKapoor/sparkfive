@@ -3,10 +3,11 @@ import { Utilities } from '../../../assets'
 
 const { radioButtonEnabled, radioButtonNormal } = Utilities
 
-const UserPreference = ({ enabled, setPreference, title, description }) => (
+const UserPreference = ({ enabled, setPreference, title, subtitle, description }) => (
   <div className={styles.container}>
     <div className={'fields-first'}>
       <h3>{title}</h3>
+      {subtitle && <h4>{subtitle}</h4>}
       <p>{description}</p>
     </div>
     <div className={styles['radio-options']}>

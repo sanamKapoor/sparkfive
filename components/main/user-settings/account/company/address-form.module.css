@@ -1,0 +1,62 @@
+.container {
+  width: 70%;
+}
+
+.container button{
+  margin-top: 18px;
+}
+
+h3.title {
+  margin-bottom: 24px;
+}
+
+.state-country{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.fields-pair{
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+  margin-top: 28px;
+}
+
+.container label {
+  margin-bottom: 16px;
+  display: block;
+}
+
+
+.fields-pair label {
+  margin-bottom: 16px;
+  display: block;
+}
+
+.fields-pair>div:first-child{
+  width: 55%;
+  margin-right: 5%;
+}
+
+.fields-pair>div:last-child{
+  width: 40%;
+}
+
+@media screen and (max-width: 600px) {
+  .container {
+    width: 100%;
+  }
+
+  .fields-pair>div:first-child{
+    width: 100%;
+    margin-right: 0%;
+  }
+  
+  .fields-pair>div:last-child{
+    width: 100%;
+  }
+
+  .state {
+    margin-top: 34px;
+  }
+}

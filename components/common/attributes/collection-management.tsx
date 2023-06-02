@@ -130,33 +130,7 @@ const CollectionManagement = () => {
 
     return (
         <div className={styles['main-wrapper']}>
-            <div className={styles['operation-row']}>
-                <CreatableSelect
-                    title=''
-                    addText='Add Collection'
-                    onAddClick={() => setActiveDropdown('folders')}
-                    selectPlaceholder={'Enter a new collection'}
-                    avilableItems={[]}
-                    setAvailableItems={() => { }}
-                    selectedItems={[]}
-                    setSelectedItems={() => { }}
-                    onAddOperationFinished={() => { }}
-                    onRemoveOperationFinished={() => { }}
-                    onOperationFailedSkipped={() => setActiveDropdown('')}
-                    isShare={false}
-                    asyncCreateFn={createFolder}
-                    dropdownIsActive={activeDropdown === 'folders'}
-                    selectClass={styles['campaign-select']}
-                />
-
-                <Select
-                    options={sorts}
-                    onChange={(value) => { setSort(value) }}
-                    placeholder={'Select to sort'}
-                    styleType={`regular ${styles['sort-select']}`}
-                    value={sort}
-                />
-            </div>
+            <h3>Collections</h3>
 
             <div className={styles['search-row']}>
                 <div className={styles['search-column-1']}>
@@ -188,24 +162,55 @@ const CollectionManagement = () => {
                 </div>
             </div>
 
+            <div className={styles['operation-row']}>
+                <CreatableSelect
+                    altColor='blue'
+                    title=''
+                    addText='Add Collection'
+                    onAddClick={() => setActiveDropdown('folders')}
+                    selectPlaceholder={'Enter a new collection'}
+                    avilableItems={[]}
+                    setAvailableItems={() => { }}
+                    selectedItems={[]}
+                    setSelectedItems={() => { }}
+                    onAddOperationFinished={() => { }}
+                    onRemoveOperationFinished={() => { }}
+                    onOperationFailedSkipped={() => setActiveDropdown('')}
+                    isShare={false}
+                    asyncCreateFn={createFolder}
+                    dropdownIsActive={activeDropdown === 'folders'}
+                    selectClass={styles['campaign-select']}
+                />
+
+                <Select
+                    options={sorts}
+                    onChange={(value) => { setSort(value) }}
+                    placeholder={'Select to sort'}
+                    styleType={`regular ${styles['sort-select']}`}
+                    value={sort}
+                />
+            </div>
+
             <ul className={styles['tag-wrapper']}>
                 {folderList.map((folder, index) => <li key={index} className={styles['tag-item']}>
-                    {(editMode === false || (editMode === true && currentEditIndex !== index)) && <Tag
-                        tag={<><span className={styles['tag-item-text']}>{folder.numberOfFiles}</span> <span>{folder.name}</span></>}
-                        data={folder}
-                        type="collection"
-                        canRemove={true}
-                        editFunction={() => {
-                            setCurrentEditIndex(index);
-                            setCurrentEditValue(folder.name);
-                            setEditMode(true);
+                    {(editMode === false || (editMode === true && currentEditIndex !== index)) &&
+                        <Tag
+                            altColor='blue'
+                            tag={<><span className={styles['tag-item-text']}>{folder.numberOfFiles}</span> <span>{folder.name}</span></>}
+                            data={folder}
+                            type="collection"
+                            canRemove={true}
+                            editFunction={() => {
+                                setCurrentEditIndex(index);
+                                setCurrentEditValue(folder.name);
+                                setEditMode(true);
 
-                        }}
-                        removeFunction={() => {
-                            setCurrentDeleteId(folder.id)
-                            setConfirmDeleteModal(true)
-                        }}
-                    />}
+                            }}
+                            removeFunction={() => {
+                                setCurrentDeleteId(folder.id)
+                                setConfirmDeleteModal(true)
+                            }}
+                        />}
                     {editMode === true && currentEditIndex === index && <div>
                         <Input
                             placeholder={'Edit name'}

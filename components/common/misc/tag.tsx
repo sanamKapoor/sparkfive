@@ -2,7 +2,7 @@ import { capitalCase } from 'change-case'
 import { useContext, useState } from "react";
 import styles from './tag.module.css'
 import { useRouter } from "next/router";
-import { Utilities } from '../../../assets'
+import { AssetOps, Utilities } from '../../../assets'
 
 import { UserContext } from '../../../context'
 import {
@@ -30,7 +30,7 @@ const Tag = ({
     }
 
     const tagRender = (type && mouseOver) ? (<span>
-        {type !== "custom-fields" && <IconClickable additionalClass={styles['tag-icon']} src={Utilities.edit} onClick={editFunction} tooltipId='Edit' tooltipText='Edit' />}
+        {type !== "custom-fields" && <IconClickable additionalClass={styles['tag-icon']} src={AssetOps.edit} onClick={editFunction} tooltipId='Edit' tooltipText='Edit' />}
         <span onClick={type !== "custom-fields" ? goToTagManagement : null}>{data.name || data.sku}</span>
     </span>) : tag
 

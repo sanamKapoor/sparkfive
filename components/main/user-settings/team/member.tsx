@@ -12,7 +12,7 @@ import { UserContext } from '../../../../context'
 import { capitalCase } from 'change-case'
 import IconClickable from "../../../common/buttons/icon-clickable";
 
-import { AssetOps } from '../../../../assets'
+import { AssetOps, Navigation } from '../../../../assets'
 
 // Components
 
@@ -20,56 +20,62 @@ const Member = ({ id, email, role, name, profilePhoto, type, editAction, deleteA
   const { user } = useContext(UserContext)
 
   const checkExpireDate = (date) => {
-      return new Date() > new Date(date);
+    return new Date() > new Date(date);
   }
 
-    const getExpireDate = (date, boolean = false) => {
-        if(new Date() > new Date(date)){
-            return boolean ? true : 'Invite Link Expired'
-        }else{
-            return boolean ? false : `Invite Link Active`
-        }
+  const getExpireDate = (date, boolean = false) => {
+    if (new Date() > new Date(date)) {
+      return boolean ? true : 'Invite Link Expired'
+    } else {
+      return boolean ? false : `Invite Link Active`
     }
+  }
 
-    const copyLink = (code) => {
-        copyClipboard(`${process.env.CLIENT_BASE_URL}/signup?inviteCode=${code}`)
-    }
+  const copyLink = (code) => {
+    copyClipboard(`${process.env.CLIENT_BASE_URL}/signup?inviteCode=${code}`)
+  }
 
-    const resend = async(id) => {
-        await inviteApi.resendInvite(id)
+  const resend = async (id) => {
+    await inviteApi.resendInvite(id)
 
-        toastUtils.success('Invitation sent successfully')
+    toastUtils.success('Invitation sent successfully')
 
-        onReload()
-    }
+    onReload()
+  }
 
   return (
     <li className={styles.container}>
       <div className={`${styles['name-email']} ${type === 'invite' ? styles['name-email-invite'] : ''}`}>
-        {type === 'member' && <div>{name}</div>}
+        <div>{name}</div>
         <div>{email}</div>
       </div>
-        {type === 'invite' && <div className={`${styles['expire-date']} ${getExpireDate(expirationDate, true) ? styles['red-text'] : styles['grey-text']}`}>
-            {getExpireDate(expirationDate)}
-            {type === 'invite' && <div className={`${styles['operation-buttons']} ${styles['resend-button']} ${!checkExpireDate(expirationDate) ? styles['hidden'] : ''}`}>
-                <IconClickable additionalClass={styles['resend-image']}  src={AssetOps[`reload${''}`]}  tooltipText={'Resend'} tooltipId={'Resend'} onClick={() => {resend(id)}} />
-            </div>}
-        </div>}
-        {type === 'invite' && <div className={styles['operation-buttons']}>
-            <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`copy${''}`]}  tooltipText={'Copy Link'} tooltipId={'Copy'} onClick={() => {copyLink(code)}} />
-        </div>}
-      <div className={styles.details}>
-        <div className={styles.role}>{capitalCase(role.name)}</div>
-          <>
-              <div onClick={editAction}
-                   className={`${styles.action} ${user.id === id ? styles.hidden: ''}`}>
-                  edit
-              </div>
-              <div onClick={deleteAction}
-                   className={`${styles.action} ${user.id === id ? styles.hidden: ''}`}>
-                  delete
-              </div>
-          </>
+      <div className={type === 'invite' ? styles.details_wrapper_invite : styles.details_wrapper}>
+        {type === 'invite' &&
+          <div className={styles['operation-buttons']}>
+            <div className={`${styles['expire-date']} ${getExpireDate(expirationDate, true) ? styles['red-text'] : styles['grey-text']}`}>
+              {getExpireDate(expirationDate)}
+            </div>
+            <div className={`${styles['resend-button']} ${!checkExpireDate(expirationDate) ? styles['hidden'] : ''}`}>
+              <IconClickable additionalClass={styles['resend-image']} src={Navigation.alertBlue} tooltipText={'Resend'} tooltipId={'Resend'} onClick={() => { resend(id) }} />
+            </div>
+            <div className={styles['copy-button']}>
+              <IconClickable additionalClass={styles['action-button']} src={AssetOps[`copy${''}`]} tooltipText={'Copy Link'} tooltipId={'Copy'} onClick={() => { copyLink(code) }} />
+            </div>
+          </div>
+        }
+        <div className={styles.details}>
+          <div className={styles.role}>{capitalCase(role.name)}</div>
+          <div className={styles.actions}>
+            <div onClick={editAction}
+              className={`${styles.action} ${user.id === id ? styles.hidden : ''}`}>
+              Edit
+            </div>
+            <div onClick={deleteAction}
+              className={`${styles.action} ${user.id === id ? styles.hidden : ''}`}>
+              Delete
+            </div>
+          </div>
+        </div>
       </div>
     </li>
   )

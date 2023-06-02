@@ -1,13 +1,13 @@
 import styles from './notification-list.module.css'
 import Router from 'next/router'
 import { format } from 'date-fns'
-import { Utilities } from '../../../assets'
+import { Utilities, ItemFields } from '../../../assets'
 
 // Components
 
 const NotificationList = ({ notifications, onClear = (notif) => { }, onMarkRead = (notif) => { }, mode = 'header' }) => (
   <div className={`${styles.list} ${styles[mode]}`}>
-    <div className={styles.title}>Notifications</div>
+    <div className={styles.title}>Recent Notifications</div>
     <ul>
       {notifications.length === 0 &&
         <div className={styles.empty}>
@@ -51,6 +51,11 @@ const NotificationList = ({ notifications, onClear = (notif) => { }, onMarkRead 
                 {format(date, 'p')}
               </div>
             </div>
+            {mode === 'page' &&
+              <div className={styles.member}>
+                <img src={ItemFields.member} alt="member icon" />
+              </div>
+            }
             <div onClick={() => Router.replace(realUrl)}>
               <div className={styles.message}>
                 {notification.message}

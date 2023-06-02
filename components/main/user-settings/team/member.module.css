@@ -1,8 +1,8 @@
 .container {
   display: flex;
+  align-items: center;
   width: 100%;
-  margin: 0.8rem 0;
-  padding: 0.8rem 0;
+  padding: 8px 16px;
   border-bottom: 1px solid var(--color-secondary-border);
 }
 
@@ -11,17 +11,22 @@
 }
 
 .name-email {
-  width: 80%;
+  width: 60%;
+}
+
+.name-email-invite {
+  width: 30%;
 }
 
 .name-email > div:first-child {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
 }
 
 .name-email > div:last-child {
   color: var(--color-sec-text);
-  font-weight: 400;
+  font-size: 12px;
+  font-weight: 300;
 }
 
 .grey-text{
@@ -33,41 +38,112 @@
   color: var(--color-prim-red);
   font-size: 12px;
 }
-
-.resend-button{
-  margin-left: 15px;
-}
-
 .role{
-  font-weight: 600;
-  width: 98px;
+  font-size: 14px;
+  font-weight: 400;
 }
 
 .details{
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  white-space: break-spaces;
+}
+
+.details_wrapper {
+  width: 40%;
+}
+
+.details_wrapper_invite {
+  width: 70%;
+  display: flex;
+  align-items: center;
 }
 
 .expire-date{
   display: flex;
-  width: 35%;
   align-items: center;
 }
 
-.operation-buttons{
+.operation-buttons {
   display: flex;
-  width: 50px;
+  align-items: center;
+  gap: 20px;
+  width: 75%;
+}
+
+.copy-button{
+  display: flex;
 }
 
 .hidden{
   visibility: hidden;
 }
 
-.action{
-  margin-left: 1rem;
-  color: var(--color-sec-text);
-  cursor: pointer;
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 44px;
 }
 
-.resend-image{
-  width: 10px
+.action{
+  color: var(--color-sec-text);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 300;
+}
+
+@media screen and (max-width: 600px) {
+  .actions {
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-start;
+  }
+
+  .name-email {
+    width: 50%;
+    line-break: anywhere;
+    margin-right: 20px;
+  }
+
+  .details_wrapper {
+    width: 50%;
+  }
+
+  .role {
+    margin-right: 20px;
+  }
+
+  .details_wrapper_invite {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .operation-buttons {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .expire-date {
+    width: 100%;
+  }
+
+  .copy-button {
+    margin-left: 12px;
+  }
+
+
+  .details_wrapper_invite .details{
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .details_wrapper_invite .actions {
+    flex-direction: row;
+    gap: 45px;
+  }
 }

@@ -1,0 +1,90 @@
+.sub-container {
+}
+
+.subscription-data {
+  flex: 1;
+  margin-right: 20%;
+}
+ 
+.plan {
+  width: 100%;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 64px;
+
+}
+
+.prop-pair {
+  display: flex;
+  margin-bottom: 28px;
+}
+
+.prop-pair > div {
+  width: 50%;
+}
+
+.label {
+  color: var(--color-prim-navy);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.value {
+  font-weight: 300;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.button-actions {
+  display: flex;
+  flex-direction: column;
+}
+
+.button-actions button{
+  margin-bottom: 26px;
+}
+
+.storage {
+  margin-top: 50px;
+}
+
+.storage h3 {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.bar_wrapper {
+  max-width: 200px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.bar {
+  background-color: var(--color-border);
+  height: 12px;
+  width: 100%;
+  border-radius: 17px;
+  overflow: hidden;
+}
+
+.bar_used {
+  background-color: var(--color-prim-turquoise);
+  height: 12px;
+  width: 100%;
+  border-radius: 17px 0 0 17px;
+}
+
+.bar_wrapper span {
+  color: var(--color-sec-text);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.storage_info {
+  font-size: 12px;
+  font-weight: 300;
+  margin-top: 16px;
+}

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 
 // Components
 import Member from './member'
+import { log } from 'console'
 
 const MemberList = ({ members, type = 'member', setSelectedMember, setSelectedDeleteMember, onReload = () => {} }) => {
 
@@ -18,7 +19,7 @@ const MemberList = ({ members, type = 'member', setSelectedMember, setSelectedDe
       member,
       type
     })
-  }
+  }  
 
   return (
     <>

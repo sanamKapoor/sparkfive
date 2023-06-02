@@ -1,6 +1,10 @@
 export const GeneralImg = {
   logoHorizontal: require('./general/logo-horizontal-sparkfive-RGB.png'),
-  logo: require('./general/logo-motif-sparkfive-RGB-scaled.png')
+  logo: require('./general/logo-motif-sparkfive-RGB-scaled.png'),
+}
+
+export const AppImg = {
+  guestCover: require('./app-images/guest-cover.png'),
 }
 
 export const LoginImg = {
@@ -10,6 +14,7 @@ export const LoginImg = {
 
 export const Navigation = {
   alert: require('./Icons/Navigation/icn-nav-alert-white.svg'),
+  alertBlue: require('./Icons/Navigation/icn-nav-alert.svg'),
   overview: require('./Icons/Navigation/icn-nav-dashboard-#E9EEFA.svg'),
   overviewSelected: require('./Icons/Navigation/icn-nav-dashboard-white.svg'),
   schedulePrimary: require('./Icons/Navigation/icn-nav-schedule.svg'),
@@ -204,6 +209,7 @@ export const AssetOps = {
   archive: require('./Icons/Asset Actions/archive.svg'),
   download: require('./Icons/Utilities/Download/icn-utilities-download.svg'),
   move: require('./Icons/Utilities/Move Folder/icn-utilities-movefolder.svg'),
+  moveGray: require('./Icons/Utilities/Move Folder/icn-utilities-movefolder-gray.svg'),
   copy: require('./Icons/Asset Actions/copy.svg'),
   share: require('./Icons/Asset Actions/share.svg'),
   reload: require('./Icons/Asset Actions/reload.png'),
@@ -222,7 +228,9 @@ export const AssetOps = {
   moveReplace: require('./Icons/Asset Actions/move.svg'),
   moveReplaceWhite: require('./Icons/Asset Actions/white-move.svg'),
   newCollection: require('./Icons/Asset Addition/new-collection.svg'),
+  newCollectionGray: require('./Icons/Asset Addition/new-collection-gray.svg'),
   uploadFiles: require('./Icons/Asset Addition/upload-files.svg'),
+  uploadFilesGray: require('./Icons/Asset Addition/upload-files-gray.svg'),
   uploadFolder: require('./Icons/Asset Addition/upload-folder.svg'),
   editGray: require('./Icons/Asset Actions/edit-gray.svg'),
   cancel: require('./Icons/Utilities/Close/blue-close.svg'),

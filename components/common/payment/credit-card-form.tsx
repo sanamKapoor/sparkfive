@@ -83,7 +83,6 @@ const CreditCardForm = ({ onConfirm, buttonDisabled, buttonText = 'Subscribe', n
 
   return (
     <section className={`${styles.container} card-content ${noBottomMargin && styles['no-bottom']}`}>
-      <h3>Credit Card Information</h3>
       <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
         <div>
           <FormInput

@@ -174,8 +174,21 @@
     align-items: center;
 }
 
+.align-items-start{
+    align-items: flex-start !important;
+}
+
+.align-items-end{
+    align-items: flex-end !important;
+}
+
+
 .flex-direction-column{
     flex-direction: column;
+}
+
+.gap-20{
+    gap: 20px;
 }
 
 /*Tablet and ipad screen*/
@@ -189,6 +202,12 @@
     .col-md-80 {
         flex: 0 0 80%;
         max-width: 80%;
+        margin: 15px 0;
+    }
+
+    .col-md-50 {
+        flex: 0 0 50%;
+        max-width: 50%;
         margin: 15px 0;
     }
 

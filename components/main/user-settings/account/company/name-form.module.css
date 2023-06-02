@@ -1,0 +1,16 @@
+.form-container {
+  display: flex;
+  width: 50%;
+}
+
+h3.title { 
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+@media screen and (max-width: 900px) {
+  .form-container {
+     width: 100%;
+     flex-wrap: wrap;
+  }
+ }

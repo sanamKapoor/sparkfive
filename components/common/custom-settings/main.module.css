@@ -1,3 +1,15 @@
+.content {
+  padding: 42px 60px;
+}
+
+.buttons{
+  display: flex;
+  padding: 32px 60px 16px;
+  padding-top: 32px;
+  border-bottom: 1px solid var(--color-border);
+  gap: 24px;
+}
+
 .integration-list{
   margin: 2.5rem 2rem 0 2rem;
 }
@@ -6,12 +18,74 @@
   margin-bottom: 5rem;
 }
 
-.buttons{
-  display: flex;
-  border-bottom: 1px solid var(--color-secondary-border);
-  padding-bottom: 2rem;
+.container {
+  width: 70%;
 }
 
-.buttons button{
-  margin-right: 3rem;
+.container h3 {
+  margin: 0 0 30px;
+  font-weight: 600;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--color-secondary-border);
+  gap: 16px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.field-radio-wrapper {
+  display: flex;
+  gap: 40px;
+}
+
+.radio {
+  font-size: 13px;
+  font-weight: 300;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+@media screen and (max-width: 1200px) {
+  .container {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 900px)  {
+  .content {
+    padding: 42px 30px;
+  }
+  .buttons {
+    padding: 32px 30px 16px;
+    flex-wrap: wrap;
+  }
+}
+
+@media screen and (max-width: 600px) {
+
+  .content {
+    padding: 42px 16px;
+  }
+  .buttons {
+    padding: 32px 16px 16px;
+  }
+
+  .field-radio-wrapper {
+    flex-wrap: wrap;
+    gap: 8px 32px;
+  }
+
+  .row {
+    flex-wrap: wrap;
+  }
 }

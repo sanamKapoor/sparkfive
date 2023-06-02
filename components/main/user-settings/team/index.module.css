@@ -1,17 +1,27 @@
 .container{
-  max-width: 48rem;
 }
 
-.container > h3, .main-headers {
-  margin-top: 3rem;
+
+.divider {
+  border-top: 1px solid var(--color-secondary-border);
+}
+.content {
+  padding: 42px 60px;
 }
 
 .main-headers{
   display: flex;
+  background-color: var(--color-sec-lightblue);
+  padding: 16px;
+}
+
+.main-headers h3 {
+  font-weight: 600;
+  margin: 0;
 }
 
 .main-headers>h3:first-child{
-  width: 80%;
+  width: 60%;
 }
 
 .back {
@@ -30,10 +40,36 @@
 
 .buttons{
   display: flex;
-  padding-bottom: 3rem;
-  padding-top: 1rem;
+  padding: 32px 60px 16px;
+  padding-top: 32px;
+  border-bottom: 1px solid var(--color-border);
+  gap: 24px;
 }
 
-.buttons button{
-  margin-right: 3rem;
+
+@media screen and (max-width: 900px)  {
+  .content {
+    padding: 42px 30px;
+  }
+  .buttons {
+    padding: 32px 30px 16px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .container h3 {
+    font-size: 14px;
+  }
+
+  .content {
+    padding: 42px 16px;
+  }
+  .buttons {
+    padding: 32px 16px 16px;
+  }
+
+  .main-headers>h3:first-child{
+    width: 52%;
+  }
+  
 }

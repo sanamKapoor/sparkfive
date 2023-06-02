@@ -1,0 +1,39 @@
+.content {
+  padding: 42px 60px;
+}
+
+  .container h3 {
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .buttons{
+    display: flex;
+    padding: 32px 60px 16px;
+    padding-top: 32px;
+    border-bottom: 1px solid var(--color-border);
+    gap: 24px;
+  }
+
+
+  @media screen and (max-width: 900px)  {
+    .content {
+      padding: 42px 30px;
+    }
+    .buttons {
+      padding: 32px 30px 16px;
+    }
+  }
+
+  @media screen and (max-width: 600px) {
+    .container h3 {
+      font-size: 14px;
+    }
+
+    .content {
+      padding: 42px 16px;
+    }
+    .buttons {
+      padding: 32px 16px 16px;
+    }
+  }

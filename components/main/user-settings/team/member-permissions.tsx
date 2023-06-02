@@ -6,6 +6,7 @@ import { TeamContext } from '../../../../context'
 
 const MemberPermissions = ({ memberPermissions, permissions, setMemberPermissions, listOnly = false }) => {
 
+
   const [mappedPermissions, setMappedPermissions] = useState([])
   const { plan } = useContext(TeamContext)
 
@@ -57,7 +58,7 @@ const MemberPermissions = ({ memberPermissions, permissions, setMemberPermission
       const arr = [...memberPermissions];
 
       // If there is field need to be switched off
-      if(toggleOffPermissionIndex !== -1){
+      if (toggleOffPermissionIndex !== -1) {
         // Remove it
         arr.splice(toggleOffPermissionIndex, 1)
       }
@@ -71,23 +72,22 @@ const MemberPermissions = ({ memberPermissions, permissions, setMemberPermission
   }
 
   return (
-    <div className={`${styles.container} ${listOnly ? styles['flex-row'] : ''}`}>
-      {!listOnly && <h3>Permissions</h3>}
-      {mappedPermissions.map(({ category, features }) => (
-        <div key={category} className={styles.group}>
-          <h4>{category}</h4>
-          <ul>
-            {features.map((permission) => (
-              <li key={permission.id} className={styles.feature}>
-                <div>
-                  {permission.name}
-                </div>
-                <img src={permission.enabled ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal} onClick={() => togglePermission(permission)} />
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+    <div className={`${styles.container}`}>
+          {mappedPermissions.map(({ category, features }) => (
+            <div key={category} className={styles.group}>
+              <h4>{category}</h4>
+              <ul>
+                {features.map((permission) => (
+                  <li key={permission.id} className={styles.feature}>
+                    <div>
+                      {permission.name}
+                    </div>
+                    <img src={permission.enabled ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal} onClick={() => togglePermission(permission)} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
     </div>
   )
 }
