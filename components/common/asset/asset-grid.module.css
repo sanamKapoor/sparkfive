@@ -5,14 +5,13 @@
   min-height: 60vh;
 }
 .filter {
-  /* width: 80%; */
-  width: calc(100% - 320px);
+  width: 100%;
   order: 2;
 }
 
 @media screen and (max-width: 1023px) {
   .filter {
-    width: 100%;
+    width: 100% !important;
   }
 }
 
@@ -29,7 +28,7 @@
 @media screen and (min-width: 410px) and (max-width: 809px) {
   .grid-list {  
     grid-template-columns: repeat(auto-fill, minmax(181px, 1fr));
-    grid-gap: 7px;
+    /* grid-gap: 7px; */
 }
 }
 
@@ -37,7 +36,7 @@
   .grid-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(187px, 1fr)) !important;
-    grid-gap: 20px;
+    /* grid-gap: 20px; */
   }
 }
 
@@ -45,7 +44,7 @@
   .grid-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(163px, 1fr));
-    grid-gap: 20px;
+    /* grid-gap: 20px; */
   }
 }
 

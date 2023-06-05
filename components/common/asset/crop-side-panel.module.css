@@ -100,7 +100,7 @@
 .select-item {
   width: 33%;
   display: grid;
-  grid-template-columns: 23px auto 15%;
+  grid-template-columns: 25px auto 15%;
   margin-top: 10px;
   align-items: center;
 }

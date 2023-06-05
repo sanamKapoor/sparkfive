@@ -42,7 +42,7 @@ const VersionListItem = ({
                 <div className={styles['info-wrapper']}>
                     <div>
                         <div className={styles.name}>{name}</div>
-                        <div className={styles.author}>by: {user?.name}</div>
+                        <div className={styles.author}>By: {user?.name}</div>
                         <div className={styles.info}>{createdAt && format(new Date(createdAt), 'MM/dd/yyyy')}<span></span>{fileSize((size || 0).toString())}</div>
                     </div>
                     {!current &&

@@ -530,7 +530,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
           title='Tags'
           addText='Add Tags'
           onAddClick={() => setActiveDropdown('tags')}
-          selectPlaceholder={'Enter a new tag or select an existing one'}
+          selectPlaceholder={'Enter a New Tag or Existing One'}
           avilableItems={availNonAiTags}
           setAvailableItems={setAvailNonAiTags}
           selectedItems={nonAiTags}

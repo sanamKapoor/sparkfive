@@ -92,7 +92,7 @@ Container for modifying campaigns
   max-height: 12rem;
   overflow-y: auto;
   margin-bottom: 16px;
-  gap: 4px;
+  gap: 8px;
 }
 
 .picker-dialog{

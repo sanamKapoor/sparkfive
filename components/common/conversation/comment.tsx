@@ -13,7 +13,7 @@ const Comment = ({ content, mentions, createdAt, user }) => {
   return (
     <div className={styles.container}>
       <div className={styles['main-content']}>
-        <UserPhoto sizePx={27} photoUrl={user.profilePhoto} extraClass={styles['author-img']} />
+        <UserPhoto sizePx={28} photoUrl={user.profilePhoto} extraClass={styles['author-img']} />
         <div className={styles['author-date']}>
           <span>{user.name}</span>
           <span>{format(new Date(createdAt), 'MMM Mo p')}</span>

@@ -24,6 +24,8 @@
     border-radius: 4px;
     color: var(--color-prim-navy);
     padding: 3px;
+    width: 100%;
+    box-sizing: border-box;
 }
 .calendar {
     position: absolute;

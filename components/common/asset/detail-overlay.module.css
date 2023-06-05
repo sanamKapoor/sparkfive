@@ -107,6 +107,7 @@
 .back img {
   margin-right: 0.5rem;
   width: 14px;
+  height: 12px;
 }
 
 .content {
@@ -158,10 +159,13 @@
 }
 
 .asset-actions ul {
-  top: 37px;
+  top: 41px;
   right: 0px;
+  /* width: 168px; */
 }
-
+.download-list-dropdown ul {
+  width: 168px;
+}
 .menu {
   display: flex;
   flex-direction: column;
@@ -171,9 +175,11 @@
   width: 100px;
 }
 .asset-actions ul li {border-top: 1px solid #DEDAD4 !important;}
+.asset-actions ul li:nth-child(3) {border-top: 0px !important}
+
 .asset-actions ul li:first-child{border-top: none;}
 .menu-icon {
-  width: 20px;
+  width: 21px;
   height: auto;
   margin-bottom: 20px;
 }

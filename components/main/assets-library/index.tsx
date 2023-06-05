@@ -70,6 +70,8 @@ const AssetsLibrary = () => {
   } = useContext(AssetContext)
 
   const { advancedConfig, hasPermission } = useContext(UserContext)
+  
+  const [widthCard, setWidthCard] = useState(0);
 
   const {term, searchFilterParams} = useContext(FilterContext)
 
@@ -720,6 +722,7 @@ const AssetsLibrary = () => {
     }
   }, [activeMode]);
 
+
   return (
     <>
       {(activeMode === 'assets' ? selectedAssets.length : selectedFolders.length) > 0 &&
@@ -789,6 +792,8 @@ const AssetsLibrary = () => {
                     setDetailOverlayId(undefined)
                     setCurrentViewAsset(assetData)
                   }}
+                  setWidthCard={setWidthCard}
+                  widthCard={widthCard}
                 />
                 }
               </DropzoneProvider>
@@ -800,6 +805,7 @@ const AssetsLibrary = () => {
                   activeSortFilter={activeSortFilter}
                   setActiveSortFilter={setActiveSortFilter}
                   isFolder={activeSortFilter.mainFilter === 'folders'}
+                  filterWidth={widthCard}
                 />
               }
             </div>

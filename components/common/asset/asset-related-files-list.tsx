@@ -72,7 +72,9 @@ const AssetRelatedFilesList = ({relatedAssets}) => {
           <div className={styles.actions}>
             <IconClickable src={AssetOps.download} onClick={downloadAllRelatedAssets}/>
             <IconClickable src={AssetOps.share} onClick={shareAllRelatedAssets} />
+            <div className={styles.actionsplus}>
             <AssetAddition />
+            </div>
           </div>
         </div>
 
@@ -113,7 +115,7 @@ const AssetRelatedFilesList = ({relatedAssets}) => {
                       wrapperClass={styles["item-actions-wrapper"]}
                       Wrapper={({ children }) => (
                         <>
-                          <IconClickable src={Utilities.moreLight} />
+                          <IconClickable src={Utilities.more} />
                           {children}
                         </>
                       )}

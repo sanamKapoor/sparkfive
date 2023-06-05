@@ -19,10 +19,7 @@
 .select-item p {
     text-overflow: ellipsis;
     overflow: hidden;
-}
-
-.capitalize .select-item p{
-
+    white-space: nowrap;
 }
 
 @media screen and (max-width: 800px) {

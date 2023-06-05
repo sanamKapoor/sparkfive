@@ -154,7 +154,7 @@ const UploadRequest = () => {
   const [assetFolders, setFolders] = useState([]);
 
   const [showReviewModal, setShowReviewModal] = useState(false);
-  const [requestInfo, setRequestInfo] = useState('')
+  const [requestInfo, setRequestInfo] = useState("");
 
   const debouncedBatchName = useDebounce(batchName, 500);
 
@@ -197,17 +197,18 @@ const UploadRequest = () => {
   const fetchApprovals = async () => {
     setIsLoading(true);
     const { data } = await uploadApprovalApi.getUploadApprovals();
+    console.log("data: ", data);
     setApprovals(data);
     setIsLoading(false);
   };
 
   // On view approval requests
   const onView = (index, uploadType) => {
-    if(uploadType === 'guest'){
+    if (uploadType === "guest") {
       setRequestInfo(approvals[index]);
       setAssets(approvals[index] ? approvals[index].assets : []);
-      setShowReviewModal(true)
-    }else{
+      setShowReviewModal(true);
+    } else {
       setAssets(approvals[index] ? approvals[index].assets : []);
       setMode("view");
       setApprovalId(approvals[index].id);
@@ -915,36 +916,44 @@ const UploadRequest = () => {
     toastUtils.success("Approve asset successfully");
   };
 
-  const filterUploadItems = (data) =>{
-    const approvalIds = data.filter(item => item.uploadType === 'approval').map(item => item.id);
-    const guestUploadIds = data.filter(item => item.uploadType === 'guest').map(item => ({id: item.id, assets: item.assets}));
-    return {approvalIds, guestUploadIds}
-  }
+  const filterUploadItems = (data) => {
+    const approvalIds = data
+      .filter((item) => item.uploadType === "approval")
+      .map((item) => item.id);
+    const guestUploadIds = data
+      .filter((item) => item.uploadType === "guest")
+      .map((item) => ({ id: item.id, assets: item.assets }));
+    return { approvalIds, guestUploadIds };
+  };
 
   const bulkApprove = async (data) => {
     setIsLoading(true);
     const ids = filterUploadItems(data);
 
-    const assetIds =ids['guestUploadIds'].map(item => item.assets.map(a => a.asset)).flat(2)
+    const assetIds = ids["guestUploadIds"]
+      .map((item) => item.assets.map((a) => a.asset))
+      .flat(2);
 
     const updateObject = {
       assetIds,
       attributes: {},
-      status: 'approved'
-    }
+      status: "approved",
+    };
 
-    await approvalApi.bulkApprove({approvalIds: ids.approvalIds});
-    await assetApi.updateMultipleAttributes(updateObject, {})
+    await approvalApi.bulkApprove({ approvalIds: ids.approvalIds });
+    await assetApi.updateMultipleAttributes(updateObject, {});
 
     // Update status to approval list
     let approvalArrData = [...approvals];
     // @ts-ignore
     approvalArrData.map((approval) => {
-      const approvalId = ids['approvalIds'].includes(approval.id) || ids['guestUploadIds'].includes(approval.id)
-      if (approvalId && approval.uploadType === 'approval') {
+      const approvalId =
+        ids["approvalIds"].includes(approval.id) ||
+        ids["guestUploadIds"].includes(approval.id);
+      if (approvalId && approval.uploadType === "approval") {
         approval.status = 2;
-      }else if(approvalId && approval.uploadType === 'guest'){
-        approval.status = 'Completed';
+      } else if (approvalId && approval.uploadType === "guest") {
+        approval.status = "Completed";
       }
     });
 
@@ -989,13 +998,15 @@ const UploadRequest = () => {
 
     await approvalApi.bulkReject({ rejectIds: ids.approvalIds });
 
-    const assetIds =ids['guestUploadIds'].map(item => item.assets.map(a => a.asset)).flat(2)
+    const assetIds = ids["guestUploadIds"]
+      .map((item) => item.assets.map((a) => a.asset))
+      .flat(2);
 
     const updateObject = {
       assetIds,
       attributes: {},
-      status: 'rejected'
-    }
+      status: "rejected",
+    };
 
     await assetApi.updateMultipleAttributes(updateObject, {});
 
@@ -1004,13 +1015,15 @@ const UploadRequest = () => {
 
     // @ts-ignore
     approvalArrData.map((approval) => {
-    const approvalId = ids['approvalIds'].includes(approval.id) || ids['guestUploadIds'].includes(approval.id)
-    if (approvalId && approval.uploadType === 'approval') {
-      approval.status = -1;
-    }else if(approvalId && approval.uploadType === 'guest'){
-      approval.status = 'Rejected';
-    }
-  });
+      const approvalId =
+        ids["approvalIds"].includes(approval.id) ||
+        ids["guestUploadIds"].includes(approval.id);
+      if (approvalId && approval.uploadType === "approval") {
+        approval.status = -1;
+      } else if (approvalId && approval.uploadType === "guest") {
+        approval.status = "Rejected";
+      }
+    });
 
     setApprovals(approvalArrData);
 
@@ -1026,26 +1039,28 @@ const UploadRequest = () => {
     setIsLoading(true);
     const ids = filterUploadItems(data);
 
-    const assetIds =ids['guestUploadIds'].map(item => item.assets.map(a => a.asset)).flat(2)
-  
+    const assetIds = ids["guestUploadIds"]
+      .map((item) => item.assets.map((a) => a.asset))
+      .flat(2);
+
     const updateObject = {
       assetIds,
       attributes: {},
-      status: 'deleted'
-    }
+      status: "deleted",
+    };
 
-    await approvalApi.bulkDelete({ deleteIds:  ids['approvalIds']});
+    await approvalApi.bulkDelete({ deleteIds: ids["approvalIds"] });
     await assetApi.updateMultipleAttributes(updateObject, {});
-    
+
     // Update status to approval list
     let approvalArrData = [...approvals];
 
-    approvalArrData = approvalArrData.filter(
-      (approval) => {
-        const approvalId = ids['approvalIds'].includes(approval.id) || ids['guestUploadIds'].includes(approval.id)
-        return !approvalId
-      }
-    );
+    approvalArrData = approvalArrData.filter((approval) => {
+      const approvalId =
+        ids["approvalIds"].includes(approval.id) ||
+        ids["guestUploadIds"].includes(approval.id);
+      return !approvalId;
+    });
 
     setApprovals(approvalArrData);
 
@@ -1065,7 +1080,11 @@ const UploadRequest = () => {
   const getSelectedApprovals = () => {
     return approvals
       .filter((approval) => approval.isSelected)
-      .map((approval) => ({id: approval.id, uploadType: approval.uploadType, assets: approval.assets}));
+      .map((approval) => ({
+        id: approval.id,
+        uploadType: approval.uploadType,
+        assets: approval.assets,
+      }));
   };
 
   // On change custom fields (add/remove)
@@ -1246,29 +1265,25 @@ const UploadRequest = () => {
   }, []);
 
   const handleDeleteApproval = async (data, uploadType) => {
-
     setIsLoading(true);
-    if(uploadType === 'guest'){
-       
-    const updateObject = {
-      assetIds: data.assets.map(item => item.asset),
-      attributes: {},
-      status: 'deleted'
+    if (uploadType === "guest") {
+      const updateObject = {
+        assetIds: data.assets.map((item) => item.asset),
+        attributes: {},
+        status: "deleted",
+      };
+      await assetApi.updateMultipleAttributes(updateObject, {});
+    } else {
+      await approvalApi.bulkDelete({ deleteIds: [data.id] });
     }
-    await assetApi.updateMultipleAttributes(updateObject, {});
 
-    }else{
-      await approvalApi.bulkDelete({ deleteIds:  [data.id]});
-    }
-  
-    
     // Update status to approval list
     let approvalArrData = [...approvals];
 
     approvalArrData = approvalArrData.filter(
       (approval) => approval.id !== data.id
     );
-    
+
     setApprovals(approvalArrData);
 
     setIsLoading(false);
@@ -1296,7 +1311,7 @@ const UploadRequest = () => {
         style={{ marginTop: top }}
       >
         <div className={styles["uploadContainer"]}>
-          <main className={`${styles.container} p-r-0`}>
+          <main className={`${styles.container}`}>
             {mode === "view" && (
               <div className={`${styles["button-wrapper"]} m-b-25`}>
                 <div className={styles["topTitle"]}>
@@ -1383,6 +1398,23 @@ const UploadRequest = () => {
                         }}
                       />
                     )}
+
+                    {mode === "view" && isAdmin() && (
+                      <div className={styles["filter-wrapper"]}>
+                        <Select
+                          containerClass={styles["filter-input"]}
+                          isClearable={true}
+                          options={filterOptions}
+                          onChange={(value) => {
+                            setFilter(value);
+                          }}
+                          placeholder={"Filter By Status"}
+                          styleType="regular"
+                          value={filter}
+                        />
+                      </div>
+                    )}
+
                     <Button
                       type="button"
                       text={"Back"}
@@ -1394,7 +1426,7 @@ const UploadRequest = () => {
               </div>
             )}
 
-            {mode === "view" && isAdmin() && (
+            {/* {mode === "view" && isAdmin() && (
               <div className={styles["filter-wrapper"]}>
                 <Select
                   containerClass={styles["filter-input"]}
@@ -1408,7 +1440,7 @@ const UploadRequest = () => {
                   value={filter}
                 />
               </div>
-            )}
+            )} */}
 
             {mode === "list" && (
               <div className={styles["asset-list"]}>
@@ -1631,7 +1663,7 @@ const UploadRequest = () => {
 
                 {!isAdmin() && currentViewStatus == 0 && (
                   <div className={detailPanelStyles["first-section"]}>
-                    <div className={detailPanelStyles["field-wrapper"]}>
+                    <div className={`${detailPanelStyles["field-wrapper"]} ${styles['batchSidePanel']}`}>
                       <div
                         className={`secondary-text ${detailPanelStyles.field} ${styles["field-name"]}`}
                       >
@@ -1889,12 +1921,12 @@ const UploadRequest = () => {
               </div>
             </div>
           )}
-          
-          {mode === "view" &&
-              <div className={styles.back}>
-                <IconClickable src={Utilities.closePanelLight} />
-              </div>
-            }
+
+          {mode === "view" && (
+            <div className={styles.back}>
+              <IconClickable src={Utilities.closePanelLight} />
+            </div>
+          )}
         </div>
       </div>
 
@@ -1910,6 +1942,7 @@ const UploadRequest = () => {
         additionalClasses={["visible-block", styles["approval-detail-modal"]]}
         showCancel={false}
         confirmAction={() => {}}
+        overlayAdditionalClass={styles['batch-outer']}
       >
         <div className={`row ${styles["modal-wrapper"]}`}>
           <div className={`${styles["left-bar"]}`}>
@@ -1930,12 +1963,14 @@ const UploadRequest = () => {
                 "MMM DD, YYYY, hh:mm a"
               )}
             </div>
+            <div className={styles['centerImg']}>
             {assets[selectedAsset]?.asset.type === "image" && (
               <AssetImg
                 name={assets[selectedAsset]?.asset.name}
                 assetImg={assets[selectedAsset]?.thumbailUrl}
               />
             )}
+            </div>
 
             {assets[selectedAsset]?.asset.type !== "image" &&
               assets[selectedAsset]?.asset.type !== "video" &&
@@ -1979,7 +2014,7 @@ const UploadRequest = () => {
             {/*<img alt={"test"} src={assets[selectedAsset]?.realUrl} />*/}
 
             {(isAdmin() || currentViewStatus !== 0) && (
-              <div className={detailPanelStyles["field-wrapper"]}>
+              <div className={`${detailPanelStyles["field-wrapper"]} ${detailPanelStyles["comments-wrapper"]}`}>
                 <div
                   className={`secondary-text ${detailPanelStyles.field} ${styles["field-name"]}`}
                 >
@@ -1990,7 +2025,7 @@ const UploadRequest = () => {
             )}
             <div className={styles["navigation-wrapper"]}>
               <span>
-                {(selectedAsset || 0) + 1} of {assets.length} collection
+                {(selectedAsset || 0) + 1} of {assets.length} in Batch
               </span>
               <IconClickable
                 src={Utilities.arrowPrev}
@@ -2355,11 +2390,12 @@ const UploadRequest = () => {
         additionalClasses={["visible-block"]}
         showCancel={false}
         confirmAction={() => {}}
+        overlayAdditionalClass={styles['msgAdminModal']}
       >
         <div className={styles["confirm-modal-wrapper"]}>
           {!submitted && (
             <>
-              <div className={styles["modal-field-title"]}>
+              <div className={`${styles["modal-field-title"]} ${styles["titleAdmin"]}`}>
                 Message for Admin
               </div>
 
@@ -2381,9 +2417,12 @@ const UploadRequest = () => {
             </>
           )}
 
+          {
+            submitted &&  <img src={Utilities.grayClose} alt={"close"} className={styles['modalClose']} />
+          }
           {submitted && (
             <p className={styles["modal-field-title"]}>
-              Thanks for submitting your assets for approval. The admin will be
+              Thanks for submitting your assets for approval. <br/>The admin will be
               notified of your submission and will be able to review it
             </p>
           )}
@@ -2479,12 +2518,17 @@ const UploadRequest = () => {
         modalIsOpen={showDeleteConfirm}
       />
 
-      {showReviewModal && <GuestUploadApprovalOverlay
-            handleBackButton={()=>{fetchApprovals(); setShowReviewModal(false)}}
-            selectedAssets={assets}
-            loadingAssets={false}
-            requestInfo={requestInfo}
-        />}
+      {showReviewModal && (
+        <GuestUploadApprovalOverlay
+          handleBackButton={() => {
+            fetchApprovals();
+            setShowReviewModal(false);
+          }}
+          selectedAssets={assets}
+          loadingAssets={false}
+          requestInfo={requestInfo}
+        />
+      )}
     </>
   );
 };

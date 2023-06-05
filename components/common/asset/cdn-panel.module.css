@@ -19,14 +19,18 @@
 
 .input {
   cursor: text;
+  text-align: center;
 }
 
 .blockInput {
   width: 100%;
-  padding: 15px 20px;
+  padding: 19px 8px;
   border-radius: 5px;
   border: 1px solid var(--color-secondary-border);
   overflow-wrap: break-word;
+  color: #aeb0C2 !important;
+  background: #faf8f5 !important;
+  text-align: left;
 }
 
 .input, .select {
@@ -66,10 +70,13 @@
 span.select {
   display: none;
 }
+.cdnType {
+  width: calc(50% - 35px);
+}
 
 .selectContainer {
   margin-bottom: 25px;
-  width: 95px;
+  width: 100%;
 }
 
 .lock {

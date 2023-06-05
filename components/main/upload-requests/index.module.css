@@ -7,8 +7,12 @@
   min-height: 100%;
 }
 
+.root-row .container {
+ padding: 35px 30px;
+}
+
 .container {
-  padding: 35px 32px;
+  padding: 35px 0;
   height: 100%;
   width: 100%;
 }
@@ -97,7 +101,7 @@
 
 .uploadContainer{
   width: 100%;
-  padding: 0 40px;
+  padding: 0;
   display: flex;
 }
 .topTitle{margin-right: auto;}
@@ -106,7 +110,7 @@
 }
 
 .button-wrapper button{
-   margin-left: 8px;
+   height: 36px;
 }
 
 .detail-title{
@@ -133,10 +137,10 @@
   color: var(--color-sec-text);
 }
 
-.add-tag-btn{
+/* .add-tag-btn{
   margin-bottom: 32px;
   margin-top: 25px;
-}
+} */
 
 .menu {
   display: none;
@@ -180,8 +184,23 @@
 }
 
 .confirm-modal-wrapper{
-  padding: 55px 48px;
+  padding: 33px 74px;
+  position: relative;
 }
+@media screen and (max-width: 767px) {
+  .confirm-modal-wrapper {
+    padding: 33px 44px;
+    position: relative;
+  }
+}
+
+.modalClose {
+  position: absolute;
+  right: 20px;
+  top: 13px;
+  cursor: pointer;
+}
+
 
 .keep-edit-btn{
   margin-right: 16px;
@@ -201,8 +220,8 @@
   display: flex;
   justify-content: flex-end;
   width: 175px;
-  margin-bottom: 25px;
 }
+
 
 .filter-input{
   max-width: 185px;
@@ -221,6 +240,15 @@
 
 .upload-section{
   display: flex;
+  flex-wrap: wrap;
+}
+
+
+.upload-request-button {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-left: 8px;
 }
 
 @media screen and (max-width: 900px) {
@@ -249,10 +277,14 @@
 .button-wrapper {
   position: relative;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
-  padding: 15px;
+  padding: 0 5vw 0 57px;
   flex-wrap: wrap;
+}
+
+.root-row .button-wrapper {
+  padding: 0;
 }
 
 .button-wrapper .approval-text{
@@ -450,6 +482,8 @@
 }
 .main-title h2{
   margin-top: 0;
+  font-size: 32px;
+  font-weight: 700;
 }
 @media screen and (max-width: 1200px) {
   .options-list.dropdown {
@@ -582,4 +616,39 @@
   .options-list.dropdown {
     width: 160px
   }
+}
+
+
+.batch-outer {
+  padding: 0;
+  align-items: center;
+}
+
+.titleAdmin {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.msgAdminModal {
+  align-items: center;
+  padding-top: 20px;
+}
+
+
+@media screen and (min-width: 1024px) {  
+  .msgAdminModal [role="dialog"] {
+    min-width: 789px;
+  }
+}
+
+.batchSidePanel {
+  display: flex;
+  flex-direction: column;
+}
+.batchSidePanel input {
+  height: 48px;
+}
+
+.centerImg {
+  text-align: center;
 }

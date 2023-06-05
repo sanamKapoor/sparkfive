@@ -80,6 +80,7 @@ const EditItem = ({assets, asset, thumbailUrl, realUrl, isEditSelected, index, t
         additionalClasses={[styles.detail]}
         closeModal={() => setModalOpen(false)}
         modalIsOpen={modalOpen}
+        overlayAdditionalClass={[styles.subEditModal]}
         children={
           <EditDetail
             currentIndex={curIndex}
