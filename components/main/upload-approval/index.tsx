@@ -1480,7 +1480,7 @@ const UploadApproval = () => {
                         <div className={styles['modal-field-subtitle']}>Are you sure you want to submit your assets for approval?</div>
                     </>}
                     {
-                        submitted &&  <img src={Utilities.grayClose} alt={"close"} className={styles['modalClose']} />
+                        submitted &&  <img src={Utilities.grayClose} alt={"close"} className={styles['modalClose']} onClick={() => {setShowConfirmModal(false); Router.push("/main/upload-approvals")}} />
                     }
                     {submitted && <p className={`${styles['modal-field-title']} ${styles['thanksSubmit']}`}>
                         Thanks for submitting your  assets for approval.
