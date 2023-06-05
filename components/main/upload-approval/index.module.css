@@ -103,7 +103,7 @@
 }
 
 .confirm-modal-wrapper{
-  padding: 33px 74px;
+  padding: 49.63px 57px;
   position: relative;
 }
 @media screen and (max-width: 767px) {
@@ -334,7 +334,6 @@
   font-size: 12px;
   color: #AEB0C2;
   margin-bottom: 10px;
-
 }
 
 .edit-icon{
@@ -398,6 +397,10 @@
   border: 1px solid var(--color-border);
 }
 
+.batch-outer {
+  padding: 0;
+  align-items: center;
+}
 @media screen and (max-width: 1200px) {
   .options-list.dropdown {
     width: calc(160px * 3);
@@ -516,6 +519,6 @@
 
 @media screen and (min-width: 1024px) {  
   .sendMsgModal [role="dialog"] {
-    min-width: 789px;
+    min-width: 791px;
   }
 }
