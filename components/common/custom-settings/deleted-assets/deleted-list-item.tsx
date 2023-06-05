@@ -33,7 +33,7 @@ const DeletedListItem = ({
   openRecoverAsset = () => { },
   setCurrentSortAttribute = (attribute) => { },
 }) => {
-  const dateFormat = "MMM do, yyyy h:mm a";
+  const dateFormat = "MMM do, yyyy";
 
   const [overlayProperties, setOverlayProperties] =
     useState(DEFAULT_DETAIL_PROPS);
@@ -102,7 +102,7 @@ const DeletedListItem = ({
                 />
               </h4>
               <h4 onClick={() => setSortAttribute("asset.dimenssions")}>
-                Dimenssions
+                Dimensions
                 <IconClickable
                   src={arrowIcon}
                   additionalClass={`${styles["sort-icon"]
@@ -203,7 +203,7 @@ const DeletedListItem = ({
             </div>
             <div className={styles.cell}>
               <div className={styles.field_name}>
-                {asset.size && filesize(asset.size)}
+                {asset.dimensionWidth && asset.dimensionHeight && `${asset.dimensionWidth} x ${asset.dimensionHeight}`}
               </div>
             </div>
           </div>
