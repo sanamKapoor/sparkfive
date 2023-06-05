@@ -94,6 +94,7 @@ const Basic = ({ name, email, provider }) => {
             text='Save Changes'
             type='submit'
             styleType='input-height-primary'
+            style={{ fontSize: 14 }}
           />
         </div>
       </form>
@@ -120,6 +121,7 @@ const Basic = ({ name, email, provider }) => {
             text='Save Changes'
             type='submit'
             styleType='input-height-primary'
+            style={{ fontSize: 14 }}
           />
         </div>
       </form>
@@ -162,6 +164,7 @@ const Basic = ({ name, email, provider }) => {
               text='Change Password'
               type='submit'
               styleType='input-height-primary'
+              style={{ fontSize: 14 }}
             />
           </div>
         </form>

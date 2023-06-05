@@ -478,7 +478,7 @@ const GuestUpload = () => {
                                             {teamName} - Guest Upload
                                         </div>
                                         <div className={styles.subtitle}>
-                                            Please upload your files or folders that you would like to submit to us.  This is more of text.  Please upload your files or folders that you would like to submit to us
+                                            Please upload your files or folders that you would like to submit to us.  This is more of text.
                                         </div>
                                     </>
                                 }
@@ -524,7 +524,7 @@ const GuestUpload = () => {
                                     {uploadEnabled &&
                                         <>
                                             <div className={styles.subtitle}>
-                                                Please upload your files or folders that you would like to submit to us.  This is more of text.  Please upload your files or folders that you would like to submit to us
+                                                Please upload your files or folders that you would like to submit to us.  This is more of text. 
                                             </div>
 
                                             {uploading ? (
@@ -584,7 +584,7 @@ const GuestUpload = () => {
                                             <div className={styles.form_button}>
                                                 <Button
                                                     form="contact-form"
-                                                    text={retryListCount ? 'Retry' : 'Submit'}
+                                                    text={retryListCount ? 'Retry' : 'Submit Upload'}
                                                     styleType='input-height-primary'
                                                     onClick={() => setUploadingStatus("done")}
                                                 />
