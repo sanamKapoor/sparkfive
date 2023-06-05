@@ -1,7 +1,7 @@
 import styles from './filter-container.module.css'
 import update from 'immutability-helper'
 import { FilterContext, AssetContext, UserContext } from '../../../context'
-import { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Utilities } from '../../../assets'
 
 import customFieldsApi from '../../../server-api/attribute'
@@ -14,8 +14,7 @@ import ProductFilter from './product-filter'
 import DimensionsFilter from './dimensions-filter'
 import ResolutionFilter from './resolution-filter'
 
-
-const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiveSortFilter, clearFilters, isFolder = false, isShare = false }) => {
+const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiveSortFilter, clearFilters, isFolder = false, isShare = false, filterWidth }) => {
 
     const [expandedMenus, setExpandedMenus] = useState(isFolder ? ['folders'] : ['tags'])
     const [stickyMenuScroll, setStickyMenuScroll] = useState(false)
@@ -145,9 +144,9 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
     const reloadTags = () => {
         loadTags({includeAi: true})
     }
-
+    
     return (
-        <div className={`${styles.container} ${stickyMenuScroll && styles['sticky-menu']}`}>
+        <div className={`${styles.container}  ${stickyMenuScroll && styles['sticky-menu']}`} style={{width: filterWidth}}>
             <section className={styles['top-bar']}>
                 <div><h3>Filters</h3></div>
                 <div className={styles.closefilter}>
