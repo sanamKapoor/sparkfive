@@ -39,6 +39,7 @@
   }
   .buttons {
     padding: 32px 16px 16px;
+    gap: 14px;
   }
   
 }

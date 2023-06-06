@@ -26,6 +26,16 @@ const Select = ({ label, options, placeholder, value = null, onChange = (selecte
       menuPlacement={menuPlacement}
       isMulti={isMulti}
       isOptionDisabled={(option) => option.disabled}
+      styles={{
+        option: (provided, state) => ({
+          ...provided,
+           backgroundColor: state.isSelected ? '#FAF8F5' : 'transparent', 
+           color: state.isSelected && '#08135e' , 
+          ':hover': {
+            backgroundColor: '#00b8d91a',
+          },
+        }),
+      }}
     />
   )
 }
