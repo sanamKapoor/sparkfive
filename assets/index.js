@@ -191,9 +191,11 @@ export const Assets = {
 
 export const Comments = {
   mention: require('./Icons/Utilities/@/icn-comments-mention.svg'),
+  mentionDisable: require('./Icons/Utilities/@/icn-comments-disable.svg'),
   mentionLight: require('./Icons/Utilities/@/icn-comments-mention-light.svg'),
   smile: require('./Icons/Utilities/Smile/icn-comments-smile.svg'),
-  smileLight: require('./Icons/Utilities/Smile/icn-comments-smile-light.svg')
+  smileLight: require('./Icons/Utilities/Smile/icn-comments-smile-light.svg'),
+  smileDisable: require('./Icons/Utilities/Smile/icn-comments-smile-disable.svg'),
 }
 
 export const Integrations = {

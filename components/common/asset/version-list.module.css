@@ -71,14 +71,18 @@
   background-color: #C4C4C4;
   display: inline-block;
   margin: 0 9px;
+  position: relative;
+  bottom: 1px;
 }
 
 .item-actions-wrapper {
   position: relative;
+  top: 4px;
 }
 
 .item-actions-wrapper img {
   width: 16px;
+  filter: brightness(0.1);
 }
 
 .more ul {

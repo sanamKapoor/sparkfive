@@ -886,13 +886,14 @@ const DetailOverlay = ({
 
   const showSideMenu = isShare ? (isMobile ? true : false) : true;
 
-  const editThenDownload = currentAsset.extension !== "gif" &&
-  currentAsset.extension !== "tiff" &&
-  currentAsset.extension !== "tif" &&
-  currentAsset.extension !== "svg" &&
-  currentAsset.extension !== "svg+xml" &&
-  currentAsset.type === "image" &&
-  isImageType(assetDetail?.extension)
+  const editThenDownload =
+    currentAsset.extension !== "gif" &&
+    currentAsset.extension !== "tiff" &&
+    currentAsset.extension !== "tif" &&
+    currentAsset.extension !== "svg" &&
+    currentAsset.extension !== "svg+xml" &&
+    currentAsset.type === "image" &&
+    isImageType(assetDetail?.extension);
 
   return (
     <div
@@ -936,11 +937,14 @@ const DetailOverlay = ({
                     {assetDetail?.fileAssociations.length > 0 && (
                       <>
                         <img src={Utilities.ellipse} />
-                        <div className={styles["related-number"]}  onClick={() => {
+                        <div
+                          className={styles["related-number"]}
+                          onClick={() => {
                             setMode("detail");
                             resetValues();
                             changeActiveSide("related");
-                          }}>
+                          }}
+                        >
                           {assetDetail?.fileAssociations.length} Related files
                         </div>
                       </>
@@ -987,9 +991,9 @@ const DetailOverlay = ({
                       className={styles["only-desktop-button"]}
                       styleType={"secondary"}
                       onClick={() => {
-                        if(editThenDownload){
-                          setDownloadDropdownOpen(true)
-                        }else{
+                        if (editThenDownload) {
+                          setDownloadDropdownOpen(true);
+                        } else {
                           downloadSelectedAssets(currentAsset.id);
                         }
                       }}
@@ -1002,23 +1006,26 @@ const DetailOverlay = ({
                       />
                     </div>
 
-                    {downloadDropdownOpen &&  (
-                      <Dropdown
-                        onClickOutside={() => setDownloadDropdownOpen(false)}
-                        additionalClass={styles["more-dropdown"]}
-                        options={[
-                          {
-                            id: "download",
-                            label: "Download Original",
-                            onClick: () => downloadSelectedAssets(currentAsset.id)
-                          },
-                          {
-                            id: "edit",
-                            label: "Edit then Download",
-                            onClick: () => changeActiveSide("download")
-                          },
-                        ]}
-                      />
+                    {downloadDropdownOpen && (
+                      <div className={styles["download-list-dropdown"]}>
+                        <Dropdown
+                          onClickOutside={() => setDownloadDropdownOpen(false)}
+                          additionalClass={styles["more-dropdown"]}
+                          options={[
+                            {
+                              id: "download",
+                              label: "Download Original",
+                              onClick: () =>
+                                downloadSelectedAssets(currentAsset.id),
+                            },
+                            {
+                              id: "edit",
+                              label: "Edit then Download",
+                              onClick: () => changeActiveSide("download"),
+                            },
+                          ]}
+                        />
+                      </div>
                     )}
                   </>
                 )}
@@ -1264,20 +1271,25 @@ const DetailOverlay = ({
         </section>
       )}
       {/* Share page mobile right button */}
-       {isShare &&  <div className={styles["share-right-button"]}> <IconClickable
+      {isShare && (
+        <div className={styles["share-right-button"]}>
+          {" "}
+          <IconClickable
             src={Utilities.closePanelLight}
-               onClick={() => toggleSideMenu()}
+            onClick={() => toggleSideMenu()}
             additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"}`}
-          /> <IconClickable
-          src={isMobile ? Utilities.infoGray : Utilities.info}
-          additionalClass={styles["menu-icon"]}
-          onClick={() => {
-            setMode("detail");
-            resetValues();
-            changeActiveSide("detail");
-          }}
-        /></div>}
-
+          />{" "}
+          <IconClickable
+            src={isMobile ? Utilities.infoGray : Utilities.info}
+            additionalClass={styles["menu-icon"]}
+            onClick={() => {
+              setMode("detail");
+              resetValues();
+              changeActiveSide("detail");
+            }}
+          />
+        </div>
+      )}
 
       {!isShare && (
         <section className={styles.menu}>
@@ -1354,39 +1366,40 @@ const DetailOverlay = ({
                 />
               )}
 
-              {editThenDownload &&
-                hasPermission([ASSET_DOWNLOAD]) && (
-                  <IconClickable
-                    src={AssetOps.download}
-                    additionalClass={
-                      styles["menu-icon"] + " " + styles["only-desktop-button"]
-                    }
-                    onClick={() => {
-                      if (
-                        currentAsset.type === "image" &&
-                        isImageType(currentAsset.extension)
-                      ) {
-                        if (mode !== "resize" && mode !== "crop") {
-                          setMode("resize");
-                        }
-                        changeActiveSide("download");
-                        resetImageSettings(undefined, undefined);
-                      } else {
-                        downloadSelectedAssets(currentAsset.id);
+              {editThenDownload && hasPermission([ASSET_DOWNLOAD]) && (
+                <IconClickable
+                  src={AssetOps.download}
+                  additionalClass={
+                    styles["menu-icon"] + " " + styles["only-desktop-button"]
+                  }
+                  onClick={() => {
+                    if (
+                      currentAsset.type === "image" &&
+                      isImageType(currentAsset.extension)
+                    ) {
+                      if (mode !== "resize" && mode !== "crop") {
+                        setMode("resize");
                       }
-                    }}
-                  />
-                )}
+                      changeActiveSide("download");
+                      resetImageSettings(undefined, undefined);
+                    } else {
+                      downloadSelectedAssets(currentAsset.id);
+                    }
+                  }}
+                />
+              )}
 
-              {asset?.fileAssociations.length > 0 && <IconClickable
-                src={isMobile ? Utilities.relatedLight : Utilities.related}
-                additionalClass={styles["menu-icon"]}
-                onClick={() => {
-                  setMode("detail");
-                  resetValues();
-                  changeActiveSide("related");
-                }}
-              />}
+              {asset?.fileAssociations.length > 0 && (
+                <IconClickable
+                  src={isMobile ? Utilities.relatedLight : Utilities.related}
+                  additionalClass={styles["menu-icon"]}
+                  onClick={() => {
+                    setMode("detail");
+                    resetValues();
+                    changeActiveSide("related");
+                  }}
+                />
+              )}
               {hasPermission(["admin", "super_admin"]) && (
                 <IconClickable
                   src={isMobile ? Utilities.notesLight : Utilities.notes}

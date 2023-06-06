@@ -39,6 +39,9 @@ const RequestStatusBadge = ({ status, uploadType, isAdmin }) => {
        case 'Rejected': {
           return <span className={requestListStyles['reject-tag']}>Rejected</span>
         }
+        default: {
+          return <span className={requestListStyles['pending-tag']}>Pending</span>
+        }
         }
     }
  

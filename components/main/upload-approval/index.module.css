@@ -60,7 +60,7 @@
 }
 
 .field-name{
-  margin-bottom: 9px !important;
+  margin-bottom: 16px !important;
   font-size: 14px;
   color: var(--color-prim-navy);
 }
@@ -85,11 +85,16 @@
 }
 
 .modal-field-title{
+  font-weight: 600;
+  font-size: 22px;
+  color: var(--color-prim-navy);
+  margin-bottom: 16px;
+  margin-top: 0;
+}
+
+.thanksSubmit {
   font-weight: 400;
   font-size: 14px;
-  color: var(--color-prim-navy);
-  margin-bottom: 20px;
-  margin-top: 0;
 }
 
 .modal-field-subtitle{
@@ -100,8 +105,23 @@
 }
 
 .confirm-modal-wrapper{
-  padding: 32px 48px;
+  padding: 49.63px 57px;
+  position: relative;
 }
+@media screen and (max-width: 767px) {
+  .confirm-modal-wrapper {
+    padding: 33px 44px;
+    position: relative;
+  }
+}
+
+.modalClose {
+  position: absolute;
+  right: 20px;
+  top: 13px;
+  cursor: pointer;
+}
+
 
 .keep-edit-btn{
   margin-right: 16px;
@@ -316,7 +336,6 @@
   font-size: 12px;
   color: #AEB0C2;
   margin-bottom: 10px;
-
 }
 
 .edit-icon{
@@ -352,13 +371,13 @@
 
 .previous-name {
   font-weight: 400;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
   font-size: 13px;
   word-break: break-all;
 }
 
 .previous-status {
-  margin-bottom: 5px;
+  margin-bottom: 4px;
   font-size: 12px;
   font-weight: 300;
 }
@@ -380,6 +399,10 @@
   border: 1px solid var(--color-border);
 }
 
+.batch-outer {
+  padding: 0;
+  align-items: center;
+}
 @media screen and (max-width: 1200px) {
   .options-list.dropdown {
     width: calc(160px * 3);
@@ -471,4 +494,33 @@
     width: calc(100% / 3);
   }
   .option {width:auto;text-align: center;}
+}
+
+.batchSubModal {
+  border: none;
+  margin-top: 2px;
+  padding-top: 0;
+}
+
+.batchImg {
+  text-align: center;
+}
+
+.batchSidePanel {
+  display: flex;
+  flex-direction: column;
+}
+.batchSidePanel input {
+  height: 48px;
+}
+
+.sendMsgModal {
+  align-items: center;
+  padding-top: 20px;
+}
+
+@media screen and (min-width: 1024px) {  
+  .sendMsgModal [role="dialog"] {
+    min-width: 791px;
+  }
 }

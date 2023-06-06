@@ -5,7 +5,7 @@
     border-radius: 5px;
     height: 34px;
     /* max-width: 250px; */
-    padding: 0 20px;
+    padding: 0 20px 0 0;
     font-weight: 600;
     cursor: pointer;
     font-size: 12px;
@@ -25,7 +25,7 @@
 }
 .options-list {
     position: absolute;
-    top: 40px;
+    top: 32px;
     z-index: 1400;
     border-radius: 8px;
     border: 1px solid var(--color-secondary-border);
