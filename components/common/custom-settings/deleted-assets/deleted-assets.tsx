@@ -132,23 +132,18 @@ const DeletedAssets = ({
     assets.length > 0 && assets[assets.length - 1].isLoading;
 
     const selectAll = () => {
-        selectAllAssets()
-        setAssets(assets.map(assetItem => ({ ...assetItem, isSelected: true })))
-    }
+      selectAllAssets();
+      setAssets(
+        assets.map((assetItem) => ({ ...assetItem, isSelected: true }))
+      );
+    };
   
     const setSortFilterValue = (key, value) => {
-      console.log('key: ', key)
-      console.log('selected value: ', value)
       let sort = key === 'sort' ? value : activeSortFilter.sort
-
-      console.log('sort: ', sort)
-  
-      // Reset select all status
-      selectAllAssets(false);
   
       setActiveSortFilter({
         ...activeSortFilter,
-        // [key]: value,
+        [key]: value,
         sort
       })
     }
