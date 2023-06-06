@@ -37,7 +37,7 @@ const NameForm = () => {
               message={'This field should be between 2 and 30 characters long'}
             />
           </div>
-          <div>
+          <div className={styles.companyBtn}>
             <Button
               text='Save Changes'
               type='submit'

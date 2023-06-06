@@ -36,7 +36,7 @@ const Automations = () => {
             <div>
                 <div className={styles.row}>
                     <span className={styles.label}>AI Tagging</span>
-                    <div className={styles['field-radio-wrapper']}>
+                    <div className={styles['field-radio-wrapper-auto']}>
                         <div className={styles.radio}>
                             <div>On</div>
                             <IconClickable

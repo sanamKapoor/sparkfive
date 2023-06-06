@@ -45,6 +45,10 @@
   display: flex;
   gap: 40px;
 }
+.field-radio-wrapper-auto{
+  display: flex;
+  gap: 200px;
+}
 
 .radio {
   font-size: 13px;
@@ -53,6 +57,11 @@
   flex-direction: column;
   align-items: center;
   gap: 10px;
+}
+
+.radio img {
+  width: 20px;
+  height: 20px;
 }
 
 @media screen and (max-width: 1200px) {

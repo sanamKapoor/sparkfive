@@ -17,7 +17,15 @@
 .name-email-invite {
   width: 30%;
 }
-
+.resend-button img{
+  width:15.41px;
+  height:15.98px;
+  position: relative;
+  top: 2px;
+}
+.copy-button img{width: 13px;
+  height: 13px;
+}
 .name-email > div:first-child {
   font-size: 14px;
   font-weight: 500;
@@ -27,6 +35,7 @@
   color: var(--color-sec-text);
   font-size: 12px;
   font-weight: 300;
+  margin-top: 8px;
 }
 
 .grey-text{

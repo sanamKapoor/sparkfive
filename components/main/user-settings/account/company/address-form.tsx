@@ -135,7 +135,7 @@ const AddressForm = () => {
                 </div>
               </div>
             </div>
-            <div>
+            <div className={styles.companyBtn}>
               <Button
                 text='Save Changes'
                 type='submit'

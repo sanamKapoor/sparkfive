@@ -21,7 +21,12 @@ h3.title {
   margin-bottom: 14px;
   margin-top: 28px;
 }
-
+.companyBtn button{
+  min-width: 135px;
+  min-height: 35px;
+  font-size: 14px;
+  font-weight: 600;
+}
 .container label {
   margin-bottom: 16px;
   display: block;

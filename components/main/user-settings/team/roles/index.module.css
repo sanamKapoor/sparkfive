@@ -30,7 +30,10 @@
     gap: 10px;
     color: var(--color-sec-text);
 }
-
+.select-add img{
+    width: 19px;
+    height: 19px;
+}
 .select-add-wrapper {
     width: 100%;
     display: flex;
