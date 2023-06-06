@@ -27,6 +27,16 @@
   gap: 8px;
 }
 
+.action-recover{
+  height: 15px;
+width: 15px;
+}
+
+.action-delete{
+  height: 15.75px;
+  width: 15.75px;
+}
+
 .headers-content {
   flex: 1;
   display: flex;

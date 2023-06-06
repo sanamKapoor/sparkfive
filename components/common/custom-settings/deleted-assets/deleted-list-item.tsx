@@ -163,7 +163,7 @@ const DeletedListItem = ({
                 <div className={styles.actions}>
                   <span className={styles.span}>
                     <IconClickable
-                      additionalClass={styles["action-button"]}
+                      additionalClass={styles["action-recover"]}
                       src={AssetOps.moveGray}
                       tooltipText={"Recover"}
                       tooltipId={"Recover"}
@@ -172,7 +172,7 @@ const DeletedListItem = ({
                   </span>
                   <span className={styles.span}>
                     <IconClickable
-                      additionalClass={styles["action-button"]}
+                      additionalClass={styles["action-delete"]}
                       src={AssetOps.deleteGray}
                       tooltipText={"Delete"}
                       tooltipId={"Delete"}

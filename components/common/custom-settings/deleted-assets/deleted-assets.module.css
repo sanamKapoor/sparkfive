@@ -66,3 +66,13 @@
   display: flex;
   justify-content: center;
 }
+.action-recover{
+  height: 15px;
+   width: 15px;
+}
+
+.action-delete{
+  height: 15.75px;
+  width: 15.75px;
+  margin-right: 10px;
+}

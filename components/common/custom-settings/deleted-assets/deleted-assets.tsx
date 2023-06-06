@@ -138,12 +138,15 @@ const DeletedAssets = ({
       </div>
 
       <div className={styles.header_actions}>
+      <IconClickable
+          src={AssetOps.moveGray}
+          additionalClass={styles["action-recover"]}
+        />
         <IconClickable
           src={AssetOps.deleteGray}
+          additionalClass={styles["action-delete"]}
         />
-        <IconClickable
-          src={AssetOps.moveGray}
-        />
+
         <Button
           text="Deselect All"
           type="button"
@@ -151,7 +154,7 @@ const DeletedAssets = ({
           onClick={() => alert('deselect all')}
         />
         <Button
-          text="Sselect All"
+          text="Select All"
           type="button"
           styleType="secondary"
           onClick={() => alert('select all')}

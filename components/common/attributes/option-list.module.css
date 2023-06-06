@@ -47,6 +47,8 @@
 
 .select-icon {
     display: block;
+    width: 20px;
+    height: 20px;
 }
 .select-item p {
     margin: 0 5px;
