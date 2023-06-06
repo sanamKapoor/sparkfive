@@ -45,7 +45,7 @@
   z-index: 999;
   display: flex;
   align-items: center;
-  gap: 23%;
+  gap: 25%;
 }
 
 .top-wrapper .name {

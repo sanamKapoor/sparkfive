@@ -1,24 +1,27 @@
-import styles from './top-bar.module.css'
-import React, { useContext, useState, useRef, useEffect } from 'react'
-import { Utilities } from '../../../assets'
-import selectOptions from '../../../utils/select-options'
-import { isMobile } from 'react-device-detect'
+import styles from "./top-bar.module.css";
+import React, { useContext, useState, useRef, useEffect } from "react";
+import { Utilities } from "../../../assets";
+import selectOptions from "../../../utils/select-options";
+import { isMobile } from "react-device-detect";
 
 // Components
-import SectionButton from '../buttons/section-button'
-import Select from '../inputs/select'
-import Button from '../buttons/button'
-import IconClickable from '../buttons/icon-clickable'
-import AssetAddition from '../../common/asset/asset-addition'
-import Dropdown from '../inputs/dropdown'
-import SubHeader from '../layouts/sub-header'
-import Breadcrumbs from '../misc/breadcrumbs'
+import SectionButton from "../buttons/section-button";
+import Select from "../inputs/select";
+import Button from "../buttons/button";
+import IconClickable from "../buttons/icon-clickable";
+import AssetAddition from "../../common/asset/asset-addition";
+import Dropdown from "../inputs/dropdown";
+import SubHeader from "../layouts/sub-header";
+import Breadcrumbs from "../misc/breadcrumbs";
 
 // Context
-import { AssetContext, UserContext } from '../../../context'
+import { AssetContext, UserContext } from "../../../context";
 
-import { ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL } from '../../../constants/permissions'
-import SearchOverlay from '../../main/search-overlay-assets'
+import {
+  ASSET_UPLOAD_NO_APPROVAL,
+  ASSET_UPLOAD_APPROVAL,
+} from "../../../constants/permissions";
+import SearchOverlay from "../../main/search-overlay-assets";
 
 const TopBar = ({
   activeSortFilter,
@@ -27,7 +30,7 @@ const TopBar = ({
   setActiveView,
   activeView,
   selectAll,
-  activeFolder = '',
+  activeFolder = "",
   getFolders,
   setOpenFilter,
   openFilter,
@@ -44,9 +47,8 @@ const TopBar = ({
   setCurrentViewAsset,
   sharePath,
   isFolder,
-  activeMode
+  activeMode,
 }) => {
-
   const {
     selectedAllAssets,
     selectAllAssets,
@@ -54,23 +56,32 @@ const TopBar = ({
     selectedAllFolders,
     setLastUploadedFolder,
     folders,
-    setActiveFolder
-  } = useContext(AssetContext)
+    setActiveFolder,
+  } = useContext(AssetContext);
 
-  const { user, hasPermission, advancedConfig, setAdvancedConfig } = useContext(UserContext)
-  const [hideFilterElements, setHideFilterElements] = useState(advancedConfig.hideFilterElements)
-  const [showTabs, setShowTabs] = useState(isMobile ? false : true)
-  const [showViewDropdown, setShowViewDropdown] = useState(false)
+  const { user, hasPermission, advancedConfig, setAdvancedConfig } =
+    useContext(UserContext);
+  const [hideFilterElements, setHideFilterElements] = useState(
+    advancedConfig.hideFilterElements
+  );
+  const [showTabs, setShowTabs] = useState(isMobile ? false : true);
+  const [showViewDropdown, setShowViewDropdown] = useState(false);
 
-  const [tabs, setTabs] = useState(selectOptions.views)
+  const [tabs, setTabs] = useState(selectOptions.views);
 
   const setSortFilterValue = (key, value) => {
-    let sort = key === 'sort' ? value : activeSortFilter.sort
-    if (key === 'mainFilter') {
-      if (value === 'folders') {
-        sort = advancedConfig.collectionSortView === 'alphabetical' ? selectOptions.sort[3] : selectOptions.sort[1]
+    let sort = key === "sort" ? value : activeSortFilter.sort;
+    if (key === "mainFilter") {
+      if (value === "folders") {
+        sort =
+          advancedConfig.collectionSortView === "alphabetical"
+            ? selectOptions.sort[3]
+            : selectOptions.sort[1];
       } else {
-        sort = advancedConfig.assetSortView === 'newest' ? selectOptions.sort[1] : selectOptions.sort[3]
+        sort =
+          advancedConfig.assetSortView === "newest"
+            ? selectOptions.sort[1]
+            : selectOptions.sort[3];
       }
     }
 
@@ -78,56 +89,64 @@ const TopBar = ({
     selectAllAssets(false);
     selectAllFolders(false);
     setActiveSortFilter({
-      ...activeSortFilter
-    })
+      ...activeSortFilter,
+    });
     // Needed to reset because it is set for collection upload when alphabetical sort active
     // And uploaded folder needed to show at first
-    setLastUploadedFolder(undefined)
+    setLastUploadedFolder(undefined);
 
     setActiveSortFilter({
       ...activeSortFilter,
       [key]: value,
-      sort
-    })
-  }
-
+      sort,
+    });
+  };
 
   const toggleSelectAll = () => {
-    selectAllAssets(!selectedAllAssets)
-  }
+    selectAllAssets(!selectedAllAssets);
+  };
 
   const setTabsVisibility = () => {
-    const filterElements = sharedAdvanceConfig ? sharedAdvanceConfig.hideFilterElements : hideFilterElements
-    const _tabs = selectOptions.views.filter(tab => {
-      let tabName = tab.text.toLowerCase()
-      let shouldShow = true
+    const filterElements = sharedAdvanceConfig
+      ? sharedAdvanceConfig.hideFilterElements
+      : hideFilterElements;
+    const _tabs = selectOptions.views.filter((tab) => {
+      let tabName = tab.text.toLowerCase();
+      let shouldShow = true;
       if (filterElements && filterElements.hasOwnProperty(tabName)) {
-        shouldShow = !filterElements[tabName]
+        shouldShow = !filterElements[tabName];
       }
-      return shouldShow
-    })
-    setTabs(_tabs)
-  }
+      return shouldShow;
+    });
+    setTabs(_tabs);
+  };
 
   useEffect(() => {
     setTabsVisibility();
-  }, [sharedAdvanceConfig])
+  }, [sharedAdvanceConfig]);
 
   const handleOpenFilter = () => {
     if (openFilter) {
-      setOpenFilter(false)
+      setOpenFilter(false);
     } else {
-      setOpenFilter(true)
+      setOpenFilter(true);
     }
-  }
-
+  };
 
   const mobileTabs = tabs.filter((view) => {
-    return (!activeFolder || !view.omitFolder) && (!isShare || (isShare && !view.omitShare && view.hideOnSingle !== singleCollection)) &&
-      (view.requirePermissions.length === 0 || (view.requirePermissions.length > 0 && hasPermission(view.requirePermissions)))
-  })
+    return (
+      (!activeFolder || !view.omitFolder) &&
+      (!isShare ||
+        (isShare &&
+          !view.omitShare &&
+          view.hideOnSingle !== singleCollection)) &&
+      (view.requirePermissions.length === 0 ||
+        (view.requirePermissions.length > 0 &&
+          hasPermission(view.requirePermissions)))
+    );
+  });
 
-  const folderData = folders.filter(folder => folder.id === activeFolder)
+  const folderData = folders.filter((folder) => folder.id === activeFolder);
 
   return (
     <section className={styles.container} id={"top-bar"}>
@@ -249,19 +268,19 @@ const TopBar = ({
             />
           )}
           {activeSearchOverlay && (
-              <SearchOverlay
-                closeOverlay={closeSearchOverlay}
-                operationsEnabled={true}
-                activeFolder={activeFolder}
-                onCloseDetailOverlay={(assetData) => {
-                  closeSearchOverlay();
-                  // setActiveSearchOverlay(false)
-                  setDetailOverlayId(undefined);
-                  setCurrentViewAsset(assetData);
-                }}
-                sharePath={sharePath}
-                isFolder={isFolder}
-              />
+            <SearchOverlay
+              closeOverlay={closeSearchOverlay}
+              operationsEnabled={true}
+              activeFolder={activeFolder}
+              onCloseDetailOverlay={(assetData) => {
+                closeSearchOverlay();
+                // setActiveSearchOverlay(false)
+                setDetailOverlayId(undefined);
+                setCurrentViewAsset(assetData);
+              }}
+              sharePath={sharePath}
+              isFolder={isFolder}
+            />
           )}
           {(amountSelected === 0 || mode === "folders") &&
             showAssetAddition &&
@@ -269,10 +288,11 @@ const TopBar = ({
               ASSET_UPLOAD_NO_APPROVAL,
               ASSET_UPLOAD_APPROVAL,
             ]) && (
-              <AssetAddition
-                activeFolder={activeFolder}
-                getFolders={getFolders}
-              />
+
+                <AssetAddition
+                  activeFolder={activeFolder}
+                  getFolders={getFolders}
+                />
             )}
           <div className={styles.gridOuter}>
             {!deletedAssets && (
@@ -376,12 +396,17 @@ const TopBar = ({
       </div>
 
       <div className={styles["mobile-bottom"]}>
-        {(amountSelected === 0 || mode === 'folders') && showAssetAddition && hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL]) && (
-          <AssetAddition activeFolder={activeFolder} getFolders={getFolders} />
-        )}
+        {(amountSelected === 0 || mode === "folders") &&
+          showAssetAddition &&
+          hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL]) && (
+            <AssetAddition
+              activeFolder={activeFolder}
+              getFolders={getFolders}
+            />
+          )}
       </div>
     </section>
   );
-}
+};
 
-export default TopBar
+export default TopBar;
