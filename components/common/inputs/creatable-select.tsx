@@ -145,7 +145,7 @@ const CreatableSelect = ({
   const menuStyles = {
     menuList: (base) => ({
       ...base,
-      marginRight: '8px',
+      marginRight: '0',
       scrollbarWidth: 'thin',
       borderRadius: '14px',
       scrollbarColor: '#AEB0C2',

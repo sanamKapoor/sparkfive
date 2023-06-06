@@ -4,7 +4,15 @@
     /* min-height: 46px; */
     font-weight: 400;
 }
+.creatable-select > div > div:first-child{
+    line-height: 14px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
 
+.creatable-select > div:first-child > div:first-child{
+    padding: 4px 8px;
+}
 .creatable-select span{
    display: none;
 }
