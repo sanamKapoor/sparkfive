@@ -1133,7 +1133,7 @@ export default ({ getAssets }) => {
         closeModal={closeModalAndClearOpAsset}
         confirmAction={recoverAssetStatus}
         confirmText={"Recover"}
-        message={`Recover ${operationLength} item(s)?`}
+        message={`Recover ${selectedAssets.length} item(s)?`}
       />
       {activeOperation === "edit" && (
         <BulkEditOverlay

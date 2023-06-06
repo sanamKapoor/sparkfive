@@ -523,6 +523,7 @@ const DeletedAssetsLibrary = () => {
 			  activeFolder={activeFolder}
 			  activeView={activeView}
 			  activeSortFilter={activeSortFilter}
+			  setActiveSortFilter={setActiveSortFilter}
 			  onFilesDataGet={onFilesDataGet}
 			  toggleSelected={toggleSelected}
 			  mode={null}
