@@ -246,6 +246,9 @@ const AddCustomRole = ({ onSave, role }) => {
         }
     }, [inputCustomFields])
 
+    const onCancel = () => {
+        onSave()
+     }
 
     return (
         <>
@@ -273,7 +276,7 @@ const AddCustomRole = ({ onSave, role }) => {
                         type={'button'}
                         text='Cancel'
                         styleType='secondary'
-                        onClick={onSubmit}
+                        onClick={onCancel}
                     />
                 </div>
             </div>
@@ -390,62 +393,13 @@ const AddCustomRole = ({ onSave, role }) => {
                         })}
                     </div>
 
-                    <div className={styles.field}>
-                        <span className={styles['field-title']}>Regions</span>
-                        <div className={styles.select}>
-                            <Select
-                                options={['North', 'West']}
-                                onChange={() => console.log('on change')}
-                                placeholder={'Select Field'}
-                                styleType='regular'
-                                value={''}
-                            />
-                        </div>
-                    </div>
-
-
-                    {/*<span className={styles['field-title']} >Campaigns</span>*/}
-                    {/*<div className={styles['field-wrapper']} >*/}
-                    {/*    <CreatableSelect*/}
-                    {/*        creatable={false}*/}
-                    {/*        title=''*/}
-                    {/*        addText='Add Campaigns'*/}
-                    {/*        onAddClick={() => setActiveDropdown('campaigns')}*/}
-                    {/*        selectPlaceholder={'Select an existing one'}*/}
-                    {/*        avilableItems={campaigns}*/}
-                    {/*        setAvailableItems={setCampaigns}*/}
-                    {/*        selectedItems={selectedCampaigns}*/}
-                    {/*        setSelectedItems={setSelectedCampaigns}*/}
-                    {/*        onAddOperationFinished={(stateUpdate) => {*/}
-                    {/*            // console.log('here2')*/}
-                    {/*            // updateAssetState({*/}
-                    {/*            //     tags: { $set: stateUpdate }*/}
-                    {/*            // })*/}
-                    {/*            // loadTags()*/}
-                    {/*        }}*/}
-                    {/*        onRemoveOperationFinished={async (index, stateUpdate) => {*/}
-                    {/*            // await assetApi.removeTag(id, assetTags[index].id)*/}
-                    {/*            // updateAssetState({*/}
-                    {/*            //     tags: { $set: stateUpdate }*/}
-                    {/*            // })*/}
-                    {/*        }}*/}
-                    {/*        onOperationFailedSkipped={() => setActiveDropdown('')}*/}
-                    {/*        isShare={false}*/}
-                    {/*        asyncCreateFn={(newItem) => {return true}}*/}
-                    {/*        dropdownIsActive={activeDropdown === 'campaigns'}*/}
-                    {/*        altColor='yellow'*/}
-                    {/*    />*/}
-                    {/*</div>*/}
                 </div>}
 
 
-                {mode === 'permission' && <MemberPermissions memberPermissions={selectedPermissions}
+                {mode === 'permission' && <><MemberPermissions memberPermissions={selectedPermissions}
                     listOnly={true}
-                    permissions={permissions} setMemberPermissions={setSelectedPermissions} />}
-
-                {loading && <SpinnerOverlay />}
-
-                <div className={styles['buttons-wrapper']}>
+                    permissions={permissions} setMemberPermissions={setSelectedPermissions} />
+                                    <div className={styles['buttons-wrapper']}>
                     <Button
                         type={'button'}
                         text='Save Changes'
@@ -457,9 +411,12 @@ const AddCustomRole = ({ onSave, role }) => {
                         type={'button'}
                         text='Cancel'
                         styleType='secondary'
-                        onClick={onSubmit}
+                        onClick={onCancel}
                     />
                 </div>
+                    </>}
+
+                {loading && <SpinnerOverlay />}
             </div>
         </>
     )
