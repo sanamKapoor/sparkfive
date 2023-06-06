@@ -493,68 +493,19 @@ const DeletedAssetsLibrary = () => {
   }
 
   return (
-	<>
-	  <AssetSubheader
-		activeFolder={null}
-		getFolders={null}
-		mode={'asset'}
-		amountSelected={selectedAssets.length}
-		activeFolderData={null}
-		backToFolders={backToFolders}
-		setRenameModalOpen={setRenameModalOpen}
-		activeSortFilter={activeSortFilter}
-		deletedAssets={true}
-	  />
-	  <main className={`${styles.container}`}>
-		{/* <TopBar
-		  activeSortFilter={activeSortFilter}
-		  setActiveSortFilter={setActiveSortFilter}
-		  setActiveView={setActiveView}
-		  activeFolder={activeFolder}
-		  setActiveSearchOverlay={false}
-		  selectAll={selectAll}
-		  setOpenFilter={setOpenFilter}
-		  openFilter={openFilter}
-		  deletedAssets={true}
-		/> */}
-		  <div className={`${openFilter && styles['col-wrapper']} ${styles['grid-wrapper']}`}>
-		  <DropzoneProvider>
-			<DeletedAssets
-			  activeFolder={activeFolder}
-			  activeView={activeView}
-			  activeSortFilter={activeSortFilter}
-			  setActiveSortFilter={setActiveSortFilter}
-			  onFilesDataGet={onFilesDataGet}
-			  toggleSelected={toggleSelected}
-			  mode={null}
-			  viewFolder={viewFolder}
-			  loadMore={loadMore}
-			  openFilter={openFilter}
-			/>
-		  </DropzoneProvider>
-		  {openFilter &&
-			<FilterContainer
-			  clearFilters={clearFilters}
-			  openFilter={openFilter}
-			  setOpenFilter={setOpenFilter}
-			  activeSortFilter={activeSortFilter}
-			  setActiveSortFilter={setActiveSortFilter}
-			  isFolder={activeSortFilter.mainFilter === 'folders'}
-			/>
-		  }
-		</div>
-	  </main>
-      <AssetOps getAssets={getAssets}/>
-	  <RenameModal
-		closeModal={() => setRenameModalOpen(false)}
-		modalIsOpen={renameModalOpen}
-		renameConfirm={confirmFolderRename}
-		type={'Folder'}
-		initialValue={activeFolder && folders.find(folder => folder.id === activeFolder).name}
-	  />
-	  {uploadDetailOverlay && <UploadStatusOverlayAssets closeOverlay={() => { setUploadDetailOverlay(false) }} />}
-	</>
-  )
+    <DeletedAssets
+      activeFolder={activeFolder}
+      activeView={activeView}
+      activeSortFilter={activeSortFilter}
+      setActiveSortFilter={setActiveSortFilter}
+      onFilesDataGet={onFilesDataGet}
+      toggleSelected={toggleSelected}
+      mode='assets'
+      viewFolder={viewFolder}
+      loadMore={loadMore}
+      openFilter={openFilter}
+    />
+  );
 }
 
 export default DeletedAssetsLibrary
