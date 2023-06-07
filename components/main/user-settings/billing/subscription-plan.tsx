@@ -1,6 +1,6 @@
 import styles from './subscription-plan.module.css'
 import { useContext, useState } from 'react'
-import { TeamContext } from '../../../../context'
+import { TeamContext, UserContext } from '../../../../context'
 import { format, differenceInDays } from 'date-fns'
 import { formatCurrency } from '../../../../utils/numbers'
 import Link from 'next/link'
@@ -20,6 +20,7 @@ const SubscriptionData = ({ label, value }) => (
 
 const SubscriptionPlan = ({ paymentMethod, goCheckout }) => {
   const { plan } = useContext(TeamContext)
+  const { user } = useContext(UserContext);
 
   const [cancelOpen, setCancelOpen] = useState(false)
 
@@ -53,16 +54,42 @@ const SubscriptionPlan = ({ paymentMethod, goCheckout }) => {
     productName += ` (Trial - ${remainingDays} day(s) remaining)`
   }
 
+  function formatBytes(bytes, decimals = 2) {
+    if (!+bytes) return '0 Bytes'
+
+    const k = 1024
+    const dm = decimals < 0 ? 0 : decimals
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
+  }
+
+  const getStorageUsed = () => {
+    return formatBytes( parseInt(user?.storageUsed || 0))
+  }
+
   return (
     <div className={styles.container}>
       <h3>Subscription</h3>
       {plan &&
         <div className={styles['sub-container']}>
           <div className={'fields-first'}>
-            <div className={styles.plan}>
+            {/*<div className={styles.plan}>*/}
+            {/*  <SubscriptionData*/}
+            {/*    label={'Plan Name'}*/}
+            {/*    value={productName}*/}
+            {/*  />*/}
+            {/*</div>*/}
+            <div className={styles['prop-pair']}>
               <SubscriptionData
-                label={'Plan Name'}
-                value={productName}
+                  label={'Plan Name'}
+                  value={productName}
+              />
+              <SubscriptionData
+                  label={'Storage used'}
+                  value={getStorageUsed()}
               />
             </div>
             <div className={styles['prop-pair']}>

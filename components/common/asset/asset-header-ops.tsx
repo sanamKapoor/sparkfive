@@ -10,7 +10,7 @@ import { AssetContext, UserContext, FilterContext, LoadingContext } from '../../
 
 // Utils
 import downloadUtils from '../../../utils/download'
-import { ASSET_DOWNLOAD } from '../../../constants/permissions'
+import { ASSET_DOWNLOAD, ASSET_EDIT } from '../../../constants/permissions'
 import { getAssetsFilters } from '../../../utils/asset'
 import assetApi from '../../../server-api/asset'
 import shareApi from '../../../server-api/share-collection'
