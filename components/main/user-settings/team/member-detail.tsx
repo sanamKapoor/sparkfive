@@ -112,14 +112,6 @@ const MemberDetail = ({ member, type = 'member', mappedRoles, onSaveChanges, onC
             className={styles['saveBtn']}
             styleType='secondary'
             onClick={onCancel} />
-
-          <Button
-            className={"m-l-15"}
-            text="Cancel"
-            type="button"
-            styleType="secondary"
-            onClick={onCancel}
-          />
         </div>
       </div>
     </div>
