@@ -1,3 +1,4 @@
+import {useContext} from "react";
 import styles from './channel-selector.module.css'
 import { ProjectTypeChannel, ProjectType } from '../../../assets'
 
@@ -6,10 +7,26 @@ import ToggleableAbsoluteWrapper from '../misc/toggleable-absolute-wrapper'
 import ItemDropdownWrapper from '../items/item-dropdown-wrapper'
 import Dropdown from '../inputs/dropdown'
 
+
+// Contexts
+import {  UserContext } from '../../../context'
+
+import { ASSET_EDIT } from '../../../constants/permissions'
+import Tag from "../misc/tag";
+
 const CustomFieldSelector = ({ onLabelClick, handleFieldChange, data = 'Select field',  options, isShare = false }) => {
+    const { hasPermission } = useContext(UserContext)
+
   return (
     <div className={`${styles.container} ${isShare && styles.shared}`}>
-      <ToggleableAbsoluteWrapper
+        {!hasPermission([ASSET_EDIT]) && data !== "Select field" && <Tag
+          data={{ name: data}}
+          altColor={""}
+          tag={data}
+          canRemove={false}
+          removeFunction={() => {}}
+        />}
+        {hasPermission([ASSET_EDIT]) && <ToggleableAbsoluteWrapper
         enabled={!isShare}
         wrapperClass='field'
         contentClass='dropdown'
@@ -35,7 +52,7 @@ const CustomFieldSelector = ({ onLabelClick, handleFieldChange, data = 'Select f
             }))}
           />
         )}
-      />
+      />}
     </div>
   )
 }

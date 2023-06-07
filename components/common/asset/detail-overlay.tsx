@@ -37,9 +37,10 @@ import CdnPanel from "./cdn-panel";
 import { isImageType } from "../../../utils/file";
 
 import { ASSET_ACCESS } from "../../../constants/permissions";
-import AssetNotes from "./asset-notes";
-import AssetNote from "./asset-note";
-import AssetRelatedFIles from "./asset-related-files";
+import AssetNotes from './asset-notes';
+import AssetNote from './asset-note';
+import AssetTranscript from './asset-transcript';
+import AssetRelatedFIles from './asset-related-files';
 
 import { sizeToZipDownload } from "../../../constants/download";
 import EventBus from "../../../utils/event-bus";
@@ -112,7 +113,7 @@ const DetailOverlay = ({
   outsideDetailOverlay = false,
 }) => {
   const { hasPermission } = useContext(UserContext);
-  const { user, cdnAccess } = useContext(UserContext);
+  const { user, cdnAccess, transcriptAccess } = useContext(UserContext);
 
   const [assetDetail, setAssetDetail] = useState(undefined);
 
@@ -149,21 +150,11 @@ const DetailOverlay = ({
   const [versionThumbnailUrl, setVersionThumbnailUrl] = useState(thumbailUrl);
   const [previewUrl, setPreviewUrl] = useState(null);
 
-  const [detailPosSize, setDetailPosSize] = useState({
-    x: 0,
-    y: 0,
-    width: currentAsset.dimensionWidth,
-    height: currentAsset.dimensionHeight,
-  });
-  const [defaultSize, setDefaultSize] = useState({
-    width: currentAsset.dimensionWidth,
-    height: currentAsset.dimensionHeight,
-  });
-  const [notes, setNotes] = useState([]);
-  const [sizeOfCrop, setSizeOfCrop] = useState({
-    width: defaultSize.width,
-    height: defaultSize.height,
-  });
+  const [detailPosSize, setDetailPosSize] = useState({ x: 0, y: 0, width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight });
+  const [defaultSize, setDefaultSize] = useState({ width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight });
+  const [notes, setNotes] = useState([])
+  const [sizeOfCrop, setSizeOfCrop] = useState({ width: defaultSize.width, height: defaultSize.height })
+  const [transcripts, setTranscript] = useState([])
 
   const renameValue = useRef("");
   const setRenameValue = (value) => {
@@ -256,6 +247,10 @@ const DetailOverlay = ({
   };
 
   useEffect(() => {
+    if (transcriptAccess) {
+      getTranscript();
+    }
+
     getCropResizeOptions();
     getDetail();
     checkInitialParams();
@@ -295,6 +290,16 @@ const DetailOverlay = ({
           setVersionThumbnailUrl(data.thumbailUrl);
         }
       }
+    } catch (err) {
+      // console.log(err);
+    }
+  };
+
+  const getTranscript = async (curAsset?) => {
+    try {
+      const asset = curAsset || currentAsset;
+      const { data } = await assetApi.getTranscript(asset.id);
+      setTranscript(data)
     } catch (err) {
       // console.log(err);
     }
@@ -1074,12 +1079,7 @@ const DetailOverlay = ({
                       onResizeStop(ref.style.width, ref.style.height, position)
                     }
                   >
-                    <AssetImg
-                      name={assetDetail.name}
-                      assetImg={versionRealUrl}
-                      imgClass="img-preview"
-                      isResize
-                    />
+                    <AssetImg name={assetDetail.name} assetImg={versionRealUrl} imgClass="img-preview" isResize />
                   </Rnd>
                 )}
 
@@ -1260,11 +1260,14 @@ const DetailOverlay = ({
             <AssetNotes asset={asset} notes={notes} applyCrud={applyCrud} />
           )}
 
-          {activeSideComponent === "related" && (
-            <AssetRelatedFilesList
-              relatedAssets={assetDetail?.fileAssociations}
+          {activeSideComponent === "related" && <AssetRelatedFilesList relatedAssets={assetDetail?.fileAssociations}/>}
+          {activeSideComponent === "transcript" && transcripts && (
+            <AssetTranscript
+              title={"Transcript"}
+              transcripts={transcripts}
             />
           )}
+
         </section>
       )}
       {/* Share page mobile right button */}
@@ -1422,6 +1425,16 @@ const DetailOverlay = ({
               )}
             </>
           )}
+          }
+          {transcriptAccess && <IconClickable
+            src={Utilities.listView}
+            additionalClass={styles["menu-icon"]}
+            onClick={() => {
+              setMode("detail");
+              resetValues();
+              changeActiveSide("transcript");
+            }}
+          />}
         </section>
       )}
       <RenameModal

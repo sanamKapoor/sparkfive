@@ -1030,6 +1030,9 @@ const UploadRequest = () => {
     setIsLoading(false);
 
     setDetailModal(false);
+    const isAdmin = () => {
+        return user?.role?.id === "admin" || user?.role?.id === "super_admin"
+    }
 
     toastUtils.success("Reject assets successfully");
   };

@@ -16,9 +16,17 @@ const parseDateToString = (d) => {
   return format(date, 'MM/dd/yyyy')
 }
 
+const getSecondsFromHhMmSs =  (hms) => {
+  const value = hms.split(':') // split it at the colons
+
+  // minutes are worth 60 seconds. Hours are worth 60 minutes.
+  return (+value[0]) * 60 * 60 + (+value[1]) * 60 + (+value[2])
+}
+
 export default {
   areSameDates,
   getDateKey,
+  getSecondsFromHhMmSs,
   getSpecialDateString: (inputDate) => {
     let specialDate = ''
     const today = new Date()
