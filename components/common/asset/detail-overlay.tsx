@@ -1425,7 +1425,6 @@ const DetailOverlay = ({
               )}
             </>
           )}
-          }
           {transcriptAccess && <IconClickable
             src={Utilities.listView}
             additionalClass={styles["menu-icon"]}
