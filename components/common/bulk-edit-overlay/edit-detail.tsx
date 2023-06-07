@@ -22,6 +22,8 @@ import ProjectCreationModal from '../modals/project-creation-modal';
 import ProductAddition from '../asset/product-addition';
 import SidePanel from "../../common/asset/detail-side-panel";
 import EditSidePanel from "./edit-side-panel";
+import { format } from "date-fns";
+import fileSize from "filesize";
 
 
 const mappingCustomFieldData = (list, valueList) => {
@@ -338,37 +340,39 @@ const EditDetail = ({
           <div className={styles["field-wrapper"]}>
             <div className={`secondary-text ${styles.field}`}>Last Updated</div>
             <div className={`normal-text ${styles["meta-text"]}`}>
-              {asset?.asset.updatedAt}
+              {format(new Date(asset?.asset?.updatedAt), "MM/dd/yyyy")}
             </div>
           </div>
           <div className={styles["field-wrapper"]}>
             <div className={`secondary-text ${styles.field}`}>Uploaded</div>
             <div className={`normal-text ${styles["meta-text"]}`}>
-              {asset?.asset.createdAt}
+              {format(new Date(asset?.asset?.createdAt), "MM/dd/yyyy")}
             </div>
           </div>
           <div className={styles["field-wrapper"]}>
             <div className={`secondary-text ${styles.field}`}>Extension</div>
             <div className={`normal-text ${styles["meta-text"]}`}>
-              {asset?.asset.extension}
+              {asset?.asset.extension?.toUpperCase()}
             </div>
           </div>
           <div className={styles["field-wrapper"]}>
             <div className={`secondary-text ${styles.field}`}>Dimensions</div>
             <div className={`normal-text ${styles["meta-text"]}`}>
-              {asset?.asset.Dimensions}
+              {asset?.asset?.dimensionWidth &&
+                asset?.asset?.dimensionHeight &&
+                `${asset?.asset?.dimensionWidth} x ${asset?.asset?.dimensionHeight}`}
             </div>
           </div>
           <div className={styles["field-wrapper"]}>
             <div className={`secondary-text ${styles.field}`}>Size</div>
             <div className={`normal-text ${styles["meta-text"]}`}>
-              {asset?.asset.size}
+              {fileSize(asset?.asset.size)}
             </div>
           </div>
           <div className={styles["field-wrapper"]}>
             <div className={`secondary-text ${styles.field}`}>Resolution</div>
             <div className={`normal-text ${styles["meta-text"]}`}>
-              {asset?.asset.dpi}
+              {asset?.asset?.dpi === 0 ? '' : asset?.asset?.dpi + ''}
             </div>
           </div>
         </div>
@@ -376,10 +380,10 @@ const EditDetail = ({
           <EditSidePanel
             asset={asset?.asset}
             updateAsset={updateAsset}
-            setAssetDetail={(a) => setCurrentAsset({...asset, a})}
+            setAssetDetail={(a) => setCurrentAsset({ ...asset, a })}
             isShare={false}
           />
-        </div>        
+        </div>
       </div>
     </div>
   );
