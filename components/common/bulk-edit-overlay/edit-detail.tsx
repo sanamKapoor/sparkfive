@@ -379,7 +379,7 @@ const EditDetail = ({
             setAssetDetail={(a) => setCurrentAsset({...asset, a})}
             isShare={false}
           />
-        </div>
+        </div>        
       </div>
     </div>
   );

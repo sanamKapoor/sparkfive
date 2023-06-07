@@ -1,7 +1,7 @@
 import styles from "./deleted-assets.module.css";
 import update from "immutability-helper";
 import { useEffect, useContext, useState } from "react";
-import { AssetContext } from "../../../../context";
+import { AssetContext, FilterContext, UserContext } from "../../../../context";
 import toastUtils from "../../../../utils/toast";
 import { Waypoint } from "react-waypoint";
 import urlUtils from "../../../../utils/url";
@@ -25,7 +25,8 @@ const DeletedAssets = ({
   onFilesDataGet = (files) => { },
   toggleSelected,
   mode = "assets",
-  activeSortFilter = {},
+  activeSortFilter,
+  setActiveSortFilter,
   deleteFolder = (id) => { },
   itemSize = "regular",
   activeFolder = "",
@@ -45,8 +46,8 @@ const DeletedAssets = ({
     nextPage,
     setOperationFolder,
     folders,
+    selectAllAssets,  
   } = useContext(AssetContext);
-
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [recoverModalOpen, setRecoverModalOpen] = useState(false);
   const [activeAssetId, setActiveAssetId] = useState("");
@@ -54,7 +55,7 @@ const DeletedAssets = ({
   const [initAsset, setInitAsset] = useState(undefined);
 
   const [sortedAssets, currentSortAttribute, setCurrentSortAttribute] =
-    useSortedAssets(assets, "-assets.deleted-at");
+    useSortedAssets(assets, "-asset.deleted-at");
 
   useEffect(() => {
     const { assetId } = urlUtils.getQueryParameters();
@@ -125,11 +126,29 @@ const DeletedAssets = ({
     setActiveOperation(operation);
   };
 
+
   const showLoadMore = assets.length > 0;
   const loadingAssetsFolders =
     assets.length > 0 && assets[assets.length - 1].isLoading;
 
-
+    const selectAll = () => {
+      selectAllAssets();
+      setAssets(
+        assets.map((assetItem) => ({ ...assetItem, isSelected: true }))
+      );
+    };
+  
+    const setSortFilterValue = (key, value) => {
+      let sort = key === 'sort' ? value : activeSortFilter.sort
+  
+      setActiveSortFilter({
+        ...activeSortFilter,
+        [key]: value,
+        sort
+      })
+    }
+  
+    console.log('activeSortFilter ', activeSortFilter);
   return (
     <section className={`${styles.container} ${openFilter && styles.filter}`}>
       <div className={styles.header}>
@@ -157,20 +176,17 @@ const DeletedAssets = ({
           text="Select All"
           type="button"
           styleType="secondary"
-          onClick={() => alert('select all')}
+          onClick={selectAll}
         />
         <div className={styles.select}>
-          <Select
-            label={"Sort By"}
-            options={selectOptions.sort.filter(item => {
-              return item
-            })}
-            value={activeSortFilter.sort}
-            styleType='filter filter-schedule'
-            onChange={() => console.log('on change')
-            }
-            placeholder='Sort By'
-          />
+        <Select
+              label={"Sort By"}
+              options={selectOptions.sort}
+              value={activeSortFilter.sort}
+              styleType="filter filter-schedule"
+              onChange={(selected) => setSortFilterValue("sort", selected)}
+              placeholder="Sort By"
+            />
         </div>
       </div>
       <ul className={styles["list-wrapper"]}>

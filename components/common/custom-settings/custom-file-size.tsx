@@ -163,6 +163,7 @@ const CustomFileSizes = () => {
                             styleTypes={['exclude-min-height']}
                             type={'button'}
                             text='Save'
+                            className={styles['saveBtn']}
                             styleType='primary'
                             onClick={() => { saveChanges(index) }}
                             disabled={!field.name || !field.width || !field.height}

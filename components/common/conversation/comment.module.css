@@ -28,7 +28,7 @@
 
 .author-date > span:first-child {
   display: inline-flex;
-  margin-right: 10px;
+  margin-right: 16px;
   font-weight: 600;
 
 }
@@ -41,5 +41,6 @@
 
 .mention {
   color: var(--color-prim-turquoise);
+  margin-right: 5px;
 }
 

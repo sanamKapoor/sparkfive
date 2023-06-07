@@ -142,6 +142,32 @@ const CreatableSelect = ({
     }
   };
 
+  const menuStyles = {
+    menuList: (base) => ({
+      ...base,
+      marginRight: '0',
+      scrollbarWidth: 'thin',
+      borderRadius: '14px',
+      scrollbarColor: '#AEB0C2',
+      "::-webkit-scrollbar": {
+        width: "6px",
+        height: "0px",   
+      },
+      "::-webkit-scrollbar-track": {
+        background: "transparent",
+      },
+      "::-webkit-scrollbar-thumb": {
+        background: "#AEB0C2",
+        width: '6px',
+        height: '30px',
+        borderRadius: '14px',
+      },
+      "::-webkit-scrollbar-thumb:hover": {
+        background: "#7a7b87"
+      }
+    })
+  }
+
   return (
     <>
       <div className={`secondary-text ${styles.field}`}>{title}</div>
@@ -199,6 +225,7 @@ const CreatableSelect = ({
                     menuPosition={menuPosition}
                     isClearable={true}
                     className="creatable-select"
+                    styles={menuStyles}
                   />
                 )}
 
@@ -216,6 +243,7 @@ const CreatableSelect = ({
                     menuPosition={menuPosition}
                     isClearable={true}
                     className="creatable-select"
+                    styles={menuStyles}
                   />
                 )}
               </div>

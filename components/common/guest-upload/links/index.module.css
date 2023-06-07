@@ -195,6 +195,7 @@
 
 .action-button{
     width: 21px;
+    height: 21px;
 }
 
 .action-button:hover{
@@ -298,6 +299,11 @@
 .select-input .select-prefix{
     min-height: 48px;
 }
+.copyBtn{
+    font-size: 14px;
+}
+
+.showBtn{padding: 0;}
 
 @media screen and (max-width: 1280px){
 

@@ -51,7 +51,10 @@
   justify-content: flex-start;
 }
 
-
+.saveBtn{
+  font-size: 14px;
+  margin-right: 10px;
+}
 .nav-buttons {
   display: flex;
   align-items: center;

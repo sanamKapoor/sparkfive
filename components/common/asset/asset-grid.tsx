@@ -1,7 +1,7 @@
 import styles from "./asset-grid.module.css";
 import useDropzone from "../misc/dropzone";
 import update from "immutability-helper";
-import React, { useEffect, useContext, useState } from "react";
+import React, { useEffect, useContext, useState, useRef } from "react";
 import { AssetContext, LoadingContext, UserContext } from "../../../context";
 import toastUtils from "../../../utils/toast";
 import { Waypoint } from "react-waypoint";
@@ -54,6 +54,8 @@ const AssetGrid = ({
   sharePath = "",
   openFilter,
   onCloseDetailOverlay = (assetData) => {},
+  setWidthCard,
+  widthCard
 }) => {
 
   let isDragging;
@@ -306,8 +308,31 @@ const AssetGrid = ({
     }
   };
 
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const ref = useRef(null);
+
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (ref.current) {
+      setWidthCard(ref.current.clientWidth);        
+    }
+  }, [ref.current, windowWidth]);
+
+
   return (
-    <section className={`${styles.container} ${openFilter && styles.filter}`}>
+    <section className={`${styles.container} ${openFilter && styles.filter}`} style={{ width: openFilter ? `calc(100% - ${widthCard}px)` : '100%' }}>
       {(shouldShowUpload || isDragging) && !isShare && (
         <AssetUpload
           onDragText={"Drop files here to upload"}
@@ -342,6 +367,7 @@ const AssetGrid = ({
                       className={styles["grid-item"]}
                       key={assetItem.asset.id || index}
                       onClick={(e) => handleFocusChange(e, assetItem.asset.id)}
+                      ref={ref} style={{width: `$${setWidthCard}px`}}
                     >
                       <AssetThumbail
                         {...assetItem}

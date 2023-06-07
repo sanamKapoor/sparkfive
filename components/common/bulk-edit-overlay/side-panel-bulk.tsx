@@ -529,13 +529,14 @@ const SidePanelBulk = ({
             return <div className={styles['product-wrapper']} key={index}>
               <ProductAddition
                 noTitle
+                className={styles['productPlus']}
                 skuActiveDropdownValue={`sku-${index}`}
                 productFieldActiveDropdownValue={`product_field-${index}`}
                 productVendorActiveDropdownValue={`product_vendor-${index}`}
                 productCategoryActiveDropdownValue={`product_category-${index}`}
                 productRetailerActiveDropdownValue={`product_retailer-${index}`}
                 FieldWrapper={({ children }) => (
-                  <div className={styles['field-wrapper']} >{children}</div>
+                  <div className={styles['productPlus']} >{children}</div>
                 )}
                 isShare={false}
                 activeDropdown={activeDropdown}

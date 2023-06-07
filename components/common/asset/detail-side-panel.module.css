@@ -57,9 +57,10 @@
   min-width: 100px;
 }
 
-.field-wrapper div:first-child{
+.first-section .field-wrapper > div:first-child{
   min-width: 100px;
 }
+
 .meta-text {
   font-size: 12px;
 }
@@ -147,4 +148,13 @@
 .cus-dropdown ul {
   right: inherit;
   left: 0;
+}
+
+.save-submodal-btn {
+  text-align: center;
+  margin-top: 25px;
+}
+
+.comments-wrapper {
+  border-top: 0;
 }

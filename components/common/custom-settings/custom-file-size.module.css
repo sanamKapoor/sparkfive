@@ -223,9 +223,13 @@
 
 .select-add img{
     margin-right: 5px;
+    width: 20px;
+    height: 20px;
 }
 
-
+.saveBtn{
+    font-size: 14px;
+}
 @media screen and (max-width: 1200px) {
     .main-wrapper {
         width: 100%;

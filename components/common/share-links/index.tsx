@@ -467,8 +467,8 @@ export default function ShareLinks() {
                                     <UserPhoto photoUrl={link.user.profilePhoto || ""} extraClass={styles.profile} sizePx={35} />
                                     <span className={"m-l-15 font-12"}>{link.user.name}</span>
                                 </div>
-                                <div className={"col-25 d-flex justify-content-center align-items-center word-break-text col-sm-100"}>
-                                    <span className={"font-12"}>
+                                <div className={"col-25 d-flex  justify-content-center align-items-center word-break-text col-sm-100"}>
+                                    <span className={"font-12"} style={{width:'61%'}}>
                                         {link.type === "folder" ?
                                             (!link.team.advancedCollectionShareLink ?
                                                 `${process.env.CLIENT_BASE_URL}/collections/${link.collectionLink}` :

@@ -48,6 +48,8 @@
 
 .select-icon {
     display: block;
+    width: 19.25px;
+    height: 19.25px;
 }
 .select-item p {
     margin: 0 5px;

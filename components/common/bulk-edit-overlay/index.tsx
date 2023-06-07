@@ -278,6 +278,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 				closeModal={handleBackButton}
 				additionalClasses={['visible-block']}
 				modalIsOpen={true}
+				overlayAdditionalClass={styles['edit-modal-outer']}
 				headText={
 					<div className={styles['top-wrapper']}>
 						<div className={styles.name}>

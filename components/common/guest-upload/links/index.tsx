@@ -233,6 +233,7 @@ const Links = () => {
                         }
                         <Button
                             styleTypes={['exclude-min-height']}
+                            className={styles['copyBtn']}
                             type={'button'}
                             text='Copy Link'
                             styleType='primary'
@@ -275,6 +276,7 @@ const Links = () => {
                                     <OptionList data={passwordOperations}
                                         oneColumn={true}
                                         value={field.showPassword}
+                                        className={styles['showBtn']}
                                         additionalClass={styles['password-li']}
                                         setValue={(value) => { showPassword(index, value) }} toggle={true} />
                                 </div>

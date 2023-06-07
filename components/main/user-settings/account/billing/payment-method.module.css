@@ -24,3 +24,46 @@ span.modal_subtitle {
   display: block;
   text-align: center;
 }
+
+.paymentModal{
+  margin-top: 81px;
+  width: calc(100vw - 218px);
+  left: 214px;
+  right: 0;
+  padding-top: 70px
+}
+
+@media (max-width:900px){
+  .paymentModal{
+    margin-top: 186px;
+    width: 100vw;
+    left: 0;
+    right: 0;
+    padding-top: 0;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 76vh;
+  }
+  .paymentModal > div{
+    max-height: 70vh;
+  }
+}
+
+
+@media (max-width:767px){
+  .paymentModal{
+    margin-top: 162px;
+  }
+}
+
+@media (max-width:900px) and (orientation:landscape){
+  .paymentModal{
+    margin-top: 189px;
+    height: 50vh;
+  }
+  .paymentModal > div{
+    max-height: 42vh;
+  }
+}

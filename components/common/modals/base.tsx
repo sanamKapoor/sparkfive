@@ -23,7 +23,8 @@ const Base = ({
   noHeightMax = false,
   additionalClasses = [''],
   showCancel = true,
-  closeButtonOnly = false
+  closeButtonOnly = false,
+  overlayAdditionalClass,
 }) => {
 
   useEffect(() => {
@@ -43,7 +44,7 @@ const Base = ({
     <ReactModal
       isOpen={modalIsOpen}
       className={`${styles.modal} ${noHeightMax && styles['no-height-max']} ${additionalClasses.join(' ')}`}
-      overlayClassName={styles.overlay}
+      overlayClassName={`${styles.overlay} ${overlayAdditionalClass}`}
       onRequestClose={closeModal}
       shouldCloseOnOverlayClick={true}
       shouldFocusAfterRender={false}
@@ -54,7 +55,7 @@ const Base = ({
 
       } */}
       {(headText) &&
-        <div className={styles.header}>
+        <div className={closeButtonOnly ? `${styles.header} ${styles['no-border']}` : styles.header}>
           <div className={`${styles.text} ${closeButtonOnly ? styles['no-border'] : ""} ${textWidth && styles['full-width']}`}>
             {<p className={styles['overflow-text']}>{!closeButtonOnly ? headText : ""}</p>}
             <img src={Utilities.bigblueClose} alt="close" className={styles.close} onClick={closeModal} />

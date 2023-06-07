@@ -65,6 +65,7 @@ width: 15px;
   font-size: 16px;
   margin: 16px 0;
 }
+
 .headers-content h4:first-child {
   width: 25px;
 }
@@ -77,13 +78,16 @@ width: 15px;
 
 
 .headers-content h4 .sort-icon {
-  margin-left: 24px;
+  margin-left: 14px;
   display: none;
+  width: 14px;
+  height: 12px;
 }
 
 .headers-content h4:hover .sort-icon,
 .headers-content h4 .sort-icon.active {
   display: block;
+  transform: rotate(180deg);
 }
 
 .cell:first-child {

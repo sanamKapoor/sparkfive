@@ -7,18 +7,18 @@
 
 .grid-list {
   display: grid;
-  grid-template-columns: repeat(6, minmax(165px, 1fr));
-  grid-gap: 45px;
+  grid-template-columns: repeat(7, minmax(270px, 1fr));
+  grid-gap: 40px;
 }
 
 .container {
-  border: 1px solid var(--color-secondary-border);
+  border: 0.738515px solid var(--color-secondary-border);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
   position: relative;
-  border-radius: 6px;
+  border-radius: 5.21304px;
 }
 
 .image-wrapper {
@@ -38,6 +38,7 @@
 .image-wrapper .selectable-wrapper .select-icon {
   width: 25px;
   height: auto;
+  padding: 0;
 }
 
 .image-wrapper > img,
@@ -144,5 +145,16 @@
 
   .list-wrapper {
     padding: 14px 14px 130px;
+  }
+}
+
+.subEditModal {
+  align-items: center;
+  padding: 20px;
+}
+
+@media screen and (min-width:1440px) {
+  .subEditModal div:first-child[role="dialog"] {
+    min-width: 1271px;
   }
 }

@@ -5,7 +5,7 @@ import Router from 'next/router'
 
 const HeaderLink = ({ img, imgHover, href, text, active = false }) => {
 
-  const [srcimg, setSrcimg] = useState(img)
+  const [srcimg, setSrcimg] = useState(imgHover)
 
   return (
     <Link href={href}>

@@ -16,6 +16,7 @@
 .header h3 {
   margin: 0;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .header p {
@@ -75,4 +76,15 @@
   height: 15.75px;
   width: 15.75px;
   margin-right: 10px;
+}
+
+@media (max-width:900px){
+  .header {
+    width: 100%;
+  }
+}
+@media (max-width:600px){
+  .header{
+    align-items: flex-start
+  }
 }

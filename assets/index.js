@@ -106,6 +106,7 @@ export const Utilities = {
   related: require('./Icons/Utilities/Related/related.svg'),
   relatedLight: require('./Icons/Utilities/Related/related-light.svg'),
   sort: require('./Icons/Utilities/arrow/sort.svg'),
+  sortUp: require('./Icons/Utilities/arrow/sort-up.svg'),
   caretRight: require('./Icons/Utilities/Caret/caret-right.svg'),
   checkMark: require('./Icons/Utilities/CheckMark/checkmark.svg'),
 }
@@ -191,9 +192,11 @@ export const Assets = {
 
 export const Comments = {
   mention: require('./Icons/Utilities/@/icn-comments-mention.svg'),
+  mentionDisable: require('./Icons/Utilities/@/icn-comments-disable.svg'),
   mentionLight: require('./Icons/Utilities/@/icn-comments-mention-light.svg'),
   smile: require('./Icons/Utilities/Smile/icn-comments-smile.svg'),
-  smileLight: require('./Icons/Utilities/Smile/icn-comments-smile-light.svg')
+  smileLight: require('./Icons/Utilities/Smile/icn-comments-smile-light.svg'),
+  smileDisable: require('./Icons/Utilities/Smile/icn-comments-smile-disable.svg'),
 }
 
 export const Integrations = {

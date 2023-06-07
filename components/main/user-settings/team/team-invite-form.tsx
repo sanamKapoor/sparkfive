@@ -41,6 +41,7 @@ const TeamInvite = ({ mappedRoles, onInviteSend }) => {
         <Button
           className={styles.button}
           text='Send invitation'
+          className={styles['invitationBtn']}
           type='submit'
           styleType='primary'
           disabled={!inviteEmail || !inviteRole}
