@@ -78,67 +78,67 @@ const AssetRelatedFilesList = ({relatedAssets}) => {
           </div>
         </div>
 
-        <ul>
-          {relatedAssets?.map((asset, i) => (
-            <li className={styles.item} key={i}>
-              <div className={styles["item-wrapper"]}>
-                <div className={styles.thumbnail}>
-                  {asset.thumbailUrl && (
-                    <img src={asset.thumbailUrl || Assets.unknown} alt={name} />
-                  )}
-                  {!asset.thumbailUrl && (
-                    <AssetIcon
-                      extension={asset?.asset?.extension}
-                      onList={true}
-                    />
-                  )}
-                </div>
-                <div className={styles["info-wrapper"]}>
-                  <div>
-                    <div className={styles.name}>{asset?.asset?.name}</div>
-                    <div className={styles.dimension}>
-                      {" "}
-                      {asset?.asset?.dimensionWidth &&
-                        asset?.asset?.dimensionWidth &&
-                        `${asset?.asset?.dimensionWidth} x ${asset?.asset?.dimensionHeight}`}
-                    </div>
-                    <div className={styles.info}>
-                      {format(new Date(asset?.asset?.createdAt), "dd/mm/yyyy")}
-                      <span></span>
-                      {fileSize(asset?.asset?.size)}
-                    </div>
-                  </div>
-
-                  <>
-                    <ToggleableAbsoluteWrapper
-                      contentClass={styles["item-actions"]}
-                      wrapperClass={styles["item-actions-wrapper"]}
-                      Wrapper={({ children }) => (
-                        <>
-                          <IconClickable src={Utilities.more} />
-                          {children}
-                        </>
-                      )}
-                      Content={() => (
-                        <div className={styles.more}>
-                          <Dropdown options={options} />
-                        </div>
-                      )}
-                    />
-
-                    <ConfirmModal
-                      closeModal={() => setDeleteModalOpen(false)}
-                      confirmAction={() => alert("confirm")}
-                      confirmText={"Yes"}
-                      message={<span>Are you sure you want to Delete?</span>}
-                      modalIsOpen={deleteModaOpen}
-                    />
-                  </>
-                </div>
+      {relatedAssets?.length > 0 ? <ul>
+        {relatedAssets?.map((asset, i) => (
+          <li className={styles.item} key={i}>
+            <div className={styles["item-wrapper"]}>
+              <div className={styles.thumbnail}>
+                {asset.thumbailUrl && (
+                  <img src={asset.thumbailUrl || Assets.unknown} alt={name} />
+                )}
+                {!asset.thumbailUrl && (
+                  <AssetIcon
+                    extension={asset?.asset?.extension}
+                    onList={true}
+                  />
+                )}
               </div>
-            </li>
-          ))}
-        </ul>
+              <div className={styles["info-wrapper"]}>
+                <div>
+                  <div className={styles.name}>{asset?.asset?.name}</div>
+                  <div className={styles.dimension}>
+                    {" "}
+                    {asset?.asset?.dimensionWidth &&
+                      asset?.asset?.dimensionWidth &&
+                      `${asset?.asset?.dimensionWidth} x ${asset?.asset?.dimensionHeight}`}
+                  </div>
+                  <div className={styles.info}>
+                    {format(new Date(asset?.asset?.createdAt), "dd/mm/yyyy")}
+                    <span></span>
+                    {fileSize(asset?.asset?.size)}
+                  </div>
+                </div>
+
+                <>
+                  <ToggleableAbsoluteWrapper
+                    contentClass={styles["item-actions"]}
+                    wrapperClass={styles["item-actions-wrapper"]}
+                    Wrapper={({ children }) => (
+                      <>
+                        <IconClickable src={Utilities.more} />
+                        {children}
+                      </>
+                    )}
+                    Content={() => (
+                      <div className={styles.more}>
+                        <Dropdown options={options} />
+                      </div>
+                    )}
+                  />
+
+                  <ConfirmModal
+                    closeModal={() => setDeleteModalOpen(false)}
+                    confirmAction={() => alert("confirm")}
+                    confirmText={"Yes"}
+                    message={<span>Are you sure you want to Delete?</span>}
+                    modalIsOpen={deleteModaOpen}
+                  />
+                </>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul> : <p>No related assets available</p>}
       </div>
     );
 }

@@ -934,7 +934,7 @@ const DetailOverlay = ({
                           {versionCount + 1} versions
                         </div>
                       )}
-                    {assetDetail?.fileAssociations.length > 0 && (
+                    {assetDetail?.fileAssociations?.length > 0 && (
                       <>
                         <img src={Utilities.ellipse} />
                         <div
@@ -945,7 +945,7 @@ const DetailOverlay = ({
                             changeActiveSide("related");
                           }}
                         >
-                          {assetDetail?.fileAssociations.length} Related files
+                          {assetDetail?.fileAssociations?.length} Related files
                         </div>
                       </>
                     )}
@@ -1415,9 +1415,7 @@ const DetailOverlay = ({
                     }
                   }}
                 />
-              )}
-
-              {asset?.fileAssociations?.length > 0 && (
+              )}          
                 <IconClickable
                   src={isMobile ? Utilities.relatedLight : Utilities.related}
                   additionalClass={styles["menu-icon"]}
@@ -1427,7 +1425,6 @@ const DetailOverlay = ({
                     changeActiveSide("related");
                   }}
                 />
-              )}
               {hasPermission(["admin", "super_admin"]) && (
                 <IconClickable
                   src={isMobile ? Utilities.notesLight : Utilities.notes}
