@@ -1291,6 +1291,8 @@ const DetailOverlay = ({
           {activeSideComponent === "related" && (
             <AssetRelatedFilesList
               relatedAssets={assetDetail?.fileAssociations}
+              associateFileId={currentAsset.id}
+              onChangeRelatedFiles={onChangeRelatedFiles}
             />
           )}
           {activeSideComponent === "transcript" && transcripts && (
@@ -1415,7 +1417,8 @@ const DetailOverlay = ({
                     }
                   }}
                 />
-              )}          
+              )}
+          
                 <IconClickable
                   src={isMobile ? Utilities.relatedLight : Utilities.related}
                   additionalClass={styles["menu-icon"]}
