@@ -74,9 +74,9 @@ const Search = (props) => {
     },
   ]
 
-  if (filtersTags.length === 0 && advancedConfig.searchDefault === 'tags_only') {
-    setFiltersTags([...filtersTags, searchFrom[0]])
-  }
+  // if (filtersTags.length === 0 && advancedConfig.searchDefault === 'tags_only') {
+  //   setFiltersTags([...filtersTags, searchFrom[0]])
+  // }
 
   const addTag = (tag, isFilter) => {
     let selectedItems = [...filtersTags]

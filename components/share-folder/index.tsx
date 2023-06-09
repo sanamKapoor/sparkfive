@@ -61,6 +61,7 @@ const ShareFolderMain = () => {
     const [openFilter, setOpenFilter] = useState((activeMode === 'assets' && !isMobile) ? true: false)
 
     const [top, setTop] = useState('calc(55px + 5rem)')
+    const [widthCard, setWidthCard] = useState(0);
 
     const submitPassword = async (password, email) => {
         try {
@@ -398,6 +399,8 @@ const ShareFolderMain = () => {
                         loadMore={loadMore}
                         openFilter={openFilter}
                         sharePath={sharePath}
+                        setWidthCard={setWidthCard}
+                        widthCard={widthCard}
                     />
                     {openFilter &&
                         <FilterContainer
@@ -408,6 +411,7 @@ const ShareFolderMain = () => {
                             activeSortFilter={activeSortFilter}
                             setActiveSortFilter={setActiveSortFilter}
                             isFolder={activeSortFilter.mainFilter === 'folders'}
+                            filterWidth={widthCard}
                         />
                     }
                 </div>
