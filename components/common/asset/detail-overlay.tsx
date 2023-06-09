@@ -1389,7 +1389,7 @@ const DetailOverlay = ({
                 />
               )}
 
-              {asset?.fileAssociations.length > 0 && (
+              {asset?.fileAssociations?.length > 0 && (
                 <IconClickable
                   src={isMobile ? Utilities.relatedLight : Utilities.related}
                   additionalClass={styles["menu-icon"]}

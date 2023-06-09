@@ -9,7 +9,7 @@ import { useDebounce } from '../../../hooks/useDebounce'
 
 const Search = (props) => {
 
-  const { openFilters } = props
+  const { openFilters, setOpenFilters } = props
 
   const [input, setInput] = useState('');
 
@@ -19,6 +19,7 @@ const Search = (props) => {
 
   useEffect( () => {
     setSearchTerm(debouncedSearchTerm)
+    setOpenFilters(false);
 }, [debouncedSearchTerm]);
 
   const [filtersTags, setFiltersTags] = useState([])
