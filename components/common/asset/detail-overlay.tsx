@@ -1021,7 +1021,10 @@ const DetailOverlay = ({
                             {
                               id: "edit",
                               label: "Edit then Download",
-                              onClick: () => changeActiveSide("download"),
+                              onClick: () => {
+                                changeActiveSide("download");
+                                setMode("resize");
+                              },
                             },
                           ]}
                         />
@@ -1063,7 +1066,7 @@ const DetailOverlay = ({
                     }
                   />
                 )}
-                {mode === "resize" && (
+                {/* {mode === "resize" && (
                   <Rnd
                     position={{ x: detailPosSize.x, y: detailPosSize.y }}
                     size={{
@@ -1080,6 +1083,31 @@ const DetailOverlay = ({
                     }
                   >
                     <AssetImg name={assetDetail.name} assetImg={versionRealUrl} imgClass="img-preview" isResize />
+                  </Rnd>
+                )} */}
+
+                {mode === "resize" && (
+                  <Rnd
+                    position={{ x: detailPosSize.x, y: detailPosSize.y }}
+                    size={{
+                      width: detailPosSize.width,
+                      height: detailPosSize.height,
+                    }}
+                    className={`${styles["react-draggable"]}`}
+                    lockAspectRatio={true}
+                    // onDragStop={(e, d) => {
+                    //   setDetailPosSize(Object.assign({...detailPosSize}, { x: d.x, y: d.y}))
+                    // }}
+                    onResizeStop={(e, direction, ref, delta, position) =>
+                      onResizeStop(ref.style.width, ref.style.height, position)
+                    }
+                  >
+                    <AssetImg
+                      name={assetDetail.name}
+                      assetImg={versionRealUrl}
+                      imgClass="img-preview"
+                      isResize
+                    />
                   </Rnd>
                 )}
 
@@ -1260,14 +1288,14 @@ const DetailOverlay = ({
             <AssetNotes asset={asset} notes={notes} applyCrud={applyCrud} />
           )}
 
-          {activeSideComponent === "related" && <AssetRelatedFilesList relatedAssets={assetDetail?.fileAssociations}/>}
-          {activeSideComponent === "transcript" && transcripts && (
-            <AssetTranscript
-              title={"Transcript"}
-              transcripts={transcripts}
+          {activeSideComponent === "related" && (
+            <AssetRelatedFilesList
+              relatedAssets={assetDetail?.fileAssociations}
             />
           )}
-
+          {activeSideComponent === "transcript" && transcripts && (
+            <AssetTranscript title={"Transcript"} transcripts={transcripts} />
+          )}
         </section>
       )}
       {/* Share page mobile right button */}
@@ -1425,15 +1453,17 @@ const DetailOverlay = ({
               )}
             </>
           )}
-          {transcriptAccess && <IconClickable
-            src={Utilities.listView}
-            additionalClass={styles["menu-icon"]}
-            onClick={() => {
-              setMode("detail");
-              resetValues();
-              changeActiveSide("transcript");
-            }}
-          />}
+          {transcriptAccess && (
+            <IconClickable
+              src={Utilities.listView}
+              additionalClass={styles["menu-icon"]}
+              onClick={() => {
+                setMode("detail");
+                resetValues();
+                changeActiveSide("transcript");
+              }}
+            />
+          )}
         </section>
       )}
       <RenameModal
