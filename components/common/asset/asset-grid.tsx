@@ -365,12 +365,12 @@ const AssetGrid = ({
             className={`${styles["grid-list"]} ${styles[itemSize]}
             ${
               mode === "assets"
-                ? openFilter === false
-                  ? styles["grid-" + advancedConfig.assetThumbnail]
-                  : styles["grid-filter-" + advancedConfig.assetThumbnail]
-                : openFilter === false
-                ? styles["grid-" + advancedConfig.collectionThumbnail]
-                : styles["grid-filter-" + advancedConfig.collectionThumbnail]
+                ? openFilter
+                  ? styles["grid-filter-" + advancedConfig.assetThumbnail]
+                  : styles["grid-" + advancedConfig.assetThumbnail]
+                : openFilter
+                ? styles["grid-filter-" + advancedConfig.collectionThumbnail]
+                : styles["grid-" + advancedConfig.collectionThumbnail]
             }
             `}
           >
