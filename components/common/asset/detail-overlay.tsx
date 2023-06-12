@@ -1293,6 +1293,7 @@ const DetailOverlay = ({
               relatedAssets={assetDetail?.fileAssociations}
               associateFileId={currentAsset.id}
               onChangeRelatedFiles={onChangeRelatedFiles}
+              currentAsset={currentAsset}
             />
           )}
           {activeSideComponent === "transcript" && transcripts && (

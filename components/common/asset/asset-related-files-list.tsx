@@ -16,8 +16,8 @@ import downloadUtils from "../../../utils/download"
 import update from 'immutability-helper';
 import toastUtils from '../../../utils/toast'
 
-const AssetRelatedFilesList = ({relatedAssets, associateFileId, onChangeRelatedFiles}) => {
-    const {activeOperation, setActiveOperation, updateDownloadingStatus} = useContext(AssetContext);
+const AssetRelatedFilesList = ({currentAsset, relatedAssets, associateFileId, onChangeRelatedFiles}) => {
+    const {activeOperation, setActiveOperation, updateDownloadingStatus, setOperationAssets} = useContext(AssetContext);
 
     const { setIsLoading } = useContext(LoadingContext);
 
@@ -36,9 +36,10 @@ const AssetRelatedFilesList = ({relatedAssets, associateFileId, onChangeRelatedF
           estimateTime: 1,
         };
 
-        totalDownloadingAssets = relatedAssets.length;
+        totalDownloadingAssets = relatedAssets.length + 1;
         payload.assetIds = relatedAssets.map((assetItem) => assetItem.asset.id);
 
+        payload.assetIds.push(associateFileId);
         // Show processing bar
         updateDownloadingStatus("zipping", 0, totalDownloadingAssets);
         let api = assetApi;
@@ -79,30 +80,31 @@ const AssetRelatedFilesList = ({relatedAssets, associateFileId, onChangeRelatedF
           setDeleteModalOpen(true);
       };
 
-          const disassociateAsset = async (id) => {
-            try {
-              setIsLoading(true);
-              await assetApi.disassociate([associateFileId, id]);
-              const assetIndex = relatedAssets.findIndex(
-                (assetItem) => assetItem.asset.id === id
-              );
-              if (assetIndex !== -1)
-                onChangeRelatedFiles(
-                  update(relatedAssets, {
-                    $splice: [[assetIndex, 1]],
-                  })
-                );
+      const disassociateAsset = async (id) => {
+        try {
+          setIsLoading(true);
+          await assetApi.disassociate([associateFileId, id]);
+          const assetIndex = relatedAssets.findIndex(
+            (assetItem) => assetItem.asset.id === id
+          );
 
-              setIsLoading(false);
-              toastUtils.success("Assets disassociated successfully");
-            } catch (err) {
-              // TODO: Error handling
-              setIsLoading(false);
-              toastUtils.error(
-                "Could not disassociate assets, please try again later."
-              );
-            }
-          };
+          if (assetIndex !== -1)
+            onChangeRelatedFiles(
+              update(relatedAssets, {
+                $splice: [[assetIndex, 1]],
+              })
+            );
+
+          setIsLoading(false);
+          toastUtils.success("Assets disassociated successfully");
+        } catch (err) {
+          // TODO: Error handling
+          setIsLoading(false);
+          toastUtils.error(
+            "Could not disassociate assets, please try again later."
+          );
+        }
+      };          
 
 
     const deleteAsset = async (id) => {
@@ -134,6 +136,10 @@ const AssetRelatedFilesList = ({relatedAssets, associateFileId, onChangeRelatedF
             toastUtils.error("Could not delete assets, please try again later.")
         }
     }
+
+    useEffect(()=>{
+      setOperationAssets([...relatedAssets, {asset: currentAsset}])
+  },[relatedAssets])
 
 
     return (

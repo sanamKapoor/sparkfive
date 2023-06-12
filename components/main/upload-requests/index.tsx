@@ -849,11 +849,11 @@ const UploadRequest = () => {
   };
 
   const hasBothTagAndComments = (asset) => {
-    return asset.tags.length > 0 && asset.comments;
+    return asset?.tags?.length > 0 && asset?.comments;
   };
 
   const hasTagOrComments = (asset) => {
-    return asset.tags.length > 0 || asset.comments;
+    return asset?.tags?.length > 0 || asset?.comments;
   };
 
   const isAdmin = () => {
@@ -1619,14 +1619,14 @@ const UploadRequest = () => {
                                 <div
                                   className={`${styles["icon-wrapper"]} d-flex`}
                                 >
-                                  {assetItem.asset.comments && (
+                                  {assetItem?.asset?.comments && (
                                     <IconClickable
                                       additionalClass={styles["edit-icon"]}
                                       src={Utilities.comment}
                                       onClick={() => {}}
                                     />
                                   )}
-                                  {assetItem.asset.tags.length > 0 && (
+                                  {assetItem?.asset?.tags?.length > 0 && (
                                     <IconClickable
                                       additionalClass={styles["edit-icon"]}
                                       src={Utilities.greenTag}
