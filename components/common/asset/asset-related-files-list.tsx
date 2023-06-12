@@ -84,17 +84,13 @@ const AssetRelatedFilesList = ({currentAsset, relatedAssets, associateFileId, on
         try {
           setIsLoading(true);
           await assetApi.disassociate([associateFileId, id]);
-          const assetIndex = relatedAssets.findIndex(
+
+          const assetIndex = relatedAssets.find(
             (assetItem) => assetItem.asset.id === id
           );
 
-          if (assetIndex !== -1)
-            onChangeRelatedFiles(
-              update(relatedAssets, {
-                $splice: [[assetIndex, 1]],
-              })
-            );
-
+          if (assetIndex !== -1) {onChangeRelatedFiles([...relatedAssets.filter(item => item.asset.id !== id)]); }
+           
           setIsLoading(false);
           toastUtils.success("Assets disassociated successfully");
         } catch (err) {
@@ -156,7 +152,7 @@ const AssetRelatedFilesList = ({currentAsset, relatedAssets, associateFileId, on
               onClick={shareAllRelatedAssets}
             />
             <div className={styles.actionsPlus}>
-              <AssetAddition />
+             <AssetAddition folderAdd={false} />
             </div>
           </div>
         </div>
@@ -164,7 +160,7 @@ const AssetRelatedFilesList = ({currentAsset, relatedAssets, associateFileId, on
         {relatedAssets?.length > 0 ? (
           <ul>
             {relatedAssets?.map((asset, i) => (
-              <li className={styles.item} key={i}>
+              <li className={styles.item} key={asset?.asset?.id}>
                 <div className={styles["item-wrapper"]}>
                   <div className={styles.thumbnail}>
                     {asset.thumbailUrl && (
@@ -218,7 +214,7 @@ const AssetRelatedFilesList = ({currentAsset, relatedAssets, associateFileId, on
                                   onClick: () => downloadAsset(asset),
                                 },
                                 {
-                                  label: "Dissociate",
+                                  label: "Disassociate",
                                   onClick: () =>
                                     openDisassociateModal(asset?.asset?.id),
                                 },
@@ -248,7 +244,7 @@ const AssetRelatedFilesList = ({currentAsset, relatedAssets, associateFileId, on
                       <ConfirmModal
                         closeModal={() => setDisassociateModal(false)}
                         confirmAction={() => {
-                          disassociateAsset(asset?.asset?.id);
+                          disassociateAsset(activeAssetId);
                           setActiveAssetId("");
                           setDisassociateModal(false);
                         }}

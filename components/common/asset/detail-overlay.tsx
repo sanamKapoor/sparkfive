@@ -48,7 +48,6 @@ import AssetRelatedFilesList from "./asset-related-files-list";
 import Dropdown from "../inputs/dropdown";
 
 const getDefaultDownloadImageType = (extension) => {
-  console.log("isMobile", isMobile);
 
   const defaultDownloadImageTypes = [
     {
@@ -1290,10 +1289,9 @@ const DetailOverlay = ({
 
           {activeSideComponent === "related" && (
             <AssetRelatedFilesList
-              relatedAssets={assetDetail?.fileAssociations}
+              relatedAssets={assetDetail?.fileAssociations || []}
               associateFileId={currentAsset.id}
               onChangeRelatedFiles={onChangeRelatedFiles}
-              currentAsset={currentAsset}
             />
           )}
           {activeSideComponent === "transcript" && transcripts && (
