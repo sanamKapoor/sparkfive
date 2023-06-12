@@ -186,7 +186,7 @@ const AssetRelatedFilesList = ({relatedAssets, associateFileId, onChangeRelatedF
                       <div className={styles.info}>
                         {format(
                           new Date(asset?.asset?.createdAt),
-                          "dd/mm/yyyy"
+                          "dd/MM/yyyy"
                         )}
                         <span></span>
                         {fileSize(asset?.asset?.size)}
