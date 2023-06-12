@@ -1292,6 +1292,11 @@ const DetailOverlay = ({
               relatedAssets={assetDetail?.fileAssociations || []}
               associateFileId={currentAsset.id}
               onChangeRelatedFiles={onChangeRelatedFiles}
+              onAddRelatedFiles={(data) => {
+                let updatedAssets = [...assetDetail.fileAssociations]
+                updatedAssets = updatedAssets.concat(data)
+                setAssetDetail({ ...assetDetail, fileAssociations: updatedAssets })
+              }}
             />
           )}
           {activeSideComponent === "transcript" && transcripts && (

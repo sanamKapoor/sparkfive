@@ -4,7 +4,6 @@ import IconClickable from '../buttons/icon-clickable'
 import Dropdown from '../inputs/dropdown'
 import ToggleableAbsoluteWrapper from '../misc/toggleable-absolute-wrapper'
 import ConfirmModal from '../modals/confirm-modal'
-import AssetAddition from './asset-addition'
 import styles from './asset-related-files-list.module.css'
 import { format } from 'date-fns'
 import fileSize from 'filesize'
@@ -15,8 +14,9 @@ import fileDownload from "js-file-download";
 import downloadUtils from "../../../utils/download"
 import update from 'immutability-helper';
 import toastUtils from '../../../utils/toast'
+import AssetRelatedAddition from './asset-related-addition'
 
-const AssetRelatedFilesList = ({currentAsset, relatedAssets, associateFileId, onChangeRelatedFiles}) => {
+const AssetRelatedFilesList = ({currentAsset, relatedAssets, associateFileId, onChangeRelatedFiles, onAddRelatedFiles}) => {
     const {activeOperation, setActiveOperation, updateDownloadingStatus, setOperationAssets} = useContext(AssetContext);
 
     const { setIsLoading } = useContext(LoadingContext);
@@ -152,7 +152,7 @@ const AssetRelatedFilesList = ({currentAsset, relatedAssets, associateFileId, on
               onClick={shareAllRelatedAssets}
             />
             <div className={styles.actionsPlus}>
-             <AssetAddition folderAdd={false} />
+             <AssetRelatedAddition currentRelatedAssets={relatedAssets} associateFileId={associateFileId} onUploadFinish={onAddRelatedFiles} />
             </div>
           </div>
         </div>
