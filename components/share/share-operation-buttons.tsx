@@ -2,10 +2,10 @@ import styles from "./share-operation-buttons.module.css"
 
 import Button from "../common/buttons/button"
 
-const ShareOperationButtons = ({ selectAll, selectedAsset, downloadSelectedAssets }: Props) => {
+const ShareOperationButtons = ({ sharedBy, selectAll, selectedAsset, downloadSelectedAssets, totalSharedFiles }: Props) => {
     return <div className={styles.container}>
         <span className={styles['files-shared']}>
-            2 Files Shared - Bossco Supply Inc
+            {totalSharedFiles} Files Shared - {sharedBy}
         </span>
         <div>
             {selectedAsset > 0 &&
@@ -21,6 +21,8 @@ interface Props {
     downloadSelectedAssets: () => void
     selectAll: () => void
     selectedAsset: number
+    totalSharedFiles: number
+    sharedBy: string
 }
 
 export default ShareOperationButtons
