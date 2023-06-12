@@ -36,9 +36,10 @@
 .asset-list{
   margin-top: 16px;
   padding-bottom: 80px;
-  border: 1px solid var(--color-border);
-  padding: 20px;
-  border-radius: 6px;
+  /* border: 1px solid var(--color-border);
+  border-radius: 6px; */
+  padding: 20px 0;
+
 }
 
 .operation-wrapper{
@@ -103,13 +104,22 @@
 }
 
 .confirm-modal-wrapper{
+  /* padding: 49.63px 57px; */
+  position: relative;
+  padding: 27.63px 26px;
+}
+
+.sendConfirmModal [role="dialog"] .confirm-modal-wrapper{
   padding: 49.63px 57px;
   position: relative;
 }
 @media screen and (max-width: 767px) {
   .confirm-modal-wrapper {
+    padding: 27.63px 26px;
+  }
+  .sendConfirmModal [role="dialog"] .confirm-modal-wrapper{
     padding: 33px 44px;
-    position: relative;
+  
   }
 }
 
@@ -149,7 +159,7 @@
 }
 
 .grid-list{
-  grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(161px, 1fr));
 }
 
 
@@ -519,6 +529,9 @@
 
 @media screen and (min-width: 1024px) {  
   .sendMsgModal [role="dialog"] {
-    min-width: 791px;
+    min-width: 555px;
+  }
+  .sendConfirmModal [role="dialog"]{
+     min-width: 791px;
   }
 }

@@ -18,6 +18,10 @@
   gap: 16px;
 }
 
+.plusIcon{
+  padding:0px;
+}
+
 @media screen and (max-width: 900px) {
   .container {
     padding: 16px 40px;
@@ -75,6 +79,11 @@
   align-items: center;
   gap: 17px;
   position: relative;
+}
+.sec-filters button span{
+  position: relative;
+  left: 0.5px;
+  bottom: 0.3px;
 }
 
 .sort-wrapper {

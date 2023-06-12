@@ -1,6 +1,11 @@
 .container {
     padding: 0 20px;
 }
+.innerContainer{
+    height: calc(100vh - 245px);
+    overflow-y: auto;
+    padding-bottom: 10px;
+}
 .container h2 {
     font-size: 14px;
     margin: 15px 0 15px 0;
@@ -39,7 +44,7 @@
 .save-changes {
     width: 100%;
     text-align: center;
-    margin-top: 50px;
+    margin-top: 25px;
 }
 
 .select-add{
@@ -69,4 +74,12 @@
 
 .productPlus > div > div:first-child > div:first-child{
     padding: 4px 8px;
+}
+
+@media (max-width:600px){
+    .innerContainer{
+        height: calc(100vh - 245px);
+        overflow-y: auto;
+        padding-bottom: 10px;
+    }
 }

@@ -1320,7 +1320,12 @@ const UploadRequest = () => {
                 <div className={styles["topTitle"]}>
                   <div className={styles["main-title"]}>
                     <p>
-                      Upload Requests
+                    <Button
+                      type="button"
+                      text={"Upload Requests "}
+                      onClick={onCancelView}
+                      className={styles["back-button"]}
+                    ></Button>
                       <span>
                         <img
                           src={Utilities.arrowNav}

@@ -1466,7 +1466,7 @@ const UploadApproval = () => {
                 disabledConfirm={false}
                 additionalClasses={['visible-block']}
                 showCancel={false}
-                overlayAdditionalClass={styles['sendMsgModal']}
+                overlayAdditionalClass={submitted ? styles['sendMsgModal'] : styles['sendConfirmModal']}
                 confirmAction={() => {
 
                 }} >

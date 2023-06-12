@@ -336,7 +336,7 @@ const EditDetail = ({
       </div>
       <div className={styles.side}>
         <h3>Add Attributes to Selected Assets</h3>
-        <div className={styles["first-section"]}>
+        {/* <div className={styles["first-section"]}>
           <div className={styles["field-wrapper"]}>
             <div className={`secondary-text ${styles.field}`}>Last Updated</div>
             <div className={`normal-text ${styles["meta-text"]}`}>
@@ -375,7 +375,7 @@ const EditDetail = ({
               {asset?.asset?.dpi === 0 ? '' : asset?.asset?.dpi + ''}
             </div>
           </div>
-        </div>
+        </div> */}
         <div className={styles["second-section"]}>
           <EditSidePanel
             asset={asset?.asset}

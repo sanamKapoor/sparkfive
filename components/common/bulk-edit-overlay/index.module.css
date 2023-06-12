@@ -9,6 +9,10 @@
   display: flex;
 }
 
+.innerContainer{
+  padding: 0;
+}
+
 .content {
   background-color: white;
   padding-top: 0;
@@ -21,9 +25,9 @@
 .side {
   padding-top: 15px;
   padding-bottom: 25px;
-  min-width: 320px;
-  height: calc(100vh - 150px);
-  overflow-y: auto;
+  min-width: 345px;
+  /* height: calc(100vh - 150px);
+  overflow-y: auto; */
 }
 
 .menu {
@@ -121,6 +125,15 @@
   grid-area: content-asset;
 }
 
+.content::-webkit-scrollbar {
+  width: 7px;
+}
+
+.content::-webkit-scrollbar-thumb {
+  background: #AEB0C2;
+  border-radius: 19px
+}
+
 .side {
   grid-area: side;
   border-left: 1px solid var(--color-secondary-border);
@@ -213,6 +226,11 @@
     min-height: 100%;
     max-height: 100%;
     overflow: hidden;
+  }
+
+  .edit-modal-outer div:first-child[role="dialog"] > div:first-child{
+    margin: 0 20px;
+    padding: 20px 0;
   }
 
   .wrapper {

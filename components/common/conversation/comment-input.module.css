@@ -17,6 +17,7 @@
   position: relative;
 }
 
+
 textarea.content-input::-webkit-input-placeholder {
   color: #817D9D;
 }
@@ -117,4 +118,8 @@ textarea.content-input.reply::-moz-placeholder {
 .mention-dropdown {
   top: calc(1.5rem + var(--top-dropdown));
   left: var(--left-dropdown);
+}
+
+.mention-dropdown ul{
+  right: 0;
 }
