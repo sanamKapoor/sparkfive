@@ -48,7 +48,6 @@ import AssetRelatedFilesList from "./asset-related-files-list";
 import Dropdown from "../inputs/dropdown";
 
 const getDefaultDownloadImageType = (extension) => {
-  console.log("isMobile", isMobile);
 
   const defaultDownloadImageTypes = [
     {
@@ -934,7 +933,7 @@ const DetailOverlay = ({
                           {versionCount + 1} versions
                         </div>
                       )}
-                    {assetDetail?.fileAssociations.length > 0 && (
+                    {assetDetail?.fileAssociations?.length > 0 && (
                       <>
                         <img src={Utilities.ellipse} />
                         <div
@@ -945,7 +944,7 @@ const DetailOverlay = ({
                             changeActiveSide("related");
                           }}
                         >
-                          {assetDetail?.fileAssociations.length} Related files
+                          {assetDetail?.fileAssociations?.length} Related files
                         </div>
                       </>
                     )}
@@ -1021,7 +1020,10 @@ const DetailOverlay = ({
                             {
                               id: "edit",
                               label: "Edit then Download",
-                              onClick: () => changeActiveSide("download"),
+                              onClick: () => {
+                                changeActiveSide("download");
+                                setMode("resize");
+                              },
                             },
                           ]}
                         />
@@ -1063,12 +1065,13 @@ const DetailOverlay = ({
                     }
                   />
                 )}
+
                 {mode === "resize" && (
                   <Rnd
                     position={{ x: detailPosSize.x, y: detailPosSize.y }}
                     size={{
-                      width: detailPosSize.width,
-                      height: detailPosSize.height,
+                      width: width,
+                      height: height,
                     }}
                     className={`${styles["react-draggable"]}`}
                     lockAspectRatio={true}
@@ -1079,7 +1082,12 @@ const DetailOverlay = ({
                       onResizeStop(ref.style.width, ref.style.height, position)
                     }
                   >
-                    <AssetImg name={assetDetail.name} assetImg={versionRealUrl} imgClass="img-preview" isResize />
+                    <AssetImg
+                      name={assetDetail.name}
+                      assetImg={versionRealUrl}
+                      imgClass="img-preview"
+                      isResize
+                    />
                   </Rnd>
                 )}
 
@@ -1260,14 +1268,21 @@ const DetailOverlay = ({
             <AssetNotes asset={asset} notes={notes} applyCrud={applyCrud} />
           )}
 
-          {activeSideComponent === "related" && <AssetRelatedFilesList relatedAssets={assetDetail?.fileAssociations}/>}
-          {activeSideComponent === "transcript" && transcripts && (
-            <AssetTranscript
-              title={"Transcript"}
-              transcripts={transcripts}
+          {activeSideComponent === "related" && (
+            <AssetRelatedFilesList
+              relatedAssets={assetDetail?.fileAssociations || []}
+              associateFileId={currentAsset.id}
+              onChangeRelatedFiles={onChangeRelatedFiles}
+              onAddRelatedFiles={(data) => {
+                let updatedAssets = [...assetDetail.fileAssociations]
+                updatedAssets = updatedAssets.concat(data)
+                setAssetDetail({ ...assetDetail, fileAssociations: updatedAssets })
+              }}
             />
           )}
-
+          {activeSideComponent === "transcript" && transcripts && (
+            <AssetTranscript title={"Transcript"} transcripts={transcripts} />
+          )}
         </section>
       )}
       {/* Share page mobile right button */}
@@ -1388,8 +1403,7 @@ const DetailOverlay = ({
                   }}
                 />
               )}
-
-              {asset?.fileAssociations.length > 0 && (
+          
                 <IconClickable
                   src={isMobile ? Utilities.relatedLight : Utilities.related}
                   additionalClass={styles["menu-icon"]}
@@ -1399,7 +1413,6 @@ const DetailOverlay = ({
                     changeActiveSide("related");
                   }}
                 />
-              )}
               {hasPermission(["admin", "super_admin"]) && (
                 <IconClickable
                   src={isMobile ? Utilities.notesLight : Utilities.notes}
@@ -1425,15 +1438,17 @@ const DetailOverlay = ({
               )}
             </>
           )}
-          {transcriptAccess && <IconClickable
-            src={Utilities.listView}
-            additionalClass={styles["menu-icon"]}
-            onClick={() => {
-              setMode("detail");
-              resetValues();
-              changeActiveSide("transcript");
-            }}
-          />}
+          {transcriptAccess && (
+            <IconClickable
+              src={Utilities.listView}
+              additionalClass={styles["menu-icon"]}
+              onClick={() => {
+                setMode("detail");
+                resetValues();
+                changeActiveSide("transcript");
+              }}
+            />
+          )}
         </section>
       )}
       <RenameModal

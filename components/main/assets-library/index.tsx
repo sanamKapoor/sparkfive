@@ -541,7 +541,7 @@ const AssetsLibrary = () => {
       if (replace) {
         setAddedIds([])
       }
-      setPlaceHolders('asset', replace)
+      // setPlaceHolders('asset', replace)
       const { data } = await assetApi.getAssets({
         ...getAssetsFilters({
           replace,

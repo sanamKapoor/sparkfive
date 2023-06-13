@@ -50,7 +50,7 @@ export default ({ children }) => {
 
         const { data } = await userApi.getUserData()
         const teamResponse = await teamApi.getTeam()
-        console.log(teamResponse.data)
+        // console.log(teamResponse.data)
         setCdnAccess(teamResponse.data.cdnAccess)
         setTranscriptAccess(teamResponse.data.transcript)
 

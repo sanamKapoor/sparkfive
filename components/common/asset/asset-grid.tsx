@@ -332,7 +332,10 @@ const AssetGrid = ({
 
 
   return (
-    <section className={`${styles.container} ${openFilter && styles.filter}`} style={{ width: openFilter ? `calc(100% - ${widthCard}px)` : '100%' }}>
+    <section
+      className={`${styles.container} ${openFilter && styles.filter}`}
+      style={{ width: openFilter ? `calc(100% - ${widthCard}px)` : "100%" }}
+    >
       {(shouldShowUpload || isDragging) && !isShare && (
         <AssetUpload
           onDragText={"Drop files here to upload"}
@@ -358,7 +361,19 @@ const AssetGrid = ({
       )}
       <div className={styles["list-wrapper"]}>
         {activeView === "grid" && (
-          <ul className={`${styles["grid-list"]} ${styles[itemSize]} ${mode === "assets" ? !openFilter ? styles["grid-" + advancedConfig.assetThumbnail] : styles["grid-filter-" + advancedConfig.assetThumbnail] : !openFilter ? styles["grid-" + advancedConfig.collectionThumbnail] : styles["grid-filter-" + advancedConfig.collectionThumbnail]}`}>
+          <ul
+            className={`${styles["grid-list"]} ${styles[itemSize]}
+            ${
+              mode === "assets"
+                ? openFilter
+                  ? styles["grid-filter-" + advancedConfig.assetThumbnail]
+                  : styles["grid-" + advancedConfig.assetThumbnail]
+                : openFilter
+                ? styles["grid-filter-" + advancedConfig.collectionThumbnail]
+                : styles["grid-" + advancedConfig.collectionThumbnail]
+            }
+            `}
+          >
             {mode === "assets" &&
               assets.map((assetItem, index) => {
                 if (assetItem.status !== "fail") {
@@ -367,7 +382,8 @@ const AssetGrid = ({
                       className={styles["grid-item"]}
                       key={assetItem.asset.id || index}
                       onClick={(e) => handleFocusChange(e, assetItem.asset.id)}
-                      ref={ref} style={{width: `$${setWidthCard}px`}}
+                      ref={ref}
+                      style={{ width: `$${setWidthCard}px` }}
                     >
                       <AssetThumbail
                         {...assetItem}
@@ -497,7 +513,13 @@ const AssetGrid = ({
               sortedFolders.map((folder, index) => {
                 return (
                   <li
-                    className={`${styles["grid-item"]} ${!openFilter ? styles[" grid-" + advancedConfig.collectionThumbnail] : styles["grid-filter-" + advancedConfig.collectionThumbnail]}`} 
+                    className={`${styles["grid-item"]} ${
+                      !openFilter
+                        ? styles[" grid-" + advancedConfig.collectionThumbnail]
+                        : styles[
+                            "grid-filter-" + advancedConfig.collectionThumbnail
+                          ]
+                    }`}
                     key={folder.id || index}
                     onClick={(e) => handleFocusChange(e, folder.id)}
                   >

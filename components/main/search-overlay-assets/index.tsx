@@ -143,6 +143,7 @@ const SearchOverlayAssets = ({  closeOverlay, importEnabled = false, operationsE
           placeholder={`Search ${isFolder ? 'Collections' : 'Assets'}`}
           onSubmit={(inputTerm, filterParams) => getData(inputTerm, true, filterParams)}
           openFilters={openFilters}
+          setOpenFilters={setOpenFilters}
         />
       </div>
 

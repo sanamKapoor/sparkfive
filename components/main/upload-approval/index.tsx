@@ -107,6 +107,8 @@ const UploadApproval = () => {
     const debouncedBatchName = useDebounce(batchName, 500);
     const [sideOpen, setSideOpen] = useState(isMobile ? false : true);
 
+    const [mode, setMode] = useState("list");
+
     const toggleSideMenu = (value = null) => {
         if (value === null) setSideOpen(!sideOpen);
         else setSideOpen(value);
@@ -1103,6 +1105,13 @@ const UploadApproval = () => {
             }
 
     }
+
+    const onView = (index: number) => {
+        setAssets(prevBatches[index] ? prevBatches[index].assets : []);
+        setMode("view");
+        setApprovalId(prevBatches[index].id);
+        setBatchName(prevBatches[index].name || "");
+    }
     
     return (
         <>
@@ -1143,8 +1152,7 @@ const UploadApproval = () => {
                             } />}
                         </div>
                     </div>
-                    {assets.length > 0 ? (
-                        <div className={styles["asset-list"]}>
+                        {assets.length > 0 && <div className={styles["asset-list"]}>
                             <div className={assetGridStyles["list-wrapper"]}>
                                 <ul className={`${assetGridStyles["grid-list"]} ${assetGridStyles["regular"]} ${styles["grid-list"]}`}>
                                     {
@@ -1210,16 +1218,7 @@ const UploadApproval = () => {
                                         })}
                                 </ul>
                             </div>
-                        </div>
-                    ) : (
-                        <DropzoneProvider>
-                            <AssetUpload
-                                onDragText={"Drop files here to upload"}
-                                preDragText={`Or Drag and Drop your file(s) here to upload`}
-                                onFilesDataGet={onFilesDataGet}
-                            />
-                        </DropzoneProvider>
-                    )}
+                        </div>}
                 </main>
                 {sideOpen &&
                     <div className={`${styles['right-panel']}`}>
@@ -1294,7 +1293,7 @@ const UploadApproval = () => {
                                         <ul>
                                             {prevBatches.map((batch, i) => (
                                                 <li className={styles['previous-item']} key={i}>
-                                                    <div className={styles['previous-item-wrapper']}>
+                                                    <div className={styles['previous-item-wrapper']} onClick={() =>  onView(i)}>
                                                         <div className={styles['previous-thumbnail']}>
                                                             {batch?.assets[0]?.thumbailUrl && <img src={batch?.assets[0]?.thumbailUrl || Assets.unknown} alt={batch?.name} />}
                                                             {!batch?.assets[0]?.thumbailUrl && <AssetIcon extension={batch?.assets[0]?.asset.extension} onList={true} />}
@@ -1466,7 +1465,7 @@ const UploadApproval = () => {
                 disabledConfirm={false}
                 additionalClasses={['visible-block']}
                 showCancel={false}
-                overlayAdditionalClass={styles['sendMsgModal']}
+                overlayAdditionalClass={submitted ? styles['sendMsgModal'] : styles['sendConfirmModal']}
                 confirmAction={() => {
 
                 }} >

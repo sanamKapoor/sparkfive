@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react'
 import update from 'immutability-helper'
 
-import { FilterContext, AssetContext } from '../context'
+import { FilterContext, AssetContext, UserContext } from '../context'
 
 // APIs
 import campaignApi from '../server-api/campaign'
@@ -20,11 +20,12 @@ import { useRouter } from 'next/router'
 export default ({ children, isPublic = false }) => {
   const location = useRouter()
   const { activeFolder } = useContext(AssetContext)
+  const { advancedConfig } = useContext(UserContext)
 
   const [searchFilterParams, setSearchFilterParams] = useState({});
   const [activeSortFilter, setActiveSortFilter] = useState({
     sort: location.pathname.indexOf('deleted-assets-list') !== -1 ? selectOptions.sort[5] : selectOptions.sort[1],
-    mainFilter: 'all',
+    mainFilter: advancedConfig.defaultLandingPage === 'allTab' ? 'all' : 'folders',
     ...DEFAULT_FILTERS,
     dimensionsActive: false
   })

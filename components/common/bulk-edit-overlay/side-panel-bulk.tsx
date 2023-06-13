@@ -277,6 +277,7 @@ const SidePanelBulk = ({
 
   return (
     <div className={styles.container}>
+      <div  className={styles.innerContainer}>
       <h2>{addMode ? 'Add Attributes to' : 'Remove Attributes from'} Selected Assets</h2>
       <section className={styles['first-section']}>
         <p>{`Editing (${elementsSelected.length}) files`}</p>
@@ -579,6 +580,7 @@ const SidePanelBulk = ({
         confirmCreation={(project) => handleProjectChange({ ...project, label: project.name }, 'create-option')}
         modalIsOpen={newProjectName ? true : false}
       />
+      </div>
 
       <div className={styles['save-changes']}>
         <Button text={'Save Changes'} type={'button'} styleType={'primary'} onClick={prepareSave} disabled={elementsSelected.length === 0 || loading} />

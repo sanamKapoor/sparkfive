@@ -10,21 +10,20 @@ import AssetImg from "../asset/asset-img";
 import SidePanelBulk from "./side-panel-bulk";
 import customFieldsApi from "../../../server-api/attribute";
 import assetApi from "../../../server-api/asset";
-import tagApi from '../../../server-api/tag'
-import projectApi from '../../../server-api/project'
-import campaignApi from '../../../server-api/campaign'
-import attributeApi from '../../../server-api/attribute'
-import folderApi from '../../../server-api/folder'
+import tagApi from "../../../server-api/tag";
+import projectApi from "../../../server-api/project";
+import campaignApi from "../../../server-api/campaign";
+import attributeApi from "../../../server-api/attribute";
+import folderApi from "../../../server-api/folder";
 import update from "immutability-helper";
 import { UserContext } from "../../../context";
-import toastUtils from '../../../utils/toast';
-import ProjectCreationModal from '../modals/project-creation-modal';
-import ProductAddition from '../asset/product-addition';
+import toastUtils from "../../../utils/toast";
+import ProjectCreationModal from "../modals/project-creation-modal";
+import ProductAddition from "../asset/product-addition";
 import SidePanel from "../../common/asset/detail-side-panel";
 import EditSidePanel from "./edit-side-panel";
 import { format } from "date-fns";
 import fileSize from "filesize";
-
 
 const mappingCustomFieldData = (list, valueList) => {
   let rs = [];
@@ -48,7 +47,7 @@ const EditDetail = ({
   setCurrentIndex,
   currentAsset: asset,
   totalLength,
-  setCurrentAsset
+  setCurrentAsset,
 }) => {
   const [activeDropdown, setActiveDropdown] = useState("");
   const [inputTags, setInputTags] = useState([]);
@@ -73,48 +72,50 @@ const EditDetail = ({
   );
   const [addMode, setAddMode] = useState(true);
 
-  const { advancedConfig } = useContext(UserContext)
-  const [hideFilterElements] = useState(advancedConfig.hideFilterElements)
+  const { advancedConfig } = useContext(UserContext);
+  const [hideFilterElements] = useState(advancedConfig.hideFilterElements);
 
-  const [channel, setChannel] = useState(null)
+  const [channel, setChannel] = useState(null);
 
-  const [inputCampaigns, setInputCampaigns] = useState([])
-  const [assetFolder, setAssetFolder] = useState(null)
+  const [inputCampaigns, setInputCampaigns] = useState([]);
+  const [assetFolder, setAssetFolder] = useState(null);
 
+  const [inputProjects, setInputProjects] = useState([]);
 
-  const [inputProjects, setInputProjects] = useState([])
+  const [newProjectName, setNewProjectName] = useState("");
 
-  const [newProjectName, setNewProjectName] = useState('')
+  const [assetProduct, setAssetProduct] = useState(null);
+  const [assetProducts, setAssetProducts] = useState([]);
 
-  const [assetProduct, setAssetProduct] = useState(null)
-  const [assetProducts, setAssetProducts] = useState([])
-
-  const [warningMessage, setWarningMessage] = useState('')
+  const [warningMessage, setWarningMessage] = useState("");
 
   // Custom fields
-  const [activeCustomField, setActiveCustomField] = useState<number>()
+  const [activeCustomField, setActiveCustomField] = useState<number>();
 
   const getInputData = async () => {
     try {
-      const projectsResponse = await projectApi.getProjects()
-      const campaignsResponse = await campaignApi.getCampaigns()
-      const folderResponse = await folderApi.getFoldersSimple()
-      const tagsResponse = await tagApi.getTags()
-      const customFieldsResponse = await attributeApi.getCustomFields({ isAll: 1, sort: 'createdAt,asc' })
+      const projectsResponse = await projectApi.getProjects();
+      const campaignsResponse = await campaignApi.getCampaigns();
+      const folderResponse = await folderApi.getFoldersSimple();
+      const tagsResponse = await tagApi.getTags();
+      const customFieldsResponse = await attributeApi.getCustomFields({
+        isAll: 1,
+        sort: "createdAt,asc",
+      });
 
-      setInputProjects(projectsResponse.data)
-      setInputCampaigns(campaignsResponse.data)
-      setInputFolders(folderResponse.data)
-      setInputTags(tagsResponse.data)
-      setInputCustomFields(customFieldsResponse.data)
+      setInputProjects(projectsResponse.data);
+      setInputCampaigns(campaignsResponse.data);
+      setInputFolders(folderResponse.data);
+      setInputTags(tagsResponse.data);
+      setInputCustomFields(customFieldsResponse.data);
     } catch (err) {
       // TODO: Maybe show error?
     }
-  }
+  };
 
   useEffect(() => {
-    getInputData()
-  }, [])
+    getInputData();
+  }, []);
 
   const handlePrevNav = () => {
     setCurrentIndex((prevIndex) =>
@@ -187,58 +188,72 @@ const EditDetail = ({
   };
 
   const addProductBlock = () => {
-    setAssetProducts([...assetProducts, null])
-  }
+    setAssetProducts([...assetProducts, null]);
+  };
 
   const handleProjectChange = (selected, actionMeta) => {
-    if (!selected || assetProjects.findIndex(selectedItem => selected.label === selectedItem.name) !== -1) return
-    if (actionMeta.action === 'create-option') {
-      setNewProjectName(selected.value)
+    if (
+      !selected ||
+      assetProjects.findIndex(
+        (selectedItem) => selected.label === selectedItem.name
+      ) !== -1
+    )
+      return;
+    if (actionMeta.action === "create-option") {
+      setNewProjectName(selected.value);
     } else if (selected) {
-      setAssetProjects(update(assetProjects, { $push: [selected] }))
+      setAssetProjects(update(assetProjects, { $push: [selected] }));
     }
-    setActiveDropdown('')
-  }
+    setActiveDropdown("");
+  };
 
   const customFieldAttributes = (customFields) => {
-    let values = []
+    let values = [];
     customFields.map((field) => {
-      values = values.concat(field.values)
-    })
+      values = values.concat(field.values);
+    });
 
-    return values
+    return values;
+  };
 
-  }
-
-
-  const getRemoveAttributes = ({ campaigns, projects, tags, customs, folders }) => {
-    const filterFn = (chosenList) => origItem => chosenList.findIndex(chosenItem => chosenItem.id === origItem.id) === -1
+  const getRemoveAttributes = ({
+    campaigns,
+    projects,
+    tags,
+    customs,
+    folders,
+  }) => {
+    const filterFn = (chosenList) => (origItem) =>
+      chosenList.findIndex((chosenItem) => chosenItem.id === origItem.id) ===
+      -1;
     return {
       removeCampaigns: originalInputs.campaigns.filter(filterFn(campaigns)),
       removeProjects: originalInputs.projects.filter(filterFn(projects)),
       removeTags: originalInputs.tags.filter(filterFn(tags)),
-      removeCustoms: customFieldAttributes(originalInputs.customs).filter(filterFn(customs)),
+      removeCustoms: customFieldAttributes(originalInputs.customs).filter(
+        filterFn(customs)
+      ),
       removeFolders: originalInputs.folders.filter(filterFn(folders)),
-    }
-  }
-
+    };
+  };
 
   const saveChanges = async () => {
     try {
-      let filters = {}
-      setWarningMessage('')
-      setLoading(true)
-      const mapAttributes = ({ id, name }) => ({ id, name })
+      let filters = {};
+      setWarningMessage("");
+      setLoading(true);
+      const mapAttributes = ({ id, name }) => ({ id, name });
 
-      const campaigns = assetCampaigns.map(mapAttributes)
-      const projects = assetProjects.map(mapAttributes)
-      const tags = assetTags.map(mapAttributes)
-      const customs = customFieldAttributes(assetCustomFields).map(mapAttributes)
-      const folders = assetFolders.map(mapAttributes)
+      const campaigns = assetCampaigns.map(mapAttributes);
+      const projects = assetProjects.map(mapAttributes);
+      const tags = assetTags.map(mapAttributes);
+      const customs =
+        customFieldAttributes(assetCustomFields).map(mapAttributes);
+      const folders = assetFolders.map(mapAttributes);
       const updateObject = {
         assetIds: asset?.asset,
-        attributes: {}
-      }
+        attributes: {},
+      };
 
       if (addMode) {
         updateObject.attributes = {
@@ -248,45 +263,54 @@ const EditDetail = ({
           projects,
           tags,
           customs,
-          products: []
-        }
+          products: [],
+        };
 
-        if (assetProducts.length > 0) updateObject.attributes.products = assetProducts.map((item) => {
-          if (item) {
-            return { product: item, productTags: item.tags }
-          } else {
-            return null
-          }
-        }).filter((item) => item !== null)
+        if (assetProducts.length > 0)
+          updateObject.attributes.products = assetProducts
+            .map((item) => {
+              if (item) {
+                return { product: item, productTags: item.tags };
+              } else {
+                return null;
+              }
+            })
+            .filter((item) => item !== null);
         // if (assetFolder) updateObject.attributes.folders = [{ name: assetFolder.name, id: assetFolder.id }]
       } else {
-        updateObject.attributes = getRemoveAttributes({ campaigns, projects, tags, customs, folders })
+        updateObject.attributes = getRemoveAttributes({
+          campaigns,
+          projects,
+          tags,
+          customs,
+          folders,
+        });
       }
 
-      updateObject.activeFolder = activeFolder
+      updateObject.activeFolder = activeFolder;
 
-      console.log(updateObject)
+      console.log(updateObject);
 
-      await assetApi.updateMultipleAttributes(updateObject, filters)
-      await getInitialAttributes()
-      toastUtils.success('Asset edits saved')
+      await assetApi.updateMultipleAttributes(updateObject, filters);
+      await getInitialAttributes();
+      toastUtils.success("Asset edits saved");
     } catch (err) {
-      console.log(err)
-      toastUtils.error('An error occurred, please try again later')
+      console.log(err);
+      toastUtils.error("An error occurred, please try again later");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const updateAsset = async (inputData) => {
     try {
       // Optimistic data set
-    //   setCurrentAsset({
-    //     ...assetDetail,
-    //     ...inputData.updateData,
-    //   });
+      //   setCurrentAsset({
+      //     ...assetDetail,
+      //     ...inputData.updateData,
+      //   });
       const { data } = await assetApi.updateAsset(asset?.asset?.id, inputData);
-    //   setAssetDetail(data);
+      //   setAssetDetail(data);
     } catch (err) {
       // console.log(err);
     }
@@ -335,12 +359,15 @@ const EditDetail = ({
         </div>
       </div>
       <div className={styles.side}>
-        <h3>Add Attributes to Selected Assets</h3>
-        <div className={styles["first-section"]}>
+        <div className={styles.editClose}>
+          <IconClickable src={Utilities.bigblueClose} onClick={close} />
+        </div>
+        {/* <h3>Add Attributes to Selected Assets</h3> */}
+        {/* <div className={styles["first-section"]}>
           <div className={styles["field-wrapper"]}>
             <div className={`secondary-text ${styles.field}`}>Last Updated</div>
             <div className={`normal-text ${styles["meta-text"]}`}>
-              {format(new Date(asset?.asset?.updatedAt), "MM/dd/yyyy")}
+              {asset?.asset?.updatedAt ? format(new Date(asset?.asset?.updatedAt), "MM/dd/yyyy") : ''}
             </div>
           </div>
           <div className={styles["field-wrapper"]}>
@@ -375,7 +402,7 @@ const EditDetail = ({
               {asset?.asset?.dpi === 0 ? '' : asset?.asset?.dpi + ''}
             </div>
           </div>
-        </div>
+        </div> */}
         <div className={styles["second-section"]}>
           <EditSidePanel
             asset={asset?.asset}

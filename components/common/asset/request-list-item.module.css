@@ -261,6 +261,16 @@
   text-align: center;
 }
 
+@media (max-width:600px){
+  .item {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  .header {
+    padding: 0 15px;
+  }
+}
+
 @media screen and (max-width: 768px)  {
   .thumbnail {
     display: none;

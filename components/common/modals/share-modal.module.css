@@ -1,6 +1,7 @@
 .wrapper{
     padding-bottom: 40px;
-    height: 100%;
+    height: calc(100vh - 530px);
+    overflow-y: auto;
 }
 
 .input-wrapper{
@@ -27,7 +28,10 @@
 }
 
 .row-field-content{
-    padding: 20px 0 20px 20px;
+    /* padding: 20px 0 20px 20px; */
+}
+.share-outer-modal{
+    height: 100vh;
 }
 
 .field-radio-wrapper{
@@ -79,6 +83,9 @@
     .radio-button-wrapper:last-child{
         margin-left: 0;
      }
+     .wrapper{
+        height: calc(100vh - 330px);
+    }
 }
 
 .arrow-icon{

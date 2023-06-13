@@ -297,7 +297,7 @@ const AssetHeaderOps = ({
 				{!deselectHidden &&
 					<img className={styles.close} src={Utilities.blueClose} onClick={deselectAll} />
 				}
-				<div className={styles.text}>{!isFolder ? `${(selectedAssets.length)} Assets`: `${selectedFolders.length} Collections`}  Selected</div>
+				<div className={styles.text}>{!isFolder ? `${(totalSelectAssets)} Assets`: `${selectedFolders.length} Collections`}  Selected</div>
 
 			</div>
 

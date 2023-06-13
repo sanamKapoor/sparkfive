@@ -18,6 +18,10 @@
   gap: 16px;
 }
 
+.plusIcon{
+  padding:0px;
+}
+
 @media screen and (max-width: 900px) {
   .container {
     padding: 16px 40px;
@@ -75,6 +79,11 @@
   align-items: center;
   gap: 17px;
   position: relative;
+}
+.sec-filters button span{
+  position: relative;
+  left: 0.5px;
+  bottom: 0.3px;
 }
 
 .sort-wrapper {
@@ -215,9 +224,6 @@ li.dropdown-title {
     gap: 0;
   }
 
-  .wrapper .innerwrapper {
-    /* width: calc(100% - 220px);     */
-  }
   .wrapper .innerwrapper .tab-list-item {
     /* width: calc(100% - 35px);
     overflow: hidden; */
@@ -274,7 +280,6 @@ li.dropdown-title {
     left: 0;
     bottom: 0;
     display: flex;
-    justify-content: center;
     align-items: center;
   }
 }
