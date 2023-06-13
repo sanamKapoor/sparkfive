@@ -423,8 +423,6 @@
 
 .right-form{
   padding: 0;
-  overflow-y: auto;
-    height: calc(100vh - 381px);
 }
 
 .file-name{
@@ -508,7 +506,12 @@
   }
 }
 
-
+@media (min-width:768px){
+  .right-form{
+    overflow-y: auto;
+      height: calc(100vh - 401px);
+  }
+}
 
 @media screen and (max-width: 600px) {
   .back {
@@ -621,6 +624,13 @@
     gap: 32px;
   }
 
+  .button-wrapper {
+    padding: 0 15px;
+    align-items: center;
+  }
+  .main-title h2{
+    font-size: 18px;
+  }
 }
 
 @media screen and (max-width: 380px) {
@@ -633,6 +643,7 @@
 .batch-outer {
   padding: 0;
   align-items: center;
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .titleAdmin {

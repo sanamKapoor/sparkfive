@@ -457,10 +457,13 @@ const EditSidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
 
 
   return (
+    <>
     <div className={` ${!isShare ? styles.fieldWrapper : styles.shareWrapper}`}>
 
-      {!hideFilterElements.campaigns &&
-      <div className={styles['field-wrapper']} >
+
+      {!hideFilterElements.campaigns && 
+      <div className={styles['field-wrapper']} style={{borderTop: 'none'}}>
+          <h3>Add Attributes to Selected Assets</h3>
         <CreatableSelect
           title='Campaigns'
           addText='Add to Campaign'
@@ -731,10 +734,12 @@ const EditSidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
         />
       </>}
 
-      <div className={styles['save-submodal-btn']}>
+
+    </div>
+    <div className={styles['save-submodal-btn']}>
           <Button text={'Save Changes'} type={'button'} styleType={'primary'} />
       </div>
-    </div>
+      </>
   )
 }
 
