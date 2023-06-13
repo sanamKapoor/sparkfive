@@ -30,7 +30,16 @@ import { ASSET_UPLOAD_APPROVAL } from "../../../constants/permissions";
 export default function AssetRelatedAddition({ assets: assetData  = [], associateFileId, onUploadFinish = (assets) => {}, currentRelatedAssets = [], displayMode='dropdown'}){
 
     const { advancedConfig, hasPermission } = useContext(UserContext)
-    const { uploadingPercent, setUploadingPercent } = useContext(AssetContext)
+    const {
+      uploadingPercent,
+      setUploadingPercent,
+      setUploadingAssets,
+      setAddedIds,
+      setTotalAssets,
+      totalAssets,
+      showUploadProcess,
+      setUploadingFileName,
+    } = useContext(AssetContext);
 
     const fileBrowserRef = useRef(undefined)
 
@@ -61,6 +70,7 @@ export default function AssetRelatedAddition({ assets: assetData  = [], associat
         setAssets(updatedAssets)
         onUploadFinish(updatedAssets)
     }
+     
 
     // Upload asset
     const uploadAsset  = async (i: number, assets: any, currentDataClone: any, totalSize: number, folderId, folderGroup = {}, subFolderAutoTag = true) => {
@@ -81,7 +91,7 @@ export default function AssetRelatedAddition({ assets: assetData  = [], associat
                 // Violate validation, mark failure
                 const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'fail', index, error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE} : asset);
 
-
+                setUploadingAssets(updatedAssets)
                 // Remove current asset from asset placeholder
                 // let newAssetPlaceholder = updatedAssets.filter(asset => asset.status !== 'fail')
 
@@ -94,10 +104,10 @@ export default function AssetRelatedAddition({ assets: assetData  = [], associat
                 }
             } else {
                 // Show uploading toast
-                // showUploadProcess('uploading', i)
+                showUploadProcess('uploading', i)
 
                 // Set current upload file name
-                // setUploadingFileName(assets[i].asset.name)
+                setUploadingFileName(assets[i].asset.name)
 
 
                 // If user is uploading files in folder which is not saved from server yet
@@ -180,7 +190,7 @@ export default function AssetRelatedAddition({ assets: assetData  = [], associat
 
                 // Mark this asset as done
                 const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, status: 'done'} : asset);
-
+                setUploadingAssets(updatedAssets)
                 // Update uploading assets
                 setUploadUpdate(updatedAssets)
 
@@ -191,10 +201,12 @@ export default function AssetRelatedAddition({ assets: assetData  = [], associat
                     await uploadAsset(i+1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, subFolderAutoTag)
                 }
             }
+            showUploadProcess('done')
         } catch (e){
             // Violate validation, mark failure
             const updatedAssets = assets.map((asset, index)=> index === i ? {...asset, index, status: 'fail', error: 'Processing file error'} : asset);
 
+            setUploadingAssets(updatedAssets)
             // Update uploading assets
             setUploadUpdate(updatedAssets)
 
@@ -214,6 +226,7 @@ export default function AssetRelatedAddition({ assets: assetData  = [], associat
             }
         }
     }
+
 
     // Upload asset
     const reUpload  = async (i: number, assets: any, currentDataClone: any, totalSize: number, folderId, folderGroup = {}, subFolderAutoTag = true) => {
