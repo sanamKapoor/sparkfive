@@ -50,9 +50,9 @@ const sort = (data) => {
 const mappingCustomFieldData = (list, valueList) => {
   let rs = []
   list.map((field)=>{
-    let value = valueList.filter(valueField => valueField.id === field.id)
+    let value = valueList?.filter(valueField => valueField.id === field.id)
 
-    if(value.length > 0){
+    if(value?.length > 0){
       value[0].values = sort(value[0].values);
       rs.push(value[0])
     }else{

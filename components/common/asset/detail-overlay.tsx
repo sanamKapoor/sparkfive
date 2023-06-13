@@ -1065,32 +1065,13 @@ const DetailOverlay = ({
                     }
                   />
                 )}
-                {/* {mode === "resize" && (
-                  <Rnd
-                    position={{ x: detailPosSize.x, y: detailPosSize.y }}
-                    size={{
-                      width: detailPosSize.width,
-                      height: detailPosSize.height,
-                    }}
-                    className={`${styles["react-draggable"]}`}
-                    lockAspectRatio={true}
-                    // onDragStop={(e, d) => {
-                    //   setDetailPosSize(Object.assign({...detailPosSize}, { x: d.x, y: d.y}))
-                    // }}
-                    onResizeStop={(e, direction, ref, delta, position) =>
-                      onResizeStop(ref.style.width, ref.style.height, position)
-                    }
-                  >
-                    <AssetImg name={assetDetail.name} assetImg={versionRealUrl} imgClass="img-preview" isResize />
-                  </Rnd>
-                )} */}
 
                 {mode === "resize" && (
                   <Rnd
                     position={{ x: detailPosSize.x, y: detailPosSize.y }}
                     size={{
-                      width: detailPosSize.width,
-                      height: detailPosSize.height,
+                      width: width,
+                      height: height,
                     }}
                     className={`${styles["react-draggable"]}`}
                     lockAspectRatio={true}

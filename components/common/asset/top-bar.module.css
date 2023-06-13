@@ -215,9 +215,6 @@ li.dropdown-title {
     gap: 0;
   }
 
-  .wrapper .innerwrapper {
-    /* width: calc(100% - 220px);     */
-  }
   .wrapper .innerwrapper .tab-list-item {
     /* width: calc(100% - 35px);
     overflow: hidden; */
@@ -274,7 +271,6 @@ li.dropdown-title {
     left: 0;
     bottom: 0;
     display: flex;
-    justify-content: center;
     align-items: center;
   }
 }

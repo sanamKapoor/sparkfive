@@ -1319,7 +1319,7 @@ const UploadRequest = () => {
               <div className={`${styles["button-wrapper"]} m-b-25`}>
                 <div className={styles["topTitle"]}>
                   <div className={styles["main-title"]}>
-                    <p>
+                    <p onClick={onCancelView} style={{cursor: 'pointer', textDecoration: 'underline'}}>
                       Upload Requests
                       <span>
                         <img

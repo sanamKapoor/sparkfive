@@ -340,7 +340,7 @@ const EditDetail = ({
           <div className={styles["field-wrapper"]}>
             <div className={`secondary-text ${styles.field}`}>Last Updated</div>
             <div className={`normal-text ${styles["meta-text"]}`}>
-              {format(new Date(asset?.asset?.updatedAt), "MM/dd/yyyy")}
+              {asset?.asset?.updatedAt ? format(new Date(asset?.asset?.updatedAt), "MM/dd/yyyy") : ''}
             </div>
           </div>
           <div className={styles["field-wrapper"]}>
