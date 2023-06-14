@@ -29,6 +29,7 @@ const SearchOverlayAssets = ({  closeOverlay, importEnabled = false, operationsE
 
   const getData = async (inputTerm, replace = true, _filterParams = filterParams) => {
     try {
+      setOpenFilters(false);
       // setSearchTerm(inputTerm)
       if(!isFolder){
         let fetchFn = assetApi.getAssets
