@@ -36,7 +36,6 @@ const ItemAssets = ({ type, itemId }) => {
 
   useEffect(() => {
     setActivePageMode('item')
-    console.log('common/asset/item-asset.tsx--- useEffect --- line:39', 'SET ACTIVE FOLDER');
     setActiveFolder('')
     getAssets()
   }, [])
