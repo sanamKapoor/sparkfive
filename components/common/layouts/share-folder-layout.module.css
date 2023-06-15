@@ -83,6 +83,19 @@
 }
 
 
+@media (min-width:1200px){
+    .header {
+        position: fixed;
+        width: 100%;
+        padding: 0 32px;
+        z-index: 9999;
+    }
+    .logo-img {
+        max-width: 100px;
+        object-fit: contain;
+    }
+    
+}
 
 @media screen and (max-width: 600px) {
     .header {
