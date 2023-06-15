@@ -16,7 +16,7 @@
 .react-draggable {
   border: none !important;
   background-color: transparent;
-  display: flex;
+  display: flex !important;
   align-items: center;
   justify-content: center;
   /* border: 2px dotted #100d0f !important; */
@@ -26,9 +26,12 @@
 }
 
 .react-draggable img {
-  height: 100%;
-  width: auto;
   border: 2px dotted #100d0f !important;
+  height: auto;
+  object-fit: contain;
+  aspect-ratio: 1 / 1;
+  width: initial;
+  max-height: 100%;
 }
 
 @media screen and (max-height: 760px) {
@@ -128,7 +131,7 @@
   grid-area: asset-menu;
 }
 
-.img-wrapper {
+.img-wrapper, .share-img-wrapper {
   height: 100%;
   width: 100%;
   padding: 24px;
@@ -141,7 +144,8 @@
 }
 
 .img-wrapper>img,
-.img-wrapper video {
+.img-wrapper video,.share-img-wrapper>img,
+.share-img-wrapper video{
   width: initial;
   max-height: 100%;
   /* object-fit: scale-down; */
@@ -327,6 +331,7 @@
   }
   .share .content {
     width: 100%;
+
   }
 }
 
@@ -337,6 +342,10 @@
 
   .img-wrapper {
     height: calc(100vh - 90px);
+    max-width: 1250px;
+  }
+  .share-img-wrapper{
+    height: calc(100vh - 135px);
   }
 
 }

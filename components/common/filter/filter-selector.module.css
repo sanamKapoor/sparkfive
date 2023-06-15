@@ -51,6 +51,7 @@
     margin: 0 5px 0 0;
     font-size: 13px;
     font-weight: 400;
+    word-break: break-word;
 }
 .item-name {
     text-align: left;

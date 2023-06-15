@@ -29,6 +29,7 @@
   padding-top: 15px;
   padding-bottom: 25px;
   min-width: 345px;
+  max-width: 345px;
   /* height: calc(100vh - 150px);
   overflow-y: auto; */
 }

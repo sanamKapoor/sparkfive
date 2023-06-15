@@ -1033,7 +1033,7 @@ const DetailOverlay = ({
                 )}
             </div>
           </div>
-          <div className={styles["img-wrapper"]}>
+          <div className={!isShare ? styles["img-wrapper"] : styles["share-img-wrapper"]}>
             <div className={styles["notes-wrapper"]}>
               {notes.map(
                 (note, indx) =>
