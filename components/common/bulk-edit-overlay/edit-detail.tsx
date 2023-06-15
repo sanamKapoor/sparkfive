@@ -43,6 +43,7 @@ const mappingCustomFieldData = (list, valueList) => {
 };
 
 const EditDetail = ({
+  onClose,
   currentIndex,
   setCurrentIndex,
   currentAsset: asset,
@@ -360,7 +361,7 @@ const EditDetail = ({
       </div>
       <div className={styles.side}>
         <div className={styles.editClose}>
-          <IconClickable src={Utilities.bigblueClose} onClick={close} />
+          <IconClickable src={Utilities.bigblueClose} onClick={onClose} />
         </div>
         {/* <h3>Add Attributes to Selected Assets</h3> */}
         {/* <div className={styles["first-section"]}>

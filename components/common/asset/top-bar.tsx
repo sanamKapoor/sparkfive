@@ -267,7 +267,7 @@ const TopBar = ({
               className={styles.search}
             />
           )}
-          {activeSearchOverlay && (
+          {activeSearchOverlay && !(isShare && isFolder) &&(
             <SearchOverlay
               closeOverlay={closeSearchOverlay}
               operationsEnabled={true}

@@ -1070,8 +1070,8 @@ const DetailOverlay = ({
                   <Rnd
                     position={{ x: detailPosSize.x, y: detailPosSize.y }}
                     size={{
-                      width: width,
-                      height: height,
+                      width: detailPosSize.width,
+                      height: detailPosSize.height,
                     }}
                     className={`${styles["react-draggable"]}`}
                     lockAspectRatio={true}
@@ -1201,7 +1201,7 @@ const DetailOverlay = ({
               )}
             </>
           )}
-          {!isShare && activeSideComponent === "download" && (
+          {activeSideComponent === "download" && (
             <CropSidePanel
               isShare={isShare}
               sharePath={sharePath}
