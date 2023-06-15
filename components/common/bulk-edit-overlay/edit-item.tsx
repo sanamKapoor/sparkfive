@@ -88,6 +88,7 @@ const EditItem = ({assets, asset, thumbailUrl, realUrl, isEditSelected, index, t
             currentAsset={curAsset}
             setCurrentAsset={setCurAsset}
             totalLength={totalLength}
+            onClose={() => setModalOpen(false)}
           />
         }
         closeButtonOnly

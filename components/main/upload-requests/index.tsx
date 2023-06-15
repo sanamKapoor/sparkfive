@@ -2049,7 +2049,7 @@ const UploadRequest = () => {
               />
             </div>
           </div>
-          <div className={"right-side"}>
+          <div  className={`${styles["right-side"]}`}>
             <div
               className={`${detailPanelStyles.container} ${styles["right-form"]}`}
             >

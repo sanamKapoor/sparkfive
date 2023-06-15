@@ -39,6 +39,7 @@ export default function AssetRelatedAddition({ assets: assetData  = [], associat
       totalAssets,
       showUploadProcess,
       setUploadingFileName,
+      setUploadSourceType
     } = useContext(AssetContext);
 
     const fileBrowserRef = useRef(undefined)
@@ -404,7 +405,7 @@ export default function AssetRelatedAddition({ assets: assetData  = [], associat
                 })
 
                 // Store current uploading assets for calculation
-                // setUploadingAssets(newPlaceholders)
+                setUploadingAssets(newPlaceholders)
 
                 // Showing assets = uploading assets + existing assets
                 setAssets([...newPlaceholders, ...currentDataClone])
@@ -424,11 +425,11 @@ export default function AssetRelatedAddition({ assets: assetData  = [], associat
                 setUploadingPercent(0)
 
                 // Finish uploading process
-                // showUploadProcess('done')
+                showUploadProcess('done')
 
             } catch (err) {
                 // Finish uploading process
-                // showUploadProcess('done')
+                showUploadProcess('done')
 
                 setAssets(currentDataClone)
                 console.log(err)
@@ -479,56 +480,66 @@ export default function AssetRelatedAddition({ assets: assetData  = [], associat
             const googleAuthToken = cookiesUtils.get('gdriveToken')
             let currentDataClone = [...assets]
             try {
-                let totalSize = 0
-                const newPlaceholders = []
-                files.forEach(file => {
-                    totalSize += file.sizeBytes
-                    newPlaceholders.push({
-                        asset: {
-                            name: file.name,
-                            createdAt: new Date(),
-                            size: file.sizeBytes,
-                            stage: 'draft',
-                            type: 'image'
-                        },
-                        status: 'queued',
-                        isUploading: true
-                    })
-                })
-
-                setAssets([...newPlaceholders, ...currentDataClone])
-
-                setUploading(true)
-
-
-                // setUploadSourceType('dropbox')
-
-                // Check if there is 1 folder in upload links
-                // const containFolderUrl = files.filter(file => file.type === 'folder')
-
-                // setFolderImport(containFolderUrl.length > 0)
-
-                const { data } = await assetApi.importAssets('drive', files.map(file => ({
-                    googleAuthToken,
-                    id: file.id,
+              let totalSize = 0;
+              const newPlaceholders = [];
+              files.forEach((file) => {
+                totalSize += file.sizeBytes;
+                newPlaceholders.push({
+                  asset: {
                     name: file.name,
+                    createdAt: new Date(),
                     size: file.sizeBytes,
-                    mimeType: file.mimeType,
-                    type: file.type,
-                    versionGroup: file.versionGroup,
-                    changedName: file.changedName
-                })), getCreationParameters({estimateTime: 1, totalSize}))
+                    stage: "draft",
+                    type: "image",
+                  },
+                  status: "queued",
+                  isUploading: true,
+                });
+              });
 
-                setUploadingPercent(0)
+              setAssets([...newPlaceholders, ...currentDataClone]);
 
+              setUploading(true);
 
-                // Mark done
-                const updatedAssets = data.map(asset => { return {...asset, status: 'done'}});
+              // Show uploading process
+              showUploadProcess("uploading");
 
-                // Update uploading assets
-                setUploadUpdate(updatedAssets)
+            //   // Show message
+            //   setUploadingFileName("Importing files from Drop Box");
 
-                // toastUtils.success('Assets imported.')
+              setUploadSourceType("dropbox");
+
+              // Check if there is 1 folder in upload links
+              // const containFolderUrl = files.filter(file => file.type === 'folder')
+
+              // setFolderImport(containFolderUrl.length > 0)
+
+              const { data } = await assetApi.importAssets(
+                "drive",
+                files.map((file) => ({
+                  googleAuthToken,
+                  id: file.id,
+                  name: file.name,
+                  size: file.sizeBytes,
+                  mimeType: file.mimeType,
+                  type: file.type,
+                  versionGroup: file.versionGroup,
+                  changedName: file.changedName,
+                })),
+                getCreationParameters({ estimateTime: 1, totalSize })
+              );
+
+              setUploadingPercent(0);
+
+              // Mark done
+              const updatedAssets = data.map((asset) => {
+                return { ...asset, status: "done" };
+              });
+
+              // Update uploading assets
+              setUploadUpdate(updatedAssets);
+
+              // toastUtils.success('Assets imported.')
             } catch (err) {
                 setAssets(currentDataClone)
 

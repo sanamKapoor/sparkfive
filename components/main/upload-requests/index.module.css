@@ -76,9 +76,7 @@
 
 
 .asset-view-list{
-  border: 1px solid var(--color-border);
   padding: 20px;
-  border-radius: 6px;
 }
 
 .grid-list{
@@ -166,15 +164,24 @@
   width: 415px;
 }
 
+
+
+/* .right-panel ul{
+  left: 0;
+  right: inherit;
+} */
+
 .modal-wrapper{
   width: 75vw;
   max-width: 1385px;
-  padding: 25px 32px;
+  padding: 0 32px;
   display: grid;
   grid-template-columns: 1fr 35%;
   gap: 60px;
   height: 100%;
 }
+
+
 
 .modal-field-title{
   font-weight: 400;
@@ -258,6 +265,28 @@
   flex-wrap: wrap;
   gap: 8px;
   margin-left: 8px;
+}
+.right-side ul{
+  right: inherit;
+}
+
+@media (min-width:768px){
+  .batch-outer > div > div:first-child{
+    position: absolute;
+    right: 20px;
+
+  }
+  .batch-outer > div:first-child{
+    overflow-y: hidden;
+  }
+  .right-side{
+    padding: 65px 0 40px;
+    border-left: 1px solid #ccc;
+    padding-left: 25px;
+  }
+  .left-bar{
+    padding: 65px 0 40px;
+  }
 }
 
 @media screen and (max-width: 900px) {
@@ -404,6 +433,7 @@
   width: 14px !important;
 }
 
+
 /* .left-bar{
   max-height: calc(100% - 200px);
 } */
@@ -483,9 +513,7 @@
 .asset-grid-text-wrapper-2-icon{
   width: calc(100% - 50px)
 }
-.right-side{
-  padding: 0;
-}
+
 .right-side textarea{
   min-height: 159px;
 }
@@ -620,7 +648,7 @@
   .modal-wrapper {
     grid-template-columns: 1fr;
     width: 100%;
-    padding: 40px 32px;
+    padding: 20px 32px;
     gap: 32px;
   }
 
