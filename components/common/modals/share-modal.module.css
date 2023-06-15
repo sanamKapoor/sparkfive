@@ -1,7 +1,8 @@
 .wrapper{
-    padding-bottom: 40px;
-    height: calc(100vh - 530px);
+    /* padding-bottom: 40px; */
+    height: calc(100vh - 599px);
     overflow-y: auto;
+    /* height: calc(100vh - 333px); */
 }
 
 .input-wrapper{

@@ -334,7 +334,22 @@ input[role="combobox"] {
 @media screen and (min-width: 767px) {
   .collection-share-modal {
     width: 605px !important;
-    max-height: 660px !important;
+    max-height: 711px !important;
+    overflow-y: hidden !important;
+  }
+
+  .collection-share-modal >div:last-child{
+    height: calc(100vh - 333px);
+  }
+}
+
+
+@media screen and (max-width: 600px) {
+  .collection-share-modal {
+    max-height: 711px !important;
+  }
+  .collection-share-modal >div:last-child{
+    height: calc(100vh - 140px);
   }
 }
 
