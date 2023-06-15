@@ -152,20 +152,10 @@
   left: 0;
 }
 
-.save-submodal-btn {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  background-color: white;
-  width: 50%;
-  height: auto;
-  position: absolute;
-  bottom: 0;
-  padding: 30px 0;
-}
 
-.save-submodal-btn button{
-    margin-left: 100px;
+.save-submodal-btn {
+  text-align: center;
+  margin-top: 25px;
 }
 
 .comments-wrapper {
