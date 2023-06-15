@@ -383,7 +383,7 @@ const AssetGrid = ({
                       key={assetItem.asset.id || index}
                       onClick={(e) => handleFocusChange(e, assetItem.asset.id)}
                       ref={ref}
-                      style={{ width: `$${setWidthCard}px` }}
+                      style={{ width: `$${widthCard}px` }}
                     >
                       <AssetThumbail
                         {...assetItem}
@@ -435,6 +435,8 @@ const AssetGrid = ({
                     className={styles["grid-item"]}
                     key={folder.id || index}
                     onClick={(e) => handleFocusChange(e, folder.id)}
+                    ref={ref}
+                    style={{ width: `$${widthCard}px` }}
                   >
                     <FolderGridItem
                       {...folder}
