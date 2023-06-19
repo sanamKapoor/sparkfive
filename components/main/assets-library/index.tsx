@@ -200,7 +200,7 @@ const AssetsLibrary = () => {
           getFolders()
         } else {
           setActiveMode('assets')
-          setAssets([])
+          // setAssets([])
           getAssets();
         }
       }
@@ -242,7 +242,6 @@ const AssetsLibrary = () => {
   }, [activeMode])
 
   useEffect(() => {
-    updateSortFilterByAdvConfig()
   }, [advancedConfig.set])
 
   const clearFilters = () => {
@@ -557,7 +556,7 @@ const AssetsLibrary = () => {
       })
 
       setAssets({ ...data, results: data.results.map(mapWithToggleSelection) }, replace)
-      setFirstLoaded(true)
+      // setFirstLoaded(true)
     } catch (err) {
       //TODO: Handle error
       console.log(err)
@@ -683,7 +682,11 @@ const AssetsLibrary = () => {
   }
 
   const closeSearchOverlay = () => {
-    getAssets()
+    if(activeMode === 'assets'){
+      getAssets();
+    }else{
+      getFolders();
+    }
     setActiveSearchOverlay(false)
   }
 
