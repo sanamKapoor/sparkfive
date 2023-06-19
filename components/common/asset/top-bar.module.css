@@ -296,3 +296,32 @@ li.dropdown-title {
   width: 20px;
   height: 20px;
 }
+
+
+@media (max-width:400px){
+  .wrapper .innerwrapper .tab-list-item {
+    font-size: 12px;
+  }
+  .mobile-tabs img{
+    width: 22px;
+  }
+  .sec-filters {
+    gap: 10px;
+  }
+  .sort-wrapper {
+    min-width: 89px;
+  }
+  .sort-wrapper div +div +div:first-child{
+    padding: 0 7px !important;
+  }
+
+  .mobilePlus div >div{
+    margin-right: 15px;
+    padding: 0;
+  }
+  .select-only-shown-items-text{
+    position: absolute;
+    right: 0;
+    top: 40px;
+  }
+}

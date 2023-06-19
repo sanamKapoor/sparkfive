@@ -289,10 +289,11 @@ const TopBar = ({
               ASSET_UPLOAD_APPROVAL,
             ]) && (
 
-                <AssetAddition
-                  activeFolder={activeFolder}
-                  getFolders={getFolders}
-                />
+              <div  className={styles.mobilePlus}>
+              <AssetAddition
+              activeFolder={activeFolder}
+              getFolders={getFolders}
+            /></div>
             )}
           <div className={styles.gridOuter}>
             {!deletedAssets && (

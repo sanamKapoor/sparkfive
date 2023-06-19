@@ -563,6 +563,9 @@
     align-items: center;
     z-index: 999;
   }
+  .upload-request-button:empty{
+    display: none;
+  }
   .options-list.dropdown {
     width: calc(160px * 2);
   }

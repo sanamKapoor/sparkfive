@@ -385,6 +385,8 @@ const ShareFolderMain = () => {
                     sharedAdvanceConfig={user ? undefined : advancedConfig}
                     isFolder={activeSortFilter.mainFilter === 'folders'}
                     sharePath={sharePath}
+                    activeFolder={activeFolder}
+                    mode={activeMode}
                 />
                 <div className={`${openFilter && styles['col-wrapper']}`} style={{marginTop: top}}>
                     <AssetGrid
