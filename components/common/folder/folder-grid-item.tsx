@@ -1,5 +1,5 @@
 import styles from "./folder-grid-item.module.css";
-import gridStyles from "../asset//asset-grid.module.css";
+import gridStyles from "../asset/asset-grid.module.css";
 import { Utilities, Assets } from "../../../assets";
 import {
   ChangeEvent,

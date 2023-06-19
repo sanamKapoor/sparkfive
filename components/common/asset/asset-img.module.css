@@ -18,11 +18,7 @@
 
 .react-crop {
     height: 100%;
-    flex-shrink: 0;
-}
-
-.react-crop>div {
-    height: 100%;
+    flex-shrink:  0;
 }
 
 .maxHeight {

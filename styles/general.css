@@ -372,3 +372,13 @@ input[role="combobox"] {
 }
 
 
+.ReactCrop__child-wrapper{
+    height: 100%;
+    width: 100%;
+}
+
+.ReactCrop__child-wrapper > img{
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+}

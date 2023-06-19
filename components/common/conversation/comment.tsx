@@ -16,7 +16,7 @@ const Comment = ({ content, mentions, createdAt, user }) => {
         <UserPhoto sizePx={28} photoUrl={user.profilePhoto} extraClass={styles['author-img']} />
         <div className={styles['author-date']}>
           <span>{user.name}</span>
-          <span>{format(new Date(createdAt), 'MMM Mo p')}</span>
+          <span>{format(new Date(createdAt), 'MMM dd p')}</span>
         </div>
       </div>
       <Highlighter
