@@ -355,9 +355,11 @@
   .img-wrapper {
     height: calc(100vh - 90px);
     max-width: 1260px;
+    flex-direction: column;
   }
   .share-img-wrapper{
     height: calc(100vh - 135px);
+    flex-direction: column;
   }
 
 }
