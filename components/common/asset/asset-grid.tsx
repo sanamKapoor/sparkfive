@@ -466,7 +466,7 @@ const AssetGrid = ({
           </ul>
         )}
         {activeView === "list" && (
-          <ul className={"regular-list"}>
+          <ul  className={`${styles.regularlist} `}>
             {mode === "assets" &&
               sortedAssets.map((assetItem, index) => {
                 return (
