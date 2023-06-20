@@ -149,7 +149,7 @@ const DetailOverlay = ({
   const [versionThumbnailUrl, setVersionThumbnailUrl] = useState(thumbailUrl);
   const [previewUrl, setPreviewUrl] = useState(null);
 
-  const [detailPosSize, setDetailPosSize] = useState({ x: 0, y: 0, width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight });
+  const [detailPosSize, setDetailPosSize] = useState({ x: 0, y: 0, width: currentAsset.dimensionWidth > 1080 ? 1080 : currentAsset.dimensionWidth, height: currentAsset.dimensionHeight > 1080 ? 1080 : currentAsset.dimensionHeight  });
   const [defaultSize, setDefaultSize] = useState({ width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight });
   const [notes, setNotes] = useState([])
   const [sizeOfCrop, setSizeOfCrop] = useState({ width: defaultSize.width, height: defaultSize.height })
@@ -189,6 +189,7 @@ const DetailOverlay = ({
 
   const [width, setWidth] = useState<number>(currentAsset.dimensionWidth);
   const [height, setHeight] = useState<number>(currentAsset.dimensionHeight);
+  const [transcriptLoading, setTranscriptLoading] = useState(true)
 
   const resetValues = () => {
     const width = currentAsset.dimensionWidth;
@@ -296,10 +297,13 @@ const DetailOverlay = ({
 
   const getTranscript = async (curAsset?) => {
     try {
+      setTranscriptLoading(true)
       const asset = curAsset || currentAsset;
       const { data } = await assetApi.getTranscript(asset.id);
       setTranscript(data)
+      setTranscriptLoading(false)
     } catch (err) {
+      setTranscriptLoading(false)
       // console.log(err);
     }
   };
@@ -559,9 +563,9 @@ const DetailOverlay = ({
     }
   }, [mode, currentAsset]);
 
-  useEffect(() => {
-    // setDetailPosSize(Object.assign({...detailPosSize}, {height, width}));
-  }, [width, height]);
+  // useEffect(() => {
+  //   setDetailPosSize(Object.assign({...detailPosSize}, {height, width}));
+  // }, [width, height]);
 
   const downloadSelectedAssets = async (id) => {
     const { shareJWT, code } = urlUtils.getQueryParameters();
@@ -894,6 +898,25 @@ const DetailOverlay = ({
     currentAsset.type === "image" &&
     isImageType(assetDetail?.extension);
 
+    const seekVideo = secs => {
+      let myVideo = document.getElementById("video-element");
+      if(myVideo){
+        // @ts-ignore
+        if (myVideo.fastSeek) {
+          // @ts-ignore
+          myVideo.fastSeek(secs)
+          // @ts-ignore
+          myVideo.play()
+        } else {
+          // @ts-ignore
+          myVideo.currentTime = secs
+          // @ts-ignore
+          myVideo.play()
+        }
+      }
+    }
+
+    
   return (
     <div
       className={`app-overlay ${styles.container} ${
@@ -1281,7 +1304,9 @@ const DetailOverlay = ({
             />
           )}
           {activeSideComponent === "transcript" && transcripts && (
-            <AssetTranscript title={"Transcript"} transcripts={transcripts} />
+            <AssetTranscript title={"Transcript"} transcripts={transcripts} loading={transcriptLoading}
+            navigateToTime={seekVideo}
+/>
           )}
         </section>
       )}
@@ -1438,10 +1463,10 @@ const DetailOverlay = ({
               )}
             </>
           )}
-          {transcriptAccess && (
+          {transcriptAccess && assetDetail?.type === 'video' && (
             <IconClickable
-              src={Utilities.listView}
-              additionalClass={styles["menu-icon"]}
+              src={Utilities.transcript}
+              additionalClass={styles[""]}
               onClick={() => {
                 setMode("detail");
                 resetValues();
