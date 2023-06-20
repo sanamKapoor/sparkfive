@@ -494,6 +494,6 @@
 }
 
 
-.img-wrapper, .share-img-wrapper canvas{
+.img-wrapper canvas, .share-img-wrapper canvas{
   position: absolute;
 }
