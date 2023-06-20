@@ -142,6 +142,7 @@
   align-items: center;
   /* flex-direction: column; */
   position: relative;
+  flex-direction: column;
 
 }
 
@@ -355,11 +356,9 @@
   .img-wrapper {
     height: calc(100vh - 90px);
     max-width: 1260px;
-    flex-direction: column;
   }
   .share-img-wrapper{
     height: calc(100vh - 135px);
-    flex-direction: column;
   }
 
 }
@@ -370,6 +369,11 @@
     padding-top: 47px;
     flex-direction: column;
   }
+
+  .img-wrapper>img,
+.share-img-wrapper>img{
+  max-width: 100%;
+}
 
   .share.container {
     flex-direction: row;
@@ -450,6 +454,7 @@
 
   .content {
     overflow: inherit;
+    height: 100vh;
   }
 
   .expand {
