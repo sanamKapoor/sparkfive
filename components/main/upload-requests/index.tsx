@@ -814,7 +814,7 @@ const UploadRequest = () => {
   const TagWrapper = ({ status }) => {
     const getStatusName = (status) => {
       switch (status) {
-        case -1: {
+        case -1: case 'rejected': {
           return "Rejected";
         }
 
@@ -826,7 +826,7 @@ const UploadRequest = () => {
           return "Pending";
         }
 
-        case 2: {
+        case 2: case 'approved': {
           return "Approved";
         }
 
@@ -1295,6 +1295,7 @@ const UploadRequest = () => {
 
     toastUtils.success("Delete approval successfully");
   };
+
   return (
     <>
       <AssetSubheader
