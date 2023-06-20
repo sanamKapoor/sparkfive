@@ -492,3 +492,8 @@
   }
   
 }
+
+
+.img-wrapper, .share-img-wrapper canvas{
+  position: absolute;
+}
