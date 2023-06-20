@@ -149,7 +149,7 @@ const DetailOverlay = ({
   const [versionThumbnailUrl, setVersionThumbnailUrl] = useState(thumbailUrl);
   const [previewUrl, setPreviewUrl] = useState(null);
 
-  const [detailPosSize, setDetailPosSize] = useState({ x: 0, y: 0, width: currentAsset.dimensionWidth > 1080 ? 1080 : currentAsset.dimensionWidth, height: currentAsset.dimensionHeight > 1080 ? 1080 : currentAsset.dimensionHeight  });
+  const [detailPosSize, setDetailPosSize] = useState({ x: 0, y: 0, width: currentAsset.dimensionWidth > 900 ? 900 : currentAsset.dimensionWidth, height: currentAsset.dimensionHeight > 900 ? 900 : currentAsset.dimensionHeight  });
   const [defaultSize, setDefaultSize] = useState({ width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight });
   const [notes, setNotes] = useState([])
   const [sizeOfCrop, setSizeOfCrop] = useState({ width: defaultSize.width, height: defaultSize.height })
