@@ -1463,7 +1463,7 @@ const DetailOverlay = ({
               )}
             </>
           )}
-          {transcriptAccess && (
+          {transcriptAccess && assetDetail?.type === 'video' && (
             <IconClickable
               src={Utilities.transcript}
               additionalClass={styles[""]}
