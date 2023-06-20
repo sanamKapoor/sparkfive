@@ -814,7 +814,7 @@ const UploadRequest = () => {
   const TagWrapper = ({ status }) => {
     const getStatusName = (status) => {
       switch (status) {
-        case -1: {
+        case -1: case 'rejected': {
           return "Rejected";
         }
 
@@ -826,7 +826,7 @@ const UploadRequest = () => {
           return "Pending";
         }
 
-        case 2: {
+        case 2: case 'approved': {
           return "Approved";
         }
 
@@ -838,9 +838,9 @@ const UploadRequest = () => {
     return (
       <div
         className={clsx(styles["tag-wrapper"], {
-          [styles["green"]]: status === 2,
-          [styles["yellow"]]: status === 0,
-          [styles["red"]]: status === -1,
+          [styles["green"]]: status === 2 || status === 'approved',
+          [styles["yellow"]]: status === 0 ||  status === 'pending',
+          [styles["red"]]: status === -1 || status === 'rejected',
         })}
       >
         <span>{getStatusName(status)}</span>
@@ -1295,6 +1295,7 @@ const UploadRequest = () => {
 
     toastUtils.success("Delete approval successfully");
   };
+
   return (
     <>
       <AssetSubheader

@@ -19,3 +19,9 @@
     justify-content: space-between;
     gap: 40px;
   }
+
+  @media (min-width:1024px){
+    .col-wrapper {
+      padding-top: 85px;
+    }
+  }

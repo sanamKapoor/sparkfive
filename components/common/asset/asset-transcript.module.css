@@ -53,10 +53,16 @@
     margin-right: 0;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+
 }
 
 .input-container{
     margin-right: 0;
+    width: 100%;
+}
+
+.input-container input{
+    padding-left: 30px;
 }
 
 .transcript-row{
