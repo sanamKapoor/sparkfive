@@ -43,6 +43,8 @@ export const Utilities = {
   moreLighter: require('./Icons/Utilities/More/icn-utilities-more-lighter.svg'),
   closePanel: require('./Icons/Utilities/Close Panel/icn-utilities-closepanel.svg'),
   closePanelLight: require('./Icons/Utilities/Close Panel/icn-utilities-closepanel-light.svg'),
+  closePanelDark: require('./Icons/Utilities/Close Panel/icn-utilities-closepanel.svg'),
+  closePaneReverse: require('./Icons/Utilities/Close Panel/icn-utilities-closereverse.svg'),
   time: require('./Icons/Utilities/Time/icn-utilities-time.svg'),
   arrow: require('./Icons/Utilities/arrow/arrow-down-white.svg'),
   arrowGrey: require('./Icons/Utilities/arrow/arrow-down-grey.png'),

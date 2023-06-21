@@ -1935,7 +1935,7 @@ const UploadRequest = () => {
 
           {mode === "view" && (
             <div className={styles.back} onClick={() => setRightPanelOpen(!rightPanelOpen)}>
-              <IconClickable src={rightPanelOpen ? Utilities.add :Utilities.closePanelLight} />
+              <IconClickable src={rightPanelOpen ? Utilities.closePaneReverse :Utilities.closePanelDark} />
             </div>
           )}
         </div>
