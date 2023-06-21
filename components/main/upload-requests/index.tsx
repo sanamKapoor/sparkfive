@@ -838,9 +838,9 @@ const UploadRequest = () => {
     return (
       <div
         className={clsx(styles["tag-wrapper"], {
-          [styles["green"]]: status === 2,
-          [styles["yellow"]]: status === 0,
-          [styles["red"]]: status === -1,
+          [styles["green"]]: status === 2 || status === 'approved',
+          [styles["yellow"]]: status === 0 ||  status === 'pending',
+          [styles["red"]]: status === -1 || status === 'rejected',
         })}
       >
         <span>{getStatusName(status)}</span>
