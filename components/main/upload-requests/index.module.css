@@ -542,7 +542,7 @@
 }
 
 @media screen and (max-width: 600px) {
-  .back {
+  .back{
     display: block;
     border-left: 1px solid #ccc;
     padding: 20px 10px;
@@ -610,7 +610,6 @@
   }
   
   .right-panel {
-
     position: absolute;
     z-index: 999;
     width: auto;
@@ -620,6 +619,10 @@
     top: 0;
     bottom: 0;
     min-width: 90%;
+  }
+
+  .close{
+    display: none;
   }
 
   .root-row {

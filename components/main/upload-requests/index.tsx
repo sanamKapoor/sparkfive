@@ -158,6 +158,8 @@ const UploadRequest = () => {
 
   const debouncedBatchName = useDebounce(batchName, 500);
 
+  const [rightPanelOpen, setRightPanelOpen] = useState(false)
+
   const updateName = async (value) => {
     if (approvalId) {
       await approvalApi.update(approvalId, { name: value });
@@ -1653,7 +1655,7 @@ const UploadRequest = () => {
           </main>
 
           {mode === "view" && assets.length > 0 && (
-            <div className={`col-30 ${styles["right-panel"]}`}>
+            <div className={rightPanelOpen ? `col-30 ${styles['right-panel']}` : `${styles['close']}` }>
               <div className={detailPanelStyles.container}>
                 <h2 className={styles["detail-title"]}>
                   {isAdmin() ? "User Tags" : "Tagging"}
@@ -1932,8 +1934,8 @@ const UploadRequest = () => {
           )}
 
           {mode === "view" && (
-            <div className={styles.back}>
-              <IconClickable src={Utilities.closePanelLight} />
+            <div className={styles.back} onClick={() => setRightPanelOpen(!rightPanelOpen)}>
+              <IconClickable src={rightPanelOpen ? Utilities.add :Utilities.closePanelLight} />
             </div>
           )}
         </div>
