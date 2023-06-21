@@ -1655,7 +1655,7 @@ const UploadRequest = () => {
           </main>
 
           {mode === "view" && assets.length > 0 && (
-            <div className={rightPanelOpen ? `col-30 ${styles['right-panel']}` : `${styles['close']}` }>
+          <div className={rightPanelOpen ? `.col-30 ${styles['right-panel']}` : `.col-30 ${styles['close']}`}>
               <div className={detailPanelStyles.container}>
                 <h2 className={styles["detail-title"]}>
                   {isAdmin() ? "User Tags" : "Tagging"}
