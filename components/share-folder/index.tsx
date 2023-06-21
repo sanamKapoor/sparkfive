@@ -388,7 +388,7 @@ const ShareFolderMain = () => {
                     activeFolder={activeFolder}
                     mode={activeMode}
                 />
-                <div className={`${openFilter && styles['col-wrapper']}`} style={{marginTop: top}}>
+                <div className={`${activeFolder ? styles['col-wrapper'] : styles['col-wrapperview']}`} style={{marginTop: top}}>
                     <AssetGrid
                         activeFolder={activeFolder}
                         getFolders={getFolders}

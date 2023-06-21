@@ -2,6 +2,7 @@
     padding: 0 40px;
   }
   
+
 @media (min-width:1200px){
   .container {
     margin-top: 199px;
@@ -14,7 +15,7 @@
     }
   }
   
-  .col-wrapper {
+  .col-wrapper,.col-wrapperview {
     display: flex;
     justify-content: space-between;
     gap: 40px;

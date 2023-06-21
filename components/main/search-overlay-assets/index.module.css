@@ -102,7 +102,7 @@
 
 @media screen and (max-width: 810px) {    
     .share-landing-search{
-        top:0;
+        top:-27px;
         width: 365px;
         right: 91%;
     }
@@ -119,5 +119,6 @@
 @media screen and (max-width: 375px) {    
     .share-landing-search{
         width: 352px;
+        top:-27px;
     }
 }
