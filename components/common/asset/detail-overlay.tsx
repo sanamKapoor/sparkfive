@@ -37,10 +37,10 @@ import CdnPanel from "./cdn-panel";
 import { isImageType } from "../../../utils/file";
 
 import { ASSET_ACCESS } from "../../../constants/permissions";
-import AssetNotes from './asset-notes';
-import AssetNote from './asset-note';
-import AssetTranscript from './asset-transcript';
-import AssetRelatedFIles from './asset-related-files';
+import AssetNotes from "./asset-notes";
+import AssetNote from "./asset-note";
+import AssetTranscript from "./asset-transcript";
+import AssetRelatedFIles from "./asset-related-files";
 
 import { sizeToZipDownload } from "../../../constants/download";
 import EventBus from "../../../utils/event-bus";
@@ -48,7 +48,6 @@ import AssetRelatedFilesList from "./asset-related-files-list";
 import Dropdown from "../inputs/dropdown";
 
 const getDefaultDownloadImageType = (extension) => {
-
   const defaultDownloadImageTypes = [
     {
       value: "png",
@@ -149,11 +148,24 @@ const DetailOverlay = ({
   const [versionThumbnailUrl, setVersionThumbnailUrl] = useState(thumbailUrl);
   const [previewUrl, setPreviewUrl] = useState(null);
 
-  const [detailPosSize, setDetailPosSize] = useState({ x: 0, y: 0, width: currentAsset.dimensionWidth > 900 ? 900 : currentAsset.dimensionWidth, height: currentAsset.dimensionHeight > 900 ? 900 : currentAsset.dimensionHeight  });
-  const [defaultSize, setDefaultSize] = useState({ width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight });
-  const [notes, setNotes] = useState([])
-  const [sizeOfCrop, setSizeOfCrop] = useState({ width: defaultSize.width, height: defaultSize.height })
-  const [transcripts, setTranscript] = useState([])
+  const [detailPosSize, setDetailPosSize] = useState({
+    x: 0,
+    y: 0,
+    width:
+      currentAsset.dimensionWidth > 900 ? 900 : currentAsset.dimensionWidth,
+    height:
+      currentAsset.dimensionHeight > 900 ? 900 : currentAsset.dimensionHeight,
+  });
+  const [defaultSize, setDefaultSize] = useState({
+    width: currentAsset.dimensionWidth,
+    height: currentAsset.dimensionHeight,
+  });
+  const [notes, setNotes] = useState([]);
+  const [sizeOfCrop, setSizeOfCrop] = useState({
+    width: defaultSize.width,
+    height: defaultSize.height,
+  });
+  const [transcripts, setTranscript] = useState([]);
 
   const renameValue = useRef("");
   const setRenameValue = (value) => {
@@ -189,7 +201,7 @@ const DetailOverlay = ({
 
   const [width, setWidth] = useState<number>(currentAsset.dimensionWidth);
   const [height, setHeight] = useState<number>(currentAsset.dimensionHeight);
-  const [transcriptLoading, setTranscriptLoading] = useState(true)
+  const [transcriptLoading, setTranscriptLoading] = useState(true);
 
   const resetValues = () => {
     const width = currentAsset.dimensionWidth;
@@ -297,13 +309,13 @@ const DetailOverlay = ({
 
   const getTranscript = async (curAsset?) => {
     try {
-      setTranscriptLoading(true)
+      setTranscriptLoading(true);
       const asset = curAsset || currentAsset;
       const { data } = await assetApi.getTranscript(asset.id);
-      setTranscript(data)
-      setTranscriptLoading(false)
+      setTranscript(data);
+      setTranscriptLoading(false);
     } catch (err) {
-      setTranscriptLoading(false)
+      setTranscriptLoading(false);
       // console.log(err);
     }
   };
@@ -898,25 +910,24 @@ const DetailOverlay = ({
     currentAsset.type === "image" &&
     isImageType(assetDetail?.extension);
 
-    const seekVideo = secs => {
-      let myVideo = document.getElementById("video-element");
-      if(myVideo){
+  const seekVideo = (secs) => {
+    let myVideo = document.getElementById("video-element");
+    if (myVideo) {
+      // @ts-ignore
+      if (myVideo.fastSeek) {
         // @ts-ignore
-        if (myVideo.fastSeek) {
-          // @ts-ignore
-          myVideo.fastSeek(secs)
-          // @ts-ignore
-          myVideo.play()
-        } else {
-          // @ts-ignore
-          myVideo.currentTime = secs
-          // @ts-ignore
-          myVideo.play()
-        }
+        myVideo.fastSeek(secs);
+        // @ts-ignore
+        myVideo.play();
+      } else {
+        // @ts-ignore
+        myVideo.currentTime = secs;
+        // @ts-ignore
+        myVideo.play();
       }
     }
+  };
 
-    
   return (
     <div
       className={`app-overlay ${styles.container} ${
@@ -1056,7 +1067,11 @@ const DetailOverlay = ({
                 )}
             </div>
           </div>
-          <div className={!isShare ? styles["img-wrapper"] : styles["share-img-wrapper"]}>
+          <div
+            className={`${
+              !isShare ? styles["img-wrapper"] : styles["share-img-wrapper"]
+            }${activeFolder && ` ${styles["active-folderimg"]}` }`}
+          >
             <div className={styles["notes-wrapper"]}>
               {notes.map(
                 (note, indx) =>
@@ -1297,16 +1312,22 @@ const DetailOverlay = ({
               associateFileId={currentAsset.id}
               onChangeRelatedFiles={onChangeRelatedFiles}
               onAddRelatedFiles={(data) => {
-                let updatedAssets = [...assetDetail.fileAssociations]
-                updatedAssets = updatedAssets.concat(data)
-                setAssetDetail({ ...assetDetail, fileAssociations: updatedAssets })
+                let updatedAssets = [...assetDetail.fileAssociations];
+                updatedAssets = updatedAssets.concat(data);
+                setAssetDetail({
+                  ...assetDetail,
+                  fileAssociations: updatedAssets,
+                });
               }}
             />
           )}
           {activeSideComponent === "transcript" && transcripts && (
-            <AssetTranscript title={"Transcript"} transcripts={transcripts} loading={transcriptLoading}
-            navigateToTime={seekVideo}
-/>
+            <AssetTranscript
+              title={"Transcript"}
+              transcripts={transcripts}
+              loading={transcriptLoading}
+              navigateToTime={seekVideo}
+            />
           )}
         </section>
       )}
@@ -1428,16 +1449,16 @@ const DetailOverlay = ({
                   }}
                 />
               )}
-          
-                <IconClickable
-                  src={isMobile ? Utilities.relatedLight : Utilities.related}
-                  additionalClass={styles["menu-icon"]}
-                  onClick={() => {
-                    setMode("detail");
-                    resetValues();
-                    changeActiveSide("related");
-                  }}
-                />
+
+              <IconClickable
+                src={isMobile ? Utilities.relatedLight : Utilities.related}
+                additionalClass={styles["menu-icon"]}
+                onClick={() => {
+                  setMode("detail");
+                  resetValues();
+                  changeActiveSide("related");
+                }}
+              />
               {hasPermission(["admin", "super_admin"]) && (
                 <IconClickable
                   src={isMobile ? Utilities.notesLight : Utilities.notes}
@@ -1463,7 +1484,7 @@ const DetailOverlay = ({
               )}
             </>
           )}
-          {transcriptAccess && assetDetail?.type === 'video' && (
+          {transcriptAccess && assetDetail?.type === "video" && (
             <IconClickable
               src={Utilities.transcript}
               additionalClass={styles[""]}
