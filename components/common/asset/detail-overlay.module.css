@@ -154,7 +154,7 @@
 
 .img-wrapper video, .share-img-wrapper video, .active-folderimg video{
   max-width: 100%;
-  width: initial;
+  width: 100%;
   max-height: 100%;
 }
 
