@@ -1308,6 +1308,7 @@ const DetailOverlay = ({
 
           {activeSideComponent === "related" && (
             <AssetRelatedFilesList
+              currentAsset={assetDetail}
               relatedAssets={assetDetail?.fileAssociations || []}
               associateFileId={currentAsset.id}
               onChangeRelatedFiles={onChangeRelatedFiles}

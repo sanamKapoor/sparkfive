@@ -154,7 +154,7 @@
 
 .img-wrapper video, .share-img-wrapper video, .active-folderimg video{
   max-width: 100%;
-  width: initial;
+  width: 100%;
   max-height: 100%;
 }
 
@@ -349,14 +349,18 @@
 
   .img-wrapper {
     height: calc(100vh - 90px);
-    max-width: 1260px;
+    /* max-width: 1260px;
+    min-width: 100%; */
+    width: 100%;
   }
   .share-img-wrapper{
     height: calc(100vh - 135px);
+    width: 100%;
   }
   .active-folderimg{
     height: calc(100vh - 156px);
     margin-top: 75px;
+    width: 100%;
   }
 
 }
