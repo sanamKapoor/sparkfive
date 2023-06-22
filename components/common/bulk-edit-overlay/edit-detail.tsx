@@ -24,6 +24,8 @@ import SidePanel from "../../common/asset/detail-side-panel";
 import EditSidePanel from "./edit-side-panel";
 import { format } from "date-fns";
 import fileSize from "filesize";
+import AssetPdf from "../asset/asset-pdf";
+import AssetIcon from "../asset/asset-icon";
 
 const mappingCustomFieldData = (list, valueList) => {
   let rs = [];
@@ -322,22 +324,54 @@ const EditDetail = ({
       <div className={styles.content}>
         <div className={styles.name}>{asset?.asset.fileName}</div>
         <div className={styles["image-wrapper"]}>
-          <AssetImg
-            imgClass="img-preview"
-            name={asset?.asset.name}
-            assetImg={
-              asset?.asset.extension === "tiff" ||
-              asset?.asset.extension === "tif" ||
-              asset?.asset.extension === "svg" ||
-              asset?.asset.extension === "svg+xml" ||
-              asset?.asset.extension === "heif" ||
-              asset?.asset.extension === "heic" ||
-              asset?.asset.extension === "cr2" ||
-              asset?.asset.extension === "ai"
-                ? asset?.thumbailUrl
-                : asset?.realUrl
-            }
-          />
+          {asset?.asset.type === "image" && (
+            <AssetImg
+              imgClass="img-preview"
+              name={asset?.asset.name}
+              assetImg={
+                asset?.asset.extension === "tiff" ||
+                asset?.asset.extension === "tif" ||
+                asset?.asset.extension === "svg" ||
+                asset?.asset.extension === "svg+xml" ||
+                asset?.asset.extension === "heif" ||
+                asset?.asset.extension === "heic" ||
+                asset?.asset.extension === "cr2" ||
+                asset?.asset.extension === "ai"
+                  ? asset?.thumbailUrl
+                  : asset?.realUrl
+              }
+            />
+          )}
+          {asset?.asset.type !== "image" &&
+            asset?.asset.type !== "video" &&
+            asset?.thumbailUrl &&
+            (asset?.asset.extension.toLowerCase() === "pdf" ? (
+              <AssetPdf asset={asset?.asset} />
+            ) : (
+              <AssetImg
+                name={asset?.asset.name}
+                assetImg={asset?.thumbailUrl}
+                imgClass="img-preview"
+              />
+            ))}
+          {asset?.asset.type !== "image" &&
+            asset?.asset.type !== "video" &&
+            !asset?.thumbailUrl && (
+              <AssetIcon extension={asset?.asset.extension} />
+            )}
+          {asset?.asset.type === "video" && (
+            <video controls>
+              <source
+                src={asset?.previewUrl ?? asset?.realUrl}
+                type={
+                  asset?.previewUrl
+                    ? "video/mp4"
+                    : `video/${asset?.asset?.extension}`
+                }
+              />
+              Sorry, your browser doesn't support video playback.
+            </video>
+          )}
         </div>
         <div className={styles.arrows}>
           <span>
