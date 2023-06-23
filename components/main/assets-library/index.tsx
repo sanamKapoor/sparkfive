@@ -540,7 +540,7 @@ const AssetsLibrary = () => {
       if (replace) {
         setAddedIds([])
       }
-      // setPlaceHolders('asset', replace)
+      setPlaceHolders('asset', replace)
       const { data } = await assetApi.getAssets({
         ...getAssetsFilters({
           replace,
@@ -556,7 +556,7 @@ const AssetsLibrary = () => {
       })
 
       setAssets({ ...data, results: data.results.map(mapWithToggleSelection) }, replace)
-      // setFirstLoaded(true)
+      setFirstLoaded(true)
     } catch (err) {
       //TODO: Handle error
       console.log(err)
