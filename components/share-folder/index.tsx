@@ -367,6 +367,8 @@ const ShareFolderMain = () => {
     const selectedAssets = assets.filter(asset => asset.isSelected)
 	const selectedFolders = folders.filter(folder => folder.isSelected)
     
+    const assetGridWrapperStyle = (!!folderInfo.singleSharedCollectionId || activeSortFilter.mainFilter === 'folders') ? styles['col-wrapperview'] : styles['col-wrapper'];
+  
     return (
         <>
             {!loading && <main className={`${styles.container} sharefolderOuter`}>
@@ -388,7 +390,7 @@ const ShareFolderMain = () => {
                     activeFolder={activeFolder}
                     mode={activeMode}
                 />
-                <div className={`${activeFolder ? styles['col-wrapper'] : styles['col-wrapperview']}`} style={{marginTop: top}}>
+                <div className={assetGridWrapperStyle} style={{marginTop: top}}>
                     <AssetGrid
                         activeFolder={activeFolder}
                         getFolders={getFolders}

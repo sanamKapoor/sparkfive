@@ -47,7 +47,6 @@ handleDeleteApproval,
   }
 
 
-
   return (
     <>
       <div className={requestListStyles.list}>
@@ -107,7 +106,7 @@ handleDeleteApproval,
               className={`${requestListStyles.field_name} ${isLoading && "loadable"} align-center`}
             >
               {getThumbnail(assets[0])}
-              <span>{(uploadType === 'approval' ? name : `${name} - Guest Upload`) || "Untitled"}</span>
+              <span>{(!uploadType || uploadType === 'approval' ? name : `${name} - Guest Upload`) || "Untitled"}</span>
               <div className={requestListStyles.field_mobile}>
                 {isAdmin && <div className={`${requestListStyles.field_author_mobile} ${isLoading && "loadable"} font-weight-500`}>
                   {user?.name}
