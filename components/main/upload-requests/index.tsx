@@ -416,10 +416,10 @@ const UploadRequest = () => {
         if (isAdmin()) {
           for (const customField of currentAssetCustomFields) {
             // Find corresponding custom field in asset
-            const assetField = asset.customs.filter(
+            const assetField = asset?.customs?.filter(
               (custom) => custom.id === customField.id
             );
-            const oldCustoms = assetField[0]?.values || [];
+            const oldCustoms = assetField && assetField[0]?.values || [];
 
             const newCustoms = _.differenceBy(
               customField.values,
@@ -568,19 +568,19 @@ const UploadRequest = () => {
             currentAssetTags,
             asset.asset.tags || []
           );
-          asset.asset.tags = asset.asset.tags.concat(newTags);
+          asset.asset.tags = asset?.asset?.tags?.concat(newTags);
 
           const newCampaigns = _.differenceBy(
             currentAssetCampaigns,
             asset.asset.campaigns || []
           );
-          asset.asset.campaigns = asset.asset.campaigns.concat(newCampaigns);
+          asset.asset.campaigns = asset?.asset?.campaigns?.concat(newCampaigns);
 
           const newFolders = _.differenceBy(
             currentAssetFolders,
             asset.asset.folders || []
           );
-          asset.asset.folders = asset.asset.folders.concat(newFolders);
+          asset.asset.folders = asset?.asset?.folders?.concat(newFolders);
         } else {
           asset.asset.tags = currentAssetTags;
         }
@@ -1655,10 +1655,10 @@ const UploadRequest = () => {
           </main>
 
           {mode === "view" && assets.length > 0 && (
-          <div className={rightPanelOpen ? `.col-30 ${styles['right-panel']}` : `.col-30 ${styles['close']}`}>
+          <div className={rightPanelOpen ? `.col-30 ${styles['right-panel']}` : `.col-30 ${styles['right-panel']} ${styles['close']}`}>
               <div className={detailPanelStyles.container}>
                 <h2 className={styles["detail-title"]}>
-                  {isAdmin() ? "User Tags" : "Tagging"}
+                  {isAdmin() ? "Batch Details" : "Tagging"}
                 </h2>
 
                 {(currentViewStatus !== 0 || isAdmin()) && (
@@ -1692,7 +1692,7 @@ const UploadRequest = () => {
                   </div>
                 )}
 
-                {hasSelectedAssets() &&
+                {
                   (currentViewStatus === 0 || isAdmin()) && (
                     <>
                       <div className={detailPanelStyles["field-wrapper"]}>
@@ -1912,8 +1912,8 @@ const UploadRequest = () => {
                       <Button
                         className={styles["add-tag-btn"]}
                         type="button"
-                        text="Bulk Add Tag"
-                        styleType="secondary"
+                        text="Save Changes"
+                        styleType="primary"
                         onClick={saveBulkTag}
                       />
                       {/*{*/}
