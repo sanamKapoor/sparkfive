@@ -1,13 +1,19 @@
 .folder_modal{
-    width: 40em;
-    height: 16.5em;
+    max-width: 475px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 36px;
 }
 
+.folder_modal h3 {
+  font-weight: 400;
+  text-align: left;
+  width: 100%;
+  margin-top: 0;
+}
 .folder_modal_input{
-    width: 36em;
+    width: 100%;
 }
 
 .buttons_container{
@@ -15,6 +21,10 @@
     width: inherit;
     margin-top: 1em;
     justify-content: flex-end;
+}
+
+.buttons_container button {
+  width: 88px;
 }
 
 .cancel_button{
@@ -46,4 +56,10 @@
 .x { 
   font-weight: 900;
   font-family: monospace;
+}
+
+@media screen and (max-width: 600px) {
+  .folder_modal {
+    max-width: 385px;
+  }
 }

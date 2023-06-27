@@ -8,17 +8,17 @@
     /* max-height: 330px; */
 }
 
+.asset__crop{
+    aspect-ratio: none;
+}
+
 .opaque {
     opacity: 0.2;
 }
 
 .react-crop {
     height: 100%;
-    flex-shrink: 0;
-}
-
-.react-crop>div {
-    height: 100%;
+    flex-shrink:  0;
 }
 
 .maxHeight {

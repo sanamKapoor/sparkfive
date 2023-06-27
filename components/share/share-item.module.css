@@ -3,6 +3,11 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+    border-radius: 6px;
+  }
+
+  .container.selected {
+    border-color: var(--color-prim-turquoise);
   }
 
   .image-wrapper {

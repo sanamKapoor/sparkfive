@@ -28,7 +28,7 @@ const CommentInput = ({ style = 'comment', onSubmit }) => {
         closeOnAction={false}
         Wrapper={({ children }) =>
           <>
-            <img src={Comments.smileLight} />
+            <img src={Comments.smileDisable} />
             {children}
           </>
         }
@@ -49,7 +49,7 @@ const CommentInput = ({ style = 'comment', onSubmit }) => {
         closeOnAction={false}
         Wrapper={({ children }) =>
           <>
-            <img src={Comments.mentionLight} />
+            <img src={Comments.mentionDisable} />
             {children}
           </>
         }
@@ -132,9 +132,6 @@ const CommentInput = ({ style = 'comment', onSubmit }) => {
   return (
     <form onSubmit={submitComment}>
       <div className={styles['input-container']}>
-        {style === 'reply' &&
-          <UserPhoto photoUrl={user?.profilePhoto} sizePx={27} />
-        }
         <textarea
           ref={inputRef}
           onChange={updateContent}

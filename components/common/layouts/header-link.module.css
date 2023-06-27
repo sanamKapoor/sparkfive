@@ -7,8 +7,13 @@
   font-weight: 600;
 }
 
+.ref:nth-child(2), .ref:nth-child(3) {
+  display: none;
+}
+
 .link {
   display: flex;
+  align-items: center;
 }
 
 .active,
@@ -22,4 +27,10 @@
 
 .text {
   padding-left: 10px;
+  color: #fff;
+}
+
+
+@media (max-width:600px){
+  .ref{margin-right: auto;}
 }

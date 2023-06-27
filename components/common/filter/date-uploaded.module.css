@@ -24,10 +24,12 @@
     border-radius: 4px;
     color: var(--color-prim-navy);
     padding: 3px;
+    width: 100%;
+    box-sizing: border-box;
 }
 .calendar {
     position: absolute;
-    margin-top: 10px;
+    margin-top: 15px;
     left: -73px;
     background-color: white;
     z-index: 99;

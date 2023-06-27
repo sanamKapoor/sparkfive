@@ -30,7 +30,7 @@ const ShareItem = ({
 
   return (
     <>
-      <div className={styles.container}>
+      <div className={`${styles.container} ${isSelected ? styles.selected : ''}`}>
         <div className={styles["image-wrapper"]}>
           {thumbailUrl ? (
             <AssetImg
@@ -88,7 +88,7 @@ const ShareItem = ({
       {visibleOverlay && (
         <DetailOverlay
           initiaParams={{ side: "detail" }}
-          asset={asset}
+          asset={asset} 
           realUrl={realUrl}
           thumbailUrl={thumbailUrl}
           isShare={true}

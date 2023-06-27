@@ -118,7 +118,7 @@ const CdnPanel = ({ assetDetail }) => {
 
           {
             assetDetail.type === 'image' &&
-            <div>
+            <div className={styles.cdnType}>
               <h4 className={styles.controlTitle}>Type</h4>
 
               <Select 

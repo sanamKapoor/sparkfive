@@ -7,41 +7,38 @@
 
 .grid-list {
   display: grid;
-  grid-template-columns: repeat(5, minmax(165px, 1fr));
-  grid-template-rows: 200px;
-  grid-gap: 45px;
-}
-
-.grid-list li{
-  height: 200px;
-}
-
-.grid-list li{
-  position: relative;
+  grid-template-columns: repeat(6, minmax(187px, 1fr));
+  grid-gap: 40px;
 }
 
 .container {
-  border: 1px solid var(--color-secondary-border);
+  border: 0.738515px solid var(--color-secondary-border);
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   height: 100%;
   position: relative;
-  cursor: pointer;
+  border-radius: 5.21304px;
 }
 
 .image-wrapper {
   width: 100%;
-  height: 100%;
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.image-wrapper,
+.image-wrapper img {
   aspect-ratio: 1 / 1;
+  padding: 5px;
 }
 
 .image-wrapper .selectable-wrapper .select-icon {
   width: 25px;
   height: auto;
+  padding: 0;
 }
 
 .image-wrapper > img,
@@ -52,19 +49,55 @@
 }
 
 .text-wrapper{
-  margin-top: 0.6rem;
+  padding: 18px 10px;
+  border-top: 1px solid var(--color-secondary-border);
+}
+
+
+.image-button-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: 600;
+  z-index: 2;
+}
+
+.image-button-wrapper {
+  display: none;
+}
+
+.image-wrapper:hover .image-button-wrapper,
+.image-wrapper:hover .selectable-wrapper:not(.selected-wrapper) {
+  display: block;
+  animation: intoview 0.5s;
+}
+
+.name {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  font-size: 11px;
-  position: absolute;
+  font-size: 10px;
   max-width: 120px;
 }
 
+.date {
+  color: var(--color-sec-blue);
+  font-size: 9px;
+  margin-top: 4px;
+}
 .selectable-wrapper{
   position: absolute;
   top: 5px;
   left: 5px;
+}
+
+.detail > div:first-child {
+  border: none;
+  /* position: absolute; */
+  right: 0;
+  top: 0;
+  position: relative;
 }
 
 @keyframes halfopacity {
@@ -82,5 +115,53 @@
   }
   100% {
     opacity: 1;
+  }
+}
+
+@media (min-width:768px){
+  .detail > div:first-child {
+    overflow-y: hidden;
+  }
+}
+
+@media screen and (max-width: 1500px)  {
+  .grid-list {
+    grid-template-columns: repeat(4, minmax(165px, 1fr));
+    gap: 16px;
+  }
+}
+
+@media screen and (max-width: 1100px)  {
+  .grid-list {
+    grid-template-columns: repeat(3, minmax(165px, 1fr));
+  }
+}
+
+@media screen and (max-width: 920px)  {
+  .grid-list {
+    grid-template-columns: repeat(2, minmax(145px, 1fr));
+  }
+}
+
+@media screen and (max-width: 600px)  {
+  .grid-list {
+    grid-template-columns: repeat(2 , minmax(120px, 1fr));
+    gap: 6px;
+  }
+
+  .list-wrapper {
+    padding: 14px 14px 130px;
+  }
+}
+
+.subEditModal {
+  align-items: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+@media screen and (min-width:1440px) {
+  .subEditModal div:first-child[role="dialog"] {
+    min-width: 1271px;
   }
 }

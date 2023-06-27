@@ -119,20 +119,20 @@ export default function ShareIconFilesSearch({ onSelect = (asset) => {}, logo = 
 
         <div className={"row m-t-30"}>
             <div className={"col-25"}>
-                <img src={logo?.thumbailUrl || team?.workspaceIcon} className={styles["thumbnail-image"]}/>
+                <img src={logo?.thumbailUrl || team?.workspaceIcon} className={`${styles["thumbnail-image"]} ${styles["thumbnail-image-50"]}` }/>
             </div>
             <div className={"col-75"}>
-                <div>Image must be minimum 300x200px</div>
-                <div>Must be transparent. Valid formats are png or svg</div>
-                <Button
-                    className={"m-t-10"}
-                    text={"Upload Logo"}
+            <Button
+                    className={styles["change-btn"]}
+                    text={"Change"}
                     onClick={() => {
                         fileBrowserRef.current.click()
                     }}
                     type='button'
                     styleType='primary'
                 />
+                <div className={styles['upload-logo-txt']}>Image must be minimum 300x200px</div>
+                <div className={styles['upload-logo-txt']}>Must be transparent. Valid formats are png or svg</div>
             </div>
         </div>
     </div>

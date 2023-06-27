@@ -4,9 +4,8 @@
   font-weight: 600;
   color: var(--color-prim-navy);
   cursor: pointer;
-  padding: 0 3px;
   border-bottom: 3px solid white;
-  min-height: 25px;
+  padding: 0;
 }
 
 .container:hover {
