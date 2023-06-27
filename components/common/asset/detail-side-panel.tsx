@@ -456,8 +456,10 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
 
 
   return (
-    <div className={styles.container}>
-      <h2>Details</h2>
+    <>
+    <div className={` ${!isShare ? styles.fieldWrapper : styles.shareWrapper}`}>
+      <h2 className={styles['details-heading']}>Details</h2>
+      
       <div className={styles['first-section']}>
         {fieldValues.map(fieldvalue => (
           <div className={styles['field-wrapper']} key={fieldvalue.field}>
@@ -466,6 +468,11 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
           </div>
         ))}
       </div>
+
+
+
+
+
 
       {/*<div className={styles['field-wrapper']} >*/}
       {/*  <div className={`secondary-text ${styles.field}`}>Channel</div>*/}
@@ -523,7 +530,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
           title='Tags'
           addText='Add Tags'
           onAddClick={() => setActiveDropdown('tags')}
-          selectPlaceholder={'Enter a new tag or select an existing one'}
+          selectPlaceholder={'Enter a New Tag or Existing One'}
           avilableItems={availNonAiTags}
           setAvailableItems={setAvailNonAiTags}
           selectedItems={nonAiTags}
@@ -551,8 +558,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
           isShare={isShare}
           asyncCreateFn={(newItem) => {
             setIsLoading(true);
-
-            return assetApi.addTag(id, newItem)
+            return assetApi.addTag(id, {...newItem, type: 'regular'})
           }}
           dropdownIsActive={activeDropdown === 'tags'}
           sortDisplayValue={true}
@@ -607,7 +613,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
       {inputCustomFields.map((field, index)=>{
         if(field.type === 'selectOne'){
 
-          return <div className={styles['field-wrapper']} key={index}>
+          return <div className={`${styles['field-wrapper']} ${styles['cus-dropdown']}`} key={index}>
             <div className={`secondary-text ${styles.field}`}>{field.name}</div>
             <CustomFieldSelector
                 data={assetCustomFields[index]?.values[0]?.name}
@@ -866,6 +872,9 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
         />
       </>}
     </div >
+
+
+</>
   )
 }
 

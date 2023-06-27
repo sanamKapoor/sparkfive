@@ -62,6 +62,7 @@ const MoveModal = ({ modalIsOpen, closeModal, itemsAmount, moveAssets, createFol
       closeModal={closemoveModal}
       confirmText={confirmText}
       headText={`${confirmText} ${itemsAmount} item(s) to Collection`}
+      subText='The assets will be added into the new collection(s) and will not be removed from their current collection(s)'
       disabledConfirm={!selectedFolder}
       confirmAction={() => {
         moveAssets(selectedFolder)

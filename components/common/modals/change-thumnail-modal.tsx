@@ -4,7 +4,7 @@ import toastUtils from "../../../utils/toast";
 import assetApi from "../../../server-api/asset";
 import folderApi from "../../../server-api/folder";
 import { useContext, useEffect, useRef, useState } from "react";
-
+import blueClose from "../../../assets/Icons/Utilities/Close/blue-close.svg";
 // Components
 import Button from "../buttons/button";
 import React from "react";
@@ -249,7 +249,7 @@ const ChangeThumbnail = ({
             thumbnailExtension: data[0].asset.extension,
             thumbnails: { thumbnails: null },
             thumbnailStorageId: data[0].asset.storageId,
-            thumbnailName: data[0].asset.name
+            thumbnailName: data[0].asset.name,
           }
         );
       }
@@ -259,7 +259,7 @@ const ChangeThumbnail = ({
         thumbnail_extension: localThumbnail.data?.extension,
         thumbnails: { thumbnails: null },
         thumbnailStorageId: localThumbnail.data?.storageId,
-        thumbnailName: localThumbnail.data?.name
+        thumbnailName: localThumbnail.data?.name,
       });
     }
     getFolders();
@@ -301,7 +301,7 @@ const ChangeThumbnail = ({
           filePath: localThumbnails[i].data?.value,
           extension: localThumbnails[i].data?.extension,
           storageId: localThumbnails[i].data?.storageId,
-          name: localThumbnails[i].data?.name
+          name: localThumbnails[i].data?.name,
         };
 
         thumbnails.push(obj);
@@ -337,7 +337,7 @@ const ChangeThumbnail = ({
           filePath: promise.data[0]?.thumbailUrl,
           extension: promise.data[0]?.asset.extension,
           storageId: promise.data[0]?.asset.storageId,
-          name: promise.data[0]?.asset.name
+          name: promise.data[0]?.asset.name,
         };
         thumbnails.push(obj);
       }
@@ -355,7 +355,7 @@ const ChangeThumbnail = ({
         thumbnailPath: null,
         thumbnailExtension: null,
         thumbnails: { thumbnails },
-        thumbnailName: null
+        thumbnailName: null,
       });
       getFolders();
     }
@@ -381,7 +381,7 @@ const ChangeThumbnail = ({
   return (
     <ReactModal
       isOpen={modalIsOpen}
-      className={`${styles.modal} ${
+      className={`${styles.modal} ${styles.changeThumb} ${
         noHeightMax && styles["no-height-max"]
       } ${additionalClasses.join(" ")}`}
       overlayClassName={styles.overlay}
@@ -401,12 +401,20 @@ const ChangeThumbnail = ({
           closeButtonOnly ? styles["no-border"] : ""
         } ${textWidth && styles["full-width"]}`}
       >
-        {<p className={styles["overflow-text"]}>Change Thumbnail</p>}
+        {
+          <p className={(styles["overflow-text"], styles["modalTitle"])}>
+            Change Thumbnail
+          </p>
+        }
         <span className={styles.close} onClick={closeModal}>
-          x
+        <img
+            src={blueClose}
+            alt={"close"}
+            className={styles.closebtn}
+          />
         </span>
       </div>
-      <div style={{ padding: "10px 20px" }}>
+      <div>
         <div className={styles.header_checkbox}>
           <div>
             <p>
@@ -445,7 +453,7 @@ const ChangeThumbnail = ({
             </div>
           </div>
         </div>
-        <div>
+        <div className={styles.changeThumbOuter}>
           {modalView === "ONE_THUMBNAIL_VIEW" ? (
             localThumbnail.isEmpty || localThumbnail.isChanging ? (
               <SearchThumbnail
@@ -503,7 +511,13 @@ const ChangeThumbnail = ({
           )}
           <div className="row">
             <div className="col-12" style={{ width: "100%" }}>
-              <div style={{ display: "flex", margin: "10px 0", justifyContent: "center" }}>
+              <div
+                style={{
+                  display: "flex",
+                  margin: "10px 0",
+                  justifyContent: "center",
+                }}
+              >
                 <Button
                   text="Save"
                   onClick={handleSave}

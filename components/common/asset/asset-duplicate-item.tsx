@@ -49,7 +49,8 @@ const AssetDuplicateItem = ({ file, onFileNameUpdate }) => {
                         <IconClickable
                             tooltipText={'Cancel'}
                             tooltipId={'Cancel'}
-                            src={cancel ? Utilities['xMark'] : AssetOps['delete']}
+                            src={cancel ? Utilities['xMark'] : AssetOps['cancel']}
+                            additionalClass={styles.cancelItem}
                         />
                         Cancel{cancel && 'ed'} upload
                     </span>

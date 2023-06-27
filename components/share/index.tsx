@@ -22,7 +22,7 @@ import { GeneralImg } from '../../assets'
 
 
 // Contexts
-import { AssetContext } from '../../context'
+import { AssetContext, FilterContext, TeamContext } from '../../context'
 import Spinner from "../common/spinners/spinner";
 import Input from "../common/inputs/input";
 import AuthButton from "../common/buttons/auth-button";
@@ -31,6 +31,9 @@ const AssetShare = () => {
 	const {
 		updateDownloadingStatus
 	} = useContext(AssetContext)
+
+	const {searchFilterParams} = useContext(FilterContext);
+	const {team} = useContext(TeamContext)
 
 	const [assets, setAssets] = useState([])
 	const [selectedAsset, setSelectedAsset] = useState(0)
@@ -142,7 +145,7 @@ const AssetShare = () => {
 
 			// Allow get by both shareJWT or code (shareJWT has problem with very long at url issue)
 			if (shareJWT || code) {
-				const { data } = await assetApi.getSharedAssets({ shareJWT, code })
+				const { data } = await assetApi.getSharedAssets({ shareJWT, code})
 				if(data.error){
 					setError(true)
 					setLoading(false)
@@ -157,6 +160,7 @@ const AssetShare = () => {
 					setError(false)
 					setLoading(false)
 					setAssets(data.data)
+					setShareUserName(data.sharedBy)
 				}
 			}
 		} catch (err) {
@@ -168,7 +172,7 @@ const AssetShare = () => {
 		e.preventDefault();
 		setLoading(true)
 		const { shareJWT, code } = urlUtils.getQueryParameters()
-		const { data } = await assetApi.getSharedAssets( {shareJWT, email, code })
+		const { data } = await assetApi.getSharedAssets( {shareJWT, email, code})
 
 		if(data.error){
 			toastUtils.error(data.errorMessage)
@@ -219,7 +223,7 @@ const AssetShare = () => {
 				</div>
 				}
 				{!loading && !error && <>
-					<ShareOperationButtons selectAll={selectAll} selectedAsset={selectedAsset} downloadSelectedAssets={downloadSelectedAssets}/>
+					<ShareOperationButtons sharedBy={shareUserName} selectAll={selectAll} totalSharedFiles={assets?.length} selectedAsset={selectedAsset} downloadSelectedAssets={downloadSelectedAssets}/>
 					<div className={styles['list-wrapper']}>
 						<ul className={styles['grid-list']}>
 							{assets.map((assetItem) => {

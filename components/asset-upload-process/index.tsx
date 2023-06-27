@@ -1,65 +1,118 @@
-import {useContext} from "react"
-import { Line } from 'rc-progress'
-import clsx from "clsx";
+import { useContext, useEffect } from "react";
 
-import styles from './index.module.css'
+import styles from "./index.module.css";
 
+import { AssetContext } from "../../context";
+import React from "react";
 
-import { AssetContext } from '../../context'
+import { Utilities } from "../../assets";
+import teamApi from "../../server-api/team";
+import AssetUploadItem from "./asset-upload-item";
 
 const AssetUploadProcess = () => {
-    const {
-        uploadingAssets,
-        uploadingStatus,
-        showUploadProcess,
-        uploadingFile,
-        uploadRemainingTime,
-        uploadingPercent,
-        setUploadDetailOverlay,
-        uploadingFileName,
-        dropboxUploadingFile,
-        uploadSourceType,
-        uploadingType,
-        retryListCount,
-        folderImport
-    } = useContext(AssetContext)
+  const {
+    uploadingAssets,
+    uploadingStatus,
+    showUploadProcess,
+    uploadingFile,
+    uploadRemainingTime,
+    dropboxUploadingFile,
+    uploadSourceType,
+    retryListCount,
+    setUploadingAssets,
+    reUploadAsset,
+    assets,
+    activeFolder,
+    folderGroups,
+  } = useContext(AssetContext);
 
-    const uploadedAssets = uploadingAssets.filter(asset => asset.status === 'done')
-    const failAssetsCount = uploadingAssets.filter(asset => asset.status === 'fail').length
+  const uploadFailedAssets = uploadingAssets.filter(
+    (asset) => asset.status === "fail"
+  );
 
-    return <div className={clsx(styles.container, {[styles['center-align']]: uploadingStatus === 'done', [styles['less-margin-bottom']]: uploadingStatus === 'uploading'})}>
-        <div className={clsx(styles.row, styles['no-margin'])}>
-            {(uploadingStatus === 'uploading' || uploadingStatus === 're-uploading') && <>
-            <span>
-                {<span className={styles['no-wrap-text']}>
-                    {uploadingFileName}
-                </span>
-                }
-            </span>
+  const handleRetry = async (i) => {
+    const failedAssets = uploadFailedAssets.map((item) => ({
+      ...item,
+      status: "queued",
+      isUploading: true,
+      index: i,
+    }));
 
+    showUploadProcess("uploading", i);
+    setUploadingAssets(failedAssets);
 
-            {uploadSourceType !== 'dropbox' && !isNaN(uploadingFile) &&
-            <span className={styles['processing-file-count']}>{uploadingFile+1} of {uploadingStatus === 're-uploading' ? retryListCount : uploadingAssets.length} assets</span>}
-            </>}
+    let totalSize = 0;
 
-            {(!folderImport && (uploadingStatus === 'uploading' || uploadingStatus === 're-uploading')) && <>
-                {uploadSourceType === 'dropbox' && !isNaN(dropboxUploadingFile) &&
-                <span className={styles['processing-file-count']}>{dropboxUploadingFile+1} of {uploadingAssets.length} assets</span>}
-            </>}
+    uploadingAssets.map((asset) => {
+      totalSize += asset.asset.size;
+    });
 
-            {uploadingStatus === 'done' &&
-                <span>{uploadingType==='version' ? 'Recent version ' : (uploadedAssets.length + ' assets')} uploaded successfully.
-                    {failAssetsCount > 0 && <span className={`${styles['fail-text']} ${styles['no-max-min-width']}`}>{failAssetsCount} failed</span>}
-                </span>
-            }
-            {uploadingStatus === 'done' && failAssetsCount > 0 && <span className={`${styles['underline-text']} ${styles['no-max-min-width']}`} onClick={()=>{setUploadDetailOverlay(true)}}>See detail</span>}
+    const { data: subFolderAutoTag } = await teamApi.getAdvanceOptions();
+
+    await reUploadAsset(
+      i,
+      failedAssets,
+      assets,
+      totalSize,
+      failedAssets,
+      activeFolder,
+      folderGroups,
+      subFolderAutoTag
+    );
+  };
+
+  const uploadInProgress =
+    uploadingStatus === "uploading" || uploadingStatus === "re-uploading";
+
+  return (
+    <>
+      <div className={styles.uploadingContainer}>
+        <div className={styles.uploadHeader}>
+          {uploadInProgress &&
+            (uploadSourceType === "dropbox" && dropboxUploadingFile ? (
+              <div className={styles.mainHeading}>
+                Uploading {dropboxUploadingFile! + 1} of{" "}
+                {uploadingAssets.length} assets
+              </div>
+            ) : (
+              <div className={styles.mainHeading}>
+                Uploading {uploadingFile! + 1} of{" "}
+                {uploadingStatus === "re-uploading"
+                  ? retryListCount
+                  : uploadingAssets.length}{" "}
+                assets
+              </div>
+            ))}
+          {uploadingStatus === "done" && (
+            <div className={styles.mainHeading}>
+              {uploadingAssets.length - uploadFailedAssets.length} of{" "}
+              {uploadingAssets.length} assets uploaded
+            </div>
+          )}
+          <img
+            src={Utilities.blueClose}
+            alt={"close"}
+            className={styles.closebtn}
+            onClick={() => {
+              showUploadProcess("none");
+            }}
+          />
         </div>
-        {uploadingStatus === 'done' && <div className={styles['close-button']} onClick={()=>{showUploadProcess('none')}}>
-            x
-        </div>}
-        {(uploadingStatus === 'uploading' || uploadingStatus === 're-uploading') && <Line percent={uploadingPercent} strokeWidth={1} strokeColor="#fff" trailColor={"#9597a6"}/>}
 
-    </div>
-}
+        <div className={styles.list}>
+          {uploadingAssets.length > 0 &&
+            uploadingAssets.map((item, index) => (
+              <AssetUploadItem
+                key={index}
+                item={item}
+                index={index}
+                handleRetry={handleRetry}
+              />
+            ))}
+        </div>
+      </div>
+    </>
+  );
+};
 
 export default AssetUploadProcess;

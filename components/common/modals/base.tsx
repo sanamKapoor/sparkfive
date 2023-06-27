@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 
 // Components
 import Button from '../buttons/button'
+import { Utilities } from '../../../assets'
 
 ReactModal.defaultStyles = {}
 
@@ -16,12 +17,14 @@ const Base = ({
   confirmAction = () => { },
   confirmText = '',
   headText = '',
+  subText,
   textWidth = false,
   disabledConfirm = false,
   noHeightMax = false,
   additionalClasses = [''],
-    showCancel = true,
-    closeButtonOnly = false
+  showCancel = true,
+  closeButtonOnly = false,
+  overlayAdditionalClass,
 }) => {
 
   useEffect(() => {
@@ -41,16 +44,25 @@ const Base = ({
     <ReactModal
       isOpen={modalIsOpen}
       className={`${styles.modal} ${noHeightMax && styles['no-height-max']} ${additionalClasses.join(' ')}`}
-      overlayClassName={styles.overlay}
+      overlayClassName={`${styles.overlay} ${overlayAdditionalClass}`}
       onRequestClose={closeModal}
       shouldCloseOnOverlayClick={true}
       shouldFocusAfterRender={false}
       ariaHideApp={false}
     >
-      {(headText || closeButtonOnly) &&
-        <div className={`${styles.text} ${closeButtonOnly ? styles['no-border'] : "" } ${textWidth && styles['full-width']}`}>
-          {<p className={styles['overflow-text']}>{!closeButtonOnly ? headText : ""}</p>}
-          <span className={styles.close} onClick={closeModal}>x</span>
+      {/* {closeButtonOnly &&
+        <img src={Utilities.blueClose} alt="close" className={`${styles.close} ${styles.close_only}`} onClick={closeModal} />
+
+      } */}
+      {(headText) &&
+        <div className={closeButtonOnly ? `${styles.header} ${styles['no-border']}` : styles.header}>
+          <div className={`${styles.text} ${closeButtonOnly ? styles['no-border'] : ""} ${textWidth && styles['full-width']}`}>
+            {<p className={styles['overflow-text']}>{!closeButtonOnly ? headText : ""}</p>}
+            <img src={Utilities.bigblueClose} alt="close" className={styles.close} onClick={closeModal} />
+          </div>
+          {subText &&
+            <p className={styles.subtext}>{subText}</p>
+          }
         </div>
       }
       {children}

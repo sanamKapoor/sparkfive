@@ -4,17 +4,12 @@
 }
 
 .input-container {
-  margin-right: 9px;
+  border-radius: 8px;
   width: 100%;
-  padding: 8px 20px;
-  border-radius: 5px;
-  border: 1px solid var(--color-secondary-border);
   background-color: var(--color-sec-lightivory);
-  min-height: 70px;
   color: var(--color-prim-navy);
   display: flex;
   align-items: center;
-  gap: 14px;
   position: relative;
   flex-wrap: wrap;
   height: fit-content;
@@ -22,21 +17,43 @@
 
 .input-container input {
   height: 100%;
-  width: 76%;
+  width: 100%;
   background-color: transparent;
   border: none;
-  font-size: 12px;
+  font-size: 14px;
+  color: var(--color-prim-navy);
 }
 
+
 .input-container img {
-  width: 20px;
-  height: 20px;
+  width: 19px;
+  height: 19px;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 6.5px 12px 6.5px 19px;
+  width: 100%;
+}
+
+.input-wrapper ::-webkit-input-placeholder,
+.input-wrapper :-moz-placeholder,
+.input-wrapper ::-moz-placeholder,
+.input-wrapper :-ms-input-placeholder,
+.input-wrapper ::-ms-input-placeholder,
+.input-wrapper ::placeholder {
+  color: var(--color-sec-blue);
+  opacity:  1;
 }
 
 .tags {
   display: flex;
   align-items: center;
   gap: 6px;
+  padding: 12px;
+  flex-wrap: wrap;
 }
 
 .tag {
@@ -67,22 +84,19 @@
 }
 
 .filters {
-  border-radius: 5px;
-  border: 1px solid var(--color-secondary-border);
-  background-color: var(--color-sec-lightivory);
-  position: absolute;
   width: 100%;
-  left: 0;
-  top: 82px;
-  padding: 20px 24px;
+  padding: 20px 14px;
   z-index: 9;
   display: flex;
   flex-direction: column;
   gap: 24px;
+  border-top: 1px solid var(--color-secondary-border);
 }
 
 .filters h5 {
   margin: 0;
+  font-size: 13px;
+  font-weight: 400;
 }
 
 .filters ul {
@@ -113,7 +127,7 @@
 
 .limit {
   background-color: rgba(8, 19, 94, 0.2);
-  padding: 10px;
+  padding: 8px 10px;
   border-radius: 5px;
   font-size: 12px;
   font-weight: 500;
@@ -135,4 +149,18 @@
 }
 .limit-active img {
   filter: grayscale(1) invert(1) brightness(500%);
+}
+
+@media screen and (max-width: 600px) {
+  .filters {
+    display: none;
+  }
+
+  .input-container {
+    border-radius: 0;
+  }
+
+  .input-wrapper {
+    padding: 10px 12px;
+  }
 }

@@ -56,7 +56,7 @@ export default function ShareLinks(){
     const [page, setPage] = useState(0)
     const [nextPage, setNextPage] = useState(0)
     const [sortData, setSortData] = useState({
-        sortField: "createdAt",
+        sortField: "expiredAt",
         sortType: "desc"
     })
     const [colorGroups, setColorGroups] = useState<any>({})

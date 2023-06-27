@@ -40,7 +40,7 @@ const Search = (props) => {
                     placeholder={props.placeholder || 'Search'}
                     className={`${styles.container} ${props.styleType && styles[props.styleType]}`}
                 />
-                <span className={styles.remove} onClick={()=>{setTerm(''); props.onClear()}}>x</span>
+                {/* <span className={styles.remove} onClick={()=>{setTerm(''); props.onClear()}}>x</span> */}
             </div>
             {!props.onlyInput && <Button
                 styleTypes={['exclude-min-height']}
