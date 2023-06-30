@@ -18,8 +18,11 @@ const Search = (props) => {
   const debouncedSearchTerm = useDebounce(input, 500);
 
   useEffect( () => {
-    setSearchTerm(debouncedSearchTerm)
-    setOpenFilters(false);
+    setSearchTerm(debouncedSearchTerm);
+    if(setOpenFilters){
+      setOpenFilters(false);
+    }
+    
 }, [debouncedSearchTerm]);
 
   const [filtersTags, setFiltersTags] = useState([])
