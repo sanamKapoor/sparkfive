@@ -1,20 +1,23 @@
 .header {
     background-color: white;
-    padding: 30px 32px;
+    padding: 10px 32px;
     display: flex;
     align-items: center;
     /*position: relative;*/
     position: sticky;
     top: 0;
     left: 0;
-    z-index: 1500;
+    z-index: 1499;
+    min-height: 74px
 }
 
 .logo-img {
-    max-height: 75px;
-    width: auto;
+    /* max-height: 75px;
+    width: auto; */
     margin-right: 48px;
     cursor: pointer;
+    max-width: 50px;
+    object-fit: contain;
 }
 .collection-name {
     flex: 1;
@@ -66,6 +69,7 @@
     position: absolute;
     left: 0;
     right: 0;
+    font-size: 32px;
 }
 
 .ops-wrapper {
@@ -78,10 +82,27 @@
     margin-left: 1rem;
 }
 
+
+@media (min-width:1200px){
+    .header {
+        position: fixed;
+        width: 100%;
+        padding: 10px 32px;
+        z-index: 9999;
+    }
+    .logo-img {
+        max-width: 80px;
+        object-fit: contain;
+        max-height: 66px
+    }
+    
+}
+
 @media screen and (max-width: 600px) {
     .header {
         padding: 17.5px 16px;
         flex-wrap: wrap;
+        min-height: 80px;
     }
     .ops-wrapper {
         margin-top: 1rem;
@@ -90,6 +111,7 @@
 
     .header h1 {
         position: relative;
+        height: auto;
     }
 
     .logo-img {

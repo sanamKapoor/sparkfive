@@ -25,6 +25,7 @@ export const Navigation = {
 
 export const Utilities = {
   edit: require('./Icons/Utilities/Description-Edit/icn-utilities-description_edit-fill.svg'),
+  editLight: require('./Icons/Utilities/Description-Edit/icn-utilities-description_edit-light.svg'),
   editWhite: require('./Icons/Utilities/Description-Edit/icn-utilities-description_edit-fill-white.svg'),
   delete: require('./Icons/Utilities/Delete/icn-utilities-delete.svg'),
   add: require('./Icons/Utilities/Add +/icn-utilities-add+.svg'),
@@ -33,6 +34,7 @@ export const Utilities = {
   addAlt: require('./Icons/Utilities/Add +/icn-utilities-add+alt.svg'),
   comment: require('./Icons/Utilities/Comments/icn-utilities-comments.svg'),
   commentLight: require('./Icons/Utilities/Comments/icn-utilities-comments-light.svg'),
+  commentGray: require('./Icons/Utilities/Comments/icn-utilities-comments-gray.svg'),
   assignMember: require('./Icons/Utilities/Assign Member/icn-utilities-assignmember.svg'),
   assignMemberLight: require('./Icons/Utilities/Assign Member/icn-utilities-assignmember-light.svg'),
   more: require('./Icons/Utilities/More/icn-utilities-more.svg'),
@@ -41,6 +43,8 @@ export const Utilities = {
   moreLighter: require('./Icons/Utilities/More/icn-utilities-more-lighter.svg'),
   closePanel: require('./Icons/Utilities/Close Panel/icn-utilities-closepanel.svg'),
   closePanelLight: require('./Icons/Utilities/Close Panel/icn-utilities-closepanel-light.svg'),
+  closePanelDark: require('./Icons/Utilities/Close Panel/icn-utilities-closepanel.svg'),
+  closePaneReverse: require('./Icons/Utilities/Close Panel/icn-utilities-closereverse.svg'),
   time: require('./Icons/Utilities/Time/icn-utilities-time.svg'),
   arrow: require('./Icons/Utilities/arrow/arrow-down-white.svg'),
   arrowGrey: require('./Icons/Utilities/arrow/arrow-down-grey.png'),
@@ -51,9 +55,11 @@ export const Utilities = {
   arrowUpDark: require('./Icons/Utilities/arrow/arrow-up-dark.svg'),
   arrowNext: require('./Icons/Utilities/arrow/arrow-next.svg'),
   arrowPrev: require('./Icons/Utilities/arrow/arrow-prev.svg'),
+  arrowNav: require('./Icons/Utilities/arrow/nav-arrow.svg'),
   circleArrowRight: require('./Icons/Utilities/arrow/arrow-circle-right.svg'),
   circleArrowLeft: require('./Icons/Utilities/arrow/arrow-circle-left.svg'),
   back: require('./Icons/Utilities/Back/icn-utilities-back.svg'),
+  backWhite: require('./Icons/Utilities/Back/icn-utilities-back-white.svg'),
   memberProfile: require('./Icons/Utilities/Member Profile/icn-nav-memberprofile.svg'),
   radioButtonNormal: require('./Icons/Utilities/Radio Button/Normal/icn-utilities-radionormal.svg'),
   radioButtonEnabled: require('./Icons/Utilities/Radio Button/Enabled/icn-utilities-radioenabled.svg'),
@@ -62,25 +68,43 @@ export const Utilities = {
   gridView: require('./Icons/Utilities/View Grid/icn-utilities-gridview.svg'),
   listView: require('./Icons/Utilities/View List/icn-utilities-listview.svg'),
   info: require('./Icons/Utilities/Information/icn-utilities-information.svg'),
+  infoGray: require('./Icons/Utilities/Information/icn-utilities-information-gray.svg'),
   filter: require('./Icons/External/filter.svg'),
+  filterBlue: require('./Icons/Utilities/Filter/filter-blue.svg'),
   calendar:  require('./Icons/Navigation/icn-nav-schedule-alt.svg'),
   versions: require('./Icons/Utilities/Versions/VersioningLatest.svg'),
+  versionsLight: require('./Icons/Utilities/Versions/versions-light.svg'),
   addVersion: require('./Icons/Utilities/Versions/add-version.svg'),
   embedCdn: require('./Icons/Utilities/EmbedCDN/embed-cdn.svg'),
+  embedCdnGrey: require('./Icons/Utilities/EmbedCDN/embed-cdn-grey.svg'),
   lockClosed: require('./Icons/Utilities/Lock/lock-closed.svg'),
   lockOpened: require('./Icons/Utilities/Lock/lock-opened.svg'),
   xMark: require('./Icons/Utilities/X-Mark/xmark-solid.svg'),
   check: require('./Icons/Utilities/Check/check-solid.svg'),
   notes: require('./Icons/Utilities/Notes/notes.svg'),
+  notesLight: require('./Icons/Utilities/Notes/notes-light.svg'),
   hide: require('./Icons/Utilities/Hide/hide.svg'),
   tags: require('./Icons/Utilities/FiltersTags/tags.svg'),
   custom: require('./Icons/Utilities/FiltersTags/custom.svg'),
   collections: require('./Icons/Utilities/FiltersTags/collections.svg'),
   file: require('./Icons/Utilities/FiltersTags/file.svg'),
   close: require('./Icons/Utilities/Close/close.svg'),
-  share: require('./Icons/Utilities/Share/share.svg'),
+  closeTag: require('./Icons/Utilities/Close/close-tag.svg'),
   blueClose: require('./Icons/Utilities/Close/blue-close.svg'),
+  bigblueClose: require('./Icons/Utilities/Close/bigclose.svg'),
+  grayClose: require('./Icons/Utilities/Close/gray-close.svg'),
+  share: require('./Icons/Utilities/Share/share.svg'),
   greenTag: require('./Icons/Utilities/green-tag.svg'),
+  thumbsUp: require('./Icons/Utilities/Thumbs Up/thumbs-up.svg'),
+  menu: require('./Icons/Utilities/Menu/menu.svg'),
+  filterGray: require('./Icons/Utilities/Filter/filter.svg'),
+  ellipse: require('./Icons/Utilities/Ellipse/ellipse.svg'),
+  tagGray: require('./Icons/Utilities/Tags/icn-utilities-tag-gray.svg'),
+  related: require('./Icons/Utilities/Related/related.svg'),
+  relatedLight: require('./Icons/Utilities/Related/related-light.svg'),
+  sort: require('./Icons/Utilities/arrow/sort.svg'),
+  caretRight: require('./Icons/Utilities/Caret/caret-right.svg'),
+  checkMark: require('./Icons/Utilities/CheckMark/checkmark.svg'),
   transcript: require('./Icons/Utilities/Transcript/Transcript.svg'),
 }
 
@@ -159,14 +183,17 @@ export const Assets = {
   dwg: require('./Icons/Assets/dwg.png'),
   unknown: require('./Icons/Assets/unknown.svg'),
   arrowDown: require('./Icons/Assets/arrow-down.svg'),
-  computer: require('./Icons/Assets/computer.svg')
+  computer: require('./Icons/Assets/computer.svg'),
+  upload: require('./Icons/Assets/upload.svg')
 }
 
 export const Comments = {
   mention: require('./Icons/Utilities/@/icn-comments-mention.svg'),
+  mentionDisable: require('./Icons/Utilities/@/icn-comments-disable.svg'),
   mentionLight: require('./Icons/Utilities/@/icn-comments-mention-light.svg'),
   smile: require('./Icons/Utilities/Smile/icn-comments-smile.svg'),
-  smileLight: require('./Icons/Utilities/Smile/icn-comments-smile-light.svg')
+  smileLight: require('./Icons/Utilities/Smile/icn-comments-smile-light.svg'),
+  smileDisable: require('./Icons/Utilities/Smile/icn-comments-smile-disable.svg'),
 }
 
 export const Integrations = {
@@ -175,8 +202,9 @@ export const Integrations = {
 }
 
 export const AssetOps = {
-  edit: require('./Icons/Utilities/Description-Edit/icn-utilities-description_edit-fill.svg'),
+  edit: require('./Icons/Utilities/Description-Edit/icn-utilities-description_edit.svg'),
   delete: require('./Icons/Utilities/Delete/icn-utilities-delete.svg'),
+  deleteGray: require('./Icons/Utilities/Delete/icn-utilities-delete-gray.svg'),
   deleteRed: require('./Icons/Utilities/Delete/icn-utilities-delete-red.svg'),
   archive: require('./Icons/Asset Actions/archive.svg'),
   download: require('./Icons/Utilities/Download/icn-utilities-download.svg'),
@@ -192,9 +220,15 @@ export const AssetOps = {
   copyWhite: require('./Icons/Asset Actions/copy-white.svg'),
   shareWhite: require('./Icons/Asset Actions/share-white.svg'),
   generateThumbnail: require('./Icons/Asset Actions/wrench.svg'),
+  recreateThumbnail: require('./Icons/Asset Actions/wrench-blue.svg'),
   upload: require('./Icons/Asset Actions/upload.svg'),
   associate: require('./Icons/Asset Actions/associate.svg'),
   associateBlue: require('./Icons/Asset Actions/associate-blue.svg'),
   moveReplace: require('./Icons/Asset Actions/move.svg'),
-  moveReplaceWhite: require('./Icons/Asset Actions/white-move.svg')
+  moveReplaceWhite: require('./Icons/Asset Actions/white-move.svg'),
+  newCollection: require('./Icons/Asset Addition/new-collection.svg'),
+  uploadFiles: require('./Icons/Asset Addition/upload-files.svg'),
+  uploadFolder: require('./Icons/Asset Addition/upload-folder.svg'),
+  editGray: require('./Icons/Asset Actions/edit-gray.svg'),
+  cancel: require('./Icons/Utilities/Close/blue-close.svg'),
 }

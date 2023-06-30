@@ -34,7 +34,7 @@ const AssetTranscript = ({ title, transcripts, loading = true, navigateToTime = 
                 <h2>{title}</h2>
             </div>
 
-            {transcriptData?.transcript && transcriptData?.transcript?.length > 0 && <Search placeholder={"Search transcript"}
+            {transcriptData?.transcript && <Search placeholder={"Search transcript"}
                     onChange={search}
                     onClear={onClear}
                     onlyInput={true}

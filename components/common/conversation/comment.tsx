@@ -13,18 +13,19 @@ const Comment = ({ content, mentions, createdAt, user }) => {
   return (
     <div className={styles.container}>
       <div className={styles['main-content']}>
-        <UserPhoto sizePx={27} photoUrl={user.profilePhoto} extraClass={styles['author-img']} />
-        <Highlighter
-          highlightClassName={styles.mention}
-          searchWords={mentionNames}
-          autoEscape={true}
-          textToHighlight={content}
-        />
+        <UserPhoto sizePx={28} photoUrl={user.profilePhoto} extraClass={styles['author-img']} />
+        <div className={styles['author-date']}>
+          <span>{user.name}</span>
+          <span>{format(new Date(createdAt), 'MMM dd p')}</span>
+        </div>
       </div>
-      <div className={styles['author-date']}>
-        <span>{user.name}</span>
-        <span>{format(new Date(createdAt), 'MMM Mo p')}</span>
-      </div>
+      <Highlighter
+        highlightClassName={styles.mention}
+        searchWords={mentionNames}
+        autoEscape={true}
+        textToHighlight={content}
+        style={{ fontSize: 14, color: "#817D9D" }}
+      />
     </div>
   )
 }

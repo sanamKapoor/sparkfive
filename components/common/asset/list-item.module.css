@@ -1,15 +1,66 @@
 .item {
   display: flex;
   padding: 0.5rem 0;
-  border-top: 1px solid var(--color-secondary-border);
   align-items: center;
-  height: 71px;
+  min-height: 71px;
+}
+
+.headers-content,
+.item {
+  gap: 10px;
+}
+
+.listBadge  {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+@media screen and (max-width: 800px) {
+  .item {
+    padding: 0 20px;
+    margin: 0 -20px;
+  }
+}
+
+.item--selected {
+  background-color: var(--color-sec-lightivory);
 }
 
 .photo {
-  width: 95px;
+  width: 30%;
+  min-width: 30%;
+  display: flex;
+}
+
+@media screen and (max-width: 600px) {
+  .photo {
+    width: 80%;
+  }
+}
+
+.photo-name {
+  width: 30%;
   display: flex;
   align-items: center;
+}
+
+.name {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  font-weight: 400;
+  color: var(--color-prin-navy);
+  width: calc(100% - 50px);
+  font-size: 12px;
+}
+
+.name span {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .info {
@@ -26,35 +77,32 @@
 
 .header {
   display: flex;
-}
-
-.header h4 {
-  font-weight: 550;
-  color: var(--color-prim-nav);
+  border-top: 1px solid var(--color-secondary-border);
+  border-bottom: 1px solid var(--color-secondary-border);
+  padding: 28px 0;
 }
 
 .headers-content h4 {
-  width: 14%;
+  font-weight: 500;
+  color: var(--color-prim-navy);
+  font-size: 13px;
+  width: 10%;
   display: flex;
   align-items: center;
   cursor: pointer;
-}
-
-.header h4:first-child {
-  width: 95px;
+  justify-content: center;
+  margin: 0;
 }
 
 .headers-content h4:first-child {
-  width: 21%;
-}
-
-.headers-content h4:last-child {
-  flex: 1;
+  width: 30%;
+  justify-content: flex-start;
 }
 
 .headers-content h4 .sort-icon {
-  margin-left: 24px;
+  margin-left: 8px;
   display: none;
+  width: 13px;
 }
 
 .headers-content h4:hover .sort-icon,
@@ -63,10 +111,11 @@
 }
 
 .thumbnail {
-  overflow: hidden;
-  margin: 0 10px;
+  /* overflow: hidden; */
+  margin: 0 10px 0 0;
   position: relative;
   max-height: 50px;
+  width: 50px;
 }
 
 .thumbnail > img,
@@ -76,25 +125,32 @@
   object-fit: contain;
 }
 
-.name {
-  width: 21%;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  padding-right: 0.5rem;
-  cursor: pointer;
-  font-weight: 600;
-  position: relative;
-}
-
 .name:hover {
   opacity: 0.6;
 }
 
+.edit {
+  cursor: pointer;
+}
+
+.edit:hover {
+  opacity: 0.6;
+}
+
+.options img:hover {
+  opacity: 0.6;
+}
+
 .field_name {
-  width: 14%;
-  font-size: 13px;
+  width: 10%;
+  font-size: 12px;
   position: relative;
+  text-align: center;
+  font-weight: 400;
+  color: var(--color-prim-navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .status {
@@ -110,13 +166,17 @@
   margin-left: 2rem;
 }
 
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+}
+
 @media screen and (max-width: 900px) {
   .item {
-    min-height: 71px;
+    min-height: 70px;
     height: auto;
-  }
-  .header {
-    display: none;
   }
 
   .info {
@@ -126,13 +186,79 @@
   .info > * {
     margin-bottom: 10px;
   }
+}
 
-  .name {
-    width: 200px;
+@media screen and (max-width: 810px) {
+  .headers-content,
+  .item {
+    gap: 10px;
+  }
+  .item {
+    margin-bottom: 10px;
+  }
+  .extension,
+  h4.extension {
+    display: none;
+  }
+  .dimension,
+  h4.dimension {
+    display: none;
+  }
+  .photo {
+    width: 40%;
+    min-width: 40%;
+  }
+  .photo-name {
+    width: 40%;
   }
 
-  .field_name,
-  .status {
-    width: 130px;
+  .headers-content h4:first-child {
+    width: 40%;
+    min-width: 40%;
+  }
+
+  .headers-content h4 {
+    width: 12%;
+  }
+  .field_name {
+    width: 12%;
+  }
+  .actions {
+    gap: 12px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .header {
+    display: none;
+  }
+  .size,
+  h4.size {
+    display: none;
+  }
+  .date-created,
+  h4.date-created {
+    display: none;
+  }
+  .date-modified,
+  h4.date-modified {
+    display: none;
+  }
+
+  .collection,
+  h4.collection {
+    display: none;
+  }
+
+  .edit {
+    display: none;
+  }
+
+  .item {
+    justify-content: space-between;
+  }
+
+  .photo-name {
+    width: 100%;
   }
 }

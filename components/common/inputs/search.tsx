@@ -1,19 +1,32 @@
 import styles from './search.module.css'
 import { Utilities } from '../../../assets'
-import { useRef, useState, useContext } from 'react'
-import { UserContext } from '../../../context'
+import { useRef, useState, useContext, useEffect } from 'react'
+import { FilterContext, UserContext } from '../../../context'
 
 // Components
 import Button from '../buttons/button'
+import { useDebounce } from '../../../hooks/useDebounce'
 
 const Search = (props) => {
 
-  const [term, setTerm] = useState('')
-  const [filtersTags, setFiltersTags] = useState([])
-  const [isOpen, setIsOpen] = useState(false)
-  const contentRef = useRef(null)
+  const { openFilters, setOpenFilters } = props
 
-  const {advancedConfig} = useContext(UserContext)
+  const [input, setInput] = useState('');
+
+  const {setSearchTerm} = useContext(FilterContext);
+
+  const debouncedSearchTerm = useDebounce(input, 500);
+
+  useEffect( () => {
+    setSearchTerm(debouncedSearchTerm)
+    setOpenFilters(false);
+}, [debouncedSearchTerm]);
+
+  const [filtersTags, setFiltersTags] = useState([])
+  const contentRef = useRef(null)
+  let isOpen = openFilters
+
+  const { advancedConfig } = useContext(UserContext)
 
   const searchModes = [
     {
@@ -36,22 +49,22 @@ const Search = (props) => {
 
   const searchFrom = [
     {
-      label: 'Tags',
+      label: 'Tags only',
       value: 'tags.name',
       icon: Utilities.tags
     },
     {
-      label: 'Custom fields',
+      label: 'Custom fields only',
       value: 'attributes.name',
       icon: Utilities.custom
     },
     {
-      label: 'Collections',
+      label: 'Collections only',
       value: 'folders.name',
       icon: Utilities.collections
     },
     {
-      label: 'File name',
+      label: 'File name only',
       value: 'assets.name',
       icon: Utilities.file
     },
@@ -62,9 +75,9 @@ const Search = (props) => {
     },
   ]
 
-  if (filtersTags.length === 0 && advancedConfig.searchDefault==='tags_only') {
-    setFiltersTags([...filtersTags, searchFrom[0]])
-  }
+  // if (filtersTags.length === 0 && advancedConfig.searchDefault === 'tags_only') {
+  //   setFiltersTags([...filtersTags, searchFrom[0]])
+  // }
 
   const addTag = (tag, isFilter) => {
     let selectedItems = [...filtersTags]
@@ -101,7 +114,7 @@ const Search = (props) => {
     if (e) {
       e.stopPropagation()
     }
-    setIsOpen(visible)
+    isOpen = visible
     if (visible) {
       document.addEventListener("mousedown", handleClickOutside);
     } else {
@@ -120,11 +133,20 @@ const Search = (props) => {
         return filtersTags?.some(tag => tag.value === filter.value)
       })?.map(item => item.value)
 
-      props.onSubmit(term, {advSearchMode: selectedModes, advSearchFrom: from})
+      props.onSubmit(input, { advSearchMode: selectedModes, advSearchFrom: from })
     }}>
       <div className={styles.form}>
         <div className={styles['input-container']} ref={contentRef} onClick={() => setFiltersVisible(null, true)}>
-          <img src={Utilities.search} />
+          <div className={styles["input-wrapper"]}>
+            <img src={Utilities.search} />
+            <input {...props}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyUp={(e) => hideSearchOnEnter(e)}
+              value={input}
+              placeholder={props.placeholder || 'Search'}
+              className={`${styles.container} ${props.styleType && styles[props.styleType]}`}
+            />
+          </div>
           {filtersTags.length > 0 &&
             <div className={styles.tags}>
               {filtersTags?.map((tag, index) => (
@@ -140,16 +162,10 @@ const Search = (props) => {
               ))}
             </div>
           }
-          <input {...props}
-            onChange={(e) => setTerm(e.target.value)}
-            onKeyUp={(e) => hideSearchOnEnter(e)}
-            value={term}
-            placeholder={props.placeholder || 'Search'}
-            className={`${styles.container} ${props.styleType && styles[props.styleType]}`}
-          />
+
           {isOpen &&
             <div className={styles.filters}>
-              <h5>Search Mode</h5>
+              <h5>Search Filters</h5>
               <ul>
                 {searchModes?.map((filter, index) => {
 
@@ -163,7 +179,6 @@ const Search = (props) => {
                 })}
 
               </ul>
-              <h5>Search from</h5>
               <ul>
                 {searchFrom?.map((item, index) => {
 
@@ -180,12 +195,6 @@ const Search = (props) => {
             </div>
           }
         </div>
-        <Button
-          disabled={term.length < 1}
-          type={'submit'}
-          text='Search'
-          styleType='primary'
-        />
       </div>
     </form>
   )

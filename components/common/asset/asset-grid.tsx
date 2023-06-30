@@ -1,7 +1,7 @@
 import styles from "./asset-grid.module.css";
 import useDropzone from "../misc/dropzone";
 import update from "immutability-helper";
-import React, { useEffect, useContext, useState } from "react";
+import React, { useEffect, useContext, useState, useRef } from "react";
 import { AssetContext, LoadingContext, UserContext } from "../../../context";
 import toastUtils from "../../../utils/toast";
 import { Waypoint } from "react-waypoint";
@@ -54,7 +54,10 @@ const AssetGrid = ({
   sharePath = "",
   openFilter,
   onCloseDetailOverlay = (assetData) => {},
+  setWidthCard,
+  widthCard
 }) => {
+
   let isDragging;
   if (!isShare) isDragging = useDropzone();
   const {
@@ -67,7 +70,6 @@ const AssetGrid = ({
     folders,
     updateDownloadingStatus,
   } = useContext(AssetContext);
-
   const { advancedConfig, hasPermission, user } = useContext(UserContext);
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -91,7 +93,6 @@ const AssetGrid = ({
   ] = useSortedAssets(folders);
 
   const { setIsLoading } = useContext(LoadingContext);
-  const { setFolders } = useContext(AssetContext);
 
   const [focusedItem, setFocusedItem] = useState(null);
 
@@ -307,8 +308,34 @@ const AssetGrid = ({
     }
   };
 
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const ref = useRef(null);
+
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (ref.current) {
+      setWidthCard(ref.current.clientWidth);        
+    }
+  }, [ref.current, windowWidth]);
+
+
   return (
-    <section className={`${styles.container} ${openFilter && styles.filter}`}>
+    <section
+      className={`${styles.container} ${openFilter && styles.filter}`}
+      style={{ width: openFilter ? `calc(100% - ${widthCard}px)` : "100%" }}
+    >
       {(shouldShowUpload || isDragging) && !isShare && (
         <AssetUpload
           onDragText={"Drop files here to upload"}
@@ -334,7 +361,19 @@ const AssetGrid = ({
       )}
       <div className={styles["list-wrapper"]}>
         {activeView === "grid" && (
-          <ul className={`${styles["grid-list"]} ${styles[itemSize]} ${mode === "assets" ? !openFilter ? styles["grid-" + advancedConfig.assetThumbnail] : styles["grid-filter-" + advancedConfig.assetThumbnail] : !openFilter ? styles["grid-" + advancedConfig.collectionThumbnail] : styles["grid-filter-" + advancedConfig.collectionThumbnail]}`}>
+          <ul
+            className={`${styles["grid-list"]} ${styles[itemSize]}
+            ${
+              mode === "assets"
+                ? openFilter
+                  ? styles["grid-filter-" + advancedConfig.assetThumbnail]
+                  : styles["grid-" + advancedConfig.assetThumbnail]
+                : openFilter
+                ? styles["grid-filter-" + advancedConfig.collectionThumbnail]
+                : styles["grid-" + advancedConfig.collectionThumbnail]
+            }
+            `}
+          >
             {mode === "assets" &&
               assets.map((assetItem, index) => {
                 if (assetItem.status !== "fail") {
@@ -343,6 +382,8 @@ const AssetGrid = ({
                       className={styles["grid-item"]}
                       key={assetItem.asset.id || index}
                       onClick={(e) => handleFocusChange(e, assetItem.asset.id)}
+                      ref={ref}
+                      style={{ width: `$${widthCard}px` }}
                     >
                       <AssetThumbail
                         {...assetItem}
@@ -394,6 +435,8 @@ const AssetGrid = ({
                     className={styles["grid-item"]}
                     key={folder.id || index}
                     onClick={(e) => handleFocusChange(e, folder.id)}
+                    ref={ref}
+                    style={{ width: `$${widthCard}px` }}
                   >
                     <FolderGridItem
                       {...folder}
@@ -423,7 +466,7 @@ const AssetGrid = ({
           </ul>
         )}
         {activeView === "list" && (
-          <ul className={"regular-list"}>
+          <ul  className={`${styles.regularlist} `}>
             {mode === "assets" &&
               sortedAssets.map((assetItem, index) => {
                 return (
@@ -472,12 +515,20 @@ const AssetGrid = ({
               sortedFolders.map((folder, index) => {
                 return (
                   <li
-                    className={`${styles["grid-item"]} ${!openFilter ? styles[" grid-" + advancedConfig.collectionThumbnail] : styles["grid-filter-" + advancedConfig.collectionThumbnail]}`} 
+                    className={`${styles["grid-item"]} ${
+                      !openFilter
+                        ? styles[" grid-" + advancedConfig.collectionThumbnail]
+                        : styles[
+                            "grid-filter-" + advancedConfig.collectionThumbnail
+                          ]
+                    }`}
                     key={folder.id || index}
                     onClick={(e) => handleFocusChange(e, folder.id)}
                   >
                     <FolderListItem
                       {...folder}
+                      isShare={isShare}
+                      sharePath={sharePath}
                       toggleSelected={() => toggleSelected(folder.id)}
                       viewFolder={() => viewFolder(folder.id)}
                       deleteFolder={() => deleteFolder(folder.id)}
