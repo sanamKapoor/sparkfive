@@ -69,19 +69,19 @@ const Search = (props) => {
   const addTag = (tag, isFilter) => {
     let selectedItems = [...filtersTags]
     if (isFilter) {
-      selectedItems = selectedItems.filter(item => {
-        const isSelected = searchModes.some(fItem => fItem.value === item.value)
+      selectedItems = selectedItems?.filter(item => {
+        const isSelected = searchModes?.some(fItem => fItem.value === item.value)
         return !isSelected
       })
     } else {
-      selectedItems = selectedItems.filter(filter => filter.value !== tag.value)
+      selectedItems = selectedItems?.filter(filter => filter.value !== tag.value)
     }
 
     setFiltersTags([...selectedItems, tag])
   }
 
   const removeTag = (index) => {
-    const newTags = filtersTags.filter((tag, i) => index !== i)
+    const newTags = filtersTags?.filter((tag, i) => index !== i)
     setFiltersTags([...newTags])
   }
 
@@ -112,13 +112,13 @@ const Search = (props) => {
   return (
     <form onSubmit={(e) => {
       e.preventDefault()
-      const selectedModes = searchModes.filter((filter) => {
-        return filtersTags.some(tag => tag.value === filter.value)
-      }).map(item => item.value)
+      const selectedModes = searchModes?.filter((filter) => {
+        return filtersTags?.some(tag => tag.value === filter.value)
+      })?.map(item => item.value)
     
-      const from = searchFrom.filter((filter) => {
-        return filtersTags.some(tag => tag.value === filter.value)
-      }).map(item => item.value)
+      const from = searchFrom?.filter((filter) => {
+        return filtersTags?.some(tag => tag.value === filter.value)
+      })?.map(item => item.value)
 
       props.onSubmit(term, {advSearchMode: selectedModes, advSearchFrom: from})
     }}>
@@ -127,7 +127,7 @@ const Search = (props) => {
           <img src={Utilities.search} />
           {filtersTags.length > 0 &&
             <div className={styles.tags}>
-              {filtersTags.map((tag, index) => (
+              {filtersTags?.map((tag, index) => (
                 <div className={styles.tag} key={index}>
                   {tag.icon &&
                     <img src={tag.icon} />
@@ -151,9 +151,9 @@ const Search = (props) => {
             <div className={styles.filters}>
               <h5>Search Mode</h5>
               <ul>
-                {searchModes.map((filter, index) => {
+                {searchModes?.map((filter, index) => {
 
-                  let active = filtersTags.some(tag => tag.value === filter.value) ? true : false
+                  let active = filtersTags?.some(tag => tag.value === filter.value) ? true : false
 
                   return (
                     <li key={`filter-${index}`} className={`${styles.filter} ${active ? styles['filter-active'] : ''}`} onClick={() => addTag(filter, true)}>
@@ -165,7 +165,7 @@ const Search = (props) => {
               </ul>
               <h5>Search from</h5>
               <ul>
-                {searchFrom.map((item, index) => {
+                {searchFrom?.map((item, index) => {
 
                   let active = filtersTags.some(tag => tag.value === item.value) ? true : false
 
