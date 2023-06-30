@@ -39,7 +39,7 @@ const EditGrid = ({ assets, toggleSelectedEdit }) => {
   const showPreviewImage = (asset) => {
     setPreviewAsset(asset);
     setPreviewModalOpen(true);
-  };
+  };                      
 
   return (
     <div className={styles["list-wrapper"]}>

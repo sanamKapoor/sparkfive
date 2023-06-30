@@ -1,10 +1,13 @@
 .container {
   border-radius: 5px;
-  height: 34px;
+  height: 32px;
   /* max-width: 250px; */
   padding: 0 20px;
   font-weight: 600;
   cursor: pointer;
+  font-size: 12px;
+  min-width: 120px;
+  white-space: nowrap;
 }
 
 .submit {
@@ -103,4 +106,17 @@
 /* Used for multi usually */
 .round-corners{
   border-radius: 50px;
+}
+
+.outlined {
+  color: white;
+  background-color: transparent;
+  border: 1px solid white;
+}
+
+@media screen and (max-width: 600px) {
+  .container {
+    padding: 0 8px;
+    min-width: fit-content;
+  }
 }

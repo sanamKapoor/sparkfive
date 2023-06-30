@@ -1,20 +1,30 @@
-.container {
-  display: flex;
-  align-items: center;
-  margin-bottom: 3rem;
-  /*position: relative;*/
+.container { 
+  /* position: relative; */
   position: fixed;
   width: 100%;
-  top: 0;
+  top: 81px;
   left: 0;
-  z-index: 1399; /* To be lower than top bar so that upoad popup is not hidden*/
+  /* z-index: 200; To be lower than top bar so that upoad popup is not hidden  */
+  z-index: 1499; /* To be lower than top bar so that upoad popup is not hidden */
   background-color: white;
-  padding: 35px 32px;
+  padding: 33.5px 40px;
+  min-height: 99px;
+}
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.plusIcon{
+  padding:0px;
 }
 
 @media screen and (max-width: 900px) {
   .container {
-    padding: 17.5px 16px;
+    padding: 16px 40px;
   }
 }
 
@@ -30,10 +40,9 @@
 .tab-list{
   display: flex;
   flex-wrap: wrap;
-}
-
-.tab-list-item{
-  padding: 15px;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
 }
 
 .content {
@@ -41,14 +50,25 @@
    margin-left: 20px;
 }
 
-.filters > img,
-.sec-filters > img {
-  width: 20px;
-  height: 20px;
+.filters > img {
+  width: 24px;
+  height: 24px;
   cursor: pointer;
-  margin: 0 15px;
   align-self: center;
 }
+
+.sec-filters > img {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  align-self: center;
+}
+
+.sec-filters > img.gridList {
+  width: 20px;
+  height: 20px;
+}
+
 
 .filters > button {
   margin: 0 15px;
@@ -57,18 +77,23 @@
 .sec-filters {
   display: flex;
   align-items: center;
+  gap: 17px;
+  position: relative;
+}
+.sec-filters button span{
+  position: relative;
+  left: 0.5px;
+  bottom: 0.3px;
 }
 
 .sort-wrapper {
-  margin: 0 5px;
   z-index: 1000;
-  min-width: 160px;
+  min-width: 127px
 }
 
 .nested-wrapper {
   display: flex;
   align-items: center;
-  margin: 0 5px;
 }
 
 .filter {
@@ -77,12 +102,10 @@
 
 .container .search{
   margin-left: 0;
+  margin-right: -14px;
 }
 
 @media screen and (max-width: 1210px) {
-  .container {
-    margin-bottom: 1rem;
-  }
 
   .options {
     flex-wrap: wrap;
@@ -112,22 +135,6 @@
     height: auto;
   }
 
-  .sec-filters {
-    display: none;
-    right: 0;
-    flex-wrap: wrap;
-    position: absolute;
-    top: 2rem;
-    z-index: 300;
-    background-color: white;
-    padding: 20px;
-    border: 1px solid var(--color-secondary-border);
-  }
-
-  .sec-filters > * {
-    margin-bottom: 10px;
-  }
-
   .print {
     display: none;
   }
@@ -135,12 +142,33 @@
 
 .select-only-shown-items-text{
   cursor: pointer;
-  margin-right: 15px;
+  /* margin-right: 15px; */
   font-size: 9px;
 }
 
 .select-only-shown-items-text:hover{
   text-decoration: underline;
+}
+
+
+.view-dropdown {
+  right: 0;
+  top: 35px;
+  width: 160px;
+}
+
+@media screen and (max-width: 409px) {
+  .view-dropdown {
+    right: 0;
+    width: 100px;
+  }
+}
+
+
+li.dropdown-title {
+  padding: 8px 10px;
+  background-color: var(--color-sec-lightblue);
+  border-bottom: 1px solid var(--color-secondary-border);
 }
 
 @media screen and (max-width: 600px) {
@@ -155,25 +183,149 @@
   }
 }
 
-@media screen and (max-width: 1024px){
-  .content{
-    margin-left: 0 !important;
-    text-align: center;
-    align-items: flex-start;
+@media screen and (min-width: 810px){
+  .hamburger {
+    display: none;
   }
-  .filters {
-  display: flex;
-  align-items: center;
-}
+
+
 }
 
-@media screen and (max-width: 650px) {
+@media screen and (min-width: 601px) {
+  .search-filter--mobile {
+      display: none;
+  }
+
+  .filter-mobile {
+    display: none;
+  }
+
+  .mobile-bottom {
+    display: none;
+  }
+
+}
+
+@media screen and (max-width: 810px) {
+  .sec-filters {
+    gap: 8px;
+  }
+
+  .sec-filters button {
+    white-space: nowrap;
+    padding: 0 10px;
+  }
+
+  .sort-wrapper {
+    min-width: 97px;
+  }
+
+  .wrapper {
+    gap: 0;
+  }
+
+  .wrapper .innerwrapper .tab-list-item {
+    /* width: calc(100% - 35px);
+    overflow: hidden; */
+    padding: 0;
+  }
+  
+
+  .mobile-tabs {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+  .dropdown {
+    left: 0;
+    top: 36px;
+  }
+
+  .container {
+    padding: 20px;
+  }
+}
+
+@media screen and (max-width: 600px) {
   .tab-list {
     flex-wrap: wrap;
-    margin-top: 10px;
+    gap: 8px;
   }
 
   .tab-list-item{
     padding: 6px 8px;
+  }
+
+  .container {
+    top: calc(55px + 36px);
+    min-height: 75px;
+  }
+
+  .filter-mobile {
+    position: absolute;
+    top: -26px;
+    right: 22px;
+    cursor: pointer;
+  }
+
+  .mobile-bottom {
+    background-color: var(--color-prim-navy);
+    height: 36px;
+    width: 100%;
+    justify-content: center;
+    position: fixed;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.gridOuter {
+  display: flex;
+  position: relative;
+  cursor: pointer;
+  margin-left: -14px;
+  margin-right: 4px;
+}
+
+.gridOuter .gridList {
+  width: 20px;
+  height: 20px;
+}
+
+
+@media (max-width:400px){
+  .wrapper .innerwrapper .tab-list-item {
+    font-size: 12px;
+  }
+  .mobile-tabs img{
+    width: 22px;
+  }
+  .sec-filters {
+    gap: 10px;
+  }
+  .sort-wrapper {
+    min-width: 89px;
+  }
+  .sort-wrapper div +div +div:first-child{
+    padding: 0 7px !important;
+  }
+
+  .mobilePlus div >div{
+    padding: 0;
+    margin: 5px 13px 0px 13px;
+    display: block;
+  }
+  .mobilePlus div >div ul{
+    bottom: inherit !important;
+  }
+  .select-only-shown-items-text{
+    position: absolute;
+    right: 0;
+    top: 40px;
   }
 }

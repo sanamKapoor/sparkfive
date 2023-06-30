@@ -65,7 +65,7 @@ const AssetOptions = ({
 			wrapperClass={styles['asset-actions-wrapper']}
 			Wrapper={({ children }) => (
 				<>
-					<IconClickable src={Utilities.moreLight} />
+					<IconClickable src={Utilities.more} additionalClass={styles.thumbnailDots} />
 					{children}
 				</>
 			)}

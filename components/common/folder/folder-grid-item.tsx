@@ -1,5 +1,5 @@
 import styles from "./folder-grid-item.module.css";
-import gridStyles from "../asset//asset-grid.module.css";
+import gridStyles from "../asset/asset-grid.module.css";
 import { Utilities, Assets } from "../../../assets";
 import {
   ChangeEvent,
@@ -117,32 +117,37 @@ const FolderGridItem = ({
     // zipDownloadUtils.zipAndDownload(data, name)
 
     // Show processing bar
-    updateDownloadingStatus("zipping", 0, 1);
+    try {
+      updateDownloadingStatus("zipping", 0, assetsCount);
 
-    let payload = {
-      folderIds: [id],
-    };
-    let filters = {
-      estimateTime: 1,
-    };
+      let payload = {
+        folderIds: [id],
+      };
+      let filters = {
+        estimateTime: 1,
+      };
 
-    let api = folderApi;
+      let api = folderApi;
 
-    if (isShare) {
-      api = shareFolderApi;
+      if (isShare) {
+        api = shareFolderApi;
+      }
+
+      // Add sharePath property if user is at share collection page
+      if (sharePath) {
+        filters["sharePath"] = sharePath;
+      }
+
+      const { data } = await api.downloadFoldersAsZip(payload, filters);
+
+      // Download file to storage
+      fileDownload(data, "assets.zip");
+
+      updateDownloadingStatus("done", 0, 0);
+    } catch (err) {
+      console.log("err in download: ", err);
+      updateDownloadingStatus("error", 0, 0);
     }
-
-    // Add sharePath property if user is at share collection page
-    if (sharePath) {
-      filters["sharePath"] = sharePath;
-    }
-
-    const { data } = await api.downloadFoldersAsZip(payload, filters);
-
-    // Download file to storage
-    fileDownload(data, "assets.zip");
-
-    updateDownloadingStatus("done", 0, 0);
   };
 
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -251,32 +256,36 @@ const FolderGridItem = ({
         </>
       </div>
       <div className={styles.info} onClick={handleOnFocus}>
-        {isThumbnailNameEditable &&
-        isEditing &&
-        focusedItem &&
-        focusedItem === id ? (
-          <input
-            className={`normal-text ${gridStyles["editable-input"]}`}
-            value={thumbnailName}
-            onChange={handleNameChange}
-            onBlur={updateNameOnBlur}
-            autoFocus
-          />
-        ) : (
-          <span
-            id="editable-preview"
-            onClick={handleOnFocus}
-            className={
-              isThumbnailNameEditable
-                ? `normal-text ${styles["wrap-text"]} ${gridStyles["editable-preview"]}`
-                : `${gridStyles["editable-preview"]} ${gridStyles["non-editable-preview"]}`
-            }
-          >
-            {thumbnailName}
-          </span>
-        )}
-        <div className={styles["details-wrapper"]}>
-          <div className="secondary-text">{`${assetsCount} Assets`}</div>
+        <div className={styles.folderItemHeadingOuter}>
+          <div className={styles.folderItemHeading}>
+            {isThumbnailNameEditable &&
+            isEditing &&
+            focusedItem &&
+            focusedItem === id ? (
+              <input
+                className={`normal-text ${gridStyles["editable-input"]}`}
+                value={thumbnailName}
+                onChange={handleNameChange}
+                onBlur={updateNameOnBlur}
+                autoFocus
+              />
+            ) : (
+              <span
+                id="editable-preview"
+                onClick={handleOnFocus}
+                className={
+                  isThumbnailNameEditable
+                    ? `normal-text ${styles["wrap-text"]} ${gridStyles["editable-preview"]}`
+                    : `${gridStyles["editable-preview"]} ${gridStyles["non-editable-preview"]}`
+                }
+              >
+                {thumbnailName}
+              </span>
+            )}
+            <div className={styles["details-wrapper"]}>
+              <div className="secondary-text">{`${assetsCount} Assets`}</div>
+            </div>
+          </div>
           <FolderOptions
             activeFolderId={id}
             isShare={isShare}
@@ -301,7 +310,7 @@ const FolderGridItem = ({
           setDeleteOpen(false);
         }}
         confirmText={"Delete"}
-        message={"Are you sure you want to delete this folder?"}
+        message={"Are you sure you want to delete this Collection?"}
         modalIsOpen={deleteOpen}
       />
     </div>

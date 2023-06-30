@@ -2,6 +2,13 @@
     position: relative;
     display: flex;
     align-items: center;
+    border-radius: 5px;
+    height: 34px;
+    /* max-width: 250px; */
+    padding: 0 20px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 12px;
 }
 
 .button-wrapper .approval-text{
@@ -13,57 +20,58 @@
     cursor: pointer;
 }
 
-.button-wrapper-displaced {
-    margin-right: 1rem;
+.button-wrapper:empty{
+    padding: 0 8px;
 }
-
 .options-list {
     position: absolute;
-    display: flex;
-    z-index: 10000;
-    flex-wrap: wrap;
-    justify-content: center;
+    top: 32px;
+    z-index: 1400;
+    border-radius: 8px;
+    border: 1px solid var(--color-secondary-border);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    background-color: white;
+    overflow: hidden;
 }
 
-.options-list.regular {
-    bottom: 1rem;
+.options-list li:first-child span,
+.options-list li:nth-child(3) span {
+    border-bottom: 1px solid var(--color-secondary-border);
 }
+
+/* .options-list.regular {
+    bottom: 1rem;
+} */
 
 .options-list.dropdown {
     right: 0;
 }
 
 .option {
-    background-color: white;
-    border: 1px solid var(--color-secondary-border);
-    /* border-right: none; */
-    width: 10rem;
-    height: 8em;
+    width: 202px;
     display: flex;
-    justify-content: center;
-    flex-direction: column;
     align-items: center;
+    gap: 10px;
     cursor: pointer;
+    padding: 15px;
+}
+
+.option:hover {
+    background-color: var(--color-sec-lightblue);
 }
 
 .option-label {
     font-weight: 500;
-    margin-top: 0.5rem;
+    font-size: 13px;
 }
 
 .option-text {
     color: var(--color-sec-blue);
-    font-size: 12px;
-    margin-top: 0.2rem;
-}
-
-.option:last-child {
-    border-right: 1px solid var(--color-secondary-border);
 }
 
 .option .icon {
-    width: 25px;
-    height: 25px;
+    width: 15px;
+    height: auto;
 }
 
 .back {
@@ -90,17 +98,15 @@
     flex-wrap: nowrap;
 }
 
-@media screen and (max-width: 1200px) {
-    .options-list.dropdown {
-        width: calc(160px * 3);
-        z-index: 400;
-        flex-wrap: wrap;
-    }
-}
 
-@media screen and (max-width: 550px) {
+@media screen and (max-width: 600px) {
+
     .options-list.dropdown {
-        width: calc(160px * 2);
+        top: inherit;
+        left: 50%;
+        transform: translate(-50%);
+        bottom: 58px;
+        width: 195px;
     }
 }
 

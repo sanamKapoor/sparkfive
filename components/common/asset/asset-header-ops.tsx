@@ -31,18 +31,19 @@ import { useRouter } from "next/router";
 import ConfirmModal from "../modals/confirm-modal"
 
 // Constants
-import { maximumAssociateFiles} from "../../../constants/asset-associate";
+import { maximumAssociateFiles } from "../../../constants/asset-associate";
+import Dropdown from '../inputs/dropdown';
 
 const AssetHeaderOps = ({
-							isUnarchive = false,
-							itemType = '',
-							isShare = false,
-							isFolder = false,
-							deselectHidden = false,
-							iconColor = '',
-							deletedAssets = false,
-							advancedLink = false,
-							isSearch = false,
+	isUnarchive = false,
+	itemType = '',
+	isShare = false,
+	isFolder = false,
+	deselectHidden = false,
+	iconColor = '',
+	deletedAssets = false,
+	advancedLink = false,
+	isSearch = false,
 }) => {
 	const {
 		assets,
@@ -180,18 +181,18 @@ const AssetHeaderOps = ({
 			setIsLoading(true)
 			const assetIds = selectedAssets.map(assetItem => assetItem.asset.id)
 
-			if(assetIds.length > 1){
-				const assetsToAssociate = selectedAssets.filter(assetItem => (assetItem.asset.fileAssociations.length + selectedAssets.length-1) <= maximumAssociateFiles)
-				if(assetsToAssociate.length !== selectedAssets.length){
+			if (assetIds.length > 1) {
+				const assetsToAssociate = selectedAssets.filter(assetItem => (assetItem.asset.fileAssociations.length + selectedAssets.length - 1) <= maximumAssociateFiles)
+				if (assetsToAssociate.length !== selectedAssets.length) {
 					setIsLoading(false)
 					toastUtils.error(`Some of your selected assets have already maximum ${maximumAssociateFiles} associated files`)
-				}else{
+				} else {
 					await assetApi.associate(assetIds)
 					setNeedsFetch('asset')
 					toastUtils.success('Association successful')
 					setIsLoading(false)
 				}
-			}else{
+			} else {
 				setIsLoading(false)
 				toastUtils.error('Please select at least 2 assets to associate')
 			}
@@ -291,108 +292,146 @@ const AssetHeaderOps = ({
 	}
 
 	return (
-		<>
-			{(!isShare && !deletedAssets) && hasPermission([ASSET_EDIT]) && <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`edit${iconColor}`]} tooltipText={'Edit'} tooltipId={'Edit'} onClick={() => setActiveOperation('edit')} />}
-			{((!isFolder && !isShare) && !deletedAssets) && hasPermission([ASSET_EDIT]) &&  <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`delete${iconColor}`]} tooltipText={'Delete'} tooltipId={'Delete'} onClick={() => setActiveOperation('update')} />}
-			{(isShare || hasPermission([ASSET_DOWNLOAD]) && !deletedAssets) && <IconClickable place={'bottom'} additionalClass={`${styles['action-button']} ${hasPermission[ASSET_EDIT] ? "" : "m-r-0"}`} src={AssetOps[`download${iconColor}`]} tooltipId={'Download'} tooltipText={'Download'} onClick={downloadSelectedAssets} />}
-			{((!isFolder && !isShare) && !deletedAssets) && hasPermission([ASSET_EDIT]) &&  <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`move${iconColor}`]} tooltipText={'Add to Collection'} tooltipId={'Move'} onClick={() => setActiveOperation('move')} />}
-			{((!isFolder && !isShare) && !deletedAssets) &&
-				<div className={styles['share-wrapper']} ref={contentRef}>
-					<IconClickable
-						place={'bottom'}
-						additionalClass={`${styles['action-button']}`}
-						src={AssetOps[`share${iconColor}`]}
-						tooltipText={'Share'}
-						tooltipId={'Share'}
-						onClick={(e) => {
-							showShareActionList(e, true)
-							// setActiveOperation('share')
-						}}
-					/>
+		<div className={styles.bar}>
+			<div className={styles.wrapper}>
+				{!deselectHidden &&
+					<img className={styles.close} src={Utilities.blueClose} onClick={deselectAll} />
+				}
+				<div className={styles.text}>{!isFolder ? `${(totalSelectAssets)} Assets`: `${selectedFolders.length} Collections`}  Selected</div>
+
+			</div>
+
+			<div className={styles.icons}>
+				{(!isShare && !deletedAssets && !isFolder) && <IconClickable place={'top'} additionalClass={styles['action-button']} src={AssetOps[`edit`]} tooltipText={'Edit'} tooltipId={'Edit'} onClick={() => setActiveOperation('edit')} />}
+				{((!isFolder && !isShare) && !deletedAssets) && <IconClickable place={'top'} additionalClass={styles['action-button']} src={AssetOps[`delete`]} tooltipText={'Delete'} tooltipId={'Delete'} onClick={() => setActiveOperation('update')} />}
+				{(isShare || hasPermission([ASSET_DOWNLOAD]) && !deletedAssets) && <IconClickable place={'top'} additionalClass={styles['action-button']} src={AssetOps[`download`]} tooltipId={'Download'} tooltipText={'Download'} onClick={downloadSelectedAssets} />}
+				{((!isFolder && !isShare) && !deletedAssets) && <IconClickable place={'top'} additionalClass={styles['action-button']} src={AssetOps[`move`]} tooltipText={'Add to Collection'} tooltipId={'Move'} onClick={() => setActiveOperation('move')} />}
+				{((!isFolder && !isShare) && !deletedAssets) &&
+					<div className={styles['share-wrapper']} ref={contentRef}>
+						<IconClickable
+							place={'top'}
+							additionalClass={`${styles['action-button']}`}
+							src={AssetOps[`share`]}
+							tooltipText={'Share'}
+							tooltipId={'Share'}
+							onClick={(e) => {
+								showShareActionList(e, true)
+								// setActiveOperation('share')
+							}}
+						/>
 
 
-					{showShareAction && <div className={styles['share-popover']}>
-						<div className={styles['share-title']}>
-							Share
+						{showShareAction && <div className={styles['share-popover']}>
+							<div className={styles['share-title']}>
+								Share
 
-							<img src={Utilities.blueClose} alt={"close"} onClick={(e) => {
-								showShareActionList(e, false)
-							}} />
-						</div>
-						<ul>
-							<li className={styles['share-item']} onClick={() => {
-								setShowShareAction(false)
-								setActiveOperation('share-as-subcollection')
-							}}>
-								<img src={Utilities.gridView} alt={"share-collection"} />
-								<span className={"font-weight-500"}>Share as Collection</span>
-								<p className={styles['share-description']}>
-									Create a branded collection
-								</p>
-							</li>
-							<li className={styles['share-item']}
-								onClick={() => {
+								<img src={Utilities.blueClose} alt={"close"} onClick={(e) => {
+									showShareActionList(e, false)
+								}} />
+							</div>
+							<ul>
+								<li className={styles['share-item']} onClick={() => {
 									setShowShareAction(false)
-									setActiveOperation('share')
+									setActiveOperation('share-as-subcollection')
 								}}>
-								<img src={Utilities.share} alt={"share-file"} />
-								<span className={"font-weight-500"}>Share Files</span>
-								<p className={styles['share-description']}>
-									Create a link to shared file(s)
-								</p>
-							</li>
-						</ul>
+									<img src={Utilities.gridView} alt={"share-collection"} />
+									<span className={"font-weight-500"}>Share as Collection</span>
+									<p className={styles['share-description']}>
+										Create a branded collection
+									</p>
+								</li>
+								<li className={styles['share-item']}
+									onClick={() => {
+										setShowShareAction(false)
+										setActiveOperation('share')
+									}}>
+									<img src={Utilities.share} alt={"share-file"} />
+									<span className={"font-weight-500"}>Share Files</span>
+									<p className={styles['share-description']}>
+										Create a link to shared file(s)
+									</p>
+								</li>
+							</ul>
 
-					</div>}
-				</div>
-			}
-			{showMoreActions && (
+						</div>}
+					</div>
+				}
+				{((isFolder && !isShare) && !deletedAssets) && <IconClickable place={'top'} additionalClass={styles['action-button']} src={AssetOps[`share`]} tooltipText={'Share'} tooltipId={'Share'} onClick={() => setActiveOperation('shareCollections')} />}
+				{/* {(!isShare && !deletedAssets && isFolder) && <IconClickable place={'top'} additionalClass={styles['action-button']} src={AssetOps[`delete`]} tooltipText={'Remove'} onClick={() => setActiveOperation('remove_item')} />} */}
+				{deletedAssets && <IconClickable place={'top'} additionalClass={styles['action-button']} src={AssetOps[`move`]} tooltipText={'Recover Asset'} tooltipId={'Recover'} onClick={() => setActiveOperation('recover')} />}
+				{deletedAssets && <IconClickable place={'top'} additionalClass={styles['action-button']} src={AssetOps[`delete`]} tooltipText={'Delete'} tooltipId={'Delete'} onClick={() => setActiveOperation('delete')} />}
+
+				{!isFolder && !isShare &&
+
+					<div className={styles["more-wrapper"]}>
+						<IconClickable place={'top'} additionalClass={`${styles['action-button']}`} src={Utilities.more} tooltipText={'More'} tooltipId={'More'} onClick={() => setShowMoreActions(true)} />
+						{showMoreActions && ((!isFolder && !isShare) && !deletedAssets) && (
+							<>								<Dropdown
+									onClickOutside={() => setShowMoreActions(false)}
+									additionalClass={styles["more-dropdown"]}
+									options={[
+										{
+											id: "associate",
+											label: "Associate",
+											icon: AssetOps.associateBlue,
+											onClick: () => setShowAssociateModalOpen(true)
+										},
+										{
+											id: "move",
+											label: "Move",
+											icon: AssetOps.moveReplace,
+											onClick: () => setActiveOperation('moveReplace')
+										},
+										{
+											id: "archive",
+											label: "Archive",
+											icon: AssetOps.archive,
+											onClick: () => setActiveOperation(isUnarchive ? 'unarchive' : 'archive')
+										},
+										{
+											id: "copy",
+											label: "Copy",
+											icon: AssetOps.copy,
+											onClick: () => setActiveOperation('copy')
+										},
+										{
+											id: "thumbnail",
+											label: "Recreate Thumbnail",
+											icon: AssetOps.recreateThumbnail,
+											onClick: () => setActiveOperation('generate_thumbnails')
+										}
+									]}
+								/>
+							</>
+
+						)}
+					</div>
+				}
+			</div>
+			{((!isFolder && !isShare) && !deletedAssets) && (
+				
 				<>
-					{((!isFolder && !isShare) && !deletedAssets) && hasPermission([ASSET_EDIT]) &&  <IconClickable place={'bottom'} additionalClass={`${styles['action-button']} m-l-0`} src={AssetOps.generateThumbnail} tooltipText={'Generate thumbnail'} onClick={() => setActiveOperation('generate_thumbnails')} />}
-					{((!isFolder && !isShare) && !deletedAssets) && hasPermission([ASSET_EDIT]) &&  <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`archive${iconColor}`]} tooltipText={isUnarchive ? 'Unarchive' : 'Archive'} tooltipId={isUnarchive ? 'Unarchive' : 'Archive'} onClick={() => setActiveOperation(isUnarchive ? 'unarchive' : 'archive')} />}
-					{((!isFolder && !isShare) && !deletedAssets) && hasPermission([ASSET_EDIT]) &&  <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`copy${iconColor}`]} tooltipText={'Copy'} tooltipId={'Copy'} onClick={() => setActiveOperation('copy')} />}
-					{((!isFolder && !isShare) && !deletedAssets) && hasPermission([ASSET_EDIT]) &&  <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`moveReplace${iconColor}`]} tooltipText={'Move'} tooltipId={'MoveReplace'} onClick={() => setActiveOperation('moveReplace')} />}
-					{((!isFolder && !isShare) && !deletedAssets) && hasPermission([ASSET_EDIT]) &&  (
-						<>
-							<IconClickable place={'bottom'} additionalClass={styles['action-button']} src={isSearch ? AssetOps.associateBlue : AssetOps.associate} tooltipText={'Associate'} tooltipId={'Associate'} onClick={() => setShowAssociateModalOpen(true)} />
+										<ConfirmModal
+											closeModal={() => setShowAssociateModalOpen(false)}
+											confirmAction={() => {
+												setActiveOperation('associate')
+												setShowAssociateModalOpen(false)
 
-							<ConfirmModal
-								closeModal={() => setShowAssociateModalOpen(false)}
-								confirmAction={() => {
-									setActiveOperation('associate')
-									setShowAssociateModalOpen(false)
+												associateAssets()
+											}}
+											confirmText={"Associate"}
+											message={
+												<span className=''>
+													Associate ({totalSelectAssets}) asset(s)?
+												</span>
+											}
+											subText="Associating allows you see all related assets together on the asset detail pages"
+											modalIsOpen={showAssociateModalOpen}
+										/>
+									</>
+								)}
 
-									associateAssets()
-								}}
-								confirmText={"Associate"}
-								message={
-									<span className=''>
-										Are you sure you would like to associate these ({totalSelectAssets}) files with each other?
-									</span>
-								}
-								modalIsOpen={showAssociateModalOpen}
-							/>
-						</>
-					)}
-				</>
-
-			)}
-			{((isFolder && !isShare) && !deletedAssets) && <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`share${iconColor}`]} tooltipText={'Share'} tooltipId={'Share'} onClick={() => setActiveOperation('shareCollections')} />}
-			{((!isFolder && itemType && !isShare) && !deletedAssets) && hasPermission([ASSET_EDIT]) &&  <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`delete${iconColor}`]} tooltipText={'Remove'} onClick={() => setActiveOperation('remove_item')} />}
-			{deletedAssets && hasPermission([ASSET_EDIT]) &&  <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`move${iconColor}`]} tooltipText={'Recover Asset'} tooltipId={'Recover'} onClick={() => setActiveOperation('recover')} />}
-			{deletedAssets && hasPermission([ASSET_EDIT]) && <IconClickable place={'bottom'} additionalClass={styles['action-button']} src={AssetOps[`delete${iconColor}`]} tooltipText={'Delete'} tooltipId={'Delete'} onClick={() => setActiveOperation('delete')} />}
-
-			{!isFolder && hasPermission([ASSET_EDIT]) &&  <>
-				{showMoreActions ? (
-					<span className={isSearch ? styles['search-less-icons-button'] : styles['less-icons-button']} onClick={() => setShowMoreActions(false)}>Less Icons</span>
-				) : (
-					<IconClickable place={'bottom'} additionalClass={`${styles['action-button']} m-l-0`} src={isSearch  ? Utilities.more :  Utilities.moreWhite} tooltipText={'More'} tooltipId={'More'} onClick={() => setShowMoreActions(true)} />
-				)}
-			</>}
-
-
-			{!deselectHidden && <Button className={styles['deselect-button']} text={`Deselect All (${!isFolder ? (totalSelectAssets) : selectedFolders.length})`} type='button' styleType='primary' onClick={deselectAll} />}
-		</>
+		</div>
 	)
 }
 

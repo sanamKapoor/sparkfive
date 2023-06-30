@@ -8,11 +8,15 @@
     justify-content: space-between;
 }
 
+.head h3 {
+    font-size: 14px;
+}
+
 .radios {
     display: grid;
     grid-auto-flow: column;
     align-items: flex-start;
-    justify-content: space-between;
+    justify-content: flex-start;
     margin: 12px 0;
     gap: 32px;
 }
@@ -26,10 +30,21 @@
     display: flex;
     align-items: flex-start;
 }
-
+.radio-wrapper img{
+    width: 15px;
+}
+.radio-wrapper div{
+    max-width: 150px;
+}
 @media screen and (max-width: 1200px) {
     .container {
         min-width: 0;
         width: 100%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .divider {
+        display: none;
     }
 }

@@ -1,5 +1,5 @@
 import styles from './asset-addition.module.css'
-import { Assets } from '../../../assets'
+import { Assets, AssetOps } from '../../../assets'
 import { AssetContext } from '../../../context'
 import { getFoldersFromUploads } from '../../../utils/asset'
 import toastUtils from '../../../utils/toast'
@@ -653,35 +653,35 @@ const AssetAddition = ({
 		},
 		{
 			id: 'collection',
-			label: 'Add Collection',
+			label: 'New Collection',
 			text: 'Organized Files',
 			onClick: () => setActiveModal('folder'),
-			icon: Assets.folder
+			icon: AssetOps.newCollection
 		},
 		{
 			id: 'file',
-			label: 'Upload',
+			label: 'Upload From Computer',
 			text: 'png, jpg, mp4 and more',
 			onClick: () => fileBrowserRef.current.click(),
-			icon: Assets.file
+			icon: AssetOps.newCollection
 		},
 		{
 			id: 'folder',
-			label: 'Upload',
+			label: 'Upload Folder',
 			text: 'folder',
 			onClick: () => folderBrowserRef.current.click(),
-			icon: Assets.folder
+			icon: AssetOps.uploadFolder
 		},
 		{
 			id: 'dropbox',
-			label: 'Dropbox',
+			label: 'Upload from Dropbox',
 			text: 'Import files',
 			onClick: openDropboxSelector,
 			icon: Assets.dropbox
 		},
 		{
 			id: 'gdrive',
-			label: 'Google Drive',
+			label: 'Upload from Drive',
 			text: 'Import files',
 			onClick: () => { },
 			icon: Assets.gdrive,
@@ -802,8 +802,8 @@ const AssetAddition = ({
 	}
 
 	const SimpleButtonWrapper = ({ children }) => (
-		<div className={`${styles['button-wrapper']} ${!folderAdd && styles['button-wrapper-displaced']}`}>
-			{hasPermission([ASSET_UPLOAD_APPROVAL]) && <span className={styles['approval-text']}>Upload for approval</span>}
+		<div className={`${styles['button-wrapper']} ${!folderAdd && styles['button-wrapper-displaced']} asset-addition`}>
+			{/* {hasPermission([ASSET_UPLOAD_APPROVAL]) && <span className={styles['approval-text']}>Upload for approval</span>} */}
 			{!hasPermission([ASSET_UPLOAD_APPROVAL]) &&<SimpleButton text='+' />}
 			{children}
 		</div>
@@ -817,7 +817,6 @@ const AssetAddition = ({
 					onClick={option.onClick}>
 					<IconClickable src={option.icon} additionalClass={styles.icon} />
 					<div className={styles['option-label']}>{option.label}</div>
-					<div className={styles['option-text']}>{option.text}</div>
 				</span>
 			)
 		}

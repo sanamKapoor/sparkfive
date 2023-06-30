@@ -1,11 +1,13 @@
 /* Select prefix */
 
 .primary-input-height.select-prefix__control{
-  min-height: 48px;
+  min-height: 34px;
 }
 
 .select-prefix__control {
   border-style: none !important;
+  max-height: 34px;
+  min-height: 34px !important;
 }
 
 .select-prefix__value-container {
@@ -20,7 +22,7 @@
 
 .select-prefix__single-value {
   color: var(--color-prim-navy) !important;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .select-prefix__indicators {
@@ -31,18 +33,32 @@
 }
 
 .select-prefix__menu {
+  border: 1px solid var(--color-secondary-border);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 8px !important;
+  overflow: hidden;
+  right: -1px;
 }
 
 .select-prefix__menu-list {
   background-color: var(--color-sec-ivory);
   color: var(--color-prim-navy);
   text-align: left;
+  padding: 0 !important;
 }
 
 .select-prefix__option {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  font-size: 12px !important;
+  cursor: pointer !important;
+}
+
+.select-prefix__option--is-disabled {
+  background-color: var(--color-sec-lightblue) !important;
+  color: var(--color-prim-navy) !important;
+  border-bottom: 1px solid var(--color-secondary-border) !important;
 }
 
 /* Regular */
@@ -84,6 +100,10 @@
   font-weight: 600;
 }
 
+.search-filters .select-prefix__value-container {
+  padding-left: 39px;
+}
+
 .filter .select-prefix__placeholder,
 .regular .select-prefix__placeholder {
   color: var(--color-prim-navy);
@@ -91,7 +111,8 @@
 .search-filters .filter .select-prefix__placeholder,
 .product-select .select-prefix__placeholder {
   color: var(--color-sec-text);
-  font-weight: 500;
+  font-weight: 400;
+  font-size: 14px;
 }
 
 .font-weight-normal .select-prefix__placeholder {
@@ -106,6 +127,7 @@
   background-color: white;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
+  max-height: 34px;
 }
 
 .filter .select-prefix__indicators span,
@@ -127,13 +149,14 @@
   color: inherit;
 }
 
-.filter .select-prefix__option--is-selected:hover {
-  background-color: #deebff;
+.filter .select-prefix__option:hover {
+  background-color: var(--color-sec-lightblue);
 }
 
-.filter .select-prefix__value-container {
-  margin-left: 1.3rem;
+.filter .select-prefix__option--is-selected:hover {
+  background-color: var(--color-sec-lightblue);
 }
+
 
 .m-l-0 .select-prefix__value-container {
   margin-left: 0;
@@ -157,8 +180,7 @@
 
 @media screen and (max-width: 1000px) {
   .filter-schedule .select-prefix__menu {
-    width: 100%;
-    margin-left: 0;
-    font-size: 12px;
+    width: 168px;
   }
 }
+

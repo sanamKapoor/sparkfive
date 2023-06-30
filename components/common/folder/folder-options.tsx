@@ -153,7 +153,7 @@ const FolderOptions = ({
       wrapperClass={styles["asset-actions-wrapper"]}
       Wrapper={({ children }) => (
         <>
-          <IconClickable src={Utilities.moreLight} />
+          <IconClickable src={Utilities.more} additionalClass={styles.folderDots} />
           {children}
         </>
       )}

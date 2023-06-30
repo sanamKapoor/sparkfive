@@ -2,3 +2,32 @@
   margin-left: 25px;
   flex: 1;
 }
+.overview-sub-heading {
+  margin-top: 81px;
+  padding-right: 10rem;
+  padding-left: 10rem;
+  padding-top: 40px;
+}
+
+@media screen and (max-width: 1550px) {
+  .overview-sub-heading {
+    padding-right: 3rem;
+    padding-left: 3rem;
+  }
+  .overview-sub-heading button {
+    padding: 0 16px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .overview-sub-heading {
+    padding-top: 20px;
+    margin-top: 55px;
+  }  
+}
+
+@media screen and (max-width: 810px) {
+  .overview-sub-heading button {
+    margin: 0 auto;
+  }  
+}

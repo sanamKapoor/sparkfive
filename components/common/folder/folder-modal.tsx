@@ -18,14 +18,8 @@ const FolderModal = ({ modalIsOpen, closeModal, onSubmit }) => {
       closeModal={closeModal}
     >
       <div className={styles.folder_modal}>
-        <div className={styles.close_modal} onClick={closeModal}>
-          {/* <img src={GeneralImg.logo} /> */}
-          <span className={styles.x}>X</span>
-        </div>
-        <div>
-          <h2>Create Collection</h2>
-        </div>
-          <div className={styles.folder_modal_input}>
+        <h3>Create Your New Collection</h3>
+        <div className={styles.folder_modal_input}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <FormInput
               InputComponent={
@@ -41,25 +35,25 @@ const FolderModal = ({ modalIsOpen, closeModal, onSubmit }) => {
               rules={{ minLength: 1, maxLength: 70, required: true }}
               errors={errors}
             />
-          <div className={styles.buttons_container}>
-            <div className={styles.cancel_button}>
-              <Button
-                text="Cancel"
-                onClick={closeModal}
-                type=""
-                styleType='secondary'
+            <div className={styles.buttons_container}>
+              <div className={styles.cancel_button}>
+                <Button
+                  text="Cancel"
+                  onClick={closeModal}
+                  type=""
+                  styleType='secondary'
                 />
+              </div>
+              <Button
+                text="Save"
+                type="normal-height"
+                styleType='primary'
+              />
             </div>
-            <Button
-              text="Create"
-              type="normal-height"
-              styleType='primary'
-            />
-          </div>
-        </form>
-          
-          </div>
-          
+          </form>
+
+        </div>
+
       </div>
     </Base >
   )
