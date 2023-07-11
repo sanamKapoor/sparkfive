@@ -484,7 +484,7 @@ const EditSidePanel = ({ asset, updateAsset, setAssetDetail, isShare}) => {
                     customs: {[index]: {values: { $set: stateUpdate }}}
                   })
                 }}
-                onRemoveOperationFinished={async (index, stateUpdate, removeId) => {
+                onRemoveOperationFinished={async (i, stateUpdate, removeId) => {
                   setIsLoading(true);
 
                   await assetApi.removeCustomFields(id, removeId)
