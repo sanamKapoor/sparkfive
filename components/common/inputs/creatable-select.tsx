@@ -174,38 +174,45 @@ const CreatableSelect = ({
       {selectOneComponent}
       <div className={"normal-text"}>
         <ul className={`tags-list ${styles["tags-list"]}`}>
-        { (selectedItems || []).slice(0, 9).map((item, index) => {
-            return (
-            <li key={item.id || item.value}>
-              <Tag
-                data={item}
-                altColor={altColor}
-                tag={item.name}
-                canRemove={!isShare && allowEdit && hasPermission([ASSET_EDIT])}
-                removeFunction={() => removeItem(index, item.id)}
-              />
-            </li>
-            )
-            })}
-            {
-                selectedItems?.length > 10 && !isCollapsed && (
-                  (selectedItems || []).slice(9, selectedItems?.length).map((item, index) => {
-                    return (
-                    <li key={item.id || item.value}>
-                      <Tag
-                        data={item}
-                        altColor={altColor}
-                        tag={item.name}
-                        canRemove={!isShare && allowEdit && hasPermission([ASSET_EDIT])}
-                        removeFunction={() => removeItem(index, item.id)}
-                      />
-                    </li>
-                    )
-                    })
-                )
-            }
+          {selectedItems?.length > 10 && !isCollapsed
+            ? (selectedItems || []).map((item, index) => {
+                return (
+                  <li key={item.id || item.value}>
+                    <Tag
+                      data={item}
+                      altColor={altColor}
+                      tag={item.name}
+                      canRemove={
+                        !isShare && allowEdit && hasPermission([ASSET_EDIT])
+                      }
+                      removeFunction={() => removeItem(index, item.id)}
+                    />
+                  </li>
+                );
+              })
+            : (selectedItems || []).slice(0, 10).map((item, index) => {
+                return (
+                  <li key={item.id || item.value}>
+                    <Tag
+                      data={item}
+                      altColor={altColor}
+                      tag={item.name}
+                      canRemove={
+                        !isShare && allowEdit && hasPermission([ASSET_EDIT])
+                      }
+                      removeFunction={() => removeItem(index, item.id)}
+                    />
+                  </li>
+                );
+              })}
         </ul>
-       <p onClick={handleShowAll} className={styles['show-all']}>{(selectedItems?.length > 10) ? (isCollapsed ? `Show all ${selectedItems.length}` : 'Show less') : '' }</p>
+        <p onClick={handleShowAll} className={styles["show-all"]}>
+          {selectedItems?.length > 10
+            ? isCollapsed
+              ? `Show all ${selectedItems.length}`
+              : "Show less"
+            : ""}
+        </p>
         {((!isShare && canAdd && hasPermission([ASSET_EDIT])) ||
           ignorePermission) && (
           <>
