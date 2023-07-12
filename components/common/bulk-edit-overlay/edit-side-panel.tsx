@@ -2,12 +2,7 @@
 import _ from "lodash"
 import styles from '../../common/asset/detail-side-panel.module.css'
 import update from 'immutability-helper'
-import ReactCreatableSelect from 'react-select/creatable'
-import ReactSelect from 'react-select'
 import { useEffect, useState, useContext } from 'react'
-import { format } from 'date-fns'
-import { capitalCase } from 'change-case'
-import filesize from 'filesize'
 
 // APIs
 import tagApi from '../../../server-api/tag'
@@ -21,25 +16,19 @@ import folderApi from '../../../server-api/folder'
 import { AssetContext, UserContext, FilterContext, LoadingContext } from '../../../context'
 
 // Utils
-import { getParsedExtension } from '../../../utils/asset'
 import { Utilities } from '../../../assets'
 import channelSocialOptions from '../../../resources/data/channels-social.json'
 import {
-  CALENDAR_ACCESS
+  CALENDAR_ACCESS, ASSET_EDIT
 } from '../../../constants/permissions'
 
 // Components
-import Tag from '../misc/tag'
 import IconClickable from '../buttons/icon-clickable'
-import ChannelSelector from '../items/channel-selector'
 import CustomFieldSelector from "../items/custom-field-selector"
 import CreatableSelect from '../inputs/creatable-select'
 import ProjectCreationModal from '../modals/project-creation-modal'
 import ProductAddition from '../../common/asset/product-addition'
 
-// Constants
-import { ASSET_EDIT } from '../../../constants/permissions'
-import Button from "../buttons/button"
 
 const sort = (data) => {
   return _.orderBy(data, [item => (item.name || "")?.toLowerCase()],['asc']);
@@ -65,22 +54,14 @@ const mappingCustomFieldData = (list, valueList) => {
   return rs
 }
 
-const EditSidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
+const EditSidePanel = ({ asset, updateAsset, setAssetDetail, isShare}) => {
   const {
     id,
-    createdAt,
-    fileModifiedAt,
-    type,
-    extension,
     dimension,
-    size,
     tags,
     campaigns,
     projects,
-    channel,
-    product,
     products,
-    folder,
     folders,
     customs,
     dpi
@@ -127,10 +108,6 @@ const EditSidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     setCampaigns(sort(campaigns))
     setProjects(projects)
     setSelectedFolders(folders)
-
-    // setAssetCustomFields(update(assetCustomFields, {
-    //   $set: mappingCustomFieldData(inputCustomFields, customs)
-    // }))
 
   }, [asset])
 
@@ -221,45 +198,17 @@ const EditSidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
 
   const updateAssetState = (updatedata) => {
     const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
-    if (assetIndex >= 0) {
+    if (assetIndex !== -1) {
       setAssets(update(assets, {
         [assetIndex]: {
           asset: updatedata
         }
       }))
+
       setAssetDetail(update(asset, updatedata))
     }
 
     setActiveDropdown('')
-  }
-
-  const handleProjectChange = async (selected, actionMeta) => {
-    if (actionMeta.action === 'create-option') {
-      setNewProjectName(selected.value)
-    } else if (selected) {
-      handleAssociationChange(selected.value, 'projects', 'add')
-    }
-  }
-
-  const handleAssociationChange = async (id, type, operation) => {
-    // Only perform operations if item exists/are abcent
-    if (operation === 'add') {
-      if (asset[type].findIndex(item => item.id === id) !== -1) return
-    } else if (operation === 'remove') {
-      if (asset[type].findIndex(item => item.id === id) === -1) return
-    }
-    updateAsset({
-      updateData: {}, associations: {
-        [type]: {
-          [operation]: [id]
-        }
-      }
-    })
-    setActiveDropdown('')
-  }
-
-  const updateChannel = async (channel) => {
-    await updateAsset({ updateData: { channel } })
   }
 
   let formattedDimension
@@ -277,44 +226,6 @@ const EditSidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     formattedDPI = ""
   }
 
-  const fieldValues = [
-    {
-      field: 'Last Updated',
-      value: fileModifiedAt? format(new Date(fileModifiedAt), 'P'):''
-    },
-    {
-      field: 'Uploaded',
-      value: format(new Date(createdAt), 'P')
-    },
-    // {
-    //   field: 'Type',
-    //   value: capitalCase(type)
-    // },
-    {
-      field: 'Extension',
-      value: getParsedExtension(extension)
-    },
-    {
-      field: 'Resolution',
-      value: formattedDPI
-    },
-    {
-      field: 'Dimension',
-      value: formattedDimension
-    },
-    {
-      field: 'Size',
-      value: filesize(size)
-    }
-  ]
-
-  const onValueChange = (selected, actionMeta, createFn, changeFn) => {
-    if (actionMeta.action === 'create-option') {
-      createFn(selected.value)
-    } else {
-      changeFn(selected)
-    }
-  }
 
   const addFolder = async (folderData) => {
     try {
@@ -325,15 +236,6 @@ const EditSidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
       setIsLoading(false)
 
       return rs
-      // console.log(newFolder)
-      // changeFolderState(newFolder)
-      //
-      // // Create the new one
-      // if(!folderData.id){
-      //   setInputFolders(update(inputFolders, { $push: [newFolder] }))
-      // }
-
-      // return newFolder
 
     } catch (err) {
       console.log(err)
@@ -353,30 +255,10 @@ const EditSidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     }
   }
 
-  const changeFolder = async (product) => {
-    try {
-      await assetApi.addFolder(id, { id: product.id })
-      changeFolderState(product)
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
   const changeFolderState = (folders) => {
     let stateUpdate = {
       folders: { $set: folders }
     }
-    // if (!folder) {
-    //   stateUpdate = {
-    //     folderId: { $set: undefined },
-    //     folder: { $set: undefined }
-    //   }
-    // } else {
-    //   stateUpdate = {
-    //     folderId: { $set: folder.id },
-    //     folder: { $set: folder }
-    //   }
-    // }
     updateAssetState(stateUpdate)
   }
 
@@ -418,35 +300,17 @@ const EditSidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
         values: {$set: [selected]}
       }
     }))
+  
+    const newAssetCustoms = asset?.customs;
+    newAssetCustoms[index].values = [selected];
+
+   setAssetDetail(asset, newAssetCustoms);
 
     // Hide loading
     setIsLoading(false)
   }
 
   // On remove select one custom field
-
-  const onRemoveSelectOneCustomField = async (removeId, index, stateUpdate) => {
-    // Show loading
-    setIsLoading(true)
-
-    await assetApi.removeCustomFields(id, removeId)
-
-    // Update asset custom field (local)
-    setAssetCustomFields(update(assetCustomFields, {
-      [index]: {
-        values: {$set: stateUpdate}
-      }
-    }))
-
-    // Update asset (global)
-    updateAssetState({
-      customs: {[index]: {values: { $set: stateUpdate }}}
-    })
-
-    // Hide loading
-    setIsLoading(false)
-  }
-
   const addProductBlock = () => {
     setProductList([...productList, null])
   }
@@ -620,7 +484,7 @@ const EditSidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                     customs: {[index]: {values: { $set: stateUpdate }}}
                   })
                 }}
-                onRemoveOperationFinished={async (index, stateUpdate, removeId) => {
+                onRemoveOperationFinished={async (i, stateUpdate, removeId) => {
                   setIsLoading(true);
 
                   await assetApi.removeCustomFields(id, removeId)
@@ -662,11 +526,6 @@ const EditSidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
             }}
             onRemoveOperationFinished={async (index, stateUpdate, id) => {
               deleteFolder(id, stateUpdate)
-              // return deleteFolder(index)
-              // await assetApi.removeCampaign(id, assetCampaigns[index].id)
-              // updateAssetState({
-              //   campaigns: { $set: stateUpdate }
-              // })
             }}
             onOperationFailedSkipped={() => setActiveDropdown('')}
             isShare={isShare}
@@ -683,7 +542,7 @@ const EditSidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
           <div className={`secondary-text ${styles.field}`}>Products</div>
         </div>
 
-        {productList && productList.map((product, index)=>{
+        {productList?.productList.map((product, index)=>{
           return <div className={styles['product-wrapper']} key={index}>
             <ProductAddition
                 noTitle
@@ -736,9 +595,6 @@ const EditSidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
 
 
     </div>
-    <div className={styles['save-submodal-btn']}>
-          <Button text={'Save Changes'} type={'button'} styleType={'primary'} />
-      </div>
       </>
   )
 }
