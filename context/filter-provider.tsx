@@ -23,12 +23,26 @@ export default ({ children, isPublic = false }) => {
   const { advancedConfig } = useContext(UserContext)
 
   const [searchFilterParams, setSearchFilterParams] = useState({});
+
+  const assetSort =  advancedConfig.assetSortView === "newest"
+  ? selectOptions.sort[1]
+  : selectOptions.sort[3];
+
+  const collectionSort = advancedConfig.collectionSortView === "alphabetical"
+  ? selectOptions.sort[3]
+  : selectOptions.sort[1];
+
   const [activeSortFilter, setActiveSortFilter] = useState({
-    sort: location.pathname.indexOf('deleted-assets-list') !== -1 ? selectOptions.sort[5] : selectOptions.sort[1],
-    mainFilter: advancedConfig.defaultLandingPage === 'allTab' ? 'all' : 'folders',
+    sort:
+      advancedConfig.defaultLandingPage === "allTab"
+        ? assetSort
+        : collectionSort,
+    mainFilter:
+      advancedConfig.defaultLandingPage === "allTab" ? "all" : "folders",
     ...DEFAULT_FILTERS,
-    dimensionsActive: false
-  })
+    dimensionsActive: false,
+  });
+
   const [sharePath, setSharePath] = useState('')
   const [tags, setTags] = useState([])
   const [customFields, setCustomFields] = useState({})
@@ -362,6 +376,7 @@ export default ({ children, isPublic = false }) => {
     searchFilterParams,
     setSearchFilterParams
   }
+  
   return (
     <FilterContext.Provider value={filterValue}>
       {children}
