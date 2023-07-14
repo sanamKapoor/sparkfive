@@ -29,7 +29,6 @@ const EditDetail = ({
 
   const [inputProjects, setInputProjects] = useState([]);
 
-
   const getInputData = async () => {
     try {
       const projectsResponse = await projectApi.getProjects();
@@ -67,14 +66,13 @@ const EditDetail = ({
     );
   };
 
-
   const updateAsset = async (inputData) => {
     try {
       // Optimistic data set
-      //   setCurrentAsset({
-      //     ...assetDetail,
-      //     ...inputData.updateData,
-      //   });
+      setCurrentAsset({
+        ...asset,
+        ...inputData.updateData,
+      });
       const { data } = await assetApi.updateAsset(asset?.asset?.id, inputData);
       //   setAssetDetail(data);
     } catch (err) {
@@ -165,8 +163,11 @@ const EditDetail = ({
             asset={asset?.asset}
             updateAsset={updateAsset}
             setAssetDetail={(a) => {
-              const updateCurrentAsset = Object.assign({}, {...asset, asset: a});
-              setCurrentAsset(updateCurrentAsset)
+              const updateCurrentAsset = Object.assign(
+                {},
+                { ...asset, asset: a }
+              );
+              setCurrentAsset(updateCurrentAsset);
             }}
             isShare={false}
           />
