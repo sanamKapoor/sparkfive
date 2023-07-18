@@ -28,7 +28,7 @@
   border: 2px dotted #100d0f !important;
   /* height: auto; */
   object-fit: contain;
-  aspect-ratio: 1 / 1;
+  /*aspect-ratio: 1 / 1;*/
   width: initial;
   max-height: 100%;
 }
@@ -500,7 +500,7 @@
   .top-wrapper .back-name {
     gap: 47px;
   }
-  
+
 }
 
 
