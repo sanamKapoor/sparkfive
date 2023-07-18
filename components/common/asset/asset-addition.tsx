@@ -565,8 +565,6 @@ const AssetAddition = ({
       showUploadProcess("done");
 
       setAssets(currentDataClone);
-
-      setAssets(currentDataClone);
       console.log(err);
       if (err.response?.status === 402)
         toastUtils.error(err.response.data.message);

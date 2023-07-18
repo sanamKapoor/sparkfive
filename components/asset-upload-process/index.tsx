@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 
 import styles from "./index.module.css";
 
@@ -7,6 +7,7 @@ import { AssetContext } from "../../context";
 import { Utilities } from "../../assets";
 import teamApi from "../../server-api/team";
 import AssetUploadItem from "./asset-upload-item";
+import AssetImportItem from "./asset-import-item";
 
 const AssetUploadProcess = () => {
   const {
@@ -98,7 +99,10 @@ const AssetUploadProcess = () => {
         </div>
 
         <div className={styles.list}>
-          {uploadingAssets.length > 0 &&
+          {uploadSourceType === "dropbox" ? (
+            <AssetImportItem handleRetry={handleRetry} />
+          ) : (
+            uploadingAssets.length > 0 &&
             uploadingAssets.map((item, index) => (
               <AssetUploadItem
                 key={index}
@@ -106,7 +110,8 @@ const AssetUploadProcess = () => {
                 index={index}
                 handleRetry={handleRetry}
               />
-            ))}
+            ))
+          )}
         </div>
       </div>
     </>
