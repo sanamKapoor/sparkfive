@@ -95,6 +95,29 @@ const getDefaultDownloadImageType = (extension) => {
   }
 };
 
+const getResizeSize = (assetWidth, assetHeight): any => {
+  const maximumWidth = 900;
+  const maximumHeight = 900;
+  if(assetWidth > maximumWidth){
+    return {
+      width: maximumWidth,
+      height: maximumHeight*(assetHeight/assetWidth)
+    }
+  }
+
+  if(assetHeight > maximumHeight){
+    return {
+      width: maximumWidth*(assetWidth/assetHeight),
+      height: maximumHeight
+    }
+  }
+
+  return {
+    width: assetWidth,
+    height: assetHeight
+  }
+}
+
 const DetailOverlay = ({
   asset,
   realUrl,
@@ -148,13 +171,13 @@ const DetailOverlay = ({
   const [versionThumbnailUrl, setVersionThumbnailUrl] = useState(thumbailUrl);
   const [previewUrl, setPreviewUrl] = useState(null);
 
+  const resizeSizes = getResizeSize(currentAsset.dimensionWidth, currentAsset.dimensionHeight);
+
   const [detailPosSize, setDetailPosSize] = useState({
     x: 0,
     y: 0,
-    width:
-      currentAsset.dimensionWidth > 900 ? 900 : currentAsset.dimensionWidth,
-    height:
-      currentAsset.dimensionHeight > 900 ? 900 : currentAsset.dimensionHeight,
+    width: resizeSizes.width,
+    height: resizeSizes.height,
   });
   const [defaultSize, setDefaultSize] = useState({
     width: currentAsset.dimensionWidth,
@@ -533,7 +556,9 @@ const DetailOverlay = ({
     setWidth(_width);
     setHeight(_height);
 
-    setDetailPosSize({ ...detailPosSize, width: newW, height: newH });
+    const resizeSizes = getResizeSize(newW, newH)
+
+    setDetailPosSize({ ...detailPosSize, width: resizeSizes.width, height: resizeSizes.height });
   };
 
   const lockCropping = () => {
@@ -880,12 +905,13 @@ const DetailOverlay = ({
   const onResizeStop = (w, h, position = {}) => {
     w = parseInt(w);
     h = parseInt(h);
+    const resizeSizes = getResizeSize(w, h)
     setDetailPosSize(
       Object.assign(
         { ...detailPosSize },
         {
-          width: w,
-          height: h,
+          width: resizeSizes.width,
+          height: resizeSizes.height,
           ...position,
         }
       )
