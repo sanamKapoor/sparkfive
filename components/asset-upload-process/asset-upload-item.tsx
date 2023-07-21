@@ -6,20 +6,28 @@ import { Utilities } from "../../assets";
 import { AssetContext } from "../../context";
 
 const AssetUploadItem = ({ item, index, handleRetry }) => {
-  const { uploadingStatus, uploadingPercent, uploadingFile, uploadRemainingTime } =
-    useContext(AssetContext);
+  const {
+    uploadingStatus,
+    uploadingPercent,
+    uploadingFile,
+    uploadRemainingTime,
+    uploadSourceType,
+    dropboxUploadingFile,
+  } = useContext(AssetContext);
 
   const uploadSuccess = item?.status === "done" && uploadingStatus === "done";
   const uploadFail = item?.status === "fail" && uploadingStatus === "done";
   const uploadInProgress =
     uploadingStatus === "uploading" || uploadingStatus === "re-uploading";
 
+  const uploadingFileIndex =
+    uploadSourceType === "dropbox" ? dropboxUploadingFile : uploadingFile;
+
+  const isUploadComplete =
+    item?.status === "done" || item?.status === "fail" ? 100 : 0;
+
   const uploadProgressPercent =
-    uploadingFile === index
-      ? uploadingPercent
-      : item?.status === "done" || item?.status === "fail"
-      ? 100
-      : 0;
+    uploadingFileIndex === index ? uploadingPercent : isUploadComplete;
 
   return (
     <div className={styles.innerUploadList}>
@@ -58,12 +66,18 @@ const AssetUploadItem = ({ item, index, handleRetry }) => {
           </div>
         )}
       </div>
-     {(uploadInProgress || item?.status === "done" || item?.status === "fail") && <div className={styles.subHeading}>
-        Estimated Time:{" "}
-        {item?.status === "done" || item?.status === "fail"
-          ? "Finished"
-          : (uploadRemainingTime === '0 seconds remaining' ? '1 second remaining' : uploadRemainingTime)}
-      </div>}
+      {(uploadInProgress ||
+        item?.status === "done" ||
+        item?.status === "fail") && (
+        <div className={styles.subHeading}>
+          Estimated Time:{" "}
+          {item?.status === "done" || item?.status === "fail"
+            ? "Finished"
+            : uploadRemainingTime === "0 seconds remaining"
+            ? "1 second remaining"
+            : uploadRemainingTime}
+        </div>
+      )}
     </div>
   );
 };
