@@ -386,6 +386,7 @@ const UploadRequest = () => {
   // Save bulk tag from right pannel
   const saveBulkTag = async () => {
     setIsLoading(true);
+    let submitApi = false;
 
     let currentAssetTags = [...assetTags];
     let currentAssetCampaigns = [...assetCampaigns];
@@ -402,6 +403,7 @@ const UploadRequest = () => {
       let folderPromises = [];
 
       if (isSelected) {
+        submitApi = true
         const newTags = _.differenceBy(currentAssetTags, asset?.tags || []);
         const newCampaigns = _.differenceBy(
           currentAssetCampaigns,
@@ -587,7 +589,13 @@ const UploadRequest = () => {
       }
     });
 
-    toastUtils.success(`Save successfully`);
+    if(submitApi){
+      toastUtils.success(`Save successfully`);
+    }else{
+      toastUtils.error(`Please select assets`)
+    }
+
+
 
     // Reset tags
     setTags([]);
