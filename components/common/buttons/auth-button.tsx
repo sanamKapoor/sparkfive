@@ -1,6 +1,20 @@
-import styles from './auth-button.module.css'
+import { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
+import styles from "./auth-button.module.css";
 
-const AuthButton = ({ text, type, onClick = () => { }, disabled = false }) => (
+interface AuthButtonProps
+  extends DetailedHTMLProps<
+    ButtonHTMLAttributes<HTMLButtonElement>,
+    HTMLButtonElement
+  > {
+  text: string;
+}
+
+const AuthButton: React.FC<AuthButtonProps> = ({
+  text,
+  type,
+  onClick = () => {},
+  disabled = false,
+}) => (
   <button
     className={styles.container}
     type={type}
@@ -9,6 +23,6 @@ const AuthButton = ({ text, type, onClick = () => { }, disabled = false }) => (
   >
     {text}
   </button>
-)
+);
 
-export default AuthButton
+export default AuthButton;
