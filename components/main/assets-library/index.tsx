@@ -1049,7 +1049,7 @@ const AssetsLibrary = () => {
       )}
 
       {showOverlayLoader && (
-        <SpinnerOverlay text="Currently we are in the middle of syncing your assets, this process might take few seconds. Thank you for your patience." />
+        <SpinnerOverlay text="Account updating...this process might take few seconds. Thank you for your patience." />
       )}
     </>
   );
