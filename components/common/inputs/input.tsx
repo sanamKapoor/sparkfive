@@ -6,7 +6,7 @@ interface CommonInputProps
     InputHTMLAttributes<HTMLInputElement>,
     HTMLInputElement
   > {
-  styleType: string;
+  styleType?: string;
   additionalClasses?: string;
 }
 

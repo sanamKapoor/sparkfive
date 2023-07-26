@@ -1,16 +1,25 @@
-import styles from './select.module.css'
-import ReactSelect from 'react-select'
+import styles from "./select.module.css";
+import ReactSelect from "react-select";
 
-
-
-const Select = ({ label, options, placeholder, value = null, onChange = (selected) => { }, styleType = '', isClearable = false, menuPlacement = 'auto', isMulti = false, additionalClass = '', containerClass = '' }) => {
-
+const Select = ({
+  label = "",
+  options,
+  placeholder,
+  value = null,
+  onChange = (selected) => {},
+  styleType = "",
+  isClearable = false,
+  menuPlacement = "auto",
+  isMulti = false,
+  additionalClass = "",
+  containerClass = "",
+}) => {
   const customOptions = [
     {
       label: label,
-      disabled: true
+      disabled: true,
     },
-    ...options
+    ...options,
   ];
 
   return (
@@ -27,9 +36,7 @@ const Select = ({ label, options, placeholder, value = null, onChange = (selecte
       isMulti={isMulti}
       isOptionDisabled={(option) => option.disabled}
     />
-  )
-}
+  );
+};
 
-export default Select
-
-
+export default Select;

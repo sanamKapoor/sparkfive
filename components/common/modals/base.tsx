@@ -1,32 +1,50 @@
-import ReactModal from 'react-modal'
-import styles from './base.module.css'
+import ReactModal from "react-modal";
+import styles from "./base.module.css";
 
-import { useEffect } from 'react'
+import { MouseEventHandler, useEffect } from "react";
 
 // Components
-import Button from '../buttons/button'
-import { Utilities } from '../../../assets'
+import Button from "../buttons/button";
+import { Utilities } from "../../../assets";
 
-ReactModal.defaultStyles = {}
+ReactModal.defaultStyles = {};
+
+interface BaseModalProps {
+  modalIsOpen: boolean;
+  children: any;
+  closeModal?: (
+    event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>
+  ) => void;
+  confirmAction?: MouseEventHandler<HTMLButtonElement>;
+  confirmText?: string;
+  headText?: string;
+  subText?: string;
+  textWidth?: boolean;
+  disabledConfirm?: boolean;
+  noHeightMax?: boolean;
+  additionalClasses?: string[];
+  showCancel?: boolean;
+  closeButtonOnly?: boolean;
+  overlayAdditionalClass?: string;
+}
 
 // Used for the future
-const Base = ({
+const Base: React.FC<BaseModalProps> = ({
   modalIsOpen,
   children,
   closeModal,
-  confirmAction = () => { },
-  confirmText = '',
-  headText = '',
+  confirmAction = () => {},
+  confirmText = "",
+  headText = "",
   subText,
   textWidth = false,
   disabledConfirm = false,
   noHeightMax = false,
-  additionalClasses = [''],
+  additionalClasses = [""],
   showCancel = true,
   closeButtonOnly = false,
   overlayAdditionalClass,
 }) => {
-
   useEffect(() => {
     const cols: any = document.getElementsByTagName("html");
     if (modalIsOpen) {
@@ -43,7 +61,9 @@ const Base = ({
   return (
     <ReactModal
       isOpen={modalIsOpen}
-      className={`${styles.modal} ${noHeightMax && styles['no-height-max']} ${additionalClasses.join(' ')}`}
+      className={`${styles.modal} ${
+        noHeightMax && styles["no-height-max"]
+      } ${additionalClasses.join(" ")}`}
       overlayClassName={`${styles.overlay} ${overlayAdditionalClass}`}
       onRequestClose={closeModal}
       shouldCloseOnOverlayClick={true}
@@ -54,41 +74,64 @@ const Base = ({
         <img src={Utilities.blueClose} alt="close" className={`${styles.close} ${styles.close_only}`} onClick={closeModal} />
 
       } */}
-      {(headText) &&
-        <div className={closeButtonOnly ? `${styles.header} ${styles['no-border']}` : styles.header}>
-          <div className={`${styles.text} ${closeButtonOnly ? styles['no-border'] : ""} ${textWidth && styles['full-width']}`}>
-            {<p className={styles['overflow-text']}>{!closeButtonOnly ? headText : ""}</p>}
-            <img src={Utilities.bigblueClose} alt="close" className={styles.close} onClick={closeModal} />
-          </div>
-          {subText &&
-            <p className={styles.subtext}>{subText}</p>
+      {headText && (
+        <div
+          className={
+            closeButtonOnly
+              ? `${styles.header} ${styles["no-border"]}`
+              : styles.header
           }
-        </div>
-      }
-      {children}
-      {confirmText &&
-        <div className={`${styles.buttons} ${!showCancel ? styles['button-center'] : ''}`}>
-          {showCancel && <div>
-            <Button
-              text='Cancel'
+        >
+          <div
+            className={`${styles.text} ${
+              closeButtonOnly ? styles["no-border"] : ""
+            } ${textWidth && styles["full-width"]}`}
+          >
+            {
+              <p className={styles["overflow-text"]}>
+                {!closeButtonOnly ? headText : ""}
+              </p>
+            }
+            <img
+              src={Utilities.bigblueClose}
+              alt="close"
+              className={styles.close}
               onClick={closeModal}
-              type='button'
-              styleType='secondary'
             />
-          </div>}
+          </div>
+          {subText && <p className={styles.subtext}>{subText}</p>}
+        </div>
+      )}
+      {children}
+      {confirmText && (
+        <div
+          className={`${styles.buttons} ${
+            !showCancel ? styles["button-center"] : ""
+          }`}
+        >
+          {showCancel && (
+            <div>
+              <Button
+                text="Cancel"
+                onClick={closeModal}
+                type="button"
+                styleType="secondary"
+              />
+            </div>
+          )}
           <div>
             <Button
               text={confirmText}
               onClick={confirmAction}
-              type='button'
-              styleType='primary'
+              type="button"
+              styleType="primary"
               disabled={disabledConfirm}
             />
           </div>
         </div>
-      }
+      )}
     </ReactModal>
-  )
-}
+  );
+};
 
-export default Base
+export default Base;
