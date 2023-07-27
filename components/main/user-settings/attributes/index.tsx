@@ -1,7 +1,6 @@
-import styles from './index.module.css'
+import styles from "./index.module.css";
 
 // Component
-import IntegrationsComponent from '../../../common/account/integrations'
 import Main from "../../../common/attributes/main";
 
 const Attributes = () => {
@@ -9,7 +8,7 @@ const Attributes = () => {
     <div className={styles.container}>
       <Main />
     </div>
-  )
-}
+  );
+};
 
-export default Attributes
+export default Attributes;

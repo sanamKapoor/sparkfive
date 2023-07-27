@@ -1,16 +1,16 @@
-import styles from "./top-bar.module.css";
-import React, { useContext, useState, useRef, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
+import { isMobile } from "react-device-detect";
 import { Utilities } from "../../../assets";
 import selectOptions from "../../../utils/select-options";
-import { isMobile } from "react-device-detect";
+import styles from "./top-bar.module.css";
 
 // Components
-import SectionButton from "../buttons/section-button";
-import Select from "../inputs/select";
+import AssetAddition from "../../common/asset/asset-addition";
 import Button from "../buttons/button";
 import IconClickable from "../buttons/icon-clickable";
-import AssetAddition from "../../common/asset/asset-addition";
+import SectionButton from "../buttons/section-button";
 import Dropdown from "../inputs/dropdown";
+import Select from "../inputs/select";
 import SubHeader from "../layouts/sub-header";
 import Breadcrumbs from "../misc/breadcrumbs";
 
@@ -18,8 +18,8 @@ import Breadcrumbs from "../misc/breadcrumbs";
 import { AssetContext, UserContext } from "../../../context";
 
 import {
-  ASSET_UPLOAD_NO_APPROVAL,
   ASSET_UPLOAD_APPROVAL,
+  ASSET_UPLOAD_NO_APPROVAL,
 } from "../../../constants/permissions";
 import SearchOverlay from "../../main/search-overlay-assets";
 
@@ -274,7 +274,6 @@ const TopBar = ({
               activeFolder={activeFolder}
               onCloseDetailOverlay={(assetData) => {
                 closeSearchOverlay();
-                // setActiveSearchOverlay(false)
                 setDetailOverlayId(undefined);
                 setCurrentViewAsset(assetData);
               }}
@@ -288,11 +287,10 @@ const TopBar = ({
               ASSET_UPLOAD_NO_APPROVAL,
               ASSET_UPLOAD_APPROVAL,
             ]) && (
-
-                <AssetAddition
-                  activeFolder={activeFolder}
-                  getFolders={getFolders}
-                />
+              <AssetAddition
+                activeFolder={activeFolder}
+                getFolders={getFolders}
+              />
             )}
           <div className={styles.gridOuter}>
             {!deletedAssets && (

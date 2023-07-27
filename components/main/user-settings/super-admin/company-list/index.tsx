@@ -1,25 +1,23 @@
-import styles from "./index.module.css";
-import { useState, useEffect } from "react";
-import Router from "next/router";
-import cookiesUtils from "../../../../../utils/cookies";
-import superAdminApi from "../../../../../server-api/super-admin";
 import { saveAs } from "file-saver";
+import { useEffect, useState } from "react";
+import superAdminApi from "../../../../../server-api/super-admin";
+import styles from "./index.module.css";
 
 // Components
-import CompanyItem from "../company-item";
-import Search from "../../../../common/inputs/search";
-import Button from "../../../../common/buttons/button";
-import SpinnerOverlay from "../../../../common/spinners/spinner-overlay";
-import CompanyListHeader from "../company-list-header";
-import { defaultSortData } from "../company-list-header/types";
-import { useQueryStrings } from "../../../../../hooks/use-query-strings";
-import toastUtils from "../../../../../utils/toast";
+import { AssetOps } from "../../../../../assets";
 import {
   ACCOUNTS_DOWNLOADED,
   FAILED_TO_DOWNLOAD_ACCOUNTS,
 } from "../../../../../constants/messages";
-import { AssetOps } from "../../../../../assets";
+import { useQueryStrings } from "../../../../../hooks/use-query-strings";
+import toastUtils from "../../../../../utils/toast";
+import Button from "../../../../common/buttons/button";
 import IconClickable from "../../../../common/buttons/icon-clickable";
+import Search from "../../../../common/inputs/search";
+import SpinnerOverlay from "../../../../common/spinners/spinner-overlay";
+import CompanyItem from "../company-item";
+import CompanyListHeader from "../company-list-header";
+import { defaultSortData } from "../company-list-header/types";
 
 const CompanyList = ({ onViewCompanySettings }) => {
   const [term, setTerm] = useState("");

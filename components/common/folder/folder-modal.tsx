@@ -1,22 +1,17 @@
-import { capitalCase } from 'change-case'
-import styles from './folder-modal.module.css'
-import { useForm } from 'react-hook-form'
+import { useForm } from "react-hook-form";
+import styles from "./folder-modal.module.css";
 
 // Components
-import Base from '../../common/modals/base'
-import Input from '../../common/inputs/input'
-import Button from '../../common/buttons/button'
-import FormInput from '../../common/inputs/form-input'
+import Button from "../../common/buttons/button";
+import FormInput from "../../common/inputs/form-input";
+import Input from "../../common/inputs/input";
+import Base from "../../common/modals/base";
 
 const FolderModal = ({ modalIsOpen, closeModal, onSubmit }) => {
-
-  const { control, handleSubmit, errors } = useForm()
+  const { control, handleSubmit, errors } = useForm();
 
   return (
-    <Base
-      modalIsOpen={modalIsOpen}
-      closeModal={closeModal}
-    >
+    <Base modalIsOpen={modalIsOpen} closeModal={closeModal}>
       <div className={styles.folder_modal}>
         <h3>Create Your New Collection</h3>
         <div className={styles.folder_modal_input}>
@@ -24,14 +19,14 @@ const FolderModal = ({ modalIsOpen, closeModal, onSubmit }) => {
             <FormInput
               InputComponent={
                 <Input
-                  type='text'
-                  placeholder='Name Your Collection'
-                  styleType='regular-short'
+                  type="text"
+                  placeholder="Name Your Collection"
+                  styleType="regular-short"
                 />
               }
-              name='name'
+              name="name"
               control={control}
-              message={'This field should be between 1 and 30 characters long'}
+              message={"This field should be between 1 and 30 characters long"}
               rules={{ minLength: 1, maxLength: 70, required: true }}
               errors={errors}
             />
@@ -41,22 +36,16 @@ const FolderModal = ({ modalIsOpen, closeModal, onSubmit }) => {
                   text="Cancel"
                   onClick={closeModal}
                   type=""
-                  styleType='secondary'
+                  styleType="secondary"
                 />
               </div>
-              <Button
-                text="Save"
-                type="normal-height"
-                styleType='primary'
-              />
+              <Button text="Save" type="normal-height" styleType="primary" />
             </div>
           </form>
-
         </div>
-
       </div>
-    </Base >
-  )
-}
+    </Base>
+  );
+};
 
-export default FolderModal
+export default FolderModal;

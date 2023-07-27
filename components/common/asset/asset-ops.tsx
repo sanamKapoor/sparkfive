@@ -1,23 +1,22 @@
-import { AssetContext, FilterContext, LoadingContext } from "../../../context";
+import update from "immutability-helper";
+import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
+import { AssetContext, FilterContext, LoadingContext } from "../../../context";
 import assetApi from "../../../server-api/asset";
+import folderApi from "../../../server-api/folder";
 import projectApi from "../../../server-api/project";
 import taskApi from "../../../server-api/task";
-import folderApi from "../../../server-api/folder";
-import toastUtils from "../../../utils/toast";
 import { getAssetsFilters } from "../../../utils/asset";
-import { useRouter } from "next/router";
-import update from "immutability-helper";
+import toastUtils from "../../../utils/toast";
 
 // Components
+import BulkEditOverlay from "../bulk-edit-overlay";
+import ConfirmModal from "../modals/confirm-modal";
+import CopyModal from "../modals/copy-modal";
 import MoveModal from "../modals/move-modal";
 import MoveReplaceModal from "../modals/move-replace-modal";
-import CopyModal from "../modals/copy-modal";
-import ShareModal from "../modals/share-modal";
 import ShareCollectionModal from "../modals/share-collection-modal";
-import ShareFolderModal from "../modals/share-folder-modal";
-import ConfirmModal from "../modals/confirm-modal";
-import BulkEditOverlay from "../bulk-edit-overlay";
+import ShareModal from "../modals/share-modal";
 
 export default ({ getAssets }) => {
   const {
@@ -45,7 +44,8 @@ export default ({ getAssets }) => {
 
   const { setIsLoading } = useContext(LoadingContext);
 
-  const { loadFolders, activeSortFilter, term , searchFilterParams} = useContext(FilterContext);
+  const { loadFolders, activeSortFilter, term, searchFilterParams } =
+    useContext(FilterContext);
 
   // We need this for all selected asset ignore pagination
   const unSelectedAssets = selectedAllAssets
@@ -60,7 +60,11 @@ export default ({ getAssets }) => {
   });
 
   useEffect(() => {
-    if (activeOperation === "move" || activeOperation === "copy" || activeOperation === "moveReplace") {
+    if (
+      activeOperation === "move" ||
+      activeOperation === "copy" ||
+      activeOperation === "moveReplace"
+    ) {
       getFolders(true);
     }
 
@@ -248,7 +252,7 @@ export default ({ getAssets }) => {
       let filters = {};
       if (!operationAsset) {
         copyAssetIds = selectedAssets.map(
-            (selectedAsset) => selectedAsset.asset.id
+          (selectedAsset) => selectedAsset.asset.id
         );
       } else {
         copyAssetIds = [operationAsset.asset.id];
@@ -276,14 +280,11 @@ export default ({ getAssets }) => {
       }
 
       const { data } = await assetApi.moveAssets(
-          { idList: copyAssetIds, folderId: selectedFolder },
-          filters
+        { idList: copyAssetIds, folderId: selectedFolder },
+        filters
       );
       closeModalAndClearOpAsset();
       toastUtils.success("Assets moved successfully");
-      // if (!activeFolder && activePageMode === "library") {
-      //   setAssets(update(assets, { $unshift: data }));
-      // }
     } catch (err) {
       console.log(err);
       if (err.response?.status === 402)
@@ -496,7 +497,7 @@ export default ({ getAssets }) => {
           assetIds = operationAsset.asset.id;
         } else if (operationFolder) {
           assetIds = operationFolder.assets.map((asset) => asset.id).join(",");
-        } else if (operationAssets.length > 0){
+        } else if (operationAssets.length > 0) {
           assetIds = operationAssets.map((item) => item.asset.id).join(",");
         } else {
           assetIds = selectedAssets
@@ -523,7 +524,7 @@ export default ({ getAssets }) => {
           }
 
           filters.advSearchFrom = searchFilterParams?.advSearchFrom;
-          
+
           // @ts-ignore
           delete filters.page;
         }
@@ -559,23 +560,20 @@ export default ({ getAssets }) => {
   };
 
   const shareCollections = async (
-      recipients,
-      message,
-      sharedLinkData,
-      closeAfterDone = true,
-      showStatusToast = true
+    recipients,
+    message,
+    sharedLinkData,
+    closeAfterDone = true,
+    showStatusToast = true
   ) => {
     return new Promise<any>(async (resolve) => {
       try {
-
-        const result = await folderApi.generateAndSendShareUrl(
-            {
-              recipients,
-              message,
-              ...sharedLinkData,
-              expiredPeriod: sharedLinkData.expiredPeriod?.value || "",
-            },
-        );
+        const result = await folderApi.generateAndSendShareUrl({
+          recipients,
+          message,
+          ...sharedLinkData,
+          expiredPeriod: sharedLinkData.expiredPeriod?.value || "",
+        });
 
         if (showStatusToast) {
           toastUtils.success("Collections shared succesfully");
@@ -589,7 +587,9 @@ export default ({ getAssets }) => {
       } catch (err) {
         console.log(err);
         if (showStatusToast) {
-          toastUtils.error("Could not share collections, please try again later.");
+          toastUtils.error(
+            "Could not share collections, please try again later."
+          );
         }
         resolve({});
       }
@@ -605,21 +605,24 @@ export default ({ getAssets }) => {
         versionGroups = operationAsset.asset.versionGroup;
         assetIds = operationAsset.asset.id;
       } else if (operationFolder) {
-        versionGroups = operationFolder.assets.map((asset) => asset.versionGroup).join(",");
+        versionGroups = operationFolder.assets
+          .map((asset) => asset.versionGroup)
+          .join(",");
         assetIds = operationFolder.assets.map((asset) => asset.id).join(",");
-      } else if(operationAssets.length > 0){
-        versionGroups = operationAssets.map((item) => item.asset.versionGroup).join(",");
+      } else if (operationAssets.length > 0) {
+        versionGroups = operationAssets
+          .map((item) => item.asset.versionGroup)
+          .join(",");
         assetIds = operationAssets.map((item) => item.asset.id).join(",");
-      } else{
+      } else {
         versionGroups = selectedAssets
           .map((assetItem) => assetItem.asset.versionGroup)
           .join(",");
 
         assetIds = selectedAssets
-            .map((assetItem) => assetItem.asset.id)
-            .join(",");
+          .map((assetItem) => assetItem.asset.id)
+          .join(",");
       }
-
 
       // Select all assets without pagination
       if (selectedAllAssets) {
@@ -645,41 +648,42 @@ export default ({ getAssets }) => {
       filters["name"] = name;
 
       const getCustomFields = (filters) => {
-        let fields = ''
-        Object.keys(filters).map((key)=>{
-          if(key.includes('custom-p')){
-            if(fields){
-              fields = `${fields},${filters[key]}`
-            }else{
-              fields = `${filters[key]}`
+        let fields = "";
+        Object.keys(filters).map((key) => {
+          if (key.includes("custom-p")) {
+            if (fields) {
+              fields = `${fields},${filters[key]}`;
+            } else {
+              fields = `${filters[key]}`;
             }
           }
-        })
+        });
 
-        return fields
-      }
+        return fields;
+      };
 
-      const customFields = getCustomFields(filters)
+      const customFields = getCustomFields(filters);
 
       const params = {
         versionGroups,
         assetIds,
-      }
+      };
 
       // Create sub collection from tags/custom fields (only create sub colleciton if all filtered assets selected)
-      if(filters['folderId'] && (customFields || filters['tags']) && filters['selectedAll'] && subCollectionShare){
+      if (
+        filters["folderId"] &&
+        (customFields || filters["tags"]) &&
+        filters["selectedAll"] &&
+        subCollectionShare
+      ) {
+        params["customFields"] = customFields;
+        params["folderId"] = filters["folderId"];
+        params["tags"] = filters["tags"];
 
-        params['customFields'] = customFields
-        params['folderId'] = filters['folderId']
-        params['tags'] = filters['tags']
-
-        filters['subCollection'] = '1'
+        filters["subCollection"] = "1";
       }
 
-      return await assetApi.getShareUrl(
-        params,
-        filters
-      );
+      return await assetApi.getShareUrl(params, filters);
     } catch (err) {
       console.log(err);
       return "";
@@ -691,15 +695,14 @@ export default ({ getAssets }) => {
       let folderIds;
       let filters = {};
 
-      if(operationFolder){
-        folderIds = operationFolder.id
-      }else{
+      if (operationFolder) {
+        folderIds = operationFolder.id;
+      } else {
         folderIds = folders
-            .filter((folder) => folder.isSelected)
-            .map((item)=>item.id)
-            .join(",");
+          .filter((folder) => folder.isSelected)
+          .map((item) => item.id)
+          .join(",");
       }
-
 
       // Select all assets without pagination
       if (selectedAllFolders) {
@@ -723,10 +726,10 @@ export default ({ getAssets }) => {
       }
       filters["name"] = name;
       return await folderApi.getShareUrl(
-          {
-            folderIds,
-          },
-          filters
+        {
+          folderIds,
+        },
+        filters
       );
     } catch (err) {
       console.log(err);
@@ -734,41 +737,15 @@ export default ({ getAssets }) => {
     }
   };
 
-  const shareFolders = async ({
-    shareStatus,
-    newPassword,
-    customUrl,
-    notificationSettings,
-  }) => {
-    try {
-      const { data } = await folderApi.shareFolder(operationFolder.id, {
-        shareStatus,
-        newPassword,
-        customUrl,
-        notificationSettings,
-      });
-      toastUtils.success("Collection shared successfully");
-      const folderIndex = folders.findIndex((folder) => folder.id === data.id);
-      console.log(folderIndex);
-      setFolders(update(folders, { [folderIndex]: { $merge: data } }));
-      closeModalAndClearOpAsset();
-    } catch (err) {
-      console.log(err);
-      toastUtils.error("Could not share collection, please try again later.");
-    }
-  };
-
   const getSharedCollectionCount = () => {
-      let count = 1;
+    let count = 1;
 
-    if(!operationFolder){
-      count = folders
-          .filter((folder) => folder.isSelected).length
+    if (!operationFolder) {
+      count = folders.filter((folder) => folder.isSelected).length;
     }
 
-    return count
-
-  }
+    return count;
+  };
 
   const copyAssets = async (selectedFolder) => {
     try {
@@ -1024,7 +1001,7 @@ export default ({ getAssets }) => {
   } else if (operationFolder) {
     operationLength = operationFolder.assets.length;
   } else if (operationAssets.length > 0) {
-    operationLength = operationAssets.length
+    operationLength = operationAssets.length;
   } else {
     operationLength = selectedAllAssets ? totalAssets : selectedAssets.length;
   }
@@ -1032,12 +1009,12 @@ export default ({ getAssets }) => {
   return (
     <>
       <MoveReplaceModal
-          modalIsOpen={activeOperation === "moveReplace"}
-          closeModal={closeModalAndClearOpAsset}
-          itemsAmount={operationLength}
-          moveAssets={moveReplaceAssets}
-          confirmText={"Move"}
-          createFolder={createFolder}
+        modalIsOpen={activeOperation === "moveReplace"}
+        closeModal={closeModalAndClearOpAsset}
+        itemsAmount={operationLength}
+        moveAssets={moveReplaceAssets}
+        confirmText={"Move"}
+        createFolder={createFolder}
       />
       <MoveModal
         modalIsOpen={activeOperation === "move"}
@@ -1062,26 +1039,23 @@ export default ({ getAssets }) => {
         getShareLink={getShareLink}
       />
       <ShareModal
-          modalIsOpen={activeOperation === "share-as-subcollection"}
-          closeModal={closeModalAndClearOpAsset}
-          itemsAmount={operationLength}
-          shareAssets={shareAssets}
-          getShareLink={getShareLink}
-          subCollectionShare={true}
+        modalIsOpen={activeOperation === "share-as-subcollection"}
+        closeModal={closeModalAndClearOpAsset}
+        itemsAmount={operationLength}
+        shareAssets={shareAssets}
+        getShareLink={getShareLink}
+        subCollectionShare={true}
       />
       <ShareCollectionModal
-          modalIsOpen={activeOperation === "shareCollections" || activeOperation === "shareFolders"}
-          closeModal={closeModalAndClearOpAsset}
-          itemsAmount={getSharedCollectionCount()}
-          shareAssets={shareCollections}
-          getShareLink={getShareCollectionLink}
+        modalIsOpen={
+          activeOperation === "shareCollections" ||
+          activeOperation === "shareFolders"
+        }
+        closeModal={closeModalAndClearOpAsset}
+        itemsAmount={getSharedCollectionCount()}
+        shareAssets={shareCollections}
+        getShareLink={getShareCollectionLink}
       />
-      {/*<ShareFolderModal*/}
-      {/*  modalIsOpen={activeOperation === "shareFolders"}*/}
-      {/*  closeModal={closeModalAndClearOpAsset}*/}
-      {/*  folder={operationFolder}*/}
-      {/*  shareAssets={shareFolders}*/}
-      {/*/>*/}
       <ConfirmModal
         modalIsOpen={activeOperation === "archive"}
         closeModal={closeModalAndClearOpAsset}

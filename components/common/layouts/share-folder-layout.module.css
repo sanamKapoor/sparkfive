@@ -3,7 +3,6 @@
     padding: 10px 32px;
     display: flex;
     align-items: center;
-    /*position: relative;*/
     position: sticky;
     top: 0;
     left: 0;
@@ -12,13 +11,12 @@
 }
 
 .logo-img {
-    /* max-height: 75px;
-    width: auto; */
     margin-right: 48px;
     cursor: pointer;
     max-width: 50px;
     object-fit: contain;
 }
+
 .collection-name {
     flex: 1;
     font-size: 22px;
@@ -62,6 +60,7 @@
     height: auto;
     margin-right: 10px;
 }
+
 .header h1 {
     color: var(--color-prim-navy);
     font-weight: 600;
@@ -90,6 +89,7 @@
         flex-wrap: wrap;
         min-height: 80px;
     }
+
     .ops-wrapper {
         margin-top: 1rem;
         width: 100%;

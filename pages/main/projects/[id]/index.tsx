@@ -1,10 +1,10 @@
-import Head from 'next/head'
+import Head from "next/head";
 
-import { CALENDAR_ACCESS } from '../../../../constants/permissions'
+import { CALENDAR_ACCESS } from "../../../../constants/permissions";
 
 // Components
-import MainLayout from '../../../../components/common/layouts/main-layout'
-import ProjectDetail from '../../../../components/main/project/detail'
+import MainLayout from "../../../../components/common/layouts/main-layout";
+import ProjectDetail from "../../../../components/main/project/detail";
 
 const ProjectDetailPage = () => (
   <>
@@ -16,6 +16,6 @@ const ProjectDetailPage = () => (
       <ProjectDetail />
     </MainLayout>
   </>
-)
+);
 
-export default ProjectDetailPage
+export default ProjectDetailPage;

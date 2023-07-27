@@ -1,4 +1,4 @@
-import styles from './index.module.css'
+import styles from "./index.module.css";
 
 // Component
 import Main from "../../../common/guest-upload";
@@ -8,7 +8,7 @@ const GuestUpload = () => {
     <div className={styles.container}>
       <Main />
     </div>
-  )
-}
+  );
+};
 
-export default GuestUpload
+export default GuestUpload;

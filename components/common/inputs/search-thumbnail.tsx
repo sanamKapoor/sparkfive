@@ -1,10 +1,10 @@
-import React, { Children, useState } from "react";
+import { useState } from "react";
 import Autocomplete from "react-autocomplete";
-import AssetIcon from "../asset/asset-icon";
 import assetApi from "../../../server-api/asset";
+import AssetIcon from "../asset/asset-icon";
 
-import classes from "./search-thumbnail.module.css";
 import styles from "../modals/change-thumnail-modal.module.css";
+import classes from "./search-thumbnail.module.css";
 
 const SearchThumbnail = ({
   onUpload,

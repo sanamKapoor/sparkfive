@@ -1,6 +1,5 @@
-import styles from "./contact-form.module.css";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
+import styles from "./contact-form.module.css";
 
 // Components
 import FormInput from "../common/inputs/form-input";

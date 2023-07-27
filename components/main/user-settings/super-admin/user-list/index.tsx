@@ -1,26 +1,25 @@
-import styles from "./index.module.css";
-import { useState, useEffect } from "react";
 import Router from "next/router";
-import cookiesUtils from "../../../../../utils/cookies";
-import superAdminApi from "../../../../../server-api/super-admin";
-import { defaultSortData } from "./types";
+import { useEffect, useState } from "react";
 import { useQueryStrings } from "../../../../../hooks/use-query-strings";
+import superAdminApi from "../../../../../server-api/super-admin";
+import cookiesUtils from "../../../../../utils/cookies";
+import styles from "./index.module.css";
+import { defaultSortData } from "./types";
 
 // Components
-import UserListHeader from "../user-list-header";
-import UserItem from "../user-item";
-import Search from "../../../../common/inputs/search";
-import Button from "../../../../common/buttons/button";
-import SpinnerOverlay from "../../../../common/spinners/spinner-overlay";
-import { Assets } from "../../../../../assets";
 import { AssetOps } from "../../../../../assets";
+import Button from "../../../../common/buttons/button";
+import Search from "../../../../common/inputs/search";
+import SpinnerOverlay from "../../../../common/spinners/spinner-overlay";
+import UserItem from "../user-item";
+import UserListHeader from "../user-list-header";
 
 import { saveAs } from "file-saver";
-import toastUtils from "../../../../../utils/toast";
 import {
   FAILED_TO_DOWNLOAD_USERS,
   USERS_DOWNLOADED,
 } from "../../../../../constants/messages";
+import toastUtils from "../../../../../utils/toast";
 import IconClickable from "../../../../common/buttons/icon-clickable";
 
 const UserList = () => {

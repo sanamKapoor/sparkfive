@@ -1,8 +1,8 @@
-import Head from 'next/head'
+import Head from "next/head";
 
 // Components
-import AuthLayout from '../components/common/layouts/auth-layout'
-import TwoFactor from '../components/two-factor'
+import AuthLayout from "../components/common/layouts/auth-layout";
+import TwoFactor from "../components/two-factor";
 
 const TwoFactorPage = () => (
   <>
@@ -14,6 +14,6 @@ const TwoFactorPage = () => (
       <TwoFactor />
     </AuthLayout>
   </>
-)
+);
 
-export default TwoFactorPage
+export default TwoFactorPage;

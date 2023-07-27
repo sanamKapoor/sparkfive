@@ -1,12 +1,12 @@
-import styles from "./new-password-modal.module.css";
 import { useForm } from "react-hook-form";
+import styles from "./new-password-modal.module.css";
 
 // Components
-import BaseModal from "../../../../common/modals/base";
+import { MouseEvent } from "react";
 import Button from "../../../../common/buttons/button";
 import FormInput from "../../../../common/inputs/form-input";
 import Input from "../../../../common/inputs/input";
-import { KeyboardEvent, MouseEvent } from "react";
+import BaseModal from "../../../../common/modals/base";
 
 interface NewPasswordModalProps {
   closeModal?: (

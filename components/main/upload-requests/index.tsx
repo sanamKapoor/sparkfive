@@ -1,52 +1,53 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
-import moment from "moment";
-import _ from "lodash";
-import update from "immutability-helper";
 import clsx from "clsx";
+import update from "immutability-helper";
+import _ from "lodash";
+import moment from "moment";
+import { useContext, useEffect, useState } from "react";
 
 // Components
 import AssetSubheader from "../../common/asset/asset-subheader";
 
-import Base from "../../common/modals/base";
-import AssetThumbail from "../../common/asset/asset-thumbail";
-import RenameModal from "../../common/modals/rename-modal";
 import AssetImg from "../../common/asset/asset-img";
+import AssetThumbail from "../../common/asset/asset-thumbail";
 import Input from "../../common/inputs/input";
-import ConfirmModal from "../../common/modals/confirm-modal";
 import Select from "../../common/inputs/select";
 import CustomFieldSelector from "../../common/items/custom-field-selector";
+import Base from "../../common/modals/base";
+import ConfirmModal from "../../common/modals/confirm-modal";
+import RenameModal from "../../common/modals/rename-modal";
 
 // Styles
-import styles from "./index.module.css";
 import assetGridStyles from "../../common/asset/asset-grid.module.css";
 import detailPanelStyles from "../../common/asset/detail-side-panel.module.css";
 import IconClickable from "../../common/buttons/icon-clickable";
+import styles from "./index.module.css";
 // Contexts
-import { UserContext, AssetContext, LoadingContext } from "../../../context";
+import { AssetContext, LoadingContext, UserContext } from "../../../context";
 
 // Utils
+import { Utilities } from "../../../assets";
+import toastUtils from "../../../utils/toast";
 import ListItem from "../../common/asset/request-list-item";
 import Button from "../../common/buttons/button";
 import CreatableSelect from "../../common/inputs/creatable-select";
 import TextArea from "../../common/inputs/text-area";
-import { Utilities } from "../../../assets";
-import toastUtils from "../../../utils/toast";
 
 // APIs
-import uploadApprovalApi from "../../../server-api/upload-approvals";
-import tagApi from "../../../server-api/tag";
-import approvalApi from "../../../server-api/upload-approvals";
 import assetApi from "../../../server-api/asset";
 import customFieldsApi from "../../../server-api/attribute";
 import campaignApi from "../../../server-api/campaign";
 import folderApi from "../../../server-api/folder";
+import tagApi from "../../../server-api/tag";
+import {
+  default as approvalApi,
+  default as uploadApprovalApi,
+} from "../../../server-api/upload-approvals";
 
 // Hooks
-import { useDebounce } from "../../../hooks/useDebounce";
-import AssetPdf from "../../common/asset/asset-pdf";
-import AssetIcon from "../../common/asset/asset-icon";
-import AssetCropImg from "../../common/asset/asset-crop-img";
 import GuestUploadApprovalOverlay from "../../../components/common/guest-upload-approval-overlay";
+import { useDebounce } from "../../../hooks/useDebounce";
+import AssetIcon from "../../common/asset/asset-icon";
+import AssetPdf from "../../common/asset/asset-pdf";
 
 const filterOptions = [
   {
@@ -169,17 +170,6 @@ const UploadRequest = () => {
       setCurrentApproval(currentApprovalData);
 
       setNeedRefresh(true);
-
-      // let approvalList = [...approvals]
-      // approvalList.map((item)=>{
-      //     if(item.id === approvalId){
-      //         item.name = value
-      //     }
-      // })
-      //
-      // setApprovals(approvalList)
-
-      // toastUtils.success("Name is saved successfully")
     }
   };
 
@@ -595,42 +585,6 @@ const UploadRequest = () => {
     setIsLoading(false);
   };
 
-  // Save comment  from right panel
-  const saveComment = async () => {
-    setIsLoading(true);
-
-    let promises = [];
-
-    for (const { asset, isSelected } of assets) {
-      if (isSelected) {
-        promises.push(
-          approvalApi.addComments(asset.id, { comments, approvalId })
-        );
-      }
-    }
-
-    await Promise.all(promises);
-
-    // Save comments to asset
-    let assetArr = [...assets];
-    assetArr.map((asset) => {
-      if (asset.isSelected) {
-        asset.asset.comments = comments;
-      }
-    });
-
-    setAssets(assetArr);
-
-    toastUtils.success(`Save successfully`);
-
-    // Reset comments
-    setComments("");
-
-    setNeedRefresh(true);
-
-    setIsLoading(false);
-  };
-
   const submit = async () => {
     setIsLoading(true);
     await approvalApi.submit(approvalId, { message, name: batchName });
@@ -790,25 +744,6 @@ const UploadRequest = () => {
     if (value === false) {
       setTempApprovals([]);
     }
-  };
-
-  // Toggle select approval
-  const toggleSelectedApproval = (id) => {
-    const approvalIndex = approvals.findIndex(
-      (approvalItem) => approvalItem.id === id
-    );
-    const selectedValue = !approvals[approvalIndex].isSelected;
-    // Toggle unselect when selected all will disable selected all
-    if (!selectedValue && selectedAllApprovals) {
-      setSelectedAllApprovals(false);
-    }
-    setApprovals(
-      update(approvals, {
-        [approvalIndex]: {
-          isSelected: { $set: !approvals[approvalIndex].isSelected },
-        },
-      })
-    );
   };
 
   const TagWrapper = ({ status }) => {
@@ -1089,9 +1024,6 @@ const UploadRequest = () => {
 
   // On change custom fields (add/remove)
   const onChangeCustomField = (index, data) => {
-    // // Show loading
-    // setIsLoading(true)
-    //
     // Hide select list
     setActiveCustomField(undefined);
     //
@@ -1104,9 +1036,6 @@ const UploadRequest = () => {
         },
       })
     );
-    //
-    // // Show loading
-    // setIsLoading(false)
   };
 
   const onChangeTempCustomField = (index, data) => {
@@ -1426,22 +1355,6 @@ const UploadRequest = () => {
               </div>
             )}
 
-            {/* {mode === "view" && isAdmin() && (
-              <div className={styles["filter-wrapper"]}>
-                <Select
-                  containerClass={styles["filter-input"]}
-                  isClearable={true}
-                  options={filterOptions}
-                  onChange={(value) => {
-                    setFilter(value);
-                  }}
-                  placeholder={"Filter By Status"}
-                  styleType="regular"
-                  value={filter}
-                />
-              </div>
-            )} */}
-
             {mode === "list" && (
               <div className={styles["asset-list"]}>
                 <div className={`${styles["button-wrapper"]} m-b-25`}>
@@ -1570,30 +1483,13 @@ const UploadRequest = () => {
                               toggleSelected={() => {
                                 toggleSelectedAsset(assetItem.asset.id);
                               }}
-                              openArchiveAsset={() => {
-                                // openArchiveAsset(assetItem.asset)
-                              }}
-                              openDeleteAsset={() => {
-                                // openDeleteAsset(assetItem.asset.id)
-                              }}
-                              openMoveAsset={() => {
-                                // beginAssetOperation({ asset: assetItem }, "move")
-                              }}
-                              openCopyAsset={() => {
-                                // beginAssetOperation({ asset: assetItem }, "copy")
-                              }}
-                              openShareAsset={() => {
-                                // beginAssetOperation({ asset: assetItem }, "share")
-                              }}
-                              downloadAsset={() => {
-                                // downloadAsset(assetItem)}
-                              }}
-                              openRemoveAsset={() => {
-                                // beginAssetOperation(
-                                //     { asset: assetItem },
-                                //     "remove_item"
-                                // )
-                              }}
+                              openArchiveAsset={() => {}}
+                              openDeleteAsset={() => {}}
+                              openMoveAsset={() => {}}
+                              openCopyAsset={() => {}}
+                              openShareAsset={() => {}}
+                              downloadAsset={() => {}}
+                              openRemoveAsset={() => {}}
                               handleVersionChange={() => {}}
                               loadMore={() => {}}
                               onView={() => {
@@ -1663,7 +1559,9 @@ const UploadRequest = () => {
 
                 {!isAdmin() && currentViewStatus == 0 && (
                   <div className={detailPanelStyles["first-section"]}>
-                    <div className={`${detailPanelStyles["field-wrapper"]} ${styles['batchSidePanel']}`}>
+                    <div
+                      className={`${detailPanelStyles["field-wrapper"]} ${styles["batchSidePanel"]}`}
+                    >
                       <div
                         className={`secondary-text ${detailPanelStyles.field} ${styles["field-name"]}`}
                       >
@@ -1700,26 +1598,15 @@ const UploadRequest = () => {
                           creatable={true}
                           onAddOperationFinished={(stateUpdate) => {
                             setActiveDropdown("");
-                            // updateAssetState({
-                            //     tags: { $set: stateUpdate }
-                            // })
-                            // loadTags()
                           }}
                           onRemoveOperationFinished={async (
                             index,
                             stateUpdate
-                          ) => {
-                            // await assetApi.removeTag(id, assetTags[index].id)
-                            // updateAssetState({
-                            //     tags: { $set: stateUpdate }
-                            // })
-                          }}
+                          ) => {}}
                           onOperationFailedSkipped={() => setActiveDropdown("")}
                           isShare={false}
                           asyncCreateFn={(newItem) => {
                             return { data: newItem };
-
-                            // assetApi.addTag(id, newItem)
                           }}
                           dropdownIsActive={activeDropdown === "tags"}
                           ignorePermission={true}
@@ -1753,7 +1640,6 @@ const UploadRequest = () => {
                             }
                             isShare={false}
                             asyncCreateFn={(newItem) => {
-                              // (newItem) => assetApi.addCampaign(id, newItem)
                               return { data: newItem };
                             }}
                             dropdownIsActive={activeDropdown === "collections"}
@@ -1780,27 +1666,16 @@ const UploadRequest = () => {
                             creatable={isAdmin()}
                             onAddOperationFinished={(stateUpdate) => {
                               setActiveDropdown("");
-
-                              // updateAssetState({
-                              //     campaigns: { $set: stateUpdate }
-                              // })
-                              // loadCampaigns()
                             }}
                             onRemoveOperationFinished={async (
                               index,
                               stateUpdate
-                            ) => {
-                              // await assetApi.removeCampaign(id, assetCampaigns[index].id)
-                              // updateAssetState({
-                              //     campaigns: { $set: stateUpdate }
-                              // })
-                            }}
+                            ) => {}}
                             onOperationFailedSkipped={() =>
                               setActiveDropdown("")
                             }
                             isShare={false}
                             asyncCreateFn={(newItem) => {
-                              // (newItem) => assetApi.addCampaign(id, newItem)
                               return { data: newItem };
                             }}
                             dropdownIsActive={activeDropdown === "campaigns"}
@@ -1860,26 +1735,12 @@ const UploadRequest = () => {
                                   setSelectedItems={(data) => {
                                     onChangeCustomField(index, data);
                                   }}
-                                  onAddOperationFinished={(stateUpdate) => {
-                                    // updateAssetState({
-                                    //     customs: {[index]: {values: { $set: stateUpdate }}}
-                                    // })
-                                  }}
+                                  onAddOperationFinished={(stateUpdate) => {}}
                                   onRemoveOperationFinished={async (
                                     index,
                                     stateUpdate,
                                     removeId
-                                  ) => {
-                                    // setIsLoading(true);
-                                    //
-                                    // await assetApi.removeCustomFields(id, removeId)
-                                    //
-                                    // updateAssetState({
-                                    //     customs: {[index]: {values: { $set: stateUpdate }}}
-                                    // })
-                                    //
-                                    // setIsLoading(false);
-                                  }}
+                                  ) => {}}
                                   onOperationFailedSkipped={() =>
                                     setActiveCustomField(undefined)
                                   }
@@ -1887,8 +1748,6 @@ const UploadRequest = () => {
                                   asyncCreateFn={(newItem) => {
                                     // Show loading
                                     return { data: newItem };
-                                    // setIsLoading(true);
-                                    // return assetApi.addCustomFields(id, {...newItem, folderId: activeFolder})
                                   }}
                                   dropdownIsActive={activeCustomField === index}
                                   ignorePermission={true}
@@ -1905,17 +1764,6 @@ const UploadRequest = () => {
                         styleType="secondary"
                         onClick={saveBulkTag}
                       />
-                      {/*{*/}
-                      {/*    !isAdmin() && <>*/}
-                      {/*        <div className={detailPanelStyles['field-wrapper']} >*/}
-                      {/*            <div className={`secondary-text ${detailPanelStyles.field} ${styles['field-name']}`}>Comments</div>*/}
-                      {/*            <TextArea type={"textarea"} rows={4} placeholder={'Add comments'} value={comments}*/}
-                      {/*                      onChange={e => {setComments(e.target.value)}} styleType={'regular-short'} />*/}
-                      {/*        </div>*/}
-
-                      {/*        <Button className={styles['add-tag-btn']} type='button' text='Add comments' styleType='secondary' onClick={saveComment} />*/}
-                      {/*    </>*/}
-                      {/*}*/}
                     </>
                   )}
               </div>
@@ -1942,7 +1790,7 @@ const UploadRequest = () => {
         additionalClasses={["visible-block", styles["approval-detail-modal"]]}
         showCancel={false}
         confirmAction={() => {}}
-        overlayAdditionalClass={styles['batch-outer']}
+        overlayAdditionalClass={styles["batch-outer"]}
       >
         <div className={`row ${styles["modal-wrapper"]}`}>
           <div className={`${styles["left-bar"]}`}>
@@ -1963,13 +1811,13 @@ const UploadRequest = () => {
                 "MMM DD, YYYY, hh:mm a"
               )}
             </div>
-            <div className={styles['centerImg']}>
-            {assets[selectedAsset]?.asset.type === "image" && (
-              <AssetImg
-                name={assets[selectedAsset]?.asset.name}
-                assetImg={assets[selectedAsset]?.thumbailUrl}
-              />
-            )}
+            <div className={styles["centerImg"]}>
+              {assets[selectedAsset]?.asset.type === "image" && (
+                <AssetImg
+                  name={assets[selectedAsset]?.asset.name}
+                  assetImg={assets[selectedAsset]?.thumbailUrl}
+                />
+              )}
             </div>
 
             {assets[selectedAsset]?.asset.type !== "image" &&
@@ -2005,16 +1853,11 @@ const UploadRequest = () => {
                 Sorry, your browser doesn't support video playback.
               </video>
             )}
-            {/*<AssetImg*/}
-            {/*    imgClass={""}*/}
-            {/*    assetImg={assets[selectedAsset]?.realUrl}*/}
-            {/*    type={""}*/}
-            {/*    name={"image"}*/}
-            {/*/>*/}
-            {/*<img alt={"test"} src={assets[selectedAsset]?.realUrl} />*/}
 
             {(isAdmin() || currentViewStatus !== 0) && (
-              <div className={`${detailPanelStyles["field-wrapper"]} ${detailPanelStyles["comments-wrapper"]}`}>
+              <div
+                className={`${detailPanelStyles["field-wrapper"]} ${detailPanelStyles["comments-wrapper"]}`}
+              >
                 <div
                   className={`secondary-text ${detailPanelStyles.field} ${styles["field-name"]}`}
                 >
@@ -2179,7 +2022,6 @@ const UploadRequest = () => {
                       updateAssetState({
                         campaigns: { $set: stateUpdate },
                       });
-                      // loadCampaigns()
                     }}
                     onRemoveOperationFinished={async (index, stateUpdate) => {
                       await assetApi.removeCampaign(
@@ -2390,12 +2232,14 @@ const UploadRequest = () => {
         additionalClasses={["visible-block"]}
         showCancel={false}
         confirmAction={() => {}}
-        overlayAdditionalClass={styles['msgAdminModal']}
+        overlayAdditionalClass={styles["msgAdminModal"]}
       >
         <div className={styles["confirm-modal-wrapper"]}>
           {!submitted && (
             <>
-              <div className={`${styles["modal-field-title"]} ${styles["titleAdmin"]}`}>
+              <div
+                className={`${styles["modal-field-title"]} ${styles["titleAdmin"]}`}
+              >
                 Message for Admin
               </div>
 
@@ -2417,13 +2261,18 @@ const UploadRequest = () => {
             </>
           )}
 
-          {
-            submitted &&  <img src={Utilities.grayClose} alt={"close"} className={styles['modalClose']} />
-          }
+          {submitted && (
+            <img
+              src={Utilities.grayClose}
+              alt={"close"}
+              className={styles["modalClose"]}
+            />
+          )}
           {submitted && (
             <p className={styles["modal-field-title"]}>
-              Thanks for submitting your assets for approval. <br/>The admin will be
-              notified of your submission and will be able to review it
+              Thanks for submitting your assets for approval. <br />
+              The admin will be notified of your submission and will be able to
+              review it
             </p>
           )}
 

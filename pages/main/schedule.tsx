@@ -1,10 +1,10 @@
-import Head from 'next/head'
+import Head from "next/head";
 
-import { CALENDAR_ACCESS } from '../../constants/permissions'
+import { CALENDAR_ACCESS } from "../../constants/permissions";
 
 // Components
-import MainLayout from '../../components/common/layouts/main-layout'
-import Schedule from '../../components/main/schedule'
+import MainLayout from "../../components/common/layouts/main-layout";
+import Schedule from "../../components/main/schedule";
 
 const SchedulePage = () => (
   <>
@@ -16,6 +16,6 @@ const SchedulePage = () => (
       <Schedule />
     </MainLayout>
   </>
-)
+);
 
-export default SchedulePage
+export default SchedulePage;

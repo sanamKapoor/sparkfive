@@ -1,51 +1,44 @@
-import styles from "./detail-overlay.module.css";
-import { Utilities, AssetOps } from "../../../assets";
-import { saveAs } from "file-saver";
+import update from "immutability-helper";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Rnd } from "react-rnd";
-import { useState, useEffect, useContext, useRef } from "react";
+import { AssetOps, Utilities } from "../../../assets";
+import { AssetContext, UserContext } from "../../../context";
 import assetApi from "../../../server-api/asset";
 import shareApi from "../../../server-api/share-collection";
 import customFileSizeApi from "../../../server-api/size";
-import { AssetContext, UserContext } from "../../../context";
+
 import toastUtils from "../../../utils/toast";
-import update from "immutability-helper";
-import downloadUtils from "../../../utils/download";
-import VersionList from "./version-list";
-import AssetAddition from "./asset-addition";
 import urlUtils from "../../../utils/url";
+import AssetAddition from "./asset-addition";
+import styles from "./detail-overlay.module.css";
+import VersionList from "./version-list";
 
 import { isMobile } from "react-device-detect";
 
 import { ASSET_DOWNLOAD } from "../../../constants/permissions";
 
 // Components
-import SidePanel from "./detail-side-panel";
-import ConversationList from "../conversation/conversation-list";
-import IconClickable from "../buttons/icon-clickable";
-import Button from "../buttons/button";
-import AssetPdf from "./asset-pdf";
-import AssetImg from "./asset-img";
-import AssetApplication from "./asset-application";
-import AssetText from "./asset-text";
-import RenameModal from "../modals/rename-modal";
-import CropSidePanel from "./crop-side-panel";
-import AssetCropImg from "./asset-crop-img";
 import fileDownload from "js-file-download";
+import Button from "../buttons/button";
+import IconClickable from "../buttons/icon-clickable";
+import ConversationList from "../conversation/conversation-list";
+import RenameModal from "../modals/rename-modal";
+import AssetCropImg from "./asset-crop-img";
 import AssetIcon from "./asset-icon";
+import AssetImg from "./asset-img";
+import AssetPdf from "./asset-pdf";
 import CdnPanel from "./cdn-panel";
+import CropSidePanel from "./crop-side-panel";
+import SidePanel from "./detail-side-panel";
 
 import { isImageType } from "../../../utils/file";
 
-import { ASSET_ACCESS } from "../../../constants/permissions";
-import AssetNotes from './asset-notes';
-import AssetNote from './asset-note';
-import AssetTranscript from './asset-transcript';
-import AssetRelatedFIles from './asset-related-files';
+import AssetNote from "./asset-note";
+import AssetNotes from "./asset-notes";
+import AssetTranscript from "./asset-transcript";
 
-import { sizeToZipDownload } from "../../../constants/download";
-import EventBus from "../../../utils/event-bus";
-import AssetRelatedFilesList from "./asset-related-files-list";
 import Dropdown from "../inputs/dropdown";
+import AssetRelatedFilesList from "./asset-related-files-list";
 
 const getDefaultDownloadImageType = (extension) => {
   console.log("isMobile", isMobile);
@@ -136,7 +129,6 @@ const DetailOverlay = ({
     needsFetch,
     updateDownloadingStatus,
     setDetailOverlayId,
-    totalAssets,
     setOperationAssets,
   } = useContext(AssetContext);
 
@@ -150,11 +142,22 @@ const DetailOverlay = ({
   const [versionThumbnailUrl, setVersionThumbnailUrl] = useState(thumbailUrl);
   const [previewUrl, setPreviewUrl] = useState(null);
 
-  const [detailPosSize, setDetailPosSize] = useState({ x: 0, y: 0, width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight });
-  const [defaultSize, setDefaultSize] = useState({ width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight });
-  const [notes, setNotes] = useState([])
-  const [sizeOfCrop, setSizeOfCrop] = useState({ width: defaultSize.width, height: defaultSize.height })
-  const [transcripts, setTranscript] = useState([])
+  const [detailPosSize, setDetailPosSize] = useState({
+    x: 0,
+    y: 0,
+    width: currentAsset.dimensionWidth,
+    height: currentAsset.dimensionHeight,
+  });
+  const [defaultSize, setDefaultSize] = useState({
+    width: currentAsset.dimensionWidth,
+    height: currentAsset.dimensionHeight,
+  });
+  const [notes, setNotes] = useState([]);
+  const [sizeOfCrop, setSizeOfCrop] = useState({
+    width: defaultSize.width,
+    height: defaultSize.height,
+  });
+  const [transcripts, setTranscript] = useState([]);
 
   const renameValue = useRef("");
   const setRenameValue = (value) => {
@@ -234,9 +237,6 @@ const DetailOverlay = ({
     if (activeFolder) {
       const folder = folders.find((folder) => folder.id === activeFolder);
       if (folder) {
-        // if (folder.assets.length === 0 && assets && assets.length) {
-        // folder.assets = [...assets];
-        // }
         setActiveCollection(folder);
         const assetIndx =
           assets.findIndex((item) => item.asset && item.asset.id === asset.id) +
@@ -262,12 +262,6 @@ const DetailOverlay = ({
       setCurrentAsset(asset);
     }
   }, [asset]);
-
-  // useEffect(() => {
-  //   const modAssetIndex = assets.findIndex(assetItem => assetItem.asset.id === assetDetail?.id)
-  //   if (modAssetIndex !== -1)
-  //     setAssetDetail(assets[modAssetIndex].asset)
-  // }, [assets])
 
   const checkInitialParams = () => {
     if (initialParams?.side) {
@@ -299,7 +293,7 @@ const DetailOverlay = ({
     try {
       const asset = curAsset || currentAsset;
       const { data } = await assetApi.getTranscript(asset.id);
-      setTranscript(data)
+      setTranscript(data);
     } catch (err) {
       // console.log(err);
     }
@@ -344,7 +338,6 @@ const DetailOverlay = ({
       );
       toastUtils.success("Asset name updated");
     } catch (err) {
-      // console.log(err);
       toastUtils.error("Could not update asset name");
     }
   };
@@ -434,17 +427,6 @@ const DetailOverlay = ({
               : value.height,
         });
       }
-      // const {newW, newH} = calculateRenderSize(value.width, value.height);
-      //
-      // // calculate actual height/width with respect to display size
-      // const pixelW = currentAsset.dimensionWidth/defaultSize.width;
-      // const pixelH = currentAsset.dimensionHeight/defaultSize.height;
-      // setWidth(Math.round(newW*pixelW));
-      // setHeight(Math.round(newH*pixelH));
-      //
-      // // set new rendering size in the container
-      // setDetailPosSize({...detailPosSize, width: newW, height: newH });
-
       setSize(value);
     }
   };
@@ -540,7 +522,6 @@ const DetailOverlay = ({
           height: currentAsset.dimensionHeight,
         },
       ]);
-      // setPresetTypes([{ label: 'None', value: 'none', width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight}])
 
       setSize({
         label: "Original",
@@ -560,9 +541,7 @@ const DetailOverlay = ({
     }
   }, [mode, currentAsset]);
 
-  useEffect(() => {
-    // setDetailPosSize(Object.assign({...detailPosSize}, {height, width}));
-  }, [width, height]);
+  useEffect(() => {}, [width, height]);
 
   const downloadSelectedAssets = async (id) => {
     const { shareJWT, code } = urlUtils.getQueryParameters();
@@ -624,12 +603,6 @@ const DetailOverlay = ({
         "Internal Server Error. Please try again."
       );
     }
-
-    // downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets')
-  };
-
-  const manualDownloadAsset = (asset) => {
-    downloadUtils.downloadFile(versionRealUrl, asset.name);
   };
 
   const setDisplayVersions = (versionAssets) => {
@@ -880,12 +853,6 @@ const DetailOverlay = ({
     setHeight(h);
   };
 
-  const onChangeRelatedFiles = (fileAssociations) => {
-    setAssetDetail({ ...assetDetail, fileAssociations });
-  };
-
-  const showSideMenu = isShare ? (isMobile ? true : false) : true;
-
   const editThenDownload =
     currentAsset.extension !== "gif" &&
     currentAsset.extension !== "tiff" &&
@@ -1072,14 +1039,16 @@ const DetailOverlay = ({
                     }}
                     className={`${styles["react-draggable"]}`}
                     lockAspectRatio={true}
-                    // onDragStop={(e, d) => {
-                    //   setDetailPosSize(Object.assign({...detailPosSize}, { x: d.x, y: d.y}))
-                    // }}
                     onResizeStop={(e, direction, ref, delta, position) =>
                       onResizeStop(ref.style.width, ref.style.height, position)
                     }
                   >
-                    <AssetImg name={assetDetail.name} assetImg={versionRealUrl} imgClass="img-preview" isResize />
+                    <AssetImg
+                      name={assetDetail.name}
+                      assetImg={versionRealUrl}
+                      imgClass="img-preview"
+                      isResize
+                    />
                   </Rnd>
                 )}
 
@@ -1166,16 +1135,6 @@ const DetailOverlay = ({
                 </span>
               </div>
             )}
-
-            {/* {!isShare &&
-              <>
-                <AssetRelatedFIles outsideDetailOverlay={outsideDetailOverlay} closeOverlay={closeOverlay} assets={assetDetail.fileAssociations || []} associateFileId={currentAsset.id} onChangeRelatedFiles={onChangeRelatedFiles} onAddRelatedFiles={(data) => {
-                  let updatedAssets = [...assetDetail.fileAssociations]
-                  updatedAssets = updatedAssets.concat(data)
-                  setAssetDetail({ ...assetDetail, fileAssociations: updatedAssets })
-                }} />
-              </>
-            } */}
           </div>
         </section>
       )}
@@ -1210,7 +1169,6 @@ const DetailOverlay = ({
               widthOriginal={width}
               heightOriginal={height}
               onModeChange={(mode) => {
-                // resetValues();
                 setMode(mode);
                 if (mode === "crop") {
                   setSizeOfCrop({
@@ -1260,14 +1218,14 @@ const DetailOverlay = ({
             <AssetNotes asset={asset} notes={notes} applyCrud={applyCrud} />
           )}
 
-          {activeSideComponent === "related" && <AssetRelatedFilesList relatedAssets={assetDetail?.fileAssociations}/>}
-          {activeSideComponent === "transcript" && transcripts && (
-            <AssetTranscript
-              title={"Transcript"}
-              transcripts={transcripts}
+          {activeSideComponent === "related" && (
+            <AssetRelatedFilesList
+              relatedAssets={assetDetail?.fileAssociations}
             />
           )}
-
+          {activeSideComponent === "transcript" && transcripts && (
+            <AssetTranscript title={"Transcript"} transcripts={transcripts} />
+          )}
         </section>
       )}
       {/* Share page mobile right button */}
@@ -1425,16 +1383,17 @@ const DetailOverlay = ({
               )}
             </>
           )}
-          }
-          {transcriptAccess && <IconClickable
-            src={Utilities.listView}
-            additionalClass={styles["menu-icon"]}
-            onClick={() => {
-              setMode("detail");
-              resetValues();
-              changeActiveSide("transcript");
-            }}
-          />}
+          {transcriptAccess && (
+            <IconClickable
+              src={Utilities.listView}
+              additionalClass={styles["menu-icon"]}
+              onClick={() => {
+                setMode("detail");
+                resetValues();
+                changeActiveSide("transcript");
+              }}
+            />
+          )}
         </section>
       )}
       <RenameModal

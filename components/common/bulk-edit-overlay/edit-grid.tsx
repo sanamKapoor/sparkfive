@@ -25,6 +25,6 @@ const EditGrid = ({ assets, toggleSelectedEdit }) => {
       </div>
     </>
   );
-}
+};
 
 export default EditGrid;

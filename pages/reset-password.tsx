@@ -1,8 +1,8 @@
-import Head from 'next/head'
+import Head from "next/head";
 
 // Components
-import AuthLayout from '../components/common/layouts/auth-layout'
-import ResetPassword from '../components/reset-password'
+import AuthLayout from "../components/common/layouts/auth-layout";
+import ResetPassword from "../components/reset-password";
 
 const ResetPasswordPage = () => (
   <>
@@ -14,6 +14,6 @@ const ResetPasswordPage = () => (
       <ResetPassword />
     </AuthLayout>
   </>
-)
+);
 
-export default ResetPasswordPage
+export default ResetPasswordPage;

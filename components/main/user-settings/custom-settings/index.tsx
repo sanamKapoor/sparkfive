@@ -1,4 +1,4 @@
-import styles from './index.module.css'
+import styles from "./index.module.css";
 
 // Component
 import Main from "../../../common/custom-settings/main";
@@ -8,7 +8,7 @@ const CustomSettings = () => {
     <div className={styles.container}>
       <Main />
     </div>
-  )
-}
+  );
+};
 
-export default CustomSettings
+export default CustomSettings;

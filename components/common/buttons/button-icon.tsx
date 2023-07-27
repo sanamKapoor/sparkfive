@@ -23,7 +23,6 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
       className={`${!isGray ? styles.container : styles["container-gray"]}`}
       disabled={disabled}
       onClick={onClick}
-      // type='button'
     >
       <span className={styles.icon}>
         <img src={icon} />

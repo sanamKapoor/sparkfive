@@ -1,8 +1,8 @@
-import Head from 'next/head'
+import Head from "next/head";
 
 // Components
-import AuthLayout from '../components/common/layouts/auth-layout'
-import RequestAccess from '../components/request-access'
+import AuthLayout from "../components/common/layouts/auth-layout";
+import RequestAccess from "../components/request-access";
 
 const RequestAccessPage = () => (
   <>
@@ -14,6 +14,6 @@ const RequestAccessPage = () => (
       <RequestAccess />
     </AuthLayout>
   </>
-)
+);
 
-export default RequestAccessPage
+export default RequestAccessPage;

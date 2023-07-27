@@ -1,8 +1,8 @@
-import Head from 'next/head'
+import Head from "next/head";
 
 // Components
-import AuthLayout from '../../../components/common/layouts/auth-layout'
-import SetupMain from '../../../components/main/setup'
+import AuthLayout from "../../../components/common/layouts/auth-layout";
+import SetupMain from "../../../components/main/setup";
 
 const AssetsPage = () => (
   <>
@@ -14,6 +14,6 @@ const AssetsPage = () => (
       <SetupMain />
     </AuthLayout>
   </>
-)
+);
 
-export default AssetsPage
+export default AssetsPage;

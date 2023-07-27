@@ -1,40 +1,37 @@
-import styles from "./asset-grid.module.css";
-import useDropzone from "../misc/dropzone";
-import update from "immutability-helper";
-import React, { useEffect, useContext, useState, useRef } from "react";
-import { AssetContext, LoadingContext, UserContext } from "../../../context";
-import toastUtils from "../../../utils/toast";
-import { Waypoint } from "react-waypoint";
 import copyClipboard from "copy-to-clipboard";
-import urlUtils from "../../../utils/url";
-import downloadUtils from "../../../utils/download";
+import update from "immutability-helper";
+import { useContext, useEffect, useRef, useState } from "react";
+import { Waypoint } from "react-waypoint";
+import { AssetContext, LoadingContext, UserContext } from "../../../context";
 import assetsApi from "../../../server-api/asset";
+import downloadUtils from "../../../utils/download";
+import toastUtils from "../../../utils/toast";
+import urlUtils from "../../../utils/url";
+import useDropzone from "../misc/dropzone";
+import styles from "./asset-grid.module.css";
 
 import assetApi from "../../../server-api/asset";
 import shareApi from "../../../server-api/share-collection";
 
 // Components
-import AssetAddition from "./asset-addition";
-import FolderGridItem from "../folder/folder-grid-item";
-import FolderListItem from "../folder/folder-list-item";
-import AssetThumbail from "./asset-thumbail";
-import ListItem from "./list-item";
-import AssetUpload from "./asset-upload";
-import DetailOverlay from "./detail-overlay";
-import ConfirmModal from "../modals/confirm-modal";
-import Button from "../buttons/button";
 import useSortedAssets from "../../../hooks/use-sorted-assets";
 import folderApi from "../../../server-api/folder";
+import Button from "../buttons/button";
+import FolderGridItem from "../folder/folder-grid-item";
+import FolderListItem from "../folder/folder-list-item";
+import ConfirmModal from "../modals/confirm-modal";
+import AssetAddition from "./asset-addition";
+import AssetThumbail from "./asset-thumbail";
+import AssetUpload from "./asset-upload";
+import DetailOverlay from "./detail-overlay";
+import ListItem from "./list-item";
 
-import {
-  ASSET_UPLOAD_APPROVAL,
-  ASSET_ACCESS,
-} from "../../../constants/permissions";
 import fileDownload from "js-file-download";
+import { ASSET_ACCESS } from "../../../constants/permissions";
 
 import { sizeToZipDownload } from "../../../constants/download";
-import ChangeThumbnail from "../modals/change-thumnail-modal";
 import { checkIfUserCanEditThumbnail } from "../../../utils/asset";
+import ChangeThumbnail from "../modals/change-thumnail-modal";
 
 const AssetGrid = ({
   activeView = "grid",
@@ -55,9 +52,8 @@ const AssetGrid = ({
   openFilter,
   onCloseDetailOverlay = (assetData) => {},
   setWidthCard,
-  widthCard
+  widthCard,
 }) => {
-
   let isDragging;
   if (!isShare) isDragging = useDropzone();
   const {
@@ -294,8 +290,6 @@ const AssetGrid = ({
       clonedAssets[versionIndex] = newVersionAsset;
       setAssets(clonedAssets);
     }
-
-    // setAssetDetail({...newVersionAsset})
   };
 
   const isThumbnailNameEditable = checkIfUserCanEditThumbnail(user?.roleId);
@@ -311,7 +305,6 @@ const AssetGrid = ({
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const ref = useRef(null);
 
-
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -326,13 +319,15 @@ const AssetGrid = ({
 
   useEffect(() => {
     if (ref.current) {
-      setWidthCard(ref.current.clientWidth);        
+      setWidthCard(ref.current.clientWidth);
     }
   }, [ref.current, windowWidth]);
 
-
   return (
-    <section className={`${styles.container} ${openFilter && styles.filter}`} style={{ width: openFilter ? `calc(100% - ${widthCard}px)` : '100%' }}>
+    <section
+      className={`${styles.container} ${openFilter && styles.filter}`}
+      style={{ width: openFilter ? `calc(100% - ${widthCard}px)` : "100%" }}
+    >
       {(shouldShowUpload || isDragging) && !isShare && (
         <AssetUpload
           onDragText={"Drop files here to upload"}
@@ -358,7 +353,17 @@ const AssetGrid = ({
       )}
       <div className={styles["list-wrapper"]}>
         {activeView === "grid" && (
-          <ul className={`${styles["grid-list"]} ${styles[itemSize]} ${mode === "assets" ? !openFilter ? styles["grid-" + advancedConfig.assetThumbnail] : styles["grid-filter-" + advancedConfig.assetThumbnail] : !openFilter ? styles["grid-" + advancedConfig.collectionThumbnail] : styles["grid-filter-" + advancedConfig.collectionThumbnail]}`}>
+          <ul
+            className={`${styles["grid-list"]} ${styles[itemSize]} ${
+              mode === "assets"
+                ? !openFilter
+                  ? styles["grid-" + advancedConfig.assetThumbnail]
+                  : styles["grid-filter-" + advancedConfig.assetThumbnail]
+                : !openFilter
+                ? styles["grid-" + advancedConfig.collectionThumbnail]
+                : styles["grid-filter-" + advancedConfig.collectionThumbnail]
+            }`}
+          >
             {mode === "assets" &&
               assets.map((assetItem, index) => {
                 if (assetItem.status !== "fail") {
@@ -367,7 +372,8 @@ const AssetGrid = ({
                       className={styles["grid-item"]}
                       key={assetItem.asset.id || index}
                       onClick={(e) => handleFocusChange(e, assetItem.asset.id)}
-                      ref={ref} style={{width: `$${setWidthCard}px`}}
+                      ref={ref}
+                      style={{ width: `$${setWidthCard}px` }}
                     >
                       <AssetThumbail
                         {...assetItem}
@@ -497,7 +503,13 @@ const AssetGrid = ({
               sortedFolders.map((folder, index) => {
                 return (
                   <li
-                    className={`${styles["grid-item"]} ${!openFilter ? styles[" grid-" + advancedConfig.collectionThumbnail] : styles["grid-filter-" + advancedConfig.collectionThumbnail]}`} 
+                    className={`${styles["grid-item"]} ${
+                      !openFilter
+                        ? styles[" grid-" + advancedConfig.collectionThumbnail]
+                        : styles[
+                            "grid-filter-" + advancedConfig.collectionThumbnail
+                          ]
+                    }`}
                     key={folder.id || index}
                     onClick={(e) => handleFocusChange(e, folder.id)}
                   >

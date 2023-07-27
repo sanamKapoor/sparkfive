@@ -1,38 +1,34 @@
 // External imports
-import styles from "./index.module.css";
-import { useContext, useEffect, useRef, useState } from "react";
-import { useRouter } from "next/router";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useContext, useEffect, useRef, useState } from "react";
+import styles from "./index.module.css";
 
 // Contexts
-import { SocketContext } from "../../context";
-import { GuestUploadContext } from "../../context";
+import { GuestUploadContext, SocketContext } from "../../context";
 
 // Components
 import { Assets } from "../../assets";
-import IconClickable from "../common/buttons/icon-clickable";
-import ContactForm from "./contact-form";
 import Button from "../common/buttons/button";
-import UploadItem from "./upload-item";
-import PasswordOverlay from "../share-folder/password-overlay";
 import SpinnerOverlay from "../common/spinners/spinner-overlay";
+import PasswordOverlay from "../share-folder/password-overlay";
+import ContactForm from "./contact-form";
+import UploadItem from "./upload-item";
 import AssetUploadProcess from "./upload-process";
 
 // Utils
-import toastUtils from "../../utils/toast";
-import requestUtils from "../../utils/requests";
 import { validation } from "../../constants/file-validation";
+import requestUtils from "../../utils/requests";
+import toastUtils from "../../utils/toast";
 import {
   convertTimeFromSeconds,
   getFolderKeyAndNewNameByFileName,
 } from "../../utils/upload";
 
 // Apis
+import { Utilities } from "../../assets";
 import uploadLinkApi from "../../server-api/guest-upload";
 import shareUploadLinkApi from "../../server-api/share-upload-link";
-import Input from "../common/inputs/input";
-import TextArea from "../common/inputs/text-area";
-import { Utilities } from "../../assets";
 import ButtonIcon from "../common/buttons/button-icon";
 import DropdownOptions from "./Dropdown/DropdownOptions";
 
@@ -148,13 +144,6 @@ const GuestUpload = () => {
         // Update uploading assets
         setUploadingAssets(updatedAssets);
         setFiles(updatedAssets);
-
-        // Remove current asset from asset placeholder
-        // let newAssetPlaceholder = updatedAssets.filter(asset => asset.status !== 'fail')
-
-        // At this point, file place holder will be removed
-        // setFiles([...newAssetPlaceholder, ...currentDataClone])
-
         // The final one
         if (i === assets.length - 1) {
           return { folderGroup, updatedAssets };
@@ -268,13 +257,6 @@ const GuestUpload = () => {
           requestId = assets[i].requestId;
         }
 
-        // At this point, file place holder will be removed
-        // setAssets([...assets, ...currentDataClone])
-        // setAddedIds(data.map(assetItem => assetItem.asset.id))
-
-        // Update total assets
-        // setTotalAssets(totalAssets + newAssets +1)
-
         // Mark this asset as done
         const updatedAssets = assets.map((asset, index) =>
           index === i ? { ...asset, status: "done" } : asset
@@ -310,12 +292,6 @@ const GuestUpload = () => {
 
       // Update uploading assets
       setUploadingAssets(updatedAssets);
-
-      // Remove current asset from asset placeholder
-      // let newAssetPlaceholder = updatedAssets.filter(asset => asset.status !== 'fail')
-
-      // At this point, file place holder will be removed
-      // setAssets([...newAssetPlaceholder, ...currentDataClone])
 
       // The final one
       if (i === assets.length - 1) {
@@ -358,7 +334,6 @@ const GuestUpload = () => {
         status: "queued",
         isUploading: false,
       });
-      // formData.append('asset', file.path || file.originalFile)
     });
 
     setTotalSize(totalSize);
@@ -457,8 +432,6 @@ const GuestUpload = () => {
       const { data } = await shareUploadLinkApi.getLinkDetail({
         url: query.code,
       });
-
-      // console.log(data)
 
       // Show team name and logo
       updateLogo(data.logo);

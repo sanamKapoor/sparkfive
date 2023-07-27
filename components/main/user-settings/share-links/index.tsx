@@ -1,4 +1,4 @@
-import styles from './index.module.css'
+import styles from "./index.module.css";
 
 // Component
 import Main from "../../../common/share-links";
@@ -8,7 +8,7 @@ const ShareLinks = () => {
     <div className={styles.container}>
       <Main />
     </div>
-  )
-}
+  );
+};
 
-export default ShareLinks
+export default ShareLinks;

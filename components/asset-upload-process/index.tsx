@@ -3,7 +3,6 @@ import { useContext } from "react";
 import styles from "./index.module.css";
 
 import { AssetContext } from "../../context";
-import React from "react";
 
 import { Utilities } from "../../assets";
 import teamApi from "../../server-api/team";
@@ -15,7 +14,6 @@ const AssetUploadProcess = () => {
     uploadingStatus,
     showUploadProcess,
     uploadingFile,
-    uploadRemainingTime,
     dropboxUploadingFile,
     uploadSourceType,
     retryListCount,

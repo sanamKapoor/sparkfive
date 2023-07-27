@@ -1,18 +1,18 @@
-import styles from "./item-sublayout.module.css";
-import { useState, useEffect, useContext } from "react";
+import { useContext, useEffect, useState } from "react";
+import { isMobile } from "react-device-detect";
 import { Utilities } from "../../../assets";
 import { TeamContext, UserContext } from "../../../context";
-import { isMobile } from "react-device-detect";
+import styles from "./item-sublayout.module.css";
 
 import { ASSET_ACCESS } from "../../../constants/permissions";
 
 // Components
-import SectionButton from "../buttons/section-button";
-import ConfirmModal from "../modals/confirm-modal";
-import Dropdown from "../inputs/dropdown";
-import ToggleableAbsoluteWrapper from "../misc/toggleable-absolute-wrapper";
 import ItemAssets from "../asset/item-assets";
 import IconClickable from "../buttons/icon-clickable";
+import SectionButton from "../buttons/section-button";
+import Dropdown from "../inputs/dropdown";
+import ToggleableAbsoluteWrapper from "../misc/toggleable-absolute-wrapper";
+import ConfirmModal from "../modals/confirm-modal";
 
 const ItemSublayout = ({
   SideComponent = null,
@@ -21,9 +21,9 @@ const ItemSublayout = ({
   layout = "double",
   type = "item",
   hasAssets = false,
-  itemId = '',
-  deleteItem = () => { },
-  duplicateProject
+  itemId = "",
+  deleteItem = () => {},
+  duplicateProject,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [activeMain, setActiveMain] = useState("details");
@@ -106,18 +106,20 @@ const ItemSublayout = ({
               {children}
             </>
           )}
-          contentClass={styles['more-drop']}
+          contentClass={styles["more-drop"]}
           Content={() => {
+            const options = [];
+            if (duplicateProject)
+              options.push({
+                label: "Duplicate",
+                onClick: () => duplicateProject(),
+              });
+            options.push({
+              label: "Delete",
+              onClick: () => setModalOpen(true),
+            });
 
-            const options = []
-            if (duplicateProject) options.push({ label: 'Duplicate', onClick: () => duplicateProject() })
-            options.push({ label: 'Delete', onClick: () => setModalOpen(true) })
-
-            return (
-              <Dropdown
-                options={options}
-              />
-            )
+            return <Dropdown options={options} />;
           }}
         />
       </div>

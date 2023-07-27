@@ -1,10 +1,9 @@
-import { useEffect} from "react";
+import { useEffect } from "react";
 
 import styles from "./asset-img.module.css";
 
-import { Assets } from "../../../assets";
 import { useState } from "react";
-import asset from "../../../server-api/asset";
+import { Assets } from "../../../assets";
 
 const AssetImg = ({
   assetImg,
@@ -13,9 +12,9 @@ const AssetImg = ({
   opaque = false,
   onClick = () => {},
   imgClass = "",
-  style={},
-  activeFilter="",
-  isResize
+  style = {},
+  activeFilter = "",
+  isResize,
 }) => {
   const [loaded, setLoaded] = useState(false);
 
@@ -24,9 +23,9 @@ const AssetImg = ({
 
   if (!finalImg) finalImg = Assets.empty;
 
-  useEffect(()=>{
-      setLoaded(false)
-  },[assetImg])
+  useEffect(() => {
+    setLoaded(false);
+  }, [assetImg]);
 
   return (
     <>
@@ -34,17 +33,27 @@ const AssetImg = ({
         src={Assets.empty}
         alt={"blank"}
         className={`${styles[activeFilter]}`}
-        style={loaded ? { display: "none" } : { width: '100%', height: "100%", "object-fit": "cover"}}
+        style={
+          loaded
+            ? { display: "none" }
+            : { width: "100%", height: "100%", "object-fit": "cover" }
+        }
       />
       <img
         onClick={onClick}
         src={finalImg}
-        className={`asset-img ${!isResize ? styles.asset : styles.asset__crop} ${opaque && styles.opaque} ${imgClass} ${styles[imgClass]} ${styles[activeFilter]}`}
+        className={`asset-img ${
+          !isResize ? styles.asset : styles.asset__crop
+        } ${opaque && styles.opaque} ${imgClass} ${styles[imgClass]} ${
+          styles[activeFilter]
+        }`}
         onLoad={() => setLoaded(true)}
-        onError={(e) => {setLoaded(false)}}
+        onError={(e) => {
+          setLoaded(false);
+        }}
         style={
           loaded
-            ? {...style}
+            ? { ...style }
             : {
                 opacity: 0,
                 overflow: "hidden",

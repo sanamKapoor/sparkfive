@@ -1,7 +1,7 @@
-import styles from "./address-form.module.css";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { LocationContext, TeamContext } from "../../../../../context";
+import styles from "./address-form.module.css";
 
 // Components
 import Button from "../../../../common/buttons/button";

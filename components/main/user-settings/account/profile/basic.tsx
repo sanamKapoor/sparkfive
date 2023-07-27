@@ -1,16 +1,16 @@
-import styles from "./basic.module.css";
+import { capitalCase } from "change-case";
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
-import userApi from "../../../../../server-api/user";
 import { UserContext } from "../../../../../context";
+import userApi from "../../../../../server-api/user";
 import toastUtils from "../../../../../utils/toast";
-import { capitalCase } from "change-case";
+import styles from "./basic.module.css";
 
 // Components
-import NewPasswordModal from "./new-password-modal";
 import Button from "../../../../common/buttons/button";
 import FormInput from "../../../../common/inputs/form-input";
 import Input from "../../../../common/inputs/input";
+import NewPasswordModal from "./new-password-modal";
 
 interface BasicProps {
   name: string;

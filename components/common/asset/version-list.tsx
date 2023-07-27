@@ -1,16 +1,11 @@
-import styles from './version-list.module.css'
-import downloadUtils from '../../../utils/download'
-import VersionListItem from './version-list-item'
+import downloadUtils from "../../../utils/download";
+import VersionListItem from "./version-list-item";
+import styles from "./version-list.module.css";
 
-const VersionList = ({
-  versions,
-  currentAsset,
-  triggerUserEvent
-}) => {
-
+const VersionList = ({ versions, currentAsset, triggerUserEvent }) => {
   const downloadVersion = async (asset) => {
-    downloadUtils.downloadFile(asset.realUrl, asset.name)
-  }
+    downloadUtils.downloadFile(asset.realUrl, asset.name);
+  };
 
   return (
     <div className={styles.container}>
@@ -39,6 +34,6 @@ const VersionList = ({
       </ul>
     </div>
   );
-}
+};
 
-export default VersionList
+export default VersionList;

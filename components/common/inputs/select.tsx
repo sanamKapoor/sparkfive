@@ -1,5 +1,5 @@
-import styles from "./select.module.css";
 import ReactSelect from "react-select";
+import styles from "./select.module.css";
 
 const Select = ({
   label = "",

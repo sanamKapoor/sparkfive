@@ -1,8 +1,8 @@
-import Head from 'next/head'
+import Head from "next/head";
 
 // Components
-import AuthLayout from '../components/common/layouts/auth-layout'
-import Payment from '../components/payment'
+import AuthLayout from "../components/common/layouts/auth-layout";
+import Payment from "../components/payment";
 
 const PaymentPage = () => (
   <>
@@ -14,6 +14,6 @@ const PaymentPage = () => (
       <Payment />
     </AuthLayout>
   </>
-)
+);
 
-export default PaymentPage
+export default PaymentPage;

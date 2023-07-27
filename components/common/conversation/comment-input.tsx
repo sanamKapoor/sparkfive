@@ -1,174 +1,191 @@
-import styles from './comment-input.module.css'
-import { useState, useRef, useEffect, useContext } from 'react'
-import { UserContext } from '../../../context'
-import { Comments, Utilities } from '../../../assets'
-import { Picker } from 'emoji-mart'
-import getCaretCoordinates from 'textarea-caret'
+import { Picker } from "emoji-mart";
+import { useContext, useEffect, useRef, useState } from "react";
+import getCaretCoordinates from "textarea-caret";
+import { Comments } from "../../../assets";
+import { UserContext } from "../../../context";
+import styles from "./comment-input.module.css";
 
 // Components
-import Button from '../buttons/button'
-import ToggleableAbsoluteWrapper from '../misc/toggleable-absolute-wrapper'
-import SearchableUserList from '../user/searchable-user-list'
-import UserPhoto from '../user/user-photo'
+import Button from "../buttons/button";
+import ToggleableAbsoluteWrapper from "../misc/toggleable-absolute-wrapper";
+import SearchableUserList from "../user/searchable-user-list";
 
-const CommentInput = ({ style = 'comment', onSubmit }) => {
+const CommentInput = ({ style = "comment", onSubmit }) => {
+  const [content, setContent] = useState("");
+  const [inputPosition, setInputPosition] = useState(0);
+  const [activePosibleMention, setActivePosibleMention] = useState("");
+  const [mentionStartPosition, setMentionStartPosition] = useState(-1);
 
-  const [content, setContent] = useState('')
-  const [inputPosition, setInputPosition] = useState(0)
-  const [activePosibleMention, setActivePosibleMention] = useState('')
-  const [mentionStartPosition, setMentionStartPosition] = useState(-1)
+  const { user } = useContext(UserContext);
 
-  const { user } = useContext(UserContext)
-
-  const inputRef = useRef(null)
+  const inputRef = useRef(null);
 
   const InputIconsPair = () => (
-    <div className={styles['image-pair']}>
+    <div className={styles["image-pair"]}>
       <ToggleableAbsoluteWrapper
         closeOnAction={false}
-        Wrapper={({ children }) =>
+        Wrapper={({ children }) => (
           <>
             <img src={Comments.smileDisable} />
             {children}
           </>
-        }
-        Content={() => <Picker
-          emoji=''
-          onSelect={addEmoji}
-          showPreview={false}
-          style={{
-            position: 'absolute',
-            right: 0,
-            top: '2rem'
-          }}
-          native={true} />}
-        contentClass={styles['picker-wrapper']}
-        wrapperClass={styles['image-wrapper']}
+        )}
+        Content={() => (
+          <Picker
+            emoji=""
+            onSelect={addEmoji}
+            showPreview={false}
+            style={{
+              position: "absolute",
+              right: 0,
+              top: "2rem",
+            }}
+            native={true}
+          />
+        )}
+        contentClass={styles["picker-wrapper"]}
+        wrapperClass={styles["image-wrapper"]}
       />
       <ToggleableAbsoluteWrapper
         closeOnAction={false}
-        Wrapper={({ children }) =>
+        Wrapper={({ children }) => (
           <>
             <img src={Comments.mentionDisable} />
             {children}
           </>
-        }
-        Content={() => <SearchableUserList
-          onUserSelected={addMention} />}
-        wrapperClass={styles['image-wrapper']}
-        contentClass={styles['user-list-wrapper']}
+        )}
+        Content={() => <SearchableUserList onUserSelected={addMention} />}
+        wrapperClass={styles["image-wrapper"]}
+        contentClass={styles["user-list-wrapper"]}
       />
     </div>
-  )
+  );
 
   useEffect(() => {
     if (inputPosition < mentionStartPosition) {
-      resetMentionDropdown()
+      resetMentionDropdown();
     }
-  }, [inputPosition])
+  }, [inputPosition]);
 
   const addEmoji = (emoji) => {
-    modifyText(emoji.native)
-  }
+    modifyText(emoji.native);
+  };
 
   const addMention = (user) => {
-    const text = `@${user.name}`
+    const text = `@${user.name}`;
     if (mentionStartPosition !== -1) {
-      modifyText(text, mentionStartPosition - 1, inputPosition)
+      modifyText(text, mentionStartPosition - 1, inputPosition);
     } else {
-      modifyText(text)
+      modifyText(text);
     }
-  }
+  };
 
-  const modifyText = (newContent, position = inputPosition, positionOffset = 0) => {
-    const firstHalf = content.substring(0, position)
-    const secondHalf = content.substring(position + positionOffset, content.length)
-    setContent(`${firstHalf}${newContent}${secondHalf}`)
-    const newPosition = position + newContent.length
-    setInputPosition(newPosition)
-    resetMentionDropdown()
+  const modifyText = (
+    newContent,
+    position = inputPosition,
+    positionOffset = 0
+  ) => {
+    const firstHalf = content.substring(0, position);
+    const secondHalf = content.substring(
+      position + positionOffset,
+      content.length
+    );
+    setContent(`${firstHalf}${newContent}${secondHalf}`);
+    const newPosition = position + newContent.length;
+    setInputPosition(newPosition);
+    resetMentionDropdown();
     // Refocus and set caret at position of inserted content
-    inputRef.current.focus()
-    inputRef.current.select()
+    inputRef.current.focus();
+    inputRef.current.select();
     // need to set a timeout. Focus and select are not immediate
-    setTimeout(() => inputRef.current.setSelectionRange(newPosition, newPosition))
-
-  }
+    setTimeout(() =>
+      inputRef.current.setSelectionRange(newPosition, newPosition)
+    );
+  };
 
   const submitComment = async (e) => {
-    e.preventDefault()
-    await onSubmit(content)
-    setContent('')
-    resetMentionDropdown()
-  }
+    e.preventDefault();
+    await onSubmit(content);
+    setContent("");
+    resetMentionDropdown();
+  };
 
   const resetMentionDropdown = () => {
-    setActivePosibleMention('')
-    setMentionStartPosition(-1)
-  }
+    setActivePosibleMention("");
+    setMentionStartPosition(-1);
+  };
 
   const updateContent = (e) => {
-    const newPosition = e.target.selectionStart
-    const newContent = e.target.value
-    setContent(newContent)
-    setInputPosition(newPosition)
+    const newPosition = e.target.selectionStart;
+    const newContent = e.target.value;
+    setContent(newContent);
+    setInputPosition(newPosition);
     // Check if user wants to mention someone
-    if (newContent.charAt(newPosition - 1) === '@') {
-      const { left, top } = getCaretCoordinates(inputRef.current, newPosition)
-      document.documentElement.style.setProperty('--top-dropdown', `${top}px`)
-      document.documentElement.style.setProperty('--left-dropdown', `${left}px`)
-      setActivePosibleMention('')
-      setMentionStartPosition(newPosition)
+    if (newContent.charAt(newPosition - 1) === "@") {
+      const { left, top } = getCaretCoordinates(inputRef.current, newPosition);
+      document.documentElement.style.setProperty("--top-dropdown", `${top}px`);
+      document.documentElement.style.setProperty(
+        "--left-dropdown",
+        `${left}px`
+      );
+      setActivePosibleMention("");
+      setMentionStartPosition(newPosition);
     }
 
     // Check if user is mentioning someone. Display dropdown if at least 1 match
     else if (mentionStartPosition !== -1) {
-      setActivePosibleMention(newContent.substring(mentionStartPosition, newPosition))
+      setActivePosibleMention(
+        newContent.substring(mentionStartPosition, newPosition)
+      );
     }
-  }
+  };
 
-  const breakValue = style === 'comment' ? 25 : 20
+  const breakValue = style === "comment" ? 25 : 20;
 
   return (
     <form onSubmit={submitComment}>
-      <div className={styles['input-container']}>
+      <div className={styles["input-container"]}>
         <textarea
           ref={inputRef}
           onChange={updateContent}
-          rows={content?.length > 0 ? Math.ceil(content.length / breakValue) : 1}
+          rows={
+            content?.length > 0 ? Math.ceil(content.length / breakValue) : 1
+          }
           value={content}
-          onClick={e => setInputPosition(e.target.selectionStart)}
-          placeholder={style === 'comment' ? 'Add a comment' : 'Reply'}
-          className={`${styles['content-input']} ${styles[style]}`}
+          onClick={(e) => setInputPosition(e.target.selectionStart)}
+          placeholder={style === "comment" ? "Add a comment" : "Reply"}
+          className={`${styles["content-input"]} ${styles[style]}`}
         />
-        {activePosibleMention &&
-          <div className={styles['mention-dropdown']}>
+        {activePosibleMention && (
+          <div className={styles["mention-dropdown"]}>
             <SearchableUserList
               externalTerm={activePosibleMention}
-              onUserSelected={addMention} />
+              onUserSelected={addMention}
+            />
           </div>
-        }
+        )}
         <InputIconsPair />
       </div>
-      {content &&
-        <div className={styles['buttons-wrapper']}>
+      {content && (
+        <div className={styles["buttons-wrapper"]}>
           <Button
-            text='Cancel'
-            type='button'
-            styleType='secondary'
+            text="Cancel"
+            type="button"
+            styleType="secondary"
             onClick={() => {
-              setContent('')
+              setContent("");
             }}
           />
           <Button
-            text='Post'
-            type='button'
+            text="Post"
+            type="button"
             onClick={submitComment}
-            styleType='primary' />
+            styleType="primary"
+          />
         </div>
-      }
+      )}
     </form>
-  )
-}
+  );
+};
 
-export default CommentInput
+export default CommentInput;

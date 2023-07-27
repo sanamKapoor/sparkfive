@@ -1,7 +1,6 @@
 .container {
   border-radius: 50px;
   height: 48px;
-  /* max-width: 250px; */
   padding: 12px 40px;
   color: white;
   background-color: var(--color-prim-turquoise);

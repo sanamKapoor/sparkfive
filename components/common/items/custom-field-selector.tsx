@@ -1,27 +1,36 @@
-import styles from './channel-selector.module.css'
-import { ProjectTypeChannel, ProjectType } from '../../../assets'
+import { ProjectType, ProjectTypeChannel } from "../../../assets";
+import styles from "./channel-selector.module.css";
 
 // Components
-import ToggleableAbsoluteWrapper from '../misc/toggleable-absolute-wrapper'
-import ItemDropdownWrapper from '../items/item-dropdown-wrapper'
-import Dropdown from '../inputs/dropdown'
+import Dropdown from "../inputs/dropdown";
+import ItemDropdownWrapper from "../items/item-dropdown-wrapper";
+import ToggleableAbsoluteWrapper from "../misc/toggleable-absolute-wrapper";
 
-const CustomFieldSelector = ({ onLabelClick, handleFieldChange, data = 'Select field',  options, isShare = false }) => {
+const CustomFieldSelector = ({
+  onLabelClick,
+  handleFieldChange,
+  data = "Select field",
+  options,
+  isShare = false,
+}) => {
   return (
     <div className={`${styles.container} ${isShare && styles.shared}`}>
       <ToggleableAbsoluteWrapper
         enabled={!isShare}
-        wrapperClass='field'
-        contentClass='dropdown'
+        wrapperClass="field"
+        contentClass="dropdown"
         Wrapper={({ children }) => (
           <>
             <ItemDropdownWrapper
-              image={ProjectTypeChannel['Select Channel'] || ProjectType['Select Channel']}
+              image={
+                ProjectTypeChannel["Select Channel"] ||
+                ProjectType["Select Channel"]
+              }
               data={data}
               hasOption={true}
               optionOnClick={onLabelClick}
               isShare={isShare}
-              styleType={data === 'Select field' ? false : true}
+              styleType={data === "Select field" ? false : true}
             >
               {children}
             </ItemDropdownWrapper>
@@ -37,7 +46,7 @@ const CustomFieldSelector = ({ onLabelClick, handleFieldChange, data = 'Select f
         )}
       />
     </div>
-  )
-}
+  );
+};
 
-export default CustomFieldSelector
+export default CustomFieldSelector;

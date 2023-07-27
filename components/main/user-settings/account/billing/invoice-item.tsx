@@ -1,13 +1,12 @@
-import styles from "./invoice-item.module.css";
 import { format } from "date-fns";
-import { formatCurrency } from "../../../../../utils/numbers";
 import downloadUtils from "../../../../../utils/download";
+import { formatCurrency } from "../../../../../utils/numbers";
+import styles from "./invoice-item.module.css";
 
 // Components
-import Tag from "../../../../common/misc/tag";
-import IconClickable from "../../../../common/buttons/icon-clickable";
-import { AssetOps } from "../../../../../assets";
 import { capitalCase } from "change-case";
+import { AssetOps } from "../../../../../assets";
+import IconClickable from "../../../../common/buttons/icon-clickable";
 
 interface InvoiceItemProps {
   invoice: any;

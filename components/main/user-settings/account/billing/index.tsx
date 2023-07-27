@@ -1,15 +1,14 @@
-import styles from "./index.module.css";
-import { loadStripe } from "@stripe/stripe-js";
-import { useState, useEffect } from "react";
-import { capitalCase } from "change-case";
 import { Elements } from "@stripe/react-stripe-js";
-import planApi from "../../../../../server-api/plan";
+import { loadStripe } from "@stripe/stripe-js";
+import { capitalCase } from "change-case";
+import { useEffect, useState } from "react";
 
-// Components
-import SectionButton from "../../../../common/buttons/section-button";
-import Subscription from "./subscription";
-import PaymentMethod from "./payment-method";
+import planApi from "../../../../../server-api/plan";
+import styles from "./index.module.css";
+
 import Invoices from "./invoices";
+import PaymentMethod from "./payment-method";
+import Subscription from "./subscription";
 
 const SETTING_SECTIONS_CONTENT = {
   subscription: Subscription,

@@ -4,8 +4,8 @@ import styles from "./base.module.css";
 import { MouseEventHandler, useEffect } from "react";
 
 // Components
-import Button from "../buttons/button";
 import { Utilities } from "../../../assets";
+import Button from "../buttons/button";
 
 ReactModal.defaultStyles = {};
 
@@ -70,10 +70,6 @@ const Base: React.FC<BaseModalProps> = ({
       shouldFocusAfterRender={false}
       ariaHideApp={false}
     >
-      {/* {closeButtonOnly &&
-        <img src={Utilities.blueClose} alt="close" className={`${styles.close} ${styles.close_only}`} onClick={closeModal} />
-
-      } */}
       {headText && (
         <div
           className={

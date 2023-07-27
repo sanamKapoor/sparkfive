@@ -1,36 +1,27 @@
-import styles from "./folder-grid-item.module.css";
-import gridStyles from "../asset//asset-grid.module.css";
-import { Utilities, Assets } from "../../../assets";
-import {
-  ChangeEvent,
-  FocusEventHandler,
-  useContext,
-  useRef,
-  useState,
-} from "react";
 import fileDownload from "js-file-download";
-import zipDownloadUtils from "../../../utils/download";
-import _ from "lodash";
+import { ChangeEvent, useContext, useState } from "react";
+import { Utilities } from "../../../assets";
+import gridStyles from "../asset//asset-grid.module.css";
+import styles from "./folder-grid-item.module.css";
 
 // Context
-import { AssetContext, FilterContext } from "../../../context";
+import { AssetContext } from "../../../context";
 
 // Components
 import AssetImg from "../asset/asset-img";
 import Button from "../buttons/button";
-import FolderOptions from "./folder-options";
 import IconClickable from "../buttons/icon-clickable";
 import ConfirmModal from "../modals/confirm-modal";
+import FolderOptions from "./folder-options";
 
+import {
+  COLLECTION_NAME_UPDATED,
+  FAILED_TO_UPDATE_COLLECTION_NAME,
+} from "../../../constants/messages";
 import folderApi from "../../../server-api/folder";
 import shareFolderApi from "../../../server-api/share-collection";
-import AssetIcon from "../asset/asset-icon";
-import React from "react";
 import toastUtils from "../../../utils/toast";
-import {
-  FAILED_TO_UPDATE_COLLECTION_NAME,
-  COLLECTION_NAME_UPDATED,
-} from "../../../constants/messages";
+import AssetIcon from "../asset/asset-icon";
 
 const FolderGridItem = ({
   id,
@@ -112,10 +103,6 @@ const FolderGridItem = ({
   const [deleteOpen, setDeleteOpen] = useState(false);
 
   const downloadFoldercontents = async () => {
-    // const { data } = await folderApi.getInfoToDownloadFolder(id)
-    // // Get full assets url, because currently, it just get maximum 4 real url in thumbnail
-    // zipDownloadUtils.zipAndDownload(data, name)
-
     // Show processing bar
     try {
       updateDownloadingStatus("zipping", 0, assetsCount);

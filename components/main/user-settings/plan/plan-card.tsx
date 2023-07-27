@@ -1,9 +1,9 @@
-import styles from './plan-card.module.css'
-import featuresConstants from './constants'
-import { formatCurrency } from '../../../../utils/numbers'
+import { formatCurrency } from "../../../../utils/numbers";
+import featuresConstants from "./constants";
+import styles from "./plan-card.module.css";
 
 // Components
-import Button from '../../../common/buttons/button'
+import Button from "../../../common/buttons/button";
 
 const PlanCard = ({
   type,
@@ -14,59 +14,60 @@ const PlanCard = ({
   interval,
   name,
   metadata,
-  onChange = (priceId) => { },
+  onChange = (priceId) => {},
   buttonDisabled,
   buttonText,
   paymentMethodExists = false,
-  activeType
+  activeType,
 }) => {
-
-  let monthValue = amount / 100
-  if (interval === 'year') {
-    monthValue = amount / 100 / 12
+  let monthValue = amount / 100;
+  if (interval === "year") {
+    monthValue = amount / 100 / 12;
   }
 
-  const ChangeButton = () =>
+  const ChangeButton = () => (
     <Button
       text={buttonText}
-      type='button'
+      type="button"
       disabled={buttonDisabled}
       onClick={onChange}
-      styleType='primary'
+      styleType="primary"
     />
+  );
 
-  let summary
-  let features
+  let summary;
+  let features;
 
-  if (activeType === 'dam') {
-    summary = featuresConstants[`DAM_${metadata.benefits_id}_SUMMARY`]
-    features = featuresConstants[`DAM_${metadata.benefits_id}_FEATURES`]
+  if (activeType === "dam") {
+    summary = featuresConstants[`DAM_${metadata.benefits_id}_SUMMARY`];
+    features = featuresConstants[`DAM_${metadata.benefits_id}_FEATURES`];
   } else {
-    summary = featuresConstants[`${metadata.benefits_id}_SUMMARY`]
-    features = featuresConstants[`${metadata.benefits_id}_FEATURES`]
+    summary = featuresConstants[`${metadata.benefits_id}_SUMMARY`];
+    features = featuresConstants[`${metadata.benefits_id}_FEATURES`];
   }
-
 
   return (
     <div className={styles.container}>
       <h3>{name.toUpperCase()}</h3>
       <p className={styles.description}>{summary}</p>
       <div className={styles.pricing}>
-        {type === 'enterprise' ?
+        {type === "enterprise" ? (
           <div className={styles.contact}>Contact Us</div>
-          :
+        ) : (
           <>
             <div className={styles.monthly}>
               <div>{formatCurrency(monthValue)}</div>
               <div>month</div>
             </div>
-            {interval === 'year' &&
-              <div className={styles.anual}>{`billed ${formatCurrency(amount / 100)} anually`}</div>
-            }
+            {interval === "year" && (
+              <div className={styles.anual}>{`billed ${formatCurrency(
+                amount / 100
+              )} anually`}</div>
+            )}
           </>
-        }
+        )}
       </div>
-      <div className={styles['key-header']}>Key Features:</div>
+      <div className={styles["key-header"]}>Key Features:</div>
       <ul className={styles.features}>
         {features.map((feature) => (
           <li key={feature}>
@@ -75,21 +76,21 @@ const PlanCard = ({
           </li>
         ))}
       </ul>
-      {(paymentMethodExists || type === 'enterprise') ?
+      {paymentMethodExists || type === "enterprise" ? (
         <>
-          {type === 'enterprise' ?
+          {type === "enterprise" ? (
             <a href="mailto:sales@sparkfive.com">
               <ChangeButton />
             </a>
-            :
+          ) : (
             <ChangeButton />
-          }
+          )}
         </>
-        :
-        <div className={styles['please-add']}>Please add a Payment method</div>
-      }
+      ) : (
+        <div className={styles["please-add"]}>Please add a Payment method</div>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default PlanCard
+export default PlanCard;

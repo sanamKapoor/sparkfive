@@ -4,44 +4,41 @@
   align-items: center;
 }
 
-.form input{
+.form input {
   flex: 1;
   min-width: 150px;
 }
 
-.form .role-select-wrapper{
+.form .role-select-wrapper {
   min-width: 150px;
   margin: 0 16px;
 }
 
-.form button{
 
-}
-
-.input{
+.input {
   min-height: inherit;
 }
 
-.button{
+.button {
   min-height: inherit;
 }
 
-@media screen and (max-width: 630px){
-  .form input{
+@media screen and (max-width: 630px) {
+  .form input {
     margin-bottom: 10px;
   }
 
-  .form .role-select-wrapper{
+  .form .role-select-wrapper {
     margin-bottom: 10px;
   }
 
-  .form button{
+  .form button {
     margin-bottom: 10px;
   }
 }
 
-@media screen and (max-width: 477px){
-  .form .role-select-wrapper{
+@media screen and (max-width: 477px) {
+  .form .role-select-wrapper {
     margin-right: 0;
     margin-left: 0;
   }

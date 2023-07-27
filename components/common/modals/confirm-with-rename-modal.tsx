@@ -1,52 +1,71 @@
-import { capitalCase } from 'change-case'
-import styles from './confirm-with-rename-modal.module.css'
+import styles from "./confirm-with-rename-modal.module.css";
 
 // Components
-import Base from './base'
-import Button from '../buttons/button'
+import { useEffect, useState } from "react";
+import Button from "../buttons/button";
 import Input from "../inputs/input";
-import {useEffect, useState} from "react";
+import Base from "./base";
 
 // Used for the future
-const ConfirmModal = ({ modalIsOpen, closeModal, message, secondMessage = '', confirmText, confirmAction, textContentClass = '', closeButtonClass = '', initialValue = '' }) => {
-  const [renameInput, setRenameInput] = useState('')
+const ConfirmModal = ({
+  modalIsOpen,
+  closeModal,
+  message,
+  secondMessage = "",
+  confirmText,
+  confirmAction,
+  textContentClass = "",
+  closeButtonClass = "",
+  initialValue = "",
+}) => {
+  const [renameInput, setRenameInput] = useState("");
 
   useEffect(() => {
     if (initialValue) {
-      setRenameInput(initialValue)
+      setRenameInput(initialValue);
     }
-  }, [modalIsOpen, initialValue])
+  }, [modalIsOpen, initialValue]);
 
   return (
-  <Base
-    modalIsOpen={modalIsOpen}
-    closeModal={closeModal}
-  >
-    <div className={`${styles.text} ${textContentClass}`}>
-      <span>{message}</span>
-      <Input placeholder={'Enter name'} onChange={e => setRenameInput(e.target.value)} value={renameInput} styleType={'regular-short'} />
-      <span>{secondMessage}</span>
-      <span className={`${styles.close} ${closeButtonClass}`} onClick={closeModal}>x</span>
-    </div>
-    <div className={styles.buttons}>
-      <div>
-        <Button
-          text='Cancel'
+    <Base modalIsOpen={modalIsOpen} closeModal={closeModal}>
+      <div className={`${styles.text} ${textContentClass}`}>
+        <span>{message}</span>
+        <Input
+          placeholder={"Enter name"}
+          onChange={(e) => setRenameInput(e.target.value)}
+          value={renameInput}
+          styleType={"regular-short"}
+        />
+        <span>{secondMessage}</span>
+        <span
+          className={`${styles.close} ${closeButtonClass}`}
           onClick={closeModal}
-          type='button'
-          styleType='secondary'
-        />
+        >
+          x
+        </span>
       </div>
-      <div>
-        <Button
-          text={confirmText}
-          onClick={()=>{confirmAction(renameInput)}}
-          type='button'
-          styleType='primary'
-        />
+      <div className={styles.buttons}>
+        <div>
+          <Button
+            text="Cancel"
+            onClick={closeModal}
+            type="button"
+            styleType="secondary"
+          />
+        </div>
+        <div>
+          <Button
+            text={confirmText}
+            onClick={() => {
+              confirmAction(renameInput);
+            }}
+            type="button"
+            styleType="primary"
+          />
+        </div>
       </div>
-    </div>
-  </Base>
-)}
+    </Base>
+  );
+};
 
-export default ConfirmModal
+export default ConfirmModal;

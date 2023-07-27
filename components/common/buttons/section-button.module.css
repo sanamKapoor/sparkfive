@@ -8,9 +8,6 @@
   padding: 0;
 }
 
-.container:hover {
-}
-
 .container:disabled {
   background-color: var(--color-prim-turquoise-hover);
   cursor: default;

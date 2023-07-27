@@ -1,7 +1,7 @@
-import styles from "./name-form.module.css";
-import { useContext, useState, useEffect } from "react";
-import { TeamContext } from "../../../../../context";
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
+import { TeamContext } from "../../../../../context";
+import styles from "./name-form.module.css";
 
 // Components
 import Button from "../../../../common/buttons/button";

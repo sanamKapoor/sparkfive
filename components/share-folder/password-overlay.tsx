@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
-import styles from "./password-overlay.module.css";
+import { useState } from "react";
 import { GeneralImg } from "../../assets";
+import styles from "./password-overlay.module.css";
 
 // Components
+import AuthButton from "../common/buttons/auth-button";
 import AuthContainer from "../common/containers/auth-container";
 import Input from "../common/inputs/input";
-import AuthButton from "../common/buttons/auth-button";
 
 interface CreateOverlayProps {
   onPasswordSubmit: (password: string, email: string) => void;

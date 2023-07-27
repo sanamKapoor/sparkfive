@@ -1,11 +1,11 @@
 import styles from "./payment-method.module.css";
 
-import planApi from "../../../../../server-api/plan";
 import { useState } from "react";
+import planApi from "../../../../../server-api/plan";
 
 // Components
-import BaseModal from "../../../../common/modals/base";
 import Button from "../../../../common/buttons/button";
+import BaseModal from "../../../../common/modals/base";
 import CreditCardForm from "../../../../common/payment/credit-card-form";
 
 const PaymentMethod = ({ paymentMethod, setPaymentMethod }) => {

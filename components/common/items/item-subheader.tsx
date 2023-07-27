@@ -1,15 +1,15 @@
-import styles from "./item-subheader.module.css";
-import { useContext, useState } from "react";
 import Router from "next/router";
-import { AssetContext, UserContext } from "../../../context";
+import { useContext, useState } from "react";
 import { ASSET_ACCESS } from "../../../constants/permissions";
+import { AssetContext, UserContext } from "../../../context";
+import styles from "./item-subheader.module.css";
 
 // Components
-import SubHeader from "../layouts/sub-header";
-import NavButton from "../buttons/nav-button";
-import StatusBadge from "../misc/status-badge";
-import AssetHeaderOps from "../asset/asset-header-ops";
 import AssetAddition from "../asset/asset-addition";
+import AssetHeaderOps from "../asset/asset-header-ops";
+import NavButton from "../buttons/nav-button";
+import SubHeader from "../layouts/sub-header";
+import StatusBadge from "../misc/status-badge";
 import RenameModal from "../modals/rename-modal";
 
 const ItemSubHeader = ({
@@ -51,7 +51,7 @@ const ItemSubHeader = ({
         {!activeSearchOverlay && selectedAssets.length > 0 ? (
           <>
             <div className={styles.break}></div>
-            <AssetHeaderOps itemType={type} iconColor='White'/>
+            <AssetHeaderOps itemType={type} iconColor="White" />
           </>
         ) : (
           <>

@@ -1,8 +1,8 @@
-import Head from 'next/head'
+import Head from "next/head";
 
 // Components
-import AuthLayout from '../components/common/layouts/auth-layout'
-import Signup from '../components/signup'
+import AuthLayout from "../components/common/layouts/auth-layout";
+import Signup from "../components/signup";
 
 const SignupPage = () => (
   <>
@@ -11,9 +11,9 @@ const SignupPage = () => (
       <link rel="icon" href="/favicon.ico" />
     </Head>
     <AuthLayout>
-      <Signup onlyWorkEmail={true}/>
+      <Signup onlyWorkEmail={true} />
     </AuthLayout>
   </>
-)
+);
 
-export default SignupPage
+export default SignupPage;

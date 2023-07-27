@@ -1,13 +1,13 @@
-import styles from "./folder-options.module.css";
 import { Utilities } from "../../../assets";
+import styles from "./folder-options.module.css";
 
 // Components
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../../../context";
+import folderApi from "../../../server-api/folder";
 import IconClickable from "../buttons/icon-clickable";
 import Dropdown from "../inputs/dropdown";
 import ToggleableAbsoluteWrapper from "../misc/toggleable-absolute-wrapper";
-import { AssetContext, UserContext } from "../../../context";
-import { useContext, useEffect, useState } from "react";
-import folderApi from "../../../server-api/folder";
 
 const FolderOptions = ({
   downloadFoldercontents,
@@ -100,35 +100,6 @@ const FolderOptions = ({
       });
     }
 
-    // if (thumbnailPath == null) {
-    //   if (
-    //     adminOption.filter(
-    //       (ele) =>
-    //         ele.label == "Change Thumbnail" || ele.label == "Add Thumbnail"
-    //     ).length == 0
-    //   ) {
-    //     setAdminOption([
-    //       ...adminOption,
-    //       {
-    //         label: "Add Thumbnail",
-    //         onClick: changeThumbnail,
-    //       },
-    //     ]);
-    //   } else {
-    //     setAdminOption([
-    //       ...adminOption.map((ele) => {
-    //         if (ele.label == "Add Thumbnail") {
-    //           return {
-    //             label: "Add Thumbnail",
-    //             onClick: changeThumbnail,
-    //           };
-    //         } else {
-    //           return ele;
-    //         }
-    //       }),
-    //     ]);
-    //   }
-    // }
     if (copyEnabled && !isShare) {
       if (adminOption.filter((ele) => ele.label == "Copy Link").length == 0) {
         setAdminOption([
@@ -145,7 +116,10 @@ const FolderOptions = ({
       wrapperClass={styles["asset-actions-wrapper"]}
       Wrapper={({ children }) => (
         <>
-          <IconClickable src={Utilities.more} additionalClass={styles.folderDots} />
+          <IconClickable
+            src={Utilities.more}
+            additionalClass={styles.folderDots}
+          />
           {children}
         </>
       )}

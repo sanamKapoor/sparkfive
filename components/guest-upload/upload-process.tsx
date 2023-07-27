@@ -1,6 +1,5 @@
-import { useContext } from "react";
-import { Line } from "rc-progress";
 import clsx from "clsx";
+import { Line } from "rc-progress";
 
 import styles from "./upload-process.module.css";
 

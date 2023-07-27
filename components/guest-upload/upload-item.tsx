@@ -1,9 +1,8 @@
 import styles from "./upload-item.module.css";
 
-import { Utilities, ProjectTypes, AssetOps } from "../../assets";
+import { AssetOps, Utilities } from "../../assets";
 
 import IconClickable from "../common/buttons/icon-clickable";
-import ReactTooltip from "react-tooltip";
 
 interface UploadItemProps {
   name: string;

@@ -1,6 +1,6 @@
-import styles from './nav-button.module.css'
+import styles from "./nav-button.module.css";
 
-const NavButton = ({ text, type, onClick = () => { }, disabled = false }) => (
+const NavButton = ({ text, type, onClick = () => {}, disabled = false }) => (
   <button
     className={styles.container}
     type={type}
@@ -9,6 +9,6 @@ const NavButton = ({ text, type, onClick = () => { }, disabled = false }) => (
   >
     {text}
   </button>
-)
+);
 
-export default NavButton
+export default NavButton;

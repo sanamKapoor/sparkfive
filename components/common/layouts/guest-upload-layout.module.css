@@ -27,8 +27,6 @@
     cursor: pointer;
 }
 
-.left-logo{
-}
 
 .right-logo .logo-img {
     height: 40px;
@@ -69,7 +67,7 @@
     margin-right: 10px;
 }
 
-.title{
+.title {
     margin: 0 auto;
     width: auto;
     display: flex;
@@ -77,12 +75,12 @@
     font-weight: bold;
 }
 
-.right-logo{
+.right-logo {
     display: flex;
     align-items: center;
 }
 
-.right-logo span{
+.right-logo span {
     margin-right: 16px;
     font-size: 14px;
     font-weight: 500;
@@ -104,11 +102,11 @@
         max-height: 90px;
     }
 
-    .left-logo{
+    .left-logo {
         left: 15px;
     }
 
-    .right-logo{
+    .right-logo {
         display: none;
     }
 }

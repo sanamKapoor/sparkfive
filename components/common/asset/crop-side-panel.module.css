@@ -10,7 +10,7 @@
   margin-top: 1.5rem;
 }
 
-.field-wrapper .resize-option{
+.field-wrapper .resize-option {
   font-weight: bold;
   margin-left: 15px;
   width: 28px;
@@ -24,16 +24,17 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  line-height:10px;
+  line-height: 10px;
 }
-.field-wrapper .resize-option.selected{
+
+.field-wrapper .resize-option.selected {
   background: #ccc;
   width: 28px;
   height: 24px;
 
 }
 
-.meta-text{
+.meta-text {
   font-size: 12px;
 }
 
@@ -41,10 +42,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
 }
-/*.first-section .field-wrapper:first-child {*/
-/*  grid-column-start: 1;*/
-/*  grid-column-end: 3;*/
-/*}*/
+
 
 .container .field-wrapper .tags-list {
   margin-top: 0.7rem;
@@ -73,30 +71,36 @@
   margin-left: 0.5rem;
   color: var(--color-sec-text);
 }
+
 .remove:hover {
   color: var(--color-prim-turquoise);
 }
 
-.field-radio-wrapper{
+.field-radio-wrapper {
   display: flex;
 }
-.selectable-wrapper{
+
+.selectable-wrapper {
   display: flex;
   align-items: center;
 }
 
-.field-radio-wrapper img, .selectable-wrapper img{
+.field-radio-wrapper img,
+.selectable-wrapper img {
   width: 15px;
 }
-.field-radio-wrapper div{
+
+.field-radio-wrapper div {
   margin-left: 8px;
 }
+
 .item-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   margin-left: 10px;
 }
+
 .select-item {
   width: 33%;
   display: grid;
@@ -104,6 +108,7 @@
   margin-top: 10px;
   align-items: center;
 }
+
 .select-item p {
   text-overflow: ellipsis;
   overflow: hidden;
@@ -113,15 +118,15 @@
   margin: 0;
 }
 
-.title{
+.title {
   margin-bottom: 15px;
   font-size: 16px;
   font-weight: 400;
   display: flex;
-    align-items: center;
+  align-items: center;
 }
 
-.input-label{
+.input-label {
   width: 100%;
   display: block;
   text-align: center;
@@ -137,11 +142,11 @@
   padding-top: 40px;
 }
 
-.item-name{
+.item-name {
   font-size: 12px;
 }
 
-.radio-button-wrapper{
+.radio-button-wrapper {
   display: flex;
   align-items: center;
 }
@@ -151,6 +156,7 @@
   .item-list .tags-container:nth-last-child(-n + 5) {
     display: none;
   }
+
   .select-item p {
     font-size: 13px;
   }
@@ -172,7 +178,7 @@
     grid-column-end: 3;
   }
 
-  .hide-on-mobile{
+  .hide-on-mobile {
     display: none;
   }
 
