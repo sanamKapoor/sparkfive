@@ -8,7 +8,7 @@ import styles from "./index.module.css";
 import { GuestUploadContext, SocketContext } from "../../context";
 
 // Components
-import { Assets } from "../../assets";
+import { Assets, Utilities } from "../../assets";
 import Button from "../common/buttons/button";
 import SpinnerOverlay from "../common/spinners/spinner-overlay";
 import PasswordOverlay from "../share-folder/password-overlay";
@@ -26,7 +26,6 @@ import {
 } from "../../utils/upload";
 
 // Apis
-import { Utilities } from "../../assets";
 import uploadLinkApi from "../../server-api/guest-upload";
 import shareUploadLinkApi from "../../server-api/share-upload-link";
 import ButtonIcon from "../common/buttons/button-icon";

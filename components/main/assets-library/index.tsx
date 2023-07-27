@@ -28,7 +28,6 @@ import SearchOverlay from "../search-overlay-assets";
 
 // utils
 import selectOptions from "../../../utils/select-options";
-// import advancedConfigParams from '../../../utils/advance-config-params'
 
 import { isMobile } from "react-device-detect";
 import {
