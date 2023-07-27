@@ -1,4 +1,3 @@
-import Head from "next/head";
 import { useContext } from "react";
 import FilterProvider from "../../../../context/filter-provider";
 
@@ -7,6 +6,7 @@ import AssetDownloadProcess from "../../../../components/asset-download-process"
 import ShareFolderLayout from "../../../../components/common/layouts/share-folder-layout";
 import ShareCollectionMain from "../../../../components/share-collections";
 
+import AppLayout from "../../../../components/common/layouts/app-layout";
 import { AssetContext } from "../../../../context";
 
 const ShareFolder = () => {
@@ -14,14 +14,12 @@ const ShareFolder = () => {
 
   return (
     <FilterProvider isPublic={true}>
-      <Head>
-        <title>Shared Collections</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <ShareFolderLayout advancedLink={true}>
-        {downloadingStatus !== "none" && <AssetDownloadProcess />}
-        <ShareCollectionMain />
-      </ShareFolderLayout>
+      <AppLayout title="Shared Collections">
+        <ShareFolderLayout advancedLink={true}>
+          {downloadingStatus !== "none" && <AssetDownloadProcess />}
+          <ShareCollectionMain />
+        </ShareFolderLayout>
+      </AppLayout>
     </FilterProvider>
   );
 };

@@ -1,18 +1,15 @@
-import Head from "next/head";
-
 // Components
+import AppLayout from "../components/common/layouts/app-layout";
 import AuthLayout from "../components/common/layouts/auth-layout";
 import Payment from "../components/payment";
 
 const PaymentPage = () => (
   <>
-    <Head>
-      <title>Payment</title>
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
-    <AuthLayout>
-      <Payment />
-    </AuthLayout>
+    <AppLayout title="Payment">
+      <AuthLayout>
+        <Payment />
+      </AuthLayout>
+    </AppLayout>
   </>
 );
 

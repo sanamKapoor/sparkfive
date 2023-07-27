@@ -1,5 +1,3 @@
-import Head from "next/head";
-
 import { ASSET_ACCESS } from "../../../../constants/permissions";
 import FilterProvider from "../../../../context/filter-provider";
 
@@ -8,6 +6,7 @@ import MainLayout from "../../../../components/common/layouts/main-layout";
 
 import { useContext } from "react";
 import DeletedAssetsLibrary from "../../../../components/common/custom-settings/deleted-assets";
+import AppLayout from "../../../../components/common/layouts/app-layout";
 import NoPermissionNotice from "../../../../components/common/misc/no-permission-notice";
 import { UserContext } from "../../../../context";
 import LoginPage from "../../../login";
@@ -16,21 +15,19 @@ const AssetsPage = () => {
   const { user } = useContext(UserContext);
   return (
     <FilterProvider>
-      <Head>
-        <title>User Settings</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <MainLayout requiredPermissions={[ASSET_ACCESS]}>
-        {user ? (
-          user.roleId === "admin" || user.roleId === "super_admin" ? (
-            <DeletedAssetsLibrary />
+      <AppLayout title="User Settings">
+        <MainLayout requiredPermissions={[ASSET_ACCESS]}>
+          {user ? (
+            user.roleId === "admin" || user.roleId === "super_admin" ? (
+              <DeletedAssetsLibrary />
+            ) : (
+              <NoPermissionNotice />
+            )
           ) : (
-            <NoPermissionNotice />
-          )
-        ) : (
-          <LoginPage />
-        )}
-      </MainLayout>
+            <LoginPage />
+          )}
+        </MainLayout>
+      </AppLayout>
     </FilterProvider>
   );
 };

@@ -1,4 +1,3 @@
-import Head from "next/head";
 import { useContext } from "react";
 
 // Components
@@ -6,6 +5,7 @@ import ShareLayout from "../../components/common/layouts/share-layout";
 import ShareMain from "../../components/share";
 
 import AssetDownloadProcess from "../../components/asset-download-process";
+import AppLayout from "../../components/common/layouts/app-layout";
 import { AssetContext } from "../../context";
 
 const SharePage = () => {
@@ -13,14 +13,12 @@ const SharePage = () => {
 
   return (
     <>
-      <Head>
-        <title>Assets</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <ShareLayout>
-        {downloadingStatus !== "none" && <AssetDownloadProcess />}
-        <ShareMain />
-      </ShareLayout>
+      <AppLayout title="Assets">
+        <ShareLayout>
+          {downloadingStatus !== "none" && <AssetDownloadProcess />}
+          <ShareMain />
+        </ShareLayout>
+      </AppLayout>
     </>
   );
 };

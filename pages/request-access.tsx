@@ -1,18 +1,15 @@
-import Head from "next/head";
-
 // Components
+import AppLayout from "../components/common/layouts/app-layout";
 import AuthLayout from "../components/common/layouts/auth-layout";
 import RequestAccess from "../components/request-access";
 
 const RequestAccessPage = () => (
   <>
-    <Head>
-      <title>Request Access</title>
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
-    <AuthLayout>
-      <RequestAccess />
-    </AuthLayout>
+    <AppLayout title="Request Access">
+      <AuthLayout>
+        <RequestAccess />
+      </AuthLayout>
+    </AppLayout>
   </>
 );
 
