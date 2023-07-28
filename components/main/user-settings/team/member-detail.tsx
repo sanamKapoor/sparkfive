@@ -106,14 +106,13 @@ const MemberDetail = ({
             text="Save Changes"
             type="button"
             onClick={onSaveMemberChanges}
-            styleType={"primary"}
+            className={"container primary"}
           />
 
           <Button
-            className={"m-l-15"}
+            className={"container m-l-15 secondary"}
             text="Cancel"
             type="button"
-            styleType="secondary"
             onClick={onCancel}
           />
         </div>

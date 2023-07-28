@@ -7,36 +7,20 @@ interface CommonButtonProps
     HTMLButtonElement
   > {
   text: string;
-  styleType?: string;
-  styleTypes?: string[];
 }
 
 const Button: React.FC<CommonButtonProps> = ({
   text,
-  type,
-  onClick = (e) => {},
-  disabled = false,
-  styleType = "",
-  styleTypes = [],
   className = "",
-  form = null,
+  ...rest
 }) => {
-  const props: any = {};
-  if (form) {
-    props.form = form;
-  }
+  const classes = className
+    .split(" ")
+    .map((style) => styles[style])
+    .join(" ");
+
   return (
-    <button
-      className={`${styles.container} ${styles[styleType]} ${
-        styles[type]
-      } ${className} ${styleTypes
-        .map((styleItem) => styles[styleItem])
-        .join(" ")}`}
-      type={type}
-      onClick={onClick}
-      disabled={disabled}
-      {...props}
-    >
+    <button className={classes} {...rest}>
       {text}
     </button>
   );

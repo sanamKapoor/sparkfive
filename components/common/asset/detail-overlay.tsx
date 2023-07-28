@@ -935,14 +935,13 @@ const DetailOverlay = ({
                   <Button
                     text={"Share"}
                     type={"button"}
-                    styleType={"primary"}
-                    className={styles["only-desktop-button"]}
+                    className={`container ${styles["only-desktop-button"]} primary`}
                     onClick={openShareAsset}
                   />
 
                   <div className={styles["only-mobile-button"]}>
                     <IconClickable
-                      className={styles["only-mobile-button"]}
+                      additionalClass={styles["only-mobile-button"]}
                       src={AssetOps.shareWhite}
                       onClick={openShareAsset}
                     />
@@ -955,8 +954,7 @@ const DetailOverlay = ({
                     <Button
                       text={"Download"}
                       type={"button"}
-                      className={styles["only-desktop-button"]}
-                      styleType={"secondary"}
+                      className={`container ${styles["only-desktop-button"]} secondary`}
                       onClick={() => {
                         if (editThenDownload) {
                           setDownloadDropdownOpen(true);

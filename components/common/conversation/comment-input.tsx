@@ -171,7 +171,7 @@ const CommentInput = ({ style = "comment", onSubmit }) => {
           <Button
             text="Cancel"
             type="button"
-            styleType="secondary"
+            className="container secondary"
             onClick={() => {
               setContent("");
             }}
@@ -180,7 +180,7 @@ const CommentInput = ({ style = "comment", onSubmit }) => {
             text="Post"
             type="button"
             onClick={submitComment}
-            styleType="primary"
+            className="container primary"
           />
         </div>
       )}

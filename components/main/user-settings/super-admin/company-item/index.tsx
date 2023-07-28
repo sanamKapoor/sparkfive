@@ -38,10 +38,9 @@ const CompanyItem = ({ team, onViewCompanySettings }) => {
 
       <div className={styles.role}>{team.plan?.name}</div>
       <Button
-        className={styles.btn}
+        className={`${styles.btn} container secondary`}
         onClick={onViewCompanySettings}
         type={"button"}
-        styleType={"secondary"}
         text={"Settings"}
       />
     </div>

@@ -152,7 +152,7 @@ const SearchOverlayAssets = ({
               type="button"
               disabled={selectedAssets.length === 0}
               onClick={importAssets}
-              styleType="primary"
+              className="container primary"
             />
           </div>
         )}

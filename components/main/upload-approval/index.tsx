@@ -1164,7 +1164,7 @@ const UploadApproval = () => {
                 <Button
                   type="button"
                   text="Deselect"
-                  styleType="secondary"
+                  className="container secondary"
                   onClick={() => {
                     selectAllAssets(false);
                   }}
@@ -1174,7 +1174,7 @@ const UploadApproval = () => {
                 <Button
                   type="button"
                   text="Select All"
-                  styleType="secondary"
+                  className="container secondary"
                   onClick={selectAllAssets}
                 />
               )}
@@ -1182,7 +1182,7 @@ const UploadApproval = () => {
                 <Button
                   type="button"
                   text="Submit Batch"
-                  styleType="primary"
+                  className="container primary"
                   onClick={() => {
                     if (!batchName) {
                       toastUtils.error("Please enter the batch name to submit");
@@ -1337,10 +1337,9 @@ const UploadApproval = () => {
                       </div>
 
                       <Button
-                        className={"m-t-20"}
+                        className={"container m-t-20 primary"}
                         type="button"
                         text="Save Changes"
-                        styleType="primary"
                         onClick={saveBulkTag}
                       />
                     </>
@@ -1557,10 +1556,9 @@ const UploadApproval = () => {
             </div>
 
             <Button
-              className={`${styles["add-tag-btn"]} m-t-20 m-b-40`}
+              className={`container ${styles["add-tag-btn"]} m-t-20 m-b-40 primary`}
               type="button"
               text="Save changes"
-              styleType="primary"
               onClick={onSaveSingleAsset}
             />
           </div>
@@ -1627,30 +1625,27 @@ const UploadApproval = () => {
             {!submitted && (
               <>
                 <Button
-                  className={styles["keep-edit-btn"]}
+                  className={`${styles["keep-edit-btn"]} container secondary`}
                   type="button"
                   text="Keep editing"
-                  styleType="secondary"
                   onClick={() => {
                     setShowConfirmModal(false);
                     setMessage("");
                   }}
                 />
                 <Button
-                  className={styles["add-tag-btn"]}
+                  className={`${styles["add-tag-btn"]} container primary`}
                   type="button"
                   text="Submit"
-                  styleType="primary"
                   onClick={submit}
                 />
               </>
             )}
             {submitted && (
               <Button
-                className={styles["add-tag-btn"]}
+                className={`${styles["add-tag-btn"]} container primary`}
                 type="button"
                 text="Back to Sparkfive"
-                styleType="primary"
                 onClick={() => {
                   setShowConfirmModal(false);
                   Router.push("/main/upload-approvals");

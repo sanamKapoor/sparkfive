@@ -224,7 +224,7 @@ const Links = () => {
       </div>
 
       {linkList.map((field, index) => (
-        <div className={styles.item}>
+        <div className={styles.item} key={index}>
           <div className={styles.row}>
             <div className={styles.item_title}>Link URL</div>
             {!field.default && (
@@ -239,10 +239,9 @@ const Links = () => {
               />
             )}
             <Button
-              styleTypes={["exclude-min-height"]}
+              className={"container exclude-min-height primary"}
               type={"button"}
               text="Copy Link"
-              styleType="primary"
               onClick={(e) => {
                 copy(
                   `${process.env.CLIENT_BASE_URL}/guest-upload?code=${field.url}`

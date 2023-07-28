@@ -7,6 +7,7 @@ import copy from "copy-to-clipboard";
 import { Utilities } from "../../../assets";
 import toastUtils from "../../../utils/toast";
 import urlUtils from "../../../utils/url";
+import Button from "../buttons/button";
 import styles from "./cdn-panel.module.css";
 
 const options = {
@@ -98,9 +99,11 @@ const CdnPanel = ({ assetDetail }) => {
       <div className={`${styles.block} ${styles.mb}`}>
         <h3 className={styles.subtitle}>CDN Link</h3>
         <div className={`${styles.input} ${styles.blockInput}`}>{link}</div>
-        <button onClick={copyToClipboard} className={styles.btn}>
-          Copy Link
-        </button>
+        <Button
+          onClick={copyToClipboard}
+          className={styles.btn}
+          text="Copy Link"
+        />
       </div>
 
       {assetDetail.type !== "video" && assetDetail.type !== "pdf" && (

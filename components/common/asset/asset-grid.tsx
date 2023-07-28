@@ -557,7 +557,7 @@ const AssetGrid = ({
                     <Button
                       text="Load More"
                       type="button"
-                      styleType="primary"
+                      className="container primary"
                       onClick={loadMore}
                     />
                   </div>

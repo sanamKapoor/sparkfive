@@ -243,10 +243,9 @@ const SizeSaPresets = () => {
                   className={`${styles["col-100"]} p-r-0 p-l-0 d-flex p-t-15`}
                 >
                   <Button
-                    styleTypes={["exclude-min-height"]}
+                    className={"container exclude-min-height primary"}
                     type={"button"}
                     text="Save"
-                    styleType="primary"
                     onClick={() => {
                       saveChanges(index);
                     }}

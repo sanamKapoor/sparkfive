@@ -38,10 +38,9 @@ const TeamInvite = ({ mappedRoles, onInviteSend }) => {
           />
         </div>
         <Button
-          className={styles.button}
+          className={`${styles.button} container primary`}
           text="Send invitation"
           type="submit"
-          styleType="primary"
           disabled={!inviteEmail || !inviteRole}
         />
       </form>

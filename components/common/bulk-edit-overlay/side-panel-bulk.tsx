@@ -451,7 +451,7 @@ const SidePanelBulk = ({
         <Button
           text={"Save Changes"}
           type={"button"}
-          styleType={"primary"}
+          className={"container primary"}
           onClick={prepareSave}
           disabled={elementsSelected.length === 0 || loading}
         />

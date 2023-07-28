@@ -72,7 +72,7 @@ const NewPasswordModal: React.FC<NewPasswordModalProps> = ({
             <Button
               text="Confirm Email change"
               type="submit"
-              styleType="input-height-primary"
+              className="container submit input-height-primary"
             />
           </div>
         </form>

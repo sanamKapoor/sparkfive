@@ -140,14 +140,14 @@ const UploadStatusOverlayAssets = ({ closeOverlay }) => {
           <Button
             type="button"
             text="Select All"
-            styleType="secondary"
+            className="container secondary"
             onClick={selectAll}
           />
           {selectedAssets.length > 0 && (
             <Button
               text={`Deselect All (${totalSelectAssets})`}
               type="button"
-              styleType="primary"
+              className="container primary"
               onClick={deselectAll}
             />
           )}
@@ -155,7 +155,7 @@ const UploadStatusOverlayAssets = ({ closeOverlay }) => {
             <Button
               text={`Retry (${totalSelectAssets})`}
               type="button"
-              styleType="primary"
+              className="container primary"
               onClick={onBulkRetry}
             />
           )}
@@ -173,7 +173,11 @@ const UploadStatusOverlayAssets = ({ closeOverlay }) => {
             <div className={styles.type}>Size</div>
             <div className={`${styles["upload-error"]}`}>Upload Error</div>
             <div className={styles.button}>
-              <Button type="button" text="Retry" styleType="primary" />
+              <Button
+                type="button"
+                text="Retry"
+                className="container primary"
+              />
             </div>
           </li>
           {failUploadingAssets.map((assetItem, index) => (

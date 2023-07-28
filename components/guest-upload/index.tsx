@@ -564,7 +564,7 @@ const GuestUpload = () => {
                       <div className={styles.form_button}>
                         <Button
                           text="Save & Continue"
-                          styleType="primary"
+                          className="container primary"
                           onClick={() => {
                             setUploadEnabled(true);
                             setEdit(false);
@@ -666,7 +666,7 @@ const GuestUpload = () => {
                             <Button
                               form="contact-form"
                               text={retryListCount ? "Retry" : "Submit"}
-                              styleType="input-height-primary"
+                              className="container input-height-primary"
                               onClick={() => setUploadingStatus("done")}
                             />
                           </div>

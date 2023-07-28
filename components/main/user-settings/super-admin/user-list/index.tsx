@@ -210,7 +210,7 @@ const UserList = () => {
             text={"Load more"}
             onClick={getMore}
             type={"button"}
-            styleType={"primary"}
+            className={"container primary"}
           />
         </div>
       )}

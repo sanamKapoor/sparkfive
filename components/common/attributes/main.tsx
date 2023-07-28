@@ -2,7 +2,7 @@ import { useState } from "react";
 import styles from "./main.module.css";
 
 // Components
-import SectionButton from "../../common/buttons/section-button";
+import Button from "../buttons/button";
 import CampaignManagement from "./campaign-management";
 import CollectionManagement from "./collection-management";
 import CustomFieldsManagement from "./custom-fields-management";
@@ -15,30 +15,50 @@ const Main = () => {
   return (
     <>
       <div className={styles.buttons}>
-        <SectionButton
+        <Button
           text="Tags"
-          active={activeList === "tags"}
+          className={
+            activeList === "tags"
+              ? "section-container section-active"
+              : "section-container"
+          }
           onClick={() => setActiveList("tags")}
         />
-        <SectionButton
+        <Button
           text="Custom Fields"
-          active={activeList === "customFields"}
+          className={
+            activeList === "customFields"
+              ? "section-container section-active"
+              : "section-container"
+          }
           onClick={() => setActiveList("customFields")}
         />
-        <SectionButton
+        <Button
           text="Collections"
-          active={activeList === "collections"}
+          className={
+            activeList === "collections"
+              ? "section-container section-active"
+              : "section-container"
+          }
           onClick={() => setActiveList("collections")}
         />
-        <SectionButton
+        <Button
           text="Products"
-          active={activeList === "products"}
+          className={
+            activeList === "products"
+              ? "section-container section-active"
+              : "section-container"
+          }
           onClick={() => setActiveList("products")}
         />
 
-        <SectionButton
+        <Button
           text="Campaigns"
-          active={activeList === "campaigns"}
+          className={
+            activeList === "campaigns"
+              ? "section-container section-active"
+              : "section-container"
+          }
           onClick={() => setActiveList("campaigns")}
         />
       </div>

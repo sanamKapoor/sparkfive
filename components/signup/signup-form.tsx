@@ -5,12 +5,12 @@ import userApi from "../../server-api/user";
 import styles from "./signup-form.module.css";
 
 // Components
-import AuthButton from "../common/buttons/auth-button";
 import FormInput from "../common/inputs/form-input";
 import Input from "../common/inputs/input";
 import Select from "../common/inputs/select";
 
 import companySizeOptions from "../../resources/data/company-sizes.json";
+import Button from "../common/buttons/button";
 
 const SignupForm = ({
   inviteCode = "",
@@ -149,7 +149,7 @@ const SignupForm = ({
         </p>
       )}
       <div className={styles["button-wrapper"]}>
-        <AuthButton type={"submit"} text={"Sign Up"} />
+        <Button className="auth-container" type={"submit"} text={"Sign Up"} />
       </div>
     </form>
   );

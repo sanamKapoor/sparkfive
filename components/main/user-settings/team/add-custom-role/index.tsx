@@ -238,14 +238,14 @@ const AddCustomRole = ({ onSave, role }) => {
           <Button
             type={"button"}
             text="Save Changes"
-            styleType="primary"
+            className="container primary"
             onClick={onSubmit}
             disabled={!name}
           />
           <Button
             type={"button"}
             text="Cancel"
-            styleType="secondary"
+            className="container secondary"
             onClick={onCancel}
           />
         </div>
@@ -377,14 +377,14 @@ const AddCustomRole = ({ onSave, role }) => {
               <Button
                 type={"button"}
                 text="Save Changes"
-                styleType="primary"
+                className="container primary"
                 onClick={onSubmit}
                 disabled={!name}
               />
               <Button
                 type={"button"}
                 text="Cancel"
-                styleType="secondary"
+                className="container secondary"
                 onClick={onCancel}
               />
             </div>

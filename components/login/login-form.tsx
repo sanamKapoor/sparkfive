@@ -6,7 +6,7 @@ import userApi from "../../server-api/user";
 import styles from "./login-form.module.css";
 
 // Components
-import AuthButton from "../common/buttons/auth-button";
+import Button from "../common/buttons/button";
 import FormInput from "../common/inputs/form-input";
 import Input from "../common/inputs/input";
 
@@ -66,7 +66,7 @@ const Form = ({ teamId }) => {
       </div>
       {submitError && <p className="submit-error">{submitError}</p>}
       <div className={styles["button-wrapper"]}>
-        <AuthButton type={"submit"} text={"Log In"} />
+        <Button className="auth-container" type={"submit"} text={"Log In"} />
       </div>
     </form>
   );

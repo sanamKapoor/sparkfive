@@ -233,7 +233,7 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
                 <Button
                   text="Upload for approval"
                   type="button"
-                  styleType="primary"
+                  className="container primary"
                   onClick={() => Router.push("/main/upload-approval")}
                 />
               </div>
@@ -277,7 +277,7 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
               <Button
                 text="Go back to Superadmin"
                 type="button"
-                styleType="secondary"
+                className="container secondary"
                 onClick={getBackToAdmin}
               />
             </div>

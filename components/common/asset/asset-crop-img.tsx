@@ -4,6 +4,7 @@ import "react-image-crop/dist/ReactCrop.css";
 import { Assets } from "../../../assets";
 import { LoadingContext } from "../../../context";
 import assetApi from "../../../server-api/asset";
+import Button from "../buttons/button";
 import styles from "./asset-img.module.css";
 
 const AssetCropImg = ({
@@ -342,31 +343,30 @@ const AssetCropImg = ({
         }}
       />
 
-      <button
+      <Button
         id={"download-crop-image"}
-        className={"position-absolute visibility-hidden"}
+        className={"container position-absolute visibility-hidden"}
         type="button"
         onClick={() =>
           generateDownload(previewCanvasRef.current, completedCrop)
         }
-      >
-        Download cropped image
-      </button>
+        text=" Download cropped image"
+      />
 
-      <button
+      <Button
         id={"associate-crop-image"}
-        className={"position-absolute visibility-hidden"}
+        className={"container position-absolute visibility-hidden"}
         type="button"
         onClick={() =>
           generateToUpload(previewCanvasRef.current, completedCrop)
         }
-      >
-        Save as associated file
-      </button>
+        text="Save as associated file"
+      />
 
-      <button
+      <Button
+        text=""
         id={"crop-preview"}
-        className={"position-absolute visibility-hidden"}
+        className={"container position-absolute visibility-hidden"}
         type="button"
         onClick={() => {
           const newMode = mode === "edit" ? "preview" : "edit";
@@ -375,7 +375,7 @@ const AssetCropImg = ({
             canvasPreview(imgRef.current, previewCanvasRef.current, crop, 1, 0);
           }
         }}
-      ></button>
+      />
     </>
   );
 };

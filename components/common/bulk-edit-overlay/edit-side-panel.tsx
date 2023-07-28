@@ -649,7 +649,11 @@ const EditSidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
       )}
 
       <div className={styles["save-submodal-btn"]}>
-        <Button text={"Save Changes"} type={"button"} styleType={"primary"} />
+        <Button
+          text={"Save Changes"}
+          type={"button"}
+          className={"container primary"}
+        />
       </div>
     </div>
   );

@@ -35,11 +35,10 @@ const FolderModal = ({ modalIsOpen, closeModal, onSubmit }) => {
                 <Button
                   text="Cancel"
                   onClick={closeModal}
-                  type=""
-                  styleType="secondary"
+                  className="container secondary"
                 />
               </div>
-              <Button text="Save" type="normal-height" styleType="primary" />
+              <Button text="Save" className="container normal-height primary" />
             </div>
           </form>
         </div>

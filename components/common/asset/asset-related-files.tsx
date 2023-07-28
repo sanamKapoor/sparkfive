@@ -15,6 +15,7 @@ import ConfirmModal from "../modals/confirm-modal";
 import styles from "./asset-related-files.module.css";
 import AssetThumbail from "./asset-thumbail";
 
+import IconClickable from "../buttons/icon-clickable";
 import AssetRelatedFileUpload from "./asset-related-files-upload";
 
 const NextArrow = ({ onClick }) => (
@@ -218,13 +219,10 @@ const AssetRelatedFIles = ({
           }
         >
           {assets.length > 0 && <h3>Related Files</h3>}
-
-          <Button
-            text={<img src={AssetOps.upload} />}
-            type="button"
-            styleType="primary"
+          <IconClickable
+            src={AssetOps.upload}
             onClick={() => setUploadModalOpen(true)}
-          ></Button>
+          />
           <ReactTooltip
             id={"upload"}
             delayShow={300}
@@ -284,13 +282,13 @@ const AssetRelatedFIles = ({
               <Button
                 text="Download All Related Files"
                 type="button"
-                styleType="secondary"
+                className="container secondary"
                 onClick={downloadAllRelatedAssets}
               />
               <Button
                 text="Share All Related Files"
                 type="button"
-                styleType="primary"
+                className="container primary"
                 onClick={shareAllRelatedAssets}
               />
             </div>

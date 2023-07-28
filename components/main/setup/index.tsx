@@ -61,8 +61,7 @@ const Setup = () => {
         text="Skip Step"
         type="button"
         onClick={goNext}
-        styleType="secondary"
-        styleTypes={["round-corners", "input-height"]}
+        className="container secondary round-corners input-height"
       />
       <Button
         text="LOOKS GREAT!"
@@ -71,8 +70,7 @@ const Setup = () => {
           await saveAction();
           goNext();
         }}
-        styleType="primary"
-        styleTypes={["round-corners", "input-height"]}
+        className="container primary round-corners input-height"
       />
     </div>
   );

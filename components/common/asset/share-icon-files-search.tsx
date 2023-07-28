@@ -162,13 +162,12 @@ export default function ShareIconFilesSearch({
         </div>
         <div className={"col-75"}>
           <Button
-            className={styles["change-btn"]}
+            className={`${styles["change-btn"]} container primary`}
             text={"Change"}
             onClick={() => {
               fileBrowserRef.current.click();
             }}
             type="button"
-            styleType="primary"
           />
           <div className={styles["upload-logo-txt"]}>
             Image must be minimum 300x200px

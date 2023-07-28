@@ -111,7 +111,7 @@ const Base: React.FC<BaseModalProps> = ({
                 text="Cancel"
                 onClick={closeModal}
                 type="button"
-                styleType="secondary"
+                className="container secondary"
               />
             </div>
           )}
@@ -120,7 +120,7 @@ const Base: React.FC<BaseModalProps> = ({
               text={confirmText}
               onClick={confirmAction}
               type="button"
-              styleType="primary"
+              className="container primary"
               disabled={disabledConfirm}
             />
           </div>

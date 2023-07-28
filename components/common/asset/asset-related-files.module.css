@@ -207,3 +207,8 @@
         min-width: 35rem;
     }
 }
+
+.upload {
+    background-color: var(--color-prim-turquoise);
+    color: white;
+}

@@ -6,7 +6,7 @@ import constants from "./constants";
 import styles from "./index.module.css";
 
 // Components
-import SectionButton from "../../../common/buttons/section-button";
+import Section from "../../../common/s/section-";
 import SpinnerOverlay from "../../../common/spinners/spinner-overlay";
 import DataUsage from "../../../common/usage/data-usage";
 import PlanCard from "./plan-card";
@@ -84,25 +84,25 @@ const Plan = () => {
               usage={plan.storageUsage}
             />
           </div>
-          <div className={styles["section-buttons-type"]}>
-            <SectionButton
+          <div className={styles["section-s-type"]}>
+            <Section
               text="DAM"
               onClick={() => setActiveType("dam")}
               active={activeType === "dam"}
             />
-            <SectionButton
+            <Section
               text="Marketing Hub"
               onClick={() => setActiveType("marketing_hub")}
               active={activeType === "marketing_hub"}
             />
           </div>
-          <div className={styles["section-buttons-cycle"]}>
-            <SectionButton
+          <div className={styles["section-s-cycle"]}>
+            <Section
               text="Annual"
               onClick={() => setActiveCycle("annual")}
               active={activeCycle === "annual"}
             />
-            <SectionButton
+            <Section
               text="Monthly"
               onClick={() => setActiveCycle("monthly")}
               active={activeCycle === "monthly"}
@@ -116,11 +116,11 @@ const Plan = () => {
                 ),
                 constants.ENTERPRISE_PLAN,
               ].map((price) => {
-                let buttonText = "Upgrade";
+                let Text = "Upgrade";
                 if (price.id === plan.stripePriceId) {
-                  buttonText = "Current Plan";
+                  Text = "Current Plan";
                 } else if (price.amount < plan.stripePrice.amount) {
-                  buttonText = "Downgrade";
+                  Text = "Downgrade";
                 }
                 return (
                   <li key={price.id}>
@@ -131,8 +131,8 @@ const Plan = () => {
                           ? () => openChangeModal(price)
                           : redirectToContact
                       }
-                      buttonDisabled={price.id === plan.stripePriceId}
-                      buttonText={buttonText}
+                      Disabled={price.id === plan.stripePriceId}
+                      Text={Text}
                       activeType={activeType}
                       paymentMethodExists={paymentMethod}
                     />

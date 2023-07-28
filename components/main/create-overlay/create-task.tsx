@@ -81,7 +81,11 @@ const CreateTask = ({ endDate }) => {
           />
         </div>
         <div className={styles["button-wrapper"]}>
-          <Button type={"submit"} text={"Next"} styleType="primary" />
+          <Button
+            type={"submit"}
+            text={"Next"}
+            className="container submit primary"
+          />
         </div>
       </form>
     </div>

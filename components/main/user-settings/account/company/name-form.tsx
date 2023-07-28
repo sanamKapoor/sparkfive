@@ -41,7 +41,7 @@ const NameForm = () => {
               <Button
                 text="Save Changes"
                 type="submit"
-                styleType="input-height-primary"
+                className="container submit input-height-primary"
               />
             </div>
           </div>

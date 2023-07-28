@@ -253,21 +253,19 @@ const CollectionManagement = () => {
                   styleType={"regular-short"}
                 />
                 <Button
-                  styleTypes={["exclude-min-height"]}
+                  className={
+                    "container submit exclude-min-height edit-submit-btn primary"
+                  }
                   type={"submit"}
-                  className={styles["edit-submit-btn"]}
                   text="Save changes"
-                  styleType="primary"
                   onClick={() => {
                     saveChanges(folder.id);
                   }}
                 />
                 <Button
-                  styleTypes={["secondary"]}
+                  className={"container secondary edit-cancel-btn"}
                   type={"button"}
-                  className={styles["edit-cancel-btn"]}
                   text="Cancel"
-                  styleType="primary"
                   onClick={resetEditState}
                 />
               </div>

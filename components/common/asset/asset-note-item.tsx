@@ -68,13 +68,13 @@ const AssetNoteItem = ({ title, note, saveChanges, deleteNote }) => {
             <Button
               text={"Save changes"}
               type={"button"}
-              styleType={"primary"}
+              className={"container primary"}
               onClick={() => _saveChanges(note, noteText)}
             />
             <Button
               text={"Cancel"}
               type={"button"}
-              styleType={"secondary"}
+              className={"container secondary"}
               onClick={() => setEditMode(false)}
             />
           </div>

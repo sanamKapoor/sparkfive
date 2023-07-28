@@ -15,20 +15,18 @@ const ShareOperationButtons = ({
       <div>
         {selectedAsset > 0 && (
           <Button
-            className={styles.download}
+            className={`${styles.download} container outlined`}
             text={"Download"}
             type="button"
-            styleType="outlined"
             onClick={downloadSelectedAssets}
           />
         )}
         <Button
-          className={styles.deselectAll}
+          className={`${styles.deselectAll} container primary`}
           text={
             selectedAsset ? `Deselect All (${selectedAsset})` : `Select All`
           }
           type="button"
-          styleType="primary"
           onClick={selectAll}
         />
       </div>

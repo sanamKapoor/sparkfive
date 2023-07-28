@@ -1,13 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { LocationContext, TeamContext } from "../../../../../context";
+import FormInput from "../../../../common/inputs/form-input";
+import Input from "../../../../common/inputs/input";
+import Select from "../../../../common/inputs/select";
 import styles from "./address-form.module.css";
 
 // Components
 import Button from "../../../../common/buttons/button";
-import FormInput from "../../../../common/inputs/form-input";
-import Input from "../../../../common/inputs/input";
-import Select from "../../../../common/inputs/select";
 
 const AddressForm = () => {
   const { control, handleSubmit, errors } = useForm();
@@ -130,7 +130,7 @@ const AddressForm = () => {
               <Button
                 text="Save Changes"
                 type="submit"
-                styleType="input-height-primary"
+                className="container submit input-height-primary"
               />
             </div>
           </div>

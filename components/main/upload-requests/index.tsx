@@ -1270,7 +1270,7 @@ const UploadRequest = () => {
                       <Button
                         type="button"
                         text="Select All"
-                        styleType="secondary"
+                        className="container secondary"
                         onClick={selectAllAssets}
                       />
                     )}
@@ -1282,7 +1282,7 @@ const UploadRequest = () => {
                         <Button
                           type="button"
                           text="Deselect"
-                          styleType="secondary"
+                          className="container secondary"
                           onClick={() => {
                             selectAllAssets(false);
                           }}
@@ -1293,7 +1293,7 @@ const UploadRequest = () => {
                       <Button
                         type="button"
                         text="Submit Batch"
-                        styleType="primary"
+                        className="container primary"
                         onClick={() => {
                           if (!batchName) {
                             toastUtils.error(
@@ -1309,7 +1309,7 @@ const UploadRequest = () => {
                       <Button
                         type="button"
                         text="Reject Selected"
-                        styleType="primary"
+                        className="container primary"
                         onClick={() => {
                           setTempAssets(getSelectedAssets());
                           setShowRejectConfirm(true);
@@ -1320,7 +1320,7 @@ const UploadRequest = () => {
                       <Button
                         type="button"
                         text="Approve Selected"
-                        styleType="primary"
+                        className="container primary"
                         onClick={() => {
                           setTempAssets(getSelectedAssets());
                           setShowApproveConfirm(true);
@@ -1347,7 +1347,7 @@ const UploadRequest = () => {
                     <Button
                       type="button"
                       text={"Back"}
-                      styleType="secondary"
+                      className="container secondary"
                       onClick={onCancelView}
                     />
                   </div>
@@ -1366,7 +1366,7 @@ const UploadRequest = () => {
                       <Button
                         type="button"
                         text="Select All"
-                        styleType="secondary"
+                        className="container secondary"
                         onClick={selectAllApprovals}
                       />
                     )}
@@ -1375,7 +1375,7 @@ const UploadRequest = () => {
                         <Button
                           type="button"
                           text="Deselect"
-                          styleType="secondary"
+                          className="container secondary"
                           onClick={() => {
                             selectAllApprovals(false);
                           }}
@@ -1386,7 +1386,7 @@ const UploadRequest = () => {
                         <Button
                           type="button"
                           text="Delete"
-                          styleType="primary"
+                          className="container primary"
                           onClick={() => {
                             setTempApprovals(getSelectedApprovals());
                             setShowDeleteConfirm(true);
@@ -1401,7 +1401,7 @@ const UploadRequest = () => {
                           <Button
                             type="button"
                             text="Reject Selected"
-                            styleType="primary"
+                            className="container primary"
                             onClick={() => {
                               setTempApprovals(getSelectedApprovals());
                               setShowRejectConfirm(true);
@@ -1415,7 +1415,7 @@ const UploadRequest = () => {
                           <Button
                             type="button"
                             text="Approve Selected"
-                            styleType="primary"
+                            className="container primary"
                             onClick={() => {
                               setTempApprovals(getSelectedApprovals());
                               setShowApproveConfirm(true);
@@ -1758,10 +1758,9 @@ const UploadRequest = () => {
                         })}
 
                       <Button
-                        className={styles["add-tag-btn"]}
+                        className={`${styles["add-tag-btn"]} container secondary`}
                         type="button"
                         text="Bulk Add Tag"
-                        styleType="secondary"
                         onClick={saveBulkTag}
                       />
                     </>
@@ -2186,21 +2185,21 @@ const UploadRequest = () => {
 
             {currentViewStatus === 0 && (
               <Button
-                className={`${styles["add-tag-btn"]} m-l-20`}
+                className={`${styles["add-tag-btn"]} container m-l-20 primary`}
                 type="button"
                 text="Save changes"
-                styleType="primary"
                 onClick={onSaveSingleAsset}
               />
             )}
 
             {isAdmin() && (
-              <div className={`${styles["admin-button-wrapper"]} m-l-20`}>
+              <div
+                className={`${styles["admin-button-wrapper"]} m-l-20 secondary`}
+              >
                 <Button
-                  className={styles["add-tag-btn"]}
+                  className={`${styles["add-tag-btn"]} container`}
                   type="button"
                   text="Reject"
-                  styleType="secondary"
                   onClick={() => {
                     setTempAssets([assets[selectedAsset]?.asset.id]);
                     setShowRejectConfirm(true);
@@ -2208,10 +2207,9 @@ const UploadRequest = () => {
                 />
 
                 <Button
-                  className={styles["add-tag-btn"]}
+                  className={`${styles["add-tag-btn"]} container primary`}
                   type="button"
                   text="Approve"
-                  styleType="primary"
                   onClick={() => {
                     setTempAssets([assets[selectedAsset]?.asset.id]);
                     setShowApproveConfirm(true);
@@ -2280,30 +2278,27 @@ const UploadRequest = () => {
             {!submitted && (
               <>
                 <Button
-                  className={styles["keep-edit-btn"]}
+                  className={`${styles["keep-edit-btn"]} container secondary`}
                   type="button"
                   text="Keep editing"
-                  styleType="secondary"
                   onClick={() => {
                     setShowConfirmModal(false);
                     setMessage("");
                   }}
                 />
                 <Button
-                  className={styles["add-tag-btn"]}
+                  className={`${styles["add-tag-btn"]} primary`}
                   type="button"
                   text="Submit"
-                  styleType="primary"
                   onClick={submit}
                 />
               </>
             )}
             {submitted && (
               <Button
-                className={styles["add-tag-btn"]}
+                className={`${styles["add-tag-btn"]} container primary`}
                 type="button"
                 text="Back to Sparkfive"
-                styleType="primary"
                 onClick={() => {
                   onCancelView(true);
                 }}

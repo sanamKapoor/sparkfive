@@ -245,13 +245,13 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
               <Button
                 text={"Select All"}
                 type={"button"}
-                styleType={"secondary"}
+                className={"container secondary"}
                 onClick={selectAll}
               />
               <Button
                 text={`Deselect All (${editSelectedAssets.length})`}
                 type={"button"}
-                styleType={"primary"}
+                className={"container primary"}
                 onClick={deselectAll}
               />
             </div>
@@ -329,13 +329,13 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
             <Button
               text={"Select All"}
               type={"button"}
-              styleType={"secondary"}
+              className={"container secondary"}
               onClick={selectAll}
             />
             <Button
               text={`Deselect All (${editSelectedAssets.length})`}
               type={"button"}
-              styleType={"primary"}
+              className={"container primary"}
               onClick={deselectAll}
             />
           </div>

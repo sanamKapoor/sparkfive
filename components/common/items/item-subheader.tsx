@@ -7,7 +7,7 @@ import styles from "./item-subheader.module.css";
 // Components
 import AssetAddition from "../asset/asset-addition";
 import AssetHeaderOps from "../asset/asset-header-ops";
-import NavButton from "../buttons/nav-button";
+import Button from "../buttons/button";
 import SubHeader from "../layouts/sub-header";
 import StatusBadge from "../misc/status-badge";
 import RenameModal from "../modals/rename-modal";
@@ -39,12 +39,11 @@ const ItemSubHeader = ({
         <div className={styles["header-additional"]}>
           {status && <StatusBadge status={status} />}
           {type === "task" && status !== "completed" && (
-            <button
+            <Button
               className={styles["draft-action"]}
               onClick={() => changeStatus("completed")}
-            >
-              Mark as Complete
-            </button>
+              text="Mark as Complete"
+            />
           )}
         </div>
 
@@ -65,34 +64,40 @@ const ItemSubHeader = ({
               />
             )}
             <div className={styles.break}></div>
-            <button
+            <Button
               className={styles["draft-action"]}
               onClick={() => Router.replace("/main/overview")}
-            >
-              Cancel
-            </button>
+              text="Cancel"
+            />
             {status === "draft" && (
-              <button className={styles["draft-action"]} onClick={saveDraft}>
-                Save Draft
-              </button>
-            )}
-            {status !== "draft" && (
-              <button
+              <Button
                 className={styles["draft-action"]}
-                onClick={() => changeStatus("draft")}
-              >
-                Change to Draft
-              </button>
-            )}
-            {status === "draft" && (
-              <NavButton
-                text="Schedule"
-                onClick={() => changeStatus("scheduled")}
-                type="button"
+                onClick={saveDraft}
+                text="Save Draft"
               />
             )}
             {status !== "draft" && (
-              <NavButton text="Save" onClick={saveDraft} type="button" />
+              <Button
+                className={styles["draft-action"]}
+                onClick={() => changeStatus("draft")}
+                text="Change to Draft"
+              />
+            )}
+            {status === "draft" && (
+              <Button
+                text="Schedule"
+                onClick={() => changeStatus("scheduled")}
+                type="button"
+                className="nav-container"
+              />
+            )}
+            {status !== "draft" && (
+              <Button
+                text="Save"
+                onClick={saveDraft}
+                type="button"
+                className="nav-container"
+              />
             )}
           </>
         )}

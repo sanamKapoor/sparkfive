@@ -11,8 +11,8 @@ import styles from "./index.module.css";
 
 // Components
 import { Utilities } from "../../../../assets";
+import Button from "../../../common/buttons/button";
 import IconClickable from "../../../common/buttons/icon-clickable";
-import SectionButton from "../../../common/buttons/section-button";
 import ConfirmModal from "../../../common/modals/confirm-modal";
 import SpinnerOverlay from "../../../common/spinners/spinner-overlay";
 import AddCustomRole from "./add-custom-role";
@@ -196,18 +196,22 @@ const Team = () => {
   return (
     <div className={styles.container}>
       <div className={styles.buttons}>
-        <SectionButton
+        <Button
           text="Members"
-          active={tab === 0}
+          className={
+            tab === 0 ? "section-container section-active" : "section-container"
+          }
           onClick={() => {
             setTab(0);
             setSelectedRole(undefined);
             setSelectedMember(undefined);
           }}
         />
-        <SectionButton
+        <Button
           text="Roles"
-          active={tab === 1}
+          className={
+            tab === 1 ? "section-container section-active" : "section-container"
+          }
           onClick={() => {
             setTab(1);
             setSelectedRole(undefined);
@@ -215,9 +219,13 @@ const Team = () => {
           }}
         />
         {tab === 2 && (
-          <SectionButton
+          <Button
             text="Add Custom Role"
-            active={tab === 2}
+            className={
+              tab === 2
+                ? "section-container section-active"
+                : "section-container"
+            }
             onClick={() => setTab(2)}
           />
         )}

@@ -6,7 +6,7 @@ import cookiesUtil from "../../../utils/cookies";
 import styles from "./integrations.module.css";
 
 // Components
-import SectionButton from "../../common/buttons/section-button";
+import Button from "../buttons/button";
 import IntegrationItem from "./integration-item";
 
 const Integrations = ({ mode = "setup" }) => {
@@ -77,14 +77,22 @@ const Integrations = ({ mode = "setup" }) => {
     <>
       {mode === "settings" && (
         <div className={styles.buttons}>
-          <SectionButton
+          <Button
             text="Enabled"
-            active={activeList === "enabled"}
+            className={
+              activeList === "enabled"
+                ? "section-container section-active"
+                : "section-container"
+            }
             onClick={() => setActiveList("enabled")}
           />
-          <SectionButton
+          <Button
             text="Available"
-            active={activeList === "available"}
+            className={
+              activeList === "available"
+                ? "section-container section-active"
+                : "section-container"
+            }
             onClick={() => setActiveList("available")}
           />
         </div>

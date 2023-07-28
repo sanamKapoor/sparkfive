@@ -517,14 +517,13 @@ const ChangeThumbnail = ({
                   text="Save"
                   onClick={handleSave}
                   type="button"
-                  styleType="primary"
-                  className={`${styles.button} ${styles.mr}`}
+                  className={`${styles.button} ${styles.mr} container primary`}
                 />
                 <Button
                   text="Cancel"
                   onClick={handleCancel}
                   type="button"
-                  className={`${styles.button} ${styles.mr} ${styles.cancel}`}
+                  className={`${styles.button} ${styles.mr} ${styles.cancel} container secondary`}
                 />
               </div>
             </div>

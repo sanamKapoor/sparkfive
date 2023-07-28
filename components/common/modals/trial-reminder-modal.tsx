@@ -64,7 +64,7 @@ const TrialReminderModal = () => {
             <Button
               text="SUBSCRIBE NOW"
               type="button"
-              styleType="input-height-primary"
+              className="container input-height-primary"
             />
           </a>
         </Link>

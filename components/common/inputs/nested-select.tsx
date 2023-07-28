@@ -60,7 +60,7 @@ const NestedSelect = ({ selectList, onApplyFilters }) => {
       <Button
         text="Filters"
         type="button"
-        styleType="secondary"
+        className="container secondary"
         onClick={(e) => {
           setDropdownOpen(e, true);
         }}
@@ -88,7 +88,7 @@ const NestedSelect = ({ selectList, onApplyFilters }) => {
             <Button
               text="Apply"
               type="button"
-              styleType="primary"
+              className="container primary"
               onClick={applyFilters}
             />
           </div>
@@ -96,7 +96,7 @@ const NestedSelect = ({ selectList, onApplyFilters }) => {
             <Button
               text="Cancel"
               type="button"
-              styleType="secondary"
+              className="container secondary"
               onClick={(e) => {
                 setDropdownOpen(e, false);
               }}

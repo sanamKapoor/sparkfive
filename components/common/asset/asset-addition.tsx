@@ -17,7 +17,6 @@ import { useContext, useRef, useState } from "react";
 import SearchOverlay from "../../main/search-overlay-assets";
 import DriveSelector from "../asset/drive-selector";
 import IconClickable from "../buttons/icon-clickable";
-import SimpleButton from "../buttons/simple-button";
 import FolderModal from "../folder/folder-modal";
 import ToggleAbleAbsoluteWrapper from "../misc/toggleable-absolute-wrapper";
 
@@ -28,6 +27,7 @@ import { getFolderKeyAndNewNameByFileName } from "../../../utils/upload";
 import AssetDuplicateModal from "./asset-duplicate-modal";
 
 import { ASSET_UPLOAD_APPROVAL } from "../../../constants/permissions";
+import Button from "../buttons/button";
 
 const AssetAddition = ({
   activeFolder = "",
@@ -916,7 +916,9 @@ const AssetAddition = ({
         !folderAdd && styles["button-wrapper-displaced"]
       } asset-addition`}
     >
-      {!hasPermission([ASSET_UPLOAD_APPROVAL]) && <SimpleButton text="+" />}
+      {!hasPermission([ASSET_UPLOAD_APPROVAL]) && (
+        <Button text="+" className="container" />
+      )}
       {children}
     </div>
   );

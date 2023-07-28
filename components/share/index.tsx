@@ -20,7 +20,7 @@ import ShareItem from "./share-item";
 import ShareOperationButtons from "./share-operation-buttons";
 
 // Contexts
-import AuthButton from "../common/buttons/auth-button";
+import Button from "../common/buttons/button";
 import Input from "../common/inputs/input";
 import Spinner from "../common/spinners/spinner";
 
@@ -215,7 +215,11 @@ const AssetShare = () => {
                   type="text"
                 />
                 <div className={"m-t-15"}>
-                  <AuthButton text={"Submit"} type={"submit"} />
+                  <Button
+                    className="auth-container"
+                    text={"Submit"}
+                    type={"submit"}
+                  />
                 </div>
               </form>
             </AuthContainer>

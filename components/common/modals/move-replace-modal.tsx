@@ -114,7 +114,7 @@ const MoveReplaceModal = ({
             <Button
               type={"submit"}
               text={"Create"}
-              styleType="input-height"
+              className="container submit input-height"
               disabled={!newFolderName}
             />
           </form>

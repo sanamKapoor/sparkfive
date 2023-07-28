@@ -51,10 +51,9 @@ const Search = (props) => {
       </div>
       {!props.onlyInput && (
         <Button
-          styleTypes={["exclude-min-height"]}
+          className={"container submit exclude-min-height primary"}
           type={"submit"}
           text="Search"
-          styleType="primary"
         />
       )}
     </form>

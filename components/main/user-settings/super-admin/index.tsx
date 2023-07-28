@@ -12,7 +12,6 @@ import dateStyles from "../../../common/filter/date-uploaded.module.css";
 import { Utilities } from "../../../../assets";
 import Button from "../../../common/buttons/button";
 import IconClickable from "../../../common/buttons/icon-clickable";
-import SectionButton from "../../../common/buttons/section-button";
 import Input from "../../../common/inputs/input";
 import CompanyList from "./company-list";
 import OptionList from "./option-list";
@@ -189,14 +188,22 @@ const SuperAdmin = () => {
       {!viewCompanyDetail && (
         <>
           <div className={styles.buttons}>
-            <SectionButton
+            <Button
               text="All Users"
-              active={sortData.activeList === "allUsers"}
+              className={
+                sortData.activeList === "allUsers"
+                  ? "section-container section-active"
+                  : "section-container"
+              }
               onClick={() => setSortData(defaultValues)}
             />
-            <SectionButton
+            <Button
               text="All Accounts"
-              active={sortData.activeList === "allAccounts"}
+              className={
+                sortData.activeList === "allAccounts"
+                  ? "section-container section-active"
+                  : "section-container"
+              }
               onClick={() => setSortData(companyDefaultSortData)}
             />
           </div>
@@ -257,10 +264,9 @@ const SuperAdmin = () => {
                     )}
 
                     <Button
-                      styleTypes={["exclude-min-height"]}
+                      className={"container exclude-min-height primary"}
                       type={"button"}
                       text="Edit"
-                      styleType="primary"
                       onClick={() => {
                         setPlanDetail(viewCompanyDetail?.plan);
                         setShowPlanModal(true);
@@ -310,10 +316,9 @@ const SuperAdmin = () => {
 
             <div className={"col-20 align-self-flex-end"}>
               <Button
-                styleTypes={["exclude-min-height"]}
+                className={"container exclude-min-height primary"}
                 type={"button"}
                 text="Save"
-                styleType="primary"
                 onClick={() =>
                   updateTeam({
                     vanity,
@@ -339,10 +344,9 @@ const SuperAdmin = () => {
 
             <div className={"col-20 align-self-flex-end"}>
               <Button
-                styleTypes={["exclude-min-height"]}
+                className={"container exclude-min-height primary"}
                 type={"button"}
                 text="Save"
-                styleType="primary"
                 onClick={() => updateTeam({ cdnAccess })}
               />
             </div>
@@ -364,10 +368,9 @@ const SuperAdmin = () => {
 
             <div className={"col-20 align-self-flex-end"}>
               <Button
-                styleTypes={["exclude-min-height"]}
+                className={"container exclude-min-height primary"}
                 type={"button"}
                 text="Save"
-                styleType="primary"
                 onClick={() => updateTeam({ advancedCollectionShareLink })}
               />
             </div>
@@ -387,10 +390,9 @@ const SuperAdmin = () => {
 
             <div className={"col-20 align-self-flex-end"}>
               <Button
-                styleTypes={["exclude-min-height"]}
+                className={"container exclude-min-height primary"}
                 type={"button"}
                 text="Save"
-                styleType="primary"
                 onClick={() => updateTeam({ transcript })}
               />
             </div>
@@ -472,20 +474,17 @@ const SuperAdmin = () => {
 
           <div className={"d-flex justify--flex-end"}>
             <Button
-              styleTypes={["exclude-min-height"]}
+              className={"container exclude-min-height secondary"}
               type={"button"}
               text="Cancel"
-              styleType="secondary"
               onClick={() => {
                 setShowPlanModal(false);
               }}
             />
             <Button
-              className={"m-l-10"}
-              styleTypes={["exclude-min-height"]}
+              className={"container m-l-10 exclude-min-height primary"}
               type={"button"}
               text="Save Changes"
-              styleType="primary"
               onClick={() => {
                 updatePlan();
               }}

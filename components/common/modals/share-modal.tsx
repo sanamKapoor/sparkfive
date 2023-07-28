@@ -362,13 +362,12 @@ const ShareModal = ({
               styleType={"regular-short"}
             />
             <Button
-              className="m-r-15"
+              className="container m-r-15 primary"
               text={"Save"}
               onClick={() => {
                 saveChanges("name");
               }}
               type="button"
-              styleType="primary"
               disabled={name === ""}
             />
             <span className={styles["helper-text"]}>(Required)</span>
@@ -513,7 +512,7 @@ const ShareModal = ({
                 text={"Save"}
                 onClick={saveChanges}
                 type="button"
-                styleType="primary"
+                className="container primary"
                 disabled={recipients === ""}
               />
             </div>

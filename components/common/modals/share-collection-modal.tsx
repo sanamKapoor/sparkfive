@@ -418,7 +418,7 @@ const ShareCollectionModal = ({
                 saveChanges("name");
               }}
               type="button"
-              styleType="primary"
+              className="container primary"
               disabled={name === ""}
             />
             <span className={"m-l-10"}>(Required)</span>
@@ -572,7 +572,7 @@ const ShareCollectionModal = ({
                   saveChanges();
                 }}
                 type="button"
-                styleType="primary"
+                className="container primary"
                 disabled={!recipients || !password}
               />
             </div>

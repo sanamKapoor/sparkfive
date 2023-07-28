@@ -142,20 +142,16 @@ const RequestForm = ({
 
           <div className={styles["button-list"]}>
             <Button
-              className={styles.button}
-              styleTypes={["exclude-min-height"]}
+              className={`${styles.button} container exclude-min-height primary`}
               type={"button"}
               text="Approve"
-              styleType="primary"
               onClick={onApprove}
             />
             <Button
-              className={styles.button}
+              className={`${styles.button} container exclude-min-height secondary`}
               text={"Reject"}
               type={"button"}
-              styleType={"secondary"}
               onClick={onReject}
-              styleTypes={["exclude-min-height"]}
             />
           </div>
         </>

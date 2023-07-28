@@ -63,7 +63,7 @@ const EditItem = ({
             </>
             <div className={styles["image-button-wrapper"]}>
               <Button
-                styleType={"primary"}
+                className={"container primary"}
                 text={"View Details"}
                 type={"button"}
                 onClick={() => {

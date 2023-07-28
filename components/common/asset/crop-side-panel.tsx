@@ -494,26 +494,23 @@ const CropSidePanel = ({
       >
         {mode === "crop" ? (
           <Button
-            className={"m-r-15"}
+            className={"container m-r-15 secondary"}
             text={previewActive ? "Close Preview" : "View Preview"}
             type="button"
-            styleType="secondary"
             onClick={() => togglePreview()}
           />
         ) : (
           <Button
-            className={"m-r-10"}
+            className={"container m-r-10 secondary"}
             text="Reset Changes"
             type="button"
-            styleType="secondary"
             onClick={() => onResetImageSize()}
           />
         )}
         <Button
-          className={"m-r-10"}
+          className={"container m-r-10 primary"}
           text={"Download Edited"}
           type={"button"}
-          styleType={"primary"}
           onClick={() => {
             if (mode === "crop") {
               document.getElementById("download-crop-image").click();
@@ -525,10 +522,9 @@ const CropSidePanel = ({
         />
         {!isShare && (
           <Button
-            className={"m-t-40"}
+            className={"container m-t-40 primary-navy"}
             text="Save as Related File"
             type="button"
-            styleType="primary-navy"
             onClick={() => {
               let name =
                 asset.name.substring(0, asset.name.lastIndexOf(".")) ||

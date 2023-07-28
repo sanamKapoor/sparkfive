@@ -23,8 +23,7 @@ const IntegrationItem = ({
         <Button
           text={"Connected"}
           type={"button"}
-          styleType={"secondary"}
-          styleTypes={["input-height"]}
+          className={"container secondary input-height"}
           disabled={true}
         />
       ) : (

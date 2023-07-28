@@ -1,13 +1,16 @@
 import { capitalCase } from "change-case";
 import simplebtnstyles from "./auth-button.module.css";
+import Button from "./button";
 import styles from "./provider-auth-button.module.css";
 
 const ProviderAuthButton = ({ provider, onClick, icon }) => (
   <>
     {provider === "sso" ? (
-      <button className={simplebtnstyles.container} onClick={onClick}>
-        {`${capitalCase(provider)}`}
-      </button>
+      <Button
+        className={simplebtnstyles.container}
+        onClick={onClick}
+        text={`${capitalCase(provider)}`}
+      />
     ) : (
       <button
         className={`${styles.button} ${styles[provider]}`}

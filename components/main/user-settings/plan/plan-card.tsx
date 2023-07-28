@@ -31,7 +31,7 @@ const PlanCard = ({
       type="button"
       disabled={buttonDisabled}
       onClick={onChange}
-      styleType="primary"
+      className="container primary"
     />
   );
 

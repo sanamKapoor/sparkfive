@@ -3,7 +3,7 @@ import { GeneralImg } from "../../assets";
 import styles from "./password-overlay.module.css";
 
 // Components
-import AuthButton from "../common/buttons/auth-button";
+import Button from "../common/buttons/button";
 import AuthContainer from "../common/containers/auth-container";
 import Input from "../common/inputs/input";
 
@@ -55,7 +55,11 @@ const CreateOverlay: React.FC<CreateOverlayProps> = ({
               />
             )}
 
-            <AuthButton text={"Submit"} type={"submit"} />
+            <Button
+              className="auth-container"
+              text={"Submit"}
+              type={"submit"}
+            />
           </form>
         </AuthContainer>
       </div>

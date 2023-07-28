@@ -73,9 +73,8 @@ const AssetDuplicateItem = ({ file, onFileNameUpdate }) => {
               onChange={(e) => setFileName(e.target.value)}
             />
             <Button
-              styleTypes={["exclude-min-height"]}
+              className={"container exclude-min-height primary"}
               text="Set"
-              styleType="primary"
               onClick={() => setAction("change", true)}
             />
             <span onClick={() => setAction("edit", false)}>Cancel</span>

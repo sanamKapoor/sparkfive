@@ -8,8 +8,8 @@ import { ASSET_ACCESS } from "../../../constants/permissions";
 
 // Components
 import ItemAssets from "../asset/item-assets";
+import Button from "../buttons/button";
 import IconClickable from "../buttons/icon-clickable";
-import SectionButton from "../buttons/section-button";
 import Dropdown from "../inputs/dropdown";
 import ToggleableAbsoluteWrapper from "../misc/toggleable-absolute-wrapper";
 import ConfirmModal from "../modals/confirm-modal";
@@ -49,15 +49,23 @@ const ItemSublayout = ({
       <div className={styles["main-component"]}>
         <div className={styles.heading}>
           <div className={styles[layout]}>
-            <SectionButton
+            <Button
               text="Details"
-              active={activeMain === "details"}
+              className={
+                activeMain === "details"
+                  ? "section-container section-active"
+                  : "section-container"
+              }
               onClick={() => setActiveMain("details")}
             />
             {hasAssets && hasPermission([ASSET_ACCESS]) && (
-              <SectionButton
+              <Button
                 text="Assets"
-                active={activeMain === "assets"}
+                className={
+                  activeMain === "assets"
+                    ? "section-container section-active"
+                    : "section-container"
+                }
                 onClick={() => setActiveMain("assets")}
               />
             )}

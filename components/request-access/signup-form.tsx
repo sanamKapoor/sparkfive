@@ -7,12 +7,12 @@ import userApi from "../../server-api/user";
 import styles from "./signup-form.module.css";
 
 // Components
-import AuthButton from "../common/buttons/auth-button";
 import FormInput from "../common/inputs/form-input";
 import Input from "../common/inputs/input";
 import TextArea from "../common/inputs/text-area";
 
 import toastUtils from "../../utils/toast";
+import Button from "../common/buttons/button";
 
 const SignupForm = ({
   teamId,
@@ -199,7 +199,7 @@ const SignupForm = ({
 
       {submitError && <p className="submit-error">{submitError}</p>}
       <div className={styles["button-wrapper"]}>
-        <AuthButton type={"submit"} text={"Sign Up"} />
+        <Button className="auth-container" type={"submit"} text={"Sign Up"} />
       </div>
     </form>
   );

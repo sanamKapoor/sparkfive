@@ -50,7 +50,7 @@ const ConfirmModal = ({
             text="Cancel"
             onClick={closeModal}
             type="button"
-            styleType="secondary"
+            className="container secondary"
           />
         </div>
         <div>
@@ -60,7 +60,7 @@ const ConfirmModal = ({
               confirmAction(renameInput);
             }}
             type="button"
-            styleType="primary"
+            className="container primary"
           />
         </div>
       </div>

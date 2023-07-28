@@ -41,7 +41,7 @@ const PaymentMethod = ({ paymentMethod, setPaymentMethod }) => {
               text="Update Card"
               type="button"
               onClick={() => setModalActive(true)}
-              styleType="primary"
+              className="container primary"
             />
           </div>
         </div>

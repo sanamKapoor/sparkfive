@@ -254,21 +254,19 @@ const CampaignManagement = () => {
                   styleType={"regular-short"}
                 />
                 <Button
-                  styleTypes={["exclude-min-height"]}
-                  type={"submit"}
-                  className={styles["edit-submit-btn"]}
+                  className={
+                    "container submit exclude-min-height edit-submit-btn primary"
+                  }
+                  type="submit"
                   text="Save changes"
-                  styleType="primary"
                   onClick={() => {
                     saveChanges(campaign.id);
                   }}
                 />
                 <Button
-                  styleTypes={["secondary"]}
+                  className={"container secondary edit-cancel-btn primary"}
                   type={"button"}
-                  className={styles["edit-cancel-btn"]}
                   text="Cancel"
-                  styleType="primary"
                   onClick={resetEditState}
                 />
               </div>

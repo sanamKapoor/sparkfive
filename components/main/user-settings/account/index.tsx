@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styles from "./index.module.css";
 
-import SectionButton from "../../../common/buttons/section-button";
+import Button from "../../../common/buttons/button";
 import Billing from "./billing";
 import Company from "./company";
 import Profile from "./profile";
@@ -13,24 +13,32 @@ const Account = () => {
   return (
     <div className={styles.container}>
       <div className={styles.buttons}>
-        <SectionButton
+        <Button
           text="Profile"
-          active={tab === 0}
+          className={
+            tab === 0 ? "section-container section-active" : "section-container"
+          }
           onClick={() => setTab(0)}
         />
-        <SectionButton
+        <Button
           text="Billing"
-          active={tab === 1}
+          className={
+            tab === 1 ? "section-container section-active" : "section-container"
+          }
           onClick={() => setTab(1)}
         />
-        <SectionButton
+        <Button
           text="Company"
-          active={tab === 2}
+          className={
+            tab === 2 ? "section-container section-active" : "section-container"
+          }
           onClick={() => setTab(2)}
         />
-        <SectionButton
+        <Button
           text="Security"
-          active={tab === 3}
+          className={
+            tab === 3 ? "section-container section-active" : "section-container"
+          }
           onClick={() => setTab(3)}
         />
       </div>

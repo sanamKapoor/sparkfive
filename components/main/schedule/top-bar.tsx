@@ -11,7 +11,6 @@ import { CALENDAR_PRINT } from "../../../constants/permissions";
 // Components
 import Button from "../../common/buttons/button";
 import IconClickable from "../../common/buttons/icon-clickable";
-import SectionButton from "../../common/buttons/section-button";
 import FiltersSelect from "../../common/inputs/filters-select";
 
 const typeOptions = ["campaigns", "tasks", ...projectTypes];
@@ -65,27 +64,38 @@ const TopBar = ({
             onClick={() => window.print()}
           />
         )}
-        <SectionButton
+        <Button
           text="List"
-          active={activeView === "list"}
+          className={
+            activeView === "list"
+              ? "section-container section-active"
+              : "section-container"
+          }
           onClick={() => setActiveView("list")}
         />
-        <SectionButton
+        <Button
           text="Week"
-          active={activeView === "week"}
+          className={
+            activeView === "week"
+              ? "section-container section-active"
+              : "section-container"
+          }
           onClick={() => setActiveView("week")}
         />
-        <SectionButton
+        <Button
           text="Month"
-          active={activeView === "month"}
+          className={
+            activeView === "month"
+              ? "section-container section-active"
+              : "section-container"
+          }
           onClick={() => setActiveView("month")}
         />
         <Button
           text="Today"
           type="button"
-          styleType="secondary"
+          className={`${styles["last-button"]} container secondary`}
           onClick={() => setCurrentDate(new Date())}
-          styleTypes={[styles["last-button"]]}
         />
       </div>
 

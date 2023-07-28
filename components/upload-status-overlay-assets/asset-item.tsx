@@ -38,10 +38,11 @@ const AssetItem = ({ assetItem, toggleSelected, onRetry }) => {
       <div>
         <Button
           onClick={onRetry}
-          className={clsx({ [styles["hidden"]]: !error })}
+          className={`${clsx({
+            [styles["hidden"]]: !error,
+          })} container primary`}
           type="button"
           text="Retry"
-          styleType="primary"
         />
       </div>
     </li>

@@ -157,7 +157,7 @@ const DeletedAssets = ({
         <Button
           text="Select All"
           type="button"
-          styleType="secondary"
+          className="container secondary"
           onClick={selectAll}
         />
         <div className={styles.select}>
@@ -208,7 +208,7 @@ const DeletedAssets = ({
                   <Button
                     text="Load More"
                     type="button"
-                    styleType="primary"
+                    className="container primary"
                     onClick={loadMore}
                   />
                 </div>

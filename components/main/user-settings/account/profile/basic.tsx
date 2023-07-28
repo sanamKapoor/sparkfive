@@ -109,7 +109,7 @@ const Basic: React.FC<BasicProps> = ({ name, email, provider }) => {
           <Button
             text="Save Changes"
             type="submit"
-            styleType="input-height-primary"
+            className="container submit input-height-primary"
           />
         </div>
       </form>
@@ -134,7 +134,7 @@ const Basic: React.FC<BasicProps> = ({ name, email, provider }) => {
           <Button
             text="Save Changes"
             type="submit"
-            styleType="input-height-primary"
+            className="container submit input-height-primary"
           />
         </div>
       </form>
@@ -175,7 +175,7 @@ const Basic: React.FC<BasicProps> = ({ name, email, provider }) => {
             <Button
               text="Change Password"
               type="submit"
-              styleType="input-height-primary"
+              className="container submit input-height-primary"
             />
           </div>
         </form>

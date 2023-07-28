@@ -151,7 +151,7 @@ const ShareFolderModal = ({ modalIsOpen, closeModal, shareAssets, folder }) => {
               text="Copy Link"
               type="button"
               onClick={copyShareLink}
-              styleType={"secondary"}
+              className={"container secondary"}
             />
           </>
         )}
@@ -215,7 +215,7 @@ const ShareFolderModal = ({ modalIsOpen, closeModal, shareAssets, folder }) => {
                 text="Send"
                 type="button"
                 onClick={() => saveChanges(true)}
-                styleType={"secondary"}
+                className={"container secondary"}
               />
             </div>
           </>

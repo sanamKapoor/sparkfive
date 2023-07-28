@@ -1,4 +1,5 @@
 import redDeleteIconSrc from "../../../assets/Icons/Utilities/Delete/icn-utilities-delete.svg";
+import Button from "../buttons/button";
 import IconClickable from "../buttons/icon-clickable";
 import classes from "./change-collection-thumbnail-row.module.css";
 
@@ -37,13 +38,12 @@ const ChangeCollectionThumbnailRow = ({
           <p>or</p>
         </div>
       </div>
-      <button
+      <Button
         type="button"
         onClick={onChangeThisOnly}
         className={classes["change-this-btn"]}
-      >
-        {changeThisImgText}
-      </button>
+        text={changeThisImgText}
+      />
       <label
         onChange={onUpload}
         htmlFor={`upload-file-${index}`}

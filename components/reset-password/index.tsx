@@ -6,7 +6,7 @@ import urlUtils from "../../utils/url";
 import styles from "./index.module.css";
 
 // Container
-import AuthButton from "../common/buttons/auth-button";
+import Button from "../common/buttons/button";
 import AuthContainer from "../common/containers/auth-container";
 import FormInput from "../common/inputs/form-input";
 import Input from "../common/inputs/input";
@@ -72,7 +72,11 @@ const ForgotPassword = () => {
             </div>
             {submitError && <p className="submit-error">{submitError}</p>}
             <div className={styles["button-wrapper"]}>
-              <AuthButton type={"submit"} text={"Reset Password"} />
+              <Button
+                className="auth-container"
+                type={"submit"}
+                text={"Reset Password"}
+              />
             </div>
           </form>
         </AuthContainer>

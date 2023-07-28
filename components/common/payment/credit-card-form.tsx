@@ -13,7 +13,7 @@ import {
 import { useForm } from "react-hook-form";
 
 // Components
-import AuthButton from "../buttons/auth-button";
+import Button from "../buttons/button";
 import FormInput from "../inputs/form-input";
 import Input from "../inputs/input";
 import Select from "../inputs/select";
@@ -193,9 +193,10 @@ const CreditCardForm = ({
         </div>
         {submitError && <p className="submit-error">{submitError}</p>}
         <div className={styles.subscribe}>
-          <AuthButton
+          <Button
             text={buttonText}
             type="submit"
+            className="auth-container"
             disabled={buttonDisabled}
           />
         </div>

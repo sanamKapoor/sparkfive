@@ -218,7 +218,11 @@ const CreateCampaign = () => {
           removeProject={removeProject}
         />
         <div className={styles["button-wrapper"]}>
-          <Button type={"submit"} text={"Save changes"} styleType="primary" />
+          <Button
+            type={"submit"}
+            text={"Save changes"}
+            className="container submit primary"
+          />
         </div>
       </form>
     </div>

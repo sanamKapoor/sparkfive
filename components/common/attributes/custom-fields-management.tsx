@@ -331,10 +331,9 @@ const CustomFieldsManagement = () => {
               className={`${styles["col-15"]} ${styles["col-md-100"]} ${styles["button-row"]} ${styles["p-l-30"]}`}
             >
               <Button
-                styleTypes={["exclude-min-height"]}
+                className={"container exclude-min-height primary"}
                 type={"button"}
                 text="Save"
-                styleType="primary"
                 onClick={() => {
                   saveChanges(index);
                 }}

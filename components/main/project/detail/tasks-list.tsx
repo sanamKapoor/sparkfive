@@ -272,14 +272,14 @@ const TasksList = ({
             <Button
               text="Add Task"
               type="button"
-              styleType="primary"
+              className="container primary"
               onClick={sendCreateTask}
               disabled={!name}
             />
             <Button
               text="Cancel"
               type="button"
-              styleType="secondary"
+              className="container secondary"
               onClick={() => setInputVisible(false)}
             />
           </div>

@@ -163,10 +163,9 @@ const CustomFileSizes = () => {
 
           <div className={styles.button_group}>
             <Button
-              styleTypes={["exclude-min-height"]}
+              className={"container exclude-min-height primary"}
               type={"button"}
               text="Save"
-              styleType="primary"
               onClick={() => {
                 saveChanges(index);
               }}

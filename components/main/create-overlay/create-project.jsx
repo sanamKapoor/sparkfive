@@ -105,7 +105,11 @@ const CreateProject = ({ publishDate }) => {
               styleType="regular"
             />
           </div>
-          <Button type={"submit"} text={"Next"} styleType="primary" />
+          <Button
+            type={"submit"}
+            text={"Next"}
+            className="container submit primary"
+          />
         </div>
       </form>
     </div>

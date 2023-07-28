@@ -219,7 +219,7 @@ const FolderGridItem = ({
             ))}
           <div className={styles["image-button-wrapper"]}>
             <Button
-              styleType={"primary"}
+              className="container primary"
               text={"View Collection"}
               type={"button"}
               onClick={viewFolder}

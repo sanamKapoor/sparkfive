@@ -90,13 +90,13 @@ const PhotoUpload = ({
             <Button
               text="Cancel"
               type="button"
-              styleType="secondary"
+              className="container secondary"
               onClick={cancelPreview}
             />
             <Button
               text="Save Changes"
               type="button"
-              styleType="primary"
+              className="container primary"
               onClick={saveChanges}
             />
           </>

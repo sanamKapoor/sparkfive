@@ -34,7 +34,7 @@ const ConfirmModal = ({
           text="Cancel"
           onClick={closeModal}
           type="button"
-          styleType="secondary"
+          className="container secondary"
         />
       </div>
       <div>
@@ -42,7 +42,7 @@ const ConfirmModal = ({
           text={confirmText}
           onClick={confirmAction}
           type="button"
-          styleType="primary"
+          className="container primary"
         />
       </div>
     </div>

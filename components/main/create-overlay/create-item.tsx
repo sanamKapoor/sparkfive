@@ -12,7 +12,7 @@ const CreateItem = ({ icon, type, description, onClick }) => (
     <Button
       text={`Create ${capitalCase(type)}`}
       type="button"
-      styleType="primary"
+      className="container primary"
       onClick={onClick}
     />
   </div>

@@ -76,7 +76,7 @@ const ListItem = ({ item }) => {
         <Button
           text="Edit"
           type="button"
-          styleType="primary"
+          className="container primary"
           onClick={() => Router.replace(`/main/${item.itemType}s/${item.id}`)}
         />
         {item.dropdownOpts.length > 0 && (

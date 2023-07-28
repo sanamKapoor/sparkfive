@@ -3,7 +3,7 @@ import styles from "./main.module.css";
 
 // Components
 import { UserContext } from "../../../context";
-import SectionButton from "../../common/buttons/section-button";
+import Button from "../../common/buttons/button";
 import CustomFileSizes from "./custom-file-size";
 import SizeSaPresets from "./size-sa-presets";
 
@@ -22,46 +22,78 @@ const Main = () => {
   return (
     <>
       <div className={styles.buttons}>
-        <SectionButton
+        <Button
           text="Advanced Options"
-          active={activeList === "advancedOptions"}
+          className={
+            activeList === "advancedOptions"
+              ? "section-container section-active"
+              : "section-container"
+          }
           onClick={() => setActiveList("advancedOptions")}
         />
         {hasPermission([SUPERADMIN_ACCESS]) && (
-          <SectionButton
+          <Button
             text="Size SA Presets"
-            active={activeList === "sizeSaPresets"}
+            className={
+              activeList === "sizeSaPresets"
+                ? "section-container section-active"
+                : "section-container"
+            }
             onClick={() => setActiveList("sizeSaPresets")}
           />
         )}
-        <SectionButton
+        <Button
           text="Custom Views"
-          active={activeList === "customViews"}
+          className={
+            activeList === "customViews"
+              ? "section-container section-active"
+              : "section-container"
+          }
           onClick={() => setActiveList("customViews")}
         />
-        <SectionButton
+        <Button
           text="Account Actions"
-          active={activeList === "accountActions"}
+          className={
+            activeList === "accountActions"
+              ? "section-container section-active"
+              : "section-container"
+          }
           onClick={() => setActiveList("accountActions")}
         />
-        <SectionButton
+        <Button
           text="Automations"
-          active={activeList === "automations"}
+          className={
+            activeList === "automations"
+              ? "section-container section-active"
+              : "section-container"
+          }
           onClick={() => setActiveList("automations")}
         />
-        <SectionButton
+        <Button
           text="Custom File Sizes"
-          active={activeList === "customFileSizes"}
+          className={
+            activeList === "customFileSizes"
+              ? "section-container section-active"
+              : "section-container"
+          }
           onClick={() => setActiveList("customFileSizes")}
         />
-        <SectionButton
+        <Button
           text="Guest Upload Links"
-          active={activeList === "guestUpload"}
+          className={
+            activeList === "guestUpload"
+              ? "section-container section-active"
+              : "section-container"
+          }
           onClick={() => setActiveList("guestUpload")}
         />
-        <SectionButton
+        <Button
           text="Deleted Assets"
-          active={activeList === "deletedAssets"}
+          className={
+            activeList === "deletedAssets"
+              ? "section-container section-active"
+              : "section-container"
+          }
           onClick={() => setActiveList("deletedAssets")}
         />
       </div>

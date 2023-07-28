@@ -113,7 +113,7 @@ const AssetNotes = ({ asset, notes, applyCrud }) => {
           <Button
             text={"Save"}
             type={"button"}
-            styleType={"primary"}
+            className={"container primary"}
             disabled={!noteText}
             onClick={createNote}
           />
