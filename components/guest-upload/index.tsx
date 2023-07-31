@@ -1,5 +1,4 @@
 // External imports
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useRef, useState } from "react";
 import styles from "./index.module.css";
@@ -8,13 +7,9 @@ import styles from "./index.module.css";
 import { GuestUploadContext, SocketContext } from "../../context";
 
 // Components
-import { Assets, Utilities } from "../../assets";
-import Button from "../common/buttons/button";
+import { Assets } from "../../assets";
 import SpinnerOverlay from "../common/spinners/spinner-overlay";
 import PasswordOverlay from "../share-folder/password-overlay";
-import ContactForm from "./contact-form";
-import UploadItem from "./upload-item";
-import AssetUploadProcess from "./upload-process";
 
 // Utils
 import { validation } from "../../constants/file-validation";
@@ -28,8 +23,10 @@ import {
 // Apis
 import uploadLinkApi from "../../server-api/guest-upload";
 import shareUploadLinkApi from "../../server-api/share-upload-link";
-import ButtonIcon from "../common/buttons/button-icon";
-import DropdownOptions from "./Dropdown/DropdownOptions";
+import { UploadingStatus } from "../../types/common/upload";
+import GuestDetails from "./guest-details";
+import GuestInfoForm from "./guest-info-form";
+import GuestUploadSection from "./guest-upload-section";
 
 const GuestUpload = () => {
   const { socket, connected, connectSocket } = useContext(SocketContext);
@@ -53,12 +50,13 @@ const GuestUpload = () => {
   // For processing uploading
   // Upload process
   const [uploadingAssets, setUploadingAssets] = useState([]);
-  const [uploadingStatus, setUploadingStatus] = useState("none"); // Allowed value: "none", "uploading", "done"
+  const [uploadingStatus, setUploadingStatus] =
+    useState<UploadingStatus>("none");
   const [uploadingPercent, setUploadingPercent] = useState(0); // Percent of uploading process: 0 - 100
   const [uploadingFile, setUploadingFile] = useState<number>(); // Current uploading file index
   const [uploadingFileName, setUploadingFileName] = useState<string>(); // Current uploading file name, import feature need this
-  const [uploadRemainingTime, setUploadRemainingTime] = useState<string>(""); // Remaining time
-  const [uploadDetailOverlay, setUploadDetailOverlay] = useState(false); // Detail overlay
+  const [uploadRemainingTime, setUploadRemainingTime] = useState<string>("");
+  const [uploadDetailOverlay, setUploadDetailOverlay] = useState(false);
   const [folderGroups, setFolderGroups] = useState({}); // This groups contain all folder key which is need to identity which folder file need to be saved to
   const [retryListCount, setRetryListCount] = useState(0);
 
@@ -89,7 +87,7 @@ const GuestUpload = () => {
   };
 
   // Show upload process toast
-  const showUploadProcess = (value: string, fileIndex?: number) => {
+  const showUploadProcess = (value: UploadingStatus, fileIndex?: number) => {
     // Set uploading file index
     if (fileIndex !== undefined) {
       setUploadingFile(fileIndex);
@@ -532,150 +530,34 @@ const GuestUpload = () => {
                     </>
                   )}
 
-                  {uploadEnabled && !edit && (
-                    <div className={styles.guest_info}>
-                      <div className={styles.guest_info_row}>
-                        <div className={styles.user}>John Smith</div>
-                        <div
-                          className={styles.edit}
-                          onClick={() => setEdit(true)}
-                        >
-                          Edit
-                        </div>
-                      </div>
-                      <div className={styles.email}>testJohn@gmail.com</div>
-                      <div className={styles.message}>
-                        This is my message to the ChampionX team. Please let me
-                        know if you get this. I will be standing by waiting for
-                        your response. These file are submitted by me and me
-                        only
-                      </div>
-                    </div>
-                  )}
+                  {uploadEnabled && !edit && <GuestDetails setEdit={setEdit} />}
 
                   {(!uploadEnabled || edit) && (
-                    <div className={styles.form}>
-                      <ContactForm
-                        id={"contact-form"}
-                        onSubmit={saveChanges}
-                        disabled={uploadingStatus === "uploading"}
-                        teamName={teamName}
-                      />
-                      <div className={styles.form_button}>
-                        <Button
-                          text="Save & Continue"
-                          className="container primary"
-                          onClick={() => {
-                            setUploadEnabled(true);
-                            setEdit(false);
-                          }}
-                        />
-                      </div>
-                    </div>
+                    <GuestInfoForm
+                      onSubmit={saveChanges}
+                      teamName={teamName}
+                      uploadingStatus={uploadingStatus}
+                      setUploadEnabled={setUploadEnabled}
+                      setEdit={setEdit}
+                    />
                   )}
-
-                  <div className={styles.upload_area}>
-                    <div className={styles.upload_title}>Upload Files</div>
-                    {uploadEnabled && (
-                      <>
-                        <div className={styles.subtitle}>
-                          Please upload your files or folders that you would
-                          like to submit to us. This is more of text. Please
-                          upload your files or folders that you would like to
-                          submit to us
-                        </div>
-
-                        {uploading ? (
-                          <div>
-                            <div className={styles.cancel}>Cancel</div>
-                            <div className={styles["file-list-wrapper"]}>
-                              <div className={styles["file-list-header"]}>
-                                <div className={styles.files_count}>
-                                  {files.length} Files Ready to Submit
-                                </div>
-                                <ButtonIcon
-                                  icon={Utilities.addAlt}
-                                  text="UPLOAD"
-                                />
-                              </div>
-                              <div className={styles["file-list"]}>
-                                {files.map((file, index) => {
-                                  return (
-                                    <UploadItem
-                                      name={file.asset.name}
-                                      key={index}
-                                      status={file.status}
-                                      error={file.error}
-                                    />
-                                  );
-                                })}
-                              </div>
-                            </div>
-                          </div>
-                        ) : (
-                          <>
-                            <div
-                              className={`row justify-center ${styles["row"]}`}
-                            >
-                              <DropdownOptions
-                                dropdownOptions={dropdownOptions}
-                              />
-                            </div>
-
-                            <div className={styles.option_helpertext}>
-                              * 1GB min & 200 files min at once
-                            </div>
-                          </>
-                        )}
-                      </>
-                    )}
-
-                    {uploading && (
-                      <>
-                        {uploadingStatus === "uploading" && (
-                          <AssetUploadProcess
-                            uploadingAssets={uploadingAssets}
-                            uploadingStatus={uploadingStatus}
-                            showUploadProcess={showUploadProcess}
-                            uploadingFile={uploadingFile}
-                            uploadingPercent={uploadingPercent}
-                            setUploadDetailOverlay={setUploadDetailOverlay}
-                            uploadingFileName={uploadingFileName}
-                            retryListCount={retryListCount}
-                          />
-                        )}
-
-                        {uploadingStatus === "done" && retryListCount > 0 && (
-                          <div
-                            className={`row justify-center text-align-center m-b-10`}
-                          >
-                            {retryListCount} assets uploaded fail
-                          </div>
-                        )}
-
-                        {uploadingStatus === "done" && retryListCount > 0 && (
-                          <div
-                            className={`row justify-center text-align-center m-b-25`}
-                          >
-                            Press Retry button to try again
-                          </div>
-                        )}
-
-                        {uploadingStatus !== "uploading" && (
-                          <div className={styles.form_button}>
-                            <Button
-                              form="contact-form"
-                              text={retryListCount ? "Retry" : "Submit"}
-                              className="container input-height-primary"
-                              onClick={() => setUploadingStatus("done")}
-                            />
-                          </div>
-                        )}
-                      </>
-                    )}
-                  </div>
                 </>
 
+                <GuestUploadSection
+                  uploadEnabled={uploadEnabled}
+                  uploading={uploading}
+                  uploadingStatus={uploadingStatus}
+                  files={files}
+                  dropDownOptions={dropdownOptions}
+                  retryListCount={retryListCount}
+                  uploadingAssets={uploadingAssets}
+                  showUploadProcess={showUploadProcess}
+                  uploadingFile={uploadingFile}
+                  uploadingPercent={uploadingPercent}
+                  setUploadDetailOverlay={setUploadDetailOverlay}
+                  uploadingFileName={uploadingFileName}
+                  setUploadingStatus={setUploadingStatus}
+                />
                 {activePasswordOverlay && (
                   <PasswordOverlay
                     onPasswordSubmit={submitPassword}
@@ -688,22 +570,6 @@ const GuestUpload = () => {
         )}
       </div>
       {loading && <SpinnerOverlay />}
-
-      <div
-        className={`row justify-center ${styles["footer"]} ${styles["row"]}`}
-      >
-        <p className={"font-weight-600 m-b-0 font-14"}>Sparkfive</p>
-        <p className={"m-b-0 font-16"}>
-          Store, organize & distribute your digital assets efficiently with
-          Sparkfive
-        </p>
-        <p className={"m-t-0 font-16"}>Unlease the power of your team</p>
-        <p className={`${styles.footer_link} m-t-0 font-16`}>
-          <Link href={"https://www.sparkfive.com"}>
-            <a className={styles.link}>Learn More</a>
-          </Link>
-        </p>
-      </div>
     </section>
   );
 };

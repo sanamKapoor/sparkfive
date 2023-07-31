@@ -1,6 +1,6 @@
 import React from "react";
 import IconClickable from "../../common/buttons/icon-clickable";
-import styles from "./index.module.css";
+import styles from "../index.module.css";
 
 interface ContentProps {
   onClick: () => void;

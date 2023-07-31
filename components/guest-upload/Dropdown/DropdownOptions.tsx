@@ -1,7 +1,7 @@
 import React from "react";
 import Content from "./Content";
 
-import styles from "./index.module.css";
+import styles from "../index.module.css";
 
 interface DropdownOptionProps {
   dropdownOptions: {
