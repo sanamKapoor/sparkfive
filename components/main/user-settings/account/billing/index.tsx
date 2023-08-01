@@ -16,6 +16,17 @@ const SETTING_SECTIONS_CONTENT = {
   paymentMethod: PaymentMethod,
 };
 
+const SectionButtonOption = ({ section, activeSection, setActiveSection }) => (
+  <div
+    className={`${styles["section-button"]} ${
+      activeSection === section ? styles.active : ""
+    }`}
+    onClick={() => setActiveSection(section)}
+  >
+    {capitalCase(section)}
+  </div>
+);
+
 const Billing = () => {
   const stripePromise = loadStripe(process.env.STRIPE_PUBLIC_KEY);
   const [activeSection, setActiveSection] = useState("subscription");
@@ -23,6 +34,7 @@ const Billing = () => {
   const ActiveContent = SETTING_SECTIONS_CONTENT[activeSection];
 
   useEffect(() => {
+    console.log("billing rendered...");
     getPaymentMethod();
   }, []);
 
@@ -35,23 +47,24 @@ const Billing = () => {
     }
   };
 
-  const SectionButtonOption = ({ section }) => (
-    <div
-      className={`${styles["section-button"]} ${
-        activeSection === section ? styles.active : ""
-      }`}
-      onClick={() => setActiveSection(section)}
-    >
-      {capitalCase(section)}
-    </div>
-  );
-
   return (
     <div className={styles.container}>
       <div className={styles["section-buttons"]}>
-        <SectionButtonOption section="subscription" />
-        <SectionButtonOption section="invoices" />
-        <SectionButtonOption section="paymentMethod" />
+        <SectionButtonOption
+          section="subscription"
+          activeSection={activeSection}
+          setActiveSection={setActiveSection}
+        />
+        <SectionButtonOption
+          section="invoices"
+          activeSection={activeSection}
+          setActiveSection={setActiveSection}
+        />
+        <SectionButtonOption
+          section="paymentMethod"
+          activeSection={activeSection}
+          setActiveSection={setActiveSection}
+        />
       </div>
       <Elements stripe={stripePromise}>
         <div className={styles.content}>
