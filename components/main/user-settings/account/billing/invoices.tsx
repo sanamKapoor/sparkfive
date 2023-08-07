@@ -5,10 +5,20 @@ import styles from "./invoices.module.css";
 // Components
 import InvoiceItem from "./invoice-item";
 
-const Invoices = () => {
+const Headers = ({ type = "invoice" }) => (
+  <li className={styles.headers}>
+    <div>Date</div>
+    <div>Plan</div>
+    {type === "invoice" && <div>Status</div>}
+    <div>Amount</div>
+    {type === "invoice" && <div>Download</div>}
+  </li>
+);
+
+const Invoices: React.FC = () => {
   const [invoices, setInvoices] = useState([]);
   const [upcoming, setUpcoming] = useState([]);
-  const [hasMore, setHasMore] = useState(false);
+  const [hasMore, setHasMore] = useState<boolean>(false);
 
   useEffect(() => {
     getInvoices();
@@ -35,16 +45,6 @@ const Invoices = () => {
       console.log(err);
     }
   };
-
-  const Headers = ({ type = "invoice" }) => (
-    <li className={styles.headers}>
-      <div>Date</div>
-      <div>Plan</div>
-      {type === "invoice" && <div>Status</div>}
-      <div>Amount</div>
-      {type === "invoice" && <div>Download</div>}
-    </li>
-  );
 
   const parsedInvoices = invoices
     .filter(

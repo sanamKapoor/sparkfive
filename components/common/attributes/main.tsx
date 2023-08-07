@@ -2,6 +2,8 @@ import { useState } from "react";
 import styles from "./main.module.css";
 
 // Components
+import { capitalCase } from "change-case";
+import { AttributeTabs } from "../../../types/common/tabs";
 import Button from "../buttons/button";
 import CampaignManagement from "./campaign-management";
 import CollectionManagement from "./collection-management";
@@ -9,66 +11,70 @@ import CustomFieldsManagement from "./custom-fields-management";
 import ProductManagment from "./product-management";
 import TagManagement from "./tag-management";
 
-const Main = () => {
-  const [activeList, setActiveList] = useState("tags");
+const Main: React.FC = () => {
+  const [activeList, setActiveList] = useState<AttributeTabs>(
+    AttributeTabs.TAGS
+  );
 
   return (
     <>
       <div className={styles.buttons}>
         <Button
-          text="Tags"
+          text={capitalCase(AttributeTabs.TAGS)}
           className={
-            activeList === "tags"
+            activeList === AttributeTabs.TAGS
               ? "section-container section-active"
               : "section-container"
           }
-          onClick={() => setActiveList("tags")}
+          onClick={() => setActiveList(AttributeTabs.TAGS)}
         />
         <Button
-          text="Custom Fields"
+          text={capitalCase(AttributeTabs.CUSTOM_FIELDS)}
           className={
-            activeList === "customFields"
+            activeList === AttributeTabs.CUSTOM_FIELDS
               ? "section-container section-active"
               : "section-container"
           }
-          onClick={() => setActiveList("customFields")}
+          onClick={() => setActiveList(AttributeTabs.CUSTOM_FIELDS)}
         />
         <Button
-          text="Collections"
+          text={capitalCase(AttributeTabs.COLLECTIONS)}
           className={
-            activeList === "collections"
+            activeList === AttributeTabs.COLLECTIONS
               ? "section-container section-active"
               : "section-container"
           }
-          onClick={() => setActiveList("collections")}
+          onClick={() => setActiveList(AttributeTabs.COLLECTIONS)}
         />
         <Button
-          text="Products"
+          text={capitalCase(AttributeTabs.PRODUCTS)}
           className={
-            activeList === "products"
+            activeList === AttributeTabs.PRODUCTS
               ? "section-container section-active"
               : "section-container"
           }
-          onClick={() => setActiveList("products")}
+          onClick={() => setActiveList(AttributeTabs.PRODUCTS)}
         />
 
         <Button
-          text="Campaigns"
+          text={capitalCase(AttributeTabs.CAMPAIGNS)}
           className={
-            activeList === "campaigns"
+            activeList === AttributeTabs.CAMPAIGNS
               ? "section-container section-active"
               : "section-container"
           }
-          onClick={() => setActiveList("campaigns")}
+          onClick={() => setActiveList(AttributeTabs.CAMPAIGNS)}
         />
       </div>
 
       <div className={styles.content}>
-        {activeList === "tags" && <TagManagement />}
-        {activeList === "customFields" && <CustomFieldsManagement />}
-        {activeList === "collections" && <CollectionManagement />}
-        {activeList === "products" && <ProductManagment />}
-        {activeList === "campaigns" && <CampaignManagement />}
+        {activeList === AttributeTabs.TAGS && <TagManagement />}
+        {activeList === AttributeTabs.CUSTOM_FIELDS && (
+          <CustomFieldsManagement />
+        )}
+        {activeList === AttributeTabs.COLLECTIONS && <CollectionManagement />}
+        {activeList === AttributeTabs.PRODUCTS && <ProductManagment />}
+        {activeList === AttributeTabs.CAMPAIGNS && <CampaignManagement />}
       </div>
     </>
   );

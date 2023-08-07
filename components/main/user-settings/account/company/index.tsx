@@ -7,7 +7,7 @@ import PhotoUpload from "../../../../common/account/photo-upload";
 import AddressForm from "./address-form";
 import NameForm from "./name-form";
 
-const Company = () => {
+const Company: React.FC = () => {
   const { getTeam, team } = useContext(TeamContext);
 
   useEffect(() => {

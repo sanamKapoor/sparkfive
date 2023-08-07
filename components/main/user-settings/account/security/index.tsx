@@ -7,10 +7,10 @@ import styles from "./index.module.css";
 // Components
 import UserPreference from "../../../../common/account/user-preference";
 
-const Notifications = () => {
+const Notifications: React.FC = () => {
   const { user, setUser } = useContext(UserContext);
 
-  const [enabledTwoFactor, setEnabledTwoFactor] = useState(false);
+  const [enabledTwoFactor, setEnabledTwoFactor] = useState<boolean>(false);
 
   useEffect(() => {
     if (user) {

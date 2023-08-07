@@ -9,14 +9,22 @@ import styles from "./subscription-plan.module.css";
 // Components
 import BaseModal from "../../../../common/modals/base";
 
-const SubscriptionData = ({ label, value }) => (
+interface SubscriptionDataProps {
+  label: string;
+  value: string;
+}
+
+const SubscriptionData: React.FC<SubscriptionDataProps> = ({
+  label,
+  value,
+}) => (
   <div className={styles.item}>
     <div className={styles.label}>{label}</div>
     <div className={styles.value}>{value}</div>
   </div>
 );
 
-const SubscriptionPlan = ({ paymentMethod, goCheckout }) => {
+const SubscriptionPlan: React.FC = () => {
   const { plan } = useContext(TeamContext);
 
   const [cancelOpen, setCancelOpen] = useState(false);

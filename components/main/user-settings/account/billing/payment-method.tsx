@@ -4,11 +4,20 @@ import { useState } from "react";
 import planApi from "../../../../../server-api/plan";
 
 // Components
+import { IPaymentMethod } from "../../../../../types/account/payment";
 import Button from "../../../../common/buttons/button";
 import BaseModal from "../../../../common/modals/base";
 import CreditCardForm from "../../../../common/payment/credit-card-form";
 
-const PaymentMethod = ({ paymentMethod, setPaymentMethod }) => {
+interface PaymentMethodProps {
+  paymentMethod: IPaymentMethod;
+  setPaymentMethod: (val: string) => void;
+}
+
+const PaymentMethod: React.FC<PaymentMethodProps> = ({
+  paymentMethod,
+  setPaymentMethod,
+}) => {
   const [modalActive, setModalActive] = useState(false);
 
   const updatePaymentMethod = async (paymentMethodId) => {

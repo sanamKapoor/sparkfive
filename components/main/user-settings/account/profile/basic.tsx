@@ -39,7 +39,7 @@ const Basic: React.FC<BasicProps> = ({ name, email, provider }) => {
     reset,
   } = useForm();
 
-  const [newEmail, setNewEmail] = useState("");
+  const [newEmail, setNewEmail] = useState<string>("");
 
   const onNameSubmit = ({ name }) => {
     saveChanges({ name }, "regular");
@@ -186,7 +186,7 @@ const Basic: React.FC<BasicProps> = ({ name, email, provider }) => {
       {provider && (
         <NewPasswordModal
           closeModal={() => setNewEmail("")}
-          modalIsOpen={newEmail}
+          modalIsOpen={newEmail ? true : false}
           confirmChange={saveEmailWithPassword}
         />
       )}

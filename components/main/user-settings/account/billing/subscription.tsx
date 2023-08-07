@@ -5,7 +5,11 @@ import { TeamContext } from "../../../../../context";
 import SubscriptionCheckout from "./subscription-checkout";
 import SubscriptionPlan from "./subscription-plan";
 
-const Subscription = ({ paymentMethod, getPaymentMethod }) => {
+interface SubscriptionProps {
+  getPaymentMethod: () => void;
+}
+
+const Subscription: React.FC<SubscriptionProps> = ({ getPaymentMethod }) => {
   const { plan } = useContext(TeamContext);
   const [onCheckout, setOnCheckout] = useState(false);
 
@@ -17,10 +21,7 @@ const Subscription = ({ paymentMethod, getPaymentMethod }) => {
   return (
     <div>
       {!onCheckout ? (
-        <SubscriptionPlan
-          goCheckout={() => setOnCheckout(true)}
-          paymentMethod={paymentMethod}
-        />
+        <SubscriptionPlan />
       ) : (
         <SubscriptionCheckout
           goBack={goBack}

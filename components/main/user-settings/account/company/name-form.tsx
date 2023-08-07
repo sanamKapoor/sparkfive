@@ -8,7 +8,7 @@ import Button from "../../../../common/buttons/button";
 import FormInput from "../../../../common/inputs/form-input";
 import Input from "../../../../common/inputs/input";
 
-const NameForm = () => {
+const NameForm: React.FC = () => {
   const { team, patchTeam } = useContext(TeamContext);
   const { control, handleSubmit, errors } = useForm();
 
@@ -21,7 +21,6 @@ const NameForm = () => {
     <>
       <h3>Company Name</h3>
       <form onSubmit={handleSubmit(onSubmit)} className={styles.container}>
-        <h3 className={styles.title}>Company Name</h3>
         {team && (
           <div className={styles["form-container"]}>
             <div className={"fields-first"}>

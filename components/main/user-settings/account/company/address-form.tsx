@@ -9,14 +9,14 @@ import styles from "./address-form.module.css";
 // Components
 import Button from "../../../../common/buttons/button";
 
-const AddressForm = () => {
+const AddressForm: React.FC = () => {
   const { control, handleSubmit, errors } = useForm();
 
   const { countries, states, loadStates } = useContext(LocationContext);
   const { team, patchTeam } = useContext(TeamContext);
 
-  const [country, setCountry] = useState("");
-  const [state, seState] = useState("");
+  const [country, setCountry] = useState<string>("");
+  const [state, seState] = useState<string>("");
 
   const onSubmit = (fieldData) => {
     const { address, city, zip } = fieldData;

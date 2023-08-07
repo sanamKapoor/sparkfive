@@ -28,37 +28,41 @@ import GuestDetails from "./guest-details";
 import GuestInfoForm from "./guest-info-form";
 import GuestUploadSection from "./guest-upload-section";
 
-const GuestUpload = () => {
+const GuestUpload: React.FC = () => {
   const { socket, connected, connectSocket } = useContext(SocketContext);
   const { updateLogo, logo } = useContext(GuestUploadContext);
 
   const { query } = useRouter();
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const fileBrowserRef = useRef(undefined);
   const folderBrowserRef = useRef(undefined);
-  const [uploadEnabled, setUploadEnabled] = useState(false);
-  const [edit, setEdit] = useState(false);
+  const [uploadEnabled, setUploadEnabled] = useState<boolean>(false);
+  const [edit, setEdit] = useState<boolean>(false);
 
-  const [uploading, setUploading] = useState(false);
-  const [activePasswordOverlay, setActivePasswordOverlay] = useState(true);
+  const [uploading, setUploading] = useState<boolean>(false);
+  const [activePasswordOverlay, setActivePasswordOverlay] =
+    useState<boolean>(true);
 
-  const [teamName, setTeamName] = useState("");
-  const [files, setFiles] = useState([]);
+  const [teamName, setTeamName] = useState<string>("");
+  const [files, setFiles] = useState<Array<Record<string, unknown>>>([]);
   const [totalSize, setTotalSize] = useState(0);
 
   // For processing uploading
   // Upload process
-  const [uploadingAssets, setUploadingAssets] = useState([]);
+  const [uploadingAssets, setUploadingAssets] = useState<
+    Array<Record<string, unknown>>
+  >([]);
   const [uploadingStatus, setUploadingStatus] =
     useState<UploadingStatus>("none");
-  const [uploadingPercent, setUploadingPercent] = useState(0); // Percent of uploading process: 0 - 100
+  const [uploadingPercent, setUploadingPercent] = useState<number>(0); // Percent of uploading process: 0 - 100
   const [uploadingFile, setUploadingFile] = useState<number>(); // Current uploading file index
   const [uploadingFileName, setUploadingFileName] = useState<string>(); // Current uploading file name, import feature need this
   const [uploadRemainingTime, setUploadRemainingTime] = useState<string>("");
-  const [uploadDetailOverlay, setUploadDetailOverlay] = useState(false);
-  const [folderGroups, setFolderGroups] = useState({}); // This groups contain all folder key which is need to identity which folder file need to be saved to
-  const [retryListCount, setRetryListCount] = useState(0);
+  const [uploadDetailOverlay, setUploadDetailOverlay] =
+    useState<boolean>(false);
+  const [folderGroups, setFolderGroups] = useState<Record<string, unknown>>({}); // This groups contain all folder key which is need to identity which folder file need to be saved to
+  const [retryListCount, setRetryListCount] = useState<number>(0);
 
   const dropdownOptions = [
     {
@@ -475,7 +479,6 @@ const GuestUpload = () => {
           `${convertTimeFromSeconds(data.timeLeft)} remaining`
         );
 
-        // setUploadingFileName("Test.png")
         if (data.fileName) {
           setUploadingFileName(data.fileName);
         }

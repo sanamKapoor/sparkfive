@@ -7,7 +7,9 @@ import Button from "../../common/buttons/button";
 import CustomFileSizes from "./custom-file-size";
 import SizeSaPresets from "./size-sa-presets";
 
+import { capitalCase } from "change-case";
 import { SUPERADMIN_ACCESS } from "../../../constants/permissions";
+import { CustomSettingsTabs } from "../../../types/common/tabs";
 import Links from "../guest-upload/links";
 import AccountActions from "./account-actions";
 import AdvancedOptions from "./advanced-options";
@@ -15,7 +17,7 @@ import Automations from "./automations";
 import CustomViews from "./custom-views";
 import DeletedAssetsLibrary from "./deleted-assets";
 
-const Main = () => {
+const Main: React.FC = () => {
   const { hasPermission } = useContext(UserContext);
   const [activeList, setActiveList] = useState("advancedOptions");
 
@@ -23,60 +25,60 @@ const Main = () => {
     <>
       <div className={styles.buttons}>
         <Button
-          text="Advanced Options"
+          text={capitalCase(CustomSettingsTabs.ADVANCED_OPTIONS)}
           className={
-            activeList === "advancedOptions"
+            activeList === CustomSettingsTabs.ADVANCED_OPTIONS
               ? "section-container section-active"
               : "section-container"
           }
-          onClick={() => setActiveList("advancedOptions")}
+          onClick={() => setActiveList(CustomSettingsTabs.ADVANCED_OPTIONS)}
         />
         {hasPermission([SUPERADMIN_ACCESS]) && (
           <Button
-            text="Size SA Presets"
+            text={capitalCase(CustomSettingsTabs.SIZE_SA_PRESETS)}
             className={
-              activeList === "sizeSaPresets"
+              activeList === CustomSettingsTabs.SIZE_SA_PRESETS
                 ? "section-container section-active"
                 : "section-container"
             }
-            onClick={() => setActiveList("sizeSaPresets")}
+            onClick={() => setActiveList(CustomSettingsTabs.SIZE_SA_PRESETS)}
           />
         )}
         <Button
-          text="Custom Views"
+          text={capitalCase(CustomSettingsTabs.CUSTOM_VIEWS)}
           className={
-            activeList === "customViews"
+            activeList === CustomSettingsTabs.CUSTOM_VIEWS
               ? "section-container section-active"
               : "section-container"
           }
-          onClick={() => setActiveList("customViews")}
+          onClick={() => setActiveList(CustomSettingsTabs.CUSTOM_VIEWS)}
         />
         <Button
-          text="Account Actions"
+          text={capitalCase(CustomSettingsTabs.ACCOUNT_ACTIONS)}
           className={
-            activeList === "accountActions"
+            activeList === CustomSettingsTabs.ACCOUNT_ACTIONS
               ? "section-container section-active"
               : "section-container"
           }
-          onClick={() => setActiveList("accountActions")}
+          onClick={() => setActiveList(CustomSettingsTabs.ACCOUNT_ACTIONS)}
         />
         <Button
-          text="Automations"
+          text={capitalCase(CustomSettingsTabs.AUTOMATIONS)}
           className={
-            activeList === "automations"
+            activeList === CustomSettingsTabs.AUTOMATIONS
               ? "section-container section-active"
               : "section-container"
           }
-          onClick={() => setActiveList("automations")}
+          onClick={() => setActiveList(CustomSettingsTabs.AUTOMATIONS)}
         />
         <Button
-          text="Custom File Sizes"
+          text={capitalCase(CustomSettingsTabs.CUSTOM_FILE_SIZES)}
           className={
-            activeList === "customFileSizes"
+            activeList === CustomSettingsTabs.CUSTOM_FILE_SIZES
               ? "section-container section-active"
               : "section-container"
           }
-          onClick={() => setActiveList("customFileSizes")}
+          onClick={() => setActiveList(CustomSettingsTabs.CUSTOM_FILE_SIZES)}
         />
         <Button
           text="Guest Upload Links"

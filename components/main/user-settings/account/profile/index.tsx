@@ -6,8 +6,8 @@ import styles from "./index.module.css";
 import PhotoUpload from "../../../../common/account/photo-upload";
 import Basic from "./basic";
 
-const Profile = () => {
-  const { user, setUser } = useContext(UserContext);
+const Profile: React.FC = () => {
+  const { user } = useContext(UserContext);
 
   return (
     <div className={styles.container}>

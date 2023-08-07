@@ -11,7 +11,7 @@ ReactModal.defaultStyles = {};
 
 interface BaseModalProps {
   modalIsOpen: boolean;
-  children: any;
+  children?: any;
   closeModal?: (
     event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>
   ) => void;
