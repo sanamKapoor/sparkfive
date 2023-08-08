@@ -1,10 +1,14 @@
 import Link from "next/link";
 import { useContext } from "react";
+import { SETTING_OPTIONS } from ".";
 import { UserContext } from "../../../context";
 import styles from "./side-navigation.module.css";
 
-// Components
-const UserSettings = ({ activeView, SETTING_OPTIONS }) => {
+interface UserSettingsProps {
+  activeView: string;
+}
+
+const UserSettings: React.FC<UserSettingsProps> = ({ activeView }) => {
   const { hasPermission } = useContext(UserContext);
 
   return (

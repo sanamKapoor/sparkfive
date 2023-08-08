@@ -7,7 +7,7 @@ import styles from "./index.module.css";
 import sharedLinksApi from "../../../server-api/shared-links";
 
 // Components
-import { AssetOps, Assets } from "../../../assets";
+import { AssetOps, Assets, ItemFields } from "../../../assets";
 import IconClickable from "../buttons/icon-clickable";
 import Select from "../inputs/select";
 import SpinnerOverlay from "../spinners/spinner-overlay";
@@ -21,7 +21,6 @@ import ShareModal from "../modals/share-modal";
 
 // Constants
 import { Waypoint } from "react-waypoint";
-import { ItemFields } from "../../../assets";
 import { colorList, statusList } from "../../../constants/shared-links";
 
 const typeList = [
@@ -41,10 +40,10 @@ const typeList = [
 
 export default function ShareLinks() {
   const [links, setLinks] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [deleteOpen, setDeleteOpen] = useState(false);
-  const [deleteId, setDeleteId] = useState("");
-  const [showEditModal, setShowEditModal] = useState(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [deleteId, setDeleteId] = useState<string>("");
+  const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [currentLink, setCurrentLink] = useState();
   const [status, setStatus] = useState(null);
   const [sharedBy, setSharedBy] = useState(null);
@@ -52,14 +51,14 @@ export default function ShareLinks() {
   const [sharedWith, setSharedWith] = useState(null);
   const [shareByList, setShareByList] = useState([]);
   const [shareWithList, setShareWithList] = useState([]);
-  const [page, setPage] = useState(0);
-  const [nextPage, setNextPage] = useState(0);
+  const [page, setPage] = useState<number>(0);
+  const [nextPage, setNextPage] = useState<number>(0);
   const [sortData, setSortData] = useState({
     sortField: "expiredAt",
     sortType: "desc",
   });
   const [colorGroups, setColorGroups] = useState<any>({});
-  const [editType, setEditType] = useState("asset");
+  const [editType, setEditType] = useState<string>("asset");
 
   const getFilterObject = (page) => {
     let filters: any = { page };

@@ -4,9 +4,18 @@ import dateUtils from "../../../../../utils/date";
 
 // Components
 import fileSize from "filesize";
+import { ITeam } from "../../../../../types/team/team";
 import Button from "../../../../common/buttons/button";
 
-const CompanyItem = ({ team, onViewCompanySettings }) => {
+interface CompanyItemProps {
+  team: ITeam;
+  onViewCompanySettings: () => void;
+}
+
+const CompanyItem: React.FC<CompanyItemProps> = ({
+  team,
+  onViewCompanySettings,
+}) => {
   return (
     <div className={styles.container}>
       <div className={styles["name-email"]}>

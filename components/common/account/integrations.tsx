@@ -9,7 +9,11 @@ import styles from "./integrations.module.css";
 import Button from "../buttons/button";
 import IntegrationItem from "./integration-item";
 
-const Integrations = ({ mode = "setup" }) => {
+interface IntegrationsProps {
+  mode: string;
+}
+
+const Integrations: React.FC<IntegrationsProps> = ({ mode = "setup" }) => {
   const [integrations, setIntegrations] = useState([]);
   const [availableIntegrations, setAvailableIntegrations] = useState([]);
   const [activeList, setActiveList] = useState("enabled");

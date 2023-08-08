@@ -81,34 +81,42 @@ const Main: React.FC = () => {
           onClick={() => setActiveList(CustomSettingsTabs.CUSTOM_FILE_SIZES)}
         />
         <Button
-          text="Guest Upload Links"
+          text={capitalCase(CustomSettingsTabs.GUEST_UPLOAD)}
           className={
-            activeList === "guestUpload"
+            activeList === CustomSettingsTabs.GUEST_UPLOAD
               ? "section-container section-active"
               : "section-container"
           }
-          onClick={() => setActiveList("guestUpload")}
+          onClick={() => setActiveList(CustomSettingsTabs.GUEST_UPLOAD)}
         />
         <Button
-          text="Deleted Assets"
+          text={capitalCase(CustomSettingsTabs.DELETED_ASSETS)}
           className={
-            activeList === "deletedAssets"
+            activeList === CustomSettingsTabs.DELETED_ASSETS
               ? "section-container section-active"
               : "section-container"
           }
-          onClick={() => setActiveList("deletedAssets")}
+          onClick={() => setActiveList(CustomSettingsTabs.DELETED_ASSETS)}
         />
       </div>
 
       <div className={styles.content}>
-        {activeList === "customViews" && <CustomViews />}
-        {activeList === "accountActions" && <AccountActions />}
-        {activeList === "automations" && <Automations />}
-        {activeList === "advancedOptions" && <AdvancedOptions />}
-        {activeList === "customFileSizes" && <CustomFileSizes />}
-        {activeList === "guestUpload" && <Links />}
-        {activeList === "deletedAssets" && <DeletedAssetsLibrary />}
-        {activeList === "sizeSaPresets" &&
+        {activeList === CustomSettingsTabs.CUSTOM_VIEWS && <CustomViews />}
+        {activeList === CustomSettingsTabs.ACCOUNT_ACTIONS && (
+          <AccountActions />
+        )}
+        {activeList === CustomSettingsTabs.AUTOMATIONS && <Automations />}
+        {activeList === CustomSettingsTabs.ADVANCED_OPTIONS && (
+          <AdvancedOptions />
+        )}
+        {activeList === CustomSettingsTabs.CUSTOM_FILE_SIZES && (
+          <CustomFileSizes />
+        )}
+        {activeList === CustomSettingsTabs.GUEST_UPLOAD && <Links />}
+        {activeList === CustomSettingsTabs.DELETED_ASSETS && (
+          <DeletedAssetsLibrary />
+        )}
+        {activeList === CustomSettingsTabs.SIZE_SA_PRESETS &&
           hasPermission([SUPERADMIN_ACCESS]) && <SizeSaPresets />}
       </div>
     </>

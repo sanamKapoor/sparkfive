@@ -1,9 +1,20 @@
+import { ITeamMember } from "../../../../types/team/team";
 import styles from "./member-list.module.css";
 
 // Components
 import Request from "./request";
 
-const RequestAccessList = ({ members, type = "member", onChange }) => {
+interface RequestAccessListProps {
+  members: ITeamMember[];
+  type: string;
+  onChange: (type: string, member: ITeamMember) => void;
+}
+
+const RequestAccessList: React.FC<RequestAccessListProps> = ({
+  members,
+  type = "member",
+  onChange,
+}) => {
   return (
     <>
       <ul className={styles.container}>

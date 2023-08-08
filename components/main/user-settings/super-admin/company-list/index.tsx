@@ -10,6 +10,7 @@ import {
   FAILED_TO_DOWNLOAD_ACCOUNTS,
 } from "../../../../../constants/messages";
 import { useQueryStrings } from "../../../../../hooks/use-query-strings";
+import { ITeam, ITeamResponseData } from "../../../../../types/team/team";
 import toastUtils from "../../../../../utils/toast";
 import Button from "../../../../common/buttons/button";
 import IconClickable from "../../../../common/buttons/icon-clickable";
@@ -19,12 +20,16 @@ import CompanyItem from "../company-item";
 import CompanyListHeader from "../company-list-header";
 import { defaultSortData } from "../company-list-header/types";
 
-const CompanyList = ({ onViewCompanySettings }) => {
-  const [term, setTerm] = useState("");
-  const [termForDownload, setTermForDownload] = useState("");
-  const [loading, setLoading] = useState(true);
+interface CompanyListProps {
+  onViewCompanySettings: (team: ITeam, benefits) => void;
+}
 
-  const [companyData, setCompanyData] = useState({
+const CompanyList: React.FC<CompanyListProps> = ({ onViewCompanySettings }) => {
+  const [term, setTerm] = useState<string>("");
+  const [termForDownload, setTermForDownload] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const [companyData, setCompanyData] = useState<ITeamResponseData>({
     teams: [],
     currentPage: 1,
     total: 0,

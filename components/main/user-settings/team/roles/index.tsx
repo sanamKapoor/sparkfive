@@ -5,14 +5,20 @@ import styles from "./index.module.css";
 import { capitalCase } from "change-case";
 import { useEffect, useState } from "react";
 import teamApi from "../../../../../server-api/team";
+import { IRole } from "../../../../../types/user/role";
 import ConfirmModal from "../../../../common/modals/confirm-modal";
 import SpinnerOverlay from "../../../../common/spinners/spinner-overlay";
 
-const Roles = ({ onAdd, onEdit }) => {
+interface RolesProps {
+  onAdd: () => void;
+  onEdit: (roleId: string) => void;
+}
+
+const Roles: React.FC<RolesProps> = ({ onAdd, onEdit }) => {
   const [roles, setRoles] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [openModal, setOpenModal] = useState(false);
-  const [selectedRole, setSelectedRole] = useState();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [selectedRole, setSelectedRole] = useState<IRole>();
 
   const getRoleList = async () => {
     const { data } = await teamApi.getRoles();
@@ -86,6 +92,8 @@ const Roles = ({ onAdd, onEdit }) => {
       })}
 
       <ConfirmModal
+        headText=""
+        subText=""
         modalIsOpen={openModal}
         closeModal={() => {
           setSelectedRole(undefined);

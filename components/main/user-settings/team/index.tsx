@@ -11,6 +11,7 @@ import styles from "./index.module.css";
 
 // Components
 import { Utilities } from "../../../../assets";
+import { IRole } from "../../../../types/user/role";
 import Button from "../../../common/buttons/button";
 import IconClickable from "../../../common/buttons/icon-clickable";
 import ConfirmModal from "../../../common/modals/confirm-modal";
@@ -23,8 +24,8 @@ import RequestForm from "./request-form";
 import Roles from "./roles";
 import TeamInviteForm from "./team-invite-form";
 
-const Team = () => {
-  const [roles, setRoles] = useState([]);
+const Team: React.FC = () => {
+  const [roles, setRoles] = useState<IRole[]>([]);
   const [invites, setInvites] = useState([]);
   const [requests, setRequests] = useState([]);
 
@@ -36,10 +37,10 @@ const Team = () => {
 
   const [selectedRequest, setSelectedRequest] = useState(undefined);
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const [tab, setTab] = useState(0);
-  const [selectedRole, setSelectedRole] = useState();
+  const [tab, setTab] = useState<number>(0);
+  const [selectedRole, setSelectedRole] = useState<string>();
 
   useEffect(() => {
     getRoles();
@@ -337,6 +338,8 @@ const Team = () => {
       )}
 
       <ConfirmModal
+        headText=""
+        subText=""
         modalIsOpen={selectedDeleteMember !== undefined}
         closeModal={() => setSelectedDeleteMember(undefined)}
         confirmAction={deleteMember}

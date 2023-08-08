@@ -38,7 +38,12 @@ const mappingCustomFieldData = (list, valueList) => {
   return rs;
 };
 
-const AddCustomRole = ({ onSave, role }) => {
+interface AddCustomRoleProps {
+  onSave: () => void;
+  role: string;
+}
+
+const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
   const [mode, setMode] = useState("customRestriction"); // Available options: customRestriction, permission
   const [activeDropdown, setActiveDropdown] = useState("");
 

@@ -2,12 +2,19 @@ import { useForm } from "react-hook-form";
 import styles from "./request-form.module.css";
 
 // Components
+import { IRequestFormData } from "../../../../types/team/team";
 import Button from "../../../common/buttons/button";
 import FormInput from "../../../common/inputs/form-input";
 import Input from "../../../common/inputs/input";
 import TextArea from "../../../common/inputs/text-area";
 
-const RequestForm = ({
+interface RequestFormProps {
+  data: IRequestFormData;
+  onApprove: () => void;
+  onReject: () => void;
+}
+
+const RequestForm: React.FC<RequestFormProps> = ({
   data: { id, email, name, phone, city, state, message },
   onApprove,
   onReject,

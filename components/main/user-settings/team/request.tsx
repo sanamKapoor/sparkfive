@@ -2,9 +2,14 @@ import { useContext } from "react";
 import { UserContext } from "../../../../context";
 import styles from "./request.module.css";
 
-// Components
+interface RequestProps {
+  id: string;
+  email: string;
+  name: string;
+  onChange: (val: string) => void;
+}
 
-const Request = ({ id, email, name, onChange }) => {
+const Request: React.FC<RequestProps> = ({ id, email, name, onChange }) => {
   const { user } = useContext(UserContext);
   return (
     <li className={styles.container}>

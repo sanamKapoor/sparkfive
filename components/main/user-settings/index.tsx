@@ -27,7 +27,7 @@ import SideNavigation from "./side-navigation";
 import SuperAdmin from "./super-admin";
 import Team from "./team";
 
-const SETTING_OPTIONS = {
+export const SETTING_OPTIONS = {
   account: { label: "Account", permissions: [], content: Account },
   team: { label: "Team", permissions: [SETTINGS_TEAM], content: Team },
   notifications: {
@@ -69,7 +69,7 @@ const SETTING_OPTIONS = {
   },
 };
 
-const UserSettings = () => {
+const UserSettings: React.FC = () => {
   const { hasPermission } = useContext(UserContext);
 
   const router = useRouter();
@@ -79,8 +79,8 @@ const UserSettings = () => {
     setActiveView(activeView);
   }, [router.query.view]);
 
-  const [activeView, setActiveView] = useState("");
-  const [menuActive, setMenuActive] = useState(true);
+  const [activeView, setActiveView] = useState<string>("");
+  const [menuActive, setMenuActive] = useState<boolean>(true);
 
   let ActiveContent = () => <></>;
   if (SETTING_OPTIONS[activeView])
@@ -109,12 +109,7 @@ const UserSettings = () => {
   return (
     <main className={`${styles.container}`}>
       <LocationContextProvider>
-        {menuActive && (
-          <SideNavigation
-            activeView={activeView}
-            SETTING_OPTIONS={SETTING_OPTIONS}
-          />
-        )}
+        {menuActive && <SideNavigation activeView={activeView} />}
         <section className={styles.content}>
           <div className={styles.header}>
             <IconClickable src={Utilities.menu} onClick={toggleSettings} />

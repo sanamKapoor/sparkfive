@@ -9,8 +9,18 @@ import Select from "../../../common/inputs/select";
 import MemberPermissions from "./member-permissions";
 
 import { default as permissionList } from "../../../../constants/permissions";
+import { ITeamMember } from "../../../../types/team/team";
+import { IRole } from "../../../../types/user/role";
 
-const MemberDetail = ({
+interface MemberDetailProps {
+  member: ITeamMember;
+  type: string;
+  mappedRoles: IRole[];
+  onSaveChanges: (id: string, data) => void;
+  onCancel: () => void;
+}
+
+const MemberDetail: React.FC<MemberDetailProps> = ({
   member,
   type = "member",
   mappedRoles,

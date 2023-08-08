@@ -1,9 +1,21 @@
 import styles from "./member-list.module.css";
 
 // Components
+import { ITeamMember } from "../../../../types/team/team";
 import Member from "./member";
 
-const MemberList = ({
+interface MemberListProps {
+  members: ITeamMember[];
+  type: string;
+  setSelectedMember: (data: { member: ITeamMember; type: string }) => void;
+  setSelectedDeleteMember: (data: {
+    member: ITeamMember;
+    type: string;
+  }) => void;
+  onReload: () => {};
+}
+
+const MemberList: React.FC<MemberListProps> = ({
   members,
   type = "member",
   setSelectedMember,

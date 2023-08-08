@@ -27,6 +27,7 @@ import Base from "../../../common/modals/base";
 import { defaultSortData as companyDefaultSortData } from "./company-list-header/types";
 
 import { statuses } from "../../../../constants/plans";
+import { ITeamPlan } from "../../../../types/team/team";
 
 const type = [
   {
@@ -56,19 +57,19 @@ const defaultValues = {
   sortDirection: "ASC",
 };
 
-const SuperAdmin = () => {
-  const [viewCompanyDetail, setViewCompanyDetail] = useState();
+const SuperAdmin: React.FC = () => {
+  const [viewCompanyDetail, setViewCompanyDetail] = useState(null);
   const [vanity, setVanity] = useState(type[1].value);
   const [cdnAccess, setCdnAcces] = useState(type[1].value);
   const [transcript, setTranscript] = useState(type[1].value);
   const [advancedCollectionShareLink, setAdvanceShareLink] = useState(
     collectionSharedLink[1].value
   );
-  const [subdomain, setSubdomain] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [subdomain, setSubdomain] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const [sortData, setSortData] = useQueryStrings(defaultValues);
-  const [showPlanModal, setShowPlanModal] = useState(false);
-  const [planDetail, setPlanDetail] = useState({});
+  const [showPlanModal, setShowPlanModal] = useState<boolean>(false);
+  const [planDetail, setPlanDetail] = useState<ITeamPlan | null>(null);
   const [benefits, setBenefits] = useState([]);
 
   const onViewCompanySettings = (data, benefits) => {
@@ -464,6 +465,8 @@ const SuperAdmin = () => {
               placeholder={"mm/dd/yyyy"}
               classNames={{
                 container: dateStyles.input,
+                overlay: "",
+                overlayWrapper: "",
               }}
               dayPickerProps={{
                 className: dateStyles.calendar,

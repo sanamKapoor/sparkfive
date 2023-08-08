@@ -19,16 +19,17 @@ import {
   FAILED_TO_DOWNLOAD_USERS,
   USERS_DOWNLOADED,
 } from "../../../../../constants/messages";
+import { IUserResponseData } from "../../../../../types/user/user";
 import toastUtils from "../../../../../utils/toast";
 import IconClickable from "../../../../common/buttons/icon-clickable";
 
-const UserList = () => {
-  const [term, setTerm] = useState("");
-  const [termForDownload, setTermForDownload] = useState("");
+const UserList: React.FC = () => {
+  const [term, setTerm] = useState<string>("");
+  const [termForDownload, setTermForDownload] = useState<string>("");
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const [userData, setUserData] = useState({
+  const [userData, setUserData] = useState<IUserResponseData>({
     users: [],
     currentPage: 1,
     total: 0,

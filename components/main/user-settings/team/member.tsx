@@ -11,15 +11,20 @@ import { UserContext } from "../../../../context";
 import IconClickable from "../../../common/buttons/icon-clickable";
 
 import { AssetOps, Navigation } from "../../../../assets";
+import { ITeamMember } from "../../../../types/team/team";
 
-// Components
+interface IMemberProps extends ITeamMember {
+  type: string;
+  editAction: () => void;
+  deleteAction: () => void;
+  onReload: () => void;
+}
 
-const Member = ({
+const Member: React.FC<IMemberProps> = ({
   id,
   email,
   role,
   name,
-  profilePhoto,
   type,
   editAction,
   deleteAction,

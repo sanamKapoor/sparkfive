@@ -4,14 +4,23 @@ import styles from "./index.module.css";
 
 import { Utilities } from "../../../../../assets";
 
-export default function OptionList({
+interface OptionListProps {
+  data: { label: string; value: boolean }[];
+  oneColumn?: boolean;
+  value: boolean;
+  setValue: (val: boolean) => void;
+  additionalClass?: string;
+  capitalize?: boolean;
+}
+
+const OptionList: React.FC<OptionListProps> = ({
   data,
   oneColumn = false,
   setValue,
   value,
-  addtionalClass = "",
+  additionalClass = "",
   capitalize = false,
-}) {
+}) => {
   const toggleSelected = (selectedValue) => {
     setValue(selectedValue);
   };
@@ -27,7 +36,7 @@ export default function OptionList({
         return (
           <li
             key={index}
-            className={`${styles["select-item"]} ${styles[addtionalClass]}`}
+            className={`${styles["select-item"]} ${styles[additionalClass]}`}
           >
             <div
               className={`${styles["selectable-wrapper"]} ${
@@ -54,4 +63,6 @@ export default function OptionList({
       })}
     </ul>
   );
-}
+};
+
+export default OptionList;

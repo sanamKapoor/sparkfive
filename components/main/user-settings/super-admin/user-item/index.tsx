@@ -3,9 +3,15 @@ import styles from "./index.module.css";
 import dateUtils from "../../../../../utils/date";
 
 // Components
+import { IUser } from "../../../../../types/user/user";
 import Button from "../../../../common/buttons/button";
 
-const UserItem = ({ user, getUserToken }) => {
+interface UserItemProps {
+  user: IUser;
+  getUserToken: () => void;
+}
+
+const UserItem: React.FC<UserItemProps> = ({ user, getUserToken }) => {
   return (
     <div className={styles.container}>
       <div className={`${styles["name-email"]} ${styles["centered-cell"]}`}>

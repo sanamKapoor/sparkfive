@@ -10,10 +10,10 @@ import styles from "./index.module.css";
 import UserPreference from "../../../common/account/user-preference";
 import NotificationList from "../../../common/notifications/notification-list";
 
-const Notifications = () => {
+const Notifications: React.FC = () => {
   const { user, setUser } = useContext(UserContext);
 
-  const [enabledEmailNotif, setEnabledEmailNotif] = useState(false);
+  const [enabledEmailNotif, setEnabledEmailNotif] = useState<boolean>(false);
 
   const [notifications, setNotifications] = useState([]);
 
