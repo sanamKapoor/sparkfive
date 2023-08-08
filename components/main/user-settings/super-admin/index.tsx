@@ -26,36 +26,13 @@ import Select from "../../../common/inputs/select";
 import Base from "../../../common/modals/base";
 import { defaultSortData as companyDefaultSortData } from "./company-list-header/types";
 
+import {
+  collectionSharedLink,
+  defaultValues,
+  type,
+} from "../../../../config/data/super-admin";
 import { statuses } from "../../../../constants/plans";
 import { ITeamPlan } from "../../../../types/team/team";
-
-const type = [
-  {
-    label: "On",
-    value: true,
-  },
-  {
-    label: "Off",
-    value: false,
-  },
-];
-
-const collectionSharedLink = [
-  {
-    label: "On",
-    value: true,
-  },
-  {
-    label: "Off",
-    value: false,
-  },
-];
-
-const defaultValues = {
-  activeList: "allUsers",
-  sortBy: "users.lastLogin",
-  sortDirection: "ASC",
-};
 
 const SuperAdmin: React.FC = () => {
   const [viewCompanyDetail, setViewCompanyDetail] = useState(null);

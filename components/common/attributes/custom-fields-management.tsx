@@ -15,61 +15,10 @@ import OptionList from "./option-list";
 
 // Utils
 import { AssetOps } from "../../../assets";
+import { defaultCustomFields, type } from "../../../config/data/attributes";
+import { maximumCustomFields } from "../../../constants/attributes";
 import toastUtils from "../../../utils/toast";
 import IconClickable from "../buttons/icon-clickable";
-
-// Maximum custom fields
-const maximumCustomFields = 6;
-
-const defaultCustomFields = [
-  {
-    id: null,
-    name: "",
-    type: "selectOne",
-    values: [],
-  },
-  {
-    id: null,
-    name: "",
-    type: "selectOne",
-    values: [],
-  },
-  {
-    id: null,
-    name: "",
-    type: "selectOne",
-    values: [],
-  },
-  {
-    id: null,
-    name: "",
-    type: "selectOne",
-    values: [],
-  },
-  {
-    id: null,
-    name: "",
-    type: "selectOne",
-    values: [],
-  },
-  {
-    id: null,
-    name: "",
-    type: "selectOne",
-    values: [],
-  },
-];
-
-const type = [
-  {
-    label: "Select One",
-    value: "selectOne",
-  },
-  {
-    label: "Select Multiple",
-    value: "selectMultiple",
-  },
-];
 
 const CustomFieldsManagement = () => {
   const [activeDropdown, setActiveDropdown] = useState<number>(undefined);
@@ -114,44 +63,7 @@ const CustomFieldsManagement = () => {
 
       setCustomFieldList(data);
     } else {
-      setCustomFieldList([
-        {
-          id: null,
-          name: "",
-          type: "selectOne",
-          values: [],
-        },
-        {
-          id: null,
-          name: "",
-          type: "selectOne",
-          values: [],
-        },
-        {
-          id: null,
-          name: "",
-          type: "selectOne",
-          values: [],
-        },
-        {
-          id: null,
-          name: "",
-          type: "selectOne",
-          values: [],
-        },
-        {
-          id: null,
-          name: "",
-          type: "selectOne",
-          values: [],
-        },
-        {
-          id: null,
-          name: "",
-          type: "selectOne",
-          values: [],
-        },
-      ]);
+      setCustomFieldList(defaultCustomFields);
     }
 
     // Hide loading

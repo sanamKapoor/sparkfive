@@ -17,39 +17,10 @@ import IconClickable from "../../buttons/icon-clickable";
 import Select from "../../inputs/select";
 
 // Maximum links
+import { defaultLinks } from "../../../../config/data/upload-links";
 import { maximumLinks, statusList } from "../../../../constants/guest-upload";
 import ButtonIcon from "../../buttons/button-icon";
 import ShareModal from "../../modals/share-modal";
-
-const defaultLinks = [
-  {
-    id: null,
-    url: "",
-    password: "",
-    values: [],
-    status: "public",
-    default: true, // Created as default, this will show blank field on screen
-    showPassword: false,
-  },
-  {
-    id: null,
-    url: "",
-    password: "",
-    values: [],
-    status: "public",
-    default: true,
-    showPassword: false,
-  },
-  {
-    id: null,
-    url: "",
-    password: "",
-    values: [],
-    status: "public",
-    default: true,
-    showPassword: false,
-  },
-];
 
 const Links = () => {
   const [linkList, setLinkList] = useState(defaultLinks);

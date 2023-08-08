@@ -15,26 +15,8 @@ import ConfirmModal from "../modals/confirm-modal";
 import SpinnerOverlay from "../spinners/spinner-overlay";
 
 // Utils
+import { sorts } from "../../../config/data/attributes";
 import toastUtils from "../../../utils/toast";
-
-const sorts = [
-  {
-    value: "name,asc",
-    label: "Alphabetical (A-Z)",
-  },
-  {
-    value: "name,desc",
-    label: "Alphabetical (Z-A)",
-  },
-  {
-    value: "numberOfFiles,asc",
-    label: "Popularity (Low to High)",
-  },
-  {
-    value: "numberOfFiles,desc",
-    label: "Popularity (High to Low)",
-  },
-];
 
 const CampaignManagement = () => {
   const [activeDropdown, setActiveDropdown] = useState("");

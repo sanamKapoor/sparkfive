@@ -21,22 +21,8 @@ import ShareModal from "../modals/share-modal";
 
 // Constants
 import { Waypoint } from "react-waypoint";
+import { typeList } from "../../../config/data/shared-links";
 import { colorList, statusList } from "../../../constants/shared-links";
-
-const typeList = [
-  {
-    label: "Asset",
-    value: "asset",
-  },
-  {
-    label: "Collection",
-    value: "collection",
-  },
-  {
-    label: "Portal",
-    value: "portal",
-  },
-];
 
 export default function ShareLinks() {
   const [links, setLinks] = useState([]);

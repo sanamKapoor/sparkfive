@@ -15,26 +15,8 @@ import ConfirmModal from "../modals/confirm-modal";
 import SpinnerOverlay from "../spinners/spinner-overlay";
 
 // Utils
+import { productSorts } from "../../../config/data/attributes";
 import toastUtils from "../../../utils/toast";
-
-const sorts = [
-  {
-    value: "sku,asc",
-    label: "Alphabetical (A-Z)",
-  },
-  {
-    value: "sku,desc",
-    label: "Alphabetical (Z-A)",
-  },
-  {
-    value: "numberOfFiles,asc",
-    label: "Popularity (Low to High)",
-  },
-  {
-    value: "numberOfFiles,desc",
-    label: "Popularity (High to Low)",
-  },
-];
 
 const ProductManagement = () => {
   const [activeDropdown, setActiveDropdown] = useState("");
@@ -201,7 +183,7 @@ const ProductManagement = () => {
         />
 
         <Select
-          options={sorts}
+          options={productSorts}
           onChange={(value) => {
             setSort(value);
           }}
