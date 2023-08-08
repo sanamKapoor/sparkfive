@@ -1,3 +1,9 @@
+import CampaignManagement from "../../components/common/attributes/campaign-management";
+import CollectionManagement from "../../components/common/attributes/collection-management";
+import CustomFieldsManagement from "../../components/common/attributes/custom-fields-management";
+import ProductManagement from "../../components/common/attributes/product-management";
+import TagManagement from "../../components/common/attributes/tag-management";
+
 export const sorts = [
   {
     value: "name,asc",
@@ -83,5 +89,33 @@ export const productSorts = [
   {
     value: "numberOfFiles,desc",
     label: "Popularity (High to Low)",
+  },
+];
+
+export const tabsData = [
+  {
+    id: "tags",
+    title: "Tags",
+    content: TagManagement,
+  },
+  {
+    id: "customFields",
+    title: "Custom Fields",
+    content: CustomFieldsManagement,
+  },
+  {
+    id: "collections",
+    title: "Collections",
+    content: CollectionManagement,
+  },
+  {
+    id: "products",
+    title: "Products",
+    content: ProductManagement,
+  },
+  {
+    id: "campaigns",
+    title: "Campaigns",
+    content: CampaignManagement,
   },
 ];

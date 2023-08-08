@@ -21,7 +21,7 @@ import toastUtils from "../../../utils/toast";
 const ProductManagement = () => {
   const [activeDropdown, setActiveDropdown] = useState("");
   const [productList, setProductList] = useState([]);
-  const [sort, setSort] = useState(sorts[0]);
+  const [sort, setSort] = useState(productSorts[0]);
   const [searchType, setSearchType] = useState("");
   const [searchKey, setSearchKey] = useState("");
   const [loading, setLoading] = useState(false);
