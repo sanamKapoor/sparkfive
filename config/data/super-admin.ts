@@ -25,3 +25,9 @@ export const defaultValues = {
   sortBy: "users.lastLogin",
   sortDirection: "ASC",
 };
+
+export const defaultUserSortData = {
+  sortBy: "users.lastLogin",
+  sortDirection: "ASC",
+  activeList: "allAccounts",
+};

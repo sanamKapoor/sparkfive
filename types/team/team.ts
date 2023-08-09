@@ -24,7 +24,7 @@ export interface ITeam {
   id: string;
   company: string;
   users: ITeamUser[];
-  plan: Pick<ITeamPlan, "id" | "name">;
+  plan: ITeamPlan;
 }
 
 export interface ITeamResponseData {

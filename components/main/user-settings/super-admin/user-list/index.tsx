@@ -195,8 +195,6 @@ const UserList: React.FC = () => {
                 title="Company"
               />
             </div>
-            <div className={styles.button} />{" "}
-            {/*it needs to implement button column width*/}
           </div>
         </li>
         {userData.users.map((user) => (
