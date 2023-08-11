@@ -16,6 +16,14 @@
   height: 100%;
   width: 100%;
 }
+.back-button{
+  background: none;
+  padding: 0;
+  height: auto !important;
+  min-width: inherit;
+  color: #817D9D;
+  font-weight: 400;
+}
 
 .container ul{
   -webkit-justify-content: flex-start;
@@ -68,9 +76,7 @@
 
 
 .asset-view-list{
-  border: 1px solid var(--color-border);
   padding: 20px;
-  border-radius: 6px;
 }
 
 .grid-list{
@@ -137,10 +143,10 @@
   color: var(--color-sec-text);
 }
 
-/* .add-tag-btn{
-  margin-bottom: 32px;
-  margin-top: 25px;
-} */
+.add-tag-btn{
+  margin-bottom: 16px;
+  margin-top: 16px;
+}
 
 .menu {
   display: none;
@@ -158,10 +164,17 @@
   width: 415px;
 }
 
+
+
+/* .right-panel ul{
+  left: 0;
+  right: inherit;
+} */
+
 .modal-wrapper{
   width: 75vw;
   max-width: 1385px;
-  padding: 25px 32px;
+  padding: 0 32px;
   display: grid;
   grid-template-columns: 1fr 35%;
   gap: 60px;
@@ -169,6 +182,8 @@
   max-height: 70vh;
   overflow-y: auto;
 }
+
+
 
 .modal-field-title{
   font-weight: 400;
@@ -211,7 +226,8 @@
 .admin-button-wrapper{
   display: flex;
   align-items: center;
-  margin-top: 15px;
+  margin-top: 25px;
+  justify-content: center;
 }
 
 .admin-button-wrapper button{
@@ -251,6 +267,28 @@
   flex-wrap: wrap;
   gap: 8px;
   margin-left: 8px;
+}
+.right-side ul{
+  right: inherit;
+}
+
+@media (min-width:768px){
+  .batch-outer > div > div:first-child{
+    position: absolute;
+    right: 20px;
+
+  }
+  .batch-outer > div:first-child{
+    overflow-y: hidden;
+  }
+  .right-side{
+    padding: 65px 0 40px;
+    border-left: 1px solid #ccc;
+    padding-left: 25px;
+  }
+  .left-bar{
+    padding: 65px 0 40px;
+  }
 }
 
 @media screen and (max-width: 900px) {
@@ -397,6 +435,7 @@
   width: 14px !important;
 }
 
+
 /* .left-bar{
   max-height: calc(100% - 200px);
 } */
@@ -476,9 +515,7 @@
 .asset-grid-text-wrapper-2-icon{
   width: calc(100% - 50px)
 }
-.right-side{
-  padding: 0;
-}
+
 .right-side textarea{
   min-height: 159px;
 }
@@ -499,10 +536,15 @@
   }
 }
 
-
+@media (min-width:768px){
+  .right-form{
+    overflow-y: auto;
+      height: calc(100vh - 401px);
+  }
+}
 
 @media screen and (max-width: 600px) {
-  .back {
+  .back{
     display: block;
     border-left: 1px solid #ccc;
     padding: 20px 10px;
@@ -522,6 +564,9 @@
     justify-content: center;
     align-items: center;
     z-index: 999;
+  }
+  .upload-request-button:empty{
+    display: none;
   }
   .options-list.dropdown {
     width: calc(160px * 2);
@@ -567,7 +612,6 @@
   }
   
   .right-panel {
-
     position: absolute;
     z-index: 999;
     width: auto;
@@ -577,6 +621,10 @@
     top: 0;
     bottom: 0;
     min-width: 90%;
+  }
+
+  .close{
+    display: none;
   }
 
   .root-row {
@@ -608,10 +656,17 @@
   .modal-wrapper {
     grid-template-columns: 1fr;
     width: 100%;
-    padding: 40px 32px;
+    padding: 20px 32px;
     gap: 32px;
   }
 
+  .button-wrapper {
+    padding: 0 15px;
+    align-items: center;
+  }
+  .main-title h2{
+    font-size: 18px;
+  }
 }
 
 @media screen and (max-width: 380px) {
@@ -624,6 +679,7 @@
 .batch-outer {
   padding: 0;
   align-items: center;
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .titleAdmin {

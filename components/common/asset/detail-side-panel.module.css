@@ -104,7 +104,9 @@
   cursor: pointer;
   margin-left: 0;
   /*margin-left: 8px;*/
-  margin-top: 1.5rem;
+  /* margin-top: 1.5rem; */
+  border-top: solid 1px #dddad4;
+  padding-top: 25px;
 }
 .select-add img{
   width: 17px;
@@ -112,7 +114,7 @@
 .product-wrapper {
   margin-left: 8px;
   padding-bottom: 8px;
-  border-bottom: solid 1px #dddad4;
+  /* border-bottom: solid 1px #dddad4; */
 }
 
 

@@ -66,6 +66,7 @@ const SuperAdmin = () => {
     const [vanity, setVanity] = useState(type[1].value)
     const [cdnAccess, setCdnAcces] = useState(type[1].value)
     const [transcript, setTranscript] = useState(type[1].value)
+    const [ocr, setOcr] = useState(type[1].value)
     const [advancedCollectionShareLink, setAdvanceShareLink] = useState(collectionSharedLink[1].value)
     const [subdomain, setSubdomain] = useState('')
     const [loading, setLoading] = useState(false)
@@ -79,6 +80,8 @@ const SuperAdmin = () => {
         setVanity(data.vanity)
         setSubdomain(data.subdomain ? `${data.subdomain || ""}.${window.location.hostname.replace("www.","")}` : "")
         setCdnAcces(data.cdnAccess)
+        setTranscript(data.transcript)
+        setOcr(data.ocr)
         setAdvanceShareLink(data.advancedCollectionShareLink)
         setBenefits(benefits.map((benefit)=>{ return {
             label: benefit.id,
@@ -355,6 +358,26 @@ const SuperAdmin = () => {
                 text='Save'
                 styleType='primary'
                 onClick={() => updateTeam({ transcript })}
+              />
+            </div>
+          </div>
+
+          <div className={`row align-flex-start ${styles.cdnEmbedding}`}>
+            <div className={"col-20 font-weight-600"}>
+              Text Recognition
+            </div>
+
+            <div className={"col-20"}>
+              <OptionList setValue={(value) => setOcr(value)} data={type} oneColumn={false} value={ocr }/>
+            </div>
+
+            <div className={"col-20 align-self-flex-end"}>
+              <Button
+                styleTypes={['exclude-min-height']}
+                type={'button'}
+                text='Save'
+                styleType='primary'
+                onClick={() => updateTeam({ ocr })}
               />
             </div>
           </div>

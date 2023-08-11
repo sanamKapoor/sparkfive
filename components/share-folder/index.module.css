@@ -3,13 +3,30 @@
   }
   
 
+@media (min-width:1200px){
+  .container {
+    margin-top: 199px;
+  } 
+}
+
   @media screen and (max-width: 900px) {
     .container {
       padding: 17.5px 16px;
     }
   }
   
-  .col-wrapper {
+  .col-wrapper,.col-wrapperview {
     display: flex;
     justify-content: space-between;
+    gap: 40px;
+  }
+
+  
+  @media screen and (min-width:1024px){
+    .col-wrapper {
+      padding-top: 85px;
+    }
+    .col-wrapperview{
+      padding-top: 0;
+    }
   }

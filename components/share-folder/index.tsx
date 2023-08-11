@@ -61,6 +61,7 @@ const ShareFolderMain = () => {
     const [openFilter, setOpenFilter] = useState((activeMode === 'assets' && !isMobile) ? true: false)
 
     const [top, setTop] = useState('calc(55px + 5rem)')
+    const [widthCard, setWidthCard] = useState(0);
 
     const submitPassword = async (password, email) => {
         try {
@@ -366,6 +367,8 @@ const ShareFolderMain = () => {
     const selectedAssets = assets.filter(asset => asset.isSelected)
 	const selectedFolders = folders.filter(folder => folder.isSelected)
     
+    const assetGridWrapperStyle = (!!folderInfo.singleSharedCollectionId || activeSortFilter.mainFilter === 'folders') ? styles['col-wrapperview'] : styles['col-wrapper'];
+  
     return (
         <>
             {!loading && <main className={`${styles.container} sharefolderOuter`}>
@@ -384,8 +387,10 @@ const ShareFolderMain = () => {
                     sharedAdvanceConfig={user ? undefined : advancedConfig}
                     isFolder={activeSortFilter.mainFilter === 'folders'}
                     sharePath={sharePath}
+                    activeFolder={activeFolder}
+                    mode={activeMode}
                 />
-                <div className={`${openFilter && styles['col-wrapper']}`} style={{marginTop: top}}>
+                <div className={assetGridWrapperStyle} style={{marginTop: top}}>
                     <AssetGrid
                         activeFolder={activeFolder}
                         getFolders={getFolders}
@@ -398,6 +403,8 @@ const ShareFolderMain = () => {
                         loadMore={loadMore}
                         openFilter={openFilter}
                         sharePath={sharePath}
+                        setWidthCard={setWidthCard}
+                        widthCard={widthCard}
                     />
                     {openFilter &&
                         <FilterContainer
@@ -408,6 +415,7 @@ const ShareFolderMain = () => {
                             activeSortFilter={activeSortFilter}
                             setActiveSortFilter={setActiveSortFilter}
                             isFolder={activeSortFilter.mainFilter === 'folders'}
+                            filterWidth={widthCard}
                         />
                     }
                 </div>

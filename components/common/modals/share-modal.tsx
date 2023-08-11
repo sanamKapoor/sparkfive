@@ -321,7 +321,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 			}} >
 
 			{loading && <Spinner className={styles['spinner']} />}
-			{!loading && <>
+			{!loading && <div className={styles['wrapper']}>
 				<div className={`${styles['input-wrapper']} d-flex align-items-center`}>
 					<Input
 						value={name}
@@ -475,7 +475,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 							/>
 						</div>
 						<div className={`col-50 d-flex align-items-center ${expiredPeriod?.value === 0 ? "flex-direction-column" : ""}`}>
-							{expiredPeriod?.value === 0 && <div className={"row w-100 m-b-5"}>
+							{expiredPeriod?.value === 0 && <div className={"row w-100 m-b-5 m-l-10"}>
 								<DayPickerInput
 									value={expiredAt}
 									formatDate={formatDate}
@@ -493,7 +493,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 							</div>}
 
 							{/*<Input additionalClasses={"w-50 m-r-15"} disabled={!url} placeholder={'Loading share link...'} value={url} styleType={'regular-short'} />*/}
-							<span className={"font-12 m-l-15 w-100"}>{expiredAt ? expiredAt.toDateString() : ""}</span>
+							<span className={"font-12 m-l-20 w-100"}>{expiredAt ? expiredAt.toDateString() : ""}</span>
 						</div>
 					</div>
 				</div>}
@@ -535,7 +535,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 				</div>}
 
 
-			</>}
+			</div>}
 
 
 

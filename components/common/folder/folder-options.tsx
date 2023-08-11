@@ -9,6 +9,8 @@ import { AssetContext, UserContext } from "../../../context";
 import { useContext, useEffect, useState } from "react";
 import folderApi from "../../../server-api/folder";
 
+import { ASSET_EDIT } from '../../../constants/permissions'
+
 const FolderOptions = ({
   downloadFoldercontents,
   setDeleteOpen,
@@ -24,15 +26,21 @@ const FolderOptions = ({
   activeView,
   activeFolderId,
 }) => {
-  const { user } = useContext(UserContext);
+  const { user, hasPermission } = useContext(UserContext);
 
   const options = isShare
     ? [{ label: "Download", onClick: downloadFoldercontents }]
     : [
         { label: "Download", onClick: downloadFoldercontents },
-        { label: "Delete", onClick: () => setDeleteOpen(true) },
+        // { label: "Delete", onClick: () => setDeleteOpen(true) },
         { label: "Share", onClick: shareAssets },
       ];
+
+
+  if(hasPermission([ASSET_EDIT])){
+    options.push( { label: "Delete", onClick: () => setDeleteOpen(true) })
+  }
+
   const [adminOption, setAdminOption] = useState(options);
 
   const handleChangeThumbnail = async () => {

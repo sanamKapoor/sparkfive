@@ -26,7 +26,7 @@
 .sub-image-wrapper img {
     height: inherit;
     width: 100%;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .image-button-wrapper {
@@ -50,9 +50,7 @@
   border-radius: 0 8px 0 0;
 }
 
-.sub-image-wrapper > img {
-    object-fit: cover;
-}
+
 
 .image-wrapper:hover img {
     animation: halfopacity 0.5s;

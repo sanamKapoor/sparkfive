@@ -11,7 +11,7 @@ import shareCollectionApi from '../../../server-api/share-collection'
 import { Utilities } from '../../../assets'
 
 // Contexts
-import { AssetContext, LoadingContext } from '../../../context'
+import { AssetContext, LoadingContext, UserContext } from '../../../context'
 
 // Components
 import IconClickable from '../buttons/icon-clickable'
@@ -51,6 +51,7 @@ const CropSidePanel = ({ asset,
 
     const { updateDownloadingStatus } = useContext(AssetContext)
     const { setIsLoading } = useContext(LoadingContext)
+    const { user } = useContext(UserContext)
 
     const [resizeOption, setResizeOption] = useState('px')
     const [sizesValue, setSizesValue] = useState({
@@ -66,6 +67,10 @@ const CropSidePanel = ({ asset,
 
     const [renameValue, setRenameValue] = useState(asset.name)
     const [renameModalOpen, setRenameModalOpen] = useState(false);
+
+    const isAdmin = () => {
+        return user?.role?.id === "admin" || user?.role?.id === "super_admin"
+    }
 
     const setMode = (mode) => {
         onModeChange(mode);

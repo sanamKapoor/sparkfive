@@ -212,6 +212,8 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 		// setIsLoading(false)
 	}
 
+	
+
 	return (
 		isMobile ? (
 			<div className={`app-overlay ${styles.container}`}>

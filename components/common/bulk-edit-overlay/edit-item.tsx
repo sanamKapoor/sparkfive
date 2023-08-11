@@ -35,10 +35,6 @@ const EditItem = ({assets, asset, thumbailUrl, realUrl, isEditSelected, index, t
             ) : (
               <AssetIcon extension={asset.extension} bulkSize={true} />
             )}
-            {/* {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} />}
-        {asset.type === 'video' && <AssetVideo asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} bulkSize={true} />}
-        {asset.type === 'application' && <AssetApplication extension={asset.extension} bulkSize={true} />}
-        {asset.type === 'text' && <AssetText extension={asset.extension} bulkSize={true} />} */}
             <>
               <div
                 className={`${styles["selectable-wrapper"]} ${
@@ -88,6 +84,7 @@ const EditItem = ({assets, asset, thumbailUrl, realUrl, isEditSelected, index, t
             currentAsset={curAsset}
             setCurrentAsset={setCurAsset}
             totalLength={totalLength}
+            onClose={() => setModalOpen(false)}
           />
         }
         closeButtonOnly

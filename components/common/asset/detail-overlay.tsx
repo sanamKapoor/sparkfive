@@ -1,55 +1,46 @@
-import styles from "./detail-overlay.module.css";
-import { Utilities, AssetOps } from "../../../assets";
-import { saveAs } from "file-saver";
+import update from "immutability-helper";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Rnd } from "react-rnd";
-import { useState, useEffect, useContext, useRef } from "react";
+import { AssetOps, Utilities } from "../../../assets";
+import { AssetContext, UserContext } from "../../../context";
 import assetApi from "../../../server-api/asset";
 import shareApi from "../../../server-api/share-collection";
 import customFileSizeApi from "../../../server-api/size";
-import { AssetContext, UserContext } from "../../../context";
-import toastUtils from "../../../utils/toast";
-import update from "immutability-helper";
 import downloadUtils from "../../../utils/download";
-import VersionList from "./version-list";
-import AssetAddition from "./asset-addition";
+import toastUtils from "../../../utils/toast";
 import urlUtils from "../../../utils/url";
+import AssetAddition from "./asset-addition";
+import styles from "./detail-overlay.module.css";
+import VersionList from "./version-list";
 
 import { isMobile } from "react-device-detect";
 
 import { ASSET_DOWNLOAD } from "../../../constants/permissions";
 
 // Components
-import SidePanel from "./detail-side-panel";
-import ConversationList from "../conversation/conversation-list";
-import IconClickable from "../buttons/icon-clickable";
-import Button from "../buttons/button";
-import AssetPdf from "./asset-pdf";
-import AssetImg from "./asset-img";
-import AssetApplication from "./asset-application";
-import AssetText from "./asset-text";
-import RenameModal from "../modals/rename-modal";
-import CropSidePanel from "./crop-side-panel";
-import AssetCropImg from "./asset-crop-img";
 import fileDownload from "js-file-download";
+import Button from "../buttons/button";
+import IconClickable from "../buttons/icon-clickable";
+import ConversationList from "../conversation/conversation-list";
+import RenameModal from "../modals/rename-modal";
+import AssetCropImg from "./asset-crop-img";
 import AssetIcon from "./asset-icon";
+import AssetImg from "./asset-img";
+import AssetPdf from "./asset-pdf";
 import CdnPanel from "./cdn-panel";
+import CropSidePanel from "./crop-side-panel";
+import SidePanel from "./detail-side-panel";
 
 import { isImageType } from "../../../utils/file";
 
-import { ASSET_ACCESS } from "../../../constants/permissions";
-import AssetNotes from './asset-notes';
-import AssetNote from './asset-note';
-import AssetTranscript from './asset-transcript';
-import AssetRelatedFIles from './asset-related-files';
+import AssetNote from "./asset-note";
+import AssetNotes from "./asset-notes";
+import AssetTranscript from "./asset-transcript";
 
-import { sizeToZipDownload } from "../../../constants/download";
-import EventBus from "../../../utils/event-bus";
-import AssetRelatedFilesList from "./asset-related-files-list";
 import Dropdown from "../inputs/dropdown";
+import AssetRelatedFilesList from "./asset-related-files-list";
 
 const getDefaultDownloadImageType = (extension) => {
-  console.log("isMobile", isMobile);
-
   const defaultDownloadImageTypes = [
     {
       value: "png",
@@ -95,6 +86,29 @@ const getDefaultDownloadImageType = (extension) => {
       },
     ]);
   }
+};
+
+const getResizeSize = (assetWidth, assetHeight): any => {
+  const maximumWidth = 900;
+  const maximumHeight = 900;
+  if (assetWidth > maximumWidth) {
+    return {
+      width: maximumWidth,
+      height: maximumHeight * (assetHeight / assetWidth),
+    };
+  }
+
+  if (assetHeight > maximumHeight) {
+    return {
+      width: maximumWidth * (assetWidth / assetHeight),
+      height: maximumHeight,
+    };
+  }
+
+  return {
+    width: assetWidth,
+    height: assetHeight,
+  };
 };
 
 const DetailOverlay = ({
@@ -150,11 +164,27 @@ const DetailOverlay = ({
   const [versionThumbnailUrl, setVersionThumbnailUrl] = useState(thumbailUrl);
   const [previewUrl, setPreviewUrl] = useState(null);
 
-  const [detailPosSize, setDetailPosSize] = useState({ x: 0, y: 0, width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight });
-  const [defaultSize, setDefaultSize] = useState({ width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight });
-  const [notes, setNotes] = useState([])
-  const [sizeOfCrop, setSizeOfCrop] = useState({ width: defaultSize.width, height: defaultSize.height })
-  const [transcripts, setTranscript] = useState([])
+  const resizeSizes = getResizeSize(
+    currentAsset.dimensionWidth,
+    currentAsset.dimensionHeight
+  );
+
+  const [detailPosSize, setDetailPosSize] = useState({
+    x: 0,
+    y: 0,
+    width: resizeSizes.width,
+    height: resizeSizes.height,
+  });
+  const [defaultSize, setDefaultSize] = useState({
+    width: currentAsset.dimensionWidth,
+    height: currentAsset.dimensionHeight,
+  });
+  const [notes, setNotes] = useState([]);
+  const [sizeOfCrop, setSizeOfCrop] = useState({
+    width: defaultSize.width,
+    height: defaultSize.height,
+  });
+  const [transcripts, setTranscript] = useState([]);
 
   const renameValue = useRef("");
   const setRenameValue = (value) => {
@@ -190,6 +220,7 @@ const DetailOverlay = ({
 
   const [width, setWidth] = useState<number>(currentAsset.dimensionWidth);
   const [height, setHeight] = useState<number>(currentAsset.dimensionHeight);
+  const [transcriptLoading, setTranscriptLoading] = useState(true);
 
   const resetValues = () => {
     const width = currentAsset.dimensionWidth;
@@ -297,10 +328,13 @@ const DetailOverlay = ({
 
   const getTranscript = async (curAsset?) => {
     try {
+      setTranscriptLoading(true);
       const asset = curAsset || currentAsset;
       const { data } = await assetApi.getTranscript(asset.id);
-      setTranscript(data)
+      setTranscript(data);
+      setTranscriptLoading(false);
     } catch (err) {
+      setTranscriptLoading(false);
       // console.log(err);
     }
   };
@@ -518,7 +552,13 @@ const DetailOverlay = ({
     setWidth(_width);
     setHeight(_height);
 
-    setDetailPosSize({ ...detailPosSize, width: newW, height: newH });
+    const resizeSizes = getResizeSize(newW, newH);
+
+    setDetailPosSize({
+      ...detailPosSize,
+      width: resizeSizes.width,
+      height: resizeSizes.height,
+    });
   };
 
   const lockCropping = () => {
@@ -560,9 +600,9 @@ const DetailOverlay = ({
     }
   }, [mode, currentAsset]);
 
-  useEffect(() => {
-    // setDetailPosSize(Object.assign({...detailPosSize}, {height, width}));
-  }, [width, height]);
+  // useEffect(() => {
+  //   setDetailPosSize(Object.assign({...detailPosSize}, {height, width}));
+  // }, [width, height]);
 
   const downloadSelectedAssets = async (id) => {
     const { shareJWT, code } = urlUtils.getQueryParameters();
@@ -865,12 +905,13 @@ const DetailOverlay = ({
   const onResizeStop = (w, h, position = {}) => {
     w = parseInt(w);
     h = parseInt(h);
+    const resizeSizes = getResizeSize(w, h);
     setDetailPosSize(
       Object.assign(
         { ...detailPosSize },
         {
-          width: w,
-          height: h,
+          width: resizeSizes.width,
+          height: resizeSizes.height,
           ...position,
         }
       )
@@ -894,6 +935,24 @@ const DetailOverlay = ({
     currentAsset.extension !== "svg+xml" &&
     currentAsset.type === "image" &&
     isImageType(assetDetail?.extension);
+
+  const seekVideo = (secs) => {
+    let myVideo = document.getElementById("video-element");
+    if (myVideo) {
+      // @ts-ignore
+      if (myVideo.fastSeek) {
+        // @ts-ignore
+        myVideo.fastSeek(secs);
+        // @ts-ignore
+        myVideo.play();
+      } else {
+        // @ts-ignore
+        myVideo.currentTime = secs;
+        // @ts-ignore
+        myVideo.play();
+      }
+    }
+  };
 
   return (
     <div
@@ -934,7 +993,7 @@ const DetailOverlay = ({
                           {versionCount + 1} versions
                         </div>
                       )}
-                    {assetDetail?.fileAssociations.length > 0 && (
+                    {assetDetail?.fileAssociations?.length > 0 && (
                       <>
                         <img src={Utilities.ellipse} />
                         <div
@@ -945,7 +1004,7 @@ const DetailOverlay = ({
                             changeActiveSide("related");
                           }}
                         >
-                          {assetDetail?.fileAssociations.length} Related files
+                          {assetDetail?.fileAssociations?.length} Related files
                         </div>
                       </>
                     )}
@@ -1021,7 +1080,10 @@ const DetailOverlay = ({
                             {
                               id: "edit",
                               label: "Edit then Download",
-                              onClick: () => changeActiveSide("download"),
+                              onClick: () => {
+                                changeActiveSide("download");
+                                setMode("resize");
+                              },
                             },
                           ]}
                         />
@@ -1031,7 +1093,11 @@ const DetailOverlay = ({
                 )}
             </div>
           </div>
-          <div className={styles["img-wrapper"]}>
+          <div
+            className={`${
+              !isShare ? styles["img-wrapper"] : styles["share-img-wrapper"]
+            }${activeFolder && ` ${styles["active-folderimg"]}`}`}
+          >
             <div className={styles["notes-wrapper"]}>
               {notes.map(
                 (note, indx) =>
@@ -1063,6 +1129,7 @@ const DetailOverlay = ({
                     }
                   />
                 )}
+
                 {mode === "resize" && (
                   <Rnd
                     position={{ x: detailPosSize.x, y: detailPosSize.y }}
@@ -1079,7 +1146,12 @@ const DetailOverlay = ({
                       onResizeStop(ref.style.width, ref.style.height, position)
                     }
                   >
-                    <AssetImg name={assetDetail.name} assetImg={versionRealUrl} imgClass="img-preview" isResize />
+                    <AssetImg
+                      name={assetDetail.name}
+                      assetImg={versionRealUrl}
+                      imgClass="img-preview"
+                      isResize
+                    />
                   </Rnd>
                 )}
 
@@ -1127,7 +1199,7 @@ const DetailOverlay = ({
                 <AssetIcon extension={currentAsset.extension} />
               )}
             {assetDetail.type === "video" && (
-              <video controls>
+              <video controls id={"video-element"}>
                 <source
                   src={previewUrl ?? versionRealUrl}
                   type={
@@ -1193,7 +1265,7 @@ const DetailOverlay = ({
               )}
             </>
           )}
-          {!isShare && activeSideComponent === "download" && (
+          {activeSideComponent === "download" && (
             <CropSidePanel
               isShare={isShare}
               sharePath={sharePath}
@@ -1260,14 +1332,30 @@ const DetailOverlay = ({
             <AssetNotes asset={asset} notes={notes} applyCrud={applyCrud} />
           )}
 
-          {activeSideComponent === "related" && <AssetRelatedFilesList relatedAssets={assetDetail?.fileAssociations}/>}
+          {activeSideComponent === "related" && (
+            <AssetRelatedFilesList
+              currentAsset={assetDetail}
+              relatedAssets={assetDetail?.fileAssociations || []}
+              associateFileId={currentAsset.id}
+              onChangeRelatedFiles={onChangeRelatedFiles}
+              onAddRelatedFiles={(data) => {
+                let updatedAssets = [...assetDetail.fileAssociations];
+                updatedAssets = updatedAssets.concat(data);
+                setAssetDetail({
+                  ...assetDetail,
+                  fileAssociations: updatedAssets,
+                });
+              }}
+            />
+          )}
           {activeSideComponent === "transcript" && transcripts && (
             <AssetTranscript
               title={"Transcript"}
               transcripts={transcripts}
+              loading={transcriptLoading}
+              navigateToTime={seekVideo}
             />
           )}
-
         </section>
       )}
       {/* Share page mobile right button */}
@@ -1389,17 +1477,15 @@ const DetailOverlay = ({
                 />
               )}
 
-              {asset?.fileAssociations.length > 0 && (
-                <IconClickable
-                  src={isMobile ? Utilities.relatedLight : Utilities.related}
-                  additionalClass={styles["menu-icon"]}
-                  onClick={() => {
-                    setMode("detail");
-                    resetValues();
-                    changeActiveSide("related");
-                  }}
-                />
-              )}
+              <IconClickable
+                src={isMobile ? Utilities.relatedLight : Utilities.related}
+                additionalClass={styles["menu-icon"]}
+                onClick={() => {
+                  setMode("detail");
+                  resetValues();
+                  changeActiveSide("related");
+                }}
+              />
               {hasPermission(["admin", "super_admin"]) && (
                 <IconClickable
                   src={isMobile ? Utilities.notesLight : Utilities.notes}
@@ -1425,15 +1511,17 @@ const DetailOverlay = ({
               )}
             </>
           )}
-          {transcriptAccess && <IconClickable
-            src={Utilities.listView}
-            additionalClass={styles["menu-icon"]}
-            onClick={() => {
-              setMode("detail");
-              resetValues();
-              changeActiveSide("transcript");
-            }}
-          />}
+          {transcriptAccess && assetDetail?.type === "video" && (
+            <IconClickable
+              src={Utilities.transcript}
+              additionalClass={styles[""]}
+              onClick={() => {
+                setMode("detail");
+                resetValues();
+                changeActiveSide("transcript");
+              }}
+            />
+          )}
         </section>
       )}
       <RenameModal

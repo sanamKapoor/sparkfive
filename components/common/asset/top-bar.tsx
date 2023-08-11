@@ -157,7 +157,7 @@ const TopBar = ({
         <img src={Utilities.filterBlue} alt={"filter"} />
       </div>
       <div className={styles.titleBreadcrumbs}>
-        {activeFolder && mode === "assets" && (
+        {activeFolder && mode === "assets" && !singleCollection && (
           <Breadcrumbs
             links={[
               {
@@ -171,9 +171,9 @@ const TopBar = ({
             current={folderData[0]?.name}
           />
         )}
-        {activeFolder && mode === "assets" && (
+        {activeFolder && mode === "assets" && !singleCollection && (
           <SubHeader pageTitle={folderData[0]?.name} />
-        )}
+        )} 
       </div>
       <div className={styles.wrapper}>
         <div className={styles.innerwrapper}>
@@ -267,7 +267,7 @@ const TopBar = ({
               className={styles.search}
             />
           )}
-          {activeSearchOverlay && (
+          {activeSearchOverlay && !(isShare && isFolder) &&(
             <SearchOverlay
               closeOverlay={closeSearchOverlay}
               operationsEnabled={true}
@@ -289,10 +289,11 @@ const TopBar = ({
               ASSET_UPLOAD_APPROVAL,
             ]) && (
 
-                <AssetAddition
-                  activeFolder={activeFolder}
-                  getFolders={getFolders}
-                />
+              <div  className={styles.mobilePlus}>
+              <AssetAddition
+              activeFolder={activeFolder}
+              getFolders={getFolders}
+            /></div>
             )}
           <div className={styles.gridOuter}>
             {!deletedAssets && (

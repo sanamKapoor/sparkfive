@@ -29,6 +29,7 @@ const SearchOverlayAssets = ({  closeOverlay, importEnabled = false, operationsE
 
   const getData = async (inputTerm, replace = true, _filterParams = filterParams) => {
     try {
+      setOpenFilters(false);
       // setSearchTerm(inputTerm)
       if(!isFolder){
         let fetchFn = assetApi.getAssets
@@ -143,6 +144,7 @@ const SearchOverlayAssets = ({  closeOverlay, importEnabled = false, operationsE
           placeholder={`Search ${isFolder ? 'Collections' : 'Assets'}`}
           onSubmit={(inputTerm, filterParams) => getData(inputTerm, true, filterParams)}
           openFilters={openFilters}
+          setOpenFilters={setOpenFilters}
         />
       </div>
 

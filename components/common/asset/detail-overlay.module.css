@@ -15,20 +15,22 @@
 
 .react-draggable {
   border: none !important;
-  background-color: transparent;
-  display: flex;
+  /* background-color: transparent; */
+  display: flex !important;
   align-items: center;
   justify-content: center;
   /* border: 2px dotted #100d0f !important; */
   position: relative !important;
   transform: none !important;
-  overflow: hidden;
 }
 
 .react-draggable img {
-  height: 100%;
-  width: auto;
   border: 2px dotted #100d0f !important;
+  /* height: auto; */
+  object-fit: contain;
+  /*aspect-ratio: 1 / 1;*/
+  width: initial;
+  max-height: 100%;
 }
 
 @media screen and (max-height: 760px) {
@@ -111,6 +113,9 @@
 }
 
 .content {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
   grid-area: content-asset;
   padding-right: 25px;
   padding-left: 25px;
@@ -128,23 +133,29 @@
   grid-area: asset-menu;
 }
 
-.img-wrapper {
-  height: 100%;
-  width: 100%;
+.img-wrapper, .share-img-wrapper , .download-image-types{
+  /* height: 100%;
+  width: 100%; */
   padding: 24px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
-  flex-direction: column;
+  /* flex-direction: column; */
   position: relative;
+  flex-direction: column;
+
 }
 
 .img-wrapper>img,
-.img-wrapper video {
+.share-img-wrapper>img,.active-folderimg img{
+  width: initial;
+  max-height: 100%;
+}
+
+.img-wrapper video, .share-img-wrapper video, .active-folderimg video{
+  max-width: 100%;
   width: 100%;
   max-height: 100%;
-  /* object-fit: scale-down; */
-
 }
 
 .asset-actions {
@@ -285,6 +296,7 @@
   display: none;
 }
 
+
 @media screen and (max-width: 1200px) {
   .container {
     display: flex;
@@ -326,6 +338,7 @@
   }
   .share .content {
     width: 100%;
+
   }
 }
 
@@ -336,6 +349,18 @@
 
   .img-wrapper {
     height: calc(100vh - 90px);
+    /* max-width: 1260px;
+    min-width: 100%; */
+    width: 100%;
+  }
+  .share-img-wrapper{
+    height: calc(100vh - 135px);
+    width: 100%;
+  }
+  .active-folderimg{
+    height: calc(100vh - 156px);
+    margin-top: 75px;
+    width: 100%;
   }
 
 }
@@ -346,6 +371,14 @@
     padding-top: 47px;
     flex-direction: column;
   }
+  .arrows {
+    padding-bottom: 0;
+  }
+
+  .img-wrapper>img,
+.share-img-wrapper>img{
+  max-width: 100%;
+}
 
   .share.container {
     flex-direction: row;
@@ -426,6 +459,7 @@
 
   .content {
     overflow: inherit;
+    height: 100vh;
   }
 
   .expand {
@@ -459,4 +493,17 @@
   .menu {
     gap: 18px;
   }
+}
+
+
+@media (max-width:400px){
+  .top-wrapper .back-name {
+    gap: 47px;
+  }
+
+}
+
+
+.img-wrapper canvas, .share-img-wrapper canvas{
+  position: absolute;
 }

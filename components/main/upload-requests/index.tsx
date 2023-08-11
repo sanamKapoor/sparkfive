@@ -158,6 +158,8 @@ const UploadRequest = () => {
 
   const debouncedBatchName = useDebounce(batchName, 500);
 
+  const [rightPanelOpen, setRightPanelOpen] = useState(false)
+
   const updateName = async (value) => {
     if (approvalId) {
       await approvalApi.update(approvalId, { name: value });
@@ -384,6 +386,7 @@ const UploadRequest = () => {
   // Save bulk tag from right pannel
   const saveBulkTag = async () => {
     setIsLoading(true);
+    let submitApi = false;
 
     let currentAssetTags = [...assetTags];
     let currentAssetCampaigns = [...assetCampaigns];
@@ -400,6 +403,7 @@ const UploadRequest = () => {
       let folderPromises = [];
 
       if (isSelected) {
+        submitApi = true
         const newTags = _.differenceBy(currentAssetTags, asset?.tags || []);
         const newCampaigns = _.differenceBy(
           currentAssetCampaigns,
@@ -414,10 +418,10 @@ const UploadRequest = () => {
         if (isAdmin()) {
           for (const customField of currentAssetCustomFields) {
             // Find corresponding custom field in asset
-            const assetField = asset.customs.filter(
+            const assetField = asset?.customs?.filter(
               (custom) => custom.id === customField.id
             );
-            const oldCustoms = assetField[0]?.values || [];
+            const oldCustoms = assetField && assetField[0]?.values || [];
 
             const newCustoms = _.differenceBy(
               customField.values,
@@ -566,26 +570,32 @@ const UploadRequest = () => {
             currentAssetTags,
             asset.asset.tags || []
           );
-          asset.asset.tags = asset.asset.tags.concat(newTags);
+          asset.asset.tags = asset?.asset?.tags?.concat(newTags);
 
           const newCampaigns = _.differenceBy(
             currentAssetCampaigns,
             asset.asset.campaigns || []
           );
-          asset.asset.campaigns = asset.asset.campaigns.concat(newCampaigns);
+          asset.asset.campaigns = asset?.asset?.campaigns?.concat(newCampaigns);
 
           const newFolders = _.differenceBy(
             currentAssetFolders,
             asset.asset.folders || []
           );
-          asset.asset.folders = asset.asset.folders.concat(newFolders);
+          asset.asset.folders = asset?.asset?.folders?.concat(newFolders);
         } else {
           asset.asset.tags = currentAssetTags;
         }
       }
     });
 
-    toastUtils.success(`Save successfully`);
+    if(submitApi){
+      toastUtils.success(`Save successfully`);
+    }else{
+      toastUtils.error(`Please select assets`)
+    }
+
+
 
     // Reset tags
     setTags([]);
@@ -814,7 +824,7 @@ const UploadRequest = () => {
   const TagWrapper = ({ status }) => {
     const getStatusName = (status) => {
       switch (status) {
-        case -1: {
+        case -1: case 'rejected': {
           return "Rejected";
         }
 
@@ -826,7 +836,7 @@ const UploadRequest = () => {
           return "Pending";
         }
 
-        case 2: {
+        case 2: case 'approved': {
           return "Approved";
         }
 
@@ -838,9 +848,9 @@ const UploadRequest = () => {
     return (
       <div
         className={clsx(styles["tag-wrapper"], {
-          [styles["green"]]: status === 2,
-          [styles["yellow"]]: status === 0,
-          [styles["red"]]: status === -1,
+          [styles["green"]]: status === 2 || status === 'approved',
+          [styles["yellow"]]: status === 0 ||  status === 'pending',
+          [styles["red"]]: status === -1 || status === 'rejected',
         })}
       >
         <span>{getStatusName(status)}</span>
@@ -849,11 +859,11 @@ const UploadRequest = () => {
   };
 
   const hasBothTagAndComments = (asset) => {
-    return asset.tags.length > 0 && asset.comments;
+    return asset?.tags?.length > 0 && asset?.comments;
   };
 
   const hasTagOrComments = (asset) => {
-    return asset.tags.length > 0 || asset.comments;
+    return asset?.tags?.length > 0 || asset?.comments;
   };
 
   const isAdmin = () => {
@@ -1030,6 +1040,9 @@ const UploadRequest = () => {
     setIsLoading(false);
 
     setDetailModal(false);
+    const isAdmin = () => {
+        return user?.role?.id === "admin" || user?.role?.id === "super_admin"
+    }
 
     toastUtils.success("Reject assets successfully");
   };
@@ -1292,6 +1305,7 @@ const UploadRequest = () => {
 
     toastUtils.success("Delete approval successfully");
   };
+
   return (
     <>
       <AssetSubheader
@@ -1317,7 +1331,12 @@ const UploadRequest = () => {
                 <div className={styles["topTitle"]}>
                   <div className={styles["main-title"]}>
                     <p>
-                      Upload Requests
+                    <Button
+                      type="button"
+                      text={"Upload Requests "}
+                      onClick={onCancelView}
+                      className={styles["back-button"]}
+                    ></Button>
                       <span>
                         <img
                           src={Utilities.arrowNav}
@@ -1616,14 +1635,14 @@ const UploadRequest = () => {
                                 <div
                                   className={`${styles["icon-wrapper"]} d-flex`}
                                 >
-                                  {assetItem.asset.comments && (
+                                  {assetItem?.asset?.comments && (
                                     <IconClickable
                                       additionalClass={styles["edit-icon"]}
                                       src={Utilities.comment}
                                       onClick={() => {}}
                                     />
                                   )}
-                                  {assetItem.asset.tags.length > 0 && (
+                                  {assetItem?.asset?.tags?.length > 0 && (
                                     <IconClickable
                                       additionalClass={styles["edit-icon"]}
                                       src={Utilities.greenTag}
@@ -1644,10 +1663,10 @@ const UploadRequest = () => {
           </main>
 
           {mode === "view" && assets.length > 0 && (
-            <div className={`col-30 ${styles["right-panel"]}`}>
+          <div className={rightPanelOpen ? `.col-30 ${styles['right-panel']}` : `.col-30 ${styles['right-panel']} ${styles['close']}`}>
               <div className={detailPanelStyles.container}>
                 <h2 className={styles["detail-title"]}>
-                  {isAdmin() ? "User Tags" : "Tagging"}
+                  {isAdmin() ? "Batch Details" : "Tagging"}
                 </h2>
 
                 {(currentViewStatus !== 0 || isAdmin()) && (
@@ -1681,7 +1700,7 @@ const UploadRequest = () => {
                   </div>
                 )}
 
-                {hasSelectedAssets() &&
+                {
                   (currentViewStatus === 0 || isAdmin()) && (
                     <>
                       <div className={detailPanelStyles["field-wrapper"]}>
@@ -1901,8 +1920,8 @@ const UploadRequest = () => {
                       <Button
                         className={styles["add-tag-btn"]}
                         type="button"
-                        text="Bulk Add Tag"
-                        styleType="secondary"
+                        text="Save Changes"
+                        styleType="primary"
                         onClick={saveBulkTag}
                       />
                       {/*{*/}
@@ -1923,8 +1942,8 @@ const UploadRequest = () => {
           )}
 
           {mode === "view" && (
-            <div className={styles.back}>
-              <IconClickable src={Utilities.closePanelLight} />
+            <div className={styles.back} onClick={() => setRightPanelOpen(!rightPanelOpen)}>
+              <IconClickable src={rightPanelOpen ? Utilities.closePaneReverse :Utilities.closePanelDark} />
             </div>
           )}
         </div>
@@ -2041,7 +2060,7 @@ const UploadRequest = () => {
               />
             </div>
           </div>
-          <div className={"right-side"}>
+          <div  className={`${styles["right-side"]}`}>
             <div
               className={`${detailPanelStyles.container} ${styles["right-form"]}`}
             >

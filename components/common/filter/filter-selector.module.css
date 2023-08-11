@@ -17,9 +17,9 @@
     text-align: right;
 }
 .select-item p {
-    text-overflow: ellipsis;
+    /* text-overflow: ellipsis;
     overflow: hidden;
-    white-space: nowrap;
+    white-space: nowrap; */
 }
 
 @media screen and (max-width: 800px) {
@@ -48,9 +48,10 @@
     width: 14px;
 }
 .select-item p {
-    margin: 0 10px;
+    margin: 0 5px 0 0;
     font-size: 13px;
     font-weight: 400;
+    word-break: break-word;
 }
 .item-name {
     text-align: left;

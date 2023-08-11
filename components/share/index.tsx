@@ -22,7 +22,7 @@ import { GeneralImg } from '../../assets'
 
 
 // Contexts
-import { AssetContext, FilterContext } from '../../context'
+import { AssetContext, FilterContext, TeamContext } from '../../context'
 import Spinner from "../common/spinners/spinner";
 import Input from "../common/inputs/input";
 import AuthButton from "../common/buttons/auth-button";
@@ -33,6 +33,7 @@ const AssetShare = () => {
 	} = useContext(AssetContext)
 
 	const {searchFilterParams} = useContext(FilterContext);
+	const {team} = useContext(TeamContext)
 
 	const [assets, setAssets] = useState([])
 	const [selectedAsset, setSelectedAsset] = useState(0)
@@ -159,6 +160,7 @@ const AssetShare = () => {
 					setError(false)
 					setLoading(false)
 					setAssets(data.data)
+					setShareUserName(data.sharedBy)
 				}
 			}
 		} catch (err) {
@@ -221,7 +223,7 @@ const AssetShare = () => {
 				</div>
 				}
 				{!loading && !error && <>
-					<ShareOperationButtons selectAll={selectAll} selectedAsset={selectedAsset} downloadSelectedAssets={downloadSelectedAssets}/>
+					<ShareOperationButtons sharedBy={shareUserName} selectAll={selectAll} totalSharedFiles={assets?.length} selectedAsset={selectedAsset} downloadSelectedAssets={downloadSelectedAssets}/>
 					<div className={styles['list-wrapper']}>
 						<ul className={styles['grid-list']}>
 							{assets.map((assetItem) => {

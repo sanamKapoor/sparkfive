@@ -1,12 +1,13 @@
-import styles from './spinner-overlay.module.css'
+import styles from "./spinner-overlay.module.css";
 
 // Components
-import Spinner from './spinner'
+import Spinner from "./spinner";
 
-const SpinnerOverlay = () => (
+const SpinnerOverlay = ({ text }) => (
   <div className={styles.container}>
+    {text && <p>{text}</p>}
     <Spinner />
   </div>
-)
+);
 
-export default SpinnerOverlay
+export default SpinnerOverlay;

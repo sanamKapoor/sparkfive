@@ -22,7 +22,7 @@ const RequestStatusBadge = ({ status, uploadType, isAdmin }) => {
  
        }
        case 2: {
-         return <span className={requestListStyles['complete-tag']}>Completed</span>
+         return <span className={requestListStyles['complete-tag']}>Approved</span>
        }
        default: {
          return <span className={requestListStyles['pending-tag']}>Pending</span>
@@ -30,8 +30,8 @@ const RequestStatusBadge = ({ status, uploadType, isAdmin }) => {
      }
     }else{
      switch(status){
-       case 'Completed':
-         return <span className={requestListStyles['complete-tag']}>Completed</span>
+       case 2: case 'Completed':
+         return <span className={requestListStyles['complete-tag']}>Approved</span>
        case 'Pending':
          return <span className={requestListStyles['pending-tag']}>Pending</span>
        case 'In Progress':

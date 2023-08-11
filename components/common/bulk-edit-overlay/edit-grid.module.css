@@ -7,7 +7,7 @@
 
 .grid-list {
   display: grid;
-  grid-template-columns: repeat(7, minmax(270px, 1fr));
+  grid-template-columns: repeat(6, minmax(187px, 1fr));
   grid-gap: 40px;
 }
 
@@ -118,6 +118,12 @@
   }
 }
 
+@media (min-width:768px){
+  .detail > div:first-child {
+    overflow-y: hidden;
+  }
+}
+
 @media screen and (max-width: 1500px)  {
   .grid-list {
     grid-template-columns: repeat(4, minmax(165px, 1fr));
@@ -151,6 +157,7 @@
 .subEditModal {
   align-items: center;
   padding: 20px;
+  background: rgba(0, 0, 0, 0.6);
 }
 
 @media screen and (min-width:1440px) {

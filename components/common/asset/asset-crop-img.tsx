@@ -258,7 +258,7 @@ const AssetCropImg = ({ sizeOfCrop, setSizeOfCrop, assetImg, setWidth, setHeight
 
 			<ReactCrop
 				crop={crop}
-				// locked={locked}
+				locked={locked}
 				ruleOfThirds={true}
 				className={`${styles['react-crop']} ${mode == 'preview' ? "display-none" : ""}`}
 				onChange={(e) => {

@@ -27,19 +27,22 @@
 
 .transcript-item{
     display: flex;
-    margin-bottom: 8px;
+    margin-bottom: 30px;
 }
 
 .time-text{
     margin-right: 16px;
-    padding: 4px 8px;
-    background-color: var(--color-prim-turquoise);
-    border-radius: 4px;
+    padding: 4px 16px;
+    background-color: var(--color-sec-lightblue);
     display: flex;
     align-items: center;
-    color: white;
+    color: var(--color-prim-navy);
     cursor: pointer;
     height: min-content;
+    border-radius: 10px;
+    font-size: 12px;
+    width: 85px;
+    font-weight: 500;
 }
 
 .trans-text{
@@ -50,14 +53,20 @@
     margin-right: 0;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+
 }
 
 .input-container{
     margin-right: 0;
+    width: 100%;
+}
+
+.input-container input{
+    padding-left: 30px;
 }
 
 .transcript-row{
-    margin-top: 24px;
+    margin-top: 47px;
 }
 
 @media screen and (max-width: 460px) {
