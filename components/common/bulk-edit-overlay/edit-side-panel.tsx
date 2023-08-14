@@ -22,7 +22,7 @@ import {
 
 // Utils
 import { Utilities } from "../../../assets";
-import { CALENDAR_ACCESS } from "../../../constants/permissions";
+import { ASSET_EDIT, CALENDAR_ACCESS } from "../../../constants/permissions";
 import channelSocialOptions from "../../../resources/data/channels-social.json";
 
 // Components
@@ -33,7 +33,6 @@ import CustomFieldSelector from "../items/custom-field-selector";
 import ProjectCreationModal from "../modals/project-creation-modal";
 
 // Constants
-import { ASSET_EDIT } from "../../../constants/permissions";
 import Button from "../buttons/button";
 
 const sort = (data) => {
