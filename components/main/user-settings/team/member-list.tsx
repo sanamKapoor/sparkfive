@@ -1,30 +1,45 @@
-import styles from './member-list.module.css'
-import { useState, useEffect } from 'react'
+import styles from "./member-list.module.css";
 
 // Components
-import Member from './member'
-import { log } from 'console'
+import { ITeamMember } from "../../../../types/team/team";
+import Member from "./member";
 
-const MemberList = ({ members, type = 'member', setSelectedMember, setSelectedDeleteMember, onReload = () => {} }) => {
+interface MemberListProps {
+  members: ITeamMember[];
+  type: string;
+  setSelectedMember: (data: { member: ITeamMember; type: string }) => void;
+  setSelectedDeleteMember: (data: {
+    member: ITeamMember;
+    type: string;
+  }) => void;
+  onReload: () => {};
+}
 
+const MemberList: React.FC<MemberListProps> = ({
+  members,
+  type = "member",
+  setSelectedMember,
+  setSelectedDeleteMember,
+  onReload = () => {},
+}) => {
   const selectMember = (member) => {
     setSelectedMember({
       member,
-      type
-    })
-  }
+      type,
+    });
+  };
 
   const selectForDelete = (member) => {
     setSelectedDeleteMember({
       member,
-      type
-    })
-  }  
+      type,
+    });
+  };
 
   return (
     <>
       <ul className={styles.container}>
-        {members.map(member => (
+        {members.map((member) => (
           <Member
             key={member.id}
             id={member.id}
@@ -42,7 +57,7 @@ const MemberList = ({ members, type = 'member', setSelectedMember, setSelectedDe
         ))}
       </ul>
     </>
-  )
-}
+  );
+};
 
-export default MemberList
+export default MemberList;

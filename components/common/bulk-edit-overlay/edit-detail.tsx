@@ -1,17 +1,17 @@
-import { useContext, useEffect, useState } from "react";
-import styles from "./edit-detail.module.css";
+import { useEffect, useState } from "react";
 import { Utilities } from "../../../assets";
+import styles from "./edit-detail.module.css";
 
-import IconClickable from "../buttons/icon-clickable";
-import AssetImg from "../asset/asset-img";
 import assetApi from "../../../server-api/asset";
-import tagApi from "../../../server-api/tag";
-import projectApi from "../../../server-api/project";
 import campaignApi from "../../../server-api/campaign";
 import folderApi from "../../../server-api/folder";
-import EditSidePanel from "./edit-side-panel";
-import AssetPdf from "../asset/asset-pdf";
+import projectApi from "../../../server-api/project";
+import tagApi from "../../../server-api/tag";
 import AssetIcon from "../asset/asset-icon";
+import AssetImg from "../asset/asset-img";
+import AssetPdf from "../asset/asset-pdf";
+import IconClickable from "../buttons/icon-clickable";
+import EditSidePanel from "./edit-side-panel";
 
 const EditDetail = ({
   onClose,

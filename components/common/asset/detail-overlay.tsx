@@ -6,7 +6,6 @@ import { AssetContext, UserContext } from "../../../context";
 import assetApi from "../../../server-api/asset";
 import shareApi from "../../../server-api/share-collection";
 import customFileSizeApi from "../../../server-api/size";
-import downloadUtils from "../../../utils/download";
 import toastUtils from "../../../utils/toast";
 import urlUtils from "../../../utils/url";
 import AssetAddition from "./asset-addition";
@@ -150,7 +149,6 @@ const DetailOverlay = ({
     needsFetch,
     updateDownloadingStatus,
     setDetailOverlayId,
-    totalAssets,
     setOperationAssets,
   } = useContext(AssetContext);
 
@@ -265,9 +263,6 @@ const DetailOverlay = ({
     if (activeFolder) {
       const folder = folders.find((folder) => folder.id === activeFolder);
       if (folder) {
-        // if (folder.assets.length === 0 && assets && assets.length) {
-        // folder.assets = [...assets];
-        // }
         setActiveCollection(folder);
         const assetIndx =
           assets.findIndex((item) => item.asset && item.asset.id === asset.id) +
@@ -293,12 +288,6 @@ const DetailOverlay = ({
       setCurrentAsset(asset);
     }
   }, [asset]);
-
-  // useEffect(() => {
-  //   const modAssetIndex = assets.findIndex(assetItem => assetItem.asset.id === assetDetail?.id)
-  //   if (modAssetIndex !== -1)
-  //     setAssetDetail(assets[modAssetIndex].asset)
-  // }, [assets])
 
   const checkInitialParams = () => {
     if (initialParams?.side) {
@@ -378,7 +367,6 @@ const DetailOverlay = ({
       );
       toastUtils.success("Asset name updated");
     } catch (err) {
-      // console.log(err);
       toastUtils.error("Could not update asset name");
     }
   };
@@ -468,17 +456,6 @@ const DetailOverlay = ({
               : value.height,
         });
       }
-      // const {newW, newH} = calculateRenderSize(value.width, value.height);
-      //
-      // // calculate actual height/width with respect to display size
-      // const pixelW = currentAsset.dimensionWidth/defaultSize.width;
-      // const pixelH = currentAsset.dimensionHeight/defaultSize.height;
-      // setWidth(Math.round(newW*pixelW));
-      // setHeight(Math.round(newH*pixelH));
-      //
-      // // set new rendering size in the container
-      // setDetailPosSize({...detailPosSize, width: newW, height: newH });
-
       setSize(value);
     }
   };
@@ -580,7 +557,6 @@ const DetailOverlay = ({
           height: currentAsset.dimensionHeight,
         },
       ]);
-      // setPresetTypes([{ label: 'None', value: 'none', width: currentAsset.dimensionWidth, height: currentAsset.dimensionHeight}])
 
       setSize({
         label: "Original",
@@ -664,12 +640,6 @@ const DetailOverlay = ({
         "Internal Server Error. Please try again."
       );
     }
-
-    // downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets')
-  };
-
-  const manualDownloadAsset = (asset) => {
-    downloadUtils.downloadFile(versionRealUrl, asset.name);
   };
 
   const setDisplayVersions = (versionAssets) => {
@@ -921,12 +891,6 @@ const DetailOverlay = ({
     setHeight(h);
   };
 
-  const onChangeRelatedFiles = (fileAssociations) => {
-    setAssetDetail({ ...assetDetail, fileAssociations });
-  };
-
-  const showSideMenu = isShare ? (isMobile ? true : false) : true;
-
   const editThenDownload =
     currentAsset.extension !== "gif" &&
     currentAsset.extension !== "tiff" &&
@@ -1027,14 +991,13 @@ const DetailOverlay = ({
                   <Button
                     text={"Share"}
                     type={"button"}
-                    styleType={"primary"}
-                    className={styles["only-desktop-button"]}
+                    className={`container ${styles["only-desktop-button"]} primary`}
                     onClick={openShareAsset}
                   />
 
                   <div className={styles["only-mobile-button"]}>
                     <IconClickable
-                      className={styles["only-mobile-button"]}
+                      additionalClass={styles["only-mobile-button"]}
                       src={AssetOps.shareWhite}
                       onClick={openShareAsset}
                     />
@@ -1047,8 +1010,7 @@ const DetailOverlay = ({
                     <Button
                       text={"Download"}
                       type={"button"}
-                      className={styles["only-desktop-button"]}
-                      styleType={"secondary"}
+                      className={`container ${styles["only-desktop-button"]} secondary`}
                       onClick={() => {
                         if (editThenDownload) {
                           setDownloadDropdownOpen(true);
@@ -1139,9 +1101,6 @@ const DetailOverlay = ({
                     }}
                     className={`${styles["react-draggable"]}`}
                     lockAspectRatio={true}
-                    // onDragStop={(e, d) => {
-                    //   setDetailPosSize(Object.assign({...detailPosSize}, { x: d.x, y: d.y}))
-                    // }}
                     onResizeStop={(e, direction, ref, delta, position) =>
                       onResizeStop(ref.style.width, ref.style.height, position)
                     }
@@ -1238,16 +1197,6 @@ const DetailOverlay = ({
                 </span>
               </div>
             )}
-
-            {/* {!isShare &&
-              <>
-                <AssetRelatedFIles outsideDetailOverlay={outsideDetailOverlay} closeOverlay={closeOverlay} assets={assetDetail.fileAssociations || []} associateFileId={currentAsset.id} onChangeRelatedFiles={onChangeRelatedFiles} onAddRelatedFiles={(data) => {
-                  let updatedAssets = [...assetDetail.fileAssociations]
-                  updatedAssets = updatedAssets.concat(data)
-                  setAssetDetail({ ...assetDetail, fileAssociations: updatedAssets })
-                }} />
-              </>
-            } */}
           </div>
         </section>
       )}
@@ -1282,7 +1231,6 @@ const DetailOverlay = ({
               widthOriginal={width}
               heightOriginal={height}
               onModeChange={(mode) => {
-                // resetValues();
                 setMode(mode);
                 if (mode === "crop") {
                   setSizeOfCrop({

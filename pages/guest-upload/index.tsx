@@ -1,23 +1,19 @@
-import Head from 'next/head'
-
 import GuestUploadLayout from "../../components/common/layouts/guest-upload-layout";
 import GuestUpload from "../../components/guest-upload";
 
-import GuestUploadContextProvider from '../../context/share-upload-link-provider'
+import AppLayout from "../../components/common/layouts/app-layout";
+import GuestUploadContextProvider from "../../context/share-upload-link-provider";
 
 const GuestUploadPage = () => (
-    <>
-        <Head>
-            <title>Guest Upload</title>
-            <link rel="icon" href="/favicon.ico" />
-        </Head>
+  <>
+    <GuestUploadContextProvider>
+      <AppLayout title="Guest Upload">
+        <GuestUploadLayout>
+          <GuestUpload />
+        </GuestUploadLayout>
+      </AppLayout>
+    </GuestUploadContextProvider>
+  </>
+);
 
-        <GuestUploadContextProvider>
-            <GuestUploadLayout>
-                <GuestUpload />
-            </GuestUploadLayout>
-        </GuestUploadContextProvider>
-    </>
-)
-
-export default GuestUploadPage
+export default GuestUploadPage;

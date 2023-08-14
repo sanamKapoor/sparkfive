@@ -1,60 +1,66 @@
-import styles from './invoices.module.css'
-import { useState, useEffect } from 'react'
-import planApi from '../../../../../server-api/plan'
+import { useEffect, useState } from "react";
+import planApi from "../../../../../server-api/plan";
+import styles from "./invoices.module.css";
 
 // Components
-import InvoiceItem from './invoice-item'
+import InvoiceItem from "./invoice-item";
 
-const Invoices = () => {
-  const [invoices, setInvoices] = useState([])
-  const [upcoming, setUpcoming] = useState([])
-  const [hasMore, setHasMore] = useState(false)
+const Headers = ({ type = "invoice" }) => (
+  <li className={styles.headers}>
+    <div>Date</div>
+    <div>Plan</div>
+    {type === "invoice" && <div>Status</div>}
+    <div>Amount</div>
+    {type === "invoice" && <div>Download</div>}
+  </li>
+);
+
+const Invoices: React.FC = () => {
+  const [invoices, setInvoices] = useState([]);
+  const [upcoming, setUpcoming] = useState([]);
+  const [hasMore, setHasMore] = useState<boolean>(false);
 
   useEffect(() => {
-    getInvoices()
-    getUpcoming()
-  }, [])
+    getInvoices();
+    getUpcoming();
+  }, []);
 
   const getInvoices = async () => {
     try {
-      const { data: { hasMore, invoices } } = await planApi.getInvoices()
-      setHasMore(hasMore)
-      setInvoices(invoices)
+      const {
+        data: { hasMore, invoices },
+      } = await planApi.getInvoices();
+      setHasMore(hasMore);
+      setInvoices(invoices);
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
-  }
+  };
 
   const getUpcoming = async () => {
     try {
-      const { data } = await planApi.getUpcomingInvoice()
-      setUpcoming([data])
+      const { data } = await planApi.getUpcomingInvoice();
+      setUpcoming([data]);
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
-  }
-
-  const Headers = ({ type = 'invoice' }) => (
-    <li className={styles.headers}>
-      <div>Date</div>
-      <div>Plan</div>
-      {type === 'invoice' && <div>Status</div>}
-      <div>Amount</div>
-      {type === 'invoice' && <div>Download</div>}
-    </li>
-  )
+  };
 
   const parsedInvoices = invoices
-    .filter(({ product, status, statusTransitions }) => product !== process.env.STRIPE_EXPIRE_PRODUCT_NAME && (status !== 'draft' || statusTransitions.finalized_at))
-    .map(invoice => ({
+    .filter(
+      ({ product, status, statusTransitions }) =>
+        product !== process.env.STRIPE_EXPIRE_PRODUCT_NAME &&
+        (status !== "draft" || statusTransitions.finalized_at)
+    )
+    .map((invoice) => ({
       ...invoice,
       date: getInvoiceDate(invoice),
-      status: getInvoiceStatus(invoice)
-    }))
+      status: getInvoiceStatus(invoice),
+    }));
 
   const parsedUpcoming = upcoming
     .filter(({ product }) => product !== process.env.STRIPE_EXPIRE_PRODUCT_NAME)
-    .map(upcoming => ({ ...upcoming, date: new Date(upcoming.date * 1000) }))
+    .map((upcoming) => ({ ...upcoming, date: new Date(upcoming.date * 1000) }));
 
   return (
     <div>
@@ -67,31 +73,35 @@ const Invoices = () => {
         ))}
       </ul>
 
-      <h3 className={styles['upcoming-header']}>Upcoming Charges</h3>
+      <h3 className={styles["upcoming-header"]}>Upcoming Charges</h3>
       <ul>
-        <Headers type='upcoming' />
+        <Headers type="upcoming" />
         {parsedUpcoming.map((invoice, index) => (
           <li key={index}>
-            <InvoiceItem invoice={invoice} type='upcoming' />
+            <InvoiceItem invoice={invoice} type="upcoming" />
           </li>
         ))}
       </ul>
     </div>
-  )
-}
+  );
+};
 
-export default Invoices
+export default Invoices;
 
 const getInvoiceDate = (invoice) => {
-  if (invoice.status === 'paid') {
-    return (!isNaN(invoice.statusTransitions.paid_at) && new Date(invoice.statusTransitions.paid_at * 1000)) || ''
+  if (invoice.status === "paid") {
+    return (
+      (!isNaN(invoice.statusTransitions.paid_at) &&
+        new Date(invoice.statusTransitions.paid_at * 1000)) ||
+      ""
+    );
   } else {
-    return new Date(invoice.statusTransitions.finalized_at * 1000)
+    return new Date(invoice.statusTransitions.finalized_at * 1000);
   }
-}
+};
 
 const getInvoiceStatus = (invoice) => {
-  if (invoice.status === 'open') {
-    return 'in process'
-  } else return invoice.status
-}
+  if (invoice.status === "open") {
+    return "in process";
+  } else return invoice.status;
+};

@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
-import { Utilities } from "../../../assets";
+import { AssetOps, Utilities } from "../../../assets";
 import styles from "./tag.module.css";
 
 import {
@@ -15,7 +15,6 @@ const Tag = ({
   data,
   type = null,
   canRemove = false,
-  canEdit = true,
   removeFunction = () => {},
   editFunction = () => {},
   altColor = "",
@@ -41,10 +40,10 @@ const Tag = ({
   const tagRender =
     type && mouseOver ? (
       <span>
-        {type !== "custom-fields" && canEdit && (
+        {type !== "custom-fields" && (
           <IconClickable
             additionalClass={styles["tag-icon"]}
-            src={Utilities.edit}
+            src={AssetOps.edit}
             onClick={editFunction}
             tooltipId="Edit"
             tooltipText="Edit"

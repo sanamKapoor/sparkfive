@@ -1,11 +1,8 @@
-.sub-container {
-}
-
 .subscription-data {
   flex: 1;
   margin-right: 20%;
 }
- 
+
 .plan {
   width: 100%;
   margin-bottom: 28px;
@@ -21,7 +18,7 @@
   margin-bottom: 28px;
 }
 
-.prop-pair > div {
+.prop-pair>div {
   width: 50%;
 }
 
@@ -42,7 +39,7 @@
   flex-direction: column;
 }
 
-.button-actions button{
+.button-actions button {
   margin-bottom: 26px;
 }
 

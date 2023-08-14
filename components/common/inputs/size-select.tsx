@@ -1,20 +1,17 @@
-import styles from './filters-select.module.css'
-import ReactSelect, { components, createFilter } from 'react-select'
-import { useState } from 'react'
-import { Utilities } from '../../../assets'
+import ReactSelect from "react-select";
+import styles from "./filters-select.module.css";
 
 const SizeSelect = ({
   options,
   placeholder,
   value = null,
-  onChange = (selected) => { },
-  styleType = '',
+  onChange = (selected) => {},
+  styleType = "",
   isClearable = false,
   closeMenuOnSelect = true,
-  additionalClass = '',
-  disabled=false,
+  additionalClass = "",
+  disabled = false,
 }) => {
-
   return (
     <>
       <ReactSelect
@@ -31,9 +28,7 @@ const SizeSelect = ({
         isDisabled={disabled}
       />
     </>
-  )
-}
+  );
+};
 
-export default SizeSelect
-
-
+export default SizeSelect;

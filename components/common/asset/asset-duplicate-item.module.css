@@ -6,7 +6,6 @@
 .actions {
     display: grid;
     grid-auto-flow: column;
-    /* justify-content: center; */
     gap: 29px;
     padding: 17px 20px;
     flex-wrap: wrap;
@@ -57,7 +56,8 @@
         border-bottom: 1px solid var(--color-secondary-border);
         gap: 15px;
         padding: 17px 40px;
-    }   
+    }
+
     .file {
         padding: 0 16px;
     }

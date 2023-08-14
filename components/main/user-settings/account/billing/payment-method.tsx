@@ -1,69 +1,77 @@
-import styles from './payment-method.module.css'
+import styles from "./payment-method.module.css";
 
-import planApi from '../../../../../server-api/plan'
-import { useState } from 'react'
+import { useState } from "react";
+import planApi from "../../../../../server-api/plan";
 
 // Components
-import BaseModal from '../../../../common/modals/base'
-import Button from '../../../../common/buttons/button'
-import CreditCardForm from '../../../../common/payment/credit-card-form'
+import { IPaymentMethod } from "../../../../../types/account/payment";
+import Button from "../../../../common/buttons/button";
+import BaseModal from "../../../../common/modals/base";
+import CreditCardForm from "../../../../common/payment/credit-card-form";
 
-const PaymentMethod = ({ paymentMethod, setPaymentMethod }) => {
-  const [modalActive, setModalActive] = useState(false)
+interface PaymentMethodProps {
+  paymentMethod: IPaymentMethod;
+  setPaymentMethod: (val: string) => void;
+}
+
+const PaymentMethod: React.FC<PaymentMethodProps> = ({
+  paymentMethod,
+  setPaymentMethod,
+}) => {
+  const [modalActive, setModalActive] = useState(false);
 
   const updatePaymentMethod = async (paymentMethodId) => {
     try {
-      const { data } = await planApi.addPaymentMethod({ paymentMethodId })
-      setPaymentMethod(data)
+      const { data } = await planApi.addPaymentMethod({ paymentMethodId });
+      setPaymentMethod(data);
     } catch (err) {
-      console.log(err)
+      console.log(err);
     } finally {
-      setModalActive(false)
+      setModalActive(false);
     }
-  }
+  };
 
   return (
     <>
       <div className={styles.container}>
         <h3 className={styles.title}>Active Card</h3>
-        <div className={`${styles['card-info']}`}>
-          {paymentMethod ?
+        <div className={`${styles["card-info"]}`}>
+          {paymentMethod ? (
             <div>
               <div>{paymentMethod.name}</div>
               <div>{`${paymentMethod.brand} ending in ${paymentMethod.last4}`}</div>
               <div>{`Expires ${paymentMethod.expMonth}/${paymentMethod.expYear} `}</div>
             </div>
-            :
-            <div className={'fields-first'}>
-              No card configured
-            </div>
-          }
+          ) : (
+            <div className={"fields-first"}>No card configured</div>
+          )}
           <div>
             <Button
-              text='Update Card'
-              type='button'
+              text="Update Card"
+              type="button"
               onClick={() => setModalActive(true)}
-              styleType='primary' />
+              className="container primary"
+            />
           </div>
         </div>
       </div>
       <BaseModal
-        headText={<span className={styles.modal_title}>Update Credit Card</span>}
-        subText={<span className={styles.modal_title}>Please enter your credit card details below</span>}
+        headText="Update Credit Card"
+        subText="Please enter your credit card details below"
         closeModal={() => setModalActive(false)}
         noHeightMax={true}
-        additionalClasses={['visible-block']}
-        overlayAdditionalClass={styles['paymentModal']}
-        modalIsOpen={modalActive}>
+        additionalClasses={["visible-block"]}
+        modalIsOpen={modalActive}
+      >
         <CreditCardForm
           onConfirm={updatePaymentMethod}
-          buttonText={'Update Card'}
+          buttonText={"Update Card"}
           buttonDisabled={false}
           noBottomMargin={true}
         />
       </BaseModal>
     </>
-  )
-}
+  );
+};
 
-export default PaymentMethod
+export default PaymentMethod;

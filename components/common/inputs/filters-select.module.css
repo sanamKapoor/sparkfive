@@ -5,7 +5,6 @@
 }
 
 .filter {
-  /* min-width: 170px; */
   font-size: 13px;
   border: 1px solid var(--color-secondary-border);
 }

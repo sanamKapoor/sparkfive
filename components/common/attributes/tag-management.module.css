@@ -2,7 +2,7 @@
     margin: 0 0 36px;
 }
 
-.operation-row{
+.operation-row {
     align-items: center;
     margin-top: 50px;
     display: -webkit-box;
@@ -12,22 +12,22 @@
     flex-wrap: wrap;
 }
 
-.tag-select{
+.tag-select {
     width: 200px;
 }
 
-.campaign-select{
+.campaign-select {
     width: 250px;
 }
 
-.sort-select{
+.sort-select {
     min-width: 150px;
     max-width: 200px;
     margin-left: auto;
     font-size: 12px;
 }
 
-.search-row{
+.search-row {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -35,21 +35,21 @@
     gap: 16px;
 }
 
-.search-column-1{
+.search-column-1 {
     max-width: 356px;
     position: relative;
     width: 100%;
     min-height: 1px;
 }
 
-.search-column-2{
+.search-column-2 {
     max-width: 356px;
     position: relative;
     width: 100%;
     min-height: 1px;
 }
 
-.search-column-3{
+.search-column-3 {
     max-width: 356px;
     position: relative;
     width: 100%;
@@ -58,7 +58,7 @@
 
 
 
-.tag-wrapper{
+.tag-wrapper {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -67,24 +67,22 @@
     margin-top: 36px;
 }
 
-.tag-item{
+.tag-item {
     display: flex;
     align-items: center;
     margin: 12px 5px;
     cursor: pointer;
 }
 
-.tag-item-text{
+.tag-item-text {
     font-weight: normal;
     margin-right: 10px;
     font-size: 13px;
 }
 
-.edit-row{
 
-}
 
-.edit-input{
+.edit-input {
     width: auto;
     min-height: auto;
     display: inline-block;
@@ -92,22 +90,22 @@
 }
 
 
-.edit-submit-btn{
+.edit-submit-btn {
     display: inline-block;
 }
 
-.edit-cancel-btn{
+.edit-cancel-btn {
     margin-left: 5px;
     display: inline-block;
 }
 
-.close-modal-btn{
+.close-modal-btn {
     position: absolute;
     right: 10px;
     top: 0;
 }
 
-.confirm-modal-text{
+.confirm-modal-text {
     padding-top: 30px;
 }
 
@@ -117,17 +115,16 @@
     .search-row {
         flex-direction: column;
     }
-    
-    .search-column-1{
+
+    .search-column-1 {
         max-width: 100%;
     }
 
-    .search-column-2{
+    .search-column-2 {
         max-width: 100%;
     }
 
-    .search-column-3{
+    .search-column-3 {
         max-width: 100%;
     }
 }
-

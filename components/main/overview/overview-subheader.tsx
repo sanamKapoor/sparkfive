@@ -1,13 +1,10 @@
 import styles from "./overview-subheader.module.css";
-import Router from "next/router";
-import Link from "next/link";
 
 import { ProjectTypes } from "../../../assets";
 
 // Components
-import SubHeader from "../../common/layouts/sub-header";
 import NavDropdownButton from "../../common/buttons/nav-dropdown-button";
-import StatusBadge from "../../common/misc/status-badge";
+import SubHeader from "../../common/layouts/sub-header";
 
 const OverviewSubHeader = ({ status = "", openCreateOVerlay }) => {
   const dropdownOptions = [

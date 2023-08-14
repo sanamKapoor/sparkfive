@@ -1,67 +1,83 @@
-import styles from './member-detail.module.css'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from "react";
+import styles from "./member-detail.module.css";
 
-import permissionApi from '../../../../server-api/permission'
-import teamApi from '../../../../server-api/team'
+import permissionApi from "../../../../server-api/permission";
 
 // Components
-import Button from '../../../common/buttons/button'
-import Select from '../../../common/inputs/select'
-import MemberPermissions from './member-permissions'
-import CreatableSelect from '../../../common/inputs/creatable-select'
+import Button from "../../../common/buttons/button";
+import Select from "../../../common/inputs/select";
+import MemberPermissions from "./member-permissions";
 
-import { default as permissionList } from "../../../../constants/permissions"
+import { default as permissionList } from "../../../../constants/permissions";
+import { ITeamMember } from "../../../../types/team/team";
+import { IRole } from "../../../../types/user/role";
 
-const MemberDetail = ({ member, type = 'member', mappedRoles, onSaveChanges, onCancel }) => {
+interface MemberDetailProps {
+  member: ITeamMember;
+  type: string;
+  mappedRoles: IRole[];
+  onSaveChanges: (id: string, data) => void;
+  onCancel: () => void;
+}
 
-  const [memberRole, setMemberRole] = useState(undefined)
-  const [memberPermissions, setMemberPermissions] = useState([])
-  const [permissions, setPermissions] = useState([])
-
+const MemberDetail: React.FC<MemberDetailProps> = ({
+  member,
+  type = "member",
+  mappedRoles,
+  onSaveChanges,
+  onCancel,
+}) => {
+  const [memberRole, setMemberRole] = useState(undefined);
+  const [memberPermissions, setMemberPermissions] = useState([]);
+  const [permissions, setPermissions] = useState([]);
 
   const onRoleChange = (role) => {
-    if (role.id === 'user') {
+    if (role.id === "user") {
       let permission = permissions.filter((item, index) => {
-        return [permissionList.ASSET_ACCESS, permissionList.ASSET_DOWNLOAD, permissionList.ASSET_SHARE].includes(item.id)
-      })
-      setMemberPermissions(permission)
+        return [
+          permissionList.ASSET_ACCESS,
+          permissionList.ASSET_DOWNLOAD,
+          permissionList.ASSET_SHARE,
+        ].includes(item.id);
+      });
+      setMemberPermissions(permission);
     }
 
-    setMemberRole(role)
-  }
+    setMemberRole(role);
+  };
 
   useEffect(() => {
-    getPermissions()
-  }, [])
+    getPermissions();
+  }, []);
 
   useEffect(() => {
     if (member) {
-      setMemberRole(getMemberRole(member.role))
-      setMemberPermissions(member.permissions)
+      setMemberRole(getMemberRole(member.role));
+      setMemberPermissions(member.permissions);
     }
-  }, [member])
+  }, [member]);
 
   const getMemberRole = (role) => {
-    return mappedRoles.find(mappedRole => mappedRole.id === role.id)
-  }
+    return mappedRoles.find((mappedRole) => mappedRole.id === role.id);
+  };
 
   const getPermissions = async () => {
     try {
-      const { data } = await permissionApi.getPermissions()
-      setPermissions(data)
+      const { data } = await permissionApi.getPermissions();
+      setPermissions(data);
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
-  }
+  };
 
   const onSaveMemberChanges = () => {
     const saveData = {
       permissions: memberPermissions,
       updatePermissions: true,
-      roleId: memberRole.id
-    }
-    onSaveChanges(member.id, saveData)
-  }
+      roleId: memberRole.id,
+    };
+    onSaveChanges(member.id, saveData);
+  };
 
   return (
     <div className={styles.container}>
@@ -97,25 +113,22 @@ const MemberDetail = ({ member, type = 'member', mappedRoles, onSaveChanges, onC
         )}
         <div className={styles["button-wrapper"]}>
           <Button
-            text='Save Changes'
-            type='button'
-            className={styles['saveBtn']}
             text="Save Changes"
             type="button"
             onClick={onSaveMemberChanges}
-            styleType={"primary"}
+            className={"container primary"}
           />
 
-          <Button className={'m-l-15'}
-            text='Cancel'
-            type='button'
-            className={styles['saveBtn']}
-            styleType='secondary'
-            onClick={onCancel} />
+          <Button
+            className={"container m-l-15 secondary"}
+            text="Cancel"
+            type="button"
+            onClick={onCancel}
+          />
         </div>
       </div>
     </div>
   );
-}
+};
 
-export default MemberDetail
+export default MemberDetail;

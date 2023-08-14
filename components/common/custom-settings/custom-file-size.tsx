@@ -1,209 +1,228 @@
-import { useEffect, useState } from 'react'
-import styles from './custom-file-size.module.css'
+import { useEffect, useState } from "react";
+import styles from "./custom-file-size.module.css";
 
-import { Utilities } from '../../../assets'
+import { Utilities } from "../../../assets";
 
 // APIs
-import sizeApi from '../../../server-api/size'
+import sizeApi from "../../../server-api/size";
 
 // Components
-import toastUtils from '../../../utils/toast'
-import { AssetOps } from '../../../assets'
-import IconClickable from "../buttons/icon-clickable";
-import SpinnerOverlay from "../spinners/spinner-overlay";
-import Input from "../inputs/input";
+import { AssetOps } from "../../../assets";
+import toastUtils from "../../../utils/toast";
 import Button from "../buttons/button";
+import IconClickable from "../buttons/icon-clickable";
+import Input from "../inputs/input";
 import ConfirmModal from "../modals/confirm-modal";
+import SpinnerOverlay from "../spinners/spinner-overlay";
 
-import { customSettings } from '../../../constants/custom-settings'
+import { customSettings } from "../../../constants/custom-settings";
 
 const CustomFileSizes = () => {
-    const [fileSizeList, setFileSizeList] = useState([])
-    const [loading, setLoading] = useState(false)
-    const [confirmDeleteModal, setConfirmDeleteModal] = useState(false)
-    const [currentDeleteId, setCurrentDeleteId] = useState() // Id is pending to delete
+  const [fileSizeList, setFileSizeList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
+  const [currentDeleteId, setCurrentDeleteId] = useState(); // Id is pending to delete
 
-    // Create the new tag
-    const createValue = async (index, item) => {
-        let currentFieldList = [...fileSizeList];
-        currentFieldList[index].values.push({
-            name: item.name
-        });
-        setFileSizeList(currentFieldList)
-    }
+  // Get tag list
+  const getCustomSizes = async () => {
+    // Show loading
+    setLoading(true);
 
-    // Get tag list
-    const getCustomSizes = async () => {
-        // Show loading
-        setLoading(true)
+    let { data } = await sizeApi.getCustomFileSizes();
 
-        let { data } = await sizeApi.getCustomFileSizes()
+    setFileSizeList(data);
 
-        setFileSizeList(data)
+    // Hide loading
+    setLoading(false);
+  };
 
-        // Hide loading
-        setLoading(false)
-    }
+  // Save updated changes
+  const saveChanges = async (index) => {
+    try {
+      // Show loading
+      setLoading(true);
 
-    // Save updated changes
-    const saveChanges = async (index) => {
-        try {
-            // Show loading
-            setLoading(true)
+      // Call API to delete tag
+      await sizeApi.createCustomSize({ sizes: [fileSizeList[index]] });
 
-            // Call API to delete tag
-            await sizeApi.createCustomSize({ sizes: [fileSizeList[index]] })
-
-            // Edit
-            if (fileSizeList[index].id !== null) {
-                toastUtils.success('Custom size changes saved')
-
-                // Refresh the list
-                getCustomSizes();
-            } else { // Create the new one
-                toastUtils.success('Custom size created successfully')
-
-                // Refresh the list
-                getCustomSizes();
-            }
-        } catch (err) {
-            if (err.response?.status === 400) toastUtils.error(err.response.data.message)
-            else toastUtils.error('Could not create custom file size, please try again later.')
-
-            // Show loading
-            setLoading(false)
-        }
-    }
-
-    const deleteCustomSize = async (id) => {
-        // Hide confirm modal
-        setConfirmDeleteModal(false)
-
-        // Show loading
-        setLoading(true)
-
-        // Call API to delete custom size
-        await sizeApi.deleteCustomSize({ sizeIds: [id] })
+      // Edit
+      if (fileSizeList[index].id !== null) {
+        toastUtils.success("Custom size changes saved");
 
         // Refresh the list
         getCustomSizes();
-    }
+      } else {
+        // Create the new one
+        toastUtils.success("Custom size created successfully");
 
-    // On input change
-    const onInputChange = (e, name, index) => {
-        let currentFieldList = [...fileSizeList];
-        currentFieldList[index][name] = e.target.value;
-        setFileSizeList(currentFieldList)
-    }
-
-    const addNew = () => {
-        setFileSizeList(fileSizeList.concat([{
-            id: null,
-            name: ''
-        }]))
-    }
-
-    useEffect(() => {
+        // Refresh the list
         getCustomSizes();
+      }
+    } catch (err) {
+      if (err.response?.status === 400)
+        toastUtils.error(err.response.data.message);
+      else
+        toastUtils.error(
+          "Could not create custom file size, please try again later."
+        );
 
-    }, [])
+      // Show loading
+      setLoading(false);
+    }
+  };
 
-    return (
-        <div className={styles['main-wrapper']}>
-            <h3>Custom File Sizes</h3>
-            {fileSizeList.map((field, index) => (
-                <div className={styles.row} key={index}>
+  const deleteCustomSize = async (id) => {
+    // Hide confirm modal
+    setConfirmDeleteModal(false);
 
-                    <div className={styles.form}>
-                        <div className={styles.field}>
-                            <div className={styles.field_title}>
-                                Custom File Size Name
-                            </div>
-                            <div className={styles.input}>
-                                <Input
-                                    onChange={(e) => { onInputChange(e, 'name', index) }}
-                                    value={field.name}
-                                    placeholder={'Field name'}
-                                    styleType={'regular-short'} />
-                            </div>
-                        </div>
+    // Show loading
+    setLoading(true);
 
-                        <div className={styles.field}>
-                            <div className={styles.field_title}>
-                                Dimensions
-                            </div>
-                            <div className={styles.input_group}>
-                                <div className={styles.input}>
-                                    <label>Width (PX)</label>
-                                    <Input
-                                        onChange={(e) => { onInputChange(e, 'width', index) }}
-                                        value={field.width}
-                                        placeholder={'Width'}
-                                        additionalClasses={'center-input'}
-                                        type={'number'}
-                                        styleType={'regular-short'} />
-                                </div>
+    // Call API to delete custom size
+    await sizeApi.deleteCustomSize({ sizeIds: [id] });
 
-                                <div className={styles.input}>
-                                    <label>Height (PX)</label>
-                                    <Input
-                                        onChange={(e) => { onInputChange(e, 'height', index) }}
-                                        value={field.height}
-                                        placeholder={'Height'}
-                                        type={'number'}
-                                        additionalClasses={'center-input'}
-                                        styleType={'regular-short'} />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    // Refresh the list
+    getCustomSizes();
+  };
 
-                    <div className={styles.button_group}>
-                        <Button
-                            styleTypes={['exclude-min-height']}
-                            type={'button'}
-                            text='Save'
-                            className={styles['saveBtn']}
-                            styleType='primary'
-                            onClick={() => { saveChanges(index) }}
-                            disabled={!field.name || !field.width || !field.height}
-                        />
-                        {<IconClickable additionalClass={styles['action-button']} src={AssetOps.deleteGray} tooltipText={'Delete'} tooltipId={'Delete'}
-                            onClick={() => {
-                                if (field.id) {
-                                    setCurrentDeleteId(field.id)
-                                    setConfirmDeleteModal(true)
-                                } else {
-                                    setFileSizeList(fileSizeList.filter((item, indexItem) => index !== indexItem))
-                                }
-                            }}
-                        />}
-                    </div>
+  // On input change
+  const onInputChange = (e, name, index) => {
+    let currentFieldList = [...fileSizeList];
+    currentFieldList[index][name] = e.target.value;
+    setFileSizeList(currentFieldList);
+  };
 
+  const addNew = () => {
+    setFileSizeList(
+      fileSizeList.concat([
+        {
+          id: null,
+          name: "",
+        },
+      ])
+    );
+  };
+
+  useEffect(() => {
+    getCustomSizes();
+  }, []);
+
+  return (
+    <div className={styles["main-wrapper"]}>
+      <h3>Custom File Sizes</h3>
+      {fileSizeList.map((field, index) => (
+        <div className={styles.row} key={index}>
+          <div className={styles.form}>
+            <div className={styles.field}>
+              <div className={styles.field_title}>Custom File Size Name</div>
+              <div className={styles.input}>
+                <Input
+                  onChange={(e) => {
+                    onInputChange(e, "name", index);
+                  }}
+                  value={field.name}
+                  placeholder={"Field name"}
+                  styleType={"regular-short"}
+                />
+              </div>
+            </div>
+
+            <div className={styles.field}>
+              <div className={styles.field_title}>Dimensions</div>
+              <div className={styles.input_group}>
+                <div className={styles.input}>
+                  <label>Width (PX)</label>
+                  <Input
+                    onChange={(e) => {
+                      onInputChange(e, "width", index);
+                    }}
+                    value={field.width}
+                    placeholder={"Width"}
+                    additionalClasses={"center-input"}
+                    type={"number"}
+                    styleType={"regular-short"}
+                  />
                 </div>
-            ))}
 
-            {fileSizeList.length < customSettings.CUSTOM_FILE_SIZES.MAX_CONFIGURATIONS && <div className={`${styles['row']} ${styles['field-block']}`}>
-                <div className={`add ${styles['select-add']}`} onClick={addNew}>
-                    <IconClickable src={Utilities.add} />
-                    <span className={'font-weight-500'}>Add New</span>
-                    <span className={'font-12'}>&nbsp; (up to 10 allowed)</span>
+                <div className={styles.input}>
+                  <label>Height (PX)</label>
+                  <Input
+                    onChange={(e) => {
+                      onInputChange(e, "height", index);
+                    }}
+                    value={field.height}
+                    placeholder={"Height"}
+                    type={"number"}
+                    additionalClasses={"center-input"}
+                    styleType={"regular-short"}
+                  />
                 </div>
-            </div>}
+              </div>
+            </div>
+          </div>
 
-            <ConfirmModal
-                modalIsOpen={confirmDeleteModal}
-                closeModal={() => { setConfirmDeleteModal(false) }}
-                confirmAction={() => { deleteCustomSize(currentDeleteId) }}
-                confirmText={'Delete'}
-                message={<span>Are you sure you want to delete this custom size?</span>}
-                closeButtonClass={styles['close-modal-btn']}
-                textContentClass={styles['confirm-modal-text']}
+          <div className={styles.button_group}>
+            <Button
+              className={"container exclude-min-height primary"}
+              type={"button"}
+              text="Save"
+              onClick={() => {
+                saveChanges(index);
+              }}
+              disabled={!field.name || !field.width || !field.height}
             />
-
-            {loading && <SpinnerOverlay />}
+            {
+              <IconClickable
+                additionalClass={styles["action-button"]}
+                src={AssetOps.deleteGray}
+                tooltipText={"Delete"}
+                tooltipId={"Delete"}
+                onClick={() => {
+                  if (field.id) {
+                    setCurrentDeleteId(field.id);
+                    setConfirmDeleteModal(true);
+                  } else {
+                    setFileSizeList(
+                      fileSizeList.filter(
+                        (item, indexItem) => index !== indexItem
+                      )
+                    );
+                  }
+                }}
+              />
+            }
+          </div>
         </div>
-    )
-}
+      ))}
 
-export default CustomFileSizes
+      {fileSizeList.length <
+        customSettings.CUSTOM_FILE_SIZES.MAX_CONFIGURATIONS && (
+        <div className={`${styles["row"]} ${styles["field-block"]}`}>
+          <div className={`add ${styles["select-add"]}`} onClick={addNew}>
+            <IconClickable src={Utilities.add} />
+            <span className={"font-weight-500"}>Add New</span>
+            <span className={"font-12"}>&nbsp; (up to 10 allowed)</span>
+          </div>
+        </div>
+      )}
+
+      <ConfirmModal
+        modalIsOpen={confirmDeleteModal}
+        closeModal={() => {
+          setConfirmDeleteModal(false);
+        }}
+        confirmAction={() => {
+          deleteCustomSize(currentDeleteId);
+        }}
+        confirmText={"Delete"}
+        message={<span>Are you sure you want to delete this custom size?</span>}
+        closeButtonClass={styles["close-modal-btn"]}
+        textContentClass={styles["confirm-modal-text"]}
+      />
+
+      {loading && <SpinnerOverlay />}
+    </div>
+  );
+};
+
+export default CustomFileSizes;

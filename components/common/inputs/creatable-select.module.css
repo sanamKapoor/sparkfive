@@ -1,14 +1,12 @@
 .field {
   margin-bottom: 16px;
-  /* font-size: 14px;
-  color: var(--color-prim-navy); */
 }
 
-.tags-list{
+.tags-list {
   margin-top: 16px;
 }
 
-.select-add{
+.select-add {
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -16,7 +14,7 @@
   color: var(--color-sec-text);
 }
 
-.select-add img{
+.select-add img {
   margin-right: 5px;
   width: 17px;
 }

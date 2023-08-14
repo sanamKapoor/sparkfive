@@ -1,17 +1,15 @@
-import asset from "../../../../server-api/asset";
-import styles from "./deleted-list-item.module.css";
-import { Utilities } from "../../../../assets";
-import filesize from "filesize";
 import { format } from "date-fns";
-import { useState, useEffect, useContext } from "react";
+import filesize from "filesize";
+import { useEffect, useState } from "react";
+import { Utilities } from "../../../../assets";
 import { getParsedExtension } from "../../../../utils/asset";
+import styles from "./deleted-list-item.module.css";
 
 // Components
+import { AssetOps } from "../../../../assets";
+import AssetIcon from "../../asset/asset-icon";
 import AssetImg from "../../asset/asset-img";
 import IconClickable from "../../buttons/icon-clickable";
-import DetailOverlay from "../../asset/detail-overlay";
-import AssetIcon from "../../asset/asset-icon";
-import { AssetOps } from "../../../../assets";
 
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
 
@@ -28,15 +26,14 @@ const DeletedListItem = ({
   },
   index,
   sortAttribute,
-  toggleSelected = () => { },
-  openDeleteAsset = () => { },
-  openRecoverAsset = () => { },
-  setCurrentSortAttribute = (attribute) => { },
+  toggleSelected = () => {},
+  openDeleteAsset = () => {},
+  openRecoverAsset = () => {},
+  setCurrentSortAttribute = (attribute) => {},
 }) => {
   const dateFormat = "MMM do, yyyy";
 
-  const [overlayProperties, setOverlayProperties] =
-    useState(DEFAULT_DETAIL_PROPS);
+  const [overlayProperties] = useState(DEFAULT_DETAIL_PROPS);
 
   useEffect(() => {
     if (overlayProperties.visible) {
@@ -54,7 +51,9 @@ const DeletedListItem = ({
     if (attribute === sortAttribute) {
       setCurrentSortAttribute("-" + attribute);
     } else {
-      setCurrentSortAttribute(sortAttribute.startsWith("-") ? attribute : "-" + attribute);
+      setCurrentSortAttribute(
+        sortAttribute.startsWith("-") ? attribute : "-" + attribute
+      );
     }
   };
   const arrowIcon = sortAttribute.startsWith("-")
@@ -72,8 +71,9 @@ const DeletedListItem = ({
                 Name
                 <IconClickable
                   src={arrowIcon}
-                  additionalClass={`${styles["sort-icon"]
-                    } ${getSortAttributeClassName("asset.name")}`}
+                  additionalClass={`${
+                    styles["sort-icon"]
+                  } ${getSortAttributeClassName("asset.name")}`}
                 />
               </h4>
               <h4></h4>
@@ -81,32 +81,36 @@ const DeletedListItem = ({
                 Date Deleted
                 <IconClickable
                   src={arrowIcon}
-                  additionalClass={`${styles["sort-icon"]
-                    } ${getSortAttributeClassName("asset.deleted-at")}`}
+                  additionalClass={`${
+                    styles["sort-icon"]
+                  } ${getSortAttributeClassName("asset.deleted-at")}`}
                 />
               </h4>
               <h4 onClick={() => setSortAttribute("asset.size")}>
                 Size
                 <IconClickable
                   src={arrowIcon}
-                  additionalClass={`${styles["sort-icon"]
-                    } ${getSortAttributeClassName("asset.size")}`}
+                  additionalClass={`${
+                    styles["sort-icon"]
+                  } ${getSortAttributeClassName("asset.size")}`}
                 />
               </h4>
               <h4 onClick={() => setSortAttribute("asset.extension")}>
                 File Ext
                 <IconClickable
                   src={arrowIcon}
-                  additionalClass={`${styles["sort-icon"]
-                    } ${getSortAttributeClassName("asset.extension")}`}
+                  additionalClass={`${
+                    styles["sort-icon"]
+                  } ${getSortAttributeClassName("asset.extension")}`}
                 />
               </h4>
               <h4 onClick={() => setSortAttribute("asset.dimenssions")}>
                 Dimensions
                 <IconClickable
                   src={arrowIcon}
-                  additionalClass={`${styles["sort-icon"]
-                    } ${getSortAttributeClassName("asset.dimemssions")}`}
+                  additionalClass={`${
+                    styles["sort-icon"]
+                  } ${getSortAttributeClassName("asset.dimemssions")}`}
                 />
               </h4>
             </div>
@@ -115,8 +119,9 @@ const DeletedListItem = ({
         <div className={`${styles.item} ${isSelected && styles.selected}`}>
           <div className={styles.info}>
             <div
-              className={`${styles.cell} ${styles["selectable-wrapper"]} ${isSelected && styles["selected-wrapper"]
-                }`}
+              className={`${styles.cell} ${styles["selectable-wrapper"]} ${
+                isSelected && styles["selected-wrapper"]
+              }`}
             >
               {!isLoading && (
                 <>
@@ -138,7 +143,9 @@ const DeletedListItem = ({
             </div>
             <div className={styles.cell}>
               <div className={styles.thumbnail_name}>
-                <div className={`${styles.thumbnail} ${isLoading && "loadable"}`}>
+                <div
+                  className={`${styles.thumbnail} ${isLoading && "loadable"}`}
+                >
                   {thumbailUrl ? (
                     <AssetImg
                       assetImg={thumbailUrl}
@@ -184,8 +191,9 @@ const DeletedListItem = ({
             </div>
             <div className={styles.cell}>
               <div
-                className={`${styles.field_name} ${styles.dateHide} ${isLoading && "loadable"
-                  }`}
+                className={`${styles.field_name} ${styles.dateHide} ${
+                  isLoading && "loadable"
+                }`}
               >
                 {asset?.deletedAt &&
                   format(new Date(asset.deletedAt), dateFormat)}
@@ -203,7 +211,9 @@ const DeletedListItem = ({
             </div>
             <div className={styles.cell}>
               <div className={styles.field_name}>
-                {asset.dimensionWidth && asset.dimensionHeight && `${asset.dimensionWidth} x ${asset.dimensionHeight}`}
+                {asset.dimensionWidth &&
+                  asset.dimensionHeight &&
+                  `${asset.dimensionWidth} x ${asset.dimensionHeight}`}
               </div>
             </div>
           </div>

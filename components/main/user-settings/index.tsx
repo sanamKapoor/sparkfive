@@ -22,15 +22,13 @@ import Attributes from "./attributes";
 import CustomSettings from "./custom-settings";
 import Integrations from "./integrations";
 import Notifications from "./notifications";
-import OCR from "./ocr-text-recognition";
 import ShareLinks from "./share-links";
 import SideNavigation from "./side-navigation";
 import SuperAdmin from "./super-admin";
 import Team from "./team";
 
-const SETTING_OPTIONS = {
+export const SETTING_OPTIONS = {
   account: { label: "Account", permissions: [], content: Account },
-  // plan: { label: 'Plan', permissions: [SETTINGS_PLAN], content: Plan },
   team: { label: "Team", permissions: [SETTINGS_TEAM], content: Team },
   notifications: {
     label: "Notifications",
@@ -64,12 +62,6 @@ const SETTING_OPTIONS = {
     permissions: [SETTINGS_TEAM, SETTINGS_COMPANY],
     content: CustomSettings,
   },
-  ["ocr-text-recognition"]: {
-    label: "Text Recognition",
-    contentTitle: "Text Recognition",
-    permissions: [SETTINGS_TEAM, SETTINGS_COMPANY],
-    content: OCR,
-  },
   ["super-admin"]: {
     label: "Super Admin",
     permissions: [SUPERADMIN_ACCESS],
@@ -77,7 +69,7 @@ const SETTING_OPTIONS = {
   },
 };
 
-const UserSettings = () => {
+const UserSettings: React.FC = () => {
   const { hasPermission } = useContext(UserContext);
 
   const router = useRouter();
@@ -87,8 +79,8 @@ const UserSettings = () => {
     setActiveView(activeView);
   }, [router.query.view]);
 
-  const [activeView, setActiveView] = useState("");
-  const [menuActive, setMenuActive] = useState(true);
+  const [activeView, setActiveView] = useState<string>("");
+  const [menuActive, setMenuActive] = useState<boolean>(true);
 
   let ActiveContent = () => <></>;
   if (SETTING_OPTIONS[activeView])
@@ -117,12 +109,7 @@ const UserSettings = () => {
   return (
     <main className={`${styles.container}`}>
       <LocationContextProvider>
-        {menuActive && (
-          <SideNavigation
-            activeView={activeView}
-            SETTING_OPTIONS={SETTING_OPTIONS}
-          />
-        )}
+        {menuActive && <SideNavigation activeView={activeView} />}
         <section className={styles.content}>
           <div className={styles.header}>
             <IconClickable src={Utilities.menu} onClick={toggleSettings} />

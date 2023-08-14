@@ -1,11 +1,11 @@
-import styles from "./create-project.module.css";
-import { useState, useEffect, useContext } from 'react'
-import { ScheduleContext, LoadingContext } from '../../../context'
-import { useForm } from "react-hook-form";
+import { capitalCase } from "change-case";
 import Router from "next/router";
+import { useContext, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { LoadingContext, ScheduleContext } from "../../../context";
 import projectApi from "../../../server-api/project";
 import toastUtils from "../../../utils/toast";
-import { capitalCase } from "change-case";
+import styles from "./create-project.module.css";
 
 // Components
 import Button from "../../common/buttons/button";
@@ -18,19 +18,19 @@ import projectTypes from "../../../resources/data/project-types.json";
 const CreateProject = ({ publishDate }) => {
   const { control, handleSubmit, errors } = useForm();
   const [submitError, setSubmitError] = useState("");
-  const { setNewItem } = useContext(ScheduleContext)
+  const { setNewItem } = useContext(ScheduleContext);
   const [type, setType] = useState();
 
   const [projectNames, setProjectNames] = useState([]);
 
-  const { setIsLoading } = useContext(LoadingContext)
+  const { setIsLoading } = useContext(LoadingContext);
 
   useEffect(() => {
     getProjectNames();
   }, []);
 
   const onSubmit = async (projectData) => {
-    setIsLoading(true)
+    setIsLoading(true);
     if (projectNames.includes(projectData.name)) {
       return toastUtils.error("A project with that name already exists");
     }
@@ -41,17 +41,16 @@ const CreateProject = ({ publishDate }) => {
       const createData = {
         ...projectData,
         type: type.value,
-      }
-      if (publishDate) createData.publishDate = publishDate
-      const { data } = await projectApi.createProject(createData)
+      };
+      if (publishDate) createData.publishDate = publishDate;
+      const { data } = await projectApi.createProject(createData);
 
       // Only redirect if publish date is not present
       if (!publishDate) {
         Router.replace(`/main/projects/${data.id}`);
       } else {
-        setNewItem({ item: data, type: 'project' })
+        setNewItem({ item: data, type: "project" });
       }
-
     } catch (err) {
       // TODO: Show error message
       if (err.response?.data?.message) {
@@ -60,7 +59,7 @@ const CreateProject = ({ publishDate }) => {
         setSubmitError("Something went wrong, please try again later");
       }
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   };
 
@@ -106,7 +105,11 @@ const CreateProject = ({ publishDate }) => {
               styleType="regular"
             />
           </div>
-          <Button type={"submit"} text={"Next"} styleType="primary" />
+          <Button
+            type={"submit"}
+            text={"Next"}
+            className="container submit primary"
+          />
         </div>
       </form>
     </div>

@@ -1,7 +1,6 @@
 .list-wrapper {
   width: 100%;
   max-width: 1800px;
-  /*margin-top: 2rem; !*Comment to add sticky*!*/
   padding: 25px 25px 0 25px;
 }
 
@@ -41,14 +40,14 @@
   padding: 0;
 }
 
-.image-wrapper > img,
-.image-wrapper > .video-wrapper {
+.image-wrapper>img,
+.image-wrapper>.video-wrapper {
   width: inherit;
   height: inherit;
   object-fit: contain;
 }
 
-.text-wrapper{
+.text-wrapper {
   padding: 18px 10px;
   border-top: 1px solid var(--color-secondary-border);
 }
@@ -86,15 +85,15 @@
   font-size: 9px;
   margin-top: 4px;
 }
-.selectable-wrapper{
+
+.selectable-wrapper {
   position: absolute;
   top: 5px;
   left: 5px;
 }
 
-.detail > div:first-child {
+.detail>div:first-child {
   border: none;
-  /* position: absolute; */
   right: 0;
   top: 0;
   position: relative;
@@ -104,6 +103,7 @@
   0% {
     opacity: 1;
   }
+
   100% {
     opacity: 0.5;
   }
@@ -113,39 +113,40 @@
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }
 }
 
-@media (min-width:768px){
-  .detail > div:first-child {
+@media (min-width:768px) {
+  .detail>div:first-child {
     overflow-y: hidden;
   }
 }
 
-@media screen and (max-width: 1500px)  {
+@media screen and (max-width: 1500px) {
   .grid-list {
     grid-template-columns: repeat(4, minmax(165px, 1fr));
     gap: 16px;
   }
 }
 
-@media screen and (max-width: 1100px)  {
+@media screen and (max-width: 1100px) {
   .grid-list {
     grid-template-columns: repeat(3, minmax(165px, 1fr));
   }
 }
 
-@media screen and (max-width: 920px)  {
+@media screen and (max-width: 920px) {
   .grid-list {
     grid-template-columns: repeat(2, minmax(145px, 1fr));
   }
 }
 
-@media screen and (max-width: 600px)  {
+@media screen and (max-width: 600px) {
   .grid-list {
-    grid-template-columns: repeat(2 , minmax(120px, 1fr));
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
     gap: 6px;
   }
 

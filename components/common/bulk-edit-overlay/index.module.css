@@ -40,6 +40,7 @@
 }
 
 @media screen and (max-height: 760px) {
+
   .side,
   .menu {
     height: 100%;
@@ -67,7 +68,6 @@
 }
 
 .back {
-  padding-top: 5px;
   display: flex;
   cursor: pointer;
   align-items: center;
@@ -214,6 +214,7 @@
   .side {
     min-width: 290px;
   }
+
   .top-wrapper {
     gap: 9px;
     padding: 10px 0px;

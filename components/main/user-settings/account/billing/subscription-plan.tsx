@@ -1,6 +1,6 @@
 import { differenceInDays, format } from "date-fns";
 import { useContext, useState } from "react";
-import { TeamContext, UserContext } from "../../../../../context";
+import { TeamContext } from "../../../../../context";
 import planApi from "../../../../../server-api/plan";
 import { formatCurrency } from "../../../../../utils/numbers";
 import toastUtils from "../../../../../utils/toast";
@@ -9,16 +9,23 @@ import styles from "./subscription-plan.module.css";
 // Components
 import BaseModal from "../../../../common/modals/base";
 
-const SubscriptionData = ({ label, value }) => (
+interface SubscriptionDataProps {
+  label: string;
+  value: string;
+}
+
+const SubscriptionData: React.FC<SubscriptionDataProps> = ({
+  label,
+  value,
+}) => (
   <div className={styles.item}>
     <div className={styles.label}>{label}</div>
     <div className={styles.value}>{value}</div>
   </div>
 );
 
-const SubscriptionPlan = ({ paymentMethod, goCheckout }) => {
+const SubscriptionPlan: React.FC = () => {
   const { plan } = useContext(TeamContext);
-  const { user } = useContext(UserContext);
 
   const [cancelOpen, setCancelOpen] = useState(false);
 
@@ -54,18 +61,6 @@ const SubscriptionPlan = ({ paymentMethod, goCheckout }) => {
     productName += ` (Trial - ${remainingDays} day(s) remaining)`;
   }
 
-  function formatBytes(bytes, decimals = 2) {
-    if (!+bytes) return "0 Bytes";
-
-    const k = 1024;
-    const dm = decimals < 0 ? 0 : decimals;
-    const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
-
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
-  }
-
   const getStorageUsed = () => {
     return formatBytes(parseInt(user?.storageUsed || 0));
   };
@@ -75,18 +70,8 @@ const SubscriptionPlan = ({ paymentMethod, goCheckout }) => {
       {plan && (
         <div className={styles["sub-container"]}>
           <div className={"fields-first"}>
-            {/*<div className={styles.plan}>*/}
-            {/*  <SubscriptionData*/}
-            {/*    label={'Plan Name'}*/}
-            {/*    value={productName}*/}
-            {/*  />*/}
-            {/*</div>*/}
-            <div className={styles["prop-pair"]}>
+            <div className={styles.plan}>
               <SubscriptionData label={"Plan Name"} value={productName} />
-              <SubscriptionData
-                label={"Storage used"}
-                value={getStorageUsed()}
-              />
               <SubscriptionData label={"Frequency"} value={getFrequency()} />
               <SubscriptionData label={"Amount"} value={getAmount()} />
               <SubscriptionData
@@ -110,31 +95,6 @@ const SubscriptionPlan = ({ paymentMethod, goCheckout }) => {
             </div>
             <div className={styles.storage_info}>500 GB out 1TB used</div>
           </div>
-          {/* <div className={styles['button-actions']}>
-            {!paymentMethod && plan.status === 'trialing' &&
-              <Button
-                text='Subscribe'
-                type='button'
-                styleType='input-height-primary'
-                onClick={goCheckout}
-              />
-            }
-            <Link href='/main/user-settings/plan'>
-              <a>
-                <Button
-                  text='Change Plan'
-                  type='button'
-                  styleType='input-height-primary'
-                />
-              </a>
-            </Link>
-            <Button
-              text='Cancel Plan'
-              type='button'
-              styleType='input-height-secondary'
-              onClick={() => setCancelOpen(true)}
-            />
-          </div> */}
         </div>
       )}
       <BaseModal

@@ -1,51 +1,45 @@
-import styles from "./index.module.css";
-import { useState, useEffect, useContext, useRef } from "react";
-import { AssetContext, FilterContext, UserContext } from "../../../context";
 import update from "immutability-helper";
+import { useContext, useEffect, useRef, useState } from "react";
+import { AssetContext, FilterContext, UserContext } from "../../../context";
 import assetApi from "../../../server-api/asset";
 import folderApi from "../../../server-api/folder";
-import toastUtils from "../../../utils/toast";
-import { getFolderKeyAndNewNameByFileName } from "../../../utils/upload";
 import {
+  DEFAULT_CUSTOM_FIELD_FILTERS,
+  DEFAULT_FILTERS,
   getAssetsFilters,
   getAssetsSort,
-  DEFAULT_FILTERS,
-  DEFAULT_CUSTOM_FIELD_FILTERS,
   getFoldersFromUploads,
 } from "../../../utils/asset";
+import toastUtils from "../../../utils/toast";
+import { getFolderKeyAndNewNameByFileName } from "../../../utils/upload";
+import styles from "./index.module.css";
 
 // Components
-import AssetOps from "../../common/asset/asset-ops";
-import SearchOverlay from "../search-overlay-assets";
-import AssetSubheader from "../../common/asset/asset-subheader";
+import { useRouter } from "next/router";
+import { validation } from "../../../constants/file-validation";
 import AssetGrid from "../../common/asset/asset-grid";
+import AssetOps from "../../common/asset/asset-ops";
 import TopBar from "../../common/asset/top-bar";
 import FilterContainer from "../../common/filter/filter-container";
 import { DropzoneProvider } from "../../common/misc/dropzone";
 import RenameModal from "../../common/modals/rename-modal";
 import UploadStatusOverlayAssets from "../../upload-status-overlay-assets";
-import { validation } from "../../../constants/file-validation";
-import { useRouter } from "next/router";
+import SearchOverlay from "../search-overlay-assets";
 
 // utils
 import selectOptions from "../../../utils/select-options";
-// import advancedConfigParams from '../../../utils/advance-config-params'
 
-import {
-  ASSET_UPLOAD_APPROVAL,
-  ASSET_ACCESS,
-} from "../../../constants/permissions";
-import NoPermissionNotice from "../../common/misc/no-permission-notice";
-import DetailOverlay from "../../common/asset/detail-overlay";
-import React from "react";
-import AssetHeaderOps from "../../common/asset/asset-header-ops";
-import deletedAssets from "../../common/custom-settings/deleted-assets";
 import { isMobile } from "react-device-detect";
-import SpinnerOverlay from "../../common/spinners/spinner-overlay";
+import {
+  ASSET_ACCESS,
+  ASSET_UPLOAD_APPROVAL,
+} from "../../../constants/permissions";
+import AssetHeaderOps from "../../common/asset/asset-header-ops";
+import DetailOverlay from "../../common/asset/detail-overlay";
+import NoPermissionNotice from "../../common/misc/no-permission-notice";
 
 const AssetsLibrary = () => {
   const [activeView, setActiveView] = useState("grid");
-  const [showOverlayLoader, setShowOverlayLoader] = useState(false);
   const {
     assets,
     setAssets,
@@ -77,7 +71,6 @@ const AssetsLibrary = () => {
     currentViewAsset,
     setCurrentViewAsset,
     setDetailOverlayId,
-    loadingAssets,
   } = useContext(AssetContext);
 
   const { advancedConfig, hasPermission } = useContext(UserContext);
@@ -97,17 +90,6 @@ const AssetsLibrary = () => {
   const [openFilter, setOpenFilter] = useState(
     activeMode === "assets" ? true : false
   );
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (loadingAssets) {
-        setShowOverlayLoader(true);
-      } else {
-        setShowOverlayLoader(false);
-      }
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, [loadingAssets]);
 
   const {
     activeSortFilter,
@@ -235,9 +217,6 @@ const AssetsLibrary = () => {
     if (hasPermission([ASSET_ACCESS])) {
       // Assets are under preparing (for query etc)
       if (preparingAssets.current) {
-        // setActivePageMode('library')
-        // setLoadingAssets(true)
-        // setFirstLoaded(true)
         return;
       } else {
         if (!firstLoaded) {
@@ -252,7 +231,7 @@ const AssetsLibrary = () => {
           getFolders();
         } else {
           setActiveMode("assets");
-          // setAssets([])
+          setAssets([]);
           getAssets();
         }
       }
@@ -291,7 +270,9 @@ const AssetsLibrary = () => {
     }
   }, [activeMode]);
 
-  useEffect(() => {}, [advancedConfig.set]);
+  useEffect(() => {
+    updateSortFilterByAdvConfig();
+  }, [advancedConfig.set]);
 
   const clearFilters = () => {
     setActiveSortFilter({
@@ -322,7 +303,6 @@ const AssetsLibrary = () => {
           ? selectOptions.sort[1]
           : selectOptions.sort[3];
     }
-    // console.log(advancedConfig.assetSortView, sort.name)
 
     setActiveSortFilter({
       ...activeSortFilter,
@@ -411,10 +391,6 @@ const AssetsLibrary = () => {
           // Current folder Group have the key
           if (fileGroupInfo.folderKey && folderGroup[fileGroupInfo.folderKey]) {
             currentUploadingFolderId = folderGroup[fileGroupInfo.folderKey];
-            // Assign new file name without splash
-            // file = new File([file.slice(0, file.size, file.type)],
-            //   fileGroupInfo.newName
-            //   , { type: file.type, lastModified: (file.lastModifiedDate || new Date(file.lastModified)) })
           }
         }
 
@@ -659,9 +635,6 @@ const AssetsLibrary = () => {
         if (needsFolderFetch) {
           setNeedsFetch("folders");
         }
-
-        // Do not need toast here because we have already process toast
-        // toastUtils.success(`${data.length} Asset(s) uploaded.`)
       } catch (err) {
         // Finish uploading process
         showUploadProcess("done");
@@ -777,12 +750,6 @@ const AssetsLibrary = () => {
       const assetIndex = assets.findIndex(
         (assetItem) => assetItem.asset.id === id
       );
-      const selectedValue = !assets[assetIndex].isSelected;
-      // Comment this because this will return wrong couting selected asset if user select all then unselect some assets
-      // Toggle unselect when selected all will disable selected all
-      // if(!selectedValue && selectedAllAssets){
-      //   selectAllAssets(false)
-      // }
       setAssets(
         update(assets, {
           [assetIndex]: {
@@ -823,28 +790,11 @@ const AssetsLibrary = () => {
     toggleSelected,
   });
 
-  const backToFolders = () => {
-    setActiveFolder("");
-    // setActiveSortFilter({
-    //   ...activeSortFilter,
-    //   // filterFolders: [], // Open this comment to reset filter folders
-    //   mainFilter: 'folders'
-    // })
-    updateSortFilterByAdvConfig({ mainFilter: "folders" });
-  };
-
   const selectedAssets = assets.filter((asset) => asset.isSelected);
 
   const selectedFolders = folders.filter((folder) => folder.isSelected);
 
   const viewFolder = async (id) => {
-    // setActiveSortFilter({
-    //   ...activeSortFilter,
-    //   ...DEFAULT_FILTERS,
-    //   ...DEFAULT_CUSTOM_FIELD_FILTERS(activeSortFilter),
-    //   mainFilter: 'folders'
-    // })
-    // router.replace("/main/assets") // Open this comment to reset query string url
     setActiveFolder(id);
     updateSortFilterByAdvConfig({ folderId: id });
   };
@@ -865,11 +815,7 @@ const AssetsLibrary = () => {
   };
 
   const closeSearchOverlay = () => {
-    if (activeMode === "assets") {
-      getAssets();
-    } else {
-      getFolders();
-    }
+    getAssets();
     setActiveSearchOverlay(false);
   };
 
@@ -934,7 +880,6 @@ const AssetsLibrary = () => {
                   activeFolder={activeFolder}
                   onCloseDetailOverlay={(assetData) => {
                     closeSearchOverlay();
-                    // setActiveSearchOverlay(false)
                     setDetailOverlayId(undefined);
                     setCurrentViewAsset(assetData);
                   }}
@@ -1046,10 +991,6 @@ const AssetsLibrary = () => {
           }}
           outsideDetailOverlay={true}
         />
-      )}
-
-      {showOverlayLoader && (
-        <SpinnerOverlay text="Account updating...this process might take a few seconds. Thank you for your patience." />
       )}
     </>
   );

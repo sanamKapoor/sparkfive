@@ -1,33 +1,24 @@
-import styles from "./asset-thumbail.module.css";
-import gridStyles from "./asset-grid.module.css";
-import { Utilities, Assets } from "../../../assets";
 import { format } from "date-fns";
-import {
-  useState,
-  useEffect,
-  useContext,
-  FocusEventHandler,
-  ChangeEvent,
-} from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { Utilities } from "../../../assets";
+import gridStyles from "./asset-grid.module.css";
+import styles from "./asset-thumbail.module.css";
 
 // Components
-import AssetImg from "./asset-img";
-import AssetIcon from "./asset-icon";
-import AssetVideo from "./asset-video";
-import AssetApplication from "./asset-application";
-import AssetText from "./asset-text";
-import IconClickable from "../buttons/icon-clickable";
-import Button from "../buttons/button";
-import DetailOverlay from "./detail-overlay";
-import AssetOptions from "./asset-options";
+import {
+  ASSET_NAME_UPDATED,
+  FAILED_TO_UPDATE_ASSET_NAME,
+} from "../../../constants/messages";
 import { AssetContext } from "../../../context";
 import assetApi from "../../../server-api/asset";
 import { removeExtension } from "../../../utils/asset";
 import toastUtils from "../../../utils/toast";
-import {
-  FAILED_TO_UPDATE_ASSET_NAME,
-  ASSET_NAME_UPDATED,
-} from "../../../constants/messages";
+import Button from "../buttons/button";
+import IconClickable from "../buttons/icon-clickable";
+import AssetIcon from "./asset-icon";
+import AssetImg from "./asset-img";
+import AssetOptions from "./asset-options";
+import DetailOverlay from "./detail-overlay";
 
 import HoverVideoPlayer from "react-hover-video-player";
 import Spinner from "../spinners/spinner";
@@ -236,7 +227,7 @@ const AssetThumbail = ({
                 )}
                 <div className={styles["image-button-wrapper"]}>
                   <Button
-                    styleType={"primary"}
+                    className={"container primary"}
                     text={"View Details"}
                     type={"button"}
                     onClick={() => {
@@ -256,7 +247,9 @@ const AssetThumbail = ({
         </div>
         <div className={styles.info}>
           <div className={`${infoWrapperClass} overflow--visible`}>
-            <div className={`${textWrapperClass} overflow--visible ${styles.folderItemHeadingOuter}`}>
+            <div
+              className={`${textWrapperClass} overflow--visible ${styles.folderItemHeadingOuter}`}
+            >
               <div className={styles.folderItemHeading}>
                 {isThumbnailNameEditable &&
                 isEditing &&

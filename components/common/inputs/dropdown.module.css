@@ -36,18 +36,9 @@
   gap: 10px;
 }
 
-/* .menu li:first-child {
-  border-top-right-radius: 8px;
-  border-top-left-radius: 8px;
-}
-
-.menu li:last-child {
-  border-bottom-right-radius: 8px;
-  border-bottom-left-radius: 8px;
-} */
 
 
-.menu li a{
+.menu li a {
   padding-left: 10px;
   min-width: inherit;
   display: inherit;

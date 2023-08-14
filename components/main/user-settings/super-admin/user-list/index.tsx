@@ -1,35 +1,35 @@
-import styles from "./index.module.css";
-import { useState, useEffect } from "react";
 import Router from "next/router";
-import cookiesUtils from "../../../../../utils/cookies";
-import superAdminApi from "../../../../../server-api/super-admin";
-import { defaultSortData } from "./types";
+import { useEffect, useState } from "react";
 import { useQueryStrings } from "../../../../../hooks/use-query-strings";
+import superAdminApi from "../../../../../server-api/super-admin";
+import cookiesUtils from "../../../../../utils/cookies";
+import styles from "./index.module.css";
+import { defaultSortData } from "./types";
 
 // Components
-import UserListHeader from "../user-list-header";
-import UserItem from "../user-item";
-import Search from "../../../../common/inputs/search";
-import Button from "../../../../common/buttons/button";
-import SpinnerOverlay from "../../../../common/spinners/spinner-overlay";
-import { Assets } from "../../../../../assets";
 import { AssetOps } from "../../../../../assets";
+import Button from "../../../../common/buttons/button";
+import Search from "../../../../common/inputs/search";
+import SpinnerOverlay from "../../../../common/spinners/spinner-overlay";
+import UserItem from "../user-item";
+import UserListHeader from "../user-list-header";
 
 import { saveAs } from "file-saver";
-import toastUtils from "../../../../../utils/toast";
 import {
   FAILED_TO_DOWNLOAD_USERS,
   USERS_DOWNLOADED,
 } from "../../../../../constants/messages";
+import { IUserResponseData } from "../../../../../types/user/user";
+import toastUtils from "../../../../../utils/toast";
 import IconClickable from "../../../../common/buttons/icon-clickable";
 
-const UserList = () => {
-  const [term, setTerm] = useState("");
-  const [termForDownload, setTermForDownload] = useState("");
+const UserList: React.FC = () => {
+  const [term, setTerm] = useState<string>("");
+  const [termForDownload, setTermForDownload] = useState<string>("");
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const [userData, setUserData] = useState({
+  const [userData, setUserData] = useState<IUserResponseData>({
     users: [],
     currentPage: 1,
     total: 0,
@@ -195,8 +195,6 @@ const UserList = () => {
                 title="Company"
               />
             </div>
-            <div className={styles.button} />{" "}
-            {/*it needs to implement button column width*/}
           </div>
         </li>
         {userData.users.map((user) => (
@@ -211,7 +209,7 @@ const UserList = () => {
             text={"Load more"}
             onClick={getMore}
             type={"button"}
-            styleType={"primary"}
+            className={"container primary"}
           />
         </div>
       )}

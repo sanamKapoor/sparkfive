@@ -19,30 +19,29 @@
   height: 12px;
 }
 
-.remove:hover{
+.remove:hover {
   opacity: 0.7;
 }
 
-.alt-color-turquoise{
+.alt-color-turquoise {
   background-color: var(--color-sec-lightturquoise);
 }
 
-.alt-color-yellow{
-  /* background-color: var(--color-sec-lightyellow); */
-}
 
-.alt-color-wine{
+
+.alt-color-wine {
   background-color: var(--color-sec-lightwine);
 }
 
-.alt-color-orange{
+.alt-color-orange {
   background-color: var(--color-sec-lightorange);
 }
 
 .alt-color-blue {
   background-color: var(--color-sec-lightblue);
 }
-.pointer{
+
+.pointer {
   cursor: pointer;
 }
 

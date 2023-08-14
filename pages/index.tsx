@@ -1,18 +1,18 @@
-import Head from 'next/head'
-
 // Components
-import Spinner from '../components/common/spinners/spinner'
+import AppLayout from "../components/common/layouts/app-layout";
+import Spinner from "../components/common/spinners/spinner";
 
 const MainPage = () => (
   <>
-    <Head>
-      <title>Sparkfive</title>
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
-    <div className="container" style={{ display: 'flex', justifyContent: 'center', marginTop: '4rem' }}>
-      <Spinner />
-    </div>
+    <AppLayout title="Sparkfive">
+      <div
+        className="container"
+        style={{ display: "flex", justifyContent: "center", marginTop: "4rem" }}
+      >
+        <Spinner />
+      </div>
+    </AppLayout>
   </>
-)
+);
 
-export default MainPage
+export default MainPage;

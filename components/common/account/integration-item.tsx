@@ -1,40 +1,40 @@
-import styles from './integration-item.module.css'
-import { Integrations } from '../../../assets'
-import { Utilities } from '../../../assets'
+import { Integrations, Utilities } from "../../../assets";
+import styles from "./integration-item.module.css";
 
 // Components
-import Button from '../buttons/button'
-import ButtonIcon from '../buttons/button-icon'
+import Button from "../buttons/button";
+import ButtonIcon from "../buttons/button-icon";
 
-const IntegrationItem = ({ integrationName, integrationId, onClick, createdAt = '' }) => {
-  let existingIntegration = createdAt
+const IntegrationItem = ({
+  integrationName,
+  integrationId,
+  onClick,
+  createdAt = "",
+}) => {
+  let existingIntegration = createdAt;
 
   return (
     <div className={styles.container}>
       <div className={styles.name}>
         <img src={Integrations[integrationId]} />
-        <div>
-          {integrationName}
-        </div>
+        <div>{integrationName}</div>
       </div>
-      {existingIntegration ?
+      {existingIntegration ? (
         <Button
-          text={'Connected'}
-          type={'button'}
-          styleType={'secondary'}
-          styleTypes={['input-height']}
+          text={"Connected"}
+          type={"button"}
+          className={"container secondary input-height"}
           disabled={true}
         />
-        :
+      ) : (
         <ButtonIcon
-          text={'Add Integration'}
+          text={"Add Integration"}
           icon={Utilities.addAlt}
           onClick={onClick}
         />
-      }
-
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default IntegrationItem
+export default IntegrationItem;

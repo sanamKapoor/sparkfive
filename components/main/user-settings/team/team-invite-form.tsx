@@ -1,54 +1,60 @@
-import styles from './team-invite-form.module.css'
-import { useState, useEffect } from 'react'
+import { useState } from "react";
+import styles from "./team-invite-form.module.css";
 
 // Components
-import Button from '../../../common/buttons/button'
-import Input from '../../../common/inputs/input'
-import Select from '../../../common/inputs/select'
+import { IRole } from "../../../../types/user/role";
+import Button from "../../../common/buttons/button";
+import Input from "../../../common/inputs/input";
+import Select from "../../../common/inputs/select";
 
-const TeamInvite = ({ mappedRoles, onInviteSend }) => {
+interface TeamInviteProps {
+  mappedRoles: IRole[];
+  onInviteSend: (email: string, roleValue: string) => void;
+}
 
-  const [inviteEmail, setInviteEmail] = useState('')
-  const [inviteRole, setInviteRole] = useState(undefined)
+const TeamInvite: React.FC<TeamInviteProps> = ({
+  mappedRoles,
+  onInviteSend,
+}) => {
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteRole, setInviteRole] = useState(undefined);
 
   const onSubmitForm = async (e) => {
-    e.preventDefault()
-    await onInviteSend(inviteEmail, inviteRole.value)
-    setInviteEmail('')
-    setInviteRole(undefined)
-  }
+    e.preventDefault();
+    await onInviteSend(inviteEmail, inviteRole.value);
+    setInviteEmail("");
+    setInviteRole(undefined);
+  };
 
   return (
     <div className={styles.container}>
       <form className={styles.form} onSubmit={onSubmitForm}>
         <Input
-          type='email'
-          styleType='regular'
+          type="email"
+          styleType="regular"
           value={inviteEmail}
-          placeholder='Email'
+          placeholder="Email"
           additionalClasses={styles.input}
           onChange={(e) => setInviteEmail(e.target.value)}
         />
-        <div className={styles['role-select-wrapper']}>
+        <div className={styles["role-select-wrapper"]}>
           <Select
             options={mappedRoles}
             onChange={(selected) => setInviteRole(selected)}
-            placeholder={'Select a role'}
-            styleType='regular'
+            placeholder={"Select a role"}
+            styleType="regular"
             value={inviteRole}
           />
         </div>
         <Button
-          className={styles.button}
-          text='Send invitation'
-          className={styles['invitationBtn']}
-          type='submit'
-          styleType='primary'
+          className={`${styles.button} container primary`}
+          text="Send invitation"
+          type="submit"
           disabled={!inviteEmail || !inviteRole}
         />
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default TeamInvite
+export default TeamInvite;

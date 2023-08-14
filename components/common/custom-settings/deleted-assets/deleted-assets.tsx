@@ -1,40 +1,37 @@
-import styles from "./deleted-assets.module.css";
 import update from "immutability-helper";
-import { useEffect, useContext, useState } from "react";
-import { AssetContext, FilterContext, UserContext } from "../../../../context";
-import toastUtils from "../../../../utils/toast";
+import { useContext, useEffect, useState } from "react";
 import { Waypoint } from "react-waypoint";
-import urlUtils from "../../../../utils/url";
-import downloadUtils from "../../../../utils/download";
+import { AssetContext } from "../../../../context";
 import assetsApi from "../../../../server-api/asset";
+import toastUtils from "../../../../utils/toast";
+import urlUtils from "../../../../utils/url";
+import styles from "./deleted-assets.module.css";
 
 // Components
-import DetailOverlay from "../../asset/detail-overlay";
-import ConfirmModal from "../../modals/confirm-modal";
-import Button from "../../buttons/button";
 import useSortedAssets from "../../../../hooks/use-sorted-assets";
+import selectOptions from "../../../../utils/select-options";
+import DetailOverlay from "../../asset/detail-overlay";
+import Button from "../../buttons/button";
+import Select from "../../inputs/select";
+import ConfirmModal from "../../modals/confirm-modal";
 import DeletedListItem from "./deleted-list-item";
-import Select from '../../inputs/select';
-import selectOptions from '../../../../utils/select-options';
-import IconClickable from '../../buttons/icon-clickable';
-import { AssetOps } from '../../../../assets';
 
 const DeletedAssets = ({
   activeView = "grid",
   isShare = false,
-  onFilesDataGet = (files) => { },
+  onFilesDataGet = (files) => {},
   toggleSelected,
   mode = "assets",
   activeSortFilter,
   setActiveSortFilter,
-  deleteFolder = (id) => { },
+  deleteFolder = (id) => {},
   itemSize = "regular",
   activeFolder = "",
   type = "",
   itemId = "",
-  getFolders = () => { },
-  loadMore = () => { },
-  viewFolder = (id) => { },
+  getFolders = () => {},
+  loadMore = () => {},
+  viewFolder = (id) => {},
   sharePath = "",
   openFilter,
 }) => {
@@ -46,7 +43,7 @@ const DeletedAssets = ({
     nextPage,
     setOperationFolder,
     folders,
-    selectAllAssets,  
+    selectAllAssets,
   } = useContext(AssetContext);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [recoverModalOpen, setRecoverModalOpen] = useState(false);
@@ -126,34 +123,34 @@ const DeletedAssets = ({
     setActiveOperation(operation);
   };
 
-
   const showLoadMore = assets.length > 0;
   const loadingAssetsFolders =
     assets.length > 0 && assets[assets.length - 1].isLoading;
 
-    const selectAll = () => {
-      selectAllAssets();
-      setAssets(
-        assets.map((assetItem) => ({ ...assetItem, isSelected: true }))
-      );
-    };
-  
-    const setSortFilterValue = (key, value) => {
-      let sort = key === 'sort' ? value : activeSortFilter.sort
-  
-      setActiveSortFilter({
-        ...activeSortFilter,
-        [key]: value,
-        sort
-      })
-    }
-  
-    console.log('activeSortFilter ', activeSortFilter);
+  const selectAll = () => {
+    selectAllAssets();
+    setAssets(assets.map((assetItem) => ({ ...assetItem, isSelected: true })));
+  };
+
+  const setSortFilterValue = (key, value) => {
+    let sort = key === "sort" ? value : activeSortFilter.sort;
+
+    setActiveSortFilter({
+      ...activeSortFilter,
+      [key]: value,
+      sort,
+    });
+  };
+
+  console.log("activeSortFilter ", activeSortFilter);
   return (
     <section className={`${styles.container} ${openFilter && styles.filter}`}>
       <div className={styles.header}>
         <h3>Deleted Assets</h3>
-        <p>Deleted assets are retained for 60 days before permanent removal. Admin can recover deleted assets within 60 days</p>
+        <p>
+          Deleted assets are retained for 60 days before permanent removal.
+          Admin can recover deleted assets within 60 days
+        </p>
       </div>
 
       <div className={styles.header_actions}>
@@ -175,18 +172,18 @@ const DeletedAssets = ({
         <Button
           text="Select All"
           type="button"
-          styleType="secondary"
+          className="container secondary"
           onClick={selectAll}
         />
         <div className={styles.select}>
-        <Select
-              label={"Sort By"}
-              options={selectOptions.sort}
-              value={activeSortFilter.sort}
-              styleType="filter filter-schedule"
-              onChange={(selected) => setSortFilterValue("sort", selected)}
-              placeholder="Sort By"
-            />
+          <Select
+            label={"Sort By"}
+            options={selectOptions.sort}
+            value={activeSortFilter.sort}
+            styleType="filter filter-schedule"
+            onChange={(selected) => setSortFilterValue("sort", selected)}
+            placeholder="Sort By"
+          />
         </div>
       </div>
       <ul className={styles["list-wrapper"]}>
@@ -226,7 +223,7 @@ const DeletedAssets = ({
                   <Button
                     text="Load More"
                     type="button"
-                    styleType="primary"
+                    className="container primary"
                     onClick={loadMore}
                   />
                 </div>

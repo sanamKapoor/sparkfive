@@ -1,11 +1,11 @@
-.modal-wrapper{
+.modal-wrapper {
     width: 90vw;
     height: 90vh;
     text-align: center;
     overflow-y: hidden;
 }
 
-.modal-wrapper img{
+.modal-wrapper img {
     height: 100%;
     width: auto;
     max-width: 100%;
@@ -36,7 +36,7 @@
     cursor: pointer;
 }
 
-.close-modal-btn{
+.close-modal-btn {
     position: absolute;
     right: 10px;
     top: 0;
@@ -44,11 +44,8 @@
     z-index: 9999;
 }
 
-.confirm-modal-text{
 
-}
-
-.video-preview{
+.video-preview {
     height: 100%;
     width: 100%;
 }
