@@ -9,7 +9,6 @@ import { GuestUploadContext, SocketContext } from "../../context";
 // Components
 import { Assets } from "../../assets";
 import SpinnerOverlay from "../common/spinners/spinner-overlay";
-import PasswordOverlay from "../share-folder/password-overlay";
 
 // Utils
 import { validation } from "../../constants/file-validation";
@@ -24,9 +23,16 @@ import {
 import uploadLinkApi from "../../server-api/guest-upload";
 import shareUploadLinkApi from "../../server-api/share-upload-link";
 import { UploadingStatus } from "../../types/common/upload";
+import PasswordOverlay from "../share-collections/password-overlay";
 import GuestDetails from "./guest-details";
 import GuestInfoForm from "./guest-info-form";
 import GuestUploadSection from "./guest-upload-section";
+
+import {
+  GUEST_UPLOAD_SUCCESS_MESSAGE,
+  GUEST_UPLOAD_WELCOME_MESSAGE,
+} from "../../constants/messages";
+import { IGuestUploadFormInput } from "../../types/guest-upload/guest-upload";
 
 const GuestUpload: React.FC = () => {
   const { socket, connected, connectSocket } = useContext(SocketContext);
@@ -63,6 +69,14 @@ const GuestUpload: React.FC = () => {
     useState<boolean>(false);
   const [folderGroups, setFolderGroups] = useState<Record<string, unknown>>({}); // This groups contain all folder key which is need to identity which folder file need to be saved to
   const [retryListCount, setRetryListCount] = useState<number>(0);
+
+  const [guestUserDetails, setGuestUserDetails] =
+    useState<IGuestUploadFormInput>({
+      firstName: "",
+      lastName: "",
+      email: "",
+      message: "",
+    });
 
   const dropdownOptions = [
     {
@@ -342,6 +356,7 @@ const GuestUpload: React.FC = () => {
   };
 
   const submitUpload = async (data, files) => {
+    console.log("data: ", data);
     let { folderGroup, updatedAssets } = await uploadAsset(
       0,
       files,
@@ -374,6 +389,8 @@ const GuestUpload: React.FC = () => {
   };
 
   const saveChanges = async (data) => {
+    console.log("data in save changes function: ", data);
+    setGuestUserDetails(data);
     // Scroll to top
     document.body.scrollTop = 0; // For Safari
     document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
@@ -458,6 +475,7 @@ const GuestUpload: React.FC = () => {
       }
     }
   };
+
   useEffect(() => {
     // If code is declared, use it to get link info
     if (query?.code) {
@@ -489,87 +507,70 @@ const GuestUpload: React.FC = () => {
   return (
     <section className={styles.container}>
       <div className={styles.wrapper}>
-        {uploadingStatus === "done" ? (
-          <div className={styles.success}>
-            <div className={styles.title}>{teamName} - Upload Success</div>
+        <div className={styles.topSubSection}>
+          <div className={styles.topSubSectionHeader}>
+            <div className={styles.title}>
+              {teamName} -{" "}
+              {uploadingStatus === "done" ? "Upload Success" : "Guest Upload"}
+            </div>
             <div className={styles.subtitle}>
-              Thank you for submitting your files to us. Our team has been
-              notified and will review the files. Have a great day!
+              {uploadingStatus === "done"
+                ? GUEST_UPLOAD_SUCCESS_MESSAGE
+                : GUEST_UPLOAD_WELCOME_MESSAGE}
             </div>
           </div>
-        ) : (
-          <>
-            {!loading && (
-              <>
-                <input
-                  multiple={true}
-                  id="file-input-id"
-                  ref={fileBrowserRef}
-                  style={{ display: "none" }}
-                  type="file"
-                  onChange={onFileChange}
-                />
-                <input
-                  multiple={true}
-                  id="file-input-id"
-                  ref={folderBrowserRef}
-                  style={{ display: "none" }}
-                  type="file"
-                  onChange={onFileChange}
-                />
-
-                <>
-                  {uploadingStatus === "none" && (
-                    <>
-                      <div className={styles.title}>
-                        {teamName} - Guest Upload
-                      </div>
-                      <div className={styles.subtitle}>
-                        Please upload your files or folders that you would like
-                        to submit to us. This is more of text. Please upload
-                        your files or folders that you would like to submit to
-                        us
-                      </div>
-                    </>
-                  )}
-
-                  {uploadEnabled && !edit && <GuestDetails setEdit={setEdit} />}
-
-                  {(!uploadEnabled || edit) && (
-                    <GuestInfoForm
-                      onSubmit={saveChanges}
-                      teamName={teamName}
-                      uploadingStatus={uploadingStatus}
-                      setUploadEnabled={setUploadEnabled}
-                      setEdit={setEdit}
-                    />
-                  )}
-                </>
-
-                <GuestUploadSection
-                  uploadEnabled={uploadEnabled}
-                  uploading={uploading}
-                  uploadingStatus={uploadingStatus}
-                  files={files}
-                  dropDownOptions={dropdownOptions}
-                  retryListCount={retryListCount}
-                  uploadingAssets={uploadingAssets}
-                  showUploadProcess={showUploadProcess}
-                  uploadingFile={uploadingFile}
-                  uploadingPercent={uploadingPercent}
-                  setUploadDetailOverlay={setUploadDetailOverlay}
-                  uploadingFileName={uploadingFileName}
-                  setUploadingStatus={setUploadingStatus}
-                />
-                {activePasswordOverlay && (
-                  <PasswordOverlay
-                    onPasswordSubmit={submitPassword}
-                    logo={logo}
-                  />
-                )}
-              </>
+          <div className={styles.topSubSectionContent}>
+            {(!uploadEnabled || edit) && (
+              <GuestInfoForm
+                onSubmit={saveChanges}
+                teamName={teamName}
+                uploadingStatus={uploadingStatus}
+                setUploadEnabled={setUploadEnabled}
+                setEdit={setEdit}
+              />
             )}
-          </>
+            {uploadEnabled && !edit && (
+              <GuestDetails userDetails={guestUserDetails} setEdit={setEdit} />
+            )}
+          </div>
+        </div>
+        <div className={styles.bottomSubSection}>
+          <div className={styles.bottomSubSectionContent}>
+            <input
+              multiple={true}
+              id="file-input-id"
+              ref={fileBrowserRef}
+              style={{ display: "none" }}
+              type="file"
+              onChange={onFileChange}
+            />
+            <input
+              multiple={true}
+              id="file-input-id"
+              ref={folderBrowserRef}
+              style={{ display: "none" }}
+              type="file"
+              onChange={onFileChange}
+            />
+            <GuestUploadSection
+              uploadEnabled={uploadEnabled}
+              uploading={uploading}
+              uploadingStatus={uploadingStatus}
+              files={files}
+              dropDownOptions={dropdownOptions}
+              retryListCount={retryListCount}
+              uploadingAssets={uploadingAssets}
+              showUploadProcess={showUploadProcess}
+              uploadingFile={uploadingFile}
+              uploadingPercent={uploadingPercent}
+              setUploadDetailOverlay={setUploadDetailOverlay}
+              uploadingFileName={uploadingFileName}
+              setUploadingStatus={setUploadingStatus}
+            />
+          </div>
+        </div>
+        {activePasswordOverlay && (
+          <PasswordOverlay onPasswordSubmit={submitPassword} logo={logo} />
         )}
       </div>
       {loading && <SpinnerOverlay />}

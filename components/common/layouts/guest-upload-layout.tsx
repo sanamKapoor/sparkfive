@@ -16,7 +16,7 @@ const GuestUploadLayout = ({ children }) => {
         <header className={styles.header}>
           <img
             className={`${styles["logo-img"]} ${styles["left-logo"]}`}
-            src={logo ? logo : GeneralImg.logo}
+            src={logo || GeneralImg.logo}
           />
           <div className={styles["right-logo"]}>
             <span>Powered by Sparkfive</span>

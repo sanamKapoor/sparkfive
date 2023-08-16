@@ -44,7 +44,7 @@
     margin-bottom: 34px;
 }
 
-.edit ,
+.edit,
 .cancel {
     font-size: 22px;
     font-weight: 700;
@@ -62,7 +62,7 @@
     max-width: 580px;
 }
 
-.list-wrapper{
+.list-wrapper {
     width: 100%;
     max-width: 1800px;
 }
@@ -74,17 +74,17 @@
 }
 
 
-.success-row{
+.success-row {
     display: flex;
     padding: 10px 0;
 }
 
-.success-text{
+.success-text {
     color: var(--color-nav);
     font-size: 16px;
 }
 
-.upload-more-text{
+.upload-more-text {
     padding-bottom: 0;
     margin-top: 60px;
     font-size: 12px;
@@ -94,7 +94,7 @@
     margin-top: 28px;
 }
 
-.footer p{
+.footer p {
     font-size: 12px;
     width: 100%;
     text-align: center;
@@ -117,7 +117,7 @@
     margin-bottom: 24px;
 }
 
-.form_name_row > div {
+.form_name_row>div {
     width: 100%;
 }
 
@@ -232,7 +232,7 @@
     flex-wrap: nowrap;
 }
 
-.file-upload-row{
+.file-upload-row {
     padding: 10px 5px;
 }
 
@@ -247,11 +247,11 @@
 }
 
 .file-list-wrapper::-webkit-scrollbar {
-  width: 10px;
+    width: 10px;
 }
 
 .file-list-wrapper::-webkit-scrollbar-track {
-  background: transparent;
+    background: transparent;
 }
 
 /* Handle */
@@ -263,7 +263,7 @@
 
 /* Handle on hover */
 .file-list-wrapper::-webkit-scrollbar-thumb:hover {
-  background: var(--color-sec-text);
+    background: var(--color-sec-text);
 }
 
 .file-list-header {
@@ -302,7 +302,7 @@
     height: 28px;
 }
 
-.link{
+.link {
     color: var(--color-prim-blue);
 }
 
@@ -359,7 +359,7 @@
     }
 
     .guest_info {
-      font-size: 12px;  
+        font-size: 12px;
     }
 
     .guest_info_row {
@@ -390,6 +390,7 @@
         min-height: 60vh;
         padding: 28px 20px;
     }
+
     .wrapper {
         padding: 40px 16px 64px;
     }
@@ -402,6 +403,7 @@
         width: 140px;
         height: 120px;
     }
+
     .option:last-child {
         border-width: 0px 1px 1px 1px;
         border-style: solid;
@@ -427,7 +429,7 @@
         font-size: 12px;
         padding: 4px 16px;
     }
-    
+
     .upload_button img {
         width: 18px;
         height: 18px;
@@ -436,6 +438,7 @@
     .file-list-wrapper {
         padding: 23px 16px;
     }
+
     .files_count {
         font-size: 12px;
     }
@@ -447,3 +450,12 @@
     }
 }
 
+
+/* -------------------- TODO ---------------- */
+.topSubSection {}
+
+.topSubSectionHeader {}
+
+.topSubSectionContent {}
+
+.bottomSubSection {}

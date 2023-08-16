@@ -15,3 +15,11 @@ export const ALL_THUMBNAILS_REQUIRED = "Please select all thumbnails.";
 export const THUMBNAIL_REQUIRED = "Please select a thumbnail!";
 export const ERR_IN_UPDATING_THUMBNAIL =
   "Could not update photo, please try again later.";
+
+//ui text
+export const GUEST_UPLOAD_SUCCESS_MESSAGE =
+  "Thank you for submitting your files to us. Our team has been notified and will review the files. Have a great day!";
+
+//TODO: verify if content is correct
+export const GUEST_UPLOAD_WELCOME_MESSAGE =
+  "Please upload your files or folders that you would like to submit to us. This is more of text here.Please upload your files or folders that you would like to submit to us.";

@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import styles from "./contact-form.module.css";
 
 // Components
+import Button from "../common/buttons/button";
 import FormInput from "../common/inputs/form-input";
 import Input from "../common/inputs/input";
 import TextArea from "../common/inputs/text-area";
@@ -11,6 +12,8 @@ interface ContactFormProps {
   onSubmit: (data: any) => void;
   disabled: boolean;
   teamName: string;
+  setUploadEnabled: (state: boolean) => void;
+  setEdit: (state: boolean) => void;
 }
 
 const ContactForm: React.FC<ContactFormProps> = ({
@@ -18,10 +21,13 @@ const ContactForm: React.FC<ContactFormProps> = ({
   onSubmit,
   disabled = false,
   teamName = "",
+  setUploadEnabled,
+  setEdit,
 }) => {
-  const { control, handleSubmit, errors } = useForm();
+  const { control, handleSubmit, errors, getValues } = useForm();
 
   const submitForm = (data) => {
+    console.log("form data: ", data);
     onSubmit(data);
   };
 
@@ -36,17 +42,17 @@ const ContactForm: React.FC<ContactFormProps> = ({
           <div className={styles.row}>
             <div>
               <FormInput
-                labId="first_name"
+                labId="firstName"
                 label="First Name"
                 InputComponent={
                   <Input
                     type="text"
-                    id="first_name"
+                    id="firstName"
                     disabled={disabled}
                     additionalClasses={styles.input}
                   />
                 }
-                name="first_name"
+                name="firstName"
                 defaultValue={""}
                 control={control}
                 rules={{ required: true, minLength: 2, maxLength: 30 }}
@@ -58,17 +64,17 @@ const ContactForm: React.FC<ContactFormProps> = ({
             </div>
             <div>
               <FormInput
-                labId="last_name"
+                labId="lastName"
                 label="Last Name"
                 InputComponent={
                   <Input
                     type="text"
-                    id="last_name"
+                    id="lastName"
                     disabled={disabled}
                     additionalClasses={styles.input}
                   />
                 }
-                name="last_name"
+                name="lastName"
                 defaultValue={""}
                 control={control}
                 rules={{ required: true, minLength: 2, maxLength: 30 }}
@@ -110,19 +116,19 @@ const ContactForm: React.FC<ContactFormProps> = ({
 
           <div>
             <FormInput
-              labId="notes"
+              labId="message"
               label={`Message to ${teamName} (i.e name of project, campaign, etc)`}
               InputComponent={
                 <TextArea
                   type="text"
-                  id="notes"
+                  id="message"
                   rows={5}
                   disabled={disabled}
                   additionalClasses={styles.input}
                 />
               }
               defaultValue={""}
-              name="notes"
+              name="message"
               control={control}
               rules={{ minLength: 4, maxLength: 300 }}
               errors={errors}
@@ -131,6 +137,19 @@ const ContactForm: React.FC<ContactFormProps> = ({
           </div>
         </div>
       </>
+      <div className={styles.form_button}>
+        <Button
+          type="submit"
+          text="Save & Continue"
+          className="container primary"
+          onClick={() => {
+            console.log("form should be submitted now...");
+            handleSubmit(submitForm);
+            setUploadEnabled(true);
+            setEdit(false);
+          }}
+        />
+      </div>
     </form>
   );
 };
