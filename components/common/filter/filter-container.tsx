@@ -4,6 +4,7 @@ import { FilterContext, AssetContext, UserContext } from '../../../context'
 import React, { useState, useEffect, useContext } from 'react'
 import { Utilities } from '../../../assets'
 
+
 import customFieldsApi from '../../../server-api/attribute'
 import shareCollectionApi from '../../../server-api/share-collection'
 
@@ -13,6 +14,7 @@ import DateUploaded from './date-uploaded'
 import ProductFilter from './product-filter'
 import DimensionsFilter from './dimensions-filter'
 import ResolutionFilter from './resolution-filter'
+import NestedSidenav from '../../nested-subcollection-sidenav/nested-sidenav'
 
 const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiveSortFilter, clearFilters, isFolder = false, isShare = false, filterWidth }) => {
 
@@ -446,6 +448,7 @@ const FilterContainer = ({ openFilter, setOpenFilter, activeSortFilter, setActiv
                 }
             </div>
         </div>
+       
 
     )
 }

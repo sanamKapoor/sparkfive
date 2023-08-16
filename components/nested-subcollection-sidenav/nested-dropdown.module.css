@@ -1,0 +1,27 @@
+.icon-descriptions span{
+    font-family: "Noto Sans", sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+    color:#08135E;
+    margin-left:5px;
+}
+.list1-right-contents span{
+    font-family: "Noto Sans", sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+    color:#08135E;
+
+}
+.dropdown-lists{
+    display: flex;
+    justify-content: space-between;
+}
+
+.dropdownIcons{
+    display: flex;
+}
+.rightIcon{
+    margin-right: 5px;
+}

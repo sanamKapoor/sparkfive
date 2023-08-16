@@ -1,0 +1,34 @@
+
+.list1-description{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    margin-top: 18px;
+}
+.icon{
+    margin-right: 5px;
+    cursor: pointer;
+}
+.list1-left-contents{
+    display: flex;
+}
+.icon-description span{
+    font-family: "Noto Sans", sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+    color:#08135E;
+}
+.list1-right-contents span{
+    font-family: "Noto Sans", sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+    color:#08135E;
+}
+.active{
+    background:#E9EEFA;
+    border-radius: 4px;
+    padding: 4px
+}
