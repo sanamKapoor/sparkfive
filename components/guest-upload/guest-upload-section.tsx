@@ -1,32 +1,22 @@
 import React from "react";
 import { Utilities } from "../../assets";
 import { DropDownOption } from "../../types/common/components";
-import { UploadingStatus } from "../../types/common/upload";
-import Button from "../common/buttons/button";
+import { IUploadingFile, UploadingStatus } from "../../types/common/upload";
+import AssetUploadProcess from "../asset-upload-process";
 import ButtonIcon from "../common/buttons/button-icon";
 import DropdownOptions from "./Dropdown/DropdownOptions";
 import styles from "./index.module.css";
 import UploadItem from "./upload-item";
-import AssetUploadProcess from "./upload-process";
 
 interface GuestUploadSectionProps {
   uploadEnabled: boolean;
   uploading: boolean;
   uploadingStatus: UploadingStatus;
   setUploadingStatus: (val: UploadingStatus) => void;
-  files: {
-    asset: Record<string, string>;
-    status: "done" | "fail";
-    error: string;
-  }[];
+  files: IUploadingFile[];
   dropDownOptions: DropDownOption[];
   retryListCount: number;
   uploadingAssets: any; //TODO: fix this type
-  showUploadProcess: (val: string) => void;
-  uploadingFile: number;
-  uploadingPercent: number;
-  setUploadDetailOverlay: (val: boolean) => void;
-  uploadingFileName: string;
 }
 
 const GuestUploadSection: React.FC<GuestUploadSectionProps> = ({
@@ -37,12 +27,6 @@ const GuestUploadSection: React.FC<GuestUploadSectionProps> = ({
   dropDownOptions,
   retryListCount,
   uploadingAssets,
-  showUploadProcess,
-  uploadingFile,
-  uploadingPercent,
-  setUploadDetailOverlay,
-  uploadingFileName,
-  setUploadingStatus,
 }) => {
   return (
     <div className={styles.upload_area}>
@@ -86,7 +70,7 @@ const GuestUploadSection: React.FC<GuestUploadSectionProps> = ({
               </div>
 
               <div className={styles.option_helpertext}>
-                * 1GB min & 200 files min at once
+                *1GB max upload size & 200 files max at once
               </div>
             </>
           )}
@@ -95,17 +79,8 @@ const GuestUploadSection: React.FC<GuestUploadSectionProps> = ({
 
       {uploading && (
         <>
-          {uploadingStatus === "uploading" && (
-            <AssetUploadProcess
-              uploadingAssets={uploadingAssets}
-              uploadingStatus={uploadingStatus}
-              showUploadProcess={showUploadProcess}
-              uploadingFile={uploadingFile}
-              uploadingPercent={uploadingPercent}
-              setUploadDetailOverlay={setUploadDetailOverlay}
-              uploadingFileName={uploadingFileName}
-              retryListCount={retryListCount}
-            />
+          {uploadingStatus !== "none" && uploadingAssets.length > 0 && (
+            <AssetUploadProcess />
           )}
 
           {uploadingStatus === "done" && retryListCount > 0 && (
@@ -117,17 +92,6 @@ const GuestUploadSection: React.FC<GuestUploadSectionProps> = ({
           {uploadingStatus === "done" && retryListCount > 0 && (
             <div className={`row justify-center text-align-center m-b-25`}>
               Press Retry button to try again
-            </div>
-          )}
-
-          {uploadingStatus !== "uploading" && (
-            <div className={styles.form_button}>
-              <Button
-                form="contact-form"
-                text={retryListCount ? "Retry" : "Submit"}
-                className="container input-height-primary"
-                onClick={() => setUploadingStatus("done")}
-              />
             </div>
           )}
         </>

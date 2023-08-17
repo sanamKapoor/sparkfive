@@ -2,12 +2,13 @@ import styles from "./upload-item.module.css";
 
 import { AssetOps, Utilities } from "../../assets";
 
+import { UploadingStatus } from "../../types/common/upload";
 import IconClickable from "../common/buttons/icon-clickable";
 
 interface UploadItemProps {
   name: string;
   key?: number;
-  status?: "done" | "fail";
+  status?: UploadingStatus;
   error?: string;
 }
 

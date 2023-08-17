@@ -1,4 +1,4 @@
-import { Controller, ErrorMessage } from "react-hook-form";
+import { Controller, ErrorMessage, EventFunction } from "react-hook-form";
 
 import styles from "./form-input.module.css";
 
@@ -13,9 +13,11 @@ interface FormInputProps {
   errors?: unknown;
   message?: string;
   defaultValue?: string;
+  onChange: EventFunction;
+  valueName: string;
 }
 
-const FormInput = ({
+const FormInput: React.FC<FormInputProps> = ({
   label = "",
   labelClass = "",
   labId = "",
@@ -26,6 +28,8 @@ const FormInput = ({
   errors,
   message = "",
   defaultValue = "",
+  onChange,
+  valueName,
 }) => {
   return (
     <>
@@ -39,7 +43,9 @@ const FormInput = ({
         name={name}
         control={control}
         rules={rules}
+        valueName={valueName}
         defaultValue={defaultValue}
+        onChange={onChange}
       />
       <p className={styles.error}>
         <ErrorMessage errors={errors} name={name} message={message} />

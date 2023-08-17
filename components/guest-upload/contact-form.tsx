@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import styles from "./contact-form.module.css";
 
 // Components
+import { IGuestUploadFormInput } from "../../types/guest-upload/guest-upload";
 import Button from "../common/buttons/button";
 import FormInput from "../common/inputs/form-input";
 import Input from "../common/inputs/input";
@@ -14,6 +15,8 @@ interface ContactFormProps {
   teamName: string;
   setUploadEnabled: (state: boolean) => void;
   setEdit: (state: boolean) => void;
+  userDetails: IGuestUploadFormInput;
+  setUserDetails: (data: IGuestUploadFormInput) => void;
 }
 
 const ContactForm: React.FC<ContactFormProps> = ({
@@ -23,11 +26,12 @@ const ContactForm: React.FC<ContactFormProps> = ({
   teamName = "",
   setUploadEnabled,
   setEdit,
+  userDetails,
+  setUserDetails,
 }) => {
   const { control, handleSubmit, errors, getValues } = useForm();
 
   const submitForm = (data) => {
-    console.log("form data: ", data);
     onSubmit(data);
   };
 
@@ -53,7 +57,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
                   />
                 }
                 name="firstName"
-                defaultValue={""}
+                defaultValue={userDetails?.firstName}
                 control={control}
                 rules={{ required: true, minLength: 2, maxLength: 30 }}
                 errors={errors}
@@ -75,7 +79,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
                   />
                 }
                 name="lastName"
-                defaultValue={""}
+                defaultValue={userDetails?.lastName}
                 control={control}
                 rules={{ required: true, minLength: 2, maxLength: 30 }}
                 errors={errors}
@@ -99,7 +103,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
                   />
                 }
                 name="email"
-                defaultValue={""}
+                defaultValue={userDetails?.email}
                 control={control}
                 rules={{
                   required: true,
@@ -127,7 +131,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
                   additionalClasses={styles.input}
                 />
               }
-              defaultValue={""}
+              defaultValue={userDetails?.message}
               name="message"
               control={control}
               rules={{ minLength: 4, maxLength: 300 }}
@@ -139,12 +143,11 @@ const ContactForm: React.FC<ContactFormProps> = ({
       </>
       <div className={styles.form_button}>
         <Button
-          type="submit"
           text="Save & Continue"
           className="container primary"
           onClick={() => {
-            console.log("form should be submitted now...");
-            handleSubmit(submitForm);
+            const details = getValues();
+            setUserDetails(details as IGuestUploadFormInput);
             setUploadEnabled(true);
             setEdit(false);
           }}

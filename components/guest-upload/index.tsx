@@ -22,7 +22,7 @@ import {
 // Apis
 import uploadLinkApi from "../../server-api/guest-upload";
 import shareUploadLinkApi from "../../server-api/share-upload-link";
-import { UploadingStatus } from "../../types/common/upload";
+import { IUploadingFile, UploadingStatus } from "../../types/common/upload";
 import PasswordOverlay from "../share-collections/password-overlay";
 import GuestDetails from "./guest-details";
 import GuestInfoForm from "./guest-info-form";
@@ -33,6 +33,7 @@ import {
   GUEST_UPLOAD_WELCOME_MESSAGE,
 } from "../../constants/messages";
 import { IGuestUploadFormInput } from "../../types/guest-upload/guest-upload";
+import Button from "../common/buttons/button";
 
 const GuestUpload: React.FC = () => {
   const { socket, connected, connectSocket } = useContext(SocketContext);
@@ -51,7 +52,7 @@ const GuestUpload: React.FC = () => {
     useState<boolean>(true);
 
   const [teamName, setTeamName] = useState<string>("");
-  const [files, setFiles] = useState<Array<Record<string, unknown>>>([]);
+  const [files, setFiles] = useState<IUploadingFile[]>([]);
   const [totalSize, setTotalSize] = useState(0);
 
   // For processing uploading
@@ -369,7 +370,7 @@ const GuestUpload: React.FC = () => {
     );
 
     // Save this for retry failure files later
-    setFolderGroups(folderGroups);
+    setFolderGroups(folderGroup);
 
     // Finish uploading process
     showUploadProcess("done");
@@ -409,7 +410,10 @@ const GuestUpload: React.FC = () => {
     }
   };
 
+  console.log("uploadingAssets: ", uploadingAssets);
+
   const onFileChange = (e) => {
+    console.log("file change fired......");
     // Only allow to upload max 200 files
     if (
       e.target.files.length <= validation.UPLOAD.MAX_GUEST_UPLOAD_FILES.VALUE
@@ -527,6 +531,8 @@ const GuestUpload: React.FC = () => {
                 uploadingStatus={uploadingStatus}
                 setUploadEnabled={setUploadEnabled}
                 setEdit={setEdit}
+                userDetails={guestUserDetails}
+                setUserDetails={setGuestUserDetails}
               />
             )}
             {uploadEnabled && !edit && (
@@ -567,6 +573,15 @@ const GuestUpload: React.FC = () => {
               uploadingFileName={uploadingFileName}
               setUploadingStatus={setUploadingStatus}
             />
+            {uploadingStatus !== "uploading" && (
+              <div className={styles.form_button}>
+                <Button
+                  text={retryListCount ? "Retry" : "Submit"}
+                  className="container input-height-primary"
+                  onClick={() => saveChanges(guestUserDetails)}
+                />
+              </div>
+            )}
           </div>
         </div>
         {activePasswordOverlay && (

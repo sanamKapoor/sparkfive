@@ -1,4 +1,5 @@
 import { UploadingStatus } from "../../types/common/upload";
+import { IGuestUploadFormInput } from "../../types/guest-upload/guest-upload";
 import ContactForm from "./contact-form";
 import styles from "./index.module.css";
 
@@ -8,6 +9,8 @@ interface GuestInfoFormProps {
   teamName: string;
   setUploadEnabled: (val: boolean) => void;
   setEdit: (val: boolean) => void;
+  userDetails: IGuestUploadFormInput;
+  setUserDetails: (data: IGuestUploadFormInput) => void;
 }
 
 const GuestInfoForm: React.FC<GuestInfoFormProps> = ({
@@ -16,6 +19,8 @@ const GuestInfoForm: React.FC<GuestInfoFormProps> = ({
   teamName,
   setUploadEnabled,
   setEdit,
+  userDetails,
+  setUserDetails,
 }) => {
   return (
     <div className={styles.form}>
@@ -26,6 +31,8 @@ const GuestInfoForm: React.FC<GuestInfoFormProps> = ({
         teamName={teamName}
         setEdit={setEdit}
         setUploadEnabled={setUploadEnabled}
+        userDetails={userDetails}
+        setUserDetails={setUserDetails}
       />
     </div>
   );
