@@ -119,6 +119,8 @@ export const Utilities = {
   product:require('./Icons/Utilities/nestedCollection/product.svg'),
   right:require('./Icons/Utilities/nestedCollection/right.svg'),
   vedio:require('./Icons/Utilities/nestedCollection/vedio.svg'),
+  line:require('./Icons/Utilities/nestedCollection/Line.svg'),
+  dots:require('./Icons/Utilities/nestedCollection/dots.svg'),
   
  
 }
