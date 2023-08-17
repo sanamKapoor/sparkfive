@@ -12,7 +12,6 @@ interface GuestUploadSectionProps {
   uploadEnabled: boolean;
   uploading: boolean;
   uploadingStatus: UploadingStatus;
-  setUploadingStatus: (val: UploadingStatus) => void;
   files: IUploadingFile[];
   dropDownOptions: DropDownOption[];
   retryListCount: number;

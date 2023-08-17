@@ -566,12 +566,6 @@ const GuestUpload: React.FC = () => {
               dropDownOptions={dropdownOptions}
               retryListCount={retryListCount}
               uploadingAssets={uploadingAssets}
-              showUploadProcess={showUploadProcess}
-              uploadingFile={uploadingFile}
-              uploadingPercent={uploadingPercent}
-              setUploadDetailOverlay={setUploadDetailOverlay}
-              uploadingFileName={uploadingFileName}
-              setUploadingStatus={setUploadingStatus}
             />
             {uploadingStatus !== "uploading" && (
               <div className={styles.form_button}>
