@@ -1199,7 +1199,7 @@ const DetailOverlay = ({
                 <AssetIcon extension={currentAsset.extension} />
               )}
             {assetDetail.type === "video" && (
-              <video controls>
+              <video controls id={"video-element"}>
                 <source
                   src={previewUrl ?? versionRealUrl}
                   type={
