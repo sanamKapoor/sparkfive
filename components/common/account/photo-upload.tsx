@@ -10,17 +10,26 @@ import { Utilities } from "../../../assets";
 const ALLOWED_TYPES = "image/png, image/jpeg";
 
 // Components
-import Button from "../buttons/button";
+import {
+  FAILED_TO_UPLOAD_PHOTO,
+  PHOTO_UPDATED,
+} from "../../../constants/messages";
+import { PROFILE_PIC_HELP_TEXT } from "../../../constants/strings";
 import ButtonIcon from "../buttons/button-icon";
 import Spinner from "../spinners/spinner";
 
-const PhotoUpload = ({
+interface IPhotoUploadProps {
+  userPhoto?: string;
+  description?: string;
+  type?: "user" | "team";
+}
+
+const PhotoUpload: React.FC<IPhotoUploadProps> = ({
   userPhoto = "",
-  explainText = "Your Avatar appears in your team comments and notifications",
+  description = PROFILE_PIC_HELP_TEXT,
   type = "user",
 }) => {
   const [currentPhoto, setCurrentPhoto] = useState(undefined);
-  const [uploadedImage, setUploadedImage] = useState(undefined);
   const [isUploading, setIsUploading] = useState(false);
 
   const { setUser } = useContext(UserContext);
@@ -44,7 +53,6 @@ const PhotoUpload = ({
   };
 
   const cancelPreview = () => {
-    setUploadedImage(undefined);
     setCurrentPhoto(userPhoto);
   };
 
@@ -58,12 +66,11 @@ const PhotoUpload = ({
       const { data } = await updateFn(formData);
       if (type === "user") setUser(data);
       else getTeam();
-      toastUtils.success(`Photo updated.`);
-      setUploadedImage(undefined);
+      toastUtils.success(PHOTO_UPDATED);
     } catch (err) {
       cancelPreview();
       console.log(err);
-      toastUtils.error("Could not update photo, please try again later.");
+      toastUtils.error(FAILED_TO_UPLOAD_PHOTO);
     } finally {
       setIsUploading(false);
     }
@@ -71,43 +78,25 @@ const PhotoUpload = ({
 
   return (
     <div className={styles.container}>
-      {!isUploading && (
+      {!isUploading ? (
         <img
           className={`${currentPhoto ? styles.current : styles["no-photo"]} ${
             styles[type]
           }`}
           src={currentPhoto || Utilities.memberProfile}
         />
-      )}
-      {isUploading && (
+      ) : (
         <div className={styles.loading}>
           <Spinner />
         </div>
       )}
       <div>
-        {uploadedImage ? (
-          <>
-            <Button
-              text="Cancel"
-              type="button"
-              className="container secondary"
-              onClick={cancelPreview}
-            />
-            <Button
-              text="Save Changes"
-              type="button"
-              className="container primary"
-              onClick={saveChanges}
-            />
-          </>
-        ) : (
-          <ButtonIcon
-            icon={Utilities.addAlt}
-            text="UPLOAD PHOTO"
-            onClick={openUpload}
-          />
-        )}
-        <p className={styles.description}>{explainText}</p>
+        <ButtonIcon
+          icon={Utilities.addAlt}
+          text="UPLOAD PHOTO"
+          onClick={openUpload}
+        />
+        <p className={styles.description}>{description}</p>
       </div>
       <input
         id="file-input-id"

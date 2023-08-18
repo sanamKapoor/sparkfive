@@ -4,6 +4,7 @@ export const COLLECTION_NAME_UPDATED = "Collection name updated.";
 export const USERS_DOWNLOADED = "Users list downloaded.";
 export const ACCOUNTS_DOWNLOADED = "Accounts list downloaded.";
 export const THUMBNAIL_UPDATED = "Thumbnail Updated.";
+export const PHOTO_UPDATED = "Photo updated.";
 
 //errors
 export const FAILED_TO_UPDATE_ASSET_NAME = "Failed to update asset name.";
@@ -17,6 +18,8 @@ export const ERR_IN_UPDATING_THUMBNAIL =
   "Could not update photo, please try again later.";
 export const COULD_NOT_CHANGE_PREFERENCE =
   "Could not change preference, please try again later";
+export const FAILED_TO_UPLOAD_PHOTO =
+  "Could not update photo, please try again later.";
 
 //ui text
 export const GUEST_UPLOAD_SUCCESS_MESSAGE =

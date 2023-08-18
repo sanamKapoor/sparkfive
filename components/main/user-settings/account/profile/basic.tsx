@@ -186,7 +186,7 @@ const Basic: React.FC<BasicProps> = ({ name, email, provider }) => {
       {provider && (
         <NewPasswordModal
           closeModal={() => setNewEmail("")}
-          modalIsOpen={newEmail ? true : false}
+          modalIsOpen={!!newEmail}
           confirmChange={saveEmailWithPassword}
         />
       )}
