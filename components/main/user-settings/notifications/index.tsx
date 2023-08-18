@@ -7,13 +7,20 @@ import toastUtils from "../../../../utils/toast";
 import styles from "./index.module.css";
 
 // Components
+import { COULD_NOT_CHANGE_PREFERENCE } from "../../../../constants/messages";
+import {
+  ENABLE_TWO_AUTH_FOR_NOTIFICATION,
+  NOTIFICATIONS_SUBTITLE,
+  NOTIFICATIONS_TITLE,
+} from "../../../../constants/strings";
 import UserPreference from "../../../common/account/user-preference";
 import NotificationList from "../../../common/notifications/notification-list";
 
 const Notifications: React.FC = () => {
   const { user, setUser } = useContext(UserContext);
 
-  const [enabledEmailNotif, setEnabledEmailNotif] = useState<boolean>(false);
+  const [enableEmailNotification, setEnableEmailNotification] =
+    useState<boolean>(false);
 
   const [notifications, setNotifications] = useState([]);
 
@@ -36,7 +43,7 @@ const Notifications: React.FC = () => {
   };
 
   const setUserProperties = () => {
-    setEnabledEmailNotif(user.notifEmail);
+    setEnableEmailNotification(user.notifEmail);
   };
 
   const handleChange = async (updateData) => {
@@ -45,12 +52,12 @@ const Notifications: React.FC = () => {
       setUser(data);
     } catch (err) {
       console.log(err);
-      toastUtils.error("Could not change preference, please try again later");
+      toastUtils.error(COULD_NOT_CHANGE_PREFERENCE);
     }
   };
 
   const setEmailNotif = (value) => {
-    setEnabledEmailNotif(value);
+    setEnableEmailNotification(value);
     handleChange({ notifEmail: value });
   };
 
@@ -79,11 +86,11 @@ const Notifications: React.FC = () => {
       <div className={styles.divider}></div>
       <div className={styles.preferences}>
         <UserPreference
-          enabled={enabledEmailNotif}
+          enabled={enableEmailNotification}
           setPreference={setEmailNotif}
-          title={"Email notifications"}
-          subtitle={"Two-Factor Authentification"}
-          description={`Enabling this will enable your account's email to recieve notifications whenever you are tagged in a comment`}
+          title={NOTIFICATIONS_TITLE}
+          subtitle={NOTIFICATIONS_SUBTITLE}
+          description={ENABLE_TWO_AUTH_FOR_NOTIFICATION}
         />
       </div>
       <NotificationList

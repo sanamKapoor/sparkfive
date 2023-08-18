@@ -15,6 +15,8 @@ export const ALL_THUMBNAILS_REQUIRED = "Please select all thumbnails.";
 export const THUMBNAIL_REQUIRED = "Please select a thumbnail!";
 export const ERR_IN_UPDATING_THUMBNAIL =
   "Could not update photo, please try again later.";
+export const COULD_NOT_CHANGE_PREFERENCE =
+  "Could not change preference, please try again later";
 
 //ui text
 export const GUEST_UPLOAD_SUCCESS_MESSAGE =
