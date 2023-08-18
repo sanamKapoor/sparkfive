@@ -1,0 +1,25 @@
+.custom-select select {
+  background-color: white;
+  border: 1px solid #dedad4;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: "Noto Sans", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  color: var(--color-prim-navy);
+  padding: 8px;
+  margin-right: 10px;
+}
+
+.morefilter{
+    font-family: "Noto Sans", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  color: var(--color-prim-navy);
+
+}
