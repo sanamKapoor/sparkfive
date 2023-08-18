@@ -15,7 +15,6 @@ const AvailableIntegrations = () => {
   const getAvailableIntegrations = async () => {
     try {
       const { data } = await parameterApi.getAvailableIntegrations();
-      console.log("data: ", data);
       setAvailableIntegrations(data);
     } catch (err) {
       console.log(err);
