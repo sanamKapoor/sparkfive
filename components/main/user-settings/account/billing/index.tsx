@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import planApi from "../../../../../server-api/plan";
 import styles from "./index.module.css";
 
+import { IPaymentMethod } from "../../../../../types/account/payment";
 import { BillingTabs } from "../../../../../types/common/tabs";
 import Invoices from "./invoices";
 import PaymentMethod from "./payment-method";
@@ -33,9 +34,7 @@ const Billing = () => {
   const [activeSection, setActiveSection] = useState<BillingTabs>(
     BillingTabs.SUBSCRIPTION
   );
-  const [paymentMethod, setPaymentMethod] = useState<string | undefined>(
-    undefined
-  );
+  const [paymentMethod, setPaymentMethod] = useState<IPaymentMethod>(undefined);
   const ActiveContent = SETTING_SECTIONS_CONTENT[activeSection];
 
   useEffect(() => {

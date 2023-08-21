@@ -11,7 +11,7 @@ import CreditCardForm from "../../../../common/payment/credit-card-form";
 
 interface PaymentMethodProps {
   paymentMethod: IPaymentMethod;
-  setPaymentMethod: (val: string) => void;
+  setPaymentMethod: (val: IPaymentMethod) => void;
 }
 
 const PaymentMethod: React.FC<PaymentMethodProps> = ({

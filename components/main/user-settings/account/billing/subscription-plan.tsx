@@ -1,12 +1,16 @@
 import { differenceInDays, format } from "date-fns";
 import { useContext, useState } from "react";
-import { TeamContext } from "../../../../../context";
+import { TeamContext, UserContext } from "../../../../../context";
 import planApi from "../../../../../server-api/plan";
 import { formatCurrency } from "../../../../../utils/numbers";
 import toastUtils from "../../../../../utils/toast";
 import styles from "./subscription-plan.module.css";
 
 // Components
+import {
+  calculateStorageUsedPercent,
+  formatBytes,
+} from "../../../../../utils/upload";
 import BaseModal from "../../../../common/modals/base";
 
 interface SubscriptionDataProps {
@@ -26,6 +30,7 @@ const SubscriptionData: React.FC<SubscriptionDataProps> = ({
 
 const SubscriptionPlan: React.FC = () => {
   const { plan } = useContext(TeamContext);
+  const { user } = useContext(UserContext);
 
   const [cancelOpen, setCancelOpen] = useState(false);
 
@@ -65,6 +70,13 @@ const SubscriptionPlan: React.FC = () => {
     return formatBytes(parseInt(user?.storageUsed || 0));
   };
 
+  const formattedStorageUsed = getStorageUsed();
+  const totalStorage = plan?.benefit?.storage;
+
+  const percent = plan
+    ? calculateStorageUsedPercent(user?.storageUsed || 0, totalStorage)
+    : 0;
+
   return (
     <div className={styles.container}>
       {plan && (
@@ -88,12 +100,16 @@ const SubscriptionPlan: React.FC = () => {
             <h3>Account Storage Used</h3>
             <div className={styles.bar_wrapper}>
               <div className={styles.bar}>
-                {/* TO DO: the width style should em dynamic accourding to percentage */}
-                <div className={styles.bar_used} style={{ width: "65%" }}></div>
+                <div
+                  className={styles.bar_used}
+                  style={{ width: `${percent}%` }}
+                ></div>
               </div>
-              <span>65%</span>
+              <span>{percent}%</span>
             </div>
-            <div className={styles.storage_info}>500 GB out 1TB used</div>
+            <div className={styles.storage_info}>
+              {formattedStorageUsed} out of {totalStorage} used
+            </div>
           </div>
         </div>
       )}
