@@ -8,10 +8,12 @@ import urlUtils from "../../../../utils/url";
 import styles from "./deleted-assets.module.css";
 
 // Components
+import { AssetOps } from "../../../../assets";
 import useSortedAssets from "../../../../hooks/use-sorted-assets";
 import selectOptions from "../../../../utils/select-options";
 import DetailOverlay from "../../asset/detail-overlay";
 import Button from "../../buttons/button";
+import IconClickable from "../../buttons/icon-clickable";
 import Select from "../../inputs/select";
 import ConfirmModal from "../../modals/confirm-modal";
 import DeletedListItem from "./deleted-list-item";
@@ -154,7 +156,7 @@ const DeletedAssets = ({
       </div>
 
       <div className={styles.header_actions}>
-      <IconClickable
+        <IconClickable
           src={AssetOps.moveGray}
           additionalClass={styles["action-recover"]}
         />
@@ -166,8 +168,7 @@ const DeletedAssets = ({
         <Button
           text="Deselect All"
           type="button"
-          styleType="primary"
-          onClick={() => alert('deselect all')}
+          onClick={() => alert("deselect all")}
         />
         <Button
           text="Select All"
