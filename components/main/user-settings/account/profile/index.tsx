@@ -15,6 +15,7 @@ const Profile: React.FC = () => {
       {user && (
         <>
           <PhotoUpload userPhoto={user.profilePhoto} />
+          <div className={styles.divider}></div>
           <Basic email={user.email} name={user.name} provider={user.provider} />
         </>
       )}

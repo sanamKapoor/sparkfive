@@ -19,7 +19,10 @@ const NameForm: React.FC = () => {
 
   return (
     <>
-      <h3>Company Name</h3>
+    <div className={styles.compamnyInfo}>
+    <h3>Company Info</h3>
+    </div>
+      <h3 className={styles.companyName}>Company Name</h3>
       <form onSubmit={handleSubmit(onSubmit)} className={styles.container}>
         {team && (
           <div className={styles["form-container"]}>

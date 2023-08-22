@@ -5,9 +5,14 @@
 .container button{
   margin-top: 18px;
 }
+.title{
+  margin-bottom: 20px !important;
+}
 
 h3.title {
+  font-weight: 500;
   margin-bottom: 24px;
+
 }
 
 .state-country{
@@ -30,12 +35,23 @@ h3.title {
 .container label {
   margin-bottom: 16px;
   display: block;
+  font-weight: 500;
+  font-family: "Noto Sans", sans-serif;
+  font-size: 14px;
 }
+.companyLabel{
+  font-family: "Noto Sans", sans-serif;
+  font-size: 14px;
+ font-weight: 500;
 
+}
 
 .fields-pair label {
   margin-bottom: 16px;
   display: block;
+  font-weight: 500;
+  font-family: "Noto Sans", sans-serif;
+  font-size: 14px;
 }
 
 .fields-pair>div:first-child{
@@ -64,4 +80,16 @@ h3.title {
   .state {
     margin-top: 34px;
   }
+}
+@media screen and (max-width: 810px){
+  .fields-pair>div:first-child{
+    width: 100%;
+    margin-right: 0%;
+  }
+  
+  .fields-pair>div:last-child{
+    width: 100%;
+  }
+
+
 }

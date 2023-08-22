@@ -145,16 +145,20 @@ const Basic: React.FC<BasicProps> = ({ name, email, provider }) => {
           className={`${styles.form} ${styles["password-form"]}`}
         >
           <div className={"fields-first"}>
+            <div className={styles.passwordLabels}>
             <h3>Current Password</h3>
+            </div>
             <FormInput
-              InputComponent={<Input type="password" />}
+            InputComponent={<Input type="password" />}
               name="currentPassword"
               control={controlPassword}
               rules={{ minLength: 8, maxLength: 80, required: true }}
               errors={errorsPassword}
               message={"This field should be minimun 8 characters long"}
             />
+             <div className={styles.passwordLabels}>
             <h3 className="m-t-40">New Password</h3>
+            </div>
             <FormInput
               InputComponent={<Input type="password" />}
               name="newPassword"

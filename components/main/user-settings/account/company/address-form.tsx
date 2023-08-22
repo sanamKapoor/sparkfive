@@ -75,7 +75,7 @@ const AddressForm: React.FC = () => {
               />
               <div className={styles["fields-pair"]}>
                 <div>
-                  <label>Country</label>
+                  <label className={styles.companyLabel}>Country</label>
                   <Select
                     placeholder="Select Country"
                     options={countries}
@@ -84,7 +84,7 @@ const AddressForm: React.FC = () => {
                   />
                 </div>
                 <div className={styles.state}>
-                  <label>State</label>
+                  <label className={styles.companyLabel}>State</label>
                   <Select
                     placeholder="Select State"
                     options={states}

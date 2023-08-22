@@ -27,13 +27,19 @@
   display: flex;
   width: 50%;
   margin-bottom: 24px;
+  margin-top: 20px;
 }
 
 .change-password-button {
   align-self: flex-end;
   margin-bottom: 15px;
 }
-
+.fields-first{
+  margin-top:20px;
+}
+.passwordLabels{
+  margin-bottom:20px;
+}
 
 @media screen and (max-width: 900px) {
   .form {
