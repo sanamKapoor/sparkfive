@@ -1,20 +1,16 @@
 import { useEffect, useState } from "react";
+import { ITeamMember } from "../../../../../../types/team/team";
+import { IRole } from "../../../../../../types/user/role";
 import styles from "./member-detail.module.css";
 
-import permissionApi from "../../../../server-api/permission";
+import permissionApi from "../../../../../../server-api/permission";
 
-// Components
-import Button from "../../../common/buttons/button";
-import Select from "../../../common/inputs/select";
+import { default as permissionList } from "../../../../../../constants/permissions";
+import Button from "../../../../../common/buttons/button";
+import Select from "../../../../../common/inputs/select";
 import MemberPermissions from "./member-permissions";
-
-import { default as permissionList } from "../../../../constants/permissions";
-import { ITeamMember } from "../../../../types/team/team";
-import { IRole } from "../../../../types/user/role";
-
 interface MemberDetailProps {
   member: ITeamMember;
-  type: string;
   mappedRoles: IRole[];
   onSaveChanges: (id: string, data) => void;
   onCancel: () => void;
@@ -22,7 +18,6 @@ interface MemberDetailProps {
 
 const MemberDetail: React.FC<MemberDetailProps> = ({
   member,
-  type = "member",
   mappedRoles,
   onSaveChanges,
   onCancel,
@@ -83,14 +78,13 @@ const MemberDetail: React.FC<MemberDetailProps> = ({
     <div className={styles.container}>
       <div className={styles.content}>
         <div className={styles.headers}>
-          {type === "member" && <h3>Name</h3>}
+          <h3>Name</h3>
           <h3>Email Address</h3>
           <h3>Role</h3>
         </div>
         <div className={styles.fields}>
-          {type === "member" && (
-            <div className={styles.name}>{member.name}</div>
-          )}
+          <div className={styles.name}>{member.name}</div>
+
           <div className={styles.email}>{member.email}</div>
           <div>
             <Select
