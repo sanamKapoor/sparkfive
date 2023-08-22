@@ -303,7 +303,6 @@ const EditSidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
 
   // On custom field select one changes
   const onChangeSelectOneCustomField = async (selected, index) => {
-    // console.log(selected)
     // Show loading
     setIsLoading(true);
 

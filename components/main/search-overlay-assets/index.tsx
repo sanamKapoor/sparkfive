@@ -1,24 +1,21 @@
-import { useContext, useEffect, useState } from "react";
-import { Utilities } from "../../../assets";
-import { AssetContext, FilterContext } from "../../../context";
-import assetApi from "../../../server-api/asset";
-import folderApi from "../../../server-api/folder";
-import shareCollectionApi from "../../../server-api/share-collection";
-import styles from "./index.module.css";
+import { useContext, useEffect, useState } from 'react';
+
+import { Utilities } from '../../../assets';
+import { AssetContext, FilterContext } from '../../../context';
+import assetApi from '../../../server-api/asset';
+import folderApi from '../../../server-api/folder';
+import shareCollectionApi from '../../../server-api/share-collection';
+import Button from '../../common/buttons/button';
+import Search from '../../common/inputs/search';
+import styles from './index.module.css';
 
 // Components
-import Button from "../../common/buttons/button";
-import Search from "../../common/inputs/search";
-
 const SearchOverlayAssets = ({
   closeOverlay,
   importEnabled = false,
-  operationsEnabled = false,
   importAssets = () => {},
   sharePath = "",
   activeFolder = "",
-  onCloseDetailOverlay = (assetData) => {},
-  onClickOutside,
   isFolder,
 }) => {
   const {
@@ -28,7 +25,6 @@ const SearchOverlayAssets = ({
     nextPage,
     selectAllAssets,
     selectedAllAssets,
-    totalAssets,
     setFolders,
   } = useContext(AssetContext);
 
@@ -97,7 +93,7 @@ const SearchOverlayAssets = ({
   if (selectedAllAssets) {
     // Get assets is not selected on screen
     const currentUnSelectedAssets = assets.filter((asset) => !asset.isSelected);
-    totalSelectAssets = totalAssets - currentUnSelectedAssets.length;
+  //  let totalSelectAssets = totalAssets - currentUnSelectedAssets.length;
   }
 
   // Close search modal
@@ -106,7 +102,6 @@ const SearchOverlayAssets = ({
     setSearchTerm("");
     setSearchFilterParams({});
     selectAllAssets(false);
-
     closeOverlay();
   };
 
@@ -135,6 +130,7 @@ const SearchOverlayAssets = ({
               </div>
             )}
           </div>
+          {isFolder}
           {/* TODO: When is a collecttion change placeholter to "Search Collections" */}
           <Search
             placeholder={`Search ${isFolder ? "Collections" : "Assets"}`}

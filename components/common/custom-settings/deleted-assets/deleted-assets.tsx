@@ -15,6 +15,8 @@ import Button from "../../buttons/button";
 import Select from "../../inputs/select";
 import ConfirmModal from "../../modals/confirm-modal";
 import DeletedListItem from "./deleted-list-item";
+import { AssetOps } from "../../../../assets";
+import IconClickable from "../../buttons/icon-clickable";
 
 const DeletedAssets = ({
   activeView = "grid",
@@ -142,7 +144,6 @@ const DeletedAssets = ({
     });
   };
 
-  console.log("activeSortFilter ", activeSortFilter);
   return (
     <section className={`${styles.container} ${openFilter && styles.filter}`}>
       <div className={styles.header}>

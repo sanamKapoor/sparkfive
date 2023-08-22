@@ -420,7 +420,6 @@ export default function AssetRelatedFileUpload({
         // Showing assets = uploading assets + existing assets
         setAssets([...newPlaceholders, ...currentDataClone]);
 
-        console.log([...newPlaceholders, ...currentDataClone]);
 
         // Get team advance configurations first
         const { subFolderAutoTag } = advancedConfig;

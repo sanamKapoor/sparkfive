@@ -473,7 +473,6 @@ const GuestUpload: React.FC = () => {
       console.log(`Register socket listener...`);
       // Listen upload file process event
       socket.on("uploadFilesProgress", function (data) {
-        // console.log(data)
         setUploadingPercent(data.percent);
         setUploadRemainingTime(
           `${convertTimeFromSeconds(data.timeLeft)} remaining`

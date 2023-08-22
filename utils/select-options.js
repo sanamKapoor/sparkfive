@@ -29,19 +29,7 @@ export default {
       value: 'size',
       field: 'size',
       order: 'desc'
-    },
-    // {
-    //   label: 'Newest',
-    //   value: 'newest',
-    //   field: 'deletedAt',
-    //   order: 'desc'
-    // },
-    // {
-    //   label: 'Oldest',
-    //   value: 'oldest',
-    //   field: 'deletedAt',
-    //   order: 'asc'
-    // }
+    }
   ],
 
   views: [

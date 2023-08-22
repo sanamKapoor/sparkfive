@@ -189,7 +189,6 @@ const UploadRequest = () => {
   const fetchApprovals = async () => {
     setIsLoading(true);
     const { data } = await uploadApprovalApi.getUploadApprovals();
-    console.log("data: ", data);
     setApprovals(data);
     setIsLoading(false);
   };

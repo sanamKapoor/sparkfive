@@ -217,6 +217,8 @@ export const FilterContext = createContext({
 
   isPublic: false,
   sharePath: "",
+  renderFlag:false,
+  setRenderedFlag:()=>{},
 });
 
 export const ShareContext = createContext({

@@ -1,12 +1,11 @@
-import ReactModal from "react-modal";
-import styles from "./base.module.css";
+import { MouseEventHandler, useEffect } from 'react';
+import ReactModal from 'react-modal';
 
-import { MouseEventHandler, useEffect } from "react";
+import { Utilities } from '../../../assets';
+import Button from '../buttons/button';
+import styles from './base.module.css';
 
 // Components
-import { Utilities } from "../../../assets";
-import Button from "../buttons/button";
-
 ReactModal.defaultStyles = {};
 
 interface BaseModalProps {

@@ -1,19 +1,18 @@
-import update from "immutability-helper";
-import { useContext, useEffect, useState } from "react";
-import { Utilities } from "../../../assets";
-import { AssetContext, FilterContext, UserContext } from "../../../context";
-import styles from "./filter-container.module.css";
+import update from 'immutability-helper';
+import { useContext, useEffect, useState } from 'react';
 
-import customFieldsApi from "../../../server-api/attribute";
-import shareCollectionApi from "../../../server-api/share-collection";
+import { Utilities } from '../../../assets';
+import { AssetContext, FilterContext, UserContext } from '../../../context';
+import customFieldsApi from '../../../server-api/attribute';
+import shareCollectionApi from '../../../server-api/share-collection';
+import DateUploaded from './date-uploaded';
+import DimensionsFilter from './dimensions-filter';
+import styles from './filter-container.module.css';
+import FilterSelector from './filter-selector';
+import ProductFilter from './product-filter';
+import ResolutionFilter from './resolution-filter';
 
 // Components
-import DateUploaded from "./date-uploaded";
-import DimensionsFilter from "./dimensions-filter";
-import FilterSelector from "./filter-selector";
-import ProductFilter from "./product-filter";
-import ResolutionFilter from "./resolution-filter";
-
 const FilterContainer = ({
   openFilter,
   setOpenFilter,
@@ -59,13 +58,17 @@ const FilterContainer = ({
     customFields,
     loadCustomFields,
     setCustomFields,
+    setRenderedFlag,
+    renderFlag
   } = useContext(FilterContext);
 
   const { activeFolder } = useContext(AssetContext);
 
   const getCustomFields = async () => {
+    
     try {
-      const { data } = isPublic
+      if(!renderFlag){
+        const { data } = isPublic
         ? await shareCollectionApi.getCustomFields({
             assetsCount: "yes",
             assetLim: "yes",
@@ -76,16 +79,12 @@ const FilterContainer = ({
             assetLim: "yes",
             sharePath,
           });
-
       setCustomFieldList(data);
-
       let fields = [];
-
       // Expand those custom field
       data.map((item, index) => {
         fields.push(`customFields-${index}`);
       });
-
       let filter = {};
       let fieldValues = {};
       data.map((value, index) => {
@@ -96,17 +95,19 @@ const FilterContainer = ({
         filter[`custom-p${value.id}`] = { $set: [] };
         fieldValues[value.id] = [];
       });
-
       setCustomFields(fieldValues);
-
+      console.log("helolol m hu sari problem")
       // Add filter
+      setRenderedFlag(true);
       setActiveSortFilter(update(activeSortFilter, filter));
+      }
     } catch (err) {
       // TODO: Maybe show error?
     }
   };
-
+  
   useEffect(() => {
+    console.log("again") 
     window.addEventListener("scroll", () => {
       setStickyMenuScroll(window.scrollY > 215);
     });
@@ -158,7 +159,9 @@ const FilterContainer = ({
   };
 
   return (
-    <div
+    <>
+    {renderFlag ?
+    <div 
       className={`${styles.container}  ${
         stickyMenuScroll && styles["sticky-menu"]
       }`}
@@ -686,7 +689,10 @@ const FilterContainer = ({
           </section>
         )}
       </div>
-    </div>
+    </div>:null}
+    </>
+    
+    
   );
 };
 

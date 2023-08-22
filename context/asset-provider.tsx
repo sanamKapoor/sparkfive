@@ -428,25 +428,30 @@ export default ({ children }) => {
       console.log(`Register socket listener...`);
       // Listen upload file process event
       socket.on("uploadFilesProgress", function (data) {
-        console.log(data);
+        console.log(data,"im here");
         setUploadingPercent(data.percent);
         setUploadRemainingTime(
           `${convertTimeFromSeconds(data.timeLeft)} remaining`
         );
+        console.log(data,"im here2");
 
         // setUploadingFileName("Test.png")
         if (data.fileName) {
           setUploadingFileName(data.fileName);
         }
+        console.log(data,"im here23");
 
         // setUploadingFile(0)
         if (!isNaN(data.uploadingAssets)) {
+          console.log(data,"im here234");
+
           setDropboxUploadingFile(data.uploadingAssets);
         }
       });
+      console.log("im here2345");
 
       socket.on("downloadFilesProgress", function (data) {
-        console.log(data);
+        console.log("im here2346");
         setDownloadingPercent(data.percent);
       });
     }
@@ -454,6 +459,7 @@ export default ({ children }) => {
 
   // Reset active folders if user navigate to other pages
   useEffect(() => {
+    console.log("122121")
     const handleRouteChange = (url, { shallow }) => {
       setActiveFolder("");
     };

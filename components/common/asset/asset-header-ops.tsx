@@ -1,52 +1,40 @@
 // External
-import fileDownload from "js-file-download";
-import { useContext, useEffect, useRef, useState } from "react";
+import fileDownload from 'js-file-download';
+import { useRouter } from 'next/router';
+import { useContext, useEffect, useRef, useState } from 'react';
 
-import styles from "./asset-header-ops.module.css";
+import { AssetOps, Utilities } from '../../../assets';
+import { maximumAssociateFiles } from '../../../constants/asset-associate';
+import { ASSET_DOWNLOAD } from '../../../constants/permissions';
+import { AssetContext, FilterContext, LoadingContext, UserContext } from '../../../context';
+import assetApi from '../../../server-api/asset';
+import folderApi from '../../../server-api/folder';
+import shareApi from '../../../server-api/share-collection';
+import { getAssetsFilters } from '../../../utils/asset';
+import { getSubdomain } from '../../../utils/domain';
+import toastUtils from '../../../utils/toast';
+import IconClickable from '../../common/buttons/icon-clickable';
+import Dropdown from '../inputs/dropdown';
+import ConfirmModal from '../modals/confirm-modal';
+import styles from './asset-header-ops.module.css';
 
-// Contexts
-import {
-  AssetContext,
-  FilterContext,
-  LoadingContext,
-  UserContext,
-} from "../../../context";
-
-// Utils
-import { Utilities } from "../../../assets";
-import { ASSET_DOWNLOAD } from "../../../constants/permissions";
-import assetApi from "../../../server-api/asset";
-import folderApi from "../../../server-api/folder";
-import shareApi from "../../../server-api/share-collection";
-import { getAssetsFilters } from "../../../utils/asset";
-
-// Utils
-import { getSubdomain } from "../../../utils/domain";
-import toastUtils from "../../../utils/toast";
-
-// Components
-import { AssetOps } from "../../../assets";
-
-// Components
-import { useRouter } from "next/router";
-import IconClickable from "../../common/buttons/icon-clickable";
-import ConfirmModal from "../modals/confirm-modal";
-
-// Constants
-import { maximumAssociateFiles } from "../../../constants/asset-associate";
-import Dropdown from "../inputs/dropdown";
 
 const AssetHeaderOps = ({
   isUnarchive = false,
-  itemType = "",
   isShare = false,
   isFolder = false,
   deselectHidden = false,
-  iconColor = "",
   deletedAssets = false,
   advancedLink = false,
-  isSearch = false,
 }) => {
+  const router = useRouter();
+
+  const [sharePath, setSharePath] = useState("");
+  const [showShareAction, setShowShareAction] = useState(false);
+  const contentRef = useRef(null);
+  const [showMoreActions, setShowMoreActions] = useState(false);
+  const [showAssociateModalOpen, setShowAssociateModalOpen] = useState(false);
+
   const {
     assets,
     setAssets,
@@ -64,7 +52,6 @@ const AssetHeaderOps = ({
 
   const { setIsLoading } = useContext(LoadingContext);
 
-  const router = useRouter();
 
   const { hasPermission } = useContext(UserContext);
 
@@ -73,14 +60,37 @@ const AssetHeaderOps = ({
     term,
     setSharePath: setContextPath,
   } = useContext(FilterContext);
-  const [sharePath, setSharePath] = useState("");
-  const [showShareAction, setShowShareAction] = useState(false);
-  const contentRef = useRef(null);
-  const [showMoreActions, setShowMoreActions] = useState(false);
-  const [showAssociateModalOpen, setShowAssociateModalOpen] = useState(false);
-
+  
   const selectedAssets = assets.filter((asset) => asset.isSelected);
+  
   let totalSelectAssets = selectedAssets.length;
+
+  useEffect(() => {
+    const { asPath } = router;
+    if (asPath) {
+      if (advancedLink) {
+        // TODO: Optimize exact path
+        const splitPath = asPath.split("/collections/");
+
+        const idPath = splitPath[1].split("/");
+
+        if (
+          idPath &&
+          !idPath[0].includes("[team]") &&
+          !idPath[1].includes("[id]")
+        ) {
+          const path = `${processSubdomain()}/${idPath[1]}/${idPath[0]}`;
+          setSharePath(path);
+          setContextPath(path);
+        }
+      } else {
+        // Get shareUrl from path
+        const splitPath = asPath.split("collections/");
+        setSharePath(splitPath[1]);
+      }
+    }
+  }, [router.asPath]);
+  
 
   // Hidden pagination assets are selected
   if (selectedAllAssets) {
@@ -95,7 +105,6 @@ const AssetHeaderOps = ({
   }
 
   const downloadSelectedAssets = async () => {
-    console.log(`selectedAllAssets: ${selectedAllAssets}`);
     try {
       let payload = {
         assetIds: [],
@@ -225,32 +234,6 @@ const AssetHeaderOps = ({
     return getSubdomain() || "danner";
   };
 
-  useEffect(() => {
-    const { asPath } = router;
-    if (asPath) {
-      if (advancedLink) {
-        // TODO: Optimize exact path
-        const splitPath = asPath.split("/collections/");
-
-        const idPath = splitPath[1].split("/");
-
-        if (
-          idPath &&
-          !idPath[0].includes("[team]") &&
-          !idPath[1].includes("[id]")
-        ) {
-          const path = `${processSubdomain()}/${idPath[1]}/${idPath[0]}`;
-          setSharePath(path);
-          setContextPath(path);
-        }
-      } else {
-        // Get shareUrl from path
-        const splitPath = asPath.split("collections/");
-        setSharePath(splitPath[1]);
-      }
-    }
-  }, [router.asPath]);
-
   const handleClickOutside = (event) => {
     if (contentRef.current && !contentRef.current.contains(event.target)) {
       showShareActionList(null, false);
@@ -307,156 +290,159 @@ const AssetHeaderOps = ({
     }
   };
 
-  return (
-    <div className={styles.bar}>
-      <div className={styles.wrapper}>
-        {!deselectHidden && (
-          <img
-            className={styles.close}
-            src={Utilities.blueClose}
-            onClick={deselectAll}
-          />
-        )}
-        <div className={styles.text}>
-          {!isFolder
-            ? `${selectedAssets.length} Assets`
-            : `${selectedFolders.length} Collections`}{" "}
-          Selected
-        </div>
-      </div>
+  const conditionalIcons= [
+    {
+      condition: !isShare && !deletedAssets && !isFolder,
+      props: {
+        place: "top",
+        additionalClass: styles["action-button"],
+        src: AssetOps[`edit`],
+        tooltipText: "Edit",
+        tooltipId: "Edit",
+        onClick: () => setActiveOperation("edit"),
+        child:null
+      },
+    },
+    {
+      condition: !isFolder && !isShare && !deletedAssets,
+      props: {
+        place: "top",
+        additionalClass: styles["action-button"],
+        src: AssetOps[`delete`],
+        tooltipText: "Delete",
+        tooltipId: "Delete",
+        onClick: () => setActiveOperation("update"),
+        child:null
+      },
+    },
+    {
+      condition: (isShare || (hasPermission([ASSET_DOWNLOAD]) && !deletedAssets)),
+      props: {
+        place: "top",
+        additionalClass: styles["action-button"],
+        src: AssetOps[`download`],
+        tooltipId: "Download",
+        tooltipText: "Download",
+        onClick: downloadSelectedAssets,
+        child:null
+      },
+    },
+    {
+      condition: !isFolder && !isShare && !deletedAssets,
+      props: {
+        place: "top",
+        additionalClass: styles["action-button"],
+        src: AssetOps[`move`],
+        tooltipText: "Add to Collection",
+        tooltipId: "Move",
+        onClick: () => setActiveOperation("move"),
+        child:null
+      },
 
-      <div className={styles.icons}>
-        {!isShare && !deletedAssets && !isFolder && (
-          <IconClickable
-            place={"top"}
-            additionalClass={styles["action-button"]}
-            src={AssetOps[`edit`]}
-            tooltipText={"Edit"}
-            tooltipId={"Edit"}
-            onClick={() => setActiveOperation("edit")}
-          />
-        )}
-        {!isFolder && !isShare && !deletedAssets && (
-          <IconClickable
-            place={"top"}
-            additionalClass={styles["action-button"]}
-            src={AssetOps[`delete`]}
-            tooltipText={"Delete"}
-            tooltipId={"Delete"}
-            onClick={() => setActiveOperation("update")}
-          />
-        )}
-        {(isShare || (hasPermission([ASSET_DOWNLOAD]) && !deletedAssets)) && (
-          <IconClickable
-            place={"top"}
-            additionalClass={styles["action-button"]}
-            src={AssetOps[`download`]}
-            tooltipId={"Download"}
-            tooltipText={"Download"}
-            onClick={downloadSelectedAssets}
-          />
-        )}
-        {!isFolder && !isShare && !deletedAssets && (
-          <IconClickable
-            place={"top"}
-            additionalClass={styles["action-button"]}
-            src={AssetOps[`move`]}
-            tooltipText={"Add to Collection"}
-            tooltipId={"Move"}
-            onClick={() => setActiveOperation("move")}
-          />
-        )}
-        {!isFolder && !isShare && !deletedAssets && (
+    },
+    {
+      condition: !isFolder && !isShare && !deletedAssets,
+      props: {
+        child: (
           <div className={styles["share-wrapper"]} ref={contentRef}>
             <IconClickable
-              place={"top"}
-              additionalClass={`${styles["action-button"]}`}
-              src={AssetOps[`share`]}
-              tooltipText={"Share"}
-              tooltipId={"Share"}
-              onClick={(e) => {
-                showShareActionList(e, true);
-              }}
-            />
-
-            {showShareAction && (
-              <div className={styles["share-popover"]}>
-                <div className={styles["share-title"]}>
-                  Share
-                  <img
-                    src={Utilities.blueClose}
-                    alt={"close"}
-                    onClick={(e) => {
-                      showShareActionList(e, false);
-                    }}
-                  />
-                </div>
-                <ul>
-                  <li
-                    className={styles["share-item"]}
-                    onClick={() => {
-                      setShowShareAction(false);
-                      setActiveOperation("share-as-subcollection");
-                    }}
-                  >
-                    <img src={Utilities.gridView} alt={"share-collection"} />
-                    <span className={"font-weight-500"}>
-                      Share as Collection
-                    </span>
-                    <p className={styles["share-description"]}>
-                      Create a branded collection
-                    </p>
-                  </li>
-                  <li
-                    className={styles["share-item"]}
-                    onClick={() => {
-                      setShowShareAction(false);
-                      setActiveOperation("share");
-                    }}
-                  >
-                    <img src={Utilities.share} alt={"share-file"} />
-                    <span className={"font-weight-500"}>Share Files</span>
-                    <p className={styles["share-description"]}>
-                      Create a link to shared file(s)
-                    </p>
-                  </li>
-                </ul>
-              </div>
-            )}
-          </div>
-        )}
-        {isFolder && !isShare && !deletedAssets && (
-          <IconClickable
             place={"top"}
-            additionalClass={styles["action-button"]}
+            additionalClass={`${styles["action-button"]}`}
             src={AssetOps[`share`]}
             tooltipText={"Share"}
             tooltipId={"Share"}
-            onClick={() => setActiveOperation("shareCollections")}
+            onClick={(e) => {
+              showShareActionList(e, true);
+            }}
           />
-        )}
-        {deletedAssets && (
-          <IconClickable
-            place={"top"}
-            additionalClass={styles["action-button"]}
-            src={AssetOps[`move`]}
-            tooltipText={"Recover Asset"}
-            tooltipId={"Recover"}
-            onClick={() => setActiveOperation("recover")}
-          />
-        )}
-        {deletedAssets && (
-          <IconClickable
-            place={"top"}
-            additionalClass={styles["action-button"]}
-            src={AssetOps[`delete`]}
-            tooltipText={"Delete"}
-            tooltipId={"Delete"}
-            onClick={() => setActiveOperation("delete")}
-          />
-        )}
-
-        {!isFolder && !isShare && (
+          {showShareAction && (
+            <div className={styles["share-popover"]}>
+              <div className={styles["share-title"]}>
+                Share
+                <img
+                  src={Utilities.blueClose}
+                  alt={"close"}
+                  onClick={(e) => {
+                    showShareActionList(e, false);
+                  }}
+                />
+              </div>
+              <ul>
+                <li
+                  className={styles["share-item"]}
+                  onClick={() => {
+                    setShowShareAction(false);
+                    setActiveOperation("share-as-subcollection");
+                  }}
+                >
+                  <img src={Utilities.gridView} alt={"share-collection"} />
+                  <span className={"font-weight-500"}>
+                    Share as Collection
+                  </span>
+                  <p className={styles["share-description"]}>
+                    Create a branded collection
+                  </p>
+                </li>
+                <li
+                  className={styles["share-item"]}
+                  onClick={() => {
+                    setShowShareAction(false);
+                    setActiveOperation("share");
+                  }}
+                >
+                  <img src={Utilities.share} alt={"share-file"} />
+                  <span className={"font-weight-500"}>Share Files</span>
+                  <p className={styles["share-description"]}>
+                    Create a link to shared file(s)
+                  </p>
+                </li>
+              </ul>
+            </div>
+          )}
+        </div>
+        ),
+      },
+    },
+    {
+      condition: isFolder && !isShare && !deletedAssets,
+      props: {
+        place: "top",
+        additionalClass: styles["action-button"],
+        src: AssetOps[`share`],
+        tooltipText: "Share",
+        tooltipId: "Share",
+        onClick: () => setActiveOperation("shareCollections"),
+        child:null
+      },
+    },
+    {
+      condition: deletedAssets,
+      props: {
+        place: "top",
+        additionalClass: styles["action-button"],
+        src: AssetOps[`move`],
+        tooltipText: "Recover Asset",
+        tooltipId: "Recover",
+        onClick: () => setActiveOperation("recover"),
+        child:null
+      },
+    },
+    {
+      condition: deletedAssets,
+      props: {
+        place: "top",
+        additionalClass: styles["action-button"],
+        src: AssetOps[`delete`],
+        tooltipText: "Delete",
+        tooltipId: "Delete",
+        onClick: () => setActiveOperation("delete"),
+        child:null
+      },
+    },
+    {
+      condition: !isFolder && !isShare,
+      props: {
+        child: (
           <div className={styles["more-wrapper"]}>
             <IconClickable
               place={"top"}
@@ -466,7 +452,7 @@ const AssetHeaderOps = ({
               tooltipId={"More"}
               onClick={() => setShowMoreActions(true)}
             />
-            {showMoreActions && !isFolder && !isShare && !deletedAssets && (
+            {showMoreActions &&  !deletedAssets && (
               <>
                 {" "}
                 <Dropdown
@@ -511,7 +497,32 @@ const AssetHeaderOps = ({
               </>
             )}
           </div>
+        ),
+      },
+    },
+  ]
+
+  return (
+    <div className={styles.bar}>
+      <div className={styles.wrapper}>
+        {!deselectHidden && (
+          <img
+            className={styles.close}
+            src={Utilities.blueClose}
+            onClick={deselectAll}
+          />
         )}
+        <div className={styles.text}>
+          {!isFolder
+            ? `${selectedAssets.length} Assets`
+            : `${selectedFolders.length} Collections`}{" "}
+          Selected
+        </div>
+      </div>
+      <div className={styles.icons}>
+      {conditionalIcons.map(({ condition, props }, index) => condition && (
+       props.child?props.child:<IconClickable key={index} {...props} />
+       ))}
       </div>
       {!isFolder && !isShare && !deletedAssets && (
         <>

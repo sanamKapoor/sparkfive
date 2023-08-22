@@ -61,6 +61,8 @@ export default ({ children, isPublic = false }) => {
     retailers: [],
     sku: [],
   });
+  const [renderFlag,setRenderFlag] = useState(false);
+
   const [term, setTerm] = useState("");
 
   const loadAll = () => {
@@ -449,7 +451,9 @@ export default ({ children, isPublic = false }) => {
   const setSearchTerm = (value) => {
     setTerm(value);
   };
-
+const setRenderedFlag = (value:boolean) => {
+  setRenderFlag(value)
+}
   const filterValue = {
     loadAll,
     tags,
@@ -486,6 +490,8 @@ export default ({ children, isPublic = false }) => {
     loadSharedFolders,
     searchFilterParams,
     setSearchFilterParams,
+    setRenderedFlag,
+    renderFlag,
   };
 
   return (

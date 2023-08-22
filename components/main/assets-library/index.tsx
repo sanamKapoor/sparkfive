@@ -1,43 +1,39 @@
-import update from "immutability-helper";
-import { useContext, useEffect, useRef, useState } from "react";
-import { AssetContext, FilterContext, UserContext } from "../../../context";
-import assetApi from "../../../server-api/asset";
-import folderApi from "../../../server-api/folder";
+import update from 'immutability-helper';
+import { useRouter } from 'next/router';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { isMobile } from 'react-device-detect';
+
+import { validation } from '../../../constants/file-validation';
+import { ASSET_ACCESS, ASSET_UPLOAD_APPROVAL } from '../../../constants/permissions';
+import { AssetContext, FilterContext, UserContext } from '../../../context';
+import assetApi from '../../../server-api/asset';
+import folderApi from '../../../server-api/folder';
 import {
   DEFAULT_CUSTOM_FIELD_FILTERS,
   DEFAULT_FILTERS,
   getAssetsFilters,
   getAssetsSort,
   getFoldersFromUploads,
-} from "../../../utils/asset";
-import toastUtils from "../../../utils/toast";
-import { getFolderKeyAndNewNameByFileName } from "../../../utils/upload";
-import styles from "./index.module.css";
+} from '../../../utils/asset';
+import selectOptions from '../../../utils/select-options';
+import toastUtils from '../../../utils/toast';
+import { getFolderKeyAndNewNameByFileName } from '../../../utils/upload';
+import AssetGrid from '../../common/asset/asset-grid';
+import AssetHeaderOps from '../../common/asset/asset-header-ops';
+import AssetOps from '../../common/asset/asset-ops';
+import DetailOverlay from '../../common/asset/detail-overlay';
+import TopBar from '../../common/asset/top-bar';
+import FilterContainer from '../../common/filter/filter-container';
+import { DropzoneProvider } from '../../common/misc/dropzone';
+import NoPermissionNotice from '../../common/misc/no-permission-notice';
+import RenameModal from '../../common/modals/rename-modal';
+import UploadStatusOverlayAssets from '../../upload-status-overlay-assets';
+import SearchOverlay from '../search-overlay-assets';
+import styles from './index.module.css';
+import SpinnerOverlay from '../../common/spinners/spinner-overlay';
 
 // Components
-import { useRouter } from "next/router";
-import { validation } from "../../../constants/file-validation";
-import AssetGrid from "../../common/asset/asset-grid";
-import AssetOps from "../../common/asset/asset-ops";
-import TopBar from "../../common/asset/top-bar";
-import FilterContainer from "../../common/filter/filter-container";
-import { DropzoneProvider } from "../../common/misc/dropzone";
-import RenameModal from "../../common/modals/rename-modal";
-import UploadStatusOverlayAssets from "../../upload-status-overlay-assets";
-import SearchOverlay from "../search-overlay-assets";
-
 // utils
-import selectOptions from "../../../utils/select-options";
-
-import { isMobile } from "react-device-detect";
-import {
-  ASSET_ACCESS,
-  ASSET_UPLOAD_APPROVAL,
-} from "../../../constants/permissions";
-import AssetHeaderOps from "../../common/asset/asset-header-ops";
-import DetailOverlay from "../../common/asset/detail-overlay";
-import NoPermissionNotice from "../../common/misc/no-permission-notice";
-
 const AssetsLibrary = () => {
   const [activeView, setActiveView] = useState("grid");
   const {
@@ -72,25 +68,6 @@ const AssetsLibrary = () => {
     setCurrentViewAsset,
     setDetailOverlayId,
   } = useContext(AssetContext);
-
-  const { advancedConfig, hasPermission } = useContext(UserContext);
-
-  const [widthCard, setWidthCard] = useState(0);
-
-  const { term, searchFilterParams } = useContext(FilterContext);
-
-  const [activeMode, setActiveMode] = useState("assets");
-
-  const [activeSearchOverlay, setActiveSearchOverlay] = useState(false);
-
-  const [firstLoaded, setFirstLoaded] = useState(false);
-
-  const [renameModalOpen, setRenameModalOpen] = useState(false);
-
-  const [openFilter, setOpenFilter] = useState(
-    activeMode === "assets" ? true : false
-  );
-
   const {
     activeSortFilter,
     setActiveSortFilter,
@@ -103,10 +80,27 @@ const AssetsLibrary = () => {
     campaigns,
     loadCampaigns,
   } = useContext(FilterContext);
+  const { advancedConfig, hasPermission } = useContext(UserContext);
+
+  const [widthCard, setWidthCard] = useState(0);
+
+  const { term, searchFilterParams,renderFlag } = useContext(FilterContext);
+
+  const [activeMode, setActiveMode] = useState("assets");
+
+  const [activeSearchOverlay, setActiveSearchOverlay] = useState(false);
+
+  const [firstLoaded, setFirstLoaded] = useState(false);
+
+  const [renameModalOpen, setRenameModalOpen] = useState(false);
+  const [openFilter, setOpenFilter] = useState(
+    activeSortFilter?.mainFilter === "assets" ? true : false
+  );
+
+  
 
   const router = useRouter();
   const preparingAssets = useRef(true);
-
   // When tag, campaigns, collection changes, used for click on tag/campaigns/collection in admin attribute management
   useEffect(() => {
     if (!preparingAssets.current) return;
@@ -211,10 +205,12 @@ const AssetsLibrary = () => {
       setActiveSortFilter(newSortFilter);
       return;
     }
+
   }, [tags, productFields.sku, collection, campaigns]);
 
+
   useEffect(() => {
-    if (hasPermission([ASSET_ACCESS])) {
+    if (hasPermission([ASSET_ACCESS])) {      
       // Assets are under preparing (for query etc)
       if (preparingAssets.current) {
         return;
@@ -223,8 +219,7 @@ const AssetsLibrary = () => {
           setFirstLoaded(true);
         }
       }
-
-      if (firstLoaded) {
+      if (firstLoaded&&renderFlag) {
         setActivePageMode("library");
         if (activeSortFilter.mainFilter === "folders") {
           setActiveMode("folders");
@@ -239,6 +234,8 @@ const AssetsLibrary = () => {
   }, [activeSortFilter, firstLoaded, term]);
 
   useEffect(() => {
+    console.log("useeffect 3")
+
     if (firstLoaded && activeFolder !== "") {
       setActiveSortFilter({
         ...activeSortFilter,
@@ -248,19 +245,27 @@ const AssetsLibrary = () => {
   }, [activeFolder]);
 
   useEffect(() => {
+    console.log("hello world!111111heloting",needsFetch);
+
     if (needsFetch === "assets") {
+      console.log("11122")
       getAssets();
     } else if (needsFetch === "folders") {
+      console.log("11122")
+      
       getFolders();
     }
     setNeedsFetch("");
   }, [needsFetch]);
 
   useEffect(() => {
+    console.log("useEffect 2")
+
     if (activeMode === "folders") {
       setOpenFilter(false);
       setAssets(assets.map((asset) => ({ ...asset, isSelected: false })));
-    } else if (activeMode === "assets") {
+    } 
+    if (activeMode === "assets") {
       if (isMobile) {
         setOpenFilter(false);
       } else {
@@ -268,9 +273,29 @@ const AssetsLibrary = () => {
       }
       setFolders(folders.map((folder) => ({ ...folder, isSelected: false })));
     }
+    
+    if (selectedAllAssets) {
+      selectAllAssets(false);
+    }
+
+    if (selectedAllFolders) {
+      selectAllFolders(false);
+    }
   }, [activeMode]);
 
   useEffect(() => {
+    console.log("useEffect last")
+    if (selectedAllAssets) {
+      selectAllAssets(false);
+    }
+
+    if (selectedAllFolders) {
+      selectAllFolders(false);
+    }
+  }, [activeMode]);
+  useEffect(() => {
+    console.log("useEffect 1")
+
     updateSortFilterByAdvConfig();
   }, [advancedConfig.set]);
 
@@ -847,16 +872,6 @@ const AssetsLibrary = () => {
     }
   };
 
-  useEffect(() => {
-    if (selectedAllAssets) {
-      selectAllAssets(false);
-    }
-
-    if (selectedAllFolders) {
-      selectAllFolders(false);
-    }
-  }, [activeMode]);
-
   return (
     <>
       {(activeMode === "assets"
@@ -868,12 +883,13 @@ const AssetsLibrary = () => {
           deletedAssets={false}
         />
       )}
+      {!renderFlag&&<SpinnerOverlay text="Your Assets are loading please wait...."/>}
       {hasPermission([ASSET_ACCESS]) ||
       hasPermission([ASSET_UPLOAD_APPROVAL]) ? (
         <>
           <main className={`${styles.container}`}>
             <div className="position-relative">
-              <div className={styles["search-mobile"]}>
+              <div id="mySecret" className={styles["search-mobile"]}>
                 <SearchOverlay
                   closeOverlay={closeSearchOverlay}
                   operationsEnabled={true}
@@ -907,8 +923,6 @@ const AssetsLibrary = () => {
                   closeSearchOverlay={closeSearchOverlay}
                   setDetailOverlayId={setDetailOverlayId}
                   setCurrentViewAsset={setCurrentViewAsset}
-                  activeMode={activeMode}
-                  isFolder={activeSortFilter?.mainFilter === "folders"}
                 />
               )}
             </div>
@@ -918,7 +932,7 @@ const AssetsLibrary = () => {
               } ${activeFolder && styles["active-breadcrumb-item"]}`}
             >
               <DropzoneProvider>
-                {advancedConfig.set && (
+                {advancedConfig.set && renderFlag &&(
                   <AssetGrid
                     activeFolder={activeFolder}
                     getFolders={getFolders}

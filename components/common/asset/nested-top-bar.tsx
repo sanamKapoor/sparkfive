@@ -3,19 +3,18 @@ import { isMobile } from 'react-device-detect';
 
 import { Utilities } from '../../../assets';
 import { ASSET_UPLOAD_APPROVAL, ASSET_UPLOAD_NO_APPROVAL } from '../../../constants/permissions';
-import { AssetContext, UserContext,FilterContext } from '../../../context';
+import { AssetContext, UserContext } from '../../../context';
 import selectOptions from '../../../utils/select-options';
 import AssetAddition from '../../common/asset/asset-addition';
 import SearchOverlay from '../../main/search-overlay-assets';
 import Button from '../buttons/button';
-import IconClickable from '../buttons/icon-clickable';
 import Dropdown from '../inputs/dropdown';
 import Select from '../inputs/select';
 import SubHeader from '../layouts/sub-header';
 import Breadcrumbs from '../misc/breadcrumbs';
 import styles from './top-bar.module.css';
 
-const TopBar = ({
+const NestedTopBar = ({
   activeSortFilter,
   setActiveSearchOverlay,
   setActiveSortFilter,
@@ -29,7 +28,6 @@ const TopBar = ({
   isShare = false,
   deletedAssets,
   singleCollection = false,
-  sharedAdvanceConfig,
   amountSelected = 0,
   mode,
   showAssetAddition = true,
@@ -50,19 +48,12 @@ const TopBar = ({
     setActiveFolder,
   } = useContext(AssetContext);
 
-  const {  hasPermission, advancedConfig } =
+  const { hasPermission, advancedConfig } =
     useContext(UserContext);
-  const [hideFilterElements] = useState(
-    advancedConfig.hideFilterElements
-  );
-  const [showTabs, setShowTabs] = useState(isMobile ? false : true);
+  
   const [showViewDropdown, setShowViewDropdown] = useState(false);
 
-  const [tabs, setTabs] = useState(selectOptions.views);
-const  {setRenderedFlag} = useContext(FilterContext);
   const setSortFilterValue = (key, value) => {
-
-
     let sort = key === "sort" ? value : activeSortFilter.sort;
     if (key === "mainFilter") {
       if (value === "folders") {
@@ -77,45 +68,28 @@ const  {setRenderedFlag} = useContext(FilterContext);
             : selectOptions.sort[3];
       }
     }
+
     // Reset select all status
     selectAllAssets(false);
     selectAllFolders(false);
+    setActiveSortFilter({
+      ...activeSortFilter,
+    });
     // Needed to reset because it is set for collection upload when alphabetical sort active
     // And uploaded folder needed to show at first
     setLastUploadedFolder(undefined);
 
-    console.log({[key]: value},sort,"12here finally" )
     setActiveSortFilter({
       ...activeSortFilter,
       [key]: value,
       sort,
     });
-
   };
 
   const toggleSelectAll = () => {
     selectAllAssets(!selectedAllAssets);
   };
 
-  const setTabsVisibility = () => {
-    const filterElements = sharedAdvanceConfig
-      ? sharedAdvanceConfig.hideFilterElements
-      : hideFilterElements;
-      
-    const _tabs = selectOptions.views.filter((tab) => {
-      let tabName = tab.text.toLowerCase();
-      let shouldShow = true;
-      if (filterElements && filterElements.hasOwnProperty(tabName)) {
-        shouldShow = !filterElements[tabName];
-      }
-      return shouldShow;
-    });
-    setTabs(_tabs);
-  };
-
-  useEffect(() => {
-    setTabsVisibility();
-  }, [sharedAdvanceConfig]);
 
   const handleOpenFilter = () => {
     if (openFilter) {
@@ -124,19 +98,6 @@ const  {setRenderedFlag} = useContext(FilterContext);
       setOpenFilter(true);
     }
   };
-
-  const mobileTabs = tabs.filter((view) => {
-    return (
-      (!activeFolder || !view.omitFolder) &&
-      (!isShare ||
-        (isShare &&
-          !view.omitShare &&
-          view.hideOnSingle !== singleCollection)) &&
-      (view.requirePermissions.length === 0 ||
-        (view.requirePermissions.length > 0 &&
-          hasPermission(view.requirePermissions)))
-    );
-  });
 
   const folderData = folders.filter((folder) => folder.id === activeFolder);
 
@@ -169,86 +130,7 @@ const  {setRenderedFlag} = useContext(FilterContext);
       </div>
       <div className={styles.wrapper}>
         <div className={styles.innerwrapper}>
-          {!deletedAssets ? (
-            <div className={styles.filters}>
-              <ul className={styles["tab-list"]}>
-                {isMobile ? (
-                  <div className={styles["mobile-tabs"]}>
-                    <IconClickable
-                      src={Utilities.menu}
-                      additionalClass={styles.hamburger}
-                      onClick={() => setShowTabs(!showTabs)}
-                    />
-                    <li className={styles["tab-list-item"]}>
-                      {tabs
-                        .filter(
-                          (view) => activeSortFilter.mainFilter === view.name
-                        )
-                        .map((view) => (
-                          <Button
-                            key={view.name}
-                            text={
-                              activeFolder && mode === "assets"
-                                ? folderData[0].name
-                                : view.text
-                            }
-                            className={
-                              activeSortFilter.mainFilter === view.name
-                                ? "section-container section-active"
-                                : "section-container"
-                            }
-                            onClick={() =>
-                              setSortFilterValue("mainFilter", view.name)
-                            }
-                          />
-                        ))}
-                    </li>
-                    {showTabs && (
-                      <Dropdown
-                        onClickOutside={() => setShowTabs(false)}
-                        additionalClass={styles.dropdown}
-                        options={mobileTabs.map((tab) => ({
-                          label: tab.text,
-                          id: tab.name,
-                          onClick: () => {
-                            setSortFilterValue("mainFilter", tab.name);
-                          },
-                        }))}
-                      />
-                    )}
-                  </div>
-                ) : (
-                  tabs.map((view) => {
-                    return (
-                      <li key={view.name} className={styles["tab-list-item"]}>
-                        {(!activeFolder || !view.omitFolder) &&
-                          (!isShare ||
-                            (isShare &&
-                              !view.omitShare &&
-                              view.hideOnSingle !== singleCollection)) &&
-                          (view.requirePermissions.length === 0 ||
-                            (view.requirePermissions.length > 0 &&
-                              hasPermission(view.requirePermissions))) && (
-                            <Button
-                              key={view.name}
-                              text={view.text}
-                              className={
-                                activeSortFilter.mainFilter === view.name
-                                  ? "section-container section-active"
-                                  : "section-container"
-                              }
-                              onClick={() =>
-                                setSortFilterValue("mainFilter", view.name)
-                              }
-                            />
-                          )}
-                      </li>
-                    );
-                  })
-                )}
-              </ul>
-            </div>
-          ) : (
+          {deletedAssets && (
             <div className={styles.filters}>
               <h2>Deleted Assets</h2>
               <div></div>
@@ -409,4 +291,4 @@ const  {setRenderedFlag} = useContext(FilterContext);
   );
 };
 
-export default TopBar;
+export default NestedTopBar;

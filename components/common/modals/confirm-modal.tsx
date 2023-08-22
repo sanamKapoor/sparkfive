@@ -1,9 +1,8 @@
-import styles from "./confirm-modal.module.css";
+import Button from '../buttons/button';
+import Base from './base';
+import styles from './confirm-modal.module.css';
 
 // Components
-import Button from "../buttons/button";
-import Base from "./base";
-
 // Used for the future
 const ConfirmModal = ({
   modalIsOpen,
@@ -11,11 +10,9 @@ const ConfirmModal = ({
   message,
   secondMessage = "",
   confirmText,
-  headText,
   subText,
   confirmAction,
   textContentClass = "",
-  closeButtonClass = "",
 }) => (
   <Base
     modalIsOpen={modalIsOpen}

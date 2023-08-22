@@ -328,7 +328,6 @@ export const getAssetsFilters = ({
     filters.allCampaigns = allCampaigns;
 
   filters.page = replace ? 1 : nextPage;
-
   return filters;
 };
 

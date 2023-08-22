@@ -241,7 +241,6 @@ const ShareCollectionModal = ({
   ) => {
     setIsLoading(true);
 
-    console.log("logo inside save changes: ", logo);
     // Link is not created yet due to lacking name, saving name then getting url back
     if (firstInit === false && field === "name") {
       getInitialSharedLink(false);
