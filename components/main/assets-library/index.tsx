@@ -32,6 +32,8 @@ import React from 'react'
 import AssetHeaderOps from '../../common/asset/asset-header-ops'
 import deletedAssets from '../../common/custom-settings/deleted-assets'
 import { isMobile } from 'react-device-detect'
+import Tags from '../../topbar-newnavigation/Tags'
+import NestedSidenav from '../../nested-subcollection-sidenav/nested-sidenav'
 
 const AssetsLibrary = () => {
 
@@ -772,6 +774,7 @@ const AssetsLibrary = () => {
                   isFolder={activeSortFilter?.mainFilter === 'folders'}
                   />
               }
+             
 
             </div>
             <div className={`${openFilter && styles['col-wrapper']} ${styles['grid-wrapper']} ${activeFolder && styles['active-breadcrumb-item']}`}>
@@ -797,7 +800,7 @@ const AssetsLibrary = () => {
                 />
                 }
               </DropzoneProvider>
-              {openFilter && hasPermission([ASSET_ACCESS]) &&
+              {/* {openFilter && hasPermission([ASSET_ACCESS]) &&
                 <FilterContainer
                   clearFilters={clearFilters}
                   openFilter={openFilter}
@@ -807,7 +810,8 @@ const AssetsLibrary = () => {
                   isFolder={activeSortFilter.mainFilter === 'folders'}
                   filterWidth={widthCard}
                 />
-              }
+              } */}
+                 <NestedSidenav />
             </div>
           </main>
           <AssetOps />

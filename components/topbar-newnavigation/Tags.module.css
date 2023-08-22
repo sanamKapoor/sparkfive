@@ -23,3 +23,10 @@
   color: var(--color-prim-navy);
 
 }
+.allTags{
+  display: flex;
+  align-items: center;
+  margin-top: 150px;
+  width: calc(100% - 283px);
+  margin-left: 283px;
+}

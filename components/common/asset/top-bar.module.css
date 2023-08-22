@@ -4,10 +4,12 @@
   width: 100%;
   top: 81px;
   left: 0;
-  z-index: 1499; /* To be lower than top bar so that upoad popup is not hidden */
+  z-index: 1500;
+
   background-color: white;
   padding: 33.5px 40px;
-  min-height: 99px;
+  width: calc(100% - 283px);
+  margin-left: 290px;
 }
 
 .wrapper {

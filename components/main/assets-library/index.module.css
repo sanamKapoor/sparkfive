@@ -3,7 +3,8 @@
 }
 
 .grid-wrapper {
-  margin-top: calc(81px + 68px);
+  /* margin-top: calc(81px + 68px); */
+  margin-top:30px;
 }
 
 @media screen and (max-width: 600px) {

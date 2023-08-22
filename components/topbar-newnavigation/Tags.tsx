@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./Tags.module.css";
 const Tags = () => {
   return (
-    <div>
+    <div className={styles.allTags}>
     <div className={styles["custom-select"]}>
       <select>
         <option value="" selected>

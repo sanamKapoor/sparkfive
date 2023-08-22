@@ -22,6 +22,8 @@ import {
   ASSET_UPLOAD_APPROVAL,
 } from "../../../constants/permissions";
 import SearchOverlay from "../../main/search-overlay-assets";
+import NavHeading from "../../topbar-newnavigation/NavHeading";
+import InputChip from "../../topbar-newnavigation/InputChip";
 
 const TopBar = ({
   activeSortFilter,
@@ -172,7 +174,7 @@ const TopBar = ({
           />
         )}
         {activeFolder && mode === "assets" && (
-          <SubHeader pageTitle={folderData[0]?.name} />
+          <SubHeader pageTitle={folderData[0]?.name} children={undefined} />
         )}
       </div>
       <div className={styles.wrapper}>
@@ -188,7 +190,7 @@ const TopBar = ({
                       onClick={() => setShowTabs(!showTabs)}
                     />
                     <li className={styles["tab-list-item"]}>
-                      {tabs
+                      {/* {tabs
                         .filter(
                           (view) => activeSortFilter.mainFilter === view.name
                         )
@@ -205,7 +207,7 @@ const TopBar = ({
                               setSortFilterValue("mainFilter", view.name)
                             }
                           />
-                        ))}
+                        ))} */}
                     </li>
                     {showTabs && (
                       <Dropdown
@@ -222,29 +224,30 @@ const TopBar = ({
                     )}
                   </div>
                 ) : (
-                  tabs.map((view) => {
-                    return (
-                      <li key={view.name} className={styles["tab-list-item"]}>
-                        {(!activeFolder || !view.omitFolder) &&
-                          (!isShare ||
-                            (isShare &&
-                              !view.omitShare &&
-                              view.hideOnSingle !== singleCollection)) &&
-                          (view.requirePermissions.length === 0 ||
-                            (view.requirePermissions.length > 0 &&
-                              hasPermission(view.requirePermissions))) && (
-                            <SectionButton
-                              keyProp={view.name}
-                              text={view.text}
-                              active={activeSortFilter.mainFilter === view.name}
-                              onClick={() =>
-                                setSortFilterValue("mainFilter", view.name)
-                              }
-                            />
-                          )}
-                      </li>
-                    );
-                  })
+                  // tabs.map((view) => {
+                  //   return (
+                  //     <li key={view.name} className={styles["tab-list-item"]}>
+                  //       {(!activeFolder || !view.omitFolder) &&
+                  //         (!isShare ||
+                  //           (isShare &&
+                  //             !view.omitShare &&
+                  //             view.hideOnSingle !== singleCollection)) &&
+                  //         (view.requirePermissions.length === 0 ||
+                  //           (view.requirePermissions.length > 0 &&
+                  //             hasPermission(view.requirePermissions))) && (
+                  //           <SectionButton
+                  //             keyProp={view.name}
+                  //             text={view.text}
+                  //             active={activeSortFilter.mainFilter === view.name}
+                  //             onClick={() =>
+                  //               setSortFilterValue("mainFilter", view.name)
+                  //             }
+                  //           />
+                  //         )}
+                  //     </li>
+                  //   );
+                  // })
+                  <NavHeading title="asset" />
                 )}
               </ul>
             </div>
@@ -277,10 +280,9 @@ const TopBar = ({
                 // setActiveSearchOverlay(false)
                 setDetailOverlayId(undefined);
                 setCurrentViewAsset(assetData);
-              }}
+              } }
               sharePath={sharePath}
-              isFolder={isFolder}
-            />
+              isFolder={isFolder} onClickOutside={undefined}            />
           )}
           {(amountSelected === 0 || mode === "folders") &&
             showAssetAddition &&
@@ -290,9 +292,8 @@ const TopBar = ({
             ]) && (
 
                 <AssetAddition
-                  activeFolder={activeFolder}
-                  getFolders={getFolders}
-                />
+              activeFolder={activeFolder}
+              getFolders={getFolders} triggerUploadComplete={undefined}                />
             )}
           <div className={styles.gridOuter}>
             {!deletedAssets && (
@@ -400,11 +401,13 @@ const TopBar = ({
           showAssetAddition &&
           hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL]) && (
             <AssetAddition
-              activeFolder={activeFolder}
-              getFolders={getFolders}
-            />
+            activeFolder={activeFolder}
+            getFolders={getFolders} triggerUploadComplete={undefined}            />
           )}
       </div>
+      {/* <NavHeading title="asset" />
+      <InputChip />
+       */}
     </section>
   );
 };
