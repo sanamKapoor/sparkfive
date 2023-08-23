@@ -11,6 +11,11 @@
   display: flex;
   background-color: var(--color-sec-lightblue);
   padding: 16px;
+  border-bottom:1px solid #E9EEFA;
+  padding: 4px 0px 4px 0px;
+  background: #F9FBFF;
+  margin-top: 20px;
+
 }
 
 .header h3 {
