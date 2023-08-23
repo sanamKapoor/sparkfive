@@ -11,7 +11,6 @@ import styles from "./deleted-assets.module.css";
 import { AssetOps } from "../../../../assets";
 import useSortedAssets from "../../../../hooks/use-sorted-assets";
 import selectOptions from "../../../../utils/select-options";
-import DetailOverlay from "../../asset/detail-overlay";
 import Button from "../../buttons/button";
 import IconClickable from "../../buttons/icon-clickable";
 import Select from "../../inputs/select";
@@ -19,32 +18,18 @@ import ConfirmModal from "../../modals/confirm-modal";
 import DeletedListItem from "./deleted-list-item";
 
 const DeletedAssets = ({
-  activeView = "grid",
   isShare = false,
-  onFilesDataGet = (files) => {},
   toggleSelected,
-  mode = "assets",
   activeSortFilter,
   setActiveSortFilter,
-  deleteFolder = (id) => {},
-  itemSize = "regular",
-  activeFolder = "",
   type = "",
-  itemId = "",
-  getFolders = () => {},
   loadMore = () => {},
-  viewFolder = (id) => {},
-  sharePath = "",
-  openFilter,
 }) => {
   const {
     assets,
     setAssets,
-    setActiveOperation,
-    setOperationAsset,
+
     nextPage,
-    setOperationFolder,
-    folders,
     selectAllAssets,
   } = useContext(AssetContext);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -119,12 +104,6 @@ const DeletedAssets = ({
     }
   };
 
-  const beginAssetOperation = ({ asset = null, folder = null }, operation) => {
-    if (asset) setOperationAsset(asset);
-    if (folder) setOperationFolder(folder);
-    setActiveOperation(operation);
-  };
-
   const showLoadMore = assets.length > 0;
   const loadingAssetsFolders =
     assets.length > 0 && assets[assets.length - 1].isLoading;
@@ -144,9 +123,9 @@ const DeletedAssets = ({
     });
   };
 
-  console.log("activeSortFilter ", activeSortFilter);
+  // console.log("activeSortFilter ", activeSortFilter);
   return (
-    <section className={`${styles.container} ${openFilter && styles.filter}`}>
+    <section className={styles.container}>
       <div className={styles.header}>
         <h3>Deleted Assets</h3>
         <p>
@@ -234,8 +213,9 @@ const DeletedAssets = ({
         </>
       )}
 
-      {/* Delete modal */}
       <ConfirmModal
+        headText=""
+        subText=""
         closeModal={() => setDeleteModalOpen(false)}
         confirmAction={() => {
           deleteAsset(activeAssetId);
@@ -253,6 +233,8 @@ const DeletedAssets = ({
       />
 
       <ConfirmModal
+        headText=""
+        subText=""
         closeModal={() => setRecoverModalOpen(false)}
         confirmAction={() => {
           recoverAsset(activeAssetId);
@@ -268,23 +250,6 @@ const DeletedAssets = ({
         }
         modalIsOpen={recoverModalOpen}
       />
-
-      {/* Overlay exclusive to page load assets */}
-      {initAsset && (
-        <DetailOverlay
-          isShare={isShare}
-          sharePath={sharePath}
-          asset={initAsset.asset}
-          realUrl={initAsset.realUrl}
-          initialParams={{ side: "comments" }}
-          openShareAsset={() =>
-            beginAssetOperation({ asset: initAsset }, "share")
-          }
-          openDeleteAsset={() => openDeleteAsset(initAsset.asset.id)}
-          closeOverlay={() => setInitAsset(undefined)}
-          thumbailUrl={undefined}
-        />
-      )}
     </section>
   );
 };
