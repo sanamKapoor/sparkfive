@@ -32,7 +32,10 @@
   align-items: baseline;
   padding: 16px;
 }
-
+.notify{
+  display: flex;
+  align-items: baseline;
+}
 .notification:last-child {
   border: none;
 }
@@ -131,6 +134,7 @@
     right: -34px;
     width: calc(100vw - 58px);
   }
+ 
 
   .page {
     max-width: 100%;

@@ -915,7 +915,7 @@ const AssetAddition = ({
       } asset-addition`}
     >
       {!hasPermission([ASSET_UPLOAD_APPROVAL]) && (
-        <Button text="+" className="container" />
+        <Button text="+" className="container add" />
       )}
       {children}
     </div>
