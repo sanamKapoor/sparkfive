@@ -1,11 +1,11 @@
 import React from "react";
 import styles from "./nested-heading.module.css";
 
-const ReusableHeading = ({ text, icon, }) => {
+const ReusableHeading = ({ totalCount, text, icon, }) => {
    
   return (
     <div className={styles["heading-contents"]}>
-      <div className={styles["sidenav-heading"]}>{text}</div>
+      <div className={styles["sidenav-heading"]}>{`${text} ${totalCount?totalCount:""}`}</div>
       {icon && <div className="left-icon">{icon}</div>}
     </div>
   );

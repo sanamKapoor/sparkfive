@@ -1,6 +1,6 @@
 import update from 'immutability-helper';
 import { useRouter } from 'next/router';
-import { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 
 import { validation } from '../../../constants/file-validation';
@@ -23,22 +23,20 @@ import AssetHeaderOps from '../../common/asset/asset-header-ops';
 import AssetOps from '../../common/asset/asset-ops';
 import DetailOverlay from '../../common/asset/detail-overlay';
 import TopBar from '../../common/asset/top-bar';
+import deletedAssets from '../../common/custom-settings/deleted-assets';
 import FilterContainer from '../../common/filter/filter-container';
 import { DropzoneProvider } from '../../common/misc/dropzone';
 import NoPermissionNotice from '../../common/misc/no-permission-notice';
 import RenameModal from '../../common/modals/rename-modal';
+import SpinnerOverlay from '../../common/spinners/spinner-overlay';
+import NestedSidenav from '../../nested-subcollection-sidenav/nested-sidenav';
+import InputChip from '../../topbar-newnavigation/InputChip';
+import Tags from '../../topbar-newnavigation/Tags';
 import UploadStatusOverlayAssets from '../../upload-status-overlay-assets';
 import SearchOverlay from '../search-overlay-assets';
 import styles from './index.module.css';
-import SpinnerOverlay from '../../common/spinners/spinner-overlay';
 
 // Components
-
-import React from 'react'
-import deletedAssets from '../../common/custom-settings/deleted-assets'
-import Tags from '../../topbar-newnavigation/Tags'
-import NestedSidenav from '../../nested-subcollection-sidenav/nested-sidenav'
-import InputChip from '../../topbar-newnavigation/InputChip'
 
 const AssetsLibrary = () => {
   const [activeView, setActiveView] = useState("grid");
@@ -226,6 +224,7 @@ const AssetsLibrary = () => {
         }
       }
       if (firstLoaded&&renderFlag) {
+        
         setActivePageMode("library");
         if (activeSortFilter.mainFilter === "folders") {
           setActiveMode("folders");
@@ -240,7 +239,6 @@ const AssetsLibrary = () => {
   }, [activeSortFilter, firstLoaded, term]);
 
   useEffect(() => {
-    console.log("useeffect 3")
 
     if (firstLoaded && activeFolder !== "") {
       setActiveSortFilter({
@@ -251,13 +249,10 @@ const AssetsLibrary = () => {
   }, [activeFolder]);
 
   useEffect(() => {
-    console.log("hello world!111111heloting",needsFetch);
 
     if (needsFetch === "assets") {
-      console.log("11122")
       getAssets();
     } else if (needsFetch === "folders") {
-      console.log("11122")
       
       getFolders();
     }
@@ -265,7 +260,6 @@ const AssetsLibrary = () => {
   }, [needsFetch]);
 
   useEffect(() => {
-    console.log("useEffect 2")
 
     if (activeMode === "folders") {
       setOpenFilter(false);
@@ -290,7 +284,6 @@ const AssetsLibrary = () => {
   }, [activeMode]);
 
   useEffect(() => {
-    console.log("useEffect last")
     if (selectedAllAssets) {
       selectAllAssets(false);
     }
@@ -300,7 +293,6 @@ const AssetsLibrary = () => {
     }
   }, [activeMode]);
   useEffect(() => {
-    console.log("useEffect 1")
 
     updateSortFilterByAdvConfig();
   }, [advancedConfig.set]);
@@ -672,7 +664,6 @@ const AssetsLibrary = () => {
 
         setAssets(currentDataClone);
         setFolders(currenFolderClone);
-        console.log(err);
         if (err.response?.status === 402)
           toastUtils.error(err.response.data.message);
         else
