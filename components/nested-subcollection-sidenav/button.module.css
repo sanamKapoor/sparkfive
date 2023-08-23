@@ -1,0 +1,19 @@
+.nestedButton{
+    background: #fff;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 0px;
+    margin-top:20px;
+
+}
+
+.nestedButton span{
+    font-family: "Noto Sans", sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+    color:var(--color-prim-turquoise);
+    margin-left: 5px;
+
+}

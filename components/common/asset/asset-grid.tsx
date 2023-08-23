@@ -324,10 +324,7 @@ const AssetGrid = ({
   }, [ref.current, windowWidth]);
 
   return (
-    <section
-      className={`${styles.container} ${openFilter && styles.filter}`}
-      style={{ width: openFilter ? `calc(100% - ${widthCard}px)` : "100%" }}
-    >
+    <section className={`${styles.container} ${openFilter && styles.filter}`} >
       {(shouldShowUpload || isDragging) && !isShare && (
         <AssetUpload
           onDragText={"Drop files here to upload"}

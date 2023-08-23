@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { ASSET_ACCESS } from "../../constants/permissions";
 import FilterProvider from "../../context/filter-provider";
 
+
 // Components
 import AssetDownloadProcess from "../../components/asset-download-process";
 import AssetUploadProcess from "../../components/asset-upload-process";
@@ -12,6 +13,9 @@ import AssetsLibrary from "../../components/main/assets-library";
 import AppLayout from "../../components/common/layouts/app-layout";
 import { AssetContext } from "../../context";
 import NestedSubcollection from "../../components/main/nested-collections";
+
+import NestedSidenav from '../../components/nested-subcollection-sidenav/nested-sidenav'
+import React from 'react'
 
 const AssetsPage = () => {
   const { uploadingStatus, uploadingAssets, downloadingStatus } =

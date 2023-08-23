@@ -199,7 +199,7 @@ const AssetAddition = ({
 
         // Uploading the new folder where it's folderId has been created earlier in previous API call
         if (currentUploadingFolderId) {
-          attachedQuery["folderId"] = currentUploadingFolderId;
+          attachedQuery["folderId"] = currentUploadingFolderTopBarId;
         }
 
         // Call API to upload
@@ -915,7 +915,7 @@ const AssetAddition = ({
       } asset-addition`}
     >
       {!hasPermission([ASSET_UPLOAD_APPROVAL]) && (
-        <Button text="+" className="container" />
+        <Button text="+" className="container add" />
       )}
       {children}
     </div>

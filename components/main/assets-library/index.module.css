@@ -3,7 +3,8 @@
 }
 
 .grid-wrapper {
-  margin-top: calc(81px + 68px);
+  /* margin-top: calc(81px + 68px); */
+  margin-top:30px;
 }
 
 @media screen and (max-width: 600px) {
@@ -48,4 +49,15 @@
   .active-breadcrumb-item {
     margin-top: calc(81px + 98px);
   }
+}
+
+.newsidenav{padding: 0;}
+.innnerContainer{
+  display: flex;
+  height: calc(100vh - 170px);
+  overflow: auto;
+}
+.rightSide{
+  width: 100%;
+  padding:0 30px;
 }

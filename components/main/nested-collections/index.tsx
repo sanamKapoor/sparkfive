@@ -484,6 +484,8 @@ const NestedSubcollection = React.memo(() => {
     }
     setNeedsFetch("");
   }, [needsFetch]);
+
+  
   useEffect(() => {
     console.log("111")
     if (hasPermission([ASSET_ACCESS])) {

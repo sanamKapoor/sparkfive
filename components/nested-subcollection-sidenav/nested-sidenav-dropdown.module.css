@@ -1,0 +1,74 @@
+.icon-descriptions span {
+  font-family: "Noto Sans", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  color:var(--color-prim-navy);
+  margin-left: 5px;
+}
+.list1-right-contents span {
+  font-family: "Noto Sans", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  color:var(--color-prim-navy);
+}
+.dropdown-lists::before {
+  content: "";
+  display: inline-block;
+  background-image: url("../../assets/Icons/Utilities/nestedCollection/right.svg");
+  background-repeat: no-repeat;
+  position: absolute;
+  left: -11px;
+  bottom: 7px;
+  width: 100%;
+  height: 10px;
+}
+.dropdown-lists {
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  align-items: center;
+  height: 30px;
+  margin-top: 16px;
+  position: relative;
+}
+.folder-lists {
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  align-items: center;
+  height: 30px;
+  margin-top: 16px;
+}
+
+.dropdownIcons {
+  display: flex;
+}
+.rightIcon {
+  margin-right: 5px;
+}
+.dropdownOptions {
+  margin-top: 16px;
+  position: relative;
+}
+.dropdownOptions::before {
+  content: "";
+  display: inline-block;
+  background-image: url("../../assets/Icons/Utilities/nestedCollection/Line.svg");
+  background-repeat: no-repeat;
+  position: absolute;
+  left: -16px;
+  bottom: 14px;
+  width: 100%;
+  height: 1px;
+}
+.active {
+  background:var(--color-sec-lightblue);
+  border-radius: 4px;
+  padding: 4px;
+}
+.subfolderList {
+  padding: 0px 0px 0px 16px;
+  border-left: 1px solid #dedad4;
+}

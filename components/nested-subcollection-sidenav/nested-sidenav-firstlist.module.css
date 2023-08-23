@@ -1,0 +1,37 @@
+.list1-description{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    margin-top: 16px;
+    height:30px;
+}
+.icon{
+    margin-right: 5px;
+    cursor: pointer;
+}
+.list1-left-contents{
+    display: flex;
+}
+.icon-description span{
+    font-family: "Noto Sans", sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+    color:var(--color-prim-navy);
+}
+.list1-right-contents span{
+    font-family: "Noto Sans", sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+    color:var(--color-prim-navy);
+}
+.active{
+    background:var(--color-sec-lightblue);
+    border-radius: 4px;
+    padding: 4px
+}
+.sidenav-list1{
+    margin-bottom: 10px;
+}

@@ -160,7 +160,7 @@ const FilterContainer = ({
 
   return (
     <>
-    {renderFlag ?
+    {false ?
     <div 
       className={`${styles.container}  ${
         stickyMenuScroll && styles["sticky-menu"]

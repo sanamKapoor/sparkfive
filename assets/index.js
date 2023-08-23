@@ -59,6 +59,7 @@ export const Utilities = {
   arrowDark: require('./Icons/Utilities/arrow/arrow-down-dark.svg'),
   arrowUpDark: require('./Icons/Utilities/arrow/arrow-up-dark.svg'),
   arrowNext: require('./Icons/Utilities/arrow/arrow-next.svg'),
+
   arrowPrev: require('./Icons/Utilities/arrow/arrow-prev.svg'),
   arrowNav: require('./Icons/Utilities/arrow/nav-arrow.svg'),
   circleArrowRight: require('./Icons/Utilities/arrow/arrow-circle-right.svg'),
@@ -111,7 +112,19 @@ export const Utilities = {
   sortUp: require('./Icons/Utilities/arrow/sort-up.svg'),
   caretRight: require('./Icons/Utilities/Caret/caret-right.svg'),
   checkMark: require('./Icons/Utilities/CheckMark/checkmark.svg'),
-  transcript: require('./Icons/Utilities/Transcript/Transcript.svg'),
+  add:require('./Icons/Utilities/nestedCollection/add.svg'),
+  archive:require('./Icons/Utilities/nestedCollection/archived.svg'),
+  arrowleft:require('./Icons/Utilities/nestedCollection/arrow-square-left.svg'),
+  assets:require('./Icons/Utilities/nestedCollection/assets.svg'),
+  folder:require('./Icons/Utilities/nestedCollection/folder.svg'),
+  images:require('./Icons/Utilities/nestedCollection/images.svg'),
+  product:require('./Icons/Utilities/nestedCollection/product.svg'),
+  right:require('./Icons/Utilities/nestedCollection/right.svg'),
+  vedio:require('./Icons/Utilities/nestedCollection/vedio.svg'),
+  line:require('./Icons/Utilities/nestedCollection/Line.svg'),
+  dots:require('./Icons/Utilities/nestedCollection/dots.svg'),
+  
+ 
 }
 
 export const ProjectTypes = {

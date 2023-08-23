@@ -33,7 +33,13 @@ import styles from './index.module.css';
 import SpinnerOverlay from '../../common/spinners/spinner-overlay';
 
 // Components
-// utils
+
+import React from 'react'
+import deletedAssets from '../../common/custom-settings/deleted-assets'
+import Tags from '../../topbar-newnavigation/Tags'
+import NestedSidenav from '../../nested-subcollection-sidenav/nested-sidenav'
+import InputChip from '../../topbar-newnavigation/InputChip'
+
 const AssetsLibrary = () => {
   const [activeView, setActiveView] = useState("grid");
   const {
@@ -888,8 +894,13 @@ const AssetsLibrary = () => {
       hasPermission([ASSET_UPLOAD_APPROVAL]) ? (
         <>
           <main className={`${styles.container}`}>
-            <div className="position-relative">
-              <div id="mySecret" className={styles["search-mobile"]}>
+            <div className={styles.innnerContainer}>
+            <div className={styles.newsidenav}>
+              <NestedSidenav/>
+            </div>
+            <div className={styles.rightSide}>
+            <div className='position-relative'>
+              <div className={styles["search-mobile"]}>
                 <SearchOverlay
                   closeOverlay={closeSearchOverlay}
                   operationsEnabled={true}
@@ -902,7 +913,7 @@ const AssetsLibrary = () => {
                   isFolder={activeMode === "folders"}
                 />
               </div>
-              {advancedConfig.set && hasPermission([ASSET_ACCESS]) && (
+              {advancedConfig.set && hasPermission([ASSET_ACCESS]) &&
                 <TopBar
                   activeFolder={activeFolder}
                   getFolders={getFolders}
@@ -923,8 +934,12 @@ const AssetsLibrary = () => {
                   closeSearchOverlay={closeSearchOverlay}
                   setDetailOverlayId={setDetailOverlayId}
                   setCurrentViewAsset={setCurrentViewAsset}
-                />
-              )}
+                  activeMode={activeMode}
+                  isFolder={activeSortFilter?.mainFilter === 'folders'}
+                  />
+              }
+              <Tags />
+              <InputChip />
             </div>
             <div
               className={`${openFilter && styles["col-wrapper"]} ${
@@ -954,7 +969,7 @@ const AssetsLibrary = () => {
                   />
                 )}
               </DropzoneProvider>
-              {openFilter && hasPermission([ASSET_ACCESS]) && (
+              {openFilter && hasPermission([ASSET_ACCESS]) &&
                 <FilterContainer
                   clearFilters={clearFilters}
                   openFilter={openFilter}
@@ -964,7 +979,9 @@ const AssetsLibrary = () => {
                   isFolder={activeSortFilter.mainFilter === "folders"}
                   filterWidth={widthCard}
                 />
-              )}
+              }
+            </div>
+            </div>
             </div>
           </main>
           <AssetOps />
