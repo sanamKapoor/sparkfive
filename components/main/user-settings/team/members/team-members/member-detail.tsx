@@ -1,23 +1,15 @@
 import { useEffect, useState } from "react";
-import { ITeamMember } from "../../../../../../types/team/team";
-import { IRole } from "../../../../../../types/user/role";
 import styles from "./member-detail.module.css";
 
-import permissionApi from "../../../../../../server-api/permission";
-
 import { default as permissionList } from "../../../../../../constants/permissions";
+import permissionApi from "../../../../../../server-api/permission";
 import Button from "../../../../../common/buttons/button";
 import Select from "../../../../../common/inputs/select";
 import MemberPermissions from "./member-permissions";
-interface MemberDetailProps {
-  member: ITeamMember;
-  mappedRoles: IRole[];
-  onSaveChanges: (id: string, data) => void;
-  onCancel: () => void;
-}
 
-const MemberDetail: React.FC<MemberDetailProps> = ({
+const MemberDetail = ({
   member,
+  type = "member",
   mappedRoles,
   onSaveChanges,
   onCancel,
@@ -71,55 +63,52 @@ const MemberDetail: React.FC<MemberDetailProps> = ({
       updatePermissions: true,
       roleId: memberRole.id,
     };
+
     onSaveChanges(member.id, saveData);
   };
 
   return (
     <div className={styles.container}>
-      <div className={styles.content}>
-        <div className={styles.headers}>
-          <h3>Name</h3>
-          <h3>Email Address</h3>
-          <h3>Role</h3>
-        </div>
-        <div className={styles.fields}>
-          <div className={styles.name}>{member.name}</div>
-
-          <div className={styles.email}>{member.email}</div>
-          <div>
-            <Select
-              options={mappedRoles}
-              onChange={(selected) => onRoleChange(selected)}
-              placeholder={"Select a role"}
-              styleType="regular"
-              value={memberRole}
-            />
-          </div>
-        </div>
-
-        {memberRole && memberRole.type === "preset" && (
-          <MemberPermissions
-            memberPermissions={memberPermissions}
-            permissions={permissions}
-            setMemberPermissions={setMemberPermissions}
-            listOnly={true}
-          />
-        )}
-        <div className={styles["button-wrapper"]}>
-          <Button
-            text="Save Changes"
-            type="button"
-            onClick={onSaveMemberChanges}
-            className={"container primary"}
-          />
-
-          <Button
-            className={"container m-l-15 secondary"}
-            text="Cancel"
-            type="button"
-            onClick={onCancel}
+      <div className={styles.headers}>
+        {type === "member" && <h3>Name</h3>}
+        <h3>Email Address</h3>
+        <h3>Role</h3>
+      </div>
+      <div className={styles.fields}>
+        {type === "member" && <div>{member.name}</div>}
+        <div>{member.email}</div>
+        <div>
+          <Select
+            options={mappedRoles}
+            onChange={(selected) => onRoleChange(selected)}
+            placeholder={"Select a role"}
+            styleType="regular"
+            value={memberRole}
           />
         </div>
+      </div>
+      {memberRole && memberRole.type === "preset" && (
+        <MemberPermissions
+          memberPermissions={memberPermissions}
+          permissions={permissions}
+          setMemberPermissions={setMemberPermissions}
+          listOnly={true}
+        />
+      )}
+      <div className={styles["button-wrapper"]}>
+        <Button
+          text="Save Changes"
+          type="button"
+          onClick={onSaveMemberChanges}
+          className={"primary"}
+        />
+
+        <Button
+          className={"m-l-15 secondary"}
+          text="Cancel"
+          type="button"
+          onClick={onCancel}
+        />
       </div>
     </div>
   );

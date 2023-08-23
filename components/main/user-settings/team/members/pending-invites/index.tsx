@@ -2,17 +2,21 @@ import { useEffect, useState } from "react";
 import styles from "../../index.module.css";
 
 import inviteApi from "../../../../../../server-api/invite";
-import { ITeamMember } from "../../../../../../types/team/team";
+import { IEditType, ITeamMember } from "../../../../../../types/team/team";
 import PendingInviteItem from "./pending-invite-item";
 
 interface PendingInvitesProps {
   setIsEditMode: (val: boolean) => void;
   setSelectedMember: (member: ITeamMember) => void;
+  setIsModalOpen: (val: boolean) => void;
+  setEditType: (val: IEditType) => void;
 }
 
 const PendingInvites: React.FC<PendingInvitesProps> = ({
   setIsEditMode,
   setSelectedMember,
+  setIsModalOpen,
+  setEditType,
 }) => {
   const [invites, setInvites] = useState<ITeamMember[]>([]);
 
@@ -29,9 +33,17 @@ const PendingInvites: React.FC<PendingInvitesProps> = ({
     getInvites();
   }, []);
 
-  const onEditInvite = async (id: string) => {};
+  const onEditInvite = async (invite: ITeamMember) => {
+    setEditType("invite");
+    setIsEditMode(true);
+    setSelectedMember({ ...invite });
+  };
 
-  const onDeleteInvite = (id: string) => {};
+  const onDeleteInvite = (invite: ITeamMember) => {
+    setEditType("invite");
+    setSelectedMember({ ...invite });
+    setIsModalOpen(true);
+  };
 
   return (
     <div className={styles.content}>
@@ -43,8 +55,8 @@ const PendingInvites: React.FC<PendingInvitesProps> = ({
           <PendingInviteItem
             invite={invite}
             setInvites={setInvites}
-            editAction={() => onEditInvite(invite.id)}
-            deleteAction={() => onDeleteInvite(invite.id)}
+            editAction={() => onEditInvite(invite)}
+            deleteAction={() => onDeleteInvite(invite)}
             key={invite.id}
           />
         ))}

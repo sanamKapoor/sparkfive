@@ -1,6 +1,6 @@
 import styles from "./member-list.module.css";
 
-import { ITeamMember } from "../../../../../../types/team/team";
+import { IEditType, ITeamMember } from "../../../../../../types/team/team";
 import Member from "./member";
 
 interface MemberListProps {
@@ -8,6 +8,7 @@ interface MemberListProps {
   setSelectedMember: (data: ITeamMember) => void;
   setIsModalOpen: (val: boolean) => void;
   setIsEditMode: (val: boolean) => void;
+  setEditType: (val: IEditType) => void;
 }
 
 const MemberList: React.FC<MemberListProps> = ({
@@ -15,13 +16,16 @@ const MemberList: React.FC<MemberListProps> = ({
   setSelectedMember,
   setIsModalOpen,
   setIsEditMode,
+  setEditType,
 }) => {
   const onEditMember = (member: ITeamMember) => {
+    setEditType("member");
     setIsEditMode(true);
     setSelectedMember({ ...member });
   };
 
   const onDeleteMember = (member: ITeamMember) => {
+    setEditType("member");
     setSelectedMember({ ...member });
     setIsModalOpen(true);
   };

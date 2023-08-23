@@ -29,6 +29,8 @@ const Team: React.FC = () => {
       props: {
         loading,
         setLoading,
+        selectedMember,
+        setSelectedMember,
       },
     },
     {

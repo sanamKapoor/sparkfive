@@ -54,3 +54,5 @@ export interface IRequestFormData {
   state: string;
   message: string;
 }
+
+export type IEditType = "member" | "invite" | "request";
