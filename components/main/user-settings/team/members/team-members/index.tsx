@@ -1,6 +1,6 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { TeamContext } from "../../../../../../context";
-import { ITeamMember } from "../../../../../../types/team/team";
+import { IEditType, ITeamMember } from "../../../../../../types/team/team";
 import styles from "../../index.module.css";
 import MemberList from "./member-list";
 
@@ -8,18 +8,16 @@ interface TeamMembersProps {
   setSelectedMember: (data: ITeamMember) => void;
   setIsModalOpen: (val: boolean) => void;
   setIsEditMode: (val: boolean) => void;
+  setEditType: (val: IEditType) => void;
 }
 
 const TeamMembers: React.FC<TeamMembersProps> = ({
   setSelectedMember,
   setIsModalOpen,
   setIsEditMode,
+  setEditType,
 }) => {
-  const { teamMembers, getTeamMembers } = useContext(TeamContext);
-
-  useEffect(() => {
-    getTeamMembers();
-  }, []);
+  const { teamMembers } = useContext(TeamContext);
 
   return (
     <>
@@ -33,6 +31,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({
           setSelectedMember={setSelectedMember}
           setIsModalOpen={setIsModalOpen}
           setIsEditMode={setIsEditMode}
+          setEditType={setEditType}
         />
       </div>
     </>

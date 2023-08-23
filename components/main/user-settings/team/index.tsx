@@ -9,7 +9,6 @@ import Members from "./members";
 import Roles from "./roles";
 
 const Team: React.FC = () => {
-  const [selectedMember, setSelectedMember] = useState(undefined);
   const [selectedRole, setSelectedRole] = useState<string>(undefined);
 
   const [activeTab, setActiveTab] = useState<string>("members");
@@ -54,20 +53,12 @@ const Team: React.FC = () => {
     },
   ];
 
-  const handleOnTabsClick = (tabId: string) => {
-    if (tabId === "members" || tabId === "roles") {
-      setSelectedRole(undefined);
-      setSelectedMember(undefined);
-    }
-  };
-
   return (
     <div className={styles.container}>
       <SwitchableTabsWithProps
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         data={data}
-        onClick={handleOnTabsClick}
       />
       {loading && <SpinnerOverlay />}
     </div>
