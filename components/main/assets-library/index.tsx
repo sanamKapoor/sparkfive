@@ -1,47 +1,45 @@
-import styles from "./index.module.css";
-import { useState, useEffect, useContext, useRef } from "react";
-import { AssetContext, FilterContext, UserContext } from "../../../context";
 import update from "immutability-helper";
+import { useRouter } from "next/router";
+import { useContext, useEffect, useRef, useState } from "react";
+import React from "react";
+import { isMobile } from "react-device-detect";
+
+import { validation } from "../../../constants/file-validation";
+import {
+  ASSET_ACCESS,
+  ASSET_UPLOAD_APPROVAL,
+} from "../../../constants/permissions";
+import { AssetContext, FilterContext, UserContext } from "../../../context";
 import assetApi from "../../../server-api/asset";
 import folderApi from "../../../server-api/folder";
-import toastUtils from "../../../utils/toast";
-import { getFolderKeyAndNewNameByFileName } from "../../../utils/upload";
 import {
+  DEFAULT_CUSTOM_FIELD_FILTERS,
+  DEFAULT_FILTERS,
   getAssetsFilters,
   getAssetsSort,
-  DEFAULT_FILTERS,
-  DEFAULT_CUSTOM_FIELD_FILTERS,
   getFoldersFromUploads,
 } from "../../../utils/asset";
-
-// Components
-import AssetOps from "../../common/asset/asset-ops";
-import SearchOverlay from "../search-overlay-assets";
-import AssetSubheader from "../../common/asset/asset-subheader";
+import selectOptions from "../../../utils/select-options";
+import toastUtils from "../../../utils/toast";
+import { getFolderKeyAndNewNameByFileName } from "../../../utils/upload";
 import AssetGrid from "../../common/asset/asset-grid";
+import AssetHeaderOps from "../../common/asset/asset-header-ops";
+import AssetOps from "../../common/asset/asset-ops";
+import DetailOverlay from "../../common/asset/detail-overlay";
 import TopBar from "../../common/asset/top-bar";
+import deletedAssets from "../../common/custom-settings/deleted-assets";
 import FilterContainer from "../../common/filter/filter-container";
 import { DropzoneProvider } from "../../common/misc/dropzone";
-import RenameModal from "../../common/modals/rename-modal";
-import UploadStatusOverlayAssets from "../../upload-status-overlay-assets";
-import { validation } from "../../../constants/file-validation";
-import { useRouter } from "next/router";
-
-// utils
-import selectOptions from "../../../utils/select-options";
-// import advancedConfigParams from '../../../utils/advance-config-params'
-
-import {
-  ASSET_UPLOAD_APPROVAL,
-  ASSET_ACCESS,
-} from "../../../constants/permissions";
 import NoPermissionNotice from "../../common/misc/no-permission-notice";
-import DetailOverlay from "../../common/asset/detail-overlay";
-import React from "react";
-import AssetHeaderOps from "../../common/asset/asset-header-ops";
-import deletedAssets from "../../common/custom-settings/deleted-assets";
-import { isMobile } from "react-device-detect";
+import RenameModal from "../../common/modals/rename-modal";
 import SpinnerOverlay from "../../common/spinners/spinner-overlay";
+import UploadStatusOverlayAssets from "../../upload-status-overlay-assets";
+import SearchOverlay from "../search-overlay-assets";
+import styles from "./index.module.css";
+
+// Components
+// utils
+// import advancedConfigParams from '../../../utils/advance-config-params'
 
 const AssetsLibrary = () => {
   const [activeView, setActiveView] = useState("grid");
@@ -120,6 +118,7 @@ const AssetsLibrary = () => {
     loadFolders,
     campaigns,
     loadCampaigns,
+    renderFlag,
   } = useContext(FilterContext);
 
   const router = useRouter();
@@ -245,7 +244,7 @@ const AssetsLibrary = () => {
         }
       }
 
-      if (firstLoaded) {
+      if (firstLoaded && renderFlag) {
         setActivePageMode("library");
         if (activeSortFilter.mainFilter === "folders") {
           setActiveMode("folders");
@@ -825,11 +824,6 @@ const AssetsLibrary = () => {
 
   const backToFolders = () => {
     setActiveFolder("");
-    // setActiveSortFilter({
-    //   ...activeSortFilter,
-    //   // filterFolders: [], // Open this comment to reset filter folders
-    //   mainFilter: 'folders'
-    // })
     updateSortFilterByAdvConfig({ mainFilter: "folders" });
   };
 
@@ -838,13 +832,6 @@ const AssetsLibrary = () => {
   const selectedFolders = folders.filter((folder) => folder.isSelected);
 
   const viewFolder = async (id) => {
-    // setActiveSortFilter({
-    //   ...activeSortFilter,
-    //   ...DEFAULT_FILTERS,
-    //   ...DEFAULT_CUSTOM_FIELD_FILTERS(activeSortFilter),
-    //   mainFilter: 'folders'
-    // })
-    // router.replace("/main/assets") // Open this comment to reset query string url
     setActiveFolder(id);
     updateSortFilterByAdvConfig({ folderId: id });
   };
@@ -922,6 +909,9 @@ const AssetsLibrary = () => {
           deletedAssets={false}
         />
       )}
+      {!renderFlag && (
+        <SpinnerOverlay text="Your assets are Loading please wait..." />
+      )}
       {hasPermission([ASSET_ACCESS]) ||
       hasPermission([ASSET_UPLOAD_APPROVAL]) ? (
         <>
@@ -973,7 +963,7 @@ const AssetsLibrary = () => {
               } ${activeFolder && styles["active-breadcrumb-item"]}`}
             >
               <DropzoneProvider>
-                {advancedConfig.set && (
+                {advancedConfig.set && renderFlag && (
                   <AssetGrid
                     activeFolder={activeFolder}
                     getFolders={getFolders}
