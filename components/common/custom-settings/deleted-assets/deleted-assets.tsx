@@ -123,7 +123,6 @@ const DeletedAssets = ({
     });
   };
 
-  // console.log("activeSortFilter ", activeSortFilter);
   return (
     <section className={styles.container}>
       <div className={styles.header}>
