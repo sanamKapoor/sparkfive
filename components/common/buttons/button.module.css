@@ -8,6 +8,17 @@
   font-size: 12px;
   min-width: 120px;
   white-space: nowrap;
+
+}
+.add{
+ background:#fff;
+ width:22px;
+ height:22px;
+ background: #10BDA5 ;
+ border-radius: 50%;
+ min-width: 0;
+ padding: 0;
+ color:#fff;
 }
 
 .submit {
