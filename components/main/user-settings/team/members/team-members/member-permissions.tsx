@@ -1,8 +1,8 @@
 import update from "immutability-helper";
 import { useContext, useEffect, useState } from "react";
-import { Utilities } from "../../../../assets";
-import { TeamContext } from "../../../../context";
-import { IUserPermission } from "../../../../types/user/user";
+import { Utilities } from "../../../../../../assets";
+import { TeamContext } from "../../../../../../context";
+import { IUserPermission } from "../../../../../../types/user/user";
 import styles from "./member-permissions.module.css";
 
 interface MemberPermissionsProps {

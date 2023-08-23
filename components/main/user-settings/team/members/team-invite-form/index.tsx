@@ -1,18 +1,16 @@
 import { useState } from "react";
+import { IRole } from "../../../../../../types/user/role";
+import Button from "../../../../../common/buttons/button";
+import Input from "../../../../../common/inputs/input";
+import Select from "../../../../../common/inputs/select";
 import styles from "./team-invite-form.module.css";
-
-// Components
-import { IRole } from "../../../../types/user/role";
-import Button from "../../../common/buttons/button";
-import Input from "../../../common/inputs/input";
-import Select from "../../../common/inputs/select";
 
 interface TeamInviteProps {
   mappedRoles: IRole[];
   onInviteSend: (email: string, roleValue: string) => void;
 }
 
-const TeamInvite: React.FC<TeamInviteProps> = ({
+const TeamInviteForm: React.FC<TeamInviteProps> = ({
   mappedRoles,
   onInviteSend,
 }) => {
@@ -57,4 +55,4 @@ const TeamInvite: React.FC<TeamInviteProps> = ({
   );
 };
 
-export default TeamInvite;
+export default TeamInviteForm;

@@ -1,5 +1,5 @@
-import { ITeamMember } from "../../../../types/team/team";
-import styles from "./member-list.module.css";
+import { ITeamMember } from "../../../../../../types/team/team";
+import styles from "../team-members/member-list.module.css";
 
 // Components
 import Request from "./request";

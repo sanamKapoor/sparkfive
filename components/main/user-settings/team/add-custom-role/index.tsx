@@ -15,7 +15,7 @@ import folderApi from "../../../../../server-api/folder";
 import permissionApi from "../../../../../server-api/permission";
 import teamApi from "../../../../../server-api/team";
 import SpinnerOverlay from "../../../../common/spinners/spinner-overlay";
-import MemberPermissions from "../member-permissions";
+import MemberPermissions from "../members/team-members/member-permissions";
 
 // Server DO NOT return full custom field slots including empty array, so we will generate empty array here
 // The order of result should be match with order of custom field list

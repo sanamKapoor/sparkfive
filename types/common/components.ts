@@ -5,3 +5,10 @@ export interface DropDownOption {
   icon: string;
   CustomContent: Element | null;
 }
+
+export interface SwitchableTabsWithPropsData {
+  id: string;
+  title: string;
+  content: React.FC<T>;
+  props?: any;
+}
