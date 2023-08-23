@@ -6,7 +6,6 @@ import userApi from "../../../../server-api/user";
 import toastUtils from "../../../../utils/toast";
 import styles from "./index.module.css";
 
-// Components
 import { COULD_NOT_CHANGE_PREFERENCE } from "../../../../constants/messages";
 import {
   ENABLE_TWO_AUTH_FOR_NOTIFICATION,
