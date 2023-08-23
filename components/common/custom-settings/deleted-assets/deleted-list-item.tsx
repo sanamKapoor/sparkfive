@@ -1,12 +1,10 @@
 import { format } from "date-fns";
 import filesize from "filesize";
 import { useEffect, useState } from "react";
-import { Utilities } from "../../../../assets";
+import { AssetOps, Utilities } from "../../../../assets";
 import { getParsedExtension } from "../../../../utils/asset";
 import styles from "./deleted-list-item.module.css";
 
-// Components
-import { AssetOps } from "../../../../assets";
 import AssetIcon from "../../asset/asset-icon";
 import AssetImg from "../../asset/asset-img";
 import IconClickable from "../../buttons/icon-clickable";
