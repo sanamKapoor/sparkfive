@@ -34,6 +34,7 @@ import deletedAssets from '../../common/custom-settings/deleted-assets'
 import { isMobile } from 'react-device-detect'
 import Tags from '../../topbar-newnavigation/Tags'
 import NestedSidenav from '../../nested-subcollection-sidenav/nested-sidenav'
+import InputChip from '../../topbar-newnavigation/InputChip'
 
 const AssetsLibrary = () => {
 
@@ -737,6 +738,11 @@ const AssetsLibrary = () => {
       {(hasPermission([ASSET_ACCESS]) || hasPermission([ASSET_UPLOAD_APPROVAL])) ?
         <>
           <main className={`${styles.container}`}>
+            <div className={styles.innnerContainer}>
+            <div className={styles.newsidenav}>
+              <NestedSidenav/>
+            </div>
+            <div className={styles.rightSide}>
             <div className='position-relative'>
               <div className={styles["search-mobile"]}>
                 <SearchOverlay
@@ -752,6 +758,8 @@ const AssetsLibrary = () => {
                   isFolder={activeMode === 'folders'}
                 />
               </div>
+              <>
+              </>
               {advancedConfig.set && hasPermission([ASSET_ACCESS]) &&
                 <TopBar
                   activeFolder={activeFolder}
@@ -774,6 +782,12 @@ const AssetsLibrary = () => {
                   isFolder={activeSortFilter?.mainFilter === 'folders'}
                   />
               }
+              <Tags />
+              
+              <InputChip />
+             
+             
+
              
 
             </div>
@@ -811,7 +825,8 @@ const AssetsLibrary = () => {
                   filterWidth={widthCard}
                 />
               } */}
-                 <NestedSidenav />
+            </div>
+            </div>
             </div>
           </main>
           <AssetOps />

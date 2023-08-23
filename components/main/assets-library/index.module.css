@@ -50,3 +50,14 @@
     margin-top: calc(81px + 98px);
   }
 }
+
+.newsidenav{padding: 0;}
+.innnerContainer{
+  display: flex;
+  height: calc(100vh - 170px);
+  overflow: auto;
+}
+.rightSide{
+  width: 100%;
+  padding:0 30px;
+}

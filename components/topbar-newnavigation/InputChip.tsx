@@ -3,6 +3,7 @@ import styles from "./InputChip.module.css";
 import ClearBtn from "./ClearBtn";
 const InputChip = () => {
   return (
+    <div className={styles.chips}>
     <div className={styles.chipSet}>
       <div className={styles.chip}>
        80s
@@ -25,6 +26,7 @@ Discovery
         <span className={styles.closebtn}>&times;</span>
       </div>
       <ClearBtn />
+    </div>
     </div>
   );
 };

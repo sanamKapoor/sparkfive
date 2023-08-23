@@ -2,6 +2,10 @@
     display: flex;
     align-items: center;
 }
+.chips{
+ 
+  margin-top:20px;
+}
 .chip {
     display: flex;
     align-items: center;
