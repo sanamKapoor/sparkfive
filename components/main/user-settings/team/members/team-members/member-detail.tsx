@@ -3,11 +3,20 @@ import styles from "./member-detail.module.css";
 
 import { default as permissionList } from "../../../../../../constants/permissions";
 import permissionApi from "../../../../../../server-api/permission";
+import { ITeamMember } from "../../../../../../types/team/team";
 import Button from "../../../../../common/buttons/button";
 import Select from "../../../../../common/inputs/select";
 import MemberPermissions from "./member-permissions";
 
-const MemberDetail = ({
+interface MemberDetailProps {
+  member: ITeamMember;
+  type: "member" | "invite";
+  mappedRoles: { id: string; name: string; label: string; value: string }[];
+  onSaveChanges: (id: string, data: unknown) => void;
+  onCancel: () => void;
+}
+
+const MemberDetail: React.FC<MemberDetailProps> = ({
   member,
   type = "member",
   mappedRoles,
@@ -100,11 +109,11 @@ const MemberDetail = ({
           text="Save Changes"
           type="button"
           onClick={onSaveMemberChanges}
-          className={"primary"}
+          className={"container primary"}
         />
 
         <Button
-          className={"m-l-15 secondary"}
+          className={"container m-l-15 secondary"}
           text="Cancel"
           type="button"
           onClick={onCancel}

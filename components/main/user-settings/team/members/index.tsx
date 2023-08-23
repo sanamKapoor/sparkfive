@@ -22,21 +22,15 @@ import requestApi from "../../../../../server-api/request";
 import EditDetailsView from "./edit-details-view";
 
 interface MembersProps {
-  selectedMember: ITeamMember;
-  setSelectedMember: (val: ITeamMember) => void;
   loading: boolean;
   setLoading: (val: boolean) => void;
 }
 
-const Members: React.FC<MembersProps> = ({
-  loading,
-  setLoading,
-  selectedMember,
-  setSelectedMember,
-}) => {
+const Members: React.FC<MembersProps> = ({ loading, setLoading }) => {
   const { mappedRoles } = useRoles();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedMember, setSelectedMember] = useState<ITeamMember>(undefined);
 
   const { teamMembers, getTeamMembers, setTeamMembers } =
     useContext(TeamContext);

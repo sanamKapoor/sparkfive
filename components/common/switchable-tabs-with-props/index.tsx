@@ -6,21 +6,18 @@ interface ISwitchableTabsWithProps {
   activeTab: string;
   setActiveTab: (tabId: string) => void;
   data: SwitchableTabsWithPropsData[];
-  onClick: (tabId: string) => void;
 }
 
 function SwitchableTabsWithProps({
   activeTab,
   setActiveTab,
   data,
-  onClick,
 }: ISwitchableTabsWithProps) {
   const activeTabData = data.find((item) => item.id === activeTab);
   const ActiveTabComponent = activeTabData.content;
 
   const handleTabChange = (tabId: string) => {
     setActiveTab(tabId);
-    onClick(tabId);
   };
   return (
     <div>
