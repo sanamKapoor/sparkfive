@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import styles from "./custom-file-size.module.css";
 
-import { Utilities } from "../../../assets";
+import { AssetOps, Utilities } from "../../../assets";
 
 // APIs
 import sizeApi from "../../../server-api/size";
 
 // Components
-import { AssetOps } from "../../../assets";
 import toastUtils from "../../../utils/toast";
 import Button from "../buttons/button";
 import IconClickable from "../buttons/icon-clickable";

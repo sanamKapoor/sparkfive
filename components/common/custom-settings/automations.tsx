@@ -8,7 +8,6 @@ import styles from "./main.module.css";
 const Automations = () => {
   const [loading, setLoading] = useState(false);
   const { advancedConfig, setAdvancedConfig } = useContext(UserContext);
-  const [aiTagging, setaiTagging] = useState(false);
 
   const saveAdvanceConfig = async (config) => {
     setLoading(true);
@@ -16,14 +15,6 @@ const Automations = () => {
 
     const updatedConfig = { ...advancedConfig, ...config };
     setAdvancedConfig(updatedConfig);
-
-    getAdvanceConfigurations(updatedConfig);
-  };
-
-  const getAdvanceConfigurations = (conf = advancedConfig) => {
-    setaiTagging(conf.aiTagging);
-    setLoading(false);
-    return true;
   };
 
   return (
@@ -37,7 +28,7 @@ const Automations = () => {
               <div>On</div>
               <IconClickable
                 src={
-                  aiTagging
+                  advancedConfig.aiTagging
                     ? Utilities.radioButtonEnabled
                     : Utilities.radioButtonNormal
                 }
@@ -49,7 +40,7 @@ const Automations = () => {
               <div>Off</div>
               <IconClickable
                 src={
-                  !aiTagging
+                  !advancedConfig.aiTagging
                     ? Utilities.radioButtonEnabled
                     : Utilities.radioButtonNormal
                 }

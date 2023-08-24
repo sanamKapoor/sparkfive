@@ -2,7 +2,6 @@ import { useContext, useState } from "react";
 import { Utilities } from "../../../assets";
 import { UserContext } from "../../../context";
 import teamAPI from "../../../server-api/team";
-import advancedConfigParams from "../../../utils/advance-config-params";
 import IconClickable from "../buttons/icon-clickable";
 import styles from "./main.module.css";
 
@@ -12,9 +11,8 @@ const CustomViews = () => {
   const [defaultLandingPage, setDefaultLandingPage] = useState("");
   const [collectionSortView, setCollectionSortView] = useState("");
   const [assetSortView, setAssetSortView] = useState("");
-  const [hideFilterElements, setHideFilterElements] = useState(
-    advancedConfigParams.hideFilterElements
-  );
+
+  const hideFilterElements = advancedConfig.hideFilterElements;
 
   const saveAdvanceConfig = async (config) => {
     setLoading(true);
@@ -36,9 +34,9 @@ const CustomViews = () => {
   };
 
   const toggleHideElementProperty = (prop) => {
-    const elemsState = { ...hideFilterElements };
-    elemsState[prop] = !elemsState[prop];
-    saveAdvanceConfig({ hideFilterElements: elemsState });
+    const state = { ...hideFilterElements };
+    state[prop] = !state[prop];
+    saveAdvanceConfig({ hideFilterElements: state });
   };
 
   return (
