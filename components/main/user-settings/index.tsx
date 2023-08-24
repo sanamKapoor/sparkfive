@@ -47,10 +47,6 @@ export const SETTING_OPTIONS = {
     permissions: [SETTINGS_TEAM, SETTINGS_COMPANY],
     content: Attributes,
   },
-  ["upload-approvals"]: {
-    label: "Upload Approvals",
-    path: "/main/upload-approvals",
-  },
   ["shared-links"]: {
     label: "Shared Links",
     contentTitle: "Shared Links",
