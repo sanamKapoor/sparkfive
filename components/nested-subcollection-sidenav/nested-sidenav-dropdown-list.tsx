@@ -40,14 +40,14 @@ console.log(folders,"folders")
   <div className={styles.dropdownIcons}>
     <img src={Utilities.folder} />
     <div className={styles["icon-descriptions"]}>
-      <span>Architecture</span>
+      <span>{item.name}</span>
     </div>
   </div>
   <div className={styles["list1-right-contents"]}>
-    <span>8</span>
+    <span>{item.assetsCount}</span>
   </div>
 </div>
-{isArchitectureOpen && (
+{/* {isArchitectureOpen && (
   <div className={styles.subfolderList}>
     
       <div className={styles.dropdownOptions}>
@@ -116,7 +116,7 @@ console.log(folders,"folders")
       </div>
     <NestedButton>Add Subcollection</NestedButton>
   </div>
-   )}
+   )} */}
    </li>
     </>
     

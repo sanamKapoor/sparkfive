@@ -127,21 +127,17 @@ const AssetsLibrary = () => {
       loadProductFields();
       return;
     }
-
     if (router.query.collection && !collection.length) {
       setPlaceHolders("asset", true);
       loadFolders();
       return;
     }
-
     if (router.query.campaign && !campaigns.length) {
       setPlaceHolders("asset", true);
       loadCampaigns();
       return;
     }
-
     const newSortFilter: any = { ...activeSortFilter };
-
     if (router.query.campaign) {
       const foundCampaign = campaigns.find(
         ({ name }) => name === router.query.campaign
@@ -158,7 +154,6 @@ const AssetsLibrary = () => {
       setActiveSortFilter(newSortFilter);
       return;
     }
-
     // Query folder
     if (router.query.collection) {
       const foundCollection = collection.find(
@@ -177,7 +172,6 @@ const AssetsLibrary = () => {
       setActiveSortFilter(newSortFilter);
       return;
     }
-
     if (router.query.product) {
       const foundProduct = productFields.sku.find(
         ({ sku }) => sku === router.query.product
@@ -194,7 +188,6 @@ const AssetsLibrary = () => {
       setActiveSortFilter(newSortFilter);
       return;
     }
-
     if (router.query.tag) {
       const foundTag = tags.find(({ name }) => name === router.query.tag);
       if (foundTag) {
@@ -209,7 +202,6 @@ const AssetsLibrary = () => {
       setActiveSortFilter(newSortFilter);
       return;
     }
-
   }, [tags, productFields.sku, collection, campaigns]);
 
 
@@ -239,7 +231,6 @@ const AssetsLibrary = () => {
   }, [activeSortFilter, firstLoaded, term]);
 
   useEffect(() => {
-
     if (firstLoaded && activeFolder !== "") {
       setActiveSortFilter({
         ...activeSortFilter,
@@ -249,18 +240,15 @@ const AssetsLibrary = () => {
   }, [activeFolder]);
 
   useEffect(() => {
-
     if (needsFetch === "assets") {
       getAssets();
-    } else if (needsFetch === "folders") {
-      
+    } else if (needsFetch === "folders") { 
       getFolders();
     }
     setNeedsFetch("");
   }, [needsFetch]);
 
   useEffect(() => {
-
     if (activeMode === "folders") {
       setOpenFilter(false);
       setAssets(assets.map((asset) => ({ ...asset, isSelected: false })));
@@ -273,11 +261,9 @@ const AssetsLibrary = () => {
       }
       setFolders(folders.map((folder) => ({ ...folder, isSelected: false })));
     }
-    
     if (selectedAllAssets) {
       selectAllAssets(false);
     }
-
     if (selectedAllFolders) {
       selectAllFolders(false);
     }
