@@ -9,5 +9,13 @@
  
 }
 .sidenav-content{
-    padding: 23px 23px 23px 23px;
+    padding: 23px 23px 0px 23px;
+}
+
+
+@media screen and (max-width: 800px) {
+    .nestedsidenav{
+        display: none;
+    }
+
 }

@@ -11,6 +11,37 @@ import assetApi from "../server-api/asset";
 
 import { validation } from "../constants/file-validation";
 
+interface Asset {
+  id: string;
+  name: string;
+  type: string;
+  thumbailUrl: string;
+  realUrl: string;
+  extension: string;
+  version: number;
+}
+interface Item {
+  id: string;
+  userId: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  sharePath: null;
+  sharePassword: null;
+  shareStatus: null;
+  status: string;
+  thumbnailPath: null;
+  thumbnailExtension: null;
+  thumbnails: null;
+  thumbnailStorageId: null;
+  thumbnailName: null;
+  assetsCount: string;
+  assets: Asset[];
+  size: string;
+  length: number;
+}
+
+
 const loadingDefaultAsset = {
   asset: {
     name: "placeholder",
@@ -57,7 +88,10 @@ export default ({ children }) => {
   const [selectedAllAssets, setSelectedAllAssets] = useState(false);
   const [selectedAllFolders, setSelectedAllFolders] = useState(false);
   const [completedAssets, setCompletedAssets] = useState([]);
-
+  // sidenamv list count states declared below
+  const [sidenavFolderList, setSidenavFolderList] = useState([])
+  const [sidenavFolderNextPage, setSidenavFolderNextPage] = useState(1);
+  const [sidenavTotalCount, setSidenavTotalCount] = useState(0)
   // Upload process
   const [uploadingAssets, setUploadingAssets] = useState([]);
   const [uploadingType, setUploadingType] = useState();
@@ -138,6 +172,24 @@ export default ({ children }) => {
       setFolders([
         ...folders.filter((folder) => !folder.isLoading),
         ...inputFolders,
+      ]);
+  };
+
+  const setSidenavFolderItems = (
+    inputFolders: { results: Item[], next: number, total: number },
+    replace = true,
+    ignoreTotalItem = false
+  ) => {
+    const { results, next, total } = inputFolders;
+    let resultedArray: Item[] = [];
+    if (results) resultedArray = results;
+    if (next) setSidenavFolderNextPage(next);
+    if (total && !ignoreTotalItem) setSidenavTotalCount(total);
+    if (replace) setSidenavFolderList(resultedArray);
+    else
+      setSidenavFolderList([
+        ...sidenavFolderList.filter((folder) => !folder.isLoading),
+        ...resultedArray,
       ]);
   };
 
@@ -227,11 +279,11 @@ export default ({ children }) => {
         const updatedAssets = assets.map((asset, index) =>
           index === retryList[i].index
             ? {
-                ...asset,
-                status: "fail",
-                index,
-                error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
-              }
+              ...asset,
+              status: "fail",
+              index,
+              error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
+            }
             : asset
         );
 
@@ -428,22 +480,22 @@ export default ({ children }) => {
       console.log(`Register socket listener...`);
       // Listen upload file process event
       socket.on("uploadFilesProgress", function (data) {
-        console.log(data,"im here");
+        console.log(data, "im here");
         setUploadingPercent(data.percent);
         setUploadRemainingTime(
           `${convertTimeFromSeconds(data.timeLeft)} remaining`
         );
-        console.log(data,"im here2");
+        console.log(data, "im here2");
 
         // setUploadingFileName("Test.png")
         if (data.fileName) {
           setUploadingFileName(data.fileName);
         }
-        console.log(data,"im here23");
+        console.log(data, "im here23");
 
         // setUploadingFile(0)
         if (!isNaN(data.uploadingAssets)) {
-          console.log(data,"im here234");
+          console.log(data, "im here234");
 
           setDropboxUploadingFile(data.uploadingAssets);
         }
@@ -540,6 +592,12 @@ export default ({ children }) => {
     setOperationAssets,
     currentViewAsset,
     setCurrentViewAsset,
+    sidenavFolderList,
+    setSidenavFolderList: setSidenavFolderItems,
+    sidenavFolderNextPage,
+    setSidenavFolderNextPage,
+    sidenavTotalCount,
+    setSidenavTotalCount
   };
   return (
     <AssetContext.Provider value={assetsValue}>

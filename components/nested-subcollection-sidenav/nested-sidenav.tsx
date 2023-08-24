@@ -10,10 +10,7 @@ import styles from './nested-sidenav.module.css';
 
 const NestedSidenav = () => {
   const {
-    folders,
-    setFolders,
-    totalAssets,
-    
+    sidenavTotalCount,
   } = useContext(AssetContext);
   return (
     <div className={styles.nestedsidenav}>
@@ -23,10 +20,10 @@ const NestedSidenav = () => {
           icon={<img src={Utilities.arrowleft} />}
         />
         <NestedFirstlist />
-        <ReusableHeading text="Collections" totalCount={totalAssets} icon={undefined} />
-       
+        <ReusableHeading text="Collections" totalCount={sidenavTotalCount} icon={undefined} />
+
       </div>
-      <NestedSidenavDropdown folders={folders}/>
+      <NestedSidenavDropdown />
     </div>
   );
 };

@@ -88,7 +88,7 @@ const AssetsLibrary = () => {
 
   const [widthCard, setWidthCard] = useState(0);
 
-  const { term, searchFilterParams,renderFlag } = useContext(FilterContext);
+  const { term, searchFilterParams, renderFlag } = useContext(FilterContext);
 
   const [activeMode, setActiveMode] = useState("assets");
 
@@ -101,7 +101,7 @@ const AssetsLibrary = () => {
     activeSortFilter?.mainFilter === "assets" ? true : false
   );
 
-  
+
 
   const router = useRouter();
   const preparingAssets = useRef(true);
@@ -206,7 +206,7 @@ const AssetsLibrary = () => {
 
 
   useEffect(() => {
-    if (hasPermission([ASSET_ACCESS])) {      
+    if (hasPermission([ASSET_ACCESS])) {
       // Assets are under preparing (for query etc)
       if (preparingAssets.current) {
         return;
@@ -215,8 +215,8 @@ const AssetsLibrary = () => {
           setFirstLoaded(true);
         }
       }
-      if (firstLoaded&&renderFlag) {
-        
+      if (firstLoaded && renderFlag) {
+
         setActivePageMode("library");
         if (activeSortFilter.mainFilter === "folders") {
           setActiveMode("folders");
@@ -242,7 +242,7 @@ const AssetsLibrary = () => {
   useEffect(() => {
     if (needsFetch === "assets") {
       getAssets();
-    } else if (needsFetch === "folders") { 
+    } else if (needsFetch === "folders") {
       getFolders();
     }
     setNeedsFetch("");
@@ -252,7 +252,7 @@ const AssetsLibrary = () => {
     if (activeMode === "folders") {
       setOpenFilter(false);
       setAssets(assets.map((asset) => ({ ...asset, isSelected: false })));
-    } 
+    }
     if (activeMode === "assets") {
       if (isMobile) {
         setOpenFilter(false);
@@ -349,11 +349,11 @@ const AssetsLibrary = () => {
         const updatedAssets = assets.map((asset, index) =>
           index === i
             ? {
-                ...asset,
-                status: "fail",
-                index,
-                error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
-              }
+              ...asset,
+              status: "fail",
+              index,
+              error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
+            }
             : asset
         );
 
@@ -412,16 +412,16 @@ const AssetsLibrary = () => {
           "fileModifiedAt",
           assets[i].dragDropFolderUpload
             ? new Date(
-                (
-                  file.lastModifiedDate || new Date(file.lastModified)
-                ).toUTCString()
-              ).toISOString()
+              (
+                file.lastModifiedDate || new Date(file.lastModified)
+              ).toUTCString()
+            ).toISOString()
             : new Date(
-                (
-                  file.originalFile.lastModifiedDate ||
-                  new Date(file.originalFile.lastModified)
-                ).toUTCString()
-              ).toISOString()
+              (
+                file.originalFile.lastModifiedDate ||
+                new Date(file.originalFile.lastModified)
+              ).toUTCString()
+            ).toISOString()
         );
 
         let size = totalSize;
@@ -710,7 +710,6 @@ const AssetsLibrary = () => {
       if (activeFolder) {
         return;
       }
-
       if (replace) {
         setAddedIds([]);
       }
@@ -721,7 +720,6 @@ const AssetsLibrary = () => {
         sortField: field,
         sortOrder: order,
       };
-
       if (!replace && addedIds.length > 0) {
         queryParams.excludeIds = addedIds.join(",");
       }
@@ -730,12 +728,10 @@ const AssetsLibrary = () => {
           .map((item) => item.value)
           .join(",");
       }
-
       const { data } = await folderApi.getFolders({
         ...queryParams,
         ...(term && { term }),
       });
-
       let assetList = { ...data, results: data.results };
       if (
         lastUploadedFolder &&
@@ -745,7 +741,6 @@ const AssetsLibrary = () => {
         const lastFolder = { ...lastUploadedFolder };
         assetList.results.unshift(lastFolder);
       }
-
       setFolders(assetList, replace);
     } catch (err) {
       //TODO: Handle error
@@ -860,105 +855,104 @@ const AssetsLibrary = () => {
       {(activeMode === "assets"
         ? selectedAssets.length
         : selectedFolders.length) > 0 && (
-        <AssetHeaderOps
-          isUnarchive={activeSortFilter.mainFilter === "archived"}
-          isFolder={activeMode === "folders"}
-          deletedAssets={false}
-        />
-      )}
-      {!renderFlag&&<SpinnerOverlay text="Your Assets are loading please wait...."/>}
+          <AssetHeaderOps
+            isUnarchive={activeSortFilter.mainFilter === "archived"}
+            isFolder={activeMode === "folders"}
+            deletedAssets={false}
+          />
+        )}
+      {!renderFlag && <SpinnerOverlay text="Your Assets are loading please wait...." />}
       {hasPermission([ASSET_ACCESS]) ||
-      hasPermission([ASSET_UPLOAD_APPROVAL]) ? (
+        hasPermission([ASSET_UPLOAD_APPROVAL]) ? (
         <>
           <main className={`${styles.container}`}>
             <div className={styles.innnerContainer}>
-            <div className={styles.newsidenav}>
-              <NestedSidenav/>
-            </div>
-            <div className={styles.rightSide}>
-            <div className='position-relative'>
-              <div className={styles["search-mobile"]}>
-                <SearchOverlay
-                  closeOverlay={closeSearchOverlay}
-                  operationsEnabled={true}
-                  activeFolder={activeFolder}
-                  onCloseDetailOverlay={(assetData) => {
-                    closeSearchOverlay();
-                    setDetailOverlayId(undefined);
-                    setCurrentViewAsset(assetData);
-                  }}
-                  isFolder={activeMode === "folders"}
-                />
+              <div className={styles.newsidenav}>
+                <NestedSidenav />
               </div>
-              {advancedConfig.set && hasPermission([ASSET_ACCESS]) &&
-                <TopBar
-                  activeFolder={activeFolder}
-                  getFolders={getFolders}
-                  mode={activeMode}
-                  activeSortFilter={activeSortFilter}
-                  setActiveSortFilter={setActiveSortFilter}
-                  setActiveView={setActiveView}
-                  activeView={activeView}
-                  setActiveSearchOverlay={() => {
-                    selectAllAssets(false);
-                    setActiveSearchOverlay(true);
-                  }}
-                  selectAll={selectAll}
-                  setOpenFilter={setOpenFilter}
-                  openFilter={openFilter}
-                  deletedAssets={false}
-                  activeSearchOverlay={activeSearchOverlay}
-                  closeSearchOverlay={closeSearchOverlay}
-                  setDetailOverlayId={setDetailOverlayId}
-                  setCurrentViewAsset={setCurrentViewAsset}
-                  activeMode={activeMode}
-                  isFolder={activeSortFilter?.mainFilter === 'folders'}
-                  />
-              }
-              <Tags />
-              <InputChip />
-            </div>
-            <div
-              className={`${openFilter && styles["col-wrapper"]} ${
-                styles["grid-wrapper"]
-              } ${activeFolder && styles["active-breadcrumb-item"]}`}
-            >
-              <DropzoneProvider>
-                {advancedConfig.set && renderFlag &&(
-                  <AssetGrid
-                    activeFolder={activeFolder}
-                    getFolders={getFolders}
-                    activeView={activeView}
-                    activeSortFilter={activeSortFilter}
-                    onFilesDataGet={onFilesDataGet}
-                    toggleSelected={toggleSelected}
-                    mode={activeMode}
-                    viewFolder={viewFolder}
-                    deleteFolder={deleteFolder}
-                    loadMore={loadMore}
-                    openFilter={openFilter}
-                    onCloseDetailOverlay={(assetData) => {
-                      setDetailOverlayId(undefined);
-                      setCurrentViewAsset(assetData);
-                    }}
-                    setWidthCard={setWidthCard}
-                    widthCard={widthCard}
-                  />
-                )}
-              </DropzoneProvider>
-              {openFilter && hasPermission([ASSET_ACCESS]) &&
-                <FilterContainer
-                  clearFilters={clearFilters}
-                  openFilter={openFilter}
-                  setOpenFilter={setOpenFilter}
-                  activeSortFilter={activeSortFilter}
-                  setActiveSortFilter={setActiveSortFilter}
-                  isFolder={activeSortFilter.mainFilter === "folders"}
-                  filterWidth={widthCard}
-                />
-              }
-            </div>
-            </div>
+              <div className={styles.rightSide}>
+                <div className='position-relative'>
+                  <div className={styles["search-mobile"]}>
+                    <SearchOverlay
+                      closeOverlay={closeSearchOverlay}
+                      operationsEnabled={true}
+                      activeFolder={activeFolder}
+                      onCloseDetailOverlay={(assetData) => {
+                        closeSearchOverlay();
+                        setDetailOverlayId(undefined);
+                        setCurrentViewAsset(assetData);
+                      }}
+                      isFolder={activeMode === "folders"}
+                    />
+                  </div>
+                  {advancedConfig.set && hasPermission([ASSET_ACCESS]) &&
+                    <TopBar
+                      activeFolder={activeFolder}
+                      getFolders={getFolders}
+                      mode={activeMode}
+                      activeSortFilter={activeSortFilter}
+                      setActiveSortFilter={setActiveSortFilter}
+                      setActiveView={setActiveView}
+                      activeView={activeView}
+                      setActiveSearchOverlay={() => {
+                        selectAllAssets(false);
+                        setActiveSearchOverlay(true);
+                      }}
+                      selectAll={selectAll}
+                      setOpenFilter={setOpenFilter}
+                      openFilter={openFilter}
+                      deletedAssets={false}
+                      activeSearchOverlay={activeSearchOverlay}
+                      closeSearchOverlay={closeSearchOverlay}
+                      setDetailOverlayId={setDetailOverlayId}
+                      setCurrentViewAsset={setCurrentViewAsset}
+                      activeMode={activeMode}
+                      isFolder={activeSortFilter?.mainFilter === 'folders'}
+                    />
+                  }
+                  <Tags />
+                  <InputChip />
+                </div>
+                <div
+                  className={`${openFilter && styles["col-wrapper"]} ${styles["grid-wrapper"]
+                    } ${activeFolder && styles["active-breadcrumb-item"]}`}
+                >
+                  <DropzoneProvider>
+                    {advancedConfig.set && renderFlag && (
+                      <AssetGrid
+                        activeFolder={activeFolder}
+                        getFolders={getFolders}
+                        activeView={activeView}
+                        activeSortFilter={activeSortFilter}
+                        onFilesDataGet={onFilesDataGet}
+                        toggleSelected={toggleSelected}
+                        mode={activeMode}
+                        viewFolder={viewFolder}
+                        deleteFolder={deleteFolder}
+                        loadMore={loadMore}
+                        openFilter={openFilter}
+                        onCloseDetailOverlay={(assetData) => {
+                          setDetailOverlayId(undefined);
+                          setCurrentViewAsset(assetData);
+                        }}
+                        setWidthCard={setWidthCard}
+                        widthCard={widthCard}
+                      />
+                    )}
+                  </DropzoneProvider>
+                  {openFilter && hasPermission([ASSET_ACCESS]) &&
+                    <FilterContainer
+                      clearFilters={clearFilters}
+                      openFilter={openFilter}
+                      setOpenFilter={setOpenFilter}
+                      activeSortFilter={activeSortFilter}
+                      setActiveSortFilter={setActiveSortFilter}
+                      isFolder={activeSortFilter.mainFilter === "folders"}
+                      filterWidth={widthCard}
+                    />
+                  }
+                </div>
+              </div>
             </div>
           </main>
           <AssetOps />

@@ -60,9 +60,9 @@ const AssetHeaderOps = ({
     term,
     setSharePath: setContextPath,
   } = useContext(FilterContext);
-  
+
   const selectedAssets = assets.filter((asset) => asset.isSelected);
-  
+
   let totalSelectAssets = selectedAssets.length;
 
   useEffect(() => {
@@ -90,7 +90,7 @@ const AssetHeaderOps = ({
       }
     }
   }, [router.asPath]);
-  
+
 
   // Hidden pagination assets are selected
   if (selectedAllAssets) {
@@ -196,8 +196,8 @@ const AssetHeaderOps = ({
         const assetsToAssociate = selectedAssets.filter(
           (assetItem) =>
             assetItem.asset.fileAssociations.length +
-              selectedAssets.length -
-              1 <=
+            selectedAssets.length -
+            1 <=
             maximumAssociateFiles
         );
         if (assetsToAssociate.length !== selectedAssets.length) {
@@ -290,7 +290,7 @@ const AssetHeaderOps = ({
     }
   };
 
-  const conditionalIcons= [
+  const conditionalIcons = [
     {
       condition: !isShare && !deletedAssets && !isFolder,
       props: {
@@ -300,7 +300,7 @@ const AssetHeaderOps = ({
         tooltipText: "Edit",
         tooltipId: "Edit",
         onClick: () => setActiveOperation("edit"),
-        child:null
+        child: null
       },
     },
     {
@@ -312,7 +312,7 @@ const AssetHeaderOps = ({
         tooltipText: "Delete",
         tooltipId: "Delete",
         onClick: () => setActiveOperation("update"),
-        child:null
+        child: null
       },
     },
     {
@@ -324,7 +324,7 @@ const AssetHeaderOps = ({
         tooltipId: "Download",
         tooltipText: "Download",
         onClick: downloadSelectedAssets,
-        child:null
+        child: null
       },
     },
     {
@@ -336,7 +336,7 @@ const AssetHeaderOps = ({
         tooltipText: "Add to Collection",
         tooltipId: "Move",
         onClick: () => setActiveOperation("move"),
-        child:null
+        child: null
       },
 
     },
@@ -346,60 +346,60 @@ const AssetHeaderOps = ({
         child: (
           <div className={styles["share-wrapper"]} ref={contentRef}>
             <IconClickable
-            place={"top"}
-            additionalClass={`${styles["action-button"]}`}
-            src={AssetOps[`share`]}
-            tooltipText={"Share"}
-            tooltipId={"Share"}
-            onClick={(e) => {
-              showShareActionList(e, true);
-            }}
-          />
-          {showShareAction && (
-            <div className={styles["share-popover"]}>
-              <div className={styles["share-title"]}>
-                Share
-                <img
-                  src={Utilities.blueClose}
-                  alt={"close"}
-                  onClick={(e) => {
-                    showShareActionList(e, false);
-                  }}
-                />
+              place={"top"}
+              additionalClass={`${styles["action-button"]}`}
+              src={AssetOps[`share`]}
+              tooltipText={"Share"}
+              tooltipId={"Share"}
+              onClick={(e) => {
+                showShareActionList(e, true);
+              }}
+            />
+            {showShareAction && (
+              <div className={styles["share-popover"]}>
+                <div className={styles["share-title"]}>
+                  Share
+                  <img
+                    src={Utilities.blueClose}
+                    alt={"close"}
+                    onClick={(e) => {
+                      showShareActionList(e, false);
+                    }}
+                  />
+                </div>
+                <ul>
+                  <li
+                    className={styles["share-item"]}
+                    onClick={() => {
+                      setShowShareAction(false);
+                      setActiveOperation("share-as-subcollection");
+                    }}
+                  >
+                    <img src={Utilities.gridView} alt={"share-collection"} />
+                    <span className={"font-weight-500"}>
+                      Share as Collection
+                    </span>
+                    <p className={styles["share-description"]}>
+                      Create a branded collection
+                    </p>
+                  </li>
+                  <li
+                    className={styles["share-item"]}
+                    onClick={() => {
+                      setShowShareAction(false);
+                      setActiveOperation("share");
+                    }}
+                  >
+                    <img src={Utilities.share} alt={"share-file"} />
+                    <span className={"font-weight-500"}>Share Files</span>
+                    <p className={styles["share-description"]}>
+                      Create a link to shared file(s)
+                    </p>
+                  </li>
+                </ul>
               </div>
-              <ul>
-                <li
-                  className={styles["share-item"]}
-                  onClick={() => {
-                    setShowShareAction(false);
-                    setActiveOperation("share-as-subcollection");
-                  }}
-                >
-                  <img src={Utilities.gridView} alt={"share-collection"} />
-                  <span className={"font-weight-500"}>
-                    Share as Collection
-                  </span>
-                  <p className={styles["share-description"]}>
-                    Create a branded collection
-                  </p>
-                </li>
-                <li
-                  className={styles["share-item"]}
-                  onClick={() => {
-                    setShowShareAction(false);
-                    setActiveOperation("share");
-                  }}
-                >
-                  <img src={Utilities.share} alt={"share-file"} />
-                  <span className={"font-weight-500"}>Share Files</span>
-                  <p className={styles["share-description"]}>
-                    Create a link to shared file(s)
-                  </p>
-                </li>
-              </ul>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
         ),
       },
     },
@@ -412,7 +412,7 @@ const AssetHeaderOps = ({
         tooltipText: "Share",
         tooltipId: "Share",
         onClick: () => setActiveOperation("shareCollections"),
-        child:null
+        child: null
       },
     },
     {
@@ -424,7 +424,7 @@ const AssetHeaderOps = ({
         tooltipText: "Recover Asset",
         tooltipId: "Recover",
         onClick: () => setActiveOperation("recover"),
-        child:null
+        child: null
       },
     },
     {
@@ -436,7 +436,7 @@ const AssetHeaderOps = ({
         tooltipText: "Delete",
         tooltipId: "Delete",
         onClick: () => setActiveOperation("delete"),
-        child:null
+        child: null
       },
     },
     {
@@ -452,7 +452,7 @@ const AssetHeaderOps = ({
               tooltipId={"More"}
               onClick={() => setShowMoreActions(true)}
             />
-            {showMoreActions &&  !deletedAssets && (
+            {showMoreActions && !deletedAssets && (
               <>
                 {" "}
                 <Dropdown
@@ -514,15 +514,15 @@ const AssetHeaderOps = ({
         )}
         <div className={styles.text}>
           {!isFolder
-            ? `${selectedAssets.length} Assets`
-            : `${selectedFolders.length} Collections`}{" "}
+            ? `${totalSelectAssets} Assets`
+            : `${totalSelectAssets} Collections`}{" "}
           Selected
         </div>
       </div>
       <div className={styles.icons}>
-      {conditionalIcons.map(({ condition, props }, index) => condition && (
-       props.child?props.child:<IconClickable key={index} {...props} />
-       ))}
+        {conditionalIcons.map(({ condition, props }, index) => condition && (
+          props.child ? props.child : <IconClickable key={index} {...props} />
+        ))}
       </div>
       {!isFolder && !isShare && !deletedAssets && (
         <>
