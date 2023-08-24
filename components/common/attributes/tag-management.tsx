@@ -167,7 +167,7 @@ const TagManagement = () => {
         <CreatableSelect
           altColor="blue"
           title=""
-          addText="Add Tags"
+          addText="Add a New Tag"
           onAddClick={() => setActiveDropdown("tags")}
           selectPlaceholder={"Enter a new tag"}
           avilableItems={[]}

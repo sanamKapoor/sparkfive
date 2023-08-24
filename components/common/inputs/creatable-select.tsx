@@ -274,7 +274,7 @@ const CreatableSelect = ({
                     className={`add ${styles["select-add"]}`}
                     onClick={onAddClick}
                   >
-                    <IconClickable src={Utilities.addLight} />
+                    <IconClickable src={Utilities.adddark} />
                     <span>{addText}</span>
                   </div>
                 )}

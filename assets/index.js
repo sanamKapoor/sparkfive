@@ -37,6 +37,7 @@ export const Utilities = {
   addLight: require('./Icons/Utilities/Add +/icn-utilities-add+light.svg'),
   addWhite: require('./Icons/Utilities/Add +/icn-utilities-add+white.svg'),
   addAlt: require('./Icons/Utilities/Add +/icn-utilities-add+alt.svg'),
+  adddark: require('./Icons/Utilities/Add +/adddark.png'),
   comment: require('./Icons/Utilities/Comments/icn-utilities-comments.svg'),
   commentLight: require('./Icons/Utilities/Comments/icn-utilities-comments-light.svg'),
   commentGray: require('./Icons/Utilities/Comments/icn-utilities-comments-gray.svg'),
@@ -190,7 +191,8 @@ export const Assets = {
   unknown: require('./Icons/Assets/unknown.svg'),
   arrowDown: require('./Icons/Assets/arrow-down.svg'),
   computer: require('./Icons/Assets/computer.svg'),
-  upload: require('./Icons/Assets/upload.svg')
+  upload: require('./Icons/Assets/upload.svg'),
+  downarrow:require('./Icons/Assets/downvector.svg')
 }
 
 export const Comments = {

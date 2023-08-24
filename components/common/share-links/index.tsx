@@ -359,7 +359,7 @@ export default function ShareLinks() {
             >
               <span className={"font-12"}>Date Created</span>
               <img
-                src={Assets.arrowDown}
+                src={Assets.downarrow}
                 className={`
                           ${styles["sort-icon"]} 
                           ${
@@ -431,7 +431,7 @@ export default function ShareLinks() {
             >
               <span className={"font-12"}>Expiration Date</span>
               <img
-                src={Assets.arrowDown}
+                src={Assets.downarrow}
                 className={`
                           ${styles["sort-icon"]} 
                           ${
