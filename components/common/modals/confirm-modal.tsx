@@ -4,14 +4,24 @@ import styles from "./confirm-modal.module.css";
 import Button from "../buttons/button";
 import Base from "./base";
 
-// Used for the future
-const ConfirmModal = ({
+interface ConfirmModalProps {
+  modalIsOpen: boolean;
+  closeModal: () => void;
+  message?: React.ReactNode;
+  secondMessage?: string;
+  confirmText: string;
+  subText?: string;
+  confirmAction: () => void;
+  textContentClass?: string;
+  closeButtonClass?: string;
+}
+
+const ConfirmModal: React.FC<ConfirmModalProps> = ({
   modalIsOpen,
   closeModal,
   message,
   secondMessage = "",
   confirmText,
-  headText,
   subText,
   confirmAction,
   textContentClass = "",

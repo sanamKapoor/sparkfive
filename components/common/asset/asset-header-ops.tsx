@@ -95,7 +95,6 @@ const AssetHeaderOps = ({
   }
 
   const downloadSelectedAssets = async () => {
-    console.log(`selectedAllAssets: ${selectedAllAssets}`);
     try {
       let payload = {
         assetIds: [],
@@ -319,8 +318,8 @@ const AssetHeaderOps = ({
         )}
         <div className={styles.text}>
           {!isFolder
-            ? `${selectedAssets.length} Assets`
-            : `${selectedFolders.length} Collections`}{" "}
+            ? `${totalSelectAssets} Assets`
+            : `${totalSelectAssets} Collections`}{" "}
           Selected
         </div>
       </div>

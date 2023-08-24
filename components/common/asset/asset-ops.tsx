@@ -380,7 +380,6 @@ export default ({ getAssets }) => {
           );
           return searchedAssetIndex === -1;
         });
-
         setAssets(newAssets);
       } else {
         await assetApi.deleteAsset(operationAsset.asset.id, filters);
@@ -435,7 +434,7 @@ export default ({ getAssets }) => {
             replace: false,
             activeFolder,
             addedIds: [],
-            nextPage: 1,
+            nextPage: 2,
             userFilterObject: activeSortFilter,
           }),
           selectedAll: "1",

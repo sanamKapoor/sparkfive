@@ -12,8 +12,6 @@ import IconClickable from "../../buttons/icon-clickable";
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
 
 const DeletedListItem = ({
-  isShare,
-  type,
   assetItem: {
     asset,
     thumbailUrl,
@@ -102,15 +100,7 @@ const DeletedListItem = ({
                   } ${getSortAttributeClassName("asset.extension")}`}
                 />
               </h4>
-              <h4 onClick={() => setSortAttribute("asset.dimenssions")}>
-                Dimensions
-                <IconClickable
-                  src={arrowIcon}
-                  additionalClass={`${
-                    styles["sort-icon"]
-                  } ${getSortAttributeClassName("asset.dimemssions")}`}
-                />
-              </h4>
+              <h4>Dimensions</h4>
             </div>
           </div>
         )}
@@ -148,7 +138,7 @@ const DeletedListItem = ({
                     <AssetImg
                       assetImg={thumbailUrl}
                       type={asset.type}
-                      name={asset.name}
+                      isDeletedItem
                     />
                   ) : (
                     <AssetIcon

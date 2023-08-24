@@ -15,6 +15,7 @@ import {
 
 // Components
 import { Utilities } from "../../../assets";
+import FilterProvider from "../../../context/filter-provider";
 import IconClickable from "../../common/buttons/icon-clickable";
 import NoPermissionNotice from "../../common/misc/no-permission-notice";
 import Account from "./account";
@@ -109,18 +110,20 @@ const UserSettings: React.FC = () => {
   return (
     <main className={`${styles.container}`}>
       <LocationContextProvider>
-        {menuActive && <SideNavigation activeView={activeView} />}
-        <section className={styles.content}>
-          <div className={styles.header}>
-            <IconClickable src={Utilities.menu} onClick={toggleSettings} />
-            <h2>{capitalCase(getTitle(activeView))}</h2>
-          </div>
-          {hasPermission(SETTING_OPTIONS[activeView]?.permissions) ? (
-            <ActiveContent />
-          ) : (
-            <NoPermissionNotice />
-          )}
-        </section>
+        <FilterProvider>
+          {menuActive && <SideNavigation activeView={activeView} />}
+          <section className={styles.content}>
+            <div className={styles.header}>
+              <IconClickable src={Utilities.menu} onClick={toggleSettings} />
+              <h2>{capitalCase(getTitle(activeView))}</h2>
+            </div>
+            {hasPermission(SETTING_OPTIONS[activeView]?.permissions) ? (
+              <ActiveContent />
+            ) : (
+              <NoPermissionNotice />
+            )}
+          </section>
+        </FilterProvider>
       </LocationContextProvider>
     </main>
   );
