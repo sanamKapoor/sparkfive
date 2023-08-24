@@ -93,6 +93,7 @@ const SearchOverlayAssets = ({
 
   const selectedAssets = assets.filter((asset) => asset.isSelected);
 
+  let totalSelectAssets = selectedAssets.length;
   // Hidden pagination assets are selected
   if (selectedAllAssets) {
     // Get assets is not selected on screen

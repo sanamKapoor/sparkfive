@@ -953,7 +953,7 @@ const AssetsLibrary = () => {
               )}
             </div>
           </main>
-          <AssetOps />
+          <AssetOps getAssets={getAssets} />
         </>
       ) : (
         <NoPermissionNotice />

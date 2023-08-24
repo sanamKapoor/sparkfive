@@ -1,20 +1,19 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import styles from "./asset-img.module.css";
 
-import { useState } from "react";
 import { Assets } from "../../../assets";
 
 const AssetImg = ({
   assetImg,
   type = "image",
-  name,
   opaque = false,
   onClick = () => {},
   imgClass = "",
   style = {},
   activeFilter = "",
-  isResize,
+  isResize = false,
+  isDeletedItem = false,
 }) => {
   const [loaded, setLoaded] = useState(false);
 
@@ -36,7 +35,11 @@ const AssetImg = ({
         style={
           loaded
             ? { display: "none" }
-            : { width: "100%", height: "100%", objectFit: "contain" }
+            : {
+                width: isDeletedItem ? "none" : "100%",
+                height: isDeletedItem ? "none" : "100%",
+                objectFit: "contain",
+              }
         }
       />
       <img

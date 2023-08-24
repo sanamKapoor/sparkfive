@@ -1,5 +1,29 @@
-
 .col-wrapper {
   display: flex;
   justify-content: space-between;
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+}
+
+.header__content {
+  font-size: 10px;
+  margin-left: 20px;
+}
+
+/* TODO: define styles */
+.subHeader {}
+
+
+/* TODO: fix styles */
+.sort-wrapper {
+  z-index: 1000;
+  width: 100px;
+  min-width: 90px
 }

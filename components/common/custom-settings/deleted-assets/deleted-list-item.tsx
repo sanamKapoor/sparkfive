@@ -1,12 +1,10 @@
 import { format } from "date-fns";
 import filesize from "filesize";
 import { useEffect, useState } from "react";
-import { Utilities } from "../../../../assets";
+import { AssetOps, Utilities } from "../../../../assets";
 import { getParsedExtension } from "../../../../utils/asset";
 import styles from "./deleted-list-item.module.css";
 
-// Components
-import { AssetOps } from "../../../../assets";
 import AssetIcon from "../../asset/asset-icon";
 import AssetImg from "../../asset/asset-img";
 import IconClickable from "../../buttons/icon-clickable";
@@ -14,8 +12,6 @@ import IconClickable from "../../buttons/icon-clickable";
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
 
 const DeletedListItem = ({
-  isShare,
-  type,
   assetItem: {
     asset,
     thumbailUrl,
@@ -104,15 +100,7 @@ const DeletedListItem = ({
                   } ${getSortAttributeClassName("asset.extension")}`}
                 />
               </h4>
-              <h4 onClick={() => setSortAttribute("asset.dimenssions")}>
-                Dimensions
-                <IconClickable
-                  src={arrowIcon}
-                  additionalClass={`${
-                    styles["sort-icon"]
-                  } ${getSortAttributeClassName("asset.dimemssions")}`}
-                />
-              </h4>
+              <h4>Dimensions</h4>
             </div>
           </div>
         )}
@@ -150,7 +138,7 @@ const DeletedListItem = ({
                     <AssetImg
                       assetImg={thumbailUrl}
                       type={asset.type}
-                      name={asset.name}
+                      isDeletedItem
                     />
                   ) : (
                     <AssetIcon
