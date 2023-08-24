@@ -123,6 +123,8 @@ export const Utilities = {
   vedio:require('./Icons/Utilities/nestedCollection/vedio.svg'),
   line:require('./Icons/Utilities/nestedCollection/Line.svg'),
   dots:require('./Icons/Utilities/nestedCollection/dots.svg'),
+  menu:require('./Icons/Utilities/nestedCollection/menu.svg'),
+  
   
  
 }

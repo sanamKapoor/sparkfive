@@ -13,7 +13,24 @@
   line-height: 18px;
   color:var(--color-prim-navy);
 }
-.dropdown-lists::before {
+.flex{
+  display: flex;
+  align-items: center;
+}
+.w100{
+  width:100%;
+}
+.dropdownMenu{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.nestedbox{
+  padding: 0 24px 0 14px;
+  margin-top:20px;
+
+}
+/* .dropdown-lists::before {
   content: "";
   display: inline-block;
   background-image: url("../../assets/Icons/Utilities/nestedCollection/right.svg");
@@ -23,8 +40,8 @@
   bottom: 7px;
   width: 100%;
   height: 10px;
-}
-.dropdown-lists {
+} */
+/* .dropdown-lists {
   display: flex;
   justify-content: space-between;
   cursor: pointer;
@@ -32,6 +49,9 @@
   height: 30px;
   margin-top: 16px;
   position: relative;
+} */
+.folder{
+  padding:0 24px 0 24px;
 }
 .folder-lists {
   display: flex;

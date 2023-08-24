@@ -1,5 +1,6 @@
 .container {
   padding: 35px 40px;
+  margin-top:81px;
 }
 
 .grid-wrapper {
@@ -54,8 +55,8 @@
 .newsidenav{padding: 0;}
 .innnerContainer{
   display: flex;
-  height: calc(100vh - 170px);
-  overflow: auto;
+  /* height: calc(100vh - 170px);
+  overflow: auto; */
 }
 .rightSide{
   width: 100%;
