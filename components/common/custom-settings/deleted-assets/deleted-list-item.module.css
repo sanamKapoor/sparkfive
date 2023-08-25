@@ -135,6 +135,7 @@ width: 15px;
   position: relative;
   /* text-overflow: ellipsis; */
   font-size: 12px;
+  text-align: start;
 }
 
 .field_name {

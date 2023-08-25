@@ -121,6 +121,7 @@ const DeletedAssetsLibrary = () => {
         activeSortFilter={activeSortFilter}
         deletedAssets={true}
       />
+      <div className={styles.infowrapper}>
       <div className={styles.header}>
         <h2>Deleted Assets</h2>
         <div></div>
@@ -138,12 +139,14 @@ const DeletedAssetsLibrary = () => {
             Select only 25 assets shown
           </span>
         )}
-        <Button
+        <div className={styles.newbtn}>
+          <Button
           type="button"
           text="Select All"
           className="container secondary"
           onClick={selectAll}
         />
+          </div>
         <div className={styles["sort-wrapper"]}>
           <Select
             label={"Sort By"}
@@ -154,6 +157,7 @@ const DeletedAssetsLibrary = () => {
             placeholder="Sort By"
           />
         </div>
+      </div>
       </div>
       <DeletedAssets toggleSelected={toggleSelected} loadMore={loadMore} />
       <AssetOps getAssets={getAssets} />

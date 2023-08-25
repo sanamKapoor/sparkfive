@@ -1,7 +1,7 @@
 /*----- Define style for all types of buttons used in the app -----*/
 .container {
   border-radius: 5px;
-  height: 32px;
+  height: 34px;
   padding: 0 20px;
   font-weight: 600;
   cursor: pointer;
