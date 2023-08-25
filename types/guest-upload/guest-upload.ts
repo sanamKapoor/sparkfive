@@ -4,3 +4,11 @@ export interface IGuestUploadFormInput {
   email: string;
   message: string;
 }
+
+export interface IGuestUploadLink {
+  id: string;
+  url: string;
+  status: "public" | "private";
+  allowCustomFields: boolean;
+  password?: string;
+}
