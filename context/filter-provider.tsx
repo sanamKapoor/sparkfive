@@ -61,6 +61,7 @@ export default ({ children, isPublic = false }) => {
     retailers: [],
     sku: [],
   });
+  const [renderFlag, setRenderFlag] = useState(false);
   const [term, setTerm] = useState("");
 
   const loadAll = () => {
@@ -398,6 +399,10 @@ export default ({ children, isPublic = false }) => {
     return params;
   };
 
+  const setRenderedFlag = (value: boolean) => {
+    setRenderFlag(value);
+  };
+
   const anyFilters = () => {
     const {
       filterCampaigns,
@@ -486,6 +491,8 @@ export default ({ children, isPublic = false }) => {
     loadSharedFolders,
     searchFilterParams,
     setSearchFilterParams,
+    renderFlag,
+    setRenderedFlag,
   };
 
   return (

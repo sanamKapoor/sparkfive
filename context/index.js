@@ -19,6 +19,7 @@ export const UserContext = createContext({
   vanityCompanyInfo: undefined,
   cdnAccess: false,
   advancedConfig: {},
+  setAdvancedConfig: (conf) => {},
   transcriptAccess: false,
 });
 
@@ -217,6 +218,8 @@ export const FilterContext = createContext({
 
   isPublic: false,
   sharePath: "",
+  renderFlag: false,
+  setRenderedFlag: () => {},
 });
 
 export const ShareContext = createContext({

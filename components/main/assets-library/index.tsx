@@ -1,5 +1,13 @@
 import update from "immutability-helper";
+import { useRouter } from "next/router";
 import { useContext, useEffect, useRef, useState } from "react";
+import { isMobile } from "react-device-detect";
+
+import { validation } from "../../../constants/file-validation";
+import {
+  ASSET_ACCESS,
+  ASSET_UPLOAD_APPROVAL,
+} from "../../../constants/permissions";
 import { AssetContext, FilterContext, UserContext } from "../../../context";
 import assetApi from "../../../server-api/asset";
 import folderApi from "../../../server-api/folder";
@@ -10,36 +18,30 @@ import {
   getAssetsSort,
   getFoldersFromUploads,
 } from "../../../utils/asset";
+import selectOptions from "../../../utils/select-options";
 import toastUtils from "../../../utils/toast";
 import { getFolderKeyAndNewNameByFileName } from "../../../utils/upload";
-import styles from "./index.module.css";
-
-// Components
-import { useRouter } from "next/router";
-import { validation } from "../../../constants/file-validation";
 import AssetGrid from "../../common/asset/asset-grid";
+import AssetHeaderOps from "../../common/asset/asset-header-ops";
 import AssetOps from "../../common/asset/asset-ops";
+import DetailOverlay from "../../common/asset/detail-overlay";
 import TopBar from "../../common/asset/top-bar";
 import FilterContainer from "../../common/filter/filter-container";
 import { DropzoneProvider } from "../../common/misc/dropzone";
+import NoPermissionNotice from "../../common/misc/no-permission-notice";
 import RenameModal from "../../common/modals/rename-modal";
+import SpinnerOverlay from "../../common/spinners/spinner-overlay";
 import UploadStatusOverlayAssets from "../../upload-status-overlay-assets";
 import SearchOverlay from "../search-overlay-assets";
+import styles from "./index.module.css";
 
+// Components
 // utils
-import selectOptions from "../../../utils/select-options";
-
-import { isMobile } from "react-device-detect";
-import {
-  ASSET_ACCESS,
-  ASSET_UPLOAD_APPROVAL,
-} from "../../../constants/permissions";
-import AssetHeaderOps from "../../common/asset/asset-header-ops";
-import DetailOverlay from "../../common/asset/detail-overlay";
-import NoPermissionNotice from "../../common/misc/no-permission-notice";
+// import advancedConfigParams from '../../../utils/advance-config-params'
 
 const AssetsLibrary = () => {
   const [activeView, setActiveView] = useState("grid");
+  const [showOverlayLoader, setShowOverlayLoader] = useState(false);
   const {
     assets,
     setAssets,
@@ -71,6 +73,7 @@ const AssetsLibrary = () => {
     currentViewAsset,
     setCurrentViewAsset,
     setDetailOverlayId,
+    loadingAssets,
   } = useContext(AssetContext);
 
   const { advancedConfig, hasPermission } = useContext(UserContext);
@@ -91,6 +94,17 @@ const AssetsLibrary = () => {
     activeMode === "assets" ? true : false
   );
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (loadingAssets) {
+        setShowOverlayLoader(true);
+      } else {
+        setShowOverlayLoader(false);
+      }
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [loadingAssets]);
+
   const {
     activeSortFilter,
     setActiveSortFilter,
@@ -102,6 +116,7 @@ const AssetsLibrary = () => {
     loadFolders,
     campaigns,
     loadCampaigns,
+    renderFlag,
   } = useContext(FilterContext);
 
   const router = useRouter();
@@ -217,6 +232,9 @@ const AssetsLibrary = () => {
     if (hasPermission([ASSET_ACCESS])) {
       // Assets are under preparing (for query etc)
       if (preparingAssets.current) {
+        // setActivePageMode('library')
+        // setLoadingAssets(true)
+        // setFirstLoaded(true)
         return;
       } else {
         if (!firstLoaded) {
@@ -224,14 +242,14 @@ const AssetsLibrary = () => {
         }
       }
 
-      if (firstLoaded) {
+      if (firstLoaded && renderFlag) {
         setActivePageMode("library");
         if (activeSortFilter.mainFilter === "folders") {
           setActiveMode("folders");
           getFolders();
         } else {
           setActiveMode("assets");
-          setAssets([]);
+          // setAssets([])
           getAssets();
         }
       }
@@ -270,9 +288,7 @@ const AssetsLibrary = () => {
     }
   }, [activeMode]);
 
-  useEffect(() => {
-    updateSortFilterByAdvConfig();
-  }, [advancedConfig.set]);
+  useEffect(() => {}, [advancedConfig.set]);
 
   const clearFilters = () => {
     setActiveSortFilter({
@@ -303,6 +319,7 @@ const AssetsLibrary = () => {
           ? selectOptions.sort[1]
           : selectOptions.sort[3];
     }
+    // console.log(advancedConfig.assetSortView, sort.name)
 
     setActiveSortFilter({
       ...activeSortFilter,
@@ -391,6 +408,10 @@ const AssetsLibrary = () => {
           // Current folder Group have the key
           if (fileGroupInfo.folderKey && folderGroup[fileGroupInfo.folderKey]) {
             currentUploadingFolderId = folderGroup[fileGroupInfo.folderKey];
+            // Assign new file name without splash
+            // file = new File([file.slice(0, file.size, file.type)],
+            //   fileGroupInfo.newName
+            //   , { type: file.type, lastModified: (file.lastModifiedDate || new Date(file.lastModified)) })
           }
         }
 
@@ -635,6 +656,9 @@ const AssetsLibrary = () => {
         if (needsFolderFetch) {
           setNeedsFetch("folders");
         }
+
+        // Do not need toast here because we have already process toast
+        // toastUtils.success(`${data.length} Asset(s) uploaded.`)
       } catch (err) {
         // Finish uploading process
         showUploadProcess("done");
@@ -750,6 +774,12 @@ const AssetsLibrary = () => {
       const assetIndex = assets.findIndex(
         (assetItem) => assetItem.asset.id === id
       );
+      const selectedValue = !assets[assetIndex].isSelected;
+      // Comment this because this will return wrong couting selected asset if user select all then unselect some assets
+      // Toggle unselect when selected all will disable selected all
+      // if(!selectedValue && selectedAllAssets){
+      //   selectAllAssets(false)
+      // }
       setAssets(
         update(assets, {
           [assetIndex]: {
@@ -790,6 +820,11 @@ const AssetsLibrary = () => {
     toggleSelected,
   });
 
+  const backToFolders = () => {
+    setActiveFolder("");
+    updateSortFilterByAdvConfig({ mainFilter: "folders" });
+  };
+
   const selectedAssets = assets.filter((asset) => asset.isSelected);
 
   const selectedFolders = folders.filter((folder) => folder.isSelected);
@@ -815,7 +850,11 @@ const AssetsLibrary = () => {
   };
 
   const closeSearchOverlay = () => {
-    getAssets();
+    if (activeMode === "assets") {
+      getAssets();
+    } else {
+      getFolders();
+    }
     setActiveSearchOverlay(false);
   };
 
@@ -868,6 +907,9 @@ const AssetsLibrary = () => {
           deletedAssets={false}
         />
       )}
+      {/* {!renderFlag && (
+        <SpinnerOverlay text="Your assets are Loading please wait..." />
+      )} */}
       {hasPermission([ASSET_ACCESS]) ||
       hasPermission([ASSET_UPLOAD_APPROVAL]) ? (
         <>
@@ -880,6 +922,7 @@ const AssetsLibrary = () => {
                   activeFolder={activeFolder}
                   onCloseDetailOverlay={(assetData) => {
                     closeSearchOverlay();
+                    // setActiveSearchOverlay(false)
                     setDetailOverlayId(undefined);
                     setCurrentViewAsset(assetData);
                   }}
@@ -918,7 +961,7 @@ const AssetsLibrary = () => {
               } ${activeFolder && styles["active-breadcrumb-item"]}`}
             >
               <DropzoneProvider>
-                {advancedConfig.set && (
+                {advancedConfig.set && renderFlag && (
                   <AssetGrid
                     activeFolder={activeFolder}
                     getFolders={getFolders}
@@ -953,7 +996,7 @@ const AssetsLibrary = () => {
               )}
             </div>
           </main>
-          <AssetOps getAssets={getAssets} />
+          <AssetOps />
         </>
       ) : (
         <NoPermissionNotice />
@@ -991,6 +1034,10 @@ const AssetsLibrary = () => {
           }}
           outsideDetailOverlay={true}
         />
+      )}
+
+      {showOverlayLoader && (
+        <SpinnerOverlay text="Account updating...this process might take a few seconds. Thank you for your patience." />
       )}
     </>
   );
