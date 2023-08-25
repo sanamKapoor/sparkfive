@@ -1,15 +1,16 @@
 .nestedsidenav{
     width: 283px;
     border:1px solid #DEDAD4;
-    height:100%;
+    height:fit-content;
     border-radius: 6px;
     /* margin-top: 50px; */
     position: relative;
     z-index: 999;
+    padding:24px 0;
  
 }
 .sidenav-content{
-    padding: 23px 23px 0px 23px;
+    padding: 0px 23px 0px 23px;
 }
 
 

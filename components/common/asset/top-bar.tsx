@@ -203,6 +203,7 @@ const  {setRenderedFlag} = useContext(FilterContext);
                             }
                           />
                         ))} */}
+                         <NavHeading title="assets"/>
                     </li>
                     {showTabs && (
                       <Dropdown

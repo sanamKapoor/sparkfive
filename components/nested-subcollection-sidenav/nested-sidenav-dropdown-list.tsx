@@ -92,7 +92,7 @@ const NestedSidenavDropdown = () => {
         return (
           <>
             < div key={index} className={`${styles["flex"]} ${styles.nestedbox}`}>
-              <img className={styles.rightIcon} src={Utilities.right} onClick={() => toggleDropdown(index)} />
+            <img className={`${styles["rightIcon"]} ${styles.iconClick}`} src={Utilities.arrowBlue} onClick={() => toggleDropdown(index)} />
               <div className={styles.w100}>
                 <div className={`${styles["dropdownMenu"]} ${styles.active}`}>
                   <div className={styles.flex}>
@@ -201,8 +201,17 @@ const NestedSidenavDropdown = () => {
           </>
         )
       })}
-      <span className={styles.desc} onClick={() => { getFolders(false); }}>{"Load More"}</span>
+      <span className={styles.loadbtn} onClick={() => { getFolders(false); }}>{"Load More"}</span>
+      <div className={styles.loadmore}>
+      <button className={styles.loaderbuttons}>
+      <span className={styles.buttontext}>Load More</span>
+      <div className={styles.loader}></div>
+    </button>
+    </div>
+
+      <div className={styles.collection}>
       <NestedButton>Add collection</NestedButton>
+      </div>
     </div >
   );
 };

@@ -5,6 +5,7 @@
     cursor: pointer;
     margin-top: 16px;
     height:30px;
+    padding: 4px;
 }
 .icon{
     margin-right: 5px;
@@ -19,6 +20,16 @@
     font-size: 14px;
     line-height: 18px;
     color:var(--color-prim-navy);
+}
+.icon-description{
+    max-width: 15ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.icon-description:hover{
+    overflow:visible;
+    text-overflow: visible;
 }
 .list1-right-contents span{
     font-family: "Noto Sans", sans-serif;

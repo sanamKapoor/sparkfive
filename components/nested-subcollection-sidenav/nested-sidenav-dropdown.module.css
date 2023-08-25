@@ -6,6 +6,17 @@
   color:var(--color-prim-navy);
   margin-left: 5px;
 }
+.icon-descriptions{
+  max-width: 15ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.icon-descriptions:hover{
+  overflow:visible;
+  text-overflow: visible;
+
+}
 .list1-right-contents span {
   font-family: "Noto Sans", sans-serif;
   font-weight: 500;
@@ -25,13 +36,15 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
+  padding: 4px;
 }
 .nestedbox{
   padding: 0 24px 0 14px;
   margin-top:20px;
 
 }
-.desc{
+.loadbtn{
+  display: block;
   background: #fff !important;
   padding: 0 24px 0 24px;
   color: var(--color-prim-turquoise);
@@ -39,7 +52,14 @@
   font-weight: 500;
   font-size: 14px;
   cursor:pointer;
+  margin-top: 10px;
 
+}
+.collection{
+  padding: 0 24px;
+}
+.loadmore{
+  padding: 0 24px;
 }
 /* .dropdown-lists::before {
   content: "";
@@ -78,6 +98,10 @@
 }
 .rightIcon {
   margin-right: 5px;
+  transform: rotate(275deg);
+}
+.iconClick{
+  transform: rotate(0deg);
 }
 .dropdownOptions {
   margin-top: 16px;
@@ -102,4 +126,52 @@
 .subfolderList {
   padding: 0px 0px 0px 16px;
   border-left: 1px solid #dedad4;
+}
+
+.loaderbuttons {
+  position: relative;
+  padding: 8px 10px;
+  background-color: var(--color-prim-turquoise);
+  color: white;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  font-family: "Noto Sans", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  cursor:pointer;
+  margin-top: 10px;
+  border-radius: 8px;
+}
+
+.buttontext {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.loaderbuttons:hover .buttontext  {
+  opacity: 0;
+}
+
+.loader {
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #3498db;
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  animation: spin 2s linear infinite;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.loaderbuttons:hover .loader {
+  opacity: 1;
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
