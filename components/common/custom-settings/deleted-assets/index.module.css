@@ -12,13 +12,18 @@
   justify-content: start;
 }
 
+
 .header__content {
-  font-size: 10px;
+  font-size: 12px;
   margin-left: 20px;
+  font-weight: 300;
 }
 
 /* TODO: define styles */
-.subHeader {}
+.subHeader {
+  display: flex;
+  align-items: center;
+}
 
 
 /* TODO: fix styles */
@@ -26,4 +31,19 @@
   z-index: 1000;
   width: 100px;
   min-width: 90px
+}
+.infowrapper{
+  display: flex;
+  align-items: center;
+  padding-bottom: 30px;
+}
+.newbtn{
+  margin-right: 10px;
+}
+
+@media screen and (max-width: 1200px) {
+  .header__content{
+    margin-left: 0px;
+  }
+  
 }
