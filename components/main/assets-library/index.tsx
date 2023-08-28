@@ -290,7 +290,7 @@ const AssetsLibrary = () => {
     }
   }, [activeMode]);
 
-  useEffect(() => {}, [advancedConfig.set]);
+  useEffect(() => { }, [advancedConfig.set]);
 
   const clearFilters = () => {
     setActiveSortFilter({
@@ -359,11 +359,11 @@ const AssetsLibrary = () => {
         const updatedAssets = assets.map((asset, index) =>
           index === i
             ? {
-                ...asset,
-                status: "fail",
-                index,
-                error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
-              }
+              ...asset,
+              status: "fail",
+              index,
+              error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
+            }
             : asset
         );
 
@@ -426,16 +426,16 @@ const AssetsLibrary = () => {
           "fileModifiedAt",
           assets[i].dragDropFolderUpload
             ? new Date(
-                (
-                  file.lastModifiedDate || new Date(file.lastModified)
-                ).toUTCString()
-              ).toISOString()
+              (
+                file.lastModifiedDate || new Date(file.lastModified)
+              ).toUTCString()
+            ).toISOString()
             : new Date(
-                (
-                  file.originalFile.lastModifiedDate ||
-                  new Date(file.originalFile.lastModified)
-                ).toUTCString()
-              ).toISOString()
+              (
+                file.originalFile.lastModifiedDate ||
+                new Date(file.originalFile.lastModified)
+              ).toUTCString()
+            ).toISOString()
         );
 
         let size = totalSize;
@@ -903,17 +903,17 @@ const AssetsLibrary = () => {
       {(activeMode === "assets"
         ? selectedAssets.length
         : selectedFolders.length) > 0 && (
-        <AssetHeaderOps
-          isUnarchive={activeSortFilter.mainFilter === "archived"}
-          isFolder={activeMode === "folders"}
-          deletedAssets={false}
-        />
-      )}
-      {!renderFlag && (
+          <AssetHeaderOps
+            isUnarchive={activeSortFilter.mainFilter === "archived"}
+            isFolder={activeMode === "folders"}
+            deletedAssets={false}
+          />
+        )}
+      {/* {!renderFlag && (
         <SpinnerOverlay text="Your assets are Loading please wait..." />
-      )}
+      )} */}
       {hasPermission([ASSET_ACCESS]) ||
-      hasPermission([ASSET_UPLOAD_APPROVAL]) ? (
+        hasPermission([ASSET_UPLOAD_APPROVAL]) ? (
         <>
           <main className={`${styles.container}`}>
             <div className="position-relative">
@@ -958,9 +958,8 @@ const AssetsLibrary = () => {
               )}
             </div>
             <div
-              className={`${openFilter && styles["col-wrapper"]} ${
-                styles["grid-wrapper"]
-              } ${activeFolder && styles["active-breadcrumb-item"]}`}
+              className={`${openFilter && styles["col-wrapper"]} ${styles["grid-wrapper"]
+                } ${activeFolder && styles["active-breadcrumb-item"]}`}
             >
               <DropzoneProvider>
                 {advancedConfig.set && renderFlag && (
