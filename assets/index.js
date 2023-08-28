@@ -115,6 +115,7 @@ export const Utilities = {
   add:require('./Icons/Utilities/nestedCollection/add.svg'),
   archive:require('./Icons/Utilities/nestedCollection/archived.svg'),
   arrowleft:require('./Icons/Utilities/nestedCollection/arrow-square-left.svg'),
+  arrowright:require('./Icons/Utilities/nestedCollection/arrow-square-right.svg'),
   assets:require('./Icons/Utilities/nestedCollection/assets.svg'),
   folder:require('./Icons/Utilities/nestedCollection/folder.svg'),
   images:require('./Icons/Utilities/nestedCollection/images.svg'),

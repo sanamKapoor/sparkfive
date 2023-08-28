@@ -136,8 +136,9 @@ export const AssetContext = createContext({
   sidenavFolderNextPage: 0,
   setSidenavFolderNextPage: () => { },
   sidenavTotalCount: 0,
-  setSidenavTotalCount: () => { }
-
+  setSidenavTotalCount: () => { },
+  sidebarOpen:true,
+  setSidebarOpen:()=>{}
 });
 
 export const TeamContext = createContext({
