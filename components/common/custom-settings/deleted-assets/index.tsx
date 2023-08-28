@@ -122,42 +122,42 @@ const DeletedAssetsLibrary = () => {
         deletedAssets={true}
       />
       <div className={styles.infowrapper}>
-      <div className={styles.header}>
-        <h2>Deleted Assets</h2>
-        <div></div>
-        <span className={styles.header__content}>
-          Deleted assets are retained for 60 days before permanent removal.
-          Admin can recover deleted assets within 60 days
-        </span>
-      </div>
-      <div className={styles.subHeader}>
-        {selectedAllAssets && (
-          <span
-            className={styles["select-only-shown-items-text"]}
-            onClick={toggleSelectAll}
-          >
-            Select only 25 assets shown
+        <div className={styles.header}>
+          <h2>Deleted Assets</h2>
+          <div></div>
+          <span className={styles.header__content}>
+            Deleted assets are retained for 60 days before permanent removal.
+            Admin can recover deleted assets within 60 days
           </span>
-        )}
-        <div className={styles.newbtn}>
-          <Button
-          type="button"
-          text="Select All"
-          className="container secondary"
-          onClick={selectAll}
-        />
-          </div>
-        <div className={styles["sort-wrapper"]}>
-          <Select
-            label={"Sort By"}
-            options={sortOptions}
-            value={activeSortFilter.sort}
-            styleType="filter filter-schedule"
-            onChange={(selected) => setSortFilterValue(selected)}
-            placeholder="Sort By"
-          />
         </div>
-      </div>
+        <div className={styles.subHeader}>
+          {selectedAllAssets && (
+            <span
+              className={styles["select-only-shown-items-text"]}
+              onClick={toggleSelectAll}
+            >
+              Select only 25 assets shown
+            </span>
+          )}
+          <div className={styles.newbtn}>
+            <Button
+              type="button"
+              text="Select All"
+              className="container secondary"
+              onClick={selectAll}
+            />
+          </div>
+          <div className={styles["sort-wrapper"]}>
+            <Select
+              label={"Sort By"}
+              options={sortOptions}
+              value={activeSortFilter.sort}
+              styleType="filter filter-schedule"
+              onChange={(selected) => setSortFilterValue(selected)}
+              placeholder="Sort By"
+            />
+          </div>
+        </div>
       </div>
       <DeletedAssets toggleSelected={toggleSelected} loadMore={loadMore} />
       <AssetOps getAssets={getAssets} />
