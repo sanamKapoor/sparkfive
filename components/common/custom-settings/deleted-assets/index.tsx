@@ -205,11 +205,11 @@ const DeletedAssetsLibrary = () => {
         const updatedAssets = assets.map((asset, index) =>
           index === i
             ? {
-                ...asset,
-                status: "fail",
-                index,
-                error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
-              }
+              ...asset,
+              status: "fail",
+              index,
+              error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
+            }
             : asset
         );
 
@@ -274,16 +274,16 @@ const DeletedAssetsLibrary = () => {
           "fileModifiedAt",
           assets[i].dragDropFolderUpload
             ? new Date(
-                (
-                  file.lastModifiedDate || new Date(file.lastModified)
-                ).toUTCString()
-              ).toISOString()
+              (
+                file.lastModifiedDate || new Date(file.lastModified)
+              ).toUTCString()
+            ).toISOString()
             : new Date(
-                (
-                  file.originalFile.lastModifiedDate ||
-                  new Date(file.originalFile.lastModified)
-                ).toUTCString()
-              ).toISOString()
+              (
+                file.originalFile.lastModifiedDate ||
+                new Date(file.originalFile.lastModified)
+              ).toUTCString()
+            ).toISOString()
         );
 
         let size = totalSize;
@@ -549,7 +549,6 @@ const DeletedAssetsLibrary = () => {
   const mapWithToggleSelection = (asset) => ({ ...asset, toggleSelected });
 
   const viewFolder = async (id) => {
-    console.log(`View folder`);
     setActiveFolder(id);
   };
 

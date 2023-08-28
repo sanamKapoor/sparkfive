@@ -477,7 +477,7 @@ const EditSidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                 data={assetCustomFields[index]?.values[0]?.name}
                 options={field.values}
                 isShare={isShare}
-                onLabelClick={() => {}}
+                onLabelClick={() => { }}
                 handleFieldChange={(option) => {
                   onChangeSelectOneCustomField(option, index);
                 }}
@@ -496,7 +496,7 @@ const EditSidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                 onAddClick={() => setActiveCustomField(index)}
                 selectPlaceholder={"Select an existing one"}
                 avilableItems={field.values}
-                setAvailableItems={() => {}}
+                setAvailableItems={() => { }}
                 selectedItems={
                   assetCustomFields.filter(
                     (assetField) => assetField.id === field.id
@@ -595,7 +595,6 @@ const EditSidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                     isShare={isShare || !hasPermission([ASSET_EDIT])}
                     activeDropdown={activeDropdown}
                     setActiveDropdown={(value) => {
-                      console.log(value);
                       setActiveDropdown(`${value}-${index}`);
                     }}
                     assetId={id}

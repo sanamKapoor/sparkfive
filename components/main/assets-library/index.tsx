@@ -216,7 +216,6 @@ const AssetsLibrary = () => {
         }
       }
       if (firstLoaded && renderFlag) {
-
         setActivePageMode("library");
         if (activeSortFilter.mainFilter === "folders") {
           setActiveMode("folders");
@@ -231,6 +230,7 @@ const AssetsLibrary = () => {
   }, [activeSortFilter, firstLoaded, term]);
 
   useEffect(() => {
+    console.log("hello123")
     if (firstLoaded && activeFolder !== "") {
       setActiveSortFilter({
         ...activeSortFilter,
@@ -249,6 +249,7 @@ const AssetsLibrary = () => {
   }, [needsFetch]);
 
   useEffect(() => {
+    console.log("111", activeMode)
     if (activeMode === "folders") {
       setOpenFilter(false);
       setAssets(assets.map((asset) => ({ ...asset, isSelected: false })));
@@ -270,16 +271,6 @@ const AssetsLibrary = () => {
   }, [activeMode]);
 
   useEffect(() => {
-    if (selectedAllAssets) {
-      selectAllAssets(false);
-    }
-
-    if (selectedAllFolders) {
-      selectAllFolders(false);
-    }
-  }, [activeMode]);
-  useEffect(() => {
-
     updateSortFilterByAdvConfig();
   }, [advancedConfig.set]);
 
@@ -301,6 +292,7 @@ const AssetsLibrary = () => {
     }
 
     let sort = { ...activeSortFilter.sort };
+    console.log(sort, activeSortFilter, advancedConfig, "headerValues")
     if (defaultTab === "folders" && !params.folderId) {
       sort =
         advancedConfig.collectionSortView === "alphabetical"
@@ -798,6 +790,7 @@ const AssetsLibrary = () => {
   const selectedFolders = folders.filter((folder) => folder.isSelected);
 
   const viewFolder = async (id) => {
+    console.log(activeMode, "viewFolder aactive mode")
     setActiveFolder(id);
     updateSortFilterByAdvConfig({ folderId: id });
   };
@@ -861,7 +854,7 @@ const AssetsLibrary = () => {
             deletedAssets={false}
           />
         )}
-      {!renderFlag && <SpinnerOverlay text="Your Assets are loading please wait...." />}
+      {/* {!renderFlag && <SpinnerOverlay text="Your Assets are loading please wait...." />} */}
       {hasPermission([ASSET_ACCESS]) ||
         hasPermission([ASSET_UPLOAD_APPROVAL]) ? (
         <>

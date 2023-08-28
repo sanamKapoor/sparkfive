@@ -34,10 +34,10 @@ const FolderGridItem = ({
   viewFolder,
   isLoading = false,
   deleteFolder,
-  shareAssets = (folder) => {},
+  shareAssets = (folder) => { },
   changeThumbnail,
-  deleteThumbnail = (folder) => {},
-  copyShareLink = (folder) => {},
+  deleteThumbnail = (folder) => { },
+  copyShareLink = (folder) => { },
   toggleSelected,
   copyEnabled,
   sharePath = "",
@@ -132,7 +132,6 @@ const FolderGridItem = ({
 
       updateDownloadingStatus("done", 0, 0);
     } catch (err) {
-      console.log("err in download: ", err);
       updateDownloadingStatus("error", 0, 0);
     }
   };
@@ -183,9 +182,8 @@ const FolderGridItem = ({
         className={
           thumbnailPath || thumbnailExtension
             ? `${styles.grid_border} ${openFilter ? styles["filter_open"] : ""}`
-            : `${styles["image-wrapper"]} ${
-                openFilter ? styles["filter_open"] : ""
-              }`
+            : `${styles["image-wrapper"]} ${openFilter ? styles["filter_open"] : ""
+            }`
         }
       >
         <>
@@ -226,9 +224,8 @@ const FolderGridItem = ({
             />
           </div>
           <div
-            className={`${styles["selectable-wrapper"]} ${
-              isSelected && styles["selected-wrapper"]
-            }`}
+            className={`${styles["selectable-wrapper"]} ${isSelected && styles["selected-wrapper"]
+              }`}
           >
             <IconClickable
               src={
@@ -246,9 +243,9 @@ const FolderGridItem = ({
         <div className={styles.folderItemHeadingOuter}>
           <div className={styles.folderItemHeading}>
             {isThumbnailNameEditable &&
-            isEditing &&
-            focusedItem &&
-            focusedItem === id ? (
+              isEditing &&
+              focusedItem &&
+              focusedItem === id ? (
               <input
                 className={`normal-text ${gridStyles["editable-input"]}`}
                 value={thumbnailName}

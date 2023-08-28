@@ -210,7 +210,6 @@ const SidePanelBulk = ({
 
       updateObject.activeFolder = activeFolder;
 
-      console.log(updateObject);
 
       await assetApi.updateMultipleAttributes(updateObject, filters);
       await onUpdate();
@@ -340,7 +339,7 @@ const SidePanelBulk = ({
                   data={assetCustomFields[index]?.values[0]?.name}
                   options={field.values}
                   isShare={false}
-                  onLabelClick={() => {}}
+                  onLabelClick={() => { }}
                   handleFieldChange={(option) => {
                     setCustomFields(index, [option]);
                   }}
@@ -360,7 +359,7 @@ const SidePanelBulk = ({
                   selectPlaceholder={"Select an existing one"}
                   avilableItems={field.values}
                   isShare={false}
-                  setAvailableItems={() => {}}
+                  setAvailableItems={() => { }}
                   selectedItems={
                     assetCustomFields.filter(
                       (assetField) => assetField.id === field.id
@@ -370,7 +369,7 @@ const SidePanelBulk = ({
                     setActiveCustomField(undefined);
                     setCustomFields(index, data);
                   }}
-                  onAddOperationFinished={(stateUpdate) => {}}
+                  onAddOperationFinished={(stateUpdate) => { }}
                   onRemoveOperationFinished={async (
                     index,
                     stateUpdate,

@@ -105,6 +105,7 @@ export default function MyApp({ Component, pageProps }) {
                       </Head>
                       {process.env.INCLUDE_PIXEL === "yes" && <FBPixel />}
                       <Component {...pageProps} />
+
                     </TeamContextProvider>
                   </AssetContextProvider>
                 </ThemeContext.Provider>

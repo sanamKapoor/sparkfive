@@ -57,13 +57,13 @@ const NestedSubcollection = React.memo(() => {
   const { advancedConfig, hasPermission } = useContext(UserContext);
 
   const {
-    activeSortFilter,setActiveSortFilter,term,searchFilterParams, tags,loadTags,
+    activeSortFilter, setActiveSortFilter, term, searchFilterParams, tags, loadTags,
   } = useContext(FilterContext);
 
   const selectedAssets = assets.filter((asset) => asset.isSelected);
-  
+
   const selectedFolders = folders.filter((folder) => folder.isSelected);
-  
+
   const getFolders = async (replace = true) => {
     try {
 
@@ -113,7 +113,7 @@ const NestedSubcollection = React.memo(() => {
     }
   };
 
- const selectAll = () => {
+  const selectAll = () => {
     if (activeMode === "assets") {
       // Mark select all
       selectAllAssets();
@@ -128,10 +128,10 @@ const NestedSubcollection = React.memo(() => {
     }
   };
 
- const closeSearchOverlay = () => {
+  const closeSearchOverlay = () => {
     setActiveSearchOverlay(false);
   };
- const onFilesDataGet = async (files) => {
+  const onFilesDataGet = async (files) => {
     // if (!hasPermission([ASSET_UPLOAD_APPROVAL])) {
     //   const currentDataClone = [...assets];
     //   const currenFolderClone = [...folders];
@@ -245,7 +245,7 @@ const NestedSubcollection = React.memo(() => {
     //   }
     // }
   };
- const toggleSelected = (id) => {
+  const toggleSelected = (id) => {
     if (activeMode === "assets") {
       const assetIndex = assets.findIndex(
         (assetItem) => assetItem.asset.id === id
@@ -367,8 +367,8 @@ const NestedSubcollection = React.memo(() => {
       getFolders(false);
     }
   };
-  
-  console.log(activeSortFilter||"no value", firstLoaded||"no value", term||"no value","valueeeess")
+
+  console.log(activeSortFilter || "no value", firstLoaded || "no value", term || "no value", "valueeeess")
 
   useEffect(() => {
     if (!preparingAssets.current) return;
@@ -474,9 +474,8 @@ const NestedSubcollection = React.memo(() => {
       return;
     }
   }, [tags, productFields.sku, collection, campaigns]);
-  
+
   useEffect(() => {
-    console.log("hello world!111111heloting");
     if (needsFetch === "assets") {
       getAssets();
     } else if (needsFetch === "folders") {
@@ -485,20 +484,18 @@ const NestedSubcollection = React.memo(() => {
     setNeedsFetch("");
   }, [needsFetch]);
 
-  
+
   useEffect(() => {
-    console.log("111")
     if (hasPermission([ASSET_ACCESS])) {
       // Assets are under preparing (for query etc)
       // if (preparingAssets.current) {
       //   console.log("helloworld")
       //   return;
       // } else {
-        if (!firstLoaded) {
-          setFirstLoaded(true);
-        }
+      if (!firstLoaded) {
+        setFirstLoaded(true);
+      }
       // }
-      console.log("222")
       if (firstLoaded) {
         setActivePageMode("library");
         if (activeSortFilter.mainFilter === "folders") {
@@ -511,20 +508,20 @@ const NestedSubcollection = React.memo(() => {
         }
       }
     }
-  }, [activeSortFilter,firstLoaded,term]);
+  }, [activeSortFilter, firstLoaded, term]);
   return (
- <>
- {(activeMode === "assets"
+    <>
+      {(activeMode === "assets"
         ? selectedAssets.length
         : selectedFolders.length) > 0 && (
-        <AssetHeaderOps
-          isUnarchive={activeSortFilter.mainFilter === "archived"}
-          isFolder={activeMode === "folders"}
-          deletedAssets={false}
-        />
-      )}
-       {hasPermission([ASSET_ACCESS]) ||
-      hasPermission([ASSET_UPLOAD_APPROVAL]) ? (
+          <AssetHeaderOps
+            isUnarchive={activeSortFilter.mainFilter === "archived"}
+            isFolder={activeMode === "folders"}
+            deletedAssets={false}
+          />
+        )}
+      {hasPermission([ASSET_ACCESS]) ||
+        hasPermission([ASSET_UPLOAD_APPROVAL]) ? (
         <>
           <main className={`${styles.container}`}>
             <div className="position-relative">
@@ -554,9 +551,8 @@ const NestedSubcollection = React.memo(() => {
               )}
             </div>
             <div
-              className={`${openFilter && styles["col-wrapper"]} ${
-                styles["grid-wrapper"]
-              } ${activeFolder && styles["active-breadcrumb-item"]}`}
+              className={`${openFilter && styles["col-wrapper"]} ${styles["grid-wrapper"]
+                } ${activeFolder && styles["active-breadcrumb-item"]}`}
             >
               <DropzoneProvider>
                 {advancedConfig.set && (
@@ -587,9 +583,9 @@ const NestedSubcollection = React.memo(() => {
       ) : (
         <NoPermissionNotice />
       )}
-  </>
-  
-    
+    </>
+
+
   )
 })
 

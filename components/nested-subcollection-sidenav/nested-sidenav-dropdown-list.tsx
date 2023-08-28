@@ -47,10 +47,11 @@ const NestedSidenavDropdown = () => {
     sidenavFolderNextPage,
     setSidenavFolderList
   } = useContext(AssetContext);
-  const [showDropdown, setShowDropdown] = useState(new Array(sidenavFolderList.length).fill(false));
   const {
     term,
   } = useContext(FilterContext);
+  const [showDropdown, setShowDropdown] = useState(new Array(sidenavFolderList.length).fill(false));
+  const [isFolderLoading, SetIsFolderLoading] = useState(false)
 
 
   const toggleDropdown = (index: number) => {
@@ -59,14 +60,11 @@ const NestedSidenavDropdown = () => {
     setShowDropdown(updatedShowDropdown);
   };
 
-
-
   const getFolders = async (replace = true) => {
     try {
-
+      SetIsFolderLoading(true);
       const field = 'createdAt'
       const order = 'desc'
-
       const queryParams = {
         page: replace ? 1 : sidenavFolderNextPage,
         sortField: field,
@@ -74,12 +72,14 @@ const NestedSidenavDropdown = () => {
       };
       const { data } = await folderApi.getFolders({
         ...queryParams,
-        ...(term && { term }),
+        // ...(term && { term }),
       });
       let collectionList = { ...data };
       setSidenavFolderList(collectionList, replace);
+      SetIsFolderLoading(false);
     } catch (err) {
       //TODO: Handle error
+      SetIsFolderLoading(false);
       console.log(err);
     }
   };
@@ -195,14 +195,17 @@ const NestedSidenavDropdown = () => {
                       </div>
                     </div>
                   </Draggable>
-                  <NestedButton>Add Subcollection</NestedButton>
+                  <NestedButton type={"subCollection"} parentId={item.id} >Add Subcollection</NestedButton>
                 </div>
-              </div>}
+              </div >}
           </>
         )
       })}
-      <span className={styles.desc} onClick={() => { getFolders(false); }}>{"Load More"}</span>
-      <NestedButton>Add collection</NestedButton>
+      {
+        (sidenavFolderNextPage >= 0) &&
+        <span className={styles.desc} onClick={() => { getFolders(false); }}>{isFolderLoading ? "Loading..." : "Load More"}</span>
+      }
+      <NestedButton type={"collection"}>Add collection</NestedButton>
     </div >
   );
 };

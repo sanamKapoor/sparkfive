@@ -3,7 +3,7 @@ import styles from "./icon-clickable.module.css";
 
 const IconClickable = ({
   src,
-  onClick = (e) => {},
+  onClick = (e) => { },
   additionalClass = "",
   tooltipId = "",
   tooltipText,

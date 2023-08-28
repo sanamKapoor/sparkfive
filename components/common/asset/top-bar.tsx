@@ -3,7 +3,7 @@ import { isMobile } from 'react-device-detect';
 
 import { Utilities } from '../../../assets';
 import { ASSET_UPLOAD_APPROVAL, ASSET_UPLOAD_NO_APPROVAL } from '../../../constants/permissions';
-import { AssetContext, UserContext,FilterContext } from '../../../context';
+import { AssetContext, UserContext, FilterContext } from '../../../context';
 import selectOptions from '../../../utils/select-options';
 import AssetAddition from '../../common/asset/asset-addition';
 import SearchOverlay from '../../main/search-overlay-assets';
@@ -51,7 +51,7 @@ const TopBar = ({
     setActiveFolder,
   } = useContext(AssetContext);
 
-  const {  hasPermission, advancedConfig } =
+  const { hasPermission, advancedConfig } =
     useContext(UserContext);
   const [hideFilterElements] = useState(
     advancedConfig.hideFilterElements
@@ -60,7 +60,7 @@ const TopBar = ({
   const [showViewDropdown, setShowViewDropdown] = useState(false);
 
   const [tabs, setTabs] = useState(selectOptions.views);
-const  {setRenderedFlag} = useContext(FilterContext);
+  const { setRenderedFlag } = useContext(FilterContext);
   const setSortFilterValue = (key, value) => {
 
 
@@ -85,7 +85,6 @@ const  {setRenderedFlag} = useContext(FilterContext);
     // And uploaded folder needed to show at first
     setLastUploadedFolder(undefined);
 
-    console.log({[key]: value},sort,"12here finally" )
     setActiveSortFilter({
       ...activeSortFilter,
       [key]: value,
@@ -102,7 +101,7 @@ const  {setRenderedFlag} = useContext(FilterContext);
     const filterElements = sharedAdvanceConfig
       ? sharedAdvanceConfig.hideFilterElements
       : hideFilterElements;
-      
+
     const _tabs = selectOptions.views.filter((tab) => {
       let tabName = tab.text.toLowerCase();
       let shouldShow = true;
@@ -219,34 +218,34 @@ const  {setRenderedFlag} = useContext(FilterContext);
                     )}
                   </div>
                 ) : (
-                  // tabs.map((view) => {
-                  //   return (
-                  //     <li key={view.name} className={styles["tab-list-item"]}>
-                  //       {(!activeFolder || !view.omitFolder) &&
-                  //         (!isShare ||
-                  //           (isShare &&
-                  //             !view.omitShare &&
-                  //             view.hideOnSingle !== singleCollection)) &&
-                  //         (view.requirePermissions.length === 0 ||
-                  //           (view.requirePermissions.length > 0 &&
-                  //             hasPermission(view.requirePermissions))) && (
-                  //           <Button
-                  //             key={view.name}
-                  //             text={view.text}
-                  //             className={
-                  //               activeSortFilter.mainFilter === view.name
-                  //                 ? "section-container section-active"
-                  //                 : "section-container"
-                  //             }
-                  //             onClick={() =>
-                  //               setSortFilterValue("mainFilter", view.name)
-                  //             }
-                  //           />
-                  //         )}
-                  //     </li>
-                  //   );
-                  // })
-                  <NavHeading title="assets"/>
+                  tabs.map((view) => {
+                    return (
+                      <li key={view.name} className={styles["tab-list-item"]}>
+                        {(!activeFolder || !view.omitFolder) &&
+                          (!isShare ||
+                            (isShare &&
+                              !view.omitShare &&
+                              view.hideOnSingle !== singleCollection)) &&
+                          (view.requirePermissions.length === 0 ||
+                            (view.requirePermissions.length > 0 &&
+                              hasPermission(view.requirePermissions))) && (
+                            <Button
+                              key={view.name}
+                              text={view.text}
+                              className={
+                                activeSortFilter.mainFilter === view.name
+                                  ? "section-container section-active"
+                                  : "section-container"
+                              }
+                              onClick={() =>
+                                setSortFilterValue("mainFilter", view.name)
+                              }
+                            />
+                          )}
+                      </li>
+                    );
+                  })
+                  // < NavHeading title="All Assets" />
                 )}
               </ul>
             </div>
@@ -278,9 +277,9 @@ const  {setRenderedFlag} = useContext(FilterContext);
                 closeSearchOverlay();
                 setDetailOverlayId(undefined);
                 setCurrentViewAsset(assetData);
-              } }
+              }}
               sharePath={sharePath}
-              isFolder={isFolder} onClickOutside={undefined}            />
+              isFolder={isFolder} onClickOutside={undefined} />
           )}
           {(amountSelected === 0 || mode === "folders") &&
             showAssetAddition &&
@@ -401,8 +400,8 @@ const  {setRenderedFlag} = useContext(FilterContext);
           showAssetAddition &&
           hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL]) && (
             <AssetAddition
-            activeFolder={activeFolder}
-            getFolders={getFolders} triggerUploadComplete={undefined}            />
+              activeFolder={activeFolder}
+              getFolders={getFolders} triggerUploadComplete={undefined} />
           )}
       </div>
       {/* <NavHeading title="asset" />

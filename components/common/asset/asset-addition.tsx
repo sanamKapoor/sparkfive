@@ -31,9 +31,9 @@ import Button from "../buttons/button";
 
 const AssetAddition = ({
   activeFolder = "",
-  getFolders = () => {},
+  getFolders = () => { },
   activeSearchOverlay = false,
-  setActiveSearchOverlay = (active) => {},
+  setActiveSearchOverlay = (active) => { },
   folderAdd = true,
   type = "",
   itemId = "",
@@ -43,14 +43,14 @@ const AssetAddition = ({
 }) => {
   const fileBrowserRef = useRef(undefined);
   const folderBrowserRef = useRef(undefined);
-
   const [activeModal, setActiveModal] = useState("");
+  const [addSubCollection, setAddSubCollection] = useState(false)
   const [submitError, setSubmitError] = useState("");
   const [duplicateModalOpen, setDuplicateModalOpen] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [duplicateAssets, setDuplicateAssets] = useState([]);
   const [uploadFrom, setUploadFrom] = useState("");
-
+  const [disableButtons, setDisableButtons] = useState(false)
   const { activeSortFilter } = useContext(FilterContext);
   const { advancedConfig, hasPermission } = useContext(UserContext);
 
@@ -72,6 +72,8 @@ const AssetAddition = ({
     setTotalAssets,
     totalAssets,
     setFolderImport,
+    setSidenavFolderList,
+    sidenavFolderList,
   } = useContext(AssetContext);
 
   // Upload asset
@@ -104,11 +106,11 @@ const AssetAddition = ({
         const updatedAssets = assets.map((asset, index) =>
           index === i
             ? {
-                ...asset,
-                status: "fail",
-                index,
-                error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
-              }
+              ...asset,
+              status: "fail",
+              index,
+              error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
+            }
             : asset
         );
 
@@ -563,14 +565,22 @@ const AssetAddition = ({
     }
   };
 
-  const onSubmit = async (folderData) => {
+  const onSubmit = async (folderData: { name: string, parent_id?: string }) => {
+    setDisableButtons(true)
     try {
+      if (addSubCollection) {
+        folderData.parent_id = activeFolder
+      }
       const currentDataClone = [...folders];
       const { data } = await folderApi.createFolder(folderData);
       setActiveModal("");
+      setAddSubCollection(false)
       setFolders([data, ...currentDataClone]);
+      setSidenavFolderList({ results: [data, ...sidenavFolderList] })
+      setDisableButtons(false)
       toastUtils.success("Collection created successfully");
     } catch (err) {
+      setDisableButtons(false)
       // TODO: Show error message
       if (err.response?.data?.message) {
         setSubmitError(err.response.data.message);
@@ -753,6 +763,13 @@ const AssetAddition = ({
       icon: AssetOps.newCollection,
     },
     {
+      id: "subCollection",
+      label: "Add Sub Collection",
+      text: "Add Sub Collection",
+      onClick: () => { setAddSubCollection(true), setActiveModal("folder") },
+      icon: AssetOps.newCollection,
+    },
+    {
       id: "file",
       label: "Upload From Computer",
       text: "png, jpg, mp4 and more",
@@ -777,7 +794,7 @@ const AssetAddition = ({
       id: "gdrive",
       label: "Upload from Drive",
       text: "Import files",
-      onClick: () => {},
+      onClick: () => { },
       icon: Assets.gdrive,
       CustomContent: ({ children }) => {
         return (
@@ -804,24 +821,24 @@ const AssetAddition = ({
       (item) => ["library"].indexOf(item.id) === -1
     );
   }
+  if (!activeFolder) {
+    dropdownOptions = dropdownOptions.filter(
+      (item) => ["subCollection"].indexOf(item.id) === -1
+    );
+  }
 
   const getCreationParameters = (attachQuery?: any) => {
     let queryData: any = {};
-
     let uploadToFolders = [];
-
     if (activeFolder) {
       uploadToFolders = [activeFolder];
     }
-
     if (folders.filter((folder) => folder.isSelected).length > 0) {
       uploadToFolders = folders
         .filter((folder) => folder.isSelected)
         .map((folder) => folder.id);
     }
-
     queryData.folderId = uploadToFolders.join(",");
-
     if (type === "project") queryData.projectId = itemId;
     if (type === "task") queryData.taskId = itemId;
     // Attach extra query
@@ -910,9 +927,8 @@ const AssetAddition = ({
 
   const SimpleButtonWrapper = ({ children }) => (
     <div
-      className={`${styles["button-wrapper"]} ${
-        !folderAdd && styles["button-wrapper-displaced"]
-      } asset-addition`}
+      className={`${styles["button-wrapper"]} ${!folderAdd && styles["button-wrapper-displaced"]
+        } asset-addition`}
     >
       {!hasPermission([ASSET_UPLOAD_APPROVAL]) && (
         <Button text="+" className="container add" />
@@ -978,8 +994,10 @@ const AssetAddition = ({
       )}
       <FolderModal
         modalIsOpen={activeModal === "folder"}
-        closeModal={() => setActiveModal("")}
+        closeModal={() => { setActiveModal(""); setAddSubCollection(false) }}
+        disableButtons={disableButtons}
         onSubmit={onSubmit}
+        addSubCollection={addSubCollection}
       />
       {activeSearchOverlay && (
         <SearchOverlay

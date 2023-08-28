@@ -108,7 +108,6 @@ const GuestUploadApprovalOverlay = ({
   };
 
   useEffect(() => {
-    console.log(assetCustomFields);
   }, [assetCustomFields]);
 
   const initialize = () => {

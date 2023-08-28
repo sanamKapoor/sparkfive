@@ -36,21 +36,21 @@ import ChangeThumbnail from "../modals/change-thumnail-modal";
 const AssetGrid = ({
   activeView = "grid",
   isShare = false,
-  onFilesDataGet = (files) => {},
+  onFilesDataGet = (files) => { },
   toggleSelected,
   mode = "assets",
   activeSortFilter = {},
-  deleteFolder = (id) => {},
+  deleteFolder = (id) => { },
   itemSize = "regular",
   activeFolder = "",
   type = "",
   itemId = "",
-  getFolders = () => {},
-  loadMore = () => {},
-  viewFolder = (id) => {},
+  getFolders = () => { },
+  loadMore = () => { },
+  viewFolder = (id) => { },
   sharePath = "",
   openFilter,
-  onCloseDetailOverlay = (assetData) => {},
+  onCloseDetailOverlay = (assetData) => { },
   setWidthCard,
   widthCard,
 }) => {
@@ -155,15 +155,13 @@ const AssetGrid = ({
         })
       );
       toastUtils.success(
-        `Assets ${
-          newState === "archived" ? "archived" : "unarchived"
+        `Assets ${newState === "archived" ? "archived" : "unarchived"
         } successfully`
       );
     } catch (err) {
       // TODO: Error handling
       toastUtils.error(
-        `Could not ${
-          newState === "archived" ? "archive" : "unarchive"
+        `Could not ${newState === "archived" ? "archive" : "unarchive"
         } assets, please try again later.`
       );
     }
@@ -352,15 +350,14 @@ const AssetGrid = ({
         {activeView === "grid" && (
           <ul
             className={`${styles["grid-list"]} ${styles[itemSize]}
-            ${
-              mode === "assets"
+            ${mode === "assets"
                 ? openFilter
                   ? styles["grid-filter-" + advancedConfig.assetThumbnail]
                   : styles["grid-" + advancedConfig.assetThumbnail]
                 : openFilter
-                ? styles["grid-filter-" + advancedConfig.collectionThumbnail]
-                : styles["grid-" + advancedConfig.collectionThumbnail]
-            }
+                  ? styles["grid-filter-" + advancedConfig.collectionThumbnail]
+                  : styles["grid-" + advancedConfig.collectionThumbnail]
+              }
             `}
           >
             {mode === "assets" &&
@@ -416,14 +413,13 @@ const AssetGrid = ({
                   );
                 }
               })}
-
             {mode === "folders" &&
               folders.map((folder, index) => {
                 return (
                   <li
                     className={styles["grid-item"]}
                     key={folder.id || index}
-                    onClick={(e) => handleFocusChange(e, folder.id)}
+                    // onClick={(e) => handleFocusChange(e, folder.id)}
                     ref={ref}
                     style={{ width: `$${widthCard}px` }}
                   >
@@ -504,13 +500,12 @@ const AssetGrid = ({
               sortedFolders.map((folder, index) => {
                 return (
                   <li
-                    className={`${styles["grid-item"]} ${
-                      !openFilter
-                        ? styles[" grid-" + advancedConfig.collectionThumbnail]
-                        : styles[
-                            "grid-filter-" + advancedConfig.collectionThumbnail
-                          ]
-                    }`}
+                    className={`${styles["grid-item"]} ${!openFilter
+                      ? styles[" grid-" + advancedConfig.collectionThumbnail]
+                      : styles[
+                      "grid-filter-" + advancedConfig.collectionThumbnail
+                      ]
+                      }`}
                     key={folder.id || index}
                     onClick={(e) => handleFocusChange(e, folder.id)}
                   >
@@ -569,6 +564,22 @@ const AssetGrid = ({
         )}
       </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       {/* Change thumbnail modal */}
       <ChangeThumbnail
         closeModal={() => {
@@ -579,7 +590,7 @@ const AssetGrid = ({
         additionalClasses={["visible-block"]}
         modalData={modalData}
         modalIsOpen={modalOpen}
-        confirmAction={() => {}}
+        confirmAction={() => { }}
       />
 
       {/* Delete modal */}
@@ -608,15 +619,13 @@ const AssetGrid = ({
           setActiveAssetId("");
           setActiveArchiveAsset(undefined);
         }}
-        confirmText={`${
-          activeArchiveAsset?.stage !== "archived" ? "Archive" : "Unarchive"
-        }`}
+        confirmText={`${activeArchiveAsset?.stage !== "archived" ? "Archive" : "Unarchive"
+          }`}
         message={
           <span>
             Are you sure you want to &nbsp;
-            <strong>{`${
-              activeArchiveAsset?.stage !== "archived" ? "Archive" : "Unarchive"
-            }`}</strong>
+            <strong>{`${activeArchiveAsset?.stage !== "archived" ? "Archive" : "Unarchive"
+              }`}</strong>
             &nbsp; this asset?
           </span>
         }

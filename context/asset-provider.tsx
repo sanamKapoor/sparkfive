@@ -162,6 +162,7 @@ export default ({ children }) => {
     replace = true,
     ignoreTotalItem = false
   ) => {
+    console.log(inputFolders, "inputFolders")
     const { results, next, total } = inputFolders;
     if (results) inputFolders = results;
     if (next) setNextPage(next);
