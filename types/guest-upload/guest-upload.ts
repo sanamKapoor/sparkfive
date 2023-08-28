@@ -11,4 +11,14 @@ export interface IGuestUploadLink {
   status: "public" | "private";
   allowCustomFields: boolean;
   password?: string;
+  bannerSrc?: string;
+}
+
+export interface ILinkDefaultPayload {
+  id: null;
+  url: string;
+  password: string;
+  values: Array<unknown>;
+  status: string;
+  default: boolean;
 }

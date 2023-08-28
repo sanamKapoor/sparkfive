@@ -1,5 +1,5 @@
 import copy from "copy-to-clipboard";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./index.module.css";
 
 // APIs
@@ -17,8 +17,19 @@ import IconClickable from "../../buttons/icon-clickable";
 import Select from "../../inputs/select";
 
 // Maximum links
-import { maximumLinks, statusList } from "../../../../constants/guest-upload";
-import { IGuestUploadLink } from "../../../../types/guest-upload/guest-upload";
+import {
+  BANNER_ACCEPT_FILE_TYPES,
+  BANNER_ALLOWED_SIZE,
+  BANNER_ALLOWED_TYPES,
+  BANNER_MIN_HEIGHT,
+  BANNER_MIN_WIDTH,
+  maximumLinks,
+  statusList,
+} from "../../../../constants/guest-upload";
+import {
+  IGuestUploadLink,
+  ILinkDefaultPayload,
+} from "../../../../types/guest-upload/guest-upload";
 import ButtonIcon from "../../buttons/button-icon";
 
 const Links = () => {
@@ -30,6 +41,8 @@ const Links = () => {
   const [currentLink, setCurrentLink] = useState<string>();
   const [password, setPassword] = useState<string>("");
   const [showPasswordId, setShowPasswordId] = useState<string>();
+
+  const fileInputRefs = {};
 
   const getLinks = async () => {
     try {
@@ -113,6 +126,16 @@ const Links = () => {
     toastUtils.bottomSuccess("Link is copied.");
   };
 
+  const createOrUpdateLink = async (
+    payload: IGuestUploadLink | ILinkDefaultPayload
+  ) => {
+    const response = await guestUploadApi.createLink({
+      links: [payload],
+    });
+
+    return response.data;
+  };
+
   const createNewLink = async () => {
     try {
       setLoading(true);
@@ -125,11 +148,10 @@ const Links = () => {
         default: true,
       };
 
-      const response = await guestUploadApi.createLink({
-        links: [payload],
-      });
-      if (response.data.length > 0) {
-        setLinks([...links, ...response.data]);
+      const res = await createOrUpdateLink(payload);
+
+      if (res.length > 0) {
+        setLinks([...links, ...res]);
       }
       toastUtils.success("Upload link has been created.");
     } catch (err) {
@@ -149,9 +171,7 @@ const Links = () => {
           links[currentLinkIndex].password = password;
         }
         const currentLink = links[currentLinkIndex];
-        await guestUploadApi.createLink({
-          links: [currentLink],
-        });
+        await createOrUpdateLink(currentLink);
       }
       toastUtils.success("Upload link changes saved.");
       setCurrentLink(undefined);
@@ -163,8 +183,57 @@ const Links = () => {
     }
   };
 
-  //TODO: implement
-  const uploadBanner = () => {};
+  const onFileChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    id: string
+  ) => {
+    const fileMeta = e.target.files[0];
+
+    if (!BANNER_ALLOWED_TYPES.includes(fileMeta.type)) {
+      toastUtils.error("File type is not allowed.");
+    }
+
+    if (fileMeta.size > BANNER_ALLOWED_SIZE) {
+      toastUtils.error("Banner size should not be more than 10 MB");
+    }
+
+    const image = new Image();
+    image.src = window.URL.createObjectURL(fileMeta);
+
+    image.onload = () => {
+      if (image.width < BANNER_MIN_WIDTH || image.height < BANNER_MIN_HEIGHT) {
+        toastUtils.error("File must be at least 1920 x 300");
+      }
+    };
+    await uploadBanner(fileMeta, id);
+    if (fileInputRefs[id]) {
+      fileInputRefs[id].value = "";
+    }
+  };
+
+  const openUploadDialog = (e, id: string) => {
+    fileInputRefs[id]?.click();
+  };
+
+  const uploadBanner = async (file: File, id: string) => {
+    try {
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("banner", file);
+      const res = await guestUploadApi.uploadBanner(id, formData);
+
+      const linkIndex = links.findIndex((link) => link.id === id);
+      if (linkIndex !== -1) {
+        links[linkIndex].bannerSrc = res.data.bannerSrc;
+        setLinks([...links]);
+        toastUtils.success("Banner uploaded successfully");
+      }
+    } catch (error) {
+      toastUtils.error("something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className={styles["main-wrapper"]}>
@@ -260,19 +329,26 @@ const Links = () => {
             )}
           </div>
 
-          {/* TODO: modify */}
           <div className={`${styles.row} align-items-end`}>
             <div className={styles.banner}>
               <label>Custom Banner (Must be at least 1920 x 300)</label>
               <div className={styles.banner_wrapper}>
-                <img src={AppImg.guestCover} />
+                <img src={field.bannerSrc ?? AppImg.guestCover} />
               </div>
             </div>
 
             <ButtonIcon
               icon={Utilities.addAlt}
               text="UPLOAD PHOTO"
-              onClick={uploadBanner}
+              onClick={(e) => openUploadDialog(e, field.id)}
+            />
+            <input
+              id="file-input-id"
+              ref={(input) => (fileInputRefs[field.id] = input)}
+              style={{ display: "none" }}
+              type="file"
+              onChange={(e) => onFileChange(e, field.id)}
+              accept={BANNER_ACCEPT_FILE_TYPES}
             />
           </div>
         </div>

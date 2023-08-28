@@ -1,6 +1,6 @@
 import { useContext } from "react";
 
-import { AppImg, GeneralImg } from "../../../assets";
+import { GeneralImg } from "../../../assets";
 import styles from "./guest-upload-layout.module.css";
 
 import { GuestUploadContext } from "../../../context";
@@ -23,9 +23,6 @@ const GuestUploadLayout = ({ children }) => {
             <img className={styles["logo-img"]} src={GeneralImg.logo} />
           </div>
         </header>
-        <div className={styles.cover}>
-          <img src={AppImg.guestCover} alt="cover" />
-        </div>
         {children}
         <Footer />
       </AssetContextProvider>

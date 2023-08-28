@@ -7,7 +7,7 @@ import styles from "./index.module.css";
 import { GuestUploadContext, SocketContext } from "../../context";
 
 // Components
-import { Assets } from "../../assets";
+import { AppImg, Assets } from "../../assets";
 import SpinnerOverlay from "../common/spinners/spinner-overlay";
 
 // Utils
@@ -70,6 +70,8 @@ const GuestUpload: React.FC = () => {
     useState<boolean>(false);
   const [folderGroups, setFolderGroups] = useState<Record<string, unknown>>({}); // This groups contain all folder key which is need to identity which folder file need to be saved to
   const [retryListCount, setRetryListCount] = useState<number>(0);
+
+  const [banner, setBanner] = useState(null);
 
   const [guestUserDetails, setGuestUserDetails] =
     useState<IGuestUploadFormInput>({
@@ -458,6 +460,7 @@ const GuestUpload: React.FC = () => {
       // Show team name and logo
       updateLogo(data.logo);
       setTeamName(data.team);
+      setBanner(data.bannerSrc);
 
       setActivePasswordOverlay(false);
 
@@ -510,6 +513,9 @@ const GuestUpload: React.FC = () => {
 
   return (
     <section className={styles.container}>
+      <div className={styles.banner}>
+        <img src={banner ?? AppImg.guestCover} alt="cover" />
+      </div>
       <div className={styles.wrapper}>
         <div className={styles.topSubSection}>
           <div className={styles.topSubSectionHeader}>
