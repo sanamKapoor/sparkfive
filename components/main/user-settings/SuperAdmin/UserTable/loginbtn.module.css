@@ -1,0 +1,8 @@
+.login{
+    cursor: pointer;
+    background: transparent;
+    color:#10BDA5;
+    font-family: "Noto Sans", sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+}

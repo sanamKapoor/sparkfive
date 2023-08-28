@@ -113,6 +113,7 @@ export const Utilities = {
   caretRight: require('./Icons/Utilities/Caret/caret-right.svg'),
   checkMark: require('./Icons/Utilities/CheckMark/checkmark.svg'),
   transcript: require('./Icons/Utilities/Transcript/Transcript.svg'),
+  updown: require('./Icons/Utilities/ArrowsDownUp.svg'),
 }
 
 export const ProjectTypes = {

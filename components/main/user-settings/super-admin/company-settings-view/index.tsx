@@ -82,7 +82,7 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({
     <>
       <div className={styles.back} onClick={onBack}>
         <IconClickable src={Utilities.back} />
-        <span>Back</span>
+        <span>Back to all accounts</span>
       </div>
       <div className={styles.container}>
         <ul className={styles.list}>
@@ -99,6 +99,15 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({
               <div className={`${styles.role} ${styles["header-title"]}`}>
                 Plan
               </div>
+              <div className={`${styles.role} ${styles["header-title"]}`}>
+                Status
+              </div>
+              <div className={`${styles.role} ${styles["header-title"]}`}>
+               Expired date
+              </div>
+              <div className={`${styles.role} ${styles["header-title"]}`}>
+            Action
+              </div>
             </div>
           </li>
 
@@ -113,7 +122,7 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({
               </div>
               <div className={`${styles.role}`}>
                 <p>{detail?.plan?.name}</p>
-                <p>{getStatusBadge(detail?.plan?.status)}</p>
+                {/* <p>{getStatusBadge(detail?.plan?.status)}</p>
                 {detail?.plan?.endDate && (
                   <p>
                     End at {moment(detail?.plan?.endDate).format("DD/MM/YYYY")}
@@ -129,12 +138,36 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({
                     setShowPlanModal(true);
                   }}
                   disabled={false}
+                /> */}
+              </div>
+              <div>
+              <p>{getStatusBadge(detail?.plan?.status)}</p>
+               </div>
+              <div>
+              {detail?.plan?.endDate && (
+                  <p>
+                    End at {moment(detail?.plan?.endDate).format("DD/MM/YYYY")}
+                  </p>
+                )}
+              </div>
+              <div>
+              <Button
+                  className={"container exclude-min-height primary"}
+                  type={"button"}
+                  text="Edit"
+                  onClick={() => {
+                    setPlanDetail(detail?.plan);
+                    setShowPlanModal(true);
+                  }}
+                  disabled={false}
                 />
+
               </div>
             </div>
           </li>
         </ul>
       </div>
+      <div className={styles.features}>
       <div className={`${styles["header-title"]} m-t-40 m-b-20`}>
         Added Features
       </div>
@@ -250,6 +283,9 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({
           />
         </div>
       </div>
+
+      </div>
+     
     </>
   );
 };

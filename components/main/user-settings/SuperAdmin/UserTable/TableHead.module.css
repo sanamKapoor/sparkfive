@@ -1,0 +1,28 @@
+.tableHead{
+    padding: 12px 0px 12px 8px;
+    background: 
+    #F6EFE4;
+    margin-top:16px;
+    width: 100%;
+}
+
+.username{
+    text-align: start;
+    padding: 12px 0 12px 8px;
+   
+}
+.headdata{
+  background: 
+    #F6EFE4;
+}
+.thead{
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+@media screen and (max-width: 1200px) {
+   .headcontent{
+    width: 198px;
+   }
+
+}
