@@ -12,6 +12,19 @@
     padding: 48px 58px 130px;
 }
 
+.banner {
+    max-height: 250px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.banner img {
+    width: 100%;
+    height: auto;
+}
+
+
 .title {
     font-size: 32px;
     font-weight: 700;
