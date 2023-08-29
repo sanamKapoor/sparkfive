@@ -1,10 +1,3 @@
-export interface IGuestUploadFormInput {
-  firstName: string;
-  lastName: string;
-  email: string;
-  message: string;
-}
-
 export interface IGuestUploadLink {
   id: string;
   url: string;
@@ -21,4 +14,11 @@ export interface ILinkDefaultPayload {
   values: Array<unknown>;
   status: string;
   default: boolean;
+}
+
+export interface IGuestUserInfo {
+  firstName: string;
+  lastName: string;
+  email: string;
+  notes: string;
 }

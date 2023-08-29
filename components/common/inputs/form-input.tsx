@@ -1,4 +1,6 @@
-import { Controller, ErrorMessage, EventFunction } from "react-hook-form";
+import { Controller } from "react-hook-form";
+
+import { ErrorMessage } from "@hookform/error-message";
 
 import styles from "./form-input.module.css";
 
@@ -13,7 +15,7 @@ interface FormInputProps {
   errors?: unknown;
   message?: string;
   defaultValue?: string;
-  onChange: EventFunction;
+  onChange: unknown; //TODO: fix type
   valueName: string;
 }
 

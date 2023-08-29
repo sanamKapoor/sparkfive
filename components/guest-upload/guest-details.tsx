@@ -1,15 +1,15 @@
 import React from "react";
-import { IGuestUploadFormInput } from "../../types/guest-upload/guest-upload";
+import { IGuestUserInfo } from "../../types/guest-upload/guest-upload";
 import styles from "./index.module.css";
 
 interface GuestDetailsProps {
-  userDetails: IGuestUploadFormInput;
-  setEdit?: (val: boolean) => void;
+  userDetails: IGuestUserInfo;
+  onCancel: () => void;
 }
 
 const GuestDetails: React.FC<GuestDetailsProps> = ({
   userDetails,
-  setEdit,
+  onCancel,
 }) => {
   return (
     <div className={styles.guest_info}>
@@ -17,12 +17,12 @@ const GuestDetails: React.FC<GuestDetailsProps> = ({
         <div className={styles.user}>
           {userDetails.firstName} {userDetails.lastName}
         </div>
-        <div className={styles.edit} onClick={() => setEdit(true)}>
-          Edit
+        <div className={styles.edit} onClick={onCancel}>
+          Cancel
         </div>
       </div>
       <div className={styles.email}>{userDetails.email}</div>
-      <div className={styles.message}>{userDetails.message}</div>
+      <div className={styles.message}>{userDetails.notes}</div>
     </div>
   );
 };

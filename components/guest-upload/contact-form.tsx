@@ -1,158 +1,66 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import * as z from "zod";
 import styles from "./contact-form.module.css";
 
 // Components
-import { IGuestUploadFormInput } from "../../types/guest-upload/guest-upload";
+import { contactFormSchema } from "../../schemas/guest-contact-form";
+import { IGuestUserInfo } from "../../types/guest-upload/guest-upload";
 import Button from "../common/buttons/button";
-import FormInput from "../common/inputs/form-input";
-import Input from "../common/inputs/input";
-import TextArea from "../common/inputs/text-area";
+
+type ContactFormValues = z.infer<typeof contactFormSchema>;
 
 interface ContactFormProps {
-  id: string;
-  onSubmit: (data: any) => void;
-  disabled: boolean;
+  data: IGuestUserInfo;
+  onSubmit: (data: IGuestUserInfo) => void;
   teamName: string;
-  setUploadEnabled: (state: boolean) => void;
-  setEdit: (state: boolean) => void;
-  userDetails: IGuestUploadFormInput;
-  setUserDetails: (data: IGuestUploadFormInput) => void;
 }
 
 const ContactForm: React.FC<ContactFormProps> = ({
-  id,
+  data,
   onSubmit,
-  disabled = false,
   teamName = "",
-  setUploadEnabled,
-  setEdit,
-  userDetails,
-  setUserDetails,
 }) => {
-  const { control, handleSubmit, errors, getValues } = useForm();
-
-  const submitForm = (data) => {
-    onSubmit(data);
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ContactFormValues>({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues: data,
+  });
 
   return (
-    <form
-      id={id}
-      onSubmit={handleSubmit(submitForm)}
-      className={styles["form"]}
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className={styles["form"]}>
       <>
         <div className={styles.container}>
           <div className={styles.row}>
-            <div>
-              <FormInput
-                labId="firstName"
-                label="First Name"
-                InputComponent={
-                  <Input
-                    type="text"
-                    id="firstName"
-                    disabled={disabled}
-                    additionalClasses={styles.input}
-                  />
-                }
-                name="firstName"
-                defaultValue={userDetails?.firstName}
-                control={control}
-                rules={{ required: true, minLength: 2, maxLength: 30 }}
-                errors={errors}
-                message={
-                  "This field should be between 2 and 30 characters long"
-                }
-              />
-            </div>
-            <div>
-              <FormInput
-                labId="lastName"
-                label="Last Name"
-                InputComponent={
-                  <Input
-                    type="text"
-                    id="lastName"
-                    disabled={disabled}
-                    additionalClasses={styles.input}
-                  />
-                }
-                name="lastName"
-                defaultValue={userDetails?.lastName}
-                control={control}
-                rules={{ required: true, minLength: 2, maxLength: 30 }}
-                errors={errors}
-                message={
-                  "This field should be between 2 and 30 characters long"
-                }
-              />
-            </div>
+            <label>First Name</label>
+            <input id="firstName" {...register("firstName")} />
+            {errors?.firstName && <p>{errors.firstName?.message}</p>}
           </div>
           <div className={styles.row}>
-            <div>
-              <FormInput
-                labId="email"
-                label="Email"
-                InputComponent={
-                  <Input
-                    type="text"
-                    id="email"
-                    disabled={disabled}
-                    additionalClasses={styles.input}
-                  />
-                }
-                name="email"
-                defaultValue={userDetails?.email}
-                control={control}
-                rules={{
-                  required: true,
-                  pattern: {
-                    value: /\S+@\S+\.\S+/,
-                    message: "Wrong email format",
-                  },
-                }}
-                errors={errors}
-                message={"Wrong email format"}
-              />
-            </div>
+            <label>Last Name</label>
+            <input id="lastName" {...register("lastName")} />
+            {errors?.lastName && <p>{errors.lastName?.message}</p>}
           </div>
-
-          <div>
-            <FormInput
-              labId="message"
-              label={`Message to ${teamName} (i.e name of project, campaign, etc)`}
-              InputComponent={
-                <TextArea
-                  type="text"
-                  id="message"
-                  rows={5}
-                  disabled={disabled}
-                  additionalClasses={styles.input}
-                />
-              }
-              defaultValue={userDetails?.message}
-              name="message"
-              control={control}
-              rules={{ minLength: 4, maxLength: 300 }}
-              errors={errors}
-              message={"This field should be between 4 and 300 characters long"}
-            />
+          <div className={styles.row}>
+            <label>Email</label>
+            <input id="email" {...register("email")} />
+            {errors?.email && <p>{errors.email?.message}</p>}
           </div>
+          <div className={styles.row}>
+            <label>{`Message to ${teamName} (i.e. name of project, campaign etc.)`}</label>
+            <textarea id="notes" {...register("notes")} />
+            {errors?.notes && <p>{errors.notes?.message}</p>}
+          </div>
+          <Button
+            type="submit"
+            className="container primary"
+            text="Save & Continue"
+          />
         </div>
       </>
-      <div className={styles.form_button}>
-        <Button
-          text="Save & Continue"
-          className="container primary"
-          onClick={() => {
-            const details = getValues();
-            setUserDetails(details as IGuestUploadFormInput);
-            setUploadEnabled(true);
-            setEdit(false);
-          }}
-        />
-      </div>
     </form>
   );
 };
