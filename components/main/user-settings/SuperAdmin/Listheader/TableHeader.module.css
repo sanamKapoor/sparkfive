@@ -1,16 +1,41 @@
-.tableheader{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.tableheader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.heading {
+  font-family: "Noto Sans", sans-serif;
+  font-weight: 600;
+  font-size: 22px;
+  color: #08135e;
+  flex: 1;
+}
+.buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.csvorder {
+  order: 1;
+}
 
-}
-.heading{
-font-family: "Noto Sans", sans-serif;
-font-weight: 600;
-font-size: 22px;
-color:#08135E
-}
-.buttons{
-    display: flex;
-    align-items: center;
-}
+@media (max-width: 575px) {
+    .tableheader {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .searchorder {
+      margin-top: 10px; 
+      order: 2; 
+    }
+  
+    .csvorder {
+      order: 1;
+    }
+  
+    .buttons {
+      width: 100%;
+    }
+  }
+  

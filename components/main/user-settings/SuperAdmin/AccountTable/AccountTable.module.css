@@ -12,9 +12,3 @@
   border-collapse: separate;
   border-spacing: 0;
 }
-.loadbtnWrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 30px;
-}
