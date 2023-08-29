@@ -238,4 +238,6 @@ export const SocketContext = createContext({
 export const GuestUploadContext = createContext({
   logo: "",
   updateLogo: (url) => {},
+  banner: "",
+  setBanner: (banner) => {},
 });

@@ -1,5 +1,9 @@
 import moment from "moment";
 import "moment-duration-format";
+import {
+  MAX_UPLOAD_FILES_ALLOWED,
+  MAX_UPLOAD_SIZE_ALLOWED,
+} from "../constants/guest-upload";
 
 export const convertTimeFromSeconds = (seconds) => {
   // @ts-ignore
@@ -91,4 +95,17 @@ export const getFolderKeyAndNewNameByFileName = (
       : fileName.substring(0, lastSeparator),
     newName: fileName.substring(lastSeparator + 1, fileName.length),
   };
+};
+
+// validations for guest upload files
+export const isFilesInputValid = (files: FileList) => {
+  const totalSize = Array.from(files).reduce(
+    (acc, file: File) => acc + file.size,
+    0
+  );
+
+  return (
+    files.length < MAX_UPLOAD_FILES_ALLOWED &&
+    totalSize < MAX_UPLOAD_SIZE_ALLOWED
+  );
 };

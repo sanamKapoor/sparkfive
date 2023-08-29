@@ -15,6 +15,17 @@
     cursor: pointer;
 }
 
+.banner {
+    max-height: 250px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.banner img {
+    width: 100%;
+    height: auto;
+}
 
 .right-logo .logo-img {
     height: 40px;
