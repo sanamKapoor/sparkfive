@@ -40,6 +40,7 @@
     width: 300px;
 }
 
+
 .input ul li {
     display: flex;
     flex-direction: row-reverse;
@@ -351,7 +352,14 @@
         padding-bottom: 30px;
     }
 }
-
+.privateBlock{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.passwordSave{
+    margin:25px 0 0 20px;
+}
 @media screen and (max-width: 900px){
     .row {
         flex-wrap: wrap;
@@ -362,6 +370,7 @@
     }
 
 }
+
 
 @media screen and (max-width: 600px){
     .input {

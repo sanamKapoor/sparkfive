@@ -290,6 +290,8 @@ const Links = () => {
                 }
               />
             </div>
+            <div className={styles.privateBlock}>
+            <div>
             {field.status === "private" && (
               <>
                 <div className={styles.input}>
@@ -317,7 +319,9 @@ const Links = () => {
                 </div>
               </>
             )}
-            {((currentLink && currentLink === field.id) ||
+            </div>
+          <div className={styles.passwordSave}>
+          {((currentLink && currentLink === field.id) ||
               field.status === "private") && (
               <Button
                 className={"container exclude-min-height primary"}
@@ -327,6 +331,11 @@ const Links = () => {
                 onClick={() => saveStatusChanges(field.id)}
               />
             )}
+          </div>
+           
+
+            </div>
+          
           </div>
 
           <div className={`${styles.row} align-items-end`}>
@@ -338,11 +347,14 @@ const Links = () => {
             </div>
 
             <ButtonIcon
+             className={styles.uploadbtn}
               icon={Utilities.addAlt}
               text="UPLOAD PHOTO"
               onClick={(e) => openUploadDialog(e, field.id)}
+             
             />
             <input
+            
               id="file-input-id"
               ref={(input) => (fileInputRefs[field.id] = input)}
               style={{ display: "none" }}

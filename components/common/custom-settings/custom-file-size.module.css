@@ -34,6 +34,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+ 
 }
 
 .field_title {
@@ -147,11 +148,13 @@
     min-height: 1px;
     padding-right: 15px;
     padding-left: 15px;
+
 }
 
 .action-button{
     width: 21px;
     height: 21px;
+    margin-left: 10px;
 }
 
 
@@ -167,7 +170,9 @@
 .p-l-30{
     padding-left: 30px;
 }
-
+.d-flex{
+    display: flex;
+}
 .font-weight-600{
     font-weight: 600;
 }
@@ -231,8 +236,26 @@
 .saveBtn{
     font-size: 14px;
 }
+.saveblock{
+    display: flex;
+    align-items: center;
+}
+
+
 @media screen and (max-width: 1200px) {
     .main-wrapper {
         width: 100%;
     }
 }
+
+@media screen and (max-width: 480px) {
+
+    .field {
+        width: 100%;
+    }
+    .input {
+        width: 100% !important;
+    }
+   
+}
+

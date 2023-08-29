@@ -12,6 +12,7 @@
   outline: none;
   position: relative;
   font-size: 12px;
+  margin-bottom: 8px;
 }
 
 .container-gray {
@@ -52,6 +53,7 @@
   flex: 1;
   margin-left: 8px;
 }
+
 
 @media screen and (max-width: 600px) {
   .container {
