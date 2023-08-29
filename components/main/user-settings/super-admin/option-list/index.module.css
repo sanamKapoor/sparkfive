@@ -18,7 +18,7 @@
 
 .select-item p {
     text-overflow: ellipsis;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 
@@ -53,7 +53,7 @@
 }
 
 .select-item p {
-    margin: 0 15px;
+    margin: 0 0 0 15px;
 }
 
 .item-name {

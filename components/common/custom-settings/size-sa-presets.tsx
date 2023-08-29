@@ -114,11 +114,12 @@ const SizeSaPresets = () => {
             key={index}
           >
             <div
-              className={`${styles["col-20"]} ${styles["col-md-100"]} p-l-r-0`}
+              // className={`${styles["col-20"]} ${styles["col-md-100"]} p-l-r-0`}
+              className="col-20 col-sm-100 col-md-100 p-l-r-0"
             >
               <div className={styles["row"]}>
                 <div
-                  className={`${styles["col-100"]} ${styles["flex-display"]}`}
+                  className={`${styles["col-100"]} ${styles["flex-display"]} d-flex`}
                 >
                   <span className={styles["font-weight-600"]}>
                     {index + 1}.
@@ -147,14 +148,15 @@ const SizeSaPresets = () => {
               </div>
             </div>
             <div
-              className={`${styles["col-25"]} ${styles["col-md-100"]} p-l-r-0`}
+              // className={`${styles["col-25"]} ${styles["col-md-100"]} ${styles["col-sm-100"]} p-l-r-0`}
+              className="col-20 col-sm-100 col-md-100 p-l-r-0"
             >
               <div className={styles["row"]}>
                 <div
                   className={`${styles["col-100"]} ${styles["flex-display"]}`}
                 >
                   <span
-                    className={`${styles["row-header"]} ${styles["font-weight-600"]}`}
+                    className={`${styles["row-header"]}`}
                   >
                     Custom File Size name
                   </span>
@@ -177,7 +179,8 @@ const SizeSaPresets = () => {
               </div>
             </div>
             <div
-              className={`${styles["col-35"]} ${styles["col-md-100"]} p-l-r-0`}
+              // className={`${styles["col-35"]} ${styles["col-md-100"]} p-l-r-0`}
+              className="col-20 col-sm-100 col-md-100 p-l-r-0"
             >
               <div className={styles["row"]}>
                 <div
@@ -241,6 +244,7 @@ const SizeSaPresets = () => {
                 <div
                   className={`${styles["col-100"]} p-r-0 p-l-0 d-flex p-t-15`}
                 >
+                  <div className={styles.saveblock}>
                   <Button
                     className={"container exclude-min-height primary"}
                     type={"button"}
@@ -275,6 +279,8 @@ const SizeSaPresets = () => {
                       }}
                     />
                   }
+                  </div>
+                 
                 </div>
               </div>
             </div>

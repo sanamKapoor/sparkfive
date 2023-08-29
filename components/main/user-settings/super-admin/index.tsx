@@ -186,14 +186,18 @@ const SuperAdmin: React.FC = () => {
         additionalClasses={[styles["base-plan-modal"]]}
       >
         <div className={styles["plan-modal"]}>
+          <div className={styles.adminModal}>
+            <span className={styles.settings}>Settings</span>
           <span
             className={`${styles.close}`}
             onClick={() => {
               setShowPlanModal(false);
             }}
           >
-            x
+            X
           </span>
+          </div>
+          <hr className={styles.divider}></hr>
           <div className={styles["form-field"]}>
             <div className={styles["form-title"]}>Plan</div>
             <Select
@@ -231,7 +235,7 @@ const SuperAdmin: React.FC = () => {
           </div>
 
           <div className={`${styles["form-field"]} ${styles["date-wrapper"]}`}>
-            <div className={styles["form-title"]}>Expired At</div>
+            <div className={styles["form-title"]}>Expired at</div>
             <DayPickerInput
               formatDate={formatDate}
               format={FORMAT}
@@ -252,7 +256,7 @@ const SuperAdmin: React.FC = () => {
             />
           </div>
 
-          <div className={"d-flex justify--flex-end"}>
+          <div className={"d-flex justify-center"}>
             <Button
               className={"container exclude-min-height secondary"}
               type={"button"}

@@ -204,7 +204,7 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({
         )}
 
         <div className={"col-20 align-self-flex-end"}>
-          <Button
+          {/* <Button
             className={"container exclude-min-height primary"}
             type={"button"}
             text="Save"
@@ -215,7 +215,7 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({
               })
             }
             disabled={false}
-          />
+          /> */}
         </div>
       </div>
       <div className={`row align-flex-start ${styles.cdnEmbedding}`}>
@@ -231,12 +231,12 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({
         </div>
 
         <div className={"col-20 align-self-flex-end"}>
-          <Button
+          {/* <Button
             className={"container exclude-min-height primary"}
             type={"button"}
             text="Save"
             onClick={() => updateTeam({ cdnAccess })}
-          />
+          /> */}
         </div>
       </div>
       <div className={`row align-flex-start ${styles.cdnEmbedding}`}>
@@ -254,12 +254,12 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({
         </div>
 
         <div className={"col-20 align-self-flex-end"}>
-          <Button
+          {/* <Button
             className={"container exclude-min-height primary"}
             type={"button"}
             text="Save"
             onClick={() => updateTeam({ advancedCollectionShareLink })}
-          />
+          /> */}
         </div>
       </div>
       <div className={`row align-flex-start ${styles.cdnEmbedding}`}>
@@ -275,14 +275,23 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({
         </div>
 
         <div className={"col-20 align-self-flex-end"}>
-          <Button
+          {/* <Button
+            className={"container exclude-min-height primary"}
+            type={"button"}
+            text="Save"
+            onClick={() => updateTeam({ transcript })}
+          /> */}
+        </div>
+      </div>
+      <div className={styles.featuresbtn}>
+      <Button
             className={"container exclude-min-height primary"}
             type={"button"}
             text="Save"
             onClick={() => updateTeam({ transcript })}
           />
-        </div>
       </div>
+     
 
       </div>
      
