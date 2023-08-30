@@ -1,6 +1,4 @@
 import AccountTable from "../../components/main/user-settings/SuperAdmin/AccountTable/AccountTable";
-import AccountData from "../../components/main/user-settings/SuperAdmin/AccountTable/Accountdata";
-import AccountTableHead from "../../components/main/user-settings/SuperAdmin/AccountTable/Accounttablehead";
 import UserTable from "../../components/main/user-settings/SuperAdmin/UserTable/UserTable";
 
 export const type = [
@@ -60,7 +58,7 @@ export const allUsersHeaderData = [
   },
 ];
 
- export const superAdminTabsData = [  {    id: "allUsers",    title: "All Users",  content: UserTable  },
-{    id: "allAccounts",    title: "All Accounts",  content: AccountTable  },
-
+export const superAdminTabsData = [
+  { id: "allUsers", title: "All Users", content: UserTable },
+  { id: "allAccounts", title: "All Accounts", content: AccountTable },
 ];

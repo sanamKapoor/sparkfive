@@ -1,6 +1,5 @@
 form.search input[type="text"] {
   padding: 8px 0 8px 30px;
-  font-size: 17px;
   max-width: 260px;
   width: 100%;
   background: #f1f1f1;
@@ -12,6 +11,7 @@ form.search input[type="text"] {
   color: #aeb0c2;
   cursor: pointer;
 }
+
 .search {
   position: relative;
 }
@@ -21,10 +21,12 @@ form.search button {
   border-left: none;
   cursor: pointer;
 }
+
 .image {
   width: 15px;
   height: 15px;
 }
+
 .searchbtn {
   position: absolute;
   top: 5.7px;

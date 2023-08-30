@@ -1,364 +1,86 @@
+import { ITeam } from "../../../../../types/team/team";
 import styles from "./Accountdata.module.css";
-import React from "react";
-import { Utilities } from "../../../../../assets";
-import Expiredbtn from "../UserTable/expiredbtn";
-import Logginbtn from "../UserTable/loginbtn";
-import Activebtn from "../UserTable/activebtn";
-const AccountData = () => {
+
+import fileSize from "filesize";
+import dateUtils from "../../../../../utils/date";
+import Button from "../../../../common/buttons/button";
+
+interface AccountDataProps {
+  accounts: ITeam[];
+  benefits: Array<unknown>; //TODO: fix type
+  onSettingsOpen: (account: ITeam, benefits) => void;
+}
+
+const AccountData: React.FC<AccountDataProps> = ({
+  accounts,
+  benefits,
+  onSettingsOpen,
+}) => {
   return (
     <>
-      <tr className={styles.tabledata}>
-        <td>
-          <span className={styles.useremail}>Iselectrics</span>
-        </td>
-        <td>
-          <div className={styles.content}>
-            <span className={styles.username}>
-              Seraphina Alexandra Montgomery-Smith
-            </span>
-            <span className={styles.useremail}>shawnce@att.net</span>
-          </div>
-        </td>
-        <td>
-          <span className={styles.useremail}>08/23/23</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>05/14/23</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>No date</span>
-        </td>
-        <td>
-          <span className={styles.username}>0B</span>
-        </td>
-        <td>
-          <span className={styles.username}>0</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>DAM Premium Plus</span>
-        </td>
-        <td>
-          <Activebtn />
-        </td>
-        <td className={styles.logbtn}>
-         <Logginbtn buttonText="Settings" /> 
-        </td>
-      </tr>
-      <tr className={styles.tabledata}>
-        <td>
-          <span className={styles.useremail}>Plusstrip</span>
-        </td>
-        <td>
-          <div className={styles.content}>
-            <span className={styles.username}>Matthew Daniel</span>
-            <span className={styles.useremail}>shawnce@att.net</span>
-          </div>
-        </td>
-        <td>
-          <span className={styles.useremail}>08/23/23</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>05/14/23</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>No date</span>
-        </td>
-        <td>
-          <span className={styles.username}>1.11GB</span>
-        </td>
-        <td>
-          <span className={styles.username}>122</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>DAM Premium Plus</span>
-        </td>
-        <td>
-          <Activebtn />
-        </td>
-        <td className={styles.logbtn}>
-        <Logginbtn buttonText="Settings" /> 
-        </td>
-      </tr>
-      <tr className={styles.tabledata}>
-        <td>
-          <span className={styles.useremail}>Toughzap</span>
-        </td>
-        <td>
-          <div className={styles.content}>
-            <span className={styles.username}>Michael Alexander</span>
-            <span className={styles.useremail}>adamk@me.com</span>
-          </div>
-        </td>
-        <td>
-          <span className={styles.useremail}>08/23/23</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>05/14/23</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>No date</span>
-        </td>
-        <td>
-          <span className={styles.username}>0B</span>
-        </td>
-        <td>
-          <span className={styles.username}>0</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>DAM Premium Plus</span>
-        </td>
-        <td>
-          <Expiredbtn />
-        </td>
-        <td className={styles.logbtn}>
-        <Logginbtn buttonText="Settings" /> 
-        </td>
-      </tr>
-      <tr className={styles.tabledata}>
-        <td>
-          <span className={styles.useremail}>Zencorporation</span>
-        </td>
-        <td>
-          <div className={styles.content}>
-            <span className={styles.username}>Michael Alexander</span>
-            <span className={styles.useremail}>adamk@me.com</span>
-          </div>
-        </td>
-        <td>
-          <span className={styles.useremail}>08/23/23</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>05/14/23</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>No date</span>
-        </td>
-        <td>
-          <span className={styles.username}>0B</span>
-        </td>
-        <td>
-          <span className={styles.username}>0</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>DAM Basic</span>
-        </td>
-        <td>
-          <Activebtn />
-        </td>
-        <td className={styles.logbtn}>
-        <Logginbtn buttonText="Settings" /> 
-        </td>
-      </tr>
-      <tr className={styles.tabledata}>
-        <td>
-          <span className={styles.useremail}>Sunnamplex</span>
-        </td>
-        <td>
-          <div className={styles.content}>
-            <span className={styles.username}>Daniel Mason</span>
-            <span className={styles.useremail}>cgcra@yahoo.com</span>
-          </div>
-        </td>
-        <td>
-          <span className={styles.useremail}>08/23/23</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>05/14/23</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>No date</span>
-        </td>
-        <td>
-          <span className={styles.username}>0B</span>
-        </td>
-        <td>
-          <span className={styles.username}>0</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>DAM Basic</span>
-        </td>
-        <td>
-          <Expiredbtn />
-        </td>
-        <td className={styles.logbtn}>
-        <Logginbtn buttonText="Settings" /> 
-        </td>
-      </tr>
-      <tr className={styles.tabledata}>
-        <td>
-          <span className={styles.useremail}>Isdom</span>
-        </td>
-        <td>
-          <div className={styles.content}>
-            <span className={styles.username}>Lucas Elijah</span>
-            <span className={styles.useremail}>seano@icloud.com</span>
-          </div>
-        </td>
-        <td>
-          <span className={styles.useremail}>08/23/23</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>05/14/23</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>No date</span>
-        </td>
-        <td>
-          <span className={styles.username}>18.82GB</span>
-        </td>
-        <td>
-          <span className={styles.username}>0</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>DAM Premium Plus</span>
-        </td>
-        <td>
-          <Activebtn />
-        </td>
-        <td className={styles.logbtn}>
-        <Logginbtn buttonText="Settings" /> 
-        </td>
-      </tr>
-      <tr className={styles.tabledata}>
-        <td>
-          <span className={styles.useremail}>dambase</span>
-        </td>
-        <td>
-          <div className={styles.content}>
-            <span className={styles.username}>Samuel Jackson</span>
-            <span className={styles.useremail}>shawnce@att.net</span>
-          </div>
-        </td>
-        <td>
-          <span className={styles.useremail}>08/23/23</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>05/14/23</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>No date</span>
-        </td>
-        <td>
-          <span className={styles.username}>0B</span>
-        </td>
-        <td>
-          <span className={styles.username}>0</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>DAM Basic</span>
-        </td>
-        <td>
-          <Expiredbtn />
-        </td>
-        <td className={styles.logbtn}>
-        <Logginbtn buttonText="Settings" /> 
-        </td>
-      </tr>
-      <tr className={styles.tabledata}>
-        <td>
-          <span className={styles.useremail}>Y-corporation</span>
-        </td>
-        <td>
-          <div className={styles.content}>
-            <span className={styles.username}>Jayden Samuel</span>
-            <span className={styles.useremail}>garyjb@sbcglobal.net</span>
-          </div>
-        </td>
-        <td>
-          <span className={styles.useremail}>08/23/23</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>05/14/23</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>No date</span>
-        </td>
-        <td>
-          <span className={styles.username}>0B</span>
-        </td>
-        <td>
-          <span className={styles.username}>0</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>DAM Basic</span>
-        </td>
-        <td>
-          <Activebtn />
-        </td>
-        <td className={styles.logbtn}>
-        <Logginbtn buttonText="Settings" /> 
-        </td>
-      </tr>
-      <tr className={styles.tabledata}>
-        <td>
-          <span className={styles.useremail}>Sumace</span>
-        </td>
-        <td>
-          <div className={styles.content}>
-            <span className={styles.username}>Mason Henry</span>
-            <span className={styles.useremail}>jesse@comcast.net</span>
-          </div>
-        </td>
-        <td>
-          <span className={styles.useremail}>08/23/23</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>05/14/23</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>No date</span>
-        </td>
-        <td>
-          <span className={styles.username}>0B</span>
-        </td>
-        <td>
-          <span className={styles.username}>0</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>DAM Basic</span>
-        </td>
-        <td>
-          <Expiredbtn />
-        </td>
-        <td className={styles.logbtn}>
-        <Logginbtn buttonText="Settings" /> 
-        </td>
-      </tr>
-      <tr className={styles.tabledata}>
-        <td>
-          <span className={styles.useremail}>Sumace</span>
-        </td>
-        <td>
-          <div className={styles.content}>
-            <span className={styles.username}>Mason Henry</span>
-            <span className={styles.useremail}>jesse@comcast.net</span>
-          </div>
-        </td>
-        <td>
-          <span className={styles.useremail}>08/23/23</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>05/14/23</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>No date</span>
-        </td>
-        <td>
-          <span className={styles.username}>0B</span>
-        </td>
-        <td>
-          <span className={styles.username}>0</span>
-        </td>
-        <td>
-          <span className={styles.useremail}>DAM Basic</span>
-        </td>
-        <td>
-          <Activebtn />
-        </td>
-        <td className={styles.logbtn}>
-        <Logginbtn buttonText="Settings" /> 
-        </td>
-      </tr>
+      {accounts.map((account, index) => {
+        return (
+          <tr
+            className={
+              index % 2 === 0
+                ? styles.tabledata
+                : `${styles.tabledata} ${styles.active}`
+            }
+            key={account.id}
+          >
+            <td>
+              <span className={styles.useremail}>
+                {account.company || "No Company Name"}
+              </span>
+            </td>
+            <td>
+              <div className={styles.content}>
+                <span className={styles.username}>
+                  {account.users[0]?.name}
+                </span>
+                <span className={styles.useremail}>
+                  {account.users[0]?.email}
+                </span>
+              </div>
+            </td>
+            <td>
+              <span className={styles.useremail}>
+                {dateUtils.parseDateToString(account.users[0].lastLogin)}
+              </span>
+            </td>
+            <td>
+              <span className={styles.useremail}>
+                {dateUtils.parseDateToString(account.users[0].createdAt)}
+              </span>
+            </td>
+            <td>
+              <span className={styles.useremail}>
+                {dateUtils.parseDateToString(account.users[0].lastUpload)}
+              </span>
+            </td>
+            <td>
+              <span className={styles.username}>
+                {fileSize(account.users[0]?.storageUsed).replace(" ", "")}
+              </span>
+            </td>
+            <td>
+              <span className={styles.username}>
+                {account.users[0]?.filesCount}
+              </span>
+            </td>
+            <td>
+              <span className={styles.useremail}>{account.plan?.name}</span>
+            </td>
+            <td>{account.plan.status}</td>
+            <td className={styles.logbtn}>
+              <Button
+                text="Settings"
+                onClick={(e) => onSettingsOpen(account, benefits)}
+              />
+            </td>
+          </tr>
+        );
+      })}
     </>
   );
 };

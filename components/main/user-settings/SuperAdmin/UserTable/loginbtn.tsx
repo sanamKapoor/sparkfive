@@ -1,15 +1,17 @@
-import styles from "./loginbtn.module.css";
-import React from "react";
 import PropTypes from "prop-types";
-const Logginbtn = ({buttonText}) => {
+import styles from "./loginbtn.module.css";
+
+const Logginbtn = ({ buttonText }) => {
   return (
     <>
       <button className={styles.login}>{buttonText}</button>
     </>
   );
 };
+
+//TODO: convert to a typescript interface
 Logginbtn.propTypes = {
-  buttonText: PropTypes.string.isRequired, 
-}
+  buttonText: PropTypes.string.isRequired,
+};
 
 export default Logginbtn;
