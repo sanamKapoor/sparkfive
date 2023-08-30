@@ -6,11 +6,13 @@
   display: flex;
   max-width: 40rem;
   align-items: center;
+  
 }
 
 .form input {
   flex: 1;
   min-width: 150px;
+  border-radius: 4px;
 }
 
 .form .role-select-wrapper {
@@ -31,7 +33,17 @@
   font-size: 14px;
   min-height: inherit;
 }
-
+@media screen and (max-width: 810px) {
+  .form {
+    display: flex;
+    max-width: 40rem;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    
+  }
+  
+}
 @media screen and (max-width: 630px) {
   .form input {
     margin-bottom: 10px;
@@ -50,5 +62,13 @@
   .form .role-select-wrapper {
     margin-right: 0;
     margin-left: 0;
+  }
+}
+@media screen and (max-width: 470px) {
+  .container{
+    display: none;
+  }
+  .roleinput{
+    width: 100%;
   }
 }

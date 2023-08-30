@@ -35,6 +35,11 @@
   font-weight: 300;
   line-break: anywhere;
 }
+.emailaddress{
+  width: 60%;
+  word-wrap: break-word;
+
+}
 .headers > h3,
 .fields > div {
   width: 38%;
@@ -85,12 +90,21 @@
 .select {
   width: 188px;
 }
+.container{
+  padding: 54px 60px;
+}
 
 .container h4 {
   color: var(--color-prim-navy);
   font-size: 16px;
   font-weight: 500;
   margin: 0 0 8px;
+}
+@media screen and (max-width: 1200px)  {
+  .container{
+    padding: 54px 46px;
+  }
+  
 }
 
 @media screen and (max-width: 900px)  {
@@ -103,6 +117,13 @@
 }
 
 @media screen and (max-width: 600px) {
+  .container{
+    padding: 54px 16px;
+  }
+  .selectcontainer{
+    margin-left:20px ;
+  }
+  
   .content {
     padding: 42px 16px;
   }
@@ -119,7 +140,7 @@
 
   .headers > h3,
   .fields > div {
-    width: 33%;
+    width: 25%;
   }
 
   .headers > h3:last-child,

@@ -98,7 +98,6 @@
     width: 188px;
   }
 
-
 @media screen and (max-width: 900px)  {
     .content {
       padding: 42px 30px;
@@ -117,4 +116,12 @@
       .nav-button {
         font-size: 12px;
       }
+  }
+  @media screen and (max-width: 470px) {
+    .form{
+      flex-wrap: wrap;
+    }
+   .roleInput{
+    width: 100%;
+   }
   }

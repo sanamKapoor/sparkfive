@@ -228,7 +228,7 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
         <h4>Role Name</h4>
 
         <div className={styles.form}>
-          <div>
+          <div className={styles.roleInput}>
             <Input
               name={"name"}
               value={name}

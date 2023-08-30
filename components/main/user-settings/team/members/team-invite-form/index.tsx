@@ -52,14 +52,16 @@ const TeamInviteForm: React.FC<TeamInviteProps> = ({
   return (
     <div className={styles.container}>
       <form className={styles.form} onSubmit={onSubmitForm}>
-        <Input
-          type="email"
-          styleType="regular"
-          value={inviteEmail}
-          placeholder="Email"
-          additionalClasses={styles.input}
-          onChange={(e) => setInviteEmail(e.target.value)}
-        />
+          <Input
+            type="email"
+            styleType="regular"
+            value={inviteEmail}
+            placeholder="Email"
+            additionalClasses={styles.input}
+            onChange={(e) => setInviteEmail(e.target.value)}
+          />
+       
+
         <div className={styles["role-select-wrapper"]}>
           <Select
             options={mappedRoles}

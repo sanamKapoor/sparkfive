@@ -24,7 +24,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({
       <div className={styles.content}>
         <div className={styles["main-headers"]}>
           <h3>Members</h3>
-          <h3>Role</h3>
+          <h3>Roles</h3>
         </div>
         <MemberList
           members={teamMembers}

@@ -16,6 +16,7 @@
 
 .name-email-invite {
   width: 30%;
+  word-wrap: break-word;
 }
 .resend-button img{
   width:15.41px;
@@ -104,12 +105,21 @@
 }
 
 @media screen and (max-width: 600px) {
+  .container{
+    justify-content: space-between;
+  }
+  .name-email-invite {
+    width: 50%;
+    word-wrap: break-word;
+  }
   .actions {
     flex-direction: column;
     gap: 4px;
     align-items: flex-start;
   }
-
+  .details_wrapper_invite {
+    width: unset;
+  }
   .name-email {
     width: 50%;
     line-break: anywhere;

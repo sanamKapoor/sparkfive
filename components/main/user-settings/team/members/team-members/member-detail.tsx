@@ -89,9 +89,10 @@ const MemberDetail: React.FC<MemberDetailProps> = ({
       </div>
       <div className={styles.fields}>
         {type === "member" && <div>{member.name}</div>}
-        <div>{member.email}</div>
-        <div>
+        <div className={styles.emailaddress}>{member.email}</div>
+        <div className={styles.selectcontainer}>
           <Select
+         
             options={mappedRoles}
             onChange={(selected) => onRoleChange(selected)}
             placeholder={"Select a role"}
