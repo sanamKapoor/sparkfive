@@ -19,6 +19,8 @@ import TeamMembers from "./team-members";
 
 import inviteApi from "../../../../../server-api/invite";
 import requestApi from "../../../../../server-api/request";
+import Base from "../../../../common/modals/base";
+import RequestForm from "./access-requests/request-form";
 import MemberDetail from "./team-members/member-detail";
 
 interface MembersProps {
@@ -42,6 +44,8 @@ const Members: React.FC<MembersProps> = ({ loading, setLoading }) => {
   const [selectedRequest, setSelectedRequest] = useState<IRequestFormData>();
   const [requests, setRequests] = useState<IRequestFormData[]>([]);
   const [invites, setInvites] = useState([]);
+
+  const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
 
   useEffect(() => {
     getTeamMembers();
@@ -203,7 +207,9 @@ const Members: React.FC<MembersProps> = ({ loading, setLoading }) => {
           />
           <AccessRequests
             requests={requests}
+            setSelectedRequest={setSelectedRequest}
             onRequestChange={onRequestChange}
+            setShowReviewModal={setShowReviewModal}
           />
         </>
       )}
@@ -219,6 +225,26 @@ const Members: React.FC<MembersProps> = ({ loading, setLoading }) => {
         confirmText={"Delete"}
         message={`Are you sure you want to delete ${selectedMember?.email}?`}
       />
+
+      <Base
+        modalIsOpen={showReviewModal}
+        closeModal={() => {
+          setShowReviewModal(false);
+        }}
+        additionalClasses={[styles["base-plan-modal"]]}
+      >
+        <RequestForm
+          data={selectedRequest}
+          onApprove={() => {
+            setShowReviewModal(false);
+            onRequestChange("accept", selectedRequest);
+          }}
+          onReject={() => {
+            setShowReviewModal(false);
+            onRequestChange("reject", selectedRequest);
+          }}
+        />
+      </Base>
     </>
   );
 };

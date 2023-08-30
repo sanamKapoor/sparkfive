@@ -8,12 +8,16 @@ interface RequestAccessListProps {
   members: ITeamMember[];
   type: string;
   onChange: (type: string, member: ITeamMember) => void;
+  setSelectedRequest: (val) => void;
+  setShowReviewModal: (val: boolean) => void;
 }
 
 const RequestAccessList: React.FC<RequestAccessListProps> = ({
   members,
   type = "member",
   onChange,
+  setSelectedRequest,
+  setShowReviewModal,
 }) => {
   return (
     <>
@@ -25,6 +29,12 @@ const RequestAccessList: React.FC<RequestAccessListProps> = ({
             email={member.email}
             name={member.name}
             onChange={(type) => {
+              if (type === "review") {
+                setShowReviewModal(true);
+                setSelectedRequest(member);
+              } else {
+                setShowReviewModal(false);
+              }
               onChange(type, member);
             }}
           />
