@@ -19,7 +19,7 @@ import TeamMembers from "./team-members";
 
 import inviteApi from "../../../../../server-api/invite";
 import requestApi from "../../../../../server-api/request";
-import EditDetailsView from "./edit-details-view";
+import MemberDetail from "./team-members/member-detail";
 
 interface MembersProps {
   loading: boolean;
@@ -108,7 +108,6 @@ const Members: React.FC<MembersProps> = ({ loading, setLoading }) => {
   };
 
   const onRequestChange = async (type: string, request) => {
-    setEditType("request");
     switch (type) {
       case "review": {
         setSelectedRequest(request);
@@ -134,19 +133,51 @@ const Members: React.FC<MembersProps> = ({ loading, setLoading }) => {
       }
     }
   };
+
+  const onDetailSaveChanges = async (
+    id,
+    { roleId, permissions, updatePermissions }
+  ) => {
+    try {
+      setLoading(true);
+      if (editType === "member")
+        await teamApi.patchTeamMember(id, {
+          roleId,
+          permissions,
+          updatePermissions,
+        });
+      else
+        await inviteApi.patchInvite(id, {
+          roleId,
+          permissions,
+          updatePermissions,
+        });
+
+      await getTeamMembers();
+      await getInvites();
+
+      setIsEditMode(false);
+      setSelectedMember(undefined);
+
+      toastUtils.success("Changes saved successfully");
+    } catch (err) {
+      toastUtils.error(err.response.data?.message || "Internal server error");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <>
       {isEditMode ? (
-        <EditDetailsView
+        <MemberDetail
           type={editType}
-          selectedMember={selectedMember}
-          setIsEditMode={setIsEditMode}
-          setSelectedMember={setSelectedMember}
-          setLoading={setLoading}
-          selectedRequest={selectedRequest}
-          setSelectedRequest={setSelectedRequest}
-          onRequestChange={onRequestChange}
-          getInvites={getInvites}
+          mappedRoles={mappedRoles}
+          member={selectedMember}
+          onSaveChanges={onDetailSaveChanges}
+          onCancel={() => {
+            setIsEditMode(false);
+            setSelectedMember(undefined);
+          }}
         />
       ) : (
         <>
@@ -163,6 +194,8 @@ const Members: React.FC<MembersProps> = ({ loading, setLoading }) => {
             setEditType={setEditType}
           />
           <PendingInvites
+            invites={invites}
+            setInvites={setInvites}
             setIsEditMode={setIsEditMode}
             setSelectedMember={setSelectedMember}
             setIsModalOpen={setIsModalOpen}
@@ -176,7 +209,6 @@ const Members: React.FC<MembersProps> = ({ loading, setLoading }) => {
       )}
 
       <ConfirmModal
-        headText=""
         subText=""
         modalIsOpen={isModalOpen}
         closeModal={() => {

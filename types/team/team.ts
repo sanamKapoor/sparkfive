@@ -55,4 +55,4 @@ export interface IRequestFormData {
   message: string;
 }
 
-export type IEditType = "member" | "invite" | "request";
+export type IEditType = "member" | "invite";

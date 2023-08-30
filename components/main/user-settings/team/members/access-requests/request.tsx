@@ -14,9 +14,10 @@ const Request: React.FC<RequestProps> = ({ id, email, name, onChange }) => {
   return (
     <li className={styles.container}>
       <div className={styles["name-email"]}>
+        <div>{name}</div>
         <div>{email}</div>
       </div>
-      <div className={styles.role}>{name}</div>
+
       <div className={styles.details}>
         {user.id !== id && (
           <>

@@ -23,9 +23,13 @@ const MemberDetail: React.FC<MemberDetailProps> = ({
   onSaveChanges,
   onCancel,
 }) => {
-  const [memberRole, setMemberRole] = useState(undefined);
+  const [memberRole, setMemberRole] = useState(member?.role);
   const [memberPermissions, setMemberPermissions] = useState([]);
   const [permissions, setPermissions] = useState([]);
+
+  useEffect(() => {
+    setMemberRole(member.role);
+  }, [member]);
 
   const onRoleChange = (role) => {
     if (role.id === "user") {

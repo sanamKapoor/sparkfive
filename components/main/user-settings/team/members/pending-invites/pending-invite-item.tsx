@@ -1,43 +1,34 @@
 import copyClipboard from "copy-to-clipboard";
 import React, { useContext } from "react";
 
-import inviteApi from "../../../../../../server-api/invite";
-import toastUtils from "../../../../../../utils/toast";
-
 import { capitalCase } from "change-case";
 
 import { AssetOps, Navigation } from "../../../../../../assets";
 import { UserContext } from "../../../../../../context";
 import { ITeamMember } from "../../../../../../types/team/team";
 import { checkExpireDate, getExpireDate } from "../../../../../../utils/team";
+import toastUtils from "../../../../../../utils/toast";
 import IconClickable from "../../../../../common/buttons/icon-clickable";
 import styles from "../team-members/member.module.css";
 
 interface PendingInviteItemProps {
   invite: ITeamMember;
-  setInvites: (invites: ITeamMember[]) => void;
   editAction: () => void;
   deleteAction: () => void;
+  resend: (id: string) => void;
 }
 
 const PendingInviteItem: React.FC<PendingInviteItemProps> = ({
   invite,
-  setInvites,
   editAction,
   deleteAction,
+  resend,
 }) => {
   const { user } = useContext(UserContext);
 
-  const resend = async (id: string) => {
-    await inviteApi.resendInvite(id);
-
-    //TODO: update invites to re-render the list
-    //TODO: create constant for the message
-    toastUtils.success("Invitation sent successfully");
-  };
-
   const copyLink = (code: string) => {
     copyClipboard(`${process.env.CLIENT_BASE_URL}/signup?inviteCode=${code}`);
+    toastUtils.success("Link copied successfully");
   };
 
   return (

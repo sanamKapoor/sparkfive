@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import styles from "../../index.module.css";
 
 import inviteApi from "../../../../../../server-api/invite";
 import { IEditType, ITeamMember } from "../../../../../../types/team/team";
+import toastUtils from "../../../../../../utils/toast";
 import PendingInviteItem from "./pending-invite-item";
 
 interface PendingInvitesProps {
+  invites: ITeamMember[];
+  setInvites: (data: ITeamMember[]) => void;
   setIsEditMode: (val: boolean) => void;
   setSelectedMember: (member: ITeamMember) => void;
   setIsModalOpen: (val: boolean) => void;
@@ -13,13 +16,13 @@ interface PendingInvitesProps {
 }
 
 const PendingInvites: React.FC<PendingInvitesProps> = ({
+  invites,
+  setInvites,
   setIsEditMode,
   setSelectedMember,
   setIsModalOpen,
   setEditType,
 }) => {
-  const [invites, setInvites] = useState<ITeamMember[]>([]);
-
   const getInvites = async () => {
     try {
       const { data } = await inviteApi.getInvites();
@@ -45,6 +48,17 @@ const PendingInvites: React.FC<PendingInvitesProps> = ({
     setIsModalOpen(true);
   };
 
+  const resend = async (id: string) => {
+    const { data } = await inviteApi.resendInvite(id);
+    const inviteIndex = invites.findIndex((invite) => invite.id === id);
+
+    if (inviteIndex !== -1) {
+      invites[inviteIndex].expirationDate = data.expirationDate;
+      setInvites([...invites]);
+    }
+    toastUtils.success("Invitation sent successfully");
+  };
+
   return (
     <div className={styles.content}>
       <div className={`${styles["main-headers"]} m-t-40`}>
@@ -54,9 +68,9 @@ const PendingInvites: React.FC<PendingInvitesProps> = ({
         {invites.map((invite) => (
           <PendingInviteItem
             invite={invite}
-            setInvites={setInvites}
             editAction={() => onEditInvite(invite)}
             deleteAction={() => onDeleteInvite(invite)}
+            resend={resend}
             key={invite.id}
           />
         ))}
