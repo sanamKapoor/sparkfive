@@ -1,17 +1,16 @@
 .outer {
   padding: 17px 16px;
   border: 1px solid #dedad4;
-  /* margin: 32px 60px; */
   overflow: auto;
 }
+
 .userTable {
   padding: 17px 0 0 0;
-  /* border:1px solid 
-    #DEDAD4; */
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
 }
+
 .loadbtnWrapper {
   display: flex;
   justify-content: center;

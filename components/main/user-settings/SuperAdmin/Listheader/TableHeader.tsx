@@ -1,11 +1,22 @@
 import React from "react";
 import styles from "./TableHeader.module.css";
 
-import SearchBtn from "../SearchButton/SearchBtn";
-import CsvBtn from "../CsvBtn/CsvBtn";
-import PropTypes from "prop-types";
+import Button from "../../../../common/buttons/button";
+import Search from "../Search/Search";
 
-const TableHeader = ({headerText}) => {
+interface TableHeaderProps {
+  headerText: string;
+  onDownload: () => void;
+  onSearch: (term: string) => void;
+  placeholder: string;
+}
+
+const TableHeader: React.FC<TableHeaderProps> = ({
+  headerText,
+  onDownload,
+  onSearch,
+  placeholder,
+}) => {
   return (
     <>
       <div className={styles.tableheader}>
@@ -14,19 +25,15 @@ const TableHeader = ({headerText}) => {
         </div>
         <div className={styles.buttons}>
           <div className={styles.searchorder}>
-            <SearchBtn />
+            <Search onSubmit={onSearch} placeholder={placeholder} />
           </div>
           <div className={styles.csvorder}>
-            <CsvBtn />
+            <Button text="Download CSV" onClick={onDownload} />
           </div>
         </div>
       </div>
     </>
   );
 };
-TableHeader.propTypes = {
-  headerText: PropTypes.string.isRequired,
-};
-
 
 export default TableHeader;

@@ -25,6 +25,23 @@ export interface ITeam {
   company: string;
   users: ITeamUser[];
   plan: ITeamPlan;
+  vanity?: boolean;
+  website?: string | null;
+  workspaceIcon?: string | null;
+  workspaceName?: string | null;
+  workspaceUrl?: string | null;
+  zip?: string | null;
+  state?: string | null;
+  subdomain?: string | null;
+  timezone?: string;
+  transcript?: boolean;
+  ocr?: boolean;
+  address?: string | null;
+  advancedCollectionShareLink?: boolean;
+  cdnAccess?: boolean;
+  city?: string | null;
+  companySize?: string;
+  country?: string | null;
 }
 
 export interface ITeamResponseData {

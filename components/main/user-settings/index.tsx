@@ -41,11 +41,20 @@ export const SETTING_OPTIONS = {
     permissions: [],
     content: Integrations,
   },
+  ["super-admin"]: {
+    label: "Super Admin",
+    permissions: [SUPERADMIN_ACCESS],
+    content: SuperAdmin,
+  },
   attributes: {
     label: "Attributes",
     contentTitle: "Custom Attributes",
     permissions: [SETTINGS_TEAM, SETTINGS_COMPANY],
     content: Attributes,
+  },
+  ["upload-approvals"]: {
+    label: "Upload Approvals",
+    path: "/main/upload-approvals",
   },
   ["shared-links"]: {
     label: "Shared Links",
@@ -58,11 +67,6 @@ export const SETTING_OPTIONS = {
     contentTitle: "Custom Settings",
     permissions: [SETTINGS_TEAM, SETTINGS_COMPANY],
     content: CustomSettings,
-  },
-  ["super-admin"]: {
-    label: "Super Admin",
-    permissions: [SUPERADMIN_ACCESS],
-    content: SuperAdmin,
   },
 };
 
