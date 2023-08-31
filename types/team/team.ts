@@ -70,6 +70,7 @@ export interface IRequestFormData {
   city: string;
   state: string;
   message: string;
+  roleId: string | null;
 }
 
 export type IEditType = "member" | "invite";

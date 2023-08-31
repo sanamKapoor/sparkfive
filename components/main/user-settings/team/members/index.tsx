@@ -18,10 +18,9 @@ import TeamInvite from "./team-invite-form";
 import TeamMembers from "./team-members";
 
 import inviteApi from "../../../../../server-api/invite";
-import requestApi from "../../../../../server-api/request";
-import Base from "../../../../common/modals/base";
-import RequestForm from "./access-requests/request-form";
 import MemberDetail from "./team-members/member-detail";
+
+import requestApi from "../../../../../server-api/request";
 
 interface MembersProps {
   loading: boolean;
@@ -41,17 +40,23 @@ const Members: React.FC<MembersProps> = ({ loading, setLoading }) => {
 
   const [editType, setEditType] = useState<IEditType>("member");
 
-  const [selectedRequest, setSelectedRequest] = useState<IRequestFormData>();
   const [requests, setRequests] = useState<IRequestFormData[]>([]);
   const [invites, setInvites] = useState([]);
-
-  const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
 
   useEffect(() => {
     getTeamMembers();
     getAccessRequest();
     getInvites();
   }, []);
+
+  const getAccessRequest = async () => {
+    try {
+      const { data } = await requestApi.getRequests();
+      setRequests(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const getInvites = async () => {
     try {
@@ -99,42 +104,6 @@ const Members: React.FC<MembersProps> = ({ loading, setLoading }) => {
     } finally {
       setLoading(false);
       setSelectedMember(undefined);
-    }
-  };
-
-  const getAccessRequest = async () => {
-    try {
-      const { data } = await requestApi.getRequests();
-      setRequests(data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const onRequestChange = async (type: string, request) => {
-    switch (type) {
-      case "review": {
-        setSelectedRequest(request);
-        break;
-      }
-      case "accept": {
-        setLoading(true);
-        await requestApi.approve(request.id);
-        getAccessRequest();
-        toastUtils.success("Approve successfully");
-        setSelectedRequest(undefined);
-        setLoading(false);
-        break;
-      }
-      case "reject": {
-        setLoading(true);
-        await requestApi.reject(request.id);
-        getAccessRequest();
-        toastUtils.success("Reject successfully");
-        setSelectedRequest(undefined);
-        setLoading(false);
-        break;
-      }
     }
   };
 
@@ -207,9 +176,8 @@ const Members: React.FC<MembersProps> = ({ loading, setLoading }) => {
           />
           <AccessRequests
             requests={requests}
-            setSelectedRequest={setSelectedRequest}
-            onRequestChange={onRequestChange}
-            setShowReviewModal={setShowReviewModal}
+            getAccessRequest={getAccessRequest}
+            setLoading={setLoading}
           />
         </>
       )}
@@ -225,26 +193,6 @@ const Members: React.FC<MembersProps> = ({ loading, setLoading }) => {
         confirmText={"Delete"}
         message={`Are you sure you want to delete ${selectedMember?.email}?`}
       />
-
-      <Base
-        modalIsOpen={showReviewModal}
-        closeModal={() => {
-          setShowReviewModal(false);
-        }}
-        additionalClasses={[styles["base-plan-modal"]]}
-      >
-        <RequestForm
-          data={selectedRequest}
-          onApprove={() => {
-            setShowReviewModal(false);
-            onRequestChange("accept", selectedRequest);
-          }}
-          onReject={() => {
-            setShowReviewModal(false);
-            onRequestChange("reject", selectedRequest);
-          }}
-        />
-      </Base>
     </>
   );
 };
