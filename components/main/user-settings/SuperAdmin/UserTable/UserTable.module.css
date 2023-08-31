@@ -1,3 +1,7 @@
+.tableWrapper{
+  padding: 32px 60px;
+
+}
 .outer {
   padding: 17px 16px;
   border: 1px solid #dedad4;
@@ -10,8 +14,7 @@
   border-collapse: separate;
   border-spacing: 0;
 }
-
-.loadbtnWrapper {
+.loadMore{
   display: flex;
   justify-content: center;
   align-items: center;

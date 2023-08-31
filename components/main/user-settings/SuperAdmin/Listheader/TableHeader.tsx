@@ -3,6 +3,7 @@ import styles from "./TableHeader.module.css";
 
 import Button from "../../../../common/buttons/button";
 import Search from "../Search/Search";
+import CsvBtn from "../CsvBtn/CsvBtn";
 
 interface TableHeaderProps {
   headerText: string;
@@ -28,8 +29,9 @@ const TableHeader: React.FC<TableHeaderProps> = ({
             <Search onSubmit={onSearch} placeholder={placeholder} />
           </div>
           <div className={styles.csvorder}>
-            <Button text="Download CSV" onClick={onDownload} />
-          </div>
+             <CsvBtn onClick={onDownload}/>
+            </div>
+          
         </div>
       </div>
     </>

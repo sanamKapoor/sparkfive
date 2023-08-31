@@ -1,4 +1,4 @@
-.csvBtn {
+.downloadBtn {
   height: 32px;
   padding: 8px;
   font-family: "Noto Sans", sans-serif;
@@ -11,7 +11,8 @@
   margin-left: 10px;
   cursor: pointer;
 }
-.csvicon {
+
+.downloadIcon{
   display: none;
 }
 
@@ -20,7 +21,7 @@
     display: none;
     margin-left: 0;
   }
-  .csvicon {
+  .downloadIcon {
     display: block;
   }
 }

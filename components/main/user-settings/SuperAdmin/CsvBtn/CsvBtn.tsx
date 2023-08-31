@@ -1,21 +1,20 @@
 import styles from "./CsvBtn.module.css";
 import React from "react";
 import { Utilities } from "../../../../../assets";
-const CsvBtn = () => {
-  function handleImageClick() {
-    console.log("Image clicked!");
-  }
-  return (
+import Button from "../../../../common/buttons/button";
+import ButtonIcon from "../../../../common/buttons/button-icon";
+const CsvBtn: React.FC<CsvBtnProps> = ({onClick}) => {
+ 
+return (
     <>
-      <button className={styles.csvBtn}>Download CSV</button>
-      <button className={`${styles["csvBtn"]} ${styles["csvicon"]}`}>
-        <img
-          className={styles.image}
-          src={Utilities.download}
-          onClick={handleImageClick}
-        />
-      </button>
+      <Button onClick={onClick} className={"downloadBtn"} text="Download CSV"/>
+      <div className={styles.downloadIcon}>
+      <ButtonIcon onClick={onClick} text=""  icon={Utilities.download}   className={"downloadBtn"}/>
+
+      </div>
+    
     </>
   );
 };
+interface CsvBtnProps{onClick: ( ) => void;}
 export default CsvBtn;

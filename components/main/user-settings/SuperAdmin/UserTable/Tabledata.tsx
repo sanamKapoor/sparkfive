@@ -54,7 +54,7 @@ const TableData: React.FC<TableDataProps> = ({ users, onUserLogin }) => {
             </td>
             {/* TODO: fix styling */}
             <td className={styles.logbtn}>
-              <Button text="User Login" onClick={(e) => onUserLogin(user)} />
+              <Button className={"actionBtn"} text="User Login" onClick={(e) => onUserLogin(user)} />
             </td>
           </tr>
         );

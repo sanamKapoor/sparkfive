@@ -38,3 +38,10 @@
 .active {
   background: #faf8f5;
 }
+.active-badge{
+  padding: 4px 8px;
+  background-color: 
+  #0083CD;
+  color: white;
+  border-radius: 4px;
+}
