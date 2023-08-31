@@ -27,59 +27,82 @@ const ContactForm: React.FC<ContactFormProps> = ({
     <form onSubmit={handleSubmit(onSubmit)} className={styles["form"]}>
       <>
         <div className={styles.container}>
-          <div>
-            <div className={styles["fields-pair"]}>
-              <div className={styles.city}>
-                <FormInput
-                  labId="name"
-                  label="Your Name"
-                  InputComponent={
-                    <Input
-                      type="text"
-                      id="name"
-                      additionalClasses={styles.input}
-                    />
-                  }
-                  name="name"
-                  defaultValue={""}
-                  control={control}
-                  rules={{ required: true, minLength: 2, maxLength: 30 }}
-                  errors={errors}
-                  message={
-                    "This field should be between 2 and 30 characters long"
-                  }
-                />
-              </div>
-              <div className={styles.city}>
-                <FormInput
-                  labId="email"
-                  label="Email Address"
-                  InputComponent={
-                    <Input
-                      type="text"
-                      id="email"
-                      additionalClasses={styles.input}
-                    />
-                  }
-                  name="email"
-                  defaultValue={""}
-                  control={control}
-                  rules={{
-                    required: true,
-                    pattern: {
-                      value: /\S+@\S+\.\S+/,
-                      message: "Wrong email format",
-                    },
-                  }}
-                  errors={errors}
-                  message={"Wrong email format"}
-                />
-              </div>
+          <div className={styles.row}>
+            <div>
+              <FormInput
+                labId="firstName"
+                label="First Name"
+                InputComponent={
+                  <Input
+                    type="text"
+                    id="first_name"
+                    additionalClasses={styles.input}
+                  />
+                }
+                name="firstName"
+                defaultValue={""}
+                control={control}
+                rules={{ required: true, minLength: 2, maxLength: 30 }}
+                errors={errors}
+                message={
+                  "This field should be between 2 and 30 characters long"
+                }
+              />
             </div>
+            <div>
+              <FormInput
+                labId="lastName"
+                label="Last Name"
+                InputComponent={
+                  <Input
+                    type="text"
+                    id="last_name"
+                    additionalClasses={styles.input}
+                  />
+                }
+                name="lastName"
+                defaultValue={""}
+                control={control}
+                rules={{ required: true, minLength: 2, maxLength: 30 }}
+                errors={errors}
+                message={
+                  "This field should be between 2 and 30 characters long"
+                }
+              />
+            </div>
+          </div>
+          <div className={styles.row}>
+            <div>
+              <FormInput
+                labId="email"
+                label="Email"
+                InputComponent={
+                  <Input
+                    type="text"
+                    id="email"
+                    additionalClasses={styles.input}
+                  />
+                }
+                name="email"
+                defaultValue={""}
+                control={control}
+                rules={{
+                  required: true,
+                  pattern: {
+                    value: /\S+@\S+\.\S+/,
+                    message: "Wrong email format",
+                  },
+                }}
+                errors={errors}
+                message={"Wrong email format"}
+              />
+            </div>
+          </div>
 
+          <div>
             <FormInput
               labId="notes"
-              label={`Note to ${teamName} (i.e name of project, campaign, etc)`}
+              label={`Message to ${teamName} (i.e name of project, campaign, etc)`}
               InputComponent={
                 <TextArea
                   type="text"

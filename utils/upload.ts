@@ -109,3 +109,7 @@ export const isFilesInputValid = (files: FileList) => {
     totalSize < MAX_UPLOAD_SIZE_ALLOWED
   );
 };
+
+export const getTotalSize = (filesData) => {
+  return filesData.reduce((acc, data) => acc + data.file.size, 0);
+};
