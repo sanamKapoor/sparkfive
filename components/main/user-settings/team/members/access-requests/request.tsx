@@ -63,7 +63,8 @@ const Request: React.FC<RequestProps> = ({
               onClick={() => {
                 onChange("accept");
               }}
-              className={styles.action}
+              className={styles.approve}
+            
             >
               Approve
             </div>
@@ -71,7 +72,7 @@ const Request: React.FC<RequestProps> = ({
               onClick={() => {
                 onChange("reject");
               }}
-              className={styles.action}
+              className={styles.reject}
             >
               Reject
             </div>

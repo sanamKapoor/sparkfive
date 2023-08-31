@@ -254,7 +254,12 @@
   font-weight: 400;
   font-size: 12px;
 }
-
+.rejectBtn{
+  margin-right: 40px;
+}
+.formButton{
+  width: 100%;
+}
 
 @media screen and (max-width: 1000px) {
   .nav-container {

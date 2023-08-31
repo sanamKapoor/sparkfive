@@ -5,6 +5,7 @@ import FormInput from "../../../../../common/inputs/form-input";
 import Input from "../../../../../common/inputs/input";
 import TextArea from "../../../../../common/inputs/text-area";
 import styles from "./request-form.module.css";
+import { Utilities } from "../../../../../../assets";
 
 interface RequestFormProps {
   data: IRequestFormData;
@@ -20,11 +21,17 @@ const RequestForm: React.FC<RequestFormProps> = ({
   const { control, handleSubmit, errors } = useForm();
 
   return (
-    <form onSubmit={handleSubmit(() => {})}>
+    <form className={styles.accessRequestForm} onSubmit={handleSubmit(() => {})}>
       {email && (
         <>
-          <h4 className={styles.title}>Review Access Request</h4>
-          <div className={styles.container}>
+        <div className={styles.formHeader}>
+        <h4 className={styles.title}>Review Access Request</h4>
+          <img
+              className={styles.image}
+              src={Utilities.blueClose}
+            />
+        </div>
+         <div className={styles.container}>
             <div className={styles.form}>
               <div className={styles["fields-pair"]}>
                 <div className={styles.city}>
@@ -146,18 +153,19 @@ const RequestForm: React.FC<RequestFormProps> = ({
           </div>
 
           <div className={styles["button-list"]}>
-            <Button
-              className={`${styles.button} container exclude-min-height primary`}
-              type={"button"}
-              text="Approve"
-              onClick={onApprove}
-            />
-            <Button
-              className={`${styles.button} container exclude-min-height secondary`}
+          <Button
+              className={`${styles.button} formButton rejectBtn container exclude-min-height secondary`}
               text={"Reject"}
               type={"button"}
               onClick={onReject}
             />
+            <Button
+              className={`${styles.button} formButton container exclude-min-height primary`}
+              type={"button"}
+              text="Approve"
+              onClick={onApprove}
+            />
+          
           </div>
         </>
       )}

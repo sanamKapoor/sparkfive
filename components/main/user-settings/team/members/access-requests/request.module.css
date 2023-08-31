@@ -1,5 +1,8 @@
 .container {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
   width: 100%;
   margin: 0.8rem 0;
   padding: 0.8rem 0;
@@ -14,12 +17,12 @@
   width: 40%;
 }
 
-.name-email>div:first-child {
+.name-email > div:first-child {
   font-size: 16px;
   font-weight: 500;
 }
 
-.name-email>div:last-child {
+.name-email > div:last-child {
   color: var(--color-sec-text);
   font-weight: 400;
 }
@@ -38,8 +41,27 @@
   color: var(--color-sec-text);
   cursor: pointer;
 }
+.approve {
+  margin-left: 1rem;
+  color: #10bda5;
+  cursor: pointer;
+}
+.reject {
+  margin-left: 1rem;
+  color: #fa373d;
+  cursor: pointer;
+}
 
 .role-select-wrapper {
   min-width: 150px;
   margin: 0 16px;
+}
+
+@media screen and (max-width: 575px) {
+  .action {
+    margin-left: 0px;
+  }
+  .details {
+    margin-top: 10px;
+  }
 }
