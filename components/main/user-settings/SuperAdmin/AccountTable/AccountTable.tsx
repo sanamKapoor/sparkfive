@@ -125,7 +125,7 @@ const AccountTable: React.FC<AccountDataProps> = ({
   };
 
   return (
-    <>
+    <div className={styles.tableWrapper}>
       <div className={styles.outer}>
         <TableHeader
           headerText="All accounts"
@@ -151,7 +151,7 @@ const AccountTable: React.FC<AccountDataProps> = ({
         />
       )}
       {loading && <SpinnerOverlay />}
-    </>
+    </div>
   );
 };
 export default AccountTable;

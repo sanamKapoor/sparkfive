@@ -71,10 +71,11 @@ const AccountData: React.FC<AccountDataProps> = ({
             <td>
               <span className={styles.useremail}>{account.plan?.name}</span>
             </td>
-            <td>{account.plan.status}</td>
+            <td><span className={styles["active-badge"]}>{account.plan.status}</span></td>
             <td className={styles.logbtn}>
               <Button
                 text="Settings"
+                className={"actionBtn"}
                 onClick={(e) => onSettingsOpen(account, benefits)}
               />
             </td>

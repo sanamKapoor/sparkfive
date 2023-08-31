@@ -135,7 +135,7 @@ const UserTable = () => {
   };
 
   return (
-    <>
+    <div className={styles.tableWrapper}>
       <div className={styles.outer}>
         <TableHeader
           headerText="All Users"
@@ -149,14 +149,18 @@ const UserTable = () => {
         </table>
       </div>
       {userData.total > userData.users.length && (
-        <Button
+        <div className={styles.loadMore}>
+          <Button
           text="Load More"
           onClick={getMore}
           className="container primary"
         />
+
+        </div>
+        
       )}
       {loading && <SpinnerOverlay />}
-    </>
+    </div>
   );
 };
 export default UserTable;
