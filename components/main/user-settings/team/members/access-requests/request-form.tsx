@@ -6,8 +6,6 @@ import Input from "../../../../../common/inputs/input";
 import TextArea from "../../../../../common/inputs/text-area";
 import styles from "./request-form.module.css";
 
-// Components
-
 interface RequestFormProps {
   data: IRequestFormData;
   onApprove: () => void;
@@ -15,7 +13,7 @@ interface RequestFormProps {
 }
 
 const RequestForm: React.FC<RequestFormProps> = ({
-  data: { id, email, name, phone, city, state, message },
+  data: { id, email, name, phone, city, state, message, roleId },
   onApprove,
   onReject,
 }) => {

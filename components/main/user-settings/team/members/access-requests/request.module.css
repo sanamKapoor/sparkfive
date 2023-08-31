@@ -14,27 +14,32 @@
   width: 40%;
 }
 
-.name-email > div:first-child {
+.name-email>div:first-child {
   font-size: 16px;
   font-weight: 500;
 }
 
-.name-email > div:last-child {
+.name-email>div:last-child {
   color: var(--color-sec-text);
   font-weight: 400;
 }
 
-.role{
+.role {
   color: var(--color-sec-text);
   width: 40%;
 }
 
-.details{
+.details {
   display: flex;
 }
 
-.action{
+.action {
   margin-left: 1rem;
   color: var(--color-sec-text);
   cursor: pointer;
+}
+
+.role-select-wrapper {
+  min-width: 150px;
+  margin: 0 16px;
 }
