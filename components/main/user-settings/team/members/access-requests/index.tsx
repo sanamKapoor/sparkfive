@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { IRequestFormData } from "../../../../../../types/team/team";
+import { IRequestFormData } from "../../../../../../interfaces/team/team";
 import styles from "../../index.module.css";
 import RequestAccessList from "./request-access-list";
 

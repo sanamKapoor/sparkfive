@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import styles from "./contact-form.module.css";
 
 // Components
-import { IGuestUserInfo } from "../../types/guest-upload/guest-upload";
+import { IGuestUserInfo } from "../../interfaces/guest-upload/guest-upload";
 import Button from "../common/buttons/button";
 import FormInput from "../common/inputs/form-input";
 import Input from "../common/inputs/input";
@@ -122,20 +122,15 @@ const ContactForm: React.FC<ContactFormProps> = ({
         </div>
       </>
       <div className={styles.formBtn}>
-      <Button
-        type="submit"
-        className="container primary"
-        text="Save & Continue"
-      />
-
+        <Button
+          type="submit"
+          className="container primary"
+          text="Save & Continue"
+        />
       </div>
       <div className={styles.fileHeading}>
-        <span>
-        Upload Files
-        </span>
-
+        <span>Upload Files</span>
       </div>
-   
     </form>
   );
 };

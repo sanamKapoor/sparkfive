@@ -5,7 +5,7 @@ import { capitalCase } from "change-case";
 
 import { AssetOps, Navigation } from "../../../../../../assets";
 import { UserContext } from "../../../../../../context";
-import { ITeamMember } from "../../../../../../types/team/team";
+import { ITeamMember } from "../../../../../../interfaces/team/team";
 import { checkExpireDate, getExpireDate } from "../../../../../../utils/team";
 import toastUtils from "../../../../../../utils/toast";
 import IconClickable from "../../../../../common/buttons/icon-clickable";

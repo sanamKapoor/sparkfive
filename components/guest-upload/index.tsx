@@ -12,7 +12,7 @@ import { defaultInfo } from "../../config/data/upload-links";
 import {
   IGuestUploadItem,
   IGuestUserInfo,
-} from "../../types/guest-upload/guest-upload";
+} from "../../interfaces/guest-upload/guest-upload";
 import {
   getFolderKeyAndNewNameByFileName,
   getTotalSize,

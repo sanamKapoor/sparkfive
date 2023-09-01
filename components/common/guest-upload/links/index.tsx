@@ -29,7 +29,7 @@ import {
 import {
   IGuestUploadLink,
   ILinkDefaultPayload,
-} from "../../../../types/guest-upload/guest-upload";
+} from "../../../../interfaces/guest-upload/guest-upload";
 import ButtonIcon from "../../buttons/button-icon";
 
 const Links = () => {
@@ -291,51 +291,50 @@ const Links = () => {
               />
             </div>
             <div className={styles.privateBlock}>
-            <div>
-            {field.status === "private" && (
-              <>
-                <div className={styles.input}>
-                  <label>Password</label>
-                  <Input
-                    type={showPasswordId === field.id ? "text" : "password"}
-                    onChange={onPasswordChange}
-                    value={password}
-                    placeholder={"Password"}
-                    styleType={"regular-short"}
+              <div>
+                {field.status === "private" && (
+                  <>
+                    <div className={styles.input}>
+                      <label>Password</label>
+                      <Input
+                        type={showPasswordId === field.id ? "text" : "password"}
+                        onChange={onPasswordChange}
+                        value={password}
+                        placeholder={"Password"}
+                        styleType={"regular-short"}
+                      />
+
+                      {password.length > 0 && (
+                        <OptionList
+                          data={passwordOperations}
+                          oneColumn={true}
+                          value={showPasswordId === field.id}
+                          additionalClass={styles["password-li"]}
+                          setValue={(value) => {
+                            showPassword(field.id);
+                          }}
+                          toggle={true}
+                        />
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
+              <div className={styles.passwordSave}>
+                {((currentLink && currentLink === field.id) ||
+                  field.status === "private") && (
+                  <Button
+                    className={"container exclude-min-height primary"}
+                    type={"button"}
+                    text={"Save"}
+                    disabled={
+                      field.status === "private" && password.length === 0
+                    }
+                    onClick={() => saveStatusChanges(field.id)}
                   />
-
-                  {password.length > 0 && (
-                    <OptionList
-                      data={passwordOperations}
-                      oneColumn={true}
-                      value={showPasswordId === field.id}
-                      additionalClass={styles["password-li"]}
-                      setValue={(value) => {
-                        showPassword(field.id);
-                      }}
-                      toggle={true}
-                    />
-                  )}
-                </div>
-              </>
-            )}
+                )}
+              </div>
             </div>
-          <div className={styles.passwordSave}>
-          {((currentLink && currentLink === field.id) ||
-              field.status === "private") && (
-              <Button
-                className={"container exclude-min-height primary"}
-                type={"button"}
-                text={"Save"}
-                disabled={field.status === "private" && password.length === 0}
-                onClick={() => saveStatusChanges(field.id)}
-              />
-            )}
-          </div>
-           
-
-            </div>
-          
           </div>
 
           <div className={`${styles.row} align-items-end`}>
@@ -347,14 +346,12 @@ const Links = () => {
             </div>
 
             <ButtonIcon
-             className={styles.uploadbtn}
+              className={styles.uploadbtn}
               icon={Utilities.addAlt}
               text="UPLOAD PHOTO"
               onClick={(e) => openUploadDialog(e, field.id)}
-             
             />
             <input
-            
               id="file-input-id"
               ref={(input) => (fileInputRefs[field.id] = input)}
               style={{ display: "none" }}

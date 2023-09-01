@@ -1,5 +1,5 @@
 import { useQueryStrings } from "../../../../../hooks/use-query-strings";
-import { ITeam, ITeamResponseData } from "../../../../../types/team/team";
+import { ITeam, ITeamResponseData } from "../../../../../interfaces/team/team";
 import { defaultSortData } from "../../super-admin/company-list-header/types";
 import AccountData from "../AccountTable/Accountdata";
 import AccountTableHead from "../AccountTable/Accounttablehead";

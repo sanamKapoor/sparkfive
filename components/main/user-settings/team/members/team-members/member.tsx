@@ -3,7 +3,7 @@ import styles from "./member.module.css";
 import { capitalCase } from "change-case";
 import { useContext } from "react";
 import { UserContext } from "../../../../../../context";
-import { ITeamMember } from "../../../../../../types/team/team";
+import { ITeamMember } from "../../../../../../interfaces/team/team";
 
 interface IMemberProps extends Partial<ITeamMember> {
   editAction: () => void;

@@ -2,7 +2,7 @@ import styles from "./upload-item.module.css";
 
 import { AssetOps, Utilities } from "../../assets";
 
-import { UploadingStatus } from "../../types/common/upload";
+import { UploadingStatus } from "../../interfaces/common/upload";
 import IconClickable from "../common/buttons/icon-clickable";
 
 interface UploadItemProps {
