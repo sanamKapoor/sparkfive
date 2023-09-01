@@ -9,7 +9,6 @@ import { SocketContext } from "../../context";
 import requestUtils from "../../utils/requests";
 
 import { defaultInfo } from "../../config/data/upload-links";
-import { Utilities } from "../../assets";
 import {
   IGuestUploadItem,
   IGuestUserInfo,
@@ -365,7 +364,7 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
                     : "Please upload your files or folders that you would like to submit to us.  After files are selected, click “Submit Upload” button to send your files."}
                 </div>
                 {uploading ? (
-                  <div className={styles.listWrapper} >
+                  <div className={styles.listWrapper}>
                     <UploadList
                       files={uploadingFiles}
                       onUpload={onAdditionalUpload}
@@ -376,7 +375,7 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
                       uploadingIndex={uploadingIndex}
                     />
                     <Button
-                    className={"uploadBtn"}
+                      className={"container primary"}
                       text="Submit Upload"
                       onClick={onSubmitUpload}
                       disabled={disabled}
@@ -395,14 +394,13 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
           </div>
         ) : (
           <>
-          <div className={styles.submission}>
-          <h1>{teamName} - Files Successfully Submitted</h1>
-            <p>
-              Thank you for submitting your files to us. Our team has been
-              notified and will review the files. Have a great day.
-            </p>
-          </div>
-           
+            <div className={styles.submission}>
+              <h1>{teamName} - Files Successfully Submitted</h1>
+              <p>
+                Thank you for submitting your files to us. Our team has been
+                notified and will review the files. Have a great day.
+              </p>
+            </div>
           </>
         )}
       </section>
