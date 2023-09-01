@@ -9,8 +9,6 @@
     "start": "next start"
   },
   "dependencies": {
-    "@hookform/error-message": "^2.0.1",
-    "@hookform/resolvers": "^3.3.1",
     "@sentry/nextjs": "^6.15.0",
     "@stripe/react-stripe-js": "^1.1.0",
     "@stripe/stripe-js": "^1.2.0",
