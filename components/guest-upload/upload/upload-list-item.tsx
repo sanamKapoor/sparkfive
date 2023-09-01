@@ -34,14 +34,16 @@ const UploadListItem: React.FC<UploadListItemProps> = ({
       </div>
      <div>
      {!data.isUploading && data.status === "queued" && (
-        <div>
+        <div className={styles.progressBar}>
           <Line
-            percent={0}
-            strokeColor="green"
+          className={styles.progressLine}
+            percent={50}
+            strokeColor="
+            #10BDA5"
             strokeWidth={3}
             trailWidth={3}
             trailColor="#e5e5e5"
-            style={{ width: "100%" }}
+            style={{ width: "80px",height:"10px" }}
           />
           <img src={AssetOps.cancel} onClick={() => onRemove(index)} />
         </div>
@@ -58,14 +60,15 @@ const UploadListItem: React.FC<UploadListItemProps> = ({
       )}
 
       {data.isUploading && data.status === "in-progress" && (
-        <div>
+        <div className={styles.progressBar}>
           <Line
-            percent={uploadingPercent}
-            strokeColor="green"
+            percent={50}
+            strokeColor="
+            #10BDA5"
             strokeWidth={3}
             trailWidth={3}
             trailColor="#e5e5e5"
-            style={{ width: "100%" }}
+            style={{ width: "80px" ,height:"10px",borderRadius:"30px"}}
           />
           <img src={AssetOps.cancel} />
         </div>

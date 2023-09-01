@@ -36,8 +36,11 @@
 .listWrapper{
     border: 1px solid ;
 }
-
-.errorMsg{
+.errorMsg img {
+    width: 16px;
+    height:16px;
+}
+.errorMsg p{
     color:
     #FA373D;
     display:flex;
@@ -60,7 +63,14 @@
     align-items: center;
     justify-content: space-between;
 }
-
+.progressBar{
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+.progressBar img{
+    margin-left: 20px;
+}
 
 @media screen and (max-width: 575px) {
     .fileSize {
