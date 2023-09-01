@@ -18,7 +18,8 @@
   "exclude": ["node_modules"],
   "include": [
     "next-env.d.ts",
-    "**/*.ts"
-    // "**/*.tsx" //TODO: need to work on it, commenting for now
+    "**/*.ts",
+    "components/signup/signup-form.jsx",
+    "components/main/user-settings/super-admin/user-list-header/index.tsx"
   ]
 }
