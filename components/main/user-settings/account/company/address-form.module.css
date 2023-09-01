@@ -1,0 +1,95 @@
+.container {
+  width: 70%;
+}
+
+.container button{
+  margin-top: 18px;
+}
+.title{
+  margin-bottom: 20px !important;
+}
+
+h3.title {
+  font-weight: 500;
+  margin-bottom: 24px;
+
+}
+
+.state-country{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.fields-pair{
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+  margin-top: 28px;
+}
+.companyBtn button{
+  min-width: 135px;
+  min-height: 35px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.container label {
+  margin-bottom: 16px;
+  display: block;
+  font-weight: 500;
+  font-family: "Noto Sans", sans-serif;
+  font-size: 14px;
+}
+.companyLabel{
+  font-family: "Noto Sans", sans-serif;
+  font-size: 14px;
+ font-weight: 500;
+
+}
+
+.fields-pair label {
+  margin-bottom: 16px;
+  display: block;
+  font-weight: 500;
+  font-family: "Noto Sans", sans-serif;
+  font-size: 14px;
+}
+
+.fields-pair>div:first-child{
+  width: 55%;
+  margin-right: 5%;
+}
+
+.fields-pair>div:last-child{
+  width: 40%;
+}
+
+@media screen and (max-width: 600px) {
+  .container {
+    width: 100%;
+  }
+
+  .fields-pair>div:first-child{
+    width: 100%;
+    margin-right: 0%;
+  }
+  
+  .fields-pair>div:last-child{
+    width: 100%;
+  }
+
+  .state {
+    margin-top: 34px;
+  }
+}
+@media screen and (max-width: 810px){
+  .fields-pair>div:first-child{
+    width: 100%;
+    margin-right: 0%;
+  }
+  
+  .fields-pair>div:last-child{
+    width: 100%;
+  }
+
+
+}

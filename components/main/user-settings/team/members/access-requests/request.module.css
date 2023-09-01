@@ -1,0 +1,67 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  margin: 0.8rem 0;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--color-secondary-border);
+}
+
+.container:last-child {
+  border-bottom: none;
+}
+
+.name-email {
+  width: 40%;
+}
+
+.name-email > div:first-child {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.name-email > div:last-child {
+  color: var(--color-sec-text);
+  font-weight: 400;
+}
+
+.role {
+  color: var(--color-sec-text);
+  width: 40%;
+}
+
+.details {
+  display: flex;
+}
+
+.action {
+  margin-left: 1rem;
+  color: var(--color-sec-text);
+  cursor: pointer;
+}
+.approve {
+  margin-left: 1rem;
+  color: #10bda5;
+  cursor: pointer;
+}
+.reject {
+  margin-left: 1rem;
+  color: #fa373d;
+  cursor: pointer;
+}
+
+.role-select-wrapper {
+  min-width: 150px;
+  margin: 0 16px;
+}
+
+@media screen and (max-width: 575px) {
+  .action {
+    margin-left: 0px;
+  }
+  .details {
+    margin-top: 10px;
+  }
+}

@@ -1,0 +1,158 @@
+.content {
+  padding: 42px 60px;
+}
+
+.headers,
+.fields {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.headers{
+  display: flex;
+  background-color: var(--color-sec-lightblue);
+  padding: 16px;
+}
+
+.headers h3 {
+  font-weight: 600;
+  margin: 0;
+}
+
+
+.fields {
+  padding: 16px;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--color-secondary-border);
+  align-items: center;
+}
+
+.name {
+  font-weight: 500;
+}
+
+.email {
+  font-weight: 300;
+  line-break: anywhere;
+}
+.emailaddress{
+  width: 60%;
+  word-wrap: break-word;
+
+}
+.headers > h3,
+.fields > div {
+  width: 38%;
+}
+
+.headers > h3:last-child,
+.fields > div:last-child {
+  width: 24%;
+}
+
+.button-wrapper {
+  margin-top: 3rem;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.saveBtn{
+  font-size: 14px;
+  margin-right: 10px;
+}
+.nav-buttons {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  border-bottom: 1px solid var(--color-secondary-border);
+  margin: 42px 0 24px;
+  width: 100%;
+}
+
+.nav-button {
+  padding: 8px 16px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-sec-text);
+  cursor: pointer;
+
+}
+
+.nav-button.active {
+  color: var(--color-prim-navy);
+  background-color: var(--color-sec-lightivory);
+}
+
+.field {
+  margin-bottom: 70px;
+}
+ 
+.select {
+  width: 188px;
+}
+.container{
+  padding: 54px 60px;
+}
+
+.container h4 {
+  color: var(--color-prim-navy);
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 0 8px;
+}
+@media screen and (max-width: 1200px)  {
+  .container{
+    padding: 54px 46px;
+  }
+  
+}
+
+@media screen and (max-width: 900px)  {
+  .content {
+    padding: 42px 30px;
+  }
+  .buttons {
+    padding: 32px 30px 16px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .container{
+    padding: 54px 16px;
+  }
+  .selectcontainer{
+    margin-left:20px ;
+  }
+  
+  .content {
+    padding: 42px 16px;
+  }
+
+  .name {
+    font-size: 12px;
+    padding-right: 16px;
+  }
+
+  .email {
+    font-size: 12px;
+    padding-right: 16px;
+  }
+
+  .headers > h3,
+  .fields > div {
+    width: 25%;
+  }
+
+  .headers > h3:last-child,
+  .fields > div:last-child {
+    width: 33%;
+  }
+
+  .nav-buttons {
+    gap: 0;
+  }
+
+  .nav-button {
+    font-size: 12px;
+  }
+}

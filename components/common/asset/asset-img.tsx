@@ -1,21 +1,19 @@
-import { useEffect} from "react";
+import { useEffect, useState } from "react";
 
 import styles from "./asset-img.module.css";
 
 import { Assets } from "../../../assets";
-import { useState } from "react";
-import asset from "../../../server-api/asset";
 
 const AssetImg = ({
   assetImg,
   type = "image",
-  name,
   opaque = false,
   onClick = () => {},
   imgClass = "",
-  style={},
-  activeFilter="",
-  isResize
+  style = {},
+  activeFilter = "",
+  isResize = false,
+  isDeletedItem = false,
 }) => {
   const [loaded, setLoaded] = useState(false);
 
@@ -24,9 +22,9 @@ const AssetImg = ({
 
   if (!finalImg) finalImg = Assets.empty;
 
-  useEffect(()=>{
-      setLoaded(false)
-  },[assetImg])
+  useEffect(() => {
+    setLoaded(false);
+  }, [assetImg]);
 
   return (
     <>
@@ -34,17 +32,31 @@ const AssetImg = ({
         src={Assets.empty}
         alt={"blank"}
         className={`${styles[activeFilter]}`}
-        style={loaded ? { display: "none" } : { width: '100%', height: "100%", "object-fit": "contain"}}
+        style={
+          loaded
+            ? { display: "none" }
+            : {
+                width: isDeletedItem ? "none" : "100%",
+                height: isDeletedItem ? "none" : "100%",
+                objectFit: "contain",
+              }
+        }
       />
       <img
         onClick={onClick}
         src={finalImg}
-        className={`asset-img ${!isResize ? styles.asset : styles.asset__crop} ${opaque && styles.opaque} ${imgClass} ${styles[imgClass]} ${styles[activeFilter]}`}
+        className={`asset-img ${
+          !isResize ? styles.asset : styles.asset__crop
+        } ${opaque && styles.opaque} ${imgClass} ${styles[imgClass]} ${
+          styles[activeFilter]
+        }`}
         onLoad={() => setLoaded(true)}
-        onError={(e) => {setLoaded(false)}}
+        onError={(e) => {
+          setLoaded(false);
+        }}
         style={
           loaded
-            ? {...style}
+            ? { ...style }
             : {
                 opacity: 0,
                 overflow: "hidden",

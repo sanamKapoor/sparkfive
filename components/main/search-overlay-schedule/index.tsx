@@ -1,115 +1,99 @@
-import { useState } from 'react'
-import styles from './index.module.css'
-import Link from 'next/link'
-import campaignApi from '../../../server-api/campaign'
-import projectApi from '../../../server-api/project'
-import taskApi from '../../../server-api/task'
+import { useState } from "react";
 
+import campaignApi from "../../../server-api/campaign";
+import projectApi from "../../../server-api/project";
+import taskApi from "../../../server-api/task";
 
 // Components
-import Search from '../../common/inputs/search'
-import SearchItem from './search-item'
+import Search from "../../common/inputs/search";
+import SearchItem from "./search-item";
 
 const CreateOverlay = ({ closeOverlay }) => {
-
-  const [mixedList, setMixedList] = useState([])
-  const [term, setTerm] = useState('')
+  const [mixedList, setMixedList] = useState([]);
+  const [term, setTerm] = useState("");
 
   const getData = async (inputTerm) => {
-    setTerm(inputTerm)
+    setTerm(inputTerm);
     try {
-      const filterObj = { term: inputTerm }
+      const filterObj = { term: inputTerm };
 
-      const campaignResponse = await campaignApi.getCampaigns(filterObj)
-      const campaignsData = campaignResponse.data
+      const campaignResponse = await campaignApi.getCampaigns(filterObj);
+      const campaignsData = campaignResponse.data;
 
-      const projectResponse = await projectApi.getProjects(filterObj)
-      const projectsData = projectResponse.data
+      const projectResponse = await projectApi.getProjects(filterObj);
+      const projectsData = projectResponse.data;
 
-      const taskResponse = await taskApi.getTasks(filterObj)
-      const tasksData = taskResponse.data
+      const taskResponse = await taskApi.getTasks(filterObj);
+      const tasksData = taskResponse.data;
 
-      mixAndOrderData(campaignsData, projectsData, tasksData)
-
+      mixAndOrderData(campaignsData, projectsData, tasksData);
     } catch (err) {
       // TODO: Handle this error
-      console.log(err)
+      console.log(err);
     }
-  }
+  };
 
   const mixAndOrderData = (campaignsData, projectsData, tasksData) => {
     const mixed = [
-      ...campaignsData.map(campaign => ({ ...campaign, itemType: 'campaign' })),
-      ...projectsData.map(project => ({ ...project, itemType: 'project' })),
-      ...tasksData.map(task => ({ ...task, itemType: 'task' })),
-    ]
-    mixed
-      .sort((itemA, itemB) => {
-        const aDateKey = getItemDateKey(itemA)
-        const bDateKey = getItemDateKey(itemB)
+      ...campaignsData.map((campaign) => ({
+        ...campaign,
+        itemType: "campaign",
+      })),
+      ...projectsData.map((project) => ({ ...project, itemType: "project" })),
+      ...tasksData.map((task) => ({ ...task, itemType: "task" })),
+    ];
+    mixed.sort((itemA, itemB) => {
+      const aDateKey = getItemDateKey(itemA);
+      const bDateKey = getItemDateKey(itemB);
 
-        // Handle undefined dates
-        if (!itemA[aDateKey])
-          return 1
-        else if (!itemB[bDateKey])
-          return -1
+      // Handle undefined dates
+      if (!itemA[aDateKey]) return 1;
+      else if (!itemB[bDateKey]) return -1;
 
-        const dateA = new Date(itemA[aDateKey])
-        const dateB = new Date(itemB[bDateKey])
+      const dateA = new Date(itemA[aDateKey]);
+      const dateB = new Date(itemB[bDateKey]);
 
-        if (dateA > dateB)
-          return 1
-        else if (dateA < dateB)
-          return -1
-        else
-          return 0
-      })
-    setMixedList(mixed)
-  }
-
+      if (dateA > dateB) return 1;
+      else if (dateA < dateB) return -1;
+      else return 0;
+    });
+    setMixedList(mixed);
+  };
 
   const getItemDateKey = (item) => {
     switch (item.itemType) {
-      case 'campaign':
-        return 'endDate'
-      case 'project':
-        return 'publishDate'
-      case 'task':
-        return 'endDate'
+      case "campaign":
+        return "endDate";
+      case "project":
+        return "publishDate";
+      case "task":
+        return "endDate";
       default:
-        return
+        return;
     }
-  }
+  };
 
   return (
     <div className={`app-overlay search-container`}>
-      <div className={'search-top'}>
-        <div className={'search-close'} onClick={closeOverlay}>
-          <span className={'search-x'}>X</span>
+      <div className={"search-top"}>
+        <div className={"search-close"} onClick={closeOverlay}>
+          <span className={"search-x"}>X</span>
           <span>esc</span>
         </div>
       </div>
-      <div className={'search-content'}>
-        <h2 >
-          Search Calendar
-        </h2>
-        <div className={'search-cont'}>
-          <Search
-            onSubmit={(inputTerm) => getData(inputTerm)}
-          />
+      <div className={"search-content"}>
+        <h2>Search Calendar</h2>
+        <div className={"search-cont"}>
+          <Search onSubmit={(inputTerm) => getData(inputTerm)} />
         </div>
-        <ul className={'search-content-list'}>
+        <ul className={"search-content-list"}>
           {mixedList.map((item, index) => (
-            <SearchItem
-              key={index}
-              item={item}
-              term={term}
-            />
+            <SearchItem key={index} item={item} term={term} />
           ))}
         </ul>
       </div>
-    </div >
-  )
-}
+    </div>
+  );
+};
 
-export default CreateOverlay
+export default CreateOverlay;

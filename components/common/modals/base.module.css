@@ -1,6 +1,4 @@
 .modal {
-  /*min-width: calc(100vw - 65%);
-   min-height: calc(100vw - 65%); */
   max-width: calc(100vw - 10%);
   min-width: 380px;
   max-height: calc(100vh - 20%);
@@ -10,18 +8,12 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* top: 20%;
-  left: 30%;
-  right: 30%; */
   background: white;
   border: 1px solid var(--color-secondary-border);
   width: fit-content;
   height: fit-content;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 8px;
-  /* padding-bottom: 20px; */
-  /* width: 100%;
-  height: 100%; */
 }
 
 @media screen and (max-width: 410px) {
@@ -42,14 +34,13 @@
   width: 100vw;
   height: 100%;
   background: rgba(0, 0, 0, 0.2);
-  /* background: rgba(0, 0, 0, 0.5); */
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 @media screen and (min-width: 801px) {
-  .overlay { 
+  .overlay {
     align-items: flex-start;
     padding-top: 188px;
   }
@@ -70,8 +61,7 @@
 }
 
 .subtext {
-  font-size: 13px;
-  max-width: 80%;
+  font-size: 12px;
   margin: 8px 0 0;
   font-weight: 300;
 }
@@ -84,6 +74,7 @@
 .text span {
   display: inline-flex;
 }
+
 .full-width {
   width: 100% !important;
 }
@@ -109,7 +100,7 @@
   padding: 20px;
 }
 
-.buttons > div {
+.buttons>div {
   margin-left: 5px;
 }
 

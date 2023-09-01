@@ -1,0 +1,30 @@
+.form-container {
+  display: flex;
+  width: 50%;
+  margin-top: 20px;
+}
+.companyName{
+  font-family: "Noto Sans", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+}
+.compamnyInfo{
+  margin-bottom: 20px;
+}
+h3.title { 
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+.companyBtn button{
+  min-width: 135px;
+  min-height: 35px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+@media screen and (max-width: 900px) {
+  .form-container {
+     width: 100%;
+     flex-wrap: wrap;
+  }
+ }

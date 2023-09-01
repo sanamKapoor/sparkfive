@@ -6,7 +6,6 @@
 
 .select-prefix__control {
   border-style: none !important;
-  max-height: 34px;
   min-height: 34px !important;
 }
 
@@ -107,6 +106,8 @@
 .filter .select-prefix__placeholder,
 .regular .select-prefix__placeholder {
   color: var(--color-prim-navy);
+  font-weight: 400;
+  font-size: 14px;
 }
 .search-filters .filter .select-prefix__placeholder,
 .product-select .select-prefix__placeholder {
@@ -140,6 +141,9 @@
   background-color: white;
   font-size: 13px;
   border-radius: 5px;
+}
+.select-prefix__indicator svg{
+fill:#08135E;
 }
 
 /* Multi filter */

@@ -1,94 +1,143 @@
-import styles from './contact-form.module.css'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm } from "react-hook-form";
+import styles from "./contact-form.module.css";
 
 // Components
-import FormInput from '../common/inputs/form-input'
-import Input from '../common/inputs/input'
-import TextArea from '../common/inputs/text-area'
+import { IGuestUserInfo } from "../../types/guest-upload/guest-upload";
+import Button from "../common/buttons/button";
+import FormInput from "../common/inputs/form-input";
+import Input from "../common/inputs/input";
+import TextArea from "../common/inputs/text-area";
 
-const ContactForm = ({ id, onSubmit, disabled = false, teamName = '' }) => {
-  const { control, handleSubmit, errors } = useForm()
+interface ContactFormProps {
+  data: IGuestUserInfo;
+  onSubmit: (data: IGuestUserInfo) => void;
+  teamName: string;
+}
 
-  const submitForm = data => {
-      onSubmit(data)
-  }
+const ContactForm: React.FC<ContactFormProps> = ({
+  data,
+  onSubmit,
+  teamName = "",
+}) => {
+  const { control, handleSubmit, errors } = useForm({
+    defaultValues: data,
+  });
 
   return (
-    <form id={id} onSubmit={handleSubmit(submitForm)} className={styles['form']}>
+    <form onSubmit={handleSubmit(onSubmit)} className={styles["form"]}>
       <>
         <div className={styles.container}>
-          <div>
-            <div className={styles['fields-pair']}>
-              <div className={styles.city}>
-                <FormInput
-                    labId='name'
-                    label='Your Name'
-                    InputComponent={
-                      <Input
-                          type='text'
-                          id='name'
-                          disabled={disabled}
-                          additionalClasses={styles.input}
-                      />
-                    }
-                    name='name'
-                    defaultValue={''}
-                    control={control}
-                    rules={{ required: true, minLength: 2, maxLength: 30 }}
-                    errors={errors}
-                    message={'This field should be between 2 and 30 characters long'}
-                />
-              </div>
-              <div className={styles.city}>
-                <FormInput
-                    labId='email'
-                    label='Email Address'
-                    InputComponent={
-                      <Input
-                          type='text'
-                          id='email'
-                          disabled={disabled}
-                          additionalClasses={styles.input}
-                      />
-                    }
-                    name='email'
-                    defaultValue={''}
-                    control={control}
-                    rules={{ required: true, pattern: {
-                            value: /\S+@\S+\.\S+/,
-                            message: "Wrong email format"
-                        } }}
-                    errors={errors}
-                    message={'Wrong email format'}
-                />
-              </div>
-            </div>
-
-            <FormInput
-                labId='notes'
-                label={`Note to ${teamName} (i.e name of project, campaign, etc)`}
+          <div className={styles.row}>
+            <div>
+              <FormInput
+                labId="firstName"
+                label="First Name"
                 InputComponent={
-                  <TextArea
-                      type='text'
-                      id='notes'
-                      rows={5}
-                      disabled={disabled}
-                      additionalClasses={styles.input}
+                  <Input
+                    type="text"
+                    id="first_name"
+                    additionalClasses={styles.input}
                   />
                 }
-                defaultValue={''}
-                name='notes'
+                name="firstName"
+                defaultValue={""}
                 control={control}
-                rules={{ minLength: 4, maxLength: 300 }}
+                rules={{ required: true, minLength: 2, maxLength: 30 }}
                 errors={errors}
-                message={'This field should be between 4 and 300 characters long'}
+                message={
+                  "This field should be between 2 and 30 characters long"
+                }
+              />
+            </div>
+            <div>
+              <FormInput
+                labId="lastName"
+                label="Last Name"
+                InputComponent={
+                  <Input
+                    type="text"
+                    id="last_name"
+                    additionalClasses={styles.input}
+                  />
+                }
+                name="lastName"
+                defaultValue={""}
+                control={control}
+                rules={{ required: true, minLength: 2, maxLength: 30 }}
+                errors={errors}
+                message={
+                  "This field should be between 2 and 30 characters long"
+                }
+              />
+            </div>
+          </div>
+          <div className={styles.row}>
+            <div>
+              <FormInput
+                labId="email"
+                label="Email"
+                InputComponent={
+                  <Input
+                    type="text"
+                    id="email"
+                    additionalClasses={styles.input}
+                  />
+                }
+                name="email"
+                defaultValue={""}
+                control={control}
+                rules={{
+                  required: true,
+                  pattern: {
+                    value: /\S+@\S+\.\S+/,
+                    message: "Wrong email format",
+                  },
+                }}
+                errors={errors}
+                message={"Wrong email format"}
+              />
+            </div>
+          </div>
+
+          <div>
+            <FormInput
+              labId="notes"
+              label={`Message to ${teamName} (i.e name of project, campaign, etc)`}
+              InputComponent={
+                <TextArea
+                  type="text"
+                  id="notes"
+                  rows={5}
+                  additionalClasses={styles.input}
+                />
+              }
+              defaultValue={""}
+              name="notes"
+              control={control}
+              rules={{ minLength: 4, maxLength: 300 }}
+              errors={errors}
+              message={"This field should be between 4 and 300 characters long"}
             />
           </div>
         </div>
       </>
-    </form>
-  )
-}
+      <div className={styles.formBtn}>
+      <Button
+        type="submit"
+        className="container primary"
+        text="Save & Continue"
+      />
 
-export default ContactForm
+      </div>
+      <div className={styles.fileHeading}>
+        <span>
+        Upload Files
+        </span>
+
+      </div>
+   
+    </form>
+  );
+};
+
+export default ContactForm;

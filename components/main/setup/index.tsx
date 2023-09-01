@@ -1,82 +1,79 @@
-import styles from './index.module.css'
-import { useEffect, useState, useContext } from 'react'
-import { UserContext } from '../../../context'
-import urlUtils from '../../../utils/url'
-import userApi from '../../../server-api/user'
-import Router from 'next/router'
+import Router from "next/router";
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../../../context";
+import userApi from "../../../server-api/user";
+import urlUtils from "../../../utils/url";
+import styles from "./index.module.css";
 
 // Components
-import Profile from './profile'
-import Integrations from './integrations'
-import Button from '../../common/buttons/button'
+import Button from "../../common/buttons/button";
+import Integrations from "./integrations";
+import Profile from "./profile";
 
 const Setup = () => {
+  const { user } = useContext(UserContext);
 
-  const { user } = useContext(UserContext)
-
-  const splitName = user?.name.split(' ')[0]
+  const splitName = user?.name.split(" ")[0];
 
   const AVAILABLE_STEPS = {
     profile: {
       Component: Profile,
-      next: 'integrations',
+      next: "integrations",
       title: `Welcome, ${splitName}! It is our pleasure to serve you`,
-      subtitle: `Lets get your account set up.`
+      subtitle: `Lets get your account set up.`,
     },
     integrations: {
       Component: Integrations,
       title: `${splitName}, let's connect with your other services`,
-      subtitle: `Integrate with other apps to speed up your workflow.`
-    }
-  }
+      subtitle: `Integrate with other apps to speed up your workflow.`,
+    },
+  };
 
-  const [currentStep, setCurrentStep] = useState(AVAILABLE_STEPS['profile'])
+  const [currentStep, setCurrentStep] = useState(AVAILABLE_STEPS["profile"]);
 
-  const nextStep = AVAILABLE_STEPS[currentStep.next]
+  const nextStep = AVAILABLE_STEPS[currentStep.next];
 
   const goNext = async () => {
     if (nextStep) {
-      setCurrentStep(nextStep)
+      setCurrentStep(nextStep);
     } else {
       // No more steps, redirect to main menu
       try {
-        await userApi.patchUser({ firstTimeLogin: true })
+        await userApi.patchUser({ firstTimeLogin: true });
       } catch (err) {
-        console.log(err)
+        console.log(err);
       } finally {
-        Router.replace('/main/assets')
+        Router.replace("/main/assets");
       }
     }
-  }
+  };
 
   useEffect(() => {
-    const { step } = urlUtils.getQueryParameters()
+    const { step } = urlUtils.getQueryParameters();
     if (step) {
-      setCurrentStep(AVAILABLE_STEPS[step as string])
+      setCurrentStep(AVAILABLE_STEPS[step as string]);
     }
-  }, [])
+  }, []);
 
   const ActionButtons = ({ saveAction }) => (
-    <div className={styles['action-buttons']}>
+    <div className={styles["action-buttons"]}>
       <Button
-        text='Skip Step'
-        type='button'
+        text="Skip Step"
+        type="button"
         onClick={goNext}
-        styleType='secondary'
-        styleTypes={['round-corners', 'input-height']}
+        className="container secondary round-corners input-height"
       />
       <Button
-        text='LOOKS GREAT!'
-        type='button'
+        text="LOOKS GREAT!"
+        type="button"
         onClick={async () => {
-          await saveAction()
-          goNext()
+          await saveAction();
+          goNext();
         }}
-        styleType='primary'
-        styleTypes={['round-corners', 'input-height']}
+        className="container primary round-corners input-height"
       />
     </div>
-  )
+  );
 
   return (
     <section className={`${styles.container} container-centered`}>
@@ -85,8 +82,8 @@ const Setup = () => {
         <p className={styles.subtitle}>{currentStep.subtitle}</p>
         <currentStep.Component ActionButtons={ActionButtons} />
       </div>
-    </section >
-  )
-}
+    </section>
+  );
+};
 
-export default Setup
+export default Setup;

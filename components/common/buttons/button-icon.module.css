@@ -2,8 +2,7 @@
   display: flex;
   align-items: center;
   border-radius: 50px;
-  height: 48px;
-  min-width: 200px;
+  height: 36px;
   padding: 0 25px;
   color: var(--color-prim-turquoise);
   background-color: white;
@@ -12,6 +11,21 @@
   cursor: pointer;
   outline: none;
   position: relative;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+.downloadBtn {
+  height: 32px;
+  padding: 8px;
+  font-family: "Noto Sans", sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  color: #08135e;
+  border: 1px solid #dedad4;
+  background: #fff;
+  border-radius: 4px;
+  margin-left: 10px;
+  cursor: pointer;
 }
 
 .container-gray {
@@ -44,11 +58,24 @@
 
 
 .icon img {
-  width: 25px;
+  width: 24px;
   height: auto;
 }
 
 .text {
   flex: 1;
   margin-left: 8px;
+}
+
+
+@media screen and (max-width: 600px) {
+  .container {
+    font-size: 12px;
+    padding: 4px 16px;
+  }
+  
+  .icon img {
+    width: 18px;
+    height: 18px;
+  }
 }

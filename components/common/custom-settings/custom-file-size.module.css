@@ -1,9 +1,74 @@
+.main-wrapper{
+    width: 80%;
+}
+
+.main-wrapper h3 {
+    margin: 0;
+    font-weight: 600;
+  }
+  
 .row{
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
+    gap: 24px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--color-secondary-border);
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+}
+
+.form {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+ 
+}
+
+.field_title {
+    font-weight: 500;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--color-sec-lightivory);
+}
+
+.input {
+    width: 162px;
+}
+
+.input label {
+    font-size: 12px;
+    font-weight: 300;
+    margin-bottom: 16px;
+    display: block;
+}
+
+.input_group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.button_group {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.button_group button {
+    min-width: 80px;
 }
 
 .col-15{
@@ -83,30 +148,15 @@
     min-height: 1px;
     padding-right: 15px;
     padding-left: 15px;
+
 }
 
 .action-button{
-    width: 1.5rem;
-    margin-left: 1.2rem;
+    width: 21px;
+    height: 21px;
+    margin-left: 10px;
 }
 
-.action-button:last-of-type{
-    margin-right: 1.2rem;
-}
-
-.action-button:hover{
-    opacity: 0.5;
-}
-
-.button-row{
-    display: flex;
-    align-items: center;
-}
-
-.flex-display{
-    display: flex;
-    vertical-align: center;
-}
 
 .row-header{
     margin: 0 0 15px 15px;
@@ -120,7 +170,9 @@
 .p-l-30{
     padding-left: 30px;
 }
-
+.d-flex{
+    display: flex;
+}
 .font-weight-600{
     font-weight: 600;
 }
@@ -173,29 +225,37 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-    margin-left: 8px;
-    margin-top: 10px;
 }
 
 .select-add img{
     margin-right: 5px;
+    width: 20px;
+    height: 20px;
+}
+
+.saveBtn{
+    font-size: 14px;
+}
+.saveblock{
+    display: flex;
+    align-items: center;
 }
 
 
-@media screen and (max-width: 1280px){
-    .col-md-100{
-        flex: 0 0 100%;
-        max-width: 100%;
-        margin: 15px 0;
-    }
-
-    .field-block{
-        margin-bottom: 50px;
-        border-bottom: solid 2px #eae8e4;
-        padding-bottom: 30px;
-    }
-
-    .button-row{
-       justify-content: center;
+@media screen and (max-width: 1200px) {
+    .main-wrapper {
+        width: 100%;
     }
 }
+
+@media screen and (max-width: 480px) {
+
+    .field {
+        width: 100%;
+    }
+    .input {
+        width: 100% !important;
+    }
+   
+}
+

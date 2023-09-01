@@ -1,73 +1,79 @@
-import styles from './notification-list.module.css'
-import Router from 'next/router'
-import { format } from 'date-fns'
-import { Utilities } from '../../../assets'
+import { format } from "date-fns";
+import Router from "next/router";
+import { ItemFields, Utilities } from "../../../assets";
+import styles from "./notification-list.module.css";
 
-// Components
-
-const NotificationList = ({ notifications, onClear = (notif) => { }, onMarkRead = (notif) => { }, mode = 'header' }) => (
+const NotificationList = ({
+  notifications,
+  onClear = (notif) => {},
+  onMarkRead = (notif) => {},
+  mode = "header",
+}) => (
   <div className={`${styles.list} ${styles[mode]}`}>
-    <div className={styles.title}>Notifications</div>
+    <div className={styles.title}>Recent Notifications</div>
     <ul>
-      {notifications.length === 0 &&
+      {notifications.length === 0 && (
         <div className={styles.empty}>
-          <img
-            src={Utilities.thumbsUp}
-          />
-          <span>
-            You’re all set!  No new notifications
-          </span>
+          <img src={Utilities.thumbsUp} />
+          <span>You’re all set! No new notifications</span>
         </div>
-      }
-      {notifications.map(notification => {
+      )}
+      {notifications.map((notification) => {
+        const content = JSON.parse(notification.item).content;
+        let formattedContent;
 
-        const content = JSON.parse(notification.item).content
-        let formattedContent
-
-        if (mode === 'header') {
+        if (mode === "header") {
           if (content) {
-            formattedContent = content.length > 65 ?
-              `"${content.substring(0, 65)}..."` : `"${content}"`
+            formattedContent =
+              content.length > 65
+                ? `"${content.substring(0, 65)}..."`
+                : `"${content}"`;
           } else {
-            formattedContent = content
+            formattedContent = content;
           }
-        } else {
-
         }
 
-        const date = new Date(notification.timestamp * 1000)
+        const date = new Date(notification.timestamp * 1000);
 
-        const urlIndex = notification.url.indexOf('/main')
-        const realUrl = notification.url.substring(urlIndex, notification.url.length)
+        const urlIndex = notification.url.indexOf("/main");
+        const realUrl = notification.url.substring(
+          urlIndex,
+          notification.url.length
+        );
 
         return (
           <li className={styles.notification} key={notification.notifId}>
+            <div className={styles.notify}>
             <div className={`${styles[notification.status]}`}></div>
             <div className={styles.date}>
-              <div>
-                {format(date, 'MMM d')}
-              </div>
-              <div>
-                {format(date, 'p')}
-              </div>
+              <div>{format(date, "MMM d")}</div>
+              <div>{format(date, "p")}</div>
             </div>
+            </div>
+            {mode === "page" && (
+              <div className={styles.member}>
+                <img src={ItemFields.member} alt="member icon" />
+              </div>
+            )}
             <div onClick={() => Router.replace(realUrl)}>
-              <div className={styles.message}>
-                {notification.message}
-              </div>
-              <div className={styles.content}>
-                {formattedContent}
-              </div>
+              <div className={styles.message}>{notification.message}</div>
+              <div className={styles.content}>{formattedContent}</div>
             </div>
-            <div className={styles.action} onClick={
-              mode === 'header' ? () => onClear(notification) : () => onMarkRead(notification)}>
-              {mode === 'header' ? 'clear' : 'mark as seen'}
+            <div
+              className={styles.action}
+              onClick={
+                mode === "header"
+                  ? () => onClear(notification)
+                  : () => onMarkRead(notification)
+              }
+            >
+              {mode === "header" ? "clear" : "mark as seen"}
             </div>
           </li>
-        )
+        );
       })}
     </ul>
   </div>
-)
+);
 
-export default NotificationList
+export default NotificationList;

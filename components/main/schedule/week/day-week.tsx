@@ -1,28 +1,35 @@
-import Router from 'next/router'
-import styles from './day-week.module.css'
-import { useState, useRef } from 'react'
+import Router from "next/router";
+import { useRef, useState } from "react";
+import styles from "./day-week.module.css";
 
 // Components
-import TypeBadgeExtended from '../../../common/misc/type-badge-extended'
+import TypeBadgeExtended from "../../../common/misc/type-badge-extended";
 
 const DayWeek = ({ item, socialChannel, type, isMultiple, time }) => {
-  const cloneRef = useRef()
-  const realRef = useRef()
-  const [beingDragged, setBeingDragged] = useState(false)
+  const cloneRef = useRef();
+  const realRef = useRef();
+  const [beingDragged, setBeingDragged] = useState(false);
 
   const beginDrag = (e) => {
     if (cloneRef?.current) {
-      const realDayWidth = realRef.current.offsetWidth
-      document.documentElement.style.setProperty('--day-week-width', `${realDayWidth}px`)
-      e.dataTransfer.setData("itemId", item.id)
-      const dayWidth = cloneRef.current.offsetWidth
-      const dayHeight = cloneRef.current.offsetHeight
-      e.dataTransfer.setDragImage(cloneRef.current, dayWidth / 2, dayHeight / 2)
-      setBeingDragged(true)
+      const realDayWidth = realRef.current.offsetWidth;
+      document.documentElement.style.setProperty(
+        "--day-week-width",
+        `${realDayWidth}px`
+      );
+      e.dataTransfer.setData("itemId", item.id);
+      const dayWidth = cloneRef.current.offsetWidth;
+      const dayHeight = cloneRef.current.offsetHeight;
+      e.dataTransfer.setDragImage(
+        cloneRef.current,
+        dayWidth / 2,
+        dayHeight / 2
+      );
+      setBeingDragged(true);
     }
-  }
-  
-  const owner = item.users?.find(user => user.isOwner)
+  };
+
+  const owner = item.users?.find((user) => user.isOwner);
 
   return (
     <>
@@ -45,7 +52,7 @@ const DayWeek = ({ item, socialChannel, type, isMultiple, time }) => {
           dropdownOptions={item.dropdownOpts}
         />
       </div>
-      {!item.startDate &&
+      {!item.startDate && (
         <div className={styles.clone} ref={cloneRef}>
           {/* Draggable element with styles */}
           <TypeBadgeExtended
@@ -58,9 +65,9 @@ const DayWeek = ({ item, socialChannel, type, isMultiple, time }) => {
             projectTask={item.project?.name}
           />
         </div>
-      }
+      )}
     </>
-  )
-}
+  );
+};
 
-export default DayWeek
+export default DayWeek;

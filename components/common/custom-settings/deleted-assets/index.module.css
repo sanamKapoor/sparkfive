@@ -1,14 +1,49 @@
-.container {
-  padding: 35px 32px;
-}
-
-@media screen and (max-width: 900px) {
-  .container {
-    padding: 17.5px 16px;
-  }
-}
-
 .col-wrapper {
   display: flex;
   justify-content: space-between;
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+}
+
+
+.header__content {
+  font-size: 12px;
+  margin-left: 20px;
+  font-weight: 300;
+}
+
+/* TODO: define styles */
+.subHeader {
+  display: flex;
+  align-items: center;
+}
+
+
+/* TODO: fix styles */
+.sort-wrapper {
+  z-index: 1000;
+  width: 100px;
+  min-width: 90px
+}
+.infowrapper{
+  display: flex;
+  align-items: center;
+  padding-bottom: 30px;
+}
+.newbtn{
+  margin-right: 10px;
+}
+
+@media screen and (max-width: 1200px) {
+  .header__content{
+    margin-left: 0px;
+  }
+  
 }

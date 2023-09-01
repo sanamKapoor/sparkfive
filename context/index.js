@@ -1,5 +1,4 @@
 import { createContext } from "react";
-import { create } from "domain";
 
 export const LoadingContext = createContext({
   isLoading: false,
@@ -239,4 +238,6 @@ export const SocketContext = createContext({
 export const GuestUploadContext = createContext({
   logo: "",
   updateLogo: (url) => {},
+  banner: "",
+  setBanner: (banner) => {},
 });

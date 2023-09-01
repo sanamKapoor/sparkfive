@@ -1,38 +1,40 @@
-import {useContext} from "react";
+import { GeneralImg } from "../../../assets";
+import styles from "./guest-upload-layout.module.css";
 
-import styles from './guest-upload-layout.module.css'
-import { GeneralImg } from '../../../assets'
+import AssetContextProvider from "../../../context/asset-provider";
+import Footer from "../../guest-upload/footer";
 
-import AssetContextProvider from '../../../context/asset-provider'
-import  { GuestUploadContext } from '../../../context'
-
-const GuestUploadLayout = ({ children }) => {
-	const { logo } = useContext(GuestUploadContext)
-
-	return (
-		<>
-			<AssetContextProvider>
-				<header className={styles.header}>
-					<img
-						className={`${styles['logo-img']} ${styles['left-logo']}`}
-						src={logo ? logo : GeneralImg.logo} />
-
-						<div className={styles['title']}>Guest Upload</div>
-
-					<div className={styles['right-logo']}>
-						<span>Powered by Sparkfive</span>
-						<img
-							className={styles['logo-img']}
-							src={GeneralImg.logo} />
-					</div>
-
-				</header>
-				{children}
-				<footer className={styles.footer}>
-				</footer>
-			</AssetContextProvider>
-		</>
-	)
+interface GuestUploadLayoutProps {
+  children?: React.ReactNode;
+  logo: string;
+  banner: string;
 }
+const GuestUploadLayout: React.FC<GuestUploadLayoutProps> = ({
+  children,
+  logo,
+  banner,
+}) => {
+  return (
+    <>
+      <AssetContextProvider>
+        <header className={styles.header}>
+          <img
+            className={`${styles["logo-img"]} ${styles["left-logo"]}`}
+            src={logo}
+          />
+          <div className={styles["right-logo"]}>
+            <span>Powered by Sparkfive</span>
+            <img className={styles["logo-img"]} src={GeneralImg.logo} />
+          </div>
+        </header>
+        <div className={styles.banner}>
+          <img src={banner} alt="cover" />
+        </div>
+        {children}
+        <Footer />
+      </AssetContextProvider>
+    </>
+  );
+};
 
-export default GuestUploadLayout
+export default GuestUploadLayout;

@@ -1,38 +1,44 @@
-import { useRouter } from 'next/router'
-import { useCallback, useEffect, useState } from 'react'
-import urlUtils from '../utils/url'
+import { useRouter } from "next/router";
+import { useCallback, useEffect, useState } from "react";
+import urlUtils from "../utils/url";
 
 export const useQueryStrings = (defaultValues: any) => {
-  const [result, setResult] = useState<any>({})
-  const [params, setParams] = useState<any>({})
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [result, setResult] = useState<any>({});
+  const [params, setParams] = useState<any>({});
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  const router = useRouter()
-  
+  const router = useRouter();
+
   useEffect(() => {
-    setParams(urlUtils.getQueryParameters())
-    setIsLoaded(true)
-  }, [router.query])
+    setParams(urlUtils.getQueryParameters());
+    setIsLoaded(true);
+  }, [router.query]);
 
   useEffect(() => {
     if (Object.keys(params).length > 0) {
-      setResult(params)
+      setResult(params);
     } else if (isLoaded) {
-      setResult(defaultValues)
-      router.push(`${window.location.pathname}?${urlUtils.getQueryStringFromObject(defaultValues)}`)
+      setResult(defaultValues);
+      router.push(
+        `${window.location.pathname}?${urlUtils.getQueryStringFromObject(
+          defaultValues
+        )}`
+      );
     }
-  }, [params, isLoaded])
+  }, [params, isLoaded]);
 
-  const setter = useCallback((values: any) => {
-    const newParams = {
-      ...params,
-      ...values
-    }
+  const setter = useCallback(
+    (values: any) => {
+      const newParams = {
+        ...params,
+        ...values,
+      };
 
-    const qs = urlUtils.getQueryStringFromObject(newParams)
-    return router.push(`${window.location.pathname}?${qs}`)
-  }, [defaultValues])
+      const qs = urlUtils.getQueryStringFromObject(newParams);
+      return router.push(`${window.location.pathname}?${qs}`);
+    },
+    [defaultValues]
+  );
 
-
-  return [result, setter]
-}
+  return [result, setter];
+};

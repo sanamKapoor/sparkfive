@@ -1,13 +1,12 @@
-import { useEffect, useRef, useState } from 'react'
-import { startOfWeek, endOfWeek, addDays, subDays, addMonths, subMonths, differenceInMonths } from 'date-fns'
-import { Waypoint } from 'react-waypoint'
-import styles from './index.module.css'
-import dateUtils from '../../../../utils/date'
+import { addDays, differenceInMonths, subDays } from "date-fns";
+import { useEffect, useRef, useState } from "react";
+import { Waypoint } from "react-waypoint";
+import dateUtils from "../../../../utils/date";
+import styles from "./index.module.css";
 
 // Components
-import Day from '../common/day'
-import DayMonth from './day-month'
-
+import Day from "../common/day";
+import DayMonth from "./day-month";
 
 const Month = ({
   monthRange,
@@ -20,138 +19,148 @@ const Month = ({
   setActiveView,
   setCreateType,
   setCreateVisible,
-  setCreateEndDate
+  setCreateEndDate,
 }) => {
+  const dayRef = useRef(null);
+  const gridContRef = useRef(null);
 
-  const dayRef = useRef(null)
-  const gridContRef = useRef(null)
-
-  const [calendarBoundaries, setCalendarBoundaries] = useState(null)
-  const [calendarDays, setCalendarDays] = useState([])
-  const [mappedItems, setMappedItems] = useState(null)
-  const [repositioning, setRepositioning] = useState(true)
-  const [loadingData, setLoadingData] = useState(true)
-  const [firstLoad, setFistLoad] = useState(false)
-  const [offsetBeginElement, setOffsetBeginElement] = useState(null)
-
+  const [calendarBoundaries, setCalendarBoundaries] = useState(null);
+  const [calendarDays, setCalendarDays] = useState([]);
+  const [mappedItems, setMappedItems] = useState(null);
+  const [repositioning, setRepositioning] = useState(true);
+  const [loadingData, setLoadingData] = useState(true);
+  const [firstLoad, setFistLoad] = useState(false);
+  const [offsetBeginElement, setOffsetBeginElement] = useState(null);
 
   useEffect(() => {
     if (dayRef && dayRef.current) {
       const resizeWindow = () => {
-        let dayWidth = dayRef.current.offsetWidth
-        document.documentElement.style.setProperty('--day-width', `${dayWidth}px`)
-      }
-      resizeWindow()
-      window.addEventListener('resize', resizeWindow)
-      return () => window.removeEventListener('resize', resizeWindow)
+        let dayWidth = dayRef.current.offsetWidth;
+        document.documentElement.style.setProperty(
+          "--day-width",
+          `${dayWidth}px`
+        );
+      };
+      resizeWindow();
+      window.addEventListener("resize", resizeWindow);
+      return () => window.removeEventListener("resize", resizeWindow);
     }
-  }, [dayRef])
+  }, [dayRef]);
 
   useEffect(() => {
-    loadData()
-  }, [mixedList])
+    loadData();
+  }, [mixedList]);
 
   const loadData = () => {
     if (monthRange) {
-      let boundaryBegin = calendarBoundaries?.begin
-      let boundaryEnd = calendarBoundaries?.end
+      let boundaryBegin = calendarBoundaries?.begin;
+      let boundaryEnd = calendarBoundaries?.end;
 
       if (!boundaryBegin || monthRange.begin < boundaryBegin) {
-        boundaryBegin = monthRange.begin
+        boundaryBegin = monthRange.begin;
       }
       if (!boundaryEnd || monthRange.end > boundaryEnd) {
-        boundaryEnd = monthRange.end
+        boundaryEnd = monthRange.end;
       }
 
       const newBoundaries = {
         begin: boundaryBegin,
         beginRender: boundaryBegin,
         end: boundaryEnd,
-        endRender: boundaryEnd
-      }
-      setCalendarBoundaries(newBoundaries)
+        endRender: boundaryEnd,
+      };
+      setCalendarBoundaries(newBoundaries);
 
-      const newCalendarDays = []
+      const newCalendarDays = [];
 
-      let indDate = new Date(newBoundaries.beginRender)
+      let indDate = new Date(newBoundaries.beginRender);
       while (indDate < newBoundaries.endRender) {
         for (let i = 0; i < 7; i++) {
-          newCalendarDays.push({ date: new Date(indDate), weekDay: i })
-          indDate = addDays(indDate, 1)
+          newCalendarDays.push({ date: new Date(indDate), weekDay: i });
+          indDate = addDays(indDate, 1);
         }
       }
-      setCalendarDays(newCalendarDays)
-      const newMappedItems = {}
+      setCalendarDays(newCalendarDays);
+      const newMappedItems = {};
       mixedList.forEach((item) => {
-        dateUtils.processDayItem(item, newMappedItems, DayMonth)
-      })
-      const reorderedItems = dateUtils.reorderItems(newMappedItems, newCalendarDays)
-      setMappedItems(reorderedItems)
+        dateUtils.processDayItem(item, newMappedItems, DayMonth);
+      });
+      const reorderedItems = dateUtils.reorderItems(
+        newMappedItems,
+        newCalendarDays
+      );
+      setMappedItems(reorderedItems);
     }
-  }
+  };
 
   useEffect(() => {
     if (firstLoad && !loadingData) {
-      repositionToDate(currentDate)
+      repositionToDate(currentDate);
     }
-  }, [currentDate])
+  }, [currentDate]);
 
   useEffect(() => {
     if (mappedItems) {
       if (offsetBeginElement) {
         gridContRef?.current.scrollTo({
-          top: offsetBeginElement.offsetTop
-        })
-        setOffsetBeginElement(null)
+          top: offsetBeginElement.offsetTop,
+        });
+        setOffsetBeginElement(null);
       }
-      setLoadingData(false)
+      setLoadingData(false);
       if (!firstLoad) {
-        repositionToDate(currentDate)
-        setFistLoad(true)
+        repositionToDate(currentDate);
+        setFistLoad(true);
       }
     }
-  }, [mappedItems])
+  }, [mappedItems]);
 
   const repositionToDate = (date) => {
-    setRepositioning(true)
-    const elRef = window.document.getElementById(dateUtils.getDateKey(date))
+    setRepositioning(true);
+    const elRef = window.document.getElementById(dateUtils.getDateKey(date));
     gridContRef?.current.scrollTo({
-      top: (elRef.offsetTop)
-    })
-    setRepositioning(false)
-  }
+      top: elRef.offsetTop,
+    });
+    setRepositioning(false);
+  };
 
   const onDragDrop = (itemId, date) => {
     if (itemId) {
-      updateItem(mixedList.find(item => item.id === itemId), date)
+      updateItem(
+        mixedList.find((item) => item.id === itemId),
+        date
+      );
     }
-  }
+  };
 
   const handleScrollEnter = (day) => {
-    const equalBegin = dateUtils.areSameDates(day.date, monthRange.begin)
-    const equalEnd = dateUtils.areSameDates(day.date, monthRange.end)
+    const equalBegin = dateUtils.areSameDates(day.date, monthRange.begin);
+    const equalEnd = dateUtils.areSameDates(day.date, monthRange.end);
 
     if (displayDate.getMonth() !== day.date.getMonth()) {
-      setDisplayDate(day.date)
+      setDisplayDate(day.date);
     }
 
     if (!repositioning && !loadingData && (equalBegin || equalEnd)) {
-      setLoadingData(true)
-      if (equalBegin && differenceInMonths(day.date, calendarBoundaries.begin) <= 1) {
-        setOffsetBeginElement(window.document.getElementById(dateUtils.getDateKey(day.date)))
+      setLoadingData(true);
+      if (
+        equalBegin &&
+        differenceInMonths(day.date, calendarBoundaries.begin) <= 1
+      ) {
+        setOffsetBeginElement(
+          window.document.getElementById(dateUtils.getDateKey(day.date))
+        );
       }
 
-      setCurrentDate(equalEnd ? addDays(day.date, 1) : subDays(day.date, 1))
+      setCurrentDate(equalEnd ? addDays(day.date, 1) : subDays(day.date, 1));
     }
-  }
+  };
 
   return (
     <section className={styles.container}>
-      <div className={styles.calendar} >
-        {loadingData &&
-          <div className={styles.loading}></div>
-        }
-        <div className={styles['day-of-week']}>
+      <div className={styles.calendar}>
+        {loadingData && <div className={styles.loading}></div>}
+        <div className={styles["day-of-week"]}>
           <div ref={dayRef}>Sun</div>
           <div>Mon</div>
           <div>Tue</div>
@@ -160,29 +169,32 @@ const Month = ({
           <div>Fri</div>
           <div>Sat</div>
         </div>
-        <div ref={gridContRef} className={`${styles['date-grid-container']}`}>
-          <div className={styles['date-grid']}>
-
+        <div ref={gridContRef} className={`${styles["date-grid-container"]}`}>
+          <div className={styles["date-grid"]}>
             {calendarDays.map((day, index) => {
+              const { date } = day;
 
-              const { date } = day
+              const dayKey = dateUtils.getDateKey(date);
+              const itemListForDate = mappedItems[dayKey];
+              const itemList = itemListForDate || [];
 
-              const dayKey = dateUtils.getDateKey(date)
-              const itemListForDate = mappedItems[dayKey]
-              const itemList = itemListForDate || []
-
-              let itemListPrevious = []
+              let itemListPrevious = [];
               if (index > 0) {
-                const previousDate = subDays(date, 1)
-                const previousKey = dateUtils.getDateKey(previousDate)
-                const itemListForDatePrevious = mappedItems[previousKey]
-                itemListPrevious = itemListForDatePrevious || []
+                const previousDate = subDays(date, 1);
+                const previousKey = dateUtils.getDateKey(previousDate);
+                const itemListForDatePrevious = mappedItems[previousKey];
+                itemListPrevious = itemListForDatePrevious || [];
               }
 
-              let WaypointComp
+              let WaypointComp;
 
               if (day.weekDay === 0 || day.weekDay === 6) {
-                WaypointComp = <Waypoint onEnter={() => handleScrollEnter(day)} fireOnRapidScroll={false} />
+                WaypointComp = (
+                  <Waypoint
+                    onEnter={() => handleScrollEnter(day)}
+                    fireOnRapidScroll={false}
+                  />
+                );
               }
 
               return (
@@ -200,19 +212,19 @@ const Month = ({
                   itemListNext={[]}
                   Waypoint={WaypointComp}
                   onDragDrop={(e) => {
-                    onDragDrop(e.dataTransfer.getData("itemId"), date)
-                    e.dataTransfer.clearData()
+                    onDragDrop(e.dataTransfer.getData("itemId"), date);
+                    e.dataTransfer.clearData();
                   }}
                   setCreateType={setCreateType}
                   setCreateVisible={setCreateVisible}
                 />
-              )
+              );
             })}
           </div>
         </div>
       </div>
-    </section >
-  )
-}
+    </section>
+  );
+};
 
-export default Month
+export default Month;

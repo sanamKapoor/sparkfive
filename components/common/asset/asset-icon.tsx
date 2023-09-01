@@ -1,5 +1,5 @@
-import styles from "./asset-icon.module.css";
 import { Assets } from "../../../assets";
+import styles from "./asset-icon.module.css";
 
 const {
   msword,
@@ -47,7 +47,7 @@ const AssetIcon = ({
   padding = false,
   style = {},
   imgClass = {},
-  activeFilter=""
+  activeFilter = "",
 }) => {
   return (
     <div
@@ -58,7 +58,11 @@ const AssetIcon = ({
         isCollection && styles.collection
       }`}
     >
-      <img className={`${styles.icon} ${styles[imgClass]} ${styles[activeFilter]}`} style={style} src={extensionToType(extension, isCollection)} />
+      <img
+        className={`${styles.icon} ${styles[imgClass]} ${styles[activeFilter]}`}
+        style={style}
+        src={extensionToType(extension, isCollection)}
+      />
     </div>
   );
 };

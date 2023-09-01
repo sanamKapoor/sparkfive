@@ -1,6 +1,6 @@
+import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { AssetContext, SocketContext } from "../context";
-import { useRouter } from "next/router";
 
 import {
   convertTimeFromSeconds,
@@ -271,10 +271,6 @@ export default ({ children }) => {
         // Current folder Group have the key
         if (folderGroup[fileGroupInfo.folderKey]) {
           currentUploadingFolderId = folderGroup[fileGroupInfo.folderKey];
-          // Assign new file name without splash
-          // file = new File([file.slice(0, file.size, file.type)],
-          //     fileGroupInfo.newName
-          //     , { type: file.type })
         }
       }
 

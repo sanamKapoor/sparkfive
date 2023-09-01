@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
 import { Line } from "rc-progress";
+import { useContext } from "react";
 
-import styles from "./index.module.css";
 import { Utilities } from "../../assets";
 import { AssetContext } from "../../context";
+import styles from "./index.module.css";
 
 const AssetUploadItem = ({ item, index, handleRetry }) => {
   const {

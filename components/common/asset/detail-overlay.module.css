@@ -19,7 +19,6 @@
   display: flex !important;
   align-items: center;
   justify-content: center;
-  /* border: 2px dotted #100d0f !important; */
   position: relative !important;
   transform: none !important;
 }
@@ -76,14 +75,13 @@
   align-items: center;
   justify-self: center;
 }
-.name img{
+
+.name img {
   width: 14px;
 }
 
 .top-wrapper .name h3 {
   margin: 0;
-  /* margin-right: 8px;
-  font-size: 16px; */
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
@@ -133,7 +131,9 @@
   grid-area: asset-menu;
 }
 
-.img-wrapper, .share-img-wrapper , .download-image-types{
+.img-wrapper,
+.share-img-wrapper,
+.download-image-types {
   /* height: 100%;
   width: 100%; */
   padding: 24px;
@@ -147,12 +147,15 @@
 }
 
 .img-wrapper>img,
-.share-img-wrapper>img,.active-folderimg img{
+.share-img-wrapper>img,
+.active-folderimg img {
   width: initial;
   max-height: 100%;
 }
 
-.img-wrapper video, .share-img-wrapper video, .active-folderimg video{
+.img-wrapper video,
+.share-img-wrapper video,
+.active-folderimg video {
   max-width: 100%;
   width: 100%;
   max-height: 100%;
@@ -172,11 +175,12 @@
 .asset-actions ul {
   top: 41px;
   right: 0px;
-  /* width: 168px; */
 }
+
 .download-list-dropdown ul {
   width: 168px;
 }
+
 .menu {
   display: flex;
   flex-direction: column;
@@ -185,10 +189,19 @@
   padding: 16px 32px;
   width: 100px;
 }
-.asset-actions ul li {border-top: 1px solid #DEDAD4 !important;}
-.asset-actions ul li:nth-child(3) {border-top: 0px !important}
 
-.asset-actions ul li:first-child{border-top: none;}
+.asset-actions ul li {
+  border-top: 1px solid #DEDAD4 !important;
+}
+
+.asset-actions ul li:nth-child(3) {
+  border-top: 0px !important
+}
+
+.asset-actions ul li:first-child {
+  border-top: none;
+}
+
 .menu-icon {
   width: 21px;
   height: auto;
@@ -292,7 +305,8 @@
   width: 266px;
   background: #FAF8F5;
 }
-.share-right-button{
+
+.share-right-button {
   display: none;
 }
 
@@ -314,8 +328,8 @@
   }
 }
 
-@media (max-width:810px){
-  .share-right-button{
+@media (max-width:810px) {
+  .share-right-button {
     display: flex;
     background-color: var(--color-sec-lightivory);
     border-left: 1px solid var(--color-secondary-border);
@@ -323,19 +337,22 @@
     right: 0;
     width: 60px;
     height: 100%;
-    justify-content:  flex-start;
-    align-items:center;
+    justify-content: flex-start;
+    align-items: center;
     flex-direction: column;
     position: relative;
   }
-  .share-right-button img{
+
+  .share-right-button img {
     margin-bottom: 15px;
   }
+
   .share .side {
     width: calc(100% - 49px);
     position: absolute;
     right: 50px;
   }
+
   .share .content {
     width: 100%;
 
@@ -353,11 +370,13 @@
     min-width: 100%; */
     width: 100%;
   }
-  .share-img-wrapper{
+
+  .share-img-wrapper {
     height: calc(100vh - 135px);
     width: 100%;
   }
-  .active-folderimg{
+
+  .active-folderimg {
     height: calc(100vh - 156px);
     margin-top: 75px;
     width: 100%;
@@ -371,20 +390,21 @@
     padding-top: 47px;
     flex-direction: column;
   }
+
   .arrows {
     padding-bottom: 0;
   }
 
   .img-wrapper>img,
-.share-img-wrapper>img{
-  max-width: 100%;
-}
+  .share-img-wrapper>img {
+    max-width: 100%;
+  }
 
   .share.container {
     flex-direction: row;
   }
 
-  .field-wrapper{
+  .field-wrapper {
     display: flex;
     align-items: center;
     padding: 0;
@@ -393,9 +413,10 @@
     width: 100%;
   }
 
-  .field-wrapper .secondary-text{
-    min-width:90px;
+  .field-wrapper .secondary-text {
+    min-width: 90px;
   }
+
   .side {
     position: initial;
     width: 100%;
@@ -419,8 +440,9 @@
   .asset-actions {
     gap: 12px
   }
-  .asset-actions img{
-    width:15px
+
+  .asset-actions img {
+    width: 15px
   }
 
   .asset-actions ul {
@@ -450,9 +472,11 @@
     margin-bottom: 0;
     width: 18px;
   }
+
   .menu-icon.cdn-icon {
     width: 23px;
   }
+
   .top-wrapper {
     height: 47px;
   }
@@ -483,20 +507,20 @@
   }
 }
 
-@media (max-width:413px){
+@media (max-width:413px) {
   .top-wrapper .name h3 {
     max-width: 200px;
   }
 }
 
-@media (max-width:413px){
+@media (max-width:413px) {
   .menu {
     gap: 18px;
   }
 }
 
 
-@media (max-width:400px){
+@media (max-width:400px) {
   .top-wrapper .back-name {
     gap: 47px;
   }
@@ -504,6 +528,7 @@
 }
 
 
-.img-wrapper canvas, .share-img-wrapper canvas{
+.img-wrapper canvas,
+.share-img-wrapper canvas {
   position: absolute;
 }

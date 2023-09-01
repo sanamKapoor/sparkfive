@@ -1,13 +1,29 @@
+/*----- Define style for all types of buttons used in the app -----*/
 .container {
   border-radius: 5px;
-  height: 32px;
-  /* max-width: 250px; */
+  height: 34px;
   padding: 0 20px;
   font-weight: 600;
   cursor: pointer;
   font-size: 12px;
   min-width: 120px;
   white-space: nowrap;
+
+}
+
+.add{
+ background:#fff;
+ width:22px;
+ height:22px;
+ background: #10BDA5 ;
+ border-radius: 50%;
+ min-width: 0;
+ padding: 0;
+ color:#fff;
+ font-size: 20px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
 }
 
 .submit {
@@ -18,9 +34,6 @@
   min-height: unset !important;
 }
 
-.cancel-btn{
-
-}
 
 .normal-height,
 .normal-height-primary {
@@ -58,7 +71,7 @@
   background-color: var(--color-prim-turquoise-hover);
 }
 
-.primary-navy:hover{
+.primary-navy:hover {
   background-color: var(--color-prim-navy-hover);
 }
 
@@ -69,7 +82,7 @@
   cursor: default;
 }
 
-.primary-navy:disabled{
+.primary-navy:disabled {
   background-color: var(--color-prim-navy-hover);
   cursor: default;
 }
@@ -104,7 +117,7 @@
 }
 
 /* Used for multi usually */
-.round-corners{
+.round-corners {
   border-radius: 50px;
 }
 
@@ -114,9 +127,181 @@
   border: 1px solid white;
 }
 
+.edit-submit-btn {
+  display: inline-block;
+}
+
+.edit-cancel-btn {
+  margin-left: 5px;
+  display: inline-block;
+}
+
+.section-container {
+  outline: none;
+  background-color: inherit;
+  font-weight: 400;
+  color: var(--color-prim-navy);
+  cursor: pointer;
+  border-bottom: 3px solid white;
+  padding: 0;
+}
+
+.section-container:disabled {
+  background-color: var(--color-prim-turquoise-hover);
+  cursor: default;
+}
+
+.section-active {
+  border-color: var(--color-prim-turquoise);
+  font-weight: 600;
+}
+
+.m-l-15 {
+  margin-left: 15px;
+}
+
+.m-r-10 {
+  margin-right: 10px;
+}
+
+.m-t-40 {
+  margin-top: 40px !important;
+}
+
+.m-t-20 {
+  margin-top: 20px
+}
+
+.m-b-40 {
+  margin-bottom: 40px;
+}
+
+.m-l-20 {
+  margin-left: 20px;
+}
+
+.m-l-10 {
+  margin-left: 10px;
+}
+
+.auth-container {
+  border-radius: 50px;
+  min-height: 35px;
+  max-height: 48px;
+  padding: 12px 40px;
+  color: white;
+  text-transform: uppercase;
+  background-color: var(--color-prim-turquoise);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.auth-container:hover {
+  background-color: var(--color-prim-turquoise-hover);
+}
+
+.auth-container:disabled {
+  background-color: var(--color-prim-turquoise-hover);
+  cursor: default;
+}
+
+.nav-container {
+  border-radius: 50px;
+  height: 48px;
+  padding: 12px 40px;
+  color: white;
+  background-color: var(--color-prim-turquoise);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.nav-container:hover {
+  background-color: var(--color-prim-turquoise-hover);
+}
+
+.nav-container:disabled {
+  background-color: var(--color-prim-turquoise-hover);
+  cursor: default;
+}
+
+.position-absolute {
+  position: absolute;
+}
+
+.visibility-hidden {
+  visibility: hidden;
+}
+
+/* //download button */
+.downloadBtn {
+  height: 32px;
+  padding: 8px;
+  font-family: "Noto Sans", sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  color: #08135e;
+  border: 1px solid #dedad4;
+  background: #fff;
+  border-radius: 4px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+.actionBtn {
+  cursor: pointer;
+  background: transparent;
+  color: #10bda5;
+  font-family: "Noto Sans", sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+}
+.rejectBtn{
+  margin-right: 40px;
+}
+.formButton{
+  width: 100%;
+}
+.uploadBtn{
+  background-color:#817D9D;
+  height:40px;
+    border-radius:4px;
+    padding:8px 24px 8px 24px;
+    color:#fff;
+    font-style: 600;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 32px;
+}
+
+.activeUpload{
+  background-color:#10BDA5;
+  height:40px;
+    border-radius:4px;
+    padding:8px 24px 8px 24px;
+    color:#fff;
+    font-style: 600;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 32px;
+
+}
+
+@media screen and (max-width: 1000px) {
+  .nav-container {
+    min-width: 0;
+    font-size: 13px;
+    padding: 6px 20px;
+  }
+}
+
 @media screen and (max-width: 600px) {
   .container {
     padding: 0 8px;
     min-width: fit-content;
+  }
+}
+@media screen and (max-width: 575px) {
+  .downloadBtn {
+    display: none;
+    margin-left: 0;
   }
 }

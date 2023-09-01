@@ -1,10 +1,10 @@
-import styles from './dropdown.module.css'
-import { UserContext } from '../../../context'
-import { useContext, useEffect, useRef } from 'react'
+import { useContext, useEffect, useRef } from "react";
+import { UserContext } from "../../../context";
+import styles from "./dropdown.module.css";
 
-const Dropdown = ({ options = [], additionalClass = '', onClickOutside }) => {
-  const { hasPermission } = useContext(UserContext)
-  const ref = useRef(null)
+const Dropdown = ({ options = [], additionalClass = "", onClickOutside }) => {
+  const { hasPermission } = useContext(UserContext);
+  const ref = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -12,42 +12,37 @@ const Dropdown = ({ options = [], additionalClass = '', onClickOutside }) => {
         onClickOutside && onClickOutside();
       }
     };
-    document.addEventListener('click', handleClickOutside, true);
+    document.addEventListener("click", handleClickOutside, true);
     return () => {
-      document.removeEventListener('click', handleClickOutside, true);
+      document.removeEventListener("click", handleClickOutside, true);
     };
-  }, [onClickOutside])
-
+  }, [onClickOutside]);
 
   return (
     <ul className={`${styles.menu} ${additionalClass}`} ref={ref}>
       {options.map((option, index) => (
         <div key={option.id || index}>
-          {(!option.permissions || hasPermission(option.permissions)) &&
+          {(!option.permissions || hasPermission(option.permissions)) && (
             <div>
-              {option.OverrideComp ?
+              {option.OverrideComp ? (
                 <option.OverrideComp />
-                :
-                <li onClick={() => {
-                  option.onClick()
-                  onClickOutside && onClickOutside()
-                }}>
-                  <span>
-                    {option.icon &&
-                      <img src={option.icon} />
-                    }
-                  </span>
-                  <span>
-                    {option.label}
-                  </span>
+              ) : (
+                <li
+                  onClick={() => {
+                    option.onClick();
+                    onClickOutside && onClickOutside();
+                  }}
+                >
+                  <span>{option.icon && <img src={option.icon} />}</span>
+                  <span>{option.label}</span>
                 </li>
-              }
+              )}
             </div>
-          }
+          )}
         </div>
       ))}
     </ul>
-  )
-}
+  );
+};
 
-export default Dropdown
+export default Dropdown;

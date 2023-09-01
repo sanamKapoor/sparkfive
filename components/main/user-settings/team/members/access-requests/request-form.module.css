@@ -1,0 +1,81 @@
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.container button{
+  margin-top: 18px;
+}
+
+.state-country{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.fields-pair{
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+  margin-top: 28px;
+}
+
+.fields-pair>div:first-child{
+  width: 55%;
+  margin-right: 5%;
+}
+
+.fields-pair>div:last-child{
+  width: 40%;
+}
+
+.button-list{
+  display: flex;
+  justify-content: center;
+}
+
+.button{
+  margin-right: 25px;
+}
+
+.formHeader{
+  width: 100%;
+  display: flex;
+  justify-content:space-between;
+  border-bottom: 1px solid 
+  #E5E5E5;
+}
+
+.form{
+  width: 100%;
+  overflow: auto;
+
+}
+.accessRequestForm{
+  overflow: auto;
+  padding: 0px 24px 24px 24px;
+}
+
+
+.label{
+  font-weight: 600;
+  margin-bottom: 10px;
+  display:inline-block;
+
+}
+
+.title{
+  color: inherit;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+@media screen and (max-width: 650px) {
+  .fields-pair>div:first-child{
+    width: 100%;
+    margin-right: 0%;
+  }
+
+  .fields-pair>div:last-child{
+    width: 100%;
+  }
+}

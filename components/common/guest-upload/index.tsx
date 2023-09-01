@@ -1,50 +1,47 @@
-import styles from './index.module.css'
-import { useState } from 'react'
+import { useState } from "react";
+import styles from "./index.module.css";
 
 // Components
-import SectionButton from '../../common/buttons/section-button'
+import { useRouter } from "next/router";
+import Button from "../buttons/button";
 import Links from "./links";
-import Requests from "./requests";
-import {useRouter} from "next/router";
 
 const GuestUpload = () => {
-    const { query } = useRouter()
+  const { query } = useRouter();
 
-    const getDefaultTab = () => {
-        switch (query.tab){
-            case '0': {
-                return 'links'
-            }
-            case '1': {
-                return 'requests'
-            }
-            default: {
-                return 'links'
-            }
-        }
+  const getDefaultTab = () => {
+    switch (query.tab) {
+      case "0": {
+        return "links";
+      }
+      case "1": {
+        return "requests";
+      }
+      default: {
+        return "links";
+      }
     }
+  };
 
-    const [activeList, setActiveList] = useState(getDefaultTab())
+  const [activeList, setActiveList] = useState(getDefaultTab());
 
-    return (
-        <>
-            <div className={styles.buttons}>
-                <SectionButton
-                    text='Links'
-                    active={activeList === 'links'}
-                    onClick={() => setActiveList('links')}
-                />
-                {/* <SectionButton
-                    text='Requests'
-                    active={activeList === 'requests'}
-                    onClick={() => setActiveList('requests')}
-                /> */}
-            </div>
+  return (
+    <>
+      <div className={styles.buttons}>
+        <Button
+          text="Links"
+          className={
+            activeList === "links"
+              ? "section-container section-active"
+              : "section-container"
+          }
+          onClick={() => setActiveList("links")}
+        />
+      </div>
 
-            {activeList === 'links' && <Links />}
-            {/* {activeList === 'requests' && <Requests />} */}
-        </>
-    )
-}
+      {activeList === "links" && <Links />}
+    </>
+  );
+};
 
-export default GuestUpload
+export default GuestUpload;

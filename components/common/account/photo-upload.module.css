@@ -1,36 +1,33 @@
 .container {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   margin: 2.5rem 0;
+  gap: 16px
 }
 
-.container button:first-of-type, .container button:last-of-type, .description{
-  margin-left: 2rem;
-}
-
-.description{
+.description {
   margin-bottom: 0;
+  font-weight: 300;
 }
 
-.container button{
+.container button {
   min-width: 150px;
 }
 
-.current, .no-photo, .loading{
-  width: 85px;
-  height: 85px;
+.current,
+.no-photo,
+.loading {
+  width: 53px;
+  height: 53px;
 }
 
-.current, .loading {
+.current,
+.loading {
   object-fit: cover;
   border-radius: 50%;
 }
 
-.no-photo {
-
-}
-
-.team{
+.team {
   object-fit: contain;
   border-radius: 0;
 }
