@@ -30,12 +30,14 @@
     font-size: 32px;
     font-weight: 700;
     margin-bottom: 16px;
+    margin-top: 40px;
 }
 
 .upload_title {
     font-size: 32px;
     font-weight: 600;
     margin-bottom: 16px;
+    margin-top: 40px;
 }
 .uploadMOdal{
     padding: 40px 60px;
@@ -348,6 +350,10 @@
     border:1px solid 
     #E5E5E5;
     padding:31px 24px 18px 24px;
+}
+.uploadSection{
+    border-top: 1px solid 
+    #E5E5E5;
 }
 
 

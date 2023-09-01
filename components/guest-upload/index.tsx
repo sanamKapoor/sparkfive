@@ -356,7 +356,7 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
               </div>
             </>
             {showUploadSection && (
-              <>
+              <div className={styles.uploadSection}>
                 <div className={styles.upload_title}>Upload Files</div>
 
                 <div className={styles.subtitle}>
@@ -393,7 +393,7 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
                     onCancel={onCancelUpload}
                   />
                 )}
-              </>
+              </div>
             )}
           </div>
         ) : (
