@@ -69,46 +69,47 @@ const FilterContainer = ({
 
   const getCustomFields = async () => {
     try {
+
+      const { data } = isPublic
+        ? await shareCollectionApi.getCustomFields({
+          assetsCount: "yes",
+          assetLim: "yes",
+          sharePath,
+        })
+        : await customFieldsApi.getCustomFieldsWithCount({
+          assetsCount: "yes",
+          assetLim: "yes",
+          sharePath,
+        });
+
+      setCustomFieldList(data);
+
+      let fields = [];
+
+      // Expand those custom field
+      data.map((item, index) => {
+        fields.push(`customFields-${index}`);
+      });
+      //
+      // setExpandedMenus(update(expandedMenus, {
+      //     $push: fields
+      // }))
+
+      let filter = {};
+      let fieldValues = {};
+      data.map((value, index) => {
+        // Select one will use `all-px` query field also
+        filter[`all-p${value.id}`] = {
+          $set: value.type === "selectOne" ? "all" : "all",
+        }; // Available: none, all
+        filter[`custom-p${value.id}`] = { $set: [] };
+        fieldValues[value.id] = [];
+      });
+
+      setCustomFields(fieldValues);
+      // Add filter
+      setRenderedFlag(true);
       if (!renderFlag) {
-        const { data } = isPublic
-          ? await shareCollectionApi.getCustomFields({
-              assetsCount: "yes",
-              assetLim: "yes",
-              sharePath,
-            })
-          : await customFieldsApi.getCustomFieldsWithCount({
-              assetsCount: "yes",
-              assetLim: "yes",
-              sharePath,
-            });
-
-        setCustomFieldList(data);
-
-        let fields = [];
-
-        // Expand those custom field
-        data.map((item, index) => {
-          fields.push(`customFields-${index}`);
-        });
-        //
-        // setExpandedMenus(update(expandedMenus, {
-        //     $push: fields
-        // }))
-
-        let filter = {};
-        let fieldValues = {};
-        data.map((value, index) => {
-          // Select one will use `all-px` query field also
-          filter[`all-p${value.id}`] = {
-            $set: value.type === "selectOne" ? "all" : "all",
-          }; // Available: none, all
-          filter[`custom-p${value.id}`] = { $set: [] };
-          fieldValues[value.id] = [];
-        });
-
-        setCustomFields(fieldValues);
-        setRenderedFlag(true);
-        // Add filter
         setActiveSortFilter(update(activeSortFilter, filter));
       }
     } catch (err) {
@@ -171,9 +172,8 @@ const FilterContainer = ({
     <>
       {renderFlag && (
         <div
-          className={`${styles.container}  ${
-            stickyMenuScroll && styles["sticky-menu"]
-          }`}
+          className={`${styles.container}  ${stickyMenuScroll && styles["sticky-menu"]
+            }`}
           style={{ width: filterWidth }}
         >
           <section className={styles["top-bar"]}>
@@ -198,9 +198,8 @@ const FilterContainer = ({
             </div>
           </section>
           <div
-            className={`${styles["section-container"]} ${
-              isFolder ? styles["limit-height-container"] : ""
-            }`}
+            className={`${styles["section-container"]} ${isFolder ? styles["limit-height-container"] : ""
+              }`}
             id={"scroll-search-bottom-container"}
           >
             {!isFolder && (
@@ -330,21 +329,21 @@ const FilterContainer = ({
                           setAnyAll={
                             field.type === "selectMultiple"
                               ? (value) =>
-                                  setActiveSortFilter(
-                                    update(activeSortFilter, {
-                                      [`all-p${field.id}`]: { $set: value },
-                                    })
-                                  )
-                              : () => {}
+                                setActiveSortFilter(
+                                  update(activeSortFilter, {
+                                    [`all-p${field.id}`]: { $set: value },
+                                  })
+                                )
+                              : () => { }
                           }
                           loadFn={() => loadCustomFields(field.id)}
                           filters={
                             customFields[field.id]
                               ? customFields[field.id].map((tag) => ({
-                                  ...tag,
-                                  label: tag.name,
-                                  value: tag.id,
-                                }))
+                                ...tag,
+                                label: tag.name,
+                                value: tag.id,
+                              }))
                               : []
                           }
                           value={activeSortFilter[`custom-p${field.id}`]}
