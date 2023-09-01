@@ -3,7 +3,8 @@ import { Line } from "rc-progress";
 import React from "react";
 import { AssetOps } from "../../../assets";
 import { IGuestUploadItem } from "../../../types/guest-upload/guest-upload";
-
+import styles from "../upload-item.module.css"
+import { Utilities } from "../../../assets";
 interface UploadListItemProps {
   index: number;
   data: IGuestUploadItem;
@@ -20,10 +21,19 @@ const UploadListItem: React.FC<UploadListItemProps> = ({
   uploadingPercent,
 }) => {
   return (
-    <div key={index}>
-      <img src={AssetOps.recreateThumbnail} />
+    <>
+    <div  key={index}>
+      <div className={styles.uploadWrapper}>
+      <div className={styles.imageInfo}>
+      <div className={styles.fileImg}>
+      <img src={Utilities.document} />
+      </div>
+      <div>
       <p>{data.asset.name}</p>
-      {!data.isUploading && data.status === "queued" && (
+      </div>
+      </div>
+     <div>
+     {!data.isUploading && data.status === "queued" && (
         <div>
           <Line
             percent={0}
@@ -37,10 +47,13 @@ const UploadListItem: React.FC<UploadListItemProps> = ({
         </div>
       )}
       {!data.isUploading && data.status === "fail" && (
-        <div>
+        <div className={styles.errorMsg}>
           <p>Upload error</p>
+          <div className={styles.loadingImg}>
           <img src={AssetOps.reload} onClick={() => onRetry(index)} />
           <img src={AssetOps.cancel} onClick={() => onRemove(index)} />
+          </div>
+       
         </div>
       )}
 
@@ -56,15 +69,23 @@ const UploadListItem: React.FC<UploadListItemProps> = ({
           />
           <img src={AssetOps.cancel} />
         </div>
+       
       )}
 
       {!data.isUploading && data.status === "done" && (
-        <div>
+        <div className={styles.fileSize}>
           <p>{fileSize(data.file.size)}</p>
         </div>
       )}
+     </div>
+      </div>
+     
+    
     </div>
+    </>
+  
   );
 };
+
 
 export default UploadListItem;

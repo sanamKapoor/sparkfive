@@ -260,6 +260,28 @@
 .formButton{
   width: 100%;
 }
+.uploadBtn{
+  background-color:#817D9D;
+  height:40px;
+    border-radius:4px;
+    padding:8px 24px 8px 24px;
+    color:#fff;
+    font-style: 600;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.activeUpload{
+  background-color:#10BDA5;
+  height:40px;
+    border-radius:4px;
+    padding:8px 24px 8px 24px;
+    color:#fff;
+    font-style: 600;
+    font-size: 14px;
+    cursor: pointer;
+
+}
 
 @media screen and (max-width: 1000px) {
   .nav-container {

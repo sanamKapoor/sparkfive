@@ -114,7 +114,8 @@ export const Utilities = {
   checkMark: require('./Icons/Utilities/CheckMark/checkmark.svg'),
   transcript: require('./Icons/Utilities/Transcript/Transcript.svg'),
   updown: require('./Icons/Utilities/ArrowsDownUp.svg'),
-  download:require('./Icons/Utilities/download.svg')
+  download:require('./Icons/Utilities/download.svg'),
+  document:require('./Icons/Utilities/document.svg')
 }
 
 export const ProjectTypes = {

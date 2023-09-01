@@ -50,6 +50,20 @@
   text-align: center;
   margin-top: 34px;
 }
+.formBtn{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fileHeading{
+  font-weight: 600;
+  font-size: 32px;
+  border-bottom: 1px solid #DEDAD4;
+  border-top: 1px solid #DEDAD4;
+  padding: 20px;
+  margin-top:55px;
+
+}
 
 @media screen and (max-width: 1200px) {
   .container {
