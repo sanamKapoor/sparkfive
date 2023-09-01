@@ -2,6 +2,9 @@ import { Utilities } from "../../../assets";
 import { IGuestUploadItem } from "../../../types/guest-upload/guest-upload";
 import ButtonIcon from "../../common/buttons/button-icon";
 import UploadListItem from "./upload-list-item";
+import styles from "../upload-item.module.css"
+import DisableBtn from "./disable-btn";
+
 
 interface UploadListProps {
   files: IGuestUploadItem[];
@@ -24,21 +27,36 @@ const UploadList: React.FC<UploadListProps> = ({
 }) => {
   return (
     <div>
+      <div className={styles.updateStatus}>
       <h2>
         {uploadingIndex === files.length &&
         files.every((file) => file.status === "done")
           ? `Ready to Submit ${files.length} files`
           : `Uploading ${uploadingIndex} of ${files.length} files`}
       </h2>
+      <div className={styles.uploadBtn}>
       <ButtonIcon
-        icon={Utilities.add}
+        icon={Utilities.addAlt}
         text="Upload"
         onClick={onUpload}
         disabled={additionUploadDisabled}
       />
+      <DisableBtn 
+       icon={Utilities.add}
+       text="Upload"
+       onClick={onUpload}
+        disabled={additionUploadDisabled}
+      
+      />
+    
+      </div>
+      </div>
+     
+      
       {files.map((data, index) => {
         return (
-          <UploadListItem
+         
+            <UploadListItem
             key={index}
             index={index}
             data={data}
@@ -46,6 +64,9 @@ const UploadList: React.FC<UploadListProps> = ({
             onRetry={onRetry}
             uploadingPercent={uploadingPercent}
           />
+
+         
+          
         );
       })}
     </div>

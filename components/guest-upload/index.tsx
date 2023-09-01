@@ -9,6 +9,7 @@ import { SocketContext } from "../../context";
 import requestUtils from "../../utils/requests";
 
 import { defaultInfo } from "../../config/data/upload-links";
+import { Utilities } from "../../assets";
 import {
   IGuestUploadItem,
   IGuestUserInfo,
@@ -364,7 +365,7 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
                     : "Please upload your files or folders that you would like to submit to us.  After files are selected, click “Submit Upload” button to send your files."}
                 </div>
                 {uploading ? (
-                  <>
+                  <div className={styles.listWrapper} >
                     <UploadList
                       files={uploadingFiles}
                       onUpload={onAdditionalUpload}
@@ -375,11 +376,12 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
                       uploadingIndex={uploadingIndex}
                     />
                     <Button
+                    className={"uploadBtn"}
                       text="Submit Upload"
                       onClick={onSubmitUpload}
                       disabled={disabled}
                     />
-                  </>
+                  </div>
                 ) : (
                   <UploadOptions
                     onFileChange={onFileChange}
@@ -393,11 +395,14 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
           </div>
         ) : (
           <>
-            <h1>{teamName} - Files Successfully Submitted</h1>
+          <div className={styles.submission}>
+          <h1>{teamName} - Files Successfully Submitted</h1>
             <p>
               Thank you for submitting your files to us. Our team has been
               notified and will review the files. Have a great day.
             </p>
+          </div>
+           
           </>
         )}
       </section>
@@ -411,7 +416,8 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
         confirmText=""
         confirmAction={() => {}}
       >
-        <>
+        <div className={styles.uploadMOdal}>
+          <h2>Upload Files</h2>
           <div className={styles.subtitle}>
             {showUploadError
               ? "You are trying to upload too many files. Re-upload no more than 200 files, the total size of the files should not exceed 1GB"
@@ -423,7 +429,7 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
             uploadingFiles={uploadingFiles}
             onCancel={onCancelUpload}
           />
-        </>
+        </div>
       </BaseModal>
       {loading && <SpinnerOverlay />}
     </>

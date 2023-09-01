@@ -121,11 +121,21 @@ const ContactForm: React.FC<ContactFormProps> = ({
           </div>
         </div>
       </>
+      <div className={styles.formBtn}>
       <Button
         type="submit"
         className="container primary"
         text="Save & Continue"
       />
+
+      </div>
+      <div className={styles.fileHeading}>
+        <span>
+        Upload Files
+        </span>
+
+      </div>
+   
     </form>
   );
 };

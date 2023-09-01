@@ -20,3 +20,50 @@
     text-overflow: ellipsis;
     color: var(--color-sec-text);
 }
+.imageInfo{
+    display: flex;
+    align-items: center;
+}
+.fileImg{
+    margin-right: 5px;
+}
+.uploadWrapper{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+}
+.listWrapper{
+    border: 1px solid ;
+}
+
+.errorMsg{
+    color:
+    #FA373D;
+    display:flex;
+   
+}
+.loadingImg{
+    display: flex;
+    align-items: center;
+}
+.loadingImg img{
+    width: 15px;
+    margin-left: 10px;
+}
+.uploadBtn{
+    display: flex;
+    justify-content: end;
+}
+.updateStatus{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+@media screen and (max-width: 575px) {
+    .fileSize {
+       display: none;
+    }
+}
