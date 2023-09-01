@@ -43,7 +43,7 @@ const UploadListItem: React.FC<UploadListItemProps> = ({
             strokeWidth={3}
             trailWidth={3}
             trailColor="#e5e5e5"
-            style={{ width: "50%",height:"10px" }}
+            style={{ width: "80px",height:"10px" }}
           />
           <img src={AssetOps.cancel} onClick={() => onRemove(index)} />
         </div>
@@ -68,7 +68,7 @@ const UploadListItem: React.FC<UploadListItemProps> = ({
             strokeWidth={3}
             trailWidth={3}
             trailColor="#e5e5e5"
-            style={{ width: "50%" ,height:"10px"}}
+            style={{ width: "80px" ,height:"10px",borderRadius:"30px"}}
           />
           <img src={AssetOps.cancel} />
         </div>

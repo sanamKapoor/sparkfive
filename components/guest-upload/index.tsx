@@ -365,6 +365,7 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
                     : "Please upload your files or folders that you would like to submit to us.  After files are selected, click “Submit Upload” button to send your files."}
                 </div>
                 {uploading ? (
+                  <div>
                   <div className={styles.listWrapper} >
                     <UploadList
                       files={uploadingFiles}
@@ -375,7 +376,9 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
                       additionUploadDisabled={disabled}
                       uploadingIndex={uploadingIndex}
                     />
-                    <Button
+                   
+                  </div>
+                  <Button
                     className={"uploadBtn"}
                       text="Submit Upload"
                       onClick={onSubmitUpload}
