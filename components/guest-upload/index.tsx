@@ -9,7 +9,10 @@ import { SocketContext } from "../../context";
 import requestUtils from "../../utils/requests";
 
 import { defaultInfo } from "../../config/data/upload-links";
-import { IGuestUserInfo } from "../../types/guest-upload/guest-upload";
+import {
+  IGuestUploadItem,
+  IGuestUserInfo,
+} from "../../types/guest-upload/guest-upload";
 import {
   getFolderKeyAndNewNameByFileName,
   getTotalSize,
@@ -52,7 +55,7 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
   const [showUploadSection, setShowUploadSection] = useState<boolean>(false);
 
   const [showUploadError, setShowUploadError] = useState<boolean>(false);
-  const [uploadingFiles, setUploadingFiles] = useState([]);
+  const [uploadingFiles, setUploadingFiles] = useState<IGuestUploadItem[]>([]);
   const [uploading, setUploading] = useState<boolean>(false);
 
   const [uploadingPercent, setUploadingPercent] = useState<number>(0);
@@ -64,6 +67,8 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
   const [disabled, setDisabled] = useState<boolean>(false);
 
   const [uploadingIndex, setUploadingIndex] = useState(0);
+
+  const [uploadSuccess, setUploadSuccess] = useState<boolean>(false);
 
   useEffect(() => {
     if (query?.code) {
@@ -89,9 +94,8 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
         setActivePasswordOverlay(false);
       }
     } catch (err) {
-      console.log("err: ", err);
-      if (err.response.status === 400) {
-        setLogo(err.response?.data?.teamIcon);
+      if (err?.response?.status === 400) {
+        setLogo(err?.response?.data?.teamIcon);
       } else {
         toastUtils.error("Something went wrong");
       }
@@ -139,7 +143,6 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
   };
 
   //TODO: add type for files
-  //TODO: manage request id
   const uploadFiles = async (
     i: number,
     files: Array<any>,
@@ -147,14 +150,12 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
     isRetry = false
   ) => {
     setUploadingIndex(i + 1);
-    console.log("files: ", files);
     const totalSize = getTotalSize(files);
     let folderGroup = {};
     let currentUploadingFolderId = null;
     const formData = new FormData();
     let file = files[i].file;
 
-    console.log("file: ", file);
     files[i].isUploading = true;
     files[i].status = "in-progress";
     setUploadingFiles([...files]);
@@ -205,6 +206,11 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
       attachedQuery["folderId"] = currentUploadingFolderId;
     }
 
+    if (i === files.length - 1) {
+      setDisabled(false);
+      attachedQuery["alertAdmin"] = true;
+    }
+
     const { firstName, lastName, ...rest } = attachedQuery;
 
     const newQuery = {
@@ -215,7 +221,6 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
     // Call API to upload
     try {
       let { data } = await shareUploadLinkApi.uploadAssets(formData, newQuery);
-      //TODO: keep track of uploaded files at this point as well
       files[i].asset = data[0].asset;
 
       if (!requestId) {
@@ -235,17 +240,12 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
     if (i < files.length - 1 && !isRetry) {
       await uploadFiles(i + 1, files, requestId);
     }
-
-    if (i === files.length - 1) {
-      setDisabled(false);
-    }
   };
 
   const onFileChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
     isAdditionalUpload = false
   ) => {
-    console.log("isAdditionalUpload: ", isAdditionalUpload);
     const files = e.target.files;
 
     if (files.length > 0) {
@@ -254,22 +254,24 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
 
         setShowUploadError(false);
 
-        const formattedFiles = Array.from(files).map((file) => {
-          return {
-            asset: {
-              name: file.name,
-              createdAt: new Date(),
-              size: file.size,
-              stage: "draft",
-              type: "image",
-              mimeType: file.type,
-              fileModifiedAt: new Date(file.lastModified),
-            },
-            file,
-            status: "queued",
-            isUploading: false,
-          };
-        });
+        const formattedFiles: IGuestUploadItem[] = Array.from(files).map(
+          (file) => {
+            return {
+              asset: {
+                name: file.name,
+                createdAt: new Date(),
+                size: file.size,
+                stage: "draft",
+                type: "image",
+                mimeType: file.type,
+                fileModifiedAt: new Date(file.lastModified),
+              },
+              file,
+              status: "queued",
+              isUploading: false,
+            };
+          }
+        );
 
         connectSocket();
         setUploading(true);
@@ -303,14 +305,12 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
     }
   }, [socket, connected]);
 
-  //TODO
   const onAdditionalUpload = () => {
     setIsModalOpen(true);
   };
 
-  //TODO:
   const onSubmitUpload = () => {
-    console.log("onSubmitUpload");
+    setUploadSuccess(true);
   };
 
   const onRemoveUploadingFile = (index: number) => {
@@ -329,66 +329,77 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
       )}
 
       <section className={styles.container}>
-        <div className={styles.wrapper}>
-          <>
-            <div>
-              <h1>{teamName} - Guest Upload</h1>
-              <p>
-                Please fill out the form below before uploading your files to us
-              </p>
-            </div>
-            <div className={styles.form}>
-              {!showPreview ? (
-                <ContactForm
-                  data={guestInfo}
-                  onSubmit={saveChanges}
-                  teamName={teamName}
-                />
-              ) : (
-                <GuestDetails
-                  userDetails={guestInfo}
-                  onCancel={onCancelGuestInfo}
-                />
-              )}
-            </div>
-          </>
-          {showUploadSection && (
+        {!uploadSuccess ? (
+          <div className={styles.wrapper}>
             <>
-              <div className={styles.upload_title}>Upload Files</div>
-
-              <div className={styles.subtitle}>
-                {showUploadError
-                  ? "You are trying to upload too many files. Re-upload no more than 200 files, the total size of the files should not exceed 1GB"
-                  : "Please upload your files or folders that you would like to submit to us.  After files are selected, click “Submit Upload” button to send your files."}
+              <div>
+                <h1>{teamName} - Guest Upload</h1>
+                <p>
+                  Please fill out the form below before uploading your files to
+                  us
+                </p>
               </div>
-              {uploading ? (
-                <>
-                  <UploadList
-                    files={uploadingFiles}
-                    onUpload={onAdditionalUpload}
-                    uploadingPercent={uploadingPercent}
-                    onRetry={onRetryUploadingFile}
-                    onRemove={onRemoveUploadingFile}
-                    additionUploadDisabled={disabled}
-                    uploadingIndex={uploadingIndex}
+              <div className={styles.form}>
+                {!showPreview ? (
+                  <ContactForm
+                    data={guestInfo}
+                    onSubmit={saveChanges}
+                    teamName={teamName}
                   />
-                  <Button
-                    text="Submit Upload"
-                    onClick={onSubmitUpload}
-                    disabled={disabled}
+                ) : (
+                  <GuestDetails
+                    userDetails={guestInfo}
+                    onCancel={onCancelGuestInfo}
                   />
-                </>
-              ) : (
-                <UploadOptions
-                  onFileChange={onFileChange}
-                  uploading={uploading}
-                  uploadingFiles={uploadingFiles}
-                  onCancel={onCancelUpload}
-                />
-              )}
+                )}
+              </div>
             </>
-          )}
-        </div>
+            {showUploadSection && (
+              <>
+                <div className={styles.upload_title}>Upload Files</div>
+
+                <div className={styles.subtitle}>
+                  {showUploadError
+                    ? "You are trying to upload too many files. Re-upload no more than 200 files, the total size of the files should not exceed 1GB"
+                    : "Please upload your files or folders that you would like to submit to us.  After files are selected, click “Submit Upload” button to send your files."}
+                </div>
+                {uploading ? (
+                  <>
+                    <UploadList
+                      files={uploadingFiles}
+                      onUpload={onAdditionalUpload}
+                      uploadingPercent={uploadingPercent}
+                      onRetry={onRetryUploadingFile}
+                      onRemove={onRemoveUploadingFile}
+                      additionUploadDisabled={disabled}
+                      uploadingIndex={uploadingIndex}
+                    />
+                    <Button
+                      text="Submit Upload"
+                      onClick={onSubmitUpload}
+                      disabled={disabled}
+                    />
+                  </>
+                ) : (
+                  <UploadOptions
+                    onFileChange={onFileChange}
+                    uploading={uploading}
+                    uploadingFiles={uploadingFiles}
+                    onCancel={onCancelUpload}
+                  />
+                )}
+              </>
+            )}
+          </div>
+        ) : (
+          <>
+            <h1>{teamName} - Files Successfully Submitted</h1>
+            <p>
+              Thank you for submitting your files to us. Our team has been
+              notified and will review the files. Have a great day.
+            </p>
+          </>
+        )}
       </section>
 
       <BaseModal

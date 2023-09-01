@@ -22,3 +22,18 @@ export interface IGuestUserInfo {
   email: string;
   notes: string;
 }
+
+export interface IGuestUploadItem {
+  asset: {
+    name: string;
+    createdAt: Date;
+    size: number;
+    stage: string;
+    type: string;
+    mimeType: string;
+    fileModifiedAt: Date;
+  };
+  file: File;
+  status: "queued" | "in-progress" | "done" | "fail";
+  isUploading: boolean;
+}
