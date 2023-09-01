@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import styles from "./member-detail.module.css";
 
 import { default as permissionList } from "../../../../../../constants/permissions";
+import { ITeamMember } from "../../../../../../interfaces/team/team";
 import permissionApi from "../../../../../../server-api/permission";
-import { ITeamMember } from "../../../../../../types/team/team";
 import Button from "../../../../../common/buttons/button";
 import Select from "../../../../../common/inputs/select";
 import MemberPermissions from "./member-permissions";
@@ -92,7 +92,6 @@ const MemberDetail: React.FC<MemberDetailProps> = ({
         <div className={styles.emailaddress}>{member.email}</div>
         <div className={styles.selectcontainer}>
           <Select
-         
             options={mappedRoles}
             onChange={(selected) => onRoleChange(selected)}
             placeholder={"Select a role"}

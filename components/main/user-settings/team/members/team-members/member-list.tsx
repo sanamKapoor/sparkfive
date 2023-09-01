@@ -1,6 +1,6 @@
 import styles from "./member-list.module.css";
 
-import { IEditType, ITeamMember } from "../../../../../../types/team/team";
+import { IEditType, ITeamMember } from "../../../../../../interfaces/team/team";
 import Member from "./member";
 
 interface MemberListProps {

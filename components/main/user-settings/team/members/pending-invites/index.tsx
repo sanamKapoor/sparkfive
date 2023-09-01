@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import styles from "../../index.module.css";
 
+import { IEditType, ITeamMember } from "../../../../../../interfaces/team/team";
 import inviteApi from "../../../../../../server-api/invite";
-import { IEditType, ITeamMember } from "../../../../../../types/team/team";
 import toastUtils from "../../../../../../utils/toast";
 import PendingInviteItem from "./pending-invite-item";
 

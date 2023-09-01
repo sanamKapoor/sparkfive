@@ -3,7 +3,7 @@ import Base from "../../../../common/modals/base";
 
 import DayPickerInput from "react-day-picker/DayPickerInput";
 import { statuses } from "../../../../../constants/plans";
-import { ITeamPlan } from "../../../../../types/team/team";
+import { ITeamPlan } from "../../../../../interfaces/team/team";
 import Button from "../../../../common/buttons/button";
 import Select from "../../../../common/inputs/select";
 import styles from "../../super-admin/index.module.css";

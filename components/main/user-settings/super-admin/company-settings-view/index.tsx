@@ -4,7 +4,7 @@ import { Utilities } from "../../../../../assets";
 import Button from "../../../../common/buttons/button";
 import IconClickable from "../../../../common/buttons/icon-clickable";
 
-import { ITeam, ITeamPlan } from "../../../../../types/team/team";
+import { ITeam, ITeamPlan } from "../../../../../interfaces/team/team";
 import styles from "../index.module.css";
 
 import superAdminApi from "../../../../../server-api/super-admin";

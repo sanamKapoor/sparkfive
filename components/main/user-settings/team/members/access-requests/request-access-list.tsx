@@ -1,4 +1,4 @@
-import { IRequestFormData } from "../../../../../../types/team/team";
+import { IRequestFormData } from "../../../../../../interfaces/team/team";
 import styles from "../team-members/member-list.module.css";
 
 import Request from "./request";

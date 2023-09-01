@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { TeamContext } from "../../../../../../context";
-import { IEditType, ITeamMember } from "../../../../../../types/team/team";
+import { IEditType, ITeamMember } from "../../../../../../interfaces/team/team";
 import styles from "../../index.module.css";
 import MemberList from "./member-list";
 

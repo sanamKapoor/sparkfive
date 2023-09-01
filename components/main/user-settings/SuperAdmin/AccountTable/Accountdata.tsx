@@ -1,4 +1,4 @@
-import { ITeam } from "../../../../../types/team/team";
+import { ITeam } from "../../../../../interfaces/team/team";
 import styles from "./Accountdata.module.css";
 
 import fileSize from "filesize";
@@ -71,7 +71,11 @@ const AccountData: React.FC<AccountDataProps> = ({
             <td>
               <span className={styles.useremail}>{account.plan?.name}</span>
             </td>
-            <td><span className={styles["active-badge"]}>{account.plan.status}</span></td>
+            <td>
+              <span className={styles["active-badge"]}>
+                {account.plan.status}
+              </span>
+            </td>
             <td className={styles.logbtn}>
               <Button
                 text="Settings"

@@ -1,4 +1,4 @@
-import { IUpcomingInvoice, Invoice } from "../types/account/invoice";
+import { IUpcomingInvoice, Invoice } from "../interfaces/account/invoice";
 
 const getInvoiceDate = (invoice: Invoice) => {
   if (invoice.status === "paid") {

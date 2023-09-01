@@ -1,5 +1,5 @@
 import { Utilities } from "../../../assets";
-import { IGuestUploadItem } from "../../../types/guest-upload/guest-upload";
+import { IGuestUploadItem } from "../../../interfaces/guest-upload/guest-upload";
 import ButtonIcon from "../../common/buttons/button-icon";
 import styles from "../upload-item.module.css";
 import DisableBtn from "./disable-btn";
