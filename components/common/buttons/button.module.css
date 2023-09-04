@@ -45,6 +45,9 @@
 .input-height-secondary {
   min-height: 48px;
 }
+.save{
+  min-height:35px !important;
+}
 
 .primary,
 .normal-height-primary,
@@ -188,12 +191,14 @@
   border-radius: 50px;
   min-height: 35px;
   max-height: 48px;
-  padding: 12px 40px;
+  padding: 12px 6px;
   color: white;
   text-transform: uppercase;
   background-color: var(--color-prim-turquoise);
   font-weight: 600;
   cursor: pointer;
+  height:44px;
+  font-size: 16px;
 }
 
 .auth-container:hover {
@@ -284,6 +289,8 @@
     margin-top: 32px;
 
 }
+
+
 
 @media screen and (max-width: 1000px) {
   .nav-container {

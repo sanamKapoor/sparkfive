@@ -17,7 +17,7 @@
 .container h4 {
   font-size: 16px;
   font-weight: 500;
-  margin-bottom: 24px;
+  margin:24px 0 0 0;
   color: var(--color-prim-navy);
 }
 
@@ -28,7 +28,7 @@
 
 .option {
   font-size: 12px;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 .radio-options > div:last-child {
@@ -41,6 +41,16 @@
 
 .option > img {
   cursor: pointer;
+}
+.securityWrapper{
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+.desc{
+  max-width: 698px;
+  width: 100%;
 }
 
 @media screen and (max-width: 600px) {

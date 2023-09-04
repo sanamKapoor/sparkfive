@@ -74,26 +74,7 @@ const AddressForm: React.FC = () => {
                 }
               />
               <div className={styles["fields-pair"]}>
-                <div>
-                  <label className={styles.companyLabel}>Country</label>
-                  <Select
-                    placeholder="Select Country"
-                    options={countries}
-                    onChange={(selected) => setCountry(selected.name)}
-                    value={getSelectedItem("country", country)}
-                  />
-                </div>
-                <div className={styles.state}>
-                  <label className={styles.companyLabel}>State</label>
-                  <Select
-                    placeholder="Select State"
-                    options={states}
-                    onChange={(selected) => seState(selected.name)}
-                    value={getSelectedItem("state", state)}
-                  />
-                </div>
-              </div>
-              <div className={styles["fields-pair"]}>
+               
                 <div className={styles.city}>
                   <FormInput
                     labId="city"
@@ -109,6 +90,27 @@ const AddressForm: React.FC = () => {
                     }
                   />
                 </div>
+                <div className={styles.state}>
+                  <label className={styles.companyLabel}>State</label>
+                  <Select
+                    placeholder="Select State"
+                    options={states}
+                    onChange={(selected) => seState(selected.name)}
+                    value={getSelectedItem("state", state)}
+                  />
+                </div>
+              </div>
+              <div className={styles["fields-pair"]}>
+              <div>
+                  <label className={styles.companyLabel}>Country</label>
+                  <Select
+                    placeholder="Select Country"
+                    options={countries}
+                    onChange={(selected) => setCountry(selected.name)}
+                    value={getSelectedItem("country", country)}
+                  />
+                </div>
+                
                 <div className={styles.zip}>
                   <FormInput
                     labId="zip-form"

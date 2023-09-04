@@ -43,7 +43,7 @@ const NameForm: React.FC = () => {
               <Button
                 text="Save Changes"
                 type="submit"
-                className="container submit input-height-primary"
+                className="container submit input-height-primary save"
               />
             </div>
           </div>

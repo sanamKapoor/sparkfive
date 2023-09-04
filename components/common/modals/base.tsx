@@ -78,6 +78,7 @@ const Base: React.FC<BaseModalProps> = ({
               : styles.header
           }
         >
+          <div className={styles.baseHeading}>
           <div
             className={`${styles.text} ${
               closeButtonOnly ? styles["no-border"] : ""
@@ -96,6 +97,8 @@ const Base: React.FC<BaseModalProps> = ({
             />
           </div>
           {subText && <p className={styles.subtext}>{subText}</p>}
+          </div>
+          
         </div>
       )}
       {children}

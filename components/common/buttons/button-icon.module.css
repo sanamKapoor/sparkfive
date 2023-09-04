@@ -2,8 +2,8 @@
   display: flex;
   align-items: center;
   border-radius: 50px;
-  height: 36px;
-  padding: 0 25px;
+  height: 44px;
+  padding: 0 33px;
   color: var(--color-prim-turquoise);
   background-color: white;
   border: 2px solid var(--color-prim-turquoise);
@@ -13,6 +13,10 @@
   position: relative;
   font-size: 12px;
   margin-bottom: 8px;
+}
+.uploadText{
+  font-size: 16px;
+
 }
 .downloadBtn {
   height: 32px;
@@ -58,8 +62,9 @@
 
 
 .icon img {
-  width: 24px;
-  height: auto;
+  width: 26px;
+  height: 28px;
+  
 }
 
 .text {
