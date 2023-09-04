@@ -2,7 +2,7 @@ import Router from "next/router";
 
 import { useEffect, useState } from "react";
 import { useQueryStrings } from "../../../../../hooks/use-query-strings";
-import { IUserResponseData } from "../../../../../types/user/user";
+import { IUserResponseData } from "../../../../../interfaces/user/user";
 import { defaultSortData } from "../../super-admin/user-list/types";
 import TableHeader from "../Listheader/TableHeader";
 import TableHead from "./TableHead";
@@ -151,13 +151,11 @@ const UserTable = () => {
       {userData.total > userData.users.length && (
         <div className={styles.loadMore}>
           <Button
-          text="Load More"
-          onClick={getMore}
-          className="container primary"
-        />
-
+            text="Load More"
+            onClick={getMore}
+            className="container primary"
+          />
         </div>
-        
       )}
       {loading && <SpinnerOverlay />}
     </div>

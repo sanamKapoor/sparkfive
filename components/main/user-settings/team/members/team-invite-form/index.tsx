@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { IRole } from "../../../../../../types/user/role";
+import { IRole } from "../../../../../../interfaces/user/role";
 import Button from "../../../../../common/buttons/button";
 import Input from "../../../../../common/inputs/input";
 import Select from "../../../../../common/inputs/select";
@@ -9,7 +9,7 @@ import inviteApi from "../../../../../../server-api/invite";
 import toastUtils from "../../../../../../utils/toast";
 
 import update from "immutability-helper";
-import { ITeamMember } from "../../../../../../types/team/team";
+import { ITeamMember } from "../../../../../../interfaces/team/team";
 
 interface TeamInviteProps {
   invites: ITeamMember[];
@@ -52,15 +52,14 @@ const TeamInviteForm: React.FC<TeamInviteProps> = ({
   return (
     <div className={styles.container}>
       <form className={styles.form} onSubmit={onSubmitForm}>
-          <Input
-            type="email"
-            styleType="regular"
-            value={inviteEmail}
-            placeholder="Email"
-            additionalClasses={styles.input}
-            onChange={(e) => setInviteEmail(e.target.value)}
-          />
-       
+        <Input
+          type="email"
+          styleType="regular"
+          value={inviteEmail}
+          placeholder="Email"
+          additionalClasses={styles.input}
+          onChange={(e) => setInviteEmail(e.target.value)}
+        />
 
         <div className={styles["role-select-wrapper"]}>
           <Select

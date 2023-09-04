@@ -1,8 +1,8 @@
 import { useContext, useState } from "react";
 import { UserContext } from "../../../../../../context";
 import useRoles from "../../../../../../hooks/use-roles";
-import { IRequestFormData } from "../../../../../../types/team/team";
-import { IRole } from "../../../../../../types/user/role";
+import { IRequestFormData } from "../../../../../../interfaces/team/team";
+import { IRole } from "../../../../../../interfaces/user/role";
 import Select from "../../../../../common/inputs/select";
 import styles from "./request.module.css";
 
@@ -64,7 +64,6 @@ const Request: React.FC<RequestProps> = ({
                 onChange("accept");
               }}
               className={styles.approve}
-            
             >
               Approve
             </div>

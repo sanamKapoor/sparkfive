@@ -4,8 +4,8 @@ import styles from "./index.module.css";
 
 import { capitalCase } from "change-case";
 import { useEffect, useState } from "react";
+import { IRole } from "../../../../../interfaces/user/role";
 import teamApi from "../../../../../server-api/team";
-import { IRole } from "../../../../../types/user/role";
 import ConfirmModal from "../../../../common/modals/confirm-modal";
 import SpinnerOverlay from "../../../../common/spinners/spinner-overlay";
 

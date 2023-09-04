@@ -9,7 +9,7 @@ import DeletedAssetsLibrary from "../../../../components/common/custom-settings/
 import AppLayout from "../../../../components/common/layouts/app-layout";
 import NoPermissionNotice from "../../../../components/common/misc/no-permission-notice";
 import { UserContext } from "../../../../context";
-import { UserRole } from "../../../../types/user/role";
+import { UserRole } from "../../../../interfaces/user/role";
 
 const AssetsPage: React.FC = () => {
   const { user } = useContext(UserContext);

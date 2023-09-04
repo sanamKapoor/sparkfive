@@ -1,4 +1,4 @@
-import { IUser } from "../../../../../types/user/user";
+import { IUser } from "../../../../../interfaces/user/user";
 import styles from "./Tabledata.module.css";
 
 import dateUtils from "../../../../../utils/date";
@@ -54,7 +54,11 @@ const TableData: React.FC<TableDataProps> = ({ users, onUserLogin }) => {
             </td>
             {/* TODO: fix styling */}
             <td className={styles.logbtn}>
-              <Button className={"actionBtn"} text="User Login" onClick={(e) => onUserLogin(user)} />
+              <Button
+                className={"actionBtn"}
+                text="User Login"
+                onClick={(e) => onUserLogin(user)}
+              />
             </td>
           </tr>
         );

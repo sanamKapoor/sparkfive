@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ITeam } from "../../../../types/team/team";
+import { ITeam } from "../../../../interfaces/team/team";
 import SpinnerOverlay from "../../../common/spinners/spinner-overlay";
 import SwitchableTabsWithProps from "../../../common/switchable-tabs-with-props";
 import AccountTable from "../SuperAdmin/AccountTable/AccountTable";

@@ -1,5 +1,5 @@
 import React from "react";
-import { IGuestUserInfo } from "../../types/guest-upload/guest-upload";
+import { IGuestUserInfo } from "../../interfaces/guest-upload/guest-upload";
 import styles from "./index.module.css";
 
 interface GuestDetailsProps {

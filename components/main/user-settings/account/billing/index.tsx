@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 import planApi from "../../../../../server-api/plan";
 import styles from "./index.module.css";
 
-import { IPaymentMethod } from "../../../../../types/account/payment";
-import { BillingTabs } from "../../../../../types/common/tabs";
+import { IPaymentMethod } from "../../../../../interfaces/account/payment";
+import { BillingTabs } from "../../../../../interfaces/common/tabs";
 import Invoices from "./invoices";
 import PaymentMethod from "./payment-method";
 import Subscription from "./subscription";

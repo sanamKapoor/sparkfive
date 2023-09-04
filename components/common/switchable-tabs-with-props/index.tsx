@@ -1,4 +1,4 @@
-import { SwitchableTabsWithPropsData } from "../../../types/common/components";
+import { SwitchableTabsWithPropsData } from "../../../interfaces/common/components";
 import Button from "../buttons/button";
 import styles from "./index.module.css";
 
@@ -14,7 +14,7 @@ function SwitchableTabsWithProps({
   data,
 }: ISwitchableTabsWithProps) {
   const activeTabData = data.find((item) => item.id === activeTab);
-  const ActiveTabComponent = activeTabData.content;
+  const ActiveTabComponent = activeTabData?.content;
 
   const handleTabChange = (tabId: string) => {
     setActiveTab(tabId);

@@ -4,12 +4,12 @@ import styles from "../index.module.css";
 import update from "immutability-helper";
 import { TeamContext } from "../../../../../context";
 import useRoles from "../../../../../hooks/use-roles";
-import teamApi from "../../../../../server-api/team";
 import {
   IEditType,
   IRequestFormData,
   ITeamMember,
-} from "../../../../../types/team/team";
+} from "../../../../../interfaces/team/team";
+import teamApi from "../../../../../server-api/team";
 import toastUtils from "../../../../../utils/toast";
 import ConfirmModal from "../../../../common/modals/confirm-modal";
 import AccessRequests from "./access-requests";
