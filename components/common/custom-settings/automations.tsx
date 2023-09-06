@@ -10,11 +10,17 @@ const Automations = () => {
   const { advancedConfig, setAdvancedConfig } = useContext(UserContext);
 
   const saveAdvanceConfig = async (config) => {
+    try{
     setLoading(true);
     await teamAPI.saveAdvanceConfigurations({ config });
 
     const updatedConfig = { ...advancedConfig, ...config };
     setAdvancedConfig(updatedConfig);
+    }catch(err){
+     console.log('err in saving advanced config: ', err)
+    }finally{
+      setLoading(false)
+    }
   };
 
   return (
