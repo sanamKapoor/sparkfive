@@ -114,6 +114,7 @@ export default ({ children }) => {
   const [downloadingStatus, setDownloadingStatus] = useState("none"); // Allowed value: "none", "zipping", "preparing", "done", "error"
   const [downloadingPercent, setDownloadingPercent] = useState(0); // Percent of uploading process: 0 - 100
   const [downloadingError, setDownloadingError] = useState(""); // Percent of uploading process: 0 - 100
+  const [sidenavFolderChildList, setSidenavFolderChildList] = useState(new Map())
 
   // Asset navigation
   const [detailOverlayId, setDetailOverlayId] = useState(undefined);
@@ -174,6 +175,23 @@ export default ({ children }) => {
         ...folders.filter((folder) => !folder.isLoading),
         ...inputFolders,
       ]);
+  };
+
+
+  const setSidenavFolderChildListItems = (
+    inputFolders,
+    id: string,
+    replace = true,
+  ) => {
+    const { results, next, total } = inputFolders;
+    if (replace) {
+      if (results.length > 0) {
+        setSidenavFolderChildList((map) => { return new Map(map.set(id, { results, next, total })) })
+      }
+    }
+    else {
+      setSidenavFolderChildList((map) => { return new Map(map.set(id, { results: [...map.get(id).results, ...results], next, total })) })
+    }
   };
 
   const setSidenavFolderItems = (
@@ -598,7 +616,9 @@ export default ({ children }) => {
     sidenavFolderNextPage,
     setSidenavFolderNextPage,
     sidenavTotalCount,
-    setSidenavTotalCount
+    setSidenavTotalCount,
+    sidenavFolderChildList,
+    setSidenavFolderChildList: setSidenavFolderChildListItems
   };
   return (
     <AssetContext.Provider value={assetsValue}>

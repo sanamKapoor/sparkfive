@@ -189,7 +189,6 @@ export default function ShareLinks() {
   const loadMore = () => {
     // still have page to load
     if (nextPage !== -1) {
-      console.log(`load more`);
       setPage(page + 1);
       getLinks(
         {
@@ -362,11 +361,10 @@ export default function ShareLinks() {
                 src={Assets.arrowDown}
                 className={`
                           ${styles["sort-icon"]} 
-                          ${
-                            sortData.sortField === "createdAt"
-                              ? styles["sort-icon-active"]
-                              : ""
-                          } 
+                          ${sortData.sortField === "createdAt"
+                    ? styles["sort-icon-active"]
+                    : ""
+                  } 
                           ${sortData.sortType === "asc" ? "" : styles.desc}
                         `}
               />
@@ -434,11 +432,10 @@ export default function ShareLinks() {
                 src={Assets.arrowDown}
                 className={`
                           ${styles["sort-icon"]} 
-                          ${
-                            sortData.sortField === "expiredAt"
-                              ? styles["sort-icon-active"]
-                              : ""
-                          } 
+                          ${sortData.sortField === "expiredAt"
+                    ? styles["sort-icon-active"]
+                    : ""
+                  } 
                           ${sortData.sortType === "asc" ? "" : styles.desc}
                         `}
               />
@@ -697,7 +694,7 @@ export default function ShareLinks() {
               setShowEditModal(false);
             }}
             shareAssets={updateLink}
-            getShareLink={() => {}}
+            getShareLink={() => { }}
             currentShareLink={currentLink}
             title={"Update shared link"}
           />
@@ -709,7 +706,7 @@ export default function ShareLinks() {
               setShowEditModal(false);
             }}
             shareAssets={updateLink}
-            getShareLink={() => {}}
+            getShareLink={() => { }}
             currentShareLink={currentLink}
             title={"Update shared link"}
           />

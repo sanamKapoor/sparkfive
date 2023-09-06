@@ -136,7 +136,9 @@ export const AssetContext = createContext({
   sidenavFolderNextPage: 0,
   setSidenavFolderNextPage: () => { },
   sidenavTotalCount: 0,
-  setSidenavTotalCount: () => { }
+  setSidenavTotalCount: () => { },
+  sidenavFolderChildList: {},
+  setSidenavFolderChildList: (data, id, replace) => { }
 
 });
 

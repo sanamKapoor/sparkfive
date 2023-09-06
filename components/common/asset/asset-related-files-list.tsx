@@ -68,9 +68,7 @@ const AssetRelatedFilesList = ({
   };
 
   const shareAllRelatedAssets = () => {
-    console.log("share operation started....");
     setActiveOperation("share");
-    console.log("activeOperation: ", activeOperation);
   };
 
   return (

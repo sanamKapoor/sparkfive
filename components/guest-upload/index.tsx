@@ -134,11 +134,11 @@ const GuestUpload: React.FC = () => {
         const updatedAssets = assets.map((asset, index) =>
           index === i
             ? {
-                ...asset,
-                status: "fail",
-                index,
-                error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
-              }
+              ...asset,
+              status: "fail",
+              index,
+              error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
+            }
             : asset
         );
 
@@ -470,7 +470,6 @@ const GuestUpload: React.FC = () => {
   useEffect(() => {
     // Socket is available and connected
     if (socket && connected) {
-      console.log(`Register socket listener...`);
       // Listen upload file process event
       socket.on("uploadFilesProgress", function (data) {
         setUploadingPercent(data.percent);

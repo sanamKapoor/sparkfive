@@ -230,7 +230,6 @@ const AssetsLibrary = () => {
   }, [activeSortFilter, firstLoaded, term]);
 
   useEffect(() => {
-    console.log("hello123")
     if (firstLoaded && activeFolder !== "") {
       setActiveSortFilter({
         ...activeSortFilter,
@@ -249,7 +248,6 @@ const AssetsLibrary = () => {
   }, [needsFetch]);
 
   useEffect(() => {
-    console.log("111", activeMode)
     if (activeMode === "folders") {
       setOpenFilter(false);
       setAssets(assets.map((asset) => ({ ...asset, isSelected: false })));
@@ -292,7 +290,6 @@ const AssetsLibrary = () => {
     }
 
     let sort = { ...activeSortFilter.sort };
-    console.log(sort, activeSortFilter, advancedConfig, "headerValues")
     if (defaultTab === "folders" && !params.folderId) {
       sort =
         advancedConfig.collectionSortView === "alphabetical"
@@ -790,7 +787,6 @@ const AssetsLibrary = () => {
   const selectedFolders = folders.filter((folder) => folder.isSelected);
 
   const viewFolder = async (id) => {
-    console.log(activeMode, "viewFolder aactive mode")
     setActiveFolder(id);
     updateSortFilterByAdvConfig({ folderId: id });
   };

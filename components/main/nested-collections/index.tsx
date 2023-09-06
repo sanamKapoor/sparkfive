@@ -328,7 +328,6 @@ const NestedSubcollection = React.memo(() => {
   });
   const getAssets = async (replace = true, complete = null) => {
     try {
-      console.log("hello world!22222");
       setLoadingAssets(true);
       if (replace) {
         setAddedIds([]);
@@ -368,7 +367,6 @@ const NestedSubcollection = React.memo(() => {
     }
   };
 
-  console.log(activeSortFilter || "no value", firstLoaded || "no value", term || "no value", "valueeeess")
 
   useEffect(() => {
     if (!preparingAssets.current) return;
@@ -489,7 +487,6 @@ const NestedSubcollection = React.memo(() => {
     if (hasPermission([ASSET_ACCESS])) {
       // Assets are under preparing (for query etc)
       // if (preparingAssets.current) {
-      //   console.log("helloworld")
       //   return;
       // } else {
       if (!firstLoaded) {

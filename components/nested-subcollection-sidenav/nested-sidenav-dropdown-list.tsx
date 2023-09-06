@@ -42,22 +42,57 @@ interface Item {
 
 const NestedSidenavDropdown = () => {
   const {
-
     sidenavFolderList,
     sidenavFolderNextPage,
-    setSidenavFolderList
+    setSidenavFolderList,
+    sidenavFolderChildList,
+    setSidenavFolderChildList,
   } = useContext(AssetContext);
   const {
     term,
   } = useContext(FilterContext);
   const [showDropdown, setShowDropdown] = useState(new Array(sidenavFolderList.length).fill(false));
   const [isFolderLoading, SetIsFolderLoading] = useState(false)
+  const [subFolderLoadingState, setSubFolderLoadingState] = useState(new Map())
 
+  const getSubFolders = async (id: string, page: number, replace: boolean) => {
+    setSubFolderLoadingState((map) => new Map(map.set(id, "true")))
+    const queryParams = {
+      page: replace ? 1 : page,
+      pageSize: 5
+    };
+    const { data } = await folderApi.getSubFolders({
+      ...queryParams,
+    }, id);
 
-  const toggleDropdown = (index: number) => {
+    setSidenavFolderChildList(data,
+      id,
+      replace
+    )
+    setSubFolderLoadingState((map) => { map.delete(id); return map })
+
+    return sidenavFolderChildList;
+  }
+
+  const toggleDropdown = async (index: number, item: Item, replace: boolean) => {
+
+    await getSubFolders(item.id, 1, replace);
+
     const updatedShowDropdown = [...showDropdown];
     updatedShowDropdown[index] = !updatedShowDropdown[index]; // Toggle dropdown on img click event
     setShowDropdown(updatedShowDropdown);
+  };
+
+  const keyExists = (key: string) => {
+    return sidenavFolderChildList.has(key);
+  };
+
+  const keyResultsFetch = (key: string, type: string) => {
+    const { results, next, total } = sidenavFolderChildList.get(key);
+    if (type === 'record') {
+      return results || []
+    }
+    return next
   };
 
   const getFolders = async (replace = true) => {
@@ -91,8 +126,12 @@ const NestedSidenavDropdown = () => {
       {sidenavFolderList.map((item: Item, index: number) => {
         return (
           <>
-            < div key={index} className={`${styles["flex"]} ${styles.nestedbox}`}>
-              <img className={styles.rightIcon} src={Utilities.right} onClick={() => toggleDropdown(index)} />
+            <div key={index} className={`${styles["flex"]} ${styles.nestedbox}`}>
+              <img
+                className={styles.rightIcon}
+                src={Utilities.right}
+                onClick={() => toggleDropdown(index, item, true)}
+              />
               <div className={styles.w100}>
                 <div className={`${styles["dropdownMenu"]} ${styles.active}`}>
                   <div className={styles.flex}>
@@ -108,98 +147,52 @@ const NestedSidenavDropdown = () => {
                   </div>
                 </div>
               </div>
-            </ div>
-            {
-              showDropdown[index] &&
+            </div>
+            {showDropdown[index] && (
               <div className={styles.folder}>
                 <div className={styles.subfolderList}>
-                  <Draggable
-                    axis="both"
-                    defaultPosition={{ x: 0, y: 0 }}
-                    grid={[25, 25]}
-                    scale={1}
-                  >
-                    <div className={styles.dropdownOptions}>
-                      <div className={styles["folder-lists"]}>
-                        <div className={styles.dropdownIcons}>
-                          <img
-                            className={styles.subfolder}
-                            src={Utilities.folder}
-                          />
-                          <div className={styles["icon-descriptions"]}>
-                            <span>City</span>
+                  {keyExists(item.id) &&
+                    <>
+                      {keyResultsFetch(item.id, "record").map((record: Item, recordIndex: number) => (
+                        <Draggable
+                          key={recordIndex}
+                          axis="both"
+                          defaultPosition={{ x: 0, y: 0 }}
+                          grid={[25, 25]}
+                          scale={1}
+                        >
+                          <div className={styles.dropdownOptions}>
+                            <div className={styles["folder-lists"]}>
+                              <div className={styles.dropdownIcons}>
+                                <img
+                                  className={styles.subfolder}
+                                  src={Utilities.folder}
+                                />
+                                <div className={styles["icon-descriptions"]}>
+                                  <span>{record.name}</span>
+                                </div>
+                              </div>
+                              <div className={styles["list1-right-contents"]}>
+                                <span>{record.assets.length}</span>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                        <div className={styles["list1-right-contents"]}>
-                          <span>7</span>
-                        </div>
-                      </div>
-                    </div>
-                  </Draggable>
-                  <Draggable
-                    axis="both"
-                    defaultPosition={{ x: 0, y: 0 }}
-                    grid={[25, 25]}
-                    scale={1}
-                  >
-                    <div className={styles.dropdownOptions}>
-                      <div className={styles["folder-lists"]}>
-                        <div className={styles.dropdownIcons}>
-                          <img
-                            className={styles.subfolder}
-                            src={Utilities.folder}
-                          />
-                          <div className={styles["icon-descriptions"]}>
-                            <span>Renaissance</span>
-                          </div>
-                        </div>
-                        <div className={styles["list1-right-contents"]}>
-                          <span>7</span>
-                        </div>
-                      </div>
-                    </div>
-                  </Draggable>
-                  <div className={styles.dropdownOptions}>
-                    <div className={styles["folder-lists"]}>
-                      <div className={styles.dropdownIcons}>
-                        <img className={styles.subfolder} src={Utilities.folder} />
-                        <div className={styles["icon-descriptions"]}>
-                          <span>Interior</span>
-                        </div>
-                      </div>
-                      <div className={styles["list1-right-contents"]}>
-                        <span>23</span>
-                      </div>
-                    </div>
-                  </div>
-                  <Draggable
-                    axis="both"
-                    defaultPosition={{ x: 0, y: 0 }}
-                    grid={[25, 25]}
-                    scale={1}
-                  >
-                    <div className={styles.dropdownOptions}>
-                      <div className={styles["folder-lists"]}>
-                        <div className={styles.dropdownIcons}>
-                          <img
-                            className={styles.subfolder}
-                            src={Utilities.folder}
-                          />
-                          <div className={styles["icon-descriptions"]}>
-                            <span>House</span>
-                          </div>
-                        </div>
-                        <div className={styles["list1-right-contents"]}>
-                          <span>29</span>
-                        </div>
-                      </div>
-                    </div>
-                  </Draggable>
-                  <NestedButton type={"subCollection"} parentId={item.id} >Add Subcollection</NestedButton>
+                        </Draggable>
+                      ))}
+                      {
+                        keyResultsFetch(item.id, "next") >= 0 &&
+                        <span className={styles.desc} onClick={() => { getSubFolders(item.id, keyResultsFetch(item.id, "next"), false); }}>{subFolderLoadingState.has(item.id) ? "Loading..." : "Load More"}</span>
+                      }
+                    </>
+                  }
+                  <NestedButton type={"subCollection"} parentId={item.id}>
+                    Add Subcollection
+                  </NestedButton>
                 </div>
-              </div >}
+              </div>
+            )}
           </>
-        )
+        );
       })}
       {
         (sidenavFolderNextPage >= 0) &&
