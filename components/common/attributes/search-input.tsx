@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Utilities } from "../../../assets";
+import { AssetOps, Utilities } from "../../../assets";
 import { useDebounce } from "../../../hooks/useDebounce";
 import styles from "./search-input.module.css";
 
@@ -48,6 +48,7 @@ const Search = (props) => {
             props.styleType && styles[props.styleType]
           }`}
         />
+        {term.length > 0 && <img src={AssetOps.cancel} onClick={() => setTerm('')}/>}
       </div>
       {!props.onlyInput && (
         <Button
