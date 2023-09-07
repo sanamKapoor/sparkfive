@@ -14,9 +14,14 @@
   background-color: var(--color-sec-lightivory);
   color: var(--color-prim-navy);
 }
+.tagAttribute{
+  width: 251px !important;
+  height:35px;
+  border-radius: 8px !important;
 
+}
 .input-container {
-  width: 64%;
+  /* width: 64%; */
   margin-right: 9px;
   position: relative;
 }

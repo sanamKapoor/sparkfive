@@ -3,6 +3,7 @@
   width: 50%;
   margin-top: 20px;
   margin-left: 10px;
+  align-items: center;
 }
 .companyName{
   font-family: "Noto Sans", sans-serif;
@@ -21,6 +22,10 @@ h3.title {
   min-height: 35px;
   font-size: 14px;
   font-weight: 600;
+}
+.infoField{
+  max-width: 356px;
+  margin-right: 114px;
 }
 
 @media screen and (max-width: 900px) {

@@ -1,19 +1,34 @@
 .container {
   display: flex;
   align-items: flex-start;
-  margin: 2.5rem 0;
-  gap: 16px
+  /* margin: 2.5rem 0; */
+  gap: 16px;
+  margin:24px 0 36px 0;
+  position: relative;
 }
 
 .container img{
   width: 82px;
   height:82px;
 }
+.uploadPhotoProfile{
+  height: 36px !important;
+  max-width: 176px;
+  width: 100%;
+ 
+}
+.uploadPhotoProfile span{
+  font-size: 12px !important;
+}
+.uploadPhotoProfile img{
+  width: 22px !important;
+  height: 24px !important;
 
+}
 .description {
   margin-bottom: 0;
   font-weight: 300;
-  max-width: 358px;
+  max-width: 385px;
   width: 100%;
   height: 19px;
 }

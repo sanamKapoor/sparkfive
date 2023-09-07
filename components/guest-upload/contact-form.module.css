@@ -31,6 +31,10 @@
 
 .input {
   margin-top: 5px;
+  min-width: 458px !important;
+  width: 100%;
+  height: 60px !important;
+  
 }
 
 .row {
@@ -39,7 +43,11 @@
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  margin-bottom: 24px;
+  margin-bottom: 13px;
+ 
+}
+.first-row{
+  margin-top: 82px;
 }
 
 .row>div {

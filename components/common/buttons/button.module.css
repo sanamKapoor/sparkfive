@@ -10,6 +10,9 @@
   white-space: nowrap;
 
 }
+.saveChangeBtn{
+  border-radius: 4px;
+}
 
 .add{
  background:#fff;
@@ -240,7 +243,7 @@
 /* //download button */
 .downloadBtn {
   height: 32px;
-  padding: 8px;
+  padding: 8px 0;
   font-family: "Noto Sans", sans-serif;
   font-weight: 600;
   font-size: 12px;
@@ -250,6 +253,7 @@
   border-radius: 4px;
   margin-left: 10px;
   cursor: pointer;
+  min-width: 92px;
 }
 .actionBtn {
   cursor: pointer;
@@ -289,7 +293,40 @@
     margin-top: 32px;
 
 }
+.teamInviteBtn{
+  height: 50px;
+  padding: 0 29px;
+  font-size: 14px;
+}
+.guestUpLoadBtn{
+min-width: 112px;
+ height:35px;
+}
+.select-all{
+  min-width: 115px;
+  height:33px;
+}
+.attribute-btn{
+  height:35px !important;
+  min-width: 92px;
+  border-radius: 4px;
+}
+.field-btn{
+  height:35px !important;
+  min-width: 79px;
+  border-radius: 4px;
 
+}
+.guestBtn{
+  font-size: 14px;
+  min-width: 151px !important;
+  height:42px !important;
+
+}
+.GuestFileUploadBtn{
+  min-width: 151px !important;
+  height:40px !important;
+}
 
 
 @media screen and (max-width: 1000px) {

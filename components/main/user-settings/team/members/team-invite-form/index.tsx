@@ -65,13 +65,13 @@ const TeamInviteForm: React.FC<TeamInviteProps> = ({
           <Select
             options={mappedRoles}
             onChange={(selected) => setInviteRole(selected)}
-            placeholder={"Select a role"}
+            placeholder={"Select role"}
             styleType="regular"
             value={inviteRole}
           />
         </div>
         <Button
-          className={`${styles.button} container primary`}
+          className={`${styles.button} container primary teamInviteBtn`}
           text="Send invitation"
           type="submit"
           disabled={!inviteEmail || !inviteRole}

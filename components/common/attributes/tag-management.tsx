@@ -163,7 +163,7 @@ const TagManagement = () => {
         </div>
       </div>
 
-      <div className={styles["operation-row"]}>
+      <div className={`${styles['operation-row']} ${styles['attribute-operation']}`}>
         <CreatableSelect
           altColor="blue"
           title=""

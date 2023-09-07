@@ -95,6 +95,7 @@ const PhotoUpload: React.FC<IPhotoUploadProps> = ({
           icon={Utilities.addAlt}
           text="UPLOAD PHOTO"
           onClick={openUpload}
+          additionalClass={styles.uploadPhotoProfile}
          
         />
         <p className={styles.description}>{description}</p>

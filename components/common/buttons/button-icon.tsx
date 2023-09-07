@@ -9,6 +9,7 @@ interface ButtonIconProps
   text: string;
   icon: string;
   isGray?: boolean;
+  additionalClass?: string;
 }
 
 const ButtonIcon: React.FC<ButtonIconProps> = ({
@@ -17,10 +18,11 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
   icon,
   onClick,
   isGray = false,
+  additionalClass = '',
 }) => {
   return (
     <button
-      className={`${!isGray ? styles.container : styles["container-gray"]}`}
+      className={`${!isGray ? styles.container : styles["container-gray"]} ${additionalClass}`}
       disabled={disabled}
       onClick={onClick}
     >

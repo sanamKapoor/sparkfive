@@ -17,6 +17,10 @@
   align-items: center;
   cursor: pointer;
 }
+.thead span{
+  font-size: 12px;
+  font-weight: 500;
+}
 @media screen and (max-width: 1200px) {
   .headcontent {
     width: 198px;

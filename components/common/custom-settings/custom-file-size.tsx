@@ -108,7 +108,7 @@ const CustomFileSizes = () => {
   }, []);
 
   return (
-    <div className={styles["main-wrapper"]}>
+    <div className={`${styles['main-wrapper']} ${styles['outer-wrapper']}`}>
       <h3>Custom File Sizes</h3>
       {fileSizeList.map((field, index) => (
         <div className={styles.row} key={index}>
@@ -123,6 +123,7 @@ const CustomFileSizes = () => {
                   value={field.name}
                   placeholder={"Field name"}
                   styleType={"regular-short"}
+                  additionalClasses={styles.fileSizeFirst}
                 />
               </div>
             </div>
@@ -138,7 +139,7 @@ const CustomFileSizes = () => {
                     }}
                     value={field.width}
                     placeholder={"Width"}
-                    additionalClasses={"center-input"}
+                    additionalClasses={styles.fileSizeSecond}
                     type={"number"}
                     styleType={"regular-short"}
                   />
@@ -153,7 +154,7 @@ const CustomFileSizes = () => {
                     value={field.height}
                     placeholder={"Height"}
                     type={"number"}
-                    additionalClasses={"center-input"}
+                    additionalClasses={styles.fileSizethird}
                     styleType={"regular-short"}
                   />
                 </div>

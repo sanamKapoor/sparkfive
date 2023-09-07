@@ -114,6 +114,12 @@
 .sort-icon-active{
   visibility: visible;
 }
+.linkWrapper{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 70%;
+}
 
 @media screen and (max-width: 900px)  {
   .content {
