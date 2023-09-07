@@ -51,6 +51,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 	const [shareJWT, setShareJWT] = useState("")
 	const [hash, setHash] = useState("")
 	const [sharable, setSharable] = useState(false)
+	const [displayAttributes, setDisplayAttributes] = useState(false)
 	const [shareId, setShareId] = useState("")
 	const [currentName, setCurrentName] = useState("") // To decide user can copy link or not
 	const [basic, setBasic] = useState(true)
@@ -85,6 +86,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 		setShareJWT("")
 		setHash("")
 		setSharable(false)
+		setDisplayAttributes(false)
 		setShareId("")
 		setCurrentName("")
 		setCollectionLink("")
@@ -131,6 +133,8 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 
 				setMessage(data.currentSharedLinks.message)
 				setSharable(data.currentSharedLinks.sharable !== undefined ? data.currentSharedLinks.sharable : false) // default is false
+
+				setDisplayAttributes(data.currentSharedLinks.displayAttributes !== undefined ? data.currentSharedLinks.displayAttributes : false) // default is false
 
 				if (showInternalLoading) {
 					setLoading(false)
@@ -192,6 +196,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 
 		setMessage(data.message)
 		setSharable(data.sharable)
+		setDisplayAttributes(data.displayAttributes)
 
 		setFirstInit(true)
 
@@ -211,7 +216,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 	}
 
 	// Save changes
-	const saveChanges = async (field = "", isPublicValue = undefined, expiredValue = undefined, expiredPeriodValue = undefined, expiredAtValue = undefined, sharableValue = undefined) => {
+	const saveChanges = async (field = "", isPublicValue = undefined, expiredValue = undefined, expiredPeriodValue = undefined, expiredAtValue = undefined, sharableValue = undefined, displayAttributes = undefined) => {
 		setIsLoading(true);
 
 		// Link is not created yet due to lacking name, saving name then getting url back
@@ -231,6 +236,7 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 					expiredPeriod: expiredPeriodValue === undefined ? expiredPeriod : expiredPeriodValue,
 					expiredAt: expiredAtValue === undefined ? expiredAt : expiredAtValue,
 					sharable: sharableValue === undefined ? sharable : sharableValue,
+					displayAttributes: displayAttributes === undefined ? displayAttributes : displayAttributes,
 					shareId
 				},
 				false,
@@ -273,6 +279,12 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 		setSharable(value)
 
 		saveChanges("", undefined, undefined, undefined, undefined, value)
+	}
+
+	const changeDisplayAttributes = (value) => {
+		setDisplayAttributes(value)
+
+		saveChanges("", undefined, undefined, undefined, undefined, undefined, value)
 	}
 
 	const changeExpiredAt = (value) => {
@@ -533,6 +545,30 @@ const ShareModal = ({ modalIsOpen, closeModal, itemsAmount = 0, shareAssets, tit
 						/>
 					</div>
 				</div>}
+
+
+				<div className={`${styles['input-wrapper']} ${displayAttributes ? "" : ""}`} >
+					<div className={`${styles.title}`}>Display attributes</div>
+					<div className={styles['field-content']}>
+						<div className={styles['field-radio-wrapper']}>
+							<div className={`${styles['radio-button-wrapper']} m-r-25`}>
+								<IconClickable
+									src={displayAttributes ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+									additionalClass={styles['select-icon']}
+									onClick={() => { changeDisplayAttributes(true) }} />
+								<div className={'font-12 m-l-10'}>On</div>
+							</div>
+
+							<div className={`${styles['radio-button-wrapper']} m-r-25`}>
+								<IconClickable
+									src={!displayAttributes ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+									additionalClass={styles['select-icon']}
+									onClick={() => { changeDisplayAttributes(false) }} />
+								<div className={'font-12 m-l-10'}>Off</div>
+							</div>
+						</div>
+					</div>
+				</div>
 
 
 			</div>}
