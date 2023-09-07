@@ -138,8 +138,9 @@ export const AssetContext = createContext({
   sidenavTotalCount: 0,
   setSidenavTotalCount: () => { },
   sidenavFolderChildList: {},
-  setSidenavFolderChildList: (data, id, replace) => { }
-
+  setSidenavFolderChildList: (data, id, replace) => { },
+  sidebarOpen: true,
+  setSidebarOpen: (sidebarValue) => { }
 });
 
 export const TeamContext = createContext({

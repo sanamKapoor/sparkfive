@@ -1,21 +1,46 @@
-.nestedsidenav{
+/* nested-sidenav.module.css */
+.nestedsidenav {
     width: 283px;
-    border:1px solid #DEDAD4;
-    height:100%;
+    border: 1px solid #DEDAD4;
+    height: fit-content;
     border-radius: 6px;
-    /* margin-top: 50px; */
     position: relative;
     z-index: 999;
- 
-}
-.sidenav-content{
-    padding: 23px 23px 0px 23px;
-}
-
-
-@media screen and (max-width: 800px) {
-    .nestedsidenav{
-        display: none;
+    padding: 24px 0;
+    opacity: 1;
+    display: block;
+    transition: opacity 0.3s ease-in-out, display 0s linear 0.3s;
+  }
+  
+  .nestedsidenav.hidden {
+    display: none;
+    pointer-events: none;
+  }
+  
+  .sidenav-content {
+    padding: 0px 23px 0px 23px;
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  .sidenav-content.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  .showButton {
+    position: absolute;
+    right: -27px;
+    top: 7px;
+    cursor: pointer;
+  }
+  
+  .showButton img {
+    width: 20px;
+  }
+  
+  @media screen and (max-width: 800px) {
+    .nestedsidenav {
+      display: none;
     }
-
-}
+  }
+  

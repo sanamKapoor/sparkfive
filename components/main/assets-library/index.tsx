@@ -71,6 +71,8 @@ const AssetsLibrary = () => {
     currentViewAsset,
     setCurrentViewAsset,
     setDetailOverlayId,
+    sidebarOpen,
+    setSidebarOpen
   } = useContext(AssetContext);
   const {
     activeSortFilter,
@@ -856,9 +858,9 @@ const AssetsLibrary = () => {
         <>
           <main className={`${styles.container}`}>
             <div className={styles.innnerContainer}>
-              <div className={styles.newsidenav}>
+              {sidebarOpen&&<div className={styles.newsidenav}>
                 <NestedSidenav />
-              </div>
+              </div>}
               <div className={styles.rightSide}>
                 <div className='position-relative'>
                   <div className={styles["search-mobile"]}>

@@ -202,6 +202,7 @@ const TopBar = ({
                             }
                           />
                         ))} */}
+                         <NavHeading title="assets"/>
                     </li>
                     {showTabs && (
                       <Dropdown

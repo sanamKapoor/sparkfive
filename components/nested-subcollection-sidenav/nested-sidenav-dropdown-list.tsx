@@ -126,12 +126,14 @@ const NestedSidenavDropdown = () => {
       {sidenavFolderList.map((item: Item, index: number) => {
         return (
           <>
-            <div key={index} className={`${styles["flex"]} ${styles.nestedbox}`}>
+            {/* <div key={index} className={`${styles["flex"]} ${styles.nestedbox}`}>
               <img
                 className={styles.rightIcon}
                 src={Utilities.right}
                 onClick={() => toggleDropdown(index, item, true)}
-              />
+              /> */}
+            < div key={index} className={`${styles["flex"]} ${styles.nestedbox}`}>
+              <img className={`${styles["rightIcon"]} ${styles.iconClick}`} src={Utilities.arrowBlue} onClick={() => toggleDropdown(index, item, true)} />
               <div className={styles.w100}>
                 <div className={`${styles["dropdownMenu"]} ${styles.active}`}>
                   <div className={styles.flex}>
@@ -194,11 +196,17 @@ const NestedSidenavDropdown = () => {
           </>
         );
       })}
-      {
-        (sidenavFolderNextPage >= 0) &&
-        <span className={styles.desc} onClick={() => { getFolders(false); }}>{isFolderLoading ? "Loading..." : "Load More"}</span>
-      }
-      <NestedButton type={"collection"}>Add collection</NestedButton>
+      <span className={styles.loadbtn} onClick={() => { getFolders(false); }}>{"Load More"}</span>
+      <div className={styles.loadmore}>
+        <button className={styles.loaderbuttons}>
+          <span className={styles.buttontext}>Load More</span>
+          <div className={styles.loader}></div>
+        </button>
+      </div>
+
+      <div className={styles.collection}>
+        <NestedButton>Add collection</NestedButton>
+      </div>
     </div >
   );
 };

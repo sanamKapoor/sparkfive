@@ -118,6 +118,7 @@ export default ({ children }) => {
 
   // Asset navigation
   const [detailOverlayId, setDetailOverlayId] = useState(undefined);
+  const [sidebarOpen, setSidebarOpen] = useState(true)
 
   // For viewing asset in file associations
   const [currentViewAsset, setCurrentViewAsset] = useState();
@@ -618,7 +619,9 @@ export default ({ children }) => {
     sidenavTotalCount,
     setSidenavTotalCount,
     sidenavFolderChildList,
-    setSidenavFolderChildList: setSidenavFolderChildListItems
+    setSidenavFolderChildList: setSidenavFolderChildListItems,
+    sidebarOpen,
+    setSidebarOpen
   };
   return (
     <AssetContext.Provider value={assetsValue}>
