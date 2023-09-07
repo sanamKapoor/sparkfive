@@ -75,9 +75,9 @@ const NestedSidenavDropdown = () => {
   }
 
   const toggleDropdown = async (index: number, item: Item, replace: boolean) => {
-
-    await getSubFolders(item.id, 1, replace);
-
+    if (!showDropdown[index]) {
+      await getSubFolders(item.id, 1, replace);
+    }
     const updatedShowDropdown = [...showDropdown];
     updatedShowDropdown[index] = !updatedShowDropdown[index]; // Toggle dropdown on img click event
     setShowDropdown(updatedShowDropdown);
@@ -107,7 +107,6 @@ const NestedSidenavDropdown = () => {
       };
       const { data } = await folderApi.getFolders({
         ...queryParams,
-        // ...(term && { term }),
       });
       let collectionList = { ...data };
       setSidenavFolderList(collectionList, replace);
@@ -126,14 +125,8 @@ const NestedSidenavDropdown = () => {
       {sidenavFolderList.map((item: Item, index: number) => {
         return (
           <>
-            {/* <div key={index} className={`${styles["flex"]} ${styles.nestedbox}`}>
-              <img
-                className={styles.rightIcon}
-                src={Utilities.right}
-                onClick={() => toggleDropdown(index, item, true)}
-              /> */}
-            < div key={index} className={`${styles["flex"]} ${styles.nestedbox}`}>
-              <img className={`${styles["rightIcon"]} ${styles.iconClick}`} src={Utilities.arrowBlue} onClick={() => toggleDropdown(index, item, true)} />
+            <div key={index} className={`${styles["flex"]} ${styles.nestedbox}`}>
+              <img className={showDropdown[index] ? styles.iconClick : styles.rightIcon} src={Utilities.arrowBlue} onClick={() => toggleDropdown(index, item, true)} />
               <div className={styles.w100}>
                 <div className={`${styles["dropdownMenu"]} ${styles.active}`}>
                   <div className={styles.flex}>
@@ -183,7 +176,7 @@ const NestedSidenavDropdown = () => {
                       ))}
                       {
                         keyResultsFetch(item.id, "next") >= 0 &&
-                        <span className={styles.desc} onClick={() => { getSubFolders(item.id, keyResultsFetch(item.id, "next"), false); }}>{subFolderLoadingState.has(item.id) ? "Loading..." : "Load More"}</span>
+                        <span className={styles.desc} onClick={() => { getSubFolders(item.id, keyResultsFetch(item.id, "next"), false); }} style={{ cursor: "pointer" }}>{subFolderLoadingState.has(item.id) ? "Loading..." : "Load More"}</span>
                       }
                     </>
                   }
@@ -196,16 +189,20 @@ const NestedSidenavDropdown = () => {
           </>
         );
       })}
-      <span className={styles.loadbtn} onClick={() => { getFolders(false); }}>{"Load More"}</span>
-      <div className={styles.loadmore}>
-        <button className={styles.loaderbuttons}>
-          <span className={styles.buttontext}>Load More</span>
-          <div className={styles.loader}></div>
-        </button>
-      </div>
-
+      {
+        (sidenavFolderNextPage >= 0) &&
+        <div className={styles.loadmore}>
+          <button className={styles.loaderbuttons} onClick={() => getFolders(false)} disabled={isFolderLoading}>
+            {isFolderLoading ?
+              <div className={styles.loader}></div>
+              :
+              <span className={styles.buttontext}>Load More</span>
+            }
+          </button>
+        </div>
+      }
       <div className={styles.collection}>
-        <NestedButton>Add collection</NestedButton>
+        <NestedButton type={"collection"}>Add collection</NestedButton>
       </div>
     </div >
   );

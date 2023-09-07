@@ -1,9 +1,9 @@
 import React from "react";
 import styles from './Navheading.module.css'
-const NavHeading = ({ title }) => {
-    return(
+const NavHeading = ({ title }: { title: string }) => {
+    return (
         <div>
-        <span className={styles.navigationLinkheading}>{title}</span>
+            <span className={styles.navigationLinkheading}>{title}</span>
         </div>
 
     )

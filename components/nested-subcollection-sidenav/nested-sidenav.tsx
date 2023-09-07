@@ -20,9 +20,7 @@ const NestedSidenav = () => {
       <div className={styles["sidenav-content"]}>
         <ReusableHeading
           text={`${team?.company}.`}
-          // icon={<img src={Utilities.arrowleft} />}
-          // text="Hooli Inc."
-          icon={<img onClick={() => { setSidebarOpen(!sidebarOpen) }} src={sidebarOpen ? Utilities.arrowleft : Utilities.arrowright} />}
+          icon={<img onClick={() => { setSidebarOpen(!sidebarOpen) }} src={Utilities.arrowleft} />}
         />
         <NestedFirstlist />
         <ReusableHeading text="Collections" totalCount={sidenavTotalCount} icon={undefined} />

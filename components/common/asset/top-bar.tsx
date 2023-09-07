@@ -202,7 +202,7 @@ const TopBar = ({
                             }
                           />
                         ))} */}
-                         <NavHeading title="assets"/>
+                      <NavHeading title="assets" />
                     </li>
                     {showTabs && (
                       <Dropdown
@@ -219,34 +219,34 @@ const TopBar = ({
                     )}
                   </div>
                 ) : (
-                  tabs.map((view) => {
-                    return (
-                      <li key={view.name} className={styles["tab-list-item"]}>
-                        {(!activeFolder || !view.omitFolder) &&
-                          (!isShare ||
-                            (isShare &&
-                              !view.omitShare &&
-                              view.hideOnSingle !== singleCollection)) &&
-                          (view.requirePermissions.length === 0 ||
-                            (view.requirePermissions.length > 0 &&
-                              hasPermission(view.requirePermissions))) && (
-                            <Button
-                              key={view.name}
-                              text={view.text}
-                              className={
-                                activeSortFilter.mainFilter === view.name
-                                  ? "section-container section-active"
-                                  : "section-container"
-                              }
-                              onClick={() =>
-                                setSortFilterValue("mainFilter", view.name)
-                              }
-                            />
-                          )}
-                      </li>
-                    );
-                  })
-                  // < NavHeading title="All Assets" />
+                  // tabs.map((view) => {
+                  //   return (
+                  //     <li key={view.name} className={styles["tab-list-item"]}>
+                  //       {(!activeFolder || !view.omitFolder) &&
+                  //         (!isShare ||
+                  //           (isShare &&
+                  //             !view.omitShare &&
+                  //             view.hideOnSingle !== singleCollection)) &&
+                  //         (view.requirePermissions.length === 0 ||
+                  //           (view.requirePermissions.length > 0 &&
+                  //             hasPermission(view.requirePermissions))) && (
+                  //           <Button
+                  //             key={view.name}
+                  //             text={view.text}
+                  //             className={
+                  //               activeSortFilter.mainFilter === view.name
+                  //                 ? "section-container section-active"
+                  //                 : "section-container"
+                  //             }
+                  //             onClick={() =>
+                  //               setSortFilterValue("mainFilter", view.name)
+                  //             }
+                  //           />
+                  //         )}
+                  //     </li>
+                  //   );
+                  // })
+                  < NavHeading title="All Assets" />
                 )}
               </ul>
             </div>
@@ -405,9 +405,6 @@ const TopBar = ({
               getFolders={getFolders} triggerUploadComplete={undefined} />
           )}
       </div>
-      {/* <NavHeading title="asset" />
-      <InputChip />
-       */}
     </section>
   );
 };

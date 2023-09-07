@@ -35,6 +35,7 @@ import Tags from '../../topbar-newnavigation/Tags';
 import UploadStatusOverlayAssets from '../../upload-status-overlay-assets';
 import SearchOverlay from '../search-overlay-assets';
 import styles from './index.module.css';
+import { Utilities } from '../../../assets';
 
 // Components
 
@@ -858,8 +859,10 @@ const AssetsLibrary = () => {
         <>
           <main className={`${styles.container}`}>
             <div className={styles.innnerContainer}>
-              {sidebarOpen&&<div className={styles.newsidenav}>
+              {sidebarOpen ? <div className={styles.newsidenav}>
                 <NestedSidenav />
+              </div> : <div className={styles.newsidenav}>
+                <img onClick={() => { setSidebarOpen(!sidebarOpen) }} src={Utilities.arrowright} />
               </div>}
               <div className={styles.rightSide}>
                 <div className='position-relative'>
