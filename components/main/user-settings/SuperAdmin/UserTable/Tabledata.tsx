@@ -52,7 +52,16 @@ const TableData: React.FC<TableDataProps> = ({ users, onUserLogin }) => {
                 {user.team.company || "No company name"}
               </span>
             </td>
-            {/* TODO: fix styling */}
+             <td>
+              <span className={styles.username}>
+                 <span className={styles.useremail}>{user?.team?.plan?.name}</span>
+              </span>
+            </td>
+              <td>
+              <span className={styles["active-badge"]}>
+                {user?.team?.plan.status}
+              </span>
+            </td>
             <td className={styles.logbtn}>
               <Button
                 className={"actionBtn"}
