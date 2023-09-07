@@ -116,7 +116,7 @@ const CampaignManagement = () => {
   }, [sort, searchKey]);
 
   return (
-    <div className={styles["main-wrapper"]}>
+    <div className={`${styles['main-wrapper']} ${styles['collection-management-wrapper']}`}>
       <h3>Campaigns</h3>
 
       <div className={styles["search-row"]}>

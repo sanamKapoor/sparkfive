@@ -106,11 +106,11 @@ const SizeSaPresets = () => {
   }, []);
 
   return (
-    <div className={styles["main-wrapper"]}>
+    <div  className={`${styles['main-wrapper']} ${styles['size-preset-main-wrapper']}`}>
       {presetList.map((field, index) => {
         return (
           <div
-            className={`${styles["row"]} ${styles["field-block"]}`}
+            className={`${styles["row"]} ${styles["custom-setting-border"]} ${styles["field-block"]}`}
             key={index}
           >
             <div

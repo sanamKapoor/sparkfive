@@ -29,7 +29,7 @@ const AvailableIntegrations = () => {
   };
 
   return (
-    <div>
+    <div  className={`${styles['available-integration-wrapper']}`}>
       <ul className={styles["integration-list"]}>
         {availableIntegrations.map((integration) => (
           <li key={integration.type}>

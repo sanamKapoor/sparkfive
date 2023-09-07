@@ -26,7 +26,7 @@ const EnabledIntegrations = () => {
   };
 
   return (
-    <div>
+    <div  className={`${styles['enabled-integration-wrapper']}`}>
       <h3>Enabled Integrations</h3>
       <div className={styles.header}>
         <h3>Name</h3>

@@ -29,13 +29,14 @@ const AccountActions = () => {
 
   return (
     <div className={styles.container}>
+      <div className={`${styles['custom-view-wrapper']}`}>
       <h3>Account Actions</h3>
 
       <div>
         <div className={styles.row}>
           <span className={styles.label}>Search Default</span>
           <div className={styles["field-radio-wrapper"]}>
-            <div className={styles.radio}>
+            <div className={`${styles['radio']} ${styles['account-action-wrapper']}`}>
               <div>Subfolder as Separate Collection</div>
               <IconClickable
                 src={
@@ -67,7 +68,7 @@ const AccountActions = () => {
         <div className={styles.row}>
           <div className={styles.label}>Folder Upload Configuration</div>
           <div className={styles["field-radio-wrapper"]}>
-            <div className={styles.radio}>
+          <div className={`${styles['radio']} ${styles['account-action-wrapper']}`}>
               <div>All</div>
               <IconClickable
                 src={
@@ -99,7 +100,7 @@ const AccountActions = () => {
             Duplicate Management - Check Uploads
           </div>
           <div className={styles["field-radio-wrapper"]}>
-            <div className={styles.radio}>
+          <div className={`${styles['radio']} ${styles['account-action-wrapper']}`}>
               <div>On</div>
               <IconClickable
                 src={
@@ -125,6 +126,7 @@ const AccountActions = () => {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

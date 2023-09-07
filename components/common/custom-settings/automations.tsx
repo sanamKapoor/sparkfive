@@ -25,8 +25,9 @@ const Automations = () => {
 
   return (
     <div className={styles.container}>
+      <div className={`${styles['custom-view-wrapper']}`}>
       <h3>Automations</h3>
-      <div>
+      
         <div className={styles.row}>
           <span className={styles.label}>AI Tagging</span>
           <div className={styles["field-radio-wrapper"]}>
@@ -56,6 +57,7 @@ const Automations = () => {
             </div>
           </div>
         </div>
+    
       </div>
     </div>
   );

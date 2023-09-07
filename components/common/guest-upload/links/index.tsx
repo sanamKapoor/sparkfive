@@ -236,7 +236,7 @@ const Links = () => {
   };
 
   return (
-    <div className={styles["main-wrapper"]}>
+    <div className={`${styles['main-wrapper']} ${styles['guest-upload-wrapper']}`}>
       <h3>Guest Upload Links</h3>
 
       {links.length < maximumLinks && (

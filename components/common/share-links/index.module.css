@@ -120,7 +120,23 @@
   justify-content: space-between;
   width: 70%;
 }
-
+.copy-icon{
+ height:16px !important;
+ width: 16px !important;
+}
+.sharedIconimg{
+  width: 10.96px !important;
+  height:11px;
+}
+.edit-btn{
+  width: 18px !important;
+}
+.delete-btn{
+  width: 18px !important;
+}
+.drop-down-icon{
+  width: 12px !important;
+}
 @media screen and (max-width: 900px)  {
   .content {
     padding: 42px 30px;

@@ -43,7 +43,7 @@ const Notifications: React.FC = () => {
   };
 
   return (
-    <div className={styles.container}>
+       <div className={`${styles['container']} ${styles['security-container-wrapper']}`}>
       <UserPreference
         enabled={user?.twoFactor}
         setPreference={setTwoFactor}

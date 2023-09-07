@@ -33,6 +33,7 @@ const CustomViews = () => {
 
   return (
     <div className={styles.container}>
+      <div className={`${styles['custom-view-wrapper']}`}>
       <h3>Custom Views</h3>
 
       <div>
@@ -189,6 +190,7 @@ const CustomViews = () => {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

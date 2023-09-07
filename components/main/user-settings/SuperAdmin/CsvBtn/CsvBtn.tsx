@@ -9,7 +9,7 @@ return (
     <>
       <Button onClick={onClick} className={"downloadBtn"} text="Download CSV"/>
       <div className={styles.downloadIcon}>
-      <ButtonIcon onClick={onClick} text=""  icon={Utilities.download}   className={"downloadBtn"}/>
+      <ButtonIcon onClick={onClick} text=""  icon={Utilities.download} additionalClass={styles.downloadBtn}   className={"downloadBtn"}/>
 
       </div>
     

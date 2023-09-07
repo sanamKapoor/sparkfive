@@ -36,7 +36,7 @@ const Search = (props) => {
           props.inputContainerStyle || ""
         }`}
       >
-        {!props?.nonIcon && <img src={Utilities.search} />}
+        {!props?.nonIcon && <img className={styles.searchIcon} src={Utilities.search} />}
 
         <input
           {...props}
@@ -50,7 +50,7 @@ const Search = (props) => {
         />
         {term && (
     <img
-      src={Utilities.close} 
+      src={Utilities.blueClose} 
       className={styles.closeIcon}
       alt="Close Icon"
       onClick={() => setTerm("")}

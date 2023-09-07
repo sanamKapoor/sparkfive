@@ -54,7 +54,7 @@ const AddressForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form className={`${styles['company-address-form-wrapper']}`} onSubmit={handleSubmit(onSubmit)}>
       {team && (
         <>
           <h3 className={styles.title}>Company Address</h3>

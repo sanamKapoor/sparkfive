@@ -23,6 +23,7 @@ import ShareModal from "../modals/share-modal";
 import { Waypoint } from "react-waypoint";
 import { typeList } from "../../../config/data/shared-links";
 import { colorList, statusList } from "../../../constants/shared-links";
+import React from "react";
 
 export default function ShareLinks() {
   const [links, setLinks] = useState([]);
@@ -362,6 +363,7 @@ export default function ShareLinks() {
                 src={Assets.downarrow}
                 className={`
                           ${styles["sort-icon"]} 
+                          ${styles["drop-down-icon"]} 
                           ${
                             sortData.sortField === "createdAt"
                               ? styles["sort-icon-active"]
@@ -434,6 +436,7 @@ export default function ShareLinks() {
                 src={Assets.downarrow}
                 className={`
                           ${styles["sort-icon"]} 
+                          ${styles["drop-down-icon"]} 
                           ${
                             sortData.sortField === "expiredAt"
                               ? styles["sort-icon-active"]
@@ -510,7 +513,7 @@ export default function ShareLinks() {
                       : link.sharedLink}
                   </span>
                   <IconClickable
-                    additionalClass={`${styles["action-button"]} m-l-15 cursor-pointer`}
+                    additionalClass={`${styles["action-button"]} ${styles["copy-icon"]}  m-l-15 cursor-pointer`}
                     src={AssetOps[`copy${""}`]}
                     tooltipText={"Copy"}
                     tooltipId={"Copy"}
@@ -535,7 +538,7 @@ export default function ShareLinks() {
                   <img
                     src={ItemFields.member}
                     alt="member icon"
-                    width={`10px`}
+                  className={styles.sharedIconimg}
                   />
                   <span className={"m-l-15 font-weight-400 font-14"}>
                     {link.sharedCount}
@@ -558,7 +561,7 @@ export default function ShareLinks() {
                   }
                 >
                   <IconClickable
-                    additionalClass={styles["action-button"]}
+                    additionalClass={`${styles['action-button']} ${styles['edit-btn']}`}
                     src={AssetOps[`edit`]}
                     tooltipText={"Edit"}
                     tooltipId={"Edit"}
@@ -569,7 +572,7 @@ export default function ShareLinks() {
                     }}
                   />
                   <IconClickable
-                    additionalClass={`${styles["action-button"]} m-l-10`}
+                    additionalClass={`${styles["action-button"]} ${styles['delete-btn']} m-l-10`}
                     src={AssetOps[`delete`]}
                     tooltipText={"Delete"}
                     tooltipId={"Delete"}

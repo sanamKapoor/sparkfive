@@ -1,6 +1,9 @@
 .main-wrapper {
     width: 70%;
 }
+.guest-upload-wrapper{
+    padding: 0 60px;
+}
 
 .main-wrapper h3 {
     margin: 0 0 30px;
@@ -363,7 +366,7 @@
     flex-wrap: wrap;
 }
 .passwordSave{
-    margin:25px 0 0 20px;
+    margin:0px 0 10px 45px;
 }
 .uploadPassword{
     height: 50px !important;

@@ -117,6 +117,7 @@
 
 .field-block{
     margin-bottom: 75px;
+    gap:100px;
 }
 
 .tag-wrapper{
@@ -148,6 +149,9 @@
 
 .confirm-modal-text{
     padding-top: 30px;
+}
+.custom-fields-managements{
+    padding: 0 60px;
 }
 
 

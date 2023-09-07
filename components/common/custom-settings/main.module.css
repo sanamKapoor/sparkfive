@@ -43,7 +43,10 @@
 
 .field-radio-wrapper {
   display: flex;
-  gap: 40px;
+  gap: 100px;
+  min-width: 300px;
+  width: 100%;
+  max-width: 550px;
 }
 .field-radio-wrapper-auto{
   display: flex;
@@ -66,7 +69,12 @@
   width: 20px;
   height: 20px;
 }
-
+.custom-view-wrapper{
+  padding: 0 60px;
+}
+.account-action-wrapper{
+  width: 40%;
+}
 @media screen and (max-width: 1200px) {
   .container {
     width: 100%;

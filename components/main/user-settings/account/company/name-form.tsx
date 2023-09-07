@@ -18,7 +18,7 @@ const NameForm: React.FC = () => {
   };
 
   return (
-    <>
+    <div className={styles.companyAllInfo}>
     <div className={styles.compamnyInfo}>
     <h3>Company Info</h3>
     </div>
@@ -49,7 +49,7 @@ const NameForm: React.FC = () => {
           </div>
         )}
       </form>
-    </>
+    </div>
   );
 };
 
