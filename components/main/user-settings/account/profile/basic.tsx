@@ -96,7 +96,7 @@ const Basic: React.FC<BasicProps> = ({ name, email, provider }) => {
       <form onSubmit={handleName(onNameSubmit)} className={styles.form}>
         <div className={"fields-first"}>
           <FormInput
-            InputComponent={<Input type="text" />}
+            InputComponent={<Input additionalClasses={styles.profileFormdata} type="text" />}
             defaultValue={name}
             name="name"
             control={controlName}
@@ -109,7 +109,7 @@ const Basic: React.FC<BasicProps> = ({ name, email, provider }) => {
           <Button
             text="Save Changes"
             type="submit"
-            className="container submit input-height-primary"
+            className="container submit input-height-primary saveChangeBtn"
           />
         </div>
       </form>
@@ -118,7 +118,7 @@ const Basic: React.FC<BasicProps> = ({ name, email, provider }) => {
       <form onSubmit={handleEmail(onEmailSubmit)} className={styles.form}>
         <div className={"fields-first"}>
           <FormInput
-            InputComponent={<Input type="email" />}
+            InputComponent={<Input additionalClasses={styles.profileFormdata} type="email" />}
             defaultValue={email}
             name="email"
             control={controlEmail}
@@ -149,7 +149,7 @@ const Basic: React.FC<BasicProps> = ({ name, email, provider }) => {
             <h3>Current Password</h3>
             </div>
             <FormInput
-            InputComponent={<Input type="password" />}
+            InputComponent={<Input additionalClasses={styles.profileFormdata} type="password" />}
               name="currentPassword"
               control={controlPassword}
               rules={{ minLength: 8, maxLength: 80, required: true }}
@@ -160,7 +160,7 @@ const Basic: React.FC<BasicProps> = ({ name, email, provider }) => {
             <h3 className="m-t-40">New Password</h3>
             </div>
             <FormInput
-              InputComponent={<Input type="password" />}
+              InputComponent={<Input additionalClasses={styles.profileFormdata} type="password" />}
               name="newPassword"
               control={controlPassword}
               rules={{

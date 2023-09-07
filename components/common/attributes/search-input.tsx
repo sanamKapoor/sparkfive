@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AssetOps, Utilities } from "../../../assets";
+import { Utilities } from "../../../assets";
 import { useDebounce } from "../../../hooks/useDebounce";
 import styles from "./search-input.module.css";
 
@@ -37,6 +37,7 @@ const Search = (props) => {
         }`}
       >
         {!props?.nonIcon && <img src={Utilities.search} />}
+
         <input
           {...props}
           onChange={(e) => {
@@ -44,15 +45,21 @@ const Search = (props) => {
           }}
           value={term}
           placeholder={props.placeholder || "Search"}
-          className={`${styles.container} ${
-            props.styleType && styles[props.styleType]
+          className={`${styles.container} ${styles.tagAttribute}
           }`}
         />
-        {term.length > 0 && <img src={AssetOps.cancel} onClick={() => setTerm('')}/>}
+        {term && (
+    <img
+      src={Utilities.close} 
+      className={styles.closeIcon}
+      alt="Close Icon"
+      onClick={() => setTerm("")}
+    />
+  )}
       </div>
       {!props.onlyInput && (
         <Button
-          className={"container submit exclude-min-height primary"}
+          className={"container submit exclude-min-height primary attribute-btn"}
           type={"submit"}
           text="Search"
         />

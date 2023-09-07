@@ -419,7 +419,7 @@ export default function ShareLinks() {
                 sort("sharedCount", getSortType("sharedCount"));
               }}
             >
-              <span className={"font-12"}>Share With</span>
+              <span className={"font-12"}>Shared With</span>
             </div>
             <div
               className={
@@ -501,6 +501,7 @@ export default function ShareLinks() {
                     "col-25 d-flex justify-content-center align-items-center word-break-text col-sm-100"
                   }
                 >
+                  <div className={styles.linkWrapper}>
                   <span className={"font-12"}>
                     {link.type === "folder"
                       ? !link.team.advancedCollectionShareLink
@@ -524,6 +525,7 @@ export default function ShareLinks() {
                       toastUtils.bottomSuccess("Link copied");
                     }}
                   />
+                  </div>
                 </div>
                 <div
                   className={

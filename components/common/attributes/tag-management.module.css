@@ -11,6 +11,10 @@
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
 }
+.attribute-operation{
+    margin-top: 24px !important;
+
+}
 
 .tag-select {
     width: 200px;
@@ -76,7 +80,7 @@
 
 .tag-item-text {
     font-weight: normal;
-    margin-right: 10px;
+    margin-right: 5px;
     font-size: 13px;
 }
 

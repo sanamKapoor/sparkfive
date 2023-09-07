@@ -63,7 +63,7 @@ const AddressForm: React.FC = () => {
               <FormInput
                 labId="address"
                 label="Address"
-                InputComponent={<Input type="text" id="address" />}
+                InputComponent={<Input additionalClasses={styles.companyAddress} type="text" id="address" />}
                 defaultValue={team.address}
                 name="address"
                 control={control}
@@ -79,7 +79,7 @@ const AddressForm: React.FC = () => {
                   <FormInput
                     labId="city"
                     label="City"
-                    InputComponent={<Input type="text" id="city" />}
+                    InputComponent={<Input additionalClasses={styles.companyCity} type="text" id="city" />}
                     name="city"
                     defaultValue={team.city}
                     control={control}
@@ -97,6 +97,8 @@ const AddressForm: React.FC = () => {
                     options={states}
                     onChange={(selected) => seState(selected.name)}
                     value={getSelectedItem("state", state)}
+                    containerClass={styles.borderRadius}
+                    additionalClass={styles.height}
                   />
                 </div>
               </div>
@@ -108,6 +110,8 @@ const AddressForm: React.FC = () => {
                     options={countries}
                     onChange={(selected) => setCountry(selected.name)}
                     value={getSelectedItem("country", country)}
+                    containerClass={styles.borderRadius}
+                    additionalClass={styles.height}
                   />
                 </div>
                 
@@ -115,7 +119,7 @@ const AddressForm: React.FC = () => {
                   <FormInput
                     labId="zip-form"
                     label="Zip Code"
-                    InputComponent={<Input type="text" id="zip-form" />}
+                    InputComponent={<Input additionalClasses={styles.companyCity} type="text" id="zip-form" />}
                     name="zip"
                     defaultValue={team.zip}
                     control={control}

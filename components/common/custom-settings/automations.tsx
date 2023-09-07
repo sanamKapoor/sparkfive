@@ -42,7 +42,7 @@ const Automations = () => {
                 onClick={() => saveAdvanceConfig({ aiTagging: true })}
               />
             </div>
-            <div className={styles.radio}>
+            <div className={`${styles.radio} ${styles.automation}`}>
               <div>Off</div>
               <IconClickable
                 src={

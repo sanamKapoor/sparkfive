@@ -243,7 +243,7 @@ const CustomFieldsManagement = () => {
               className={`${styles["col-15"]} ${styles["col-md-100"]} ${styles["button-row"]} ${styles["p-l-30"]}`}
             >
               <Button
-                className={"container exclude-min-height primary"}
+                className={"container exclude-min-height primary field-btn"}
                 type={"button"}
                 text="Save"
                 onClick={() => {

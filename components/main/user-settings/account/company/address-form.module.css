@@ -14,11 +14,23 @@ h3.title {
   margin-bottom: 24px;
 
 }
-
+.companyAddress{
+  height: 60px;
+}
+.companyCity{
+  height:60px;
+}
 .state-country{
   display: flex;
   flex-wrap: wrap;
 }
+.borderRadius{
+  border-radius: 10px;
+  /* height:60px; */
+}
+/* .height{
+  height:60px;
+} */
 
 .fields-pair{
   display: flex;

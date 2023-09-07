@@ -27,7 +27,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
     <form onSubmit={handleSubmit(onSubmit)} className={styles["form"]}>
       <>
         <div className={styles.container}>
-          <div className={styles.row}>
+          <div className={`${styles['row']} ${styles['first-row']}`}>
             <div>
               <FormInput
                 labId="firstName"
@@ -124,7 +124,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
       <div className={styles.formBtn}>
         <Button
           type="submit"
-          className="container primary"
+          className="container primary guestBtn"
           text="Save & Continue"
         />
       </div>

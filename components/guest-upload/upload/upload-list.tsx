@@ -39,8 +39,9 @@ const UploadList: React.FC<UploadListProps> = ({
           ) : (
             <ButtonIcon
               icon={Utilities.addAlt}
-              text="Upload"
+              text="UPLOAD"
               onClick={onUpload}
+              additionalClass={styles.uploadFileBtnIcon}
             />
           )}
         </div>
