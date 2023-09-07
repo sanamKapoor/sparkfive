@@ -8,27 +8,24 @@ import styles from "./main.module.css";
 const AccountActions = () => {
   const [loading, setLoading] = useState(false);
   const { advancedConfig, setAdvancedConfig } = useContext(UserContext);
-  const [subFolderAutoTag, setSubFolderAutoTag] = useState(true);
-  const [duplicateCheck, setDuplicateCheck] = useState(false);
-  const [searchDefault, setSearchDefault] = useState("");
+
 
   const saveAdvanceConfig = async (config) => {
-    setLoading(true);
-    await teamAPI.saveAdvanceConfigurations({ config });
+    try {
+      setLoading(true);
+      await teamAPI.saveAdvanceConfigurations({ config });
 
-    const updatedConfig = { ...advancedConfig, ...config };
-    setAdvancedConfig(updatedConfig);
+      const updatedConfig = { ...advancedConfig, ...config };
+      setAdvancedConfig(updatedConfig);
 
-    getAdvanceConfigurations(updatedConfig);
+    } catch (err) {
+      console.log('err in saving advanced config: ', err)
+    } finally {
+      setLoading(false)
+    }
   };
 
-  const getAdvanceConfigurations = (conf = advancedConfig) => {
-    setSubFolderAutoTag(conf.subFolderAutoTag);
-    setDuplicateCheck(conf.duplicateCheck);
-    setSearchDefault(conf.searchDefault);
-    setLoading(false);
-    return true;
-  };
+
 
   return (
     <div className={styles.container}>
@@ -42,7 +39,7 @@ const AccountActions = () => {
               <div>Subfolder as Separate Collection</div>
               <IconClickable
                 src={
-                  searchDefault === "all"
+                  advancedConfig?.searchDefault === "all"
                     ? Utilities.radioButtonEnabled
                     : Utilities.radioButtonNormal
                 }
@@ -54,7 +51,7 @@ const AccountActions = () => {
               <div>Subfolder as Tags (Default)</div>
               <IconClickable
                 src={
-                  searchDefault === "tags_only"
+                  advancedConfig?.searchDefault === "tags_only"
                     ? Utilities.radioButtonEnabled
                     : Utilities.radioButtonNormal
                 }
@@ -74,7 +71,7 @@ const AccountActions = () => {
               <div>All</div>
               <IconClickable
                 src={
-                  subFolderAutoTag
+                  advancedConfig?.subFolderAutoTag
                     ? Utilities.radioButtonEnabled
                     : Utilities.radioButtonNormal
                 }
@@ -86,7 +83,7 @@ const AccountActions = () => {
               <div>Tags Only</div>
               <IconClickable
                 src={
-                  !subFolderAutoTag
+                  !advancedConfig?.subFolderAutoTag
                     ? Utilities.radioButtonEnabled
                     : Utilities.radioButtonNormal
                 }
@@ -106,7 +103,7 @@ const AccountActions = () => {
               <div>On</div>
               <IconClickable
                 src={
-                  duplicateCheck
+                  advancedConfig?.duplicateCheck
                     ? Utilities.radioButtonEnabled
                     : Utilities.radioButtonNormal
                 }
@@ -118,7 +115,7 @@ const AccountActions = () => {
               <div>Off</div>
               <IconClickable
                 src={
-                  !duplicateCheck
+                  !advancedConfig?.duplicateCheck
                     ? Utilities.radioButtonEnabled
                     : Utilities.radioButtonNormal
                 }

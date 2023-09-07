@@ -45,7 +45,7 @@ const Notifications: React.FC = () => {
   return (
     <div className={styles.container}>
       <UserPreference
-        enabled={enabledTwoFactor}
+        enabled={user?.twoFactor}
         setPreference={setTwoFactor}
         title={SECURITY_TITLE}
         subtitle={SECURITY_SUBTITLE}
