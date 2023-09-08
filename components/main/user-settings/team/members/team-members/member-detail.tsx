@@ -97,6 +97,7 @@ const MemberDetail: React.FC<MemberDetailProps> = ({
             placeholder={"Select a role"}
             styleType="regular"
             value={memberRole}
+            containerClass={styles.memberDetailInfo}
          
           />
         </div>

@@ -60,6 +60,8 @@
 .fields > div:last-child {
   width: 11.8%;
   height:33px;
+  max-width: 192px;
+  width: 100%;
 }
 
 .button-wrapper {
@@ -104,6 +106,10 @@
 }
 .container{
   padding: 54px 60px;
+}
+.memberDetailInfo{
+  max-width: 192px;
+  width: 100%;
 }
 
 .container h4 {

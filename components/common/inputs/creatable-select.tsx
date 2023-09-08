@@ -262,7 +262,8 @@ const CreatableSelect = ({
                     menuPlacement={"auto"}
                     menuPosition={menuPosition}
                     isClearable={true}
-                    className="creatable-select"
+                    // className="creatable-select"
+                    className={`${styles['creatable-select']}`}
                     styles={menuStyles}
                   />
                 )}

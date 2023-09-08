@@ -9,6 +9,7 @@
   background-color: var(--color-sec-ivory);
   font-size: 12px;
   overflow-y: hidden;
+  margin-right: 5px;
 }
 
 .remove {
