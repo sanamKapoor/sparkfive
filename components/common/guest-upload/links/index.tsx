@@ -236,7 +236,7 @@ const Links = () => {
   };
 
   return (
-    <div className={styles["main-wrapper"]}>
+    <div className={`${styles['main-wrapper']} ${styles['guest-upload-wrapper']}`}>
       <h3>Guest Upload Links</h3>
 
       {links.length < maximumLinks && (
@@ -255,9 +255,11 @@ const Links = () => {
               disabled
               placeholder={"Link URL"}
               styleType={"regular-short"}
+              additionalClasses={styles.guestUploadLink}
+             
             />
             <Button
-              className={"container exclude-min-height primary"}
+              className={"container exclude-min-height primary guestUpLoadBtn"}
               type={"button"}
               text="Copy Link"
               onClick={(e) => {
@@ -280,8 +282,9 @@ const Links = () => {
             <div className={styles.input}>
               <label>Status</label>
               <Select
+              
                 options={statusList}
-                additionalClass={"primary-input-height"}
+                additionalClass={"primary-input-height uploadSelect"}
                 onChange={(selected) => onStatusChange(selected, field.id)}
                 placeholder={"Select status"}
                 styleType="regular"
@@ -302,6 +305,7 @@ const Links = () => {
                         value={password}
                         placeholder={"Password"}
                         styleType={"regular-short"}
+                        additionalClasses={styles.uploadPassword}
                       />
 
                       {password.length > 0 && (

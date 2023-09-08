@@ -143,7 +143,7 @@ const DeletedAssetsLibrary = () => {
             <Button
               type="button"
               text="Select All"
-              className="container secondary"
+              className="container secondary select-all"
               onClick={selectAll}
             />
           </div>

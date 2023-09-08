@@ -1,24 +1,32 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
+
+import dateUtils from "../../../utils/date";
+
 // @ts-ignore
 import Search from "../attributes/search-input";
-import styles from "./asset-transcript.module.css";
+import styles from './asset-transcript.module.css';
 
-const AssetTranscript = ({ title, transcripts }) => {
-  const [transcriptData, setTranscriptData] = useState(transcripts);
+const AssetTranscript = ({ title, transcripts, loading = true, navigateToTime = (time) => { } }) => {
+  const [transcriptData, setTranscriptData] = useState(transcripts)
 
   const search = (value) => {
-    const searchResults = transcripts.filter(
-      (item) => item.text.toLowerCase().indexOf(value.toLowerCase()) > -1
-    );
+    if (transcripts.transcript) {
+      const searchResults = transcripts.transcript.filter(
+        (item) => item.text.toLowerCase().indexOf(value.toLowerCase()) > -1,
+      );
 
-    setTranscriptData(searchResults);
-  };
+      setTranscriptData({ ...transcriptData, transcript: searchResults })
+    }
 
-  const onClear = () => {};
+  }
+
+  const onClear = () => {
+
+  }
 
   useEffect(() => {
-    setTranscriptData(transcripts);
-  }, [transcripts]);
+    setTranscriptData(transcripts)
+  }, [transcripts])
 
   return (
     <div className={`${styles.container}`}>
@@ -26,32 +34,28 @@ const AssetTranscript = ({ title, transcripts }) => {
         <h2>{title}</h2>
       </div>
 
-      {transcriptData.length > 0 && (
-        <Search
-          placeholder={"Search transcript"}
-          onChange={search}
-          onClear={onClear}
-          onlyInput={true}
-          styleType={styles["search-input"]}
-          inputContainerStyle={styles["input-container"]}
-        />
-      )}
+      {transcriptData?.transcript && <Search placeholder={"Search transcript"}
+        onChange={search}
+        onClear={onClear}
+        onlyInput={true}
+        styleType={styles["search-input"]}
+        inputContainerStyle={styles["input-container"]} />}
 
       <div className={styles["transcript-row"]}>
-        {transcriptData.length === 0 && <div>Processing...</div>}
-        {transcriptData.map((transcript, index) => {
-          return (
-            <div key={index} className={styles["transcript-item"]}>
-              <span className={styles["time-text"]}>
-                {transcript.startTime.split(",")[0]}
-              </span>
-              <span className={styles["trans-text"]}>{transcript.text}</span>
-            </div>
-          );
+        {loading && <div>Processing...</div>}
+        {!loading && (transcriptData?.error || (!transcriptData?.error && transcriptData?.transcript && transcriptData?.transcript.length === 0)) && <div>A transcript does not exist for this video</div>}
+        {!loading && !transcriptData?.error && transcriptData?.transcript && transcriptData?.transcript.map((transcript, index) => {
+          return <div key={index} className={styles["transcript-item"]}>
+            <span className={styles["time-text"]} onClick={() => {
+              navigateToTime(dateUtils.getSecondsFromHhMmSs(transcript.startTime.split(",")[0]))
+            }}>{transcript.startTime.split(",")[0]}</span>
+            <span className={styles["trans-text"]}>{transcript.text}</span>
+          </div>
         })}
       </div>
-    </div>
-  );
-};
 
-export default AssetTranscript;
+    </div>
+  )
+}
+
+export default AssetTranscript

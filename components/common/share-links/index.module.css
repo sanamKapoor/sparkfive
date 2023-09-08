@@ -114,7 +114,29 @@
 .sort-icon-active{
   visibility: visible;
 }
-
+.linkWrapper{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 70%;
+}
+.copy-icon{
+ height:16px !important;
+ width: 16px !important;
+}
+.sharedIconimg{
+  width: 10.96px !important;
+  height:11px;
+}
+.edit-btn{
+  width: 18px !important;
+}
+.delete-btn{
+  width: 18px !important;
+}
+.drop-down-icon{
+  width: 12px !important;
+}
 @media screen and (max-width: 900px)  {
   .content {
     padding: 42px 30px;
@@ -141,12 +163,13 @@
     display: none;
   }
   .content {
-    padding: 42px 16px;
+    padding: 42px 0px;
   }
 
   .header {
     flex-wrap: wrap;
     gap: 16px;
+    padding: 0 16px;
   }
 
   .header .form {

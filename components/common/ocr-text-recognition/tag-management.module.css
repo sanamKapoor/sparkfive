@@ -1,6 +1,10 @@
-.main.wrapper{
+.main-wrapper{
+   
 
 }
+/* .mainWrapper{
+    padding: 0 60px !important;
+} */
 
 .operation-row{
     align-items: center;
@@ -9,6 +13,7 @@
     display: flex;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
+  
 }
 
 .tag-select{

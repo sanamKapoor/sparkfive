@@ -10,6 +10,9 @@
   white-space: nowrap;
 
 }
+.saveChangeBtn{
+  border-radius: 4px;
+}
 
 .add{
  background:#fff;
@@ -44,6 +47,9 @@
 .input-height-primary,
 .input-height-secondary {
   min-height: 48px;
+}
+.save{
+  min-height:35px !important;
 }
 
 .primary,
@@ -187,13 +193,15 @@
 .auth-container {
   border-radius: 50px;
   min-height: 35px;
-  max-height: 48px;
-  padding: 12px 40px;
+  padding: 12px 6px;
   color: white;
   text-transform: uppercase;
   background-color: var(--color-prim-turquoise);
   font-weight: 600;
   cursor: pointer;
+  height:44px;
+  min-width: 161px;
+  font-size: 16px;
 }
 
 .auth-container:hover {
@@ -235,7 +243,7 @@
 /* //download button */
 .downloadBtn {
   height: 32px;
-  padding: 8px;
+  padding: 8px 0;
   font-family: "Noto Sans", sans-serif;
   font-weight: 600;
   font-size: 12px;
@@ -245,6 +253,7 @@
   border-radius: 4px;
   margin-left: 10px;
   cursor: pointer;
+  min-width: 92px;
 }
 .actionBtn {
   cursor: pointer;
@@ -284,6 +293,46 @@
     margin-top: 32px;
 
 }
+.teamInviteBtn{
+  height: 50px;
+  padding: 0 29px;
+  font-size: 14px;
+}
+.guestUpLoadBtn{
+min-width: 112px;
+ height:35px;
+}
+.select-all{
+  min-width: 115px;
+  height:33px;
+}
+.attribute-btn{
+  height:35px !important;
+  min-width: 92px;
+  border-radius: 4px;
+}
+.field-btn{
+  height:35px !important;
+  min-width: 79px;
+  border-radius: 4px;
+
+}
+.guestBtn{
+  font-size: 14px;
+  min-width: 151px !important;
+  height:42px !important;
+
+}
+.GuestFileUploadBtn{
+  min-width: 151px !important;
+  height:40px !important;
+}
+.update-cart-btn{
+  height: 44px;
+  min-width: 161px;
+
+}
+
 
 @media screen and (max-width: 1000px) {
   .nav-container {

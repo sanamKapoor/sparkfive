@@ -75,6 +75,8 @@ export default {
     })
   },
 
+  shareGetById: (id, code) => axios.get(`${assetUrl}/share/detail/${id}?code=${code}`),
+
   associate: (assetIds, queryData) => axios.post(`${assetUrl}/associate?${querystring.encode(queryData)}`, { assetIds }),
   disassociate: (assetIds) => axios.post(`${assetUrl}/disassociate`, { assetIds }),
 

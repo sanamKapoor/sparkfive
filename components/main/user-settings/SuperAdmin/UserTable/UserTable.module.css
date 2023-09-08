@@ -20,3 +20,10 @@
   align-items: center;
   margin-top: 30px;
 }
+@media (max-width: 575px) {
+  .tableWrapper{
+    padding: 32px 16px;
+  
+  }
+ 
+}

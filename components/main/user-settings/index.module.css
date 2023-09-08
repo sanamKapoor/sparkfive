@@ -11,8 +11,12 @@
 }
 .container input{
   border-radius: 10px;
-  font-weight: 400;
+  font-weight: 300;
   font-size:14px;
+  /* max-width: 355px; */
+  width: 100%;
+  
+
 }
 /* .container button{
   min-width: 135px;

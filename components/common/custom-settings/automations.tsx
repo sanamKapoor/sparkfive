@@ -10,17 +10,24 @@ const Automations = () => {
   const { advancedConfig, setAdvancedConfig } = useContext(UserContext);
 
   const saveAdvanceConfig = async (config) => {
+    try{
     setLoading(true);
     await teamAPI.saveAdvanceConfigurations({ config });
 
     const updatedConfig = { ...advancedConfig, ...config };
     setAdvancedConfig(updatedConfig);
+    }catch(err){
+     console.log('err in saving advanced config: ', err)
+    }finally{
+      setLoading(false)
+    }
   };
 
   return (
     <div className={styles.container}>
+      <div className={`${styles['custom-view-wrapper']}`}>
       <h3>Automations</h3>
-      <div>
+      
         <div className={styles.row}>
           <span className={styles.label}>AI Tagging</span>
           <div className={styles["field-radio-wrapper"]}>
@@ -36,7 +43,7 @@ const Automations = () => {
                 onClick={() => saveAdvanceConfig({ aiTagging: true })}
               />
             </div>
-            <div className={styles.radio}>
+            <div className={`${styles.radio} ${styles.automation}`}>
               <div>Off</div>
               <IconClickable
                 src={
@@ -50,6 +57,7 @@ const Automations = () => {
             </div>
           </div>
         </div>
+    
       </div>
     </div>
   );

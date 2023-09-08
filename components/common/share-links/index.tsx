@@ -23,6 +23,7 @@ import ShareModal from "../modals/share-modal";
 import { Waypoint } from "react-waypoint";
 import { typeList } from "../../../config/data/shared-links";
 import { colorList, statusList } from "../../../constants/shared-links";
+import React from "react";
 
 export default function ShareLinks() {
   const [links, setLinks] = useState([]);
@@ -362,6 +363,7 @@ export default function ShareLinks() {
                 src={Assets.downarrow}
                 className={`
                           ${styles["sort-icon"]} 
+                          ${styles["drop-down-icon"]} 
                           ${
                             sortData.sortField === "createdAt"
                               ? styles["sort-icon-active"]
@@ -419,7 +421,7 @@ export default function ShareLinks() {
                 sort("sharedCount", getSortType("sharedCount"));
               }}
             >
-              <span className={"font-12"}>Share With</span>
+              <span className={"font-12"}>Shared With</span>
             </div>
             <div
               className={
@@ -434,6 +436,7 @@ export default function ShareLinks() {
                 src={Assets.downarrow}
                 className={`
                           ${styles["sort-icon"]} 
+                          ${styles["drop-down-icon"]} 
                           ${
                             sortData.sortField === "expiredAt"
                               ? styles["sort-icon-active"]
@@ -501,6 +504,7 @@ export default function ShareLinks() {
                     "col-25 d-flex justify-content-center align-items-center word-break-text col-sm-100"
                   }
                 >
+                  <div className={styles.linkWrapper}>
                   <span className={"font-12"}>
                     {link.type === "folder"
                       ? !link.team.advancedCollectionShareLink
@@ -509,7 +513,7 @@ export default function ShareLinks() {
                       : link.sharedLink}
                   </span>
                   <IconClickable
-                    additionalClass={`${styles["action-button"]} m-l-15 cursor-pointer`}
+                    additionalClass={`${styles["action-button"]} ${styles["copy-icon"]}  m-l-15 cursor-pointer`}
                     src={AssetOps[`copy${""}`]}
                     tooltipText={"Copy"}
                     tooltipId={"Copy"}
@@ -524,6 +528,7 @@ export default function ShareLinks() {
                       toastUtils.bottomSuccess("Link copied");
                     }}
                   />
+                  </div>
                 </div>
                 <div
                   className={
@@ -533,7 +538,7 @@ export default function ShareLinks() {
                   <img
                     src={ItemFields.member}
                     alt="member icon"
-                    width={`10px`}
+                  className={styles.sharedIconimg}
                   />
                   <span className={"m-l-15 font-weight-400 font-14"}>
                     {link.sharedCount}
@@ -556,7 +561,7 @@ export default function ShareLinks() {
                   }
                 >
                   <IconClickable
-                    additionalClass={styles["action-button"]}
+                    additionalClass={`${styles['action-button']} ${styles['edit-btn']}`}
                     src={AssetOps[`edit`]}
                     tooltipText={"Edit"}
                     tooltipId={"Edit"}
@@ -567,7 +572,7 @@ export default function ShareLinks() {
                     }}
                   />
                   <IconClickable
-                    additionalClass={`${styles["action-button"]} m-l-10`}
+                    additionalClass={`${styles["action-button"]} ${styles['delete-btn']} m-l-10`}
                     src={AssetOps[`delete`]}
                     tooltipText={"Delete"}
                     tooltipId={"Delete"}
@@ -619,7 +624,7 @@ export default function ShareLinks() {
                     />
                   </div>
                 </div>
-                <div className={"row align-items-center gap-20"}>
+                <div className={"row align-items-center gap-10"}>
                   <div className="d-flex align-items-center">
                     <UserPhoto
                       photoUrl={link.user.profilePhoto || ""}
@@ -661,6 +666,7 @@ export default function ShareLinks() {
                       : "None"}
                   </span>
                   <div className={"d-flex align-items-center"}>
+                    <span className={"font-12"}>shared with:</span>
                     <img
                       src={ItemFields.member}
                       alt="member icon"

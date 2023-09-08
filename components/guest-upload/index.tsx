@@ -334,7 +334,7 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
             <>
               <div>
                 <h1>{teamName} - Guest Upload</h1>
-                <p>
+                <p className={styles.detail}>
                   Please fill out the form below before uploading your files to
                   us
                 </p>
@@ -361,7 +361,7 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
                 <div className={styles.subtitle}>
                   {showUploadError
                     ? "You are trying to upload too many files. Re-upload no more than 200 files, the total size of the files should not exceed 1GB"
-                    : "Please upload your files or folders that you would like to submit to us.  After files are selected, click “Submit Upload” button to send your files."}
+                    : "Please upload your files or folders that you would like to submit to us. After files are selected, click “Submit Upload” button to send your files."}
                 </div>
                 {uploading ? (
                   <div className={styles.listWrapper}>
@@ -375,7 +375,7 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
                       uploadingIndex={uploadingIndex}
                     />
                     <Button
-                      className={"container primary"}
+                      className={"container primary GuestFileUploadBtn"}
                       text="Submit Upload"
                       onClick={onSubmitUpload}
                       disabled={disabled}
@@ -396,9 +396,9 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
           <>
             <div className={styles.submission}>
               <h1>{teamName} - Files Successfully Submitted</h1>
-              <p>
+              <p className={styles.submissionMsg}>
                 Thank you for submitting your files to us. Our team has been
-                notified and will review the files. Have a great day.
+                notified and will review the files. Have a great day !
               </p>
             </div>
           </>

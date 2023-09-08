@@ -73,6 +73,21 @@ const TableHead: React.FC<TableHeadProps> = ({ sortData, setSortData }) => {
             />
           </div>
         </th>
+         <th>
+          <div className={styles.thead}>
+            <span> Plan</span>
+            <img
+              className={styles.image}
+              src={Utilities.updown}
+           onClick={() => onSort("plan.name")}
+            />
+          </div>
+        </th>
+         <th>
+          <div className={styles.thead}>
+            <span> Status</span>
+          </div>
+        </th>
         <th className={styles.action}>Action</th>
       </tr>
     </>

@@ -116,7 +116,7 @@ const TagManagement = () => {
   }, [sort, searchKey]);
 
   return (
-    <div className={styles["main-wrapper"]}>
+    <div className={`${styles['main-wrapper']} ${styles['Tags-wrapper']}`}>
       <h3>Tags</h3>
       <div className={styles["search-row"]}>
         <div className={styles["search-column-1"]}>
@@ -163,7 +163,7 @@ const TagManagement = () => {
         </div>
       </div>
 
-      <div className={styles["operation-row"]}>
+      <div className={`${styles['operation-row']} ${styles['attribute-operation']}`}>
         <CreatableSelect
           altColor="blue"
           title=""

@@ -196,7 +196,7 @@ const CreditCardForm = ({
           <Button
             text={buttonText}
             type="submit"
-            className="auth-container"
+            className="auth-container update-cart-btn"
             disabled={buttonDisabled}
           />
         </div>

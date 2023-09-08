@@ -85,7 +85,7 @@ const MemberDetail: React.FC<MemberDetailProps> = ({
       <div className={styles.headers}>
         {type === "member" && <h3>Name</h3>}
         <h3>Email Address</h3>
-        <h3>Role</h3>
+        <h3>Roles</h3>
       </div>
       <div className={styles.fields}>
         {type === "member" && <div>{member.name}</div>}
@@ -97,6 +97,8 @@ const MemberDetail: React.FC<MemberDetailProps> = ({
             placeholder={"Select a role"}
             styleType="regular"
             value={memberRole}
+            containerClass={styles.memberDetailInfo}
+         
           />
         </div>
       </div>

@@ -8,30 +8,22 @@ import styles from "./main.module.css";
 const CustomViews = () => {
   const [loading, setLoading] = useState(false);
   const { advancedConfig, setAdvancedConfig } = useContext(UserContext);
-  const [defaultLandingPage, setDefaultLandingPage] = useState("");
-  const [collectionSortView, setCollectionSortView] = useState("");
-  const [assetSortView, setAssetSortView] = useState("");
 
   const hideFilterElements = advancedConfig.hideFilterElements;
 
   const saveAdvanceConfig = async (config) => {
-    setLoading(true);
-    await teamAPI.saveAdvanceConfigurations({ config });
+    try {
+      setLoading(true);
+      await teamAPI.saveAdvanceConfigurations({ config });
 
-    const updatedConfig = { ...advancedConfig, ...config };
-    setAdvancedConfig(updatedConfig);
-
-    getAdvanceConfigurations(updatedConfig);
-  };
-
-  const getAdvanceConfigurations = (conf = advancedConfig) => {
-    setDefaultLandingPage(conf.defaultLandingPage);
-    setCollectionSortView(conf.collectionSortView);
-    setAssetSortView(conf.assetSortView);
-    // setaiTagging(conf.aiTagging)
-    setLoading(false);
-    return true;
-  };
+      const updatedConfig = { ...advancedConfig, ...config };
+      setAdvancedConfig(updatedConfig);
+    } catch (err) {
+      console.log('err in saving advanced config: ', err)
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const toggleHideElementProperty = (prop) => {
     const state = { ...hideFilterElements };
@@ -41,6 +33,7 @@ const CustomViews = () => {
 
   return (
     <div className={styles.container}>
+      <div className={`${styles['custom-view-wrapper']}`}>
       <h3>Custom Views</h3>
 
       <div>
@@ -51,7 +44,7 @@ const CustomViews = () => {
               <div>All Tab</div>
               <IconClickable
                 src={
-                  defaultLandingPage === "allTab"
+                  advancedConfig?.defaultLandingPage === "allTab"
                     ? Utilities.radioButtonEnabled
                     : Utilities.radioButtonNormal
                 }
@@ -65,7 +58,7 @@ const CustomViews = () => {
               <div>Collection Tab</div>
               <IconClickable
                 src={
-                  defaultLandingPage !== "allTab"
+                  advancedConfig?.defaultLandingPage !== "allTab"
                     ? Utilities.radioButtonEnabled
                     : Utilities.radioButtonNormal
                 }
@@ -85,7 +78,7 @@ const CustomViews = () => {
               <div>Alphabetical</div>
               <IconClickable
                 src={
-                  collectionSortView === "alphabetical"
+                  advancedConfig?.collectionSortView === "alphabetical"
                     ? Utilities.radioButtonEnabled
                     : Utilities.radioButtonNormal
                 }
@@ -99,7 +92,7 @@ const CustomViews = () => {
               <div>Newest</div>
               <IconClickable
                 src={
-                  collectionSortView !== "alphabetical"
+                  advancedConfig?.collectionSortView !== "alphabetical"
                     ? Utilities.radioButtonEnabled
                     : Utilities.radioButtonNormal
                 }
@@ -119,7 +112,7 @@ const CustomViews = () => {
               <div>Alphabetical</div>
               <IconClickable
                 src={
-                  assetSortView === "alphabetical"
+                  advancedConfig?.assetSortView === "alphabetical"
                     ? Utilities.radioButtonEnabled
                     : Utilities.radioButtonNormal
                 }
@@ -133,7 +126,7 @@ const CustomViews = () => {
               <div>Newest</div>
               <IconClickable
                 src={
-                  assetSortView !== "alphabetical"
+                  advancedConfig?.assetSortView !== "alphabetical"
                     ? Utilities.radioButtonEnabled
                     : Utilities.radioButtonNormal
                 }
@@ -197,6 +190,7 @@ const CustomViews = () => {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

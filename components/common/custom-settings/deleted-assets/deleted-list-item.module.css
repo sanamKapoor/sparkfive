@@ -4,57 +4,59 @@
   border-top: 1px solid var(--color-secondary-border);
   align-items: center;
   min-height: 71px;
-}
-
-.item:hover {
+  }
+  
+  .item:hover {
   background-color: var(--color-sec-lightivory);
-}
-
-.item.selected {
+  }
+  
+  .item.selected {
   background-color: var(--color-sec-lightivory);
-}
-
-.photo {
+  }
+  
+  .photo {
   width: 95px;
   display: flex;
   align-items: center;
-}
-
-.info {
+  }
+  
+  .info {
   flex: 1;
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-.action-recover{
+  padding: 0 60px;
+  }
+  
+  .action-recover{
   height: 15px;
-width: 15px;
-}
-
-.action-delete{
+  width: 15px;
+  }
+  
+  .action-delete{
   height: 15.75px;
   width: 15.75px;
-}
-
-.headers-content {
+  }
+  
+  .headers-content {
   flex: 1;
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-.header {
+  }
+  
+  .header {
   display: flex;
   border-top: 1px solid var(--color-border);
-}
-
-.header h4 {
+  padding: 0 60px;
+  }
+  
+  .header h4 {
   font-weight: 550;
   color: var(--color-prim-nav);
-}
-
-.headers-content h4 {
+  }
+  
+  .headers-content h4 {
   width: 12%;
   display: flex;
   align-items: center;
@@ -64,68 +66,66 @@ width: 15px;
   font-weight: 400;
   font-size: 16px;
   margin: 16px 0;
-}
-
-.headers-content h4:first-child {
+  }
+  
+  .headers-content h4:first-child {
   width: 25px;
-}
-
-.headers-content h4:nth-child(2) {
+  }
+  
+  .headers-content h4:nth-child(2) {
   width: calc(40% - 25px);
   justify-content: flex-start;
   margin-left: 10px;
-}
-
-
-.headers-content h4 .sort-icon {
+  }
+  
+  .headers-content h4 .sort-icon {
   margin-left: 14px;
   display: none;
   width: 14px;
   height: 12px;
-}
-
-.headers-content h4:hover .sort-icon,
-.headers-content h4 .sort-icon.active {
+  }
+  
+  .headers-content h4:hover .sort-icon,
+  .headers-content h4 .sort-icon.active {
   display: block;
   transform: rotate(180deg);
-}
-
-.cell:first-child {
+  }
+  
+  .cell:first-child {
   width: 25px;
-}
-
-.cell:nth-child(2) {
+  }
+  
+  .cell:nth-child(2) {
   width: calc(40% - 25px);
   justify-content: flex-start;
   margin-left: 10px;
-}
-
-.cell {
+  }
+  
+  .cell {
   width: 12%;
   text-align: center;
   justify-content: center;
-}
-
-.thumbnail {
+  }
+  
+  .thumbnail {
   position: relative;
-}
-
-.thumbnail_name {
+  }
+  
+  .thumbnail_name {
   display: flex;
   align-items: center;
   gap: 10px;
-}
-
-.thumbnail > img,
-.thumbnail > video {
+  }
+  
+  .thumbnail > img,
+  .thumbnail > video {
   width: 50px;
   height: 50px;
   height: auto;
   border: 1px solid var(--color-secondary-border);
-}
-
-
-.name {
+  }
+  
+  .name {
   /* text-overflow: ellipsis;
   white-space: nowrap; */
   line-break: anywhere;
@@ -136,72 +136,72 @@ width: 15px;
   /* text-overflow: ellipsis; */
   font-size: 12px;
   text-align: start;
-}
-
-.field_name {
+  }
+  .assetDesc{
+  max-width: 440px;
+  }
+  
+  .field_name {
   font-size: 12px;
   position: relative;
   align-content: flex-start;
   white-space: nowrap;
   color: var(--color-sec-text);
-}
-
-.select-icon {
-  width: 25px;
+  }
+  
+  .select-icon {
+  width: 27px;
   height: auto;
-}
-
-.info>div:last-child{
+  }
+  
+  .info>div:last-child{
   display: flex;
-}
-
-.actions {
+  }
+  
+  .actions {
   display: flex;
   align-items: center;
   gap: 24px;
-}
-
-@media screen and (max-width: 1024px) {
-
-}
-
-@media screen and (max-width: 900px) {
-
-
-}
-
-@media (min-width: 600px) and (max-width: 750px) {
-
-
-
-}
-@media screen and (max-width: 600px) {
-
-  .header h4 {
-    font-size: 12px;
-    white-space: break-spaces;
-  }
-
-  .thumbnail_name {
-    flex-wrap: wrap;
-  }
-
-  .cell {
-    white-space: break-spaces;
-  }
-
-  .actions {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .thumbnail > img,
-  .thumbnail > video {
-    width: 30px;
-    height: 30px;
   }
   
-  .field_name {
-    white-space: break-spaces;
+  @media screen and (max-width: 1024px) {
+  
   }
-}
+  
+  @media screen and (max-width: 900px) {
+  
+  }
+  
+  @media (min-width: 600px) and (max-width: 750px) {
+  
+  
+  }
+  @media screen and (max-width: 600px) {
+  
+  .header h4 {
+  font-size: 12px;
+  white-space: break-spaces;
+  }
+  
+  .thumbnail_name {
+  flex-wrap: wrap;
+  }
+  
+  .cell {
+  white-space: break-spaces;
+  }
+  
+  .actions {
+  flex-direction: column;
+  gap: 8px;
+  }
+  
+  .thumbnail > img,
+  .thumbnail > video {
+  width: 30px;
+  height: 30px;
+  }
+  .field_name {
+  white-space: break-spaces;
+  }
+  }

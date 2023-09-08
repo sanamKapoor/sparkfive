@@ -124,6 +124,7 @@ const DetailOverlay = ({
   initialParams,
   availableNext = true,
   outsideDetailOverlay = false,
+  sharedCode = ""
 }) => {
   const { hasPermission } = useContext(UserContext);
   const { user, cdnAccess, transcriptAccess } = useContext(UserContext);
@@ -299,7 +300,14 @@ const DetailOverlay = ({
     try {
       const asset = curAsset || currentAsset;
       if (isShare) {
-        setAssetDetail(asset);
+        const { data } = await shareApi.getAssetById(asset.id, { sharePath, sharedCode })
+
+        if (data.asset.id !== assetDetail?.id) {
+          setAssetDetail(data.asset);
+          setPreviewUrl(data.previewUrl);
+          setVersionRealUrl(data.realUrl);
+          setVersionThumbnailUrl(data.thumbailUrl);
+        }
       } else {
         const { data } = await assetApi.getById(asset.id);
 
@@ -314,6 +322,11 @@ const DetailOverlay = ({
       // console.log(err);
     }
   };
+
+    const onChangeRelatedFiles = (fileAssociations) => {
+    setAssetDetail({ ...assetDetail, fileAssociations });
+  };
+
 
   const getTranscript = async (curAsset?) => {
     try {
@@ -1158,15 +1171,26 @@ const DetailOverlay = ({
                 <AssetIcon extension={currentAsset.extension} />
               )}
             {assetDetail.type === "video" && (
-              <video controls id={"video-element"}>
-                <source
-                  src={previewUrl ?? versionRealUrl}
-                  type={
-                    previewUrl ? "video/mp4" : `video/${assetDetail.extension}`
-                  }
-                />
-                Sorry, your browser doesn't support video playback.
-              </video>
+                <>
+                {(previewUrl || (!previewUrl && currentAsset.extension === "mp4")) && <video controls id={"video-element"}>
+                    <source
+                        src={previewUrl ?? versionRealUrl}
+                        type={
+                          "video/mp4"
+                        }
+                    />
+                    Sorry, your browser doesn't support video playback.
+                  </video>}
+
+                  {(!previewUrl && currentAsset.extension !== "mp4") && <AssetImg
+                      name={assetDetail.name}
+                      assetImg={""}
+                      type={"video"}
+                      imgClass="img-preview"
+                      isResize
+                  />}
+                </>
+
             )}
             {activeFolder && (
               <div className={styles.arrows}>

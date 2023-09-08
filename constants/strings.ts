@@ -12,4 +12,4 @@ export const TEAM_PROFILE_PIC_HELP_TEXT =
 export const SECURITY_TITLE = "Security";
 export const SECURITY_SUBTITLE = "Two-Factor Authentication";
 export const ENABLE_TWO_AUTH_FOR_SECURITY =
-  "Enabling this provides an extra layer of security for all users in your account. A security code wil be required in addition to your password";
+  "Enabling this provides an extra layer of security for all users in your account. A security code will be required in addition to your password";

@@ -4,12 +4,13 @@
 
 .content {
   padding: 42px 60px;
-}
+  }
 
 .main-headers {
   display: flex;
-  background-color: var(--color-sec-lightblue);
+  background-color: #F9FAFF;
   padding: 16px;
+  border: 1px solid #E9EEFA;
 }
 
 .main-headers h3 {

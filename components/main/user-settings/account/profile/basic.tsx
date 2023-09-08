@@ -92,75 +92,95 @@ const Basic: React.FC<BasicProps> = ({ name, email, provider }) => {
 
   return (
     <div className={styles.container}>
-      <h3>Full Name</h3>
-      <form onSubmit={handleName(onNameSubmit)} className={styles.form}>
-        <div className={"fields-first"}>
-          <FormInput
-            InputComponent={<Input type="text" />}
-            defaultValue={name}
-            name="name"
-            control={controlName}
-            rules={{ minLength: 2, maxLength: 50, required: true }}
-            errors={errorsName}
-            message={"This field should be between 4 and 50 characters long"}
-          />
-        </div>
-        <div>
-          <Button
-            text="Save Changes"
-            type="submit"
-            className="container submit input-height-primary"
-          />
-        </div>
-      </form>
+      <div className={`${styles["account-profile-detail"]}`}>
+        <h3>Full Name</h3>
 
-      <h3>Email Address</h3>
-      <form onSubmit={handleEmail(onEmailSubmit)} className={styles.form}>
-        <div className={"fields-first"}>
-          <FormInput
-            InputComponent={<Input type="email" />}
-            defaultValue={email}
-            name="email"
-            control={controlEmail}
-            rules={{
-              required: true,
-              pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,15}$/i,
-            }}
-            message={"Invalid email address"}
-            errors={errorsEmail}
-          />
-        </div>
-        <div>
-          <Button
-            text="Save Changes"
-            type="submit"
-            className="container submit input-height-primary"
-          />
-        </div>
-      </form>
+        <form onSubmit={handleName(onNameSubmit)} className={styles.form}>
+          <div className={styles.profilebox}>
+            <FormInput
+              InputComponent={
+                <Input additionalClasses={styles.profileFormdata} type="text" />
+              }
+              defaultValue={name}
+              name="name"
+              control={controlName}
+              rules={{ minLength: 2, maxLength: 50, required: true }}
+              errors={errorsName}
+              message={"This field should be between 4 and 50 characters long"}
+            />
+          </div>
+          <div>
+            <Button
+              text="Save Changes"
+              type="submit"
+              className="container submit input-height-primary saveChangeBtn"
+            />
+          </div>
+        </form>
+
+        <h3>Email Address</h3>
+        <form onSubmit={handleEmail(onEmailSubmit)} className={styles.form}>
+          <div className={styles.profilebox}>
+            <FormInput
+              InputComponent={
+                <Input
+                  additionalClasses={styles.profileFormdata}
+                  type="email"
+                />
+              }
+              defaultValue={email}
+              name="email"
+              control={controlEmail}
+              rules={{
+                required: true,
+                pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,15}$/i,
+              }}
+              message={"Invalid email address"}
+              errors={errorsEmail}
+            />
+          </div>
+          <div>
+            <Button
+              text="Save Changes"
+              type="submit"
+              className="container submit input-height-primary"
+            />
+          </div>
+        </form>
+      </div>
       <div className={styles.divider}></div>
       {!provider && (
         <form
           onSubmit={handlePassword(onPasswordSubmit)}
-          className={`${styles.form} ${styles["password-form"]}`}
+          className={`${styles.form} ${styles["password-form"]} ${styles["account-profile-detail"]}`}
         >
-          <div className={"fields-first"}>
+          <div className={styles.profilebox}>
             <div className={styles.passwordLabels}>
-            <h3>Current Password</h3>
+              <h3>Current Password</h3>
             </div>
             <FormInput
-            InputComponent={<Input type="password" />}
+              InputComponent={
+                <Input
+                  additionalClasses={styles.profileFormdata}
+                  type="password"
+                />
+              }
               name="currentPassword"
               control={controlPassword}
               rules={{ minLength: 8, maxLength: 80, required: true }}
               errors={errorsPassword}
               message={"This field should be minimun 8 characters long"}
             />
-             <div className={styles.passwordLabels}>
-            <h3 className="m-t-40">New Password</h3>
+            <div className={styles.passwordLabels}>
+              <h3 className="m-t-40">New Password</h3>
             </div>
             <FormInput
-              InputComponent={<Input type="password" />}
+              InputComponent={
+                <Input
+                  additionalClasses={styles.profileFormdata}
+                  type="password"
+                />
+              }
               name="newPassword"
               control={controlPassword}
               rules={{

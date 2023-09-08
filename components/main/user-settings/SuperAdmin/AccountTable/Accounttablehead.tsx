@@ -1,7 +1,7 @@
 import { Utilities } from "../../../../../assets";
 import { defaultSortData } from "../../super-admin/company-list-header/types";
 import { SortData } from "../../super-admin/user-list/types";
-import styles from "./Accounttable.module.css";
+import styles from "./Accounttablehead.module.css";
 
 interface AccountTableHeadProps {
   sortData: SortData;

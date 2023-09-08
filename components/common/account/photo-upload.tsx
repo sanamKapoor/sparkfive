@@ -90,11 +90,13 @@ const PhotoUpload: React.FC<IPhotoUploadProps> = ({
           <Spinner />
         </div>
       )}
-      <div>
+      <div className={styles.uploadText}>
         <ButtonIcon
           icon={Utilities.addAlt}
           text="UPLOAD PHOTO"
           onClick={openUpload}
+          additionalClass={styles.uploadPhotoProfile}
+         
         />
         <p className={styles.description}>{description}</p>
       </div>
@@ -107,6 +109,7 @@ const PhotoUpload: React.FC<IPhotoUploadProps> = ({
         accept={ALLOWED_TYPES}
       />
     </div>
+   
   );
 };
 

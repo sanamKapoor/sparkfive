@@ -18,11 +18,15 @@ const Company: React.FC = () => {
   return (
     <div>
       <NameForm />
+      <div className={styles.photoUploadWRapper}>
       <PhotoUpload
         userPhoto={team?.workspaceIcon}
         description={TEAM_PROFILE_PIC_HELP_TEXT}
         type={"team"}
+        
       />
+      </div>
+      
       <div className={styles.divider}></div>
       <AddressForm />
     </div>

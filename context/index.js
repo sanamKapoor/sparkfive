@@ -225,6 +225,8 @@ export const FilterContext = createContext({
 export const ShareContext = createContext({
   folderInfo: undefined,
   setFolderInfo: (folderInfo) => {},
+  activePasswordOverlay: true,
+  setActivePasswordOverlay: (value) => {}
 });
 
 export const SocketContext = createContext({

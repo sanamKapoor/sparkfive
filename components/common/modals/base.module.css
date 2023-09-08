@@ -59,16 +59,23 @@
   font-weight: 600;
   gap: 10px;
 }
+.baseHeading{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
 .subtext {
   font-size: 12px;
   margin: 8px 0 0;
   font-weight: 300;
+  text-align: center;
 }
 
 .text p {
   flex: 1;
   margin: 0;
+  text-align: center;
 }
 
 .text span {
@@ -80,7 +87,8 @@
 }
 
 .close {
-  width: 24px;
+  width: 21px;
+  height: 21px;
   height: auto;
   font-weight: 700;
   color: var(--color-sec-blue);
