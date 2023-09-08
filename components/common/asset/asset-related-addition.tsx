@@ -1,31 +1,28 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { Progress } from "react-sweet-progress";
-import "react-sweet-progress/lib/style.css";
 import _ from "lodash";
+import React, { useContext, useRef, useState } from "react";
+import "react-sweet-progress/lib/style.css";
 
 import IconClickable from "../buttons/icon-clickable";
 import styles from "./asset-addition.module.css";
 
 import "react-sweet-progress/lib/style.css";
-import AssetUpload from "./asset-upload";
-import { Assets, AssetOps } from "../../../assets";
+import { AssetOps, Assets } from "../../../assets";
 import toastUtils from "../../../utils/toast";
 
 import assetApi from "../../../server-api/asset";
 
-import { UserContext, AssetContext } from "../../../context";
-import { getFolderKeyAndNewNameByFileName } from "../../../utils/upload";
 import { validation } from "../../../constants/file-validation";
-import DriveSelector from "./drive-selector";
+import { AssetContext, UserContext } from "../../../context";
 import cookiesUtils from "../../../utils/cookies";
+import { getFolderKeyAndNewNameByFileName } from "../../../utils/upload";
 import AssetDuplicateModal from "./asset-duplicate-modal";
-import AssetRelatedFilesSearch from "./asset-related-files-search";
+import DriveSelector from "./drive-selector";
 
-import SimpleButton from "../buttons/simple-button";
 
 import { maximumAssociateFiles } from "../../../constants/asset-associate";
-import ToggleableAbsoluteWrapper from "../misc/toggleable-absolute-wrapper";
 import { ASSET_UPLOAD_APPROVAL } from "../../../constants/permissions";
+import Button from "../buttons/button";
+import ToggleableAbsoluteWrapper from "../misc/toggleable-absolute-wrapper";
 
 export default function AssetRelatedAddition({
   assets: assetData = [],
@@ -818,7 +815,7 @@ export default function AssetRelatedAddition({
   const SimpleButtonWrapper = ({ children }) => (
     <div className={`${styles["button-wrapper"]} asset-addition`}>
       {/* {hasPermission([ASSET_UPLOAD_APPROVAL]) && <span className={styles['approval-text']}>Upload for approval</span>} */}
-      {!hasPermission([ASSET_UPLOAD_APPROVAL]) && <SimpleButton text="+" />}
+      {!hasPermission([ASSET_UPLOAD_APPROVAL]) && <Button text="+" className="container primary"/>}
       {children}
     </div>
   );

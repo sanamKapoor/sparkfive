@@ -315,6 +315,11 @@ const DetailOverlay = ({
     }
   };
 
+    const onChangeRelatedFiles = (fileAssociations) => {
+    setAssetDetail({ ...assetDetail, fileAssociations });
+  };
+
+
   const getTranscript = async (curAsset?) => {
     try {
       setTranscriptLoading(true);
