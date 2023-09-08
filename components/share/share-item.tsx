@@ -17,8 +17,11 @@ const ShareItem = ({
   realUrl,
   isSelected = false,
   toggleSelected = () => {},
+  sharedCode = ""
 }) => {
   const [visibleOverlay, setVisibleOVerlay] = useState(false);
+
+  console.log(sharedCode)
 
   useEffect(() => {
     if (visibleOverlay) {
@@ -88,10 +91,11 @@ const ShareItem = ({
       {visibleOverlay && (
         <DetailOverlay
           initiaParams={{ side: "detail" }}
-          asset={asset} 
+          asset={asset}
           realUrl={realUrl}
           thumbailUrl={thumbailUrl}
           isShare={true}
+          sharedCode={sharedCode}
           closeOverlay={() => setVisibleOVerlay(false)}
         />
       )}

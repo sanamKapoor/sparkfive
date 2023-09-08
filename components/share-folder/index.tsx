@@ -47,12 +47,11 @@ const ShareFolderMain = () => {
 
     const { user, advancedConfig, setAdvancedConfig } = useContext(UserContext)
 
-    const { folderInfo, setFolderInfo } = useContext(ShareContext)
+    const { folderInfo, setFolderInfo, activePasswordOverlay, setActivePasswordOverlay } = useContext(ShareContext)
 
     const { activeSortFilter, setActiveSortFilter, setSharePath: setContextPath, term, searchFilterParams } = useContext(FilterContext)
 
     const [firstLoaded, setFirstLoaded] = useState(false)
-    const [activePasswordOverlay, setActivePasswordOverlay] = useState(true)
     const [loading, setLoading] = useState(true)
     const [activeSearchOverlay, setActiveSearchOverlay] = useState(true)
     const [activeView, setActiveView] = useState('grid')
@@ -148,7 +147,7 @@ const ShareFolderMain = () => {
     //     if (selectedAllAssets) {
     //       selectAllAssets(false);
     //     }
-    
+
     //     if (selectedAllFolders) {
     //       selectAllFolders(false);
     //     }
@@ -366,9 +365,9 @@ const ShareFolderMain = () => {
 
     const selectedAssets = assets.filter(asset => asset.isSelected)
 	const selectedFolders = folders.filter(folder => folder.isSelected)
-    
+
     const assetGridWrapperStyle = (!!folderInfo.singleSharedCollectionId || activeSortFilter.mainFilter === 'folders') ? styles['col-wrapperview'] : styles['col-wrapper'];
-  
+
     return (
         <>
             {!loading && <main className={`${styles.container} sharefolderOuter`}>
