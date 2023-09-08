@@ -7,7 +7,7 @@ import AssetHeaderOps from '../asset/asset-header-ops'
 
 const ShareFolderLayout = ({ children, advancedLink = false }) => {
 
-	const { folderInfo } = useContext(ShareContext)
+	const { folderInfo, activePasswordOverlay } = useContext(ShareContext)
 	const { assets, folders } = useContext(AssetContext)
 	const { activeSortFilter } = useContext(FilterContext)
 
@@ -18,14 +18,14 @@ const ShareFolderLayout = ({ children, advancedLink = false }) => {
 
 	return (
 		<>
-			<header className={styles.header} id={"share-header"}>
+			{!activePasswordOverlay && <header className={styles.header} id={"share-header"}>
 				<div className={styles['image-wrapper']}>
 					<img
 						className={styles['logo-img']}
 						src={folderInfo?.teamIcon || GeneralImg.logo} />
 				</div>
 				<h1 className={styles['collection-name']}>{folderInfo?.folderName}</h1>
-			</header>
+			</header>}
 			{amountSelected > 0 &&
 					<div className={styles['ops-wrapper']}>
 						<AssetHeaderOps isShare={true} advancedLink={advancedLink} isFolder={activeSortFilter.mainFilter === 'folders'}/>
