@@ -1208,7 +1208,7 @@ const DetailOverlay = ({
               )}
             {assetDetail.type === "video" && (
                 <>
-                {previewUrl && <video controls id={"video-element"}>
+                {(previewUrl || (!previewUrl && currentAsset.extension === "mp4")) && <video controls id={"video-element"}>
                     <source
                         src={previewUrl ?? versionRealUrl}
                         type={
@@ -1218,7 +1218,7 @@ const DetailOverlay = ({
                     Sorry, your browser doesn't support video playback.
                   </video>}
 
-                  {!previewUrl && <AssetImg
+                  {(!previewUrl && currentAsset.extension !== "mp4") && <AssetImg
                       name={assetDetail.name}
                       assetImg={""}
                       type={"video"}
