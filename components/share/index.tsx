@@ -149,6 +149,7 @@ const AssetShare = () => {
           setError(false);
           setLoading(false);
           setAssets(data.data);
+          setShareUserName(data.sharedBy);
         }
       }
     } catch (err) {
@@ -228,6 +229,8 @@ const AssetShare = () => {
         {!loading && !error && (
           <>
             <ShareOperationButtons
+              sharedBy={shareUserName}
+              totalSharedFiles={assets?.length}
               selectAll={selectAll}
               selectedAsset={selectedAsset}
               downloadSelectedAssets={downloadSelectedAssets}
