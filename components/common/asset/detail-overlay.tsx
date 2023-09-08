@@ -132,6 +132,7 @@ const DetailOverlay = ({
   initialParams,
   availableNext = true,
   outsideDetailOverlay = false,
+  sharedCode = ""
 }) => {
   const { hasPermission } = useContext(UserContext);
   const { user, cdnAccess, transcriptAccess } = useContext(UserContext);
@@ -314,7 +315,7 @@ const DetailOverlay = ({
     try {
       const asset = curAsset || currentAsset;
       if (isShare) {
-        const { data } = await shareApi.getAssetById(asset.id, { sharePath })
+        const { data } = await shareApi.getAssetById(asset.id, { sharePath, sharedCode })
 
         if (data.asset.id !== assetDetail?.id) {
           setAssetDetail(data.asset);

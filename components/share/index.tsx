@@ -1,6 +1,6 @@
 // External import
 import update from "immutability-helper"
-import {useContext, useEffect, useState, useRef} from 'react'
+import { useEffect, useState, useRef} from 'react'
 
 // Styles
 import styles from './index.module.css'
@@ -9,8 +9,6 @@ import assetApi from '../../server-api/asset'
 import toastUtils from '../../utils/toast'
 import urlUtils from '../../utils/url'
 
-// Utils
-import downloadUtils from '../../utils/download'
 
 // Components
 import ShareItem from './share-item'
@@ -22,18 +20,11 @@ import { GeneralImg } from '../../assets'
 
 
 // Contexts
-import { AssetContext, FilterContext, TeamContext } from '../../context'
 import Spinner from "../common/spinners/spinner";
 import Input from "../common/inputs/input";
 import AuthButton from "../common/buttons/auth-button";
 
 const AssetShare = () => {
-	const {
-		updateDownloadingStatus
-	} = useContext(AssetContext)
-
-	const {searchFilterParams} = useContext(FilterContext);
-	const {team} = useContext(TeamContext)
 
 	const [assets, setAssets] = useState([])
 	const [selectedAsset, setSelectedAsset] = useState(0)
@@ -46,6 +37,7 @@ const AssetShare = () => {
 	const [loading, setLoading] = useState(true)
 	const [error, setError] = useState(false)
 	const [shareUserName, setShareUserName] = useState("")
+	const [sharedCode, setSharedCode] = useState("")
 
 	// Toggle select asset
 	const toggleSelected = (id) => {
@@ -152,6 +144,7 @@ const AssetShare = () => {
 					setLogo(data.data.team.workspaceIcon)
 					setShareUserName(data.data.user.name)
 
+
 					if(data.errorMessage !== "Email is required"){
 						toastUtils.error(data.errorMessage)
 					}
@@ -161,6 +154,7 @@ const AssetShare = () => {
 					setLoading(false)
 					setAssets(data.data)
 					setShareUserName(data.sharedBy)
+					setSharedCode(code as string)
 				}
 			}
 		} catch (err) {
@@ -229,7 +223,7 @@ const AssetShare = () => {
 							{assets.map((assetItem) => {
 								return (
 									<li className={styles['grid-item']} key={assetItem.asset.id}>
-										<ShareItem {...assetItem} toggleSelected={()=>{toggleSelected(assetItem.asset.id)}} selectAll={selectAll}/>
+										<ShareItem {...assetItem} toggleSelected={()=>{toggleSelected(assetItem.asset.id)}} selectAll={selectAll} sharedCode={sharedCode}/>
 									</li>
 								)
 							})}
