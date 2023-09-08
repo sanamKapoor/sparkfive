@@ -6,7 +6,7 @@ const shareCollectionsUrl = `${process.env.SERVER_BASE_URL}/share-collections`
 export default {
 
   getFolderInfo: (queryParams) => axios.get(`${shareCollectionsUrl}?${querystring.encode(queryParams)}`),
-  getAssetById: (id) => axios.get(`${shareCollectionsUrl}/assets/${id}`),
+  getAssetById: (id, queryParams) => axios.get(`${shareCollectionsUrl}/assets/${id}?${querystring.encode(queryParams)}`),
   getAssets: (queryParams = {}) => axios.get(`${shareCollectionsUrl}/assets?${querystring.encode(queryParams)}`),
   getFolders: (queryParams = {}) => axios.get(`${shareCollectionsUrl}/folders?${querystring.encode(queryParams)}`),
   getCampaigns: (queryParams) => axios.get(`${shareCollectionsUrl}/campaigns?${querystring.stringify(queryParams)}`),

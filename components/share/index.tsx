@@ -9,8 +9,6 @@ import assetApi from "../../server-api/asset";
 import toastUtils from "../../utils/toast";
 import urlUtils from "../../utils/url";
 
-// Utils
-
 // Components
 import fileDownload from "js-file-download";
 import { GeneralImg } from "../../assets";
@@ -36,6 +34,7 @@ const AssetShare = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [shareUserName, setShareUserName] = useState("");
+  const [sharedCode, setSharedCode] = useState("");
 
   // Toggle select asset
   const toggleSelected = (id) => {
@@ -78,10 +77,12 @@ const AssetShare = () => {
   const zipping = () => {
     setDownloadStatus("zipping");
     setShowDownloadPopup(true);
+    // simulateProcess();
   };
 
   const done = () => {
     setDownloadStatus("done");
+    // cancelSimulatedProcess
   };
 
   const simulateProcess = () => {
@@ -122,6 +123,8 @@ const AssetShare = () => {
       fileDownload(data, "assets.zip");
 
       done();
+
+      // downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets.zip')
     } catch (e) {}
   };
 
@@ -150,6 +153,7 @@ const AssetShare = () => {
           setLoading(false);
           setAssets(data.data);
           setShareUserName(data.sharedBy);
+          setSharedCode(code as string);
         }
       }
     } catch (err) {
@@ -217,7 +221,7 @@ const AssetShare = () => {
                 />
                 <div className={"m-t-15"}>
                   <Button
-                    className="auth-container"
+                    className="container primary"
                     text={"Submit"}
                     type={"submit"}
                   />
@@ -230,8 +234,8 @@ const AssetShare = () => {
           <>
             <ShareOperationButtons
               sharedBy={shareUserName}
-              totalSharedFiles={assets?.length}
               selectAll={selectAll}
+              totalSharedFiles={assets?.length}
               selectedAsset={selectedAsset}
               downloadSelectedAssets={downloadSelectedAssets}
             />
@@ -249,6 +253,7 @@ const AssetShare = () => {
                           toggleSelected(assetItem.asset.id);
                         }}
                         selectAll={selectAll}
+                        sharedCode={sharedCode}
                       />
                     </li>
                   );

@@ -15,13 +15,14 @@
 
 .icon {
   object-fit: scale-down;
-  width: 10rem;
+  width: 10rem !important;
   max-width: 100%;
 }
 
 .noMargin {
   margin: 0;
 }
+
 
 .small .icon {
   width: 30px;
