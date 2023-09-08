@@ -136,7 +136,6 @@ const SearchOverlayAssets = ({
               </div>
             )}
           </div>
-          {/* TODO: When is a collecttion change placeholter to "Search Collections" */}
           <Search
             placeholder={`Search ${isFolder ? "Collections" : "Assets"}`}
             onSubmit={(inputTerm, filterParams) =>
