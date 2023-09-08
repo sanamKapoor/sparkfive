@@ -815,7 +815,7 @@ export default function AssetRelatedAddition({
   const SimpleButtonWrapper = ({ children }) => (
     <div className={`${styles["button-wrapper"]} asset-addition`}>
       {/* {hasPermission([ASSET_UPLOAD_APPROVAL]) && <span className={styles['approval-text']}>Upload for approval</span>} */}
-      {!hasPermission([ASSET_UPLOAD_APPROVAL]) && <Button text="+" className="container primary"/>}
+      {!hasPermission([ASSET_UPLOAD_APPROVAL]) && <Button text="+" className="container primary add"/>}
       {children}
     </div>
   );

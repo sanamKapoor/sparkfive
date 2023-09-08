@@ -396,9 +396,9 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
           <>
             <div className={styles.submission}>
               <h1>{teamName} - Files Successfully Submitted</h1>
-              <p>
+              <p className={styles.submissionMsg}>
                 Thank you for submitting your files to us. Our team has been
-                notified and will review the files. Have a great day.
+                notified and will review the files. Have a great day !
               </p>
             </div>
           </>

@@ -7,10 +7,11 @@
 .wrapper {
     border: 1px solid var(--color-border);
     border-radius: 4px;
-    max-width: 1052px;
+    max-width: 1053px;
     margin: 0 auto;
     padding: 48px 58px 105px;
-    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.25)
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.25);
+min-height:1013px;
 }
 
 .banner {
@@ -336,15 +337,20 @@
     max-width: 1083px;
     border-radius: 8px;
     border: 1px solid #E5E5E5;
-  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.25);
-  padding: 40px;
-  margin: 0 auto;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.25);
+    padding: 45px;
+    margin: 0 auto;
+    min-height: 409px;
   
   
 }
 .submission p {
     border-bottom: 1px solid #DEDAD4;
     padding-bottom:100px;
+}
+.submission h1{
+    font-weight: 600;
+    font-size: 32px;
 }
 .listWrapper{
     border:1px solid 
@@ -360,6 +366,11 @@
     font-weight: 300;
     font-size: 24px;
     
+}
+.submissionMsg{
+    font-weight: 300;
+    font-size: 24px;
+    line-height: 43px;
 }
 
 

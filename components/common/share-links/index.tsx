@@ -624,7 +624,7 @@ export default function ShareLinks() {
                     />
                   </div>
                 </div>
-                <div className={"row align-items-center gap-20"}>
+                <div className={"row align-items-center gap-10"}>
                   <div className="d-flex align-items-center">
                     <UserPhoto
                       photoUrl={link.user.profilePhoto || ""}
@@ -666,6 +666,7 @@ export default function ShareLinks() {
                       : "None"}
                   </span>
                   <div className={"d-flex align-items-center"}>
+                    <span className={"font-12"}>shared with:</span>
                     <img
                       src={ItemFields.member}
                       alt="member icon"

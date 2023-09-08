@@ -150,6 +150,7 @@
   cursor: pointer;
   border-bottom: 3px solid white;
   padding: 0;
+  min-width: 56px;
 }
 
 .section-container:disabled {

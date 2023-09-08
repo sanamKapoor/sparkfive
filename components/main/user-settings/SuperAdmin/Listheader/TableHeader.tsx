@@ -20,18 +20,32 @@ const TableHeader: React.FC<TableHeaderProps> = ({
 }) => {
   return (
     <>
-      <div className={styles.tableheader}>
+    <div className={styles.desktop}>
+    <div className={styles.tableheader}>
         <div className={styles.heading}>
           <span>{headerText}</span>
         </div>
         <div className={styles.buttons}>
-          <div className={styles.searchorder}>
-            <Search onSubmit={onSearch} placeholder={placeholder} />
-          </div>
+        <Search onSubmit={onSearch} placeholder={placeholder} />
           <div className={styles.csvorder}>
-             <CsvBtn onClick={onDownload}/>
+            <CsvBtn onClick={onDownload} />
+          </div>
+        </div>
+      </div>
+    </div>
+  
+
+      <div className={styles.mobile}>
+        <div className={styles.tableheader}>
+          <div className={styles.userWrap}>
+            <div className={styles.heading}>
+              <span>{headerText}</span>
             </div>
-          
+            <CsvBtn onClick={onDownload} />
+          </div>
+        </div>
+        <div className={styles.searchorder}>
+        <Search onSubmit={onSearch} placeholder={placeholder} />
         </div>
       </div>
     </>

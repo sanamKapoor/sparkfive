@@ -163,12 +163,13 @@
     display: none;
   }
   .content {
-    padding: 42px 16px;
+    padding: 42px 0px;
   }
 
   .header {
     flex-wrap: wrap;
     gap: 16px;
+    padding: 0 16px;
   }
 
   .header .form {

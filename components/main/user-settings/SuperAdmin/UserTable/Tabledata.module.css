@@ -54,3 +54,9 @@
   color: white;
   border-radius: 4px;
 }
+@media (max-width: 575px) {
+  .useremail{
+    min-width: 154px;
+    word-break: break-all;
+  }
+}
