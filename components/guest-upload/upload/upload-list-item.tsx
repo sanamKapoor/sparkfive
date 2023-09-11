@@ -7,7 +7,6 @@ import styles from "../upload-item.module.css";
 interface UploadListItemProps {
   index: number;
   data: IGuestUploadItem;
-  onRemove: (i: number) => void;
   onRetry: (i: number) => void;
   uploadingPercent: number;
 }
@@ -15,7 +14,6 @@ interface UploadListItemProps {
 const UploadListItem: React.FC<UploadListItemProps> = ({
   index,
   data,
-  onRemove,
   onRetry,
   uploadingPercent,
 }) => {
@@ -44,7 +42,6 @@ const UploadListItem: React.FC<UploadListItemProps> = ({
                   trailColor="#e5e5e5"
                   style={{ width: "80px", height: "10px" }}
                 />
-                <img src={AssetOps.cancel} onClick={() => onRemove(index)} />
               </div>
             )}
             {!data.isUploading && data.status === "fail" && (
@@ -52,7 +49,6 @@ const UploadListItem: React.FC<UploadListItemProps> = ({
                 <p>Upload error</p>
                 <div className={styles.loadingImg}>
                   <img src={AssetOps.reload} onClick={() => onRetry(index)} />
-                  <img src={AssetOps.cancel} onClick={() => onRemove(index)} />
                 </div>
               </div>
             )}
@@ -72,7 +68,6 @@ const UploadListItem: React.FC<UploadListItemProps> = ({
                     borderRadius: "30px",
                   }}
                 />
-                <img src={AssetOps.cancel} />
               </div>
             )}
 

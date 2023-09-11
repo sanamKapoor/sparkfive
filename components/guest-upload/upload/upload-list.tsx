@@ -10,7 +10,6 @@ interface UploadListProps {
   onUpload: () => void;
   uploadingPercent: number;
   onRetry: (i: number) => void;
-  onRemove: (i: number) => void;
   additionUploadDisabled: boolean;
   uploadingIndex: number;
 }
@@ -53,7 +52,6 @@ const UploadList: React.FC<UploadListProps> = ({
             key={index}
             index={index}
             data={data}
-            onRemove={onRemove}
             onRetry={onRetry}
             uploadingPercent={uploadingPercent}
           />
