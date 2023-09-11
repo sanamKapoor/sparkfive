@@ -322,6 +322,7 @@ const DetailOverlay = ({
           setPreviewUrl(data.previewUrl);
           setVersionRealUrl(data.realUrl);
           setVersionThumbnailUrl(data.thumbailUrl);
+          setCurrentAsset({...currentAsset, thumbailUrl: data.thumbailUrl})
         }
       } else {
         const { data } = await assetApi.getById(asset.id);
@@ -331,6 +332,9 @@ const DetailOverlay = ({
           setPreviewUrl(data.previewUrl);
           setVersionRealUrl(data.realUrl);
           setVersionThumbnailUrl(data.thumbailUrl);
+
+          // This is for showing current asset image in version list
+          setCurrentAsset({...currentAsset, thumbailUrl: data.thumbailUrl})
         }
       }
     } catch (err) {
