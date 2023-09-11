@@ -6,7 +6,7 @@ import { statuses } from "../../../../../constants/plans";
 import { ITeamPlan } from "../../../../../interfaces/team/team";
 import Button from "../../../../common/buttons/button";
 import Select from "../../../../common/inputs/select";
-import styles from "../../super-admin/index.module.css";
+// import styles from "../../super-admin/index.module.css";
 
 import dateFnsFormat from "date-fns/format";
 import dateFnsParse from "date-fns/parse";
@@ -14,6 +14,7 @@ import dateFnsParse from "date-fns/parse";
 import { DateUtils } from "react-day-picker";
 
 import dateStyles from "../../../../common/filter/date-uploaded.module.css";
+import styles from "../index.module.css";
 
 interface PlanModalProps {
   isOpen: boolean;
@@ -69,6 +70,8 @@ const PlanModal: React.FC<PlanModalProps> = ({
       additionalClasses={[styles["base-plan-modal"]]}
     >
       <div className={styles["plan-modal"]}>
+        <div className={styles.planModel}>
+          <span className={styles.planModelHeading}>Settings</span>
         <span
           className={`${styles.close}`}
           onClick={() => {
@@ -76,7 +79,8 @@ const PlanModal: React.FC<PlanModalProps> = ({
           }}
         >
           x
-        </span>
+        </span></div>
+        <div className={styles.modalPadding}>
         <div className={styles["form-field"]}>
           <div className={styles["form-title"]}>Plan</div>
           <Select
@@ -131,21 +135,22 @@ const PlanModal: React.FC<PlanModalProps> = ({
           />
         </div>
 
-        <div className={"d-flex justify--flex-end"}>
+        <div className={"d-flex justify-center"}>
           <Button
-            className="container secondary exclude-min-height"
+            className="container secondary exclude-min-height plan-modal-btn"
             text="Cancel"
             onClick={() => {
               setIsOpen(false);
             }}
           />
           <Button
-            className={"container m-l-10 exclude-min-height primary"}
+            className={"container m-l-10 exclude-min-height primary plan-modal-btn"}
             text="Save Changes"
             onClick={() => {
               updatePlan();
             }}
           />
+        </div>
         </div>
       </div>
     </Base>

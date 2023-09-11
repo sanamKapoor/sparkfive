@@ -320,7 +320,7 @@ export default function ShareLinks() {
                 onChange={(value) => {
                   setSharedWith(value);
                 }}
-                placeholder={"Share with"}
+                placeholder={"Shared with"}
                 styleType="regular"
                 value={sharedWith}
                 isMulti={true}

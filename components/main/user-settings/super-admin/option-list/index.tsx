@@ -46,13 +46,13 @@ const OptionList: React.FC<OptionListProps> = ({
               {isSelected ? (
                 <IconClickable
                   src={Utilities.radioButtonEnabled}
-                  additionalClass={styles["select-icon"]}
+                  additionalClass={styles.iconselectfeature}
                   onClick={() => toggleSelected(filter.value)}
                 />
               ) : (
                 <IconClickable
                   src={Utilities.radioButtonNormal}
-                  additionalClass={styles["select-icon"]}
+                  additionalClass={styles.iconselectfeature}
                   onClick={() => toggleSelected(filter.value)}
                 />
               )}
