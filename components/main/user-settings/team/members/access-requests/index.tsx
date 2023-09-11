@@ -52,7 +52,7 @@ const AccessRequests: React.FC<AccessRequestsProps> = ({
 
   return (
     <div className={styles.content}>
-      <div className={`${styles["main-headers"]} m-t-40`}>
+      <div className={`${styles["main-headers"]}`}>
         <h3>Access Requests</h3>
       </div>
       {requests.length > 0 ? (

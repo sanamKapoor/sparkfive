@@ -1,6 +1,6 @@
 .content {
     padding: 30px 0px 20px 0px;
-    border-bottom: 1px solid var(--color-border)
+    /* border-bottom: 1px solid var(--color-border); */
 }
 
 .container h3 {

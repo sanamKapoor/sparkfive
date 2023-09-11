@@ -61,7 +61,7 @@ const PendingInvites: React.FC<PendingInvitesProps> = ({
 
   return (
     <div className={styles.content}>
-      <div className={`${styles["main-headers"]} m-t-40`}>
+      <div className={`${styles["main-headers"]}`}>
         <h3>Pending Invites</h3>
       </div>
       <ul>

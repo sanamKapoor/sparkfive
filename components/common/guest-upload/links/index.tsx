@@ -284,13 +284,14 @@ const Links = () => {
               <Select
               
                 options={statusList}
-                additionalClass={"primary-input-height uploadSelect"}
+                additionalClass={"primary-input-height uploadSelect customSelect"}
                 onChange={(selected) => onStatusChange(selected, field.id)}
                 placeholder={"Select status"}
                 styleType="regular"
                 value={
                   statusList.filter((item) => item.value === field.status)[0]
                 }
+             
               />
             </div>
             <div className={styles.privateBlock}>

@@ -238,6 +238,7 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
               placeholder={"Role name"}
               type={"text"}
               styleType={"regular-short"}
+              additionalClasses={styles.RoleInputField}
             />
           </div>
           <Button

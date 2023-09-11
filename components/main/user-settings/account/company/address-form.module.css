@@ -37,9 +37,11 @@ h3.title {
 
 .fields-pair{
   display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 14px;
+  /* flex-wrap: wrap; */
+  /* margin-bottom: 14px; */
   margin-top: 28px;
+  max-width: 739px;
+  gap:10px;
 }
 .companyBtn button{
   min-width: 135px;
@@ -70,14 +72,25 @@ h3.title {
 }
 
 .fields-pair>div:first-child{
-  width: 55%;
-  margin-right: 5%;
+  max-width: 374px;
+  width: 100%;
 }
 
 .fields-pair>div:last-child{
-  width: 40%;
+  max-width: 374px;
+  width: 100%;
 }
+.companyAddress{
+  max-width: 739px;
+}
+/* .companyCity{
+  max-width: 374px;
+  margin-right: 10px;
 
+} */
+.borderRadius{
+  height: 60px;
+}
 @media screen and (max-width: 600px) {
   .container {
     width: 100%;

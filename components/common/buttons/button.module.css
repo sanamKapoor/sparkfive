@@ -253,7 +253,7 @@
   border-radius: 4px;
   margin-left: 10px;
   cursor: pointer;
-  min-width: 92px;
+  min-width: 96px;
 }
 .actionBtn {
   cursor: pointer;
@@ -295,8 +295,9 @@
 }
 .teamInviteBtn{
   height: 50px;
-  padding: 0 29px;
+  /* padding: 0 29px; */
   font-size: 14px;
+  min-width: 148px;
 }
 .guestUpLoadBtn{
 min-width: 112px;
@@ -330,6 +331,11 @@ min-width: 112px;
 .update-cart-btn{
   height: 44px;
   min-width: 161px;
+
+}
+.plan-modal-btn{
+  min-width: 203px;
+  height: 40px;
 
 }
 

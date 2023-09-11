@@ -60,7 +60,7 @@
 .fields > div:last-child {
   width: 11.8%;
   height:33px;
-  max-width: 192px;
+  max-width: 250px;
   width: 100%;
 }
 
@@ -108,7 +108,7 @@
   padding: 54px 60px;
 }
 .memberDetailInfo{
-  max-width: 192px;
+  max-width: 250px;
   width: 100%;
 }
 

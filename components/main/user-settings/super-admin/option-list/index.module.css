@@ -21,7 +21,12 @@
     /* overflow: hidden; */
 }
 
-
+.select-item p {
+    margin: 0 0 0 5px !important;
+}
+.iconselectfeature{
+   width: 14px;
+}
 @media screen and (max-width: 800px) {
     .item-list {
         flex-direction: column;
