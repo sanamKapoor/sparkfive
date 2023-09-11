@@ -36,7 +36,7 @@ const UploadListItem: React.FC<UploadListItemProps> = ({
               <div className={styles.progressBar}>
                 <Line
                   className={styles.progressLine}
-                  percent={50}
+                  percent={uploadingPercent}
                   strokeColor="
             #10BDA5"
                   strokeWidth={3}
@@ -60,7 +60,7 @@ const UploadListItem: React.FC<UploadListItemProps> = ({
             {data.isUploading && data.status === "in-progress" && (
               <div className={styles.progressBar}>
                 <Line
-                  percent={50}
+                  percent={uploadingPercent}
                   strokeColor="
             #10BDA5"
                   strokeWidth={3}
