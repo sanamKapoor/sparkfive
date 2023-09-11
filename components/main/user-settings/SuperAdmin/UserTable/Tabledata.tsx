@@ -1,6 +1,7 @@
 import { IUser } from "../../../../../interfaces/user/user";
 import styles from "./Tabledata.module.css";
 
+import { capitalCase } from "change-case";
 import dateUtils from "../../../../../utils/date";
 import Button from "../../../../common/buttons/button";
 
@@ -52,14 +53,16 @@ const TableData: React.FC<TableDataProps> = ({ users, onUserLogin }) => {
                 {user.team.company || "No company name"}
               </span>
             </td>
-             <td>
+            <td>
               <span className={styles.username}>
-                 <span className={styles.useremail}>{user?.team?.plan?.name}</span>
+                <span className={styles.useremail}>
+                  {user?.team?.plan?.name}
+                </span>
               </span>
             </td>
-              <td>
+            <td>
               <span className={styles["active-badge"]}>
-                {user?.team?.plan.status}
+                {capitalCase(user?.team?.plan.status)}
               </span>
             </td>
             <td className={styles.logbtn}>
