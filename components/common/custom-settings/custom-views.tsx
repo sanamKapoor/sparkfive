@@ -54,7 +54,7 @@ const CustomViews = () => {
                 }
               />
             </div>
-            <div className={styles.radio}>
+            <div className={`${styles['radio']} ${styles['collection-tab']}`}>
               <div>Collection Tab</div>
               <IconClickable
                 src={

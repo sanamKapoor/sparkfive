@@ -36,7 +36,7 @@
     display: flex;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
-    gap: 24px;
+    gap: 0px;
     padding: 24px 0;
     /* border-bottom: 1px solid var(--color-secondary-border); */
     justify-content: space-between;
@@ -70,6 +70,9 @@
     padding-bottom: 8px;
     margin-bottom: 12px;
     border-bottom: 1px solid var(--color-sec-lightivory);
+}
+.DimensionBox{
+   min-width: 100px !important;
 }
 
 .input {
@@ -268,7 +271,7 @@
 .saveblock{
     display: flex;
     align-items: center;
-    padding-top: 32px;
+    padding-top: 10px;
 }
 .size-preset-main-wrapper{
     padding-left: 60px;
