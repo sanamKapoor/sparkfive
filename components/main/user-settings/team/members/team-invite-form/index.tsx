@@ -57,7 +57,9 @@ const TeamInviteForm: React.FC<TeamInviteProps> = ({
           styleType="regular"
           value={inviteEmail}
           placeholder="Email"
-          additionalClasses={styles.input}
+          // additionalClasses={styles.input}
+              additionalClasses={`${styles['input']} ${styles['invitation-input']}`}
+       
           onChange={(e) => setInviteEmail(e.target.value)}
         />
 

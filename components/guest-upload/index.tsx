@@ -313,11 +313,6 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
     setUploadSuccess(true);
   };
 
-  const onRemoveUploadingFile = (index: number) => {
-    uploadingFiles.splice(index, 1);
-    setUploadingFiles([...uploadingFiles]);
-  };
-
   const onRetryUploadingFile = async (index: number) => {
     await uploadFiles(index, uploadingFiles, activeRequestId, true);
   };
@@ -370,7 +365,6 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
                       onUpload={onAdditionalUpload}
                       uploadingPercent={uploadingPercent}
                       onRetry={onRetryUploadingFile}
-                      onRemove={onRemoveUploadingFile}
                       additionUploadDisabled={disabled}
                       uploadingIndex={uploadingIndex}
                     />

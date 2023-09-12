@@ -1,6 +1,7 @@
 import { ITeam } from "../../../../../interfaces/team/team";
 import styles from "./Accountdata.module.css";
 
+import { capitalCase } from "change-case";
 import fileSize from "filesize";
 import dateUtils from "../../../../../utils/date";
 import Button from "../../../../common/buttons/button";
@@ -73,7 +74,7 @@ const AccountData: React.FC<AccountDataProps> = ({
             </td>
             <td>
               <span className={styles["active-badge"]}>
-                {account.plan.status}
+                {capitalCase(account.plan.status)}
               </span>
             </td>
             <td className={styles.logbtn}>

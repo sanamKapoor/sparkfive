@@ -2,15 +2,25 @@
 
 .primary-input-height.select-prefix__control{
   min-height: 34px;
+  
+}
+.primary-input-height:focus{
+  box-shadow: none !important;
+  border: none;
+  outline: none;
+
+  
 }
 .uploadSelect.select-prefix__control{
   height:50px;
   max-width: 294px;
 }
 
+
 .select-prefix__control {
   border-style: none !important;
   min-height: 33px !important;
+  height: 100%;
 }
 
 .select-prefix__value-container {
@@ -21,6 +31,7 @@
   color: var(--color-prim-navy);
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
+  height: 100%;
 }
 
 .select-prefix__single-value {
@@ -138,6 +149,10 @@
   max-height: 50px;
 
 }
+.customSelect:focus{
+  outline: none !important;
+}
+
 /* .filter .select-prefix__indicators,
 .regular .select-prefix__indicators svg {
  width: 12px;

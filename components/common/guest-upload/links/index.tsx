@@ -200,12 +200,14 @@ const Links = () => {
     const image = new Image();
     image.src = window.URL.createObjectURL(fileMeta);
 
-    image.onload = () => {
+    image.onload = async () => {
       if (image.width < BANNER_MIN_WIDTH || image.height < BANNER_MIN_HEIGHT) {
         toastUtils.error("File must be at least 1920 x 300");
+      } else {
+        await uploadBanner(fileMeta, id);
       }
     };
-    await uploadBanner(fileMeta, id);
+
     if (fileInputRefs[id]) {
       fileInputRefs[id].value = "";
     }
@@ -236,7 +238,9 @@ const Links = () => {
   };
 
   return (
-    <div className={`${styles['main-wrapper']} ${styles['guest-upload-wrapper']}`}>
+    <div
+      className={`${styles["main-wrapper"]} ${styles["guest-upload-wrapper"]}`}
+    >
       <h3>Guest Upload Links</h3>
 
       {links.length < maximumLinks && (
@@ -256,7 +260,6 @@ const Links = () => {
               placeholder={"Link URL"}
               styleType={"regular-short"}
               additionalClasses={styles.guestUploadLink}
-             
             />
             <Button
               className={"container exclude-min-height primary guestUpLoadBtn"}
@@ -282,15 +285,15 @@ const Links = () => {
             <div className={styles.input}>
               <label>Status</label>
               <Select
-              
                 options={statusList}
-                additionalClass={"primary-input-height uploadSelect"}
+                additionalClass={"primary-input-height uploadSelect customSelect"}
                 onChange={(selected) => onStatusChange(selected, field.id)}
                 placeholder={"Select status"}
                 styleType="regular"
                 value={
                   statusList.filter((item) => item.value === field.status)[0]
                 }
+             
               />
             </div>
             <div className={styles.privateBlock}>

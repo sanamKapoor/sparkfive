@@ -223,7 +223,7 @@ const TagManagement = () => {
               />
             )}
             {editMode === true && currentEditIndex === index && (
-              <div>
+              <div className={styles.Editattrubute}>
                 <Input
                   placeholder={"Edit name"}
                   onChange={(e) => {
