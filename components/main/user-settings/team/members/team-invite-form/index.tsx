@@ -70,6 +70,7 @@ const TeamInviteForm: React.FC<TeamInviteProps> = ({
             placeholder={"Select role"}
             styleType="regular"
             value={inviteRole}
+            containerClass={styles.SelectRoleInput}
           />
         </div>
         <Button

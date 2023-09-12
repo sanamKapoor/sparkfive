@@ -5,12 +5,13 @@
   
 }
 .primary-input-height:focus{
-  box-shadow: none !important;
-  border: none;
+  box-shadow: none;
+  border: 0;
   outline: none;
 
   
 }
+
 .uploadSelect.select-prefix__control{
   height:50px;
   max-width: 294px;
@@ -144,6 +145,10 @@
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
   max-height: 34px;
+}
+.SelectRoleInput .select-prefix__indicators,
+.regular .select-prefix__indicators {
+  max-height: 50px;
 }
 .uploadSelect .select-prefix__indicators {
   max-height: 50px;

@@ -31,6 +31,9 @@
   width: 100%;
   height: 50px !important;
 }
+.SelectRoleInput{
+  height: 50px;
+}
 
 .button {
   min-height: inherit;
