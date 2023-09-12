@@ -15,6 +15,7 @@ import SubHeader from '../layouts/sub-header';
 import Breadcrumbs from '../misc/breadcrumbs';
 import styles from './top-bar.module.css';
 import NavHeading from '../../topbar-newnavigation/NavHeading';
+import React from 'react';
 
 const TopBar = ({
   activeSortFilter,
@@ -202,7 +203,7 @@ const TopBar = ({
                             }
                           />
                         ))} */}
-                      <NavHeading title="assets" />
+                      <NavHeading  />
                     </li>
                     {showTabs && (
                       <Dropdown
@@ -246,7 +247,7 @@ const TopBar = ({
                   //     </li>
                   //   );
                   // })
-                  < NavHeading title="All Assets" />
+                  < NavHeading  />
                 )}
               </ul>
             </div>

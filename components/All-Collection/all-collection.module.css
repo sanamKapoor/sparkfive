@@ -1,0 +1,66 @@
+/* //subcollection card */
+.subcollectionCard{
+    max-width: 282px;
+    width: 100%;
+    border-radius: 6px 6px 0 0;
+    border: 1px solid
+    #DEDAD4 ;
+    padding: 12px;
+    position: relative;
+   
+  }
+  .subcollectionCard:hover{
+    animation: halfopacity 0.5s;
+    opacity: 0.5;
+  }
+  .subcollectionCard:hover .image-button-wrapper{
+    display: block;
+
+  }
+  .imageGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 10px; 
+   
+  }
+  
+  .image img {
+    width: 100%;
+   
+  }
+  .cardFooter{
+    max-width: 282px;
+    padding: 12px;
+    border-radius: 0 0 6px 6px;
+    border: 1px solid
+    #DEDAD4;
+    border-top: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .cardFooter span{
+    display: block;
+  }
+  .heading{
+    font-family: "Noto Sans";
+    font-weight: 500;
+    font-size: 14px;
+  }
+  .totalCount{
+    font-family: "Noto Sans";
+    font-weight: 400;
+    font-size: 12px;
+    color:#AEB0C2;
+  
+  }
+  .image-button-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+    
+
+  }
+  

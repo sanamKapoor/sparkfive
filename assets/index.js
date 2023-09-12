@@ -5,6 +5,10 @@ export const GeneralImg = {
 
 export const AppImg = {
   guestCover: require('./app-images/guest-cover.png'),
+  abstraction1:require('./app-images/abstractImg1.svg'),
+  abstraction2:require('./app-images/abstractImg 2.svg'),
+  abstraction3:require('./app-images/abstractImg 3.svg'),
+  abstraction4:require('./app-images/abstractImg4.svg'),
 }
 
 export const LoginImg = {
@@ -125,6 +129,11 @@ export const Utilities = {
   line:require('./Icons/Utilities/nestedCollection/Line.svg'),
   dots:require('./Icons/Utilities/nestedCollection/dots.svg'),
   menu:require('./Icons/Utilities/nestedCollection/menu.svg'),
+closeIcon:require('./Icons/Utilities/nestedCollection/close.svg'),
+searchIcon:require('./Icons/Utilities/nestedCollection/search.svg'),
+checkIcon:require('./Icons/Utilities/nestedCollection/checkIcon.svg'),
+horizontalDots:require('./Icons/Utilities/nestedCollection/horixzontaldots.svg'),
+  
   
   
  

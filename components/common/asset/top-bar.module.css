@@ -211,6 +211,7 @@ li.dropdown-title {
 @media screen and (max-width: 810px) {
   .sec-filters {
     gap: 8px;
+    margin-top: 20px;
   }
 
   .sec-filters button {
@@ -248,6 +249,9 @@ li.dropdown-title {
 
   .container {
     padding: 20px;
+  }
+  .wrapper{
+    display: block;
   }
 }
 
