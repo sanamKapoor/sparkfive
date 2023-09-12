@@ -61,10 +61,15 @@
   align-items: center;
   gap: 10px;
 }
-.automation{
+/* .automation{
   margin-left: 200px;
+} */
+.collection-tab{
+  width: 20%;
 }
-
+.subfolder-tags{
+  width:30%;
+}
 .radio img {
   width: 20px;
   height: 20px;

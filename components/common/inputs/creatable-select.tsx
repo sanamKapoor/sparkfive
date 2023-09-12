@@ -182,7 +182,7 @@ const CreatableSelect = ({
     <>
       <div className={`secondary-text ${styles.field}`}>{title}</div>
       {selectOneComponent}
-      <div className={"normal-text"}>
+      <div className={`normal-text`}>
         <ul className={`tags-list ${styles["tags-list"]}`}>
           {(selectedItems || []).slice(0, 9).map((item, index) => {
             return (
@@ -263,7 +263,7 @@ const CreatableSelect = ({
                     menuPosition={menuPosition}
                     isClearable={true}
                     // className="creatable-select"
-                    className={`${styles['creatable-select']}`}
+                    className={`${styles["creatable-select"]}`}
                     styles={menuStyles}
                   />
                 )}

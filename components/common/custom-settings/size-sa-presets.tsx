@@ -156,7 +156,7 @@ const SizeSaPresets = () => {
                   className={`${styles["col-100"]} ${styles["flex-display"]}`}
                 >
                   <span
-                    className={`${styles["row-header"]}`}
+                    className={`${styles["row-header"]} ${styles["font-weight-600"]}`}
                   >
                     Custom File Size name
                   </span>
@@ -174,6 +174,7 @@ const SizeSaPresets = () => {
                     value={field.name}
                     placeholder={"Field name"}
                     styleType={"regular-short"}
+                  
                   />
                 </div>
               </div>
@@ -207,6 +208,7 @@ const SizeSaPresets = () => {
                         additionalClasses={"center-input"}
                         type={"number"}
                         styleType={"regular-short"}
+                        additionalClasses={styles.DimensionBox}
                       />
                     </div>
                     <div className={"col-50"}>
@@ -222,6 +224,7 @@ const SizeSaPresets = () => {
                         type={"number"}
                         additionalClasses={"center-input"}
                         styleType={"regular-short"}
+                        additionalClasses={styles.DimensionBox}
                       />
                     </div>
                   </div>

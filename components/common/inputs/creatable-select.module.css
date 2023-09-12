@@ -6,6 +6,7 @@
   margin-top: 16px;
 }
 
+
 .select-add {
   display: flex;
   align-items: center;
@@ -28,7 +29,7 @@
   margin-bottom: 16px;
 }
 
-.creatable-select{
+.creatable-select {
   max-width: 260px;
   width: 100%;
 }

@@ -1,42 +1,47 @@
-.main-wrapper{
+.main-wrapper {
     width: 80%;
 }
 
 .main-wrapper h3 {
     margin: 0;
     font-weight: 600;
-  }
-  .fileSizeFirst{
-    height:50px;
+}
+
+.fileSizeFirst {
+    height: 50px;
     max-width: 152px !important;
     width: 100%;
     border-radius: 4px !important;
-  }
-  .fileSizeSecond{
-    height:50px;
+}
+
+.fileSizeSecond {
+    height: 50px;
     border-radius: 4px !important;
 
-  }
-  .fileSizethird{
-    height:50px;
+}
+
+.fileSizethird {
+    height: 50px;
     border-radius: 4px !important;
 }
-.outer-wrapper{
+
+.outer-wrapper {
     padding: 0 60px;
 }
-.outer-wrapper .row{
+
+.outer-wrapper .row {
     justify-content: unset;
-    gap:247px;
+    gap: 247px;
     align-items: end;
 }
-  
-.row{
+
+.row {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
-    gap: 24px;
+    gap: 0px;
     padding: 24px 0;
     /* border-bottom: 1px solid var(--color-secondary-border); */
     justify-content: space-between;
@@ -45,10 +50,12 @@
     width: 100%;
     align-items: center;
 }
-.custom-setting-border{
+
+.custom-setting-border {
     border-bottom: 1px solid var(--color-secondary-border);
 
 }
+
 .form {
     display: -webkit-box;
     display: -ms-flexbox;
@@ -62,7 +69,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
- 
+
 }
 
 .field_title {
@@ -70,6 +77,10 @@
     padding-bottom: 8px;
     margin-bottom: 12px;
     border-bottom: 1px solid var(--color-sec-lightivory);
+}
+
+.DimensionBox {
+    min-width: 90px !important;
 }
 
 .input {
@@ -93,13 +104,14 @@
     display: flex;
     align-items: center;
     gap: 24px;
+    padding-bottom: 8px;
 }
 
 .button_group button {
     min-width: 80px;
 }
 
-.col-15{
+.col-15 {
     -webkit-box-flex: 0;
     -ms-flex: 0 0 15%;
     flex: 0 0 15%;
@@ -112,7 +124,7 @@
     padding-left: 15px;
 }
 
-.col-20{
+.col-20 {
     -webkit-box-flex: 0;
     -ms-flex: 0 0 20%;
     flex: 0 0 20%;
@@ -125,7 +137,7 @@
     padding-left: 15px;
 }
 
-.col-25{
+.col-25 {
     -webkit-box-flex: 0;
     -ms-flex: 0 0 25%;
     flex: 0 0 25%;
@@ -138,7 +150,7 @@
     padding-left: 15px;
 }
 
-.col-35{
+.col-35 {
     -webkit-box-flex: 0;
     -ms-flex: 0 0 35%;
     flex: 0 0 35%;
@@ -152,7 +164,7 @@
 }
 
 
-.col-40{
+.col-40 {
     -webkit-box-flex: 0;
     -ms-flex: 0 0 40%;
     flex: 0 0 40%;
@@ -165,7 +177,7 @@
     padding-left: 15px;
 }
 
-.col-100{
+.col-100 {
     -webkit-box-flex: 0;
     -ms-flex: 0 0 100%;
     flex: 0 0 100%;
@@ -179,14 +191,14 @@
 
 }
 
-.action-button{
+.action-button {
     width: 21px;
     height: 21px;
     margin-left: 10px;
 }
 
 
-.row-header{
+.row-header {
     margin: 0 0 15px 15px;
     display: block;
     /* border-bottom: solid 1px #dddad4; */
@@ -195,21 +207,23 @@
     /*font-weight: 600;*/
 }
 
-.p-l-30{
+.p-l-30 {
     padding-left: 30px;
 }
-.d-flex{
+
+.d-flex {
     display: flex;
 }
-.font-weight-600{
+
+.font-weight-600 {
     font-weight: 600;
 }
 
-.field-block{
+.field-block {
     margin-bottom: 25px;
 }
 
-.tag-wrapper{
+.tag-wrapper {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -217,30 +231,30 @@
     flex-wrap: wrap;
 }
 
-.tag-item{
+.tag-item {
     display: flex;
     align-items: center;
     margin: 5px;
     cursor: pointer;
 }
 
-.tag-item-text{
+.tag-item-text {
     font-weight: normal;
     margin-right: 10px;
     font-size: 13px;
 }
 
-.close-modal-btn{
+.close-modal-btn {
     position: absolute;
     right: 10px;
     top: 0;
 }
 
-.confirm-modal-text{
+.confirm-modal-text {
     padding-top: 30px;
 }
 
-.input-label{
+.input-label {
     width: 100%;
     display: block;
     text-align: center;
@@ -249,26 +263,29 @@
     font-weight: 600;
 }
 
-.select-add{
+.select-add {
     display: flex;
     align-items: center;
     cursor: pointer;
 }
 
-.select-add img{
+.select-add img {
     margin-right: 5px;
     width: 20px;
     height: 20px;
 }
 
-.saveBtn{
+.saveBtn {
     font-size: 14px;
 }
-.saveblock{
+
+.saveblock {
     display: flex;
     align-items: center;
+    padding-top: 10px;
 }
-.size-preset-main-wrapper{
+
+.size-preset-main-wrapper {
     padding-left: 60px;
     border-bottom: 1px solid var(--color-secondary-border);
 }
@@ -284,9 +301,9 @@
     .field {
         width: 100%;
     }
+
     .input {
         width: 100% !important;
     }
-   
-}
 
+}

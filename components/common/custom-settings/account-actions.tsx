@@ -48,7 +48,7 @@ const AccountActions = () => {
                 onClick={() => saveAdvanceConfig({ searchDefault: "all" })}
               />
             </div>
-            <div className={styles.radio}>
+            <div className={`${styles['radio']} ${styles['subfolder-tags']}`}>
               <div>Subfolder as Tags (Default)</div>
               <IconClickable
                 src={
@@ -80,7 +80,7 @@ const AccountActions = () => {
                 onClick={() => saveAdvanceConfig({ subFolderAutoTag: true })}
               />
             </div>
-            <div className={styles.radio}>
+            <div className={`${styles['radio']} ${styles['subfolder-tags']}`}>
               <div>Tags Only</div>
               <IconClickable
                 src={
@@ -112,7 +112,7 @@ const AccountActions = () => {
                 onClick={() => saveAdvanceConfig({ duplicateCheck: true })}
               />
             </div>
-            <div className={styles.radio}>
+            <div className={`${styles['radio']} ${styles['subfolder-tags']}`}>
               <div>Off</div>
               <IconClickable
                 src={
