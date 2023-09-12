@@ -182,7 +182,7 @@ const CreatableSelect = ({
     <>
       <div className={`secondary-text ${styles.field}`}>{title}</div>
       {selectOneComponent}
-      <div className={"normal-text"}>
+      <div className={`normal-text ${styles['add-new-tag-btn']}`}>
         <ul className={`tags-list ${styles["tags-list"]}`}>
           {(selectedItems || []).slice(0, 9).map((item, index) => {
             return (
