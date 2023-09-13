@@ -523,7 +523,7 @@ export default ({ getAssets }) => {
           }
 
           filters.advSearchFrom = searchFilterParams?.advSearchFrom;
-          
+
           // @ts-ignore
           delete filters.page;
         }
