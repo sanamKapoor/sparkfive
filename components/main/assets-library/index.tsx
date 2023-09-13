@@ -36,6 +36,7 @@ import UploadStatusOverlayAssets from '../../upload-status-overlay-assets';
 import SearchOverlay from '../search-overlay-assets';
 import styles from './index.module.css';
 import { Utilities } from '../../../assets';
+import SubCollection from '../../Sub-collection/sub-collection';
 
 // Components
 
@@ -862,7 +863,7 @@ const AssetsLibrary = () => {
               {sidebarOpen ? <div className={styles.newsidenav}>
                 <NestedSidenav />
               </div> : <div className={styles.newsidenav}>
-                <img onClick={() => { setSidebarOpen(!sidebarOpen) }} src={Utilities.arrowright} />
+                <img className={styles.sidenavRightIcon} onClick={() => { setSidebarOpen(!sidebarOpen) }} src={Utilities.arrowright} />
               </div>}
               <div className={styles.rightSide}>
                 <div className='position-relative'>

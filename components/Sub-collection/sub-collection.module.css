@@ -1,3 +1,15 @@
+.sub-collection-heading{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 0 16px 0;
+}
+.sub-collection-heading span{
+    font-family: "Noto Sans", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    margin-right: 11px;
+}
 /* //subcollection card */
 .subcollectionCard{
     max-width: 282px;
@@ -63,24 +75,51 @@
     
 
   }
-  @keyframes halfopacity {
-    0% {
-      opacity: 1;
-    }
-  
-    100% {
-      opacity: 0.5;
-    }
+  .circle {
+    width: 20px;
+    height: 20px;
+    background-color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition:
+      background-color 0.3s,
+      color 0.3s;
+    border: 1px solid #dedad4;
+  }
+  .checkIcon {
+    font-size: 24px;
+    color: white;
+    display: none;
+    border: 1px solid #dedad4;
   }
   
-  @keyframes intoview {
-    0% {
-      opacity: 0;
-    }
+  .checked {
+    background-color: #dedad4;
+  }
   
-    100% {
-      opacity: 1;
-    }
+  .checked .checkIcon {
+    display: inline;
+  }
+  .TagsInfo {
+    display: flex;
+    align-items: center;
+  }
+  .tagOuter {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .TagsInfo span{
+    font-family: "Noto Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    margin-left: 11px;
+  }
+  .rightSide{
+    display: flex;
+    align-items: center;
   }
   .cardsWrapper{
     display: grid;
@@ -104,3 +143,4 @@
     }
    
   }
+  

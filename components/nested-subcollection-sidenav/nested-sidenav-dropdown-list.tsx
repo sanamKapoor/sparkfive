@@ -125,7 +125,9 @@ const NestedSidenavDropdown = () => {
       {sidenavFolderList.map((item: Item, index: number) => {
         return (
           <>
-            <div key={index} className={`${styles["flex"]} ${styles.nestedbox}`}>
+            <div key={index} className={`${styles["flex"]} ${styles.nestedbox}`}
+              onClick={() => toggleDropdown(index, item, true)}
+            >
               <img className={showDropdown[index] ? styles.iconClick : styles.rightIcon} src={Utilities.arrowBlue} onClick={() => toggleDropdown(index, item, true)} />
               <div className={styles.w100}>
                 <div className={`${styles["dropdownMenu"]} ${styles.active}`}>

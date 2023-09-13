@@ -61,26 +61,7 @@
 .loadmore{
   padding: 0 24px;
 }
-/* .dropdown-lists::before {
-  content: "";
-  display: inline-block;
-  background-image: url("../../assets/Icons/Utilities/nestedCollection/right.svg");
-  background-repeat: no-repeat;
-  position: absolute;
-  left: -11px;
-  bottom: 7px;
-  width: 100%;
-  height: 10px;
-} */
-/* .dropdown-lists {
-  display: flex;
-  justify-content: space-between;
-  cursor: pointer;
-  align-items: center;
-  height: 30px;
-  margin-top: 16px;
-  position: relative;
-} */
+
 .folder{
   padding:0 24px 0 24px;
 }
@@ -102,6 +83,7 @@
 }
 .iconClick{
   transform: rotate(0deg);
+  margin-right: 5px;
 }
 .dropdownOptions {
   margin-top: 16px;
@@ -130,7 +112,8 @@
 
 .loaderbuttons {
   position: relative;
-  padding: 8px 10px;
+  padding: 0px 8px;
+  min-width: 100px;
   background-color: var(--color-prim-turquoise);
   color: white;
   border: none;
@@ -142,14 +125,16 @@
   cursor:pointer;
   margin-top: 10px;
   border-radius: 8px;
+  height:30px;
 }
+
 
 .buttontext {
   transition: opacity 0.3s ease-in-out;
 }
 
 .loaderbuttons:hover .buttontext  {
-  opacity: 0;
+  opacity: 1;
 }
 
 .loader {

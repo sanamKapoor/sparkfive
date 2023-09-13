@@ -53,6 +53,13 @@
 }
 
 .newsidenav{padding: 0;}
+.newsidenav img{
+  cursor: pointer;
+}
+.sidenavRightIcon{
+  padding: 6px 0 0 0;
+
+}
 .innnerContainer{
   display: flex;
   /* height: calc(100vh - 170px);

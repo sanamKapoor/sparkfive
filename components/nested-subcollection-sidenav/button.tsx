@@ -50,7 +50,7 @@ const NestedButton: React.FC<MyComponentProps> = ({ children, type, parentId }) 
 
   return (
     <>
-      <div>
+      <div onClick={() => setActiveModal("folder")}>
         <button className={styles.nestedButton}>
           <img src={Utilities.add} alt="Add Icon" onClick={() => setActiveModal("folder")} />
           <span>{children}</span>
