@@ -21,8 +21,6 @@ const ShareItem = ({
 }) => {
   const [visibleOverlay, setVisibleOVerlay] = useState(false);
 
-  console.log(sharedCode)
-
   useEffect(() => {
     if (visibleOverlay) {
       document.body.classList.add("no-overflow");
