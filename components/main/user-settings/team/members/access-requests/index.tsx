@@ -65,7 +65,7 @@ const AccessRequests: React.FC<AccessRequestsProps> = ({
           setShowReviewModal={setShowReviewModal}
         />
       ) : (
-        <p>No requests at the moment.</p>
+        <p className={styles.noRequest}>No requests at the moment.</p>
       )}
 
       <Base

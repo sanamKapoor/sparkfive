@@ -164,7 +164,7 @@ const DeletedAssetsLibrary = () => {
       <AssetOps getAssets={getAssets} />
     </>
   ) : (
-    <p>No deleted assets at the moment.</p>
+    <p className={styles.noDeletedAsset}>No deleted assets at the moment.</p>
   );
 };
 
