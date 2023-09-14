@@ -1,8 +1,8 @@
 import { IUser } from "../../../../../interfaces/user/user";
 import styles from "./Tabledata.module.css";
 
-import { capitalCase } from "change-case";
 import dateUtils from "../../../../../utils/date";
+import { checkIfPLanIsActive } from "../../../../../utils/team";
 import Button from "../../../../common/buttons/button";
 
 interface TableDataProps {
@@ -61,8 +61,16 @@ const TableData: React.FC<TableDataProps> = ({ users, onUserLogin }) => {
               </span>
             </td>
             <td>
-              <span className={styles["active-badge"]}>
-                {capitalCase(user?.team?.plan.status)}
+              <span
+                className={
+                  checkIfPLanIsActive(user?.team?.plan?.name)
+                    ? `${styles["active-badge"]}`
+                    : `${styles["expired-badge"]}`
+                }
+              >
+                {checkIfPLanIsActive(user?.team?.plan?.name)
+                  ? "Active"
+                  : "Expired"}
               </span>
             </td>
             <td className={styles.logbtn}>
