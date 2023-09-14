@@ -5,10 +5,7 @@
 .tags-list {
   margin-top: 16px;
 }
-.add-new-tag-btn{
-  display: flex;
-  align-items: center;
-}
+
 
 .select-add {
   display: flex;
@@ -32,7 +29,7 @@
   margin-bottom: 16px;
 }
 
-.creatable-select{
+.creatable-select {
   max-width: 260px;
   width: 100%;
 }

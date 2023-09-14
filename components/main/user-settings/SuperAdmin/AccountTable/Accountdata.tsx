@@ -1,9 +1,9 @@
 import { ITeam } from "../../../../../interfaces/team/team";
 import styles from "./Accountdata.module.css";
 
-import { capitalCase } from "change-case";
 import fileSize from "filesize";
 import dateUtils from "../../../../../utils/date";
+import { checkIfPLanIsActive } from "../../../../../utils/team";
 import Button from "../../../../common/buttons/button";
 
 interface AccountDataProps {
@@ -73,8 +73,16 @@ const AccountData: React.FC<AccountDataProps> = ({
               <span className={styles.useremail}>{account.plan?.name}</span>
             </td>
             <td>
-              <span className={styles["active-badge"]}>
-                {capitalCase(account.plan.status)}
+              <span
+                className={
+                  checkIfPLanIsActive(account?.plan?.name)
+                    ? `${styles["active-badge"]}`
+                    : `${styles["expired-badge"]}`
+                }
+              >
+                {checkIfPLanIsActive(account?.plan?.name)
+                  ? "Active"
+                  : "Expired"}
               </span>
             </td>
             <td className={styles.logbtn}>

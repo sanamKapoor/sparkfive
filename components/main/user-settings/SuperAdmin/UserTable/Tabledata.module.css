@@ -54,15 +54,18 @@
   color: white;
   border-radius: 4px;
 }
-.expired-badge{
+
+.expired-badge {
   padding: 4px 8px;
+  background-color:
+    #FA373D;
   color: white;
   border-radius: 4px;
-  background: #fa373d;
-
 }
+
+
 @media (max-width: 575px) {
-  .useremail{
+  .useremail {
     min-width: 154px;
     word-break: break-all;
   }

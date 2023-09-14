@@ -9,3 +9,7 @@ export const getExpireDate = (date: string, boolean = false) => {
 export const checkExpireDate = (date: string) => {
   return new Date() > new Date(date);
 };
+
+export const checkIfPLanIsActive = (planName: string) => {
+  return planName.toLowerCase() !== "expired";
+};
