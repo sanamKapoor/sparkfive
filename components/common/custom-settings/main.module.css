@@ -19,7 +19,7 @@
 }
 
 .container {
-  width: 70%;
+  width: 80%;
 }
 
 .container h3 {
@@ -43,10 +43,10 @@
 
 .field-radio-wrapper {
   display: flex;
-  gap: 100px;
+  /* gap: 100px; */
   min-width: 300px;
   width: 100%;
-  max-width: 550px;
+  max-width: 800px;
 }
 .field-radio-wrapper-auto{
   display: flex;
@@ -60,16 +60,17 @@
   flex-direction: column;
   align-items: center;
   gap: 10px;
+  min-width: 177px;
 }
 /* .automation{
   margin-left: 200px;
 } */
-.collection-tab{
+/* .collection-tab{
   width: 20%;
 }
 .subfolder-tags{
   width:30%;
-}
+} */
 .radio img {
   width: 20px;
   height: 20px;
