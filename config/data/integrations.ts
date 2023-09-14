@@ -6,10 +6,12 @@ export const integrationTabsData = [
     id: "enabled",
     title: "Enabled",
     content: EnabledIntegrations,
+    permissions: [],
   },
   {
     id: "available",
     title: "Available",
     content: AvailableIntegrations,
+    permissions: [],
   },
 ];
