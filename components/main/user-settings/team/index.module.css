@@ -5,6 +5,9 @@
 .content {
   padding: 42px 60px;
   }
+  .noRequest{
+    padding: 0 0 0 10px;
+  }
 
 .main-headers {
   display: flex;

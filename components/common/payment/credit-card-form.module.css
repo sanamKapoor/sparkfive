@@ -3,6 +3,8 @@
   width: 100%;
   max-width: 528px;
   margin-bottom: 3rem;
+  overflow: auto;
+  height:70vh;
 }
 
 .no-bottom {

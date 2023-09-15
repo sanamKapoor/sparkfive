@@ -1,5 +1,4 @@
-// Components
-import IntegrationsComponent from "../../common/account/integrations";
+import IntegrationsComponent from "./integrations-component";
 
 const Integrations = ({ ActionButtons }) => {
   const onSave = async () => {
