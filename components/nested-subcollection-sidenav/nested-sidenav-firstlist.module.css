@@ -5,7 +5,7 @@
     cursor: pointer;
     margin-top: 16px;
     height:30px;
-    padding: 4px;
+  
 }
 .icon{
     margin-right: 5px;
@@ -42,7 +42,7 @@
 .active{
     background:var(--color-sec-lightblue);
     border-radius: 4px;
-    padding: 4px
+    padding: 7.5px;
 }
 .sidenav-list1{
     margin-bottom: 10px;

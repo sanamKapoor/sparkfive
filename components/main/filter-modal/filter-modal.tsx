@@ -1,9 +1,9 @@
-import styles from "./tag-modal.module.css";
+import styles from "./filter-modal.module.css";
 import React, { useState } from "react";
 import { Utilities } from "../../../assets";
 import Button from "../../common/buttons/button";
 
-const Tagmodal = () => {
+const Filtermodal = () => {
   const [isChecked, setIsChecked] = useState(false);
 
   const handleCircleClick = () => {
@@ -152,4 +152,4 @@ const Tagmodal = () => {
     </div>
   );
 };
-export default Tagmodal;
+export default Filtermodal;

@@ -36,7 +36,6 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
-  padding: 4px;
 }
 .nestedbox{
   padding: 0 24px 0 14px;
@@ -103,7 +102,7 @@
 .active {
   background:var(--color-sec-lightblue);
   border-radius: 4px;
-  padding: 4px;
+  padding: 7.5px;
 }
 .subfolderList {
   padding: 0px 0px 0px 16px;
