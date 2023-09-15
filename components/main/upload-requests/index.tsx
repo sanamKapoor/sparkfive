@@ -1784,7 +1784,7 @@ const UploadRequest = () => {
                       })}
 
                     <Button
-                      className={` container secondary bulk-tag`}
+                      className={` container bulk-tag`}
                       type="button"
                       text="Save changes"
                       onClick={saveBulkTag}
