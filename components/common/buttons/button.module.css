@@ -293,6 +293,18 @@
     margin-top: 32px;
 
 }
+.bulk-tag{
+  background-color:#10BDA5;
+  color:#fff;
+  margin-top: 20px;
+
+}
+.reject-btn{
+  border: 1px solid var(--color-secondary-border);
+  background: #fff;
+  color:var(--color-prim-navy);
+
+}
 .teamInviteBtn{
   height: 50px;
   /* padding: 0 29px; */
@@ -338,6 +350,15 @@ min-width: 112px;
   height: 40px;
 
 }
+.back-button{
+  background: none;
+  padding: 0;
+  height: auto !important;
+  min-width: inherit;
+  color: #817D9D;
+  font-weight: 400;
+}
+
 
 
 @media screen and (max-width: 1000px) {
