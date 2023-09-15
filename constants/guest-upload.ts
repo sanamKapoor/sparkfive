@@ -36,7 +36,7 @@ export const BANNER_ALLOWED_SIZE = 10 * 1024 * 1024; //10 MB
 
 export const BANNER_MIN_WIDTH = 1920;
 
-export const BANNER_MIN_HEIGHT = 320;
+export const BANNER_MIN_HEIGHT = 300;
 
 export const MAX_UPLOAD_FILES_ALLOWED = 200;
 
