@@ -5,6 +5,35 @@ export const GeneralImg = {
 
 export const AppImg = {
   guestCover: require('./app-images/guest-cover.png'),
+  abstraction1:require('./app-images/abstractImg1.svg'),
+  abstraction2:require('./app-images/abstractImg 2.svg'),
+  abstraction3:require('./app-images/abstractImg 3.svg'),
+  abstraction4:require('./app-images/abstractImg4.svg'),
+  subcollection5:require('./app-images/subcollection5.svg'),
+  subcollection6:require('./app-images/subcollection6.svg'),
+  subcollection7:require('./app-images/subcollection7.svg'),
+  subcollection8:require('./app-images/subcollection8.svg'),
+  subcollection9:require('./app-images/subcollection9.svg'),
+  subcollection10:require('./app-images/subcollection10.svg'),
+  subcollection11:require('./app-images/subcollection11.svg'),
+  subcollection12:require('./app-images/subcollection12.svg'),
+  subcollection13:require('./app-images/subcollection13.svg'),
+  subcollection14:require('./app-images/subcollection14.svg'),
+  subcollection15:require('./app-images/subcollection15.svg'),
+  subcollection16:require('./app-images/subcollection16.svg'),
+  collection1:require('./app-images/collection1.svg'),
+  collection2:require('./app-images/collection2.svg'),
+  collection3:require('./app-images/collection3.svg'),
+  collection4:require('./app-images/collection4.svg'),
+  collection5:require('./app-images/collection5.svg'),
+  collection6:require('./app-images/collection6.svg'),
+  collection7:require('./app-images/collection7.svg'),
+  collection8:require('./app-images/collection8.svg'),
+  collection9:require('./app-images/collection9.svg'),
+  collection10:require('./app-images/collection10.svg'),
+  collection11:require('./app-images/collection11.svg'),
+  collection12:require('./app-images/collection12.svg'),
+
 }
 
 export const LoginImg = {
@@ -125,6 +154,16 @@ export const Utilities = {
   line:require('./Icons/Utilities/nestedCollection/Line.svg'),
   dots:require('./Icons/Utilities/nestedCollection/dots.svg'),
   menu:require('./Icons/Utilities/nestedCollection/menu.svg'),
+closeIcon:require('./Icons/Utilities/nestedCollection/close.svg'),
+searchIcon:require('./Icons/Utilities/nestedCollection/search.svg'),
+checkIcon:require('./Icons/Utilities/nestedCollection/checkIcon.svg'),
+horizontalDots:require('./Icons/Utilities/nestedCollection/horixzontaldots.svg'),
+downIcon:require('./Icons/Utilities/nestedCollection/downIcon.svg'),
+arrowDownUp:require('./Icons/Utilities/collection/ArrowsDownUp.svg'),
+edit:require('./Icons/Utilities/collection/edit.svg'),
+tabulardots:require('./Icons/Utilities/collection/tabler-icon-dots.svg')
+
+  
   
   
  

@@ -32,6 +32,12 @@ import { ASSET_ACCESS } from "../../../constants/permissions";
 import { sizeToZipDownload } from "../../../constants/download";
 import { checkIfUserCanEditThumbnail } from "../../../utils/asset";
 import ChangeThumbnail from "../modals/change-thumnail-modal";
+import SubCollection from "../../Sub-collection/sub-collection";
+import AllCollection from "../../All-Collection/all-collection";
+import CollectionHeader from "../../All-Collection/List-view/all-collection-header";
+import CollectionListVIew from "../../All-Collection/List-view";
+import SubcollectionListView from "../../Sub-collection/List-view";
+import AssetListVIew from "../../Asset-listing/List-view";
 
 const AssetGrid = ({
   activeView = "grid",
@@ -346,7 +352,8 @@ const AssetGrid = ({
           setActiveSearchOverlay={setActiveSearchOverlay}
         />
       )}
-      <div className={styles["list-wrapper"]}>
+   
+      { <div className={styles["list-wrapper"]}>
         {activeView === "grid" && (
           <ul
             className={`${styles["grid-list"]} ${styles[itemSize]}
@@ -562,7 +569,7 @@ const AssetGrid = ({
             )}
           </>
         )}
-      </div>
+      </div> }
 
 
 

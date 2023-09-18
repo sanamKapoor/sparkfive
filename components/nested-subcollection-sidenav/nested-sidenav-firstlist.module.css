@@ -5,7 +5,7 @@
     cursor: pointer;
     margin-top: 16px;
     height:30px;
-    padding: 4px;
+  
 }
 .icon{
     margin-right: 5px;
@@ -13,6 +13,7 @@
 }
 .list1-left-contents{
     display: flex;
+    align-items: center;
 }
 .icon-description span{
     font-family: "Noto Sans", sans-serif;
@@ -46,7 +47,7 @@
 .active{
     background:var(--color-sec-lightblue);
     border-radius: 4px;
-    padding: 4px
+    padding: 7.5px;
 }
 .sidenav-list1{
     margin-bottom: 10px;

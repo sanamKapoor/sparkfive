@@ -9,7 +9,7 @@
     padding: 24px 0;
     opacity: 1;
     display: block;
-    transition: opacity 0.3s ease-in-out, display 0s linear 0.3s;
+    transition: opacity 0.1s ease-in-out, display 0s linear 0.1s;
   }
   
   .nestedsidenav.hidden {
@@ -19,7 +19,7 @@
   
   .sidenav-content {
     padding: 0px 23px 0px 23px;
-    transition: opacity 0.3s ease-in-out;
+    transition: opacity 0.1s ease-in-out;
   }
   .active {
     background:var(--color-sec-lightblue);

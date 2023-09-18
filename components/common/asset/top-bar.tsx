@@ -15,6 +15,7 @@ import SubHeader from '../layouts/sub-header';
 import Breadcrumbs from '../misc/breadcrumbs';
 import styles from './top-bar.module.css';
 import NavHeading from '../../topbar-newnavigation/NavHeading';
+import React from 'react';
 
 const TopBar = ({
   activeSortFilter,
@@ -202,7 +203,7 @@ const TopBar = ({
                             }
                           />
                         ))}
-                      {/* <NavHeading title="assets" /> */}
+                      <NavHeading />
                     </li>
                     {showTabs && (
                       <Dropdown
@@ -219,34 +220,34 @@ const TopBar = ({
                     )}
                   </div>
                 ) : (
-                  tabs.map((view) => {
-                    return (
-                      <li key={view.name} className={styles["tab-list-item"]}>
-                        {(!activeFolder || !view.omitFolder) &&
-                          (!isShare ||
-                            (isShare &&
-                              !view.omitShare &&
-                              view.hideOnSingle !== singleCollection)) &&
-                          (view.requirePermissions.length === 0 ||
-                            (view.requirePermissions.length > 0 &&
-                              hasPermission(view.requirePermissions))) && (
-                            <Button
-                              key={view.name}
-                              text={view.text}
-                              className={
-                                activeSortFilter.mainFilter === view.name
-                                  ? "section-container section-active"
-                                  : "section-container"
-                              }
-                              onClick={() =>
-                                setSortFilterValue("mainFilter", view.name)
-                              }
-                            />
-                          )}
-                      </li>
-                    );
-                  })
-                  // < NavHeading title="All Assets" />
+                  // tabs.map((view) => {
+                  //   return (
+                  //     <li key={view.name} className={styles["tab-list-item"]}>
+                  //       {(!activeFolder || !view.omitFolder) &&
+                  //         (!isShare ||
+                  //           (isShare &&
+                  //             !view.omitShare &&
+                  //             view.hideOnSingle !== singleCollection)) &&
+                  //         (view.requirePermissions.length === 0 ||
+                  //           (view.requirePermissions.length > 0 &&
+                  //             hasPermission(view.requirePermissions))) && (
+                  //           <Button
+                  //             key={view.name}
+                  //             text={view.text}
+                  //             className={
+                  //               activeSortFilter.mainFilter === view.name
+                  //                 ? "section-container section-active"
+                  //                 : "section-container"
+                  //             }
+                  //             onClick={() =>
+                  //               setSortFilterValue("mainFilter", view.name)
+                  //             }
+                  //           />
+                  //         )}
+                  //     </li>
+                  //   );
+                  // })
+                  < NavHeading />
                 )}
               </ul>
             </div>

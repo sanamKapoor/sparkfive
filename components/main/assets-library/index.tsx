@@ -36,6 +36,11 @@ import UploadStatusOverlayAssets from '../../upload-status-overlay-assets';
 import SearchOverlay from '../search-overlay-assets';
 import styles from './index.module.css';
 import { Utilities } from '../../../assets';
+import SubCollection from '../../Sub-collection/sub-collection';
+import AllCollection from '../../All-Collection/all-collection';
+import CollectionData from '../../All-Collection/List-view/all-collection-data';
+import SubCollectionData from '../../Sub-collection/List-view/sub-collection-data';
+import SubCollectionHeading from '../../Sub-collection/List-view/sub-collection-heading';
 
 // Components
 
@@ -75,6 +80,7 @@ const AssetsLibrary = () => {
     sidebarOpen,
     setSidebarOpen
   } = useContext(AssetContext);
+
   const {
     activeSortFilter,
     setActiveSortFilter,
@@ -87,6 +93,7 @@ const AssetsLibrary = () => {
     campaigns,
     loadCampaigns,
   } = useContext(FilterContext);
+
   const { advancedConfig, hasPermission } = useContext(UserContext);
 
   const [widthCard, setWidthCard] = useState(0);
@@ -862,7 +869,7 @@ const AssetsLibrary = () => {
               {sidebarOpen ? <div className={styles.newsidenav}>
                 <NestedSidenav />
               </div> : <div className={styles.newsidenav}>
-                <img onClick={() => { setSidebarOpen(!sidebarOpen) }} src={Utilities.arrowright} />
+                <img className={styles.sidenavRightIcon} onClick={() => { setSidebarOpen(!sidebarOpen) }} src={Utilities.arrowright} />
               </div>}
               <div className={styles.rightSide}>
                 <div className='position-relative'>
@@ -904,13 +911,19 @@ const AssetsLibrary = () => {
                       isFolder={activeSortFilter?.mainFilter === 'folders'}
                     />
                   }
-                  <Tags />
-                  <InputChip />
+                  {/* <Tags />
+                  <InputChip /> */}
                 </div>
                 <div
                   className={`${openFilter && styles["col-wrapper"]} ${styles["grid-wrapper"]
                     } ${activeFolder && styles["active-breadcrumb-item"]}`}
                 >
+                  {/* <SubCollectionHeading />
+                  <AllCollection /> */}
+
+                  {/* <CollectionData></CollectionData> */}
+                  {/* <AllCollection /> */}
+                  {/* <SubCollectionData /> */}
                   <DropzoneProvider>
                     {advancedConfig.set && renderFlag && (
                       <AssetGrid
