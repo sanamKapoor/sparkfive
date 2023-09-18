@@ -1452,7 +1452,7 @@ const UploadRequest = () => {
                 >
                   <ul className={"regular-list"}>
                     {approvals.length === 0 && (
-                      <p>There are no upload requests for you to review</p>
+                      <p className={`${styles['upload-approval-desc']}`}>There are no upload requests for you to reviews</p>
                     )}
                     {approvals.map((approval, index) => {
                       return (

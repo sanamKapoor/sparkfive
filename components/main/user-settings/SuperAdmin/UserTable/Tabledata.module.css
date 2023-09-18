@@ -48,19 +48,24 @@
 }
 
 .active-badge {
-  padding: 4px 8px;
+  padding: 3.5px 4.5px;
   background-color:
     #0083CD;
   color: white;
   border-radius: 4px;
+  font-size: 12px;
+  font-weight: 400;
 }
 
 .expired-badge {
-  padding: 4px 8px;
+  padding: 3.5px 9.5px;
   background-color:
     #FA373D;
   color: white;
   border-radius: 4px;
+  height:24px ;
+  font-size: 12px;
+  font-weight: 400;
 }
 
 
