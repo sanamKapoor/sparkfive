@@ -1,0 +1,17 @@
+.modal-wrapper{
+    max-width: 300px;
+    height:220px;
+    border-radius: 4px;
+    box-shadow: rgba(154, 161, 167, 0.2);
+    border:1px solid rgba(222, 218, 212, 1);
+}
+.list-items{
+    padding: 12px 16px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    cursor: pointer;
+}
+.active{
+    background: #E9EEFA;
+}
