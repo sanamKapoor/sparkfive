@@ -43,6 +43,7 @@ const CreatableSelect = ({
   ignorePermission = false,
   menuPosition = "absolute",
   sortDisplayValue = false,
+  isAddIconDark= false,
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
 
@@ -275,7 +276,7 @@ const CreatableSelect = ({
                     className={`add ${styles["select-add"]}`}
                     onClick={onAddClick}
                   >
-                    <IconClickable src={Utilities.adddark} />
+                    <IconClickable src={isAddIconDark ? Utilities.adddark : Utilities.addLight} />
                     <span>{addText}</span>
                   </div>
                 )}
