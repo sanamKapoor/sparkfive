@@ -1,13 +1,22 @@
 import React, { ReactNode } from "react";
 import styles from "./nested-heading.module.css";
 
-const ReusableHeading = ({ totalCount, text, icon, }: { totalCount?: number, text: string, icon: ReactNode }) => {
+const ReusableHeading = ({ headingTrue, totalCount, text, icon, headingClick, headingClickType = "" }: {
+  totalCount?: number, text: string, icon: ReactNode,
+  headingClick?: Function,
+  headingClickType?: string,
+  headingTrue?: boolean
+}) => {
 
   return (
     <div className={styles["heading-contents"]}>
-      <div className={styles["sidenav-heading"]}>{`${text} ${totalCount ? totalCount : ""}`}</div>
+      <div className={`${styles["sidenav-heading"]} ${headingTrue ? styles["active"] : ""}`} onClick={() => headingClick(headingClickType)}
+        style={{ cursor: "pointer" }}
+      >
+        {`${text} ${totalCount ? `(${totalCount})` : ""}`}
+      </div>
       {icon && <div className="left-icon">{icon}</div>}
-    </div>
+    </div >
   );
 };
 

@@ -5,6 +5,7 @@ export default function useSortedAssets(
   assets,
   initialSortValue = ""
 ): [any[], string, any] {
+
   const [sortedAssets, setSortedAssets] = useState([]);
   const [currentSortAttribute, setCurrentSortAttribute] =
     useState(initialSortValue);

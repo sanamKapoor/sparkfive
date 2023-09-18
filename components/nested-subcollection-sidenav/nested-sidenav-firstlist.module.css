@@ -21,6 +21,11 @@
     line-height: 18px;
     color:var(--color-prim-navy);
 }
+.active {
+    background:var(--color-sec-lightblue);
+    border-radius: 4px;
+    padding: 4px;
+  }
 .icon-description{
     max-width: 15ch;
     overflow: hidden;

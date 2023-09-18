@@ -36,24 +36,24 @@ import ChangeThumbnail from "../modals/change-thumnail-modal";
 const AssetGrid = ({
   activeView = "grid",
   isShare = false,
-  onFilesDataGet = (files) => { },
+  onFilesDataGet = (files: any) => { },
   toggleSelected,
   mode = "assets",
   activeSortFilter = {},
-  deleteFolder = (id) => { },
+  deleteFolder = (id: string) => { },
   itemSize = "regular",
   activeFolder = "",
   type = "",
   itemId = "",
   getFolders = () => { },
   loadMore = () => { },
-  viewFolder = (id) => { },
+  viewFolder = (id: string) => { },
   sharePath = "",
   openFilter,
   onCloseDetailOverlay = (assetData) => { },
   setWidthCard,
   widthCard,
-}) => {
+}: any) => {
   let isDragging;
   if (!isShare) isDragging = useDropzone();
   const {

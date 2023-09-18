@@ -135,12 +135,15 @@ export const AssetContext = createContext({
   setSidenavFolderList: (folders, replace, ignoreTotalItems) => { },
   sidenavFolderNextPage: 0,
   setSidenavFolderNextPage: () => { },
-  sidenavTotalCount: 0,
-  setSidenavTotalCount: () => { },
+  sidenavTotalCollectionCount: 0,
+  setSidenavTotalCollectionCount: () => { },
   sidenavFolderChildList: {},
   setSidenavFolderChildList: (data, id, replace) => { },
   sidebarOpen: true,
-  setSidebarOpen: (sidebarValue) => { }
+  setSidebarOpen: (sidebarValue) => { },
+  sidenavFolderChildList: {},
+  setSidenavFolderChildList: (data, id, replace) => { },
+
 });
 
 export const TeamContext = createContext({

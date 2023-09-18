@@ -16,9 +16,11 @@ export default {
     }
   }),
   getAssets: (queryData = {}) => axios.get(`${assetUrl}?${querystring.encode(queryData)}`),
+  getAssetsCountDropdown: (queryData = {}) => axios.get(`${assetUrl}/assetsCount?${querystring.encode(queryData)}`),
+
   searchAssets: (queryData = {}) => axios.get(`${assetUrl}/search/filename?${querystring.encode(queryData)}`),
   getVersions: (versionGroup) => axios.get(`${assetUrl}/versions-of/${versionGroup}`),
-  checkDuplicates: (fileNames) => axios.post(`${assetUrl}/check-duplicates`, {fileNames}),
+  checkDuplicates: (fileNames) => axios.post(`${assetUrl}/check-duplicates`, { fileNames }),
   revertVersion: ({ revertAssetId, versionGroup } = {}) => axios.post(`${assetUrl}/revert-version`, { revertAssetId, versionGroup }),
   getNotes: (id) => axios.get(`${assetUrl}/get-notes/${id}`),
   saveNote: (note = {}) => axios.post(`${assetUrl}/save-note`, note),
@@ -54,7 +56,7 @@ export default {
   addCustomFields: (id, data) => axios.post(`${assetUrl}/${id}/custom-fields`, data),
   removeCustomFields: (id, tagId) => axios.delete(`${assetUrl}/${id}/custom-fields/${tagId}`),
 
-  generateThumbnails: ({assetIds}) => axios.post(`${assetUrl}/generate-thumbnails`, { assetIds }),
+  generateThumbnails: ({ assetIds }) => axios.post(`${assetUrl}/generate-thumbnails`, { assetIds }),
 
 
   downloadAll: (data, filters) => {

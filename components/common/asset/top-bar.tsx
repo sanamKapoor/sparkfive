@@ -180,7 +180,7 @@ const TopBar = ({
                       onClick={() => setShowTabs(!showTabs)}
                     />
                     <li className={styles["tab-list-item"]}>
-                      {/* {tabs
+                      {tabs
                         .filter(
                           (view) => activeSortFilter.mainFilter === view.name
                         )
@@ -201,8 +201,8 @@ const TopBar = ({
                               setSortFilterValue("mainFilter", view.name)
                             }
                           />
-                        ))} */}
-                      <NavHeading title="assets" />
+                        ))}
+                      {/* <NavHeading title="assets" /> */}
                     </li>
                     {showTabs && (
                       <Dropdown
@@ -219,47 +219,49 @@ const TopBar = ({
                     )}
                   </div>
                 ) : (
-                  // tabs.map((view) => {
-                  //   return (
-                  //     <li key={view.name} className={styles["tab-list-item"]}>
-                  //       {(!activeFolder || !view.omitFolder) &&
-                  //         (!isShare ||
-                  //           (isShare &&
-                  //             !view.omitShare &&
-                  //             view.hideOnSingle !== singleCollection)) &&
-                  //         (view.requirePermissions.length === 0 ||
-                  //           (view.requirePermissions.length > 0 &&
-                  //             hasPermission(view.requirePermissions))) && (
-                  //           <Button
-                  //             key={view.name}
-                  //             text={view.text}
-                  //             className={
-                  //               activeSortFilter.mainFilter === view.name
-                  //                 ? "section-container section-active"
-                  //                 : "section-container"
-                  //             }
-                  //             onClick={() =>
-                  //               setSortFilterValue("mainFilter", view.name)
-                  //             }
-                  //           />
-                  //         )}
-                  //     </li>
-                  //   );
-                  // })
-                  < NavHeading title="All Assets" />
+                  tabs.map((view) => {
+                    return (
+                      <li key={view.name} className={styles["tab-list-item"]}>
+                        {(!activeFolder || !view.omitFolder) &&
+                          (!isShare ||
+                            (isShare &&
+                              !view.omitShare &&
+                              view.hideOnSingle !== singleCollection)) &&
+                          (view.requirePermissions.length === 0 ||
+                            (view.requirePermissions.length > 0 &&
+                              hasPermission(view.requirePermissions))) && (
+                            <Button
+                              key={view.name}
+                              text={view.text}
+                              className={
+                                activeSortFilter.mainFilter === view.name
+                                  ? "section-container section-active"
+                                  : "section-container"
+                              }
+                              onClick={() =>
+                                setSortFilterValue("mainFilter", view.name)
+                              }
+                            />
+                          )}
+                      </li>
+                    );
+                  })
+                  // < NavHeading title="All Assets" />
                 )}
               </ul>
             </div>
-          ) : (
-            <div className={styles.filters}>
-              <h2>Deleted Assets</h2>
-              <div></div>
-              <span className={styles["content"]}>
-                Deleted assets are retained for 60 days before permanent
-                removal. Admin can recover deleted assets within 60 days
-              </span>
-            </div>
-          )}
+          ) :
+            (
+              <div className={styles.filters}>
+                <h2>Deleted Assets</h2>
+                <div></div>
+                <span className={styles["content"]}>
+                  Deleted assets are retained for 60 days before permanent
+                  removal. Admin can recover deleted assets within 60 days
+                </span>
+              </div>
+            )
+          }
         </div>
         <div className={styles["sec-filters"]}>
           {!isMobile && !isShare && !activeSearchOverlay && (

@@ -31,6 +31,8 @@ const FolderGridItem = ({
   length,
   assetsCount,
   assets,
+  totalchildassests,
+  totalchild,
   viewFolder,
   isLoading = false,
   deleteFolder,
@@ -267,7 +269,8 @@ const FolderGridItem = ({
               </span>
             )}
             <div className={styles["details-wrapper"]}>
-              <div className="secondary-text">{`${assetsCount} Assets`}</div>
+              <div className="secondary-text">{`${Number(assetsCount) + Number(totalchildassests)} Assets 
+              ${Number(totalchild) !== 0 ? Number(totalchild) : ""}${Number(totalchild) !== 0 ? " Subcollection" : ""}`}</div>
             </div>
           </div>
           <FolderOptions

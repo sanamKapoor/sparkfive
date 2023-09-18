@@ -39,28 +39,34 @@ interface Item {
   length: number;
 }
 
-
 const NestedSidenavDropdown = () => {
+
   const {
     sidenavFolderList,
     sidenavFolderNextPage,
     setSidenavFolderList,
     sidenavFolderChildList,
-    setSidenavFolderChildList,
+    setSidenavFolderChildList
   } = useContext(AssetContext);
+
   const {
     term,
-  } = useContext(FilterContext);
+    activeSortFilter
+  } = useContext(FilterContext) as { term: any, activeSortFilter: any };
   const [showDropdown, setShowDropdown] = useState(new Array(sidenavFolderList.length).fill(false));
   const [isFolderLoading, SetIsFolderLoading] = useState(false)
   const [subFolderLoadingState, setSubFolderLoadingState] = useState(new Map())
+  const [firstLoaded, setFirstLoaded] = useState(false);
 
   const getSubFolders = async (id: string, page: number, replace: boolean) => {
-    setSubFolderLoadingState((map) => new Map(map.set(id, "true")))
+
+    setSubFolderLoadingState((map) => new Map(map.set(id, true)))
+
     const queryParams = {
       page: replace ? 1 : page,
       pageSize: 5
     };
+
     const { data } = await folderApi.getSubFolders({
       ...queryParams,
     }, id);
@@ -69,7 +75,8 @@ const NestedSidenavDropdown = () => {
       id,
       replace
     )
-    setSubFolderLoadingState((map) => { map.delete(id); return map })
+
+    setSubFolderLoadingState((map) => new Map(map.set(id, false)))
 
     return sidenavFolderChildList;
   }
@@ -88,7 +95,7 @@ const NestedSidenavDropdown = () => {
   };
 
   const keyResultsFetch = (key: string, type: string) => {
-    const { results, next, total } = sidenavFolderChildList.get(key);
+    const { results, next } = sidenavFolderChildList.get(key);
     if (type === 'record') {
       return results || []
     }
@@ -98,13 +105,23 @@ const NestedSidenavDropdown = () => {
   const getFolders = async (replace = true) => {
     try {
       SetIsFolderLoading(true);
-      const field = 'createdAt'
-      const order = 'desc'
-      const queryParams = {
+      const { field, order } = activeSortFilter.sort;
+      const queryParams: {
+        page: number,
+        sortField: string,
+        sortOrder: string,
+        folders?: string[]
+
+      } = {
         page: replace ? 1 : sidenavFolderNextPage,
         sortField: field,
         sortOrder: order,
       };
+      if (activeSortFilter?.filterFolders?.length > 0) {
+        queryParams.folders = activeSortFilter.filterFolders
+          .map((item: any) => item.value)
+          .join(",");
+      }
       const { data } = await folderApi.getFolders({
         ...queryParams,
       });
@@ -118,7 +135,14 @@ const NestedSidenavDropdown = () => {
     }
   };
 
-  useEffect(() => { getFolders(false) }, []);
+  useEffect(() => {
+    if (firstLoaded) {
+      if (activeSortFilter.mainFilter === "folders") {
+        getFolders(true);
+      }
+    }
+    setFirstLoaded(true)
+  }, [activeSortFilter]);
 
   return (
     <div>
@@ -128,7 +152,7 @@ const NestedSidenavDropdown = () => {
             <div key={index} className={`${styles["flex"]} ${styles.nestedbox}`}>
               <img className={showDropdown[index] ? styles.iconClick : styles.rightIcon} src={Utilities.arrowBlue} onClick={() => toggleDropdown(index, item, true)} />
               <div className={styles.w100}>
-                <div className={`${styles["dropdownMenu"]} ${styles.active}`}>
+                <div className={`${styles["dropdownMenu"]} ${showDropdown[index] ? styles.active : ""}`} >
                   <div className={styles.flex}>
                     <img src={Utilities.folder} />
                     <div className={styles["icon-descriptions"]}>
@@ -176,7 +200,16 @@ const NestedSidenavDropdown = () => {
                       ))}
                       {
                         keyResultsFetch(item.id, "next") >= 0 &&
-                        <span className={styles.desc} onClick={() => { getSubFolders(item.id, keyResultsFetch(item.id, "next"), false); }} style={{ cursor: "pointer" }}>{subFolderLoadingState.has(item.id) ? "Loading..." : "Load More"}</span>
+                        <span className={styles.desc} onClick={() => { getSubFolders(item.id, keyResultsFetch(item.id, "next"), false); }}
+                          style={{ cursor: "pointer" }}>
+                          {
+                            subFolderLoadingState.get(item.id)
+                              ?
+                              "Loading..."
+                              :
+                              "Load More"
+                          }
+                        </span>
                       }
                     </>
                   }

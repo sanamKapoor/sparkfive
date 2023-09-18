@@ -12,13 +12,7 @@ interface MyComponentProps {
   type: string
   parentId?: string
 }
-interface ErrorResponse {
-  response: {
-    data: {
-      message: string;
-    };
-  };
-}
+
 const NestedButton: React.FC<MyComponentProps> = ({ children, type, parentId }) => {
   const [activeModal, setActiveModal] = useState("");
   const [disableButtons, setDisableButtons] = useState(false)
@@ -37,8 +31,8 @@ const NestedButton: React.FC<MyComponentProps> = ({ children, type, parentId }) 
       }
       const { data } = await folderApi.createFolder(folderData);
       setActiveModal("");
-      setFolders([data, ...folders]);
-      setSidenavFolderList({ results: [data, ...sidenavFolderList] })
+      // setFolders([data, ...folders]); //Todo handle the additiob of folders in subcollection here
+      // setSidenavFolderList({ results: [data, ...sidenavFolderList] })
       setDisableButtons(false)
       toastUtils.success("Collection created successfully");
     } catch (err: any) {

@@ -1,79 +1,109 @@
-import styles from "./nested-sidenav-firstlist.module.css";
-import { Utilities } from "../../assets";
+import React, { useContext, useEffect, useState } from 'react';
 
-import React from "react";
-const NestedFirstlist = () => {
+import styles from './nested-sidenav-firstlist.module.css';
+import assetApi from '../../server-api/asset';
+import {
+  getAssetsFilters,
+  getAssetsSort,
+} from '../../utils/asset';
+import { AssetContext, FilterContext } from '../../context';
+import { sideNavFirstList } from "../../constants/firstList-sidenav"
+
+const NestedFirstlist = ({ headingClick }: {
+  headingClick?: Function
+}) => {
+
+  const {
+    activeFolder,
+    nextPage,
+    addedIds,
+  } = useContext(AssetContext);
+
+  const {
+    activeSortFilter,
+    searchFilterParams,
+    term
+  } = useContext(FilterContext);
+
+  const [listingData, setListingData] = useState({
+    image: "",
+    allAsset: "",
+    video: ""
+  });
+  const [firstLoaded, setFirstLoaded] = useState(false);
+
+  const getAssets = async (replace = true) => {
+    try {
+
+      const { data } = await assetApi.getAssetsCountDropdown({
+        ...getAssetsFilters({
+          replace,
+          activeFolder,
+          addedIds,
+          nextPage,
+          userFilterObject: activeSortFilter,
+        }),
+        term,
+        ...searchFilterParams,
+        ...getAssetsSort(activeSortFilter),
+      });
+
+      const dataInfo = {
+        image: (0).toString(),
+        video: (0).toString(),
+        allAsset: data?.total.toString() || (0).toString(),
+      };
+
+      if (data?.assetsListingCount) {
+        for (const content of data.assetsListingCount) {
+          if (content.key === "image") {
+            dataInfo.image = content.doc_count.toString();
+          }
+          if (content.key === "video") {
+            dataInfo.video = content.doc_count.toString();
+          }
+        }
+      }
+
+      setListingData(dataInfo); // Update the listingData with the received data
+    } catch (err) {
+      // TODO: Handle error
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    // if (firstLoaded) {
+    getAssets(true);
+    // }
+    setFirstLoaded(true)
+  }, [
+    // activeSortFilter
+  ]);
+
   return (
     <div className={styles["sidenav-list1"]}>
       <ul>
-        <li className={`${styles["list1-description"]} ${styles.active}`}>
-          <div className={styles["list1-left-contents"]}>
-            <div className={styles.icon}>
-              <img src={Utilities.assets} />
+        {sideNavFirstList.map((item, index) => (
+          <li onClick={() =>
+            headingClick(item.name)
+          } className={`${styles["list1-description"]} ${activeSortFilter?.mainFilter === item.name ? styles["active"] : ""}`} key={index}>
+            <div className={styles["list1-left-contents"]}>
+              <div className={styles.icon}>
+                <img src={item.icon} alt={item.description} />
+              </div>
+              <div className={styles["icon-description"]}>
+                <span>{item.description}</span>
+              </div>
             </div>
-            <div className={styles["icon-description"]}>
-              <span>All Assets</span>
+            <div className={styles["list1-right-contents"]}>
+              <span>{listingData[item.countValue] || ""}</span>
             </div>
-          </div>
-          <div className={styles["list1-right-contents"]}>
-            <span>396</span>
-          </div>
-        </li>
-        <li className={`${styles["list1-description"]}`}>
-          <div className={styles["list1-left-contents"]}>
-            <div className={styles.icon}>
-              <img src={Utilities.vedio} />
-            </div>
-            <div className={styles["icon-description"]}>
-              <span>Video</span>
-            </div>
-          </div>
-          <div className={styles["list1-right-contents"]}>
-            <span>96</span>
-          </div>
-        </li>
-        <li className={`${styles["list1-description"]}`}>
-          <div className={styles["list1-left-contents"]}>
-            <div className={styles.icon}>
-              <img src={Utilities.images} />
-            </div>
-            <div className={styles["icon-description"]}>
-              <span>Images</span>
-            </div>
-          </div>
-          <div className={styles["list1-right-contents"]}>
-            <span>300</span>
-          </div>
-        </li>
-        <li className={`${styles["list1-description"]}`}>
-          <div className={styles["list1-left-contents"]}>
-            <div className={styles.icon}>
-              <img src={Utilities.product} />
-            </div>
-            <div className={styles["icon-description"]}>
-              <span>Product</span>
-            </div>
-          </div>
-          <div className={styles["list1-right-contents"]}>
-            <span></span>
-          </div>
-        </li>
-        <li className={`${styles["list1-description"]}`}>
-          <div className={styles["list1-left-contents"]}>
-            <div className={styles.icon}>
-              <img src={Utilities.archive} />
-            </div>
-            <div className={styles["icon-description"]}>
-              <span>Archived</span>
-            </div>
-          </div>
-          <div className={styles["list1-right-contents"]}>
-            <span></span>
-          </div>
-        </li>
+          </li>
+        ))}
       </ul>
     </div>
   );
 };
 
-export default NestedFirstlist;
+export default React.memo(NestedFirstlist);

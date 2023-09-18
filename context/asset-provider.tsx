@@ -91,7 +91,7 @@ export default ({ children }) => {
   // sidenamv list count states declared below
   const [sidenavFolderList, setSidenavFolderList] = useState([])
   const [sidenavFolderNextPage, setSidenavFolderNextPage] = useState(1);
-  const [sidenavTotalCount, setSidenavTotalCount] = useState(0)
+  const [sidenavTotalCollectionCount, setSidenavTotalCollectionCount] = useState(0)
   // Upload process
   const [uploadingAssets, setUploadingAssets] = useState([]);
   const [uploadingType, setUploadingType] = useState();
@@ -164,7 +164,6 @@ export default ({ children }) => {
     replace = true,
     ignoreTotalItem = false
   ) => {
-    console.log(inputFolders, "inputFolders")
     const { results, next, total } = inputFolders;
     if (results) inputFolders = results;
     if (next) setNextPage(next);
@@ -204,7 +203,7 @@ export default ({ children }) => {
     let resultedArray: Item[] = [];
     if (results) resultedArray = results;
     if (next) setSidenavFolderNextPage(next);
-    if (total && !ignoreTotalItem) setSidenavTotalCount(total);
+    if (total && !ignoreTotalItem) setSidenavTotalCollectionCount(total);
     if (replace) setSidenavFolderList(resultedArray);
     else
       setSidenavFolderList([
@@ -500,30 +499,22 @@ export default ({ children }) => {
       console.log(`Register socket listener...`);
       // Listen upload file process event
       socket.on("uploadFilesProgress", function (data) {
-        console.log(data, "im here");
         setUploadingPercent(data.percent);
         setUploadRemainingTime(
           `${convertTimeFromSeconds(data.timeLeft)} remaining`
         );
-        console.log(data, "im here2");
 
         // setUploadingFileName("Test.png")
         if (data.fileName) {
           setUploadingFileName(data.fileName);
         }
-        console.log(data, "im here23");
-
         // setUploadingFile(0)
         if (!isNaN(data.uploadingAssets)) {
-          console.log(data, "im here234");
-
           setDropboxUploadingFile(data.uploadingAssets);
         }
       });
-      console.log("im here2345");
 
       socket.on("downloadFilesProgress", function (data) {
-        console.log("im here2346");
         setDownloadingPercent(data.percent);
       });
     }
@@ -531,7 +522,6 @@ export default ({ children }) => {
 
   // Reset active folders if user navigate to other pages
   useEffect(() => {
-    console.log("122121")
     const handleRouteChange = (url, { shallow }) => {
       setActiveFolder("");
     };
@@ -616,8 +606,8 @@ export default ({ children }) => {
     setSidenavFolderList: setSidenavFolderItems,
     sidenavFolderNextPage,
     setSidenavFolderNextPage,
-    sidenavTotalCount,
-    setSidenavTotalCount,
+    sidenavTotalCollectionCount,
+    setSidenavTotalCollectionCount,
     sidenavFolderChildList,
     setSidenavFolderChildList: setSidenavFolderChildListItems,
     sidebarOpen,

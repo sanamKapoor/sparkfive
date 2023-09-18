@@ -33,7 +33,7 @@ export default ({ children, isPublic = false }) => {
       ? selectOptions.sort[3]
       : selectOptions.sort[1];
 
-  const [activeSortFilter, setActiveSortFilter] = useState({
+  const [activeSortFilter, setActiveSortFilter] = useState<any>({
     sort:
       advancedConfig.defaultLandingPage === "allTab"
         ? assetSort
@@ -42,7 +42,7 @@ export default ({ children, isPublic = false }) => {
       advancedConfig.defaultLandingPage === "allTab" ? "all" : "folders",
     ...DEFAULT_FILTERS,
     dimensionsActive: false,
-  });
+  } as any);
 
   const [sharePath, setSharePath] = useState("");
   const [tags, setTags] = useState([]);
@@ -61,7 +61,7 @@ export default ({ children, isPublic = false }) => {
     retailers: [],
     sku: [],
   });
-  const [renderFlag,setRenderFlag] = useState(false);
+  const [renderFlag, setRenderFlag] = useState(false);
 
   const [term, setTerm] = useState("");
 
@@ -451,9 +451,9 @@ export default ({ children, isPublic = false }) => {
   const setSearchTerm = (value) => {
     setTerm(value);
   };
-const setRenderedFlag = (value:boolean) => {
-  setRenderFlag(value)
-}
+  const setRenderedFlag = (value: boolean) => {
+    setRenderFlag(value)
+  }
   const filterValue = {
     loadAll,
     tags,
