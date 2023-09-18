@@ -6,6 +6,17 @@
   font-size: 12px;
   font-weight: 300;
 }
+.update-card-modal> div >div>p{
+  font-weight: 300;
+  font-size: 14px;
+
+}
+
+.update-card-modal p.base_overflow-text__10ayz {
+  font-weight: 300;
+  font-size: 14px;
+  background: pink;
+}
 
 h3.title {
   font-size: 16px;

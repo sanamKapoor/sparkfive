@@ -212,6 +212,9 @@
   padding: 33px 74px;
   position: relative;
 }
+.upload-approval-desc{
+padding-left: 58px;
+}
 @media screen and (max-width: 767px) {
   .confirm-modal-wrapper {
     padding: 33px 44px;
