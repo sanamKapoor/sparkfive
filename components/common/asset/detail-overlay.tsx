@@ -665,11 +665,14 @@ const DetailOverlay = ({
         }
       }
     } catch (e) {
+      const errorResponse = await e.response.data.text() || "{}"
+      const parsedErrorResponse = JSON.parse(errorResponse)
+      console.log(`Error in detail-overlay`)
       updateDownloadingStatus(
         "error",
         0,
         0,
-        "Internal Server Error. Please try again."
+        parsedErrorResponse.message || 'Internal Server Error. Please try again.'
       );
     }
 
