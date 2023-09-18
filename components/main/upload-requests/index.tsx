@@ -1289,7 +1289,7 @@ const UploadRequest = () => {
                       <Button
                         type="button"
                         text="Select All"
-                        className="container secondary"
+                        className="container secondary select-all"
                         onClick={selectAllAssets}
                       />
                     )}
@@ -1350,8 +1350,10 @@ const UploadRequest = () => {
                     {mode === "view" && isAdmin() && (
                       <div className={styles["filter-wrapper"]}>
                         <Select
-                          containerClass={styles["filter-input"]}
-                          additionalClass={styles["filter-by-status"]}
+
+                          containerClass={`${styles['filter-input']} ${styles['filter-main-box']}`}
+                      
+                          additionalClass={`${styles['filter-by-status']} ${styles['filter-inner-box']}`}
                           isClearable={true}
                           options={filterOptions}
                           onChange={(value) => {

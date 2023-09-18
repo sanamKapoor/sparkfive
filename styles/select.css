@@ -146,14 +146,11 @@
   border-bottom-right-radius: 5px;
   max-height: 34px;
 }
-.SelectRoleInput .select-prefix__indicators,
-.regular .select-prefix__indicators {
-  max-height: 50px;
-}
+
 .uploadSelect .select-prefix__indicators {
   max-height: 50px;
-
 }
+
 .customSelect:focus{
   outline: none !important;
 }
