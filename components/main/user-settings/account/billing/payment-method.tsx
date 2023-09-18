@@ -60,7 +60,7 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({
         subText="Please enter your credit card details below"
         closeModal={() => setModalActive(false)}
         noHeightMax={true}
-        additionalClasses={["visible-block"]}
+        additionalClasses={["visible-block",styles['update-card-modal']]}
         modalIsOpen={modalActive}
       >
         <CreditCardForm
