@@ -84,11 +84,11 @@ const Base: React.FC<BaseModalProps> = ({
               closeButtonOnly ? styles["no-border"] : ""
             } ${textWidth && styles["full-width"]}`}
           >
-            {
+            
               <p className={styles["overflow-text"]}>
                 {!closeButtonOnly ? headText : ""}
               </p>
-            }
+            
             <img
               src={Utilities.bigblueClose}
               alt="close"
