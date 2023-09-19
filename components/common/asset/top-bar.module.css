@@ -336,3 +336,7 @@ li.dropdown-title {
     top: 40px;
   }
 }
+
+.container button span {
+  font-size: 24px;
+}

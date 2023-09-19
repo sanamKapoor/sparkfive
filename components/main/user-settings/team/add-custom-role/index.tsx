@@ -16,6 +16,7 @@ import permissionApi from "../../../../../server-api/permission";
 import teamApi from "../../../../../server-api/team";
 import SpinnerOverlay from "../../../../common/spinners/spinner-overlay";
 import MemberPermissions from "../members/team-members/member-permissions";
+import React from "react";
 
 // Server DO NOT return full custom field slots including empty array, so we will generate empty array here
 // The order of result should be match with order of custom field list
@@ -355,6 +356,7 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
                 }
               })}
             </div>
+            <div className={`${styles['role-save-btn']}`}>
             <Button
               type={"button"}
               text="Save"
@@ -362,6 +364,7 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
               onClick={onSubmit}
               disabled={!name}
             />
+            </div>
           </div>
         )}
 
