@@ -10,12 +10,12 @@ const AssetImg = ({
   type = "image",
   name,
   opaque = false,
-  onClick = () => {},
+  onClick = () => { },
   imgClass = "",
   style = {},
   activeFilter = "",
   isResize,
-}) => {
+}: any) => {
   const [loaded, setLoaded] = useState(false);
 
   let finalImg = assetImg;
@@ -42,11 +42,9 @@ const AssetImg = ({
       <img
         onClick={onClick}
         src={finalImg}
-        className={`asset-img ${
-          !isResize ? styles.asset : styles.asset__crop
-        } ${opaque && styles.opaque} ${imgClass} ${styles[imgClass]} ${
-          styles[activeFilter]
-        }`}
+        className={`asset-img ${!isResize ? styles.asset : styles.asset__crop
+          } ${opaque && styles.opaque} ${imgClass} ${styles[imgClass]} ${styles[activeFilter]
+          }`}
         onLoad={() => setLoaded(true)}
         onError={(e) => {
           setLoaded(false);
@@ -55,14 +53,14 @@ const AssetImg = ({
           loaded
             ? { ...style }
             : {
-                opacity: 0,
-                overflow: "hidden",
-                height: 0,
-                width: 0,
-                margin: 0,
-                padding: 0,
-                border: "none",
-              }
+              opacity: 0,
+              overflow: "hidden",
+              height: 0,
+              width: 0,
+              margin: 0,
+              padding: 0,
+              border: "none",
+            }
         }
       />
     </>

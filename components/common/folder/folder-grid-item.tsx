@@ -36,10 +36,10 @@ const FolderGridItem = ({
   viewFolder,
   isLoading = false,
   deleteFolder,
-  shareAssets = (folder) => { },
+  shareAssets = (folder: string) => { },
   changeThumbnail,
-  deleteThumbnail = (folder) => { },
-  copyShareLink = (folder) => { },
+  deleteThumbnail = (folder: string) => { },
+  copyShareLink = (folder: string) => { },
   toggleSelected,
   copyEnabled,
   sharePath = "",
@@ -52,7 +52,8 @@ const FolderGridItem = ({
   isThumbnailNameEditable = false,
   focusedItem,
   setFocusedItem,
-}) => {
+  folderType,
+}: any) => {
   const { updateDownloadingStatus, folders, setFolders } =
     useContext(AssetContext);
 
@@ -192,7 +193,6 @@ const FolderGridItem = ({
           {thumbnailPath && (
             <AssetImg
               assetImg={thumbnailPath}
-              isCollection={false}
               imgClass="maxHeight"
               style={{ maxWidth: "330px !important" }}
             />
@@ -269,9 +269,12 @@ const FolderGridItem = ({
               </span>
             )}
             <div className={styles["details-wrapper"]}>
-              <div className="secondary-text">{`${Number(assetsCount) + Number(totalchildassests)} Assets 
+              {
+                folderType === "SubCollection" ? <div className="secondary-text">{`${assets?.length || 0} Assets`}</div>
+                  :
+                  <div className="secondary-text">{`${Number(assetsCount) + Number(totalchildassests)} Assets 
               ${Number(totalchild) !== 0 ? Number(totalchild) : ""}${Number(totalchild) !== 0 ? " Subcollection" : ""}`}</div>
-            </div>
+              }</div>
           </div>
           <FolderOptions
             activeFolderId={id}

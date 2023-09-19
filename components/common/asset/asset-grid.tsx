@@ -368,41 +368,28 @@ const AssetGrid = ({
             `}
           >
             {mode === "SubCollectionView" &&
-              <SubCollection></SubCollection>
-              // folders.map((folder, index) => {
-              //   return (
-              //     <li
-              //       className={styles["grid-item"]}
-              //       key={folder.id || index}
-              //       // onClick={(e) => handleFocusChange(e, folder.id)}
-              //       ref={ref}
-              //       style={{ width: `$${widthCard}px` }}
-              //     >
-              //       <FolderGridItem
-              //         {...folder}
-              //         isShare={isShare}
-              //         sharePath={sharePath}
-              //         toggleSelected={() => toggleSelected(folder.id)}
-              //         viewFolder={() => viewFolder(folder.id, "SubCollection")}
-              //         deleteFolder={() => deleteFolder(folder.id)}
-              //         copyShareLink={() => copyShareLink(folder)}
-              //         copyEnabled={getShareIsEnabled(folder)}
-              //         openFilter={openFilter}
-              //         shareAssets={() =>
-              //           beginAssetOperation({ folder }, "shareFolders")
-              //         }
-              //         changeThumbnail={beginChangeThumbnailOperation}
-              //         deleteThumbnail={() =>
-              //           deleteThumbnail({ folder }, "shareFolders")
-              //         }
-              //         activeView={activeView || mode}
-              //         isThumbnailNameEditable={isThumbnailNameEditable}
-              //         focusedItem={focusedItem}
-              //         setFocusedItem={setFocusedItem}
-              //       />
-              //     </li>
-              //   );
-              // })
+              <SubCollection
+                activeView={activeView}
+                isShare
+                toggleSelected={toggleSelected}
+                mode={mode}
+                deleteFolder={deleteFolder}
+                viewFolder={viewFolder}
+                sharePath={sharePath}
+                openFilter
+                widthCard
+                ref={ref}
+                copyShareLink
+                getShareIsEnabled={getShareIsEnabled}
+                beginAssetOperation={beginAssetOperation}
+                beginChangeThumbnailOperation={beginChangeThumbnailOperation}
+                deleteThumbnail={deleteThumbnail}
+                isThumbnailNameEditable={isThumbnailNameEditable}
+                setFocusedItem={setFocusedItem}
+                focusedItem
+                handleFocusChange={handleFocusChange}
+              />
+
             }
 
             {mode === "assets" &&
@@ -464,7 +451,7 @@ const AssetGrid = ({
                   <li
                     className={styles["grid-item"]}
                     key={folder.id || index}
-                    // onClick={(e) => handleFocusChange(e, folder.id)}
+                    onClick={(e) => handleFocusChange(e, folder.id)}
                     ref={ref}
                     style={{ width: `$${widthCard}px` }}
                   >

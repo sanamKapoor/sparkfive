@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import styles from "./Navheading.module.css";
 import { Utilities } from "../../assets";
 import Button from "../common/buttons/button";
+
 const NavHeading = () => {
- 
+
   return (
     <>
       <div className={styles.menuWrapper}>
@@ -21,7 +22,7 @@ const NavHeading = () => {
         </div>
         <span className={styles.count}>396</span>
       </div>
-</>
+    </>
   );
 };
 export default NavHeading;

@@ -107,6 +107,7 @@ const AssetsLibrary = () => {
   const [firstLoaded, setFirstLoaded] = useState(false);
 
   const [renameModalOpen, setRenameModalOpen] = useState(false);
+
   const [openFilter, setOpenFilter] = useState(
     activeSortFilter?.mainFilter === "assets" ? true : false
   );

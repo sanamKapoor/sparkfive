@@ -1,26 +1,44 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import styles from "./sub-collection.module.css";
 import { AppImg, Utilities } from "../../assets";
 import Button from "../common/buttons/button";
 import { AssetContext } from "../../context";
+import FolderGridItem from "../common/folder/folder-grid-item";
 
-const SubCollection = () => {
+const SubCollection = (
+  {
+    activeView = "grid",
+    isShare = false,
+    toggleSelected,
+    mode = "assets",
+    deleteFolder = (id: string) => { },
+    viewFolder = (id: string) => { },
+    sharePath = "",
+    openFilter,
+    widthCard,
+    ref,
+    copyShareLink,
+    getShareIsEnabled,
+    beginAssetOperation,
+    beginChangeThumbnailOperation,
+    deleteThumbnail,
+    isThumbnailNameEditable,
+    setFocusedItem,
+    focusedItem,
+    handleFocusChange
+  }: any) => {
+
   const [isChecked, setIsChecked] = useState(false);
 
   const handleCircleClick = () => {
     setIsChecked(!isChecked);
   };
 
-
   const {
-    setSubFoldersViewList,
     subFoldersViewList: { results, next, total },
   } = useContext(AssetContext);
 
 
-
-
-  const array = new Array<number>(4, 2, 3, 4);
   return (
     <>
       <div className={`${styles["sub-collection-heading"]}`}>
@@ -46,6 +64,8 @@ const SubCollection = () => {
         </div>
       </div>
       <div className={styles.cardsWrapper}>
+
+
         {results.map((item) => {
           return (
             <div>
@@ -64,6 +84,8 @@ const SubCollection = () => {
                     <img src={AppImg.abstraction4} />
                   </div>
                 </div>
+
+
                 <div className={styles["image-button-wrapper"]}>
                   <Button
                     className="container primary"
@@ -71,7 +93,9 @@ const SubCollection = () => {
                     type={"button"}
                   />
                 </div>
+
               </div>
+
               <div className={styles.cardFooter}>
                 <div>
                   <span className={styles.heading}>House</span>
@@ -84,7 +108,46 @@ const SubCollection = () => {
             </div>
           )
         })}
-      </div>
+        {/* {results.map((folder, index) => {
+          return (
+            <li
+              className={styles["grid-item"]}
+              key={folder.id || index}
+              onClick={(e) => handleFocusChange(e, folder.id)}
+              ref={ref}
+              style={{ width: `$${widthCard}px` }}
+            >
+              <FolderGridItem
+                {...folder}
+                isShare={isShare}
+                sharePath={sharePath}
+                toggleSelected={() => toggleSelected(folder.id)}
+                viewFolder={() => viewFolder(folder.id)}
+                deleteFolder={() => deleteFolder(folder.id)}
+                copyShareLink={() => copyShareLink(folder)}
+                copyEnabled={getShareIsEnabled(folder)}
+                openFilter={openFilter}
+                shareAssets={() =>
+                  beginAssetOperation({ folder }, "shareFolders")
+                }
+                changeThumbnail={beginChangeThumbnailOperation}
+                deleteThumbnail={() =>
+                  deleteThumbnail({ folder }, "shareFolders")
+                }
+                activeView={activeView || mode}
+                isThumbnailNameEditable={isThumbnailNameEditable}
+                focusedItem={focusedItem}
+                setFocusedItem={setFocusedItem}
+                folderType="SubCollection"
+              />
+            </li>
+          );
+        })
+        } */}
+
+
+
+      </div >
     </>
   );
 };
