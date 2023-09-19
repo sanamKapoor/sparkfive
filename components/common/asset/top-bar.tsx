@@ -50,6 +50,7 @@ const TopBar = ({
     setLastUploadedFolder,
     folders,
     setActiveFolder,
+    setFolders
   } = useContext(AssetContext);
 
   const { hasPermission, advancedConfig } =
@@ -220,34 +221,34 @@ const TopBar = ({
                     )}
                   </div>
                 ) : (
-                  // tabs.map((view) => {
-                  //   return (
-                  //     <li key={view.name} className={styles["tab-list-item"]}>
-                  //       {(!activeFolder || !view.omitFolder) &&
-                  //         (!isShare ||
-                  //           (isShare &&
-                  //             !view.omitShare &&
-                  //             view.hideOnSingle !== singleCollection)) &&
-                  //         (view.requirePermissions.length === 0 ||
-                  //           (view.requirePermissions.length > 0 &&
-                  //             hasPermission(view.requirePermissions))) && (
-                  //           <Button
-                  //             key={view.name}
-                  //             text={view.text}
-                  //             className={
-                  //               activeSortFilter.mainFilter === view.name
-                  //                 ? "section-container section-active"
-                  //                 : "section-container"
-                  //             }
-                  //             onClick={() =>
-                  //               setSortFilterValue("mainFilter", view.name)
-                  //             }
-                  //           />
-                  //         )}
-                  //     </li>
-                  //   );
-                  // })
-                  < NavHeading />
+                  tabs.map((view) => {
+                    return (
+                      <li key={view.name} className={styles["tab-list-item"]}>
+                        {(!activeFolder || !view.omitFolder) &&
+                          (!isShare ||
+                            (isShare &&
+                              !view.omitShare &&
+                              view.hideOnSingle !== singleCollection)) &&
+                          (view.requirePermissions.length === 0 ||
+                            (view.requirePermissions.length > 0 &&
+                              hasPermission(view.requirePermissions))) && (
+                            <Button
+                              key={view.name}
+                              text={view.text}
+                              className={
+                                activeSortFilter.mainFilter === view.name
+                                  ? "section-container section-active"
+                                  : "section-container"
+                              }
+                              onClick={() =>
+                                setSortFilterValue("mainFilter", view.name)
+                              }
+                            />
+                          )}
+                      </li>
+                    );
+                  })
+                  // < NavHeading />
                 )}
               </ul>
             </div>

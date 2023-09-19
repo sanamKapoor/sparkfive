@@ -36,12 +36,8 @@ import UploadStatusOverlayAssets from '../../upload-status-overlay-assets';
 import SearchOverlay from '../search-overlay-assets';
 import styles from './index.module.css';
 import { Utilities } from '../../../assets';
-import SubCollection from '../../Sub-collection/sub-collection';
-import AllCollection from '../../All-Collection/all-collection';
-import CollectionData from '../../All-Collection/List-view/all-collection-data';
-import SubCollectionData from '../../Sub-collection/List-view/sub-collection-data';
-import SubCollectionHeading from '../../Sub-collection/List-view/sub-collection-heading';
 
+import SubCollection from '../../new-subcollection-design/Sub-collection/sub-collection';
 // Components
 
 const AssetsLibrary = () => {
@@ -54,6 +50,8 @@ const AssetsLibrary = () => {
     lastUploadedFolder,
     setPlaceHolders,
     activeFolder,
+    activeSubFolders,
+    setActiveSubFolders,
     setActiveFolder,
     setActivePageMode,
     needsFetch,
@@ -78,7 +76,9 @@ const AssetsLibrary = () => {
     setCurrentViewAsset,
     setDetailOverlayId,
     sidebarOpen,
-    setSidebarOpen
+    setSidebarOpen,
+    setSubFoldersViewList,
+    subFoldersViewList,
   } = useContext(AssetContext);
 
   const {
@@ -92,7 +92,7 @@ const AssetsLibrary = () => {
     loadFolders,
     campaigns,
     loadCampaigns,
-  } = useContext(FilterContext);
+  } = useContext(FilterContext) as any;
 
   const { advancedConfig, hasPermission } = useContext(UserContext);
 
@@ -225,11 +225,17 @@ const AssetsLibrary = () => {
           setFirstLoaded(true);
         }
       }
+
+      console.log("in useEffect")
       if (firstLoaded && renderFlag) {
         setActivePageMode("library");
         if (activeSortFilter.mainFilter === "folders") {
           setActiveMode("folders");
           getFolders();
+        } else if (activeSortFilter.mainFilter === "SubCollectionView" && activeSubFolders !== "") {
+          console.log("12211")
+          setActiveMode("SubCollectionView");
+          getSubCollectionsData();
         } else {
           setActiveMode("assets");
           setAssets([]);
@@ -240,6 +246,7 @@ const AssetsLibrary = () => {
   }, [activeSortFilter, firstLoaded, term]);
 
   useEffect(() => {
+    console.log("🚀 ~ file: index.tsx:242 ~ useEffect ~ firstLoaded:", 11111212)
     if (firstLoaded && activeFolder !== "") {
       setActiveSortFilter({
         ...activeSortFilter,
@@ -247,6 +254,18 @@ const AssetsLibrary = () => {
       });
     }
   }, [activeFolder]);
+
+
+  useEffect(() => {
+    if (firstLoaded && activeSubFolders !== "") {
+      console.log("in active")
+      setActiveSortFilter({
+        ...activeSortFilter,
+        mainFilter: "SubCollectionView",
+      });
+    }
+  }, [activeSubFolders]);
+
 
   useEffect(() => {
     if (needsFetch === "assets") {
@@ -293,6 +312,7 @@ const AssetsLibrary = () => {
   const updateSortFilterByAdvConfig = async (params: any = {}) => {
     let defaultTab = getDefaultTab();
     const filters = Object.keys(router.query);
+    console.log("🚀 ~ file: index.tsx:294 ~ updateSortFilterByAdvConfig ~ filters:", filters)
     if (filters && filters.length) {
       defaultTab = filters[0] === "collection" ? "folders" : "all";
     } else if (params.mainFilter) {
@@ -747,6 +767,29 @@ const AssetsLibrary = () => {
     }
   };
 
+  const getSubCollectionsData = async (replace = true) => {
+    try {
+      // don't reload folder on active detail folder/collection
+      if (activeSortFilter.mainFilter !== "SubCollectionView") {
+        return;
+      }
+      const { next } = subFoldersViewList;
+      const queryParams = {
+        page: replace ? 1 : next,
+        pageSize: 5
+      };
+      const { data } = await folderApi.getSubFolders({
+        ...queryParams,
+      }, activeSubFolders);
+      setSubFoldersViewList(data,
+        replace
+      );
+    } catch (err) {
+      // TODO: Handle Error
+      console.log(err);
+    }
+  }
+
   const toggleSelected = (id) => {
     if (activeMode === "assets") {
       const assetIndex = assets.findIndex(
@@ -796,9 +839,13 @@ const AssetsLibrary = () => {
 
   const selectedFolders = folders.filter((folder) => folder.isSelected);
 
-  const viewFolder = async (id) => {
-    setActiveFolder(id);
-    updateSortFilterByAdvConfig({ folderId: id });
+
+  const viewFolder = async (id: string, subCollection: boolean) => {
+    if (!subCollection) {
+      setActiveFolder(id);
+      updateSortFilterByAdvConfig({ folderId: id });
+    }
+    setActiveSubFolders(id)
   };
 
   const deleteFolder = async (id) => {
@@ -918,12 +965,8 @@ const AssetsLibrary = () => {
                   className={`${openFilter && styles["col-wrapper"]} ${styles["grid-wrapper"]
                     } ${activeFolder && styles["active-breadcrumb-item"]}`}
                 >
-                  {/* <SubCollectionHeading />
-                  <AllCollection /> */}
 
-                  {/* <CollectionData></CollectionData> */}
-                  {/* <AllCollection /> */}
-                  {/* <SubCollectionData /> */}
+                  {/* <SubCollection /> */}
                   <DropzoneProvider>
                     {advancedConfig.set && renderFlag && (
                       <AssetGrid

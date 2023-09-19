@@ -685,7 +685,8 @@ const FilterContainer = ({
               </section>
             )}
           </div>
-        </div> : null}
+        </div>
+        : null}
     </>
 
 

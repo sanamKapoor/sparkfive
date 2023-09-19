@@ -39,6 +39,7 @@ interface Item {
   assets: Asset[];
   size: string;
   length: number;
+  [key: string]: any;
 }
 
 
@@ -115,13 +116,14 @@ export default ({ children }) => {
   const [downloadingPercent, setDownloadingPercent] = useState(0); // Percent of uploading process: 0 - 100
   const [downloadingError, setDownloadingError] = useState(""); // Percent of uploading process: 0 - 100
   const [sidenavFolderChildList, setSidenavFolderChildList] = useState(new Map())
-
+  const [activeSubFolders, setActiveSubFolders] = useState("")
   // Asset navigation
   const [detailOverlayId, setDetailOverlayId] = useState(undefined);
   const [sidebarOpen, setSidebarOpen] = useState(true)
 
   // For viewing asset in file associations
   const [currentViewAsset, setCurrentViewAsset] = useState();
+  const [subFoldersViewList, setSubFoldersViewList] = useState({ results: [], next: 0, total: 0 });
 
   const setPlaceHolders = (type, replace = true) => {
     if (type === "asset") {
@@ -168,8 +170,9 @@ export default ({ children }) => {
     if (results) inputFolders = results;
     if (next) setNextPage(next);
     if (total && !ignoreTotalItem) setTotalAssets(total);
-
-    if (replace) setFolders(inputFolders);
+    if (replace) {
+      setFolders((prev) => inputFolders);
+    }
     else
       setFolders([
         ...folders.filter((folder) => !folder.isLoading),
@@ -177,9 +180,20 @@ export default ({ children }) => {
       ]);
   };
 
+  const subFoldersList = (inputFolders: { results: Item[], next: number, total: number }, replace = true) => {
+    const { results, next, total } = inputFolders;
+    setSubFoldersViewList((previousValue) => {
+      return {
+        ...previousValue,
+        results: replace ? results : [...previousValue.results, ...results],
+        next,
+        total
+      };
+    });
+  };
 
   const setSidenavFolderChildListItems = (
-    inputFolders,
+    inputFolders: any,
     id: string,
     replace = true,
   ) => {
@@ -611,7 +625,11 @@ export default ({ children }) => {
     sidenavFolderChildList,
     setSidenavFolderChildList: setSidenavFolderChildListItems,
     sidebarOpen,
-    setSidebarOpen
+    setSidebarOpen,
+    activeSubFolders,
+    setActiveSubFolders,
+    setSubFoldersViewList: subFoldersList,
+    subFoldersViewList,
   };
   return (
     <AssetContext.Provider value={assetsValue}>

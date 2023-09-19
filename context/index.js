@@ -70,6 +70,9 @@ export const AssetContext = createContext({
   activeFolder: "",
   setActiveFolder: (folderId) => { },
 
+  activeSubFolders: "",
+  setActiveSubFolders: (subFolderIds) => { },
+
   activePageMode: "",
   setActivePageMode: (mode) => { },
 
@@ -143,6 +146,8 @@ export const AssetContext = createContext({
   setSidebarOpen: (sidebarValue) => { },
   sidenavFolderChildList: {},
   setSidenavFolderChildList: (data, id, replace) => { },
+  setSubFoldersViewList: (data, id, replace) => { },
+  subFoldersViewList: { results: [], next: 0, total: 0 },
 
 });
 

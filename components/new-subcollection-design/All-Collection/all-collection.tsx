@@ -1,13 +1,15 @@
 import React from "react";
 import styles from "./all-collection.module.css";
-import { AppImg, Utilities } from "../../assets";
-import Button from "../common/buttons/button";
+import { AppImg, Utilities } from "../../../assets";
+import Button from "../../common/buttons/button";
+import SubCollectionHeading from "../sub-collection-heading/sub-collection-heading";
 
 const AllCollection = () => {
   return (
-   <>
+    <>
+      <SubCollectionHeading></SubCollectionHeading>
       <div className={styles.cardsWrapper}>
-       <div>
+        <div>
           <div className={styles.subcollectionCard}>
             <div className={styles.imageGrid}>
               <div className={styles.image}>

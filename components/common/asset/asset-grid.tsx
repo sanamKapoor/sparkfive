@@ -352,11 +352,11 @@ const AssetGrid = ({
           setActiveSearchOverlay={setActiveSearchOverlay}
         />
       )}
-   
-      { <div className={styles["list-wrapper"]}>
+
+      {<div className={styles["list-wrapper"]}>
         {activeView === "grid" && (
           <ul
-            className={`${styles["grid-list"]} ${styles[itemSize]}
+            className={`${mode === "SubCollectionView" ? "" : styles["grid-list"]} ${styles[itemSize]}
             ${mode === "assets"
                 ? openFilter
                   ? styles["grid-filter-" + advancedConfig.assetThumbnail]
@@ -367,6 +367,44 @@ const AssetGrid = ({
               }
             `}
           >
+            {mode === "SubCollectionView" &&
+              <SubCollection></SubCollection>
+              // folders.map((folder, index) => {
+              //   return (
+              //     <li
+              //       className={styles["grid-item"]}
+              //       key={folder.id || index}
+              //       // onClick={(e) => handleFocusChange(e, folder.id)}
+              //       ref={ref}
+              //       style={{ width: `$${widthCard}px` }}
+              //     >
+              //       <FolderGridItem
+              //         {...folder}
+              //         isShare={isShare}
+              //         sharePath={sharePath}
+              //         toggleSelected={() => toggleSelected(folder.id)}
+              //         viewFolder={() => viewFolder(folder.id, "SubCollection")}
+              //         deleteFolder={() => deleteFolder(folder.id)}
+              //         copyShareLink={() => copyShareLink(folder)}
+              //         copyEnabled={getShareIsEnabled(folder)}
+              //         openFilter={openFilter}
+              //         shareAssets={() =>
+              //           beginAssetOperation({ folder }, "shareFolders")
+              //         }
+              //         changeThumbnail={beginChangeThumbnailOperation}
+              //         deleteThumbnail={() =>
+              //           deleteThumbnail({ folder }, "shareFolders")
+              //         }
+              //         activeView={activeView || mode}
+              //         isThumbnailNameEditable={isThumbnailNameEditable}
+              //         focusedItem={focusedItem}
+              //         setFocusedItem={setFocusedItem}
+              //       />
+              //     </li>
+              //   );
+              // })
+            }
+
             {mode === "assets" &&
               assets.map((assetItem, index) => {
                 if (assetItem.status !== "fail") {
@@ -435,7 +473,7 @@ const AssetGrid = ({
                       isShare={isShare}
                       sharePath={sharePath}
                       toggleSelected={() => toggleSelected(folder.id)}
-                      viewFolder={() => viewFolder(folder.id)}
+                      viewFolder={() => viewFolder(folder.id, true)}
                       deleteFolder={() => deleteFolder(folder.id)}
                       copyShareLink={() => copyShareLink(folder)}
                       copyEnabled={getShareIsEnabled(folder)}
@@ -521,7 +559,7 @@ const AssetGrid = ({
                       isShare={isShare}
                       sharePath={sharePath}
                       toggleSelected={() => toggleSelected(folder.id)}
-                      viewFolder={() => viewFolder(folder.id)}
+                      viewFolder={() => viewFolder(folder.id, true)}
                       deleteFolder={() => deleteFolder(folder.id)}
                       index={index}
                       copyShareLink={() => copyShareLink(folder)}
@@ -569,7 +607,7 @@ const AssetGrid = ({
             )}
           </>
         )}
-      </div> }
+      </div>}
 
 
 
@@ -640,23 +678,25 @@ const AssetGrid = ({
       />
 
       {/* Overlay exclusive to page load assets */}
-      {initAsset && (
-        <DetailOverlay
-          isShare={isShare}
-          sharePath={sharePath}
-          asset={initAsset.asset}
-          realUrl={initAsset.realUrl}
-          initialParams={{ side: "comments" }}
-          openShareAsset={() =>
-            beginAssetOperation({ asset: initAsset }, "share")
-          }
-          openDeleteAsset={() => openDeleteAsset(initAsset.asset.id)}
-          closeOverlay={() => setInitAsset(undefined)}
-          loadMore={loadMore}
-          availableNext={nextPage !== -1}
-        />
-      )}
-    </section>
+      {
+        initAsset && (
+          <DetailOverlay
+            isShare={isShare}
+            sharePath={sharePath}
+            asset={initAsset.asset}
+            realUrl={initAsset.realUrl}
+            initialParams={{ side: "comments" }}
+            openShareAsset={() =>
+              beginAssetOperation({ asset: initAsset }, "share")
+            }
+            openDeleteAsset={() => openDeleteAsset(initAsset.asset.id)}
+            closeOverlay={() => setInitAsset(undefined)}
+            loadMore={loadMore}
+            availableNext={nextPage !== -1}
+          />
+        )
+      }
+    </section >
   );
 };
 
