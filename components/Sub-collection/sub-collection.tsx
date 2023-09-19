@@ -6,19 +6,19 @@ import { AssetContext } from "../../context";
 
 const SubCollection = () => {
   const [isChecked, setIsChecked] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
 
   const handleCircleClick = () => {
     setIsChecked(!isChecked);
   };
-
+  const handleClick = () => {
+    setIsClicked(!isClicked);
+  };
 
   const {
     setSubFoldersViewList,
     subFoldersViewList: { results, next, total },
   } = useContext(AssetContext);
-
-
-
 
   const array = new Array<number>(4, 2, 3, 4);
   return (
@@ -32,8 +32,9 @@ const SubCollection = () => {
           <div className={styles.left}>
             <div className={styles.TagsInfo}>
               <div
-                className={`${styles.circle} ${isChecked ? styles.checked : ""
-                  }`}
+                className={`${styles.circle} ${
+                  isChecked ? styles.checked : ""
+                }`}
                 onClick={handleCircleClick}
               >
                 {isChecked && <img src={Utilities.checkIcon} />}
@@ -46,9 +47,9 @@ const SubCollection = () => {
         </div>
       </div>
       <div className={styles.cardsWrapper}>
-        {results.map((item) => {
+        {array.map((item) => {
           return (
-            <div>
+            <div className={`${styles["sub-collection-wrapper"]}`}>
               <div className={styles.subcollectionCard}>
                 <div className={styles.imageGrid}>
                   <div className={styles.image}>
@@ -71,6 +72,16 @@ const SubCollection = () => {
                     type={"button"}
                   />
                 </div>
+                <div className={styles["checked-button"]} onClick={handleClick}>
+                  {isClicked ? (
+                    <img
+                      src={Utilities.radioButtonEnabled}
+                      alt="Enabled Image"
+                    />
+                  ) : (
+                    <img src={Utilities.radioButtonNormal} alt="Normal Image" />
+                  )}
+                </div>
               </div>
               <div className={styles.cardFooter}>
                 <div>
@@ -82,8 +93,11 @@ const SubCollection = () => {
                 </div>
               </div>
             </div>
-          )
+          );
         })}
+      </div>
+      <div className={styles.LoadMorebtn}>
+        <Button text="Load More" type="button" className="container primary" />
       </div>
     </>
   );
