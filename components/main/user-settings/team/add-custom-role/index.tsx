@@ -241,19 +241,6 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
               additionalClasses={styles.RoleInputField}
             />
           </div>
-          <Button
-            type={"button"}
-            text="Save Changes"
-            className="container primary"
-            onClick={onSubmit}
-            disabled={!name}
-          />
-          <Button
-            type={"button"}
-            text="Cancel"
-            className="container secondary"
-            onClick={onCancel}
-          />
         </div>
       </div>
 
@@ -368,6 +355,13 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
                 }
               })}
             </div>
+            <Button
+              type={"button"}
+              text="Save"
+              className="container primary"
+              onClick={onSubmit}
+              disabled={!name}
+            />
           </div>
         )}
 

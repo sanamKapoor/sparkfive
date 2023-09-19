@@ -2,6 +2,7 @@ import { useState } from "react";
 import styles from "./index.module.css";
 
 // Components
+import { IRole } from "../../../../interfaces/user/role";
 import SpinnerOverlay from "../../../common/spinners/spinner-overlay";
 import SwitchableTabsWithProps from "../../../common/switchable-tabs-with-props";
 import AddCustomRole from "./add-custom-role";
@@ -9,7 +10,9 @@ import Members from "./members";
 import Roles from "./roles";
 
 const Team: React.FC = () => {
-  const [selectedRole, setSelectedRole] = useState<string>(undefined);
+  const [selectedRole, setSelectedRole] = useState<IRole | undefined>(
+    undefined
+  );
 
   const [activeTab, setActiveTab] = useState<string>("members");
 
@@ -35,7 +38,10 @@ const Team: React.FC = () => {
       title: "Roles",
       content: Roles,
       props: {
-        onAdd: () => setActiveTab("addCustomRole"),
+        onAdd: () => {
+          setActiveTab("addCustomRole");
+          setSelectedRole(undefined);
+        },
         onEdit: (id: string) => {
           setActiveTab("addCustomRole");
           setSelectedRole(id);
