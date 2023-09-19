@@ -105,8 +105,11 @@
     align-items: center;
     color: #fff;
 }
+.addButton:hover{
+    background-color: var(--color-prim-turquoise-hover);
+}
 .addButton span{
-    font-size: 24px;
+    font-size: 26px;
     font-weight: 500;
     display: flex;
     align-items: center;

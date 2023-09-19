@@ -7,6 +7,7 @@ import { ASSET_EDIT } from "../../../constants/permissions";
 import { UserContext } from "../../../context";
 import Dropdown from "../inputs/dropdown";
 import ItemDropdownWrapper from "../items/item-dropdown-wrapper";
+import Tag from "../misc/tag";
 import ToggleableAbsoluteWrapper from "../misc/toggleable-absolute-wrapper";
 
 const CustomFieldSelector = ({

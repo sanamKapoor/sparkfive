@@ -26,9 +26,8 @@ import { getFolderKeyAndNewNameByFileName } from "../../../utils/upload";
 // Context
 import AssetDuplicateModal from "./asset-duplicate-modal";
 
-import { ASSET_UPLOAD_APPROVAL } from "../../../constants/permissions";
-import Button from "../buttons/button";
 import React from "react";
+import { ASSET_UPLOAD_APPROVAL } from "../../../constants/permissions";
 
 const AssetAddition = ({
   activeFolder = "",
@@ -916,8 +915,10 @@ const AssetAddition = ({
       } asset-addition`}
     >
       {!hasPermission([ASSET_UPLOAD_APPROVAL]) && (
-        // <Button text="+" className="container add"/> 
-        <button className={styles.addButton} ><span>+</span></button>
+        // <Button text="+" className="container add"/>
+        <button className={styles.addButton}>
+          <span>+</span>
+        </button>
       )}
       {children}
     </div>
