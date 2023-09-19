@@ -169,8 +169,12 @@ const AssetHeaderOps = ({
 				// updateDownloadingStatus("done", 0, 0);
 			}
 		} catch (e) {
+			const errorResponse = await e.response.data.text() || "{}"
+			const parsedErrorResponse = JSON.parse(errorResponse)
+
+			console.log(`Error in asset-header-ops`)
 			console.error(e)
-			updateDownloadingStatus('error', 0, 0, 'Internal Server Error. Please try again.')
+			updateDownloadingStatus('error', 0, 0, parsedErrorResponse.message || 'Internal Server Error. Please try again.')
 		}
 
 		// downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets')
@@ -409,7 +413,7 @@ const AssetHeaderOps = ({
 				}
 			</div>
 			{((!isFolder && !isShare) && !deletedAssets) && (
-				
+
 				<>
 										<ConfirmModal
 											closeModal={() => setShowAssociateModalOpen(false)}

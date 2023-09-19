@@ -151,7 +151,8 @@ const CropSidePanel = ({ asset,
             //     api = shareApi
             // }
 
-            const { data } = await download(payload, filters)
+            const result = await download(payload, filters)
+            const { data } = result;
 
             // Download file to storage
             const nameWords = asset.name.split('.')
@@ -160,7 +161,10 @@ const CropSidePanel = ({ asset,
 
             updateDownloadingStatus('none', 0, 0, '')
         } catch (e) {
-            updateDownloadingStatus('error', 0, 0, 'Internal Server Error. Please try again.')
+            const errorResponse = await e.response.data.text() || "{}"
+            const parsedErrorResponse = JSON.parse(errorResponse)
+            console.log(`Error in crop-side-panel`)
+            updateDownloadingStatus('error', 0, 0, parsedErrorResponse.message || 'Internal Server Error. Please try again.')
         }
 
 
@@ -424,7 +428,7 @@ const CropSidePanel = ({ asset,
                             onResetImageSize()
                         } />
                 }
-                <Button className={'m-r-10'} 
+                <Button className={'m-r-10'}
                     text={'Download Edited'}
                     type={'button'}
                     styleType={'primary'}
