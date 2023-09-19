@@ -10,7 +10,6 @@ import urlUtils from "../../../utils/url";
 import useDropzone from "../misc/dropzone";
 import styles from "./asset-grid.module.css";
 
-import assetApi from "../../../server-api/asset";
 import shareApi from "../../../server-api/share-collection";
 
 // Components
@@ -551,7 +550,14 @@ const AssetGrid = ({
             {nextPage > 2 || mode === "folders" ? (
               <>
                 {!loadingAssetsFolders && (
-                  <Waypoint onEnter={()=>{console.log(`on Enter`);loadMore()}} fireOnRapidScroll={false} bottomOffset='-25px'/>
+                  <Waypoint
+                    onEnter={() => {
+                      console.log(`on Enter`);
+                      loadMore();
+                    }}
+                    fireOnRapidScroll={false}
+                    bottomOffset="-25px"
+                  />
                 )}
               </>
             ) : (
