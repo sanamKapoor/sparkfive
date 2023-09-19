@@ -413,7 +413,7 @@ const ShareModal = ({
               styleType={"regular-short"}
             />
             <Button
-              className="container primary m-r-15"
+              className="container primary m-r-15 thumbnail-btn"
               text={"Save"}
               onClick={() => {
                 saveChanges("name");

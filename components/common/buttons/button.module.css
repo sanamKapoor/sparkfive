@@ -359,6 +359,22 @@ min-width: 112px;
   color: #817D9D;
   font-weight: 400;
 }
+.thumbnail-btn{
+  margin: 0px 10px 0px 0px;
+
+}
+
+.change-this-btn {
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  color: #08135e;
+  font-weight: 400;
+  font-size: 12px;
+  background-color: transparent;
+}
+
+
 
 
 
