@@ -71,13 +71,13 @@
   font-size: 12px;
   margin: 8px 0 0;
   font-weight: 300;
-  text-align: center;
+ max-width: 80%;
 }
 
 .text p {
   flex: 1;
   margin: 0;
-  text-align: center;
+  
 }
 
 .text span {

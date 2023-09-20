@@ -103,6 +103,7 @@
     background-color:var(--color-prim-turquoise);
     display: flex;
     align-items: center;
+    justify-content: center;
     color: #fff;
 }
 .addButton:hover{
