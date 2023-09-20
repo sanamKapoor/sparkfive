@@ -163,6 +163,9 @@ export const AssetContext = createContext({
   subFoldersAssetsViewList: { results: [], next: 0, total: 0 },
   setSubFoldersAssetsViewList: (data, replace) => { },
 
+  // Landing Page Header Type(text)
+  setHeaderName: (name) => { },
+  headerName: ""
 });
 
 export const TeamContext = createContext({

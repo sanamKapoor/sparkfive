@@ -41,24 +41,24 @@ const AssetThumbail = ({
   isSelected = false,
   isLoading = false,
   activeFolder = "",
-  toggleSelected = () => {},
-  openDeleteAsset = () => {},
-  openMoveAsset = () => {},
-  openCopyAsset = () => {},
-  openShareAsset = () => {},
-  openArchiveAsset = () => {},
-  downloadAsset = () => {},
-  openRemoveAsset = () => {},
-  loadMore = () => {},
+  toggleSelected = () => { },
+  openDeleteAsset = () => { },
+  openMoveAsset = () => { },
+  openCopyAsset = () => { },
+  openShareAsset = () => { },
+  openArchiveAsset = () => { },
+  downloadAsset = () => { },
+  openRemoveAsset = () => { },
+  // loadMore = () => { },
   handleVersionChange,
   onView = null,
   customComponent = <></>,
   infoWrapperClass = "",
   textWrapperClass = "",
   customIconComponent = <></>,
-  onDisassociate = () => {},
+  onDisassociate = () => { },
   detailOverlay = true,
-  onCloseDetailOverlay = (asset) => {},
+  onCloseDetailOverlay = (asset) => { },
   isThumbnailNameEditable = false,
   focusedItem,
   setFocusedItem,
@@ -205,26 +205,25 @@ const AssetThumbail = ({
               <>
                 {(!showViewButtonOnly ||
                   (showViewButtonOnly && showSelectedAsset)) && (
-                  <div
-                    className={`${styles["selectable-wrapper"]} ${
-                      isSelected && styles["selected-wrapper"]
-                    }`}
-                  >
-                    {isSelected ? (
-                      <IconClickable
-                        src={Utilities.radioButtonEnabled}
-                        additionalClass={styles["select-icon"]}
-                        onClick={toggleSelected}
-                      />
-                    ) : (
-                      <IconClickable
-                        src={Utilities.radioButtonNormal}
-                        additionalClass={styles["select-icon"]}
-                        onClick={toggleSelected}
-                      />
-                    )}
-                  </div>
-                )}
+                    <div
+                      className={`${styles["selectable-wrapper"]} ${isSelected && styles["selected-wrapper"]
+                        }`}
+                    >
+                      {isSelected ? (
+                        <IconClickable
+                          src={Utilities.radioButtonEnabled}
+                          additionalClass={styles["select-icon"]}
+                          onClick={toggleSelected}
+                        />
+                      ) : (
+                        <IconClickable
+                          src={Utilities.radioButtonNormal}
+                          additionalClass={styles["select-icon"]}
+                          onClick={toggleSelected}
+                        />
+                      )}
+                    </div>
+                  )}
                 <div className={styles["image-button-wrapper"]}>
                   <Button
                     className={"container primary"}
@@ -252,9 +251,9 @@ const AssetThumbail = ({
             >
               <div className={styles.folderItemHeading}>
                 {isThumbnailNameEditable &&
-                isEditing &&
-                focusedItem &&
-                focusedItem === asset.id ? (
+                  isEditing &&
+                  focusedItem &&
+                  focusedItem === asset.id ? (
                   <input
                     autoFocus
                     className={`normal-text ${gridStyles["editable-input"]} ${styles["wrap-text"]}`}
@@ -319,7 +318,7 @@ const AssetThumbail = ({
           <div>{customComponent}</div>
         </div>
       </div>
-      {overlayProperties.visible && (
+      {/* {overlayProperties.visible && (
         <DetailOverlay
           sharePath={sharePath}
           isShare={isShare}
@@ -337,7 +336,7 @@ const AssetThumbail = ({
           closeOverlay={onCloseOverlay}
           loadMore={loadMore}
         />
-      )}
+      )} */}
     </>
   );
 };

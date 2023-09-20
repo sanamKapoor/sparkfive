@@ -115,9 +115,9 @@ const DetailOverlay = ({
   realUrl,
   thumbailUrl,
   closeOverlay,
-  openShareAsset = () => {},
-  openDeleteAsset = () => {},
-  loadMore = () => {},
+  openShareAsset = () => { },
+  openDeleteAsset = () => { },
+  loadMore = () => { },
   isShare = false,
   sharePath = "",
   activeFolder = "",
@@ -223,7 +223,6 @@ const DetailOverlay = ({
   const resetValues = () => {
     const width = currentAsset.dimensionWidth;
     const height = currentAsset.dimensionHeight;
-    // debugger
     setPreset({
       label: "None",
       value: "none",
@@ -255,7 +254,7 @@ const DetailOverlay = ({
           setPresetTypes(presetTypes.concat(data));
         }
       }
-    } catch (e) {}
+    } catch (e) { }
   };
 
   const _setActiveCollection = () => {
@@ -920,9 +919,8 @@ const DetailOverlay = ({
 
   return (
     <div
-      className={`app-overlay ${styles.container} ${
-        isShare ? styles.share : ""
-      }`}
+      className={`app-overlay ${styles.container} ${isShare ? styles.share : ""
+        }`}
     >
       {assetDetail && (
         <section id={"detail-overlay"} className={styles.content}>
@@ -1056,9 +1054,8 @@ const DetailOverlay = ({
             </div>
           </div>
           <div
-            className={`${
-              !isShare ? styles["img-wrapper"] : styles["share-img-wrapper"]
-            }${activeFolder && ` ${styles["active-folderimg"]}`}`}
+            className={`${!isShare ? styles["img-wrapper"] : styles["share-img-wrapper"]
+              }${activeFolder && ` ${styles["active-folderimg"]}`}`}
           >
             <div className={styles["notes-wrapper"]}>
               {notes.map(
@@ -1080,12 +1077,12 @@ const DetailOverlay = ({
                     name={assetDetail.name}
                     assetImg={
                       assetDetail.extension === "tiff" ||
-                      assetDetail.extension === "tif" ||
-                      assetDetail.extension === "svg" ||
-                      assetDetail.extension === "svg+xml" ||
-                      assetDetail.extension === "heif" ||
-                      assetDetail.extension === "heic" ||
-                      assetDetail.extension === "cr2"
+                        assetDetail.extension === "tif" ||
+                        assetDetail.extension === "svg" ||
+                        assetDetail.extension === "svg+xml" ||
+                        assetDetail.extension === "heif" ||
+                        assetDetail.extension === "heic" ||
+                        assetDetail.extension === "cr2"
                         ? versionThumbnailUrl
                         : versionRealUrl
                     }
@@ -1332,9 +1329,8 @@ const DetailOverlay = ({
           <IconClickable
             src={Utilities.closePanelLight}
             onClick={() => toggleSideMenu()}
-            additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"} ${
-              styles.expand
-            }`}
+            additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"} ${styles.expand
+              }`}
           />
           {!isShare && (
             <>
@@ -1367,7 +1363,7 @@ const DetailOverlay = ({
                 additionalClass={
                   styles["menu-icon"] + " " + styles["only-mobile-button"]
                 }
-                onClick={() => {}}
+                onClick={() => { }}
               />
               <IconClickable
                 src={isMobile ? Utilities.commentLight : Utilities.comment}
