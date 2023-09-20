@@ -160,6 +160,7 @@ const CropSidePanel = ({ asset,
 
             updateDownloadingStatus('none', 0, 0, '')
         } catch (e) {
+            console.error(e)
             updateDownloadingStatus('error', 0, 0, 'Internal Server Error. Please try again.')
         }
 
@@ -424,7 +425,7 @@ const CropSidePanel = ({ asset,
                             onResetImageSize()
                         } />
                 }
-                <Button className={'m-r-10'} 
+                <Button className={'m-r-10'}
                     text={'Download Edited'}
                     type={'button'}
                     styleType={'primary'}

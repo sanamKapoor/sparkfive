@@ -665,6 +665,7 @@ const DetailOverlay = ({
         }
       }
     } catch (e) {
+      console.error(e)
       updateDownloadingStatus(
         "error",
         0,

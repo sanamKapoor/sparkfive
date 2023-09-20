@@ -215,7 +215,7 @@ const AssetGrid = ({
       // Show processing bar
       updateDownloadingStatus("zipping", 0, totalDownloadingAssets);
 
-      let api: any = assetApi;
+      let api: any = assetsApi;
 
       if (isShare) {
         api = shareApi;
@@ -228,6 +228,7 @@ const AssetGrid = ({
 
       updateDownloadingStatus("done", 0, 0);
     } catch (e) {
+      console.error(e)
       updateDownloadingStatus(
         "error",
         0,
