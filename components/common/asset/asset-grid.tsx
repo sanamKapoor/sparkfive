@@ -228,12 +228,15 @@ const AssetGrid = ({
 
       updateDownloadingStatus("done", 0, 0);
     } catch (e) {
-      console.error(e)
+      const errorResponse = await e.response.data.text() || "{}"
+      const parsedErrorResponse = JSON.parse(errorResponse)
+
+      console.log(`Error in asset-grid`)
       updateDownloadingStatus(
         "error",
         0,
         0,
-        "Internal Server Error. Please try again."
+        parsedErrorResponse.message || 'Internal Server Error. Please try again.'
       );
     }
 

@@ -50,12 +50,16 @@ const AssetRelatedFilesList = ({currentAsset, relatedAssets, associateFileId, on
 
         updateDownloadingStatus("done", 0, 0);
       } catch (e) {
+         const errorResponse = await e.response.data.text() || "{}"
+         const parsedErrorResponse = JSON.parse(errorResponse)
+
+        console.log(`Error in asset-related-files-list`)
         console.error(e);
         updateDownloadingStatus(
           "error",
           0,
           0,
-          "Internal Server Error. Please try again."
+          parsedErrorResponse.message || 'Internal Server Error. Please try again.'
         );
       }
 
@@ -90,7 +94,7 @@ const AssetRelatedFilesList = ({currentAsset, relatedAssets, associateFileId, on
           );
 
           if (assetIndex !== -1) {onChangeRelatedFiles([...relatedAssets.filter(item => item.asset.id !== id)]); }
-           
+
           setIsLoading(false);
           toastUtils.success("Assets disassociated successfully");
         } catch (err) {
@@ -100,7 +104,7 @@ const AssetRelatedFilesList = ({currentAsset, relatedAssets, associateFileId, on
             "Could not disassociate assets, please try again later."
           );
         }
-      };          
+      };
 
 
     const deleteAsset = async (id) => {
