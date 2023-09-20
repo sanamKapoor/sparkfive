@@ -5,14 +5,15 @@ import { utimesSync } from "fs";
 import IconClickable from "../../common/buttons/icon-clickable";
 
 const SubCollectionHeading = () => {
-    const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
 
-    const handleCircleClick = () => {
-      setIsChecked(!isChecked);
-    };
+  const handleCircleClick = () => {
+    setIsChecked(!isChecked);
+  };
+
   return (
     <>
-       <div className={`${styles["sub-collection-heading"]}`}>
+      <div className={`${styles["sub-collection-heading"]}`}>
         <div className={styles.rightSide}>
           <span>Subcollection(4)</span>
           <img src={Utilities.downIcon} />
@@ -21,9 +22,8 @@ const SubCollectionHeading = () => {
           <div className={styles.left}>
             <div className={styles.TagsInfo}>
               <div
-                className={`${styles.circle} ${
-                  isChecked ? styles.checked : ""
-                }`}
+                className={`${styles.circle} ${isChecked ? styles.checked : ""
+                  }`}
                 onClick={handleCircleClick}
               >
                 {isChecked && <img src={Utilities.checkIcon} />}

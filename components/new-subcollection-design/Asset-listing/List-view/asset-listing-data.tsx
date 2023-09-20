@@ -7,6 +7,43 @@ import IconClickable from "../../common/buttons/icon-clickable";
 const AssetData = () => {
   return (
     <>
+      <table className={`${styles["table-head"]}`}>
+       <thead>
+          <tr className={`${styles["tableHead-row"]}`}>
+            <th className={styles.firstColumn}>
+                <div className={styles.headContent}>
+                <span>Name</span>
+              <img src={Utilities.arrowDownUp} />
+                </div>
+             
+            </th>
+            <th className={styles.secondColumn}>
+            <div className={styles.headContent}>
+              <span>Size</span>
+              <img src={Utilities.arrowDownUp} />
+              </div>
+            </th>
+            <th className={styles.thirdColumn}>
+            <div className={styles.headContent}>
+              <span>Uploaded date</span>
+              <img src={Utilities.arrowDownUp} />
+              </div>
+            </th>
+            <th className={styles.thirdColumn}>
+            <div className={styles.headContent}>
+              <span>Date modified</span>
+              <img src={Utilities.arrowDownUp} />
+              </div>
+            </th>
+            <th className={styles.thirdColumn}>
+            <div className={styles.headContent}>
+              <span>Extension</span>
+              <img src={Utilities.arrowDownUp} />
+              </div>
+            </th>
+            <th className={styles.fourthColumn}>Action</th>
+          </tr>
+        </thead>
       <tbody>
         <tr className={`${styles["table-head-row"]}`}>
           <td>
@@ -347,6 +384,7 @@ const AssetData = () => {
        
        
       </tbody>
+      </table>
     </>
   );
 };
