@@ -1,22 +1,32 @@
 .container { 
   /* position: relative; */
-  /* position: fixed; */
+  position: fixed;
   width: 100%;
-  /* top: 81px; */
-  /* left: 0;
-  z-index: 1500;
+  top: 81px;
+  left: 0;
+  z-index: 1300;
 
   background-color: white;
   padding: 33.5px 40px;
-  width: calc(100% - 283px);
-  margin-left: 290px; */
+  width: calc(100% - 320px);
+  margin-left: 327px;
 }
+/* .container-on-toggle{
+  position: fixed;
+  width: 100%;
+  margin-left: 0;
+  max-width: calc(100% - 130px);
+} */
 
 .wrapper {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  /* position: fixed;
+  width: 100%; */
+  /* left: 283px;
+  max-width: calc(100% - 283px); */
 }
 
 .plusIcon {

@@ -989,7 +989,7 @@ const AssetsLibrary = () => {
                   <InputChip /> */}
                 </div>
                 <div
-                  className={`${openFilter && styles["col-wrapper"]} ${styles["grid-wrapper"]
+                  className={`${openFilter && styles["col-wrapper"]} ${styles["grid-wrapper"]} ${styles["grid-wrapper-web"]}
                     } ${activeFolder && styles["active-breadcrumb-item"]}`}
                 >
 

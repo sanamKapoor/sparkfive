@@ -10,6 +10,8 @@
     opacity: 1;
     display: block;
     transition: opacity 0.1s ease-in-out, display 0s linear 0.1s;
+    position: fixed;
+   
   }
   
   .nestedsidenav.hidden {
@@ -18,8 +20,15 @@
   }
   
   .sidenav-content {
-    padding: 0px 23px 0px 23px;
+    /* padding: 0px 23px 0px 23px; */
     transition: opacity 0.1s ease-in-out;
+ 
+  }
+  .sidenavScroll{
+    max-height: calc(100vh - 300px);
+    overflow-y: auto;
+    padding: 0px 23px 0px 23px;
+
   }
   .active {
     background:var(--color-sec-lightblue);

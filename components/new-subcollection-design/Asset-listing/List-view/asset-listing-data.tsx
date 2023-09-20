@@ -1,8 +1,8 @@
 import React from "react";
 import styles from "./asset-listing-data.module.css";
-import { Utilities, AppImg } from "../../../assets";
+import { Utilities, AppImg } from "../../../../assets";
 import { utimesSync } from "fs";
-import IconClickable from "../../common/buttons/icon-clickable";
+import IconClickable from "../../../common/buttons/icon-clickable";
 
 const AssetData = () => {
   return (

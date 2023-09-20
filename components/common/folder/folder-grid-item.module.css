@@ -4,14 +4,20 @@
   height: 100%;
   position: relative;
   border-radius: 8px;
+
 }
 
 .image-wrapper {
   position: relative;
   display: grid;
   grid-template-columns: 50% 50%;
-  grid-template-rows: 50% 50%;
+  /* grid-template-rows: 50% 50%; */
   height: 100%;
+  border:1px solid var(--color-secondary-border);
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  padding: 12px;
+  gap:12px;
 }
 
 .sub-image-wrapper {
@@ -35,8 +41,8 @@
 }
 
 .sub-image-wrapper {
-  padding: 10px;
-  border: 1px solid var(--color-secondary-border);
+  /* padding: 10px; */
+  /* border: 1px solid var(--color-secondary-border); */
 }
 
 .sub-image-wrapper:nth-child(1) {
