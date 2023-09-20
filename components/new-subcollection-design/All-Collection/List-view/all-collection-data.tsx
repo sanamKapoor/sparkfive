@@ -1,12 +1,37 @@
 import React from "react";
 import styles from "./all-collection-data.module.css";
-import { Utilities, AppImg } from "../../../assets";
+import { Utilities, AppImg } from "../../../../assets";
 import { utimesSync } from "fs";
-import IconClickable from "../../common/buttons/icon-clickable";
+import IconClickable from "../../../common/buttons/icon-clickable";
 
 const CollectionData = () => {
   return (
     <>
+    <table className={`${styles["table-head"]}`}>
+           <thead>
+          <tr className={`${styles["tableHead-row"]}`}>
+            <th className={styles.firstColumn}>
+                <div className={styles.headContent}>
+                <span>Name</span>
+              <img src={Utilities.arrowDownUp} />
+                </div>
+             
+            </th>
+            <th className={styles.secondColumn}>
+            <div className={styles.headContent}>
+              <span>Assets</span>
+              <img src={Utilities.arrowDownUp} />
+              </div>
+            </th>
+            <th className={styles.thirdColumn}>
+            <div className={styles.headContent}>
+              <span>Create date</span>
+              <img src={Utilities.arrowDownUp} />
+              </div>
+            </th>
+            <th className={styles.fourthColumn}>Action</th>
+          </tr>
+        </thead>
       <tbody>
         <tr className={`${styles["table-head-row"]}`}>
           <td>
@@ -201,6 +226,7 @@ const CollectionData = () => {
           </td>
         </tr>
       </tbody>
+      </table>
     </>
   );
 };

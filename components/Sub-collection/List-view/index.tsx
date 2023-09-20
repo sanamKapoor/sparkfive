@@ -12,11 +12,7 @@ const SubcollectionListView = () => {
   return (
     <>
     <SubCollectionHeading/>
-     <table className={`${styles["table-head"]}`}>
-      <SubCollectionHeader/>
-      <SubCollectionData/>
     
-     </table>
      <AssetListVIew/>
 
      
