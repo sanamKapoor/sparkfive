@@ -33,11 +33,8 @@ import { sizeToZipDownload } from "../../../constants/download";
 import { checkIfUserCanEditThumbnail } from "../../../utils/asset";
 import ChangeThumbnail from "../modals/change-thumnail-modal";
 import SubCollection from "../../Sub-collection/sub-collection";
-import AllCollection from "../../All-Collection/all-collection";
-import CollectionHeader from "../../All-Collection/List-view/all-collection-header";
-import CollectionListVIew from "../../All-Collection/List-view";
+
 import SubcollectionListView from "../../Sub-collection/List-view";
-import AssetListVIew from "../../Asset-listing/List-view";
 
 const AssetGrid = ({
   activeView = "grid",
@@ -298,7 +295,6 @@ const AssetGrid = ({
   };
 
   const isThumbnailNameEditable = checkIfUserCanEditThumbnail(user?.roleId);
-
   const handleFocusChange = (e, id) => {
     if (focusedItem === id && e.target.tagName.toLowerCase() !== "input") {
       setFocusedItem(null);
@@ -306,7 +302,6 @@ const AssetGrid = ({
       setFocusedItem(id);
     }
   };
-
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const ref = useRef(null);
 
@@ -314,14 +309,11 @@ const AssetGrid = ({
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
-
     window.addEventListener("resize", handleResize);
-
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
 
   useEffect(() => {
     if (ref.current) {
@@ -390,6 +382,12 @@ const AssetGrid = ({
                 focusedItem
                 handleFocusChange={handleFocusChange}
                 LoadMore={getSubFolders}
+                openArchiveAsset={openArchiveAsset}
+                openDeleteAsset={openDeleteAsset}
+                downloadAsset={downloadAsset}
+                refreshVersion={refreshVersion}
+                loadMore={loadMore}
+                onCloseDetailOverlay={onCloseDetailOverlay}
               />
             }
 
@@ -485,6 +483,9 @@ const AssetGrid = ({
         )}
         {activeView === "list" && (
           <ul className={`${styles.regularlist} `}>
+            {mode === "SubCollectionView" &&
+              <SubcollectionListView />
+            }
             {mode === "assets" &&
               sortedAssets.map((assetItem, index) => {
                 return (
@@ -596,14 +597,6 @@ const AssetGrid = ({
           </>
         )}
       </div>}
-
-
-
-
-
-
-
-
 
 
 

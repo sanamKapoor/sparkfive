@@ -195,7 +195,7 @@ export const getAssetsFilters = ({
     filters.folderId = activeFolder;
   }
 
-  if (!replace && addedIds.length > 0) {
+  if (!replace && addedIds?.length > 0) {
     filters.excludeIds = addedIds.join(",");
   }
 

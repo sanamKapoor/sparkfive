@@ -70,8 +70,7 @@ export const AssetContext = createContext({
   activeFolder: "",
   setActiveFolder: (folderId) => { },
 
-  activeSubFolders: "",
-  setActiveSubFolders: (subFolderIds) => { },
+
 
   activePageMode: "",
   setActivePageMode: (mode) => { },
@@ -134,20 +133,35 @@ export const AssetContext = createContext({
   currentViewAsset: undefined,
   setCurrentViewAsset: (asset) => { },
 
+  // Active folder for subListing
+  activeSubFolders: "",
+  setActiveSubFolders: (subFolderIds) => { },
+
+  // Sidenav parent Folder List
   sidenavFolderList: [],
   setSidenavFolderList: (folders, replace, ignoreTotalItems) => { },
+
+  // Sidenav parent Folder Next page list
   sidenavFolderNextPage: 0,
   setSidenavFolderNextPage: () => { },
+
+  // Sidenav parent Folder count
   sidenavTotalCollectionCount: 0,
   setSidenavTotalCollectionCount: () => { },
+
   sidenavFolderChildList: {},
   setSidenavFolderChildList: (data, id, replace) => { },
+  // side bar open close button click
   sidebarOpen: true,
   setSidebarOpen: (sidebarValue) => { },
-  sidenavFolderChildList: {},
-  setSidenavFolderChildList: (data, id, replace) => { },
-  setSubFoldersViewList: (data, id, replace) => { },
+
+  //sub collection page sub folders listing items
+  setSubFoldersViewList: (data, replace) => { },
   subFoldersViewList: { results: [], next: 0, total: 0 },
+
+  //sub collection page sub assets listing items
+  subFoldersAssetsViewList: { results: [], next: 0, total: 0 },
+  setSubFoldersAssetsViewList: (data, replace) => { },
 
 });
 

@@ -124,6 +124,7 @@ export default ({ children }) => {
   // For viewing asset in file associations
   const [currentViewAsset, setCurrentViewAsset] = useState();
   const [subFoldersViewList, setSubFoldersViewList] = useState({ results: [], next: 0, total: 0 });
+  const [subFoldersAssetsViewList, setSubFoldersAssetsViewList] = useState({ results: [], next: 0, total: 0 })
 
   const setPlaceHolders = (type, replace = true) => {
     if (type === "asset") {
@@ -191,6 +192,19 @@ export default ({ children }) => {
       };
     });
   };
+
+  const subFoldersAssetList = (inputFolders: { results: Item[], next: number, total: number }, replace = true) => {
+    const { results, next, total } = inputFolders;
+    setSubFoldersAssetsViewList((previousValue) => {
+      return {
+        ...previousValue,
+        results: replace ? results : [...previousValue.results, ...results],
+        next,
+        total
+      };
+    });
+  };
+
 
   const setSidenavFolderChildListItems = (
     inputFolders: any,
@@ -630,6 +644,8 @@ export default ({ children }) => {
     setActiveSubFolders,
     setSubFoldersViewList: subFoldersList,
     subFoldersViewList,
+    subFoldersAssetsViewList,
+    setSubFoldersAssetsViewList: subFoldersAssetList
   };
   return (
     <AssetContext.Provider value={assetsValue}>

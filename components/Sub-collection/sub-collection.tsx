@@ -4,6 +4,7 @@ import { AppImg, Utilities } from "../../assets";
 import Button from "../common/buttons/button";
 import { AssetContext } from "../../context";
 import FolderGridItem from "../common/folder/folder-grid-item";
+import AssetThumbail from "../common/asset/asset-thumbail";
 
 const SubCollection = (
   {
@@ -26,11 +27,19 @@ const SubCollection = (
     setFocusedItem,
     focusedItem,
     handleFocusChange,
-    LoadMore
+    LoadMore,
+    openArchiveAsset,
+    openDeleteAsset,
+    downloadAsset,
+    refreshVersion,
+    loadMore,
+    onCloseDetailOverlay,
   }: any) => {
 
   const [isChecked, setIsChecked] = useState(false);
   const [collectionHide, setCollectionHide] = useState(false);
+  const [assetsHide, setAssetsHide] = useState(false);
+
 
   const handleCircleClick = () => {
     setIsChecked(!isChecked);
@@ -38,28 +47,40 @@ const SubCollection = (
   const handleHideClick = () => {
     setCollectionHide(!collectionHide);
   };
+  const handleAssetsHideClick = () => {
+    setAssetsHide(!assetsHide);
+  };
 
   const {
     setActiveSubFolders,
     subFoldersViewList: { results, next, total },
-    setSubFoldersViewList
+    setSubFoldersViewList,
+    setSubFoldersAssetsViewList,
+    subFoldersAssetsViewList: { results: assets, next: nextAsset, total: totalAssets },
+    activeSubFolders,
   } = useContext(AssetContext);
 
 
   const loadMoreCollection = () => {
     LoadMore(false)
   }
+
+  const loadMoreAssets = () => {
+    // LoadMore(false)
+  }
+
   useEffect(() => {
     return () => {
       setActiveSubFolders("")
       setSubFoldersViewList({ results: [], next: 0, total: 0 })
+      setSubFoldersAssetsViewList({ results: [], next: 0, total: 0 })
     }
   }, [])
   return (
     <>
       <div className={`${styles["sub-collection-heading"]}`}>
         <div className={styles.rightSide}>
-          <span>Subcollection(4)</span>
+          <span>Subcollection ({total})</span>
           <img onClick={() => { handleHideClick() }} src={collectionHide ? Utilities.arrowDownUp : Utilities.downIcon} />
         </div>
         <div className={styles.tagOuter}>
@@ -124,8 +145,76 @@ const SubCollection = (
               <Button text="Load More" onClick={loadMoreCollection} type="button" className="container primary" />
             </div>
           }
-
         </>
+      }
+      {assetsHide && <>
+        <div className={`${styles["sub-collection-heading"]}`}>
+          <div className={styles.rightSide}>
+            <span>Assets ({totalAssets})</span>
+            <img onClick={() => { handleAssetsHideClick() }} src={assetsHide ? Utilities.arrowDownUp : Utilities.downIcon} />
+          </div>
+        </div>
+        <div>
+          {assets.map((assetItem, index) => {
+            if (assetItem.status !== "fail") {
+              return (
+                <li
+                  className={styles["grid-item"]}
+                  key={assetItem.asset.id || index}
+                  onClick={(e) => handleFocusChange(e, assetItem.asset.id)}
+                  ref={ref}
+                  style={{ width: `$${widthCard}px` }}
+                >
+                  <AssetThumbail
+                    {...assetItem}
+                    sharePath={sharePath}
+                    activeFolder={activeSubFolders}
+                    isShare={isShare}
+                    type={""}
+                    toggleSelected={() =>
+                      toggleSelected(assetItem.asset.id)
+                    }
+                    openArchiveAsset={() =>
+                      openArchiveAsset(assetItem.asset)
+                    }
+                    openDeleteAsset={() =>
+                      openDeleteAsset(assetItem.asset.id)
+                    }
+                    openMoveAsset={() =>
+                      beginAssetOperation({ asset: assetItem }, "move")
+                    }
+                    openCopyAsset={() =>
+                      beginAssetOperation({ asset: assetItem }, "copy")
+                    }
+                    openShareAsset={() =>
+                      beginAssetOperation({ asset: assetItem }, "share")
+                    }
+                    downloadAsset={() => downloadAsset(assetItem)}
+                    openRemoveAsset={() =>
+                      beginAssetOperation(
+                        { asset: assetItem },
+                        "remove_item"
+                      )
+                    }
+                    handleVersionChange={refreshVersion}
+                    loadMore={loadMore}
+                    onCloseDetailOverlay={onCloseDetailOverlay}
+                    isThumbnailNameEditable={isThumbnailNameEditable}
+                    focusedItem={focusedItem}
+                    setFocusedItem={setFocusedItem}
+                  />
+                </li>
+              );
+            }
+          })
+          }
+        </div>
+        {nextAsset > 0 &&
+          <div className={styles.LoadMorebtn}>
+            <Button text="Load More" onClick={loadMoreAssets} type="button" className="container primary" />
+          </div>
+        }
+      </>
       }
     </>
   );
