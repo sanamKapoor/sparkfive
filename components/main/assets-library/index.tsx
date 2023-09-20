@@ -259,14 +259,12 @@ const AssetsLibrary = () => {
 
   useEffect(() => {
     if (firstLoaded && activeSubFolders !== "") {
-      console.log("in active")
       setActiveSortFilter({
         ...activeSortFilter,
         mainFilter: "SubCollectionView",
       });
     }
   }, [activeSubFolders]);
-
 
   useEffect(() => {
     if (needsFetch === "assets") {
@@ -770,7 +768,6 @@ const AssetsLibrary = () => {
 
   const getSubCollectionsData = async (replace = true) => {
     try {
-      // don't reload folder on active detail folder/collection
       if (activeSortFilter.mainFilter !== "SubCollectionView") {
         return;
       }
@@ -973,6 +970,7 @@ const AssetsLibrary = () => {
                       <AssetGrid
                         activeFolder={activeFolder}
                         getFolders={getFolders}
+                        getSubFolders={getSubCollectionsData}
                         activeView={activeView}
                         activeSortFilter={activeSortFilter}
                         onFilesDataGet={onFilesDataGet}

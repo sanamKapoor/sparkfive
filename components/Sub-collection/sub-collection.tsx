@@ -25,26 +25,42 @@ const SubCollection = (
     isThumbnailNameEditable,
     setFocusedItem,
     focusedItem,
-    handleFocusChange
+    handleFocusChange,
+    LoadMore
   }: any) => {
 
   const [isChecked, setIsChecked] = useState(false);
+  const [collectionHide, setCollectionHide] = useState(false);
 
   const handleCircleClick = () => {
     setIsChecked(!isChecked);
   };
+  const handleHideClick = () => {
+    setCollectionHide(!collectionHide);
+  };
 
   const {
+    setActiveSubFolders,
     subFoldersViewList: { results, next, total },
+    setSubFoldersViewList
   } = useContext(AssetContext);
 
 
+  const loadMoreCollection = () => {
+    LoadMore(false)
+  }
+  useEffect(() => {
+    return () => {
+      setActiveSubFolders("")
+      setSubFoldersViewList({ results: [], next: 0, total: 0 })
+    }
+  }, [])
   return (
     <>
       <div className={`${styles["sub-collection-heading"]}`}>
         <div className={styles.rightSide}>
           <span>Subcollection(4)</span>
-          <img src={Utilities.downIcon} />
+          <img onClick={() => { handleHideClick() }} src={collectionHide ? Utilities.arrowDownUp : Utilities.downIcon} />
         </div>
         <div className={styles.tagOuter}>
           <div className={styles.left}>
@@ -63,91 +79,54 @@ const SubCollection = (
           </div>
         </div>
       </div>
-      <div className={styles.cardsWrapper}>
-
-
-        {results.map((item) => {
-          return (
-            <div>
-              <div className={styles.subcollectionCard}>
-                <div className={styles.imageGrid}>
-                  <div className={styles.image}>
-                    <img src={AppImg.abstraction1} />
-                  </div>
-                  <div className={styles.image}>
-                    <img src={AppImg.abstraction2} />
-                  </div>
-                  <div className={styles.image}>
-                    <img src={AppImg.abstraction3} />
-                  </div>
-                  <div className={styles.image}>
-                    <img src={AppImg.abstraction4} />
-                  </div>
-                </div>
-
-
-                <div className={styles["image-button-wrapper"]}>
-                  <Button
-                    className="container primary"
-                    text={"View Collection"}
-                    type={"button"}
+      {!collectionHide &&
+        <>
+          <div className={styles.cardsWrapper}>
+            {results.map((folder, index) => {
+              return (
+                <li
+                  className={styles["grid-item"]}
+                  key={folder.id || index}
+                  onClick={(e) => handleFocusChange(e, folder.id)}
+                  ref={ref}
+                  style={{ width: `$${widthCard}px` }}
+                >
+                  <FolderGridItem
+                    {...folder}
+                    isShare={isShare}
+                    sharePath={sharePath}
+                    toggleSelected={() => toggleSelected(folder.id)}
+                    viewFolder={() => viewFolder(folder.id)}
+                    deleteFolder={() => deleteFolder(folder.id)}
+                    copyShareLink={() => copyShareLink(folder)}
+                    copyEnabled={getShareIsEnabled(folder)}
+                    openFilter={openFilter}
+                    shareAssets={() =>
+                      beginAssetOperation({ folder }, "shareFolders")
+                    }
+                    changeThumbnail={beginChangeThumbnailOperation}
+                    deleteThumbnail={() =>
+                      deleteThumbnail({ folder }, "shareFolders")
+                    }
+                    activeView={activeView || mode}
+                    isThumbnailNameEditable={isThumbnailNameEditable}
+                    focusedItem={focusedItem}
+                    setFocusedItem={setFocusedItem}
+                    folderType="SubCollection"
                   />
-                </div>
-
-              </div>
-
-              <div className={styles.cardFooter}>
-                <div>
-                  <span className={styles.heading}>House</span>
-                  <span className={styles.totalCount}>7 Assets</span>
-                </div>
-                <div>
-                  <img src={Utilities.horizontalDots} />
-                </div>
-              </div>
+                </li>
+              );
+            })
+            }
+          </div >
+          {next > 0 &&
+            <div className={styles.LoadMorebtn}>
+              <Button text="Load More" onClick={loadMoreCollection} type="button" className="container primary" />
             </div>
-          )
-        })}
-        {/* {results.map((folder, index) => {
-          return (
-            <li
-              className={styles["grid-item"]}
-              key={folder.id || index}
-              onClick={(e) => handleFocusChange(e, folder.id)}
-              ref={ref}
-              style={{ width: `$${widthCard}px` }}
-            >
-              <FolderGridItem
-                {...folder}
-                isShare={isShare}
-                sharePath={sharePath}
-                toggleSelected={() => toggleSelected(folder.id)}
-                viewFolder={() => viewFolder(folder.id)}
-                deleteFolder={() => deleteFolder(folder.id)}
-                copyShareLink={() => copyShareLink(folder)}
-                copyEnabled={getShareIsEnabled(folder)}
-                openFilter={openFilter}
-                shareAssets={() =>
-                  beginAssetOperation({ folder }, "shareFolders")
-                }
-                changeThumbnail={beginChangeThumbnailOperation}
-                deleteThumbnail={() =>
-                  deleteThumbnail({ folder }, "shareFolders")
-                }
-                activeView={activeView || mode}
-                isThumbnailNameEditable={isThumbnailNameEditable}
-                focusedItem={focusedItem}
-                setFocusedItem={setFocusedItem}
-                folderType="SubCollection"
-              />
-            </li>
-          );
-        })
-        } */}
+          }
 
-
-
-      </div >
+        </>
+      }
     </>
   );
 };

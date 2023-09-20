@@ -26,9 +26,7 @@ import AssetIcon from "../asset/asset-icon";
 const FolderGridItem = ({
   id,
   name,
-  size,
   isSelected,
-  length,
   assetsCount,
   assets,
   totalchildassests,
@@ -202,7 +200,7 @@ const FolderGridItem = ({
           )}
           {!thumbnailPath &&
             !thumbnailExtension &&
-            previews.map((preview, index) => (
+            previews.map((preview: any, index: number) => (
               <div
                 className={styles["sub-image-wrapper"]}
                 key={index.toString()}

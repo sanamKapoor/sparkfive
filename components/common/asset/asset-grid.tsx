@@ -59,6 +59,7 @@ const AssetGrid = ({
   onCloseDetailOverlay = (assetData) => { },
   setWidthCard,
   widthCard,
+  getSubFolders
 }: any) => {
   let isDragging;
   if (!isShare) isDragging = useDropzone();
@@ -321,6 +322,7 @@ const AssetGrid = ({
     };
   }, []);
 
+
   useEffect(() => {
     if (ref.current) {
       setWidthCard(ref.current.clientWidth);
@@ -352,7 +354,6 @@ const AssetGrid = ({
           setActiveSearchOverlay={setActiveSearchOverlay}
         />
       )}
-
       {<div className={styles["list-wrapper"]}>
         {activeView === "grid" && (
           <ul
@@ -388,8 +389,8 @@ const AssetGrid = ({
                 setFocusedItem={setFocusedItem}
                 focusedItem
                 handleFocusChange={handleFocusChange}
+                LoadMore={getSubFolders}
               />
-
             }
 
             {mode === "assets" &&

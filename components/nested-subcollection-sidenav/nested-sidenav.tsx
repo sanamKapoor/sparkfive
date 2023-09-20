@@ -64,7 +64,8 @@ const NestedSidenav = () => {
           icon={<img onClick={() => { setSidebarOpen(!sidebarOpen) }} src={Utilities.arrowleft} />}
         />
         <NestedFirstlist headingClick={headingClick} />
-        <ReusableHeading text="Collections" headingClickType="folders" headingTrue={activeSortFilter.mainFilter === "folders"} headingClick={headingClick} totalCount={sidenavTotalCollectionCount} icon={undefined} />
+        <ReusableHeading text="Collections" headingClickType="folders" headingTrue={activeSortFilter.mainFilter === "folders"}
+          headingClick={headingClick} totalCount={sidenavTotalCollectionCount} icon={undefined} />
       </div>
       <NestedSidenavDropdown />
     </div>
