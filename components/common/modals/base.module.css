@@ -43,7 +43,7 @@
 @media screen and (min-width: 801px) {
   .overlay {
     align-items: flex-start;
-    padding-top: 140px;
+    padding-top: 188px;
     padding-bottom: 50px;
   }
 }
@@ -61,7 +61,8 @@
   font-weight: 600;
   gap: 10px;
 }
-.baseHeading{
+
+.baseHeading {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -71,13 +72,13 @@
   font-size: 12px;
   margin: 8px 0 0;
   font-weight: 300;
- max-width: 80%;
+  max-width: 80%;
 }
 
 .text p {
   flex: 1;
   margin: 0;
-  
+
 }
 
 .text span {
