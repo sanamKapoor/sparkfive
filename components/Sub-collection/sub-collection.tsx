@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import styles from "./sub-collection.module.css";
-import { AppImg, Utilities } from "../../assets";
+import { Utilities } from "../../assets";
 import Button from "../common/buttons/button";
 import { AssetContext } from "../../context";
 import FolderGridItem from "../common/folder/folder-grid-item";
 import AssetThumbail from "../common/asset/asset-thumbail";
+import { Waypoint } from "react-waypoint";
 
 const SubCollection = (
   {
@@ -27,15 +28,14 @@ const SubCollection = (
     setFocusedItem,
     focusedItem,
     handleFocusChange,
-    LoadMore,
+    loadMoreSubCollctions,
     openArchiveAsset,
     openDeleteAsset,
     downloadAsset,
     refreshVersion,
-    loadMore,
+    loadMoreAssets,
     onCloseDetailOverlay,
   }: any) => {
-
   const [isChecked, setIsChecked] = useState(false);
   const [collectionHide, setCollectionHide] = useState(false);
   const [assetsHide, setAssetsHide] = useState(false);
@@ -61,13 +61,8 @@ const SubCollection = (
   } = useContext(AssetContext);
 
 
-  const loadMoreCollection = () => {
-    LoadMore(false)
-  }
-
-  const loadMoreAssets = () => {
-    // LoadMore(false)
-  }
+  const loadingAssetsFolders =
+    (assets.length > 0 && assets[assets.length - 1].isLoading)
 
   useEffect(() => {
     return () => {
@@ -142,12 +137,12 @@ const SubCollection = (
           </div >
           {next > 0 &&
             <div className={styles.LoadMorebtn}>
-              <Button text="Load More" onClick={loadMoreCollection} type="button" className="container primary" />
+              <Button text="Load More" onClick={() => { loadMoreSubCollctions(false) }} type="button" className="container primary" />
             </div>
           }
         </>
       }
-      {assetsHide && <>
+      {!assetsHide && <>
         <div className={`${styles["sub-collection-heading"]}`}>
           <div className={styles.rightSide}>
             <span>Assets ({totalAssets})</span>
@@ -197,7 +192,7 @@ const SubCollection = (
                       )
                     }
                     handleVersionChange={refreshVersion}
-                    loadMore={loadMore}
+                    // loadMore={loadMore}
                     onCloseDetailOverlay={onCloseDetailOverlay}
                     isThumbnailNameEditable={isThumbnailNameEditable}
                     focusedItem={focusedItem}
@@ -209,11 +204,32 @@ const SubCollection = (
           })
           }
         </div>
-        {nextAsset > 0 &&
-          <div className={styles.LoadMorebtn}>
-            <Button text="Load More" onClick={loadMoreAssets} type="button" className="container primary" />
-          </div>
-        }
+
+        {nextAsset > 0 && (
+          <>
+            {nextAsset > 2 ? (
+              <>
+                {(!loadingAssetsFolders &&
+                  <Waypoint onEnter={() => { loadMoreAssets(false) }} fireOnRapidScroll={false} />
+                )}
+              </>
+            ) : (
+              <>
+                {(
+                  !loadingAssetsFolders &&
+                  <div className={styles["button-wrapper"]}>
+                    <Button
+                      text="Load More"
+                      type="button"
+                      className="container primary"
+                      onClick={() => { loadMoreAssets(false) }}
+                    />
+                  </div>
+                )}
+              </>
+            )}
+          </>
+        )}
       </>
       }
     </>

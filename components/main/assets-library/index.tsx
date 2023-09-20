@@ -81,6 +81,7 @@ const AssetsLibrary = () => {
     subFoldersViewList,
     subFoldersAssetsViewList,
     setSubFoldersAssetsViewList,
+    setHeaderName,
   } = useContext(AssetContext);
 
   const {
@@ -250,6 +251,7 @@ const AssetsLibrary = () => {
 
 
   useEffect(() => {
+
     if (firstLoaded) {
       // let sort = { ...activeSortFilter.sort };
       // sort =
@@ -789,6 +791,7 @@ const AssetsLibrary = () => {
 
   const getSubCollectionsAssetData = async (replace = true, complete: any = null) => {
     try {
+
       if (activeSortFilter.mainFilter !== "SubCollectionView") {
         return;
       }
@@ -873,6 +876,7 @@ const AssetsLibrary = () => {
       updateSortFilterByAdvConfig({ folderId: id });
     }
     setActiveSubFolders(id)
+    setHeaderName(folders.find((folder: any) => folder.id === id)?.name || "")
   };
 
   const deleteFolder = async (id) => {
@@ -1000,6 +1004,7 @@ const AssetsLibrary = () => {
                         activeFolder={activeFolder}
                         getFolders={getFolders}
                         getSubFolders={getSubCollectionsFolderData}
+                        getSubCollectionsAssetData={getSubCollectionsAssetData}
                         activeView={activeView}
                         activeSortFilter={activeSortFilter}
                         onFilesDataGet={onFilesDataGet}

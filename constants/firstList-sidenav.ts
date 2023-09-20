@@ -28,8 +28,8 @@ export const sideNavFirstList = [
     },
     {
         icon: Utilities.archive,
-        name: 'archived',
         description: 'Archived',
+        name: 'archived',
         countValue: "", // Replace with the actual count if available
     },
 ]

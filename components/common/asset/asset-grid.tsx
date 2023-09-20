@@ -56,6 +56,7 @@ const AssetGrid = ({
   onCloseDetailOverlay = (assetData) => { },
   setWidthCard,
   widthCard,
+  getSubCollectionsAssetData,
   getSubFolders
 }: any) => {
   let isDragging;
@@ -70,6 +71,8 @@ const AssetGrid = ({
     folders,
     updateDownloadingStatus,
   } = useContext(AssetContext);
+
+
   const { advancedConfig, hasPermission, user } = useContext(UserContext);
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -381,12 +384,12 @@ const AssetGrid = ({
                 setFocusedItem={setFocusedItem}
                 focusedItem
                 handleFocusChange={handleFocusChange}
-                LoadMore={getSubFolders}
+                loadMoreSubCollctions={getSubFolders}
                 openArchiveAsset={openArchiveAsset}
                 openDeleteAsset={openDeleteAsset}
                 downloadAsset={downloadAsset}
                 refreshVersion={refreshVersion}
-                loadMore={loadMore}
+                loadMoreAssets={getSubCollectionsAssetData}
                 onCloseDetailOverlay={onCloseDetailOverlay}
               />
             }
@@ -483,9 +486,9 @@ const AssetGrid = ({
         )}
         {activeView === "list" && (
           <ul className={`${styles.regularlist} `}>
-            {mode === "SubCollectionView" &&
-              <SubcollectionListView />
-            }
+            {/* {mode === "SubCollectionView" && */}
+            {/* <SubcollectionListView /> */}
+            {/* } */}
             {mode === "assets" &&
               sortedAssets.map((assetItem, index) => {
                 return (

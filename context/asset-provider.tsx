@@ -125,6 +125,9 @@ export default ({ children }) => {
   const [currentViewAsset, setCurrentViewAsset] = useState();
   const [subFoldersViewList, setSubFoldersViewList] = useState({ results: [], next: 0, total: 0 });
   const [subFoldersAssetsViewList, setSubFoldersAssetsViewList] = useState({ results: [], next: 0, total: 0 })
+  const [headerName, setHeaderName] = useState("All Assets")
+
+
 
   const setPlaceHolders = (type, replace = true) => {
     if (type === "asset") {
@@ -195,6 +198,7 @@ export default ({ children }) => {
 
   const subFoldersAssetList = (inputFolders: { results: Item[], next: number, total: number }, replace = true) => {
     const { results, next, total } = inputFolders;
+
     setSubFoldersAssetsViewList((previousValue) => {
       return {
         ...previousValue,
@@ -645,7 +649,9 @@ export default ({ children }) => {
     setSubFoldersViewList: subFoldersList,
     subFoldersViewList,
     subFoldersAssetsViewList,
-    setSubFoldersAssetsViewList: subFoldersAssetList
+    setSubFoldersAssetsViewList: subFoldersAssetList,
+    setHeaderName,
+    headerName,
   };
   return (
     <AssetContext.Provider value={assetsValue}>
