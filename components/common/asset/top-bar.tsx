@@ -167,6 +167,10 @@ const TopBar = ({
             current={folderData[0]?.name}
           />
         )}
+       
+      </div>
+      <div className={styles.wrapper}>
+      <div className={`${styles['main-heading-wrapper']}`}>
         {sidebarOpen ?
           null :
           <div className={styles.newsidenav}>
@@ -175,8 +179,6 @@ const TopBar = ({
         {activeFolder && mode === "assets" && (
           <SubHeader pageTitle={folderData[0]?.name} children={undefined} />
         )}
-      </div>
-      <div className={styles.wrapper}>
         <div className={styles.innerwrapper}>
           {!deletedAssets ? (
             <div className={styles.filters}>
@@ -272,6 +274,9 @@ const TopBar = ({
             )
           }
         </div>
+
+        </div>
+        
         <div className={styles["sec-filters"]}>
           {!isMobile && !isShare && !activeSearchOverlay && (
             <img

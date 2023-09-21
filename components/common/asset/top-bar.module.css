@@ -14,9 +14,12 @@
 .container-on-toggle{
   position: fixed;
   width: 100%;
-  margin-left: 0;
-  max-width: calc(100% - 130px);
-}
+  top: 81px;
+  left: 0;
+  z-index: 1300;
+  background-color: white;
+  padding: 33.5px 40px;
+  }
 
 .wrapper {
   display: flex;
@@ -28,7 +31,14 @@
   /* left: 283px;
   max-width: calc(100% - 283px); */
 }
+.main-heading-wrapper{
+  display: flex;
+  align-items: center;
+}
+.newsidenav{
+  margin-right: 10px;
 
+}
 .plusIcon {
   padding: 0px;
 }
@@ -236,6 +246,7 @@ li.dropdown-title {
   .wrapper {
     gap: 0;
   }
+
 
   .wrapper .innerwrapper .tab-list-item {
     /* width: calc(100% - 35px);

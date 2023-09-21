@@ -480,7 +480,7 @@ const AssetGrid = ({
           </ul>
         )}
         {activeView === "list" && (
-          <ul className={`${styles.regularlist} `}>
+          <ul className={`${styles['regularlist']}`}>
             {/* {mode === "SubCollectionView" && */}
             {/* <SubcollectionListView /> */}
             {/* } */}

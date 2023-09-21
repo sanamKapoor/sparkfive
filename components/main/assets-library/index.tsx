@@ -951,12 +951,12 @@ const AssetsLibrary = () => {
                   <NestedSidenav />
                 </div> :
                 null}
-              <div className={styles.rightSide}>
+              <div className={`${sidebarOpen ? styles["rightSide"] : styles["rightSideToggle"]}`}>
                 <div className='position-relative'>
                   <div className={styles["search-mobile"]}>
                     <SearchOverlay
                       closeOverlay={closeSearchOverlay}
-                      operationsEnabled={true}
+                      operationsEnabled
                       activeFolder={activeFolder}
                       onCloseDetailOverlay={(assetData) => {
                         closeSearchOverlay();
