@@ -76,7 +76,7 @@ const SubCollection = (
       <div className={`${styles["sub-collection-heading"]}`}>
         <div className={styles.rightSide}>
           <span>Subcollection ({total})</span>
-          <img onClick={() => { handleHideClick() }} src={collectionHide ? Utilities.arrowDownUp : Utilities.downIcon} />
+          <img className={styles.ExpandIcons} onClick={() => { handleHideClick() }} src={collectionHide ? Utilities.up : Utilities.downIcon} />
         </div>
         <div className={styles.tagOuter}>
           <div className={styles.left}>
@@ -146,7 +146,7 @@ const SubCollection = (
         <div className={`${styles["sub-collection-heading"]}`}>
           <div className={styles.rightSide}>
             <span>Assets ({totalAssets})</span>
-            <img onClick={() => { handleAssetsHideClick() }} src={assetsHide ? Utilities.arrowDownUp : Utilities.downIcon} />
+            <img className={styles.ExpandIcons} onClick={() => { handleAssetsHideClick() }} src={assetsHide ? Utilities.up : Utilities.downIcon} />
           </div>
         </div>
         <div className={styles.assetWrapper}>

@@ -161,7 +161,8 @@ horizontalDots:require('./Icons/Utilities/nestedCollection/horixzontaldots.svg')
 downIcon:require('./Icons/Utilities/nestedCollection/downIcon.svg'),
 arrowDownUp:require('./Icons/Utilities/collection/ArrowsDownUp.svg'),
 edit:require('./Icons/Utilities/collection/edit.svg'),
-tabulardots:require('./Icons/Utilities/collection/tabler-icon-dots.svg')
+tabulardots:require('./Icons/Utilities/collection/tabler-icon-dots.svg'),
+up:require('./Icons/Utilities/icons8-chevron-up-30.png'),
 
   
   

@@ -59,7 +59,7 @@ const NestedSidenav = () => {
     <div className={styles.nestedsidenav}>
       <div className={styles["sidenav-content"]}>
         <ReusableHeading
-         customStyle={{ padding: "0px 34px 0px 23px" }}
+         customStyle={{ padding: "0px 23px 0px 23px" }}
           text={`${team?.company}.`}
           headingClick={headingClick}
           icon={<img onClick={() => { setSidebarOpen(!sidebarOpen) }} src={Utilities.arrowleft} />}
