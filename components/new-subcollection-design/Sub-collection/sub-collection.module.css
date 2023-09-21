@@ -150,7 +150,12 @@
         grid-template-columns: repeat(5, 231px); 
     }
   }
-  
+  @media screen and (max-width: 810px){
+     .cardsWrapper{
+      margin-top:100px;
+     }
+
+  }
   @media screen and (max-width: 475px) {
     .cardsWrapper{
         display: grid;

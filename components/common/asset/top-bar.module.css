@@ -203,13 +203,20 @@ li.dropdown-title {
     width: 100%;
     max-width: 290px;
   }
+ 
+}
+@media screen and (max-width: 810px){
+  .container{
+    width: 100%;
+    margin-left: 0;
+  }
 }
 
 @media screen and (min-width: 810px) {
   .hamburger {
     display: none;
   }
-
+ 
 
 }
 
@@ -247,7 +254,9 @@ li.dropdown-title {
     gap: 0;
   }
 
-
+.innerwrapper{
+  width: 100%;
+}
   .wrapper .innerwrapper .tab-list-item {
     /* width: calc(100% - 35px);
     overflow: hidden; */
