@@ -167,7 +167,7 @@ export const getAssetsFilters = ({
 
   addFilterToQuery(filters, filterCampaigns, "campaigns");
   addFilterToQuery(filters, filterProjects, "projects");
-  if (activeFolder === "") addFilterToQuery(filters, filterFolders, "folders");
+  activeFolder ? addFilterToQuery(filters, filterFolders, "folders") : addFilterToQuery(filters, activeFolder, "folders");
   addFilterToQuery(filters, filterChannels, "channels");
   addFilterTagsToQuery(filters, filterNonAiTags, filterAiTags, "tags");
   addFilterToQuery(filters, filterFileTypes, "fileTypes");

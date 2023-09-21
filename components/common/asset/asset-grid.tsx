@@ -1,40 +1,35 @@
-import copyClipboard from "copy-to-clipboard";
-import update from "immutability-helper";
-import { useContext, useEffect, useRef, useState } from "react";
-import { Waypoint } from "react-waypoint";
-import { AssetContext, LoadingContext, UserContext } from "../../../context";
-import assetsApi from "../../../server-api/asset";
-import downloadUtils from "../../../utils/download";
-import toastUtils from "../../../utils/toast";
-import urlUtils from "../../../utils/url";
-import useDropzone from "../misc/dropzone";
-import styles from "./asset-grid.module.css";
+import copyClipboard from 'copy-to-clipboard';
+import update from 'immutability-helper';
+import fileDownload from 'js-file-download';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { Waypoint } from 'react-waypoint';
 
-import assetApi from "../../../server-api/asset";
-import shareApi from "../../../server-api/share-collection";
+import { sizeToZipDownload } from '../../../constants/download';
+import { ASSET_ACCESS } from '../../../constants/permissions';
+import { AssetContext, LoadingContext, UserContext } from '../../../context';
+import useSortedAssets from '../../../hooks/use-sorted-assets';
+import assetApi from '../../../server-api/asset';
+import folderApi from '../../../server-api/folder';
+import shareApi from '../../../server-api/share-collection';
+import { checkIfUserCanEditThumbnail } from '../../../utils/asset';
+import downloadUtils from '../../../utils/download';
+import toastUtils from '../../../utils/toast';
+import urlUtils from '../../../utils/url';
+import SubCollection from '../../Sub-collection/sub-collection';
+import Button from '../buttons/button';
+import FolderGridItem from '../folder/folder-grid-item';
+import FolderListItem from '../folder/folder-list-item';
+import useDropzone from '../misc/dropzone';
+import ChangeThumbnail from '../modals/change-thumnail-modal';
+import ConfirmModal from '../modals/confirm-modal';
+import AssetAddition from './asset-addition';
+import styles from './asset-grid.module.css';
+import AssetThumbail from './asset-thumbail';
+import AssetUpload from './asset-upload';
+import DetailOverlay from './detail-overlay';
+import ListItem from './list-item';
 
 // Components
-import useSortedAssets from "../../../hooks/use-sorted-assets";
-import folderApi from "../../../server-api/folder";
-import Button from "../buttons/button";
-import FolderGridItem from "../folder/folder-grid-item";
-import FolderListItem from "../folder/folder-list-item";
-import ConfirmModal from "../modals/confirm-modal";
-import AssetAddition from "./asset-addition";
-import AssetThumbail from "./asset-thumbail";
-import AssetUpload from "./asset-upload";
-import DetailOverlay from "./detail-overlay";
-import ListItem from "./list-item";
-
-import fileDownload from "js-file-download";
-import { ASSET_ACCESS } from "../../../constants/permissions";
-
-import { sizeToZipDownload } from "../../../constants/download";
-import { checkIfUserCanEditThumbnail } from "../../../utils/asset";
-import ChangeThumbnail from "../modals/change-thumnail-modal";
-import SubCollection from "../../Sub-collection/sub-collection";
-
-import SubcollectionListView from "../../Sub-collection/List-view";
 
 const AssetGrid = ({
   activeView = "grid",

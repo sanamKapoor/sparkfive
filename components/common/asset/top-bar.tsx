@@ -50,7 +50,9 @@ const TopBar = ({
     setLastUploadedFolder,
     folders,
     setActiveFolder,
-    setFolders
+    setFolders,
+    sidebarOpen,
+    setSidebarOpen
   } = useContext(AssetContext);
 
   const { hasPermission, advancedConfig } =
@@ -143,7 +145,7 @@ const TopBar = ({
   const folderData = folders.filter((folder) => folder.id === activeFolder);
 
   return (
-    <section className={`${styles['container']} ${styles['']}`} id={"top-bar"}>
+    <section className={`${sidebarOpen ? styles['container'] : styles['container-on-toggle']}`} id={"top-bar"}>
       <div
         className={styles["filter-mobile"]}
         onClick={() => handleOpenFilter()}
@@ -165,6 +167,11 @@ const TopBar = ({
             current={folderData[0]?.name}
           />
         )}
+        {sidebarOpen ?
+          null :
+          <div className={styles.newsidenav}>
+            <img className={styles.sidenavRightIcon} onClick={() => { setSidebarOpen(!sidebarOpen) }} src={Utilities.arrowright} />
+          </div>}
         {activeFolder && mode === "assets" && (
           <SubHeader pageTitle={folderData[0]?.name} children={undefined} />
         )}
