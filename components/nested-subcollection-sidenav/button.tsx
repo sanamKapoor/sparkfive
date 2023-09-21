@@ -31,7 +31,7 @@ const NestedButton: React.FC<MyComponentProps> = ({ children, type, parentId }) 
       }
       const { data } = await folderApi.createFolder(folderData);
       setActiveModal("");
-      // setFolders([data, ...folders]); //Todo handle the additiob of folders in subcollection here
+      // setFolders([data, ...folders]); //Todo handle the addition of folders in subcollection here
       // setSidenavFolderList({ results: [data, ...sidenavFolderList] })
       setDisableButtons(false)
       toastUtils.success("Collection created successfully");

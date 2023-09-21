@@ -27,31 +27,30 @@ import { getFolderKeyAndNewNameByFileName } from "../../../utils/upload";
 import AssetDuplicateModal from "./asset-duplicate-modal";
 
 import { ASSET_UPLOAD_APPROVAL } from "../../../constants/permissions";
+
 import Button from "../buttons/button";
 
 const AssetAddition = ({
   activeFolder = "",
-  getFolders = () => { },
   activeSearchOverlay = false,
-  setActiveSearchOverlay = (active) => { },
+  setActiveSearchOverlay = (active: any) => { },
   folderAdd = true,
   type = "",
   itemId = "",
   displayMode = "dropdown",
   versionGroup = "",
   triggerUploadComplete,
-}) => {
+}: any) => {
   const fileBrowserRef = useRef(undefined);
   const folderBrowserRef = useRef(undefined);
   const [activeModal, setActiveModal] = useState("");
   const [addSubCollection, setAddSubCollection] = useState(false)
-  const [submitError, setSubmitError] = useState("");
   const [duplicateModalOpen, setDuplicateModalOpen] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [duplicateAssets, setDuplicateAssets] = useState([]);
   const [uploadFrom, setUploadFrom] = useState("");
   const [disableButtons, setDisableButtons] = useState(false)
-  const { activeSortFilter } = useContext(FilterContext);
+  const { activeSortFilter } = useContext(FilterContext) as any;
   const { advancedConfig, hasPermission } = useContext(UserContext);
 
   const {
@@ -73,7 +72,12 @@ const AssetAddition = ({
     totalAssets,
     setFolderImport,
     setSidenavFolderList,
+    activeSubFolders,
     sidenavFolderList,
+    setSidenavFolderChildList,
+    setSubFoldersViewList,
+    sidenavFolderChildList,
+    subFoldersViewList
   } = useContext(AssetContext);
 
   // Upload asset
@@ -569,24 +573,21 @@ const AssetAddition = ({
     setDisableButtons(true)
     try {
       if (addSubCollection) {
-        folderData.parent_id = activeFolder
+        folderData.parent_id = activeSubFolders
       }
       const currentDataClone = [...folders];
       const { data } = await folderApi.createFolder(folderData);
       setActiveModal("");
       setAddSubCollection(false)
-      setFolders([data, ...currentDataClone]);
-      setSidenavFolderList({ results: [data, ...sidenavFolderList] })
+      !activeSubFolders && setFolders([data, ...currentDataClone]);
+      !activeSubFolders && setSidenavFolderList({ results: [data, ...sidenavFolderList] })
+      //TODO  handle Add setSidenavFolderChildList child list logic here
+      // setSidenavFolderChildList({ results: [data, ...sidenavFolderChildList.results] }),
+      setSubFoldersViewList({ ...subFoldersViewList, results: [data, ...subFoldersViewList.results] })
       setDisableButtons(false)
       toastUtils.success("Collection created successfully");
     } catch (err) {
       setDisableButtons(false)
-      // TODO: Show error message
-      if (err.response?.data?.message) {
-        setSubmitError(err.response.data.message);
-      } else {
-        setSubmitError("Something went wrong, please try again later");
-      }
     }
   };
 
@@ -809,8 +810,8 @@ const AssetAddition = ({
       },
     },
   ];
-
-  if (!folderAdd) {
+  // Here i have added the activeSortFilter?.mainFilter check for subCollection
+  if (!folderAdd || activeSortFilter?.mainFilter === "SubCollectionView") {
     dropdownOptions = dropdownOptions.filter(
       (item) => ["collection", "folder"].indexOf(item.id) === -1
     );
@@ -821,11 +822,13 @@ const AssetAddition = ({
       (item) => ["library"].indexOf(item.id) === -1
     );
   }
-  if (!activeFolder) {
+  // Here is the logic for add sub collection in topbar menu logic implemented will remove the subcollection in case of not active sub folder id 
+  if (!activeFolder && !activeSubFolders) {
     dropdownOptions = dropdownOptions.filter(
       (item) => ["subCollection"].indexOf(item.id) === -1
     );
   }
+
 
   const getCreationParameters = (attachQuery?: any) => {
     let queryData: any = {};
@@ -983,6 +986,10 @@ const AssetAddition = ({
         type="file"
         onChange={onFileChange}
       />
+
+
+
+
       {displayMode === "dropdown" ? (
         <ToggleAbleAbsoluteWrapper
           Wrapper={SimpleButtonWrapper}
@@ -992,6 +999,10 @@ const AssetAddition = ({
       ) : (
         <DropDownOptions />
       )}
+
+
+
+
       <FolderModal
         modalIsOpen={activeModal === "folder"}
         closeModal={() => { setActiveModal(""); setAddSubCollection(false) }}

@@ -64,7 +64,7 @@ const TopBar = ({
   const [showViewDropdown, setShowViewDropdown] = useState(false);
 
   const [tabs, setTabs] = useState(selectOptions.views);
-  const { setRenderedFlag } = useContext(FilterContext);
+
   const setSortFilterValue = (key, value) => {
 
 
@@ -172,9 +172,6 @@ const TopBar = ({
           <div className={styles.newsidenav}>
             <img className={styles.sidenavRightIcon} onClick={() => { setSidebarOpen(!sidebarOpen) }} src={Utilities.arrowright} />
           </div>}
-        {activeFolder && mode === "assets" && (
-          <SubHeader pageTitle={folderData[0]?.name} children={undefined} />
-        )}
       </div>
       <div className={styles.wrapper}>
         <div className={styles.innerwrapper}>
@@ -280,7 +277,7 @@ const TopBar = ({
               className={styles.search}
             />
           )}
-          {activeSearchOverlay && !(isShare && isFolder) && (
+          {/* {activeSearchOverlay && !(isShare && isFolder) && (
             <SearchOverlay
               closeOverlay={closeSearchOverlay}
               operationsEnabled={true}
@@ -292,7 +289,15 @@ const TopBar = ({
               }}
               sharePath={sharePath}
               isFolder={isFolder} onClickOutside={undefined} />
-          )}
+          )} */}
+
+
+
+
+
+
+
+
           {(amountSelected === 0 || mode === "folders") &&
             showAssetAddition &&
             hasPermission([
@@ -302,11 +307,19 @@ const TopBar = ({
               <div className={styles.mobilePlus}>
                 <AssetAddition
                   activeFolder={activeFolder}
-                  getFolders={getFolders}
                 />
               </div>
             )}
-          <div className={styles.gridOuter}>
+
+
+
+
+
+
+
+
+
+          {/* <div className={styles.gridOuter}>
             {!deletedAssets && (
               <img
                 className={styles.gridList}
@@ -348,8 +361,8 @@ const TopBar = ({
                 ]}
               />
             )}
-          </div>
-          {selectedAllAssets && (
+          </div> */}
+          {/* {selectedAllAssets && (
             <span
               className={styles["select-only-shown-items-text"]}
               onClick={toggleSelectAll}
@@ -364,8 +377,8 @@ const TopBar = ({
             >
               Select only 25 collections shown
             </span>
-          )}
-          <Button
+          )} */}
+          {/* <Button
             type="button"
             text="Select All"
             className="container secondary"
@@ -382,8 +395,8 @@ const TopBar = ({
                 }}
               />
             </div>
-          )}
-          <div className={styles["sort-wrapper"]}>
+          )} */}
+          {/* <div className={styles["sort-wrapper"]}>
             <Select
               label={"Sort By"}
               options={selectOptions.sort.filter((item) => {
@@ -403,7 +416,7 @@ const TopBar = ({
               onChange={(selected) => setSortFilterValue("sort", selected)}
               placeholder="Sort By"
             />
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -413,7 +426,7 @@ const TopBar = ({
           hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL]) && (
             <AssetAddition
               activeFolder={activeFolder}
-              getFolders={getFolders} triggerUploadComplete={undefined} />
+              triggerUploadComplete={undefined} />
           )}
       </div>
     </section>

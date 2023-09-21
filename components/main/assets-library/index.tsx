@@ -253,14 +253,8 @@ const AssetsLibrary = () => {
   useEffect(() => {
 
     if (firstLoaded) {
-      // let sort = { ...activeSortFilter.sort };
-      // sort =
-      //   advancedConfig.assetSortView === "newest"
-      //     ? selectOptions.sort[1]
-      //     : selectOptions.sort[3];
       setActiveSortFilter({
         ...activeSortFilter,
-        // sort,
         mainFilter: activeFolder ? "all" : activeSubFolders ? "SubCollectionView" : activeSortFilter.mainFilter,
       });
     }
