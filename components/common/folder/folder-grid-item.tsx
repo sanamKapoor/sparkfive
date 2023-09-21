@@ -179,6 +179,7 @@ const FolderGridItem = ({
 
   return (
     <div className={`${styles.container} ${isLoading && "loadable"}`}>
+     <div className={`${styles['main-border']}`}>
       <div
         className={
           thumbnailPath || thumbnailExtension
@@ -239,6 +240,8 @@ const FolderGridItem = ({
           </div>
         </>
       </div>
+      </div>
+     
       <div className={styles.info} onClick={handleOnFocus}>
         <div className={styles.folderItemHeadingOuter}>
           <div className={styles.folderItemHeading}>
