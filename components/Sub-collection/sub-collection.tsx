@@ -201,7 +201,7 @@ const SubCollection = (
                     setFocusedItem={setFocusedItem}
                   />
                 </li>
-               
+
               );
             }
           })
@@ -220,7 +220,7 @@ const SubCollection = (
               <>
                 {(
                   !loadingAssetsFolders &&
-                  <div className={styles["button-wrapper"]}>
+                  <div className={styles.LoadMorebtn}>
                     <Button
                       text="Load More"
                       type="button"

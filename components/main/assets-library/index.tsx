@@ -338,7 +338,7 @@ const AssetsLibrary = () => {
     });
   };
 
-  const getDefaultTab = (advConf?) => {
+  const getDefaultTab = (advConf: any) => {
     const config = advConf || advancedConfig;
     const defaultTab =
       config.defaultLandingPage === "allTab" ? "all" : "folders";
@@ -562,7 +562,7 @@ const AssetsLibrary = () => {
     }
   };
 
-  const onFilesDataGet = async (files) => {
+  const onFilesDataGet = async (files: any) => {
     if (!hasPermission([ASSET_UPLOAD_APPROVAL])) {
       const currentDataClone = [...assets];
       const currenFolderClone = [...folders];
@@ -688,7 +688,7 @@ const AssetsLibrary = () => {
     return queryData;
   };
 
-  const getAssets = async (replace = true, complete = null) => {
+  const getAssets = async (replace = true, complete: any = null) => {
     try {
       setLoadingAssets(true);
       if (replace) {
@@ -733,7 +733,12 @@ const AssetsLibrary = () => {
       }
       setPlaceHolders("folder", replace);
       const { field, order } = activeSortFilter.sort;
-      const queryParams = {
+      const queryParams: {
+        page: number;
+        sortField: any;
+        sortOrder: any;
+        [key: string]: any;
+      } = {
         page: replace ? 1 : nextPage,
         sortField: field,
         sortOrder: order,
@@ -743,7 +748,7 @@ const AssetsLibrary = () => {
       }
       if (activeSortFilter.filterFolders?.length > 0) {
         queryParams.folders = activeSortFilter.filterFolders
-          .map((item) => item.value)
+          .map((item: any) => item.value)
           .join(",");
       }
       const { data } = await folderApi.getFolders({
@@ -941,11 +946,11 @@ const AssetsLibrary = () => {
         <>
           <main className={`${styles.container}`}>
             <div className={styles.innnerContainer}>
-              {sidebarOpen ? <div className={styles.newsidenav}>
-                <NestedSidenav />
-              </div> : <div className={styles.newsidenav}>
-                <img className={styles.sidenavRightIcon} onClick={() => { setSidebarOpen(!sidebarOpen) }} src={Utilities.arrowright} />
-              </div>}
+              {sidebarOpen ?
+                <div className={styles.newsidenav}>
+                  <NestedSidenav />
+                </div> :
+                null}
               <div className={styles.rightSide}>
                 <div className='position-relative'>
                   <div className={styles["search-mobile"]}>
@@ -990,7 +995,7 @@ const AssetsLibrary = () => {
                   <InputChip /> */}
                 </div>
                 <div
-                  className={`${openFilter && styles["col-wrapper"]} ${styles["grid-wrapper"]} ${styles["grid-wrapper-web"]}
+                  className={`${openFilter && styles["col-wrapper"]} ${sidebarOpen ? styles["grid-wrapper-web"] : styles["grid-wrapper"]}
                     } ${activeFolder && styles["active-breadcrumb-item"]}`}
                 >
 
