@@ -143,7 +143,7 @@ const TopBar = ({
   const folderData = folders.filter((folder) => folder.id === activeFolder);
 
   return (
-    <section className={styles.container} id={"top-bar"}>
+    <section className={`${styles['container']} ${styles['']}`} id={"top-bar"}>
       <div
         className={styles["filter-mobile"]}
         onClick={() => handleOpenFilter()}

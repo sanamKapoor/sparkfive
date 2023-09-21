@@ -6,6 +6,14 @@
 .grid-wrapper {
   /* margin-top: calc(81px + 68px); */
   margin-top:30px;
+ 
+
+}
+.grid-wrapper-web{
+  max-width: calc(100% - 283px);
+ position: relative;
+  left:283px;
+  padding-top: 40px;
 }
 
 @media screen and (max-width: 600px) {

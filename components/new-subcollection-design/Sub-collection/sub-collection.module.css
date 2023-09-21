@@ -123,10 +123,25 @@
   }
   .cardsWrapper{
     display: grid;
-    grid-template-columns: repeat(5, 144px); 
- gap:32px
+    grid-template-columns: repeat(auto-fill,minmax(246px,1fr));
+    grid-gap: 40px
     
  
+  }
+  .assetWrapper{
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(246px,1fr));
+    grid-gap: 40px;
+  }
+  .LoadMorebtn{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    margin-top:30px;
+
+  }
+  .ExpandIcons{
+    width: 15px;
   }
    
    @media screen and (max-width: 1280px) {

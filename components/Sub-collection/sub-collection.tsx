@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import styles from "./sub-collection.module.css";
+import styles from "../new-subcollection-design/Sub-collection/sub-collection.module.css";
 import { Utilities } from "../../assets";
 import Button from "../common/buttons/button";
 import { AssetContext } from "../../context";
@@ -78,7 +78,7 @@ const SubCollection = (
       <div className={`${styles["sub-collection-heading"]}`}>
         <div className={styles.rightSide}>
           <span>Subcollection ({total})</span>
-          <img onClick={() => { handleHideClick() }} src={collectionHide ? Utilities.arrowDownUp : Utilities.downIcon} />
+          <img className={styles.ExpandIcons} onClick={() => { handleHideClick() }} src={collectionHide ? Utilities.up : Utilities.downIcon} />
         </div>
         <div className={styles.tagOuter}>
           <div className={styles.left}>
@@ -148,10 +148,10 @@ const SubCollection = (
         <div className={`${styles["sub-collection-heading"]}`}>
           <div className={styles.rightSide}>
             <span>Assets ({totalAssets})</span>
-            <img onClick={() => { handleAssetsHideClick() }} src={assetsHide ? Utilities.arrowDownUp : Utilities.downIcon} />
+            <img className={styles.ExpandIcons} onClick={() => { handleAssetsHideClick() }} src={assetsHide ? Utilities.up : Utilities.downIcon} />
           </div>
         </div>
-        <div>
+        <div className={styles.assetWrapper}>
           {assets.map((assetItem, index) => {
             if (assetItem.status !== "fail") {
               return (
@@ -201,6 +201,7 @@ const SubCollection = (
                     setFocusedItem={setFocusedItem}
                   />
                 </li>
+               
               );
             }
           })
