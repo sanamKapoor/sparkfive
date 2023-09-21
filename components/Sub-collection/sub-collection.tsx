@@ -42,6 +42,7 @@ const SubCollection = (
 
 
   const handleCircleClick = () => {
+    loadMoreAssets(true, !isChecked)
     setIsChecked(!isChecked);
   };
   const handleHideClick = () => {
@@ -71,6 +72,7 @@ const SubCollection = (
       setSubFoldersAssetsViewList({ results: [], next: 0, total: 0 })
     }
   }, [])
+
   return (
     <>
       <div className={`${styles["sub-collection-heading"]}`}>
@@ -210,7 +212,7 @@ const SubCollection = (
             {nextAsset > 2 ? (
               <>
                 {(!loadingAssetsFolders &&
-                  <Waypoint onEnter={() => { loadMoreAssets(false) }} fireOnRapidScroll={false} />
+                  <Waypoint onEnter={() => { loadMoreAssets(false, isChecked) }} fireOnRapidScroll={false} />
                 )}
               </>
             ) : (
@@ -222,7 +224,10 @@ const SubCollection = (
                       text="Load More"
                       type="button"
                       className="container primary"
-                      onClick={() => { loadMoreAssets(false) }}
+                      onClick={() => {
+                        loadMoreAssets(false, isChecked
+                        )
+                      }}
                     />
                   </div>
                 )}

@@ -789,9 +789,8 @@ const AssetsLibrary = () => {
     }
   }
 
-  const getSubCollectionsAssetData = async (replace = true, complete: any = null) => {
+  const getSubCollectionsAssetData = async (replace = true, showAllAssets: boolean = false) => {
     try {
-
       if (activeSortFilter.mainFilter !== "SubCollectionView") {
         return;
       }
@@ -807,13 +806,11 @@ const AssetsLibrary = () => {
         ...getAssetsSort(activeSortFilter),
         term,
         ...searchFilterParams,
-        complete,
+        showAllAssets: showAllAssets
       });
-
       setSubFoldersAssetsViewList(subFolderAssets,
         replace
       );
-
     } catch (err) {
       // TODO: Handle Error
       console.log(err);
