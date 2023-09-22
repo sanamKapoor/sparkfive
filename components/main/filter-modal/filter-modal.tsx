@@ -3,18 +3,19 @@ import React, { useState } from "react";
 import { Utilities } from "../../../assets";
 import Button from "../../common/buttons/button";
 
-const Filtermodal = () => {
+const Filtermodal = ({ onClose }) => {
   const [isChecked, setIsChecked] = useState(false);
 
   const handleCircleClick = () => {
     setIsChecked(!isChecked);
   };
   return (
+    <div className={styles.modalContainer}>
     <div className={styles.tagModal}>
       <div className={styles.modalHead}>
         <span>More filters</span>
         <div className={styles.buttons}>
-          <button className={styles.clear}>clear</button>
+          <button onClick={onClose}  className={styles.clear}>clear</button>
           <img src={Utilities.closeIcon} />
         </div>
       </div>
@@ -146,9 +147,10 @@ const Filtermodal = () => {
         </div>
       </div>
       <div className={styles.modalBtn}>
-        <Button className={"apply"} text={"Apply"}></Button>
-        <Button className={"cancel"} text={"Cancel"}></Button>
+        <Button className="apply" text={"Apply"}></Button>
+        <Button className="cancel" text={"Cancel"}></Button>
       </div>
+    </div>
     </div>
   );
 };

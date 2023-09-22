@@ -6,19 +6,20 @@ import NestedSelect from "../../common/inputs/nested-select";
 import Select from "../../common/inputs/select";
 import { sorts } from "../../../config/data/attributes";
 
-const Tagmodal = () => {
+const Tagmodal = ({ onClose }) => {
   const [isChecked, setIsChecked] = useState(false);
 
   const handleCircleClick = () => {
     setIsChecked(!isChecked);
   };
   return (
-    <div className={styles.tagModal}>
+    <div className={styles.modalContainer}>
+       <div className={styles.tagModal}>
       <div className={styles.modalHead}>
         <span>Select Tags</span>
         <div className={styles.buttons}>
-          <button className={styles.clear}>clear</button>
-          <img src={Utilities.closeIcon} />
+          <button onClick={onClose} className={styles.clear}>clear</button>
+          <img  src={Utilities.closeIcon} />
         </div>
       </div>
       <div className={styles.searchWrapper}>
@@ -521,8 +522,9 @@ const Tagmodal = () => {
       <label>Rule:</label>
       <Select 
         onChange={(value) => {  } }
+      
         placeholder={'Any selected'}
-        styleType={`regular ${styles['tag-select']}`} options={sorts}/>     
+        styleType={`regular ${styles['tag-select']} fontSize: '16px', fontWeight: 'bold' `} options={sorts}/>     
         </div>
            
       <div className={styles.modalBtn}>
@@ -532,6 +534,10 @@ const Tagmodal = () => {
      
 
     </div>
+    </div>
+   
   );
+  
 };
+
 export default Tagmodal;

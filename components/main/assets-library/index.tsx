@@ -952,6 +952,17 @@ const AssetsLibrary = () => {
                 </div> :
                 null}
               <div className={`${sidebarOpen ? styles["rightSide"] : styles["rightSideToggle"]}`}>
+              {openFilter && hasPermission([ASSET_ACCESS]) &&
+                      <FilterContainer
+                        clearFilters={clearFilters}
+                        openFilter={openFilter}
+                        setOpenFilter={setOpenFilter}
+                        activeSortFilter={activeSortFilter}
+                        setActiveSortFilter={setActiveSortFilter}
+                        isFolder={activeSortFilter.mainFilter === "folders"}
+                        filterWidth={widthCard}
+                      />
+                    }
                 <div className='position-relative'>
                   <div className={styles["search-mobile"]}>
                     <SearchOverlay
@@ -990,10 +1001,14 @@ const AssetsLibrary = () => {
                       activeMode={activeMode}
                       isFolder={activeSortFilter?.mainFilter === 'folders'}
                     />
+                   
                   }
+                  
+                   
                   {/* <Tags />
                   <InputChip /> */}
                 </div>
+              
                 <div
                   className={`${openFilter && styles["col-wrapper"]} ${sidebarOpen ? styles["grid-wrapper-web"] : styles["grid-wrapper"]}
                     } ${activeFolder && styles["active-breadcrumb-item"]}`}
@@ -1025,17 +1040,7 @@ const AssetsLibrary = () => {
                       />
                     )}
                   </DropzoneProvider>
-                  {openFilter && hasPermission([ASSET_ACCESS]) &&
-                    <FilterContainer
-                      clearFilters={clearFilters}
-                      openFilter={openFilter}
-                      setOpenFilter={setOpenFilter}
-                      activeSortFilter={activeSortFilter}
-                      setActiveSortFilter={setActiveSortFilter}
-                      isFolder={activeSortFilter.mainFilter === "folders"}
-                      filterWidth={widthCard}
-                    />
-                  }
+                 
                 </div>
               </div>
             </div>
@@ -1045,6 +1050,7 @@ const AssetsLibrary = () => {
       ) : (
         <NoPermissionNotice />
       )}
+   
 
       <RenameModal
         closeModal={() => setRenameModalOpen(false)}

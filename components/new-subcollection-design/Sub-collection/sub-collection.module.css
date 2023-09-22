@@ -84,9 +84,8 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition:
-      background-color 0.3s,
-      color 0.3s;
+    transition:background-color 0.3s,
+    color 0.3s;
     border: 1px solid #dedad4;
   }
   .checkIcon {
@@ -159,7 +158,7 @@
   @media screen and (max-width: 475px) {
     .cardsWrapper{
         display: grid;
-        grid-template-columns: repeat(1, 282px); 
+        grid-template-columns: repeat(auto-fill, minmax(246px, 1fr));
     }
    
   }
