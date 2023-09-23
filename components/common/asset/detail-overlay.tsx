@@ -322,6 +322,7 @@ const DetailOverlay = ({
           setPreviewUrl(data.previewUrl);
           setVersionRealUrl(data.realUrl);
           setVersionThumbnailUrl(data.thumbailUrl);
+          setCurrentAsset({...currentAsset, thumbailUrl: data.thumbailUrl})
         }
       } else {
         const { data } = await assetApi.getById(asset.id);
@@ -331,6 +332,9 @@ const DetailOverlay = ({
           setPreviewUrl(data.previewUrl);
           setVersionRealUrl(data.realUrl);
           setVersionThumbnailUrl(data.thumbailUrl);
+
+          // This is for showing current asset image in version list
+          setCurrentAsset({...data.asset, thumbailUrl: data.thumbailUrl})
         }
       }
     } catch (err) {
@@ -665,11 +669,14 @@ const DetailOverlay = ({
         }
       }
     } catch (e) {
+      const errorResponse = await e.response.data.text() || "{}"
+      const parsedErrorResponse = JSON.parse(errorResponse)
+      console.log(`Error in detail-overlay`)
       updateDownloadingStatus(
         "error",
         0,
         0,
-        "Internal Server Error. Please try again."
+        parsedErrorResponse.message || 'Internal Server Error. Please try again.'
       );
     }
 

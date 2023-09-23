@@ -243,8 +243,12 @@ const AssetsLibrary = () => {
           setFirstLoaded(true);
         }
       }
+      console.log(`>>> Check firstLoaded`, {firstLoaded, renderFlag, activeSortFilter})
 
-      if (firstLoaded && renderFlag) {
+      // I commented renderFlag here, not sure why we need to wait for it to load folders/assets.
+      // This fixes issue happening when collection is not loaded at the first opening
+      // Referenced issues: https://trello.com/c/r57fmh0a/548-login-landing-ui-issue
+      if (firstLoaded){//} && renderFlag) {
         setActivePageMode("library");
         if (activeSortFilter.mainFilter === "folders") {
           setActiveMode("folders");
