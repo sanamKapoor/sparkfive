@@ -23,7 +23,8 @@
     border-bottom: none;
 }
 
-.list li:hover, .list li.selected {
+.list li:hover,
+.list li.selected {
     background-color: var(--color-sec-lightblue);
 }
 
@@ -37,7 +38,7 @@
     padding: 20px 20px 5px 20px;
 }
 
-.folder-wrapper button{
+.folder-wrapper button {
     margin-left: 1rem;
 }
 

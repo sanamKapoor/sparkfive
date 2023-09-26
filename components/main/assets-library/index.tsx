@@ -1,7 +1,6 @@
 import update from "immutability-helper";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useRef, useState } from "react";
-import React from "react";
 import { isMobile } from "react-device-detect";
 
 import { validation } from "../../../constants/file-validation";
@@ -27,7 +26,6 @@ import AssetHeaderOps from "../../common/asset/asset-header-ops";
 import AssetOps from "../../common/asset/asset-ops";
 import DetailOverlay from "../../common/asset/detail-overlay";
 import TopBar from "../../common/asset/top-bar";
-import deletedAssets from "../../common/custom-settings/deleted-assets";
 import FilterContainer from "../../common/filter/filter-container";
 import { DropzoneProvider } from "../../common/misc/dropzone";
 import NoPermissionNotice from "../../common/misc/no-permission-notice";
@@ -294,7 +292,7 @@ const AssetsLibrary = () => {
     }
   }, [activeMode]);
 
-  useEffect(() => { }, [advancedConfig.set]);
+  useEffect(() => {}, [advancedConfig.set]);
 
   const clearFilters = () => {
     setActiveSortFilter({
@@ -363,11 +361,11 @@ const AssetsLibrary = () => {
         const updatedAssets = assets.map((asset, index) =>
           index === i
             ? {
-              ...asset,
-              status: "fail",
-              index,
-              error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
-            }
+                ...asset,
+                status: "fail",
+                index,
+                error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
+              }
             : asset
         );
 
@@ -430,16 +428,16 @@ const AssetsLibrary = () => {
           "fileModifiedAt",
           assets[i].dragDropFolderUpload
             ? new Date(
-              (
-                file.lastModifiedDate || new Date(file.lastModified)
-              ).toUTCString()
-            ).toISOString()
+                (
+                  file.lastModifiedDate || new Date(file.lastModified)
+                ).toUTCString()
+              ).toISOString()
             : new Date(
-              (
-                file.originalFile.lastModifiedDate ||
-                new Date(file.originalFile.lastModified)
-              ).toUTCString()
-            ).toISOString()
+                (
+                  file.originalFile.lastModifiedDate ||
+                  new Date(file.originalFile.lastModified)
+                ).toUTCString()
+              ).toISOString()
         );
 
         let size = totalSize;
@@ -907,17 +905,17 @@ const AssetsLibrary = () => {
       {(activeMode === "assets"
         ? selectedAssets.length
         : selectedFolders.length) > 0 && (
-          <AssetHeaderOps
-            isUnarchive={activeSortFilter.mainFilter === "archived"}
-            isFolder={activeMode === "folders"}
-            deletedAssets={false}
-          />
-        )}
+        <AssetHeaderOps
+          isUnarchive={activeSortFilter.mainFilter === "archived"}
+          isFolder={activeMode === "folders"}
+          deletedAssets={false}
+        />
+      )}
       {/* {!renderFlag && (
         <SpinnerOverlay text="Your assets are Loading please wait..." />
       )} */}
       {hasPermission([ASSET_ACCESS]) ||
-        hasPermission([ASSET_UPLOAD_APPROVAL]) ? (
+      hasPermission([ASSET_UPLOAD_APPROVAL]) ? (
         <>
           <main className={`${styles.container}`}>
             <div className="position-relative">
@@ -962,8 +960,9 @@ const AssetsLibrary = () => {
               )}
             </div>
             <div
-              className={`${openFilter && styles["col-wrapper"]} ${styles["grid-wrapper"]
-                } ${activeFolder && styles["active-breadcrumb-item"]}`}
+              className={`${openFilter && styles["col-wrapper"]} ${
+                styles["grid-wrapper"]
+              } ${activeFolder && styles["active-breadcrumb-item"]}`}
             >
               <DropzoneProvider>
                 {advancedConfig.set && renderFlag && (

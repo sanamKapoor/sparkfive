@@ -1,6 +1,5 @@
 .list {
-  width: 477px;
-  position: absolute;
+  width: 447px;
   background-color: white;
   z-index: 1000;
   right: 0;
@@ -10,9 +9,22 @@
   top: 36px;
 }
 
-/* .list ul {
+.page {
+  /* position: relative; */
+  border: none;
+  box-shadow: none;
+  width: 100%;
+  z-index: 0;
+  padding: 0 60px 42px;
+}
+
+.title {
+  font-weight: 600;
   padding: 16px;
-} */
+  border-bottom: 1px solid var(--color-border);
+}
+
+
 
 .notification {
   display: flex;
@@ -20,15 +32,16 @@
   align-items: baseline;
   padding: 16px;
 }
-
+.notify{
+  display: flex;
+  align-items: baseline;
+}
 .notification:last-child {
   border: none;
 }
 
 .page .notification {
-  margin-bottom: 10px;
-  padding-bottom: 10px;
-  padding-top: 10px;
+  padding: 30px 0;
 }
 
 .message {
@@ -38,7 +51,7 @@
   color: var(--color-sec-blue);
 }
 
-.message > div:first-child {
+.message>div:first-child {
   font-size: 14px;
 }
 
@@ -64,6 +77,10 @@
 
 .page .action {
   min-width: 93px;
+}
+
+.page .empty {
+  padding: 16px 0;
 }
 
 .action:hover {
@@ -95,37 +112,33 @@
   background-color: var(--color-sec-blue);
 }
 
+.member {
+  width: 13px;
+  align-self: center;
+  margin-right: 16px;
+}
+
 @media screen and (max-width: 900px) {
 
   .page {
     width: 100%;
     right: 0;
     flex-wrap: wrap;
+    padding: 0 30px 42px;
   }
 }
 
-@media screen and (max-width: 550px) {
+@media screen and (max-width: 600px) {
   .list {
     max-width: inherit;
     right: -34px;
     width: calc(100vw - 58px);
   }
+ 
 
   .page {
     max-width: 100%;
+    right: 0;
+    padding: 0 16px 42px;
   }
-}
-
-.page {
-  position: relative;
-  border: none;
-  width: 100%;
-  z-index: 0;
-  padding: 0;
-}
-
-.title {
-  font-weight: 600;
-  padding: 16px;
-  border-bottom: 1px solid var(--color-border);
 }

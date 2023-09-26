@@ -1,15 +1,16 @@
 .asset {
-    /* animation: assetintoview 0.5s; */
     transition: opacity 0.5s ease;
     width: 100%;
     height: auto;
     object-fit: contain;
     aspect-ratio: 1 / 1;
-    /* max-height: 330px; */
 }
 
-.asset__crop{
-    aspect-ratio: none;
+.asset__crop {
+    transition: opacity 0.5s ease;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
 }
 
 .opaque {
@@ -18,7 +19,7 @@
 
 .react-crop {
     height: 100%;
-    flex-shrink:  0;
+    flex-shrink: 0;
 }
 
 .maxHeight {

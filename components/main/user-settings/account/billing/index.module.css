@@ -1,0 +1,41 @@
+.section-buttons {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  border-bottom: 1px solid var(--color-secondary-border);
+  width: 45%;
+  padding: 0 50px;
+  max-width: 727px;
+  width: 100%;
+}
+
+.section-button {
+  padding: 8px 16px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-sec-text);
+  cursor: pointer;
+
+}
+
+.section-button.active {
+  color: var(--color-prim-navy);
+  background-color: var(--color-sec-lightivory);
+}
+
+.content{
+  margin-top: 40px;
+  padding-bottom: 100px;
+  /* border-bottom: 1px solid var(--color-secondary-border); */
+  padding: 0 60px;
+}
+
+@media screen and (max-width: 600px) {
+  .section-buttons {
+    gap: 0;
+  }
+
+  .section-button {
+    font-size: 12px;
+  }
+}

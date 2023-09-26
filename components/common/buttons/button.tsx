@@ -1,19 +1,29 @@
-import styles from './button.module.css'
+import { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
+import styles from "./button.module.css";
 
-const Button = ({ text, type, onClick = (e) => { }, disabled = false, styleType = '', styleTypes = [], className = '', form = null }) => {
-  const props: any = {}
-  if(form){
-    props.form = form
-  }
-  return <button
-      className={`${styles.container} ${styles[styleType]} ${styles[type]} ${className} ${styleTypes.map(styleItem => styles[styleItem]).join(' ')}`}
-      type={type}
-      onClick={onClick}
-      disabled={disabled}
-      {...props}
-  >
-    {text}
-  </button>
+interface CommonButtonProps
+  extends DetailedHTMLProps<
+    ButtonHTMLAttributes<HTMLButtonElement>,
+    HTMLButtonElement
+  > {
+  text: string;
 }
 
-export default Button
+const Button: React.FC<CommonButtonProps> = ({
+  text,
+  className = "",
+  ...rest
+}) => {
+  const classes = className
+    .split(" ")
+    .map((style) => styles[style])
+    .join(" ");
+
+  return (
+    <button className={classes} {...rest}>
+      {text}
+    </button>
+  );
+};
+
+export default Button;

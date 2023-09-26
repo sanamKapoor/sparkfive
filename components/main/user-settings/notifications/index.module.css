@@ -1,7 +1,6 @@
 .preferences{
-  padding-bottom: 2rem;
+  padding: 42px 60px;
   border-bottom: 1px solid var(--color-secondary-border);
-  margin-bottom: 2rem;
 }
 
 .radio-options{
@@ -14,4 +13,22 @@
 
 .option>div:first-child{
   margin-bottom: 0.5rem;
+}
+
+.divider {
+  border-top: 1px solid var(--color-secondary-border);
+  margin: 20px 0;
+}
+
+
+@media screen and (max-width: 900px)  {
+  .preferences {
+    padding: 42px 30px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .preferences {
+    padding: 42px 16px;
+  }
 }

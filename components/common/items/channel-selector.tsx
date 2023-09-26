@@ -1,21 +1,26 @@
-import styles from './channel-selector.module.css'
-import { capitalCase } from 'change-case'
-import { ProjectTypeChannel, ProjectType } from '../../../assets'
-import projectTypeOptions from '../../../resources/data/project-types.json'
-import channelSocialOptions from '../../../resources/data/channels-social.json'
+import { capitalCase } from "change-case";
+import { ProjectType, ProjectTypeChannel } from "../../../assets";
+import channelSocialOptions from "../../../resources/data/channels-social.json";
+import projectTypeOptions from "../../../resources/data/project-types.json";
+import styles from "./channel-selector.module.css";
 
 // Components
-import ToggleableAbsoluteWrapper from '../misc/toggleable-absolute-wrapper'
-import ItemDropdownWrapper from '../items/item-dropdown-wrapper'
-import Dropdown from '../inputs/dropdown'
+import Dropdown from "../inputs/dropdown";
+import ItemDropdownWrapper from "../items/item-dropdown-wrapper";
+import ToggleableAbsoluteWrapper from "../misc/toggleable-absolute-wrapper";
 
-const ChannelSelector = ({ onLabelClick, handleChannelChange, channel = 'Select Channel', isShare = false }) => {
+const ChannelSelector = ({
+  onLabelClick,
+  handleChannelChange,
+  channel = "Select Channel",
+  isShare = false,
+}) => {
   return (
     <div className={`${styles.container} ${isShare && styles.shared}`}>
       <ToggleableAbsoluteWrapper
         enabled={!isShare}
-        wrapperClass='field'
-        contentClass='dropdown'
+        wrapperClass="field"
+        contentClass="dropdown"
         Wrapper={({ children }) => (
           <>
             <ItemDropdownWrapper
@@ -24,7 +29,7 @@ const ChannelSelector = ({ onLabelClick, handleChannelChange, channel = 'Select 
               hasOption={true}
               optionOnClick={onLabelClick}
               isShare={isShare}
-              styleType={channel === 'Select Channel' ? false : true}
+              styleType={channel === "Select Channel" ? false : true}
             >
               {children}
             </ItemDropdownWrapper>
@@ -32,15 +37,17 @@ const ChannelSelector = ({ onLabelClick, handleChannelChange, channel = 'Select 
         )}
         Content={() => (
           <Dropdown
-            options={[...projectTypeOptions, ...channelSocialOptions].filter(option => option !== 'social').map((option) => ({
-              label: capitalCase(option),
-              onClick: () => handleChannelChange(option),
-            }))}
+            options={[...projectTypeOptions, ...channelSocialOptions]
+              .filter((option) => option !== "social")
+              .map((option) => ({
+                label: capitalCase(option),
+                onClick: () => handleChannelChange(option),
+              }))}
           />
         )}
       />
     </div>
-  )
-}
+  );
+};
 
-export default ChannelSelector
+export default ChannelSelector;

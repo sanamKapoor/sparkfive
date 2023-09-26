@@ -1,14 +1,13 @@
-import styles from "./filter-selector.module.css";
+import update from "immutability-helper";
+import { useContext, useEffect, useState } from "react";
 import { Utilities } from "../../../assets";
 import { FilterContext } from "../../../context";
-import { useContext, useEffect, useState } from "react";
-import update from "immutability-helper";
+import styles from "./filter-selector.module.css";
 
 // Components
 import IconClickable from "../buttons/icon-clickable";
-import FiltersSelect from "../inputs/filters-select";
 import Dropdown from "../inputs/dropdown";
-import React from "react";
+import FiltersSelect from "../inputs/filters-select";
 
 const FilterSelector = ({
   searchBar = true,
@@ -87,15 +86,15 @@ const FilterSelector = ({
   }
 
   const getSelectionLabel = () => {
-    switch(anyAllSelection){
-      case 'all':
-            return 'All Selected'
-      case 'any': 
-            return 'Any Selected'
-      default: 
-            return 'No Tags'
-    } 
-  }
+    switch (anyAllSelection) {
+      case "all":
+        return "All Selected";
+      case "any":
+        return "Any Selected";
+      default:
+        return "No Tags";
+    }
+  };
 
   return (
     <div className={`${styles.container}`}>
@@ -140,35 +139,40 @@ const FilterSelector = ({
           );
         })}
       </ul>
-      {anyAllSelection !== '' && <div className={styles.dropdownOpt}>
-        <div className={styles.dropdownOptHead} onClick={() => setShowViewDropdown(true)}>
-          {getSelectionLabel()}
-          <img
-            src={Utilities.arrowGrey}            
-          />
+      {anyAllSelection !== "" && (
+        <div className={styles.dropdownOpt}>
+          <div
+            className={styles.dropdownOptHead}
+            onClick={() => setShowViewDropdown(true)}
+          >
+            {getSelectionLabel()}
+            <img src={Utilities.arrowGrey} />
+          </div>
+          {showViewDropdown && (
+            <Dropdown
+              additionalClass={styles["view-dropdown"]}
+              onClickOutside={() => setShowViewDropdown(false)}
+              options={[
+                {
+                  label: "All selected",
+                  id: "All selected",
+                  onClick: () => setAnyAll("all"),
+                },
+                {
+                  label: "Any Selected",
+                  id: "Any",
+                  onClick: () => setAnyAll("any"),
+                },
+                {
+                  label: "No Tags",
+                  id: "None",
+                  onClick: () => setAnyAll("none"),
+                },
+              ]}
+            />
+          )}
         </div>
-        {showViewDropdown && <Dropdown
-          additionalClass={styles["view-dropdown"]}
-          onClickOutside={() => setShowViewDropdown(false)}
-          options={[
-            {
-              label: "All selected",
-              id: "All selected",
-              onClick: () => setAnyAll('all')
-            },
-            {
-              label: "Any Selected",
-              id: "Any",
-              onClick: () => setAnyAll('any')
-            },
-            {
-                label: "No Tags",
-                id: "None",
-                onClick: () => setAnyAll('none')
-              },
-          ]}
-        />}
-      </div>}
+      )}
 
       {searchBar && (
         <div className={`${styles["select-filter"]} search-filters`}>

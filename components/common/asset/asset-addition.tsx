@@ -1,38 +1,33 @@
-import styles from "./asset-addition.module.css";
-import { Assets, AssetOps } from "../../../assets";
-import { AssetContext } from "../../../context";
-import { getFoldersFromUploads } from "../../../utils/asset";
-import toastUtils from "../../../utils/toast";
-import cookiesUtils from "../../../utils/cookies";
+import { AssetOps, Assets } from "../../../assets";
+import { AssetContext, FilterContext, UserContext } from "../../../context";
 import assetApi from "../../../server-api/asset";
-import taskApi from "../../../server-api/task";
-import projectApi from "../../../server-api/project";
 import folderApi from "../../../server-api/folder";
-import teamAPI from "../../../server-api/team";
+import projectApi from "../../../server-api/project";
+import taskApi from "../../../server-api/task";
+import { getFoldersFromUploads } from "../../../utils/asset";
+import cookiesUtils from "../../../utils/cookies";
+import toastUtils from "../../../utils/toast";
+import styles from "./asset-addition.module.css";
 
 // libraries
-import { useRef, useState, useContext } from "react";
 import _ from "lodash";
+import { useContext, useRef, useState } from "react";
 
 // Components
 import SearchOverlay from "../../main/search-overlay-assets";
-import SimpleButton from "../buttons/simple-button";
-import ToggleAbleAbsoluteWrapper from "../misc/toggleable-absolute-wrapper";
 import DriveSelector from "../asset/drive-selector";
-import FolderModal from "../folder/folder-modal";
 import IconClickable from "../buttons/icon-clickable";
+import FolderModal from "../folder/folder-modal";
+import ToggleAbleAbsoluteWrapper from "../misc/toggleable-absolute-wrapper";
 
 import { validation } from "../../../constants/file-validation";
 import { getFolderKeyAndNewNameByFileName } from "../../../utils/upload";
 
 // Context
-import { FilterContext, UserContext } from "../../../context";
 import AssetDuplicateModal from "./asset-duplicate-modal";
 
-import {
-  ASSET_UPLOAD_NO_APPROVAL,
-  ASSET_UPLOAD_APPROVAL,
-} from "../../../constants/permissions";
+import React from "react";
+import { ASSET_UPLOAD_APPROVAL } from "../../../constants/permissions";
 
 const AssetAddition = ({
   activeFolder = "",
@@ -160,10 +155,6 @@ const AssetAddition = ({
           if (folderGroup[fileGroupInfo.folderKey]) {
             // Store this key to use to upload to same folder
             currentUploadingFolderId = folderGroup[fileGroupInfo.folderKey];
-            // Assign new file name without splash
-            // file = new File([file.slice(0, file.size, file.type)],
-            // 	fileGroupInfo.newName
-            // 	, { type: file.type, lastModified: (file.lastModifiedDate || new Date(file.lastModified)) })
           }
         }
 
@@ -923,8 +914,12 @@ const AssetAddition = ({
         !folderAdd && styles["button-wrapper-displaced"]
       } asset-addition`}
     >
-      {/* {hasPermission([ASSET_UPLOAD_APPROVAL]) && <span className={styles['approval-text']}>Upload for approval</span>} */}
-      {!hasPermission([ASSET_UPLOAD_APPROVAL]) && <SimpleButton text="+" />}
+      {!hasPermission([ASSET_UPLOAD_APPROVAL]) && (
+        // <Button text="+" className="container add"/>
+        <button className={styles.addButton}>
+          <span>+</span>
+        </button>
+      )}
       {children}
     </div>
   );

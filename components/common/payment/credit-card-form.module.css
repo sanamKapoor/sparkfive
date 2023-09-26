@@ -1,15 +1,17 @@
 .container {
-  padding: 35px 25px;
+  padding: 25px 30px 30px 30px;
   width: 100%;
-  max-width: 400px;
+  max-width: 528px;
   margin-bottom: 3rem;
+  overflow: auto;
+  /* height:69vh; */
 }
 
 .no-bottom {
   margin-bottom: 0;
 }
 
-.form > div {
+.form>div {
   margin-bottom: 12px;
 }
 
@@ -40,12 +42,12 @@
   display: flex;
 }
 
-.fields-pair > div:first-child {
+.fields-pair>div:first-child {
   width: 50%;
   margin-right: 5%;
 }
 
-.fields-pair > div:last-child {
+.fields-pair>div:last-child {
   width: 45%;
 }
 
@@ -55,12 +57,14 @@
 }
 
 .container label {
-  font-weight: 500;
+  font-weight: 400;
   display: block;
   margin-bottom: 8px;
+  color: var(--color-sec-text);
 }
 
 @media screen and (max-width: 650px) {
+
   .expiry-cvc,
   .city-state {
     flex-wrap: wrap;
@@ -70,16 +74,16 @@
     flex-wrap: wrap;
   }
 
-  .stripe-elem-expiry {    
+  .stripe-elem-expiry {
     width: 100%;
   }
 
-  .fields-pair > div:first-child {
+  .fields-pair>div:first-child {
     width: 100%;
     margin-right: 0;
   }
-  
-  .fields-pair > div:last-child {
+
+  .fields-pair>div:last-child {
     width: 100%;
   }
 

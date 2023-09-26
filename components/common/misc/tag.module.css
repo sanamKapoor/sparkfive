@@ -9,41 +9,45 @@
   background-color: var(--color-sec-ivory);
   font-size: 12px;
   overflow-y: hidden;
+  margin-right: 5px;
 }
 
 .remove {
   display: inline-flex;
   margin-left: 8px;
   cursor: pointer;
-  width: 6px;
+  width: 12px;
+  height: 12px;
 }
 
-.remove:hover{
+.remove:hover {
   opacity: 0.7;
 }
 
-.alt-color-turquoise{
+.alt-color-turquoise {
   background-color: var(--color-sec-lightturquoise);
 }
 
-.alt-color-yellow{
-  /* background-color: var(--color-sec-lightyellow); */
-}
 
-.alt-color-wine{
+
+.alt-color-wine {
   background-color: var(--color-sec-lightwine);
 }
 
-.alt-color-orange{
+.alt-color-orange {
   background-color: var(--color-sec-lightorange);
 }
 
-.pointer{
+.alt-color-blue {
+  background-color: var(--color-sec-lightblue);
+}
+
+.pointer {
   cursor: pointer;
 }
 
 .tag-icon {
   margin-right: 10px;
-  font-size: 13px;
+  width: 13px;
   background-color: var(--color-sec-lightblue);
 }

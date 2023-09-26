@@ -1,19 +1,16 @@
-import Head from 'next/head'
-
 // Components
-import AuthLayout from '../components/common/layouts/auth-layout'
-import TwoFactor from '../components/two-factor'
+import AppLayout from "../components/common/layouts/app-layout";
+import AuthLayout from "../components/common/layouts/auth-layout";
+import TwoFactor from "../components/two-factor";
 
 const TwoFactorPage = () => (
   <>
-    <Head>
-      <title>Enter Confirmation Code</title>
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
-    <AuthLayout>
-      <TwoFactor />
-    </AuthLayout>
+    <AppLayout title="Enter Confirmation Code">
+      <AuthLayout>
+        <TwoFactor />
+      </AuthLayout>
+    </AppLayout>
   </>
-)
+);
 
-export default TwoFactorPage
+export default TwoFactorPage;

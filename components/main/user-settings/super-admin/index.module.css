@@ -1,7 +1,9 @@
-.list{
+/* .list{
   margin-top: 2rem;
+} */
+.container{
+  padding: 0 44px;
 }
-
 .posRelative {
   position: relative;
 }
@@ -16,6 +18,8 @@
   display: flex;
   padding-bottom: 3rem;
   padding-top: 1rem;
+  /* temporary need to remove */
+  padding:20px 60px; 
 }
 
 .buttons button{
@@ -29,15 +33,21 @@
   align-items: center;
   font-weight: 600;
   width: fit-content;
+  border-bottom: 1px solid var(--color-secondary-border);
+  width: 100%;
+  padding: 20px 57px;
+
 }
 
 .back img {
   margin-right: 0.5rem;
+  width: 16px;
+  height: 16px;
 }
 
-.list{
+/* .list{
   margin-top: 2rem;
-}
+} */
 
 .action{
   display: flex;
@@ -55,12 +65,12 @@
 }
 
 .role{
-  width: 7rem;
+  /* width: 7rem; */
 }
 
-.company{
+/* .company{
   flex: 1;
-}
+} */
 
 .company>div:first-child{
   font-weight: 600;
@@ -71,11 +81,15 @@
 }
 
 .row {
-  display: flex;
-  flex-wrap: wrap;
-  padding: 1rem 0;
-  margin-top: 1rem;
+  /* display: flex;
+  flex-wrap: wrap; */
+  padding: 2rem 0;
+  /* margin-top: 1rem; */
   border-bottom: 1px solid var(--color-secondary-border);
+  /* justify-content: space-between;
+  align-items: center; */
+  display: grid;
+  grid-template-columns: repeat(6,1fr);
 }
 
 .header-title{
@@ -95,10 +109,16 @@
   overflow: visible;
 }
 
+
+
 .plan-modal{
-  width: 25em;
-  height: 35em;
-  padding: 32px
+  /* width: 25em;
+  height: 35em; */
+  max-width:470px;
+  width: 100%;
+  /* height:428px; */
+  /* padding: 32px */
+  padding: 18px 24px 24px 24px;
 }
 
 .input-wrapper{
@@ -111,7 +131,11 @@
 
 .form-title{
   margin-bottom: 4px;
-  color: grey;
+  color:#08135E;
+  font-weight: 400;
+  font-size: 16px;
+  font-family: "Noto Sans", sans-serif;
+
 }
 
 .date-wrapper input{
@@ -124,14 +148,31 @@
   font-weight: 400;
   color: var(--color-sec-blue);
   cursor: pointer;
-  position: absolute;
+  /* position: absolute;
   top: 8px;
-  right: 10px
+  right: 10px */
+}
+.adminModal{
+  display: flex;
+  justify-content: space-between;
+
+}
+.settings{
+  font-family: "Noto Sans", sans-serif;
+  color:#08135E;
+  font-weight: 600;
+  font-size: 16px;
+
+}
+.divider{
+  border:1px solid #E5E5E5;
 }
 
 .active-badge{
   padding: 4px 8px;
-  background-color: #13bda6;
+  /* background-color: #13bda6; */
+  background-color: 
+  #0083CD;
   color: white;
   border-radius: 4px;
 }
@@ -141,4 +182,10 @@
   background-color: #d19f24;
   color: white;
   border-radius: 4px;
+}
+.features{
+  padding:0 40px;
+}
+.featuresbtn{
+  margin-top:24px;
 }

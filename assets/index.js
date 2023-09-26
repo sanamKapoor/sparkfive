@@ -1,6 +1,10 @@
 export const GeneralImg = {
   logoHorizontal: require('./general/logo-horizontal-sparkfive-RGB.png'),
-  logo: require('./general/logo-motif-sparkfive-RGB-scaled.png')
+  logo: require('./general/logo-motif-sparkfive-RGB-scaled.png'),
+}
+
+export const AppImg = {
+  guestCover: require('./app-images/guest-cover.png'),
 }
 
 export const LoginImg = {
@@ -10,6 +14,7 @@ export const LoginImg = {
 
 export const Navigation = {
   alert: require('./Icons/Navigation/icn-nav-alert-white.svg'),
+  alertBlue: require('./Icons/Navigation/icn-nav-alert.svg'),
   overview: require('./Icons/Navigation/icn-nav-dashboard-#E9EEFA.svg'),
   overviewSelected: require('./Icons/Navigation/icn-nav-dashboard-white.svg'),
   schedulePrimary: require('./Icons/Navigation/icn-nav-schedule.svg'),
@@ -32,6 +37,7 @@ export const Utilities = {
   addLight: require('./Icons/Utilities/Add +/icn-utilities-add+light.svg'),
   addWhite: require('./Icons/Utilities/Add +/icn-utilities-add+white.svg'),
   addAlt: require('./Icons/Utilities/Add +/icn-utilities-add+alt.svg'),
+  adddark: require('./Icons/Utilities/Add +/adddark.png'),
   comment: require('./Icons/Utilities/Comments/icn-utilities-comments.svg'),
   commentLight: require('./Icons/Utilities/Comments/icn-utilities-comments-light.svg'),
   commentGray: require('./Icons/Utilities/Comments/icn-utilities-comments-gray.svg'),
@@ -103,9 +109,13 @@ export const Utilities = {
   related: require('./Icons/Utilities/Related/related.svg'),
   relatedLight: require('./Icons/Utilities/Related/related-light.svg'),
   sort: require('./Icons/Utilities/arrow/sort.svg'),
+  sortUp: require('./Icons/Utilities/arrow/sort-up.svg'),
   caretRight: require('./Icons/Utilities/Caret/caret-right.svg'),
   checkMark: require('./Icons/Utilities/CheckMark/checkmark.svg'),
   transcript: require('./Icons/Utilities/Transcript/Transcript.svg'),
+  updown: require('./Icons/Utilities/ArrowsDownUp.svg'),
+  download:require('./Icons/Utilities/download.svg'),
+  document:require('./Icons/Utilities/document.svg')
 }
 
 export const ProjectTypes = {
@@ -184,7 +194,9 @@ export const Assets = {
   unknown: require('./Icons/Assets/unknown.svg'),
   arrowDown: require('./Icons/Assets/arrow-down.svg'),
   computer: require('./Icons/Assets/computer.svg'),
-  upload: require('./Icons/Assets/upload.svg')
+  upload: require('./Icons/Assets/upload.svg'),
+  downarrow:require('./Icons/Assets/downvector.svg')
+
 }
 
 export const Comments = {
@@ -209,6 +221,7 @@ export const AssetOps = {
   archive: require('./Icons/Asset Actions/archive.svg'),
   download: require('./Icons/Utilities/Download/icn-utilities-download.svg'),
   move: require('./Icons/Utilities/Move Folder/icn-utilities-movefolder.svg'),
+  moveGray: require('./Icons/Utilities/Move Folder/icn-utilities-movefolder-gray.svg'),
   copy: require('./Icons/Asset Actions/copy.svg'),
   share: require('./Icons/Asset Actions/share.svg'),
   reload: require('./Icons/Asset Actions/reload.png'),
@@ -227,7 +240,9 @@ export const AssetOps = {
   moveReplace: require('./Icons/Asset Actions/move.svg'),
   moveReplaceWhite: require('./Icons/Asset Actions/white-move.svg'),
   newCollection: require('./Icons/Asset Addition/new-collection.svg'),
+  newCollectionGray: require('./Icons/Asset Addition/new-collection-gray.svg'),
   uploadFiles: require('./Icons/Asset Addition/upload-files.svg'),
+  uploadFilesGray: require('./Icons/Asset Addition/upload-files-gray.svg'),
   uploadFolder: require('./Icons/Asset Addition/upload-folder.svg'),
   editGray: require('./Icons/Asset Actions/edit-gray.svg'),
   cancel: require('./Icons/Utilities/Close/blue-close.svg'),

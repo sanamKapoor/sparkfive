@@ -1,9 +1,91 @@
-.row{
+.main-wrapper {
+    width: 70%;
+}
+.guest-upload-wrapper{
+    padding: 0 60px;
+}
+
+.main-wrapper h3 {
+    margin: 0 0 30px;
+    font-weight: 600;
+}
+.guestUploadLink{
+    max-width: 571px !important;
+    width: 100%;
+    height:50px;
+    
+}
+.item {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--color-secondary-border);
+}
+
+.item > input {
+    max-width: 570px;
+}
+
+.row {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    gap: 24px;
+    width: 100%;
+    align-items: center;
+}
+
+.item_title {
+    font-weight: 500;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.input {
+    width: 300px;
+}
+
+
+.input ul li {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+.input label {
+    font-size: 12px;
+    font-weight: 300;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.banner label {
+    font-size: 12px;
+    font-weight: 300;
+    display: block;
+    margin-bottom: 20px; 
+}
+
+.banner_wrapper {
+    width: 250px;
+    height: 55px;
+    padding: 8px 5px;
+    border: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.banner_wrapper img {
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    max-height: 37px;
 }
 
 .col-10{
@@ -125,12 +207,8 @@
 }
 
 .action-button{
-    width: 1.2rem;
-    margin-left: 1.2rem;
-}
-
-.action-button:last-of-type{
-    margin-right: 1.2rem;
+    width: 21px;
+    height: 21px;
 }
 
 .action-button:hover{
@@ -210,12 +288,18 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-    margin-left: 8px;
-    margin-top: 10px;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+}
+
+.select-add span{
+    color: var(--color-sec-text);
 }
 
 .select-add img{
     margin-right: 5px;
+    width: 16px;
+    height: 16px;
 }
 
 .operation-row{
@@ -228,12 +312,18 @@
 .select-input .select-prefix{
     min-height: 48px;
 }
-
-.password-li{
-    font-size: 12px;
+.copyBtn{
+    font-size: 14px;
 }
 
+.showBtn{padding: 0;}
+
 @media screen and (max-width: 1280px){
+
+    .main-wrapper {
+        width: 100%;
+    }
+
     .button-row{
         display: block;
     }
@@ -274,20 +364,42 @@
         padding-bottom: 30px;
     }
 }
-
-@media screen and (max-width: 576px){
-    .col-sm-100{
-        flex: 0 0 100%;
-        max-width: 100%;
-        margin: 15px 0;
+.privateBlock{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.passwordSave{
+    margin:30px 0 10px 45px;
+}
+.uploadPassword{
+    height: 50px !important;
+    width: 316px !important;
+    border-radius: 4px !important;
+}
+.password-li img{
+   height: 22px;
+   width: 22px;
+}
+@media screen and (max-width: 900px){
+    .row {
+        flex-wrap: wrap;
     }
 
-    .col-sm-d-n{
-        display: none;
+    .input {
+        width: 260px;
     }
 
-    .operation-row{
+}
+
+
+@media screen and (max-width: 600px){
+    .input {
+        width: 170px;
+    }
+
+    .select-add {
         justify-content: flex-start;
+        margin-bottom: 0;
     }
-
 }

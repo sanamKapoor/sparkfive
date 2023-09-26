@@ -4,6 +4,39 @@
   position: relative;
   min-height: 60vh;
 }
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 30px;
+  width: 70%;
+}
+
+.header h3 {
+  margin: 0;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.header p {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 300;
+}
+
+.header_actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 22px;
+  margin-bottom: 36px;
+}
+
+.header_actions .select {
+  width: 160px;
+}
+
 .filter {
   width: 80%;
 }
@@ -33,4 +66,25 @@
   margin-top: 1.5rem;
   display: flex;
   justify-content: center;
+}
+.action-recover{
+  height: 15px;
+   width: 15px;
+}
+
+.action-delete{
+  height: 15.75px;
+  width: 15.75px;
+  margin-right: 10px;
+}
+
+@media (max-width:900px){
+  .header {
+    width: 100%;
+  }
+}
+@media (max-width:600px){
+  .header{
+    align-items: flex-start
+  }
 }

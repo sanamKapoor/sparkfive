@@ -4,14 +4,13 @@
 
 .container h3 {
     text-align: left;
-    /*margin: 48px 0 60px;*/
 }
 
 .slider {
     margin-bottom: 36px;
 }
 
-.slider .slick-slide:first-child{
+.slider .slick-slide:first-child {
     padding-left: 0 !important;
 }
 
@@ -37,7 +36,7 @@
     align-items: center;
 }
 
-.upload-wrapper-no-asset{
+.upload-wrapper-no-asset {
     margin-top: 14px;
     display: flex;
     justify-content: flex-end;
@@ -57,7 +56,7 @@
     height: 100%;
 }
 
-.modal-upload-content > div:last-child {
+.modal-upload-content>div:last-child {
     position: static;
     height: 175px;
     background-color: var(--olor-sec-lightblue);
@@ -145,7 +144,8 @@
 
 .fail-badge {
     color: var(--color-prim-red);
-    background-color: rgba(250, 55, 61, 0.2);;
+    background-color: rgba(250, 55, 61, 0.2);
+    ;
     width: 76px;
     height: 25px;
     display: flex;
@@ -203,7 +203,12 @@
 }
 
 @media screen and (min-width: 769px) and (max-width: 1200px) {
- .confirm-modal {
-    min-width: 35rem;
- }
+    .confirm-modal {
+        min-width: 35rem;
+    }
+}
+
+.upload {
+    background-color: var(--color-prim-turquoise);
+    color: white;
 }

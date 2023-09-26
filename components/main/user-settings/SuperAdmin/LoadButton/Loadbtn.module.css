@@ -1,0 +1,20 @@
+.loadmore {
+  height: 32px;
+  padding: 8px;
+  font-family: "Noto Sans", sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  color: #fff;
+  border: 1px solid #dedad4;
+  background: var(--color-prim-turquoise);
+  border-radius: 4px;
+  margin-left: 10px;
+  min-width: 120px;
+  cursor: pointer;
+}
+.loadbtnWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+}

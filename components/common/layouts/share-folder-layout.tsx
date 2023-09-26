@@ -1,41 +1,51 @@
-import styles from './share-folder-layout.module.css'
-import { GeneralImg } from '../../../assets'
-import { useState, useEffect, useContext } from "react"
-import { AssetContext, ShareContext, FilterContext } from '../../../context'
+import { useContext } from "react";
+import { GeneralImg } from "../../../assets";
+import { AssetContext, FilterContext, ShareContext } from "../../../context";
+import styles from "./share-folder-layout.module.css";
 
-import AssetHeaderOps from '../asset/asset-header-ops'
+import AssetHeaderOps from "../asset/asset-header-ops";
 
 const ShareFolderLayout = ({ children, advancedLink = false }) => {
+  const { folderInfo, activePasswordOverlay } = useContext(ShareContext);
+  const { assets, folders } = useContext(AssetContext);
+  const { activeSortFilter } = useContext(FilterContext);
 
-	const { folderInfo, activePasswordOverlay } = useContext(ShareContext)
-	const { assets, folders } = useContext(AssetContext)
-	const { activeSortFilter } = useContext(FilterContext)
+  const selectedAssets = assets.filter((asset) => asset.isSelected);
+  const selectedFolders = folders.filter((folder) => folder.isSelected);
 
-	const selectedAssets = assets.filter(asset => asset.isSelected)
-	const selectedFolders = folders.filter(folder => folder.isSelected)
+  const amountSelected =
+    activeSortFilter.mainFilter === "folders"
+      ? selectedFolders.length
+      : selectedAssets.length;
 
-	const amountSelected= activeSortFilter.mainFilter === 'folders' ? selectedFolders.length : selectedAssets.length
+  return (
+    <>
+      {!activePasswordOverlay && (
+        <header className={styles.header} id={"share-header"}>
+          <div className={styles["image-wrapper"]}>
+            <img
+              className={styles["logo-img"]}
+              src={folderInfo?.teamIcon || GeneralImg.logo}
+            />
+          </div>
+          <h1 className={styles["collection-name"]}>
+            {folderInfo?.folderName}
+          </h1>
+        </header>
+      )}
+      {amountSelected > 0 && (
+        <div className={styles["ops-wrapper"]}>
+          <AssetHeaderOps
+            isShare={true}
+            advancedLink={advancedLink}
+            isFolder={activeSortFilter.mainFilter === "folders"}
+          />
+        </div>
+      )}
+      {children}
+      <footer className={styles.footer}></footer>
+    </>
+  );
+};
 
-	return (
-		<>
-			{!activePasswordOverlay && <header className={styles.header} id={"share-header"}>
-				<div className={styles['image-wrapper']}>
-					<img
-						className={styles['logo-img']}
-						src={folderInfo?.teamIcon || GeneralImg.logo} />
-				</div>
-				<h1 className={styles['collection-name']}>{folderInfo?.folderName}</h1>
-			</header>}
-			{amountSelected > 0 &&
-					<div className={styles['ops-wrapper']}>
-						<AssetHeaderOps isShare={true} advancedLink={advancedLink} isFolder={activeSortFilter.mainFilter === 'folders'}/>
-					</div>
-				}
-			{children}
-			<footer className={styles.footer}>
-			</footer>
-		</>
-	)
-}
-
-export default ShareFolderLayout
+export default ShareFolderLayout;

@@ -1,81 +1,76 @@
-import styles from "./index.module.css"
-import Link from "next/link"
-import { useState, useEffect, useContext } from "react"
-import { UserContext } from "../../../context"
-import campaignApi from "../../../server-api/campaign"
-import projectApi from "../../../server-api/project"
-import taskApi from "../../../server-api/task"
-import update from "immutability-helper"
-import { startOfDay } from "date-fns"
+import { startOfDay } from "date-fns";
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../../../context";
+import projectApi from "../../../server-api/project";
+import taskApi from "../../../server-api/task";
+import styles from "./index.module.css";
 
 // Components
-import OverviewSubHeader from "./overview-subheader"
-import Banner from "./banner"
-import SchedulingReport from "./scheduling-report"
-import Upcoming from "./upcoming"
-import UpcomingTasks from "./upcoming-tasks"
-import CreateOverlay from "../create-overlay"
+import CreateOverlay from "../create-overlay";
+import OverviewSubHeader from "./overview-subheader";
+import SchedulingReport from "./scheduling-report";
+import Upcoming from "./upcoming";
+import UpcomingTasks from "./upcoming-tasks";
 
 const Overview = () => {
-  const [createVisible, setCreateVisible] = useState(false)
-  const [createType, setCreateType] = useState("")
+  const [createVisible, setCreateVisible] = useState(false);
+  const [createType, setCreateType] = useState("");
 
-  const [campaigns, setCampaigns] = useState([])
-  const [projects, setProjects] = useState([])
-  const [tasks, setTasks] = useState([])
+  const [projects, setProjects] = useState([]);
+  const [tasks, setTasks] = useState([]);
 
-  const { user } = useContext(UserContext)
+  const { user } = useContext(UserContext);
 
-  const DEFAULT_DATE = startOfDay(new Date()).toISOString()
+  const DEFAULT_DATE = startOfDay(new Date()).toISOString();
 
   const openCreateOVerlay = (type) => {
-    setCreateVisible(true)
-    setCreateType(type)
-  }
+    setCreateVisible(true);
+    setCreateType(type);
+  };
 
   useEffect(() => {
-    getProjects()
-    getTasks()
-  }, [])
+    getProjects();
+    getTasks();
+  }, []);
 
   const deleteProject = async (index) => {
     try {
-      await projectApi.deleteProject(projects[index].id)
-      getProjects()
+      await projectApi.deleteProject(projects[index].id);
+      getProjects();
     } catch (err) {
       // TODO: Handle error
     }
-  }
+  };
 
   const getProjects = async () => {
     try {
-      const { data } = await projectApi.getProjects({ fromDate: DEFAULT_DATE })
-      setProjects(data)
+      const { data } = await projectApi.getProjects({ fromDate: DEFAULT_DATE });
+      setProjects(data);
     } catch (err) {
       // TODO: Display error or something
     }
-  }
+  };
 
   const getTasks = async () => {
     try {
-      const { data } = await taskApi.getOwnedTasks({ fromDate: DEFAULT_DATE })
-      setTasks(data)
+      const { data } = await taskApi.getOwnedTasks({ fromDate: DEFAULT_DATE });
+      setTasks(data);
     } catch (err) {
       // TODO: Display error or something
     }
-  }
+  };
 
   useEffect(() => {
     if (createVisible) {
-      document.body.classList.add("no-overflow")
+      document.body.classList.add("no-overflow");
     } else {
-      document.body.classList.remove("no-overflow")
+      document.body.classList.remove("no-overflow");
     }
-  }, [createVisible])
+  }, [createVisible]);
 
   return (
     <>
-      <OverviewSubHeader openCreateOVerlay={openCreateOVerlay}  />
+      <OverviewSubHeader openCreateOVerlay={openCreateOVerlay} />
       <main className={`${styles.container}`}>
         <h1>{`Welcome back, ${user?.name.split(" ")[0]}`}</h1>
         <section className={styles["first-section"]}>
@@ -100,7 +95,7 @@ const Overview = () => {
         />
       )}
     </>
-  )
-}
+  );
+};
 
-export default Overview
+export default Overview;

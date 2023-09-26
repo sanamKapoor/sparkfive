@@ -1,27 +1,25 @@
-import styles from './day.module.css'
-import { format } from 'date-fns'
-import { useState, useRef, useEffect } from 'react'
-import { Utilities } from '../../../../assets'
+import { format } from "date-fns";
+import { useEffect, useRef, useState } from "react";
+import { Utilities } from "../../../../assets";
+import styles from "./day.module.css";
 
 // Components
-import ToggleableAbsoluteWrapper from '../../../common/misc/toggleable-absolute-wrapper'
-import Dropdown from '../../../common/inputs/dropdown'
+import Dropdown from "../../../common/inputs/dropdown";
+import ToggleableAbsoluteWrapper from "../../../common/misc/toggleable-absolute-wrapper";
 
 const isSameMonth = (date, targetDate) => {
-  return date.getMonth() === targetDate.getMonth()
-}
+  return date.getMonth() === targetDate.getMonth();
+};
 
 const dateFormat = (date) => {
-  if (date.getDate() === 1)
-    return format(date, 'MMM d')
-  else
-    return format(date, 'd')
-}
+  if (date.getDate() === 1) return format(date, "MMM d");
+  else return format(date, "d");
+};
 
-const today = new Date()
+const today = new Date();
 
 const Day = ({
-  id = '',
+  id = "",
   date,
   currentDate,
   displayDate = null,
@@ -29,108 +27,134 @@ const Day = ({
   itemListPrevious,
   itemListNext,
   hasDayHeader = true,
-  type = '',
+  type = "",
   onDragDrop,
   setActiveView,
   setCurrentDate,
   Waypoint = <></>,
   setCreateType,
   setCreateVisible,
-  setCreateEndDate
+  setCreateEndDate,
 }) => {
-  const dayRef = useRef()
+  const dayRef = useRef();
 
-  const [maxItems, setMaxItems] = useState(10)
+  const [maxItems, setMaxItems] = useState(10);
 
   useEffect(() => {
     if (dayRef && dayRef.current) {
       const modifyMaxItems = () => {
-        let dayHeight = dayRef.current.offsetHeight
+        let dayHeight = dayRef.current.offsetHeight;
         if (dayHeight <= 300) {
-          setMaxItems(5)
+          setMaxItems(5);
         }
         if (dayHeight <= 235) {
-          setMaxItems(4)
+          setMaxItems(4);
         }
         if (dayHeight <= 195) {
-          setMaxItems(3)
+          setMaxItems(3);
         }
         if (dayHeight <= 165) {
-          setMaxItems(2)
+          setMaxItems(2);
         }
         if (dayHeight <= 128) {
-          setMaxItems(1)
+          setMaxItems(1);
         }
-      }
-      modifyMaxItems()
-      window.addEventListener('resize', modifyMaxItems)
-      return () => window.removeEventListener('resize', modifyMaxItems)
+      };
+      modifyMaxItems();
+      window.addEventListener("resize", modifyMaxItems);
+      return () => window.removeEventListener("resize", modifyMaxItems);
     }
-  }, [dayRef])
+  }, [dayRef]);
 
+  const [dragHovering, setDragHovering] = useState(false);
+  const positionedItems = itemList.filter(
+    (item) => item.currentWeekPosition !== undefined
+  );
+  const nonPositionedItems = itemList.filter(
+    (item) => item.currentWeekPosition === undefined
+  );
 
-  const [dragHovering, setDragHovering] = useState(false)
-  const positionedItems = itemList.filter(item => item.currentWeekPosition !== undefined)
-  const nonPositionedItems = itemList.filter(item => item.currentWeekPosition === undefined)
-
-  let preparedItemList = []
+  let preparedItemList = [];
 
   const fillPrevious = (difference) => {
     for (let i = 0; i < difference; i++) {
-      if (nonPositionedItems.length > 0 && type !== 'week') {
-        preparedItemList.push({ Item: nonPositionedItems.pop().data.Item })
+      if (nonPositionedItems.length > 0 && type !== "week") {
+        preparedItemList.push({ Item: nonPositionedItems.pop().data.Item });
       } else {
         // Push filler
         preparedItemList.push({
-          Item: () => <div className={styles.filler}></div>
-        })
+          Item: () => <div className={styles.filler}></div>,
+        });
       }
     }
-  }
+  };
 
-  positionedItems.forEach(item => {
-    const difference = item.currentWeekPosition - preparedItemList.length
+  positionedItems.forEach((item) => {
+    const difference = item.currentWeekPosition - preparedItemList.length;
     if (difference > 0) {
-      fillPrevious(difference)
+      fillPrevious(difference);
     }
 
-    let isContinuation = false
+    let isContinuation = false;
     // Check if item is continuation
-    if (itemListPrevious?.findIndex(previous => previous.currentWeek === item.currentWeek && previous.data.id === item.data.id) !== -1) {
-      isContinuation = true
+    if (
+      itemListPrevious?.findIndex(
+        (previous) =>
+          previous.currentWeek === item.currentWeek &&
+          previous.data.id === item.data.id
+      ) !== -1
+    ) {
+      isContinuation = true;
     }
 
     // Check if item is last iteration
-    let isLast = true
-    if (itemListNext?.findIndex(next => next.currentWeek === item.currentWeek && next.data.id === item.data.id) !== -1) {
-      isLast = false
+    let isLast = true;
+    if (
+      itemListNext?.findIndex(
+        (next) =>
+          next.currentWeek === item.currentWeek && next.data.id === item.data.id
+      ) !== -1
+    ) {
+      isLast = false;
     }
 
-    preparedItemList.push({ Item: item.data.Item, isContinuation, isLast })
-  })
+    preparedItemList.push({ Item: item.data.Item, isContinuation, isLast });
+  });
 
-  nonPositionedItems.forEach(item => {
-    preparedItemList.push({ Item: item.data.Item })
-  })
+  nonPositionedItems.forEach((item) => {
+    preparedItemList.push({ Item: item.data.Item });
+  });
 
-  let overLimit = false
+  let overLimit = false;
   if (preparedItemList.length > maxItems) {
-    preparedItemList = preparedItemList.slice(0, maxItems)
-    overLimit = true
+    preparedItemList = preparedItemList.slice(0, maxItems);
+    overLimit = true;
   }
 
   return (
-    <div id={id} ref={dayRef} className={`day ${styles['day']} ${!isSameMonth(date, displayDate || currentDate) && styles['diff-month']} ${styles[type]} ${dragHovering && styles.hovering}`}
-      onDragOver={(e) => { e.preventDefault(); setDragHovering(true) }}
-      onDragEnter={() => { setDragHovering(true) }}
-      onDragLeave={() => { setDragHovering(false) }}
+    <div
+      id={id}
+      ref={dayRef}
+      className={`day ${styles["day"]} ${
+        !isSameMonth(date, displayDate || currentDate) && styles["diff-month"]
+      } ${styles[type]} ${dragHovering && styles.hovering}`}
+      onDragOver={(e) => {
+        e.preventDefault();
+        setDragHovering(true);
+      }}
+      onDragEnter={() => {
+        setDragHovering(true);
+      }}
+      onDragLeave={() => {
+        setDragHovering(false);
+      }}
       onDrop={(e) => {
-        setDragHovering(false)
-        onDragDrop(e)
+        setDragHovering(false);
+        onDragDrop(e);
       }}
     >
       <ToggleableAbsoluteWrapper
-        wrapperClass={`add ${styles['add']}`}
+        wrapperClass={`add ${styles["add"]}`}
         contentClass={styles.dropdown}
         Wrapper={({ children }) => (
           <>
@@ -143,57 +167,65 @@ const Day = ({
             <Dropdown
               options={[
                 {
-                  label: 'Project',
+                  label: "Project",
                   onClick: () => {
-                    setCreateEndDate(date)
-                    setCreateType('project')
-                    setCreateVisible(true)
-                  }
+                    setCreateEndDate(date);
+                    setCreateType("project");
+                    setCreateVisible(true);
+                  },
                 },
                 {
-                  label: 'Task',
+                  label: "Task",
                   onClick: () => {
-                    setCreateEndDate(date)
-                    setCreateType('task')
-                    setCreateVisible(true)
-                  }
-                }
+                    setCreateEndDate(date);
+                    setCreateType("task");
+                    setCreateVisible(true);
+                  },
+                },
               ]}
             />
-          )
+          );
         }}
       />
       {Waypoint}
-      {hasDayHeader &&
-        <div className={styles['day-header']}>
-          <div className={styles['day-number']}>{dateFormat(date)} </div>
-          <div className={`${styles['day-number']} ${styles['day-number-week-name']}`}>{`- ${format(date, 'EEE')}`}</div>
-          {date.getDate() === today.getDate() && isSameMonth(date, today) &&
-            <div className={styles['today-dot']}></div>
-          }
+      {hasDayHeader && (
+        <div className={styles["day-header"]}>
+          <div className={styles["day-number"]}>{dateFormat(date)} </div>
+          <div
+            className={`${styles["day-number"]} ${styles["day-number-week-name"]}`}
+          >{`- ${format(date, "EEE")}`}</div>
+          {date.getDate() === today.getDate() && isSameMonth(date, today) && (
+            <div className={styles["today-dot"]}></div>
+          )}
         </div>
-      }
+      )}
       <ul>
         {preparedItemList.map(({ isContinuation, isLast, Item }, index) => (
-          <li key={index} className={`${isContinuation && 'continuation'} ${isLast && 'last'}`} >
-            <Item
-              key={index}
-            />
+          <li
+            key={index}
+            className={`${isContinuation && "continuation"} ${
+              isLast && "last"
+            }`}
+          >
+            <Item key={index} />
           </li>
         ))}
-        {overLimit &&
-          <li className={styles['more-li']}>
-            <div className={styles.more} onClick={() => {
-              setActiveView('list')
-              setCurrentDate(date)
-            }}>
+        {overLimit && (
+          <li className={styles["more-li"]}>
+            <div
+              className={styles.more}
+              onClick={() => {
+                setActiveView("list");
+                setCurrentDate(date);
+              }}
+            >
               View more
             </div>
           </li>
-        }
+        )}
       </ul>
     </div>
-  )
-}
+  );
+};
 
-export default Day
+export default Day;

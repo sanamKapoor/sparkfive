@@ -1,20 +1,14 @@
-import styles from "./search-item.module.css";
-import { Utilities } from "../../../assets";
-import Router from "next/router";
-import { format } from "date-fns";
-import Highlighter from "react-highlight-words";
-import { getAssociatedCampaigns } from "../../../utils/asset";
 import { useState } from "react";
+import Highlighter from "react-highlight-words";
+import { Utilities } from "../../../assets";
 import { getParsedExtension } from "../../../utils/asset";
+import styles from "./search-item.module.css";
 
 // Components
+import AssetIcon from "../../common/asset/asset-icon";
 import AssetImg from "../../common/asset/asset-img";
-import AssetVideo from "../../common/asset/asset-video";
-import AssetApplication from "../../common/asset/asset-application";
-import AssetText from "../../common/asset/asset-text";
 import DetailOverlay from "../../common/asset/detail-overlay";
 import IconClickable from "../../common/buttons/icon-clickable";
-import AssetIcon from "../../common/asset/asset-icon";
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
 
 const SearchItem = ({
@@ -25,8 +19,8 @@ const SearchItem = ({
   toggleSelected,
   enabledSelect = false,
   isShare,
-  activeFolder = '',
-  onCloseDetailOverlay = (assetData) => {}
+  activeFolder = "",
+  onCloseDetailOverlay = (assetData) => {},
 }) => {
   const {
     asset,
@@ -36,7 +30,7 @@ const SearchItem = ({
     isSelected,
   } = assetItem;
   const [visibleOverlay, setVisibleOVerlay] = useState(false);
-  const [overlayProperties, setOverlayProperties] = useState(DEFAULT_DETAIL_PROPS);
+  const [overlayProperties] = useState(DEFAULT_DETAIL_PROPS);
 
   const searchWords = term.split(" ");
 
@@ -61,8 +55,9 @@ const SearchItem = ({
           </>
         )}
         <div
-          className={`${styles["image-wrapper"]} ${isLoading && "loadable"} ${enabledSelect && styles["image-selectable"]
-            }`}
+          className={`${styles["image-wrapper"]} ${isLoading && "loadable"} ${
+            enabledSelect && styles["image-selectable"]
+          }`}
         >
           {thumbailUrl ? (
             <AssetImg
@@ -73,14 +68,10 @@ const SearchItem = ({
           ) : (
             <AssetIcon noMargin extension={asset.extension} onList={true} />
           )}
-          {/* {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} />}
-          {asset.type === 'video' && <AssetVideo asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} />}
-          {asset.type === 'application' && <AssetApplication extension={asset.extension} onList={true} />}
-          {asset.type === 'text' && <AssetText extension={asset.extension} onList={true} />} */}
         </div>
         <div
           className={`${styles.name} ${isLoading && "loadable"}`}
-          onClick={() => (!isLoading ? setVisibleOVerlay(true) : () => { })}
+          onClick={() => (!isLoading ? setVisibleOVerlay(true) : () => {})}
         >
           <Highlighter
             highlightClassName={"search-highlight"}
@@ -90,34 +81,24 @@ const SearchItem = ({
           />
         </div>
         <div className={styles.tag}>
-          {!isLoading && (
-            asset?.tags && asset.tags.length > 0 ? (
-              asset.tags.map(({ name }) => (
-                <span>{name}</span>
-              ))
-            ) : (
-              "No Tags"
-            )
-          )}
+          {!isLoading &&
+            (asset?.tags && asset.tags.length > 0
+              ? asset.tags.map(({ name }) => <span>{name}</span>)
+              : "No Tags")}
         </div>
         <div className={`${styles.extension} ${isLoading && "loadable"}`}>
           <Highlighter
             highlightClassName={"search-highlight"}
             searchWords={searchWords}
             autoEscape={true}
-            textToHighlight={getParsedExtension(asset.extension) || 'na'}
+            textToHighlight={getParsedExtension(asset.extension) || "na"}
           />
         </div>
         <div className={styles.folder}>
-          {!isLoading && (
-            asset && asset.folders && asset.folders.length > 0 ? (
-              asset.folders.map((folder) => (
-                <span>{folder.name}</span>
-              ))
-            ) : (
-              "No Collection"
-            )
-          )}
+          {!isLoading &&
+            (asset && asset.folders && asset.folders.length > 0
+              ? asset.folders.map((folder) => <span>{folder.name}</span>)
+              : "No Collection")}
         </div>
       </li>
       {visibleOverlay && (
@@ -135,8 +116,8 @@ const SearchItem = ({
           openShareAsset={openShareAsset}
           openDeleteAsset={openDeleteAsset}
           closeOverlay={(value, assetData) => {
-            setVisibleOVerlay(false)
-            onCloseDetailOverlay(assetData)
+            setVisibleOVerlay(false);
+            onCloseDetailOverlay(assetData);
           }}
           activeFolder={activeFolder}
         />
