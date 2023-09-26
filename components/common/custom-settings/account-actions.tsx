@@ -71,24 +71,24 @@ const AccountActions = () => {
                 <div>Subfolder as Separate Collection</div>
                 <IconClickable
                   src={
-                    advancedConfig?.subFolderAutoTag
-                      ? Utilities.radioButtonEnabled
-                      : Utilities.radioButtonNormal
-                  }
-                  additionalClass={styles["select-icon"]}
-                  onClick={() => saveAdvanceConfig({ subFolderAutoTag: true })}
-                />
-              </div>
-              <div className={`${styles["radio"]} ${styles["subfolder-tags"]}`}>
-                <div>Subfolder as Tags (Default)</div>
-                <IconClickable
-                  src={
                     !advancedConfig?.subFolderAutoTag
                       ? Utilities.radioButtonEnabled
                       : Utilities.radioButtonNormal
                   }
                   additionalClass={styles["select-icon"]}
                   onClick={() => saveAdvanceConfig({ subFolderAutoTag: false })}
+                />
+              </div>
+              <div className={`${styles["radio"]} ${styles["subfolder-tags"]}`}>
+                <div>Subfolder as Tags (Default)</div>
+                <IconClickable
+                  src={
+                    advancedConfig?.subFolderAutoTag
+                      ? Utilities.radioButtonEnabled
+                      : Utilities.radioButtonNormal
+                  }
+                  additionalClass={styles["select-icon"]}
+                  onClick={() => saveAdvanceConfig({ subFolderAutoTag: true })}
                 />
               </div>
             </div>
