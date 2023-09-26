@@ -1,8 +1,8 @@
-import styles from './create-item.module.css'
-import { capitalCase } from 'change-case'
+import { capitalCase } from "change-case";
+import styles from "./create-item.module.css";
 
 // Components
-import Button from '../../common/buttons/button'
+import Button from "../../common/buttons/button";
 
 const CreateItem = ({ icon, type, description, onClick }) => (
   <div className={`${styles.container}`}>
@@ -11,11 +11,11 @@ const CreateItem = ({ icon, type, description, onClick }) => (
     <p>{description}</p>
     <Button
       text={`Create ${capitalCase(type)}`}
-      type='button'
-      styleType='primary'
+      type="button"
+      className="container primary"
       onClick={onClick}
     />
   </div>
-)
+);
 
-export default CreateItem
+export default CreateItem;

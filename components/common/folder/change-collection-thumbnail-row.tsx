@@ -1,7 +1,6 @@
-import React from "react";
-
-import IconClickable from "../buttons/icon-clickable";
 import redDeleteIconSrc from "../../../assets/Icons/Utilities/Delete/icn-utilities-delete.svg";
+import Button from "../buttons/button";
+import IconClickable from "../buttons/icon-clickable";
 import classes from "./change-collection-thumbnail-row.module.css";
 
 const ChangeCollectionThumbnailRow = ({
@@ -16,32 +15,35 @@ const ChangeCollectionThumbnailRow = ({
 }) => {
   return (
     <div className={classes["row-wrapper"]}>
-      <div className={classes['img-wrapper-container']}>
-      {index !== "0" && <p>{index}</p>}
-      <div className={classes["img-preview-wrapper"]}>
-        <div className={classes["img-box"]}>
-          <img
-            src={imgSrc}
-            alt={"preview"}
-            className={classes["img-preview"]}
-          />
+      <div className={classes["img-wrapper-container"]}>
+        {index !== "0" && <p>{index}</p>}
+        <div className={classes["img-preview-wrapper"]}>
+          <div className={classes["img-box"]}>
+            <img
+              src={imgSrc}
+              alt={"preview"}
+              className={classes["img-preview"]}
+            />
+          </div>
+          {imgName && imgName !== "undefined" && (
+            <p className={classes["img-name"]}>{imgName}</p>
+          )}
         </div>
-        {imgName && imgName !== "undefined" && (
-          <p className={classes["img-name"]}>{imgName}</p>
-        )}
+        <div className={classes["del-icon-wrapper"]}>
+          <IconClickable
+            src={redDeleteIconSrc}
+            onClick={onDelete}
+            additionalClass={classes["delete-icon"]}
+          />
+          <p>or</p>
+        </div>
       </div>
-      <div className={classes['del-icon-wrapper']}>
-      <IconClickable src={redDeleteIconSrc} onClick={onDelete} additionalClass={classes['delete-icon']} />
-      <p>or</p>
-      </div>
-      </div>
-      <button
+      <Button
         type="button"
         onClick={onChangeThisOnly}
-        className={classes["change-this-btn"]}
-      >
-        {changeThisImgText}
-      </button>
+        className="change-this-btn"
+        text={changeThisImgText}
+      />
       <label
         onChange={onUpload}
         htmlFor={`upload-file-${index}`}

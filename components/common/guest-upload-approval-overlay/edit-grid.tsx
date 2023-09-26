@@ -1,18 +1,14 @@
 import { useState } from "react";
 import ReactTooltip from "react-tooltip";
 
-import styles from "./edit-grid.module.css";
 import { Utilities } from "../../../assets";
-
+import styles from "./edit-grid.module.css";
 
 // Components
 import AssetImg from "../asset/asset-img";
 import AssetVideo from "../asset/asset-video";
-import AssetApplication from "../asset/asset-application";
-import AssetText from "../asset/asset-text";
 import IconClickable from "../buttons/icon-clickable";
 import ImagePreviewModal from "../modals/image-preview-modal";
-
 
 import AssetIcon from "../../common/asset/asset-icon";
 
@@ -34,20 +30,19 @@ const getStatusClass = (status: string) => {
 
 const EditGrid = ({ assets, toggleSelectedEdit }) => {
   const [previewModalOpen, setPreviewModalOpen] = useState(false);
-  const [previewAsset, setPreviewAsset] = useState({ asset: {}});
+  const [previewAsset, setPreviewAsset] = useState({ asset: {} });
 
   const showPreviewImage = (asset) => {
     setPreviewAsset(asset);
     setPreviewModalOpen(true);
-  };                      
+  };
 
   return (
     <div className={styles["list-wrapper"]}>
       <ul className={`${styles["grid-list"]}`}>
-        {assets.map(
-          (item, index) => {
-            const {  asset, thumbailUrl, realUrl, isEditSelected } = item
-            return (
+        {assets.map((item, index) => {
+          const { asset, thumbailUrl, realUrl, isEditSelected } = item;
+          return (
             <li key={asset.id || index}>
               <>
                 <div className={`${styles.container}`}>
@@ -88,21 +83,15 @@ const EditGrid = ({ assets, toggleSelectedEdit }) => {
                     {asset.type !== "image" &&
                       asset.type !== "video" &&
                       !thumbailUrl && (
-                        <AssetIcon padding extension={asset.extension} onClick={() => {
-                          showPreviewImage(item);
-                        }}/>
+                        <AssetIcon
+                          padding
+                          extension={asset.extension}
+                          onClick={() => {
+                            showPreviewImage(item);
+                          }}
+                        />
                       )}
 
-                    {/* {asset.type === 'application' && <AssetApplication
-                    extension={asset.extension}
-                    bulkSize={true}
-                    onClick={()=>{showPreviewImage(realUrl)}}
-                />}
-                {asset.type === 'text' && <AssetText
-                    extension={asset.extension}
-                    bulkSize={true}
-                    onClick={()=>{showPreviewImage(realUrl)}}
-              /> */}
                     <>
                       <div
                         id={`button-${index}`}
@@ -146,8 +135,8 @@ const EditGrid = ({ assets, toggleSelectedEdit }) => {
                 </ReactTooltip>
               </>
             </li>
-          )}
-        )}
+          );
+        })}
       </ul>
 
       <ImagePreviewModal

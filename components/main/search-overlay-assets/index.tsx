@@ -1,69 +1,89 @@
-import { useState, useContext, useEffect, useRef } from 'react'
-import { AssetContext, FilterContext } from '../../../context'
-import styles from './index.module.css'
-import assetApi from '../../../server-api/asset'
-import folderApi from '../../../server-api/folder'
-import shareCollectionApi from '../../../server-api/share-collection'
-import { Waypoint } from 'react-waypoint'
-import update from 'immutability-helper'
-import { Utilities } from '../../../assets'
-
-import gridStyle from '../../common/asset/asset-grid.module.css'
+import { useContext, useEffect, useState } from "react";
+import { Utilities } from "../../../assets";
+import { AssetContext, FilterContext } from "../../../context";
+import assetApi from "../../../server-api/asset";
+import folderApi from "../../../server-api/folder";
+import shareCollectionApi from "../../../server-api/share-collection";
+import styles from "./index.module.css";
 
 // Components
-import Search from '../../common/inputs/search'
-import SearchItem from './search-item'
-import Button from '../../common/buttons/button'
-import AssetHeaderOps from '../../common/asset/asset-header-ops'
-import AssetThumbail from "../../common/asset/asset-thumbail";
-import { useDebounce } from '../../../hooks/useDebounce'
+import Button from "../../common/buttons/button";
+import Search from "../../common/inputs/search";
 
-const SearchOverlayAssets = ({  closeOverlay, importEnabled = false, operationsEnabled = false, importAssets = () => { }, sharePath = '', activeFolder = '', onCloseDetailOverlay = (assetData) => { }, onClickOutside, isFolder }) => {
-  const { assets, setAssets, setActiveOperation, setOperationAsset, setPlaceHolders, nextPage, selectAllAssets, selectedAllAssets, totalAssets, setFolders} = useContext(AssetContext)
+const SearchOverlayAssets = ({
+  closeOverlay,
+  importEnabled = false,
+  operationsEnabled = false,
+  importAssets = () => {},
+  sharePath = "",
+  activeFolder = "",
+  onCloseDetailOverlay = (assetData) => {},
+  onClickOutside,
+  isFolder,
+}) => {
+  const {
+    assets,
+    setAssets,
+    setPlaceHolders,
+    nextPage,
+    selectAllAssets,
+    selectedAllAssets,
+    totalAssets,
+    setFolders,
+  } = useContext(AssetContext);
 
-  const {  term, setSearchTerm, setSearchFilterParams, activeSortFilter, setActiveSortFilter } = useContext(FilterContext)
+  const { setSearchTerm, setSearchFilterParams, activeSortFilter } =
+    useContext(FilterContext);
 
-  const [activeView, setActiveView] = useState('list')
-  const [filterParams, setFilterParams] = useState({})
-  const [openFilters, setOpenFilters] = useState(false)
+  const [filterParams, setFilterParams] = useState({});
+  const [openFilters, setOpenFilters] = useState(false);
 
-  const getData = async (inputTerm, replace = true, _filterParams = filterParams) => {
+  const getData = async (
+    inputTerm,
+    replace = true,
+    _filterParams = filterParams
+  ) => {
     try {
-      setOpenFilters(false);
-      // setSearchTerm(inputTerm)
-      if(!isFolder){
-        let fetchFn = assetApi.getAssets
+      if (!isFolder) {
+        let fetchFn = assetApi.getAssets;
         if (sharePath) {
-          fetchFn = shareCollectionApi.getAssets
+          fetchFn = shareCollectionApi.getAssets;
         }
-        setPlaceHolders('asset', replace)
+        setPlaceHolders("asset", replace);
         if (Object.keys(_filterParams).length > 0) {
-          setFilterParams(_filterParams)
+          setFilterParams(_filterParams);
           setSearchFilterParams(_filterParams);
         }
 
-        const params: any = {term: inputTerm, stage: activeSortFilter?.mainFilter === 'archived' ? 'archived' : 'draft', page: replace ? 1 : nextPage, sharePath, ..._filterParams }
+        const params: any = {
+          term: inputTerm,
+          stage:
+            activeSortFilter?.mainFilter === "archived" ? "archived" : "draft",
+          page: replace ? 1 : nextPage,
+          sharePath,
+          ..._filterParams,
+        };
         // search from inside collection
         if (activeFolder) {
-          params.folderId = activeFolder
+          params.folderId = activeFolder;
         }
-        const { data } = await fetchFn(params)
-        setAssets(data, replace)
-      }else{
+        const { data } = await fetchFn(params);
+        setAssets(data, replace);
+      } else {
         let query = {
           page: 1,
           sortField: activeSortFilter.sort?.field || "createdAt",
           sortOrder: activeSortFilter.sort?.order || "desc",
-          term: inputTerm
+          term: inputTerm,
         };
         const { data } = await folderApi.getFolders(query);
         setFolders(data, true, true);
       }
     } catch (err) {
       // TODO: Handle this error
-      console.log(err)
+      console.log(err);
     }
-  }
+  };
 
   useEffect(() => {
     if (openFilters) {
@@ -71,46 +91,14 @@ const SearchOverlayAssets = ({  closeOverlay, importEnabled = false, operationsE
     }
   }, [isFolder]);
 
-  const beginAssetOperation = (asset, operation) => {
-    setOperationAsset(asset)
-    setActiveOperation(operation)
-  }
-
-  const toggleSelected = (id) => {
-    const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
-    setAssets(update(assets, {
-      [assetIndex]: {
-        isSelected: { $set: !assets[assetIndex].isSelected }
-      }
-    }))
-  }
-
-  const selectAll = () => {
-    // Mark select all
-    selectAllAssets()
-
-    setAssets(assets.map(assetItem => ({ ...assetItem, isSelected: true })))
-  }
-
-  const deselectAll = () => {
-    selectAllAssets(false)
-
-    setAssets(assets.map(asset => ({ ...asset, isSelected: false })))
-  }
-
-  const selectedAssets = assets.filter(asset => asset.isSelected)
+  const selectedAssets = assets.filter((asset) => asset.isSelected);
 
   let totalSelectAssets = selectedAssets.length;
-
   // Hidden pagination assets are selected
   if (selectedAllAssets) {
     // Get assets is not selected on screen
-    const currentUnSelectedAssets = assets.filter(asset => !asset.isSelected)
-    totalSelectAssets = totalAssets - currentUnSelectedAssets.length
-  }
-
-  const toggleSelectAll = () => {
-    selectAllAssets(!selectedAllAssets)
+    const currentUnSelectedAssets = assets.filter((asset) => !asset.isSelected);
+    totalSelectAssets = totalAssets - currentUnSelectedAssets.length;
   }
 
   // Close search modal
@@ -118,112 +106,59 @@ const SearchOverlayAssets = ({  closeOverlay, importEnabled = false, operationsE
     // Reset all value
     setSearchTerm("");
     setSearchFilterParams({});
-    selectAllAssets(false)
+    selectAllAssets(false);
 
     closeOverlay();
-  }
+  };
 
   return (
     <div>
-    <div className={sharePath ? `${styles['share-landing-search']} search-content` : 'search-content' } >
-
-      <div className={'search-cont'}>
-        <div className={"search-actions"}>
-          
-          {!isFolder &&
-            <div className={'search-filter'} onClick={() => setOpenFilters(!openFilters)}>
-              <img src={Utilities.filterGray} alt={"filter"} />
-            </div>
-          }
-          {!sharePath && <div className={'search-close'} onClick={closeSearchModal}>
-            <img src={Utilities.grayClose} alt={"close"} />
-          </div>}
+      <div
+        className={
+          sharePath
+            ? `${styles["share-landing-search"]} search-content`
+            : "search-content"
+        }
+      >
+        <div className={"search-cont"}>
+          <div className={"search-actions"}>
+            {!isFolder && (
+              <div
+                className={"search-filter"}
+                onClick={() => setOpenFilters(!openFilters)}
+              >
+                <img src={Utilities.filterGray} alt={"filter"} />
+              </div>
+            )}
+            {!sharePath && (
+              <div className={"search-close"} onClick={closeSearchModal}>
+                <img src={Utilities.grayClose} alt={"close"} />
+              </div>
+            )}
+          </div>
+          <Search
+            placeholder={`Search ${isFolder ? "Collections" : "Assets"}`}
+            onSubmit={(inputTerm, filterParams) =>
+              getData(inputTerm, true, filterParams)
+            }
+            openFilters={openFilters}
+          />
         </div>
-        {/* TODO: When is a collecttion change placeholter to "Search Collections" */}
-        <Search
-          placeholder={`Search ${isFolder ? 'Collections' : 'Assets'}`}
-          onSubmit={(inputTerm, filterParams) => getData(inputTerm, true, filterParams)}
-          openFilters={openFilters}
-          setOpenFilters={setOpenFilters}
-        />
+
+        {importEnabled && (
+          <div className={styles["import-wrapper"]}>
+            <Button
+              text="Import Assets"
+              type="button"
+              disabled={selectedAssets.length === 0}
+              onClick={importAssets}
+              className="container primary"
+            />
+          </div>
+        )}
       </div>
-
-      {importEnabled &&
-        <div className={styles['import-wrapper']}>
-          <Button
-            text='Import Assets'
-            type='button'
-            disabled={selectedAssets.length === 0}
-            onClick={importAssets}
-            styleType='primary'
-          />
-        </div>
-      }
-      {/* {activeView === "list" && <ul className={'search-content-list'}>
-        {assets.map((assetItem, index) => (
-          <SearchItem
-            isShare={sharePath}
-            key={index.toString()}
-            enabledSelect={importEnabled || operationsEnabled}
-            toggleSelected={() => toggleSelected(assetItem.asset.id)}
-            assetItem={assetItem}
-            term={term}
-            openShareAsset={() => beginAssetOperation(assetItem, 'share')}
-            openDeleteAsset={() => beginAssetOperation(assetItem, 'delete')}
-            onCloseDetailOverlay={onCloseDetailOverlay}
-          />
-        ))}
-      </ul>} */}
-
-      {/* {activeView === "grid" && <div className={`${gridStyle['list-wrapper']} search-content-list`}>
-        <ul className={`${gridStyle['grid-list-small']} ${gridStyle['regular']}`}>
-          {assets.map((assetItem, index) => {
-            return (
-              <li className={gridStyle['grid-item']} key={assetItem.asset.id || index}>
-                <AssetThumbail
-                  {...assetItem}
-                  showAssetOption={true}
-                  sharePath={sharePath}
-                  isShare={false}
-                  type={""}
-                  toggleSelected={() => toggleSelected(assetItem.asset.id)}
-                  onCloseDetailOverlay={onCloseDetailOverlay}
-                />
-              </li>
-            )
-          })}
-        </ul>
-      </div>} */}
-
-
-      {/* {assets.length > 0 && nextPage !== -1 &&
-        <>
-          {nextPage > 2 ?
-            <>
-              {!assets[assets.length - 1].isLoading &&
-                <Waypoint onEnter={() => getData(term, false)} fireOnRapidScroll={false} />
-              }
-            </>
-
-            :
-            <>
-              {!assets[assets.length - 1].isLoading &&
-                <div className={styles['button-wrapper']}>
-                  <Button
-                    text='Load More'
-                    type='button'
-                    styleType='primary'
-                    onClick={() => getData(term, false)} />
-                </div>
-              }
-            </>
-          }
-        </>
-      } */}
     </div>
-  </div >
+  );
+};
 
-  )
-}
-
-export default SearchOverlayAssets
+export default SearchOverlayAssets;

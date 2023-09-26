@@ -1,22 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import { format } from "date-fns";
+import { useEffect, useState } from "react";
+import { Utilities } from "../../../assets";
+import AssetIcon from "../asset/asset-icon";
+import AssetImg from "../asset/asset-img";
+import Button from "../buttons/button";
+import IconClickable from "../buttons/icon-clickable";
+import BaseModal from "../modals/base";
+import EditDetail from "./edit-detail";
 import styles from "./edit-grid.module.css";
-import { format } from 'date-fns';
-import { Utilities } from '../../../assets';
-import AssetImg from '../asset/asset-img';
-import AssetIcon from '../asset/asset-icon';
-import IconClickable from '../buttons/icon-clickable';
-import Button from '../buttons/button';
-import BaseModal from '../modals/base';
-import EditDetail from './edit-detail';
 
-const EditItem = ({assets, asset, thumbailUrl, realUrl, isEditSelected, index, toggleSelectedEdit, totalLength }) => {
-    const [modalOpen, setModalOpen] = useState(false);
-    const [curIndex, setCurIndex] = useState(index)
-    const [curAsset, setCurAsset] = useState(assets[curIndex % totalLength])
+const EditItem = ({
+  assets,
+  asset,
+  thumbailUrl,
+  realUrl,
+  isEditSelected,
+  index,
+  toggleSelectedEdit,
+  totalLength,
+}) => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [curIndex, setCurIndex] = useState(index);
+  const [curAsset, setCurAsset] = useState(assets[curIndex % totalLength]);
 
-    useEffect(() => {
-      setCurAsset(assets[curIndex % totalLength]);
-    }, [curIndex]);
+  useEffect(() => {
+    setCurAsset(assets[curIndex % totalLength]);
+  }, [curIndex]);
 
   return (
     <li key={asset.id || index}>
@@ -53,10 +62,13 @@ const EditItem = ({assets, asset, thumbailUrl, realUrl, isEditSelected, index, t
             </>
             <div className={styles["image-button-wrapper"]}>
               <Button
-                styleType={"primary"}
+                className={"container primary"}
                 text={"View Details"}
                 type={"button"}
-                onClick={() => {setCurIndex(index) ; setModalOpen(true)}}
+                onClick={() => {
+                  setCurIndex(index);
+                  setModalOpen(true);
+                }}
               />
             </div>
           </div>
@@ -91,6 +103,6 @@ const EditItem = ({assets, asset, thumbailUrl, realUrl, isEditSelected, index, t
       />
     </li>
   );
-}
- 
-export default EditItem
+};
+
+export default EditItem;

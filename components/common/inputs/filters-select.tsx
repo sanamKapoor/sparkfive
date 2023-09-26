@@ -1,56 +1,60 @@
-import styles from './filters-select.module.css'
-import ReactSelect, { components, createFilter } from 'react-select'
-import { useState } from 'react'
-import { Utilities } from '../../../assets'
+import { useState } from "react";
+import ReactSelect, { components, createFilter } from "react-select";
+import { Utilities } from "../../../assets";
+import styles from "./filters-select.module.css";
 
 const FiltersSelect = ({
   options,
   placeholder,
   value = null,
-  onChange = (selected) => { },
-  styleType = '',
+  onChange = (selected) => {},
+  styleType = "",
   isClearable = false,
   closeMenuOnSelect = false,
   hasCount = false,
-  scrollBottomAfterSearch = false
+  scrollBottomAfterSearch = false,
 }) => {
-
   const [optionsVisible, setOptionsVisible] = useState(false);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
 
   const onInputChange = (value) => {
     setInputValue(value);
     if (!value || value.length === 0) {
-      setOptionsVisible(false)
-    }
-    else if (!optionsVisible && value.length > 0) {
-      setOptionsVisible(true)
+      setOptionsVisible(false);
+    } else if (!optionsVisible && value.length > 0) {
+      setOptionsVisible(true);
     }
 
     // Scroll bottom
-    if(scrollBottomAfterSearch){
-        setTimeout(()=>{
-            var objDiv = document.getElementById("scroll-search-bottom-container");
-            objDiv.scrollTop = objDiv.scrollHeight;
-        },100)
+    if (scrollBottomAfterSearch) {
+      setTimeout(() => {
+        var objDiv = document.getElementById("scroll-search-bottom-container");
+        objDiv.scrollTop = objDiv.scrollHeight;
+      }, 100);
     }
-  }
+  };
 
   const onChangeWrapper = (selected) => {
-    if(inputValue){
+    if (inputValue) {
       onChange(selected);
     }
-  }
+  };
 
-  const Option = props => (
-    <components.Option {...props} >
+  const Option = (props) => (
+    <components.Option {...props}>
       <div className={styles.option}>
-        <img src={props.isSelected ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal} />
+        <img
+          src={
+            props.isSelected
+              ? Utilities.radioButtonEnabled
+              : Utilities.radioButtonNormal
+          }
+        />
         <div className={styles.label}>{props.label}</div>
         {hasCount && <div>{props.data.count}</div>}
       </div>
     </components.Option>
-  )
+  );
 
   return (
     <>
@@ -71,14 +75,12 @@ const FiltersSelect = ({
         menuIsOpen={optionsVisible}
         onInputChange={onInputChange}
         filterOption={createFilter({
-          matchFrom: 'any',
-          stringify: option => `${option.label}`,
+          matchFrom: "any",
+          stringify: (option) => `${option.label}`,
         })}
       />
     </>
-  )
-}
+  );
+};
 
-export default FiltersSelect
-
-
+export default FiltersSelect;

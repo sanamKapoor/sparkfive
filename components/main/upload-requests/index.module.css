@@ -178,8 +178,19 @@
   display: grid;
   grid-template-columns: 1fr 35%;
   gap: 60px;
+  min-height: 769px;
   height: 100%;
+  /* max-height: 70vh;
+  overflow-y: auto; */
+
 }
+.assetIconContainer >div {
+  min-height:470px;
+  height:100%;
+  text-align: center;
+
+}
+
 
 
 
@@ -201,6 +212,9 @@
 .confirm-modal-wrapper{
   padding: 33px 74px;
   position: relative;
+}
+.upload-approval-desc{
+padding-left: 58px;
 }
 @media screen and (max-width: 767px) {
   .confirm-modal-wrapper {
@@ -242,6 +256,8 @@
 .filter-input{
   max-width: 185px;
 }
+
+
 
 .label_info h4 {
   font-size: 16px;
@@ -522,6 +538,23 @@
   font-size: 32px;
   font-weight: 700;
 }
+.approval-pending-title h2{
+  font-size: 32px;
+  font-weight: 600;
+
+}
+.filter-by-status{
+  font-weight:600 !important;
+
+}
+.creatable-select-container >div>div span{
+  font-size: 12px;
+  font-weight: 400;
+}
+.creatable-select-container >div>div img{
+  width: 17px;
+}
+
 @media screen and (max-width: 1200px) {
   .options-list.dropdown {
     width: calc(160px * 3);

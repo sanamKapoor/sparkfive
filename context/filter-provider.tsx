@@ -1,21 +1,20 @@
-import { useState, useEffect, useContext } from "react";
-import update from "immutability-helper";
+import { useContext, useState } from "react";
 
-import { FilterContext, AssetContext, UserContext } from "../context";
+import { AssetContext, FilterContext, UserContext } from "../context";
 
 // APIs
+import customFieldsApi from "../server-api/attribute";
 import campaignApi from "../server-api/campaign";
-import projectApi from "../server-api/project";
-import tagApi from "../server-api/tag";
 import filterApi from "../server-api/filter";
 import fodlerApi from "../server-api/folder";
+import projectApi from "../server-api/project";
 import shareCollectionApi from "../server-api/share-collection";
-import customFieldsApi from "../server-api/attribute";
+import tagApi from "../server-api/tag";
 
 // Utils
-import selectOptions from "../utils/select-options";
-import { DEFAULT_FILTERS, getAssetsFilters } from "../utils/asset";
 import { useRouter } from "next/router";
+import { DEFAULT_FILTERS, getAssetsFilters } from "../utils/asset";
+import selectOptions from "../utils/select-options";
 
 export default ({ children, isPublic = false }) => {
   const location = useRouter();

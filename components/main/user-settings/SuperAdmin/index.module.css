@@ -1,0 +1,200 @@
+/* .list{
+  margin-top: 2rem;
+} */
+.container {
+  padding: 0 44px;
+}
+.posRelative {
+  position: relative;
+}
+
+.action {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.buttons {
+  display: flex;
+  padding-bottom: 3rem;
+  padding-top: 1rem;
+  /* temporary need to remove */
+  padding: 20px 60px;
+}
+
+.buttons button {
+  margin-right: 3rem;
+}
+
+.back {
+  padding-top: 5px;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  font-weight: 600;
+  width: fit-content;
+  border-bottom: 1px solid var(--color-secondary-border);
+  width: 100%;
+  padding: 20px 57px;
+}
+
+.back img {
+  margin-right: 0.5rem;
+  width: 16px;
+  height: 16px;
+}
+
+/* .list{
+    margin-top: 2rem;
+  } */
+
+.action {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.name-email {
+  width: 12rem;
+  margin-right: 1rem;
+}
+
+.name-email > div:first-child {
+  font-weight: 600;
+}
+
+.role {
+  /* width: 7rem; */
+}
+
+/* .company{
+    flex: 1;
+  } */
+
+.company > div:first-child {
+  font-weight: 600;
+}
+
+.no-comp {
+  color: var(--color-sec-blue);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 2rem 0;
+ 
+  border-bottom: 1px solid var(--color-secondary-border);
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-title {
+  color: #a7adbb;
+  font-weight: 600;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.cdnEmbedding {
+  margin-top: 50px;
+}
+
+.base-plan-modal {
+  overflow: visible;
+  margin-top: 188px;
+}
+
+.plan-modal {
+  /* width: 25em;
+    height: 35em; */
+  max-width: 470px !important;
+  width: 100%;
+  /* height:428px; */
+  /* padding: 32px */
+  padding: 18px 0px 24px 0px;
+}
+.planModel{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  border-bottom: 1px solid 
+  #E5E5E5;
+  padding: 0 24px 10px 24px;
+
+}
+.modalPadding{
+padding: 10px 24px;
+}
+.planModelHeading{
+  font-size: 16px;
+  font-weight: 600;
+}
+.input-wrapper {
+  padding: 1rem 2rem;
+}
+
+.form-field {
+  margin-bottom: 16px;
+}
+
+.form-title {
+  margin-bottom: 4px;
+  color: #08135e;
+  font-weight: 400;
+  font-size: 16px;
+  font-family: "Noto Sans", sans-serif;
+}
+
+.date-wrapper input {
+  padding: 14px 16px !important;
+  width: 100%;
+  height: 40px;
+}
+
+.close {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--color-sec-blue);
+  cursor: pointer;
+  /* position: absolute;
+    top: 8px;
+    right: 10px */
+}
+.adminModal {
+  display: flex;
+  justify-content: space-between;
+}
+.settings {
+  font-family: "Noto Sans", sans-serif;
+  color: #08135e;
+  font-weight: 600;
+  font-size: 16px;
+}
+.divider {
+  border: 1px solid #e5e5e5;
+}
+
+.active-badge {
+  padding: 4px 8px;
+  /* background-color: #13bda6; */
+  background-color: #0083cd;
+  color: white;
+  border-radius: 4px;
+}
+
+.trial-badge {
+  padding: 4px 8px;
+  background-color: #d19f24;
+  color: white;
+  border-radius: 4px;
+}
+.features {
+  padding: 0 40px;
+}
+.featuresbtn {
+  margin-top: 24px;
+}

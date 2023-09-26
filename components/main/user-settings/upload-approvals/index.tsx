@@ -1,4 +1,4 @@
-import styles from './index.module.css'
+import styles from "./index.module.css";
 
 // Component
 import Main from "../../../common/upload-approvals";
@@ -8,7 +8,7 @@ const UploadApprovals = () => {
     <div className={styles.container}>
       <Main />
     </div>
-  )
-}
+  );
+};
 
-export default UploadApprovals
+export default UploadApprovals;

@@ -41,7 +41,7 @@
 }
 
 .m-t-40{
-    margin-top: 40px;
+    margin-top: 40px !important;
 }
 
 .m-t-50{
@@ -107,7 +107,7 @@
 
 }
 .m-r-20{
-    margin-right: 20px;
+    margin-right: 20px !important;
 }
 
 .m-r-25{

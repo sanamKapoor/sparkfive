@@ -1,18 +1,12 @@
-import styles from './share-layout.module.css'
-import { GeneralImg, Navigation, Utilities } from '../../../assets'
-import AssetContextProvider from '../../../context/asset-provider'
-import AssetHeaderOps from "../asset/asset-header-ops";
+import styles from "./share-layout.module.css";
 
 const ShareLayout = ({ children }) => {
-	return (
-		<>
-			{/*<AssetContextProvider>*/}
-				{children}
-				<footer className={styles.footer}>
-				</footer>
-			{/*</AssetContextProvider>*/}
-		</>
-	)
-}
+  return (
+    <>
+      {children}
+      <footer className={styles.footer}></footer>
+    </>
+  );
+};
 
-export default ShareLayout
+export default ShareLayout;

@@ -1,23 +1,17 @@
-import asset from "../../../../server-api/asset";
-import styles from "./deleted-list-item.module.css";
-import { Utilities } from "../../../../assets";
-import filesize from "filesize";
 import { format } from "date-fns";
-import { useState, useEffect, useContext } from "react";
+import filesize from "filesize";
+import { useEffect, useState } from "react";
+import { AssetOps, Utilities } from "../../../../assets";
 import { getParsedExtension } from "../../../../utils/asset";
+import styles from "./deleted-list-item.module.css";
 
-// Components
+import { extensionToType } from "../../../../utils/deleted-assets";
 import AssetImg from "../../asset/asset-img";
 import IconClickable from "../../buttons/icon-clickable";
-import DetailOverlay from "../../asset/detail-overlay";
-import AssetIcon from "../../asset/asset-icon";
-import { AssetOps } from "../../../../assets";
 
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
 
 const DeletedListItem = ({
-  isShare,
-  type,
   assetItem: {
     asset,
     thumbailUrl,
@@ -33,10 +27,9 @@ const DeletedListItem = ({
   openRecoverAsset = () => {},
   setCurrentSortAttribute = (attribute) => {},
 }) => {
-  const dateFormat = "MMM do, yyyy h:mm a";
+  const dateFormat = "MMM do, yyyy";
 
-  const [overlayProperties, setOverlayProperties] =
-    useState(DEFAULT_DETAIL_PROPS);
+  const [overlayProperties] = useState(DEFAULT_DETAIL_PROPS);
 
   useEffect(() => {
     if (overlayProperties.visible) {
@@ -54,20 +47,22 @@ const DeletedListItem = ({
     if (attribute === sortAttribute) {
       setCurrentSortAttribute("-" + attribute);
     } else {
-      setCurrentSortAttribute(sortAttribute.startsWith("-") ? attribute : "-" + attribute);
+      setCurrentSortAttribute(
+        sortAttribute.startsWith("-") ? attribute : "-" + attribute
+      );
     }
   };
   const arrowIcon = sortAttribute.startsWith("-")
-    ? Utilities.arrowUpGrey
-    : Utilities.arrowGrey;
+    ? Utilities.sort
+    : Utilities.sortUp;
 
   return (
     <>
       <div className={styles.list}>
         {index === 0 && (
           <div className={styles.header}>
-            <h4> </h4>
             <div className={styles["headers-content"]}>
+              <h4></h4>
               <h4 onClick={() => setSortAttribute("asset.name")}>
                 Name
                 <IconClickable
@@ -77,23 +72,14 @@ const DeletedListItem = ({
                   } ${getSortAttributeClassName("asset.name")}`}
                 />
               </h4>
-              {/*<h4>Stage</h4>*/}
-              <h4 onClick={() => setSortAttribute("asset.type")}>
-                Type
+              <h4></h4>
+              <h4 onClick={() => setSortAttribute("asset.deleted-at")}>
+                Date Deleted
                 <IconClickable
                   src={arrowIcon}
                   additionalClass={`${
                     styles["sort-icon"]
-                  } ${getSortAttributeClassName("asset.type")}`}
-                />
-              </h4>
-              <h4 onClick={() => setSortAttribute("asset.extension")}>
-                Extension
-                <IconClickable
-                  src={arrowIcon}
-                  additionalClass={`${
-                    styles["sort-icon"]
-                  } ${getSortAttributeClassName("asset.extension")}`}
+                  } ${getSortAttributeClassName("asset.deleted-at")}`}
                 />
               </h4>
               <h4 onClick={() => setSortAttribute("asset.size")}>
@@ -105,23 +91,23 @@ const DeletedListItem = ({
                   } ${getSortAttributeClassName("asset.size")}`}
                 />
               </h4>
-              <h4 onClick={() => setSortAttribute("asset.deleted-at")}>
-                Date Deleted
+              <h4 onClick={() => setSortAttribute("asset.extension")}>
+                File Ext
                 <IconClickable
                   src={arrowIcon}
                   additionalClass={`${
                     styles["sort-icon"]
-                  } ${getSortAttributeClassName("asset.deleted-at")}`}
+                  } ${getSortAttributeClassName("asset.extension")}`}
                 />
               </h4>
-              <h4></h4>
+              <h4>Dimensions</h4>
             </div>
           </div>
         )}
-        <div className={styles.item}>
-          <div className={styles.photo}>
+        <div className={`${styles.item} ${isSelected && styles.selected}`}>
+          <div className={styles.info}>
             <div
-              className={`${styles["selectable-wrapper"]} ${
+              className={`${styles.cell} ${styles["selectable-wrapper"]} ${
                 isSelected && styles["selected-wrapper"]
               }`}
             >
@@ -143,65 +129,84 @@ const DeletedListItem = ({
                 </>
               )}
             </div>
-            <div className={`${styles.thumbnail} ${isLoading && "loadable"}`}>
-              {thumbailUrl ? (
-                <AssetImg
-                  assetImg={thumbailUrl}
-                  type={asset.type}
-                  name={asset.name}
-                />
-              ) : (
-                <AssetIcon
-                  extension={asset.extension}
-                  onList={true}
-                  onClick={undefined}
-                />
+            <div className={styles.cell}>
+              <div className={styles.thumbnail_name}>
+                <div
+                  className={`${styles.thumbnail} ${isLoading && "loadable"}`}
+                >
+                  {thumbailUrl ? (
+                    <AssetImg
+                      assetImg={thumbailUrl}
+                      type={asset.type}
+                      isDeletedItem
+                    />
+                  ) : (
+                    <img
+                      className={styles.defaultIcon}
+                      src={extensionToType(asset.extension, false)}
+                    />
+                  )}
+                </div>
+                <div
+                  className={`${styles.name} ${styles.assetDesc} ${
+                    isLoading && "loadable"
+                  }`}
+                >
+                  {asset.name}
+                </div>
+              </div>
+            </div>
+            <div className={styles.cell}>
+              {!isLoading && !isUploading && (
+                <div className={styles.actions}>
+                  <span className={styles.span}>
+                    <IconClickable
+                      additionalClass={styles["action-recover"]}
+                      src={AssetOps.moveGray}
+                      tooltipText={"Recover"}
+                      tooltipId={"Recover"}
+                      onClick={openRecoverAsset}
+                    />
+                  </span>
+                  <span className={styles.span}>
+                    <IconClickable
+                      additionalClass={styles["action-delete"]}
+                      src={AssetOps.deleteGray}
+                      tooltipText={"Delete"}
+                      tooltipId={"Delete"}
+                      onClick={openDeleteAsset}
+                    />
+                  </span>
+                </div>
               )}
             </div>
-          </div>
-          <div className={styles.info}>
-            <div className={`${styles.name} ${isLoading && "loadable"}`}>
-              {asset.name}
-            </div>
-            <div className={`${styles.field_name} ${isLoading && "loadable"}`}>
-              {!isUploading && asset.type}
-            </div>
-            <div className={styles.field_name}>
-              {!isLoading && getParsedExtension(asset.extension)}
-            </div>
-            <div className={styles.field_name}>
-              {asset.size && filesize(asset.size)}
-            </div>
-            <div
-              className={`${styles.field_name} ${styles.dateHide} ${
-                isLoading && "loadable"
-              }`}
-            >
-              {asset?.deletedAt &&
-                format(new Date(asset.deletedAt), dateFormat)}
-            </div>
-            {!isLoading && !isUploading && (
-              <div>
-                <span className={styles.span}>
-                  <IconClickable
-                    additionalClass={styles["action-button"]}
-                    src={AssetOps[`move`]}
-                    tooltipText={"Recover"}
-                    tooltipId={"Recover"}
-                    onClick={openRecoverAsset}
-                  />
-                </span>
-                <span className={styles.span}>
-                  <IconClickable
-                    additionalClass={styles["action-button"]}
-                    src={AssetOps[`delete`]}
-                    tooltipText={"Delete"}
-                    tooltipId={"Delete"}
-                    onClick={openDeleteAsset}
-                  />
-                </span>
+            <div className={styles.cell}>
+              <div
+                className={`${styles.field_name} ${styles.dateHide} ${
+                  isLoading && "loadable"
+                }`}
+              >
+                {asset?.deletedAt &&
+                  format(new Date(asset.deletedAt), dateFormat)}
               </div>
-            )}
+            </div>
+            <div className={styles.cell}>
+              <div className={styles.field_name}>
+                {asset.size && filesize(asset.size)}
+              </div>
+            </div>
+            <div className={styles.cell}>
+              <div className={styles.field_name}>
+                {!isLoading && getParsedExtension(asset.extension)}
+              </div>
+            </div>
+            <div className={styles.cell}>
+              <div className={styles.field_name}>
+                {asset.dimensionWidth &&
+                  asset.dimensionHeight &&
+                  `${asset.dimensionWidth} x ${asset.dimensionHeight}`}
+              </div>
+            </div>
           </div>
         </div>
       </div>

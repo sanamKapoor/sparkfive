@@ -1,247 +1,281 @@
 // External import
-import update from "immutability-helper"
-import {useContext, useEffect, useState, useRef} from 'react'
+import update from "immutability-helper";
+import { useEffect, useRef, useState } from "react";
 
 // Styles
-import styles from './index.module.css'
+import styles from "./index.module.css";
 
-import assetApi from '../../server-api/asset'
-import toastUtils from '../../utils/toast'
-import urlUtils from '../../utils/url'
-
-// Utils
-import downloadUtils from '../../utils/download'
+import assetApi from "../../server-api/asset";
+import toastUtils from "../../utils/toast";
+import urlUtils from "../../utils/url";
 
 // Components
-import ShareItem from './share-item'
-import ShareOperationButtons from "./share-operation-buttons"
 import fileDownload from "js-file-download";
-import AssetDownloadProcess from "./asset-download-process"
-import AuthContainer from '../common/containers/auth-container'
-import { GeneralImg } from '../../assets'
-
+import { GeneralImg } from "../../assets";
+import AuthContainer from "../common/containers/auth-container";
+import AssetDownloadProcess from "./asset-download-process";
+import ShareItem from "./share-item";
+import ShareOperationButtons from "./share-operation-buttons";
 
 // Contexts
-import { AssetContext, FilterContext, TeamContext } from '../../context'
-import Spinner from "../common/spinners/spinner";
+import Button from "../common/buttons/button";
 import Input from "../common/inputs/input";
-import AuthButton from "../common/buttons/auth-button";
+import Spinner from "../common/spinners/spinner";
 
 const AssetShare = () => {
-	const {
-		updateDownloadingStatus
-	} = useContext(AssetContext)
+  const [assets, setAssets] = useState([]);
+  const [selectedAsset, setSelectedAsset] = useState(0);
+  const [showDownloadPopup, setShowDownloadPopup] = useState(false);
+  const [downloadStatus, setDownloadStatus] = useState("");
+  const [downloadingPercent, setDownloadingPercent] = useState(30);
+  const interval = useRef();
+  const [email, setEmail] = useState("");
+  const [logo, setLogo] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [shareUserName, setShareUserName] = useState("");
+  const [sharedCode, setSharedCode] = useState("");
 
-	const {searchFilterParams} = useContext(FilterContext);
-	const {team} = useContext(TeamContext)
+  // Toggle select asset
+  const toggleSelected = (id) => {
+    const assetIndex = assets.findIndex(
+      (assetItem) => assetItem.asset.id === id
+    );
 
-	const [assets, setAssets] = useState([])
-	const [selectedAsset, setSelectedAsset] = useState(0)
-	const [showDownloadPopup, setShowDownloadPopup] = useState(false)
-	const [downloadStatus, setDownloadStatus] = useState("")
-	const [downloadingPercent, setDownloadingPercent] = useState(30)
-	const interval = useRef()
-	const [email, setEmail] = useState("")
-	const [logo, setLogo] = useState("")
-	const [loading, setLoading] = useState(true)
-	const [error, setError] = useState(false)
-	const [shareUserName, setShareUserName] = useState("")
+    // Toggle selected item
+    if (!assets[assetIndex].isSelected) {
+      setSelectedAsset(selectedAsset + 1);
+    } else {
+      setSelectedAsset(selectedAsset - 1);
+    }
 
-	// Toggle select asset
-	const toggleSelected = (id) => {
-		const assetIndex = assets.findIndex(assetItem => assetItem.asset.id === id)
+    setAssets(
+      update(assets, {
+        [assetIndex]: {
+          isSelected: { $set: !assets[assetIndex].isSelected },
+        },
+      })
+    );
+  };
 
-		// Toggle selected item
-		if(!assets[assetIndex].isSelected){
-			setSelectedAsset(selectedAsset+1)
-		}else{
-			setSelectedAsset(selectedAsset-1)
-		}
+  // Select/Deselect all assets
+  const selectAll = () => {
+    // If already select all, do deselect
+    if (selectedAsset) {
+      setAssets(
+        assets.map((assetItem) => ({ ...assetItem, isSelected: false }))
+      );
+      setSelectedAsset(0);
+    } else {
+      setAssets(
+        assets.map((assetItem) => ({ ...assetItem, isSelected: true }))
+      );
+      setSelectedAsset(assets.length);
+    }
+  };
 
-		setAssets(update(assets, {
-			[assetIndex]: {
-				isSelected: { $set: !assets[assetIndex].isSelected }
-			}
-		}))
-	}
+  const zipping = () => {
+    setDownloadStatus("zipping");
+    setShowDownloadPopup(true);
+    // simulateProcess();
+  };
 
-	// Select/Deselect all assets
-	const selectAll = () => {
-		// If already select all, do deselect
-		if(selectedAsset){
-			setAssets(assets.map(assetItem => ({ ...assetItem, isSelected: false })))
-			setSelectedAsset(0)
-		}else{
-			setAssets(assets.map(assetItem => ({ ...assetItem, isSelected: true })))
-			setSelectedAsset(assets.length)
-		}
+  const done = () => {
+    setDownloadStatus("done");
+    // cancelSimulatedProcess
+  };
 
-	}
+  const simulateProcess = () => {
+    // @ts-ignore
+    interval.current = setInterval(() => {
+      if (downloadingPercent < 100) {
+        setDownloadingPercent(downloadingPercent + 10);
+      }
+    }, 1000);
+  };
 
-	const zipping = () => {
-		setDownloadStatus("zipping")
-		setShowDownloadPopup(true)
-		// simulateProcess();
-	}
+  const cancelSimulatedProcess = () => {
+    if (interval.current) {
+      clearInterval(interval.current);
+      setDownloadingPercent(0);
+    }
+  };
 
-	const done = () => {
-		setDownloadStatus("done")
-		// cancelSimulatedProcess
-	}
+  // Download select assets
+  const downloadSelectedAssets = async () => {
+    try {
+      const { shareJWT, code } = urlUtils.getQueryParameters();
 
-	const simulateProcess = () => {
-		// @ts-ignore
-		interval.current = setInterval(()=>{
-			if(downloadingPercent < 100){
-				setDownloadingPercent(downloadingPercent+10)
-			}
+      const selectedAssets = assets.filter((asset) => asset.isSelected);
 
-		},1000)
-	}
+      let payload = {
+        assetIds: selectedAssets.map((item) => item.asset.id),
+      };
 
-	const cancelSimulatedProcess = () => {
-		if(interval.current){
-			clearInterval(interval.current)
-			setDownloadingPercent(0)
-		}
+      // Show processing bar
+      zipping();
 
-	}
+      const { data } = await assetApi.shareDownload(payload, {
+        shareJWT,
+        code,
+      });
+      // Download file to storage
+      fileDownload(data, "assets.zip");
 
-	// Download select assets
-	const downloadSelectedAssets = async () => {
-		try{
+      done();
 
-			const { shareJWT, code } = urlUtils.getQueryParameters()
+      // downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets.zip')
+    } catch (e) {}
+  };
 
-			const selectedAssets = assets.filter(asset => asset.isSelected)
+  useEffect(() => {
+    getAssets();
+  }, []);
 
-			let payload = {
-				assetIds: selectedAssets.map((item)=>item.asset.id),
-			};
+  const getAssets = async () => {
+    try {
+      const { shareJWT, code } = urlUtils.getQueryParameters();
 
-			// Show processing bar
-			zipping()
+      // Allow get by both shareJWT or code (shareJWT has problem with very long at url issue)
+      if (shareJWT || code) {
+        const { data } = await assetApi.getSharedAssets({ shareJWT, code });
+        if (data.error) {
+          setError(true);
+          setLoading(false);
+          setLogo(data.data.team.workspaceIcon);
+          setShareUserName(data.data.user.name);
 
-			const { data } = await assetApi.shareDownload(payload, {shareJWT, code});
-			// Download file to storage
-			fileDownload(data, "assets.zip");
+          if (data.errorMessage !== "Email is required") {
+            toastUtils.error(data.errorMessage);
+          }
+        } else {
+          setError(false);
+          setLoading(false);
+          setAssets(data.data);
+          setShareUserName(data.sharedBy);
+          setSharedCode(code as string);
+        }
+      }
+    } catch (err) {
+      toastUtils.error("Could not get assets from server");
+    }
+  };
 
-			done();
+  const onSubmitAuth = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    const { shareJWT, code } = urlUtils.getQueryParameters();
+    const { data } = await assetApi.getSharedAssets({ shareJWT, email, code });
 
-			// downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets.zip')
-		}catch (e){
+    if (data.error) {
+      toastUtils.error(data.errorMessage);
+      setError(true);
+      setLoading(false);
+    } else {
+      setError(false);
+      setLoading(false);
+      setAssets(data.data);
+    }
+  };
 
-		}
+  return (
+    <>
+      {!loading && !error && (
+        <header className={styles.header}>
+          <img className={styles["logo-img"]} src={GeneralImg.logo} />
+        </header>
+      )}
+      <section className={styles.container}>
+        {loading && <Spinner className={styles["spinner"]} />}
+        {!loading && error && (
+          <div>
+            <img
+              alt={"logo"}
+              src={logo || GeneralImg.logoHorizontal}
+              className={styles.logo}
+            />
+            <AuthContainer
+              title="Spencer Mo has shared files with you"
+              titleComponent={
+                <p className={"normal-text font-16"}>
+                  {shareUserName} has shared files with you
+                </p>
+              }
+              subTitleComponent={
+                <p className={"normal-text m-b-32"}>
+                  Please enter your email to access the shared files
+                </p>
+              }
+              additionalClass={"color-secondary"}
+              subtitle={"Please enter your email to access the shared files"}
+            >
+              <form onSubmit={onSubmitAuth} className={styles["password-form"]}>
+                <Input
+                  placeholder={"Email"}
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
+                  styleType={"regular-short"}
+                  type="text"
+                />
+                <div className={"m-t-15"}>
+                  <Button
+                    className="container primary"
+                    text={"Submit"}
+                    type={"submit"}
+                  />
+                </div>
+              </form>
+            </AuthContainer>
+          </div>
+        )}
+        {!loading && !error && (
+          <>
+            <ShareOperationButtons
+              sharedBy={shareUserName}
+              selectAll={selectAll}
+              totalSharedFiles={assets?.length}
+              selectedAsset={selectedAsset}
+              downloadSelectedAssets={downloadSelectedAssets}
+            />
+            <div className={styles["list-wrapper"]}>
+              <ul className={styles["grid-list"]}>
+                {assets.map((assetItem) => {
+                  return (
+                    <li
+                      className={styles["grid-item"]}
+                      key={assetItem.asset.id}
+                    >
+                      <ShareItem
+                        {...assetItem}
+                        toggleSelected={() => {
+                          toggleSelected(assetItem.asset.id);
+                        }}
+                        selectAll={selectAll}
+                        sharedCode={sharedCode}
+                      />
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </>
+        )}
 
-	}
+        {showDownloadPopup && (
+          <AssetDownloadProcess
+            downloadingStatus={downloadStatus}
+            onClose={() => {
+              setShowDownloadPopup(false);
+            }}
+            downloadingPercent={downloadingPercent}
+            selectedAsset={selectedAsset}
+          />
+        )}
+      </section>
+    </>
+  );
+};
 
-	useEffect(() => {
-		getAssets()
-	}, [])
-
-	const getAssets = async () => {
-		try {
-			const { shareJWT, code } = urlUtils.getQueryParameters()
-
-			// Allow get by both shareJWT or code (shareJWT has problem with very long at url issue)
-			if (shareJWT || code) {
-				const { data } = await assetApi.getSharedAssets({ shareJWT, code})
-				if(data.error){
-					setError(true)
-					setLoading(false)
-					setLogo(data.data.team.workspaceIcon)
-					setShareUserName(data.data.user.name)
-
-					if(data.errorMessage !== "Email is required"){
-						toastUtils.error(data.errorMessage)
-					}
-
-				}else{
-					setError(false)
-					setLoading(false)
-					setAssets(data.data)
-					setShareUserName(data.sharedBy)
-				}
-			}
-		} catch (err) {
-			toastUtils.error('Could not get assets from server')
-		}
-	}
-
-	const onSubmitAuth = async (e) => {
-		e.preventDefault();
-		setLoading(true)
-		const { shareJWT, code } = urlUtils.getQueryParameters()
-		const { data } = await assetApi.getSharedAssets( {shareJWT, email, code})
-
-		if(data.error){
-			toastUtils.error(data.errorMessage)
-			setError(true)
-			setLoading(false)
-		}else{
-			setError(false)
-			setLoading(false)
-			setAssets(data.data)
-		}
-	}
-
-	return (
-		<>
-			{!loading && !error && <header className={styles.header}>
-				<img
-					className={styles['logo-img']}
-					src={GeneralImg.logo} />
-			</header>}
-			<section className={styles.container}>
-				{loading && <Spinner className={styles['spinner']}/>}
-				{!loading && error &&
-				<div>
-					<img alt={"logo"} src={logo || GeneralImg.logoHorizontal} className={styles.logo} />
-					<AuthContainer
-						title='Spencer Mo has shared files with you'
-						titleComponent={<p className={"normal-text font-16"}>{shareUserName} has shared files with you</p>}
-						subTitleComponent={<p className={"normal-text m-b-32"}>Please enter your email to access the shared files</p>}
-						additionalClass={'color-secondary'}
-						subtitle={'Please enter your email to access the shared files'}>
-						<form onSubmit={onSubmitAuth} className={styles['password-form']}>
-							<Input
-								placeholder={'Email'}
-								value={email}
-								onChange={(e) => {setEmail(e.target.value)}}
-								styleType={'regular-short'}
-								type='text'
-							/>
-							<div className={"m-t-15"}>
-								<AuthButton
-									text={'Submit'}
-									type={'submit'}
-								/>
-							</div>
-
-						</form>
-					</AuthContainer>
-				</div>
-				}
-				{!loading && !error && <>
-					<ShareOperationButtons sharedBy={shareUserName} selectAll={selectAll} totalSharedFiles={assets?.length} selectedAsset={selectedAsset} downloadSelectedAssets={downloadSelectedAssets}/>
-					<div className={styles['list-wrapper']}>
-						<ul className={styles['grid-list']}>
-							{assets.map((assetItem) => {
-								return (
-									<li className={styles['grid-item']} key={assetItem.asset.id}>
-										<ShareItem {...assetItem} toggleSelected={()=>{toggleSelected(assetItem.asset.id)}} selectAll={selectAll}/>
-									</li>
-								)
-							})}
-						</ul>
-					</div>
-				</>}
-
-				{showDownloadPopup && <AssetDownloadProcess downloadingStatus={downloadStatus} onClose={()=>{setShowDownloadPopup(false)}} downloadingPercent={downloadingPercent} selectedAsset={selectedAsset}/>}
-			</section >
-
-		</>
-	)
-}
-
-export default AssetShare
+export default AssetShare;

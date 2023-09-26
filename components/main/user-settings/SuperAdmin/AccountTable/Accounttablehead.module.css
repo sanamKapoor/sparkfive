@@ -1,0 +1,41 @@
+.tableHead {
+  padding: 12px 0px 12px 8px;
+  background: #f6efe4;
+  margin-top: 16px;
+  width: 100%;
+}
+
+.username {
+  text-align: start;
+  padding: 12px 0 12px 8px;
+}
+.headdata {
+  background: #f6efe4;
+}
+.thead {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.thead span{
+  font-size: 12px;
+  font-weight: 500;
+}
+.action{
+  font-size: 12px;
+  font-weight: 500;
+
+}
+@media screen and (max-width: 1200px) {
+  .headcontent {
+    width: 198px;
+  }
+}
+@media screen and (max-width: 1486px) {
+    .thead span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+  

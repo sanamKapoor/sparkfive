@@ -1,18 +1,18 @@
-import styles from "./item-sublayout.module.css";
-import { useState, useEffect, useContext } from "react";
+import { useContext, useEffect, useState } from "react";
+import { isMobile } from "react-device-detect";
 import { Utilities } from "../../../assets";
 import { TeamContext, UserContext } from "../../../context";
-import { isMobile } from "react-device-detect";
+import styles from "./item-sublayout.module.css";
 
 import { ASSET_ACCESS } from "../../../constants/permissions";
 
 // Components
-import SectionButton from "../buttons/section-button";
-import ConfirmModal from "../modals/confirm-modal";
+import ItemAssets from "../asset/item-assets";
+import Button from "../buttons/button";
+import IconClickable from "../buttons/icon-clickable";
 import Dropdown from "../inputs/dropdown";
 import ToggleableAbsoluteWrapper from "../misc/toggleable-absolute-wrapper";
-import ItemAssets from "../asset/item-assets";
-import IconClickable from "../buttons/icon-clickable";
+import ConfirmModal from "../modals/confirm-modal";
 
 const ItemSublayout = ({
   SideComponent = null,
@@ -21,9 +21,9 @@ const ItemSublayout = ({
   layout = "double",
   type = "item",
   hasAssets = false,
-  itemId = '',
-  deleteItem = () => { },
-  duplicateProject
+  itemId = "",
+  deleteItem = () => {},
+  duplicateProject,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [activeMain, setActiveMain] = useState("details");
@@ -49,15 +49,23 @@ const ItemSublayout = ({
       <div className={styles["main-component"]}>
         <div className={styles.heading}>
           <div className={styles[layout]}>
-            <SectionButton
+            <Button
               text="Details"
-              active={activeMain === "details"}
+              className={
+                activeMain === "details"
+                  ? "section-container section-active"
+                  : "section-container"
+              }
               onClick={() => setActiveMain("details")}
             />
             {hasAssets && hasPermission([ASSET_ACCESS]) && (
-              <SectionButton
+              <Button
                 text="Assets"
-                active={activeMain === "assets"}
+                className={
+                  activeMain === "assets"
+                    ? "section-container section-active"
+                    : "section-container"
+                }
                 onClick={() => setActiveMain("assets")}
               />
             )}
@@ -106,18 +114,20 @@ const ItemSublayout = ({
               {children}
             </>
           )}
-          contentClass={styles['more-drop']}
+          contentClass={styles["more-drop"]}
           Content={() => {
+            const options = [];
+            if (duplicateProject)
+              options.push({
+                label: "Duplicate",
+                onClick: () => duplicateProject(),
+              });
+            options.push({
+              label: "Delete",
+              onClick: () => setModalOpen(true),
+            });
 
-            const options = []
-            if (duplicateProject) options.push({ label: 'Duplicate', onClick: () => duplicateProject() })
-            options.push({ label: 'Delete', onClick: () => setModalOpen(true) })
-
-            return (
-              <Dropdown
-                options={options}
-              />
-            )
+            return <Dropdown options={options} />;
           }}
         />
       </div>

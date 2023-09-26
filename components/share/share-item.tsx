@@ -1,15 +1,15 @@
-import styles from "./share-item.module.css";
 import { format } from "date-fns";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import styles from "./share-item.module.css";
 
 import { Utilities } from "../../assets";
 
 // Component
-import AssetImg from "../common/asset/asset-img";
-import Button from "../common/buttons/button";
-import DetailOverlay from "../common/asset/detail-overlay";
-import IconClickable from "../common/buttons/icon-clickable";
 import AssetIcon from "../common/asset/asset-icon";
+import AssetImg from "../common/asset/asset-img";
+import DetailOverlay from "../common/asset/detail-overlay";
+import Button from "../common/buttons/button";
+import IconClickable from "../common/buttons/icon-clickable";
 
 const ShareItem = ({
   asset,
@@ -17,6 +17,7 @@ const ShareItem = ({
   realUrl,
   isSelected = false,
   toggleSelected = () => {},
+  sharedCode = ""
 }) => {
   const [visibleOverlay, setVisibleOVerlay] = useState(false);
 
@@ -30,7 +31,9 @@ const ShareItem = ({
 
   return (
     <>
-      <div className={`${styles.container} ${isSelected ? styles.selected : ''}`}>
+      <div
+        className={`${styles.container} ${isSelected ? styles.selected : ""}`}
+      >
         <div className={styles["image-wrapper"]}>
           {thumbailUrl ? (
             <AssetImg
@@ -42,10 +45,7 @@ const ShareItem = ({
           ) : (
             <AssetIcon extension={asset?.extension} />
           )}
-          {/* {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} opaque={false} />}
-					{asset.type === 'video' && <AssetVideo asset={asset} realUrl={realUrl} additionalClass={styles['video-wrapper']} />}
-					{asset.type === 'application' && <AssetApplication extension={asset.extension} />}
-					{asset.type === 'text' && <AssetText extension={asset.extension} />} */}
+
           <div
             className={`${styles["selectable-wrapper"]} ${
               isSelected && styles["selected-wrapper"]
@@ -67,7 +67,7 @@ const ShareItem = ({
           </div>
           <div className={styles["image-button-wrapper"]}>
             <Button
-              styleType={"primary"}
+              className={"container primary"}
               text={"View Details"}
               type={"button"}
               onClick={() => setVisibleOVerlay(true)}
@@ -88,10 +88,11 @@ const ShareItem = ({
       {visibleOverlay && (
         <DetailOverlay
           initiaParams={{ side: "detail" }}
-          asset={asset} 
+          asset={asset}
           realUrl={realUrl}
           thumbailUrl={thumbailUrl}
           isShare={true}
+          sharedCode={sharedCode}
           closeOverlay={() => setVisibleOVerlay(false)}
         />
       )}

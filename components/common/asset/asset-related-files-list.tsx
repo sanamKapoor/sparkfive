@@ -1,20 +1,20 @@
+import { format } from 'date-fns'
+import fileSize from 'filesize'
+import update from 'immutability-helper'
+import fileDownload from "js-file-download"
 import { useContext, useEffect, useState } from 'react'
 import { AssetOps, Utilities } from '../../../assets'
+import { AssetContext, LoadingContext } from '../../../context'
+import assetApi from "../../../server-api/asset"
+import downloadUtils from "../../../utils/download"
+import toastUtils from '../../../utils/toast'
 import IconClickable from '../buttons/icon-clickable'
 import Dropdown from '../inputs/dropdown'
 import ToggleableAbsoluteWrapper from '../misc/toggleable-absolute-wrapper'
 import ConfirmModal from '../modals/confirm-modal'
-import styles from './asset-related-files-list.module.css'
-import { format } from 'date-fns'
-import fileSize from 'filesize'
 import AssetIcon from './asset-icon'
-import { AssetContext, LoadingContext } from '../../../context'
-import assetApi from "../../../server-api/asset"
-import fileDownload from "js-file-download";
-import downloadUtils from "../../../utils/download"
-import update from 'immutability-helper';
-import toastUtils from '../../../utils/toast'
 import AssetRelatedAddition from './asset-related-addition'
+import styles from './asset-related-files-list.module.css'
 
 const AssetRelatedFilesList = ({currentAsset, relatedAssets, associateFileId, onChangeRelatedFiles, onAddRelatedFiles}) => {
     const {activeOperation, setActiveOperation, updateDownloadingStatus, setOperationAssets} = useContext(AssetContext);
@@ -50,12 +50,16 @@ const AssetRelatedFilesList = ({currentAsset, relatedAssets, associateFileId, on
 
         updateDownloadingStatus("done", 0, 0);
       } catch (e) {
+         const errorResponse = await e.response.data.text() || "{}"
+         const parsedErrorResponse = JSON.parse(errorResponse)
+
+        console.log(`Error in asset-related-files-list`)
         console.error(e);
         updateDownloadingStatus(
           "error",
           0,
           0,
-          "Internal Server Error. Please try again."
+          parsedErrorResponse.message || 'Internal Server Error. Please try again.'
         );
       }
 
@@ -90,7 +94,7 @@ const AssetRelatedFilesList = ({currentAsset, relatedAssets, associateFileId, on
           );
 
           if (assetIndex !== -1) {onChangeRelatedFiles([...relatedAssets.filter(item => item.asset.id !== id)]); }
-           
+
           setIsLoading(false);
           toastUtils.success("Assets disassociated successfully");
         } catch (err) {
@@ -100,7 +104,7 @@ const AssetRelatedFilesList = ({currentAsset, relatedAssets, associateFileId, on
             "Could not disassociate assets, please try again later."
           );
         }
-      };          
+      };
 
 
     const deleteAsset = async (id) => {

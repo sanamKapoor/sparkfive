@@ -6,9 +6,6 @@
 }
 
 
-.wrapper {
-}
-
 .wrapper h4 {
     font-weight: 500;
     color: var(--color-prim-navy);
@@ -25,12 +22,12 @@
 }
 
 
-.transcript-item{
+.transcript-item {
     display: flex;
     margin-bottom: 30px;
 }
 
-.time-text{
+.time-text {
     margin-right: 16px;
     padding: 4px 16px;
     background-color: var(--color-sec-lightblue);
@@ -45,29 +42,25 @@
     font-weight: 500;
 }
 
-.trans-text{
 
-}
-
-.search-input{
+.search-input {
     margin-right: 0;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
 
 }
 
-.input-container{
+.input-container {
     margin-right: 0;
     width: 100%;
 }
 
-.input-container input{
+.input-container input {
     padding-left: 30px;
 }
 
-.transcript-row{
+.transcript-row {
     margin-top: 47px;
 }
 
-@media screen and (max-width: 460px) {
-}
+@media screen and (max-width: 460px) {}

@@ -1,14 +1,15 @@
-import styles from './side-navigation.module.css'
-import { useState, useEffect, useContext } from 'react'
-import { UserContext } from '../../../context'
-import update from 'immutability-helper'
-import toastUtils from '../../../utils/toast'
-import Link from 'next/link'
+import Link from "next/link";
+import { useContext } from "react";
+import { SETTING_OPTIONS } from ".";
+import { UserContext } from "../../../context";
+import styles from "./side-navigation.module.css";
 
-// Components
-const UserSettings = ({ activeView, SETTING_OPTIONS }) => {
+interface UserSettingsProps {
+  activeView: string;
+}
 
-  const { hasPermission } = useContext(UserContext)
+const UserSettings: React.FC<UserSettingsProps> = ({ activeView }) => {
+  const { hasPermission } = useContext(UserContext);
 
   return (
     <section className={styles.container}>
@@ -16,17 +17,32 @@ const UserSettings = ({ activeView, SETTING_OPTIONS }) => {
         {Object.entries(SETTING_OPTIONS)
           .filter(([_, optionProps]) => hasPermission(optionProps.permissions))
           .map(([option, optionProps], index) => (
-            <Link href={`/main/user-settings/${option}`} key={index}>
-              <a>
-                <li className={`${styles.setting} ${activeView === option && styles.selected}`}>
-                  <span>{optionProps.label}</span>
-                </li>
-              </a>
-            </Link>
+            <>
+              {option === "account" && <h6>ADMINISTRATION</h6>}
+              {option === "attributes" && <h6>SETTINGS</h6>}
+              <Link
+                href={
+                  option === "upload-approvals"
+                    ? optionProps.path
+                    : `/main/user-settings/${option}`
+                }
+                key={index}
+              >
+                <a>
+                  <li
+                    className={`${styles.setting} ${
+                      activeView === option && styles.selected
+                    }`}
+                  >
+                    <span>{optionProps.label}</span>
+                  </li>
+                </a>
+              </Link>
+            </>
           ))}
       </ul>
     </section>
-  )
-}
+  );
+};
 
-export default UserSettings
+export default UserSettings;

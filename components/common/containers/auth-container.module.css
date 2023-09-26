@@ -1,15 +1,9 @@
 .container {
-  width:425px;
+  width: 425px;
   text-align: center;
 }
 
-.container h2 {
-}
-
-.container h4 {
-}
-
-.logo{
+.logo {
   max-width: 200px;
   margin-bottom: 25px;
 }

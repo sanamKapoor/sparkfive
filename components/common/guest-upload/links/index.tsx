@@ -1,365 +1,397 @@
-import {useEffect, useState} from 'react'
-import styles from './index.module.css'
-import copy from 'copy-to-clipboard'
+import copy from "copy-to-clipboard";
+import React, { useEffect, useState } from "react";
+import styles from "./index.module.css";
 
 // APIs
-import guestUploadApi from '../../../../server-api/guest-upload'
-import SpinnerOverlay from "../../spinners/spinner-overlay";
-import Input from "../../inputs/input";
-import OptionList from "./option-list";
+import guestUploadApi from "../../../../server-api/guest-upload";
 import Button from "../../buttons/button";
+import Input from "../../inputs/input";
 import ConfirmModal from "../../modals/confirm-modal";
+import SpinnerOverlay from "../../spinners/spinner-overlay";
+import OptionList from "./option-list";
 
 // Utils
-import toastUtils from '../../../../utils/toast'
-import { AssetOps } from '../../../../assets'
+import { AppImg, AssetOps, Utilities } from "../../../../assets";
+import toastUtils from "../../../../utils/toast";
 import IconClickable from "../../buttons/icon-clickable";
 import Select from "../../inputs/select";
-import { Utilities } from '../../../../assets'
 
 // Maximum links
-import { maximumLinks, statusList } from '../../../../constants/guest-upload'
-import ShareModal from "../../modals/share-modal";
-
-const defaultLinks = [
-    {
-        id: null,
-        url: '',
-        password: '',
-        values: [],
-        status: 'public',
-        default: true, // Created as default, this will show blank field on screen
-        showPassword: false
-    },
-    {
-        id: null,
-        url: '',
-        password: '',
-        values: [],
-        status: 'public',
-        default: true,
-        showPassword: false
-    },
-    {
-        id: null,
-        url: '',
-        password: '',
-        values: [],
-        status: 'public',
-        default: true,
-        showPassword: false
-    }
-]
+import {
+  BANNER_ACCEPT_FILE_TYPES,
+  BANNER_ALLOWED_SIZE,
+  BANNER_ALLOWED_TYPES,
+  BANNER_MIN_HEIGHT,
+  BANNER_MIN_WIDTH,
+  maximumLinks,
+  statusList,
+} from "../../../../constants/guest-upload";
+import {
+  IGuestUploadLink,
+  ILinkDefaultPayload,
+} from "../../../../interfaces/guest-upload/guest-upload";
+import ButtonIcon from "../../buttons/button-icon";
 
 const Links = () => {
-    const [linkList, setLinkList] = useState(defaultLinks)
-    const [loading, setLoading] = useState(false)
-    const [confirmDeleteModal, setConfirmDeleteModal] = useState(false)
-    const [currentDeleteId, setCurrentDeleteId] = useState() // Id is pending to delete
-    const [currentShareId, setCurrentShareId] = useState() // Id is pending to share
-    const [shareModal, setShareModal] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
+  const [currentDeleteId, setCurrentDeleteId] = useState<string>();
 
-    // Create the new tag
-    const createValue = async (index, item) => {
-        let currentFieldList = [...linkList];
-        currentFieldList[index].values.push({
-            url: item.url
-        });
-        setLinkList(currentFieldList)
+  const [links, setLinks] = useState<IGuestUploadLink[]>([]);
+  const [currentLink, setCurrentLink] = useState<string>();
+  const [password, setPassword] = useState<string>("");
+  const [showPasswordId, setShowPasswordId] = useState<string>();
+
+  const fileInputRefs = {};
+
+  const getLinks = async () => {
+    try {
+      setLoading(true);
+
+      let { data } = await guestUploadApi.getLinks({
+        isAll: 1,
+        sort: "createdAt,asc",
+      });
+
+      if (data.length > 0) {
+        setLinks(data);
+      }
+    } catch (err) {
+      console.log("err: ", err);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    // Get tag list
-    const getLinks = async () => {
-        // Show loading
-        setLoading(true)
+  useEffect(() => {
+    getLinks();
+  }, []);
 
-        let { data } = await guestUploadApi.getLinks({isAll: 1, sort: 'createdAt,asc'})
+  const deleteLink = async (id: string) => {
+    try {
+      setConfirmDeleteModal(false);
 
-        if(data.length > 0){
-            // There still be available fields to create
-            if(data.length < maximumLinks){
-                const dataLength = data.length
-                // Add it
-                for(let i=0;i<(maximumLinks-dataLength);i++){
-                    data.push({
-                        id: null,
-                        url: '',
-                        password: '',
-                        values: [],
-                        status: 'public',
-                        default: true
-                    })
-                }
-            }
+      setLoading(true);
 
-            setLinkList(data)
-        }else{
-            setLinkList(defaultLinks)
+      const res = await guestUploadApi.deleteLink({ linkIds: [id] });
+
+      const updatedLinks = [
+        ...links.filter((link) => link.id !== res.data.linkIds[0]),
+      ];
+      setLinks(updatedLinks);
+      toastUtils.success("link deleted successfully.");
+    } catch (err) {
+      toastUtils.error("Failed to delete the link.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onPasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const onStatusChange = (
+    item: { value: "public" | "private"; label: string },
+    id: string
+  ) => {
+    const currentLinkIndex = links.findIndex((link) => link.id === id);
+    if (currentLinkIndex !== -1) {
+      if (links[currentLinkIndex].status !== item.value) {
+        setCurrentLink(id);
+
+        links[currentLinkIndex].status = item.value;
+        setLinks([...links]);
+      }
+    }
+  };
+
+  const showPassword = (id: string) => {
+    setShowPasswordId((prevId) => {
+      if (prevId === id) {
+        return undefined;
+      } else return id;
+    });
+  };
+
+  const passwordOperations = [
+    {
+      value: true,
+      label: "Show Password",
+    },
+  ];
+
+  const copyLink = (url: string) => {
+    copy(`${process.env.CLIENT_BASE_URL}/guest-upload?code=${url}`);
+    toastUtils.bottomSuccess("Link is copied.");
+  };
+
+  const createOrUpdateLink = async (
+    payload: IGuestUploadLink | ILinkDefaultPayload
+  ) => {
+    const response = await guestUploadApi.createLink({
+      links: [payload],
+    });
+
+    return response.data;
+  };
+
+  const createNewLink = async () => {
+    try {
+      setLoading(true);
+      const payload = {
+        id: null,
+        url: "",
+        password: "",
+        values: [],
+        status: "public",
+        default: true,
+      };
+
+      const res = await createOrUpdateLink(payload);
+
+      if (res.length > 0) {
+        setLinks([...links, ...res]);
+      }
+      toastUtils.success("Upload link has been created.");
+    } catch (err) {
+      toastUtils.error("Could not create new link.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const saveStatusChanges = async (id: string) => {
+    try {
+      setLoading(true);
+      const currentLinkIndex = links.findIndex((link) => link.id === id);
+
+      if (currentLinkIndex !== -1) {
+        if (links[currentLinkIndex].status === "private") {
+          links[currentLinkIndex].password = password;
         }
+        const currentLink = links[currentLinkIndex];
+        await createOrUpdateLink(currentLink);
+      }
+      toastUtils.success("Upload link changes saved.");
+      setCurrentLink(undefined);
+      setPassword("");
+    } catch (err) {
+      toastUtils.error("Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        // Hide loading
-        setLoading(false)
+  const onFileChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    id: string
+  ) => {
+    const fileMeta = e.target.files[0];
+
+    if (!BANNER_ALLOWED_TYPES.includes(fileMeta.type)) {
+      toastUtils.error("File type is not allowed.");
     }
 
-    const deleteValue = async(customFieldIndex, valueIndex) => {
-        let currentFieldList = [...linkList];
-        currentFieldList[customFieldIndex].values.splice(valueIndex, 1)
-        setLinkList(currentFieldList)
+    if (fileMeta.size > BANNER_ALLOWED_SIZE) {
+      toastUtils.error("Banner size should not be more than 10 MB");
     }
 
-    // Save updated changes
-    const saveChanges = async (index) => {
-        try{
-            // Show loading
-            setLoading(true)
+    const image = new Image();
+    image.src = window.URL.createObjectURL(fileMeta);
 
-            // Call API to delete tag
-            await guestUploadApi.createLink({
-                links: [
-                    linkList[index]
-                ]
-            })
+    image.onload = async () => {
+      if (image.width < BANNER_MIN_WIDTH || image.height < BANNER_MIN_HEIGHT) {
+        toastUtils.error("File must be at least 1920 x 300");
+      } else {
+        await uploadBanner(fileMeta, id);
+      }
+    };
 
-            // Updated
-            if(linkList[index].id){
-                toastUtils.success('Upload link changes saved')
-            }else{ // Created
-                toastUtils.success('Upload link has been created')
-            }
-
-
-
-            // Refresh the list
-            getLinks();
-
-            return true
-        }catch (err) {
-            if (err.response?.status === 400) toastUtils.error(err.response.data.message)
-            else toastUtils.error('Could not create tag, please try again later.')
-
-            // Show loading
-            setLoading(false)
-
-            return false
-        }
+    if (fileInputRefs[id]) {
+      fileInputRefs[id].value = "";
     }
+  };
 
-    const deleteLink = async(id) => {
-        // Hide confirm modal
-        setConfirmDeleteModal(false)
+  const openUploadDialog = (e, id: string) => {
+    fileInputRefs[id]?.click();
+  };
 
-        // Show loading
-        setLoading(true)
+  const uploadBanner = async (file: File, id: string) => {
+    try {
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("banner", file);
+      const res = await guestUploadApi.uploadBanner(id, formData);
 
-        // Call API to delete tag
-        await guestUploadApi.deleteLink({linkIds: [id]})
-
-        // Refresh the list
-        getLinks();
+      const linkIndex = links.findIndex((link) => link.id === id);
+      if (linkIndex !== -1) {
+        links[linkIndex].bannerSrc = res.data.bannerSrc;
+        setLinks([...links]);
+        toastUtils.success("Banner uploaded successfully");
+      }
+    } catch (error) {
+      toastUtils.error("something went wrong");
+    } finally {
+      setLoading(false);
     }
+  };
 
-    // On input change
-    const onInputChange = (e, name, index) => {
-        let currentFieldList = [...linkList];
-        currentFieldList[index][name] = e.target.value;
-        setLinkList(currentFieldList)
-    }
+  return (
+    <div
+      className={`${styles["main-wrapper"]} ${styles["guest-upload-wrapper"]}`}
+    >
+      <h3>Guest Upload Links</h3>
 
-    // On select option change
-    const onSelectChange = (item, index) => {
-        let currentFieldList = [...linkList];
-        currentFieldList[index].status = item.value;
-
-        // Switch from private to public
-        if(item.value === 'public'){
-            // Clear password state
-            currentFieldList[index].showPassword = false
-            currentFieldList[index].password = ''
-        }
-        setLinkList(currentFieldList)
-    }
-
-    // On click create new link button
-    const activateInputLink = async (index) => {
-        saveChanges(index)
-
-    }
-
-    // On show password field
-    const showPassword = (index, value) => {
-        let currentFieldList = [...linkList];
-        currentFieldList[index].showPassword = value;
-        setLinkList(currentFieldList)
-    }
-
-    // Share link
-    const shareLink = (recipients, message) => {
-        guestUploadApi.shareLink({ recipients, message, id: currentShareId })
-        toastUtils.success('Link shared succesfully')
-    }
-
-    const passwordOperations = [
-        {
-            value: true,
-            label: 'Show Password'
-        }
-    ]
-
-    useEffect(()=>{
-        getLinks();
-    },[])
-
-    return (
-        <div className={styles['main-wrapper']}>
-            {linkList.map((field, index)=>{
-                return <div className={`${styles['row']} ${styles['field-block']}`} key={index}>
-                    <div className={`${styles['col-50']} ${styles['col-md-80']} ${styles['col-sm-100']} p-r-0 p-l-0-mobile`}>
-                        <div className={styles['row']}>
-                            <div className={`${styles['col-100']} ${styles['flex-display']} p-l-0-mobile`}>
-                                <span className={styles['font-weight-600']}>{index+1}.</span>
-                                <span className={`${styles['row-header']} ${styles['font-weight-600']}`}>Link URL</span>
-                            </div>
-                            <div className={`${styles['col-100']} ${styles['p-l-30']} p-l-0-mobile`}>
-                                {field.default && <div className={`add ${styles['select-add']}`} onClick={()=>{activateInputLink(index)}}>
-                                    <IconClickable src={Utilities.add} />
-                                    <span>Create New Link</span>
-                                </div>}
-                                {!field.default && <Input
-                                    onChange={(e)=>{onInputChange(e, 'url', index)}}
-                                    value={`${process.env.CLIENT_BASE_URL}/guest-upload?code=${field.url}`}
-                                    disabled
-                                    placeholder={'Link URL'}
-                                    styleType={'regular-short'} />}
-                            </div>
-                        </div>
-                    </div>
-                    {!field.default && <div className={`${styles['col-15']} ${styles['col-md-20']} ${styles['col-sm-100']} p-l-0`}>
-                        <div className={styles['row']}>
-                            <div className={`${styles['col-100']} ${styles['col-sm-d-n']} ${styles['flex-display']}`}>
-                                <span className={`${styles['font-weight-600']} ${styles['visibility-hidden']}`}>{index+1}.</span>
-                                <span className={`${styles['row-header']} ${styles['visibility-hidden']}`}>Link URL</span>
-                            </div>
-                            <div className={`${styles['col-100']} ${styles['p-l-0']}`}>
-                                <div className={`${styles['row']} justify-center ${styles['operation-row']}`}>
-                                    <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`copy`]}  tooltipText={'Copy'} tooltipId={'Copy'}
-                                                   onClick={(e)=>{
-                                                       copy(`${process.env.CLIENT_BASE_URL}/guest-upload?code=${field.url}`)
-                                                   }}
-                                    />
-
-                                    <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`share`]}  tooltipText={'Share'} tooltipId={'Share'}
-                                                   onClick={()=>{
-                                                       setCurrentShareId(field.id)
-                                                       setShareModal(true)
-                                                   }}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>}
-                    <div className={`${styles['col-15']} ${styles['col-md-80']} ${styles['col-sm-100']} p-l-0`}>
-                        <div className={styles['row']}>
-                            <div className={`${styles['col-100']} p-l-0`}>
-                                <span className={`${styles['row-header']} ${styles['font-weight-600']} m-l-0-mobile`}>Status</span>
-                            </div>
-                            <div className={`${styles['col-100']} p-l-15 p-l-0-mobile`}>
-                                {!field.default && <Select
-                                    options={statusList}
-                                    additionalClass={'primary-input-height'}
-                                    onChange={(selected) => onSelectChange(selected, index)}
-                                    placeholder={'Select status'}
-                                    styleType='regular'
-                                    value={statusList.filter((item)=> item.value === field.status)[0]}
-                                />}
-                            </div>
-                        </div>
-                    </div>
-                    <div className={`${styles['col-20']} ${styles['col-md-80']} ${styles['col-sm-100']} ${styles['button-row']} p-l-0`}>
-                        <div className={styles['row']}>
-                            <div className={`${styles['col-100']} p-l-0-mobile`}>
-                                <span className={`${styles['row-header']} ${styles['font-weight-600']} ${styles['visibility-hidden']}`}>Status</span>
-                            </div>
-                            <div className={`${field.status === 'public' ? 'p-r-0' : ''} ${styles['col-100']}  p-l-0-mobile`}>
-                                {field.status === 'private' && <>
-                                    <Input
-                                    type={field.showPassword ? 'text' : 'password'}
-                                    onChange={(e)=>{onInputChange(e, 'password', index)}}
-                                    value={field.password}
-                                    placeholder={'Password'}
-                                    styleType={'regular-short'} />
-
-                                    <OptionList data={passwordOperations}
-                                                oneColumn={true}
-                                                value={field.showPassword}
-                                                additionalClass={styles['password-li']}
-                                                setValue={(value)=>{showPassword(index, value)}} toggle={true}/>
-                                </>
-                                }
-
-                                {field.status === 'public' && <div className={`${styles['button-row']} p-l-0 flex-row-reverse`}>
-                                    {field.id && <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`delete`]}  tooltipText={'Delete'} tooltipId={'Delete'}
-                                                                onClick={()=>{
-                                                                    setCurrentDeleteId(field.id)
-                                                                    setConfirmDeleteModal(true)
-                                                                }}
-                                    />}
-                                    {field.id && <Button
-                                        styleTypes={['exclude-min-height']}
-                                        type={'button'}
-                                        text='Save'
-                                        styleType='primary'
-                                        onClick={()=>{saveChanges(index)}}
-                                        disabled={!field.url}
-                                    />}
-
-                                </div>
-                                }
-                            </div>
-                        </div>
-                    </div>
-
-                    {field.status === 'private' &&
-                    <div className={`${styles['col-100']} ${styles['col-md-100']} ${styles['button-row']} p-l-0 flex-row-reverse m-t-20`}>
-                        {field.id && <IconClickable additionalClass={styles['action-button']}  src={AssetOps[`delete`]}  tooltipText={'Delete'} tooltipId={'Delete'}
-                                                    onClick={()=>{
-                                                        setCurrentDeleteId(field.id)
-                                                        setConfirmDeleteModal(true)
-                                                    }}
-                        />}
-                        {field.id && <Button
-                            styleTypes={['exclude-min-height']}
-                            type={'button'}
-                            text='Save'
-                            styleType='primary'
-                            onClick={()=>{saveChanges(index)}}
-                            disabled={!field.url}
-                        />}
-
-                    </div>}
-                </div>
-            })}
-
-            <ConfirmModal
-                modalIsOpen={confirmDeleteModal}
-                closeModal={()=>{setConfirmDeleteModal(false)}}
-                confirmAction={()=>{deleteLink(currentDeleteId)}}
-                confirmText={'Delete'}
-                message={<span>This link will be deleted. People will not access to it anymore. Are you sure you want to delete this?</span>}
-                closeButtonClass={styles['close-modal-btn']}
-                textContentClass={styles['confirm-modal-text']}
-            />
-
-            <ShareModal
-                modalIsOpen={shareModal}
-                closeModal={()=>{setShareModal(false)}}
-                itemsAmount={0}
-                shareAssets={shareLink}
-                title={'Share link'}
-            />
-
-            {loading && <SpinnerOverlay />}
+      {links.length < maximumLinks && (
+        <div className={`add ${styles["select-add"]}`} onClick={createNewLink}>
+          <IconClickable src={Utilities.add} />
+          <span>Add New (Up to {maximumLinks} Allowed)</span>
         </div>
-    )
-}
+      )}
 
-export default Links
+      {links.map((field, index) => (
+        <div className={styles.item} key={index}>
+          <div className={styles.row}>
+            <div className={styles.item_title}>Link URL</div>
+            <Input
+              value={`${process.env.CLIENT_BASE_URL}/guest-upload?code=${field.url}`}
+              disabled
+              placeholder={"Link URL"}
+              styleType={"regular-short"}
+              additionalClasses={styles.guestUploadLink}
+            />
+            <Button
+              className={"container exclude-min-height primary guestUpLoadBtn"}
+              type={"button"}
+              text="Copy Link"
+              onClick={(e) => {
+                copyLink(field.url);
+              }}
+            />
+            <IconClickable
+              additionalClass={styles["action-button"]}
+              src={AssetOps.deleteGray}
+              tooltipText={"Delete"}
+              tooltipId={"Delete"}
+              onClick={() => {
+                setCurrentDeleteId(field.id);
+                setConfirmDeleteModal(true);
+              }}
+            />
+          </div>
+
+          <div className={`${styles.row} align-items-start`}>
+            <div className={styles.input}>
+              <label>Status</label>
+              <Select
+                options={statusList}
+                additionalClass={"primary-input-height uploadSelect customSelect"}
+                onChange={(selected) => onStatusChange(selected, field.id)}
+                placeholder={"Select status"}
+                styleType="regular"
+                value={
+                  statusList.filter((item) => item.value === field.status)[0]
+                }
+             
+              />
+            </div>
+            <div className={styles.privateBlock}>
+              <div>
+                {field.status === "private" && (
+                  <>
+                    <div className={styles.input}>
+                      <label>Password</label>
+                      <Input
+                        type={showPasswordId === field.id ? "text" : "password"}
+                        onChange={onPasswordChange}
+                        value={password}
+                        placeholder={"Password"}
+                        styleType={"regular-short"}
+                        additionalClasses={styles.uploadPassword}
+                      />
+
+                      {password.length > 0 && (
+                        <OptionList
+                          data={passwordOperations}
+                          oneColumn={true}
+                          value={showPasswordId === field.id}
+                          additionalClass={styles["password-li"]}
+                          setValue={(value) => {
+                            showPassword(field.id);
+                          }}
+                          toggle={true}
+                        />
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
+              <div className={styles.passwordSave}>
+                {((currentLink && currentLink === field.id) ||
+                  field.status === "private") && (
+                  <Button
+                    className={"container exclude-min-height primary"}
+                    type={"button"}
+                    text={"Save"}
+                    disabled={
+                      field.status === "private" && password.length === 0
+                    }
+                    onClick={() => saveStatusChanges(field.id)}
+                  />
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className={`${styles.row} align-items-end`}>
+            <div className={styles.banner}>
+              <label>Custom Banner (Must be at least 1920 x 300)</label>
+              <div className={styles.banner_wrapper}>
+                <img src={field.bannerSrc ?? AppImg.guestCover} />
+              </div>
+            </div>
+
+            <ButtonIcon
+              className={styles.uploadbtn}
+              icon={Utilities.addAlt}
+              text="UPLOAD PHOTO"
+              onClick={(e) => openUploadDialog(e, field.id)}
+            />
+            <input
+              id="file-input-id"
+              ref={(input) => (fileInputRefs[field.id] = input)}
+              style={{ display: "none" }}
+              type="file"
+              onChange={(e) => onFileChange(e, field.id)}
+              accept={BANNER_ACCEPT_FILE_TYPES}
+            />
+          </div>
+        </div>
+      ))}
+
+      <ConfirmModal
+        modalIsOpen={confirmDeleteModal}
+        closeModal={() => {
+          setConfirmDeleteModal(false);
+        }}
+        confirmAction={() => {
+          deleteLink(currentDeleteId);
+        }}
+        confirmText={"Delete"}
+        message={
+          <span>
+            This link will be deleted. People will not access to it anymore. Are
+            you sure you want to delete this?
+          </span>
+        }
+        closeButtonClass={styles["close-modal-btn"]}
+        textContentClass={styles["confirm-modal-text"]}
+      />
+
+      {loading && <SpinnerOverlay />}
+    </div>
+  );
+};
+
+export default Links;

@@ -1,47 +1,20 @@
-import styles from "./deleted-assets.module.css";
 import update from "immutability-helper";
-import { useEffect, useContext, useState } from "react";
-import { AssetContext } from "../../../../context";
-import toastUtils from "../../../../utils/toast";
+import { useContext, useEffect, useState } from "react";
 import { Waypoint } from "react-waypoint";
-import urlUtils from "../../../../utils/url";
-import downloadUtils from "../../../../utils/download";
+import { AssetContext } from "../../../../context";
 import assetsApi from "../../../../server-api/asset";
+import toastUtils from "../../../../utils/toast";
+import urlUtils from "../../../../utils/url";
+import styles from "./deleted-assets.module.css";
 
 // Components
-import DetailOverlay from "../../asset/detail-overlay";
-import ConfirmModal from "../../modals/confirm-modal";
-import Button from "../../buttons/button";
 import useSortedAssets from "../../../../hooks/use-sorted-assets";
+import Button from "../../buttons/button";
+import ConfirmModal from "../../modals/confirm-modal";
 import DeletedListItem from "./deleted-list-item";
 
-const DeletedAssets = ({
-  activeView = "grid",
-  isShare = false,
-  onFilesDataGet = (files) => {},
-  toggleSelected,
-  mode = "assets",
-  activeSortFilter = {},
-  deleteFolder = (id) => {},
-  itemSize = "regular",
-  activeFolder = "",
-  type = "",
-  itemId = "",
-  getFolders = () => {},
-  loadMore = () => {},
-  viewFolder = (id) => {},
-  sharePath = "",
-  openFilter,
-}) => {
-  const {
-    assets,
-    setAssets,
-    setActiveOperation,
-    setOperationAsset,
-    nextPage,
-    setOperationFolder,
-    folders,
-  } = useContext(AssetContext);
+const DeletedAssets = ({ toggleSelected, loadMore = () => {} }) => {
+  const { assets, setAssets, nextPage } = useContext(AssetContext);
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [recoverModalOpen, setRecoverModalOpen] = useState(false);
@@ -115,18 +88,12 @@ const DeletedAssets = ({
     }
   };
 
-  const beginAssetOperation = ({ asset = null, folder = null }, operation) => {
-    if (asset) setOperationAsset(asset);
-    if (folder) setOperationFolder(folder);
-    setActiveOperation(operation);
-  };
-
   const showLoadMore = assets.length > 0;
   const loadingAssetsFolders =
     assets.length > 0 && assets[assets.length - 1].isLoading;
 
   return (
-    <section className={`${styles.container} ${openFilter && styles.filter}`}>
+    <section className={`${styles.container}`}>
       <ul className={styles["list-wrapper"]}>
         {sortedAssets.map((assetItem, index) => {
           return (
@@ -135,8 +102,6 @@ const DeletedAssets = ({
               key={assetItem.asset.id || index}
             >
               <DeletedListItem
-                isShare={isShare}
-                type={type}
                 assetItem={assetItem}
                 index={index}
                 toggleSelected={() => toggleSelected(assetItem.asset.id)}
@@ -164,7 +129,7 @@ const DeletedAssets = ({
                   <Button
                     text="Load More"
                     type="button"
-                    styleType="primary"
+                    className="container primary"
                     onClick={loadMore}
                   />
                 </div>
@@ -174,7 +139,6 @@ const DeletedAssets = ({
         </>
       )}
 
-      {/* Delete modal */}
       <ConfirmModal
         closeModal={() => setDeleteModalOpen(false)}
         confirmAction={() => {
@@ -208,23 +172,6 @@ const DeletedAssets = ({
         }
         modalIsOpen={recoverModalOpen}
       />
-
-      {/* Overlay exclusive to page load assets */}
-      {initAsset && (
-        <DetailOverlay
-          isShare={isShare}
-          sharePath={sharePath}
-          asset={initAsset.asset}
-          realUrl={initAsset.realUrl}
-          initialParams={{ side: "comments" }}
-          openShareAsset={() =>
-            beginAssetOperation({ asset: initAsset }, "share")
-          }
-          openDeleteAsset={() => openDeleteAsset(initAsset.asset.id)}
-          closeOverlay={() => setInitAsset(undefined)}
-          thumbailUrl={undefined}
-        />
-      )}
     </section>
   );
 };

@@ -1,0 +1,28 @@
+.downloadBtn {
+  height: 32px;
+  padding: 8px;
+  font-family: "Noto Sans", sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  color: #08135e;
+  border: 1px solid #dedad4;
+  background: #fff;
+  border-radius: 4px;
+  margin-left: 10px;
+  cursor: pointer;
+  margin-bottom: 0px;
+}
+
+.downloadIcon{
+  display: none;
+}
+
+@media screen and (max-width: 575px) {
+  .csvBtn {
+    display: none;
+    margin-left: 0;
+  }
+  .downloadIcon {
+    display: block;
+  }
+}

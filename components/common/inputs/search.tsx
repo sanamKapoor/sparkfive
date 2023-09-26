@@ -1,10 +1,9 @@
-import styles from './search.module.css'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { Utilities } from '../../../assets'
-import { useRef, useState, useContext, useEffect } from 'react'
 import { FilterContext, UserContext } from '../../../context'
+import styles from './search.module.css'
 
 // Components
-import Button from '../buttons/button'
 import { useDebounce } from '../../../hooks/useDebounce'
 
 const Search = (props) => {
