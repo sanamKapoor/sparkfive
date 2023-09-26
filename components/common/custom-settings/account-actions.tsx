@@ -30,37 +30,6 @@ const AccountActions = () => {
 
         <div>
           <div className={styles.row}>
-            <div className={styles.label}>Folder Upload Configuration</div>
-            <div className={styles["field-radio-wrapper"]}>
-              <div
-                className={`${styles["radio"]} ${styles["account-action-wrapper"]}`}
-              >
-                <div>Subfolder as Separate Collection</div>
-                <IconClickable
-                  src={
-                    advancedConfig?.subFolderAutoTag
-                      ? Utilities.radioButtonEnabled
-                      : Utilities.radioButtonNormal
-                  }
-                  additionalClass={styles["select-icon"]}
-                  onClick={() => saveAdvanceConfig({ subFolderAutoTag: true })}
-                />
-              </div>
-              <div className={`${styles["radio"]} ${styles["subfolder-tags"]}`}>
-                <div>Subfolder as Tags (Default)</div>
-                <IconClickable
-                  src={
-                    !advancedConfig?.subFolderAutoTag
-                      ? Utilities.radioButtonEnabled
-                      : Utilities.radioButtonNormal
-                  }
-                  additionalClass={styles["select-icon"]}
-                  onClick={() => saveAdvanceConfig({ subFolderAutoTag: false })}
-                />
-              </div>
-            </div>
-          </div>
-          <div className={styles.row}>
             <span className={styles.label}>Search Default</span>
             <div className={styles["field-radio-wrapper"]}>
               <div
@@ -89,6 +58,37 @@ const AccountActions = () => {
                   onClick={() =>
                     saveAdvanceConfig({ searchDefault: "tags_only" })
                   }
+                />
+              </div>
+            </div>
+          </div>
+          <div className={styles.row}>
+            <div className={styles.label}>Folder Upload Configuration</div>
+            <div className={styles["field-radio-wrapper"]}>
+              <div
+                className={`${styles["radio"]} ${styles["account-action-wrapper"]}`}
+              >
+                <div>Subfolder as Separate Collection</div>
+                <IconClickable
+                  src={
+                    advancedConfig?.subFolderAutoTag
+                      ? Utilities.radioButtonEnabled
+                      : Utilities.radioButtonNormal
+                  }
+                  additionalClass={styles["select-icon"]}
+                  onClick={() => saveAdvanceConfig({ subFolderAutoTag: true })}
+                />
+              </div>
+              <div className={`${styles["radio"]} ${styles["subfolder-tags"]}`}>
+                <div>Subfolder as Tags (Default)</div>
+                <IconClickable
+                  src={
+                    !advancedConfig?.subFolderAutoTag
+                      ? Utilities.radioButtonEnabled
+                      : Utilities.radioButtonNormal
+                  }
+                  additionalClass={styles["select-icon"]}
+                  onClick={() => saveAdvanceConfig({ subFolderAutoTag: false })}
                 />
               </div>
             </div>
