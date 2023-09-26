@@ -271,7 +271,12 @@ const TopBar = ({
             <img
               src={Utilities.search}
               onClick={setActiveSearchOverlay}
-              className={styles.search}
+              className={`${styles.search} ${!((amountSelected === 0 || mode === "folders") &&
+              showAssetAddition &&
+              hasPermission([
+                ASSET_UPLOAD_NO_APPROVAL,
+                ASSET_UPLOAD_APPROVAL,
+              ])) ? "m-r-20": "" }`}
             />
           )}
           {activeSearchOverlay && !(isShare && isFolder) && (
