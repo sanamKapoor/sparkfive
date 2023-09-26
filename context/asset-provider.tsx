@@ -89,10 +89,7 @@ export default ({ children }) => {
   const [selectedAllAssets, setSelectedAllAssets] = useState(false);
   const [selectedAllFolders, setSelectedAllFolders] = useState(false);
   const [completedAssets, setCompletedAssets] = useState([]);
-  // sidenamv list count states declared below
-  const [sidenavFolderList, setSidenavFolderList] = useState([])
-  const [sidenavFolderNextPage, setSidenavFolderNextPage] = useState(1);
-  const [sidenavTotalCollectionCount, setSidenavTotalCollectionCount] = useState(0)
+
   // Upload process
   const [uploadingAssets, setUploadingAssets] = useState([]);
   const [uploadingType, setUploadingType] = useState();
@@ -115,19 +112,34 @@ export default ({ children }) => {
   const [downloadingStatus, setDownloadingStatus] = useState("none"); // Allowed value: "none", "zipping", "preparing", "done", "error"
   const [downloadingPercent, setDownloadingPercent] = useState(0); // Percent of uploading process: 0 - 100
   const [downloadingError, setDownloadingError] = useState(""); // Percent of uploading process: 0 - 100
-  const [sidenavFolderChildList, setSidenavFolderChildList] = useState(new Map())
-  const [activeSubFolders, setActiveSubFolders] = useState("")
+
   // Asset navigation
   const [detailOverlayId, setDetailOverlayId] = useState(undefined);
+
+  // sidenamv list count states declared below
+  const [sidenavFolderList, setSidenavFolderList] = useState([])
+  const [sidenavFolderNextPage, setSidenavFolderNextPage] = useState(1);
+  const [sidenavTotalCollectionCount, setSidenavTotalCollectionCount] = useState(0)
+
+  // Sidenav folders child Listing in particular collection collections area 
+  const [sidenavFolderChildList, setSidenavFolderChildList] = useState(new Map())
+
+  // Folder id for sub Collection view  
+  const [activeSubFolders, setActiveSubFolders] = useState("")
+
+  // Sidebar navigation
   const [sidebarOpen, setSidebarOpen] = useState(true)
 
   // For viewing asset in file associations
   const [currentViewAsset, setCurrentViewAsset] = useState();
+
+  // For subcollection page states for collection and asset associations
   const [subFoldersViewList, setSubFoldersViewList] = useState({ results: [], next: 0, total: 0 });
   const [subFoldersAssetsViewList, setSubFoldersAssetsViewList] = useState({ results: [], next: 0, total: 0 })
   const [headerName, setHeaderName] = useState("All Assets")
 
 
+  const [selectedAllSubFoldersAndAssets, setSelectedAllSubFoldersAndAssets] = useState(false)
 
   const setPlaceHolders = (type, replace = true) => {
     if (type === "asset") {
@@ -253,6 +265,12 @@ export default ({ children }) => {
   const selectAllFolders = (isSelectedAll = true) => {
     setSelectedAllFolders(isSelectedAll);
   };
+
+  // Select all folders in Sub Collections View
+  const selectAllSubFoldersAndAssetsViewList = (value: boolean = true) => {
+    setSelectedAllSubFoldersAndAssets(value);
+  };
+
 
   // Show upload process toast
   const showUploadProcess = (value: string, fileIndex?: number) => {
@@ -634,6 +652,7 @@ export default ({ children }) => {
     setOperationAssets,
     currentViewAsset,
     setCurrentViewAsset,
+    // sidenav folders states
     sidenavFolderList,
     setSidenavFolderList: setSidenavFolderItems,
     sidenavFolderNextPage,
@@ -644,14 +663,23 @@ export default ({ children }) => {
     setSidenavFolderChildList: setSidenavFolderChildListItems,
     sidebarOpen,
     setSidebarOpen,
+    // Sub collection page folders and assets states
     activeSubFolders,
     setActiveSubFolders,
-    setSubFoldersViewList: subFoldersList,
+
     subFoldersViewList,
+    setSubFoldersViewList: subFoldersList,
+
     subFoldersAssetsViewList,
     setSubFoldersAssetsViewList: subFoldersAssetList,
-    setHeaderName,
+
     headerName,
+    setHeaderName,
+
+    //select all feature for the selected subcollection page assets and folders
+    selectedAllSubFoldersAndAssets,
+    setSelectedAllSubFoldersAndAssets: selectAllSubFoldersAndAssetsViewList
+
   };
   return (
     <AssetContext.Provider value={assetsValue}>

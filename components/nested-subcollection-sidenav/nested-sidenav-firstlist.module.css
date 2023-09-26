@@ -13,7 +13,7 @@
 }
 .list1-left-contents{
     display: flex;
-    align-items: center;
+    align-items: flex-start;
 }
 .icon-description span{
     font-family: "Noto Sans", sans-serif;

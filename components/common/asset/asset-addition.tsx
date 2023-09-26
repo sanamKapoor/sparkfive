@@ -1,37 +1,29 @@
-import { AssetOps, Assets } from "../../../assets";
-import { AssetContext, FilterContext, UserContext } from "../../../context";
-import assetApi from "../../../server-api/asset";
-import folderApi from "../../../server-api/folder";
-import projectApi from "../../../server-api/project";
-import taskApi from "../../../server-api/task";
-import { getFoldersFromUploads } from "../../../utils/asset";
-import cookiesUtils from "../../../utils/cookies";
-import toastUtils from "../../../utils/toast";
-import styles from "./asset-addition.module.css";
+import _ from 'lodash';
+import { useContext, useRef, useState } from 'react';
 
-// libraries
-import _ from "lodash";
-import { useContext, useRef, useState } from "react";
+import { AssetOps, Assets } from '../../../assets';
+import { validation } from '../../../constants/file-validation';
+import { ASSET_UPLOAD_APPROVAL } from '../../../constants/permissions';
+import { AssetContext, FilterContext, UserContext } from '../../../context';
+import assetApi from '../../../server-api/asset';
+import folderApi from '../../../server-api/folder';
+import projectApi from '../../../server-api/project';
+import taskApi from '../../../server-api/task';
+import { getFoldersFromUploads } from '../../../utils/asset';
+import cookiesUtils from '../../../utils/cookies';
+import toastUtils from '../../../utils/toast';
+import { getFolderKeyAndNewNameByFileName } from '../../../utils/upload';
+import SearchOverlay from '../../main/search-overlay-assets';
+import DriveSelector from '../asset/drive-selector';
+import Button from '../buttons/button';
+import IconClickable from '../buttons/icon-clickable';
+import FolderModal from '../folder/folder-modal';
+import ToggleAbleAbsoluteWrapper from '../misc/toggleable-absolute-wrapper';
+import styles from './asset-addition.module.css';
+import AssetDuplicateModal from './asset-duplicate-modal';
 
-// Components
-import SearchOverlay from "../../main/search-overlay-assets";
-import DriveSelector from "../asset/drive-selector";
-import IconClickable from "../buttons/icon-clickable";
-import FolderModal from "../folder/folder-modal";
-import ToggleAbleAbsoluteWrapper from "../misc/toggleable-absolute-wrapper";
-
-import { validation } from "../../../constants/file-validation";
-import { getFolderKeyAndNewNameByFileName } from "../../../utils/upload";
-
-// Context
-import AssetDuplicateModal from "./asset-duplicate-modal";
-
-import { ASSET_UPLOAD_APPROVAL } from "../../../constants/permissions";
-
-import Button from "../buttons/button";
 
 const AssetAddition = ({
-  activeFolder = "",
   activeSearchOverlay = false,
   setActiveSearchOverlay = (active: any) => { },
   folderAdd = true,
@@ -74,10 +66,11 @@ const AssetAddition = ({
     setSidenavFolderList,
     activeSubFolders,
     sidenavFolderList,
-    setSidenavFolderChildList,
     setSubFoldersViewList,
+    activeFolder,
+    subFoldersViewList,
     sidenavFolderChildList,
-    subFoldersViewList
+    setSidenavFolderChildList,
   } = useContext(AssetContext);
 
   // Upload asset
@@ -582,8 +575,11 @@ const AssetAddition = ({
       !activeSubFolders && setFolders([data, ...currentDataClone]);
       !activeSubFolders && setSidenavFolderList({ results: [data, ...sidenavFolderList] })
       //TODO  handle Add setSidenavFolderChildList child list logic here
-      // setSidenavFolderChildList({ results: [data, ...sidenavFolderChildList.results] }),
-      setSubFoldersViewList({ ...subFoldersViewList, results: [data, ...subFoldersViewList.results] })
+      // activeSubFolders && setSidenavFolderChildList({ result: [data], ...{ next, total } = sidenavFolderChildList.get(activeSubFolders) },
+      //   activeSubFolders,
+      //   false
+      // )
+      activeSubFolders && setSubFoldersViewList({ ...subFoldersViewList, results: [data, ...subFoldersViewList.results] })
       setDisableButtons(false)
       toastUtils.success("Collection created successfully");
     } catch (err) {
@@ -977,6 +973,8 @@ const AssetAddition = ({
         type="file"
         onChange={onFileChange}
       />
+
+
       <input
         multiple={true}
         webkitdirectory=""
@@ -1001,8 +999,6 @@ const AssetAddition = ({
       )}
 
 
-
-
       <FolderModal
         modalIsOpen={activeModal === "folder"}
         closeModal={() => { setActiveModal(""); setAddSubCollection(false) }}
@@ -1010,6 +1006,7 @@ const AssetAddition = ({
         onSubmit={onSubmit}
         addSubCollection={addSubCollection}
       />
+
       {activeSearchOverlay && (
         <SearchOverlay
           closeOverlay={closeSearchOverlay}

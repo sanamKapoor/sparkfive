@@ -53,7 +53,7 @@ const AssetGrid = ({
   widthCard,
   getSubCollectionsAssetData,
   getSubFolders
-}: any) => {
+}) => {
   let isDragging;
   if (!isShare) isDragging = useDropzone();
   const {
@@ -480,7 +480,7 @@ const AssetGrid = ({
           </ul>
         )}
         {activeView === "list" && (
-          <ul className={`${styles.regularlist} `}>
+          <ul className={`${styles['regularlist']}`}>
             {/* {mode === "SubCollectionView" && */}
             {/* <SubcollectionListView /> */}
             {/* } */}

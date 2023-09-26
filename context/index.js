@@ -165,7 +165,12 @@ export const AssetContext = createContext({
 
   // Landing Page Header Type(text)
   setHeaderName: (name) => { },
-  headerName: ""
+  headerName: "",
+
+  // Sub Collection select All Folders and assets in subCollection
+  selectedAllSubFoldersAndAssets: false,
+  setSelectedAllSubFoldersAndAssets: (value) => { },
+
 });
 
 export const TeamContext = createContext({

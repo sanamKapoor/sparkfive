@@ -23,25 +23,20 @@ import AssetHeaderOps from '../../common/asset/asset-header-ops';
 import AssetOps from '../../common/asset/asset-ops';
 import DetailOverlay from '../../common/asset/detail-overlay';
 import TopBar from '../../common/asset/top-bar';
-import deletedAssets from '../../common/custom-settings/deleted-assets';
 import FilterContainer from '../../common/filter/filter-container';
 import { DropzoneProvider } from '../../common/misc/dropzone';
 import NoPermissionNotice from '../../common/misc/no-permission-notice';
 import RenameModal from '../../common/modals/rename-modal';
-import SpinnerOverlay from '../../common/spinners/spinner-overlay';
 import NestedSidenav from '../../nested-subcollection-sidenav/nested-sidenav';
-import InputChip from '../../topbar-newnavigation/InputChip';
-import Tags from '../../topbar-newnavigation/Tags';
 import UploadStatusOverlayAssets from '../../upload-status-overlay-assets';
 import SearchOverlay from '../search-overlay-assets';
 import styles from './index.module.css';
-import { Utilities } from '../../../assets';
 
-import SubCollection from '../../new-subcollection-design/Sub-collection/sub-collection';
 // Components
 
 const AssetsLibrary = () => {
   const [activeView, setActiveView] = useState("grid");
+
   const {
     assets,
     setAssets,
@@ -76,12 +71,13 @@ const AssetsLibrary = () => {
     setCurrentViewAsset,
     setDetailOverlayId,
     sidebarOpen,
-    setSidebarOpen,
     setSubFoldersViewList,
     subFoldersViewList,
     subFoldersAssetsViewList,
     setSubFoldersAssetsViewList,
     setHeaderName,
+    selectedAllSubFoldersAndAssets,
+    setSelectedAllSubFoldersAndAssets
   } = useContext(AssetContext);
 
   const {
@@ -95,13 +91,13 @@ const AssetsLibrary = () => {
     loadFolders,
     campaigns,
     loadCampaigns,
+    term, searchFilterParams, renderFlag
   } = useContext(FilterContext) as any;
 
-  const { advancedConfig, hasPermission } = useContext(UserContext);
+  const { advancedConfig, hasPermission } = useContext(UserContext) as any;
 
   const [widthCard, setWidthCard] = useState(0);
 
-  const { term, searchFilterParams, renderFlag } = useContext(FilterContext);
 
   const [activeMode, setActiveMode] = useState("assets");
 
@@ -115,9 +111,8 @@ const AssetsLibrary = () => {
     activeSortFilter?.mainFilter === "assets" ? true : false
   );
 
-
-
   const router = useRouter();
+
   const preparingAssets = useRef(true);
   // When tag, campaigns, collection changes, used for click on tag/campaigns/collection in admin attribute management
   useEffect(() => {
@@ -218,7 +213,6 @@ const AssetsLibrary = () => {
     }
   }, [tags, productFields.sku, collection, campaigns]);
 
-
   useEffect(() => {
     if (hasPermission([ASSET_ACCESS])) {
       // Assets are under preparing (for query etc)
@@ -235,7 +229,6 @@ const AssetsLibrary = () => {
           setActiveMode("folders");
           getFolders();
         } else if (activeSortFilter.mainFilter === "SubCollectionView" && activeSubFolders !== "") {
-          console.log("12211")
           setActiveMode("SubCollectionView");
           getSubCollectionsFolderData();
           getSubCollectionsAssetData();
@@ -248,10 +241,7 @@ const AssetsLibrary = () => {
     }
   }, [activeSortFilter, firstLoaded, term]);
 
-
-
   useEffect(() => {
-
     if (firstLoaded) {
       setActiveSortFilter({
         ...activeSortFilter,
@@ -282,12 +272,14 @@ const AssetsLibrary = () => {
       }
       setFolders(folders.map((folder) => ({ ...folder, isSelected: false })));
     }
-    if (selectedAllAssets) {
+    if (selectedAllAssets)
       selectAllAssets(false);
-    }
-    if (selectedAllFolders) {
+
+    if (selectedAllFolders)
       selectAllFolders(false);
-    }
+
+    if (selectedAllSubFoldersAndAssets)
+      setSelectedAllSubFoldersAndAssets(false);
   }, [activeMode]);
 
   useEffect(() => {
@@ -332,7 +324,7 @@ const AssetsLibrary = () => {
     });
   };
 
-  const getDefaultTab = (advConf: any) => {
+  const getDefaultTab = (advConf: any = null) => {
     const config = advConf || advancedConfig;
     const defaultTab =
       config.defaultLandingPage === "allTab" ? "all" : "folders";
@@ -793,6 +785,7 @@ const AssetsLibrary = () => {
       if (activeSortFilter.mainFilter !== "SubCollectionView") {
         return;
       }
+
       const { next } = subFoldersAssetsViewList;
       const { data: subFolderAssets } = await assetApi.getAssets({
         ...getAssetsFilters({
@@ -816,7 +809,7 @@ const AssetsLibrary = () => {
     }
   }
 
-  const toggleSelected = (id) => {
+  const toggleSelected = (id: string) => {
     if (activeMode === "assets") {
       const assetIndex = assets.findIndex(
         (assetItem) => assetItem.asset.id === id
@@ -837,6 +830,32 @@ const AssetsLibrary = () => {
           },
         })
       );
+    } else if (activeMode === "SubCollectionView") {
+      const assetIndex = subFoldersAssetsViewList.results.findIndex(
+        (assetItem) => assetItem.asset.id === id
+      );
+      const folderIndex = subFoldersViewList.results.findIndex((folder) => folder.id === id);
+
+      if (folderIndex !== -1) {
+        setSubFoldersViewList({
+          ...subFoldersViewList,
+          results: update(subFoldersViewList.results, {
+            [folderIndex]: {
+              isSelected: { $set: !subFoldersViewList.results[folderIndex]?.isSelected },
+            },
+          })
+        })
+      }
+      if (assetIndex !== -1) {
+        setSubFoldersAssetsViewList({
+          ...subFoldersAssetsViewList,
+          results: update(subFoldersAssetsViewList.results, {
+            [assetIndex]: {
+              isSelected: { $set: !subFoldersAssetsViewList.results[assetIndex]?.isSelected },
+            },
+          })
+        })
+      }
     }
   };
 
@@ -844,14 +863,18 @@ const AssetsLibrary = () => {
     if (activeMode === "assets") {
       // Mark select all
       selectAllAssets();
-
       setAssets(
         assets.map((assetItem) => ({ ...assetItem, isSelected: true }))
       );
     } else if (activeMode === "folders") {
       selectAllFolders();
-
       setFolders(folders.map((folder) => ({ ...folder, isSelected: true })));
+    } else if (activeMode === "SubCollectionView") {
+      setSelectedAllSubFoldersAndAssets(true);
+      setSubFoldersViewList({ ...subFoldersViewList, results: subFoldersViewList.results.map((folder) => ({ ...folder, isSelected: true })) })
+      setSubFoldersAssetsViewList({
+        ...subFoldersAssetsViewList, results: subFoldersAssetsViewList.results.map((asset) => ({ ...asset, isSelected: true }))
+      })
     }
   };
 
@@ -865,6 +888,10 @@ const AssetsLibrary = () => {
 
   const selectedFolders = folders.filter((folder) => folder.isSelected);
 
+  const selectedSubFoldersAndAssets = {
+    assets: subFoldersAssetsViewList.results.filter((asset) => asset.isSelected),
+    folders: subFoldersViewList.results.filter((folder) => (folder.isSelected))
+  };
 
   const viewFolder = async (id: string, subCollection: boolean) => {
     if (!subCollection) {
@@ -927,11 +954,14 @@ const AssetsLibrary = () => {
     <>
       {(activeMode === "assets"
         ? selectedAssets.length
-        : selectedFolders.length) > 0 && (
+        : activeMode === "folders" ? selectedFolders.length : selectedSubFoldersAndAssets.folders.length || selectedSubFoldersAndAssets.assets.length) > 0 && (
           <AssetHeaderOps
             isUnarchive={activeSortFilter.mainFilter === "archived"}
             isFolder={activeMode === "folders"}
             deletedAssets={false}
+            activeMode={activeMode}
+            selectedFolders={selectedFolders}
+            selectedSubFoldersAndAssets={selectedSubFoldersAndAssets}
           />
         )}
       {/* {!renderFlag && <SpinnerOverlay text="Your Assets are loading please wait...." />} */}
@@ -945,12 +975,12 @@ const AssetsLibrary = () => {
                   <NestedSidenav />
                 </div> :
                 null}
-              <div className={styles.rightSide}>
+              <div className={`${sidebarOpen ? styles["rightSide"] : styles["rightSideToggle"]}`}>
                 <div className='position-relative'>
                   <div className={styles["search-mobile"]}>
                     <SearchOverlay
                       closeOverlay={closeSearchOverlay}
-                      operationsEnabled={true}
+                      operationsEnabled
                       activeFolder={activeFolder}
                       onCloseDetailOverlay={(assetData) => {
                         closeSearchOverlay();
@@ -963,7 +993,6 @@ const AssetsLibrary = () => {
                   {advancedConfig.set && hasPermission([ASSET_ACCESS]) &&
                     <TopBar
                       activeFolder={activeFolder}
-                      getFolders={getFolders}
                       mode={activeMode}
                       activeSortFilter={activeSortFilter}
                       setActiveSortFilter={setActiveSortFilter}
@@ -985,15 +1014,12 @@ const AssetsLibrary = () => {
                       isFolder={activeSortFilter?.mainFilter === 'folders'}
                     />
                   }
-                  {/* <Tags />
-                  <InputChip /> */}
                 </div>
                 <div
                   className={`${openFilter && styles["col-wrapper"]} ${sidebarOpen ? styles["grid-wrapper-web"] : styles["grid-wrapper"]}
                     } ${activeFolder && styles["active-breadcrumb-item"]}`}
                 >
 
-                  {/* <SubCollection /> */}
                   <DropzoneProvider>
                     {advancedConfig.set && renderFlag && (
                       <AssetGrid

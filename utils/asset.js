@@ -167,7 +167,7 @@ export const getAssetsFilters = ({
 
   addFilterToQuery(filters, filterCampaigns, "campaigns");
   addFilterToQuery(filters, filterProjects, "projects");
-  activeFolder ? addFilterToQuery(filters, filterFolders, "folders") : addFilterToQuery(filters, activeFolder, "folders");
+  activeFolder ? addFilterToQuery(filters, [activeFolder], "folders") : addFilterToQuery(filters, filterFolders, "folders");
   addFilterToQuery(filters, filterChannels, "channels");
   addFilterTagsToQuery(filters, filterNonAiTags, filterAiTags, "tags");
   addFilterToQuery(filters, filterFileTypes, "fileTypes");
@@ -360,7 +360,11 @@ export const getFoldersFromUploads = (files, isRegular = false) => {
 
 const addFilterToQuery = (filters, filterItems, key, valueKey = "value") => {
   if (filterItems?.length > 0) {
-    filters[key] = filterItems.map((item) => item[valueKey]).join(",");
+    if (filterItems?.length == 1) {
+      filters[key] = filterItems[0]
+    } else {
+      filters[key] = filterItems.map((item) => item[valueKey]).join(",");
+    }
   }
 };
 

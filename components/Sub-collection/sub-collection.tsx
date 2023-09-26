@@ -144,7 +144,7 @@ const SubCollection = (
           }
         </>
       }
-      {!assetsHide && <>
+      {<>
         <div className={`${styles["sub-collection-heading"]}`}>
           <div className={styles.rightSide}>
             <span>Assets ({totalAssets})</span>
@@ -152,7 +152,7 @@ const SubCollection = (
           </div>
         </div>
         <div className={styles.assetWrapper}>
-          {assets.map((assetItem, index) => {
+          {!assetsHide && assets.map((assetItem, index) => {
             if (assetItem.status !== "fail") {
               return (
                 <li
@@ -201,13 +201,11 @@ const SubCollection = (
                     setFocusedItem={setFocusedItem}
                   />
                 </li>
-
               );
             }
           })
           }
         </div>
-
         {nextAsset > 0 && (
           <>
             {nextAsset > 2 ? (
