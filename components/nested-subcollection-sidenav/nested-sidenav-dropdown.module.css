@@ -30,12 +30,12 @@
 }
 .w100{
   width:100%;
- 
-}
+ }
 .dropdownMenu{
   display: flex;
   justify-content: space-between;
   width: 100%;
+  box-sizing: border-box;
 }
 .nestedbox{
   /* padding: 0 24px 0 14px; */

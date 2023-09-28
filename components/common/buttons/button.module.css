@@ -255,6 +255,10 @@
   border:1px solid #AEB0C2;
   cursor: pointer;
 }
+.main-modal-btn{
+  margin-right:16px;
+  padding: 6px;
+}
 @media screen and (max-width: 1000px) {
   .nav-container {
     min-width: 0;

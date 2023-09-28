@@ -37,7 +37,7 @@ import SearchOverlay from '../search-overlay-assets';
 import styles from './index.module.css';
 import { Utilities } from '../../../assets';
 
-import SubCollection from '../../new-subcollection-design/Sub-collection/sub-collection';
+
 // Components
 
 const AssetsLibrary = () => {
