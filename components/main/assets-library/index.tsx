@@ -762,10 +762,13 @@ const AssetsLibrary = () => {
       if (activeSortFilter.mainFilter !== "SubCollectionView") {
         return;
       }
+      const { field, order } = activeSortFilter.sort;
       const { next } = subFoldersViewList;
       const queryParams = {
         page: replace ? 1 : next,
-        pageSize: 5
+        pageSize: 10,
+        sortField: field,
+        sortOrder: order,
       };
       const { data: subFolders } = await folderApi.getSubFolders({
         ...queryParams,
@@ -871,10 +874,12 @@ const AssetsLibrary = () => {
       setFolders(folders.map((folder) => ({ ...folder, isSelected: true })));
     } else if (activeMode === "SubCollectionView") {
       setSelectedAllSubFoldersAndAssets(true);
+      // For selecting the folders only subcollection view
       setSubFoldersViewList({ ...subFoldersViewList, results: subFoldersViewList.results.map((folder) => ({ ...folder, isSelected: true })) })
-      setSubFoldersAssetsViewList({
-        ...subFoldersAssetsViewList, results: subFoldersAssetsViewList.results.map((asset) => ({ ...asset, isSelected: true }))
-      })
+      // For selecting the assets only subcollection view
+      // setSubFoldersAssetsViewList({
+      //   ...subFoldersAssetsViewList, results: subFoldersAssetsViewList.results.map((asset) => ({ ...asset, isSelected: true }))
+      // })
     }
   };
 
@@ -905,13 +910,29 @@ const AssetsLibrary = () => {
   const deleteFolder = async (id) => {
     try {
       await folderApi.deleteFolder(id);
-      const modFolderIndex = folders.findIndex((folder) => folder.id === id);
-      setFolders(
-        update(folders, {
-          $splice: [[modFolderIndex, 1]],
-        })
-      );
-      toastUtils.success("Collection deleted successfully");
+      if (activeMode === "SubCollectionView") {
+        const folderIndex = subFoldersViewList.results.findIndex((folder) => folder.id === id);
+        if (folderIndex !== -1) {
+          setSubFoldersViewList({
+            ...subFoldersViewList,
+            results: update(subFoldersViewList.results, {
+              $splice: [[folderIndex, 1]],
+            })
+          })
+        }
+        toastUtils.success("Sub collection deleted successfully");
+      } else {
+        const modFolderIndex = folders.findIndex((folder) => folder.id === id);
+        setFolders(
+          update(folders, {
+            $splice: [[modFolderIndex, 1]],
+          })
+        );
+        toastUtils.success("Collection deleted successfully");
+      }
+
+
+
     } catch (err) {
       console.log(err);
     }
@@ -954,7 +975,8 @@ const AssetsLibrary = () => {
     <>
       {(activeMode === "assets"
         ? selectedAssets.length
-        : activeMode === "folders" ? selectedFolders.length : selectedSubFoldersAndAssets.folders.length || selectedSubFoldersAndAssets.assets.length) > 0 && (
+        : activeMode === "folders" ? selectedFolders.length : selectedSubFoldersAndAssets.folders.length || selectedSubFoldersAndAssets.assets.length) > 0 &&
+        (
           <AssetHeaderOps
             isUnarchive={activeSortFilter.mainFilter === "archived"}
             isFolder={activeMode === "folders"}

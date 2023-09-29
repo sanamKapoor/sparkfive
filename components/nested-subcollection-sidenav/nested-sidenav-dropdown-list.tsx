@@ -62,9 +62,12 @@ const NestedSidenavDropdown = () => {
 
     setSubFolderLoadingState((map) => new Map(map.set(id, true)))
 
+    const { field, order } = activeSortFilter.sort;
     const queryParams = {
       page: replace ? 1 : page,
-      pageSize: 5
+      pageSize: 10,
+      sortField: field,
+      sortOrder: order,
     };
 
     const { data } = await folderApi.getSubFolders({

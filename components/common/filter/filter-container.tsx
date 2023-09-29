@@ -12,6 +12,7 @@ import FilterSelector from './filter-selector';
 import ProductFilter from './product-filter';
 import ResolutionFilter from './resolution-filter';
 import Tags from '../../topbar-newnavigation/Tags';
+import InputChip from '../../topbar-newnavigation/InputChip';
 
 // Components
 const FilterContainer = ({
@@ -159,13 +160,15 @@ const FilterContainer = ({
 
   return (
     <>
-      {/* {false ? */}
+      {false ?
         <div
           className={`${styles.container}  ${stickyMenuScroll && styles["sticky-menu"]
             }`}
           style={{ width: filterWidth }}
         >
           <Tags />
+          <InputChip />
+
           {/* <section className={styles["top-bar"]}>
             <div>
               <h3>Filters</h3>
@@ -688,7 +691,7 @@ const FilterContainer = ({
             )}
           </div> */}
         </div>
-        {/* // : null} */}
+        : null}
     </>
 
 
