@@ -1,3 +1,5 @@
+//TODO: refactor this file
+
 import { Utilities } from "../../../assets";
 import styles from "./folder-options.module.css";
 
@@ -35,7 +37,6 @@ const FolderOptions = ({
         { label: "Download", onClick: downloadFoldercontents },
         // { label: "Delete", onClick: () => setDeleteOpen(true) },
         { label: "Share", onClick: shareAssets },
-        { label: "Filter Settings", onClick: onClickFilterSettings },
       ];
 
   if (hasPermission([ASSET_EDIT])) {
@@ -134,7 +135,20 @@ const FolderOptions = ({
       )}
       Content={() => (
         <div className={styles.more}>
-          {adminOption.length > 0 && <Dropdown options={adminOption} />}
+          {adminOption.length > 0 && (
+            //TODO: handle Filter Settings click
+            <Dropdown
+              options={[
+                ...adminOption,
+                {
+                  label: "Filter Settings",
+                  onClick: () => {
+                    console.log("Filter Settings");
+                  },
+                },
+              ]}
+            />
+          )}
         </div>
       )}
     />
