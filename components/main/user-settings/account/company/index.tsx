@@ -3,6 +3,7 @@ import { TeamContext } from "../../../../../context";
 import styles from "./index.module.css";
 
 // Components
+import { TEAM_PROFILE_PIC_HELP_TEXT } from "../../../../../constants/strings";
 import PhotoUpload from "../../../../common/account/photo-upload";
 import AddressForm from "./address-form";
 import NameForm from "./name-form";
@@ -17,12 +18,15 @@ const Company: React.FC = () => {
   return (
     <div>
       <NameForm />
+      <div className={styles.photoUploadWRapper}>
       <PhotoUpload
         userPhoto={team?.workspaceIcon}
-        explainText={`Your company's icon appears in shared collections`}
+        description={TEAM_PROFILE_PIC_HELP_TEXT}
         type={"team"}
+        
       />
-
+      </div>
+      
       <div className={styles.divider}></div>
       <AddressForm />
     </div>

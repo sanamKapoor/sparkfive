@@ -1,9 +1,32 @@
 .card-info{
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 32px;
   font-size: 12px;
   font-weight: 300;
+}
+.update-card-modal> div >div>p{
+  font-weight: 300;
+  font-size: 14px;
+  text-align: center;
+  max-width: 100%;
+
+}
+.update-card-modal> div >div> div>p:first-child{
+  font-weight: 600;
+  font-size: 24px;
+  text-align: center;
+ 
+ 
+
+}
+
+
+.update-card-modal p.base_overflow-text__10ayz {
+  font-weight: 300;
+  font-size: 14px;
+  background: pink;
 }
 
 h3.title {

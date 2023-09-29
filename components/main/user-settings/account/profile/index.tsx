@@ -11,10 +11,14 @@ const Profile: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <h3>Profile</h3>
+      <h3 className={`${styles["account-profile-name"]}`}>Profile</h3>
       {user && (
         <>
-          <PhotoUpload userPhoto={user.profilePhoto} />
+          <div className={`${styles["account-profile-name"]}`}>
+            <PhotoUpload userPhoto={user.profilePhoto} />
+          </div>
+
+          <div className={styles.divider}></div>
           <Basic email={user.email} name={user.name} provider={user.provider} />
         </>
       )}

@@ -2,21 +2,119 @@
     padding: 10px 5px;
 }
 
-.file-icon{
+.file-icon {
     margin-right: 10px;
     width: 28px;
     height: 24px;
 }
 
-.check-icon{
+.check-icon {
     float: right;
     margin-left: auto;
 }
 
-.file-name{
+.file-name {
     white-space: nowrap;
     max-width: 75%;
     overflow: hidden;
     text-overflow: ellipsis;
     color: var(--color-sec-text);
+}
+
+.imageInfo {
+    display: flex;
+    align-items: center;
+}
+
+.fileImg {
+    margin-right: 5px;
+}
+
+.fileImg img {
+    display: flex;
+    align-items: center;
+}
+
+.uploadWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+.listWrapper {
+    border: 1px solid;
+}
+
+.errorMsg img {
+    width: 16px;
+    height: 16px;
+}
+
+.errorMsg {
+    display: flex;
+    flex-direction: row;
+}
+
+.errorMsg p {
+    color:
+        #FA373D;
+    display: flex;
+
+
+}
+
+.loadingImg {
+    display: flex;
+    align-items: center;
+}
+
+.loadingImg img {
+    width: 15px;
+    margin-left: 10px;
+}
+
+.uploadBtn {
+    display: flex;
+    justify-content: end;
+}
+
+.updateStatus {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.progressBar {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
+.progressBar img {
+    margin-left: 20px;
+}
+
+.uploadFileBtnIcon {
+    max-width: 136px;
+    width: 100%;
+    height: 40px;
+    padding: 0 20px;
+}
+
+.uploadFileBtnIcon img {
+    width: 24px;
+    height: 24px;
+
+}
+
+.uploadFileBtnIcon span {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+@media screen and (max-width: 575px) {
+    .fileSize {
+        display: none;
+    }
 }

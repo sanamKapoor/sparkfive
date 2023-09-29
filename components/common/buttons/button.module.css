@@ -1,23 +1,31 @@
 /*----- Define style for all types of buttons used in the app -----*/
 .container {
   border-radius: 5px;
-  height: 32px;
+  height: 34px;
   padding: 0 20px;
   font-weight: 600;
   cursor: pointer;
   font-size: 12px;
   min-width: 120px;
   white-space: nowrap;
+
 }
-.add{
-  min-width: 0;
-  height:26px;
-  width:26px;
-  background-color: var(--color-prim-turquoise);
-  color:#fff;
+
+.saveChangeBtn {
+  border-radius: 4px;
+}
+
+.add {
+  background: #fff;
+  width: 26.47px;
+  height: 26.47px;
+  background: #10BDA5;
   border-radius: 50%;
+  min-width: 0;
   padding: 0;
-  font-size: 20px;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -41,6 +49,10 @@
 .input-height-primary,
 .input-height-secondary {
   min-height: 48px;
+}
+
+.save {
+  min-height: 35px !important;
 }
 
 .primary,
@@ -136,7 +148,7 @@
 .section-container {
   outline: none;
   background-color: inherit;
-  font-weight: 400;
+  font-weight: 600;
   color: var(--color-prim-navy);
   cursor: pointer;
   border-bottom: 3px solid white;
@@ -184,13 +196,15 @@
 .auth-container {
   border-radius: 50px;
   min-height: 35px;
-  max-height: 48px;
-  padding: 12px 40px;
+  padding: 12px 6px;
   color: white;
   text-transform: uppercase;
   background-color: var(--color-prim-turquoise);
   font-weight: 600;
   cursor: pointer;
+  height: 44px;
+  min-width: 161px;
+  font-size: 16px;
 }
 
 .auth-container:hover {
@@ -228,37 +242,195 @@
 .visibility-hidden {
   visibility: hidden;
 }
-.apply{
-  background: 
-  #10BDA5;
-  height:40px;
+
+.apply {
+  background:
+    #10BDA5;
+  height: 40px;
   max-width: 120px;
   width: 100%;
   border-radius: 4px;
-  color:#fff;
+  color: #fff;
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
   margin-right: 16px;
 }
-.cancel{
-  background: 
-  #fff;
-  height:40px;
+
+.cancel {
+  background:
+    #fff;
+  height: 40px;
   max-width: 120px;
   width: 100%;
   border-radius: 4px;
   color:
-  #AEB0C2;
+    #AEB0C2;
   font-weight: 600;
   font-size: 14px;
-  border:1px solid #AEB0C2;
+  border: 1px solid #AEB0C2;
   cursor: pointer;
 }
-.main-modal-btn{
-  margin-right:16px;
+
+.main-modal-btn {
+  margin-right: 16px;
   padding: 6px;
 }
+
+/* //download button */
+.downloadBtn {
+  height: 32px;
+  padding: 8px 0;
+  font-family: "Noto Sans", sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  color: #08135e;
+  border: 1px solid #dedad4;
+  background: #fff;
+  border-radius: 4px;
+  margin-left: 10px;
+  cursor: pointer;
+  min-width: 96px;
+}
+
+.actionBtn {
+  cursor: pointer;
+  background: transparent;
+  color: #10bda5;
+  font-family: "Noto Sans", sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+}
+
+.rejectBtn {
+  margin-right: 40px;
+}
+
+.formButton {
+  width: 100%;
+}
+
+.uploadBtn {
+  background-color: #817D9D;
+  height: 40px;
+  border-radius: 4px;
+  padding: 8px 24px 8px 24px;
+  color: #fff;
+  font-style: 600;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 32px;
+}
+
+.activeUpload {
+  background-color: #10BDA5;
+  height: 40px;
+  border-radius: 4px;
+  padding: 8px 24px 8px 24px;
+  color: #fff;
+  font-style: 600;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 32px;
+
+}
+
+.bulk-tag {
+  background-color: #10BDA5;
+  color: #fff;
+  margin-top: 20px;
+
+}
+
+.reject-btn {
+  border: 1px solid var(--color-secondary-border);
+  background: #fff;
+  color: var(--color-prim-navy);
+
+}
+
+.teamInviteBtn {
+  height: 36px;
+  /* padding: 0 29px; */
+  font-size: 14px;
+  min-width: 148px;
+}
+
+.guestUpLoadBtn {
+  min-width: 112px;
+  height: 35px;
+}
+
+.select-all {
+  min-width: 115px;
+  height: 34px;
+}
+
+.attribute-btn {
+  height: 35px !important;
+  min-width: 92px;
+  border-radius: 4px;
+}
+
+.field-btn {
+  height: 35px !important;
+  min-width: 79px;
+  border-radius: 4px;
+
+}
+
+.guestBtn {
+  font-size: 14px;
+  min-width: 151px !important;
+  height: 42px !important;
+
+}
+
+.GuestFileUploadBtn {
+  min-width: 151px !important;
+  height: 40px !important;
+}
+
+.update-cart-btn {
+  height: 44px;
+  min-width: 161px;
+
+}
+
+.plan-modal-btn {
+  min-width: 203px;
+  height: 40px;
+
+}
+
+.back-button {
+  background: none;
+  padding: 0;
+  height: auto !important;
+  min-width: inherit;
+  color: #817D9D;
+  font-weight: 400;
+}
+
+.thumbnail-btn {
+  margin: 0px 10px 0px 0px;
+
+}
+
+.change-this-btn {
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  color: #08135e;
+  font-weight: 400;
+  font-size: 12px;
+  background-color: transparent;
+}
+
+
+
+
+
 @media screen and (max-width: 1000px) {
   .nav-container {
     min-width: 0;
@@ -271,5 +443,12 @@
   .container {
     padding: 0 8px;
     min-width: fit-content;
+  }
+}
+
+@media screen and (max-width: 575px) {
+  .downloadBtn {
+    display: none;
+    margin-left: 0;
   }
 }

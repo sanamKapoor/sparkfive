@@ -15,7 +15,8 @@ import folderApi from "../../../../../server-api/folder";
 import permissionApi from "../../../../../server-api/permission";
 import teamApi from "../../../../../server-api/team";
 import SpinnerOverlay from "../../../../common/spinners/spinner-overlay";
-import MemberPermissions from "../member-permissions";
+import MemberPermissions from "../members/team-members/member-permissions";
+import React from "react";
 
 // Server DO NOT return full custom field slots including empty array, so we will generate empty array here
 // The order of result should be match with order of custom field list
@@ -228,7 +229,7 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
         <h4>Role Name</h4>
 
         <div className={styles.form}>
-          <div>
+          <div className={styles.roleInput}>
             <Input
               name={"name"}
               value={name}
@@ -238,21 +239,9 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
               placeholder={"Role name"}
               type={"text"}
               styleType={"regular-short"}
+              additionalClasses={styles.RoleInputField}
             />
           </div>
-          <Button
-            type={"button"}
-            text="Save Changes"
-            className="container primary"
-            onClick={onSubmit}
-            disabled={!name}
-          />
-          <Button
-            type={"button"}
-            text="Cancel"
-            className="container secondary"
-            onClick={onCancel}
-          />
         </div>
       </div>
 
@@ -366,6 +355,15 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
                   );
                 }
               })}
+            </div>
+            <div className={`${styles['role-save-btn']}`}>
+            <Button
+              type={"button"}
+              text="Save"
+              className="container primary"
+              onClick={onSubmit}
+              disabled={!name}
+            />
             </div>
           </div>
         )}

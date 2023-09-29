@@ -36,7 +36,8 @@ const Search = (props) => {
           props.inputContainerStyle || ""
         }`}
       >
-        {!props?.nonIcon && <img src={Utilities.search} />}
+        {!props?.nonIcon && <img className={styles.searchIcon} src={Utilities.search} />}
+
         <input
           {...props}
           onChange={(e) => {
@@ -44,14 +45,21 @@ const Search = (props) => {
           }}
           value={term}
           placeholder={props.placeholder || "Search"}
-          className={`${styles.container} ${
-            props.styleType && styles[props.styleType]
+          className={`${styles.container} ${styles.tagAttribute}
           }`}
         />
+        {term && (
+    <img
+      src={Utilities.blueClose} 
+      className={styles.closeIcon}
+      alt="Close Icon"
+      onClick={() => setTerm("")}
+    />
+  )}
       </div>
       {!props.onlyInput && (
         <Button
-          className={"container submit exclude-min-height primary"}
+          className={"container submit exclude-min-height primary attribute-btn"}
           type={"submit"}
           text="Search"
         />

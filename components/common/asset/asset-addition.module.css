@@ -94,6 +94,28 @@
     right: 0;
     flex-wrap: nowrap;
 }
+.addButton{
+    border-radius:50%;
+    height:26.47px;
+    width:26.47px;
+    font-size: 35px;
+    cursor: pointer;
+    background-color:var(--color-prim-turquoise);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+.addButton:hover{
+    background-color: var(--color-prim-turquoise-hover);
+}
+.addButton span{
+    font-size: 26px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 
 @media screen and (max-width: 600px) {

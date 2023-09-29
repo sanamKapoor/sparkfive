@@ -5,6 +5,11 @@ import toastUtils from "../../../../../utils/toast";
 import styles from "./index.module.css";
 
 // Components
+import {
+  ENABLE_TWO_AUTH_FOR_SECURITY,
+  SECURITY_SUBTITLE,
+  SECURITY_TITLE,
+} from "../../../../../constants/strings";
 import UserPreference from "../../../../common/account/user-preference";
 
 const Notifications: React.FC = () => {
@@ -38,13 +43,13 @@ const Notifications: React.FC = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <h3>Security</h3>
+       <div className={`${styles['container']} ${styles['security-container-wrapper']}`}>
       <UserPreference
-        enabled={enabledTwoFactor}
+        enabled={user?.twoFactor}
         setPreference={setTwoFactor}
-        title={"Two-Factor Authentication"}
-        description={`Enabling this provides an extra layer of security for all users in your account. A security code wil be required in addition to your password`}
+        title={SECURITY_TITLE}
+        subtitle={SECURITY_SUBTITLE}
+        description={ENABLE_TWO_AUTH_FOR_SECURITY}
       />
     </div>
   );

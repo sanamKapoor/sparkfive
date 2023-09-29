@@ -54,7 +54,7 @@ const AddressForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form className={`${styles['company-address-form-wrapper']}`} onSubmit={handleSubmit(onSubmit)}>
       {team && (
         <>
           <h3 className={styles.title}>Company Address</h3>
@@ -63,7 +63,7 @@ const AddressForm: React.FC = () => {
               <FormInput
                 labId="address"
                 label="Address"
-                InputComponent={<Input type="text" id="address" />}
+                InputComponent={<Input additionalClasses={styles.companyAddress} type="text" id="address" />}
                 defaultValue={team.address}
                 name="address"
                 control={control}
@@ -74,31 +74,12 @@ const AddressForm: React.FC = () => {
                 }
               />
               <div className={styles["fields-pair"]}>
-                <div>
-                  <label>Country</label>
-                  <Select
-                    placeholder="Select Country"
-                    options={countries}
-                    onChange={(selected) => setCountry(selected.name)}
-                    value={getSelectedItem("country", country)}
-                  />
-                </div>
-                <div className={styles.state}>
-                  <label>State</label>
-                  <Select
-                    placeholder="Select State"
-                    options={states}
-                    onChange={(selected) => seState(selected.name)}
-                    value={getSelectedItem("state", state)}
-                  />
-                </div>
-              </div>
-              <div className={styles["fields-pair"]}>
+               
                 <div className={styles.city}>
                   <FormInput
                     labId="city"
                     label="City"
-                    InputComponent={<Input type="text" id="city" />}
+                    InputComponent={<Input additionalClasses={styles.companyCity} type="text" id="city" />}
                     name="city"
                     defaultValue={team.city}
                     control={control}
@@ -109,11 +90,36 @@ const AddressForm: React.FC = () => {
                     }
                   />
                 </div>
+                <div className={styles.state}>
+                  <label className={styles.companyLabel}>State</label>
+                  <Select
+                    placeholder="Select State"
+                    options={states}
+                    onChange={(selected) => seState(selected.name)}
+                    value={getSelectedItem("state", state)}
+                    containerClass={styles.borderRadius}
+                    additionalClass={styles.height}
+                  />
+                </div>
+              </div>
+              <div className={styles["fields-pair"]}>
+              <div>
+                  <label className={styles.companyLabel}>Country</label>
+                  <Select
+                    placeholder="Select Country"
+                    options={countries}
+                    onChange={(selected) => setCountry(selected.name)}
+                    value={getSelectedItem("country", country)}
+                    containerClass={styles.borderRadius}
+                    additionalClass={styles.height}
+                  />
+                </div>
+                
                 <div className={styles.zip}>
                   <FormInput
                     labId="zip-form"
                     label="Zip Code"
-                    InputComponent={<Input type="text" id="zip-form" />}
+                    InputComponent={<Input additionalClasses={styles.companyCity} type="text" id="zip-form" />}
                     name="zip"
                     defaultValue={team.zip}
                     control={control}

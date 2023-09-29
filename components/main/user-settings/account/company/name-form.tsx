@@ -18,14 +18,17 @@ const NameForm: React.FC = () => {
   };
 
   return (
-    <>
-      <h3>Company Name</h3>
+    <div className={styles.companyAllInfo}>
+    <div className={styles.compamnyInfo}>
+    <h3>Company Info</h3>
+    </div>
+      <h3 className={styles.companyName}>Company Name</h3>
       <form onSubmit={handleSubmit(onSubmit)} className={styles.container}>
         {team && (
           <div className={styles["form-container"]}>
-            <div className={"fields-first"}>
+           
               <FormInput
-                InputComponent={<Input type="text" />}
+                InputComponent={<Input additionalClasses={styles.infoField} type="text" />}
                 name="company"
                 defaultValue={team.company}
                 control={control}
@@ -35,18 +38,18 @@ const NameForm: React.FC = () => {
                   "This field should be between 2 and 30 characters long"
                 }
               />
-            </div>
+           
             <div>
               <Button
                 text="Save Changes"
                 type="submit"
-                className="container submit input-height-primary"
+                className="container submit input-height-primary save"
               />
             </div>
           </div>
         )}
       </form>
-    </>
+    </div>
   );
 };
 

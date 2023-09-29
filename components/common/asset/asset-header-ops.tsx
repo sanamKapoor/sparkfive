@@ -1,23 +1,27 @@
 // External
-import fileDownload from 'js-file-download';
-import { useRouter } from 'next/router';
-import { useContext, useEffect, useRef, useState } from 'react';
+import fileDownload from "js-file-download";
+import { useRouter } from "next/router";
+import { useContext, useEffect, useRef, useState } from "react";
 
-import { AssetOps, Utilities } from '../../../assets';
-import { maximumAssociateFiles } from '../../../constants/asset-associate';
-import { ASSET_DOWNLOAD } from '../../../constants/permissions';
-import { AssetContext, FilterContext, LoadingContext, UserContext } from '../../../context';
-import assetApi from '../../../server-api/asset';
-import folderApi from '../../../server-api/folder';
-import shareApi from '../../../server-api/share-collection';
-import { getAssetsFilters } from '../../../utils/asset';
-import { getSubdomain } from '../../../utils/domain';
-import toastUtils from '../../../utils/toast';
-import IconClickable from '../../common/buttons/icon-clickable';
-import Dropdown from '../inputs/dropdown';
-import ConfirmModal from '../modals/confirm-modal';
-import styles from './asset-header-ops.module.css';
-
+import { AssetOps, Utilities } from "../../../assets";
+import { maximumAssociateFiles } from "../../../constants/asset-associate";
+import { ASSET_DOWNLOAD } from "../../../constants/permissions";
+import {
+  AssetContext,
+  FilterContext,
+  LoadingContext,
+  UserContext,
+} from "../../../context";
+import assetApi from "../../../server-api/asset";
+import folderApi from "../../../server-api/folder";
+import shareApi from "../../../server-api/share-collection";
+import { getAssetsFilters } from "../../../utils/asset";
+import { getSubdomain } from "../../../utils/domain";
+import toastUtils from "../../../utils/toast";
+import IconClickable from "../../common/buttons/icon-clickable";
+import Dropdown from "../inputs/dropdown";
+import ConfirmModal from "../modals/confirm-modal";
+import styles from "./asset-header-ops.module.css";
 
 const AssetHeaderOps = ({
   isUnarchive = false,
@@ -51,7 +55,6 @@ const AssetHeaderOps = ({
   } = useContext(AssetContext);
 
   const { setIsLoading } = useContext(LoadingContext);
-
 
   const { hasPermission } = useContext(UserContext);
 
@@ -90,7 +93,6 @@ const AssetHeaderOps = ({
       }
     }
   }, [router.asPath]);
-
 
   // Hidden pagination assets are selected
   if (selectedAllAssets) {
@@ -196,8 +198,8 @@ const AssetHeaderOps = ({
         const assetsToAssociate = selectedAssets.filter(
           (assetItem) =>
             assetItem.asset.fileAssociations.length +
-            selectedAssets.length -
-            1 <=
+              selectedAssets.length -
+              1 <=
             maximumAssociateFiles
         );
         if (assetsToAssociate.length !== selectedAssets.length) {
@@ -300,7 +302,7 @@ const AssetHeaderOps = ({
         tooltipText: "Edit",
         tooltipId: "Edit",
         onClick: () => setActiveOperation("edit"),
-        child: null
+        child: null,
       },
     },
     {
@@ -312,11 +314,11 @@ const AssetHeaderOps = ({
         tooltipText: "Delete",
         tooltipId: "Delete",
         onClick: () => setActiveOperation("update"),
-        child: null
+        child: null,
       },
     },
     {
-      condition: (isShare || (hasPermission([ASSET_DOWNLOAD]) && !deletedAssets)),
+      condition: isShare || (hasPermission([ASSET_DOWNLOAD]) && !deletedAssets),
       props: {
         place: "top",
         additionalClass: styles["action-button"],
@@ -324,7 +326,7 @@ const AssetHeaderOps = ({
         tooltipId: "Download",
         tooltipText: "Download",
         onClick: downloadSelectedAssets,
-        child: null
+        child: null,
       },
     },
     {
@@ -336,9 +338,8 @@ const AssetHeaderOps = ({
         tooltipText: "Add to Collection",
         tooltipId: "Move",
         onClick: () => setActiveOperation("move"),
-        child: null
+        child: null,
       },
-
     },
     {
       condition: !isFolder && !isShare && !deletedAssets,
@@ -412,7 +413,7 @@ const AssetHeaderOps = ({
         tooltipText: "Share",
         tooltipId: "Share",
         onClick: () => setActiveOperation("shareCollections"),
-        child: null
+        child: null,
       },
     },
     {
@@ -424,7 +425,7 @@ const AssetHeaderOps = ({
         tooltipText: "Recover Asset",
         tooltipId: "Recover",
         onClick: () => setActiveOperation("recover"),
-        child: null
+        child: null,
       },
     },
     {
@@ -436,7 +437,7 @@ const AssetHeaderOps = ({
         tooltipText: "Delete",
         tooltipId: "Delete",
         onClick: () => setActiveOperation("delete"),
-        child: null
+        child: null,
       },
     },
     {
@@ -500,7 +501,7 @@ const AssetHeaderOps = ({
         ),
       },
     },
-  ]
+  ];
 
   return (
     <div className={styles.bar}>
@@ -520,9 +521,15 @@ const AssetHeaderOps = ({
         </div>
       </div>
       <div className={styles.icons}>
-        {conditionalIcons.map(({ condition, props }, index) => condition && (
-          props.child ? props.child : <IconClickable key={index} {...props} />
-        ))}
+        {conditionalIcons.map(
+          ({ condition, props }, index) =>
+            condition &&
+            (props.child ? (
+              props.child
+            ) : (
+              <IconClickable key={index} {...props} />
+            ))
+        )}
       </div>
       {!isFolder && !isShare && !deletedAssets && (
         <>

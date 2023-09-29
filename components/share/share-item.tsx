@@ -17,6 +17,7 @@ const ShareItem = ({
   realUrl,
   isSelected = false,
   toggleSelected = () => {},
+  sharedCode = ""
 }) => {
   const [visibleOverlay, setVisibleOVerlay] = useState(false);
 
@@ -91,6 +92,7 @@ const ShareItem = ({
           realUrl={realUrl}
           thumbailUrl={thumbailUrl}
           isShare={true}
+          sharedCode={sharedCode}
           closeOverlay={() => setVisibleOVerlay(false)}
         />
       )}

@@ -77,16 +77,17 @@ const Base: React.FC<BaseModalProps> = ({
               : styles.header
           }
         >
+          <div className={styles.baseHeading}>
           <div
             className={`${styles.text} ${
               closeButtonOnly ? styles["no-border"] : ""
             } ${textWidth && styles["full-width"]}`}
           >
-            {
+            
               <p className={styles["overflow-text"]}>
                 {!closeButtonOnly ? headText : ""}
               </p>
-            }
+            
             <img
               src={Utilities.bigblueClose}
               alt="close"
@@ -95,6 +96,8 @@ const Base: React.FC<BaseModalProps> = ({
             />
           </div>
           {subText && <p className={styles.subtext}>{subText}</p>}
+          </div>
+          
         </div>
       )}
       {children}

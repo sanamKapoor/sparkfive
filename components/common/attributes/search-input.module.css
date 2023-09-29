@@ -14,9 +14,14 @@
   background-color: var(--color-sec-lightivory);
   color: var(--color-prim-navy);
 }
+.tagAttribute{
+  width: 251px !important;
+  height:35px;
+  border-radius: 8px !important;
 
+}
 .input-container {
-  width: 64%;
+  /* width: 64%; */
   margin-right: 9px;
   position: relative;
 }
@@ -26,10 +31,13 @@
 }
 
 .input-container input::placeholder{
-  color: #e5e5e5;
+  color: #817D9D;
+  font-family: "Noto Sans", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
 }
 
-.input-container img {
+.searchIcon  {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -48,6 +56,14 @@
   top: 50%;
   transform: translateY(-50%);
   font-size: 16px;
+}
+.closeIcon{
+  position: absolute ;
+  top:50% ;
+  transform: translateY(-50%) ;
+  right: 11px;
+  cursor: pointer;
+
 }
 
 @media (max-width:600px){

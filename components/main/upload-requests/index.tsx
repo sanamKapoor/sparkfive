@@ -2,7 +2,7 @@ import clsx from "clsx";
 import update from "immutability-helper";
 import _ from "lodash";
 import moment from "moment";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 // Components
 import AssetSubheader from "../../common/asset/asset-subheader";
@@ -1261,9 +1261,9 @@ const UploadRequest = () => {
                     <p>
                       <Button
                         type="button"
-                        text={"Upload Requests "}
+                        text={"Upload Requests"}
                         onClick={onCancelView}
-                        className={styles["back-button"]}
+                        className={"back-button"}
                       ></Button>
                       <span>
                         <img
@@ -1288,7 +1288,7 @@ const UploadRequest = () => {
                       <Button
                         type="button"
                         text="Select All"
-                        className="container secondary"
+                        className="container secondary select-all"
                         onClick={selectAllAssets}
                       />
                     )}
@@ -1349,7 +1349,10 @@ const UploadRequest = () => {
                     {mode === "view" && isAdmin() && (
                       <div className={styles["filter-wrapper"]}>
                         <Select
-                          containerClass={styles["filter-input"]}
+
+                          containerClass={`${styles['filter-input']} ${styles['filter-main-box']}`}
+                      
+                          additionalClass={`${styles['filter-by-status']} ${styles['filter-inner-box']}`}
                           isClearable={true}
                           options={filterOptions}
                           onChange={(value) => {
@@ -1376,7 +1379,7 @@ const UploadRequest = () => {
             {mode === "list" && (
               <div className={styles["asset-list"]}>
                 <div className={`${styles["button-wrapper"]} m-b-25`}>
-                  <div className={styles["main-title"]}>
+                <div className={`${styles['main-title']} ${styles['approval-pending-title']}`}>
                     <h2>Upload Requests</h2>
                   </div>
                   <div className={styles["upload-section"]}>
@@ -1450,7 +1453,7 @@ const UploadRequest = () => {
                 >
                   <ul className={"regular-list"}>
                     {approvals.length === 0 && (
-                      <p>There are no upload requests for you to review</p>
+                      <p className={`${styles['upload-approval-desc']}`}>There are no upload requests for you to reviews</p>
                     )}
                     {approvals.map((approval, index) => {
                       return (
@@ -1606,6 +1609,7 @@ const UploadRequest = () => {
                 {(currentViewStatus === 0 || isAdmin()) && (
                   <>
                     <div className={detailPanelStyles["field-wrapper"]}>
+                    <div className={styles['creatable-select-container']}>
                       <CreatableSelect
                         title="Tags"
                         addText="Add Tags"
@@ -1633,11 +1637,14 @@ const UploadRequest = () => {
                         }}
                         dropdownIsActive={activeDropdown === "tags"}
                         ignorePermission={true}
+                       
                       />
+                      </div>
                     </div>
 
                     {isAdmin() && (
                       <div className={detailPanelStyles["field-wrapper"]}>
+                         <div className={styles['creatable-select-container']}>
                         <CreatableSelect
                           title="Collections"
                           addText="Add to Collections"
@@ -1668,11 +1675,13 @@ const UploadRequest = () => {
                           sortDisplayValue={true}
                           ignorePermission={true}
                         />
+                        </div>
                       </div>
                     )}
 
                     {isAdmin() && (
                       <div className={detailPanelStyles["field-wrapper"]}>
+                         <div className={styles['creatable-select-container']}>
                         <CreatableSelect
                           title="Campaigns"
                           addText="Add to Campaign"
@@ -1701,6 +1710,7 @@ const UploadRequest = () => {
                           altColor="yellow"
                           ignorePermission={true}
                         />
+                        </div>
                       </div>
                     )}
 
@@ -1734,6 +1744,7 @@ const UploadRequest = () => {
                               className={detailPanelStyles["field-wrapper"]}
                               key={index}
                             >
+                              <div className={styles['creatable-select-container']}>
                               <CreatableSelect
                                 creatable={false}
                                 title={field.name}
@@ -1767,15 +1778,16 @@ const UploadRequest = () => {
                                 dropdownIsActive={activeCustomField === index}
                                 ignorePermission={true}
                               />
+                              </div>
                             </div>
                           );
                         }
                       })}
 
                     <Button
-                      className={`${styles["add-tag-btn"]} container secondary`}
+                      className={` container bulk-tag`}
                       type="button"
-                      text="Bulk Add Tag"
+                      text="Save changes"
                       onClick={saveBulkTag}
                     />
                   </>
@@ -1840,9 +1852,8 @@ const UploadRequest = () => {
                   name={assets[selectedAsset]?.asset.name}
                   assetImg={assets[selectedAsset]?.thumbailUrl}
                 />
+               
               )}
-            </div>
-
             {assets[selectedAsset]?.asset.type !== "image" &&
               assets[selectedAsset]?.asset.type !== "video" &&
               assets[selectedAsset]?.thumbailUrl &&
@@ -1858,7 +1869,11 @@ const UploadRequest = () => {
             {assets[selectedAsset]?.asset.type !== "image" &&
               assets[selectedAsset]?.asset.type !== "video" &&
               !assets[selectedAsset]?.thumbailUrl && (
-                <AssetIcon extension={assets[selectedAsset]?.asset.extension} />
+                <div className={styles.assetIconContainer}>
+                     <AssetIcon  extension={assets[selectedAsset]?.asset.extension} />
+                </div>
+             
+                
               )}
             {assets[selectedAsset]?.asset.type === "video" && (
               <video controls>
@@ -1876,6 +1891,8 @@ const UploadRequest = () => {
                 Sorry, your browser doesn't support video playback.
               </video>
             )}
+            </div>
+
 
             {(isAdmin() || currentViewStatus !== 0) && (
               <div
@@ -1916,6 +1933,7 @@ const UploadRequest = () => {
               </h2>
 
               <div className={detailPanelStyles["field-wrapper"]}>
+              <div className={styles['creatable-select-container']}>
                 <CreatableSelect
                   title="Tags"
                   addText="Add Tags"
@@ -1968,10 +1986,12 @@ const UploadRequest = () => {
                   dropdownIsActive={activeDropdown === "tags"}
                   ignorePermission={true}
                 />
+                </div>
               </div>
 
               {isAdmin() && (
                 <div className={detailPanelStyles["field-wrapper"]}>
+                   <div className={styles['creatable-select-container']}>
                   <CreatableSelect
                     title="Collections"
                     addText="Add to Collections"
@@ -2023,11 +2043,13 @@ const UploadRequest = () => {
                     sortDisplayValue={true}
                     ignorePermission={true}
                   />
+                  </div>
                 </div>
               )}
 
               {isAdmin() && (
                 <div className={detailPanelStyles["field-wrapper"]}>
+                     <div className={styles['creatable-select-container']}>
                   <CreatableSelect
                     title="Campaigns"
                     addText="Add to Campaign"
@@ -2074,6 +2096,7 @@ const UploadRequest = () => {
                     altColor="yellow"
                     ignorePermission={true}
                   />
+                  </div>
                 </div>
               )}
 
@@ -2107,6 +2130,7 @@ const UploadRequest = () => {
                         className={detailPanelStyles["field-wrapper"]}
                         key={index}
                       >
+                           <div className={styles['creatable-select-container']}>
                         <CreatableSelect
                           creatable={false}
                           title={field.name}
@@ -2177,6 +2201,7 @@ const UploadRequest = () => {
                           dropdownIsActive={activeCustomField === index}
                           ignorePermission={true}
                         />
+                        </div>
                       </div>
                     );
                   }
@@ -2221,7 +2246,7 @@ const UploadRequest = () => {
                 className={`${styles["admin-button-wrapper"]} m-l-20 secondary`}
               >
                 <Button
-                  className={`${styles["add-tag-btn"]} container`}
+                  className={`${styles["add-tag-btn"]} container reject-btn`}
                   type="button"
                   text="Reject"
                   onClick={() => {

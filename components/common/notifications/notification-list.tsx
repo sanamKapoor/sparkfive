@@ -43,10 +43,12 @@ const NotificationList = ({
 
         return (
           <li className={styles.notification} key={notification.notifId}>
+            <div className={styles.notify}>
             <div className={`${styles[notification.status]}`}></div>
             <div className={styles.date}>
               <div>{format(date, "MMM d")}</div>
               <div>{format(date, "p")}</div>
+            </div>
             </div>
             {mode === "page" && (
               <div className={styles.member}>

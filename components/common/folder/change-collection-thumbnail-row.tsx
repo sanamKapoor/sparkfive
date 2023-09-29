@@ -41,7 +41,7 @@ const ChangeCollectionThumbnailRow = ({
       <Button
         type="button"
         onClick={onChangeThisOnly}
-        className={classes["change-this-btn"]}
+        className="change-this-btn"
         text={changeThisImgText}
       />
       <label

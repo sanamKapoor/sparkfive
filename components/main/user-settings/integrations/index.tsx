@@ -6,7 +6,7 @@ import IntegrationsComponent from "../../../common/account/integrations";
 const Integrations: React.FC = () => {
   return (
     <div className={styles.container}>
-      <IntegrationsComponent mode="settings" />
+      <IntegrationsComponent />
     </div>
   );
 };

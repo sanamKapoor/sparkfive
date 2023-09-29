@@ -2,19 +2,6 @@ import { Controller, ErrorMessage } from "react-hook-form";
 
 import styles from "./form-input.module.css";
 
-interface FormInputProps {
-  label?: string;
-  labelClass?: string;
-  labId?: string;
-  name: string;
-  control?: any;
-  rules?: Record<string, unknown>;
-  InputComponent: Element;
-  errors?: unknown;
-  message?: string;
-  defaultValue?: string;
-}
-
 const FormInput = ({
   label = "",
   labelClass = "",

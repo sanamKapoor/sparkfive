@@ -2,51 +2,44 @@ import { useForm } from "react-hook-form";
 import styles from "./contact-form.module.css";
 
 // Components
+import { IGuestUserInfo } from "../../interfaces/guest-upload/guest-upload";
+import Button from "../common/buttons/button";
 import FormInput from "../common/inputs/form-input";
 import Input from "../common/inputs/input";
 import TextArea from "../common/inputs/text-area";
 
 interface ContactFormProps {
-  id: string;
-  onSubmit: (data: any) => void;
-  disabled: boolean;
+  data: IGuestUserInfo;
+  onSubmit: (data: IGuestUserInfo) => void;
   teamName: string;
 }
 
 const ContactForm: React.FC<ContactFormProps> = ({
-  id,
+  data,
   onSubmit,
-  disabled = false,
   teamName = "",
 }) => {
-  const { control, handleSubmit, errors } = useForm();
-
-  const submitForm = (data) => {
-    onSubmit(data);
-  };
+  const { control, handleSubmit, errors } = useForm({
+    defaultValues: data,
+  });
 
   return (
-    <form
-      id={id}
-      onSubmit={handleSubmit(submitForm)}
-      className={styles["form"]}
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className={styles["form"]}>
       <>
         <div className={styles.container}>
-          <div className={styles.row}>
+          <div className={`${styles['row']} ${styles['first-row']}`}>
             <div>
               <FormInput
-                labId="first_name"
+                labId="firstName"
                 label="First Name"
                 InputComponent={
                   <Input
                     type="text"
                     id="first_name"
-                    disabled={disabled}
                     additionalClasses={styles.input}
                   />
                 }
-                name="first_name"
+                name="firstName"
                 defaultValue={""}
                 control={control}
                 rules={{ required: true, minLength: 2, maxLength: 30 }}
@@ -58,17 +51,16 @@ const ContactForm: React.FC<ContactFormProps> = ({
             </div>
             <div>
               <FormInput
-                labId="last_name"
+                labId="lastName"
                 label="Last Name"
                 InputComponent={
                   <Input
                     type="text"
                     id="last_name"
-                    disabled={disabled}
                     additionalClasses={styles.input}
                   />
                 }
-                name="last_name"
+                name="lastName"
                 defaultValue={""}
                 control={control}
                 rules={{ required: true, minLength: 2, maxLength: 30 }}
@@ -88,7 +80,6 @@ const ContactForm: React.FC<ContactFormProps> = ({
                   <Input
                     type="text"
                     id="email"
-                    disabled={disabled}
                     additionalClasses={styles.input}
                   />
                 }
@@ -117,7 +108,6 @@ const ContactForm: React.FC<ContactFormProps> = ({
                   type="text"
                   id="notes"
                   rows={5}
-                  disabled={disabled}
                   additionalClasses={styles.input}
                 />
               }
@@ -131,6 +121,16 @@ const ContactForm: React.FC<ContactFormProps> = ({
           </div>
         </div>
       </>
+      <div className={styles.formBtn}>
+        <Button
+          type="submit"
+          className="container primary guestBtn"
+          text="Save & Continue"
+        />
+      </div>
+      <div className={styles.fileHeading}>
+        <span>Upload Files</span>
+      </div>
     </form>
   );
 };

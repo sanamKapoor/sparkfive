@@ -2,6 +2,9 @@
   color: var(--color-prim-navy);
   font-weight: 400;
 }
+/* .d-flex{
+  display: flex;
+} */
 
 .wrap_text{
   display: -webkit-box;

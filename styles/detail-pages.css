@@ -66,6 +66,7 @@ Container for modifying campaigns
 .item-detail-cont .campaign-select,
 .item-detail-cont .add {
   margin-top: 10px;
+  width: 100%;
 }
 
 .item-detail-cont .add {

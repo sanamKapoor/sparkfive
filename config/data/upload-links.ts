@@ -27,3 +27,10 @@ export const defaultLinks = [
     showPassword: false,
   },
 ];
+
+export const defaultInfo = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  notes: "",
+};

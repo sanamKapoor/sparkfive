@@ -20,6 +20,7 @@ import ShareCollectionModal from "../modals/share-collection-modal";
 import ShareModal from "../modals/share-modal";
 
 // Constants
+import React from "react";
 import { Waypoint } from "react-waypoint";
 import { typeList } from "../../../config/data/shared-links";
 import { colorList, statusList } from "../../../constants/shared-links";
@@ -318,7 +319,7 @@ export default function ShareLinks() {
                 onChange={(value) => {
                   setSharedWith(value);
                 }}
-                placeholder={"Share with"}
+                placeholder={"Shared with"}
                 styleType="regular"
                 value={sharedWith}
                 isMulti={true}
@@ -358,13 +359,15 @@ export default function ShareLinks() {
             >
               <span className={"font-12"}>Date Created</span>
               <img
-                src={Assets.arrowDown}
+                src={Assets.downarrow}
                 className={`
                           ${styles["sort-icon"]} 
-                          ${sortData.sortField === "createdAt"
-                    ? styles["sort-icon-active"]
-                    : ""
-                  } 
+                          ${styles["drop-down-icon"]} 
+                          ${
+                            sortData.sortField === "createdAt"
+                              ? styles["sort-icon-active"]
+                              : ""
+                          } 
                           ${sortData.sortType === "asc" ? "" : styles.desc}
                         `}
               />
@@ -417,7 +420,7 @@ export default function ShareLinks() {
                 sort("sharedCount", getSortType("sharedCount"));
               }}
             >
-              <span className={"font-12"}>Share With</span>
+              <span className={"font-12"}>Shared With</span>
             </div>
             <div
               className={
@@ -429,13 +432,15 @@ export default function ShareLinks() {
             >
               <span className={"font-12"}>Expiration Date</span>
               <img
-                src={Assets.arrowDown}
+                src={Assets.downarrow}
                 className={`
                           ${styles["sort-icon"]} 
-                          ${sortData.sortField === "expiredAt"
-                    ? styles["sort-icon-active"]
-                    : ""
-                  } 
+                          ${styles["drop-down-icon"]} 
+                          ${
+                            sortData.sortField === "expiredAt"
+                              ? styles["sort-icon-active"]
+                              : ""
+                          } 
                           ${sortData.sortType === "asc" ? "" : styles.desc}
                         `}
               />
@@ -498,29 +503,31 @@ export default function ShareLinks() {
                     "col-25 d-flex justify-content-center align-items-center word-break-text col-sm-100"
                   }
                 >
-                  <span className={"font-12"}>
-                    {link.type === "folder"
-                      ? !link.team.advancedCollectionShareLink
-                        ? `${process.env.CLIENT_BASE_URL}/collections/${link.collectionLink}`
-                        : link.sharedLink
-                      : link.sharedLink}
-                  </span>
-                  <IconClickable
-                    additionalClass={`${styles["action-button"]} m-l-15 cursor-pointer`}
-                    src={AssetOps[`copy${""}`]}
-                    tooltipText={"Copy"}
-                    tooltipId={"Copy"}
-                    onClick={() => {
-                      copy(
-                        link.type === "folder"
-                          ? !link.team.advancedCollectionShareLink
-                            ? `${process.env.CLIENT_BASE_URL}/collections/${link.collectionLink}`
-                            : link.sharedLink
+                  <div className={styles.linkWrapper}>
+                    <span className={"font-12"}>
+                      {link.type === "folder"
+                        ? !link.team.advancedCollectionShareLink
+                          ? `${process.env.CLIENT_BASE_URL}/collections/${link.collectionLink}`
                           : link.sharedLink
-                      );
-                      toastUtils.bottomSuccess("Link copied");
-                    }}
-                  />
+                        : link.sharedLink}
+                    </span>
+                    <IconClickable
+                      additionalClass={`${styles["action-button"]} ${styles["copy-icon"]}  m-l-15 cursor-pointer`}
+                      src={AssetOps[`copy${""}`]}
+                      tooltipText={"Copy"}
+                      tooltipId={"Copy"}
+                      onClick={() => {
+                        copy(
+                          link.type === "folder"
+                            ? !link.team.advancedCollectionShareLink
+                              ? `${process.env.CLIENT_BASE_URL}/collections/${link.collectionLink}`
+                              : link.sharedLink
+                            : link.sharedLink
+                        );
+                        toastUtils.bottomSuccess("Link copied");
+                      }}
+                    />
+                  </div>
                 </div>
                 <div
                   className={
@@ -530,7 +537,7 @@ export default function ShareLinks() {
                   <img
                     src={ItemFields.member}
                     alt="member icon"
-                    width={`10px`}
+                    className={styles.sharedIconimg}
                   />
                   <span className={"m-l-15 font-weight-400 font-14"}>
                     {link.sharedCount}
@@ -553,7 +560,7 @@ export default function ShareLinks() {
                   }
                 >
                   <IconClickable
-                    additionalClass={styles["action-button"]}
+                    additionalClass={`${styles["action-button"]} ${styles["edit-btn"]}`}
                     src={AssetOps[`edit`]}
                     tooltipText={"Edit"}
                     tooltipId={"Edit"}
@@ -564,7 +571,7 @@ export default function ShareLinks() {
                     }}
                   />
                   <IconClickable
-                    additionalClass={`${styles["action-button"]} m-l-10`}
+                    additionalClass={`${styles["action-button"]} ${styles["delete-btn"]} m-l-10`}
                     src={AssetOps[`delete`]}
                     tooltipText={"Delete"}
                     tooltipId={"Delete"}
@@ -616,7 +623,7 @@ export default function ShareLinks() {
                     />
                   </div>
                 </div>
-                <div className={"row align-items-center gap-20"}>
+                <div className={"row align-items-center gap-10"}>
                   <div className="d-flex align-items-center">
                     <UserPhoto
                       photoUrl={link.user.profilePhoto || ""}
@@ -658,6 +665,7 @@ export default function ShareLinks() {
                       : "None"}
                   </span>
                   <div className={"d-flex align-items-center"}>
+                    <span className={"font-12"}>shared with:</span>
                     <img
                       src={ItemFields.member}
                       alt="member icon"
@@ -694,7 +702,7 @@ export default function ShareLinks() {
               setShowEditModal(false);
             }}
             shareAssets={updateLink}
-            getShareLink={() => { }}
+            getShareLink={() => {}}
             currentShareLink={currentLink}
             title={"Update shared link"}
           />
@@ -706,7 +714,7 @@ export default function ShareLinks() {
               setShowEditModal(false);
             }}
             shareAssets={updateLink}
-            getShareLink={() => { }}
+            getShareLink={() => {}}
             currentShareLink={currentLink}
             title={"Update shared link"}
           />

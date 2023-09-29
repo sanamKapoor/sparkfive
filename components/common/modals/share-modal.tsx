@@ -59,12 +59,27 @@ const ShareModal = ({
   const [shareJWT, setShareJWT] = useState("");
   const [hash, setHash] = useState("");
   const [sharable, setSharable] = useState(false);
+  const [displayAttributes, setDisplayAttributes] = useState(false);
   const [shareId, setShareId] = useState("");
   const [currentName, setCurrentName] = useState(""); // To decide user can copy link or not
   const [basic, setBasic] = useState(true);
   const [collectionLink, setCollectionLink] = useState("");
 
   const [firstInit, setFirstInit] = useState(false);
+  // const [name, setName]
+  //
+  // recipients,
+  // 	shareJWT,
+  // 	message,
+  // 	name,
+  // 	sharedLink,
+  // 	isPublic,
+  // 	expired,
+  // 	expiredPeriod,
+  // 	expiredAt,
+  // 	sharable,
+  // 	status,
+  // 	shareId
 
   const closemoveModal = () => {
     setRecipients("");
@@ -79,6 +94,7 @@ const ShareModal = ({
     setShareJWT("");
     setHash("");
     setSharable(false);
+    setDisplayAttributes(false);
     setShareId("");
     setCurrentName("");
     setCollectionLink("");
@@ -141,6 +157,12 @@ const ShareModal = ({
             : false
         ); // default is false
 
+        setDisplayAttributes(
+          data.currentSharedLinks.displayAttributes !== undefined
+            ? data.currentSharedLinks.displayAttributes
+            : false
+        ); // default is false
+
         if (showInternalLoading) {
           setLoading(false);
         }
@@ -187,6 +209,7 @@ const ShareModal = ({
       setExpiredAt(null);
     }
 
+    // setExpiredAt(new Date(data.expiredAt))
     setExpired(data.expired);
     setName(data.name);
     if (data.name) {
@@ -201,6 +224,7 @@ const ShareModal = ({
 
     setMessage(data.message);
     setSharable(data.sharable);
+    setDisplayAttributes(data.displayAttributes);
 
     setFirstInit(true);
 
@@ -226,7 +250,8 @@ const ShareModal = ({
     expiredValue = undefined,
     expiredPeriodValue = undefined,
     expiredAtValue = undefined,
-    sharableValue = undefined
+    sharableValue = undefined,
+    displayAttributes = undefined
   ) => {
     setIsLoading(true);
 
@@ -250,6 +275,10 @@ const ShareModal = ({
               : expiredPeriodValue,
           expiredAt: expiredAtValue === undefined ? expiredAt : expiredAtValue,
           sharable: sharableValue === undefined ? sharable : sharableValue,
+          displayAttributes:
+            displayAttributes === undefined
+              ? displayAttributes
+              : displayAttributes,
           shareId,
         },
         false,
@@ -300,6 +329,20 @@ const ShareModal = ({
     saveChanges("", undefined, undefined, undefined, undefined, value);
   };
 
+  const changeDisplayAttributes = (value) => {
+    setDisplayAttributes(value);
+
+    saveChanges(
+      "",
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      value
+    );
+  };
+
   const changeExpiredAt = (value) => {
     setExpiredAt(value);
     saveChanges("", undefined, undefined, undefined, value);
@@ -318,6 +361,14 @@ const ShareModal = ({
       setLoading(false);
     }
   }, [modalIsOpen]);
+  // Listen radio button change to call api saving automatically
+  // useEffect(()=>{
+  // 	if(url && firstInit && !loading){
+  // 		saveChanges();
+  // 	}
+  //
+  // },[ expiredPeriod, expiredAt, sharable])
+
   return (
     <Base
       modalIsOpen={modalIsOpen}
@@ -348,7 +399,7 @@ const ShareModal = ({
     >
       {loading && <Spinner className={styles["spinner"]} />}
       {!loading && (
-        <>
+        <div className={styles["wrapper"]}>
           <div
             className={`${styles["input-wrapper"]} d-flex align-items-center`}
           >
@@ -362,7 +413,7 @@ const ShareModal = ({
               styleType={"regular-short"}
             />
             <Button
-              className="container m-r-15 primary"
+              className="container primary m-r-15 thumbnail-btn"
               text={"Save"}
               onClick={() => {
                 saveChanges("name");
@@ -507,6 +558,12 @@ const ShareModal = ({
                 styleType={"regular-short"}
                 noResize={true}
               />
+              {/*<Input*/}
+              {/*	value={recipients}*/}
+              {/*	placeholder={'Emails separated with comma'}*/}
+              {/*	onChange={e => setRecipients(e.target.value)}*/}
+              {/*	additionalClasses={"m-r-15 m-l-30"}*/}
+              {/*	styleType={'regular-short'} />*/}
 
               <Button
                 text={"Save"}
@@ -580,7 +637,7 @@ const ShareModal = ({
                   }`}
                 >
                   {expiredPeriod?.value === 0 && (
-                    <div className={"row w-100 m-b-5"}>
+                    <div className={"row w-100 m-b-5 m-l-10"}>
                       <DayPickerInput
                         value={expiredAt}
                         formatDate={formatDate}
@@ -600,7 +657,8 @@ const ShareModal = ({
                     </div>
                   )}
 
-                  <span className={"font-12 m-l-15 w-100"}>
+                  {/*<Input additionalClasses={"w-50 m-r-15"} disabled={!url} placeholder={'Loading share link...'} value={url} styleType={'regular-short'} />*/}
+                  <span className={"font-12 m-l-20 w-100"}>
                     {expiredAt ? expiredAt.toDateString() : ""}
                   </span>
                 </div>
@@ -659,10 +717,59 @@ const ShareModal = ({
               </div>
             </div>
           )}
-        </>
+
+          <div
+            className={`${styles["input-wrapper"]} ${
+              displayAttributes ? "" : ""
+            }`}
+          >
+            <div className={`${styles.title}`}>Display attributes</div>
+            <div className={styles["field-content"]}>
+              <div className={styles["field-radio-wrapper"]}>
+                <div className={`${styles["radio-button-wrapper"]} m-r-25`}>
+                  <IconClickable
+                    src={
+                      displayAttributes
+                        ? Utilities.radioButtonEnabled
+                        : Utilities.radioButtonNormal
+                    }
+                    additionalClass={styles["select-icon"]}
+                    onClick={() => {
+                      changeDisplayAttributes(true);
+                    }}
+                  />
+                  <div className={"font-12 m-l-10"}>On</div>
+                </div>
+
+                <div className={`${styles["radio-button-wrapper"]} m-r-25`}>
+                  <IconClickable
+                    src={
+                      !displayAttributes
+                        ? Utilities.radioButtonEnabled
+                        : Utilities.radioButtonNormal
+                    }
+                    additionalClass={styles["select-icon"]}
+                    onClick={() => {
+                      changeDisplayAttributes(false);
+                    }}
+                  />
+                  <div className={"font-12 m-l-10"}>Off</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </Base>
   );
 };
+
+interface Props {
+  modalIsOpen: boolean;
+  closeModal: () => void;
+  itemsAmount: number;
+  shareAssets: (recipients: string, message: string) => void;
+  title?: string;
+}
 
 export default ShareModal;

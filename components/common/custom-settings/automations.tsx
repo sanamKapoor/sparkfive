@@ -8,28 +8,26 @@ import styles from "./main.module.css";
 const Automations = () => {
   const [loading, setLoading] = useState(false);
   const { advancedConfig, setAdvancedConfig } = useContext(UserContext);
-  const [aiTagging, setaiTagging] = useState(false);
 
   const saveAdvanceConfig = async (config) => {
+    try{
     setLoading(true);
     await teamAPI.saveAdvanceConfigurations({ config });
 
     const updatedConfig = { ...advancedConfig, ...config };
     setAdvancedConfig(updatedConfig);
-
-    getAdvanceConfigurations(updatedConfig);
-  };
-
-  const getAdvanceConfigurations = (conf = advancedConfig) => {
-    setaiTagging(conf.aiTagging);
-    setLoading(false);
-    return true;
+    }catch(err){
+     console.log('err in saving advanced config: ', err)
+    }finally{
+      setLoading(false)
+    }
   };
 
   return (
     <div className={styles.container}>
+      <div className={`${styles['custom-view-wrapper']}`}>
       <h3>Automations</h3>
-      <div>
+      
         <div className={styles.row}>
           <span className={styles.label}>AI Tagging</span>
           <div className={styles["field-radio-wrapper"]}>
@@ -37,7 +35,7 @@ const Automations = () => {
               <div>On</div>
               <IconClickable
                 src={
-                  aiTagging
+                  advancedConfig.aiTagging
                     ? Utilities.radioButtonEnabled
                     : Utilities.radioButtonNormal
                 }
@@ -45,11 +43,11 @@ const Automations = () => {
                 onClick={() => saveAdvanceConfig({ aiTagging: true })}
               />
             </div>
-            <div className={styles.radio}>
+            <div className={`${styles.radio} ${styles.automation}`}>
               <div>Off</div>
               <IconClickable
                 src={
-                  !aiTagging
+                  !advancedConfig.aiTagging
                     ? Utilities.radioButtonEnabled
                     : Utilities.radioButtonNormal
                 }
@@ -59,6 +57,7 @@ const Automations = () => {
             </div>
           </div>
         </div>
+    
       </div>
     </div>
   );

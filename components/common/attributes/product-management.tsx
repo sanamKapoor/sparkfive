@@ -115,7 +115,7 @@ const ProductManagement = () => {
   }, [sort, searchKey]);
 
   return (
-    <div className={styles["main-wrapper"]}>
+    <div className={`${styles['main-wrapper']} ${styles['collection-management-wrapper']}`}>
       <h3>Products</h3>
       <div className={styles["search-row"]}>
         <div className={styles["search-column-1"]}>

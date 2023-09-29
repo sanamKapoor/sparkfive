@@ -26,14 +26,14 @@ import { getFolderKeyAndNewNameByFileName } from "../../../utils/upload";
 // Context
 import AssetDuplicateModal from "./asset-duplicate-modal";
 
+import React from "react";
 import { ASSET_UPLOAD_APPROVAL } from "../../../constants/permissions";
-import Button from "../buttons/button";
 
 const AssetAddition = ({
   activeFolder = "",
-  getFolders = () => { },
+  getFolders = () => {},
   activeSearchOverlay = false,
-  setActiveSearchOverlay = (active) => { },
+  setActiveSearchOverlay = (active) => {},
   folderAdd = true,
   type = "",
   itemId = "",
@@ -44,13 +44,13 @@ const AssetAddition = ({
   const fileBrowserRef = useRef(undefined);
   const folderBrowserRef = useRef(undefined);
   const [activeModal, setActiveModal] = useState("");
-  const [addSubCollection, setAddSubCollection] = useState(false)
+  const [addSubCollection, setAddSubCollection] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [duplicateModalOpen, setDuplicateModalOpen] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [duplicateAssets, setDuplicateAssets] = useState([]);
   const [uploadFrom, setUploadFrom] = useState("");
-  const [disableButtons, setDisableButtons] = useState(false)
+  const [disableButtons, setDisableButtons] = useState(false);
   const { activeSortFilter } = useContext(FilterContext);
   const { advancedConfig, hasPermission } = useContext(UserContext);
 
@@ -106,11 +106,11 @@ const AssetAddition = ({
         const updatedAssets = assets.map((asset, index) =>
           index === i
             ? {
-              ...asset,
-              status: "fail",
-              index,
-              error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
-            }
+                ...asset,
+                status: "fail",
+                index,
+                error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
+              }
             : asset
         );
 
@@ -565,22 +565,22 @@ const AssetAddition = ({
     }
   };
 
-  const onSubmit = async (folderData: { name: string, parent_id?: string }) => {
-    setDisableButtons(true)
+  const onSubmit = async (folderData: { name: string; parent_id?: string }) => {
+    setDisableButtons(true);
     try {
       if (addSubCollection) {
-        folderData.parent_id = activeFolder
+        folderData.parent_id = activeFolder;
       }
       const currentDataClone = [...folders];
       const { data } = await folderApi.createFolder(folderData);
       setActiveModal("");
-      setAddSubCollection(false)
+      setAddSubCollection(false);
       setFolders([data, ...currentDataClone]);
-      setSidenavFolderList({ results: [data, ...sidenavFolderList] })
-      setDisableButtons(false)
+      setSidenavFolderList({ results: [data, ...sidenavFolderList] });
+      setDisableButtons(false);
       toastUtils.success("Collection created successfully");
     } catch (err) {
-      setDisableButtons(false)
+      setDisableButtons(false);
       // TODO: Show error message
       if (err.response?.data?.message) {
         setSubmitError(err.response.data.message);
@@ -766,7 +766,9 @@ const AssetAddition = ({
       id: "subCollection",
       label: "Add Sub Collection",
       text: "Add Sub Collection",
-      onClick: () => { setAddSubCollection(true), setActiveModal("folder") },
+      onClick: () => {
+        setAddSubCollection(true), setActiveModal("folder");
+      },
       icon: AssetOps.newCollection,
     },
     {
@@ -794,7 +796,7 @@ const AssetAddition = ({
       id: "gdrive",
       label: "Upload from Drive",
       text: "Import files",
-      onClick: () => { },
+      onClick: () => {},
       icon: Assets.gdrive,
       CustomContent: ({ children }) => {
         return (
@@ -927,11 +929,15 @@ const AssetAddition = ({
 
   const SimpleButtonWrapper = ({ children }) => (
     <div
-      className={`${styles["button-wrapper"]} ${!folderAdd && styles["button-wrapper-displaced"]
-        } asset-addition`}
+      className={`${styles["button-wrapper"]} ${
+        !folderAdd && styles["button-wrapper-displaced"]
+      } asset-addition`}
     >
       {!hasPermission([ASSET_UPLOAD_APPROVAL]) && (
-        <Button text="+" className="container add" />
+        // <Button text="+" className="container add"/>
+        <button className={styles.addButton}>
+          <span>+</span>
+        </button>
       )}
       {children}
     </div>
@@ -994,7 +1000,10 @@ const AssetAddition = ({
       )}
       <FolderModal
         modalIsOpen={activeModal === "folder"}
-        closeModal={() => { setActiveModal(""); setAddSubCollection(false) }}
+        closeModal={() => {
+          setActiveModal("");
+          setAddSubCollection(false);
+        }}
         disableButtons={disableButtons}
         onSubmit={onSubmit}
         addSubCollection={addSubCollection}

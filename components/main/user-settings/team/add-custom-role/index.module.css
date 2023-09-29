@@ -97,7 +97,21 @@
   .select {
     width: 188px;
   }
+  .RoleInputField{
+    max-width: 365px;
+    width: 100%;
+    height: 45px;
+  }
+  .roleInput{
+    max-width: 365px;
+    width: 100%;
 
+  }
+  .role-save-btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
 @media screen and (max-width: 900px)  {
     .content {
@@ -117,4 +131,12 @@
       .nav-button {
         font-size: 12px;
       }
+  }
+  @media screen and (max-width: 470px) {
+    .form{
+      flex-wrap: wrap;
+    }
+   .roleInput{
+    width: 100%;
+   }
   }

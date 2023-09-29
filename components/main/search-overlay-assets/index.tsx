@@ -1,13 +1,13 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from "react";
 
-import { Utilities } from '../../../assets';
-import { AssetContext, FilterContext } from '../../../context';
-import assetApi from '../../../server-api/asset';
-import folderApi from '../../../server-api/folder';
-import shareCollectionApi from '../../../server-api/share-collection';
-import Button from '../../common/buttons/button';
-import Search from '../../common/inputs/search';
-import styles from './index.module.css';
+import { Utilities } from "../../../assets";
+import { AssetContext, FilterContext } from "../../../context";
+import assetApi from "../../../server-api/asset";
+import folderApi from "../../../server-api/folder";
+import shareCollectionApi from "../../../server-api/share-collection";
+import Button from "../../common/buttons/button";
+import Search from "../../common/inputs/search";
+import styles from "./index.module.css";
 
 // Components
 const SearchOverlayAssets = ({
@@ -89,11 +89,12 @@ const SearchOverlayAssets = ({
 
   const selectedAssets = assets.filter((asset) => asset.isSelected);
 
+  let totalSelectAssets = selectedAssets.length;
   // Hidden pagination assets are selected
   if (selectedAllAssets) {
     // Get assets is not selected on screen
     const currentUnSelectedAssets = assets.filter((asset) => !asset.isSelected);
-  //  let totalSelectAssets = totalAssets - currentUnSelectedAssets.length;
+    //  let totalSelectAssets = totalAssets - currentUnSelectedAssets.length;
   }
 
   // Close search modal

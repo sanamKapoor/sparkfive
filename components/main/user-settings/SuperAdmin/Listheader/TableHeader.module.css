@@ -1,0 +1,44 @@
+.tableheader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+}
+.heading {
+  font-family: "Noto Sans", sans-serif;
+  font-weight: 600;
+  font-size: 22px;
+  color: #08135e;
+  flex: 1;
+}
+.buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mobile{
+  display: none;
+}
+.userWrap{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+  
+  @media (max-width: 475px) {
+    .desktop{
+      display: none;
+    }
+    .mobile{
+      display: block;
+    }
+
+    .searchorder {
+      margin-top: 16px; 
+    }
+
+ 
+  }
+  

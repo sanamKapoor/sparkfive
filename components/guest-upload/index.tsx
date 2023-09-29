@@ -1,412 +1,112 @@
-// External imports
 import { useRouter } from "next/router";
-import { useContext, useEffect, useRef, useState } from "react";
-import styles from "./index.module.css";
-
-// Contexts
-import { GuestUploadContext, SocketContext } from "../../context";
-
-// Components
-import { Assets } from "../../assets";
-import SpinnerOverlay from "../common/spinners/spinner-overlay";
-import PasswordOverlay from "../share-folder/password-overlay";
-
-// Utils
-import { validation } from "../../constants/file-validation";
-import requestUtils from "../../utils/requests";
-import toastUtils from "../../utils/toast";
-import {
-  convertTimeFromSeconds,
-  getFolderKeyAndNewNameByFileName,
-} from "../../utils/upload";
-
-// Apis
+import { useContext, useEffect, useState } from "react";
 import uploadLinkApi from "../../server-api/guest-upload";
-import shareUploadLinkApi from "../../server-api/share-upload-link";
-import { UploadingStatus } from "../../types/common/upload";
+import toastUtils from "../../utils/toast";
+import SpinnerOverlay from "../common/spinners/spinner-overlay";
+import PasswordOverlay from "../share-collections/password-overlay";
+
+import { SocketContext } from "../../context";
+import requestUtils from "../../utils/requests";
+
+import { defaultInfo } from "../../config/data/upload-links";
+import {
+  IGuestUploadItem,
+  IGuestUserInfo,
+} from "../../interfaces/guest-upload/guest-upload";
+import {
+  getFolderKeyAndNewNameByFileName,
+  getTotalSize,
+  isFilesInputValid,
+} from "../../utils/upload";
+import ContactForm from "./contact-form";
 import GuestDetails from "./guest-details";
-import GuestInfoForm from "./guest-info-form";
-import GuestUploadSection from "./guest-upload-section";
+import styles from "./index.module.css";
+import UploadList from "./upload/upload-list";
+import UploadOptions from "./upload/upload-options";
 
-const GuestUpload: React.FC = () => {
-  const { socket, connected, connectSocket } = useContext(SocketContext);
-  const { updateLogo, logo } = useContext(GuestUploadContext);
+import shareUploadLinkApi from "../../server-api/share-upload-link";
+import Button from "../common/buttons/button";
 
+import BaseModal from "../common/modals/base";
+
+interface GuestUploadMainProps {
+  logo: string;
+  setLogo: (val: string) => void;
+  banner: string;
+  setBanner: (val: string) => void;
+}
+
+const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
+  logo,
+  setLogo,
+  banner,
+  setBanner,
+}) => {
   const { query } = useRouter();
 
+  const { socket, connected, connectSocket } = useContext(SocketContext);
+
+  const [guestInfo, setGuestInfo] = useState<IGuestUserInfo>(defaultInfo);
   const [loading, setLoading] = useState<boolean>(false);
-  const fileBrowserRef = useRef(undefined);
-  const folderBrowserRef = useRef(undefined);
-  const [uploadEnabled, setUploadEnabled] = useState<boolean>(false);
-  const [edit, setEdit] = useState<boolean>(false);
-
-  const [uploading, setUploading] = useState<boolean>(false);
   const [activePasswordOverlay, setActivePasswordOverlay] =
-    useState<boolean>(true);
-
-  const [teamName, setTeamName] = useState<string>("");
-  const [files, setFiles] = useState<Array<Record<string, unknown>>>([]);
-  const [totalSize, setTotalSize] = useState(0);
-
-  // For processing uploading
-  // Upload process
-  const [uploadingAssets, setUploadingAssets] = useState<
-    Array<Record<string, unknown>>
-  >([]);
-  const [uploadingStatus, setUploadingStatus] =
-    useState<UploadingStatus>("none");
-  const [uploadingPercent, setUploadingPercent] = useState<number>(0); // Percent of uploading process: 0 - 100
-  const [uploadingFile, setUploadingFile] = useState<number>(); // Current uploading file index
-  const [uploadingFileName, setUploadingFileName] = useState<string>(); // Current uploading file name, import feature need this
-  const [uploadRemainingTime, setUploadRemainingTime] = useState<string>("");
-  const [uploadDetailOverlay, setUploadDetailOverlay] =
     useState<boolean>(false);
-  const [folderGroups, setFolderGroups] = useState<Record<string, unknown>>({}); // This groups contain all folder key which is need to identity which folder file need to be saved to
-  const [retryListCount, setRetryListCount] = useState<number>(0);
+  const [teamName, setTeamName] = useState<string>("");
+  const [showPreview, setShowPreview] = useState<boolean>(false);
+  const [showUploadSection, setShowUploadSection] = useState<boolean>(false);
 
-  const dropdownOptions = [
-    {
-      label: "Upload",
-      text: "Files",
-      onClick: () => fileBrowserRef.current.click(),
-      icon: Assets.upload,
-      CustomContent: null,
-    },
-    {
-      label: "Upload",
-      text: "Folder",
-      onClick: () => folderBrowserRef.current.click(),
-      icon: Assets.folder,
-      CustomContent: null,
-    },
-  ];
+  const [showUploadError, setShowUploadError] = useState<boolean>(false);
+  const [uploadingFiles, setUploadingFiles] = useState<IGuestUploadItem[]>([]);
+  const [uploading, setUploading] = useState<boolean>(false);
 
-  const getCreationParameters = (attachQuery?: any) => {
-    let queryData: any = {};
-    // Attach extra query
-    if (attachQuery) {
-      queryData = { ...queryData, ...attachQuery };
+  const [uploadingPercent, setUploadingPercent] = useState<number>(0);
+
+  const [activeRequestId, setActiveRequestId] = useState<string>();
+
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  const [disabled, setDisabled] = useState<boolean>(false);
+
+  const [uploadingIndex, setUploadingIndex] = useState(0);
+
+  const [uploadSuccess, setUploadSuccess] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (query?.code) {
+      getLinkInfo();
     }
-    return queryData;
-  };
+  }, [query]);
 
-  // Show upload process toast
-  const showUploadProcess = (value: UploadingStatus, fileIndex?: number) => {
-    // Set uploading file index
-    if (fileIndex !== undefined) {
-      setUploadingFile(fileIndex);
-    }
-
-    // Update uploading status
-    setUploadingStatus(value);
-
-    // Reset all value
-    if (fileIndex === 0) {
-      setUploadingPercent(0);
-    }
-  };
-
-  // Upload asset
-  const uploadAsset = async (
-    i: number,
-    assets: any,
-    currentDataClone: any,
-    totalSize: number,
-    folderId,
-    folderGroup = {},
-    attachedData,
-    requestId
-  ) => {
+  const getLinkInfo = async () => {
     try {
-      const formData = new FormData();
-      let file = assets[i].file.originalFile;
-      let currentUploadingFolderId = null;
-      let newAssets = 0;
-
-      // Get file group info, this returns folderKey and newName of file
-      let fileGroupInfo = getFolderKeyAndNewNameByFileName(
-        file.webkitRelativePath
-      );
-
-      // Do validation
-      if (assets[i].asset.size > validation.UPLOAD.MAX_SIZE.VALUE) {
-        // Violate validation, mark failure
-        const updatedAssets = assets.map((asset, index) =>
-          index === i
-            ? {
-              ...asset,
-              status: "fail",
-              index,
-              error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
-            }
-            : asset
-        );
-
-        // Update uploading assets
-        setUploadingAssets(updatedAssets);
-        setFiles(updatedAssets);
-        // The final one
-        if (i === assets.length - 1) {
-          return { folderGroup, updatedAssets };
-        } else {
-          // Keep going
-          return await uploadAsset(
-            i + 1,
-            updatedAssets,
-            currentDataClone,
-            totalSize,
-            folderId,
-            folderGroup,
-            attachedData,
-            requestId
-          );
-        }
-      } else {
-        // Show uploading toast
-        showUploadProcess("uploading", i);
-
-        // Set current upload file name
-        setUploadingFileName(assets[i].asset.name);
-
-        // If user is uploading files in folder which is not saved from server yet
-        if (fileGroupInfo.folderKey && !folderId) {
-          // Current folder Group have the key
-          if (folderGroup[fileGroupInfo.folderKey]) {
-            currentUploadingFolderId = folderGroup[fileGroupInfo.folderKey];
-            // Assign new file name without splash
-            file = new File(
-              [file.slice(0, file.size, file.type)],
-              fileGroupInfo.newName,
-              {
-                type: file.type,
-                lastModified:
-                  file.lastModifiedDate || new Date(file.lastModified),
-              }
-            );
-          }
-        }
-
-        // Append file to form data
-        formData.append("asset", file);
-        formData.append(
-          "fileModifiedAt",
-          new Date(
-            (file.lastModifiedDate || new Date(file.lastModified)).toUTCString()
-          ).toISOString()
-        );
-
-        let size = totalSize;
-        // Calculate the rest of size
-        assets.map((asset) => {
-          // Exclude done or fail assets
-          if (asset.status === "done" || asset.status === "fail") {
-            size -= asset.asset.size;
-            newAssets += 1;
-          }
-        });
-
-        let attachedQuery = {
-          estimateTime: 1,
-          size,
-          totalSize,
-          url: query.code,
-          ...attachedData,
-        };
-
-        // Uploading inside specific folders
-        if (folderId) {
-          attachedQuery["folderId"] = folderId;
-        }
-
-        // Uploading the new folder
-        if (currentUploadingFolderId) {
-          attachedQuery["folderId"] = currentUploadingFolderId;
-        }
-
-        if (requestId) {
-          attachedQuery["requestId"] = requestId;
-        }
-
-        // Alert to admin user, if this is the final one of current request
-        if (i === assets.length - 1) {
-          attachedQuery["alertAdmin"] = true;
-        }
-
-        // Call API to upload
-        let { data } = await shareUploadLinkApi.uploadAssets(
-          formData,
-          getCreationParameters(attachedQuery)
-        );
-
-        // If user is uploading files in folder which is not saved from server yet
-        if (fileGroupInfo.folderKey && !folderId) {
-          /// If user is uploading new folder and this one still does not have folder Id, add it to folder group
-          if (!folderGroup[fileGroupInfo.folderKey]) {
-            folderGroup[fileGroupInfo.folderKey] = data[0].asset.folders[0];
-          }
-        }
-
-        data = data.map((item) => {
-          item.isSelected = true;
-          return item;
-        });
-
-        assets[i] = data[0];
-
-        // If request id is not updated yet
-        if (!requestId) {
-          requestId = assets[i].requestId;
-        }
-
-        // Mark this asset as done
-        const updatedAssets = assets.map((asset, index) =>
-          index === i ? { ...asset, status: "done" } : asset
-        );
-
-        setUploadingAssets(updatedAssets);
-        setFiles(updatedAssets);
-
-        // The final one
-        if (i === assets.length - 1) {
-          return { folderGroup, updatedAssets };
-        } else {
-          // Keep going
-          return await uploadAsset(
-            i + 1,
-            updatedAssets,
-            currentDataClone,
-            totalSize,
-            folderId,
-            folderGroup,
-            attachedData,
-            requestId
-          );
-        }
-      }
-    } catch (e) {
-      // Violate validation, mark failure
-      const updatedAssets = assets.map((asset, index) =>
-        index === i
-          ? { ...asset, index, status: "fail", error: "Processing file error" }
-          : asset
-      );
-
-      // Update uploading assets
-      setUploadingAssets(updatedAssets);
-
-      // The final one
-      if (i === assets.length - 1) {
-        return { folderGroup, updatedAssets };
-      } else {
-        // Keep going
-        return await uploadAsset(
-          i + 1,
-          updatedAssets,
-          currentDataClone,
-          totalSize,
-          folderId,
-          folderGroup,
-          attachedData,
-          requestId
-        );
-      }
-    }
-  };
-
-  const onFilesDataGet = async (files) => {
-    let totalSize = 0;
-    const fileArr = [];
-
-    files.forEach((file) => {
-      totalSize += file.originalFile.size;
-      fileArr.push({
-        asset: {
-          name: file.originalFile.name,
-          createdAt: new Date(),
-          size: file.originalFile.size,
-          stage: "draft",
-          type: "image",
-          mimeType: file.originalFile.type,
-          fileModifiedAt:
-            file.originalFile.lastModifiedDate ||
-            new Date(file.originalFile.lastModified),
-        },
-        file,
-        status: "queued",
-        isUploading: false,
+      setLoading(true);
+      const { data } = await shareUploadLinkApi.getLinkDetail({
+        url: query.code,
       });
-    });
 
-    setTotalSize(totalSize);
-    setFiles(fileArr);
-  };
+      if (data) {
+        // update info
+        setTeamName(data.team);
 
-  const submitUpload = async (data, files) => {
-    let { folderGroup, updatedAssets } = await uploadAsset(
-      0,
-      files,
-      [...files],
-      totalSize,
-      null,
-      {},
-      data,
-      null
-    );
-
-    // Save this for retry failure files later
-    setFolderGroups(folderGroups);
-
-    // Finish uploading process
-    showUploadProcess("done");
-
-    const failAssets = updatedAssets.filter(
-      (updatedAsset) => updatedAsset.status === "fail"
-    );
-
-    // If there is any fail asset, keep at current screen
-    if (failAssets.length > 0) {
-      setRetryListCount(failAssets.length);
-    } else {
-      // Else, Show done screen
-      setRetryListCount(0);
-      setUploading(false);
+        if (data.bannerSrc) {
+          setBanner(data.bannerSrc);
+        }
+        setLogo(data.logo);
+        setActivePasswordOverlay(false);
+      }
+    } catch (err) {
+      if (err?.response?.status === 400) {
+        setLogo(err?.response?.data?.teamIcon);
+      } else {
+        toastUtils.error("Something went wrong");
+      }
+      setActivePasswordOverlay(true);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const saveChanges = async (data) => {
-    // Scroll to top
-    document.body.scrollTop = 0; // For Safari
-    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-
-    // Retry upload
-    if (retryListCount > 0) {
-      const failAssets = files.filter(
-        (updatedAsset) => updatedAsset.status === "fail"
-      );
-
-      setUploadingAssets(failAssets);
-      submitUpload(data, failAssets);
-    } else {
-      setUploadingAssets(files);
-      submitUpload(data, files);
-    }
-  };
-
-  const onFileChange = (e) => {
-    // Only allow to upload max 200 files
-    if (
-      e.target.files.length <= validation.UPLOAD.MAX_GUEST_UPLOAD_FILES.VALUE
-    ) {
-      setUploading(true);
-      onFilesDataGet(
-        Array.from(e.target.files).map((originalFile) => ({ originalFile }))
-      );
-    }
-  };
-
-  const submitPassword = async (password) => {
+  const submitPassword = async (password: string) => {
     try {
-      // Show loading
       setLoading(true);
 
       const { data } = await uploadLinkApi.authenticateLink({
@@ -419,52 +119,180 @@ const GuestUpload: React.FC = () => {
 
       connectSocket(data.token);
 
-      getLinkInfo(true);
-    } catch (err) {
-      console.log(err);
-      // Show loading
-      setLoading(false);
-      toastUtils.error("Wrong password or invalid link, please try again");
-    }
-  };
-
-  const getLinkInfo = async (displayError = false) => {
-    try {
-      const { data } = await shareUploadLinkApi.getLinkDetail({
-        url: query.code,
-      });
-
-      // Show team name and logo
-      updateLogo(data.logo);
-      setTeamName(data.team);
-
-      setActivePasswordOverlay(false);
-
-      // Hide loading
-      setLoading(false);
-    } catch (err) {
-      // If not 500, must be auth error, request user password
-      if (err.response.status !== 500) {
-        updateLogo(err.response?.data?.teamIcon);
-        // Hide loading
-        setLoading(false);
-
-        // setFolderInfo(err.response.data)
-        setActivePasswordOverlay(true);
-      }
-
-      if (displayError) {
-        toastUtils.error("Wrong password or invalid link, please try again");
-      }
-    }
-  };
-  useEffect(() => {
-    // If code is declared, use it to get link info
-    if (query?.code) {
-      // Get link info
       getLinkInfo();
+    } catch (err) {
+      toastUtils.error("Wrong password or invalid link, please try again");
+    } finally {
+      setLoading(false);
     }
-  }, [query]);
+  };
+
+  const saveChanges = (data: IGuestUserInfo) => {
+    setGuestInfo(data);
+    setShowPreview(true);
+    setShowUploadSection(true);
+  };
+
+  const onCancelGuestInfo = () => {
+    //TODO: check if this pattern can be avoided
+    setGuestInfo(defaultInfo);
+    setShowPreview(false);
+    setShowUploadSection(false);
+    setShowUploadError(false);
+    setUploading(false);
+  };
+
+  //TODO: add type for files
+  const uploadFiles = async (
+    i: number,
+    files: Array<any>,
+    requestId: string | null,
+    isRetry = false
+  ) => {
+    setUploadingIndex(i + 1);
+    const totalSize = getTotalSize(files);
+    let folderGroup = {};
+    let currentUploadingFolderId = null;
+    const formData = new FormData();
+    let file = files[i].file;
+
+    files[i].isUploading = true;
+    files[i].status = "in-progress";
+    setUploadingFiles([...files]);
+
+    // Get file group info, this returns folderKey and newName of file
+    let fileGroupInfo = getFolderKeyAndNewNameByFileName(
+      file.webkitRelativePath
+    );
+    // If user is uploading files in folder which is not saved from server yet
+    if (fileGroupInfo.folderKey) {
+      // Current folder Group have the key
+      if (folderGroup[fileGroupInfo.folderKey]) {
+        currentUploadingFolderId = folderGroup[fileGroupInfo.folderKey];
+        // Assign new file name without splash
+        file = new File(
+          [file.slice(0, file.size, file.type)],
+          fileGroupInfo.newName,
+          {
+            type: file.type,
+            lastModified: file.lastModifiedDate || new Date(file.lastModified),
+          }
+        );
+      }
+    }
+
+    // Append file to form data
+    formData.append("asset", file);
+    formData.append(
+      "fileModifiedAt",
+      new Date(
+        (file.lastModifiedDate || new Date(file.lastModified)).toUTCString()
+      ).toISOString()
+    );
+
+    let attachedQuery = {
+      estimateTime: 1,
+      size: file.size,
+      totalSize,
+      url: query.code,
+      ...guestInfo,
+    };
+
+    if (requestId) {
+      attachedQuery["requestId"] = requestId;
+    }
+    // Uploading the new folder
+    if (currentUploadingFolderId) {
+      attachedQuery["folderId"] = currentUploadingFolderId;
+    }
+
+    if (i === files.length - 1) {
+      setDisabled(false);
+      attachedQuery["alertAdmin"] = true;
+    }
+
+    const { firstName, lastName, ...rest } = attachedQuery;
+
+    const newQuery = {
+      ...rest,
+      name: `${firstName} ${lastName}`,
+    };
+
+    // Call API to upload
+    try {
+      let { data } = await shareUploadLinkApi.uploadAssets(formData, newQuery);
+      files[i].asset = data[0].asset;
+
+      if (!requestId) {
+        requestId = data[0].requestId;
+        setActiveRequestId(requestId);
+      }
+
+      files[i].status = "done";
+    } catch (err) {
+      files[i].status = "fail";
+    } finally {
+      files[i].isUploading = false;
+    }
+
+    setUploadingFiles([...files]);
+
+    if (i < files.length - 1 && !isRetry) {
+      await uploadFiles(i + 1, files, requestId);
+    }
+  };
+
+  const onFileChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    isAdditionalUpload = false
+  ) => {
+    const files = e.target.files;
+
+    if (files.length > 0) {
+      if (isFilesInputValid(files)) {
+        setIsModalOpen(false);
+
+        setShowUploadError(false);
+
+        const formattedFiles: IGuestUploadItem[] = Array.from(files).map(
+          (file) => {
+            return {
+              asset: {
+                name: file.name,
+                createdAt: new Date(),
+                size: file.size,
+                stage: "draft",
+                type: "image",
+                mimeType: file.type,
+                fileModifiedAt: new Date(file.lastModified),
+              },
+              file,
+              status: "queued",
+              isUploading: false,
+            };
+          }
+        );
+
+        connectSocket();
+        setUploading(true);
+        setDisabled(true);
+        await uploadFiles(
+          isAdditionalUpload ? uploadingFiles.length : 0,
+          [...uploadingFiles, ...formattedFiles],
+          null
+        );
+        setUploadingFiles([...uploadingFiles, ...formattedFiles]);
+      } else {
+        setShowUploadError(true);
+      }
+    }
+  };
+
+  const onCancelUpload = () => {
+    setUploading(false);
+    setUploadingFiles([]);
+    //TODO: delete assets that were already uploaded
+  };
 
   // Init socket listener
   useEffect(() => {
@@ -473,106 +301,131 @@ const GuestUpload: React.FC = () => {
       // Listen upload file process event
       socket.on("uploadFilesProgress", function (data) {
         setUploadingPercent(data.percent);
-        setUploadRemainingTime(
-          `${convertTimeFromSeconds(data.timeLeft)} remaining`
-        );
-
-        if (data.fileName) {
-          setUploadingFileName(data.fileName);
-        }
       });
     }
   }, [socket, connected]);
 
+  const onAdditionalUpload = () => {
+    setIsModalOpen(true);
+  };
+
+  const onSubmitUpload = () => {
+    setUploadSuccess(true);
+  };
+
+  const onRetryUploadingFile = async (index: number) => {
+    await uploadFiles(index, uploadingFiles, activeRequestId, true);
+  };
+
   return (
-    <section className={styles.container}>
-      <div className={styles.wrapper}>
-        {uploadingStatus === "done" ? (
-          <div className={styles.success}>
-            <div className={styles.title}>{teamName} - Upload Success</div>
-            <div className={styles.subtitle}>
-              Thank you for submitting your files to us. Our team has been
-              notified and will review the files. Have a great day!
-            </div>
+    <>
+      {activePasswordOverlay && (
+        <PasswordOverlay onPasswordSubmit={submitPassword} logo={logo} />
+      )}
+
+      <section className={styles.container}>
+        {!uploadSuccess ? (
+          <div className={styles.wrapper}>
+            <>
+              <div>
+                <h1>{teamName} - Guest Upload</h1>
+                <p className={styles.detail}>
+                  Please fill out the form below before uploading your files to
+                  us
+                </p>
+              </div>
+              <div className={styles.form}>
+                {!showPreview ? (
+                  <ContactForm
+                    data={guestInfo}
+                    onSubmit={saveChanges}
+                    teamName={teamName}
+                  />
+                ) : (
+                  <GuestDetails
+                    userDetails={guestInfo}
+                    onCancel={onCancelGuestInfo}
+                  />
+                )}
+              </div>
+            </>
+            {showUploadSection && (
+              <div className={styles.uploadSection}>
+                <div className={styles.upload_title}>Upload Files</div>
+
+                <div className={styles.subtitle}>
+                  {showUploadError
+                    ? "You are trying to upload too many files. Re-upload no more than 200 files, the total size of the files should not exceed 1GB"
+                    : "Please upload your files or folders that you would like to submit to us. After files are selected, click “Submit Upload” button to send your files."}
+                </div>
+                {uploading ? (
+                  <div className={styles.listWrapper}>
+                    <UploadList
+                      files={uploadingFiles}
+                      onUpload={onAdditionalUpload}
+                      uploadingPercent={uploadingPercent}
+                      onRetry={onRetryUploadingFile}
+                      additionUploadDisabled={disabled}
+                      uploadingIndex={uploadingIndex}
+                    />
+                    <Button
+                      className={"container primary GuestFileUploadBtn"}
+                      text="Submit Upload"
+                      onClick={onSubmitUpload}
+                      disabled={disabled}
+                    />
+                  </div>
+                ) : (
+                  <UploadOptions
+                    onFileChange={onFileChange}
+                    uploading={uploading}
+                    uploadingFiles={uploadingFiles}
+                    onCancel={onCancelUpload}
+                  />
+                )}
+              </div>
+            )}
           </div>
         ) : (
           <>
-            {!loading && (
-              <>
-                <input
-                  multiple={true}
-                  id="file-input-id"
-                  ref={fileBrowserRef}
-                  style={{ display: "none" }}
-                  type="file"
-                  onChange={onFileChange}
-                />
-                <input
-                  multiple={true}
-                  id="file-input-id"
-                  ref={folderBrowserRef}
-                  style={{ display: "none" }}
-                  type="file"
-                  onChange={onFileChange}
-                />
-
-                <>
-                  {uploadingStatus === "none" && (
-                    <>
-                      <div className={styles.title}>
-                        {teamName} - Guest Upload
-                      </div>
-                      <div className={styles.subtitle}>
-                        Please upload your files or folders that you would like
-                        to submit to us. This is more of text. Please upload
-                        your files or folders that you would like to submit to
-                        us
-                      </div>
-                    </>
-                  )}
-
-                  {uploadEnabled && !edit && <GuestDetails setEdit={setEdit} />}
-
-                  {(!uploadEnabled || edit) && (
-                    <GuestInfoForm
-                      onSubmit={saveChanges}
-                      teamName={teamName}
-                      uploadingStatus={uploadingStatus}
-                      setUploadEnabled={setUploadEnabled}
-                      setEdit={setEdit}
-                    />
-                  )}
-                </>
-
-                <GuestUploadSection
-                  uploadEnabled={uploadEnabled}
-                  uploading={uploading}
-                  uploadingStatus={uploadingStatus}
-                  files={files}
-                  dropDownOptions={dropdownOptions}
-                  retryListCount={retryListCount}
-                  uploadingAssets={uploadingAssets}
-                  showUploadProcess={showUploadProcess}
-                  uploadingFile={uploadingFile}
-                  uploadingPercent={uploadingPercent}
-                  setUploadDetailOverlay={setUploadDetailOverlay}
-                  uploadingFileName={uploadingFileName}
-                  setUploadingStatus={setUploadingStatus}
-                />
-                {activePasswordOverlay && (
-                  <PasswordOverlay
-                    onPasswordSubmit={submitPassword}
-                    logo={logo}
-                  />
-                )}
-              </>
-            )}
+            <div className={styles.submission}>
+              <h1>{teamName} - Files Successfully Submitted</h1>
+              <p className={styles.submissionMsg}>
+                Thank you for submitting your files to us. Our team has been
+                notified and will review the files. Have a great day !
+              </p>
+            </div>
           </>
         )}
-      </div>
+      </section>
+
+      <BaseModal
+        showCancel={true}
+        closeButtonOnly
+        additionalClasses={[styles["modal-upload"]]}
+        closeModal={() => setIsModalOpen(false)}
+        modalIsOpen={isModalOpen}
+        confirmText=""
+        confirmAction={() => {}}
+      >
+        <div className={styles.uploadMOdal}>
+          <h2>Upload Files</h2>
+          <div className={styles.subtitle}>
+            {showUploadError
+              ? "You are trying to upload too many files. Re-upload no more than 200 files, the total size of the files should not exceed 1GB"
+              : "Please upload your files or folders that you would like to submit to us.  After files are selected, click “Submit Upload” button to send your files."}
+          </div>
+          <UploadOptions
+            onFileChange={(e) => onFileChange(e, true)}
+            uploading={uploading}
+            uploadingFiles={uploadingFiles}
+            onCancel={onCancelUpload}
+          />
+        </div>
+      </BaseModal>
       {loading && <SpinnerOverlay />}
-    </section>
+    </>
   );
 };
 
-export default GuestUpload;
+export default GuestUploadMain;
