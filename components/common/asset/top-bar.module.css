@@ -254,10 +254,12 @@ li.dropdown-title {
     gap: 0;
   }
 
+
 .innerwrapper{
   width: 100%;
 }
-  .wrapper .innerwrapper .tab-list-item {
+
+.wrapper .innerwrapper .tab-list-item {
     /* width: calc(100% - 35px);
     overflow: hidden; */
     padding: 0;

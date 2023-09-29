@@ -25,7 +25,6 @@ const TopBar = ({
   activeView,
   selectAll,
   activeFolder = "",
-  getFolders,
   setOpenFilter,
   openFilter,
   isShare = false,
@@ -41,7 +40,7 @@ const TopBar = ({
   setCurrentViewAsset,
   sharePath,
   isFolder,
-}) => {
+}: any) => {
   const {
     selectedAllAssets,
     selectAllAssets,
@@ -50,13 +49,15 @@ const TopBar = ({
     setLastUploadedFolder,
     folders,
     setActiveFolder,
-    setFolders,
     sidebarOpen,
-    setSidebarOpen
+    setSidebarOpen,
+    selectedAllSubFoldersAndAssets,
+    setSelectedAllSubFoldersAndAssets,
+    activeSubFolders
   } = useContext(AssetContext);
 
   const { hasPermission, advancedConfig } =
-    useContext(UserContext);
+    useContext(UserContext) as any;
   const [hideFilterElements] = useState(
     advancedConfig.hideFilterElements
   );
@@ -64,9 +65,8 @@ const TopBar = ({
   const [showViewDropdown, setShowViewDropdown] = useState(false);
 
   const [tabs, setTabs] = useState(selectOptions.views);
-  const { setRenderedFlag } = useContext(FilterContext);
-  const setSortFilterValue = (key, value) => {
 
+  const setSortFilterValue = (key: string, value: string) => {
 
     let sort = key === "sort" ? value : activeSortFilter.sort;
     if (key === "mainFilter") {
@@ -100,6 +100,12 @@ const TopBar = ({
   const toggleSelectAll = () => {
     selectAllAssets(!selectedAllAssets);
   };
+  const toggleSelectAllFolders = () => {
+    selectAllFolders(!selectedAllFolders);
+  };
+  const toggleSelectSubCollection = () => {
+    setSelectedAllSubFoldersAndAssets(!selectedAllSubFoldersAndAssets);
+  }
 
   const setTabsVisibility = () => {
     const filterElements = sharedAdvanceConfig
@@ -167,31 +173,30 @@ const TopBar = ({
             current={folderData[0]?.name}
           />
         )}
-       
       </div>
       <div className={styles.wrapper}>
-      <div className={`${styles['main-heading-wrapper']}`}>
-        {sidebarOpen ?
-          null :
-          <div className={styles.newsidenav}>
-            <img className={styles.sidenavRightIcon} onClick={() => { setSidebarOpen(!sidebarOpen) }} src={Utilities.arrowright} />
-          </div>}
-        {activeFolder && mode === "assets" && (
-          <SubHeader pageTitle={folderData[0]?.name} children={undefined} />
-        )}
-        <div className={styles.innerwrapper}>
-          {!deletedAssets ? (
-            <div className={styles.filters}>
-              <ul className={styles["tab-list"]}>
-                {isMobile ? (
-                  <div className={styles["mobile-tabs"]}>
-                    <IconClickable
-                      src={Utilities.menu}
-                      additionalClass={styles.hamburger}
-                      onClick={() => setShowTabs(!showTabs)}
-                    />
-                    <li className={styles["tab-list-item"]}>
-                      {/* {tabs
+        <div className={`${styles['main-heading-wrapper']}`}>
+          {sidebarOpen ?
+            null :
+            <div className={styles.newsidenav}>
+              <img className={styles.sidenavRightIcon} onClick={() => { setSidebarOpen(!sidebarOpen) }} src={Utilities.arrowright} />
+            </div>}
+          {activeFolder && mode === "assets" && (
+            <SubHeader pageTitle={folderData[0]?.name} children={undefined} />
+          )}
+          <div className={styles.innerwrapper}>
+            {!deletedAssets ? (
+              <div className={styles.filters}>
+                <ul className={styles["tab-list"]}>
+                  {isMobile ? (
+                    <div className={styles["mobile-tabs"]}>
+                      <IconClickable
+                        src={Utilities.menu}
+                        additionalClass={styles.hamburger}
+                        onClick={() => setShowTabs(!showTabs)}
+                      />
+                      <li className={styles["tab-list-item"]}>
+                        {/* {tabs
                         .filter(
                           (view) => activeSortFilter.mainFilter === view.name
                         )
@@ -213,70 +218,68 @@ const TopBar = ({
                             }
                           />
                         ))} */}
-                      <NavHeading />
-                    </li>
-                    {showTabs && (
-                      <Dropdown
-                        onClickOutside={() => setShowTabs(false)}
-                        additionalClass={styles.dropdown}
-                        options={mobileTabs.map((tab) => ({
-                          label: tab.text,
-                          id: tab.name,
-                          onClick: () => {
-                            setSortFilterValue("mainFilter", tab.name);
-                          },
-                        }))}
-                      />
-                    )}
-                  </div>
-                ) : (
-                  // tabs.map((view) => {
-                  //   return (
-                  //     <li key={view.name} className={styles["tab-list-item"]}>
-                  //       {(!activeFolder || !view.omitFolder) &&
-                  //         (!isShare ||
-                  //           (isShare &&
-                  //             !view.omitShare &&
-                  //             view.hideOnSingle !== singleCollection)) &&
-                  //         (view.requirePermissions.length === 0 ||
-                  //           (view.requirePermissions.length > 0 &&
-                  //             hasPermission(view.requirePermissions))) && (
-                  //           <Button
-                  //             key={view.name}
-                  //             text={view.text}
-                  //             className={
-                  //               activeSortFilter.mainFilter === view.name
-                  //                 ? "section-container section-active"
-                  //                 : "section-container"
-                  //             }
-                  //             onClick={() =>
-                  //               setSortFilterValue("mainFilter", view.name)
-                  //             }
-                  //           />
-                  //         )}
-                  //     </li>
-                  //   );
-                  // })
-                  < NavHeading />
-                )}
-              </ul>
-            </div>
-          ) :
-            (
-              <div className={styles.filters}>
-                <h2>Deleted Assets</h2>
-                <div></div>
-                <span className={styles["content"]}>
-                  Deleted assets are retained for 60 days before permanent
-                  removal. Admin can recover deleted assets within 60 days
-                </span>
+                        <NavHeading />
+                      </li>
+                      {showTabs && (
+                        <Dropdown
+                          onClickOutside={() => setShowTabs(false)}
+                          additionalClass={styles.dropdown}
+                          options={mobileTabs.map((tab) => ({
+                            label: tab.text,
+                            id: tab.name,
+                            onClick: () => {
+                              setSortFilterValue("mainFilter", tab.name);
+                            },
+                          }))}
+                        />
+                      )}
+                    </div>
+                  ) : (
+                    // tabs.map((view) => {
+                    //   return (
+                    //     <li key={view.name} className={styles["tab-list-item"]}>
+                    //       {(!activeFolder || !view.omitFolder) &&
+                    //         (!isShare ||
+                    //           (isShare &&
+                    //             !view.omitShare &&
+                    //             view.hideOnSingle !== singleCollection)) &&
+                    //         (view.requirePermissions.length === 0 ||
+                    //           (view.requirePermissions.length > 0 &&
+                    //             hasPermission(view.requirePermissions))) && (
+                    //           <Button
+                    //             key={view.name}
+                    //             text={view.text}
+                    //             className={
+                    //               activeSortFilter.mainFilter === view.name
+                    //                 ? "section-container section-active"
+                    //                 : "section-container"
+                    //             }
+                    //             onClick={() =>
+                    //               setSortFilterValue("mainFilter", view.name)
+                    //             }
+                    //           />
+                    //         )}
+                    //     </li>
+                    //   );
+                    // })
+                    < NavHeading />
+                  )}
+                </ul>
               </div>
-            )
-          }
+            ) :
+              (
+                <div className={styles.filters}>
+                  <h2>Deleted Assets</h2>
+                  <div></div>
+                  <span className={styles["content"]}>
+                    Deleted assets are retained for 60 days before permanent
+                    removal. Admin can recover deleted assets within 60 days
+                  </span>
+                </div>
+              )
+            }
+          </div>
         </div>
-
-        </div>
-        
         <div className={styles["sec-filters"]}>
           {!isMobile && !isShare && !activeSearchOverlay && (
             <img
@@ -312,7 +315,6 @@ const TopBar = ({
               <div className={styles.mobilePlus}>
                 <AssetAddition
                   activeFolder={activeFolder}
-                  getFolders={getFolders}
                 />
               </div>
             )}
@@ -367,10 +369,19 @@ const TopBar = ({
               Select only 25 assets shown
             </span>
           )}
+          {selectedAllSubFoldersAndAssets && (
+            <span
+              className={styles["select-only-shown-items-text"]}
+              onClick={toggleSelectAllFolders}
+            >
+              Select only 5 Sub collections and 25 Assets shown
+            </span>
+          )}
+
           {selectedAllFolders && (
             <span
               className={styles["select-only-shown-items-text"]}
-              onClick={toggleSelectAll}
+              onClick={toggleSelectSubCollection}
             >
               Select only 25 collections shown
             </span>
@@ -393,6 +404,7 @@ const TopBar = ({
               />
             </div>
           )}
+
           <div className={styles["sort-wrapper"]}>
             <Select
               label={"Sort By"}
@@ -415,18 +427,18 @@ const TopBar = ({
             />
           </div>
         </div>
-      </div>
+      </div >
 
       <div className={styles["mobile-bottom"]}>
         {(amountSelected === 0 || mode === "folders") &&
           showAssetAddition &&
           hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL]) && (
             <AssetAddition
-              activeFolder={activeFolder}
-              getFolders={getFolders} triggerUploadComplete={undefined} />
+              triggerUploadComplete={undefined} />
           )}
       </div>
-    </section>
+
+    </section >
   );
 };
 

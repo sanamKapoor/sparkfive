@@ -15,7 +15,7 @@ import RenameModal from "../modals/rename-modal";
 const ItemSubHeader = ({
   title,
   status = "draft",
-  saveDraft = () => {},
+  saveDraft = () => { },
   changeName,
   changeStatus,
   hasAssets = false,

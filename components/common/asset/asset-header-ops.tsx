@@ -30,6 +30,12 @@ const AssetHeaderOps = ({
   deselectHidden = false,
   deletedAssets = false,
   advancedLink = false,
+  activeMode,
+  selectedFolders,
+  selectedSubFoldersAndAssets,
+}: {
+  activeMode: string;
+  [key: string]: any;
 }) => {
   const router = useRouter();
 
@@ -52,10 +58,15 @@ const AssetHeaderOps = ({
     activeFolder,
     updateDownloadingStatus,
     setNeedsFetch,
+    subFoldersAssetsViewList,
+    subFoldersViewList,
+    selectedAllSubFoldersAndAssets,
+    setSelectedAllSubFoldersAndAssets,
+    setSubFoldersViewList,
+    setSubFoldersAssetsViewList,
   } = useContext(AssetContext);
 
   const { setIsLoading } = useContext(LoadingContext);
-
   const { hasPermission } = useContext(UserContext);
 
   const {
@@ -94,6 +105,8 @@ const AssetHeaderOps = ({
     }
   }, [router.asPath]);
 
+  const isSubCollection = activeMode === "SubCollectionView";
+
   // Hidden pagination assets are selected
   if (selectedAllAssets) {
     // Get assets is not selected on screen
@@ -101,9 +114,26 @@ const AssetHeaderOps = ({
     totalSelectAssets = totalAssets - currentUnSelectedAssets.length;
   }
 
-  const selectedFolders = folders.filter((folder) => folder.isSelected);
   if (selectedFolders.length > 0) {
     totalSelectAssets = selectedFolders.length;
+  }
+  let totalSubFoldersAndAssets = { assets: 0, folders: 0 };
+
+  if (
+    selectedSubFoldersAndAssets.folders.length > 0 ||
+    selectedSubFoldersAndAssets.assets.length > 0
+  ) {
+    const currentUnSelectedSubAssets = subFoldersAssetsViewList.results.filter(
+      (asset) => !asset.isSelected
+    );
+    totalSubFoldersAndAssets = {
+      assets:
+        subFoldersAssetsViewList.total - currentUnSelectedSubAssets?.length ||
+        0,
+      folders:
+        subFoldersViewList.results.filter((folder) => folder.isSelected)
+          ?.length || 0,
+    };
   }
 
   const downloadSelectedAssets = async () => {
@@ -111,12 +141,15 @@ const AssetHeaderOps = ({
       let payload = {
         assetIds: [],
         folderIds: [],
+        subFolders: [],
       };
+
       let totalDownloadingAssets = 0;
+
       let filters = {
         estimateTime: 1,
       };
-
+      // Have implemented the functionality for the Download Sub Collection assets
       if (selectedAllAssets) {
         totalDownloadingAssets = totalAssets;
         // Download all assets without pagination
@@ -141,18 +174,21 @@ const AssetHeaderOps = ({
       } else if (selectedFolders.length > 0) {
         totalDownloadingAssets = selectedFolders.length;
         payload.folderIds = selectedFolders.map((folder) => folder.id);
+      } else if (selectedSubFoldersAndAssets.folders.length > 0) {
+        totalDownloadingAssets = selectedSubFoldersAndAssets.folders.length;
+        payload.folderIds = selectedSubFoldersAndAssets.folders.map(
+          (folder) => folder.id
+        );
       } else {
         totalDownloadingAssets = selectedAssets.length;
         payload.assetIds = selectedAssets.map(
           (assetItem) => assetItem.asset.id
         );
       }
-
       // Add sharePath property if user is at share collection page
       if (sharePath) {
         filters["sharePath"] = sharePath;
       }
-
       // Show processing bar
       updateDownloadingStatus("zipping", 0, totalDownloadingAssets);
       let api = assetApi;
@@ -172,10 +208,8 @@ const AssetHeaderOps = ({
           api = shareApi;
         }
         const { data } = await api.downloadFoldersAsZip(payload, filters);
-
         // Download file to storage
         fileDownload(data, "assets.zip");
-
         updateDownloadingStatus("done", 0, 0);
       }
     } catch (e) {
@@ -221,14 +255,31 @@ const AssetHeaderOps = ({
   };
 
   const deselectAll = () => {
-    if (!isFolder) {
+    if (activeMode === "assets") {
       // Mark deselect all
       selectAllAssets(false);
 
       setAssets(assets.map((asset) => ({ ...asset, isSelected: false })));
-    } else {
+    } else if (activeMode === "folders") {
       selectAllFolders(false);
       setFolders(folders.map((folder) => ({ ...folder, isSelected: false })));
+    } else if (activeMode === "SubCollectionView") {
+      // Mark deselect all
+      setSelectedAllSubFoldersAndAssets(false);
+      setSubFoldersViewList({
+        ...subFoldersViewList,
+        results: subFoldersViewList.results.map((folder) => ({
+          ...folder,
+          isSelected: false,
+        })),
+      });
+      setSubFoldersAssetsViewList({
+        ...subFoldersAssetsViewList,
+        results: subFoldersAssetsViewList.results.map((asset) => ({
+          ...asset,
+          isSelected: false,
+        })),
+      });
     }
   };
 
@@ -294,7 +345,7 @@ const AssetHeaderOps = ({
 
   const conditionalIcons = [
     {
-      condition: !isShare && !deletedAssets && !isFolder,
+      condition: !isShare && !deletedAssets && !isFolder && !isSubCollection,
       props: {
         place: "top",
         additionalClass: styles["action-button"],
@@ -306,7 +357,7 @@ const AssetHeaderOps = ({
       },
     },
     {
-      condition: !isFolder && !isShare && !deletedAssets,
+      condition: !isFolder && !isShare && !deletedAssets && !isSubCollection,
       props: {
         place: "top",
         additionalClass: styles["action-button"],
@@ -330,7 +381,7 @@ const AssetHeaderOps = ({
       },
     },
     {
-      condition: !isFolder && !isShare && !deletedAssets,
+      condition: !isFolder && !isShare && !deletedAssets && !isSubCollection,
       props: {
         place: "top",
         additionalClass: styles["action-button"],
@@ -342,7 +393,7 @@ const AssetHeaderOps = ({
       },
     },
     {
-      condition: !isFolder && !isShare && !deletedAssets,
+      condition: !isFolder && !isShare && !deletedAssets && !isSubCollection,
       props: {
         child: (
           <div className={styles["share-wrapper"]} ref={contentRef}>
@@ -405,7 +456,7 @@ const AssetHeaderOps = ({
       },
     },
     {
-      condition: isFolder && !isShare && !deletedAssets,
+      condition: (isFolder && !isShare && !deletedAssets) || isSubCollection,
       props: {
         place: "top",
         additionalClass: styles["action-button"],
@@ -441,7 +492,7 @@ const AssetHeaderOps = ({
       },
     },
     {
-      condition: !isFolder && !isShare,
+      condition: !isFolder && !isShare && !isSubCollection,
       props: {
         child: (
           <div className={styles["more-wrapper"]}>
@@ -514,12 +565,20 @@ const AssetHeaderOps = ({
           />
         )}
         <div className={styles.text}>
-          {!isFolder
+          {activeMode === "assets"
             ? `${totalSelectAssets} Assets`
-            : `${totalSelectAssets} Collections`}{" "}
+            : activeMode === "folders"
+            ? `${totalSelectAssets} Collections`
+            : `${totalSubFoldersAndAssets.folders} Sub Collections 
+             
+            `}{" "}
           Selected
         </div>
       </div>
+      {/** add below line in case of selection of assets in subcollection right */}
+      {/* and ${totalSubFoldersAndAssets.assets} Assets */}
+      {/* Icons over the select all modal  */}
+
       <div className={styles.icons}>
         {conditionalIcons.map(
           ({ condition, props }, index) =>
@@ -531,7 +590,8 @@ const AssetHeaderOps = ({
             ))
         )}
       </div>
-      {!isFolder && !isShare && !deletedAssets && (
+
+      {!isFolder && !isShare && !isSubCollection && !deletedAssets && (
         <>
           <ConfirmModal
             closeModal={() => setShowAssociateModalOpen(false)}

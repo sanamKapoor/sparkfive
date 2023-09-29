@@ -111,6 +111,7 @@ const FolderGridItem = ({
       let payload = {
         folderIds: [id],
       };
+
       let filters = {
         estimateTime: 1,
       };
@@ -127,7 +128,6 @@ const FolderGridItem = ({
       }
 
       const { data } = await api.downloadFoldersAsZip(payload, filters);
-
       // Download file to storage
       fileDownload(data, "assets.zip");
 
@@ -142,6 +142,7 @@ const FolderGridItem = ({
   };
 
   const updateNameOnBlur = async (e) => {
+    console.log("onBlurr", e)
     setFocusedItem(null);
     setIsEditing(false);
     //fire api only if name is changed
@@ -174,74 +175,79 @@ const FolderGridItem = ({
   };
 
   const handleOnFocus = () => {
+    console.log("sasasetThumbnailName")
     setIsEditing(true);
   };
 
+  console.log(isThumbnailNameEditable,
+    isEditing,
+    focusedItem,
+    focusedItem === id, id, "isThumbnailNameEditable")
+
   return (
     <div className={`${styles.container} ${isLoading && "loadable"}`}>
-     <div className={`${styles['main-border']}`}>
-      <div
-        className={
-          thumbnailPath || thumbnailExtension
-            ? `${styles.grid_border} ${openFilter ? styles["filter_open"] : ""}`
-            : `${styles["image-wrapper"]} ${openFilter ? styles["filter_open"] : ""
-            }`
-        }
-      >
-        <>
-          {thumbnailPath && (
-            <AssetImg
-              assetImg={thumbnailPath}
-              imgClass="maxHeight"
-              style={{ maxWidth: "330px !important" }}
-            />
-          )}
-          {thumbnailExtension && !thumbnailPath && (
-            <AssetIcon extension={thumbnailExtension} imgClass="maxHeight" />
-          )}
-          {!thumbnailPath &&
-            !thumbnailExtension &&
-            previews.map((preview: any, index: number) => (
-              <div
-                className={styles["sub-image-wrapper"]}
-                key={index.toString()}
-              >
-                {preview.assetImg || preview.name === "empty" ? (
-                  <AssetImg {...preview} />
-                ) : (
-                  <AssetIcon
-                    extension={preview.extension}
-                    isCollection={true}
-                  />
-                )}
-              </div>
-            ))}
-          <div className={styles["image-button-wrapper"]}>
-            <Button
-              className="container primary"
-              text={"View Collection"}
-              type={"button"}
-              onClick={viewFolder}
-            />
-          </div>
-          <div
-            className={`${styles["selectable-wrapper"]} ${isSelected && styles["selected-wrapper"]
-              }`}
-          >
-            <IconClickable
-              src={
-                isSelected
-                  ? Utilities.radioButtonEnabled
-                  : Utilities.radioButtonNormal
-              }
-              additionalClass={styles["select-icon"]}
-              onClick={toggleSelected}
-            />
-          </div>
-        </>
+      <div className={`${styles['main-border']}`}>
+        <div
+          className={
+            thumbnailPath || thumbnailExtension
+              ? `${styles.grid_border} ${openFilter ? styles["filter_open"] : ""}`
+              : `${styles["image-wrapper"]} ${openFilter ? styles["filter_open"] : ""
+              }`
+          }
+        >
+          <>
+            {thumbnailPath && (
+              <AssetImg
+                assetImg={thumbnailPath}
+                imgClass="maxHeight"
+                style={{ maxWidth: "330px !important" }}
+              />
+            )}
+            {thumbnailExtension && !thumbnailPath && (
+              <AssetIcon extension={thumbnailExtension} imgClass="maxHeight" />
+            )}
+            {!thumbnailPath &&
+              !thumbnailExtension &&
+              previews.map((preview: any, index: number) => (
+                <div
+                  className={styles["sub-image-wrapper"]}
+                  key={index.toString()}
+                >
+                  {preview.assetImg || preview.name === "empty" ? (
+                    <AssetImg {...preview} />
+                  ) : (
+                    <AssetIcon
+                      extension={preview.extension}
+                      isCollection={true}
+                    />
+                  )}
+                </div>
+              ))}
+            <div className={styles["image-button-wrapper"]}>
+              <Button
+                className="container primary"
+                text={"View Collection"}
+                type={"button"}
+                onClick={viewFolder}
+              />
+            </div>
+            <div
+              className={`${styles["selectable-wrapper"]} ${isSelected && styles["selected-wrapper"]
+                }`}
+            >
+              <IconClickable
+                src={
+                  isSelected
+                    ? Utilities.radioButtonEnabled
+                    : Utilities.radioButtonNormal
+                }
+                additionalClass={styles["select-icon"]}
+                onClick={toggleSelected}
+              />
+            </div>
+          </>
+        </div>
       </div>
-      </div>
-     
       <div className={styles.info} onClick={handleOnFocus}>
         <div className={styles.folderItemHeadingOuter}>
           <div className={styles.folderItemHeading}>

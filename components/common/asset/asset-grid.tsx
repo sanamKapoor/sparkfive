@@ -8,6 +8,7 @@ import { sizeToZipDownload } from "../../../constants/download";
 import { ASSET_ACCESS } from "../../../constants/permissions";
 import { AssetContext, LoadingContext, UserContext } from "../../../context";
 import useSortedAssets from "../../../hooks/use-sorted-assets";
+import assetApi from "../../../server-api/asset";
 import folderApi from "../../../server-api/folder";
 import shareApi from "../../../server-api/share-collection";
 import { checkIfUserCanEditThumbnail } from "../../../utils/asset";
@@ -36,7 +37,6 @@ const AssetGrid = ({
   onFilesDataGet = (files: any) => {},
   toggleSelected,
   mode = "assets",
-  activeSortFilter = {},
   deleteFolder = (id: string) => {},
   itemSize = "regular",
   activeFolder = "",
@@ -52,7 +52,7 @@ const AssetGrid = ({
   widthCard,
   getSubCollectionsAssetData,
   getSubFolders,
-}: any) => {
+}) => {
   let isDragging;
   if (!isShare) isDragging = useDropzone();
   const {
@@ -64,6 +64,9 @@ const AssetGrid = ({
     setOperationFolder,
     folders,
     updateDownloadingStatus,
+    activeSubFolders,
+    subFoldersAssetsViewList,
+    setSubFoldersAssetsViewList,
   } = useContext(AssetContext);
 
   const { advancedConfig, hasPermission, user } = useContext(UserContext);
@@ -78,7 +81,7 @@ const AssetGrid = ({
 
   const [modalOpen, setModalOpen] = useState(false); // Open or close modal of change thumbnail
 
-  const [modalData, setModalData] = useState(); // load or unload data for change thumbnail modal
+  const [modalData, setModalData] = useState({}); // load or unload data for change thumbnail modal
 
   const [sortedAssets, currentSortAttribute, setCurrentSortAttribute] =
     useSortedAssets(assets);
@@ -99,6 +102,8 @@ const AssetGrid = ({
 
   const getInitialAsset = async (id) => {
     try {
+      let assetsApi: any = assetApi;
+
       const { data } = await assetsApi.getById(id);
       setInitAsset(data);
     } catch (err) {
@@ -118,6 +123,8 @@ const AssetGrid = ({
 
   const deleteAsset = async (id) => {
     try {
+      let assetsApi: any = assetApi;
+
       await assetsApi.updateAsset(id, {
         updateData: {
           status: "deleted",
@@ -125,15 +132,29 @@ const AssetGrid = ({
           deletedAt: new Date(new Date().toUTCString()).toISOString(),
         },
       });
-      const assetIndex = assets.findIndex(
-        (assetItem) => assetItem.asset.id === id
-      );
-      if (assetIndex !== -1)
-        setAssets(
-          update(assets, {
-            $splice: [[assetIndex, 1]],
-          })
+      if (mode === "SubCollectionView") {
+        const assetIndex = subFoldersAssetsViewList.results.findIndex(
+          (assetItem) => assetItem.asset.id === id
         );
+        if (assetIndex !== -1) {
+          setSubFoldersAssetsViewList({
+            ...subFoldersAssetsViewList,
+            results: update(subFoldersAssetsViewList.results, {
+              $splice: [[assetIndex, 1]],
+            }),
+          });
+        }
+      } else {
+        const assetIndex = assets.findIndex(
+          (assetItem) => assetItem.asset.id === id
+        );
+        if (assetIndex !== -1)
+          setAssets(
+            update(assets, {
+              $splice: [[assetIndex, 1]],
+            })
+          );
+      }
       toastUtils.success("Assets deleted successfully");
     } catch (err) {
       // TODO: Error handling
@@ -145,15 +166,31 @@ const AssetGrid = ({
     const newState =
       activeArchiveAsset?.stage !== "archived" ? "archived" : "draft";
     try {
+      let assetsApi: any = assetApi;
       await assetsApi.updateAsset(id, { updateData: { stage: newState } });
-      const assetIndex = assets.findIndex(
-        (assetItem) => assetItem.asset.id === id
-      );
-      setAssets(
-        update(assets, {
-          $splice: [[assetIndex, 1]],
-        })
-      );
+      if (mode === "SubCollectionView") {
+        const assetIndex = subFoldersAssetsViewList.results.findIndex(
+          (assetItem) => assetItem.asset.id === id
+        );
+        if (assetIndex !== -1) {
+          setSubFoldersAssetsViewList({
+            ...subFoldersAssetsViewList,
+            results: update(subFoldersAssetsViewList.results, {
+              $splice: [[assetIndex, 1]],
+            }),
+          });
+        }
+      } else {
+        const assetIndex = assets.findIndex(
+          (assetItem) => assetItem.asset.id === id
+        );
+        setAssets(
+          update(assets, {
+            $splice: [[assetIndex, 1]],
+          })
+        );
+      }
+
       toastUtils.success(
         `Assets ${
           newState === "archived" ? "archived" : "unarchived"
@@ -190,7 +227,11 @@ const AssetGrid = ({
       });
       if (data) {
         setIsLoading(false);
-        getFolders();
+        if (activeSubFolders !== "") {
+          await getSubFolders(true);
+        } else {
+          getFolders();
+        }
       }
     } catch (error) {
       setIsLoading(false);
@@ -216,7 +257,7 @@ const AssetGrid = ({
       // Show processing bar
       updateDownloadingStatus("zipping", 0, totalDownloadingAssets);
 
-      let api: any = assetsApi;
+      let api: any = assetApi;
 
       if (isShare) {
         api = shareApi;
@@ -229,16 +270,11 @@ const AssetGrid = ({
 
       updateDownloadingStatus("done", 0, 0);
     } catch (e) {
-      const errorResponse = (await e.response.data.text()) || "{}";
-      const parsedErrorResponse = JSON.parse(errorResponse);
-
-      console.log(`Error in asset-grid`);
       updateDownloadingStatus(
         "error",
         0,
         0,
-        parsedErrorResponse.message ||
-          "Internal Server Error. Please try again."
+        "Internal Server Error. Please try again."
       );
     }
 
@@ -275,6 +311,7 @@ const AssetGrid = ({
   const showLoadMore =
     (mode === "assets" && assets.length > 0) ||
     (mode === "folders" && folders.length > 0);
+
   const loadingAssetsFolders =
     (assets.length > 0 && assets[assets.length - 1].isLoading) ||
     (folders.length > 0 && folders[folders.length - 1].isLoading);
@@ -298,6 +335,7 @@ const AssetGrid = ({
   };
 
   const isThumbnailNameEditable = checkIfUserCanEditThumbnail(user?.roleId);
+
   const handleFocusChange = (e, id) => {
     if (focusedItem === id && e.target.tagName.toLowerCase() !== "input") {
       setFocusedItem(null);
@@ -305,6 +343,7 @@ const AssetGrid = ({
       setFocusedItem(id);
     }
   };
+
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const ref = useRef(null);
 
@@ -370,7 +409,7 @@ const AssetGrid = ({
               {mode === "SubCollectionView" && (
                 <SubCollection
                   activeView={activeView}
-                  isShare
+                  isShare={isShare}
                   toggleSelected={toggleSelected}
                   mode={mode}
                   deleteFolder={deleteFolder}
@@ -386,7 +425,7 @@ const AssetGrid = ({
                   deleteThumbnail={deleteThumbnail}
                   isThumbnailNameEditable={isThumbnailNameEditable}
                   setFocusedItem={setFocusedItem}
-                  focusedItem
+                  focusedItem={focusedItem}
                   handleFocusChange={handleFocusChange}
                   loadMoreSubCollctions={getSubFolders}
                   openArchiveAsset={openArchiveAsset}
@@ -453,6 +492,7 @@ const AssetGrid = ({
                     );
                   }
                 })}
+
               {mode === "folders" &&
                 folders.map((folder, index) => {
                   return (
@@ -595,14 +635,7 @@ const AssetGrid = ({
               {nextPage > 2 || mode === "folders" ? (
                 <>
                   {!loadingAssetsFolders && (
-                    <Waypoint
-                      onEnter={() => {
-                        console.log(`on Enter`);
-                        loadMore();
-                      }}
-                      fireOnRapidScroll={false}
-                      bottomOffset="-25px"
-                    />
+                    <Waypoint onEnter={loadMore} fireOnRapidScroll={false} />
                   )}
                 </>
               ) : (
@@ -635,6 +668,7 @@ const AssetGrid = ({
         modalData={modalData}
         modalIsOpen={modalOpen}
         confirmAction={() => {}}
+        getSubFolders={getSubFolders}
       />
 
       {/* Delete modal */}

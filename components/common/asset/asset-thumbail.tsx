@@ -49,7 +49,7 @@ const AssetThumbail = ({
   openArchiveAsset = () => { },
   downloadAsset = () => { },
   openRemoveAsset = () => { },
-  // loadMore = () => { },
+  loadMore = () => { },
   handleVersionChange,
   onView = null,
   customComponent = <></>,
@@ -318,7 +318,7 @@ const AssetThumbail = ({
           <div>{customComponent}</div>
         </div>
       </div>
-      {/* {overlayProperties.visible && (
+      {overlayProperties.visible && (
         <DetailOverlay
           sharePath={sharePath}
           isShare={isShare}
@@ -336,7 +336,7 @@ const AssetThumbail = ({
           closeOverlay={onCloseOverlay}
           loadMore={loadMore}
         />
-      )} */}
+      )}
     </>
   );
 };

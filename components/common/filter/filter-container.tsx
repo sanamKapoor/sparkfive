@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import { AssetContext, FilterContext, UserContext } from "../../../context";
 import customFieldsApi from "../../../server-api/attribute";
 import shareCollectionApi from "../../../server-api/share-collection";
+import InputChip from "../../topbar-newnavigation/InputChip";
 import Tags from "../../topbar-newnavigation/Tags";
 import styles from "./filter-container.module.css";
 
@@ -154,15 +155,17 @@ const FilterContainer = ({
 
   return (
     <>
-      {/* {false ? */}
-      <div
-        className={`${styles.container}  ${
-          stickyMenuScroll && styles["sticky-menu"]
-        }`}
-        style={{ width: filterWidth }}
-      >
-        <Tags />
-        {/* <section className={styles["top-bar"]}>
+      {false ? (
+        <div
+          className={`${styles.container}  ${
+            stickyMenuScroll && styles["sticky-menu"]
+          }`}
+          style={{ width: filterWidth }}
+        >
+          <Tags />
+          <InputChip />
+
+          {/* <section className={styles["top-bar"]}>
             <div>
               <h3>Filters</h3>
             </div>
@@ -683,8 +686,8 @@ const FilterContainer = ({
               </section>
             )}
           </div> */}
-      </div>
-      {/* // : null} */}
+        </div>
+      ) : null}
     </>
   );
 };

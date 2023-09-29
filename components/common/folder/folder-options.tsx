@@ -31,14 +31,14 @@ const FolderOptions = ({
   const options = isShare
     ? [{ label: "Download", onClick: downloadFoldercontents }]
     : [
-        { label: "Download", onClick: downloadFoldercontents },
-        // { label: "Delete", onClick: () => setDeleteOpen(true) },
-        { label: "Share", onClick: shareAssets },
-      ];
+      { label: "Download", onClick: downloadFoldercontents },
+      // { label: "Delete", onClick: () => setDeleteOpen(true) },
+      { label: "Share", onClick: shareAssets },
+    ];
 
 
-  if(hasPermission([ASSET_EDIT])){
-    options.push( { label: "Delete", onClick: () => setDeleteOpen(true) })
+  if (hasPermission([ASSET_EDIT])) {
+    options.push({ label: "Delete", onClick: () => setDeleteOpen(true) })
   }
 
   const [adminOption, setAdminOption] = useState(options);
