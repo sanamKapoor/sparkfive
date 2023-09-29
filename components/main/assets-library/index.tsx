@@ -976,6 +976,17 @@ const AssetsLibrary = () => {
                 </div> :
                 null}
               <div className={`${sidebarOpen ? styles["rightSide"] : styles["rightSideToggle"]}`}>
+                {openFilter && hasPermission([ASSET_ACCESS]) &&
+                  <FilterContainer
+                    clearFilters={clearFilters}
+                    openFilter={openFilter}
+                    setOpenFilter={setOpenFilter}
+                    activeSortFilter={activeSortFilter}
+                    setActiveSortFilter={setActiveSortFilter}
+                    isFolder={activeSortFilter.mainFilter === "folders"}
+                    filterWidth={widthCard}
+                  />
+                }
                 <div className='position-relative'>
                   <div className={styles["search-mobile"]}>
                     <SearchOverlay
@@ -1013,13 +1024,13 @@ const AssetsLibrary = () => {
                       activeMode={activeMode}
                       isFolder={activeSortFilter?.mainFilter === 'folders'}
                     />
+
                   }
                 </div>
                 <div
                   className={`${openFilter && styles["col-wrapper"]} ${sidebarOpen ? styles["grid-wrapper-web"] : styles["grid-wrapper"]}
                     } ${activeFolder && styles["active-breadcrumb-item"]}`}
                 >
-
                   <DropzoneProvider>
                     {advancedConfig.set && renderFlag && (
                       <AssetGrid
@@ -1045,26 +1056,17 @@ const AssetsLibrary = () => {
                       />
                     )}
                   </DropzoneProvider>
-                  {openFilter && hasPermission([ASSET_ACCESS]) &&
-                    <FilterContainer
-                      clearFilters={clearFilters}
-                      openFilter={openFilter}
-                      setOpenFilter={setOpenFilter}
-                      activeSortFilter={activeSortFilter}
-                      setActiveSortFilter={setActiveSortFilter}
-                      isFolder={activeSortFilter.mainFilter === "folders"}
-                      filterWidth={widthCard}
-                    />
-                  }
+
                 </div>
-              </div>
-            </div>
-          </main>
+              </div >
+            </div >
+          </main >
           <AssetOps />
         </>
       ) : (
         <NoPermissionNotice />
       )}
+
 
       <RenameModal
         closeModal={() => setRenameModalOpen(false)}
@@ -1077,28 +1079,32 @@ const AssetsLibrary = () => {
         }
       />
 
-      {uploadDetailOverlay && (
-        <UploadStatusOverlayAssets
-          closeOverlay={() => {
-            setUploadDetailOverlay(false);
-          }}
-        />
-      )}
+      {
+        uploadDetailOverlay && (
+          <UploadStatusOverlayAssets
+            closeOverlay={() => {
+              setUploadDetailOverlay(false);
+            }}
+          />
+        )
+      }
 
-      {currentViewAsset && (
-        <DetailOverlay
-          initiaParams={{ side: "detail" }}
-          asset={currentViewAsset.asset}
-          realUrl={currentViewAsset?.realUrl}
-          thumbailUrl={currentViewAsset?.thumbailUrl}
-          isShare={false}
-          closeOverlay={(assetData) => {
-            setDetailOverlayId(undefined);
-            setCurrentViewAsset(assetData);
-          }}
-          outsideDetailOverlay={true}
-        />
-      )}
+      {
+        currentViewAsset && (
+          <DetailOverlay
+            initiaParams={{ side: "detail" }}
+            asset={currentViewAsset.asset}
+            realUrl={currentViewAsset?.realUrl}
+            thumbailUrl={currentViewAsset?.thumbailUrl}
+            isShare={false}
+            closeOverlay={(assetData) => {
+              setDetailOverlayId(undefined);
+              setCurrentViewAsset(assetData);
+            }}
+            outsideDetailOverlay={true}
+          />
+        )
+      }
     </>
   );
 };

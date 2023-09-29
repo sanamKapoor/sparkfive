@@ -19,6 +19,11 @@
 @media screen and (max-width: 600px) {
   .grid-wrapper {
     /* margin-top: calc(55px + 36px + 75px); */
+    /* display: block; */
+  }
+  .grid-wrapper-web{
+   max-width: 100%;
+   left:0;
   }
 }
 
@@ -48,6 +53,10 @@
   .container {
     padding: 20px;
   }
+  .grid-wrapper-web{
+    max-width: 100%;
+    left:0;
+   }
 }
 
 .active-breadcrumb-item {
@@ -82,3 +91,8 @@
   padding:0 35px 0 0;
 }
 
+@media screen and (max-width: 800px) {
+.rightSide{
+  padding: 0;
+}
+}

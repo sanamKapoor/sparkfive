@@ -52,6 +52,12 @@
   .grid-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(163px, 1fr));
+  
+  }
+}
+@media screen and (max-width: 810px){
+  .grid-list{
+    margin-top: 145px;
   }
 }
 

@@ -173,7 +173,6 @@ const TopBar = ({
             current={folderData[0]?.name}
           />
         )}
-
       </div>
       <div className={styles.wrapper}>
         <div className={`${styles['main-heading-wrapper']}`}>
@@ -280,9 +279,7 @@ const TopBar = ({
               )
             }
           </div>
-
         </div>
-
         <div className={styles["sec-filters"]}>
           {!isMobile && !isShare && !activeSearchOverlay && (
             <img
@@ -425,7 +422,7 @@ const TopBar = ({
             />
           </div>
         </div>
-      </div>
+      </div >
 
       <div className={styles["mobile-bottom"]}>
         {(amountSelected === 0 || mode === "folders") &&
@@ -436,7 +433,7 @@ const TopBar = ({
           )}
       </div>
 
-    </section>
+    </section >
   );
 };
 

@@ -1,102 +1,49 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./Tags.module.css";
+import Select from "../common/inputs/select";
+import { sorts } from "../../config/data/attributes";
+import Tagmodal from "../main/Select-Tag-Modal/select-tag-modal";
+import FilterModal from "../main/filter-modal/filter-modal";
 const Tags = () => {
+  const [isMOdalOpen,setIsModalOpen] = useState(false);
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
   return (
     <div className={styles.allTags}>
-    <div className={styles["custom-select"]}>
-      <select>
-        <option value="" selected>
-          Tags
-        </option>
-        <option value="option1">Option 1</option>
-        <option value="option2"> 2</option>
-      </select>
+    <div className={`${styles['filter-tags-list']}`}>
+    <Select 
+        onChange={(value) => {  } }
+        placeholder={'Tags'}
+        styleType={`regular ${styles['tag-select']}`} options={sorts}/> 
+         <Select 
+        onChange={(value) => {  } }
+        placeholder={'AI Tags'}
+        styleType={`regular ${styles['tag-select']}`} options={sorts}/> 
+          <Select 
+        onChange={(value) => {  } }
+        placeholder={'Campaigns'}
+        styleType={`regular ${styles['tag-select']}`} options={sorts}/> 
+          <Select 
+        onChange={(value) => {  } }
+        placeholder={'File Types'}
+        styleType={`regular ${styles['tag-select']}`} options={sorts}/> 
+          <Select 
+        onChange={(value) => {  } }
+        placeholder={'Product'}
+        styleType={`regular ${styles['tag-select']}`} options={sorts}/> 
       </div>
-      <div className={styles["custom-select"]}>
-      <select>
-        <option value="" selected>
-          AI Tags
-        </option>
-        <option value="option1">Option 1</option>
-        <option value="option2"> 2</option>
-      </select>
-      </div>
-      <div className={styles["custom-select"]}>
-      <select>
-        <option value="" selected>
-          Compaigns
-        </option>
-        <option value="option1">Option 1</option>
-        <option value="option2"> 2</option>
-      </select>
-      </div>
-      <div className={styles["custom-select"]}>
-      <select>
-        <option value="" selected>
-          File Types
-        </option>
-        <option value="option1">Option 1</option>
-        <option value="option2"> 2</option>
-      </select>
-      </div>
-      <div className={styles["custom-select"]}>
-      <select>
-        <option value="" selected>
-          Products
-        </option>
-        <option value="option1">Option 1</option>
-        <option value="option2"> 2</option>
-      </select>
-      </div>
-      <div className={styles["custom-select"]}>
-      <select>
-        <option value="" selected>
-          Last Updated
-        </option>
-        <option value="option1">Option 1</option>
-        <option value="option2"> 2</option>
-      </select>
-      </div>
-      <div className={styles["custom-select"]}>
-      <select>
-        <option value="" selected>
-          Orientation
-        </option>
-        <option value="option1">Option 1</option>
-        <option value="option2"> 2</option>
-      </select>
-      </div>
-      <div className={styles["custom-select"]}>
-      <select>
-        <option value="" selected>
-          Dimensions
-        </option>
-        <option value="option1">Option 1</option>
-        <option value="option2"> 2</option>
-      </select>
-      </div>
-      <div className={styles["custom-select"]}>
-      <select>
-        <option value="" selected>
-          Custom fields #1
-        </option>
-        <option value="option1">Option 1</option>
-        <option value="option2"> 2</option>
-      </select>
-      </div>
-      <div className={styles["custom-select"]}>
-      <select>
-        <option value="" selected>
-          Custom fields #2
-        </option>
-        <option value="option1">Option 1</option>
-        <option value="option2"> 2</option>
-      </select>
-    </div>
-    <div className={styles.morefilter}>
-        <span>More filters</span>
-
-    </div>
+      <div className={styles.morefilter}>
+        <button className={styles.moreFilter} onClick={openModal} >More filters</button>
+        {isMOdalOpen && (
+        <FilterModal onClose={closeModal}/>
+        )}
+        </div>
+      
+   
     </div>
   );
 };
