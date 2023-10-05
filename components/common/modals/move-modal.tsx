@@ -268,11 +268,11 @@ const MoveModal = ({
                         // selectedItem === index &&
                         (
                           <>
-                          <div className={`${styles['select-all']}`}>
-                            <img src={Utilities.doubleCheck} alt="Check Icon" />
-                            <span className={styles.selectText}>Select All</span>
-                          </div>
-                           {/* <div className={`${styles['deselect-all']}`}>
+                            <div className={`${styles['select-all']}`}>
+                              <img src={Utilities.doubleCheck} alt="Check Icon" />
+                              <span className={styles.selectText}>Select All</span>
+                            </div>
+                            {/* <div className={`${styles['deselect-all']}`}>
                          <img src={Utilities.redCheck} alt="Check Icon" />
                          <span className={styles.deselectText}>Deselect All</span>
                        </div> */}
@@ -295,11 +295,6 @@ const MoveModal = ({
                       >
                         <div className={styles["folder-lists"]}>
                           <div className={styles.dropdownIcons}>
-                            <img
-                              className={styles.subfolder}
-                              src={Utilities.folder}
-                              alt="Folder Icon"
-                            />
                             <div
                               className={`${styles.circle} ${selectedFolder.includes(subfolder.id) ? styles.checked : ""
                                 }`}
@@ -316,13 +311,14 @@ const MoveModal = ({
                           </div> */}
                         </div>
                       </div>
-                      <div  className={`${styles['load-wrapper']}`}>
-                    <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} />
-                    <button className={styles.loadMore}>Load more</button>
-                    </div>
+
                     </>
                   ))
                 }
+                <div className={`${styles['load-wrapper']}`}>
+                  <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} />
+                  <button className={styles.loadMore}>Load more</button>
+                </div>
               </div>
             </div>
             }
