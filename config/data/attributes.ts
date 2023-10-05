@@ -97,25 +97,30 @@ export const tabsData = [
     id: "tags",
     title: "Tags",
     content: TagManagement,
+    permissions: [],
   },
   {
     id: "customFields",
     title: "Custom Fields",
     content: CustomFieldsManagement,
+    permissions: [],
   },
   {
     id: "collections",
     title: "Collections",
     content: CollectionManagement,
+    permissions: [],
   },
   {
     id: "products",
     title: "Products",
     content: ProductManagement,
+    permissions: [],
   },
   {
     id: "campaigns",
     title: "Campaigns",
     content: CampaignManagement,
+    permissions: [],
   },
 ];

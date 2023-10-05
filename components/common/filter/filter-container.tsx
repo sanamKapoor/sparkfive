@@ -1,18 +1,12 @@
-import update from 'immutability-helper';
-import { useContext, useEffect, useState } from 'react';
+import update from "immutability-helper";
+import { useContext, useEffect, useState } from "react";
 
-import { Utilities } from '../../../assets';
-import { AssetContext, FilterContext, UserContext } from '../../../context';
-import customFieldsApi from '../../../server-api/attribute';
-import shareCollectionApi from '../../../server-api/share-collection';
-import DateUploaded from './date-uploaded';
-import DimensionsFilter from './dimensions-filter';
-import styles from './filter-container.module.css';
-import FilterSelector from './filter-selector';
-import ProductFilter from './product-filter';
-import ResolutionFilter from './resolution-filter';
-import Tags from '../../topbar-newnavigation/Tags';
-import InputChip from '../../topbar-newnavigation/InputChip';
+import { AssetContext, FilterContext, UserContext } from "../../../context";
+import customFieldsApi from "../../../server-api/attribute";
+import shareCollectionApi from "../../../server-api/share-collection";
+import InputChip from "../../topbar-newnavigation/InputChip";
+import Tags from "../../topbar-newnavigation/Tags";
+import styles from "./filter-container.module.css";
 
 // Components
 const FilterContainer = ({
@@ -38,7 +32,9 @@ const FilterContainer = ({
   const {
     folders,
     campaigns,
+    channels,
     fileTypes,
+    projects,
     tags,
     assetOrientations,
     assetResolutions,
@@ -61,26 +57,25 @@ const FilterContainer = ({
     loadCustomFields,
     setCustomFields,
     setRenderedFlag,
-    renderFlag
+    renderFlag,
   } = useContext(FilterContext);
 
   const { activeFolder } = useContext(AssetContext);
 
   const getCustomFields = async () => {
-
     try {
       if (!renderFlag) {
         const { data } = isPublic
           ? await shareCollectionApi.getCustomFields({
-            assetsCount: "yes",
-            assetLim: "yes",
-            sharePath,
-          })
+              assetsCount: "yes",
+              assetLim: "yes",
+              sharePath,
+            })
           : await customFieldsApi.getCustomFieldsWithCount({
-            assetsCount: "yes",
-            assetLim: "yes",
-            sharePath,
-          });
+              assetsCount: "yes",
+              assetLim: "yes",
+              sharePath,
+            });
         setCustomFieldList(data);
         let fields = [];
         // Expand those custom field
@@ -160,10 +155,11 @@ const FilterContainer = ({
 
   return (
     <>
-      {false ?
+      {false ? (
         <div
-          className={`${styles.container}  ${stickyMenuScroll && styles["sticky-menu"]
-            }`}
+          className={`${styles.container}  ${
+            stickyMenuScroll && styles["sticky-menu"]
+          }`}
           style={{ width: filterWidth }}
         >
           <Tags />
@@ -691,10 +687,8 @@ const FilterContainer = ({
             )}
           </div> */}
         </div>
-        : null}
+      ) : null}
     </>
-
-
   );
 };
 

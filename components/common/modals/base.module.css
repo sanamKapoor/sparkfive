@@ -2,8 +2,8 @@
   max-width: calc(100vw - 10%);
   min-width: 380px;
   max-height: calc(100vh - 20%);
-  overflow-y: auto;
-  overflow-x: hidden;
+  /* overflow-y: auto;
+  overflow-x: hidden; */
   position: relative;
   display: flex;
   flex-direction: column;
@@ -37,12 +37,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
 }
 
 @media screen and (min-width: 801px) {
   .overlay {
     align-items: flex-start;
     padding-top: 188px;
+    padding-bottom: 50px;
   }
 }
 
@@ -60,15 +62,23 @@
   gap: 10px;
 }
 
+.baseHeading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .subtext {
   font-size: 12px;
   margin: 8px 0 0;
   font-weight: 300;
+  max-width: 80%;
 }
 
 .text p {
   flex: 1;
   margin: 0;
+
 }
 
 .text span {
@@ -80,7 +90,8 @@
 }
 
 .close {
-  width: 24px;
+  width: 21px;
+  height: 21px;
   height: auto;
   font-weight: 700;
   color: var(--color-sec-blue);

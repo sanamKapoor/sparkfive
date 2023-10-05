@@ -43,6 +43,7 @@ const CreatableSelect = ({
   ignorePermission = false,
   menuPosition = "absolute",
   sortDisplayValue = false,
+  isAddIconDark= false,
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
 
@@ -182,7 +183,7 @@ const CreatableSelect = ({
     <>
       <div className={`secondary-text ${styles.field}`}>{title}</div>
       {selectOneComponent}
-      <div className={"normal-text"}>
+      <div className={`normal-text`}>
         <ul className={`tags-list ${styles["tags-list"]}`}>
           {(selectedItems || []).slice(0, 9).map((item, index) => {
             return (
@@ -262,7 +263,8 @@ const CreatableSelect = ({
                     menuPlacement={"auto"}
                     menuPosition={menuPosition}
                     isClearable={true}
-                    className="creatable-select"
+                    // className="creatable-select"
+                    className={`${styles["creatable-select"]}`}
                     styles={menuStyles}
                   />
                 )}
@@ -274,7 +276,7 @@ const CreatableSelect = ({
                     className={`add ${styles["select-add"]}`}
                     onClick={onAddClick}
                   >
-                    <IconClickable src={Utilities.addLight} />
+                    <IconClickable src={isAddIconDark ? Utilities.adddark : Utilities.addLight} />
                     <span>{addText}</span>
                   </div>
                 )}

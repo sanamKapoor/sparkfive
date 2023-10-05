@@ -102,20 +102,22 @@
 }
 
 .row-header{
-    margin: 0 0 15px 0;
+    margin: 0 0 32px 0;
     display: block;
     border-bottom: solid 1px #dddad4;
-    padding-bottom: 5px;
     font-weight: 500;
+    font-size: 16px;
     width: 100%;
 }
 
 .font-weight-600{
     font-weight: 600;
+    margin-right: 5px;
 }
 
 .field-block{
     margin-bottom: 75px;
+    gap:100px;
 }
 
 .tag-wrapper{
@@ -147,6 +149,9 @@
 
 .confirm-modal-text{
     padding-top: 30px;
+}
+.custom-fields-managements{
+    padding: 0 60px;
 }
 
 

@@ -45,7 +45,7 @@ const SubscriptionCheckout: React.FC<SubscriptionCheckoutProps> = ({
       await planApi.changePlan({ priceId: selectedPrice.id, paymentMethodId });
       getPlan({ withStorageUsage: true });
       goBack();
-      toastUtils.success("Plan changed succesfully");
+      toastUtils.success("Plan changed successfully");
     } catch (err) {
       console.log(err);
     }

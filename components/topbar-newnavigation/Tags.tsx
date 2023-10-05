@@ -1,9 +1,8 @@
-import React, { useState } from "react";
-import styles from "./Tags.module.css";
-import Select from "../common/inputs/select";
+import { useState } from "react";
 import { sorts } from "../../config/data/attributes";
-import Tagmodal from "../main/Select-Tag-Modal/select-tag-modal";
+import Select from "../common/inputs/select";
 import FilterModal from "../main/filter-modal/filter-modal";
+import styles from "./Tags.module.css";
 const Tags = () => {
   const [isMOdalOpen,setIsModalOpen] = useState(false);
   const openModal = () => {

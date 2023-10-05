@@ -22,9 +22,9 @@ const UserPreference: React.FC<UserPreferenceProps> = ({
     <div className={"fields-first"}>
       <h3>{title}</h3>
       {subtitle && <h4>{subtitle}</h4>}
-      <p>{description}</p>
-    </div>
-    <div className={styles["radio-options"]}>
+      <div className={styles.securityWrapper}>
+      <p className={styles.desc}>{description}</p>
+      <div className={styles["radio-options"]}>
       <div className={styles.option}>
         <div>On</div>
         <img
@@ -40,6 +40,10 @@ const UserPreference: React.FC<UserPreferenceProps> = ({
         />
       </div>
     </div>
+      </div>
+     
+    </div>
+    
   </div>
 );
 

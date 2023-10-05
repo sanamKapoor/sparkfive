@@ -6,6 +6,8 @@
   background-color: var(--color-prim-navy);
   color: white;
   border-top: 1px solid #2D377E;
+  position: fixed;
+  width: 218px;
 
 }
 

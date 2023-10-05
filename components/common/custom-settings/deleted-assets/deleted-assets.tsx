@@ -1,3 +1,5 @@
+//TODO: check from es-dev
+
 import update from "immutability-helper";
 import { useContext, useEffect, useState } from "react";
 import { Waypoint } from "react-waypoint";
@@ -9,44 +11,13 @@ import styles from "./deleted-assets.module.css";
 
 // Components
 import useSortedAssets from "../../../../hooks/use-sorted-assets";
-import selectOptions from "../../../../utils/select-options";
-import DetailOverlay from "../../asset/detail-overlay";
 import Button from "../../buttons/button";
-import Select from "../../inputs/select";
 import ConfirmModal from "../../modals/confirm-modal";
 import DeletedListItem from "./deleted-list-item";
-import { AssetOps } from "../../../../assets";
-import IconClickable from "../../buttons/icon-clickable";
 
-const DeletedAssets = ({
-  activeView = "grid",
-  isShare = false,
-  onFilesDataGet = (files) => {},
-  toggleSelected,
-  mode = "assets",
-  activeSortFilter,
-  setActiveSortFilter,
-  deleteFolder = (id) => {},
-  itemSize = "regular",
-  activeFolder = "",
-  type = "",
-  itemId = "",
-  getFolders = () => {},
-  loadMore = () => {},
-  viewFolder = (id) => {},
-  sharePath = "",
-  openFilter,
-}) => {
-  const {
-    assets,
-    setAssets,
-    setActiveOperation,
-    setOperationAsset,
-    nextPage,
-    setOperationFolder,
-    folders,
-    selectAllAssets,
-  } = useContext(AssetContext);
+const DeletedAssets = ({ toggleSelected, loadMore = () => {} }) => {
+  const { assets, setAssets, nextPage } = useContext(AssetContext);
+
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [recoverModalOpen, setRecoverModalOpen] = useState(false);
   const [activeAssetId, setActiveAssetId] = useState("");
@@ -54,7 +25,7 @@ const DeletedAssets = ({
   const [initAsset, setInitAsset] = useState(undefined);
 
   const [sortedAssets, currentSortAttribute, setCurrentSortAttribute] =
-    useSortedAssets(assets, "-asset.deleted-at");
+    useSortedAssets(assets, "-assets.deleted-at");
 
   useEffect(() => {
     const { assetId } = urlUtils.getQueryParameters();
@@ -119,74 +90,12 @@ const DeletedAssets = ({
     }
   };
 
-  const beginAssetOperation = ({ asset = null, folder = null }, operation) => {
-    if (asset) setOperationAsset(asset);
-    if (folder) setOperationFolder(folder);
-    setActiveOperation(operation);
-  };
-
   const showLoadMore = assets.length > 0;
   const loadingAssetsFolders =
     assets.length > 0 && assets[assets.length - 1].isLoading;
 
-  const selectAll = () => {
-    selectAllAssets();
-    setAssets(assets.map((assetItem) => ({ ...assetItem, isSelected: true })));
-  };
-
-  const setSortFilterValue = (key, value) => {
-    let sort = key === "sort" ? value : activeSortFilter.sort;
-
-    setActiveSortFilter({
-      ...activeSortFilter,
-      [key]: value,
-      sort,
-    });
-  };
-
   return (
-    <section className={`${styles.container} ${openFilter && styles.filter}`}>
-      <div className={styles.header}>
-        <h3>Deleted Assets</h3>
-        <p>
-          Deleted assets are retained for 60 days before permanent removal.
-          Admin can recover deleted assets within 60 days
-        </p>
-      </div>
-
-      <div className={styles.header_actions}>
-      <IconClickable
-          src={AssetOps.moveGray}
-          additionalClass={styles["action-recover"]}
-        />
-        <IconClickable
-          src={AssetOps.deleteGray}
-          additionalClass={styles["action-delete"]}
-        />
-
-        <Button
-          text="Deselect All"
-          type="button"
-          styleType="primary"
-          onClick={() => alert('deselect all')}
-        />
-        <Button
-          text="Select All"
-          type="button"
-          className="container secondary"
-          onClick={selectAll}
-        />
-        <div className={styles.select}>
-          <Select
-            label={"Sort By"}
-            options={selectOptions.sort}
-            value={activeSortFilter.sort}
-            styleType="filter filter-schedule"
-            onChange={(selected) => setSortFilterValue("sort", selected)}
-            placeholder="Sort By"
-          />
-        </div>
-      </div>
+    <section className={`${styles.container}`}>
       <ul className={styles["list-wrapper"]}>
         {sortedAssets.map((assetItem, index) => {
           return (
@@ -195,8 +104,6 @@ const DeletedAssets = ({
               key={assetItem.asset.id || index}
             >
               <DeletedListItem
-                isShare={isShare}
-                type={type}
                 assetItem={assetItem}
                 index={index}
                 toggleSelected={() => toggleSelected(assetItem.asset.id)}
@@ -234,7 +141,6 @@ const DeletedAssets = ({
         </>
       )}
 
-      {/* Delete modal */}
       <ConfirmModal
         closeModal={() => setDeleteModalOpen(false)}
         confirmAction={() => {
@@ -268,23 +174,6 @@ const DeletedAssets = ({
         }
         modalIsOpen={recoverModalOpen}
       />
-
-      {/* Overlay exclusive to page load assets */}
-      {initAsset && (
-        <DetailOverlay
-          isShare={isShare}
-          sharePath={sharePath}
-          asset={initAsset.asset}
-          realUrl={initAsset.realUrl}
-          initialParams={{ side: "comments" }}
-          openShareAsset={() =>
-            beginAssetOperation({ asset: initAsset }, "share")
-          }
-          openDeleteAsset={() => openDeleteAsset(initAsset.asset.id)}
-          closeOverlay={() => setInitAsset(undefined)}
-          thumbailUrl={undefined}
-        />
-      )}
     </section>
   );
 };

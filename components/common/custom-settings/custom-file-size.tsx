@@ -108,10 +108,11 @@ const CustomFileSizes = () => {
   }, []);
 
   return (
-    <div className={styles["main-wrapper"]}>
+    <div className={`${styles['main-wrapper']} ${styles['outer-wrapper']}`}>
       <h3>Custom File Sizes</h3>
       {fileSizeList.map((field, index) => (
-        <div className={styles.row} key={index}>
+          <div className={`${styles['row']} ${styles['custom-setting-border']}`} key={index}>
+          
           <div className={styles.form}>
             <div className={styles.field}>
               <div className={styles.field_title}>Custom File Size Name</div>
@@ -123,6 +124,7 @@ const CustomFileSizes = () => {
                   value={field.name}
                   placeholder={"Field name"}
                   styleType={"regular-short"}
+                  additionalClasses={styles.fileSizeFirst}
                 />
               </div>
             </div>
@@ -138,7 +140,7 @@ const CustomFileSizes = () => {
                     }}
                     value={field.width}
                     placeholder={"Width"}
-                    additionalClasses={"center-input"}
+                    additionalClasses={styles.fileSizeSecond}
                     type={"number"}
                     styleType={"regular-short"}
                   />
@@ -153,7 +155,7 @@ const CustomFileSizes = () => {
                     value={field.height}
                     placeholder={"Height"}
                     type={"number"}
-                    additionalClasses={"center-input"}
+                    additionalClasses={styles.fileSizethird}
                     styleType={"regular-short"}
                   />
                 </div>
@@ -197,7 +199,7 @@ const CustomFileSizes = () => {
 
       {fileSizeList.length <
         customSettings.CUSTOM_FILE_SIZES.MAX_CONFIGURATIONS && (
-        <div className={`${styles["row"]} ${styles["field-block"]}`}>
+        <div className={`${styles["row"]} ${styles['custom-setting-border']} ${styles["field-block"]}`}>
           <div className={`add ${styles["select-add"]}`} onClick={addNew}>
             <IconClickable src={Utilities.add} />
             <span className={"font-weight-500"}>Add New</span>

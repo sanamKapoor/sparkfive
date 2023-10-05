@@ -51,12 +51,14 @@
 
 .select-icon {
     display: block;
-    width: 20px;
-    height: 20px;
+    width: 17px;
+    height: 17px;
 }
 
 .select-item p {
     margin: 0 5px;
+    font-size: 12px;
+    font-weight: 400;
 }
 
 .item-name {

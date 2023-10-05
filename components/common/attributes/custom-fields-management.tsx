@@ -134,7 +134,7 @@ const CustomFieldsManagement = () => {
   }, []);
 
   return (
-    <div className={styles["main-wrapper"]}>
+    <div className={`${styles['main-wrapper']} ${styles['custom-fields-managements']}`}>
       <h3>Custom Fields</h3>
       {customFieldList.map((field, index) => {
         return (
@@ -142,7 +142,7 @@ const CustomFieldsManagement = () => {
             className={`${styles["row"]} ${styles["field-block"]}`}
             key={index}
           >
-            <div className={`${styles["col-25"]} ${styles["col-md-100"]}`}>
+            <div className={`${styles["col-50"]} ${styles["col-md-100"]}`}>
               <div className={styles["row"]}>
                 <div
                   className={`${styles["col-100"]} ${styles["flex-display"]}`}
@@ -167,7 +167,7 @@ const CustomFieldsManagement = () => {
               </div>
             </div>
             <div
-              className={`${styles["col-35"]} ${styles["col-md-100"]} ${styles["p-l-30"]}`}
+              className={`${styles["col-25"]} ${styles["col-md-100"]} ${styles["p-l-30"]}`}
             >
               <div className={styles["row"]}>
                 <div
@@ -221,7 +221,7 @@ const CustomFieldsManagement = () => {
               </div>
             </div>
             <div
-              className={`${styles["col-25"]} ${styles["col-md-100"]} ${styles["p-l-30"]}`}
+              className={`${styles["col-15"]} ${styles["col-md-100"]} ${styles["p-l-30"]}`}
             >
               <div className={styles["row"]}>
                 <div className={`${styles["col-100"]}`}>
@@ -240,10 +240,10 @@ const CustomFieldsManagement = () => {
               </div>
             </div>
             <div
-              className={`${styles["col-15"]} ${styles["col-md-100"]} ${styles["button-row"]} ${styles["p-l-30"]}`}
+              className={`${styles["col-10"]} ${styles["col-md-100"]} ${styles["button-row"]} ${styles["p-l-30"]}`}
             >
               <Button
-                className={"container exclude-min-height primary"}
+                className={"container exclude-min-height primary field-btn"}
                 type={"button"}
                 text="Save"
                 onClick={() => {

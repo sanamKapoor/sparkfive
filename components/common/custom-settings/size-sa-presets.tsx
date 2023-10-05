@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import styles from "./custom-file-size.module.css";
 
-import { Utilities } from "../../../assets";
+import { AssetOps, Utilities } from "../../../assets";
 
 // APIs
 import sizeApi from "../../../server-api/size";
 
 // Components
-import { AssetOps } from "../../../assets";
 import toastUtils from "../../../utils/toast";
 import Button from "../buttons/button";
 import IconClickable from "../buttons/icon-clickable";
@@ -107,19 +106,20 @@ const SizeSaPresets = () => {
   }, []);
 
   return (
-    <div className={styles["main-wrapper"]}>
+    <div  className={`${styles['main-wrapper']} ${styles['size-preset-main-wrapper']}`}>
       {presetList.map((field, index) => {
         return (
           <div
-            className={`${styles["row"]} ${styles["field-block"]}`}
+            className={`${styles["row"]} ${styles["custom-setting-border"]} ${styles["field-block"]}`}
             key={index}
           >
             <div
-              className={`${styles["col-20"]} ${styles["col-md-100"]} p-l-r-0`}
+              // className={`${styles["col-20"]} ${styles["col-md-100"]} p-l-r-0`}
+              className="col-20 col-sm-100 col-md-100 p-l-r-0"
             >
               <div className={styles["row"]}>
                 <div
-                  className={`${styles["col-100"]} ${styles["flex-display"]}`}
+                  className={`${styles["col-100"]} ${styles["flex-display"]} d-flex`}
                 >
                   <span className={styles["font-weight-600"]}>
                     {index + 1}.
@@ -148,7 +148,8 @@ const SizeSaPresets = () => {
               </div>
             </div>
             <div
-              className={`${styles["col-25"]} ${styles["col-md-100"]} p-l-r-0`}
+              // className={`${styles["col-25"]} ${styles["col-md-100"]} ${styles["col-sm-100"]} p-l-r-0`}
+              className="col-20 col-sm-100 col-md-100 p-l-r-0"
             >
               <div className={styles["row"]}>
                 <div
@@ -173,12 +174,14 @@ const SizeSaPresets = () => {
                     value={field.name}
                     placeholder={"Field name"}
                     styleType={"regular-short"}
+                  
                   />
                 </div>
               </div>
             </div>
             <div
-              className={`${styles["col-35"]} ${styles["col-md-100"]} p-l-r-0`}
+              // className={`${styles["col-35"]} ${styles["col-md-100"]} p-l-r-0`}
+              className="col-20 col-sm-100 col-md-100 p-l-r-0"
             >
               <div className={styles["row"]}>
                 <div
@@ -205,6 +208,7 @@ const SizeSaPresets = () => {
                         additionalClasses={"center-input"}
                         type={"number"}
                         styleType={"regular-short"}
+                        additionalClasses={styles.DimensionBox}
                       />
                     </div>
                     <div className={"col-50"}>
@@ -220,6 +224,7 @@ const SizeSaPresets = () => {
                         type={"number"}
                         additionalClasses={"center-input"}
                         styleType={"regular-short"}
+                        additionalClasses={styles.DimensionBox}
                       />
                     </div>
                   </div>
@@ -242,6 +247,7 @@ const SizeSaPresets = () => {
                 <div
                   className={`${styles["col-100"]} p-r-0 p-l-0 d-flex p-t-15`}
                 >
+                  <div className={styles.saveblock}>
                   <Button
                     className={"container exclude-min-height primary"}
                     type={"button"}
@@ -276,6 +282,8 @@ const SizeSaPresets = () => {
                       }}
                     />
                   }
+                  </div>
+                 
                 </div>
               </div>
             </div>

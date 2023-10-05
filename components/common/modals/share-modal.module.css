@@ -1,6 +1,6 @@
 .wrapper{
     /* padding-bottom: 40px; */
-    height: calc(100vh - 599px);
+    height: calc(100vh - 512px);
     overflow-y: auto;
     /* height: calc(100vh - 333px); */
 }

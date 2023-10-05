@@ -4,14 +4,14 @@ import { useState } from "react";
 import planApi from "../../../../../server-api/plan";
 
 // Components
-import { IPaymentMethod } from "../../../../../types/account/payment";
+import { IPaymentMethod } from "../../../../../interfaces/account/payment";
 import Button from "../../../../common/buttons/button";
 import BaseModal from "../../../../common/modals/base";
 import CreditCardForm from "../../../../common/payment/credit-card-form";
 
 interface PaymentMethodProps {
   paymentMethod: IPaymentMethod;
-  setPaymentMethod: (val: string) => void;
+  setPaymentMethod: (val: IPaymentMethod) => void;
 }
 
 const PaymentMethod: React.FC<PaymentMethodProps> = ({
@@ -60,7 +60,7 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({
         subText="Please enter your credit card details below"
         closeModal={() => setModalActive(false)}
         noHeightMax={true}
-        additionalClasses={["visible-block"]}
+        additionalClasses={["visible-block",styles['update-card-modal']]}
         modalIsOpen={modalActive}
       >
         <CreditCardForm

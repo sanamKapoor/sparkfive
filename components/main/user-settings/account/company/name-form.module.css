@@ -1,8 +1,21 @@
 .form-container {
   display: flex;
   width: 50%;
+  margin-top: 20px;
+  margin-left: 10px;
+  align-items: center;
 }
-
+.companyName{
+  font-family: "Noto Sans", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+}
+.companyAllInfo{
+  padding: 0 60px;
+}
+.compamnyInfo{
+  margin-bottom: 20px;
+}
 h3.title { 
   font-weight: 600;
   margin-bottom: 24px;
@@ -13,6 +26,11 @@ h3.title {
   font-size: 14px;
   font-weight: 600;
 }
+.infoField{
+  max-width: 356px;
+  margin-right: 114px;
+}
+
 @media screen and (max-width: 900px) {
   .form-container {
      width: 100%;

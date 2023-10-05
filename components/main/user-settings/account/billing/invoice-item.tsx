@@ -1,11 +1,11 @@
 import { format } from "date-fns";
 import downloadUtils from "../../../../../utils/download";
-import { formatCurrency } from "../../../../../utils/numbers";
 import styles from "./invoice-item.module.css";
 
 // Components
 import { capitalCase } from "change-case";
 import { AssetOps } from "../../../../../assets";
+import { formatAmount } from "../../../../../utils/numbers";
 import IconClickable from "../../../../common/buttons/icon-clickable";
 
 interface InvoiceItemProps {
@@ -26,7 +26,7 @@ const InvoiceItem: React.FC<InvoiceItemProps> = ({
       <div>{invoice.date && format(invoice.date, "MM/dd/yyyy")}</div>
       <div>{invoice.product}</div>
       {type === "invoice" && <div>{capitalCase(invoice.status)}</div>}
-      <div>{formatCurrency(invoice.amount / 100)}</div>
+      <div>{formatAmount(invoice.amount, invoice.currency)}</div>
       {type === "invoice" && (
         <IconClickable src={AssetOps.download} onClick={downloadInvoice} />
       )}

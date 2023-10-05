@@ -1,25 +1,28 @@
 import React from "react";
+import { IGuestUserInfo } from "../../interfaces/guest-upload/guest-upload";
 import styles from "./index.module.css";
 
 interface GuestDetailsProps {
-  setEdit?: (val: boolean) => void;
+  userDetails: IGuestUserInfo;
+  onCancel: () => void;
 }
 
-const GuestDetails: React.FC<GuestDetailsProps> = ({ setEdit }) => {
+const GuestDetails: React.FC<GuestDetailsProps> = ({
+  userDetails,
+  onCancel,
+}) => {
   return (
     <div className={styles.guest_info}>
       <div className={styles.guest_info_row}>
-        <div className={styles.user}>John Smith</div>
-        <div className={styles.edit} onClick={() => setEdit(true)}>
-          Edit
+        <div className={styles.user}>
+          {userDetails.firstName} {userDetails.lastName}
+        </div>
+        <div className={styles.edit} onClick={onCancel}>
+          Cancel
         </div>
       </div>
-      <div className={styles.email}>testJohn@gmail.com</div>
-      <div className={styles.message}>
-        This is my message to the ChampionX team. Please let me know if you get
-        this. I will be standing by waiting for your response. These file are
-        submitted by me and me only
-      </div>
+      <div className={styles.email}>{userDetails.email}</div>
+      <div className={styles.message}>{userDetails.notes}</div>
     </div>
   );
 };

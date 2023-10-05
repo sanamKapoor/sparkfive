@@ -1,3 +1,5 @@
+//TODO: refactor this file
+
 import { Utilities } from "../../../assets";
 import styles from "./folder-options.module.css";
 
@@ -9,7 +11,7 @@ import IconClickable from "../buttons/icon-clickable";
 import Dropdown from "../inputs/dropdown";
 import ToggleableAbsoluteWrapper from "../misc/toggleable-absolute-wrapper";
 
-import { ASSET_EDIT } from '../../../constants/permissions'
+import { ASSET_EDIT } from "../../../constants/permissions";
 
 const FolderOptions = ({
   downloadFoldercontents,
@@ -25,20 +27,20 @@ const FolderOptions = ({
   thumbnails = null,
   activeView,
   activeFolderId,
+  onClickFilterSettings,
 }) => {
   const { user, hasPermission } = useContext(UserContext);
 
   const options = isShare
     ? [{ label: "Download", onClick: downloadFoldercontents }]
     : [
-      { label: "Download", onClick: downloadFoldercontents },
-      // { label: "Delete", onClick: () => setDeleteOpen(true) },
-      { label: "Share", onClick: shareAssets },
-    ];
-
+        { label: "Download", onClick: downloadFoldercontents },
+        // { label: "Delete", onClick: () => setDeleteOpen(true) },
+        { label: "Share", onClick: shareAssets },
+      ];
 
   if (hasPermission([ASSET_EDIT])) {
-    options.push({ label: "Delete", onClick: () => setDeleteOpen(true) })
+    options.push({ label: "Delete", onClick: () => setDeleteOpen(true) });
   }
 
   const [adminOption, setAdminOption] = useState(options);
@@ -133,7 +135,20 @@ const FolderOptions = ({
       )}
       Content={() => (
         <div className={styles.more}>
-          {adminOption.length > 0 && <Dropdown options={adminOption} />}
+          {adminOption.length > 0 && (
+            //TODO: handle Filter Settings click
+            <Dropdown
+              options={[
+                ...adminOption,
+                {
+                  label: "Filter Settings",
+                  onClick: () => {
+                    console.log("Filter Settings");
+                  },
+                },
+              ]}
+            />
+          )}
         </div>
       )}
     />

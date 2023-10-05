@@ -1,25 +1,47 @@
 .container {
   width: 70%;
 }
+.company-address-form-wrapper{
+  padding: 0 60px;
+}
 
 .container button{
   margin-top: 18px;
 }
-
-h3.title {
-  margin-bottom: 24px;
+.title{
+  margin-bottom: 20px !important;
 }
 
+h3.title {
+  font-weight: 500;
+  margin-bottom: 24px;
+
+}
+.companyAddress{
+  height: 60px;
+}
+.companyCity{
+  height:60px;
+}
 .state-country{
   display: flex;
   flex-wrap: wrap;
 }
+.borderRadius{
+  border-radius: 10px;
+  /* height:60px; */
+}
+/* .height{
+  height:60px;
+} */
 
 .fields-pair{
   display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 14px;
+  /* flex-wrap: wrap; */
+  /* margin-bottom: 14px; */
   margin-top: 28px;
+  max-width: 739px;
+  gap:10px;
 }
 .companyBtn button{
   min-width: 135px;
@@ -30,23 +52,45 @@ h3.title {
 .container label {
   margin-bottom: 16px;
   display: block;
+  font-weight: 500;
+  font-family: "Noto Sans", sans-serif;
+  font-size: 14px;
 }
+.companyLabel{
+  font-family: "Noto Sans", sans-serif;
+  font-size: 14px;
+ font-weight: 500;
 
+}
 
 .fields-pair label {
   margin-bottom: 16px;
   display: block;
+  font-weight: 500;
+  font-family: "Noto Sans", sans-serif;
+  font-size: 14px;
 }
 
 .fields-pair>div:first-child{
-  width: 55%;
-  margin-right: 5%;
+  max-width: 374px;
+  width: 100%;
 }
 
 .fields-pair>div:last-child{
-  width: 40%;
+  max-width: 374px;
+  width: 100%;
 }
+.companyAddress{
+  max-width: 739px;
+}
+/* .companyCity{
+  max-width: 374px;
+  margin-right: 10px;
 
+} */
+.borderRadius{
+  height: 60px;
+}
 @media screen and (max-width: 600px) {
   .container {
     width: 100%;
@@ -64,4 +108,16 @@ h3.title {
   .state {
     margin-top: 34px;
   }
+}
+@media screen and (max-width: 810px){
+  .fields-pair>div:first-child{
+    width: 100%;
+    margin-right: 0%;
+  }
+  
+  .fields-pair>div:last-child{
+    width: 100%;
+  }
+
+
 }

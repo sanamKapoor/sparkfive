@@ -1,23 +1,27 @@
 // External
-import fileDownload from 'js-file-download';
-import { useRouter } from 'next/router';
-import { useContext, useEffect, useRef, useState } from 'react';
+import fileDownload from "js-file-download";
+import { useRouter } from "next/router";
+import { useContext, useEffect, useRef, useState } from "react";
 
-import { AssetOps, Utilities } from '../../../assets';
-import { maximumAssociateFiles } from '../../../constants/asset-associate';
-import { ASSET_DOWNLOAD } from '../../../constants/permissions';
-import { AssetContext, FilterContext, LoadingContext, UserContext } from '../../../context';
-import assetApi from '../../../server-api/asset';
-import folderApi from '../../../server-api/folder';
-import shareApi from '../../../server-api/share-collection';
-import { getAssetsFilters } from '../../../utils/asset';
-import { getSubdomain } from '../../../utils/domain';
-import toastUtils from '../../../utils/toast';
-import IconClickable from '../../common/buttons/icon-clickable';
-import Dropdown from '../inputs/dropdown';
-import ConfirmModal from '../modals/confirm-modal';
-import styles from './asset-header-ops.module.css';
-
+import { AssetOps, Utilities } from "../../../assets";
+import { maximumAssociateFiles } from "../../../constants/asset-associate";
+import { ASSET_DOWNLOAD } from "../../../constants/permissions";
+import {
+  AssetContext,
+  FilterContext,
+  LoadingContext,
+  UserContext,
+} from "../../../context";
+import assetApi from "../../../server-api/asset";
+import folderApi from "../../../server-api/folder";
+import shareApi from "../../../server-api/share-collection";
+import { getAssetsFilters } from "../../../utils/asset";
+import { getSubdomain } from "../../../utils/domain";
+import toastUtils from "../../../utils/toast";
+import IconClickable from "../../common/buttons/icon-clickable";
+import Dropdown from "../inputs/dropdown";
+import ConfirmModal from "../modals/confirm-modal";
+import styles from "./asset-header-ops.module.css";
 
 const AssetHeaderOps = ({
   isUnarchive = false,
@@ -28,8 +32,11 @@ const AssetHeaderOps = ({
   advancedLink = false,
   activeMode,
   selectedFolders,
-  selectedSubFoldersAndAssets
-}: { activeMode: string, [key: string]: any }) => {
+  selectedSubFoldersAndAssets,
+}: {
+  activeMode: string;
+  [key: string]: any;
+}) => {
   const router = useRouter();
 
   const [sharePath, setSharePath] = useState("");
@@ -56,7 +63,7 @@ const AssetHeaderOps = ({
     selectedAllSubFoldersAndAssets,
     setSelectedAllSubFoldersAndAssets,
     setSubFoldersViewList,
-    setSubFoldersAssetsViewList
+    setSubFoldersAssetsViewList,
   } = useContext(AssetContext);
 
   const { setIsLoading } = useContext(LoadingContext);
@@ -98,7 +105,7 @@ const AssetHeaderOps = ({
     }
   }, [router.asPath]);
 
-  const isSubCollection = activeMode === "SubCollectionView"
+  const isSubCollection = activeMode === "SubCollectionView";
 
   // Hidden pagination assets are selected
   if (selectedAllAssets) {
@@ -112,17 +119,25 @@ const AssetHeaderOps = ({
   }
   let totalSubFoldersAndAssets = { assets: 0, folders: 0 };
 
-  if (selectedSubFoldersAndAssets.folders.length > 0 || selectedSubFoldersAndAssets.assets.length > 0) {
-    const currentUnSelectedSubAssets = subFoldersAssetsViewList.results.filter((asset) => !asset.isSelected);
+  if (
+    selectedSubFoldersAndAssets.folders.length > 0 ||
+    selectedSubFoldersAndAssets.assets.length > 0
+  ) {
+    const currentUnSelectedSubAssets = subFoldersAssetsViewList.results.filter(
+      (asset) => !asset.isSelected
+    );
     totalSubFoldersAndAssets = {
-      assets: subFoldersAssetsViewList.total - currentUnSelectedSubAssets?.length || 0,
-      folders: subFoldersViewList.results.filter((folder) => (folder.isSelected))?.length || 0
+      assets:
+        subFoldersAssetsViewList.total - currentUnSelectedSubAssets?.length ||
+        0,
+      folders:
+        subFoldersViewList.results.filter((folder) => folder.isSelected)
+          ?.length || 0,
     };
   }
 
   const downloadSelectedAssets = async () => {
     try {
-
       let payload = {
         assetIds: [],
         folderIds: [],
@@ -134,7 +149,7 @@ const AssetHeaderOps = ({
       let filters = {
         estimateTime: 1,
       };
-      // Have implemented the functionality for the Download Sub Collection assets  
+      // Have implemented the functionality for the Download Sub Collection assets
       if (selectedAllAssets) {
         totalDownloadingAssets = totalAssets;
         // Download all assets without pagination
@@ -161,7 +176,9 @@ const AssetHeaderOps = ({
         payload.folderIds = selectedFolders.map((folder) => folder.id);
       } else if (selectedSubFoldersAndAssets.folders.length > 0) {
         totalDownloadingAssets = selectedSubFoldersAndAssets.folders.length;
-        payload.folderIds = selectedSubFoldersAndAssets.folders.map((folder) => folder.id);
+        payload.folderIds = selectedSubFoldersAndAssets.folders.map(
+          (folder) => folder.id
+        );
       } else {
         totalDownloadingAssets = selectedAssets.length;
         payload.assetIds = selectedAssets.map(
@@ -215,8 +232,8 @@ const AssetHeaderOps = ({
         const assetsToAssociate = selectedAssets.filter(
           (assetItem) =>
             assetItem.asset.fileAssociations.length +
-            selectedAssets.length -
-            1 <=
+              selectedAssets.length -
+              1 <=
             maximumAssociateFiles
         );
         if (assetsToAssociate.length !== selectedAssets.length) {
@@ -249,10 +266,20 @@ const AssetHeaderOps = ({
     } else if (activeMode === "SubCollectionView") {
       // Mark deselect all
       setSelectedAllSubFoldersAndAssets(false);
-      setSubFoldersViewList({ ...subFoldersViewList, results: subFoldersViewList.results.map((folder) => ({ ...folder, isSelected: false })) })
+      setSubFoldersViewList({
+        ...subFoldersViewList,
+        results: subFoldersViewList.results.map((folder) => ({
+          ...folder,
+          isSelected: false,
+        })),
+      });
       setSubFoldersAssetsViewList({
-        ...subFoldersAssetsViewList, results: subFoldersAssetsViewList.results.map((asset) => ({ ...asset, isSelected: false }))
-      })
+        ...subFoldersAssetsViewList,
+        results: subFoldersAssetsViewList.results.map((asset) => ({
+          ...asset,
+          isSelected: false,
+        })),
+      });
     }
   };
 
@@ -326,7 +353,7 @@ const AssetHeaderOps = ({
         tooltipText: "Edit",
         tooltipId: "Edit",
         onClick: () => setActiveOperation("edit"),
-        child: null
+        child: null,
       },
     },
     {
@@ -338,11 +365,11 @@ const AssetHeaderOps = ({
         tooltipText: "Delete",
         tooltipId: "Delete",
         onClick: () => setActiveOperation("update"),
-        child: null
+        child: null,
       },
     },
     {
-      condition: (isShare || (hasPermission([ASSET_DOWNLOAD]) && !deletedAssets)),
+      condition: isShare || (hasPermission([ASSET_DOWNLOAD]) && !deletedAssets),
       props: {
         place: "top",
         additionalClass: styles["action-button"],
@@ -350,7 +377,7 @@ const AssetHeaderOps = ({
         tooltipId: "Download",
         tooltipText: "Download",
         onClick: downloadSelectedAssets,
-        child: null
+        child: null,
       },
     },
     {
@@ -362,9 +389,8 @@ const AssetHeaderOps = ({
         tooltipText: "Add to Collection",
         tooltipId: "Move",
         onClick: () => setActiveOperation("move"),
-        child: null
+        child: null,
       },
-
     },
     {
       condition: !isFolder && !isShare && !deletedAssets && !isSubCollection,
@@ -430,7 +456,7 @@ const AssetHeaderOps = ({
       },
     },
     {
-      condition: isFolder && !isShare && !deletedAssets || isSubCollection,
+      condition: (isFolder && !isShare && !deletedAssets) || isSubCollection,
       props: {
         place: "top",
         additionalClass: styles["action-button"],
@@ -438,7 +464,7 @@ const AssetHeaderOps = ({
         tooltipText: "Share",
         tooltipId: "Share",
         onClick: () => setActiveOperation("shareCollections"),
-        child: null
+        child: null,
       },
     },
     {
@@ -450,7 +476,7 @@ const AssetHeaderOps = ({
         tooltipText: "Recover Asset",
         tooltipId: "Recover",
         onClick: () => setActiveOperation("recover"),
-        child: null
+        child: null,
       },
     },
     {
@@ -462,7 +488,7 @@ const AssetHeaderOps = ({
         tooltipText: "Delete",
         tooltipId: "Delete",
         onClick: () => setActiveOperation("delete"),
-        child: null
+        child: null,
       },
     },
     {
@@ -526,7 +552,7 @@ const AssetHeaderOps = ({
         ),
       },
     },
-  ]
+  ];
 
   return (
     <div className={styles.bar}>
@@ -541,10 +567,12 @@ const AssetHeaderOps = ({
         <div className={styles.text}>
           {activeMode === "assets"
             ? `${totalSelectAssets} Assets`
-            : activeMode === "folders" ? `${totalSelectAssets} Collections` :
-              `${totalSubFoldersAndAssets.folders} Sub Collections 
+            : activeMode === "folders"
+            ? `${totalSelectAssets} Collections`
+            : `${totalSubFoldersAndAssets.folders} Sub Collections 
              
-            `} Selected
+            `}{" "}
+          Selected
         </div>
       </div>
       {/** add below line in case of selection of assets in subcollection right */}
@@ -552,11 +580,16 @@ const AssetHeaderOps = ({
       {/* Icons over the select all modal  */}
 
       <div className={styles.icons}>
-        {conditionalIcons.map(({ condition, props }, index) => condition && (
-          props.child ? props.child : <IconClickable key={index} {...props} />
-        ))}
+        {conditionalIcons.map(
+          ({ condition, props }, index) =>
+            condition &&
+            (props.child ? (
+              props.child
+            ) : (
+              <IconClickable key={index} {...props} />
+            ))
+        )}
       </div>
-
 
       {!isFolder && !isShare && !isSubCollection && !deletedAssets && (
         <>

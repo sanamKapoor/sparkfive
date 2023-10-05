@@ -19,7 +19,7 @@
 }
 
 .container {
-  width: 70%;
+  width: 80%;
 }
 
 .container h3 {
@@ -29,7 +29,7 @@
 
 .row {
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   justify-content: space-between;
   padding: 20px 0;
   border-bottom: 1px solid var(--color-secondary-border);
@@ -43,7 +43,10 @@
 
 .field-radio-wrapper {
   display: flex;
-  gap: 40px;
+  /* gap: 100px; */
+  min-width: 300px;
+  width: 100%;
+  max-width: 800px;
 }
 .field-radio-wrapper-auto{
   display: flex;
@@ -57,13 +60,27 @@
   flex-direction: column;
   align-items: center;
   gap: 10px;
+  min-width: 177px;
 }
-
+/* .automation{
+  margin-left: 200px;
+} */
+/* .collection-tab{
+  width: 20%;
+}
+.subfolder-tags{
+  width:30%;
+} */
 .radio img {
   width: 20px;
   height: 20px;
 }
-
+.custom-view-wrapper{
+  padding: 0 60px;
+}
+.account-action-wrapper{
+  width: 40%;
+}
 @media screen and (max-width: 1200px) {
   .container {
     width: 100%;

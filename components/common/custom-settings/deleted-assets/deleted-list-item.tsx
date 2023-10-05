@@ -1,21 +1,17 @@
 import { format } from "date-fns";
 import filesize from "filesize";
 import { useEffect, useState } from "react";
-import { Utilities } from "../../../../assets";
+import { AssetOps, Utilities } from "../../../../assets";
 import { getParsedExtension } from "../../../../utils/asset";
 import styles from "./deleted-list-item.module.css";
 
-// Components
-import { AssetOps } from "../../../../assets";
-import AssetIcon from "../../asset/asset-icon";
+import { extensionToType } from "../../../../utils/deleted-assets";
 import AssetImg from "../../asset/asset-img";
 import IconClickable from "../../buttons/icon-clickable";
 
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
 
 const DeletedListItem = ({
-  isShare,
-  type,
   assetItem: {
     asset,
     thumbailUrl,
@@ -104,15 +100,7 @@ const DeletedListItem = ({
                   } ${getSortAttributeClassName("asset.extension")}`}
                 />
               </h4>
-              <h4 onClick={() => setSortAttribute("asset.dimenssions")}>
-                Dimensions
-                <IconClickable
-                  src={arrowIcon}
-                  additionalClass={`${
-                    styles["sort-icon"]
-                  } ${getSortAttributeClassName("asset.dimemssions")}`}
-                />
-              </h4>
+              <h4>Dimensions</h4>
             </div>
           </div>
         )}
@@ -150,17 +138,20 @@ const DeletedListItem = ({
                     <AssetImg
                       assetImg={thumbailUrl}
                       type={asset.type}
-                      name={asset.name}
+                      isDeletedItem
                     />
                   ) : (
-                    <AssetIcon
-                      extension={asset.extension}
-                      onList={true}
-                      onClick={undefined}
+                    <img
+                      className={styles.defaultIcon}
+                      src={extensionToType(asset.extension, false)}
                     />
                   )}
                 </div>
-                <div className={`${styles.name} ${isLoading && "loadable"}`}>
+                <div
+                  className={`${styles.name} ${styles.assetDesc} ${
+                    isLoading && "loadable"
+                  }`}
+                >
                   {asset.name}
                 </div>
               </div>

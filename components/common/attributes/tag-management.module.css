@@ -1,6 +1,13 @@
 .main-wrapper h3 {
     margin: 0 0 36px;
 }
+.Tags-wrapper{
+    border-bottom: 1px solid var(--color-border);
+    padding: 0 60px 67px 60px;
+}
+.collection-management-wrapper{
+    padding: 0 60px;
+}
 
 .operation-row {
     align-items: center;
@@ -10,6 +17,10 @@
     display: flex;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
+}
+.attribute-operation{
+    margin-top: 24px !important;
+
 }
 
 .tag-select {
@@ -76,7 +87,7 @@
 
 .tag-item-text {
     font-weight: normal;
-    margin-right: 10px;
+    margin-right: 5px;
     font-size: 13px;
 }
 
@@ -107,6 +118,10 @@
 
 .confirm-modal-text {
     padding-top: 30px;
+}
+.Editattrubute{
+    display: flex;
+    align-items: center;
 }
 
 /*Media queries*/

@@ -2,47 +2,38 @@ import { useContext, useState } from "react";
 import { Utilities } from "../../../assets";
 import { UserContext } from "../../../context";
 import teamAPI from "../../../server-api/team";
-import advancedConfigParams from "../../../utils/advance-config-params";
 import IconClickable from "../buttons/icon-clickable";
 import styles from "./main.module.css";
 
 const CustomViews = () => {
   const [loading, setLoading] = useState(false);
   const { advancedConfig, setAdvancedConfig } = useContext(UserContext);
-  const [defaultLandingPage, setDefaultLandingPage] = useState("");
-  const [collectionSortView, setCollectionSortView] = useState("");
-  const [assetSortView, setAssetSortView] = useState("");
-  const [hideFilterElements, setHideFilterElements] = useState(
-    advancedConfigParams.hideFilterElements
-  );
+
+  const hideFilterElements = advancedConfig.hideFilterElements;
 
   const saveAdvanceConfig = async (config) => {
-    setLoading(true);
-    await teamAPI.saveAdvanceConfigurations({ config });
+    try {
+      setLoading(true);
+      await teamAPI.saveAdvanceConfigurations({ config });
 
-    const updatedConfig = { ...advancedConfig, ...config };
-    setAdvancedConfig(updatedConfig);
-
-    getAdvanceConfigurations(updatedConfig);
-  };
-
-  const getAdvanceConfigurations = (conf = advancedConfig) => {
-    setDefaultLandingPage(conf.defaultLandingPage);
-    setCollectionSortView(conf.collectionSortView);
-    setAssetSortView(conf.assetSortView);
-    // setaiTagging(conf.aiTagging)
-    setLoading(false);
-    return true;
-  };
+      const updatedConfig = { ...advancedConfig, ...config };
+      setAdvancedConfig(updatedConfig);
+    } catch (err) {
+      console.log('err in saving advanced config: ', err)
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const toggleHideElementProperty = (prop) => {
-    const elemsState = { ...hideFilterElements };
-    elemsState[prop] = !elemsState[prop];
-    saveAdvanceConfig({ hideFilterElements: elemsState });
+    const state = { ...hideFilterElements };
+    state[prop] = !state[prop];
+    saveAdvanceConfig({ hideFilterElements: state });
   };
 
   return (
     <div className={styles.container}>
+      <div className={`${styles['custom-view-wrapper']}`}>
       <h3>Custom Views</h3>
 
       <div>
@@ -53,7 +44,7 @@ const CustomViews = () => {
               <div>All Tab</div>
               <IconClickable
                 src={
-                  defaultLandingPage === "allTab"
+                  advancedConfig?.defaultLandingPage === "allTab"
                     ? Utilities.radioButtonEnabled
                     : Utilities.radioButtonNormal
                 }
@@ -63,11 +54,11 @@ const CustomViews = () => {
                 }
               />
             </div>
-            <div className={styles.radio}>
+            <div className={`${styles['radio']} ${styles['collection-tab']}`}>
               <div>Collection Tab</div>
               <IconClickable
                 src={
-                  defaultLandingPage !== "allTab"
+                  advancedConfig?.defaultLandingPage !== "allTab"
                     ? Utilities.radioButtonEnabled
                     : Utilities.radioButtonNormal
                 }
@@ -87,7 +78,7 @@ const CustomViews = () => {
               <div>Alphabetical</div>
               <IconClickable
                 src={
-                  collectionSortView === "alphabetical"
+                  advancedConfig?.collectionSortView === "alphabetical"
                     ? Utilities.radioButtonEnabled
                     : Utilities.radioButtonNormal
                 }
@@ -101,7 +92,7 @@ const CustomViews = () => {
               <div>Newest</div>
               <IconClickable
                 src={
-                  collectionSortView !== "alphabetical"
+                  advancedConfig?.collectionSortView !== "alphabetical"
                     ? Utilities.radioButtonEnabled
                     : Utilities.radioButtonNormal
                 }
@@ -121,7 +112,7 @@ const CustomViews = () => {
               <div>Alphabetical</div>
               <IconClickable
                 src={
-                  assetSortView === "alphabetical"
+                  advancedConfig?.assetSortView === "alphabetical"
                     ? Utilities.radioButtonEnabled
                     : Utilities.radioButtonNormal
                 }
@@ -135,7 +126,7 @@ const CustomViews = () => {
               <div>Newest</div>
               <IconClickable
                 src={
-                  assetSortView !== "alphabetical"
+                  advancedConfig?.assetSortView !== "alphabetical"
                     ? Utilities.radioButtonEnabled
                     : Utilities.radioButtonNormal
                 }
@@ -199,6 +190,7 @@ const CustomViews = () => {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
