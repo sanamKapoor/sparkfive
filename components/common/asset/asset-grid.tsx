@@ -225,7 +225,7 @@ const AssetGrid = ({
       if (data) {
         setIsLoading(false);
         if (activeSubFolders !== "") {
-          await getSubFolders(true);
+          await getSubFolders(true, 5);
         } else {
           getFolders();
         }

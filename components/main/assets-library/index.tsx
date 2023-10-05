@@ -230,7 +230,7 @@ const AssetsLibrary = () => {
           getFolders();
         } else if (activeSortFilter.mainFilter === "SubCollectionView" && activeSubFolders !== "") {
           setActiveMode("SubCollectionView");
-          getSubCollectionsFolderData();
+          getSubCollectionsFolderData(true, 5);
           getSubCollectionsAssetData();
         } else {
           setActiveMode("assets");
@@ -757,7 +757,7 @@ const AssetsLibrary = () => {
     }
   };
 
-  const getSubCollectionsFolderData = async (replace = true) => {
+  const getSubCollectionsFolderData = async (replace = true, pageSize?: number = 10) => {
     try {
       if (activeSortFilter.mainFilter !== "SubCollectionView") {
         return;
@@ -766,7 +766,7 @@ const AssetsLibrary = () => {
       const { next } = subFoldersViewList;
       const queryParams = {
         page: replace ? 1 : next,
-        pageSize: 10,
+        pageSize: pageSize,
         sortField: field,
         sortOrder: order,
       };

@@ -89,7 +89,7 @@ const NestedSidenavDropdown = () => {
       await getSubFolders(item.id, 1, replace);
     }
     const updatedShowDropdown = [...showDropdown];
-    updatedShowDropdown[index] = !updatedShowDropdown[index]; // Toggle dropdown on img click event
+    updatedShowDropdown[index] = !updatedShowDropdown[index]; //Toggle dropdown on img click event
     setShowDropdown(updatedShowDropdown);
   };
 

@@ -57,7 +57,7 @@ const MoveModal = ({
       setSelectedFolder(selectedFolder.filter((item) => item !== folderId));
     }
   };
-
+  console.log(folders, "folders")
   return (
     <Base
       modalIsOpen={modalIsOpen}

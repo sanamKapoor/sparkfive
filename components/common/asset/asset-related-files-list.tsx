@@ -20,10 +20,8 @@ const AssetRelatedFilesList = ({
   onAddRelatedFiles,
 }) => {
   const {
-    activeOperation,
     setActiveOperation,
     updateDownloadingStatus,
-    setOperationAssets,
   } = useContext(AssetContext);
 
   const { setIsLoading } = useContext(LoadingContext);

@@ -139,7 +139,7 @@ const SubCollection = (
           </div >
           {next > 0 &&
             <div className={styles.LoadMorebtn}>
-              <Button text="Load More" onClick={() => { loadMoreSubCollctions(false) }} type="button" className="container primary" />
+              <Button text="Load More" onClick={() => { loadMoreSubCollctions(false, 5) }} type="button" className="container primary" />
             </div>
           }
         </>

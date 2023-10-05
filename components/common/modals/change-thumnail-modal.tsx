@@ -265,7 +265,7 @@ const ChangeThumbnail = ({
       });
     }
     if (activeSubFolders !== "") {
-      await getSubFolders(true);
+      await getSubFolders(true, 5);
       toastUtils.success(THUMBNAIL_UPDATED);
       setIsLoading(false);
       closeModal();
@@ -367,7 +367,7 @@ const ChangeThumbnail = ({
         thumbnailName: null,
       });
       if (activeSubFolders !== "") {
-        await getSubFolders(true);
+        await getSubFolders(true, 5);
         toastUtils.success(THUMBNAIL_UPDATED);
         setIsLoading(false);
         closeModal();
