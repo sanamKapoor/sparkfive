@@ -239,7 +239,7 @@ const MoveModal = ({
                   onClick={() => toggleDropdown(folder.id, true)}
                 >
                   <div className={styles.flex}>
-                    <img src={Utilities.folder} alt="Folder Icon" />
+                    {/* <img src={Utilities.folder} alt="Folder Icon" /> */}
                     <div
                       className={`${styles.circle} ${selectedFolder.includes(folder.id) ?
                         styles.checked
@@ -262,8 +262,14 @@ const MoveModal = ({
                         // selectedItem === index &&
                         (
                           <>
-                            <img src={Utilities.checkBlue} alt="Check Icon" />
+                          <div className={`${styles['select-all']}`}>
+                            <img src={Utilities.doubleCheck} alt="Check Icon" />
                             <span className={styles.selectText}>Select All</span>
+                          </div>
+                           {/* <div className={`${styles['deselect-all']}`}>
+                         <img src={Utilities.redCheck} alt="Check Icon" />
+                         <span className={styles.deselectText}>Deselect All</span>
+                       </div> */}
                           </>
                         )}
                     </div>
@@ -304,7 +310,10 @@ const MoveModal = ({
                           </div> */}
                         </div>
                       </div>
-                      <button className={styles.loadMore}>Load more</button>
+                      <div  className={`${styles['load-wrapper']}`}>
+                    <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} />
+                    <button className={styles.loadMore}>Load more</button>
+                    </div>
                     </>
                   ))
                 }
