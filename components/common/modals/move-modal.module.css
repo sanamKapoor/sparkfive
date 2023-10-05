@@ -66,3 +66,154 @@
     height: auto;
     margin-right: 15px;
 }
+.search-btn {
+    padding: 16px;
+  }
+
+  .collection-modal {
+    padding: 16px;
+  }
+
+  .modal-heading{
+    padding: 0 16px;
+
+  }
+  .modal-heading span {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 18px;
+  }
+  .flex {
+    display: flex;
+    align-items: center;
+  }
+  .dropdownMenu {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .w100 {
+    width: 100%;
+  }
+  .rightIcon {
+    margin-right: 5px;
+    transform: rotate(275deg);
+  }
+  .nestedbox {
+    margin-top: 20px;
+  }
+  .icon-descriptions span {
+    font-family: "Noto Sans", sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+    color: var(--color-prim-navy);
+    margin-left: 5px;
+  }
+  .active {
+    background: #e9eefa;
+  }
+  
+  .folder {
+    padding: 0 24px 0 24px;
+  }
+  .folder-lists {
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+    align-items: center;
+    height: 30px;
+    /* margin-top: 16px; */
+  }
+  
+  .dropdownIcons {
+    display: flex;
+  }
+  .rightIcon {
+    margin-right: 5px;
+    transform: rotate(275deg);
+  }
+  .iconClick {
+    transform: rotate(0deg);
+    margin-right: 5px;
+  }
+  .dropdownOptions {
+    /* margin-top: 16px; */
+    position: relative;
+  }
+  .dropdownOptions::before {
+    content: "";
+    display: inline-block;
+    background-image: url("../../../assets/Icons/Utilities/nestedCollection/Line.svg");
+    background-repeat: no-repeat;
+    position: absolute;
+    left: -16px;
+    bottom: 14px;
+    width: 100%;
+    height: 1px;
+  }
+  .active {
+    background: var(--color-sec-lightblue);
+    border-radius: 4px;
+    padding: 7.5px;
+  }
+  .subfolderList {
+    padding: 0px 0px 0px 16px;
+    border-left: 1px solid #dedad4;
+  }
+  .modal-btns {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 16px;
+  }
+  .outer-wrapper{
+    padding: 0 16px;
+   
+  }
+  .moveModal{
+    max-width: 407px;
+    width: 100%;
+    /* max-height: 80vh;
+    overflow-y: scroll; */
+  }
+  
+  .selectText{
+    margin-left:10px;
+  }
+  .deselectText{
+    color:
+    #FA373D;
+    margin-left:10px;
+}
+.loadMore{
+    background: transparent;
+    color:
+    #10BDA5;
+    
+}
+.circle {
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+  border: 1px solid #dedad4;
+}
+.checkIcon {
+  font-size: 24px;
+  color: white;
+  display: none;
+  border: 1px solid #dedad4;
+}
+
+.checked {
+  background-color: #dedad4;
+}
