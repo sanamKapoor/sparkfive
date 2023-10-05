@@ -109,6 +109,12 @@ const MoveModal = ({
     if (modalIsOpen) {
       getFolders();
     }
+    return () => {
+      setSelectedFolder([]);
+      setShowDropdown([]);
+      setSubFolderLoadingState(new Map());
+      setSidenavFolderChildList(new Map())
+    };
   }, [modalIsOpen]);
 
   const getFolders = async () => {
@@ -139,8 +145,8 @@ const MoveModal = ({
   const getSubFolders = async (id: string, page: number, replace: boolean) => {
 
     setSubFolderLoadingState((map) => new Map(map.set(id, true)))
-
     const { field, order } = activeSortFilter.sort;
+
     const queryParams = {
       page: replace ? 1 : page,
       pageSize: 10,
@@ -181,10 +187,10 @@ const MoveModal = ({
 
   const toggleDropdown = async (folderId: string, replace: boolean) => {
     if (!showDropdown.includes(folderId)) {
-      setShowDropdown([...showDropdown, folderId])
       await getSubFolders(folderId, 1, replace);
+      setShowDropdown([...showDropdown, folderId])
     } else {
-      setSelectedFolder(selectedFolder.filter((item) => item !== folderId));
+      setShowDropdown(showDropdown.filter((item) => item !== folderId));
     }
   };
 
@@ -218,25 +224,25 @@ const MoveModal = ({
         <Search placeholder="search collection" />
       </div>
       <div className={`${styles["modal-heading"]}`}>
-        <span>Collection(21)</span>
+        <span>Collection({folders.length ?? ""})</span>
       </div>
       <div className={`${styles["outer-wrapper"]}`}>
         {folders.map((folder, index) => (
           <div key={index}>
             <div className={`${styles["flex"]} ${styles.nestedbox}`}>
               <img
-                className={styles.rightIcon}
+                className={showDropdown.includes(folder.id) ? styles.iconClick : styles.rightIcon}
                 src={Utilities.arrowBlue}
                 alt="Right Arrow Icon"
+                onClick={() => { toggleDropdown(folder.id, true) }}
               />
 
               <div className={styles.w100}>
                 <div
-                  className={`${styles["dropdownMenu"]} ${showDropdown.includes(folder.id) ?
+                  className={`${styles["dropdownMenu"]} ${selectedFolder.includes(folder.id) ?
                     styles["active"]
                     : ""
                     }`}
-                  onClick={() => toggleDropdown(folder.id, true)}
                 >
                   <div className={styles.flex}>
                     <img src={Utilities.folder} alt="Folder Icon" />
@@ -283,11 +289,11 @@ const MoveModal = ({
                       >
                         <div className={styles["folder-lists"]}>
                           <div className={styles.dropdownIcons}>
-                            {/* <img
-                            className={styles.subfolder}
-                            src={Utilities.folder}
-                            alt="Folder Icon"
-                          /> */}
+                            <img
+                              className={styles.subfolder}
+                              src={Utilities.folder}
+                              alt="Folder Icon"
+                            />
                             <div
                               className={`${styles.circle} ${selectedFolder.includes(subfolder.id) ? styles.checked : ""
                                 }`}

@@ -219,7 +219,7 @@ const NestedSidenavDropdown = () => {
                     </>
                   }
                   <NestedButton type={"subCollection"} parentId={item.id}>
-                    Add Subcollection
+                    Add Sub-collection
                   </NestedButton>
                 </div>
               </div>
