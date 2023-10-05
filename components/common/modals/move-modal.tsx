@@ -10,6 +10,36 @@ import Input from "../../common/inputs/input";
 import Base from "../../common/modals/base";
 import { FilterContext } from "../../../context";
 import Search from "../../common/inputs/search";
+
+interface Asset {
+  id: string;
+  name: string;
+  type: string;
+  thumbailUrl: string;
+  realUrl: string;
+  extension: string;
+  version: number;
+}
+interface Item {
+  id: string;
+  userId: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  sharePath: null;
+  sharePassword: null;
+  shareStatus: null;
+  status: string;
+  thumbnailPath: null;
+  thumbnailExtension: null;
+  thumbnails: null;
+  thumbnailStorageId: null;
+  thumbnailName: null;
+  assetsCount: string;
+  assets: Asset[];
+  size: string;
+  length: number;
+}
 const data = [
   {
     folderName: "Architecture",
@@ -66,28 +96,14 @@ const MoveModal = ({
   const [selectedFolder, setSelectedFolder] = useState([]);
   const [newFolderName, setNewFolderName] = useState("");
   const [folderInputActive, setFolderInputActive] = useState(false);
-  const [subFolderLoadingState, setSubFolderLoadingState] = useState(new Map());
-  const [sidenavFolderChildList, setSidenavFolderChildList] = useState(
-    new Map()
-  );
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [isChecked, setIsChecked] = useState(false);
-  const handleCircleClick = () => {
-    setIsChecked(!isChecked);
-  };
+  const [subFolderLoadingState, setSubFolderLoadingState] = useState(new Map())
+  const [sidenavFolderChildList, setSidenavFolderChildList] = useState(new Map())
+  const [showDropdown, setShowDropdown] = useState([]);
 
-  const handleItemClick = (index: any) => {
-    if (selectedItem === index) {
-      setSelectedItem(null);
-    } else {
-      setSelectedItem(index);
-    }
-  };
+  const {
+    activeSortFilter
+  } = useContext(FilterContext) as { term: any, activeSortFilter: any }
 
-  const { activeSortFilter } = useContext(FilterContext) as {
-    term: any;
-    activeSortFilter: any;
-  };
 
   useEffect(() => {
     if (modalIsOpen) {
@@ -107,30 +123,22 @@ const MoveModal = ({
   const setSidenavFolderChildListItems = (
     inputFolders: any,
     id: string,
-    replace = true
+    replace = true,
   ) => {
     const { results, next, total } = inputFolders;
     if (replace) {
       if (results.length > 0) {
-        setSidenavFolderChildList((map) => {
-          return new Map(map.set(id, { results, next, total }));
-        });
+        setSidenavFolderChildList((map) => { return new Map(map.set(id, { results, next, total })) })
       }
-    } else {
-      setSidenavFolderChildList((map) => {
-        return new Map(
-          map.set(id, {
-            results: [...map.get(id).results, ...results],
-            next,
-            total,
-          })
-        );
-      });
+    }
+    else {
+      setSidenavFolderChildList((map) => { return new Map(map.set(id, { results: [...map.get(id).results, ...results], next, total })) })
     }
   };
 
   const getSubFolders = async (id: string, page: number, replace: boolean) => {
-    setSubFolderLoadingState((map) => new Map(map.set(id, true)));
+
+    setSubFolderLoadingState((map) => new Map(map.set(id, true)))
 
     const { field, order } = activeSortFilter.sort;
     const queryParams = {
@@ -139,16 +147,16 @@ const MoveModal = ({
       sortField: field,
       sortOrder: order,
     };
-    const { data } = await folderApi.getSubFolders(
-      {
-        ...queryParams,
-      },
-      id
-    );
-    setSidenavFolderChildListItems(data, id, replace);
-    setSubFolderLoadingState((map) => new Map(map.set(id, false)));
+    const { data } = await folderApi.getSubFolders({
+      ...queryParams,
+    }, id);
+    setSidenavFolderChildListItems(data,
+      id,
+      replace
+    )
+    setSubFolderLoadingState((map) => new Map(map.set(id, false)))
     return sidenavFolderChildList;
-  };
+  }
 
   const closemoveModal = () => {
     setSelectedFolder([]);
@@ -163,12 +171,33 @@ const MoveModal = ({
     setFolderInputActive(false);
   };
 
-  const toggleSelected = (folderId: string, selected: boolean) => {
+  const toggleSelected = async (folderId: string, selected: boolean) => {
     if (selected) {
       setSelectedFolder([...selectedFolder, folderId]);
     } else {
       setSelectedFolder(selectedFolder.filter((item) => item !== folderId));
     }
+  };
+
+  const toggleDropdown = async (folderId: string, replace: boolean) => {
+    if (!showDropdown.includes(folderId)) {
+      setShowDropdown([...showDropdown, folderId])
+      await getSubFolders(folderId, 1, replace);
+    } else {
+      setSelectedFolder(selectedFolder.filter((item) => item !== folderId));
+    }
+  };
+
+  const keyExists = (key: string) => {
+    return sidenavFolderChildList.has(key);
+  };
+
+  const keyResultsFetch = (key: string, type: string): Item[] | number => {
+    const { results, next } = sidenavFolderChildList.get(key);
+    if (type === 'record') {
+      return results || []
+    }
+    return next
   };
 
   return (
@@ -188,36 +217,11 @@ const MoveModal = ({
       <div className={`${styles["search-btn"]}`}>
         <Search placeholder="search collection" />
       </div>
-      {/* <ul className={styles.list}>
-        {folders.map((folder) => (
-          <li
-            key={folder.id}
-            onClick={() =>
-              toggleSelected(folder.id, !selectedFolder.includes(folder.id))
-            }
-          >
-            {selectedFolder.includes(folder.id) ? (
-              <IconClickable
-                src={Utilities.radioButtonEnabled}
-                additionalClass={styles["select-icon"]}
-              />
-            ) : (
-              <IconClickable
-                src={Utilities.radioButtonNormal}
-                additionalClass={styles["select-icon"]}
-              />
-            )}
-            <IconClickable src={Assets.folder} />
-            <IconClickable src={Assets.folder} />
-            <div className={styles.name}>{folder.name}</div>
-          </li>
-        ))}
-      </ul> */}
       <div className={`${styles["modal-heading"]}`}>
         <span>Collection(21)</span>
       </div>
       <div className={`${styles["outer-wrapper"]}`}>
-        {data.map((folder, index) => (
+        {folders.map((folder, index) => (
           <div key={index}>
             <div className={`${styles["flex"]} ${styles.nestedbox}`}>
               <img
@@ -228,76 +232,85 @@ const MoveModal = ({
 
               <div className={styles.w100}>
                 <div
-                  className={`${styles["dropdownMenu"]} ${
-                    selectedItem === index ? styles["active"] : ""
-                  }`}
-                  onClick={() => handleItemClick(index)}
+                  className={`${styles["dropdownMenu"]} ${showDropdown.includes(folder.id) ?
+                    styles["active"]
+                    : ""
+                    }`}
+                  onClick={() => toggleDropdown(folder.id, true)}
                 >
                   <div className={styles.flex}>
-                    {/* <img src={Utilities.folder} alt="Folder Icon" /> */}
+                    <img src={Utilities.folder} alt="Folder Icon" />
                     <div
-                      className={`${styles.circle} ${
-                        isChecked ? styles.checked : ""
-                      }`}
-                      onClick={handleCircleClick}
+                      className={`${styles.circle} ${selectedFolder.includes(folder.id) ?
+                        styles.checked
+                        : ""
+                        }`}
+                      onClick={() => toggleSelected(folder.id, !selectedFolder.includes(folder.id))}
                     >
-                      {isChecked && <img src={Utilities.checkIcon} />}
+                      {
+                        selectedFolder.includes(folder.id) &&
+                        <img src={Utilities.checkIcon} />
+                      }
                     </div>
                     <div className={styles["icon-descriptions"]}>
-                      <span>{folder.folderName}</span>
+                      <span>{folder.name}</span>
                     </div>
                   </div>
                   <div>
                     <div className={styles["list1-right-contents"]}>
-                      {selectedItem === index && (
-                        <>
-                          <img src={Utilities.checkBlue} alt="Check Icon" />
-                          <span className={styles.selectText}>Select All</span>
-                        </>
-                      )}
+                      {
+                        // selectedItem === index &&
+                        (
+                          <>
+                            <img src={Utilities.checkBlue} alt="Check Icon" />
+                            <span className={styles.selectText}>Select All</span>
+                          </>
+                        )}
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className={styles.folder}>
+            {showDropdown.includes(folder.id) && <div className={styles.folder}>
               <div className={styles.subfolderList}>
-                {folder.subfolders.map((subfolder, subIndex) => (
-                  <>
-                    <div
-                      key={subIndex}
-                      className={styles.dropdownOptions}
-                      onClick={() => handleItemClick(index)}
-                    >
-                      <div className={styles["folder-lists"]}>
-                        <div className={styles.dropdownIcons}>
-                          {/* <img
+                {
+                  keyExists(folder.id) && (keyResultsFetch(folder.id, "record") as Item[]).map((subfolder, subIndex) => (
+                    <>
+                      <div
+                        key={subfolder.id}
+                        className={styles.dropdownOptions}
+                        onClick={() => toggleSelected(subfolder.id, !selectedFolder.includes(subfolder.id))}
+                      >
+                        <div className={styles["folder-lists"]}>
+                          <div className={styles.dropdownIcons}>
+                            {/* <img
                             className={styles.subfolder}
                             src={Utilities.folder}
                             alt="Folder Icon"
                           /> */}
-                          <div
-                            className={`${styles.circle} ${
-                              isChecked ? styles.checked : ""
-                            }`}
-                            onClick={handleCircleClick}
-                          >
-                            {isChecked && <img src={Utilities.checkIcon} />}
+                            <div
+                              className={`${styles.circle} ${selectedFolder.includes(subfolder.id) ? styles.checked : ""
+                                }`}
+                              onClick={() => toggleSelected(subfolder.id, !selectedFolder.includes(folder.id))}
+                            >
+                              {selectedFolder.includes(subfolder.id) && <img src={Utilities.checkIcon} />}
+                            </div>
+                            <div className={styles["icon-descriptions"]}>
+                              <span>{subfolder.name}</span>
+                            </div>
                           </div>
-                          <div className={styles["icon-descriptions"]}>
-                            <span>{subfolder.name}</span>
-                          </div>
-                        </div>
-                        <div className={styles["list1-right-contents"]}>
-                          {selectedItem === index && <span></span>}
+                          {/* <div className={styles["list1-right-contents"]}>
+                            {selectedItem === index && <span></span>}
+                          </div> */}
                         </div>
                       </div>
-                    </div>
-                    <button className={styles.loadMore}>Load more</button>
-                  </>
-                ))}
+                      <button className={styles.loadMore}>Load more</button>
+                    </>
+                  ))
+                }
               </div>
             </div>
+            }
           </div>
         ))}
       </div>
@@ -333,7 +346,7 @@ const MoveModal = ({
           </span>
         )}
       </div>
-    </Base>
+    </Base >
   );
 };
 
