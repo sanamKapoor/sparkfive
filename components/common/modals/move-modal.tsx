@@ -10,6 +10,7 @@ import Input from "../../common/inputs/input";
 import Base from "../../common/modals/base";
 import { FilterContext } from "../../../context";
 import Search from "../../common/inputs/search";
+import SearchModal from "../../SearchModal/Search-modal";
 
 
 interface Asset {
@@ -242,7 +243,8 @@ const MoveModal = ({
       }}
     >
       <div className={`${styles["search-btn"]}`}>
-        <Search placeholder="search collection" />
+        <SearchModal/>
+     
       </div>
       <div className={`${styles["modal-heading"]}`}>
         <span>Collection({folders.length ?? ""})</span>
@@ -350,8 +352,10 @@ const MoveModal = ({
                       :
                       "Load More"
                   }</button>
-                  <button className={`${styles['collection-btn']}`}>Add sub-collection</button>
+                    <button className={`${styles['collection-btn']}`}>Add sub-collection</button>
+
                 </div>}
+              
                 {/* <button className={styles.loadMore}>Load more</button>
                 </div>
                 <div className={`${styles['load-wrapper']}`}>
