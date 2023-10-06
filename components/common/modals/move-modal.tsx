@@ -342,7 +342,7 @@ const MoveModal = ({
                     </>
                   ))
                 }
-                {(keyExists(folder.id) && (keyResultsFetch(folder.id, "next") as number) >= 0) && <div className={`${styles['load-wrapper']}`}
+                {(keyExists(folder.id) && (keyResultsFetch(folder.id, "next") as number) >= 0) && <div className={`${styles['outer-load-wrapper']}`}><div className={`${styles['load-wrapper']}`}
                   onClick={() => { getSubFolders(folder.id, (keyResultsFetch(folder.id, "next") as number), false) }}>
                   <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} />
                   <button className={styles.loadMore}>{
@@ -352,9 +352,10 @@ const MoveModal = ({
                       :
                       "Load More"
                   }</button>
-                    <button className={`${styles['collection-btn']}`}>Add sub-collection</button>
-
-                </div>}
+                  </div>  <div className={`${styles['load-wrapper']}`}>
+                <IconClickable additionalClass={styles.loadIcon} src={Utilities.add} />
+                <button className={`${styles['collection-btn']}`}>Add sub-collection</button>
+                </div></div>}
               
                 {/* <button className={styles.loadMore}>Load more</button>
                 </div>
