@@ -53,6 +53,7 @@ const MoveModal = ({
   confirmText = "Add",
 }) => {
   const [folders, setFolders] = useState([]);
+  const [resultedSearchFolders, setResultedSearchFolders] = useState([]);
   const [selectedFolder, setSelectedFolder] = useState([]);
   const [newFolderName, setNewFolderName] = useState("");
   const [folderInputActive, setFolderInputActive] = useState(false);
@@ -60,6 +61,8 @@ const MoveModal = ({
   const [sidenavFolderChildList, setSidenavFolderChildList] = useState(new Map())
   const [showDropdown, setShowDropdown] = useState([]);
   const [selectAllFolders, setSelectAllFolders] = useState<Record<string, boolean>>({});
+  const [input, setInput] = useState('');
+
   const {
     activeSortFilter
   } = useContext(FilterContext) as { term: any, activeSortFilter: any }
@@ -78,10 +81,18 @@ const MoveModal = ({
     };
   }, [modalIsOpen]);
 
+  const filteredData = () => {
+    setFolders(resultedSearchFolders.filter(item =>
+      item.name.toLowerCase().includes(input.toLowerCase())
+    )
+    )
+  }
+
   const getFolders = async () => {
     try {
       const { data } = await folderApi.getFoldersSimple();
       const filteredParent = data.filter((folder: Item) => !folder?.parentId)
+      setResultedSearchFolders(filteredParent)
       setFolders(filteredParent);
     } catch (err) {
       console.log(err);
@@ -243,8 +254,8 @@ const MoveModal = ({
       }}
     >
       <div className={`${styles["search-btn"]}`}>
-        <SearchModal/>
-     
+        <SearchModal filteredData={filteredData} input={input} setInput={setInput} />
+
       </div>
       <div className={`${styles["modal-heading"]}`}>
         <span>Collection({folders.length ?? ""})</span>
@@ -352,10 +363,10 @@ const MoveModal = ({
                       :
                       "Load More"
                   }</button>
-                    <button className={`${styles['collection-btn']}`}>Add sub-collection</button>
+                  <button className={`${styles['collection-btn']}`}>Add sub-collection</button>
 
                 </div>}
-              
+
                 {/* <button className={styles.loadMore}>Load more</button>
                 </div>
                 <div className={`${styles['load-wrapper']}`}>
