@@ -11,6 +11,7 @@ import Base from "../../common/modals/base";
 import { FilterContext } from "../../../context";
 import Search from "../../common/inputs/search";
 
+
 interface Asset {
   id: string;
   name: string;
@@ -228,9 +229,10 @@ const MoveModal = ({
   return (
     <Base
       additionalClasses={[styles.moveModal]}
+      overlayAdditionalClass={styles["move-modal-outer"]}
       modalIsOpen={modalIsOpen}
       closeModal={closemoveModal}
-      confirmText={confirmText}
+      confirmText="Add to collections"
       headText={`${confirmText} ${itemsAmount} item(s) to Collection`}
       subText="The assets will be added into the new collection(s) and will not be removed from their current collection(s)"
       disabledConfirm={!selectedFolder}
@@ -249,12 +251,17 @@ const MoveModal = ({
         {folders.map((folder, index) => (
           <div key={index}>
             <div className={`${styles["flex"]} ${styles.nestedbox}`}>
-              <img
-                className={showDropdown.includes(folder.id) ? styles.iconClick : styles.rightIcon}
-                src={Utilities.arrowBlue}
-                alt="Right Arrow Icon"
+              <div className={`${styles["height"]}`}
                 onClick={() => { toggleDropdown(folder.id, true) }}
-              />
+              >
+                <img
+                  className={showDropdown.includes(folder.id) ? styles.iconClick : styles.rightIcon}
+                  src={Utilities.arrowBlue}
+                  alt="Right Arrow Icon"
+                  onClick={() => { toggleDropdown(folder.id, true) }}
+                />
+              </div>
+
 
               <div className={styles.w100}>
                 <div
@@ -326,7 +333,9 @@ const MoveModal = ({
                             {selectedFolder.includes(subfolder.id) && <span></span>}
                           </div>
                         </div>
+
                       </div>
+
 
                     </>
                   ))
@@ -341,7 +350,15 @@ const MoveModal = ({
                       :
                       "Load More"
                   }</button>
+                  <button className={`${styles['collection-btn']}`}>Add sub-collection</button>
                 </div>}
+                {/* <button className={styles.loadMore}>Load more</button>
+                </div>
+                <div className={`${styles['load-wrapper']}`}>
+                <IconClickable additionalClass={styles.loadIcon} src={Utilities.add} />
+                <button className={`${styles['collection-btn']}`}>Add sub-collection</button>
+                </div> */}
+
               </div>
             </div>
             }

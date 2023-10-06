@@ -76,7 +76,7 @@
   }
 
   .modal-heading{
-    padding: 0 16px;
+    padding: 0 16px 16px 16px;
    
 
   }
@@ -94,6 +94,8 @@
     justify-content: space-between;
     width: 100%;
     box-sizing: border-box;
+    padding: 7.5px;
+    background-color: #fff;
   }
   .w100 {
     width: 100%;
@@ -101,10 +103,17 @@
   .rightIcon {
     margin-right: 5px;
     transform: rotate(275deg);
+    cursor: pointer;
   }
   .nestedbox {
-    margin-top: 20px;
+    margin-bottom: 8px;
   }
+  .icon-descriptions {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100px;
+}
   .icon-descriptions span {
     font-family: "Noto Sans", sans-serif;
     font-weight: 500;
@@ -139,6 +148,7 @@
   .iconClick {
     transform: rotate(0deg);
     margin-right: 5px;
+    cursor:pointer;
   }
   .dropdownOptions {
     /* margin-top: 16px; */
@@ -212,7 +222,7 @@
   transition:
     background-color 0.3s,
     color 0.3s;
-  border: 1px solid #dedad4;
+  border: 1px solid #a1a09e;
 }
 .checkIcon {
   font-size: 24px;
@@ -235,8 +245,23 @@
 .load-wrapper{
     display: flex;
     align-items: center;
+    margin-top: 10px;
 }
 .loadIcon{
     width: 18px;
 }
+.height{
+  height:20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.collection-btn{
+  background: none;
+  cursor: pointer;
+  color: #10BDA5;
+}
+.move-modal-outer{
+  padding-top: 140px;
 
+}
