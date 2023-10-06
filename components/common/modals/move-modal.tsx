@@ -39,50 +39,8 @@ interface Item {
   assets: Asset[];
   size: string;
   length: number;
+  parentId: string | null
 }
-const data = [
-  {
-    folderName: "Architecture",
-    subfolders: [
-      {
-        name: "City",
-      },
-      {
-        name: "Renaissance",
-      },
-      {
-        name: "Interior",
-      },
-      {
-        name: "House",
-      },
-    ],
-  },
-  {
-    folderName: "Portraits",
-    subfolders: [],
-  },
-  {
-    folderName: "Nature",
-    subfolders: [],
-  },
-  {
-    folderName: "Events",
-    subfolders: [],
-  },
-  {
-    folderName: "Travel",
-    subfolders: [],
-  },
-  {
-    folderName: "Food",
-    subfolders: [],
-  },
-  {
-    folderName: "Landscapes",
-    subfolders: [],
-  },
-];
 
 const MoveModal = ({
   modalIsOpen,
@@ -99,7 +57,7 @@ const MoveModal = ({
   const [subFolderLoadingState, setSubFolderLoadingState] = useState(new Map())
   const [sidenavFolderChildList, setSidenavFolderChildList] = useState(new Map())
   const [showDropdown, setShowDropdown] = useState([]);
-
+  const [selectAllFolders, setSelectAllFolders] = useState<Record<string, boolean>>({});
   const {
     activeSortFilter
   } = useContext(FilterContext) as { term: any, activeSortFilter: any }
@@ -114,13 +72,15 @@ const MoveModal = ({
       setShowDropdown([]);
       setSubFolderLoadingState(new Map());
       setSidenavFolderChildList(new Map())
+      setSelectAllFolders({})
     };
   }, [modalIsOpen]);
 
   const getFolders = async () => {
     try {
       const { data } = await folderApi.getFoldersSimple();
-      setFolders(data);
+      const filteredParent = data.filter((folder: Item) => !folder?.parentId)
+      setFolders(filteredParent);
     } catch (err) {
       console.log(err);
     }
@@ -160,6 +120,7 @@ const MoveModal = ({
       id,
       replace
     )
+    if (selectAllFolders[id]) ToggleAllSelectedFolders(id, true)
     setSubFolderLoadingState((map) => new Map(map.set(id, false)))
     return sidenavFolderChildList;
   }
@@ -177,13 +138,39 @@ const MoveModal = ({
     setFolderInputActive(false);
   };
 
-  const toggleSelected = async (folderId: string, selected: boolean) => {
+  const toggleSelected = async (folderId: string, selected: boolean, subFolderToggle?: boolean, mainFolderId?: string) => {
+    const actionFolderId = subFolderToggle ? mainFolderId : folderId;
     if (selected) {
       setSelectedFolder([...selectedFolder, folderId]);
+      let selectedFolderArray: string[] = []
+      const allChildIds: string[] = []
+
+      //Todo:check the logic for selctecing while select all
+      if (!selectAllFolders[actionFolderId]) {
+        if (sidenavFolderChildList.has(actionFolderId)) {
+
+          const response = sidenavFolderChildList.get(actionFolderId);
+          if (response?.results?.length > 0) {
+            response?.results.forEach((item: Item) => {
+              allChildIds.push(item.id);
+            })
+            selectedFolderArray = Array.from(new Set(selectedFolder)).filter(item =>
+              [...allChildIds, actionFolderId].includes(item)
+            );
+          }
+        }
+        if ([...selectedFolderArray, folderId].length === [...allChildIds, actionFolderId].length) {
+          setSelectAllFolders((prev) => ({ ...prev, [actionFolderId]: true }))
+        }
+      }
     } else {
       setSelectedFolder(selectedFolder.filter((item) => item !== folderId));
+      if (selectAllFolders[actionFolderId]) {
+        setSelectAllFolders((prev) => ({ ...prev, [actionFolderId]: false }))
+      };
     }
   };
+
 
   const toggleDropdown = async (folderId: string, replace: boolean) => {
     if (!showDropdown.includes(folderId)) {
@@ -205,6 +192,38 @@ const MoveModal = ({
     }
     return next
   };
+
+  const ToggleAllSelectedFolders = (folderId: string, selectAll: boolean) => {
+    const response = sidenavFolderChildList.get(folderId);
+    const allChildIds: string[] = []
+
+    if (selectAll) {
+      if (response?.results?.length > 0) {
+        response?.results.forEach((item: Item) => {
+          allChildIds.push(item.id);
+        })
+      }
+      setSelectedFolder((prev) => [...prev, folderId, ...allChildIds]);
+    }
+    else if (!selectAll) {
+      if (response?.results?.length > 0) {
+        response?.results.forEach((item: Item) => {
+          allChildIds.push(item.id);
+        })
+      }
+      setSelectedFolder((prev) => (prev.filter((item) => ![...allChildIds, folderId].includes(item))));
+    }
+  }
+
+  const toggleSelectAllChildList = (folderId: string) => {
+    if (selectAllFolders[folderId]) {
+      ToggleAllSelectedFolders(folderId, false)
+      setSelectAllFolders((prev) => ({ ...prev, [folderId]: false }));
+    } else {
+      ToggleAllSelectedFolders(folderId, true)
+      setSelectAllFolders((prev) => ({ ...prev, [folderId]: true }));
+    }
+  }
 
   return (
     <Base
@@ -245,7 +264,6 @@ const MoveModal = ({
                     }`}
                 >
                   <div className={styles.flex}>
-                    {/* <img src={Utilities.folder} alt="Folder Icon" /> */}
                     <div
                       className={`${styles.circle} ${selectedFolder.includes(folder.id) ?
                         styles.checked
@@ -265,19 +283,18 @@ const MoveModal = ({
                   <div>
                     <div className={styles["list1-right-contents"]}>
                       {
-                        // selectedItem === index &&
-                        (
-                          <>
-                            <div className={`${styles['select-all']}`}>
-                              <img src={Utilities.doubleCheck} alt="Check Icon" />
-                              <span className={styles.selectText}>Select All</span>
-                            </div>
-                            {/* <div className={`${styles['deselect-all']}`}>
-                         <img src={Utilities.redCheck} alt="Check Icon" />
-                         <span className={styles.deselectText}>Deselect All</span>
-                       </div> */}
-                          </>
-                        )}
+                        selectAllFolders[folder.id] ?
+                          <div style={{ cursor: "pointer" }} onClick={() => toggleSelectAllChildList(folder.id)} className={`${styles['deselect-all']}`}>
+                            <img
+                              src={Utilities.redCheck} alt="Check Icon" />
+                            <span className={styles.deselectText}>Deselect All</span>
+                          </div>
+                          :
+                          <div style={{ cursor: "pointer" }} onClick={() => toggleSelectAllChildList(folder.id)} className={`${styles['select-all']}`}>
+                            <img src={Utilities.doubleCheck} alt="Check Icon" />
+                            <span className={styles.selectText}>Select All</span>
+                          </div>
+                      }
                     </div>
                   </div>
                 </div>
@@ -291,14 +308,13 @@ const MoveModal = ({
                       <div
                         key={subfolder.id}
                         className={styles.dropdownOptions}
-                        onClick={() => toggleSelected(subfolder.id, !selectedFolder.includes(subfolder.id))}
+                        onClick={() => toggleSelected(subfolder.id, !selectedFolder.includes(subfolder.id), true, folder.id)}
                       >
                         <div className={styles["folder-lists"]}>
                           <div className={styles.dropdownIcons}>
                             <div
                               className={`${styles.circle} ${selectedFolder.includes(subfolder.id) ? styles.checked : ""
                                 }`}
-                              onClick={() => toggleSelected(subfolder.id, !selectedFolder.includes(folder.id))}
                             >
                               {selectedFolder.includes(subfolder.id) && <img src={Utilities.checkIcon} />}
                             </div>
@@ -306,19 +322,26 @@ const MoveModal = ({
                               <span>{subfolder.name}</span>
                             </div>
                           </div>
-                          {/* <div className={styles["list1-right-contents"]}>
-                            {selectedItem === index && <span></span>}
-                          </div> */}
+                          <div className={styles["list1-right-contents"]}>
+                            {selectedFolder.includes(subfolder.id) && <span></span>}
+                          </div>
                         </div>
                       </div>
 
                     </>
                   ))
                 }
-                <div className={`${styles['load-wrapper']}`}>
+                {(keyExists(folder.id) && (keyResultsFetch(folder.id, "next") as number) >= 0) && <div className={`${styles['load-wrapper']}`}
+                  onClick={() => { getSubFolders(folder.id, (keyResultsFetch(folder.id, "next") as number), false) }}>
                   <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} />
-                  <button className={styles.loadMore}>Load more</button>
-                </div>
+                  <button className={styles.loadMore}>{
+                    subFolderLoadingState.get(folder.id)
+                      ?
+                      "Loading..."
+                      :
+                      "Load More"
+                  }</button>
+                </div>}
               </div>
             </div>
             }

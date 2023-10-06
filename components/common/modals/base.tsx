@@ -32,7 +32,7 @@ const Base: React.FC<BaseModalProps> = ({
   modalIsOpen,
   children,
   closeModal,
-  confirmAction = () => {},
+  confirmAction = () => { },
   confirmText = "",
   headText = "",
   subText,
@@ -60,9 +60,8 @@ const Base: React.FC<BaseModalProps> = ({
   return (
     <ReactModal
       isOpen={modalIsOpen}
-      className={`${styles.modal} ${
-        noHeightMax && styles["no-height-max"]
-      } ${additionalClasses.join(" ")}`}
+      className={`${styles.modal} ${noHeightMax && styles["no-height-max"]
+        } ${additionalClasses.join(" ")}`}
       overlayClassName={`${styles.overlay} ${overlayAdditionalClass}`}
       onRequestClose={closeModal}
       shouldCloseOnOverlayClick={true}
@@ -78,34 +77,32 @@ const Base: React.FC<BaseModalProps> = ({
           }
         >
           <div className={styles.baseHeading}>
-          <div
-            className={`${styles.text} ${
-              closeButtonOnly ? styles["no-border"] : ""
-            } ${textWidth && styles["full-width"]}`}
-          >
-            
+            <div
+              className={`${styles.text} ${closeButtonOnly ? styles["no-border"] : ""
+                } ${textWidth && styles["full-width"]}`}
+            >
+
               <p className={styles["overflow-text"]}>
                 {!closeButtonOnly ? headText : ""}
               </p>
-            
-            <img
-              src={Utilities.bigblueClose}
-              alt="close"
-              className={styles.close}
-              onClick={closeModal}
-            />
+
+              <img
+                src={Utilities.bigblueClose}
+                alt="close"
+                className={styles.close}
+                onClick={closeModal}
+              />
+            </div>
+            {subText && <p className={styles.subtext}>{subText}</p>}
           </div>
-          {subText && <p className={styles.subtext}>{subText}</p>}
-          </div>
-          
+
         </div>
       )}
       {children}
       {confirmText && (
         <div
-          className={`${styles.buttons} ${
-            !showCancel ? styles["button-center"] : ""
-          }`}
+          className={`${styles.buttons} ${!showCancel ? styles["button-center"] : ""
+            }`}
         >
           {showCancel && (
             <div>
