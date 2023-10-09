@@ -235,33 +235,7 @@ const TopBar = ({
                       )}
                     </div>
                   ) : (
-                    // tabs.map((view) => {
-                    //   return (
-                    //     <li key={view.name} className={styles["tab-list-item"]}>
-                    //       {(!activeFolder || !view.omitFolder) &&
-                    //         (!isShare ||
-                    //           (isShare &&
-                    //             !view.omitShare &&
-                    //             view.hideOnSingle !== singleCollection)) &&
-                    //         (view.requirePermissions.length === 0 ||
-                    //           (view.requirePermissions.length > 0 &&
-                    //             hasPermission(view.requirePermissions))) && (
-                    //           <Button
-                    //             key={view.name}
-                    //             text={view.text}
-                    //             className={
-                    //               activeSortFilter.mainFilter === view.name
-                    //                 ? "section-container section-active"
-                    //                 : "section-container"
-                    //             }
-                    //             onClick={() =>
-                    //               setSortFilterValue("mainFilter", view.name)
-                    //             }
-                    //           />
-                    //         )}
-                    //     </li>
-                    //   );
-                    // })
+
                     < NavHeading />
                   )}
                 </ul>
@@ -286,11 +260,11 @@ const TopBar = ({
               src={Utilities.search}
               onClick={setActiveSearchOverlay}
               className={`${styles.search} ${!((amountSelected === 0 || mode === "folders") &&
-              showAssetAddition &&
-              hasPermission([
-                ASSET_UPLOAD_NO_APPROVAL,
-                ASSET_UPLOAD_APPROVAL,
-              ])) ? "m-r-20": "" }`}
+                showAssetAddition &&
+                hasPermission([
+                  ASSET_UPLOAD_NO_APPROVAL,
+                  ASSET_UPLOAD_APPROVAL,
+                ])) ? "m-r-20" : ""}`}
             />
           )}
           {activeSearchOverlay && !(isShare && isFolder) && (
@@ -314,7 +288,7 @@ const TopBar = ({
             ]) && (
               <div className={styles.mobilePlus}>
                 <AssetAddition
-                  activeFolder={activeFolder}
+                  activeFolder={mode === "SubCollectionView" ? activeSubFolders : activeFolder}
                 />
               </div>
             )}

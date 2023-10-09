@@ -1,6 +1,5 @@
-import { useContext, useEffect, useState } from "react";
-import { Assets, Utilities } from "../../../assets";
-import folderApi from "../../../server-api/folder";
+import { FormEvent, useEffect } from "react";
+import { Utilities } from "../../../assets";
 import styles from "./move-modal.module.css";
 
 // Components
@@ -8,11 +7,9 @@ import Button from "../../common/buttons/button";
 import IconClickable from "../../common/buttons/icon-clickable";
 import Input from "../../common/inputs/input";
 import Base from "../../common/modals/base";
-import { FilterContext } from "../../../context";
-import Search from "../../common/inputs/search";
+
 import SearchModal from "../../SearchModal/Search-modal";
-
-
+import { useMoveModal } from "../../../hooks/Use-Modal";
 interface Asset {
   id: string;
   name: string;
@@ -52,20 +49,33 @@ const MoveModal = ({
   createFolder,
   confirmText = "Add",
 }) => {
-  const [folders, setFolders] = useState([]);
-  const [resultedSearchFolders, setResultedSearchFolders] = useState([]);
-  const [selectedFolder, setSelectedFolder] = useState([]);
-  const [newFolderName, setNewFolderName] = useState("");
-  const [folderInputActive, setFolderInputActive] = useState(false);
-  const [subFolderLoadingState, setSubFolderLoadingState] = useState(new Map())
-  const [sidenavFolderChildList, setSidenavFolderChildList] = useState(new Map())
-  const [showDropdown, setShowDropdown] = useState([]);
-  const [selectAllFolders, setSelectAllFolders] = useState<Record<string, boolean>>({});
-  const [input, setInput] = useState('');
 
   const {
-    activeSortFilter
-  } = useContext(FilterContext) as { term: any, activeSortFilter: any }
+    folders,
+    selectedFolder,
+    newFolderName,
+    folderInputActive,
+    subFolderLoadingState,
+    sidenavFolderChildList,
+    showDropdown,
+    selectAllFolders,
+    input,
+    setInput,
+    filteredData,
+    getFolders,
+    getSubFolders,
+    toggleSelected,
+    toggleDropdown,
+    toggleSelectAllChildList,
+    setNewFolderName,
+    setFolderInputActive,
+    setSelectedFolder,
+    setShowDropdown,
+    setSubFolderLoadingState,
+    setSidenavFolderChildList,
+    setSelectAllFolders,
+  } = useMoveModal();
+
 
 
   useEffect(() => {
@@ -78,121 +88,16 @@ const MoveModal = ({
       setSubFolderLoadingState(new Map());
       setSidenavFolderChildList(new Map())
       setSelectAllFolders({})
+      setInput("")
     };
   }, [modalIsOpen]);
 
-  const filteredData = () => {
-    setFolders(resultedSearchFolders.filter(item =>
-      item.name.toLowerCase().includes(input.toLowerCase())
-    )
-    )
-  }
-
-  const getFolders = async () => {
-    try {
-      const { data } = await folderApi.getFoldersSimple();
-      const filteredParent = data.filter((folder: Item) => !folder?.parentId)
-      setResultedSearchFolders(filteredParent)
-      setFolders(filteredParent);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const setSidenavFolderChildListItems = (
-    inputFolders: any,
-    id: string,
-    replace = true,
-  ) => {
-    const { results, next, total } = inputFolders;
-    if (replace) {
-      if (results.length > 0) {
-        setSidenavFolderChildList((map) => { return new Map(map.set(id, { results, next, total })) })
-      }
-    }
-    else {
-      setSidenavFolderChildList((map) => { return new Map(map.set(id, { results: [...map.get(id).results, ...results], next, total })) })
-    }
-  };
-
-  const getSubFolders = async (id: string, page: number, replace: boolean) => {
-
-    setSubFolderLoadingState((map) => new Map(map.set(id, true)))
-    const { field, order } = activeSortFilter.sort;
-
-    const queryParams = {
-      page: replace ? 1 : page,
-      pageSize: 10,
-      sortField: field,
-      sortOrder: order,
-    };
-    const { data } = await folderApi.getSubFolders({
-      ...queryParams,
-    }, id);
-    setSidenavFolderChildListItems(data,
-      id,
-      replace
-    )
-    if (selectAllFolders[id]) ToggleAllSelectedFolders(id, true)
-    setSubFolderLoadingState((map) => new Map(map.set(id, false)))
-    return sidenavFolderChildList;
-  }
 
   const closemoveModal = () => {
     setSelectedFolder([]);
     closeModal();
   };
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    await createFolder(newFolderName);
-    getFolders();
-    setNewFolderName("");
-    setFolderInputActive(false);
-  };
-
-  const toggleSelected = async (folderId: string, selected: boolean, subFolderToggle?: boolean, mainFolderId?: string) => {
-    const actionFolderId = subFolderToggle ? mainFolderId : folderId;
-    if (selected) {
-      setSelectedFolder([...selectedFolder, folderId]);
-      let selectedFolderArray: string[] = []
-      const allChildIds: string[] = []
-
-      //Todo:check the logic for selctecing while select all
-      if (!selectAllFolders[actionFolderId]) {
-        if (sidenavFolderChildList.has(actionFolderId)) {
-
-          const response = sidenavFolderChildList.get(actionFolderId);
-          if (response?.results?.length > 0) {
-            response?.results.forEach((item: Item) => {
-              allChildIds.push(item.id);
-            })
-            selectedFolderArray = Array.from(new Set(selectedFolder)).filter(item =>
-              [...allChildIds, actionFolderId].includes(item)
-            );
-          }
-        }
-        if ([...selectedFolderArray, folderId].length === [...allChildIds, actionFolderId].length) {
-          setSelectAllFolders((prev) => ({ ...prev, [actionFolderId]: true }))
-        }
-      }
-    } else {
-      setSelectedFolder(selectedFolder.filter((item) => item !== folderId));
-      if (selectAllFolders[actionFolderId]) {
-        setSelectAllFolders((prev) => ({ ...prev, [actionFolderId]: false }))
-      };
-    }
-  };
-
-
-  const toggleDropdown = async (folderId: string, replace: boolean) => {
-    if (!showDropdown.includes(folderId)) {
-      await getSubFolders(folderId, 1, replace);
-      setShowDropdown([...showDropdown, folderId])
-    } else {
-      setShowDropdown(showDropdown.filter((item) => item !== folderId));
-    }
-  };
 
   const keyExists = (key: string) => {
     return sidenavFolderChildList.has(key);
@@ -206,37 +111,14 @@ const MoveModal = ({
     return next
   };
 
-  const ToggleAllSelectedFolders = (folderId: string, selectAll: boolean) => {
-    const response = sidenavFolderChildList.get(folderId);
-    const allChildIds: string[] = []
 
-    if (selectAll) {
-      if (response?.results?.length > 0) {
-        response?.results.forEach((item: Item) => {
-          allChildIds.push(item.id);
-        })
-      }
-      setSelectedFolder((prev) => [...prev, folderId, ...allChildIds]);
-    }
-    else if (!selectAll) {
-      if (response?.results?.length > 0) {
-        response?.results.forEach((item: Item) => {
-          allChildIds.push(item.id);
-        })
-      }
-      setSelectedFolder((prev) => (prev.filter((item) => ![...allChildIds, folderId].includes(item))));
-    }
-  }
-
-  const toggleSelectAllChildList = (folderId: string) => {
-    if (selectAllFolders[folderId]) {
-      ToggleAllSelectedFolders(folderId, false)
-      setSelectAllFolders((prev) => ({ ...prev, [folderId]: false }));
-    } else {
-      ToggleAllSelectedFolders(folderId, true)
-      setSelectAllFolders((prev) => ({ ...prev, [folderId]: true }));
-    }
-  }
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await createFolder(newFolderName);
+    getFolders();
+    setNewFolderName("");
+    setFolderInputActive(false);
+  };
 
   return (
     <Base
@@ -255,7 +137,6 @@ const MoveModal = ({
     >
       <div className={`${styles["search-btn"]}`}>
         <SearchModal filteredData={filteredData} input={input} setInput={setInput} />
-
       </div>
       <div className={`${styles["modal-heading"]}`}>
         <span>Collection({folders.length ?? ""})</span>
@@ -353,7 +234,7 @@ const MoveModal = ({
                     </>
                   ))
                 }
-                {(keyExists(folder.id) && (keyResultsFetch(folder.id, "next") as number) >= 0) && <div className={`${styles['load-wrapper']}`}
+                {(keyExists(folder.id) && (keyResultsFetch(folder.id, "next") as number) >= 0) && <div className={`${styles['outer-load-wrapper']}`}><div className={`${styles['load-wrapper']}`}
                   onClick={() => { getSubFolders(folder.id, (keyResultsFetch(folder.id, "next") as number), false) }}>
                   <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} />
                   <button className={styles.loadMore}>{
@@ -363,16 +244,17 @@ const MoveModal = ({
                       :
                       "Load More"
                   }</button>
-                  <button className={`${styles['collection-btn']}`}>Add sub-collection</button>
-
-                </div>}
-
-                {/* <button className={styles.loadMore}>Load more</button>
                 </div>
-                <div className={`${styles['load-wrapper']}`}>
-                <IconClickable additionalClass={styles.loadIcon} src={Utilities.add} />
-                <button className={`${styles['collection-btn']}`}>Add sub-collection</button>
-                </div> */}
+                </div>
+                }
+                {/**
+                 * Todo uncomment when design fix by client for the Sub Collectin adding feature 
+                 */}
+                {/* {<div className={`${styles['load-wrapper']}`}>
+                  <IconClickable additionalClass={styles.loadIcon} src={Utilities.add} />
+                  <button className={`${styles['collection-btn']}`}>Add sub-collection</button>
+                </div>} */}
+
 
               </div>
             </div>
