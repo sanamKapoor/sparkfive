@@ -52,6 +52,8 @@ const CopyModal = ({
 
   return (
     <Base
+    additionalClasses={[styles.moveModal]}
+    overlayAdditionalClass={styles["move-modal-outer"]}
       modalIsOpen={modalIsOpen}
       closeModal={closemoveModal}
       confirmText={confirmText}

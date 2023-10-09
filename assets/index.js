@@ -160,6 +160,7 @@ export const Utilities = {
   checkIcon: require("./Icons/Utilities/nestedCollection/checkIcon.svg"),
   load:require("./Icons/Utilities/nestedCollection/load.svg"),
   doubleCheck:require("./Icons/Utilities/nestedCollection/DoubleChecks.svg"),
+  addCollection:require("./Icons/Utilities/nestedCollection/Add-collection.svg"),
   redCheck:require("./Icons/Utilities/nestedCollection/dcheckred.svg"),
   horizontalDots: require("./Icons/Utilities/nestedCollection/horixzontaldots.svg"),
   downIcon: require("./Icons/Utilities/nestedCollection/downIcon.svg"),
