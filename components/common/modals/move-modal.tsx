@@ -56,7 +56,7 @@ const MoveModal = ({
     newFolderName,
     folderInputActive,
     subFolderLoadingState,
-    sidenavFolderChildList,
+    folderChildList,
     showDropdown,
     selectAllFolders,
     input,
@@ -72,7 +72,7 @@ const MoveModal = ({
     setSelectedFolder,
     setShowDropdown,
     setSubFolderLoadingState,
-    setSidenavFolderChildList,
+    setFolderChildList,
     setSelectAllFolders,
   } = useMoveModal();
 
@@ -86,7 +86,7 @@ const MoveModal = ({
       setSelectedFolder([]);
       setShowDropdown([]);
       setSubFolderLoadingState(new Map());
-      setSidenavFolderChildList(new Map())
+      setFolderChildList(new Map())
       setSelectAllFolders({})
       setInput("")
     };
@@ -100,11 +100,11 @@ const MoveModal = ({
 
 
   const keyExists = (key: string) => {
-    return sidenavFolderChildList.has(key);
+    return folderChildList.has(key);
   };
 
   const keyResultsFetch = (key: string, type: string): Item[] | number => {
-    const { results, next } = sidenavFolderChildList.get(key);
+    const { results, next } = folderChildList.get(key);
     if (type === 'record') {
       return results || []
     }
