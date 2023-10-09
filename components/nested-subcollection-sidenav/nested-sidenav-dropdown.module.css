@@ -71,7 +71,7 @@
   cursor: pointer;
   align-items: center;
   height: 30px;
-  margin-top: 16px;
+  margin-top: 6px;
 }
 
 .dropdownIcons {
@@ -86,7 +86,7 @@
   margin-right: 5px;
 }
 .dropdownOptions {
-  margin-top: 16px;
+  /* margin-top: 16px; */
   position: relative;
 }
 .dropdownOptions::before {
@@ -100,6 +100,7 @@
   width: 100%;
   height: 1px;
 }
+
 .active {
   background:var(--color-sec-lightblue);
   border-radius: 4px;
@@ -160,3 +161,27 @@
   0% { transform: translate(-50%, -50%) rotate(0deg); }
   100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
+.load-wrapper{
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+.loadIcon{
+  width: 18px;
+}
+.loadMore{
+  background: transparent;
+  color:
+  #10BDA5;
+  cursor: pointer;
+  }
+  .addIcon{
+    width: 10.5px;
+   margin-right: 9px;
+   margin-left:10px;
+  }
+  .totalCount{
+    display: flex;
+    align-items: center;
+
+  }

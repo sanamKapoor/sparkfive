@@ -7,6 +7,7 @@ import Draggable from "react-draggable";
 import { AssetContext, FilterContext } from '../../context';
 
 import folderApi from '../../server-api/folder';
+import IconClickable from "../common/buttons/icon-clickable";
 
 
 interface Asset {
@@ -164,10 +165,11 @@ const NestedSidenavDropdown = () => {
                       <span>{item.name}</span>
                     </div>
                   </div>
-                  <div>
+                  <div className={styles.totalCount}>
                     <div className={styles["list1-right-contents"]}>
                       <span>{item.assetsCount}</span>
                     </div>
+                    <IconClickable additionalClass={styles.addIcon} src={Utilities.addCollection} />
                   </div>
                 </div>
               </div>
@@ -199,28 +201,35 @@ const NestedSidenavDropdown = () => {
                               <div className={styles["list1-right-contents"]}>
                                 <span>{record.assets.length}</span>
                               </div>
+                      
                             </div>
                           </div>
                         </Draggable>
                       ))}
                       {
                         keyResultsFetch(item.id, "next") >= 0 &&
-                        <span className={styles.desc} onClick={() => { getSubFolders(item.id, keyResultsFetch(item.id, "next"), false); }}
-                          style={{ cursor: "pointer" }}>
-                          {
-                            subFolderLoadingState.get(item.id)
-                              ?
-                              "Loading..."
-                              :
-                              "Load More"
-                          }
-                        </span>
+                        // <span className={styles.desc} onClick={() => { getSubFolders(item.id, keyResultsFetch(item.id, "next"), false); }}
+                        //   style={{ cursor: "pointer" }}>
+                        //   {
+                        //     subFolderLoadingState.get(item.id)
+                        //       ?
+                        //       "Loading..."
+                        //       :
+                        //       "Load More"
+                        //   }
+                        // </span>
+                         <div className={`${styles['load-wrapper']}`}>
+                         <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} />
+                         <button className={`${styles['loadMore']}`}>
+                           Load More
+                           </button>
+                       </div>
                       }
                     </>
                   }
-                  <NestedButton type={"subCollection"} parentId={item.id}>
+                  {/* <NestedButton type={"subCollection"} parentId={item.id}>
                     Add Sub-collection
-                  </NestedButton>
+                  </NestedButton> */}
                 </div>
               </div>
             )}
@@ -229,19 +238,25 @@ const NestedSidenavDropdown = () => {
       })}
       {
         (sidenavFolderNextPage >= 0) &&
-        <div className={styles.loadmore}>
-          <button className={styles.loaderbuttons} onClick={() => getFolders(false)} disabled={isFolderLoading}>
-            {isFolderLoading ?
-              <div className={styles.loader}></div>
-              :
-              <span className={styles.buttontext}>Load More</span>
-            }
-          </button>
+        // <div className={styles.loadmore}>
+        //   <button className={styles.loaderbuttons} onClick={() => getFolders(false)} disabled={isFolderLoading}>
+        //     {isFolderLoading ?
+        //       <div className={styles.loader}></div>
+        //       :
+        //       <span className={styles.buttontext}>Load More</span>
+        //     }
+        //   </button>
+        // </div>
+          <div className={`${styles['load-wrapper']}`}>
+          <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} />
+          <button className={styles.loadMore}>
+            Load More
+            </button>
         </div>
       }
-      <div className={styles.collection}>
+      {/* <div className={styles.collection}>
         <NestedButton type={"collection"}>Add collection</NestedButton>
-      </div>
+      </div> */}
     </div >
   );
 };
