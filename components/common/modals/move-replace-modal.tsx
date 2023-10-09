@@ -148,8 +148,7 @@ const MoveReplaceModal = ({
                   onClick={() => { toggleDropdown(folder.id, true) }}
                 />
               </div>
-
-
+              
               <div className={styles.w100}>
                 <div
                   className={`${styles["dropdownMenu"]} ${selectedFolder.includes(folder.id) ?
@@ -202,14 +201,12 @@ const MoveReplaceModal = ({
                       <div
                         key={subfolder.id}
                         className={styles.dropdownOptions}
-                        onClick={() => toggleSelected(subfolder.id, !selectedFolder.includes(subfolder.id), true, folder.id)}
-                      >
+                        onClick={() => toggleSelected(subfolder.id, !selectedFolder.includes(subfolder.id), true, folder.id)}>
                         <div className={styles["folder-lists"]}>
                           <div className={styles.dropdownIcons}>
                             <div
                               className={`${styles.circle} ${selectedFolder.includes(subfolder.id) ? styles.checked : ""
-                                }`}
-                            >
+                                }`}>
                               {selectedFolder.includes(subfolder.id) && <img src={Utilities.checkIcon} />}
                             </div>
                             <div className={styles["icon-descriptions"]}>
@@ -220,10 +217,7 @@ const MoveReplaceModal = ({
                             {selectedFolder.includes(subfolder.id) && <span></span>}
                           </div>
                         </div>
-
                       </div>
-
-
                     </>
                   ))
                 }
@@ -247,18 +241,13 @@ const MoveReplaceModal = ({
                   <IconClickable additionalClass={styles.loadIcon} src={Utilities.add} />
                   <button className={`${styles['collection-btn']}`}>Add sub-collection</button>
                 </div>} */}
-
-
               </div>
             </div>
             }
           </div>
         ))}
       </div>
-
-
-
-      <div className={styles["folder-wrapper"]}>
+    <div className={styles["folder-wrapper"]}>
         {folderInputActive ? (
           <form onSubmit={onSubmit}>
             <div
