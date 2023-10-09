@@ -116,6 +116,8 @@ const MoveReplaceModal = ({
   return (
     <Base
       modalIsOpen={modalIsOpen}
+      additionalClasses={[styles.moveModal]}
+      overlayAdditionalClass={styles["move-modal-outer"]}
       closeModal={closemoveModal}
       confirmText={confirmText}
       headText={`${confirmText} ${itemsAmount} asset(s) to...`}

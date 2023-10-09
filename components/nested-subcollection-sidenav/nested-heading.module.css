@@ -12,6 +12,9 @@
     font-size: 16px;
     Line-height:21.79px;
     color:var(--color-prim-navy);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
    
 }
 .mt-16{
@@ -21,4 +24,9 @@
     background:var(--color-sec-lightblue);
     border-radius: 4px;
     padding: 4px;
+    width: 100%;
+  }
+  .addIcon{
+    width: 10.5px;
+   margin-right: 9px;
   }
