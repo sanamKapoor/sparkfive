@@ -2,17 +2,15 @@
 import React, { useEffect, useState } from "react";
 
 import { Utilities } from "../../../assets";
-import { IAttribute } from "../../../interfaces/filters";
-import tagsApi from "../../../server-api/tag";
-import teamApi from "../../../server-api/team";
-
+import styles from "./options-data.module.css"
 import IconClickable from "../buttons/icon-clickable";
-import styles from "./index.module.css"
-import FilterOptionPopup from "../filter-option-popup";
-import Button from "../buttons/button";
+import search from "../../common/attributes/search-input";
+import Search from "../../common/inputs/search";
+import Divider from "./divider";
+import OptionDataItem from "./option-data-item";
 
-const FilterView = () => {
-  const [attrs, setAttrs] = useState<IAttribute[]>([{id: 'tags', name: 'Tags', type: 'pre-defined'}, {id: 'aiTags', name: 'AI Tags', type: 'pre-defined'}, {id: '789485-fdfh49584h', name: 'Services', type: 'custom'}]);
+
+const OptionData = () => {
   const [values, setValues] = useState([
     {
         "createdAt": "2022-07-19T20:22:13.558Z",
@@ -7985,73 +7983,56 @@ const FilterView = () => {
         "type": "regular",
         "updatedAt": "2023-09-07T08:48:33.808Z"
     }
-]); //TODO: define type
-  const [showAttrValues, setShowAttrValues] = useState<boolean>(false);
-
-  //TODO: move it to parent level
-  const getAttributes = async () => {
-    try {
-      const res = await teamApi.getTeamAttributes();
-      setAttrs(res.data.data);
-    } catch (err) {
-      console.log("[GET_ATTRIBUTES]: ", err);
-    }
-  };
-
-  //TODO: move it to parent level
-  useEffect(() => {
-    getAttributes();
-  }, []);
-
-  console.log('coming inside filter view')
-
-  const onAttributeClick = async (data: IAttribute) => {
-    let values = [];
-
-    if (data.type === "pre-defined") {
-      if (data.id === "tags") {
-        const res = await tagsApi.getTags({ includeAi: false });
-        values = res.data;
-      } else if (data.id === "aiTags") {
-        const res = await tagsApi.getTags({ includeAi: true });
-        values = res.data.filter((tag) => tag.type === "AI");
-      } else {
-      }
-      console.log("handling pre-defined attributes..........");
-    } else {
-      console.log("handling custom attributes..........");
-    }
-    setValues(values);
-    setShowAttrValues(true);
-  };
-
+]);
+ 
   return (
-    <div>
-    <div
-    className={`${styles['outer-wrapper']}`}
-    >
-      {attrs.map((attr) => {
-        return (
-          <div>
-            <div
-            className={`${styles['inner-wrapper']}`}
-              key={attr.id}
-              onClick={(e) => {
-                onAttributeClick(attr);
-              }}
-            >
-              {attr.name}
-            <img className={`${styles['arrow-down']}`} src={Utilities.downIcon} alt="" />
-            </div>
-          </div>
-        );
-      })}
-      </div>
-      {showAttrValues && 
-         <FilterOptionPopup />
-    }
+    <>
+    <div className={`${styles['outer-wrapper']}`}>
+    <div className={`${styles['grid-items']}`}>
+    <OptionDataItem />
+     <OptionDataItem />
+     <OptionDataItem />
+     <OptionDataItem />
+     <OptionDataItem />
+     <OptionDataItem />
+     <OptionDataItem />
+     <OptionDataItem />
+     <OptionDataItem />
+     <OptionDataItem />
+     <OptionDataItem />
+        </div>
+        <div className={`${styles['grid-items']}`}>
+    <OptionDataItem />
+     <OptionDataItem />
+     <OptionDataItem />
+     <OptionDataItem />
+     <OptionDataItem />
+     <OptionDataItem />
+     <OptionDataItem />
+     <OptionDataItem />
+     <OptionDataItem />
+     <OptionDataItem />
+     <OptionDataItem />
+        </div>
+        <div className={`${styles['grid-items']}`}>
+    <OptionDataItem />
+     <OptionDataItem />
+     <OptionDataItem />
+     <OptionDataItem />
+     <OptionDataItem />
+     <OptionDataItem />
+     <OptionDataItem />
+     <OptionDataItem />
+     <OptionDataItem />
+     <OptionDataItem />
+     <OptionDataItem />
+        </div>
+      
+       
     </div>
+    <Divider />
+    </>
   );
 };
 
-export default FilterView;
+export default OptionData ;

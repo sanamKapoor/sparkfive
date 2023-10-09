@@ -1,0 +1,19 @@
+.outer-wrapper{
+    margin-top: 24px;
+    max-height: 407px;
+    overflow: auto;
+    padding: 0 10px 0 0;
+ 
+}
+.tags-wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+   
+}
+.tags-left-side{
+    display: flex;
+    align-items: center;
+    gap:10px;
+}
