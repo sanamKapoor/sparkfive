@@ -401,9 +401,8 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
             <IconClickable
               src={Utilities.closePanelLight}
               onClick={() => toggleSideMenu()}
-              additionalClass={`${styles["menu-icon"]} ${
-                !sideOpen && "mirror"
-              }`}
+              additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"
+                }`}
             />
           </section>
         </div>
