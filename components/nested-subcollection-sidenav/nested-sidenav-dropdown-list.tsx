@@ -159,9 +159,7 @@ const NestedSidenavDropdown = ({ headingClick }) => {
       {sidenavFolderList.map((item: Item, index: number) => {
         return (
           <>
-            <div key={index} className={`${styles["flex"]} ${styles.nestedbox}`}
-             
-            >
+            <div key={index} className={`${styles["flex"]} ${styles.nestedbox}`}>
               <img className={showDropdown[index] ? styles.iconClick : styles.rightIcon} src={Utilities.arrowBlue} onClick={() => toggleDropdown(index, item, true)} />
               <div className={`${styles["dropdownMenu"]} ${showDropdown[index] ? styles.active : ""}`} >
               <div className={styles.w100}  onClick={() => toggleDropdown(index, item, true)}>
@@ -176,9 +174,7 @@ const NestedSidenavDropdown = ({ headingClick }) => {
                     <div className={styles["list1-right-contents"]}>
                       <span>{item.assetsCount}</span>
                     </div>
-            
-                   
-                    {/* <IconClickable additionalClass={styles.addIcon} src={Utilities.addCollection}  */}
+                {/* <IconClickable additionalClass={styles.addIcon} src={Utilities.addCollection}  */}
                   </div>
                 </div>
           
@@ -215,7 +211,6 @@ const NestedSidenavDropdown = ({ headingClick }) => {
                               <div className={styles["list1-right-contents"]}>
                                 <span>{record.assets.length}</span>
                               </div>
-
                             </div>
                           </div>
                         </Draggable>
