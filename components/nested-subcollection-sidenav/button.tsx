@@ -6,6 +6,7 @@ import folderApi from '../../server-api/folder';
 import FolderModal from '../common/folder/folder-modal';
 import styles from './button.module.css';
 import toastUtils from "../../utils/toast";
+import IconClickable from '../common/buttons/icon-clickable';
 
 interface MyComponentProps {
   children: ReactNode;
@@ -52,8 +53,9 @@ const NestedButton: React.FC<MyComponentProps> = ({ children, type, parentId }) 
     <>
       <div onClick={() => setActiveModal("folder")}>
         <button className={styles.nestedButton}>
-          <img src={Utilities.add} alt="Add Icon" onClick={() => setActiveModal("folder")} />
-          <span>{children}</span>
+          {/* <img src={Utilities.add} alt="Add Icon" onClick={() => setActiveModal("folder")} /> */}
+          {/* <span>{children}</span> */}
+          <IconClickable onClick={() => setActiveModal("folder")} additionalClass={styles.addIcon} src={Utilities.addCollection} />
         </button>
       </div>
       <FolderModal

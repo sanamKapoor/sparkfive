@@ -8,6 +8,7 @@ import { AssetContext, FilterContext } from '../../context';
 
 import folderApi from '../../server-api/folder';
 import IconClickable from "../common/buttons/icon-clickable";
+import ReusableHeading from './nested-heading';
 
 
 interface Asset {
@@ -40,9 +41,10 @@ interface Item {
   length: number;
 }
 
-const NestedSidenavDropdown = () => {
+const NestedSidenavDropdown = ({ headingClick }) => {
 
   const {
+    sidenavTotalCollectionCount,
     sidenavFolderList,
     sidenavFolderNextPage,
     setSidenavFolderList,
@@ -150,6 +152,10 @@ const NestedSidenavDropdown = () => {
 
   return (
     <div>
+      <ReusableHeading description="All Collections" text="Collections" headingClickType="folders" headingTrue={activeSortFilter.mainFilter === "folders"}
+        headingClick={headingClick}
+        totalCount={sidenavTotalCollectionCount}
+        icon={undefined} />
       {sidenavFolderList.map((item: Item, index: number) => {
         return (
           <>
@@ -169,7 +175,10 @@ const NestedSidenavDropdown = () => {
                     <div className={styles["list1-right-contents"]}>
                       <span>{item.assetsCount}</span>
                     </div>
-                    <IconClickable additionalClass={styles.addIcon} src={Utilities.addCollection} />
+                    <NestedButton type={"subCollection"} parentId={item.id}>
+                      Add Sub-collection
+                    </NestedButton>
+                    {/* <IconClickable additionalClass={styles.addIcon} src={Utilities.addCollection}  */}
                   </div>
                 </div>
               </div>
@@ -201,29 +210,28 @@ const NestedSidenavDropdown = () => {
                               <div className={styles["list1-right-contents"]}>
                                 <span>{record.assets.length}</span>
                               </div>
-                      
+
                             </div>
                           </div>
                         </Draggable>
                       ))}
                       {
                         keyResultsFetch(item.id, "next") >= 0 &&
-                        // <span className={styles.desc} onClick={() => { getSubFolders(item.id, keyResultsFetch(item.id, "next"), false); }}
-                        //   style={{ cursor: "pointer" }}>
-                        //   {
-                        //     subFolderLoadingState.get(item.id)
-                        //       ?
-                        //       "Loading..."
-                        //       :
-                        //       "Load More"
-                        //   }
-                        // </span>
-                         <div className={`${styles['load-wrapper']}`}>
-                         <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} />
-                         <button className={`${styles['loadMore']}`}>
-                           Load More
-                           </button>
-                       </div>
+                        <div className={`${styles['load-wrapper']}`} onClick={() => { getSubFolders(item.id, keyResultsFetch(item.id, "next"), false); }}>
+                          {
+                            subFolderLoadingState.get(item.id)
+                              ?
+                              "Loading..."
+                              :
+                              <>
+                                <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} />
+                                <button className={`${styles['loadMore']}`}>
+                                  Load More
+                                </button>
+                              </>
+                          }
+
+                        </div>
                       }
                     </>
                   }
@@ -238,20 +246,16 @@ const NestedSidenavDropdown = () => {
       })}
       {
         (sidenavFolderNextPage >= 0) &&
-        // <div className={styles.loadmore}>
-        //   <button className={styles.loaderbuttons} onClick={() => getFolders(false)} disabled={isFolderLoading}>
-        //     {isFolderLoading ?
-        //       <div className={styles.loader}></div>
-        //       :
-        //       <span className={styles.buttontext}>Load More</span>
-        //     }
-        //   </button>
-        // </div>
-          <div className={`${styles['load-wrapper']}`}>
-          <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} />
-          <button className={styles.loadMore}>
-            Load More
-            </button>
+        <div onClick={() => getFolders(false)} >
+          {isFolderLoading ? <>
+            <div className={styles.loader}></div>
+          </> :
+            <div className={`${styles['load-wrapper']}`} >
+              <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} />
+              <button className={styles.loadMore}>
+                Load More
+              </button>
+            </div>}
         </div>
       }
       {/* <div className={styles.collection}>
