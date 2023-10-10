@@ -1,150 +1,29 @@
-import update from "immutability-helper";
-import { useContext, useEffect, useState } from "react";
 import { Utilities } from "../../../assets";
-import { FilterContext } from "../../../context";
-import styles from "./filter-selector.module.css";
-
-// Components
 import IconClickable from "../buttons/icon-clickable";
+import Divider from "../filter-option-popup/divider";
+import OptionDataItem from "../filter-option-popup/option-data-item";
+import styles from "../filter-option-popup/options-data.module.css";
 
-const ResolutionFilter = ({
-  filters,
-  oneColumn = false,
-  setValue,
-  value,
-  loadFn,
-  addtionalClass = "",
-  capitalize = false,
-  internalFilter = false, // Filter list will be get from loadFn resolve directly (useful for custom fields),
-  mappingValueName = "value",
-}) => {
-  const { activeSortFilter } = useContext(FilterContext);
-  const [internalFilters, setInternalFilters] = useState([]);
+interface ResolutionFilterProps {
+  data: any; //TODO
+}
 
-  const anyHighRes = {
-    dpi: "highres",
-    value: "highres",
-  };
-
-  const getFilterList = async () => {
-    let filterValues = await loadFn();
-    filterValues = filterValues.map((value) => ({
-      ...value,
-      label: value.name,
-      value: value.id,
-    }));
-    setInternalFilters(filterValues);
-  };
-
-  useEffect(() => {
-    // Get filter list directly without by context
-    if (internalFilter) {
-      getFilterList();
-    } else {
-      loadFn();
-    }
-  }, [activeSortFilter]);
-
-  const toggleSelected = (selected) => {
-    let index =
-      value &&
-      value.findIndex(
-        (item) => item[mappingValueName] === selected[mappingValueName]
-      );
-    if (!value || index !== -1) {
-      setValue(
-        update(value, {
-          $splice: [[index, 1]],
-        })
-      );
-    } else {
-      setValue(
-        update(value, {
-          $push: [selected],
-        })
-      );
-    }
-  };
-
-  // Set value and filters as selected
-  let visibleFilters = internalFilter ? internalFilters : filters;
-
-  if (value)
-    visibleFilters = [
-      ...visibleFilters,
-      ...value.filter(
-        (selected) =>
-          !visibleFilters.map(({ value }) => value).includes(selected.value)
-      ),
-    ];
-
+const ResolutionFilter: React.FC<ResolutionFilterProps> = ({ data }) => {
   return (
-    <div className={`${styles.container}`}>
-      <div className={styles["any-all-wrapper"]}>
-        <div>
-          <IconClickable
-            src={
-              value &&
-              value.findIndex(
-                (item) =>
-                  item[mappingValueName] === anyHighRes[mappingValueName]
-              ) !== -1
-                ? Utilities.radioButtonEnabled
-                : Utilities.radioButtonNormal
-            }
-            additionalClass={styles["select-icon"]}
-            onClick={() => toggleSelected(anyHighRes)}
-          />
-          <div className={styles["any-all-text"]}>
-            All High-Res (above 250 DPI)
-          </div>
-        </div>
+    <>
+      <div>
+        <IconClickable src={Utilities.radioButtonNormal} />
+        <span>All High-Res (above 250 DPI)</span>
       </div>
-      <ul
-        className={`${styles["item-list"]} ${
-          oneColumn && styles["one-column"]
-        } ${capitalize && "capitalize"}`}
-      >
-        {visibleFilters.map((filter, index) => {
-          const isSelected =
-            value &&
-            value.findIndex(
-              (item) => item[mappingValueName] === filter[mappingValueName]
-            ) !== -1;
-          const isHighRes = filter.value === "highres";
-          return (
-            !isHighRes && (
-              <li
-                key={index}
-                className={`${styles["select-item"]} ${styles[addtionalClass]}`}
-              >
-                <div
-                  className={`${styles["selectable-wrapper"]} ${
-                    isSelected && styles["selected-wrapper"]
-                  }`}
-                >
-                  {isSelected ? (
-                    <IconClickable
-                      src={Utilities.radioButtonEnabled}
-                      additionalClass={styles["select-icon"]}
-                      onClick={() => toggleSelected(filter)}
-                    />
-                  ) : (
-                    <IconClickable
-                      src={Utilities.radioButtonNormal}
-                      additionalClass={styles["select-icon"]}
-                      onClick={() => toggleSelected(filter)}
-                    />
-                  )}
-                </div>
-                <p className={styles["item-name"]}>{filter.dpi}</p>
-                <div className={styles["item-total"]}>{filter.count}</div>
-              </li>
-            )
-          );
-        })}
-      </ul>
-    </div>
+      <div className={styles["outer-wrapper"]}>
+        {data.map((item) => (
+          <div className={styles["grid-item"]} key={item.id}>
+            <OptionDataItem name={item.dpi} count={item.count} />
+          </div>
+        ))}
+      </div>
+      <Divider />
+    </>
   );
 };
 
