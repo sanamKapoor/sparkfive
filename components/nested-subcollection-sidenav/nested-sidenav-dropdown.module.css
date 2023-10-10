@@ -11,10 +11,12 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    
 }
 .icon-descriptions:hover{
   overflow:visible;
   text-overflow: visible;
+
 
 }
 .list1-right-contents span {
@@ -37,6 +39,7 @@
   width: 100%;
   box-sizing: border-box;
   padding: 7.5px 0;
+  cursor: pointer;
 }
 .nestedbox{
   /* padding: 0 24px 0 14px; */
@@ -80,10 +83,12 @@
 .rightIcon {
   margin-right: 5px;
   transform: rotate(275deg);
+  width: 11px;
 }
 .iconClick{
   transform: rotate(0deg);
   margin-right: 5px;
+  width: 11px;
 }
 .dropdownOptions {
   /* margin-top: 16px; */
