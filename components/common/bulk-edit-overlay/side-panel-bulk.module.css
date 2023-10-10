@@ -90,3 +90,223 @@
         padding-bottom: 10px;
     }
 }
+
+
+/* EDit bulk new poppup */
+.edit-bulk-outer-wrapper{
+    max-width: 370px;
+    width: 100%;
+    border-radius: 4px;
+    background: #fff;
+    padding: 16px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    margin-top:50px;
+
+}
+
+  form.search input[type="text"] {
+    padding: 0px 0 0px 30px;
+    min-width: 260px ;
+    width: 100%;
+    background: #f1f1f1;
+    border: none;
+    border-radius: 4px;
+    font-family: "Noto Sans", sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    color: #aeb0c2;
+    cursor: pointer;
+    height:32px;
+  }
+  
+  .search {
+    position: relative;
+  }
+  
+  form.search button {
+    font-size: 17px;
+    border-left: none;
+    cursor: pointer;
+  }
+  
+  .image {
+    width: 15px;
+    height: 15px;
+  }
+  
+  .searchbtn {
+    position: absolute;
+    top: 9.7px;
+    left:8px;
+  }
+  @media (max-width: 575px) {
+    form.search input[type="text"] {
+      min-width: 0;
+    }
+  }
+  .modal-heading{
+    padding: 16px 0px;
+   
+  
+  }
+  .modal-heading span {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 18px;
+  }
+  .nestedsidenav {
+    max-width: 370px;
+    width: 100%;
+    border: 1px solid #dedad4;
+    height: fit-content;
+    border-radius: 6px;
+    position: relative;
+    z-index: 999;
+    padding: 24px 0;
+    opacity: 1;
+    display: block;
+    transition:
+      opacity 0.1s ease-in-out,
+      display 0s linear 0.1s;
+    position: fixed;
+
+  }
+  
+.collection-heading span {
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 24px;
+  }
+  .collection-modal {
+    padding: 16px;
+  }
+  .search-btn {
+    padding: 16px 0 16px 0;
+  }
+  .modal-heading span {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 18px;
+  }
+  .flex {
+    display: flex;
+    align-items: center;
+  }
+  .dropdownMenu {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+    cursor: pointer;
+  }
+  .w100 {
+    width: 100%;
+  }
+  .rightIcon {
+    margin-right: 5px;
+    transform: rotate(275deg);
+  }
+
+ 
+  .icon-descriptions span {
+    font-family: "Noto Sans", sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+    color: var(--color-prim-navy);
+    margin-left: 5px;
+  }
+  .active {
+    background: #e9eefa;
+  }
+  
+  .folder {
+    padding: 0 24px 0 20px;
+  }
+  .folder-lists {
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+    align-items: center;
+    height: 30px;
+  
+  }
+  
+  .dropdownIcons {
+    display: flex;
+  }
+  .rightIcon {
+    margin-right: 5px;
+    transform: rotate(275deg);
+    width: 11px;
+  }
+  .iconClick {
+    transform: rotate(0deg);
+    margin-right: 5px;
+    width: 11px;
+  }
+  .dropdownOptions {
+    position: relative;
+  }
+  .dropdownOptions::before {
+    content: "";
+    display: inline-block;
+    background-image: url("../../../assets/Icons/Utilities/nestedCollection/Line.svg");
+    background-repeat: no-repeat;
+    position: absolute;
+    left: -16px;
+    bottom: 14px;
+    width: 100%;
+    height: 1px;
+  }
+  .active {
+    background: var(--color-sec-lightblue);
+    border-radius: 4px;
+    padding: 7.5px;
+  }
+  .subfolderList {
+    padding: 0px 0px 0px 16px;
+    border-left: 1px solid #dedad4;
+  }
+  .modal-btns {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 16px;
+  }
+  .nestedbox {
+    margin-top: 10px;
+  }
+  .tag-container-wrapper{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .tag-container{
+    display: flex;
+    align-items: center;
+    font-weight: 400;
+    min-height: 16px;
+    border-radius: 50px;
+    padding: 4px 16px;
+    width: fit-content;
+    background-color: var(--color-sec-ivory);
+    font-size: 12px;
+    overflow-y: hidden;
+    margin:15px 5px 0 0;
+
+  }
+  .remove {
+    display: inline-flex;
+    margin-left: 8px;
+    cursor: pointer;
+    width: 12px;
+    height: 12px;
+  }
+  
+  .remove:hover {
+    opacity: 0.7;
+  }
+  
+
+  

@@ -171,7 +171,6 @@ const NestedSidenavDropdown = () => {
                     </div>
                     <IconClickable additionalClass={styles.addIcon} src={Utilities.addCollection} />
                   </div>
-                 
                 </div>
               </div>
             </div>
@@ -221,16 +220,16 @@ const NestedSidenavDropdown = () => {
                         // </span>
                          <div className={`${styles['load-wrapper']}`}>
                          <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} />
-                         <button className={styles.loadMore}>
+                         <button className={`${styles['loadMore']}`}>
                            Load More
                            </button>
                        </div>
                       }
                     </>
                   }
-                  <NestedButton type={"subCollection"} parentId={item.id}>
+                  {/* <NestedButton type={"subCollection"} parentId={item.id}>
                     Add Sub-collection
-                  </NestedButton>
+                  </NestedButton> */}
                 </div>
               </div>
             )}
@@ -255,9 +254,9 @@ const NestedSidenavDropdown = () => {
             </button>
         </div>
       }
-      <div className={styles.collection}>
+      {/* <div className={styles.collection}>
         <NestedButton type={"collection"}>Add collection</NestedButton>
-      </div>
+      </div> */}
     </div >
   );
 };

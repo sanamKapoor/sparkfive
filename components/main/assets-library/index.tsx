@@ -26,6 +26,7 @@ import AssetHeaderOps from "../../common/asset/asset-header-ops";
 import AssetOps from "../../common/asset/asset-ops";
 import DetailOverlay from "../../common/asset/detail-overlay";
 import TopBar from "../../common/asset/top-bar";
+import FilterView from "../../common/filter-view";
 import FilterContainer from "../../common/filter/filter-container";
 import { DropzoneProvider } from "../../common/misc/dropzone";
 import NoPermissionNotice from "../../common/misc/no-permission-notice";
@@ -783,7 +784,10 @@ const AssetsLibrary = () => {
     }
   };
 
-  const getSubCollectionsFolderData = async (replace = true, pageSize?: number = 10) => {
+  const getSubCollectionsFolderData = async (
+    replace = true,
+    pageSize?: number = 10
+  ) => {
     try {
       if (activeSortFilter.mainFilter !== "SubCollectionView") {
         return;
@@ -1029,7 +1033,6 @@ const AssetsLibrary = () => {
           selectedSubFoldersAndAssets={selectedSubFoldersAndAssets}
         />
       )}
-      {/* {!renderFlag && <SpinnerOverlay text="Your Assets are loading please wait...." />} */}
       {hasPermission([ASSET_ACCESS]) ||
       hasPermission([ASSET_UPLOAD_APPROVAL]) ? (
         <>
@@ -1103,6 +1106,10 @@ const AssetsLibrary = () => {
                   }
                     } ${activeFolder && styles["active-breadcrumb-item"]}`}
                 >
+                  {/* // TODO: move this inline style to css module */}
+                  <div style={{ paddingTop: "50px" }}>
+                    <FilterView />
+                  </div>
                   <DropzoneProvider>
                     {advancedConfig.set && renderFlag && (
                       <AssetGrid
