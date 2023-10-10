@@ -21,7 +21,9 @@ const ReusableHeading = ({ headingTrue, totalCount, text, icon, headingClick, he
       >
         {`${text} ${totalCount ? `(${totalCount})` : ""}`}
         <NestedButton type={"collection"}>Add collection</NestedButton>
+       
       </div>
+     
       {icon && <div className="left-icon">{icon}</div>}
 
     </div >
