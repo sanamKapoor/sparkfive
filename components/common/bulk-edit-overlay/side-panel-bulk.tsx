@@ -22,9 +22,44 @@ import CreatableSelect from "../inputs/creatable-select";
 import CustomFieldSelector from "../items/custom-field-selector";
 import ConfirmModal from "../modals/confirm-modal";
 import ProjectCreationModal from "../modals/project-creation-modal";
+import SearchModal from "../../SearchModal/Search-modal";
+import Search from "../../main/user-settings/SuperAdmin/Search/Search";
 
 // Server DO NOT return full custom field slots including empty array, so we will generate empty array here
 // The order of result should be match with order of custom field list
+const data = [
+  {
+    folderName: "Architecture",
+    subfolders: [
+      {
+        name: "City",
+      },
+      {
+        name: "Renaissance",
+      },
+      {
+        name: "Interior",
+      },
+      {
+        name: "House",
+      },
+    ],
+  },
+  {
+    folderName: "Portraits",
+    subfolders: [],
+  },
+  {
+    folderName: "Nature",
+    subfolders: [],
+  },
+  {
+    folderName: "Events",
+    subfolders: [],
+  },
+];
+const tagData = ["Data1", "Data2", "Data3","Data1",];
+
 const mappingCustomFieldData = (list, valueList) => {
   let rs = [];
   list.map((field) => {
@@ -121,7 +156,14 @@ const SidePanelBulk = ({
       // TODO: Maybe show error?
     }
   };
-
+  const [selectedItem, setSelectedItem] = useState(null);
+  const handleItemClick = (index: any) => {
+    if (selectedItem === index) {
+      setSelectedItem(null);
+    } else {
+      setSelectedItem(index);
+    }
+  };
   const handleProjectChange = (selected, actionMeta) => {
     if (
       !selected ||
@@ -210,7 +252,6 @@ const SidePanelBulk = ({
 
       updateObject.activeFolder = activeFolder;
 
-
       await assetApi.updateMultipleAttributes(updateObject, filters);
       await onUpdate();
       toastUtils.success("Asset edits saved");
@@ -279,6 +320,102 @@ const SidePanelBulk = ({
             isBulkEdit={true}
             canAdd={addMode}
           />
+          <div className={`${styles["tag-container-wrapper"]}`}>
+            {tagData.map((dataItem, index) => (
+              <div className={`${styles["tag-container"]}`} key={index}>
+                <span>{dataItem}</span>
+                <IconClickable
+                  additionalClass={styles.remove}
+                  src={Utilities.closeTag}
+                />
+              </div>
+            ))}
+          </div>
+          <div className={`${styles["edit-bulk-outer-wrapper"]}`}>
+            <div className={`${styles["search-btn"]}`}>
+              <form
+                className={styles.search}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                <div className={styles.searchinput}>
+                  <input type="text" placeholder={"Search"} name="search2" />
+                </div>
+                <div className={styles.searchbtn}>
+                  <img className={styles.image} src={Utilities.search} />
+                </div>
+              </form>
+            </div>
+            <div className={`${styles["modal-heading"]}`}>
+              <span>Collection(21)</span>
+            </div>
+            <div>
+              {data.map((folder, index) => (
+                <div key={index}>
+                  <div className={`${styles["flex"]} ${styles.nestedbox}`}>
+                    <img
+                      className={styles.rightIcon}
+                      src={Utilities.arrowBlue}
+                      alt="Right Arrow Icon"
+                    />
+                    <div className={styles.w100}>
+                      <div
+                        className={`${styles["dropdownMenu"]} ${
+                          selectedItem === index ? styles["active"] : ""
+                        }`}
+                        onClick={() => handleItemClick(index)}
+                      >
+                        <div className={styles.flex}>
+                          <img src={Utilities.folder} alt="Folder Icon" />
+                          <div className={styles["icon-descriptions"]}>
+                            <span>{folder.folderName}</span>
+                          </div>
+                        </div>
+                        <div>
+                          <div className={styles["list1-right-contents"]}>
+                            {selectedItem === index && (
+                              <img src={Utilities.checkBlue} alt="Check Icon" />
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className={styles.folder}>
+                    <div className={styles.subfolderList}>
+                      {folder.subfolders.map((subfolder, subIndex) => (
+                        <div key={subIndex} className={styles.dropdownOptions}>
+                          <div className={styles["folder-lists"]}>
+                            <div className={styles.dropdownIcons}>
+                              <img
+                                className={styles.subfolder}
+                                src={Utilities.folder}
+                                alt="Folder Icon"
+                              />
+                              <div className={styles["icon-descriptions"]}>
+                                <span>{subfolder.name}</span>
+                              </div>
+                            </div>
+                            <div className={styles["list1-right-contents"]}>
+                              {selectedItem === index && <span></span>}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className={styles["modal-btns"]}>
+              <Button
+                className="container primary main-modal-btn"
+                text="Add to collection"
+              ></Button>
+              <Button className="container secondary" text="Cancel"></Button>
+            </div>
+          </div>
         </section>
 
         {!hideFilterElements.campaigns && (
@@ -339,7 +476,7 @@ const SidePanelBulk = ({
                   data={assetCustomFields[index]?.values[0]?.name}
                   options={field.values}
                   isShare={false}
-                  onLabelClick={() => { }}
+                  onLabelClick={() => {}}
                   handleFieldChange={(option) => {
                     setCustomFields(index, [option]);
                   }}
@@ -359,7 +496,7 @@ const SidePanelBulk = ({
                   selectPlaceholder={"Select an existing one"}
                   avilableItems={field.values}
                   isShare={false}
-                  setAvailableItems={() => { }}
+                  setAvailableItems={() => {}}
                   selectedItems={
                     assetCustomFields.filter(
                       (assetField) => assetField.id === field.id
@@ -369,7 +506,7 @@ const SidePanelBulk = ({
                     setActiveCustomField(undefined);
                     setCustomFields(index, data);
                   }}
-                  onAddOperationFinished={(stateUpdate) => { }}
+                  onAddOperationFinished={(stateUpdate) => {}}
                   onRemoveOperationFinished={async (
                     index,
                     stateUpdate,
