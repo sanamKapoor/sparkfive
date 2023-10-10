@@ -22,7 +22,7 @@
    margin-left:10px;
   }
   .addBlock{
-    height: 29px;
+    /* height: 29px; */
     display: flex;
     align-items: center;
     border-radius: 0 4px 4px 0;
