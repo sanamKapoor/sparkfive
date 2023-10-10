@@ -11,7 +11,6 @@ import styles from './nested-sidenav.module.css';
 
 const NestedSidenav = () => {
   const {
-    sidenavTotalCollectionCount,
     sidebarOpen,
     setSidebarOpen,
     selectAllAssets, selectAllFolders, setLastUploadedFolder,
@@ -66,7 +65,6 @@ const NestedSidenav = () => {
         />
         <div className={styles.sidenavScroll}>
           <NestedFirstlist headingClick={headingClick} />
-
           <NestedSidenavDropdown headingClick={headingClick} />
         </div>
 

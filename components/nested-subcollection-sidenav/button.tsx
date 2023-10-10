@@ -9,12 +9,11 @@ import toastUtils from "../../utils/toast";
 import IconClickable from '../common/buttons/icon-clickable';
 
 interface MyComponentProps {
-  children: ReactNode;
   type: string
   parentId?: string
 }
 
-const NestedButton: React.FC<MyComponentProps> = ({ children, type, parentId }) => {
+const NestedButton: React.FC<MyComponentProps> = ({ type, parentId }) => {
   const [activeModal, setActiveModal] = useState("");
   const [disableButtons, setDisableButtons] = useState(false)
   const {

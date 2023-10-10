@@ -20,7 +20,7 @@ const ReusableHeading = ({ headingTrue, totalCount, text, icon, headingClick, he
         style={{ cursor: "pointer" }}
       >
         {`${text} ${totalCount ? `(${totalCount})` : ""}`}
-        <NestedButton type={"collection"}>Add collection</NestedButton>
+        {text === "Collections" && <NestedButton type={"collection"} />}
       </div>
       {icon && <div className="left-icon">{icon}</div>}
 

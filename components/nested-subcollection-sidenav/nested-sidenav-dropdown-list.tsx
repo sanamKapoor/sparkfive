@@ -175,10 +175,7 @@ const NestedSidenavDropdown = ({ headingClick }) => {
                     <div className={styles["list1-right-contents"]}>
                       <span>{item.assetsCount}</span>
                     </div>
-                    <NestedButton type={"subCollection"} parentId={item.id}>
-                      Add Sub-collection
-                    </NestedButton>
-                    {/* <IconClickable additionalClass={styles.addIcon} src={Utilities.addCollection}  */}
+                    {showDropdown[index] && <NestedButton type={"subCollection"} parentId={item.id} />}
                   </div>
                 </div>
               </div>
@@ -230,14 +227,10 @@ const NestedSidenavDropdown = ({ headingClick }) => {
                                 </button>
                               </>
                           }
-
                         </div>
                       }
                     </>
                   }
-                  {/* <NestedButton type={"subCollection"} parentId={item.id}>
-                    Add Sub-collection
-                  </NestedButton> */}
                 </div>
               </div>
             )}
