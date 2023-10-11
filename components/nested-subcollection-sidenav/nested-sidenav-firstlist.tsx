@@ -1,16 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 
-import styles from './nested-sidenav-firstlist.module.css';
-import assetApi from '../../server-api/asset';
-import {
-  getAssetsFilters,
-  getAssetsSort,
-} from '../../utils/asset';
+import { sideNavFirstList } from '../../constants/firstList-sidenav';
 import { AssetContext, FilterContext } from '../../context';
-import { sideNavFirstList } from "../../constants/firstList-sidenav"
+import assetApi from '../../server-api/asset';
+import { getAssetsFilters, getAssetsSort } from '../../utils/asset';
+import styles from './nested-sidenav-firstlist.module.css';
 
 const NestedFirstlist = ({ headingClick }: {
-  headingClick?: Function
+  headingClick?: (name, description) => void
 }) => {
 
   const {
@@ -30,7 +27,6 @@ const NestedFirstlist = ({ headingClick }: {
     allAsset: "",
     video: ""
   });
-  const [firstLoaded, setFirstLoaded] = useState(false);
 
   const getAssets = async (replace = true) => {
     try {
@@ -73,13 +69,8 @@ const NestedFirstlist = ({ headingClick }: {
   };
 
   useEffect(() => {
-    // if (firstLoaded) {
     getAssets(true);
-    // }
-    setFirstLoaded(true)
-  }, [
-    // activeSortFilter
-  ]);
+  }, []);
 
   return (
     <div className={styles["sidenav-list1"]}>

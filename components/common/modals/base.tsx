@@ -16,7 +16,7 @@ interface BaseModalProps {
   ) => void;
   confirmAction?: MouseEventHandler<HTMLButtonElement>;
   confirmText?: string;
-  headText?: string;
+  headText?: any;
   subText?: string;
   textWidth?: boolean;
   disabledConfirm?: boolean;

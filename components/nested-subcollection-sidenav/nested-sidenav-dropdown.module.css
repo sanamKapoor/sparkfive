@@ -3,47 +3,47 @@
   font-weight: 500;
   font-size: 14px;
   line-height: 18px;
-  color:var(--color-prim-navy);
+  color: var(--color-prim-navy);
   margin-left: 5px;
 }
-.icon-descriptions{
+.icon-descriptions {
   max-width: 15ch;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.icon-descriptions:hover{
-  overflow:visible;
+.icon-descriptions:hover {
+  overflow: visible;
   text-overflow: visible;
-
 }
 .list1-right-contents span {
   font-family: "Noto Sans", sans-serif;
   font-weight: 500;
   font-size: 14px;
   line-height: 18px;
-  color:var(--color-prim-navy);
+  color: var(--color-prim-navy);
 }
-.flex{
+.flex {
   display: flex;
   align-items: center;
 }
-.w100{
-  width:100%;
- }
-.dropdownMenu{
+.w100 {
+  width: 100%;
+}
+.dropdownMenu {
   display: flex;
   justify-content: space-between;
   width: 100%;
   box-sizing: border-box;
   padding: 7.5px 0;
+  cursor: pointer;
+  align-items: center;
 }
-.nestedbox{
+.nestedbox {
   /* padding: 0 24px 0 14px; */
-  margin-top:20px;
-
+  margin-top: 20px;
 }
-.loadbtn{
+.loadbtn {
   display: block;
   background: #fff !important;
   padding: 0 24px 0 24px;
@@ -51,19 +51,18 @@
   font-family: "Noto Sans", sans-serif;
   font-weight: 500;
   font-size: 14px;
-  cursor:pointer;
+  cursor: pointer;
   margin-top: 10px;
-
 }
-.collection{
+.collection {
   padding: 0 24px;
 }
-.loadmore{
+.loadmore {
   padding: 0 24px;
 }
 
-.folder{
-  padding:0 24px 0 24px;
+.folder {
+  padding: 0 24px 0 24px;
 }
 .folder-lists {
   display: flex;
@@ -80,10 +79,12 @@
 .rightIcon {
   margin-right: 5px;
   transform: rotate(275deg);
+  width: 11px;
 }
-.iconClick{
+.iconClick {
   transform: rotate(0deg);
   margin-right: 5px;
+  width: 11px;
 }
 .dropdownOptions {
   /* margin-top: 16px; */
@@ -102,7 +103,7 @@
 }
 
 .active {
-  background:var(--color-sec-lightblue);
+  background: var(--color-sec-lightblue);
   border-radius: 4px;
   padding: 7.5px;
 }
@@ -123,18 +124,17 @@
   font-family: "Noto Sans", sans-serif;
   font-weight: 500;
   font-size: 14px;
-  cursor:pointer;
+  cursor: pointer;
   margin-top: 10px;
   border-radius: 8px;
-  height:30px;
+  height: 30px;
 }
-
 
 .buttontext {
   transition: opacity 0.3s ease-in-out;
 }
 
-.loaderbuttons:hover .buttontext  {
+.loaderbuttons:hover .buttontext {
   opacity: 1;
 }
 
@@ -158,30 +158,38 @@
 }
 
 @keyframes spin {
-  0% { transform: translate(-50%, -50%) rotate(0deg); }
-  100% { transform: translate(-50%, -50%) rotate(360deg); }
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
 }
-.load-wrapper{
+.load-wrapper {
   display: flex;
   align-items: center;
   margin-top: 10px;
 }
-.loadIcon{
+.loadIcon {
   width: 18px;
 }
-.loadMore{
+.loadMore {
   background: transparent;
-  color:
-  #10BDA5;
+  color: #10bda5;
   cursor: pointer;
-  }
-  .addIcon{
-    width: 10.5px;
-   margin-right: 9px;
-   margin-left:10px;
-  }
-  .totalCount{
-    display: flex;
-    align-items: center;
-
-  }
+}
+.addIcon {
+  width: 10.5px;
+  margin-right: 9px;
+  margin-left: 10px;
+}
+.totalCount {
+  display: flex;
+  align-items: center;
+}
+.mainWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

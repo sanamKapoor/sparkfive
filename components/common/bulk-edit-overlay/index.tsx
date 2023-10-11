@@ -36,27 +36,19 @@ const mappingCustomFieldData = (list, valueList) => {
 
 const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
   const { loadingAssets } = useContext(AssetContext);
-
   const [loading, setLoading] = useState(true);
-
   const [sideOpen, setSideOpen] = useState(true);
-
   const [initialSelect, setInitialSelect] = useState(false);
-
   const [assetProjects, setAssetProjects] = useState([]);
   const [assetTags, setTags] = useState([]);
   const [assetCampaigns, setCampaigns] = useState([]);
   const [assetFolders, setFolders] = useState([]);
-
   const initialEditAssets = selectedAssets.map((assetItem) => ({
     ...assetItem,
     isEditSelected: true,
   }));
-
   const [editAssets, setEditAssets] = useState(initialEditAssets);
-
   const [addMode, setAddMode] = useState(true);
-
   const [originalInputs, setOriginalInputs] = useState({
     campaigns: [],
     projects: [],
@@ -64,6 +56,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
     customs: [],
     folders: [],
   });
+
 
   // Custom fields
   const [inputCustomFields, setInputCustomFields] = useState([]);
@@ -401,9 +394,8 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
             <IconClickable
               src={Utilities.closePanelLight}
               onClick={() => toggleSideMenu()}
-              additionalClass={`${styles["menu-icon"]} ${
-                !sideOpen && "mirror"
-              }`}
+              additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"
+                }`}
             />
           </section>
         </div>

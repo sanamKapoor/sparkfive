@@ -54,7 +54,7 @@ const MoveReplaceModal = ({
     newFolderName,
     folderInputActive,
     subFolderLoadingState,
-    sidenavFolderChildList,
+    folderChildList,
     showDropdown,
     selectAllFolders,
     input,
@@ -70,7 +70,7 @@ const MoveReplaceModal = ({
     setSelectedFolder,
     setShowDropdown,
     setSubFolderLoadingState,
-    setSidenavFolderChildList,
+    setFolderChildList,
     setSelectAllFolders,
   } = useMoveModal();
 
@@ -82,15 +82,17 @@ const MoveReplaceModal = ({
       setSelectedFolder([]);
       setShowDropdown([]);
       setSubFolderLoadingState(new Map());
-      setSidenavFolderChildList(new Map())
+      setFolderChildList(new Map())
       setSelectAllFolders({})
       setInput("")
     };
   }, [modalIsOpen]);
+
   const closemoveModal = () => {
     setSelectedFolder("");
     closeModal();
   };
+
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     await createFolder(newFolderName);
@@ -100,18 +102,16 @@ const MoveReplaceModal = ({
   };
 
   const keyExists = (key: string) => {
-    return sidenavFolderChildList.has(key);
+    return folderChildList.has(key);
   };
 
   const keyResultsFetch = (key: string, type: string): Item[] | number => {
-    const { results, next } = sidenavFolderChildList.get(key);
+    const { results, next } = folderChildList.get(key);
     if (type === 'record') {
       return results || []
     }
     return next
   };
-
-
 
   return (
     <Base
@@ -148,7 +148,7 @@ const MoveReplaceModal = ({
                   onClick={() => { toggleDropdown(folder.id, true) }}
                 />
               </div>
-              
+
               <div className={styles.w100}>
                 <div
                   className={`${styles["dropdownMenu"]} ${selectedFolder.includes(folder.id) ?
@@ -234,20 +234,13 @@ const MoveReplaceModal = ({
                 </div>
                 </div>
                 }
-                {/**
-                 * Todo uncomment when design fix by client for the Sub Collectin adding feature 
-                 */}
-                {/* {<div className={`${styles['load-wrapper']}`}>
-                  <IconClickable additionalClass={styles.loadIcon} src={Utilities.add} />
-                  <button className={`${styles['collection-btn']}`}>Add sub-collection</button>
-                </div>} */}
               </div>
             </div>
             }
           </div>
         ))}
       </div>
-    <div className={styles["folder-wrapper"]}>
+      <div className={styles["folder-wrapper"]}>
         {folderInputActive ? (
           <form onSubmit={onSubmit}>
             <div

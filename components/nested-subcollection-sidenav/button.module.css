@@ -1,11 +1,10 @@
 .nestedButton{
-    background: #fff;
+    background:transparent;
     display: flex;
     align-items: center;
     cursor: pointer;
     padding: 0px;
-    margin-top:20px;
-
+ 
 }
 
 .nestedButton span{
@@ -17,3 +16,14 @@
     margin-left: 5px;
 
 }
+.addIcon{
+    width: 10.5px;
+   margin-right: 5px;
+   margin-left:10px;
+  }
+  .addBlock{
+    display: flex;
+    align-items: center;
+    justify-content: end;
+  }
+

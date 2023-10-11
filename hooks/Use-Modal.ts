@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import { FilterContext } from "../context";
 import folderApi from "../server-api/folder";
-
+// Defining interfaces
 interface Asset {
     id: string;
     name: string;
@@ -39,7 +39,7 @@ interface MoveModalReturnType {
     newFolderName: string;
     folderInputActive: boolean;
     subFolderLoadingState: Map<string, boolean>; // Replace 'string' with the actual key type
-    sidenavFolderChildList: Map<string, { results: Item[], next: number, total: number }>; // Replace 'Item' and 'string' with actual types
+    folderChildList: Map<string, { results: Item[], next: number, total: number }>; // Replace 'Item' and 'string' with actual types
     showDropdown: string[];
     selectAllFolders: Record<string, boolean>;
     input: string;
@@ -47,7 +47,7 @@ interface MoveModalReturnType {
     setInput: (value: string) => void;
     filteredData: () => void;
     getFolders: () => void;
-    setSidenavFolderChildListItems: (inputFolders: any, id: string, replace?: boolean) => void;
+    setFolderChildListItems: (inputFolders: any, id: string, replace?: boolean) => void;
     getSubFolders: (id: string, page: number, replace: boolean) => Promise<Map<string, { results: Item[], next: number, total: number }>>;
     toggleSelected: (folderId: string, selected: boolean, subFolderToggle?: boolean, mainFolderId?: string) => void;
     toggleDropdown: (folderId: string, replace: boolean) => void;
@@ -59,21 +59,24 @@ interface MoveModalReturnType {
 }
 
 export const useMoveModal = (): MoveModalReturnType => {
+    //States for folders, search results, selected folders, etc.
     const [folders, setFolders] = useState([]);
     const [resultedSearchFolders, setResultedSearchFolders] = useState([]);
     const [selectedFolder, setSelectedFolder] = useState([]);
     const [newFolderName, setNewFolderName] = useState("");
     const [folderInputActive, setFolderInputActive] = useState(false);
     const [subFolderLoadingState, setSubFolderLoadingState] = useState(new Map());
-    const [sidenavFolderChildList, setSidenavFolderChildList] = useState(new Map());
+    const [folderChildList, setFolderChildList] = useState(new Map());
     const [showDropdown, setShowDropdown] = useState([]);
     const [selectAllFolders, setSelectAllFolders] = useState<Record<string, boolean>>({});
     const [input, setInput] = useState('');
 
+    // Extract values from FilterContext
     const {
         activeSortFilter
     } = useContext(FilterContext) as { term: any, activeSortFilter: any }
 
+    // Filter folders based on the input search string
     const filteredData = () => {
         setFolders(resultedSearchFolders.filter(item =>
             item.name.toLowerCase().includes(input.toLowerCase())
@@ -81,6 +84,7 @@ export const useMoveModal = (): MoveModalReturnType => {
         )
     }
 
+    // Fetch folders from the API
     const getFolders = async () => {
         try {
             const { data } = await folderApi.getFoldersSimple();
@@ -92,7 +96,8 @@ export const useMoveModal = (): MoveModalReturnType => {
         }
     };
 
-    const setSidenavFolderChildListItems = (
+    // Set subfolders
+    const setFolderChildListItems = (
         inputFolders: any,
         id: string,
         replace = true,
@@ -100,14 +105,15 @@ export const useMoveModal = (): MoveModalReturnType => {
         const { results, next, total } = inputFolders;
         if (replace) {
             if (results.length > 0) {
-                setSidenavFolderChildList((map) => { return new Map(map.set(id, { results, next, total })) })
+                setFolderChildList((map) => { return new Map(map.set(id, { results, next, total })) })
             }
         }
         else {
-            setSidenavFolderChildList((map) => { return new Map(map.set(id, { results: [...map.get(id).results, ...results], next, total })) })
+            setFolderChildList((map) => { return new Map(map.set(id, { results: [...map.get(id).results, ...results], next, total })) })
         }
     };
 
+    // Fetch subfolders based on folder ID and page number
     const getSubFolders = async (id: string, page: number, replace: boolean) => {
 
         setSubFolderLoadingState((map) => new Map(map.set(id, true)))
@@ -122,15 +128,15 @@ export const useMoveModal = (): MoveModalReturnType => {
         const { data } = await folderApi.getSubFolders({
             ...queryParams,
         }, id);
-        setSidenavFolderChildListItems(data,
+        setFolderChildListItems(data,
             id,
             replace
         )
         if (selectAllFolders[id]) ToggleAllSelectedFolders(id, true)
         setSubFolderLoadingState((map) => new Map(map.set(id, false)))
-        return sidenavFolderChildList;
+        return folderChildList;
     }
-
+    // Handle folder selection toggle
     const toggleSelected = async (folderId: string, selected: boolean, subFolderToggle?: boolean, mainFolderId?: string) => {
         const actionFolderId = subFolderToggle ? mainFolderId : folderId;
         if (selected) {
@@ -140,8 +146,8 @@ export const useMoveModal = (): MoveModalReturnType => {
 
             //Todo: Code shift to Custom Hook
             if (!selectAllFolders[actionFolderId]) {
-                if (sidenavFolderChildList.has(actionFolderId)) {
-                    const response = sidenavFolderChildList.get(actionFolderId);
+                if (folderChildList.has(actionFolderId)) {
+                    const response = folderChildList.get(actionFolderId);
                     if (response?.results?.length > 0) {
                         response?.results.forEach((item: Item) => {
                             allChildIds.push(item.id);
@@ -162,7 +168,7 @@ export const useMoveModal = (): MoveModalReturnType => {
             };
         }
     };
-
+    // Handle dropdown toggle for displaying subfolders
     const toggleDropdown = async (folderId: string, replace: boolean) => {
         if (!showDropdown.includes(folderId)) {
             await getSubFolders(folderId, 1, replace);
@@ -171,9 +177,9 @@ export const useMoveModal = (): MoveModalReturnType => {
             setShowDropdown(showDropdown.filter((item) => item !== folderId));
         }
     };
-
+    // Select or deselect all folders in a list
     const ToggleAllSelectedFolders = (folderId: string, selectAll: boolean) => {
-        const response = sidenavFolderChildList.get(folderId);
+        const response = folderChildList.get(folderId);
         const allChildIds: string[] = []
 
         if (selectAll) {
@@ -203,7 +209,7 @@ export const useMoveModal = (): MoveModalReturnType => {
             setSelectAllFolders((prev) => ({ ...prev, [folderId]: true }));
         }
     }
-
+    // Return all state values and handlers
     return {
         folders,
         resultedSearchFolders,
@@ -211,14 +217,14 @@ export const useMoveModal = (): MoveModalReturnType => {
         newFolderName,
         folderInputActive,
         subFolderLoadingState,
-        sidenavFolderChildList,
+        folderChildList,
         showDropdown,
         selectAllFolders,
         input,
         setInput,
         filteredData,
         getFolders,
-        setSidenavFolderChildListItems,
+        setFolderChildListItems,
         getSubFolders,
         toggleSelected,
         toggleDropdown,
@@ -229,7 +235,7 @@ export const useMoveModal = (): MoveModalReturnType => {
         setSelectedFolder,
         setShowDropdown,
         setSubFolderLoadingState,
-        setSidenavFolderChildList,
+        setFolderChildList,
         setSelectAllFolders,
     };
 };
