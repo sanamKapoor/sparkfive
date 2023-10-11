@@ -18,18 +18,12 @@
 }
 .addIcon{
     width: 10.5px;
-   /* margin-right: 9px; */
+   margin-right: 5px;
    margin-left:10px;
   }
   .addBlock{
-    /* height: 29px; */
     display: flex;
     align-items: center;
-    border-radius: 0 4px 4px 0;
     justify-content: end;
   }
 
-  .addBlock_active{
-    background: var(--color-sec-lightblue);
-
-  }

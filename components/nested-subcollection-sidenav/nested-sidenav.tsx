@@ -1,31 +1,34 @@
-import React from 'react';
-import { useContext } from 'react';
+import React from "react";
+import { useContext } from "react";
 
-import { Utilities } from '../../assets';
-import { AssetContext, FilterContext, UserContext } from '../../context';
-import selectOptions from '../../utils/select-options';
-import ReusableHeading from './nested-heading';
-import NestedSidenavDropdown from './nested-sidenav-dropdown-list';
-import NestedFirstlist from './nested-sidenav-firstlist';
-import styles from './nested-sidenav.module.css';
+import { Utilities } from "../../assets";
+import { AssetContext, FilterContext, UserContext } from "../../context";
+import selectOptions from "../../utils/select-options";
+import ReusableHeading from "./nested-heading";
+import NestedSidenavDropdown from "./nested-sidenav-dropdown-list";
+import NestedFirstlist from "./nested-sidenav-firstlist";
+import styles from "./nested-sidenav.module.css";
 
 const NestedSidenav = () => {
   const {
     sidebarOpen,
     setSidebarOpen,
-    selectAllAssets, selectAllFolders, setLastUploadedFolder,
-    setHeaderName
+    selectAllAssets,
+    selectAllFolders,
+    setLastUploadedFolder,
+    setHeaderName,
   } = useContext(AssetContext);
+  const { setActiveSortFilter, activeSortFilter } = useContext(
+    FilterContext
+  ) as { setActiveSortFilter: Function; activeSortFilter: any };
   const {
-    setActiveSortFilter,
-    activeSortFilter
-  } = useContext(FilterContext) as { setActiveSortFilter: Function, activeSortFilter: any };
-  const { advancedConfig, user: { team } } =
-    useContext(UserContext) as { advancedConfig: any, user: any };
+    advancedConfig,
+    user: { team },
+  } = useContext(UserContext) as { advancedConfig: any; user: any };
 
   const headingClick = (value: string, description: string) => {
     if (!value) {
-      return false
+      return false;
     }
     let sort = activeSortFilter.sort;
     if (value === "folders") {
@@ -46,13 +49,13 @@ const NestedSidenav = () => {
     // And uploaded folder needed to show at first
     setLastUploadedFolder(undefined);
     //setting the HeaderName
-    setHeaderName(description)
+    setHeaderName(description);
     setActiveSortFilter({
       ...activeSortFilter,
       ["mainFilter"]: value,
       sort,
     });
-  }
+  };
 
   return (
     <div className={styles.nestedsidenav}>
@@ -61,7 +64,14 @@ const NestedSidenav = () => {
           customStyle={{ padding: "0px 23px 0px 23px" }}
           text={`${team?.company}.`}
           headingClick={headingClick}
-          icon={<img onClick={() => { setSidebarOpen(!sidebarOpen) }} src={Utilities.arrowleft} />}
+          icon={
+            <img
+              onClick={() => {
+                setSidebarOpen(!sidebarOpen);
+              }}
+              src={Utilities.arrowleft}
+            />
+          }
         />
         <div className={styles.sidenavScroll}>
           <NestedFirstlist headingClick={headingClick} />
