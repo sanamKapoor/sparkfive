@@ -5,7 +5,7 @@ import { Utilities } from "../../../assets";
 import {
   IAttribute,
   IAttributeValue,
-  IDimensionFilter,
+  IFilterAttributeValues,
   IFilterPopupContentType,
 } from "../../../interfaces/filters";
 import customFieldsApi from "../../../server-api/attribute";
@@ -19,9 +19,7 @@ import styles from "./index.module.css";
 
 const FilterView = () => {
   const [attrs, setAttrs] = useState<IAttribute[]>([]);
-  const [values, setValues] = useState<IAttributeValue[] | IDimensionFilter>(
-    []
-  );
+  const [values, setValues] = useState<IFilterAttributeValues>([]);
 
   const [showAttrValues, setShowAttrValues] = useState<boolean>(false);
   const [contentType, setContentType] =
@@ -46,9 +44,10 @@ const FilterView = () => {
   /** // TODO: 1. check for permission and custom restrictions for individual filter attributes
    * 2. Check for share pages
    * 3. add a loader for content
+   * 4. Error Handling for all the api requests
    **/
   const onAttributeClick = async (data: IAttribute) => {
-    let values: IAttributeValue[] = [];
+    let values: IFilterAttributeValues = [];
     let contentType: IFilterPopupContentType = "list";
 
     setActiveAttribute(data.name);
@@ -59,7 +58,9 @@ const FilterView = () => {
         break;
       case "aiTags":
         values = await fetchAITags();
-        values = values?.filter((tag) => tag.type === "AI");
+        values = (values as IAttributeValue[])?.filter(
+          (tag) => tag.type === "AI"
+        );
         break;
       case "campaigns":
         values = await fetchCampaigns();
@@ -98,7 +99,6 @@ const FilterView = () => {
         const retailers = await fetchProductRetailers();
         const sku = await fetchProductSku();
 
-        //TODO: type for Product Filter data
         values = {
           categories,
           vendors,

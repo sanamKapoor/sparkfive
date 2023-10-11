@@ -3,7 +3,10 @@ import React, { useState } from "react";
 
 import { Utilities } from "../../../assets";
 
-import { IFilterPopupContentType } from "../../../interfaces/filters";
+import {
+  IFilterAttributeValues,
+  IFilterPopupContentType,
+} from "../../../interfaces/filters";
 import Search from "../../common/inputs/search";
 import Button from "../buttons/button";
 import DimensionsFilter from "../filter-view/dimension-filter";
@@ -17,7 +20,7 @@ import SelectOption from "./select-option";
 
 interface FilterOptionPopupProps {
   contentType: IFilterPopupContentType;
-  options: any; //TODO;
+  options: IFilterAttributeValues;
   setShowAttrValues: (val: boolean) => void;
   activeAttribute: string;
 }
@@ -80,7 +83,7 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
           />
         )}
         {contentType === "products" && (
-          <ProductFilter productFilters={options} loadFn={() => {}} />
+          <ProductFilter productFilters={options} />
         )}
         <div className={`${styles["rule-tag"]}`}>
           <label>Rule:</label>

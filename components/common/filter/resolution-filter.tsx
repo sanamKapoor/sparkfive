@@ -1,11 +1,12 @@
 import { Utilities } from "../../../assets";
+import { IResolutionFilter } from "../../../interfaces/filters";
 import IconClickable from "../buttons/icon-clickable";
 import Divider from "../filter-option-popup/divider";
 import OptionDataItem from "../filter-option-popup/option-data-item";
 import styles from "../filter-option-popup/options-data.module.css";
 
 interface ResolutionFilterProps {
-  data: any; //TODO
+  data: IResolutionFilter[];
 }
 
 const ResolutionFilter: React.FC<ResolutionFilterProps> = ({ data }) => {

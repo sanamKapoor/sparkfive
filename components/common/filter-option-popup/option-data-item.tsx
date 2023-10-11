@@ -4,7 +4,7 @@ import IconClickable from "../buttons/icon-clickable";
 import styles from "./option-data-item.module.css";
 
 interface OptionDataItemProps {
-  name: string;
+  name: string | number;
   count: string;
 }
 
