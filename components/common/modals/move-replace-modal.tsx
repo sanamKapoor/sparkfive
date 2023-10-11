@@ -87,10 +87,12 @@ const MoveReplaceModal = ({
       setInput("")
     };
   }, [modalIsOpen]);
+
   const closemoveModal = () => {
     setSelectedFolder("");
     closeModal();
   };
+
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     await createFolder(newFolderName);
@@ -110,8 +112,6 @@ const MoveReplaceModal = ({
     }
     return next
   };
-
-
 
   return (
     <Base
@@ -234,13 +234,6 @@ const MoveReplaceModal = ({
                 </div>
                 </div>
                 }
-                {/**
-                 * Todo uncomment when design fix by client for the Sub Collectin adding feature 
-                 */}
-                {/* {<div className={`${styles['load-wrapper']}`}>
-                  <IconClickable additionalClass={styles.loadIcon} src={Utilities.add} />
-                  <button className={`${styles['collection-btn']}`}>Add sub-collection</button>
-                </div>} */}
               </div>
             </div>
             }

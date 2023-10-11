@@ -16,14 +16,14 @@ const ReusableHeading = ({ headingTrue, totalCount, text, icon, headingClick, he
   return (
     <div className={styles["heading-contents"]} style={customStyle}>
       <div className={`${styles["sidenav-heading"]} ${headingTrue ? styles["active"] : ""}`}
-        onClick={() => headingClick(headingClickType, description)}
         style={{ cursor: "pointer" }}
       >
-        {`${text} ${totalCount ? `(${totalCount})` : ""}`}
+        <div onClick={() => headingClick(headingClickType, description)}>
+          {`${text} ${totalCount ? `(${totalCount})` : ""}`}
+        </div>
         {text === "Collections" && <NestedButton type={"collection"} />}
       </div>
       {icon && <div className="left-icon">{icon}</div>}
-
     </div >
   );
 };

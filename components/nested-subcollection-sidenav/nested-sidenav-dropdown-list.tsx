@@ -160,24 +160,28 @@ const NestedSidenavDropdown = ({ headingClick }) => {
         return (
           <>
             <div key={index} className={`${styles["flex"]} ${styles.nestedbox}`}
-              onClick={() => toggleDropdown(index, item, true)}
+
             >
               <img className={showDropdown[index] ? styles.iconClick : styles.rightIcon} src={Utilities.arrowBlue} onClick={() => toggleDropdown(index, item, true)} />
-              <div className={styles.w100}>
-                <div className={`${styles["dropdownMenu"]} ${showDropdown[index] ? styles.active : ""}`} >
-                  <div className={styles.flex}>
-                    <img src={Utilities.folder} />
-                    <div className={styles["icon-descriptions"]}>
-                      <span>{item.name}</span>
+              <div className={`${styles["dropdownMenu"]} ${showDropdown[index] ? styles.active : ""}`} >
+                <div className={styles.w100} onClick={() => toggleDropdown(index, item, true)}>
+                  <div className={styles.mainWrapper}  >
+                    <div className={styles.flex}>
+                      <img src={Utilities.folder} />
+                      <div className={styles["icon-descriptions"]} onClick={() => toggleDropdown(index, item, true)}>
+                        <span>{item.name}</span>
+                      </div>
+                    </div>
+                    <div className={styles.totalCount}>
+                      <div className={styles["list1-right-contents"]}>
+                        <span>{item.assetsCount}</span>
+                      </div>
+
                     </div>
                   </div>
-                  <div className={styles.totalCount}>
-                    <div className={styles["list1-right-contents"]}>
-                      <span>{item.assetsCount}</span>
-                    </div>
-                    {showDropdown[index] && <NestedButton type={"subCollection"} parentId={item.id} />}
-                  </div>
+
                 </div>
+                {showDropdown[index] && <NestedButton type={"subCollection"} parentId={item.id} />}
               </div>
             </div>
             {showDropdown[index] && (
@@ -218,7 +222,7 @@ const NestedSidenavDropdown = ({ headingClick }) => {
                           {
                             subFolderLoadingState.get(item.id)
                               ?
-                              "Loading..."
+                              <span style={{ color: '#10BDA5' }}>Loading...</span>
                               :
                               <>
                                 <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} />
@@ -251,9 +255,6 @@ const NestedSidenavDropdown = ({ headingClick }) => {
             </div>}
         </div>
       }
-      {/* <div className={styles.collection}>
-        <NestedButton type={"collection"}>Add collection</NestedButton>
-      </div> */}
     </div >
   );
 };

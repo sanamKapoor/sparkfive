@@ -67,11 +67,7 @@ const NestedSidenav = () => {
           <NestedFirstlist headingClick={headingClick} />
           <NestedSidenavDropdown headingClick={headingClick} />
         </div>
-
-
       </div>
-
-
     </div>
   );
 };

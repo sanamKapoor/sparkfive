@@ -45,6 +45,12 @@
     background-color: #f0f0f0;
     border-radius: 50px;
   }
+  .sidenavScroll::-webkit-scrollbar-thumb:hover {
+    background-color: #7d7e8e;
+    width: 6px; 
+    height: 6px; 
+    transition: background-color 0.3s, width 0.3s, height 0.3s; 
+  }
   .active {
     background:var(--color-sec-lightblue);
     border-radius: 4px;
