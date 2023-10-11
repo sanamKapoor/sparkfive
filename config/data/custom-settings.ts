@@ -40,7 +40,7 @@ export const tabsData = [
   },
   {
     id: "guestUpload",
-    title: "Guest Upload",
+    title: "Guest Upload Links",
     content: Links,
     permissions: [],
   },

@@ -1,3 +1,4 @@
+
 import copyClipboard from "copy-to-clipboard";
 import React, { useContext } from "react";
 
@@ -39,19 +40,19 @@ const PendingInviteItem: React.FC<PendingInviteItemProps> = ({
       <div className={styles.details_wrapper_invite}>
         <div className={styles["operation-buttons"]}>
           <div
-            className={`${styles["expire-date"]} ${
+            className={`${styles["expire-date"]} ${styles["w-25"]} ${
               getExpireDate(invite.expirationDate, true)
                 ? styles["red-text"]
                 : styles["grey-text"]
             }`}
           >
-            {getExpireDate(invite.expirationDate)}
+            {getExpireDate(invite.expirationDate)} 
           </div>
-          <div
-            className={`${styles["resend-button"]} ${
+          
+          <div  className={`${styles["resend-button"]} ${
               !checkExpireDate(invite.expirationDate) ? styles["hidden"] : ""
-            }`}
-          >
+            }`}>
+          
             <IconClickable
               additionalClass={styles["resend-image"]}
               src={Navigation.alertBlue}
@@ -64,8 +65,8 @@ const PendingInviteItem: React.FC<PendingInviteItemProps> = ({
           </div>
           <div className={styles["copy-button"]}>
             <IconClickable
-              additionalClass={styles["action-button"]}
-              src={AssetOps[`copy${""}`]}
+            additionalClass={`${styles['action-button']}`}
+            src={AssetOps[`copy${""}`]}
               tooltipText={"Copy Link"}
               tooltipId={"Copy"}
               onClick={() => {

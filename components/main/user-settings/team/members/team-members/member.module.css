@@ -75,6 +75,9 @@
   display: flex;
   align-items: center;
 }
+.w-25{
+  width:25%;
+}
 
 .operation-buttons {
   display: flex;
@@ -103,6 +106,7 @@
   font-size: 12px;
   font-weight: 300;
 }
+
 
 @media screen and (max-width: 600px) {
   .container{
