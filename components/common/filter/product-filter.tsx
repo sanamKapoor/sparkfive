@@ -1,24 +1,21 @@
-import { useEffect, useState } from "react";
+//🚧 work in progress 🚧
+import { useState } from "react";
 import productFields from "../../../resources/data/product-fields.json";
 import Select from "../../common/inputs/select";
 import styles from "./product-filter.module.css";
 
-const ProductFilter = ({
-  loadFn,
+interface ProductFilterProps {
+  productFilters: any; //TODO
+  fieldsValue?: any;
+  skuValue?: any;
+}
+
+const ProductFilter: React.FC<ProductFilterProps> = ({
   productFilters,
-  setSortFilterValue,
   fieldsValue,
   skuValue,
 }) => {
   const [typeValue, setType] = useState(null);
-
-  useEffect(() => {
-    loadFn();
-  }, []);
-
-  useEffect(() => {
-    if (typeValue) setSortFilterValue("filterProductFields", null);
-  }, [typeValue]);
 
   let valueFilters = [];
   if (typeValue?.value === "product_category")
@@ -42,7 +39,8 @@ const ProductFilter = ({
           isMulti={true}
           styleType="regular"
           onChange={(selected) =>
-            setSortFilterValue("filterProductSku", selected)
+            // setSortFilterValue("filterProductSku", selected)
+            console.log("selected sku: ", selected)
           }
           placeholder="Select Value"
         />
@@ -72,7 +70,8 @@ const ProductFilter = ({
           isMulti={true}
           styleType="regular"
           onChange={(selected) =>
-            setSortFilterValue("filterProductFields", selected)
+            // setSortFilterValue("filterProductFields", selected)
+            console.log("selected value: ", selected)
           }
           placeholder="Select Value"
         />

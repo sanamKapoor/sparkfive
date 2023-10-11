@@ -10,7 +10,7 @@ interface OptionDataProps {
 }
 
 const OptionData: React.FC<OptionDataProps> = ({ data }) => {
-  console.log("data: ", data);
+  // console.log("data: ", data);
   return (
     <>
       <div className={`${styles["outer-wrapper"]}`}>

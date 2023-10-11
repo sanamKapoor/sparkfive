@@ -18,4 +18,17 @@ export interface IAttributeValue {
   updatedAt: string;
 }
 
-export type IFilterPopupContentType = "list" | "dimensions" | "resolutions";
+export interface IDimensionFilter {
+  maxHeight: number;
+  minHeight: number;
+  maxWidth: number;
+  minWidth: number;
+}
+
+export type IFilterPopupContentType =
+  | "list"
+  | "dimensions"
+  | "resolutions"
+  | "lastUpdated"
+  | "dateUploaded"
+  | "products";
