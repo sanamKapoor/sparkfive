@@ -67,7 +67,7 @@ const TeamInviteForm: React.FC<TeamInviteProps> = ({
           <Select
             options={mappedRoles}
             onChange={(selected) => setInviteRole(selected)}
-            placeholder={"Select role"}
+            placeholder={"Select Role"}
             styleType="regular"
             value={inviteRole}
             containerClass={styles.SelectRoleInput}
