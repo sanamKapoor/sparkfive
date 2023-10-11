@@ -424,7 +424,7 @@ const SidePanelBulk = ({
                 {folders.map((folder, index) => (
                   <div key={index}>
                     <div className={`${styles["flex"]} ${styles.nestedbox}`}>
-                      <div className={`${styles["height"]}`}
+                      <div className={`${styles["height"]} ${styles["flex"]}`}
                         onClick={() => { toggleDropdown(folder.id, true) }}
                       >
                         <img
