@@ -21,15 +21,12 @@ const RequestForm: React.FC<RequestFormProps> = ({
   const { control, handleSubmit, errors } = useForm();
 
   return (
-    <form
-      className={styles.accessRequestForm}
-      onSubmit={handleSubmit(() => {})}
-    >
+    <form className={styles.accessRequestForm} onSubmit={handleSubmit(() => {})}>
       {email && (
         <>
           <div className={styles.formHeader}>
             <h4 className={styles.title}>Review Access Request</h4>
-            <img className={styles.image} src={Utilities.blueClose} />
+            <Utilities.blueClose className={styles.image} />
           </div>
           <div className={styles.container}>
             <div className={styles.form}>
@@ -39,17 +36,13 @@ const RequestForm: React.FC<RequestFormProps> = ({
                     labId="name"
                     labelClass={styles.label}
                     label="Full Name"
-                    InputComponent={
-                      <Input type="text" id="name" disabled={true} />
-                    }
+                    InputComponent={<Input type="text" id="name" disabled={true} />}
                     name="name"
                     defaultValue={name}
                     control={control}
                     rules={{ minLength: 2, maxLength: 30 }}
                     errors={errors}
-                    message={
-                      "This field should be between 2 and 30 characters long"
-                    }
+                    message={"This field should be between 2 and 30 characters long"}
                   />
                 </div>
                 <div className={styles.zip}>
@@ -57,9 +50,7 @@ const RequestForm: React.FC<RequestFormProps> = ({
                     labelClass={styles.label}
                     labId="city"
                     label="City"
-                    InputComponent={
-                      <Input type="text" id="city" disabled={true} />
-                    }
+                    InputComponent={<Input type="text" id="city" disabled={true} />}
                     name="city"
                     defaultValue={city}
                     control={control}
@@ -75,9 +66,7 @@ const RequestForm: React.FC<RequestFormProps> = ({
                     labelClass={styles.label}
                     labId="email"
                     label="Email Address"
-                    InputComponent={
-                      <Input type="text" id="email" disabled={true} />
-                    }
+                    InputComponent={<Input type="text" id="email" disabled={true} />}
                     name="email"
                     defaultValue={email}
                     control={control}
@@ -95,9 +84,7 @@ const RequestForm: React.FC<RequestFormProps> = ({
                     labelClass={styles.label}
                     labId="state"
                     label="State"
-                    InputComponent={
-                      <Input type="text" id="state" disabled={true} />
-                    }
+                    InputComponent={<Input type="text" id="state" disabled={true} />}
                     name="state"
                     defaultValue={state}
                     control={control}
@@ -113,9 +100,7 @@ const RequestForm: React.FC<RequestFormProps> = ({
                     labId="phone"
                     labelClass={styles.label}
                     label="Phone Number"
-                    InputComponent={
-                      <Input type="text" id="phone" disabled={true} />
-                    }
+                    InputComponent={<Input type="text" id="phone" disabled={true} />}
                     name="phone"
                     defaultValue={phone}
                     control={control}
@@ -145,9 +130,7 @@ const RequestForm: React.FC<RequestFormProps> = ({
                 control={control}
                 rules={{ required: true }}
                 errors={errors}
-                message={
-                  "This field should be between 4 and 300 characters long"
-                }
+                message={"This field should be between 4 and 300 characters long"}
               />
             </div>
           </div>

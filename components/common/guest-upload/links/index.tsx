@@ -26,10 +26,7 @@ import {
   maximumLinks,
   statusList,
 } from "../../../../constants/guest-upload";
-import {
-  IGuestUploadLink,
-  ILinkDefaultPayload,
-} from "../../../../interfaces/guest-upload/guest-upload";
+import { IGuestUploadLink, ILinkDefaultPayload } from "../../../../interfaces/guest-upload/guest-upload";
 import ButtonIcon from "../../buttons/button-icon";
 
 const Links = () => {
@@ -75,9 +72,7 @@ const Links = () => {
 
       const res = await guestUploadApi.deleteLink({ linkIds: [id] });
 
-      const updatedLinks = [
-        ...links.filter((link) => link.id !== res.data.linkIds[0]),
-      ];
+      const updatedLinks = [...links.filter((link) => link.id !== res.data.linkIds[0])];
       setLinks(updatedLinks);
       toastUtils.success("link deleted successfully.");
     } catch (err) {
@@ -91,10 +86,7 @@ const Links = () => {
     setPassword(e.target.value);
   };
 
-  const onStatusChange = (
-    item: { value: "public" | "private"; label: string },
-    id: string
-  ) => {
+  const onStatusChange = (item: { value: "public" | "private"; label: string }, id: string) => {
     const currentLinkIndex = links.findIndex((link) => link.id === id);
     if (currentLinkIndex !== -1) {
       if (links[currentLinkIndex].status !== item.value) {
@@ -126,9 +118,7 @@ const Links = () => {
     toastUtils.bottomSuccess("Link is copied.");
   };
 
-  const createOrUpdateLink = async (
-    payload: IGuestUploadLink | ILinkDefaultPayload
-  ) => {
+  const createOrUpdateLink = async (payload: IGuestUploadLink | ILinkDefaultPayload) => {
     const response = await guestUploadApi.createLink({
       links: [payload],
     });
@@ -183,10 +173,7 @@ const Links = () => {
     }
   };
 
-  const onFileChange = async (
-    e: React.ChangeEvent<HTMLInputElement>,
-    id: string
-  ) => {
+  const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
     const fileMeta = e.target.files[0];
 
     if (!BANNER_ALLOWED_TYPES.includes(fileMeta.type)) {
@@ -238,9 +225,7 @@ const Links = () => {
   };
 
   return (
-    <div
-      className={`${styles["main-wrapper"]} ${styles["guest-upload-wrapper"]}`}
-    >
+    <div className={`${styles["main-wrapper"]} ${styles["guest-upload-wrapper"]}`}>
       <h3>Guest Upload Links</h3>
 
       {links.length < maximumLinks && (
@@ -290,10 +275,7 @@ const Links = () => {
                 onChange={(selected) => onStatusChange(selected, field.id)}
                 placeholder={"Select status"}
                 styleType="regular"
-                value={
-                  statusList.filter((item) => item.value === field.status)[0]
-                }
-             
+                value={statusList.filter((item) => item.value === field.status)[0]}
               />
             </div>
             <div className={styles.privateBlock}>
@@ -328,15 +310,12 @@ const Links = () => {
                 )}
               </div>
               <div className={styles.passwordSave}>
-                {((currentLink && currentLink === field.id) ||
-                  field.status === "private") && (
+                {((currentLink && currentLink === field.id) || field.status === "private") && (
                   <Button
                     className={"container exclude-min-height primary"}
                     type={"button"}
                     text={"Save"}
-                    disabled={
-                      field.status === "private" && password.length === 0
-                    }
+                    disabled={field.status === "private" && password.length === 0}
                     onClick={() => saveStatusChanges(field.id)}
                   />
                 )}
@@ -354,7 +333,7 @@ const Links = () => {
 
             <ButtonIcon
               className={styles.uploadbtn}
-              icon={Utilities.addAlt}
+              SVGElement={Utilities.addAlt}
               text="UPLOAD PHOTO"
               onClick={(e) => openUploadDialog(e, field.id)}
             />
@@ -381,8 +360,7 @@ const Links = () => {
         confirmText={"Delete"}
         message={
           <span>
-            This link will be deleted. People will not access to it anymore. Are
-            you sure you want to delete this?
+            This link will be deleted. People will not access to it anymore. Are you sure you want to delete this?
           </span>
         }
         closeButtonClass={styles["close-modal-btn"]}

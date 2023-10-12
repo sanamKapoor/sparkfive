@@ -38,7 +38,7 @@
 }
 
 .action-button {
-  width: 18px;
+  width: 18px !important;
 }
 
 
@@ -70,7 +70,7 @@
   justify-content: center;
 }
 
-.share-title img {
+.share-title img, .share-title svg {
   cursor: pointer;
   position: absolute;
   right: 8px;
@@ -86,7 +86,7 @@
   opacity: 0.8;
 }
 
-.share-item img {
+.share-item img, .share-item svg {
   width: 13px;
   height: 13px;
   margin-right: 8px;
@@ -145,7 +145,7 @@
   background-color: var(--color-sec-lightivory);
 }
 
-.more-dropdown span img {
+.more-dropdown span img, .more-dropdown svg {
   width: 16px !important;
   height: 16px !important;
 }

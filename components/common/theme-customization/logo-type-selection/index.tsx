@@ -21,10 +21,10 @@ export default function LogoTypeSelection({ onSelect, onClose }: Props) {
           <li className={`${styles["nav-item"]} ${styles["nav-item-selected"]}`}>Library</li>
           <li className={styles["nav-item"]}>Upload</li>
           <li className={styles["nav-item"]}>
-            <img className={styles.icon} src={Assets.dropbox} alt={"dropbox"} /> Dropbox
+            <Assets.dropbox className={styles.icon} /> Dropbox
           </li>
           <li className={styles["nav-item"]}>
-            <img className={styles.icon} src={Assets.gdrive} alt={"drive"} /> Google Drive
+            <Assets.gdrive className={styles.icon} /> Google Drive
           </li>
         </ul>
 

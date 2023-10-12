@@ -272,7 +272,7 @@ li.dropdown-title {
   }
 
   .mobile-bottom {
-    background-color: var(--color-prim-navy);
+    background-color: var(--header-navigation-color);
     height: 36px;
     width: 100%;
     justify-content: center;

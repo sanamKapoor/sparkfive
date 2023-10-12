@@ -8,13 +8,12 @@
     border-radius: 50%;
     width: 40px;
     height: 40px;
-    background: #08135E;
     margin-bottom: 8px;
     cursor: pointer;
 }
 
 .color-hex{
-    color: #08135E;
+    color: var(--primary-color);
     font-weight: 300;
 }
 
@@ -53,7 +52,7 @@
 }
 
 .title{
-    color: #08135E;
+    color: var(--primary-color);
     font-size: 16px;
     font-weight: 600;
 }

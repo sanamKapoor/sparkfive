@@ -8,6 +8,8 @@ import { Utilities } from "../../../assets";
 import LogoTypeSelection from "./logo-type-selection";
 import BaseModal from "../modals/base";
 
+import { getSecondaryColor } from "../../../utils/theme";
+
 const isMobile = () => {
   // @ts-ignore
   return window.innerWidth < 600;
@@ -30,7 +32,7 @@ export default function LogoPicker({ onChange }: Props) {
                 setShowPanel(true);
               }}
             >
-              <img className={styles["icon-btn"]} src={Utilities.circlePlusGreen} alt={"change-logo-type"} />
+              <Utilities.circlePlusGreen className={styles["icon-btn"]} />
               Change Logotype
             </button>
             {children}
@@ -56,7 +58,7 @@ export default function LogoPicker({ onChange }: Props) {
           setShowPanel(true);
         }}
       >
-        <img className={styles["icon-btn"]} src={Utilities.circlePlusGreen} alt={"change-logo-type"} />
+        <Utilities.circlePlusGreen className={styles["icon-btn"]} />
         Change Logotype
       </button>
 

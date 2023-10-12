@@ -16,11 +16,10 @@ import Breadcrumbs from "../misc/breadcrumbs";
 // Context
 import { AssetContext, UserContext } from "../../../context";
 
-import {
-  ASSET_UPLOAD_APPROVAL,
-  ASSET_UPLOAD_NO_APPROVAL,
-} from "../../../constants/permissions";
+import { ASSET_UPLOAD_APPROVAL, ASSET_UPLOAD_NO_APPROVAL } from "../../../constants/permissions";
 import SearchOverlay from "../../main/search-overlay-assets";
+
+import { getIconColor } from "../../../utils/theme";
 
 const TopBar = ({
   activeSortFilter,
@@ -58,11 +57,8 @@ const TopBar = ({
     setActiveFolder,
   } = useContext(AssetContext);
 
-  const { user, hasPermission, advancedConfig, setAdvancedConfig } =
-    useContext(UserContext);
-  const [hideFilterElements, setHideFilterElements] = useState(
-    advancedConfig.hideFilterElements
-  );
+  const { user, hasPermission, advancedConfig, setAdvancedConfig } = useContext(UserContext);
+  const [hideFilterElements, setHideFilterElements] = useState(advancedConfig.hideFilterElements);
   const [showTabs, setShowTabs] = useState(isMobile ? false : true);
   const [showViewDropdown, setShowViewDropdown] = useState(false);
 
@@ -72,15 +68,9 @@ const TopBar = ({
     let sort = key === "sort" ? value : activeSortFilter.sort;
     if (key === "mainFilter") {
       if (value === "folders") {
-        sort =
-          advancedConfig.collectionSortView === "alphabetical"
-            ? selectOptions.sort[3]
-            : selectOptions.sort[1];
+        sort = advancedConfig.collectionSortView === "alphabetical" ? selectOptions.sort[3] : selectOptions.sort[1];
       } else {
-        sort =
-          advancedConfig.assetSortView === "newest"
-            ? selectOptions.sort[1]
-            : selectOptions.sort[3];
+        sort = advancedConfig.assetSortView === "newest" ? selectOptions.sort[1] : selectOptions.sort[3];
       }
     }
 
@@ -106,9 +96,7 @@ const TopBar = ({
   };
 
   const setTabsVisibility = () => {
-    const filterElements = sharedAdvanceConfig
-      ? sharedAdvanceConfig.hideFilterElements
-      : hideFilterElements;
+    const filterElements = sharedAdvanceConfig ? sharedAdvanceConfig.hideFilterElements : hideFilterElements;
     const _tabs = selectOptions.views.filter((tab) => {
       let tabName = tab.text.toLowerCase();
       let shouldShow = true;
@@ -135,13 +123,9 @@ const TopBar = ({
   const mobileTabs = tabs.filter((view) => {
     return (
       (!activeFolder || !view.omitFolder) &&
-      (!isShare ||
-        (isShare &&
-          !view.omitShare &&
-          view.hideOnSingle !== singleCollection)) &&
+      (!isShare || (isShare && !view.omitShare && view.hideOnSingle !== singleCollection)) &&
       (view.requirePermissions.length === 0 ||
-        (view.requirePermissions.length > 0 &&
-          hasPermission(view.requirePermissions)))
+        (view.requirePermissions.length > 0 && hasPermission(view.requirePermissions)))
     );
   });
 
@@ -149,10 +133,7 @@ const TopBar = ({
 
   return (
     <section className={styles.container} id={"top-bar"}>
-      <div
-        className={styles["filter-mobile"]}
-        onClick={() => handleOpenFilter()}
-      >
+      <div className={styles["filter-mobile"]} onClick={() => handleOpenFilter()}>
         <img src={Utilities.filterBlue} alt={"filter"} />
       </div>
       <div className={styles.titleBreadcrumbs}>
@@ -170,9 +151,7 @@ const TopBar = ({
             current={folderData[0]?.name}
           />
         )}
-        {activeFolder && mode === "assets" && !singleCollection && (
-          <SubHeader pageTitle={folderData[0]?.name} />
-        )}
+        {activeFolder && mode === "assets" && !singleCollection && <SubHeader pageTitle={folderData[0]?.name} />}
       </div>
       <div className={styles.wrapper}>
         <div className={styles.innerwrapper}>
@@ -188,25 +167,17 @@ const TopBar = ({
                     />
                     <li className={styles["tab-list-item"]}>
                       {tabs
-                        .filter(
-                          (view) => activeSortFilter.mainFilter === view.name
-                        )
+                        .filter((view) => activeSortFilter.mainFilter === view.name)
                         .map((view) => (
                           <Button
                             key={view.name}
-                            text={
-                              activeFolder && mode === "assets"
-                                ? folderData[0].name
-                                : view.text
-                            }
+                            text={activeFolder && mode === "assets" ? folderData[0].name : view.text}
                             className={
                               activeSortFilter.mainFilter === view.name
                                 ? "section-container section-active"
                                 : "section-container"
                             }
-                            onClick={() =>
-                              setSortFilterValue("mainFilter", view.name)
-                            }
+                            onClick={() => setSortFilterValue("mainFilter", view.name)}
                           />
                         ))}
                     </li>
@@ -229,13 +200,9 @@ const TopBar = ({
                     return (
                       <li key={view.name} className={styles["tab-list-item"]}>
                         {(!activeFolder || !view.omitFolder) &&
-                          (!isShare ||
-                            (isShare &&
-                              !view.omitShare &&
-                              view.hideOnSingle !== singleCollection)) &&
+                          (!isShare || (isShare && !view.omitShare && view.hideOnSingle !== singleCollection)) &&
                           (view.requirePermissions.length === 0 ||
-                            (view.requirePermissions.length > 0 &&
-                              hasPermission(view.requirePermissions))) && (
+                            (view.requirePermissions.length > 0 && hasPermission(view.requirePermissions))) && (
                             <Button
                               key={view.name}
                               text={view.text}
@@ -244,9 +211,7 @@ const TopBar = ({
                                   ? "section-container section-active"
                                   : "section-container"
                               }
-                              onClick={() =>
-                                setSortFilterValue("mainFilter", view.name)
-                              }
+                              onClick={() => setSortFilterValue("mainFilter", view.name)}
                             />
                           )}
                       </li>
@@ -260,8 +225,8 @@ const TopBar = ({
               <h2>Deleted Assets</h2>
               <div></div>
               <span className={styles["content"]}>
-                Deleted assets are retained for 60 days before permanent
-                removal. Admin can recover deleted assets within 60 days
+                Deleted assets are retained for 60 days before permanent removal. Admin can recover deleted assets
+                within 60 days
               </span>
             </div>
           )}
@@ -271,12 +236,15 @@ const TopBar = ({
             <img
               src={Utilities.search}
               onClick={setActiveSearchOverlay}
-              className={`${styles.search} ${!((amountSelected === 0 || mode === "folders") &&
-              showAssetAddition &&
-              hasPermission([
-                ASSET_UPLOAD_NO_APPROVAL,
-                ASSET_UPLOAD_APPROVAL,
-              ])) ? "m-r-20": "" }`}
+              className={`${styles.search} ${
+                !(
+                  (amountSelected === 0 || mode === "folders") &&
+                  showAssetAddition &&
+                  hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL])
+                )
+                  ? "m-r-20"
+                  : ""
+              }`}
             />
           )}
           {activeSearchOverlay && !(isShare && isFolder) && (
@@ -295,44 +263,46 @@ const TopBar = ({
           )}
           {(amountSelected === 0 || mode === "folders") &&
             showAssetAddition &&
-            hasPermission([
-              ASSET_UPLOAD_NO_APPROVAL,
-              ASSET_UPLOAD_APPROVAL,
-            ]) && (
+            hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL]) && (
               <div className={styles.mobilePlus}>
-                <AssetAddition
-                  activeFolder={activeFolder}
-                  getFolders={getFolders}
-                />
+                <AssetAddition activeFolder={activeFolder} getFolders={getFolders} />
               </div>
             )}
           <div className={styles.gridOuter}>
             {!deletedAssets && (
-              <img
-                className={styles.gridList}
-                src={
-                  activeView === "grid"
-                    ? Utilities.gridView
-                    : Utilities.listView
-                }
-                onClick={() => setShowViewDropdown(true)}
-              />
+              <>
+                {activeView === "grid" && (
+                  <Utilities.gridView className={styles.gridList} onClick={() => setShowViewDropdown(true)} />
+                )}
+                {activeView === "list" && (
+                  <Utilities.listView className={styles.gridList} onClick={() => setShowViewDropdown(true)} />
+                )}
+              </>
+
+              // <img
+              //   className={styles.gridList}
+              //   src={
+              //     activeView === "grid"
+              //       ? Utilities.gridView
+              //       : Utilities.listView
+              //   }
+              //   onClick={() => setShowViewDropdown(true)}
+              // />
             )}
             {showViewDropdown && (
               <Dropdown
                 additionalClass={styles["view-dropdown"]}
                 onClickOutside={() => setShowViewDropdown(false)}
+                svgIcon
                 options={[
                   {
                     id: "view",
-                    OverrideComp: () => (
-                      <li className={styles["dropdown-title"]}>View</li>
-                    ),
+                    OverrideComp: () => <li className={styles["dropdown-title"]}>View</li>,
                   },
                   {
                     label: "Grid",
                     id: "grid",
-                    icon: Utilities.gridView,
+                    icon: <Utilities.gridView />,
                     onClick: () => {
                       setActiveView("grid");
                     },
@@ -340,7 +310,7 @@ const TopBar = ({
                   {
                     label: "List",
                     id: "list",
-                    icon: Utilities.listView,
+                    icon: <Utilities.listView />,
                     onClick: () => {
                       setActiveView("list");
                     },
@@ -350,27 +320,16 @@ const TopBar = ({
             )}
           </div>
           {selectedAllAssets && (
-            <span
-              className={styles["select-only-shown-items-text"]}
-              onClick={toggleSelectAll}
-            >
+            <span className={styles["select-only-shown-items-text"]} onClick={toggleSelectAll}>
               Select only 25 assets shown
             </span>
           )}
           {selectedAllFolders && (
-            <span
-              className={styles["select-only-shown-items-text"]}
-              onClick={toggleSelectAll}
-            >
+            <span className={styles["select-only-shown-items-text"]} onClick={toggleSelectAll}>
               Select only 25 collections shown
             </span>
           )}
-          <Button
-            type="button"
-            text="Select All"
-            className="container secondary"
-            onClick={selectAll}
-          />
+          <Button type="button" text="Select All" className="container secondary" onClick={selectAll} />
           {!deletedAssets && !isMobile && (
             <div className={styles["nested-wrapper"]}>
               <Button
@@ -387,16 +346,10 @@ const TopBar = ({
             <Select
               label={"Sort By"}
               options={selectOptions.sort.filter((item) => {
-                if (
-                  activeSortFilter.mainFilter === "folders" &&
-                  item.value === "size"
-                ) {
+                if (activeSortFilter.mainFilter === "folders" && item.value === "size") {
                   return !item;
                 }
-                return activeSortFilter.mainFilter === "folders" &&
-                  item.value === "none"
-                  ? !item
-                  : item;
+                return activeSortFilter.mainFilter === "folders" && item.value === "none" ? !item : item;
               })}
               value={activeSortFilter.sort}
               styleType="filter filter-schedule"
@@ -411,10 +364,7 @@ const TopBar = ({
         {(amountSelected === 0 || mode === "folders") &&
           showAssetAddition &&
           hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL]) && (
-            <AssetAddition
-              activeFolder={activeFolder}
-              getFolders={getFolders}
-            />
+            <AssetAddition activeFolder={activeFolder} getFolders={getFolders} />
           )}
       </div>
     </section>

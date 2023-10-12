@@ -13,7 +13,7 @@
 }
 
 .name{
-    color: #08135E;
+    color: var(--primary-color);
     font-size: 12px;
 }
 

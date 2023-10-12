@@ -12,10 +12,10 @@
 .change-logotype-btn{
     padding: 8px 16px;
     border-radius: 40px;
-    border: 1px solid #10BDA5;
+    border: 1px solid var(--secondary-color);
     background: #FFF;
     text-transform: uppercase;
-    color: #10BDA5;
+    color: var(--secondary-color);
     font-weight: 600;
     margin-bottom: 8px;
     cursor: pointer;
@@ -24,7 +24,7 @@
 }
 
 .description-text{
-    color: #08135E;
+    color: var(--primary-color);
     font-size: 12px;
     font-weight: 300;
     line-height: 19px; /* 158.333% */
@@ -33,6 +33,10 @@
 
 .icon-btn{
     margin-right: 10px;
+}
+
+.icon-btn g{
+    fill: var(--secondary-color)
 }
 
 .logotype-wrapper {

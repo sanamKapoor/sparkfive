@@ -5,12 +5,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import styles from "./asset-header-ops.module.css";
 
 // Contexts
-import {
-  AssetContext,
-  FilterContext,
-  LoadingContext,
-  UserContext,
-} from "../../../context";
+import { AssetContext, FilterContext, LoadingContext, UserContext } from "../../../context";
 
 // Utils
 import { Utilities } from "../../../assets";
@@ -68,11 +63,7 @@ const AssetHeaderOps = ({
 
   const { hasPermission } = useContext(UserContext);
 
-  const {
-    activeSortFilter,
-    term,
-    setSharePath: setContextPath,
-  } = useContext(FilterContext);
+  const { activeSortFilter, term, setSharePath: setContextPath } = useContext(FilterContext);
   const [sharePath, setSharePath] = useState("");
   const [showShareAction, setShowShareAction] = useState(false);
   const contentRef = useRef(null);
@@ -131,9 +122,7 @@ const AssetHeaderOps = ({
         payload.folderIds = selectedFolders.map((folder) => folder.id);
       } else {
         totalDownloadingAssets = selectedAssets.length;
-        payload.assetIds = selectedAssets.map(
-          (assetItem) => assetItem.asset.id
-        );
+        payload.assetIds = selectedAssets.map((assetItem) => assetItem.asset.id);
       }
 
       // Add sharePath property if user is at share collection page
@@ -168,12 +157,7 @@ const AssetHeaderOps = ({
       }
     } catch (e) {
       console.error(e);
-      updateDownloadingStatus(
-        "error",
-        0,
-        0,
-        "Internal Server Error. Please try again."
-      );
+      updateDownloadingStatus("error", 0, 0, "Internal Server Error. Please try again.");
     }
   };
 
@@ -184,16 +168,12 @@ const AssetHeaderOps = ({
 
       if (assetIds.length > 1) {
         const assetsToAssociate = selectedAssets.filter(
-          (assetItem) =>
-            assetItem.asset.fileAssociations.length +
-              selectedAssets.length -
-              1 <=
-            maximumAssociateFiles
+          (assetItem) => assetItem.asset.fileAssociations.length + selectedAssets.length - 1 <= maximumAssociateFiles,
         );
         if (assetsToAssociate.length !== selectedAssets.length) {
           setIsLoading(false);
           toastUtils.error(
-            `Some of your selected assets have already maximum ${maximumAssociateFiles} associated files`
+            `Some of your selected assets have already maximum ${maximumAssociateFiles} associated files`,
           );
         } else {
           await assetApi.associate(assetIds);
@@ -233,11 +213,7 @@ const AssetHeaderOps = ({
 
         const idPath = splitPath[1].split("/");
 
-        if (
-          idPath &&
-          !idPath[0].includes("[team]") &&
-          !idPath[1].includes("[id]")
-        ) {
+        if (idPath && !idPath[0].includes("[team]") && !idPath[1].includes("[id]")) {
           const path = `${processSubdomain()}/${idPath[1]}/${idPath[0]}`;
           setSharePath(path);
           setContextPath(path);
@@ -290,11 +266,7 @@ const AssetHeaderOps = ({
     const customFields = getCustomFields(filters);
 
     // Select all assets in folder
-    if (
-      filters["folderId"] &&
-      (customFields || filters["tags"]) &&
-      selectedAllAssets
-    ) {
+    if (filters["folderId"] && (customFields || filters["tags"]) && selectedAllAssets) {
       setShowShareAction(visible);
       if (visible) {
         document.addEventListener("mousedown", handleClickOutside);
@@ -309,18 +281,9 @@ const AssetHeaderOps = ({
   return (
     <div className={styles.bar}>
       <div className={styles.wrapper}>
-        {!deselectHidden && (
-          <img
-            className={styles.close}
-            src={Utilities.blueClose}
-            onClick={deselectAll}
-          />
-        )}
+        {!deselectHidden && <Utilities.blueClose className={styles.close} onClick={deselectAll} />}
         <div className={styles.text}>
-          {!isFolder
-            ? `${totalSelectAssets} Assets`
-            : `${totalSelectAssets} Collections`}{" "}
-          Selected
+          {!isFolder ? `${totalSelectAssets} Assets` : `${totalSelectAssets} Collections`} Selected
         </div>
       </div>
 
@@ -329,7 +292,7 @@ const AssetHeaderOps = ({
           <IconClickable
             place={"top"}
             additionalClass={styles["action-button"]}
-            src={AssetOps[`edit`]}
+            SVGElement={AssetOps[`edit`]}
             tooltipText={"Edit"}
             tooltipId={"Edit"}
             onClick={() => setActiveOperation("edit")}
@@ -339,7 +302,7 @@ const AssetHeaderOps = ({
           <IconClickable
             place={"top"}
             additionalClass={styles["action-button"]}
-            src={AssetOps[`delete`]}
+            SVGElement={AssetOps[`delete`]}
             tooltipText={"Delete"}
             tooltipId={"Delete"}
             onClick={() => setActiveOperation("update")}
@@ -349,7 +312,7 @@ const AssetHeaderOps = ({
           <IconClickable
             place={"top"}
             additionalClass={styles["action-button"]}
-            src={AssetOps[`download`]}
+            SVGElement={AssetOps[`download`]}
             tooltipId={"Download"}
             tooltipText={"Download"}
             onClick={downloadSelectedAssets}
@@ -359,7 +322,7 @@ const AssetHeaderOps = ({
           <IconClickable
             place={"top"}
             additionalClass={styles["action-button"]}
-            src={AssetOps[`move`]}
+            SVGElement={AssetOps[`move`]}
             tooltipText={"Add to Collection"}
             tooltipId={"Move"}
             onClick={() => setActiveOperation("move")}
@@ -370,7 +333,7 @@ const AssetHeaderOps = ({
             <IconClickable
               place={"top"}
               additionalClass={`${styles["action-button"]}`}
-              src={AssetOps[`share`]}
+              SVGElement={AssetOps[`share`]}
               tooltipText={"Share"}
               tooltipId={"Share"}
               onClick={(e) => {
@@ -382,13 +345,18 @@ const AssetHeaderOps = ({
               <div className={styles["share-popover"]}>
                 <div className={styles["share-title"]}>
                   Share
-                  <img
-                    src={Utilities.blueClose}
-                    alt={"close"}
+                  <Utilities.blueClose
                     onClick={(e) => {
                       showShareActionList(e, false);
                     }}
                   />
+                  {/*<img*/}
+                  {/*  src={Utilities.blueClose}*/}
+                  {/*  alt={"close"}*/}
+                  {/*  onClick={(e) => {*/}
+                  {/*    showShareActionList(e, false);*/}
+                  {/*  }}*/}
+                  {/*/>*/}
                 </div>
                 <ul>
                   <li
@@ -398,13 +366,10 @@ const AssetHeaderOps = ({
                       setActiveOperation("share-as-subcollection");
                     }}
                   >
-                    <img src={Utilities.gridView} alt={"share-collection"} />
-                    <span className={"font-weight-500"}>
-                      Share as Collection
-                    </span>
-                    <p className={styles["share-description"]}>
-                      Create a branded collection
-                    </p>
+                    <Utilities.gridView />
+                    {/*<img src={Utilities.gridView} alt={"share-collection"} />*/}
+                    <span className={"font-weight-500"}>Share as Collection</span>
+                    <p className={styles["share-description"]}>Create a branded collection</p>
                   </li>
                   <li
                     className={styles["share-item"]}
@@ -413,11 +378,10 @@ const AssetHeaderOps = ({
                       setActiveOperation("share");
                     }}
                   >
-                    <img src={Utilities.share} alt={"share-file"} />
+                    <Utilities.share />
+                    {/*<img src={Utilities.share} alt={"share-file"} />*/}
                     <span className={"font-weight-500"}>Share Files</span>
-                    <p className={styles["share-description"]}>
-                      Create a link to shared file(s)
-                    </p>
+                    <p className={styles["share-description"]}>Create a link to shared file(s)</p>
                   </li>
                 </ul>
               </div>
@@ -428,7 +392,7 @@ const AssetHeaderOps = ({
           <IconClickable
             place={"top"}
             additionalClass={styles["action-button"]}
-            src={AssetOps[`share`]}
+            SVGElement={AssetOps[`share`]}
             tooltipText={"Share"}
             tooltipId={"Share"}
             onClick={() => setActiveOperation("shareCollections")}
@@ -438,7 +402,7 @@ const AssetHeaderOps = ({
           <IconClickable
             place={"top"}
             additionalClass={styles["action-button"]}
-            src={AssetOps[`move`]}
+            SVGElement={AssetOps[`move`]}
             tooltipText={"Recover Asset"}
             tooltipId={"Recover"}
             onClick={() => setActiveOperation("recover")}
@@ -448,7 +412,7 @@ const AssetHeaderOps = ({
           <IconClickable
             place={"top"}
             additionalClass={styles["action-button"]}
-            src={AssetOps[`delete`]}
+            SVGElement={AssetOps[`delete`]}
             tooltipText={"Delete"}
             tooltipId={"Delete"}
             onClick={() => setActiveOperation("delete")}
@@ -460,7 +424,7 @@ const AssetHeaderOps = ({
             <IconClickable
               place={"top"}
               additionalClass={`${styles["action-button"]}`}
-              src={Utilities.more}
+              SVGElement={Utilities.more}
               tooltipText={"More"}
               tooltipId={"More"}
               onClick={() => setShowMoreActions(true)}
@@ -471,38 +435,36 @@ const AssetHeaderOps = ({
                 <Dropdown
                   onClickOutside={() => setShowMoreActions(false)}
                   additionalClass={styles["more-dropdown"]}
+                  svgIcon
                   options={[
                     {
                       id: "associate",
                       label: "Associate",
-                      icon: AssetOps.associateBlue,
+                      icon: <AssetOps.associateBlue />,
                       onClick: () => setShowAssociateModalOpen(true),
                     },
                     {
                       id: "move",
                       label: "Move",
-                      icon: AssetOps.moveReplace,
+                      icon: <AssetOps.moveReplace />,
                       onClick: () => setActiveOperation("moveReplace"),
                     },
                     {
                       id: "archive",
                       label: "Archive",
-                      icon: AssetOps.archive,
-                      onClick: () =>
-                        setActiveOperation(
-                          isUnarchive ? "unarchive" : "archive"
-                        ),
+                      icon: <AssetOps.archive />,
+                      onClick: () => setActiveOperation(isUnarchive ? "unarchive" : "archive"),
                     },
                     {
                       id: "copy",
                       label: "Copy",
-                      icon: AssetOps.copy,
+                      icon: <AssetOps.copy />,
                       onClick: () => setActiveOperation("copy"),
                     },
                     {
                       id: "thumbnail",
                       label: "Recreate Thumbnail",
-                      icon: AssetOps.recreateThumbnail,
+                      icon: <AssetOps.recreateThumbnail />,
                       onClick: () => setActiveOperation("generate_thumbnails"),
                     },
                   ]}
@@ -522,11 +484,7 @@ const AssetHeaderOps = ({
               associateAssets();
             }}
             confirmText={"Associate"}
-            message={
-              <span className="">
-                Associate ({totalSelectAssets}) asset(s)?
-              </span>
-            }
+            message={<span className="">Associate ({totalSelectAssets}) asset(s)?</span>}
             subText="Associating allows you see all related assets together on the asset detail pages"
             modalIsOpen={showAssociateModalOpen}
           />

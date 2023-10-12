@@ -11,6 +11,8 @@ import userApi from "../server-api/user";
 import advancedConfigParams from "../utils/advance-config-params";
 import url from "../utils/url";
 
+import { loadTheme, resetTheme } from "../utils/theme";
+
 const allowedBase = [
   "/signup",
   "trial-signup",
@@ -70,16 +72,18 @@ export default ({ children }) => {
           data.permissions = data.role.permissions;
         }
         setUser(data);
-        if (
-          !data.firstTimeLogin &&
-          Router.pathname.indexOf("/main/setup") === -1
-        ) {
+
+        console.log(`>>> Logged in`);
+
+        // Load theme from local storage
+        // TODO: Load from team settings
+        loadTheme();
+
+        if (!data.firstTimeLogin && Router.pathname.indexOf("/main/setup") === -1) {
           await Router.replace("/main/setup");
         } else if (Router.pathname.indexOf("/main") === -1) {
           if (data.team.plan.type === "dam") {
-            await Router.replace(
-              "/main/assets" + (query === "" ? "" : `?${query}`)
-            );
+            await Router.replace("/main/assets" + (query === "" ? "" : `?${query}`));
           } else {
             await Router.replace("/main/overview");
           }
@@ -90,9 +94,7 @@ export default ({ children }) => {
           Router.pathname.indexOf("/advanced-options") !== -1 &&
           Router.pathname.indexOf("/deleted-assets-list") === -1
         ) {
-          await Router.replace(
-            "/main/assets" + (query === "" ? "" : `?${query}`)
-          );
+          await Router.replace("/main/assets" + (query === "" ? "" : `?${query}`));
         }
       } catch (err) {
         console.log(err);
@@ -110,6 +112,7 @@ export default ({ children }) => {
   };
 
   const logOut = () => {
+    // resetTheme();
     setUser(null);
     cookiesUtils.remove("jwt");
     requestsUtils.removeAuthToken();
@@ -120,20 +123,17 @@ export default ({ children }) => {
     // console.warn(`Check permission: `, requiredPermissions, user?.permissions)
     if (requiredPermissions.length === 0) return true;
     // check by features/permissions
-    let allowed = requiredPermissions.some(
-      (perm) => user?.permissions.map((userPerm) => userPerm.id).includes(perm)
-    );
+    let allowed = requiredPermissions.some((perm) => user?.permissions.map((userPerm) => userPerm.id).includes(perm));
 
     // check by roleId
     if (!allowed) {
-      allowed = requiredPermissions.some(
-        (role) => user && role === user.roleId
-      );
+      allowed = requiredPermissions.some((role) => user && role === user.roleId);
     }
     return allowed;
   };
 
   const afterAuth = async ({ twoFactor, token }) => {
+    console.log(`>>> After auth process`);
     cookiesUtils.setUserJWT(token);
     if (twoFactor) {
       cookiesUtils.set("twoFactor", "true");

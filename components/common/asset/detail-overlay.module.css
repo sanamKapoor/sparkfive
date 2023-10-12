@@ -46,7 +46,7 @@
 }
 
 .top-wrapper {
-  background-color: var(--color-prim-navy);
+  background-color: var(--header-navigation-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -451,7 +451,7 @@
 
   .menu {
     position: fixed;
-    background-color: var(--color-prim-navy);
+    background-color: var(--header-navigation-color);
     height: 40px;
     min-height: 36px;
     width: 100%;

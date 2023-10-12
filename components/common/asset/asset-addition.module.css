@@ -100,14 +100,15 @@
     width:26.47px;
     font-size: 35px;
     cursor: pointer;
-    background-color:var(--color-prim-turquoise);
+    background-color:var(--secondary-color);
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
 }
 .addButton:hover{
-    background-color: var(--color-prim-turquoise-hover);
+    background-color: var(--secondary-color);
+    filter: brightness(85%);
 }
 .addButton span{
     font-size: 26px;

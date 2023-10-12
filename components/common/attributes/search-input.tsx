@@ -31,11 +31,7 @@ const Search = (props) => {
         props.onSubmit(term);
       }}
     >
-      <div
-        className={`${styles["input-container"]} ${
-          props.inputContainerStyle || ""
-        }`}
-      >
+      <div className={`${styles["input-container"]} ${props.inputContainerStyle || ""}`}>
         {!props?.nonIcon && <img className={styles.searchIcon} src={Utilities.search} />}
 
         <input
@@ -49,20 +45,17 @@ const Search = (props) => {
           }`}
         />
         {term && (
-    <img
-      src={Utilities.blueClose} 
-      className={styles.closeIcon}
-      alt="Close Icon"
-      onClick={() => setTerm("")}
-    />
-  )}
+          <Utilities.blueClose className={styles.closeIcon} alt="Close Icon" onClick={() => setTerm("")} />
+          // <img
+          //   src={Utilities.blueClose}
+          //   className={styles.closeIcon}
+          //   alt="Close Icon"
+          //   onClick={() => setTerm("")}
+          // />
+        )}
       </div>
       {!props.onlyInput && (
-        <Button
-          className={"container submit exclude-min-height primary attribute-btn"}
-          type={"submit"}
-          text="Search"
-        />
+        <Button className={"container submit exclude-min-height primary attribute-btn"} type={"submit"} text="Search" />
       )}
     </form>
   );

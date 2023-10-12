@@ -23,7 +23,7 @@
     display: flex;
     align-items: center;
     border-radius: 8px;
-    border: 2px solid #10BDA5;
+    border: 2px solid var(--secondary-color);
     width: 100px;
     height: 100px;
     cursor: pointer;

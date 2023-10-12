@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./index.module.css";
 
 import Setting from "./setting";
 
 import Logotype from "./logotype";
+
+import { setTheme, getThemeFromLocalStorage } from "../../../utils/theme";
+import toastUtils from "../../../utils/toast";
 
 import {
   defaultPrimaryColor,
@@ -13,7 +16,6 @@ import {
 } from "../../../constants/theme";
 
 import { GeneralImg } from "../../../assets";
-import Button from "../buttons/button";
 
 export default function ThemeCustomization() {
   const [headNavColor, setHeadNavColor] = useState(defaultHeadNavColor);
@@ -33,6 +35,28 @@ export default function ThemeCustomization() {
   const onResetLogo = () => {
     setCurrentLogo({ id: 0, url: GeneralImg.logo });
   };
+
+  const onSave = () => {
+    setTheme("headerNavigation", headNavColor);
+    setTheme("primary", primaryColor);
+    setTheme("secondary", secondaryColor);
+    setTheme("additional", additionalColor);
+
+    toastUtils.success("Theme changes successfully");
+  };
+
+  const loadCurrentTheme = () => {
+    // Call API to get team theme then set to local storage
+    const theme = getThemeFromLocalStorage();
+    setHeadNavColor(theme?.headerNavigation || defaultHeadNavColor);
+    setPrimaryColor(theme?.primary || defaultPrimaryColor);
+    setSecondaryColor(theme?.secondary || defaultSecondaryColor);
+    setAdditionalColor(theme?.additional || defaultAdditionalColor);
+  };
+
+  useEffect(() => {
+    loadCurrentTheme();
+  }, []);
 
   return (
     <div className={styles.content}>
@@ -92,7 +116,9 @@ export default function ThemeCustomization() {
         }}
       />
 
-      <button className={styles["save-btn"]}>Save</button>
+      <button className={styles["save-btn"]} onClick={onSave}>
+        Save
+      </button>
     </div>
   );
 }

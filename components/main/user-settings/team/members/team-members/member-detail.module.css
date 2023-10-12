@@ -113,7 +113,7 @@
 }
 
 .container h4 {
-  color: var(--color-prim-navy);
+  color: var(--primary-color);
   font-size: 16px;
   font-weight: 500;
   margin: 0 0 8px;

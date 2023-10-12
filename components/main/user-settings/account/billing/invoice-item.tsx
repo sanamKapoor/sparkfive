@@ -13,10 +13,7 @@ interface InvoiceItemProps {
   type?: string;
 }
 
-const InvoiceItem: React.FC<InvoiceItemProps> = ({
-  invoice,
-  type = "invoice",
-}) => {
+const InvoiceItem: React.FC<InvoiceItemProps> = ({ invoice, type = "invoice" }) => {
   const downloadInvoice = () => {
     downloadUtils.downloadFile(invoice.invoicePdf);
   };
@@ -27,9 +24,7 @@ const InvoiceItem: React.FC<InvoiceItemProps> = ({
       <div>{invoice.product}</div>
       {type === "invoice" && <div>{capitalCase(invoice.status)}</div>}
       <div>{formatAmount(invoice.amount, invoice.currency)}</div>
-      {type === "invoice" && (
-        <IconClickable src={AssetOps.download} onClick={downloadInvoice} />
-      )}
+      {type === "invoice" && <IconClickable SVGElement={AssetOps.download} onClick={downloadInvoice} />}
     </div>
   );
 };

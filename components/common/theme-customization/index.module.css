@@ -12,6 +12,7 @@
 .title{
   font-size: 22px;
   font-weight: 600;
+  color: var(--primary-color)
 }
 
 .reset-btn{
@@ -21,7 +22,7 @@
   background: rgba(255, 255, 255, 0.38);
   font-weight: 600;
   border-radius: 4px;
-  color: #08135E;
+  color: var(--primary-color);
   opacity: 0.5;
   cursor: pointer;
 
@@ -32,8 +33,9 @@
   padding: 11px 24px;
   width: 194px;
   border-radius: 4px;
-  background: #10BDA5;
+  background: var(--secondary-color);
   color: white;
+  cursor: pointer;
 }
 
 

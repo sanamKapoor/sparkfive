@@ -22,6 +22,8 @@ import Button from "../common/buttons/button";
 import Input from "../common/inputs/input";
 import Spinner from "../common/spinners/spinner";
 
+import { loadTheme } from "../../utils/theme";
+
 const AssetShare = () => {
   const [assets, setAssets] = useState([]);
   const [selectedAsset, setSelectedAsset] = useState(0);
@@ -38,9 +40,7 @@ const AssetShare = () => {
 
   // Toggle select asset
   const toggleSelected = (id) => {
-    const assetIndex = assets.findIndex(
-      (assetItem) => assetItem.asset.id === id
-    );
+    const assetIndex = assets.findIndex((assetItem) => assetItem.asset.id === id);
 
     // Toggle selected item
     if (!assets[assetIndex].isSelected) {
@@ -54,7 +54,7 @@ const AssetShare = () => {
         [assetIndex]: {
           isSelected: { $set: !assets[assetIndex].isSelected },
         },
-      })
+      }),
     );
   };
 
@@ -62,14 +62,10 @@ const AssetShare = () => {
   const selectAll = () => {
     // If already select all, do deselect
     if (selectedAsset) {
-      setAssets(
-        assets.map((assetItem) => ({ ...assetItem, isSelected: false }))
-      );
+      setAssets(assets.map((assetItem) => ({ ...assetItem, isSelected: false })));
       setSelectedAsset(0);
     } else {
-      setAssets(
-        assets.map((assetItem) => ({ ...assetItem, isSelected: true }))
-      );
+      setAssets(assets.map((assetItem) => ({ ...assetItem, isSelected: true })));
       setSelectedAsset(assets.length);
     }
   };
@@ -155,6 +151,8 @@ const AssetShare = () => {
           setShareUserName(data.sharedBy);
           setSharedCode(code as string);
         }
+
+        loadTheme();
       }
     } catch (err) {
       toastUtils.error("Could not get assets from server");
@@ -189,22 +187,12 @@ const AssetShare = () => {
         {loading && <Spinner className={styles["spinner"]} />}
         {!loading && error && (
           <div>
-            <img
-              alt={"logo"}
-              src={logo || GeneralImg.logoHorizontal}
-              className={styles.logo}
-            />
+            <img alt={"logo"} src={logo || GeneralImg.logoHorizontal} className={styles.logo} />
             <AuthContainer
               title="Spencer Mo has shared files with you"
-              titleComponent={
-                <p className={"normal-text font-16"}>
-                  {shareUserName} has shared files with you
-                </p>
-              }
+              titleComponent={<p className={"normal-text font-16"}>{shareUserName} has shared files with you</p>}
               subTitleComponent={
-                <p className={"normal-text m-b-32"}>
-                  Please enter your email to access the shared files
-                </p>
+                <p className={"normal-text m-b-32"}>Please enter your email to access the shared files</p>
               }
               additionalClass={"color-secondary"}
               subtitle={"Please enter your email to access the shared files"}
@@ -220,11 +208,7 @@ const AssetShare = () => {
                   type="text"
                 />
                 <div className={"m-t-15"}>
-                  <Button
-                    className="container primary"
-                    text={"Submit"}
-                    type={"submit"}
-                  />
+                  <Button className="container primary" text={"Submit"} type={"submit"} />
                 </div>
               </form>
             </AuthContainer>
@@ -243,10 +227,7 @@ const AssetShare = () => {
               <ul className={styles["grid-list"]}>
                 {assets.map((assetItem) => {
                   return (
-                    <li
-                      className={styles["grid-item"]}
-                      key={assetItem.asset.id}
-                    >
+                    <li className={styles["grid-item"]} key={assetItem.asset.id}>
                       <ShareItem
                         {...assetItem}
                         toggleSelected={() => {
