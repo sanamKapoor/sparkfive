@@ -58,7 +58,6 @@ interface Item {
 // Server DO NOT return full custom field slots including empty array, so we will generate empty array here
 // The order of result should be match with order of custom field list
 
-
 const mappingCustomFieldData = (list, valueList) => {
   let rs = [];
   list.map((field) => {
@@ -347,18 +346,23 @@ const SidePanelBulk = ({
             </div>
           )}
           {<div className={`${styles["tag-container-wrapper"]}`}>
-            {Array.from([...selectedFolderCompleteObject.entries()]).map(([key, value], index) => (
-              <div className={`${styles["tag-container"]}`} key={index}>
-                <span>{value.name}</span>
-                <IconClickable
-                  additionalClass={styles.remove}
-                  src={Utilities.closeTag}
-                  onClick={() => toggleSelected(key, !selectedFolder.includes(key), false, "", value.name)}
-                />
-              </div>
-            ))}
+            {
+              Array.from([...selectedFolderCompleteObject.entries()]).map(([key, value], index) => (
+                <div className={`${styles["tag-container"]}`} key={index}>
+                  <span>{value.name}</span>
+                  <IconClickable
+                    additionalClass={styles.remove}
+                    src={Utilities.closeTag}
+                    onClick={() => toggleSelected(key, !selectedFolder.includes(key), false, "", value.name)}
+                  />
+                </div>
+              ))
+            }
+
           </div>}
-          {activeDropdown === "collections" &&
+          <p className={`${styles["show-all"]}`}> Show all 11</p>
+          {
+            activeDropdown === "collections" &&
             <div className={`${styles["edit-bulk-outer-wrapper"]}`}>
               <div className={`${styles["search-btn"]}`}>
                 <SearchModal filteredData={filteredData} input={input} setInput={setInput} />
@@ -370,7 +374,7 @@ const SidePanelBulk = ({
                 {folders.map((folder, index) => (
                   <div key={index}>
                     <div className={`${styles["flex"]} ${styles.nestedbox}`}>
-                      <div className={`${styles["height"]}`}
+                      <div className={`${styles["height"]} ${styles["flex"]}`}
                         onClick={() => { toggleDropdown(folder.id, true) }}
                       >
                         <img
@@ -381,7 +385,7 @@ const SidePanelBulk = ({
                         />
                       </div>
 
-                      <div className={styles.w100}>
+                      <div className={styles.w100} onClick={() => { toggleDropdown(folder.id, true) }} >
                         <div
                           className={`${styles["dropdownMenu"]} ${selectedFolder.includes(folder.id) ?
                             styles["active"]
@@ -483,7 +487,7 @@ const SidePanelBulk = ({
               </div>
             </div>
           }
-        </section>
+        </section >
 
         {!hideFilterElements.campaigns && (
           <section className={styles["field-wrapper"]}>
@@ -532,118 +536,122 @@ const SidePanelBulk = ({
           />
         </section>
 
-        {inputCustomFields.map((field, index) => {
-          if (field.type === "selectOne" && addMode) {
-            return (
-              <section className={styles["field-wrapper"]}>
-                <div className={`secondary-text ${styles.field}`}>
-                  {field.name}
-                </div>
-                <CustomFieldSelector
-                  data={assetCustomFields[index]?.values[0]?.name}
-                  options={field.values}
-                  isShare={false}
-                  onLabelClick={() => { }}
-                  handleFieldChange={(option) => {
-                    setCustomFields(index, [option]);
-                  }}
-                />
-              </section>
-            );
-          }
-
-          if (field.type === "selectMultiple") {
-            return (
-              <section className={styles["field-wrapper"]} key={index}>
-                <CreatableSelect
-                  creatable={false}
-                  title={field.name}
-                  addText={`Add ${field.name}`}
-                  onAddClick={() => setActiveCustomField(index)}
-                  selectPlaceholder={"Select an existing one"}
-                  avilableItems={field.values}
-                  isShare={false}
-                  setAvailableItems={() => { }}
-                  selectedItems={
-                    assetCustomFields.filter(
-                      (assetField) => assetField.id === field.id
-                    )[0]?.values || []
-                  }
-                  setSelectedItems={(data) => {
-                    setActiveCustomField(undefined);
-                    setCustomFields(index, data);
-                  }}
-                  onAddOperationFinished={(stateUpdate) => { }}
-                  onRemoveOperationFinished={async (
-                    index,
-                    stateUpdate,
-                    removeId
-                  ) => {
-                    setCustomFields(index, stateUpdate);
-                  }}
-                  onOperationFailedSkipped={() =>
-                    setActiveCustomField(undefined)
-                  }
-                  asyncCreateFn={() => null}
-                  dropdownIsActive={activeCustomField === index}
-                  isBulkEdit={true}
-                  canAdd={addMode}
-                />
-              </section>
-            );
-          }
-        })}
-
-        {addMode && !hideFilterElements.products && (
-          <section>
-            <div className={styles["field-wrapper"]}>
-              <div className={`secondary-text ${styles.field}`}>Products</div>
-            </div>
-
-            {assetProducts.map((product, index) => {
+        {
+          inputCustomFields.map((field, index) => {
+            if (field.type === "selectOne" && addMode) {
               return (
-                <div className={styles["product-wrapper"]} key={index}>
-                  <ProductAddition
-                    noTitle
-                    className={styles["productPlus"]}
-                    skuActiveDropdownValue={`sku-${index}`}
-                    productFieldActiveDropdownValue={`product_field-${index}`}
-                    productVendorActiveDropdownValue={`product_vendor-${index}`}
-                    productCategoryActiveDropdownValue={`product_category-${index}`}
-                    productRetailerActiveDropdownValue={`product_retailer-${index}`}
-                    FieldWrapper={({ children }) => (
-                      <div className={styles["productPlus"]}>{children}</div>
-                    )}
+                <section className={styles["field-wrapper"]}>
+                  <div className={`secondary-text ${styles.field}`}>
+                    {field.name}
+                  </div>
+                  <CustomFieldSelector
+                    data={assetCustomFields[index]?.values[0]?.name}
+                    options={field.values}
                     isShare={false}
-                    activeDropdown={activeDropdown}
-                    setActiveDropdown={(value) => {
-                      console.log(value);
-                      setActiveDropdown(`${value}-${index}`);
-                    }}
-                    assetId={null}
-                    updateAssetState={() => null}
-                    product={product}
-                    isBulkEdit={true}
-                    setAssetProduct={(data) => {
-                      setAssetProducts(
-                        update(assetProducts, {
-                          [index]: { $set: data },
-                        })
-                      );
+                    onLabelClick={() => { }}
+                    handleFieldChange={(option) => {
+                      setCustomFields(index, [option]);
                     }}
                   />
-                </div>
+                </section>
               );
-            })}
-            <div
-              className={`add ${styles["select-add"]}`}
-              onClick={addProductBlock}
-            >
-              <IconClickable src={Utilities.add} />
-              <span className={"normal-text"}>Add Product</span>
-            </div>
-          </section>
-        )}
+            }
+
+            if (field.type === "selectMultiple") {
+              return (
+                <section className={styles["field-wrapper"]} key={index}>
+                  <CreatableSelect
+                    creatable={false}
+                    title={field.name}
+                    addText={`Add ${field.name}`}
+                    onAddClick={() => setActiveCustomField(index)}
+                    selectPlaceholder={"Select an existing one"}
+                    avilableItems={field.values}
+                    isShare={false}
+                    setAvailableItems={() => { }}
+                    selectedItems={
+                      assetCustomFields.filter(
+                        (assetField) => assetField.id === field.id
+                      )[0]?.values || []
+                    }
+                    setSelectedItems={(data) => {
+                      setActiveCustomField(undefined);
+                      setCustomFields(index, data);
+                    }}
+                    onAddOperationFinished={(stateUpdate) => { }}
+                    onRemoveOperationFinished={async (
+                      index,
+                      stateUpdate,
+                      removeId
+                    ) => {
+                      setCustomFields(index, stateUpdate);
+                    }}
+                    onOperationFailedSkipped={() =>
+                      setActiveCustomField(undefined)
+                    }
+                    asyncCreateFn={() => null}
+                    dropdownIsActive={activeCustomField === index}
+                    isBulkEdit={true}
+                    canAdd={addMode}
+                  />
+                </section>
+              );
+            }
+          })
+        }
+
+        {
+          addMode && !hideFilterElements.products && (
+            <section>
+              <div className={styles["field-wrapper"]}>
+                <div className={`secondary-text ${styles.field}`}>Products</div>
+              </div>
+
+              {assetProducts.map((product, index) => {
+                return (
+                  <div className={styles["product-wrapper"]} key={index}>
+                    <ProductAddition
+                      noTitle
+                      className={styles["productPlus"]}
+                      skuActiveDropdownValue={`sku-${index}`}
+                      productFieldActiveDropdownValue={`product_field-${index}`}
+                      productVendorActiveDropdownValue={`product_vendor-${index}`}
+                      productCategoryActiveDropdownValue={`product_category-${index}`}
+                      productRetailerActiveDropdownValue={`product_retailer-${index}`}
+                      FieldWrapper={({ children }) => (
+                        <div className={styles["productPlus"]}>{children}</div>
+                      )}
+                      isShare={false}
+                      activeDropdown={activeDropdown}
+                      setActiveDropdown={(value) => {
+                        console.log(value);
+                        setActiveDropdown(`${value}-${index}`);
+                      }}
+                      assetId={null}
+                      updateAssetState={() => null}
+                      product={product}
+                      isBulkEdit={true}
+                      setAssetProduct={(data) => {
+                        setAssetProducts(
+                          update(assetProducts, {
+                            [index]: { $set: data },
+                          })
+                        );
+                      }}
+                    />
+                  </div>
+                );
+              })}
+              <div
+                className={`add ${styles["select-add"]}`}
+                onClick={addProductBlock}
+              >
+                <IconClickable src={Utilities.add} />
+                <span className={"normal-text"}>Add Product</span>
+              </div>
+            </section>
+          )
+        }
 
         <ProjectCreationModal
           initialValue={newProjectName}
@@ -656,7 +664,7 @@ const SidePanelBulk = ({
           }
           modalIsOpen={newProjectName ? true : false}
         />
-      </div>
+      </div >
 
       <div className={styles["save-changes"]}>
         <Button
@@ -675,7 +683,7 @@ const SidePanelBulk = ({
         message={warningMessage}
         modalIsOpen={warningMessage}
       />
-    </div>
+    </div >
   );
 };
 

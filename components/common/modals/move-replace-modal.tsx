@@ -149,7 +149,7 @@ const MoveReplaceModal = ({
                 />
               </div>
 
-              <div className={styles.w100}>
+              <div className={styles.w100} onClick={() => { toggleDropdown(folder.id, true) }}>
                 <div
                   className={`${styles["dropdownMenu"]} ${selectedFolder.includes(folder.id) ?
                     styles["active"]

@@ -157,7 +157,7 @@ const MoveModal = ({
               </div>
 
 
-              <div className={styles.w100}>
+              <div className={styles.w100} >
                 <div
                   className={`${styles["dropdownMenu"]} ${selectedFolder.includes(folder.id) ?
                     styles["active"]
