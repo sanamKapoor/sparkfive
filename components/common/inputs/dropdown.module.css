@@ -45,7 +45,7 @@
 }
 
 .menu li:hover {
-  background-color: var(--color-sec-lightblue);
+  background-color: var(--additional-color);
 }
 
 .menu li span {

@@ -54,7 +54,7 @@
 }
 
 .option:hover {
-    background-color: var(--color-sec-lightblue);
+    background-color: var(--additional-color);
 }
 
 .option-label {

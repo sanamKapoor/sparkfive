@@ -49,6 +49,7 @@ import AlertBlue from "./Icons/Navigation/AlertBlue";
 import Back from "./Icons/Utilities/Back/Back";
 import Hide from "./Icons/Utilities/Hide/Hide";
 import Upload from "./Icons/Assets/Upload";
+import MoreLight from "./Icons/Utilities/More/MoreLight";
 
 export const GeneralImg = {
   logoHorizontal: require("./general/logo-horizontal-sparkfive-RGB.png"),
@@ -96,7 +97,7 @@ export const Utilities = {
   assignMember: require("./Icons/Utilities/Assign Member/icn-utilities-assignmember.svg"),
   assignMemberLight: require("./Icons/Utilities/Assign Member/icn-utilities-assignmember-light.svg"),
   more: More,
-  moreLight: require("./Icons/Utilities/More/icn-utilities-more-light.svg"),
+  moreLight: MoreLight,
   moreWhite: require("./Icons/Utilities/More/icn-utilities-more-white.svg"),
   moreLighter: require("./Icons/Utilities/More/icn-utilities-more-lighter.svg"),
   closePanel: require("./Icons/Utilities/Close Panel/icn-utilities-closepanel.svg"),

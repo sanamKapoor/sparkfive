@@ -25,7 +25,7 @@
 
 .list li:hover,
 .list li.selected {
-    background-color: var(--color-sec-lightblue);
+    background-color: var(--additional-color);
 }
 
 .name {

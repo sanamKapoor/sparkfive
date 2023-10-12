@@ -115,7 +115,7 @@
 }
 
 .less-icons-button {
-  color: var(--color-sec-lightblue);
+  color: var(--additional-color);
   font-size: 12px;
   cursor: pointer;
   margin-right: 25px;
@@ -159,7 +159,7 @@
 }
 
 .more-dropdown li:hover {
-  background-color: var(--color-sec-lightblue);
+  background-color: var(--additional-color);
 }
 
 @media screen and (max-width: 800px) {
