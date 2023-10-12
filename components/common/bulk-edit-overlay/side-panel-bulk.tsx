@@ -88,7 +88,8 @@ const data = [
     subfolders: [],
   },
 ];
-const tagData = ["Data1", "Data2", "Data3", "Data1","Data3", "Data1","Data1","Data3", "Data1", "Data1",];
+const tagData = ["Data1", "Data2", "Data3", "Data1","Data3", "Data1","Data1","Data3", "Data1", "Data1","Data3", "Data1","Data1",];
+
 
 const mappingCustomFieldData = (list, valueList) => {
   let rs = [];
@@ -392,16 +393,7 @@ const SidePanelBulk = ({
             isBulkEdit={true}
             canAdd={addMode}
           /> */}
-          {(activeDropdown === "" || activeDropdown !== "collections") && (
-            <div
-              className={`add ${styles["select-add"]}`}
-              onClick={() => setActiveDropdown("collections")}
-            >
-              <IconClickable src={Utilities.addLight} />
-              <span>{"Add to Collection"}</span>
-            </div>
-          )}
-          {<div className={`${styles["tag-container-wrapper"]}`}>
+            {<div className={`${styles["tag-container-wrapper"]}`}>
             {tagData.map((dataItem, index) => (
               <div className={`${styles["tag-container"]}`} key={index}>
                 <span>{dataItem}</span>
@@ -413,7 +405,16 @@ const SidePanelBulk = ({
             ))}
           
           </div>}
-          <p className={`${styles["show-all"]}`}> Show all 11</p>
+          {(activeDropdown === "" || activeDropdown !== "collections") && (
+            <div
+              className={`add ${styles["select-add"]}`}
+              onClick={() => setActiveDropdown("collections")}
+            >
+              <IconClickable src={Utilities.addLight} />
+              <span>{"Add to Collection"}</span>
+            </div>
+          )}
+        
           {activeDropdown === "collections" &&
             <div className={`${styles["edit-bulk-outer-wrapper"]}`}>
               <div className={`${styles["search-btn"]}`}>
