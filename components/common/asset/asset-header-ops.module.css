@@ -37,71 +37,72 @@
   font-weight: 500;
 }
 
-.action-button{
+.action-button {
   width: 18px;
 }
 
 
-.action-button:hover{
+.action-button:hover {
   opacity: 0.5;
 }
 
-.select-only-shown-items-text{
+.select-only-shown-items-text {
   cursor: pointer;
   margin-left: 15px;
   padding: 5px;
   font-size: 9px;
 }
 
-.select-only-shown-items-text:hover{
+.select-only-shown-items-text:hover {
   text-decoration: underline;
 }
 
-.share-wrapper{
+.share-wrapper {
   position: relative;
   width: auto;
   display: flex;
 }
 
-.share-title{
+.share-title {
   padding: 10px;
   border-bottom: solid 1px #DEDAD4;
   display: flex;
   justify-content: center;
 }
 
-.share-title img{
+.share-title img {
   cursor: pointer;
   position: absolute;
   right: 8px;
 }
 
-.share-item{
+.share-item {
   padding: 8px 4px 6px 15px;
   cursor: pointer;
 }
 
-.share-description{
+.share-description {
   font-size: 11px;
   opacity: 0.8;
 }
 
-.share-item img{
+.share-item img {
   width: 13px;
   height: 13px;
   margin-right: 8px;
 }
 
-.share-item p{
+.share-item p {
   margin-top: 3px;
   margin-bottom: 3px;
 }
 
-.share-item:hover{
-  background-color: #FAF8F5;;
+.share-item:hover {
+  background-color: #FAF8F5;
+  ;
 }
 
-.share-popover{
+.share-popover {
   position: absolute;
   color: #08135E;
   top: 35px;
@@ -131,6 +132,7 @@
 .less-icons-button:hover {
   text-decoration: underline;
 }
+
 .more-wrapper {
   position: relative;
 }
@@ -168,8 +170,6 @@
     top: inherit;
     bottom: 0;
     box-shadow: none;
-    /* background: #08135E;
-    color: #fff; */
   }
 }
 

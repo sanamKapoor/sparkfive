@@ -1,15 +1,14 @@
+import { useContext, useEffect, useRef, useState } from "react";
 import ReactModal from "react-modal";
-import styles from "./change-thumnail-modal.module.css";
-import toastUtils from "../../../utils/toast";
+import blueClose from "../../../assets/Icons/Utilities/Close/blue-close.svg";
 import assetApi from "../../../server-api/asset";
 import folderApi from "../../../server-api/folder";
-import { useContext, useEffect, useRef, useState } from "react";
-import blueClose from "../../../assets/Icons/Utilities/Close/blue-close.svg";
+import toastUtils from "../../../utils/toast";
+import styles from "./change-thumnail-modal.module.css";
 // Components
+import { Assets, Utilities } from "../../../assets";
+import { AssetContext, FilterContext, LoadingContext } from "../../../context";
 import Button from "../buttons/button";
-import React from "react";
-import { LoadingContext, AssetContext, FilterContext } from "../../../context";
-import { Utilities, Assets } from "../../../assets";
 import IconClickable from "../buttons/icon-clickable";
 
 import { defaultChangeThumbnailModalView } from "../../../constants/asset-associate";
@@ -407,11 +406,7 @@ const ChangeThumbnail = ({
           </p>
         }
         <span className={styles.close} onClick={closeModal}>
-        <img
-            src={blueClose}
-            alt={"close"}
-            className={styles.closebtn}
-          />
+          <img src={blueClose} alt={"close"} className={styles.closebtn} />
         </span>
       </div>
       <div>
@@ -522,14 +517,13 @@ const ChangeThumbnail = ({
                   text="Save"
                   onClick={handleSave}
                   type="button"
-                  styleType="primary"
-                  className={`${styles.button} ${styles.mr}`}
+                  className={`${styles.button} ${styles.mr} container primary thumbnail-btn`}
                 />
                 <Button
                   text="Cancel"
                   onClick={handleCancel}
                   type="button"
-                  className={`${styles.button} ${styles.mr} ${styles.cancel}`}
+                  className={`${styles.button} ${styles.mr} ${styles.cancel} container secondary`}
                 />
               </div>
             </div>

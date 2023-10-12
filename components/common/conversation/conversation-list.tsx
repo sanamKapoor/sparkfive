@@ -1,12 +1,12 @@
-import styles from './conversation-list.module.css'
-import conversationApi from '../../../server-api/conversation'
-import { useState, useEffect, useContext } from 'react'
-import update from 'immutability-helper'
-import { TeamContext } from '../../../context'
+import update from "immutability-helper";
+import { useContext, useEffect, useState } from "react";
+import { TeamContext } from "../../../context";
+import conversationApi from "../../../server-api/conversation";
+import styles from "./conversation-list.module.css";
 
 // Components
-import Conversation from './conversation'
-import CommentInput from './comment-input'
+import CommentInput from "./comment-input";
+import Conversation from "./conversation";
 
 const skeletonConversation = {
   comments: [
@@ -14,63 +14,80 @@ const skeletonConversation = {
       createdAt: "2020-08-18T05:08:30.662Z",
       content: "Default comment",
       user: {
-        name: 'Default Name'
+        name: "Default Name",
       },
-      mentions: []
-    }],
-  isLoading: true
-}
+      mentions: [],
+    },
+  ],
+  isLoading: true,
+};
 
-const skeletonConversations = [skeletonConversation, skeletonConversation, skeletonConversation]
+const skeletonConversations = [
+  skeletonConversation,
+  skeletonConversation,
+  skeletonConversation,
+];
 
 const ConversationList = ({ itemType, itemId }) => {
-  const [conversations, setConversations] = useState(skeletonConversations)
+  const [conversations, setConversations] = useState(skeletonConversations);
 
-  const { teamMembers, getTeamMembers } = useContext(TeamContext)
+  const { teamMembers, getTeamMembers } = useContext(TeamContext);
 
   useEffect(() => {
     if (itemType && itemId) {
-      getConversations()
-      getTeamMembers()
+      getConversations();
+      getTeamMembers();
     }
-  }, [itemType, itemId])
+  }, [itemType, itemId]);
 
   const getConversations = async () => {
     try {
-      const { data } = await conversationApi.getConversations(itemType, itemId)
-      setConversations(data)
+      const { data } = await conversationApi.getConversations(itemType, itemId);
+      setConversations(data);
     } catch (err) {
-      console.log(err)
+      console.log(err);
       // TODO: Handle error
     }
-  }
+  };
 
-  const addComment = async (content, conversationId = 'new') => {
+  const addComment = async (content, conversationId = "new") => {
     try {
-      const mentions = getMentionsFromContent(content)
-      const { data } = await conversationApi.createComment(itemType, itemId, conversationId, { content, mentions })
-      if (conversationId === 'new') {
-        setConversations(update(conversations, {
-          $unshift: [data]
-        }))
-      }
-      else {
-        const conversationIndex = conversations.findIndex(conv => conv.id === conversationId)
-        setConversations(update(conversations, {
-          [conversationIndex]: { $set: data }
-        }))
+      const mentions = getMentionsFromContent(content);
+      const { data } = await conversationApi.createComment(
+        itemType,
+        itemId,
+        conversationId,
+        { content, mentions }
+      );
+      if (conversationId === "new") {
+        setConversations(
+          update(conversations, {
+            $unshift: [data],
+          })
+        );
+      } else {
+        const conversationIndex = conversations.findIndex(
+          (conv) => conv.id === conversationId
+        );
+        setConversations(
+          update(conversations, {
+            [conversationIndex]: { $set: data },
+          })
+        );
       }
     } catch (err) {
-      console.log(err)
+      console.log(err);
       // TODO: Handle error
     }
-  }
+  };
 
   const getMentionsFromContent = (content) => {
-    const mentionSet = new Set()
-    teamMembers.filter(member => content.includes(`@${member.name}`)).forEach(member => mentionSet.add(member.id))
-    return Array.from(mentionSet).map(memberId => ({ id: memberId }))
-  }
+    const mentionSet = new Set();
+    teamMembers
+      .filter((member) => content.includes(`@${member.name}`))
+      .forEach((member) => mentionSet.add(member.id));
+    return Array.from(mentionSet).map((memberId) => ({ id: memberId }));
+  };
 
   return (
     <div className={styles.container}>
@@ -82,16 +99,17 @@ const ConversationList = ({ itemType, itemId }) => {
       <CommentInput onSubmit={addComment} />
       <ul>
         {conversations.map((conversation, index) => (
-          <li key={conversation.id || index} >
+          <li key={conversation.id || index}>
             <Conversation
               isLoading={conversation.isLoading}
               comments={conversation.comments}
-              addComment={(content) => addComment(content, conversation.id)} />
+              addComment={(content) => addComment(content, conversation.id)}
+            />
           </li>
         ))}
       </ul>
     </div>
-  )
-}
+  );
+};
 
-export default ConversationList
+export default ConversationList;

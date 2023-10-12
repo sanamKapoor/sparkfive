@@ -1,17 +1,17 @@
-import styles from "./filter-container.module.css";
 import update from "immutability-helper";
-import { FilterContext, AssetContext, UserContext } from "../../../context";
-import React, { useState, useEffect, useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Utilities } from "../../../assets";
+import { AssetContext, FilterContext, UserContext } from "../../../context";
+import styles from "./filter-container.module.css";
 
 import customFieldsApi from "../../../server-api/attribute";
 import shareCollectionApi from "../../../server-api/share-collection";
 
 // Components
-import FilterSelector from "./filter-selector";
 import DateUploaded from "./date-uploaded";
-import ProductFilter from "./product-filter";
 import DimensionsFilter from "./dimensions-filter";
+import FilterSelector from "./filter-selector";
+import ProductFilter from "./product-filter";
 import ResolutionFilter from "./resolution-filter";
 
 const FilterContainer = ({

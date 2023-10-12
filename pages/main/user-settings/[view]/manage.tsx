@@ -1,31 +1,33 @@
-import Head from 'next/head'
-
-import FilterProvider from '../../../../context/filter-provider'
-import { ASSET_ACCESS } from '../../../../constants/permissions'
+import { ASSET_ACCESS } from "../../../../constants/permissions";
+import FilterProvider from "../../../../context/filter-provider";
 
 // Components
-import MainLayout from '../../../../components/common/layouts/main-layout'
+import MainLayout from "../../../../components/common/layouts/main-layout";
 
-import DeletedAssetsLibrary from '../../../../components/common/custom-settings/deleted-assets'
-import { useContext } from 'react'
-import { UserContext } from '../../../../context'
-import NoPermissionNotice from '../../../../components/common/misc/no-permission-notice'
+import { useContext } from "react";
+import DeletedAssetsLibrary from "../../../../components/common/custom-settings/deleted-assets";
+import AppLayout from "../../../../components/common/layouts/app-layout";
+import NoPermissionNotice from "../../../../components/common/misc/no-permission-notice";
+import { UserContext } from "../../../../context";
+import { UserRole } from "../../../../interfaces/user/role";
 
-const AssetsPage = () => {
+const AssetsPage: React.FC = () => {
+  const { user } = useContext(UserContext);
 
-    const {user} = useContext(UserContext)
-    
-    return <FilterProvider>
-        <Head>
-            <title>User Settings</title>
-            <link rel="icon" href="/favicon.ico" />
-        </Head>
+  return (
+    <FilterProvider>
+      <AppLayout title="User Settings">
         <MainLayout requiredPermissions={[ASSET_ACCESS]}>
-            {
-                (user.roleId === 'admin' || user.roleId === 'super_admin') ? <DeletedAssetsLibrary /> : <NoPermissionNotice />
-            }
+          {user.roleId === UserRole.ADMIN ||
+          user.roleId === UserRole.SUPER_ADMIN ? (
+            <DeletedAssetsLibrary />
+          ) : (
+            <NoPermissionNotice />
+          )}
         </MainLayout>
+      </AppLayout>
     </FilterProvider>
-}
+  );
+};
 
-export default AssetsPage
+export default AssetsPage;

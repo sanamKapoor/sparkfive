@@ -1,29 +1,32 @@
-import Head from 'next/head'
-import { useContext, useEffect } from "react"
-import FilterProvider from '../../context/filter-provider'
-import { ASSET_ACCESS } from '../../constants/permissions'
+import { useContext } from "react";
+import { ASSET_ACCESS } from "../../constants/permissions";
+import FilterProvider from "../../context/filter-provider";
 
 // Components
-import MainLayout from '../../components/common/layouts/main-layout'
-import AssetsLibrary from '../../components/main/assets-library'
-import AssetUploadProcess from "../../components/asset-upload-process"
-import AssetDownloadProcess from "../../components/asset-download-process"
+import AssetDownloadProcess from "../../components/asset-download-process";
+import AssetUploadProcess from "../../components/asset-upload-process";
+import MainLayout from "../../components/common/layouts/main-layout";
+import AssetsLibrary from "../../components/main/assets-library";
 
-import { AssetContext } from '../../context'
+import AppLayout from "../../components/common/layouts/app-layout";
+import { AssetContext } from "../../context";
 
 const AssetsPage = () => {
-    const { uploadingStatus, uploadingAssets, downloadingStatus } = useContext(AssetContext)
-    return <FilterProvider>
-        <Head>
-            <title>Assets</title>
-            <link rel="icon" href="/favicon.ico" />
-        </Head>
+  const { uploadingStatus, uploadingAssets, downloadingStatus } =
+    useContext(AssetContext);
+  return (
+    <FilterProvider>
+      <AppLayout title="Assets">
         <MainLayout requiredPermissions={[ASSET_ACCESS]}>
-            {uploadingStatus !== 'none' && uploadingAssets.length > 0 && <AssetUploadProcess />}
-            {downloadingStatus !== 'none' && <AssetDownloadProcess />}
-            <AssetsLibrary />
+          {uploadingStatus !== "none" && uploadingAssets.length > 0 && (
+            <AssetUploadProcess />
+          )}
+          {downloadingStatus !== "none" && <AssetDownloadProcess />}
+          <AssetsLibrary />
         </MainLayout>
+      </AppLayout>
     </FilterProvider>
-}
+  );
+};
 
-export default AssetsPage
+export default AssetsPage;

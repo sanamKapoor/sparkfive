@@ -1,27 +1,25 @@
-import styles from "./list-item.module.css";
-import { Utilities, Assets, AssetOps } from "../../../assets";
-import gridStyles from "./asset-grid.module.css";
-import filesize from "filesize";
 import { format } from "date-fns";
-import { useState, useEffect, ChangeEvent, useContext } from "react";
-import { getParsedExtension, removeExtension } from "../../../utils/asset";
+import filesize from "filesize";
 import update from "immutability-helper";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { AssetOps, Utilities } from "../../../assets";
+import { getParsedExtension, removeExtension } from "../../../utils/asset";
+import gridStyles from "./asset-grid.module.css";
+import styles from "./list-item.module.css";
 
 // Components
-import AssetImg from "./asset-img";
-import IconClickable from "../buttons/icon-clickable";
-import DetailOverlay from "./detail-overlay";
-import AssetOptions from "./asset-options";
-import AssetIcon from "./asset-icon";
-import CollectionBadge from "../collection/collection-badge";
-import React from "react";
-import assetApi from "../../../server-api/asset";
-import toastUtils from "../../../utils/toast";
 import {
-  FAILED_TO_UPDATE_ASSET_NAME,
   ASSET_NAME_UPDATED,
+  FAILED_TO_UPDATE_ASSET_NAME,
 } from "../../../constants/messages";
 import { AssetContext } from "../../../context";
+import assetApi from "../../../server-api/asset";
+import toastUtils from "../../../utils/toast";
+import IconClickable from "../buttons/icon-clickable";
+import AssetIcon from "./asset-icon";
+import AssetImg from "./asset-img";
+import AssetOptions from "./asset-options";
+import DetailOverlay from "./detail-overlay";
 
 import RenameModal from "../../common/modals/rename-modal";
 
@@ -177,7 +175,6 @@ const ListItem = ({
       );
       toastUtils.success("Asset name updated");
     } catch (err) {
-      // console.log(err);
       toastUtils.error("Could not update asset name");
     }
   };
@@ -197,7 +194,7 @@ const ListItem = ({
                   } ${getSortAttributeClassName("asset.name")}`}
                 />
               </h4>
-              {/*<h4>Stage</h4>*/}
+
               <h4></h4>
               <h4
                 className={styles.size}
@@ -250,8 +247,6 @@ const ListItem = ({
               </h4>
 
               <h4 className={styles.dimension}>Dimensions</h4>
-
-              {/* <h4 className={styles.collection}>Collection</h4> */}
             </div>
           </div>
         )}
@@ -305,15 +300,6 @@ const ListItem = ({
               ) : (
                 <AssetIcon extension={asset.extension} onList={true} />
               )}
-              {/* {asset.type === 'image' && <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} />}
-              {asset.type === 'video' &&
-                <video preload='metadata'>
-                  <source src={realUrl}
-                    type={`video/${asset.extension}`} />
-                </video>
-              }
-              {asset.type === 'application' && <AssetApplication extension={asset.extension} onList={true} />}
-              {asset.type === 'text' && <AssetText extension={asset.extension} onList={true} />} */}
             </div>
             <div
               className={
@@ -392,10 +378,6 @@ const ListItem = ({
           >
             {format(new Date(asset.createdAt), dateFormat)}
           </div>
-          {/*<div className={styles.status}>*/}
-          {/*  {isUploading && 'Uplaoding...'}*/}
-          {/*  {!isLoading && !isUploading && <StatusBadge status={asset.stage} />}*/}
-          {/*</div>*/}
 
           <div className={`${styles.field_name} ${styles.extension}`}>
             {!isLoading && getParsedExtension(asset.extension)}
@@ -406,14 +388,6 @@ const ListItem = ({
               asset?.dimensionWidth &&
               `${asset?.dimensionWidth}x${asset?.dimensionHeight}`}
           </div>
-
-          {/* <div className={`${styles.field_name} ${styles.collection}`}>
-            <div className={`${styles.listBadge}`}>
-              {asset?.folders?.map((folder) => (
-                <CollectionBadge collection={folder?.name} />
-              ))}
-            </div>
-          </div> */}
         </div>
       </div>
       {overlayProperties.visible && (

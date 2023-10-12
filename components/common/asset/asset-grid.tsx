@@ -1,6 +1,6 @@
 import copyClipboard from "copy-to-clipboard";
 import update from "immutability-helper";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Waypoint } from "react-waypoint";
 import { AssetContext, LoadingContext, UserContext } from "../../../context";
 import assetsApi from "../../../server-api/asset";
@@ -293,8 +293,6 @@ const AssetGrid = ({
       clonedAssets[versionIndex] = newVersionAsset;
       setAssets(clonedAssets);
     }
-
-    // setAssetDetail({...newVersionAsset})
   };
 
   const isThumbnailNameEditable = checkIfUserCanEditThumbnail(user?.roleId);
@@ -573,7 +571,7 @@ const AssetGrid = ({
                     <Button
                       text="Load More"
                       type="button"
-                      styleType="primary"
+                      className="container primary"
                       onClick={loadMore}
                     />
                   </div>

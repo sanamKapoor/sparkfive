@@ -2,12 +2,26 @@
 
 .primary-input-height.select-prefix__control{
   min-height: 34px;
+  
 }
+.primary-input-height:focus{
+  box-shadow: none;
+  border: 0;
+  outline: none;
+
+  
+}
+
+.uploadSelect.select-prefix__control{
+  height:50px;
+  max-width: 294px;
+}
+
 
 .select-prefix__control {
   border-style: none !important;
-  max-height: 34px;
-  min-height: 34px !important;
+  min-height: 33px !important;
+  height: 100%;
 }
 
 .select-prefix__value-container {
@@ -18,6 +32,7 @@
   color: var(--color-prim-navy);
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
+  height: 100%;
 }
 
 .select-prefix__single-value {
@@ -107,6 +122,8 @@
 .filter .select-prefix__placeholder,
 .regular .select-prefix__placeholder {
   color: var(--color-prim-navy);
+  font-weight: 300;
+  font-size: 12px;
 }
 .search-filters .filter .select-prefix__placeholder,
 .product-select .select-prefix__placeholder {
@@ -130,6 +147,21 @@
   max-height: 34px;
 }
 
+.uploadSelect .select-prefix__indicators {
+  max-height: 50px;
+}
+
+.customSelect:focus{
+  outline: none !important;
+}
+
+/* .filter .select-prefix__indicators,
+.regular .select-prefix__indicators svg {
+ width: 12px;
+ height:12px;
+} */
+
+
 .filter .select-prefix__indicators span,
 .regular .select-prefix__indicators span {
   background-color: white;
@@ -140,6 +172,10 @@
   background-color: white;
   font-size: 13px;
   border-radius: 5px;
+}
+.select-prefix__indicator svg{
+fill:#08135E;
+
 }
 
 /* Multi filter */

@@ -1,22 +1,14 @@
-import fileDownload from "js-file-download";
-import styles from "./folder-list-item.module.css";
-import { Utilities, Assets, AssetOps } from "../../../assets";
-import gridStyles from "../asset/asset-grid.module.css";
-import {
-  ChangeEvent,
-  ChangeEventHandler,
-  MouseEventHandler,
-  useContext,
-  useState,
-  useEffect
-} from "react";
 import { format } from "date-fns";
-import zipDownloadUtils from "../../../utils/download";
+import fileDownload from "js-file-download";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { AssetOps, Assets, Utilities } from "../../../assets";
+import gridStyles from "../asset/asset-grid.module.css";
+import styles from "./folder-list-item.module.css";
 
 // Components
-import FolderOptions from "./folder-options";
-import ConfirmModal from "../modals/confirm-modal";
 import IconClickable from "../buttons/icon-clickable";
+import ConfirmModal from "../modals/confirm-modal";
+import FolderOptions from "./folder-options";
 
 import folderApi from "../../../server-api/folder";
 import shareFolderApi from "../../../server-api/share-collection";
@@ -24,15 +16,13 @@ import shareFolderApi from "../../../server-api/share-collection";
 // Context
 import { AssetContext } from "../../../context";
 
-import toastUtils from "../../../utils/toast";
-import {
-  FAILED_TO_UPDATE_COLLECTION_NAME,
-  COLLECTION_NAME_UPDATED,
-} from "../../../constants/messages";
-import RenameModal from '../../common/modals/rename-modal'
 import update from "immutability-helper";
-
-import AssetImg from "../asset/asset-img";
+import {
+  COLLECTION_NAME_UPDATED,
+  FAILED_TO_UPDATE_COLLECTION_NAME,
+} from "../../../constants/messages";
+import toastUtils from "../../../utils/toast";
+import RenameModal from "../../common/modals/rename-modal";
 
 const FolderListItem = ({
   index,
@@ -62,8 +52,8 @@ const FolderListItem = ({
   isNameEditable = false,
   focusedItem,
   setFocusedItem,
-  isShare=false,
-  sharePath = ""
+  isShare = false,
+  sharePath = "",
 }) => {
   const { updateDownloadingStatus, folders, setFolders } =
     useContext(AssetContext);
@@ -76,26 +66,23 @@ const FolderListItem = ({
 
   const [folderRenameModalOpen, setFolderRenameModalOpen] = useState(false);
 
-  const initialPreviewImgSrc = thumbnailPath
-    ??  (thumbnails?.thumbnails && thumbnails?.thumbnails?.length > 0
-    ? thumbnails?.thumbnails[0].filePath
-    : assets[0]?.realUrl);
+  const initialPreviewImgSrc =
+    thumbnailPath ??
+    (thumbnails?.thumbnails && thumbnails?.thumbnails?.length > 0
+      ? thumbnails?.thumbnails[0].filePath
+      : assets[0]?.realUrl);
 
-  const [previewImgSrc, setPreviewImgSrc] = useState(initialPreviewImgSrc)
+  const [previewImgSrc, setPreviewImgSrc] = useState(initialPreviewImgSrc);
 
   const handleImagePreviewOnError = (e) => {
-   setPreviewImgSrc(Assets.empty)
-  }
-    
+    setPreviewImgSrc(Assets.empty);
+  };
+
   useEffect(() => {
     setCollectionName(name);
   }, [name]);
 
   const downloadFoldercontents = async () => {
-    // const { data } = await folderApi.getInfoToDownloadFolder(id)
-    // // Get full assets url, because currently, it just get maximum 4 real url in thumbnail
-    // zipDownloadUtils.zipAndDownload(data, name)
-
     // Show processing bar
     updateDownloadingStatus("zipping", 0, 1);
 
@@ -118,7 +105,7 @@ const FolderListItem = ({
     }
 
     const { data } = await api.downloadFoldersAsZip(payload, filters);
-    
+
     // Download file to storage
     fileDownload(data, "assets.zip");
 
@@ -202,7 +189,6 @@ const FolderListItem = ({
     }
   };
 
-
   return (
     <>
       <div className={styles.list}>
@@ -250,7 +236,11 @@ const FolderListItem = ({
             className={`${styles.thumbnail} cursor: pointer`}
             onClick={viewFolder}
           >
-           <img src={previewImgSrc ?? Assets.empty} alt="" onError={handleImagePreviewOnError} />
+            <img
+              src={previewImgSrc ?? Assets.empty}
+              alt=""
+              onError={handleImagePreviewOnError}
+            />
           </div>
 
           <div
@@ -274,12 +264,21 @@ const FolderListItem = ({
                 className={`normal-text ${styles.textEllipse} ${gridStyles["editable-preview"]}`}
                 onClick={handleOnFocus}
               >
-                 {collectionName}
+                {collectionName}
               </span>
             )}
           </div>
           <div className={`${styles.field_name} ${styles.actions}`}>
-            <img id="edit-icon" className={styles.edit} src={AssetOps.editGray} alt="edit" onClick={(e) => {e.stopPropagation(); setFolderRenameModalOpen(true)}} />
+            <img
+              id="edit-icon"
+              className={styles.edit}
+              src={AssetOps.editGray}
+              alt="edit"
+              onClick={(e) => {
+                e.stopPropagation();
+                setFolderRenameModalOpen(true);
+              }}
+            />
             {!isLoading && (
               <div>
                 <FolderOptions
@@ -298,9 +297,7 @@ const FolderListItem = ({
               </div>
             )}
           </div>
-          <div
-            className={styles.field_name}
-          >
+          <div className={styles.field_name}>
             {!isLoading && `${assetsCount} Assets`}
           </div>
           <div
@@ -327,12 +324,9 @@ const FolderListItem = ({
         modalIsOpen={folderRenameModalOpen}
         renameConfirm={confirmFolderRename}
         type={"Folder"}
-        initialValue={
-          name
-        }
+        initialValue={name}
       />
     </>
-    
   );
 };
 

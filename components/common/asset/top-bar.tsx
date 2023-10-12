@@ -1,16 +1,15 @@
-import styles from "./top-bar.module.css";
-import React, { useContext, useState, useRef, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
+import { isMobile } from "react-device-detect";
 import { Utilities } from "../../../assets";
 import selectOptions from "../../../utils/select-options";
-import { isMobile } from "react-device-detect";
+import styles from "./top-bar.module.css";
 
 // Components
-import SectionButton from "../buttons/section-button";
-import Select from "../inputs/select";
+import AssetAddition from "../../common/asset/asset-addition";
 import Button from "../buttons/button";
 import IconClickable from "../buttons/icon-clickable";
-import AssetAddition from "../../common/asset/asset-addition";
 import Dropdown from "../inputs/dropdown";
+import Select from "../inputs/select";
 import SubHeader from "../layouts/sub-header";
 import Breadcrumbs from "../misc/breadcrumbs";
 
@@ -18,8 +17,8 @@ import Breadcrumbs from "../misc/breadcrumbs";
 import { AssetContext, UserContext } from "../../../context";
 
 import {
-  ASSET_UPLOAD_NO_APPROVAL,
   ASSET_UPLOAD_APPROVAL,
+  ASSET_UPLOAD_NO_APPROVAL,
 } from "../../../constants/permissions";
 import SearchOverlay from "../../main/search-overlay-assets";
 
@@ -193,14 +192,18 @@ const TopBar = ({
                           (view) => activeSortFilter.mainFilter === view.name
                         )
                         .map((view) => (
-                          <SectionButton
-                            keyProp={view.name}
+                          <Button
+                            key={view.name}
                             text={
                               activeFolder && mode === "assets"
                                 ? folderData[0].name
                                 : view.text
                             }
-                            active={activeSortFilter.mainFilter === view.name}
+                            className={
+                              activeSortFilter.mainFilter === view.name
+                                ? "section-container section-active"
+                                : "section-container"
+                            }
                             onClick={() =>
                               setSortFilterValue("mainFilter", view.name)
                             }
@@ -233,10 +236,14 @@ const TopBar = ({
                           (view.requirePermissions.length === 0 ||
                             (view.requirePermissions.length > 0 &&
                               hasPermission(view.requirePermissions))) && (
-                            <SectionButton
-                              keyProp={view.name}
+                            <Button
+                              key={view.name}
                               text={view.text}
-                              active={activeSortFilter.mainFilter === view.name}
+                              className={
+                                activeSortFilter.mainFilter === view.name
+                                  ? "section-container section-active"
+                                  : "section-container"
+                              }
                               onClick={() =>
                                 setSortFilterValue("mainFilter", view.name)
                               }
@@ -272,14 +279,13 @@ const TopBar = ({
               ])) ? "m-r-20": "" }`}
             />
           )}
-          {activeSearchOverlay && !(isShare && isFolder) &&(
+          {activeSearchOverlay && !(isShare && isFolder) && (
             <SearchOverlay
               closeOverlay={closeSearchOverlay}
               operationsEnabled={true}
               activeFolder={activeFolder}
               onCloseDetailOverlay={(assetData) => {
                 closeSearchOverlay();
-                // setActiveSearchOverlay(false)
                 setDetailOverlayId(undefined);
                 setCurrentViewAsset(assetData);
               }}
@@ -293,12 +299,12 @@ const TopBar = ({
               ASSET_UPLOAD_NO_APPROVAL,
               ASSET_UPLOAD_APPROVAL,
             ]) && (
-
-              <div  className={styles.mobilePlus}>
-              <AssetAddition
-              activeFolder={activeFolder}
-              getFolders={getFolders}
-            /></div>
+              <div className={styles.mobilePlus}>
+                <AssetAddition
+                  activeFolder={activeFolder}
+                  getFolders={getFolders}
+                />
+              </div>
             )}
           <div className={styles.gridOuter}>
             {!deletedAssets && (
@@ -362,7 +368,7 @@ const TopBar = ({
           <Button
             type="button"
             text="Select All"
-            styleType="secondary"
+            className="container secondary"
             onClick={selectAll}
           />
           {!deletedAssets && !isMobile && (
@@ -370,7 +376,7 @@ const TopBar = ({
               <Button
                 text="Filters"
                 type="button"
-                styleType="secondary"
+                className="container secondary"
                 onClick={() => {
                   handleOpenFilter();
                 }}

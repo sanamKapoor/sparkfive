@@ -10,7 +10,7 @@
   gap: 10px;
 }
 
-.listBadge  {
+.listBadge {
   display: flex;
   justify-content: center;
   gap: 10px;
@@ -111,15 +111,14 @@
 }
 
 .thumbnail {
-  /* overflow: hidden; */
   margin: 0 10px 0 0;
   position: relative;
   max-height: 50px;
   width: 50px;
 }
 
-.thumbnail > img,
-.thumbnail > video {
+.thumbnail>img,
+.thumbnail>video {
   width: 50px;
   height: 50px;
   object-fit: contain;
@@ -162,7 +161,7 @@
   height: auto;
 }
 
-.info > div:last-child {
+.info>div:last-child {
   margin-left: 2rem;
 }
 
@@ -183,31 +182,37 @@
     flex-wrap: wrap;
   }
 
-  .info > * {
+  .info>* {
     margin-bottom: 10px;
   }
 }
 
 @media screen and (max-width: 810px) {
+
   .headers-content,
   .item {
     gap: 10px;
   }
+
   .item {
     margin-bottom: 10px;
   }
+
   .extension,
   h4.extension {
     display: none;
   }
+
   .dimension,
   h4.dimension {
     display: none;
   }
+
   .photo {
     width: 40%;
     min-width: 40%;
   }
+
   .photo-name {
     width: 40%;
   }
@@ -220,9 +225,11 @@
   .headers-content h4 {
     width: 12%;
   }
+
   .field_name {
     width: 12%;
   }
+
   .actions {
     gap: 12px;
   }
@@ -232,14 +239,17 @@
   .header {
     display: none;
   }
+
   .size,
   h4.size {
     display: none;
   }
+
   .date-created,
   h4.date-created {
     display: none;
   }
+
   .date-modified,
   h4.date-modified {
     display: none;

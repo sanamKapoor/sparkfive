@@ -18,10 +18,9 @@
   background: white;
   margin: 0.7rem 1rem;
   width: 300px;
-  /* margin: 0.5rem 1rem; */
 }
 
-.Toastify{
+.Toastify {
   z-index: 99999;
   position: relative;
 }
@@ -31,7 +30,7 @@
   align-items: center;
 }
 
-.Toastify .custom-toast-container > div {
+.Toastify .custom-toast-container>div {
   margin-left: 10px;
 }
 

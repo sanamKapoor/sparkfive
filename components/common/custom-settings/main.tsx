@@ -1,46 +1,19 @@
-import styles from './main.module.css'
-import {useContext, useState} from 'react'
+import { useContext } from "react";
+import { tabsData } from "../../../config/data/custom-settings";
+import { SUPERADMIN_ACCESS } from "../../../constants/permissions";
+import { UserContext } from "../../../context";
+import SwitchableTabs from "../switchable-tabs";
 
-// Components
-import SectionButton from '../../common/buttons/section-button'
-import CustomFileSizes from "./custom-file-size"
-import SizeSaPresets from "./size-sa-presets"
-import { UserContext } from '../../../context'
+const Main: React.FC = () => {
+  const { hasPermission } = useContext(UserContext);
 
-import {
-    SUPERADMIN_ACCESS
-} from '../../../constants/permissions'
-import AdvancedOptions from './advanced-options'
+  const isSuperAdmin = hasPermission([SUPERADMIN_ACCESS]);
+  return (
+    <SwitchableTabs
+      initialActiveTab={isSuperAdmin ? "sizeSaPresets" : "customViews"}
+      data={tabsData}
+    />
+  );
+};
 
-const Main = () => {
-    const { hasPermission } = useContext(UserContext)
-    const [activeList, setActiveList] = useState('advancedOptions')
-
-    return (
-        <>
-            <div className={styles.buttons}>
-                <SectionButton
-                    text='Advanced Options'
-                    active={activeList === 'advancedOptions'}
-                    onClick={() => setActiveList('advancedOptions')}
-                />
-                <SectionButton
-                    text='Custom File Sizes'
-                    active={activeList === 'customFileSizes'}
-                    onClick={() => setActiveList('customFileSizes')}
-                />
-                {hasPermission([SUPERADMIN_ACCESS]) && <SectionButton
-                    text='Size SA Presets'
-                    active={activeList === 'sizeSaPresets'}
-                    onClick={() => setActiveList('sizeSaPresets')}
-                />}
-            </div>
-
-            {activeList === 'advancedOptions' && <AdvancedOptions />}
-            {activeList === 'customFileSizes' && <CustomFileSizes />}
-            {activeList === 'sizeSaPresets' && hasPermission([SUPERADMIN_ACCESS]) && <SizeSaPresets />}
-        </>
-    )
-}
-
-export default Main
+export default Main;

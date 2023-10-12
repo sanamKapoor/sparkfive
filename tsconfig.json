@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
@@ -19,12 +15,11 @@
     "isolatedModules": true,
     "jsx": "preserve"
   },
-  "exclude": [
-    "node_modules"
-  ],
+  "exclude": ["node_modules", "components"],
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "components/signup/signup-form.jsx"
-, "components/main/user-settings/super-admin/user-list-header/index.tsx"  ]
+    "components/signup/signup-form.jsx",
+    "components/main/user-settings/super-admin/user-list-header/index.tsx"
+  ]
 }

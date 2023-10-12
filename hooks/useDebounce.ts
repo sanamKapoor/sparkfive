@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export const useDebounce = (value: string, delay: number): string => {
   // State and setters for debounced value
@@ -18,7 +18,7 @@ export const useDebounce = (value: string, delay: number): string => {
         clearTimeout(handler);
       };
     },
-    [value, delay], // Only re-call effect if value or delay changes
+    [value, delay] // Only re-call effect if value or delay changes
   );
 
   return debouncedValue;

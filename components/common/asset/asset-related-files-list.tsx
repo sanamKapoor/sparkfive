@@ -1,20 +1,20 @@
+import { format } from 'date-fns'
+import fileSize from 'filesize'
+import update from 'immutability-helper'
+import fileDownload from "js-file-download"
 import { useContext, useEffect, useState } from 'react'
 import { AssetOps, Utilities } from '../../../assets'
+import { AssetContext, LoadingContext } from '../../../context'
+import assetApi from "../../../server-api/asset"
+import downloadUtils from "../../../utils/download"
+import toastUtils from '../../../utils/toast'
 import IconClickable from '../buttons/icon-clickable'
 import Dropdown from '../inputs/dropdown'
 import ToggleableAbsoluteWrapper from '../misc/toggleable-absolute-wrapper'
 import ConfirmModal from '../modals/confirm-modal'
-import styles from './asset-related-files-list.module.css'
-import { format } from 'date-fns'
-import fileSize from 'filesize'
 import AssetIcon from './asset-icon'
-import { AssetContext, LoadingContext } from '../../../context'
-import assetApi from "../../../server-api/asset"
-import fileDownload from "js-file-download";
-import downloadUtils from "../../../utils/download"
-import update from 'immutability-helper';
-import toastUtils from '../../../utils/toast'
 import AssetRelatedAddition from './asset-related-addition'
+import styles from './asset-related-files-list.module.css'
 
 const AssetRelatedFilesList = ({currentAsset, relatedAssets, associateFileId, onChangeRelatedFiles, onAddRelatedFiles}) => {
     const {activeOperation, setActiveOperation, updateDownloadingStatus, setOperationAssets} = useContext(AssetContext);

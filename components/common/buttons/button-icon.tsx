@@ -1,19 +1,30 @@
-import styles from './button-icon.module.css';
+import { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
+import styles from "./button-icon.module.css";
 
-const ButtonIcon = ({
+interface ButtonIconProps
+  extends DetailedHTMLProps<
+    ButtonHTMLAttributes<HTMLButtonElement>,
+    HTMLButtonElement
+  > {
+  text: string;
+  icon: string;
+  isGray?: boolean;
+  additionalClass?: string;
+}
+
+const ButtonIcon: React.FC<ButtonIconProps> = ({
   text,
   disabled = false,
   icon,
   onClick,
-  buttonType = 'submit',
   isGray = false,
+  additionalClass = '',
 }) => {
   return (
     <button
-      className={`${!isGray ? styles.container : styles['container-gray']}`}
+      className={`${!isGray ? styles.container : styles["container-gray"]} ${additionalClass}`}
       disabled={disabled}
       onClick={onClick}
-      // type='button'
     >
       <span className={styles.icon}>
         <img src={icon} />
