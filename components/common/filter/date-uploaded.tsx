@@ -6,23 +6,28 @@ import DayPickerInput from "react-day-picker/DayPickerInput";
 import { ItemFields } from "../../../assets";
 import styles from "./date-uploaded.module.css";
 
-// Components
+interface DateUploadedProps {
+  startDate: Date;
+  endDate: Date;
+  setStartDate: (val: Date) => void;
+  setEndDate: (val: Date) => void;
+}
 
-const DateUploaded = ({
-  handleBeginDate,
-  handleEndDate,
-  beginDate,
+const DateUploaded: React.FC<DateUploadedProps> = ({
+  startDate,
   endDate,
+  setStartDate,
+  setEndDate,
 }) => {
   const [activeInput, setActiveInput] = useState("");
 
   const handleStartDay = (value) => {
     toggleActiveInput("startDate");
-    handleBeginDate(value);
+    setStartDate(value);
   };
   const handleEndDay = (value) => {
     toggleActiveInput("endDate");
-    handleEndDate(value);
+    setEndDate(value);
   };
 
   const toggleActiveInput = (input) => {
@@ -49,7 +54,7 @@ const DateUploaded = ({
       <div className={styles["dates-container"]}>
         <div>
           <DayPickerInput
-            value={beginDate}
+            value={startDate}
             formatDate={formatDate}
             format={FORMAT}
             parseDate={parseDate}
@@ -78,7 +83,7 @@ const DateUploaded = ({
             dayPickerProps={{
               className: styles.calendar,
               disabledDays: {
-                before: beginDate,
+                before: startDate,
               },
             }}
           />

@@ -1,21 +1,25 @@
-import React from 'react'
-import styles from "./option-data-item.module.css"
-import IconClickable from '../buttons/icon-clickable'
-import { Utilities } from '../../../assets'
+import React from "react";
+import { Utilities } from "../../../assets";
+import IconClickable from "../buttons/icon-clickable";
+import styles from "./option-data-item.module.css";
 
-const OptionDataItem = () => {
-  return (
-    <div  className={`${styles['tags-wrapper']}`}>
-                <div  className={`${styles['tags-left-side']}`}>
-                <IconClickable src={Utilities.radioButtonNormal} />
-                <span>name</span>
-                </div>
-             <div>
-                <span>12</span>
-                </div>
-                
-             </div>
-  )
+interface OptionDataItemProps {
+  name: string | number;
+  count: string;
 }
 
-export default OptionDataItem
+const OptionDataItem: React.FC<OptionDataItemProps> = ({ name, count }) => {
+  return (
+    <div className={`${styles["tags-wrapper"]}`}>
+      <div className={`${styles["tags-left-side"]}`}>
+        <IconClickable src={Utilities.radioButtonNormal} />
+        <span>{name}</span>
+      </div>
+      <div>
+        <span>{count}</span>
+      </div>
+    </div>
+  );
+};
+
+export default OptionDataItem;

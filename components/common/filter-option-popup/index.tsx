@@ -1,64 +1,102 @@
 //🚧 work in progress 🚧
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { Utilities } from "../../../assets";
 
-import IconClickable from "../buttons/icon-clickable";
-import styles from "./index.module.css"
-import search from "../../common/attributes/search-input";
+import {
+  IFilterAttributeValues,
+  IFilterPopupContentType,
+} from "../../../interfaces/filters";
 import Search from "../../common/inputs/search";
-import OptionData from "./options-data";
 import Button from "../buttons/button";
-import Select from "../inputs/select";
-import { sorts } from "../../../config/data/attributes";
+import DimensionsFilter from "../filter-view/dimension-filter";
+import DateUploaded from "../filter/date-uploaded";
+import ProductFilter from "../filter/product-filter";
+import ResolutionFilter from "../filter/resolution-filter";
 import Divider from "./divider";
+import styles from "./index.module.css";
+import OptionData from "./options-data";
 import SelectOption from "./select-option";
 
+interface FilterOptionPopupProps {
+  contentType: IFilterPopupContentType;
+  options: IFilterAttributeValues;
+  setShowAttrValues: (val: boolean) => void;
+  activeAttribute: string;
+}
 
-const FilterOptionPopup = () => {
- 
+const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
+  options,
+  contentType,
+  setShowAttrValues,
+  activeAttribute,
+}) => {
+  const [lastUpdatedStartDate, setLastUpdatedStartDate] = useState<Date>(
+    new Date()
+  );
+  const [lastUpdatedEndDate, setLastUpdatedEndDate] = useState<Date>(
+    new Date()
+  );
+
+  const [dateUploadedStartDate, setDateUploadedStartDate] = useState<Date>(
+    new Date()
+  );
+  const [dateUploadedEndDate, setDateUploadedEndDate] = useState<Date>(
+    new Date()
+  );
   return (
     <>
-    <div className={`${styles['outer-wrapper']}`}>
-      <div className={`${styles['popup-header']}`}>
-      <span className={`${styles['main-heading']}`} > Select Tag</span>
-      <div className={styles.buttons}>
-          <button  className={styles.clear}>clear</button>
-          <img  src={Utilities.closeIcon} />
+      <div className={`${styles["outer-wrapper"]}`}>
+        <div className={`${styles["popup-header"]}`}>
+          <span className={`${styles["main-heading"]}`}>
+            Select {activeAttribute}
+          </span>
+          <div className={styles.buttons}>
+            <button className={styles.clear}>clear</button>
+            <img
+              src={Utilities.closeIcon}
+              onClick={() => setShowAttrValues(false)}
+            />
+          </div>
         </div>
-    </div>
-    <div  className={`${styles['search-btn']}`}>
-    <Search/>
-  </div>
- 
-     
-     
-
-      {/* <input value="" placeholder="Search Tags...." />
-          {values.map((value) => {
-            return (
-              <>
-                <IconClickable src={Utilities.radioButtonNormal} />
-                <span>{value.name}</span>
-                <span>{value.count}</span>
-                <></>
-              </>
-            );
-          })} */}
-        <OptionData/>
-        <div className={`${styles['rule-tag']}`}>
-      <label>Rule:</label>
-     <SelectOption/> 
+        <div className={`${styles["search-btn"]}`}>
+          <Search />
         </div>
-        <Divider/>
-        <div className={`${styles['Modal-btn']}`}>
-        <Button className={"apply"}  text={"Apply"} />
-        <Button className={"cancel"} text={"Cancel"}></Button>
+        {/* TODO: move this into a separate Content Component */}
+        {contentType === "list" && <OptionData data={options} />}
+        {contentType === "dimensions" && <DimensionsFilter limits={options} />}
+        {contentType === "resolutions" && <ResolutionFilter data={options} />}
+        {contentType === "lastUpdated" && (
+          <DateUploaded
+            startDate={lastUpdatedStartDate}
+            endDate={lastUpdatedEndDate}
+            setStartDate={setLastUpdatedStartDate}
+            setEndDate={setLastUpdatedEndDate}
+          />
+        )}
+        {contentType === "dateUploaded" && (
+          <DateUploaded
+            startDate={dateUploadedStartDate}
+            endDate={dateUploadedEndDate}
+            setStartDate={setDateUploadedStartDate}
+            setEndDate={setDateUploadedEndDate}
+          />
+        )}
+        {contentType === "products" && (
+          <ProductFilter productFilters={options} />
+        )}
+        <div className={`${styles["rule-tag"]}`}>
+          <label>Rule:</label>
+          <SelectOption />
+        </div>
+        <Divider />
+        <div className={`${styles["Modal-btn"]}`}>
+          <Button className={"apply"} text={"Apply"} />
+          <Button className={"cancel"} text={"Cancel"}></Button>
+        </div>
       </div>
-    </div>
-   
-     </>
+    </>
   );
 };
 
-export default FilterOptionPopup ;
+export default FilterOptionPopup;
