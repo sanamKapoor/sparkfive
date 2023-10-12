@@ -57,38 +57,7 @@ interface Item {
 }
 // Server DO NOT return full custom field slots including empty array, so we will generate empty array here
 // The order of result should be match with order of custom field list
-const data = [
-  {
-    folderName: "Architecture",
-    subfolders: [
-      {
-        name: "City",
-      },
-      {
-        name: "Renaissance",
-      },
-      {
-        name: "Interior",
-      },
-      {
-        name: "House",
-      },
-    ],
-  },
-  {
-    folderName: "Portraits",
-    subfolders: [],
-  },
-  {
-    folderName: "Nature",
-    subfolders: [],
-  },
-  {
-    folderName: "Events",
-    subfolders: [],
-  },
-];
-const tagData = ["Data1", "Data2", "Data3", "Data1",];
+
 
 const mappingCustomFieldData = (list, valueList) => {
   let rs = [];
@@ -158,8 +127,6 @@ const SidePanelBulk = ({
   const {
     folders,
     selectedFolder,
-    newFolderName,
-    folderInputActive,
     subFolderLoadingState,
     folderChildList,
     showDropdown,
@@ -172,13 +139,12 @@ const SidePanelBulk = ({
     toggleSelected,
     toggleDropdown,
     toggleSelectAllChildList,
-    setNewFolderName,
-    setFolderInputActive,
     setSelectedFolder,
     setShowDropdown,
     setSubFolderLoadingState,
     setFolderChildList,
     setSelectAllFolders,
+    selectedFolderCompleteObject
   } = useMoveModal();
 
   const keyExists = (key: string) => {
@@ -219,7 +185,7 @@ const SidePanelBulk = ({
     try {
       const projectsResponse = await projectApi.getProjects();
       const campaignsResponse = await campaignApi.getCampaigns();
-      const folderResponse = await folderApi.getFoldersSimple();
+      // const folderResponse = await folderApi.getFoldersSimple();
       const tagsResponse = await tagApi.getTags();
       const customFieldsResponse = await attributeApi.getCustomFields({
         isAll: 1,
@@ -228,7 +194,7 @@ const SidePanelBulk = ({
 
       setInputProjects(projectsResponse.data);
       setInputCampaigns(campaignsResponse.data);
-      setInputFolders(folderResponse.data);
+      // setInputFolders(folderResponse.data);
       setInputTags(tagsResponse.data);
       setInputCustomFields(customFieldsResponse.data);
     } catch (err) {
@@ -359,7 +325,7 @@ const SidePanelBulk = ({
   const addProductBlock = () => {
     setAssetProducts([...assetProducts, null]);
   };
-
+  console.log(selectedFolderCompleteObject, selectAllFolders, selectedFolder, "selectedFolderCompleteObject")
   return (
     <div className={styles.container}>
       <div className={styles.innerContainer}>
@@ -371,27 +337,6 @@ const SidePanelBulk = ({
           <p>{`Editing (${elementsSelected.length}) files`}</p>
         </section>
         <section className={styles["field-wrapper"]}>
-          {/* <CreatableSelect
-            title="Collections"
-            addText="Add to Collection"
-            onAddClick={() => setActiveDropdown("collections")}
-            selectPlaceholder={
-              "Enter a new collection or select an existing one"
-            }
-            avilableItems={inputFolders}
-            setAvailableItems={setInputFolders}
-            selectedItems={assetFolders}
-            setSelectedItems={setFolders}
-            onAddOperationFinished={() => setActiveDropdown("")}
-            onRemoveOperationFinished={() => null}
-            onOperationFailedSkipped={() => setActiveDropdown("")}
-            asyncCreateFn={() => null}
-            dropdownIsActive={activeDropdown === "collections"}
-            altColor="yellow"
-            isShare={false}
-            isBulkEdit={true}
-            canAdd={addMode}
-          /> */}
           {(activeDropdown === "" || activeDropdown !== "collections") && (
             <div
               className={`add ${styles["select-add"]}`}
@@ -401,17 +346,18 @@ const SidePanelBulk = ({
               <span>{"Add to Collection"}</span>
             </div>
           )}
-          {/* {<div className={`${styles["tag-container-wrapper"]}`}>
-            {tagData.map((dataItem, index) => (
+          {<div className={`${styles["tag-container-wrapper"]}`}>
+            {Array.from([...selectedFolderCompleteObject.entries()]).map(([key, value], index) => (
               <div className={`${styles["tag-container"]}`} key={index}>
-                <span>{dataItem}</span>
+                <span>{value.name}</span>
                 <IconClickable
                   additionalClass={styles.remove}
                   src={Utilities.closeTag}
+                  onClick={() => toggleSelected(key, !selectedFolder.includes(key), false, "", value.name)}
                 />
               </div>
             ))}
-          </div>} */}
+          </div>}
           {activeDropdown === "collections" &&
             <div className={`${styles["edit-bulk-outer-wrapper"]}`}>
               <div className={`${styles["search-btn"]}`}>
@@ -448,7 +394,7 @@ const SidePanelBulk = ({
                                 styles.checked
                                 : ""
                                 }`}
-                              onClick={() => toggleSelected(folder.id, !selectedFolder.includes(folder.id))}
+                              onClick={() => toggleSelected(folder.id, !selectedFolder.includes(folder.id), false, "", folder.name)}
                             >
                               {
                                 selectedFolder.includes(folder.id) &&
@@ -463,13 +409,13 @@ const SidePanelBulk = ({
                             <div className={styles["list1-right-contents"]}>
                               {
                                 selectAllFolders[folder.id] ?
-                                  <div style={{ cursor: "pointer" }} onClick={() => toggleSelectAllChildList(folder.id)} className={`${styles['deselect-all']}`}>
+                                  <div style={{ cursor: "pointer" }} onClick={() => toggleSelectAllChildList(folder.id, folder.name)} className={`${styles['deselect-all']}`}>
                                     <img
                                       src={Utilities.redCheck} alt="Check Icon" />
                                     <span className={styles.deselectText}>Deselect All</span>
                                   </div>
                                   :
-                                  <div style={{ cursor: "pointer" }} onClick={() => toggleSelectAllChildList(folder.id)} className={`${styles['select-all']}`}>
+                                  <div style={{ cursor: "pointer" }} onClick={() => toggleSelectAllChildList(folder.id, folder.name)} className={`${styles['select-all']}`}>
                                     <img src={Utilities.doubleCheck} alt="Check Icon" />
                                     <span className={styles.selectText}>Select All</span>
                                   </div>
@@ -482,25 +428,25 @@ const SidePanelBulk = ({
                     {showDropdown.includes(folder.id) && <div className={styles.folder}>
                       <div className={styles.subfolderList}>
                         {
-                          keyExists(folder.id) && (keyResultsFetch(folder.id, "record") as Item[]).map((subfolder, subIndex) => (
+                          keyExists(folder.id) && (keyResultsFetch(folder.id, "record") as Item[]).map(({ id, name, parentId, ...rest }) => (
                             <>
                               <div
-                                key={subfolder.id}
+                                key={id}
                                 className={styles.dropdownOptions}
-                                onClick={() => toggleSelected(subfolder.id, !selectedFolder.includes(subfolder.id), true, folder.id)}>
+                                onClick={() => toggleSelected(id, !selectedFolder.includes(id), true, folder.id, name, parentId)}>
                                 <div className={styles["folder-lists"]}>
                                   <div className={styles.dropdownIcons}>
                                     <div
-                                      className={`${styles.circle} ${selectedFolder.includes(subfolder.id) ? styles.checked : ""
+                                      className={`${styles.circle} ${selectedFolder.includes(id) ? styles.checked : ""
                                         }`}>
-                                      {selectedFolder.includes(subfolder.id) && <img src={Utilities.checkIcon} />}
+                                      {selectedFolder.includes(id) && <img src={Utilities.checkIcon} />}
                                     </div>
                                     <div className={styles["icon-descriptions"]}>
-                                      <span>{subfolder.name}</span>
+                                      <span>{name}</span>
                                     </div>
                                   </div>
                                   <div className={styles["list1-right-contents"]}>
-                                    {selectedFolder.includes(subfolder.id) && <span></span>}
+                                    {selectedFolder.includes(id) && <span></span>}
                                   </div>
                                 </div>
                               </div>
