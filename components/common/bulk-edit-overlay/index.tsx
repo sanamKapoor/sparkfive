@@ -42,13 +42,6 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
   const [assetProjects, setAssetProjects] = useState([]);
   const [assetTags, setTags] = useState([]);
   const [assetCampaigns, setCampaigns] = useState([]);
-  const [assetFolders, setFolders] = useState([]);
-  const initialEditAssets = selectedAssets.map((assetItem) => ({
-    ...assetItem,
-    isEditSelected: true,
-  }));
-  const [editAssets, setEditAssets] = useState(initialEditAssets);
-  const [addMode, setAddMode] = useState(true);
   const [originalInputs, setOriginalInputs] = useState({
     campaigns: [],
     projects: [],
@@ -56,6 +49,14 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
     customs: [],
     folders: [],
   });
+
+  const [assetFolders, setFolders] = useState([]);
+  const initialEditAssets = selectedAssets.map((assetItem) => ({
+    ...assetItem,
+    isEditSelected: true,
+  }));
+  const [editAssets, setEditAssets] = useState(initialEditAssets);
+  const [addMode, setAddMode] = useState(true);
 
 
   // Custom fields
@@ -84,7 +85,10 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
     setAssetProjects([]);
     setTags([]);
     setCampaigns([]);
-    setFolders([]);
+    setFolders((prev) => {
+      prev.length = 0;
+      return prev
+    });
 
     // Default custom field values
     const updatedMappingCustomFieldData = mappingCustomFieldData(
@@ -144,6 +148,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
   }, [addMode, originalInputs]);
 
   useEffect(() => {
+    // debugger
     getInitialAttributes();
   }, [editAssets]);
 
@@ -159,12 +164,14 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
       const {
         data: { tags, projects, campaigns, customs, folders },
       } = await assetApi.getBulkProperties({ assetIds });
-      setOriginalInputs({
-        campaigns,
-        projects,
-        tags,
-        customs,
-        folders,
+      setOriginalInputs((prev) => {
+        // debugger
+        prev.campaigns = campaigns;
+        prev.projects = projects;
+        prev.tags = tags;
+        prev.customs = customs;
+        prev.folders = folders;
+        return prev
       });
     } catch (err) {
       // TODO: Maybe show error?
@@ -195,7 +202,6 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
     setEditAssets(
       editAssets.map((assetItem) => ({ ...assetItem, isEditSelected: true }))
     );
-
     initialize();
   };
 
@@ -251,7 +257,12 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
           </div>
           <div className={styles.mode}>
             <p>Mode: </p>
-            <div className={styles.option} onClick={() => setAddMode(true)}>
+            <div className={styles.option} onClick={() => setAddMode(() => {
+              setFolders(prev => {
+                return []
+              })
+              return true
+            })}>
               <IconClickable
                 src={
                   addMode
@@ -262,7 +273,10 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
               />
               Add
             </div>
-            <div className={styles.option} onClick={() => setAddMode(false)}>
+            <div className={styles.option} onClick={() => setAddMode(() => {
+              setFolders(() => [...originalInputs.folders]);
+              return false
+            })}>
               <IconClickable
                 src={
                   !addMode
@@ -276,7 +290,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
           </div>
         </div>
         <EditGrid assets={editAssets} toggleSelectedEdit={toggleSelectedEdit} />
-      </section>
+      </section >
       {sideOpen && (
         <section className={styles.side}>
           <SidePanelBulk
@@ -306,7 +320,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
           additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"}`}
         />
       </section>
-    </div>
+    </div >
   ) : (
     <BaseModal
       closeModal={handleBackButton}
@@ -334,7 +348,12 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
           </div>
           <div className={styles.mode}>
             <p>Mode: </p>
-            <div className={styles.option} onClick={() => setAddMode(true)}>
+            <div className={styles.option} onClick={() => setAddMode(() => {
+              setFolders(prev => {
+                return []
+              })
+              return true
+            })}>
               <IconClickable
                 src={
                   addMode
@@ -345,7 +364,10 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
               />
               Add
             </div>
-            <div className={styles.option} onClick={() => setAddMode(false)}>
+            <div className={styles.option} onClick={() => setAddMode(() => {
+              setFolders(() => [...originalInputs.folders]);
+              return false
+            })}>
               <IconClickable
                 src={
                   !addMode
