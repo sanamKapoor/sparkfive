@@ -336,16 +336,7 @@ const SidePanelBulk = ({
           <p>{`Editing (${elementsSelected.length}) files`}</p>
         </section>
         <section className={styles["field-wrapper"]}>
-          {(activeDropdown === "" || activeDropdown !== "collections") && (
-            <div
-              className={`add ${styles["select-add"]}`}
-              onClick={() => setActiveDropdown("collections")}
-            >
-              <IconClickable src={Utilities.addLight} />
-              <span>{"Add to Collection"}</span>
-            </div>
-          )}
-          {<div className={`${styles["tag-container-wrapper"]}`}>
+           {<div className={`${styles["tag-container-wrapper"]}`}>
             {
               Array.from([...selectedFolderCompleteObject.entries()]).map(([key, value], index) => (
                 <div className={`${styles["tag-container"]}`} key={index}>
@@ -360,10 +351,26 @@ const SidePanelBulk = ({
             }
 
           </div>}
-          <p className={`${styles["show-all"]}`}> Show all 11</p>
+          {(activeDropdown === "" || activeDropdown !== "collections") && (
+            <div
+              className={`add ${styles["select-add"]}`}
+              onClick={() => setActiveDropdown("collections")}
+            >
+              <IconClickable src={Utilities.addLight} />
+              <span>{"Add to Collection"}</span>
+            </div>
+          )}
+         
+       
           {
             activeDropdown === "collections" &&
             <div className={`${styles["edit-bulk-outer-wrapper"]}`}>
+              <div className= {`${styles["close-popup"]}`}> <IconClickable
+                    additionalClass={styles.remove}
+                    src={Utilities.closeTag}
+                    onClick={() => toggleSelected(key, !selectedFolder.includes(key), false, "", value.name)}
+                  /></div>
+              
               <div className={`${styles["search-btn"]}`}>
                 <SearchModal filteredData={filteredData} input={input} setInput={setInput} />
               </div>
