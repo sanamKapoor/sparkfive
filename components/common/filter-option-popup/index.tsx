@@ -4,10 +4,11 @@ import React, { useState } from "react";
 import { Utilities } from "../../../assets";
 
 import {
+  IAttribute,
   IFilterAttributeValues,
   IFilterPopupContentType,
 } from "../../../interfaces/filters";
-import Search from "../../common/inputs/search";
+import Search from "../../main/user-settings/SuperAdmin/Search/Search";
 import Button from "../buttons/button";
 import DimensionsFilter from "../filter-view/dimension-filter";
 import DateUploaded from "../filter/date-uploaded";
@@ -16,21 +17,28 @@ import ResolutionFilter from "../filter/resolution-filter";
 import Divider from "./divider";
 import styles from "./index.module.css";
 import OptionData from "./options-data";
-import SelectOption from "./select-option";
+
+import Dropdown from "../../common/inputs/dropdown";
+
+import IconClickable from "../buttons/icon-clickable";
+import Spinner from "../spinners/spinner";
 
 interface FilterOptionPopupProps {
   contentType: IFilterPopupContentType;
   options: IFilterAttributeValues;
-  setShowAttrValues: (val: boolean) => void;
-  activeAttribute: string;
+  activeAttribute: IAttribute;
+  setActiveAttribute: (val: IAttribute | null) => void;
+  loading: boolean;
 }
 
 const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   options,
   contentType,
-  setShowAttrValues,
   activeAttribute,
+  setActiveAttribute,
+  loading,
 }) => {
+  console.log("activeAttribute inside FilterOptionPopup: ", activeAttribute);
   const [lastUpdatedStartDate, setLastUpdatedStartDate] = useState<Date>(
     new Date()
   );
@@ -44,50 +52,95 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   const [dateUploadedEndDate, setDateUploadedEndDate] = useState<Date>(
     new Date()
   );
+
+  const [showDropdown, setShowdropdown] = useState<boolean>(false);
   return (
     <>
       <div className={`${styles["outer-wrapper"]}`}>
         <div className={`${styles["popup-header"]}`}>
           <span className={`${styles["main-heading"]}`}>
-            Select {activeAttribute}
+            Select {activeAttribute?.name}
           </span>
           <div className={styles.buttons}>
             <button className={styles.clear}>clear</button>
             <img
               src={Utilities.closeIcon}
-              onClick={() => setShowAttrValues(false)}
+              onClick={() => setActiveAttribute(null)}
             />
           </div>
         </div>
         <div className={`${styles["search-btn"]}`}>
-          <Search />
+          {/* TODO: */}
+          <Search placeholder="Some Placeholder" onSubmit={() => {}} />
         </div>
-        {/* TODO: move this into a separate Content Component */}
-        {contentType === "list" && <OptionData data={options} />}
-        {contentType === "dimensions" && <DimensionsFilter limits={options} />}
-        {contentType === "resolutions" && <ResolutionFilter data={options} />}
-        {contentType === "lastUpdated" && (
-          <DateUploaded
-            startDate={lastUpdatedStartDate}
-            endDate={lastUpdatedEndDate}
-            setStartDate={setLastUpdatedStartDate}
-            setEndDate={setLastUpdatedEndDate}
-          />
+        {loading ? (
+          <Spinner />
+        ) : (
+          <>
+            {/* TODO: move this into a separate Content Component */}
+            {contentType === "list" && <OptionData data={options} />}
+            {contentType === "dimensions" && (
+              <DimensionsFilter limits={options} />
+            )}
+            {contentType === "resolutions" && (
+              <ResolutionFilter data={options} />
+            )}
+            {contentType === "lastUpdated" && (
+              <DateUploaded
+                startDate={lastUpdatedStartDate}
+                endDate={lastUpdatedEndDate}
+                setStartDate={setLastUpdatedStartDate}
+                setEndDate={setLastUpdatedEndDate}
+              />
+            )}
+            {contentType === "dateUploaded" && (
+              <DateUploaded
+                startDate={dateUploadedStartDate}
+                endDate={dateUploadedEndDate}
+                setStartDate={setDateUploadedStartDate}
+                setEndDate={setDateUploadedEndDate}
+              />
+            )}
+            {contentType === "products" && (
+              <ProductFilter productFilters={options} />
+            )}
+          </>
         )}
-        {contentType === "dateUploaded" && (
-          <DateUploaded
-            startDate={dateUploadedStartDate}
-            endDate={dateUploadedEndDate}
-            setStartDate={setDateUploadedStartDate}
-            setEndDate={setDateUploadedEndDate}
-          />
-        )}
-        {contentType === "products" && (
-          <ProductFilter productFilters={options} />
-        )}
-        <div className={`${styles["rule-tag"]}`}>
-          <label>Rule:</label>
-          <SelectOption />
+
+        <div>
+          <div
+            className={`${styles["rule-tag"]}`}
+            onClick={() => setShowdropdown(!showDropdown)}
+          >
+            <label>Rule:</label>
+            <div>
+              <p>All Selected</p>
+              <IconClickable src={Utilities.arrowDark} />
+            </div>
+          </div>
+          {showDropdown && (
+            <Dropdown
+              additionalClass={styles["view-dropdown"]}
+              onClickOutside={() => {}}
+              options={[
+                {
+                  label: "All selected",
+                  id: "All selected",
+                  onClick: () => {},
+                },
+                {
+                  label: "Any Selected",
+                  id: "Any",
+                  onClick: () => {},
+                },
+                {
+                  label: "No Tags",
+                  id: "None",
+                  onClick: () => {},
+                },
+              ]}
+            />
+          )}
         </div>
         <Divider />
         <div className={`${styles["Modal-btn"]}`}>
