@@ -1,4 +1,6 @@
+import React from "react";
 import styles from "./index.module.css";
+
 
 // Components
 
@@ -15,17 +17,17 @@ const DimensionsFilter: React.FC<DimensionsFilterProps> = ({ limits }) => {
   const { maxHeight, minHeight, maxWidth, minWidth } = limits;
   return (
     <div className={`${styles.container}`}>
-      <div>
-        <p>Width</p>
-        <input value={minWidth} />
-        <p> - </p>
-        <input value={maxWidth} />
+      <p className={styles.heading}>Width</p>
+      <div className={styles.outer}>
+        <input className={styles.inputField} value={minWidth} />
+        <div className={styles.line}></div>
+        <input className={styles.inputField} value={maxWidth} />
       </div>
-      <div>
-        <p>Height</p>
-        <input value={minHeight} />
-        <p> - </p>
-        <input value={maxHeight} />
+      <p className={styles.heading}>Height</p>
+      <div className={styles.outer}>
+        <input className={styles.inputField} value={minHeight} />
+        <div className={styles.line}></div>
+        <input className={styles.inputField} value={maxHeight} />
       </div>
     </div>
   );

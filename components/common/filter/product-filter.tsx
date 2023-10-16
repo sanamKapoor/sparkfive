@@ -12,7 +12,7 @@ const ProductFilter: React.FC<ProductFilterProps> = ({ productFilters }) => {
   return (
     <div className={`${styles.container}`}>
       {productFilters.sku.map((item) => (
-        <div key={item.id}>
+        <div key={item.id}  className={`${styles['outer-wrapper']}`}>
           <IconClickable src={Utilities.radioButtonNormal} />
           <span className={`${styles["select-name"]}`}>{item.sku}</span>
         </div>

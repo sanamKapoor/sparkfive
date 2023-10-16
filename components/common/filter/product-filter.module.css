@@ -1,6 +1,7 @@
 .container h5 {
     font-weight: 400;
     font-size: 13px;
+   
 }
 
 .select-filter {
@@ -12,4 +13,16 @@
     max-width: 20rem;
     margin: 0 auto;
     position: relative;
+}
+
+.container{
+    margin-top:24px;
+
+}
+.outer-wrapper{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 30px;
+
 }

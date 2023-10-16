@@ -13,3 +13,29 @@
     font-size: 13px;
     margin-left: 15px;
 }
+.outer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+.heading{
+    margin:24px 0;
+}
+.inputField{
+    border: 1px solid #DEDAD4;
+    height:40px;
+    max-width: 131px;
+    text-align: center;
+    color:#08135E;
+    font-weight: 400;
+    font-size: 14px;
+
+}
+.line {
+    width: 14px;
+    height: 1px;
+    background-color: 
+    #08135E; 
+    margin: 0 10px; 
+  }

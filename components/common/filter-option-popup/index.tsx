@@ -113,14 +113,14 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
             onClick={() => setShowdropdown(!showDropdown)}
           >
             <label>Rule:</label>
-            <div>
+            <div  className={`${styles["select-wrapper"]}`}>
               <p>All Selected</p>
-              <IconClickable src={Utilities.arrowDark} />
+              <IconClickable   additionalClass={styles["dropdown-icon"]} src={Utilities.arrowDark} />
             </div>
           </div>
           {showDropdown && (
             <Dropdown
-              additionalClass={styles["view-dropdown"]}
+              additionalClass={styles["dropdown-menu"]}
               onClickOutside={() => {}}
               options={[
                 {
