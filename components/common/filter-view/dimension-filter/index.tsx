@@ -29,6 +29,7 @@ const DimensionsFilter: React.FC<DimensionsFilterProps> = ({ limits }) => {
         <div className={styles.line}></div>
         <input className={styles.inputField} value={maxHeight} />
       </div>
+      
     </div>
   );
 };

@@ -81,10 +81,10 @@ const NestedFirstlist = ({ headingClick }: {
           } className={`${styles["list1-description"]} ${activeSortFilter?.mainFilter === item.name ? styles["active"] : ""}`} key={index}>
             <div className={styles["list1-left-contents"]}>
               <div className={styles.icon}>
-                <img src={item.icon} alt={item.description} />
+                <img src={item.icon} alt={item.description}  />
               </div>
               <div className={styles["icon-description"]}>
-                <span>{item.description}</span>
+                <span title={item.toString()} >{item.description}</span>
               </div>
             </div>
             <div className={styles["list1-right-contents"]}>

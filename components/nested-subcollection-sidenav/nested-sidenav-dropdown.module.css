@@ -11,11 +11,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  cursor: help;
 }
-.icon-descriptions:hover {
-  overflow: visible;
-  text-overflow: visible;
-}
+
 .list1-right-contents span {
   font-family: "Noto Sans", sans-serif;
   font-weight: 500;
@@ -40,8 +38,12 @@
   align-items: center;
 }
 .nestedbox {
-  /* padding: 0 24px 0 14px; */
   margin-top: 20px;
+  padding: 0 4px;
+}
+.nestedbox:hover {
+  background: #d5dcef;
+  padding: 0 4x;
 }
 .loadbtn {
   display: block;
@@ -71,6 +73,11 @@
   align-items: center;
   height: 30px;
   margin-top: 6px;
+  padding: 4px;
+}
+.folder-lists:hover {
+  background: var(--color-sec-lightblue);
+  padding: 4px;
 }
 
 .dropdownIcons {
@@ -87,7 +94,6 @@
   width: 11px;
 }
 .dropdownOptions {
-  /* margin-top: 16px; */
   position: relative;
 }
 .dropdownOptions::before {

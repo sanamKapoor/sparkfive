@@ -155,7 +155,7 @@ const CopyModal = ({
       </div>
       <div className={`${styles["outer-wrapper"]}`}>
         {folders.map((folder, index) => (
-          <div key={index}>
+          <div key={index }>
             <div className={`${styles["flex"]} ${styles.nestedbox}`}>
               <div className={`${styles["height"]}`}
                 onClick={() => { toggleDropdown(folder.id, true) }}
@@ -239,11 +239,8 @@ const CopyModal = ({
                             {selectedFolder.includes(subfolder.id) && <span></span>}
                           </div>
                         </div>
-
                       </div>
-
-
-                    </>
+                     </>
                   ))
                 }
                 {(keyExists(folder.id) && (keyResultsFetch(folder.id, "next") as number) >= 0) && <div className={`${styles['outer-load-wrapper']}`}><div className={`${styles['load-wrapper']}`}
@@ -275,9 +272,7 @@ const CopyModal = ({
         ))}
       </div>
 
-
-
-      <div className={styles["folder-wrapper"]}>
+    <div className={styles["folder-wrapper"]}>
         {folderInputActive ? (
           <form onSubmit={onSubmit}>
             <div
@@ -308,10 +303,6 @@ const CopyModal = ({
           </span>
         )}
       </div>
-
-
-
-
     </Base>
   );
 };

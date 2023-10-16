@@ -17,6 +17,8 @@
 
 .container{
     margin-top:24px;
+    max-height: 407px;
+    overflow: auto;
 
 }
 .outer-wrapper{
@@ -26,3 +28,18 @@
     margin-bottom: 30px;
 
 }
+.container::-webkit-scrollbar {
+    width: 3px;
+   
+  }
+  
+  .container::-webkit-scrollbar-thumb {
+    background-color: 
+    #AEB0C2;
+    border-radius: 50px;
+    
+  }
+  .container::-webkit-scrollbar-track {
+    background-color: #f0f0f0;
+    border-radius: 50px;
+  }
