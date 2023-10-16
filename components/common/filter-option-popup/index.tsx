@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Utilities } from "../../../assets";
 
 import {
+  FilterAttributeVariants,
   IAttribute,
   IFilterAttributeValues,
   IFilterPopupContentType,
@@ -38,7 +39,6 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   setActiveAttribute,
   loading,
 }) => {
-  console.log("activeAttribute inside FilterOptionPopup: ", activeAttribute);
   const [lastUpdatedStartDate, setLastUpdatedStartDate] = useState<Date>(
     new Date()
   );
@@ -54,6 +54,14 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   );
 
   const [showDropdown, setShowdropdown] = useState<boolean>(false);
+  //TODO: need to check selectionType for custom fields as well; DB changes might be required here
+  const showRules =
+    activeAttribute.id === FilterAttributeVariants.TAGS ||
+    activeAttribute.id === FilterAttributeVariants.AI_TAGS ||
+    activeAttribute.id === FilterAttributeVariants.CUSTOM_FIELD;
+
+  console.log("options: ", options);
+
   return (
     <>
       <div className={`${styles["outer-wrapper"]}`}>
@@ -107,41 +115,46 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
           </>
         )}
 
-        <div>
-          <div
-            className={`${styles["rule-tag"]}`}
-            onClick={() => setShowdropdown(!showDropdown)}
-          >
-            <label>Rule:</label>
-            <div  className={`${styles["select-wrapper"]}`}>
-              <p>All Selected</p>
-              <IconClickable   additionalClass={styles["dropdown-icon"]} src={Utilities.arrowDark} />
+        {showRules && (
+          <div>
+            <div
+              className={`${styles["rule-tag"]}`}
+              onClick={() => setShowdropdown(!showDropdown)}
+            >
+              <label>Rule:</label>
+              <div className={`${styles["select-wrapper"]}`}>
+                <p>All Selected</p>
+                <IconClickable
+                  additionalClass={styles["dropdown-icon"]}
+                  src={Utilities.arrowDark}
+                />
+              </div>
             </div>
+            {showDropdown && (
+              <Dropdown
+                additionalClass={styles["dropdown-menu"]}
+                onClickOutside={() => {}}
+                options={[
+                  {
+                    label: "All selected",
+                    id: "All selected",
+                    onClick: () => {},
+                  },
+                  {
+                    label: "Any Selected",
+                    id: "Any",
+                    onClick: () => {},
+                  },
+                  {
+                    label: "No Tags",
+                    id: "None",
+                    onClick: () => {},
+                  },
+                ]}
+              />
+            )}
           </div>
-          {showDropdown && (
-            <Dropdown
-              additionalClass={styles["dropdown-menu"]}
-              onClickOutside={() => {}}
-              options={[
-                {
-                  label: "All selected",
-                  id: "All selected",
-                  onClick: () => {},
-                },
-                {
-                  label: "Any Selected",
-                  id: "Any",
-                  onClick: () => {},
-                },
-                {
-                  label: "No Tags",
-                  id: "None",
-                  onClick: () => {},
-                },
-              ]}
-            />
-          )}
-        </div>
+        )}
         <Divider />
         <div className={`${styles["Modal-btn"]}`}>
           <Button className={"apply"} text={"Apply"} />
