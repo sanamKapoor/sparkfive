@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Utilities } from "../../../assets";
 
 import {
+  FilterAttributeVariants,
   IAttribute,
   IFilterAttributeValues,
   IFilterPopupContentType,
@@ -39,7 +40,6 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   setActiveAttribute,
   loading,
 }) => {
-  console.log("activeAttribute inside FilterOptionPopup: ", activeAttribute);
   const [lastUpdatedStartDate, setLastUpdatedStartDate] = useState<Date>(
     new Date()
   );
@@ -55,6 +55,14 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   );
 
   const [showDropdown, setShowdropdown] = useState<boolean>(false);
+  //TODO: need to check selectionType for custom fields as well; DB changes might be required here
+  const showRules =
+    activeAttribute.id === FilterAttributeVariants.TAGS ||
+    activeAttribute.id === FilterAttributeVariants.AI_TAGS ||
+    activeAttribute.id === FilterAttributeVariants.CUSTOM_FIELD;
+
+  console.log("options: ", options);
+
   return (
     <>
       <div className={`${styles["main-container"]}`}>
@@ -70,6 +78,29 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
                 onClick={() => setActiveAttribute(null)}
               />
             </div>
+            {showDropdown && (
+              <Dropdown
+                additionalClass={styles["dropdown-menu"]}
+                onClickOutside={() => {}}
+                options={[
+                  {
+                    label: "All selected",
+                    id: "All selected",
+                    onClick: () => {},
+                  },
+                  {
+                    label: "Any Selected",
+                    id: "Any",
+                    onClick: () => {},
+                  },
+                  {
+                    label: "No Tags",
+                    id: "None",
+                    onClick: () => {},
+                  },
+                ]}
+              />
+            )}
           </div>
           <div className={`${styles["search-btn"]}`}>
             {/* TODO: */}
