@@ -5,19 +5,27 @@ import styles from "./Search.module.css";
 interface SearchProps {
   onSubmit: (term: string) => void;
   placeholder: string;
+  className?:string;
+  buttonClassName?: string;
+ 
 }
 
-const Search: React.FC<SearchProps> = ({ onSubmit, placeholder }) => {
+const Search: React.FC<SearchProps> = ({ onSubmit, placeholder,className, buttonClassName, }) => {
   const [term, setTerm] = useState<string>("");
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTerm(e.target.value);
   };
+  const searchClassName = className
+  ? `${styles.search} ${className}`
+  : styles.search;
+
+
 
   return (
     <>
       <form
-        className={styles.search}
+        className={searchClassName}
         onSubmit={(e) => {
           e.preventDefault();
           onSubmit(term);
@@ -32,7 +40,7 @@ const Search: React.FC<SearchProps> = ({ onSubmit, placeholder }) => {
             onChange={onChange}
           />
         </div>
-        <div className={styles.searchbtn}>
+        <div className={`${styles.searchbtn} ${buttonClassName}`}>
           <img className={styles.image} src={Utilities.search} />
         </div>
       </form>

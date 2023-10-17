@@ -81,3 +81,22 @@ font-weight: 700;
 
 
   }
+  .customStyles input{
+    height:40px !important;
+    background: #FAF8F5 !important;
+
+  }
+  .icon{
+    top:13.7px;
+
+  }
+  .customLoader{
+    position: absolute !important;
+    top:40% !important;
+    left:40% !important;
+    transform: translate(-50%, -50%);
+    
+  } 
+  .main-container{
+    position: relative;
+  }
