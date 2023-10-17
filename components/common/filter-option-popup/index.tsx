@@ -4,10 +4,12 @@ import React, { useState } from "react";
 import { Utilities } from "../../../assets";
 
 import {
+  FilterAttributeVariants,
+  IAttribute,
   IFilterAttributeValues,
   IFilterPopupContentType,
 } from "../../../interfaces/filters";
-import Search from "../../common/inputs/search";
+import Search from "../../main/user-settings/SuperAdmin/Search/Search";
 import Button from "../buttons/button";
 import DimensionsFilter from "../filter-view/dimension-filter";
 import DateUploaded from "../filter/date-uploaded";
@@ -16,20 +18,27 @@ import ResolutionFilter from "../filter/resolution-filter";
 import Divider from "./divider";
 import styles from "./index.module.css";
 import OptionData from "./options-data";
-import SelectOption from "./select-option";
+
+import Dropdown from "../../common/inputs/dropdown";
+
+import IconClickable from "../buttons/icon-clickable";
+import Spinner from "../spinners/spinner";
+import Loader from "../UI/Loader/loader";
 
 interface FilterOptionPopupProps {
   contentType: IFilterPopupContentType;
   options: IFilterAttributeValues;
-  setShowAttrValues: (val: boolean) => void;
-  activeAttribute: string;
+  activeAttribute: IAttribute;
+  setActiveAttribute: (val: IAttribute | null) => void;
+  loading: boolean;
 }
 
 const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   options,
   contentType,
-  setShowAttrValues,
   activeAttribute,
+  setActiveAttribute,
+  loading,
 }) => {
   const [lastUpdatedStartDate, setLastUpdatedStartDate] = useState<Date>(
     new Date()
@@ -44,55 +53,142 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   const [dateUploadedEndDate, setDateUploadedEndDate] = useState<Date>(
     new Date()
   );
+
+  const [showDropdown, setShowdropdown] = useState<boolean>(false);
+  //TODO: need to check selectionType for custom fields as well; DB changes might be required here
+  const showRules =
+    activeAttribute.id === FilterAttributeVariants.TAGS ||
+    activeAttribute.id === FilterAttributeVariants.AI_TAGS ||
+    activeAttribute.id === FilterAttributeVariants.CUSTOM_FIELD;
+
+  console.log("options: ", options);
+
   return (
     <>
-      <div className={`${styles["outer-wrapper"]}`}>
-        <div className={`${styles["popup-header"]}`}>
-          <span className={`${styles["main-heading"]}`}>
-            Select {activeAttribute}
-          </span>
-          <div className={styles.buttons}>
-            <button className={styles.clear}>clear</button>
-            <img
-              src={Utilities.closeIcon}
-              onClick={() => setShowAttrValues(false)}
+      <div className={`${styles["main-container"]}`}>
+        <div className={`${styles["outer-wrapper"]}`}>
+          <div className={`${styles["popup-header"]}`}>
+            <span className={`${styles["main-heading"]}`}>
+              Select {activeAttribute?.name}
+            </span>
+            <div className={styles.buttons}>
+              <button className={styles.clear}>clear</button>
+              <img
+                src={Utilities.closeIcon}
+                onClick={() => setActiveAttribute(null)}
+              />
+            </div>
+            {showDropdown && (
+              <Dropdown
+                additionalClass={styles["dropdown-menu"]}
+                onClickOutside={() => {}}
+                options={[
+                  {
+                    label: "All selected",
+                    id: "All selected",
+                    onClick: () => {},
+                  },
+                  {
+                    label: "Any Selected",
+                    id: "Any",
+                    onClick: () => {},
+                  },
+                  {
+                    label: "No Tags",
+                    id: "None",
+                    onClick: () => {},
+                  },
+                ]}
+              />
+            )}
+          </div>
+          <div className={`${styles["search-btn"]}`}>
+            {/* TODO: */}
+            <Search
+              className={styles.customStyles}
+              buttonClassName={styles.icon}
+              placeholder="Some Placeholder"
+              onSubmit={() => {}}
             />
           </div>
-        </div>
-        <div className={`${styles["search-btn"]}`}>
-          <Search />
-        </div>
-        {/* TODO: move this into a separate Content Component */}
-        {contentType === "list" && <OptionData data={options} />}
-        {contentType === "dimensions" && <DimensionsFilter limits={options} />}
-        {contentType === "resolutions" && <ResolutionFilter data={options} />}
-        {contentType === "lastUpdated" && (
-          <DateUploaded
-            startDate={lastUpdatedStartDate}
-            endDate={lastUpdatedEndDate}
-            setStartDate={setLastUpdatedStartDate}
-            setEndDate={setLastUpdatedEndDate}
-          />
-        )}
-        {contentType === "dateUploaded" && (
-          <DateUploaded
-            startDate={dateUploadedStartDate}
-            endDate={dateUploadedEndDate}
-            setStartDate={setDateUploadedStartDate}
-            setEndDate={setDateUploadedEndDate}
-          />
-        )}
-        {contentType === "products" && (
-          <ProductFilter productFilters={options} />
-        )}
-        <div className={`${styles["rule-tag"]}`}>
-          <label>Rule:</label>
-          <SelectOption />
-        </div>
-        <Divider />
-        <div className={`${styles["Modal-btn"]}`}>
-          <Button className={"apply"} text={"Apply"} />
-          <Button className={"cancel"} text={"Cancel"}></Button>
+
+          {loading ? (
+            <Loader className={styles.customLoader} />
+          ) : (
+            <>
+              {/* TODO: move this into a separate Content Component */}
+              {contentType === "list" && <OptionData data={options} />}
+              {contentType === "dimensions" && (
+                <DimensionsFilter limits={options} />
+              )}
+              {contentType === "resolutions" && (
+                <ResolutionFilter data={options} />
+              )}
+              {contentType === "lastUpdated" && (
+                <DateUploaded
+                  startDate={lastUpdatedStartDate}
+                  endDate={lastUpdatedEndDate}
+                  setStartDate={setLastUpdatedStartDate}
+                  setEndDate={setLastUpdatedEndDate}
+                />
+              )}
+              {contentType === "dateUploaded" && (
+                <DateUploaded
+                  startDate={dateUploadedStartDate}
+                  endDate={dateUploadedEndDate}
+                  setStartDate={setDateUploadedStartDate}
+                  setEndDate={setDateUploadedEndDate}
+                />
+              )}
+              {contentType === "products" && (
+                <ProductFilter productFilters={options} />
+              )}
+            </>
+          )}
+
+          <div>
+            <div
+              className={`${styles["rule-tag"]}`}
+              onClick={() => setShowdropdown(!showDropdown)}
+            >
+              <label>Rule:</label>
+              <div className={`${styles["select-wrapper"]}`}>
+                <p>All Selected</p>
+                <IconClickable
+                  additionalClass={styles["dropdown-icon"]}
+                  src={Utilities.arrowDark}
+                />
+              </div>
+            </div>
+            {showDropdown && (
+              <Dropdown
+                additionalClass={styles["dropdown-menu"]}
+                onClickOutside={() => {}}
+                options={[
+                  {
+                    label: "All selected",
+                    id: "All selected",
+                    onClick: () => {},
+                  },
+                  {
+                    label: "Any Selected",
+                    id: "Any",
+                    onClick: () => {},
+                  },
+                  {
+                    label: "No Tags",
+                    id: "None",
+                    onClick: () => {},
+                  },
+                ]}
+              />
+            )}
+          </div>
+          <Divider />
+          <div className={`${styles["Modal-btn"]}`}>
+            <Button className={"apply"} text={"Apply"} />
+            <Button className={"cancel"} text={"Cancel"}></Button>
+          </div>
         </div>
       </div>
     </>

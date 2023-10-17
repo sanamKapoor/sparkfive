@@ -13,3 +13,52 @@
     font-size: 13px;
     margin-left: 15px;
 }
+.outer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+.heading{
+    margin:24px 0;
+}
+.inputField{
+    border: 1px solid #DEDAD4;
+    height:40px;
+    max-width: 131px;
+    text-align: center;
+    color:#08135E;
+    font-weight: 400;
+    font-size: 14px;
+    background: 
+    #FAF8F5;
+
+}
+.line {
+    width: 14px;
+    height: 1px;
+    background-color: 
+    #08135E; 
+    margin: 0 10px; 
+  }
+  .container{
+    max-height: 407px;
+    overflow: auto;
+    margin-top: 20px;
+
+  }
+  .container::-webkit-scrollbar {
+    width: 3px;
+   
+  }
+  
+  .container::-webkit-scrollbar-thumb {
+    background-color: 
+    #AEB0C2;
+    border-radius: 50px;
+    
+  }
+  .container::-webkit-scrollbar-track {
+    background-color: #f0f0f0;
+    border-radius: 50px;
+  }

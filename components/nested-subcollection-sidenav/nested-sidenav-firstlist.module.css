@@ -3,11 +3,14 @@
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
-    margin-top: 16px;
     height:30px;
-    padding: 7.5px 0;
+    padding: 7.5px 2px;
     background: #fff;
   
+}
+.list1-description:hover{
+    background: var(--color-sec-lightblue);
+    padding: 7.5px 2px;
 }
 .icon{
     margin-right: 5px;
@@ -34,6 +37,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+   
 }
 .icon-description:hover{
     overflow:visible;

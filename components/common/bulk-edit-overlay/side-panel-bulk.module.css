@@ -167,7 +167,7 @@
     padding: 16px;
   }
   .search-btn {
-    padding: 16px 0 16px 0;
+    padding: 5px 0 16px 0;
   }
   .modal-heading span {
     font-weight: 600;
@@ -221,7 +221,15 @@
     cursor: pointer;
     align-items: center;
     height: 30px;
+    padding: 4px;
   
+  }
+  .folder-lists:hover{
+    background:  #d5dcef; 
+    border-radius: 4px;
+    padding: 4px;
+
+
   }
   
   .dropdownIcons {
@@ -269,6 +277,16 @@
   }
   .nestedbox {
     margin-top: 10px;
+    padding: 2px 2px;
+    
+  }
+  .nestedbox:hover{
+    background: 
+    var(--color-sec-lightblue);;
+    padding: 2px 2px;
+    
+   
+
   }
   .tag-container-wrapper{
     display: flex;

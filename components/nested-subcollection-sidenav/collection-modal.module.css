@@ -73,7 +73,6 @@
     cursor: pointer;
     align-items: center;
     height: 30px;
-    /* margin-top: 16px; */
   }
   
   .dropdownIcons {
@@ -88,7 +87,6 @@
     margin-right: 5px;
   }
   .dropdownOptions {
-    /* margin-top: 16px; */
     position: relative;
   }
   .dropdownOptions::before {

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 
 import { Utilities } from "../../../assets";
 import {
+  FilterAttributeVariants,
   IAttribute,
   IAttributeValue,
   IFilterAttributeValues,
@@ -21,10 +22,13 @@ const FilterView = () => {
   const [attrs, setAttrs] = useState<IAttribute[]>([]);
   const [values, setValues] = useState<IFilterAttributeValues>([]);
 
-  const [showAttrValues, setShowAttrValues] = useState<boolean>(false);
   const [contentType, setContentType] =
     useState<IFilterPopupContentType>("list");
-  const [activeAttribute, setActiveAttribute] = useState<string>("Tags");
+  const [activeAttribute, setActiveAttribute] = useState<IAttribute | null>(
+    null
+  );
+
+  const [loading, setLoading] = useState<boolean>(false);
 
   //TODO: move it to parent level
   const getAttributes = async () => {
@@ -43,80 +47,75 @@ const FilterView = () => {
 
   /** // TODO: 1. check for permission and custom restrictions for individual filter attributes
    * 2. Check for share pages
-   * 3. add a loader for content
-   * 4. Error Handling for all the api requests
    **/
   const onAttributeClick = async (data: IAttribute) => {
-    let values: IFilterAttributeValues = [];
-    let contentType: IFilterPopupContentType = "list";
+    try {
+      setLoading(true);
+      let values: IFilterAttributeValues = [];
+      let contentType: IFilterPopupContentType = "list";
 
-    setActiveAttribute(data.name);
+      setActiveAttribute(data);
 
-    switch (data.id) {
-      case "tags":
-        values = await fetchTags();
-        break;
-      case "aiTags":
-        values = await fetchAITags();
-        values = (values as IAttributeValue[])?.filter(
-          (tag) => tag.type === "AI"
-        );
-        break;
-      case "campaigns":
-        values = await fetchCampaigns();
-        break;
-      case "fileTypes":
-        values = await fetchAssetFileExtensions();
-        console.log("val in fileTypes: ", values);
-        break;
-      case "orientation":
-        values = await fetchAssetOrientations();
-        break;
-      case "resolution":
-        contentType = "resolutions";
-        values = await fetchAssetResolutions();
-        break;
-      case "dimensions":
-        contentType = "dimensions";
-        values = await fetchAssetDimensionLimits();
-        break;
+      switch (data.id) {
+        case FilterAttributeVariants.TAGS:
+          values = await fetchTags();
+          break;
+        case FilterAttributeVariants.AI_TAGS:
+          values = await fetchAITags();
+          values = (values as IAttributeValue[])?.filter(
+            (tag) => tag.type === "AI"
+          );
+          break;
+        case FilterAttributeVariants.CAMPAIGNS:
+          values = await fetchCampaigns();
+          break;
+        case FilterAttributeVariants.FILE_TYPES:
+          values = await fetchAssetFileExtensions();
+          break;
+        case FilterAttributeVariants.ORIENTATION:
+          values = await fetchAssetOrientations();
+          break;
+        case FilterAttributeVariants.RESOLUTION:
+          contentType = "resolutions";
+          values = await fetchAssetResolutions();
+          break;
+        case FilterAttributeVariants.DIMENSIONS:
+          contentType = "dimensions";
+          values = await fetchAssetDimensionLimits();
+          break;
 
-      case "lastUpdated":
-        contentType = "lastUpdated";
-        values = [];
-        break;
+        case FilterAttributeVariants.LAST_UPDATED:
+          contentType = "lastUpdated";
+          values = [];
+          break;
 
-      case "dateUploaded":
-        contentType = "dateUploaded";
-        values = [];
-        break;
+        case FilterAttributeVariants.DATE_UPLOADED:
+          contentType = "dateUploaded";
+          values = [];
+          break;
 
-      case "products":
-        contentType = "products";
+        case FilterAttributeVariants.PRODUCTS:
+          contentType = "products";
+          const sku = await fetchProductSku();
 
-        const categories = await fetchProductCategories();
-        const vendors = await fetchProductVendors();
-        const retailers = await fetchProductRetailers();
-        const sku = await fetchProductSku();
+          values = {
+            sku,
+          };
+          break;
 
-        values = {
-          categories,
-          vendors,
-          retailers,
-          sku,
-        };
-        break;
+        default:
+          values = await fetchCustomField(data.id);
+      }
 
-      default:
-        values = await fetchCustomField(data.id);
+      setValues((prev) => {
+        setContentType(contentType);
+        return values;
+      });
+    } catch (err) {
+      console.log("[FILTER_DROPDOWN]: ", err);
+    } finally {
+      setLoading(false);
     }
-
-    setValues((prev) => {
-      setContentType(contentType);
-      return values;
-    });
-
-    setShowAttrValues(true);
   };
 
   const fetchTags = async (params?: { includeAi?: boolean; type?: string }) => {
@@ -126,18 +125,6 @@ const FilterView = () => {
 
   const fetchAITags = async () => {
     return fetchTags({ includeAi: true });
-  };
-
-  const fetchProductCategories = async () => {
-    return fetchTags({ type: "product_category" });
-  };
-
-  const fetchProductVendors = async () => {
-    return fetchTags({ type: "product_vendor" });
-  };
-
-  const fetchProductRetailers = async () => {
-    return fetchTags({ type: "product_retailer" });
   };
 
   const fetchProductSku = async () => {
@@ -195,18 +182,19 @@ const FilterView = () => {
                   alt=""
                 />
               </div>
+              {activeAttribute !== null && activeAttribute?.id === attr.id && (
+                <FilterOptionPopup
+                  activeAttribute={activeAttribute}
+                  setActiveAttribute={setActiveAttribute}
+                  options={values}
+                  contentType={contentType}
+                  loading={loading}
+                />
+              )}
             </div>
           );
         })}
       </div>
-      {showAttrValues && (
-        <FilterOptionPopup
-          activeAttribute={activeAttribute}
-          options={values}
-          contentType={contentType}
-          setShowAttrValues={setShowAttrValues}
-        />
-      )}
     </div>
   );
 };

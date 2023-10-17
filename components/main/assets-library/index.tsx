@@ -259,8 +259,8 @@ const AssetsLibrary = () => {
         mainFilter: activeFolder
           ? "all"
           : activeSubFolders
-            ? "SubCollectionView"
-            : activeSortFilter.mainFilter,
+          ? "SubCollectionView"
+          : activeSortFilter.mainFilter,
       });
     }
   }, [activeFolder, activeSubFolders]);
@@ -380,11 +380,11 @@ const AssetsLibrary = () => {
         const updatedAssets = assets.map((asset, index) =>
           index === i
             ? {
-              ...asset,
-              status: "fail",
-              index,
-              error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
-            }
+                ...asset,
+                status: "fail",
+                index,
+                error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
+              }
             : asset
         );
 
@@ -443,16 +443,16 @@ const AssetsLibrary = () => {
           "fileModifiedAt",
           assets[i].dragDropFolderUpload
             ? new Date(
-              (
-                file.lastModifiedDate || new Date(file.lastModified)
-              ).toUTCString()
-            ).toISOString()
+                (
+                  file.lastModifiedDate || new Date(file.lastModified)
+                ).toUTCString()
+              ).toISOString()
             : new Date(
-              (
-                file.originalFile.lastModifiedDate ||
-                new Date(file.originalFile.lastModified)
-              ).toUTCString()
-            ).toISOString()
+                (
+                  file.originalFile.lastModifiedDate ||
+                  new Date(file.originalFile.lastModified)
+                ).toUTCString()
+              ).toISOString()
         );
 
         let size = totalSize;
@@ -1021,20 +1021,20 @@ const AssetsLibrary = () => {
       {(activeMode === "assets"
         ? selectedAssets.length
         : activeMode === "folders"
-          ? selectedFolders.length
-          : selectedSubFoldersAndAssets.folders.length ||
+        ? selectedFolders.length
+        : selectedSubFoldersAndAssets.folders.length ||
           selectedSubFoldersAndAssets.assets.length) > 0 && (
-          <AssetHeaderOps
-            isUnarchive={activeSortFilter.mainFilter === "archived"}
-            isFolder={activeMode === "folders"}
-            deletedAssets={false}
-            activeMode={activeMode}
-            selectedFolders={selectedFolders}
-            selectedSubFoldersAndAssets={selectedSubFoldersAndAssets}
-          />
-        )}
+        <AssetHeaderOps
+          isUnarchive={activeSortFilter.mainFilter === "archived"}
+          isFolder={activeMode === "folders"}
+          deletedAssets={false}
+          activeMode={activeMode}
+          selectedFolders={selectedFolders}
+          selectedSubFoldersAndAssets={selectedSubFoldersAndAssets}
+        />
+      )}
       {hasPermission([ASSET_ACCESS]) ||
-        hasPermission([ASSET_UPLOAD_APPROVAL]) ? (
+      hasPermission([ASSET_UPLOAD_APPROVAL]) ? (
         <>
           <main className={`${styles.container}`}>
             <div className={styles.innnerContainer}>
@@ -1044,8 +1044,9 @@ const AssetsLibrary = () => {
                 </div>
               ) : null}
               <div
-                className={`${sidebarOpen ? styles["rightSide"] : styles["rightSideToggle"]
-                  }`}
+                className={`${
+                  sidebarOpen ? styles["rightSide"] : styles["rightSideToggle"]
+                }`}
               >
                 {openFilter && hasPermission([ASSET_ACCESS]) && (
                   <FilterContainer
@@ -1098,16 +1099,18 @@ const AssetsLibrary = () => {
                   )}
                 </div>
                 <div
-                  className={`${openFilter && styles["col-wrapper"]} ${sidebarOpen
-                    ? styles["grid-wrapper-web"]
-                    : styles["grid-wrapper"]
-                    }
-                    } ${activeFolder && styles["active-breadcrumb-item"]}`}
+                  className={`${
+                    sidebarOpen
+                      ? styles["grid-wrapper-web"]
+                      : styles["grid-wrapper"]
+                  } ${activeFolder && styles["active-breadcrumb-item"]}`}
                 >
                   {/* // TODO: move this inline style to css module */}
-                  <div style={{ paddingTop: "50px" }}>
-                    <FilterView />
-                  </div>
+                  {activeMode !== "folders" && (
+                    <div style={{ paddingTop: "50px" }}>
+                      <FilterView />
+                    </div>
+                  )}
                   <DropzoneProvider>
                     {advancedConfig.set && renderFlag && (
                       <AssetGrid

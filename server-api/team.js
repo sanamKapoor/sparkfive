@@ -39,5 +39,5 @@ export default {
   getOcrCollections: () => axios.get(`${teamUrl}/ocr-folders`),
   addOcrCollection: (data) => axios.post(`${teamUrl}/ocr-folders`, data),
   removeOcrCollection: (id) => axios.delete(`${teamUrl}/ocr-folders/${id}`),
-  getTeamAttributes: (teamId) => axios.get(`${teamUrl}/attributes/${teamId}`),
+  getTeamAttributes: () => axios.get(`${teamUrl}/attributes`),
 };

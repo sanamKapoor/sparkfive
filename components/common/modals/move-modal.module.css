@@ -95,8 +95,9 @@
   width: 100%;
   box-sizing: border-box;
   padding: 7.5px;
-  background-color: #fff;
 }
+
+
 .w100 {
   width: 100%;
 }
@@ -107,7 +108,15 @@
 }
 .nestedbox {
   margin-bottom: 8px;
+  padding: 4px;
+ 
 }
+.nestedbox:hover{
+  background: var(--color-sec-lightblue);
+  cursor: pointer;
+  padding: 4px;
+}
+
 .icon-descriptions {
   white-space: nowrap;
   overflow: hidden;
@@ -153,6 +162,13 @@
 .dropdownOptions {
   /* margin-top: 16px; */
   position: relative;
+  padding: 4px;
+}
+.dropdownOptions:hover{
+  background: var(--color-sec-lightblue);
+  padding: 4px;
+  
+  
 }
 .dropdownOptions::before {
   content: "";

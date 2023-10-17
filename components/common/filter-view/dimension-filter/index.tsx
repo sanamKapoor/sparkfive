@@ -1,7 +1,8 @@
+import React from "react";
 import styles from "./index.module.css";
 
+
 // Components
-import SliderSelector from "../../../common/inputs/slider-selector";
 
 interface DimensionsFilterProps {
   limits: {
@@ -16,34 +17,19 @@ const DimensionsFilter: React.FC<DimensionsFilterProps> = ({ limits }) => {
   const { maxHeight, minHeight, maxWidth, minWidth } = limits;
   return (
     <div className={`${styles.container}`}>
-      <p className={`${styles.slider} ${styles["slider-height"]}`}>
-        <h5>Select Height</h5>
-        <form>
-          <SliderSelector
-            minNum={minHeight}
-            maxNum={maxHeight}
-            handleSlider={() => {}} //TODO: update
-            valueSlider={{
-              min: minHeight,
-              max: maxHeight,
-            }} //TODO: update
-          />
-        </form>
-      </p>
-      <div className={`${styles.slider} ${styles["slider-width"]}`}>
-        <h5>Select Width</h5>
-        <form>
-          <SliderSelector
-            minNum={minWidth}
-            maxNum={maxWidth}
-            handleSlider={() => {}} //TODO: update
-            valueSlider={{
-              min: minWidth,
-              max: maxWidth,
-            }} //TODO: update
-          />
-        </form>
+      <p className={styles.heading}>Width</p>
+      <div className={styles.outer}>
+        <input className={styles.inputField} value={minWidth} />
+        <div className={styles.line}></div>
+        <input className={styles.inputField} value={maxWidth} />
       </div>
+      <p className={styles.heading}>Height</p>
+      <div className={styles.outer}>
+        <input className={styles.inputField} value={minHeight} />
+        <div className={styles.line}></div>
+        <input className={styles.inputField} value={maxHeight} />
+      </div>
+      
     </div>
   );
 };

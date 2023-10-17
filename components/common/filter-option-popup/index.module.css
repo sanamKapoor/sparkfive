@@ -1,6 +1,6 @@
 .outer-wrapper{
-    max-width: 1008px;
-    width: 100%;
+    /* max-width: 1008px;
+    width: 100%; */
     border:1px solid #DEDAD4;
     border-radius: 12px;
     padding: 16px;
@@ -8,7 +8,10 @@
     z-index: 999;
     position: absolute;
     background: #fff;
+
 }
+
+
 .popup-header{
     display: flex;
     align-items: center;
@@ -46,7 +49,54 @@ font-weight: 700;
     align-items: center;
     padding: 16px;
    
+   
   }
   .rule-tag label {
     margin-right: 8px;
+  }
+  .select-wrapper{
+    display: flex;
+    align-items: center;
+    background: #E9EEFA;
+    width: 100%;
+    justify-content: space-between;
+    padding: 0 20px;
+    border-radius: 4px;
+    height: 24px;
+    max-width: 155px;
+  
+
+  }
+  .dropdown-icon{
+    width: 10px;
+    height: 8px;
+    margin-left: 10px;
+
+  }
+  .dropdown-menu{
+    bottom:0;
+    top:unset;
+    right:10px;
+    left: 66px
+
+
+  }
+  .customStyles input{
+    height:40px !important;
+    background: #FAF8F5 !important;
+
+  }
+  .icon{
+    top:13.7px;
+
+  }
+  .customLoader{
+    position: absolute !important;
+    top:40% !important;
+    left:40% !important;
+    transform: translate(-50%, -50%);
+    
+  } 
+  .main-container{
+    position: relative;
   }

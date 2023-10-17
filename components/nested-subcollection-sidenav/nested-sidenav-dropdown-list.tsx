@@ -166,8 +166,8 @@ const NestedSidenavDropdown = ({ headingClick }) => {
                   <div className={styles.mainWrapper}  >
                     <div className={styles.flex}>
                       <img src={Utilities.folder} />
-                      <div className={styles["icon-descriptions"]} onClick={() => toggleDropdown(index, item, true)}>
-                        <span>{item.name}</span>
+                      <div className={styles["icon-descriptions"]}  onClick={() => toggleDropdown(index, item, true)}>
+                        <span title={JSON.stringify(item.name)}>{item.name}</span>
                       </div>
                     </div>
                     <div className={styles.totalCount}>

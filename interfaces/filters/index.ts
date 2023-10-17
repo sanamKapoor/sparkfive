@@ -74,9 +74,6 @@ export interface IResolutionFilter {
 }
 
 export interface IProductFilter {
-  categories: IProductCategories[];
-  vendors: IProductVendors[];
-  retailers: IProductRetailers[];
   sku: IProductSku[];
 }
 
@@ -92,3 +89,17 @@ export type IFilterAttributeValues =
   | IAttributeValue[]
   | IDimensionFilter
   | IProductFilter;
+
+export enum FilterAttributeVariants {
+  TAGS = "tags",
+  AI_TAGS = "aiTags",
+  CAMPAIGNS = "campaigns",
+  FILE_TYPES = "fileTypes",
+  ORIENTATION = "orientation",
+  RESOLUTION = "resolution",
+  DIMENSIONS = "dimensions",
+  LAST_UPDATED = "lastUpdated",
+  DATE_UPLOADED = "dateUploaded",
+  PRODUCTS = "products",
+  CUSTOM_FIELD = "customField",
+}
