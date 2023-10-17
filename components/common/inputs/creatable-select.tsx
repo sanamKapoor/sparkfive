@@ -103,6 +103,7 @@ const CreatableSelect = ({
           (selectedItem) => item.label === selectedItem.name
         ) === -1
       ) {
+        console.log("inside index", item)
         const newItem = { name: item.label };
         if (!isNew) newItem.id = item.value;
         if (type) {

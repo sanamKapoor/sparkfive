@@ -1162,7 +1162,6 @@ const AssetsLibrary = () => {
           }}
         />
       )}
-
       {currentViewAsset && (
         <DetailOverlay
           initiaParams={{ side: "detail" }}

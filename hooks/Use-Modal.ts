@@ -39,11 +39,11 @@ interface MoveModalReturnType {
     newFolderName: string;
     folderInputActive: boolean;
     subFolderLoadingState: Map<string, boolean>; // Replace 'string' with the actual key type
-    folderChildList: Map<string, string>; // Replace 'Item' and 'string' with actual types
+    folderChildList: Map<string, { results: Item[], next: number, total: number }>; // Replace 'Item' and 'string' with actual types
     showDropdown: string[];
     selectAllFolders: Record<string, boolean>;
     input: string;
-    selectedFolderCompleteObject?: Map<string, { name: string; parentId: string | null }>; // Replace 'Item' and 'string' with actual types
+    completeSelectedFolder?: Map<string, { name: string; parentId: string | null }>; // Replace 'Item' and 'string' with actual types
 
     setInput: (value: string) => void;
     filteredData: () => void;
@@ -71,7 +71,7 @@ export const useMoveModal = (): MoveModalReturnType => {
     const [showDropdown, setShowDropdown] = useState([]);
     const [selectAllFolders, setSelectAllFolders] = useState<Record<string, boolean>>({});
     const [input, setInput] = useState('');
-    const [selectedFolderCompleteObject, setSelectedFolderCompleteObject] = useState<Map<string, { name: string; parentId: string | null }>>(new Map());
+    const [completeSelectedFolder, setCompleteSelectedFolder] = useState<Map<string, { name: string; parentId: string | null }>>(new Map());
 
     // Extract values from FilterContext
     const {
@@ -140,10 +140,7 @@ export const useMoveModal = (): MoveModalReturnType => {
 
 
     const removeIdsIntoFolder = (idsToRemove: string[]) => {
-
-
-
-        setSelectedFolderCompleteObject((map) => {
+        setCompleteSelectedFolder((map) => {
             idsToRemove.forEach(id => {
                 map.delete(id);
             });
@@ -156,7 +153,7 @@ export const useMoveModal = (): MoveModalReturnType => {
             name: string, parentId: string | null
         }
     }[]) => {
-        setSelectedFolderCompleteObject((map) => {
+        setCompleteSelectedFolder((map) => {
             items.forEach(item => {
                 for (const key in item) {
                     map.set(key, item[key]);
@@ -197,8 +194,8 @@ export const useMoveModal = (): MoveModalReturnType => {
                 setSelectAllFolders((prev) => ({ ...prev, [actionFolderId]: false }))
             };
             // Remove on Icon click of selected folders on above modal in edit page  
-            if (selectedFolderCompleteObject.get(actionFolderId).parentId) {
-                setSelectAllFolders((prev) => ({ ...prev, [selectedFolderCompleteObject.get(actionFolderId).parentId]: false }))
+            if (completeSelectedFolder.get(actionFolderId)?.parentId) {
+                setSelectAllFolders((prev) => ({ ...prev, [completeSelectedFolder.get(actionFolderId)?.parentId]: false }))
             };
         }
     };
@@ -240,11 +237,15 @@ export const useMoveModal = (): MoveModalReturnType => {
         }
     }
 
-    const toggleSelectAllChildList = (folderId: string, name = "") => {
+    const toggleSelectAllChildList = async (folderId: string, name = "") => {
         if (selectAllFolders[folderId]) {
             ToggleAllSelectedFolders(folderId, false, name)
             setSelectAllFolders((prev) => ({ ...prev, [folderId]: false }));
+
         } else {
+            if (!showDropdown.includes(folderId)) {
+                await toggleDropdown(folderId, true)
+            }
             ToggleAllSelectedFolders(folderId, true, name)
             setSelectAllFolders((prev) => ({ ...prev, [folderId]: true }));
         }
@@ -262,7 +263,7 @@ export const useMoveModal = (): MoveModalReturnType => {
         showDropdown,
         selectAllFolders,
         input,
-        selectedFolderCompleteObject,
+        completeSelectedFolder,
         setInput,
         filteredData,
         getFolders,

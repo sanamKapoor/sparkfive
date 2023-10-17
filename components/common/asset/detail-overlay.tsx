@@ -306,7 +306,7 @@ const DetailOverlay = ({
           setPreviewUrl(data.previewUrl);
           setVersionRealUrl(data.realUrl);
           setVersionThumbnailUrl(data.thumbailUrl);
-          setCurrentAsset({...currentAsset, thumbailUrl: data.thumbailUrl})
+          setCurrentAsset({ ...currentAsset, thumbailUrl: data.thumbailUrl })
         }
       } else {
         const { data } = await assetApi.getById(asset.id);
@@ -318,7 +318,7 @@ const DetailOverlay = ({
           setVersionThumbnailUrl(data.thumbailUrl);
 
           // This is for showing current asset image in version list
-          setCurrentAsset({...data.asset, thumbailUrl: data.thumbailUrl})
+          setCurrentAsset({ ...data.asset, thumbailUrl: data.thumbailUrl })
         }
       }
     } catch (err) {
@@ -326,7 +326,7 @@ const DetailOverlay = ({
     }
   };
 
-    const onChangeRelatedFiles = (fileAssociations) => {
+  const onChangeRelatedFiles = (fileAssociations) => {
     setAssetDetail({ ...assetDetail, fileAssociations });
   };
 
@@ -1175,25 +1175,25 @@ const DetailOverlay = ({
                 <AssetIcon extension={currentAsset.extension} />
               )}
             {assetDetail.type === "video" && (
-                <>
+              <>
                 {(previewUrl || (!previewUrl && currentAsset.extension === "mp4")) && <video controls id={"video-element"}>
-                    <source
-                        src={previewUrl ?? versionRealUrl}
-                        type={
-                          "video/mp4"
-                        }
-                    />
-                    Sorry, your browser doesn't support video playback.
-                  </video>}
+                  <source
+                    src={previewUrl ?? versionRealUrl}
+                    type={
+                      "video/mp4"
+                    }
+                  />
+                  Sorry, your browser doesn't support video playback.
+                </video>}
 
-                  {(!previewUrl && currentAsset.extension !== "mp4") && <AssetImg
-                      name={assetDetail.name}
-                      assetImg={""}
-                      type={"video"}
-                      imgClass="img-preview"
-                      isResize
-                  />}
-                </>
+                {(!previewUrl && currentAsset.extension !== "mp4") && <AssetImg
+                  name={assetDetail.name}
+                  assetImg={""}
+                  type={"video"}
+                  imgClass="img-preview"
+                  isResize
+                />}
+              </>
 
             )}
             {activeFolder && (
@@ -1354,7 +1354,6 @@ const DetailOverlay = ({
           />
         </div>
       )}
-
       {!isShare && (
         <section className={styles.menu}>
           <IconClickable
@@ -1428,7 +1427,6 @@ const DetailOverlay = ({
                   }}
                 />
               )}
-
               {editThenDownload && hasPermission([ASSET_DOWNLOAD]) && (
                 <IconClickable
                   src={AssetOps.download}
