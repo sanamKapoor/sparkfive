@@ -13,7 +13,7 @@ const OptionDataItem: React.FC<OptionDataItemProps> = ({ name, count }) => {
     <div className={`${styles["tags-wrapper"]}`}>
       <div className={`${styles["tags-left-side"]}`}>
         <IconClickable src={Utilities.radioButtonNormal} />
-        <span>{name}</span>
+        <span className={`${styles["select-name"]}`}>{name}</span>
       </div>
       <div>
         <span>{count}</span>

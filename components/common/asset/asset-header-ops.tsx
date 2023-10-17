@@ -232,8 +232,8 @@ const AssetHeaderOps = ({
         const assetsToAssociate = selectedAssets.filter(
           (assetItem) =>
             assetItem.asset.fileAssociations.length +
-              selectedAssets.length -
-              1 <=
+            selectedAssets.length -
+            1 <=
             maximumAssociateFiles
         );
         if (assetsToAssociate.length !== selectedAssets.length) {
@@ -564,17 +564,19 @@ const AssetHeaderOps = ({
             onClick={deselectAll}
           />
         )}
+
         <div className={styles.text}>
           {activeMode === "assets"
             ? `${totalSelectAssets} Assets`
             : activeMode === "folders"
-            ? `${totalSelectAssets} Collections`
-            : `${totalSubFoldersAndAssets.folders} Sub Collections 
+              ? `${totalSelectAssets} Collections`
+              : `${totalSubFoldersAndAssets.folders} Sub Collections 
              
             `}{" "}
           Selected
         </div>
       </div>
+
       {/** add below line in case of selection of assets in subcollection right */}
       {/* and ${totalSubFoldersAndAssets.assets} Assets */}
       {/* Icons over the select all modal  */}

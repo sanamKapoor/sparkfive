@@ -1,42 +1,66 @@
 // External
-import { format } from "date-fns";
-import filesize from "filesize";
-import update from "immutability-helper";
-import _ from "lodash";
-import { useContext, useEffect, useState } from "react";
-import styles from "./detail-side-panel.module.css";
+import { format } from 'date-fns';
+import filesize from 'filesize';
+import update from 'immutability-helper';
+import _ from 'lodash';
+import { useContext, useEffect, useState } from 'react';
+import React from 'react';
 
+import { Utilities } from '../../../assets';
+import { ASSET_EDIT, CALENDAR_ACCESS } from '../../../constants/permissions';
+import { AssetContext, FilterContext, LoadingContext, UserContext } from '../../../context';
+import { useMoveModal } from '../../../hooks/Use-Modal';
+import channelSocialOptions from '../../../resources/data/channels-social.json';
+import assetApi from '../../../server-api/asset';
+import customFieldsApi from '../../../server-api/attribute';
+import campaignApi from '../../../server-api/campaign';
+import folderApi from '../../../server-api/folder';
+import projectApi from '../../../server-api/project';
+import tagApi from '../../../server-api/tag';
+import { getParsedExtension } from '../../../utils/asset';
+import SearchModal from '../../SearchModal/Search-modal';
+import Button from '../buttons/button';
+import IconClickable from '../buttons/icon-clickable';
+import CreatableSelect from '../inputs/creatable-select';
+import CustomFieldSelector from '../items/custom-field-selector';
+import ProjectCreationModal from '../modals/project-creation-modal';
+import styles from './detail-side-panel.module.css';
+import ProductAddition from './product-addition';
+interface Asset {
+  id: string;
+  name: string;
+  type: string;
+  thumbailUrl: string;
+  realUrl: string;
+  extension: string;
+  version: number;
+}
+interface Item {
+  id: string;
+  userId: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  sharePath: null;
+  sharePassword: null;
+  shareStatus: null;
+  status: string;
+  thumbnailPath: null;
+  thumbnailExtension: null;
+  thumbnails: null;
+  thumbnailStorageId: null;
+  thumbnailName: null;
+  assetsCount: string;
+  assets: Asset[];
+  size: string;
+  length: number;
+  parentId: string | null
+}
 // APIs
-import assetApi from "../../../server-api/asset";
-import customFieldsApi from "../../../server-api/attribute";
-import campaignApi from "../../../server-api/campaign";
-import folderApi from "../../../server-api/folder";
-import projectApi from "../../../server-api/project";
-import tagApi from "../../../server-api/tag";
-
 // Contexts
-import {
-  AssetContext,
-  FilterContext,
-  LoadingContext,
-  UserContext,
-} from "../../../context";
-
 // Utils
-import { Utilities } from "../../../assets";
-import { ASSET_EDIT, CALENDAR_ACCESS } from "../../../constants/permissions";
-import channelSocialOptions from "../../../resources/data/channels-social.json";
-import { getParsedExtension } from "../../../utils/asset";
-
 // Components
-import IconClickable from "../buttons/icon-clickable";
-import CreatableSelect from "../inputs/creatable-select";
-import CustomFieldSelector from "../items/custom-field-selector";
-import ProjectCreationModal from "../modals/project-creation-modal";
-import ProductAddition from "./product-addition";
-
 // Constants
-
 const sort = (data) => {
   return _.orderBy(data, [(item) => (item.name || "")?.toLowerCase()], ["asc"]);
 };
@@ -47,7 +71,6 @@ const mappingCustomFieldData = (list, valueList) => {
   let rs = [];
   list.map((field) => {
     let value = valueList.filter((valueField) => valueField.id === field.id);
-
     if (value.length > 0) {
       value[0].values = sort(value[0].values);
       rs.push(value[0]);
@@ -57,7 +80,6 @@ const mappingCustomFieldData = (list, valueList) => {
       rs.push(customField);
     }
   });
-
   return rs;
 };
 
@@ -77,7 +99,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     product,
     products,
     folder,
-    folders,
+    folders: OriginalFolders,
     customs,
     dpi,
   } = asset;
@@ -101,7 +123,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
   const [aiTags, setAiTags] = useState([]);
   const [assetCampaigns, setCampaigns] = useState(campaigns);
   const [assetProjects, setProjects] = useState(projects);
-  const [selectedFolder, setSelectedFolders] = useState([]);
+  // const [selectedFolder, setSelectedFolders] = useState([]);
 
   const [activeDropdown, setActiveDropdown] = useState("");
 
@@ -114,6 +136,42 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     mappingCustomFieldData(inputCustomFields, customs)
   );
 
+  const {
+    folders,
+    selectedFolder,
+    subFolderLoadingState,
+    folderChildList,
+    showDropdown,
+    selectAllFolders,
+    input,
+    setInput,
+    filteredData,
+    getFolders,
+    getSubFolders,
+    toggleSelected,
+    toggleDropdown,
+    toggleSelectAllChildList,
+    setSelectedFolder,
+    setShowDropdown,
+    setSubFolderLoadingState,
+    setFolderChildList,
+    setSelectAllFolders,
+    completeSelectedFolder
+  } = useMoveModal();
+
+
+  const keyExists = (key: string) => {
+    return folderChildList.has(key);
+  };
+
+  const keyResultsFetch = (key: string, type: string): Item[] | number => {
+    const { results, next } = folderChildList.get(key);
+    if (type === 'record') {
+      return results || []
+    }
+    return next
+  };
+
   // Products
   const [productList, setProductList] = useState(products);
 
@@ -124,7 +182,10 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     setAiTags(sort(_aiTags));
     setCampaigns(sort(campaigns));
     setProjects(projects);
-    setSelectedFolders(folders);
+    // setSelectedFolders(folders);
+    OriginalFolders?.map(({ id, name, parentId, ...rest }: Item) => {
+      completeSelectedFolder.set(id, { name, parentId: parentId || null })
+    })
 
     // setAssetCustomFields(update(assetCustomFields, {
     //   $set: mappingCustomFieldData(inputCustomFields, customs)
@@ -135,12 +196,23 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     if (!isShare) {
       getTagsInputData();
       getCustomFieldsInputData();
-      getFolderData();
+      // getFolderData();
       if (hasPermission([CALENDAR_ACCESS])) {
         getInputData();
         getCustomFieldsInputData();
       }
+      getFolders();
+      return () => {
+        setSelectedFolder([]);
+        setShowDropdown([]);
+        setSubFolderLoadingState(new Map());
+        setFolderChildList(new Map())
+        setSelectAllFolders({})
+        setInput("")
+        completeSelectedFolder.clear();
+      };
     }
+
   }, []);
 
   useEffect(() => {
@@ -228,6 +300,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
   };
 
   const updateAssetState = (updatedata) => {
+    console.log(updatedata, "hello")
     const assetIndex = assets.findIndex(
       (assetItem) => assetItem.asset.id === id
     );
@@ -241,7 +314,6 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
       );
       setAssetDetail(update(asset, updatedata));
     }
-
     setActiveDropdown("");
   };
 
@@ -472,6 +544,10 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     setProductList(products);
   }, [products]);
 
+
+
+
+
   return (
     <>
       <div
@@ -491,17 +567,6 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
             </div>
           ))}
         </div>
-
-        {/*<div className={styles['field-wrapper']} >*/}
-        {/*  <div className={`secondary-text ${styles.field}`}>Channel</div>*/}
-        {/*  <ChannelSelector*/}
-        {/*    channel={channel || undefined}*/}
-        {/*    isShare={isShare}*/}
-        {/*    onLabelClick={() => { }}*/}
-        {/*    handleChannelChange={(option) => updateChannel(option)}*/}
-        {/*  />*/}
-        {/*</div>*/}
-
         {(!isShare || (isShare && asset.displayAttributes)) && (
           <>
             {!hideFilterElements.campaigns && (
@@ -590,7 +655,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
 
             {advancedConfig.aiTagging &&
               ["png", "jpg", "jpeg"].indexOf(asset.extension.toLowerCase()) >
-                -1 && (
+              -1 && (
                 <div className={styles["field-wrapper"]}>
                   <CreatableSelect
                     title="AI Tags"
@@ -649,7 +714,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                       data={assetCustomFields[index]?.values[0]?.name}
                       options={field.values}
                       isShare={isShare}
-                      onLabelClick={() => {}}
+                      onLabelClick={() => { }}
                       handleFieldChange={(option) => {
                         onChangeSelectOneCustomField(option, index);
                       }}
@@ -710,7 +775,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                       onAddClick={() => setActiveCustomField(index)}
                       selectPlaceholder={"Select an existing one"}
                       avilableItems={field.values}
-                      setAvailableItems={() => {}}
+                      setAvailableItems={() => { }}
                       selectedItems={
                         assetCustomFields.filter(
                           (assetField) => assetField.id === field.id
@@ -763,46 +828,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
               }
             })}
 
-            {/*<div className={styles['field-wrapper']} >*/}
-            {/*  <div className={`secondary-text ${styles.field}`}>Projects</div>*/}
-            {/*  <div className={'normal-text'}>*/}
-            {/*    <ul className={`tags-list ${styles['tags-list']}`}>*/}
-            {/*      {assetProjects?.map((project, index) => (*/}
-            {/*        <li key={project.id}>*/}
-            {/*          <Tag*/}
-            {/*            altColor='turquoise'*/}
-            {/*            tag={project.name}*/}
-            {/*            canRemove={!isShare}*/}
-            {/*            removeFunction={() => handleAssociationChange(project.id, 'projects', 'remove')}*/}
-            {/*          />*/}
-            {/*        </li>*/}
-            {/*      ))}*/}
-            {/*    </ul>*/}
-            {/*    {!isShare && hasPermission([CALENDAR_ACCESS]) &&*/}
-            {/*      <>*/}
-            {/*        {activeDropdown === 'projects' ?*/}
-            {/*          <div className={`tag-select ${styles['select-wrapper']}`}>*/}
-            {/*            <ReactCreatableSelect*/}
-            {/*              options={inputProjects.map(project => ({ ...project, label: project.name, value: project.id }))}*/}
-            {/*              placeholder={'Enter new project or select an existing one'}*/}
-            {/*              onChange={handleProjectChange}*/}
-            {/*              styleType={'regular item'}*/}
-            {/*              menuPlacement={'top'}*/}
-            {/*              isClearable={true}*/}
-            {/*            />*/}
-            {/*          </div>*/}
-            {/*          :*/}
-            {/*          <div className={`add ${styles['select-add']}`} onClick={() => setActiveDropdown('projects')}>*/}
-            {/*            <IconClickable src={Utilities.add} />*/}
-            {/*            <span>Add to Project</span>*/}
-            {/*          </div>*/}
-            {/*        }*/}
-            {/*      </>*/}
-            {/*    }*/}
-            {/*  </div>*/}
-            {/*</div>*/}
-
-            <div className={styles["field-wrapper"]}>
+            {/* <div className={styles["field-wrapper"]}>
               <CreatableSelect
                 title="Collections"
                 addText="Add to Collections"
@@ -815,19 +841,13 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                 selectedItems={selectedFolder}
                 setSelectedItems={setSelectedFolders}
                 onAddOperationFinished={(stateUpdate) => {
-                  // console.log(stateUpdate)
+                  console.log(stateUpdate, "stateUpdate")
                   updateAssetState({
                     folders: { $set: stateUpdate },
                   });
-                  // loadCampaigns()
                 }}
                 onRemoveOperationFinished={async (index, stateUpdate, id) => {
                   deleteFolder(id, stateUpdate);
-                  // return deleteFolder(index)
-                  // await assetApi.removeCampaign(id, assetCampaigns[index].id)
-                  // updateAssetState({
-                  //   campaigns: { $set: stateUpdate }
-                  // })
                 }}
                 onOperationFailedSkipped={() => setActiveDropdown("")}
                 isShare={isShare}
@@ -838,42 +858,145 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                 altColor="yellow"
                 sortDisplayValue={true}
               />
-            </div>
+            </div> */}
 
-            {/*<div className={styles['field-wrapper']} >*/}
-            {/*  <div className={`secondary-text ${styles.field}`}>Collection</div>*/}
-            {/*  <div className={`normal-text ${styles['collection-container']}`}>*/}
-            {/*    <p className={styles['collection-name']}>*/}
-            {/*      {folder && <span className={styles.label}>{folder.name}</span>}*/}
-            {/*      {folder && !isShare && <span className={styles.remove} onClick={deleteFolder}>x</span>}*/}
-            {/*    </p>*/}
-            {/*    {!isShare &&*/}
-            {/*      <>*/}
-            {/*        {activeDropdown === 'collection' ?*/}
-            {/*          <div className={`tag-select ${styles['select-wrapper']}`}>*/}
-            {/*            <ReactCreatableSelect*/}
-            {/*              options={inputFolders.map(folder => ({ ...folder, label: folder.name, value: folder.id }))}*/}
-            {/*              placeholder={'Enter new collection or select an existing one'}*/}
-            {/*              onChange={(selected, actionMeta) => onValueChange(selected, actionMeta, addFolder, changeFolder)}*/}
-            {/*              styleType={'regular item'}*/}
-            {/*              menuPlacement={'top'}*/}
-            {/*              isClearable={true}*/}
-            {/*            />*/}
-            {/*          </div>*/}
-            {/*          :*/}
-            {/*          <>*/}
-            {/*            {!folder &&*/}
-            {/*              <div className={`add ${styles['select-add']}`} onClick={() => setActiveDropdown('collection')}>*/}
-            {/*                <IconClickable src={Utilities.add} />*/}
-            {/*                <span>Add Collection</span>*/}
-            {/*              </div>*/}
-            {/*            }*/}
-            {/*          </>*/}
-            {/*        }*/}
-            {/*      </>*/}
-            {/*    }*/}
-            {/*  </div>*/}
-            {/*</div>*/}
+            {/**
+                * new component 
+              */}
+            <div className={styles["field-wrapper"]}>
+              {<div className={`${styles["tag-container-wrapper"]}`}>
+                {
+                  [...completeSelectedFolder.entries()].map(([key, value], index) => (
+                    <div className={`${styles["tag-container"]}`} key={index}>
+                      <span>{value.name}</span>
+                      <IconClickable
+                        additionalClass={styles.remove}
+                        src={Utilities.closeTag}
+                        onClick={() => toggleSelected(key, !selectedFolder.includes(key), false, "", value.name)}
+                      />
+                    </div>
+                  ))
+                }
+              </div>}
+              {(hasPermission([ASSET_EDIT])) && (activeDropdown === "" || activeDropdown !== "collections") && (
+                <div
+                  className={`add ${styles["select-add"]}`}
+                  onClick={() => setActiveDropdown("collections")}
+                >
+                  <IconClickable src={Utilities.addLight} />
+                  <span>{"Add to Collection"}</span>
+                </div>
+              )}
+              {
+                (hasPermission([ASSET_EDIT]) && activeDropdown === "collections") &&
+                <div className={`${styles["edit-bulk-outer-wrapper"]}`}>
+                  <div className={`${styles["close-popup"]}`}> <IconClickable
+                    additionalClass={styles.remove}
+                    src={Utilities.closeTag}
+                    onClick={() => setActiveDropdown("")}
+                  /></div>
+                  <div className={`${styles["search-btn"]}`}>
+                    <SearchModal filteredData={filteredData} input={input} setInput={setInput} />
+                  </div>
+                  <div className={`${styles["modal-heading"]}`}>
+                    <span>Collection({folders.length ?? ""})</span>
+                  </div>
+                  <div className={`${styles["outer-wrapper"]}`}>
+                    {folders.map((folder, index) => (
+                      <div key={index}>
+                        <div className={`${styles["flex"]} ${styles.nestedbox}`}>
+                          <div className={`${styles["height"]} ${styles["flex"]}`}
+                            onClick={() => { toggleDropdown(folder.id, true) }}
+                          >
+                            <img
+                              className={showDropdown.includes(folder.id) ? styles.iconClick : styles.rightIcon}
+                              src={Utilities.arrowBlue}
+                              alt="Right Arrow Icon"
+                              onClick={() => { toggleDropdown(folder.id, true) }}
+                            />
+                          </div>
+
+                          <div className={styles.w100}>
+                            <div
+                              className={`${styles["dropdownMenu"]} ${selectedFolder.includes(folder.id) ?
+                                styles["active"]
+                                : ""
+                                }`}
+                            >
+                              <div className={styles.flex}>
+                                <div
+                                  className={`${styles.circle} ${selectedFolder.includes(folder.id) ?
+                                    styles.checked
+                                    : ""
+                                    }`}
+                                  onClick={() => toggleSelected(folder.id, !selectedFolder.includes(folder.id), false, "", folder.name)}
+                                >
+                                  {
+                                    selectedFolder.includes(folder.id) &&
+                                    <img src={Utilities.checkIcon} />
+                                  }
+                                </div>
+                                <div className={styles["icon-descriptions"]}>
+                                  <span>{folder.name}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {showDropdown.includes(folder.id) && <div className={styles.folder}>
+                          <div className={styles.subfolderList}>
+                            {
+                              keyExists(folder.id) && (keyResultsFetch(folder.id, "record") as Item[]).map(({ id, name, parentId, ...rest }) => (
+                                <>
+                                  <div
+                                    key={id}
+                                    className={styles.dropdownOptions}
+                                    onClick={() => toggleSelected(id, !selectedFolder.includes(id), true, folder.id, name, parentId)}>
+                                    <div className={styles["folder-lists"]}>
+                                      <div className={styles.dropdownIcons}>
+                                        <div
+                                          className={`${styles.circle} ${selectedFolder.includes(id) ? styles.checked : ""
+                                            }`}>
+                                          {selectedFolder.includes(id) && <img src={Utilities.checkIcon} />}
+                                        </div>
+                                        <div className={styles["icon-descriptions"]}>
+                                          <span>{name}</span>
+                                        </div>
+                                      </div>
+                                      <div className={styles["list1-right-contents"]}>
+                                        {selectedFolder.includes(id) && <span></span>}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </>
+                              ))
+                            }
+                            {(keyExists(folder.id) && (keyResultsFetch(folder.id, "next") as number) >= 0) && <div className={`${styles['outer-load-wrapper']}`}><div className={`${styles['load-wrapper']}`}
+                              onClick={() => { getSubFolders(folder.id, (keyResultsFetch(folder.id, "next") as number), false) }}>
+                              <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} />
+                              <button className={styles.loadMore}>{
+                                subFolderLoadingState.get(folder.id)
+                                  ?
+                                  "Loading..."
+                                  :
+                                  "Load More"
+                              }</button>
+                            </div>
+                            </div>
+                            }
+                          </div>
+                        </div>
+                        }
+                      </div>
+                    ))}
+                  </div>
+                  <div className={styles["modal-btns"]}>
+                    <Button className="container secondary bulk-edit-btn" text="Close" onClick={() => setActiveDropdown("")}
+                    ></Button>
+                  </div>
+                </div>
+              }
+            </div >
 
             {!hideFilterElements.products && (
               <>

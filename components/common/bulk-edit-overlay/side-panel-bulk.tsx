@@ -197,7 +197,6 @@ const SidePanelBulk = ({
     try {
       const projectsResponse = await projectApi.getProjects();
       const campaignsResponse = await campaignApi.getCampaigns();
-      // const folderResponse = await folderApi.getFoldersSimple();
       const tagsResponse = await tagApi.getTags();
       const customFieldsResponse = await attributeApi.getCustomFields({
         isAll: 1,
@@ -206,7 +205,6 @@ const SidePanelBulk = ({
 
       setInputProjects(projectsResponse.data);
       setInputCampaigns(campaignsResponse.data);
-      // setInputFolders(folderResponse.data);
       setInputTags(tagsResponse.data);
       setInputCustomFields(customFieldsResponse.data);
     } catch (err) {
@@ -342,9 +340,6 @@ const SidePanelBulk = ({
     setAssetProducts([...assetProducts, null]);
   };
 
-
-
-
   return (
     <div className={styles.container}>
       <div className={styles.innerContainer}>
@@ -355,7 +350,9 @@ const SidePanelBulk = ({
         <section className={styles["first-section"]}>
           <p>{`Editing (${elementsSelected.length}) files`}</p>
         </section>
-        {/* <CreatableSelect
+
+        {/**       
+         * <CreatableSelect
             title="Collections"
             addText="Add to Collection"
             onAddClick={() => setActiveDropdown("collections")}
@@ -375,19 +372,12 @@ const SidePanelBulk = ({
             isShare={false}
             isBulkEdit={true}
             canAdd={addMode}
-          /> */}
+          />
+        */}
+
+
+
         <section className={styles["field-wrapper"]}>
-          {
-            (addMode && hasPermission([ASSET_EDIT])) &&
-            (activeDropdown === "" || activeDropdown !== "collections") && (
-              <div
-                className={`add ${styles["select-add"]}`}
-                onClick={() => setActiveDropdown("collections")}
-              >
-                <IconClickable src={Utilities.addLight} />
-                <span>{"Add to Collection"}</span>
-              </div>
-            )}
           {<div className={`${styles["tag-container-wrapper"]}`}>
             {
               [...completeSelectedFolder.entries()].map(([key, value], index) => (
@@ -396,15 +386,29 @@ const SidePanelBulk = ({
                   <IconClickable
                     additionalClass={styles.remove}
                     src={Utilities.closeTag}
-                    onClick={() => toggleSelected(key, !selectedFolder.includes(key), false, "", value.name)}
+                    onClick={() => toggleSelected(key, addMode ? !selectedFolder.includes(key) : false, false, "", value.name)}
                   />
                 </div>
               ))
             }
           </div>}
+          {(addMode && hasPermission([ASSET_EDIT])) && (activeDropdown === "" || activeDropdown !== "collections") && (
+            <div
+              className={`add ${styles["select-add"]}`}
+              onClick={() => setActiveDropdown("collections")}
+            >
+              <IconClickable src={Utilities.addLight} />
+              <span>{"Add to Collection"}</span>
+            </div>
+          )}
           {
             (addMode && hasPermission([ASSET_EDIT]) && activeDropdown === "collections") &&
             <div className={`${styles["edit-bulk-outer-wrapper"]}`}>
+              <div className={`${styles["close-popup"]}`}> <IconClickable
+                additionalClass={styles.remove}
+                src={Utilities.closeTag}
+                onClick={() => setActiveDropdown("")}
+              /></div>
               <div className={`${styles["search-btn"]}`}>
                 <SearchModal filteredData={filteredData} input={input} setInput={setInput} />
               </div>
@@ -518,12 +522,7 @@ const SidePanelBulk = ({
                 ))}
               </div>
               <div className={styles["modal-btns"]}>
-                <Button
-                  className="container primary main-modal-btn"
-                  text="Add to collection"
-                  onClick={() => setActiveDropdown("")}
-                ></Button>
-                <Button className="container secondary" text="Cancel" onClick={() => setActiveDropdown("")}
+                <Button className="container secondary bulk-edit-btn" text="Close" onClick={() => setActiveDropdown("")}
                 ></Button>
               </div>
             </div>

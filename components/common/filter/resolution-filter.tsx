@@ -1,3 +1,4 @@
+import React from "react";
 import { Utilities } from "../../../assets";
 import { IResolutionFilter } from "../../../interfaces/filters";
 import IconClickable from "../buttons/icon-clickable";
@@ -12,8 +13,8 @@ interface ResolutionFilterProps {
 const ResolutionFilter: React.FC<ResolutionFilterProps> = ({ data }) => {
   return (
     <>
-      <div>
-        <IconClickable src={Utilities.radioButtonNormal} />
+      <div className={styles["heading-tag"]}>
+        <IconClickable  src={Utilities.radioButtonNormal} />
         <span>All High-Res (above 250 DPI)</span>
       </div>
       <div className={styles["outer-wrapper"]}>

@@ -73,7 +73,7 @@
   border: 1px solid var(--color-secondary-border);
   color: var(--color-prim-navy);
 }
-
+console
 .primary:hover,
 .normal-height-primary:hover,
 .input-height-primary:hover {
@@ -427,7 +427,11 @@
   background-color: transparent;
 }
 
+.bulk-edit-btn{
+  width: 100%;
+  border: 1px solid #d8cab5;
 
+}
 
 
 

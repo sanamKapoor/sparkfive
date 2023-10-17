@@ -237,11 +237,15 @@ export const useMoveModal = (): MoveModalReturnType => {
         }
     }
 
-    const toggleSelectAllChildList = (folderId: string, name = "") => {
+    const toggleSelectAllChildList = async (folderId: string, name = "") => {
         if (selectAllFolders[folderId]) {
             ToggleAllSelectedFolders(folderId, false, name)
             setSelectAllFolders((prev) => ({ ...prev, [folderId]: false }));
+
         } else {
+            if (!showDropdown.includes(folderId)) {
+                await toggleDropdown(folderId, true)
+            }
             ToggleAllSelectedFolders(folderId, true, name)
             setSelectAllFolders((prev) => ({ ...prev, [folderId]: true }));
         }

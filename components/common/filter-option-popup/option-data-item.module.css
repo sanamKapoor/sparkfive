@@ -9,7 +9,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 30px;
+   
    
 }
 .tags-left-side{
@@ -17,3 +17,11 @@
     align-items: center;
     gap:10px;
 }
+.select-name{
+    display: inline-block;
+    width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+  }
