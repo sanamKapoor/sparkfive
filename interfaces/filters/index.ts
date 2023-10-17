@@ -2,6 +2,7 @@ export interface IAttribute {
   id: string;
   name: string;
   type: "pre-defined" | "custom";
+  selectionType: "selectOne" | "selectMultiple";
 }
 
 export interface IAttributeValue extends Pick<ITag, "type"> {
