@@ -50,9 +50,10 @@ const FilterView = () => {
   }, []);
 
   /** // TODO:
-   * 1. check for permission and custom restrictions for individual filter attributes
-   * 2. Check for share pages
-   * 3. check advancedConfiguration -> hideFilterElements
+   * 1. Handle setting of activeSortFilter on selection/ deselection of values
+   * 2. check for permission and custom restrictions for individual filter attributes
+   * 3. Check for share pages
+   * 4. check advancedConfiguration -> hideFilterElements
    **/
   const onAttributeClick = async (data: IAttribute) => {
     try {
@@ -66,25 +67,31 @@ const FilterView = () => {
         case FilterAttributeVariants.TAGS:
           values = await fetchTags();
           break;
+
         case FilterAttributeVariants.AI_TAGS:
           values = await fetchAITags();
           values = (values as IAttributeValue[])?.filter(
             (tag) => tag.type === "AI"
           );
           break;
+
         case FilterAttributeVariants.CAMPAIGNS:
           values = await fetchCampaigns();
           break;
+
         case FilterAttributeVariants.FILE_TYPES:
           values = await fetchAssetFileExtensions();
           break;
+
         case FilterAttributeVariants.ORIENTATION:
           values = await fetchAssetOrientations();
           break;
+
         case FilterAttributeVariants.RESOLUTION:
           contentType = "resolutions";
           values = await fetchAssetResolutions();
           break;
+
         case FilterAttributeVariants.DIMENSIONS:
           contentType = "dimensions";
           values = await fetchAssetDimensionLimits();
@@ -103,7 +110,6 @@ const FilterView = () => {
         case FilterAttributeVariants.PRODUCTS:
           contentType = "products";
           const sku = await fetchProductSku();
-
           values = {
             sku,
           };
