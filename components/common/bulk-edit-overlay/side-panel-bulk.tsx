@@ -10,6 +10,7 @@ import folderApi from "../../../server-api/folder";
 import projectApi from "../../../server-api/project";
 import tagApi from "../../../server-api/tag";
 import toastUtils from "../../../utils/toast";
+import { ASSET_EDIT } from "../../../constants/permissions";
 
 // Contexts
 import { AssetContext, UserContext } from "../../../context";
@@ -94,17 +95,12 @@ const SidePanelBulk = ({
   addMode,
 }) => {
   const { activeFolder } = useContext(AssetContext);
-
-  const { advancedConfig } = useContext(UserContext);
+  const { advancedConfig, hasPermission } = useContext(UserContext);
   const [hideFilterElements] = useState(advancedConfig.hideFilterElements);
-
   const [channel, setChannel] = useState(null);
   const [activeDropdown, setActiveDropdown] = useState("");
 
   const [inputCampaigns, setInputCampaigns] = useState([]);
-
-  const [inputFolders, setInputFolders] = useState([]);
-  const [assetFolder, setAssetFolder] = useState(null);
 
   const [inputTags, setInputTags] = useState([]);
 
@@ -120,7 +116,6 @@ const SidePanelBulk = ({
   // Custom fields
   const [inputCustomFields, setInputCustomFields] = useState([]);
   const [activeCustomField, setActiveCustomField] = useState<number>();
-
 
   // custom logic for the select forlders child lists
   const {
@@ -143,8 +138,26 @@ const SidePanelBulk = ({
     setSubFolderLoadingState,
     setFolderChildList,
     setSelectAllFolders,
-    selectedFolderCompleteObject
+    completeSelectedFolder
   } = useMoveModal();
+
+  useEffect(() => {
+    if (!addMode) {
+      completeSelectedFolder.clear()
+      assetFolders?.map(({ id, name, parentId, ...rest }: Item) => {
+        completeSelectedFolder.set(id, { name, parentId: parentId || null })
+      })
+    } else {
+      completeSelectedFolder.clear()
+      setSelectedFolder([]);
+      setShowDropdown([]);
+      setSubFolderLoadingState(new Map());
+      setFolderChildList(new Map())
+      setSelectAllFolders({})
+      setInput("")
+      setActiveDropdown("")
+    }
+  }, [addMode]);
 
   const keyExists = (key: string) => {
     return folderChildList.has(key);
@@ -168,12 +181,12 @@ const SidePanelBulk = ({
       setFolderChildList(new Map())
       setSelectAllFolders({})
       setInput("")
+      completeSelectedFolder.clear();
     };
   }, []);
 
   useEffect(() => {
     if (addMode) {
-      setAssetFolder(null);
       setChannel(null);
       setAssetProduct(null);
       setAssetProducts([]);
@@ -184,7 +197,6 @@ const SidePanelBulk = ({
     try {
       const projectsResponse = await projectApi.getProjects();
       const campaignsResponse = await campaignApi.getCampaigns();
-      // const folderResponse = await folderApi.getFoldersSimple();
       const tagsResponse = await tagApi.getTags();
       const customFieldsResponse = await attributeApi.getCustomFields({
         isAll: 1,
@@ -193,7 +205,6 @@ const SidePanelBulk = ({
 
       setInputProjects(projectsResponse.data);
       setInputCampaigns(campaignsResponse.data);
-      // setInputFolders(folderResponse.data);
       setInputTags(tagsResponse.data);
       setInputCustomFields(customFieldsResponse.data);
     } catch (err) {
@@ -240,7 +251,12 @@ const SidePanelBulk = ({
   const saveChanges = async () => {
     try {
       let filters = {};
-
+      const assetFolders = [...completeSelectedFolder.entries()].map(([key, value], index) => {
+        return {
+          id: key,
+          name: value.name
+        }
+      })
       setWarningMessage("");
       setLoading(true);
       const mapAttributes = ({ id, name }) => ({ id, name });
@@ -293,7 +309,6 @@ const SidePanelBulk = ({
       await onUpdate();
       toastUtils.success("Asset edits saved");
     } catch (err) {
-      console.log(err);
       toastUtils.error("An error occurred, please try again later");
     } finally {
       setLoading(false);
@@ -324,7 +339,7 @@ const SidePanelBulk = ({
   const addProductBlock = () => {
     setAssetProducts([...assetProducts, null]);
   };
-  console.log(selectedFolderCompleteObject, selectAllFolders, selectedFolder, "selectedFolderCompleteObject")
+
   return (
     <div className={styles.container}>
       <div className={styles.innerContainer}>
@@ -335,23 +350,49 @@ const SidePanelBulk = ({
         <section className={styles["first-section"]}>
           <p>{`Editing (${elementsSelected.length}) files`}</p>
         </section>
+
+        {/**       
+         * <CreatableSelect
+            title="Collections"
+            addText="Add to Collection"
+            onAddClick={() => setActiveDropdown("collections")}
+            selectPlaceholder={
+              "Enter a new collection or select an existing one"
+            }
+            avilableItems={inputFolders}
+            setAvailableItems={setInputFolders}
+            selectedItems={assetFolders}
+            setSelectedItems={setFolders}
+            onAddOperationFinished={() => setActiveDropdown("")}
+            onRemoveOperationFinished={() => null}
+            onOperationFailedSkipped={() => setActiveDropdown("")}
+            asyncCreateFn={() => null}
+            dropdownIsActive={activeDropdown === "collections"}
+            altColor="yellow"
+            isShare={false}
+            isBulkEdit={true}
+            canAdd={addMode}
+          />
+        */}
+
+
+
         <section className={styles["field-wrapper"]}>
-           {<div className={`${styles["tag-container-wrapper"]}`}>
+          {<div className={`${styles["tag-container-wrapper"]}`}>
             {
-              Array.from([...selectedFolderCompleteObject.entries()]).map(([key, value], index) => (
+              [...completeSelectedFolder.entries()].map(([key, value], index) => (
                 <div className={`${styles["tag-container"]}`} key={index}>
                   <span>{value.name}</span>
                   <IconClickable
                     additionalClass={styles.remove}
                     src={Utilities.closeTag}
-                    onClick={() => toggleSelected(key, !selectedFolder.includes(key), false, "", value.name)}
+                    onClick={() => toggleSelected(key, addMode ? !selectedFolder.includes(key) : false, false, "", value.name)}
                   />
                 </div>
               ))
             }
-
           </div>}
-          {(activeDropdown === "" || activeDropdown !== "collections") && (
+          {(addMode && hasPermission([ASSET_EDIT])) && (activeDropdown === "" || activeDropdown !== "collections") && (
             <div
               className={`add ${styles["select-add"]}`}
               onClick={() => setActiveDropdown("collections")}
@@ -360,17 +401,14 @@ const SidePanelBulk = ({
               <span>{"Add to Collection"}</span>
             </div>
           )}
-         
-       
           {
-            activeDropdown === "collections" &&
+            (addMode && hasPermission([ASSET_EDIT]) && activeDropdown === "collections") &&
             <div className={`${styles["edit-bulk-outer-wrapper"]}`}>
-              <div className= {`${styles["close-popup"]}`}> <IconClickable
-                    additionalClass={styles.remove}
-                    src={Utilities.closeTag}
-                    onClick={() => toggleSelected(key, !selectedFolder.includes(key), false, "", value.name)}
-                  /></div>
-              
+              <div className={`${styles["close-popup"]}`}> <IconClickable
+                additionalClass={styles.remove}
+                src={Utilities.closeTag}
+                onClick={() => setActiveDropdown("")}
+              /></div>
               <div className={`${styles["search-btn"]}`}>
                 <SearchModal filteredData={filteredData} input={input} setInput={setInput} />
               </div>
@@ -484,12 +522,7 @@ const SidePanelBulk = ({
                 ))}
               </div>
               <div className={styles["modal-btns"]}>
-                <Button
-                  className="container primary main-modal-btn"
-                  text="Add to collection"
-                  onClick={() => setActiveDropdown("")}
-                ></Button>
-                <Button className="container secondary" text="Cancel" onClick={() => setActiveDropdown("")}
+                <Button className="container secondary bulk-edit-btn" text="Close" onClick={() => setActiveDropdown("")}
                 ></Button>
               </div>
             </div>
@@ -631,7 +664,6 @@ const SidePanelBulk = ({
                       isShare={false}
                       activeDropdown={activeDropdown}
                       setActiveDropdown={(value) => {
-                        console.log(value);
                         setActiveDropdown(`${value}-${index}`);
                       }}
                       assetId={null}

@@ -191,6 +191,7 @@
   .rightIcon {
     margin-right: 5px;
     transform: rotate(275deg);
+    cursor: pointer;
   }
 
   .icon-descriptions {
@@ -243,6 +244,7 @@
     transform: rotate(0deg);
     margin-right: 5px;
     width: 11px;
+    cursor: pointer;
   }
   .dropdownOptions {
     position: relative;

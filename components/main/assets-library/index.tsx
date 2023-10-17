@@ -1105,9 +1105,9 @@ const AssetsLibrary = () => {
                       : styles["grid-wrapper"]
                   } ${activeFolder && styles["active-breadcrumb-item"]}`}
                 >
-                  {/* // TODO: move this inline style to css module */}
+                 
                   {activeMode !== "folders" && (
-                    <div style={{ paddingTop: "50px" }}>
+                    <div className={styles.wrapper}>
                       <FilterView />
                     </div>
                   )}
@@ -1162,7 +1162,6 @@ const AssetsLibrary = () => {
           }}
         />
       )}
-
       {currentViewAsset && (
         <DetailOverlay
           initiaParams={{ side: "detail" }}
