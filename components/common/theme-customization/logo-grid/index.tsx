@@ -1,3 +1,4 @@
+// @ts-ignore
 import styles from "./index.module.css";
 export default function LogoGrid({ data = [], selectedItem, onSelect }: Props) {
   return (
@@ -5,13 +6,13 @@ export default function LogoGrid({ data = [], selectedItem, onSelect }: Props) {
       {data.map((item, index) => {
         return (
           <div
-            className={item.id === selectedItem?.id ? styles["item-selected"] : styles.item}
+            className={item.asset?.id === selectedItem?.asset?.id ? styles["item-selected"] : styles.item}
             key={index}
             onClick={() => {
               onSelect(item);
             }}
           >
-            <img src={item.url} alt={"image"} />
+            <img src={item.thumbailUrl} alt={"image"} />
           </div>
         );
       })}

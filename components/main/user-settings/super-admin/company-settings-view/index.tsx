@@ -42,6 +42,7 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({ onBack, data,
     advancedCollectionShareLink: data?.advancedCollectionShareLink,
     transcript: data?.transcript,
     ocr: data?.ocr,
+    themeCustomization: data?.themeCustomization || false,
   });
   const [showPlanModal, setShowPlanModal] = useState<boolean>(false);
 
@@ -243,6 +244,22 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({ onBack, data,
 
           <div className={"col-20 align-self-flex-end"}></div>
         </div>
+
+        <div className={`row align-flex-start ${styles.cdnEmbedding}`}>
+          <div className={"col-20 font-weight-600"}>Theme Customization</div>
+
+          <div className={"col-20"}>
+            <OptionList
+              setValue={(value) => setSettings({ ...settings, themeCustomization: value })}
+              data={type}
+              oneColumn={false}
+              value={settings.themeCustomization}
+            />
+          </div>
+
+          <div className={"col-20 align-self-flex-end"}></div>
+        </div>
+
         <div className={styles.featuresbtn}>
           <Button
             className={"container exclude-min-height primary"}

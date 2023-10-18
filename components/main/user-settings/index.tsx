@@ -5,8 +5,10 @@ import { isMobile } from "react-device-detect";
 import { UserContext } from "../../../context";
 import LocationContextProvider from "../../../context/location-provider";
 import urlUtils from "../../../utils/url";
+// @ts-ignore
 import styles from "./index.module.css";
 
+// @ts-ignore
 import { SETTINGS_COMPANY, SETTINGS_TEAM, SUPERADMIN_ACCESS } from "../../../constants/permissions";
 
 // Components
@@ -69,12 +71,13 @@ export const SETTING_OPTIONS = {
     label: "Theme Customization",
     contentTitle: "Theme Customization",
     permissions: [SETTINGS_TEAM, SETTINGS_COMPANY],
+    requiredTeamSettings: ["themeCustomization"],
     content: ThemeCustomization,
   },
 };
 
 const UserSettings: React.FC = () => {
-  const { hasPermission } = useContext(UserContext);
+  const { hasPermission, user } = useContext(UserContext);
 
   const router = useRouter();
 
@@ -117,7 +120,14 @@ const UserSettings: React.FC = () => {
               <IconClickable src={Utilities.menu} onClick={toggleSettings} />
               <h2>{capitalCase(getTitle(activeView))}</h2>
             </div>
-            {hasPermission(SETTING_OPTIONS[activeView]?.permissions) ? <ActiveContent /> : <NoPermissionNotice />}
+            {hasPermission(
+              SETTING_OPTIONS[activeView]?.permissions,
+              SETTING_OPTIONS[activeView]?.requiredTeamSettings,
+            ) ? (
+              <ActiveContent />
+            ) : (
+              <NoPermissionNotice />
+            )}
           </section>
         </FilterProvider>
       </LocationContextProvider>

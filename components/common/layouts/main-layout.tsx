@@ -20,7 +20,7 @@ import SpinnerOverlay from "../spinners/spinner-overlay";
 import UserPhoto from "../user/user-photo";
 
 const MainLayout = ({ children, requiredPermissions = [] }) => {
-  const { user, logOut, hasPermission } = useContext(UserContext);
+  const { user, logOut, hasPermission, logo } = useContext(UserContext);
   const { isLoading } = useContext(LoadingContext);
   const pageListRef = useRef(null);
 
@@ -90,7 +90,7 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
     settingsDropdownOptions.push({
       OverrideComp: () => <SettingsLink name="Custom Settings" settingRef="custom-settings" />,
     });
-  if (hasPermission([SETTINGS_TEAM]))
+  if (hasPermission([SETTINGS_TEAM]) && user.team?.themeCustomization)
     settingsDropdownOptions.push({
       OverrideComp: () => <SettingsLink name="Theme Customization" settingRef="theme-customization" />,
     });
@@ -106,7 +106,7 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
           <header id={"main-header"} className={styles.header}>
             <Link href={plan?.type === "marketing_hub" ? "/main/overview" : "/main/assets"}>
               <a>
-                <img className={styles["logo-img"]} src={GeneralImg.logo} />
+                <img className={styles["logo-img"]} src={logo} alt={"logo"} />
               </a>
             </Link>
             <div className={styles["mobile-navigation-links"]}>

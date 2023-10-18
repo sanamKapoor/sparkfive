@@ -1,6 +1,6 @@
 // External import
 import update from "immutability-helper";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 
 // Styles
 import styles from "./index.module.css";
@@ -24,7 +24,11 @@ import Spinner from "../common/spinners/spinner";
 
 import { loadTheme } from "../../utils/theme";
 
+import { UserContext } from "../../context";
+import { defaultLogo } from "../../constants/theme";
+
 const AssetShare = () => {
+  const { logo: themeLogo, setLogo: setThemeLogo } = useContext(UserContext);
   const [assets, setAssets] = useState([]);
   const [selectedAsset, setSelectedAsset] = useState(0);
   const [showDownloadPopup, setShowDownloadPopup] = useState(false);
@@ -150,11 +154,20 @@ const AssetShare = () => {
           setAssets(data.data);
           setShareUserName(data.sharedBy);
           setSharedCode(code as string);
+          setLogo(data.data.team?.workspaceIcon);
         }
 
-        loadTheme();
+        // There is team theme set
+        if (data.theme) {
+          // Load theme from team settings
+          const currentTheme = loadTheme(data.theme);
+
+          // @ts-ignore
+          setThemeLogo(currentTheme.logoImage?.realUrl || defaultLogo);
+        }
       }
     } catch (err) {
+      console.log(err);
       toastUtils.error("Could not get assets from server");
     }
   };
@@ -174,20 +187,38 @@ const AssetShare = () => {
       setLoading(false);
       setAssets(data.data);
     }
+
+    // There is team theme set
+    if (data.theme) {
+      // Load theme from team settings
+      const currentTheme = loadTheme(data.theme);
+
+      console.log(`Current sync theme`, currentTheme);
+      // @ts-ignore
+      console.log(`Logo: `, currentTheme.logoImage?.realUrl || defaultLogo);
+      // @ts-ignore
+      setThemeLogo(currentTheme.logoImage?.realUrl || defaultLogo);
+    } else {
+      // Load theme from local storage
+      const currentTheme = loadTheme();
+      console.log(`Current logo theme`, currentTheme);
+      // @ts-ignore
+      setThemeLogo(currentTheme.logoImage?.realUrl || defaultLogo);
+    }
   };
 
   return (
     <>
       {!loading && !error && (
         <header className={styles.header}>
-          <img className={styles["logo-img"]} src={GeneralImg.logo} />
+          <img className={styles["logo-img"]} src={themeLogo} />
         </header>
       )}
       <section className={styles.container}>
         {loading && <Spinner className={styles["spinner"]} />}
         {!loading && error && (
           <div>
-            <img alt={"logo"} src={logo || GeneralImg.logoHorizontal} className={styles.logo} />
+            <img alt={"logo"} src={logo || themeLogo} className={styles.logo} />
             <AuthContainer
               title="Spencer Mo has shared files with you"
               titleComponent={<p className={"normal-text font-16"}>{shareUserName} has shared files with you</p>}

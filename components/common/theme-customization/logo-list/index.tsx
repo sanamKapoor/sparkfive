@@ -11,8 +11,8 @@ export default function LogoList({ data, onSelect }: Props) {
               onSelect(item);
             }}
           >
-            <img className={styles.logo} src={item.url} alt={"logo"} />
-            <div className={styles.name}>{item.name}</div>
+            <img className={styles.logo} src={item.thumbailUrl} alt={"logo"} />
+            <div className={styles.name}>{item.asset.name}</div>
           </div>
         );
       })}

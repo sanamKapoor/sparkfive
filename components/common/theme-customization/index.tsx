@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./index.module.css";
 
 import Setting from "./setting";
-
 import Logotype from "./logotype";
 
 import { setTheme, getThemeFromLocalStorage } from "../../../utils/theme";
@@ -17,13 +16,21 @@ import {
 
 import { GeneralImg } from "../../../assets";
 
+import { UserContext, LoadingContext } from "../../../context";
+
+import teamApi from "../../../server-api/team";
+
 export default function ThemeCustomization() {
+  const { setLogo, logo } = useContext(UserContext);
+  const { setIsLoading } = useContext(LoadingContext);
   const [headNavColor, setHeadNavColor] = useState(defaultHeadNavColor);
   const [primaryColor, setPrimaryColor] = useState(defaultPrimaryColor);
   const [secondaryColor, setSecondaryColor] = useState(defaultSecondaryColor);
   const [additionalColor, setAdditionalColor] = useState(defaultAdditionalColor);
 
-  const [currentLogo, setCurrentLogo] = useState<any>({ id: 0, url: GeneralImg.logo });
+  const [currentLogo, setCurrentLogo] = useState<any>({ id: 0, url: logo });
+
+  console.log(logo);
 
   const onResetColor = () => {
     setHeadNavColor(defaultHeadNavColor);
@@ -36,11 +43,26 @@ export default function ThemeCustomization() {
     setCurrentLogo({ id: 0, url: GeneralImg.logo });
   };
 
-  const onSave = () => {
+  const onUploadLogo = () => {};
+
+  const onSave = async () => {
+    setIsLoading(true);
+    await teamApi.updateTheme({
+      headerNavigation: headNavColor,
+      primary: primaryColor,
+      secondary: secondaryColor,
+      additional: additionalColor,
+      logo: currentLogo.id || null,
+    });
     setTheme("headerNavigation", headNavColor);
     setTheme("primary", primaryColor);
     setTheme("secondary", secondaryColor);
     setTheme("additional", additionalColor);
+    setTheme("logo", currentLogo);
+
+    setLogo(currentLogo.url);
+
+    setIsLoading(false);
 
     toastUtils.success("Theme changes successfully");
   };
@@ -112,7 +134,10 @@ export default function ThemeCustomization() {
       <Logotype
         currentLogo={currentLogo}
         onChange={(value) => {
-          setCurrentLogo(value);
+          setCurrentLogo({
+            id: value.asset.id,
+            url: value.realUrl,
+          });
         }}
       />
 

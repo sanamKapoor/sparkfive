@@ -22,7 +22,7 @@ export const getSecondaryColor = () => {
 };
 
 // Set theme at :root level
-export const setTheme = (type: string, value: string, ignoreSetStorage = false) => {
+export const setTheme = (type: string, value: any, ignoreSetStorage = false) => {
   switch (type) {
     case "headerNavigation": {
       document.documentElement.style.setProperty("--header-navigation-color", value);
@@ -68,16 +68,55 @@ export const setTheme = (type: string, value: string, ignoreSetStorage = false) 
       }
       break;
     }
+
+    case "logo": {
+      if (!ignoreSetStorage) {
+        const theme = getThemeFromLocalStorage();
+        theme.logo = value;
+        localStorage.setItem(themeVariableName, JSON.stringify(theme));
+      }
+
+      break;
+    }
+
+    // In case load from database
+    case "logoImage": {
+      if (!ignoreSetStorage) {
+        const theme = getThemeFromLocalStorage();
+        if (value) {
+          theme.logo = {
+            id: value.asset.id,
+            url: value.realUrl,
+          };
+          localStorage.setItem(themeVariableName, JSON.stringify(theme));
+        }
+      }
+    }
   }
 };
 
-export const loadTheme = () => {
+export const loadTheme = (themeData?: any) => {
   console.log(`>>> Load theme...`);
-  const theme = getThemeFromLocalStorage();
 
-  Object.keys(theme).map((key) => {
-    setTheme(key, theme[key], true);
-  });
+  let theme = {};
+
+  if (themeData) {
+    theme = themeData;
+
+    delete themeData.logo;
+
+    Object.keys(theme).map((key) => {
+      setTheme(key, theme[key]);
+    });
+  } else {
+    theme = getThemeFromLocalStorage();
+
+    Object.keys(theme).map((key) => {
+      setTheme(key, theme[key], true);
+    });
+  }
+
+  return theme;
 };
 
 export const resetTheme = () => {

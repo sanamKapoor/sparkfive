@@ -1,5 +1,7 @@
 import update from "immutability-helper";
 import { useRouter } from "next/router";
+
+import { isMobile } from "react-device-detect";
 import { useContext, useEffect, useState } from "react";
 import { AssetContext, FilterContext, ShareContext, UserContext } from "../../context";
 import folderApi from "../../server-api/folder";
@@ -16,11 +18,12 @@ import TopBar from "../common/asset/top-bar";
 import FilterContainer from "../common/filter/filter-container";
 import PasswordOverlay from "./password-overlay";
 
-import { isMobile } from "react-device-detect";
 import selectOptions from "../../utils/select-options";
 import Spinner from "../common/spinners/spinner";
 
 import { loadTheme } from "../../utils/theme";
+
+import { defaultLogo } from "../../constants/theme";
 
 const ShareFolderMain = () => {
   const router = useRouter();
@@ -45,7 +48,7 @@ const ShareFolderMain = () => {
     selectedAllFolders,
   } = useContext(AssetContext);
 
-  const { user, advancedConfig, setAdvancedConfig } = useContext(UserContext);
+  const { user, advancedConfig, setAdvancedConfig, setLogo } = useContext(UserContext);
 
   const { folderInfo, setFolderInfo, activePasswordOverlay, setActivePasswordOverlay } = useContext(ShareContext);
 
@@ -257,12 +260,20 @@ const ShareFolderMain = () => {
         setActiveFolder(sharedFolder.id);
       }
 
-      loadTheme();
+      // There is team theme set
+      if (data.theme) {
+        // Load theme from team settings
+        const currentTheme = loadTheme(data.theme);
+
+        // @ts-ignore
+        setLogo(currentTheme.logoImage?.realUrl || defaultLogo);
+      }
 
       setLoading(false);
     } catch (err) {
+      console.log(err);
       // If not 500, must be auth error, request user password
-      if (err.response.status !== 500) {
+      if (err.response?.status !== 500) {
         setFolderInfo(err.response.data);
         setActivePasswordOverlay(true);
       }

@@ -1,17 +1,21 @@
 import Router, { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
+
 import { LoadingContext, UserContext } from "../context";
+
+import SpinnerOverlay from "../components/common/spinners/spinner-overlay";
+
+import teamApi from "../server-api/team";
+import userApi from "../server-api/user";
+
+import advancedConfigParams from "../utils/advance-config-params";
+import url from "../utils/url";
 import cookiesUtils from "../utils/cookies";
 import { getSubdomain } from "../utils/domain";
 import requestsUtils from "../utils/requests";
-
-import SpinnerOverlay from "../components/common/spinners/spinner-overlay";
-import teamApi from "../server-api/team";
-import userApi from "../server-api/user";
-import advancedConfigParams from "../utils/advance-config-params";
-import url from "../utils/url";
-
 import { loadTheme, resetTheme } from "../utils/theme";
+
+import { defaultLogo } from "../constants/theme";
 
 const allowedBase = [
   "/signup",
@@ -32,6 +36,7 @@ export default ({ children }) => {
   const [cdnAccess, setCdnAccess] = useState(false);
   const [transcriptAccess, setTranscriptAccess] = useState(false);
   const [advancedConfig, setAdvancedConfig] = useState(advancedConfigParams);
+  const [logo, setLogo] = useState<string>(defaultLogo);
 
   const { setIsLoading } = useContext(LoadingContext);
 
@@ -49,6 +54,9 @@ export default ({ children }) => {
     if (jwt) requestsUtils.setAuthToken(jwt);
 
     const needTwoFactor = cookiesUtils.get("twoFactor");
+
+    console.log(">>> fetch user", { jwt, needTwoFactor });
+
     cookiesUtils.remove("twoFactor");
     if (needTwoFactor && Router.pathname.indexOf("/two-factor") === -1) {
       return Router.replace("/two-factor");
@@ -73,11 +81,24 @@ export default ({ children }) => {
         }
         setUser(data);
 
-        console.log(`>>> Logged in`);
+        // If theme customization was turned on by admin
+        if (teamResponse.data.themeCustomization) {
+          // There is team theme set
+          if (teamResponse.data.theme) {
+            // Load theme from team settings
+            const currentTheme = loadTheme(teamResponse.data.theme);
 
-        // Load theme from local storage
-        // TODO: Load from team settings
-        loadTheme();
+            console.log(`Current sync theme`, currentTheme);
+            setLogo(currentTheme.logoImage?.realUrl || defaultLogo);
+          } else {
+            // Load theme from local storage
+            const currentTheme = loadTheme();
+            console.log(`Current logo theme`, currentTheme);
+            setLogo(currentTheme.logo?.url || defaultLogo);
+          }
+        } else {
+          resetTheme();
+        }
 
         if (!data.firstTimeLogin && Router.pathname.indexOf("/main/setup") === -1) {
           await Router.replace("/main/setup");
@@ -106,22 +127,23 @@ export default ({ children }) => {
   };
 
   const initialRedirect = () => {
+    console.log(`itnitial`, Router.pathname);
     if (!allowedBase.some((url) => Router.pathname.indexOf(url) !== -1)) {
       Router.replace("/login");
     }
   };
 
   const logOut = () => {
-    // resetTheme();
+    resetTheme();
     setUser(null);
     cookiesUtils.remove("jwt");
     requestsUtils.removeAuthToken();
     Router.replace("/login");
   };
 
-  const hasPermission = (requiredPermissions = []) => {
+  const hasPermission = (requiredPermissions = [], requiredTeamSettings = []) => {
     // console.warn(`Check permission: `, requiredPermissions, user?.permissions)
-    if (requiredPermissions.length === 0) return true;
+    if (requiredPermissions.length === 0 && requiredTeamSettings.length === 0) return true;
     // check by features/permissions
     let allowed = requiredPermissions.some((perm) => user?.permissions.map((userPerm) => userPerm.id).includes(perm));
 
@@ -129,6 +151,12 @@ export default ({ children }) => {
     if (!allowed) {
       allowed = requiredPermissions.some((role) => user && role === user.roleId);
     }
+
+    // Check by team settings
+    if (requiredTeamSettings.length > 0) {
+      allowed = requiredTeamSettings.some((setting) => user.team[setting]);
+    }
+
     return allowed;
   };
 
@@ -191,9 +219,9 @@ export default ({ children }) => {
     afterAuth,
     vanityCompanyInfo,
     cdnAccess,
-    advancedConfig,
-    setAdvancedConfig,
     transcriptAccess,
+    logo,
+    setLogo,
   };
 
   return (

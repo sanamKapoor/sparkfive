@@ -8,7 +8,7 @@
 }
 
 .item{
-    padding: 30px;
+    padding: 12px;
     display: flex;
     align-items: center;
     border-radius: 8px;
@@ -19,7 +19,7 @@
 }
 
 .item-selected{
-    padding: 30px;
+    padding: 12px;
     display: flex;
     align-items: center;
     border-radius: 8px;

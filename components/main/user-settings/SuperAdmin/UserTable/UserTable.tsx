@@ -1,4 +1,5 @@
 import Router from "next/router";
+import { saveAs } from "file-saver";
 
 import { useEffect, useState } from "react";
 import { useQueryStrings } from "../../../../../hooks/use-query-strings";
@@ -11,13 +12,9 @@ import styles from "./UserTable.module.css";
 
 import superAdminApi from "../../../../../server-api/super-admin";
 import cookiesUtils from "../../../../../utils/cookies";
+import { resetTheme } from "../../../../../utils/theme";
 
-import { saveAs } from "file-saver";
-
-import {
-  FAILED_TO_DOWNLOAD_USERS,
-  USERS_DOWNLOADED,
-} from "../../../../../constants/messages";
+import { FAILED_TO_DOWNLOAD_USERS, USERS_DOWNLOADED } from "../../../../../constants/messages";
 import toastUtils from "../../../../../utils/toast";
 import Button from "../../../../common/buttons/button";
 import SpinnerOverlay from "../../../../common/spinners/spinner-overlay";
@@ -98,6 +95,10 @@ const UserTable = () => {
       const adminJwt = cookiesUtils.get("jwt");
       cookiesUtils.set("adminToken", adminJwt);
       cookiesUtils.setUserJWT(data.token);
+
+      // Reset theme before leaving
+      resetTheme();
+
       await Router.replace("/main/overview");
       Router.reload();
     } catch (err) {
@@ -150,11 +151,7 @@ const UserTable = () => {
       </div>
       {userData.total > userData.users.length && (
         <div className={styles.loadMore}>
-          <Button
-            text="Load More"
-            onClick={getMore}
-            className="container primary"
-          />
+          <Button text="Load More" onClick={getMore} className="container primary" />
         </div>
       )}
       {loading && <SpinnerOverlay />}
