@@ -9,12 +9,11 @@ import React from 'react';
 import { Utilities } from '../../../assets';
 import { ASSET_EDIT, CALENDAR_ACCESS } from '../../../constants/permissions';
 import { AssetContext, FilterContext, LoadingContext, UserContext } from '../../../context';
-import { useMoveModal } from '../../../hooks/Use-Modal';
+import { useAssetDetailCollecion } from '../../../hooks/Use-Asset-Detail-Collection';
 import channelSocialOptions from '../../../resources/data/channels-social.json';
 import assetApi from '../../../server-api/asset';
 import customFieldsApi from '../../../server-api/attribute';
 import campaignApi from '../../../server-api/campaign';
-import folderApi from '../../../server-api/folder';
 import projectApi from '../../../server-api/project';
 import tagApi from '../../../server-api/tag';
 import { getParsedExtension } from '../../../utils/asset';
@@ -26,6 +25,7 @@ import CustomFieldSelector from '../items/custom-field-selector';
 import ProjectCreationModal from '../modals/project-creation-modal';
 import styles from './detail-side-panel.module.css';
 import ProductAddition from './product-addition';
+
 interface Asset {
   id: string;
   name: string;
@@ -56,11 +56,7 @@ interface Item {
   length: number;
   parentId: string | null
 }
-// APIs
-// Contexts
-// Utils
-// Components
-// Constants
+
 const sort = (data) => {
   return _.orderBy(data, [(item) => (item.name || "")?.toLowerCase()], ["asc"]);
 };
@@ -99,7 +95,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     product,
     products,
     folder,
-    folders: OriginalFolders,
+    folders: originalFolder,
     customs,
     dpi,
   } = asset;
@@ -117,7 +113,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
   const [availNonAiTags, setAvailNonAiTags] = useState([]);
   const [availAiTags, setAvailAiTags] = useState([]);
   const [inputProjects, setInputProjects] = useState([]);
-  const [inputFolders, setInputFolders] = useState([]);
+  // const [inputFolders, setInputFolders] = useState([]);
 
   const [nonAiTags, setNonAiTags] = useState([]);
   const [aiTags, setAiTags] = useState([]);
@@ -137,178 +133,72 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
   );
 
 
+  // Products
+  const [productList, setProductList] = useState(products);
 
-
-
-
-
-  const [folders, setFolders] = useState([]);
-  const [resultedSearchFolders, setResultedSearchFolders] = useState([]);
-  const [selectedFolder, setSelectedFolder] = useState([]);
-  const [subFolderLoadingState, setSubFolderLoadingState] = useState(new Map());
-  const [folderChildList, setFolderChildList] = useState(new Map());
-  const [showDropdown, setShowDropdown] = useState([]);
-  const [selectAllFolders, setSelectAllFolders] = useState<Record<string, boolean>>({});
-  const [input, setInput] = useState('');
-  const [completeSelectedFolder, setCompleteSelectedFolder] = useState<Map<string, { name: string; parentId: string | null }>>(new Map());
-
-  // Extract values from FilterContext
-  const {
-    activeSortFilter
-  } = useContext(FilterContext) as { term: any, activeSortFilter: any }
-
-  // Filter folders based on the input search string
-  const filteredData = () => {
-    setFolders(resultedSearchFolders.filter(item =>
-      item.name.toLowerCase().includes(input.toLowerCase())
-    )
-    )
-  }
-
-  // Fetch folders from the API
-  const getFolders = async () => {
+  const addFolder = async (folderData) => {
     try {
-      const { data } = await folderApi.getFoldersSimple();
-      const filteredParent = data.filter((folder: Item) => !folder?.parentId)
-      setResultedSearchFolders(filteredParent)
-      setFolders(filteredParent);
+      // Show loading
+      setIsLoading(true);
+      const rs = await assetApi.addFolder(id, folderData);
+      setIsLoading(false);
+      return rs;
     } catch (err) {
       console.log(err);
     }
   };
 
-  // Set subfolders
-  const setFolderChildListItems = (
-    inputFolders: any,
-    id: string,
-    replace = true,
-  ) => {
-    const { results, next, total } = inputFolders;
-    if (replace) {
-      if (results.length > 0) {
-        setFolderChildList((map) => { return new Map(map.set(id, { results, next, total })) })
-      }
-    }
-    else {
-      setFolderChildList((map) => { return new Map(map.set(id, { results: [...map.get(id).results, ...results], next, total })) })
-    }
-  };
-  // Fetch subfolders based on folder ID and page number
-  const getSubFolders = async (id: string, page: number, replace: boolean) => {
-    setSubFolderLoadingState((map) => new Map(map.set(id, true)))
-    const { field, order } = activeSortFilter.sort;
-
-    const queryParams = {
-      page: replace ? 1 : page,
-      pageSize: 10,
-      sortField: field,
-      sortOrder: order,
-    };
-    const { data } = await folderApi.getSubFolders({
-      ...queryParams,
-    }, id);
-    setFolderChildListItems(data,
-      id,
-      replace
-    )
-    setSubFolderLoadingState((map) => new Map(map.set(id, false)))
-    return folderChildList;
-  }
-
-
-  const removeIdsIntoFolder = (idsToRemove: string[]) => {
-    setCompleteSelectedFolder((map) => {
-      idsToRemove.forEach(id => {
-        map.delete(id);
-      });
-      return map
-    })
-  };
-
-  const insertIdsIntoFolder = (items: {
-    [key: string]: {
-      name: string, parentId: string | null
-    }
-  }[]) => {
-    setCompleteSelectedFolder((map) => {
-      items.forEach(item => {
-        for (const key in item) {
-          map.set(key, item[key]);
-        }
-      });
-      return map
-    })
-
-  };
-  // Handle folder selection toggle
-  const toggleSelected = async (folderId: string, selected: boolean, subFolderToggle?: boolean, mainFolderId?: string, name = "") => {
-    const actionFolderId = subFolderToggle ? mainFolderId : folderId;
-    if (selected) {
-      setSelectedFolder([...selectedFolder, folderId]);
-      insertIdsIntoFolder([{ [folderId]: { "name": name, parentId: subFolderToggle ? mainFolderId : null } }])
-      let selectedFolderArray: string[] = []
-      const allChildIds: string[] = []
-      if (!selectAllFolders[actionFolderId]) {
-        if (folderChildList.has(actionFolderId)) {
-          const response = folderChildList.get(actionFolderId);
-          if (response?.results?.length > 0) {
-            response?.results.forEach((item: Item) => {
-              allChildIds.push(item.id);
-            })
-            selectedFolderArray = Array.from(new Set(selectedFolder)).filter(item =>
-              [...allChildIds, actionFolderId].includes(item)
-            );
-          }
-        }
-        if ([...selectedFolderArray, folderId].length === [...allChildIds, actionFolderId].length) {
-          setSelectAllFolders((prev) => ({ ...prev, [actionFolderId]: true }))
-        }
-      }
-    } else {
-      setSelectedFolder(selectedFolder.filter((item) => item !== folderId));
-      removeIdsIntoFolder([folderId])
-      if (selectAllFolders[actionFolderId]) {
-        setSelectAllFolders((prev) => ({ ...prev, [actionFolderId]: false }))
-      };
-      // Remove on Icon click of selected folders on above modal in edit page  
-      if (completeSelectedFolder.get(actionFolderId)?.parentId) {
-        setSelectAllFolders((prev) => ({ ...prev, [completeSelectedFolder.get(actionFolderId)?.parentId]: false }))
-      };
-    }
-  };
-  // Handle dropdown toggle for displaying subfolders
-  const toggleDropdown = async (folderId: string, replace: boolean) => {
-    if (!showDropdown.includes(folderId)) {
-      await getSubFolders(folderId, 1, replace);
-      setShowDropdown([...showDropdown, folderId])
-    } else {
-      setShowDropdown(showDropdown.filter((item) => item !== folderId));
+  const deleteFolder = async (folderId, stateUpdate) => {
+    try {
+      // Show loading
+      console.log(stateUpdate, folderId, "stateUpdate on delete function")
+      setIsLoading(true);
+      await assetApi.removeFolder(id, folderId);
+      // Show loading
+      setIsLoading(false);
+      changeFolderState(stateUpdate);
+    } catch (err) {
+      console.log(err);
     }
   };
 
-  const keyExists = (key: string) => {
-    return folderChildList.has(key);
-  };
-
-  const keyResultsFetch = (key: string, type: string): Item[] | number => {
-    const { results, next } = folderChildList.get(key);
-    if (type === 'record') {
-      return results || []
+  const updateAssetState = (updatedata) => {
+    console.log(updatedata, "hello updated Data", assets)
+    const assetIndex = assets.findIndex(
+      (assetItem) => assetItem.asset.id === id
+    );
+    if (assetIndex >= 0) {
+      const updatedAssets = update(assets, {
+        [assetIndex]: {
+          asset: updatedata
+        },
+      })
+      setAssets(updatedAssets);
+      setAssetDetail(update(asset, updatedata));
     }
-    return next
+    setActiveDropdown("");
   };
 
-
-
-
-
-
-
-
-
-
-  // Products
-  const [productList, setProductList] = useState(products);
+  const {
+    folders,
+    selectedFolder,
+    subFolderLoadingState,
+    showDropdown,
+    input,
+    completeSelectedFolder,
+    setInput,
+    filteredData,
+    getFolders,
+    getSubFolders,
+    toggleSelected,
+    toggleDropdown,
+    setSelectedFolder,
+    keyResultsFetch,
+    keyExists,
+    setShowDropdown,
+    setSubFolderLoadingState,
+    setFolderChildList
+  } = useAssetDetailCollecion(addFolder, updateAssetState, originalFolder, deleteFolder)
 
   useEffect(() => {
     const _nonAiTags = (tags || []).filter((tag) => tag.type !== "AI");
@@ -317,11 +207,11 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     setAiTags(sort(_aiTags));
     setCampaigns(sort(campaigns));
     setProjects(projects);
-    // setSelectedFolders(folders);
-    OriginalFolders?.map(({ id, name, parentId, ...rest }: Item) => {
+    const originalSelectedFolders = originalFolder?.map(({ id, name, parentId, ...rest }: Item) => {
       completeSelectedFolder.set(id, { name, parentId: parentId || null })
-      selectedFolder
+      return id
     })
+    setSelectedFolder((prev) => [...prev, ...originalSelectedFolders])
 
     // setAssetCustomFields(update(assetCustomFields, {
     //   $set: mappingCustomFieldData(inputCustomFields, customs)
@@ -332,23 +222,20 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     if (!isShare) {
       getTagsInputData();
       getCustomFieldsInputData();
-      // getFolderData();
       if (hasPermission([CALENDAR_ACCESS])) {
         getInputData();
         getCustomFieldsInputData();
+        getFolders();
       }
-      getFolders();
       return () => {
         setSelectedFolder([]);
         setShowDropdown([]);
         setSubFolderLoadingState(new Map());
         setFolderChildList(new Map())
-        setSelectAllFolders({})
         setInput("")
         completeSelectedFolder.clear();
       };
     }
-
   }, []);
 
   useEffect(() => {
@@ -379,11 +266,6 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     } catch (err) {
       // TODO: Maybe show error?
     }
-  };
-
-  const getFolderData = async () => {
-    const folderResponse = await folderApi.getFoldersSimple();
-    setInputFolders(folderResponse.data);
   };
 
   const getTagsInputData = async () => {
@@ -435,23 +317,6 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     }
   };
 
-  const updateAssetState = (updatedata) => {
-    console.log(updatedata, "hello")
-    const assetIndex = assets.findIndex(
-      (assetItem) => assetItem.asset.id === id
-    );
-    if (assetIndex >= 0) {
-      setAssets(
-        update(assets, {
-          [assetIndex]: {
-            asset: updatedata,
-          },
-        })
-      );
-      setAssetDetail(update(asset, updatedata));
-    }
-    setActiveDropdown("");
-  };
 
   const handleProjectChange = async (selected, actionMeta) => {
     if (actionMeta.action === "create-option") {
@@ -529,74 +394,11 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     },
   ];
 
-  const onValueChange = (selected, actionMeta, createFn, changeFn) => {
-    if (actionMeta.action === "create-option") {
-      createFn(selected.value);
-    } else {
-      changeFn(selected);
-    }
-  };
-
-  const addFolder = async (folderData) => {
-    try {
-      // Show loading
-      setIsLoading(true);
-      const rs = await assetApi.addFolder(id, folderData);
-
-      setIsLoading(false);
-
-      return rs;
-      // console.log(newFolder)
-      // changeFolderState(newFolder)
-      //
-      // // Create the new one
-      // if(!folderData.id){
-      //   setInputFolders(update(inputFolders, { $push: [newFolder] }))
-      // }
-
-      // return newFolder
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const deleteFolder = async (folderId, stateUpdate) => {
-    try {
-      // Show loading
-      setIsLoading(true);
-      await assetApi.removeFolder(id, folderId);
-      // Show loading
-      setIsLoading(false);
-      changeFolderState(stateUpdate);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const changeFolder = async (product) => {
-    try {
-      await assetApi.addFolder(id, { id: product.id });
-      changeFolderState(product);
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   const changeFolderState = (folders) => {
     let stateUpdate = {
       folders: { $set: folders },
     };
-    // if (!folder) {
-    //   stateUpdate = {
-    //     folderId: { $set: undefined },
-    //     folder: { $set: undefined }
-    //   }
-    // } else {
-    //   stateUpdate = {
-    //     folderId: { $set: folder.id },
-    //     folder: { $set: folder }
-    //   }
-    // }
     updateAssetState(stateUpdate);
   };
 
@@ -646,32 +448,6 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     setIsLoading(false);
   };
 
-  // On remove select one custom field
-
-  const onRemoveSelectOneCustomField = async (removeId, index, stateUpdate) => {
-    // Show loading
-    setIsLoading(true);
-
-    await assetApi.removeCustomFields(id, removeId);
-
-    // Update asset custom field (local)
-    setAssetCustomFields(
-      update(assetCustomFields, {
-        [index]: {
-          values: { $set: stateUpdate },
-        },
-      })
-    );
-
-    // Update asset (global)
-    updateAssetState({
-      customs: { [index]: { values: { $set: stateUpdate } } },
-    });
-
-    // Hide loading
-    setIsLoading(false);
-  };
-
   const addProductBlock = () => {
     setProductList([...productList, null]);
   };
@@ -679,9 +455,6 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
   useEffect(() => {
     setProductList(products);
   }, [products]);
-
-
-
 
 
   return (
@@ -963,38 +736,6 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                 );
               }
             })}
-
-            {/* <div className={styles["field-wrapper"]}>
-              <CreatableSelect
-                title="Collections"
-                addText="Add to Collections"
-                onAddClick={() => setActiveDropdown("collections")}
-                selectPlaceholder={
-                  "Enter a new collection or select an existing one"
-                }
-                avilableItems={inputFolders}
-                setAvailableItems={setInputFolders}
-                selectedItems={selectedFolder}
-                setSelectedItems={setSelectedFolders}
-                onAddOperationFinished={(stateUpdate) => {
-                  console.log(stateUpdate, "stateUpdate")
-                  updateAssetState({
-                    folders: { $set: stateUpdate },
-                  });
-                }}
-                onRemoveOperationFinished={async (index, stateUpdate, id) => {
-                  deleteFolder(id, stateUpdate);
-                }}
-                onOperationFailedSkipped={() => setActiveDropdown("")}
-                isShare={isShare}
-                asyncCreateFn={(newItem) => {
-                  return addFolder(newItem);
-                }}
-                dropdownIsActive={activeDropdown === "collections"}
-                altColor="yellow"
-                sortDisplayValue={true}
-              />
-            </div> */}
 
             {/**
                 * new component 
