@@ -38,12 +38,38 @@ import { useMoveModal } from "../../../hooks/Use-Modal";
 import { ASSET_EDIT } from "../../../constants/permissions";
 import SearchModal from "../../SearchModal/Search-modal";
 
-// Components
-// Styles
-// Contexts
-// Utils
-// APIs
-// Hooks
+
+interface Asset {
+  id: string;
+  name: string;
+  type: string;
+  thumbailUrl: string;
+  realUrl: string;
+  extension: string;
+  version: number;
+}
+interface Item {
+  id: string;
+  userId: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  sharePath: null;
+  sharePassword: null;
+  shareStatus: null;
+  status: string;
+  thumbnailPath: null;
+  thumbnailExtension: null;
+  thumbnails: null;
+  thumbnailStorageId: null;
+  thumbnailName: null;
+  assetsCount: string;
+  assets: Asset[];
+  size: string;
+  length: number;
+  parentId: string | null
+}
+
 const filterOptions = [
   {
     label: "Approved",
@@ -59,7 +85,6 @@ const filterOptions = [
   },
 ];
 
-// Server DO NOT return full custom field slots including empty array, so we will generate empty array here
 // The order of result should be match with order of custom field list
 const mappingCustomFieldData = (list, valueList) => {
   let rs = [];
@@ -80,46 +105,32 @@ const mappingCustomFieldData = (list, valueList) => {
 
 const UploadRequest = () => {
   const { user, hasPermission } = useContext(UserContext);
-
   const [top, setTop] = useState("calc(55px + 2rem)");
-
   const { setIsLoading } = useContext(LoadingContext);
-
   const [approvals, setApprovals] = useState([]);
-
   const [mode, setMode] = useState("list"); // Available options: list, view
-
   const [assets, setAssets] = useState([]);
   const [selectedAssets, setSelectedAssets] = useState([]);
-
   const [activeDropdown, setActiveDropdown] = useState("");
   const [inputTags, setInputTags] = useState([]);
   const [assetTags, setTags] = useState([]);
-
   const [showRenameModal, setShowRenameModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-
   const [showDetailModal, setDetailModal] = useState(false);
   const [selectedAsset, setSelectedAsset] = useState();
-
   const [tempTags, setTempTags] = useState([]); // For update tag in each asset
   const [tempCustoms, setTempCustoms] = useState([]); // For update custom in each asset
   const [tempComments, setTempComments] = useState(""); // For update tag in each asset
-
   const [currentApproval, setCurrentApproval] = useState();
   const [comments, setComments] = useState("");
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [approvalId, setApprovalId] = useState(); // Keep this to submit things related to current selected Approval
   const [currentViewStatus, setCurrentViewStatus] = useState(0); // 0: Pending, 1: Submitted, 2: Completed, -1: Rejected
-
   const [needRefresh, setNeedRefresh] = useState(false); // To check if need to refresh the list or not, used after saving tag/comments
-
   const [batchName, setBatchName] = useState("");
-
   const [selectedAllAssets, setSelectedAllAssets] = useState(false);
   const [selectedAllApprovals, setSelectedAllApprovals] = useState(false);
-
   const [showApproveConfirm, setShowApproveConfirm] = useState(false);
   const [showRejectConfirm, setShowRejectConfirm] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -127,10 +138,8 @@ const UploadRequest = () => {
   const [tempApprovals, setTempApprovals] = useState([]);
   const [tempCampaigns, setTempCampaigns] = useState([]);
   const [tempFolders, setTempFolders] = useState([]);
-
   const [filter, setFilter] = useState();
   const [approvalIndex, setApprovalIndex] = useState();
-
   // Custom fields
   const [customs, setCustoms] = useState([]);
   const [activeCustomField, setActiveCustomField] = useState<number>();
@@ -184,24 +193,6 @@ const UploadRequest = () => {
     completeSelectedFolder
   } = useMoveModal();
 
-  // useEffect(() => {
-  //   if (!addMode) {
-  //     completeSelectedFolder.clear()
-  //     assetFolders?.map(({ id, name, parentId, ...rest }: Item) => {
-  //       completeSelectedFolder.set(id, { name, parentId: parentId || null })
-  //     })
-  //   } else {
-  //     completeSelectedFolder.clear()
-  //     setSelectedFolder([]);
-  //     setShowDropdown([]);
-  //     setSubFolderLoadingState(new Map());
-  //     setFolderChildList(new Map())
-  //     setSelectAllFolders({})
-  //     setInput("")
-  //     setActiveDropdown("")
-  //   }
-  // }, [addMode]);
-
   const keyExists = (key: string) => {
     return folderChildList.has(key);
   };
@@ -213,9 +204,6 @@ const UploadRequest = () => {
     }
     return next
   };
-
-
-
 
 
 
@@ -367,17 +355,9 @@ const UploadRequest = () => {
   };
 
   const onSaveSingleAsset = async () => {
-    const assetFolders = [...completeSelectedFolder.entries()].map(([key, value], index) => {
-      return {
-        id: key,
-        name: value.name
-      }
-    })
 
     if (selectedAsset !== undefined) {
       setIsLoading(true);
-
-
 
       // @ts-ignore
       const assetArr = [assets[selectedAsset]];
@@ -455,7 +435,14 @@ const UploadRequest = () => {
     let currentAssetTags = [...assetTags];
     let currentAssetCampaigns = [...assetCampaigns];
     let currentAssetCustomFields = [...assetCustomFields];
-    let currentAssetFolders = [...assetFolders];
+    // let currentAssetFolders = [...assetFolders];
+    let currentAssetFolders = [...completeSelectedFolder.entries()].map(([key, value], index) => {
+      return {
+        id: key,
+        name: value.name
+      }
+    });
+    console.log(currentAssetFolders, "currentAssetFolders")
 
     for (const { asset, isSelected } of assets) {
       let tagPromises = [];
@@ -663,6 +650,14 @@ const UploadRequest = () => {
     setTags([]);
 
     setNeedRefresh(true);
+
+    setSelectedFolder([]);
+    setShowDropdown([]);
+    setSubFolderLoadingState(new Map());
+    setFolderChildList(new Map())
+    setSelectAllFolders({})
+    setInput("")
+    completeSelectedFolder.clear();
 
     setIsLoading(false);
   };
@@ -1727,37 +1722,37 @@ const UploadRequest = () => {
 
                     {/* {isAdmin() && (
                       <div className={detailPanelStyles["field-wrapper"]}>
-                         <div className={styles['creatable-select-container']}>
-                        <CreatableSelect
-                          title="Collections"
-                          addText="Add to Collections"
-                          onAddClick={() => setActiveDropdown("collections")}
-                          selectPlaceholder={
-                            "Enter a new collection or select an existing one"
-                          }
-                          avilableItems={inputFolders}
-                          setAvailableItems={setInputFolders}
-                          selectedItems={assetFolders}
-                          setSelectedItems={setFolders}
-                          onAddOperationFinished={(stateUpdate) => {
-                            setActiveDropdown("");
-                          }}
-                          creatable={isAdmin()}
-                          onRemoveOperationFinished={async (
-                            index,
-                            stateUpdate,
-                            id
-                          ) => {}}
-                          onOperationFailedSkipped={() => setActiveDropdown("")}
-                          isShare={false}
-                          asyncCreateFn={(newItem) => {
-                            return { data: newItem };
-                          }}
-                          dropdownIsActive={activeDropdown === "collections"}
-                          altColor="yellow"
-                          sortDisplayValue={true}
-                          ignorePermission={true}
-                        />
+                        <div className={styles['creatable-select-container']}>
+                          <CreatableSelect
+                            title="Collections"
+                            addText="Add to Collections"
+                            onAddClick={() => setActiveDropdown("collections")}
+                            selectPlaceholder={
+                              "Enter a new collection or select an existing one"
+                            }
+                            avilableItems={inputFolders}
+                            setAvailableItems={setInputFolders}
+                            selectedItems={assetFolders}
+                            setSelectedItems={setFolders}
+                            onAddOperationFinished={(stateUpdate) => {
+                              setActiveDropdown("");
+                            }}
+                            creatable={isAdmin()}
+                            onRemoveOperationFinished={async (
+                              index,
+                              stateUpdate,
+                              id
+                            ) => { }}
+                            onOperationFailedSkipped={() => setActiveDropdown("")}
+                            isShare={false}
+                            asyncCreateFn={(newItem) => {
+                              return { data: newItem };
+                            }}
+                            dropdownIsActive={activeDropdown === "collections"}
+                            altColor="yellow"
+                            sortDisplayValue={true}
+                            ignorePermission={true}
+                          />
                         </div>
                       </div>
                     )} */}
