@@ -4,51 +4,48 @@ import _ from "lodash";
 import moment from "moment";
 import React, { useContext, useEffect, useState } from "react";
 
-// Components
-import AssetSubheader from "../../common/asset/asset-subheader";
-
-import AssetImg from "../../common/asset/asset-img";
-import AssetThumbail from "../../common/asset/asset-thumbail";
-import Input from "../../common/inputs/input";
-import Select from "../../common/inputs/select";
-import CustomFieldSelector from "../../common/items/custom-field-selector";
-import Base from "../../common/modals/base";
-import ConfirmModal from "../../common/modals/confirm-modal";
-import RenameModal from "../../common/modals/rename-modal";
-
-// Styles
-import assetGridStyles from "../../common/asset/asset-grid.module.css";
-import detailPanelStyles from "../../common/asset/detail-side-panel.module.css";
-import IconClickable from "../../common/buttons/icon-clickable";
-import styles from "./index.module.css";
-// Contexts
-import { AssetContext, LoadingContext, UserContext } from "../../../context";
-
-// Utils
 import { Utilities } from "../../../assets";
-import toastUtils from "../../../utils/toast";
-import ListItem from "../../common/asset/request-list-item";
-import Button from "../../common/buttons/button";
-import CreatableSelect from "../../common/inputs/creatable-select";
-import TextArea from "../../common/inputs/text-area";
-
-// APIs
+import GuestUploadApprovalOverlay from "../../../components/common/guest-upload-approval-overlay";
+import { AssetContext, LoadingContext, UserContext } from "../../../context";
+import { useDebounce } from "../../../hooks/useDebounce";
 import assetApi from "../../../server-api/asset";
 import customFieldsApi from "../../../server-api/attribute";
 import campaignApi from "../../../server-api/campaign";
 import folderApi from "../../../server-api/folder";
 import tagApi from "../../../server-api/tag";
-import {
-  default as approvalApi,
+import approvalApi, {
   default as uploadApprovalApi,
 } from "../../../server-api/upload-approvals";
-
-// Hooks
-import GuestUploadApprovalOverlay from "../../../components/common/guest-upload-approval-overlay";
-import { useDebounce } from "../../../hooks/useDebounce";
+import toastUtils from "../../../utils/toast";
+import assetGridStyles from "../../common/asset/asset-grid.module.css";
 import AssetIcon from "../../common/asset/asset-icon";
+import AssetImg from "../../common/asset/asset-img";
 import AssetPdf from "../../common/asset/asset-pdf";
+import AssetSubheader from "../../common/asset/asset-subheader";
+import AssetThumbail from "../../common/asset/asset-thumbail";
+import detailPanelStyles from "../../common/asset/detail-side-panel.module.css";
+import ListItem from "../../common/asset/request-list-item";
+import Button from "../../common/buttons/button";
+import IconClickable from "../../common/buttons/icon-clickable";
+import CreatableSelect from "../../common/inputs/creatable-select";
+import Input from "../../common/inputs/input";
+import Select from "../../common/inputs/select";
+import TextArea from "../../common/inputs/text-area";
+import CustomFieldSelector from "../../common/items/custom-field-selector";
+import Base from "../../common/modals/base";
+import ConfirmModal from "../../common/modals/confirm-modal";
+import RenameModal from "../../common/modals/rename-modal";
+import styles from "./index.module.css";
+import { useMoveModal } from "../../../hooks/Use-Modal";
+import { ASSET_EDIT } from "../../../constants/permissions";
+import SearchModal from "../../SearchModal/Search-modal";
 
+// Components
+// Styles
+// Contexts
+// Utils
+// APIs
+// Hooks
 const filterOptions = [
   {
     label: "Approved",
@@ -84,9 +81,7 @@ const mappingCustomFieldData = (list, valueList) => {
 };
 
 const UploadRequest = () => {
-  const { user } = useContext(UserContext);
-
-  const {} = useContext(AssetContext);
+  const { user, hasPermission } = useContext(UserContext);
 
   const [top, setTop] = useState("calc(55px + 2rem)");
 
@@ -160,6 +155,59 @@ const UploadRequest = () => {
   const debouncedBatchName = useDebounce(batchName, 500);
 
   const [rightPanelOpen, setRightPanelOpen] = useState(false);
+
+  const {
+    folders,
+    selectedFolder,
+    subFolderLoadingState,
+    folderChildList,
+    showDropdown,
+    selectAllFolders,
+    input,
+    setInput,
+    filteredData,
+    getFolders,
+    getSubFolders,
+    toggleSelected: toggleSelectedFolders,
+    toggleDropdown,
+    toggleSelectAllChildList,
+    setSelectedFolder,
+    setShowDropdown,
+    setSubFolderLoadingState,
+    setFolderChildList,
+    setSelectAllFolders,
+    completeSelectedFolder,
+  } = useMoveModal();
+
+  // useEffect(() => {
+  //   if (!addMode) {
+  //     completeSelectedFolder.clear()
+  //     assetFolders?.map(({ id, name, parentId, ...rest }: Item) => {
+  //       completeSelectedFolder.set(id, { name, parentId: parentId || null })
+  //     })
+  //   } else {
+  //     completeSelectedFolder.clear()
+  //     setSelectedFolder([]);
+  //     setShowDropdown([]);
+  //     setSubFolderLoadingState(new Map());
+  //     setFolderChildList(new Map())
+  //     setSelectAllFolders({})
+  //     setInput("")
+  //     setActiveDropdown("")
+  //   }
+  // }, [addMode]);
+
+  const keyExists = (key: string) => {
+    return folderChildList.has(key);
+  };
+
+  const keyResultsFetch = (key: string, type: string): Item[] | number => {
+    const { results, next } = folderChildList.get(key);
+    if (type === "record") {
+      return results || [];
+    }
+    return next;
+  };
 
   const updateName = async (value) => {
     if (approvalId) {
@@ -301,6 +349,15 @@ const UploadRequest = () => {
   };
 
   const onSaveSingleAsset = async () => {
+    const assetFolders = [...completeSelectedFolder.entries()].map(
+      ([key, value], index) => {
+        return {
+          id: key,
+          name: value.name,
+        };
+      }
+    );
+
     if (selectedAsset !== undefined) {
       setIsLoading(true);
 
@@ -1109,8 +1166,18 @@ const UploadRequest = () => {
     fetchApprovals();
     getTagsInputData();
     getCampaignsInputData();
-    getFoldersInputData();
+    // getFoldersInputData();
     getCustomFieldsInputData();
+    getFolders();
+    return () => {
+      setSelectedFolder([]);
+      setShowDropdown([]);
+      setSubFolderLoadingState(new Map());
+      setFolderChildList(new Map());
+      setSelectAllFolders({});
+      setInput("");
+      completeSelectedFolder.clear();
+    };
   }, []);
 
   useEffect(() => {
@@ -1349,10 +1416,8 @@ const UploadRequest = () => {
                     {mode === "view" && isAdmin() && (
                       <div className={styles["filter-wrapper"]}>
                         <Select
-
-                          containerClass={`${styles['filter-input']} ${styles['filter-main-box']}`}
-                      
-                          additionalClass={`${styles['filter-by-status']} ${styles['filter-inner-box']}`}
+                          containerClass={`${styles["filter-input"]} ${styles["filter-main-box"]}`}
+                          additionalClass={`${styles["filter-by-status"]} ${styles["filter-inner-box"]}`}
                           isClearable={true}
                           options={filterOptions}
                           onChange={(value) => {
@@ -1379,7 +1444,9 @@ const UploadRequest = () => {
             {mode === "list" && (
               <div className={styles["asset-list"]}>
                 <div className={`${styles["button-wrapper"]} m-b-25`}>
-                <div className={`${styles['main-title']} ${styles['approval-pending-title']}`}>
+                  <div
+                    className={`${styles["main-title"]} ${styles["approval-pending-title"]}`}
+                  >
                     <h2>Upload Requests</h2>
                   </div>
                   <div className={styles["upload-section"]}>
@@ -1453,7 +1520,9 @@ const UploadRequest = () => {
                 >
                   <ul className={"regular-list"}>
                     {approvals.length === 0 && (
-                      <p className={`${styles['upload-approval-desc']}`}>There are no upload requests for you to reviews</p>
+                      <p className={`${styles["upload-approval-desc"]}`}>
+                        There are no upload requests for you to reviews
+                      </p>
                     )}
                     {approvals.map((approval, index) => {
                       return (
@@ -1609,40 +1678,39 @@ const UploadRequest = () => {
                 {(currentViewStatus === 0 || isAdmin()) && (
                   <>
                     <div className={detailPanelStyles["field-wrapper"]}>
-                    <div className={styles['creatable-select-container']}>
-                      <CreatableSelect
-                        title="Tags"
-                        addText="Add Tags"
-                        onAddClick={() => setActiveDropdown("tags")}
-                        selectPlaceholder={
-                          "Enter a new tag or select an existing one"
-                        }
-                        avilableItems={inputTags}
-                        setAvailableItems={setInputTags}
-                        selectedItems={assetTags}
-                        setSelectedItems={setTags}
-                        allowEdit={currentViewStatus === 0 || isAdmin()}
-                        creatable={true}
-                        onAddOperationFinished={(stateUpdate) => {
-                          setActiveDropdown("");
-                        }}
-                        onRemoveOperationFinished={async (
-                          index,
-                          stateUpdate
-                        ) => {}}
-                        onOperationFailedSkipped={() => setActiveDropdown("")}
-                        isShare={false}
-                        asyncCreateFn={(newItem) => {
-                          return { data: newItem };
-                        }}
-                        dropdownIsActive={activeDropdown === "tags"}
-                        ignorePermission={true}
-                       
-                      />
+                      <div className={styles["creatable-select-container"]}>
+                        <CreatableSelect
+                          title="Tags"
+                          addText="Add Tags"
+                          onAddClick={() => setActiveDropdown("tags")}
+                          selectPlaceholder={
+                            "Enter a new tag or select an existing one"
+                          }
+                          avilableItems={inputTags}
+                          setAvailableItems={setInputTags}
+                          selectedItems={assetTags}
+                          setSelectedItems={setTags}
+                          allowEdit={currentViewStatus === 0 || isAdmin()}
+                          creatable={true}
+                          onAddOperationFinished={(stateUpdate) => {
+                            setActiveDropdown("");
+                          }}
+                          onRemoveOperationFinished={async (
+                            index,
+                            stateUpdate
+                          ) => {}}
+                          onOperationFailedSkipped={() => setActiveDropdown("")}
+                          isShare={false}
+                          asyncCreateFn={(newItem) => {
+                            return { data: newItem };
+                          }}
+                          dropdownIsActive={activeDropdown === "tags"}
+                          ignorePermission={true}
+                        />
                       </div>
                     </div>
 
-                    {isAdmin() && (
+                    {/* {isAdmin() && (
                       <div className={detailPanelStyles["field-wrapper"]}>
                          <div className={styles['creatable-select-container']}>
                         <CreatableSelect
@@ -1677,39 +1745,390 @@ const UploadRequest = () => {
                         />
                         </div>
                       </div>
+                    )} */}
+
+                    {isAdmin() && (
+                      <section className={styles["field-wrapper"]}>
+                        {
+                          <div className={`${styles["tag-container-wrapper"]}`}>
+                            {[...completeSelectedFolder.entries()].map(
+                              ([key, value], index) => (
+                                <div
+                                  className={`${styles["tag-container"]}`}
+                                  key={index}
+                                >
+                                  <span>{value.name}</span>
+                                  <IconClickable
+                                    additionalClass={styles.remove}
+                                    src={Utilities.closeTag}
+                                    onClick={() =>
+                                      toggleSelectedFolders(
+                                        key,
+                                        !selectedFolder.includes(key),
+                                        false,
+                                        "",
+                                        value.name
+                                      )
+                                    }
+                                  />
+                                </div>
+                              )
+                            )}
+                          </div>
+                        }
+                        {hasPermission([ASSET_EDIT]) &&
+                          (activeDropdown === "" ||
+                            activeDropdown !== "collections") && (
+                            <>
+                              <div className={`${styles["top-heading"]}`}>
+                                <span>Collection</span>
+                              </div>
+
+                              <div
+                                className={`add ${styles["select-add"]}`}
+                                onClick={() => setActiveDropdown("collections")}
+                              >
+                                <IconClickable src={Utilities.addLight} />
+                                <span>{"Add to Collection"}</span>
+                              </div>
+                            </>
+                          )}
+                        {hasPermission([ASSET_EDIT]) &&
+                          activeDropdown === "collections" && (
+                            <div
+                              className={`${styles["edit-bulk-outer-wrapper"]}`}
+                            >
+                              <div className={`${styles["close-popup"]}`}>
+                                {" "}
+                                <IconClickable
+                                  additionalClass={styles.remove}
+                                  src={Utilities.closeTag}
+                                  onClick={() => setActiveDropdown("")}
+                                />
+                              </div>
+                              <div className={`${styles["search-btn"]}`}>
+                                <SearchModal
+                                  filteredData={filteredData}
+                                  input={input}
+                                  setInput={setInput}
+                                />
+                              </div>
+                              <div className={`${styles["modal-heading"]}`}>
+                                <span>Collection({folders.length ?? ""})</span>
+                              </div>
+                              <div className={`${styles["outer-wrapper"]}`}>
+                                {folders.map((folder, index) => (
+                                  <div key={index}>
+                                    <div
+                                      className={`${styles["flex"]} ${styles.nestedbox}`}
+                                    >
+                                      <div
+                                        className={`${styles["height"]} ${styles["flex"]}`}
+                                        onClick={() => {
+                                          toggleDropdown(folder.id, true);
+                                        }}
+                                      >
+                                        <img
+                                          className={
+                                            showDropdown.includes(folder.id)
+                                              ? styles.iconClick
+                                              : styles.rightIcon
+                                          }
+                                          src={Utilities.arrowBlue}
+                                          alt="Right Arrow Icon"
+                                          onClick={() => {
+                                            toggleDropdown(folder.id, true);
+                                          }}
+                                        />
+                                      </div>
+
+                                      <div className={styles.w100}>
+                                        <div
+                                          className={`${
+                                            styles["dropdownMenu"]
+                                          } ${
+                                            selectedFolder.includes(folder.id)
+                                              ? styles["active"]
+                                              : ""
+                                          }`}
+                                        >
+                                          <div className={styles.flex}>
+                                            <div
+                                              className={`${styles.circle} ${
+                                                selectedFolder.includes(
+                                                  folder.id
+                                                )
+                                                  ? styles.checked
+                                                  : ""
+                                              }`}
+                                              onClick={() =>
+                                                toggleSelectedFolders(
+                                                  folder.id,
+                                                  !selectedFolder.includes(
+                                                    folder.id
+                                                  ),
+                                                  false,
+                                                  "",
+                                                  folder.name
+                                                )
+                                              }
+                                            >
+                                              {selectedFolder.includes(
+                                                folder.id
+                                              ) && (
+                                                <img
+                                                  src={Utilities.checkIcon}
+                                                />
+                                              )}
+                                            </div>
+                                            <div
+                                              className={
+                                                styles["icon-descriptions"]
+                                              }
+                                            >
+                                              <span>{folder.name}</span>
+                                            </div>
+                                          </div>
+                                          <div>
+                                            <div
+                                              className={
+                                                styles["list1-right-contents"]
+                                              }
+                                            >
+                                              {selectAllFolders[folder.id] ? (
+                                                <div
+                                                  style={{ cursor: "pointer" }}
+                                                  onClick={() =>
+                                                    toggleSelectAllChildList(
+                                                      folder.id,
+                                                      folder.name
+                                                    )
+                                                  }
+                                                  className={`${styles["deselect-all"]}`}
+                                                >
+                                                  <img
+                                                    src={Utilities.redCheck}
+                                                    alt="Check Icon"
+                                                  />
+                                                  <span
+                                                    className={
+                                                      styles.deselectText
+                                                    }
+                                                  >
+                                                    Deselect All
+                                                  </span>
+                                                </div>
+                                              ) : (
+                                                <div
+                                                  style={{ cursor: "pointer" }}
+                                                  onClick={() =>
+                                                    toggleSelectAllChildList(
+                                                      folder.id,
+                                                      folder.name
+                                                    )
+                                                  }
+                                                  className={`${styles["select-all"]}`}
+                                                >
+                                                  <img
+                                                    src={Utilities.doubleCheck}
+                                                    alt="Check Icon"
+                                                  />
+                                                  <span
+                                                    className={
+                                                      styles.selectText
+                                                    }
+                                                  >
+                                                    Select All
+                                                  </span>
+                                                </div>
+                                              )}
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    {showDropdown.includes(folder.id) && (
+                                      <div className={styles.folder}>
+                                        <div className={styles.subfolderList}>
+                                          {keyExists(folder.id) &&
+                                            (
+                                              keyResultsFetch(
+                                                folder.id,
+                                                "record"
+                                              ) as Item[]
+                                            ).map(
+                                              ({
+                                                id,
+                                                name,
+                                                parentId,
+                                                ...rest
+                                              }) => (
+                                                <>
+                                                  <div
+                                                    key={id}
+                                                    className={
+                                                      styles.dropdownOptions
+                                                    }
+                                                    onClick={() =>
+                                                      toggleSelectedFolders(
+                                                        id,
+                                                        !selectedFolder.includes(
+                                                          id
+                                                        ),
+                                                        true,
+                                                        folder.id,
+                                                        name,
+                                                        parentId
+                                                      )
+                                                    }
+                                                  >
+                                                    <div
+                                                      className={
+                                                        styles["folder-lists"]
+                                                      }
+                                                    >
+                                                      <div
+                                                        className={
+                                                          styles.dropdownIcons
+                                                        }
+                                                      >
+                                                        <div
+                                                          className={`${
+                                                            styles.circle
+                                                          } ${
+                                                            selectedFolder.includes(
+                                                              id
+                                                            )
+                                                              ? styles.checked
+                                                              : ""
+                                                          }`}
+                                                        >
+                                                          {selectedFolder.includes(
+                                                            id
+                                                          ) && (
+                                                            <img
+                                                              src={
+                                                                Utilities.checkIcon
+                                                              }
+                                                            />
+                                                          )}
+                                                        </div>
+                                                        <div
+                                                          className={
+                                                            styles[
+                                                              "icon-descriptions"
+                                                            ]
+                                                          }
+                                                        >
+                                                          <span>{name}</span>
+                                                        </div>
+                                                      </div>
+                                                      <div
+                                                        className={
+                                                          styles[
+                                                            "list1-right-contents"
+                                                          ]
+                                                        }
+                                                      >
+                                                        {selectedFolder.includes(
+                                                          id
+                                                        ) && <span></span>}
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </>
+                                              )
+                                            )}
+                                          {keyExists(folder.id) &&
+                                            (keyResultsFetch(
+                                              folder.id,
+                                              "next"
+                                            ) as number) >= 0 && (
+                                              <div
+                                                className={`${styles["outer-load-wrapper"]}`}
+                                              >
+                                                <div
+                                                  className={`${styles["load-wrapper"]}`}
+                                                  onClick={() => {
+                                                    getSubFolders(
+                                                      folder.id,
+                                                      keyResultsFetch(
+                                                        folder.id,
+                                                        "next"
+                                                      ) as number,
+                                                      false
+                                                    );
+                                                  }}
+                                                >
+                                                  <IconClickable
+                                                    additionalClass={
+                                                      styles.loadIcon
+                                                    }
+                                                    src={Utilities.load}
+                                                  />
+                                                  <button
+                                                    className={styles.loadMore}
+                                                  >
+                                                    {subFolderLoadingState.get(
+                                                      folder.id
+                                                    )
+                                                      ? "Loading..."
+                                                      : "Load More"}
+                                                  </button>
+                                                </div>
+                                              </div>
+                                            )}
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                              <div className={styles["modal-btns"]}>
+                                <Button
+                                  className="container secondary bulk-edit-btn"
+                                  text="Close"
+                                  onClick={() => setActiveDropdown("")}
+                                ></Button>
+                              </div>
+                            </div>
+                          )}
+                      </section>
                     )}
 
                     {isAdmin() && (
                       <div className={detailPanelStyles["field-wrapper"]}>
-                         <div className={styles['creatable-select-container']}>
-                        <CreatableSelect
-                          title="Campaigns"
-                          addText="Add to Campaign"
-                          onAddClick={() => setActiveDropdown("campaigns")}
-                          selectPlaceholder={
-                            "Enter a new campaign or select an existing one"
-                          }
-                          avilableItems={inputCampaigns}
-                          setAvailableItems={setInputCampaigns}
-                          selectedItems={assetCampaigns}
-                          setSelectedItems={setCampaigns}
-                          creatable={isAdmin()}
-                          onAddOperationFinished={(stateUpdate) => {
-                            setActiveDropdown("");
-                          }}
-                          onRemoveOperationFinished={async (
-                            index,
-                            stateUpdate
-                          ) => {}}
-                          onOperationFailedSkipped={() => setActiveDropdown("")}
-                          isShare={false}
-                          asyncCreateFn={(newItem) => {
-                            return { data: newItem };
-                          }}
-                          dropdownIsActive={activeDropdown === "campaigns"}
-                          altColor="yellow"
-                          ignorePermission={true}
-                        />
+                        <div className={styles["creatable-select-container"]}>
+                          <CreatableSelect
+                            title="Campaigns"
+                            addText="Add to Campaign"
+                            onAddClick={() => setActiveDropdown("campaigns")}
+                            selectPlaceholder={
+                              "Enter a new campaign or select an existing one"
+                            }
+                            avilableItems={inputCampaigns}
+                            setAvailableItems={setInputCampaigns}
+                            selectedItems={assetCampaigns}
+                            setSelectedItems={setCampaigns}
+                            creatable={isAdmin()}
+                            onAddOperationFinished={(stateUpdate) => {
+                              setActiveDropdown("");
+                            }}
+                            onRemoveOperationFinished={async (
+                              index,
+                              stateUpdate
+                            ) => {}}
+                            onOperationFailedSkipped={() =>
+                              setActiveDropdown("")
+                            }
+                            isShare={false}
+                            asyncCreateFn={(newItem) => {
+                              return { data: newItem };
+                            }}
+                            dropdownIsActive={activeDropdown === "campaigns"}
+                            altColor="yellow"
+                            ignorePermission={true}
+                          />
                         </div>
                       </div>
                     )}
@@ -1744,40 +2163,42 @@ const UploadRequest = () => {
                               className={detailPanelStyles["field-wrapper"]}
                               key={index}
                             >
-                              <div className={styles['creatable-select-container']}>
-                              <CreatableSelect
-                                creatable={false}
-                                title={field.name}
-                                addText={`Add ${field.name}`}
-                                onAddClick={() => setActiveCustomField(index)}
-                                selectPlaceholder={"Select an existing one"}
-                                avilableItems={field.values}
-                                setAvailableItems={() => {}}
-                                selectedItems={
-                                  assetCustomFields.filter(
-                                    (assetField) => assetField.id === field.id
-                                  )[0]?.values || []
-                                }
-                                setSelectedItems={(data) => {
-                                  onChangeCustomField(index, data);
-                                }}
-                                onAddOperationFinished={(stateUpdate) => {}}
-                                onRemoveOperationFinished={async (
-                                  index,
-                                  stateUpdate,
-                                  removeId
-                                ) => {}}
-                                onOperationFailedSkipped={() =>
-                                  setActiveCustomField(undefined)
-                                }
-                                isShare={false}
-                                asyncCreateFn={(newItem) => {
-                                  // Show loading
-                                  return { data: newItem };
-                                }}
-                                dropdownIsActive={activeCustomField === index}
-                                ignorePermission={true}
-                              />
+                              <div
+                                className={styles["creatable-select-container"]}
+                              >
+                                <CreatableSelect
+                                  creatable={false}
+                                  title={field.name}
+                                  addText={`Add ${field.name}`}
+                                  onAddClick={() => setActiveCustomField(index)}
+                                  selectPlaceholder={"Select an existing one"}
+                                  avilableItems={field.values}
+                                  setAvailableItems={() => {}}
+                                  selectedItems={
+                                    assetCustomFields.filter(
+                                      (assetField) => assetField.id === field.id
+                                    )[0]?.values || []
+                                  }
+                                  setSelectedItems={(data) => {
+                                    onChangeCustomField(index, data);
+                                  }}
+                                  onAddOperationFinished={(stateUpdate) => {}}
+                                  onRemoveOperationFinished={async (
+                                    index,
+                                    stateUpdate,
+                                    removeId
+                                  ) => {}}
+                                  onOperationFailedSkipped={() =>
+                                    setActiveCustomField(undefined)
+                                  }
+                                  isShare={false}
+                                  asyncCreateFn={(newItem) => {
+                                    // Show loading
+                                    return { data: newItem };
+                                  }}
+                                  dropdownIsActive={activeCustomField === index}
+                                  ignorePermission={true}
+                                />
                               </div>
                             </div>
                           );
@@ -1852,47 +2273,45 @@ const UploadRequest = () => {
                   name={assets[selectedAsset]?.asset.name}
                   assetImg={assets[selectedAsset]?.thumbailUrl}
                 />
-               
               )}
-            {assets[selectedAsset]?.asset.type !== "image" &&
-              assets[selectedAsset]?.asset.type !== "video" &&
-              assets[selectedAsset]?.thumbailUrl &&
-              (assets[selectedAsset]?.asset.extension.toLowerCase() ===
-              "pdf" ? (
-                <AssetPdf asset={assets[selectedAsset]?.asset} />
-              ) : (
-                <AssetImg
-                  name={assets[selectedAsset]?.asset.name}
-                  assetImg={assets[selectedAsset]?.thumbailUrl}
-                />
-              ))}
-            {assets[selectedAsset]?.asset.type !== "image" &&
-              assets[selectedAsset]?.asset.type !== "video" &&
-              !assets[selectedAsset]?.thumbailUrl && (
-                <div className={styles.assetIconContainer}>
-                     <AssetIcon  extension={assets[selectedAsset]?.asset.extension} />
-                </div>
-             
-                
+              {assets[selectedAsset]?.asset.type !== "image" &&
+                assets[selectedAsset]?.asset.type !== "video" &&
+                assets[selectedAsset]?.thumbailUrl &&
+                (assets[selectedAsset]?.asset.extension.toLowerCase() ===
+                "pdf" ? (
+                  <AssetPdf asset={assets[selectedAsset]?.asset} />
+                ) : (
+                  <AssetImg
+                    name={assets[selectedAsset]?.asset.name}
+                    assetImg={assets[selectedAsset]?.thumbailUrl}
+                  />
+                ))}
+              {assets[selectedAsset]?.asset.type !== "image" &&
+                assets[selectedAsset]?.asset.type !== "video" &&
+                !assets[selectedAsset]?.thumbailUrl && (
+                  <div className={styles.assetIconContainer}>
+                    <AssetIcon
+                      extension={assets[selectedAsset]?.asset.extension}
+                    />
+                  </div>
+                )}
+              {assets[selectedAsset]?.asset.type === "video" && (
+                <video controls>
+                  <source
+                    src={
+                      assets[selectedAsset]?.previewUrl ??
+                      assets[selectedAsset]?.realUrl
+                    }
+                    type={
+                      assets[selectedAsset]?.previewUrl
+                        ? "video/mp4"
+                        : `video/${assets[selectedAsset]?.asset.extension}`
+                    }
+                  />
+                  Sorry, your browser doesn't support video playback.
+                </video>
               )}
-            {assets[selectedAsset]?.asset.type === "video" && (
-              <video controls>
-                <source
-                  src={
-                    assets[selectedAsset]?.previewUrl ??
-                    assets[selectedAsset]?.realUrl
-                  }
-                  type={
-                    assets[selectedAsset]?.previewUrl
-                      ? "video/mp4"
-                      : `video/${assets[selectedAsset]?.asset.extension}`
-                  }
-                />
-                Sorry, your browser doesn't support video playback.
-              </video>
-            )}
             </div>
-
 
             {(isAdmin() || currentViewStatus !== 0) && (
               <div
@@ -1933,169 +2352,484 @@ const UploadRequest = () => {
               </h2>
 
               <div className={detailPanelStyles["field-wrapper"]}>
-              <div className={styles['creatable-select-container']}>
-                <CreatableSelect
-                  title="Tags"
-                  addText="Add Tags"
-                  onAddClick={() => {
-                    if (currentViewStatus === 0 || isAdmin()) {
-                      setActiveDropdown("tags");
+                <div className={styles["creatable-select-container"]}>
+                  <CreatableSelect
+                    title="Tags"
+                    addText="Add Tags"
+                    onAddClick={() => {
+                      if (currentViewStatus === 0 || isAdmin()) {
+                        setActiveDropdown("tags");
+                      }
+                    }}
+                    selectPlaceholder={
+                      "Enter a new tag or select an existing one"
                     }
-                  }}
-                  selectPlaceholder={
-                    "Enter a new tag or select an existing one"
-                  }
-                  avilableItems={inputTags}
-                  setAvailableItems={setInputTags}
-                  selectedItems={tempTags}
-                  setSelectedItems={setTempTags}
-                  allowEdit={currentViewStatus === 0 || isAdmin()}
-                  creatable={true}
-                  menuPosition={"fixed"}
-                  onAddOperationFinished={(stateUpdate) => {
-                    setActiveDropdown("");
+                    avilableItems={inputTags}
+                    setAvailableItems={setInputTags}
+                    selectedItems={tempTags}
+                    setSelectedItems={setTempTags}
+                    allowEdit={currentViewStatus === 0 || isAdmin()}
+                    creatable={true}
+                    menuPosition={"fixed"}
+                    onAddOperationFinished={(stateUpdate) => {
+                      setActiveDropdown("");
 
-                    if (isAdmin()) {
-                      updateAssetTagsState(stateUpdate);
-                    }
-                  }}
-                  onRemoveOperationFinished={async (index, stateUpdate) => {
-                    if (isAdmin()) {
-                      setIsLoading(true);
-                      await assetApi.removeTag(
-                        assets[selectedAsset]?.asset.id,
-                        tempTags[index].id
-                      );
-                      updateAssetTagsState(stateUpdate);
-                    }
-                  }}
-                  onOperationFailedSkipped={() => setActiveDropdown("")}
-                  isShare={false}
-                  asyncCreateFn={(newItem) => {
-                    if (isAdmin()) {
-                      // Admin can edit inline, dont need to hit save button
-                      setIsLoading(true);
-                      return assetApi.addTag(
-                        assets[selectedAsset]?.asset.id,
-                        newItem
-                      );
-                    } else {
-                      return { data: newItem };
-                    }
-                  }}
-                  dropdownIsActive={activeDropdown === "tags"}
-                  ignorePermission={true}
-                />
+                      if (isAdmin()) {
+                        updateAssetTagsState(stateUpdate);
+                      }
+                    }}
+                    onRemoveOperationFinished={async (index, stateUpdate) => {
+                      if (isAdmin()) {
+                        setIsLoading(true);
+                        await assetApi.removeTag(
+                          assets[selectedAsset]?.asset.id,
+                          tempTags[index].id
+                        );
+                        updateAssetTagsState(stateUpdate);
+                      }
+                    }}
+                    onOperationFailedSkipped={() => setActiveDropdown("")}
+                    isShare={false}
+                    asyncCreateFn={(newItem) => {
+                      if (isAdmin()) {
+                        // Admin can edit inline, dont need to hit save button
+                        setIsLoading(true);
+                        return assetApi.addTag(
+                          assets[selectedAsset]?.asset.id,
+                          newItem
+                        );
+                      } else {
+                        return { data: newItem };
+                      }
+                    }}
+                    dropdownIsActive={activeDropdown === "tags"}
+                    ignorePermission={true}
+                  />
                 </div>
               </div>
 
               {isAdmin() && (
-                <div className={detailPanelStyles["field-wrapper"]}>
-                   <div className={styles['creatable-select-container']}>
-                  <CreatableSelect
-                    title="Collections"
-                    addText="Add to Collections"
-                    onAddClick={() => setActiveDropdown("collections")}
-                    selectPlaceholder={
-                      "Enter a new collection or select an existing one"
-                    }
-                    avilableItems={inputFolders}
-                    setAvailableItems={setInputFolders}
-                    selectedItems={tempFolders}
-                    setSelectedItems={setTempFolders}
-                    menuPosition={"fixed"}
-                    onAddOperationFinished={(stateUpdate) => {
-                      updateAssetState({
-                        folders: { $set: stateUpdate },
-                      });
-                    }}
-                    creatable={isAdmin()}
-                    onRemoveOperationFinished={async (
-                      index,
-                      stateUpdate,
-                      id
-                    ) => {
-                      await assetApi.removeFolder(
-                        assets[selectedAsset]?.asset.id,
-                        assetFolders[index].id
-                      );
-                      updateAssetState({
-                        folders: { $set: stateUpdate },
-                      });
-                    }}
-                    onOperationFailedSkipped={() => setActiveDropdown("")}
-                    isShare={false}
-                    asyncCreateFn={(newItem) => {
-                      if (isAdmin()) {
-                        // Admin can edit inline, dont need to hit save button
-                        setIsLoading(true);
+                <section className={styles["field-wrapper"]}>
+                  {
+                    <div className={`${styles["tag-container-wrapper"]}`}>
+                      {[...completeSelectedFolder.entries()].map(
+                        ([key, value], index) => (
+                          <div
+                            className={`${styles["tag-container"]}`}
+                            key={index}
+                          >
+                            <span>{value.name}</span>
+                            <IconClickable
+                              additionalClass={styles.remove}
+                              src={Utilities.closeTag}
+                              onClick={() =>
+                                toggleSelectedFolders(
+                                  key,
+                                  !selectedFolder.includes(key),
+                                  false,
+                                  "",
+                                  value.name
+                                )
+                              }
+                            />
+                          </div>
+                        )
+                      )}
+                    </div>
+                  }
+                  {hasPermission([ASSET_EDIT]) &&
+                    (activeDropdown === "" ||
+                      activeDropdown !== "collections") && (
+                      <>
+                        <div className={`${styles["top-heading"]}`}>
+                          <span>Collection</span>
+                        </div>
+                        <div
+                          className={`add ${styles["select-add"]}`}
+                          onClick={() => setActiveDropdown("collections")}
+                        >
+                          <IconClickable src={Utilities.addLight} />
+                          <span>{"Add to Collection"}</span>
+                        </div>
+                      </>
+                    )}
+                  {hasPermission([ASSET_EDIT]) &&
+                    activeDropdown === "collections" && (
+                      <div className={`${styles["edit-bulk-outer-wrapper"]}`}>
+                        <div className={`${styles["close-popup"]}`}>
+                          {" "}
+                          <IconClickable
+                            additionalClass={styles.remove}
+                            src={Utilities.closeTag}
+                            onClick={() => setActiveDropdown("")}
+                          />
+                        </div>
+                        <div className={`${styles["search-btn"]}`}>
+                          <SearchModal
+                            filteredData={filteredData}
+                            input={input}
+                            setInput={setInput}
+                          />
+                        </div>
+                        <div className={`${styles["modal-heading"]}`}>
+                          <span>Collection({folders.length ?? ""})</span>
+                        </div>
+                        <div className={`${styles["outer-wrapper"]}`}>
+                          {folders.map((folder, index) => (
+                            <div key={index}>
+                              <div
+                                className={`${styles["flex"]} ${styles.nestedbox}`}
+                              >
+                                <div
+                                  className={`${styles["height"]} ${styles["flex"]}`}
+                                  onClick={() => {
+                                    toggleDropdown(folder.id, true);
+                                  }}
+                                >
+                                  <img
+                                    className={
+                                      showDropdown.includes(folder.id)
+                                        ? styles.iconClick
+                                        : styles.rightIcon
+                                    }
+                                    src={Utilities.arrowBlue}
+                                    alt="Right Arrow Icon"
+                                    onClick={() => {
+                                      toggleDropdown(folder.id, true);
+                                    }}
+                                  />
+                                </div>
 
-                        return assetApi.addFolder(
-                          assets[selectedAsset]?.asset.id,
-                          newItem
-                        );
-                      } else {
-                        return { data: newItem };
+                                <div className={styles.w100}>
+                                  <div
+                                    className={`${styles["dropdownMenu"]} ${
+                                      selectedFolder.includes(folder.id)
+                                        ? styles["active"]
+                                        : ""
+                                    }`}
+                                  >
+                                    <div className={styles.flex}>
+                                      <div
+                                        className={`${styles.circle} ${
+                                          selectedFolder.includes(folder.id)
+                                            ? styles.checked
+                                            : ""
+                                        }`}
+                                        onClick={() =>
+                                          toggleSelectedFolders(
+                                            folder.id,
+                                            !selectedFolder.includes(folder.id),
+                                            false,
+                                            "",
+                                            folder.name
+                                          )
+                                        }
+                                      >
+                                        {selectedFolder.includes(folder.id) && (
+                                          <img src={Utilities.checkIcon} />
+                                        )}
+                                      </div>
+                                      <div
+                                        className={styles["icon-descriptions"]}
+                                      >
+                                        <span>{folder.name}</span>
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div
+                                        className={
+                                          styles["list1-right-contents"]
+                                        }
+                                      >
+                                        {selectAllFolders[folder.id] ? (
+                                          <div
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() =>
+                                              toggleSelectAllChildList(
+                                                folder.id,
+                                                folder.name
+                                              )
+                                            }
+                                            className={`${styles["deselect-all"]}`}
+                                          >
+                                            <img
+                                              src={Utilities.redCheck}
+                                              alt="Check Icon"
+                                            />
+                                            <span
+                                              className={styles.deselectText}
+                                            >
+                                              Deselect All
+                                            </span>
+                                          </div>
+                                        ) : (
+                                          <div
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() =>
+                                              toggleSelectAllChildList(
+                                                folder.id,
+                                                folder.name
+                                              )
+                                            }
+                                            className={`${styles["select-all"]}`}
+                                          >
+                                            <img
+                                              src={Utilities.doubleCheck}
+                                              alt="Check Icon"
+                                            />
+                                            <span className={styles.selectText}>
+                                              Select All
+                                            </span>
+                                          </div>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              {showDropdown.includes(folder.id) && (
+                                <div className={styles.folder}>
+                                  <div className={styles.subfolderList}>
+                                    {keyExists(folder.id) &&
+                                      (
+                                        keyResultsFetch(
+                                          folder.id,
+                                          "record"
+                                        ) as Item[]
+                                      ).map(
+                                        ({ id, name, parentId, ...rest }) => (
+                                          <>
+                                            <div
+                                              key={id}
+                                              className={styles.dropdownOptions}
+                                              onClick={() =>
+                                                toggleSelectedFolders(
+                                                  id,
+                                                  !selectedFolder.includes(id),
+                                                  true,
+                                                  folder.id,
+                                                  name,
+                                                  parentId
+                                                )
+                                              }
+                                            >
+                                              <div
+                                                className={
+                                                  styles["folder-lists"]
+                                                }
+                                              >
+                                                <div
+                                                  className={
+                                                    styles.dropdownIcons
+                                                  }
+                                                >
+                                                  <div
+                                                    className={`${
+                                                      styles.circle
+                                                    } ${
+                                                      selectedFolder.includes(
+                                                        id
+                                                      )
+                                                        ? styles.checked
+                                                        : ""
+                                                    }`}
+                                                  >
+                                                    {selectedFolder.includes(
+                                                      id
+                                                    ) && (
+                                                      <img
+                                                        src={
+                                                          Utilities.checkIcon
+                                                        }
+                                                      />
+                                                    )}
+                                                  </div>
+                                                  <div
+                                                    className={
+                                                      styles[
+                                                        "icon-descriptions"
+                                                      ]
+                                                    }
+                                                  >
+                                                    <span>{name}</span>
+                                                  </div>
+                                                </div>
+                                                <div
+                                                  className={
+                                                    styles[
+                                                      "list1-right-contents"
+                                                    ]
+                                                  }
+                                                >
+                                                  {selectedFolder.includes(
+                                                    id
+                                                  ) && <span></span>}
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </>
+                                        )
+                                      )}
+                                    {keyExists(folder.id) &&
+                                      (keyResultsFetch(
+                                        folder.id,
+                                        "next"
+                                      ) as number) >= 0 && (
+                                        <div
+                                          className={`${styles["outer-load-wrapper"]}`}
+                                        >
+                                          <div
+                                            className={`${styles["load-wrapper"]}`}
+                                            onClick={() => {
+                                              getSubFolders(
+                                                folder.id,
+                                                keyResultsFetch(
+                                                  folder.id,
+                                                  "next"
+                                                ) as number,
+                                                false
+                                              );
+                                            }}
+                                          >
+                                            <IconClickable
+                                              additionalClass={styles.loadIcon}
+                                              src={Utilities.load}
+                                            />
+                                            <button className={styles.loadMore}>
+                                              {subFolderLoadingState.get(
+                                                folder.id
+                                              )
+                                                ? "Loading..."
+                                                : "Load More"}
+                                            </button>
+                                          </div>
+                                        </div>
+                                      )}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                        <div className={styles["modal-btns"]}>
+                          <Button
+                            className="container secondary bulk-edit-btn"
+                            text="Close"
+                            onClick={() => setActiveDropdown("")}
+                          ></Button>
+                        </div>
+                      </div>
+                    )}
+                </section>
+              )}
+
+              {/* {isAdmin() && (
+                <div className={detailPanelStyles["field-wrapper"]}>
+                  <div className={styles['creatable-select-container']}>
+                    <CreatableSelect
+                      title="Collections"
+                      addText="Add to Collections"
+                      onAddClick={() => setActiveDropdown("collections")}
+                      selectPlaceholder={
+                        "Enter a new collection or select an existing one"
                       }
-                    }}
-                    dropdownIsActive={activeDropdown === "collections"}
-                    altColor="yellow"
-                    sortDisplayValue={true}
-                    ignorePermission={true}
-                  />
+                      avilableItems={inputFolders}
+                      setAvailableItems={setInputFolders}
+                      selectedItems={tempFolders}
+                      setSelectedItems={setTempFolders}
+                      menuPosition={"fixed"}
+                      onAddOperationFinished={(stateUpdate) => {
+                        updateAssetState({
+                          folders: { $set: stateUpdate },
+                        });
+                      }}
+                      creatable={isAdmin()}
+                      onRemoveOperationFinished={async (
+                        index,
+                        stateUpdate,
+                        id
+                      ) => {
+                        await assetApi.removeFolder(
+                          assets[selectedAsset]?.asset.id,
+                          assetFolders[index].id
+                        );
+                        updateAssetState({
+                          folders: { $set: stateUpdate },
+                        });
+                      }}
+                      onOperationFailedSkipped={() => setActiveDropdown("")}
+                      isShare={false}
+                      asyncCreateFn={(newItem) => {
+                        if (isAdmin()) {
+                          // Admin can edit inline, dont need to hit save button
+                          setIsLoading(true);
+
+                          return assetApi.addFolder(
+                            assets[selectedAsset]?.asset.id,
+                            newItem
+                          );
+                        } else {
+                          return { data: newItem };
+                        }
+                      }}
+                      dropdownIsActive={activeDropdown === "collections"}
+                      altColor="yellow"
+                      sortDisplayValue={true}
+                      ignorePermission={true}
+                    />
                   </div>
                 </div>
-              )}
+              )} */}
 
               {isAdmin() && (
                 <div className={detailPanelStyles["field-wrapper"]}>
-                     <div className={styles['creatable-select-container']}>
-                  <CreatableSelect
-                    title="Campaigns"
-                    addText="Add to Campaign"
-                    onAddClick={() => setActiveDropdown("campaigns")}
-                    selectPlaceholder={
-                      "Enter a new campaign or select an existing one"
-                    }
-                    avilableItems={inputCampaigns}
-                    setAvailableItems={setInputCampaigns}
-                    selectedItems={tempCampaigns}
-                    setSelectedItems={setTempCampaigns}
-                    creatable={isAdmin()}
-                    menuPosition={"fixed"}
-                    onAddOperationFinished={(stateUpdate) => {
-                      updateAssetState({
-                        campaigns: { $set: stateUpdate },
-                      });
-                    }}
-                    onRemoveOperationFinished={async (index, stateUpdate) => {
-                      await assetApi.removeCampaign(
-                        assets[selectedAsset]?.asset?.id,
-                        tempCampaigns[index]?.id
-                      );
-                      updateAssetState({
-                        campaigns: { $set: stateUpdate },
-                      });
-                    }}
-                    onOperationFailedSkipped={() => setActiveDropdown("")}
-                    isShare={false}
-                    asyncCreateFn={(newItem) => {
-                      if (isAdmin()) {
-                        // Admin can edit inline, dont need to hit save button
-                        setIsLoading(true);
-
-                        return assetApi.addCampaign(
-                          assets[selectedAsset]?.asset.id,
-                          newItem
-                        );
-                      } else {
-                        return { data: newItem };
+                  <div className={styles["creatable-select-container"]}>
+                    <CreatableSelect
+                      title="Campaigns"
+                      addText="Add to Campaign"
+                      onAddClick={() => setActiveDropdown("campaigns")}
+                      selectPlaceholder={
+                        "Enter a new campaign or select an existing one"
                       }
-                    }}
-                    dropdownIsActive={activeDropdown === "campaigns"}
-                    altColor="yellow"
-                    ignorePermission={true}
-                  />
+                      avilableItems={inputCampaigns}
+                      setAvailableItems={setInputCampaigns}
+                      selectedItems={tempCampaigns}
+                      setSelectedItems={setTempCampaigns}
+                      creatable={isAdmin()}
+                      menuPosition={"fixed"}
+                      onAddOperationFinished={(stateUpdate) => {
+                        updateAssetState({
+                          campaigns: { $set: stateUpdate },
+                        });
+                      }}
+                      onRemoveOperationFinished={async (index, stateUpdate) => {
+                        await assetApi.removeCampaign(
+                          assets[selectedAsset]?.asset?.id,
+                          tempCampaigns[index]?.id
+                        );
+                        updateAssetState({
+                          campaigns: { $set: stateUpdate },
+                        });
+                      }}
+                      onOperationFailedSkipped={() => setActiveDropdown("")}
+                      isShare={false}
+                      asyncCreateFn={(newItem) => {
+                        if (isAdmin()) {
+                          // Admin can edit inline, dont need to hit save button
+                          setIsLoading(true);
+
+                          return assetApi.addCampaign(
+                            assets[selectedAsset]?.asset.id,
+                            newItem
+                          );
+                        } else {
+                          return { data: newItem };
+                        }
+                      }}
+                      dropdownIsActive={activeDropdown === "campaigns"}
+                      altColor="yellow"
+                      ignorePermission={true}
+                    />
                   </div>
                 </div>
               )}
@@ -2130,77 +2864,77 @@ const UploadRequest = () => {
                         className={detailPanelStyles["field-wrapper"]}
                         key={index}
                       >
-                           <div className={styles['creatable-select-container']}>
-                        <CreatableSelect
-                          creatable={false}
-                          title={field.name}
-                          addText={`Add ${field.name}`}
-                          onAddClick={() => setActiveCustomField(index)}
-                          selectPlaceholder={"Select an existing one"}
-                          avilableItems={field.values}
-                          setAvailableItems={() => {}}
-                          menuPosition={"fixed"}
-                          selectedItems={
-                            tempCustoms.filter(
-                              (assetField) => assetField.id === field.id
-                            )[0]?.values || []
-                          }
-                          setSelectedItems={(data) => {
-                            onChangeTempCustomField(index, data);
-                          }}
-                          onAddOperationFinished={(stateUpdate) => {
-                            setActiveDropdown("");
-
-                            if (isAdmin()) {
-                              updateAssetState({
-                                customs: {
-                                  [index]: { values: { $set: stateUpdate } },
-                                },
-                              });
+                        <div className={styles["creatable-select-container"]}>
+                          <CreatableSelect
+                            creatable={false}
+                            title={field.name}
+                            addText={`Add ${field.name}`}
+                            onAddClick={() => setActiveCustomField(index)}
+                            selectPlaceholder={"Select an existing one"}
+                            avilableItems={field.values}
+                            setAvailableItems={() => {}}
+                            menuPosition={"fixed"}
+                            selectedItems={
+                              tempCustoms.filter(
+                                (assetField) => assetField.id === field.id
+                              )[0]?.values || []
                             }
-                          }}
-                          onRemoveOperationFinished={async (
-                            index,
-                            stateUpdate,
-                            removeId
-                          ) => {
-                            if (isAdmin()) {
-                              setIsLoading(true);
-                              await assetApi.removeCustomFields(
-                                assets[selectedAsset]?.asset.id,
-                                removeId
-                              );
+                            setSelectedItems={(data) => {
+                              onChangeTempCustomField(index, data);
+                            }}
+                            onAddOperationFinished={(stateUpdate) => {
+                              setActiveDropdown("");
 
-                              updateAssetState({
-                                customs: {
-                                  [index]: { values: { $set: stateUpdate } },
-                                },
-                              });
+                              if (isAdmin()) {
+                                updateAssetState({
+                                  customs: {
+                                    [index]: { values: { $set: stateUpdate } },
+                                  },
+                                });
+                              }
+                            }}
+                            onRemoveOperationFinished={async (
+                              index,
+                              stateUpdate,
+                              removeId
+                            ) => {
+                              if (isAdmin()) {
+                                setIsLoading(true);
+                                await assetApi.removeCustomFields(
+                                  assets[selectedAsset]?.asset.id,
+                                  removeId
+                                );
 
-                              setIsLoading(false);
+                                updateAssetState({
+                                  customs: {
+                                    [index]: { values: { $set: stateUpdate } },
+                                  },
+                                });
+
+                                setIsLoading(false);
+                              }
+                            }}
+                            onOperationFailedSkipped={() =>
+                              setActiveCustomField(undefined)
                             }
-                          }}
-                          onOperationFailedSkipped={() =>
-                            setActiveCustomField(undefined)
-                          }
-                          isShare={false}
-                          asyncCreateFn={(newItem) => {
-                            // Show loading
-                            setNeedRefresh(true);
-                            if (isAdmin()) {
-                              // Admin can edit inline, dont need to hit save button
-                              setIsLoading(true);
-                              return assetApi.addCustomFields(
-                                assets[selectedAsset]?.asset.id,
-                                { ...newItem }
-                              );
-                            } else {
-                              return { data: newItem };
-                            }
-                          }}
-                          dropdownIsActive={activeCustomField === index}
-                          ignorePermission={true}
-                        />
+                            isShare={false}
+                            asyncCreateFn={(newItem) => {
+                              // Show loading
+                              setNeedRefresh(true);
+                              if (isAdmin()) {
+                                // Admin can edit inline, dont need to hit save button
+                                setIsLoading(true);
+                                return assetApi.addCustomFields(
+                                  assets[selectedAsset]?.asset.id,
+                                  { ...newItem }
+                                );
+                              } else {
+                                return { data: newItem };
+                              }
+                            }}
+                            dropdownIsActive={activeCustomField === index}
+                            ignorePermission={true}
+                          />
                         </div>
                       </div>
                     );

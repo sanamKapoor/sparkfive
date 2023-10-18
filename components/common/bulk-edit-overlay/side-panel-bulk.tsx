@@ -393,6 +393,11 @@ const SidePanelBulk = ({
             }
           </div>}
           {(addMode && hasPermission([ASSET_EDIT])) && (activeDropdown === "" || activeDropdown !== "collections") && (
+            <>
+             <div className={`${styles['top-heading']}`}>
+                          <span>Collection</span>
+
+                          </div>
             <div
               className={`add ${styles["select-add"]}`}
               onClick={() => setActiveDropdown("collections")}
@@ -400,6 +405,8 @@ const SidePanelBulk = ({
               <IconClickable src={Utilities.addLight} />
               <span>{"Add to Collection"}</span>
             </div>
+            </>
+            
           )}
           {
             (addMode && hasPermission([ASSET_EDIT]) && activeDropdown === "collections") &&

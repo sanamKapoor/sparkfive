@@ -3,9 +3,9 @@
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
-    height:30px;
     padding: 7.5px 2px;
     background: #fff;
+    margin-bottom:10px;
   
 }
 .list1-description:hover{

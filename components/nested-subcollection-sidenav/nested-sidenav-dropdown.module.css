@@ -38,8 +38,9 @@
   align-items: center;
 }
 .nestedbox {
-  margin-top: 20px;
+  /* margin-top: 20px; */
   padding: 0 4px;
+  margin-bottom: 10px;
 }
 .nestedbox:hover {
   background: #d5dcef;
