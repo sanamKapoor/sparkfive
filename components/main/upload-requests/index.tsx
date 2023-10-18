@@ -1,39 +1,41 @@
-import clsx from 'clsx';
-import update from 'immutability-helper';
-import _ from 'lodash';
-import moment from 'moment';
-import React, { useContext, useEffect, useState } from 'react';
+import clsx from "clsx";
+import update from "immutability-helper";
+import _ from "lodash";
+import moment from "moment";
+import React, { useContext, useEffect, useState } from "react";
 
-import { Utilities } from '../../../assets';
-import GuestUploadApprovalOverlay from '../../../components/common/guest-upload-approval-overlay';
-import { AssetContext, LoadingContext, UserContext } from '../../../context';
-import { useDebounce } from '../../../hooks/useDebounce';
-import assetApi from '../../../server-api/asset';
-import customFieldsApi from '../../../server-api/attribute';
-import campaignApi from '../../../server-api/campaign';
-import folderApi from '../../../server-api/folder';
-import tagApi from '../../../server-api/tag';
-import approvalApi, { default as uploadApprovalApi } from '../../../server-api/upload-approvals';
-import toastUtils from '../../../utils/toast';
-import assetGridStyles from '../../common/asset/asset-grid.module.css';
-import AssetIcon from '../../common/asset/asset-icon';
-import AssetImg from '../../common/asset/asset-img';
-import AssetPdf from '../../common/asset/asset-pdf';
-import AssetSubheader from '../../common/asset/asset-subheader';
-import AssetThumbail from '../../common/asset/asset-thumbail';
-import detailPanelStyles from '../../common/asset/detail-side-panel.module.css';
-import ListItem from '../../common/asset/request-list-item';
-import Button from '../../common/buttons/button';
-import IconClickable from '../../common/buttons/icon-clickable';
-import CreatableSelect from '../../common/inputs/creatable-select';
-import Input from '../../common/inputs/input';
-import Select from '../../common/inputs/select';
-import TextArea from '../../common/inputs/text-area';
-import CustomFieldSelector from '../../common/items/custom-field-selector';
-import Base from '../../common/modals/base';
-import ConfirmModal from '../../common/modals/confirm-modal';
-import RenameModal from '../../common/modals/rename-modal';
-import styles from './index.module.css';
+import { Utilities } from "../../../assets";
+import GuestUploadApprovalOverlay from "../../../components/common/guest-upload-approval-overlay";
+import { AssetContext, LoadingContext, UserContext } from "../../../context";
+import { useDebounce } from "../../../hooks/useDebounce";
+import assetApi from "../../../server-api/asset";
+import customFieldsApi from "../../../server-api/attribute";
+import campaignApi from "../../../server-api/campaign";
+import folderApi from "../../../server-api/folder";
+import tagApi from "../../../server-api/tag";
+import approvalApi, {
+  default as uploadApprovalApi,
+} from "../../../server-api/upload-approvals";
+import toastUtils from "../../../utils/toast";
+import assetGridStyles from "../../common/asset/asset-grid.module.css";
+import AssetIcon from "../../common/asset/asset-icon";
+import AssetImg from "../../common/asset/asset-img";
+import AssetPdf from "../../common/asset/asset-pdf";
+import AssetSubheader from "../../common/asset/asset-subheader";
+import AssetThumbail from "../../common/asset/asset-thumbail";
+import detailPanelStyles from "../../common/asset/detail-side-panel.module.css";
+import ListItem from "../../common/asset/request-list-item";
+import Button from "../../common/buttons/button";
+import IconClickable from "../../common/buttons/icon-clickable";
+import CreatableSelect from "../../common/inputs/creatable-select";
+import Input from "../../common/inputs/input";
+import Select from "../../common/inputs/select";
+import TextArea from "../../common/inputs/text-area";
+import CustomFieldSelector from "../../common/items/custom-field-selector";
+import Base from "../../common/modals/base";
+import ConfirmModal from "../../common/modals/confirm-modal";
+import RenameModal from "../../common/modals/rename-modal";
+import styles from "./index.module.css";
 import { useMoveModal } from "../../../hooks/Use-Modal";
 import { ASSET_EDIT } from "../../../constants/permissions";
 import SearchModal from "../../SearchModal/Search-modal";
@@ -154,13 +156,6 @@ const UploadRequest = () => {
 
   const [rightPanelOpen, setRightPanelOpen] = useState(false);
 
-
-
-
-
-
-
-
   const {
     folders,
     selectedFolder,
@@ -181,7 +176,7 @@ const UploadRequest = () => {
     setSubFolderLoadingState,
     setFolderChildList,
     setSelectAllFolders,
-    completeSelectedFolder
+    completeSelectedFolder,
   } = useMoveModal();
 
   // useEffect(() => {
@@ -208,24 +203,11 @@ const UploadRequest = () => {
 
   const keyResultsFetch = (key: string, type: string): Item[] | number => {
     const { results, next } = folderChildList.get(key);
-    if (type === 'record') {
-      return results || []
+    if (type === "record") {
+      return results || [];
     }
-    return next
+    return next;
   };
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   const updateName = async (value) => {
     if (approvalId) {
@@ -367,17 +349,17 @@ const UploadRequest = () => {
   };
 
   const onSaveSingleAsset = async () => {
-    const assetFolders = [...completeSelectedFolder.entries()].map(([key, value], index) => {
-      return {
-        id: key,
-        name: value.name
+    const assetFolders = [...completeSelectedFolder.entries()].map(
+      ([key, value], index) => {
+        return {
+          id: key,
+          name: value.name,
+        };
       }
-    })
+    );
 
     if (selectedAsset !== undefined) {
       setIsLoading(true);
-
-
 
       // @ts-ignore
       const assetArr = [assets[selectedAsset]];
@@ -1191,9 +1173,9 @@ const UploadRequest = () => {
       setSelectedFolder([]);
       setShowDropdown([]);
       setSubFolderLoadingState(new Map());
-      setFolderChildList(new Map())
-      setSelectAllFolders({})
-      setInput("")
+      setFolderChildList(new Map());
+      setSelectAllFolders({});
+      setInput("");
       completeSelectedFolder.clear();
     };
   }, []);
@@ -1271,7 +1253,8 @@ const UploadRequest = () => {
 
       const headerTop = document.getElementById("top-bar")?.offsetHeight || 55;
       setTop(
-        `calc(${headerTop}px + ${header?.clientHeight || 0}px + ${remValue} - ${style.paddingBottom
+        `calc(${headerTop}px + ${header?.clientHeight || 0}px + ${remValue} - ${
+          style.paddingBottom
         } - ${style.paddingTop})`
       );
     }
@@ -1322,12 +1305,12 @@ const UploadRequest = () => {
     <>
       <AssetSubheader
         activeFolder={""}
-        getFolders={() => { }}
+        getFolders={() => {}}
         mode={"assets"}
         amountSelected={selectedAssets.length}
         activeFolderData={null}
-        backToFolders={() => { }}
-        setRenameModalOpen={() => { }}
+        backToFolders={() => {}}
+        setRenameModalOpen={() => {}}
         activeSortFilter={{}}
         titleText={"Upload Requests"}
         showAssetAddition={false}
@@ -1360,7 +1343,7 @@ const UploadRequest = () => {
                     {currentApproval?.name || "Untitled"}
                   </div>
                   <div className={styles["main-subtitle"]}>
-                    Submitted { } on{" "}
+                    Submitted {} on{" "}
                     {moment(currentApproval?.createdAt).format("MMM DD, YYYY")}
                   </div>
                 </div>
@@ -1433,10 +1416,8 @@ const UploadRequest = () => {
                     {mode === "view" && isAdmin() && (
                       <div className={styles["filter-wrapper"]}>
                         <Select
-
-                          containerClass={`${styles['filter-input']} ${styles['filter-main-box']}`}
-
-                          additionalClass={`${styles['filter-by-status']} ${styles['filter-inner-box']}`}
+                          containerClass={`${styles["filter-input"]} ${styles["filter-main-box"]}`}
+                          additionalClass={`${styles["filter-by-status"]} ${styles["filter-inner-box"]}`}
                           isClearable={true}
                           options={filterOptions}
                           onChange={(value) => {
@@ -1463,7 +1444,9 @@ const UploadRequest = () => {
             {mode === "list" && (
               <div className={styles["asset-list"]}>
                 <div className={`${styles["button-wrapper"]} m-b-25`}>
-                  <div className={`${styles['main-title']} ${styles['approval-pending-title']}`}>
+                  <div
+                    className={`${styles["main-title"]} ${styles["approval-pending-title"]}`}
+                  >
                     <h2>Upload Requests</h2>
                   </div>
                   <div className={styles["upload-section"]}>
@@ -1531,12 +1514,15 @@ const UploadRequest = () => {
                   </div>
                 </div>
                 <div
-                  className={`${assetGridStyles["list-wrapper"]} ${approvals.length === 0 ? "mb-32" : ""
-                    }`}
+                  className={`${assetGridStyles["list-wrapper"]} ${
+                    approvals.length === 0 ? "mb-32" : ""
+                  }`}
                 >
                   <ul className={"regular-list"}>
                     {approvals.length === 0 && (
-                      <p className={`${styles['upload-approval-desc']}`}>There are no upload requests for you to reviews</p>
+                      <p className={`${styles["upload-approval-desc"]}`}>
+                        There are no upload requests for you to reviews
+                      </p>
                     )}
                     {approvals.map((approval, index) => {
                       return (
@@ -1587,15 +1573,15 @@ const UploadRequest = () => {
                               toggleSelected={() => {
                                 toggleSelectedAsset(assetItem.asset.id);
                               }}
-                              openArchiveAsset={() => { }}
-                              openDeleteAsset={() => { }}
-                              openMoveAsset={() => { }}
-                              openCopyAsset={() => { }}
-                              openShareAsset={() => { }}
-                              downloadAsset={() => { }}
-                              openRemoveAsset={() => { }}
-                              handleVersionChange={() => { }}
-                              loadMore={() => { }}
+                              openArchiveAsset={() => {}}
+                              openDeleteAsset={() => {}}
+                              openMoveAsset={() => {}}
+                              openCopyAsset={() => {}}
+                              openShareAsset={() => {}}
+                              downloadAsset={() => {}}
+                              openRemoveAsset={() => {}}
+                              handleVersionChange={() => {}}
+                              loadMore={() => {}}
                               onView={() => {
                                 onViewAsset(index);
                               }}
@@ -1620,14 +1606,14 @@ const UploadRequest = () => {
                                     <IconClickable
                                       additionalClass={styles["edit-icon"]}
                                       src={Utilities.comment}
-                                      onClick={() => { }}
+                                      onClick={() => {}}
                                     />
                                   )}
                                   {assetItem?.asset?.tags?.length > 0 && (
                                     <IconClickable
                                       additionalClass={styles["edit-icon"]}
                                       src={Utilities.greenTag}
-                                      onClick={() => { }}
+                                      onClick={() => {}}
                                     />
                                   )}
                                 </div>
@@ -1692,7 +1678,7 @@ const UploadRequest = () => {
                 {(currentViewStatus === 0 || isAdmin()) && (
                   <>
                     <div className={detailPanelStyles["field-wrapper"]}>
-                      <div className={styles['creatable-select-container']}>
+                      <div className={styles["creatable-select-container"]}>
                         <CreatableSelect
                           title="Tags"
                           addText="Add Tags"
@@ -1712,7 +1698,7 @@ const UploadRequest = () => {
                           onRemoveOperationFinished={async (
                             index,
                             stateUpdate
-                          ) => { }}
+                          ) => {}}
                           onOperationFailedSkipped={() => setActiveDropdown("")}
                           isShare={false}
                           asyncCreateFn={(newItem) => {
@@ -1720,7 +1706,6 @@ const UploadRequest = () => {
                           }}
                           dropdownIsActive={activeDropdown === "tags"}
                           ignorePermission={true}
-
                         />
                       </div>
                     </div>
@@ -1764,168 +1749,356 @@ const UploadRequest = () => {
 
                     {isAdmin() && (
                       <section className={styles["field-wrapper"]}>
-                        {<div className={`${styles["tag-container-wrapper"]}`}>
-                          {
-                            [...completeSelectedFolder.entries()].map(([key, value], index) => (
-                              <div className={`${styles["tag-container"]}`} key={index}>
-                                <span>{value.name}</span>
+                        {
+                          <div className={`${styles["tag-container-wrapper"]}`}>
+                            {[...completeSelectedFolder.entries()].map(
+                              ([key, value], index) => (
+                                <div
+                                  className={`${styles["tag-container"]}`}
+                                  key={index}
+                                >
+                                  <span>{value.name}</span>
+                                  <IconClickable
+                                    additionalClass={styles.remove}
+                                    src={Utilities.closeTag}
+                                    onClick={() =>
+                                      toggleSelectedFolders(
+                                        key,
+                                        !selectedFolder.includes(key),
+                                        false,
+                                        "",
+                                        value.name
+                                      )
+                                    }
+                                  />
+                                </div>
+                              )
+                            )}
+                          </div>
+                        }
+                        {hasPermission([ASSET_EDIT]) &&
+                          (activeDropdown === "" ||
+                            activeDropdown !== "collections") && (
+                            <>
+                              <div className={`${styles["top-heading"]}`}>
+                                <span>Collection</span>
+                              </div>
+
+                              <div
+                                className={`add ${styles["select-add"]}`}
+                                onClick={() => setActiveDropdown("collections")}
+                              >
+                                <IconClickable src={Utilities.addLight} />
+                                <span>{"Add to Collection"}</span>
+                              </div>
+                            </>
+                          )}
+                        {hasPermission([ASSET_EDIT]) &&
+                          activeDropdown === "collections" && (
+                            <div
+                              className={`${styles["edit-bulk-outer-wrapper"]}`}
+                            >
+                              <div className={`${styles["close-popup"]}`}>
+                                {" "}
                                 <IconClickable
                                   additionalClass={styles.remove}
                                   src={Utilities.closeTag}
-                                  onClick={() => toggleSelectedFolders(key, !selectedFolder.includes(key), false, "", value.name)}
+                                  onClick={() => setActiveDropdown("")}
                                 />
                               </div>
-                            ))
-                          }
-                        </div>}
-                        {(hasPermission([ASSET_EDIT])) && (activeDropdown === "" || activeDropdown !== "collections") && (
-                          <>
-                          <div className={`${styles['top-heading']}`}>
-                          <span>Collection</span>
-                          </div>
-                             
-                          <div
-                            className={`add ${styles["select-add"]}`}
-                            onClick={() => setActiveDropdown("collections")}
-                          >
-                            <IconClickable src={Utilities.addLight} />
-                            <span>{"Add to Collection"}</span>
-                          </div>
-                          </>
-                       
-                        )}
-                        {
-                          (hasPermission([ASSET_EDIT]) && activeDropdown === "collections") &&
-                          <div className={`${styles["edit-bulk-outer-wrapper"]}`}>
-                            <div className={`${styles["close-popup"]}`}> <IconClickable
-                              additionalClass={styles.remove}
-                              src={Utilities.closeTag}
-                              onClick={() => setActiveDropdown("")}
-                            /></div>
-                            <div className={`${styles["search-btn"]}`}>
-                              <SearchModal filteredData={filteredData} input={input} setInput={setInput} />
-                            </div>
-                            <div className={`${styles["modal-heading"]}`}>
-                              <span>Collection({folders.length ?? ""})</span>
-                            </div>
-                            <div className={`${styles["outer-wrapper"]}`}>
-                              {folders.map((folder, index) => (
-                                <div key={index}>
-                                  <div className={`${styles["flex"]} ${styles.nestedbox}`}>
-                                    <div className={`${styles["height"]} ${styles["flex"]}`}
-                                      onClick={() => { toggleDropdown(folder.id, true) }}
+                              <div className={`${styles["search-btn"]}`}>
+                                <SearchModal
+                                  filteredData={filteredData}
+                                  input={input}
+                                  setInput={setInput}
+                                />
+                              </div>
+                              <div className={`${styles["modal-heading"]}`}>
+                                <span>Collection({folders.length ?? ""})</span>
+                              </div>
+                              <div className={`${styles["outer-wrapper"]}`}>
+                                {folders.map((folder, index) => (
+                                  <div key={index}>
+                                    <div
+                                      className={`${styles["flex"]} ${styles.nestedbox}`}
                                     >
-                                      <img
-                                        className={showDropdown.includes(folder.id) ? styles.iconClick : styles.rightIcon}
-                                        src={Utilities.arrowBlue}
-                                        alt="Right Arrow Icon"
-                                        onClick={() => { toggleDropdown(folder.id, true) }}
-                                      />
-                                    </div>
-
-                                    <div className={styles.w100}>
                                       <div
-                                        className={`${styles["dropdownMenu"]} ${selectedFolder.includes(folder.id) ?
-                                          styles["active"]
-                                          : ""
-                                          }`}
+                                        className={`${styles["height"]} ${styles["flex"]}`}
+                                        onClick={() => {
+                                          toggleDropdown(folder.id, true);
+                                        }}
                                       >
-                                        <div className={styles.flex}>
-                                          <div
-                                            className={`${styles.circle} ${selectedFolder.includes(folder.id) ?
-                                              styles.checked
+                                        <img
+                                          className={
+                                            showDropdown.includes(folder.id)
+                                              ? styles.iconClick
+                                              : styles.rightIcon
+                                          }
+                                          src={Utilities.arrowBlue}
+                                          alt="Right Arrow Icon"
+                                          onClick={() => {
+                                            toggleDropdown(folder.id, true);
+                                          }}
+                                        />
+                                      </div>
+
+                                      <div className={styles.w100}>
+                                        <div
+                                          className={`${
+                                            styles["dropdownMenu"]
+                                          } ${
+                                            selectedFolder.includes(folder.id)
+                                              ? styles["active"]
                                               : ""
+                                          }`}
+                                        >
+                                          <div className={styles.flex}>
+                                            <div
+                                              className={`${styles.circle} ${
+                                                selectedFolder.includes(
+                                                  folder.id
+                                                )
+                                                  ? styles.checked
+                                                  : ""
                                               }`}
-                                            onClick={() => toggleSelectedFolders(folder.id, !selectedFolder.includes(folder.id), false, "", folder.name)}
-                                          >
-                                            {
-                                              selectedFolder.includes(folder.id) &&
-                                              <img src={Utilities.checkIcon} />
-                                            }
+                                              onClick={() =>
+                                                toggleSelectedFolders(
+                                                  folder.id,
+                                                  !selectedFolder.includes(
+                                                    folder.id
+                                                  ),
+                                                  false,
+                                                  "",
+                                                  folder.name
+                                                )
+                                              }
+                                            >
+                                              {selectedFolder.includes(
+                                                folder.id
+                                              ) && (
+                                                <img
+                                                  src={Utilities.checkIcon}
+                                                />
+                                              )}
+                                            </div>
+                                            <div
+                                              className={
+                                                styles["icon-descriptions"]
+                                              }
+                                            >
+                                              <span>{folder.name}</span>
+                                            </div>
                                           </div>
-                                          <div className={styles["icon-descriptions"]}>
-                                            <span>{folder.name}</span>
-                                          </div>
-                                        </div>
-                                        <div>
-                                          <div className={styles["list1-right-contents"]}>
-                                            {
-                                              selectAllFolders[folder.id] ?
-                                                <div style={{ cursor: "pointer" }} onClick={() => toggleSelectAllChildList(folder.id, folder.name)} className={`${styles['deselect-all']}`}>
+                                          <div>
+                                            <div
+                                              className={
+                                                styles["list1-right-contents"]
+                                              }
+                                            >
+                                              {selectAllFolders[folder.id] ? (
+                                                <div
+                                                  style={{ cursor: "pointer" }}
+                                                  onClick={() =>
+                                                    toggleSelectAllChildList(
+                                                      folder.id,
+                                                      folder.name
+                                                    )
+                                                  }
+                                                  className={`${styles["deselect-all"]}`}
+                                                >
                                                   <img
-                                                    src={Utilities.redCheck} alt="Check Icon" />
-                                                  <span className={styles.deselectText}>Deselect All</span>
+                                                    src={Utilities.redCheck}
+                                                    alt="Check Icon"
+                                                  />
+                                                  <span
+                                                    className={
+                                                      styles.deselectText
+                                                    }
+                                                  >
+                                                    Deselect All
+                                                  </span>
                                                 </div>
-                                                :
-                                                <div style={{ cursor: "pointer" }} onClick={() => toggleSelectAllChildList(folder.id, folder.name)} className={`${styles['select-all']}`}>
-                                                  <img src={Utilities.doubleCheck} alt="Check Icon" />
-                                                  <span className={styles.selectText}>Select All</span>
+                                              ) : (
+                                                <div
+                                                  style={{ cursor: "pointer" }}
+                                                  onClick={() =>
+                                                    toggleSelectAllChildList(
+                                                      folder.id,
+                                                      folder.name
+                                                    )
+                                                  }
+                                                  className={`${styles["select-all"]}`}
+                                                >
+                                                  <img
+                                                    src={Utilities.doubleCheck}
+                                                    alt="Check Icon"
+                                                  />
+                                                  <span
+                                                    className={
+                                                      styles.selectText
+                                                    }
+                                                  >
+                                                    Select All
+                                                  </span>
                                                 </div>
-                                            }
+                                              )}
+                                            </div>
                                           </div>
                                         </div>
                                       </div>
                                     </div>
-                                  </div>
-                                  {showDropdown.includes(folder.id) && <div className={styles.folder}>
-                                    <div className={styles.subfolderList}>
-                                      {
-                                        keyExists(folder.id) && (keyResultsFetch(folder.id, "record") as Item[]).map(({ id, name, parentId, ...rest }) => (
-                                          <>
-                                            <div
-                                              key={id}
-                                              className={styles.dropdownOptions}
-                                              onClick={() => toggleSelectedFolders(id, !selectedFolder.includes(id), true, folder.id, name, parentId)}>
-                                              <div className={styles["folder-lists"]}>
-                                                <div className={styles.dropdownIcons}>
+                                    {showDropdown.includes(folder.id) && (
+                                      <div className={styles.folder}>
+                                        <div className={styles.subfolderList}>
+                                          {keyExists(folder.id) &&
+                                            (
+                                              keyResultsFetch(
+                                                folder.id,
+                                                "record"
+                                              ) as Item[]
+                                            ).map(
+                                              ({
+                                                id,
+                                                name,
+                                                parentId,
+                                                ...rest
+                                              }) => (
+                                                <>
                                                   <div
-                                                    className={`${styles.circle} ${selectedFolder.includes(id) ? styles.checked : ""
-                                                      }`}>
-                                                    {selectedFolder.includes(id) && <img src={Utilities.checkIcon} />}
+                                                    key={id}
+                                                    className={
+                                                      styles.dropdownOptions
+                                                    }
+                                                    onClick={() =>
+                                                      toggleSelectedFolders(
+                                                        id,
+                                                        !selectedFolder.includes(
+                                                          id
+                                                        ),
+                                                        true,
+                                                        folder.id,
+                                                        name,
+                                                        parentId
+                                                      )
+                                                    }
+                                                  >
+                                                    <div
+                                                      className={
+                                                        styles["folder-lists"]
+                                                      }
+                                                    >
+                                                      <div
+                                                        className={
+                                                          styles.dropdownIcons
+                                                        }
+                                                      >
+                                                        <div
+                                                          className={`${
+                                                            styles.circle
+                                                          } ${
+                                                            selectedFolder.includes(
+                                                              id
+                                                            )
+                                                              ? styles.checked
+                                                              : ""
+                                                          }`}
+                                                        >
+                                                          {selectedFolder.includes(
+                                                            id
+                                                          ) && (
+                                                            <img
+                                                              src={
+                                                                Utilities.checkIcon
+                                                              }
+                                                            />
+                                                          )}
+                                                        </div>
+                                                        <div
+                                                          className={
+                                                            styles[
+                                                              "icon-descriptions"
+                                                            ]
+                                                          }
+                                                        >
+                                                          <span>{name}</span>
+                                                        </div>
+                                                      </div>
+                                                      <div
+                                                        className={
+                                                          styles[
+                                                            "list1-right-contents"
+                                                          ]
+                                                        }
+                                                      >
+                                                        {selectedFolder.includes(
+                                                          id
+                                                        ) && <span></span>}
+                                                      </div>
+                                                    </div>
                                                   </div>
-                                                  <div className={styles["icon-descriptions"]}>
-                                                    <span>{name}</span>
-                                                  </div>
-                                                </div>
-                                                <div className={styles["list1-right-contents"]}>
-                                                  {selectedFolder.includes(id) && <span></span>}
+                                                </>
+                                              )
+                                            )}
+                                          {keyExists(folder.id) &&
+                                            (keyResultsFetch(
+                                              folder.id,
+                                              "next"
+                                            ) as number) >= 0 && (
+                                              <div
+                                                className={`${styles["outer-load-wrapper"]}`}
+                                              >
+                                                <div
+                                                  className={`${styles["load-wrapper"]}`}
+                                                  onClick={() => {
+                                                    getSubFolders(
+                                                      folder.id,
+                                                      keyResultsFetch(
+                                                        folder.id,
+                                                        "next"
+                                                      ) as number,
+                                                      false
+                                                    );
+                                                  }}
+                                                >
+                                                  <IconClickable
+                                                    additionalClass={
+                                                      styles.loadIcon
+                                                    }
+                                                    src={Utilities.load}
+                                                  />
+                                                  <button
+                                                    className={styles.loadMore}
+                                                  >
+                                                    {subFolderLoadingState.get(
+                                                      folder.id
+                                                    )
+                                                      ? "Loading..."
+                                                      : "Load More"}
+                                                  </button>
                                                 </div>
                                               </div>
-                                            </div>
-                                          </>
-                                        ))
-                                      }
-                                      {(keyExists(folder.id) && (keyResultsFetch(folder.id, "next") as number) >= 0) && <div className={`${styles['outer-load-wrapper']}`}><div className={`${styles['load-wrapper']}`}
-                                        onClick={() => { getSubFolders(folder.id, (keyResultsFetch(folder.id, "next") as number), false) }}>
-                                        <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} />
-                                        <button className={styles.loadMore}>{
-                                          subFolderLoadingState.get(folder.id)
-                                            ?
-                                            "Loading..."
-                                            :
-                                            "Load More"
-                                        }</button>
+                                            )}
+                                        </div>
                                       </div>
-                                      </div>
-                                      }
-                                    </div>
+                                    )}
                                   </div>
-                                  }
-                                </div>
-                              ))}
+                                ))}
+                              </div>
+                              <div className={styles["modal-btns"]}>
+                                <Button
+                                  className="container secondary bulk-edit-btn"
+                                  text="Close"
+                                  onClick={() => setActiveDropdown("")}
+                                ></Button>
+                              </div>
                             </div>
-                            <div className={styles["modal-btns"]}>
-                              <Button className="container secondary bulk-edit-btn" text="Close" onClick={() => setActiveDropdown("")}
-                              ></Button>
-                            </div>
-                          </div>
-                        }
-                      </section >)}
-
+                          )}
+                      </section>
+                    )}
 
                     {isAdmin() && (
                       <div className={detailPanelStyles["field-wrapper"]}>
-                        <div className={styles['creatable-select-container']}>
+                        <div className={styles["creatable-select-container"]}>
                           <CreatableSelect
                             title="Campaigns"
                             addText="Add to Campaign"
@@ -1944,8 +2117,10 @@ const UploadRequest = () => {
                             onRemoveOperationFinished={async (
                               index,
                               stateUpdate
-                            ) => { }}
-                            onOperationFailedSkipped={() => setActiveDropdown("")}
+                            ) => {}}
+                            onOperationFailedSkipped={() =>
+                              setActiveDropdown("")
+                            }
                             isShare={false}
                             asyncCreateFn={(newItem) => {
                               return { data: newItem };
@@ -1973,7 +2148,7 @@ const UploadRequest = () => {
                                 data={assetCustomFields[index]?.values[0]?.name}
                                 options={field.values}
                                 isShare={false}
-                                onLabelClick={() => { }}
+                                onLabelClick={() => {}}
                                 handleFieldChange={(option) => {
                                   onChangeSelectOneCustomField(option, index);
                                 }}
@@ -1988,7 +2163,9 @@ const UploadRequest = () => {
                               className={detailPanelStyles["field-wrapper"]}
                               key={index}
                             >
-                              <div className={styles['creatable-select-container']}>
+                              <div
+                                className={styles["creatable-select-container"]}
+                              >
                                 <CreatableSelect
                                   creatable={false}
                                   title={field.name}
@@ -1996,7 +2173,7 @@ const UploadRequest = () => {
                                   onAddClick={() => setActiveCustomField(index)}
                                   selectPlaceholder={"Select an existing one"}
                                   avilableItems={field.values}
-                                  setAvailableItems={() => { }}
+                                  setAvailableItems={() => {}}
                                   selectedItems={
                                     assetCustomFields.filter(
                                       (assetField) => assetField.id === field.id
@@ -2005,12 +2182,12 @@ const UploadRequest = () => {
                                   setSelectedItems={(data) => {
                                     onChangeCustomField(index, data);
                                   }}
-                                  onAddOperationFinished={(stateUpdate) => { }}
+                                  onAddOperationFinished={(stateUpdate) => {}}
                                   onRemoveOperationFinished={async (
                                     index,
                                     stateUpdate,
                                     removeId
-                                  ) => { }}
+                                  ) => {}}
                                   onOperationFailedSkipped={() =>
                                     setActiveCustomField(undefined)
                                   }
@@ -2054,7 +2231,6 @@ const UploadRequest = () => {
               />
             </div>
           )}
-
         </div>
       </div>
 
@@ -2069,7 +2245,7 @@ const UploadRequest = () => {
         disabledConfirm={false}
         additionalClasses={["visible-block", styles["approval-detail-modal"]]}
         showCancel={false}
-        confirmAction={() => { }}
+        confirmAction={() => {}}
         overlayAdditionalClass={styles["batch-outer"]}
       >
         <div className={`row ${styles["modal-wrapper"]}`}>
@@ -2097,13 +2273,12 @@ const UploadRequest = () => {
                   name={assets[selectedAsset]?.asset.name}
                   assetImg={assets[selectedAsset]?.thumbailUrl}
                 />
-
               )}
               {assets[selectedAsset]?.asset.type !== "image" &&
                 assets[selectedAsset]?.asset.type !== "video" &&
                 assets[selectedAsset]?.thumbailUrl &&
                 (assets[selectedAsset]?.asset.extension.toLowerCase() ===
-                  "pdf" ? (
+                "pdf" ? (
                   <AssetPdf asset={assets[selectedAsset]?.asset} />
                 ) : (
                   <AssetImg
@@ -2115,10 +2290,10 @@ const UploadRequest = () => {
                 assets[selectedAsset]?.asset.type !== "video" &&
                 !assets[selectedAsset]?.thumbailUrl && (
                   <div className={styles.assetIconContainer}>
-                    <AssetIcon extension={assets[selectedAsset]?.asset.extension} />
+                    <AssetIcon
+                      extension={assets[selectedAsset]?.asset.extension}
+                    />
                   </div>
-
-
                 )}
               {assets[selectedAsset]?.asset.type === "video" && (
                 <video controls>
@@ -2137,7 +2312,6 @@ const UploadRequest = () => {
                 </video>
               )}
             </div>
-
 
             {(isAdmin() || currentViewStatus !== 0) && (
               <div
@@ -2178,7 +2352,7 @@ const UploadRequest = () => {
               </h2>
 
               <div className={detailPanelStyles["field-wrapper"]}>
-                <div className={styles['creatable-select-container']}>
+                <div className={styles["creatable-select-container"]}>
                   <CreatableSelect
                     title="Tags"
                     addText="Add Tags"
@@ -2234,159 +2408,320 @@ const UploadRequest = () => {
                 </div>
               </div>
 
-
               {isAdmin() && (
-                      <section className={styles["field-wrapper"]}>
-                        {<div className={`${styles["tag-container-wrapper"]}`}>
-                          {
-                            [...completeSelectedFolder.entries()].map(([key, value], index) => (
-                              <div className={`${styles["tag-container"]}`} key={index}>
-                                <span>{value.name}</span>
-                                <IconClickable
-                                  additionalClass={styles.remove}
-                                  src={Utilities.closeTag}
-                                  onClick={() => toggleSelectedFolders(key, !selectedFolder.includes(key), false, "", value.name)}
-                                />
-                              </div>
-                            ))
-                          }
-                        </div>}
-                        {(hasPermission([ASSET_EDIT])) && (activeDropdown === "" || activeDropdown !== "collections") && (
+                <section className={styles["field-wrapper"]}>
+                  {
+                    <div className={`${styles["tag-container-wrapper"]}`}>
+                      {[...completeSelectedFolder.entries()].map(
+                        ([key, value], index) => (
                           <div
-                            className={`add ${styles["select-add"]}`}
-                            onClick={() => setActiveDropdown("collections")}
+                            className={`${styles["tag-container"]}`}
+                            key={index}
                           >
-                            <IconClickable src={Utilities.addLight} />
-                            <span>{"Add to Collection"}</span>
-                          </div>
-                        )}
-                        {
-                          (hasPermission([ASSET_EDIT]) && activeDropdown === "collections") &&
-                          <div className={`${styles["edit-bulk-outer-wrapper"]}`}>
-                            <div className={`${styles["close-popup"]}`}> <IconClickable
+                            <span>{value.name}</span>
+                            <IconClickable
                               additionalClass={styles.remove}
                               src={Utilities.closeTag}
-                              onClick={() => setActiveDropdown("")}
-                            /></div>
-                            <div className={`${styles["search-btn"]}`}>
-                              <SearchModal filteredData={filteredData} input={input} setInput={setInput} />
-                            </div>
-                            <div className={`${styles["modal-heading"]}`}>
-                              <span>Collection({folders.length ?? ""})</span>
-                            </div>
-                            <div className={`${styles["outer-wrapper"]}`}>
-                              {folders.map((folder, index) => (
-                                <div key={index}>
-                                  <div className={`${styles["flex"]} ${styles.nestedbox}`}>
-                                    <div className={`${styles["height"]} ${styles["flex"]}`}
-                                      onClick={() => { toggleDropdown(folder.id, true) }}
-                                    >
-                                      <img
-                                        className={showDropdown.includes(folder.id) ? styles.iconClick : styles.rightIcon}
-                                        src={Utilities.arrowBlue}
-                                        alt="Right Arrow Icon"
-                                        onClick={() => { toggleDropdown(folder.id, true) }}
-                                      />
-                                    </div>
+                              onClick={() =>
+                                toggleSelectedFolders(
+                                  key,
+                                  !selectedFolder.includes(key),
+                                  false,
+                                  "",
+                                  value.name
+                                )
+                              }
+                            />
+                          </div>
+                        )
+                      )}
+                    </div>
+                  }
+                  {hasPermission([ASSET_EDIT]) &&
+                    (activeDropdown === "" ||
+                      activeDropdown !== "collections") && (
+                      <>
+                        <div className={`${styles["top-heading"]}`}>
+                          <span>Collection</span>
+                        </div>
+                        <div
+                          className={`add ${styles["select-add"]}`}
+                          onClick={() => setActiveDropdown("collections")}
+                        >
+                          <IconClickable src={Utilities.addLight} />
+                          <span>{"Add to Collection"}</span>
+                        </div>
+                      </>
+                    )}
+                  {hasPermission([ASSET_EDIT]) &&
+                    activeDropdown === "collections" && (
+                      <div className={`${styles["edit-bulk-outer-wrapper"]}`}>
+                        <div className={`${styles["close-popup"]}`}>
+                          {" "}
+                          <IconClickable
+                            additionalClass={styles.remove}
+                            src={Utilities.closeTag}
+                            onClick={() => setActiveDropdown("")}
+                          />
+                        </div>
+                        <div className={`${styles["search-btn"]}`}>
+                          <SearchModal
+                            filteredData={filteredData}
+                            input={input}
+                            setInput={setInput}
+                          />
+                        </div>
+                        <div className={`${styles["modal-heading"]}`}>
+                          <span>Collection({folders.length ?? ""})</span>
+                        </div>
+                        <div className={`${styles["outer-wrapper"]}`}>
+                          {folders.map((folder, index) => (
+                            <div key={index}>
+                              <div
+                                className={`${styles["flex"]} ${styles.nestedbox}`}
+                              >
+                                <div
+                                  className={`${styles["height"]} ${styles["flex"]}`}
+                                  onClick={() => {
+                                    toggleDropdown(folder.id, true);
+                                  }}
+                                >
+                                  <img
+                                    className={
+                                      showDropdown.includes(folder.id)
+                                        ? styles.iconClick
+                                        : styles.rightIcon
+                                    }
+                                    src={Utilities.arrowBlue}
+                                    alt="Right Arrow Icon"
+                                    onClick={() => {
+                                      toggleDropdown(folder.id, true);
+                                    }}
+                                  />
+                                </div>
 
-                                    <div className={styles.w100}>
+                                <div className={styles.w100}>
+                                  <div
+                                    className={`${styles["dropdownMenu"]} ${
+                                      selectedFolder.includes(folder.id)
+                                        ? styles["active"]
+                                        : ""
+                                    }`}
+                                  >
+                                    <div className={styles.flex}>
                                       <div
-                                        className={`${styles["dropdownMenu"]} ${selectedFolder.includes(folder.id) ?
-                                          styles["active"]
-                                          : ""
-                                          }`}
+                                        className={`${styles.circle} ${
+                                          selectedFolder.includes(folder.id)
+                                            ? styles.checked
+                                            : ""
+                                        }`}
+                                        onClick={() =>
+                                          toggleSelectedFolders(
+                                            folder.id,
+                                            !selectedFolder.includes(folder.id),
+                                            false,
+                                            "",
+                                            folder.name
+                                          )
+                                        }
                                       >
-                                        <div className={styles.flex}>
+                                        {selectedFolder.includes(folder.id) && (
+                                          <img src={Utilities.checkIcon} />
+                                        )}
+                                      </div>
+                                      <div
+                                        className={styles["icon-descriptions"]}
+                                      >
+                                        <span>{folder.name}</span>
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div
+                                        className={
+                                          styles["list1-right-contents"]
+                                        }
+                                      >
+                                        {selectAllFolders[folder.id] ? (
                                           <div
-                                            className={`${styles.circle} ${selectedFolder.includes(folder.id) ?
-                                              styles.checked
-                                              : ""
-                                              }`}
-                                            onClick={() => toggleSelectedFolders(folder.id, !selectedFolder.includes(folder.id), false, "", folder.name)}
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() =>
+                                              toggleSelectAllChildList(
+                                                folder.id,
+                                                folder.name
+                                              )
+                                            }
+                                            className={`${styles["deselect-all"]}`}
                                           >
-                                            {
-                                              selectedFolder.includes(folder.id) &&
-                                              <img src={Utilities.checkIcon} />
+                                            <img
+                                              src={Utilities.redCheck}
+                                              alt="Check Icon"
+                                            />
+                                            <span
+                                              className={styles.deselectText}
+                                            >
+                                              Deselect All
+                                            </span>
+                                          </div>
+                                        ) : (
+                                          <div
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() =>
+                                              toggleSelectAllChildList(
+                                                folder.id,
+                                                folder.name
+                                              )
                                             }
+                                            className={`${styles["select-all"]}`}
+                                          >
+                                            <img
+                                              src={Utilities.doubleCheck}
+                                              alt="Check Icon"
+                                            />
+                                            <span className={styles.selectText}>
+                                              Select All
+                                            </span>
                                           </div>
-                                          <div className={styles["icon-descriptions"]}>
-                                            <span>{folder.name}</span>
-                                          </div>
-                                        </div>
-                                        <div>
-                                          <div className={styles["list1-right-contents"]}>
-                                            {
-                                              selectAllFolders[folder.id] ?
-                                                <div style={{ cursor: "pointer" }} onClick={() => toggleSelectAllChildList(folder.id, folder.name)} className={`${styles['deselect-all']}`}>
-                                                  <img
-                                                    src={Utilities.redCheck} alt="Check Icon" />
-                                                  <span className={styles.deselectText}>Deselect All</span>
-                                                </div>
-                                                :
-                                                <div style={{ cursor: "pointer" }} onClick={() => toggleSelectAllChildList(folder.id, folder.name)} className={`${styles['select-all']}`}>
-                                                  <img src={Utilities.doubleCheck} alt="Check Icon" />
-                                                  <span className={styles.selectText}>Select All</span>
-                                                </div>
-                                            }
-                                          </div>
-                                        </div>
+                                        )}
                                       </div>
                                     </div>
                                   </div>
-                                  {showDropdown.includes(folder.id) && <div className={styles.folder}>
-                                    <div className={styles.subfolderList}>
-                                      {
-                                        keyExists(folder.id) && (keyResultsFetch(folder.id, "record") as Item[]).map(({ id, name, parentId, ...rest }) => (
+                                </div>
+                              </div>
+                              {showDropdown.includes(folder.id) && (
+                                <div className={styles.folder}>
+                                  <div className={styles.subfolderList}>
+                                    {keyExists(folder.id) &&
+                                      (
+                                        keyResultsFetch(
+                                          folder.id,
+                                          "record"
+                                        ) as Item[]
+                                      ).map(
+                                        ({ id, name, parentId, ...rest }) => (
                                           <>
                                             <div
                                               key={id}
                                               className={styles.dropdownOptions}
-                                              onClick={() => toggleSelectedFolders(id, !selectedFolder.includes(id), true, folder.id, name, parentId)}>
-                                              <div className={styles["folder-lists"]}>
-                                                <div className={styles.dropdownIcons}>
+                                              onClick={() =>
+                                                toggleSelectedFolders(
+                                                  id,
+                                                  !selectedFolder.includes(id),
+                                                  true,
+                                                  folder.id,
+                                                  name,
+                                                  parentId
+                                                )
+                                              }
+                                            >
+                                              <div
+                                                className={
+                                                  styles["folder-lists"]
+                                                }
+                                              >
+                                                <div
+                                                  className={
+                                                    styles.dropdownIcons
+                                                  }
+                                                >
                                                   <div
-                                                    className={`${styles.circle} ${selectedFolder.includes(id) ? styles.checked : ""
-                                                      }`}>
-                                                    {selectedFolder.includes(id) && <img src={Utilities.checkIcon} />}
+                                                    className={`${
+                                                      styles.circle
+                                                    } ${
+                                                      selectedFolder.includes(
+                                                        id
+                                                      )
+                                                        ? styles.checked
+                                                        : ""
+                                                    }`}
+                                                  >
+                                                    {selectedFolder.includes(
+                                                      id
+                                                    ) && (
+                                                      <img
+                                                        src={
+                                                          Utilities.checkIcon
+                                                        }
+                                                      />
+                                                    )}
                                                   </div>
-                                                  <div className={styles["icon-descriptions"]}>
+                                                  <div
+                                                    className={
+                                                      styles[
+                                                        "icon-descriptions"
+                                                      ]
+                                                    }
+                                                  >
                                                     <span>{name}</span>
                                                   </div>
                                                 </div>
-                                                <div className={styles["list1-right-contents"]}>
-                                                  {selectedFolder.includes(id) && <span></span>}
+                                                <div
+                                                  className={
+                                                    styles[
+                                                      "list1-right-contents"
+                                                    ]
+                                                  }
+                                                >
+                                                  {selectedFolder.includes(
+                                                    id
+                                                  ) && <span></span>}
                                                 </div>
                                               </div>
                                             </div>
                                           </>
-                                        ))
-                                      }
-                                      {(keyExists(folder.id) && (keyResultsFetch(folder.id, "next") as number) >= 0) && <div className={`${styles['outer-load-wrapper']}`}><div className={`${styles['load-wrapper']}`}
-                                        onClick={() => { getSubFolders(folder.id, (keyResultsFetch(folder.id, "next") as number), false) }}>
-                                        <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} />
-                                        <button className={styles.loadMore}>{
-                                          subFolderLoadingState.get(folder.id)
-                                            ?
-                                            "Loading..."
-                                            :
-                                            "Load More"
-                                        }</button>
-                                      </div>
-                                      </div>
-                                      }
-                                    </div>
+                                        )
+                                      )}
+                                    {keyExists(folder.id) &&
+                                      (keyResultsFetch(
+                                        folder.id,
+                                        "next"
+                                      ) as number) >= 0 && (
+                                        <div
+                                          className={`${styles["outer-load-wrapper"]}`}
+                                        >
+                                          <div
+                                            className={`${styles["load-wrapper"]}`}
+                                            onClick={() => {
+                                              getSubFolders(
+                                                folder.id,
+                                                keyResultsFetch(
+                                                  folder.id,
+                                                  "next"
+                                                ) as number,
+                                                false
+                                              );
+                                            }}
+                                          >
+                                            <IconClickable
+                                              additionalClass={styles.loadIcon}
+                                              src={Utilities.load}
+                                            />
+                                            <button className={styles.loadMore}>
+                                              {subFolderLoadingState.get(
+                                                folder.id
+                                              )
+                                                ? "Loading..."
+                                                : "Load More"}
+                                            </button>
+                                          </div>
+                                        </div>
+                                      )}
                                   </div>
-                                  }
                                 </div>
-                              ))}
+                              )}
                             </div>
-                            <div className={styles["modal-btns"]}>
-                              <Button className="container secondary bulk-edit-btn" text="Close" onClick={() => setActiveDropdown("")}
-                              ></Button>
-                            </div>
-                          </div>
-                        }
-                      </section >)}
+                          ))}
+                        </div>
+                        <div className={styles["modal-btns"]}>
+                          <Button
+                            className="container secondary bulk-edit-btn"
+                            text="Close"
+                            onClick={() => setActiveDropdown("")}
+                          ></Button>
+                        </div>
+                      </div>
+                    )}
+                </section>
+              )}
 
               {/* {isAdmin() && (
                 <div className={detailPanelStyles["field-wrapper"]}>
@@ -2446,13 +2781,9 @@ const UploadRequest = () => {
                 </div>
               )} */}
 
-
-
-
-
               {isAdmin() && (
                 <div className={detailPanelStyles["field-wrapper"]}>
-                  <div className={styles['creatable-select-container']}>
+                  <div className={styles["creatable-select-container"]}>
                     <CreatableSelect
                       title="Campaigns"
                       addText="Add to Campaign"
@@ -2518,7 +2849,7 @@ const UploadRequest = () => {
                           data={tempCustoms[index]?.values[0]?.name}
                           options={field.values}
                           isShare={false}
-                          onLabelClick={() => { }}
+                          onLabelClick={() => {}}
                           handleFieldChange={(option) => {
                             onChangeSelectOneTempCustomField(option, index);
                           }}
@@ -2533,7 +2864,7 @@ const UploadRequest = () => {
                         className={detailPanelStyles["field-wrapper"]}
                         key={index}
                       >
-                        <div className={styles['creatable-select-container']}>
+                        <div className={styles["creatable-select-container"]}>
                           <CreatableSelect
                             creatable={false}
                             title={field.name}
@@ -2541,7 +2872,7 @@ const UploadRequest = () => {
                             onAddClick={() => setActiveCustomField(index)}
                             selectPlaceholder={"Select an existing one"}
                             avilableItems={field.values}
-                            setAvailableItems={() => { }}
+                            setAvailableItems={() => {}}
                             menuPosition={"fixed"}
                             selectedItems={
                               tempCustoms.filter(
@@ -2675,13 +3006,13 @@ const UploadRequest = () => {
 
       <Base
         modalIsOpen={showConfirmModal}
-        closeModal={() => { }}
+        closeModal={() => {}}
         confirmText={""}
         headText={""}
         disabledConfirm={false}
         additionalClasses={["visible-block"]}
         showCancel={false}
-        confirmAction={() => { }}
+        confirmAction={() => {}}
         overlayAdditionalClass={styles["msgAdminModal"]}
       >
         <div className={styles["confirm-modal-wrapper"]}>
