@@ -1,8 +1,19 @@
 import { useContext, useEffect, useRef } from "react";
 import { UserContext } from "../../../context";
+import { IDropdownOption } from "../../../interfaces/UI";
 import styles from "./dropdown.module.css";
 
-const Dropdown = ({ options = [], additionalClass = "", onClickOutside }) => {
+interface DropdownProps {
+  options: IDropdownOption[];
+  additionalClass?: string;
+  onClickOutside?: () => void;
+}
+
+const Dropdown: React.FC<DropdownProps> = ({
+  options = [],
+  additionalClass = "",
+  onClickOutside,
+}) => {
   const { hasPermission } = useContext(UserContext);
   const ref = useRef(null);
 
