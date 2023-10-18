@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { Utilities } from "../../../assets";
 
 import {
-  FilterAttributeVariants,
   IAttribute,
   IFilterAttributeValues,
   IFilterPopupContentType,
@@ -15,15 +14,14 @@ import DimensionsFilter from "../filter-view/dimension-filter";
 import DateUploaded from "../filter/date-uploaded";
 import ProductFilter from "../filter/product-filter";
 import ResolutionFilter from "../filter/resolution-filter";
-import Divider from "./divider";
 import styles from "./index.module.css";
 import OptionData from "./options-data";
 
 import Dropdown from "../../common/inputs/dropdown";
 
 import IconClickable from "../buttons/icon-clickable";
-import Spinner from "../spinners/spinner";
 import Loader from "../UI/Loader/loader";
+import Divider from "./divider";
 
 interface FilterOptionPopupProps {
   contentType: IFilterPopupContentType;
@@ -55,11 +53,7 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   );
 
   const [showDropdown, setShowdropdown] = useState<boolean>(false);
-  //TODO: need to check selectionType for custom fields as well; DB changes might be required here
-  const showRules =
-    activeAttribute.id === FilterAttributeVariants.TAGS ||
-    activeAttribute.id === FilterAttributeVariants.AI_TAGS ||
-    activeAttribute.id === FilterAttributeVariants.CUSTOM_FIELD;
+  const showRules = activeAttribute.selectionType === "selectMultiple";
 
   console.log("options: ", options);
 
@@ -78,36 +72,13 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
                 onClick={() => setActiveAttribute(null)}
               />
             </div>
-            {showDropdown && (
-              <Dropdown
-                additionalClass={styles["dropdown-menu"]}
-                onClickOutside={() => {}}
-                options={[
-                  {
-                    label: "All selected",
-                    id: "All selected",
-                    onClick: () => {},
-                  },
-                  {
-                    label: "Any Selected",
-                    id: "Any",
-                    onClick: () => {},
-                  },
-                  {
-                    label: "No Tags",
-                    id: "None",
-                    onClick: () => {},
-                  },
-                ]}
-              />
-            )}
           </div>
           <div className={`${styles["search-btn"]}`}>
             {/* TODO: */}
             <Search
               className={styles.customStyles}
               buttonClassName={styles.icon}
-              placeholder="Some Placeholder"
+              placeholder={`Search ${activeAttribute.name}`}
               onSubmit={() => {}}
             />
           </div>
@@ -116,7 +87,9 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
             <Loader className={styles.customLoader} />
           ) : (
             <>
-              {/* TODO: move this into a separate Content Component */}
+              {/* TODO: 1. move this into a separate Content Component
+               *       2. fix type error
+               */}
               {contentType === "list" && <OptionData data={options} />}
               {contentType === "dimensions" && (
                 <DimensionsFilter limits={options} />
@@ -146,48 +119,54 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
             </>
           )}
 
-          <div>
-            <div
-              className={`${styles["rule-tag"]}`}
-              onClick={() => setShowdropdown(!showDropdown)}
-            >
-              <label>Rule:</label>
-              <div className={`${styles["select-wrapper"]}`}>
-                <p>All Selected</p>
-                <IconClickable
-                  additionalClass={styles["dropdown-icon"]}
-                  src={Utilities.arrowDark}
-                />
+          {showRules && (
+            <div>
+              <div
+                className={`${styles["rule-tag"]}`}
+                onClick={() => setShowdropdown(!showDropdown)}
+              >
+                <label>Rule:</label>
+                <div className={`${styles["select-wrapper"]}`}>
+                  <p>All Selected</p>
+                  <IconClickable
+                    additionalClass={styles["dropdown-icon"]}
+                    src={Utilities.arrowDark}
+                  />
+                </div>
               </div>
+              {showDropdown && (
+                <Dropdown
+                  additionalClass={styles["dropdown-menu"]}
+                  onClickOutside={() => {}}
+                  options={[
+                    {
+                      label: "All selected",
+                      id: "All selected",
+                      onClick: () => {},
+                    },
+                    {
+                      label: "Any Selected",
+                      id: "Any",
+                      onClick: () => {},
+                    },
+                    {
+                      label: "No Tags",
+                      id: "None",
+                      onClick: () => {},
+                    },
+                  ]}
+                />
+              )}
+              <Divider />
             </div>
-            {showDropdown && (
-              <Dropdown
-                additionalClass={styles["dropdown-menu"]}
-                onClickOutside={() => {}}
-                options={[
-                  {
-                    label: "All selected",
-                    id: "All selected",
-                    onClick: () => {},
-                  },
-                  {
-                    label: "Any Selected",
-                    id: "Any",
-                    onClick: () => {},
-                  },
-                  {
-                    label: "No Tags",
-                    id: "None",
-                    onClick: () => {},
-                  },
-                ]}
-              />
-            )}
-          </div>
-          <Divider />
+          )}
           <div className={`${styles["Modal-btn"]}`}>
-            <Button className={"apply"} text={"Apply"} />
-            <Button className={"cancel"} text={"Cancel"}></Button>
+            <Button className={"apply"} text={"Apply"} disabled={loading} />
+            <Button
+              className={"cancel"}
+              text={"Cancel"}
+              disabled={loading}
+            ></Button>
           </div>
         </div>
       </div>

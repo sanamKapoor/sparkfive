@@ -53,59 +53,55 @@ const DateUploaded: React.FC<DateUploadedProps> = ({
   return (
     <div className={`${styles.container}`}>
       {dateFilterOptions.map((option) => (
-        <div key={option} className={`${styles['outer-wrapper']}`}>
+        <div key={option} className={`${styles["outer-wrapper"]}`}>
           <IconClickable src={Utilities.radioButtonNormal} />
           <span className={`${styles["select-name"]}`}>{option}</span>
         </div>
       ))}
 
       <div className={styles["dates-container"]}>
-        <div  className={`${styles['outer-wrapper']}`}>
+        <div className={`${styles["outer-wrapper"]}`}>
           <IconClickable src={Utilities.radioButtonNormal} />
           <span className={`${styles["select-name"]}`}>Custom Range</span>
         </div>
         <div className={styles["dates-wrapper"]}>
-        <div>
-          <DayPickerInput
-        
-            value={startDate}
-            formatDate={formatDate}
-            format={FORMAT}
-            parseDate={parseDate}
-            classNames={{
-              container: `${styles.input} dayPicker`,
-            }}
-            onDayChange={(day) => handleStartDay(day)}
-            placeholder={"mm/dd/yyyy"}
-            dayPickerProps={{
-              className: styles.calendar,
-            }}
-          />
+          <div>
+            <DayPickerInput
+              value={startDate}
+              formatDate={formatDate}
+              format={FORMAT}
+              parseDate={parseDate}
+              classNames={{
+                container: `${styles.input} dayPicker`,
+              }}
+              onDayChange={(day) => handleStartDay(day)}
+              placeholder={"mm/dd/yyyy"}
+              dayPickerProps={{
+                className: styles.calendar,
+              }}
+            />
+          </div>
+          <div className={styles.line}></div>
+          <div>
+            <DayPickerInput
+              value={endDate}
+              formatDate={formatDate}
+              format={FORMAT}
+              parseDate={parseDate}
+              classNames={{
+                container: styles.input,
+              }}
+              onDayChange={(day) => handleEndDay(day)}
+              placeholder={"mm/dd/yyyy"}
+              dayPickerProps={{
+                className: styles.calendar,
+                disabledDays: {
+                  before: startDate,
+                },
+              }}
+            />
+          </div>
         </div>
-        <div className={styles.line}></div>
-
-        <div>
-          <DayPickerInput
-            value={endDate}
-            formatDate={formatDate}
-            format={FORMAT}
-            parseDate={parseDate}
-            classNames={{
-              container: styles.input,
-            }}
-            onDayChange={(day) => handleEndDay(day)}
-            placeholder={"mm/dd/yyyy"}
-            dayPickerProps={{
-              className: styles.calendar,
-              disabledDays: {
-                before: startDate,
-              },
-            }}
-          />
-        </div>
-
-        </div>
-      
       </div>
     </div>
   );

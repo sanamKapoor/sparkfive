@@ -1,5 +1,5 @@
 //🚧 work in progress 🚧
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { Utilities } from "../../../assets";
 import {
@@ -15,10 +15,13 @@ import filterApi from "../../../server-api/filter";
 import tagsApi from "../../../server-api/tag";
 import teamApi from "../../../server-api/team";
 
+import { FilterContext } from "../../../context";
 import FilterOptionPopup from "../filter-option-popup";
 import styles from "./index.module.css";
 
 const FilterView = () => {
+  const { activeSortFilter, setActiveSortFilter } = useContext(FilterContext);
+
   const [attrs, setAttrs] = useState<IAttribute[]>([]);
   const [values, setValues] = useState<IFilterAttributeValues>([]);
 
@@ -30,6 +33,7 @@ const FilterView = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
 
+  console.log("activeSortFilter: ", activeSortFilter);
   //TODO: move it to parent level
   const getAttributes = async () => {
     try {
@@ -45,8 +49,11 @@ const FilterView = () => {
     getAttributes();
   }, []);
 
-  /** // TODO: 1. check for permission and custom restrictions for individual filter attributes
-   * 2. Check for share pages
+  /** // TODO:
+   * 1. Handle setting of activeSortFilter on selection/ deselection of values
+   * 2. check for permission and custom restrictions for individual filter attributes
+   * 3. Check for share pages
+   * 4. check advancedConfiguration -> hideFilterElements
    **/
   const onAttributeClick = async (data: IAttribute) => {
     try {
@@ -60,25 +67,31 @@ const FilterView = () => {
         case FilterAttributeVariants.TAGS:
           values = await fetchTags();
           break;
+
         case FilterAttributeVariants.AI_TAGS:
           values = await fetchAITags();
           values = (values as IAttributeValue[])?.filter(
             (tag) => tag.type === "AI"
           );
           break;
+
         case FilterAttributeVariants.CAMPAIGNS:
           values = await fetchCampaigns();
           break;
+
         case FilterAttributeVariants.FILE_TYPES:
           values = await fetchAssetFileExtensions();
           break;
+
         case FilterAttributeVariants.ORIENTATION:
           values = await fetchAssetOrientations();
           break;
+
         case FilterAttributeVariants.RESOLUTION:
           contentType = "resolutions";
           values = await fetchAssetResolutions();
           break;
+
         case FilterAttributeVariants.DIMENSIONS:
           contentType = "dimensions";
           values = await fetchAssetDimensionLimits();
@@ -97,7 +110,6 @@ const FilterView = () => {
         case FilterAttributeVariants.PRODUCTS:
           contentType = "products";
           const sku = await fetchProductSku();
-
           values = {
             sku,
           };
