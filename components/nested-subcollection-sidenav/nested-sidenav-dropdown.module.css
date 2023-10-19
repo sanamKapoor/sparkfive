@@ -37,6 +37,10 @@
   cursor: pointer;
   align-items: center;
 }
+.clickable{
+  padding: 7.5px 0;
+  cursor: pointer;
+}
 .nestedbox {
   /* margin-top: 20px; */
   padding: 0 4px;

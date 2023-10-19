@@ -160,7 +160,10 @@ const NestedSidenavDropdown = ({ headingClick }) => {
         return (
           <>
             <div key={index} className={`${styles["flex"]} ${styles.nestedbox}`}>
-              <img className={showDropdown[index] ? styles.iconClick : styles.rightIcon} src={Utilities.arrowBlue} onClick={() => toggleDropdown(index, item, true)} />
+              <div className={styles.clickable} onClick={() => toggleDropdown(index, item, true)}>
+              <img className={showDropdown[index] ? styles.iconClick : styles.rightIcon} src={Utilities.arrowBlue}  />
+              </div>
+           
               <div className={`${styles["dropdownMenu"]} ${showDropdown[index] ? styles.active : ""}`} >
                 <div className={styles.w100} onClick={() => toggleDropdown(index, item, true)}>
                   <div className={styles.mainWrapper}  >
