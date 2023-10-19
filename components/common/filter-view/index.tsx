@@ -1,5 +1,5 @@
 //🚧 work in progress 🚧
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Utilities } from "../../../assets";
 import {
@@ -15,13 +15,10 @@ import filterApi from "../../../server-api/filter";
 import tagsApi from "../../../server-api/tag";
 import teamApi from "../../../server-api/team";
 
-import { FilterContext } from "../../../context";
 import FilterOptionPopup from "../filter-option-popup";
 import styles from "./index.module.css";
 
 const FilterView = () => {
-  const { activeSortFilter, setActiveSortFilter } = useContext(FilterContext);
-
   const [attrs, setAttrs] = useState<IAttribute[]>([]);
   const [values, setValues] = useState<IFilterAttributeValues>([]);
 
@@ -33,7 +30,6 @@ const FilterView = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  console.log("activeSortFilter: ", activeSortFilter);
   //TODO: move it to parent level
   const getAttributes = async () => {
     try {
