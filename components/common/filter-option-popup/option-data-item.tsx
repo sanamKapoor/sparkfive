@@ -6,13 +6,22 @@ import styles from "./option-data-item.module.css";
 interface OptionDataItemProps {
   name: string | number;
   count: string;
+  isSelected?: boolean;
 }
 
-const OptionDataItem: React.FC<OptionDataItemProps> = ({ name, count }) => {
+const OptionDataItem: React.FC<OptionDataItemProps> = ({
+  name,
+  count,
+  isSelected = false,
+}) => {
   return (
     <div className={`${styles["tags-wrapper"]}`}>
       <div className={`${styles["tags-left-side"]}`}>
-        <IconClickable src={Utilities.radioButtonNormal} />
+        {isSelected ? (
+          <IconClickable src={Utilities.radioButtonEnabled} />
+        ) : (
+          <IconClickable src={Utilities.radioButtonNormal} />
+        )}
         <span className={`${styles["select-name"]}`}>{name}</span>
       </div>
       <div>

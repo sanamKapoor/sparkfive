@@ -1,9 +1,10 @@
 //🚧 work in progress 🚧
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 import { Utilities } from "../../../assets";
 
 import {
+  FilterAttributeVariants,
   IAttribute,
   IFilterAttributeValues,
   IFilterPopupContentType,
@@ -19,8 +20,9 @@ import OptionData from "./options-data";
 
 import Dropdown from "../../common/inputs/dropdown";
 
-import IconClickable from "../buttons/icon-clickable";
+import { FilterContext } from "../../../context";
 import Loader from "../UI/Loader/loader";
+import IconClickable from "../buttons/icon-clickable";
 import Divider from "./divider";
 
 interface FilterOptionPopupProps {
@@ -38,6 +40,8 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   setActiveAttribute,
   loading,
 }) => {
+  const { activeSortFilter, setActiveSortFilter } = useContext(FilterContext);
+  const [filters, setFilters] = useState(); //TODO: define type
   const [lastUpdatedStartDate, setLastUpdatedStartDate] = useState<Date>(
     new Date()
   );
@@ -55,7 +59,46 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   const [showDropdown, setShowdropdown] = useState<boolean>(false);
   const showRules = activeAttribute.selectionType === "selectMultiple";
 
-  console.log("options: ", options);
+  //TODO: keep updating it until all filter views are not covered
+  const hideSearch = activeAttribute.id === FilterAttributeVariants.DIMENSIONS;
+  const hideClear = activeAttribute.id === FilterAttributeVariants.DIMENSIONS;
+
+  /**
+   * TODO:
+   * 1. Add types
+   * 2. Refactor
+   */
+  const onApply = (filterVariant: string, data: any) => {
+    console.log("current filter variant: ", filterVariant);
+    console.log("data: ", data);
+    if (filterVariant === "dimensions") {
+      setActiveSortFilter({
+        ...activeSortFilter,
+        dimensionWidth: data.dimensionWidth,
+        dimensionHeight: data.dimensionHeight,
+      });
+    } else if (filterVariant === "resolutions") {
+      setActiveSortFilter({
+        ...activeSortFilter,
+        filterResolutions: data.filterResolutions,
+      });
+    }
+
+    setActiveAttribute(null);
+  };
+
+  const onCancel = () => {
+    setActiveAttribute(null);
+  };
+
+  //TODO: move it to more appropriate place
+  const getFilterVariant = (id: string) => {
+    const values: string[] = Object.values(FilterAttributeVariants);
+
+    if (values.includes(id)) {
+      return id;
+    } else return FilterAttributeVariants.CUSTOM_FIELD;
+  };
 
   return (
     <>
@@ -66,22 +109,24 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
               Select {activeAttribute?.name}
             </span>
             <div className={styles.buttons}>
-              <button className={styles.clear}>clear</button>
+              {!hideClear && <button className={styles.clear}>clear</button>}
               <img
                 src={Utilities.closeIcon}
                 onClick={() => setActiveAttribute(null)}
               />
             </div>
           </div>
-          <div className={`${styles["search-btn"]}`}>
-            {/* TODO: */}
-            <Search
-              className={styles.customStyles}
-              buttonClassName={styles.icon}
-              placeholder={`Search ${activeAttribute.name}`}
-              onSubmit={() => {}}
-            />
-          </div>
+          {!hideSearch && (
+            <div className={`${styles["search-btn"]}`}>
+              {/* TODO: */}
+              <Search
+                className={styles.customStyles}
+                buttonClassName={styles.icon}
+                placeholder={`Search ${activeAttribute.name}`}
+                onSubmit={() => {}}
+              />
+            </div>
+          )}
 
           {loading ? (
             <Loader className={styles.customLoader} />
@@ -92,10 +137,10 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
                */}
               {contentType === "list" && <OptionData data={options} />}
               {contentType === "dimensions" && (
-                <DimensionsFilter limits={options} />
+                <DimensionsFilter limits={options} setFilters={setFilters} />
               )}
               {contentType === "resolutions" && (
-                <ResolutionFilter data={options} />
+                <ResolutionFilter data={options} setFilters={setFilters} />
               )}
               {contentType === "lastUpdated" && (
                 <DateUploaded
@@ -161,12 +206,20 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
             </div>
           )}
           <div className={`${styles["Modal-btn"]}`}>
-            <Button className={"apply"} text={"Apply"} disabled={loading} />
+            <Button
+              className={"apply"}
+              text={"Apply"}
+              disabled={loading}
+              onClick={() =>
+                onApply(getFilterVariant(activeAttribute.id), filters)
+              }
+            />
             <Button
               className={"cancel"}
               text={"Cancel"}
               disabled={loading}
-            ></Button>
+              onClick={onCancel}
+            />
           </div>
         </div>
       </div>

@@ -37,9 +37,14 @@
   cursor: pointer;
   align-items: center;
 }
+.clickable{
+  padding: 7.5px 0;
+  cursor: pointer;
+}
 .nestedbox {
-  margin-top: 20px;
+  /* margin-top: 20px; */
   padding: 0 4px;
+  margin-bottom: 10px;
 }
 .nestedbox:hover {
   background: #d5dcef;

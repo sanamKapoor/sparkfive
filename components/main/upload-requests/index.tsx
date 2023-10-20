@@ -183,7 +183,7 @@ const UploadRequest = () => {
     setSubFolderLoadingState,
     setFolderChildList,
     setSelectAllFolders,
-    completeSelectedFolder
+    completeSelectedFolder,
   } = useMoveModal();
 
 
@@ -1469,10 +1469,8 @@ const UploadRequest = () => {
                     {mode === "view" && isAdmin() && (
                       <div className={styles["filter-wrapper"]}>
                         <Select
-
-                          containerClass={`${styles['filter-input']} ${styles['filter-main-box']}`}
-
-                          additionalClass={`${styles['filter-by-status']} ${styles['filter-inner-box']}`}
+                          containerClass={`${styles["filter-input"]} ${styles["filter-main-box"]}`}
+                          additionalClass={`${styles["filter-by-status"]} ${styles["filter-inner-box"]}`}
                           isClearable={true}
                           options={filterOptions}
                           onChange={(value) => {
@@ -1499,7 +1497,9 @@ const UploadRequest = () => {
             {mode === "list" && (
               <div className={styles["asset-list"]}>
                 <div className={`${styles["button-wrapper"]} m-b-25`}>
-                  <div className={`${styles['main-title']} ${styles['approval-pending-title']}`}>
+                  <div
+                    className={`${styles["main-title"]} ${styles["approval-pending-title"]}`}
+                  >
                     <h2>Upload Requests</h2>
                   </div>
                   <div className={styles["upload-section"]}>
@@ -1572,7 +1572,9 @@ const UploadRequest = () => {
                 >
                   <ul className={"regular-list"}>
                     {approvals.length === 0 && (
-                      <p className={`${styles['upload-approval-desc']}`}>There are no upload requests for you to reviews</p>
+                      <p className={`${styles["upload-approval-desc"]}`}>
+                        There are no upload requests for you to reviews
+                      </p>
                     )}
                     {approvals.map((approval, index) => {
                       return (
@@ -1728,7 +1730,7 @@ const UploadRequest = () => {
                 {(currentViewStatus === 0 || isAdmin()) && (
                   <>
                     <div className={detailPanelStyles["field-wrapper"]}>
-                      <div className={styles['creatable-select-container']}>
+                      <div className={styles["creatable-select-container"]}>
                         <CreatableSelect
                           title="Tags"
                           addText="Add Tags"
@@ -1756,7 +1758,6 @@ const UploadRequest = () => {
                           }}
                           dropdownIsActive={activeDropdown === "tags"}
                           ignorePermission={true}
-
                         />
                       </div>
                     </div>
@@ -1789,7 +1790,7 @@ const UploadRequest = () => {
 
                     {isAdmin() && (
                       <div className={detailPanelStyles["field-wrapper"]}>
-                        <div className={styles['creatable-select-container']}>
+                        <div className={styles["creatable-select-container"]}>
                           <CreatableSelect
                             title="Campaigns"
                             addText="Add to Campaign"
@@ -1809,7 +1810,9 @@ const UploadRequest = () => {
                               index,
                               stateUpdate
                             ) => { }}
-                            onOperationFailedSkipped={() => setActiveDropdown("")}
+                            onOperationFailedSkipped={() =>
+                              setActiveDropdown("")
+                            }
                             isShare={false}
                             asyncCreateFn={(newItem) => {
                               return { data: newItem };
@@ -1852,7 +1855,9 @@ const UploadRequest = () => {
                               className={detailPanelStyles["field-wrapper"]}
                               key={index}
                             >
-                              <div className={styles['creatable-select-container']}>
+                              <div
+                                className={styles["creatable-select-container"]}
+                              >
                                 <CreatableSelect
                                   creatable={false}
                                   title={field.name}
@@ -1918,7 +1923,6 @@ const UploadRequest = () => {
               />
             </div>
           )}
-
         </div>
       </div>
 
@@ -1961,7 +1965,6 @@ const UploadRequest = () => {
                   name={assets[selectedAsset]?.asset.name}
                   assetImg={assets[selectedAsset]?.thumbailUrl}
                 />
-
               )}
               {assets[selectedAsset]?.asset.type !== "image" &&
                 assets[selectedAsset]?.asset.type !== "video" &&
@@ -1979,10 +1982,10 @@ const UploadRequest = () => {
                 assets[selectedAsset]?.asset.type !== "video" &&
                 !assets[selectedAsset]?.thumbailUrl && (
                   <div className={styles.assetIconContainer}>
-                    <AssetIcon extension={assets[selectedAsset]?.asset.extension} />
+                    <AssetIcon
+                      extension={assets[selectedAsset]?.asset.extension}
+                    />
                   </div>
-
-
                 )}
               {assets[selectedAsset]?.asset.type === "video" && (
                 <video controls>
@@ -2001,7 +2004,6 @@ const UploadRequest = () => {
                 </video>
               )}
             </div>
-
 
             {(isAdmin() || currentViewStatus !== 0) && (
               <div
@@ -2042,7 +2044,7 @@ const UploadRequest = () => {
               </h2>
 
               <div className={detailPanelStyles["field-wrapper"]}>
-                <div className={styles['creatable-select-container']}>
+                <div className={styles["creatable-select-container"]}>
                   <CreatableSelect
                     title="Tags"
                     addText="Add Tags"
@@ -2097,26 +2099,28 @@ const UploadRequest = () => {
                   />
                 </div>
               </div>
-              {isAdmin() && (
-                <SingleCollectionSubcollectionListing
-                  activeDropdown={activeDropdown}
-                  setActiveDropdown={setActiveDropdown}
-                  folders={foldersAssetView}
-                  selectedFolder={selectedFolderAssetView}
-                  subFolderLoadingState={subFolderLoadingStateAssetView}
-                  showDropdown={showDropdownAssetView}
-                  input={inputAssetView}
-                  completeSelectedFolder={completeSelectedFolderAssetView}
-                  setInput={setInputAssetView}
-                  filteredData={filteredDataAssetView}
-                  getFolders={getFoldersAssetView}
-                  getSubFolders={getSubFoldersAssetView}
-                  toggleSelected={toggleSelectedAssetView}
-                  toggleDropdown={toggleDropdownAssetView}
-                  keyResultsFetch={keyResultsFetchAssetView}
-                  keyExists={keyExistsAssetView}
-                />
-              )}
+              {
+                isAdmin() && (
+                  <SingleCollectionSubcollectionListing
+                    activeDropdown={activeDropdown}
+                    setActiveDropdown={setActiveDropdown}
+                    folders={foldersAssetView}
+                    selectedFolder={selectedFolderAssetView}
+                    subFolderLoadingState={subFolderLoadingStateAssetView}
+                    showDropdown={showDropdownAssetView}
+                    input={inputAssetView}
+                    completeSelectedFolder={completeSelectedFolderAssetView}
+                    setInput={setInputAssetView}
+                    filteredData={filteredDataAssetView}
+                    getFolders={getFoldersAssetView}
+                    getSubFolders={getSubFoldersAssetView}
+                    toggleSelected={toggleSelectedAssetView}
+                    toggleDropdown={toggleDropdownAssetView}
+                    keyResultsFetch={keyResultsFetchAssetView}
+                    keyExists={keyExistsAssetView}
+                  />
+                )
+              }
               {/* {isAdmin() && (
                 <div className={detailPanelStyles["field-wrapper"]}>
                   <div className={styles['creatable-select-container']}>
@@ -2175,64 +2179,63 @@ const UploadRequest = () => {
                 </div>
               )} */}
 
-
-
-
-
-              {isAdmin() && (
-                <div className={detailPanelStyles["field-wrapper"]}>
-                  <div className={styles['creatable-select-container']}>
-                    <CreatableSelect
-                      title="Campaigns"
-                      addText="Add to Campaign"
-                      onAddClick={() => setActiveDropdown("campaigns")}
-                      selectPlaceholder={
-                        "Enter a new campaign or select an existing one"
-                      }
-                      avilableItems={inputCampaigns}
-                      setAvailableItems={setInputCampaigns}
-                      selectedItems={tempCampaigns}
-                      setSelectedItems={setTempCampaigns}
-                      creatable={isAdmin()}
-                      menuPosition={"fixed"}
-                      onAddOperationFinished={(stateUpdate) => {
-                        updateAssetState({
-                          campaigns: { $set: stateUpdate },
-                        });
-                      }}
-                      onRemoveOperationFinished={async (index, stateUpdate) => {
-                        await assetApi.removeCampaign(
-                          assets[selectedAsset]?.asset?.id,
-                          tempCampaigns[index]?.id
-                        );
-                        updateAssetState({
-                          campaigns: { $set: stateUpdate },
-                        });
-                      }}
-                      onOperationFailedSkipped={() => setActiveDropdown("")}
-                      isShare={false}
-                      asyncCreateFn={(newItem) => {
-                        if (isAdmin()) {
-                          // Admin can edit inline, dont need to hit save button
-                          setIsLoading(true);
-
-                          return assetApi.addCampaign(
-                            assets[selectedAsset]?.asset.id,
-                            newItem
-                          );
-                        } else {
-                          return { data: newItem };
+              {
+                isAdmin() && (
+                  <div className={detailPanelStyles["field-wrapper"]}>
+                    <div className={styles["creatable-select-container"]}>
+                      <CreatableSelect
+                        title="Campaigns"
+                        addText="Add to Campaign"
+                        onAddClick={() => setActiveDropdown("campaigns")}
+                        selectPlaceholder={
+                          "Enter a new campaign or select an existing one"
                         }
-                      }}
-                      dropdownIsActive={activeDropdown === "campaigns"}
-                      altColor="yellow"
-                      ignorePermission={true}
-                    />
-                  </div>
-                </div>
-              )}
+                        avilableItems={inputCampaigns}
+                        setAvailableItems={setInputCampaigns}
+                        selectedItems={tempCampaigns}
+                        setSelectedItems={setTempCampaigns}
+                        creatable={isAdmin()}
+                        menuPosition={"fixed"}
+                        onAddOperationFinished={(stateUpdate) => {
+                          updateAssetState({
+                            campaigns: { $set: stateUpdate },
+                          });
+                        }}
+                        onRemoveOperationFinished={async (index, stateUpdate) => {
+                          await assetApi.removeCampaign(
+                            assets[selectedAsset]?.asset?.id,
+                            tempCampaigns[index]?.id
+                          );
+                          updateAssetState({
+                            campaigns: { $set: stateUpdate },
+                          });
+                        }}
+                        onOperationFailedSkipped={() => setActiveDropdown("")}
+                        isShare={false}
+                        asyncCreateFn={(newItem) => {
+                          if (isAdmin()) {
+                            // Admin can edit inline, dont need to hit save button
+                            setIsLoading(true);
 
-              {isAdmin() &&
+                            return assetApi.addCampaign(
+                              assets[selectedAsset]?.asset.id,
+                              newItem
+                            );
+                          } else {
+                            return { data: newItem };
+                          }
+                        }}
+                        dropdownIsActive={activeDropdown === "campaigns"}
+                        altColor="yellow"
+                        ignorePermission={true}
+                      />
+                    </div>
+                  </div>
+                )
+              }
+
+              {
+                isAdmin() &&
                 inputCustomFields.map((field, index) => {
                   if (field.type === "selectOne") {
                     return (
@@ -2262,7 +2265,7 @@ const UploadRequest = () => {
                         className={detailPanelStyles["field-wrapper"]}
                         key={index}
                       >
-                        <div className={styles['creatable-select-container']}>
+                        <div className={styles["creatable-select-container"]}>
                           <CreatableSelect
                             creatable={false}
                             title={field.name}
@@ -2337,32 +2340,35 @@ const UploadRequest = () => {
                       </div>
                     );
                   }
-                })}
+                })
+              }
 
-              {!isAdmin() && currentViewStatus === 0 && (
-                <div className={detailPanelStyles["field-wrapper"]}>
-                  <div
-                    className={`secondary-text ${detailPanelStyles.field} ${styles["field-name"]}`}
-                  >
-                    Comments
+              {
+                !isAdmin() && currentViewStatus === 0 && (
+                  <div className={detailPanelStyles["field-wrapper"]}>
+                    <div
+                      className={`secondary-text ${detailPanelStyles.field} ${styles["field-name"]}`}
+                    >
+                      Comments
+                    </div>
+                    <TextArea
+                      type={"textarea"}
+                      rows={9}
+                      placeholder={"Add comments"}
+                      value={tempComments}
+                      onChange={(e) => {
+                        setTempComments(e.target.value);
+                      }}
+                      styleType={"regular-short"}
+                      disabled={currentViewStatus !== 0}
+                      maxLength={200}
+                    />
                   </div>
-                  <TextArea
-                    type={"textarea"}
-                    rows={9}
-                    placeholder={"Add comments"}
-                    value={tempComments}
-                    onChange={(e) => {
-                      setTempComments(e.target.value);
-                    }}
-                    styleType={"regular-short"}
-                    disabled={currentViewStatus !== 0}
-                    maxLength={200}
-                  />
-                </div>
-              )}
+                )
+              }
 
               <div className={"m-b-25"}></div>
-            </div>
+            </div >
 
             {currentViewStatus === 0 && (
               <Button
@@ -2373,34 +2379,36 @@ const UploadRequest = () => {
               />
             )}
 
-            {isAdmin() && (
-              <div
-                className={`${styles["admin-button-wrapper"]} m-l-20 secondary`}
-              >
-                <Button
-                  className={`${styles["add-tag-btn"]} container reject-btn`}
-                  type="button"
-                  text="Reject"
-                  onClick={() => {
-                    setTempAssets([assets[selectedAsset]?.asset.id]);
-                    setShowRejectConfirm(true);
-                  }}
-                />
+            {
+              isAdmin() && (
+                <div
+                  className={`${styles["admin-button-wrapper"]} m-l-20 secondary`}
+                >
+                  <Button
+                    className={`${styles["add-tag-btn"]} container reject-btn`}
+                    type="button"
+                    text="Reject"
+                    onClick={() => {
+                      setTempAssets([assets[selectedAsset]?.asset.id]);
+                      setShowRejectConfirm(true);
+                    }}
+                  />
 
-                <Button
-                  className={`${styles["add-tag-btn"]} container primary`}
-                  type="button"
-                  text="Approve"
-                  onClick={() => {
-                    setTempAssets([assets[selectedAsset]?.asset.id]);
-                    setShowApproveConfirm(true);
-                  }}
-                />
-              </div>
-            )}
-          </div>
-        </div>
-      </Base>
+                  <Button
+                    className={`${styles["add-tag-btn"]} container primary`}
+                    type="button"
+                    text="Approve"
+                    onClick={() => {
+                      setTempAssets([assets[selectedAsset]?.asset.id]);
+                      setShowApproveConfirm(true);
+                    }}
+                  />
+                </div>
+              )
+            }
+          </div >
+        </div >
+      </Base >
 
       <Base
         modalIsOpen={showConfirmModal}
@@ -2543,17 +2551,19 @@ const UploadRequest = () => {
         modalIsOpen={showDeleteConfirm}
       />
 
-      {showReviewModal && (
-        <GuestUploadApprovalOverlay
-          handleBackButton={() => {
-            fetchApprovals();
-            setShowReviewModal(false);
-          }}
-          selectedAssets={assets}
-          loadingAssets={false}
-          requestInfo={requestInfo}
-        />
-      )}
+      {
+        showReviewModal && (
+          <GuestUploadApprovalOverlay
+            handleBackButton={() => {
+              fetchApprovals();
+              setShowReviewModal(false);
+            }}
+            selectedAssets={assets}
+            loadingAssets={false}
+            requestInfo={requestInfo}
+          />
+        )
+      }
     </>
   );
 };

@@ -8,19 +8,27 @@ import styles from "../filter-option-popup/options-data.module.css";
 
 interface ResolutionFilterProps {
   data: IResolutionFilter[];
+  setFilters: (val: any) => void; //TODO
 }
 
-const ResolutionFilter: React.FC<ResolutionFilterProps> = ({ data }) => {
+const ResolutionFilter: React.FC<ResolutionFilterProps> = ({
+  data,
+  setFilters,
+}) => {
   return (
     <>
       <div className={styles["heading-tag"]}>
-        <IconClickable  src={Utilities.radioButtonNormal} />
+        <IconClickable src={Utilities.radioButtonNormal} />
         <span>All High-Res (above 250 DPI)</span>
       </div>
       <div className={styles["outer-wrapper"]}>
         {data.map((item) => (
-          <div className={styles["grid-item"]} key={item.id}>
-            <OptionDataItem name={item.dpi} count={item.count} />
+          <div className={styles["grid-item"]} key={item.dpi}>
+            <OptionDataItem
+              name={item.dpi}
+              count={item.count}
+              isSelected={true}
+            />
           </div>
         ))}
       </div>

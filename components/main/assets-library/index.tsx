@@ -707,6 +707,7 @@ const AssetsLibrary = () => {
       if (replace) {
         setAddedIds([]);
       }
+      console.log("activeSortFilter in assets: ", activeSortFilter);
       setPlaceHolders("asset", replace);
       const { data } = await assetApi.getAssets({
         ...getAssetsFilters({
@@ -1105,7 +1106,6 @@ const AssetsLibrary = () => {
                       : styles["grid-wrapper"]
                   } ${activeFolder && styles["active-breadcrumb-item"]}`}
                 >
-                 
                   {activeMode !== "folders" && (
                     <div className={styles.wrapper}>
                       <FilterView />
