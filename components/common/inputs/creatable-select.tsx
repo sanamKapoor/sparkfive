@@ -17,6 +17,7 @@ import Tag from "../misc/tag";
 // Contexts
 import { UserContext } from "../../../context";
 
+
 const CreatableSelect = ({
   title,
   addText = "",
@@ -48,6 +49,10 @@ const CreatableSelect = ({
   const [isCollapsed, setIsCollapsed] = useState(true);
 
   const { hasPermission } = useContext(UserContext);
+
+
+
+
 
   const sort = (data) => {
     if (sortDisplayValue) {

@@ -350,33 +350,6 @@ const SidePanelBulk = ({
         <section className={styles["first-section"]}>
           <p>{`Editing (${elementsSelected.length}) files`}</p>
         </section>
-
-        {/**       
-         * <CreatableSelect
-            title="Collections"
-            addText="Add to Collection"
-            onAddClick={() => setActiveDropdown("collections")}
-            selectPlaceholder={
-              "Enter a new collection or select an existing one"
-            }
-            avilableItems={inputFolders}
-            setAvailableItems={setInputFolders}
-            selectedItems={assetFolders}
-            setSelectedItems={setFolders}
-            onAddOperationFinished={() => setActiveDropdown("")}
-            onRemoveOperationFinished={() => null}
-            onOperationFailedSkipped={() => setActiveDropdown("")}
-            asyncCreateFn={() => null}
-            dropdownIsActive={activeDropdown === "collections"}
-            altColor="yellow"
-            isShare={false}
-            isBulkEdit={true}
-            canAdd={addMode}
-          />
-        */}
-
-
-
         <section className={styles["field-wrapper"]}>
           {<div className={`${styles["tag-container-wrapper"]}`}>
             {

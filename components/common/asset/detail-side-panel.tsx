@@ -151,7 +151,6 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
   const deleteFolder = async (folderId, stateUpdate) => {
     try {
       // Show loading
-      console.log(stateUpdate, folderId, "stateUpdate on delete function")
       setIsLoading(true);
       await assetApi.removeFolder(id, folderId);
       // Show loading
@@ -213,9 +212,6 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     })
     setSelectedFolder((prev) => [...prev, ...originalSelectedFolders])
 
-    // setAssetCustomFields(update(assetCustomFields, {
-    //   $set: mappingCustomFieldData(inputCustomFields, customs)
-    // }))
   }, [asset]);
 
   useEffect(() => {

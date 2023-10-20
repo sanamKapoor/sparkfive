@@ -6,14 +6,16 @@ import React, { useContext, useEffect, useState } from 'react';
 
 import { Utilities } from '../../../assets';
 import GuestUploadApprovalOverlay from '../../../components/common/guest-upload-approval-overlay';
-import { AssetContext, LoadingContext, UserContext } from '../../../context';
+import { LoadingContext, UserContext } from '../../../context';
+import { useMoveModal } from '../../../hooks/Use-Modal';
+import { useAssetDetailCollecion } from '../../../hooks/Use-Asset-Detail-Collection'
 import { useDebounce } from '../../../hooks/useDebounce';
 import assetApi from '../../../server-api/asset';
 import customFieldsApi from '../../../server-api/attribute';
 import campaignApi from '../../../server-api/campaign';
 import folderApi from '../../../server-api/folder';
 import tagApi from '../../../server-api/tag';
-import approvalApi, { default as uploadApprovalApi } from '../../../server-api/upload-approvals';
+import uploadApprovalApi from '../../../server-api/upload-approvals';
 import toastUtils from '../../../utils/toast';
 import assetGridStyles from '../../common/asset/asset-grid.module.css';
 import AssetIcon from '../../common/asset/asset-icon';
@@ -33,10 +35,9 @@ import CustomFieldSelector from '../../common/items/custom-field-selector';
 import Base from '../../common/modals/base';
 import ConfirmModal from '../../common/modals/confirm-modal';
 import RenameModal from '../../common/modals/rename-modal';
+import CollectionSubcollectionListing from '../collection-subcollection-listing';
+import SingleCollectionSubcollectionListing from '../single-select-collection-subcollection'
 import styles from './index.module.css';
-import { useMoveModal } from "../../../hooks/Use-Modal";
-import { ASSET_EDIT } from "../../../constants/permissions";
-import SearchModal from "../../SearchModal/Search-modal";
 
 
 interface Asset {
@@ -154,7 +155,6 @@ const UploadRequest = () => {
 
   // Folders
   const [inputFolders, setInputFolders] = useState([]);
-  const [assetFolders, setFolders] = useState([]);
 
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [requestInfo, setRequestInfo] = useState("");
@@ -162,13 +162,6 @@ const UploadRequest = () => {
   const debouncedBatchName = useDebounce(batchName, 500);
 
   const [rightPanelOpen, setRightPanelOpen] = useState(false);
-
-
-
-
-
-
-
 
   const {
     folders,
@@ -193,22 +186,69 @@ const UploadRequest = () => {
     completeSelectedFolder
   } = useMoveModal();
 
-  const keyExists = (key: string) => {
-    return folderChildList.has(key);
-  };
 
-  const keyResultsFetch = (key: string, type: string): Item[] | number => {
-    const { results, next } = folderChildList.get(key);
-    if (type === 'record') {
-      return results || []
+  const addFolderAssetView = async (newItem) => {
+
+    if (isAdmin()) {
+      // Admin can edit inline, dont need to hit save button
+      setIsLoading(true);
+
+      await assetApi.addFolder(
+        assets[selectedAsset]?.asset.id,
+        newItem
+      );
+      setIsLoading(false);
+    } else {
+      return { data: newItem };
     }
-    return next
+
   };
 
+  const updateAssetStateAssetView = (stateUpdate) => {
+    updateAssetState({
+      folders: { $set: stateUpdate },
+    });
+  };
 
+  const deleteFolderAssetView = async (id,
+    stateUpdate
+  ) => {
+    setIsLoading(true);
 
+    await assetApi.removeFolder(
+      assets[selectedAsset]?.asset.id,
+      id
+    );
+    setIsLoading(false);
 
+    updateAssetState({
+      folders: { $set: stateUpdate },
+    });
+  };
 
+  const {
+    folders: foldersAssetView,
+    resultedSearchFolders: resultedSearchFoldersAssetView,
+    selectedFolder: selectedFolderAssetView,
+    subFolderLoadingState: subFolderLoadingStateAssetView,
+    folderChildList: folderChildListAssetView,
+    showDropdown: showDropdownAssetView,
+    input: inputAssetView,
+    completeSelectedFolder: completeSelectedFolderAssetView,
+    setInput: setInputAssetView,
+    filteredData: filteredDataAssetView,
+    getFolders: getFoldersAssetView,
+    setFolderChildListItems: setFolderChildListItemsAssetView,
+    getSubFolders: getSubFoldersAssetView,
+    toggleSelected: toggleSelectedAssetView,
+    toggleDropdown: toggleDropdownAssetView,
+    setSelectedFolder: setSelectedFolderAssetView,
+    setShowDropdown: setShowDropdownAssetView,
+    setSubFolderLoadingState: setSubFolderLoadingStateAssetView,
+    setFolderChildList: setFolderChildListAssetView,
+    keyResultsFetch: keyResultsFetchAssetView,
+    keyExists: keyExistsAssetView
+  } = useAssetDetailCollecion(addFolderAssetView, updateAssetStateAssetView, tempFolders, deleteFolderAssetView)
 
 
 
@@ -217,7 +257,7 @@ const UploadRequest = () => {
 
   const updateName = async (value) => {
     if (approvalId) {
-      await approvalApi.update(approvalId, { name: value });
+      await uploadApprovalApi.update(approvalId, { name: value });
 
       // @ts-ignore
       let currentApprovalData = { ...currentApproval };
@@ -280,6 +320,16 @@ const UploadRequest = () => {
     setTempCampaigns([]);
     setTempFolders([]);
 
+
+    // Asset view modal custom Hook states resetting to initials
+    setSelectedFolderAssetView([]);
+    setShowDropdownAssetView([]);
+    setSubFolderLoadingStateAssetView(new Map());
+    setFolderChildListAssetView(new Map())
+    setInputAssetView("")
+    completeSelectedFolderAssetView.clear();
+    //
+
     if (refresh === true || needRefresh) {
       fetchApprovals();
     }
@@ -305,6 +355,14 @@ const UploadRequest = () => {
 
     // @ts-ignore
     setTempFolders(assets[index]?.asset?.folders || []);
+
+
+    const originalSelectedFolders = (assets[index]?.asset?.folders || [])?.map(({ id, name, parentId, ...rest }: Item) => {
+      completeSelectedFolderAssetView.set(id, { name, parentId: parentId || null })
+      return id
+    })
+    setSelectedFolderAssetView((prev) => [...prev, ...originalSelectedFolders])
+
 
     // @ts-ignore
     setTempComments(assets[index]?.asset?.comments || "");
@@ -399,7 +457,7 @@ const UploadRequest = () => {
 
         for (const { asset } of assetArr) {
           promises.push(
-            approvalApi.addComments(asset.id, {
+            uploadApprovalApi.addComments(asset.id, {
               comments: tempComments,
               approvalId,
             })
@@ -429,242 +487,245 @@ const UploadRequest = () => {
 
   // Save bulk tag from right pannel
   const saveBulkTag = async () => {
-    setIsLoading(true);
-    let submitApi = false;
 
-    let currentAssetTags = [...assetTags];
-    let currentAssetCampaigns = [...assetCampaigns];
-    let currentAssetCustomFields = [...assetCustomFields];
-    // let currentAssetFolders = [...assetFolders];
-    let currentAssetFolders = [...completeSelectedFolder.entries()].map(([key, value], index) => {
-      return {
-        id: key,
-        name: value.name
-      }
-    });
-    console.log(currentAssetFolders, "currentAssetFolders")
+    try {
 
-    for (const { asset, isSelected } of assets) {
-      let tagPromises = [];
-      let removeTagPromises = [];
+      setIsLoading(true);
+      let submitApi = false;
+      let currentAssetTags = [...assetTags];
+      let currentAssetCampaigns = [...assetCampaigns];
+      let currentAssetCustomFields = [...assetCustomFields];
+      // let currentAssetFolders = [...assetFolders];
+      let currentAssetFolders = [...completeSelectedFolder.entries()].map(([key, value], index) => {
+        return {
+          id: key,
+          name: value.name
+        }
+      });
 
-      let campaignPromises = [];
-      let removeCampaignPromises = [];
-      let removeFolderPromises = [];
-      let folderPromises = [];
+      for (const { asset, isSelected } of assets) {
+        let tagPromises = [];
+        let removeTagPromises = [];
 
-      if (isSelected) {
-        submitApi = true;
-        const newTags = _.differenceBy(currentAssetTags, asset?.tags || []);
-        const newCampaigns = _.differenceBy(
-          currentAssetCampaigns,
-          asset?.campaigns || []
-        );
-        const newFolders = _.differenceBy(
-          currentAssetFolders,
-          asset?.folders || []
-        );
+        let campaignPromises = [];
+        let removeCampaignPromises = [];
+        let removeFolderPromises = [];
+        let folderPromises = [];
 
-        // Online admin can add custom fields
-        if (isAdmin()) {
-          for (const customField of currentAssetCustomFields) {
-            // Find corresponding custom field in asset
-            const assetField = asset?.customs?.filter(
-              (custom) => custom.id === customField.id
-            );
-            const oldCustoms = (assetField && assetField[0]?.values) || [];
+        if (isSelected) {
+          submitApi = true;
+          const newTags = _.differenceBy(currentAssetTags, asset?.tags || []);
+          const newCampaigns = _.differenceBy(
+            currentAssetCampaigns,
+            asset?.campaigns || []
+          );
+          const newFolders = _.differenceBy(
+            currentAssetFolders,
+            asset?.folders || []
+          );
 
-            const newCustoms = _.differenceBy(
-              customField.values,
-              oldCustoms || []
-            );
+          // Online admin can add custom fields
+          if (isAdmin()) {
+            for (const customField of currentAssetCustomFields) {
+              // Find corresponding custom field in asset
+              const assetField = asset?.customs?.filter(
+                (custom) => custom.id === customField.id
+              );
+              const oldCustoms = (assetField && assetField[0]?.values) || [];
 
-            const customPromises = [];
+              const newCustoms = _.differenceBy(
+                customField.values,
+                oldCustoms || []
+              );
 
-            for (const custom of newCustoms) {
-              // Old custom, dont need to create the new one
-              if (custom.id) {
-                customPromises.push(assetApi.addCustomFields(asset.id, custom));
-              } else {
-                // Have to insert immediately here to prevent duplicate custom created due to multi asset handling
-                const rs = await assetApi.addCustomFields(asset.id, custom);
-                // Update back to asset tags array for the next asset usage
-                currentAssetCustomFields = currentAssetCustomFields.map(
-                  (assetCustom) => {
-                    if (assetCustom.id === customField.id) {
-                      assetCustom = assetCustom.values.map((value) => {
-                        if (value.name === custom.name) {
-                          value = rs;
-                        }
+              const customPromises = [];
 
-                        return value;
-                      });
+              for (const custom of newCustoms) {
+                // Old custom, dont need to create the new one
+                if (custom.id) {
+                  customPromises.push(assetApi.addCustomFields(asset.id, custom));
+                } else {
+                  // Have to insert immediately here to prevent duplicate custom created due to multi asset handling
+                  const rs = await assetApi.addCustomFields(asset.id, custom);
+                  // Update back to asset tags array for the next asset usage
+                  currentAssetCustomFields = currentAssetCustomFields.map(
+                    (assetCustom) => {
+                      if (assetCustom.id === customField.id) {
+                        assetCustom = assetCustom.values.map((value) => {
+                          if (value.name === custom.name) {
+                            value = rs;
+                          }
+
+                          return value;
+                        });
+                      }
+                      return assetCustom;
                     }
-                    return assetCustom;
+                  );
+                }
+              }
+
+              await Promise.all(customPromises);
+            }
+          }
+
+          // Save bulk by admin wont override any tag, it will add extra tags
+          const removeTags = []; //isAdmin() ? [] : _.differenceBy(asset?.tags || [], assetTags)
+
+          // Save bulk by admin wont override any capaign, it will add extra campaigns
+          const removeCampaigns = []; //isAdmin() ? [] : _.differenceBy(asset?.campaigns || [], assetCampaigns)
+
+          // Save bulk by admin wont override any folders, it will add extra folders
+          const removeFolders = []; //isAdmin() ? [] : _.differenceBy(asset?.campaigns || [], assetCampaigns)
+
+          for (const tag of removeTags) {
+            removeTagPromises.push(assetApi.removeTag(asset.id, tag.id));
+          }
+
+          for (const tag of newTags) {
+            // Old tag, dont need to create the new one
+            if (tag.id) {
+              tagPromises.push(assetApi.addTag(asset.id, tag));
+            } else {
+              // Have to insert immediately here to prevent duplicate tag created due to multi asset handling
+              const rs = await assetApi.addTag(asset.id, tag);
+              // Update back to asset tags array for the next asset usage
+              currentAssetTags = currentAssetTags.map((assetTag) => {
+                if (assetTag.name === tag.name) {
+                  assetTag = rs.data;
+                }
+                return assetTag;
+              });
+            }
+          }
+
+          // Only admin can modify campaign
+          if (isAdmin()) {
+            for (const campaign of removeCampaigns) {
+              removeCampaignPromises.push(
+                assetApi.removeCampaign(asset.id, campaign.id)
+              );
+            }
+
+            for (const campaign of newCampaigns) {
+              // Old campaign, dont need to create the new one
+              if (campaign.id) {
+                campaignPromises.push(assetApi.addCampaign(asset.id, campaign));
+              } else {
+                // Have to insert immediately here to prevent duplicate campaign created due to multi asset handling
+                const rs = await assetApi.addCampaign(asset.id, campaign);
+                // Update back to asset tags array for the next asset usage
+                currentAssetCampaigns = currentAssetCampaigns.map(
+                  (assetCampaign) => {
+                    if (assetCampaign.name === campaign.name) {
+                      assetCampaign = rs.data;
+                    }
+                    return assetCampaign;
                   }
                 );
               }
             }
-
-            await Promise.all(customPromises);
           }
-        }
 
-        // Save bulk by admin wont override any tag, it will add extra tags
-        const removeTags = []; //isAdmin() ? [] : _.differenceBy(asset?.tags || [], assetTags)
+          // Only admin can modify folders
+          if (isAdmin()) {
+            for (const folder of removeFolders) {
+              removeFolderPromises.push(
+                assetApi.removeFolder(asset.id, folder.id)
+              );
+            }
 
-        // Save bulk by admin wont override any capaign, it will add extra campaigns
-        const removeCampaigns = []; //isAdmin() ? [] : _.differenceBy(asset?.campaigns || [], assetCampaigns)
-
-        // Save bulk by admin wont override any folders, it will add extra folders
-        const removeFolders = []; //isAdmin() ? [] : _.differenceBy(asset?.campaigns || [], assetCampaigns)
-
-        for (const tag of removeTags) {
-          removeTagPromises.push(assetApi.removeTag(asset.id, tag.id));
-        }
-
-        for (const tag of newTags) {
-          // Old tag, dont need to create the new one
-          if (tag.id) {
-            tagPromises.push(assetApi.addTag(asset.id, tag));
-          } else {
-            // Have to insert immediately here to prevent duplicate tag created due to multi asset handling
-            const rs = await assetApi.addTag(asset.id, tag);
-            // Update back to asset tags array for the next asset usage
-            currentAssetTags = currentAssetTags.map((assetTag) => {
-              if (assetTag.name === tag.name) {
-                assetTag = rs.data;
+            for (const folder of newFolders) {
+              // Old folder, dont need to create the new one
+              if (folder.id) {
+                folderPromises.push(assetApi.addFolder(asset.id, folder));
+              } else {
+                // Have to insert immediately here to prevent duplicate campaign created due to multi asset handling
+                const rs = await assetApi.addFolder(asset.id, folder);
+                // Update back to asset tags array for the next asset usage
+                currentAssetFolders = currentAssetFolders.map((assetFolder) => {
+                  if (assetFolder.name === folder.name) {
+                    assetFolder = rs.data;
+                  }
+                  return assetFolder;
+                });
               }
-              return assetTag;
-            });
+            }
           }
         }
+
+        await Promise.all(tagPromises);
+        await Promise.all(removeTagPromises);
 
         // Only admin can modify campaign
         if (isAdmin()) {
-          for (const campaign of removeCampaigns) {
-            removeCampaignPromises.push(
-              assetApi.removeCampaign(asset.id, campaign.id)
-            );
-          }
-
-          for (const campaign of newCampaigns) {
-            // Old campaign, dont need to create the new one
-            if (campaign.id) {
-              campaignPromises.push(assetApi.addCampaign(asset.id, campaign));
-            } else {
-              // Have to insert immediately here to prevent duplicate campaign created due to multi asset handling
-              const rs = await assetApi.addCampaign(asset.id, campaign);
-              // Update back to asset tags array for the next asset usage
-              currentAssetCampaigns = currentAssetCampaigns.map(
-                (assetCampaign) => {
-                  if (assetCampaign.name === campaign.name) {
-                    assetCampaign = rs.data;
-                  }
-                  return assetCampaign;
-                }
-              );
-            }
-          }
+          await Promise.all(campaignPromises);
+          await Promise.all(removeCampaignPromises);
         }
 
-        // Only admin can modify folders
+        // Only admin can modify folder
         if (isAdmin()) {
-          for (const folder of removeFolders) {
-            removeFolderPromises.push(
-              assetApi.removeFolder(asset.id, folder.id)
+          await Promise.all(folderPromises);
+          await Promise.all(removeFolderPromises);
+        }
+      }
+
+      // Save tags to asset
+      let assetArr = [...assets];
+      assetArr.map((asset) => {
+        if (asset.isSelected) {
+          // Admin update does not override the tags
+          if (isAdmin()) {
+            const newTags = _.differenceBy(
+              currentAssetTags,
+              asset.asset.tags || []
             );
-          }
+            asset.asset.tags = asset?.asset?.tags?.concat(newTags);
 
-          for (const folder of newFolders) {
-            // Old folder, dont need to create the new one
-            if (folder.id) {
-              folderPromises.push(assetApi.addFolder(asset.id, folder));
-            } else {
-              // Have to insert immediately here to prevent duplicate campaign created due to multi asset handling
-              const rs = await assetApi.addFolder(asset.id, folder);
-              // Update back to asset tags array for the next asset usage
-              currentAssetFolders = currentAssetFolders.map((assetFolder) => {
-                if (assetFolder.name === folder.name) {
-                  assetFolder = rs.data;
-                }
-                return assetFolder;
-              });
-            }
+            const newCampaigns = _.differenceBy(
+              currentAssetCampaigns,
+              asset.asset.campaigns || []
+            );
+            asset.asset.campaigns = asset?.asset?.campaigns?.concat(newCampaigns);
+
+            const newFolders = _.differenceBy(
+              currentAssetFolders,
+              asset.asset.folders || []
+            );
+            asset.asset.folders = asset?.asset?.folders?.concat(newFolders);
+          } else {
+            asset.asset.tags = currentAssetTags;
           }
         }
-      }
+      });
 
-      await Promise.all(tagPromises);
-      await Promise.all(removeTagPromises);
-
-      // Only admin can modify campaign
-      if (isAdmin()) {
-        await Promise.all(campaignPromises);
-        await Promise.all(removeCampaignPromises);
+      if (submitApi) {
+        toastUtils.success(`Save successfully`);
+      } else {
+        toastUtils.error(`Please select assets`);
       }
+      // Reset tags
+      setTags([]);
+      setNeedRefresh(true);
 
-      // Only admin can modify folder
-      if (isAdmin()) {
-        await Promise.all(folderPromises);
-        await Promise.all(removeFolderPromises);
-      }
+    } catch (err) {
+      //TODO handle error
+    } finally {
+      setSelectedFolder([]);
+      setShowDropdown([]);
+      setSubFolderLoadingState(new Map());
+      setFolderChildList(new Map())
+      setSelectAllFolders({})
+      setInput("")
+      completeSelectedFolder.clear();
+      setActiveDropdown("")
+      setIsLoading(false);
     }
-
-    // Save tags to asset
-    let assetArr = [...assets];
-    assetArr.map((asset) => {
-      if (asset.isSelected) {
-        // Admin update does not override the tags
-        if (isAdmin()) {
-          const newTags = _.differenceBy(
-            currentAssetTags,
-            asset.asset.tags || []
-          );
-          asset.asset.tags = asset?.asset?.tags?.concat(newTags);
-
-          const newCampaigns = _.differenceBy(
-            currentAssetCampaigns,
-            asset.asset.campaigns || []
-          );
-          asset.asset.campaigns = asset?.asset?.campaigns?.concat(newCampaigns);
-
-          const newFolders = _.differenceBy(
-            currentAssetFolders,
-            asset.asset.folders || []
-          );
-          asset.asset.folders = asset?.asset?.folders?.concat(newFolders);
-        } else {
-          asset.asset.tags = currentAssetTags;
-        }
-      }
-    });
-
-    if (submitApi) {
-      toastUtils.success(`Save successfully`);
-    } else {
-      toastUtils.error(`Please select assets`);
-    }
-
-    // Reset tags
-    setTags([]);
-
-    setNeedRefresh(true);
-
-    setSelectedFolder([]);
-    setShowDropdown([]);
-    setSubFolderLoadingState(new Map());
-    setFolderChildList(new Map())
-    setSelectAllFolders({})
-    setInput("")
-    completeSelectedFolder.clear();
-
-    setIsLoading(false);
   };
 
   const submit = async () => {
     setIsLoading(true);
-    await approvalApi.submit(approvalId, { message, name: batchName });
+    await uploadApprovalApi.submit(approvalId, { message, name: batchName });
 
     setSubmitted(true);
 
@@ -907,9 +968,7 @@ const UploadRequest = () => {
 
   const approve = async (approvalId, assetIds) => {
     setIsLoading(true);
-
-    await approvalApi.approve(approvalId, { assetIds });
-
+    await uploadApprovalApi.approve(approvalId, { assetIds });
     // Update status to assets list
     let assetArrData = [...assets];
     // @ts-ignore
@@ -918,15 +977,10 @@ const UploadRequest = () => {
         asset.asset.status = 2;
       }
     });
-
     setAssets(assetArrData);
-
     setNeedRefresh(true);
-
     setIsLoading(false);
-
     setDetailModal(false);
-
     toastUtils.success("Approve asset successfully");
   };
 
@@ -954,7 +1008,7 @@ const UploadRequest = () => {
       status: "approved",
     };
 
-    await approvalApi.bulkApprove({ approvalIds: ids.approvalIds });
+    await uploadApprovalApi.bulkApprove({ approvalIds: ids.approvalIds });
     await assetApi.updateMultipleAttributes(updateObject, {});
 
     // Update status to approval list
@@ -972,18 +1026,15 @@ const UploadRequest = () => {
     });
 
     setApprovals(approvalArrData);
-
     setIsLoading(false);
-
     setDetailModal(false);
-
     toastUtils.success("Approve asset successfully");
   };
 
   const reject = async (approvalId, assetIds) => {
     setIsLoading(true);
 
-    await approvalApi.reject(approvalId, { assetIds });
+    await uploadApprovalApi.reject(approvalId, { assetIds });
 
     // Update status to assets list
     let assetArrData = [...assets];
@@ -1010,7 +1061,7 @@ const UploadRequest = () => {
 
     const ids = filterUploadItems(data);
 
-    await approvalApi.bulkReject({ rejectIds: ids.approvalIds });
+    await uploadApprovalApi.bulkReject({ rejectIds: ids.approvalIds });
 
     const assetIds = ids["guestUploadIds"]
       .map((item) => item.assets.map((a) => a.asset))
@@ -1066,7 +1117,7 @@ const UploadRequest = () => {
       status: "deleted",
     };
 
-    await approvalApi.bulkDelete({ deleteIds: ids["approvalIds"] });
+    await uploadApprovalApi.bulkDelete({ deleteIds: ids["approvalIds"] });
     await assetApi.updateMultipleAttributes(updateObject, {});
 
     // Update status to approval list
@@ -1179,18 +1230,8 @@ const UploadRequest = () => {
     fetchApprovals();
     getTagsInputData();
     getCampaignsInputData();
-    // getFoldersInputData();
+    getFoldersInputData();
     getCustomFieldsInputData();
-    getFolders();
-    return () => {
-      setSelectedFolder([]);
-      setShowDropdown([]);
-      setSubFolderLoadingState(new Map());
-      setFolderChildList(new Map())
-      setSelectAllFolders({})
-      setInput("")
-      completeSelectedFolder.clear();
-    };
   }, []);
 
   useEffect(() => {
@@ -1294,7 +1335,7 @@ const UploadRequest = () => {
       };
       await assetApi.updateMultipleAttributes(updateObject, {});
     } else {
-      await approvalApi.bulkDelete({ deleteIds: [data.id] });
+      await uploadApprovalApi.bulkDelete({ deleteIds: [data.id] });
     }
 
     // Update status to approval list
@@ -1720,203 +1761,31 @@ const UploadRequest = () => {
                       </div>
                     </div>
 
-                    {/* {isAdmin() && (
-                      <div className={detailPanelStyles["field-wrapper"]}>
-                        <div className={styles['creatable-select-container']}>
-                          <CreatableSelect
-                            title="Collections"
-                            addText="Add to Collections"
-                            onAddClick={() => setActiveDropdown("collections")}
-                            selectPlaceholder={
-                              "Enter a new collection or select an existing one"
-                            }
-                            avilableItems={inputFolders}
-                            setAvailableItems={setInputFolders}
-                            selectedItems={assetFolders}
-                            setSelectedItems={setFolders}
-                            onAddOperationFinished={(stateUpdate) => {
-                              setActiveDropdown("");
-                            }}
-                            creatable={isAdmin()}
-                            onRemoveOperationFinished={async (
-                              index,
-                              stateUpdate,
-                              id
-                            ) => { }}
-                            onOperationFailedSkipped={() => setActiveDropdown("")}
-                            isShare={false}
-                            asyncCreateFn={(newItem) => {
-                              return { data: newItem };
-                            }}
-                            dropdownIsActive={activeDropdown === "collections"}
-                            altColor="yellow"
-                            sortDisplayValue={true}
-                            ignorePermission={true}
-                          />
-                        </div>
-                      </div>
-                    )} */}
-
                     {isAdmin() && (
-                      <section className={styles["field-wrapper"]}>
-                        {<div className={`${styles["tag-container-wrapper"]}`}>
-                          {
-                            [...completeSelectedFolder.entries()].map(([key, value], index) => (
-                              <div className={`${styles["tag-container"]}`} key={index}>
-                                <span>{value.name}</span>
-                                <IconClickable
-                                  additionalClass={styles.remove}
-                                  src={Utilities.closeTag}
-                                  onClick={() => toggleSelectedFolders(key, !selectedFolder.includes(key), false, "", value.name)}
-                                />
-                              </div>
-                            ))
-                          }
-                        </div>}
-                        {(hasPermission([ASSET_EDIT])) && (activeDropdown === "" || activeDropdown !== "collections") && (
-                          <>
-                          <div className={`${styles['top-heading']}`}>
-                          <span>Collection</span>
-                          </div>
-                             
-                          <div
-                            className={`add ${styles["select-add"]}`}
-                            onClick={() => setActiveDropdown("collections")}
-                          >
-                            <IconClickable src={Utilities.addLight} />
-                            <span>{"Add to Collection"}</span>
-                          </div>
-                          </>
-                       
-                        )}
-                        {
-                          (hasPermission([ASSET_EDIT]) && activeDropdown === "collections") &&
-                          <div className={`${styles["edit-bulk-outer-wrapper"]}`}>
-                            <div className={`${styles["close-popup"]}`}> <IconClickable
-                              additionalClass={styles.remove}
-                              src={Utilities.closeTag}
-                              onClick={() => setActiveDropdown("")}
-                            /></div>
-                            <div className={`${styles["search-btn"]}`}>
-                              <SearchModal filteredData={filteredData} input={input} setInput={setInput} />
-                            </div>
-                            <div className={`${styles["modal-heading"]}`}>
-                              <span>Collection({folders.length ?? ""})</span>
-                            </div>
-                            <div className={`${styles["outer-wrapper"]}`}>
-                              {folders.map((folder, index) => (
-                                <div key={index}>
-                                  <div className={`${styles["flex"]} ${styles.nestedbox}`}>
-                                    <div className={`${styles["height"]} ${styles["flex"]}`}
-                                      onClick={() => { toggleDropdown(folder.id, true) }}
-                                    >
-                                      <img
-                                        className={showDropdown.includes(folder.id) ? styles.iconClick : styles.rightIcon}
-                                        src={Utilities.arrowBlue}
-                                        alt="Right Arrow Icon"
-                                        onClick={() => { toggleDropdown(folder.id, true) }}
-                                      />
-                                    </div>
-
-                                    <div className={styles.w100}>
-                                      <div
-                                        className={`${styles["dropdownMenu"]} ${selectedFolder.includes(folder.id) ?
-                                          styles["active"]
-                                          : ""
-                                          }`}
-                                      >
-                                        <div className={styles.flex}>
-                                          <div
-                                            className={`${styles.circle} ${selectedFolder.includes(folder.id) ?
-                                              styles.checked
-                                              : ""
-                                              }`}
-                                            onClick={() => toggleSelectedFolders(folder.id, !selectedFolder.includes(folder.id), false, "", folder.name)}
-                                          >
-                                            {
-                                              selectedFolder.includes(folder.id) &&
-                                              <img src={Utilities.checkIcon} />
-                                            }
-                                          </div>
-                                          <div className={styles["icon-descriptions"]}>
-                                            <span>{folder.name}</span>
-                                          </div>
-                                        </div>
-                                        <div>
-                                          <div className={styles["list1-right-contents"]}>
-                                            {
-                                              selectAllFolders[folder.id] ?
-                                                <div style={{ cursor: "pointer" }} onClick={() => toggleSelectAllChildList(folder.id, folder.name)} className={`${styles['deselect-all']}`}>
-                                                  <img
-                                                    src={Utilities.redCheck} alt="Check Icon" />
-                                                  <span className={styles.deselectText}>Deselect All</span>
-                                                </div>
-                                                :
-                                                <div style={{ cursor: "pointer" }} onClick={() => toggleSelectAllChildList(folder.id, folder.name)} className={`${styles['select-all']}`}>
-                                                  <img src={Utilities.doubleCheck} alt="Check Icon" />
-                                                  <span className={styles.selectText}>Select All</span>
-                                                </div>
-                                            }
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  {showDropdown.includes(folder.id) && <div className={styles.folder}>
-                                    <div className={styles.subfolderList}>
-                                      {
-                                        keyExists(folder.id) && (keyResultsFetch(folder.id, "record") as Item[]).map(({ id, name, parentId, ...rest }) => (
-                                          <>
-                                            <div
-                                              key={id}
-                                              className={styles.dropdownOptions}
-                                              onClick={() => toggleSelectedFolders(id, !selectedFolder.includes(id), true, folder.id, name, parentId)}>
-                                              <div className={styles["folder-lists"]}>
-                                                <div className={styles.dropdownIcons}>
-                                                  <div
-                                                    className={`${styles.circle} ${selectedFolder.includes(id) ? styles.checked : ""
-                                                      }`}>
-                                                    {selectedFolder.includes(id) && <img src={Utilities.checkIcon} />}
-                                                  </div>
-                                                  <div className={styles["icon-descriptions"]}>
-                                                    <span>{name}</span>
-                                                  </div>
-                                                </div>
-                                                <div className={styles["list1-right-contents"]}>
-                                                  {selectedFolder.includes(id) && <span></span>}
-                                                </div>
-                                              </div>
-                                            </div>
-                                          </>
-                                        ))
-                                      }
-                                      {(keyExists(folder.id) && (keyResultsFetch(folder.id, "next") as number) >= 0) && <div className={`${styles['outer-load-wrapper']}`}><div className={`${styles['load-wrapper']}`}
-                                        onClick={() => { getSubFolders(folder.id, (keyResultsFetch(folder.id, "next") as number), false) }}>
-                                        <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} />
-                                        <button className={styles.loadMore}>{
-                                          subFolderLoadingState.get(folder.id)
-                                            ?
-                                            "Loading..."
-                                            :
-                                            "Load More"
-                                        }</button>
-                                      </div>
-                                      </div>
-                                      }
-                                    </div>
-                                  </div>
-                                  }
-                                </div>
-                              ))}
-                            </div>
-                            <div className={styles["modal-btns"]}>
-                              <Button className="container secondary bulk-edit-btn" text="Close" onClick={() => setActiveDropdown("")}
-                              ></Button>
-                            </div>
-                          </div>
-                        }
-                      </section >)}
-
+                      <CollectionSubcollectionListing activeDropdown={activeDropdown}
+                        setActiveDropdown={setActiveDropdown}
+                        folders={folders}
+                        selectedFolder={selectedFolder}
+                        subFolderLoadingState={subFolderLoadingState}
+                        folderChildList={folderChildList}
+                        showDropdown={showDropdown}
+                        selectAllFolders={selectAllFolders}
+                        input={input}
+                        setInput={setInput}
+                        filteredData={filteredData}
+                        getFolders={getFolders}
+                        getSubFolders={getSubFolders}
+                        toggleSelected={toggleSelectedFolders}
+                        toggleDropdown={toggleDropdown}
+                        toggleSelectAllChildList={toggleSelectAllChildList}
+                        setSelectedFolder={setSelectedFolder}
+                        setShowDropdown={setShowDropdown}
+                        setSubFolderLoadingState={setSubFolderLoadingState}
+                        setFolderChildList={setFolderChildList}
+                        setSelectAllFolders={setSelectAllFolders}
+                        completeSelectedFolder={completeSelectedFolder}
+                      />
+                    )}
 
                     {isAdmin() && (
                       <div className={detailPanelStyles["field-wrapper"]}>
@@ -2228,161 +2097,26 @@ const UploadRequest = () => {
                   />
                 </div>
               </div>
-
-
               {isAdmin() && (
-                      <section className={styles["field-wrapper"]}>
-                        {<div className={`${styles["tag-container-wrapper"]}`}>
-                          {
-                            [...completeSelectedFolder.entries()].map(([key, value], index) => (
-                              <div className={`${styles["tag-container"]}`} key={index}>
-                                <span>{value.name}</span>
-                                <IconClickable
-                                  additionalClass={styles.remove}
-                                  src={Utilities.closeTag}
-                                  onClick={() => toggleSelectedFolders(key, !selectedFolder.includes(key), false, "", value.name)}
-                                />
-                              </div>
-                            ))
-                          }
-                        </div>}
-                        {(hasPermission([ASSET_EDIT])) && (activeDropdown === "" || activeDropdown !== "collections") && (
-                          <div
-                            className={`add ${styles["select-add"]}`}
-                            onClick={() => setActiveDropdown("collections")}
-                          >
-                            <IconClickable src={Utilities.addLight} />
-                            <span>{"Add to Collection"}</span>
-                          </div>
-                        )}
-                        {
-                          (hasPermission([ASSET_EDIT]) && activeDropdown === "collections") &&
-                          <div className={`${styles["edit-bulk-outer-wrapper"]}`}>
-                            <div className={`${styles["close-popup"]}`}> <IconClickable
-                              additionalClass={styles.remove}
-                              src={Utilities.closeTag}
-                              onClick={() => setActiveDropdown("")}
-                            /></div>
-                            <div className={`${styles["search-btn"]}`}>
-                              <SearchModal filteredData={filteredData} input={input} setInput={setInput} />
-                            </div>
-                            <div className={`${styles["modal-heading"]}`}>
-                              <span>Collection({folders.length ?? ""})</span>
-                            </div>
-                            <div className={`${styles["outer-wrapper"]}`}>
-                              {folders.map((folder, index) => (
-                                <div key={index}>
-                                  <div className={`${styles["flex"]} ${styles.nestedbox}`}>
-                                    <div className={`${styles["height"]} ${styles["flex"]}`}
-                                      onClick={() => { toggleDropdown(folder.id, true) }}
-                                    >
-                                      <img
-                                        className={showDropdown.includes(folder.id) ? styles.iconClick : styles.rightIcon}
-                                        src={Utilities.arrowBlue}
-                                        alt="Right Arrow Icon"
-                                        onClick={() => { toggleDropdown(folder.id, true) }}
-                                      />
-                                    </div>
-
-                                    <div className={styles.w100}>
-                                      <div
-                                        className={`${styles["dropdownMenu"]} ${selectedFolder.includes(folder.id) ?
-                                          styles["active"]
-                                          : ""
-                                          }`}
-                                      >
-                                        <div className={styles.flex}>
-                                          <div
-                                            className={`${styles.circle} ${selectedFolder.includes(folder.id) ?
-                                              styles.checked
-                                              : ""
-                                              }`}
-                                            onClick={() => toggleSelectedFolders(folder.id, !selectedFolder.includes(folder.id), false, "", folder.name)}
-                                          >
-                                            {
-                                              selectedFolder.includes(folder.id) &&
-                                              <img src={Utilities.checkIcon} />
-                                            }
-                                          </div>
-                                          <div className={styles["icon-descriptions"]}>
-                                            <span>{folder.name}</span>
-                                          </div>
-                                        </div>
-                                        <div>
-                                          <div className={styles["list1-right-contents"]}>
-                                            {
-                                              selectAllFolders[folder.id] ?
-                                                <div style={{ cursor: "pointer" }} onClick={() => toggleSelectAllChildList(folder.id, folder.name)} className={`${styles['deselect-all']}`}>
-                                                  <img
-                                                    src={Utilities.redCheck} alt="Check Icon" />
-                                                  <span className={styles.deselectText}>Deselect All</span>
-                                                </div>
-                                                :
-                                                <div style={{ cursor: "pointer" }} onClick={() => toggleSelectAllChildList(folder.id, folder.name)} className={`${styles['select-all']}`}>
-                                                  <img src={Utilities.doubleCheck} alt="Check Icon" />
-                                                  <span className={styles.selectText}>Select All</span>
-                                                </div>
-                                            }
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  {showDropdown.includes(folder.id) && <div className={styles.folder}>
-                                    <div className={styles.subfolderList}>
-                                      {
-                                        keyExists(folder.id) && (keyResultsFetch(folder.id, "record") as Item[]).map(({ id, name, parentId, ...rest }) => (
-                                          <>
-                                            <div
-                                              key={id}
-                                              className={styles.dropdownOptions}
-                                              onClick={() => toggleSelectedFolders(id, !selectedFolder.includes(id), true, folder.id, name, parentId)}>
-                                              <div className={styles["folder-lists"]}>
-                                                <div className={styles.dropdownIcons}>
-                                                  <div
-                                                    className={`${styles.circle} ${selectedFolder.includes(id) ? styles.checked : ""
-                                                      }`}>
-                                                    {selectedFolder.includes(id) && <img src={Utilities.checkIcon} />}
-                                                  </div>
-                                                  <div className={styles["icon-descriptions"]}>
-                                                    <span>{name}</span>
-                                                  </div>
-                                                </div>
-                                                <div className={styles["list1-right-contents"]}>
-                                                  {selectedFolder.includes(id) && <span></span>}
-                                                </div>
-                                              </div>
-                                            </div>
-                                          </>
-                                        ))
-                                      }
-                                      {(keyExists(folder.id) && (keyResultsFetch(folder.id, "next") as number) >= 0) && <div className={`${styles['outer-load-wrapper']}`}><div className={`${styles['load-wrapper']}`}
-                                        onClick={() => { getSubFolders(folder.id, (keyResultsFetch(folder.id, "next") as number), false) }}>
-                                        <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} />
-                                        <button className={styles.loadMore}>{
-                                          subFolderLoadingState.get(folder.id)
-                                            ?
-                                            "Loading..."
-                                            :
-                                            "Load More"
-                                        }</button>
-                                      </div>
-                                      </div>
-                                      }
-                                    </div>
-                                  </div>
-                                  }
-                                </div>
-                              ))}
-                            </div>
-                            <div className={styles["modal-btns"]}>
-                              <Button className="container secondary bulk-edit-btn" text="Close" onClick={() => setActiveDropdown("")}
-                              ></Button>
-                            </div>
-                          </div>
-                        }
-                      </section >)}
-
+                <SingleCollectionSubcollectionListing
+                  activeDropdown={activeDropdown}
+                  setActiveDropdown={setActiveDropdown}
+                  folders={foldersAssetView}
+                  selectedFolder={selectedFolderAssetView}
+                  subFolderLoadingState={subFolderLoadingStateAssetView}
+                  showDropdown={showDropdownAssetView}
+                  input={inputAssetView}
+                  completeSelectedFolder={completeSelectedFolderAssetView}
+                  setInput={setInputAssetView}
+                  filteredData={filteredDataAssetView}
+                  getFolders={getFoldersAssetView}
+                  getSubFolders={getSubFoldersAssetView}
+                  toggleSelected={toggleSelectedAssetView}
+                  toggleDropdown={toggleDropdownAssetView}
+                  keyResultsFetch={keyResultsFetchAssetView}
+                  keyExists={keyExistsAssetView}
+                />
+              )}
               {/* {isAdmin() && (
                 <div className={detailPanelStyles["field-wrapper"]}>
                   <div className={styles['creatable-select-container']}>
@@ -2411,7 +2145,7 @@ const UploadRequest = () => {
                       ) => {
                         await assetApi.removeFolder(
                           assets[selectedAsset]?.asset.id,
-                          assetFolders[index].id
+                          id
                         );
                         updateAssetState({
                           folders: { $set: stateUpdate },

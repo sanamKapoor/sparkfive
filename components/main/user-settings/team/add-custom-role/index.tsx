@@ -17,6 +17,9 @@ import teamApi from "../../../../../server-api/team";
 import SpinnerOverlay from "../../../../common/spinners/spinner-overlay";
 import MemberPermissions from "../members/team-members/member-permissions";
 import React from "react";
+import { useMoveModal } from "../../../../../hooks/Use-Modal";
+import CollectionSubcollectionListing from '../../../collection-subcollection-listing';
+
 
 // Server DO NOT return full custom field slots including empty array, so we will generate empty array here
 // The order of result should be match with order of custom field list
@@ -66,6 +69,29 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
 
   const [loading, setLoading] = useState(true);
 
+  const {
+    folders,
+    selectedFolder,
+    subFolderLoadingState,
+    folderChildList,
+    showDropdown,
+    selectAllFolders,
+    input,
+    setInput,
+    filteredData,
+    getFolders,
+    getSubFolders,
+    toggleSelected,
+    toggleDropdown,
+    toggleSelectAllChildList,
+    setSelectedFolder,
+    setShowDropdown,
+    setSubFolderLoadingState,
+    setFolderChildList,
+    setSelectAllFolders,
+    completeSelectedFolder
+  } = useMoveModal();
+
   const getCustomFieldsInputData = async () => {
     try {
       const { data } = await customFieldsApi.getCustomFields({
@@ -111,11 +137,11 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
     );
   };
 
-  const getFolders = async () => {
-    const { data } = await folderApi.getFoldersSimple();
-    setCollections(data);
-    return data;
-  };
+  // const getFolders = async () => {
+  //   const { data } = await folderApi.getFoldersSimple();
+  //   setCollections(data);
+  //   return data;
+  // };
 
   const getPermissions = async () => {
     try {
@@ -133,7 +159,13 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
   const getDefaultValue = async (inputCustomFields) => {
     if (role) {
       const { data } = await teamApi.getRoleDetail(role);
-      setSelectedCollection(data.folders);
+      const originalSelectedFolders = data.folders?.map(({ id, name, parentId, ...rest }: Item) => {
+        completeSelectedFolder.set(id, { name, parentId: parentId || null })
+        return id
+      })
+      setSelectedFolder((prev) => [...prev, ...originalSelectedFolders])
+
+      // setSelectedCollection(data.folders);
       setSelectedCampaigns(data.campaigns);
       setSelectedPermissions(data.permissions);
       setName(data.name);
@@ -173,11 +205,14 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
       );
     });
 
+    const selectedRoleFolders = [...completeSelectedFolder.entries()].map(([key, value], index) => {
+      return key
+    })
     // Update
     if (role) {
       await teamApi.editRole(role, {
         name,
-        collections: selectedCollections.map((collection) => collection.id),
+        collections: selectedRoleFolders,
         campaigns: selectedCampaigns.map((campaign) => campaign.id),
         customFieldValues: customFieldValueIds,
         permissions: selectedPermissions.map((permission) => permission.id),
@@ -187,7 +222,7 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
       // Create new one
       await teamApi.createCustomRole({
         name,
-        collections: selectedCollections.map((collection) => collection.id),
+        collections: selectedRoleFolders,
         campaigns: selectedCampaigns.map((campaign) => campaign.id),
         customFieldValues: customFieldValueIds,
         permissions: selectedPermissions.map((permission) => permission.id),
@@ -199,6 +234,7 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
 
     onSave();
   };
+
 
   useEffect(() => {
     getAll();
@@ -249,17 +285,15 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
       <div className={styles.content}>
         <div className={styles["nav-buttons"]}>
           <div
-            className={`${styles["nav-button"]} ${
-              mode === "customRestriction" ? styles.active : ""
-            }`}
+            className={`${styles["nav-button"]} ${mode === "customRestriction" ? styles.active : ""
+              }`}
             onClick={() => setMode("customRestriction")}
           >
             Content Restrictions
           </div>
           <div
-            className={`${styles["nav-button"]} ${
-              mode === "permission" ? styles.active : ""
-            }`}
+            className={`${styles["nav-button"]} ${mode === "permission" ? styles.active : ""
+              }`}
             onClick={() => setMode("permission")}
           >
             Action Permissions
@@ -268,8 +302,36 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
         {mode === "customRestriction" && (
           <div>
             <span className={styles["field-title"]}>Collections</span>
+
+
+
+
+
             <div className={`${styles["field-wrapper"]}`}>
-              <CreatableSelect
+              <CollectionSubcollectionListing activeDropdown={activeDropdown}
+                setActiveDropdown={setActiveDropdown}
+                folders={folders}
+                selectedFolder={selectedFolder}
+                subFolderLoadingState={subFolderLoadingState}
+                folderChildList={folderChildList}
+                showDropdown={showDropdown}
+                selectAllFolders={selectAllFolders}
+                input={input}
+                setInput={setInput}
+                filteredData={filteredData}
+                getFolders={getFolders}
+                getSubFolders={getSubFolders}
+                toggleSelected={toggleSelected}
+                toggleDropdown={toggleDropdown}
+                toggleSelectAllChildList={toggleSelectAllChildList}
+                // setSelectedFolder={setSelectedFolder}
+                // setShowDropdown={setShowDropdown}
+                // setSubFolderLoadingState={setSubFolderLoadingState}
+                // setFolderChildList={setFolderChildList}
+                // setSelectAllFolders={setSelectAllFolders}
+                completeSelectedFolder={completeSelectedFolder}
+              />
+              {/* <CreatableSelect
                 altColor="blue"
                 creatable={false}
                 title=""
@@ -283,14 +345,14 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
                 onAddOperationFinished={(stateUpdate) => {
                   setActiveDropdown("");
                 }}
-                onRemoveOperationFinished={async (index, stateUpdate) => {}}
+                onRemoveOperationFinished={async (index, stateUpdate) => { }}
                 onOperationFailedSkipped={() => setActiveDropdown("")}
                 isShare={false}
                 asyncCreateFn={(newItem) => {
                   return true;
                 }}
                 dropdownIsActive={activeDropdown === "collections"}
-              />
+              /> */}
             </div>
 
             <span className={styles["field-title"]}>Custom Fields</span>
@@ -306,7 +368,7 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
                         data={assetCustomFields[index]?.values[0]?.name}
                         options={field.values}
                         isShare={false}
-                        onLabelClick={() => {}}
+                        onLabelClick={() => { }}
                         handleFieldChange={(option) => {
                           onChangeSelectOneCustomField(option, index);
                         }}
@@ -326,7 +388,7 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
                         onAddClick={() => setActiveCustomField(index)}
                         selectPlaceholder={"Select an existing one"}
                         avilableItems={field.values}
-                        setAvailableItems={() => {}}
+                        setAvailableItems={() => { }}
                         selectedItems={
                           assetCustomFields.filter(
                             (assetField) => assetField.id === field.id
@@ -335,12 +397,12 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
                         setSelectedItems={(data) => {
                           onChangeCustomField(index, data);
                         }}
-                        onAddOperationFinished={(stateUpdate) => {}}
+                        onAddOperationFinished={(stateUpdate) => { }}
                         onRemoveOperationFinished={async (
                           index,
                           stateUpdate,
                           removeId
-                        ) => {}}
+                        ) => { }}
                         onOperationFailedSkipped={() =>
                           setActiveCustomField(undefined)
                         }
@@ -357,13 +419,13 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
               })}
             </div>
             <div className={`${styles['role-save-btn']}`}>
-            <Button
-              type={"button"}
-              text="Save"
-              className="container primary"
-              onClick={onSubmit}
-              disabled={!name}
-            />
+              <Button
+                type={"button"}
+                text="Save"
+                className="container primary"
+                onClick={onSubmit}
+                disabled={!name}
+              />
             </div>
           </div>
         )}
