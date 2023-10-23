@@ -2,11 +2,7 @@ import Link from "next/link";
 import Router from "next/router";
 import { useContext, useRef, useState } from "react";
 import { GeneralImg, Navigation } from "../../../assets";
-import {
-  ASSET_UPLOAD_APPROVAL,
-  SETTINGS_TEAM,
-  SUPERADMIN_ACCESS,
-} from "../../../constants/permissions";
+import { ASSET_UPLOAD_APPROVAL, SETTINGS_TEAM, SUPERADMIN_ACCESS } from "../../../constants/permissions";
 import { LoadingContext, TeamContext, UserContext } from "../../../context";
 import cookiesUtils from "../../../utils/cookies";
 import styles from "./main-layout.module.css";
@@ -24,7 +20,7 @@ import SpinnerOverlay from "../spinners/spinner-overlay";
 import UserPhoto from "../user/user-photo";
 
 const MainLayout = ({ children, requiredPermissions = [] }) => {
-  const { user, logOut, hasPermission } = useContext(UserContext);
+  const { user, logOut, hasPermission, logo } = useContext(UserContext);
   const { isLoading } = useContext(LoadingContext);
   const pageListRef = useRef(null);
 
@@ -75,42 +71,32 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
       OverrideComp: () => <SettingsLink name="Team" settingRef="team" />,
     });
   admDropdownOptions.push({
-    OverrideComp: () => (
-      <SettingsLink name="Notifications" settingRef="notifications" />
-    ),
+    OverrideComp: () => <SettingsLink name="Notifications" settingRef="notifications" />,
   });
   admDropdownOptions.push({
-    OverrideComp: () => (
-      <SettingsLink name="Integrations" settingRef="integrations" />
-    ),
+    OverrideComp: () => <SettingsLink name="Integrations" settingRef="integrations" />,
   });
   if (hasPermission([SETTINGS_TEAM]))
     settingsDropdownOptions.push({
-      OverrideComp: () => (
-        <SettingsLink name="Attributes" settingRef="attributes" />
-      ),
+      OverrideComp: () => <SettingsLink name="Attributes" settingRef="attributes" />,
     });
   settingsDropdownOptions.push({
-    OverrideComp: () => (
-      <MainLink name="Upload Approvals" settingRef="upload-approvals" />
-    ),
+    OverrideComp: () => <MainLink name="Upload Approvals" settingRef="upload-approvals" />,
   });
   settingsDropdownOptions.push({
-    OverrideComp: () => (
-      <SettingsLink name="Shared Links" settingRef="shared-links" />
-    ),
+    OverrideComp: () => <SettingsLink name="Shared Links" settingRef="shared-links" />,
   });
   if (hasPermission([SETTINGS_TEAM]))
     settingsDropdownOptions.push({
-      OverrideComp: () => (
-        <SettingsLink name="Custom Settings" settingRef="custom-settings" />
-      ),
+      OverrideComp: () => <SettingsLink name="Custom Settings" settingRef="custom-settings" />,
+    });
+  if (hasPermission([SETTINGS_TEAM]) && user.team?.themeCustomization)
+    settingsDropdownOptions.push({
+      OverrideComp: () => <SettingsLink name="Theme Customization" settingRef="theme-customization" />,
     });
   if (hasPermission([SUPERADMIN_ACCESS]))
     settingsDropdownOptions.push({
-      OverrideComp: () => (
-        <SettingsLink name="Super Admin" settingRef="super-admin" />
-      ),
+      OverrideComp: () => <SettingsLink name="Super Admin" settingRef="super-admin" />,
     });
 
   return (
@@ -118,15 +104,9 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
       {user && (
         <>
           <header id={"main-header"} className={styles.header}>
-            <Link
-              href={
-                plan?.type === "marketing_hub"
-                  ? "/main/overview"
-                  : "/main/assets"
-              }
-            >
+            <Link href={plan?.type === "marketing_hub" ? "/main/overview" : "/main/assets"}>
               <a>
-                <img className={styles["logo-img"]} src={GeneralImg.logo} />
+                <img className={styles["logo-img"]} src={logo} alt={"logo"} />
               </a>
             </Link>
             <div className={styles["mobile-navigation-links"]}>
@@ -134,11 +114,7 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
                 <HeaderLink
                   href={""}
                   active={Router.pathname.indexOf("assets") !== -1}
-                  img={
-                    Router.pathname.indexOf("assets") !== -1
-                      ? Navigation.assetsSelected
-                      : Navigation.assets
-                  }
+                  img={Router.pathname.indexOf("assets") !== -1 ? Navigation.assetsSelected : Navigation.assets}
                   imgHover={Navigation.assetsSelected}
                   text="Assets"
                 />
@@ -172,11 +148,7 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
                 <HeaderLink
                   active={Router.pathname.indexOf("overview") !== -1}
                   href="/main/overview"
-                  img={
-                    Router.pathname.indexOf("overview") !== -1
-                      ? Navigation.overviewSelected
-                      : Navigation.overview
-                  }
+                  img={Router.pathname.indexOf("overview") !== -1 ? Navigation.overviewSelected : Navigation.overview}
                   imgHover={Navigation.overviewSelected}
                   text="Overview"
                 />
@@ -184,33 +156,21 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
               <HeaderLink
                 active={Router.pathname.indexOf("assets") !== -1}
                 href="/main/assets"
-                img={
-                  Router.pathname.indexOf("assets") !== -1
-                    ? Navigation.assetsSelected
-                    : Navigation.assets
-                }
+                img={Router.pathname.indexOf("assets") !== -1 ? Navigation.assetsSelected : Navigation.assets}
                 imgHover={Navigation.assetsSelected}
                 text="Assets"
               />
               <HeaderLink
                 active={Router.pathname.indexOf("insights") !== -1}
                 href="/main/insights"
-                img={
-                  Router.pathname.indexOf("insights") !== -1
-                    ? Navigation.assetsSelected
-                    : Navigation.assets
-                }
+                img={Router.pathname.indexOf("insights") !== -1 ? Navigation.assetsSelected : Navigation.assets}
                 imgHover={Navigation.assetsSelected}
                 text="Insights"
               />
               <HeaderLink
                 active={Router.pathname.indexOf("templates") !== -1}
                 href="/main/templates"
-                img={
-                  Router.pathname.indexOf("templates") !== -1
-                    ? Navigation.assetsSelected
-                    : Navigation.assets
-                }
+                img={Router.pathname.indexOf("templates") !== -1 ? Navigation.assetsSelected : Navigation.assets}
                 imgHover={Navigation.assetsSelected}
                 text="Templates"
               />
@@ -218,11 +178,7 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
                 <HeaderLink
                   active={Router.pathname.indexOf("schedule") !== -1}
                   href="/main/schedule"
-                  img={
-                    Router.pathname.indexOf("schedule") !== -1
-                      ? Navigation.scheduleSelected
-                      : Navigation.schedule
-                  }
+                  img={Router.pathname.indexOf("schedule") !== -1 ? Navigation.scheduleSelected : Navigation.schedule}
                   imgHover={Navigation.scheduleSelected}
                   text="Schedule"
                 />
@@ -246,11 +202,7 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
               wrapperClass={styles.user}
               Wrapper={({ children }) => (
                 <>
-                  <UserPhoto
-                    photoUrl={user.profilePhoto}
-                    extraClass={styles.profile}
-                    sizePx={35}
-                  />
+                  <UserPhoto photoUrl={user.profilePhoto} extraClass={styles.profile} sizePx={35} />
                   {children}
                 </>
               )}
@@ -266,8 +218,7 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
             />
           </header>
           {isLoading && <SpinnerOverlay />}
-          {hasPermission(requiredPermissions) ||
-          hasPermission([ASSET_UPLOAD_APPROVAL]) ? (
+          {hasPermission(requiredPermissions) || hasPermission([ASSET_UPLOAD_APPROVAL]) ? (
             children
           ) : (
             <NoPermissionNotice />

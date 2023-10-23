@@ -18,14 +18,16 @@
   width: 30%;
   word-wrap: break-word;
 }
-.resend-button img{
+.resend-button img, .resend-button svg{
   width:16px;
   height:16px;
   position: relative;
   top: 2px;
 }
-.copy-button img{width: 13px;
+.copy-button img, .copy-button svg{
+  width: 13px;
   height: 13px;
+  position: relative;
 }
 .name-email > div:first-child {
   font-size: 14px;

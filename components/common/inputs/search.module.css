@@ -7,7 +7,7 @@
   border-radius: 8px;
   width: 100%;
   background-color: var(--color-sec-lightivory);
-  color: var(--color-prim-navy);
+  color: var(--primary-color);
   display: flex;
   align-items: center;
   position: relative;
@@ -21,7 +21,7 @@
   background-color: transparent;
   border: none;
   font-size: 14px;
-  color: var(--color-prim-navy);
+  color: var(--primary-color);
 }
 
 
@@ -57,7 +57,7 @@
 }
 
 .tag {
-  background-color: var(--color-prim-navy);
+  background-color: var(--primary-color);
   border-radius: 5px;
   color: white;
   padding: 5px 8px;
@@ -68,7 +68,7 @@
   font-size: 12px;
 }
 
-.tag > img {
+.tag > img, .tag > svg {
   width: 10px;
   height: auto;
   filter: grayscale(1) invert(1) brightness(500%);
@@ -78,7 +78,7 @@
   cursor: pointer;
 }
 
-.tag > span img {
+.tag > span img, .tag > span svg {
   width: 8px;
   height: auto;
 }
@@ -120,7 +120,7 @@
 }
 
 .filter-active {
-  background-color: var(--color-prim-navy);
+  background-color: var(--primary-color);
   color: white;
   font-weight: 700;
 }
@@ -137,17 +137,17 @@
   cursor: pointer;
 }
 
-.limit img {
+.limit img, .limit svg {
   width: 12px;
   height: auto;
   cursor: pointer;
 }
 
 .limit-active {
-  background-color: var(--color-prim-navy);
+  background-color: var(--primary-color);
   color: white;
 }
-.limit-active img {
+.limit-active img, .limit-active svg {
   filter: grayscale(1) invert(1) brightness(500%);
 }
 

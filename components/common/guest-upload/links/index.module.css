@@ -81,7 +81,7 @@
     justify-content: center;
 }
 
-.banner_wrapper img {
+.banner_wrapper img, .banner_wrapper svg {
     width: 100%;
     height: auto;
     overflow: hidden;
@@ -296,7 +296,7 @@
     color: var(--color-sec-text);
 }
 
-.select-add img{
+.select-add img, .select-add svg{
     margin-right: 5px;
     width: 16px;
     height: 16px;
@@ -377,7 +377,7 @@
     width: 316px !important;
     border-radius: 4px !important;
 }
-.password-li img{
+.password-li img, .password-li svg{
    height: 22px;
    width: 22px;
 }

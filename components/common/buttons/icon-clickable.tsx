@@ -8,15 +8,21 @@ const IconClickable = ({
   tooltipId = "",
   tooltipText,
   place = "top",
+  SVGElement,
 }: Props) => (
   <>
-    <img
-      data-tip
-      data-for={tooltipId}
-      src={src}
-      onClick={onClick}
-      className={`${styles.button} ${additionalClass}`}
-    />
+    {!SVGElement && (
+      <img
+        data-tip
+        data-for={tooltipId}
+        src={src}
+        onClick={onClick}
+        className={`${styles.button} ${additionalClass}`}
+      />
+    )}
+    {SVGElement && (
+      <SVGElement data-tip data-for={tooltipId} onClick={onClick} className={`${styles.button} ${additionalClass}`} />
+    )}
     {tooltipText && (
       <ReactTooltip id={tooltipId} delayShow={300} effect="solid" place={place}>
         {tooltipText}
@@ -26,12 +32,13 @@ const IconClickable = ({
 );
 
 interface Props {
-  src: string;
+  src?: string;
   onClick?: (e: any) => void;
   additionalClass?: string;
   tooltipId?: string;
   tooltipText?: string;
   place?: string;
+  SVGElement?: any;
 }
 
 export default IconClickable;

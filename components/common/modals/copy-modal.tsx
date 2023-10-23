@@ -9,14 +9,7 @@ import IconClickable from "../../common/buttons/icon-clickable";
 import Input from "../../common/inputs/input";
 import Base from "../../common/modals/base";
 
-const CopyModal = ({
-  modalIsOpen,
-  closeModal,
-  itemsAmount,
-  moveAssets,
-  createFolder,
-  confirmText = "Move",
-}) => {
+const CopyModal = ({ modalIsOpen, closeModal, itemsAmount, moveAssets, createFolder, confirmText = "Move" }) => {
   const [folders, setFolders] = useState([]);
   const [selectedFolder, setSelectedFolder] = useState("");
   const [newFolderName, setNewFolderName] = useState("");
@@ -70,7 +63,7 @@ const CopyModal = ({
             onClick={() => setSelectedFolder(folder.id)}
             className={selectedFolder === folder.id && styles.selected}
           >
-            <IconClickable src={Assets.folder} />
+            <IconClickable SVGElement={Assets.folder} />
             <div className={styles.name}>{folder.name}</div>
           </li>
         ))}
@@ -78,10 +71,7 @@ const CopyModal = ({
       <div className={styles["folder-wrapper"]}>
         {folderInputActive ? (
           <form onSubmit={onSubmit}>
-            <div
-              className={styles["create-new"]}
-              onClick={() => setFolderInputActive(false)}
-            >
+            <div className={styles["create-new"]} onClick={() => setFolderInputActive(false)}>
               X
             </div>
             <Input
@@ -98,10 +88,7 @@ const CopyModal = ({
             />
           </form>
         ) : (
-          <span
-            onClick={() => setFolderInputActive(true)}
-            className={styles["create-new"]}
-          >
+          <span onClick={() => setFolderInputActive(true)} className={styles["create-new"]}>
             + Create New Collection
           </span>
         )}

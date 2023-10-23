@@ -60,17 +60,17 @@
   border-bottom: 1px solid var(--color-sec-blue);
 }
 
-.side-bar img {
+.side-bar img, .side-bar svg {
   width: 20px;
   height: auto;
 }
 
-.side-bar > div:first-child img {
+.side-bar > div:first-child img, .side-bar > div:first-child svg {
   padding-bottom: 15px;
   margin-bottom: 15px;
 }
 
-.side-bar > div:last-child img {
+.side-bar > div:last-child img, .side-bar > div:last-child svg {
   padding-bottom: 0;
   margin-bottom: 0;
 }
@@ -81,12 +81,12 @@
   flex-direction: column;
 }
 
-.elements img {
+.elements img, .elements svg {
   margin-bottom: 20px;
   cursor: pointer;
 }
 
-.elements img:last-child {
+.elements img:last-child, .elements svg:last-child {
   margin-bottom: 30px;
 }
 

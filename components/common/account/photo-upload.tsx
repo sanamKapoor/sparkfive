@@ -10,10 +10,7 @@ import { Utilities } from "../../../assets";
 const ALLOWED_TYPES = "image/png, image/jpeg";
 
 // Components
-import {
-  FAILED_TO_UPLOAD_PHOTO,
-  PHOTO_UPDATED,
-} from "../../../constants/messages";
+import { FAILED_TO_UPLOAD_PHOTO, PHOTO_UPDATED } from "../../../constants/messages";
 import { PROFILE_PIC_HELP_TEXT } from "../../../constants/strings";
 import ButtonIcon from "../buttons/button-icon";
 import Spinner from "../spinners/spinner";
@@ -79,12 +76,16 @@ const PhotoUpload: React.FC<IPhotoUploadProps> = ({
   return (
     <div className={styles.container}>
       {!isUploading ? (
-        <img
-          className={`${currentPhoto ? styles.current : styles["no-photo"]} ${
-            styles[type]
-          }`}
-          src={currentPhoto || Utilities.memberProfile}
-        />
+        <>
+          {currentPhoto && <img className={`${styles.current} ${styles[type]}`} src={currentPhoto} />}
+          {!currentPhoto && <Utilities.memberProfile className={`${styles["no-photo"]} ${styles[type]}`} />}
+          {/*<img*/}
+          {/*  className={`${currentPhoto ? styles.current : styles["no-photo"]} ${*/}
+          {/*    styles[type]*/}
+          {/*  }`}*/}
+          {/*  src={currentPhoto || Utilities.memberProfile}*/}
+          {/*/>*/}
+        </>
       ) : (
         <div className={styles.loading}>
           <Spinner />
@@ -92,11 +93,10 @@ const PhotoUpload: React.FC<IPhotoUploadProps> = ({
       )}
       <div className={styles.uploadText}>
         <ButtonIcon
-          icon={Utilities.addAlt}
+          SVGElement={Utilities.addAlt}
           text="UPLOAD PHOTO"
           onClick={openUpload}
           additionalClass={styles.uploadPhotoProfile}
-         
         />
         <p className={styles.description}>{description}</p>
       </div>
@@ -109,7 +109,6 @@ const PhotoUpload: React.FC<IPhotoUploadProps> = ({
         accept={ALLOWED_TYPES}
       />
     </div>
-   
   );
 };
 

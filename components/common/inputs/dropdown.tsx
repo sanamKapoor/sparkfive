@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef } from "react";
 import { UserContext } from "../../../context";
 import styles from "./dropdown.module.css";
 
-const Dropdown = ({ options = [], additionalClass = "", onClickOutside }) => {
+const Dropdown = ({ options = [], additionalClass = "", onClickOutside, svgIcon = false }) => {
   const { hasPermission } = useContext(UserContext);
   const ref = useRef(null);
 
@@ -33,7 +33,8 @@ const Dropdown = ({ options = [], additionalClass = "", onClickOutside }) => {
                     onClickOutside && onClickOutside();
                   }}
                 >
-                  <span>{option.icon && <img src={option.icon} />}</span>
+                  {!svgIcon && <span>{option.icon && <img src={option.icon} />}</span>}
+                  {svgIcon && option.icon}
                   <span>{option.label}</span>
                 </li>
               )}

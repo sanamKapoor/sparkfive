@@ -27,8 +27,7 @@ const UploadList: React.FC<UploadListProps> = ({
     <div>
       <div className={styles.updateStatus}>
         <h2>
-          {uploadingIndex === files.length &&
-          files.every((file) => file.status === "done")
+          {uploadingIndex === files.length && files.every((file) => file.status === "done")
             ? `Ready to Submit ${files.length} files`
             : `Uploading ${uploadingIndex} of ${files.length} files`}
         </h2>
@@ -37,7 +36,7 @@ const UploadList: React.FC<UploadListProps> = ({
             <DisableBtn icon={Utilities.add} text="Upload" />
           ) : (
             <ButtonIcon
-              icon={Utilities.addAlt}
+              SVGElement={Utilities.addAlt}
               text="UPLOAD"
               onClick={onUpload}
               additionalClass={styles.uploadFileBtnIcon}
@@ -48,13 +47,7 @@ const UploadList: React.FC<UploadListProps> = ({
 
       {files.map((data, index) => {
         return (
-          <UploadListItem
-            key={index}
-            index={index}
-            data={data}
-            onRetry={onRetry}
-            uploadingPercent={uploadingPercent}
-          />
+          <UploadListItem key={index} index={index} data={data} onRetry={onRetry} uploadingPercent={uploadingPercent} />
         );
       })}
     </div>

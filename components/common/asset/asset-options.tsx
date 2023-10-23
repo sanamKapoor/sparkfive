@@ -81,10 +81,7 @@ const AssetOptions = ({
       wrapperClass={styles["asset-actions-wrapper"]}
       Wrapper={({ children }) => (
         <>
-          <IconClickable
-            src={Utilities.more}
-            additionalClass={styles.thumbnailDots}
-          />
+          <IconClickable SVGElement={Utilities.more} additionalClass={styles.thumbnailDots} />
           {children}
         </>
       )}
@@ -92,11 +89,7 @@ const AssetOptions = ({
         <div className={styles.more}>
           <Dropdown
             options={
-              isShare
-                ? [{ label: "Download", onClick: downloadAsset }]
-                : isAssetRelated
-                ? assetRelatedOptions
-                : options
+              isShare ? [{ label: "Download", onClick: downloadAsset }] : isAssetRelated ? assetRelatedOptions : options
             }
           />
         </div>

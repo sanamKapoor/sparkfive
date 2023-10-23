@@ -1,0 +1,22 @@
+.item{
+    padding: 16px;
+    border-bottom: solid 1px #dddad4;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.logo{
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+
+.name{
+    color: var(--primary-color);
+    font-size: 12px;
+}
+
+.wrapper{
+    margin-bottom: 16px;
+}

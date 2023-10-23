@@ -13,7 +13,7 @@
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  color: #08135E;
+  color: var(--primary-color);
 }
 
 .select-add img {

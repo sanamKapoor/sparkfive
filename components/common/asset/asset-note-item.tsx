@@ -33,35 +33,21 @@ const AssetNoteItem = ({ title, note, saveChanges, deleteNote }) => {
 
       {editMode ? (
         <>
-          <TextArea
-            value={noteText}
-            rows={4}
-            onChange={(e) => setNoteText(e.target.value)}
-          />
+          <TextArea value={noteText} rows={4} onChange={(e) => setNoteText(e.target.value)} />
           <div className={styles.radios}>
             <div className={styles["radio-wrapper"]}>
               <IconClickable
-                src={
-                  internal
-                    ? Utilities.radioButtonEnabled
-                    : Utilities.radioButtonNormal
-                }
+                src={internal ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                 onClick={() => setInternal(true)}
               />
               <div className={"font-12 m-l-10"}>For internal use only</div>
             </div>
             <div className={styles["radio-wrapper"]}>
               <IconClickable
-                src={
-                  !internal
-                    ? Utilities.radioButtonEnabled
-                    : Utilities.radioButtonNormal
-                }
+                src={!internal ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                 onClick={() => setInternal(false)}
               />
-              <div className={"font-12 m-l-10"}>
-                Display internally and externally
-              </div>
+              <div className={"font-12 m-l-10"}>Display internally and externally</div>
             </div>
           </div>
           <div className={styles.buttons}>
@@ -83,14 +69,8 @@ const AssetNoteItem = ({ title, note, saveChanges, deleteNote }) => {
         <div className={styles.wrapper}>
           <p>{note.text}</p>
           <div className={styles.actions}>
-            <IconClickable
-              src={Utilities.edit}
-              onClick={() => setEditMode(true)}
-            />
-            <IconClickable
-              src={Utilities.delete}
-              onClick={() => setModalOpen(true)}
-            />
+            <IconClickable SVGElement={Utilities.edit} onClick={() => setEditMode(true)} />
+            <IconClickable SVGElement={Utilities.delete} onClick={() => setModalOpen(true)} />
           </div>
         </div>
       )}
