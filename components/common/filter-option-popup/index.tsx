@@ -77,7 +77,7 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
         dimensionWidth: data.dimensionWidth,
         dimensionHeight: data.dimensionHeight,
       });
-    } else if (filterVariant === "resolutions") {
+    } else if (filterVariant === "resolution") {
       setActiveSortFilter({
         ...activeSortFilter,
         filterResolutions: data.filterResolutions,

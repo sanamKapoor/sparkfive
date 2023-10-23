@@ -7,20 +7,28 @@ interface OptionDataItemProps {
   name: string | number;
   count: string;
   isSelected?: boolean;
+  onSelect: (val: number) => void;
 }
 
 const OptionDataItem: React.FC<OptionDataItemProps> = ({
   name,
   count,
   isSelected = false,
+  onSelect,
 }) => {
   return (
     <div className={`${styles["tags-wrapper"]}`}>
       <div className={`${styles["tags-left-side"]}`}>
         {isSelected ? (
-          <IconClickable src={Utilities.radioButtonEnabled} />
+          <IconClickable
+            src={Utilities.radioButtonEnabled}
+            onClick={() => onSelect(name)}
+          />
         ) : (
-          <IconClickable src={Utilities.radioButtonNormal} />
+          <IconClickable
+            src={Utilities.radioButtonNormal}
+            onClick={() => onSelect(name)}
+          />
         )}
         <span className={`${styles["select-name"]}`}>{name}</span>
       </div>
