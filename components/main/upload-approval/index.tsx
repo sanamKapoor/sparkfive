@@ -129,11 +129,7 @@ const UploadApproval = () => {
     return queryData;
   };
 
-  const updateAssetList = (
-    newAssetPlaceholder,
-    currentDataClone,
-    folderUploadInfo
-  ) => {
+  const updateAssetList = (newAssetPlaceholder, currentDataClone, folderUploadInfo) => {
     const lastAsset = newAssetPlaceholder[newAssetPlaceholder.length - 1];
     if (lastAsset) {
       let allAssets = [...newAssetPlaceholder, ...currentDataClone];
@@ -157,7 +153,7 @@ const UploadApproval = () => {
     folderId,
     folderGroup = {},
     subFolderAutoTag = true,
-    requestId = ""
+    requestId = "",
   ) => {
     let folderUploadInfo;
     try {
@@ -167,10 +163,7 @@ const UploadApproval = () => {
       let newAssets = 0;
 
       // Get file group info, this returns folderKey and newName of file
-      let fileGroupInfo = getFolderKeyAndNewNameByFileName(
-        file.webkitRelativePath,
-        subFolderAutoTag
-      );
+      let fileGroupInfo = getFolderKeyAndNewNameByFileName(file.webkitRelativePath, subFolderAutoTag);
       folderUploadInfo = { name: fileGroupInfo.folderKey, size: totalSize };
 
       // Do validation
@@ -184,38 +177,24 @@ const UploadApproval = () => {
                 index,
                 error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
               }
-            : asset
+            : asset,
         );
 
         // Update uploading assets
         setUploadUpdate(versionGroup, updatedAssets);
 
         // Remove current asset from asset placeholder
-        let newAssetPlaceholder = updatedAssets.filter(
-          (asset) => asset.status !== "fail"
-        );
+        let newAssetPlaceholder = updatedAssets.filter((asset) => asset.status !== "fail");
 
         // At this point, file place holder will be removed
-        updateAssetList(
-          newAssetPlaceholder,
-          currentDataClone,
-          folderUploadInfo
-        );
+        updateAssetList(newAssetPlaceholder, currentDataClone, folderUploadInfo);
 
         // The final one
         if (i === assets.length - 1) {
           return folderGroup;
         } else {
           // Keep going
-          await uploadAsset(
-            i + 1,
-            updatedAssets,
-            currentDataClone,
-            totalSize,
-            folderId,
-            folderGroup,
-            subFolderAutoTag
-          );
+          await uploadAsset(i + 1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, subFolderAutoTag);
         }
       } else {
         // Show uploading toast
@@ -237,9 +216,7 @@ const UploadApproval = () => {
         formData.append("asset", file);
         formData.append(
           "fileModifiedAt",
-          new Date(
-            (file.lastModifiedDate || new Date(file.lastModified)).toUTCString()
-          ).toISOString()
+          new Date((file.lastModifiedDate || new Date(file.lastModified)).toUTCString()).toISOString(),
         );
 
         let size = totalSize;
@@ -277,10 +254,7 @@ const UploadApproval = () => {
         }
 
         // Call API to upload
-        let { data } = await assetApi.uploadAssets(
-          formData,
-          getCreationParameters(attachedQuery)
-        );
+        let { data } = await assetApi.uploadAssets(formData, getCreationParameters(attachedQuery));
 
         if (!requestId) {
           setApprovalId(data[0].requestId);
@@ -312,9 +286,7 @@ const UploadApproval = () => {
         setTotalAssets(totalAssets + newAssets + 1);
 
         // Mark this asset as done
-        const updatedAssets = assets.map((asset, index) =>
-          index === i ? { ...asset, status: "done" } : asset
-        );
+        const updatedAssets = assets.map((asset, index) => (index === i ? { ...asset, status: "done" } : asset));
 
         // Update uploading assets
         setUploadUpdate(versionGroup, updatedAssets);
@@ -332,25 +304,21 @@ const UploadApproval = () => {
             folderId,
             folderGroup,
             subFolderAutoTag,
-            requestId
+            requestId,
           );
         }
       }
     } catch (e) {
       // Violate validation, mark failure
       const updatedAssets = assets.map((asset, index) =>
-        index === i
-          ? { ...asset, index, status: "fail", error: "Processing file error" }
-          : asset
+        index === i ? { ...asset, index, status: "fail", error: "Processing file error" } : asset,
       );
 
       // Update uploading assets
       setUploadUpdate(versionGroup, updatedAssets);
 
       // Remove current asset from asset placeholder
-      let newAssetPlaceholder = updatedAssets.filter(
-        (asset) => asset.status !== "fail"
-      );
+      let newAssetPlaceholder = updatedAssets.filter((asset) => asset.status !== "fail");
 
       // At this point, file place holder will be removed
       updateAssetList(newAssetPlaceholder, currentDataClone, folderUploadInfo);
@@ -368,7 +336,7 @@ const UploadApproval = () => {
           folderId,
           folderGroup,
           subFolderAutoTag,
-          requestId
+          requestId,
         );
       }
     }
@@ -429,7 +397,7 @@ const UploadApproval = () => {
           versionGroup: file.versionGroup || versionGroup,
           changedName: file.changedName,
         })),
-        getCreationParameters(attachedQuery)
+        getCreationParameters(attachedQuery),
       );
 
       // Save this approval id for saving name automatically
@@ -470,8 +438,7 @@ const UploadApproval = () => {
 
       setAssets(currentDataClone);
       console.log(err);
-      if (err.response?.status === 402)
-        toastUtils.error(err.response.data.message);
+      if (err.response?.status === 402) toastUtils.error(err.response.data.message);
       else toastUtils.error("Could not import assets, please try again later.");
     }
   };
@@ -585,7 +552,7 @@ const UploadApproval = () => {
           versionGroup: file.versionGroup || versionGroup,
           changedName: file.changedName,
         })),
-        getCreationParameters(attachedQuery)
+        getCreationParameters(attachedQuery),
       );
 
       // Save this approval id for saving name automatically
@@ -626,8 +593,7 @@ const UploadApproval = () => {
       setAssets(currentDataClone);
 
       console.log(err);
-      if (err.response?.status === 402)
-        toastUtils.error(err.response.data.message);
+      if (err.response?.status === 402) toastUtils.error(err.response.data.message);
       else toastUtils.error("Could not import assets, please try again later.");
     }
   };
@@ -683,7 +649,7 @@ const UploadApproval = () => {
     const Content = (option) => {
       return (
         <span className={styles.option} onClick={option.onClick}>
-          <IconClickable src={option.icon} additionalClass={styles.icon} />
+          <IconClickable SVGElement={option.icon} additionalClass={styles.icon} />
           <div className={styles["option-label"]}>{option.label}</div>
         </span>
       );
@@ -721,9 +687,7 @@ const UploadApproval = () => {
           stage: "draft",
           type: "image",
           mimeType: file.originalFile.type,
-          fileModifiedAt:
-            file.originalFile.lastModifiedDate ||
-            new Date(file.originalFile.lastModified),
+          fileModifiedAt: file.originalFile.lastModifiedDate || new Date(file.originalFile.lastModified),
           // from duplicate handle
           versionGroup: file.versionGroup,
           changedName: file.changedName,
@@ -753,16 +717,7 @@ const UploadApproval = () => {
       const { subFolderAutoTag } = advancedConfig;
 
       // Start to upload assets
-      await uploadAsset(
-        0,
-        newPlaceholders,
-        currentDataClone,
-        totalSize,
-        "",
-        undefined,
-        subFolderAutoTag,
-        approvalId
-      );
+      await uploadAsset(0, newPlaceholders, currentDataClone, totalSize, "", undefined, subFolderAutoTag, approvalId);
 
       // Finish uploading process
       showUploadProcess("done");
@@ -775,8 +730,7 @@ const UploadApproval = () => {
 
       setAssets(currentDataClone);
       console.log(err);
-      if (err.response?.status === 402)
-        toastUtils.error(err.response.data.message);
+      if (err.response?.status === 402) toastUtils.error(err.response.data.message);
       else toastUtils.error("Could not upload assets, please try again later.");
     }
   };
@@ -793,9 +747,7 @@ const UploadApproval = () => {
   };
 
   const toggleSelected = (id) => {
-    const assetIndex = assets.findIndex(
-      (assetItem) => assetItem.asset.id === id
-    );
+    const assetIndex = assets.findIndex((assetItem) => assetItem.asset.id === id);
     const selectedValue = !assets[assetIndex].isSelected;
     // Toggle unselect when selected all will disable selected all
     if (!selectedValue && selectedAllAssets) {
@@ -806,7 +758,7 @@ const UploadApproval = () => {
         [assetIndex]: {
           isSelected: { $set: !assets[assetIndex].isSelected },
         },
-      })
+      }),
     );
   };
 
@@ -979,14 +931,8 @@ const UploadApproval = () => {
 
           // Find the new tags
           // @ts-ignore
-          const newTags = _.differenceBy(
-            tempTags,
-            assets[selectedAsset]?.tags || []
-          );
-          const removeTags = _.differenceBy(
-            assets[selectedAsset]?.tags || [],
-            tempTags
-          );
+          const newTags = _.differenceBy(tempTags, assets[selectedAsset]?.tags || []);
+          const removeTags = _.differenceBy(assets[selectedAsset]?.tags || [], tempTags);
 
           for (const tag of newTags) {
             tagPromises.push(assetApi.addTag(asset.id, tag));
@@ -1010,7 +956,7 @@ const UploadApproval = () => {
             approvalApi.addComments(asset.id, {
               comments: tempComments,
               approvalId,
-            })
+            }),
           );
         }
 
@@ -1144,8 +1090,7 @@ const UploadApproval = () => {
         <main className={`${styles.container} p-r-0`}>
           <p className={styles.title}>Create Upload Batch for Approval</p>
           <p className={styles.subtitle}>
-            Upload a file or multiple files. You’ll then be able to suggest tags
-            and submit to the admin(s){" "}
+            Upload a file or multiple files. You’ll then be able to suggest tags and submit to the admin(s){" "}
           </p>
           <input
             multiple={versionGroup ? false : true}
@@ -1171,12 +1116,7 @@ const UploadApproval = () => {
                 />
               )}
               {assets.length > 0 && hasAssetToSubmit() && (
-                <Button
-                  type="button"
-                  text="Select All"
-                  className="container secondary"
-                  onClick={selectAllAssets}
-                />
+                <Button type="button" text="Select All" className="container secondary" onClick={selectAllAssets} />
               )}
               {assets.length > 0 && hasAssetToSubmit() && (
                 <Button
@@ -1197,16 +1137,11 @@ const UploadApproval = () => {
           {assets.length > 0 ? (
             <div className={styles["asset-list"]}>
               <div className={assetGridStyles["list-wrapper"]}>
-                <ul
-                  className={`${assetGridStyles["grid-list"]} ${assetGridStyles["regular"]} ${styles["grid-list"]}`}
-                >
+                <ul className={`${assetGridStyles["grid-list"]} ${assetGridStyles["regular"]} ${styles["grid-list"]}`}>
                   {assets.map((assetItem, index) => {
                     if (assetItem.status !== "fail") {
                       return (
-                        <li
-                          className={assetGridStyles["grid-item"]}
-                          key={assetItem.asset.id || index}
-                        >
+                        <li className={assetGridStyles["grid-item"]} key={assetItem.asset.id || index}>
                           <AssetThumbail
                             {...assetItem}
                             sharePath={""}
@@ -1238,24 +1173,21 @@ const UploadApproval = () => {
                                 : "w-100"
                             }
                             customIconComponent={
-                              <div
-                                className={`${styles["icon-wrapper"]} d-flex`}
-                              >
+                              <div className={`${styles["icon-wrapper"]} d-flex`}>
                                 {assetItem.comments && (
                                   <IconClickable
                                     additionalClass={styles["edit-icon"]}
-                                    src={Utilities.comment}
+                                    SVGElement={Utilities.comment}
                                     onClick={() => {}}
                                   />
                                 )}
-                                {assetItem.tags &&
-                                  assetItem.tags.length > 0 && (
-                                    <IconClickable
-                                      additionalClass={styles["edit-icon"]}
-                                      src={Utilities.greenTag}
-                                      onClick={() => {}}
-                                    />
-                                  )}
+                                {assetItem.tags && assetItem.tags.length > 0 && (
+                                  <IconClickable
+                                    additionalClass={styles["edit-icon"]}
+                                    src={Utilities.greenTag}
+                                    onClick={() => {}}
+                                  />
+                                )}
                               </div>
                             }
                             showViewButtonOnly={true}
@@ -1285,14 +1217,8 @@ const UploadApproval = () => {
                 <>
                   <h2 className={styles["detail-title"]}>Batch Details</h2>
                   <div className={detailPanelStyles["first-section"]}>
-                    <div
-                      className={`${detailPanelStyles["field-wrapper"]} ${styles["batchSidePanel"]}`}
-                    >
-                      <div
-                        className={`${detailPanelStyles.field} ${styles["field-name"]}`}
-                      >
-                        Batch Name
-                      </div>
+                    <div className={`${detailPanelStyles["field-wrapper"]} ${styles["batchSidePanel"]}`}>
+                      <div className={`${detailPanelStyles.field} ${styles["field-name"]}`}>Batch Name</div>
                       <Input
                         onChange={(e) => {
                           setBatchName(e.target.value);
@@ -1311,9 +1237,7 @@ const UploadApproval = () => {
                           title="Tags"
                           addText="Add Tags"
                           onAddClick={() => setActiveDropdown("tags")}
-                          selectPlaceholder={
-                            "Enter a new tag or select an existing one"
-                          }
+                          selectPlaceholder={"Enter a new tag or select an existing one"}
                           avilableItems={inputTags}
                           setAvailableItems={setInputTags}
                           selectedItems={assetTags}
@@ -1322,10 +1246,7 @@ const UploadApproval = () => {
                           onAddOperationFinished={(stateUpdate) => {
                             setActiveDropdown("");
                           }}
-                          onRemoveOperationFinished={async (
-                            index,
-                            stateUpdate
-                          ) => {}}
+                          onRemoveOperationFinished={async (index, stateUpdate) => {}}
                           onOperationFailedSkipped={() => setActiveDropdown("")}
                           isShare={false}
                           asyncCreateFn={(newItem) => {
@@ -1355,33 +1276,18 @@ const UploadApproval = () => {
                           <div className={styles["previous-item-wrapper"]}>
                             <div className={styles["previous-thumbnail"]}>
                               {batch?.assets[0]?.thumbailUrl && (
-                                <img
-                                  src={
-                                    batch?.assets[0]?.thumbailUrl ||
-                                    Assets.unknown
-                                  }
-                                  alt={batch?.name}
-                                />
+                                <img src={batch?.assets[0]?.thumbailUrl || Assets.unknown} alt={batch?.name} />
                               )}
                               {!batch?.assets[0]?.thumbailUrl && (
-                                <AssetIcon
-                                  extension={batch?.assets[0]?.asset.extension}
-                                  onList={true}
-                                />
+                                <AssetIcon extension={batch?.assets[0]?.asset.extension} onList={true} />
                               )}
                             </div>
                             <div className={styles["info-wrapper"]}>
                               <div>
-                                <div className={styles["previous-name"]}>
-                                  {batch?.name ? batch?.name : "Untitled"}
-                                </div>
-                                <div className={styles["previous-status"]}>
-                                  {getBatchStatus(batch?.status)}
-                                </div>
+                                <div className={styles["previous-name"]}>{batch?.name ? batch?.name : "Untitled"}</div>
+                                <div className={styles["previous-status"]}>{getBatchStatus(batch?.status)}</div>
                                 <div className={styles["previous-date"]}>
-                                  {moment(batch?.createdAt).format(
-                                    "MM/DD/YYYY"
-                                  )}
+                                  {moment(batch?.createdAt).format("MM/DD/YYYY")}
                                 </div>
                               </div>
                             </div>
@@ -1402,9 +1308,7 @@ const UploadApproval = () => {
           <IconClickable
             src={Utilities.closePanelLight}
             onClick={() => toggleSideMenu()}
-            additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"} ${
-              styles.expand
-            }`}
+            additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"} ${styles.expand}`}
           />
         </section>
       </div>
@@ -1429,7 +1333,7 @@ const UploadApproval = () => {
               {isAdmin() && (
                 <IconClickable
                   additionalClass={styles["edit-icon"]}
-                  src={Utilities.edit}
+                  SVGElement={Utilities.edit}
                   onClick={() => {
                     setShowRenameModal(true);
                   }}
@@ -1437,46 +1341,30 @@ const UploadApproval = () => {
               )}
             </div>
             <div className={styles["date"]}>
-              {moment(assets[selectedAsset]?.asset?.createdAt).format(
-                "MMM DD, YYYY, hh:mm a"
-              )}
+              {moment(assets[selectedAsset]?.asset?.createdAt).format("MMM DD, YYYY, hh:mm a")}
             </div>
             <div className={styles["batchImg"]}>
               {assets[selectedAsset]?.asset.type === "image" && (
-                <AssetImg
-                  name={assets[selectedAsset]?.asset.name}
-                  assetImg={assets[selectedAsset]?.thumbailUrl}
-                />
+                <AssetImg name={assets[selectedAsset]?.asset.name} assetImg={assets[selectedAsset]?.thumbailUrl} />
               )}
             </div>
             {assets[selectedAsset]?.asset.type !== "image" &&
               assets[selectedAsset]?.asset.type !== "video" &&
               assets[selectedAsset]?.thumbailUrl &&
-              (assets[selectedAsset]?.asset.extension.toLowerCase() ===
-              "pdf" ? (
+              (assets[selectedAsset]?.asset.extension.toLowerCase() === "pdf" ? (
                 <AssetPdf asset={assets[selectedAsset]?.asset} />
               ) : (
-                <AssetImg
-                  name={assets[selectedAsset]?.asset.name}
-                  assetImg={assets[selectedAsset]?.thumbailUrl}
-                />
+                <AssetImg name={assets[selectedAsset]?.asset.name} assetImg={assets[selectedAsset]?.thumbailUrl} />
               ))}
             {assets[selectedAsset]?.asset.type !== "image" &&
               assets[selectedAsset]?.asset.type !== "video" &&
-              !assets[selectedAsset]?.thumbailUrl && (
-                <AssetIcon extension={assets[selectedAsset]?.asset.extension} />
-              )}
+              !assets[selectedAsset]?.thumbailUrl && <AssetIcon extension={assets[selectedAsset]?.asset.extension} />}
             {assets[selectedAsset]?.asset.type === "video" && (
               <video controls>
                 <source
-                  src={
-                    assets[selectedAsset]?.previewUrl ??
-                    assets[selectedAsset]?.realUrl
-                  }
+                  src={assets[selectedAsset]?.previewUrl ?? assets[selectedAsset]?.realUrl}
                   type={
-                    assets[selectedAsset]?.previewUrl
-                      ? "video/mp4"
-                      : `video/${assets[selectedAsset]?.asset.extension}`
+                    assets[selectedAsset]?.previewUrl ? "video/mp4" : `video/${assets[selectedAsset]?.asset.extension}`
                   }
                 />
                 Sorry, your browser doesn't support video playback.
@@ -1501,21 +1389,15 @@ const UploadApproval = () => {
             </div>
           </div>
           <div className={"height-100"}>
-            <div
-              className={`${detailPanelStyles.container} ${styles["right-form"]}`}
-            >
-              <h2 className={styles["detail-title"]}>
-                Add Attributes to Selected Assets
-              </h2>
+            <div className={`${detailPanelStyles.container} ${styles["right-form"]}`}>
+              <h2 className={styles["detail-title"]}>Add Attributes to Selected Assets</h2>
 
               <div className={`${detailPanelStyles["field-wrapper"]}`}>
                 <CreatableSelect
                   title="Tags"
                   addText="Add Tags"
                   onAddClick={() => setActiveDropdown("tags")}
-                  selectPlaceholder={
-                    "Enter a new tag or select an existing one"
-                  }
+                  selectPlaceholder={"Enter a new tag or select an existing one"}
                   avilableItems={inputTags}
                   setAvailableItems={setInputTags}
                   selectedItems={tempTags}
@@ -1536,11 +1418,7 @@ const UploadApproval = () => {
               </div>
 
               <div className={detailPanelStyles["field-wrapper"]}>
-                <div
-                  className={`secondary-text ${detailPanelStyles.field} ${styles["field-name"]}`}
-                >
-                  Comments
-                </div>
+                <div className={`secondary-text ${detailPanelStyles.field} ${styles["field-name"]}`}>Comments</div>
                 <TextArea
                   type={"textarea"}
                   rows={8}
@@ -1578,9 +1456,7 @@ const UploadApproval = () => {
         <div className={styles["confirm-modal-wrapper"]}>
           {!submitted && (
             <>
-              <div className={styles["modal-field-title"]}>
-                Send a Message to the Admin
-              </div>
+              <div className={styles["modal-field-title"]}>Send a Message to the Admin</div>
 
               <TextArea
                 type={"textarea"}
@@ -1611,13 +1487,10 @@ const UploadApproval = () => {
             />
           )}
           {submitted && (
-            <p
-              className={`${styles["modal-field-title"]} ${styles["thanksSubmit"]}`}
-            >
+            <p className={`${styles["modal-field-title"]} ${styles["thanksSubmit"]}`}>
               Thanks for submitting your assets for approval.
               <br />
-              The admin will be notified of your submission and will be able to
-              review it.
+              The admin will be notified of your submission and will be able to review it.
             </p>
           )}
 
@@ -1663,7 +1536,7 @@ const UploadApproval = () => {
         type={"Asset"}
         initialValue={assets[selectedAsset]?.asset?.name?.substring(
           0,
-          assets[selectedAsset]?.asset?.name.lastIndexOf(".")
+          assets[selectedAsset]?.asset?.name.lastIndexOf("."),
         )}
       />
     </>

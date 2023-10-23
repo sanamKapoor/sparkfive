@@ -48,7 +48,7 @@
 }
 
 .ratioInput, .btn, .controlTitle, .blockInput_active {
-  color: var(--color-prim-navy);
+  color: var(--primary-color);
 }
 
 .btn {
@@ -100,5 +100,5 @@ span.select {
 }
 
 .cdnType .select{
-  color: var(--color-prim-navy);
+  color: var(--primary-color);
 }

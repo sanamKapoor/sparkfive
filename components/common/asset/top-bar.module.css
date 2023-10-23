@@ -167,7 +167,7 @@
 
 li.dropdown-title {
   padding: 8px 10px;
-  background-color: var(--color-sec-lightblue);
+  background-color: var(--additional-color);
   border-bottom: 1px solid var(--color-secondary-border);
 }
 
@@ -272,7 +272,7 @@ li.dropdown-title {
   }
 
   .mobile-bottom {
-    background-color: var(--color-prim-navy);
+    background-color: var(--header-navigation-color);
     height: 36px;
     width: 100%;
     justify-content: center;

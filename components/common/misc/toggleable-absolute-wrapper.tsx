@@ -1,5 +1,5 @@
 import Router from "next/router";
-import { useContext, useRef, useState } from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 
 // Context
 import { UserContext } from "../../../context";
@@ -16,11 +16,12 @@ const ToggleableAbsoluteWrapper = ({
   onClose = () => {},
   enabled = true,
   uploadApproval = false,
+  open = false
 }) => {
   const wrapperRef = useRef(null);
   const contentRef = useRef(null);
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(open);
 
   const { hasPermission } = useContext(UserContext);
 
@@ -53,6 +54,12 @@ const ToggleableAbsoluteWrapper = ({
       }
     }
   };
+
+  useEffect(()=>{
+    if(open !== undefined){
+      setIsOpen(open)
+    }
+  },[open])
 
   return (
     <div

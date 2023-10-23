@@ -9,7 +9,7 @@
 }
 
 .content h3 {
-    background-color: var(--color-sec-lightblue);
+    background-color: var(--additional-color);
     padding: 4px 16px;
     font-weight: 600;
     margin-bottom: 0;

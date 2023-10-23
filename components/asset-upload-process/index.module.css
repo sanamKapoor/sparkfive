@@ -144,7 +144,7 @@
   padding: 14px 12px 12px;
   flex-direction: column;
   border-bottom: 1px solid var(--color-secondary-border);
-  background-color: var(--color-sec-lightblue);
+  background-color: var(--additional-color);
   position: relative;
 }
 

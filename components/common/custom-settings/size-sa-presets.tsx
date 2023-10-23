@@ -56,12 +56,8 @@ const SizeSaPresets = () => {
         getSizePresets();
       }
     } catch (err) {
-      if (err.response?.status === 400)
-        toastUtils.error(err.response.data.message);
-      else
-        toastUtils.error(
-          "Could not create file size preset, please try again later."
-        );
+      if (err.response?.status === 400) toastUtils.error(err.response.data.message);
+      else toastUtils.error("Could not create file size preset, please try again later.");
 
       // Show loading
       setLoading(false);
@@ -97,7 +93,7 @@ const SizeSaPresets = () => {
           name: "",
           presetName: "",
         },
-      ])
+      ]),
     );
   };
 
@@ -106,36 +102,21 @@ const SizeSaPresets = () => {
   }, []);
 
   return (
-    <div  className={`${styles['main-wrapper']} ${styles['size-preset-main-wrapper']}`}>
+    <div className={`${styles["main-wrapper"]} ${styles["size-preset-main-wrapper"]}`}>
       {presetList.map((field, index) => {
         return (
-          <div
-            className={`${styles["row"]} ${styles["custom-setting-border"]} ${styles["field-block"]}`}
-            key={index}
-          >
+          <div className={`${styles["row"]} ${styles["custom-setting-border"]} ${styles["field-block"]}`} key={index}>
             <div
               // className={`${styles["col-20"]} ${styles["col-md-100"]} p-l-r-0`}
               className="col-20 col-sm-100 col-md-100 p-l-r-0"
             >
               <div className={styles["row"]}>
-                <div
-                  className={`${styles["col-100"]} ${styles["flex-display"]} d-flex`}
-                >
-                  <span className={styles["font-weight-600"]}>
-                    {index + 1}.
-                  </span>
-                  <span
-                    className={`${styles["row-header"]} ${styles["font-weight-600"]}`}
-                  >
-                    Channel
-                  </span>
+                <div className={`${styles["col-100"]} ${styles["flex-display"]} d-flex`}>
+                  <span className={styles["font-weight-600"]}>{index + 1}.</span>
+                  <span className={`${styles["row-header"]} ${styles["font-weight-600"]}`}>Channel</span>
                 </div>
                 <div className={`${styles["col-100"]} ${styles["p-l-30"]}`}>
-                  <label
-                    className={`${styles["input-label"]} visibility-hidden`}
-                  >
-                    Width (px)
-                  </label>
+                  <label className={`${styles["input-label"]} visibility-hidden`}>Width (px)</label>
                   <Input
                     onChange={(e) => {
                       onInputChange(e, "presetName", index);
@@ -152,21 +133,11 @@ const SizeSaPresets = () => {
               className="col-20 col-sm-100 col-md-100 p-l-r-0"
             >
               <div className={styles["row"]}>
-                <div
-                  className={`${styles["col-100"]} ${styles["flex-display"]}`}
-                >
-                  <span
-                    className={`${styles["row-header"]} ${styles["font-weight-600"]}`}
-                  >
-                    Custom File Size name
-                  </span>
+                <div className={`${styles["col-100"]} ${styles["flex-display"]}`}>
+                  <span className={`${styles["row-header"]} ${styles["font-weight-600"]}`}>Custom File Size name</span>
                 </div>
                 <div className={`${styles["col-100"]} ${styles["p-l-30"]}`}>
-                  <label
-                    className={`${styles["input-label"]} visibility-hidden`}
-                  >
-                    Width (px)
-                  </label>
+                  <label className={`${styles["input-label"]} visibility-hidden`}>Width (px)</label>
                   <Input
                     onChange={(e) => {
                       onInputChange(e, "name", index);
@@ -174,7 +145,6 @@ const SizeSaPresets = () => {
                     value={field.name}
                     placeholder={"Field name"}
                     styleType={"regular-short"}
-                  
                   />
                 </div>
               </div>
@@ -184,21 +154,13 @@ const SizeSaPresets = () => {
               className="col-20 col-sm-100 col-md-100 p-l-r-0"
             >
               <div className={styles["row"]}>
-                <div
-                  className={`${styles["col-100"]} ${styles["flex-display"]} justify-center`}
-                >
-                  <span
-                    className={`${styles["row-header"]} ${styles["font-weight-600"]}`}
-                  >
-                    Dimensions
-                  </span>
+                <div className={`${styles["col-100"]} ${styles["flex-display"]} justify-center`}>
+                  <span className={`${styles["row-header"]} ${styles["font-weight-600"]}`}>Dimensions</span>
                 </div>
                 <div className={`${styles["col-100"]}`}>
                   <div className={"row"}>
                     <div className={"col-50"}>
-                      <label className={styles["input-label"]}>
-                        Width (px)
-                      </label>
+                      <label className={styles["input-label"]}>Width (px)</label>
                       <Input
                         onChange={(e) => {
                           onInputChange(e, "width", index);
@@ -212,9 +174,7 @@ const SizeSaPresets = () => {
                       />
                     </div>
                     <div className={"col-50"}>
-                      <label className={styles["input-label"]}>
-                        Height (px)
-                      </label>
+                      <label className={styles["input-label"]}>Height (px)</label>
                       <Input
                         onChange={(e) => {
                           onInputChange(e, "height", index);
@@ -231,59 +191,41 @@ const SizeSaPresets = () => {
                 </div>
               </div>
             </div>
-            <div
-              className={`${styles["col-20"]} ${styles["col-md-100"]} ${styles["button-row"]} p-l-r-0`}
-            >
+            <div className={`${styles["col-20"]} ${styles["col-md-100"]} ${styles["button-row"]} p-l-r-0`}>
               <div className={"row"}>
-                <div
-                  className={`${styles["col-100"]} ${styles["flex-display"]}`}
-                >
-                  <span
-                    className={`${styles["row-header"]} ${styles["font-weight-600"]} visibility-hidden`}
-                  >
+                <div className={`${styles["col-100"]} ${styles["flex-display"]}`}>
+                  <span className={`${styles["row-header"]} ${styles["font-weight-600"]} visibility-hidden`}>
                     Header
                   </span>
                 </div>
-                <div
-                  className={`${styles["col-100"]} p-r-0 p-l-0 d-flex p-t-15`}
-                >
+                <div className={`${styles["col-100"]} p-r-0 p-l-0 d-flex p-t-15`}>
                   <div className={styles.saveblock}>
-                  <Button
-                    className={"container exclude-min-height primary"}
-                    type={"button"}
-                    text="Save"
-                    onClick={() => {
-                      saveChanges(index);
-                    }}
-                    disabled={
-                      !field.name ||
-                      !field.presetName ||
-                      !field.width ||
-                      !field.height
-                    }
-                  />
-                  {
-                    <IconClickable
-                      additionalClass={styles["action-button"]}
-                      src={AssetOps[`delete`]}
-                      tooltipText={"Delete"}
-                      tooltipId={"Delete"}
+                    <Button
+                      className={"container exclude-min-height primary"}
+                      type={"button"}
+                      text="Save"
                       onClick={() => {
-                        if (field.id) {
-                          setCurrentDeleteId(field.id);
-                          setConfirmDeleteModal(true);
-                        } else {
-                          setPresetList(
-                            presetList.filter(
-                              (item, indexItem) => index !== indexItem
-                            )
-                          );
-                        }
+                        saveChanges(index);
                       }}
+                      disabled={!field.name || !field.presetName || !field.width || !field.height}
                     />
-                  }
+                    {
+                      <IconClickable
+                        additionalClass={styles["action-button"]}
+                        SVGElement={AssetOps[`delete`]}
+                        tooltipText={"Delete"}
+                        tooltipId={"Delete"}
+                        onClick={() => {
+                          if (field.id) {
+                            setCurrentDeleteId(field.id);
+                            setConfirmDeleteModal(true);
+                          } else {
+                            setPresetList(presetList.filter((item, indexItem) => index !== indexItem));
+                          }
+                        }}
+                      />
+                    }
                   </div>
-                 
                 </div>
               </div>
             </div>

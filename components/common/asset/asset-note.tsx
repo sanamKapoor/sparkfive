@@ -13,10 +13,7 @@ const AssetNote = ({ title, note }) => {
 
         {show && <p>{note}</p>}
       </div>
-      <IconClickable
-        src={show ? Utilities.hide : Utilities.notes}
-        onClick={() => setShow(!show)}
-      />
+      <IconClickable SVGElement={show ? Utilities.hide : Utilities.notes} onClick={() => setShow(!show)} />
     </div>
   );
 };

@@ -82,7 +82,7 @@ const AssetAddition = ({
     totalSize: number,
     folderId,
     folderGroup = {},
-    subFolderAutoTag = true
+    subFolderAutoTag = true,
   ) => {
     let folderUploadInfo;
     try {
@@ -92,10 +92,7 @@ const AssetAddition = ({
       let newAssets = 0;
 
       // Get file group info, this returns folderKey and newName of file
-      let fileGroupInfo = getFolderKeyAndNewNameByFileName(
-        file.webkitRelativePath,
-        subFolderAutoTag
-      );
+      let fileGroupInfo = getFolderKeyAndNewNameByFileName(file.webkitRelativePath, subFolderAutoTag);
       folderUploadInfo = { name: fileGroupInfo.folderKey, size: totalSize };
 
       // Do validation
@@ -109,38 +106,24 @@ const AssetAddition = ({
                 index,
                 error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
               }
-            : asset
+            : asset,
         );
 
         // Update uploading assets
         setUploadUpdate(versionGroup, updatedAssets);
 
         // Remove current asset from asset placeholder
-        let newAssetPlaceholder = updatedAssets.filter(
-          (asset) => asset.status !== "fail"
-        );
+        let newAssetPlaceholder = updatedAssets.filter((asset) => asset.status !== "fail");
 
         // At this point, file place holder will be removed
-        updateAssetList(
-          newAssetPlaceholder,
-          currentDataClone,
-          folderUploadInfo
-        );
+        updateAssetList(newAssetPlaceholder, currentDataClone, folderUploadInfo);
 
         // The final one
         if (i === assets.length - 1) {
           return folderGroup;
         } else {
           // Keep going
-          await uploadAsset(
-            i + 1,
-            updatedAssets,
-            currentDataClone,
-            totalSize,
-            folderId,
-            folderGroup,
-            subFolderAutoTag
-          );
+          await uploadAsset(i + 1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, subFolderAutoTag);
         }
       } else {
         // Show uploading toast
@@ -162,9 +145,7 @@ const AssetAddition = ({
         formData.append("asset", file);
         formData.append(
           "fileModifiedAt",
-          new Date(
-            (file.lastModifiedDate || new Date(file.lastModified)).toUTCString()
-          ).toISOString()
+          new Date((file.lastModifiedDate || new Date(file.lastModified)).toUTCString()).toISOString(),
         );
 
         let size = totalSize;
@@ -203,10 +184,7 @@ const AssetAddition = ({
         }
 
         // Call API to upload
-        let { data } = await assetApi.uploadAssets(
-          formData,
-          getCreationParameters(attachedQuery)
-        );
+        let { data } = await assetApi.uploadAssets(formData, getCreationParameters(attachedQuery));
 
         // If user is uploading files in folder which is not saved from server yet
         // Save folders data in response to use for subsequence request so that files in same folder can be located correctly
@@ -233,9 +211,7 @@ const AssetAddition = ({
         setTotalAssets(totalAssets + newAssets + 1);
 
         // Mark this asset as done
-        const updatedAssets = assets.map((asset, index) =>
-          index === i ? { ...asset, status: "done" } : asset
-        );
+        const updatedAssets = assets.map((asset, index) => (index === i ? { ...asset, status: "done" } : asset));
 
         // Update uploading assets
         setUploadUpdate(versionGroup, updatedAssets);
@@ -245,32 +221,20 @@ const AssetAddition = ({
           return;
         } else {
           // Keep going
-          await uploadAsset(
-            i + 1,
-            updatedAssets,
-            currentDataClone,
-            totalSize,
-            folderId,
-            folderGroup,
-            subFolderAutoTag
-          );
+          await uploadAsset(i + 1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, subFolderAutoTag);
         }
       }
     } catch (e) {
       // Violate validation, mark failure
       const updatedAssets = assets.map((asset, index) =>
-        index === i
-          ? { ...asset, index, status: "fail", error: "Processing file error" }
-          : asset
+        index === i ? { ...asset, index, status: "fail", error: "Processing file error" } : asset,
       );
 
       // Update uploading assets
       setUploadUpdate(versionGroup, updatedAssets);
 
       // Remove current asset from asset placeholder
-      let newAssetPlaceholder = updatedAssets.filter(
-        (asset) => asset.status !== "fail"
-      );
+      let newAssetPlaceholder = updatedAssets.filter((asset) => asset.status !== "fail");
 
       // At this point, file place holder will be removed
       updateAssetList(newAssetPlaceholder, currentDataClone, folderUploadInfo);
@@ -280,15 +244,7 @@ const AssetAddition = ({
         return folderGroup;
       } else {
         // Keep going
-        await uploadAsset(
-          i + 1,
-          updatedAssets,
-          currentDataClone,
-          totalSize,
-          folderId,
-          folderGroup,
-          subFolderAutoTag
-        );
+        await uploadAsset(i + 1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, subFolderAutoTag);
       }
     }
   };
@@ -298,20 +254,13 @@ const AssetAddition = ({
     setUploadingAssets(updatedAssets);
   };
 
-  const updateAssetList = (
-    newAssetPlaceholder,
-    currentDataClone,
-    folderUploadInfo
-  ) => {
+  const updateAssetList = (newAssetPlaceholder, currentDataClone, folderUploadInfo) => {
     if (versionGroup) {
       triggerUploadComplete("upload", newAssetPlaceholder[0].asset);
     } else {
       const lastAsset = newAssetPlaceholder[newAssetPlaceholder.length - 1];
       if (lastAsset) {
-        if (
-          activeSortFilter.mainFilter === "folders" &&
-          activeSortFilter.sort.value === "alphabetical"
-        ) {
+        if (activeSortFilter.mainFilter === "folders" && activeSortFilter.sort.value === "alphabetical") {
           const id = newAssetPlaceholder[0].asset.folders[0];
           setLastUploadedFolder({
             assets: [...newAssetPlaceholder],
@@ -332,9 +281,7 @@ const AssetAddition = ({
     const currentDataClone = [...assets];
     const currenFolderClone = [...folders];
     try {
-      const selectedFolderToUpload = folders.filter(
-        (folder) => folder.isSelected
-      );
+      const selectedFolderToUpload = folders.filter((folder) => folder.isSelected);
       let needsFolderFetch;
       const newPlaceholders = [];
       const folderPlaceholders = [];
@@ -368,9 +315,7 @@ const AssetAddition = ({
           stage: "draft",
           type: "image",
           mimeType: file.originalFile.type,
-          fileModifiedAt:
-            file.originalFile.lastModifiedDate ||
-            new Date(file.originalFile.lastModified),
+          fileModifiedAt: file.originalFile.lastModifiedDate || new Date(file.originalFile.lastModified),
           // from duplicate handle
           versionGroup: file.versionGroup,
           changedName: file.changedName,
@@ -418,7 +363,7 @@ const AssetAddition = ({
         totalSize,
         uploadToFolders.join(","),
         undefined,
-        subFolderAutoTag
+        subFolderAutoTag,
       );
 
       // Save this for retry failure files later
@@ -440,8 +385,7 @@ const AssetAddition = ({
       setAssets(currentDataClone);
       setFolders(currenFolderClone);
       console.log(err);
-      if (err.response?.status === 402)
-        toastUtils.error(err.response.data.message);
+      if (err.response?.status === 402) toastUtils.error(err.response.data.message);
       else toastUtils.error("Could not upload assets, please try again later.");
     }
   };
@@ -520,7 +464,7 @@ const AssetAddition = ({
           versionGroup: file.versionGroup || versionGroup,
           changedName: file.changedName,
         })),
-        getCreationParameters({ estimateTime: 1, totalSize })
+        getCreationParameters({ estimateTime: 1, totalSize }),
       );
 
       // clean old version for main grid
@@ -557,8 +501,7 @@ const AssetAddition = ({
 
       setAssets(currentDataClone);
       console.log(err);
-      if (err.response?.status === 402)
-        toastUtils.error(err.response.data.message);
+      if (err.response?.status === 402) toastUtils.error(err.response.data.message);
       else toastUtils.error("Could not import assets, please try again later.");
     }
   };
@@ -669,7 +612,7 @@ const AssetAddition = ({
           versionGroup: file.versionGroup || versionGroup,
           changedName: file.changedName,
         })),
-        getCreationParameters({ estimateTime: 1, totalSize })
+        getCreationParameters({ estimateTime: 1, totalSize }),
       );
 
       // clean old version for main grid
@@ -707,17 +650,14 @@ const AssetAddition = ({
       setAssets(currentDataClone);
 
       console.log(err);
-      if (err.response?.status === 402)
-        toastUtils.error(err.response.data.message);
+      if (err.response?.status === 402) toastUtils.error(err.response.data.message);
       else toastUtils.error("Could not import assets, please try again later.");
     }
   };
 
   const onLibraryImport = async () => {
     try {
-      const assetIds = assets
-        .filter((asset) => asset.isSelected)
-        .map((assetItem) => assetItem.asset.id);
+      const assetIds = assets.filter((asset) => asset.isSelected).map((assetItem) => assetItem.asset.id);
       if (type === "project") {
         await projectApi.associateAssets(itemId, { assetIds });
       } else if (type === "task") {
@@ -794,15 +734,11 @@ const AssetAddition = ({
   ];
 
   if (!folderAdd) {
-    dropdownOptions = dropdownOptions.filter(
-      (item) => ["collection", "folder"].indexOf(item.id) === -1
-    );
+    dropdownOptions = dropdownOptions.filter((item) => ["collection", "folder"].indexOf(item.id) === -1);
   }
 
   if (activePageMode === "library") {
-    dropdownOptions = dropdownOptions.filter(
-      (item) => ["library"].indexOf(item.id) === -1
-    );
+    dropdownOptions = dropdownOptions.filter((item) => ["library"].indexOf(item.id) === -1);
   }
 
   const getCreationParameters = (attachQuery?: any) => {
@@ -815,9 +751,7 @@ const AssetAddition = ({
     }
 
     if (folders.filter((folder) => folder.isSelected).length > 0) {
-      uploadToFolders = folders
-        .filter((folder) => folder.isSelected)
-        .map((folder) => folder.id);
+      uploadToFolders = folders.filter((folder) => folder.isSelected).map((folder) => folder.id);
     }
 
     queryData.folderId = uploadToFolders.join(",");
@@ -872,16 +806,12 @@ const AssetAddition = ({
 
     // eliminate canceled
     files = files.filter((file) => {
-      const cancelledItem = nameHistories.find(
-        (item) => item.oldName === file.name && item.action === "cancel"
-      );
+      const cancelledItem = nameHistories.find((item) => item.oldName === file.name && item.action === "cancel");
       return !cancelledItem;
     });
 
     files = files.map((file) => {
-      const handledItem = nameHistories.find(
-        (histItem) => histItem.oldName === file.name
-      );
+      const handledItem = nameHistories.find((histItem) => histItem.oldName === file.name);
       if (handledItem) {
         if (handledItem.action === "change") {
           file.changedName = handledItem.newName;
@@ -909,11 +839,7 @@ const AssetAddition = ({
   };
 
   const SimpleButtonWrapper = ({ children }) => (
-    <div
-      className={`${styles["button-wrapper"]} ${
-        !folderAdd && styles["button-wrapper-displaced"]
-      } asset-addition`}
-    >
+    <div className={`${styles["button-wrapper"]} ${!folderAdd && styles["button-wrapper-displaced"]} asset-addition`}>
       {!hasPermission([ASSET_UPLOAD_APPROVAL]) && (
         // <Button text="+" className="container add"/>
         <button className={styles.addButton}>
@@ -928,7 +854,7 @@ const AssetAddition = ({
     const Content = (option) => {
       return (
         <span className={styles.option} onClick={option.onClick}>
-          <IconClickable src={option.icon} additionalClass={styles.icon} />
+          <IconClickable SVGElement={option.icon} additionalClass={styles.icon} />
           <div className={styles["option-label"]}>{option.label}</div>
         </span>
       );
@@ -971,25 +897,13 @@ const AssetAddition = ({
         onChange={onFileChange}
       />
       {displayMode === "dropdown" ? (
-        <ToggleAbleAbsoluteWrapper
-          Wrapper={SimpleButtonWrapper}
-          Content={DropDownOptions}
-          uploadApproval={true}
-        />
+        <ToggleAbleAbsoluteWrapper Wrapper={SimpleButtonWrapper} Content={DropDownOptions} uploadApproval={true} />
       ) : (
         <DropDownOptions />
       )}
-      <FolderModal
-        modalIsOpen={activeModal === "folder"}
-        closeModal={() => setActiveModal("")}
-        onSubmit={onSubmit}
-      />
+      <FolderModal modalIsOpen={activeModal === "folder"} closeModal={() => setActiveModal("")} onSubmit={onSubmit} />
       {activeSearchOverlay && (
-        <SearchOverlay
-          closeOverlay={closeSearchOverlay}
-          importAssets={onLibraryImport}
-          importEnabled={true}
-        />
+        <SearchOverlay closeOverlay={closeSearchOverlay} importAssets={onLibraryImport} importEnabled={true} />
       )}
       {duplicateAssets?.length > 0 && (
         <AssetDuplicateModal

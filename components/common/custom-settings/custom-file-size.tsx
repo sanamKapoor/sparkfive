@@ -59,12 +59,8 @@ const CustomFileSizes = () => {
         getCustomSizes();
       }
     } catch (err) {
-      if (err.response?.status === 400)
-        toastUtils.error(err.response.data.message);
-      else
-        toastUtils.error(
-          "Could not create custom file size, please try again later."
-        );
+      if (err.response?.status === 400) toastUtils.error(err.response.data.message);
+      else toastUtils.error("Could not create custom file size, please try again later.");
 
       // Show loading
       setLoading(false);
@@ -99,7 +95,7 @@ const CustomFileSizes = () => {
           id: null,
           name: "",
         },
-      ])
+      ]),
     );
   };
 
@@ -108,11 +104,10 @@ const CustomFileSizes = () => {
   }, []);
 
   return (
-    <div className={`${styles['main-wrapper']} ${styles['outer-wrapper']}`}>
+    <div className={`${styles["main-wrapper"]} ${styles["outer-wrapper"]}`}>
       <h3>Custom File Sizes</h3>
       {fileSizeList.map((field, index) => (
-          <div className={`${styles['row']} ${styles['custom-setting-border']}`} key={index}>
-          
+        <div className={`${styles["row"]} ${styles["custom-setting-border"]}`} key={index}>
           <div className={styles.form}>
             <div className={styles.field}>
               <div className={styles.field_title}>Custom File Size Name</div>
@@ -184,11 +179,7 @@ const CustomFileSizes = () => {
                     setCurrentDeleteId(field.id);
                     setConfirmDeleteModal(true);
                   } else {
-                    setFileSizeList(
-                      fileSizeList.filter(
-                        (item, indexItem) => index !== indexItem
-                      )
-                    );
+                    setFileSizeList(fileSizeList.filter((item, indexItem) => index !== indexItem));
                   }
                 }}
               />
@@ -197,9 +188,8 @@ const CustomFileSizes = () => {
         </div>
       ))}
 
-      {fileSizeList.length <
-        customSettings.CUSTOM_FILE_SIZES.MAX_CONFIGURATIONS && (
-        <div className={`${styles["row"]} ${styles['custom-setting-border']} ${styles["field-block"]}`}>
+      {fileSizeList.length < customSettings.CUSTOM_FILE_SIZES.MAX_CONFIGURATIONS && (
+        <div className={`${styles["row"]} ${styles["custom-setting-border"]} ${styles["field-block"]}`}>
           <div className={`add ${styles["select-add"]}`} onClick={addNew}>
             <IconClickable src={Utilities.add} />
             <span className={"font-weight-500"}>Add New</span>

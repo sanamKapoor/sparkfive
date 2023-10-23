@@ -56,7 +56,7 @@
 .primary,
 .normal-height-primary,
 .input-height-primary {
-  background-color: var(--color-prim-turquoise);
+  background-color: var(--secondary-color);
   color: white;
 }
 
@@ -69,13 +69,14 @@
 .input-height-secondary {
   background-color: white;
   border: 1px solid var(--color-secondary-border);
-  color: var(--color-prim-navy);
+  color: var(--primary-color);
 }
 
 .primary:hover,
 .normal-height-primary:hover,
 .input-height-primary:hover {
-  background-color: var(--color-prim-turquoise-hover);
+  background-color: var(--secondary-color);
+  filter: brightness(85%);
 }
 
 .primary-navy:hover {
@@ -85,7 +86,8 @@
 .primary:disabled,
 .normal-height-primary:disabled,
 .input-height-primary:disabled {
-  background-color: var(--color-prim-turquoise-hover);
+  background-color: var(--secondary-color);
+  filter: brightness(85%);
   cursor: default;
 }
 
@@ -147,7 +149,7 @@
   outline: none;
   background-color: inherit;
   font-weight: 600;
-  color: var(--color-prim-navy);
+  color: var(--primary-color);
   cursor: pointer;
   border-bottom: 3px solid white;
   padding: 0;
@@ -159,7 +161,7 @@
 }
 
 .section-active {
-  border-color: var(--color-prim-turquoise);
+  border-color: var(--secondary-color);
   font-weight: 600;
 }
 
@@ -248,7 +250,7 @@
   font-family: "Noto Sans", sans-serif;
   font-weight: 600;
   font-size: 12px;
-  color: #08135e;
+  color: var(--primary-color);
   border: 1px solid #dedad4;
   background: #fff;
   border-radius: 4px;
@@ -303,7 +305,7 @@
 .reject-btn{
   border: 1px solid var(--color-secondary-border);
   background: #fff;
-  color:var(--color-prim-navy);
+  color:var(--primary-color);
 
 }
 .teamInviteBtn{

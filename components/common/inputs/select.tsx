@@ -13,7 +13,7 @@ const Select = ({
   isMulti = false,
   additionalClass = "",
   containerClass = "",
-  additionalStyles=null,
+  additionalStyles = null,
 }) => {
   const customOptions = [
     {
@@ -22,8 +22,6 @@ const Select = ({
     },
     ...options,
   ];
-
- 
 
   return (
     <ReactSelect
@@ -41,18 +39,13 @@ const Select = ({
       styles={{
         option: (provided, state) => ({
           ...provided,
-           backgroundColor: state.isSelected ? '#FAF8F5' : 'transparent', 
-           color: state.isSelected && '#08135e' , 
-          ':hover': {
-            backgroundColor: '#00b8d91a',
-           
+          backgroundColor: state.isSelected ? "#FAF8F5" : "transparent",
+          ":hover": {
+            backgroundColor: "#00b8d91a",
           },
           ...(additionalStyles && { ...additionalStyles }),
         }),
-        
-        
       }}
-    
     />
   );
 };
