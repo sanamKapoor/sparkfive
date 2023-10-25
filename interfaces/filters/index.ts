@@ -1,5 +1,5 @@
 export interface IAttribute {
-  id: string;
+  id: FilterAttributeVariants | string;
   name: string;
   type: "pre-defined" | "custom";
   selectionType: "selectOne" | "selectMultiple";
@@ -74,6 +74,11 @@ export interface IResolutionFilter {
   count: string;
 }
 
+export interface IFileTypeFilter {
+  name: string;
+  count: string;
+}
+
 export interface IProductFilter {
   sku: IProductSku[];
 }
@@ -84,7 +89,9 @@ export type IFilterPopupContentType =
   | "resolutions"
   | "lastUpdated"
   | "dateUploaded"
-  | "products";
+  | "products"
+  | "fileTypes"
+  | "orientation";
 
 export type IFilterAttributeValues =
   | IAttributeValue[]

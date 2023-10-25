@@ -8,6 +8,7 @@ interface OptionDataItemProps {
   count: string;
   isSelected?: boolean;
   onSelect: (val: number) => void;
+  onDeselect: (val: number) => void;
 }
 
 const OptionDataItem: React.FC<OptionDataItemProps> = ({
@@ -15,6 +16,7 @@ const OptionDataItem: React.FC<OptionDataItemProps> = ({
   count,
   isSelected = false,
   onSelect,
+  onDeselect,
 }) => {
   return (
     <div className={`${styles["tags-wrapper"]}`}>
@@ -22,13 +24,10 @@ const OptionDataItem: React.FC<OptionDataItemProps> = ({
         {isSelected ? (
           <IconClickable
             src={Utilities.radioButtonEnabled}
-            onClick={() => onSelect(name)}
+            onClick={onDeselect}
           />
         ) : (
-          <IconClickable
-            src={Utilities.radioButtonNormal}
-            onClick={() => onSelect(name)}
-          />
+          <IconClickable src={Utilities.radioButtonNormal} onClick={onSelect} />
         )}
         <span className={`${styles["select-name"]}`}>{name}</span>
       </div>

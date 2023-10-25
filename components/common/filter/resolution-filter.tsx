@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Utilities } from "../../../assets";
+import { FilterContext } from "../../../context";
 import { IResolutionFilter } from "../../../interfaces/filters";
 import IconClickable from "../buttons/icon-clickable";
 import Divider from "../filter-option-popup/divider";
@@ -11,64 +12,103 @@ interface ResolutionFilterProps {
   setFilters: (val: any) => void; //TODO
 }
 
+//TODO: handle selection/ deselection separately at first stage
 const ResolutionFilter: React.FC<ResolutionFilterProps> = ({
   data,
   setFilters,
 }) => {
-  const [resValues, setResValues] = useState<
-    { dpi: number | string; count: string; isSelected: boolean }[]
-  >([...data.map((item) => ({ ...item, isSelected: false }))]);
-
-  const [highResActive, setHighResActive] = useState(false);
-
-  const handleResolutionFilters = (val: string | number) => {
-    console.log("coming inside addResolutionFilters");
-
-    const curIndex = resValues.findIndex((res) => res.dpi === val);
-
-    if (curIndex !== -1) {
-      resValues[curIndex].isSelected = !resValues[curIndex].isSelected;
-    }
-
-    setResValues([...resValues]);
-    setFilters((prevFilters) => {
-      console.log("prevFilters: ", prevFilters);
-      if (prevFilters?.filterResolutions) {
-        const checkIfDpiAlreadyExists = prevFilters.filterResolutions.find(
-          (item) => item === String(val)
+  const { activeSortFilter } = useContext(FilterContext);
+  const getInitialResFilters = () => {
+    if (activeSortFilter?.filterResolutions?.length > 0) {
+      return data.map((item) => {
+        const itemExists = activeSortFilter.filterResolutions.find(
+          (filter) => filter.dpi === item.dpi
         );
-
-        if (checkIfDpiAlreadyExists) {
-          const newFilters = prevFilters.filterResolutions.filter(
-            (item) => item !== String(val)
-          );
+        if (itemExists) {
           return {
-            filterResolutions: [...newFilters],
+            ...item,
+            isSelected: true,
           };
         } else {
-          return {
-            filterResolutions: [
-              ...prevFilters.filterResolutions,
-              { value: String(val) },
-            ],
-          };
+          return { ...item, isSelected: false };
         }
+      });
+    }
+
+    return data.map((item) => ({ ...item, isSelected: false }));
+  };
+
+  const [resValues, setResValues] = useState<
+    { dpi: number | "highres"; count: string; isSelected: boolean }[]
+  >(getInitialResFilters());
+
+  const [highResActive, setHighResActive] = useState<boolean>(
+    activeSortFilter?.filterResolutions?.find((item) => item.dpi === "highres")
+      ? true
+      : false
+  );
+
+  const onSelectHighResFilter = () => {
+    setHighResActive(true);
+    onSelectResolution("highres");
+  };
+
+  const onDeselectHighResFilter = () => {
+    setHighResActive(false);
+    onDeselectResolution("highres");
+  };
+
+  const onSelectResolution = (val: number | "highres") => {
+    if (val !== "highres") {
+      const index = resValues.findIndex((value) => value.dpi === val);
+      if (index !== -1) {
+        resValues[index].isSelected = true;
       }
+      setResValues([...resValues]);
+    }
+    setFilters((prevState) => {
       return {
-        filterResolutions: [{ value: String(val) }],
+        filterResolutions:
+          prevState?.filterResolutions?.length > 0
+            ? [
+                ...prevState?.filterResolutions,
+                {
+                  value: val,
+                  dpi: val,
+                },
+              ]
+            : [
+                {
+                  value: val,
+                  dpi: val,
+                },
+              ],
       };
     });
   };
 
-  const onSelectHighResFilter = () => {
-    setHighResActive((prevHighResActive) => !prevHighResActive);
-    setFilters((prevFilters) => {
-      return {
-        filterResolutions: [
-          ...(prevFilters?.filterResolutions ?? []),
-          { value: "highres" },
-        ],
-      };
+  console.log("highResActive outside...", highResActive); //giving correct value
+  const onDeselectResolution = (val: number | "highres") => {
+    console.log("highResActive inside function: ", highResActive); //giving state result
+    let newFilters;
+    if (val !== "highres") {
+      const index = resValues.findIndex((value) => value.dpi === val);
+      if (index !== -1) {
+        resValues[index].isSelected = false;
+      }
+      setResValues([...resValues]);
+
+      if (highResActive) {
+        newFilters = [{ value: "highres", dpi: "highres" }];
+      }
+    }
+
+    newFilters = [...resValues]
+      .filter((item) => item.isSelected)
+      .map((item) => ({ value: item.dpi, dpi: item.dpi }));
+
+    setFilters({
+      filterResolutions: newFilters,
     });
   };
 
@@ -78,7 +118,7 @@ const ResolutionFilter: React.FC<ResolutionFilterProps> = ({
         {highResActive ? (
           <IconClickable
             src={Utilities.radioButtonEnabled}
-            onClick={onSelectHighResFilter}
+            onClick={onDeselectHighResFilter}
           />
         ) : (
           <IconClickable
@@ -95,7 +135,8 @@ const ResolutionFilter: React.FC<ResolutionFilterProps> = ({
               name={item.dpi}
               count={item.count}
               isSelected={item.isSelected}
-              onSelect={handleResolutionFilters}
+              onSelect={() => onSelectResolution(item.dpi)}
+              onDeselect={() => onDeselectResolution(item.dpi)}
             />
           </div>
         ))}
