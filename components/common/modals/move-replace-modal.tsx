@@ -8,7 +8,7 @@ import Button from "../../common/buttons/button";
 import IconClickable from "../../common/buttons/icon-clickable";
 import Input from "../../common/inputs/input";
 import Base from "../../common/modals/base";
-import { useMoveModal } from "../../../hooks/Use-Modal";
+import { useMoveModal } from "../../../hooks/use-modal";
 import SearchModal from "../../SearchModal/Search-modal";
 interface Asset {
   id: string;

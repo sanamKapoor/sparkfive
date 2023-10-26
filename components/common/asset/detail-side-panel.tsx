@@ -9,7 +9,7 @@ import React from 'react';
 import { Utilities } from '../../../assets';
 import { ASSET_EDIT, CALENDAR_ACCESS } from '../../../constants/permissions';
 import { AssetContext, FilterContext, LoadingContext, UserContext } from '../../../context';
-import { useAssetDetailCollecion } from '../../../hooks/Use-Asset-Detail-Collection';
+import { useAssetDetailCollecion } from '../../../hooks/use-asset-detail-collection';
 import channelSocialOptions from '../../../resources/data/channels-social.json';
 import assetApi from '../../../server-api/asset';
 import customFieldsApi from '../../../server-api/attribute';

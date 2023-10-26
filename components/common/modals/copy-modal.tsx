@@ -8,7 +8,7 @@ import Button from "../../common/buttons/button";
 import IconClickable from "../../common/buttons/icon-clickable";
 import Input from "../../common/inputs/input";
 import Base from "../../common/modals/base";
-import { useMoveModal } from "../../../hooks/Use-Modal";
+import { useMoveModal } from "../../../hooks/use-modal";
 import SearchModal from "../../SearchModal/Search-modal";
 interface Asset {
   id: string;
@@ -155,7 +155,7 @@ const CopyModal = ({
       </div>
       <div className={`${styles["outer-wrapper"]}`}>
         {folders.map((folder, index) => (
-          <div key={index }>
+          <div key={index}>
             <div className={`${styles["flex"]} ${styles.nestedbox}`}>
               <div className={`${styles["height"]}`}
                 onClick={() => { toggleDropdown(folder.id, true) }}
@@ -240,7 +240,7 @@ const CopyModal = ({
                           </div>
                         </div>
                       </div>
-                     </>
+                    </>
                   ))
                 }
                 {(keyExists(folder.id) && (keyResultsFetch(folder.id, "next") as number) >= 0) && <div className={`${styles['outer-load-wrapper']}`}><div className={`${styles['load-wrapper']}`}
@@ -272,7 +272,7 @@ const CopyModal = ({
         ))}
       </div>
 
-    <div className={styles["folder-wrapper"]}>
+      <div className={styles["folder-wrapper"]}>
         {folderInputActive ? (
           <form onSubmit={onSubmit}>
             <div
