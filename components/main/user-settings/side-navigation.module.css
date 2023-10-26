@@ -5,7 +5,7 @@
   padding: 26px 0;
   background-color: var(--header-navigation-color);
   color: white;
-  border-top: 1px solid var(--header-navigation-color);
+  border-top: 1px solid var(--additional-color);
   position: fixed;
   width: 218px;
 
