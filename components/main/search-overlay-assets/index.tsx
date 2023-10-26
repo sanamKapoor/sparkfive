@@ -13,10 +13,11 @@ import styles from "./index.module.css";
 const SearchOverlayAssets = ({
   closeOverlay,
   importEnabled = false,
-  importAssets = () => {},
+  importAssets = () => { },
   sharePath = "",
   activeFolder = "",
   isFolder,
+  mode = "",
 }) => {
   const {
     assets,
@@ -26,6 +27,7 @@ const SearchOverlayAssets = ({
     selectAllAssets,
     selectedAllAssets,
     setFolders,
+    setSubFoldersViewList
   } = useContext(AssetContext);
 
   const { setSearchTerm, setSearchFilterParams, activeSortFilter } =
@@ -40,7 +42,7 @@ const SearchOverlayAssets = ({
     _filterParams = filterParams
   ) => {
     try {
-      if (!isFolder) {
+      if (mode === "assets") {
         let fetchFn = assetApi.getAssets;
         if (sharePath) {
           fetchFn = shareCollectionApi.getAssets;
@@ -50,7 +52,6 @@ const SearchOverlayAssets = ({
           setFilterParams(_filterParams);
           setSearchFilterParams(_filterParams);
         }
-
         const params: any = {
           term: inputTerm,
           stage:
@@ -65,7 +66,20 @@ const SearchOverlayAssets = ({
         }
         const { data } = await fetchFn(params);
         setAssets(data, replace);
-      } else {
+      } else if (mode === "SubCollectionView") {
+        let query = {
+          page: 1,
+          sortField: activeSortFilter.sort?.field || "createdAt",
+          sortOrder: activeSortFilter.sort?.order || "desc",
+          term: inputTerm,
+        };
+        const { data: subFolders } = await folderApi.getSubFolders(
+          query,
+          activeFolder
+        );
+
+        setSubFoldersViewList(subFolders, true);
+      } else if (mode === "folders") {
         let query = {
           page: 1,
           sortField: activeSortFilter.sort?.field || "createdAt",
@@ -117,7 +131,7 @@ const SearchOverlayAssets = ({
       >
         <div className={"search-cont"}>
           <div className={"search-actions"}>
-            {!isFolder && (
+            {(mode === "assets") && (
               <div
                 className={"search-filter"}
                 onClick={() => setOpenFilters(!openFilters)}
@@ -131,7 +145,6 @@ const SearchOverlayAssets = ({
               </div>
             )}
           </div>
-          {isFolder}
           {/* TODO: When is a collecttion change placeholter to "Search Collections" */}
           <Search
             placeholder={`Search ${isFolder ? "Collections" : "Assets"}`}

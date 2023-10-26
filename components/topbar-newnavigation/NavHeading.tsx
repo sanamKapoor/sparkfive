@@ -31,7 +31,6 @@ const NavHeading = () => {
           </div>
           <span className={styles.navigationLinkheading}>{headerName}</span>
         </div>
-        <span className={styles.count}>396</span>
       </div>
     </>
   );

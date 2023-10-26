@@ -30,7 +30,6 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import ReactGA from "react-ga";
 import dragndropPolyfill from "../polyfills/dragndroptouch";
-import NestedSubcollection from "../components/main/nested-collections"
 // Contexts
 import { LanguageContext, ThemeContext } from "../context";
 import AssetContextProvider from "../context/asset-provider";

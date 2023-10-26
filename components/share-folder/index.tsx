@@ -81,7 +81,6 @@ const ShareFolderMain = () => {
   );
 
   const [top, setTop] = useState("calc(55px + 5rem)");
-  const [widthCard, setWidthCard] = useState(0);
 
   const submitPassword = async (password, email) => {
     try {
@@ -421,7 +420,7 @@ const ShareFolderMain = () => {
 
   const assetGridWrapperStyle =
     !!folderInfo.singleSharedCollectionId ||
-    activeSortFilter.mainFilter === "folders"
+      activeSortFilter.mainFilter === "folders"
       ? styles["col-wrapperview"]
       : styles["col-wrapper"];
 

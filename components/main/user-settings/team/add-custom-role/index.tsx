@@ -302,11 +302,6 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
         {mode === "customRestriction" && (
           <div>
             <span className={styles["field-title"]}>Collections</span>
-
-
-
-
-
             <div className={`${styles["field-wrapper"]}`}>
               <CollectionSubcollectionListing activeDropdown={activeDropdown}
                 setActiveDropdown={setActiveDropdown}
@@ -324,35 +319,8 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
                 toggleSelected={toggleSelected}
                 toggleDropdown={toggleDropdown}
                 toggleSelectAllChildList={toggleSelectAllChildList}
-                // setSelectedFolder={setSelectedFolder}
-                // setShowDropdown={setShowDropdown}
-                // setSubFolderLoadingState={setSubFolderLoadingState}
-                // setFolderChildList={setFolderChildList}
-                // setSelectAllFolders={setSelectAllFolders}
                 completeSelectedFolder={completeSelectedFolder}
               />
-              {/* <CreatableSelect
-                altColor="blue"
-                creatable={false}
-                title=""
-                addText="Add Collections"
-                onAddClick={() => setActiveDropdown("collections")}
-                selectPlaceholder={"Select an existing one"}
-                avilableItems={collections}
-                setAvailableItems={setCollections}
-                selectedItems={selectedCollections}
-                setSelectedItems={setSelectedCollection}
-                onAddOperationFinished={(stateUpdate) => {
-                  setActiveDropdown("");
-                }}
-                onRemoveOperationFinished={async (index, stateUpdate) => { }}
-                onOperationFailedSkipped={() => setActiveDropdown("")}
-                isShare={false}
-                asyncCreateFn={(newItem) => {
-                  return true;
-                }}
-                dropdownIsActive={activeDropdown === "collections"}
-              /> */}
             </div>
 
             <span className={styles["field-title"]}>Custom Fields</span>
