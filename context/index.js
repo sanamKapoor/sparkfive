@@ -22,6 +22,7 @@ export const UserContext = createContext({
   transcriptAccess: false,
   logo: "",
   setLogo: (logo) => {},
+  logoId: "",
 });
 
 export const ThemeContext = createContext({
