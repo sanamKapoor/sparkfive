@@ -142,6 +142,7 @@ const AssetGrid = ({
             results: update(subFoldersAssetsViewList.results, {
               $splice: [[assetIndex, 1]],
             }),
+            total: subFoldersAssetsViewList.total - 1
           });
         }
       } else {
@@ -585,13 +586,13 @@ const AssetGrid = ({
                   return (
                     <li
                       className={`${styles["grid-item"]} ${!openFilter
-                          ? styles[
-                          " grid-" + advancedConfig.collectionThumbnail
-                          ]
-                          : styles[
-                          "grid-filter-" +
-                          advancedConfig.collectionThumbnail
-                          ]
+                        ? styles[
+                        " grid-" + advancedConfig.collectionThumbnail
+                        ]
+                        : styles[
+                        "grid-filter-" +
+                        advancedConfig.collectionThumbnail
+                        ]
                         }`}
                       key={folder.id || index}
                       onClick={(e) => handleFocusChange(e, folder.id)}

@@ -23,7 +23,6 @@ const AssetsPage = () => {
           )}
           {downloadingStatus !== "none" && <AssetDownloadProcess />}
           <AssetsLibrary />
-          {/* <NestedSubcollection /> */}
         </MainLayout>
       </AppLayout>
     </FilterProvider>
