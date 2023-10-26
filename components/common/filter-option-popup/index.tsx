@@ -19,6 +19,7 @@ import OptionData from "./options-data";
 
 import Dropdown from "../../common/inputs/dropdown";
 
+import { filterKeyMap } from "../../../config/data/filter";
 import { FilterContext } from "../../../context";
 import Loader from "../UI/Loader/loader";
 import IconClickable from "../buttons/icon-clickable";
@@ -62,67 +63,17 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   //TODO: keep updating it until all filter views are not covered
   const hideSearch = activeAttribute.id === FilterAttributeVariants.DIMENSIONS;
 
-  /**
-   * TODO:
-   * 1. Add types
-   * 2. Refactor
-   */
-  const onApply = (filterVariant: string, data: any) => {
-    console.log("current filter variant: ", filterVariant);
-    console.log("data: ", data);
-    if (filterVariant === "dimensions") {
+  const onApply = (id: string, data: any) => {
+    //TODO: handle case if some filters already exists and new ones are added for a particular filterKey
+    const filterKey = filterKeyMap[id] || `custom-p${activeAttribute.id}`;
+
+    if (id === FilterAttributeVariants.DIMENSIONS) {
       setActiveSortFilter({
         ...activeSortFilter,
         dimensionWidth: data.dimensionWidth,
         dimensionHeight: data.dimensionHeight,
       });
-    } else if (filterVariant === "resolution") {
-      setActiveSortFilter({
-        ...activeSortFilter,
-        filterResolutions: data?.filterResolutions,
-      });
-    } else if (filterVariant === "tags") {
-      setActiveSortFilter({
-        ...activeSortFilter,
-        filterNonAiTags: data?.filterNonAiTags,
-      });
-    } else if (filterVariant === "aiTags") {
-      setActiveSortFilter({
-        ...activeSortFilter,
-        filterAiTags: data?.filterAiTags,
-      });
-    } else if (filterVariant === "campaigns") {
-      setActiveSortFilter({
-        ...activeSortFilter,
-        filterCampaigns: data?.filterCampaigns,
-      });
-    } else if (filterVariant === "products") {
-      setActiveSortFilter({
-        ...activeSortFilter,
-        filterProductSku: data?.filterProductSku,
-      });
-    } else if (filterVariant === "fileTypes") {
-      setActiveSortFilter({
-        ...activeSortFilter,
-        filterFileTypes: data?.filterFileTypes,
-      });
-    } else if (filterVariant === "orientation") {
-      setActiveSortFilter({
-        ...activeSortFilter,
-        filterOrientations: data?.filterOrientations,
-      });
-    } else if (filterVariant === "dateUploaded") {
-      setActiveSortFilter({
-        ...activeSortFilter,
-        dateUploaded: data?.dateUploaded,
-      });
-    } else if (filterVariant === "lastUpdated") {
-      setActiveSortFilter({
-        ...activeSortFilter,
-        lastUpdated: data?.lastUpdated,
-      });
     } else {
-      const filterKey = `custom-p${activeAttribute.id}`;
       setActiveSortFilter({
         ...activeSortFilter,
         [filterKey]: data[filterKey],
@@ -137,7 +88,6 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   };
 
   const onClear = () => {
-    console.log("activeAttribute.id: ", activeAttribute.id);
     if (activeAttribute.id === FilterAttributeVariants.TAGS) {
       setOptions(options.map((item) => ({ ...item, isSelected: false })));
       setActiveSortFilter({
@@ -200,15 +150,6 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
         [filterRuleKey]: "all",
       });
     }
-  };
-
-  //TODO: move it to more appropriate place
-  const getFilterVariant = (id: string) => {
-    const values: string[] = Object.values(FilterAttributeVariants);
-
-    if (values.includes(id)) {
-      return id;
-    } else return FilterAttributeVariants.CUSTOM_FIELD;
   };
 
   //TODO
@@ -383,9 +324,7 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
               className={"apply"}
               text={"Apply"}
               disabled={loading || !filters}
-              onClick={() =>
-                onApply(getFilterVariant(activeAttribute.id), filters)
-              }
+              onClick={() => onApply(activeAttribute.id, filters)}
             />
             <Button
               className={"cancel"}

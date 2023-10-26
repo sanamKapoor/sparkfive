@@ -45,3 +45,15 @@ export const dateRanges: IDateRange[] = [
     endDate: new Date(),
   },
 ];
+
+export const filterKeyMap = {
+  resolution: "filterResolutions",
+  tags: "filterNonAiTags",
+  aiTags: "filterAiTags",
+  campaigns: "filterCampaigns",
+  products: "filterProductSku",
+  fileTypes: "filterFileTypes",
+  orientation: "filterOrientations",
+  dateUploaded: "dateUploaded",
+  lastUpdated: "lastUpdated",
+};
