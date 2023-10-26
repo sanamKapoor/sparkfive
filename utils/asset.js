@@ -24,6 +24,8 @@ export const DEFAULT_FILTERS = {
   endDate: undefined,
   fileModifiedBeginDate: undefined,
   fileModifiedEndDate: undefined,
+  dateUploaded: undefined,
+  lastUpdated: undefined,
 };
 
 export const DEFAULT_CUSTOM_FIELD_FILTERS = (userFilterObject) => {
@@ -151,6 +153,8 @@ export const getAssetsFilters = ({
     filterProductFields,
     filterProductType,
     filterProductSku,
+    dateUploaded,
+    lastUpdated,
   } = userFilterObject;
 
   if (mainFilter === "images") {
@@ -209,6 +213,7 @@ export const getAssetsFilters = ({
     filters.dimensionHeight = `${dimensionHeight.min},${dimensionHeight.max}`;
   }
 
+  //TODO: don't use
   if (beginDate && endDate) {
     // a range in different day
     if (beginDate.toDateString() !== endDate.toDateString()) {
@@ -254,6 +259,7 @@ export const getAssetsFilters = ({
     }
   }
 
+  //TODO: don't use
   if (fileModifiedBeginDate && fileModifiedEndDate) {
     // a range in different day
     if (
@@ -304,6 +310,41 @@ export const getAssetsFilters = ({
         newDate.toUTCString()
       ).toISOString();
     }
+  }
+
+  if (dateUploaded) {
+    const bd = new Date(dateUploaded.beginDate);
+    const newBeginDate = new Date(
+      bd.getFullYear(),
+      bd.getMonth(),
+      bd.getDate()
+    );
+
+    filters.beginDate = new Date(newBeginDate.toUTCString()).toISOString();
+    const ed = new Date(dateUploaded.endDate);
+    const newEndDate = new Date(ed.getFullYear(), ed.getMonth(), ed.getDate());
+
+    filters.endDate = new Date(newEndDate.toUTCString()).toISOString();
+  }
+
+  if (lastUpdated) {
+    const ld = new Date(lastUpdated.beginDate);
+    const newBeginDate = new Date(
+      ld.getFullYear(),
+      ld.getMonth(),
+      ld.getDate()
+    );
+
+    filters.fileModifiedBeginDate = new Date(
+      newBeginDate.toUTCString()
+    ).toISOString();
+
+    const ed = new Date(lastUpdated.endDate);
+    const newEndDate = new Date(ed.getFullYear(), ed.getMonth(), ed.getDate());
+
+    filters.fileModifiedEndDate = new Date(
+      newEndDate.toUTCString()
+    ).toISOString();
   }
 
   if (filterProductType && filterProductFields?.length > 0) {

@@ -67,7 +67,7 @@ const OptionData: React.FC<OptionDataProps> = ({
         };
       });
     } else {
-      const filterKey = `custom-${activeAttribute?.id}`;
+      const filterKey = `custom-p${activeAttribute?.id}`;
 
       setFilters((prevState) => {
         return {
@@ -112,7 +112,7 @@ const OptionData: React.FC<OptionDataProps> = ({
         filterFileTypes: newFilters,
       };
     } else {
-      const filterKey = `custom-${activeAttribute.id}`;
+      const filterKey = `custom-p${activeAttribute.id}`;
       filters = {
         [filterKey]: newFilters,
       };

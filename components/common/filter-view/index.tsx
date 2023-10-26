@@ -16,6 +16,7 @@ import tagsApi from "../../../server-api/tag";
 import teamApi from "../../../server-api/team";
 
 import { FilterContext } from "../../../context";
+import Badge from "../UI/Badge/badge";
 import FilterOptionPopup from "../filter-option-popup";
 import styles from "./index.module.css";
 
@@ -174,12 +175,12 @@ const FilterView = () => {
 
         case FilterAttributeVariants.LAST_UPDATED:
           contentType = "lastUpdated";
-          values = [];
+          values = activeSortFilter?.lastUpdated;
           break;
 
         case FilterAttributeVariants.DATE_UPLOADED:
           contentType = "dateUploaded";
-          values = [];
+          values = activeSortFilter?.dateUploaded;
           break;
 
         case FilterAttributeVariants.PRODUCTS:
@@ -204,7 +205,7 @@ const FilterView = () => {
           break;
 
         default:
-          const filterKey = `custom-${activeAttribute?.id}`;
+          const filterKey = `custom-p${data.id}`;
           values = await fetchCustomField(data.id);
           if (activeSortFilter[filterKey]?.length > 0) {
             values = values.map((item) => {
@@ -279,6 +280,21 @@ const FilterView = () => {
     return res.data;
   };
 
+  //TODO
+  const getFilterKeyForActiveAttribute = (id: string) => {
+    const newLocal = "coming inside......";
+    console.log(newLocal);
+    let key;
+
+    if (id === "tags") key = "filterNonAiTags";
+    else if (id === "aiTags") key = "filterAiTags";
+    else if (id === "campaigns") key = "filterCampaigns";
+    else if (id === "fileTypes") key = "filterFileTypes";
+    else key = `custom-p${id}`;
+
+    return key;
+  };
+
   return (
     <div>
       <div className={`${styles["outer-wrapper"]}`}>
@@ -292,6 +308,20 @@ const FilterView = () => {
                 }}
               >
                 {attr.name}
+                {/* TODO */}
+                {activeSortFilter[getFilterKeyForActiveAttribute(attr.id)]
+                  ?.length > 0 &&
+                  attr.id !== FilterAttributeVariants.DATE_UPLOADED &&
+                  attr.id !== FilterAttributeVariants.LAST_UPDATED &&
+                  attr.id !== FilterAttributeVariants.DIMENSIONS && (
+                    <Badge
+                      count={
+                        activeSortFilter[
+                          getFilterKeyForActiveAttribute(attr.id)
+                        ]?.length
+                      }
+                    />
+                  )}
                 <img
                   className={`${styles["arrow-down"]}`}
                   src={Utilities.downIcon}

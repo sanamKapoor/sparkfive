@@ -1,15 +1,18 @@
-import  React from 'react'
-import styles from './badge.module.css'
+import React from "react";
+import styles from "./badge.module.css";
 
-function Badge({value}) {
-  return (
-    <>
-    <div className={styles.badge}>
-        <span>{value}</span>
-
-    </div>
-    </>
-  )
+interface BadgeProps {
+  count: number;
 }
 
-export default Badge
+const Badge: React.FC<BadgeProps> = ({ count }) => {
+  return (
+    <>
+      <div className={styles.badge}>
+        <span>{count}</span>
+      </div>
+    </>
+  );
+};
+
+export default Badge;

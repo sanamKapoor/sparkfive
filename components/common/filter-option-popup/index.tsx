@@ -12,7 +12,6 @@ import {
 import Search from "../../main/user-settings/SuperAdmin/Search/Search";
 import Button from "../buttons/button";
 import DimensionsFilter from "../filter-view/dimension-filter";
-import DateUploaded from "../filter/date-uploaded";
 import ProductFilter from "../filter/product-filter";
 import ResolutionFilter from "../filter/resolution-filter";
 import styles from "./index.module.css";
@@ -23,7 +22,9 @@ import Dropdown from "../../common/inputs/dropdown";
 import { FilterContext } from "../../../context";
 import Loader from "../UI/Loader/loader";
 import IconClickable from "../buttons/icon-clickable";
+import DateUploadedFilter from "../filter-view/date-uploaded-filter";
 import FileTypeFilter from "../filter-view/file-type-filter";
+import LastUpdatedFilter from "../filter-view/last-updated-filter";
 import OrientationFilter from "../filter-view/orientation-filter";
 import Divider from "./divider";
 
@@ -54,19 +55,6 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   const { activeSortFilter, setActiveSortFilter } = useContext(FilterContext);
 
   const [filters, setFilters] = useState(); //TODO: define type
-  const [lastUpdatedStartDate, setLastUpdatedStartDate] = useState<Date>(
-    new Date()
-  );
-  const [lastUpdatedEndDate, setLastUpdatedEndDate] = useState<Date>(
-    new Date()
-  );
-
-  const [dateUploadedStartDate, setDateUploadedStartDate] = useState<Date>(
-    new Date()
-  );
-  const [dateUploadedEndDate, setDateUploadedEndDate] = useState<Date>(
-    new Date()
-  );
 
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const showRules = activeAttribute.selectionType === "selectMultiple";
@@ -123,12 +111,21 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
         ...activeSortFilter,
         filterOrientations: data?.filterOrientations,
       });
+    } else if (filterVariant === "dateUploaded") {
+      setActiveSortFilter({
+        ...activeSortFilter,
+        dateUploaded: data?.dateUploaded,
+      });
+    } else if (filterVariant === "lastUpdated") {
+      setActiveSortFilter({
+        ...activeSortFilter,
+        lastUpdated: data?.lastUpdated,
+      });
     } else {
-      const filterKey = `custom-${activeAttribute.id}`;
+      const filterKey = `custom-p${activeAttribute.id}`;
       setActiveSortFilter({
         ...activeSortFilter,
         [filterKey]: data[filterKey],
-        filterCustomFields: data[filterKey],
       });
     }
 
@@ -140,6 +137,7 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   };
 
   const onClear = () => {
+    console.log("activeAttribute.id: ", activeAttribute.id);
     if (activeAttribute.id === FilterAttributeVariants.TAGS) {
       setOptions(options.map((item) => ({ ...item, isSelected: false })));
       setActiveSortFilter({
@@ -179,8 +177,21 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
         ...activeSortFilter,
         filterOrientations: [],
       });
+    } else if (activeAttribute.id === FilterAttributeVariants.DATE_UPLOADED) {
+      console.log("coming in here.......");
+      setOptions(undefined);
+      setActiveSortFilter({
+        ...activeSortFilter,
+        dateUploaded: undefined,
+      });
+    } else if (activeAttribute.id === FilterAttributeVariants.LAST_UPDATED) {
+      setOptions(undefined);
+      setActiveSortFilter({
+        ...activeSortFilter,
+        lastUpdated: undefined,
+      });
     } else {
-      const filterKey = `custom-${activeAttribute.id}`;
+      const filterKey = `custom-p${activeAttribute.id}`;
       const filterRuleKey = `all-${activeAttribute.id}`;
       setOptions(options.map((item) => ({ ...item, isSelected: false })));
       setActiveSortFilter({
@@ -205,6 +216,13 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
     console.log("Searching term....,", term);
   };
 
+  const ruleIndex =
+    activeAttribute.id === "tags"
+      ? `allNonAiTags`
+      : activeAttribute.type === "custom"
+      ? `all-p${activeAttribute.id}`
+      : activeAttribute;
+
   const onChangeRule = (ruleName: string) => {
     let id = activeAttribute.id;
 
@@ -212,6 +230,9 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
       id = "NonAiTags";
     }
 
+    if (activeAttribute.type === "custom") {
+      id = `-p${activeAttribute.id}`;
+    }
     setActiveSortFilter({
       ...activeSortFilter,
       [`all${id}`]: ruleName,
@@ -229,7 +250,11 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
               Select {activeAttribute?.name}
             </span>
             <div className={styles.buttons}>
-              <button className={styles.clear} onClick={onClear}>
+              <button
+                className={styles.clear}
+                disabled={loading}
+                onClick={onClear}
+              >
                 clear
               </button>
               <img
@@ -285,19 +310,17 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
                 />
               )}
               {contentType === "lastUpdated" && (
-                <DateUploaded
-                  startDate={lastUpdatedStartDate}
-                  endDate={lastUpdatedEndDate}
-                  setStartDate={setLastUpdatedStartDate}
-                  setEndDate={setLastUpdatedEndDate}
+                <LastUpdatedFilter
+                  data={options}
+                  setData={setOptions}
+                  setFilters={setFilters}
                 />
               )}
               {contentType === "dateUploaded" && (
-                <DateUploaded
-                  startDate={dateUploadedStartDate}
-                  endDate={dateUploadedEndDate}
-                  setStartDate={setDateUploadedStartDate}
-                  setEndDate={setDateUploadedEndDate}
+                <DateUploadedFilter
+                  data={options}
+                  setData={setOptions}
+                  setFilters={setFilters}
                 />
               )}
               {contentType === "products" && (
@@ -320,15 +343,8 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
                 <div className={`${styles["select-wrapper"]}`}>
                   {/* TODO */}
                   <p>
-                    {rulesMapper[
-                      activeSortFilter[
-                        `all${
-                          activeAttribute.id === "tags"
-                            ? "NonAiTags"
-                            : activeAttribute.id
-                        }`
-                      ]
-                    ] ?? rulesMapper["all"]}
+                    {rulesMapper[activeSortFilter[ruleIndex]] ??
+                      rulesMapper["all"]}
                   </p>
                   <IconClickable
                     additionalClass={styles["dropdown-icon"]}
@@ -366,7 +382,7 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
             <Button
               className={"apply"}
               text={"Apply"}
-              disabled={loading}
+              disabled={loading || !filters}
               onClick={() =>
                 onApply(getFilterVariant(activeAttribute.id), filters)
               }

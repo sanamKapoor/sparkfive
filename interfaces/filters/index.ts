@@ -111,3 +111,10 @@ export enum FilterAttributeVariants {
   PRODUCTS = "products",
   CUSTOM_FIELD = "customField",
 }
+
+export interface IDateRange {
+  id: string;
+  label: string;
+  beginDate: Date;
+  endDate: Date;
+}
