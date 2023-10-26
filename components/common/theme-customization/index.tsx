@@ -21,16 +21,14 @@ import { UserContext, LoadingContext } from "../../../context";
 import teamApi from "../../../server-api/team";
 
 export default function ThemeCustomization() {
-  const { setLogo, logo } = useContext(UserContext);
+  const { setLogo, logo, logoId } = useContext(UserContext);
   const { setIsLoading } = useContext(LoadingContext);
   const [headNavColor, setHeadNavColor] = useState(defaultHeadNavColor);
   const [primaryColor, setPrimaryColor] = useState(defaultPrimaryColor);
   const [secondaryColor, setSecondaryColor] = useState(defaultSecondaryColor);
   const [additionalColor, setAdditionalColor] = useState(defaultAdditionalColor);
 
-  const [currentLogo, setCurrentLogo] = useState<any>({ id: 0, url: logo });
-
-  console.log(logo);
+  const [currentLogo, setCurrentLogo] = useState<any>({ id: logoId || 0, url: logo });
 
   const onResetColor = () => {
     setHeadNavColor(defaultHeadNavColor);

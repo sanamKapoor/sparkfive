@@ -50,6 +50,7 @@ import Back from "./Icons/Utilities/Back/Back";
 import Hide from "./Icons/Utilities/Hide/Hide";
 import Upload from "./Icons/Assets/Upload";
 import MoreLight from "./Icons/Utilities/More/MoreLight";
+import CheckMark from "./Icons/Utilities/CheckMark/CheckMark";
 
 export const GeneralImg = {
   logoHorizontal: require("./general/logo-horizontal-sparkfive-RGB.png"),
@@ -164,7 +165,7 @@ export const Utilities = {
   sort: require("./Icons/Utilities/arrow/sort.svg"),
   sortUp: require("./Icons/Utilities/arrow/sort-up.svg"),
   caretRight: require("./Icons/Utilities/Caret/caret-right.svg"),
-  checkMark: require("./Icons/Utilities/CheckMark/checkmark.svg"),
+  checkMark: CheckMark,
   transcript: Transcript,
   updown: ArrowDownUp,
   download: require("./Icons/Utilities/download.svg"),

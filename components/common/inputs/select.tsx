@@ -1,5 +1,13 @@
 import ReactSelect from "react-select";
 import styles from "./select.module.css";
+import { getThemeFromLocalStorage } from "../../../utils/theme";
+import {
+  defaultAdditionalColor,
+  defaultHeadNavColor,
+  defaultPrimaryColor,
+  defaultSecondaryColor,
+} from "../../../constants/theme";
+import { useEffect, useState } from "react";
 
 const Select = ({
   label = "",
@@ -23,6 +31,21 @@ const Select = ({
     ...options,
   ];
 
+  const [secondaryColor, setSecondaryColor] = useState(defaultSecondaryColor);
+  const [additionalColor, setAdditionalColor] = useState(defaultAdditionalColor);
+
+  const loadCurrentTheme = () => {
+    // Call API to get team theme then set to local storage
+    const theme = getThemeFromLocalStorage();
+
+    setSecondaryColor(theme?.secondary || defaultSecondaryColor);
+    setAdditionalColor(theme?.additional || defaultAdditionalColor);
+  };
+
+  useEffect(() => {
+    loadCurrentTheme();
+  }, []);
+
   return (
     <ReactSelect
       defaultValue={customOptions[0]}
@@ -41,7 +64,7 @@ const Select = ({
           ...provided,
           backgroundColor: state.isSelected ? "#FAF8F5" : "transparent",
           ":hover": {
-            backgroundColor: "#00b8d91a",
+            backgroundColor: additionalColor,
           },
           ...(additionalStyles && { ...additionalStyles }),
         }),
