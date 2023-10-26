@@ -6,6 +6,8 @@ import {
   defaultAdditionalColor,
 } from "../constants/theme";
 
+import { pSBC } from "./color";
+
 export const getThemeFromLocalStorage = () => {
   const theme = localStorage.getItem(themeVariableName);
   return JSON.parse(theme || "{}");
@@ -27,11 +29,20 @@ export const setTheme = (type: string, value: any, ignoreSetStorage = false) => 
     case "headerNavigation": {
       document.documentElement.style.setProperty("--header-navigation-color", value);
 
+      // Set lighter version
+      document.documentElement.style.setProperty("--lighter-header-navigation-color", pSBC(0.2, value, false, true));
+
       if (!ignoreSetStorage) {
         const theme = getThemeFromLocalStorage();
         theme.headerNavigation = value;
         localStorage.setItem(themeVariableName, JSON.stringify(theme));
       }
+
+      break;
+    }
+
+    case "lighterHeaderNavigation": {
+      document.documentElement.style.setProperty("--lighter-header-navigation-color", value);
 
       break;
     }
