@@ -53,7 +53,7 @@
 .active{
     background:var(--color-sec-lightblue);
     border-radius: 4px;
-    padding: 7.5px;
+    padding: 7.5px 2px;
 }
 .sidenav-list1{
     margin-bottom: 10px;

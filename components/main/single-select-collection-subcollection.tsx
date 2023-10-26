@@ -95,7 +95,7 @@ const SingleCollectionSubcollectionListing = ({
             )}
             {
                 (hasPermission([ASSET_EDIT]) && activeDropdown === "collections") &&
-                <div className={`${styles["edit-bulk-outer-wrapper"]}`}>
+                <div className={`${styles["edit-bulk-outer-wrapper"]} ${styles["attribute-space"]}`}>
                     <div className={`${styles["close-popup"]}`}> <IconClickable
                         additionalClass={styles.remove}
                         src={Utilities.closeTag}

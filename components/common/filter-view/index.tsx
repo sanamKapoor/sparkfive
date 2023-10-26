@@ -1,5 +1,5 @@
 //🚧 work in progress 🚧
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { Utilities } from "../../../assets";
 import {
@@ -15,6 +15,8 @@ import filterApi from "../../../server-api/filter";
 import tagsApi from "../../../server-api/tag";
 import teamApi from "../../../server-api/team";
 
+import { FilterContext } from "../../../context";
+import Badge from "../UI/Badge/badge";
 import FilterOptionPopup from "../filter-option-popup";
 import styles from "./index.module.css";
 
@@ -29,6 +31,7 @@ const FilterView = () => {
   );
 
   const [loading, setLoading] = useState<boolean>(false);
+  const { activeSortFilter } = useContext(FilterContext);
 
   //TODO: move it to parent level
   const getAttributes = async () => {
@@ -62,6 +65,21 @@ const FilterView = () => {
       switch (data.id) {
         case FilterAttributeVariants.TAGS:
           values = await fetchTags();
+          if (activeSortFilter?.filterNonAiTags?.length > 0) {
+            values = values.map((item) => {
+              const itemExists = activeSortFilter.filterNonAiTags.find(
+                (filter) => filter.id === item.id
+              );
+              if (itemExists) {
+                return {
+                  ...item,
+                  isSelected: true,
+                };
+              } else {
+                return { ...item, isSelected: false };
+              }
+            });
+          }
           break;
 
         case FilterAttributeVariants.AI_TAGS:
@@ -69,18 +87,80 @@ const FilterView = () => {
           values = (values as IAttributeValue[])?.filter(
             (tag) => tag.type === "AI"
           );
+          if (activeSortFilter?.filterAiTags?.length > 0) {
+            values = values.map((item) => {
+              const itemExists = activeSortFilter.filterAiTags.find(
+                (filter) => filter.id === item.id
+              );
+              if (itemExists) {
+                return {
+                  ...item,
+                  isSelected: true,
+                };
+              } else {
+                return { ...item, isSelected: false };
+              }
+            });
+          }
           break;
 
         case FilterAttributeVariants.CAMPAIGNS:
           values = await fetchCampaigns();
+          if (activeSortFilter?.filterCampaigns?.length > 0) {
+            values = values.map((item) => {
+              const itemExists = activeSortFilter.filterCampaigns.find(
+                (filter) => filter.id === item.id
+              );
+              if (itemExists) {
+                return {
+                  ...item,
+                  isSelected: true,
+                };
+              } else {
+                return { ...item, isSelected: false };
+              }
+            });
+          }
           break;
 
         case FilterAttributeVariants.FILE_TYPES:
+          contentType = "fileTypes";
           values = await fetchAssetFileExtensions();
+          if (activeSortFilter?.filterFileTypes?.length > 0) {
+            values = values.map((item) => {
+              const itemExists = activeSortFilter.filterFileTypes.find(
+                (filter) => filter.value === item.name
+              );
+              if (itemExists) {
+                return {
+                  ...item,
+                  isSelected: true,
+                };
+              } else {
+                return { ...item, isSelected: false };
+              }
+            });
+          }
           break;
 
         case FilterAttributeVariants.ORIENTATION:
+          contentType = "orientation";
           values = await fetchAssetOrientations();
+          if (activeSortFilter?.filterOrientations?.length > 0) {
+            values = values.map((item) => {
+              const itemExists = activeSortFilter.filterOrientations.find(
+                (filter) => filter.value === item.name
+              );
+              if (itemExists) {
+                return {
+                  ...item,
+                  isSelected: true,
+                };
+              } else {
+                return { ...item, isSelected: false };
+              }
+            });
+          }
           break;
 
         case FilterAttributeVariants.RESOLUTION:
@@ -95,24 +175,53 @@ const FilterView = () => {
 
         case FilterAttributeVariants.LAST_UPDATED:
           contentType = "lastUpdated";
-          values = [];
+          values = activeSortFilter?.lastUpdated;
           break;
 
         case FilterAttributeVariants.DATE_UPLOADED:
           contentType = "dateUploaded";
-          values = [];
+          values = activeSortFilter?.dateUploaded;
           break;
 
         case FilterAttributeVariants.PRODUCTS:
           contentType = "products";
           const sku = await fetchProductSku();
-          values = {
-            sku,
-          };
+          values = sku;
+          if (activeSortFilter?.filterProductSku?.length > 0) {
+            values = values.map((item) => {
+              const itemExists = activeSortFilter.filterProductSku.find(
+                (filter) => filter.id === item.id
+              );
+              if (itemExists) {
+                return {
+                  ...item,
+                  isSelected: true,
+                };
+              } else {
+                return { ...item, isSelected: false };
+              }
+            });
+          }
           break;
 
         default:
+          const filterKey = `custom-p${data.id}`;
           values = await fetchCustomField(data.id);
+          if (activeSortFilter[filterKey]?.length > 0) {
+            values = values.map((item) => {
+              const itemExists = activeSortFilter[filterKey]?.find(
+                (filter) => filter.id === item.id
+              );
+              if (itemExists) {
+                return {
+                  ...item,
+                  isSelected: true,
+                };
+              } else {
+                return { ...item, isSelected: false };
+              }
+            });
+          }
       }
 
       setValues((prev) => {
@@ -171,6 +280,21 @@ const FilterView = () => {
     return res.data;
   };
 
+  //TODO
+  const getFilterKeyForActiveAttribute = (id: string) => {
+    const newLocal = "coming inside......";
+    console.log(newLocal);
+    let key;
+
+    if (id === "tags") key = "filterNonAiTags";
+    else if (id === "aiTags") key = "filterAiTags";
+    else if (id === "campaigns") key = "filterCampaigns";
+    else if (id === "fileTypes") key = "filterFileTypes";
+    else key = `custom-p${id}`;
+
+    return key;
+  };
+
   return (
     <div>
       <div className={`${styles["outer-wrapper"]}`}>
@@ -184,6 +308,20 @@ const FilterView = () => {
                 }}
               >
                 {attr.name}
+                {/* TODO */}
+                {activeSortFilter[getFilterKeyForActiveAttribute(attr.id)]
+                  ?.length > 0 &&
+                  attr.id !== FilterAttributeVariants.DATE_UPLOADED &&
+                  attr.id !== FilterAttributeVariants.LAST_UPDATED &&
+                  attr.id !== FilterAttributeVariants.DIMENSIONS && (
+                    <Badge
+                      count={
+                        activeSortFilter[
+                          getFilterKeyForActiveAttribute(attr.id)
+                        ]?.length
+                      }
+                    />
+                  )}
                 <img
                   className={`${styles["arrow-down"]}`}
                   src={Utilities.downIcon}
@@ -195,6 +333,7 @@ const FilterView = () => {
                   activeAttribute={activeAttribute}
                   setActiveAttribute={setActiveAttribute}
                   options={values}
+                  setOptions={setValues}
                   contentType={contentType}
                   loading={loading}
                 />

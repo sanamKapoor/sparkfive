@@ -2,46 +2,67 @@ import dateFnsFormat from "date-fns/format";
 import dateFnsParse from "date-fns/parse";
 import { useState } from "react";
 import { DateUtils } from "react-day-picker";
-import DayPickerInput from "react-day-picker/DayPickerInput";
-import { Utilities } from "../../../assets";
-import { dateRanges } from "../../../config/data/filter";
-import { IDateRange } from "../../../interfaces/filters";
-import IconClickable from "../buttons/icon-clickable";
-import styles from "./date-uploaded.module.css";
+import { Utilities } from "../../../../assets";
+import { dateRanges } from "../../../../config/data/filter";
+import { IDateRange } from "../../../../interfaces/filters";
+import IconClickable from "../../buttons/icon-clickable";
 
-interface DateUploadedProps {
+import DayPickerInput from "react-day-picker/DayPickerInput";
+import styles from "../../filter/date-uploaded.module.css";
+
+interface LastUpdatedFilterProps {
   data: IDateRange;
   setData: (options: IDateRange) => void;
   setFilters: (val: unknown) => void;
 }
 
-const DateUploaded: React.FC<DateUploadedProps> = ({
+const LastUpdatedFilter: React.FC<LastUpdatedFilterProps> = ({
   data,
   setData,
   setFilters,
 }) => {
   const [showCustomRange, setShowCustomRange] = useState(false);
+  const [activeInput, setActiveInput] = useState("");
 
   const onSelectDateRange = (dateRange: IDateRange) => {
-    setData({
-      last,
+    setData(dateRange);
+    setFilters({
+      lastUpdated: dateRange,
     });
   };
 
-  const onDeselectDateRange = (dateRange: IDateRange) => {};
+  const onDeselectDateRange = () => {
+    setData(undefined);
+    setFilters({
+      lastUpdated: undefined,
+    });
+  };
 
   const handleStartDay = (value) => {
-    toggleActiveInput("startDate");
-    setStartDate(value);
-  };
-  const handleEndDay = (value) => {
-    toggleActiveInput("endDate");
-    setEndDate(value);
+    setActiveInput("startDate");
+
+    const obj = {
+      ...data,
+      beginDate: value,
+      endDate: data?.endDate,
+    };
+    setData(obj);
+    setFilters({
+      lastUpdated: obj,
+    });
   };
 
-  const toggleActiveInput = (input) => {
-    if (input === activeInput) setActiveInput("");
-    else setActiveInput(input);
+  const handleEndDay = (value) => {
+    setActiveInput("endDate");
+
+    const obj = {
+      ...data,
+      beginDate: data?.beginDate,
+      endDate: value,
+    };
+
+    setData(obj);
+    setFilters({ lastUpdated: obj });
   };
 
   const parseDate = (str, format, locale) => {
@@ -55,16 +76,30 @@ const DateUploaded: React.FC<DateUploadedProps> = ({
     return dateFnsFormat(date, format, { locale });
   };
 
+  const onDeselectCustomRange = () => {
+    setShowCustomRange(false);
+  };
+
+  const onSelectCustomRange = () => {
+    setShowCustomRange(true);
+    setData({
+      id: "custom",
+      label: "Custom Range",
+      beginDate: undefined,
+      endDate: undefined,
+    });
+  };
+
   const FORMAT = "MM/dd/yyyy";
 
   return (
     <div className={`${styles.container}`}>
       {dateRanges.map((option) => (
         <div key={option.id} className={`${styles["outer-wrapper"]}`}>
-          {option.id === data?.id ? (
+          {data && option.id === data?.id ? (
             <IconClickable
               src={Utilities.radioButtonEnabled}
-              onClick={() => onDeselectDateRange(option)}
+              onClick={() => onDeselectDateRange()}
             />
           ) : (
             <IconClickable
@@ -79,9 +114,15 @@ const DateUploaded: React.FC<DateUploadedProps> = ({
       <div className={styles["dates-container"]}>
         <div className={`${styles["outer-wrapper"]}`}>
           {data?.id === "custom" ? (
-            <IconClickable src={Utilities.radioButtonEnabled} />
+            <IconClickable
+              src={Utilities.radioButtonEnabled}
+              onClick={onDeselectCustomRange}
+            />
           ) : (
-            <IconClickable src={Utilities.radioButtonNormal} />
+            <IconClickable
+              src={Utilities.radioButtonNormal}
+              onClick={onSelectCustomRange}
+            />
           )}
           <span className={`${styles["select-name"]}`}>Custom Range</span>
         </div>
@@ -89,7 +130,7 @@ const DateUploaded: React.FC<DateUploadedProps> = ({
           <div className={styles["dates-wrapper"]}>
             <div>
               <DayPickerInput
-                value={data.beginDate ?? new Date()}
+                value={data?.beginDate ?? new Date()}
                 formatDate={formatDate}
                 format={FORMAT}
                 parseDate={parseDate}
@@ -106,7 +147,7 @@ const DateUploaded: React.FC<DateUploadedProps> = ({
             <div className={styles.line}></div>
             <div>
               <DayPickerInput
-                value={data.endDate ?? new Date()}
+                value={data?.endDate ?? new Date()}
                 formatDate={formatDate}
                 format={FORMAT}
                 parseDate={parseDate}
@@ -118,7 +159,7 @@ const DateUploaded: React.FC<DateUploadedProps> = ({
                 dayPickerProps={{
                   className: styles.calendar,
                   disabledDays: {
-                    before: data.beginDate ?? new Date(),
+                    before: data?.beginDate ?? new Date(),
                   },
                 }}
               />
@@ -130,4 +171,4 @@ const DateUploaded: React.FC<DateUploadedProps> = ({
   );
 };
 
-export default DateUploaded;
+export default LastUpdatedFilter;
