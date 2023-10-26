@@ -317,14 +317,13 @@ export default function LogoTypeSelection({ onSelect, onClose }: Props) {
           >
             Upload
           </li>
-          <li className={styles["nav-item"]}>
-            <Assets.dropbox
-              className={styles.icon}
-              onClick={() => {
-                openDropboxSelector();
-              }}
-            />{" "}
-            Dropbox
+          <li
+            className={styles["nav-item"]}
+            onClick={() => {
+              openDropboxSelector();
+            }}
+          >
+            <Assets.dropbox className={styles.icon} /> Dropbox
           </li>
           <li className={styles["nav-item"]}>
             <DriveSelector multiSelect={true} folderSelect={true} onFilesSelect={onDriveFilesSelection}>
