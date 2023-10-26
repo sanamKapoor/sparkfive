@@ -70,7 +70,7 @@
     text-align: center;
     color: white;
     border-radius: 4px;
-    background: #10BDA5;
+    background: var(--secondary-color);
     cursor: pointer;
 
 }
@@ -80,9 +80,9 @@
     width: 137px;
     text-align: center;
     border-radius: 4px;
-    color: #10BDA5;
+    color: var(--secondary-color);
     background-color: white;
-    border: 1px solid #10BDA5;
+    border: 1px solid var(--secondary-color);
     margin-right: 12px;
     cursor: pointer;
 }

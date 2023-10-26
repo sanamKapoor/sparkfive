@@ -98,10 +98,7 @@ const CropSidePanel = ({
     try {
       let payload = {
         assetIds: [asset.id],
-        sizeId:
-          (sizeValue && sizeValue.value === "none") || dlSize === "original"
-            ? null
-            : sizeValue.id,
+        sizeId: (sizeValue && sizeValue.value === "none") || dlSize === "original" ? null : sizeValue.id,
         customSize: true,
         width: dlSize === "original" ? asset.dimensionWidth : widthOriginal,
         height: dlSize === "original" ? asset.dimensionHeight : heightOriginal,
@@ -144,19 +141,12 @@ const CropSidePanel = ({
 
       updateDownloadingStatus("none", 0, 0, "");
     } catch (e) {
-      updateDownloadingStatus(
-        "error",
-        0,
-        0,
-        "Internal Server Error. Please try again."
-      );
+      updateDownloadingStatus("error", 0, 0, "Internal Server Error. Please try again.");
     }
   };
 
   const getFileNameWithExtension = (fileName) => {
-    const extension = fileName.slice(
-      ((fileName.lastIndexOf(".") - 1) >>> 0) + 2
-    );
+    const extension = fileName.slice(((fileName.lastIndexOf(".") - 1) >>> 0) + 2);
     if (extension) {
       return fileName;
     } else {
@@ -170,10 +160,7 @@ const CropSidePanel = ({
 
       let payload = {
         assetIds: [asset.id],
-        sizeId:
-          (sizeValue && sizeValue.value === "none") || dlSize === "original"
-            ? null
-            : sizeValue.id,
+        sizeId: (sizeValue && sizeValue.value === "none") || dlSize === "original" ? null : sizeValue.id,
         customSize: true,
         width: dlSize === "original" ? asset.dimensionWidth : widthOriginal,
         height: dlSize === "original" ? asset.dimensionHeight : heightOriginal,
@@ -230,24 +217,15 @@ const CropSidePanel = ({
   useEffect(() => {
     const width = mode === "crop" ? sizeOfCrop.width : widthOriginal;
     const height = mode === "crop" ? sizeOfCrop.height : heightOriginal;
-    const dimensionWidth =
-      mode === "crop" ? widthOriginal : asset.dimensionWidth;
-    const dimensionHeight =
-      mode === "crop" ? heightOriginal : asset.dimensionHeight;
+    const dimensionWidth = mode === "crop" ? widthOriginal : asset.dimensionWidth;
+    const dimensionHeight = mode === "crop" ? heightOriginal : asset.dimensionHeight;
     setSizesValue({
       percentWidth: Math.round((width * 100) / dimensionWidth),
       percentHeight: Math.round((height * 100) / dimensionHeight),
       width: width,
       height: height,
     });
-  }, [
-    widthOriginal,
-    heightOriginal,
-    mode,
-    sizeOfCrop,
-    detailPosSize,
-    presetTypeValue,
-  ]);
+  }, [widthOriginal, heightOriginal, mode, sizeOfCrop, detailPosSize, presetTypeValue]);
 
   useEffect(() => {
     setSelectedSize(sizeValue);
@@ -257,9 +235,7 @@ const CropSidePanel = ({
     if (isCroppingMode()) {
       if (resizeOption === "%") {
         value =
-          name === "width"
-            ? Math.round((value * widthOriginal) / 100)
-            : Math.round((value * heightOriginal) / 100);
+          name === "width" ? Math.round((value * widthOriginal) / 100) : Math.round((value * heightOriginal) / 100);
       }
       if (name === "width" && value > widthOriginal) {
         value = widthOriginal;
@@ -284,60 +260,32 @@ const CropSidePanel = ({
         <div className={`${styles.title}`}>Mode</div>
         <div className={styles["field-content"]}>
           <div className={styles["field-radio-wrapper"]}>
-            <div
-              className={`${styles["radio-button-wrapper"]} m-r-15`}
-              data-tip
-              data-for={"resize"}
-            >
+            <div className={`${styles["radio-button-wrapper"]} m-r-15`} data-tip data-for={"resize"}>
               <IconClickable
-                src={
-                  mode === "resize"
-                    ? Utilities.radioButtonEnabled
-                    : Utilities.radioButtonNormal
-                }
+                src={mode === "resize" ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                 additionalClass={styles["select-icon"]}
                 onClick={() => setMode("resize")}
               />
               <div className={"font-12 m-l-15"}>Resize</div>
             </div>
-            <ReactTooltip
-              place={"bottom"}
-              id={"resize"}
-              delayShow={300}
-              effect="solid"
-            >
+            <ReactTooltip place={"bottom"} id={"resize"} delayShow={300} effect="solid">
               {"Resize image at desired dimensions when ratio is maintained"}
             </ReactTooltip>
-            {asset.extension !== "svg" &&
-              asset.extension !== "tiff" &&
-              asset.extension !== "tif" && (
-                <>
-                  <div
-                    className={`${styles["radio-button-wrapper"]}`}
-                    data-tip
-                    data-for={"crop"}
-                  >
-                    <IconClickable
-                      src={
-                        mode === "crop"
-                          ? Utilities.radioButtonEnabled
-                          : Utilities.radioButtonNormal
-                      }
-                      additionalClass={styles["select-icon"]}
-                      onClick={() => setMode("crop")}
-                    />
-                    <div className={"font-12 m-l-15"}>Crop</div>
-                  </div>
-                  <ReactTooltip
-                    place={"bottom"}
-                    id={"crop"}
-                    delayShow={300}
-                    effect="solid"
-                  >
-                    {"Crop image at desired ratio"}
-                  </ReactTooltip>
-                </>
-              )}
+            {asset.extension !== "svg" && asset.extension !== "tiff" && asset.extension !== "tif" && (
+              <>
+                <div className={`${styles["radio-button-wrapper"]}`} data-tip data-for={"crop"}>
+                  <IconClickable
+                    src={mode === "crop" ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                    additionalClass={styles["select-icon"]}
+                    onClick={() => setMode("crop")}
+                  />
+                  <div className={"font-12 m-l-15"}>Crop</div>
+                </div>
+                <ReactTooltip place={"bottom"} id={"crop"} delayShow={300} effect="solid">
+                  {"Crop image at desired ratio"}
+                </ReactTooltip>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -350,16 +298,9 @@ const CropSidePanel = ({
               const isSelected = getImageType(imageType) === type.value;
               return (
                 <li key={index} className={`${styles["select-item"]}`}>
-                  <div
-                    className={`${styles["selectable-wrapper"]} ${
-                      isSelected && styles["selected-wrapper"]
-                    }`}
-                  >
+                  <div className={`${styles["selectable-wrapper"]} ${isSelected && styles["selected-wrapper"]}`}>
                     {isSelected ? (
-                      <IconClickable
-                        src={Utilities.radioButtonEnabled}
-                        additionalClass={styles["select-icon"]}
-                      />
+                      <IconClickable src={Utilities.radioButtonEnabled} additionalClass={styles["select-icon"]} />
                     ) : (
                       <IconClickable
                         src={Utilities.radioButtonNormal}
@@ -384,17 +325,13 @@ const CropSidePanel = ({
             <div className={`${styles.title}`}>
               <span>Resize</span>
               <span
-                className={`${styles["resize-option"]} ${
-                  resizeOption === "px" ? styles["selected"] : ""
-                }`}
+                className={`${styles["resize-option"]} ${resizeOption === "px" ? styles["selected"] : ""}`}
                 onClick={() => resetResizeOption("px")}
               >
                 px
               </span>
               <span
-                className={`${styles["resize-option"]} ${
-                  resizeOption === "%" ? styles["selected"] : ""
-                }`}
+                className={`${styles["resize-option"]} ${resizeOption === "%" ? styles["selected"] : ""}`}
                 onClick={() => resetResizeOption("%")}
               >
                 %
@@ -403,9 +340,7 @@ const CropSidePanel = ({
             <div className={styles["field-content"]}>
               <div className={"row m-t-30"}>
                 <div className={"col-50 m-l-abs-15"}>
-                  <label className={styles["input-label"]}>
-                    Width ({resizeOption})
-                  </label>
+                  <label className={styles["input-label"]}>Width ({resizeOption})</label>
                   <Input
                     disabled={lockCropping()}
                     onChange={(e) => {
@@ -415,18 +350,12 @@ const CropSidePanel = ({
                     additionalClasses={"center-input"}
                     type={"number"}
                     // defaultValue
-                    value={
-                      resizeOption === "%"
-                        ? sizesValue.percentWidth
-                        : sizesValue.width
-                    }
+                    value={resizeOption === "%" ? sizesValue.percentWidth : sizesValue.width}
                     styleType={"regular-height-short"}
                   />
                 </div>
                 <div className={"col-50"}>
-                  <label className={styles["input-label"]}>
-                    Height ({resizeOption})
-                  </label>
+                  <label className={styles["input-label"]}>Height ({resizeOption})</label>
                   <Input
                     disabled={lockCropping()}
                     onChange={(e) => {
@@ -434,11 +363,7 @@ const CropSidePanel = ({
                     }}
                     placeholder={"Height"}
                     type={"number"}
-                    value={
-                      resizeOption === "%"
-                        ? sizesValue.percentHeight
-                        : sizesValue.height
-                    }
+                    value={resizeOption === "%" ? sizesValue.percentHeight : sizesValue.height}
                     additionalClasses={"center-input"}
                     styleType={"regular-height-short"}
                   />
@@ -489,9 +414,7 @@ const CropSidePanel = ({
         </>
       )}
 
-      <div
-        className={`${styles["save-changes"]} ${styles["save-preview-btn-row"]}`}
-      >
+      <div className={`${styles["save-changes"]} ${styles["save-preview-btn-row"]}`}>
         {mode === "crop" ? (
           <Button
             className={"container m-r-15 secondary"}
@@ -522,21 +445,13 @@ const CropSidePanel = ({
         />
         {!isShare && (
           <Button
-            className={"container m-t-40 primary-navy"}
+            className={"container m-t-40 primary"}
             text="Save as Related File"
             type="button"
             onClick={() => {
-              let name =
-                asset.name.substring(0, asset.name.lastIndexOf(".")) ||
-                asset.name;
-              let extension =
-                asset.name.substring(
-                  asset.name.lastIndexOf("."),
-                  asset.name.length
-                ) || "";
-              setRenameValue(
-                `${name}-${mode}-${new Date().getTime()}${extension}`
-              );
+              let name = asset.name.substring(0, asset.name.lastIndexOf(".")) || asset.name;
+              let extension = asset.name.substring(asset.name.lastIndexOf("."), asset.name.length) || "";
+              setRenameValue(`${name}-${mode}-${new Date().getTime()}${extension}`);
               setRelatedModalOpen(true);
             }}
           />

@@ -14,7 +14,7 @@
     align-items: center;
     gap: 18px;
 }
-.actions img{
+.actions img, .actions svg{
   width: 14px;
 }
 .actions button {

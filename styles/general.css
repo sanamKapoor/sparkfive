@@ -31,6 +31,7 @@
   --color-secondary-hover: var(--color-sec-lightivory);
   --color-ghost-text: #9597a6;
   --header-navigation-color: var(--color-prim-navy);
+  --lighter-header-navigation-color: #374186;
   --primary-color: var(--color-prim-navy);
   --secondary-color: var(--color-prim-turquoise);
   --additional-color: var(--color-sec-lightblue)
