@@ -150,6 +150,12 @@ export default ({ children }) => {
     Router.replace("/login");
   };
 
+  const resetLogo = () => {
+    // Reset Logo
+    setLogo(defaultLogo);
+    setLogoId(undefined);
+  };
+
   const hasPermission = (requiredPermissions = [], requiredTeamSettings = []) => {
     // console.warn(`Check permission: `, requiredPermissions, user?.permissions)
     if (requiredPermissions.length === 0 && requiredTeamSettings.length === 0) return true;
@@ -232,6 +238,7 @@ export default ({ children }) => {
     logo,
     setLogo,
     logoId,
+    resetLogo,
   };
 
   return (
