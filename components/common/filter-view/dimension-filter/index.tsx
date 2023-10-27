@@ -3,7 +3,7 @@ import { FilterContext } from "../../../../context";
 import styles from "./index.module.css";
 
 interface DimensionsFilterProps {
-  limits: {
+  options: {
     maxHeight: number;
     minHeight: number;
     maxWidth: number;
@@ -13,12 +13,12 @@ interface DimensionsFilterProps {
 }
 
 const DimensionsFilter: React.FC<DimensionsFilterProps> = ({
-  limits,
+  options,
   setFilters,
 }) => {
   const { activeSortFilter } = useContext(FilterContext);
 
-  const { maxHeight, minHeight, maxWidth, minWidth } = limits;
+  const { maxHeight, minHeight, maxWidth, minWidth } = options;
 
   //TODO: check if this is actually required
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { IDateRange } from "../../interfaces/filters";
+import { FilterAttributeVariants, IDateRange } from "../../interfaces/filters";
 
 const calculateBeginDate = (daysAgo: number) => {
   const endDate = new Date();
@@ -47,13 +47,25 @@ export const dateRanges: IDateRange[] = [
 ];
 
 export const filterKeyMap = {
-  resolution: "filterResolutions",
-  tags: "filterNonAiTags",
-  aiTags: "filterAiTags",
-  campaigns: "filterCampaigns",
-  products: "filterProductSku",
-  fileTypes: "filterFileTypes",
-  orientation: "filterOrientations",
-  dateUploaded: "dateUploaded",
-  lastUpdated: "lastUpdated",
+  [FilterAttributeVariants.TAGS]: "filterNonAiTags",
+  [FilterAttributeVariants.AI_TAGS]: "filterAiTags",
+  [FilterAttributeVariants.CAMPAIGNS]: "filterCampaigns",
+  [FilterAttributeVariants.PRODUCTS]: "filterProductSku",
+  [FilterAttributeVariants.FILE_TYPES]: "filterFileTypes",
+  [FilterAttributeVariants.ORIENTATION]: "filterOrientations",
+  [FilterAttributeVariants.RESOLUTION]: "filterResolutions",
+  [FilterAttributeVariants.DATE_UPLOADED]: "dateUploaded",
+  [FilterAttributeVariants.LAST_UPDATED]: "lastUpdated",
+};
+
+export const ruleKeyMap = {
+  [FilterAttributeVariants.TAGS]: "allNonAiTags",
+  [FilterAttributeVariants.AI_TAGS]: "allAiTags",
+  [FilterAttributeVariants.CAMPAIGNS]: "allCampaigns",
+};
+
+export const rulesMapper = {
+  all: "All Selected",
+  any: "Any Selected",
+  none: "No Tags",
 };

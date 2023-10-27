@@ -118,3 +118,10 @@ export interface IDateRange {
   beginDate: Date;
   endDate: Date;
 }
+
+export interface OptionDataProps {
+  options: IAttributeValue[];
+  setOptions: (val: unknown) => void;
+  activeAttribute?: IAttribute;
+  setFilters: (data: any) => void; //TODO
+}

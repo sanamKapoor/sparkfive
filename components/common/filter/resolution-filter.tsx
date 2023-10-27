@@ -8,19 +8,19 @@ import OptionDataItem from "../filter-option-popup/option-data-item";
 import styles from "../filter-option-popup/options-data.module.css";
 
 interface ResolutionFilterProps {
-  data: IResolutionFilter[];
+  options: IResolutionFilter[];
   setFilters: (val: any) => void; //TODO
 }
 
 //TODO: handle selection/ deselection separately at first stage
 const ResolutionFilter: React.FC<ResolutionFilterProps> = ({
-  data,
+  options,
   setFilters,
 }) => {
   const { activeSortFilter } = useContext(FilterContext);
   const getInitialResFilters = () => {
     if (activeSortFilter?.filterResolutions?.length > 0) {
-      return data.map((item) => {
+      return options.map((item) => {
         const itemExists = activeSortFilter.filterResolutions.find(
           (filter) => filter.dpi === item.dpi
         );
@@ -35,7 +35,7 @@ const ResolutionFilter: React.FC<ResolutionFilterProps> = ({
       });
     }
 
-    return data.map((item) => ({ ...item, isSelected: false }));
+    return options.map((item) => ({ ...item, isSelected: false }));
   };
 
   const [resValues, setResValues] = useState<

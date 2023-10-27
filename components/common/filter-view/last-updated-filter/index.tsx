@@ -11,28 +11,28 @@ import DayPickerInput from "react-day-picker/DayPickerInput";
 import styles from "../../filter/date-uploaded.module.css";
 
 interface LastUpdatedFilterProps {
-  data: IDateRange;
-  setData: (options: IDateRange) => void;
+  options: IDateRange;
+  setOptions: (options: IDateRange) => void;
   setFilters: (val: unknown) => void;
 }
 
 const LastUpdatedFilter: React.FC<LastUpdatedFilterProps> = ({
-  data,
-  setData,
+  options,
+  setOptions,
   setFilters,
 }) => {
   const [showCustomRange, setShowCustomRange] = useState(false);
   const [activeInput, setActiveInput] = useState("");
 
   const onSelectDateRange = (dateRange: IDateRange) => {
-    setData(dateRange);
+    setOptions(dateRange);
     setFilters({
       lastUpdated: dateRange,
     });
   };
 
   const onDeselectDateRange = () => {
-    setData(undefined);
+    setOptions(undefined);
     setFilters({
       lastUpdated: undefined,
     });
@@ -42,11 +42,11 @@ const LastUpdatedFilter: React.FC<LastUpdatedFilterProps> = ({
     setActiveInput("startDate");
 
     const obj = {
-      ...data,
+      ...options,
       beginDate: value,
-      endDate: data?.endDate,
+      endDate: options?.endDate,
     };
-    setData(obj);
+    setOptions(obj);
     setFilters({
       lastUpdated: obj,
     });
@@ -56,12 +56,12 @@ const LastUpdatedFilter: React.FC<LastUpdatedFilterProps> = ({
     setActiveInput("endDate");
 
     const obj = {
-      ...data,
-      beginDate: data?.beginDate,
+      ...options,
+      beginDate: options?.beginDate,
       endDate: value,
     };
 
-    setData(obj);
+    setOptions(obj);
     setFilters({ lastUpdated: obj });
   };
 
@@ -82,7 +82,7 @@ const LastUpdatedFilter: React.FC<LastUpdatedFilterProps> = ({
 
   const onSelectCustomRange = () => {
     setShowCustomRange(true);
-    setData({
+    setOptions({
       id: "custom",
       label: "Custom Range",
       beginDate: undefined,
@@ -96,7 +96,7 @@ const LastUpdatedFilter: React.FC<LastUpdatedFilterProps> = ({
     <div className={`${styles.container}`}>
       {dateRanges.map((option) => (
         <div key={option.id} className={`${styles["outer-wrapper"]}`}>
-          {data && option.id === data?.id ? (
+          {options && option.id === options?.id ? (
             <IconClickable
               src={Utilities.radioButtonEnabled}
               onClick={() => onDeselectDateRange()}
@@ -113,7 +113,7 @@ const LastUpdatedFilter: React.FC<LastUpdatedFilterProps> = ({
 
       <div className={styles["dates-container"]}>
         <div className={`${styles["outer-wrapper"]}`}>
-          {data?.id === "custom" ? (
+          {options?.id === "custom" ? (
             <IconClickable
               src={Utilities.radioButtonEnabled}
               onClick={onDeselectCustomRange}
@@ -130,7 +130,7 @@ const LastUpdatedFilter: React.FC<LastUpdatedFilterProps> = ({
           <div className={styles["dates-wrapper"]}>
             <div>
               <DayPickerInput
-                value={data?.beginDate ?? new Date()}
+                value={options?.beginDate ?? new Date()}
                 formatDate={formatDate}
                 format={FORMAT}
                 parseDate={parseDate}
@@ -147,7 +147,7 @@ const LastUpdatedFilter: React.FC<LastUpdatedFilterProps> = ({
             <div className={styles.line}></div>
             <div>
               <DayPickerInput
-                value={data?.endDate ?? new Date()}
+                value={options?.endDate ?? new Date()}
                 formatDate={formatDate}
                 format={FORMAT}
                 parseDate={parseDate}

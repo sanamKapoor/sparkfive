@@ -5,22 +5,22 @@ import IconClickable from "../buttons/icon-clickable";
 import styles from "./product-filter.module.css";
 
 interface ProductFilterProps {
-  values: IProductSku[];
-  setValues: (val: unknown) => void;
+  options: IProductSku[];
+  setOptions: (val: unknown) => void;
   setFilters: (data: unknown) => void;
 }
 
 const ProductFilter: React.FC<ProductFilterProps> = ({
-  values,
-  setValues,
+  options,
+  setOptions,
   setFilters,
 }) => {
   const onSelectProduct = (data: IProductSku) => {
-    const index = values.findIndex((value) => value.id === data.id);
+    const index = options.findIndex((value) => value.id === data.id);
     if (index !== -1) {
-      values[index].isSelected = true;
+      options[index].isSelected = true;
     }
-    setValues([...values]);
+    setOptions([...options]);
     setFilters((prevState) => {
       return {
         filterProductSku:
@@ -32,13 +32,13 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
   };
 
   const onDeselectProduct = (data: IProductSku) => {
-    const index = values.findIndex((value) => value.id === data.id);
+    const index = options.findIndex((value) => value.id === data.id);
     if (index !== -1) {
-      values[index].isSelected = false;
+      options[index].isSelected = false;
     }
-    setValues([...values]);
+    setOptions([...options]);
 
-    const newFilters = values
+    const newFilters = options
       .filter((item) => item.isSelected)
       .map((item) => ({ value: item.id, ...item }));
     setFilters({
@@ -48,7 +48,7 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
 
   return (
     <div className={`${styles.container}`}>
-      {values.map((item) => (
+      {options.map((item) => (
         <div key={item.id} className={`${styles["outer-wrapper"]}`}>
           {item.isSelected ? (
             <IconClickable

@@ -3,19 +3,12 @@ import React from "react";
 
 import {
   FilterAttributeVariants,
-  IAttribute,
   IAttributeValue,
+  OptionDataProps,
 } from "../../../interfaces/filters";
 import Divider from "./divider";
 import OptionDataItem from "./option-data-item";
 import styles from "./options-data.module.css";
-
-interface OptionDataProps {
-  values: IAttributeValue[];
-  setValues: (val: unknown) => void;
-  activeAttribute: IAttribute;
-  setFilters: (data: any) => void; //TODO
-}
 
 const OptionData: React.FC<OptionDataProps> = ({
   values,

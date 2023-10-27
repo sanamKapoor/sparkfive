@@ -6,25 +6,22 @@ import OptionDataItem from "../../filter-option-popup/option-data-item";
 import styles from "../../filter-option-popup/options-data.module.css";
 
 interface OrientationFilterProps {
-  values: IFileTypeFilter[];
-  setValues: (data: unknown) => void;
+  options: IFileTypeFilter[];
+  setOptions: (data: unknown) => void;
   setFilters: (val: any) => void; //TODO
 }
 
 const OrientationFilter: React.FC<OrientationFilterProps> = ({
-  values,
-  setValues,
+  options,
+  setOptions,
   setFilters,
 }) => {
-  console.log("options values: ", values);
   const onSelectOrientation = (val: string) => {
-    console.log("select: ", val);
-
-    const index = values.findIndex((value) => value.name === val);
+    const index = options.findIndex((value) => value.name === val);
     if (index !== -1) {
-      values[index].isSelected = true;
+      options[index].isSelected = true;
     }
-    setValues([...values]);
+    setOptions([...options]);
     setFilters((prevState) => {
       return {
         filterOrientations:
@@ -48,13 +45,13 @@ const OrientationFilter: React.FC<OrientationFilterProps> = ({
 
   const onDeselectOrientation = (val: string) => {
     console.log("deselect: ", val);
-    const index = values.findIndex((value) => value.name === val);
+    const index = options.findIndex((value) => value.name === val);
     if (index !== -1) {
-      values[index].isSelected = false;
+      options[index].isSelected = false;
     }
-    setValues([...values]);
+    setOptions([...options]);
 
-    let newFilters = values
+    let newFilters = options
       .filter((item) => item.isSelected)
       .map((item) => ({ value: item.name, name: item.name }));
 
@@ -66,7 +63,7 @@ const OrientationFilter: React.FC<OrientationFilterProps> = ({
   return (
     <>
       <div className={styles["outer-wrapper"]}>
-        {values.map((item) => (
+        {options.map((item) => (
           <div className={styles["grid-item"]} key={item.dpi}>
             <OptionDataItem
               name={item.name}

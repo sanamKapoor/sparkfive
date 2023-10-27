@@ -23,7 +23,6 @@ import styles from "./index.module.css";
 import AssetGrid from "../common/asset/asset-grid";
 import AssetOps from "../common/asset/asset-ops";
 import TopBar from "../common/asset/top-bar";
-import FilterContainer from "../common/filter/filter-container";
 import PasswordOverlay from "./password-overlay";
 
 import { isMobile } from "react-device-detect";
@@ -420,7 +419,7 @@ const ShareFolderMain = () => {
 
   const assetGridWrapperStyle =
     !!folderInfo.singleSharedCollectionId ||
-      activeSortFilter.mainFilter === "folders"
+    activeSortFilter.mainFilter === "folders"
       ? styles["col-wrapperview"]
       : styles["col-wrapper"];
 
@@ -462,18 +461,6 @@ const ShareFolderMain = () => {
               setWidthCard={setWidthCard}
               widthCard={widthCard}
             />
-            {openFilter && (
-              <FilterContainer
-                isShare={true}
-                clearFilters={clearFilters}
-                openFilter={openFilter}
-                setOpenFilter={setOpenFilter}
-                activeSortFilter={activeSortFilter}
-                setActiveSortFilter={setActiveSortFilter}
-                isFolder={activeSortFilter.mainFilter === "folders"}
-                filterWidth={widthCard}
-              />
-            )}
           </div>
         </main>
       )}

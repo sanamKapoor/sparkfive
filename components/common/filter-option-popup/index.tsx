@@ -7,30 +7,25 @@ import {
   FilterAttributeVariants,
   IAttribute,
   IFilterAttributeValues,
-  IFilterPopupContentType,
 } from "../../../interfaces/filters";
 import Search from "../../main/user-settings/SuperAdmin/Search/Search";
 import Button from "../buttons/button";
-import DimensionsFilter from "../filter-view/dimension-filter";
-import ProductFilter from "../filter/product-filter";
-import ResolutionFilter from "../filter/resolution-filter";
 import styles from "./index.module.css";
-import OptionData from "./options-data";
 
 import Dropdown from "../../common/inputs/dropdown";
 
-import { filterKeyMap } from "../../../config/data/filter";
+import {
+  filterKeyMap,
+  ruleKeyMap,
+  rulesMapper,
+} from "../../../config/data/filter";
 import { FilterContext } from "../../../context";
 import Loader from "../UI/Loader/loader";
 import IconClickable from "../buttons/icon-clickable";
-import DateUploadedFilter from "../filter-view/date-uploaded-filter";
-import FileTypeFilter from "../filter-view/file-type-filter";
-import LastUpdatedFilter from "../filter-view/last-updated-filter";
-import OrientationFilter from "../filter-view/orientation-filter";
+import FilterContent from "../filter-view/filter-content";
 import Divider from "./divider";
 
 interface FilterOptionPopupProps {
-  contentType: IFilterPopupContentType;
   options: IFilterAttributeValues;
   setOptions: (data: unknown) => void;
   activeAttribute: IAttribute;
@@ -38,17 +33,9 @@ interface FilterOptionPopupProps {
   loading: boolean;
 }
 
-//TODO
-const rulesMapper = {
-  all: "All Selected",
-  any: "Any Selected",
-  none: "No Tags",
-};
-
 const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   options,
   setOptions,
-  contentType,
   activeAttribute,
   setActiveAttribute,
   loading,
@@ -60,8 +47,10 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const showRules = activeAttribute.selectionType === "selectMultiple";
 
-  //TODO: keep updating it until all filter views are not covered
-  const hideSearch = activeAttribute.id === FilterAttributeVariants.DIMENSIONS;
+  const hideSearch =
+    activeAttribute.id === FilterAttributeVariants.DIMENSIONS ||
+    activeAttribute.id === FilterAttributeVariants.LAST_UPDATED ||
+    activeAttribute.id === FilterAttributeVariants.DATE_UPLOADED;
 
   const onApply = (id: string, data: any) => {
     //TODO: handle case if some filters already exists and new ones are added for a particular filterKey
@@ -88,95 +77,106 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   };
 
   const onClear = () => {
-    if (activeAttribute.id === FilterAttributeVariants.TAGS) {
-      setOptions(options.map((item) => ({ ...item, isSelected: false })));
-      setActiveSortFilter({
-        ...activeSortFilter,
-        filterNonAiTags: [],
-        allNonAiTags: "all",
-      });
-    } else if (activeAttribute.id === FilterAttributeVariants.AI_TAGS) {
-      setOptions(options.map((item) => ({ ...item, isSelected: false })));
-      setActiveSortFilter({
-        ...activeSortFilter,
-        filterAiTags: [],
-        allAiTags: "all",
-      });
-    } else if (activeAttribute.id === FilterAttributeVariants.CAMPAIGNS) {
-      setOptions(options.map((item) => ({ ...item, isSelected: false })));
-      setActiveSortFilter({
-        ...activeSortFilter,
-        filterCampaigns: [],
-        allCampaigns: "all",
-      });
-    } else if (activeAttribute.id === FilterAttributeVariants.PRODUCTS) {
-      setOptions(options.map((item) => ({ ...item, isSelected: false })));
-      setActiveSortFilter({
-        ...activeSortFilter,
-        filterProductSku: undefined,
-      });
-    } else if (activeAttribute.id === FilterAttributeVariants.FILE_TYPES) {
-      setOptions(options.map((item) => ({ ...item, isSelected: false })));
-      setActiveSortFilter({
-        ...activeSortFilter,
-        filterFileTypes: [],
-      });
-    } else if (activeAttribute.id === FilterAttributeVariants.ORIENTATION) {
-      setOptions(options.map((item) => ({ ...item, isSelected: false })));
-      setActiveSortFilter({
-        ...activeSortFilter,
-        filterOrientations: [],
-      });
-    } else if (activeAttribute.id === FilterAttributeVariants.DATE_UPLOADED) {
-      console.log("coming in here.......");
-      setOptions(undefined);
-      setActiveSortFilter({
-        ...activeSortFilter,
-        dateUploaded: undefined,
-      });
-    } else if (activeAttribute.id === FilterAttributeVariants.LAST_UPDATED) {
-      setOptions(undefined);
-      setActiveSortFilter({
-        ...activeSortFilter,
-        lastUpdated: undefined,
-      });
-    } else {
-      const filterKey = `custom-p${activeAttribute.id}`;
-      const filterRuleKey = `all-${activeAttribute.id}`;
-      setOptions(options.map((item) => ({ ...item, isSelected: false })));
-      setActiveSortFilter({
-        ...activeSortFilter,
-        [filterKey]: [],
-        [filterRuleKey]: "all",
-      });
-    }
+    const filterKey =
+      filterKeyMap[activeAttribute.id] || `custom-p${activeAttribute.id}`;
+    const ruleKey =
+      ruleKeyMap[activeAttribute.id] || `all-${activeAttribute.id}`;
+
+    const clearOptions =
+      activeAttribute.id !== FilterAttributeVariants.DATE_UPLOADED &&
+      activeAttribute.id !== FilterAttributeVariants.LAST_UPDATED;
+
+    setOptions(
+      clearOptions
+        ? options.map((item) => ({ ...item, isSelected: false }))
+        : undefined
+    );
+
+    const clearFilter = {};
+    clearFilter[filterKey] = clearOptions ? [] : undefined;
+    clearFilter[ruleKey] = clearOptions ? "all" : undefined;
+
+    setActiveSortFilter({
+      ...activeSortFilter,
+      ...clearFilter,
+    });
   };
+
+  //   if (activeAttribute.id === FilterAttributeVariants.TAGS) {
+  //     setOptions(options.map((item) => ({ ...item, isSelected: false })));
+  //     setActiveSortFilter({
+  //       ...activeSortFilter,
+  //       filterNonAiTags: [],
+  //       allNonAiTags: "all",
+  //     });
+  //   } else if (activeAttribute.id === FilterAttributeVariants.AI_TAGS) {
+  //     setOptions(options.map((item) => ({ ...item, isSelected: false })));
+  //     setActiveSortFilter({
+  //       ...activeSortFilter,
+  //       filterAiTags: [],
+  //       allAiTags: "all",
+  //     });
+  //   } else if (activeAttribute.id === FilterAttributeVariants.CAMPAIGNS) {
+  //     setOptions(options.map((item) => ({ ...item, isSelected: false })));
+  //     setActiveSortFilter({
+  //       ...activeSortFilter,
+  //       filterCampaigns: [],
+  //       allCampaigns: "all",
+  //     });
+  //   } else if (activeAttribute.id === FilterAttributeVariants.PRODUCTS) {
+  //     setOptions(options.map((item) => ({ ...item, isSelected: false })));
+  //     setActiveSortFilter({
+  //       ...activeSortFilter,
+  //       filterProductSku: [], //TODO: verify
+  //     });
+  //   } else if (activeAttribute.id === FilterAttributeVariants.FILE_TYPES) {
+  //     setOptions(options.map((item) => ({ ...item, isSelected: false })));
+  //     setActiveSortFilter({
+  //       ...activeSortFilter,
+  //       filterFileTypes: [],
+  //     });
+  //   } else if (activeAttribute.id === FilterAttributeVariants.ORIENTATION) {
+  //     setOptions(options.map((item) => ({ ...item, isSelected: false })));
+  //     setActiveSortFilter({
+  //       ...activeSortFilter,
+  //       filterOrientations: [],
+  //     });
+  //   } else if (activeAttribute.id === FilterAttributeVariants.DATE_UPLOADED) {
+  //     console.log("coming in here.......");
+  //     setOptions(undefined);
+  //     setActiveSortFilter({
+  //       ...activeSortFilter,
+  //       dateUploaded: undefined,
+  //     });
+  //   } else if (activeAttribute.id === FilterAttributeVariants.LAST_UPDATED) {
+  //     setOptions(undefined);
+  //     setActiveSortFilter({
+  //       ...activeSortFilter,
+  //       lastUpdated: undefined,
+  //     });
+  //   } else {
+  //     const filterKey = `custom-p${activeAttribute.id}`;
+  //     const filterRuleKey = `all-${activeAttribute.id}`;
+  //     setOptions(options.map((item) => ({ ...item, isSelected: false })));
+  //     setActiveSortFilter({
+  //       ...activeSortFilter,
+  //       [filterKey]: [],
+  //       [filterRuleKey]: "all",
+  //     });
+  //   }
+  // };
 
   //TODO
   const onSearch = (term: string) => {
     console.log("Searching term....,", term);
   };
 
-  const ruleIndex =
-    activeAttribute.id === "tags"
-      ? `allNonAiTags`
-      : activeAttribute.type === "custom"
-      ? `all-p${activeAttribute.id}`
-      : activeAttribute;
+  const ruleKey = ruleKeyMap[activeAttribute.id] || `all-${activeAttribute.id}`;
 
   const onChangeRule = (ruleName: string) => {
-    let id = activeAttribute.id;
-
-    if (activeAttribute.id === "tags") {
-      id = "NonAiTags";
-    }
-
-    if (activeAttribute.type === "custom") {
-      id = `-p${activeAttribute.id}`;
-    }
     setActiveSortFilter({
       ...activeSortFilter,
-      [`all${id}`]: ruleName,
+      [ruleKey]: ruleName,
     });
 
     setShowDropdown(false);
@@ -218,60 +218,12 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
           {loading ? (
             <Loader className={styles.customLoader} />
           ) : (
-            <>
-              {/* TODO: 1. move this into a separate Content Component
-               *       2. fix type error
-               */}
-              {contentType === "list" && (
-                <OptionData
-                  values={options}
-                  setValues={setOptions}
-                  setFilters={setFilters}
-                  activeAttribute={activeAttribute}
-                />
-              )}
-              {contentType === "dimensions" && (
-                <DimensionsFilter limits={options} setFilters={setFilters} />
-              )}
-              {contentType === "resolutions" && (
-                <ResolutionFilter data={options} setFilters={setFilters} />
-              )}
-              {contentType === "fileTypes" && (
-                <FileTypeFilter
-                  values={options}
-                  setValues={setOptions}
-                  setFilters={setFilters}
-                />
-              )}
-              {contentType === "orientation" && (
-                <OrientationFilter
-                  values={options}
-                  setValues={setOptions}
-                  setFilters={setFilters}
-                />
-              )}
-              {contentType === "lastUpdated" && (
-                <LastUpdatedFilter
-                  data={options}
-                  setData={setOptions}
-                  setFilters={setFilters}
-                />
-              )}
-              {contentType === "dateUploaded" && (
-                <DateUploadedFilter
-                  data={options}
-                  setData={setOptions}
-                  setFilters={setFilters}
-                />
-              )}
-              {contentType === "products" && (
-                <ProductFilter
-                  values={options}
-                  setValues={setOptions}
-                  setFilters={setFilters}
-                />
-              )}
-            </>
+            <FilterContent
+              options={options}
+              setOptions={setOptions}
+              setFilters={setFilters}
+              activeAttribute={activeAttribute}
+            />
           )}
 
           {showRules && (
@@ -282,9 +234,8 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
               >
                 <label>Rule:</label>
                 <div className={`${styles["select-wrapper"]}`}>
-                  {/* TODO */}
                   <p>
-                    {rulesMapper[activeSortFilter[ruleIndex]] ??
+                    {rulesMapper[activeSortFilter[ruleKey]] ??
                       rulesMapper["all"]}
                   </p>
                   <IconClickable
@@ -323,7 +274,7 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
             <Button
               className={"apply"}
               text={"Apply"}
-              disabled={loading || !filters}
+              disabled={loading}
               onClick={() => onApply(activeAttribute.id, filters)}
             />
             <Button

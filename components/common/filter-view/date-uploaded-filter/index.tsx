@@ -11,30 +11,30 @@ import DayPickerInput from "react-day-picker/DayPickerInput";
 import styles from "../../filter/date-uploaded.module.css";
 
 interface DateUploadedFilterProps {
-  data: IDateRange;
-  setData: (options: IDateRange) => void;
+  options: IDateRange;
+  setOptions: (options: IDateRange) => void;
   setFilters: (val: unknown) => void;
 }
 
 const DateUploadedFilter: React.FC<DateUploadedFilterProps> = ({
-  data,
-  setData,
+  options,
+  setOptions,
   setFilters,
 }) => {
   const [showCustomRange, setShowCustomRange] = useState(
-    data?.id === "custom" ? true : false
+    options?.id === "custom" ? true : false
   );
   const [activeInput, setActiveInput] = useState("");
 
   const onSelectDateRange = (dateRange: IDateRange) => {
-    setData(dateRange);
+    setOptions(dateRange);
     setFilters({
       dateUploaded: dateRange,
     });
   };
 
   const onDeselectDateRange = () => {
-    setData(undefined);
+    setOptions(undefined);
     setFilters({
       dateUploaded: undefined,
     });
@@ -47,9 +47,9 @@ const DateUploadedFilter: React.FC<DateUploadedFilterProps> = ({
       id: "custom",
       label: "Custom Range",
       beginDate: value,
-      endDate: data?.endDate,
+      endDate: options?.endDate,
     };
-    setData(obj);
+    setOptions(obj);
     setFilters({
       dateUploaded: obj,
     });
@@ -61,11 +61,11 @@ const DateUploadedFilter: React.FC<DateUploadedFilterProps> = ({
     const obj = {
       id: "custom",
       label: "Custom Range",
-      beginDate: data?.beginDate,
+      beginDate: options?.beginDate,
       endDate: value,
     };
 
-    setData(obj);
+    setOptions(obj);
     setFilters({ dateUploaded: obj });
   };
 
@@ -94,7 +94,7 @@ const DateUploadedFilter: React.FC<DateUploadedFilterProps> = ({
     <div className={`${styles.container}`}>
       {dateRanges.map((option) => (
         <div key={option.id} className={`${styles["outer-wrapper"]}`}>
-          {data && option.id === data?.id ? (
+          {options && option.id === options?.id ? (
             <IconClickable
               src={Utilities.radioButtonEnabled}
               onClick={() => onDeselectDateRange()}
@@ -111,7 +111,7 @@ const DateUploadedFilter: React.FC<DateUploadedFilterProps> = ({
 
       <div className={styles["dates-container"]}>
         <div className={`${styles["outer-wrapper"]}`}>
-          {data?.id === "custom" ? (
+          {options?.id === "custom" ? (
             <IconClickable
               src={Utilities.radioButtonEnabled}
               onClick={onDeselectCustomRange}
@@ -125,11 +125,11 @@ const DateUploadedFilter: React.FC<DateUploadedFilterProps> = ({
           <span className={`${styles["select-name"]}`}>Custom Range</span>
         </div>
         {showCustomRange ||
-          (data?.id === "custom" && (
+          (options?.id === "custom" && (
             <div className={styles["dates-wrapper"]}>
               <div>
                 <DayPickerInput
-                  value={data?.beginDate ?? new Date()}
+                  value={options?.beginDate ?? new Date()}
                   formatDate={formatDate}
                   format={FORMAT}
                   parseDate={parseDate}
@@ -146,7 +146,7 @@ const DateUploadedFilter: React.FC<DateUploadedFilterProps> = ({
               <div className={styles.line}></div>
               <div>
                 <DayPickerInput
-                  value={data?.endDate ?? new Date()}
+                  value={options?.endDate ?? new Date()}
                   formatDate={formatDate}
                   format={FORMAT}
                   parseDate={parseDate}
@@ -158,7 +158,7 @@ const DateUploadedFilter: React.FC<DateUploadedFilterProps> = ({
                   dayPickerProps={{
                     className: styles.calendar,
                     disabledDays: {
-                      before: data?.beginDate ?? new Date(),
+                      before: options?.beginDate ?? new Date(),
                     },
                   }}
                 />

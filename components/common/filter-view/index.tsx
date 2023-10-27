@@ -15,10 +15,9 @@ import FilterOptionPopup from "../filter-option-popup";
 import styles from "./index.module.css";
 
 const FilterView = () => {
-  const { activeSortFilter } = useContext(FilterContext);
+  const { activeSortFilter, setRenderedFlag } = useContext(FilterContext);
   const {
     activeAttribute,
-    contentType,
     loading,
     onAttributeClick,
     setActiveAttribute,
@@ -47,6 +46,7 @@ const FilterView = () => {
 
   useEffect(() => {
     getAttributes();
+    setRenderedFlag(true);
   }, []);
 
   return (
@@ -83,7 +83,6 @@ const FilterView = () => {
                   setActiveAttribute={setActiveAttribute}
                   options={values}
                   setOptions={setValues}
-                  contentType={contentType}
                   loading={loading}
                 />
               )}

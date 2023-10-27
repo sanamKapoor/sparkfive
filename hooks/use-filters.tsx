@@ -3,7 +3,6 @@ import {
   FilterAttributeVariants,
   IAttribute,
   IFilterAttributeValues,
-  IFilterPopupContentType,
 } from "../interfaces/filters";
 
 import { getFilterKeyForAttribute } from "../utils/filter";
@@ -15,9 +14,6 @@ import filterApi from "../server-api/filter";
 import tagsApi from "../server-api/tag";
 
 const useFilters = (activeSortFilter) => {
-  const [contentType, setContentType] =
-    useState<IFilterPopupContentType>("list");
-
   const [loading, setLoading] = useState<boolean>(false);
   const [activeAttribute, setActiveAttribute] = useState<IAttribute | null>(
     null
@@ -61,7 +57,6 @@ const useFilters = (activeSortFilter) => {
       setLoading(true);
 
       setActiveAttribute(data);
-      let contentType: IFilterPopupContentType = "list";
       let values: IFilterAttributeValues = [];
 
       switch (data.id) {
@@ -79,41 +74,34 @@ const useFilters = (activeSortFilter) => {
           break;
 
         case FilterAttributeVariants.FILE_TYPES:
-          contentType = "fileTypes";
           values = await fetchValues(data.id, fetchAssetFileExtensions, [
             "value",
           ]);
           break;
 
         case FilterAttributeVariants.ORIENTATION:
-          contentType = "orientation";
           values = await fetchValues(data.id, fetchAssetOrientations, [
             "value",
           ]);
           break;
 
         case FilterAttributeVariants.RESOLUTION:
-          contentType = "resolutions";
           values = await fetchAssetResolutions();
           break;
 
         case FilterAttributeVariants.DIMENSIONS:
-          contentType = "dimensions";
           values = await fetchAssetDimensionLimits();
           break;
 
         case FilterAttributeVariants.LAST_UPDATED:
-          contentType = "lastUpdated";
           values = activeSortFilter?.lastUpdated || [];
           break;
 
         case FilterAttributeVariants.DATE_UPLOADED:
-          contentType = "dateUploaded";
           values = activeSortFilter?.dateUploaded || [];
           break;
 
         case FilterAttributeVariants.PRODUCTS:
-          contentType = "products";
           values = await fetchValues(data.id, fetchProductSku, ["id"]);
           break;
 
@@ -124,7 +112,6 @@ const useFilters = (activeSortFilter) => {
       }
 
       setValues(values);
-      setContentType(contentType);
     } catch (err) {
       console.log("[FILTER_DROPDOWN]: ", err);
     } finally {
@@ -178,7 +165,6 @@ const useFilters = (activeSortFilter) => {
   };
   return {
     activeAttribute,
-    contentType,
     loading,
     onAttributeClick,
     setActiveAttribute,
