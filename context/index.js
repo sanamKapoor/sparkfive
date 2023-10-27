@@ -23,6 +23,7 @@ export const UserContext = createContext({
   logo: "",
   setLogo: (logo) => {},
   logoId: "",
+  resetLogo: () => {},
 });
 
 export const ThemeContext = createContext({
