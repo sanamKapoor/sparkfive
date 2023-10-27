@@ -6,7 +6,12 @@
     padding: 7.5px 2px;
     background: #fff;
     margin-bottom:10px;
-  
+    box-sizing: border-box;
+    
+}
+
+.border-bottom{
+    border-bottom: none;
 }
 .list1-description:hover{
     background: var(--color-sec-lightblue);
@@ -27,11 +32,11 @@
     line-height: 18px;
     color:var(--color-prim-navy);
 }
-.active {
+/* .active {
     background:var(--color-sec-lightblue);
     border-radius: 4px;
     padding: 4px;
-  }
+  } */
 .icon-description{
     max-width: 15ch;
     overflow: hidden;
@@ -58,3 +63,23 @@
 .sidenav-list1{
     margin-bottom: 10px;
 }
+
+@media (max-width:820px) {
+    .border-bottom{
+        border-bottom: 1px solid #dfdad4;
+        padding: 10px 23px;
+
+    }
+    .list1-description{
+        margin-bottom:0px;
+      
+    }
+    .active{
+        padding: 10px 23px;
+    }
+    .list1-description:hover{
+        
+        padding: 10px 23px;
+    }
+    
+  }

@@ -162,6 +162,16 @@
     }
    
   }
+  @media (max-width:400px){
+    .sub-collection-heading{
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+    .TagsInfo{
+      margin-top:10px;
+      align-items: flex-start;
+    }
+  }
   
 
   

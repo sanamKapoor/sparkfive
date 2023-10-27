@@ -456,3 +456,14 @@ console
     margin-left: 0;
   }
 }
+@media screen and (max-width: 400px) {
+ .mobile-select {
+    width: 100%;
+  
+  }
+  .filter-btn-mob{
+    width: 100%;
+    
+  }
+}
+

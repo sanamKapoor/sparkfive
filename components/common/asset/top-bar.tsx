@@ -16,6 +16,9 @@ import Breadcrumbs from '../misc/breadcrumbs';
 import styles from './top-bar.module.css';
 import NavHeading from '../../topbar-newnavigation/NavHeading';
 import React from 'react';
+import Search from '../../main/user-settings/SuperAdmin/Search/Search';
+import SearchModal from '../../SearchModal/Search-modal';
+import SearchOverlayAssets from '../../main/search-overlay-assets';
 
 const TopBar = ({
   activeSortFilter,
@@ -190,11 +193,11 @@ const TopBar = ({
                 <ul className={styles["tab-list"]}>
                   {isMobile ? (
                     <div className={styles["mobile-tabs"]}>
-                      <IconClickable
+                      {/* <IconClickable
                         src={Utilities.menu}
                         additionalClass={styles.hamburger}
                         onClick={() => setShowTabs(!showTabs)}
-                      />
+                      /> */}
                       <li className={styles["tab-list-item"]}>
                         {/* {tabs
                         .filter(
@@ -255,18 +258,28 @@ const TopBar = ({
           </div>
         </div>
         <div className={styles["sec-filters"]}>
-          {!isMobile && !isShare && !activeSearchOverlay && (
-            <img
+          {/* {!isMobile && !isShare && !activeSearchOverlay && ( */}
+         
+          <img
               src={Utilities.search}
               onClick={setActiveSearchOverlay}
-              className={`${styles.search} ${!((amountSelected === 0 || mode === "folders") &&
+              className={`${styles.search} ${styles.SearchWeb} ${!((amountSelected === 0 || mode === "folders") &&
                 showAssetAddition &&
                 hasPermission([
                   ASSET_UPLOAD_NO_APPROVAL,
                   ASSET_UPLOAD_APPROVAL,
                 ])) ? "m-r-20" : ""}`}
             />
-          )}
+
+         
+          <div className={styles.SearchMobile}>
+          <SearchOverlayAssets/>
+
+          </div>
+          
+      
+         
+          {/* )} */}
           {activeSearchOverlay && !(isShare && isFolder) && (
             <SearchOverlay
               closeOverlay={closeSearchOverlay}
@@ -279,6 +292,7 @@ const TopBar = ({
               }}
               sharePath={sharePath}
               isFolder={isFolder} onClickOutside={undefined} />
+        
           )}
           {(amountSelected === 0 || mode === "folders") &&
             showAssetAddition &&
@@ -286,11 +300,12 @@ const TopBar = ({
               ASSET_UPLOAD_NO_APPROVAL,
               ASSET_UPLOAD_APPROVAL,
             ]) && (
-              <div className={styles.mobilePlus}>
+              <div className={styles["mobilePlus"]}>
                 <AssetAddition
                   activeFolder={mode === "SubCollectionView" ? activeSubFolders : activeFolder}
                 />
               </div>
+            
             )}
           <div className={styles.gridOuter}>
             {!deletedAssets && (
@@ -360,24 +375,28 @@ const TopBar = ({
               Select only 25 collections shown
             </span>
           )}
-          <Button
+           <div className={styles["selected-wrapper"]}>
+           <Button
             type="button"
             text="Select All"
             className="container secondary"
             onClick={selectAll}
           />
-          {!deletedAssets && !isMobile && (
+
+           </div>
+     
+          {/* {!deletedAssets && !isMobile && ( */}
             <div className={styles["nested-wrapper"]}>
               <Button
                 text="Filters"
                 type="button"
-                className="container secondary"
+                className="container secondary filter-btn-mob"
                 onClick={() => {
                   handleOpenFilter();
                 }}
               />
             </div>
-          )}
+          {/* )} */}
 
           <div className={styles["sort-wrapper"]}>
             <Select
@@ -400,7 +419,46 @@ const TopBar = ({
               placeholder="Sort By"
             />
           </div>
+        
         </div>
+        <div className={styles["mobile-app"]}>
+          <div  className={styles["outer-box"]}>
+          <div className={styles["selected-wrapper-mob"]}>
+           <Button
+            type="button"
+            text="Select All"
+            className="container secondary mobile-select"
+            onClick={selectAll}
+          />
+
+           </div>
+           <div className={styles["sort-wrapper-mob"]}>
+            <Select
+              label={"Sort By"}
+              options={selectOptions.sort.filter((item) => {
+                if (
+                  activeSortFilter.mainFilter === "folders" &&
+                  item.value === "size"
+                ) {
+                  return !item;
+                }
+                return activeSortFilter.mainFilter === "folders" &&
+                  item.value === "none"
+                  ? !item
+                  : item;
+              })}
+              value={activeSortFilter.sort}
+              styleType="filter filter-schedule"
+              onChange={(selected) => setSortFilterValue("sort", selected)}
+              placeholder="Sort By"
+            />
+          </div>
+            
+
+          </div>
+         
+
+          </div>
       </div >
 
       <div className={styles["mobile-bottom"]}>

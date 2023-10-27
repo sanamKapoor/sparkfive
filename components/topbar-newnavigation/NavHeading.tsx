@@ -21,6 +21,8 @@ const NavHeading = () => {
       <div className={styles.menuWrapper}>
         <div className={styles.icon}>
           <img src={Utilities.menu} />
+          {/* close icon  :need to add functionality*/}
+         {/* <img src={Utilities.bigblueClose}/> */}
         </div>
         <span className={styles.menuHeading}>Menu</span>
       </div>
