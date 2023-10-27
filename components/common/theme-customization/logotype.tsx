@@ -10,7 +10,7 @@ import { useState } from "react";
 export default function Logotype({ currentLogo, onChange }: Props) {
   return (
     <div className={styles.wrapper}>
-      <div>
+      <div className={styles["logo-img-wrapper"]}>
         <img className={styles["logo-img"]} src={currentLogo.url} alt={"logo"} />
       </div>
       <div>

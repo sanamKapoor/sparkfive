@@ -137,7 +137,13 @@ export default ({ children }) => {
   };
 
   const logOut = () => {
+    // Reset Logo
+    setLogo(defaultLogo);
+    setLogoId(undefined);
+
+    // Reset theme
     resetTheme();
+
     setUser(null);
     cookiesUtils.remove("jwt");
     requestsUtils.removeAuthToken();
