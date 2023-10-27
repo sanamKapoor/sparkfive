@@ -1,7 +1,7 @@
 import Router from "next/router";
 import { saveAs } from "file-saver";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useQueryStrings } from "../../../../../hooks/use-query-strings";
 import { IUserResponseData } from "../../../../../interfaces/user/user";
 import { defaultSortData } from "../../super-admin/user-list/types";
@@ -18,8 +18,11 @@ import { FAILED_TO_DOWNLOAD_USERS, USERS_DOWNLOADED } from "../../../../../const
 import toastUtils from "../../../../../utils/toast";
 import Button from "../../../../common/buttons/button";
 import SpinnerOverlay from "../../../../common/spinners/spinner-overlay";
+import { UserContext } from "../../../../../context";
 
 const UserTable = () => {
+  const { resetLogo } = useContext(UserContext);
+
   const [term, setTerm] = useState<string>("");
   const [termForDownload, setTermForDownload] = useState<string>("");
 
@@ -96,6 +99,7 @@ const UserTable = () => {
       cookiesUtils.set("adminToken", adminJwt);
       cookiesUtils.setUserJWT(data.token);
 
+      resetLogo();
       // Reset theme before leaving
       resetTheme();
 

@@ -265,15 +265,26 @@ export default function LogoTypeSelection({ onSelect, onClose }: Props) {
   const fetchLogos = async (searchKey?: string) => {
     setLoading(true);
 
+    const commonFilters: any = {
+      replace: true,
+      addedIds: [],
+      nextPage: 1,
+    };
+
+    // Allow search through all assets instead of just logos
+    if (!searchKey) {
+      commonFilters.userFilterObject = {
+        usageType: "logo",
+      };
+    } else {
+      commonFilters.userFilterObject = {
+        filterFileTypes: [{ value: "png" }, { value: "svg" }, { value: "jpeg" }, { value: "jpg" }],
+        mainFilter: "images",
+      };
+    }
+
     const { data } = await assetApi.getAssets({
-      ...getAssetsFilters({
-        replace: true,
-        addedIds: [],
-        nextPage: 1,
-        userFilterObject: {
-          usageType: "logo",
-        },
-      }),
+      ...getAssetsFilters(commonFilters),
       complete: "1",
       term: searchKey || "",
     });

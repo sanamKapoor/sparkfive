@@ -137,11 +137,23 @@ export default ({ children }) => {
   };
 
   const logOut = () => {
+    // Reset Logo
+    setLogo(defaultLogo);
+    setLogoId(undefined);
+
+    // Reset theme
     resetTheme();
+
     setUser(null);
     cookiesUtils.remove("jwt");
     requestsUtils.removeAuthToken();
     Router.replace("/login");
+  };
+
+  const resetLogo = () => {
+    // Reset Logo
+    setLogo(defaultLogo);
+    setLogoId(undefined);
   };
 
   const hasPermission = (requiredPermissions = [], requiredTeamSettings = []) => {
@@ -226,6 +238,7 @@ export default ({ children }) => {
     logo,
     setLogo,
     logoId,
+    resetLogo,
   };
 
   return (
