@@ -62,8 +62,8 @@ const FileTypeFilter: React.FC<FileTypeFilterProps> = ({
   return (
     <>
       <div className={styles["outer-wrapper"]}>
-        {options.map((item) => (
-          <div className={styles["grid-item"]} key={item.dpi}>
+        {options.map((item, index) => (
+          <div className={styles["grid-item"]} key={index}>
             <OptionDataItem
               name={item.name}
               count={item.count}

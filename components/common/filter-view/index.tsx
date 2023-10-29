@@ -1,7 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 
 import { Utilities } from "../../../assets";
-import { IAttribute } from "../../../interfaces/filters";
+import {
+  FilterAttributeVariants,
+  IAttribute,
+} from "../../../interfaces/filters";
 import teamApi from "../../../server-api/team";
 
 import { FilterContext, UserContext } from "../../../context";
@@ -13,19 +16,25 @@ import {
 import Badge from "../UI/Badge/badge";
 import FilterOptionPopup from "../filter-option-popup";
 import styles from "./index.module.css";
+import SelectedFilters from "./selected-filters";
 
 const FilterView = () => {
-  const { activeSortFilter, setRenderedFlag } = useContext(FilterContext);
+  const { activeSortFilter, setRenderedFlag, setActiveSortFilter } =
+    useContext(FilterContext);
+
+  const [attrs, setAttrs] = useState<IAttribute[]>([]);
+
   const {
     activeAttribute,
     loading,
     onAttributeClick,
+    onClearAll,
+    onRemoveFilter,
+    selectedFilters,
     setActiveAttribute,
     setValues,
     values,
-  } = useFilters(activeSortFilter);
-
-  const [attrs, setAttrs] = useState<IAttribute[]>([]);
+  } = useFilters(attrs, activeSortFilter, setActiveSortFilter);
 
   const { advancedConfig } = useContext(UserContext);
 
@@ -46,9 +55,10 @@ const FilterView = () => {
 
   useEffect(() => {
     getAttributes();
-    setRenderedFlag(true);
+    setRenderedFlag(true); //TODO
   }, []);
 
+  console.log("selectedFilters: ", selectedFilters);
   return (
     <div>
       <div className={`${styles["outer-wrapper"]}`}>
@@ -56,20 +66,28 @@ const FilterView = () => {
           return (
             <div key={attr.id}>
               <div
-                className={`${styles["inner-wrapper"]}`}
+                className={
+                  checkIfBadgeVisible(activeSortFilter, attr.id)
+                    ? `${styles["inner-wrapper"]} ${styles["attribute-active"]}`
+                    : `${styles["inner-wrapper"]}`
+                }
                 onClick={(e) => {
                   onAttributeClick(attr);
                 }}
               >
                 {attr.name}
-                {checkIfBadgeVisible(activeSortFilter, attr.id) && (
-                  <Badge
-                    count={
-                      activeSortFilter[getFilterKeyForAttribute(attr.id)]
-                        ?.length
-                    }
-                  />
-                )}
+                {checkIfBadgeVisible(activeSortFilter, attr.id) &&
+                  ![
+                    FilterAttributeVariants.LAST_UPDATED,
+                    FilterAttributeVariants.DATE_UPLOADED,
+                  ].includes(attr.id) && (
+                    <Badge
+                      count={
+                        activeSortFilter[getFilterKeyForAttribute(attr.id)]
+                          ?.length
+                      }
+                    />
+                  )}
 
                 <img
                   className={`${styles["arrow-down"]}`}
@@ -90,6 +108,13 @@ const FilterView = () => {
           );
         })}
       </div>
+      {selectedFilters.length > 0 && (
+        <SelectedFilters
+          data={selectedFilters}
+          onRemoveFilter={onRemoveFilter}
+          onClearAll={onClearAll}
+        />
+      )}
     </div>
   );
 };

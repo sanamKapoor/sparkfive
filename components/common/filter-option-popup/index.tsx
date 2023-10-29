@@ -63,6 +63,9 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
         dimensionHeight: data.dimensionHeight,
       });
     } else {
+      console.log("coming inside else - onApply");
+
+      console.log("data: ", data);
       setActiveSortFilter({
         ...activeSortFilter,
         [filterKey]: data[filterKey],

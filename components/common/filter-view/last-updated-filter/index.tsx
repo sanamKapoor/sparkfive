@@ -38,11 +38,25 @@ const LastUpdatedFilter: React.FC<LastUpdatedFilterProps> = ({
     });
   };
 
+  const getLabelForCustomRangeInput = (beginDate, endDate) => {
+    if (!beginDate) {
+      return formatDate(endDate, FORMAT);
+    } else if (!endDate) {
+      return formatDate(beginDate, FORMAT);
+    } else {
+      return `${formatDate(beginDate, FORMAT)} - ${formatDate(
+        endDate,
+        FORMAT
+      )}`;
+    }
+  };
+
   const handleStartDay = (value) => {
     setActiveInput("startDate");
 
     const obj = {
       ...options,
+      label: getLabelForCustomRangeInput(value, options?.endDate),
       beginDate: value,
       endDate: options?.endDate,
     };
@@ -57,6 +71,7 @@ const LastUpdatedFilter: React.FC<LastUpdatedFilterProps> = ({
 
     const obj = {
       ...options,
+      label: getLabelForCustomRangeInput(options?.beginDate, value),
       beginDate: options?.beginDate,
       endDate: value,
     };
@@ -72,7 +87,7 @@ const LastUpdatedFilter: React.FC<LastUpdatedFilterProps> = ({
     }
     return undefined;
   };
-  const formatDate = (date, format, locale) => {
+  const formatDate = (date, format, locale?) => {
     return dateFnsFormat(date, format, { locale });
   };
 
@@ -113,7 +128,7 @@ const LastUpdatedFilter: React.FC<LastUpdatedFilterProps> = ({
 
       <div className={styles["dates-container"]}>
         <div className={`${styles["outer-wrapper"]}`}>
-          {options?.id === "custom" ? (
+          {options?.id === "custom" || showCustomRange ? (
             <IconClickable
               src={Utilities.radioButtonEnabled}
               onClick={onDeselectCustomRange}
@@ -130,7 +145,7 @@ const LastUpdatedFilter: React.FC<LastUpdatedFilterProps> = ({
           <div className={styles["dates-wrapper"]}>
             <div>
               <DayPickerInput
-                value={options?.beginDate ?? new Date()}
+                value={options?.beginDate}
                 formatDate={formatDate}
                 format={FORMAT}
                 parseDate={parseDate}
@@ -147,7 +162,7 @@ const LastUpdatedFilter: React.FC<LastUpdatedFilterProps> = ({
             <div className={styles.line}></div>
             <div>
               <DayPickerInput
-                value={options?.endDate ?? new Date()}
+                value={options?.endDate}
                 formatDate={formatDate}
                 format={FORMAT}
                 parseDate={parseDate}
@@ -159,7 +174,7 @@ const LastUpdatedFilter: React.FC<LastUpdatedFilterProps> = ({
                 dayPickerProps={{
                   className: styles.calendar,
                   disabledDays: {
-                    before: data?.beginDate ?? new Date(),
+                    before: options?.beginDate,
                   },
                 }}
               />

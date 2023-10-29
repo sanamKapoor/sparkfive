@@ -56,6 +56,7 @@ export const filterKeyMap = {
   [FilterAttributeVariants.RESOLUTION]: "filterResolutions",
   [FilterAttributeVariants.DATE_UPLOADED]: "dateUploaded",
   [FilterAttributeVariants.LAST_UPDATED]: "lastUpdated",
+  [FilterAttributeVariants.DIMENSIONS]: "dimensions",
 };
 
 export const ruleKeyMap = {
@@ -68,4 +69,34 @@ export const rulesMapper = {
   all: "All Selected",
   any: "Any Selected",
   none: "No Tags",
+};
+
+//TODO
+
+export const initialActiveSortFilters: any = {
+  filterCampaigns: [],
+  filterChannels: [],
+  filterNonAiTags: [],
+  filterAiTags: [],
+  filterFolders: [],
+  filterProjects: [],
+  filterFileTypes: [],
+  filterOrientations: [],
+  filterProductFields: [],
+  filterProductSku: undefined,
+  filterProductType: [],
+  filterCustomFields: [],
+  filterResolutions: [],
+  allNonAiTags: "all",
+  allAiTags: "all",
+  allCampaigns: "all",
+  allProjects: "all",
+  dimensionWidth: undefined,
+  dimensionHeight: undefined,
+  beginDate: undefined,
+  endDate: undefined,
+  fileModifiedBeginDate: undefined,
+  fileModifiedEndDate: undefined,
+  dateUploaded: undefined,
+  lastUpdated: undefined,
 };
