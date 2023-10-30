@@ -8,6 +8,7 @@
     z-index: 999;
     position: absolute;
     background: #fff;
+    min-width: 300px;
 
 }
 

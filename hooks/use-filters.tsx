@@ -1,25 +1,86 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FilterAttributeVariants,
   IAttribute,
   IFilterAttributeValues,
+  ISelectedFilter,
 } from "../interfaces/filters";
 
 import { getFilterKeyForAttribute } from "../utils/filter";
 
-import { filterKeyMap } from "../config/data/filter";
+import { filterKeyMap, initialActiveSortFilters } from "../config/data/filter";
 import customFieldsApi from "../server-api/attribute";
 import campaignApi from "../server-api/campaign";
 import filterApi from "../server-api/filter";
 import tagsApi from "../server-api/tag";
 
-const useFilters = (activeSortFilter) => {
+const useFilters = (attributes, activeSortFilter, setActiveSortFilter) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [activeAttribute, setActiveAttribute] = useState<IAttribute | null>(
     null
   );
 
   const [values, setValues] = useState<IFilterAttributeValues>([]);
+  const [selectedFilters, setSelectedFilters] = useState<ISelectedFilter[]>([]);
+
+  const getLabelForSelectedFilter = (key: string) => {
+    const labelKeyMap = {
+      filterProductSku: "sku",
+      filterAiTags: "name",
+      filterNonAiTags: "name",
+      filterFileTypes: "value",
+      lastUpdated: "label",
+      dateUploaded: "label",
+      filterOrientations: "name",
+      filterResolutions: "dpi",
+    };
+
+    console.log("labelKeyMap[key]: ", labelKeyMap[key]);
+
+    return labelKeyMap[key] ?? "name";
+  };
+
+  const getSelectedFilters = () => {
+    const filters = activeSortFilter;
+
+    const data: ISelectedFilter[] = [];
+
+    //fetch the values against keys that include either 'custom-p' or 'filter'
+    Object.keys(filters).map((key) => {
+      if (key.includes("custom-p") || key.includes("filter")) {
+        if (filters[key]?.length > 0) {
+          console.log("filters key: ", filters[key]);
+          console.log(key, "filters key");
+          let filterValues = filters[key].map((item) => ({
+            id: item.id ?? item.name ?? item.dpi,
+            label: item[getLabelForSelectedFilter(key)],
+            filterKey: key,
+          }));
+          data.push(filterValues);
+        }
+      } else if (
+        key.includes("lastUpdated") ||
+        key.includes("dateUploaded") ||
+        key.includes("dimension")
+      ) {
+        const item = filters[key];
+        if (item) {
+          let filterValues = {
+            id: item.id,
+            label: item[getLabelForSelectedFilter(key)],
+            filterKey: key,
+          };
+          data.push(filterValues);
+        }
+      }
+    });
+
+    setSelectedFilters(data.flat(1));
+  };
+
+  useEffect(() => {
+    getSelectedFilters();
+  }, [activeSortFilter]);
 
   const fetchValues = async (
     id: keyof typeof filterKeyMap,
@@ -46,6 +107,75 @@ const useFilters = (activeSortFilter) => {
       }));
     }
     return fetchedValues;
+  };
+
+  const getCustomInitialFilters = () => {
+    const customAttributes = attributes.filter(
+      (attr) => attr.type === "custom"
+    );
+
+    const fields = {};
+
+    customAttributes.forEach((attr) => {
+      if (!fields[`custom-p${attr.id}`]) {
+        fields[`custom-p${attr.id}`] = [];
+      }
+
+      if (!fields[`all-p${attr.id}`]) {
+        fields[`all-p${attr.id}`] = "all";
+      }
+    });
+
+    return fields;
+  };
+
+  const onClearAll = () => {
+    setActiveSortFilter({
+      ...activeSortFilter,
+      ...initialActiveSortFilters,
+      ...getCustomInitialFilters(),
+    });
+  };
+
+  // TODO
+  const onRemoveFilter = (item: ISelectedFilter) => {
+    console.log("item to be removed: ", item);
+    if (item.filterKey === "lastUpdated" || item.filterKey === "dateUploaded") {
+      setActiveSortFilter({
+        ...activeSortFilter,
+        [item.filterKey]: undefined,
+      });
+    } else if (
+      item.filterKey === "filterFileTypes" ||
+      item.filterKey === "filterOrientations"
+    ) {
+      const filterData = activeSortFilter[item.filterKey];
+      const updatedFilterData = filterData.filter(
+        (data) => data.name !== item.id
+      );
+      setActiveSortFilter({
+        ...activeSortFilter,
+        [item.filterKey]: updatedFilterData,
+      });
+    } else if (item.filterKey === "filterResolutions") {
+      const filterData = activeSortFilter[item.filterKey];
+      const updatedFilterData = filterData.filter(
+        (data) => data.dpi !== item.id
+      );
+      setActiveSortFilter({
+        ...activeSortFilter,
+        [item.filterKey]: updatedFilterData,
+      });
+    } else {
+      const filterData = activeSortFilter[item.filterKey];
+      const updatedFilterData = filterData.filter(
+        (data) => data.id !== item.id
+      );
+      setActiveSortFilter({
+        ...activeSortFilter,
+        [item.filterKey]: updatedFilterData,
+      });
+    }
   };
 
   /** // TODO:
@@ -167,6 +297,9 @@ const useFilters = (activeSortFilter) => {
     activeAttribute,
     loading,
     onAttributeClick,
+    onClearAll,
+    onRemoveFilter,
+    selectedFilters,
     setActiveAttribute,
     setValues,
     values,

@@ -432,6 +432,14 @@ console
   border: 1px solid #d8cab5;
 
 }
+.text-btn{
+  font-weight: 400;
+  font-size: 14px;
+  color:#10BDA5;
+  background: transparent;
+  cursor: pointer;
+
+}
 
 
 

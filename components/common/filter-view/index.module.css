@@ -1,21 +1,30 @@
-.outer-wrapper{
+.outer-wrapper {
     display: flex;
-    flex-direction:row;
+    flex-direction: row;
     flex-wrap: wrap;
-    gap:10px;
- 
+    gap: 10px;
+    margin-bottom: 12px;
 }
-.inner-wrapper{
-    border:1px solid 
-    #DEDAD4;
+
+.inner-wrapper {
+    border: 1px solid #DEDAD4;
     border-radius: 4px;
     padding: 4px 6px 4px 6px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+
 }
-.arrow-down{
+
+.attribute-active {
+    background-color: #E9EEFA;
+}
+
+.arrow-down {
     margin-left: 7px;
 }
-.tag-wrapper{
+
+.tag-wrapper {
     display: flex;
     flex-direction: row;
 }
@@ -37,3 +46,25 @@
     }
 }
 
+/* TODO: fix the css as per the designs and remove the TODO */
+
+.selected-filters-wrapper {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.selected-filter-item {
+   display: flex;
+   align-items: center;
+    flex-direction: row;
+    background-color: #F6EFE4;
+    border-radius: 44px;
+    padding: 0px 10px;
+    height:30px;
+    margin: 6px 10px;
+}
+.selected-filter-item p {
+    font-weight: 500;
+    font-size: 14px;
+}

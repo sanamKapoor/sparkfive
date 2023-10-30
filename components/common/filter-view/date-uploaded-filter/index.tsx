@@ -40,12 +40,25 @@ const DateUploadedFilter: React.FC<DateUploadedFilterProps> = ({
     });
   };
 
+  const getLabelForCustomRangeInput = (beginDate, endDate) => {
+    if (!beginDate) {
+      return formatDate(endDate, FORMAT);
+    } else if (!endDate) {
+      return formatDate(beginDate, FORMAT);
+    } else {
+      return `${formatDate(beginDate, FORMAT)} - ${formatDate(
+        endDate,
+        FORMAT
+      )}`;
+    }
+  };
+
   const handleStartDay = (value) => {
     setActiveInput("startDate");
 
     const obj = {
       id: "custom",
-      label: "Custom Range",
+      label: getLabelForCustomRangeInput(value, options?.endDate),
       beginDate: value,
       endDate: options?.endDate,
     };
@@ -60,7 +73,7 @@ const DateUploadedFilter: React.FC<DateUploadedFilterProps> = ({
 
     const obj = {
       id: "custom",
-      label: "Custom Range",
+      label: getLabelForCustomRangeInput(options?.beginDate, value),
       beginDate: options?.beginDate,
       endDate: value,
     };
@@ -76,7 +89,7 @@ const DateUploadedFilter: React.FC<DateUploadedFilterProps> = ({
     }
     return undefined;
   };
-  const formatDate = (date, format, locale) => {
+  const formatDate = (date, format, locale?) => {
     return dateFnsFormat(date, format, { locale });
   };
 
@@ -86,6 +99,12 @@ const DateUploadedFilter: React.FC<DateUploadedFilterProps> = ({
 
   const onSelectCustomRange = () => {
     setShowCustomRange(true);
+    setOptions({
+      id: "custom",
+      label: "Custom Range",
+      beginDate: undefined,
+      endDate: undefined,
+    });
   };
 
   const FORMAT = "MM/dd/yyyy";
@@ -111,7 +130,7 @@ const DateUploadedFilter: React.FC<DateUploadedFilterProps> = ({
 
       <div className={styles["dates-container"]}>
         <div className={`${styles["outer-wrapper"]}`}>
-          {options?.id === "custom" ? (
+          {options?.id === "custom" || showCustomRange ? (
             <IconClickable
               src={Utilities.radioButtonEnabled}
               onClick={onDeselectCustomRange}
@@ -124,47 +143,46 @@ const DateUploadedFilter: React.FC<DateUploadedFilterProps> = ({
           )}
           <span className={`${styles["select-name"]}`}>Custom Range</span>
         </div>
-        {showCustomRange ||
-          (options?.id === "custom" && (
-            <div className={styles["dates-wrapper"]}>
-              <div>
-                <DayPickerInput
-                  value={options?.beginDate ?? new Date()}
-                  formatDate={formatDate}
-                  format={FORMAT}
-                  parseDate={parseDate}
-                  classNames={{
-                    container: `${styles.input} dayPicker`,
-                  }}
-                  onDayChange={(day) => handleStartDay(day)}
-                  placeholder={"mm/dd/yyyy"}
-                  dayPickerProps={{
-                    className: styles.calendar,
-                  }}
-                />
-              </div>
-              <div className={styles.line}></div>
-              <div>
-                <DayPickerInput
-                  value={options?.endDate ?? new Date()}
-                  formatDate={formatDate}
-                  format={FORMAT}
-                  parseDate={parseDate}
-                  classNames={{
-                    container: styles.input,
-                  }}
-                  onDayChange={(day) => handleEndDay(day)}
-                  placeholder={"mm/dd/yyyy"}
-                  dayPickerProps={{
-                    className: styles.calendar,
-                    disabledDays: {
-                      before: options?.beginDate ?? new Date(),
-                    },
-                  }}
-                />
-              </div>
+        {showCustomRange && (
+          <div className={styles["dates-wrapper"]}>
+            <div>
+              <DayPickerInput
+                value={options?.beginDate}
+                formatDate={formatDate}
+                format={FORMAT}
+                parseDate={parseDate}
+                classNames={{
+                  container: `${styles.input} dayPicker`,
+                }}
+                onDayChange={(day) => handleStartDay(day)}
+                placeholder={"mm/dd/yyyy"}
+                dayPickerProps={{
+                  className: styles.calendar,
+                }}
+              />
             </div>
-          ))}
+            <div className={styles.line}></div>
+            <div>
+              <DayPickerInput
+                value={options?.endDate}
+                formatDate={formatDate}
+                format={FORMAT}
+                parseDate={parseDate}
+                classNames={{
+                  container: styles.input,
+                }}
+                onDayChange={(day) => handleEndDay(day)}
+                placeholder={"mm/dd/yyyy"}
+                dayPickerProps={{
+                  className: styles.calendar,
+                  disabledDays: {
+                    before: options?.beginDate,
+                  },
+                }}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
