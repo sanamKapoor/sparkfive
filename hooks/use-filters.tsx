@@ -27,9 +27,11 @@ const useFilters = (attributes, activeSortFilter, setActiveSortFilter) => {
   const [values, setValues] = useState<IFilterAttributeValues>([]);
   const [selectedFilters, setSelectedFilters] = useState<ISelectedFilter[]>([]);
 
+  console.log("selectedFilters: ", selectedFilters);
   const getSelectedFilters = () => {
     const filters = activeSortFilter;
 
+    console.log("filters: ", filters);
     const data: ISelectedFilter[] = [];
 
     Object.keys(filters).map((key) => {
@@ -37,7 +39,7 @@ const useFilters = (attributes, activeSortFilter, setActiveSortFilter) => {
         if (filters[key]?.length > 0) {
           let filterValues = filters[key].map((item) => ({
             id: item.id ?? item.name ?? item.dpi,
-            label: labelKeyMap[key] ?? item["name"],
+            label: item[labelKeyMap[key]] ?? item["name"],
             filterKey: key,
           }));
           data.push(filterValues);
@@ -47,7 +49,7 @@ const useFilters = (attributes, activeSortFilter, setActiveSortFilter) => {
         if (item) {
           let filterValues = {
             id: item.id,
-            label: labelKeyMap[key] ?? item["name"],
+            label: item[labelKeyMap[key]] ?? item["name"],
             filterKey: key,
           };
           data.push(filterValues);
@@ -82,23 +84,49 @@ const useFilters = (attributes, activeSortFilter, setActiveSortFilter) => {
   ) => {
     let fetchedValues = await fetchFunction();
 
-    const filterKey = getFilterKeyForAttribute(id);
+    if (id === "dimensions") {
+      fetchedValues = {
+        dimensionWidth: {
+          min: fetchedValues.minWidth,
+          max: fetchedValues.maxWidth,
+        },
+        dimensionHeight: {
+          min: fetchedValues.minHeight,
+          max: fetchedValues.maxHeight,
+        },
+      };
+      if (activeSortFilter["dimensionWidth"]) {
+        fetchedValues = {
+          ...fetchedValues["dimensionHeight"],
+          dimensionWidth: activeSortFilter["dimensionWidth"],
+        };
+      }
+      if (activeSortFilter["dimensionHeight"]) {
+        fetchedValues = {
+          ...fetchedValues["dimensionWidth"],
+          dimensionHeight: activeSortFilter["dimensionHeight"],
+        };
+      }
+    } else {
+      const filterKey = getFilterKeyForAttribute(id);
 
-    if (activeSortFilter[filterKey]?.length > 0) {
-      fetchedValues = fetchedValues.map((item) => ({
-        ...item,
-        isSelected: keysToFilter?.some((key) => {
-          if (key === "id") {
+      if (activeSortFilter[filterKey]?.length > 0) {
+        fetchedValues = fetchedValues.map((item) => ({
+          ...item,
+          isSelected: keysToFilter?.some((key) => {
+            if (key === "id") {
+              return activeSortFilter[filterKey]?.some(
+                (filter) => filter.id === item.id
+              );
+            }
             return activeSortFilter[filterKey]?.some(
-              (filter) => filter.id === item.id
+              (filter) => filter[key] === item[key]
             );
-          }
-          return activeSortFilter[filterKey]?.some(
-            (filter) => filter[key] === item[key]
-          );
-        }),
-      }));
+          }),
+        }));
+      }
     }
+
     return fetchedValues;
   };
 
@@ -196,7 +224,7 @@ const useFilters = (attributes, activeSortFilter, setActiveSortFilter) => {
           break;
 
         case FilterAttributeVariants.DIMENSIONS:
-          values = await fetchAssetDimensionLimits();
+          values = await fetchValues(data.id, fetchAssetDimensionLimits, []);
           break;
 
         case FilterAttributeVariants.LAST_UPDATED:

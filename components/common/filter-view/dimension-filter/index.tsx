@@ -1,72 +1,50 @@
-import React, { useContext, useEffect, useState } from "react";
-import { FilterContext } from "../../../../context";
+import React from "react";
+import { CommonFilterProps } from "../../../../interfaces/filters";
 import styles from "./index.module.css";
 
-interface DimensionsFilterProps {
-  options: {
-    maxHeight: number;
-    minHeight: number;
-    maxWidth: number;
-    minWidth: number;
-  };
-  setFilters: (data: any) => void; //TODO
-}
+interface DimensionsFilterProps extends CommonFilterProps {}
 
 const DimensionsFilter: React.FC<DimensionsFilterProps> = ({
   options,
+  setOptions,
   setFilters,
 }) => {
-  const { activeSortFilter } = useContext(FilterContext);
-
-  const { maxHeight, minHeight, maxWidth, minWidth } = options;
-
-  //TODO: check if this is actually required
-  useEffect(() => {
-    setFilters({ dimensionHeight, dimensionWidth });
-  }, []);
-
-  const [dimensionWidth, setDimensionWidth] = useState<{
-    min: string;
-    max: string;
-  }>({
-    min: activeSortFilter?.dimensionWidth?.min || minWidth,
-    max: activeSortFilter?.dimensionWidth?.max || maxWidth,
-  });
-
-  const [dimensionHeight, setDimensionHeight] = useState<{
-    min: string;
-    max: string;
-  }>({
-    min: activeSortFilter?.dimensionHeight?.min || minHeight,
-    max: activeSortFilter?.dimensionHeight?.max || maxHeight,
-  });
-
+  console.log("options: ", options);
+  const { dimensionWidth, dimensionHeight } = options;
   const handleWidthChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     prop: "min" | "max"
   ) => {
-    setDimensionWidth({ ...dimensionWidth, [prop]: e.target.value });
-    setFilters({
-      dimensionWidth: {
-        ...dimensionWidth,
-        [prop]: e.target.value,
-      },
-      dimensionHeight,
-    });
+    const updateDimensionWidth = (prevFilters) => {
+      return {
+        dimensionWidth: {
+          ...prevFilters?.dimensionWidth,
+          [prop]: e?.target?.value,
+        },
+        ...prevFilters,
+      };
+    };
+
+    setOptions(updateDimensionWidth);
+    setFilters(updateDimensionWidth);
   };
 
   const handleHeightChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     prop: "min" | "max"
   ) => {
-    setDimensionHeight({ ...dimensionHeight, [prop]: e.target.value });
-    setFilters({
-      dimensionHeight: {
-        ...dimensionHeight,
-        [prop]: e.target.value,
-      },
-      dimensionWidth,
-    });
+    const updateDimensionHeight = (prevFilters) => {
+      return {
+        dimensionHeight: {
+          ...prevFilters?.dimensionWidth,
+          [prop]: e?.target?.value,
+        },
+        ...prevFilters,
+      };
+    };
+
+    setOptions(updateDimensionHeight);
+    setFilters(updateDimensionHeight);
   };
 
   return (

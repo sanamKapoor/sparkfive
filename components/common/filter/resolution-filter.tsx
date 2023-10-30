@@ -1,19 +1,14 @@
 import React, { useContext, useState } from "react";
 import { Utilities } from "../../../assets";
 import { FilterContext } from "../../../context";
-import { IResolutionFilter } from "../../../interfaces/filters";
+import { CommonFilterProps } from "../../../interfaces/filters";
 import IconClickable from "../buttons/icon-clickable";
 import Divider from "../filter-option-popup/divider";
 import OptionDataItem from "../filter-option-popup/option-data-item";
 import styles from "../filter-option-popup/options-data.module.css";
 
-interface ResolutionFilterProps {
-  options: IResolutionFilter[];
-  setOptions: (data: unknown) => void;
-  setFilters: (val: any) => void; //TODO
-}
+interface ResolutionFilterProps extends CommonFilterProps {}
 
-//TODO: handle selection/ deselection separately at first stage
 const ResolutionFilter: React.FC<ResolutionFilterProps> = ({
   options,
   setOptions,
@@ -26,7 +21,6 @@ const ResolutionFilter: React.FC<ResolutionFilterProps> = ({
   );
 
   const onSelectHighResFilter = () => {
-    console.log("selected high res...");
     setHighResActive(true);
     onSelectResolution("highres");
   };

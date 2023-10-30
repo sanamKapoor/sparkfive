@@ -2,7 +2,7 @@
 
 import {
   FilterAttributeVariants,
-  OptionDataProps,
+  OptionsDataProps,
 } from "../../../../interfaces/filters";
 import ProductFilter from "../../filter/product-filter";
 import ResolutionFilter from "../../filter/resolution-filter";
@@ -16,7 +16,13 @@ import LastUpdatedFilter from "../last-updated-filter";
 import OrientationFilter from "../orientation-filter";
 import TagsFilter from "../tags-filter";
 
-interface FilterContentProps extends Required<OptionDataProps> {}
+interface FilterContentProps
+  extends Required<
+    Pick<
+      OptionsDataProps,
+      "activeAttribute" | "options" | "setOptions" | "setFilters"
+    >
+  > {}
 
 const FilterContent: React.FC<FilterContentProps> = ({
   activeAttribute,
@@ -24,7 +30,6 @@ const FilterContent: React.FC<FilterContentProps> = ({
   setOptions,
   setFilters,
 }) => {
-  //TODO: use base component for similar components
   const filterComponents = {
     [FilterAttributeVariants.TAGS]: TagsFilter,
     [FilterAttributeVariants.AI_TAGS]: AiTagsFilter,

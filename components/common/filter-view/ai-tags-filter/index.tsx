@@ -1,68 +1,24 @@
 import React from "react";
 
-import {
-  IAttributeValue,
-  OptionDataProps,
-} from "../../../../interfaces/filters";
-import Divider from "../../filter-option-popup/divider";
-import OptionDataItem from "../../filter-option-popup/option-data-item";
-import styles from "../../filter-option-popup/options-data.module.css";
+import { CommonFilterProps } from "../../../../interfaces/filters";
+import OptionsData from "../../filter-option-popup/options-data";
 
-interface AiTagsFilterProps extends OptionDataProps {}
+interface AiTagsFilterProps extends CommonFilterProps {}
 
 const AiTagsFilter: React.FC<AiTagsFilterProps> = ({
   options,
   setOptions,
   setFilters,
 }) => {
-  const onSelectValue = (data: IAttributeValue) => {
-    const index = options.findIndex((value) => value.id === data.id);
-    if (index !== -1) {
-      options[index].isSelected = true;
-    }
-    setOptions([...options]);
-    setFilters((prevState) => {
-      return {
-        filterAiTags:
-          prevState?.filterAiTags?.length > 0
-            ? [...prevState?.filterAiTags, { ...data, value: data.id }]
-            : [{ ...data, value: data.id }],
-      };
-    });
-  };
-
-  const onDeselectValue = (data: IAttributeValue) => {
-    const index = options.findIndex((value) => value.id === data.id);
-    if (index !== -1) {
-      options[index].isSelected = false;
-    }
-    setOptions([...options]);
-
-    const newFilters = options
-      .filter((item) => item.isSelected)
-      .map((item) => ({ value: item.id, ...item }));
-    setFilters({
-      filterAiTags: newFilters,
-    });
-  };
-
   return (
-    <>
-      <div className={`${styles["outer-wrapper"]}`}>
-        {options.map((item) => (
-          <div className={styles["grid-item"]} key={item.id}>
-            <OptionDataItem
-              name={item.name}
-              count={item.count}
-              onSelect={() => onSelectValue(item)} //TODO
-              onDeselect={() => onDeselectValue(item)} //TODO
-              isSelected={item.isSelected}
-            />
-          </div>
-        ))}
-      </div>
-      <Divider />
-    </>
+    <OptionsData
+      filterKey="filterAiTags"
+      dataKey="name"
+      compareKey="id"
+      options={options}
+      setOptions={setOptions}
+      setFilters={setFilters}
+    />
   );
 };
 

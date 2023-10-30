@@ -1,129 +1,79 @@
-//🚧 work in progress 🚧
 import React from "react";
 
-import {
-  FilterAttributeVariants,
-  IAttributeValue,
-  OptionDataProps,
-} from "../../../interfaces/filters";
+import { OptionsDataProps } from "../../../interfaces/filters";
 import Divider from "./divider";
 import OptionDataItem from "./option-data-item";
 import styles from "./options-data.module.css";
 
-const OptionData: React.FC<OptionDataProps> = ({
-  values,
-  setValues,
+const OptionsData: React.FC<OptionsDataProps> = ({
+  filterKey,
+  dataKey,
+  compareKey,
+  options,
+  setOptions,
   setFilters,
-  activeAttribute,
 }) => {
-  const onSelectValue = (data: IAttributeValue) => {
-    const index = values.findIndex((value) => value.id === data.id);
+  const onSelectOption = (data) => {
+    const index = options.findIndex(
+      (value) => value[compareKey] === data[compareKey]
+    );
     if (index !== -1) {
-      values[index].isSelected = true;
+      options[index].isSelected = true;
     }
-    setValues([...values]);
-
-    if (activeAttribute.id === FilterAttributeVariants.TAGS) {
-      setFilters((prevState) => {
-        return {
-          filterNonAiTags:
-            prevState?.filterNonAiTags?.length > 0
-              ? [...prevState?.filterNonAiTags, { ...data, value: data.id }]
-              : [{ ...data, value: data.id }],
-        };
-      });
-    } else if (activeAttribute.id === FilterAttributeVariants.AI_TAGS) {
-      setFilters((prevState) => {
-        return {
-          filterAiTags:
-            prevState?.filterAiTags?.length > 0
-              ? [...prevState?.filterAiTags, { ...data, value: data.id }]
-              : [{ ...data, value: data.id }],
-        };
-      });
-    } else if (activeAttribute.id === FilterAttributeVariants.CAMPAIGNS) {
-      setFilters((prevState) => {
-        return {
-          filterCampaigns:
-            prevState?.filterCampaigns?.length > 0
-              ? [...prevState?.filterCampaigns, { ...data, value: data.id }]
-              : [{ ...data, value: data.id }],
-        };
-      });
-    } else if (activeAttribute.id === FilterAttributeVariants.FILE_TYPES) {
-      setFilters((prevState) => {
-        return {
-          filterFileTypes:
-            prevState?.filterFileTypes?.length > 0
-              ? [...prevState?.filterFileTypes, { ...data, value: data.id }]
-              : [{ ...data, value: data.id }],
-        };
-      });
-    } else {
-      const filterKey = `custom-p${activeAttribute?.id}`;
-
-      setFilters((prevState) => {
-        return {
-          [filterKey]:
-            prevState && prevState[filterKey]?.length > 0
-              ? [
-                  ...(prevState && prevState[filterKey]),
-                  { ...data, value: data.id, label: data.name },
-                ]
-              : [{ ...data, value: data.id, label: data.name }],
-        };
-      });
-    }
+    setOptions([...options]);
+    setFilters((prevState) => {
+      return {
+        [filterKey]:
+          prevState && prevState[filterKey]?.length > 0
+            ? [
+                ...prevState[filterKey],
+                {
+                  value: data[compareKey],
+                  ...data,
+                },
+              ]
+            : [
+                {
+                  value: data[compareKey],
+                  ...data,
+                },
+              ],
+      };
+    });
   };
 
-  const onDeselectValue = (data: IAttributeValue) => {
-    const index = values.findIndex((value) => value.id === data.id);
+  const onDeselectOption = (data) => {
+    const index = options.findIndex(
+      (value) => value[compareKey] === data[compareKey]
+    );
     if (index !== -1) {
-      values[index].isSelected = false;
+      options[index].isSelected = false;
     }
-    setValues([...values]);
+    setOptions([...options]);
 
-    const newFilters = values
+    let newFilters = options
       .filter((item) => item.isSelected)
-      .map((item) => ({ value: item.id, ...item }));
+      .map((item) => ({
+        value: item[compareKey],
+        ...data,
+      }));
 
-    let filters;
-    if (activeAttribute.id === FilterAttributeVariants.TAGS) {
-      filters = {
-        filterNonAiTags: newFilters,
-      };
-    } else if (activeAttribute.id === FilterAttributeVariants.AI_TAGS) {
-      filters = {
-        filterAiTags: newFilters,
-      };
-    } else if (activeAttribute.id === FilterAttributeVariants.CAMPAIGNS) {
-      filters = {
-        filterCampaigns: newFilters,
-      };
-    } else if (activeAttribute.id === FilterAttributeVariants.FILE_TYPES) {
-      filters = {
-        filterFileTypes: newFilters,
-      };
-    } else {
-      const filterKey = `custom-p${activeAttribute.id}`;
-      filters = {
-        [filterKey]: newFilters,
-      };
-    }
-    setFilters(filters);
+    setFilters({
+      [filterKey]: newFilters,
+    });
   };
 
   return (
     <>
-      <div className={`${styles["outer-wrapper"]}`}>
-        {values.map((item) => (
-          <div className={styles["grid-item"]} key={item.id}>
+      <div className={styles["outer-wrapper"]}>
+        {options.map((item, index) => (
+          <div className={styles["grid-item"]} key={index}>
             <OptionDataItem
-              name={item.name}
+              name={item[dataKey]}
               count={item.count}
-              onSelect={() => onSelectValue(item)} //TODO
-              onDeselect={() => onDeselectValue(item)} //TODO
               isSelected={item.isSelected}
+              onSelect={() => onSelectOption(item)}
+              onDeselect={() => onDeselectOption(item)}
             />
           </div>
         ))}
@@ -133,4 +83,4 @@ const OptionData: React.FC<OptionDataProps> = ({
   );
 };
 
-export default OptionData;
+export default OptionsData;
