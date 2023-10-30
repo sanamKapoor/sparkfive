@@ -418,12 +418,15 @@ export const getFoldersFromUploads = (files, isRegular = false) => {
 };
 
 const addFilterToQuery = (filters, filterItems, key, valueKey = "value") => {
+  // if (filterItems?.length > 0) {
+  //   if (filterItems?.length == 1) {
+  //     filters[key] = filterItems[0];
+  //   } else {
+  //     filters[key] = filterItems.map((item) => item[valueKey]).join(",");
+  //   }
+  // }
   if (filterItems?.length > 0) {
-    if (filterItems?.length == 1) {
-      filters[key] = filterItems[0];
-    } else {
-      filters[key] = filterItems.map((item) => item[valueKey]).join(",");
-    }
+    filters[key] = filterItems.map((item) => item[valueKey]).join(",");
   }
 };
 
