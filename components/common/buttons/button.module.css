@@ -432,12 +432,30 @@ console
   border: 1px solid #d8cab5;
 
 }
-.text-btn{
+.text-success-btn{
   font-weight: 400;
   font-size: 14px;
   color:#10BDA5;
   background: transparent;
   cursor: pointer;
+
+}
+.text-primary-btn{
+  font-weight: 500;
+  font-size: 14px;
+  color:
+  #08135E;
+  background: transparent;
+  cursor: pointer;
+}
+.text-secondary-btn{
+  font-weight: 400;
+  font-size: 14px;
+  color:
+  #817D9D;
+  background: transparent;
+  cursor: pointer;
+  
 
 }
 

@@ -121,6 +121,22 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
     <>
       <div className={`${styles["main-container"]}`}>
         <div className={`${styles["outer-wrapper"]}`}>
+          <div className={`${styles["popup-mobile-view"]}`}>
+            <div className={`${styles["popup-mobile-header"]}`}>
+              <img src={Utilities.leftArrow} alt="left-arrow" />
+              <span className={`${styles["main-heading"]}`}>
+                Select {activeAttribute?.name}
+              </span>
+              <button
+                className={styles.clear}
+                disabled={loading}
+                onClick={() => setActiveAttribute(null)}
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+
           <div className={`${styles["popup-header"]}`}>
             <span className={`${styles["main-heading"]}`}>
               Select {activeAttribute?.name}

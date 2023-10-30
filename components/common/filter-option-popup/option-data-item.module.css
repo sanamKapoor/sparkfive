@@ -25,3 +25,10 @@
     text-overflow: ellipsis;
 
   }
+  
+  @media (max-width:400px){
+    .tags-wrapper{
+        border-top:1px solid #DEDAD4; 
+        padding:12px 0;
+    }
+  }
