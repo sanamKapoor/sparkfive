@@ -42,6 +42,8 @@ export default ({ children, isPublic = false }) => {
       advancedConfig.defaultLandingPage === "allTab" ? "all" : "folders",
     ...DEFAULT_FILTERS,
     dimensionsActive: false,
+    lastUpdated: undefined,
+    dateUploaded: undefined,
   } as any);
 
   const [sharePath, setSharePath] = useState("");

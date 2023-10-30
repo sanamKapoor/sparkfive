@@ -10,6 +10,7 @@ import NestedFirstlist from "./nested-sidenav-firstlist";
 import styles from "./nested-sidenav.module.css";
 
 const NestedSidenav = () => {
+
   const {
     sidebarOpen,
     setSidebarOpen,
@@ -17,7 +18,10 @@ const NestedSidenav = () => {
     selectAllFolders,
     setLastUploadedFolder,
     setHeaderName,
+    setActiveSubFolders,
+    setActiveFolder
   } = useContext(AssetContext);
+
   const { setActiveSortFilter, activeSortFilter } = useContext(
     FilterContext
   ) as { setActiveSortFilter: Function; activeSortFilter: any };
@@ -50,6 +54,8 @@ const NestedSidenav = () => {
     setLastUploadedFolder(undefined);
     //setting the HeaderName
     setHeaderName(description);
+    setActiveFolder("");
+    setActiveSubFolders("");
     setActiveSortFilter({
       ...activeSortFilter,
       ["mainFilter"]: value,

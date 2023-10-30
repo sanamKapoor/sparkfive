@@ -25,7 +25,7 @@ import ConfirmModal from "../modals/confirm-modal";
 import ProjectCreationModal from "../modals/project-creation-modal";
 import SearchModal from "../../SearchModal/Search-modal";
 import Search from "../../main/user-settings/SuperAdmin/Search/Search";
-import { useMoveModal } from "../../../hooks/Use-Modal";
+import { useMoveModal } from "../../../hooks/use-modal";
 interface Asset {
   id: string;
   name: string;
@@ -367,19 +367,19 @@ const SidePanelBulk = ({
           </div>}
           {(addMode && hasPermission([ASSET_EDIT])) && (activeDropdown === "" || activeDropdown !== "collections") && (
             <>
-             <div className={`${styles['top-heading']}`}>
-                          <span>Collection</span>
+              <div className={`${styles['top-heading']}`}>
+                <span>Collection</span>
 
-                          </div>
-            <div
-              className={`add ${styles["select-add"]}`}
-              onClick={() => setActiveDropdown("collections")}
-            >
-              <IconClickable src={Utilities.addLight} />
-              <span>{"Add to Collection"}</span>
-            </div>
+              </div>
+              <div
+                className={`add ${styles["select-add"]}`}
+                onClick={() => setActiveDropdown("collections")}
+              >
+                <IconClickable src={Utilities.addLight} />
+                <span>{"Add to Collection"}</span>
+              </div>
             </>
-            
+
           )}
           {
             (addMode && hasPermission([ASSET_EDIT]) && activeDropdown === "collections") &&

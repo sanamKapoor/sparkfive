@@ -7,27 +7,27 @@ import {
   FilterAttributeVariants,
   IAttribute,
   IFilterAttributeValues,
-  IFilterPopupContentType,
 } from "../../../interfaces/filters";
 import Search from "../../main/user-settings/SuperAdmin/Search/Search";
 import Button from "../buttons/button";
-import DimensionsFilter from "../filter-view/dimension-filter";
-import DateUploaded from "../filter/date-uploaded";
-import ProductFilter from "../filter/product-filter";
-import ResolutionFilter from "../filter/resolution-filter";
 import styles from "./index.module.css";
-import OptionData from "./options-data";
 
 import Dropdown from "../../common/inputs/dropdown";
 
+import {
+  filterKeyMap,
+  ruleKeyMap,
+  rulesMapper,
+} from "../../../config/data/filter";
 import { FilterContext } from "../../../context";
 import Loader from "../UI/Loader/loader";
 import IconClickable from "../buttons/icon-clickable";
+import FilterContent from "../filter-view/filter-content";
 import Divider from "./divider";
 
 interface FilterOptionPopupProps {
-  contentType: IFilterPopupContentType;
   options: IFilterAttributeValues;
+  setOptions: (data: unknown) => void;
   activeAttribute: IAttribute;
   setActiveAttribute: (val: IAttribute | null) => void;
   loading: boolean;
@@ -35,52 +35,37 @@ interface FilterOptionPopupProps {
 
 const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   options,
-  contentType,
+  setOptions,
   activeAttribute,
   setActiveAttribute,
   loading,
 }) => {
   const { activeSortFilter, setActiveSortFilter } = useContext(FilterContext);
+
   const [filters, setFilters] = useState(); //TODO: define type
-  const [lastUpdatedStartDate, setLastUpdatedStartDate] = useState<Date>(
-    new Date()
-  );
-  const [lastUpdatedEndDate, setLastUpdatedEndDate] = useState<Date>(
-    new Date()
-  );
 
-  const [dateUploadedStartDate, setDateUploadedStartDate] = useState<Date>(
-    new Date()
-  );
-  const [dateUploadedEndDate, setDateUploadedEndDate] = useState<Date>(
-    new Date()
-  );
-
-  const [showDropdown, setShowdropdown] = useState<boolean>(false);
+  const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const showRules = activeAttribute.selectionType === "selectMultiple";
 
-  //TODO: keep updating it until all filter views are not covered
-  const hideSearch = activeAttribute.id === FilterAttributeVariants.DIMENSIONS;
-  const hideClear = activeAttribute.id === FilterAttributeVariants.DIMENSIONS;
+  const hideSearch =
+    activeAttribute.id === FilterAttributeVariants.DIMENSIONS ||
+    activeAttribute.id === FilterAttributeVariants.LAST_UPDATED ||
+    activeAttribute.id === FilterAttributeVariants.DATE_UPLOADED;
 
-  /**
-   * TODO:
-   * 1. Add types
-   * 2. Refactor
-   */
-  const onApply = (filterVariant: string, data: any) => {
-    console.log("current filter variant: ", filterVariant);
-    console.log("data: ", data);
-    if (filterVariant === "dimensions") {
+  const onApply = (id: string, data: any) => {
+    //TODO: handle case if some filters already exists and new ones are added for a particular filterKey
+    const filterKey = filterKeyMap[id] || `custom-p${activeAttribute.id}`;
+
+    if (id === FilterAttributeVariants.DIMENSIONS) {
       setActiveSortFilter({
         ...activeSortFilter,
         dimensionWidth: data.dimensionWidth,
         dimensionHeight: data.dimensionHeight,
       });
-    } else if (filterVariant === "resolutions") {
+    } else {
       setActiveSortFilter({
         ...activeSortFilter,
-        filterResolutions: data.filterResolutions,
+        [filterKey]: data[filterKey],
       });
     }
 
@@ -91,13 +76,110 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
     setActiveAttribute(null);
   };
 
-  //TODO: move it to more appropriate place
-  const getFilterVariant = (id: string) => {
-    const values: string[] = Object.values(FilterAttributeVariants);
+  const onClear = () => {
+    const filterKey =
+      filterKeyMap[activeAttribute.id] || `custom-p${activeAttribute.id}`;
+    const ruleKey =
+      ruleKeyMap[activeAttribute.id] || `all-${activeAttribute.id}`;
 
-    if (values.includes(id)) {
-      return id;
-    } else return FilterAttributeVariants.CUSTOM_FIELD;
+    const clearOptions =
+      activeAttribute.id !== FilterAttributeVariants.DATE_UPLOADED &&
+      activeAttribute.id !== FilterAttributeVariants.LAST_UPDATED;
+
+    setOptions(
+      clearOptions
+        ? options.map((item) => ({ ...item, isSelected: false }))
+        : undefined
+    );
+
+    const clearFilter = {};
+    clearFilter[filterKey] = clearOptions ? [] : undefined;
+    clearFilter[ruleKey] = clearOptions ? "all" : undefined;
+
+    setActiveSortFilter({
+      ...activeSortFilter,
+      ...clearFilter,
+    });
+  };
+
+  //   if (activeAttribute.id === FilterAttributeVariants.TAGS) {
+  //     setOptions(options.map((item) => ({ ...item, isSelected: false })));
+  //     setActiveSortFilter({
+  //       ...activeSortFilter,
+  //       filterNonAiTags: [],
+  //       allNonAiTags: "all",
+  //     });
+  //   } else if (activeAttribute.id === FilterAttributeVariants.AI_TAGS) {
+  //     setOptions(options.map((item) => ({ ...item, isSelected: false })));
+  //     setActiveSortFilter({
+  //       ...activeSortFilter,
+  //       filterAiTags: [],
+  //       allAiTags: "all",
+  //     });
+  //   } else if (activeAttribute.id === FilterAttributeVariants.CAMPAIGNS) {
+  //     setOptions(options.map((item) => ({ ...item, isSelected: false })));
+  //     setActiveSortFilter({
+  //       ...activeSortFilter,
+  //       filterCampaigns: [],
+  //       allCampaigns: "all",
+  //     });
+  //   } else if (activeAttribute.id === FilterAttributeVariants.PRODUCTS) {
+  //     setOptions(options.map((item) => ({ ...item, isSelected: false })));
+  //     setActiveSortFilter({
+  //       ...activeSortFilter,
+  //       filterProductSku: [], //TODO: verify
+  //     });
+  //   } else if (activeAttribute.id === FilterAttributeVariants.FILE_TYPES) {
+  //     setOptions(options.map((item) => ({ ...item, isSelected: false })));
+  //     setActiveSortFilter({
+  //       ...activeSortFilter,
+  //       filterFileTypes: [],
+  //     });
+  //   } else if (activeAttribute.id === FilterAttributeVariants.ORIENTATION) {
+  //     setOptions(options.map((item) => ({ ...item, isSelected: false })));
+  //     setActiveSortFilter({
+  //       ...activeSortFilter,
+  //       filterOrientations: [],
+  //     });
+  //   } else if (activeAttribute.id === FilterAttributeVariants.DATE_UPLOADED) {
+  //     console.log("coming in here.......");
+  //     setOptions(undefined);
+  //     setActiveSortFilter({
+  //       ...activeSortFilter,
+  //       dateUploaded: undefined,
+  //     });
+  //   } else if (activeAttribute.id === FilterAttributeVariants.LAST_UPDATED) {
+  //     setOptions(undefined);
+  //     setActiveSortFilter({
+  //       ...activeSortFilter,
+  //       lastUpdated: undefined,
+  //     });
+  //   } else {
+  //     const filterKey = `custom-p${activeAttribute.id}`;
+  //     const filterRuleKey = `all-${activeAttribute.id}`;
+  //     setOptions(options.map((item) => ({ ...item, isSelected: false })));
+  //     setActiveSortFilter({
+  //       ...activeSortFilter,
+  //       [filterKey]: [],
+  //       [filterRuleKey]: "all",
+  //     });
+  //   }
+  // };
+
+  //TODO
+  const onSearch = (term: string) => {
+    console.log("Searching term....,", term);
+  };
+
+  const ruleKey = ruleKeyMap[activeAttribute.id] || `all-${activeAttribute.id}`;
+
+  const onChangeRule = (ruleName: string) => {
+    setActiveSortFilter({
+      ...activeSortFilter,
+      [ruleKey]: ruleName,
+    });
+
+    setShowDropdown(false);
   };
 
   return (
@@ -109,7 +191,13 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
               Select {activeAttribute?.name}
             </span>
             <div className={styles.buttons}>
-              {!hideClear && <button className={styles.clear}>clear</button>}
+              <button
+                className={styles.clear}
+                disabled={loading}
+                onClick={onClear}
+              >
+                clear
+              </button>
               <img
                 src={Utilities.closeIcon}
                 onClick={() => setActiveAttribute(null)}
@@ -118,12 +206,11 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
           </div>
           {!hideSearch && (
             <div className={`${styles["search-btn"]}`}>
-              {/* TODO: */}
               <Search
                 className={styles.customStyles}
                 buttonClassName={styles.icon}
                 placeholder={`Search ${activeAttribute.name}`}
-                onSubmit={() => {}}
+                onSubmit={onSearch}
               />
             </div>
           )}
@@ -131,48 +218,26 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
           {loading ? (
             <Loader className={styles.customLoader} />
           ) : (
-            <>
-              {/* TODO: 1. move this into a separate Content Component
-               *       2. fix type error
-               */}
-              {contentType === "list" && <OptionData data={options} />}
-              {contentType === "dimensions" && (
-                <DimensionsFilter limits={options} setFilters={setFilters} />
-              )}
-              {contentType === "resolutions" && (
-                <ResolutionFilter data={options} setFilters={setFilters} />
-              )}
-              {contentType === "lastUpdated" && (
-                <DateUploaded
-                  startDate={lastUpdatedStartDate}
-                  endDate={lastUpdatedEndDate}
-                  setStartDate={setLastUpdatedStartDate}
-                  setEndDate={setLastUpdatedEndDate}
-                />
-              )}
-              {contentType === "dateUploaded" && (
-                <DateUploaded
-                  startDate={dateUploadedStartDate}
-                  endDate={dateUploadedEndDate}
-                  setStartDate={setDateUploadedStartDate}
-                  setEndDate={setDateUploadedEndDate}
-                />
-              )}
-              {contentType === "products" && (
-                <ProductFilter productFilters={options} />
-              )}
-            </>
+            <FilterContent
+              options={options}
+              setOptions={setOptions}
+              setFilters={setFilters}
+              activeAttribute={activeAttribute}
+            />
           )}
 
           {showRules && (
             <div>
               <div
                 className={`${styles["rule-tag"]}`}
-                onClick={() => setShowdropdown(!showDropdown)}
+                onClick={() => setShowDropdown(!showDropdown)}
               >
                 <label>Rule:</label>
                 <div className={`${styles["select-wrapper"]}`}>
-                  <p>All Selected</p>
+                  <p>
+                    {rulesMapper[activeSortFilter[ruleKey]] ??
+                      rulesMapper["all"]}
+                  </p>
                   <IconClickable
                     additionalClass={styles["dropdown-icon"]}
                     src={Utilities.arrowDark}
@@ -187,17 +252,17 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
                     {
                       label: "All selected",
                       id: "All selected",
-                      onClick: () => {},
+                      onClick: () => onChangeRule("all"),
                     },
                     {
                       label: "Any Selected",
                       id: "Any",
-                      onClick: () => {},
+                      onClick: () => onChangeRule("any"),
                     },
                     {
                       label: "No Tags",
                       id: "None",
-                      onClick: () => {},
+                      onClick: () => onChangeRule("none"),
                     },
                   ]}
                 />
@@ -210,9 +275,7 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
               className={"apply"}
               text={"Apply"}
               disabled={loading}
-              onClick={() =>
-                onApply(getFilterVariant(activeAttribute.id), filters)
-              }
+              onClick={() => onApply(activeAttribute.id, filters)}
             />
             <Button
               className={"cancel"}

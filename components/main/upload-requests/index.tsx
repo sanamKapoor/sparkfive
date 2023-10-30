@@ -2121,64 +2121,6 @@ const UploadRequest = () => {
                   />
                 )
               }
-              {/* {isAdmin() && (
-                <div className={detailPanelStyles["field-wrapper"]}>
-                  <div className={styles['creatable-select-container']}>
-                    <CreatableSelect
-                      title="Collections"
-                      addText="Add to Collections"
-                      onAddClick={() => setActiveDropdown("collections")}
-                      selectPlaceholder={
-                        "Enter a new collection or select an existing one"
-                      }
-                      avilableItems={inputFolders}
-                      setAvailableItems={setInputFolders}
-                      selectedItems={tempFolders}
-                      setSelectedItems={setTempFolders}
-                      menuPosition={"fixed"}
-                      onAddOperationFinished={(stateUpdate) => {
-                        updateAssetState({
-                          folders: { $set: stateUpdate },
-                        });
-                      }}
-                      creatable={isAdmin()}
-                      onRemoveOperationFinished={async (
-                        index,
-                        stateUpdate,
-                        id
-                      ) => {
-                        await assetApi.removeFolder(
-                          assets[selectedAsset]?.asset.id,
-                          id
-                        );
-                        updateAssetState({
-                          folders: { $set: stateUpdate },
-                        });
-                      }}
-                      onOperationFailedSkipped={() => setActiveDropdown("")}
-                      isShare={false}
-                      asyncCreateFn={(newItem) => {
-                        if (isAdmin()) {
-                          // Admin can edit inline, dont need to hit save button
-                          setIsLoading(true);
-
-                          return assetApi.addFolder(
-                            assets[selectedAsset]?.asset.id,
-                            newItem
-                          );
-                        } else {
-                          return { data: newItem };
-                        }
-                      }}
-                      dropdownIsActive={activeDropdown === "collections"}
-                      altColor="yellow"
-                      sortDisplayValue={true}
-                      ignorePermission={true}
-                    />
-                  </div>
-                </div>
-              )} */}
-
               {
                 isAdmin() && (
                   <div className={detailPanelStyles["field-wrapper"]}>

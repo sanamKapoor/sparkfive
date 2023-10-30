@@ -12,7 +12,6 @@ import IconClickable from '../buttons/icon-clickable';
 import Dropdown from '../inputs/dropdown';
 import Select from '../inputs/select';
 import SubHeader from '../layouts/sub-header';
-import Breadcrumbs from '../misc/breadcrumbs';
 import styles from './top-bar.module.css';
 import NavHeading from '../../topbar-newnavigation/NavHeading';
 import React from 'react';
@@ -56,7 +55,8 @@ const TopBar = ({
     setSidebarOpen,
     selectedAllSubFoldersAndAssets,
     setSelectedAllSubFoldersAndAssets,
-    activeSubFolders
+    activeSubFolders,
+
   } = useContext(AssetContext);
 
   const { hasPermission, advancedConfig } =
@@ -151,7 +151,9 @@ const TopBar = ({
     );
   });
 
-  const folderData = folders.filter((folder) => folder.id === activeFolder);
+  // const folderData = activeSortFilter.mainFilter !== "SubCollectionView" ? folders.filter((folder) => folder.id === activeSubFolders) :
+  //   subFoldersViewList.results.filter((folder) => folder.id === activeFolder);
+  // console.log("🚀 ~ file: top-bar.tsx:152 ~ folderData:", folderData, activeFolder && activeSubFolders && mode === "assets")
 
   return (
     <section className={`${sidebarOpen ? styles['container'] : styles['container-on-toggle']}`} id={"top-bar"}>
@@ -161,7 +163,10 @@ const TopBar = ({
       >
         <img src={Utilities.filterBlue} alt={"filter"} />
       </div>
-      <div className={styles.titleBreadcrumbs}>
+      {/**
+       * Todo manage the case for share collection
+       */}
+      {/* <div className={styles.titleBreadcrumbs}>
         {activeFolder && mode === "assets" && !singleCollection && (
           <Breadcrumbs
             links={[
@@ -176,7 +181,7 @@ const TopBar = ({
             current={folderData[0]?.name}
           />
         )}
-      </div>
+      </div> */}
       <div className={styles.wrapper}>
         <div className={`${styles['main-heading-wrapper']}`}>
           {sidebarOpen ?
@@ -184,9 +189,9 @@ const TopBar = ({
             <div className={styles.newsidenav}>
               <img className={styles.sidenavRightIcon} onClick={() => { setSidebarOpen(!sidebarOpen) }} src={Utilities.arrowright} />
             </div>}
-          {activeFolder && mode === "assets" && (
+          {/* {activeFolder && mode === "assets" && (
             <SubHeader pageTitle={folderData[0]?.name} children={undefined} />
-          )}
+          )} */}
           <div className={styles.innerwrapper}>
             {!deletedAssets ? (
               <div className={styles.filters}>
@@ -199,28 +204,6 @@ const TopBar = ({
                         onClick={() => setShowTabs(!showTabs)}
                       /> */}
                       <li className={styles["tab-list-item"]}>
-                        {/* {tabs
-                        .filter(
-                          (view) => activeSortFilter.mainFilter === view.name
-                        )
-                        .map((view) => (
-                          <Button
-                            key={view.name}
-                            text={
-                              activeFolder && mode === "assets"
-                                ? folderData[0].name
-                                : view.text
-                            }
-                            className={
-                              activeSortFilter.mainFilter === view.name
-                                ? "section-container section-active"
-                                : "section-container"
-                            }
-                            onClick={() =>
-                              setSortFilterValue("mainFilter", view.name)
-                            }
-                          />
-                        ))} */}
                         <NavHeading />
                       </li>
                       {showTabs && (
@@ -238,7 +221,6 @@ const TopBar = ({
                       )}
                     </div>
                   ) : (
-
                     < NavHeading />
                   )}
                 </ul>
@@ -283,16 +265,12 @@ const TopBar = ({
           {activeSearchOverlay && !(isShare && isFolder) && (
             <SearchOverlay
               closeOverlay={closeSearchOverlay}
-              operationsEnabled={true}
-              activeFolder={activeFolder}
-              onCloseDetailOverlay={(assetData) => {
-                closeSearchOverlay();
-                setDetailOverlayId(undefined);
-                setCurrentViewAsset(assetData);
-              }}
+              activeFolder={mode === "SubCollectionView" ? activeSubFolders : activeFolder}
+              mode={mode}
               sharePath={sharePath}
               isFolder={isFolder} onClickOutside={undefined} />
         
+            
           )}
           {(amountSelected === 0 || mode === "folders") &&
             showAssetAddition &&

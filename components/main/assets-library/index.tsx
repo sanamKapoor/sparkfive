@@ -27,7 +27,6 @@ import AssetOps from "../../common/asset/asset-ops";
 import DetailOverlay from "../../common/asset/detail-overlay";
 import TopBar from "../../common/asset/top-bar";
 import FilterView from "../../common/filter-view";
-import FilterContainer from "../../common/filter/filter-container";
 import { DropzoneProvider } from "../../common/misc/dropzone";
 import NoPermissionNotice from "../../common/misc/no-permission-notice";
 import RenameModal from "../../common/modals/rename-modal";
@@ -321,10 +320,6 @@ const AssetsLibrary = () => {
   const updateSortFilterByAdvConfig = async (params: any = {}) => {
     let defaultTab = getDefaultTab();
     const filters = Object.keys(router.query);
-    console.log(
-      "🚀 ~ file: index.tsx:294 ~ updateSortFilterByAdvConfig ~ filters:",
-      filters
-    );
     if (filters && filters.length) {
       defaultTab = filters[0] === "collection" ? "folders" : "all";
     } else if (params.mainFilter) {
@@ -581,8 +576,8 @@ const AssetsLibrary = () => {
       const currenFolderClone = [...folders];
       try {
         let needsFolderFetch;
-        const newPlaceholders = [];
-        const folderPlaceholders = [];
+        const newPlaceholders: any = [];
+        const folderPlaceholders: any = [];
         const foldersUploaded = getFoldersFromUploads(files);
         if (foldersUploaded.length > 0) {
           needsFolderFetch = true;
@@ -707,7 +702,6 @@ const AssetsLibrary = () => {
       if (replace) {
         setAddedIds([]);
       }
-      console.log("activeSortFilter in assets: ", activeSortFilter);
       setPlaceHolders("asset", replace);
       const { data } = await assetApi.getAssets({
         ...getAssetsFilters({
@@ -804,6 +798,7 @@ const AssetsLibrary = () => {
       const { data: subFolders } = await folderApi.getSubFolders(
         {
           ...queryParams,
+          ...(term && { term }),
         },
         activeSubFolders
       );
@@ -834,8 +829,8 @@ const AssetsLibrary = () => {
           userFilterObject: activeSortFilter,
         }),
         ...getAssetsSort(activeSortFilter),
-        term,
-        ...searchFilterParams,
+        term: "", // Empty because we don't search in case of sub-collection
+        // ...searchFilterParams, commented because we don't search in case of sub-collection
         showAllAssets: showAllAssets,
       });
       setSubFoldersAssetsViewList(subFolderAssets, replace);
@@ -948,10 +943,17 @@ const AssetsLibrary = () => {
   const viewFolder = async (id: string, subCollection: boolean) => {
     if (!subCollection) {
       setActiveFolder(id);
+      setHeaderName(
+        subFoldersViewList.results.find((folder: any) => folder.id === id)
+          ?.name || ""
+      );
       updateSortFilterByAdvConfig({ folderId: id });
+    } else {
+      setActiveSubFolders(id);
+      setHeaderName(
+        folders.find((folder: any) => folder.id === id)?.name || ""
+      );
     }
-    setActiveSubFolders(id);
-    setHeaderName(folders.find((folder: any) => folder.id === id)?.name || "");
   };
 
   const deleteFolder = async (id) => {
@@ -967,6 +969,7 @@ const AssetsLibrary = () => {
             results: update(subFoldersViewList.results, {
               $splice: [[folderIndex, 1]],
             }),
+            total: subFoldersViewList.total - 1,
           });
         }
         toastUtils.success("Sub collection deleted successfully");
@@ -980,7 +983,10 @@ const AssetsLibrary = () => {
         toastUtils.success("Collection deleted successfully");
       }
     } catch (err) {
-      console.log(err);
+      toastUtils.error(
+        err?.response?.data?.message ||
+          "Something went wrong please try again later"
+      );
     }
   };
 
@@ -1049,7 +1055,7 @@ const AssetsLibrary = () => {
                   sidebarOpen ? styles["rightSide"] : styles["rightSideToggle"]
                 }`}
               >
-                {openFilter && hasPermission([ASSET_ACCESS]) && (
+                {/* {openFilter && hasPermission([ASSET_ACCESS]) && (
                   <FilterContainer
                     clearFilters={clearFilters}
                     openFilter={openFilter}
@@ -1059,19 +1065,18 @@ const AssetsLibrary = () => {
                     isFolder={activeSortFilter.mainFilter === "folders"}
                     filterWidth={widthCard}
                   />
-                )}
+                )} */}
                 <div className="position-relative">
                   <div className={styles["search-mobile"]}>
                     <SearchOverlay
                       closeOverlay={closeSearchOverlay}
-                      operationsEnabled
-                      activeFolder={activeFolder}
-                      onCloseDetailOverlay={(assetData) => {
-                        closeSearchOverlay();
-                        setDetailOverlayId(undefined);
-                        setCurrentViewAsset(assetData);
-                      }}
                       isFolder={activeMode === "folders"}
+                      activeFolder={
+                        activeMode === "SubCollectionView"
+                          ? activeSubFolders
+                          : activeFolder
+                      }
+                      mode={activeMode}
                     />
                   </div>
                   {advancedConfig.set && hasPermission([ASSET_ACCESS]) && (

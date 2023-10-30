@@ -9,7 +9,7 @@ import Input from "../../common/inputs/input";
 import Base from "../../common/modals/base";
 
 import SearchModal from "../../SearchModal/Search-modal";
-import { useMoveModal } from "../../../hooks/Use-Modal";
+import { useMoveModal } from "../../../hooks/use-modal";
 interface Asset {
   id: string;
   name: string;
