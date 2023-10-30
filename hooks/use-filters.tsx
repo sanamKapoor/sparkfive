@@ -8,7 +8,11 @@ import {
 
 import { getFilterKeyForAttribute } from "../utils/filter";
 
-import { filterKeyMap, initialActiveSortFilters } from "../config/data/filter";
+import {
+  filterKeyMap,
+  initialActiveSortFilters,
+  labelKeyMap,
+} from "../config/data/filter";
 import customFieldsApi from "../server-api/attribute";
 import campaignApi from "../server-api/campaign";
 import filterApi from "../server-api/filter";
@@ -23,37 +27,18 @@ const useFilters = (attributes, activeSortFilter, setActiveSortFilter) => {
   const [values, setValues] = useState<IFilterAttributeValues>([]);
   const [selectedFilters, setSelectedFilters] = useState<ISelectedFilter[]>([]);
 
-  const getLabelForSelectedFilter = (key: string) => {
-    const labelKeyMap = {
-      filterProductSku: "sku",
-      filterAiTags: "name",
-      filterNonAiTags: "name",
-      filterFileTypes: "value",
-      lastUpdated: "label",
-      dateUploaded: "label",
-      filterOrientations: "name",
-      filterResolutions: "dpi",
-    };
-
-    console.log("labelKeyMap[key]: ", labelKeyMap[key]);
-
-    return labelKeyMap[key] ?? "name";
-  };
-
+  //TODO: dimensions pending
   const getSelectedFilters = () => {
     const filters = activeSortFilter;
 
     const data: ISelectedFilter[] = [];
 
-    //fetch the values against keys that include either 'custom-p' or 'filter'
     Object.keys(filters).map((key) => {
       if (key.includes("custom-p") || key.includes("filter")) {
         if (filters[key]?.length > 0) {
-          console.log("filters key: ", filters[key]);
-          console.log(key, "filters key");
           let filterValues = filters[key].map((item) => ({
             id: item.id ?? item.name ?? item.dpi,
-            label: item[getLabelForSelectedFilter(key)],
+            label: labelKeyMap[key] ?? "name",
             filterKey: key,
           }));
           data.push(filterValues);
@@ -67,7 +52,7 @@ const useFilters = (attributes, activeSortFilter, setActiveSortFilter) => {
         if (item) {
           let filterValues = {
             id: item.id,
-            label: item[getLabelForSelectedFilter(key)],
+            label: labelKeyMap[key] ?? "name",
             filterKey: key,
           };
           data.push(filterValues);
@@ -137,52 +122,34 @@ const useFilters = (attributes, activeSortFilter, setActiveSortFilter) => {
     });
   };
 
-  // TODO
   const onRemoveFilter = (item: ISelectedFilter) => {
-    console.log("item to be removed: ", item);
-    if (item.filterKey === "lastUpdated" || item.filterKey === "dateUploaded") {
-      setActiveSortFilter({
-        ...activeSortFilter,
-        [item.filterKey]: undefined,
-      });
-    } else if (
-      item.filterKey === "filterFileTypes" ||
-      item.filterKey === "filterOrientations"
-    ) {
-      const filterData = activeSortFilter[item.filterKey];
-      const updatedFilterData = filterData.filter(
-        (data) => data.name !== item.id
-      );
-      setActiveSortFilter({
-        ...activeSortFilter,
-        [item.filterKey]: updatedFilterData,
-      });
-    } else if (item.filterKey === "filterResolutions") {
-      const filterData = activeSortFilter[item.filterKey];
-      const updatedFilterData = filterData.filter(
-        (data) => data.dpi !== item.id
-      );
-      setActiveSortFilter({
-        ...activeSortFilter,
-        [item.filterKey]: updatedFilterData,
-      });
-    } else {
-      const filterData = activeSortFilter[item.filterKey];
-      const updatedFilterData = filterData.filter(
-        (data) => data.id !== item.id
-      );
-      setActiveSortFilter({
-        ...activeSortFilter,
-        [item.filterKey]: updatedFilterData,
-      });
-    }
+    const filterKey = item.filterKey;
+    const filterData = activeSortFilter[filterKey];
+
+    const updateFilter = (data, filterKey: string, item) => {
+      switch (filterKey) {
+        case "lastUpdated":
+        case "dateUploaded":
+          return undefined;
+        case "filterFileTypes":
+        case "filterOrientations":
+          return data.filter((entry) => entry.name !== item.id);
+        case "filterResolutions":
+          return data.filter((entry) => entry.dpi !== item.id);
+        default:
+          return data.filter((entry) => entry.id !== item.id);
+      }
+    };
+
+    const updatedData = updateFilter(filterData, filterKey, item);
+
+    setActiveSortFilter({ ...activeSortFilter, [filterKey]: updatedData });
   };
 
   /** // TODO:
    * 1. Check filters on share landing page
    **/
   const onAttributeClick = async (data: IAttribute) => {
-    console.log("data: ", data);
     try {
       setLoading(true);
 
@@ -192,7 +159,6 @@ const useFilters = (attributes, activeSortFilter, setActiveSortFilter) => {
       switch (data.id) {
         case FilterAttributeVariants.TAGS:
           values = await fetchValues(data.id, fetchTags, ["id"]);
-          console.log("values: ", values);
           break;
 
         case FilterAttributeVariants.AI_TAGS:

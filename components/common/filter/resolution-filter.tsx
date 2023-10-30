@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Utilities } from "../../../assets";
+import { FilterContext } from "../../../context";
 import { IResolutionFilter } from "../../../interfaces/filters";
 import IconClickable from "../buttons/icon-clickable";
 import Divider from "../filter-option-popup/divider";
@@ -18,7 +19,11 @@ const ResolutionFilter: React.FC<ResolutionFilterProps> = ({
   setOptions,
   setFilters,
 }) => {
-  const [highResActive, setHighResActive] = useState<boolean>(false);
+  const { activeSortFilter } = useContext(FilterContext);
+
+  const [highResActive, setHighResActive] = useState<boolean>(
+    !!activeSortFilter?.filterResolutions.find((item) => item.dpi === "highres")
+  );
 
   const onSelectHighResFilter = () => {
     console.log("selected high res...");
@@ -97,17 +102,19 @@ const ResolutionFilter: React.FC<ResolutionFilterProps> = ({
         <span>All High-Res (above 250 DPI)</span>
       </div>
       <div className={styles["outer-wrapper"]}>
-        {options.map((item) => (
-          <div className={styles["grid-item"]} key={item.dpi}>
-            <OptionDataItem
-              name={item.dpi}
-              count={item.count}
-              isSelected={item.isSelected}
-              onSelect={() => onSelectResolution(item.dpi)}
-              onDeselect={() => onDeselectResolution(item.dpi)}
-            />
-          </div>
-        ))}
+        {options.map((item) =>
+          item.dpi === "highres" ? null : (
+            <div className={styles["grid-item"]} key={item.dpi}>
+              <OptionDataItem
+                name={item.dpi}
+                count={item.count}
+                isSelected={item.isSelected}
+                onSelect={() => onSelectResolution(item.dpi)}
+                onDeselect={() => onDeselectResolution(item.dpi)}
+              />
+            </div>
+          )
+        )}
       </div>
       <Divider />
     </>

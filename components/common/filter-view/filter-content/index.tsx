@@ -1,3 +1,5 @@
+//🚧 work in progress 🚧
+
 import {
   FilterAttributeVariants,
   OptionDataProps,
@@ -22,6 +24,7 @@ const FilterContent: React.FC<FilterContentProps> = ({
   setOptions,
   setFilters,
 }) => {
+  //TODO: use base component for similar components
   const filterComponents = {
     [FilterAttributeVariants.TAGS]: TagsFilter,
     [FilterAttributeVariants.AI_TAGS]: AiTagsFilter,
