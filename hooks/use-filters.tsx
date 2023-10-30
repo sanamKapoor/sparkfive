@@ -27,7 +27,6 @@ const useFilters = (attributes, activeSortFilter, setActiveSortFilter) => {
   const [values, setValues] = useState<IFilterAttributeValues>([]);
   const [selectedFilters, setSelectedFilters] = useState<ISelectedFilter[]>([]);
 
-  //TODO: dimensions pending
   const getSelectedFilters = () => {
     const filters = activeSortFilter;
 
@@ -38,21 +37,30 @@ const useFilters = (attributes, activeSortFilter, setActiveSortFilter) => {
         if (filters[key]?.length > 0) {
           let filterValues = filters[key].map((item) => ({
             id: item.id ?? item.name ?? item.dpi,
-            label: labelKeyMap[key] ?? "name",
+            label: labelKeyMap[key] ?? item["name"],
             filterKey: key,
           }));
           data.push(filterValues);
         }
-      } else if (
-        key.includes("lastUpdated") ||
-        key.includes("dateUploaded") ||
-        key.includes("dimension")
-      ) {
+      } else if (key.includes("lastUpdated") || key.includes("dateUploaded")) {
         const item = filters[key];
         if (item) {
           let filterValues = {
             id: item.id,
-            label: labelKeyMap[key] ?? "name",
+            label: labelKeyMap[key] ?? item["name"],
+            filterKey: key,
+          };
+          data.push(filterValues);
+        }
+      } else if (
+        key.includes("dimensionWidth") ||
+        key.includes("dimensionHeight")
+      ) {
+        const item = filters[key];
+        if (item) {
+          let filterValues = {
+            id: key,
+            label: `${key.split("dimension")[1]}: ${item.min} - ${item.max}`,
             filterKey: key,
           };
           data.push(filterValues);
@@ -130,6 +138,8 @@ const useFilters = (attributes, activeSortFilter, setActiveSortFilter) => {
       switch (filterKey) {
         case "lastUpdated":
         case "dateUploaded":
+        case "dimensionWidth":
+        case "dimensionHeight":
           return undefined;
         case "filterFileTypes":
         case "filterOrientations":

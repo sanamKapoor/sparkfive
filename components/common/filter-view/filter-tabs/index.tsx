@@ -56,7 +56,7 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
 
   useEffect(() => {
     getAttributes();
-    setRenderedFlag(true); //TODO
+    setRenderedFlag(true);
   }, []);
 
   return (
@@ -79,6 +79,7 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
                 ![
                   FilterAttributeVariants.LAST_UPDATED,
                   FilterAttributeVariants.DATE_UPLOADED,
+                  FilterAttributeVariants.DIMENSIONS,
                 ].includes(attr.id) && (
                   <Badge
                     count={

@@ -23,6 +23,12 @@ export const checkIfBadgeVisible = (
     filterObject[id] !== undefined
   ) {
     result = true;
+  } else if (
+    id === FilterAttributeVariants.DIMENSIONS &&
+    (filterObject["dimensionWidth"] !== undefined ||
+      filterObject["dimensionHeight"] !== undefined)
+  ) {
+    result = true;
   } else {
     result = false;
   }
