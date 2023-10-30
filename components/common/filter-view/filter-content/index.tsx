@@ -32,13 +32,13 @@ const FilterContent: React.FC<FilterContentProps> = ({
     [FilterAttributeVariants.TAGS]: TagsFilter,
     [FilterAttributeVariants.AI_TAGS]: AiTagsFilter,
     [FilterAttributeVariants.CAMPAIGNS]: CampaignFilter,
-    [FilterAttributeVariants.DIMENSIONS]: DimensionsFilter,
-    [FilterAttributeVariants.RESOLUTION]: ResolutionFilter,
     [FilterAttributeVariants.FILE_TYPES]: FileTypeFilter,
     [FilterAttributeVariants.ORIENTATION]: OrientationFilter,
+    [FilterAttributeVariants.PRODUCTS]: ProductFilter,
     [FilterAttributeVariants.LAST_UPDATED]: LastUpdatedFilter,
     [FilterAttributeVariants.DATE_UPLOADED]: DateUploadedFilter,
-    [FilterAttributeVariants.PRODUCTS]: ProductFilter,
+    [FilterAttributeVariants.DIMENSIONS]: DimensionsFilter,
+    [FilterAttributeVariants.RESOLUTION]: ResolutionFilter,
   };
 
   const Component =
