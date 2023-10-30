@@ -100,3 +100,14 @@ export const initialActiveSortFilters: any = {
   dateUploaded: undefined,
   lastUpdated: undefined,
 };
+
+export const labelKeyMap = {
+  filterProductSku: "sku",
+  filterAiTags: "name",
+  filterNonAiTags: "name",
+  filterFileTypes: "value",
+  lastUpdated: "label",
+  dateUploaded: "label",
+  filterOrientations: "name",
+  filterResolutions: "dpi",
+};

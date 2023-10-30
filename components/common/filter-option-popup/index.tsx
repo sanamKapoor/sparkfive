@@ -12,8 +12,6 @@ import Search from "../../main/user-settings/SuperAdmin/Search/Search";
 import Button from "../buttons/button";
 import styles from "./index.module.css";
 
-import Dropdown from "../../common/inputs/dropdown";
-
 import {
   filterKeyMap,
   ruleKeyMap,
@@ -21,9 +19,8 @@ import {
 } from "../../../config/data/filter";
 import { FilterContext } from "../../../context";
 import Loader from "../UI/Loader/loader";
-import IconClickable from "../buttons/icon-clickable";
 import FilterContent from "../filter-view/filter-content";
-import Divider from "./divider";
+import RulesOptions from "./rules-options";
 
 interface FilterOptionPopupProps {
   options: IFilterAttributeValues;
@@ -63,9 +60,6 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
         dimensionHeight: data.dimensionHeight,
       });
     } else {
-      console.log("coming inside else - onApply");
-
-      console.log("data: ", data);
       setActiveSortFilter({
         ...activeSortFilter,
         [filterKey]: data[filterKey],
@@ -105,76 +99,14 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
     });
   };
 
-  //   if (activeAttribute.id === FilterAttributeVariants.TAGS) {
-  //     setOptions(options.map((item) => ({ ...item, isSelected: false })));
-  //     setActiveSortFilter({
-  //       ...activeSortFilter,
-  //       filterNonAiTags: [],
-  //       allNonAiTags: "all",
-  //     });
-  //   } else if (activeAttribute.id === FilterAttributeVariants.AI_TAGS) {
-  //     setOptions(options.map((item) => ({ ...item, isSelected: false })));
-  //     setActiveSortFilter({
-  //       ...activeSortFilter,
-  //       filterAiTags: [],
-  //       allAiTags: "all",
-  //     });
-  //   } else if (activeAttribute.id === FilterAttributeVariants.CAMPAIGNS) {
-  //     setOptions(options.map((item) => ({ ...item, isSelected: false })));
-  //     setActiveSortFilter({
-  //       ...activeSortFilter,
-  //       filterCampaigns: [],
-  //       allCampaigns: "all",
-  //     });
-  //   } else if (activeAttribute.id === FilterAttributeVariants.PRODUCTS) {
-  //     setOptions(options.map((item) => ({ ...item, isSelected: false })));
-  //     setActiveSortFilter({
-  //       ...activeSortFilter,
-  //       filterProductSku: [], //TODO: verify
-  //     });
-  //   } else if (activeAttribute.id === FilterAttributeVariants.FILE_TYPES) {
-  //     setOptions(options.map((item) => ({ ...item, isSelected: false })));
-  //     setActiveSortFilter({
-  //       ...activeSortFilter,
-  //       filterFileTypes: [],
-  //     });
-  //   } else if (activeAttribute.id === FilterAttributeVariants.ORIENTATION) {
-  //     setOptions(options.map((item) => ({ ...item, isSelected: false })));
-  //     setActiveSortFilter({
-  //       ...activeSortFilter,
-  //       filterOrientations: [],
-  //     });
-  //   } else if (activeAttribute.id === FilterAttributeVariants.DATE_UPLOADED) {
-  //     console.log("coming in here.......");
-  //     setOptions(undefined);
-  //     setActiveSortFilter({
-  //       ...activeSortFilter,
-  //       dateUploaded: undefined,
-  //     });
-  //   } else if (activeAttribute.id === FilterAttributeVariants.LAST_UPDATED) {
-  //     setOptions(undefined);
-  //     setActiveSortFilter({
-  //       ...activeSortFilter,
-  //       lastUpdated: undefined,
-  //     });
-  //   } else {
-  //     const filterKey = `custom-p${activeAttribute.id}`;
-  //     const filterRuleKey = `all-${activeAttribute.id}`;
-  //     setOptions(options.map((item) => ({ ...item, isSelected: false })));
-  //     setActiveSortFilter({
-  //       ...activeSortFilter,
-  //       [filterKey]: [],
-  //       [filterRuleKey]: "all",
-  //     });
-  //   }
-  // };
-
   //TODO
   const onSearch = (term: string) => {
     console.log("Searching term....,", term);
   };
 
   const ruleKey = ruleKeyMap[activeAttribute.id] || `all-${activeAttribute.id}`;
+  const activeRuleName =
+    rulesMapper[activeSortFilter[ruleKey]] ?? rulesMapper["all"];
 
   const onChangeRule = (ruleName: string) => {
     setActiveSortFilter({
@@ -230,48 +162,12 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
           )}
 
           {showRules && (
-            <div>
-              <div
-                className={`${styles["rule-tag"]}`}
-                onClick={() => setShowDropdown(!showDropdown)}
-              >
-                <label>Rule:</label>
-                <div className={`${styles["select-wrapper"]}`}>
-                  <p>
-                    {rulesMapper[activeSortFilter[ruleKey]] ??
-                      rulesMapper["all"]}
-                  </p>
-                  <IconClickable
-                    additionalClass={styles["dropdown-icon"]}
-                    src={Utilities.arrowDark}
-                  />
-                </div>
-              </div>
-              {showDropdown && (
-                <Dropdown
-                  additionalClass={styles["dropdown-menu"]}
-                  onClickOutside={() => {}}
-                  options={[
-                    {
-                      label: "All selected",
-                      id: "All selected",
-                      onClick: () => onChangeRule("all"),
-                    },
-                    {
-                      label: "Any Selected",
-                      id: "Any",
-                      onClick: () => onChangeRule("any"),
-                    },
-                    {
-                      label: "No Tags",
-                      id: "None",
-                      onClick: () => onChangeRule("none"),
-                    },
-                  ]}
-                />
-              )}
-              <Divider />
-            </div>
+            <RulesOptions
+              showDropdown={showDropdown}
+              setShowDropdown={setShowDropdown}
+              onChangeRule={onChangeRule}
+              activeRuleName={activeRuleName}
+            />
           )}
           <div className={`${styles["Modal-btn"]}`}>
             <Button
