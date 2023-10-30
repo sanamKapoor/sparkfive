@@ -119,12 +119,18 @@ export interface IDateRange {
   endDate: Date;
 }
 
-export interface OptionDataProps {
-  options: IAttributeValue[];
-  setOptions: (val: unknown) => void;
+export interface OptionsDataProps {
+  filterKey: string;
+  dataKey: string;
+  compareKey: string;
+  options: unknown; //TODO
+  setOptions: (data: unknown) => void;
+  setFilters: (val: any) => void; //TODO
   activeAttribute?: IAttribute;
-  setFilters: (data: any) => void; //TODO
 }
+
+export interface CommonFilterProps
+  extends Pick<OptionsDataProps, "options" | "setFilters" | "setOptions"> {}
 
 export interface ISelectedFilter {
   id: string;

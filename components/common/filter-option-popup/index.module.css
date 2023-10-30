@@ -44,6 +44,9 @@
   cursor: pointer;
   margin-right: 10px;
 }
+.closeIcon{
+  cursor: pointer;
+}
 .search-btn {
   margin-top: 24px;
 }
@@ -68,6 +71,7 @@
   border-radius: 4px;
   height: 24px;
   max-width: 155px;
+  cursor: pointer;
 }
 .dropdown-icon {
   width: 10px;

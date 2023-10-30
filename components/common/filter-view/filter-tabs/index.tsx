@@ -58,11 +58,11 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
 
   useEffect(() => {
     getAttributes();
-    setRenderedFlag(true); //TODO
+    setRenderedFlag(true);
   }, []);
 
   return (
-    <>
+    <div className={`${styles["outer-Box"]}`}>
       <div className={`${styles["outer-wrapper"]}`}>
         <div className={`${styles["filter-header-mobile"]}`}>
           <div className={`${styles["filter-heading-mobile"]}`}>
@@ -102,17 +102,19 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
               >
                 {attr.name}
                 {checkIfBadgeVisible(activeSortFilter, attr.id) &&
-                  ![
-                    FilterAttributeVariants.LAST_UPDATED,
-                    FilterAttributeVariants.DATE_UPLOADED,
-                  ].includes(attr.id) && (
-                    <Badge
-                      count={
-                        activeSortFilter[getFilterKeyForAttribute(attr.id)]
-                          ?.length
-                      }
-                    />
-                  )}
+                ![
+                  FilterAttributeVariants.LAST_UPDATED,
+                  FilterAttributeVariants.DATE_UPLOADED,
+                  FilterAttributeVariants.DIMENSIONS,
+                ].includes(attr.id) && (
+                  <Badge
+                    count={
+                      activeSortFilter[getFilterKeyForAttribute(attr.id)]
+                        ?.length
+                    }
+                  />
+                )}
+
 
                 <img
                   className={`${styles["arrow-down"]}`}
@@ -136,7 +138,7 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
           <Button text={"More filter"} className="text-primary-btn"></Button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

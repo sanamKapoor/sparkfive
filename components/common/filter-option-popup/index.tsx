@@ -1,4 +1,3 @@
-//🚧 work in progress 🚧
 import React, { useContext, useState } from "react";
 
 import { Utilities } from "../../../assets";
@@ -74,29 +73,39 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   };
 
   const onClear = () => {
-    const filterKey =
-      filterKeyMap[activeAttribute.id] || `custom-p${activeAttribute.id}`;
-    const ruleKey =
-      ruleKeyMap[activeAttribute.id] || `all-${activeAttribute.id}`;
+    if (activeAttribute.id === FilterAttributeVariants.DIMENSIONS) {
+      setActiveSortFilter({
+        ...activeSortFilter,
+        dimensionWidth: undefined,
+        dimensionHeight: undefined,
+      });
+    } else {
+      const filterKey =
+        filterKeyMap[activeAttribute.id] || `custom-p${activeAttribute.id}`;
+      const ruleKey =
+        ruleKeyMap[activeAttribute.id] || `all-${activeAttribute.id}`;
 
-    const clearOptions =
-      activeAttribute.id !== FilterAttributeVariants.DATE_UPLOADED &&
-      activeAttribute.id !== FilterAttributeVariants.LAST_UPDATED;
+      const clearOptions =
+        activeAttribute.id !== FilterAttributeVariants.DATE_UPLOADED &&
+        activeAttribute.id !== FilterAttributeVariants.LAST_UPDATED;
 
-    setOptions(
-      clearOptions
-        ? options.map((item) => ({ ...item, isSelected: false }))
-        : undefined
-    );
+      setOptions(
+        clearOptions
+          ? options.map((item) => ({ ...item, isSelected: false }))
+          : undefined
+      );
 
-    const clearFilter = {};
-    clearFilter[filterKey] = clearOptions ? [] : undefined;
-    clearFilter[ruleKey] = clearOptions ? "all" : undefined;
+      const clearFilter = {};
+      clearFilter[filterKey] = clearOptions ? [] : undefined;
+      clearFilter[ruleKey] = clearOptions ? "all" : undefined;
 
-    setActiveSortFilter({
-      ...activeSortFilter,
-      ...clearFilter,
-    });
+      setActiveSortFilter({
+        ...activeSortFilter,
+        ...clearFilter,
+      });
+    }
+
+    setActiveAttribute(null);
   };
 
   //TODO
@@ -150,6 +159,7 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
                 clear
               </button>
               <img
+              className={styles.closeIcon}
                 src={Utilities.closeIcon}
                 onClick={() => setActiveAttribute(null)}
               />
