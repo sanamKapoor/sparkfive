@@ -1,4 +1,3 @@
-//🚧 work in progress 🚧
 import React from "react";
 
 import { CommonFilterProps } from "../../../../interfaces/filters";

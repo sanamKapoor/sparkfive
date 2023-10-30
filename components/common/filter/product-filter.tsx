@@ -1,4 +1,3 @@
-//🚧 work in progress 🚧
 import { CommonFilterProps } from "../../../interfaces/filters";
 import OptionsData from "../filter-option-popup/options-data";
 

@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext, useState } from "react";
+import { FilterContext } from "../../../../context";
 import { CommonFilterProps } from "../../../../interfaces/filters";
 import styles from "./index.module.css";
 
@@ -9,42 +10,64 @@ const DimensionsFilter: React.FC<DimensionsFilterProps> = ({
   setOptions,
   setFilters,
 }) => {
-  console.log("options: ", options);
-  const { dimensionWidth, dimensionHeight } = options;
+  const { activeSortFilter } = useContext(FilterContext);
+
+  const { dimensionWidth: width, dimensionHeight: height } = options;
+
+  const [dimensionWidth, setDimensionWidth] = useState<{
+    min: string;
+    max: string;
+  }>({
+    min: activeSortFilter?.dimensionWidth?.min || width.min,
+    max: activeSortFilter?.dimensionWidth?.max || width.max,
+  });
+
+  const [dimensionHeight, setDimensionHeight] = useState<{
+    min: string;
+    max: string;
+  }>({
+    min: activeSortFilter?.dimensionHeight?.min || height.min,
+    max: activeSortFilter?.dimensionHeight?.max || height.max,
+  });
+
   const handleWidthChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     prop: "min" | "max"
   ) => {
-    const updateDimensionWidth = (prevFilters) => {
-      return {
-        dimensionWidth: {
-          ...prevFilters?.dimensionWidth,
-          [prop]: e?.target?.value,
-        },
-        ...prevFilters,
-      };
+    const value = e.target.value;
+
+    setDimensionWidth({ ...dimensionWidth, [prop]: value });
+
+    const updatedState = {
+      dimensionWidth: {
+        ...dimensionWidth,
+        [prop]: value,
+      },
+      dimensionHeight,
     };
 
-    setOptions(updateDimensionWidth);
-    setFilters(updateDimensionWidth);
+    setOptions(updatedState);
+    setFilters(updatedState);
   };
 
   const handleHeightChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     prop: "min" | "max"
   ) => {
-    const updateDimensionHeight = (prevFilters) => {
-      return {
-        dimensionHeight: {
-          ...prevFilters?.dimensionWidth,
-          [prop]: e?.target?.value,
-        },
-        ...prevFilters,
-      };
+    const value = e.target.value;
+
+    setDimensionHeight({ ...dimensionHeight, [prop]: value });
+
+    const updatedState = {
+      dimensionHeight: {
+        ...dimensionHeight,
+        [prop]: value,
+      },
+      dimensionWidth,
     };
 
-    setOptions(updateDimensionHeight);
-    setFilters(updateDimensionHeight);
+    setOptions(updatedState);
+    setFilters(updatedState);
   };
 
   return (

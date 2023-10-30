@@ -27,11 +27,9 @@ const useFilters = (attributes, activeSortFilter, setActiveSortFilter) => {
   const [values, setValues] = useState<IFilterAttributeValues>([]);
   const [selectedFilters, setSelectedFilters] = useState<ISelectedFilter[]>([]);
 
-  console.log("selectedFilters: ", selectedFilters);
   const getSelectedFilters = () => {
     const filters = activeSortFilter;
 
-    console.log("filters: ", filters);
     const data: ISelectedFilter[] = [];
 
     Object.keys(filters).map((key) => {
