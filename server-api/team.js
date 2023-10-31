@@ -1,4 +1,5 @@
 import axios from "axios";
+import querystring from "querystring";
 
 const teamUrl = `${process.env.SERVER_BASE_URL}/teams`;
 
@@ -39,5 +40,6 @@ export default {
   getOcrCollections: () => axios.get(`${teamUrl}/ocr-folders`),
   addOcrCollection: (data) => axios.post(`${teamUrl}/ocr-folders`, data),
   removeOcrCollection: (id) => axios.delete(`${teamUrl}/ocr-folders/${id}`),
-  getTeamAttributes: () => axios.get(`${teamUrl}/attributes`),
+  getTeamAttributes: (query = {}) =>
+    axios.get(`${teamUrl}/attributes?${querystring.encode(query)}`),
 };

@@ -24,8 +24,8 @@ const useFilters = (attributes, activeSortFilter, setActiveSortFilter) => {
     null
   );
 
-  const [values, setValues] = useState<IFilterAttributeValues>([]);
-  const [filteredOptions, setFilteredOptions] = useState([...values]);
+  const [values, setValues] = useState<IFilterAttributeValues[]>([]);
+  const [filteredOptions, setFilteredOptions] = useState<unknown>([...values]);
   const [selectedFilters, setSelectedFilters] = useState<ISelectedFilter[]>([]);
 
   const getSelectedFilters = () => {
@@ -307,6 +307,7 @@ const useFilters = (attributes, activeSortFilter, setActiveSortFilter) => {
     selectedFilters,
     setActiveAttribute,
     setFilteredOptions,
+    setLoading,
     setValues,
     values,
   };

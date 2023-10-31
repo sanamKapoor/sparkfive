@@ -1,6 +1,6 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
-import { FilterContext, UserContext } from "../../../../context";
+import { AssetContext, FilterContext, UserContext } from "../../../../context";
 import useFilters from "../../../../hooks/use-filters";
 import teamApi from "../../../../server-api/team";
 import {
@@ -17,6 +17,7 @@ import Badge from "../../UI/Badge/badge";
 import Button from "../../buttons/button";
 import IconClickable from "../../buttons/icon-clickable";
 import FilterOptionPopup from "../../filter-option-popup";
+import MoreFiltersOptionPopup from "../../filter-option-popup/more-filters-option-popup";
 import styles from "../index.module.css";
 
 interface IFilterTabsProps {
@@ -33,6 +34,7 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
   const {
     activeAttribute,
     loading,
+    setLoading,
     onAttributeClick,
     setActiveAttribute,
     values,
@@ -40,16 +42,33 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
     setFilteredOptions,
   } = useFilters(attributes, activeSortFilter, setActiveSortFilter);
 
+  const { activeFolder, activeSubFolders } = useContext(AssetContext);
+
   const { advancedConfig } = useContext(UserContext);
 
+  const [showMoreFilters, setShowMoreFilters] = useState<boolean>(false);
+  const [moreFilterOptions, setMoreFilterOptions] = useState([]);
+
+  console.log("activeSubFolders: ", activeSubFolders);
   const getAttributes = async () => {
+    //TODO: refine and fix
     try {
-      const res = await teamApi.getTeamAttributes();
+      let res;
+      if (activeSubFolders) {
+        console.log("activeFolder: ", activeFolder);
+        res = await teamApi.getTeamAttributes({ folderId: activeSubFolders });
+      } else if (activeFolder) {
+        res = await teamApi.getTeamAttributes({ folderId: activeFolder });
+      } else {
+        res = await teamApi.getTeamAttributes();
+      }
       //check for filter elements to hide
       if (advancedConfig?.hideFilterElements) {
-        const filteredAttrs = res.data.data.filter(
-          (item) => advancedConfig?.hideFilterElements[item.id] !== false
-        );
+        const filteredAttrs = res.data.data
+          .filter(
+            (item) => advancedConfig?.hideFilterElements[item.id] !== false
+          )
+          .map((item) => ({ ...item, isSelected: true }));
         setAttributes(filteredAttrs);
       }
     } catch (err) {
@@ -61,6 +80,27 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
     getAttributes();
     setRenderedFlag(true);
   }, []);
+
+  const onMoreFiltersClick = async () => {
+    setShowMoreFilters((prevState) => !prevState);
+    try {
+      setLoading(true);
+      const res = await teamApi.getTeamAttributes();
+      //check for filter elements to hide
+      if (advancedConfig?.hideFilterElements) {
+        const filteredAttrs = res.data.data
+          .filter(
+            (item) => advancedConfig?.hideFilterElements[item.id] !== false
+          )
+          .map((item) => ({ ...item, isSelected: true }));
+        setMoreFilterOptions(filteredAttrs);
+      }
+    } catch (err) {
+      console.log("[GET_MORE_ATTRIBUTES]: ", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className={`${styles["outer-Box"]}`}>
@@ -80,7 +120,7 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
           </div>
         </div>
 
-        {/* more filter button with icon */}
+        {/* more filter button with icon (for mobile view) */}
         <div className={`${styles["more-filter-btnIcon"]}`}>
           <div className={`${styles["filter-btn-withIcon"]}`}>
             <IconClickable src={Utilities.filterSetting} />
@@ -89,7 +129,7 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
         </div>
 
         {attributes.map((attr) => {
-          return (
+          return attr.isSelected ? (
             <div className={`${styles["main-wrapper"]}`} key={attr.id}>
               <div
                 className={
@@ -133,10 +173,25 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
                 />
               )}
             </div>
-          );
+          ) : null;
         })}
-        <div className={`${styles["more-filter-btn"]}`}>
-          <Button text={"More filter"} className="text-primary-btn"></Button>
+
+        <div className={`${styles["main-wrapper"]}`}>
+          <div
+            className={`${styles["more-filter-btn"]}`}
+            onClick={onMoreFiltersClick}
+          >
+            <Button text="More filters" className="text-primary-btn" />
+          </div>
+          {showMoreFilters && (
+            <MoreFiltersOptionPopup
+              loading={loading}
+              options={moreFilterOptions}
+              setOptions={setMoreFilterOptions}
+              setAttributes={setAttributes}
+              setShowModal={setShowMoreFilters}
+            />
+          )}
         </div>
       </div>
     </div>
