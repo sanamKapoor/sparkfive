@@ -33,8 +33,9 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
     loading,
     onAttributeClick,
     setActiveAttribute,
-    setValues,
     values,
+    filteredOptions,
+    setFilteredOptions,
   } = useFilters(attributes, activeSortFilter, setActiveSortFilter);
 
   const { advancedConfig } = useContext(UserContext);
@@ -97,10 +98,11 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
             </div>
             {activeAttribute !== null && activeAttribute?.id === attr.id && (
               <FilterOptionPopup
+                values={values}
                 activeAttribute={activeAttribute}
                 setActiveAttribute={setActiveAttribute}
-                options={values}
-                setOptions={setValues}
+                options={filteredOptions}
+                setOptions={setFilteredOptions}
                 loading={loading}
               />
             )}

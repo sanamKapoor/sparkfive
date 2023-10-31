@@ -25,6 +25,7 @@ const useFilters = (attributes, activeSortFilter, setActiveSortFilter) => {
   );
 
   const [values, setValues] = useState<IFilterAttributeValues>([]);
+  const [filteredOptions, setFilteredOptions] = useState([...values]);
   const [selectedFilters, setSelectedFilters] = useState<ISelectedFilter[]>([]);
 
   const getSelectedFilters = () => {
@@ -244,6 +245,7 @@ const useFilters = (attributes, activeSortFilter, setActiveSortFilter) => {
       }
 
       setValues(values);
+      setFilteredOptions(values);
     } catch (err) {
       console.log("[FILTER_DROPDOWN]: ", err);
     } finally {
@@ -297,12 +299,14 @@ const useFilters = (attributes, activeSortFilter, setActiveSortFilter) => {
   };
   return {
     activeAttribute,
+    filteredOptions,
     loading,
     onAttributeClick,
     onClearAll,
     onRemoveFilter,
     selectedFilters,
     setActiveAttribute,
+    setFilteredOptions,
     setValues,
     values,
   };

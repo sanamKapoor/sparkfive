@@ -22,6 +22,7 @@ import FilterContent from "../filter-view/filter-content";
 import RulesOptions from "./rules-options";
 
 interface FilterOptionPopupProps {
+  values: IFilterAttributeValues;
   options: IFilterAttributeValues;
   setOptions: (data: unknown) => void;
   activeAttribute: IAttribute;
@@ -30,6 +31,7 @@ interface FilterOptionPopupProps {
 }
 
 const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
+  values,
   options,
   setOptions,
   activeAttribute,
@@ -46,7 +48,10 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   const hideSearch =
     activeAttribute.id === FilterAttributeVariants.DIMENSIONS ||
     activeAttribute.id === FilterAttributeVariants.LAST_UPDATED ||
-    activeAttribute.id === FilterAttributeVariants.DATE_UPLOADED;
+    activeAttribute.id === FilterAttributeVariants.DATE_UPLOADED ||
+    activeAttribute.id === FilterAttributeVariants.RESOLUTION ||
+    activeAttribute.id === FilterAttributeVariants.FILE_TYPES ||
+    activeAttribute.id === FilterAttributeVariants.ORIENTATION;
 
   const onApply = (id: string, data: any) => {
     //TODO: handle case if some filters already exists and new ones are added for a particular filterKey
@@ -108,9 +113,23 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
     setActiveAttribute(null);
   };
 
-  //TODO
   const onSearch = (term: string) => {
-    console.log("Searching term....,", term);
+    if (term.trim() === "") {
+      setOptions([...values]); // Reset to the original list when search term is empty
+    } else {
+      let filteredResults = [];
+      if (activeAttribute.id === FilterAttributeVariants.PRODUCTS) {
+        filteredResults = values.filter(
+          (option) => option.sku.toLowerCase().includes(term.toLowerCase()) // Replace 'name' with the property you want to search in
+        );
+      } else {
+        filteredResults = values.filter(
+          (option) => option.name.toLowerCase().includes(term.toLowerCase()) // Replace 'name' with the property you want to search in
+        );
+      }
+
+      setOptions(filteredResults);
+    }
   };
 
   const ruleKey = ruleKeyMap[activeAttribute.id] || `all-${activeAttribute.id}`;
