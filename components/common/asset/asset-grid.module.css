@@ -9,6 +9,7 @@
 .filter {
   width: 100%;
   order: 2;
+  margin-top:230px;
 }
 
 @media screen and (max-width: 1023px) {

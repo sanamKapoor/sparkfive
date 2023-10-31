@@ -35,7 +35,7 @@
     cursor: pointer;
 }
 .input {
-    position: relative;
+    /* position: relative; */
 }
 .input input {
     border: 1px solid var(--color-secondary-border);
@@ -53,11 +53,17 @@
 .calendar {
     position: absolute;
     margin-top: 15px;
-    left: -73px;
     background-color: white;
     z-index: 99;
     border: 2px solid var(--color-secondary-border);
     border-radius: 10px;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+
+
+ 
+  
 }
 .outer-wrapper{
     display: flex;

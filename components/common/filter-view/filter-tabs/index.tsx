@@ -14,6 +14,8 @@ import {
   IAttribute,
 } from "../../../../interfaces/filters";
 import Badge from "../../UI/Badge/badge";
+import Button from "../../buttons/button";
+import IconClickable from "../../buttons/icon-clickable";
 import FilterOptionPopup from "../../filter-option-popup";
 import styles from "../index.module.css";
 
@@ -61,54 +63,82 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
   }, []);
 
   return (
-    <div className={`${styles["outer-wrapper"]}`}>
-      {attributes.map((attr) => {
-        return (
-          <div key={attr.id}>
-            <div
-              className={
-                checkIfBadgeVisible(activeSortFilter, attr.id)
-                  ? `${styles["inner-wrapper"]} ${styles["attribute-active"]}`
-                  : `${styles["inner-wrapper"]}`
-              }
-              onClick={(e) => {
-                onAttributeClick(attr);
-              }}
-            >
-              {attr.name}
-              {checkIfBadgeVisible(activeSortFilter, attr.id) &&
-                ![
-                  FilterAttributeVariants.LAST_UPDATED,
-                  FilterAttributeVariants.DATE_UPLOADED,
-                  FilterAttributeVariants.DIMENSIONS,
-                ].includes(attr.id) && (
-                  <Badge
-                    count={
-                      activeSortFilter[getFilterKeyForAttribute(attr.id)]
-                        ?.length
-                    }
-                  />
-                )}
-
-              <img
-                className={`${styles["arrow-down"]}`}
-                src={Utilities.downIcon}
-                alt=""
+    <div className={`${styles["outer-Box"]}`}>
+      <div className={`${styles["outer-wrapper"]}`}>
+        <div className={`${styles["filter-header-mobile"]}`}>
+          <div className={`${styles["filter-heading-mobile"]}`}>
+            <div>
+              <span>Filter</span>
+            </div>
+            <div className={`${styles["close-buttons"]}`}>
+              <Button text={"Clear"} className="text-secondary-btn" />
+              <IconClickable
+                additionalClass={styles["close-button"]}
+                src={Utilities.bigblueClose}
               />
             </div>
-            {activeAttribute !== null && activeAttribute?.id === attr.id && (
-              <FilterOptionPopup
-                values={values}
-                activeAttribute={activeAttribute}
-                setActiveAttribute={setActiveAttribute}
-                options={filteredOptions}
-                setOptions={setFilteredOptions}
-                loading={loading}
-              />
-            )}
           </div>
-        );
-      })}
+        </div>
+
+        {/* more filter button with icon */}
+        <div className={`${styles["more-filter-btnIcon"]}`}>
+          <div className={`${styles["filter-btn-withIcon"]}`}>
+            <IconClickable src={Utilities.filterSetting} />
+            <Button text={"More filter"} className="text-primary-btn"></Button>
+          </div>
+        </div>
+
+        {attributes.map((attr) => {
+          return (
+            <div className={`${styles["main-wrapper"]}`} key={attr.id}>
+              <div
+                className={
+                  checkIfBadgeVisible(activeSortFilter, attr.id)
+                    ? `${styles["inner-wrapper"]} ${styles["attribute-active"]}`
+                    : `${styles["inner-wrapper"]}`
+                }
+                onClick={(e) => {
+                  onAttributeClick(attr);
+                }}
+              >
+                {attr.name}
+                {checkIfBadgeVisible(activeSortFilter, attr.id) &&
+                  ![
+                    FilterAttributeVariants.LAST_UPDATED,
+                    FilterAttributeVariants.DATE_UPLOADED,
+                    FilterAttributeVariants.DIMENSIONS,
+                  ].includes(attr.id) && (
+                    <Badge
+                      count={
+                        activeSortFilter[getFilterKeyForAttribute(attr.id)]
+                          ?.length
+                      }
+                    />
+                  )}
+
+                <img
+                  className={`${styles["arrow-down"]}`}
+                  src={Utilities.downIcon}
+                  alt=""
+                />
+              </div>
+              {activeAttribute !== null && activeAttribute?.id === attr.id && (
+                <FilterOptionPopup
+                  values={values}
+                  activeAttribute={activeAttribute}
+                  setActiveAttribute={setActiveAttribute}
+                  options={filteredOptions}
+                  setOptions={setFilteredOptions}
+                  loading={loading}
+                />
+              )}
+            </div>
+          );
+        })}
+        <div className={`${styles["more-filter-btn"]}`}>
+          <Button text={"More filter"} className="text-primary-btn"></Button>
+        </div>
+      </div>
     </div>
   );
 };

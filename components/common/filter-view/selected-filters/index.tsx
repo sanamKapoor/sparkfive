@@ -28,7 +28,7 @@ const SelectedFilters: React.FC<SelectedFilterProps> = ({
           />
         </div>
       ))}
-      <Button text="Clear All" className="text-btn" onClick={onClearAll} />
+      <Button text="Clear All" className="text-success-btn" onClick={onClearAll} />
     </div>
   );
 };
