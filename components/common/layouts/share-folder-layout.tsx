@@ -28,9 +28,9 @@ const ShareFolderLayout = ({ children, advancedLink = false }) => {
               src={folderInfo?.teamIcon || GeneralImg.logo}
             />
           </div>
-          <h1 className={styles["collection-name"]}>
+          {/* <h1 className={styles["collection-name"]}>
             {folderInfo?.folderName}
-          </h1>
+          </h1> */}
         </header>
       )}
       {amountSelected > 0 && (
