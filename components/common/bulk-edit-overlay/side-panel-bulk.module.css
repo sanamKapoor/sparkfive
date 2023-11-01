@@ -184,6 +184,7 @@
     width: 100%;
     box-sizing: border-box;
     cursor: pointer;
+    padding: 5px;
   }
   .w100 {
     width: 100%;
@@ -210,6 +211,7 @@
   }
   .active {
     background: #e9eefa;
+   
   }
   
   .folder {
@@ -263,7 +265,7 @@
   .active {
     background: var(--color-sec-lightblue);
     border-radius: 4px;
-    padding: 7.5px;
+    /* padding: 7.5px; */
   }
   .subfolderList {
     padding: 0px 0px 0px 16px;
@@ -277,17 +279,25 @@
   }
   .nestedbox {
     margin-top: 10px;
-    padding: 2px 2px;
+    padding: 0px 5px;
     
   }
   .nestedbox:hover{
     background: 
-    var(--color-sec-lightblue);;
-    padding: 2px 2px;
-    
+    var(--color-sec-lightblue);
+    border-radius: 4px;
+   
    
 
   }
+  .list1-right-contents{
+    display: none;
+  
+  }
+  .nestedbox:hover .list1-right-contents {
+    display: block;
+  }
+  
   .tag-container-wrapper{
     display: flex;
     align-items: center;
@@ -325,7 +335,7 @@
     width: 20px;
     height: 20px;
     background-color: #fff;
-    border-radius: 50%;
+    border-radius: 2px;
     display: flex;
     align-items: center;
     justify-content: center;

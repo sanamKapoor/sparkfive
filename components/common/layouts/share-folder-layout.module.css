@@ -7,7 +7,8 @@
     top: 0;
     left: 0;
     z-index: 1499;
-    min-height: 74px
+    min-height: 60px;
+    border-bottom: 1px solid #DEDAD4;
 }
 
 .logo-img {
@@ -90,7 +91,7 @@
         z-index: 9999;
     }
     .logo-img {
-        max-width: 80px;
+        max-width: 40px;
         object-fit: contain;
         max-height: 66px
     }

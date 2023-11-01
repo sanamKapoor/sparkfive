@@ -108,20 +108,28 @@
 }
 .nestedbox {
   margin-bottom: 8px;
-  padding: 4px;
+  padding: 0px 4px;
  
 }
 .nestedbox:hover{
   background: var(--color-sec-lightblue);
   cursor: pointer;
-  padding: 4px;
+  /* padding: 4px; */
+}
+.list1-right-contents{
+  display: none;
+
+}
+.nestedbox:hover .list1-right-contents {
+  display: block;
 }
 
 .icon-descriptions {
-  white-space: nowrap;
+ 
+  max-width: 15ch;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 100px;
+  white-space: nowrap;
 }
 .icon-descriptions span {
   font-family: "Noto Sans", sans-serif;
@@ -131,9 +139,11 @@
   color: var(--color-prim-navy);
   margin-left: 5px;
 }
+
 .active {
   background: #e9eefa;
 }
+
 
 .folder {
   padding: 0 24px 0 24px;
@@ -184,7 +194,7 @@
 .active {
   background: var(--color-sec-lightblue);
   border-radius: 4px;
-  padding: 7.5px;
+  /* padding: 7.5px; */
 }
 .subfolderList {
   padding: 0px 0px 0px 16px;
@@ -230,7 +240,7 @@
 width: 20px;
 height: 20px;
 background-color: #fff;
-border-radius: 50%;
+border-radius: 2px;
 display: flex;
 align-items: center;
 justify-content: center;

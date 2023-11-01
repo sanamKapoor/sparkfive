@@ -219,8 +219,8 @@ const MoveModal = ({
                             >
                               {selectedFolder.includes(subfolder.id) && <img src={Utilities.checkIcon} />}
                             </div>
-                            <div className={styles["icon-descriptions"]}>
-                              <span>{subfolder.name}</span>
+                            <div className={styles["icon-descriptions"]} >
+                              <span title={JSON.stringify(subfolder.name)} > {subfolder.name}</span>
                             </div>
                           </div>
                           <div className={styles["list1-right-contents"]}>
