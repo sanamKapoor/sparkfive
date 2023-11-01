@@ -25,7 +25,7 @@ const useFilters = (attributes, activeSortFilter, setActiveSortFilter) => {
   );
 
   const [values, setValues] = useState<IFilterAttributeValues[]>([]);
-  const [filteredOptions, setFilteredOptions] = useState<unknown>([...values]);
+  const [filteredOptions, setFilteredOptions] = useState<unknown>([]);
   const [selectedFilters, setSelectedFilters] = useState<ISelectedFilter[]>([]);
 
   const getSelectedFilters = () => {

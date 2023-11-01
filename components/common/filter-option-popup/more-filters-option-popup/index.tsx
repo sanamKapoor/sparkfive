@@ -2,7 +2,6 @@ import React from "react";
 
 import { Utilities } from "../../../../assets";
 import { IAttribute } from "../../../../interfaces/filters";
-import Loader from "../../UI/Loader/loader";
 import Button from "../../buttons/button";
 import indexStyles from "../index.module.css";
 import OptionDataItem from "../option-data-item";
@@ -70,46 +69,41 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
               />
             </div>
           </div>
-          {loading ? (
-            <Loader className={styles.customLoader} />
-          ) : (
-            <>
-              <div className={`${styles["outer-Box"]}`}>
-                <div className={styles["outer-wrapper"]}>
-                  {options.length === 0 ? (
-                    <p>No Results Found.</p>
-                  ) : (
-                    options.map((item, index) => (
-                      <div className={styles["grid-item"]} key={item.id}>
-                        <OptionDataItem
-                          name={item.name}
-                          count={item.count}
-                          isSelected={item.isSelected}
-                          onSelect={() => onSelectOption(item)}
-                          onDeselect={() => onDeselectOption(item)}
-                        />
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
 
-              <div className={`${indexStyles["Modal-btn"]}`}>
-                <Button
-                  className={"apply"}
-                  text={"Apply"}
-                  disabled={loading}
-                  onClick={onApply}
-                />
-                <Button
-                  className={"cancel"}
-                  text={"Cancel"}
-                  disabled={loading}
-                  onClick={onCancel}
-                />
-              </div>
-            </>
-          )}
+          <div className={`${styles["outer-Box"]}`}>
+            <div className={styles["outer-wrapper"]}>
+              {options.length === 0 ? (
+                <p>No Results Found.</p>
+              ) : (
+                options.map((item, index) => (
+                  <div className={styles["grid-item"]} key={item.id}>
+                    <OptionDataItem
+                      name={item.name}
+                      count={item.count}
+                      isSelected={item.isSelected}
+                      onSelect={() => onSelectOption(item)}
+                      onDeselect={() => onDeselectOption(item)}
+                    />
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
+          <div className={`${indexStyles["Modal-btn"]}`}>
+            <Button
+              className={"apply"}
+              text={"Apply"}
+              // disabled={loading}
+              onClick={onApply}
+            />
+            <Button
+              className={"cancel"}
+              text={"Cancel"}
+              // disabled={loading}
+              onClick={onCancel}
+            />
+          </div>
         </div>
       </div>
     </>

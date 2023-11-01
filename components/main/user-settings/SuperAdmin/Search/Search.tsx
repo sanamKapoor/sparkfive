@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Utilities } from "../../../../../assets";
+import { useDebounce } from "../../../../../hooks/useDebounce";
 import styles from "./Search.module.css";
 
 interface SearchProps {
@@ -17,6 +18,12 @@ const Search: React.FC<SearchProps> = ({
 }) => {
   const [term, setTerm] = useState<string>("");
 
+  const debouncedTerm = useDebounce(term, 500);
+
+  useEffect(() => {
+    onSubmit(debouncedTerm);
+  }, [debouncedTerm]);
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTerm(e.target.value);
   };
@@ -27,13 +34,7 @@ const Search: React.FC<SearchProps> = ({
 
   return (
     <>
-      <form
-        className={searchClassName}
-        onSubmit={(e) => {
-          e.preventDefault();
-          onSubmit(term);
-        }}
-      >
+      <form className={searchClassName}>
         <div className={styles.searchinput}>
           <input
             type="text"

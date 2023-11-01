@@ -1,5 +1,6 @@
 .outer-Box {
-  /* position: fixed; */
+  /* position: fixed;
+  top: calc((2*81)px); */
   z-index: 999;
   background: #fff;
 }
