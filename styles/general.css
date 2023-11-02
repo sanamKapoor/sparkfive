@@ -393,3 +393,7 @@ input[role="combobox"] {
 .theme-icon{
   fill: var(--primary-color);
 }
+
+.theme-secondary-icon{
+  fill: var(--secondary-color);
+}
