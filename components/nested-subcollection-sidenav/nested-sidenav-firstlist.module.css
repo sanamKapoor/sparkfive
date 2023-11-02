@@ -20,10 +20,12 @@
 .icon{
     margin-right: 5px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
 }
 .list1-left-contents{
     display: flex;
-    align-items: flex-start;
+    align-items: center;
 }
 .icon-description span{
     font-family: "Noto Sans", sans-serif;
@@ -68,11 +70,9 @@
     .border-bottom{
         border-bottom: 1px solid #dfdad4;
         padding: 10px 23px;
-
     }
     .list1-description{
         margin-bottom:0px;
-      
     }
     .active{
         padding: 10px 23px;
@@ -81,5 +81,4 @@
         
         padding: 10px 23px;
     }
-    
-  }
+}

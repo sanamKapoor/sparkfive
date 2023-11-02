@@ -124,13 +124,17 @@
   display: block;
 }
 
+
 .icon-descriptions {
- 
   max-width: 15ch;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  position: relative; 
 }
+
+
+
 .icon-descriptions span {
   font-family: "Noto Sans", sans-serif;
   font-weight: 500;
@@ -291,3 +295,24 @@ color: #10BDA5;
 padding-top: 140px;
 
 }
+.icon-descriptions span {
+  position: relative;
+}
+
+.icon-descriptions span::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: -30px; 
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  display: none;
+}
+
+.icon-descriptions span:hover::before {
+  display: block;
+}
+
