@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { Utilities } from "../../../../assets";
 import { IAttribute } from "../../../../interfaces/filters";
@@ -7,21 +7,57 @@ import indexStyles from "../index.module.css";
 import OptionDataItem from "../option-data-item";
 import styles from "../options-data.module.css";
 
+import { UserContext } from "../../../../context";
+import teamApi from "../../../../server-api/team";
+
+import toastUtils from "../../../../utils/toast";
+
 interface MoreFiltersOptionPopupProps {
-  options: IAttribute[]; //TODO;
-  setOptions: (data: unknown) => void;
+  attributes: IAttribute[];
   setAttributes: (data: unknown) => void;
   setShowModal: (val: boolean) => void;
-  loading: boolean;
 }
 
 const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
-  options,
-  setOptions,
+  attributes,
   setAttributes,
   setShowModal,
-  loading,
 }) => {
+  const { advancedConfig } = useContext(UserContext);
+
+  const [options, setOptions] = useState([]);
+
+  useEffect(() => {
+    getMoreFilters();
+  }, []);
+
+  const getMoreFilters = async () => {
+    try {
+      const res = await teamApi.getTeamAttributes();
+      //check for filter elements to hide
+      if (advancedConfig?.hideFilterElements) {
+        const filteredAttrs = res.data.data.filter(
+          (item) => advancedConfig?.hideFilterElements[item.id] !== false
+        );
+
+        const mapFilteredAttrs = filteredAttrs.map((item) => {
+          const attrExists = attributes?.find((attr) => attr.id === item.id);
+
+          if (attrExists) {
+            return {
+              ...item,
+              isSelected: true,
+            };
+          }
+          return { ...item, isSelected: false };
+        });
+        setOptions(mapFilteredAttrs);
+      }
+    } catch (err) {
+      console.log("[GET_MORE_ATTRIBUTES]: ", err);
+    }
+  };
+
   const onSelectOption = (data: IAttribute) => {
     const index = options.findIndex((item) => item.id === data.id);
     if (index !== -1) {
@@ -41,8 +77,13 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
   };
 
   const onApply = () => {
-    setAttributes([...options]);
-    setShowModal(false);
+    if (options.every((option) => !option.isSelected)) {
+      toastUtils.error("Please select at least one filter type!");
+    } else {
+      const selectedAttributes = options.filter((option) => option.isSelected);
+      setAttributes([...selectedAttributes]);
+      setShowModal(false);
+    }
   };
 
   const onClose = () => {
@@ -54,59 +95,45 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
   };
 
   return (
-    <>
-      <div className={`${indexStyles["main-container"]}`}>
-        <div className={`${indexStyles["outer-wrapper"]}`}>
-          <div className={`${indexStyles["popup-header"]}`}>
-            <span className={`${indexStyles["main-heading"]}`}>
-              More Filters
-            </span>
-            <div className={indexStyles.buttons}>
-              <img
-                className={indexStyles.closeIcon}
-                src={Utilities.closeIcon}
-                onClick={onClose}
-              />
-            </div>
-          </div>
-
-          <div className={`${styles["outer-Box"]}`}>
-            <div className={styles["outer-wrapper"]}>
-              {options.length === 0 ? (
-                <p>No Results Found.</p>
-              ) : (
-                options.map((item, index) => (
-                  <div className={styles["grid-item"]} key={item.id}>
-                    <OptionDataItem
-                      name={item.name}
-                      count={item.count}
-                      isSelected={item.isSelected}
-                      onSelect={() => onSelectOption(item)}
-                      onDeselect={() => onDeselectOption(item)}
-                    />
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-
-          <div className={`${indexStyles["Modal-btn"]}`}>
-            <Button
-              className={"apply"}
-              text={"Apply"}
-              // disabled={loading}
-              onClick={onApply}
-            />
-            <Button
-              className={"cancel"}
-              text={"Cancel"}
-              // disabled={loading}
-              onClick={onCancel}
+    <div className={`${indexStyles["main-container"]}`}>
+      <div className={`${indexStyles["outer-wrapper"]}`}>
+        <div className={`${indexStyles["popup-header"]}`}>
+          <span className={`${indexStyles["main-heading"]}`}>More Filters</span>
+          <div className={indexStyles.buttons}>
+            <img
+              className={indexStyles.closeIcon}
+              src={Utilities.closeIcon}
+              onClick={onClose}
             />
           </div>
         </div>
+
+        <div className={`${styles["outer-Box"]}`}>
+          <div className={styles["outer-wrapper"]}>
+            {options.length === 0 ? (
+              <p>No Results Found.</p>
+            ) : (
+              options.map((item, index) => (
+                <div className={styles["grid-item"]} key={item.id}>
+                  <OptionDataItem
+                    name={item.name}
+                    count={item.count}
+                    isSelected={item.isSelected}
+                    onSelect={() => onSelectOption(item)}
+                    onDeselect={() => onDeselectOption(item)}
+                  />
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        <div className={`${indexStyles["Modal-btn"]}`}>
+          <Button className={"apply"} text={"Apply"} onClick={onApply} />
+          <Button className={"cancel"} text={"Cancel"} onClick={onCancel} />
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 

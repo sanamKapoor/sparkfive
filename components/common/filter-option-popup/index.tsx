@@ -17,11 +17,12 @@ import {
 } from "../../../config/data/filter";
 import { FilterContext } from "../../../context";
 import Loader from "../UI/Loader/loader";
+import NoResultsPopup from "../UI/NoResultsPopup";
 import FilterContent from "../filter-view/filter-content";
 import RulesOptions from "./rules-options";
 
 interface FilterOptionPopupProps {
-  values: unknown;
+  values: Array<unknown> | Record<string, unknown>;
   options: unknown;
   setOptions: (data: unknown) => void;
   activeAttribute: IAttribute;
@@ -75,8 +76,12 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
     setActiveAttribute(null);
   };
 
-  const onCancel = () => {
+  const onClose = () => {
     setActiveAttribute(null);
+  };
+
+  const onCancel = () => {
+    onClose();
   };
 
   const onClear = () => {
@@ -118,7 +123,7 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   //TODO: handle search to work on input change
   const onSearch = (term: string) => {
     if (term.trim() === "") {
-      setOptions([...values]); // Reset to the original list when search term is empty
+      setOptions(values); // Reset to the original list when search term is empty
     } else {
       let filteredResults = [];
       if (activeAttribute.id === FilterAttributeVariants.PRODUCTS) {
@@ -148,92 +153,117 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
     setShowDropdown(false);
   };
 
+  const checkIfValuesExist = () => {
+    if (activeAttribute) {
+      if (
+        [
+          FilterAttributeVariants.LAST_UPDATED,
+          FilterAttributeVariants.DATE_UPLOADED,
+          FilterAttributeVariants.DIMENSIONS,
+        ].includes(activeAttribute?.id)
+      ) {
+        console.log("coming inside if.....");
+        return true;
+      } else {
+        console.log("coming inside else.....");
+
+        return values instanceof Array
+          ? values.length > 0
+          : Object.keys(values).length > 0;
+      }
+    }
+  };
+
   return (
-    <>
-      <div className={`${styles["main-container"]}`}>
-        <div className={`${styles["outer-wrapper"]}`}>
-          <div className={`${styles["popup-mobile-view"]}`}>
-            <div className={`${styles["popup-mobile-header"]}`}>
-              <img src={Utilities.leftArrow} alt="left-arrow" />
+    <div className={`${styles["main-container"]}`}>
+      <div className={`${styles["outer-wrapper"]}`}>
+        {checkIfValuesExist() ? (
+          <>
+            <div className={`${styles["popup-mobile-view"]}`}>
+              <div className={`${styles["popup-mobile-header"]}`}>
+                <img src={Utilities.leftArrow} alt="left-arrow" />
+                <span className={`${styles["main-heading"]}`}>
+                  Select {activeAttribute?.name}
+                </span>
+                <button
+                  className={styles.clear}
+                  disabled={loading}
+                  onClick={() => setActiveAttribute(null)}
+                >
+                  Clear
+                </button>
+              </div>
+            </div>
+
+            <div className={`${styles["popup-header"]}`}>
               <span className={`${styles["main-heading"]}`}>
                 Select {activeAttribute?.name}
               </span>
-              <button
-                className={styles.clear}
-                disabled={loading}
-                onClick={() => setActiveAttribute(null)}
-              >
-                Clear
-              </button>
+              <div className={styles.buttons}>
+                <button
+                  className={styles.clear}
+                  disabled={loading}
+                  onClick={onClear}
+                >
+                  clear
+                </button>
+                <img
+                  className={styles.closeIcon}
+                  src={Utilities.closeIcon}
+                  onClick={onClose}
+                />
+              </div>
             </div>
-          </div>
+            {!hideSearch && (
+              <div className={`${styles["search-btn"]}`}>
+                <Search
+                  className={styles.customStyles}
+                  buttonClassName={styles.icon}
+                  placeholder={`Search ${activeAttribute.name}`}
+                  onSubmit={onSearch}
+                />
+              </div>
+            )}
 
-          <div className={`${styles["popup-header"]}`}>
-            <span className={`${styles["main-heading"]}`}>
-              Select {activeAttribute?.name}
-            </span>
-            <div className={styles.buttons}>
-              <button
-                className={styles.clear}
+            {loading ? (
+              <Loader className={styles.customLoader} />
+            ) : (
+              <FilterContent
+                options={options}
+                setOptions={setOptions}
+                setFilters={setFilters}
+                activeAttribute={activeAttribute}
+              />
+            )}
+
+            {showRules && (
+              <RulesOptions
+                showDropdown={showDropdown}
+                setShowDropdown={setShowDropdown}
+                onChangeRule={onChangeRule}
+                activeRuleName={activeRuleName}
+              />
+            )}
+            <div className={`${styles["Modal-btn"]}`}>
+              <Button
+                className={"apply"}
+                text={"Apply"}
                 disabled={loading}
-                onClick={onClear}
-              >
-                clear
-              </button>
-              <img
-                className={styles.closeIcon}
-                src={Utilities.closeIcon}
-                onClick={() => setActiveAttribute(null)}
+                onClick={() => onApply(activeAttribute.id, filters)}
+              />
+              <Button
+                className={"cancel"}
+                text={"Cancel"}
+                disabled={loading}
+                onClick={onCancel}
               />
             </div>
-          </div>
-          {!hideSearch && (
-            <div className={`${styles["search-btn"]}`}>
-              <Search
-                className={styles.customStyles}
-                buttonClassName={styles.icon}
-                placeholder={`Search ${activeAttribute.name}`}
-                onSubmit={onSearch}
-              />
-            </div>
-          )}
-
-          {loading ? (
-            <Loader className={styles.customLoader} />
-          ) : (
-            <FilterContent
-              options={options}
-              setOptions={setOptions}
-              setFilters={setFilters}
-              activeAttribute={activeAttribute}
-            />
-          )}
-
-          {showRules && (
-            <RulesOptions
-              showDropdown={showDropdown}
-              setShowDropdown={setShowDropdown}
-              onChangeRule={onChangeRule}
-              activeRuleName={activeRuleName}
-            />
-          )}
-          <div className={`${styles["Modal-btn"]}`}>
-            <Button
-              className={"apply"}
-              text={"Apply"}
-              disabled={loading}
-              onClick={() => onApply(activeAttribute.id, filters)}
-            />
-            <Button
-              className={"cancel"}
-              text={"Cancel"}
-              disabled={loading}
-              onClick={onCancel}
-            />
-          </div>
-        </div>
+          </>
+        ) : (
+          <NoResultsPopup onClose={onClose} />
+        )}
       </div>
-    </>
+    </div>
   );
 };
 
