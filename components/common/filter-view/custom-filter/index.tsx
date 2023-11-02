@@ -1,14 +1,15 @@
 import React from "react";
 
 import {
+  CommonFilterProps,
   IAttributeValue,
-  OptionDataProps,
 } from "../../../../interfaces/filters";
 import Divider from "../../filter-option-popup/divider";
 import OptionDataItem from "../../filter-option-popup/option-data-item";
 import styles from "../../filter-option-popup/options-data.module.css";
+import NoResults from "../../UI/NoResultsPopup";
 
-interface CustomFilterProps extends OptionDataProps {}
+interface CustomFilterProps extends CommonFilterProps {}
 
 const CustomFilter: React.FC<CustomFilterProps> = ({
   options,
@@ -58,17 +59,21 @@ const CustomFilter: React.FC<CustomFilterProps> = ({
   return (
     <>
       <div className={`${styles["outer-wrapper"]}`}>
-        {options.map((item) => (
-          <div className={styles["grid-item"]} key={item.id}>
-            <OptionDataItem
-              name={item.name}
-              count={item.count}
-              onSelect={() => onSelectValue(item)} //TODO
-              onDeselect={() => onDeselectValue(item)} //TODO
-              isSelected={item.isSelected}
-            />
-          </div>
-        ))}
+        {options.length > 0 ? (
+          options.map((item) => (
+            <div className={styles["grid-item"]} key={item.id}>
+              <OptionDataItem
+                name={item.name}
+                count={item.count}
+                onSelect={() => onSelectValue(item)}
+                onDeselect={() => onDeselectValue(item)}
+                isSelected={item.isSelected}
+              />
+            </div>
+          ))
+        ) : (
+          <NoResults />
+        )}
       </div>
       <Divider />
     </>
