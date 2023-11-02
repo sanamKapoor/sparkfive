@@ -58,19 +58,21 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
 
   const onApply = (id: string, data: any) => {
     //TODO: handle case if some filters already exists and new ones are added for a particular filterKey
-    const filterKey = filterKeyMap[id] || `custom-p${activeAttribute.id}`;
+    if (data) {
+      const filterKey = filterKeyMap[id] || `custom-p${activeAttribute.id}`;
 
-    if (id === FilterAttributeVariants.DIMENSIONS) {
-      setActiveSortFilter({
-        ...activeSortFilter,
-        dimensionWidth: data.dimensionWidth,
-        dimensionHeight: data.dimensionHeight,
-      });
-    } else {
-      setActiveSortFilter({
-        ...activeSortFilter,
-        [filterKey]: data[filterKey],
-      });
+      if (id === FilterAttributeVariants.DIMENSIONS) {
+        setActiveSortFilter({
+          ...activeSortFilter,
+          dimensionWidth: data.dimensionWidth,
+          dimensionHeight: data.dimensionHeight,
+        });
+      } else {
+        setActiveSortFilter({
+          ...activeSortFilter,
+          [filterKey]: data[filterKey],
+        });
+      }
     }
 
     setActiveAttribute(null);
@@ -162,11 +164,8 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
           FilterAttributeVariants.DIMENSIONS,
         ].includes(activeAttribute?.id)
       ) {
-        console.log("coming inside if.....");
         return true;
       } else {
-        console.log("coming inside else.....");
-
         return values instanceof Array
           ? values.length > 0
           : Object.keys(values).length > 0;

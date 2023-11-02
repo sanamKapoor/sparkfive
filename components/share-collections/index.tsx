@@ -12,12 +12,7 @@ import {
 } from "../../context";
 import folderApi from "../../server-api/folder";
 import shareCollectionApi from "../../server-api/share-collection";
-import {
-  DEFAULT_CUSTOM_FIELD_FILTERS,
-  DEFAULT_FILTERS,
-  getAssetsFilters,
-  getAssetsSort,
-} from "../../utils/asset";
+import { getAssetsFilters, getAssetsSort } from "../../utils/asset";
 import requestUtils from "../../utils/requests";
 import toastUtils from "../../utils/toast";
 import styles from "./index.module.css";
@@ -157,14 +152,6 @@ const ShareCollectionMain = () => {
       getShareInfo();
     }
   }, [sharePath]);
-
-  const clearFilters = () => {
-    setActiveSortFilter({
-      ...activeSortFilter,
-      ...DEFAULT_FILTERS,
-      ...DEFAULT_CUSTOM_FIELD_FILTERS(activeSortFilter),
-    });
-  };
 
   const setInitialLoad = async (folderInfo) => {
     if (!firstLoaded && folderInfo) {
