@@ -20,6 +20,18 @@
   background-color: white;
   padding: 33.5px 40px;
   }
+  .outer-box{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap:10px;
+  }
+  .mobile-app{
+  
+    display: none;
+  }
+  
 
 .wrapper {
   display: flex;
@@ -30,17 +42,20 @@
   width: 100%; */
   /* left: 283px;
   max-width: calc(100% - 283px); */
+  flex-wrap: wrap;
 }
 .main-heading-wrapper{
   display: flex;
   align-items: center;
-}
+ 
 .newsidenav{
   margin-right: 10px;
 
 }
 .plusIcon {
   padding: 0px;
+}
+
 }
 
 @media screen and (max-width: 900px) {
@@ -59,10 +74,10 @@
 }
 
 .tab-list {
-  display: flex;
+  /* display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 18px;
+  gap: 18px; */
   width: 100%;
 }
 
@@ -100,6 +115,7 @@
   align-items: center;
   gap: 17px;
   position: relative;
+  
 }
 
 .sec-filters button span {
@@ -125,6 +141,9 @@
 .container .search {
   margin-left: 0;
   margin-right: -14px;
+}
+.SearchMobile{
+  display: none;
 }
 
 @media screen and (max-width: 1210px) {
@@ -233,6 +252,7 @@ li.dropdown-title {
     display: none;
   }
 
+
 }
 
 @media screen and (max-width: 810px) {
@@ -265,6 +285,7 @@ li.dropdown-title {
     padding: 0;
   }
 
+   /* as per new mobile design there is no need for this 
 
   .mobile-tabs {
     position: relative;
@@ -272,7 +293,7 @@ li.dropdown-title {
     align-items: center;
     gap: 8px;
     width: 100%;
-  }
+  } */
 
   .dropdown {
     left: 0;
@@ -285,6 +306,28 @@ li.dropdown-title {
   .wrapper{
     display: block;
   }
+  .SearchWeb{
+    display: none;
+  }
+  .SearchMobile{
+    display: block;
+  }
+  .mobilePlus{
+    display: none;
+  }
+  .mobile-bottom {
+    background-color: var(--color-prim-navy);
+    height: 36px;
+    width: 100%;
+    justify-content: center;
+    position: fixed;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+  }
+
 }
 
 @media screen and (max-width: 600px) {
@@ -298,7 +341,7 @@ li.dropdown-title {
   }
 
   .container {
-    top: calc(55px + 36px);
+    top: calc(55px + -1px);
     min-height: 75px;
   }
 
@@ -321,13 +364,16 @@ li.dropdown-title {
     display: flex;
     align-items: center;
   }
+  .filter-mobile {
+    display: none;
+  }
 }
 
 .gridOuter {
   display: flex;
   position: relative;
   cursor: pointer;
-  margin-left: -14px;
+  /* margin-left: -14px; */
   margin-right: 4px;
 }
 
@@ -373,8 +419,39 @@ li.dropdown-title {
     right: 0;
     top: 40px;
   }
+  .gridOuter{
+    display: none;
+  }
+  .sort-wrapper{
+    display: none;
+  }
+ 
+  .selected-wrapper{
+    display: none;
+  }
+  .sec-filters {
+   justify-content: space-between;
+  }
+  .mobile-app{
+    display: block;
+    padding-top:20px;
+  }
+  .sort-wrapper-mob{
+    width: 100%;
+  }
+  .selected-wrapper-mob{
+    width: 100%;
+  }
+
 }
 
 .container button span {
   font-size: 24px;
+}
+@media (min-width:800px) {
+  .sec-filters {
+   flex-wrap: wrap;
+    
+  }
+  
 }

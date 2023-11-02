@@ -1,4 +1,4 @@
-import { IDateRange } from "../../interfaces/filters";
+import { FilterAttributeVariants, IDateRange } from "../../interfaces/filters";
 
 const calculateBeginDate = (daysAgo: number) => {
   const endDate = new Date();
@@ -45,3 +45,69 @@ export const dateRanges: IDateRange[] = [
     endDate: new Date(),
   },
 ];
+
+export const filterKeyMap = {
+  [FilterAttributeVariants.TAGS]: "filterNonAiTags",
+  [FilterAttributeVariants.AI_TAGS]: "filterAiTags",
+  [FilterAttributeVariants.CAMPAIGNS]: "filterCampaigns",
+  [FilterAttributeVariants.PRODUCTS]: "filterProductSku",
+  [FilterAttributeVariants.FILE_TYPES]: "filterFileTypes",
+  [FilterAttributeVariants.ORIENTATION]: "filterOrientations",
+  [FilterAttributeVariants.RESOLUTION]: "filterResolutions",
+  [FilterAttributeVariants.DATE_UPLOADED]: "dateUploaded",
+  [FilterAttributeVariants.LAST_UPDATED]: "lastUpdated",
+  [FilterAttributeVariants.DIMENSIONS]: "dimensions",
+};
+
+export const ruleKeyMap = {
+  [FilterAttributeVariants.TAGS]: "allNonAiTags",
+  [FilterAttributeVariants.AI_TAGS]: "allAiTags",
+  [FilterAttributeVariants.CAMPAIGNS]: "allCampaigns",
+};
+
+export const rulesMapper = {
+  all: "All Selected",
+  any: "Any Selected",
+  none: "No Tags",
+};
+
+//TODO
+
+export const initialActiveSortFilters: any = {
+  filterCampaigns: [],
+  filterChannels: [],
+  filterNonAiTags: [],
+  filterAiTags: [],
+  filterFolders: [],
+  filterProjects: [],
+  filterFileTypes: [],
+  filterOrientations: [],
+  filterProductFields: [],
+  filterProductSku: undefined,
+  filterProductType: [],
+  filterCustomFields: [],
+  filterResolutions: [],
+  allNonAiTags: "all",
+  allAiTags: "all",
+  allCampaigns: "all",
+  allProjects: "all",
+  dimensionWidth: undefined,
+  dimensionHeight: undefined,
+  beginDate: undefined,
+  endDate: undefined,
+  fileModifiedBeginDate: undefined,
+  fileModifiedEndDate: undefined,
+  dateUploaded: undefined,
+  lastUpdated: undefined,
+};
+
+export const labelKeyMap = {
+  filterProductSku: "sku",
+  filterAiTags: "name",
+  filterNonAiTags: "name",
+  filterFileTypes: "value",
+  lastUpdated: "label",
+  dateUploaded: "label",
+  filterOrientations: "name",
+  filterResolutions: "dpi",
+};

@@ -24,7 +24,6 @@ import styles from "./index.module.css";
 import AssetGrid from "../common/asset/asset-grid";
 import AssetOps from "../common/asset/asset-ops";
 import TopBar from "../common/asset/top-bar";
-import FilterContainer from "../common/filter/filter-container";
 import PasswordOverlay from "./password-overlay";
 
 import { isMobile } from "react-device-detect";
@@ -87,7 +86,6 @@ const ShareFolderMain = () => {
   const [openFilter, setOpenFilter] = useState(
     activeMode === "assets" && !isMobile ? true : false
   );
-  const [widthCard, setWidthCard] = useState(0);
 
   const [top, setTop] = useState("calc(55px + 5rem)");
 
@@ -633,18 +631,6 @@ const ShareFolderMain = () => {
               setWidthCard={setWidthCard}
               widthCard={widthCard}
             />
-            {/* {openFilter && (
-              <FilterContainer
-                isShare={true}
-                clearFilters={clearFilters}
-                openFilter={openFilter}
-                setOpenFilter={setOpenFilter}
-                activeSortFilter={activeSortFilter}
-                setActiveSortFilter={setActiveSortFilter}
-                isFolder={activeSortFilter.mainFilter === "folders"}
-                filterWidth={widthCard}
-              />
-            )} */}
           </div>
         </main>
       )}

@@ -1,4 +1,3 @@
-//🚧 work in progress 🚧
 import React, { useContext, useState } from "react";
 
 import { Utilities } from "../../../assets";
@@ -6,48 +5,34 @@ import { Utilities } from "../../../assets";
 import {
   FilterAttributeVariants,
   IAttribute,
-  IFilterAttributeValues,
-  IFilterPopupContentType,
 } from "../../../interfaces/filters";
 import Search from "../../main/user-settings/SuperAdmin/Search/Search";
 import Button from "../buttons/button";
-import DimensionsFilter from "../filter-view/dimension-filter";
-import ProductFilter from "../filter/product-filter";
-import ResolutionFilter from "../filter/resolution-filter";
 import styles from "./index.module.css";
-import OptionData from "./options-data";
 
-import Dropdown from "../../common/inputs/dropdown";
-
+import {
+  filterKeyMap,
+  ruleKeyMap,
+  rulesMapper,
+} from "../../../config/data/filter";
 import { FilterContext } from "../../../context";
 import Loader from "../UI/Loader/loader";
-import IconClickable from "../buttons/icon-clickable";
-import DateUploadedFilter from "../filter-view/date-uploaded-filter";
-import FileTypeFilter from "../filter-view/file-type-filter";
-import LastUpdatedFilter from "../filter-view/last-updated-filter";
-import OrientationFilter from "../filter-view/orientation-filter";
-import Divider from "./divider";
+import FilterContent from "../filter-view/filter-content";
+import RulesOptions from "./rules-options";
 
 interface FilterOptionPopupProps {
-  contentType: IFilterPopupContentType;
-  options: IFilterAttributeValues;
+  values: unknown;
+  options: unknown;
   setOptions: (data: unknown) => void;
   activeAttribute: IAttribute;
   setActiveAttribute: (val: IAttribute | null) => void;
   loading: boolean;
 }
 
-//TODO
-const rulesMapper = {
-  all: "All Selected",
-  any: "Any Selected",
-  none: "No Tags",
-};
-
 const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
+  values,
   options,
   setOptions,
-  contentType,
   activeAttribute,
   setActiveAttribute,
   loading,
@@ -59,70 +44,28 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const showRules = activeAttribute.selectionType === "selectMultiple";
 
-  //TODO: keep updating it until all filter views are not covered
-  const hideSearch = activeAttribute.id === FilterAttributeVariants.DIMENSIONS;
+  const hideSearch = (
+    [
+      FilterAttributeVariants.DIMENSIONS,
+      FilterAttributeVariants.LAST_UPDATED,
+      FilterAttributeVariants.DATE_UPLOADED,
+      FilterAttributeVariants.RESOLUTION,
+      FilterAttributeVariants.FILE_TYPES,
+      FilterAttributeVariants.ORIENTATION,
+    ] as string[]
+  ).includes(activeAttribute.id);
 
-  /**
-   * TODO:
-   * 1. Add types
-   * 2. Refactor
-   */
-  const onApply = (filterVariant: string, data: any) => {
-    console.log("current filter variant: ", filterVariant);
-    console.log("data: ", data);
-    if (filterVariant === "dimensions") {
+  const onApply = (id: string, data: any) => {
+    //TODO: handle case if some filters already exists and new ones are added for a particular filterKey
+    const filterKey = filterKeyMap[id] || `custom-p${activeAttribute.id}`;
+
+    if (id === FilterAttributeVariants.DIMENSIONS) {
       setActiveSortFilter({
         ...activeSortFilter,
         dimensionWidth: data.dimensionWidth,
         dimensionHeight: data.dimensionHeight,
       });
-    } else if (filterVariant === "resolution") {
-      setActiveSortFilter({
-        ...activeSortFilter,
-        filterResolutions: data?.filterResolutions,
-      });
-    } else if (filterVariant === "tags") {
-      setActiveSortFilter({
-        ...activeSortFilter,
-        filterNonAiTags: data?.filterNonAiTags,
-      });
-    } else if (filterVariant === "aiTags") {
-      setActiveSortFilter({
-        ...activeSortFilter,
-        filterAiTags: data?.filterAiTags,
-      });
-    } else if (filterVariant === "campaigns") {
-      setActiveSortFilter({
-        ...activeSortFilter,
-        filterCampaigns: data?.filterCampaigns,
-      });
-    } else if (filterVariant === "products") {
-      setActiveSortFilter({
-        ...activeSortFilter,
-        filterProductSku: data?.filterProductSku,
-      });
-    } else if (filterVariant === "fileTypes") {
-      setActiveSortFilter({
-        ...activeSortFilter,
-        filterFileTypes: data?.filterFileTypes,
-      });
-    } else if (filterVariant === "orientation") {
-      setActiveSortFilter({
-        ...activeSortFilter,
-        filterOrientations: data?.filterOrientations,
-      });
-    } else if (filterVariant === "dateUploaded") {
-      setActiveSortFilter({
-        ...activeSortFilter,
-        dateUploaded: data?.dateUploaded,
-      });
-    } else if (filterVariant === "lastUpdated") {
-      setActiveSortFilter({
-        ...activeSortFilter,
-        lastUpdated: data?.lastUpdated,
-      });
     } else {
-      const filterKey = `custom-p${activeAttribute.id}`;
       setActiveSortFilter({
         ...activeSortFilter,
         [filterKey]: data[filterKey],
@@ -137,105 +80,69 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   };
 
   const onClear = () => {
-    console.log("activeAttribute.id: ", activeAttribute.id);
-    if (activeAttribute.id === FilterAttributeVariants.TAGS) {
-      setOptions(options.map((item) => ({ ...item, isSelected: false })));
+    if (activeAttribute.id === FilterAttributeVariants.DIMENSIONS) {
       setActiveSortFilter({
         ...activeSortFilter,
-        filterNonAiTags: [],
-        allNonAiTags: "all",
-      });
-    } else if (activeAttribute.id === FilterAttributeVariants.AI_TAGS) {
-      setOptions(options.map((item) => ({ ...item, isSelected: false })));
-      setActiveSortFilter({
-        ...activeSortFilter,
-        filterAiTags: [],
-        allAiTags: "all",
-      });
-    } else if (activeAttribute.id === FilterAttributeVariants.CAMPAIGNS) {
-      setOptions(options.map((item) => ({ ...item, isSelected: false })));
-      setActiveSortFilter({
-        ...activeSortFilter,
-        filterCampaigns: [],
-        allCampaigns: "all",
-      });
-    } else if (activeAttribute.id === FilterAttributeVariants.PRODUCTS) {
-      setOptions(options.map((item) => ({ ...item, isSelected: false })));
-      setActiveSortFilter({
-        ...activeSortFilter,
-        filterProductSku: undefined,
-      });
-    } else if (activeAttribute.id === FilterAttributeVariants.FILE_TYPES) {
-      setOptions(options.map((item) => ({ ...item, isSelected: false })));
-      setActiveSortFilter({
-        ...activeSortFilter,
-        filterFileTypes: [],
-      });
-    } else if (activeAttribute.id === FilterAttributeVariants.ORIENTATION) {
-      setOptions(options.map((item) => ({ ...item, isSelected: false })));
-      setActiveSortFilter({
-        ...activeSortFilter,
-        filterOrientations: [],
-      });
-    } else if (activeAttribute.id === FilterAttributeVariants.DATE_UPLOADED) {
-      console.log("coming in here.......");
-      setOptions(undefined);
-      setActiveSortFilter({
-        ...activeSortFilter,
-        dateUploaded: undefined,
-      });
-    } else if (activeAttribute.id === FilterAttributeVariants.LAST_UPDATED) {
-      setOptions(undefined);
-      setActiveSortFilter({
-        ...activeSortFilter,
-        lastUpdated: undefined,
+        dimensionWidth: undefined,
+        dimensionHeight: undefined,
       });
     } else {
-      const filterKey = `custom-p${activeAttribute.id}`;
-      const filterRuleKey = `all-${activeAttribute.id}`;
-      setOptions(options.map((item) => ({ ...item, isSelected: false })));
+      const filterKey =
+        filterKeyMap[activeAttribute.id] || `custom-p${activeAttribute.id}`;
+      const ruleKey =
+        ruleKeyMap[activeAttribute.id] || `all-${activeAttribute.id}`;
+
+      const clearOptions =
+        activeAttribute.id !== FilterAttributeVariants.DATE_UPLOADED &&
+        activeAttribute.id !== FilterAttributeVariants.LAST_UPDATED;
+
+      setOptions(
+        clearOptions
+          ? options.map((item) => ({ ...item, isSelected: false }))
+          : undefined
+      );
+
+      const clearFilter = {};
+      clearFilter[filterKey] = clearOptions ? [] : undefined;
+      clearFilter[ruleKey] = clearOptions ? "all" : undefined;
+
       setActiveSortFilter({
         ...activeSortFilter,
-        [filterKey]: [],
-        [filterRuleKey]: "all",
+        ...clearFilter,
       });
     }
+
+    setActiveAttribute(null);
   };
 
-  //TODO: move it to more appropriate place
-  const getFilterVariant = (id: string) => {
-    const values: string[] = Object.values(FilterAttributeVariants);
-
-    if (values.includes(id)) {
-      return id;
-    } else return FilterAttributeVariants.CUSTOM_FIELD;
-  };
-
-  //TODO
+  //TODO: handle search to work on input change
   const onSearch = (term: string) => {
-    console.log("Searching term....,", term);
+    if (term.trim() === "") {
+      setOptions([...values]); // Reset to the original list when search term is empty
+    } else {
+      let filteredResults = [];
+      if (activeAttribute.id === FilterAttributeVariants.PRODUCTS) {
+        filteredResults = values.filter(
+          (option) => option.sku.toLowerCase().includes(term.toLowerCase()) // Replace 'name' with the property you want to search in
+        );
+      } else {
+        filteredResults = values.filter(
+          (option) => option.name.toLowerCase().includes(term.toLowerCase()) // Replace 'name' with the property you want to search in
+        );
+      }
+
+      setOptions(filteredResults);
+    }
   };
 
-  const ruleIndex =
-    activeAttribute.id === "tags"
-      ? `allNonAiTags`
-      : activeAttribute.type === "custom"
-      ? `all-p${activeAttribute.id}`
-      : activeAttribute;
+  const ruleKey = ruleKeyMap[activeAttribute.id] || `all-${activeAttribute.id}`;
+  const activeRuleName =
+    rulesMapper[activeSortFilter[ruleKey]] ?? rulesMapper["all"];
 
   const onChangeRule = (ruleName: string) => {
-    let id = activeAttribute.id;
-
-    if (activeAttribute.id === "tags") {
-      id = "NonAiTags";
-    }
-
-    if (activeAttribute.type === "custom") {
-      id = `-p${activeAttribute.id}`;
-    }
     setActiveSortFilter({
       ...activeSortFilter,
-      [`all${id}`]: ruleName,
+      [ruleKey]: ruleName,
     });
 
     setShowDropdown(false);
@@ -245,6 +152,22 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
     <>
       <div className={`${styles["main-container"]}`}>
         <div className={`${styles["outer-wrapper"]}`}>
+          <div className={`${styles["popup-mobile-view"]}`}>
+            <div className={`${styles["popup-mobile-header"]}`}>
+              <img src={Utilities.leftArrow} alt="left-arrow" />
+              <span className={`${styles["main-heading"]}`}>
+                Select {activeAttribute?.name}
+              </span>
+              <button
+                className={styles.clear}
+                disabled={loading}
+                onClick={() => setActiveAttribute(null)}
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+
           <div className={`${styles["popup-header"]}`}>
             <span className={`${styles["main-heading"]}`}>
               Select {activeAttribute?.name}
@@ -258,6 +181,7 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
                 clear
               </button>
               <img
+                className={styles.closeIcon}
                 src={Utilities.closeIcon}
                 onClick={() => setActiveAttribute(null)}
               />
@@ -277,115 +201,28 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
           {loading ? (
             <Loader className={styles.customLoader} />
           ) : (
-            <>
-              {/* TODO: 1. move this into a separate Content Component
-               *       2. fix type error
-               */}
-              {contentType === "list" && (
-                <OptionData
-                  values={options}
-                  setValues={setOptions}
-                  setFilters={setFilters}
-                  activeAttribute={activeAttribute}
-                />
-              )}
-              {contentType === "dimensions" && (
-                <DimensionsFilter limits={options} setFilters={setFilters} />
-              )}
-              {contentType === "resolutions" && (
-                <ResolutionFilter data={options} setFilters={setFilters} />
-              )}
-              {contentType === "fileTypes" && (
-                <FileTypeFilter
-                  values={options}
-                  setValues={setOptions}
-                  setFilters={setFilters}
-                />
-              )}
-              {contentType === "orientation" && (
-                <OrientationFilter
-                  values={options}
-                  setValues={setOptions}
-                  setFilters={setFilters}
-                />
-              )}
-              {contentType === "lastUpdated" && (
-                <LastUpdatedFilter
-                  data={options}
-                  setData={setOptions}
-                  setFilters={setFilters}
-                />
-              )}
-              {contentType === "dateUploaded" && (
-                <DateUploadedFilter
-                  data={options}
-                  setData={setOptions}
-                  setFilters={setFilters}
-                />
-              )}
-              {contentType === "products" && (
-                <ProductFilter
-                  values={options}
-                  setValues={setOptions}
-                  setFilters={setFilters}
-                />
-              )}
-            </>
+            <FilterContent
+              options={options}
+              setOptions={setOptions}
+              setFilters={setFilters}
+              activeAttribute={activeAttribute}
+            />
           )}
 
           {showRules && (
-            <div>
-              <div
-                className={`${styles["rule-tag"]}`}
-                onClick={() => setShowDropdown(!showDropdown)}
-              >
-                <label>Rule:</label>
-                <div className={`${styles["select-wrapper"]}`}>
-                  {/* TODO */}
-                  <p>
-                    {rulesMapper[activeSortFilter[ruleIndex]] ??
-                      rulesMapper["all"]}
-                  </p>
-                  <IconClickable
-                    additionalClass={styles["dropdown-icon"]}
-                    src={Utilities.arrowDark}
-                  />
-                </div>
-              </div>
-              {showDropdown && (
-                <Dropdown
-                  additionalClass={styles["dropdown-menu"]}
-                  onClickOutside={() => {}}
-                  options={[
-                    {
-                      label: "All selected",
-                      id: "All selected",
-                      onClick: () => onChangeRule("all"),
-                    },
-                    {
-                      label: "Any Selected",
-                      id: "Any",
-                      onClick: () => onChangeRule("any"),
-                    },
-                    {
-                      label: "No Tags",
-                      id: "None",
-                      onClick: () => onChangeRule("none"),
-                    },
-                  ]}
-                />
-              )}
-              <Divider />
-            </div>
+            <RulesOptions
+              showDropdown={showDropdown}
+              setShowDropdown={setShowDropdown}
+              onChangeRule={onChangeRule}
+              activeRuleName={activeRuleName}
+            />
           )}
           <div className={`${styles["Modal-btn"]}`}>
             <Button
               className={"apply"}
               text={"Apply"}
-              disabled={loading || !filters}
-              onClick={() =>
-                onApply(getFilterVariant(activeAttribute.id), filters)
-              }
+              disabled={loading}
+              onClick={() => onApply(activeAttribute.id, filters)}
             />
             <Button
               className={"cancel"}

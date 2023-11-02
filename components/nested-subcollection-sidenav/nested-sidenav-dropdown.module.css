@@ -13,6 +13,12 @@
   white-space: nowrap;
 
 }
+.nestedbox {
+  margin-top: 20px;
+  /* padding: 5px 4px; */
+  border-bottom: none;
+
+}
 
 .list1-right-contents span {
   font-family: "Noto Sans", sans-serif;
@@ -33,22 +39,20 @@
   justify-content: space-between;
   width: 100%;
   box-sizing: border-box;
-  padding: 7.5px 0;
+  padding: 7.5px 5px;
   cursor: pointer;
   align-items: center;
 }
 .clickable{
-  padding: 7.5px 0;
+  padding: 7.5px 0 7.5px 5px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 }
-.nestedbox {
-  /* margin-top: 20px; */
-  padding: 0 4px;
-  margin-bottom: 10px;
-}
+
 .nestedbox:hover {
-  background: #d5dcef;
-  padding: 0 4x;
+  background: var(--color-sec-lightblue);
+  /* padding: 0 4x; */
 }
 .loadbtn {
   display: block;
@@ -116,7 +120,7 @@
 .active {
   background: var(--color-sec-lightblue);
   border-radius: 4px;
-  padding: 7.5px;
+  /* padding: 7.5px; */
 }
 .subfolderList {
   padding: 0px 0px 0px 16px;
@@ -219,7 +223,6 @@
 .addIcon {
   width: 10.5px;
   margin-right: 9px;
-  margin-left: 10px;
 }
 .totalCount {
   display: flex;
@@ -230,4 +233,24 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+
+@media (max-width:820px){
+  .nestedbox {
+    margin-top: 0px;
+    padding: 0px 23px;
+    border-bottom: 1px solid #dfdad4 ;
+    height: 43px;
+  
+   
+  }
+  .active{
+    padding: 10px 0;
+  }
+  .dropdownMenu {
+
+  }
+
+
 }

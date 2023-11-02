@@ -313,38 +313,54 @@ export const getAssetsFilters = ({
   }
 
   if (dateUploaded) {
-    const bd = new Date(dateUploaded.beginDate);
-    const newBeginDate = new Date(
-      bd.getFullYear(),
-      bd.getMonth(),
-      bd.getDate()
-    );
+    if (dateUploaded.beginDate) {
+      const bd = new Date(dateUploaded.beginDate);
+      const newBeginDate = new Date(
+        bd.getFullYear(),
+        bd.getMonth(),
+        bd.getDate()
+      );
 
-    filters.beginDate = new Date(newBeginDate.toUTCString()).toISOString();
-    const ed = new Date(dateUploaded.endDate);
-    const newEndDate = new Date(ed.getFullYear(), ed.getMonth(), ed.getDate());
+      filters.beginDate = new Date(newBeginDate.toUTCString()).toISOString();
+    }
+    if (dateUploaded.endDate) {
+      const ed = new Date(dateUploaded.endDate);
+      const newEndDate = new Date(
+        ed.getFullYear(),
+        ed.getMonth(),
+        ed.getDate()
+      );
 
-    filters.endDate = new Date(newEndDate.toUTCString()).toISOString();
+      filters.endDate = new Date(newEndDate.toUTCString()).toISOString();
+    }
   }
 
   if (lastUpdated) {
-    const ld = new Date(lastUpdated.beginDate);
-    const newBeginDate = new Date(
-      ld.getFullYear(),
-      ld.getMonth(),
-      ld.getDate()
-    );
+    if (lastUpdated.beginDate) {
+      const ld = new Date(lastUpdated.beginDate);
+      const newBeginDate = new Date(
+        ld.getFullYear(),
+        ld.getMonth(),
+        ld.getDate()
+      );
 
-    filters.fileModifiedBeginDate = new Date(
-      newBeginDate.toUTCString()
-    ).toISOString();
+      filters.fileModifiedBeginDate = new Date(
+        newBeginDate.toUTCString()
+      ).toISOString();
+    }
 
-    const ed = new Date(lastUpdated.endDate);
-    const newEndDate = new Date(ed.getFullYear(), ed.getMonth(), ed.getDate());
+    if (lastUpdated.endDate) {
+      const ed = new Date(lastUpdated.endDate);
+      const newEndDate = new Date(
+        ed.getFullYear(),
+        ed.getMonth(),
+        ed.getDate()
+      );
 
-    filters.fileModifiedEndDate = new Date(
-      newEndDate.toUTCString()
-    ).toISOString();
+      filters.fileModifiedEndDate = new Date(
+        newEndDate.toUTCString()
+      ).toISOString();
+    }
   }
 
   if (filterProductType && filterProductFields?.length > 0) {
@@ -403,7 +419,7 @@ export const getFoldersFromUploads = (files, isRegular = false) => {
 
 const addFilterToQuery = (filters, filterItems, key, valueKey = "value") => {
   if (filterItems?.length > 0) {
-    if (filterItems?.length == 1) {
+    if (filterItems?.length == 1 && key === "folders") {
       filters[key] = filterItems[0];
     } else {
       filters[key] = filterItems.map((item) => item[valueKey]).join(",");

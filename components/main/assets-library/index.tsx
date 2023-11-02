@@ -27,7 +27,6 @@ import AssetOps from "../../common/asset/asset-ops";
 import DetailOverlay from "../../common/asset/detail-overlay";
 import TopBar from "../../common/asset/top-bar";
 import FilterView from "../../common/filter-view";
-import FilterContainer from "../../common/filter/filter-container";
 import { DropzoneProvider } from "../../common/misc/dropzone";
 import NoPermissionNotice from "../../common/misc/no-permission-notice";
 import RenameModal from "../../common/modals/rename-modal";
@@ -1002,7 +1001,7 @@ const AssetsLibrary = () => {
             results: update(subFoldersViewList.results, {
               $splice: [[folderIndex, 1]],
             }),
-            total: subFoldersViewList.total - 1
+            total: subFoldersViewList.total - 1,
           });
         }
         toastUtils.success("Sub collection deleted successfully");
@@ -1016,7 +1015,10 @@ const AssetsLibrary = () => {
         toastUtils.success("Collection deleted successfully");
       }
     } catch (err) {
-      toastUtils.error(err?.response?.data?.message || "Something went wrong please try again later");
+      toastUtils.error(
+        err?.response?.data?.message ||
+        "Something went wrong please try again later"
+      );
     }
   };
 
@@ -1084,12 +1086,27 @@ const AssetsLibrary = () => {
                 className={`${sidebarOpen ? styles["rightSide"] : styles["rightSideToggle"]
                   }`}
               >
+                {/* {openFilter && hasPermission([ASSET_ACCESS]) && (
+                  <FilterContainer
+                    clearFilters={clearFilters}
+                    openFilter={openFilter}
+                    setOpenFilter={setOpenFilter}
+                    activeSortFilter={activeSortFilter}
+                    setActiveSortFilter={setActiveSortFilter}
+                    isFolder={activeSortFilter.mainFilter === "folders"}
+                    filterWidth={widthCard}
+                  />
+                )} */}
                 <div className="position-relative">
                   {/* <div className={styles["search-mobile"]}>
                     <SearchOverlay
                       closeOverlay={closeSearchOverlay}
                       isFolder={activeMode === "folders"}
-                      activeFolder={activeMode === "SubCollectionView" ? activeSubFolders : activeFolder}
+                      activeFolder={
+                        activeMode === "SubCollectionView"
+                          ? activeSubFolders
+                          : activeFolder
+                      }
                       mode={activeMode}
                     />
                   </div> */}
@@ -1155,9 +1172,9 @@ const AssetsLibrary = () => {
                     )}
                   </DropzoneProvider>
                 </div>
-              </div>
-            </div>
-          </main>
+              </div >
+            </div >
+          </main >
           <AssetOps />
         </>
       ) : (
@@ -1173,30 +1190,36 @@ const AssetsLibrary = () => {
           folders.find((folder) => folder.id === activeFolder)?.name
         }
       />
-      {uploadDetailOverlay && (
-        <UploadStatusOverlayAssets
-          closeOverlay={() => {
-            setUploadDetailOverlay(false);
-          }}
-        />
-      )}
-      {currentViewAsset && (
-        <DetailOverlay
-          initiaParams={{ side: "detail" }}
-          asset={currentViewAsset.asset}
-          realUrl={currentViewAsset?.realUrl}
-          thumbailUrl={currentViewAsset?.thumbailUrl}
-          isShare={false}
-          closeOverlay={(assetData) => {
-            setDetailOverlayId(undefined);
-            setCurrentViewAsset(assetData);
-          }}
-          outsideDetailOverlay={true}
-        />
-      )}
-      {showOverlayLoader && (
-        <SpinnerOverlay text="Account updating...this process might take a few seconds. Thank you for your patience." />
-      )}
+      {
+        uploadDetailOverlay && (
+          <UploadStatusOverlayAssets
+            closeOverlay={() => {
+              setUploadDetailOverlay(false);
+            }}
+          />
+        )
+      }
+      {
+        currentViewAsset && (
+          <DetailOverlay
+            initiaParams={{ side: "detail" }}
+            asset={currentViewAsset.asset}
+            realUrl={currentViewAsset?.realUrl}
+            thumbailUrl={currentViewAsset?.thumbailUrl}
+            isShare={false}
+            closeOverlay={(assetData) => {
+              setDetailOverlayId(undefined);
+              setCurrentViewAsset(assetData);
+            }}
+            outsideDetailOverlay={true}
+          />
+        )
+      }
+      {
+        showOverlayLoader && (
+          <SpinnerOverlay text="Account updating...this process might take a few seconds. Thank you for your patience." />
+        )
+      }
     </>
   );
 };

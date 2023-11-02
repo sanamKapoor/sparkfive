@@ -9,6 +9,7 @@
 .filter {
   width: 100%;
   order: 2;
+  margin-top:230px;
 }
 
 @media screen and (max-width: 1023px) {
@@ -33,6 +34,12 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(246px, 1fr));
   grid-gap: 40px;
+}
+@media screen and (max-width: 600px) {
+  .grid-list{
+    margin-top: 85px !important;
+  }
+
 }
 
 @media screen and (min-width: 410px) and (max-width: 809px) {

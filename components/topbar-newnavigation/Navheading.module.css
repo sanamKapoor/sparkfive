@@ -59,12 +59,12 @@
  }
  .headingWrapper{
 width: 100%;
-  padding-top: 10PX;
+  padding-top: 10px;
  }
  .menuWrapper{
  display: flex;
   width: 100%;
-  padding-top: 10PX;
+  padding: 10px 0;
 
  }
 }

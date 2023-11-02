@@ -3,6 +3,7 @@ export interface IAttribute {
   name: string;
   type: "pre-defined" | "custom";
   selectionType: "selectOne" | "selectMultiple";
+  isSelected?: boolean;
 }
 
 export interface IAttributeValue extends Pick<ITag, "type"> {
@@ -117,4 +118,59 @@ export interface IDateRange {
   label: string;
   beginDate: Date;
   endDate: Date;
+}
+
+export interface OptionsDataProps {
+  filterKey: string;
+  dataKey: string;
+  compareKey: string;
+  options: unknown; //TODO
+  setOptions: (data: unknown) => void;
+  setFilters: (val: any) => void; //TODO
+  activeAttribute?: IAttribute;
+}
+
+export interface CommonFilterProps
+  extends Pick<OptionsDataProps, "options" | "setFilters" | "setOptions"> {}
+
+export interface ISelectedFilter {
+  id: string;
+  label: string;
+  filterKey: string;
+}
+
+export interface IDimension {
+  min: number;
+  max: number;
+}
+
+export type IFilterRule = "any" | "all" | "none";
+
+//TODO
+export interface IActiveSortFilter {
+  filterCampaigns: [];
+  filterChannels: [];
+  filterNonAiTags: [];
+  filterAiTags: [];
+  filterFolders: [];
+  filterProjects: [];
+  filterFileTypes: [];
+  filterOrientations: [];
+  filterProductFields: [];
+  filterProductSku: undefined;
+  filterProductType: [];
+  filterCustomFields: [];
+  filterResolutions: IResolutionFilter[];
+  allNonAiTags: IFilterRule;
+  allAiTags: IFilterRule;
+  allCampaigns: IFilterRule;
+  allProjects: IFilterRule;
+  dimensionWidth?: IDimension;
+  dimensionHeight?: IDimension;
+  beginDate?: Date;
+  endDate?: Date;
+  fileModifiedBeginDate?: Date;
+  fileModifiedEndDate?: Date;
+  dateUploaded?: IDateRange;
+  lastUpdated?: IDateRange;
 }
