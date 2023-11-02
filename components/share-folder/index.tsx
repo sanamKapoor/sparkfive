@@ -86,6 +86,7 @@ const ShareFolderMain = () => {
   const [openFilter, setOpenFilter] = useState(
     activeMode === "assets" && !isMobile ? true : false
   );
+  const [widthCard, setWidthCard] = useState(0);
 
   const [top, setTop] = useState("calc(55px + 5rem)");
 
@@ -306,8 +307,6 @@ const ShareFolderMain = () => {
       const { next } = subFoldersViewList;
 
 
-
-
       const queryParams = {
         page: replace ? 1 : next,
         pageSize: pageSize,
@@ -458,6 +457,7 @@ const ShareFolderMain = () => {
       const folderIndex = subFoldersViewList.results.findIndex(
         (folder) => folder.id === id
       );
+
       if (folderIndex !== -1) {
         setSubFoldersViewList({
           ...subFoldersViewList,
@@ -468,6 +468,13 @@ const ShareFolderMain = () => {
               },
             },
           }),
+        });
+        setSubFoldersAssetsViewList({
+          ...subFoldersAssetsViewList,
+          results: subFoldersAssetsViewList.results.map((asset) => ({
+            ...asset,
+            isSelected: false,
+          })),
         });
       }
       if (assetIndex !== -1) {
@@ -480,6 +487,13 @@ const ShareFolderMain = () => {
               },
             },
           }),
+        });
+        setSubFoldersViewList({
+          ...subFoldersViewList,
+          results: subFoldersViewList.results.map((folder: any) => ({
+            ...folder,
+            isSelected: false,
+          })),
         });
       }
     }
@@ -593,25 +607,6 @@ const ShareFolderMain = () => {
             activeFolder={activeFolder}
             mode={activeMode}
           />
-          {/* <TopBar
-            activeSearchOverlay={activeSearchOverlay}
-            activeSortFilter={activeSortFilter}
-            setActiveSortFilter={setActiveSortFilter}
-            activeView={activeView}
-            setActiveView={setActiveView}
-            setActiveSearchOverlay={() => {
-              selectAllAssets(false);
-              setActiveSearchOverlay(true);
-            }}
-            activeFolder={activeFolder}
-            mode={activeMode}
-            selectAll={selectAll}
-            setOpenFilter={setOpenFilter}
-            openFilter={openFilter}
-            deletedAssets={false}
-            activeMode={activeMode}
-            isFolder={activeSortFilter?.mainFilter === "folders"}
-          /> */}
 
           <div className={assetGridWrapperStyle} style={{ marginTop: top }}>
             <AssetGrid

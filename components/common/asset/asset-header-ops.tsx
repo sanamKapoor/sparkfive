@@ -361,7 +361,7 @@ const AssetHeaderOps = ({
 
   const conditionalIcons = [
     {
-      condition: (!isFolder && !isShare && !deletedAssets && !isSubCollection) || totalSubFoldersAndAssets.assets > 0,
+      condition: ((!isFolder && !deletedAssets && !isSubCollection) || totalSubFoldersAndAssets.assets > 0) && !isShare,
       props: {
         place: "top",
         additionalClass: styles["action-button"],
@@ -373,7 +373,7 @@ const AssetHeaderOps = ({
       },
     },
     {
-      condition: (!isFolder && !isShare && !deletedAssets && !isSubCollection) || totalSubFoldersAndAssets.assets > 0,
+      condition: ((!isFolder && !deletedAssets && !isSubCollection) || totalSubFoldersAndAssets.assets > 0) && !isShare,
       props: {
         place: "top",
         additionalClass: styles["action-button"],
@@ -397,7 +397,7 @@ const AssetHeaderOps = ({
       },
     },
     {
-      condition: (!isFolder && !isShare && !deletedAssets && !isSubCollection) || totalSubFoldersAndAssets.assets > 0,
+      condition: ((!isFolder && !deletedAssets && !isSubCollection) || totalSubFoldersAndAssets.assets > 0) && !isShare,
       props: {
         place: "top",
         additionalClass: styles["action-button"],
@@ -409,7 +409,7 @@ const AssetHeaderOps = ({
       },
     },
     {
-      condition: (!isFolder && !isShare && !deletedAssets && !isSubCollection) || totalSubFoldersAndAssets.assets > 0,
+      condition: ((!isFolder && !deletedAssets && !isSubCollection) || totalSubFoldersAndAssets.assets > 0) && !isShare,
       props: {
         child: (
           <div className={styles["share-wrapper"]} ref={contentRef}>
@@ -472,7 +472,7 @@ const AssetHeaderOps = ({
       },
     },
     {
-      condition: ((isFolder && !isShare && !deletedAssets) || (totalSubFoldersAndAssets.folders > 0 && isSubCollection)),
+      condition: ((isFolder && !deletedAssets) || (totalSubFoldersAndAssets.folders > 0 && isSubCollection) && !isShare),
       props: {
         place: "top",
         additionalClass: styles["action-button"],
@@ -508,7 +508,7 @@ const AssetHeaderOps = ({
       },
     },
     {
-      condition: (!isFolder && !isShare && !isSubCollection || totalSubFoldersAndAssets.assets > 0),
+      condition: ((!isFolder && !isSubCollection || totalSubFoldersAndAssets.assets > 0) && !isShare),
       props: {
         child: (
           <div className={styles["more-wrapper"]}>
@@ -608,8 +608,7 @@ const AssetHeaderOps = ({
             ))
         )}
       </div>
-
-      {((!isFolder && !isShare && !isSubCollection && !deletedAssets) || totalSubFoldersAndAssets.assets > 0) && (
+      {(((!isFolder && !isSubCollection && !deletedAssets) || totalSubFoldersAndAssets.assets > 0) && !isShare) && (
         <>
           <ConfirmModal
             closeModal={() => setShowAssociateModalOpen(false)}

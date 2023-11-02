@@ -18,7 +18,7 @@ const ShareFolderLayout = ({ children, advancedLink = false }) => {
     ),
     folders: subFoldersViewList.results.filter((folder: any) => folder.isSelected),
   };
-  const amountSelected = activeSortFilter.mainFilter === "SubCollectionView" ? selectedSubFoldersAndAssets.folders.length :
+  const amountSelected = activeSortFilter.mainFilter === "SubCollectionView" ? selectedSubFoldersAndAssets.folders.length || selectedSubFoldersAndAssets.assets.length :
     activeSortFilter.mainFilter === "folders"
       ? selectedFolders.length
       : selectedAssets.length;

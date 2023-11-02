@@ -356,8 +356,7 @@ const UploadRequest = () => {
     // @ts-ignore
     setTempFolders(assets[index]?.asset?.folders || []);
 
-
-    const originalSelectedFolders = (assets[index]?.asset?.folders || [])?.map(({ id, name, parentId, ...rest }: Item) => {
+    const originalSelectedFolders = (assets[index]?.asset?.folders ?? [])?.map(({ id, name, parentId, ...rest }: Item) => {
       completeSelectedFolderAssetView.set(id, { name, parentId: parentId || null })
       return id
     })
