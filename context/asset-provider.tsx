@@ -475,7 +475,7 @@ export default ({ children }) => {
     } catch (e) {
       // Violate validation, mark failure
       const updatedAssets = assets.map((asset, index) =>
-        index === retryList[i].index
+        index === retryList[i]?.index
           ? { ...asset, index, status: "fail", error: "Processing file error" }
           : asset
       );

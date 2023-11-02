@@ -255,20 +255,33 @@ const AssetsLibrary = () => {
     if (firstLoaded) {
       setActiveSortFilter({
         ...activeSortFilter,
-        mainFilter: activeFolder
-          ? "all"
-          : activeSubFolders
+        mainFilter: activeSubFolders
           ? "SubCollectionView"
           : activeSortFilter.mainFilter,
       });
     }
-  }, [activeFolder, activeSubFolders]);
+  }, [activeSubFolders]);
+
+  useEffect(() => {
+    if (firstLoaded) {
+      setActiveSortFilter({
+        ...activeSortFilter,
+        mainFilter: activeFolder
+          ? "all"
+          : activeSortFilter.mainFilter,
+      });
+    }
+  }, [activeFolder]);
 
   useEffect(() => {
     if (needsFetch === "assets") {
       getAssets();
     } else if (needsFetch === "folders") {
       getFolders();
+    }
+    else if (needsFetch === "SubCollectionView") {
+      getSubCollectionsFolderData(true, 5);
+      getSubCollectionsAssetData();
     }
     setNeedsFetch("");
   }, [needsFetch]);
@@ -375,11 +388,11 @@ const AssetsLibrary = () => {
         const updatedAssets = assets.map((asset, index) =>
           index === i
             ? {
-                ...asset,
-                status: "fail",
-                index,
-                error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
-              }
+              ...asset,
+              status: "fail",
+              index,
+              error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
+            }
             : asset
         );
 
@@ -438,16 +451,16 @@ const AssetsLibrary = () => {
           "fileModifiedAt",
           assets[i].dragDropFolderUpload
             ? new Date(
-                (
-                  file.lastModifiedDate || new Date(file.lastModified)
-                ).toUTCString()
-              ).toISOString()
+              (
+                file.lastModifiedDate || new Date(file.lastModified)
+              ).toUTCString()
+            ).toISOString()
             : new Date(
-                (
-                  file.originalFile.lastModifiedDate ||
-                  new Date(file.originalFile.lastModified)
-                ).toUTCString()
-              ).toISOString()
+              (
+                file.originalFile.lastModifiedDate ||
+                new Date(file.originalFile.lastModified)
+              ).toUTCString()
+            ).toISOString()
         );
 
         let size = totalSize;
@@ -781,7 +794,8 @@ const AssetsLibrary = () => {
 
   const getSubCollectionsFolderData = async (
     replace = true,
-    pageSize?: number = 10
+    pageSize?: number = 10,
+    nestedSubFolderId?: string = ""
   ) => {
     try {
       if (activeSortFilter.mainFilter !== "SubCollectionView") {
@@ -800,7 +814,7 @@ const AssetsLibrary = () => {
           ...queryParams,
           ...(term && { term }),
         },
-        activeSubFolders
+        nestedSubFolderId ? nestedSubFolderId : activeSubFolders
       );
 
       setSubFoldersViewList(subFolders, replace);
@@ -829,7 +843,6 @@ const AssetsLibrary = () => {
           userFilterObject: activeSortFilter,
         }),
         ...getAssetsSort(activeSortFilter),
-        term: "", // Empty because we don't search in case of sub-collection
         // ...searchFilterParams, commented because we don't search in case of sub-collection
         showAllAssets: showAllAssets,
       });
@@ -880,6 +893,13 @@ const AssetsLibrary = () => {
             },
           }),
         });
+        setSubFoldersAssetsViewList({
+          ...subFoldersAssetsViewList,
+          results: subFoldersAssetsViewList.results.map((asset) => ({
+            ...asset,
+            isSelected: false,
+          })),
+        });
       }
       if (assetIndex !== -1) {
         setSubFoldersAssetsViewList({
@@ -891,6 +911,13 @@ const AssetsLibrary = () => {
               },
             },
           }),
+        });
+        setSubFoldersViewList({
+          ...subFoldersViewList,
+          results: subFoldersViewList.results.map((folder: any) => ({
+            ...folder,
+            isSelected: false,
+          })),
         });
       }
     }
@@ -911,9 +938,16 @@ const AssetsLibrary = () => {
       // For selecting the folders only subcollection view
       setSubFoldersViewList({
         ...subFoldersViewList,
-        results: subFoldersViewList.results.map((folder) => ({
+        results: subFoldersViewList.results.map((folder: any) => ({
           ...folder,
           isSelected: true,
+        })),
+      });
+      setSubFoldersAssetsViewList({
+        ...subFoldersAssetsViewList,
+        results: subFoldersAssetsViewList.results.map((asset: any) => ({
+          ...asset,
+          isSelected: false,
         })),
       });
       // For selecting the assets only subcollection view
@@ -934,25 +968,23 @@ const AssetsLibrary = () => {
   const selectedFolders = folders.filter((folder) => folder.isSelected);
 
   const selectedSubFoldersAndAssets = {
-    assets: subFoldersAssetsViewList.results.filter(
+    assets: subFoldersAssetsViewList?.results?.filter(
       (asset) => asset.isSelected
-    ),
-    folders: subFoldersViewList.results.filter((folder) => folder.isSelected),
+    ) || [],
+    folders: subFoldersViewList?.results?.filter((folder) => folder.isSelected) || [],
   };
 
-  const viewFolder = async (id: string, subCollection: boolean) => {
+  const viewFolder = async (id: string, subCollection: boolean, nestedSubFolderId = "", folderName = "") => {
     if (!subCollection) {
+      if (nestedSubFolderId) {
+        await getSubCollectionsFolderData(true, 50, nestedSubFolderId);
+      }
       setActiveFolder(id);
-      setHeaderName(
-        subFoldersViewList.results.find((folder: any) => folder.id === id)
-          ?.name || ""
-      );
+      setHeaderName(folderName ? folderName : subFoldersViewList.results.find((folder: any) => folder.id === id)?.name || "")
       updateSortFilterByAdvConfig({ folderId: id });
     } else {
       setActiveSubFolders(id);
-      setHeaderName(
-        folders.find((folder: any) => folder.id === id)?.name || ""
-      );
+      setHeaderName(folderName ? folderName : folders.find((folder: any) => folder.id === id)?.name || "");
     }
   };
 
@@ -985,7 +1017,7 @@ const AssetsLibrary = () => {
     } catch (err) {
       toastUtils.error(
         err?.response?.data?.message ||
-          "Something went wrong please try again later"
+        "Something went wrong please try again later"
       );
     }
   };
@@ -1028,32 +1060,31 @@ const AssetsLibrary = () => {
       {(activeMode === "assets"
         ? selectedAssets.length
         : activeMode === "folders"
-        ? selectedFolders.length
-        : selectedSubFoldersAndAssets.folders.length ||
+          ? selectedFolders.length
+          : selectedSubFoldersAndAssets.folders.length ||
           selectedSubFoldersAndAssets.assets.length) > 0 && (
-        <AssetHeaderOps
-          isUnarchive={activeSortFilter.mainFilter === "archived"}
-          isFolder={activeMode === "folders"}
-          deletedAssets={false}
-          activeMode={activeMode}
-          selectedFolders={selectedFolders}
-          selectedSubFoldersAndAssets={selectedSubFoldersAndAssets}
-        />
-      )}
+          <AssetHeaderOps
+            isUnarchive={activeSortFilter.mainFilter === "archived"}
+            isFolder={activeMode === "folders"}
+            deletedAssets={false}
+            activeMode={activeMode}
+            selectedFolders={selectedFolders}
+            selectedSubFoldersAndAssets={selectedSubFoldersAndAssets}
+          />
+        )}
       {hasPermission([ASSET_ACCESS]) ||
-      hasPermission([ASSET_UPLOAD_APPROVAL]) ? (
+        hasPermission([ASSET_UPLOAD_APPROVAL]) ? (
         <>
           <main className={`${styles.container}`}>
             <div className={styles.innnerContainer}>
               {sidebarOpen ? (
                 <div className={styles.newsidenav}>
-                  <NestedSidenav />
+                  <NestedSidenav viewFolder={viewFolder} />
                 </div>
               ) : null}
               <div
-                className={`${
-                  sidebarOpen ? styles["rightSide"] : styles["rightSideToggle"]
-                }`}
+                className={`${sidebarOpen ? styles["rightSide"] : styles["rightSideToggle"]
+                  }`}
               >
                 {/* {openFilter && hasPermission([ASSET_ACCESS]) && (
                   <FilterContainer
@@ -1067,7 +1098,7 @@ const AssetsLibrary = () => {
                   />
                 )} */}
                 <div className="position-relative">
-                  <div className={styles["search-mobile"]}>
+                  {/* <div className={styles["search-mobile"]}>
                     <SearchOverlay
                       closeOverlay={closeSearchOverlay}
                       isFolder={activeMode === "folders"}
@@ -1078,7 +1109,7 @@ const AssetsLibrary = () => {
                       }
                       mode={activeMode}
                     />
-                  </div>
+                  </div> */}
                   {advancedConfig.set && hasPermission([ASSET_ACCESS]) && (
                     <TopBar
                       activeFolder={activeFolder}
@@ -1105,11 +1136,10 @@ const AssetsLibrary = () => {
                   )}
                 </div>
                 <div
-                  className={`${
-                    sidebarOpen
-                      ? styles["grid-wrapper-web"]
-                      : styles["grid-wrapper"]
-                  } ${activeFolder && styles["active-breadcrumb-item"]}`}
+                  className={`${sidebarOpen
+                    ? styles["grid-wrapper-web"]
+                    : styles["grid-wrapper"]
+                    } ${activeFolder && styles["active-breadcrumb-item"]}`}
                 >
                   {activeMode !== "folders" && (
                     <div className={styles.wrapper}>
@@ -1142,9 +1172,9 @@ const AssetsLibrary = () => {
                     )}
                   </DropzoneProvider>
                 </div>
-              </div>
-            </div>
-          </main>
+              </div >
+            </div >
+          </main >
           <AssetOps />
         </>
       ) : (
@@ -1160,31 +1190,36 @@ const AssetsLibrary = () => {
           folders.find((folder) => folder.id === activeFolder)?.name
         }
       />
-      {uploadDetailOverlay && (
-        <UploadStatusOverlayAssets
-          closeOverlay={() => {
-            setUploadDetailOverlay(false);
-          }}
-        />
-      )}
-      {currentViewAsset && (
-        <DetailOverlay
-          initiaParams={{ side: "detail" }}
-          asset={currentViewAsset.asset}
-          realUrl={currentViewAsset?.realUrl}
-          thumbailUrl={currentViewAsset?.thumbailUrl}
-          isShare={false}
-          closeOverlay={(assetData) => {
-            setDetailOverlayId(undefined);
-            setCurrentViewAsset(assetData);
-          }}
-          outsideDetailOverlay={true}
-        />
-      )}
-
-      {showOverlayLoader && (
-        <SpinnerOverlay text="Account updating...this process might take a few seconds. Thank you for your patience." />
-      )}
+      {
+        uploadDetailOverlay && (
+          <UploadStatusOverlayAssets
+            closeOverlay={() => {
+              setUploadDetailOverlay(false);
+            }}
+          />
+        )
+      }
+      {
+        currentViewAsset && (
+          <DetailOverlay
+            initiaParams={{ side: "detail" }}
+            asset={currentViewAsset.asset}
+            realUrl={currentViewAsset?.realUrl}
+            thumbailUrl={currentViewAsset?.thumbailUrl}
+            isShare={false}
+            closeOverlay={(assetData) => {
+              setDetailOverlayId(undefined);
+              setCurrentViewAsset(assetData);
+            }}
+            outsideDetailOverlay={true}
+          />
+        )
+      }
+      {
+        showOverlayLoader && (
+          <SpinnerOverlay text="Account updating...this process might take a few seconds. Thank you for your patience." />
+        )
+      }
     </>
   );
 };
