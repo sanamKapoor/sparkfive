@@ -195,9 +195,9 @@ const AssetAddition = ({
         }
 
         // Uploading the new folder where it's folderId has been created earlier in previous API call
-        // if (currentUploadingFolderId) {
-        //   attachedQuery["folderId"] = currentUploadingFolderTopBarId;
-        // }
+        if (currentUploadingFolderId) {
+          attachedQuery["folderId"] = currentUploadingFolderId;
+        }
 
         // Call API to upload
         let { data } = await assetApi.uploadAssets(
@@ -410,10 +410,8 @@ const AssetAddition = ({
 
       let uploadToFolders: any = [];
 
-
       if (activeSortFilter?.mainFilter === "SubCollectionView") {
         uploadToFolders = [activeSubFolders]
-        // selectedFolderToUpload = subFoldersViewList.results.filter((folder) => folder.isSelected);
       } else if (activeFolder) {
         uploadToFolders = [activeFolder];
       }

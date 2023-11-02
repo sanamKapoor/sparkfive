@@ -981,7 +981,7 @@ const AssetsLibrary = () => {
       }
       setActiveFolder(id);
       setHeaderName(folderName ? folderName : subFoldersViewList.results.find((folder: any) => folder.id === id)?.name || "")
-      // updateSortFilterByAdvConfig({ folderId: id });
+      updateSortFilterByAdvConfig({ folderId: id });
     } else {
       setActiveSubFolders(id);
       setHeaderName(folderName ? folderName : folders.find((folder: any) => folder.id === id)?.name || "");
