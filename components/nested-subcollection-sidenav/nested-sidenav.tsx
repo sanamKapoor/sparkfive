@@ -9,7 +9,7 @@ import NestedSidenavDropdown from "./nested-sidenav-dropdown-list";
 import NestedFirstlist from "./nested-sidenav-firstlist";
 import styles from "./nested-sidenav.module.css";
 
-const NestedSidenav = () => {
+const NestedSidenav = ({ viewFolder }) => {
 
   const {
     sidebarOpen,
@@ -81,7 +81,8 @@ const NestedSidenav = () => {
         />
         <div className={styles.sidenavScroll}>
           <NestedFirstlist headingClick={headingClick} />
-          <NestedSidenavDropdown headingClick={headingClick} />
+          <NestedSidenavDropdown
+            viewFolder={viewFolder} headingClick={headingClick} />
         </div>
       </div>
     </div>

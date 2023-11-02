@@ -809,7 +809,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                                     <img src={Utilities.checkIcon} />
                                   }
                                 </div>
-                                <div className={styles["icon-descriptions"]}>
+                                <div className={styles["icon-descriptions"]} title={folder.name}>
                                   <span>{folder.name}</span>
                                 </div>
                               </div>
@@ -832,7 +832,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                                             }`}>
                                           {selectedFolder.includes(id) && <img src={Utilities.checkIcon} />}
                                         </div>
-                                        <div className={styles["icon-descriptions"]}>
+                                        <div className={styles["icon-descriptions"]} title={folder.name}>
                                           <span>{name}</span>
                                         </div>
                                       </div>

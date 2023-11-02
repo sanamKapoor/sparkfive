@@ -720,13 +720,26 @@ const ShareCollectionModal = ({
               </div>
             </div>
           )}
+          {/* filter values code starts from here */}
+          <div className={`${styles["filter-value-wrapper"]} ${styles["input-wrapper"]}`}>
+          <div className={`${styles.title}`}>
+            <p>Filter values</p>
+            <IconClickable
+                  src={Utilities.downarrowThin}
+                  // src={Utilities.uparrowThin}
+                  additionalClass={styles["arrow-icon"]}
+                />
+            </div>
+
+          </div>
+
 
           {isAdmin() && (
             <div className={`${styles["input-wrapper"]}`}>
               <div className={`${styles.title}`}>
                 <p>Upload Logo</p>
                 <IconClickable
-                  src={Utilities.arrowBlue}
+                  src={Utilities.downarrowThin}
                   additionalClass={styles["arrow-icon"]}
                 />
               </div>

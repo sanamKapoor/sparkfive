@@ -430,7 +430,7 @@ const SidePanelBulk = ({
                                 <img src={Utilities.checkIcon} />
                               }
                             </div>
-                            <div className={styles["icon-descriptions"]}>
+                            <div className={styles["icon-descriptions"]} title={folder.name}>
                               <span>{folder.name}</span>
                             </div>
                           </div>
@@ -470,7 +470,7 @@ const SidePanelBulk = ({
                                         }`}>
                                       {selectedFolder.includes(id) && <img src={Utilities.checkIcon} />}
                                     </div>
-                                    <div className={styles["icon-descriptions"]}>
+                                    <div className={styles["icon-descriptions"]} title={folder.name}>
                                       <span>{name}</span>
                                     </div>
                                   </div>

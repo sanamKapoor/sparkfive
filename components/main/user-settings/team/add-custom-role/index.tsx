@@ -286,17 +286,15 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
       <div className={styles.content}>
         <div className={styles["nav-buttons"]}>
           <div
-            className={`${styles["nav-button"]} ${
-              mode === "customRestriction" ? styles.active : ""
-            }`}
+            className={`${styles["nav-button"]} ${mode === "customRestriction" ? styles.active : ""
+              }`}
             onClick={() => setMode("customRestriction")}
           >
             Content Restrictions
           </div>
           <div
-            className={`${styles["nav-button"]} ${
-              mode === "permission" ? styles.active : ""
-            }`}
+            className={`${styles["nav-button"]} ${mode === "permission" ? styles.active : ""
+              }`}
             onClick={() => setMode("permission")}
           >
             Action Permissions
@@ -340,7 +338,7 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
                         data={assetCustomFields[index]?.values[0]?.name}
                         options={field.values}
                         isShare={false}
-                        onLabelClick={() => {}}
+                        onLabelClick={() => { }}
                         handleFieldChange={(option) => {
                           onChangeSelectOneCustomField(option, index);
                         }}
@@ -360,7 +358,7 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
                         onAddClick={() => setActiveCustomField(index)}
                         selectPlaceholder={"Select an existing one"}
                         avilableItems={field.values}
-                        setAvailableItems={() => {}}
+                        setAvailableItems={() => { }}
                         selectedItems={
                           assetCustomFields.filter(
                             (assetField) => assetField.id === field.id
@@ -369,12 +367,12 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
                         setSelectedItems={(data) => {
                           onChangeCustomField(index, data);
                         }}
-                        onAddOperationFinished={(stateUpdate) => {}}
+                        onAddOperationFinished={(stateUpdate) => { }}
                         onRemoveOperationFinished={async (
                           index,
                           stateUpdate,
                           removeId
-                        ) => {}}
+                        ) => { }}
                         onOperationFailedSkipped={() =>
                           setActiveCustomField(undefined)
                         }

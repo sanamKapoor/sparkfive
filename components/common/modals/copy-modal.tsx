@@ -189,7 +189,7 @@ const CopyModal = ({
                         <img src={Utilities.checkIcon} />
                       }
                     </div>
-                    <div className={styles["icon-descriptions"]}>
+                    <div className={styles["icon-descriptions"]} title={folder.name}>
                       <span>{folder.name}</span>
                     </div>
                   </div>
@@ -231,7 +231,7 @@ const CopyModal = ({
                             >
                               {selectedFolder.includes(subfolder.id) && <img src={Utilities.checkIcon} />}
                             </div>
-                            <div className={styles["icon-descriptions"]}>
+                            <div className={styles["icon-descriptions"]} title={folder.name}>
                               <span>{subfolder.name}</span>
                             </div>
                           </div>
