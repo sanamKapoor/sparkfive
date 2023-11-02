@@ -196,10 +196,16 @@
     background: 
     var(--color-sec-lightblue);;
     padding: 2px 2px;
-    
-   
+   }
+   .list1-right-contents{
+    display: none;
   
   }
+  .nestedbox:hover .list1-right-contents {
+    display: block;
+  }
+  
+  
   .tag-container-wrapper{
     display: flex;
     align-items: center;
@@ -237,7 +243,7 @@
     width: 20px;
     height: 20px;
     background-color: #fff;
-    border-radius: 50%;
+    border-radius: 2px;
     display: flex;
     align-items: center;
     justify-content: center;

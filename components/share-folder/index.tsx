@@ -29,6 +29,7 @@ import PasswordOverlay from "./password-overlay";
 import { isMobile } from "react-device-detect";
 import selectOptions from "../../utils/select-options";
 import Spinner from "../common/spinners/spinner";
+import SharedPageSidenav from "./shared-nested-sidenav/shared-nested-sidenav";
 
 const ShareFolderMain = () => {
   const router = useRouter();
@@ -86,6 +87,7 @@ const ShareFolderMain = () => {
   const [openFilter, setOpenFilter] = useState(
     activeMode === "assets" && !isMobile ? true : false
   );
+  const [widthCard, setWidthCard] = useState(0);
 
   const [top, setTop] = useState("calc(55px + 5rem)");
 
@@ -575,6 +577,8 @@ const ShareFolderMain = () => {
     <>
       {!loading && (
         <main className={`${styles.container} sharefolderOuter`}>
+              <SharedPageSidenav/>
+         
           <TopBar
             activeSearchOverlay={activeSearchOverlay}
             activeSortFilter={activeSortFilter}
@@ -612,8 +616,9 @@ const ShareFolderMain = () => {
             activeMode={activeMode}
             isFolder={activeSortFilter?.mainFilter === "folders"}
           /> */}
+       
 
-          <div className={assetGridWrapperStyle} style={{ marginTop: top }}>
+       <div className={`${assetGridWrapperStyle} ${styles['mainContainer']}`} style={{ marginTop: top }}>
             <AssetGrid
               activeFolder={activeFolder}
               getFolders={getFolders}
