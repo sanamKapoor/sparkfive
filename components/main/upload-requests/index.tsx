@@ -7,8 +7,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Utilities } from '../../../assets';
 import GuestUploadApprovalOverlay from '../../../components/common/guest-upload-approval-overlay';
 import { LoadingContext, UserContext } from '../../../context';
-import { useMoveModal } from '../../../hooks/Use-Modal';
-import { useAssetDetailCollecion } from '../../../hooks/Use-Asset-Detail-Collection'
+import { useMoveModal } from '../../../hooks/use-modal';
+import { useAssetDetailCollecion } from '../../../hooks/use-asset-detail-collection'
 import { useDebounce } from '../../../hooks/useDebounce';
 import assetApi from '../../../server-api/asset';
 import customFieldsApi from '../../../server-api/attribute';

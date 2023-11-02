@@ -41,7 +41,7 @@ interface Item {
   length: number;
 }
 
-const NestedSidenavDropdown = ({ headingClick }) => {
+const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
 
   const {
     sidenavTotalCollectionCount,
@@ -161,15 +161,15 @@ const NestedSidenavDropdown = ({ headingClick }) => {
           <>
             <div key={index} className={`${styles["flex"]} ${styles.nestedbox}`}>
               <div className={styles.clickable} onClick={() => toggleDropdown(index, item, true)}>
-              <img className={showDropdown[index] ? styles.iconClick : styles.rightIcon} src={Utilities.arrowBlue}  />
+                <img className={showDropdown[index] ? styles.iconClick : styles.rightIcon} src={Utilities.arrowBlue} />
               </div>
-           
+
               <div className={`${styles["dropdownMenu"]} ${showDropdown[index] ? styles.active : ""}`} >
-                <div className={styles.w100} onClick={() => toggleDropdown(index, item, true)}>
+                <div className={styles.w100} onClick={() => viewFolder(item.id, true, "", item.name)} >
                   <div className={styles.mainWrapper}  >
                     <div className={styles.flex}>
                       <img src={Utilities.folder} />
-                      <div className={styles["icon-descriptions"]}  onClick={() => toggleDropdown(index, item, true)}>
+                      <div className={styles["icon-descriptions"]} >
                         <span title={JSON.stringify(item.name)}>{item.name}</span>
                       </div>
                     </div>
@@ -199,13 +199,13 @@ const NestedSidenavDropdown = ({ headingClick }) => {
                           scale={1}
                         >
                           <div className={styles.dropdownOptions}>
-                            <div className={styles["folder-lists"]}>
+                            <div className={styles["folder-lists"]} onClick={() => viewFolder(record.id, false, item.id, record.name)}>
                               <div className={styles.dropdownIcons}>
                                 <img
                                   className={styles.subfolder}
                                   src={Utilities.folder}
                                 />
-                                <div className={styles["icon-descriptions"]}>
+                                <div className={styles["icon-descriptions"]} >
                                   <span>{record.name}</span>
                                 </div>
                               </div>

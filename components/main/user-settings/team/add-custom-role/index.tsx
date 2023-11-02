@@ -17,7 +17,7 @@ import teamApi from "../../../../../server-api/team";
 import SpinnerOverlay from "../../../../common/spinners/spinner-overlay";
 import MemberPermissions from "../members/team-members/member-permissions";
 import React from "react";
-import { useMoveModal } from "../../../../../hooks/Use-Modal";
+import { useMoveModal } from "../../../../../hooks/use-modal";
 import CollectionSubcollectionListing from '../../../collection-subcollection-listing';
 
 

@@ -26,6 +26,7 @@ const AssetRelatedFilesList = ({
   const {
     setActiveOperation,
     updateDownloadingStatus,
+    setOperationAssets,
   } = useContext(AssetContext);
 
   const { setIsLoading } = useContext(LoadingContext);
@@ -69,7 +70,7 @@ const AssetRelatedFilesList = ({
         0,
         0,
         parsedErrorResponse.message ||
-          "Internal Server Error. Please try again."
+        "Internal Server Error. Please try again."
       );
     }
 

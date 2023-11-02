@@ -31,7 +31,7 @@ const FilterView = () => {
   );
 
   const [loading, setLoading] = useState<boolean>(false);
-  const { activeSortFilter } = useContext(FilterContext);
+  const { activeSortFilter, setRenderedFlag } = useContext(FilterContext);
 
   //TODO: move it to parent level
   const getAttributes = async () => {
@@ -46,6 +46,7 @@ const FilterView = () => {
   //TODO: move it to parent level
   useEffect(() => {
     getAttributes();
+    setRenderedFlag(true)
   }, []);
 
   /** // TODO:
