@@ -18,7 +18,7 @@ const FilterView = () => {
   );
 
   return (
-    <div>
+    <>
       <FilterTabs attributes={attributes} setAttributes={setAttributes} />
       {selectedFilters.length > 0 && (
         <SelectedFilters
@@ -27,7 +27,7 @@ const FilterView = () => {
           onClearAll={onClearAll}
         />
       )}
-    </div>
+    </>
   );
 };
 

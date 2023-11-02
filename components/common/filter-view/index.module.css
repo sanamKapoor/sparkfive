@@ -1,8 +1,10 @@
-.outer-Box{
-  position: fixed;
+.outer-Box {
+  /* position: fixed;
+  top: calc((2*81)px); */
   z-index: 999;
   background: #fff;
 }
+
 .outer-wrapper {
   display: flex;
   flex-direction: row;
@@ -32,9 +34,11 @@
   display: flex;
   flex-direction: row;
 }
+
 .more-filter-btnIcon {
   display: none;
 }
+
 .filter-btn-withIcon {
   display: flex;
   align-items: center;
@@ -42,15 +46,19 @@
   border-top: 1px solid #dedad4;
   width: 100%;
 }
+
 .more-filter-btn {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 4px 6px 4px 6px;
 }
+
 .filter-header-mobile {
   width: 100%;
   display: none;
 }
+
 .filter-heading-mobile {
   display: flex;
   align-items: center;
@@ -59,14 +67,17 @@
   padding: 16px 0px;
   border-top: 1px solid #dedad4;
 }
+
 .filter-heading-mobile span {
   font-weight: 600;
   font-size: 14px;
 }
+
 .close-buttons {
   display: flex;
   align-items: center;
 }
+
 .close-button {
   margin-left: 14px;
   width: 15px;
@@ -77,18 +88,19 @@
     margin-top: 170px;
   }
 }
+
 @media (min-width: 820px) and (max-width: 1080px) {
   .outer-wrapper {
     margin-top: 129px;
   }
 }
+
 @media (max-width: 600px) {
   .outer-wrapper {
     margin-top: 60px;
   }
 }
 
-/* TODO: fix the css as per the designs and remove the TODO */
 
 .selected-filters-wrapper {
   display: flex;
@@ -106,6 +118,7 @@
   height: 30px;
   margin: 6px 10px;
 }
+
 .selected-filter-item p {
   font-weight: 500;
   font-size: 14px;
@@ -115,6 +128,7 @@
   .main-wrapper {
     width: 100%;
   }
+
   .inner-wrapper {
     justify-content: space-between;
     height: 50px;
@@ -125,18 +139,22 @@
     border-bottom: none;
     border-radius: 0;
   }
+
   .outer-wrapper {
     margin-top: 164px;
     grid-gap: 0;
   }
+
   .more-filter-btn {
     display: none;
     width: 100%;
   }
+
   .more-filter-btnIcon {
     display: block;
     width: 100%;
   }
+
   .filter-header-mobile {
     display: block;
   }

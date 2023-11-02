@@ -4,25 +4,26 @@
   padding: 0 10px 0 0;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  overflow: hidden;
   box-sizing: border-box;
   gap: 32px;
   max-height: 407px;
-  overflow: auto;
   scrollbar-width: thin;
   padding-right: 10px;
 }
+
 .tags-wrapper {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 30px;
 }
+
 .tags-left-side {
   display: flex;
   align-items: center;
   gap: 10px;
 }
+
 .outer-wrapper::-webkit-scrollbar {
   width: 3px;
 }
@@ -31,10 +32,12 @@
   background-color: #aeb0c2;
   border-radius: 50px;
 }
+
 .outer-wrapper::-webkit-scrollbar-track {
   background-color: #f0f0f0;
   border-radius: 50px;
 }
+
 .heading-tag {
   display: flex;
   align-items: center;

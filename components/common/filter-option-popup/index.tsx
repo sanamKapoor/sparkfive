@@ -5,7 +5,6 @@ import { Utilities } from "../../../assets";
 import {
   FilterAttributeVariants,
   IAttribute,
-  IFilterAttributeValues,
 } from "../../../interfaces/filters";
 import Search from "../../main/user-settings/SuperAdmin/Search/Search";
 import Button from "../buttons/button";
@@ -22,7 +21,8 @@ import FilterContent from "../filter-view/filter-content";
 import RulesOptions from "./rules-options";
 
 interface FilterOptionPopupProps {
-  options: IFilterAttributeValues;
+  values: unknown;
+  options: unknown;
   setOptions: (data: unknown) => void;
   activeAttribute: IAttribute;
   setActiveAttribute: (val: IAttribute | null) => void;
@@ -30,6 +30,7 @@ interface FilterOptionPopupProps {
 }
 
 const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
+  values,
   options,
   setOptions,
   activeAttribute,
@@ -43,10 +44,16 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const showRules = activeAttribute.selectionType === "selectMultiple";
 
-  const hideSearch =
-    activeAttribute.id === FilterAttributeVariants.DIMENSIONS ||
-    activeAttribute.id === FilterAttributeVariants.LAST_UPDATED ||
-    activeAttribute.id === FilterAttributeVariants.DATE_UPLOADED;
+  const hideSearch = (
+    [
+      FilterAttributeVariants.DIMENSIONS,
+      FilterAttributeVariants.LAST_UPDATED,
+      FilterAttributeVariants.DATE_UPLOADED,
+      FilterAttributeVariants.RESOLUTION,
+      FilterAttributeVariants.FILE_TYPES,
+      FilterAttributeVariants.ORIENTATION,
+    ] as string[]
+  ).includes(activeAttribute.id);
 
   const onApply = (id: string, data: any) => {
     //TODO: handle case if some filters already exists and new ones are added for a particular filterKey
@@ -108,9 +115,24 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
     setActiveAttribute(null);
   };
 
-  //TODO
+  //TODO: handle search to work on input change
   const onSearch = (term: string) => {
-    console.log("Searching term....,", term);
+    if (term.trim() === "") {
+      setOptions([...values]); // Reset to the original list when search term is empty
+    } else {
+      let filteredResults = [];
+      if (activeAttribute.id === FilterAttributeVariants.PRODUCTS) {
+        filteredResults = values.filter(
+          (option) => option.sku.toLowerCase().includes(term.toLowerCase()) // Replace 'name' with the property you want to search in
+        );
+      } else {
+        filteredResults = values.filter(
+          (option) => option.name.toLowerCase().includes(term.toLowerCase()) // Replace 'name' with the property you want to search in
+        );
+      }
+
+      setOptions(filteredResults);
+    }
   };
 
   const ruleKey = ruleKeyMap[activeAttribute.id] || `all-${activeAttribute.id}`;
@@ -159,7 +181,7 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
                 clear
               </button>
               <img
-              className={styles.closeIcon}
+                className={styles.closeIcon}
                 src={Utilities.closeIcon}
                 onClick={() => setActiveAttribute(null)}
               />

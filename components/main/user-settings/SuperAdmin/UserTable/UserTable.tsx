@@ -23,7 +23,6 @@ import Button from "../../../../common/buttons/button";
 import SpinnerOverlay from "../../../../common/spinners/spinner-overlay";
 
 const UserTable = () => {
-  const [term, setTerm] = useState<string>("");
   const [termForDownload, setTermForDownload] = useState<string>("");
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -47,7 +46,7 @@ const UserTable = () => {
 
   const getUsers = async ({
     page = 1,
-    searchTerm = term,
+    searchTerm = "",
     reset = false,
     sortBy = "users.lastLogin",
     sortDirection = "ASC",
@@ -63,6 +62,7 @@ const UserTable = () => {
         sortBy,
         sortOrder: sortDirection,
       });
+
       const users = [...newUsers, ...data.users];
 
       setUserData({
@@ -78,8 +78,7 @@ const UserTable = () => {
     }
   };
 
-  const searchAndGetUsers = (searchTerm: string) => {
-    console.log("searchTerm: ", searchTerm);
+  const searchAndGetUsers = async (searchTerm: string) => {
     getUsers({
       searchTerm,
       page: 1,
@@ -87,7 +86,7 @@ const UserTable = () => {
       sortBy: sortData.sortBy,
       sortDirection: sortData.sortDirection,
     });
-    setTerm(searchTerm);
+
     setTermForDownload(searchTerm);
   };
 

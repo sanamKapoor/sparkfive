@@ -18,16 +18,16 @@ const DimensionsFilter: React.FC<DimensionsFilterProps> = ({
     min: string;
     max: string;
   }>({
-    min: activeSortFilter?.dimensionWidth?.min || width.min,
-    max: activeSortFilter?.dimensionWidth?.max || width.max,
+    min: activeSortFilter?.dimensionWidth?.min || width?.min,
+    max: activeSortFilter?.dimensionWidth?.max || width?.max,
   });
 
   const [dimensionHeight, setDimensionHeight] = useState<{
     min: string;
     max: string;
   }>({
-    min: activeSortFilter?.dimensionHeight?.min || height.min,
-    max: activeSortFilter?.dimensionHeight?.max || height.max,
+    min: activeSortFilter?.dimensionHeight?.min || height?.min,
+    max: activeSortFilter?.dimensionHeight?.max || height?.max,
   });
 
   const handleWidthChange = (
