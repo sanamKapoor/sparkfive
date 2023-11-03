@@ -27,6 +27,16 @@ import dateStyles from "../filter/date-uploaded.module.css";
 // Contexts
 import { LoadingContext, UserContext } from "../../../context";
 
+// Accordion
+import {
+  Accordion,
+  AccordionItem,
+  AccordionItemHeading,
+  AccordionItemButton,
+  AccordionItemPanel,
+} from "react-accessible-accordion";
+// import 'react-accessible-accordion/dist/fancy-example.css';
+
 const getDayToCurrentDate = (day: number = 1) => {
   return new Date(moment().add(day, "d").toDate());
 };
@@ -93,6 +103,10 @@ const ShareCollectionModal = ({
     setLoading(true);
     setLogo("");
     closeModal();
+  };
+  const [isAccordionOpen, setIsAccordionOpen] = useState(false);
+  const toggleAccordion = () => {
+    setIsAccordionOpen(!isAccordionOpen);
   };
 
   const getInitialSharedLink = async (showInternalLoading = true) => {
@@ -720,19 +734,61 @@ const ShareCollectionModal = ({
               </div>
             </div>
           )}
+
           {/* filter values code starts from here */}
-          <div className={`${styles["filter-value-wrapper"]} ${styles["input-wrapper"]}`}>
-          <div className={`${styles.title}`}>
-            <p>Filter values</p>
-            <IconClickable
-                  src={Utilities.downarrowThin}
-                  // src={Utilities.uparrowThin}
-                  additionalClass={styles["arrow-icon"]}
-                />
-            </div>
 
+          <div
+            className={`${styles["filter-value-wrapper"]}  ${styles["accordion-container"]}`}
+          >
+            <Accordion allowZeroExpanded>
+              <AccordionItem>
+                <AccordionItemHeading>
+                  <AccordionItemButton className={styles.button}>
+                    <div className={`${styles.title}`}>
+                      <p>Filter values</p>
+
+                      <IconClickable
+                        // src={Utilities.downarrowThin}
+                        // src={Utilities.uparrowThin}
+                        src={
+                          isAccordionOpen
+                            ? Utilities.uparrowThin
+                            : Utilities.downarrowThin
+                        }
+                        additionalClass={styles["arrow-icon"]}
+                        onClick={toggleAccordion}
+                      />
+                    </div>
+                  </AccordionItemButton>
+                </AccordionItemHeading>
+                <AccordionItemPanel>
+                  <div className={`${styles["filter-data"]}`}>
+                    <div className={`${styles["tags-wrapper"]}`}>
+                      <div className={`${styles["tags-left-side"]}`}>
+                        <IconClickable src={Utilities.radioButtonEnabled} />
+                        {/* <IconClickable
+                      src={Utilities.radioButtonNormal}
+                    /> */}
+                        <span className={`${styles["select-name"]}`}>Tags</span>
+                      </div>
+                    </div>
+                    <div className={`${styles["tags-wrapper"]}`}>
+                      <div className={`${styles["tags-left-side"]}`}>
+                        <IconClickable src={Utilities.radioButtonEnabled} />
+                        <span className={`${styles["select-name"]}`}>Tags</span>
+                      </div>
+                    </div>
+                    <div className={`${styles["tags-wrapper"]}`}>
+                      <div className={`${styles["tags-left-side"]}`}>
+                        <IconClickable src={Utilities.radioButtonEnabled} />
+                        <span className={`${styles["select-name"]}`}>Tags</span>
+                      </div>
+                    </div>
+                  </div>
+                </AccordionItemPanel>
+              </AccordionItem>
+            </Accordion>
           </div>
-
 
           {isAdmin() && (
             <div className={`${styles["input-wrapper"]}`}>
