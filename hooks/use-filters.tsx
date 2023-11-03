@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   FilterAttributeVariants,
   IAttribute,
@@ -13,12 +13,17 @@ import {
   initialActiveSortFilters,
   labelKeyMap,
 } from "../config/data/filter";
+import { AssetContext, FilterContext } from "../context";
 import customFieldsApi from "../server-api/attribute";
 import campaignApi from "../server-api/campaign";
 import filterApi from "../server-api/filter";
 import tagsApi from "../server-api/tag";
 
-const useFilters = (attributes, activeSortFilter, setActiveSortFilter) => {
+const useFilters = (attributes) => {
+  const { activeSortFilter, setActiveSortFilter, sharePath } =
+    useContext(FilterContext);
+  const { activeFolder, activeSubFolders } = useContext(AssetContext);
+
   const [loading, setLoading] = useState<boolean>(false);
   const [activeAttribute, setActiveAttribute] = useState<IAttribute | null>(
     null
@@ -78,10 +83,36 @@ const useFilters = (attributes, activeSortFilter, setActiveSortFilter) => {
 
   const fetchValues = async (
     id: keyof typeof filterKeyMap,
-    fetchFunction: () => Promise<any>,
+    fetchFunction: (params?: Record<string, unknown>) => Promise<any>,
     keysToFilter: string[]
   ) => {
-    let fetchedValues = await fetchFunction();
+    //TODO: refactor
+    let type, stage, hasProducts;
+
+    if (activeSortFilter.mainFilter === "images") {
+      type = "image";
+      stage = "draft";
+    } else if (activeSortFilter.mainFilter === "videos") {
+      type = "video";
+      stage = "draft";
+    } else if (activeSortFilter.mainFilter === "product") {
+      hasProducts = "product";
+      stage = "draft";
+    } else if (activeSortFilter.mainFilter === "archived") stage = "archived";
+    else stage = "draft";
+
+    const params = {
+      assetsCount: "yes",
+      sharePath,
+      folderId: activeSubFolders || activeFolder || null,
+      type,
+      stage,
+      page: 0,
+      assetLim: "yes",
+      ...(hasProducts && { hasProducts }),
+    };
+
+    let fetchedValues = await fetchFunction({ ...params });
 
     if (id === "dimensions") {
       fetchedValues = {
@@ -264,48 +295,54 @@ const useFilters = (attributes, activeSortFilter, setActiveSortFilter) => {
     }
   };
 
-  const fetchTags = async (params?: { includeAi?: boolean; type?: string }) => {
+  const fetchTags = async (params?: Record<string, unknown>) => {
     const res = await tagsApi.getTags({ ...params });
     return res.data;
   };
 
-  const fetchAITags = async () => {
-    return fetchTags({ includeAi: true });
+  const fetchAITags = async (params?: Record<string, unknown>) => {
+    return fetchTags({ includeAi: true, ...params });
   };
 
-  const fetchProductSku = async () => {
-    return fetchTags({ type: "sku" });
+  const fetchProductSku = async (params?: Record<string, unknown>) => {
+    return fetchTags({ type: "sku", ...params });
   };
 
-  const fetchCampaigns = async () => {
-    const res = await campaignApi.getCampaigns();
+  const fetchCampaigns = async (params?: Record<string, unknown>) => {
+    const res = await campaignApi.getCampaigns(params);
     return res.data;
   };
 
-  const fetchAssetFileExtensions = async () => {
-    const res = await filterApi.getAssetFileExtensions();
+  const fetchAssetFileExtensions = async (params?: Record<string, unknown>) => {
+    const res = await filterApi.getAssetFileExtensions(params);
     return res.data;
   };
 
-  const fetchAssetOrientations = async () => {
-    const res = await filterApi.getAssetOrientations();
+  const fetchAssetOrientations = async (params?: Record<string, unknown>) => {
+    const res = await filterApi.getAssetOrientations(params);
     return res.data;
   };
 
-  const fetchAssetResolutions = async () => {
-    const res = await filterApi.getAssetResolutions();
+  const fetchAssetResolutions = async (params?: Record<string, unknown>) => {
+    const res = await filterApi.getAssetResolutions(params);
     return res.data;
   };
 
-  const fetchAssetDimensionLimits = async () => {
-    const res = await filterApi.getAssetDimensionLimits();
+  const fetchAssetDimensionLimits = async (
+    params?: Record<string, unknown>
+  ) => {
+    const res = await filterApi.getAssetDimensionLimits(params);
     return res.data;
   };
 
-  const fetchCustomField = async (customFieldId: string) => {
-    const res = await customFieldsApi.getCustomFieldWithCount(customFieldId, {
-      assetsCount: "yes",
-    });
+  const fetchCustomField = async (
+    customFieldId: string,
+    params?: Record<string, unknown>
+  ) => {
+    const res = await customFieldsApi.getCustomFieldWithCount(
+      customFieldId,
+      params
+    );
     return res.data;
   };
   return {
