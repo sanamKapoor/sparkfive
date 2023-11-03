@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 
+import { FilterContext } from "../../../context";
 import { OptionsDataProps } from "../../../interfaces/filters";
 import Divider from "./divider";
 import OptionDataItem from "./option-data-item";
@@ -13,6 +14,8 @@ const OptionsData: React.FC<OptionsDataProps> = ({
   setOptions,
   setFilters,
 }) => {
+  const { activeSortFilter } = useContext(FilterContext);
+
   const onSelectOption = (data) => {
     const index = options.findIndex(
       (value) => value[compareKey] === data[compareKey]
@@ -22,22 +25,34 @@ const OptionsData: React.FC<OptionsDataProps> = ({
     }
     setOptions([...options]);
     setFilters((prevState) => {
+      let newState;
+
+      if (
+        activeSortFilter[filterKey] &&
+        activeSortFilter[filterKey].length > 0
+      ) {
+        newState = [
+          ...new Set([
+            ...activeSortFilter[filterKey],
+            ...((prevState && prevState[filterKey]) ?? []),
+            {
+              value: data[compareKey],
+              ...data,
+            },
+          ]),
+        ];
+      } else {
+        newState = [
+          ...((prevState && prevState[filterKey]) ?? []),
+          {
+            value: data[compareKey],
+            ...data,
+          },
+        ];
+      }
+
       return {
-        [filterKey]:
-          prevState && prevState[filterKey]?.length > 0
-            ? [
-                ...prevState[filterKey],
-                {
-                  value: data[compareKey],
-                  ...data,
-                },
-              ]
-            : [
-                {
-                  value: data[compareKey],
-                  ...data,
-                },
-              ],
+        [filterKey]: newState,
       };
     });
   };
@@ -55,7 +70,7 @@ const OptionsData: React.FC<OptionsDataProps> = ({
       .filter((item) => item.isSelected)
       .map((item) => ({
         value: item[compareKey],
-        ...data,
+        ...item,
       }));
 
     setFilters({
