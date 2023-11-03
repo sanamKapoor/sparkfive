@@ -75,12 +75,14 @@ const DimensionsFilter: React.FC<DimensionsFilterProps> = ({
       <p className={styles.heading}>Width</p>
       <div className={styles.outer}>
         <input
+          type="number"
           className={styles.inputField}
           value={dimensionWidth.min}
           onChange={(e) => handleWidthChange(e, "min")}
         />
         <div className={styles.line} />
         <input
+          type="number"
           className={styles.inputField}
           value={dimensionWidth.max}
           onChange={(e) => handleWidthChange(e, "max")}
@@ -89,12 +91,14 @@ const DimensionsFilter: React.FC<DimensionsFilterProps> = ({
       <p className={styles.heading}>Height</p>
       <div className={styles.outer}>
         <input
+          type="number"
           className={styles.inputField}
           value={dimensionHeight.min}
           onChange={(e) => handleHeightChange(e, "min")}
         />
         <div className={styles.line} />
         <input
+          type="number"
           className={styles.inputField}
           value={dimensionHeight.max}
           onChange={(e) => handleHeightChange(e, "max")}
