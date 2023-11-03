@@ -44,7 +44,7 @@ const ShareFolderLayout = ({ children, advancedLink = false }) => {
             isShare={true}
             advancedLink={advancedLink}
             activeMode={activeSortFilter.mainFilter === "SubCollectionView" ?
-              "SubCollectionView" : activeSortFilter.mainFilter !== "folders" ? "folders" : "assets"}
+              "SubCollectionView" : activeSortFilter.mainFilter === "folders" ? "folders" : "assets"}
             isFolder={activeSortFilter.mainFilter === "folders"}
             selectedFolders={selectedFolders}
             selectedSubFoldersAndAssets={selectedSubFoldersAndAssets}

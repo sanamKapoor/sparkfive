@@ -140,6 +140,8 @@ export const Utilities = {
   related: require("./Icons/Utilities/Related/related.svg"),
   relatedLight: require("./Icons/Utilities/Related/related-light.svg"),
   sort: require("./Icons/Utilities/arrow/sort.svg"),
+  uparrowThin: require("./Icons/Utilities/arrow/up-arrow-thin.svg"),
+  downarrowThin:require("./Icons/Utilities/arrow/down-arrow-thin.svg"),
   leftArrow: require("./Icons/Utilities/arrow/arrow-left.svg"),
   sortUp: require("./Icons/Utilities/arrow/sort-up.svg"),
   caretRight: require("./Icons/Utilities/Caret/caret-right.svg"),

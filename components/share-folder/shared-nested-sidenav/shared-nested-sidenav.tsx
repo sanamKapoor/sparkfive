@@ -1,34 +1,86 @@
-import React from "react";
+import React, { useContext } from "react";
 import styles from "./shared-nested-sidenav.module.css";
 import { Utilities } from "../../../assets";
 import Draggable from "react-draggable";
 import IconClickable from "../../common/buttons/icon-clickable";
 import NestedButton from "../../nested-subcollection-sidenav/button";
-const data = [
-  { id: 1, name: "City", quantity: 6 },
-  { id: 2, name: "Renaissance", quantity: 12 },
-  { id: 3, name: "Interior", quantity: 12 },
-  { id: 4, name: "House", quantity: 29 },
-];
+import { AssetContext, ShareContext, FilterContext } from "../../../context";
 
-export default function SharedPageSidenav() {
+interface Asset {
+  id: string;
+  name: string;
+  type: string;
+  thumbailUrl: string;
+  realUrl: string;
+  extension: string;
+  version: number;
+}
+interface Item {
+  id: string;
+  userId: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  sharePath: null;
+  sharePassword: null;
+  shareStatus: null;
+  status: string;
+  thumbnailPath: null;
+  thumbnailExtension: null;
+  thumbnails: null;
+  thumbnailStorageId: null;
+  thumbnailName: null;
+  assetsCount: string;
+  assets: Asset[];
+  size: string;
+  length: number;
+}
+export default function SharedPageSidenav({ sidenavFolderList, viewFolder }) {
+  const { folderInfo } = useContext(ShareContext);
+  const {
+    folders,
+    activeSubFolders,
+    activeFolder
+  } = useContext(AssetContext);
+  const { activeSortFilter } = useContext(FilterContext)
+
+  let foldersList: any = [];
+  if (
+    activeSortFilter.mainFilter === "SubCollectionView" &&
+    activeSubFolders !== ""
+  ) {
+    foldersList = sidenavFolderList
+  } else if (!Boolean(folderInfo?.singleSharedCollectionId)) {
+    foldersList = folders
+  } else if (Boolean(folderInfo?.singleSharedCollectionId)) {
+    foldersList = sidenavFolderList
+  }
+  if (activeFolder) {
+    foldersList = foldersList.map((item) => {
+      if (item.id === activeFolder) {
+        return { ...item, sidenavShowSelected: true };
+      }
+      return item;
+    });
+  }
   return (
     <>
       <div className={`${styles["shared-sidenav-outer"]}`}>
         <div
           className={`${styles["collection-heading"]} ${styles["collection-heading-active"]}`}
+          onClick={() => viewFolder()}
         >
-          <span>New collection(4)</span>
+          <span>{folderInfo?.folderName || ""}{`(${foldersList.length})`}</span>
         </div>
-        <div className={styles["sidenavScroll"]}>
+        <div className={styles["sidenavScroll"]} >
           <div className={styles["sidenav-list1"]}>
             <ul>
-              {data.map((item) => (
+              {foldersList.map((item: Item, index: number) => (
                 <li
-                  key={item.id}
-                  className={`${styles["list1-description"]} ${styles["border-bottom"]}`}
+                  key={index}
+                  className={`${styles["list1-description"]} ${styles["border-bottom"]} ${item?.sidenavShowSelected ? styles["collection-list-active"] : ""}`}
                 >
-                  <div className={styles["list1-left-contents"]}>
+                  <div className={styles["list1-left-contents"]} onClick={() => viewFolder(item.id, true)}>
                     <div className={styles.icon}>
                       <img src={Utilities.folder} alt="" />
                     </div>
@@ -37,7 +89,7 @@ export default function SharedPageSidenav() {
                     </div>
                   </div>
                   <div className={styles["list1-right-contents"]}>
-                    <span>{item.quantity}</span>
+                    <span>{item.assetsCount}</span>
                   </div>
                 </li>
               ))}

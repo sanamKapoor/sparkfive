@@ -4,7 +4,7 @@ import { Utilities } from "../../assets";
 import Button from "../common/buttons/button";
 import { AssetContext, FilterContext } from "../../context";
 
-const NavHeading = () => {
+const NavHeading = ({ isShare = false }) => {
   const {
     headerName,
     setHeaderName
@@ -14,7 +14,9 @@ const NavHeading = () => {
   } = useContext(FilterContext) as any;
 
   useEffect(() => {
-    setHeaderName(`${activeSortFilter.mainFilter === "folders" ? "All Collections" : "All Assets"}`)
+    if (!isShare) {
+      setHeaderName(`${activeSortFilter.mainFilter === "folders" ? "All Collections" : "All Assets"}`)
+    }
   }, [])
   return (
     <>
@@ -22,7 +24,7 @@ const NavHeading = () => {
         <div className={styles.icon}>
           <img src={Utilities.menu} />
           {/* close icon  :need to add functionality*/}
-         {/* <img src={Utilities.bigblueClose}/> */}
+          {/* <img src={Utilities.bigblueClose}/> */}
         </div>
         <span className={styles.menuHeading}>Menu</span>
       </div>

@@ -55,6 +55,7 @@ const AssetHeaderOps = ({
     selectAllAssets,
     selectAllFolders,
     totalAssets,
+    activeSubFolders,
     activeFolder,
     updateDownloadingStatus,
     setNeedsFetch,
@@ -332,7 +333,7 @@ const AssetHeaderOps = ({
     const filters = {
       ...getAssetsFilters({
         replace: false,
-        activeFolder,
+        activeFolder: activeSortFilter?.mainFilter === "SubCollectionView" ? activeSubFolders : activeFolder,
         addedIds: [],
         nextPage: 1,
         userFilterObject: activeSortFilter,

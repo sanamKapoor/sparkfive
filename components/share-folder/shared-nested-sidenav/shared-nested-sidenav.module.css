@@ -395,3 +395,8 @@
 
 
 }
+
+
+.collection-list-active{
+ background: var(--color-sec-lightblue);;
+}

@@ -252,7 +252,7 @@ const AssetsLibrary = () => {
   }, [activeSortFilter, firstLoaded, term]);
 
   useEffect(() => {
-    if (firstLoaded) {
+    if (firstLoaded && activeSubFolders) {
       setActiveSortFilter({
         ...activeSortFilter,
         mainFilter: activeSubFolders
@@ -263,7 +263,7 @@ const AssetsLibrary = () => {
   }, [activeSubFolders]);
 
   useEffect(() => {
-    if (firstLoaded) {
+    if (firstLoaded && activeFolder) {
       setActiveSortFilter({
         ...activeSortFilter,
         mainFilter: activeFolder
@@ -980,9 +980,10 @@ const AssetsLibrary = () => {
         await getSubCollectionsFolderData(true, 50, nestedSubFolderId);
       }
       setActiveFolder(id);
+      setActiveSubFolders("");
       setHeaderName(folderName ? folderName : subFoldersViewList.results.find((folder: any) => folder.id === id)?.name || "")
-      updateSortFilterByAdvConfig({ folderId: id });
     } else {
+      setActiveFolder("")
       setActiveSubFolders(id);
       setHeaderName(folderName ? folderName : folders.find((folder: any) => folder.id === id)?.name || "");
     }
@@ -1086,30 +1087,7 @@ const AssetsLibrary = () => {
                 className={`${sidebarOpen ? styles["rightSide"] : styles["rightSideToggle"]
                   }`}
               >
-                {/* {openFilter && hasPermission([ASSET_ACCESS]) && (
-                  <FilterContainer
-                    clearFilters={clearFilters}
-                    openFilter={openFilter}
-                    setOpenFilter={setOpenFilter}
-                    activeSortFilter={activeSortFilter}
-                    setActiveSortFilter={setActiveSortFilter}
-                    isFolder={activeSortFilter.mainFilter === "folders"}
-                    filterWidth={widthCard}
-                  />
-                )} */}
                 <div className="position-relative">
-                  {/* <div className={styles["search-mobile"]}>
-                    <SearchOverlay
-                      closeOverlay={closeSearchOverlay}
-                      isFolder={activeMode === "folders"}
-                      activeFolder={
-                        activeMode === "SubCollectionView"
-                          ? activeSubFolders
-                          : activeFolder
-                      }
-                      mode={activeMode}
-                    />
-                  </div> */}
                   {advancedConfig.set && hasPermission([ASSET_ACCESS]) && (
                     <TopBar
                       activeFolder={activeFolder}

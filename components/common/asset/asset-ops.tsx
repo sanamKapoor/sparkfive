@@ -39,8 +39,11 @@ export default ({ getAssets }) => {
     completedAssets,
     setCompletedAssets,
     totalAssets,
+    subFoldersViewList,
     subFoldersAssetsViewList,
-    setSubFoldersAssetsViewList
+    setSubFoldersAssetsViewList,
+    selectedAllSubFoldersAndAssets,
+    activeSubFolders
   } = useContext(AssetContext);
 
   const { setIsLoading } = useContext(LoadingContext);
@@ -64,6 +67,7 @@ export default ({ getAssets }) => {
   const selectedSubFolderAssetId = subFoldersAssetsViewList?.results?.filter(
     (asset) => asset.isSelected
   ) || []
+  const selectedSubFoldersViewListId = subFoldersViewList?.results?.filter((folder) => folder.isSelected) || [];
 
   useEffect(() => {
     if (
@@ -754,6 +758,8 @@ export default ({ getAssets }) => {
 
       if (operationFolder) {
         folderIds = operationFolder.id;
+      } else if (activeSortFilter?.mainFilter === "SubCollectionView" && !operationFolder) {
+        folderIds = selectedSubFoldersViewListId.map((item) => item.id).join(",")
       } else {
         folderIds = folders
           .filter((folder) => folder.isSelected)
@@ -762,7 +768,7 @@ export default ({ getAssets }) => {
       }
 
       // Select all assets without pagination
-      if (selectedAllFolders) {
+      if (selectedAllFolders || selectedAllSubFoldersAndAssets) {
         filters = {
           ...getAssetsFilters({
             replace: false,
@@ -781,7 +787,11 @@ export default ({ getAssets }) => {
         // @ts-ignore
         delete filters.page;
       }
+      if (selectedAllSubFoldersAndAssets && activeSortFilter?.mainFilter === "SubCollectionView") {
+        filters["parent_id"] = activeSubFolders;
+      }
       filters["name"] = name;
+      console.log(filters, "activeSubFolders")
       return await folderApi.getShareUrl(
         {
           folderIds,
@@ -796,11 +806,11 @@ export default ({ getAssets }) => {
 
   const getSharedCollectionCount = () => {
     let count = 1;
-
-    if (!operationFolder) {
-      count = folders.filter((folder) => folder.isSelected).length;
+    if (activeSortFilter?.mainFilter === "SubCollectionView" && !operationFolder) {
+      count = selectedSubFoldersViewListId?.length
+    } else if (!operationFolder) {
+      count = selectedFolders?.length;
     }
-
     return count;
   };
 

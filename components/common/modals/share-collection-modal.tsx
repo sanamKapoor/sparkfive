@@ -39,7 +39,7 @@ const ShareCollectionModal = ({
   itemsAmount = 0,
   shareAssets,
   title = "",
-  getShareLink = (name) => {},
+  getShareLink = (name) => { },
   currentShareLink = undefined,
 }) => {
   const { setIsLoading } = useContext(LoadingContext);
@@ -373,8 +373,8 @@ const ShareCollectionModal = ({
         title
           ? title
           : itemsAmount === 1
-          ? `Share 1 collection`
-          : `Share portal`
+            ? `Share 1 collection`
+            : `Share portal`
       }
       disabledConfirm={!name}
       additionalClasses={["visible-block collection-share-modal"]}
@@ -436,7 +436,7 @@ const ShareCollectionModal = ({
                     ? `${process.env.CLIENT_BASE_URL}/collections/${collectionLink}`
                     : ""
                 }
-                onChange={() => {}}
+                onChange={() => { }}
                 styleType={"regular-short"}
               />
 
@@ -632,9 +632,8 @@ const ShareCollectionModal = ({
                   />
                 </div>
                 <div
-                  className={`col-50 d-flex align-items-center ${
-                    expiredPeriod?.value === 0 ? "flex-direction-column" : ""
-                  }`}
+                  className={`col-50 d-flex align-items-center ${expiredPeriod?.value === 0 ? "flex-direction-column" : ""
+                    }`}
                 >
                   {expiredPeriod?.value === 0 && (
                     <div className={"row w-100 m-b-5"}>
@@ -666,9 +665,8 @@ const ShareCollectionModal = ({
           )}
 
           <div
-            className={`${styles["input-wrapper"]} ${
-              sharable || isAdmin() ? "" : "m-b-6rem"
-            }`}
+            className={`${styles["input-wrapper"]} ${sharable || isAdmin() ? "" : "m-b-6rem"
+              }`}
           >
             <div className={`${styles.title}`}>Share from Sparkfive</div>
             <div className={styles["row-field-content"]}>
@@ -720,13 +718,26 @@ const ShareCollectionModal = ({
               </div>
             </div>
           )}
+          {/* filter values code starts from here */}
+          <div className={`${styles["filter-value-wrapper"]} ${styles["input-wrapper"]}`}>
+            <div className={`${styles.title}`}>
+              <p>Filter values</p>
+              <IconClickable
+                src={Utilities.downarrowThin}
+                // src={Utilities.uparrowThin}
+                additionalClass={styles["arrow-icon"]}
+              />
+            </div>
+
+          </div>
+
 
           {isAdmin() && (
             <div className={`${styles["input-wrapper"]}`}>
               <div className={`${styles.title}`}>
                 <p>Upload Logo</p>
                 <IconClickable
-                  src={Utilities.arrowBlue}
+                  src={Utilities.downarrowThin}
                   additionalClass={styles["arrow-icon"]}
                 />
               </div>
