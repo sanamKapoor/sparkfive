@@ -33,9 +33,9 @@ import RenameModal from "../../common/modals/rename-modal";
 import SpinnerOverlay from "../../common/spinners/spinner-overlay";
 import NestedSidenav from "../../nested-subcollection-sidenav/nested-sidenav";
 import UploadStatusOverlayAssets from "../../upload-status-overlay-assets";
-import SearchOverlay from "../search-overlay-assets";
 import styles from "./index.module.css";
 
+import { initialActiveSortFilters } from "../../../config/data/filter";
 // Components
 
 const AssetsLibrary = () => {
@@ -266,9 +266,7 @@ const AssetsLibrary = () => {
     if (firstLoaded && activeFolder) {
       setActiveSortFilter({
         ...activeSortFilter,
-        mainFilter: activeFolder
-          ? "all"
-          : activeSortFilter.mainFilter,
+        mainFilter: activeFolder ? "all" : activeSortFilter.mainFilter,
       });
     }
   }, [activeFolder]);
@@ -278,8 +276,7 @@ const AssetsLibrary = () => {
       getAssets();
     } else if (needsFetch === "folders") {
       getFolders();
-    }
-    else if (needsFetch === "SubCollectionView") {
+    } else if (needsFetch === "SubCollectionView") {
       getSubCollectionsFolderData(true, 5);
       getSubCollectionsAssetData();
     }
@@ -305,6 +302,12 @@ const AssetsLibrary = () => {
 
     if (selectedAllSubFoldersAndAssets)
       setSelectedAllSubFoldersAndAssets(false);
+
+    setActiveSortFilter({
+      ...activeSortFilter,
+      ...initialActiveSortFilters,
+      ...DEFAULT_CUSTOM_FIELD_FILTERS(activeSortFilter),
+    });
   }, [activeMode]);
 
   useEffect(() => {
@@ -968,13 +971,19 @@ const AssetsLibrary = () => {
   const selectedFolders = folders.filter((folder) => folder.isSelected);
 
   const selectedSubFoldersAndAssets = {
-    assets: subFoldersAssetsViewList?.results?.filter(
-      (asset) => asset.isSelected
-    ) || [],
-    folders: subFoldersViewList?.results?.filter((folder) => folder.isSelected) || [],
+    assets:
+      subFoldersAssetsViewList?.results?.filter((asset) => asset.isSelected) ||
+      [],
+    folders:
+      subFoldersViewList?.results?.filter((folder) => folder.isSelected) || [],
   };
 
-  const viewFolder = async (id: string, subCollection: boolean, nestedSubFolderId = "", folderName = "") => {
+  const viewFolder = async (
+    id: string,
+    subCollection: boolean,
+    nestedSubFolderId = "",
+    folderName = ""
+  ) => {
     if (!subCollection) {
       if (nestedSubFolderId) {
         await getSubCollectionsFolderData(true, 50, nestedSubFolderId);
@@ -985,7 +994,11 @@ const AssetsLibrary = () => {
     } else {
       setActiveFolder("")
       setActiveSubFolders(id);
-      setHeaderName(folderName ? folderName : folders.find((folder: any) => folder.id === id)?.name || "");
+      setHeaderName(
+        folderName
+          ? folderName
+          : folders.find((folder: any) => folder.id === id)?.name || ""
+      );
     }
   };
 
@@ -1115,8 +1128,8 @@ const AssetsLibrary = () => {
                 </div>
                 <div
                   className={`${sidebarOpen
-                    ? styles["grid-wrapper-web"]
-                    : styles["grid-wrapper"]
+                      ? styles["grid-wrapper-web"]
+                      : styles["grid-wrapper"]
                     } ${activeFolder && styles["active-breadcrumb-item"]}`}
                 >
                   {activeMode !== "folders" && (
@@ -1150,9 +1163,9 @@ const AssetsLibrary = () => {
                     )}
                   </DropzoneProvider>
                 </div>
-              </div >
-            </div >
-          </main >
+              </div>
+            </div>
+          </main>
           <AssetOps />
         </>
       ) : (
@@ -1168,36 +1181,30 @@ const AssetsLibrary = () => {
           folders.find((folder) => folder.id === activeFolder)?.name
         }
       />
-      {
-        uploadDetailOverlay && (
-          <UploadStatusOverlayAssets
-            closeOverlay={() => {
-              setUploadDetailOverlay(false);
-            }}
-          />
-        )
-      }
-      {
-        currentViewAsset && (
-          <DetailOverlay
-            initiaParams={{ side: "detail" }}
-            asset={currentViewAsset.asset}
-            realUrl={currentViewAsset?.realUrl}
-            thumbailUrl={currentViewAsset?.thumbailUrl}
-            isShare={false}
-            closeOverlay={(assetData) => {
-              setDetailOverlayId(undefined);
-              setCurrentViewAsset(assetData);
-            }}
-            outsideDetailOverlay={true}
-          />
-        )
-      }
-      {
-        showOverlayLoader && (
-          <SpinnerOverlay text="Account updating...this process might take a few seconds. Thank you for your patience." />
-        )
-      }
+      {uploadDetailOverlay && (
+        <UploadStatusOverlayAssets
+          closeOverlay={() => {
+            setUploadDetailOverlay(false);
+          }}
+        />
+      )}
+      {currentViewAsset && (
+        <DetailOverlay
+          initiaParams={{ side: "detail" }}
+          asset={currentViewAsset.asset}
+          realUrl={currentViewAsset?.realUrl}
+          thumbailUrl={currentViewAsset?.thumbailUrl}
+          isShare={false}
+          closeOverlay={(assetData) => {
+            setDetailOverlayId(undefined);
+            setCurrentViewAsset(assetData);
+          }}
+          outsideDetailOverlay={true}
+        />
+      )}
+      {showOverlayLoader && (
+        <SpinnerOverlay text="Account updating...this process might take a few seconds. Thank you for your patience." />
+      )}
     </>
   );
 };

@@ -29,8 +29,7 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
   attributes,
   setAttributes,
 }) => {
-  const { activeSortFilter, setActiveSortFilter, setRenderedFlag } =
-    useContext(FilterContext);
+  const { activeSortFilter, setRenderedFlag } = useContext(FilterContext);
   const {
     activeAttribute,
     loading,
@@ -39,7 +38,7 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
     values,
     filteredOptions,
     setFilteredOptions,
-  } = useFilters(attributes, activeSortFilter, setActiveSortFilter);
+  } = useFilters(attributes);
 
   const { advancedConfig } = useContext(UserContext);
 

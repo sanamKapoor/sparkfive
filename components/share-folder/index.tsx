@@ -558,7 +558,6 @@ const ShareFolderMain = () => {
   };
 
   const viewFolder = async (id: string, subCollection: boolean, nestedSubFolderId = "", folderName = "") => {
-    activeSortFilter.mainFilter, folderInfo?.singleSharedCollectionId)
     if (
       ((activeSortFilter.mainFilter === "SubCollectionView" &&
         activeSubFolders !== "") || subCollection && Boolean(folderInfo?.singleSharedCollectionId))

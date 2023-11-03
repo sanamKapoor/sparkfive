@@ -1,7 +1,11 @@
 import React, { useContext, useState } from "react";
 import { Utilities } from "../../../assets";
+import { filterKeyMap } from "../../../config/data/filter";
 import { FilterContext } from "../../../context";
-import { CommonFilterProps } from "../../../interfaces/filters";
+import {
+  CommonFilterProps,
+  FilterAttributeVariants,
+} from "../../../interfaces/filters";
 import IconClickable from "../buttons/icon-clickable";
 import Divider from "../filter-option-popup/divider";
 import OptionDataItem from "../filter-option-popup/option-data-item";
@@ -20,6 +24,8 @@ const ResolutionFilter: React.FC<ResolutionFilterProps> = ({
     !!activeSortFilter?.filterResolutions.find((item) => item.dpi === "highres")
   );
 
+  const highResLabel = "All High-Res (above 250 DPI)";
+
   const onSelectHighResFilter = () => {
     setHighResActive(true);
     onSelectResolution("highres");
@@ -31,40 +37,64 @@ const ResolutionFilter: React.FC<ResolutionFilterProps> = ({
   };
 
   const onSelectResolution = (val: number | "highres") => {
+    const filterKey = filterKeyMap[FilterAttributeVariants.RESOLUTION];
     if (val !== "highres") {
       const index = options.findIndex((value) => value.dpi === val);
       if (index !== -1) {
         options[index].isSelected = true;
       }
     } else {
-      options = [...options, { dpi: "highres" }];
+      options = [
+        ...options,
+        {
+          value: "highres",
+          dpi: "highres",
+          label: highResLabel,
+          isSelected: true,
+        },
+      ];
     }
 
     setOptions([...options]);
 
     setFilters((prevState) => {
+      let newState;
+
+      if (
+        activeSortFilter[filterKey] &&
+        activeSortFilter[filterKey].length > 0
+      ) {
+        newState = [
+          ...new Set([
+            ...activeSortFilter[filterKey],
+            ...((prevState && prevState[filterKey]) ?? []),
+            {
+              value: val,
+              dpi: val,
+              label: val === "highres" ? highResLabel : val,
+            },
+          ]),
+        ];
+      } else {
+        newState = [
+          ...((prevState && prevState[filterKey]) ?? []),
+          {
+            value: val,
+            dpi: val,
+            label: val === "highres" ? highResLabel : val,
+          },
+        ];
+      }
+
       return {
-        filterResolutions:
-          prevState?.filterResolutions?.length > 0
-            ? [
-                ...prevState?.filterResolutions,
-                {
-                  value: val,
-                  dpi: val,
-                },
-              ]
-            : [
-                {
-                  value: val,
-                  dpi: val,
-                },
-              ],
+        [filterKey]: newState,
       };
     });
   };
 
   const onDeselectResolution = (val: number | "highres") => {
     const index = options.findIndex((value) => value.dpi === val);
+
     if (index !== -1) {
       options[index].isSelected = false;
     }
@@ -72,7 +102,11 @@ const ResolutionFilter: React.FC<ResolutionFilterProps> = ({
 
     let newFilters = options
       .filter((item) => item.isSelected)
-      .map((item) => ({ value: item.dpi, dpi: item.dpi }));
+      .map((item) => ({
+        value: item.dpi,
+        dpi: item.dpi,
+        label: val === "highres" ? highResLabel : item.dpi,
+      }));
 
     setFilters({
       filterResolutions: newFilters,
@@ -93,7 +127,7 @@ const ResolutionFilter: React.FC<ResolutionFilterProps> = ({
             onClick={onSelectHighResFilter}
           />
         )}
-        <span>All High-Res (above 250 DPI)</span>
+        <span>{highResLabel}</span>
       </div>
       <div className={styles["outer-wrapper"]}>
         {options.map((item) =>

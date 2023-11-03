@@ -6,4 +6,5 @@
 
 .container div{
   box-shadow: none;
+  cursor: pointer;
 }
