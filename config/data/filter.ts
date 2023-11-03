@@ -109,5 +109,5 @@ export const labelKeyMap = {
   lastUpdated: "label",
   dateUploaded: "label",
   filterOrientations: "name",
-  filterResolutions: "dpi",
+  filterResolutions: "label",
 };

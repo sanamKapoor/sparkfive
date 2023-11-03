@@ -208,18 +208,29 @@ const useFilters = (attributes, activeSortFilter, setActiveSortFilter) => {
 
         case FilterAttributeVariants.FILE_TYPES:
           values = await fetchValues(data.id, fetchAssetFileExtensions, [
-            "value",
+            "name",
           ]);
           break;
 
         case FilterAttributeVariants.ORIENTATION:
-          values = await fetchValues(data.id, fetchAssetOrientations, [
-            "value",
-          ]);
+          values = await fetchValues(data.id, fetchAssetOrientations, ["name"]);
           break;
 
         case FilterAttributeVariants.RESOLUTION:
-          values = await fetchAssetResolutions();
+          values = await fetchValues(data.id, fetchAssetResolutions, ["dpi"]);
+          values = values.map((item) => {
+            if (item.dpi === "highres") {
+              return {
+                ...item,
+                label: "All High-Res (above 250 DPI)",
+              };
+            } else {
+              return {
+                ...item,
+                label: item.dpi,
+              };
+            }
+          });
           break;
 
         case FilterAttributeVariants.DIMENSIONS:
