@@ -1,6 +1,6 @@
-import axios from 'axios'
+import axios from "axios";
 
-const teamUrl = `${process.env.SERVER_BASE_URL}/teams`
+const teamUrl = `${process.env.SERVER_BASE_URL}/teams`;
 
 export default {
   getTeam: () => axios.get(teamUrl),
@@ -9,18 +9,19 @@ export default {
   getTeamMembers: () => axios.get(`${teamUrl}/members`),
   patchTeamMember: (id, updatedata) => axios.patch(`${teamUrl}/members/${id}`, updatedata),
   disableTeamMember: (id) => axios.patch(`${teamUrl}/members/${id}/disable`),
-  uploadPhoto: (formData) => axios.post(`${teamUrl}/photo`, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-  }),
+  uploadPhoto: (formData) =>
+    axios.post(`${teamUrl}/photo`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }),
   getRoles: () => axios.get(`${teamUrl}/roles`),
   getRoleDetail: (id) => axios.get(`${teamUrl}/roles/${id}`),
   deleteRole: (id) => axios.delete(`${teamUrl}/roles/${id}`),
   createCustomRole: (data) => axios.post(`${teamUrl}/roles`, data),
   editRole: (id, data) => axios.put(`${teamUrl}/roles/${id}`, data),
-  saveAdvanceConfigurations:(data) => axios.put(`${teamUrl}/saveAdvanceConfigurations`, data),
-  getAdvanceOptions:() => axios.get(`${teamUrl}/advanceConfigurations`),
+  saveAdvanceConfigurations: (data) => axios.put(`${teamUrl}/saveAdvanceConfigurations`, data),
+  getAdvanceOptions: () => axios.get(`${teamUrl}/advanceConfigurations`),
   getOcrTags: () => axios.get(`${teamUrl}/ocr-tags`),
   addOcrTag: (data) => axios.post(`${teamUrl}/ocr-tags`, data),
   removeOcrTag: (id) => axios.delete(`${teamUrl}/ocr-tags/${id}`),
@@ -33,4 +34,5 @@ export default {
   getOcrCollections: () => axios.get(`${teamUrl}/ocr-folders`),
   addOcrCollection: (data) => axios.post(`${teamUrl}/ocr-folders`, data),
   removeOcrCollection: (id) => axios.delete(`${teamUrl}/ocr-folders/${id}`),
-}
+  updateTheme: (patchData) => axios.put(`${teamUrl}/theme`, patchData),
+};

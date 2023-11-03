@@ -12,15 +12,18 @@ export const UserContext = createContext({
   setAdvancedConfig: (config) => {},
   fetchUser: (redirectUser) => {},
   logOut: () => {},
-  hasPermission: (requiredPermissions) => {
+  hasPermission: (requiredPermissions, requiredTeamSetting) => {
     return true;
   },
   afterAuth: ({ twoFactor, token }) => {},
+  initialLoadFinished: false,
   vanityCompanyInfo: undefined,
   cdnAccess: false,
-  advancedConfig: {},
-  setAdvancedConfig: (conf) => {},
   transcriptAccess: false,
+  logo: "",
+  setLogo: (logo) => {},
+  logoId: "",
+  resetLogo: () => {},
 });
 
 export const ThemeContext = createContext({
@@ -92,16 +95,7 @@ export const AssetContext = createContext({
   setUploadingType: (uploadingType) => {},
   uploadDetailOverlay: false,
   setUploadDetailOverlay: (show) => {},
-  reUploadAsset: (
-    i,
-    assets,
-    currentDataClone,
-    totalSize,
-    retryList,
-    folderId,
-    folderGroups,
-    subFolderAutoTag
-  ) => {},
+  reUploadAsset: (i, assets, currentDataClone, totalSize, retryList, folderId, folderGroups, subFolderAutoTag) => {},
 
   uploadingFileName: "",
   setUploadingFileName: (name) => {},
@@ -226,7 +220,7 @@ export const ShareContext = createContext({
   folderInfo: undefined,
   setFolderInfo: (folderInfo) => {},
   activePasswordOverlay: true,
-  setActivePasswordOverlay: (value) => {}
+  setActivePasswordOverlay: (value) => {},
 });
 
 export const SocketContext = createContext({

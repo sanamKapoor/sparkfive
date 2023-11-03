@@ -9,14 +9,7 @@ import IconClickable from "../../common/buttons/icon-clickable";
 import Input from "../../common/inputs/input";
 import Base from "../../common/modals/base";
 
-const MoveModal = ({
-  modalIsOpen,
-  closeModal,
-  itemsAmount,
-  moveAssets,
-  createFolder,
-  confirmText = "Add",
-}) => {
+const MoveModal = ({ modalIsOpen, closeModal, itemsAmount, moveAssets, createFolder, confirmText = "Add" }) => {
   const [folders, setFolders] = useState([]);
   const [selectedFolder, setSelectedFolder] = useState([]);
   const [newFolderName, setNewFolderName] = useState("");
@@ -73,24 +66,13 @@ const MoveModal = ({
     >
       <ul className={styles.list}>
         {folders.map((folder) => (
-          <li
-            key={folder.id}
-            onClick={() =>
-              toggleSelected(folder.id, !selectedFolder.includes(folder.id))
-            }
-          >
+          <li key={folder.id} onClick={() => toggleSelected(folder.id, !selectedFolder.includes(folder.id))}>
             {selectedFolder.includes(folder.id) ? (
-              <IconClickable
-                src={Utilities.radioButtonEnabled}
-                additionalClass={styles["select-icon"]}
-              />
+              <IconClickable src={Utilities.radioButtonEnabled} additionalClass={styles["select-icon"]} />
             ) : (
-              <IconClickable
-                src={Utilities.radioButtonNormal}
-                additionalClass={styles["select-icon"]}
-              />
+              <IconClickable src={Utilities.radioButtonNormal} additionalClass={styles["select-icon"]} />
             )}
-            <IconClickable src={Assets.folder} />
+            <IconClickable SVGElement={Assets.folder} />
             <div className={styles.name}>{folder.name}</div>
           </li>
         ))}
@@ -98,10 +80,7 @@ const MoveModal = ({
       <div className={styles["folder-wrapper"]}>
         {folderInputActive ? (
           <form onSubmit={onSubmit}>
-            <div
-              className={styles["create-new"]}
-              onClick={() => setFolderInputActive(false)}
-            >
+            <div className={styles["create-new"]} onClick={() => setFolderInputActive(false)}>
               X
             </div>
             <Input
@@ -118,10 +97,7 @@ const MoveModal = ({
             />
           </form>
         ) : (
-          <span
-            onClick={() => setFolderInputActive(true)}
-            className={styles["create-new"]}
-          >
+          <span onClick={() => setFolderInputActive(true)} className={styles["create-new"]}>
             + Create New Collection
           </span>
         )}

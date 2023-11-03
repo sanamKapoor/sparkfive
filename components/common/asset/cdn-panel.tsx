@@ -28,9 +28,7 @@ const options = {
 
 const CdnPanel = ({ assetDetail }) => {
   const mainUrl = process.env.SERVER_BASE_URL;
-  const [link, setLink] = useState(
-    encodeURI(`${mainUrl}/assets/cdn/${assetDetail.storageId}`)
-  );
+  const [link, setLink] = useState(encodeURI(`${mainUrl}/assets/cdn/${assetDetail.storageId}`));
   const [type, setType] = useState({ label: "Select", value: "" });
   const [dimension, setDimension] = useState({
     height: assetDetail.dimensionHeight,
@@ -39,12 +37,7 @@ const CdnPanel = ({ assetDetail }) => {
   });
   const [isLocked, setIsLocked] = useState(true);
 
-  const makeLink = ({
-    _type,
-    value = 0,
-    secondValue = null,
-    format = null,
-  }) => {
+  const makeLink = ({ _type, value = 0, secondValue = null, format = null }) => {
     const secondType = _type === "height" ? "width" : "height";
 
     const qs =
@@ -99,11 +92,7 @@ const CdnPanel = ({ assetDetail }) => {
       <div className={`${styles.block} ${styles.mb}`}>
         <h3 className={styles.subtitle}>CDN Link</h3>
         <div className={`${styles.input} ${styles.blockInput}`}>{link}</div>
-        <Button
-          onClick={copyToClipboard}
-          className={styles.btn}
-          text="Copy Link"
-        />
+        <Button onClick={copyToClipboard} className={styles.btn} text="Copy Link" />
       </div>
 
       {assetDetail.type !== "video" && assetDetail.type !== "pdf" && (
@@ -111,8 +100,7 @@ const CdnPanel = ({ assetDetail }) => {
           <h3 className={styles.subtitle}>Intelligent CDN</h3>
 
           <div className={styles.description}>
-            Modify the size and/or format and the CDN link will update for
-            various use cases
+            Modify the size and/or format and the CDN link will update for various use cases
           </div>
 
           <div className={styles.aspectRatioContainer}>
@@ -126,20 +114,20 @@ const CdnPanel = ({ assetDetail }) => {
             </div>
 
             <div onClick={() => setIsLocked(!isLocked)} className={styles.lock}>
-              <img
-                width="30px"
-                height="30px"
-                src={isLocked ? Utilities.lockClosed : Utilities.lockOpened}
-                alt={isLocked ? "Locked" : "Not Locked"}
-              />
+              {isLocked && <Utilities.lockClosed width="20px" height="30px" />}
+              {!isLocked && <Utilities.lockOpened width="20px" height="30px" />}
+              {/*<img*/}
+              {/*  width="30px"*/}
+              {/*  height="30px"*/}
+              {/*  src={isLocked ? Utilities.lockClosed : Utilities.lockOpened}*/}
+              {/*  alt={isLocked ? "Locked" : "Not Locked"}*/}
+              {/*/>*/}
             </div>
 
             <div>
               <h4 className={styles.controlTitle}>Height (px)</h4>
               <Input
-                onChange={(e) =>
-                  onInputChange(Number(e.target.value), "height")
-                }
+                onChange={(e) => onInputChange(Number(e.target.value), "height")}
                 value={dimension.height}
                 additionalClasses={`${styles.input} ${styles.ratioInput}`}
               />
@@ -168,8 +156,7 @@ const CdnPanel = ({ assetDetail }) => {
           )}
 
           <div className={styles.description}>
-            Any time you update the asset these links will auto update to
-            capture these changes
+            Any time you update the asset these links will auto update to capture these changes
           </div>
         </div>
       )}

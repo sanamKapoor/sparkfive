@@ -56,9 +56,7 @@ const ShareCollectionModal = ({
   const [isPublic, setIsPublic] = useState(true);
   const [expired, setExpired] = useState(false);
   const [expiredPeriod, setExpiredPeriod] = useState(expireOptions[1]);
-  const [expiredAt, setExpiredAt] = useState(
-    getDayToCurrentDate(expireOptions[1].value)
-  );
+  const [expiredAt, setExpiredAt] = useState(getDayToCurrentDate(expireOptions[1].value));
   const [shareJWT, setShareJWT] = useState("");
   const [hash, setHash] = useState("");
   const [sharable, setSharable] = useState(false);
@@ -108,10 +106,7 @@ const ShareCollectionModal = ({
         setShareJWT(data.currentSharedLinks.sharedJwt);
         setHash(data.currentSharedLinks.hash);
         setExpiredPeriod(
-          expireOptions.filter(
-            (item) =>
-              item.value === parseInt(data.currentSharedLinks.expiredPeriod)
-          )[0]
+          expireOptions.filter((item) => item.value === parseInt(data.currentSharedLinks.expiredPeriod))[0],
         );
         if (data.currentSharedLinks.expiredAt) {
           setExpiredAt(new Date(data.currentSharedLinks.expiredAt));
@@ -119,11 +114,7 @@ const ShareCollectionModal = ({
           setExpiredAt(null);
         }
 
-        setExpired(
-          data.currentSharedLinks.expired !== undefined
-            ? data.currentSharedLinks.expired
-            : false
-        ); // default is false
+        setExpired(data.currentSharedLinks.expired !== undefined ? data.currentSharedLinks.expired : false); // default is false
         setName(data.currentSharedLinks.name);
 
         if (data.currentSharedLinks.name) {
@@ -133,18 +124,10 @@ const ShareCollectionModal = ({
         setPassword(data.currentSharedLinks.password);
         setRecipients(data.currentSharedLinks.sharedEmails);
         setShareId(data.currentSharedLinks.id);
-        setIsPublic(
-          data.currentSharedLinks.isPublic !== undefined
-            ? data.currentSharedLinks.isPublic
-            : true
-        ); // default is true
+        setIsPublic(data.currentSharedLinks.isPublic !== undefined ? data.currentSharedLinks.isPublic : true); // default is true
         setBasic(!data.currentSharedLinks.team.advancedCollectionShareLink); // default is true
         setMessage(data.currentSharedLinks.message);
-        setSharable(
-          data.currentSharedLinks.sharable !== undefined
-            ? data.currentSharedLinks.sharable
-            : false
-        ); // default is false
+        setSharable(data.currentSharedLinks.sharable !== undefined ? data.currentSharedLinks.sharable : false); // default is false
         setLogo(data.currentSharedLinks.logo);
 
         if (showInternalLoading) {
@@ -180,11 +163,7 @@ const ShareCollectionModal = ({
     if (!data.expiredPeriod) {
       setExpiredPeriod(expireOptions[expireOptions.length - 1]);
     } else {
-      setExpiredPeriod(
-        expireOptions.filter(
-          (item) => item.value === parseInt(data.expiredPeriod)
-        )[0]
-      );
+      setExpiredPeriod(expireOptions.filter((item) => item.value === parseInt(data.expiredPeriod))[0]);
     }
 
     if (data.expiredAt) {
@@ -237,7 +216,7 @@ const ShareCollectionModal = ({
     expiredPeriodValue = undefined,
     expiredAtValue = undefined,
     sharableValue = undefined,
-    logoA = {}
+    logoA = {},
   ) => {
     setIsLoading(true);
 
@@ -257,21 +236,15 @@ const ShareCollectionModal = ({
           password,
           isPublic: isPublicValue === undefined ? isPublic : isPublicValue,
           expired: expiredValue === undefined ? expired : expiredValue,
-          expiredPeriod:
-            expiredPeriodValue === undefined
-              ? expiredPeriod
-              : expiredPeriodValue,
+          expiredPeriod: expiredPeriodValue === undefined ? expiredPeriod : expiredPeriodValue,
           expiredAt: expiredAtValue === undefined ? expiredAt : expiredAtValue,
           sharable: sharableValue === undefined ? sharable : sharableValue,
           shareId,
           type: "folder",
-          logoId:
-            Object.keys(logoA).length !== 0
-              ? logoA?.id
-              : logo?.asset?.id ?? null,
+          logoId: Object.keys(logoA).length !== 0 ? logoA?.id : logo?.asset?.id ?? null,
         },
         false,
-        false
+        false,
       );
 
       if (field === "name") {
@@ -304,13 +277,7 @@ const ShareCollectionModal = ({
       // Switch from off
       if (currentValue === false) {
         // Set 60 days expired as default
-        saveChanges(
-          "",
-          undefined,
-          nextValue,
-          expireOptions[1],
-          getDayToCurrentDate(expireOptions[1].value)
-        );
+        saveChanges("", undefined, nextValue, expireOptions[1], getDayToCurrentDate(expireOptions[1].value));
         setExpiredPeriod(expireOptions[1]);
         setExpiredAt(getDayToCurrentDate(expireOptions[1].value));
       } else {
@@ -337,15 +304,7 @@ const ShareCollectionModal = ({
   };
 
   const changeLogo = (value) => {
-    saveChanges(
-      "",
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      value
-    );
+    saveChanges("", undefined, undefined, undefined, undefined, undefined, value);
   };
 
   useEffect(() => {
@@ -367,16 +326,8 @@ const ShareCollectionModal = ({
     <Base
       modalIsOpen={modalIsOpen}
       closeModal={closemoveModal}
-      confirmText={
-        sharable ? (currentShareLink ? "Save Changes" : "Send Email") : ""
-      }
-      headText={
-        title
-          ? title
-          : itemsAmount === 1
-          ? `Share 1 collection`
-          : `Share portal`
-      }
+      confirmText={sharable ? (currentShareLink ? "Save Changes" : "Send Email") : ""}
+      headText={title ? title : itemsAmount === 1 ? `Share 1 collection` : `Share portal`}
       disabledConfirm={!name}
       additionalClasses={["visible-block collection-share-modal"]}
       showCancel={false}
@@ -400,9 +351,7 @@ const ShareCollectionModal = ({
       {loading && <Spinner className={styles["spinner"]} />}
       {!loading && (
         <div className={styles["wrapper"]}>
-          <div
-            className={`${styles["input-wrapper"]} d-flex align-items-center`}
-          >
+          <div className={`${styles["input-wrapper"]} d-flex align-items-center`}>
             <Input
               value={name}
               onChange={(e) => {
@@ -425,18 +374,12 @@ const ShareCollectionModal = ({
           </div>
 
           {basic && (
-            <div
-              className={`${styles["input-wrapper"]} d-flex align-items-center p-t-0`}
-            >
+            <div className={`${styles["input-wrapper"]} d-flex align-items-center p-t-0`}>
               <Input
                 additionalClasses={"w-50 m-r-15"}
                 disabled={!collectionLink || !currentName}
                 placeholder={""}
-                value={
-                  currentName
-                    ? `${process.env.CLIENT_BASE_URL}/collections/${collectionLink}`
-                    : ""
-                }
+                value={currentName ? `${process.env.CLIENT_BASE_URL}/collections/${collectionLink}` : ""}
                 onChange={() => {}}
                 styleType={"regular-short"}
               />
@@ -445,9 +388,7 @@ const ShareCollectionModal = ({
                 className={"cursor-pointer"}
                 onClick={() => {
                   if (currentName) {
-                    copy(
-                      `${process.env.CLIENT_BASE_URL}/collections/${collectionLink}`
-                    );
+                    copy(`${process.env.CLIENT_BASE_URL}/collections/${collectionLink}`);
                     toastUtils.bottomSuccess("Link copied");
                   }
                 }}
@@ -458,9 +399,7 @@ const ShareCollectionModal = ({
           )}
 
           {!basic && (
-            <div
-              className={`${styles["input-wrapper"]} d-flex align-items-center p-t-0`}
-            >
+            <div className={`${styles["input-wrapper"]} d-flex align-items-center p-t-0`}>
               <Input
                 additionalClasses={"w-50 m-r-15"}
                 disabled={!url || !currentName}
@@ -500,11 +439,7 @@ const ShareCollectionModal = ({
               <div className={styles["field-radio-wrapper"]}>
                 <div className={`${styles["radio-button-wrapper"]} m-r-15`}>
                   <IconClickable
-                    src={
-                      isPublic
-                        ? Utilities.radioButtonEnabled
-                        : Utilities.radioButtonNormal
-                    }
+                    src={isPublic ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                     additionalClass={styles["select-icon"]}
                     onClick={() => {
                       changeIsPublic(true);
@@ -515,28 +450,20 @@ const ShareCollectionModal = ({
 
                 <div className={`${styles["radio-button-wrapper"]} m-r-15`}>
                   <IconClickable
-                    src={
-                      !isPublic
-                        ? Utilities.radioButtonEnabled
-                        : Utilities.radioButtonNormal
-                    }
+                    src={!isPublic ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                     additionalClass={styles["select-icon"]}
                     onClick={() => {
                       changeIsPublic(false);
                     }}
                   />
-                  <div className={"font-12 m-l-15"}>
-                    Restrict access by email address/password
-                  </div>
+                  <div className={"font-12 m-l-15"}>Restrict access by email address/password</div>
                 </div>
               </div>
             </div>
           </div>
 
           {!isPublic && (
-            <div
-              className={`${styles["input-wrapper"]} d-flex align-items-center p-l-30`}
-            >
+            <div className={`${styles["input-wrapper"]} d-flex align-items-center p-l-30`}>
               <TextArea
                 value={recipients}
                 placeholder={"Emails separated with comma"}
@@ -550,9 +477,7 @@ const ShareCollectionModal = ({
           )}
 
           {!isPublic && (
-            <div
-              className={`${styles["input-wrapper"]} d-flex align-items-center p-l-30`}
-            >
+            <div className={`${styles["input-wrapper"]} d-flex align-items-center p-l-30`}>
               <Input
                 value={password}
                 placeholder={"Password"}
@@ -584,11 +509,7 @@ const ShareCollectionModal = ({
               <div className={styles["field-radio-wrapper"]}>
                 <div className={`${styles["radio-button-wrapper"]} m-r-15`}>
                   <IconClickable
-                    src={
-                      expired
-                        ? Utilities.radioButtonEnabled
-                        : Utilities.radioButtonNormal
-                    }
+                    src={expired ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                     additionalClass={styles["select-icon"]}
                     onClick={() => {
                       changeExpired(expired, true);
@@ -599,11 +520,7 @@ const ShareCollectionModal = ({
 
                 <div className={`${styles["radio-button-wrapper"]} m-r-15`}>
                   <IconClickable
-                    src={
-                      !expired
-                        ? Utilities.radioButtonEnabled
-                        : Utilities.radioButtonNormal
-                    }
+                    src={!expired ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                     additionalClass={styles["select-icon"]}
                     onClick={() => {
                       changeExpired(expired, false);
@@ -616,9 +533,7 @@ const ShareCollectionModal = ({
           </div>
 
           {expired && (
-            <div
-              className={`${styles["input-wrapper"]} d-flex align-items-center`}
-            >
+            <div className={`${styles["input-wrapper"]} d-flex align-items-center`}>
               <div className={`${styles["row-field-content"]} row w-100`}>
                 <div className={"col-50"}>
                   <Select
@@ -658,29 +573,19 @@ const ShareCollectionModal = ({
                     </div>
                   )}
 
-                  <span className={"font-12 m-l-15 w-100"}>
-                    {expiredAt?.toDateString()}
-                  </span>
+                  <span className={"font-12 m-l-15 w-100"}>{expiredAt?.toDateString()}</span>
                 </div>
               </div>
             </div>
           )}
 
-          <div
-            className={`${styles["input-wrapper"]} ${
-              sharable || isAdmin() ? "" : "m-b-6rem"
-            }`}
-          >
+          <div className={`${styles["input-wrapper"]} ${sharable || isAdmin() ? "" : "m-b-6rem"}`}>
             <div className={`${styles.title}`}>Share from Sparkfive</div>
             <div className={styles["row-field-content"]}>
               <div className={styles["field-radio-wrapper"]}>
                 <div className={`${styles["radio-button-wrapper"]} m-r-15`}>
                   <IconClickable
-                    src={
-                      sharable
-                        ? Utilities.radioButtonEnabled
-                        : Utilities.radioButtonNormal
-                    }
+                    src={sharable ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                     additionalClass={styles["select-icon"]}
                     onClick={() => {
                       changeSharable(true);
@@ -691,11 +596,7 @@ const ShareCollectionModal = ({
 
                 <div className={`${styles["radio-button-wrapper"]} m-r-15`}>
                   <IconClickable
-                    src={
-                      !sharable
-                        ? Utilities.radioButtonEnabled
-                        : Utilities.radioButtonNormal
-                    }
+                    src={!sharable ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                     additionalClass={styles["select-icon"]}
                     onClick={() => {
                       changeSharable(false);
@@ -726,10 +627,7 @@ const ShareCollectionModal = ({
             <div className={`${styles["input-wrapper"]}`}>
               <div className={`${styles.title}`}>
                 <p>Upload Logo</p>
-                <IconClickable
-                  src={Utilities.arrowBlue}
-                  additionalClass={styles["arrow-icon"]}
-                />
+                <IconClickable SVGElement={Utilities.arrowBlue} additionalClass={styles["arrow-icon"]} />
               </div>
               <ShareIconFilesSearch onSelect={changeLogo} logo={logo} />
             </div>

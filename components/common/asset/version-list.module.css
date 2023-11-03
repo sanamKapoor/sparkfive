@@ -19,7 +19,7 @@
 }
 
 .item h6 {
-  color: var(--color-prim-navy);
+  color: var(--primary-color);
   font-size: 14px;
   font-weight: 400;
   margin: 0 0 10px;
@@ -84,6 +84,10 @@
 .item-actions-wrapper img {
   width: 16px;
   filter: brightness(0.1);
+}
+
+.item-actions-wrapper svg{
+  width: 16px;
 }
 
 .more ul {

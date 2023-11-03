@@ -24,6 +24,7 @@ import "../styles/slider.css";
 import "../styles/text.css";
 import "../styles/time-picker.css";
 import "../styles/toast.css";
+import "../styles/color-picker.css";
 // Import stripe as a side effect so it helps detect fraudulent activy
 import "@stripe/stripe-js";
 import { useRouter } from "next/router";

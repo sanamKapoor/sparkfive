@@ -27,7 +27,7 @@
     margin-bottom: 0;
     font-weight: 500;
     font-size: 14px;
-    color: var(--color-prim-navy);
+    color: var(--primary-color);
     text-align: left;
 }
 
@@ -45,7 +45,7 @@
 
 .clear-container {
     margin: 0 auto;
-    color: var(--color-prim-turquoise);
+    color: var(--secondary-color);
     margin-right: 10px;
     font-size: 12px;
     cursor: pointer;
@@ -62,7 +62,7 @@
     margin: 0;
     font-size: 14px;
     font-weight: 500;
-    color: var(--color-prim-navy);
+    color: var(--primary-color);
 }
 
 .expand-bar {

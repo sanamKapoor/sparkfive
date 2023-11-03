@@ -30,7 +30,7 @@
 .time-text {
     margin-right: 16px;
     padding: 4px 16px;
-    background-color: var(--color-sec-lightblue);
+    background-color: var(--additional-color);
     display: flex;
     align-items: center;
     color: var(--color-prim-navy);

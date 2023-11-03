@@ -64,9 +64,7 @@ const getDefaultDownloadImageType = (extension) => {
     foundExtension = "tiff";
   }
 
-  const existingExtension = defaultDownloadImageTypes.filter(
-    (type) => type.value === foundExtension
-  );
+  const existingExtension = defaultDownloadImageTypes.filter((type) => type.value === foundExtension);
 
   // Already existed
   if (existingExtension.length > 0) {
@@ -124,7 +122,7 @@ const DetailOverlay = ({
   initialParams,
   availableNext = true,
   outsideDetailOverlay = false,
-  sharedCode = ""
+  sharedCode = "",
 }) => {
   const { hasPermission } = useContext(UserContext);
   const { user, cdnAccess, transcriptAccess } = useContext(UserContext);
@@ -143,15 +141,8 @@ const DetailOverlay = ({
 
   const [activeSideComponent, setActiveSidecomponent] = useState("detail");
 
-  const {
-    assets,
-    setAssets,
-    folders,
-    needsFetch,
-    updateDownloadingStatus,
-    setDetailOverlayId,
-    setOperationAssets,
-  } = useContext(AssetContext);
+  const { assets, setAssets, folders, needsFetch, updateDownloadingStatus, setDetailOverlayId, setOperationAssets } =
+    useContext(AssetContext);
 
   const [sideOpen, setSideOpen] = useState(true);
 
@@ -163,10 +154,7 @@ const DetailOverlay = ({
   const [versionThumbnailUrl, setVersionThumbnailUrl] = useState(thumbailUrl);
   const [previewUrl, setPreviewUrl] = useState(null);
 
-  const resizeSizes = getResizeSize(
-    currentAsset.dimensionWidth,
-    currentAsset.dimensionHeight
-  );
+  const resizeSizes = getResizeSize(currentAsset.dimensionWidth, currentAsset.dimensionHeight);
 
   const [detailPosSize, setDetailPosSize] = useState({
     x: 0,
@@ -191,9 +179,7 @@ const DetailOverlay = ({
   };
 
   // For resize and cropping
-  const [downloadImageTypes, setDownloadImageTypes] = useState(
-    getDefaultDownloadImageType(currentAsset.extension)
-  );
+  const [downloadImageTypes, setDownloadImageTypes] = useState(getDefaultDownloadImageType(currentAsset.extension));
   const [mode, setMode] = useState("detail"); // Available options: resize, crop, detail
   const [imageType, setImageType] = useState(currentAsset.extension);
 
@@ -265,9 +251,7 @@ const DetailOverlay = ({
       const folder = folders.find((folder) => folder.id === activeFolder);
       if (folder) {
         setActiveCollection(folder);
-        const assetIndx =
-          assets.findIndex((item) => item.asset && item.asset.id === asset.id) +
-          1;
+        const assetIndx = assets.findIndex((item) => item.asset && item.asset.id === asset.id) + 1;
         setAssetIndex(assetIndx);
       }
     }
@@ -300,14 +284,14 @@ const DetailOverlay = ({
     try {
       const asset = curAsset || currentAsset;
       if (isShare) {
-        const { data } = await shareApi.getAssetById(asset.id, { sharePath, sharedCode })
+        const { data } = await shareApi.getAssetById(asset.id, { sharePath, sharedCode });
 
         if (data.asset.id !== assetDetail?.id) {
           setAssetDetail(data.asset);
           setPreviewUrl(data.previewUrl);
           setVersionRealUrl(data.realUrl);
           setVersionThumbnailUrl(data.thumbailUrl);
-          setCurrentAsset({...currentAsset, thumbailUrl: data.thumbailUrl})
+          setCurrentAsset({ ...currentAsset, thumbailUrl: data.thumbailUrl });
         }
       } else {
         const { data } = await assetApi.getById(asset.id);
@@ -319,7 +303,7 @@ const DetailOverlay = ({
           setVersionThumbnailUrl(data.thumbailUrl);
 
           // This is for showing current asset image in version list
-          setCurrentAsset({...data.asset, thumbailUrl: data.thumbailUrl})
+          setCurrentAsset({ ...data.asset, thumbailUrl: data.thumbailUrl });
         }
       }
     } catch (err) {
@@ -327,10 +311,9 @@ const DetailOverlay = ({
     }
   };
 
-    const onChangeRelatedFiles = (fileAssociations) => {
+  const onChangeRelatedFiles = (fileAssociations) => {
     setAssetDetail({ ...assetDetail, fileAssociations });
   };
-
 
   const getTranscript = async (curAsset?) => {
     try {
@@ -365,9 +348,7 @@ const DetailOverlay = ({
       await assetApi.updateAsset(currentAsset.id, {
         updateData: { name: editedName },
       });
-      const modAssetIndex = assets.findIndex(
-        (assetItem) => assetItem.asset.id === currentAsset.id
-      );
+      const modAssetIndex = assets.findIndex((assetItem) => assetItem.asset.id === currentAsset.id);
       setAssets(
         update(assets, {
           [modAssetIndex]: {
@@ -375,12 +356,12 @@ const DetailOverlay = ({
               name: { $set: editedName },
             },
           },
-        })
+        }),
       );
       setAssetDetail(
         update(assetDetail, {
           name: { $set: editedName },
-        })
+        }),
       );
       toastUtils.success("Asset name updated");
     } catch (err) {
@@ -450,14 +431,8 @@ const DetailOverlay = ({
     if (type === "size") {
       if (mode === "crop") {
         setSizeOfCrop({
-          width:
-            value.width > detailPosSize.width
-              ? detailPosSize.width
-              : value.width,
-          height:
-            value.height > detailPosSize.height
-              ? detailPosSize.height
-              : value.height,
+          width: value.width > detailPosSize.width ? detailPosSize.width : value.width,
+          height: value.height > detailPosSize.height ? detailPosSize.height : value.height,
         });
       } else {
         setWidth(value.width);
@@ -465,12 +440,8 @@ const DetailOverlay = ({
         // set new rendering size in the <container></container>
         setDetailPosSize({
           ...detailPosSize,
-          width:
-            value.width > defaultSize.width ? defaultSize.width : value.width,
-          height:
-            value.height > defaultSize.height
-              ? defaultSize.height
-              : value.height,
+          width: value.width > defaultSize.width ? defaultSize.width : value.width,
+          height: value.height > defaultSize.height ? defaultSize.height : value.height,
         });
       }
       setSize(value);
@@ -499,8 +470,7 @@ const DetailOverlay = ({
 
   // On width, height input change
   const onSizeInputChange = (name, value, resizeOption) => {
-    const originalRatio =
-      currentAsset.dimensionWidth / currentAsset.dimensionHeight;
+    const originalRatio = currentAsset.dimensionWidth / currentAsset.dimensionHeight;
     let _width = width,
       _height = height;
     if (resizeOption === "%") {
@@ -557,9 +527,7 @@ const DetailOverlay = ({
 
   const lockCropping = () => {
     // Only lock if user is choose specific preset
-    return (
-      (preset && preset.value !== "none") || (size && size.value !== "none")
-    );
+    return (preset && preset.value !== "none") || (size && size.value !== "none");
   };
 
   // Subscribe mode change, if user back/enter to detail page, should reset all size value do default
@@ -650,15 +618,10 @@ const DetailOverlay = ({
         }
       }
     } catch (e) {
-      const errorResponse = await e.response.data.text() || "{}"
-      const parsedErrorResponse = JSON.parse(errorResponse)
-      console.log(`Error in detail-overlay`)
-      updateDownloadingStatus(
-        "error",
-        0,
-        0,
-        parsedErrorResponse.message || 'Internal Server Error. Please try again.'
-      );
+      const errorResponse = (await e.response.data.text()) || "{}";
+      const parsedErrorResponse = JSON.parse(errorResponse);
+      console.log(`Error in detail-overlay`);
+      updateDownloadingStatus("error", 0, 0, parsedErrorResponse.message || "Internal Server Error. Please try again.");
     }
   };
 
@@ -747,28 +710,12 @@ const DetailOverlay = ({
       return result;
     };
 
-    const isTypeValid = checkValid(
-      ["image", "video", "pdf"],
-      assetDetail?.type
-    );
+    const isTypeValid = checkValid(["image", "video", "pdf"], assetDetail?.type);
     const isExtensionValid = checkValid(
-      [
-        "png",
-        "jpg",
-        "gif",
-        "tif",
-        "tiff",
-        "webp",
-        "svg",
-        "mp4",
-        "mov",
-        "avi",
-        "pdf",
-      ],
-      assetDetail?.extension
+      ["png", "jpg", "gif", "tif", "tiff", "webp", "svg", "mp4", "mov", "avi", "pdf"],
+      assetDetail?.extension,
     );
-    const isUserValid =
-      (user.roleId === "admin" || user.roleId === "super_admin") && cdnAccess;
+    const isUserValid = (user.roleId === "admin" || user.roleId === "super_admin") && cdnAccess;
 
     return isTypeValid && isExtensionValid && isUserValid;
   };
@@ -777,9 +724,7 @@ const DetailOverlay = ({
     try {
       await assetApi.deleteAsset(version.id);
       let clonedVersions = [...versions];
-      clonedVersions = clonedVersions.filter(
-        (asset) => asset.id !== version.id
-      );
+      clonedVersions = clonedVersions.filter((asset) => asset.id !== version.id);
       clonedVersions = setDisplayVersions(clonedVersions);
       setVersions(clonedVersions);
       toastUtils.success("Version deleted successfully.");
@@ -834,9 +779,7 @@ const DetailOverlay = ({
   };
 
   const navigateOverlay = (navBy) => {
-    const currentIndx = assets.findIndex(
-      (item) => asset && item.asset && item.asset.id === asset.id
-    );
+    const currentIndx = assets.findIndex((item) => asset && item.asset && item.asset.id === asset.id);
     const newIndx = currentIndx + navBy;
     setAssetIndex(newIndx);
     if (assets[newIndx]) {
@@ -855,9 +798,7 @@ const DetailOverlay = ({
   };
 
   const resetImageSettings = (newWidth, newHeight) => {
-    const img = document.querySelector(
-      ".app-overlay img.img-preview"
-    ) as HTMLImageElement;
+    const img = document.querySelector(".app-overlay img.img-preview") as HTMLImageElement;
     // const draggable = document.querySelector('.app-overlay .react-draggable') as HTMLDivElement;
     // var positions = window.getComputedStyle(img).getPropertyValue('object-position').split(' ');
     // const pos = parseInt(positions[0]);
@@ -877,14 +818,8 @@ const DetailOverlay = ({
       height = cHeight;
     }
 
-    width =
-      width > currentAsset.dimensionWidth
-        ? currentAsset.dimensionWidth
-        : Math.round(width);
-    height =
-      height > currentAsset.dimensionHeight
-        ? currentAsset.dimensionHeight
-        : Math.round(height);
+    width = width > currentAsset.dimensionWidth ? currentAsset.dimensionWidth : Math.round(width);
+    height = height > currentAsset.dimensionHeight ? currentAsset.dimensionHeight : Math.round(height);
 
     setDetailPosSize(Object.assign({ ...detailPosSize }, { height, width }));
     if (!newWidth && !newHeight) {
@@ -903,8 +838,8 @@ const DetailOverlay = ({
           width: resizeSizes.width,
           height: resizeSizes.height,
           ...position,
-        }
-      )
+        },
+      ),
     );
 
     setWidth(w);
@@ -939,11 +874,7 @@ const DetailOverlay = ({
   };
 
   return (
-    <div
-      className={`app-overlay ${styles.container} ${
-        isShare ? styles.share : ""
-      }`}
-    >
+    <div className={`app-overlay ${styles.container} ${isShare ? styles.share : ""}`}>
       {assetDetail && (
         <section id={"detail-overlay"} className={styles.content}>
           <div className={styles["top-wrapper"]}>
@@ -955,28 +886,22 @@ const DetailOverlay = ({
               <div>
                 <div className={styles.name}>
                   <h3>{assetDetail.name}</h3>
-                  {!isShare && (
-                    <IconClickable
-                      src={Utilities.editLight}
-                      onClick={() => setRenameModalOpen(true)}
-                    />
-                  )}
+                  {!isShare && <IconClickable src={Utilities.editLight} onClick={() => setRenameModalOpen(true)} />}
                 </div>
                 {!isShare && (
                   <div className={styles["versions-related-wrapper"]}>
-                    {hasPermission(["admin", "super_admin"]) &&
-                      versionCount > 0 && (
-                        <div
-                          className={styles["versions-number"]}
-                          onClick={() => {
-                            setMode("detail");
-                            resetValues();
-                            changeActiveSide("versions");
-                          }}
-                        >
-                          {versionCount + 1} versions
-                        </div>
-                      )}
+                    {hasPermission(["admin", "super_admin"]) && versionCount > 0 && (
+                      <div
+                        className={styles["versions-number"]}
+                        onClick={() => {
+                          setMode("detail");
+                          resetValues();
+                          changeActiveSide("versions");
+                        }}
+                      >
+                        {versionCount + 1} versions
+                      </div>
+                    )}
                     {assetDetail?.fileAssociations?.length > 0 && (
                       <>
                         <img src={Utilities.ellipse} />
@@ -1024,72 +949,66 @@ const DetailOverlay = ({
                   </div>
                 </>
               )}
-              {mode === "detail" &&
-                (isShare || hasPermission([ASSET_DOWNLOAD])) && (
-                  <>
-                    <Button
-                      text={"Download"}
-                      type={"button"}
-                      className={`container ${styles["only-desktop-button"]} secondary`}
-                      onClick={() => {
-                        if (editThenDownload) {
-                          setDownloadDropdownOpen(true);
-                        } else {
-                          downloadSelectedAssets(currentAsset.id);
-                        }
-                      }}
+              {mode === "detail" && (isShare || hasPermission([ASSET_DOWNLOAD])) && (
+                <>
+                  <Button
+                    text={"Download"}
+                    type={"button"}
+                    className={`container ${styles["only-desktop-button"]} secondary`}
+                    onClick={() => {
+                      if (editThenDownload) {
+                        setDownloadDropdownOpen(true);
+                      } else {
+                        downloadSelectedAssets(currentAsset.id);
+                      }
+                    }}
+                  />
+                  <div className={styles["only-mobile-button"]}>
+                    <IconClickable
+                      className={styles["only-mobile-button"]}
+                      src={AssetOps.downloadWhite}
+                      onClick={() => setDownloadDropdownOpen(true)}
                     />
-                    <div className={styles["only-mobile-button"]}>
-                      <IconClickable
-                        className={styles["only-mobile-button"]}
-                        src={AssetOps.downloadWhite}
-                        onClick={() => setDownloadDropdownOpen(true)}
+                  </div>
+
+                  {downloadDropdownOpen && (
+                    <div className={styles["download-list-dropdown"]}>
+                      <Dropdown
+                        onClickOutside={() => setDownloadDropdownOpen(false)}
+                        additionalClass={styles["more-dropdown"]}
+                        options={[
+                          {
+                            id: "download",
+                            label: "Download Original",
+                            onClick: () => downloadSelectedAssets(currentAsset.id),
+                          },
+                          {
+                            id: "edit",
+                            label: "Edit then Download",
+                            onClick: () => {
+                              changeActiveSide("download");
+                              setMode("resize");
+                            },
+                          },
+                        ]}
                       />
                     </div>
-
-                    {downloadDropdownOpen && (
-                      <div className={styles["download-list-dropdown"]}>
-                        <Dropdown
-                          onClickOutside={() => setDownloadDropdownOpen(false)}
-                          additionalClass={styles["more-dropdown"]}
-                          options={[
-                            {
-                              id: "download",
-                              label: "Download Original",
-                              onClick: () =>
-                                downloadSelectedAssets(currentAsset.id),
-                            },
-                            {
-                              id: "edit",
-                              label: "Edit then Download",
-                              onClick: () => {
-                                changeActiveSide("download");
-                                setMode("resize");
-                              },
-                            },
-                          ]}
-                        />
-                      </div>
-                    )}
-                  </>
-                )}
+                  )}
+                </>
+              )}
             </div>
           </div>
           <div
-            className={`${
-              !isShare ? styles["img-wrapper"] : styles["share-img-wrapper"]
-            }${activeFolder && ` ${styles["active-folderimg"]}`}`}
+            className={`${!isShare ? styles["img-wrapper"] : styles["share-img-wrapper"]}${
+              activeFolder && ` ${styles["active-folderimg"]}`
+            }`}
           >
             <div className={styles["notes-wrapper"]}>
               {notes.map(
                 (note, indx) =>
                   ((isShare && !note.internal) || !isShare) && (
-                    <AssetNote
-                      key={indx.toString()}
-                      title={`Note ${indx + 1}`}
-                      note={note.text}
-                    />
-                  )
+                    <AssetNote key={indx.toString()} title={`Note ${indx + 1}`} note={note.text} />
+                  ),
               )}
             </div>
             {assetDetail.type === "image" && (
@@ -1125,12 +1044,7 @@ const DetailOverlay = ({
                       onResizeStop(ref.style.width, ref.style.height, position)
                     }
                   >
-                    <AssetImg
-                      name={assetDetail.name}
-                      assetImg={versionRealUrl}
-                      imgClass="img-preview"
-                      isResize
-                    />
+                    <AssetImg name={assetDetail.name} assetImg={versionRealUrl} imgClass="img-preview" isResize />
                   </Rnd>
                 )}
 
@@ -1166,65 +1080,42 @@ const DetailOverlay = ({
               (assetDetail.extension.toLowerCase() === "pdf" ? (
                 <AssetPdf asset={asset} />
               ) : (
-                <AssetImg
-                  name={assetDetail.name}
-                  assetImg={versionThumbnailUrl}
-                  imgClass="img-preview"
-                />
+                <AssetImg name={assetDetail.name} assetImg={versionThumbnailUrl} imgClass="img-preview" />
               ))}
-            {assetDetail.type !== "image" &&
-              assetDetail.type !== "video" &&
-              !versionThumbnailUrl && (
-                <AssetIcon extension={currentAsset.extension} />
-              )}
+            {assetDetail.type !== "image" && assetDetail.type !== "video" && !versionThumbnailUrl && (
+              <AssetIcon extension={currentAsset.extension} />
+            )}
             {assetDetail.type === "video" && (
-                <>
-                {(previewUrl || (!previewUrl && currentAsset.extension === "mp4")) && <video controls id={"video-element"}>
-                    <source
-                        src={previewUrl ?? versionRealUrl}
-                        type={
-                          "video/mp4"
-                        }
-                    />
+              <>
+                {(previewUrl || (!previewUrl && currentAsset.extension === "mp4")) && (
+                  <video controls id={"video-element"}>
+                    <source src={previewUrl ?? versionRealUrl} type={"video/mp4"} />
                     Sorry, your browser doesn't support video playback.
-                  </video>}
+                  </video>
+                )}
 
-                  {(!previewUrl && currentAsset.extension !== "mp4") && <AssetImg
-                      name={assetDetail.name}
-                      assetImg={""}
-                      type={"video"}
-                      imgClass="img-preview"
-                      isResize
-                  />}
-                </>
-
+                {!previewUrl && currentAsset.extension !== "mp4" && (
+                  <AssetImg name={assetDetail.name} assetImg={""} type={"video"} imgClass="img-preview" isResize />
+                )}
+              </>
             )}
             {activeFolder && (
               <div className={styles.arrows}>
                 <div>
-                  {assets.length &&
-                    assets[0].asset &&
-                    assets[0].asset.id !== asset.id && (
-                      <span className={styles["arrow-prev"]}>
-                        <IconClickable
-                          src={Utilities.arrowPrev}
-                          onClick={() => navigateOverlay(-1)}
-                        />
-                      </span>
-                    )}
+                  {assets.length && assets[0].asset && assets[0].asset.id !== asset.id && (
+                    <span className={styles["arrow-prev"]}>
+                      <IconClickable src={Utilities.arrowPrev} onClick={() => navigateOverlay(-1)} />
+                    </span>
+                  )}
                   {availableNext && (
                     <span className={styles["arrow-next"]}>
-                      <IconClickable
-                        src={Utilities.arrowNext}
-                        onClick={() => navigateOverlay(1)}
-                      />
+                      <IconClickable src={Utilities.arrowNext} onClick={() => navigateOverlay(1)} />
                     </span>
                   )}
                 </div>
                 <span>
-                  {(assetIndex % activeCollection?.assetsCount) + 1} of{" "}
-                  {activeCollection?.assetsCount} in {activeCollection?.name}{" "}
-                  collection
+                  {(assetIndex % activeCollection?.assetsCount) + 1} of {activeCollection?.assetsCount} in{" "}
+                  {activeCollection?.name} collection
                 </span>
               </div>
             )}
@@ -1293,23 +1184,13 @@ const DetailOverlay = ({
               setRenameData={setRenameValue}
             />
           )}
-          {!isShare && activeSideComponent === "comments" && (
-            <ConversationList itemId={asset?.id} itemType="assets" />
-          )}
+          {!isShare && activeSideComponent === "comments" && <ConversationList itemId={asset?.id} itemType="assets" />}
           {!isShare && activeSideComponent === "versions" && (
-            <VersionList
-              versions={versions}
-              currentAsset={currentAsset}
-              triggerUserEvent={onUserEvent}
-            />
+            <VersionList versions={versions} currentAsset={currentAsset} triggerUserEvent={onUserEvent} />
           )}
-          {activeSideComponent === "cdn" && (
-            <CdnPanel assetDetail={assetDetail} />
-          )}
+          {activeSideComponent === "cdn" && <CdnPanel assetDetail={assetDetail} />}
 
-          {activeSideComponent === "notes" && notes && (
-            <AssetNotes asset={asset} notes={notes} applyCrud={applyCrud} />
-          )}
+          {activeSideComponent === "notes" && notes && <AssetNotes asset={asset} notes={notes} applyCrud={applyCrud} />}
 
           {activeSideComponent === "related" && (
             <AssetRelatedFilesList
@@ -1347,7 +1228,7 @@ const DetailOverlay = ({
             additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"}`}
           />{" "}
           <IconClickable
-            src={isMobile ? Utilities.infoGray : Utilities.info}
+            SVGElement={isMobile ? Utilities.infoGray : Utilities.info}
             additionalClass={styles["menu-icon"]}
             onClick={() => {
               setMode("detail");
@@ -1363,27 +1244,21 @@ const DetailOverlay = ({
           <IconClickable
             src={Utilities.closePanelLight}
             onClick={() => toggleSideMenu()}
-            additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"} ${
-              styles.expand
-            }`}
+            additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"} ${styles.expand}`}
           />
           {!isShare && (
             <>
               <div className={`${styles.separator} ${styles.expand}`}></div>
               <IconClickable
-                src={Utilities.delete}
-                additionalClass={
-                  styles["menu-icon"] + " " + styles["only-desktop-button"]
-                }
+                SVGElement={Utilities.delete}
+                additionalClass={styles["menu-icon"] + " " + styles["only-desktop-button"]}
                 onClick={openDeleteAsset}
               />
             </>
           )}
-          <div
-            className={styles.separator + " " + styles["only-desktop-button"]}
-          ></div>
+          <div className={styles.separator + " " + styles["only-desktop-button"]}></div>
           <IconClickable
-            src={isMobile ? Utilities.infoGray : Utilities.info}
+            SVGElement={isMobile ? Utilities.infoGray : Utilities.info}
             additionalClass={styles["menu-icon"]}
             onClick={() => {
               setMode("detail");
@@ -1395,13 +1270,11 @@ const DetailOverlay = ({
             <>
               <IconClickable
                 src={Utilities.tagGray}
-                additionalClass={
-                  styles["menu-icon"] + " " + styles["only-mobile-button"]
-                }
+                additionalClass={styles["menu-icon"] + " " + styles["only-mobile-button"]}
                 onClick={() => {}}
               />
               <IconClickable
-                src={isMobile ? Utilities.commentLight : Utilities.comment}
+                SVGElement={isMobile ? Utilities.commentLight : Utilities.comment}
                 additionalClass={styles["menu-icon"]}
                 onClick={() => {
                   setMode("detail");
@@ -1421,10 +1294,8 @@ const DetailOverlay = ({
               {shouldRenderCdnTabButton() && (
                 <IconClickable
                   // src={Utilities.embedCdn}
-                  src={isMobile ? Utilities.embedCdnGrey : Utilities.embedCdn}
-                  additionalClass={
-                    styles["menu-icon"] + " " + styles["cdn-icon"]
-                  }
+                  SVGElement={isMobile ? Utilities.embedCdnGrey : Utilities.embedCdn}
+                  additionalClass={styles["menu-icon"] + " " + styles["cdn-icon"]}
                   onClick={() => {
                     setMode("detail");
                     resetValues();
@@ -1435,15 +1306,10 @@ const DetailOverlay = ({
 
               {editThenDownload && hasPermission([ASSET_DOWNLOAD]) && (
                 <IconClickable
-                  src={AssetOps.download}
-                  additionalClass={
-                    styles["menu-icon"] + " " + styles["only-desktop-button"]
-                  }
+                  SVGElement={AssetOps.download}
+                  additionalClass={styles["menu-icon"] + " " + styles["only-desktop-button"]}
                   onClick={() => {
-                    if (
-                      currentAsset.type === "image" &&
-                      isImageType(currentAsset.extension)
-                    ) {
+                    if (currentAsset.type === "image" && isImageType(currentAsset.extension)) {
                       if (mode !== "resize" && mode !== "crop") {
                         setMode("resize");
                       }
@@ -1457,7 +1323,7 @@ const DetailOverlay = ({
               )}
 
               <IconClickable
-                src={isMobile ? Utilities.relatedLight : Utilities.related}
+                SVGElement={isMobile ? Utilities.relatedLight : Utilities.related}
                 additionalClass={styles["menu-icon"]}
                 onClick={() => {
                   setMode("detail");
@@ -1467,7 +1333,7 @@ const DetailOverlay = ({
               />
               {hasPermission(["admin", "super_admin"]) && (
                 <IconClickable
-                  src={isMobile ? Utilities.notesLight : Utilities.notes}
+                  SVGElement={isMobile ? Utilities.notesLight : Utilities.notes}
                   additionalClass={styles["menu-icon"]}
                   onClick={() => {
                     setMode("detail");
@@ -1479,7 +1345,7 @@ const DetailOverlay = ({
 
               {hasPermission(["admin", "super_admin"]) && versionCount > 0 && (
                 <IconClickable
-                  src={isMobile ? Utilities.versionsLight : Utilities.versions}
+                  SVGElement={isMobile ? Utilities.versionsLight : Utilities.versions}
                   additionalClass={styles["menu-icon"]}
                   onClick={() => {
                     setMode("detail");
@@ -1492,7 +1358,7 @@ const DetailOverlay = ({
           )}
           {transcriptAccess && assetDetail?.type === "video" && (
             <IconClickable
-              src={Utilities.transcript}
+              SVGElement={Utilities.transcript}
               additionalClass={styles[""]}
               onClick={() => {
                 setMode("detail");
@@ -1508,10 +1374,7 @@ const DetailOverlay = ({
         modalIsOpen={renameModalOpen}
         renameConfirm={confirmAssetRename}
         type={"Asset"}
-        initialValue={assetDetail?.name?.substring(
-          0,
-          assetDetail?.name.lastIndexOf(".")
-        )}
+        initialValue={assetDetail?.name?.substring(0, assetDetail?.name.lastIndexOf("."))}
       />
     </div>
   );

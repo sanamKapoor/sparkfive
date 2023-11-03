@@ -9,7 +9,7 @@ import IconClickable from "../buttons/icon-clickable";
 import Dropdown from "../inputs/dropdown";
 import ToggleableAbsoluteWrapper from "../misc/toggleable-absolute-wrapper";
 
-import { ASSET_EDIT } from '../../../constants/permissions'
+import { ASSET_EDIT } from "../../../constants/permissions";
 
 const FolderOptions = ({
   downloadFoldercontents,
@@ -36,9 +36,8 @@ const FolderOptions = ({
         { label: "Share", onClick: shareAssets },
       ];
 
-
-  if(hasPermission([ASSET_EDIT])){
-    options.push( { label: "Delete", onClick: () => setDeleteOpen(true) })
+  if (hasPermission([ASSET_EDIT])) {
+    options.push({ label: "Delete", onClick: () => setDeleteOpen(true) });
   }
 
   const [adminOption, setAdminOption] = useState(options);
@@ -55,10 +54,7 @@ const FolderOptions = ({
   useEffect(() => {
     let userDetails: any = user;
     let opts = adminOption;
-    if (
-      userDetails &&
-      (userDetails.roleId == "admin" || userDetails.roleId == "super_admin")
-    ) {
+    if (userDetails && (userDetails.roleId == "admin" || userDetails.roleId == "super_admin")) {
       if (opts.filter((ele) => ele.label == "Change Thumbnail").length == 0) {
         setAdminOption([
           ...opts,
@@ -77,9 +73,7 @@ const FolderOptions = ({
       }
       setTimeout(() => {
         if (thumbnailPath) {
-          if (
-            opts.filter((ele) => ele.label == "Delete Thumbnail").length == 0
-          ) {
+          if (opts.filter((ele) => ele.label == "Delete Thumbnail").length == 0) {
             setAdminOption([
               ...opts,
               {
@@ -96,24 +90,17 @@ const FolderOptions = ({
             ];
           }
         } else {
-          if (
-            opts.filter((ele) => ele.label == "Delete Thumbnail").length > 0
-          ) {
-            setAdminOption([
-              ...opts.filter((ele) => ele.label !== "Delete Thumbnail"),
-            ]);
+          if (opts.filter((ele) => ele.label == "Delete Thumbnail").length > 0) {
+            setAdminOption([...opts.filter((ele) => ele.label !== "Delete Thumbnail")]);
             opts = [...opts.filter((ele) => ele.label !== "Delete Thumbnail")];
           }
         }
-      });
+      }, 100);
     }
 
     if (copyEnabled && !isShare) {
       if (adminOption.filter((ele) => ele.label == "Copy Link").length == 0) {
-        setAdminOption([
-          ...adminOption,
-          { label: "Copy Link", onClick: copyShareLink },
-        ]);
+        setAdminOption([...adminOption, { label: "Copy Link", onClick: copyShareLink }]);
       }
     }
   }, [user, thumbnailPath, downloadFoldercontents, copyShareLink]);
@@ -124,18 +111,11 @@ const FolderOptions = ({
       wrapperClass={styles["asset-actions-wrapper"]}
       Wrapper={({ children }) => (
         <>
-          <IconClickable
-            src={Utilities.more}
-            additionalClass={styles.folderDots}
-          />
+          <IconClickable SVGElement={Utilities.more} additionalClass={styles.folderDots} />
           {children}
         </>
       )}
-      Content={() => (
-        <div className={styles.more}>
-          {adminOption.length > 0 && <Dropdown options={adminOption} />}
-        </div>
-      )}
+      Content={() => <div className={styles.more}>{adminOption.length > 0 && <Dropdown options={adminOption} />}</div>}
     />
   );
 };
