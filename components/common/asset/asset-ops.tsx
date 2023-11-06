@@ -675,6 +675,13 @@ export default ({ getAssets }) => {
           .map((item) => item.asset.versionGroup)
           .join(",");
         assetIds = operationAssets.map((item) => item.asset.id).join(",");
+      } else if (activeSortFilter?.mainFilter === "SubCollectionView" && !operationFolder) {
+        assetIds = selectedSubFolderAssetId
+          .map((assetItem) => assetItem.asset.id)
+          .join(",");
+        versionGroups = selectedSubFolderAssetId
+          .map((assetItem) => assetItem.asset.versionGroup)
+          .join(",");
       } else {
         versionGroups = selectedAssets
           .map((assetItem) => assetItem.asset.versionGroup)
@@ -791,7 +798,6 @@ export default ({ getAssets }) => {
         filters["parent_id"] = activeSubFolders;
       }
       filters["name"] = name;
-      console.log(filters, "activeSubFolders")
       return await folderApi.getShareUrl(
         {
           folderIds,

@@ -660,9 +660,18 @@ const AssetsLibrary = () => {
         setUploadingAssets(newPlaceholders);
 
         // Showing assets = uploading assets + existing assets
-        setAssets([...newPlaceholders, ...currentDataClone]);
-        setFolders([...folderPlaceholders, ...currenFolderClone]);
-
+        if (activeSortFilter?.mainFilter === "SubCollectionView") {
+          setSubFoldersAssetsViewList(
+            {
+              ...subFoldersAssetsViewList,
+              results: [...newPlaceholders],
+            },
+            false
+          );
+        } else {
+          setAssets([...newPlaceholders, ...currentDataClone]);
+          setFolders([...folderPlaceholders, ...currenFolderClone]);
+        }
         // Get team advance configurations first
         const subFolderAutoTag = advancedConfig.subFolderAutoTag;
 
@@ -672,7 +681,9 @@ const AssetsLibrary = () => {
           newPlaceholders,
           currentDataClone,
           totalSize,
-          activeFolder,
+          activeSortFilter?.mainFilter === "SubCollectionView"
+            ? activeSubFolders
+            : activeFolder,
           undefined,
           subFolderAutoTag
         );
@@ -683,7 +694,9 @@ const AssetsLibrary = () => {
         // Finish uploading process
         showUploadProcess("done");
 
-        if (needsFolderFetch) {
+        if (activeSortFilter?.mainFilter === "SubCollectionView") {
+          setNeedsFetch("SubCollectionView");
+        } else if (needsFolderFetch) {
           setNeedsFetch("folders");
         }
       } catch (err) {
@@ -1128,8 +1141,8 @@ const AssetsLibrary = () => {
                 </div>
                 <div
                   className={`${sidebarOpen
-                      ? styles["grid-wrapper-web"]
-                      : styles["grid-wrapper"]
+                    ? styles["grid-wrapper-web"]
+                    : styles["grid-wrapper"]
                     } ${activeFolder && styles["active-breadcrumb-item"]}`}
                 >
                   {activeMode !== "folders" && (
