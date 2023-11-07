@@ -204,14 +204,6 @@ const FolderListItem = ({
                 />
               </h4>
               <h4></h4>
-              <h4 onClick={() => setSortAttribute("folder.length")}>
-                Assets
-                <IconClickable
-                  src={arrowIcon}
-                  additionalClass={`${styles["sort-icon"]
-                    } ${getSortAttributeClassName("folder.length")}`}
-                />
-              </h4>
               <h4 onClick={() => setSortAttribute("folder.created-at")}>
                 Create Date
                 <IconClickable
@@ -220,6 +212,15 @@ const FolderListItem = ({
                     } ${getSortAttributeClassName("folder.created-at")}`}
                 />
               </h4>
+              <h4 onClick={() => setSortAttribute("folder.length")}>
+                Assets
+                <IconClickable
+                  src={arrowIcon}
+                  additionalClass={`${styles["sort-icon"]
+                    } ${getSortAttributeClassName("folder.length")}`}
+                />
+              </h4>
+
             </div>
           </div>
         )}

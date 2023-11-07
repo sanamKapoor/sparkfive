@@ -3,6 +3,7 @@ import { ChangeEvent, useContext, useState } from "react";
 import { Utilities } from "../../../assets";
 import gridStyles from "../asset//asset-grid.module.css";
 import styles from "./folder-grid-item.module.css";
+import { format } from 'date-fns';
 
 // Context
 import { AssetContext } from "../../../context";
@@ -23,6 +24,7 @@ import shareFolderApi from "../../../server-api/share-collection";
 import toastUtils from "../../../utils/toast";
 import AssetIcon from "../asset/asset-icon";
 import React from "react";
+import { Assets } from "../../../assets";
 
 const FolderGridItem = ({
   id,
@@ -35,6 +37,7 @@ const FolderGridItem = ({
   viewFolder,
   isLoading = false,
   deleteFolder,
+  createdAt,
   shareAssets = (folder: string) => { },
   changeThumbnail,
   deleteThumbnail = (folder: string) => { },
@@ -56,8 +59,22 @@ const FolderGridItem = ({
   const { updateDownloadingStatus, folders, setFolders } =
     useContext(AssetContext);
 
+  //Todo handle case for Thumbnail Image for list view 
+
+  // const initialPreviewImgSrc =
+  //   thumbnailPath ??
+  //   (thumbnails?.thumbnails && thumbnails?.thumbnails?.length > 0
+  //     ? thumbnails?.thumbnails[0].filePath
+  //     : assets[0]?.realUrl);
+  // const [previewImgSrc, setPreviewImgSrc] = useState(initialPreviewImgSrc);
+
+  // const handleImagePreviewOnError = (e) => {
+  //   setPreviewImgSrc(Assets.empty);
+  // };
+
   const [thumbnailName, setThumbnailName] = useState(name);
   const [isEditing, setIsEditing] = useState(false);
+  const dateFormat = "MMM do, yyyy";
 
   let previews;
 
@@ -181,40 +198,38 @@ const FolderGridItem = ({
 
   return (
     <div
-      className={`${styles.container} ${  activeView === "list" && styles.listContainer} ${
-        isLoading && "loadable"
-      }`}
+      className={`${styles.container} ${activeView === "list" && styles.listContainer} ${isLoading && "loadable"
+        }`}
     >
-     {/* select wrapper is for list view  */}
-     {activeView === "list" ? (
-      <div
-        className={`${ activeView === "list" && styles["list-select-icon"]} ${isSelected && styles["selected-wrapper"]}`}
-      >
-        <IconClickable
-          src={
-            isSelected
-              ? Utilities.radioButtonEnabled
-              : Utilities.radioButtonNormal
-          }
-          additionalClass={styles["select-icon"]}
-          onClick={toggleSelected}
-        />
-      </div>
-     ):null}
-       {/* list-main-border is list-item class */}
-      <div className={`${styles["main-border"]} ${  activeView === "list" && styles["list-main-border"]}`}>
+      {/* select wrapper is for list view  */}
+      {activeView === "list" ? (
+        <div
+          className={`${activeView === "list" && styles["list-select-icon"]} ${isSelected && styles["selected-wrapper"]}`}
+        >
+          <IconClickable
+            src={
+              isSelected
+                ? Utilities.radioButtonEnabled
+                : Utilities.radioButtonNormal
+            }
+            additionalClass={styles["select-icon"]}
+            onClick={toggleSelected}
+          />
+        </div>
+      ) : null}
+      {/* list-main-border is list-item class */}
+      <div className={`${styles["main-border"]} ${activeView === "list" && styles["list-main-border"]}`}>
         <div
           className={
             thumbnailPath || thumbnailExtension
-              ? `${styles.grid_border} ${
-                  openFilter ? styles["filter_open"] : ""
-                }`
-              : `${styles["image-wrapper"]} ${
-                  openFilter ? styles["filter_open"] : ""
-                }
-                ${ activeView === "list" && styles["list-image-wrapper"]}
+              ? `${styles.grid_border} ${openFilter ? styles["filter_open"] : ""
+              }`
+              : `${styles["image-wrapper"]} ${openFilter ? styles["filter_open"] : ""
+              }
+                ${activeView === "list" && styles["list-image-wrapper"]}
                 `
           }
+          onClick={activeView === "list" && viewFolder}
         >
           <>
             {thumbnailPath && (
@@ -244,15 +259,16 @@ const FolderGridItem = ({
                   )}
                 </div>
               ))}
-            <div className={styles["image-button-wrapper"]}>
+            {activeView !== "list" && <div className={styles["image-button-wrapper"]}>
               <Button
                 className="container primary"
                 text={"View Collection"}
                 type={"button"}
                 onClick={viewFolder}
               />
-            </div>
-            <div
+
+            </div>}
+            {activeView !== "list" && <div
               className={`${styles["selectable-wrapper"]} ${isSelected && styles["selected-wrapper"]
                 }`}
             >
@@ -266,17 +282,18 @@ const FolderGridItem = ({
                 onClick={toggleSelected}
               />
             </div>
+            }
           </>
         </div>
       </div>
       {/* listInfo is for list-view */}
       <div
-        className={`${styles.info} ${  activeView === "list" && styles.listInfo}`}
+        className={`${styles.info} ${activeView === "list" && styles.listInfo}`}
         onClick={handleOnFocus}
       >
         <div className={styles.folderItemHeadingOuter}>
           {/* listHeading is for list-view */}
-          <div className={`${styles.folderItemHeading} ${  activeView === "list" && styles.listHeading}`}>
+          <div className={`${styles.folderItemHeading} ${activeView === "list" && styles.listHeading}`}>
             {isThumbnailNameEditable &&
               isEditing &&
               focusedItem &&
@@ -295,7 +312,7 @@ const FolderGridItem = ({
                 // list-text is for list-view
                 className={
                   isThumbnailNameEditable
-                    ? `normal-text ${styles["wrap-text"]} ${gridStyles["editable-preview"]} ${  activeView === "list" && styles["list-text"]}`
+                    ? `normal-text ${styles["wrap-text"]} ${gridStyles["editable-preview"]} ${activeView === "list" && styles["list-text"]}`
                     : `${gridStyles["editable-preview"]} ${gridStyles["non-editable-preview"]}`
                 }
               >
@@ -313,6 +330,9 @@ const FolderGridItem = ({
                   }`}</div>
               )}
             </div>
+            {activeView === "list" && (
+              <div className={`${styles['modified-date']}}`}> {format(new Date(createdAt), dateFormat)}</div>
+            )}
           </div>
           {/* createdData is for list view */}
           {/* <div className={styles.createdDate}>05/14/23</div> */}

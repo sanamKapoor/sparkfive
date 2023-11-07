@@ -362,6 +362,7 @@ const AssetGrid = ({
     }
   }, [ref.current, windowWidth]);
 
+
   return (
     <section className={`${styles.container} ${openFilter && styles.filter}`}>
       {(shouldShowUpload || isDragging) && !isShare && (
@@ -387,12 +388,11 @@ const AssetGrid = ({
           setActiveSearchOverlay={setActiveSearchOverlay}
         />
       )}
+
       {
-        //  className={`${mode === "SubCollectionView" ? "" : styles["grid-list"]
-        // } ${styles[itemSize]} ${styles["list-view"]} 
         <div className={styles["list-wrapper"]}>
-           {/* testing component starts from here */}
-           { (
+          {/* testing component starts from here */}
+          {(
             <ul
               className={`${mode === "SubCollectionView" ? "" : styles["grid-list"]
                 } ${styles[itemSize]} ${activeView === "list" && styles["list-view"]} 
@@ -488,7 +488,6 @@ const AssetGrid = ({
                           focusedItem={focusedItem}
                           setFocusedItem={setFocusedItem}
                           activeView={activeView}
-
                         />
                       </li>
                     );
@@ -532,9 +531,9 @@ const AssetGrid = ({
                 })}
             </ul>
           )}
-           
-           
-         
+
+
+
           {showLoadMore && nextPage !== -1 && (
             <>
               {nextPage > 2 || mode === "folders" ? (
@@ -562,7 +561,7 @@ const AssetGrid = ({
         </div>
       }
 
-     
+
 
       {/* Change thumbnail modal */}
       <ChangeThumbnail

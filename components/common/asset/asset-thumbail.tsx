@@ -1,29 +1,26 @@
-import { format } from "date-fns";
-import { ChangeEvent, useContext, useEffect, useState } from "react";
-import { Utilities } from "../../../assets";
-import gridStyles from "./asset-grid.module.css";
-import styles from "./asset-thumbail.module.css";
+import { format } from 'date-fns';
+import filesize from 'filesize';
+import { ChangeEvent, useContext, useEffect, useState } from 'react';
+import React from 'react';
+import HoverVideoPlayer from 'react-hover-video-player';
+
+import { Utilities } from '../../../assets';
+import { ASSET_NAME_UPDATED, FAILED_TO_UPDATE_ASSET_NAME } from '../../../constants/messages';
+import { AssetContext } from '../../../context';
+import assetApi from '../../../server-api/asset';
+import { getParsedExtension, removeExtension } from '../../../utils/asset';
+import toastUtils from '../../../utils/toast';
+import Button from '../buttons/button';
+import IconClickable from '../buttons/icon-clickable';
+import Spinner from '../spinners/spinner';
+import gridStyles from './asset-grid.module.css';
+import AssetIcon from './asset-icon';
+import AssetImg from './asset-img';
+import AssetOptions from './asset-options';
+import styles from './asset-thumbail.module.css';
+import DetailOverlay from './detail-overlay';
 
 // Components
-import {
-  ASSET_NAME_UPDATED,
-  FAILED_TO_UPDATE_ASSET_NAME,
-} from "../../../constants/messages";
-import { AssetContext } from "../../../context";
-import assetApi from "../../../server-api/asset";
-import { removeExtension } from "../../../utils/asset";
-import toastUtils from "../../../utils/toast";
-import Button from "../buttons/button";
-import IconClickable from "../buttons/icon-clickable";
-import AssetIcon from "./asset-icon";
-import AssetImg from "./asset-img";
-import AssetOptions from "./asset-options";
-import DetailOverlay from "./detail-overlay";
-
-import HoverVideoPlayer from "react-hover-video-player";
-import Spinner from "../spinners/spinner";
-import React from "react";
-
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
 
 const AssetThumbail = ({
@@ -76,6 +73,7 @@ const AssetThumbail = ({
   const [thumbnailName, setThumbnailName] = useState(assetName);
 
   const [isEditing, setIsEditing] = useState(false);
+  const dateFormat = "MMM do, yyyy";
 
   useEffect(() => {
     setThumbnailName(assetName);
@@ -161,28 +159,40 @@ const AssetThumbail = ({
 
   return (
     <>
-      <div className={`${styles.container} ${ activeView === "list" && styles.listContainer} ${isLoading && "loadable"}`}>
-           {/* select wrapper is for list view  */}
-           {activeView==="list" ? (
-               <div
-               className={`${styles["list-select-icon"]} ${isSelected && styles["selected-wrapper"]}`}
-             >
-               <IconClickable
-                 src={
-                   isSelected
-                     ? Utilities.radioButtonEnabled
-                     : Utilities.radioButtonNormal
-                 }
-                 additionalClass={styles["select-icon"]}
-                 onClick={toggleSelected}
-               />
-             </div>
+      <div className={`${styles.container} ${activeView === "list" && styles.listContainer} ${isLoading && "loadable"}`}>
+        {/* select wrapper is for list view  */}
+        {activeView === "list" ? (
+          <div
+            className={`${styles["list-select-icon"]} ${isSelected && styles["selected-wrapper"]}`}
+          >
+            <IconClickable
+              src={
+                isSelected
+                  ? Utilities.radioButtonEnabled
+                  : Utilities.radioButtonNormal
+              }
+              additionalClass={styles["select-icon"]}
+              onClick={toggleSelected}
+            />
+          </div>
+        ) : null}
 
-
-           ):null}
-   
         {/* list-image -wrapper is for list view */}
-        <div className={`${styles['image-wrapper']} ${ activeView === "list" && styles['list-image-wrapper']}`}>
+        <div className={`${styles['image-wrapper']} ${activeView === "list" && styles['list-image-wrapper']}`}
+
+          onClick={() => {
+            if (onView && activeView === "list") {
+              onView(asset.id);
+            } else if (activeView === "list") {
+              setOverlayProperties({
+                ...DEFAULT_DETAIL_PROPS,
+                visible: !overlayProperties.visible,
+              });
+            }
+          }}
+
+
+        >
           {isUploading && (
             <>
               <p className={styles.uploading}>Uploading...</p>
@@ -200,7 +210,13 @@ const AssetThumbail = ({
               <AssetIcon extension={asset.extension} />
             )
           ) : (
-            <HoverVideoPlayer
+            activeView === "list" ? (<AssetImg
+              assetImg={thumbailUrl}
+              type={asset.type}
+              name={asset.name}
+              opaque={isUploading}
+              imgClass={styles["video-thumbnail"]}
+            />) : (<HoverVideoPlayer
               controls
               className={styles["hover-video-player-wrapper"]}
               videoClassName={styles["video-style"]}
@@ -219,9 +235,10 @@ const AssetThumbail = ({
                   <Spinner />
                 </div>
               }
-            />
+            />)
+
           )}
-          {!isUploading &&
+          {activeView !== "list" && !isUploading &&
             !isLoading &&
             (showAssetOption || showViewButtonOnly) && (
               <>
@@ -267,29 +284,29 @@ const AssetThumbail = ({
             )}
         </div>
         {/* list-info is for list view  */}
-        <div className={`${styles.info} ${activeView === "list" &&  styles.listInfo}`}>
+        <div className={`${styles.info} ${activeView === "list" && styles.listInfo}`}>
           <div className={`${infoWrapperClass} overflow--visible`}>
             <div
               className={`${textWrapperClass} overflow--visible ${styles.folderItemHeadingOuter}`}
             >
               {/* folderItemHeading is for list view */}
-              <div className= {`${styles.folderItemHeading} ${ activeView === "list" &&  styles.listHeading}`}>
+              <div className={`${styles.folderItemHeading} ${activeView === "list" && styles.listHeading}`}>
                 {isThumbnailNameEditable &&
                   isEditing &&
                   focusedItem &&
                   focusedItem === asset.id ? (
-                    // list-text is for list view
+                  // list-text is for list view
                   <input
                     autoFocus
-                    className={`normal-text ${gridStyles["editable-input"]} ${styles["wrap-text"]}  ${ activeView === "list" &&   styles["list-text"]}`}
+                    className={`normal-text ${gridStyles["editable-input"]} ${styles["wrap-text"]}  ${activeView === "list" && styles["list-text"]}`}
                     value={thumbnailName}
                     onChange={handleNameChange}
                     onBlur={updateNameOnBlur}
                   />
-                 
+
                 ) : (
                   // list-text is for list view 
-                  <div className={`normal-text ${styles["wrap-text"]} ${activeView === "list" &&  styles["list-text"]}`}>
+                  <div className={`normal-text ${styles["wrap-text"]} ${activeView === "list" && styles["list-text"]}`}>
                     <span
                       id="editable-preview"
                       onClick={handleOnFocus}
@@ -306,20 +323,26 @@ const AssetThumbail = ({
                 )}
                 {/* only for list view */}
                 {/* size */}
-               
-                 <div  className={styles["size"]}>
-                  <span> 13.37KB</span>
-                 </div>
+
+                {activeView === "list" && (<div className={styles["size"]}>
+                  {parseInt(asset.size) !== 0 && asset.size && filesize(asset.size)}
+                  {/* <span> 13.37KB</span> */}
+                </div>)}
                 <div className={styles["details-wrapper"]}>
                   <div className="secondary-text">
-                    {format(new Date(asset.createdAt), "MMM d, yyyy, p")}
+                    {format(new Date(asset.createdAt), dateFormat)}
                   </div>
                 </div>
                 {/* only for list view  */}
                 {/* date modified */}
-                <div  className={`${styles['modified-date']}}`}>5/14/23</div>
+                {activeView === "list" && (
+
+                  <div className={`${styles['modified-date']}}`}> {format(new Date(asset.createdAt), dateFormat)}</div>
+                )}
                 {/* extensions */}
-                <div className={`${styles['extension']}}`}>jpej</div>
+                {activeView === "list" && (
+                  <div className={`${styles['extension']}}`}> {!isLoading && getParsedExtension(asset.extension)}</div>
+                )}
               </div>
               {!isUploading && showAssetOption && (
                 <AssetOptions
