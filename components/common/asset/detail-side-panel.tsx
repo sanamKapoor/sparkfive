@@ -778,17 +778,21 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                     {folders.map((folder, index) => (
                       <div key={index}>
                         <div className={`${styles["flex"]} ${styles.nestedbox}`}>
-                          <div className={`${styles["height"]} ${styles["flex"]}`}
-                            onClick={() => { toggleDropdown(folder.id, true) }}
-                          >
-                            <img
-                              className={showDropdown.includes(folder.id) ? styles.iconClick : styles.rightIcon}
-                              src={Utilities.arrowBlue}
-                              alt="Right Arrow Icon"
+                          {folder?.childFolders?.length > 0 ?
+                            (<div className={`${styles["height"]} ${styles["flex"]}`}
                               onClick={() => { toggleDropdown(folder.id, true) }}
-                            />
-                          </div>
-
+                            >
+                              <img
+                                className={showDropdown.includes(folder.id) ? styles.iconClick : styles.rightIcon}
+                                src={Utilities.arrowBlue}
+                                alt="Right Arrow Icon"
+                                onClick={() => { toggleDropdown(folder.id, true) }}
+                              />
+                            </div>
+                            ) : (
+                              <div>
+                              </div>
+                            )}
                           <div className={styles.w100}>
                             <div
                               className={`${styles["dropdownMenu"]} ${selectedFolder.includes(folder.id) ?

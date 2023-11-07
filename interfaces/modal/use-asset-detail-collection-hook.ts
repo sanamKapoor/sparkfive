@@ -28,6 +28,7 @@ export interface Item {
     size: string;
     length: number;
     parentId: string | null
+    childFolders?: Item[]
 }
 
 export interface MoveModalReturnType {

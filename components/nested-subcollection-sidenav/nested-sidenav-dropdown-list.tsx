@@ -39,6 +39,7 @@ interface Item {
   assets: Asset[];
   size: string;
   length: number;
+  childFolders: Item[]
 }
 
 const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
@@ -49,13 +50,16 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
     sidenavFolderNextPage,
     setSidenavFolderList,
     sidenavFolderChildList,
-    setSidenavFolderChildList
+    setSidenavFolderChildList,
+    listUpdateFlag,
+    setListUpdateFlag
   } = useContext(AssetContext);
 
   const {
     term,
     activeSortFilter
   } = useContext(FilterContext) as { term: any, activeSortFilter: any };
+
   const [showDropdown, setShowDropdown] = useState(new Array(sidenavFolderList.length).fill(false));
   const [isFolderLoading, SetIsFolderLoading] = useState(false)
   const [subFolderLoadingState, setSubFolderLoadingState] = useState(new Map())
@@ -142,17 +146,23 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
   };
 
   useEffect(() => {
-    if (firstLoaded) {
-      if (activeSortFilter.mainFilter === "folders") {
-        getFolders(true);
-      }
+    if (firstLoaded && activeSortFilter.mainFilter === "folders") {
+      getFolders(true);
     }
     setFirstLoaded(true)
-  }, [activeSortFilter]);
+  }, [firstLoaded, activeSortFilter])
 
+  useEffect(() => {
+    if (listUpdateFlag) {
+      setListUpdateFlag(false);
+
+      getFolders(true);
+    }
+  }, [listUpdateFlag]);
   return (
     <div>
-      <ReusableHeading description="All Collections" text="Collections" headingClickType="folders" headingTrue={activeSortFilter.mainFilter === "folders"}
+      <ReusableHeading description="All Collections" text="Collections" headingClickType="folders"
+        headingTrue={activeSortFilter.mainFilter === "folders"}
         headingClick={headingClick}
         totalCount={sidenavTotalCollectionCount}
         icon={undefined} />

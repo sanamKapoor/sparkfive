@@ -107,40 +107,86 @@ export const useMoveModal = (): MoveModalReturnType => {
         })
 
     };
-    // Handle folder selection toggle
-    const toggleSelected = async (folderId: string, selected: boolean, subFolderToggle?: boolean, mainFolderId?: string, name = "") => {
-        const actionFolderId = subFolderToggle ? mainFolderId : folderId;
+
+    const toggleSelected = async (
+        folderId: string,
+        selected: boolean,
+        subFolderToggle?: boolean,
+        mainFolderId?: string,
+        name = "",
+        customRole?: boolean // Added this check to select the parent when subcollection select in case of parent
+    ) => {
+        const parentFolderId = subFolderToggle ? mainFolderId : folderId;
         if (selected) {
-            setSelectedFolder([...selectedFolder, folderId]);
-            insertIdsIntoFolder([{ [folderId]: { "name": name, parentId: subFolderToggle ? mainFolderId : null } }])
-            let selectedFolderArray: string[] = []
-            const allChildIds: string[] = []
-            if (!selectAllFolders[actionFolderId]) {
-                if (folderChildList.has(actionFolderId)) {
-                    const response = folderChildList.get(actionFolderId);
+            if (subFolderToggle && !selectedFolder.includes(parentFolderId) && customRole) {
+                setSelectedFolder([...selectedFolder, folderId, mainFolderId]);
+                insertIdsIntoFolder([
+                    {
+                        [folderId]: {
+                            name: name,
+                            parentId: subFolderToggle ? mainFolderId : null,
+                        },
+                        [mainFolderId]: {
+                            name: name,
+                            parentId: null,
+                        },
+                    },
+                ]);
+            } else {
+                setSelectedFolder([...selectedFolder, folderId]);
+                insertIdsIntoFolder([
+                    {
+                        [folderId]: {
+                            name: name,
+                            parentId: subFolderToggle ? mainFolderId : null,
+                        },
+                    },
+                ]);
+            }
+
+            let selectedFolderArray: string[] = [];
+            const allChildIds: string[] = [];
+            if (!selectAllFolders[parentFolderId]) {
+                if (folderChildList.has(parentFolderId)) {
+                    const response = folderChildList.get(parentFolderId);
                     if (response?.results?.length > 0) {
                         response?.results.forEach((item: Item) => {
                             allChildIds.push(item.id);
-                        })
-                        selectedFolderArray = Array.from(new Set(selectedFolder)).filter(item =>
-                            [...allChildIds, actionFolderId].includes(item)
+                        });
+                        selectedFolderArray = Array.from(new Set(selectedFolder)).filter(
+                            (item) => [...allChildIds, parentFolderId].includes(item)
                         );
                     }
                 }
-                if ([...selectedFolderArray, folderId].length === [...allChildIds, actionFolderId].length) {
-                    setSelectAllFolders((prev) => ({ ...prev, [actionFolderId]: true }))
+
+                if (
+                    [...selectedFolderArray, folderId].length ===
+                    [...allChildIds, parentFolderId].length ||
+                    (!subFolderToggle && !showDropdown.includes(folderId))
+                ) {
+                    setSelectAllFolders((prev) => ({ ...prev, [parentFolderId]: true }));
+                } else if (
+                    subFolderToggle &&
+                    !selectedFolder.includes(parentFolderId) &&
+                    [...selectedFolderArray, folderId, parentFolderId].length ===
+                    [...allChildIds, parentFolderId].length, customRole
+                ) {
+                    setSelectAllFolders((prev) => ({ ...prev, [parentFolderId]: true }));
                 }
             }
         } else {
             setSelectedFolder(selectedFolder.filter((item) => item !== folderId));
-            removeIdsIntoFolder([folderId])
-            if (selectAllFolders[actionFolderId]) {
-                setSelectAllFolders((prev) => ({ ...prev, [actionFolderId]: false }))
-            };
-            // Remove on Icon click of selected folders on above modal in edit page  
-            if (completeSelectedFolder.get(actionFolderId)?.parentId) {
-                setSelectAllFolders((prev) => ({ ...prev, [completeSelectedFolder.get(actionFolderId)?.parentId]: false }))
-            };
+            removeIdsIntoFolder([folderId]);
+            if (selectAllFolders[parentFolderId]) {
+                setSelectAllFolders((prev) => ({ ...prev, [parentFolderId]: false }));
+            }
+            // Remove on Icon click of selected folders on above modal in edit page
+            if (completeSelectedFolder.get(parentFolderId)?.parentId) {
+                setSelectAllFolders((prev) => ({
+                    ...prev,
+                    [completeSelectedFolder.get(parentFolderId)?.parentId]: false,
+                }));
+            }
         }
     };
     // Handle dropdown toggle for displaying subfolders

@@ -44,6 +44,8 @@ const AssetsLibrary = () => {
 
   const {
     assets,
+    sidenavFolderList,
+    setSidenavFolderList,
     setAssets,
     folders,
     setFolders,
@@ -84,6 +86,7 @@ const AssetsLibrary = () => {
     selectedAllSubFoldersAndAssets,
     setSelectedAllSubFoldersAndAssets,
     loadingAssets,
+    appendNewSubSidenavFolders
   } = useContext(AssetContext);
 
   const {
@@ -660,9 +663,18 @@ const AssetsLibrary = () => {
         setUploadingAssets(newPlaceholders);
 
         // Showing assets = uploading assets + existing assets
-        setAssets([...newPlaceholders, ...currentDataClone]);
-        setFolders([...folderPlaceholders, ...currenFolderClone]);
-
+        if (activeSortFilter?.mainFilter === "SubCollectionView") {
+          setSubFoldersAssetsViewList(
+            {
+              ...subFoldersAssetsViewList,
+              results: [...newPlaceholders],
+            },
+            false
+          );
+        } else {
+          setAssets([...newPlaceholders, ...currentDataClone]);
+          setFolders([...folderPlaceholders, ...currenFolderClone]);
+        }
         // Get team advance configurations first
         const subFolderAutoTag = advancedConfig.subFolderAutoTag;
 
@@ -672,7 +684,9 @@ const AssetsLibrary = () => {
           newPlaceholders,
           currentDataClone,
           totalSize,
-          activeFolder,
+          activeSortFilter?.mainFilter === "SubCollectionView"
+            ? activeSubFolders
+            : activeFolder,
           undefined,
           subFolderAutoTag
         );
@@ -683,7 +697,9 @@ const AssetsLibrary = () => {
         // Finish uploading process
         showUploadProcess("done");
 
-        if (needsFolderFetch) {
+        if (activeSortFilter?.mainFilter === "SubCollectionView") {
+          setNeedsFetch("SubCollectionView");
+        } else if (needsFolderFetch) {
           setNeedsFetch("folders");
         }
       } catch (err) {
@@ -1018,14 +1034,17 @@ const AssetsLibrary = () => {
             total: subFoldersViewList.total - 1,
           });
         }
+        appendNewSubSidenavFolders([], activeSubFolders, true, id)
         toastUtils.success("Sub collection deleted successfully");
       } else {
-        const modFolderIndex = folders.findIndex((folder) => folder.id === id);
+        const modFolderIndex = folders.findIndex((folder: any) => folder.id === id);
         setFolders(
           update(folders, {
             $splice: [[modFolderIndex, 1]],
           })
         );
+        setSidenavFolderList({ results: [...sidenavFolderList.filter((folder: any) => folder.id !== id)] });
+
         toastUtils.success("Collection deleted successfully");
       }
     } catch (err) {
@@ -1128,8 +1147,8 @@ const AssetsLibrary = () => {
                 </div>
                 <div
                   className={`${sidebarOpen
-                      ? styles["grid-wrapper-web"]
-                      : styles["grid-wrapper"]
+                    ? styles["grid-wrapper-web"]
+                    : styles["grid-wrapper"]
                     } ${activeFolder && styles["active-breadcrumb-item"]}`}
                 >
                   {activeMode !== "folders" && (
