@@ -252,20 +252,24 @@ const FolderGridItem = ({
                 onClick={viewFolder}
               />
             </div>
-            <div
-              className={`${styles["selectable-wrapper"]} ${isSelected && styles["selected-wrapper"]
-                }`}
-            >
-              <IconClickable
-                src={
-                  isSelected
-                    ? Utilities.radioButtonEnabled
-                    : Utilities.radioButtonNormal
-                }
-                additionalClass={styles["select-icon"]}
-                onClick={toggleSelected}
-              />
-            </div>
+        
+                 <div
+                 className={`${styles["selectable-wrapper"]} ${isSelected && styles["selected-wrapper"]
+                   }`}
+               >
+                 <IconClickable
+                   src={
+                     isSelected
+                       ? Utilities.radioButtonEnabled
+                       : Utilities.radioButtonNormal
+                   }
+                   additionalClass={styles["select-icon"]}
+                   onClick={toggleSelected}
+                 />
+               </div>
+
+          
+         
           </>
         </div>
       </div>
