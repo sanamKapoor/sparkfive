@@ -35,10 +35,10 @@ const FolderGridItem = ({
   viewFolder,
   isLoading = false,
   deleteFolder,
-  shareAssets = (folder: string) => {},
+  shareAssets = (folder: string) => { },
   changeThumbnail,
-  deleteThumbnail = (folder: string) => {},
-  copyShareLink = (folder: string) => {},
+  deleteThumbnail = (folder: string) => { },
+  copyShareLink = (folder: string) => { },
   toggleSelected,
   copyEnabled,
   sharePath = "",
@@ -253,9 +253,8 @@ const FolderGridItem = ({
               />
             </div>
             <div
-              className={`${styles["selectable-wrapper"]} ${
-                isSelected && styles["selected-wrapper"]
-              }`}
+              className={`${styles["selectable-wrapper"]} ${isSelected && styles["selected-wrapper"]
+                }`}
             >
               <IconClickable
                 src={
@@ -279,9 +278,9 @@ const FolderGridItem = ({
           {/* listHeading is for list-view */}
           <div className={`${styles.folderItemHeading} ${  activeView === "list" && styles.listHeading}`}>
             {isThumbnailNameEditable &&
-            isEditing &&
-            focusedItem &&
-            focusedItem === id ? (
+              isEditing &&
+              focusedItem &&
+              focusedItem === id ? (
               <input
                 className={`normal-text ${gridStyles["editable-input"]}`}
                 value={thumbnailName}
@@ -305,16 +304,13 @@ const FolderGridItem = ({
             )}
             <div className={styles["details-wrapper"]}>
               {folderType === "SubCollection" ? (
-                <div className="secondary-text">{`${
-                  assets?.length || 0
-                } Assets`}</div>
+                <div className="secondary-text">{`${assets?.length ?? 0
+                  } Assets`}</div>
               ) : (
-                <div className="secondary-text">{`${
-                  Number(assetsCount) + Number(totalchildassests)
-                } Assets 
-              ${Number(totalchild) !== 0 ? Number(totalchild) : ""}${
-                  Number(totalchild) !== 0 ? " Subcollection" : ""
-                }`}</div>
+                <div className="secondary-text">{`${Number(assetsCount ?? 0) + Number(totalchildassests ?? 0)
+                  } Assets 
+              ${Number(totalchild) !== 0 ? Number(totalchild ?? 0) : ""}${Number(totalchild) !== 0 ? " Subcollection" : ""
+                  }`}</div>
               )}
             </div>
           </div>

@@ -322,6 +322,7 @@ const AddCustomRole: React.FC<AddCustomRoleProps> = ({ onSave, role }) => {
                 toggleDropdown={toggleDropdown}
                 toggleSelectAllChildList={toggleSelectAllChildList}
                 completeSelectedFolder={completeSelectedFolder}
+                isCustomRestriction={true}
               />
             </div>
 

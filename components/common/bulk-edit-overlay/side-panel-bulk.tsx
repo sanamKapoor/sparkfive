@@ -399,16 +399,19 @@ const SidePanelBulk = ({
                 {folders.map((folder, index) => (
                   <div key={index}>
                     <div className={`${styles["flex"]} ${styles.nestedbox}`}>
-                      <div className={`${styles["height"]} ${styles["flex"]}`}
-                        onClick={() => { toggleDropdown(folder.id, true) }}
-                      >
-                        <img
-                          className={showDropdown.includes(folder.id) ? styles.iconClick : styles.rightIcon}
-                          src={Utilities.arrowBlue}
-                          alt="Right Arrow Icon"
+                      {folder?.childFolders?.length > 0 &&
+                        (<div className={`${styles["height"]} ${styles["flex"]}`}
                           onClick={() => { toggleDropdown(folder.id, true) }}
-                        />
-                      </div>
+                        >
+                          <img
+                            className={showDropdown.includes(folder.id) ? styles.iconClick : styles.rightIcon}
+                            src={Utilities.arrowBlue}
+                            alt="Right Arrow Icon"
+                            onClick={() => { toggleDropdown(folder.id, true) }}
+                          />
+                        </div>
+                        )
+                      }
 
                       <div className={styles.w100}>
                         <div
@@ -435,21 +438,23 @@ const SidePanelBulk = ({
                             </div>
                           </div>
                           <div>
-                            <div className={styles["list1-right-contents"]}>
-                              {
-                                selectAllFolders[folder.id] ?
-                                  <div style={{ cursor: "pointer" }} onClick={() => toggleSelectAllChildList(folder.id, folder.name)} className={`${styles['deselect-all']}`}>
-                                    <img
-                                      src={Utilities.redCheck} alt="Check Icon" />
-                                    <span className={styles.deselectText}>Deselect All</span>
-                                  </div>
-                                  :
-                                  <div style={{ cursor: "pointer" }} onClick={() => toggleSelectAllChildList(folder.id, folder.name)} className={`${styles['select-all']}`}>
-                                    <img src={Utilities.doubleCheck} alt="Check Icon" />
-                                    <span className={styles.selectText}>Select All</span>
-                                  </div>
-                              }
-                            </div>
+                            {folder?.childFolders?.length > 0 && (
+                              <div className={styles["list1-right-contents"]}>
+                                {
+                                  selectAllFolders[folder.id] ?
+                                    <div style={{ cursor: "pointer" }} onClick={() => toggleSelectAllChildList(folder.id, folder.name)} className={`${styles['deselect-all']}`}>
+                                      <img
+                                        src={Utilities.redCheck} alt="Check Icon" />
+                                      <span className={styles.deselectText}>Deselect All</span>
+                                    </div>
+                                    :
+                                    <div style={{ cursor: "pointer" }} onClick={() => toggleSelectAllChildList(folder.id, folder.name)} className={`${styles['select-all']}`}>
+                                      <img src={Utilities.doubleCheck} alt="Check Icon" />
+                                      <span className={styles.selectText}>Select All</span>
+                                    </div>
+                                }
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>

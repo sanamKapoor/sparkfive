@@ -59,14 +59,9 @@ const SingleCollectionSubcollectionListing = ({
 }) => {
     const { hasPermission } = useContext(UserContext);
 
-
-
     useEffect(() => {
         getFolders()
     }, [])
-
-
-
 
     return (
         <div className={styles["field-wrapper"]}>
@@ -111,17 +106,19 @@ const SingleCollectionSubcollectionListing = ({
                         {folders.map((folder, index) => (
                             <div key={index}>
                                 <div className={`${styles["flex"]} ${styles.nestedbox}`}>
-                                    <div className={`${styles["height"]} ${styles["flex"]}`}
-                                        onClick={() => { toggleDropdown(folder.id, true) }}
-                                    >
-                                        <img
-                                            className={showDropdown.includes(folder.id) ? styles.iconClick : styles.rightIcon}
-                                            src={Utilities.arrowBlue}
-                                            alt="Right Arrow Icon"
-                                            onClick={() => { toggleDropdown(folder.id, true) }}
-                                        />
-                                    </div>
 
+                                    {folder?.childFolders?.length > 0 && (
+                                        <div className={`${styles["height"]} ${styles["flex"]}`}
+                                            onClick={() => { toggleDropdown(folder.id, true) }}
+                                        >
+                                            <img
+                                                className={showDropdown.includes(folder.id) ? styles.iconClick : styles.rightIcon}
+                                                src={Utilities.arrowBlue}
+                                                alt="Right Arrow Icon"
+                                                onClick={() => { toggleDropdown(folder.id, true) }}
+                                            />
+                                        </div>
+                                    )}
                                     <div className={styles.w100}>
                                         <div
                                             className={`${styles["dropdownMenu"]} ${selectedFolder.includes(folder.id) ?

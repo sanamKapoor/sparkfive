@@ -1762,7 +1762,8 @@ const UploadRequest = () => {
                     </div>
 
                     {isAdmin() && (
-                      <CollectionSubcollectionListing activeDropdown={activeDropdown}
+                      <CollectionSubcollectionListing
+                        activeDropdown={activeDropdown}
                         setActiveDropdown={setActiveDropdown}
                         folders={folders}
                         selectedFolder={selectedFolder}
@@ -1778,11 +1779,6 @@ const UploadRequest = () => {
                         toggleSelected={toggleSelectedFolders}
                         toggleDropdown={toggleDropdown}
                         toggleSelectAllChildList={toggleSelectAllChildList}
-                        setSelectedFolder={setSelectedFolder}
-                        setShowDropdown={setShowDropdown}
-                        setSubFolderLoadingState={setSubFolderLoadingState}
-                        setFolderChildList={setFolderChildList}
-                        setSelectAllFolders={setSelectAllFolders}
                         completeSelectedFolder={completeSelectedFolder}
                       />
                     )}

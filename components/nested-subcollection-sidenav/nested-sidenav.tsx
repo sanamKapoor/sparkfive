@@ -36,10 +36,12 @@ const NestedSidenav = ({ viewFolder }) => {
     }
     let sort = activeSortFilter.sort;
     if (value === "folders") {
-      sort =
-        advancedConfig.collectionSortView === "alphabetical"
-          ? selectOptions.sort[3]
-          : selectOptions.sort[1];
+      if (activeSortFilter.mainFilter !== "folders") {
+        sort =
+          advancedConfig.collectionSortView === "alphabetical"
+            ? selectOptions.sort[3]
+            : selectOptions.sort[1];
+      }
     } else {
       sort =
         advancedConfig.assetSortView === "newest"
