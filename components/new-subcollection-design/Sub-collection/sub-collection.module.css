@@ -176,3 +176,14 @@
   
 
   
+  /* list view css starts from here */
+  .list-wrapper{
+    grid-template-columns: unset;
+    
+
+  }
+
+  .list-asset-wrapper{
+    grid-template-columns: unset;
+
+  }

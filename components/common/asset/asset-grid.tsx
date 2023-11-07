@@ -389,10 +389,11 @@ const AssetGrid = ({
       )}
       {
         <div className={styles["list-wrapper"]}>
-          {activeView === "grid" && (
+           {/* testing component starts from here */}
+           {activeView === "grid" && (
             <ul
               className={`${mode === "SubCollectionView" ? "" : styles["grid-list"]
-                } ${styles[itemSize]}
+                } ${styles[itemSize]} ${styles["list-view"]} 
             ${mode === "assets"
                   ? openFilter
                     ? styles["grid-filter-" + advancedConfig.assetThumbnail]
@@ -527,6 +528,8 @@ const AssetGrid = ({
                 })}
             </ul>
           )}
+           
+           
           {activeView === "list" && (
             <ul className={`${styles["regularlist"]}`}>
               {/* {mode === "SubCollectionView" && */}
@@ -652,6 +655,8 @@ const AssetGrid = ({
           )}
         </div>
       }
+
+     
 
       {/* Change thumbnail modal */}
       <ChangeThumbnail

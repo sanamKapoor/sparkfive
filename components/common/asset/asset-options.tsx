@@ -10,6 +10,7 @@ import ToggleableAbsoluteWrapper from "../misc/toggleable-absolute-wrapper";
 
 import { useContext } from "react";
 import { UserContext } from "../../../context";
+import React from "react";
 
 const AssetOptions = ({
   itemType = "",
@@ -85,6 +86,8 @@ const AssetOptions = ({
             src={Utilities.more}
             additionalClass={styles.thumbnailDots}
           />
+          {/* this is for list view  */}
+             <IconClickable additionalClass={styles["edit-icon"]} src={Utilities.edit} />
           {children}
         </>
       )}

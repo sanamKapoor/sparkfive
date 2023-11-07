@@ -130,6 +130,9 @@ const FolderOptions = ({
             src={Utilities.more}
             additionalClass={styles.folderDots}
           />
+
+          {/* this edit icon is for list view */}
+          <IconClickable additionalClass={styles["edit-icon"]} src={Utilities.edit} />
           {children}
         </>
       )}

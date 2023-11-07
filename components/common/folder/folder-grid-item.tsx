@@ -22,6 +22,7 @@ import folderApi from "../../../server-api/folder";
 import shareFolderApi from "../../../server-api/share-collection";
 import toastUtils from "../../../utils/toast";
 import AssetIcon from "../asset/asset-icon";
+import React from "react";
 
 const FolderGridItem = ({
   id,
@@ -179,8 +180,9 @@ const FolderGridItem = ({
   };
 
   return (
-    <div className={`${styles.container} ${isLoading && "loadable"}`}>
-      <div className={`${styles["main-border"]}`}>
+    <div className={`${styles.container} ${styles.listContainer} ${isLoading && "loadable"}`}>
+      {/* list-main-border is list-item class */}
+      <div className={`${styles["main-border"]} ${styles['list-main-border']}`}> 
         <div
           className={
             thumbnailPath || thumbnailExtension
@@ -188,8 +190,11 @@ const FolderGridItem = ({
                   openFilter ? styles["filter_open"] : ""
                 }`
               : `${styles["image-wrapper"]} ${
-                  openFilter ? styles["filter_open"] : ""
-                }`
+                  openFilter ? styles["filter_open"] : "" 
+                  }
+                ${styles["list-image-wrapper"]}
+                `
+                
           }
         >
           <>
@@ -246,9 +251,11 @@ const FolderGridItem = ({
           </>
         </div>
       </div>
-      <div className={styles.info} onClick={handleOnFocus}>
+      {/* listInfo is for list-view */}
+      <div className={`${styles.info} ${styles.listInfo}`} onClick={handleOnFocus}>
         <div className={styles.folderItemHeadingOuter}>
-          <div className={styles.folderItemHeading}>
+          {/* listHeading is for list-view */}
+          <div className={`${styles.folderItemHeading} ${styles.listHeading}`}>
             {isThumbnailNameEditable &&
             isEditing &&
             focusedItem &&
@@ -264,9 +271,10 @@ const FolderGridItem = ({
               <span
                 id="editable-preview"
                 onClick={handleOnFocus}
+                // list-text is for list-view
                 className={
                   isThumbnailNameEditable
-                    ? `normal-text ${styles["wrap-text"]} ${gridStyles["editable-preview"]}`
+                    ? `normal-text ${styles["wrap-text"]} ${gridStyles["editable-preview"]} ${styles["list-text"]}`
                     : `${gridStyles["editable-preview"]} ${gridStyles["non-editable-preview"]}`
                 }
               >
@@ -288,6 +296,11 @@ const FolderGridItem = ({
               )}
             </div>
           </div>
+          {/* createdData is for list view */}
+          <div className={styles.createdDate}>
+          05/14/23
+          </div>
+          
           <FolderOptions
             activeFolderId={id}
             isShare={isShare}

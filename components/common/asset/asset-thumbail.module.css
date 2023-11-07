@@ -164,3 +164,41 @@
   overflow: hidden;
   width: 100%;
 }
+
+
+/* list view css starts from here  */
+.listHeading{
+  flex-direction: row;
+  gap:100px;
+}
+.createdDate{
+  width: 100%;
+}
+
+.listContainer{
+  display: flex;
+  flex-direction: row;
+  border:none;
+  align-items: center;
+}
+
+.list-image-wrapper{
+  max-width: 64px;
+  height:100%;
+}
+.listContainer img{
+  max-width: 64px;
+  width: 100%;
+}
+.list-text{
+  width: 40%;
+}
+.list-main-border{
+  border:none;
+  height: unset;
+  padding: 0;
+}
+.listInfo{
+  width: 100%;
+  border:none;
+}

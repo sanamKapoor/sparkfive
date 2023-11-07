@@ -29,6 +29,7 @@
   bottom: inherit;
 }
 
+/* need to uncomment */
 .grid-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(246px, 1fr));
@@ -73,4 +74,13 @@
   display: flex;
   justify-content: center;
   margin-bottom: 2.5rem;
+}
+
+
+/* List view code starts form here */
+.list-view{
+  display: flex;
+ flex-direction: column;
+  grid-gap: 40px;
+  
 }

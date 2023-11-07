@@ -99,7 +99,8 @@ const SubCollection = (
       </div>
       {!collectionHide &&
         <>
-          <div className={styles.cardsWrapper}>
+        {/* list wrapper for list view */}
+          <div className={`${styles['cardsWrapper']} ${styles['list-wrapper']}`}>
             {results.map((folder, index) => {
               return (
                 <li
@@ -151,7 +152,7 @@ const SubCollection = (
             <img className={styles.ExpandIcons} onClick={() => { handleAssetsHideClick() }} src={assetsHide ? Utilities.up : Utilities.downIcon} />
           </div>
         </div>
-        <div className={styles.assetWrapper}>
+        <div className={`${styles['assetWrapper']} ${styles['list-wrapper']}`}>
           {!assetsHide && assets.map((assetItem, index) => {
             if (assetItem.status !== "fail") {
               return (

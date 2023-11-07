@@ -1,5 +1,8 @@
 .asset-actions-wrapper {
     position: relative;
+    display: flex;
+    align-items: center;
+    gap:10px
   }
   
   .more ul {
@@ -9,5 +12,11 @@
   }
 
   img.thumbnailDots {
-    width: 16px;
+    width: 16px !important;
+  }
+
+  /* for list view  */
+  
+  .edit-icon{
+    width: 15px;
   }

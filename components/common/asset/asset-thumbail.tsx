@@ -22,6 +22,7 @@ import DetailOverlay from "./detail-overlay";
 
 import HoverVideoPlayer from "react-hover-video-player";
 import Spinner from "../spinners/spinner";
+import React from "react";
 
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
 
@@ -159,8 +160,9 @@ const AssetThumbail = ({
 
   return (
     <>
-      <div className={`${styles.container} ${isLoading && "loadable"}`}>
-        <div className={styles["image-wrapper"]}>
+      <div className={`${styles.container} ${styles.listContainer} ${isLoading && "loadable"}`}>
+        {/* list-image -wrapper is for list view */}
+        <div className={`${styles['image-wrapper']} ${styles['list-image-wrapper']}`}>
           {isUploading && (
             <>
               <p className={styles.uploading}>Uploading...</p>
@@ -244,25 +246,30 @@ const AssetThumbail = ({
               </>
             )}
         </div>
-        <div className={styles.info}>
+        {/* list-info is for list view  */}
+        <div className={`${styles.info} ${styles.listInfo}`}>
           <div className={`${infoWrapperClass} overflow--visible`}>
             <div
               className={`${textWrapperClass} overflow--visible ${styles.folderItemHeadingOuter}`}
             >
-              <div className={styles.folderItemHeading}>
+              {/* folderItemHeading is for list view */}
+              <div className= {`${styles.folderItemHeading} ${styles.listHeading}`}>
                 {isThumbnailNameEditable &&
                   isEditing &&
                   focusedItem &&
                   focusedItem === asset.id ? (
+                    // list-text is for list view
                   <input
                     autoFocus
-                    className={`normal-text ${gridStyles["editable-input"]} ${styles["wrap-text"]}`}
+                    className={`normal-text ${gridStyles["editable-input"]} ${styles["wrap-text"]}  ${styles["list-text"]}`}
                     value={thumbnailName}
                     onChange={handleNameChange}
                     onBlur={updateNameOnBlur}
                   />
+                 
                 ) : (
-                  <div className={`normal-text ${styles["wrap-text"]}`}>
+                  // list-text is for list view 
+                  <div className={`normal-text ${styles["wrap-text"]} ${styles["list-text"]}`}>
                     <span
                       id="editable-preview"
                       onClick={handleOnFocus}
@@ -277,11 +284,19 @@ const AssetThumbail = ({
                     </span>
                   </div>
                 )}
+                {/* only for list view */}
+                {/* size */}
+                 <div className={styles.size}>13.37KB</div>
                 <div className={styles["details-wrapper"]}>
                   <div className="secondary-text">
                     {format(new Date(asset.createdAt), "MMM d, yyyy, p")}
                   </div>
                 </div>
+                {/* only for list view  */}
+                {/* date modified */}
+                <div className={styles.modifiedDate}>5/14/23</div>
+                {/* extensions */}
+                <div className={styles.extension}>jpej</div>
               </div>
               {!isUploading && showAssetOption && (
                 <AssetOptions
