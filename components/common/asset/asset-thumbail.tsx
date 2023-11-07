@@ -63,6 +63,7 @@ const AssetThumbail = ({
   isThumbnailNameEditable = false,
   focusedItem,
   setFocusedItem,
+  activeView
 }) => {
   const [overlayProperties, setOverlayProperties] =
     useState(DEFAULT_DETAIL_PROPS);
@@ -160,9 +161,28 @@ const AssetThumbail = ({
 
   return (
     <>
-      <div className={`${styles.container} ${styles.listContainer} ${isLoading && "loadable"}`}>
+      <div className={`${styles.container} ${ activeView === "list" && styles.listContainer} ${isLoading && "loadable"}`}>
+           {/* select wrapper is for list view  */}
+           {activeView==="list" ? (
+               <div
+               className={`${styles["list-select-icon"]} ${isSelected && styles["selected-wrapper"]}`}
+             >
+               <IconClickable
+                 src={
+                   isSelected
+                     ? Utilities.radioButtonEnabled
+                     : Utilities.radioButtonNormal
+                 }
+                 additionalClass={styles["select-icon"]}
+                 onClick={toggleSelected}
+               />
+             </div>
+
+
+           ):null}
+   
         {/* list-image -wrapper is for list view */}
-        <div className={`${styles['image-wrapper']} ${styles['list-image-wrapper']}`}>
+        <div className={`${styles['image-wrapper']} ${ activeView === "list" && styles['list-image-wrapper']}`}>
           {isUploading && (
             <>
               <p className={styles.uploading}>Uploading...</p>
@@ -247,13 +267,13 @@ const AssetThumbail = ({
             )}
         </div>
         {/* list-info is for list view  */}
-        <div className={`${styles.info} ${styles.listInfo}`}>
+        <div className={`${styles.info} ${activeView === "list" &&  styles.listInfo}`}>
           <div className={`${infoWrapperClass} overflow--visible`}>
             <div
               className={`${textWrapperClass} overflow--visible ${styles.folderItemHeadingOuter}`}
             >
               {/* folderItemHeading is for list view */}
-              <div className= {`${styles.folderItemHeading} ${styles.listHeading}`}>
+              <div className= {`${styles.folderItemHeading} ${ activeView === "list" &&  styles.listHeading}`}>
                 {isThumbnailNameEditable &&
                   isEditing &&
                   focusedItem &&
@@ -261,7 +281,7 @@ const AssetThumbail = ({
                     // list-text is for list view
                   <input
                     autoFocus
-                    className={`normal-text ${gridStyles["editable-input"]} ${styles["wrap-text"]}  ${styles["list-text"]}`}
+                    className={`normal-text ${gridStyles["editable-input"]} ${styles["wrap-text"]}  ${ activeView === "list" &&   styles["list-text"]}`}
                     value={thumbnailName}
                     onChange={handleNameChange}
                     onBlur={updateNameOnBlur}
@@ -269,7 +289,7 @@ const AssetThumbail = ({
                  
                 ) : (
                   // list-text is for list view 
-                  <div className={`normal-text ${styles["wrap-text"]} ${styles["list-text"]}`}>
+                  <div className={`normal-text ${styles["wrap-text"]} ${activeView === "list" &&  styles["list-text"]}`}>
                     <span
                       id="editable-preview"
                       onClick={handleOnFocus}
@@ -286,7 +306,10 @@ const AssetThumbail = ({
                 )}
                 {/* only for list view */}
                 {/* size */}
-                 <div className={styles.size}>13.37KB</div>
+               
+                 <div  className={styles["size"]}>
+                  <span> 13.37KB</span>
+                 </div>
                 <div className={styles["details-wrapper"]}>
                   <div className="secondary-text">
                     {format(new Date(asset.createdAt), "MMM d, yyyy, p")}
@@ -294,9 +317,9 @@ const AssetThumbail = ({
                 </div>
                 {/* only for list view  */}
                 {/* date modified */}
-                <div className={styles.modifiedDate}>5/14/23</div>
+                <div  className={`${styles['modified-date']}}`}>5/14/23</div>
                 {/* extensions */}
-                <div className={styles.extension}>jpej</div>
+                <div className={`${styles['extension']}}`}>jpej</div>
               </div>
               {!isUploading && showAssetOption && (
                 <AssetOptions

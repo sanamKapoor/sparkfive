@@ -24,6 +24,7 @@ const AssetOptions = ({
   openComments,
   openRemoveAsset,
   dissociateAsset,
+  activeView,
   isShare = false,
   isAssetRelated = false,
 }) => {
@@ -87,7 +88,14 @@ const AssetOptions = ({
             additionalClass={styles.thumbnailDots}
           />
           {/* this is for list view  */}
-             <IconClickable additionalClass={styles["edit-icon"]} src={Utilities.edit} />
+          {activeView === "list" ? (
+            <div>
+            <IconClickable additionalClass={styles["edit-icon"]} src={Utilities.edit} />
+            </div>
+
+          ):null}
+          
+           
           {children}
         </>
       )}

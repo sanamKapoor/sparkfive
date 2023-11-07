@@ -132,7 +132,12 @@ const FolderOptions = ({
           />
 
           {/* this edit icon is for list view */}
+          {activeView === "list" ? (
+          <div>
           <IconClickable additionalClass={styles["edit-icon"]} src={Utilities.edit} />
+          </div>
+          ) : null}
+        
           {children}
         </>
       )}

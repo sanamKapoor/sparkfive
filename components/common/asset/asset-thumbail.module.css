@@ -80,6 +80,7 @@
   overflow: hidden;
   font-size: 13px;
   font-weight: 500;
+  max-width: 300px;
 }
 
 @keyframes halfopacity {
@@ -202,3 +203,12 @@
   width: 100%;
   border:none;
 }
+.list-select-icon{
+  width: 25px;
+  margin-right: 10px;
+}
+.size{
+  display: block;
+  width: 10% !important;
+}
+

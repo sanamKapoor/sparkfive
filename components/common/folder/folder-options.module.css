@@ -3,6 +3,7 @@
     display: flex;
     align-items: center;
     gap:20px;
+    width:10%;
   }
   
   .more ul {
@@ -14,7 +15,7 @@
     width: 16px !important;
   }
   .edit-icon{
-    width: 15px;
+    width: 15px !important;
   }
 
 
@@ -22,7 +23,4 @@
   .edit-icon{
     display: none;
   }
-
-
-  
 }

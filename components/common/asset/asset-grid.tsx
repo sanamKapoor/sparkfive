@@ -388,12 +388,14 @@ const AssetGrid = ({
         />
       )}
       {
+        //  className={`${mode === "SubCollectionView" ? "" : styles["grid-list"]
+        // } ${styles[itemSize]} ${styles["list-view"]} 
         <div className={styles["list-wrapper"]}>
            {/* testing component starts from here */}
-           {activeView === "grid" && (
+           { (
             <ul
               className={`${mode === "SubCollectionView" ? "" : styles["grid-list"]
-                } ${styles[itemSize]} ${styles["list-view"]} 
+                } ${styles[itemSize]} ${activeView === "list" && styles["list-view"]} 
             ${mode === "assets"
                   ? openFilter
                     ? styles["grid-filter-" + advancedConfig.assetThumbnail]
@@ -485,6 +487,8 @@ const AssetGrid = ({
                           isThumbnailNameEditable={isThumbnailNameEditable}
                           focusedItem={focusedItem}
                           setFocusedItem={setFocusedItem}
+                          activeView={activeView}
+
                         />
                       </li>
                     );
@@ -530,105 +534,7 @@ const AssetGrid = ({
           )}
            
            
-          {activeView === "list" && (
-            <ul className={`${styles["regularlist"]}`}>
-              {/* {mode === "SubCollectionView" && */}
-              {/* <SubcollectionListView /> */}
-              {/* } */}
-              {mode === "assets" &&
-                sortedAssets.map((assetItem, index) => {
-                  return (
-                    <li
-                      className={styles["regular-item"]}
-                      key={assetItem.asset.id || index}
-                      onClick={(e) => handleFocusChange(e, assetItem.asset.id)}
-                    >
-                      <ListItem
-                        sharePath={sharePath}
-                        isShare={isShare}
-                        type={type}
-                        assetItem={assetItem}
-                        activeFolder={activeFolder}
-                        index={index}
-                        toggleSelected={() =>
-                          toggleSelected(assetItem.asset.id)
-                        }
-                        openArchiveAsset={() =>
-                          openArchiveAsset(assetItem.asset.id)
-                        }
-                        openDeleteAsset={() =>
-                          openDeleteAsset(assetItem.asset.id)
-                        }
-                        openMoveAsset={() =>
-                          beginAssetOperation({ asset: assetItem }, "move")
-                        }
-                        openCopyAsset={() =>
-                          beginAssetOperation({ asset: assetItem }, "copy")
-                        }
-                        openShareAsset={() =>
-                          beginAssetOperation({ asset: assetItem }, "share")
-                        }
-                        downloadAsset={() => downloadAsset(assetItem)}
-                        openRemoveAsset={() =>
-                          beginAssetOperation(
-                            { asset: assetItem },
-                            "remove_item"
-                          )
-                        }
-                        setCurrentSortAttribute={setCurrentSortAttribute}
-                        sortAttribute={currentSortAttribute}
-                        isNameEditable={isThumbnailNameEditable}
-                        focusedItem={focusedItem}
-                        setFocusedItem={setFocusedItem}
-                      />
-                    </li>
-                  );
-                })}
-              {mode === "folders" &&
-                sortedFolders.map((folder, index) => {
-                  return (
-                    <li
-                      className={`${styles["grid-item"]} ${!openFilter
-                        ? styles[
-                        " grid-" + advancedConfig.collectionThumbnail
-                        ]
-                        : styles[
-                        "grid-filter-" +
-                        advancedConfig.collectionThumbnail
-                        ]
-                        }`}
-                      key={folder.id || index}
-                      onClick={(e) => handleFocusChange(e, folder.id)}
-                    >
-                      <FolderListItem
-                        {...folder}
-                        isShare={isShare}
-                        sharePath={sharePath}
-                        toggleSelected={() => toggleSelected(folder.id)}
-                        viewFolder={() => viewFolder(folder.id, true)}
-                        deleteFolder={() => deleteFolder(folder.id)}
-                        index={index}
-                        copyShareLink={() => copyShareLink(folder)}
-                        copyEnabled={getShareIsEnabled(folder)}
-                        shareAssets={() =>
-                          beginAssetOperation({ folder }, "shareFolders")
-                        }
-                        setCurrentSortAttribute={setCurrentSortFolderAttribute}
-                        sortAttribute={currentSortFolderAttribute}
-                        changeThumbnail={beginChangeThumbnailOperation}
-                        deleteThumbnail={() =>
-                          deleteThumbnail({ folder }, "shareFolders")
-                        }
-                        activeView={activeView || mode}
-                        isNameEditable={isThumbnailNameEditable}
-                        focusedItem={focusedItem}
-                        setFocusedItem={setFocusedItem}
-                      />
-                    </li>
-                  );
-                })}
-            </ul>
-          )}
+         
           {showLoadMore && nextPage !== -1 && (
             <>
               {nextPage > 2 || mode === "folders" ? (
@@ -733,3 +639,5 @@ const AssetGrid = ({
 };
 
 export default AssetGrid;
+
+

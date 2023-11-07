@@ -180,9 +180,29 @@ const FolderGridItem = ({
   };
 
   return (
-    <div className={`${styles.container} ${styles.listContainer} ${isLoading && "loadable"}`}>
-      {/* list-main-border is list-item class */}
-      <div className={`${styles["main-border"]} ${styles['list-main-border']}`}> 
+    <div
+      className={`${styles.container} ${  activeView === "list" && styles.listContainer} ${
+        isLoading && "loadable"
+      }`}
+    >
+     {/* select wrapper is for list view  */}
+     {activeView === "list" ? (
+      <div
+        className={`${ activeView === "list" && styles["list-select-icon"]} ${isSelected && styles["selected-wrapper"]}`}
+      >
+        <IconClickable
+          src={
+            isSelected
+              ? Utilities.radioButtonEnabled
+              : Utilities.radioButtonNormal
+          }
+          additionalClass={styles["select-icon"]}
+          onClick={toggleSelected}
+        />
+      </div>
+     ):null}
+       {/* list-main-border is list-item class */}
+      <div className={`${styles["main-border"]} ${  activeView === "list" && styles["list-main-border"]}`}>
         <div
           className={
             thumbnailPath || thumbnailExtension
@@ -190,11 +210,10 @@ const FolderGridItem = ({
                   openFilter ? styles["filter_open"] : ""
                 }`
               : `${styles["image-wrapper"]} ${
-                  openFilter ? styles["filter_open"] : "" 
-                  }
-                ${styles["list-image-wrapper"]}
+                  openFilter ? styles["filter_open"] : ""
+                }
+                ${ activeView === "list" && styles["list-image-wrapper"]}
                 `
-                
           }
         >
           <>
@@ -252,10 +271,13 @@ const FolderGridItem = ({
         </div>
       </div>
       {/* listInfo is for list-view */}
-      <div className={`${styles.info} ${styles.listInfo}`} onClick={handleOnFocus}>
+      <div
+        className={`${styles.info} ${  activeView === "list" && styles.listInfo}`}
+        onClick={handleOnFocus}
+      >
         <div className={styles.folderItemHeadingOuter}>
           {/* listHeading is for list-view */}
-          <div className={`${styles.folderItemHeading} ${styles.listHeading}`}>
+          <div className={`${styles.folderItemHeading} ${  activeView === "list" && styles.listHeading}`}>
             {isThumbnailNameEditable &&
             isEditing &&
             focusedItem &&
@@ -274,7 +296,7 @@ const FolderGridItem = ({
                 // list-text is for list-view
                 className={
                   isThumbnailNameEditable
-                    ? `normal-text ${styles["wrap-text"]} ${gridStyles["editable-preview"]} ${styles["list-text"]}`
+                    ? `normal-text ${styles["wrap-text"]} ${gridStyles["editable-preview"]} ${  activeView === "list" && styles["list-text"]}`
                     : `${gridStyles["editable-preview"]} ${gridStyles["non-editable-preview"]}`
                 }
               >
@@ -297,10 +319,8 @@ const FolderGridItem = ({
             </div>
           </div>
           {/* createdData is for list view */}
-          <div className={styles.createdDate}>
-          05/14/23
-          </div>
-          
+          {/* <div className={styles.createdDate}>05/14/23</div> */}
+
           <FolderOptions
             activeFolderId={id}
             isShare={isShare}

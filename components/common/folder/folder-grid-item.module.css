@@ -188,8 +188,12 @@
   flex-direction: row;
   gap:100px;
 }
+.listHeading :hover{
+  opacity: .6;
+}
 .createdDate{
   width: 100%;
+  width: 20%;
 }
 
 .listContainer{
@@ -197,10 +201,14 @@
   align-items: center;
   flex-direction: row;
 }
+.select{
+  background: var(--color-sec-lightivory);
+  padding: 10px;
+}
 
 .list-image-wrapper{
   max-width: 64px;
-  max-height: 64px;
+
   height:100%;
 }
 .listContainer img{
@@ -208,7 +216,8 @@
   width: 100%;
 }
 .list-text{
-  width: 40%;
+  /* width: 40%; */
+  width: 60%;
 }
 .list-main-border{
   border:none;
@@ -218,6 +227,10 @@
 .listInfo{
   width: 100%;
   border:none;
+}
+.list-select-icon{
+  width: 25px;
+  margin-right: 10px;
 }
 
 @media (max-width:480px){

@@ -31,7 +31,14 @@
   
     display: none;
   }
-  
+  .search-icon{
+    display: flex;
+    align-items: center;
+  }
+  .search-icon img{
+    width: 24px;
+    height:24px;
+  }
 
 .wrapper {
   display: flex;

@@ -100,7 +100,7 @@ const SubCollection = (
       {!collectionHide &&
         <>
         {/* list wrapper for list view */}
-          <div className={`${styles['cardsWrapper']} ${styles['list-wrapper']}`}>
+          <div className={`${styles['cardsWrapper']} ${ activeView === "list" && styles['list-wrapper']}`}>
             {results.map((folder, index) => {
               return (
                 <li
@@ -127,7 +127,7 @@ const SubCollection = (
                     deleteThumbnail={() =>
                       deleteThumbnail({ folder }, "shareFolders")
                     }
-                    activeView={activeView || mode}
+                    activeView={activeView }
                     isThumbnailNameEditable={isThumbnailNameEditable}
                     focusedItem={focusedItem}
                     setFocusedItem={setFocusedItem}
@@ -152,7 +152,7 @@ const SubCollection = (
             <img className={styles.ExpandIcons} onClick={() => { handleAssetsHideClick() }} src={assetsHide ? Utilities.up : Utilities.downIcon} />
           </div>
         </div>
-        <div className={`${styles['assetWrapper']} ${styles['list-wrapper']}`}>
+        <div className={`${styles['assetWrapper']} ${ activeView === "list" && styles['list-wrapper']}`}>
           {!assetsHide && assets.map((assetItem, index) => {
             if (assetItem.status !== "fail") {
               return (
@@ -200,6 +200,7 @@ const SubCollection = (
                     isThumbnailNameEditable={isThumbnailNameEditable}
                     focusedItem={focusedItem}
                     setFocusedItem={setFocusedItem}
+                    activeView={activeView}
                   />
                 </li>
               );

@@ -241,7 +241,7 @@ const TopBar = ({
         </div>
         <div className={styles["sec-filters"]}>
           {!isMobile && !isShare && !activeSearchOverlay && (
-            <div>
+            <div className={styles["search-icon"]}>
               <img
                 src={Utilities.search}
                 onClick={setActiveSearchOverlay}
