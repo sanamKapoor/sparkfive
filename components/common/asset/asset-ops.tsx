@@ -43,7 +43,11 @@ export default ({ getAssets }) => {
     subFoldersAssetsViewList,
     setSubFoldersAssetsViewList,
     selectedAllSubFoldersAndAssets,
-    activeSubFolders
+    activeSubFolders,
+    setSubFoldersViewList,
+    setSidenavFolderList,
+    sidenavFolderList,
+    setListUpdateFlag
   } = useContext(AssetContext);
 
   const { setIsLoading } = useContext(LoadingContext);
@@ -197,8 +201,6 @@ export default ({ getAssets }) => {
     setOperationFolder(null);
   };
 
-
-
   const moveAssets = async (selectedFolder) => {
     try {
       setIsLoading(true);
@@ -249,11 +251,11 @@ export default ({ getAssets }) => {
       }
 
       await assetApi.updateMultiple(updateAssets, filters);
+      setListUpdateFlag(true);
       closeModalAndClearOpAsset();
       if (activeFolder && activeFolder !== selectedFolder) {
         removeSelectedFromList();
       }
-
       setIsLoading(false);
       toastUtils.success("Assets moved successfully");
     } catch (err) {
@@ -304,6 +306,7 @@ export default ({ getAssets }) => {
         { idList: copyAssetIds, folderId: selectedFolder },
         filters
       );
+      setListUpdateFlag(true);
       closeModalAndClearOpAsset();
       toastUtils.success("Assets moved successfully");
     } catch (err) {
@@ -867,6 +870,7 @@ export default ({ getAssets }) => {
       if (!activeFolder && activePageMode === "library") {
         setAssets(update(assets, { $unshift: data }));
       }
+      setListUpdateFlag(true);
       setIsLoading(false);
       toastUtils.success("Assets copied successfully");
     } catch (err) {
@@ -881,6 +885,11 @@ export default ({ getAssets }) => {
     try {
       const { data } = await folderApi.createFolder({ name: newFolderName });
       setFolders(update(folders, { $push: [data] }));
+      setSubFoldersViewList({
+        ...subFoldersViewList,
+        results: [data, ...subFoldersViewList.results],
+      }, false);
+      setSidenavFolderList({ results: [data, ...sidenavFolderList] });
       loadFolders();
     } catch (err) {
       console.log(err);

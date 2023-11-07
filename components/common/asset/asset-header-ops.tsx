@@ -473,7 +473,7 @@ const AssetHeaderOps = ({
       },
     },
     {
-      condition: ((isFolder && !deletedAssets) || (totalSubFoldersAndAssets.folders > 0 && isSubCollection) && !isShare),
+      condition: ((isFolder && !deletedAssets && selectedFolders?.length < 2) || (totalSubFoldersAndAssets.folders > 0 && isSubCollection) && !isShare),
       props: {
         place: "top",
         additionalClass: styles["action-button"],

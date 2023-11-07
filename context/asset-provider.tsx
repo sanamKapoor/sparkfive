@@ -1,15 +1,11 @@
-import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
-import { AssetContext, SocketContext } from "../context";
+import update from 'immutability-helper';
+import { useRouter } from 'next/router';
+import { useContext, useEffect, useState } from 'react';
 
-import {
-  convertTimeFromSeconds,
-  getFolderKeyAndNewNameByFileName,
-} from "../utils/upload";
-
-import assetApi from "../server-api/asset";
-
-import { validation } from "../constants/file-validation";
+import { validation } from '../constants/file-validation';
+import { AssetContext, SocketContext } from '../context';
+import assetApi from '../server-api/asset';
+import { convertTimeFromSeconds, getFolderKeyAndNewNameByFileName } from '../utils/upload';
 
 interface Asset {
   id: string;
@@ -138,8 +134,8 @@ export default ({ children }) => {
   const [subFoldersAssetsViewList, setSubFoldersAssetsViewList] = useState({ results: [], next: 0, total: 0 })
   const [headerName, setHeaderName] = useState("All Assets")
 
-
   const [selectedAllSubFoldersAndAssets, setSelectedAllSubFoldersAndAssets] = useState(false)
+  const [listUpdateFlag, setListUpdateFlag] = useState(false);
 
   const setPlaceHolders = (type, replace = true) => {
     if (type === "asset") {
@@ -221,7 +217,6 @@ export default ({ children }) => {
     });
   };
 
-
   const setSidenavFolderChildListItems = (
     inputFolders: any,
     id: string,
@@ -236,6 +231,35 @@ export default ({ children }) => {
     else {
       setSidenavFolderChildList((map) => { return new Map(map.set(id, { results: [...map.get(id).results, ...results], next, total })) })
     }
+  };
+
+  const appendNewSubSidenavFolders = (
+    inputFolders: any,
+    id: string,
+    remove: boolean,
+    removeId?: string
+
+  ) => {
+    const { results = [], next = -1, total = 0 } = sidenavFolderChildList.get(id);
+    console.log("🚀 ~ file: asset-provider.tsx:245 ~ results:", results)
+    if (!remove) {
+      setSidenavFolderChildList((map) => {
+        return new Map(map.set(id, { results: [...inputFolders, ...results], next, total: total + 1 }))
+      })
+    } else {
+
+      const folderIndex = results.findIndex(
+        (folder) => folder.id === removeId
+      );
+
+      if (folderIndex !== -1) {
+        setSidenavFolderChildList((map) => {
+          return new Map(map.set(id, { results: update(results, { $splice: [[folderIndex, 1]], }), next, total: total - 1 }))
+        })
+      }
+    }
+
+
   };
 
   const setSidenavFolderItems = (
@@ -678,8 +702,10 @@ export default ({ children }) => {
 
     //select all feature for the selected subcollection page assets and folders
     selectedAllSubFoldersAndAssets,
-    setSelectedAllSubFoldersAndAssets: selectAllSubFoldersAndAssetsViewList
-
+    setSelectedAllSubFoldersAndAssets: selectAllSubFoldersAndAssetsViewList,
+    appendNewSubSidenavFolders,
+    setListUpdateFlag,
+    listUpdateFlag
   };
   return (
     <AssetContext.Provider value={assetsValue}>

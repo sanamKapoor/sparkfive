@@ -23,6 +23,10 @@ const NestedButton: React.FC<MyComponentProps> = ({ type, parentId }) => {
     setSidenavFolderList,
     setSidenavFolderChildList,
     sidenavFolderChildList,
+    activeSubFolders,
+    appendNewSubSidenavFolders,
+    setSubFoldersViewList,
+    subFoldersViewList
   } = useContext(AssetContext);
 
   const onSubmit = async (folderData: { name: string, parent_id?: string }) => {
@@ -35,10 +39,12 @@ const NestedButton: React.FC<MyComponentProps> = ({ type, parentId }) => {
       setActiveModal("");
       (type !== "subCollection") && setFolders([data, ...folders]); //Todo handle the addition of folders in subcollection here
       (type !== "subCollection") && setSidenavFolderList({ results: [data, ...sidenavFolderList] });
-      // (type === "subCollection") && setSidenavFolderChildList({ result: [data], ...{ next, total } = sidenavFolderChildList.get(parentId) },
-      //   parentId,
-      //   false
-      // )
+      (type === "subCollection") && appendNewSubSidenavFolders([data], parentId, false, "");
+      (type === "subCollection" && parentId === activeSubFolders) &&
+        setSubFoldersViewList({
+          ...subFoldersViewList,
+          results: [data, ...subFoldersViewList.results],
+        });
       setDisableButtons(false)
       toastUtils.success("Collection created successfully");
     } catch (err: any) {

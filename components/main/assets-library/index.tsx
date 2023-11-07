@@ -44,6 +44,8 @@ const AssetsLibrary = () => {
 
   const {
     assets,
+    sidenavFolderList,
+    setSidenavFolderList,
     setAssets,
     folders,
     setFolders,
@@ -84,6 +86,7 @@ const AssetsLibrary = () => {
     selectedAllSubFoldersAndAssets,
     setSelectedAllSubFoldersAndAssets,
     loadingAssets,
+    appendNewSubSidenavFolders
   } = useContext(AssetContext);
 
   const {
@@ -1031,14 +1034,17 @@ const AssetsLibrary = () => {
             total: subFoldersViewList.total - 1,
           });
         }
+        appendNewSubSidenavFolders([], activeSubFolders, true, id)
         toastUtils.success("Sub collection deleted successfully");
       } else {
-        const modFolderIndex = folders.findIndex((folder) => folder.id === id);
+        const modFolderIndex = folders.findIndex((folder: any) => folder.id === id);
         setFolders(
           update(folders, {
             $splice: [[modFolderIndex, 1]],
           })
         );
+        setSidenavFolderList({ results: [...sidenavFolderList.filter((folder: any) => folder.id !== id)] });
+
         toastUtils.success("Collection deleted successfully");
       }
     } catch (err) {
