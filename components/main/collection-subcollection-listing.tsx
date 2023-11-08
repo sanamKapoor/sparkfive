@@ -135,7 +135,7 @@ const CollectionSubcollectionListing = ({
                                 <div className={`${styles["flex"]} ${styles.nestedbox}`}>
 
                                     {
-                                        folder?.childFolders?.length > 0 && (
+                                        folder?.childFolders?.length > 0 ? (
                                             <div className={`${styles["height"]} ${styles["flex"]}`}
                                                 onClick={() => { toggleDropdown(folder.id, true) }}
                                             >
@@ -146,7 +146,7 @@ const CollectionSubcollectionListing = ({
                                                     onClick={() => { toggleDropdown(folder.id, true) }}
                                                 />
                                             </div>
-                                        )
+                                        ) : <div className={styles.emptyBox}></div>
                                     }
 
 

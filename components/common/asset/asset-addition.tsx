@@ -589,18 +589,27 @@ const AssetAddition = ({
       }
       const currentDataClone = [...folders];
       const { data } = await folderApi.createFolder(folderData);
-      setActiveModal("");
-      setAddSubCollection(false);
-      !activeSubFolders && setFolders([data, ...currentDataClone]);
-      !activeSubFolders &&
-        setSidenavFolderList({ results: [data, ...sidenavFolderList] });
 
-      addSubCollection && appendNewSubSidenavFolders([data], activeSubFolders, false, "");
-      activeSubFolders &&
+      setActiveModal("");
+
+      setAddSubCollection(false);
+
+      (!activeSubFolders && setFolders([data, ...currentDataClone]));
+      (!activeSubFolders &&
+        setSidenavFolderList({ results: [data, ...sidenavFolderList] }));
+      (activeSortFilter?.mainFilter === "SubCollectionView" && activeSubFolders) &&
         setSubFoldersViewList({
           ...subFoldersViewList,
           results: [data, ...subFoldersViewList.results],
         });
+      (addSubCollection && appendNewSubSidenavFolders([data], activeSubFolders, false, ""));
+
+
+      // activeSubFolders &&
+      //   setSubFoldersViewList({
+      //     ...subFoldersViewList,
+      //     results: [data, ...subFoldersViewList.results],
+      //   });
       setDisableButtons(false);
       toastUtils.success("Collection created successfully");
     } catch (err) {

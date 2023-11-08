@@ -198,7 +198,7 @@ const FolderGridItem = ({
         });
         if (data) {
           const updatedAssets = [
-            ...SubFolders.map((folder) => {
+            ...folders.map((folder) => {
               if (folder.id === data.data.id) {
                 return { ...folder, name: data.data.name };
               } else {
@@ -222,7 +222,6 @@ const FolderGridItem = ({
           setFolders(
             folders.map((folder) => {
               if (folder.id === data.data.id) {
-                console.log("hello")
                 return { ...folder, name: data.data.name };
               } else {
                 return folder;

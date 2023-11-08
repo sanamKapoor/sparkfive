@@ -30,7 +30,7 @@ import DetailOverlay from "./detail-overlay";
 import ListItem from "./list-item";
 import React from "react";
 import { Utilities } from "../../../assets";
-import  FolderTableHeader  from "./Folder-table-header/folder-table-header";
+import FolderTableHeader from "./Folder-table-header/folder-table-header";
 import AssetTableHeader from "./Asset-table-header/asset-table-header";
 
 
@@ -103,13 +103,14 @@ const AssetGrid = ({
   const { setIsLoading } = useContext(LoadingContext);
 
   const [focusedItem, setFocusedItem] = useState(null);
-
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const ref = useRef(null);
   useEffect(() => {
     const { assetId } = urlUtils.getQueryParameters();
     if (assetId) getInitialAsset(assetId);
   }, []);
 
-
+  // For sorting the list view the hook in folder and asset view ----
   const setSortAssetAttribute = (attribute) => {
     if (attribute === currentSortAttribute) {
       setCurrentSortAttribute("-" + attribute);
@@ -127,6 +128,7 @@ const AssetGrid = ({
       );
     }
   };
+  //----
 
 
   const getInitialAsset = async (id) => {
@@ -372,8 +374,7 @@ const AssetGrid = ({
     }
   };
 
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const ref = useRef(null);
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -418,8 +419,6 @@ const AssetGrid = ({
           />
         )}
         {
-          //  className={`${mode === "SubCollectionView" ? "" : styles["grid-list"]
-          // } ${styles[itemSize]} ${styles["list-view"]}
           <div className={styles["list-wrapper"]}>
             {/* testing component starts from here */}
             {
@@ -475,73 +474,73 @@ const AssetGrid = ({
                     if (assetItem.status !== "fail") {
                       return (
                         <>
-                        <div>
-                        <AssetTableHeader index={index} activeView={activeView} setSortAttribute={setSortAssetAttribute} />
-                          <li
-                            className={styles["grid-item"]}
-                            key={assetItem.asset.id || index}
-                            onClick={(e) =>
-                              handleFocusChange(e, assetItem.asset.id)
-                            }
-                            ref={ref}
-                            style={{ width: `$${widthCard}px` }}
-                          >
-                            <AssetThumbail
-                              {...assetItem}
-                              sharePath={sharePath}
-                              activeFolder={activeFolder}
-                              isShare={isShare}
-                              type={type}
-                              toggleSelected={() =>
-                                toggleSelected(assetItem.asset.id)
+                          <div>
+                            <AssetTableHeader index={index} activeView={activeView} setSortAttribute={setSortAssetAttribute} />
+                            <li
+                              className={styles["grid-item"]}
+                              key={assetItem.asset.id || index}
+                              onClick={(e) =>
+                                handleFocusChange(e, assetItem.asset.id)
                               }
-                              openArchiveAsset={() =>
-                                openArchiveAsset(assetItem.asset)
-                              }
-                              openDeleteAsset={() =>
-                                openDeleteAsset(assetItem.asset.id)
-                              }
-                              openMoveAsset={() =>
-                                beginAssetOperation(
-                                  { asset: assetItem },
-                                  "move"
-                                )
-                              }
-                              openCopyAsset={() =>
-                                beginAssetOperation(
-                                  { asset: assetItem },
-                                  "copy"
-                                )
-                              }
-                              openShareAsset={() =>
-                                beginAssetOperation(
-                                  { asset: assetItem },
-                                  "share"
-                                )
-                              }
-                              downloadAsset={() => downloadAsset(assetItem)}
-                              openRemoveAsset={() =>
-                                beginAssetOperation(
-                                  { asset: assetItem },
-                                  "remove_item"
-                                )
-                              }
-                              handleVersionChange={refreshVersion}
-                              loadMore={loadMore}
-                              onCloseDetailOverlay={onCloseDetailOverlay}
-                              isThumbnailNameEditable={
-                                isThumbnailNameEditable
-                              }
-                              focusedItem={focusedItem}
-                              setFocusedItem={setFocusedItem}
-                              activeView={activeView}
-                              mode={mode}
+                              ref={ref}
+                              style={{ width: `$${widthCard}px` }}
+                            >
+                              <AssetThumbail
+                                {...assetItem}
+                                sharePath={sharePath}
+                                activeFolder={activeFolder}
+                                isShare={isShare}
+                                type={type}
+                                toggleSelected={() =>
+                                  toggleSelected(assetItem.asset.id)
+                                }
+                                openArchiveAsset={() =>
+                                  openArchiveAsset(assetItem.asset)
+                                }
+                                openDeleteAsset={() =>
+                                  openDeleteAsset(assetItem.asset.id)
+                                }
+                                openMoveAsset={() =>
+                                  beginAssetOperation(
+                                    { asset: assetItem },
+                                    "move"
+                                  )
+                                }
+                                openCopyAsset={() =>
+                                  beginAssetOperation(
+                                    { asset: assetItem },
+                                    "copy"
+                                  )
+                                }
+                                openShareAsset={() =>
+                                  beginAssetOperation(
+                                    { asset: assetItem },
+                                    "share"
+                                  )
+                                }
+                                downloadAsset={() => downloadAsset(assetItem)}
+                                openRemoveAsset={() =>
+                                  beginAssetOperation(
+                                    { asset: assetItem },
+                                    "remove_item"
+                                  )
+                                }
+                                handleVersionChange={refreshVersion}
+                                loadMore={loadMore}
+                                onCloseDetailOverlay={onCloseDetailOverlay}
+                                isThumbnailNameEditable={
+                                  isThumbnailNameEditable
+                                }
+                                focusedItem={focusedItem}
+                                setFocusedItem={setFocusedItem}
+                                activeView={activeView}
+                                mode={mode}
 
-                            />
-                          </li>
+                              />
+                            </li>
 
-                        </div>
-                         
+                          </div>
+
                         </>
                       );
                     }

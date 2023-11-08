@@ -790,8 +790,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                               />
                             </div>
                             ) : (
-                              <div>
-                              </div>
+                              <div className={styles.emptyBox}></div>
                             )}
                           <div className={styles.w100}>
                             <div
