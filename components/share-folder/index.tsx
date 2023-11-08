@@ -562,7 +562,7 @@ const ShareFolderMain = () => {
           folderName
             ? folderName
             : sidenavFolderList.find((folder: any) => folder.id === id)?.name ||
-                ""
+            ""
         );
       } else {
         getFolderInfo();
@@ -577,7 +577,7 @@ const ShareFolderMain = () => {
         setActiveFolder("");
         let sort =
           folderInfo?.customAdvanceOptions?.collectionSortView ===
-          "alphabetical"
+            "alphabetical"
             ? selectOptions.sort[3]
             : selectOptions.sort[1];
         setActiveSortFilter({
@@ -623,7 +623,7 @@ const ShareFolderMain = () => {
 
   const assetGridWrapperStyle =
     !!folderInfo.singleSharedCollectionId ||
-    activeSortFilter.mainFilter === "folders"
+      activeSortFilter.mainFilter === "folders"
       ? styles["col-wrapperview"]
       : styles["col-wrapper"];
 
