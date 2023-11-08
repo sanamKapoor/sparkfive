@@ -44,24 +44,24 @@ const AssetThumbail = ({
   isSelected = false,
   isLoading = false,
   activeFolder = "",
-  toggleSelected = () => {},
-  openDeleteAsset = () => {},
-  openMoveAsset = () => {},
-  openCopyAsset = () => {},
-  openShareAsset = () => {},
-  openArchiveAsset = () => {},
-  downloadAsset = () => {},
-  openRemoveAsset = () => {},
-  loadMore = () => {},
+  toggleSelected = () => { },
+  openDeleteAsset = () => { },
+  openMoveAsset = () => { },
+  openCopyAsset = () => { },
+  openShareAsset = () => { },
+  openArchiveAsset = () => { },
+  downloadAsset = () => { },
+  openRemoveAsset = () => { },
+  loadMore = () => { },
   handleVersionChange,
   onView = null,
   customComponent = <></>,
   infoWrapperClass = "",
   textWrapperClass = "",
   customIconComponent = <></>,
-  onDisassociate = () => {},
+  onDisassociate = () => { },
   detailOverlay = true,
-  onCloseDetailOverlay = (asset) => {},
+  onCloseDetailOverlay = (asset) => { },
   isThumbnailNameEditable = false,
   focusedItem,
   setFocusedItem,
@@ -251,17 +251,15 @@ const AssetThumbail = ({
   return (
     <>
       <div
-        className={`${styles.container} ${
-          activeView === "list" && styles.listContainer
-        } ${isLoading && "loadable"}`}
+        className={`${styles.container} ${activeView === "list" && styles.listContainer
+          } ${isLoading && "loadable"}`}
       >
         {/* select wrapper is for list view  */}
         <div className={activeView === "list" && styles["list-item-wrapper"]}>
           {activeView === "list" ? (
             <div
-              className={`${styles["list-select-icon"]} ${
-                isSelected && styles["selected-wrapper"]
-              }`}
+              className={`${styles["list-select-icon"]} ${isSelected && styles["selected-wrapper"]
+                }`}
             >
               <IconClickable
                 src={
@@ -276,9 +274,8 @@ const AssetThumbail = ({
           ) : null}
 
           <div
-            className={`${styles["image-wrapper"]} ${
-              activeView === "list" && styles["list-image-wrapper"]
-            }`}
+            className={`${styles["image-wrapper"]} ${activeView === "list" && styles["list-image-wrapper"]
+              }`}
             onClick={() => {
               if (onView && activeView === "list") {
                 onView(asset.id);
@@ -343,26 +340,25 @@ const AssetThumbail = ({
                 <>
                   {(!showViewButtonOnly ||
                     (showViewButtonOnly && showSelectedAsset)) && (
-                    <div
-                      className={`${styles["selectable-wrapper"]} ${
-                        isSelected && styles["selected-wrapper"]
-                      }`}
-                    >
-                      {isSelected ? (
-                        <IconClickable
-                          src={Utilities.radioButtonEnabled}
-                          additionalClass={styles["select-icon"]}
-                          onClick={toggleSelected}
-                        />
-                      ) : (
-                        <IconClickable
-                          src={Utilities.radioButtonNormal}
-                          additionalClass={styles["select-icon"]}
-                          onClick={toggleSelected}
-                        />
-                      )}
-                    </div>
-                  )}
+                      <div
+                        className={`${styles["selectable-wrapper"]} ${isSelected && styles["selected-wrapper"]
+                          }`}
+                      >
+                        {isSelected ? (
+                          <IconClickable
+                            src={Utilities.radioButtonEnabled}
+                            additionalClass={styles["select-icon"]}
+                            onClick={toggleSelected}
+                          />
+                        ) : (
+                          <IconClickable
+                            src={Utilities.radioButtonNormal}
+                            additionalClass={styles["select-icon"]}
+                            onClick={toggleSelected}
+                          />
+                        )}
+                      </div>
+                    )}
                   <div className={styles["image-button-wrapper"]}>
                     <Button
                       className={"container primary"}
@@ -381,9 +377,8 @@ const AssetThumbail = ({
                     />
                   </div>
                   <div
-                    className={`normal-text ${styles["wrap-text"]} ${
-                      activeView === "list" && styles["list-text"]
-                    }`}
+                    className={`normal-text ${styles["wrap-text"]} ${activeView === "list" && styles["list-text"]
+                      }`}
                   >
                     <span
                       id="editable-preview"
@@ -412,9 +407,8 @@ const AssetThumbail = ({
           </div>
 
           <div
-            className={`normal-text ${styles["wrap-text"]} ${
-              activeView === "list" && styles["list-text"]
-            }`}
+            className={`normal-text ${styles["wrap-text"]} ${activeView === "list" && styles["list-text"]
+              }`}
           >
             <span
               id="editable-preview"
@@ -457,9 +451,10 @@ const AssetThumbail = ({
           </div>
         )}
 
-        <div>
-          <span>extension</span>
-        </div>
+        {activeView === "list" &&
+          (<div>
+            <span>{asset.extension}</span>
+          </div>)}
 
         {!isUploading && showAssetOption && (
           <AssetOptions

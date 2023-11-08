@@ -145,7 +145,7 @@ const MoveModal = ({
         {folders.map((folder, index) => (
           <div key={index}>
             <div className={`${styles["flex"]} ${styles.nestedbox}`}>
-              {folder?.childFolders?.length > 0 && (
+              {folder?.childFolders?.length > 0 ? (
                 <div className={`${styles["height"]}`}
                   onClick={() => { toggleDropdown(folder.id, true) }}
                 >
@@ -156,7 +156,7 @@ const MoveModal = ({
                     onClick={() => { toggleDropdown(folder.id, true) }}
                   />
                 </div>
-              )}
+              ) : <div className={styles.emptyBox}></div>}
 
               <div className={styles.w100} >
                 <div
