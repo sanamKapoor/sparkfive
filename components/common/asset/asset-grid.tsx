@@ -475,7 +475,8 @@ const AssetGrid = ({
                     if (assetItem.status !== "fail") {
                       return (
                         <>
-                          <AssetTableHeader index={index} activeView={activeView} setSortAttribute={setSortAssetAttribute} />
+                        <div>
+                        <AssetTableHeader index={index} activeView={activeView} setSortAttribute={setSortAssetAttribute} />
                           <li
                             className={styles["grid-item"]}
                             key={assetItem.asset.id || index}
@@ -538,6 +539,9 @@ const AssetGrid = ({
 
                             />
                           </li>
+
+                        </div>
+                         
                         </>
                       );
                     }
