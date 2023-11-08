@@ -81,21 +81,19 @@ const AssetOptions = ({
 
   return (
     <ToggleableAbsoluteWrapper
-      contentClass={styles["asset-actions"]}
-      wrapperClass={styles["asset-actions-wrapper"]}
-      Wrapper={({ children }) => (
+    contentClass={styles["asset-actions"]}
+    wrapperClass={`${
+      activeView === "list" ? styles["list-actions-wrapper"]:styles["asset-actions-wrapper"]
+    }`}
+    Wrapper={({ children }) => (
+        
         <>
           <IconClickable
             src={Utilities.more}
             additionalClass={styles.thumbnailDots}
           />
           {/* this is for list view  */}
-          {activeView === "list" ? (
-            <div>
-              <IconClickable additionalClass={styles["edit-icon"]} src={Utilities.edit} />
-            </div>
-
-          ) : null}
+        
 
 
           {children}

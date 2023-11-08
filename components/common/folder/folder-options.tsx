@@ -129,7 +129,9 @@ const FolderOptions = ({
   return (
     <ToggleableAbsoluteWrapper
       contentClass={styles["asset-actions"]}
-      wrapperClass={styles["asset-actions-wrapper"]}
+      wrapperClass={`${styles["asset-actions-wrapper"]} ${
+        activeView === "list" && styles["list-actions-wrapper"]
+      }`}
       Wrapper={({ children }) => (
         <>
           <IconClickable

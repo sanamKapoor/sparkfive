@@ -1,0 +1,45 @@
+import React from 'react'
+import styles from "./asset-table-header.module.css"
+import { Utilities } from "../../../../assets";
+
+ const AssetTableHeader = ({
+    index,
+    activeView,
+    setSortAttribute
+  }) => {
+    return <div>
+      {index === 0 && activeView === "list" ? (
+        <div className={styles.listHeader}>
+          <div className={styles.listWrapper}>
+            <div className={styles.headContent1}>
+              <span>Name</span>
+              <img src={Utilities.arrowDownUp} onClick={() => setSortAttribute("folder.name")} />
+            </div>
+            <div className={styles.headContent2}>
+              <span>Size</span>
+              <img src={Utilities.arrowDownUp} onClick={() => setSortAttribute("folder.length")} />
+            </div>
+            <div className={styles.headContent3} >
+              <span>Uploaded date</span>
+              <img src={Utilities.arrowDownUp} onClick={() => setSortAttribute("folder.created-at")} />
+            </div>
+            <div className={styles.headContent4} >
+              <span>Date modified</span>
+              <img src={Utilities.arrowDownUp} onClick={() => setSortAttribute("folder.created-at")} />
+            </div>
+            <div className={styles.headContent5} >
+              <span>Action</span>
+              <img src={Utilities.arrowDownUp} onClick={() => setSortAttribute("folder.created-at")} />
+            </div>
+            <div className={styles.headContent6}>
+              <span>Action</span>
+            </div>
+          </div>
+        </div>
+      ) : (
+        null
+      )}
+    </div>
+  }
+  export default AssetTableHeader
+  

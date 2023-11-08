@@ -1,24 +1,27 @@
-import { format } from 'date-fns';
-import filesize from 'filesize';
-import { ChangeEvent, useContext, useEffect, useState } from 'react';
-import React from 'react';
-import HoverVideoPlayer from 'react-hover-video-player';
+import { format } from "date-fns";
+import filesize from "filesize";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
+import React from "react";
+import HoverVideoPlayer from "react-hover-video-player";
 
-import { Utilities } from '../../../assets';
-import { ASSET_NAME_UPDATED, FAILED_TO_UPDATE_ASSET_NAME } from '../../../constants/messages';
-import { AssetContext } from '../../../context';
-import assetApi from '../../../server-api/asset';
-import { getParsedExtension, removeExtension } from '../../../utils/asset';
-import toastUtils from '../../../utils/toast';
-import Button from '../buttons/button';
-import IconClickable from '../buttons/icon-clickable';
-import Spinner from '../spinners/spinner';
-import gridStyles from './asset-grid.module.css';
-import AssetIcon from './asset-icon';
-import AssetImg from './asset-img';
-import AssetOptions from './asset-options';
-import styles from './asset-thumbail.module.css';
-import DetailOverlay from './detail-overlay';
+import { Utilities } from "../../../assets";
+import {
+  ASSET_NAME_UPDATED,
+  FAILED_TO_UPDATE_ASSET_NAME,
+} from "../../../constants/messages";
+import { AssetContext } from "../../../context";
+import assetApi from "../../../server-api/asset";
+import { getParsedExtension, removeExtension } from "../../../utils/asset";
+import toastUtils from "../../../utils/toast";
+import Button from "../buttons/button";
+import IconClickable from "../buttons/icon-clickable";
+import Spinner from "../spinners/spinner";
+import gridStyles from "./asset-grid.module.css";
+import AssetIcon from "./asset-icon";
+import AssetImg from "./asset-img";
+import AssetOptions from "./asset-options";
+import styles from "./asset-thumbail.module.css";
+import DetailOverlay from "./detail-overlay";
 import RenameModal from "../../common/modals/rename-modal";
 import update from "immutability-helper";
 
@@ -41,35 +44,43 @@ const AssetThumbail = ({
   isSelected = false,
   isLoading = false,
   activeFolder = "",
-  toggleSelected = () => { },
-  openDeleteAsset = () => { },
-  openMoveAsset = () => { },
-  openCopyAsset = () => { },
-  openShareAsset = () => { },
-  openArchiveAsset = () => { },
-  downloadAsset = () => { },
-  openRemoveAsset = () => { },
-  loadMore = () => { },
+  toggleSelected = () => {},
+  openDeleteAsset = () => {},
+  openMoveAsset = () => {},
+  openCopyAsset = () => {},
+  openShareAsset = () => {},
+  openArchiveAsset = () => {},
+  downloadAsset = () => {},
+  openRemoveAsset = () => {},
+  loadMore = () => {},
   handleVersionChange,
   onView = null,
   customComponent = <></>,
   infoWrapperClass = "",
   textWrapperClass = "",
   customIconComponent = <></>,
-  onDisassociate = () => { },
+  onDisassociate = () => {},
   detailOverlay = true,
-  onCloseDetailOverlay = (asset) => { },
+  onCloseDetailOverlay = (asset) => {},
   isThumbnailNameEditable = false,
   focusedItem,
   setFocusedItem,
   activeView,
-  mode
+  mode,
 }) => {
   const [overlayProperties, setOverlayProperties] =
     useState(DEFAULT_DETAIL_PROPS);
-  const { detailOverlayId, assets, setAssets,
-    subFoldersAssetsViewList: { results: subAssets, next: nextAsset, total: totalAssets },
-    setListUpdateFlag } = useContext(AssetContext);
+  const {
+    detailOverlayId,
+    assets,
+    setAssets,
+    subFoldersAssetsViewList: {
+      results: subAssets,
+      next: nextAsset,
+      total: totalAssets,
+    },
+    setListUpdateFlag,
+  } = useContext(AssetContext);
 
   const isAssetACopy = asset.name.endsWith(" - COPY");
 
@@ -165,11 +176,13 @@ const AssetThumbail = ({
   // HAndle the New action Button Change name for assets
   const renameAsset = () => {
     setAssetRenameModalOpen(true);
-  }
+  };
   const confirmAssetRename = async (newValue) => {
     try {
       if (mode === "SubCollectionView") {
-        const activeAsset = subAssets.find((asst) => asst?.asset?.id === asset?.id);
+        const activeAsset = subAssets.find(
+          (asst) => asst?.asset?.id === asset?.id
+        );
         const fileName = thumbnailName + "." + asset.extension;
 
         const editedName = `${newValue}.${activeAsset?.extension}`;
@@ -199,7 +212,9 @@ const AssetThumbail = ({
         setThumbnailName(editedName);
         toastUtils.success("Asset name updated");
       } else {
-        const activeAsset = assets.find((asst) => asst?.asset?.id === asset?.id);
+        const activeAsset = assets.find(
+          (asst) => asst?.asset?.id === asset?.id
+        );
         const fileName = thumbnailName + "." + asset.extension;
 
         const editedName = `${newValue}.${activeAsset?.extension}`;
@@ -225,7 +240,6 @@ const AssetThumbail = ({
           ];
           setAssets(updatedAssets);
           setListUpdateFlag(true);
-
         }
         setThumbnailName(editedName);
         toastUtils.success("Asset name updated");
@@ -236,91 +250,103 @@ const AssetThumbail = ({
   };
   return (
     <>
-      <div className={`${styles.container} ${activeView === "list" && styles.listContainer} ${isLoading && "loadable"}`}>
+      <div
+        className={`${styles.container} ${
+          activeView === "list" && styles.listContainer
+        } ${isLoading && "loadable"}`}
+      >
         {/* select wrapper is for list view  */}
-        {activeView === "list" ? (
-          <div
-            className={`${styles["list-select-icon"]} ${isSelected && styles["selected-wrapper"]}`}
-          >
-            <IconClickable
-              src={
-                isSelected
-                  ? Utilities.radioButtonEnabled
-                  : Utilities.radioButtonNormal
-              }
-              additionalClass={styles["select-icon"]}
-              onClick={toggleSelected}
-            />
-          </div>
-        ) : null}
-
-        {/* list-image -wrapper is for list view */}
-        <div className={`${styles['image-wrapper']} ${activeView === "list" && styles['list-image-wrapper']}`}
-          onClick={() => {
-            if (onView && activeView === "list") {
-              onView(asset.id);
-            } else if (activeView === "list") {
-              setOverlayProperties({
-                ...DEFAULT_DETAIL_PROPS,
-                visible: !overlayProperties.visible,
-              });
-            }
-          }}
-        >
-          {isUploading && (
-            <>
-              <p className={styles.uploading}>Uploading...</p>
-            </>
-          )}
-          {asset.type !== "video" ? (
-            thumbailUrl ? (
-              <AssetImg
-                assetImg={thumbailUrl}
-                type={asset.type}
-                name={asset.name}
-                opaque={isUploading}
+        <div className={activeView === "list" && styles["list-item-wrapper"]}>
+          {activeView === "list" ? (
+            <div
+              className={`${styles["list-select-icon"]} ${
+                isSelected && styles["selected-wrapper"]
+              }`}
+            >
+              <IconClickable
+                src={
+                  isSelected
+                    ? Utilities.radioButtonEnabled
+                    : Utilities.radioButtonNormal
+                }
+                additionalClass={styles["select-icon"]}
+                onClick={toggleSelected}
               />
-            ) : (
-              <AssetIcon extension={asset.extension} />
-            )
-          ) : (
-            activeView === "list" ? (<AssetImg
-              assetImg={thumbailUrl}
-              type={asset.type}
-              name={asset.name}
-              opaque={isUploading}
-              imgClass={styles["video-thumbnail"]}
-            />) : (<HoverVideoPlayer
-              controls
-              className={styles["hover-video-player-wrapper"]}
-              videoClassName={styles["video-style"]}
-              videoSrc={previewUrl ?? realUrl}
-              pausedOverlay={
+            </div>
+          ) : null}
+
+          <div
+            className={`${styles["image-wrapper"]} ${
+              activeView === "list" && styles["list-image-wrapper"]
+            }`}
+            onClick={() => {
+              if (onView && activeView === "list") {
+                onView(asset.id);
+              } else if (activeView === "list") {
+                setOverlayProperties({
+                  ...DEFAULT_DETAIL_PROPS,
+                  visible: !overlayProperties.visible,
+                });
+              }
+            }}
+          >
+            {isUploading && (
+              <>
+                <p className={styles.uploading}>Uploading...</p>
+              </>
+            )}
+            {asset.type !== "video" ? (
+              thumbailUrl ? (
                 <AssetImg
                   assetImg={thumbailUrl}
                   type={asset.type}
                   name={asset.name}
                   opaque={isUploading}
-                  imgClass={styles["video-thumbnail"]}
                 />
-              }
-              loadingOverlay={
-                <div className={styles["loading-overlay"]}>
-                  <Spinner />
-                </div>
-              }
-            />)
-
-          )}
-          {activeView !== "list" && !isUploading &&
-            !isLoading &&
-            (showAssetOption || showViewButtonOnly) && (
-              <>
-                {(!showViewButtonOnly ||
-                  (showViewButtonOnly && showSelectedAsset)) && (
+              ) : (
+                <AssetIcon extension={asset.extension} />
+              )
+            ) : activeView === "list" ? (
+              <AssetImg
+                assetImg={thumbailUrl}
+                type={asset.type}
+                name={asset.name}
+                opaque={isUploading}
+                imgClass={styles["video-thumbnail"]}
+              />
+            ) : (
+              <HoverVideoPlayer
+                controls
+                className={styles["hover-video-player-wrapper"]}
+                videoClassName={styles["video-style"]}
+                videoSrc={previewUrl ?? realUrl}
+                pausedOverlay={
+                  <AssetImg
+                    assetImg={thumbailUrl}
+                    type={asset.type}
+                    name={asset.name}
+                    opaque={isUploading}
+                    imgClass={styles["video-thumbnail"]}
+                  />
+                }
+                loadingOverlay={
+                  <div className={styles["loading-overlay"]}>
+                    <Spinner />
+                  </div>
+                }
+              />
+            )}
+            {activeView !== "list" &&
+              !isUploading &&
+              !isLoading &&
+              (showAssetOption || showViewButtonOnly) && (
+                <>
+                  {(!showViewButtonOnly ||
+                    (showViewButtonOnly && showSelectedAsset)) && (
                     <div
-                      className={`${styles["selectable-wrapper"]} ${isSelected && styles["selected-wrapper"]
-                        }`}
+                      className={`${styles["selectable-wrapper"]} ${
+                        isSelected && styles["selected-wrapper"]
+                      }`}
                     >
                       {isSelected ? (
                         <IconClickable
@@ -337,50 +363,28 @@ const AssetThumbail = ({
                       )}
                     </div>
                   )}
-                <div className={styles["image-button-wrapper"]}>
-                  <Button
-                    className={"container primary"}
-                    text={"View Details"}
-                    type={"button"}
-                    onClick={() => {
-                      if (onView) {
-                        onView(asset.id);
-                      } else {
-                        setOverlayProperties({
-                          ...DEFAULT_DETAIL_PROPS,
-                          visible: !overlayProperties.visible,
-                        });
-                      }
-                    }}
-                  />
-                </div>
-              </>
-            )}
-        </div>
-        {/* list-info is for list view  */}
-        <div className={`${styles.info} ${activeView === "list" && styles.listInfo}`}>
-          <div className={`${infoWrapperClass} overflow--visible`}>
-            <div
-              className={`${textWrapperClass} overflow--visible ${styles.folderItemHeadingOuter}`}
-            >
-              {/* folderItemHeading is for list view */}
-              <div className={`${styles.folderItemHeading} ${activeView === "list" && styles.listHeading}`}>
-                {
-                  // isThumbnailNameEditable &&
-                  //   isEditing &&
-                  //   focusedItem &&
-                  //   focusedItem === asset.id ? (
-                  //   // list-text is for list view
-                  //   <input
-                  //     autoFocus
-                  //     className={`normal-text ${gridStyles["editable-input"]} ${styles["wrap-text"]}  ${activeView === "list" && styles["list-text"]}`}
-                  //     value={thumbnailName}
-                  //     onChange={handleNameChange}
-                  //     onBlur={updateNameOnBlur}
-                  //   />
-                  // ) : (
-                  // list-text is for list view 
-                  <div className={`normal-text ${styles["wrap-text"]} ${activeView === "list" && styles["list-text"]}`}>
+                  <div className={styles["image-button-wrapper"]}>
+                    <Button
+                      className={"container primary"}
+                      text={"View Details"}
+                      type={"button"}
+                      onClick={() => {
+                        if (onView) {
+                          onView(asset.id);
+                        } else {
+                          setOverlayProperties({
+                            ...DEFAULT_DETAIL_PROPS,
+                            visible: !overlayProperties.visible,
+                          });
+                        }
+                      }}
+                    />
+                  </div>
+                  <div
+                    className={`normal-text ${styles["wrap-text"]} ${
+                      activeView === "list" && styles["list-text"]
+                    }`}
+                  >
                     <span
                       id="editable-preview"
                       onClick={() => {
@@ -390,8 +394,7 @@ const AssetThumbail = ({
                           setOverlayProperties({
                             ...DEFAULT_DETAIL_PROPS,
                             visible: !overlayProperties.visible,
-                          })
-
+                          });
                         }
                       }}
                       className={
@@ -404,68 +407,95 @@ const AssetThumbail = ({
                       {isAssetACopy && ` - COPY`}
                     </span>
                   </div>
-                  // )
-                }
-                {/* only for list view */}
-                {/* size */}
-
-                {activeView === "list" && (<div className={styles["size"]}>
-                  {parseInt(asset.size) !== 0 && asset.size && filesize(asset.size)}
-                  {/* <span> 13.37KB</span> */}
-                </div>)}
-                <div className={styles["details-wrapper"]}>
-                  <div className="secondary-text">
-                    {format(new Date(asset.createdAt), dateFormat)}
-                  </div>
-                </div>
-                {/* only for list view  */}
-                {/* date modified */}
-                {activeView === "list" && (
-
-                  <div className={`${styles['modified-date']}}`}> {format(new Date(asset.createdAt), dateFormat)}</div>
-                )}
-                {/* extensions */}
-                {activeView === "list" && (
-                  <div className={`${styles['extension']}}`}> {!isLoading && getParsedExtension(asset.extension)}</div>
-                )}
-              </div>
-              {!isUploading && showAssetOption && (
-                <AssetOptions
-                  itemType={type}
-                  asset={asset}
-                  openArchiveAsset={openArchiveAsset}
-                  openDeleteAsset={openDeleteAsset}
-                  openMoveAsset={openMoveAsset}
-                  openCopyAsset={openCopyAsset}
-                  downloadAsset={downloadAsset}
-                  openShareAsset={openShareAsset}
-                  openComments={openComments}
-                  openRemoveAsset={openRemoveAsset}
-                  isShare={isShare}
-                  dissociateAsset={onDisassociate}
-                  renameAsset={renameAsset}
-
-                />
+                </>
               )}
-              {showAssetRelatedOption && (
-                <AssetOptions
-                  itemType={type}
-                  asset={asset}
-                  openDeleteAsset={openDeleteAsset}
-                  downloadAsset={downloadAsset}
-                  isAssetRelated
-                  dissociateAsset={onDisassociate}
-                />
-              )}
-              {/* </div> */}
-            </div>
-
-            {customIconComponent}
           </div>
 
-          <div>{customComponent}</div>
+          <div
+            className={`normal-text ${styles["wrap-text"]} ${
+              activeView === "list" && styles["list-text"]
+            }`}
+          >
+            <span
+              id="editable-preview"
+              onClick={() => {
+                if (onView) {
+                  onView(asset.id);
+                } else {
+                  setOverlayProperties({
+                    ...DEFAULT_DETAIL_PROPS,
+                    visible: !overlayProperties.visible,
+                  });
+                }
+              }}
+              className={
+                isThumbnailNameEditable
+                  ? gridStyles["editable-preview"]
+                  : `${gridStyles["editable-preview"]} ${gridStyles["non-editable-preview"]}`
+              }
+            >
+              {thumbnailName}.{asset.extension}
+              {isAssetACopy && ` - COPY`}
+            </span>
+          </div>
         </div>
-      </div >
+        {activeView === "list" && (
+          <div className={styles["size"]}>
+            {parseInt(asset.size) !== 0 && asset.size && filesize(asset.size)}
+          </div>
+        )}
+        <div className={styles["details-wrapper"]}>
+          <div className="secondary-text">
+            {format(new Date(asset.createdAt), dateFormat)}
+          </div>
+        </div>
+
+        {activeView === "list" && (
+          <div className={`${styles["modified-date"]}}`}>
+            {" "}
+            {format(new Date(asset.createdAt), dateFormat)}
+          </div>
+        )}
+
+        <div>
+          <span>extension</span>
+        </div>
+
+        {!isUploading && showAssetOption && (
+          <AssetOptions
+            itemType={type}
+            asset={asset}
+            openArchiveAsset={openArchiveAsset}
+            openDeleteAsset={openDeleteAsset}
+            openMoveAsset={openMoveAsset}
+            openCopyAsset={openCopyAsset}
+            downloadAsset={downloadAsset}
+            openShareAsset={openShareAsset}
+            openComments={openComments}
+            openRemoveAsset={openRemoveAsset}
+            isShare={isShare}
+            dissociateAsset={onDisassociate}
+            renameAsset={renameAsset}
+            activeView={activeView}
+          />
+        )}
+        {showAssetRelatedOption && (
+          <AssetOptions
+            itemType={type}
+            asset={asset}
+            openDeleteAsset={openDeleteAsset}
+            downloadAsset={downloadAsset}
+            isAssetRelated
+            dissociateAsset={onDisassociate}
+          />
+        )}
+        {/* </div> */}
+      </div>
+
+      {customIconComponent}
+
+      <div>{customComponent}</div>
+
       <RenameModal
         closeModal={() => setAssetRenameModalOpen(false)}
         modalIsOpen={assetRenameModalOpen}
@@ -473,27 +503,25 @@ const AssetThumbail = ({
         type={"Asset"}
         initialValue={assetName}
       />
-      {
-        overlayProperties.visible && (
-          <DetailOverlay
-            sharePath={sharePath}
-            isShare={isShare}
-            asset={asset}
-            realUrl={
-              asset.extension === "tiff" || asset.extension === "tif"
-                ? thumbailUrl
-                : realUrl
-            }
-            activeFolder={activeFolder}
-            thumbailUrl={thumbailUrl}
-            initialParams={overlayProperties}
-            openShareAsset={openShareAsset}
-            openDeleteAsset={openDeleteAsset}
-            closeOverlay={onCloseOverlay}
-            loadMore={loadMore}
-          />
-        )
-      }
+      {overlayProperties.visible && (
+        <DetailOverlay
+          sharePath={sharePath}
+          isShare={isShare}
+          asset={asset}
+          realUrl={
+            asset.extension === "tiff" || asset.extension === "tif"
+              ? thumbailUrl
+              : realUrl
+          }
+          activeFolder={activeFolder}
+          thumbailUrl={thumbailUrl}
+          initialParams={overlayProperties}
+          openShareAsset={openShareAsset}
+          openDeleteAsset={openDeleteAsset}
+          closeOverlay={onCloseOverlay}
+          loadMore={loadMore}
+        />
+      )}
     </>
   );
 };

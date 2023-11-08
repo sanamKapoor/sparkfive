@@ -6,8 +6,10 @@ import { AssetContext } from "../../context";
 import FolderGridItem from "../common/folder/folder-grid-item";
 import AssetThumbail from "../common/asset/asset-thumbail";
 import { Waypoint } from "react-waypoint";
-import { AssetTableHeader, FolderTableHeader } from "../common/asset/asset-grid";
+
 import useSortedAssets from "../../hooks/use-sorted-assets";
+import FolderTableHeader from "../common/asset/Folder-table-header/folder-table-header";
+import AssetTableHeader from "../common/asset/Asset-table-header/asset-table-header";
 
 const SubCollection = (
   {
