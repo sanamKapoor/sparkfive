@@ -123,7 +123,9 @@ const FolderOptions = ({
   return (
     <ToggleableAbsoluteWrapper
       contentClass={styles["asset-actions"]}
-      wrapperClass={styles["asset-actions-wrapper"]}
+      wrapperClass={`${styles["asset-actions-wrapper"]} ${
+        activeView === "list" && styles["list-actions-wrapper"]
+      }`}
       Wrapper={({ children }) => (
         <>
           <IconClickable
@@ -133,11 +135,14 @@ const FolderOptions = ({
 
           {/* this edit icon is for list view */}
           {activeView === "list" ? (
-          <div>
-          <IconClickable additionalClass={styles["edit-icon"]} src={Utilities.edit} />
-          </div>
+            <div>
+              <IconClickable
+                additionalClass={styles["edit-icon"]}
+                src={Utilities.edit}
+              />
+            </div>
           ) : null}
-        
+
           {children}
         </>
       )}

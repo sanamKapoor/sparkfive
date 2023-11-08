@@ -1,9 +1,12 @@
 .asset-actions-wrapper {
-    position: relative;
+    /* position: relative; */
     display: flex;
     align-items: center;
     gap:20px;
     width:10%;
+    position: absolute;
+    right: 0;
+    bottom: 9px;
   }
   
   .more ul {
@@ -17,7 +20,9 @@
   .edit-icon{
     width: 15px !important;
   }
-
+.list-actions-wrapper{
+  position: relative;
+}
 
 @media (max-width:480px){
   .edit-icon{
