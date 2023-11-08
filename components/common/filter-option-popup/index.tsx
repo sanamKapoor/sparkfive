@@ -122,7 +122,6 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
     setActiveAttribute(null);
   };
 
-  //TODO: handle search to work on input change
   const onSearch = (term: string) => {
     if (term.trim() === "") {
       setOptions(values); // Reset to the original list when search term is empty
