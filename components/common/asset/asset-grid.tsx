@@ -34,8 +34,7 @@ import { Utilities } from "../../../assets";
 // Components
 
 
-
-const FolderTableHeader = ({
+export const FolderTableHeader = ({
   index,
   activeView,
   setSortAttribute
@@ -68,7 +67,7 @@ const FolderTableHeader = ({
 }
 
 
-const AssetTableHeader = ({
+export const AssetTableHeader = ({
   index,
   activeView,
   setSortAttribute
@@ -536,7 +535,7 @@ const AssetGrid = ({
                     if (assetItem.status !== "fail") {
                       return (
                         <>
-                          <FolderTableHeader index={index} activeView={activeView} setSortAttribute={setSortFolderAttribute} />
+                          <AssetTableHeader index={index} activeView={activeView} setSortAttribute={setSortAssetAttribute} />
                           <li
                             className={styles["grid-item"]}
                             key={assetItem.asset.id || index}
@@ -595,6 +594,8 @@ const AssetGrid = ({
                               focusedItem={focusedItem}
                               setFocusedItem={setFocusedItem}
                               activeView={activeView}
+                              mode={mode}
+
                             />
                           </li>
                         </>
@@ -632,10 +633,11 @@ const AssetGrid = ({
                               deleteThumbnail={() =>
                                 deleteThumbnail({ folder }, "shareFolders")
                               }
-                              activeView={activeView || mode}
+                              activeView={activeView}
                               isThumbnailNameEditable={isThumbnailNameEditable}
                               focusedItem={focusedItem}
                               setFocusedItem={setFocusedItem}
+                              mode={mode}
                             />
                           </li>
                         </div>

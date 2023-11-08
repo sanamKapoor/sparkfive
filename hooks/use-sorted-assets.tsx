@@ -3,7 +3,8 @@ import dateCompare from "../utils/date-compare";
 
 export default function useSortedAssets(
   assets,
-  initialSortValue = ""
+  initialSortValue = "",
+  sub_collection = false
 ): [any[], string, any] {
 
   const [sortedAssets, setSortedAssets] = useState([]);
@@ -80,9 +81,16 @@ export default function useSortedAssets(
         );
         break;
       case "folder.length":
-        newSortedAssets.sort(
-          (a, b) => (b.assetsCount - a.assetsCount) * direction
-        );
+        if (sub_collection) {
+          newSortedAssets.sort(
+            (a, b) => (b.assets?.length - a.assets?.length) * direction
+          );
+        }
+        else {
+          newSortedAssets.sort(
+            (a, b) => (b.assetsCount - a.assetsCount) * direction
+          );
+        }
         break;
       case "folder.created-at":
         newSortedAssets.sort(

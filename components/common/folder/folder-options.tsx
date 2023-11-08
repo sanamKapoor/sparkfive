@@ -28,16 +28,22 @@ const FolderOptions = ({
   activeView,
   activeFolderId,
   onClickFilterSettings,
+  renameCollection
 }) => {
   const { user, hasPermission } = useContext(UserContext);
 
   const options = isShare
     ? [{ label: "Download", onClick: downloadFoldercontents }]
     : [
-        { label: "Download", onClick: downloadFoldercontents },
-        // { label: "Delete", onClick: () => setDeleteOpen(true) },
-        { label: "Share", onClick: shareAssets },
-      ];
+      { label: "Download", onClick: downloadFoldercontents },
+      // { label: "Delete", onClick: () => setDeleteOpen(true) },
+      { label: "Share", onClick: shareAssets },
+      {
+        label: "Rename Folder", onClick: () => {
+          renameCollection()
+        }
+      }
+    ];
 
   if (hasPermission([ASSET_EDIT])) {
     options.push({ label: "Delete", onClick: () => setDeleteOpen(true) });
@@ -130,14 +136,6 @@ const FolderOptions = ({
             src={Utilities.more}
             additionalClass={styles.folderDots}
           />
-
-          {/* this edit icon is for list view */}
-          {activeView === "list" ? (
-          <div>
-          <IconClickable additionalClass={styles["edit-icon"]} src={Utilities.edit} />
-          </div>
-          ) : null}
-        
           {children}
         </>
       )}
