@@ -7,7 +7,8 @@ import indexStyles from "../index.module.css";
 import OptionDataItem from "../option-data-item";
 import styles from "../options-data.module.css";
 
-import { UserContext } from "../../../../context";
+import { FilterContext, UserContext } from "../../../../context";
+import shareCollectionApi from "../../../../server-api/share-collection";
 import teamApi from "../../../../server-api/team";
 
 import toastUtils from "../../../../utils/toast";
@@ -23,6 +24,8 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
   setAttributes,
   setShowModal,
 }) => {
+  const { isPublic, sharePath } = useContext(FilterContext);
+
   const { advancedConfig } = useContext(UserContext);
 
   const [options, setOptions] = useState([]);
@@ -33,7 +36,11 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
 
   const getMoreFilters = async () => {
     try {
-      const res = await teamApi.getTeamAttributes();
+      const fetchApi = isPublic ? shareCollectionApi : teamApi;
+
+      const res = await fetchApi.getTeamAttributes({
+        ...(sharePath && { sharePath }),
+      });
       //check for filter elements to hide
       if (advancedConfig?.hideFilterElements) {
         const filteredAttrs = res.data.data.filter(
