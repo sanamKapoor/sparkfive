@@ -3,13 +3,15 @@ import { useEffect, useRef } from "react";
 interface ClickOutsideProps {
   children: React.ReactNode;
   onClick: (e: MouseEvent) => void;
-  className: string;
+  className?: string;
+  exceptionRef?: React.MutableRefObject<React.ReactNode>;
 }
 
 const ClickOutside: React.FC<ClickOutsideProps> = ({
   children,
   onClick,
   className,
+  exceptionRef,
 }) => {
   const wrapperRef = useRef();
 
@@ -22,7 +24,15 @@ const ClickOutside: React.FC<ClickOutsideProps> = ({
   }, []);
 
   const handleClickListener = (event: MouseEvent) => {
-    const clickedInside = wrapperRef?.current?.contains(event.target);
+    let clickedInside;
+    if (exceptionRef) {
+      clickedInside =
+        wrapperRef?.current?.contains(event.target) ||
+        exceptionRef?.current === event.target ||
+        exceptionRef?.current?.contains(event.target);
+    } else {
+      clickedInside = wrapperRef?.current?.contains(event.target);
+    }
 
     if (clickedInside) return;
     else onClick(event);

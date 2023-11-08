@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 import { FilterContext, UserContext } from "../../../../context";
 import useFilters from "../../../../hooks/use-filters";
@@ -47,6 +47,8 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
 
   const [showMoreFilters, setShowMoreFilters] = useState<boolean>(false);
 
+  const exceptionRef = useRef(null);
+
   const getAttributes = async () => {
     //TODO: refine and fix
     try {
@@ -76,7 +78,8 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
     setShowMoreFilters((prevState) => !prevState);
   };
 
-  const onClickOutsideAttribute = () => {
+  const onClickOutsideAttribute = (e) => {
+    e.stopPropagation();
     setActiveAttribute((prev) => null);
   };
 
@@ -116,6 +119,7 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
               onClick={onClickOutsideAttribute}
               className={`${styles["main-wrapper"]}`}
               key={attr.id}
+              exceptionRef={exceptionRef}
             >
               <div
                 className={
@@ -148,16 +152,18 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
                   alt=""
                 />
               </div>
-              {activeAttribute !== null && activeAttribute?.id === attr.id ? (
-                <FilterOptionPopup
-                  values={values}
-                  activeAttribute={activeAttribute}
-                  setActiveAttribute={setActiveAttribute}
-                  options={filteredOptions}
-                  setOptions={setFilteredOptions}
-                  loading={loading}
-                />
-              ) : null}
+              {activeAttribute !== null && activeAttribute?.id === attr.id && (
+                <div ref={exceptionRef}>
+                  <FilterOptionPopup
+                    values={values}
+                    activeAttribute={activeAttribute}
+                    setActiveAttribute={setActiveAttribute}
+                    options={filteredOptions}
+                    setOptions={setFilteredOptions}
+                    loading={loading}
+                  />
+                </div>
+              )}
             </ClickOutside>
           );
         })}
