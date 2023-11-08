@@ -33,6 +33,74 @@ import { Utilities } from "../../../assets";
 
 // Components
 
+
+
+const FolderTableHeader = ({
+  index,
+  activeView,
+  setSortAttribute
+}) => {
+  return <div>
+    {index === 0 && activeView === "list" ? (
+      <div className={styles.listHeader}>
+        <div className={styles.listWrapper}>
+          <div className={styles.headContent1}>
+            <span>Name</span>
+            <img src={Utilities.arrowDownUp} onClick={() => setSortAttribute("folder.name")} />
+          </div>
+          <div className={styles.headContent2}>
+            <span>Assets</span>
+            <img src={Utilities.arrowDownUp} onClick={() => setSortAttribute("folder.length")} />
+          </div>
+          <div className={styles.headContent3} >
+            <span>Create date</span>
+            <img src={Utilities.arrowDownUp} onClick={() => setSortAttribute("folder.created-at")} />
+          </div>
+          <div className={styles.headContent4}>
+            <span>Action</span>
+          </div>
+        </div>
+      </div>
+    ) : (
+      null
+    )}
+  </div>
+}
+
+
+const AssetTableHeader = ({
+  index,
+  activeView,
+  setSortAttribute
+}) => {
+  return <div>
+    {index === 0 && activeView === "list" ? (
+      <div className={styles.listHeader}>
+        <div className={styles.listWrapper}>
+          <div className={styles.headContent1}>
+            <span>Name</span>
+            <img src={Utilities.arrowDownUp} onClick={() => setSortAttribute("folder.name")} />
+          </div>
+          <div className={styles.headContent2}>
+            <span>Assets</span>
+            <img src={Utilities.arrowDownUp} onClick={() => setSortAttribute("folder.length")} />
+          </div>
+          <div className={styles.headContent3} >
+            <span>Create date</span>
+            <img src={Utilities.arrowDownUp} onClick={() => setSortAttribute("folder.created-at")} />
+          </div>
+          <div className={styles.headContent4}>
+            <span>Action</span>
+          </div>
+        </div>
+      </div>
+    ) : (
+      null
+    )}
+  </div>
+}
+
+
 const AssetGrid = ({
   activeView = "grid",
   isShare = false,
@@ -101,6 +169,26 @@ const AssetGrid = ({
     const { assetId } = urlUtils.getQueryParameters();
     if (assetId) getInitialAsset(assetId);
   }, []);
+
+
+  const setSortAssetAttribute = (attribute) => {
+    if (attribute === currentSortAttribute) {
+      setCurrentSortAttribute("-" + attribute);
+    } else {
+      setCurrentSortAttribute(currentSortAttribute.startsWith("-") ? "" : attribute);
+    }
+  };
+
+  const setSortFolderAttribute = (attribute) => {
+    if (attribute === currentSortFolderAttribute) {
+      setCurrentSortFolderAttribute("-" + attribute);
+    } else {
+      setCurrentSortFolderAttribute(
+        currentSortFolderAttribute.startsWith("-") ? attribute : "-" + attribute
+      );
+    }
+  };
+
 
   const getInitialAsset = async (id) => {
     try {
@@ -364,7 +452,6 @@ const AssetGrid = ({
     }
   }, [ref.current, windowWidth]);
 
-
   return (
     <>
       <section className={`${styles.container} ${openFilter && styles.filter}`}>
@@ -445,36 +532,11 @@ const AssetGrid = ({
                 )}
 
                 {mode === "assets" &&
-                  assets.map((assetItem, index) => {
+                  sortedAssets.map((assetItem, index) => {
                     if (assetItem.status !== "fail") {
                       return (
                         <>
-                          <>
-                            {index === 0 && activeView === "list" ? (
-                              <div className={styles.listHeader}>
-                                <div className={styles.listWrapper}>
-                                  <div className={styles.headContent1}>
-                                    <span>Name</span>
-                                    <img src={Utilities.arrowDownUp} />
-                                  </div>
-
-                                  <div className={styles.headContent2}>
-                                    <span>Assets</span>
-                                    <img src={Utilities.arrowDownUp} />
-                                  </div>
-                                  <div className={styles.headContent3}>
-                                    <span>Create date</span>
-                                    <img src={Utilities.arrowDownUp} />
-                                  </div>
-                                  <div className={styles.headContent4}>
-                                    <span>Action</span>
-                                  </div>
-                                </div>
-                              </div>
-                            ) : (
-                              ""
-                            )}
-                          </>
+                          <FolderTableHeader index={index} activeView={activeView} setSortAttribute={setSortFolderAttribute} />
                           <li
                             className={styles["grid-item"]}
                             key={assetItem.asset.id || index}
@@ -541,36 +603,11 @@ const AssetGrid = ({
                   })}
 
                 {mode === "folders" &&
-                  folders.map((folder, index) => {
+                  sortedFolders.map((folder, index) => {
                     return (
                       <>
                         <div>
-                          <div>
-                            {index === 0 && activeView === "list" ? (
-                              <div className={styles.listHeader}>
-                                <div className={styles.listWrapper}>
-                                  <div className={styles.headContent1}>
-                                    <span>Name</span>
-                                    <img src={Utilities.arrowDownUp} />
-                                  </div>
-
-                                  <div className={styles.headContent2}>
-                                    <span>Assets</span>
-                                    <img src={Utilities.arrowDownUp} />
-                                  </div>
-                                  <div className={styles.headContent3}>
-                                    <span>Create date</span>
-                                    <img src={Utilities.arrowDownUp} />
-                                  </div>
-                                  <div className={styles.headContent4}>
-                                    <span>Action</span>
-                                  </div>
-                                </div>
-                              </div>
-                            ) : (
-                              ""
-                            )}
-                          </div>
+                          <FolderTableHeader index={index} activeView={activeView} setSortAttribute={setSortFolderAttribute} />
                           <li
                             className={styles["grid-item"]}
                             key={folder.id || index}
@@ -681,8 +718,8 @@ const AssetGrid = ({
             <span>
               Are you sure you want to &nbsp;
               <strong>{`${activeArchiveAsset?.stage !== "archived"
-                  ? "Archive"
-                  : "Unarchive"
+                ? "Archive"
+                : "Unarchive"
                 }`}</strong>
               &nbsp; this asset?
             </span>
