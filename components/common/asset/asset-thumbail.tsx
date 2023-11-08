@@ -60,7 +60,7 @@ const AssetThumbail = ({
   isThumbnailNameEditable = false,
   focusedItem,
   setFocusedItem,
-  activeView
+  activeView,
 }) => {
   const [overlayProperties, setOverlayProperties] =
     useState(DEFAULT_DETAIL_PROPS);
