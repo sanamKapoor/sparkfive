@@ -17,10 +17,11 @@ import { AssetContext, FilterContext } from "../context";
 import customFieldsApi from "../server-api/attribute";
 import campaignApi from "../server-api/campaign";
 import filterApi from "../server-api/filter";
+import shareCollectionApi from "../server-api/share-collection";
 import tagsApi from "../server-api/tag";
 
 const useFilters = (attributes) => {
-  const { activeSortFilter, setActiveSortFilter, sharePath } =
+  const { activeSortFilter, setActiveSortFilter, sharePath, isPublic } =
     useContext(FilterContext);
   const { activeFolder, activeSubFolders } = useContext(AssetContext);
 
@@ -105,7 +106,7 @@ const useFilters = (attributes) => {
       assetsCount: "yes",
       sharePath,
       folderId: activeSubFolders || activeFolder || null,
-      type,
+      ...(type && { type }),
       stage,
       page: 0,
       assetLim: "yes",
@@ -214,9 +215,6 @@ const useFilters = (attributes) => {
     setActiveSortFilter({ ...activeSortFilter, [filterKey]: updatedData });
   };
 
-  /** // TODO:
-   * 1. Check filters on share landing page
-   **/
   const onAttributeClick = async (data: IAttribute) => {
     try {
       setLoading(true);
@@ -296,7 +294,9 @@ const useFilters = (attributes) => {
   };
 
   const fetchTags = async (params?: Record<string, unknown>) => {
-    const res = await tagsApi.getTags({ ...params });
+    const fetchApi = isPublic ? shareCollectionApi : tagsApi;
+
+    const res = await fetchApi.getTags({ ...params });
     return res.data;
   };
 
@@ -309,29 +309,34 @@ const useFilters = (attributes) => {
   };
 
   const fetchCampaigns = async (params?: Record<string, unknown>) => {
-    const res = await campaignApi.getCampaigns(params);
+    const fetchApi = isPublic ? shareCollectionApi : campaignApi;
+    const res = await fetchApi.getCampaigns(params);
     return res.data;
   };
 
   const fetchAssetFileExtensions = async (params?: Record<string, unknown>) => {
-    const res = await filterApi.getAssetFileExtensions(params);
+    const fetchApi = isPublic ? shareCollectionApi : filterApi;
+    const res = await fetchApi.getAssetFileExtensions(params);
     return res.data;
   };
 
   const fetchAssetOrientations = async (params?: Record<string, unknown>) => {
-    const res = await filterApi.getAssetOrientations(params);
+    const fetchApi = isPublic ? shareCollectionApi : filterApi;
+    const res = await fetchApi.getAssetOrientations(params);
     return res.data;
   };
 
   const fetchAssetResolutions = async (params?: Record<string, unknown>) => {
-    const res = await filterApi.getAssetResolutions(params);
+    const fetchApi = isPublic ? shareCollectionApi : filterApi;
+    const res = await fetchApi.getAssetResolutions(params);
     return res.data;
   };
 
   const fetchAssetDimensionLimits = async (
     params?: Record<string, unknown>
   ) => {
-    const res = await filterApi.getAssetDimensionLimits(params);
+    const fetchApi = isPublic ? shareCollectionApi : filterApi;
+    const res = await fetchApi.getAssetDimensionLimits(params);
     return res.data;
   };
 
@@ -339,12 +344,11 @@ const useFilters = (attributes) => {
     customFieldId: string,
     params?: Record<string, unknown>
   ) => {
-    const res = await customFieldsApi.getCustomFieldWithCount(
-      customFieldId,
-      params
-    );
+    const fetchApi = isPublic ? shareCollectionApi : customFieldsApi;
+    const res = await fetchApi.getCustomFieldWithCount(customFieldId, params);
     return res.data;
   };
+
   return {
     activeAttribute,
     filteredOptions,

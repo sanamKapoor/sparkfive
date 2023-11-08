@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 import { FilterContext, UserContext } from "../../../../context";
 import useFilters from "../../../../hooks/use-filters";
@@ -13,7 +13,9 @@ import {
   FilterAttributeVariants,
   IAttribute,
 } from "../../../../interfaces/filters";
+import shareCollectionApi from "../../../../server-api/share-collection";
 import Badge from "../../UI/Badge/badge";
+import ClickOutside from "../../UI/ClickOutside";
 import Button from "../../buttons/button";
 import IconClickable from "../../buttons/icon-clickable";
 import FilterOptionPopup from "../../filter-option-popup";
@@ -29,7 +31,8 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
   attributes,
   setAttributes,
 }) => {
-  const { activeSortFilter, setRenderedFlag } = useContext(FilterContext);
+  const { activeSortFilter, setRenderedFlag, isPublic, sharePath } =
+    useContext(FilterContext);
   const {
     activeAttribute,
     loading,
@@ -44,10 +47,16 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
 
   const [showMoreFilters, setShowMoreFilters] = useState<boolean>(false);
 
+  const exceptionRef = useRef(null);
+
   const getAttributes = async () => {
     //TODO: refine and fix
     try {
-      const res = await teamApi.getTeamAttributes({ defaultOnly: true });
+      const fetchApi = isPublic ? shareCollectionApi : teamApi;
+      const res = await fetchApi.getTeamAttributes({
+        defaultOnly: true,
+        ...(sharePath && { sharePath }),
+      });
       //check for filter elements to hide
       if (advancedConfig?.hideFilterElements) {
         const filteredAttrs = res.data.data.filter(
@@ -67,6 +76,15 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
 
   const onMoreFiltersClick = async () => {
     setShowMoreFilters((prevState) => !prevState);
+  };
+
+  const onClickOutsideAttribute = (e) => {
+    e.stopPropagation();
+    setActiveAttribute((prev) => null);
+  };
+
+  const onClickOutsideMoreFilters = () => {
+    setShowMoreFilters(false);
   };
 
   return (
@@ -97,7 +115,12 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
 
         {attributes.map((attr) => {
           return (
-            <div className={`${styles["main-wrapper"]}`} key={attr.id}>
+            <ClickOutside
+              onClick={onClickOutsideAttribute}
+              className={`${styles["main-wrapper"]}`}
+              key={attr.id}
+              exceptionRef={exceptionRef}
+            >
               <div
                 className={
                   checkIfBadgeVisible(activeSortFilter, attr.id)
@@ -130,34 +153,41 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
                 />
               </div>
               {activeAttribute !== null && activeAttribute?.id === attr.id && (
-                <FilterOptionPopup
-                  values={values}
-                  activeAttribute={activeAttribute}
-                  setActiveAttribute={setActiveAttribute}
-                  options={filteredOptions}
-                  setOptions={setFilteredOptions}
-                  loading={loading}
-                />
+                <div ref={exceptionRef}>
+                  <FilterOptionPopup
+                    values={values}
+                    activeAttribute={activeAttribute}
+                    setActiveAttribute={setActiveAttribute}
+                    options={filteredOptions}
+                    setOptions={setFilteredOptions}
+                    loading={loading}
+                  />
+                </div>
               )}
-            </div>
+            </ClickOutside>
           );
         })}
 
-        <div className={`${styles["main-wrapper"]}`}>
-          <div
-            className={`${styles["more-filter-btn"]}`}
-            onClick={onMoreFiltersClick}
+        {attributes.length > 0 && (
+          <ClickOutside
+            className={`${styles["main-wrapper"]}`}
+            onClick={onClickOutsideMoreFilters}
           >
-            <Button text="More filters" className="text-primary-btn" />
-          </div>
-          {showMoreFilters && (
-            <MoreFiltersOptionPopup
-              attributes={attributes}
-              setAttributes={setAttributes}
-              setShowModal={setShowMoreFilters}
-            />
-          )}
-        </div>
+            <div
+              className={`${styles["more-filter-btn"]}`}
+              onClick={onMoreFiltersClick}
+            >
+              <Button text="More filters" className="text-primary-btn" />
+            </div>
+            {showMoreFilters && (
+              <MoreFiltersOptionPopup
+                attributes={attributes}
+                setAttributes={setAttributes}
+                setShowModal={setShowMoreFilters}
+              />
+            )}
+          </ClickOutside>
+        )}
       </div>
     </div>
   );

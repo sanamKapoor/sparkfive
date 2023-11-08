@@ -10,6 +10,9 @@
   width: 100%;
 }
 
+.filterViewWrapper {
+  margin-top: 200px;
+}
 
 @media (min-width: 1200px) {
   .container {
@@ -23,17 +26,18 @@
   }
 }
 
-.col-wrapper,
+/* .col-wrapper,
 .col-wrapperview {
   display: flex;
   justify-content: space-between;
   gap: 40px;
-}
+} */
 
 @media screen and (min-width: 1024px) {
   .col-wrapper {
     padding-top: 85px;
   }
+
   .col-wrapperview {
     padding-top: 0;
   }
