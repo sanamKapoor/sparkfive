@@ -125,6 +125,9 @@ export const AssetContext = createContext({
 
   currentViewAsset: undefined,
   setCurrentViewAsset: (asset) => {},
+
+  downloadController: undefined,
+  setDownloadController: (controller) => {},
 });
 
 export const TeamContext = createContext({

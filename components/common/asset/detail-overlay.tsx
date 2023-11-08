@@ -39,6 +39,9 @@ import AssetTranscript from "./asset-transcript";
 import Dropdown from "../inputs/dropdown";
 import AssetRelatedFilesList from "./asset-related-files-list";
 
+import downloadUtils from "../../../utils/download";
+import { sizeToZipDownload } from "../../../constants/download";
+
 const getDefaultDownloadImageType = (extension) => {
   const defaultDownloadImageTypes = [
     {
@@ -660,6 +663,14 @@ const DetailOverlay = ({
     }
   };
 
+  const downloadAsset = (id) => {
+    if (currentAsset >= sizeToZipDownload || currentAsset.type === "video") {
+      downloadSelectedAssets(id);
+    } else {
+      downloadUtils.downloadFile(versionRealUrl, currentAsset.name);
+    }
+  };
+
   const loadNotes = async () => {
     try {
       const assetId = currentAsset.id;
@@ -980,7 +991,7 @@ const DetailOverlay = ({
                           {
                             id: "download",
                             label: "Download Original",
-                            onClick: () => downloadSelectedAssets(currentAsset.id),
+                            onClick: () => downloadAsset(currentAsset.id),
                           },
                           {
                             id: "edit",
