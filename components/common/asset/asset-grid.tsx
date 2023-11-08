@@ -163,13 +163,14 @@ const AssetGrid = ({
   const { setIsLoading } = useContext(LoadingContext);
 
   const [focusedItem, setFocusedItem] = useState(null);
-
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const ref = useRef(null);
   useEffect(() => {
     const { assetId } = urlUtils.getQueryParameters();
     if (assetId) getInitialAsset(assetId);
   }, []);
 
-
+  // For sorting the list view the hook in folder and asset view ----
   const setSortAssetAttribute = (attribute) => {
     if (attribute === currentSortAttribute) {
       setCurrentSortAttribute("-" + attribute);
@@ -187,6 +188,7 @@ const AssetGrid = ({
       );
     }
   };
+  //----
 
 
   const getInitialAsset = async (id) => {
@@ -432,8 +434,7 @@ const AssetGrid = ({
     }
   };
 
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const ref = useRef(null);
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -478,8 +479,6 @@ const AssetGrid = ({
           />
         )}
         {
-          //  className={`${mode === "SubCollectionView" ? "" : styles["grid-list"]
-          // } ${styles[itemSize]} ${styles["list-view"]}
           <div className={styles["list-wrapper"]}>
             {/* testing component starts from here */}
             {
