@@ -14,6 +14,7 @@ import assetApi from "../../../server-api/asset";
 import folderApi from "../../../server-api/folder";
 import shareApi from "../../../server-api/share-collection";
 import { getAssetsFilters } from "../../../utils/asset";
+import downloadUtils from "../../../utils/download";
 
 // Utils
 import { getSubdomain } from "../../../utils/domain";
@@ -30,6 +31,7 @@ import ConfirmModal from "../modals/confirm-modal";
 // Constants
 import { maximumAssociateFiles } from "../../../constants/asset-associate";
 import Dropdown from "../inputs/dropdown";
+import { sizeToZipDownload } from "../../../constants/download";
 
 const AssetHeaderOps = ({
   isUnarchive = false,
@@ -55,6 +57,7 @@ const AssetHeaderOps = ({
     activeFolder,
     updateDownloadingStatus,
     setNeedsFetch,
+    setDownloadController,
   } = useContext(AssetContext);
 
   const { setIsLoading } = useContext(LoadingContext);
@@ -132,13 +135,18 @@ const AssetHeaderOps = ({
 
       // Show processing bar
       updateDownloadingStatus("zipping", 0, totalDownloadingAssets);
-      let api = assetApi;
+      let api: any = assetApi;
 
       if (payload.assetIds.length > 0 || selectedAllAssets) {
         if (isShare) {
           api = shareApi;
         }
-        const { data } = await api.downloadAll(payload, filters);
+
+        const controller = new AbortController();
+        setDownloadController(controller);
+
+        const { data } = await api.downloadAll(payload, filters, controller);
+
         // Download file to storage
         fileDownload(data, "assets.zip");
 
@@ -156,8 +164,13 @@ const AssetHeaderOps = ({
         updateDownloadingStatus("done", 0, 0);
       }
     } catch (e) {
-      console.error(e);
-      updateDownloadingStatus("error", 0, 0, "Internal Server Error. Please try again.");
+      console.error(`Code`, e.code);
+      if (e.code === "ERR_CANCELED") {
+        // Do nothing for now
+        updateDownloadingStatus("error", 0, 0, "Download was canceled");
+      } else {
+        updateDownloadingStatus("error", 0, 0, "Internal Server Error. Please try again.");
+      }
     }
   };
 
@@ -202,6 +215,23 @@ const AssetHeaderOps = ({
 
   const processSubdomain = () => {
     return getSubdomain() || "danner";
+  };
+
+  const downloadAssets = () => {
+    // updateDownloadingStatus("zipping", 0, 1);
+    // return;
+    // Only select 1 asset or select all but there is only 1 asset
+    if (selectedAssets.length === 1 || (selectedAllAssets && totalAssets === 1)) {
+      const size = parseInt(selectedAssets[0].asset?.size || 0);
+      // Asset size larger than limit size
+      if (size >= sizeToZipDownload || selectedAssets[0].asset?.type === "video") {
+        downloadSelectedAssets();
+      } else {
+        downloadUtils.downloadFile(selectedAssets[0].realUrl, selectedAssets[0]?.asset.name);
+      }
+    } else {
+      downloadSelectedAssets();
+    }
   };
 
   useEffect(() => {
@@ -315,7 +345,7 @@ const AssetHeaderOps = ({
             SVGElement={AssetOps[`download`]}
             tooltipId={"Download"}
             tooltipText={"Download"}
-            onClick={downloadSelectedAssets}
+            onClick={downloadAssets}
           />
         )}
         {!isFolder && !isShare && !deletedAssets && (

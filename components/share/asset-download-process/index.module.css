@@ -59,6 +59,51 @@
   min-width: 25%;
 }
 
+.zip-container{
+  text-align: center;
+  position: fixed;
+  top: 136px;
+  left: 50%;
+  padding: 10px 20px;
+  background-color: var(--color-prim-turquoise);
+  color: white;
+  max-width: 550px;
+  width: 60%;
+  z-index: 100001;
+  min-height: 88px;
+  transform: translate(-50%, -50%);
+  border-radius: 8px;
+}
+
+.zip-header{
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.zip-download-text{
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 24px;
+}
+
+.zip-cancel-btn{
+  border: solid 2px white;
+  color: white;
+  background: transparent;
+  padding: 11px 24px;
+  font-weight: 600;
+  border-radius: 4px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+  cursor: pointer;
+}
+
+.zip-loading{
+  margin: 16px auto 24px auto;
+}
+
+
 @media screen and (max-width: 650px) {
   .row span.processing-file-count{
     max-width: 100%;
