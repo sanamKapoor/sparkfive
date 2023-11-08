@@ -87,7 +87,6 @@ const useFilters = (attributes) => {
     fetchFunction: (params?: Record<string, unknown>) => Promise<any>,
     keysToFilter: string[]
   ) => {
-    //TODO: refactor
     let type, stage, hasProducts;
 
     if (activeSortFilter.mainFilter === "images") {
@@ -218,7 +217,6 @@ const useFilters = (attributes) => {
   const onAttributeClick = async (data: IAttribute) => {
     try {
       setLoading(true);
-
       setActiveAttribute(data);
       let values: IFilterAttributeValues = [];
 
