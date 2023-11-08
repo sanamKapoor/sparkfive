@@ -380,33 +380,6 @@ const AssetThumbail = ({
                       }}
                     />
                   </div>
-                  <div
-                    className={`normal-text ${styles["wrap-text"]} ${
-                      activeView === "list" && styles["list-text"]
-                    }`}
-                  >
-                    <span
-                      id="editable-preview"
-                      onClick={() => {
-                        if (onView) {
-                          onView(asset.id);
-                        } else {
-                          setOverlayProperties({
-                            ...DEFAULT_DETAIL_PROPS,
-                            visible: !overlayProperties.visible,
-                          });
-                        }
-                      }}
-                      className={
-                        isThumbnailNameEditable
-                          ? gridStyles["editable-preview"]
-                          : `${gridStyles["editable-preview"]} ${gridStyles["non-editable-preview"]}`
-                      }
-                    >
-                      {thumbnailName}.{asset.extension}
-                      {isAssetACopy && ` - COPY`}
-                    </span>
-                  </div>
                 </>
               )}
           </div>
