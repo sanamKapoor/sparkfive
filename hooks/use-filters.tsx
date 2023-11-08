@@ -215,9 +215,6 @@ const useFilters = (attributes) => {
     setActiveSortFilter({ ...activeSortFilter, [filterKey]: updatedData });
   };
 
-  /** // TODO:
-   * 1. Check filters on share landing page
-   **/
   const onAttributeClick = async (data: IAttribute) => {
     try {
       setLoading(true);
@@ -351,6 +348,7 @@ const useFilters = (attributes) => {
     const res = await fetchApi.getCustomFieldWithCount(customFieldId, params);
     return res.data;
   };
+
   return {
     activeAttribute,
     filteredOptions,

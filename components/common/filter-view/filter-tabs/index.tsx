@@ -15,6 +15,7 @@ import {
 } from "../../../../interfaces/filters";
 import shareCollectionApi from "../../../../server-api/share-collection";
 import Badge from "../../UI/Badge/badge";
+import ClickOutside from "../../UI/ClickOutside";
 import Button from "../../buttons/button";
 import IconClickable from "../../buttons/icon-clickable";
 import FilterOptionPopup from "../../filter-option-popup";
@@ -75,6 +76,14 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
     setShowMoreFilters((prevState) => !prevState);
   };
 
+  const onClickOutsideAttribute = () => {
+    setActiveAttribute((prev) => null);
+  };
+
+  const onClickOutsideMoreFilters = () => {
+    setShowMoreFilters(false);
+  };
+
   return (
     <div className={`${styles["outer-Box"]}`}>
       <div className={`${styles["outer-wrapper"]}`}>
@@ -103,7 +112,11 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
 
         {attributes.map((attr) => {
           return (
-            <div className={`${styles["main-wrapper"]}`} key={attr.id}>
+            <ClickOutside
+              onClick={onClickOutsideAttribute}
+              className={`${styles["main-wrapper"]}`}
+              key={attr.id}
+            >
               <div
                 className={
                   checkIfBadgeVisible(activeSortFilter, attr.id)
@@ -135,7 +148,7 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
                   alt=""
                 />
               </div>
-              {activeAttribute !== null && activeAttribute?.id === attr.id && (
+              {activeAttribute !== null && activeAttribute?.id === attr.id ? (
                 <FilterOptionPopup
                   values={values}
                   activeAttribute={activeAttribute}
@@ -144,13 +157,16 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
                   setOptions={setFilteredOptions}
                   loading={loading}
                 />
-              )}
-            </div>
+              ) : null}
+            </ClickOutside>
           );
         })}
 
         {attributes.length > 0 && (
-          <div className={`${styles["main-wrapper"]}`}>
+          <ClickOutside
+            className={`${styles["main-wrapper"]}`}
+            onClick={onClickOutsideMoreFilters}
+          >
             <div
               className={`${styles["more-filter-btn"]}`}
               onClick={onMoreFiltersClick}
@@ -164,7 +180,7 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
                 setShowModal={setShowMoreFilters}
               />
             )}
-          </div>
+          </ClickOutside>
         )}
       </div>
     </div>
