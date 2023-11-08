@@ -13,6 +13,7 @@ import {
   FilterAttributeVariants,
   IAttribute,
 } from "../../../../interfaces/filters";
+import shareCollectionApi from "../../../../server-api/share-collection";
 import Badge from "../../UI/Badge/badge";
 import Button from "../../buttons/button";
 import IconClickable from "../../buttons/icon-clickable";
@@ -29,7 +30,8 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
   attributes,
   setAttributes,
 }) => {
-  const { activeSortFilter, setRenderedFlag } = useContext(FilterContext);
+  const { activeSortFilter, setRenderedFlag, isPublic, sharePath } =
+    useContext(FilterContext);
   const {
     activeAttribute,
     loading,
@@ -47,7 +49,11 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
   const getAttributes = async () => {
     //TODO: refine and fix
     try {
-      const res = await teamApi.getTeamAttributes({ defaultOnly: true });
+      const fetchApi = isPublic ? shareCollectionApi : teamApi;
+      const res = await fetchApi.getTeamAttributes({
+        defaultOnly: true,
+        ...(sharePath && { sharePath }),
+      });
       //check for filter elements to hide
       if (advancedConfig?.hideFilterElements) {
         const filteredAttrs = res.data.data.filter(
@@ -143,21 +149,23 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
           );
         })}
 
-        <div className={`${styles["main-wrapper"]}`}>
-          <div
-            className={`${styles["more-filter-btn"]}`}
-            onClick={onMoreFiltersClick}
-          >
-            <Button text="More filters" className="text-primary-btn" />
+        {attributes.length > 0 && (
+          <div className={`${styles["main-wrapper"]}`}>
+            <div
+              className={`${styles["more-filter-btn"]}`}
+              onClick={onMoreFiltersClick}
+            >
+              <Button text="More filters" className="text-primary-btn" />
+            </div>
+            {showMoreFilters && (
+              <MoreFiltersOptionPopup
+                attributes={attributes}
+                setAttributes={setAttributes}
+                setShowModal={setShowMoreFilters}
+              />
+            )}
           </div>
-          {showMoreFilters && (
-            <MoreFiltersOptionPopup
-              attributes={attributes}
-              setAttributes={setAttributes}
-              setShowModal={setShowMoreFilters}
-            />
-          )}
-        </div>
+        )}
       </div>
     </div>
   );

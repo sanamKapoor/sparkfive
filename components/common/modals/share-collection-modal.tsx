@@ -28,13 +28,6 @@ import dateStyles from "../filter/date-uploaded.module.css";
 import { LoadingContext, UserContext } from "../../../context";
 
 // Accordion
-import {
-  Accordion,
-  AccordionItem,
-  AccordionItemHeading,
-  AccordionItemButton,
-  AccordionItemPanel,
-} from "react-accessible-accordion";
 // import 'react-accessible-accordion/dist/fancy-example.css';
 
 const getDayToCurrentDate = (day: number = 1) => {
@@ -49,7 +42,7 @@ const ShareCollectionModal = ({
   itemsAmount = 0,
   shareAssets,
   title = "",
-  getShareLink = (name) => { },
+  getShareLink = (name) => {},
   currentShareLink = undefined,
 }) => {
   const { setIsLoading } = useContext(LoadingContext);
@@ -387,8 +380,8 @@ const ShareCollectionModal = ({
         title
           ? title
           : itemsAmount === 1
-            ? `Share 1 collection`
-            : `Share portal`
+          ? `Share 1 collection`
+          : `Share portal`
       }
       disabledConfirm={!name}
       additionalClasses={["visible-block collection-share-modal"]}
@@ -450,7 +443,7 @@ const ShareCollectionModal = ({
                     ? `${process.env.CLIENT_BASE_URL}/collections/${collectionLink}`
                     : ""
                 }
-                onChange={() => { }}
+                onChange={() => {}}
                 styleType={"regular-short"}
               />
 
@@ -646,8 +639,9 @@ const ShareCollectionModal = ({
                   />
                 </div>
                 <div
-                  className={`col-50 d-flex align-items-center ${expiredPeriod?.value === 0 ? "flex-direction-column" : ""
-                    }`}
+                  className={`col-50 d-flex align-items-center ${
+                    expiredPeriod?.value === 0 ? "flex-direction-column" : ""
+                  }`}
                 >
                   {expiredPeriod?.value === 0 && (
                     <div className={"row w-100 m-b-5"}>
@@ -679,8 +673,9 @@ const ShareCollectionModal = ({
           )}
 
           <div
-            className={`${styles["input-wrapper"]} ${sharable || isAdmin() ? "" : "m-b-6rem"
-              }`}
+            className={`${styles["input-wrapper"]} ${
+              sharable || isAdmin() ? "" : "m-b-6rem"
+            }`}
           >
             <div className={`${styles.title}`}>Share from Sparkfive</div>
             <div className={styles["row-field-content"]}>
@@ -733,18 +728,8 @@ const ShareCollectionModal = ({
             </div>
           )}
 
-          {/* filter values code starts from here */}
-          {/* <div className={`${styles["filter-value-wrapper"]} ${styles["input-wrapper"]}`}>
-            <div className={`${styles.title}`}>
-              <p>Filter values</p>
-              <IconClickable
-                src={Utilities.downarrowThin}
-                // src={Utilities.uparrowThin}
-                additionalClass={styles["arrow-icon"]}
-              />
-            </div> */}
-
-          <div
+          {/* TODO: required code  */}
+          {/* <div
             className={`${styles["filter-value-wrapper"]}  ${styles["accordion-container"]}`}
           >
             <Accordion allowZeroExpanded>
@@ -755,8 +740,7 @@ const ShareCollectionModal = ({
                       <p>Filter values</p>
 
                       <IconClickable
-                        // src={Utilities.downarrowThin}
-                        // src={Utilities.uparrowThin}
+          
                         src={
                           isAccordionOpen
                             ? Utilities.uparrowThin
@@ -773,9 +757,7 @@ const ShareCollectionModal = ({
                     <div className={`${styles["tags-wrapper"]}`}>
                       <div className={`${styles["tags-left-side"]}`}>
                         <IconClickable src={Utilities.radioButtonEnabled} />
-                        {/* <IconClickable
-                      src={Utilities.radioButtonNormal}
-                    /> */}
+                      
                         <span className={`${styles["select-name"]}`}>Tags</span>
                       </div>
                     </div>
@@ -795,7 +777,7 @@ const ShareCollectionModal = ({
                 </AccordionItemPanel>
               </AccordionItem>
             </Accordion>
-          </div>
+          </div> */}
 
           {isAdmin() && (
             <div className={`${styles["input-wrapper"]}`}>
