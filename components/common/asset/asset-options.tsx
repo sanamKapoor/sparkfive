@@ -27,6 +27,7 @@ const AssetOptions = ({
   activeView,
   isShare = false,
   isAssetRelated = false,
+  renameAsset
 }) => {
   const { hasPermission, user } = useContext(UserContext);
 
@@ -61,8 +62,9 @@ const AssetOptions = ({
   if (hasPermission([ASSET_EDIT])) {
     assetRelatedOptions.push({ label: "Delete", onClick: openDeleteAsset });
     options.push({ label: "Comment", onClick: openComments });
-    options.push({ label: "Add to", onClick: openMoveAsset });
     options.push({ label: "Copy", onClick: openCopyAsset });
+    options.push({ label: "Rename Asset", onClick: renameAsset });
+    options.push({ label: "Add to", onClick: openMoveAsset });
     options.push({
       label: asset.stage !== "archived" ? "Archive" : "Unarchive",
       onClick: openArchiveAsset,
@@ -90,12 +92,12 @@ const AssetOptions = ({
           {/* this is for list view  */}
           {activeView === "list" ? (
             <div>
-            <IconClickable additionalClass={styles["edit-icon"]} src={Utilities.edit} />
+              <IconClickable additionalClass={styles["edit-icon"]} src={Utilities.edit} />
             </div>
 
-          ):null}
-          
-           
+          ) : null}
+
+
           {children}
         </>
       )}
@@ -106,8 +108,8 @@ const AssetOptions = ({
               isShare
                 ? [{ label: "Download", onClick: downloadAsset }]
                 : isAssetRelated
-                ? assetRelatedOptions
-                : options
+                  ? assetRelatedOptions
+                  : options
             }
           />
         </div>

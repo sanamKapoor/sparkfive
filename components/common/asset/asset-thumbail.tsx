@@ -19,6 +19,8 @@ import AssetImg from './asset-img';
 import AssetOptions from './asset-options';
 import styles from './asset-thumbail.module.css';
 import DetailOverlay from './detail-overlay';
+import RenameModal from "../../common/modals/rename-modal";
+import update from "immutability-helper";
 
 // Components
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
@@ -61,10 +63,13 @@ const AssetThumbail = ({
   focusedItem,
   setFocusedItem,
   activeView,
+  mode
 }) => {
   const [overlayProperties, setOverlayProperties] =
     useState(DEFAULT_DETAIL_PROPS);
-  const { detailOverlayId, assets, setAssets } = useContext(AssetContext);
+  const { detailOverlayId, assets, setAssets,
+    subFoldersAssetsViewList: { results: subAssets, next: nextAsset, total: totalAssets },
+    setListUpdateFlag } = useContext(AssetContext);
 
   const isAssetACopy = asset.name.endsWith(" - COPY");
 
@@ -74,6 +79,7 @@ const AssetThumbail = ({
 
   const [isEditing, setIsEditing] = useState(false);
   const dateFormat = "MMM do, yyyy";
+  const [assetRenameModalOpen, setAssetRenameModalOpen] = useState(false);
 
   useEffect(() => {
     setThumbnailName(assetName);
@@ -156,7 +162,78 @@ const AssetThumbail = ({
   const handleOnFocus = () => {
     setIsEditing(true);
   };
+  // HAndle the New action Button Change name for assets
+  const renameAsset = () => {
+    setAssetRenameModalOpen(true);
+  }
+  const confirmAssetRename = async (newValue) => {
+    try {
+      if (mode === "SubCollectionView") {
+        const activeAsset = subAssets.find((asst) => asst?.asset?.id === asset?.id);
+        const fileName = thumbnailName + "." + asset.extension;
 
+        const editedName = `${newValue}.${activeAsset?.extension}`;
+        const data = await assetApi.updateAsset(asset.id, {
+          updateData: { name: isAssetACopy ? fileName + " - COPY" : fileName },
+          associations: {},
+        });
+        if (data && removeExtension(data?.data?.name) !== assetName) {
+          const updatedAssets = [
+            ...subAssets.map((item) => {
+              if (item.asset.id === data?.data?.id) {
+                return {
+                  ...item,
+                  asset: {
+                    ...item.asset,
+                    name: isAssetACopy ? fileName + " - COPY" : fileName,
+                  },
+                };
+              } else {
+                return item;
+              }
+            }),
+          ];
+          setAssets(updatedAssets);
+          setListUpdateFlag(true);
+        }
+        setThumbnailName(editedName);
+        toastUtils.success("Asset name updated");
+      } else {
+        const activeAsset = assets.find((asst) => asst?.asset?.id === asset?.id);
+        const fileName = thumbnailName + "." + asset.extension;
+
+        const editedName = `${newValue}.${activeAsset?.extension}`;
+        const data = await assetApi.updateAsset(asset.id, {
+          updateData: { name: isAssetACopy ? fileName + " - COPY" : fileName },
+          associations: {},
+        });
+        if (data && removeExtension(data?.data?.name) !== assetName) {
+          const updatedAssets = [
+            ...assets.map((item) => {
+              if (item.asset.id === data?.data?.id) {
+                return {
+                  ...item,
+                  asset: {
+                    ...item.asset,
+                    name: isAssetACopy ? fileName + " - COPY" : fileName,
+                  },
+                };
+              } else {
+                return item;
+              }
+            }),
+          ];
+          setAssets(updatedAssets);
+          setListUpdateFlag(true);
+
+        }
+        setThumbnailName(editedName);
+        toastUtils.success("Asset name updated");
+      }
+    } catch (err) {
+      toastUtils.error("Could not update asset name");
+    }
+  };
   return (
     <>
       <div className={`${styles.container} ${activeView === "list" && styles.listContainer} ${isLoading && "loadable"}`}>
@@ -179,7 +256,6 @@ const AssetThumbail = ({
 
         {/* list-image -wrapper is for list view */}
         <div className={`${styles['image-wrapper']} ${activeView === "list" && styles['list-image-wrapper']}`}
-
           onClick={() => {
             if (onView && activeView === "list") {
               onView(asset.id);
@@ -190,8 +266,6 @@ const AssetThumbail = ({
               });
             }
           }}
-
-
         >
           {isUploading && (
             <>
@@ -291,25 +365,35 @@ const AssetThumbail = ({
             >
               {/* folderItemHeading is for list view */}
               <div className={`${styles.folderItemHeading} ${activeView === "list" && styles.listHeading}`}>
-                {isThumbnailNameEditable &&
-                  isEditing &&
-                  focusedItem &&
-                  focusedItem === asset.id ? (
-                  // list-text is for list view
-                  <input
-                    autoFocus
-                    className={`normal-text ${gridStyles["editable-input"]} ${styles["wrap-text"]}  ${activeView === "list" && styles["list-text"]}`}
-                    value={thumbnailName}
-                    onChange={handleNameChange}
-                    onBlur={updateNameOnBlur}
-                  />
-
-                ) : (
+                {
+                  // isThumbnailNameEditable &&
+                  //   isEditing &&
+                  //   focusedItem &&
+                  //   focusedItem === asset.id ? (
+                  //   // list-text is for list view
+                  //   <input
+                  //     autoFocus
+                  //     className={`normal-text ${gridStyles["editable-input"]} ${styles["wrap-text"]}  ${activeView === "list" && styles["list-text"]}`}
+                  //     value={thumbnailName}
+                  //     onChange={handleNameChange}
+                  //     onBlur={updateNameOnBlur}
+                  //   />
+                  // ) : (
                   // list-text is for list view 
                   <div className={`normal-text ${styles["wrap-text"]} ${activeView === "list" && styles["list-text"]}`}>
                     <span
                       id="editable-preview"
-                      onClick={handleOnFocus}
+                      onClick={() => {
+                        if (onView) {
+                          onView(asset.id);
+                        } else {
+                          setOverlayProperties({
+                            ...DEFAULT_DETAIL_PROPS,
+                            visible: !overlayProperties.visible,
+                          })
+
+                        }
+                      }}
                       className={
                         isThumbnailNameEditable
                           ? gridStyles["editable-preview"]
@@ -320,7 +404,8 @@ const AssetThumbail = ({
                       {isAssetACopy && ` - COPY`}
                     </span>
                   </div>
-                )}
+                  // )
+                }
                 {/* only for list view */}
                 {/* size */}
 
@@ -358,6 +443,8 @@ const AssetThumbail = ({
                   openRemoveAsset={openRemoveAsset}
                   isShare={isShare}
                   dissociateAsset={onDisassociate}
+                  renameAsset={renameAsset}
+
                 />
               )}
               {showAssetRelatedOption && (
@@ -378,26 +465,35 @@ const AssetThumbail = ({
 
           <div>{customComponent}</div>
         </div>
-      </div>
-      {overlayProperties.visible && (
-        <DetailOverlay
-          sharePath={sharePath}
-          isShare={isShare}
-          asset={asset}
-          realUrl={
-            asset.extension === "tiff" || asset.extension === "tif"
-              ? thumbailUrl
-              : realUrl
-          }
-          activeFolder={activeFolder}
-          thumbailUrl={thumbailUrl}
-          initialParams={overlayProperties}
-          openShareAsset={openShareAsset}
-          openDeleteAsset={openDeleteAsset}
-          closeOverlay={onCloseOverlay}
-          loadMore={loadMore}
-        />
-      )}
+      </div >
+      <RenameModal
+        closeModal={() => setAssetRenameModalOpen(false)}
+        modalIsOpen={assetRenameModalOpen}
+        renameConfirm={confirmAssetRename}
+        type={"Asset"}
+        initialValue={assetName}
+      />
+      {
+        overlayProperties.visible && (
+          <DetailOverlay
+            sharePath={sharePath}
+            isShare={isShare}
+            asset={asset}
+            realUrl={
+              asset.extension === "tiff" || asset.extension === "tif"
+                ? thumbailUrl
+                : realUrl
+            }
+            activeFolder={activeFolder}
+            thumbailUrl={thumbailUrl}
+            initialParams={overlayProperties}
+            openShareAsset={openShareAsset}
+            openDeleteAsset={openDeleteAsset}
+            closeOverlay={onCloseOverlay}
+            loadMore={loadMore}
+          />
+        )
+      }
     </>
   );
 };
