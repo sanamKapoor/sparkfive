@@ -181,6 +181,13 @@ const DetailOverlay = ({
     renameValue.current = value;
   };
 
+  const calculateNoteHeight = () => {
+    const element = document.getElementById(`notes-${currentAsset.id}`);
+    return element ? element.offsetHeight + 90 : 0;
+  };
+
+  const [noteHeight, setNoteHeight] = useState(calculateNoteHeight());
+
   // For resize and cropping
   const [downloadImageTypes, setDownloadImageTypes] = useState(getDefaultDownloadImageType(currentAsset.extension));
   const [mode, setMode] = useState("detail"); // Available options: resize, crop, detail
@@ -260,6 +267,12 @@ const DetailOverlay = ({
     }
   };
 
+  const onChangeNoteHeight = () => {
+    setTimeout(() => {
+      setNoteHeight(calculateNoteHeight());
+    }, 100);
+  };
+
   useEffect(() => {
     if (transcriptAccess) {
       getTranscript();
@@ -276,6 +289,18 @@ const DetailOverlay = ({
       setCurrentAsset(asset);
     }
   }, [asset]);
+
+  useEffect(() => {
+    onChangeNoteHeight();
+  }, [notes]);
+
+  useEffect(() => {
+    window.addEventListener("resize", onChangeNoteHeight);
+
+    return () => {
+      window.removeEventListener("resize", onChangeNoteHeight);
+    };
+  }, []);
 
   const checkInitialParams = () => {
     if (initialParams?.side) {
@@ -1009,127 +1034,138 @@ const DetailOverlay = ({
               )}
             </div>
           </div>
-          <div
-            className={`${!isShare ? styles["img-wrapper"] : styles["share-img-wrapper"]}${
-              activeFolder && ` ${styles["active-folderimg"]}`
-            }`}
-          >
-            <div className={styles["notes-wrapper"]}>
+          <div className={styles["notes-container"]}>
+            <div className={styles["notes-wrapper"]} id={`notes-${currentAsset.id}`}>
               {notes.map(
                 (note, indx) =>
                   ((isShare && !note.internal) || !isShare) && (
-                    <AssetNote key={indx.toString()} title={`Note ${indx + 1}`} note={note.text} />
+                    <AssetNote
+                      key={indx.toString()}
+                      title={`Note ${indx + 1}`}
+                      note={note.text}
+                      onShowClick={() => {
+                        onChangeNoteHeight();
+                      }}
+                    />
                   ),
               )}
             </div>
-            {assetDetail.type === "image" && (
-              <>
-                {mode === "detail" && (
-                  <AssetImg
-                    imgClass="img-preview"
-                    name={assetDetail.name}
-                    assetImg={
-                      assetDetail.extension === "tiff" ||
-                      assetDetail.extension === "tif" ||
-                      assetDetail.extension === "svg" ||
-                      assetDetail.extension === "svg+xml" ||
-                      assetDetail.extension === "heif" ||
-                      assetDetail.extension === "heic" ||
-                      assetDetail.extension === "cr2"
-                        ? versionThumbnailUrl
-                        : versionRealUrl
-                    }
-                  />
-                )}
 
-                {mode === "resize" && (
-                  <Rnd
-                    position={{ x: detailPosSize.x, y: detailPosSize.y }}
-                    size={{
-                      width: detailPosSize.width,
-                      height: detailPosSize.height,
-                    }}
-                    className={`${styles["react-draggable"]}`}
-                    lockAspectRatio={true}
-                    onResizeStop={(e, direction, ref, delta, position) =>
-                      onResizeStop(ref.style.width, ref.style.height, position)
-                    }
-                  >
-                    <AssetImg name={assetDetail.name} assetImg={versionRealUrl} imgClass="img-preview" isResize />
-                  </Rnd>
-                )}
-
-                {mode === "crop" && (
-                  <AssetCropImg
-                    imageType={imageType}
-                    assetExtension={assetDetail.extension}
-                    setWidth={setWidth}
-                    setHeight={setHeight}
-                    locked={lockCropping()}
-                    name={assetDetail.name}
-                    assetImg={realUrl}
-                    width={width}
-                    height={height}
-                    sizeOfCrop={sizeOfCrop}
-                    setSizeOfCrop={setSizeOfCrop}
-                    detailPosSize={detailPosSize}
-                    associateFileId={currentAsset.id}
-                    onAddAssociate={(asset) => {
-                      const detail = { ...assetDetail };
-                      detail.fileAssociations.push(asset);
-
-                      setAssetDetail(detail);
-                    }}
-                    renameValue={renameValue}
-                  />
-                )}
-              </>
-            )}
-            {assetDetail.type !== "image" &&
-              assetDetail.type !== "video" &&
-              versionThumbnailUrl &&
-              (assetDetail.extension.toLowerCase() === "pdf" ? (
-                <AssetPdf asset={asset} />
-              ) : (
-                <AssetImg name={assetDetail.name} assetImg={versionThumbnailUrl} imgClass="img-preview" />
-              ))}
-            {assetDetail.type !== "image" && assetDetail.type !== "video" && !versionThumbnailUrl && (
-              <AssetIcon extension={currentAsset.extension} />
-            )}
-            {assetDetail.type === "video" && (
-              <>
-                {(previewUrl || (!previewUrl && currentAsset.extension === "mp4")) && (
-                  <video controls id={"video-element"}>
-                    <source src={previewUrl ?? versionRealUrl} type={"video/mp4"} />
-                    Sorry, your browser doesn't support video playback.
-                  </video>
-                )}
-
-                {!previewUrl && currentAsset.extension !== "mp4" && (
-                  <AssetImg name={assetDetail.name} assetImg={""} type={"video"} imgClass="img-preview" isResize />
-                )}
-              </>
-            )}
-            {activeFolder && (
-              <div className={styles.arrows}>
-                <div>
-                  {assets.length && assets[0].asset && assets[0].asset.id !== asset.id && (
-                    <span className={styles["arrow-prev"]}>
-                      <IconClickable src={Utilities.arrowPrev} onClick={() => navigateOverlay(-1)} />
-                    </span>
+            <div
+              className={`${!isShare ? styles["img-wrapper"] : styles["share-img-wrapper"]}${
+                activeFolder && ` ${styles["active-folderimg"]}`
+              }`}
+              style={{ height: `calc(100% - ${noteHeight}px)` }}
+            >
+              {assetDetail.type === "image" && (
+                <>
+                  {mode === "detail" && (
+                    <AssetImg
+                      imgClass="img-preview"
+                      name={assetDetail.name}
+                      assetImg={
+                        assetDetail.extension === "tiff" ||
+                        assetDetail.extension === "tif" ||
+                        assetDetail.extension === "svg" ||
+                        assetDetail.extension === "svg+xml" ||
+                        assetDetail.extension === "heif" ||
+                        assetDetail.extension === "heic" ||
+                        assetDetail.extension === "cr2"
+                          ? versionThumbnailUrl
+                          : versionRealUrl
+                      }
+                    />
                   )}
-                  {availableNext && (
-                    <span className={styles["arrow-next"]}>
-                      <IconClickable src={Utilities.arrowNext} onClick={() => navigateOverlay(1)} />
-                    </span>
+
+                  {mode === "resize" && (
+                    <Rnd
+                      position={{ x: detailPosSize.x, y: detailPosSize.y }}
+                      size={{
+                        width: detailPosSize.width,
+                        height: detailPosSize.height,
+                      }}
+                      className={`${styles["react-draggable"]}`}
+                      lockAspectRatio={true}
+                      onResizeStop={(e, direction, ref, delta, position) =>
+                        onResizeStop(ref.style.width, ref.style.height, position)
+                      }
+                    >
+                      <AssetImg name={assetDetail.name} assetImg={versionRealUrl} imgClass="img-preview" isResize />
+                    </Rnd>
                   )}
+
+                  {mode === "crop" && (
+                    <AssetCropImg
+                      imageType={imageType}
+                      assetExtension={assetDetail.extension}
+                      setWidth={setWidth}
+                      setHeight={setHeight}
+                      locked={lockCropping()}
+                      name={assetDetail.name}
+                      assetImg={realUrl}
+                      width={width}
+                      height={height}
+                      sizeOfCrop={sizeOfCrop}
+                      setSizeOfCrop={setSizeOfCrop}
+                      detailPosSize={detailPosSize}
+                      associateFileId={currentAsset.id}
+                      onAddAssociate={(asset) => {
+                        const detail = { ...assetDetail };
+                        detail.fileAssociations.push(asset);
+
+                        setAssetDetail(detail);
+                      }}
+                      renameValue={renameValue}
+                    />
+                  )}
+                </>
+              )}
+              {assetDetail.type !== "image" &&
+                assetDetail.type !== "video" &&
+                versionThumbnailUrl &&
+                (assetDetail.extension.toLowerCase() === "pdf" ? (
+                  <AssetPdf asset={asset} />
+                ) : (
+                  <AssetImg name={assetDetail.name} assetImg={versionThumbnailUrl} imgClass="img-preview" />
+                ))}
+              {assetDetail.type !== "image" && assetDetail.type !== "video" && !versionThumbnailUrl && (
+                <AssetIcon extension={currentAsset.extension} />
+              )}
+              {assetDetail.type === "video" && (
+                <>
+                  {(previewUrl || (!previewUrl && currentAsset.extension === "mp4")) && (
+                    <video controls id={"video-element"}>
+                      <source src={previewUrl ?? versionRealUrl} type={"video/mp4"} />
+                      Sorry, your browser doesn't support video playback.
+                    </video>
+                  )}
+
+                  {!previewUrl && currentAsset.extension !== "mp4" && (
+                    <AssetImg name={assetDetail.name} assetImg={""} type={"video"} imgClass="img-preview" isResize />
+                  )}
+                </>
+              )}
+              {activeFolder && (
+                <div className={styles.arrows}>
+                  <div>
+                    {assets.length && assets[0].asset && assets[0].asset.id !== asset.id && (
+                      <span className={styles["arrow-prev"]}>
+                        <IconClickable src={Utilities.arrowPrev} onClick={() => navigateOverlay(-1)} />
+                      </span>
+                    )}
+                    {availableNext && (
+                      <span className={styles["arrow-next"]}>
+                        <IconClickable src={Utilities.arrowNext} onClick={() => navigateOverlay(1)} />
+                      </span>
+                    )}
+                  </div>
+                  <span>
+                    {(assetIndex % activeCollection?.assetsCount) + 1} of {activeCollection?.assetsCount} in{" "}
+                    {activeCollection?.name} collection
+                  </span>
                 </div>
-                <span>
-                  {(assetIndex % activeCollection?.assetsCount) + 1} of {activeCollection?.assetsCount} in{" "}
-                  {activeCollection?.name} collection
-                </span>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </section>
       )}

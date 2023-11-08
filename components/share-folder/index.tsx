@@ -162,8 +162,9 @@ const ShareFolderMain = () => {
     if (asPath) {
       // Get shareUrl from path
       const splitPath = asPath.split("collections/");
-      setSharePath(splitPath[1]);
-      setContextPath(splitPath[1]);
+      const splitPathWithoutQuery = splitPath[1].split("?");
+      setSharePath(splitPathWithoutQuery[0]);
+      setContextPath(splitPathWithoutQuery[0]);
     }
   }, [router.asPath]);
 
