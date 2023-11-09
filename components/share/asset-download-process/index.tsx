@@ -44,7 +44,7 @@ const AssetDownloadProcess = (props) => {
       )}
       {downloadingStatus === "zipping" && (
         <div className={clsx(styles["zip-container"])}>
-          <div className={styles["zip-header"]}>Zipping 5 assets</div>
+          <div className={styles["zip-header"]}>Zipping {selectedAsset} assets</div>
           <div>Estimated Time: less than a minute</div>
           <div className={styles["zip-download-text"]}>Please wait - download in process</div>
 
