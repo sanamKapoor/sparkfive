@@ -15,12 +15,7 @@ import projectApi from "../../../server-api/project";
 import tagApi from "../../../server-api/tag";
 
 // Contexts
-import {
-  AssetContext,
-  FilterContext,
-  LoadingContext,
-  UserContext,
-} from "../../../context";
+import { AssetContext, FilterContext, LoadingContext, UserContext } from "../../../context";
 
 // Utils
 import { Utilities } from "../../../assets";
@@ -111,9 +106,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
   // Custom fields
   const [activeCustomField, setActiveCustomField] = useState<number>();
   const [inputCustomFields, setInputCustomFields] = useState([]);
-  const [assetCustomFields, setAssetCustomFields] = useState(
-    mappingCustomFieldData(inputCustomFields, customs)
-  );
+  const [assetCustomFields, setAssetCustomFields] = useState(mappingCustomFieldData(inputCustomFields, customs));
 
   // Products
   const [productList, setProductList] = useState(products);
@@ -146,15 +139,12 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
 
   useEffect(() => {
     if (inputCustomFields.length > 0) {
-      const updatedMappingCustomFieldData = mappingCustomFieldData(
-        inputCustomFields,
-        customs
-      );
+      const updatedMappingCustomFieldData = mappingCustomFieldData(inputCustomFields, customs);
 
       setAssetCustomFields(
         update(assetCustomFields, {
           $set: updatedMappingCustomFieldData,
-        })
+        }),
       );
 
       updateAssetState({
@@ -229,16 +219,14 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
   };
 
   const updateAssetState = (updatedata) => {
-    const assetIndex = assets.findIndex(
-      (assetItem) => assetItem.asset.id === id
-    );
+    const assetIndex = assets.findIndex((assetItem) => assetItem.asset.id === id);
     if (assetIndex >= 0) {
       setAssets(
         update(assets, {
           [assetIndex]: {
             asset: updatedata,
           },
-        })
+        }),
       );
       setAssetDetail(update(asset, updatedata));
     }
@@ -407,7 +395,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
         [index]: {
           values: { $set: data },
         },
-      })
+      }),
     );
 
     // Show loading
@@ -432,7 +420,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
         [index]: {
           values: { $set: [selected] },
         },
-      })
+      }),
     );
 
     // Hide loading
@@ -453,7 +441,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
         [index]: {
           values: { $set: stateUpdate },
         },
-      })
+      }),
     );
 
     // Update asset (global)
@@ -475,20 +463,14 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
 
   return (
     <>
-      <div
-        className={` ${!isShare ? styles.fieldWrapper : styles.shareWrapper}`}
-      >
+      <div className={` ${!isShare ? styles.fieldWrapper : styles.shareWrapper}`}>
         <h2 className={styles["details-heading"]}>Details</h2>
 
         <div className={styles["first-section"]}>
           {fieldValues.map((fieldvalue) => (
             <div className={styles["field-wrapper"]} key={fieldvalue.field}>
-              <div className={`secondary-text ${styles.field}`}>
-                {fieldvalue.field}
-              </div>
-              <div className={`normal-text ${styles["meta-text"]}`}>
-                {fieldvalue.value}
-              </div>
+              <div className={`secondary-text ${styles.field}`}>{fieldvalue.field}</div>
+              <div className={`normal-text ${styles["meta-text"]}`}>{fieldvalue.value}</div>
             </div>
           ))}
         </div>
@@ -511,9 +493,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                   title="Campaigns"
                   addText="Add to Campaign"
                   onAddClick={() => setActiveDropdown("campaigns")}
-                  selectPlaceholder={
-                    "Enter a new campaign or select an existing one"
-                  }
+                  selectPlaceholder={"Enter a new campaign or select an existing one"}
                   avilableItems={inputCampaigns}
                   setAvailableItems={setInputCampaigns}
                   selectedItems={assetCampaigns}
@@ -566,7 +546,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                   updateAssetState({
                     tags: { $set: stateUpdate.concat(aiTags) },
                   });
-                  loadTags();
+                  loadTags({ includeAi: true });
                 }}
                 onRemoveOperationFinished={async (index, stateUpdate) => {
                   setIsLoading(true);
@@ -589,63 +569,56 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
               />
             </div>
 
-            {advancedConfig.aiTagging &&
-              ["png", "jpg", "jpeg"].indexOf(asset.extension.toLowerCase()) >
-                -1 && (
-                <div className={styles["field-wrapper"]}>
-                  <CreatableSelect
-                    title="AI Tags"
-                    addText="Add AI Tags"
-                    type="AI"
-                    creatable={false}
-                    onAddClick={() => setActiveDropdown("ai-tags")}
-                    selectPlaceholder={"Select an existing one"}
-                    avilableItems={availAiTags}
-                    setAvailableItems={setAvailNonAiTags}
-                    selectedItems={aiTags}
-                    setSelectedItems={(value) => {
-                      setIsLoading(false);
-                      setAiTags(value);
-                    }}
-                    onAddOperationFinished={(stateUpdate) => {
-                      updateAssetState({
-                        tags: { $set: stateUpdate.concat(nonAiTags) },
-                      });
-                      loadTags();
-                    }}
-                    onRemoveOperationFinished={async (index, stateUpdate) => {
-                      setIsLoading(true);
+            {advancedConfig.aiTagging && ["png", "jpg", "jpeg"].indexOf(asset.extension.toLowerCase()) > -1 && (
+              <div className={styles["field-wrapper"]}>
+                <CreatableSelect
+                  title="AI Tags"
+                  addText="Add AI Tags"
+                  type="AI"
+                  creatable={false}
+                  onAddClick={() => setActiveDropdown("ai-tags")}
+                  selectPlaceholder={"Select an existing one"}
+                  avilableItems={availAiTags}
+                  setAvailableItems={setAvailNonAiTags}
+                  selectedItems={aiTags}
+                  setSelectedItems={(value) => {
+                    setIsLoading(false);
+                    setAiTags(value);
+                  }}
+                  onAddOperationFinished={(stateUpdate) => {
+                    updateAssetState({
+                      tags: { $set: stateUpdate.concat(nonAiTags) },
+                    });
+                    loadTags({ includeAi: true });
+                  }}
+                  onRemoveOperationFinished={async (index, stateUpdate) => {
+                    setIsLoading(true);
 
-                      await assetApi.removeTag(id, aiTags[index].id);
-                      updateAssetState({
-                        tags: { $set: stateUpdate.concat(nonAiTags) },
-                      });
+                    await assetApi.removeTag(id, aiTags[index].id);
+                    updateAssetState({
+                      tags: { $set: stateUpdate.concat(nonAiTags) },
+                    });
 
-                      setIsLoading(false);
-                    }}
-                    onOperationFailedSkipped={() => setActiveDropdown("")}
-                    isShare={isShare}
-                    asyncCreateFn={(newItem) => {
-                      setIsLoading(true);
+                    setIsLoading(false);
+                  }}
+                  onOperationFailedSkipped={() => setActiveDropdown("")}
+                  isShare={isShare}
+                  asyncCreateFn={(newItem) => {
+                    setIsLoading(true);
 
-                      return assetApi.addTag(id, { ...newItem, type: "AI" });
-                    }}
-                    dropdownIsActive={activeDropdown === "ai-tags"}
-                    sortDisplayValue={true}
-                  />
-                </div>
-              )}
+                    return assetApi.addTag(id, { ...newItem, type: "AI" });
+                  }}
+                  dropdownIsActive={activeDropdown === "ai-tags"}
+                  sortDisplayValue={true}
+                />
+              </div>
+            )}
 
             {inputCustomFields.map((field, index) => {
               if (field.type === "selectOne") {
                 return (
-                  <div
-                    className={`${styles["field-wrapper"]} ${styles["cus-dropdown"]}`}
-                    key={index}
-                  >
-                    <div className={`secondary-text ${styles.field}`}>
-                      {field.name}
-                    </div>
+                  <div className={`${styles["field-wrapper"]} ${styles["cus-dropdown"]}`} key={index}>
+                    <div className={`secondary-text ${styles.field}`}>{field.name}</div>
                     <CustomFieldSelector
                       data={assetCustomFields[index]?.values[0]?.name}
                       options={field.values}
@@ -713,9 +686,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                       avilableItems={field.values}
                       setAvailableItems={() => {}}
                       selectedItems={
-                        assetCustomFields.filter(
-                          (assetField) => assetField.id === field.id
-                        )[0]?.values || []
+                        assetCustomFields.filter((assetField) => assetField.id === field.id)[0]?.values || []
                       }
                       setSelectedItems={(data) => {
                         onChangeCustomField(index, data);
@@ -727,11 +698,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                           },
                         });
                       }}
-                      onRemoveOperationFinished={async (
-                        index,
-                        stateUpdate,
-                        removeId
-                      ) => {
+                      onRemoveOperationFinished={async (index, stateUpdate, removeId) => {
                         setIsLoading(true);
 
                         await assetApi.removeCustomFields(id, removeId);
@@ -744,9 +711,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
 
                         setIsLoading(false);
                       }}
-                      onOperationFailedSkipped={() =>
-                        setActiveCustomField(undefined)
-                      }
+                      onOperationFailedSkipped={() => setActiveCustomField(undefined)}
                       isShare={isShare}
                       asyncCreateFn={(newItem) => {
                         // Show loading
@@ -808,9 +773,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                 title="Collections"
                 addText="Add to Collections"
                 onAddClick={() => setActiveDropdown("collections")}
-                selectPlaceholder={
-                  "Enter a new collection or select an existing one"
-                }
+                selectPlaceholder={"Enter a new collection or select an existing one"}
                 avilableItems={inputFolders}
                 setAvailableItems={setInputFolders}
                 selectedItems={selectedFolder}
@@ -879,9 +842,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
             {!hideFilterElements.products && (
               <>
                 <div className={styles["field-wrapper"]}>
-                  <div className={`secondary-text ${styles.field}`}>
-                    Products
-                  </div>
+                  <div className={`secondary-text ${styles.field}`}>Products</div>
                 </div>
 
                 {productList &&
@@ -895,11 +856,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                           productVendorActiveDropdownValue={`product_vendor-${index}`}
                           productCategoryActiveDropdownValue={`product_category-${index}`}
                           productRetailerActiveDropdownValue={`product_retailer-${index}`}
-                          FieldWrapper={({ children }) => (
-                            <div className={styles["field-wrapper"]}>
-                              {children}
-                            </div>
-                          )}
+                          FieldWrapper={({ children }) => <div className={styles["field-wrapper"]}>{children}</div>}
                           isShare={isShare || !hasPermission([ASSET_EDIT])}
                           activeDropdown={activeDropdown}
                           setActiveDropdown={(value) => {
@@ -929,10 +886,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                   })}
 
                 {!isShare && hasPermission([ASSET_EDIT]) && (
-                  <div
-                    className={`add ${styles["select-add"]}`}
-                    onClick={addProductBlock}
-                  >
+                  <div className={`add ${styles["select-add"]}`} onClick={addProductBlock}>
                     <IconClickable src={Utilities.add} />
                     <span className={"normal-text"}>Add Product</span>
                   </div>
