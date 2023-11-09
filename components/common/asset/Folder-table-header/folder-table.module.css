@@ -20,3 +20,18 @@
     display: grid;
     grid-template-columns:  40% 30% 20% 10%;
   }
+  .listWrapper img{
+    cursor: pointer;
+  }
+
+  @media (max-width:475px){
+    .headContent3{
+      display: none;
+    }
+    .listWrapper{
+     
+      grid-template-columns:  50% 25% 25%;
+    }
+
+
+  }

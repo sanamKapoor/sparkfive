@@ -5,6 +5,7 @@
   position: relative;
   border-radius: 8px;
   border: 1px solid var(--color-secondary-border);
+
 }
 
 .image-wrapper {
@@ -264,5 +265,12 @@
   .createdDate {
     display: none;
   }
- 
+  .modified-date {
+    display: none;
+  }
+  .listContainer {
+    display: grid;
+    grid-template-columns: 50% 25% 25%;
+  }
+  
 }
