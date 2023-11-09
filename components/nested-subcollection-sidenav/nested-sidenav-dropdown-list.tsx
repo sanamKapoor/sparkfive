@@ -149,6 +149,9 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
     if (firstLoaded && activeSortFilter.mainFilter === "folders") {
       getFolders(true);
     }
+    else if (firstLoaded) {
+      getFolders(true);
+    }
     setFirstLoaded(true)
   }, [firstLoaded, activeSortFilter])
 
