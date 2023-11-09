@@ -12,7 +12,7 @@ import AssetImg from "./asset-img";
 import { LoadingContext, TeamContext } from "../../../context";
 
 export default function ShareIconFilesSearch({
-  onSelect = (asset) => {},
+  onSelect = (asset) => { },
   logo = {},
 }) {
   const { setIsLoading } = useContext(LoadingContext);
@@ -58,9 +58,6 @@ export default function ShareIconFilesSearch({
   const onSelectItem = (asset) => {
     setSearching(false);
     setShowList(false);
-
-    console.log(asset);
-
     onSelect(asset);
     setSelectedLogo(asset);
   };

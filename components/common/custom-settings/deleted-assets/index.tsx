@@ -155,7 +155,6 @@ const DeletedAssetsLibrary = () => {
               styleType="filter filter-schedule"
               onChange={(selected) => setSortFilterValue(selected)}
               placeholder="Sort By"
-             
             />
           </div>
         </div>

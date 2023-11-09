@@ -1,0 +1,16 @@
+.select-wrapper{
+    padding: 4px 8px 4px 8px;
+    border-radius: 4px;
+    background: #E9EEFA;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.select-wrapper span{
+    font-weight: 400px;
+    font-size: 12px;
+    line-height: 16px;
+    margin-right: 10px;
+
+
+}

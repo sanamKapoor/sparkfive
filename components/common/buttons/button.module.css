@@ -10,24 +10,25 @@
   white-space: nowrap;
 
 }
-.saveChangeBtn{
+
+.saveChangeBtn {
   border-radius: 4px;
 }
 
-.add{
- background:#fff;
- width:26.47px;
- height:26.47px;
- background: #10BDA5 ;
- border-radius: 50%;
- min-width: 0;
- padding: 0;
- color:#fff;
- font-size: 24px;
- font-weight: 500;
- display: flex;
- align-items: center;
- justify-content: center;
+.add {
+  background: #fff;
+  width: 26.47px;
+  height: 26.47px;
+  background: #10BDA5;
+  border-radius: 50%;
+  min-width: 0;
+  padding: 0;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .submit {
@@ -49,8 +50,9 @@
 .input-height-secondary {
   min-height: 48px;
 }
-.save{
-  min-height:35px !important;
+
+.save {
+  min-height: 35px !important;
 }
 
 .primary,
@@ -71,7 +73,7 @@
   border: 1px solid var(--color-secondary-border);
   color: var(--color-prim-navy);
 }
-
+console
 .primary:hover,
 .normal-height-primary:hover,
 .input-height-primary:hover {
@@ -200,7 +202,7 @@
   background-color: var(--color-prim-turquoise);
   font-weight: 600;
   cursor: pointer;
-  height:44px;
+  height: 44px;
   min-width: 161px;
   font-size: 16px;
 }
@@ -241,6 +243,40 @@
   visibility: hidden;
 }
 
+.apply {
+  background:
+    #10BDA5;
+  height: 40px;
+  max-width: 120px;
+  width: 100%;
+  border-radius: 4px;
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  margin-right: 16px;
+}
+
+.cancel {
+  background:
+    #fff;
+  height: 40px;
+  max-width: 120px;
+  width: 100%;
+  border-radius: 4px;
+  color:
+    #AEB0C2;
+  font-weight: 600;
+  font-size: 14px;
+  border: 1px solid #AEB0C2;
+  cursor: pointer;
+}
+
+.main-modal-btn {
+  margin-right: 16px;
+  padding: 6px;
+}
+
 /* //download button */
 .downloadBtn {
   height: 32px;
@@ -256,6 +292,7 @@
   cursor: pointer;
   min-width: 96px;
 }
+
 .actionBtn {
   cursor: pointer;
   background: transparent;
@@ -264,94 +301,109 @@
   font-weight: 400;
   font-size: 12px;
 }
-.rejectBtn{
+
+.rejectBtn {
   margin-right: 40px;
 }
-.formButton{
+
+.formButton {
   width: 100%;
 }
-.uploadBtn{
-  background-color:#817D9D;
-  height:40px;
-    border-radius:4px;
-    padding:8px 24px 8px 24px;
-    color:#fff;
-    font-style: 600;
-    font-size: 14px;
-    cursor: pointer;
-    margin-top: 32px;
+
+.uploadBtn {
+  background-color: #817D9D;
+  height: 40px;
+  border-radius: 4px;
+  padding: 8px 24px 8px 24px;
+  color: #fff;
+  font-style: 600;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 32px;
 }
 
-.activeUpload{
-  background-color:#10BDA5;
-  height:40px;
-    border-radius:4px;
-    padding:8px 24px 8px 24px;
-    color:#fff;
-    font-style: 600;
-    font-size: 14px;
-    cursor: pointer;
-    margin-top: 32px;
+.activeUpload {
+  background-color: #10BDA5;
+  height: 40px;
+  border-radius: 4px;
+  padding: 8px 24px 8px 24px;
+  color: #fff;
+  font-style: 600;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 32px;
 
 }
-.bulk-tag{
-  background-color:#10BDA5;
-  color:#fff;
+
+.bulk-tag {
+  background-color: #10BDA5;
+  color: #fff;
   margin-top: 20px;
 
 }
-.reject-btn{
+
+.reject-btn {
   border: 1px solid var(--color-secondary-border);
   background: #fff;
-  color:var(--color-prim-navy);
+  color: var(--color-prim-navy);
 
 }
-.teamInviteBtn{
+
+.teamInviteBtn {
   height: 36px;
   /* padding: 0 29px; */
   font-size: 14px;
   min-width: 148px;
 }
-.guestUpLoadBtn{
-min-width: 112px;
- height:35px;
+
+.guestUpLoadBtn {
+  min-width: 112px;
+  height: 35px;
 }
-.select-all{
+
+.select-all {
   min-width: 115px;
-  height:34px;
+  height: 34px;
 }
-.attribute-btn{
-  height:35px !important;
+
+.attribute-btn {
+  height: 35px !important;
   min-width: 92px;
   border-radius: 4px;
 }
-.field-btn{
-  height:35px !important;
+
+.field-btn {
+  height: 35px !important;
   min-width: 79px;
   border-radius: 4px;
 
 }
-.guestBtn{
+
+.guestBtn {
   font-size: 14px;
   min-width: 151px !important;
-  height:42px !important;
+  height: 42px !important;
 
 }
-.GuestFileUploadBtn{
+
+.GuestFileUploadBtn {
   min-width: 151px !important;
-  height:40px !important;
+  height: 40px !important;
 }
-.update-cart-btn{
+
+.update-cart-btn {
   height: 44px;
   min-width: 161px;
 
 }
-.plan-modal-btn{
+
+.plan-modal-btn {
   min-width: 203px;
   height: 40px;
 
 }
-.back-button{
+
+.back-button {
   background: none;
   padding: 0;
   height: auto !important;
@@ -359,7 +411,8 @@ min-width: 112px;
   color: #817D9D;
   font-weight: 400;
 }
-.thumbnail-btn{
+
+.thumbnail-btn {
   margin: 0px 10px 0px 0px;
 
 }
@@ -374,7 +427,37 @@ min-width: 112px;
   background-color: transparent;
 }
 
+.bulk-edit-btn{
+  width: 100%;
+  border: 1px solid #d8cab5;
 
+}
+.text-success-btn{
+  font-weight: 400;
+  font-size: 14px;
+  color:#10BDA5;
+  background: transparent;
+  cursor: pointer;
+
+}
+.text-primary-btn{
+  font-weight: 500;
+  font-size: 14px;
+  color:
+  #08135E;
+  background: transparent;
+  cursor: pointer;
+}
+.text-secondary-btn{
+  font-weight: 400;
+  font-size: 14px;
+  color:
+  #817D9D;
+  background: transparent;
+  cursor: pointer;
+  
+
+}
 
 
 
@@ -392,9 +475,21 @@ min-width: 112px;
     min-width: fit-content;
   }
 }
+
 @media screen and (max-width: 575px) {
   .downloadBtn {
     display: none;
     margin-left: 0;
   }
 }
+@media screen and (max-width: 400px) {
+ .mobile-select {
+    width: 100%;
+  
+  }
+  .filter-btn-mob{
+    width: 100%;
+    
+  }
+}
+

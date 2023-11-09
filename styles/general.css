@@ -56,6 +56,8 @@ body {
   padding: 0;
   height: 100%;
   /*!*overflow-x: hidden;*! THis prevent sticky*/
+  /* overflow: hidden; */
+ 
 }
 
 #__next {
@@ -355,7 +357,7 @@ input[role="combobox"] {
 
 .sharefolderOuter #top-bar {
   top: 74px;
-  border-top: 1px solid #e9eefa;
+  /* border-top: 1px solid #e9eefa; */
 }
 
 .colOuter {

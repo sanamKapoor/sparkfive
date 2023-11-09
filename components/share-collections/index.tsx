@@ -12,12 +12,7 @@ import {
 } from "../../context";
 import folderApi from "../../server-api/folder";
 import shareCollectionApi from "../../server-api/share-collection";
-import {
-  DEFAULT_CUSTOM_FIELD_FILTERS,
-  DEFAULT_FILTERS,
-  getAssetsFilters,
-  getAssetsSort,
-} from "../../utils/asset";
+import { getAssetsFilters, getAssetsSort } from "../../utils/asset";
 import requestUtils from "../../utils/requests";
 import toastUtils from "../../utils/toast";
 import styles from "./index.module.css";
@@ -26,7 +21,6 @@ import styles from "./index.module.css";
 import AssetGrid from "../common/asset/asset-grid";
 import AssetOps from "../common/asset/asset-ops";
 import TopBar from "../common/asset/top-bar";
-import FilterContainer from "../common/filter/filter-container";
 import SearchOverlay from "../main/search-overlay-assets";
 import PasswordOverlay from "./password-overlay";
 
@@ -158,14 +152,6 @@ const ShareCollectionMain = () => {
       getShareInfo();
     }
   }, [sharePath]);
-
-  const clearFilters = () => {
-    setActiveSortFilter({
-      ...activeSortFilter,
-      ...DEFAULT_FILTERS,
-      ...DEFAULT_CUSTOM_FIELD_FILTERS(activeSortFilter),
-    });
-  };
 
   const setInitialLoad = async (folderInfo) => {
     if (!firstLoaded && folderInfo) {
@@ -405,17 +391,6 @@ const ShareCollectionMain = () => {
               openFilter={openFilter}
               sharePath={sharePath}
             />
-            {openFilter && (
-              <FilterContainer
-                isShare={true}
-                clearFilters={clearFilters}
-                openFilter={openFilter}
-                setOpenFilter={setOpenFilter}
-                activeSortFilter={activeSortFilter}
-                setActiveSortFilter={setActiveSortFilter}
-                isFolder={activeSortFilter.mainFilter === "folders"}
-              />
-            )}
           </div>
         </main>
       )}

@@ -28,7 +28,6 @@ export default ({ getAssets }) => {
     setActiveOperation,
     operationAsset,
     operationAssets,
-    setOperationAssets,
     setOperationAsset,
     operationFolder,
     setOperationFolder,
@@ -40,6 +39,15 @@ export default ({ getAssets }) => {
     completedAssets,
     setCompletedAssets,
     totalAssets,
+    subFoldersViewList,
+    subFoldersAssetsViewList,
+    setSubFoldersAssetsViewList,
+    selectedAllSubFoldersAndAssets,
+    activeSubFolders,
+    setSubFoldersViewList,
+    setSidenavFolderList,
+    sidenavFolderList,
+    setListUpdateFlag
   } = useContext(AssetContext);
 
   const { setIsLoading } = useContext(LoadingContext);
@@ -58,6 +66,12 @@ export default ({ getAssets }) => {
     type: "",
     id: "",
   });
+  const selectedAssets = assets.filter((asset) => asset.isSelected);
+  const selectedFolders = folders.filter((folder) => folder.isSelected);
+  const selectedSubFolderAssetId = subFoldersAssetsViewList?.results?.filter(
+    (asset) => asset.isSelected
+  ) || []
+  const selectedSubFoldersViewListId = subFoldersViewList?.results?.filter((folder) => folder.isSelected) || [];
 
   useEffect(() => {
     if (
@@ -69,13 +83,13 @@ export default ({ getAssets }) => {
     }
 
     // Edit assets in collections
-    if (activeOperation === "edit" && selectedFolders.length > 0) {
+    if (activeOperation === "edit" && selectedFolders.length > 0 && activeSortFilter?.mainFilter !== "SubCollectionView") {
       // Get all assets in collections and set it as selected
       getSelectedFolderAssets();
     }
 
     // Edit assets including hidden pagination items
-    if (activeOperation === "edit" && selectedAllAssets) {
+    if (activeOperation === "edit" && selectedAllAssets && activeSortFilter?.mainFilter !== "SubCollectionView") {
       //  Get all assets without pagination
       getSelectedAssets(unSelectedAssets.map((data) => data.asset.id));
     }
@@ -187,16 +201,20 @@ export default ({ getAssets }) => {
     setOperationFolder(null);
   };
 
-  const selectedAssets = assets.filter((asset) => asset.isSelected);
-  const selectedFolders = folders.filter((folder) => folder.isSelected);
-
   const moveAssets = async (selectedFolder) => {
     try {
       setIsLoading(true);
       let updateAssets;
       let filters = {};
+
+      let moveAssets: any = selectedAssets;
+
+      if (activeSortFilter?.mainFilter === "SubCollectionView") {
+        moveAssets = selectedSubFolderAssetId
+      }
+
       if (!operationAsset) {
-        updateAssets = selectedAssets.map((selectedAsset) => ({
+        updateAssets = moveAssets.map((selectedAsset) => ({
           id: selectedAsset.asset.id,
           userId: selectedAsset.asset.userId,
           changes: { folderId: selectedFolder },
@@ -233,11 +251,11 @@ export default ({ getAssets }) => {
       }
 
       await assetApi.updateMultiple(updateAssets, filters);
+      setListUpdateFlag(true);
       closeModalAndClearOpAsset();
       if (activeFolder && activeFolder !== selectedFolder) {
         removeSelectedFromList();
       }
-
       setIsLoading(false);
       toastUtils.success("Assets moved successfully");
     } catch (err) {
@@ -250,7 +268,12 @@ export default ({ getAssets }) => {
     try {
       let copyAssetIds;
       let filters = {};
-      if (!operationAsset) {
+
+      if (activeSortFilter?.mainFilter === "SubCollectionView") {
+        copyAssetIds = selectedSubFolderAssetId.map(
+          (selectedAsset) => selectedAsset.asset.id
+        )
+      } else if (!operationAsset) {
         copyAssetIds = selectedAssets.map(
           (selectedAsset) => selectedAsset.asset.id
         );
@@ -283,6 +306,7 @@ export default ({ getAssets }) => {
         { idList: copyAssetIds, folderId: selectedFolder },
         filters
       );
+      setListUpdateFlag(true);
       closeModalAndClearOpAsset();
       toastUtils.success("Assets moved successfully");
     } catch (err) {
@@ -313,7 +337,12 @@ export default ({ getAssets }) => {
     try {
       let updateAssets;
       let filters = {};
-      if (!operationAsset) {
+      if (activeSortFilter?.mainFilter === "SubCollectionView") {
+        updateAssets = selectedSubFolderAssetId.map((assetItem) => ({
+          id: assetItem.asset.id,
+          changes: { stage },
+        }));
+      } else if (!operationAsset) {
         updateAssets = selectedAssets.map((assetItem) => ({
           id: assetItem.asset.id,
           changes: { stage },
@@ -407,8 +436,14 @@ export default ({ getAssets }) => {
     try {
       let updateAssets;
       let filters = {};
-      if (selectedAssets.length > 1) {
-        updateAssets = selectedAssets.map((assetItem) => ({
+      let deletedAssets: any = selectedAssets;
+
+      if (activeSortFilter?.mainFilter === "SubCollectionView") {
+        deletedAssets = selectedSubFolderAssetId
+      }
+
+      if (deletedAssets.length > 1) {
+        updateAssets = deletedAssets.map((assetItem) => ({
           id: assetItem.asset.id,
           changes: {
             status: "deleted",
@@ -418,7 +453,7 @@ export default ({ getAssets }) => {
         }));
       } else {
         updateAssets = {
-          id: selectedAssets[0].asset.id,
+          id: deletedAssets[0].asset.id,
           updateData: {
             status: "deleted",
             stage: "draft",
@@ -450,27 +485,57 @@ export default ({ getAssets }) => {
 
       if (updateAssets.length > 1) {
         await assetApi.updateMultiple(updateAssets, filters);
-        const newAssets = assets.filter((existingAsset) => {
-          const searchedAssetIndex = selectedAssets.findIndex(
-            (assetListItem) => existingAsset.asset.id === assetListItem.asset.id
-          );
-          return searchedAssetIndex === -1;
-        });
+        if (activeSortFilter?.mainFilter === "SubCollectionView") {
+          const newAssets = subFoldersAssetsViewList.results.filter((existingAsset) => {
+            const searchedAssetIndex = deletedAssets.findIndex(
+              (assetListItem) => existingAsset.asset.id === assetListItem.asset.id
+            );
+            return searchedAssetIndex === -1;
+          });
 
-        setAssets(newAssets);
+          setSubFoldersAssetsViewList({
+            ...subFoldersAssetsViewList,
+            results: [...newAssets]
+          });
+
+        } else {
+          const newAssets = assets.filter((existingAsset) => {
+            const searchedAssetIndex = deletedAssets.findIndex(
+              (assetListItem) => existingAsset.asset.id === assetListItem.asset.id
+            );
+            return searchedAssetIndex === -1;
+          });
+          setAssets(newAssets)
+        }
       } else {
         await assetApi.updateAsset(updateAssets.id, {
           updateData: updateAssets.updateData,
         });
-        const assetIndex = assets.findIndex(
-          (assetItem) => assetItem.asset.id === updateAssets.id
-        );
-        if (assetIndex !== -1)
-          setAssets(
-            update(assets, {
-              $splice: [[assetIndex, 1]],
-            })
+        if (activeSortFilter?.mainFilter === "SubCollectionView") {
+
+          const assetIndex = subFoldersAssetsViewList.results.findIndex(
+            (assetItem) => assetItem.asset.id === updateAssets.id
           );
+
+          if (assetIndex !== -1)
+            setSubFoldersAssetsViewList({
+              ...subFoldersAssetsViewList,
+              results: update(subFoldersAssetsViewList.results, {
+                $splice: [[assetIndex, 1]],
+              }),
+            });
+        } else {
+          const assetIndex = assets.findIndex(
+            (assetItem) => assetItem.asset.id === updateAssets.id
+          );
+          if (assetIndex !== -1)
+            setAssets(
+              update(assets, {
+                $splice: [[assetIndex, 1]],
+              })
+            );
+        }
+
       }
 
       closeModalAndClearOpAsset();
@@ -613,6 +678,13 @@ export default ({ getAssets }) => {
           .map((item) => item.asset.versionGroup)
           .join(",");
         assetIds = operationAssets.map((item) => item.asset.id).join(",");
+      } else if (activeSortFilter?.mainFilter === "SubCollectionView" && !operationFolder) {
+        assetIds = selectedSubFolderAssetId
+          .map((assetItem) => assetItem.asset.id)
+          .join(",");
+        versionGroups = selectedSubFolderAssetId
+          .map((assetItem) => assetItem.asset.versionGroup)
+          .join(",");
       } else {
         versionGroups = selectedAssets
           .map((assetItem) => assetItem.asset.versionGroup)
@@ -696,6 +768,8 @@ export default ({ getAssets }) => {
 
       if (operationFolder) {
         folderIds = operationFolder.id;
+      } else if (activeSortFilter?.mainFilter === "SubCollectionView" && !operationFolder) {
+        folderIds = selectedSubFoldersViewListId.map((item) => item.id).join(",")
       } else {
         folderIds = folders
           .filter((folder) => folder.isSelected)
@@ -704,7 +778,7 @@ export default ({ getAssets }) => {
       }
 
       // Select all assets without pagination
-      if (selectedAllFolders) {
+      if (selectedAllFolders || selectedAllSubFoldersAndAssets) {
         filters = {
           ...getAssetsFilters({
             replace: false,
@@ -723,6 +797,9 @@ export default ({ getAssets }) => {
         // @ts-ignore
         delete filters.page;
       }
+      if (selectedAllSubFoldersAndAssets && activeSortFilter?.mainFilter === "SubCollectionView") {
+        filters["parent_id"] = activeSubFolders;
+      }
       filters["name"] = name;
       return await folderApi.getShareUrl(
         {
@@ -738,11 +815,11 @@ export default ({ getAssets }) => {
 
   const getSharedCollectionCount = () => {
     let count = 1;
-
-    if (!operationFolder) {
-      count = folders.filter((folder) => folder.isSelected).length;
+    if (activeSortFilter?.mainFilter === "SubCollectionView" && !operationFolder) {
+      count = selectedSubFoldersViewListId?.length
+    } else if (!operationFolder) {
+      count = selectedFolders?.length;
     }
-
     return count;
   };
 
@@ -751,7 +828,12 @@ export default ({ getAssets }) => {
       setIsLoading(true);
       let copyAssetIds;
       let filters = {};
-      if (!operationAsset) {
+
+      if (activeSortFilter?.mainFilter === "SubCollectionView") {
+        copyAssetIds = selectedSubFolderAssetId.map(
+          (selectedAsset) => selectedAsset.asset.id
+        )
+      } else if (!operationAsset) {
         copyAssetIds = selectedAssets.map(
           (selectedAsset) => selectedAsset.asset.id
         );
@@ -788,6 +870,7 @@ export default ({ getAssets }) => {
       if (!activeFolder && activePageMode === "library") {
         setAssets(update(assets, { $unshift: data }));
       }
+      setListUpdateFlag(true);
       setIsLoading(false);
       toastUtils.success("Assets copied successfully");
     } catch (err) {
@@ -802,6 +885,11 @@ export default ({ getAssets }) => {
     try {
       const { data } = await folderApi.createFolder({ name: newFolderName });
       setFolders(update(folders, { $push: [data] }));
+      setSubFoldersViewList({
+        ...subFoldersViewList,
+        results: [data, ...subFoldersViewList.results],
+      }, false);
+      setSidenavFolderList({ results: [data, ...sidenavFolderList] });
       loadFolders();
     } catch (err) {
       console.log(err);
@@ -889,7 +977,18 @@ export default ({ getAssets }) => {
   };
 
   const removeSelectedFromList = () => {
-    if (!operationAsset) {
+    if (activeSortFilter?.mainFilter === "SubCollectionView") {
+      const newAssets = subFoldersAssetsViewList.results.filter((existingAsset) => {
+        const searchedAssetIndex = selectedSubFolderAssetId.findIndex(
+          (assetListItem) => existingAsset.asset.id === assetListItem.asset.id
+        );
+        return searchedAssetIndex === -1;
+      });
+      setSubFoldersAssetsViewList({
+        ...subFoldersAssetsViewList,
+        results: [...newAssets]
+      });
+    } else if (!operationAsset) {
       const newAssets = assets.filter((existingAsset) => {
         const searchedAssetIndex = selectedAssets.findIndex(
           (assetListItem) => existingAsset.asset.id === assetListItem.asset.id
@@ -914,14 +1013,20 @@ export default ({ getAssets }) => {
     try {
       let updateAssets;
       let filters = {};
-      if (selectedAssets.length > 1) {
-        updateAssets = selectedAssets.map((assetItem) => ({
+      let recoverAssets: any = selectedAssets;
+
+      if (activeSortFilter?.mainFilter === "SubCollectionView") {
+        recoverAssets = selectedSubFolderAssetId
+      }
+
+      if (recoverAssets.length > 1) {
+        updateAssets = recoverAssets.map((assetItem) => ({
           id: assetItem.asset.id,
           changes: { status: "approved", deletedAt: null },
         }));
       } else {
         updateAssets = {
-          id: selectedAssets[0].asset.id,
+          id: recoverAssets[0].asset.id,
           updateData: {
             status: "approved",
             deletedAt: null,
@@ -936,28 +1041,57 @@ export default ({ getAssets }) => {
         };
       }
       if (updateAssets.length > 1) {
-        await assetApi.updateMultiple(updateAssets, filters);
-        const newAssets = assets.filter((existingAsset) => {
-          const searchedAssetIndex = selectedAssets.findIndex(
-            (assetListItem) => existingAsset.asset.id === assetListItem.asset.id
-          );
-          return searchedAssetIndex === -1;
-        });
+        if (activeSortFilter?.mainFilter === "SubCollectionView") {
+          const newAssets = subFoldersAssetsViewList.results.filter((existingAsset) => {
+            const searchedAssetIndex = recoverAssets.findIndex(
+              (assetListItem) => existingAsset.asset.id === assetListItem.asset.id
+            );
+            return searchedAssetIndex === -1;
+          });
 
-        setAssets(newAssets);
+          setSubFoldersAssetsViewList({
+            ...subFoldersAssetsViewList,
+            results: [...newAssets]
+          });
+
+        } else {
+          await assetApi.updateMultiple(updateAssets, filters);
+          const newAssets = assets.filter((existingAsset) => {
+            const searchedAssetIndex = selectedAssets.findIndex(
+              (assetListItem) => existingAsset.asset.id === assetListItem.asset.id
+            );
+            return searchedAssetIndex === -1;
+          });
+
+          setAssets(newAssets);
+        }
       } else {
         await assetApi.updateAsset(updateAssets.id, {
           updateData: updateAssets.updateData,
         });
-        const assetIndex = assets.findIndex(
-          (assetItem) => assetItem.asset.id === updateAssets.id
-        );
-        if (assetIndex !== -1)
-          setAssets(
-            update(assets, {
-              $splice: [[assetIndex, 1]],
-            })
+
+        if (activeSortFilter?.mainFilter === "SubCollectionView") {
+          const assetIndex = subFoldersAssetsViewList.results.findIndex(
+            (assetItem) => assetItem.asset.id === updateAssets.id
           );
+          if (assetIndex !== -1)
+            setSubFoldersAssetsViewList({
+              ...subFoldersAssetsViewList,
+              results: update(subFoldersAssetsViewList.results, {
+                $splice: [[assetIndex, 1]],
+              }),
+            });
+        } else {
+          const assetIndex = assets.findIndex(
+            (assetItem) => assetItem.asset.id === updateAssets.id
+          );
+          if (assetIndex !== -1)
+            setAssets(
+              update(assets, {
+                $splice: [[assetIndex, 1]],
+              })
+            );
+        }
       }
 
       closeModalAndClearOpAsset();
@@ -1002,7 +1136,9 @@ export default ({ getAssets }) => {
   } else if (operationAssets.length > 0) {
     operationLength = operationAssets.length;
   } else {
-    operationLength = selectedAllAssets ? totalAssets : selectedAssets.length;
+    operationLength = (activeSortFilter?.mainFilter === "SubCollectionView" && selectedSubFolderAssetId.length > 0)
+      ? selectedSubFolderAssetId.length
+      : selectedAllAssets ? totalAssets : selectedAssets.length;
   }
 
   return (
@@ -1111,7 +1247,11 @@ export default ({ getAssets }) => {
       {activeOperation === "edit" && (
         <BulkEditOverlay
           handleBackButton={() => setActiveOperation("")}
-          selectedAssets={selectedAllAssets ? completedAssets : selectedAssets}
+          selectedAssets={
+            activeSortFilter?.mainFilter === "SubCollectionView" ?
+              selectedSubFolderAssetId
+              :
+              selectedAllAssets ? completedAssets : selectedAssets}
         />
       )}
     </>

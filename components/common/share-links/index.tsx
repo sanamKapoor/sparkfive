@@ -20,10 +20,10 @@ import ShareCollectionModal from "../modals/share-collection-modal";
 import ShareModal from "../modals/share-modal";
 
 // Constants
+import React from "react";
 import { Waypoint } from "react-waypoint";
 import { typeList } from "../../../config/data/shared-links";
 import { colorList, statusList } from "../../../constants/shared-links";
-import React from "react";
 
 export default function ShareLinks() {
   const [links, setLinks] = useState([]);
@@ -190,7 +190,6 @@ export default function ShareLinks() {
   const loadMore = () => {
     // still have page to load
     if (nextPage !== -1) {
-      console.log(`load more`);
       setPage(page + 1);
       getLinks(
         {
@@ -505,29 +504,29 @@ export default function ShareLinks() {
                   }
                 >
                   <div className={styles.linkWrapper}>
-                  <span className={"font-12"}>
-                    {link.type === "folder"
-                      ? !link.team.advancedCollectionShareLink
-                        ? `${process.env.CLIENT_BASE_URL}/collections/${link.collectionLink}`
-                        : link.sharedLink
-                      : link.sharedLink}
-                  </span>
-                  <IconClickable
-                    additionalClass={`${styles["action-button"]} ${styles["copy-icon"]}  m-l-15 cursor-pointer`}
-                    src={AssetOps[`copy${""}`]}
-                    tooltipText={"Copy"}
-                    tooltipId={"Copy"}
-                    onClick={() => {
-                      copy(
-                        link.type === "folder"
-                          ? !link.team.advancedCollectionShareLink
-                            ? `${process.env.CLIENT_BASE_URL}/collections/${link.collectionLink}`
-                            : link.sharedLink
+                    <span className={"font-12"}>
+                      {link.type === "folder"
+                        ? !link.team.advancedCollectionShareLink
+                          ? `${process.env.CLIENT_BASE_URL}/collections/${link.collectionLink}`
                           : link.sharedLink
-                      );
-                      toastUtils.bottomSuccess("Link copied");
-                    }}
-                  />
+                        : link.sharedLink}
+                    </span>
+                    <IconClickable
+                      additionalClass={`${styles["action-button"]} ${styles["copy-icon"]}  m-l-15 cursor-pointer`}
+                      src={AssetOps[`copy${""}`]}
+                      tooltipText={"Copy"}
+                      tooltipId={"Copy"}
+                      onClick={() => {
+                        copy(
+                          link.type === "folder"
+                            ? !link.team.advancedCollectionShareLink
+                              ? `${process.env.CLIENT_BASE_URL}/collections/${link.collectionLink}`
+                              : link.sharedLink
+                            : link.sharedLink
+                        );
+                        toastUtils.bottomSuccess("Link copied");
+                      }}
+                    />
                   </div>
                 </div>
                 <div
@@ -538,7 +537,7 @@ export default function ShareLinks() {
                   <img
                     src={ItemFields.member}
                     alt="member icon"
-                  className={styles.sharedIconimg}
+                    className={styles.sharedIconimg}
                   />
                   <span className={"m-l-15 font-weight-400 font-14"}>
                     {link.sharedCount}
@@ -561,7 +560,7 @@ export default function ShareLinks() {
                   }
                 >
                   <IconClickable
-                    additionalClass={`${styles['action-button']} ${styles['edit-btn']}`}
+                    additionalClass={`${styles["action-button"]} ${styles["edit-btn"]}`}
                     src={AssetOps[`edit`]}
                     tooltipText={"Edit"}
                     tooltipId={"Edit"}
@@ -572,7 +571,7 @@ export default function ShareLinks() {
                     }}
                   />
                   <IconClickable
-                    additionalClass={`${styles["action-button"]} ${styles['delete-btn']} m-l-10`}
+                    additionalClass={`${styles["action-button"]} ${styles["delete-btn"]} m-l-10`}
                     src={AssetOps[`delete`]}
                     tooltipText={"Delete"}
                     tooltipId={"Delete"}

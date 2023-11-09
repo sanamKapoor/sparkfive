@@ -115,9 +115,9 @@ const DetailOverlay = ({
   realUrl,
   thumbailUrl,
   closeOverlay,
-  openShareAsset = () => {},
-  openDeleteAsset = () => {},
-  loadMore = () => {},
+  openShareAsset = () => { },
+  openDeleteAsset = () => { },
+  loadMore = () => { },
   isShare = false,
   sharePath = "",
   activeFolder = "",
@@ -224,7 +224,6 @@ const DetailOverlay = ({
   const resetValues = () => {
     const width = currentAsset.dimensionWidth;
     const height = currentAsset.dimensionHeight;
-    // debugger
     setPreset({
       label: "None",
       value: "none",
@@ -256,7 +255,7 @@ const DetailOverlay = ({
           setPresetTypes(presetTypes.concat(data));
         }
       }
-    } catch (e) {}
+    } catch (e) { }
   };
 
   const _setActiveCollection = () => {
@@ -307,7 +306,7 @@ const DetailOverlay = ({
           setPreviewUrl(data.previewUrl);
           setVersionRealUrl(data.realUrl);
           setVersionThumbnailUrl(data.thumbailUrl);
-          setCurrentAsset({...currentAsset, thumbailUrl: data.thumbailUrl})
+          setCurrentAsset({ ...currentAsset, thumbailUrl: data.thumbailUrl })
         }
       } else {
         const { data } = await assetApi.getById(asset.id);
@@ -319,7 +318,7 @@ const DetailOverlay = ({
           setVersionThumbnailUrl(data.thumbailUrl);
 
           // This is for showing current asset image in version list
-          setCurrentAsset({...data.asset, thumbailUrl: data.thumbailUrl})
+          setCurrentAsset({ ...data.asset, thumbailUrl: data.thumbailUrl })
         }
       }
     } catch (err) {
@@ -327,7 +326,7 @@ const DetailOverlay = ({
     }
   };
 
-    const onChangeRelatedFiles = (fileAssociations) => {
+  const onChangeRelatedFiles = (fileAssociations) => {
     setAssetDetail({ ...assetDetail, fileAssociations });
   };
 
@@ -940,9 +939,8 @@ const DetailOverlay = ({
 
   return (
     <div
-      className={`app-overlay ${styles.container} ${
-        isShare ? styles.share : ""
-      }`}
+      className={`app-overlay ${styles.container} ${isShare ? styles.share : ""
+        }`}
     >
       {assetDetail && (
         <section id={"detail-overlay"} className={styles.content}>
@@ -1076,9 +1074,8 @@ const DetailOverlay = ({
             </div>
           </div>
           <div
-            className={`${
-              !isShare ? styles["img-wrapper"] : styles["share-img-wrapper"]
-            }${activeFolder && ` ${styles["active-folderimg"]}`}`}
+            className={`${!isShare ? styles["img-wrapper"] : styles["share-img-wrapper"]
+              }${activeFolder && ` ${styles["active-folderimg"]}`}`}
           >
             <div className={styles["notes-wrapper"]}>
               {notes.map(
@@ -1100,12 +1097,12 @@ const DetailOverlay = ({
                     name={assetDetail.name}
                     assetImg={
                       assetDetail.extension === "tiff" ||
-                      assetDetail.extension === "tif" ||
-                      assetDetail.extension === "svg" ||
-                      assetDetail.extension === "svg+xml" ||
-                      assetDetail.extension === "heif" ||
-                      assetDetail.extension === "heic" ||
-                      assetDetail.extension === "cr2"
+                        assetDetail.extension === "tif" ||
+                        assetDetail.extension === "svg" ||
+                        assetDetail.extension === "svg+xml" ||
+                        assetDetail.extension === "heif" ||
+                        assetDetail.extension === "heic" ||
+                        assetDetail.extension === "cr2"
                         ? versionThumbnailUrl
                         : versionRealUrl
                     }
@@ -1178,25 +1175,25 @@ const DetailOverlay = ({
                 <AssetIcon extension={currentAsset.extension} />
               )}
             {assetDetail.type === "video" && (
-                <>
+              <>
                 {(previewUrl || (!previewUrl && currentAsset.extension === "mp4")) && <video controls id={"video-element"}>
-                    <source
-                        src={previewUrl ?? versionRealUrl}
-                        type={
-                          "video/mp4"
-                        }
-                    />
-                    Sorry, your browser doesn't support video playback.
-                  </video>}
+                  <source
+                    src={previewUrl ?? versionRealUrl}
+                    type={
+                      "video/mp4"
+                    }
+                  />
+                  Sorry, your browser doesn't support video playback.
+                </video>}
 
-                  {(!previewUrl && currentAsset.extension !== "mp4") && <AssetImg
-                      name={assetDetail.name}
-                      assetImg={""}
-                      type={"video"}
-                      imgClass="img-preview"
-                      isResize
-                  />}
-                </>
+                {(!previewUrl && currentAsset.extension !== "mp4") && <AssetImg
+                  name={assetDetail.name}
+                  assetImg={""}
+                  type={"video"}
+                  imgClass="img-preview"
+                  isResize
+                />}
+              </>
 
             )}
             {activeFolder && (
@@ -1357,15 +1354,13 @@ const DetailOverlay = ({
           />
         </div>
       )}
-
       {!isShare && (
         <section className={styles.menu}>
           <IconClickable
             src={Utilities.closePanelLight}
             onClick={() => toggleSideMenu()}
-            additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"} ${
-              styles.expand
-            }`}
+            additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"} ${styles.expand
+              }`}
           />
           {!isShare && (
             <>
@@ -1398,7 +1393,7 @@ const DetailOverlay = ({
                 additionalClass={
                   styles["menu-icon"] + " " + styles["only-mobile-button"]
                 }
-                onClick={() => {}}
+                onClick={() => { }}
               />
               <IconClickable
                 src={isMobile ? Utilities.commentLight : Utilities.comment}
@@ -1432,7 +1427,6 @@ const DetailOverlay = ({
                   }}
                 />
               )}
-
               {editThenDownload && hasPermission([ASSET_DOWNLOAD]) && (
                 <IconClickable
                   src={AssetOps.download}

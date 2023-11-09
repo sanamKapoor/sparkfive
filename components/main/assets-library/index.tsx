@@ -1,6 +1,6 @@
 import update from "immutability-helper";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 
 import { validation } from "../../../constants/file-validation";
@@ -26,30 +26,34 @@ import AssetHeaderOps from "../../common/asset/asset-header-ops";
 import AssetOps from "../../common/asset/asset-ops";
 import DetailOverlay from "../../common/asset/detail-overlay";
 import TopBar from "../../common/asset/top-bar";
-import FilterContainer from "../../common/filter/filter-container";
+import FilterView from "../../common/filter-view";
 import { DropzoneProvider } from "../../common/misc/dropzone";
 import NoPermissionNotice from "../../common/misc/no-permission-notice";
 import RenameModal from "../../common/modals/rename-modal";
 import SpinnerOverlay from "../../common/spinners/spinner-overlay";
+import NestedSidenav from "../../nested-subcollection-sidenav/nested-sidenav";
 import UploadStatusOverlayAssets from "../../upload-status-overlay-assets";
-import SearchOverlay from "../search-overlay-assets";
 import styles from "./index.module.css";
 
+import { initialActiveSortFilters } from "../../../config/data/filter";
 // Components
-// utils
-// import advancedConfigParams from '../../../utils/advance-config-params'
 
 const AssetsLibrary = () => {
   const [activeView, setActiveView] = useState("grid");
   const [showOverlayLoader, setShowOverlayLoader] = useState(false);
+
   const {
     assets,
+    sidenavFolderList,
+    setSidenavFolderList,
     setAssets,
     folders,
     setFolders,
     lastUploadedFolder,
     setPlaceHolders,
     activeFolder,
+    activeSubFolders,
+    setActiveSubFolders,
     setActiveFolder,
     setActivePageMode,
     needsFetch,
@@ -73,37 +77,17 @@ const AssetsLibrary = () => {
     currentViewAsset,
     setCurrentViewAsset,
     setDetailOverlayId,
+    sidebarOpen,
+    setSubFoldersViewList,
+    subFoldersViewList,
+    subFoldersAssetsViewList,
+    setSubFoldersAssetsViewList,
+    setHeaderName,
+    selectedAllSubFoldersAndAssets,
+    setSelectedAllSubFoldersAndAssets,
     loadingAssets,
+    appendNewSubSidenavFolders,
   } = useContext(AssetContext);
-
-  const { advancedConfig, hasPermission } = useContext(UserContext);
-
-  const [widthCard, setWidthCard] = useState(0);
-
-  const { term, searchFilterParams } = useContext(FilterContext);
-
-  const [activeMode, setActiveMode] = useState("assets");
-
-  const [activeSearchOverlay, setActiveSearchOverlay] = useState(false);
-
-  const [firstLoaded, setFirstLoaded] = useState(false);
-
-  const [renameModalOpen, setRenameModalOpen] = useState(false);
-
-  const [openFilter, setOpenFilter] = useState(
-    activeMode === "assets" ? true : false
-  );
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (loadingAssets) {
-        setShowOverlayLoader(true);
-      } else {
-        setShowOverlayLoader(false);
-      }
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, [loadingAssets]);
 
   const {
     activeSortFilter,
@@ -116,12 +100,30 @@ const AssetsLibrary = () => {
     loadFolders,
     campaigns,
     loadCampaigns,
+    term,
+    searchFilterParams,
     renderFlag,
-  } = useContext(FilterContext);
+  } = useContext(FilterContext) as any;
+
+  const { advancedConfig, hasPermission } = useContext(UserContext) as any;
+
+  const [widthCard, setWidthCard] = useState(0);
+
+  const [activeMode, setActiveMode] = useState("assets");
+
+  const [activeSearchOverlay, setActiveSearchOverlay] = useState(false);
+
+  const [firstLoaded, setFirstLoaded] = useState(false);
+
+  const [renameModalOpen, setRenameModalOpen] = useState(false);
+
+  const [openFilter, setOpenFilter] = useState(
+    activeSortFilter?.mainFilter === "assets" ? true : false
+  );
 
   const router = useRouter();
-  const preparingAssets = useRef(true);
 
+  const preparingAssets = useRef(true);
   // When tag, campaigns, collection changes, used for click on tag/campaigns/collection in admin attribute management
   useEffect(() => {
     if (!preparingAssets.current) return;
@@ -144,21 +146,17 @@ const AssetsLibrary = () => {
       loadProductFields();
       return;
     }
-
     if (router.query.collection && !collection.length) {
       setPlaceHolders("asset", true);
       loadFolders();
       return;
     }
-
     if (router.query.campaign && !campaigns.length) {
       setPlaceHolders("asset", true);
       loadCampaigns();
       return;
     }
-
     const newSortFilter: any = { ...activeSortFilter };
-
     if (router.query.campaign) {
       const foundCampaign = campaigns.find(
         ({ name }) => name === router.query.campaign
@@ -175,7 +173,6 @@ const AssetsLibrary = () => {
       setActiveSortFilter(newSortFilter);
       return;
     }
-
     // Query folder
     if (router.query.collection) {
       const foundCollection = collection.find(
@@ -194,7 +191,6 @@ const AssetsLibrary = () => {
       setActiveSortFilter(newSortFilter);
       return;
     }
-
     if (router.query.product) {
       const foundProduct = productFields.sku.find(
         ({ sku }) => sku === router.query.product
@@ -211,7 +207,6 @@ const AssetsLibrary = () => {
       setActiveSortFilter(newSortFilter);
       return;
     }
-
     if (router.query.tag) {
       const foundTag = tags.find(({ name }) => name === router.query.tag);
       if (foundTag) {
@@ -232,28 +227,27 @@ const AssetsLibrary = () => {
     if (hasPermission([ASSET_ACCESS])) {
       // Assets are under preparing (for query etc)
       if (preparingAssets.current) {
-        // setActivePageMode('library')
-        // setLoadingAssets(true)
-        // setFirstLoaded(true)
         return;
       } else {
         if (!firstLoaded) {
           setFirstLoaded(true);
         }
       }
-      console.log(`>>> Check firstLoaded`, {firstLoaded, renderFlag, activeSortFilter})
-
-      // I commented renderFlag here, not sure why we need to wait for it to load folders/assets.
-      // This fixes issue happening when collection is not loaded at the first opening
-      // Referenced issues: https://trello.com/c/r57fmh0a/548-login-landing-ui-issue
-      if (firstLoaded){//} && renderFlag) {
+      if (firstLoaded && renderFlag) {
         setActivePageMode("library");
         if (activeSortFilter.mainFilter === "folders") {
           setActiveMode("folders");
           getFolders();
+        } else if (
+          activeSortFilter.mainFilter === "SubCollectionView" &&
+          activeSubFolders !== ""
+        ) {
+          setActiveMode("SubCollectionView");
+          getSubCollectionsFolderData(true, 5);
+          getSubCollectionsAssetData();
         } else {
           setActiveMode("assets");
-          // setAssets([])
+          setAssets([]);
           getAssets();
         }
       }
@@ -261,10 +255,21 @@ const AssetsLibrary = () => {
   }, [activeSortFilter, firstLoaded, term]);
 
   useEffect(() => {
-    if (firstLoaded && activeFolder !== "") {
+    if (firstLoaded && activeSubFolders) {
       setActiveSortFilter({
         ...activeSortFilter,
-        mainFilter: "all",
+        mainFilter: activeSubFolders
+          ? "SubCollectionView"
+          : activeSortFilter.mainFilter,
+      });
+    }
+  }, [activeSubFolders]);
+
+  useEffect(() => {
+    if (firstLoaded && activeFolder) {
+      setActiveSortFilter({
+        ...activeSortFilter,
+        mainFilter: activeFolder ? "all" : activeSortFilter.mainFilter,
       });
     }
   }, [activeFolder]);
@@ -274,6 +279,9 @@ const AssetsLibrary = () => {
       getAssets();
     } else if (needsFetch === "folders") {
       getFolders();
+    } else if (needsFetch === "SubCollectionView") {
+      getSubCollectionsFolderData(true, 5);
+      getSubCollectionsAssetData();
     }
     setNeedsFetch("");
   }, [needsFetch]);
@@ -282,7 +290,8 @@ const AssetsLibrary = () => {
     if (activeMode === "folders") {
       setOpenFilter(false);
       setAssets(assets.map((asset) => ({ ...asset, isSelected: false })));
-    } else if (activeMode === "assets") {
+    }
+    if (activeMode === "assets") {
       if (isMobile) {
         setOpenFilter(false);
       } else {
@@ -290,9 +299,34 @@ const AssetsLibrary = () => {
       }
       setFolders(folders.map((folder) => ({ ...folder, isSelected: false })));
     }
+    if (selectedAllAssets) selectAllAssets(false);
+
+    if (selectedAllFolders) selectAllFolders(false);
+
+    if (selectedAllSubFoldersAndAssets)
+      setSelectedAllSubFoldersAndAssets(false);
+
+    setActiveSortFilter({
+      ...activeSortFilter,
+      ...initialActiveSortFilters,
+      ...DEFAULT_CUSTOM_FIELD_FILTERS(activeSortFilter),
+    });
   }, [activeMode]);
 
-  useEffect(() => {}, [advancedConfig.set]);
+  useEffect(() => {
+    updateSortFilterByAdvConfig();
+  }, [advancedConfig.set]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (loadingAssets) {
+        setShowOverlayLoader(true);
+      } else {
+        setShowOverlayLoader(false);
+      }
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [loadingAssets]);
 
   const clearFilters = () => {
     setActiveSortFilter({
@@ -323,7 +357,6 @@ const AssetsLibrary = () => {
           ? selectOptions.sort[1]
           : selectOptions.sort[3];
     }
-    // console.log(advancedConfig.assetSortView, sort.name)
 
     setActiveSortFilter({
       ...activeSortFilter,
@@ -332,7 +365,7 @@ const AssetsLibrary = () => {
     });
   };
 
-  const getDefaultTab = (advConf?) => {
+  const getDefaultTab = (advConf: any = null) => {
     const config = advConf || advancedConfig;
     const defaultTab =
       config.defaultLandingPage === "allTab" ? "all" : "folders";
@@ -412,10 +445,6 @@ const AssetsLibrary = () => {
           // Current folder Group have the key
           if (fileGroupInfo.folderKey && folderGroup[fileGroupInfo.folderKey]) {
             currentUploadingFolderId = folderGroup[fileGroupInfo.folderKey];
-            // Assign new file name without splash
-            // file = new File([file.slice(0, file.size, file.type)],
-            //   fileGroupInfo.newName
-            //   , { type: file.type, lastModified: (file.lastModifiedDate || new Date(file.lastModified)) })
           }
         }
 
@@ -560,14 +589,14 @@ const AssetsLibrary = () => {
     }
   };
 
-  const onFilesDataGet = async (files) => {
+  const onFilesDataGet = async (files: any) => {
     if (!hasPermission([ASSET_UPLOAD_APPROVAL])) {
       const currentDataClone = [...assets];
       const currenFolderClone = [...folders];
       try {
         let needsFolderFetch;
-        const newPlaceholders = [];
-        const folderPlaceholders = [];
+        const newPlaceholders: any = [];
+        const folderPlaceholders: any = [];
         const foldersUploaded = getFoldersFromUploads(files);
         if (foldersUploaded.length > 0) {
           needsFolderFetch = true;
@@ -634,9 +663,18 @@ const AssetsLibrary = () => {
         setUploadingAssets(newPlaceholders);
 
         // Showing assets = uploading assets + existing assets
-        setAssets([...newPlaceholders, ...currentDataClone]);
-        setFolders([...folderPlaceholders, ...currenFolderClone]);
-
+        if (activeSortFilter?.mainFilter === "SubCollectionView") {
+          setSubFoldersAssetsViewList(
+            {
+              ...subFoldersAssetsViewList,
+              results: [...newPlaceholders],
+            },
+            false
+          );
+        } else {
+          setAssets([...newPlaceholders, ...currentDataClone]);
+          setFolders([...folderPlaceholders, ...currenFolderClone]);
+        }
         // Get team advance configurations first
         const subFolderAutoTag = advancedConfig.subFolderAutoTag;
 
@@ -646,7 +684,9 @@ const AssetsLibrary = () => {
           newPlaceholders,
           currentDataClone,
           totalSize,
-          activeFolder,
+          activeSortFilter?.mainFilter === "SubCollectionView"
+            ? activeSubFolders
+            : activeFolder,
           undefined,
           subFolderAutoTag
         );
@@ -657,19 +697,17 @@ const AssetsLibrary = () => {
         // Finish uploading process
         showUploadProcess("done");
 
-        if (needsFolderFetch) {
+        if (activeSortFilter?.mainFilter === "SubCollectionView") {
+          setNeedsFetch("SubCollectionView");
+        } else if (needsFolderFetch) {
           setNeedsFetch("folders");
         }
-
-        // Do not need toast here because we have already process toast
-        // toastUtils.success(`${data.length} Asset(s) uploaded.`)
       } catch (err) {
         // Finish uploading process
         showUploadProcess("done");
 
         setAssets(currentDataClone);
         setFolders(currenFolderClone);
-        console.log(err);
         if (err.response?.status === 402)
           toastUtils.error(err.response.data.message);
         else
@@ -690,7 +728,7 @@ const AssetsLibrary = () => {
     return queryData;
   };
 
-  const getAssets = async (replace = true, complete = null) => {
+  const getAssets = async (replace = true, complete: any = null) => {
     try {
       setLoadingAssets(true);
       if (replace) {
@@ -730,32 +768,33 @@ const AssetsLibrary = () => {
       if (activeFolder) {
         return;
       }
-
       if (replace) {
         setAddedIds([]);
       }
       setPlaceHolders("folder", replace);
       const { field, order } = activeSortFilter.sort;
-      const queryParams = {
+      const queryParams: {
+        page: number;
+        sortField: any;
+        sortOrder: any;
+        [key: string]: any;
+      } = {
         page: replace ? 1 : nextPage,
         sortField: field,
         sortOrder: order,
       };
-
       if (!replace && addedIds.length > 0) {
         queryParams.excludeIds = addedIds.join(",");
       }
       if (activeSortFilter.filterFolders?.length > 0) {
         queryParams.folders = activeSortFilter.filterFolders
-          .map((item) => item.value)
+          .map((item: any) => item.value)
           .join(",");
       }
-
       const { data } = await folderApi.getFolders({
         ...queryParams,
         ...(term && { term }),
       });
-
       let assetList = { ...data, results: data.results };
       if (
         lastUploadedFolder &&
@@ -765,7 +804,6 @@ const AssetsLibrary = () => {
         const lastFolder = { ...lastUploadedFolder };
         assetList.results.unshift(lastFolder);
       }
-
       setFolders(assetList, replace);
     } catch (err) {
       //TODO: Handle error
@@ -773,17 +811,72 @@ const AssetsLibrary = () => {
     }
   };
 
-  const toggleSelected = (id) => {
+  const getSubCollectionsFolderData = async (
+    replace = true,
+    pageSize?: number = 10,
+    nestedSubFolderId?: string = ""
+  ) => {
+    try {
+      if (activeSortFilter.mainFilter !== "SubCollectionView") {
+        return;
+      }
+      const { field, order } = activeSortFilter.sort;
+      const { next } = subFoldersViewList;
+      const queryParams = {
+        page: replace ? 1 : next,
+        pageSize: pageSize,
+        sortField: field,
+        sortOrder: order,
+      };
+      const { data: subFolders } = await folderApi.getSubFolders(
+        {
+          ...queryParams,
+          ...(term && { term }),
+        },
+        nestedSubFolderId ? nestedSubFolderId : activeSubFolders
+      );
+
+      setSubFoldersViewList(subFolders, replace);
+    } catch (err) {
+      // TODO: Handle Error
+      console.log(err);
+    }
+  };
+
+  const getSubCollectionsAssetData = async (
+    replace = true,
+    showAllAssets: boolean = false
+  ) => {
+    try {
+      if (activeSortFilter.mainFilter !== "SubCollectionView") {
+        return;
+      }
+
+      const { next } = subFoldersAssetsViewList;
+      const { data: subFolderAssets } = await assetApi.getAssets({
+        ...getAssetsFilters({
+          replace,
+          activeFolder: activeSubFolders,
+          addedIds: [],
+          nextPage: next,
+          userFilterObject: activeSortFilter,
+        }),
+        ...getAssetsSort(activeSortFilter),
+        // ...searchFilterParams, commented because we don't search in case of sub-collection
+        showAllAssets: showAllAssets,
+      });
+      setSubFoldersAssetsViewList(subFolderAssets, replace);
+    } catch (err) {
+      // TODO: Handle Error
+      console.log(err);
+    }
+  };
+
+  const toggleSelected = (id: string) => {
     if (activeMode === "assets") {
       const assetIndex = assets.findIndex(
         (assetItem) => assetItem.asset.id === id
       );
-      const selectedValue = !assets[assetIndex].isSelected;
-      // Comment this because this will return wrong couting selected asset if user select all then unselect some assets
-      // Toggle unselect when selected all will disable selected all
-      // if(!selectedValue && selectedAllAssets){
-      //   selectAllAssets(false)
-      // }
       setAssets(
         update(assets, {
           [assetIndex]: {
@@ -800,6 +893,52 @@ const AssetsLibrary = () => {
           },
         })
       );
+    } else if (activeMode === "SubCollectionView") {
+      const assetIndex = subFoldersAssetsViewList.results.findIndex(
+        (assetItem) => assetItem.asset.id === id
+      );
+      const folderIndex = subFoldersViewList.results.findIndex(
+        (folder) => folder.id === id
+      );
+
+      if (folderIndex !== -1) {
+        setSubFoldersViewList({
+          ...subFoldersViewList,
+          results: update(subFoldersViewList.results, {
+            [folderIndex]: {
+              isSelected: {
+                $set: !subFoldersViewList.results[folderIndex]?.isSelected,
+              },
+            },
+          }),
+        });
+        setSubFoldersAssetsViewList({
+          ...subFoldersAssetsViewList,
+          results: subFoldersAssetsViewList.results.map((asset) => ({
+            ...asset,
+            isSelected: false,
+          })),
+        });
+      }
+      if (assetIndex !== -1) {
+        setSubFoldersAssetsViewList({
+          ...subFoldersAssetsViewList,
+          results: update(subFoldersAssetsViewList.results, {
+            [assetIndex]: {
+              isSelected: {
+                $set: !subFoldersAssetsViewList.results[assetIndex]?.isSelected,
+              },
+            },
+          }),
+        });
+        setSubFoldersViewList({
+          ...subFoldersViewList,
+          results: subFoldersViewList.results.map((folder: any) => ({
+            ...folder,
+            isSelected: false,
+          })),
+        });
+      }
     }
   };
 
@@ -807,14 +946,33 @@ const AssetsLibrary = () => {
     if (activeMode === "assets") {
       // Mark select all
       selectAllAssets();
-
       setAssets(
         assets.map((assetItem) => ({ ...assetItem, isSelected: true }))
       );
     } else if (activeMode === "folders") {
       selectAllFolders();
-
       setFolders(folders.map((folder) => ({ ...folder, isSelected: true })));
+    } else if (activeMode === "SubCollectionView") {
+      setSelectedAllSubFoldersAndAssets(true);
+      // For selecting the folders only subcollection view
+      setSubFoldersViewList({
+        ...subFoldersViewList,
+        results: subFoldersViewList.results.map((folder: any) => ({
+          ...folder,
+          isSelected: true,
+        })),
+      });
+      setSubFoldersAssetsViewList({
+        ...subFoldersAssetsViewList,
+        results: subFoldersAssetsViewList.results.map((asset: any) => ({
+          ...asset,
+          isSelected: false,
+        })),
+      });
+      // For selecting the assets only subcollection view
+      // setSubFoldersAssetsViewList({
+      //   ...subFoldersAssetsViewList, results: subFoldersAssetsViewList.results.map((asset) => ({ ...asset, isSelected: true }))
+      // })
     }
   };
 
@@ -824,41 +982,92 @@ const AssetsLibrary = () => {
     toggleSelected,
   });
 
-  const backToFolders = () => {
-    setActiveFolder("");
-    updateSortFilterByAdvConfig({ mainFilter: "folders" });
-  };
-
   const selectedAssets = assets.filter((asset) => asset.isSelected);
 
   const selectedFolders = folders.filter((folder) => folder.isSelected);
 
-  const viewFolder = async (id) => {
-    setActiveFolder(id);
-    updateSortFilterByAdvConfig({ folderId: id });
+  const selectedSubFoldersAndAssets = {
+    assets:
+      subFoldersAssetsViewList?.results?.filter((asset) => asset.isSelected) ||
+      [],
+    folders:
+      subFoldersViewList?.results?.filter((folder) => folder.isSelected) || [],
+  };
+
+  const viewFolder = async (
+    id: string,
+    subCollection: boolean,
+    nestedSubFolderId = "",
+    folderName = ""
+  ) => {
+    if (!subCollection) {
+      if (nestedSubFolderId) {
+        await getSubCollectionsFolderData(true, 50, nestedSubFolderId);
+      }
+      setActiveFolder(id);
+      setActiveSubFolders("");
+      setHeaderName(
+        folderName
+          ? folderName
+          : subFoldersViewList.results.find((folder: any) => folder.id === id)
+              ?.name || ""
+      );
+    } else {
+      setActiveFolder("");
+      setActiveSubFolders(id);
+      setHeaderName(
+        folderName
+          ? folderName
+          : folders.find((folder: any) => folder.id === id)?.name || ""
+      );
+    }
   };
 
   const deleteFolder = async (id) => {
     try {
       await folderApi.deleteFolder(id);
-      const modFolderIndex = folders.findIndex((folder) => folder.id === id);
-      setFolders(
-        update(folders, {
-          $splice: [[modFolderIndex, 1]],
-        })
-      );
-      toastUtils.success("Collection deleted successfully");
+      if (activeMode === "SubCollectionView") {
+        const folderIndex = subFoldersViewList.results.findIndex(
+          (folder) => folder.id === id
+        );
+        if (folderIndex !== -1) {
+          setSubFoldersViewList({
+            ...subFoldersViewList,
+            results: update(subFoldersViewList.results, {
+              $splice: [[folderIndex, 1]],
+            }),
+            total: subFoldersViewList.total - 1,
+          });
+        }
+        appendNewSubSidenavFolders([], activeSubFolders, true, id);
+        toastUtils.success("Sub collection deleted successfully");
+      } else {
+        const modFolderIndex = folders.findIndex(
+          (folder: any) => folder.id === id
+        );
+        setFolders(
+          update(folders, {
+            $splice: [[modFolderIndex, 1]],
+          })
+        );
+        setSidenavFolderList({
+          results: [
+            ...sidenavFolderList.filter((folder: any) => folder.id !== id),
+          ],
+        });
+
+        toastUtils.success("Collection deleted successfully");
+      }
     } catch (err) {
-      console.log(err);
+      toastUtils.error(
+        err?.response?.data?.message ||
+          "Something went wrong please try again later"
+      );
     }
   };
 
   const closeSearchOverlay = () => {
-    if (activeMode === "assets") {
-      getAssets();
-    } else {
-      getFolders();
-    }
+    getAssets();
     setActiveSearchOverlay(false);
   };
 
@@ -890,114 +1099,103 @@ const AssetsLibrary = () => {
     }
   };
 
-  useEffect(() => {
-    if (selectedAllAssets) {
-      selectAllAssets(false);
-    }
-
-    if (selectedAllFolders) {
-      selectAllFolders(false);
-    }
-  }, [activeMode]);
-
   return (
     <>
       {(activeMode === "assets"
         ? selectedAssets.length
-        : selectedFolders.length) > 0 && (
+        : activeMode === "folders"
+        ? selectedFolders.length
+        : selectedSubFoldersAndAssets.folders.length ||
+          selectedSubFoldersAndAssets.assets.length) > 0 && (
         <AssetHeaderOps
           isUnarchive={activeSortFilter.mainFilter === "archived"}
           isFolder={activeMode === "folders"}
           deletedAssets={false}
+          activeMode={activeMode}
+          selectedFolders={selectedFolders}
+          selectedSubFoldersAndAssets={selectedSubFoldersAndAssets}
         />
       )}
-      {/* {!renderFlag && (
-        <SpinnerOverlay text="Your assets are Loading please wait..." />
-      )} */}
       {hasPermission([ASSET_ACCESS]) ||
       hasPermission([ASSET_UPLOAD_APPROVAL]) ? (
         <>
           <main className={`${styles.container}`}>
-            <div className="position-relative">
-              <div className={styles["search-mobile"]}>
-                <SearchOverlay
-                  closeOverlay={closeSearchOverlay}
-                  operationsEnabled={true}
-                  activeFolder={activeFolder}
-                  onCloseDetailOverlay={(assetData) => {
-                    closeSearchOverlay();
-                    // setActiveSearchOverlay(false)
-                    setDetailOverlayId(undefined);
-                    setCurrentViewAsset(assetData);
-                  }}
-                  isFolder={activeMode === "folders"}
-                />
+            <div className={styles.innnerContainer}>
+              {sidebarOpen ? (
+                <div className={styles.newsidenav}>
+                  <NestedSidenav viewFolder={viewFolder} />
+                </div>
+              ) : null}
+              <div
+                className={`${
+                  sidebarOpen ? styles["rightSide"] : styles["rightSideToggle"]
+                }`}
+              >
+                <div className="position-relative">
+                  {advancedConfig.set && hasPermission([ASSET_ACCESS]) && (
+                    <TopBar
+                      activeFolder={activeFolder}
+                      mode={activeMode}
+                      activeSortFilter={activeSortFilter}
+                      setActiveSortFilter={setActiveSortFilter}
+                      setActiveView={setActiveView}
+                      activeView={activeView}
+                      setActiveSearchOverlay={() => {
+                        selectAllAssets(false);
+                        setActiveSearchOverlay(true);
+                      }}
+                      selectAll={selectAll}
+                      setOpenFilter={setOpenFilter}
+                      openFilter={openFilter}
+                      deletedAssets={false}
+                      activeSearchOverlay={activeSearchOverlay}
+                      closeSearchOverlay={closeSearchOverlay}
+                      setDetailOverlayId={setDetailOverlayId}
+                      setCurrentViewAsset={setCurrentViewAsset}
+                      activeMode={activeMode}
+                      isFolder={activeSortFilter?.mainFilter === "folders"}
+                    />
+                  )}
+                </div>
+                <div
+                  className={`${
+                    sidebarOpen
+                      ? styles["grid-wrapper-web"]
+                      : styles["grid-wrapper"]
+                  } ${activeFolder && styles["active-breadcrumb-item"]}`}
+                >
+                  {activeMode !== "folders" && (
+                    <div className={styles.wrapper}>
+                      <FilterView />
+                    </div>
+                  )}
+                  <DropzoneProvider>
+                    {advancedConfig.set && renderFlag && (
+                      <AssetGrid
+                        activeFolder={activeFolder}
+                        getFolders={getFolders}
+                        getSubFolders={getSubCollectionsFolderData}
+                        getSubCollectionsAssetData={getSubCollectionsAssetData}
+                        activeView={activeView}
+                        activeSortFilter={activeSortFilter}
+                        onFilesDataGet={onFilesDataGet}
+                        toggleSelected={toggleSelected}
+                        mode={activeMode}
+                        viewFolder={viewFolder}
+                        deleteFolder={deleteFolder}
+                        loadMore={loadMore}
+                        openFilter={openFilter}
+                        onCloseDetailOverlay={(assetData) => {
+                          setDetailOverlayId(undefined);
+                          setCurrentViewAsset(assetData);
+                        }}
+                        setWidthCard={setWidthCard}
+                        widthCard={widthCard}
+                      />
+                    )}
+                  </DropzoneProvider>
+                </div>
               </div>
-              {advancedConfig.set && hasPermission([ASSET_ACCESS]) && (
-                <TopBar
-                  activeFolder={activeFolder}
-                  getFolders={getFolders}
-                  mode={activeMode}
-                  activeSortFilter={activeSortFilter}
-                  setActiveSortFilter={setActiveSortFilter}
-                  setActiveView={setActiveView}
-                  activeView={activeView}
-                  setActiveSearchOverlay={() => {
-                    selectAllAssets(false);
-                    setActiveSearchOverlay(true);
-                  }}
-                  selectAll={selectAll}
-                  setOpenFilter={setOpenFilter}
-                  openFilter={openFilter}
-                  deletedAssets={false}
-                  activeSearchOverlay={activeSearchOverlay}
-                  closeSearchOverlay={closeSearchOverlay}
-                  setDetailOverlayId={setDetailOverlayId}
-                  setCurrentViewAsset={setCurrentViewAsset}
-                  activeMode={activeMode}
-                  isFolder={activeSortFilter?.mainFilter === "folders"}
-                />
-              )}
-            </div>
-            <div
-              className={`${openFilter && styles["col-wrapper"]} ${
-                styles["grid-wrapper"]
-              } ${activeFolder && styles["active-breadcrumb-item"]}`}
-            >
-              <DropzoneProvider>
-                {advancedConfig.set && renderFlag && (
-                  <AssetGrid
-                    activeFolder={activeFolder}
-                    getFolders={getFolders}
-                    activeView={activeView}
-                    activeSortFilter={activeSortFilter}
-                    onFilesDataGet={onFilesDataGet}
-                    toggleSelected={toggleSelected}
-                    mode={activeMode}
-                    viewFolder={viewFolder}
-                    deleteFolder={deleteFolder}
-                    loadMore={loadMore}
-                    openFilter={openFilter}
-                    onCloseDetailOverlay={(assetData) => {
-                      setDetailOverlayId(undefined);
-                      setCurrentViewAsset(assetData);
-                    }}
-                    setWidthCard={setWidthCard}
-                    widthCard={widthCard}
-                  />
-                )}
-              </DropzoneProvider>
-              {openFilter && hasPermission([ASSET_ACCESS]) && (
-                <FilterContainer
-                  clearFilters={clearFilters}
-                  openFilter={openFilter}
-                  setOpenFilter={setOpenFilter}
-                  activeSortFilter={activeSortFilter}
-                  setActiveSortFilter={setActiveSortFilter}
-                  isFolder={activeSortFilter.mainFilter === "folders"}
-                  filterWidth={widthCard}
-                />
-              )}
             </div>
           </main>
           <AssetOps />
@@ -1005,7 +1203,6 @@ const AssetsLibrary = () => {
       ) : (
         <NoPermissionNotice />
       )}
-
       <RenameModal
         closeModal={() => setRenameModalOpen(false)}
         modalIsOpen={renameModalOpen}
@@ -1016,7 +1213,6 @@ const AssetsLibrary = () => {
           folders.find((folder) => folder.id === activeFolder)?.name
         }
       />
-
       {uploadDetailOverlay && (
         <UploadStatusOverlayAssets
           closeOverlay={() => {
@@ -1024,7 +1220,6 @@ const AssetsLibrary = () => {
           }}
         />
       )}
-
       {currentViewAsset && (
         <DetailOverlay
           initiaParams={{ side: "detail" }}
@@ -1039,7 +1234,6 @@ const AssetsLibrary = () => {
           outsideDetailOverlay={true}
         />
       )}
-
       {showOverlayLoader && (
         <SpinnerOverlay text="Account updating...this process might take a few seconds. Thank you for your patience." />
       )}

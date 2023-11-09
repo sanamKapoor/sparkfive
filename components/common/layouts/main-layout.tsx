@@ -151,17 +151,17 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
                     {
                       id: "assets",
                       label: "Assets",
-                      onClick: () => {},
+                      onClick: () => { },
                     },
                     {
                       id: "insights",
                       label: "Insights",
-                      onClick: () => {},
+                      onClick: () => { },
                     },
                     {
                       id: "templates",
                       label: "Templates",
-                      onClick: () => {},
+                      onClick: () => { },
                     },
                   ]}
                 />
@@ -267,7 +267,7 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
           </header>
           {isLoading && <SpinnerOverlay />}
           {hasPermission(requiredPermissions) ||
-          hasPermission([ASSET_UPLOAD_APPROVAL]) ? (
+            hasPermission([ASSET_UPLOAD_APPROVAL]) ? (
             children
           ) : (
             <NoPermissionNotice />

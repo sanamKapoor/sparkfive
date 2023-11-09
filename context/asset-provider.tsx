@@ -1,15 +1,43 @@
-import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
-import { AssetContext, SocketContext } from "../context";
+import update from 'immutability-helper';
+import { useRouter } from 'next/router';
+import { useContext, useEffect, useState } from 'react';
 
-import {
-  convertTimeFromSeconds,
-  getFolderKeyAndNewNameByFileName,
-} from "../utils/upload";
+import { validation } from '../constants/file-validation';
+import { AssetContext, SocketContext } from '../context';
+import assetApi from '../server-api/asset';
+import { convertTimeFromSeconds, getFolderKeyAndNewNameByFileName } from '../utils/upload';
 
-import assetApi from "../server-api/asset";
+interface Asset {
+  id: string;
+  name: string;
+  type: string;
+  thumbailUrl: string;
+  realUrl: string;
+  extension: string;
+  version: number;
+}
+interface Item {
+  id: string;
+  userId: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  sharePath: null;
+  sharePassword: null;
+  shareStatus: null;
+  status: string;
+  thumbnailPath: null;
+  thumbnailExtension: null;
+  thumbnails: null;
+  thumbnailStorageId: null;
+  thumbnailName: null;
+  assetsCount: string;
+  assets: Asset[];
+  size: string;
+  length: number;
+  [key: string]: any;
+}
 
-import { validation } from "../constants/file-validation";
 
 const loadingDefaultAsset = {
   asset: {
@@ -84,8 +112,30 @@ export default ({ children }) => {
   // Asset navigation
   const [detailOverlayId, setDetailOverlayId] = useState(undefined);
 
+  // sidenamv list count states declared below
+  const [sidenavFolderList, setSidenavFolderList] = useState([])
+  const [sidenavFolderNextPage, setSidenavFolderNextPage] = useState(1);
+  const [sidenavTotalCollectionCount, setSidenavTotalCollectionCount] = useState(0)
+
+  // Sidenav folders child Listing in particular collection collections area 
+  const [sidenavFolderChildList, setSidenavFolderChildList] = useState(new Map())
+
+  // Folder id for sub Collection view  
+  const [activeSubFolders, setActiveSubFolders] = useState("")
+
+  // Sidebar navigation
+  const [sidebarOpen, setSidebarOpen] = useState(true)
+
   // For viewing asset in file associations
   const [currentViewAsset, setCurrentViewAsset] = useState();
+
+  // For subcollection page states for collection and asset associations
+  const [subFoldersViewList, setSubFoldersViewList] = useState({ results: [], next: 0, total: 0 });
+  const [subFoldersAssetsViewList, setSubFoldersAssetsViewList] = useState({ results: [], next: 0, total: 0 })
+  const [headerName, setHeaderName] = useState("All Assets")
+
+  const [selectedAllSubFoldersAndAssets, setSelectedAllSubFoldersAndAssets] = useState(false)
+  const [listUpdateFlag, setListUpdateFlag] = useState(false);
 
   const setPlaceHolders = (type, replace = true) => {
     if (type === "asset") {
@@ -132,12 +182,101 @@ export default ({ children }) => {
     if (results) inputFolders = results;
     if (next) setNextPage(next);
     if (total && !ignoreTotalItem) setTotalAssets(total);
-
-    if (replace) setFolders(inputFolders);
+    if (replace) {
+      setFolders((prev) => inputFolders);
+    }
     else
       setFolders([
         ...folders.filter((folder) => !folder.isLoading),
         ...inputFolders,
+      ]);
+  };
+
+  const subFoldersList = (inputFolders: { results: Item[], next: number, total: number }, replace = true) => {
+    const { results, next, total } = inputFolders;
+    setSubFoldersViewList((previousValue) => {
+      return {
+        ...previousValue,
+        results: replace ? results : [...previousValue.results, ...results],
+        next,
+        total
+      };
+    });
+  };
+
+  const subFoldersAssetList = (inputFolders: { results: Item[], next: number, total: number }, replace = true) => {
+    const { results, next, total } = inputFolders;
+
+    setSubFoldersAssetsViewList((previousValue) => {
+      return {
+        ...previousValue,
+        results: replace ? results : [...previousValue.results, ...results],
+        next,
+        total
+      };
+    });
+  };
+
+  const setSidenavFolderChildListItems = (
+    inputFolders: any,
+    id: string,
+    replace = true,
+  ) => {
+    const { results, next, total } = inputFolders;
+    if (replace) {
+      if (results.length > 0) {
+        setSidenavFolderChildList((map) => { return new Map(map.set(id, { results, next, total })) })
+      }
+    }
+    else {
+      setSidenavFolderChildList((map) => { return new Map(map.set(id, { results: [...map.get(id).results, ...results], next, total })) })
+    }
+  };
+
+  const appendNewSubSidenavFolders = (
+    inputFolders: any,
+    id: string,
+    remove: boolean,
+    removeId?: string
+
+  ) => {
+    const { results = [], next = -1, total = 0 } = sidenavFolderChildList.get(id);
+    console.log("🚀 ~ file: asset-provider.tsx:245 ~ results:", results)
+    if (!remove) {
+      setSidenavFolderChildList((map) => {
+        return new Map(map.set(id, { results: [...inputFolders, ...results], next, total: total + 1 }))
+      })
+    } else {
+
+      const folderIndex = results.findIndex(
+        (folder) => folder.id === removeId
+      );
+
+      if (folderIndex !== -1) {
+        setSidenavFolderChildList((map) => {
+          return new Map(map.set(id, { results: update(results, { $splice: [[folderIndex, 1]], }), next, total: total - 1 }))
+        })
+      }
+    }
+
+
+  };
+
+  const setSidenavFolderItems = (
+    inputFolders: { results: Item[], next: number, total: number },
+    replace = true,
+    ignoreTotalItem = false
+  ) => {
+    const { results, next, total } = inputFolders;
+    let resultedArray: Item[] = [];
+    if (results) resultedArray = results;
+    if (next) setSidenavFolderNextPage(next);
+    if (total && !ignoreTotalItem) setSidenavTotalCollectionCount(total);
+    if (replace) setSidenavFolderList(resultedArray);
+    else
+      setSidenavFolderList([
+        ...sidenavFolderList.filter((folder) => !folder.isLoading),
+        ...resultedArray,
       ]);
   };
 
@@ -150,6 +289,12 @@ export default ({ children }) => {
   const selectAllFolders = (isSelectedAll = true) => {
     setSelectedAllFolders(isSelectedAll);
   };
+
+  // Select all folders in Sub Collections View
+  const selectAllSubFoldersAndAssetsViewList = (value: boolean = true) => {
+    setSelectedAllSubFoldersAndAssets(value);
+  };
+
 
   // Show upload process toast
   const showUploadProcess = (value: string, fileIndex?: number) => {
@@ -227,11 +372,11 @@ export default ({ children }) => {
         const updatedAssets = assets.map((asset, index) =>
           index === retryList[i].index
             ? {
-                ...asset,
-                status: "fail",
-                index,
-                error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
-              }
+              ...asset,
+              status: "fail",
+              index,
+              error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
+            }
             : asset
         );
 
@@ -354,7 +499,7 @@ export default ({ children }) => {
     } catch (e) {
       // Violate validation, mark failure
       const updatedAssets = assets.map((asset, index) =>
-        index === retryList[i].index
+        index === retryList[i]?.index
           ? { ...asset, index, status: "fail", error: "Processing file error" }
           : asset
       );
@@ -428,7 +573,6 @@ export default ({ children }) => {
       console.log(`Register socket listener...`);
       // Listen upload file process event
       socket.on("uploadFilesProgress", function (data) {
-        console.log(data);
         setUploadingPercent(data.percent);
         setUploadRemainingTime(
           `${convertTimeFromSeconds(data.timeLeft)} remaining`
@@ -438,7 +582,6 @@ export default ({ children }) => {
         if (data.fileName) {
           setUploadingFileName(data.fileName);
         }
-
         // setUploadingFile(0)
         if (!isNaN(data.uploadingAssets)) {
           setDropboxUploadingFile(data.uploadingAssets);
@@ -446,7 +589,6 @@ export default ({ children }) => {
       });
 
       socket.on("downloadFilesProgress", function (data) {
-        console.log(data);
         setDownloadingPercent(data.percent);
       });
     }
@@ -534,6 +676,36 @@ export default ({ children }) => {
     setOperationAssets,
     currentViewAsset,
     setCurrentViewAsset,
+    // sidenav folders states
+    sidenavFolderList,
+    setSidenavFolderList: setSidenavFolderItems,
+    sidenavFolderNextPage,
+    setSidenavFolderNextPage,
+    sidenavTotalCollectionCount,
+    setSidenavTotalCollectionCount,
+    sidenavFolderChildList,
+    setSidenavFolderChildList: setSidenavFolderChildListItems,
+    sidebarOpen,
+    setSidebarOpen,
+    // Sub collection page folders and assets states
+    activeSubFolders,
+    setActiveSubFolders,
+
+    subFoldersViewList,
+    setSubFoldersViewList: subFoldersList,
+
+    subFoldersAssetsViewList,
+    setSubFoldersAssetsViewList: subFoldersAssetList,
+
+    headerName,
+    setHeaderName,
+
+    //select all feature for the selected subcollection page assets and folders
+    selectedAllSubFoldersAndAssets,
+    setSelectedAllSubFoldersAndAssets: selectAllSubFoldersAndAssetsViewList,
+    appendNewSubSidenavFolders,
+    setListUpdateFlag,
+    listUpdateFlag
   };
   return (
     <AssetContext.Provider value={assetsValue}>

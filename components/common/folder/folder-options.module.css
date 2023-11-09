@@ -1,5 +1,12 @@
 .asset-actions-wrapper {
-    position: relative;
+    /* position: relative; */
+    display: flex;
+    align-items: center;
+    gap:20px;
+    width:10%;
+    position: absolute;
+    right: 0;
+    bottom: 20px;
   }
   
   .more ul {
@@ -8,5 +15,17 @@
     top: inherit;
   }
   .folderDots {
-    width: 16px;
+    width: 16px !important;
   }
+  .edit-icon{
+    width: 15px !important;
+  }
+.list-actions-wrapper{
+  position: relative;
+}
+
+@media (max-width:480px){
+  .edit-icon{
+    display: none;
+  }
+}

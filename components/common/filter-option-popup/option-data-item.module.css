@@ -1,0 +1,34 @@
+.outer-wrapper{
+    margin-top: 24px;
+    max-height: 407px;
+    overflow: auto;
+    padding: 0 10px 0 0;
+ 
+}
+.tags-wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+   
+   
+}
+.tags-left-side{
+    display: flex;
+    align-items: center;
+    gap:10px;
+}
+.select-name{
+    display: inline-block;
+    width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+  }
+  
+  @media (max-width:400px){
+    .tags-wrapper{
+        border-top:1px solid #DEDAD4; 
+        padding:12px 0;
+    }
+  }

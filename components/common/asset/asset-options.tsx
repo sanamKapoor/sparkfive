@@ -10,6 +10,7 @@ import ToggleableAbsoluteWrapper from "../misc/toggleable-absolute-wrapper";
 
 import { useContext } from "react";
 import { UserContext } from "../../../context";
+import React from "react";
 
 const AssetOptions = ({
   itemType = "",
@@ -23,8 +24,10 @@ const AssetOptions = ({
   openComments,
   openRemoveAsset,
   dissociateAsset,
+  activeView,
   isShare = false,
   isAssetRelated = false,
+  renameAsset
 }) => {
   const { hasPermission, user } = useContext(UserContext);
 
@@ -59,8 +62,9 @@ const AssetOptions = ({
   if (hasPermission([ASSET_EDIT])) {
     assetRelatedOptions.push({ label: "Delete", onClick: openDeleteAsset });
     options.push({ label: "Comment", onClick: openComments });
-    options.push({ label: "Add to", onClick: openMoveAsset });
     options.push({ label: "Copy", onClick: openCopyAsset });
+    options.push({ label: "Rename Asset", onClick: renameAsset });
+    options.push({ label: "Add to", onClick: openMoveAsset });
     options.push({
       label: asset.stage !== "archived" ? "Archive" : "Unarchive",
       onClick: openArchiveAsset,
@@ -77,14 +81,21 @@ const AssetOptions = ({
 
   return (
     <ToggleableAbsoluteWrapper
-      contentClass={styles["asset-actions"]}
-      wrapperClass={styles["asset-actions-wrapper"]}
-      Wrapper={({ children }) => (
+    contentClass={styles["asset-actions"]}
+    wrapperClass={`${
+      activeView === "list" ? styles["list-actions-wrapper"]:styles["asset-actions-wrapper"]
+    }`}
+    Wrapper={({ children }) => (
+        
         <>
           <IconClickable
             src={Utilities.more}
             additionalClass={styles.thumbnailDots}
           />
+          {/* this is for list view  */}
+        
+
+
           {children}
         </>
       )}
@@ -95,8 +106,8 @@ const AssetOptions = ({
               isShare
                 ? [{ label: "Download", onClick: downloadAsset }]
                 : isAssetRelated
-                ? assetRelatedOptions
-                : options
+                  ? assetRelatedOptions
+                  : options
             }
           />
         </div>

@@ -16,11 +16,9 @@ const AssetIcon = ({
   return (
     <div
       onClick={onClick}
-      className={`${styles.container} ${!noMargin && onList && styles.small} ${
-        noMargin && styles.noMargin
-      } ${bulkSize && styles["bulk-size"]} ${
-        isCollection && styles.collection
-      }`}
+      className={`${styles.container} ${!noMargin && onList && styles.small} ${noMargin && styles.noMargin
+        } ${bulkSize && styles["bulk-size"]} ${isCollection && styles.collection
+        }`}
     >
       <img
         className={`${styles.icon} ${styles[imgClass]} ${styles[activeFilter]}`}
