@@ -17,16 +17,6 @@
   .listWrapper{
     display: flex;
     align-items: center;
-  }
-  .headContent1{
-    width: 42%;
-  }
-  .headContent2{
-    width: 18%;
-  }
-  .headContent3{
-    width: 20%;
-  }
-  .headContent4{
-    width: 20%;
+    display: grid;
+    grid-template-columns:  40% 30% 20% 10%;
   }

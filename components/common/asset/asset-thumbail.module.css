@@ -188,12 +188,13 @@
   border:none;
   align-items: center;
   display: grid;
-  grid-template-columns:  50% 10% 10% 10% 10% 10%;
+  grid-template-columns: 40% 10% 15% 15% 10% 10%;;
 }
 
 .list-image-wrapper{
   max-width: 64px;
   height:100%;
+  border-bottom: none;
 }
 .listContainer img{
   max-width: 64px;
@@ -222,7 +223,6 @@
 .list-item-wrapper{
   display: flex;
   align-items: center;
-  width: 20%;
 
 }
 

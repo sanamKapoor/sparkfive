@@ -412,7 +412,7 @@ const AssetThumbail = ({
             {parseInt(asset.size) !== 0 && asset.size && filesize(asset.size)}
           </div>
         )}
-        <div className={`${styles["details-wrapper"]}` && activeView === "list" ? `${styles["modified-date"]}` : ""}>
+        <div style={{marginBottom:10}} >
           <div className={activeView !== "list" ? `secondary-text ${styles["modified-date"]}` : ""}>
             {format(new Date(asset.createdAt), dateFormat)}
           </div>
