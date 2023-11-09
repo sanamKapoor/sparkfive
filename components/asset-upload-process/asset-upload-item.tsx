@@ -36,7 +36,7 @@ const AssetUploadItem = ({ item, index, handleRetry }) => {
   };
 
   useEffect(() => {
-    loadCurrentTheme;
+    loadCurrentTheme();
   }, []);
 
   return (
