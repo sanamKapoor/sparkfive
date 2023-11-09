@@ -20,4 +20,7 @@
     display: grid;
     grid-template-columns:  40% 10% 15% 15% 10% 10%;
   }
+  .listWrapper img{
+    cursor: pointer;
+  }
  

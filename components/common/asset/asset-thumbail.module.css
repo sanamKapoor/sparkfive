@@ -218,7 +218,7 @@
 }
 .size{
   display: block;
-  width: 20% ;
+  /* width: 20% ; */
 }
 .list-item-wrapper{
   display: flex;
