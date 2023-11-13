@@ -89,19 +89,15 @@ const useFilters = (attributes) => {
     fetchFunction: (params?: Record<string, unknown>) => Promise<any>,
     keysToFilter: string[]
   ) => {
-    let type, stage, hasProducts;
+    let type, hasProducts;
 
     if (activeSortFilter.mainFilter === "images") {
       type = "image";
-      stage = "draft";
     } else if (activeSortFilter.mainFilter === "videos") {
       type = "video";
-      stage = "draft";
     } else if (activeSortFilter.mainFilter === "product") {
       hasProducts = "product";
-      stage = "draft";
-    } else if (activeSortFilter.mainFilter === "archived") stage = "archived";
-    else stage = "draft";
+    }
 
     const params = {
       assetsCount: "yes",
@@ -285,9 +281,11 @@ const useFilters = (attributes) => {
           break;
 
         default:
-          values = await fetchValues(data.id, () => fetchCustomField(data.id), [
-            "id",
-          ]);
+          values = await fetchValues(
+            data.id,
+            (params) => fetchCustomField(data.id, params),
+            ["id"]
+          );
       }
 
       setValues(values);
