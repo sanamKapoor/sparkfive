@@ -20,6 +20,8 @@ import filterApi from "../server-api/filter";
 import shareCollectionApi from "../server-api/share-collection";
 import tagsApi from "../server-api/tag";
 
+import { getAssetsFilters } from "../utils/asset";
+
 const useFilters = (attributes) => {
   const { activeSortFilter, setActiveSortFilter, sharePath, isPublic } =
     useContext(FilterContext);
@@ -104,12 +106,18 @@ const useFilters = (attributes) => {
     const params = {
       assetsCount: "yes",
       sharePath,
-      folderId: activeSubFolders || activeFolder || null,
+      ...((activeSubFolders || activeFolder) && {
+        folderId: activeSubFolders || activeFolder,
+      }),
       ...(type && { type }),
-      stage,
-      page: 0,
       assetLim: "yes",
       ...(hasProducts && { hasProducts }),
+      ...getAssetsFilters({
+        replace: false,
+        addedIds: [],
+        nextPage: 0,
+        userFilterObject: { ...activeSortFilter },
+      }),
     };
 
     let fetchedValues = await fetchFunction({ ...params });
