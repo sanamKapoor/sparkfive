@@ -27,6 +27,9 @@ import { loadTheme } from "../../utils/theme";
 import { UserContext } from "../../context";
 import { defaultLogo } from "../../constants/theme";
 
+import { sizeToZipDownload } from "../../constants/download";
+import downloadUtils from "../../utils/download";
+
 const AssetShare = () => {
   const { logo: themeLogo, setLogo: setThemeLogo } = useContext(UserContext);
   const [assets, setAssets] = useState([]);
@@ -102,27 +105,41 @@ const AssetShare = () => {
   };
 
   // Download select assets
+  // Download select assets
   const downloadSelectedAssets = async () => {
     try {
       const { shareJWT, code } = urlUtils.getQueryParameters();
 
       const selectedAssets = assets.filter((asset) => asset.isSelected);
 
-      let payload = {
-        assetIds: selectedAssets.map((item) => item.asset.id),
+      const downloadAsZip = async () => {
+        let payload = {
+          assetIds: selectedAssets.map((item) => item.asset.id),
+        };
+
+        // Show processing bar
+        zipping();
+
+        const { data } = await assetApi.shareDownload(payload, {
+          shareJWT,
+          code,
+        });
+        // Download file to storage
+        fileDownload(data, "assets.zip");
+
+        done();
       };
 
-      // Show processing bar
-      zipping();
-
-      const { data } = await assetApi.shareDownload(payload, {
-        shareJWT,
-        code,
-      });
-      // Download file to storage
-      fileDownload(data, "assets.zip");
-
-      done();
+      if (selectedAssets.length === 1) {
+        const size = parseInt(selectedAssets[0].asset?.size || 0);
+        if (size >= sizeToZipDownload || selectedAssets[0].asset?.type === "video") {
+          downloadAsZip();
+        } else {
+          downloadUtils.downloadFile(selectedAssets[0].realUrl, selectedAssets[0]?.asset.name);
+        }
+      } else {
+        downloadAsZip();
+      }
 
       // downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets.zip')
     } catch (e) {}

@@ -41,7 +41,7 @@ export default function ShareLinks() {
   const [page, setPage] = useState<number>(0);
   const [nextPage, setNextPage] = useState<number>(0);
   const [sortData, setSortData] = useState({
-    sortField: "expiredAt",
+    sortField: "createdAt",
     sortType: "desc",
   });
   const [colorGroups, setColorGroups] = useState<any>({});
@@ -437,22 +437,24 @@ export default function ShareLinks() {
                           : link.sharedLink
                         : link.sharedLink}
                     </span>
-                    <IconClickable
-                      additionalClass={`${styles["action-button"]} ${styles["copy-icon"]}  m-l-15 cursor-pointer`}
-                      SVGElement={AssetOps.copy}
-                      tooltipText={"Copy"}
-                      tooltipId={"Copy"}
-                      onClick={() => {
-                        copy(
-                          link.type === "folder"
-                            ? !link.team.advancedCollectionShareLink
-                              ? `${process.env.CLIENT_BASE_URL}/collections/${link.collectionLink}`
-                              : link.sharedLink
-                            : link.sharedLink,
-                        );
-                        toastUtils.bottomSuccess("Link copied");
-                      }}
-                    />
+                    <div className={`${styles["copy-icon"]}  m-l-15`}>
+                      <IconClickable
+                        additionalClass={`${styles["action-button"]} ${styles["copy-icon"]} cursor-pointer`}
+                        SVGElement={AssetOps.copy}
+                        tooltipText={"Copy"}
+                        tooltipId={"Copy"}
+                        onClick={() => {
+                          copy(
+                            link.type === "folder"
+                              ? !link.team.advancedCollectionShareLink
+                                ? `${process.env.CLIENT_BASE_URL}/collections/${link.collectionLink}`
+                                : link.sharedLink
+                              : link.sharedLink,
+                          );
+                          toastUtils.bottomSuccess("Link copied");
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
                 <div className={"col-10 d-flex justify-content-center align-items-center col-sm-100"}>

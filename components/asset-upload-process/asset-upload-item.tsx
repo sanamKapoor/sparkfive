@@ -5,7 +5,7 @@ import { Utilities } from "../../assets";
 import { AssetContext } from "../../context";
 import styles from "./index.module.css";
 import { getThemeFromLocalStorage } from "../../utils/theme";
-import { defaultPrimaryColor } from "../../constants/theme";
+import { defaultPrimaryColor, defaultSecondaryColor } from "../../constants/theme";
 
 const AssetUploadItem = ({ item, index, handleRetry }) => {
   const {
@@ -27,16 +27,16 @@ const AssetUploadItem = ({ item, index, handleRetry }) => {
 
   const uploadProgressPercent = uploadingFileIndex === index ? uploadingPercent : isUploadComplete;
 
-  const [loadingColor, setLoadingColor] = useState(defaultPrimaryColor);
+  const [loadingColor, setLoadingColor] = useState(defaultSecondaryColor);
 
   const loadCurrentTheme = () => {
     // Call API to get team theme then set to local storage
     const theme = getThemeFromLocalStorage();
-    setLoadingColor(theme?.primary || defaultPrimaryColor);
+    setLoadingColor(theme?.secondary || defaultSecondaryColor);
   };
 
   useEffect(() => {
-    loadCurrentTheme;
+    loadCurrentTheme();
   }, []);
 
   return (

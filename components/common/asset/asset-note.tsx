@@ -3,7 +3,7 @@ import { Utilities } from "../../../assets";
 import IconClickable from "../buttons/icon-clickable";
 import styles from "./asset-note.module.css";
 
-const AssetNote = ({ title, note }) => {
+const AssetNote = ({ title, note, onShowClick = () => {} }) => {
   const [show, setShow] = useState(true);
 
   return (
@@ -13,7 +13,15 @@ const AssetNote = ({ title, note }) => {
 
         {show && <p>{note}</p>}
       </div>
-      <IconClickable SVGElement={show ? Utilities.hide : Utilities.notes} onClick={() => setShow(!show)} />
+      <IconClickable
+        SVGElement={show ? Utilities.hide : Utilities.notes}
+        onClick={() => {
+          setShow(!show);
+          if (onShowClick) {
+            onShowClick();
+          }
+        }}
+      />
     </div>
   );
 };
