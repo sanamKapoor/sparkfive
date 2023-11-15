@@ -37,6 +37,7 @@ const AssetHeaderOps = ({
   activeMode: string;
   [key: string]: any;
 }) => {
+
   const router = useRouter();
 
   const [sharePath, setSharePath] = useState("");
@@ -270,7 +271,7 @@ const AssetHeaderOps = ({
   };
 
   const deselectAll = () => {
-    if (activeMode === "assets") {
+    if (activeMode === "assets" || deletedAssets) {
       // Mark deselect all
       selectAllAssets(false);
 
@@ -588,6 +589,13 @@ const AssetHeaderOps = ({
       },
     },
   ];
+
+
+  const selectedItemTextAndCount = 
+    (activeMode === "assets" || deletedAssets) ? `${totalSelectAssets} Assets` : 
+    activeMode === "folders" ? `${totalSelectAssets} Collections` : 
+    totalSubFoldersAndAssets.folders > 0 ? `${totalSubFoldersAndAssets?.folders} Sub Collections` : `${totalSubFoldersAndAssets.assets} Assets Collections`;
+
   return (
     <div className={styles.bar}>
       <div className={styles.wrapper}>
@@ -600,13 +608,9 @@ const AssetHeaderOps = ({
         )}
 
         <div className={styles.text}>
-          {activeMode === "assets"
-            ? `${totalSelectAssets} Assets`
-            : activeMode === "folders"
-            ? `${totalSelectAssets} Collections`
-            : totalSubFoldersAndAssets.folders > 0
-            ? `${totalSubFoldersAndAssets?.folders} Sub Collections`
-            : `${totalSubFoldersAndAssets.assets} Assets Collections`}{" "}
+          {
+            selectedItemTextAndCount
+          }{" "}
           Selected
         </div>
       </div>
