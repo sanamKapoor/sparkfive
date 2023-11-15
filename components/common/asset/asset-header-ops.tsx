@@ -78,9 +78,9 @@ const AssetHeaderOps = ({
   } = useContext(FilterContext);
 
   const selectedAssets = assets.filter((asset) => asset.isSelected);
-  const selectedSubFolderAssetId = subFoldersAssetsViewList?.results?.filter(
-    (asset) => asset.isSelected
-  ) || []
+  const selectedSubFolderAssetId =
+    subFoldersAssetsViewList?.results?.filter((asset) => asset.isSelected) ||
+    [];
   let totalSelectAssets = selectedAssets.length;
 
   useEffect(() => {
@@ -128,10 +128,9 @@ const AssetHeaderOps = ({
     selectedSubFoldersAndAssets?.assets?.length > 0
   ) {
     totalSubFoldersAndAssets = {
-      assets: subFoldersAssetsViewList.results.filter(
-        (asset) => asset.isSelected
-      )?.length ||
-        0,
+      assets:
+        subFoldersAssetsViewList.results.filter((asset) => asset.isSelected)
+          ?.length || 0,
       folders:
         subFoldersViewList.results.filter((folder) => folder.isSelected)
           ?.length || 0,
@@ -221,12 +220,11 @@ const AssetHeaderOps = ({
       }
     } catch (e) {
       console.error(e);
-      updateDownloadingStatus(
-        "error",
-        0,
-        0,
-        "Internal Server Error. Please try again."
-      );
+      const errMsg =
+        e?.response?.status === 400
+          ? "Warning: The max download size is 10GB or 500 files. Please try downloading a smaller batch."
+          : "Internal Server Error. Please try again.";
+      updateDownloadingStatus("error", 0, 0, errMsg);
     }
   };
 
@@ -235,9 +233,9 @@ const AssetHeaderOps = ({
       setIsLoading(true);
       let associateAssets;
       if (activeSortFilter?.mainFilter === "SubCollectionView") {
-        associateAssets = selectedSubFolderAssetId
+        associateAssets = selectedSubFolderAssetId;
       } else {
-        associateAssets = selectedAssets
+        associateAssets = selectedAssets;
       }
 
       const assetIds = associateAssets.map((assetItem) => assetItem.asset.id);
@@ -246,8 +244,8 @@ const AssetHeaderOps = ({
         const assetsToAssociate = associateAssets.filter(
           (assetItem) =>
             assetItem.asset.fileAssociations.length +
-            associateAssets.length -
-            1 <=
+              associateAssets.length -
+              1 <=
             maximumAssociateFiles
         );
         if (assetsToAssociate?.length !== associateAssets?.length) {
@@ -334,7 +332,10 @@ const AssetHeaderOps = ({
     const filters = {
       ...getAssetsFilters({
         replace: false,
-        activeFolder: activeSortFilter?.mainFilter === "SubCollectionView" ? activeSubFolders : activeFolder,
+        activeFolder:
+          activeSortFilter?.mainFilter === "SubCollectionView"
+            ? activeSubFolders
+            : activeFolder,
         addedIds: [],
         nextPage: 1,
         userFilterObject: activeSortFilter,
@@ -363,7 +364,10 @@ const AssetHeaderOps = ({
 
   const conditionalIcons = [
     {
-      condition: ((!isFolder && !deletedAssets && !isSubCollection) || totalSubFoldersAndAssets.assets > 0) && !isShare,
+      condition:
+        ((!isFolder && !deletedAssets && !isSubCollection) ||
+          totalSubFoldersAndAssets.assets > 0) &&
+        !isShare,
       props: {
         place: "top",
         additionalClass: styles["action-button"],
@@ -375,7 +379,10 @@ const AssetHeaderOps = ({
       },
     },
     {
-      condition: ((!isFolder && !deletedAssets && !isSubCollection) || totalSubFoldersAndAssets.assets > 0) && !isShare,
+      condition:
+        ((!isFolder && !deletedAssets && !isSubCollection) ||
+          totalSubFoldersAndAssets.assets > 0) &&
+        !isShare,
       props: {
         place: "top",
         additionalClass: styles["action-button"],
@@ -399,7 +406,10 @@ const AssetHeaderOps = ({
       },
     },
     {
-      condition: ((!isFolder && !deletedAssets && !isSubCollection) || totalSubFoldersAndAssets.assets > 0) && !isShare,
+      condition:
+        ((!isFolder && !deletedAssets && !isSubCollection) ||
+          totalSubFoldersAndAssets.assets > 0) &&
+        !isShare,
       props: {
         place: "top",
         additionalClass: styles["action-button"],
@@ -411,7 +421,10 @@ const AssetHeaderOps = ({
       },
     },
     {
-      condition: ((!isFolder && !deletedAssets && !isSubCollection) || totalSubFoldersAndAssets.assets > 0) && !isShare,
+      condition:
+        ((!isFolder && !deletedAssets && !isSubCollection) ||
+          totalSubFoldersAndAssets.assets > 0) &&
+        !isShare,
       props: {
         child: (
           <div className={styles["share-wrapper"]} ref={contentRef}>
@@ -474,7 +487,9 @@ const AssetHeaderOps = ({
       },
     },
     {
-      condition: ((isFolder && !deletedAssets && selectedFolders?.length < 2) || (totalSubFoldersAndAssets.folders > 0 && isSubCollection) && !isShare),
+      condition:
+        (isFolder && !deletedAssets && selectedFolders?.length < 2) ||
+        (totalSubFoldersAndAssets.folders > 0 && isSubCollection && !isShare),
       props: {
         place: "top",
         additionalClass: styles["action-button"],
@@ -510,7 +525,10 @@ const AssetHeaderOps = ({
       },
     },
     {
-      condition: ((!isFolder && !isSubCollection || totalSubFoldersAndAssets.assets > 0) && !isShare),
+      condition:
+        ((!isFolder && !isSubCollection) ||
+          totalSubFoldersAndAssets.assets > 0) &&
+        !isShare,
       props: {
         child: (
           <div className={styles["more-wrapper"]}>
@@ -612,26 +630,32 @@ const AssetHeaderOps = ({
             ))
         )}
       </div>
-      {(((!isFolder && !isSubCollection && !deletedAssets) || totalSubFoldersAndAssets.assets > 0) && !isShare) && (
-        <>
-          <ConfirmModal
-            closeModal={() => setShowAssociateModalOpen(false)}
-            confirmAction={() => {
-              setActiveOperation("associate");
-              setShowAssociateModalOpen(false);
-              associateAssets();
-            }}
-            confirmText={"Associate"}
-            message={
-              <span className="">
-                Associate ({isSubCollection ? totalSubFoldersAndAssets.assets : totalSelectAssets}) asset(s)?
-              </span>
-            }
-            subText="Associating allows you see all related assets together on the asset detail pages"
-            modalIsOpen={showAssociateModalOpen}
-          />
-        </>
-      )}
+      {((!isFolder && !isSubCollection && !deletedAssets) ||
+        totalSubFoldersAndAssets.assets > 0) &&
+        !isShare && (
+          <>
+            <ConfirmModal
+              closeModal={() => setShowAssociateModalOpen(false)}
+              confirmAction={() => {
+                setActiveOperation("associate");
+                setShowAssociateModalOpen(false);
+                associateAssets();
+              }}
+              confirmText={"Associate"}
+              message={
+                <span className="">
+                  Associate (
+                  {isSubCollection
+                    ? totalSubFoldersAndAssets.assets
+                    : totalSelectAssets}
+                  ) asset(s)?
+                </span>
+              }
+              subText="Associating allows you see all related assets together on the asset detail pages"
+              modalIsOpen={showAssociateModalOpen}
+            />
+          </>
+        )}
     </div>
   );
 };

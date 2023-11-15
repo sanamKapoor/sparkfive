@@ -83,19 +83,19 @@ const AssetAddition = ({
     subFolderAutoTag = true
   ) => {
     let folderUploadInfo;
-    debugger;
+    // debugger;
     try {
       const formData = new FormData();
       let file = assets[i].file.originalFile;
       let currentUploadingFolderId = null;
       let newAssets = 0;
-      debugger;
+      // debugger;
       // Get file group info, this returns folderKey and newName of file
       let fileGroupInfo = getFolderKeyAndNewNameByFileName(
         file.webkitRelativePath,
         subFolderAutoTag
       );
-      debugger;
+      // debugger;
       folderUploadInfo = { name: fileGroupInfo.folderKey, size: totalSize };
 
       // Do validation
@@ -129,10 +129,10 @@ const AssetAddition = ({
 
         // The final one
         if (i === assets.length - 1) {
-          debugger;
+          // debugger;
           return folderGroup;
         } else {
-          debugger;
+          // debugger;
           // Keep going
           await uploadAsset(
             i + 1,
@@ -145,7 +145,7 @@ const AssetAddition = ({
           );
         }
       } else {
-        debugger;
+        // debugger;
         // Show uploading toast
         showUploadProcess("uploading", i);
 
@@ -204,7 +204,7 @@ const AssetAddition = ({
         if (currentUploadingFolderId) {
           attachedQuery["folderId"] = currentUploadingFolderId;
         }
-        debugger;
+        // debugger;
         // Call API to upload
         let { data } = await assetApi.uploadAssets(
           formData,
@@ -334,7 +334,7 @@ const AssetAddition = ({
   const onFilesDataGet = async (files) => {
     const currentDataClone = [...assets];
     const currenFolderClone = [...folders];
-    debugger;
+    // debugger;
     try {
       let selectedFolderToUpload;
       if (activeSortFilter?.mainFilter === "SubCollectionView") {
@@ -399,7 +399,7 @@ const AssetAddition = ({
         });
         // formData.append('asset', file.path || file.originalFile)
       });
-      debugger;
+      // debugger;
       // Store current uploading assets for calculation
       setUploadingAssets(newPlaceholders);
 
@@ -894,7 +894,7 @@ const AssetAddition = ({
     const files = Array.from(e.target.files).map((originalFile) => ({
       originalFile,
     }));
-    debugger;
+    // debugger;
     if (advancedConfig.duplicateCheck) {
       const names = files.map((file) => file.originalFile["name"]);
       const {
