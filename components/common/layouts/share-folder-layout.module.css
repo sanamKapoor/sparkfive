@@ -7,7 +7,7 @@
     top: 0;
     left: 0;
     z-index: 1499;
-    min-height: 90px;
+    /* min-height: 90px; */
     border-bottom: 1px solid #DEDAD4;
 }
 
@@ -80,6 +80,12 @@
 
 .ops-wrapper button {
     margin-left: 1rem;
+}
+.image-wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
 }
 
 

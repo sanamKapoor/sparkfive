@@ -26,7 +26,7 @@ const ReusableHeading = ({
   const { hasPermission } = useContext(UserContext);
 
   const showCollectionCreateIcon =
-    text === "Collections" && hasPermission([ASSET_UPLOAD_NO_APPROVAL]);
+    text === "All Collections" && hasPermission([ASSET_UPLOAD_NO_APPROVAL]);
 
   return (
     <div className={styles["heading-contents"]} style={customStyle}>

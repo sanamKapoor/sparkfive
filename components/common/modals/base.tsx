@@ -101,7 +101,7 @@ const Base: React.FC<BaseModalProps> = ({
       {children}
       {confirmText && (
         <div
-          className={`${styles.buttons} ${!showCancel ? styles["button-center"] : ""
+          className={`${styles.buttons}  ${!showCancel ? styles["button-center"] : ""
             }`}
         >
           {showCancel && (
@@ -110,7 +110,7 @@ const Base: React.FC<BaseModalProps> = ({
                 text="Cancel"
                 onClick={closeModal}
                 type="button"
-                className="container secondary"
+                className="container secondary add-modal-btn"
               />
             </div>
           )}
@@ -119,7 +119,7 @@ const Base: React.FC<BaseModalProps> = ({
               text={confirmText}
               onClick={confirmAction}
               type="button"
-              className="container primary"
+              className="container primary add-modal-btn"
               disabled={disabledConfirm}
             />
           </div>

@@ -458,6 +458,10 @@ console
   
 
 }
+.add-modal-btn{
+  min-width: 161px;
+  justify-content: center;
+}
 
 
 

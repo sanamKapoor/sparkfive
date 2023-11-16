@@ -371,7 +371,7 @@ const FolderGridItem = ({
                     } ${gridStyles["editable-preview"]} ${
                       activeView === "list" && styles["list-text"]
                     }`
-                  : `${gridStyles["editable-preview"]} ${gridStyles["non-editable-preview"]}`
+                  : `normal-text ${styles["wrap-text"]} ${gridStyles["editable-preview"]} ${gridStyles["non-editable-preview"]}`
               }
             >
               {thumbnailName}

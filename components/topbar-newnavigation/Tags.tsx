@@ -41,9 +41,9 @@ const Tags = () => {
         <FilterModal onClose={closeModal}/>
         )}
         </div>
+        </div>
       
    
-    </div>
   );
 };
 export default Tags;
