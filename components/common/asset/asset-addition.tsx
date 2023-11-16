@@ -880,13 +880,16 @@ const AssetAddition = ({
       }
     }
 
-    queryData.folderId = uploadToFolders.join(",");
     if (type === "project") queryData.projectId = itemId;
     if (type === "task") queryData.taskId = itemId;
     // Attach extra query
     if (attachQuery) {
       queryData = { ...queryData, ...attachQuery };
     }
+
+    queryData.folderId = !attachQuery.versionGroup
+      ? uploadToFolders.join(",")
+      : "";
     return queryData;
   };
 
