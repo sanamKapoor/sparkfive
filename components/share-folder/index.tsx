@@ -628,7 +628,9 @@ const ShareFolderMain = () => {
       : styles["col-wrapper"];
 
   const showFilterView =
-    folderInfo.singleSharedCollectionId || activeMode === "assets";
+    (folderInfo.singleSharedCollectionId || activeMode === "assets") && !activePasswordOverlay;
+
+
 
   return (
     <>
@@ -638,7 +640,6 @@ const ShareFolderMain = () => {
             viewFolder={viewFolder}
             sidenavFolderList={sidenavFolderList}
           />
-
           <TopBar
             activeSearchOverlay={activeSearchOverlay}
             activeSortFilter={activeSortFilter}
