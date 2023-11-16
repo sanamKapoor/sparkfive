@@ -401,7 +401,7 @@ export const getAssetsSort = (userFilterObject) => {
 };
 
 export const getFoldersFromUploads = (files, isRegular = false) => {
-  debugger
+  // debugger
   const folders = new Set();
   files.forEach(({ path, originalFile }) => {
     let pathToParse = path;
@@ -415,7 +415,7 @@ export const getFoldersFromUploads = (files, isRegular = false) => {
       });
     }
   });
-  debugger
+  // debugger
   return Array.from(folders);
 };
 

@@ -28,22 +28,23 @@ const FolderOptions = ({
   activeView,
   activeFolderId,
   onClickFilterSettings,
-  renameCollection
+  renameCollection,
 }) => {
   const { user, hasPermission } = useContext(UserContext);
 
   const options = isShare
     ? [{ label: "Download", onClick: downloadFoldercontents }]
     : [
-      { label: "Download", onClick: downloadFoldercontents },
-      // { label: "Delete", onClick: () => setDeleteOpen(true) },
-      { label: "Share", onClick: shareAssets },
-      {
-        label: "Rename Folder", onClick: () => {
-          renameCollection()
-        }
-      }
-    ];
+        { label: "Download", onClick: downloadFoldercontents },
+        // { label: "Delete", onClick: () => setDeleteOpen(true) },
+        { label: "Share", onClick: shareAssets },
+        {
+          label: "Rename Folder",
+          onClick: () => {
+            renameCollection();
+          },
+        },
+      ];
 
   if (hasPermission([ASSET_EDIT])) {
     options.push({ label: "Delete", onClick: () => setDeleteOpen(true) });
@@ -148,12 +149,12 @@ const FolderOptions = ({
             <Dropdown
               options={[
                 ...adminOption,
-                {
-                  label: "Filter Settings",
-                  onClick: () => {
-                    console.log("Filter Settings");
-                  },
-                },
+                // {
+                //   label: "Filter Settings",
+                //   onClick: () => {
+                //     console.log("Filter Settings");
+                //   },
+                // },
               ]}
             />
           )}

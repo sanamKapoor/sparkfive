@@ -20,6 +20,8 @@ import filterApi from "../server-api/filter";
 import shareCollectionApi from "../server-api/share-collection";
 import tagsApi from "../server-api/tag";
 
+import { getAssetsFilters } from "../utils/asset";
+
 const useFilters = (attributes) => {
   const { activeSortFilter, setActiveSortFilter, sharePath, isPublic } =
     useContext(FilterContext);
@@ -87,29 +89,31 @@ const useFilters = (attributes) => {
     fetchFunction: (params?: Record<string, unknown>) => Promise<any>,
     keysToFilter: string[]
   ) => {
-    let type, stage, hasProducts;
+    let type, hasProducts;
 
     if (activeSortFilter.mainFilter === "images") {
       type = "image";
-      stage = "draft";
     } else if (activeSortFilter.mainFilter === "videos") {
       type = "video";
-      stage = "draft";
     } else if (activeSortFilter.mainFilter === "product") {
       hasProducts = "product";
-      stage = "draft";
-    } else if (activeSortFilter.mainFilter === "archived") stage = "archived";
-    else stage = "draft";
+    }
 
     const params = {
       assetsCount: "yes",
       sharePath,
-      folderId: activeSubFolders || activeFolder || null,
+      ...((activeSubFolders || activeFolder) && {
+        folderId: activeSubFolders || activeFolder,
+      }),
       ...(type && { type }),
-      stage,
-      page: 0,
       assetLim: "yes",
       ...(hasProducts && { hasProducts }),
+      ...getAssetsFilters({
+        replace: false,
+        addedIds: [],
+        nextPage: 0,
+        userFilterObject: { ...activeSortFilter },
+      }),
     };
 
     let fetchedValues = await fetchFunction({ ...params });
@@ -277,9 +281,11 @@ const useFilters = (attributes) => {
           break;
 
         default:
-          values = await fetchValues(data.id, () => fetchCustomField(data.id), [
-            "id",
-          ]);
+          values = await fetchValues(
+            data.id,
+            (params) => fetchCustomField(data.id, params),
+            ["id"]
+          );
       }
 
       setValues(values);

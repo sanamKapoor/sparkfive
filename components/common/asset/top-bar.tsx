@@ -254,7 +254,6 @@ const TopBar = ({
               />
               <div className={styles.SearchMobile}>
                 <SearchOverlayAssets />
-
               </div>
             </div>
           )}
