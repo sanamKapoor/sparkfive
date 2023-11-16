@@ -1026,19 +1026,21 @@ const AssetsLibrary = () => {
   const deleteFolder = async (id) => {
     try {
       await folderApi.deleteFolder(id);
+
       if (activeMode === "SubCollectionView") {
-        const folderIndex = subFoldersViewList.results.findIndex(
+        const folderIndex = subFoldersViewList?.results?.findIndex(
           (folder) => folder.id === id
         );
         if (folderIndex !== -1) {
           setSubFoldersViewList({
             ...subFoldersViewList,
-            results: update(subFoldersViewList.results, {
+            results: update(subFoldersViewList?.results, {
               $splice: [[folderIndex, 1]],
             }),
-            total: subFoldersViewList.total - 1,
+            total: subFoldersViewList.total > 0 ? subFoldersViewList.total - 1 : 0,
           });
         }
+        
         appendNewSubSidenavFolders([], activeSubFolders, true, id);
         toastUtils.success("Sub collection deleted successfully");
       } else {
@@ -1059,6 +1061,8 @@ const AssetsLibrary = () => {
         toastUtils.success("Collection deleted successfully");
       }
     } catch (err) {
+      console.log({ err });
+
       toastUtils.error(
         err?.response?.data?.message ||
           "Something went wrong please try again later"

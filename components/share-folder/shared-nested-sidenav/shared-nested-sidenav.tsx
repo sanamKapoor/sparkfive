@@ -63,6 +63,9 @@ export default function SharedPageSidenav({ sidenavFolderList, viewFolder }) {
       return item;
     });
   }
+  
+  const collAssetsCount = folderInfo?.sharedFolder?.assetsCount ? `(${folderInfo.sharedFolder.assetsCount})` : "";
+
   return (
     <>
       <div className={`${styles["shared-sidenav-outer"]}`}>
@@ -70,7 +73,7 @@ export default function SharedPageSidenav({ sidenavFolderList, viewFolder }) {
           className={`${styles["collection-heading"]} ${styles["collection-heading-active"]}`}
           onClick={() => viewFolder()}
         >
-          <span>{folderInfo?.folderName || ""}{`(${foldersList.length})`}</span>
+          <span>{folderInfo?.folderName || ""} {collAssetsCount}</span>
         </div>
         <div className={styles["sidenavScroll"]} >
           <div className={styles["sidenav-list1"]}>

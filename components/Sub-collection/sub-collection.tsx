@@ -133,7 +133,6 @@ const SubCollection = (
           {/* list wrapper for list view */}
           <div className={`${styles['cardsWrapper']} ${activeView === "list" && styles['list-wrapper']}`}>
             {sortedFolders.map((folder, index) => {
-
               return (
                 <div>
                   <FolderTableHeader index={index} activeView={activeView} setSortAttribute={setSortFolderAttribute} />
@@ -167,7 +166,6 @@ const SubCollection = (
                       setFocusedItem={setFocusedItem}
                       folderType="SubCollection"
                       mode={mode}
-
                     />
                   </li>
                 </div>
@@ -183,7 +181,8 @@ const SubCollection = (
           }
         </>
       }
-      {<>
+      {
+        <>
         <div className={`${styles["sub-collection-heading"]}`}>
           <div className={styles.rightSide}>
             <span>Assets ({totalAssets})</span>
@@ -194,8 +193,6 @@ const SubCollection = (
           {!assetsHide && sortedAssets.map((assetItem, index) => {
             if (assetItem.status !== "fail") {
               return (
-
-
                 <div>
                   <AssetTableHeader index={index} activeView={activeView} setSortAttribute={setSortAssetAttribute} />
                   <li
@@ -247,7 +244,6 @@ const SubCollection = (
                     />
                   </li>
                 </div>
-
               );
             }
           })
@@ -281,7 +277,7 @@ const SubCollection = (
             )}
           </>
         )}
-      </>
+        </>
       }
     </>
   );
