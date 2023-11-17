@@ -13,6 +13,7 @@ import DimensionsFilter from "./dimensions-filter";
 import FilterSelector from "./filter-selector";
 import ProductFilter from "./product-filter";
 import ResolutionFilter from "./resolution-filter";
+import { useRouter } from "next/router";
 
 const FilterContainer = ({
   openFilter,
@@ -24,6 +25,8 @@ const FilterContainer = ({
   isShare = false,
   filterWidth,
 }) => {
+  const router = useRouter();
+
   const [expandedMenus, setExpandedMenus] = useState(isFolder ? ["folders"] : ["tags"]);
   const [stickyMenuScroll, setStickyMenuScroll] = useState(false);
   const [customFieldList, setCustomFieldList] = useState([]);
@@ -106,7 +109,15 @@ const FilterContainer = ({
       setCustomFields(fieldValues);
       // Add filter
       setRenderedFlag(true);
-      if (!renderFlag) {
+
+      // Not render yet, and not navigate by clicking tags from admin panel. This avoid overriding filter by tags from this navitation
+      if (
+        !renderFlag &&
+        !router.query.tag &&
+        !router.query.campaign &&
+        !router.query.product &&
+        !router.query.collection
+      ) {
         setActiveSortFilter(update(activeSortFilter, filter));
       }
     } catch (err) {
