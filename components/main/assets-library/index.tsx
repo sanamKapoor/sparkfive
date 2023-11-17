@@ -112,105 +112,110 @@ const AssetsLibrary = () => {
     campaigns,
     loadCampaigns,
     renderFlag,
+    preparingAssets,
   } = useContext(FilterContext);
 
   const router = useRouter();
-  const preparingAssets = useRef(true);
+  // const preparingAssets = useRef(true);
 
   // When tag, campaigns, collection changes, used for click on tag/campaigns/collection in admin attribute management
-  useEffect(() => {
-    if (!preparingAssets.current) return;
-    if (!router.query.tag && !router.query.product && !router.query.collection && !router.query.campaign) {
-      preparingAssets.current = false;
-      return;
-    }
-    if (router.query.tag && !tags.length) {
-      setPlaceHolders("asset", true);
-      loadTags();
-      return;
-    }
-    if (router.query.product && !productFields.sku.length) {
-      setPlaceHolders("asset", true);
-      loadProductFields();
-      return;
-    }
-
-    if (router.query.collection && !collection.length) {
-      setPlaceHolders("asset", true);
-      loadFolders();
-      return;
-    }
-
-    if (router.query.campaign && !campaigns.length) {
-      setPlaceHolders("asset", true);
-      loadCampaigns();
-      return;
-    }
-
-    const newSortFilter: any = { ...activeSortFilter };
-
-    if (router.query.campaign) {
-      const foundCampaign = campaigns.find(({ name }) => name === router.query.campaign);
-      if (foundCampaign) {
-        newSortFilter.filterCampaigns = [
-          {
-            ...foundCampaign,
-            value: foundCampaign.id,
-          },
-        ];
-      }
-      preparingAssets.current = false;
-      setActiveSortFilter(newSortFilter);
-      return;
-    }
-
-    // Query folder
-    if (router.query.collection) {
-      const foundCollection = collection.find(({ name }) => name === router.query.collection);
-      if (foundCollection) {
-        newSortFilter.filterFolders = [
-          {
-            ...foundCollection,
-            value: foundCollection.id,
-          },
-        ];
-        newSortFilter.mainFilter = "folders";
-      }
-      preparingAssets.current = false;
-      setActiveSortFilter(newSortFilter);
-      return;
-    }
-
-    if (router.query.product) {
-      const foundProduct = productFields.sku.find(({ sku }) => sku === router.query.product);
-      if (foundProduct) {
-        newSortFilter.filterProductSku = [
-          {
-            ...foundProduct,
-            value: foundProduct.sku,
-          },
-        ];
-      }
-      preparingAssets.current = false;
-      setActiveSortFilter(newSortFilter);
-      return;
-    }
-
-    if (router.query.tag) {
-      const foundTag = tags.find(({ name }) => name === router.query.tag);
-      if (foundTag) {
-        newSortFilter.filterNonAiTags = [
-          {
-            ...foundTag,
-            value: foundTag.id,
-          },
-        ];
-      }
-      preparingAssets.current = false;
-      setActiveSortFilter(newSortFilter);
-      return;
-    }
-  }, [tags, productFields.sku, collection, campaigns]);
+  // useEffect(() => {
+  //   if (!preparingAssets.current) return;
+  //   if (!router.query.tag && !router.query.product && !router.query.collection && !router.query.campaign) {
+  //     preparingAssets.current = false;
+  //     return;
+  //   }
+  //   if (router.query.tag && !tags.length) {
+  //     setPlaceHolders("asset", true);
+  //     loadTags();
+  //     return;
+  //   }
+  //   if (router.query.product && !productFields.sku.length) {
+  //     setPlaceHolders("asset", true);
+  //     loadProductFields();
+  //     return;
+  //   }
+  //
+  //   if (router.query.collection && !collection.length) {
+  //     setPlaceHolders("asset", true);
+  //     loadFolders();
+  //     return;
+  //   }
+  //
+  //   if (router.query.campaign && !campaigns.length) {
+  //     setPlaceHolders("asset", true);
+  //     loadCampaigns();
+  //     return;
+  //   }
+  //
+  //   const newSortFilter: any = { ...activeSortFilter };
+  //
+  //   if (router.query.campaign) {
+  //     const foundCampaign = campaigns.find(({ name }) => name === router.query.campaign);
+  //     if (foundCampaign) {
+  //       newSortFilter.filterCampaigns = [
+  //         {
+  //           ...foundCampaign,
+  //           value: foundCampaign.id,
+  //         },
+  //       ];
+  //     }
+  //     preparingAssets.current = false;
+  //     setActiveSortFilter(newSortFilter);
+  //     return;
+  //   }
+  //
+  //   // Query folder
+  //   if (router.query.collection) {
+  //     const foundCollection = collection.find(({ name }) => name === router.query.collection);
+  //     if (foundCollection) {
+  //       newSortFilter.filterFolders = [
+  //         {
+  //           ...foundCollection,
+  //           value: foundCollection.id,
+  //         },
+  //       ];
+  //       newSortFilter.mainFilter = "folders";
+  //     }
+  //     preparingAssets.current = false;
+  //     setActiveSortFilter(newSortFilter);
+  //     return;
+  //   }
+  //
+  //   if (router.query.product) {
+  //     const foundProduct = productFields.sku.find(({ sku }) => sku === router.query.product);
+  //     if (foundProduct) {
+  //       newSortFilter.filterProductSku = [
+  //         {
+  //           ...foundProduct,
+  //           value: foundProduct.sku,
+  //         },
+  //       ];
+  //     }
+  //     preparingAssets.current = false;
+  //     setActiveSortFilter(newSortFilter);
+  //     return;
+  //   }
+  //
+  //   if (router.query.tag) {
+  //     console.log(`>>> Should load tag here`);
+  //     const foundTag = tags.find(({ name }) => name === router.query.tag);
+  //     if (foundTag) {
+  //       newSortFilter.mainFilter = "all";
+  //
+  //       newSortFilter.filterNonAiTags = [
+  //         {
+  //           ...foundTag,
+  //           value: foundTag.id,
+  //         },
+  //       ];
+  //     }
+  //     preparingAssets.current = false;
+  //     console.log(`Filter`, newSortFilter);
+  //     setActiveSortFilter(newSortFilter);
+  //     return;
+  //   }
+  // }, [tags, productFields.sku, collection, campaigns]);
 
   useEffect(() => {
     if (hasPermission([ASSET_ACCESS])) {
@@ -233,7 +238,13 @@ const AssetsLibrary = () => {
       if (firstLoaded) {
         //} && renderFlag) {
         setActivePageMode("library");
-        if (activeSortFilter.mainFilter === "folders") {
+
+        if (
+          activeSortFilter.mainFilter === "folders" &&
+          !router.query.tag &&
+          !router.query.campaign &&
+          !router.query.product
+        ) {
           setActiveMode("folders");
           getFolders();
         } else {
@@ -245,14 +256,14 @@ const AssetsLibrary = () => {
     }
   }, [activeSortFilter, firstLoaded, term]);
 
-  useEffect(() => {
-    if (firstLoaded && activeFolder !== "") {
-      setActiveSortFilter({
-        ...activeSortFilter,
-        mainFilter: "all",
-      });
-    }
-  }, [activeFolder]);
+  // useEffect(() => {
+  //   if (firstLoaded && activeFolder !== "") {
+  //     setActiveSortFilter({
+  //       ...activeSortFilter,
+  //       mainFilter: "all",
+  //     });
+  //   }
+  // }, [activeFolder]);
 
   useEffect(() => {
     if (needsFetch === "assets") {
