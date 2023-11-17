@@ -26,6 +26,10 @@ const Search = (props) => {
   const contentRef = useRef(null);
   let isOpen = openFilters;
 
+  useEffect(() => {
+    if(openFilters) applyingSerchAndFilters()
+  }, [filtersTags])
+
   const { advancedConfig } = useContext(UserContext);
 
   const searchModes = [
@@ -81,6 +85,7 @@ const Search = (props) => {
 
   const addTag = (tag, isFilter) => {
     let selectedItems = [...filtersTags];
+
     if (isFilter) {
       selectedItems = selectedItems?.filter((item) => {
         const isSelected = searchModes?.some(
@@ -126,26 +131,30 @@ const Search = (props) => {
     }
   };
 
+  const applyingSerchAndFilters = () => {
+    const selectedModes = searchModes
+      ?.filter((filter) => {
+        return filtersTags?.some((tag) => tag.value === filter.value);
+      })
+      ?.map((item) => item.value);
+
+    const from = searchFrom
+      ?.filter((filter) => {
+        return filtersTags?.some((tag) => tag.value === filter.value);
+      })
+      ?.map((item) => item.value);
+
+    props.onSubmit(input, {
+      advSearchMode: selectedModes,
+      advSearchFrom: from,
+    });
+  }
+
   return (
     <form
       onSubmit={(e) => {
-        e.preventDefault();
-        const selectedModes = searchModes
-          ?.filter((filter) => {
-            return filtersTags?.some((tag) => tag.value === filter.value);
-          })
-          ?.map((item) => item.value);
-
-        const from = searchFrom
-          ?.filter((filter) => {
-            return filtersTags?.some((tag) => tag.value === filter.value);
-          })
-          ?.map((item) => item.value);
-
-        props.onSubmit(input, {
-          advSearchMode: selectedModes,
-          advSearchFrom: from,
-        });
+        e.preventDefault();        
+        applyingSerchAndFilters();
       }}
     >
       <div className={styles.form}>
@@ -162,11 +171,11 @@ const Search = (props) => {
               onKeyUp={(e) => hideSearchOnEnter(e)}
               value={input}
               placeholder={props.placeholder || "Search"}
-              className={`${styles.container} ${
-                props.styleType && styles[props.styleType]
-              }`}
+              className={`${styles.container} ${props.styleType && styles[props.styleType]
+                }`}
             />
           </div>
+
           {filtersTags.length > 0 && (
             <div className={styles.tags}>
               {filtersTags?.map((tag, index) => (
@@ -195,9 +204,8 @@ const Search = (props) => {
                   return (
                     <li
                       key={`filter-${index}`}
-                      className={`${styles.filter} ${
-                        active ? styles["filter-active"] : ""
-                      }`}
+                      className={`${styles.filter} ${active ? styles["filter-active"] : ""
+                        }`}
                       onClick={() => addTag(filter, true)}
                     >
                       {filter.label}
@@ -216,9 +224,8 @@ const Search = (props) => {
                   return (
                     <li
                       key={`limit-by-${index}`}
-                      className={`${styles.limit} ${
-                        active ? styles["limit-active"] : ""
-                      }`}
+                      className={`${styles.limit} ${active ? styles["limit-active"] : ""
+                        }`}
                       onClick={() => addTag(item, false)}
                     >
                       <img src={item.icon} />

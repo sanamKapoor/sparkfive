@@ -630,6 +630,7 @@ const AssetHeaderOps = ({
             ))
         )}
       </div>
+      
       {((!isFolder && !isSubCollection && !deletedAssets) ||
         totalSubFoldersAndAssets.assets > 0) &&
         !isShare && (

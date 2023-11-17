@@ -87,6 +87,7 @@ const AssetAddition = ({
     try {
       const formData = new FormData();
       let file = assets[i].file.originalFile;
+
       let currentUploadingFolderId = null;
       let newAssets = 0;
       // debugger;
@@ -331,7 +332,7 @@ const AssetAddition = ({
     }
   };
 
-  const onFilesDataGet = async (files) => {
+  const onFilesDataGet = async (files) => {    
     const currentDataClone = [...assets];
     const currenFolderClone = [...folders];
     // debugger;
@@ -463,14 +464,13 @@ const AssetAddition = ({
 
       setAssets(currentDataClone);
       setFolders(currenFolderClone);
-      console.log(err);
       if (err.response?.status === 402)
         toastUtils.error(err.response.data.message);
       else toastUtils.error("Could not upload assets, please try again later.");
     }
   };
 
-  const onDropboxFilesSelection = async (files) => {
+  const onDropboxFilesSelection = async (files) => {    
     if (advancedConfig.duplicateCheck) {
       const names = files.map((file) => file["name"]);
       const {
@@ -495,7 +495,7 @@ const AssetAddition = ({
     }
   };
 
-  const onDropboxFilesGet = async (files) => {
+  const onDropboxFilesGet = async (files) => {    
     let currentDataClone = [...assets];
     try {
       let totalSize = 0;
@@ -762,7 +762,6 @@ const AssetAddition = ({
       closeSearchOverlay();
       toastUtils.success("Assets imported successfully");
     } catch (err) {
-      console.log(err);
       closeSearchOverlay();
       toastUtils.error("Could not import Assets. Please try again later");
     }
@@ -896,13 +895,15 @@ const AssetAddition = ({
   const onFileChange = async (e) => {
     const files = Array.from(e.target.files).map((originalFile) => ({
       originalFile,
-    }));
+    }));    
+    
     // debugger;
     if (advancedConfig.duplicateCheck) {
       const names = files.map((file) => file.originalFile["name"]);
       const {
         data: { duplicateAssets },
       } = await assetApi.checkDuplicates(names);
+
       if (duplicateAssets.length) {
         setSelectedFiles(files);
         setDuplicateAssets(duplicateAssets);
@@ -922,7 +923,11 @@ const AssetAddition = ({
     }
   };
 
-  const onConfirmDuplicates = (nameHistories) => {
+  const onFileClick = (e) => {
+    e.target.value = null;
+  }
+
+  const onConfirmDuplicates = (nameHistories) => {        
     setDuplicateModalOpen(false);
     let files = [...selectedFiles];
     if (uploadFrom === "browser") {
@@ -1023,6 +1028,7 @@ const AssetAddition = ({
         style={{ display: "none" }}
         type="file"
         onChange={onFileChange}
+        onClick={onFileClick}
       />
 
       <input
@@ -1033,6 +1039,7 @@ const AssetAddition = ({
         style={{ display: "none" }}
         type="file"
         onChange={onFileChange}
+        onClick={onFileClick}
       />
 
       {displayMode === "dropdown" ? (
