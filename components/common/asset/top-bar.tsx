@@ -358,14 +358,15 @@ const TopBar = ({
 
           {/* {!deletedAssets && !isMobile && ( */}
           <div className={styles["nested-wrapper"]}>
-            <Button
+            {/* old filter button needed to be removed */}
+            {/* <Button
               text="Filters"
               type="button"
               className="container secondary filter-btn-mob"
               onClick={() => {
                 handleOpenFilter();
               }}
-            />
+            /> */}
           </div>
           {/* )} */}
 

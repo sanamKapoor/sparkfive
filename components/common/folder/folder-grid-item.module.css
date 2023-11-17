@@ -214,15 +214,15 @@
 
 .list-image-wrapper {
   max-width: 64px;
-
-  height: 100%;
+height: 100%;
+margin-right:12px;
 }
 .listContainer img {
   max-width: 64px;
   width: 100%;
+ 
 }
-.list-text {
-}
+
 .list-main-border {
   border: none;
   height: unset;

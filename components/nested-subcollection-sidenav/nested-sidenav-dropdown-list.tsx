@@ -164,7 +164,7 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
   }, [listUpdateFlag]);
   return (
     <div>
-      <ReusableHeading description="All Collections" text="Collections" headingClickType="folders"
+      <ReusableHeading description="All Collections" text="All Collections" headingClickType="folders"
         headingTrue={activeSortFilter.mainFilter === "folders"}
         headingClick={headingClick}
         totalCount={sidenavTotalCollectionCount}
