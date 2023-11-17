@@ -56,8 +56,6 @@ export default ({ children }) => {
 
     const needTwoFactor = cookiesUtils.get("twoFactor");
 
-    console.log(">>> fetch user", { jwt, needTwoFactor });
-
     cookiesUtils.remove("twoFactor");
     if (needTwoFactor && Router.pathname.indexOf("/two-factor") === -1) {
       return Router.replace("/two-factor");
