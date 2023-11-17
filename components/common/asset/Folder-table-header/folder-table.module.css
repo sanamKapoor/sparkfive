@@ -1,8 +1,7 @@
 .listHeader{
     width: 100%;
     height:40px;
-    background:
-    #F6EFE4 ;
+    background:#E9EEFA; 
     padding: 10px;
     margin-bottom:10px;
   }
@@ -20,8 +19,19 @@
     display: grid;
     grid-template-columns:  40% 30% 20% 10%;
   }
+  .listWrapper span{
+    color:#817D9D;
+    font-size: 12px;
+    font-weight: 500;
+    margin-right: 4px;
+
+  }
   .listWrapper img{
     cursor: pointer;
+  }
+  .headContent{
+    display: flex;
+    align-items: center;
   }
 
   @media (max-width:475px){

@@ -140,6 +140,9 @@
   display: flex;
   align-items: center;
 }
+.nested-wrapper Button{
+  display: none;
+}
 
 .filter {
   display: none;
@@ -449,7 +452,10 @@ li.dropdown-title {
   .selected-wrapper-mob{
     width: 100%;
   }
-
+  .nested-wrapper Button{
+    display: block;
+  }
+  
 }
 
 .container button span {

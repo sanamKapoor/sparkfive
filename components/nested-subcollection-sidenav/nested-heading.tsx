@@ -13,6 +13,7 @@ const ReusableHeading = ({
   headingClickType = "",
   description = "",
   customStyle,
+  fontSize,
 }: {
   totalCount?: number;
   text: string;
@@ -22,6 +23,7 @@ const ReusableHeading = ({
   headingTrue?: boolean;
   description?: string;
   customStyle?: React.CSSProperties;
+  fontSize?: string;
 }) => {
   const { hasPermission } = useContext(UserContext);
 
@@ -29,7 +31,7 @@ const ReusableHeading = ({
     text === "All Collections" && hasPermission([ASSET_UPLOAD_NO_APPROVAL]);
 
   return (
-    <div className={styles["heading-contents"]} style={customStyle}>
+    <div className={styles["heading-contents"]} style={{...customStyle,fontSize}}>
       <div
         className={`${styles["sidenav-heading"]} ${
           headingTrue ? styles["active"] : ""

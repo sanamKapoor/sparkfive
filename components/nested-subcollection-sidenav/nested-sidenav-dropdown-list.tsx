@@ -183,7 +183,7 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
                 <div className={styles.w100} onClick={() => viewFolder(item.id, true, "", item.name)} >
                   <div className={styles.mainWrapper}  >
                     <div className={styles.flex}>
-                      <img src={Utilities.folder} />
+                      <img src={Utilities.foldernew} />
                       <div className={styles["icon-descriptions"]} >
                         <span title={JSON.stringify(item.name)}>{item.name}</span>
                       </div>
@@ -197,7 +197,11 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
                   </div>
 
                 </div>
+                <div className={styles.abc}>
                 {showDropdown[index] && <NestedButton type={"subCollection"} parentId={item.id} />}
+
+                </div>
+               
               </div>
             </div>
             {showDropdown[index] && (
@@ -225,7 +229,7 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
                                 </div>
                               </div>
                               <div className={styles["list1-right-contents"]}>
-                                <span>{record.assets.length}</span>
+                                <span className=''>{record.assets.length}</span>
                               </div>
                             </div>
                           </div>

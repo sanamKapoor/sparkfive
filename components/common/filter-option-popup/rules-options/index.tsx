@@ -30,7 +30,7 @@ const RulesOptions: React.FC<RulesOptionsProps> = ({
           <p>{activeRuleName}</p>
           <IconClickable
             additionalClass={styles["dropdown-icon"]}
-            src={Utilities.arrowDark}
+            src={Utilities.downIconLight}
           />
         </div>
       </div>
