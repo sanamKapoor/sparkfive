@@ -24,8 +24,6 @@ import selectOptions from "../../utils/select-options";
 import Spinner from "../common/spinners/spinner";
 import SharedPageSidenav from "./shared-nested-sidenav/shared-nested-sidenav";
 
-import FilterView from "../../components/common/filter-view";
-
 const ShareFolderMain = () => {
   const router = useRouter();
 
@@ -644,11 +642,6 @@ const ShareFolderMain = () => {
             className={`${assetGridWrapperStyle} ${styles["mainContainer"]}`}
             style={{ marginTop: top }}
           >
-            {showFilterView && (
-              <div className={styles.filterViewWrapper}>
-                <FilterView />
-              </div>
-            )}
             <AssetGrid
               activeFolder={activeFolder}
               getFolders={getFolders}
