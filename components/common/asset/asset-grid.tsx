@@ -459,16 +459,17 @@ const AssetGrid = ({
                 />
               )}
 
-              {mode === "assets" &&
-                sortedAssets.map((assetItem, index) => {
-                  if (assetItem.status !== "fail") {
-                    return (
-                      <>
-                        <AssetTableHeader
-                          index={index}
-                          activeView={activeView}
-                          setSortAttribute={setSortAssetAttribute}
-                        />
+              {mode === "assets" && (
+                <>
+                  {activeView === "list" && (
+                    <AssetTableHeader
+                      activeView={activeView}
+                      setSortAttribute={setSortAssetAttribute}
+                    />
+                  )}
+                  {sortedAssets.map((assetItem, index) => {
+                    if (assetItem.status !== "fail") {
+                      return (
                         <li
                           className={styles["grid-item"]}
                           key={assetItem.asset.id || index}
@@ -519,20 +520,23 @@ const AssetGrid = ({
                             mode={mode}
                           />
                         </li>
-                      </>
-                    );
-                  }
-                })}
+                      );
+                    }
+                  })}
+                </>
+              )}
 
-              {mode === "folders" &&
-                sortedFolders.map((folder, index) => {
-                  return (
-                    <>
-                      <FolderTableHeader
-                        index={index}
-                        activeView={activeView}
-                        setSortAttribute={setSortFolderAttribute}
-                      />
+              {mode === "folders" && (
+                <>
+                  {activeView === "list" && (
+                    <FolderTableHeader
+                      activeView={activeView}
+                      setSortAttribute={setSortFolderAttribute}
+                    />
+                  )}
+
+                  {sortedFolders.map((folder, index) => {
+                    return (
                       <li
                         className={styles["grid-item"]}
                         key={folder.id || index}
@@ -563,9 +567,10 @@ const AssetGrid = ({
                           mode={mode}
                         />
                       </li>
-                    </>
-                  );
-                })}
+                    );
+                  })}
+                </>
+              )}
             </ul>
           }
 
