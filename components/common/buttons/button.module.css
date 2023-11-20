@@ -247,21 +247,21 @@ console
   background:
     #10BDA5;
   height: 40px;
-  max-width: 120px;
+  max-width: 138px;
   width: 100%;
   border-radius: 4px;
   color: #fff;
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
-  margin-right: 16px;
+ 
 }
 
 .cancel {
   background:
     #fff;
   height: 40px;
-  max-width: 120px;
+  max-width: 138px;
   width: 100%;
   border-radius: 4px;
   color:
@@ -434,7 +434,7 @@ console
 }
 .text-success-btn{
   font-weight: 400;
-  font-size: 14px;
+  font-size: 12px;
   color:#10BDA5;
   background: transparent;
   cursor: pointer;

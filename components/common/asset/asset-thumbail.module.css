@@ -82,9 +82,12 @@
   overflow: hidden;
   font-size: 13px;
   font-weight: 500;
-  max-width: 300px;
+  max-width: 150px;
   padding-left:10px;
   padding-top: 10px;
+}
+.sizeMargin{
+  margin-bottom: 10px;
 }
 
 @keyframes halfopacity {
@@ -228,4 +231,22 @@
 
 .modified-date{
   margin-left:10px;
+}
+
+@media (max-width:420px){
+  .listContainer{
+    grid-template-columns: 50% 25% 25%;
+
+  }
+
+  .extension{
+    display: none;
+  }
+  /* .modified-date{
+    display: none;
+  } */
+  .modified-date-list{
+    display: none;
+  }
+
 }

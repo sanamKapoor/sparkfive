@@ -11,25 +11,25 @@ const AssetTableHeader = ({
     {index === 0 && activeView === "list" ? (
       <div className={styles.listHeader}>
         <div className={styles.listWrapper}>
-          <div className={styles.headContent1}>
+          <div className={styles.headContent}>
             <span>Name</span>
-            <img src={Utilities.arrowDownUp} onClick={() => setSortAttribute("asset.name")} />
+            <img src={Utilities.arrowDownUpLight} onClick={() => setSortAttribute("asset.name")} />
           </div>
-          <div className={styles.headContent2}>
+          <div className={styles.headContent}>
             <span>Size</span>
-            <img src={Utilities.arrowDownUp} onClick={() => setSortAttribute("asset.size")} />
+            <img src={Utilities.arrowDownUpLight} onClick={() => setSortAttribute("asset.size")} />
           </div>
-          <div className={styles.headContent3} >
+          <div className={`${styles['headContent']} ${styles['upload-date']}`}>
             <span>Uploaded date</span>
-            <img src={Utilities.arrowDownUp} onClick={() => setSortAttribute("asset.created-at")} />
+            <img src={Utilities.arrowDownUpLight} onClick={() => setSortAttribute("asset.created-at")} />
           </div>
-          <div className={styles.headContent4} >
+          <div className={`${styles['headContent']} ${styles['date-modified']}`} >
             <span>Date modified</span>
-            <img src={Utilities.arrowDownUp} onClick={() => setSortAttribute("asset.created-at")} />
+            <img src={Utilities.arrowDownUpLight} onClick={() => setSortAttribute("asset.created-at")} />
           </div>
-          <div className={styles.headContent5} >
+          <div className={`${styles['headContent']} ${styles['extension']}`} >
             <span>Extension</span>
-            <img src={Utilities.arrowDownUp} onClick={() => setSortAttribute("asset.extension")} />
+            <img src={Utilities.arrowDownUpLight} onClick={() => setSortAttribute("asset.extension")} />
           </div>
           <div className={styles.headContent6}>
             <span>Action</span>

@@ -34,6 +34,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(246px, 1fr));
   grid-gap: 40px;
+  margin-top: 10px;
 }
 @media screen and (max-width: 600px) {
   .grid-list{

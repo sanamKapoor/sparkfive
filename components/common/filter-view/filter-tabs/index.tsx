@@ -148,7 +148,7 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
 
                 <img
                   className={`${styles["arrow-down"]}`}
-                  src={Utilities.downIcon}
+                  src={Utilities.downIconLight}
                   alt=""
                 />
               </div>
