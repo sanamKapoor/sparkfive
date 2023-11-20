@@ -233,16 +233,17 @@ const SubCollection = ({
               activeView === "list" && styles["list-wrapper"]
             }`}
           >
-            {!assetsHide &&
-              sortedAssets.map((assetItem, index) => {
-                if (assetItem.status !== "fail") {
-                  return (
-                    <div>
-                      <AssetTableHeader
-                        index={index}
-                        activeView={activeView}
-                        setSortAttribute={setSortAssetAttribute}
-                      />
+            {!assetsHide && (
+              <>
+                {activeView === "list" && (
+                  <AssetTableHeader
+                    activeView={activeView}
+                    setSortAttribute={setSortAssetAttribute}
+                  />
+                )}
+                {sortedAssets.map((assetItem, index) => {
+                  if (assetItem.status !== "fail") {
+                    return (
                       <li
                         className={styles["grid-item"]}
                         key={assetItem.asset.id || index}
@@ -293,10 +294,11 @@ const SubCollection = ({
                           mode={mode}
                         />
                       </li>
-                    </div>
-                  );
-                }
-              })}
+                    );
+                  }
+                })}
+              </>
+            )}
           </div>
           {nextAsset > 0 && (
             <>
