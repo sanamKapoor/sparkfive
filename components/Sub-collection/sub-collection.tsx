@@ -132,46 +132,45 @@ const SubCollection = ({
               activeView === "list" && styles["list-wrapper"]
             }`}
           >
+            {activeView === "list" && (
+              <FolderTableHeader
+                activeView={activeView}
+                setSortAttribute={setSortFolderAttribute}
+              />
+            )}
             {sortedFolders.map((folder, index) => {
               return (
-                <>
-                  <FolderTableHeader
-                    index={index}
+                <li
+                  className={styles["grid-item"]}
+                  key={folder.id || index}
+                  onClick={(e) => handleFocusChange(e, folder.id)}
+                  ref={ref}
+                  style={{ width: `$${widthCard}px` }}
+                >
+                  <FolderGridItem
+                    {...folder}
+                    isShare={isShare}
+                    sharePath={sharePath}
+                    toggleSelected={() => toggleSelected(folder.id)}
+                    viewFolder={() => viewFolder(folder.id)}
+                    deleteFolder={() => deleteFolder(folder.id)}
+                    copyShareLink={() => copyShareLink(folder)}
+                    copyEnabled={getShareIsEnabled(folder)}
+                    shareAssets={() =>
+                      beginAssetOperation({ folder }, "shareFolders")
+                    }
+                    changeThumbnail={beginChangeThumbnailOperation}
+                    deleteThumbnail={() =>
+                      deleteThumbnail({ folder }, "shareFolders")
+                    }
                     activeView={activeView}
-                    setSortAttribute={setSortFolderAttribute}
+                    isThumbnailNameEditable={isThumbnailNameEditable}
+                    focusedItem={focusedItem}
+                    setFocusedItem={setFocusedItem}
+                    folderType="SubCollection"
+                    mode={mode}
                   />
-                  <li
-                    className={styles["grid-item"]}
-                    key={folder.id || index}
-                    onClick={(e) => handleFocusChange(e, folder.id)}
-                    ref={ref}
-                    style={{ width: `$${widthCard}px` }}
-                  >
-                    <FolderGridItem
-                      {...folder}
-                      isShare={isShare}
-                      sharePath={sharePath}
-                      toggleSelected={() => toggleSelected(folder.id)}
-                      viewFolder={() => viewFolder(folder.id)}
-                      deleteFolder={() => deleteFolder(folder.id)}
-                      copyShareLink={() => copyShareLink(folder)}
-                      copyEnabled={getShareIsEnabled(folder)}
-                      shareAssets={() =>
-                        beginAssetOperation({ folder }, "shareFolders")
-                      }
-                      changeThumbnail={beginChangeThumbnailOperation}
-                      deleteThumbnail={() =>
-                        deleteThumbnail({ folder }, "shareFolders")
-                      }
-                      activeView={activeView}
-                      isThumbnailNameEditable={isThumbnailNameEditable}
-                      focusedItem={focusedItem}
-                      setFocusedItem={setFocusedItem}
-                      folderType="SubCollection"
-                      mode={mode}
-                    />
-                  </li>
-                </>
+                </li>
               );
             })}
           </div>
