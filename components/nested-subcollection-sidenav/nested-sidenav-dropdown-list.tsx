@@ -175,7 +175,8 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
             <div key={index} className={`${styles["flex"]} ${styles.nestedbox}`}>
               {item?.childFolders?.length > 0 ?
                 (<div className={styles.clickable} onClick={() => toggleDropdown(index, item, true)}>
-                  <img className={showDropdown[index] ? styles.iconClick : styles.rightIcon} src={Utilities.arrowBlue} />
+                  <img className={showDropdown[index] ? styles.iconClick : styles.rightIcon} src={Utilities.caretRightSolid} />
+                 
                 </div>)
                 :
                 <div className={styles.emptyBox}></div>
@@ -192,17 +193,13 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
                       <div className={styles["list1-right-contents"]}>
                         <span>{item.assetsCount}</span>
                       </div>
-
                     </div>
                   </div>
-
                 </div>
                 <div className={styles.abc}>
                 {showDropdown[index] && <NestedButton type={"subCollection"} parentId={item.id} />}
-
-                </div>
-               
               </div>
+            </div>
             </div>
             {showDropdown[index] && (
               <div className={styles.folder}>

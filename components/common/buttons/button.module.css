@@ -258,14 +258,12 @@ console
 }
 
 .cancel {
-  background:
-    #fff;
+  background: #fff;
   height: 40px;
   max-width: 138px;
   width: 100%;
   border-radius: 4px;
-  color:
-    #AEB0C2;
+  color: #AEB0C2;
   font-weight: 600;
   font-size: 14px;
   border: 1px solid #AEB0C2;
@@ -443,8 +441,7 @@ console
 .text-primary-btn{
   font-weight: 500;
   font-size: 14px;
-  color:
-  #08135E;
+  color:#08135E;
   background: transparent;
   cursor: pointer;
 }

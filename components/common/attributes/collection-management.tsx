@@ -17,6 +17,8 @@ import SpinnerOverlay from "../spinners/spinner-overlay";
 import { sorts } from "../../../config/data/attributes";
 import toastUtils from "../../../utils/toast";
 import Input from "../inputs/input";
+import IconClickable from "../buttons/icon-clickable";
+import { Utilities } from "../../../assets";
 
 const CollectionManagement = () => {
   const [activeDropdown, setActiveDropdown] = useState("");
@@ -84,9 +86,11 @@ const CollectionManagement = () => {
       toastUtils.success("Collection deleted successfully");
     } catch (err) {
       setLoading(false);
-      toastUtils.error(err?.response?.data?.message || "Something went wrong please try again later");
+      toastUtils.error(
+        err?.response?.data?.message ||
+          "Something went wrong please try again later"
+      );
     }
-
   };
 
   // Reset edit state
@@ -122,7 +126,9 @@ const CollectionManagement = () => {
   }, [sort, searchKey]);
 
   return (
-    <div className={`${styles['main-wrapper']} ${styles['collection-management-wrapper']}`}>
+    <div
+      className={`${styles["main-wrapper"]} ${styles["collection-management-wrapper"]}`}
+    >
       <h3>Collections</h3>
 
       <div className={styles["search-row"]}>
@@ -178,11 +184,11 @@ const CollectionManagement = () => {
           onAddClick={() => setActiveDropdown("folders")}
           selectPlaceholder={"Enter a new collection"}
           avilableItems={[]}
-          setAvailableItems={() => { }}
+          setAvailableItems={() => {}}
           selectedItems={[]}
-          setSelectedItems={() => { }}
-          onAddOperationFinished={() => { }}
-          onRemoveOperationFinished={() => { }}
+          setSelectedItems={() => {}}
+          onAddOperationFinished={() => {}}
+          onRemoveOperationFinished={() => {}}
           onOperationFailedSkipped={() => setActiveDropdown("")}
           isShare={false}
           asyncCreateFn={createFolder}
@@ -203,33 +209,94 @@ const CollectionManagement = () => {
 
       <ul className={styles["tag-wrapper"]}>
         {folderList.map((folder, index) => (
-          <li key={index} className={styles["tag-item"]}>
+          <li
+            key={index}
+            className={`${styles["tag-item"]} ${styles["attribute-tag-list"]}`}
+          >
             {(editMode === false ||
               (editMode === true && currentEditIndex !== index)) && (
-                <Tag
-                  altColor="blue"
-                  tag={
-                    <>
-                      <span className={styles["tag-item-text"]}>
-                        {folder.numberOfFiles}
-                      </span>{" "}
-                      <span>{folder.name}</span>
-                    </>
-                  }
-                  data={folder}
-                  type="collection"
-                  canRemove={true}
-                  editFunction={() => {
-                    setCurrentEditIndex(index);
-                    setCurrentEditValue(folder.name);
-                    setEditMode(true);
-                  }}
-                  removeFunction={() => {
-                    setCurrentDeleteId(folder.id);
-                    setConfirmDeleteModal(true);
-                  }}
-                />
-              )}
+              // <Tag
+              //   altColor="blue"
+              //   tag={
+              //     <>
+              //       <span className={styles["tag-item-text"]}>
+              //         {folder.numberOfFiles}
+              //       </span>{" "}
+              //       <span>{folder.name}</span>
+              //     </>
+              //   }
+              //   data={folder}
+              //   type="collection"
+              //   canRemove={true}
+              //   editFunction={() => {
+              //     setCurrentEditIndex(index);
+              //     setCurrentEditValue(folder.name);
+              //     setEditMode(true);
+              //   }}
+              //   removeFunction={() => {
+              //     setCurrentDeleteId(folder.id);
+              //     setConfirmDeleteModal(true);
+              //   }}
+              // />
+
+              // new design added acoording
+              <div className={`${styles["outer-wrapper"]}`}>
+                <div className={`${styles["attribute-wrapper"]}`}>
+                  <IconClickable src={Utilities.caretRightsingle} />
+                  {/* <IconClickable src={Utilities.CaretDown}/> */}
+                  <Tag
+                    altColor="blue"
+                    tag={
+                      <>
+                        <span className={styles["tag-item-text"]}>
+                          {folder.numberOfFiles}
+                        </span>{" "}
+                        <span>{folder.name}</span>
+                      </>
+                    }
+                    data={folder}
+                    type="collection"
+                    canRemove={true}
+                    editFunction={() => {
+                      setCurrentEditIndex(index);
+                      setCurrentEditValue(folder.name);
+                      setEditMode(true);
+                    }}
+                    removeFunction={() => {
+                      setCurrentDeleteId(folder.id);
+                      setConfirmDeleteModal(true);
+                    }}
+                  />
+                </div>
+                {/* only static need to change this  */}
+                <div className={styles.subList}>
+                  <Tag
+                    altColor="blue"
+                    tag={
+                      <>
+                        <span className={styles["tag-item-text"]}>
+                          {folder.numberOfFiles}
+                        </span>{" "}
+                        <span>{folder.name}</span>
+                      </>
+                    }
+                    data={folder}
+                    type="collection"
+                    canRemove={true}
+                    editFunction={() => {
+                      setCurrentEditIndex(index);
+                      setCurrentEditValue(folder.name);
+                      setEditMode(true);
+                    }}
+                    removeFunction={() => {
+                      setCurrentDeleteId(folder.id);
+                      setConfirmDeleteModal(true);
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+
             {editMode === true && currentEditIndex === index && (
               <div>
                 <Input

@@ -53,7 +53,7 @@
 }
 .main-heading-wrapper{
   display: flex;
-  align-items: center;
+  align-items: end;
  
 .newsidenav{
   margin-right: 10px;
