@@ -1,7 +1,6 @@
 import update from "immutability-helper";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { isMobile } from "react-device-detect";
 
 import { validation } from "../../../constants/file-validation";
 import {
@@ -26,7 +25,6 @@ import AssetHeaderOps from "../../common/asset/asset-header-ops";
 import AssetOps from "../../common/asset/asset-ops";
 import DetailOverlay from "../../common/asset/detail-overlay";
 import TopBar from "../../common/asset/top-bar";
-import FilterView from "../../common/filter-view";
 import { DropzoneProvider } from "../../common/misc/dropzone";
 import NoPermissionNotice from "../../common/misc/no-permission-notice";
 import RenameModal from "../../common/modals/rename-modal";
@@ -116,10 +114,6 @@ const AssetsLibrary = () => {
   const [firstLoaded, setFirstLoaded] = useState(false);
 
   const [renameModalOpen, setRenameModalOpen] = useState(false);
-
-  const [openFilter, setOpenFilter] = useState(
-    activeSortFilter?.mainFilter === "assets" ? true : false
-  );
 
   const router = useRouter();
 
@@ -233,7 +227,7 @@ const AssetsLibrary = () => {
           setFirstLoaded(true);
         }
       }
-      if (firstLoaded && renderFlag) {
+      if (firstLoaded) {
         setActivePageMode("library");
         if (activeSortFilter.mainFilter === "folders") {
           setActiveMode("folders");
@@ -288,15 +282,9 @@ const AssetsLibrary = () => {
 
   useEffect(() => {
     if (activeMode === "folders") {
-      setOpenFilter(false);
       setAssets(assets.map((asset) => ({ ...asset, isSelected: false })));
     }
     if (activeMode === "assets") {
-      if (isMobile) {
-        setOpenFilter(false);
-      } else {
-        setOpenFilter(true);
-      }
       setFolders(folders.map((folder) => ({ ...folder, isSelected: false })));
     }
     if (selectedAllAssets) selectAllAssets(false);
@@ -1037,10 +1025,11 @@ const AssetsLibrary = () => {
             results: update(subFoldersViewList?.results, {
               $splice: [[folderIndex, 1]],
             }),
-            total: subFoldersViewList.total > 0 ? subFoldersViewList.total - 1 : 0,
+            total:
+              subFoldersViewList.total > 0 ? subFoldersViewList.total - 1 : 0,
           });
         }
-        
+
         appendNewSubSidenavFolders([], activeSubFolders, true, id);
         toastUtils.success("Sub collection deleted successfully");
       } else {
@@ -1149,8 +1138,6 @@ const AssetsLibrary = () => {
                         setActiveSearchOverlay(true);
                       }}
                       selectAll={selectAll}
-                      setOpenFilter={setOpenFilter}
-                      openFilter={openFilter}
                       deletedAssets={false}
                       activeSearchOverlay={activeSearchOverlay}
                       closeSearchOverlay={closeSearchOverlay}
@@ -1168,13 +1155,8 @@ const AssetsLibrary = () => {
                       : styles["grid-wrapper"]
                   } ${activeFolder && styles["active-breadcrumb-item"]}`}
                 >
-                  {activeMode !== "folders" && (
-                    <div className={styles.wrapper}>
-                      <FilterView />
-                    </div>
-                  )}
                   <DropzoneProvider>
-                    {advancedConfig.set && renderFlag && (
+                    {advancedConfig.set && (
                       <AssetGrid
                         activeFolder={activeFolder}
                         getFolders={getFolders}
@@ -1188,7 +1170,6 @@ const AssetsLibrary = () => {
                         viewFolder={viewFolder}
                         deleteFolder={deleteFolder}
                         loadMore={loadMore}
-                        openFilter={openFilter}
                         onCloseDetailOverlay={(assetData) => {
                           setDetailOverlayId(undefined);
                           setCurrentViewAsset(assetData);

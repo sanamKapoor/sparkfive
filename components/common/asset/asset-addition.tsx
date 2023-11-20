@@ -70,6 +70,7 @@ const AssetAddition = ({
     setSubFoldersAssetsViewList,
     activeFolder,
     appendNewSubSidenavFolders,
+    setListUpdateFlag,
   } = useContext(AssetContext);
 
   // Upload asset
@@ -328,6 +329,7 @@ const AssetAddition = ({
         allAssets = _.uniqBy(allAssets, "asset.versionGroup");
 
         setAssets(allAssets);
+        setListUpdateFlag(true);
       }
     }
   };

@@ -46,7 +46,7 @@
   justify-content: space-between;
   width: 100%;
   box-sizing: border-box;
-  padding: 7.5px 5px;
+  padding: 7.5px 5px 7.5px 0;
   cursor: pointer;
   align-items: center;
 }
@@ -101,11 +101,11 @@
 }
 .rightIcon {
   margin-right: 5px;
-  transform: rotate(275deg);
+  transform: rotate(0deg);
   width: 11px;
 }
 .iconClick {
-  transform: rotate(0deg);
+  transform: rotate(91deg);
   margin-right: 5px;
   width: 11px;
 }
