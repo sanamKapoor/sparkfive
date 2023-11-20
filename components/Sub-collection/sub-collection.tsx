@@ -205,11 +205,7 @@ const SubCollection = ({
                     />
                   </div>
                 )}
-              </div>
-              <FilterView />
-            </>
-          )}
-          {sortedFolders.length > 0 && sortedAssets.length > 0 && (
+                 {sortedFolders.length > 0 && sortedAssets.length > 0 && (
             <div className={styles.tagOuter}>
               <div className={styles.left}>
                 <div className={styles.TagsInfo}>
@@ -228,6 +224,11 @@ const SubCollection = ({
               </div>
             </div>
           )}
+              </div>
+              <FilterView />
+            </>
+          )}
+         
           <div
             className={`${styles["assetWrapper"]} ${
               activeView === "list" && styles["list-wrapper"]

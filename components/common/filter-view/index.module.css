@@ -11,6 +11,7 @@
   flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 12px;
+  padding:20px 0;
 }
 
 .inner-wrapper {
