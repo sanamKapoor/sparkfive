@@ -256,14 +256,14 @@ const AssetsLibrary = () => {
     }
   }, [activeSortFilter, firstLoaded, term]);
 
-  // useEffect(() => {
-  //   if (firstLoaded && activeFolder !== "") {
-  //     setActiveSortFilter({
-  //       ...activeSortFilter,
-  //       mainFilter: "all",
-  //     });
-  //   }
-  // }, [activeFolder]);
+  useEffect(() => {
+    if (firstLoaded && activeFolder !== "") {
+      setActiveSortFilter({
+        ...activeSortFilter,
+        mainFilter: "all",
+      });
+    }
+  }, [activeFolder]);
 
   useEffect(() => {
     if (needsFetch === "assets") {
