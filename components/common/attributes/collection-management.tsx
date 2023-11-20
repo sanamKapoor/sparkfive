@@ -84,9 +84,11 @@ const CollectionManagement = () => {
       toastUtils.success("Collection deleted successfully");
     } catch (err) {
       setLoading(false);
-      toastUtils.error(err?.response?.data?.message || "Something went wrong please try again later");
+      toastUtils.error(
+        err?.response?.data?.message ||
+          "Something went wrong please try again later"
+      );
     }
-
   };
 
   // Reset edit state
@@ -122,7 +124,9 @@ const CollectionManagement = () => {
   }, [sort, searchKey]);
 
   return (
-    <div className={`${styles['main-wrapper']} ${styles['collection-management-wrapper']}`}>
+    <div
+      className={`${styles["main-wrapper"]} ${styles["collection-management-wrapper"]}`}
+    >
       <h3>Collections</h3>
 
       <div className={styles["search-row"]}>
@@ -178,11 +182,11 @@ const CollectionManagement = () => {
           onAddClick={() => setActiveDropdown("folders")}
           selectPlaceholder={"Enter a new collection"}
           avilableItems={[]}
-          setAvailableItems={() => { }}
+          setAvailableItems={() => {}}
           selectedItems={[]}
-          setSelectedItems={() => { }}
-          onAddOperationFinished={() => { }}
-          onRemoveOperationFinished={() => { }}
+          setSelectedItems={() => {}}
+          onAddOperationFinished={() => {}}
+          onRemoveOperationFinished={() => {}}
           onOperationFailedSkipped={() => setActiveDropdown("")}
           isShare={false}
           asyncCreateFn={createFolder}
@@ -206,30 +210,30 @@ const CollectionManagement = () => {
           <li key={index} className={styles["tag-item"]}>
             {(editMode === false ||
               (editMode === true && currentEditIndex !== index)) && (
-                <Tag
-                  altColor="blue"
-                  tag={
-                    <>
-                      <span className={styles["tag-item-text"]}>
-                        {folder.numberOfFiles}
-                      </span>{" "}
-                      <span>{folder.name}</span>
-                    </>
-                  }
-                  data={folder}
-                  type="collection"
-                  canRemove={true}
-                  editFunction={() => {
-                    setCurrentEditIndex(index);
-                    setCurrentEditValue(folder.name);
-                    setEditMode(true);
-                  }}
-                  removeFunction={() => {
-                    setCurrentDeleteId(folder.id);
-                    setConfirmDeleteModal(true);
-                  }}
-                />
-              )}
+              <Tag
+                altColor="blue"
+                tag={
+                  <>
+                    <span className={styles["tag-item-text"]}>
+                      {folder.numberOfFiles}
+                    </span>{" "}
+                    <span>{folder.name}</span>
+                  </>
+                }
+                data={folder}
+                type="collection"
+                canRemove={true}
+                editFunction={() => {
+                  setCurrentEditIndex(index);
+                  setCurrentEditValue(folder.name);
+                  setEditMode(true);
+                }}
+                removeFunction={() => {
+                  setCurrentDeleteId(folder.id);
+                  setConfirmDeleteModal(true);
+                }}
+              />
+            )}
             {editMode === true && currentEditIndex === index && (
               <div>
                 <Input

@@ -64,7 +64,6 @@ const ShareCollectionMain = () => {
   const [firstLoaded, setFirstLoaded] = useState(false);
   const [activePasswordOverlay, setActivePasswordOverlay] = useState(true);
   const [activeSearchOverlay, setActiveSearchOverlay] = useState(false);
-  const [openFilter, setOpenFilter] = useState(false);
   const [activeView, setActiveView] = useState("grid");
   const [sharePath, setSharePath] = useState("");
   const [activeMode, setActiveMode] = useState("assets");
@@ -368,16 +367,11 @@ const ShareCollectionMain = () => {
             setActiveView={setActiveView}
             setActiveSearchOverlay={() => setActiveSearchOverlay(true)}
             selectAll={selectAll}
-            setOpenFilter={setOpenFilter}
-            openFilter={openFilter}
             isShare={true}
             singleCollection={!!folderInfo.singleSharedCollectionId}
             sharedAdvanceConfig={user ? undefined : advancedConfig}
           />
-          <div
-            className={`${openFilter && styles["col-wrapper"]}`}
-            style={{ marginTop: top }}
-          >
+          <div style={{ marginTop: top }}>
             <AssetGrid
               activeFolder={activeFolder}
               getFolders={getFolders}
@@ -388,7 +382,6 @@ const ShareCollectionMain = () => {
               mode={activeMode}
               viewFolder={viewFolder}
               loadMore={loadMore}
-              openFilter={openFilter}
               sharePath={sharePath}
             />
           </div>

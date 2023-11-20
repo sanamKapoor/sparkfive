@@ -31,8 +31,7 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
   attributes,
   setAttributes,
 }) => {
-  const { activeSortFilter, setRenderedFlag, isPublic, sharePath } =
-    useContext(FilterContext);
+  const { activeSortFilter, isPublic, sharePath } = useContext(FilterContext);
   const {
     activeAttribute,
     loading,
@@ -71,7 +70,6 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
 
   useEffect(() => {
     getAttributes();
-    setRenderedFlag(true);
   }, []);
 
   const onMoreFiltersClick = async () => {

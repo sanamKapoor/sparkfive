@@ -46,7 +46,6 @@ const FolderGridItem = ({
   thumbnailPath,
   thumbnailExtension,
   thumbnails,
-  openFilter = false,
   activeView,
   isThumbnailNameEditable = false,
   focusedItem,
@@ -271,12 +270,8 @@ const FolderGridItem = ({
           <div
             className={
               thumbnailPath || thumbnailExtension
-                ? `${styles.grid_border} ${
-                    openFilter ? styles["filter_open"] : ""
-                  }`
-                : `${styles["image-wrapper"]} ${
-                    openFilter ? styles["filter_open"] : ""
-                  }
+                ? `${styles.grid_border} `
+                : `${styles["image-wrapper"]}
                 ${activeView === "list" && styles["list-image-wrapper"]}
                 `
             }
