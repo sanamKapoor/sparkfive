@@ -73,7 +73,7 @@ const Tag = ({
         <IconClickable
           additionalClass={styles.remove}
           onClick={removeFunction}
-          src={Utilities.closeTag}
+          src={Utilities.closeAttribute}
         />
       )}
     </div>
