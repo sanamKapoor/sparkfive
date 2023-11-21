@@ -24,7 +24,7 @@ const ReusableHeading = ({
   customStyle?: React.CSSProperties;
 }) => {
   return (
-    <div className={styles["heading-contents"]} style={customStyle}>
+    <div className={`${styles["heading-contents"]} ${icon ? styles["heading-mob"] : ""}`} style={customStyle}>
       <div
         className={`${styles["sidenav-heading"]} ${headingTrue ? styles["active"] : ""
           }`}
