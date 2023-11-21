@@ -19,7 +19,9 @@ import { AssetContext, UserContext } from "../../../context";
 import { ASSET_UPLOAD_APPROVAL, ASSET_UPLOAD_NO_APPROVAL } from "../../../constants/permissions";
 import SearchOverlay from "../../main/search-overlay-assets";
 
-import { getIconColor } from "../../../utils/theme";
+import { useRouter } from "next/router";
+
+import { DEFAULT_FILTERS } from "../../../utils/asset";
 
 const TopBar = ({
   activeSortFilter,
@@ -56,6 +58,7 @@ const TopBar = ({
     folders,
     setActiveFolder,
   } = useContext(AssetContext);
+  const router = useRouter();
 
   const { user, hasPermission, advancedConfig, setAdvancedConfig } = useContext(UserContext);
   const [hideFilterElements, setHideFilterElements] = useState(advancedConfig.hideFilterElements);
@@ -64,7 +67,7 @@ const TopBar = ({
 
   const [tabs, setTabs] = useState(selectOptions.views);
 
-  const setSortFilterValue = (key, value) => {
+  const setSortFilterValue = (key, value, reset = false) => {
     let sort = key === "sort" ? value : activeSortFilter.sort;
     if (key === "mainFilter") {
       if (value === "folders") {
@@ -77,6 +80,7 @@ const TopBar = ({
     // Reset select all status
     selectAllAssets(false);
     selectAllFolders(false);
+
     setActiveSortFilter({
       ...activeSortFilter,
     });
@@ -84,11 +88,20 @@ const TopBar = ({
     // And uploaded folder needed to show at first
     setLastUploadedFolder(undefined);
 
-    setActiveSortFilter({
-      ...activeSortFilter,
-      [key]: value,
-      sort,
-    });
+    if (reset) {
+      setActiveSortFilter({
+        ...activeSortFilter,
+        [key]: value,
+        sort,
+        ...DEFAULT_FILTERS,
+      });
+    } else {
+      setActiveSortFilter({
+        ...activeSortFilter,
+        [key]: value,
+        sort,
+      });
+    }
   };
 
   const toggleSelectAll = () => {
@@ -105,6 +118,7 @@ const TopBar = ({
       }
       return shouldShow;
     });
+
     setTabs(_tabs);
   };
 
@@ -177,7 +191,24 @@ const TopBar = ({
                                 ? "section-container section-active"
                                 : "section-container"
                             }
-                            onClick={() => setSortFilterValue("mainFilter", view.name)}
+                            onClick={() => {
+                              // Navigate from page having query in url (clicking tag in attribute from admin pannel)
+                              // Clear that url, then reset filter
+                              if (
+                                router.query.tag ||
+                                router.query.campaign ||
+                                router.query.product ||
+                                router.query.collection
+                              ) {
+                                router.replace("/main/assets");
+
+                                setTimeout(() => {
+                                  setSortFilterValue("mainFilter", view.name, true);
+                                }, 500);
+                              } else {
+                                setSortFilterValue("mainFilter", view.name);
+                              }
+                            }}
                           />
                         ))}
                     </li>
@@ -189,7 +220,22 @@ const TopBar = ({
                           label: tab.text,
                           id: tab.name,
                           onClick: () => {
-                            setSortFilterValue("mainFilter", tab.name);
+                            // Navigate from page having query in url (clicking tag in attribute from admin pannel)
+                            // Clear that url, then reset filter
+                            if (
+                              router.query.tag ||
+                              router.query.campaign ||
+                              router.query.product ||
+                              router.query.collection
+                            ) {
+                              router.replace("/main/assets");
+
+                              setTimeout(() => {
+                                setSortFilterValue("mainFilter", view.name, true);
+                              }, 500);
+                            } else {
+                              setSortFilterValue("mainFilter", view.name);
+                            }
                           },
                         }))}
                       />
@@ -211,7 +257,24 @@ const TopBar = ({
                                   ? "section-container section-active"
                                   : "section-container"
                               }
-                              onClick={() => setSortFilterValue("mainFilter", view.name)}
+                              onClick={() => {
+                                // Navigate from page having query in url (clicking tag in attribute from admin pannel)
+                                // Clear that url, then reset filter
+                                if (
+                                  router.query.tag ||
+                                  router.query.campaign ||
+                                  router.query.product ||
+                                  router.query.collection
+                                ) {
+                                  router.replace("/main/assets");
+
+                                  setTimeout(() => {
+                                    setSortFilterValue("mainFilter", view.name, true);
+                                  }, 500);
+                                } else {
+                                  setSortFilterValue("mainFilter", view.name);
+                                }
+                              }}
                             />
                           )}
                       </li>

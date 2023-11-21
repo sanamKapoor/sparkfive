@@ -404,7 +404,6 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
 
   // On custom field select one changes
   const onChangeSelectOneCustomField = async (selected, index) => {
-    // console.log(selected)
     // Show loading
     setIsLoading(true);
 
@@ -698,7 +697,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                           },
                         });
                       }}
-                      onRemoveOperationFinished={async (index, stateUpdate, removeId) => {
+                      onRemoveOperationFinished={async (itemIndex, stateUpdate, removeId) => {
                         setIsLoading(true);
 
                         await assetApi.removeCustomFields(id, removeId);
@@ -860,7 +859,6 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                           isShare={isShare || !hasPermission([ASSET_EDIT])}
                           activeDropdown={activeDropdown}
                           setActiveDropdown={(value) => {
-                            console.log(value);
                             setActiveDropdown(`${value}-${index}`);
                           }}
                           assetId={id}

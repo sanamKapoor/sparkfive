@@ -217,6 +217,8 @@ export const FilterContext = createContext({
   sharePath: "",
   renderFlag: false,
   setRenderedFlag: () => {},
+
+  preparingAssets: { current: "" },
 });
 
 export const ShareContext = createContext({
