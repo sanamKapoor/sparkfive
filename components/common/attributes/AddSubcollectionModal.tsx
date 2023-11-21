@@ -33,7 +33,8 @@ const NestedButton: React.FC<MyComponentProps> = ({ type, parentId, getSubFolder
             toastUtils.success("Collection created successfully");
         } catch (err: any) {
             setDisableButtons(false);
-            toastUtils.error(err?.response?.data?.message ||
+            setActiveModal("");
+            toastUtils.error(err?.response?.data ||
                 "Something went wrong, please try again later");
         }
     }
