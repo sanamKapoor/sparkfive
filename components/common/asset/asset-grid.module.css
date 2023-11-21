@@ -67,6 +67,13 @@
     margin-top: 145px;
   }
 }
+@media screen and (max-width: 580px) {
+  .grid-list{
+    margin-top: 160px !important;
+    padding: 0 20px;
+  }
+
+}
 
 
 .button-wrapper {

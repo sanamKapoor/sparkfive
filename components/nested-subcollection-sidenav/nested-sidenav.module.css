@@ -73,7 +73,7 @@
   
   @media screen and (max-width: 800px) {
     .nestedsidenav {
-      display: none;
+      display: block;
     }
   }
   
@@ -82,4 +82,21 @@
    padding: 0;
     }
   }
-  
+  @media (max-width:800px){
+    .nestedsidenav{
+      top:103px;
+      background: #fff;
+      z-index: 99999;
+      height:100%;
+      width:100%;
+      border:none;
+    
+  }
+}
+
+@media screen and (min-width: 500px) and (max-width: 800px) {
+  .nestedsidenav{
+   
+    top:154px;
+  }
+  }
