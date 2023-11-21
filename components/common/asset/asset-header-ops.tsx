@@ -272,7 +272,7 @@ const AssetHeaderOps = ({
   };
 
   const deselectAll = () => {
-    if (activeMode === "assets") {
+    if (activeMode === "assets" || !activeMode) {
       // Mark deselect all
       selectAllAssets(false);
 
@@ -509,7 +509,7 @@ const AssetHeaderOps = ({
       },
     },
     {
-      condition: ((!isFolder && !isSubCollection || totalSubFoldersAndAssets.assets > 0) && !isShare),
+      condition: ((!isFolder && !isSubCollection || totalSubFoldersAndAssets.assets > 0) && !isShare && activeMode),
       props: {
         child: (
           <div className={styles["more-wrapper"]}>
@@ -582,7 +582,7 @@ const AssetHeaderOps = ({
         )}
 
         <div className={styles.text}>
-          {activeMode === "assets"
+          {(activeMode === "assets" || !activeMode)
             ? `${totalSelectAssets} Assets`
             : activeMode === "folders"
               ? `${totalSelectAssets} Collections`

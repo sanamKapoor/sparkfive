@@ -5,10 +5,14 @@ import Button from "../common/buttons/button";
 import { AssetContext, FilterContext } from "../../context";
 
 const NavHeading = ({ isShare = false }) => {
+
   const {
     headerName,
-    setHeaderName
+    setHeaderName,
+    sidebarOpen,
+    setSidebarOpen
   } = useContext(AssetContext);
+
   const {
     activeSortFilter
   } = useContext(FilterContext) as any;
@@ -18,15 +22,14 @@ const NavHeading = ({ isShare = false }) => {
       setHeaderName(`${activeSortFilter.mainFilter === "folders" ? "All Collections" : "All Assets"}`)
     }
   }, [])
+
   return (
     <>
       <div className={styles.menuWrapper}>
-        <div className={styles.icon}>
+        <div className={styles.icon} onClick={() => { setSidebarOpen(!sidebarOpen) }}>
           <img src={Utilities.menu} />
-          {/* close icon  :need to add functionality*/}
-          {/* <img src={Utilities.bigblueClose}/> */}
         </div>
-        <span className={styles.menuHeading}>Menu</span>
+        <span className={styles.menuHeading} >Menu</span>
       </div>
       <div className={styles.navHeadings}>
         <div className={styles.headingWrapper}>
@@ -39,4 +42,5 @@ const NavHeading = ({ isShare = false }) => {
     </>
   );
 };
+
 export default NavHeading;

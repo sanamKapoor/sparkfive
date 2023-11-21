@@ -229,7 +229,7 @@ export default ({ children }) => {
       }
     }
     else {
-      setSidenavFolderChildList((map) => { return new Map(map.set(id, { results: [...map.get(id).results, ...results], next, total })) })
+      setSidenavFolderChildList((map) => { return new Map(map.set(id, { results: [...map.get(id)?.results || {}, ...results], next, total })) })
     }
   };
 
@@ -240,8 +240,7 @@ export default ({ children }) => {
     removeId?: string
 
   ) => {
-    const { results = [], next = -1, total = 0 } = sidenavFolderChildList.get(id);
-    console.log("🚀 ~ file: asset-provider.tsx:245 ~ results:", results)
+    const { results = [], next = -1, total = 0 } = sidenavFolderChildList.get(id) || {};
     if (!remove) {
       setSidenavFolderChildList((map) => {
         return new Map(map.set(id, { results: [...inputFolders, ...results], next, total: total + 1 }))

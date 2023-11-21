@@ -138,18 +138,18 @@ const TopBar = ({
     }
   };
 
-  const mobileTabs = tabs.filter((view) => {
-    return (
-      (!activeFolder || !view.omitFolder) &&
-      (!isShare ||
-        (isShare &&
-          !view.omitShare &&
-          view.hideOnSingle !== singleCollection)) &&
-      (view.requirePermissions.length === 0 ||
-        (view.requirePermissions.length > 0 &&
-          hasPermission(view.requirePermissions)))
-    );
-  });
+  // const mobileTabs = tabs.filter((view) => {
+  //   return (
+  //     (!activeFolder || !view.omitFolder) &&
+  //     (!isShare ||
+  //       (isShare &&
+  //         !view.omitShare &&
+  //         view.hideOnSingle !== singleCollection)) &&
+  //     (view.requirePermissions.length === 0 ||
+  //       (view.requirePermissions.length > 0 &&
+  //         hasPermission(view.requirePermissions)))
+  //   );
+  // });
 
   // const folderData = activeSortFilter.mainFilter !== "SubCollectionView" ? folders.filter((folder) => folder.id === activeSubFolders) :
   //   subFoldersViewList.results.filter((folder) => folder.id === activeFolder);
@@ -206,7 +206,7 @@ const TopBar = ({
                       <li className={styles["tab-list-item"]}>
                         <NavHeading isShare={isShare} />
                       </li>
-                      {showTabs && (
+                      {/* {showTabs && (
                         <Dropdown
                           onClickOutside={() => setShowTabs(false)}
                           additionalClass={styles.dropdown}
@@ -218,7 +218,7 @@ const TopBar = ({
                             },
                           }))}
                         />
-                      )}
+                      )} */}
                     </div>
                   ) : (
                     < NavHeading isShare={isShare} />

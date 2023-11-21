@@ -75,25 +75,24 @@ const AssetOptions = ({
   if (itemType) {
     options.push({ label: "Remove", onClick: openRemoveAsset });
   }
-  if (itemType) {
-    options.push({ label: "Remove", onClick: openRemoveAsset });
-  }
+  // if (itemType) {
+  //   options.push({ label: "Remove", onClick: openRemoveAsset });
+  // }
 
   return (
     <ToggleableAbsoluteWrapper
-    contentClass={styles["asset-actions"]}
-    wrapperClass={`${
-      activeView === "list" ? styles["list-actions-wrapper"]:styles["asset-actions-wrapper"]
-    }`}
-    Wrapper={({ children }) => (
-        
+      contentClass={styles["asset-actions"]}
+      wrapperClass={`${activeView === "list" ? styles["list-actions-wrapper"] : styles["asset-actions-wrapper"]
+        }`}
+      Wrapper={({ children }) => (
+
         <>
           <IconClickable
             src={Utilities.more}
             additionalClass={styles.thumbnailDots}
           />
           {/* this is for list view  */}
-        
+
 
 
           {children}

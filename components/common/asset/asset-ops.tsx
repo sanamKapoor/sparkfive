@@ -209,7 +209,7 @@ export default ({ getAssets }) => {
 
       let moveAssets: any = selectedAssets;
 
-      if (activeSortFilter?.mainFilter === "SubCollectionView") {
+      if (activeSortFilter?.mainFilter === "SubCollectionView" && !operationAsset) {
         moveAssets = selectedSubFolderAssetId
       }
 
@@ -268,8 +268,8 @@ export default ({ getAssets }) => {
     try {
       let copyAssetIds;
       let filters = {};
-
-      if (activeSortFilter?.mainFilter === "SubCollectionView") {
+      console.log("hello")
+      if (activeSortFilter?.mainFilter === "SubCollectionView" && !operationAsset) {
         copyAssetIds = selectedSubFolderAssetId.map(
           (selectedAsset) => selectedAsset.asset.id
         )
@@ -307,6 +307,7 @@ export default ({ getAssets }) => {
         filters
       );
       setListUpdateFlag(true);
+      removeSelectedFromList();
       closeModalAndClearOpAsset();
       toastUtils.success("Assets moved successfully");
     } catch (err) {
@@ -337,7 +338,7 @@ export default ({ getAssets }) => {
     try {
       let updateAssets;
       let filters = {};
-      if (activeSortFilter?.mainFilter === "SubCollectionView") {
+      if (activeSortFilter?.mainFilter === "SubCollectionView" && !operationAsset) {
         updateAssets = selectedSubFolderAssetId.map((assetItem) => ({
           id: assetItem.asset.id,
           changes: { stage },
@@ -829,17 +830,18 @@ export default ({ getAssets }) => {
       let copyAssetIds;
       let filters = {};
 
-      if (activeSortFilter?.mainFilter === "SubCollectionView") {
+      if (activeSortFilter?.mainFilter === "SubCollectionView" && !operationAsset) {
         copyAssetIds = selectedSubFolderAssetId.map(
           (selectedAsset) => selectedAsset.asset.id
         )
-      } else if (!operationAsset) {
-        copyAssetIds = selectedAssets.map(
-          (selectedAsset) => selectedAsset.asset.id
-        );
-      } else {
-        copyAssetIds = [operationAsset.asset.id];
-      }
+      } else
+        if (!operationAsset) {
+          copyAssetIds = selectedAssets.map(
+            (selectedAsset) => selectedAsset.asset.id
+          );
+        } else {
+          copyAssetIds = [operationAsset.asset.id];
+        }
 
       // Select all assets without pagination
       if (selectedAllAssets) {

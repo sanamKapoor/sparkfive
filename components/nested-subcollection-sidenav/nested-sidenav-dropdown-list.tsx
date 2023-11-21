@@ -52,7 +52,8 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
     sidenavFolderChildList,
     setSidenavFolderChildList,
     listUpdateFlag,
-    setListUpdateFlag
+    setListUpdateFlag,
+    activeFolder
   } = useContext(AssetContext);
 
   const {
@@ -64,11 +65,11 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
   const [isFolderLoading, SetIsFolderLoading] = useState(false)
   const [subFolderLoadingState, setSubFolderLoadingState] = useState(new Map())
   const [firstLoaded, setFirstLoaded] = useState(false);
+  const [subFoldersParentId, setSubFoldersParentId] = useState(new Map())
+
 
   const getSubFolders = async (id: string, page: number, replace: boolean) => {
-
     setSubFolderLoadingState((map) => new Map(map.set(id, true)))
-
     const { field, order } = activeSortFilter.sort;
     const queryParams = {
       page: replace ? 1 : page,
@@ -76,18 +77,21 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
       sortField: field,
       sortOrder: order,
     };
-
     const { data } = await folderApi.getSubFolders({
       ...queryParams,
     }, id);
+    setSubFoldersParentId((prev) => {
+      data?.results.forEach((item) => {
+        prev.set(item.id, id);
+      })
+      return prev
+    })
 
     setSidenavFolderChildList(data,
       id,
       replace
     )
-
     setSubFolderLoadingState((map) => new Map(map.set(id, false)))
-
     return sidenavFolderChildList;
   }
 
@@ -148,6 +152,8 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
   useEffect(() => {
     if (firstLoaded && activeSortFilter.mainFilter === "folders") {
       getFolders(true);
+      console.log(showDropdown)
+
     }
     else if (firstLoaded) {
       getFolders(true);
@@ -155,13 +161,24 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
     setFirstLoaded(true)
   }, [firstLoaded, activeSortFilter])
 
-  useEffect(() => {
+
+  const getFoldersOnUpdate = async () => {
     if (listUpdateFlag) {
       setListUpdateFlag(false);
-
-      getFolders(true);
+      await getFolders(true);
+      if (activeSortFilter.mainFilter !== "SubCollectionView" && activeSortFilter.mainFilter !== "folders" && activeFolder !== "") {
+        if (subFoldersParentId.has(activeFolder)) {
+          const data = subFoldersParentId.get(activeFolder)
+          getSubFolders(data, 1, true);
+        }
+      }
     }
+  }
+
+  useEffect(() => {
+    getFoldersOnUpdate()
   }, [listUpdateFlag]);
+
   return (
     <div>
       <ReusableHeading description="All Collections" text="Collections" headingClickType="folders"
