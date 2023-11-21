@@ -139,7 +139,10 @@ const MoveModal = ({
         <SearchModal filteredData={filteredData} input={input} setInput={setInput} />
       </div>
       <div className={`${styles["modal-heading"]}`}>
+        <div className={`${styles["heading-border"]}`}>
         <span>Collection({folders.length ?? ""})</span>
+        </div>
+      
       </div>
       <div className={`${styles["outer-wrapper"]}`}>
         {folders.map((folder, index) => (

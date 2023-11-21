@@ -8,7 +8,10 @@
 .collection-management-wrapper{
     padding: 0 60px;
 }
-
+.emptyBox{
+  width: 24px;
+  height:24px;
+}
 .operation-row {
     align-items: center;
     margin-top: 50px;
@@ -123,7 +126,27 @@
     display: flex;
     align-items: center;
 }
+.attribute-wrapper{
+    display: flex;
+    align-items: center;
+}
+.attribute-tag-list{
+    width: 100%;
+    border-bottom: 1px solid #DEDAD4;
+    padding-bottom:20px;
 
+}
+.outer-wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+}
+.subList{
+    padding: 20px 0 0 0;
+    margin-left:20px;
+    
+}
 /*Media queries*/
 @media screen and (max-width: 900px) {
 

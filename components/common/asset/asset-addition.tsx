@@ -84,19 +84,17 @@ const AssetAddition = ({
     subFolderAutoTag = true
   ) => {
     let folderUploadInfo;
-
     try {
       const formData = new FormData();
       let file = assets[i].file.originalFile;
+
       let currentUploadingFolderId = null;
       let newAssets = 0;
-
       // Get file group info, this returns folderKey and newName of file
       let fileGroupInfo = getFolderKeyAndNewNameByFileName(
         file.webkitRelativePath,
         subFolderAutoTag
       );
-
       folderUploadInfo = { name: fileGroupInfo.folderKey, size: totalSize };
 
       // Do validation
@@ -205,7 +203,6 @@ const AssetAddition = ({
         if (currentUploadingFolderId) {
           attachedQuery["folderId"] = currentUploadingFolderId;
         }
-
         // Call API to upload
         let { data } = await assetApi.uploadAssets(
           formData,
@@ -328,6 +325,7 @@ const AssetAddition = ({
         allAssets = _.uniqBy(allAssets, "asset.versionGroup");
 
         setAssets(allAssets);
+        setListUpdateFlag(true);
       }
     }
   };
@@ -335,15 +333,14 @@ const AssetAddition = ({
   const onFilesDataGet = async (files) => {
     const currentDataClone = [...assets];
     const currenFolderClone = [...folders];
-
     try {
       let selectedFolderToUpload;
       if (activeSortFilter?.mainFilter === "SubCollectionView") {
-        selectedFolderToUpload = subFoldersViewList.results.filter((folder) => folder.isSelected);
-      } else {
-        selectedFolderToUpload = folders.filter(
+        selectedFolderToUpload = subFoldersViewList.results.filter(
           (folder) => folder.isSelected
         );
+      } else {
+        selectedFolderToUpload = folders.filter((folder) => folder.isSelected);
       }
 
       let needsFolderFetch;
@@ -400,26 +397,27 @@ const AssetAddition = ({
         });
         // formData.append('asset', file.path || file.originalFile)
       });
-
       // Store current uploading assets for calculation
       setUploadingAssets(newPlaceholders);
 
       if (activeSortFilter?.mainFilter === "SubCollectionView") {
-        setSubFoldersAssetsViewList({
-          ...subFoldersAssetsViewList,
-          results: [...newPlaceholders]
-        }, false);
+        setSubFoldersAssetsViewList(
+          {
+            ...subFoldersAssetsViewList,
+            results: [...newPlaceholders],
+          },
+          false
+        );
       } else {
         // Showing assets = uploading assets + existing assets
         setAssets([...newPlaceholders, ...currentDataClone]);
         setFolders([...folderPlaceholders, ...currenFolderClone]);
       }
 
-
       let uploadToFolders: any = [];
 
       if (activeSortFilter?.mainFilter === "SubCollectionView") {
-        uploadToFolders = [activeSubFolders]
+        uploadToFolders = [activeSubFolders];
       } else if (activeFolder) {
         uploadToFolders = [activeFolder];
       }
@@ -528,8 +526,6 @@ const AssetAddition = ({
       setUploadingFileName("Importing files from Drop Box");
 
       setUploadSourceType("dropbox");
-
-
 
       const { data } = await assetApi.importAssets(
         "dropbox",
@@ -705,7 +701,6 @@ const AssetAddition = ({
         getCreationParameters({ estimateTime: 1, totalSize })
       );
 
-
       // clean old version for main grid
       if (versionGroup) {
         currentDataClone = currentDataClone.filter((item) => {
@@ -765,7 +760,6 @@ const AssetAddition = ({
       closeSearchOverlay();
       toastUtils.success("Assets imported successfully");
     } catch (err) {
-      console.log(err);
       closeSearchOverlay();
       toastUtils.error("Could not import Assets. Please try again later");
     }
@@ -860,7 +854,7 @@ const AssetAddition = ({
     );
   }
   // Here is the logic for add sub collection in topbar menu logic implemented will remove the subcollection in case of not active sub folder id
-  if (!activeFolder && !activeSubFolders) {
+  if (!activeSubFolders) {
     dropdownOptions = dropdownOptions.filter(
       (item) => ["subCollection"].indexOf(item.id) === -1
     );
@@ -872,7 +866,9 @@ const AssetAddition = ({
     let targetFolders = [];
 
     if (activeSortFilter?.mainFilter === "SubCollectionView") {
-      targetFolders = subFoldersViewList.results.filter((folder) => folder.isSelected);
+      targetFolders = subFoldersViewList.results.filter(
+        (folder) => folder.isSelected
+      );
     } else {
       targetFolders = folders.filter((folder) => folder.isSelected);
     }
@@ -887,13 +883,16 @@ const AssetAddition = ({
       }
     }
 
-    queryData.folderId = uploadToFolders.join(",");
     if (type === "project") queryData.projectId = itemId;
     if (type === "task") queryData.taskId = itemId;
     // Attach extra query
     if (attachQuery) {
       queryData = { ...queryData, ...attachQuery };
     }
+
+    queryData.folderId = !attachQuery.versionGroup
+      ? uploadToFolders.join(",")
+      : "";
     return queryData;
   };
 
@@ -906,6 +905,7 @@ const AssetAddition = ({
       const {
         data: { duplicateAssets },
       } = await assetApi.checkDuplicates(names);
+
       if (duplicateAssets.length) {
         setSelectedFiles(files);
         setDuplicateAssets(duplicateAssets);
@@ -924,6 +924,10 @@ const AssetAddition = ({
       onFilesDataGet(files);
     }
   };
+
+  const onFileClick = (e) => {
+    e.target.value = null;
+  }
 
   const onConfirmDuplicates = (nameHistories) => {
     setDuplicateModalOpen(false);
@@ -1025,6 +1029,7 @@ const AssetAddition = ({
         style={{ display: "none" }}
         type="file"
         onChange={onFileChange}
+        onClick={onFileClick}
       />
 
       <input
@@ -1035,6 +1040,7 @@ const AssetAddition = ({
         style={{ display: "none" }}
         type="file"
         onChange={onFileChange}
+        onClick={onFileClick}
       />
 
       {displayMode === "dropdown" ? (

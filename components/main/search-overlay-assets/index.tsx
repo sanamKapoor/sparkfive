@@ -13,7 +13,7 @@ import styles from "./index.module.css";
 const SearchOverlayAssets = ({
   closeOverlay,
   importEnabled = false,
-  importAssets = () => { },
+  importAssets = () => {},
   sharePath = "",
   activeFolder = "",
   isFolder,
@@ -27,7 +27,7 @@ const SearchOverlayAssets = ({
     selectAllAssets,
     selectedAllAssets,
     setFolders,
-    setSubFoldersViewList
+    setSubFoldersViewList,
   } = useContext(AssetContext);
 
   const { setSearchTerm, setSearchFilterParams, activeSortFilter } =
@@ -120,6 +120,12 @@ const SearchOverlayAssets = ({
     closeOverlay();
   };
 
+  //TODO: we can have an enum for these modes and use that all over the app to ensure consistency
+  const isSubCollectionMode =
+    mode === "SubCollectionView" ? "Sub Collections" : "assets";
+
+  const searchText = mode === "folders" ? "Collections" : isSubCollectionMode;
+
   return (
     <div>
       <div
@@ -131,7 +137,7 @@ const SearchOverlayAssets = ({
       >
         <div className={"search-cont"}>
           <div className={"search-actions"}>
-            {(mode === "assets") && (
+            {mode === "assets" && (
               <div
                 className={"search-filter"}
                 onClick={() => setOpenFilters(!openFilters)}
@@ -147,7 +153,7 @@ const SearchOverlayAssets = ({
           </div>
           {/* TODO: When is a collecttion change placeholter to "Search Collections" */}
           <Search
-            placeholder={`Search ${isFolder ? "Collections" : "Assets"}`}
+            placeholder={`Search ${searchText}`}
             onSubmit={(inputTerm, filterParams) =>
               getData(inputTerm, true, filterParams)
             }

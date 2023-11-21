@@ -23,7 +23,18 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-size: 13px;
 
+  }
+  .radio-icon{
+    width:18px;
+    height:18px;
+  }
+  .filterCount{
+    color:
+    #817D9D;
+    font-size: 14px;
+    font-weight: 400;
   }
   
   @media (max-width:400px){

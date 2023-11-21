@@ -3,7 +3,7 @@
   justify-content: center;
   position: relative;
   min-height: 60vh;
-  margin-top: 50px;
+  margin-top: 20px;
 }
 
 .filter {
@@ -21,10 +21,12 @@
   width: 100%;
 }
 
-.regularlist{
+.regularlist {
   padding: 0;
 }
-.list-wrapper .regularlist li:first-child > div ul,.list-wrapper .regularlist li:nth-child(2) > div ul{
+
+.list-wrapper .regularlist li:first-child>div ul,
+.list-wrapper .regularlist li:nth-child(2)>div ul {
 
   bottom: inherit;
 }
@@ -34,9 +36,11 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(246px, 1fr));
   grid-gap: 40px;
+  margin-top: 10px;
 }
+
 @media screen and (max-width: 600px) {
-  .grid-list{
+  .grid-list {
     margin-top: 85px !important;
   }
 
@@ -59,11 +63,12 @@
   .grid-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(163px, 1fr));
-  
+
   }
 }
-@media screen and (max-width: 810px){
-  .grid-list{
+
+@media screen and (max-width: 810px) {
+  .grid-list {
     margin-top: 145px;
   }
 }
@@ -78,42 +83,47 @@
 
 
 /* List view code starts form here */
-.list-view{
+.list-view {
   display: flex;
- flex-direction: column;
+  flex-direction: column;
   grid-gap: 40px;
-  
+
 }
 
-.listHeader{
+.listHeader {
   width: 100%;
-  height:40px;
+  height: 40px;
   background:
-  #F6EFE4 ;
+    #F6EFE4;
   padding: 10px;
-  margin-bottom:10px;
+  margin-bottom: 10px;
 }
 
-.list-content{
+.list-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  
+
 }
-.listWrapper{
+
+.listWrapper {
   display: flex;
   align-items: center;
 }
-.headContent1{
+
+.headContent1 {
   width: 42%;
 }
-.headContent2{
+
+.headContent2 {
   width: 18%;
 }
-.headContent3{
+
+.headContent3 {
   width: 20%;
 }
-.headContent4{
+
+.headContent4 {
   width: 20%;
 }

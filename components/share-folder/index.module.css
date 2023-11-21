@@ -8,10 +8,22 @@
   left: 283px;
   padding: 60px 35px;
   width: 100%;
+  top:81px;
+ 
+ 
 }
 
 .filterViewWrapper {
-  margin-top: 200px;
+  /* margin-top: 200px; */
+  /* position: fixed; */
+  background: #fff;
+  z-index: 999;
+  width: 100%;
+  top:179px;
+  top:162px;
+  margin-bottom:30px;
+
+
 }
 
 @media (min-width: 1200px) {

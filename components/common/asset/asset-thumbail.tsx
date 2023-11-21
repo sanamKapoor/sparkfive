@@ -412,21 +412,21 @@ const AssetThumbail = ({
             {parseInt(asset.size) !== 0 && asset.size && filesize(asset.size)}
           </div>
         )}
-        <div style={{marginBottom:10}} >
+        <div className={ activeView === "grid" && styles.sizeMargin}  >
           <div className={activeView !== "list" ? `secondary-text ${styles["modified-date"]}` : ""}>
             {format(new Date(asset.createdAt), dateFormat)}
           </div>
         </div>
 
         {activeView === "list" && (
-          <div className={`${styles["modified-date"]}}`}>
+         <div className={`${styles["modified-date"]} ${  activeView === "list" && styles["modified-date-list"]}`}>
             {" "}
             {format(new Date(asset.createdAt), dateFormat)}
           </div>
         )}
 
         {activeView === "list" &&
-          (<div>
+          (<div className={styles.extension}>
             <span>{asset.extension}</span>
           </div>)}
 

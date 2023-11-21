@@ -20,12 +20,9 @@ import AssetOps from "../common/asset/asset-ops";
 import TopBar from "../common/asset/top-bar";
 import PasswordOverlay from "./password-overlay";
 
-import { isMobile } from "react-device-detect";
 import selectOptions from "../../utils/select-options";
 import Spinner from "../common/spinners/spinner";
 import SharedPageSidenav from "./shared-nested-sidenav/shared-nested-sidenav";
-
-import FilterView from "../../components/common/filter-view";
 
 const ShareFolderMain = () => {
   const router = useRouter();
@@ -81,9 +78,7 @@ const ShareFolderMain = () => {
   const [activeView, setActiveView] = useState("grid");
   const [sharePath, setSharePath] = useState("");
   const [activeMode, setActiveMode] = useState("assets");
-  const [openFilter, setOpenFilter] = useState(
-    activeMode === "assets" && !isMobile ? true : false
-  );
+
   const [sidenavFolderList, setSidenavFolderList] = useState([]);
   const [widthCard, setWidthCard] = useState(0);
 
@@ -227,18 +222,6 @@ const ShareFolderMain = () => {
     }
     setNeedsFetch("");
   }, [needsFetch]);
-
-  useEffect(() => {
-    if (activeMode === "assets") {
-      if (isMobile) {
-        setOpenFilter(false);
-      } else {
-        setOpenFilter(true);
-      }
-    } else if (activeMode === "folders") {
-      setOpenFilter(false);
-    }
-  }, [activeMode]);
 
   useEffect(() => {
     setInitialLoad(folderInfo);
@@ -562,7 +545,7 @@ const ShareFolderMain = () => {
           folderName
             ? folderName
             : sidenavFolderList.find((folder: any) => folder.id === id)?.name ||
-            ""
+                ""
         );
       } else {
         getFolderInfo();
@@ -577,7 +560,7 @@ const ShareFolderMain = () => {
         setActiveFolder("");
         let sort =
           folderInfo?.customAdvanceOptions?.collectionSortView ===
-            "alphabetical"
+          "alphabetical"
             ? selectOptions.sort[3]
             : selectOptions.sort[1];
         setActiveSortFilter({
@@ -623,12 +606,13 @@ const ShareFolderMain = () => {
 
   const assetGridWrapperStyle =
     !!folderInfo.singleSharedCollectionId ||
-      activeSortFilter.mainFilter === "folders"
+    activeSortFilter.mainFilter === "folders"
       ? styles["col-wrapperview"]
       : styles["col-wrapper"];
 
   const showFilterView =
-    folderInfo.singleSharedCollectionId || activeMode === "assets";
+    (folderInfo.singleSharedCollectionId || activeMode === "assets") &&
+    !activePasswordOverlay;
 
   return (
     <>
@@ -638,7 +622,6 @@ const ShareFolderMain = () => {
             viewFolder={viewFolder}
             sidenavFolderList={sidenavFolderList}
           />
-
           <TopBar
             activeSearchOverlay={activeSearchOverlay}
             activeSortFilter={activeSortFilter}
@@ -647,8 +630,6 @@ const ShareFolderMain = () => {
             setActiveView={setActiveView}
             setActiveSearchOverlay={() => setActiveSearchOverlay(true)}
             selectAll={selectAll}
-            setOpenFilter={setOpenFilter}
-            openFilter={openFilter}
             isShare={true}
             singleCollection={!!folderInfo.singleSharedCollectionId}
             sharedAdvanceConfig={user ? undefined : advancedConfig}
@@ -661,11 +642,6 @@ const ShareFolderMain = () => {
             className={`${assetGridWrapperStyle} ${styles["mainContainer"]}`}
             style={{ marginTop: top }}
           >
-            {showFilterView && (
-              <div className={styles.filterViewWrapper}>
-                <FilterView />
-              </div>
-            )}
             <AssetGrid
               activeFolder={activeFolder}
               getFolders={getFolders}
@@ -678,7 +654,6 @@ const ShareFolderMain = () => {
               mode={activeMode}
               viewFolder={viewFolder}
               loadMore={loadMore}
-              openFilter={openFilter}
               sharePath={sharePath}
               setWidthCard={setWidthCard}
               widthCard={widthCard}

@@ -1,12 +1,12 @@
 .asset-actions-wrapper {
     /* position: relative; */
-    display: flex;
+    /* display: flex; */
     align-items: center;
     gap:20px;
-    width:10%;
     position: absolute;
     right: 0;
     bottom: 20px;
+    right:15px;
   }
   
   .more ul {
@@ -22,10 +22,27 @@
   }
 .list-actions-wrapper{
   position: relative;
+  position: unset;
 }
 
 @media (max-width:480px){
   .edit-icon{
     display: none;
   }
+ 
+  .list-actions-wrapper{
+    position: unset;
+    
+  
+}
+}
+
+@media (max-width:700px){
+  .edit-icon{
+    display: none;
+  }
+ 
+  .list-actions-wrapper{
+    position: unset;
+    }
 }

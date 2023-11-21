@@ -28,7 +28,7 @@ import dateStyles from "../filter/date-uploaded.module.css";
 import { LoadingContext, UserContext } from "../../../context";
 
 // Accordion
-// import 'react-accessible-accordion/dist/fancy-example.css';
+// import 'react-accessible-accordion/dist/fancy-example.css'; 
 
 const getDayToCurrentDate = (day: number = 1) => {
   return new Date(moment().add(day, "d").toDate());

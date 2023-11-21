@@ -23,7 +23,8 @@ const SelectedFilters: React.FC<SelectedFilterProps> = ({
         <div key={item.id} className={styles["selected-filter-item"]}>
           <p>{item.label}</p>
           <IconClickable
-            src={Utilities.closeIcon}
+            additionalClass={styles["close-icon-light"]}
+            src={Utilities.closeIconLight}
             onClick={() => onRemoveFilter(item)}
           />
         </div>
