@@ -57,7 +57,6 @@ const RulesOptions: React.FC<RulesOptionsProps> = ({
           ]}
         />
       )}
-      <Divider />
     </div>
   );
 };

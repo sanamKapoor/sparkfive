@@ -277,9 +277,9 @@
   .nestedbox {
     padding: 9px 23px;
     height:unset;
-    
-  
-   
+  }
+  .load-wrapper{
+    padding: 0 40px;
   }
   
 }

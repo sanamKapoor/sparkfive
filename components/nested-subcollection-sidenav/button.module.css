@@ -4,8 +4,7 @@
     align-items: center;
     cursor: pointer;
     padding: 0px;
- 
-}
+ }
 
 .nestedButton span{
     font-family: "Noto Sans", sans-serif;
@@ -16,7 +15,7 @@
 
 }
 .addIcon{
-    width: 15px;
+    width: 12px;
    margin-right: 5px;
    margin-left:10px;
   }

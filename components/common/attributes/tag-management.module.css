@@ -84,7 +84,7 @@
 .tag-item {
     display: flex;
     align-items: center;
-    /* margin: 12px 5px; */
+    margin: 12px 5px;
     cursor: pointer;
 }
 
@@ -133,6 +133,7 @@
 .attribute-tag-list{
     width: 100%;
     border-bottom: 1px solid #DEDAD4;
+    margin: 0;
    
 
 }
