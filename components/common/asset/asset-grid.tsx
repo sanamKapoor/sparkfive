@@ -413,7 +413,7 @@ const AssetGrid = ({
 
       {
         <div className={styles["list-wrapper"]}>
-          {mode === "assets" && assets.length > 0 && <FilterView />}
+          {mode === "assets" && <FilterView />}
           {/* testing component starts from here */}
           {
             <ul

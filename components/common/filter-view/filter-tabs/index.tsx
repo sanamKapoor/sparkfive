@@ -56,6 +56,8 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
         defaultOnly: true,
         ...(sharePath && { sharePath }),
       });
+      // TODO: need to check for advancedConfig.aiTagging setting as well
+
       //check for filter elements to hide
       if (advancedConfig?.hideFilterElements) {
         const filteredAttrs = res.data.data.filter(
