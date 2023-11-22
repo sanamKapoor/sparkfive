@@ -11,9 +11,12 @@ interface MyComponentProps {
     type: string
     parentId?: string
     updateFolders?: (id?: string, page?: number, replace?: boolean) => Promise<void>
+    iconSrc?: string;
+    textColor?: string;
+    text?: string;
 }
 
-const NestedButton: React.FC<MyComponentProps> = ({ type, parentId, updateFolders }) => {
+const NestedButton: React.FC<MyComponentProps> = ({ type, parentId, updateFolders,iconSrc = Utilities.addCollection, textColor, text}) => {
     const [activeModal, setActiveModal] = useState("");
     const [disableButtons, setDisableButtons] = useState(false)
 
@@ -44,8 +47,9 @@ const NestedButton: React.FC<MyComponentProps> = ({ type, parentId, updateFolder
     return (
         <>
             <div className={styles.addBlock} onClick={() => setActiveModal("folder")}>
-                <button className={styles.nestedButton}>
-                    <IconClickable onClick={() => setActiveModal("folder")} additionalClass={styles.addIcon} src={Utilities.addCollection} />
+                <button className={styles.nestedButton} style={{ color: textColor }}>
+                    <IconClickable onClick={() => setActiveModal("folder")} additionalClass={styles.addIcon} src={iconSrc}/>
+                    {text && <span>{text}</span>}
                 </button>
             </div>
             <FolderModal

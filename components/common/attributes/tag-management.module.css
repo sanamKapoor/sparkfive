@@ -14,7 +14,7 @@
 }
 .operation-row {
     align-items: center;
-    margin-top: 50px;
+    margin-top: 16px;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -78,13 +78,13 @@
     display: flex;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
-    margin-top: 36px;
+    margin-top: 25px;
 }
 
 .tag-item {
     display: flex;
     align-items: center;
-    margin: 12px 5px;
+    /* margin: 12px 5px; */
     cursor: pointer;
 }
 
@@ -133,12 +133,13 @@
 .attribute-tag-list{
     width: 100%;
     border-bottom: 1px solid #DEDAD4;
-    padding-bottom:20px;
+   
 
 }
 .outer-wrapper{
     display: flex;
     flex-direction: column;
+    padding:14px 0 10px 0;
   
     
 }
@@ -146,20 +147,33 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    margin-top:8px;
+    gap:16px;
+    margin-left:27px;
 }
 .subList{
-    margin-left:30px;
+    margin-left:0px;
     
 }
 .sublist-outer{
     display: flex;
     align-items: center;
-    margin-top: 16px;
+    
 }
 .addButton{
     display: flex;
     align-items: center;
 }
+.attribute-add-subcollection{
+    display: flex;
+    align-items: center;
+    color:
+    #10BDA5;
+    font-weight: 500;
+    font-size: 14px;
+
+}
+
 /*Media queries*/
 @media screen and (max-width: 900px) {
 

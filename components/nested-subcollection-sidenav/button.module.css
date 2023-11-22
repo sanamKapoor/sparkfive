@@ -12,12 +12,11 @@
     font-weight: 500;
     font-size: 14px;
     line-height: 18px;
-    color:var(--color-prim-turquoise);
     margin-left: 5px;
 
 }
 .addIcon{
-    width: 10.5px;
+    width: 15px;
    margin-right: 5px;
    margin-left:10px;
   }
