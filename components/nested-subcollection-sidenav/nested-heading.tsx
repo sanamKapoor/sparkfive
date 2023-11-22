@@ -31,11 +31,10 @@ const ReusableHeading = ({
     text === "All Collections" && hasPermission([ASSET_UPLOAD_NO_APPROVAL]);
 
   return (
-    <div className={styles["heading-contents"]} style={{...customStyle,fontSize}}>
+    <div className={`${styles["heading-contents"]} ${icon ? styles["heading-mob"] : ""}`} style={customStyle}>
       <div
-        className={`${styles["sidenav-heading"]} ${
-          headingTrue ? styles["active"] : ""
-        }`}
+        className={`${styles["sidenav-heading"]} ${headingTrue ? styles["active"] : ""
+          }`}
         style={{ cursor: "default" }}
       >
         <div onClick={() => headingClick(headingClickType, description)}>

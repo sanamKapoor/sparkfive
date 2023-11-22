@@ -42,3 +42,18 @@
         margin-bottom: 0;
     }
   }
+  @media (max-width:420px){
+    .heading-contents{
+       display: block;
+    }
+    .active{
+        padding: 10px 20px;
+    }
+    .heading-contents{
+        padding-bottom:0px;
+       
+    }
+    .heading-mob{
+        display: none;
+    }
+  }

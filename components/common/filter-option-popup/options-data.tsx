@@ -12,9 +12,8 @@ const OptionsData: React.FC<OptionsDataProps> = ({
   compareKey,
   options,
   setOptions,
-  setFilters,
 }) => {
-  const { activeSortFilter } = useContext(FilterContext);
+  const { activeSortFilter, setActiveSortFilter } = useContext(FilterContext);
 
   const onSelectOption = (data) => {
     const index = options.findIndex(
@@ -24,36 +23,30 @@ const OptionsData: React.FC<OptionsDataProps> = ({
       options[index].isSelected = true;
     }
     setOptions([...options]);
-    setFilters((prevState) => {
-      let newState;
 
-      if (
-        activeSortFilter[filterKey] &&
-        activeSortFilter[filterKey].length > 0
-      ) {
-        newState = [
-          ...new Set([
-            ...activeSortFilter[filterKey],
-            ...((prevState && prevState[filterKey]) ?? []),
-            {
-              value: data[compareKey],
-              ...data,
-            },
-          ]),
-        ];
-      } else {
-        newState = [
-          ...((prevState && prevState[filterKey]) ?? []),
+    let newState;
+
+    if (activeSortFilter[filterKey] && activeSortFilter[filterKey].length > 0) {
+      newState = [
+        ...new Set([
+          ...activeSortFilter[filterKey],
           {
             value: data[compareKey],
             ...data,
           },
-        ];
-      }
-
-      return {
-        [filterKey]: newState,
-      };
+        ]),
+      ];
+    } else {
+      newState = [
+        {
+          value: data[compareKey],
+          ...data,
+        },
+      ];
+    }
+    setActiveSortFilter({
+      ...activeSortFilter,
+      [filterKey]: newState,
     });
   };
 
@@ -73,7 +66,8 @@ const OptionsData: React.FC<OptionsDataProps> = ({
         ...item,
       }));
 
-    setFilters({
+    setActiveSortFilter({
+      ...activeSortFilter,
       [filterKey]: newFilters,
     });
   };
