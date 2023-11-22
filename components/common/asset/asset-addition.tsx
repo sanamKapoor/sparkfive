@@ -903,6 +903,64 @@ const AssetAddition = ({
     const files = Array.from(e.target.files).map((originalFile) => ({
       originalFile,
     }));
+
+    let fileList = files.map(({ originalFile }) => { return { path: originalFile?.fullPath || originalFile?.webkitRelativePath, filename: originalFile?.name, file: originalFile } });
+
+    const hierarchy = {}; // {folder_name} = { name: <name of folder>, children: {...just like hierarchy...}, files: [] }
+    // build tree
+    fileList.map(file => {
+      const paths = file.path.split('/').slice(0, -1);
+      let parentFolder = null;
+      // builds the hierarchy of folders.
+
+      paths.map(path => {
+        if(paths.length === 1) {
+        // Handling parent level files 
+          if(hierarchy[path]) {
+            hierarchy[path].files.push(file);
+          } else {
+            hierarchy[path] = {
+              name: path,
+              children: {},
+              files: [file],
+            };
+          }
+        } else if (paths.length > 2) {
+        // Handling grand-child level files 
+          const root = Object.values(hierarchy)[0];          
+          if(root && root.name && root.name === path) {
+            root?.files?.push(file);
+          }
+        } else {
+        // Handling child level files 
+          if (!parentFolder) {
+            if (!hierarchy[path]) {
+              hierarchy[path] = {
+                name: path,
+                children: {},
+                files: [],
+              };
+            }
+            parentFolder = hierarchy[path];
+          } else {
+            if (!parentFolder.children[path]) {
+              parentFolder.children[path] = {
+                name: path,
+                children: {},
+                files: [],
+              };
+            }
+            parentFolder = parentFolder.children[path];
+            parentFolder.files.push(file);
+          }
+
+        }
+      });
+
+    });
+
+    console.log({ hierarchy });
+
     if (advancedConfig.duplicateCheck) {
       const names = files.map((file) => file.originalFile["name"]);
       const {
