@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 
 import { FilterContext } from "../../../context";
 import { OptionsDataProps } from "../../../interfaces/filters";
-import Divider from "./divider";
 import OptionDataItem from "./option-data-item";
 import styles from "./options-data.module.css";
 
@@ -91,7 +90,7 @@ const OptionsData: React.FC<OptionsDataProps> = ({
           ))
         )}
       </div>
-      <Divider />
+     
     </>
   );
 };

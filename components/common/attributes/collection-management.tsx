@@ -267,7 +267,10 @@ const CollectionManagement = () => {
         {/**
          * todo once confirmed the changes for modal
          */}
-        <NestedButton type={"collection"} updateFolders={getFolderList} />
+        <NestedButton type={"collection"}  iconSrc={Utilities.addLight}
+                              text="Add collection"
+                              textColor="
+                              #08135E" updateFolders={getFolderList} />
         {/* <CreatableSelect
           altColor="blue"
           title=""
@@ -287,7 +290,7 @@ const CollectionManagement = () => {
           selectClass={styles["campaign-select"]}
         /> */}
 
-        <Select
+        {/* <Select
           options={sorts}
           onChange={(value) => {
             setSort(value);
@@ -295,7 +298,7 @@ const CollectionManagement = () => {
           placeholder={"Select to sort"}
           styleType={`regular ${styles["sort-select"]}`}
           value={sort}
-        />
+        /> */}
       </div>
 
       <ul className={styles["tag-wrapper"]}>
@@ -394,11 +397,19 @@ const CollectionManagement = () => {
                         )}
                         <div className={styles.addButton}>
                           {showDropdown[index] && (
-                            <NestedButton
+                            <div className={styles["attribute-add-subcollection"]}>
+                                <NestedButton
                               updateFolders={getSubFolders}
                               type={"subCollection"}
                               parentId={folder.id}
+                              iconSrc={Utilities.add}
+                              text="Add subcollection"
+                              textColor="
+                              #10BDA5"
                             />
+                          
+                            </div>
+                          
                           )}
                         </div>
                       </>
