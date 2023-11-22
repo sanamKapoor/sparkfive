@@ -47,7 +47,9 @@ export default ({ getAssets }) => {
     setSubFoldersViewList,
     setSidenavFolderList,
     sidenavFolderList,
-    setListUpdateFlag
+    setListUpdateFlag,
+    selectedAllSubAssets,
+    setSelectedAllSubAssets,
   } = useContext(AssetContext);
 
   const { setIsLoading } = useContext(LoadingContext);
@@ -93,6 +95,11 @@ export default ({ getAssets }) => {
       //  Get all assets without pagination
       getSelectedAssets(unSelectedAssets.map((data) => data.asset.id));
     }
+    // TODO start from here itself
+    // if (activeOperation === "edit" && selectedAllSubAssets && activeSortFilter?.mainFilter === "SubCollectionView") {
+    //   //  Get all assets without pagination
+    //   getSelectedAssets(unSelectedAssets.map((data) => data.asset.id));
+    // }
   }, [activeOperation]);
 
   useEffect(() => {

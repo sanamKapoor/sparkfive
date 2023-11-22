@@ -262,9 +262,29 @@
   .active{
     padding: 10px 0;
   }
-  .dropdownMenu {
+
+}
+@media (max-width:420px){
+  .subfolderList {
+    border-left: unset;
+  }
+  .dropdownOptions::before{
+    content:unset;
 
   }
-
-
+  .nestedbox {
+    padding: 9px 23px;
+    height:unset;
+    
+  
+   
+  }
+  
+}
+@media screen and (min-width: 420px) and (max-width: 800px) {
+  .nestedbox {
+    padding: 9px 23px;
+    height:unset;
+    }
+ 
 }

@@ -27,7 +27,11 @@ const NavHeading = ({ isShare = false }) => {
     <>
       <div className={styles.menuWrapper}>
         <div className={styles.icon} onClick={() => { setSidebarOpen(!sidebarOpen) }}>
-          <img src={Utilities.menu} />
+          {sidebarOpen ? <img src={Utilities.bigblueClose} alt="" />
+            : <img src={Utilities.menu} />}
+
+          {/* close icon : should be used when we want to close the sidenav */}
+          {/*  */}
         </div>
         <span className={styles.menuHeading} >Menu</span>
       </div>
@@ -35,6 +39,7 @@ const NavHeading = ({ isShare = false }) => {
         <div className={styles.headingWrapper}>
           <div className={styles.icon}>
             <img src={Utilities.assets} />
+
           </div>
           <span className={styles.navigationLinkheading}>{headerName}</span>
         </div>
