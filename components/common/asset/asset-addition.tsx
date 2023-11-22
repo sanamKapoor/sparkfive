@@ -904,6 +904,7 @@ const AssetAddition = ({
       originalFile,
     }));
 
+    // TODO
     // let fileList = files.map(({ originalFile }) => { return { path: originalFile?.fullPath || originalFile?.webkitRelativePath, filename: originalFile?.name, file: originalFile } });
 
     // const hierarchy = {}; // {folder_name} = { name: <name of folder>, children: {...just like hierarchy...}, files: [] }
