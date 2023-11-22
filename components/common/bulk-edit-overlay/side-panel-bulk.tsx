@@ -404,7 +404,7 @@ const SidePanelBulk = ({
                           onClick={() => { toggleDropdown(folder.id, true) }}
                         >
                           <img
-                            className={showDropdown.includes(folder.id) ? styles.iconClick : styles.rightIcon}
+                            className={showDropdown.includes(folder.id) ? styles.iconClick : styles.caretRightSolid}
                             src={Utilities.arrowBlue}
                             alt="Right Arrow Icon"
                             onClick={() => { toggleDropdown(folder.id, true) }}

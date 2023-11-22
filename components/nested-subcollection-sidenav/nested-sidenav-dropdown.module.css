@@ -103,11 +103,13 @@
   margin-right: 5px;
   transform: rotate(0deg);
   width: 11px;
+  cursor: pointer;
 }
 .iconClick {
   transform: rotate(91deg);
   margin-right: 5px;
   width: 11px;
+  cursor: pointer;
 }
 .dropdownOptions {
   position: relative;
