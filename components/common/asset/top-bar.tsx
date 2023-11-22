@@ -142,9 +142,8 @@ const TopBar = ({
 
   return (
     <section
-      className={`${
-        sidebarOpen ? styles["container"] : styles["container-on-toggle"]
-      }`}
+      className={`${sidebarOpen ? styles["container"] : styles["container-on-toggle"]
+        }`}
       id={"top-bar"}
     >
       <div
@@ -194,27 +193,9 @@ const TopBar = ({
                 <ul className={styles["tab-list"]}>
                   {isMobile ? (
                     <div className={styles["mobile-tabs"]}>
-                      {/* <IconClickable
-                        src={Utilities.menu}
-                        additionalClass={styles.hamburger}
-                        onClick={() => setShowTabs(!showTabs)}
-                      /> */}
                       <li className={styles["tab-list-item"]}>
                         <NavHeading isShare={isShare} />
                       </li>
-                      {/* {showTabs && (
-                        <Dropdown
-                          onClickOutside={() => setShowTabs(false)}
-                          additionalClass={styles.dropdown}
-                          options={mobileTabs.map((tab) => ({
-                            label: tab.text,
-                            id: tab.name,
-                            onClick: () => {
-                              setSortFilterValue("mainFilter", tab.name);
-                            },
-                          }))}
-                        />
-                      )} */}
                     </div>
                   ) : (
                     <NavHeading isShare={isShare} />
@@ -239,18 +220,17 @@ const TopBar = ({
               <img
                 src={Utilities.search}
                 onClick={setActiveSearchOverlay}
-                className={`${styles.search} ${styles.SearchWeb} ${
-                  !(
-                    (amountSelected === 0 || mode === "folders") &&
-                    showAssetAddition &&
-                    hasPermission([
-                      ASSET_UPLOAD_NO_APPROVAL,
-                      ASSET_UPLOAD_APPROVAL,
-                    ])
-                  )
-                    ? "m-r-20"
-                    : ""
-                }`}
+                className={`${styles.search} ${styles.SearchWeb} ${!(
+                  (amountSelected === 0 || mode === "folders") &&
+                  showAssetAddition &&
+                  hasPermission([
+                    ASSET_UPLOAD_NO_APPROVAL,
+                    ASSET_UPLOAD_APPROVAL,
+                  ])
+                )
+                  ? "m-r-20"
+                  : ""
+                  }`}
               />
               <div className={styles.SearchMobile}>
                 <SearchOverlayAssets />
@@ -336,14 +316,14 @@ const TopBar = ({
               Select only 25 assets shown
             </span>
           )}
-          {selectedAllSubFoldersAndAssets && (
+          {/* {selectedAllSubFoldersAndAssets && (
             <span
               className={styles["select-only-shown-items-text"]}
               onClick={toggleSelectSubCollection}
             >
               Select only 5 Sub collections and 25 Assets shown
             </span>
-          )}
+          )} */}
 
           {selectedAllFolders && (
             <span

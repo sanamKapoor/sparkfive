@@ -176,7 +176,7 @@ const CollectionManagement = () => {
       setLoading(false);
       toastUtils.error(
         err?.response?.data?.message ||
-          "Something went wrong please try again later"
+        "Something went wrong please try again later"
       );
     }
   };
@@ -218,7 +218,7 @@ const CollectionManagement = () => {
       <h3>Collections</h3>
 
       <div className={styles["search-row"]}>
-        <div className={styles["search-column-1"]}>
+        {/* <div className={styles["search-column-1"]}>
           <Search
             name={"start"}
             searchType={searchType}
@@ -245,13 +245,14 @@ const CollectionManagement = () => {
               setSearchKey("");
             }}
           />
-        </div>
+        </div> */}
         <div className={styles["search-column-3"]}>
           <Search
             name={"contain"}
             searchType={searchType}
-            placeholder={"Contains"}
-            onSubmit={(key) => {
+            onlyInput={true}
+            placeholder={"Search Collection"}
+            onChange={(key) => {
               setSearchType("contain");
               setSearchKey(key);
             }}
@@ -266,25 +267,25 @@ const CollectionManagement = () => {
         {/**
          * todo once confirmed the changes for modal
          */}
-        {/* <NestedButton type={"collection"} /> */}
-        <CreatableSelect
+        <NestedButton type={"collection"} updateFolders={getFolderList} />
+        {/* <CreatableSelect
           altColor="blue"
           title=""
           addText="Add Collection"
           onAddClick={() => setActiveDropdown("folders")}
           selectPlaceholder={"Enter a new collection"}
           avilableItems={[]}
-          setAvailableItems={() => {}}
+          setAvailableItems={() => { }}
           selectedItems={[]}
-          setSelectedItems={() => {}}
-          onAddOperationFinished={() => {}}
-          onRemoveOperationFinished={() => {}}
+          setSelectedItems={() => { }}
+          onAddOperationFinished={() => { }}
+          onRemoveOperationFinished={() => { }}
           onOperationFailedSkipped={() => setActiveDropdown("")}
           isShare={false}
           asyncCreateFn={createFolder}
           dropdownIsActive={activeDropdown === "folders"}
           selectClass={styles["campaign-select"]}
-        />
+        /> */}
 
         <Select
           options={sorts}
@@ -305,105 +306,106 @@ const CollectionManagement = () => {
           >
             {(editMode === false ||
               (editMode === true && currentEditIndex !== index)) && (
-              // new design added acoording
-              <div className={`${styles["outer-wrapper"]}`}>
-                <div className={`${styles["attribute-wrapper"]}`}>
-                  {/* <IconClickable src={Utilities.CaretDown}/> */}
-                  {folder?.childFolders?.length > 0 ? (
-                    showDropdown[index] ? (
-                      <IconClickable
-                        src={Utilities.CaretDown}
-                        onClick={() => toggleDropdown(index, folder, true)}
-                      />
-                    ) : (
-                      <IconClickable
-                        src={Utilities.caretRightsingle}
-                        onClick={() => toggleDropdown(index, folder, true)}
-                      />
-                    )
-                  ) : (
-                    <div className={styles.emptyBox}></div>
-                  )}
-                  <Tag
-                    altColor="blue"
-                    tag={
-                      <>
-                        <span className={styles["tag-item-text"]}>
-                          {folder.numberOfFiles}
-                        </span>{" "}
-                        <span>{folder.name}</span>
-                      </>
-                    }
-                    data={folder}
-                    type="collection"
-                    canRemove={true}
-                    editFunction={() => {
-                      setCurrentEditIndex(index);
-                      setCurrentEditValue(folder.name);
-                      setEditMode(true);
-                    }}
-                    removeFunction={() => {
-                      if (folder?.childFolders?.length > 0) {
-                        toastUtils.error(
-                          "Please delete its sub-collection first then try to delete this collection"
-                        );
-                      } else {
-                        setCurrentDeleteId(folder.id);
-                        setConfirmDeleteModal(true);
-                      }
-                    }}
-                  />
-                </div>
-                {/* only static need to change this  */}
-                <div  className={styles["sublist-wrapper"]}>
-                {showDropdown[index] && keyExists(folder.id) && (
-                  <>
-                    {keyResultsFetch(folder.id).map(
-                      (record: any, recordIndex: number) => (
-                        <div className={styles["sublist-outer"]}>
-                          <div className={styles.subList}>
-                            <Tag
-                              altColor="blue"
-                              tag={
-                                <>
-                                  <span className={styles["tag-item-text"]}>
-                                    {record.numberOfFiles}
-                                  </span>{" "}
-                                  <span>{record.name}</span>
-                                </>
-                              }
-                              data={record}
-                              type="collection"
-                              canRemove={true}
-                              editFunction={() => {
-                                setCurrentEditIndex(index);
-                                setCurrentEditValue(record.name);
-                                setEditMode(true);
-                                setEditSubCollectionId(record.id);
-                              }}
-                              removeFunction={() => {
-                                setCurrentDeleteId(record.id);
-                                setConfirmDeleteModal(true);
-                              }}
-                            />
-                          </div>
-                          <div className={styles.addButton}>
-                            {showDropdown[index] && (
-                              <NestedButton
-                                getSubFolders={getSubFolders}
-                                type={"subCollection"}
-                                parentId={folder.id}
-                              />
-                            )}
-                          </div>
-                        </div>
+                // new design added acoording
+                <div className={`${styles["outer-wrapper"]}`}>
+                  <div className={`${styles["attribute-wrapper"]}`}>
+                    {/* <IconClickable src={Utilities.CaretDown}/> */}
+                    {folder?.childFolders?.length > 0 ? (
+                      showDropdown[index] ? (
+                        <IconClickable
+                          src={Utilities.CaretDown}
+                          onClick={() => toggleDropdown(index, folder, true)}
+                        />
+                      ) : (
+                        <IconClickable
+                          src={Utilities.caretRightsingle}
+                          onClick={() => toggleDropdown(index, folder, true)}
+                        />
                       )
+                    ) : (
+                      <div className={styles.emptyBox}></div>
                     )}
-                  </>
-                )}
+                    <Tag
+                      altColor="blue"
+                      tag={
+                        <>
+                          <span className={styles["tag-item-text"]}>
+                            {folder.numberOfFiles}
+                          </span>{" "}
+                          <span>{folder.name}</span>
+                        </>
+                      }
+                      data={folder}
+                      type="collection"
+                      canRemove={true}
+                      editFunction={() => {
+                        setCurrentEditIndex(index);
+                        setCurrentEditValue(folder.name);
+                        setEditMode(true);
+                      }}
+                      removeFunction={() => {
+                        if (folder?.childFolders?.length > 0) {
+                          toastUtils.error(
+                            "Please delete its sub-collection first then try to delete this collection"
+                          );
+                        } else {
+                          setCurrentDeleteId(folder.id);
+                          setConfirmDeleteModal(true);
+                        }
+                      }}
+                    />
+                  </div>
+                  {/* only static need to change this  */}
+                  <div className={styles["sublist-wrapper"]}>
+                    {showDropdown[index] && keyExists(folder.id) && (
+                      <>
+                        {keyResultsFetch(folder.id).map(
+                          (record: any, recordIndex: number) => (
+                            <div className={styles["sublist-outer"]}>
+                              <div className={styles.subList}>
+                                <Tag
+                                  altColor="blue"
+                                  tag={
+                                    <>
+                                      <span className={styles["tag-item-text"]}>
+                                        {record.numberOfFiles}
+                                      </span>{" "}
+                                      <span>{record.name}</span>
+                                    </>
+                                  }
+                                  data={record}
+                                  type="collection"
+                                  canRemove={true}
+                                  editFunction={() => {
+                                    setCurrentEditIndex(index);
+                                    setCurrentEditValue(record.name);
+                                    setEditMode(true);
+                                    setEditSubCollectionId(record.id);
+                                  }}
+                                  removeFunction={() => {
+                                    setCurrentDeleteId(record.id);
+                                    setConfirmDeleteModal(true);
+                                  }}
+                                />
+                              </div>
+
+                            </div>
+                          )
+                        )}
+                        <div className={styles.addButton}>
+                          {showDropdown[index] && (
+                            <NestedButton
+                              updateFolders={getSubFolders}
+                              type={"subCollection"}
+                              parentId={folder.id}
+                            />
+                          )}
+                        </div>
+                      </>
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
             {editMode === true &&
               ((currentEditIndex === index && !editSubCollectionId) ||

@@ -135,6 +135,8 @@ export default ({ children }) => {
   const [headerName, setHeaderName] = useState("All Assets")
 
   const [selectedAllSubFoldersAndAssets, setSelectedAllSubFoldersAndAssets] = useState(false)
+
+  const [selectedAllSubAssets, setSelectedAllSubAssets] = useState(false)
   const [listUpdateFlag, setListUpdateFlag] = useState(false);
 
   const setPlaceHolders = (type, replace = true) => {
@@ -704,6 +706,8 @@ export default ({ children }) => {
     //select all feature for the selected subcollection page assets and folders
     selectedAllSubFoldersAndAssets,
     setSelectedAllSubFoldersAndAssets: selectAllSubFoldersAndAssetsViewList,
+    selectedAllSubAssets,
+    setSelectedAllSubAssets,
     appendNewSubSidenavFolders,
     setListUpdateFlag,
     listUpdateFlag
