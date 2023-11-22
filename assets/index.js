@@ -129,6 +129,7 @@ export const Utilities = {
   collections: require("./Icons/Utilities/FiltersTags/collections.svg"),
   file: require("./Icons/Utilities/FiltersTags/file.svg"),
   close: require("./Icons/Utilities/Close/close.svg"),
+  closeAttribute:require("./Icons/Utilities/Close/close-attribute.svg"),
   closeTag: require("./Icons/Utilities/Close/close-tag.svg"),
   blueClose: require("./Icons/Utilities/Close/blue-close.svg"),
   bigblueClose: require("./Icons/Utilities/Close/bigclose.svg"),
