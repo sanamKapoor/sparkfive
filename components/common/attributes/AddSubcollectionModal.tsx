@@ -10,10 +10,10 @@ import IconClickable from '../../common/buttons/icon-clickable';
 interface MyComponentProps {
     type: string
     parentId?: string
-    getSubFolders?: (id: string, page: number, replace: boolean) => Promise<void>
+    updateFolders?: (id?: string, page?: number, replace?: boolean) => Promise<void>
 }
 
-const NestedButton: React.FC<MyComponentProps> = ({ type, parentId, getSubFolders }) => {
+const NestedButton: React.FC<MyComponentProps> = ({ type, parentId, updateFolders }) => {
     const [activeModal, setActiveModal] = useState("");
     const [disableButtons, setDisableButtons] = useState(false)
 
@@ -26,7 +26,9 @@ const NestedButton: React.FC<MyComponentProps> = ({ type, parentId, getSubFolder
             }
             await folderApi.createFolder(folderData);
             if (type === "subCollection") {
-                getSubFolders(parentId, 1, true)
+                updateFolders(parentId, 1, true)
+            } else {
+                updateFolders()
             }
             setActiveModal("");
             setDisableButtons(false)
