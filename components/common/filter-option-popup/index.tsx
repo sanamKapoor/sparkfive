@@ -45,6 +45,8 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const showRules = activeAttribute.selectionType === "selectMultiple";
 
+  console.log("activeSortFilter: ", activeSortFilter);
+
   const hideSearch = (
     [
       FilterAttributeVariants.DIMENSIONS,
@@ -172,6 +174,9 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
     }
   };
 
+  const showModalActionBtns =
+    activeAttribute.id === FilterAttributeVariants.DIMENSIONS;
+
   return (
     <div className={`${styles["main-container"]}`}>
       <div className={`${styles["outer-wrapper"]}`}>
@@ -242,20 +247,22 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
                 activeRuleName={activeRuleName}
               />
             )}
-            <div className={`${styles["Modal-btn"]}`}>
-              <Button
-                className={"apply"}
-                text={"Apply"}
-                disabled={loading}
-                onClick={() => onApply(activeAttribute.id, filters)}
-              />
-              <Button
-                className={"cancel"}
-                text={"Cancel"}
-                disabled={loading}
-                onClick={onCancel}
-              />
-            </div>
+            {showModalActionBtns && (
+              <div className={`${styles["Modal-btn"]}`}>
+                <Button
+                  className={"apply"}
+                  text={"Apply"}
+                  disabled={loading}
+                  onClick={() => onApply(activeAttribute.id, filters)}
+                />
+                <Button
+                  className={"cancel"}
+                  text={"Cancel"}
+                  disabled={loading}
+                  onClick={onCancel}
+                />
+              </div>
+            )}
           </>
         ) : (
           <NoResultsPopup onClose={onClose} />

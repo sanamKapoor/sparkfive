@@ -190,45 +190,43 @@ const SubCollection = ({
       )}
       {
         <>
-          {sortedAssets.length > 0 && (
-            <>
-              <div className={`${styles["sub-collection-heading"]}`}>
-                {sortedFolders.length > 0 && (
-                  <div className={styles.rightSide}>
-                    <span>Assets ({totalAssets})</span>
-                    <img
-                      className={styles.ExpandIcons}
-                      onClick={() => {
-                        handleAssetsHideClick();
-                      }}
-                      src={assetsHide ? Utilities.up : Utilities.downIcon}
-                    />
-                  </div>
-                )}
-                 {sortedFolders.length > 0 && sortedAssets.length > 0 && (
-            <div className={styles.tagOuter}>
-              <div className={styles.left}>
-                <div className={styles.TagsInfo}>
-                  <div
-                    className={`${styles.circle} ${
-                      isChecked ? styles.checked : ""
-                    }`}
-                    onClick={handleCircleClick}
-                  >
-                    {isChecked && <img src={Utilities.checkIcon} />}
-                  </div>
-                  <span className={`${styles["sub-collection-content"]}`}>
-                    Show all assets in parent collection
-                  </span>
+          <>
+            <div className={`${styles["sub-collection-heading"]}`}>
+              {sortedFolders.length > 0 && (
+                <div className={styles.rightSide}>
+                  <span>Assets ({totalAssets})</span>
+                  <img
+                    className={styles.ExpandIcons}
+                    onClick={() => {
+                      handleAssetsHideClick();
+                    }}
+                    src={assetsHide ? Utilities.up : Utilities.downIcon}
+                  />
                 </div>
-              </div>
+              )}
+              {sortedFolders.length > 0 && (
+                <div className={styles.tagOuter}>
+                  <div className={styles.left}>
+                    <div className={styles.TagsInfo}>
+                      <div
+                        className={`${styles.circle} ${
+                          isChecked ? styles.checked : ""
+                        }`}
+                        onClick={handleCircleClick}
+                      >
+                        {isChecked && <img src={Utilities.checkIcon} />}
+                      </div>
+                      <span className={`${styles["sub-collection-content"]}`}>
+                        Show all assets in parent collection
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-          )}
-              </div>
-              <FilterView />
-            </>
-          )}
-         
+            <FilterView />
+          </>
+
           <div
             className={`${styles["assetWrapper"]} ${
               activeView === "list" && styles["list-wrapper"]
