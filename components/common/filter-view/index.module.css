@@ -87,6 +87,11 @@
   width: 10px;
   margin-left: 5px;
 }
+.main-container{
+  display: flex;
+  justify-content: end;
+  
+}
 
 @media (max-width: 820px) {
   .outer-wrapper {

@@ -27,7 +27,7 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
   const { isPublic, sharePath } = useContext(FilterContext);
 
   const { advancedConfig } = useContext(UserContext);
-
+ 
   const [options, setOptions] = useState([]);
 
   useEffect(() => {
@@ -102,8 +102,7 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
   };
 
   return (
-    <div className={`${indexStyles["main-container"]}`}>
-      <div className={`${indexStyles["outer-wrapper"]}`}>
+      <div className={`${styles["more-filter-wrapper"]}`} >
         <div className={`${indexStyles["popup-header"]}`}>
           <span className={`${indexStyles["main-heading"]}`}>More Filters</span>
           <div className={indexStyles.buttons}>
@@ -140,7 +139,6 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
           <Button className={"cancel"} text={"Cancel"} onClick={onCancel} />
         </div>
       </div>
-    </div>
   );
 };
 

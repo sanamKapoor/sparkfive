@@ -131,29 +131,28 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
                   onAttributeClick(attr);
                 }}
               >
-                {attr.name}
-                {checkIfBadgeVisible(activeSortFilter, attr.id) &&
-                  ![
-                    FilterAttributeVariants.LAST_UPDATED,
-                    FilterAttributeVariants.DATE_UPLOADED,
-                    FilterAttributeVariants.DIMENSIONS,
-                  ].includes(attr.id) && (
-                    <Badge
-                      count={
-                        activeSortFilter[getFilterKeyForAttribute(attr.id)]
-                          ?.length
-                      }
-                    />
-                  )}
-
-                <img
-                  className={`${styles["arrow-down"]}`}
-                  src={Utilities.downIconLight}
-                  alt=""
-                />
-              </div>
-              {activeAttribute !== null && activeAttribute?.id === attr.id && (
-                <div ref={exceptionRef}>
+                <div>
+                  {attr.name}
+                  {checkIfBadgeVisible(activeSortFilter, attr.id) &&
+                    ![
+                      FilterAttributeVariants.LAST_UPDATED,
+                      FilterAttributeVariants.DATE_UPLOADED,
+                      FilterAttributeVariants.DIMENSIONS,
+                    ].includes(attr.id) && (
+                      <Badge
+                        count={
+                          activeSortFilter[getFilterKeyForAttribute(attr.id)]
+                            ?.length
+                        }
+                      />
+                    )}
+                  <img
+                    className={`${styles["arrow-down"]}`}
+                    src={Utilities.downIconLight}
+                    alt=""
+                  />
+                </div>
+                {activeAttribute !== null && activeAttribute?.id === attr.id && (
                   <FilterOptionPopup
                     values={values}
                     activeAttribute={activeAttribute}
@@ -162,33 +161,36 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
                     setOptions={setFilteredOptions}
                     loading={loading}
                   />
-                </div>
-              )}
+                )}
+              </div>
             </ClickOutside>
           );
         })}
 
         {attributes.length > 0 && (
-          <ClickOutside
-            className={`${styles["main-wrapper"]}`}
-            onClick={onClickOutsideMoreFilters}
+          <div
+            className={`${styles["more-filter-btn"]}`}
+            onClick={onMoreFiltersClick}
           >
-            <div
-              className={`${styles["more-filter-btn"]}`}
-              onClick={onMoreFiltersClick}
-            >
-              <Button text="More filters" className="text-primary-btn" />
-            </div>
-            {showMoreFilters && (
-              <MoreFiltersOptionPopup
-                attributes={attributes}
-                setAttributes={setAttributes}
-                setShowModal={setShowMoreFilters}
-              />
-            )}
-          </ClickOutside>
+            <Button text="More filters" className="text-primary-btn" />
+          </div>
         )}
       </div>
+      <ClickOutside
+        className={`${styles["main-wrapper"]}`}
+        onClick={onClickOutsideMoreFilters}
+      >
+        {showMoreFilters && (
+          <div className={`${styles["main-container"]}`}>
+            <MoreFiltersOptionPopup
+              attributes={attributes}
+              setAttributes={setAttributes}
+              setShowModal={setShowMoreFilters}
+            />
+          </div>
+        )}
+      </ClickOutside>
+
     </div>
   );
 };
