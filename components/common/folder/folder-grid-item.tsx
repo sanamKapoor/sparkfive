@@ -1,24 +1,25 @@
-import { format } from 'date-fns';
-import update from 'immutability-helper';
-import fileDownload from 'js-file-download';
-import { ChangeEvent, useContext, useState } from 'react';
-import React from 'react';
+import { format } from "date-fns";
+import fileDownload from "js-file-download";
+import React, { ChangeEvent, useContext, useState } from "react";
 
-import { Utilities } from '../../../assets';
-import { COLLECTION_NAME_UPDATED, FAILED_TO_UPDATE_COLLECTION_NAME } from '../../../constants/messages';
-import { AssetContext } from '../../../context';
-import folderApi from '../../../server-api/folder';
-import shareFolderApi from '../../../server-api/share-collection';
-import toastUtils from '../../../utils/toast';
-import RenameModal from '../../common/modals/rename-modal';
-import gridStyles from '../asset//asset-grid.module.css';
-import AssetIcon from '../asset/asset-icon';
-import AssetImg from '../asset/asset-img';
-import Button from '../buttons/button';
-import IconClickable from '../buttons/icon-clickable';
-import ConfirmModal from '../modals/confirm-modal';
-import styles from './folder-grid-item.module.css';
-import FolderOptions from './folder-options';
+import { Utilities } from "../../../assets";
+import {
+  COLLECTION_NAME_UPDATED,
+  FAILED_TO_UPDATE_COLLECTION_NAME,
+} from "../../../constants/messages";
+import { AssetContext } from "../../../context";
+import folderApi from "../../../server-api/folder";
+import shareFolderApi from "../../../server-api/share-collection";
+import toastUtils from "../../../utils/toast";
+import RenameModal from "../../common/modals/rename-modal";
+import gridStyles from "../asset//asset-grid.module.css";
+import AssetIcon from "../asset/asset-icon";
+import AssetImg from "../asset/asset-img";
+import Button from "../buttons/button";
+import IconClickable from "../buttons/icon-clickable";
+import ConfirmModal from "../modals/confirm-modal";
+import styles from "./folder-grid-item.module.css";
+import FolderOptions from "./folder-options";
 
 // Context
 // Components
@@ -45,21 +46,20 @@ const FolderGridItem = ({
   thumbnailPath,
   thumbnailExtension,
   thumbnails,
-  openFilter = false,
   activeView,
   isThumbnailNameEditable = false,
   focusedItem,
   setFocusedItem,
   folderType,
-  mode
+  mode,
 }: any) => {
-  const { updateDownloadingStatus,
+  const {
+    updateDownloadingStatus,
     folders,
     setFolders,
     setListUpdateFlag,
     subFoldersViewList: { SubFolders, next, total },
-  } =
-    useContext(AssetContext);
+  } = useContext(AssetContext);
 
   const [folderRenameModalOpen, setFolderRenameModalOpen] = useState(false);
 
@@ -189,7 +189,7 @@ const FolderGridItem = ({
   //Rename collection Logic Added in action Item
   const renameCollection = () => {
     setFolderRenameModalOpen(true);
-  }
+  };
   const confirmFolderRename = async (newValue) => {
     try {
       if (mode === "SubCollectionView") {
@@ -204,12 +204,10 @@ const FolderGridItem = ({
               } else {
                 return folder;
               }
-            })
+            }),
           ];
 
-          setFolders(
-            updatedAssets
-          );
+          setFolders(updatedAssets);
           setListUpdateFlag(true);
           setThumbnailName(newValue);
         }
@@ -233,14 +231,11 @@ const FolderGridItem = ({
         }
         toastUtils.success("Collection name updated");
       }
-
     } catch (err) {
       console.log(err);
       toastUtils.error("Could not update collection name");
     }
   };
-
-
 
   return (
     <div
@@ -275,12 +270,8 @@ const FolderGridItem = ({
           <div
             className={
               thumbnailPath || thumbnailExtension
-                ? `${styles.grid_border} ${
-                    openFilter ? styles["filter_open"] : ""
-                  }`
-                : `${styles["image-wrapper"]} ${
-                    openFilter ? styles["filter_open"] : ""
-                  }
+                ? `${styles.grid_border} `
+                : `${styles["image-wrapper"]}
                 ${activeView === "list" && styles["list-image-wrapper"]}
                 `
             }
@@ -347,20 +338,20 @@ const FolderGridItem = ({
             </>
           </div>
           {
-          // isThumbnailNameEditable &&
-          // isEditing &&
-          // focusedItem &&
-          // focusedItem === id ? (
-          //   <input
-          //     className={`normal-text ${styles["editable-field"]} ${
-          //       activeView === "list" && styles["list-editable-field"]
-          //     } ${gridStyles["editable-input"]}`}
-          //     value={thumbnailName}
-          //     onChange={handleNameChange}
-          //     onBlur={updateNameOnBlur}
-          //     autoFocus
-          //   />
-          // ) : (
+            // isThumbnailNameEditable &&
+            // isEditing &&
+            // focusedItem &&
+            // focusedItem === id ? (
+            //   <input
+            //     className={`normal-text ${styles["editable-field"]} ${
+            //       activeView === "list" && styles["list-editable-field"]
+            //     } ${gridStyles["editable-input"]}`}
+            //     value={thumbnailName}
+            //     onChange={handleNameChange}
+            //     onBlur={updateNameOnBlur}
+            //     autoFocus
+            //   />
+            // ) : (
             <span
               id="editable-preview"
               onClick={handleOnFocus}
@@ -371,12 +362,12 @@ const FolderGridItem = ({
                     } ${gridStyles["editable-preview"]} ${
                       activeView === "list" && styles["list-text"]
                     }`
-                  : `${gridStyles["editable-preview"]} ${gridStyles["non-editable-preview"]}`
+                  : `normal-text ${styles["wrap-text"]} ${gridStyles["editable-preview"]} ${gridStyles["non-editable-preview"]}`
               }
             >
               {thumbnailName}
             </span>
-          // )
+            // )
           }
         </div>
       </div>
@@ -458,9 +449,8 @@ const FolderGridItem = ({
         }`}
       >
         {folderType === "SubCollection" ? (
-          <div className="secondary-text">{`${
-            assets?.length ?? 0
-          } Assets`}</div>
+          <div className="secondary-text">{`${assetsCount ?? 0} 
+          Assets`}</div>
         ) : (
           <div className="secondary-text">{`${
             Number(assetsCount ?? 0) + Number(totalchildassests ?? 0)
@@ -492,7 +482,7 @@ const FolderGridItem = ({
         thumbnails={thumbnails}
         activeView={activeView}
         renameCollection={renameCollection}
-        />
+      />
       <RenameModal
         closeModal={() => setFolderRenameModalOpen(false)}
         modalIsOpen={folderRenameModalOpen}

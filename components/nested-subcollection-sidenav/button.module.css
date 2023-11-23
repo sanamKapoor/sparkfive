@@ -4,20 +4,18 @@
     align-items: center;
     cursor: pointer;
     padding: 0px;
- 
-}
+ }
 
 .nestedButton span{
     font-family: "Noto Sans", sans-serif;
     font-weight: 500;
     font-size: 14px;
     line-height: 18px;
-    color:var(--color-prim-turquoise);
     margin-left: 5px;
 
 }
 .addIcon{
-    width: 10.5px;
+    width: 12px;
    margin-right: 5px;
    margin-left:10px;
   }

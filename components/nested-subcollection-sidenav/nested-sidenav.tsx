@@ -77,7 +77,7 @@ const NestedSidenav = ({ viewFolder }) => {
               onClick={() => {
                 setSidebarOpen(!sidebarOpen);
               }}
-              src={Utilities.arrowleft}
+              src={Utilities.toggleLight}
             />
           }
         />

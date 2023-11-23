@@ -1,8 +1,8 @@
-import React, { ReactNode } from "react";
-import styles from "./nested-heading.module.css";
-import { Utilities } from "../../assets";
-import IconClickable from "../common/buttons/icon-clickable";
+import React, { ReactNode, useContext } from "react";
+import { ASSET_UPLOAD_NO_APPROVAL } from "../../constants/permissions";
+import { UserContext } from "../../context";
 import NestedButton from "./button";
+import styles from "./nested-heading.module.css";
 
 const ReusableHeading = ({
   headingTrue,
@@ -13,6 +13,7 @@ const ReusableHeading = ({
   headingClickType = "",
   description = "",
   customStyle,
+  fontSize,
 }: {
   totalCount?: number;
   text: string;
@@ -22,9 +23,15 @@ const ReusableHeading = ({
   headingTrue?: boolean;
   description?: string;
   customStyle?: React.CSSProperties;
+  fontSize?: string;
 }) => {
+  const { hasPermission } = useContext(UserContext);
+
+  const showCollectionCreateIcon =
+    text === "All Collections" && hasPermission([ASSET_UPLOAD_NO_APPROVAL]);
+
   return (
-    <div className={styles["heading-contents"]} style={customStyle}>
+    <div className={`${styles["heading-contents"]} ${icon ? styles["heading-mob"] : ""}`} style={customStyle}>
       <div
         className={`${styles["sidenav-heading"]} ${headingTrue ? styles["active"] : ""
           }`}
@@ -33,10 +40,10 @@ const ReusableHeading = ({
         <div onClick={() => headingClick(headingClickType, description)}>
           {`${text} ${totalCount ? `(${totalCount})` : ""}`}
         </div>
-        {text === "Collections" && <NestedButton type={"collection"} />}
+        {showCollectionCreateIcon && <NestedButton type={"collection"} />}
       </div>
       {icon && <div className="left-icon">{icon}</div>}
-    </div >
+    </div>
   );
 };
 

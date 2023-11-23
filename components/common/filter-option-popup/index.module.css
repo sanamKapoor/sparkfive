@@ -5,7 +5,7 @@
   border-radius: 12px;
   padding: 16px;
   margin-top: 10px;
-  z-index: 9999;
+  z-index: 10000;
   position: absolute;
   background: #fff;
   min-width: 350px;
@@ -29,8 +29,8 @@
 }
 
 .main-heading {
-  font-weight: 700;
-  font-size: 18px;
+  font-weight: 600;
+  font-size: 14px;
   font-family: "Noto Sans", sans-serif;
 }
 
@@ -60,42 +60,50 @@
 
 .Modal-btn {
   margin-top: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap:15px;
 }
 
 .rule-tag {
   display: flex;
   align-items: center;
   padding: 16px;
+  justify-content: flex-end;
 }
 
 .rule-tag label {
   margin-right: 8px;
+  color:#817D9D;
 }
 
 .select-wrapper {
   display: flex;
   align-items: center;
-  background: #e9eefa;
+  /* background: #e9eefa; */
   width: 100%;
-  justify-content: space-between;
-  padding: 0 20px;
+  padding: 0 0 0 10px;
   border-radius: 4px;
   height: 24px;
-  max-width: 155px;
+  max-width: 108px;
   cursor: pointer;
+  color:#817D9D;
+  font-size: 12px;
+  font-weight: 400;
 }
 
 .dropdown-icon {
-  width: 10px;
-  height: 8px;
-  margin-left: 10px;
+  width: 16px;
+  height: 16px;
+  margin-left: 7px;
 }
 
 .dropdown-menu {
   bottom: 0;
   top: unset;
   right: 10px;
-  left: 66px;
+
 }
 
 .customStyles input {

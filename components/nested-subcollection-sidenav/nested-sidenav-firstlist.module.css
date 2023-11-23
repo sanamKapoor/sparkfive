@@ -30,7 +30,7 @@
 .icon-description span{
     font-family: "Noto Sans", sans-serif;
     font-weight: 500;
-    font-size: 14px;
+    font-size: 13px;
     line-height: 18px;
     color:var(--color-prim-navy);
 }
@@ -53,9 +53,9 @@
 .list1-right-contents span{
     font-family: "Noto Sans", sans-serif;
     font-weight: 500;
-    font-size: 14px;
+    font-size: 13px;
     line-height: 18px;
-    color:var(--color-prim-navy);
+    color:#817D9D;
 }
 .active{
     background:var(--color-sec-lightblue);
@@ -81,4 +81,24 @@
         
         padding: 10px 23px;
     }
+}
+
+@media (max-width:800px){
+    .sidenav-list1{
+       border-top:1px solid #dfdad4;
+    }
+    .border-bottom{
+        padding: 16px 23px;
+    }
+    .sidenav-list1{
+        margin-bottom: 0px;
+    }
+    
+}
+
+@media (max-width:420px){
+    .sidenav-list1{
+        margin-bottom: 0px;
+    }
+    
 }

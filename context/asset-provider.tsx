@@ -135,6 +135,8 @@ export default ({ children }) => {
   const [headerName, setHeaderName] = useState("All Assets")
 
   const [selectedAllSubFoldersAndAssets, setSelectedAllSubFoldersAndAssets] = useState(false)
+
+  const [selectedAllSubAssets, setSelectedAllSubAssets] = useState(false)
   const [listUpdateFlag, setListUpdateFlag] = useState(false);
 
   const setPlaceHolders = (type, replace = true) => {
@@ -229,7 +231,7 @@ export default ({ children }) => {
       }
     }
     else {
-      setSidenavFolderChildList((map) => { return new Map(map.set(id, { results: [...map.get(id).results, ...results], next, total })) })
+      setSidenavFolderChildList((map) => { return new Map(map.set(id, { results: [...map.get(id)?.results || {}, ...results], next, total })) })
     }
   };
 
@@ -240,15 +242,18 @@ export default ({ children }) => {
     removeId?: string
 
   ) => {
+    const data = sidenavFolderChildList.get(id);
+    if (!data) return;
+
     const { results = [], next = -1, total = 0 } = sidenavFolderChildList.get(id);
     console.log("🚀 ~ file: asset-provider.tsx:245 ~ results:", results)
+
     if (!remove) {
       setSidenavFolderChildList((map) => {
         return new Map(map.set(id, { results: [...inputFolders, ...results], next, total: total + 1 }))
       })
     } else {
-
-      const folderIndex = results.findIndex(
+      const folderIndex = results?.findIndex(
         (folder) => folder.id === removeId
       );
 
@@ -258,8 +263,6 @@ export default ({ children }) => {
         })
       }
     }
-
-
   };
 
   const setSidenavFolderItems = (
@@ -703,6 +706,8 @@ export default ({ children }) => {
     //select all feature for the selected subcollection page assets and folders
     selectedAllSubFoldersAndAssets,
     setSelectedAllSubFoldersAndAssets: selectAllSubFoldersAndAssetsViewList,
+    selectedAllSubAssets,
+    setSelectedAllSubAssets,
     appendNewSubSidenavFolders,
     setListUpdateFlag,
     listUpdateFlag

@@ -20,6 +20,8 @@ import filterApi from "../server-api/filter";
 import shareCollectionApi from "../server-api/share-collection";
 import tagsApi from "../server-api/tag";
 
+import { getAssetsFilters } from "../utils/asset";
+
 const useFilters = (attributes) => {
   const { activeSortFilter, setActiveSortFilter, sharePath, isPublic } =
     useContext(FilterContext);
@@ -87,29 +89,31 @@ const useFilters = (attributes) => {
     fetchFunction: (params?: Record<string, unknown>) => Promise<any>,
     keysToFilter: string[]
   ) => {
-    let type, stage, hasProducts;
+    let type, hasProducts;
 
     if (activeSortFilter.mainFilter === "images") {
       type = "image";
-      stage = "draft";
     } else if (activeSortFilter.mainFilter === "videos") {
       type = "video";
-      stage = "draft";
     } else if (activeSortFilter.mainFilter === "product") {
       hasProducts = "product";
-      stage = "draft";
-    } else if (activeSortFilter.mainFilter === "archived") stage = "archived";
-    else stage = "draft";
+    }
 
     const params = {
       assetsCount: "yes",
       sharePath,
-      folderId: activeSubFolders || activeFolder || null,
+      ...((activeSubFolders || activeFolder) && {
+        folderId: activeSubFolders || activeFolder,
+      }),
       ...(type && { type }),
-      stage,
-      page: 0,
       assetLim: "yes",
       ...(hasProducts && { hasProducts }),
+      ...getAssetsFilters({
+        replace: false,
+        addedIds: [],
+        nextPage: 0,
+        userFilterObject: { ...activeSortFilter },
+      }),
     };
 
     let fetchedValues = await fetchFunction({ ...params });
@@ -214,37 +218,33 @@ const useFilters = (attributes) => {
     setActiveSortFilter({ ...activeSortFilter, [filterKey]: updatedData });
   };
 
-  const onAttributeClick = async (data: IAttribute) => {
+  const fetchValuesById = async (id: string) => {
+    let values: IFilterAttributeValues = [];
+    setLoading(true);
     try {
-      setLoading(true);
-      setActiveAttribute(data);
-      let values: IFilterAttributeValues = [];
-
-      switch (data.id) {
+      switch (id) {
         case FilterAttributeVariants.TAGS:
-          values = await fetchValues(data.id, fetchTags, ["id"]);
+          values = await fetchValues(id, fetchTags, ["id"]);
           break;
 
         case FilterAttributeVariants.AI_TAGS:
-          values = await fetchValues(data.id, fetchAITags, ["id"]);
+          values = await fetchValues(id, fetchAITags, ["id"]);
           break;
 
         case FilterAttributeVariants.CAMPAIGNS:
-          values = await fetchValues(data.id, fetchCampaigns, ["id"]);
+          values = await fetchValues(id, fetchCampaigns, ["id"]);
           break;
 
         case FilterAttributeVariants.FILE_TYPES:
-          values = await fetchValues(data.id, fetchAssetFileExtensions, [
-            "name",
-          ]);
+          values = await fetchValues(id, fetchAssetFileExtensions, ["name"]);
           break;
 
         case FilterAttributeVariants.ORIENTATION:
-          values = await fetchValues(data.id, fetchAssetOrientations, ["name"]);
+          values = await fetchValues(id, fetchAssetOrientations, ["name"]);
           break;
 
         case FilterAttributeVariants.RESOLUTION:
-          values = await fetchValues(data.id, fetchAssetResolutions, ["dpi"]);
+          values = await fetchValues(id, fetchAssetResolutions, ["dpi"]);
           values = values.map((item) => {
             if (item.dpi === "highres") {
               return {
@@ -261,7 +261,10 @@ const useFilters = (attributes) => {
           break;
 
         case FilterAttributeVariants.DIMENSIONS:
-          values = await fetchValues(data.id, fetchAssetDimensionLimits, []);
+          values = (await fetchValues(id, fetchAssetDimensionLimits, [])) || {
+            dimensionWidth: activeSortFilter?.dimensionWidth,
+            dimensionHeight: activeSortFilter?.dimensionHeight,
+          };
           break;
 
         case FilterAttributeVariants.LAST_UPDATED:
@@ -273,22 +276,30 @@ const useFilters = (attributes) => {
           break;
 
         case FilterAttributeVariants.PRODUCTS:
-          values = await fetchValues(data.id, fetchProductSku, ["id"]);
+          values = await fetchValues(id, fetchProductSku, ["id"]);
           break;
 
         default:
-          values = await fetchValues(data.id, () => fetchCustomField(data.id), [
-            "id",
-          ]);
+          values = await fetchValues(
+            id,
+            (params) => fetchCustomField(id, params),
+            ["id"]
+          );
       }
-
-      setValues(values);
-      setFilteredOptions(values);
+      return values;
     } catch (err) {
-      console.log("[FILTER_DROPDOWN]: ", err);
+      console.log("FETCHED_VALUES_BY_ID_ERR: ", err);
     } finally {
       setLoading(false);
     }
+  };
+
+  const onAttributeClick = async (data: IAttribute) => {
+    const values = await fetchValuesById(data.id);
+
+    setValues(values);
+    setFilteredOptions(values);
+    setActiveAttribute(data);
   };
 
   const fetchTags = async (params?: Record<string, unknown>) => {
@@ -350,6 +361,7 @@ const useFilters = (attributes) => {
   return {
     activeAttribute,
     filteredOptions,
+    fetchValuesById,
     loading,
     onAttributeClick,
     onClearAll,

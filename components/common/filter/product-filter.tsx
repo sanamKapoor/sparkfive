@@ -1,4 +1,10 @@
-import { CommonFilterProps } from "../../../interfaces/filters";
+import { useContext, useEffect } from "react";
+import { FilterContext } from "../../../context";
+import useFilters from "../../../hooks/use-filters";
+import {
+  CommonFilterProps,
+  FilterAttributeVariants,
+} from "../../../interfaces/filters";
 import OptionsData from "../filter-option-popup/options-data";
 
 interface ProductFilterProps extends CommonFilterProps {}
@@ -6,8 +12,20 @@ interface ProductFilterProps extends CommonFilterProps {}
 const ProductFilter: React.FC<ProductFilterProps> = ({
   options,
   setOptions,
-  setFilters,
 }) => {
+  const { activeSortFilter } = useContext(FilterContext);
+
+  const { fetchValuesById } = useFilters([]);
+
+  const fetchFilters = async () => {
+    const newValues = await fetchValuesById(FilterAttributeVariants.PRODUCTS);
+    setOptions(newValues);
+  };
+
+  useEffect(() => {
+    fetchFilters();
+  }, [activeSortFilter]);
+
   return (
     <OptionsData
       filterKey="filterProductSku"
@@ -15,7 +33,6 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
       compareKey="id"
       options={options}
       setOptions={setOptions}
-      setFilters={setFilters}
     />
   );
 };

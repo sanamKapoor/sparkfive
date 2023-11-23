@@ -168,7 +168,11 @@ export const AssetContext = createContext({
 
   // Sub Collection select All Folders and assets in subCollection
   selectedAllSubFoldersAndAssets: false,
+
+
   setSelectedAllSubFoldersAndAssets: (value) => { },
+  selectedAllSubAssets: false,
+  setSelectedAllSubAssets: (value) => { },
   setListUpdateFlag: (value) => { },
   listUpdateFlag: false,
   appendNewSubSidenavFolders: (inputFolders,

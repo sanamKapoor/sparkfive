@@ -25,13 +25,14 @@ const OptionDataItem: React.FC<OptionDataItemProps> = ({
           <IconClickable
             src={Utilities.radioButtonEnabled}
             onClick={onDeselect}
+            additionalClass={styles["radio-icon"]}
           />
         ) : (
-          <IconClickable src={Utilities.radioButtonNormal} onClick={onSelect} />
+          <IconClickable additionalClass={styles["radio-icon"]} src={Utilities.radioButtonNormal} onClick={onSelect} />
         )}
         <span className={`${styles["select-name"]}`}>{name}</span>
       </div>
-      <div>
+      <div className={styles.filterCount}>
         <span>{count}</span>
       </div>
     </div>

@@ -31,8 +31,7 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
   attributes,
   setAttributes,
 }) => {
-  const { activeSortFilter, setRenderedFlag, isPublic, sharePath } =
-    useContext(FilterContext);
+  const { activeSortFilter, isPublic, sharePath } = useContext(FilterContext);
   const {
     activeAttribute,
     loading,
@@ -57,6 +56,8 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
         defaultOnly: true,
         ...(sharePath && { sharePath }),
       });
+      // TODO: need to check for advancedConfig.aiTagging setting as well
+
       //check for filter elements to hide
       if (advancedConfig?.hideFilterElements) {
         const filteredAttrs = res.data.data.filter(
@@ -71,7 +72,6 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
 
   useEffect(() => {
     getAttributes();
-    setRenderedFlag(true);
   }, []);
 
   const onMoreFiltersClick = async () => {
@@ -130,6 +130,9 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
                 onClick={(e) => {
                   onAttributeClick(attr);
                 }}
+                onKeyDown={(e) => {
+                  onAttributeClick(attr);
+                }}
               >
                 {attr.name}
                 {checkIfBadgeVisible(activeSortFilter, attr.id) &&
@@ -148,7 +151,7 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
 
                 <img
                   className={`${styles["arrow-down"]}`}
-                  src={Utilities.downIcon}
+                  src={Utilities.downIconLight}
                   alt=""
                 />
               </div>
@@ -156,10 +159,10 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
                 <div ref={exceptionRef}>
                   <FilterOptionPopup
                     values={values}
-                    activeAttribute={activeAttribute}
-                    setActiveAttribute={setActiveAttribute}
                     options={filteredOptions}
                     setOptions={setFilteredOptions}
+                    activeAttribute={activeAttribute}
+                    setActiveAttribute={setActiveAttribute}
                     loading={loading}
                   />
                 </div>
@@ -169,26 +172,28 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
         })}
 
         {attributes.length > 0 && (
-          <ClickOutside
-            className={`${styles["main-wrapper"]}`}
-            onClick={onClickOutsideMoreFilters}
+          <div
+            className={`${styles["more-filter-btn"]}`}
+            onClick={onMoreFiltersClick}
           >
-            <div
-              className={`${styles["more-filter-btn"]}`}
-              onClick={onMoreFiltersClick}
-            >
-              <Button text="More filters" className="text-primary-btn" />
-            </div>
-            {showMoreFilters && (
-              <MoreFiltersOptionPopup
-                attributes={attributes}
-                setAttributes={setAttributes}
-                setShowModal={setShowMoreFilters}
-              />
-            )}
-          </ClickOutside>
+            <Button text="More filters" className="text-primary-btn" />
+          </div>
         )}
       </div>
+      <ClickOutside
+        className={`${styles["main-wrapper"]}`}
+        onClick={onClickOutsideMoreFilters}
+      >
+        {showMoreFilters && (
+          <div className={`${styles["main-container"]}`}>
+            <MoreFiltersOptionPopup
+              attributes={attributes}
+              setAttributes={setAttributes}
+              setShowModal={setShowMoreFilters}
+            />
+          </div>
+        )}
+      </ClickOutside>
     </div>
   );
 };

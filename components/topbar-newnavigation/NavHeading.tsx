@@ -5,10 +5,14 @@ import Button from "../common/buttons/button";
 import { AssetContext, FilterContext } from "../../context";
 
 const NavHeading = ({ isShare = false }) => {
+
   const {
     headerName,
-    setHeaderName
+    setHeaderName,
+    sidebarOpen,
+    setSidebarOpen
   } = useContext(AssetContext);
+
   const {
     activeSortFilter
   } = useContext(FilterContext) as any;
@@ -18,20 +22,24 @@ const NavHeading = ({ isShare = false }) => {
       setHeaderName(`${activeSortFilter.mainFilter === "folders" ? "All Collections" : "All Assets"}`)
     }
   }, [])
+
   return (
     <>
       <div className={styles.menuWrapper}>
-        <div className={styles.icon}>
-          <img src={Utilities.menu} />
-          {/* close icon  :need to add functionality*/}
-          {/* <img src={Utilities.bigblueClose}/> */}
+        <div className={styles.icon} onClick={() => { setSidebarOpen(!sidebarOpen) }}>
+          {sidebarOpen ? <img src={Utilities.bigblueClose} alt="" />
+            : <img src={Utilities.menu} />}
+
+          {/* close icon : should be used when we want to close the sidenav */}
+          {/*  */}
         </div>
-        <span className={styles.menuHeading}>Menu</span>
+        <span className={styles.menuHeading} >Menu</span>
       </div>
       <div className={styles.navHeadings}>
         <div className={styles.headingWrapper}>
           <div className={styles.icon}>
             <img src={Utilities.assets} />
+
           </div>
           <span className={styles.navigationLinkheading}>{headerName}</span>
         </div>
@@ -39,4 +47,5 @@ const NavHeading = ({ isShare = false }) => {
     </>
   );
 };
+
 export default NavHeading;
