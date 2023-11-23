@@ -131,7 +131,10 @@ export interface OptionsDataProps {
 }
 
 export interface CommonFilterProps
-  extends Pick<OptionsDataProps, "options" | "setFilters" | "setOptions"> {}
+  extends Pick<
+    OptionsDataProps,
+    "options" | "setFilters" | "setOptions" | "activeAttribute"
+  > {}
 
 export interface ISelectedFilter {
   id: string;
