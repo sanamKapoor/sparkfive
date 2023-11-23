@@ -159,10 +159,10 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
                 <div ref={exceptionRef}>
                   <FilterOptionPopup
                     values={values}
-                    activeAttribute={activeAttribute}
-                    setActiveAttribute={setActiveAttribute}
                     options={filteredOptions}
                     setOptions={setFilteredOptions}
+                    activeAttribute={activeAttribute}
+                    setActiveAttribute={setActiveAttribute}
                     loading={loading}
                   />
                 </div>

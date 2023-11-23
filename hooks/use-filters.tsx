@@ -117,7 +117,6 @@ const useFilters = (attributes) => {
     };
 
     let fetchedValues = await fetchFunction({ ...params });
-    console.log("fetchedValues: ", fetchedValues);
 
     if (id === "dimensions") {
       fetchedValues = {
@@ -262,7 +261,10 @@ const useFilters = (attributes) => {
           break;
 
         case FilterAttributeVariants.DIMENSIONS:
-          values = await fetchValues(id, fetchAssetDimensionLimits, []);
+          values = (await fetchValues(id, fetchAssetDimensionLimits, [])) || {
+            dimensionWidth: activeSortFilter?.dimensionWidth,
+            dimensionHeight: activeSortFilter?.dimensionHeight,
+          };
           break;
 
         case FilterAttributeVariants.LAST_UPDATED:
@@ -293,11 +295,11 @@ const useFilters = (attributes) => {
   };
 
   const onAttributeClick = async (data: IAttribute) => {
-    setActiveAttribute(data);
-
     const values = await fetchValuesById(data.id);
+
     setValues(values);
     setFilteredOptions(values);
+    setActiveAttribute(data);
   };
 
   const fetchTags = async (params?: Record<string, unknown>) => {

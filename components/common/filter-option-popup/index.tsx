@@ -45,8 +45,6 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const showRules = activeAttribute.selectionType === "selectMultiple";
 
-  console.log("activeSortFilter: ", activeSortFilter);
-
   const hideSearch = (
     [
       FilterAttributeVariants.DIMENSIONS,
