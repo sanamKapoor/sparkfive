@@ -11,6 +11,17 @@
   padding-right: 10px;
 }
 
+
+.more-filter-wrapper {
+  position: absolute;
+  background: #fff;
+  z-index: 999;
+  padding: 30px;
+  margin-top: 5px;
+  border: 1px solid lightgray;
+  border-radius: 10px;
+}
+
 .tags-wrapper {
   display: flex;
   align-items: center;
@@ -45,15 +56,7 @@
   gap: 10px;
   padding: 20px 0 0 0;
 }
-.more-filter-wrapper{
-  position: absolute;
-  background:#fff;
-  z-index: 999;
-  padding: 30px;
-  margin-top: 5px;
-  border: 1px solid lightgray;
-  border-radius :10px;
-}
+
 
 @media screen and (max-width: 1280px) {
   .outer-wrapper {
