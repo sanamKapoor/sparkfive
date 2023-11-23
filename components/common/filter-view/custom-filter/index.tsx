@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 
+import { FilterContext } from "../../../../context";
+import useFilters from "../../../../hooks/use-filters";
 import {
   CommonFilterProps,
   IAttributeValue,
 } from "../../../../interfaces/filters";
+import NoResults from "../../UI/NoResultsPopup";
 import Divider from "../../filter-option-popup/divider";
 import OptionDataItem from "../../filter-option-popup/option-data-item";
 import styles from "../../filter-option-popup/options-data.module.css";
-import NoResults from "../../UI/NoResultsPopup";
 
 interface CustomFilterProps extends CommonFilterProps {}
 
@@ -17,6 +19,18 @@ const CustomFilter: React.FC<CustomFilterProps> = ({
   setFilters,
   activeAttribute,
 }) => {
+  const { activeSortFilter, setActiveSortFilter } = useContext(FilterContext);
+
+  const { fetchValuesById } = useFilters([]);
+  const fetchFilters = async () => {
+    const newValues = await fetchValuesById(activeAttribute?.id);
+    setOptions(newValues);
+  };
+
+  useEffect(() => {
+    fetchFilters();
+  }, [activeSortFilter]);
+
   const onSelectValue = (data: IAttributeValue) => {
     const index = options.findIndex((value) => value.id === data.id);
     if (index !== -1) {
@@ -25,16 +39,22 @@ const CustomFilter: React.FC<CustomFilterProps> = ({
     setOptions([...options]);
     const filterKey = `custom-p${activeAttribute?.id}`;
 
-    setFilters((prevState) => {
-      return {
-        [filterKey]:
-          prevState && prevState[filterKey]?.length > 0
-            ? [
-                ...(prevState && prevState[filterKey]),
-                { ...data, value: data.id, label: data.name },
-              ]
-            : [{ ...data, value: data.id, label: data.name }],
-      };
+    let newState;
+
+    if (activeSortFilter[filterKey] && activeSortFilter[filterKey].length > 0) {
+      newState = [
+        ...new Set([
+          ...activeSortFilter[filterKey],
+          { ...data, value: data.id, label: data.name },
+        ]),
+      ];
+    } else {
+      newState = [{ ...data, value: data.id, label: data.name }];
+    }
+
+    setActiveSortFilter({
+      ...activeSortFilter,
+      [filterKey]: newState,
     });
   };
 
@@ -51,7 +71,8 @@ const CustomFilter: React.FC<CustomFilterProps> = ({
 
     const filterKey = `custom-p${activeAttribute?.id}`;
 
-    setFilters({
+    setActiveSortFilter({
+      ...activeSortFilter,
       [filterKey]: newFilters,
     });
   };
@@ -59,8 +80,8 @@ const CustomFilter: React.FC<CustomFilterProps> = ({
   return (
     <>
       <div className={`${styles["outer-wrapper"]}`}>
-        {options.length > 0 ? (
-          options.map((item) => (
+        {options?.length > 0 ? (
+          options?.map((item) => (
             <div className={styles["grid-item"]} key={item.id}>
               <OptionDataItem
                 name={item.name}

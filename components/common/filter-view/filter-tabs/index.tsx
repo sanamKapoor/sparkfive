@@ -130,6 +130,9 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
                 onClick={(e) => {
                   onAttributeClick(attr);
                 }}
+                onKeyDown={(e) => {
+                  onAttributeClick(attr);
+                }}
               >
                 <div>
                   {attr.name}
@@ -155,10 +158,10 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
                 {activeAttribute !== null && activeAttribute?.id === attr.id && (
                   <FilterOptionPopup
                     values={values}
-                    activeAttribute={activeAttribute}
-                    setActiveAttribute={setActiveAttribute}
                     options={filteredOptions}
                     setOptions={setFilteredOptions}
+                    activeAttribute={activeAttribute}
+                    setActiveAttribute={setActiveAttribute}
                     loading={loading}
                   />
                 )}

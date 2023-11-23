@@ -13,18 +13,17 @@ const DimensionsFilter: React.FC<DimensionsFilterProps> = ({
   const { activeSortFilter } = useContext(FilterContext);
 
   const { dimensionWidth: width, dimensionHeight: height } = options;
-
   const [dimensionWidth, setDimensionWidth] = useState<{
-    min: string;
-    max: string;
+    min: number;
+    max: number;
   }>({
     min: activeSortFilter?.dimensionWidth?.min || width?.min,
     max: activeSortFilter?.dimensionWidth?.max || width?.max,
   });
 
   const [dimensionHeight, setDimensionHeight] = useState<{
-    min: string;
-    max: string;
+    min: number;
+    max: number;
   }>({
     min: activeSortFilter?.dimensionHeight?.min || height?.min,
     max: activeSortFilter?.dimensionHeight?.max || height?.max,

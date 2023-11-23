@@ -45,8 +45,6 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const showRules = activeAttribute.selectionType === "selectMultiple";
 
-  console.log("activeSortFilter: ", activeSortFilter);
-
   const hideSearch = (
     [
       FilterAttributeVariants.DIMENSIONS,
@@ -59,20 +57,12 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   ).includes(activeAttribute.id);
 
   const onApply = (id: string, data: any) => {
-    //TODO: handle case if some filters already exists and new ones are added for a particular filterKey
     if (data) {
-      const filterKey = filterKeyMap[id] || `custom-p${activeAttribute.id}`;
-
       if (id === FilterAttributeVariants.DIMENSIONS) {
         setActiveSortFilter({
           ...activeSortFilter,
           dimensionWidth: data.dimensionWidth,
           dimensionHeight: data.dimensionHeight,
-        });
-      } else {
-        setActiveSortFilter({
-          ...activeSortFilter,
-          [filterKey]: data[filterKey],
         });
       }
     }
@@ -189,13 +179,21 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
               <span className={`${styles["main-heading"]}`}>
                 Select {activeAttribute?.name}
               </span>
-              <button
-                className={styles.clear}
-                disabled={loading}
-                onClick={() => setActiveAttribute(null)}
-              >
-                Clear
-              </button>
+              <div className={styles.buttons}>
+                <button
+                  className={styles.clear}
+                  disabled={loading}
+                  onClick={onClear}
+                >
+                  clear
+                </button>
+                <img
+                  className={styles.closeIcon}
+                  src={Utilities.closeIcon}
+                  onClick={onClose}
+                  onKeyDown={onClose}
+                />
+              </div>
             </div>
           </div>
 
