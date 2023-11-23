@@ -121,6 +121,7 @@ export interface IDateRange {
 }
 
 export interface OptionsDataProps {
+  id: FilterAttributeVariants;
   filterKey: string;
   dataKey: string;
   compareKey: string;

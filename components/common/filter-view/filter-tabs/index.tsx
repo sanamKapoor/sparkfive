@@ -130,6 +130,9 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
                 onClick={(e) => {
                   onAttributeClick(attr);
                 }}
+                onKeyDown={(e) => {
+                  onAttributeClick(attr);
+                }}
               >
                 {attr.name}
                 {checkIfBadgeVisible(activeSortFilter, attr.id) &&
@@ -176,6 +179,7 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
             <div
               className={`${styles["more-filter-btn"]}`}
               onClick={onMoreFiltersClick}
+              onKeyDown={onMoreFiltersClick}
             >
               <Button text="More filters" className="text-primary-btn" />
             </div>

@@ -59,20 +59,12 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   ).includes(activeAttribute.id);
 
   const onApply = (id: string, data: any) => {
-    //TODO: handle case if some filters already exists and new ones are added for a particular filterKey
     if (data) {
-      const filterKey = filterKeyMap[id] || `custom-p${activeAttribute.id}`;
-
       if (id === FilterAttributeVariants.DIMENSIONS) {
         setActiveSortFilter({
           ...activeSortFilter,
           dimensionWidth: data.dimensionWidth,
           dimensionHeight: data.dimensionHeight,
-        });
-      } else {
-        setActiveSortFilter({
-          ...activeSortFilter,
-          [filterKey]: data[filterKey],
         });
       }
     }
@@ -214,6 +206,7 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
                   className={styles.closeIcon}
                   src={Utilities.closeIcon}
                   onClick={onClose}
+                  onKeyDown={onClose}
                 />
               </div>
             </div>
