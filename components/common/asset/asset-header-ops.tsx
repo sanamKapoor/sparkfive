@@ -62,9 +62,10 @@ const AssetHeaderOps = ({
     setNeedsFetch,
     subFoldersAssetsViewList,
     subFoldersViewList,
-    selectedAllSubFoldersAndAssets,
     setSelectedAllSubFoldersAndAssets,
     setSubFoldersViewList,
+    selectedAllSubAssets,
+    setSelectedAllSubAssets,
     setSubFoldersAssetsViewList,
   } = useContext(AssetContext);
 
@@ -135,6 +136,14 @@ const AssetHeaderOps = ({
         subFoldersViewList.results.filter((folder) => folder.isSelected)
           ?.length || 0,
     };
+  }
+  if (selectedAllSubAssets) {
+    const currentUnSelectedAssets = subFoldersAssetsViewList.results.filter((asset) => !asset.isSelected);
+    totalSelectAssets = subFoldersAssetsViewList.total - currentUnSelectedAssets.length;
+    totalSubFoldersAndAssets = {
+      assets: totalSelectAssets,
+      folders: 0
+    }
   }
 
   const downloadSelectedAssets = async () => {
@@ -281,6 +290,7 @@ const AssetHeaderOps = ({
       setFolders(folders.map((folder) => ({ ...folder, isSelected: false })));
     } else if (activeMode === "SubCollectionView") {
       // Mark deselect all
+      setSubFoldersAssetsViewList(false)
       setSelectedAllSubFoldersAndAssets(false);
       setSubFoldersViewList({
         ...subFoldersViewList,
@@ -588,11 +598,6 @@ const AssetHeaderOps = ({
   ];
 
 
-  const selectedItemTextAndCount =
-    (activeMode === "assets" || deletedAssets) ? `${totalSelectAssets} Assets` :
-      activeMode === "folders" ? `${totalSelectAssets} Collections` :
-        totalSubFoldersAndAssets.folders > 0 ? `${totalSubFoldersAndAssets?.folders} Sub Collections` : `${totalSubFoldersAndAssets.assets} Assets Collections`;
-
   return (
     <div className={styles.bar}>
       <div className={styles.wrapper}>
@@ -603,14 +608,13 @@ const AssetHeaderOps = ({
             onClick={deselectAll}
           />
         )}
-
         <div className={styles.text}>
           {(activeMode === "assets" || !activeMode)
             ? `${totalSelectAssets} Assets`
             : activeMode === "folders"
               ? `${totalSelectAssets} Collections`
               : totalSubFoldersAndAssets.folders > 0 ? `${totalSubFoldersAndAssets?.folders} Sub Collections` :
-                `${totalSubFoldersAndAssets.assets} Assets Collections`
+                `${totalSubFoldersAndAssets.assets} Assets`
 
           }{" "}
           Selected

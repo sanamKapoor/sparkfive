@@ -10,10 +10,13 @@ import IconClickable from '../../common/buttons/icon-clickable';
 interface MyComponentProps {
     type: string
     parentId?: string
-    getSubFolders?: (id: string, page: number, replace: boolean) => Promise<void>
+    updateFolders?: (id?: string, page?: number, replace?: boolean) => Promise<void>
+    iconSrc?: string;
+    textColor?: string;
+    text?: string;
 }
 
-const NestedButton: React.FC<MyComponentProps> = ({ type, parentId, getSubFolders }) => {
+const NestedButton: React.FC<MyComponentProps> = ({ type, parentId, updateFolders,iconSrc = Utilities.addCollection, textColor, text}) => {
     const [activeModal, setActiveModal] = useState("");
     const [disableButtons, setDisableButtons] = useState(false)
 
@@ -26,7 +29,9 @@ const NestedButton: React.FC<MyComponentProps> = ({ type, parentId, getSubFolder
             }
             await folderApi.createFolder(folderData);
             if (type === "subCollection") {
-                getSubFolders(parentId, 1, true)
+                updateFolders(parentId, 1, true)
+            } else {
+                updateFolders()
             }
             setActiveModal("");
             setDisableButtons(false)
@@ -42,8 +47,9 @@ const NestedButton: React.FC<MyComponentProps> = ({ type, parentId, getSubFolder
     return (
         <>
             <div className={styles.addBlock} onClick={() => setActiveModal("folder")}>
-                <button className={styles.nestedButton}>
-                    <IconClickable onClick={() => setActiveModal("folder")} additionalClass={styles.addIcon} src={Utilities.addCollection} />
+                <button className={styles.nestedButton} style={{ color: textColor }}>
+                    <IconClickable onClick={() => setActiveModal("folder")} additionalClass={styles.addIcon} src={iconSrc}/>
+                    {text && <span>{text}</span>}
                 </button>
             </div>
             <FolderModal

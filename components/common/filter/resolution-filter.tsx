@@ -7,7 +7,6 @@ import {
   FilterAttributeVariants,
 } from "../../../interfaces/filters";
 import IconClickable from "../buttons/icon-clickable";
-import Divider from "../filter-option-popup/divider";
 import OptionDataItem from "../filter-option-popup/option-data-item";
 import styles from "../filter-option-popup/options-data.module.css";
 
@@ -144,7 +143,7 @@ const ResolutionFilter: React.FC<ResolutionFilterProps> = ({
           )
         )}
       </div>
-      <Divider />
+     
     </>
   );
 };

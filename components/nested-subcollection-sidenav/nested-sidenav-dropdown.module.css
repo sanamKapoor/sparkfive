@@ -103,11 +103,13 @@
   margin-right: 5px;
   transform: rotate(0deg);
   width: 11px;
+  cursor: pointer;
 }
 .iconClick {
   transform: rotate(91deg);
   margin-right: 5px;
   width: 11px;
+  cursor: pointer;
 }
 .dropdownOptions {
   position: relative;
@@ -262,9 +264,29 @@
   .active{
     padding: 10px 0;
   }
-  .dropdownMenu {
+
+}
+@media (max-width:420px){
+  .subfolderList {
+    border-left: unset;
+  }
+  .dropdownOptions::before{
+    content:unset;
 
   }
-
-
+  .nestedbox {
+    padding: 9px 23px;
+    height:unset;
+  }
+  .load-wrapper{
+    padding: 0 40px;
+  }
+  
+}
+@media screen and (min-width: 420px) and (max-width: 800px) {
+  .nestedbox {
+    padding: 9px 23px;
+    height:unset;
+    }
+ 
 }

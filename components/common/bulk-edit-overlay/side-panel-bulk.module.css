@@ -231,13 +231,27 @@ form.search button {
 .dropdownIcons {
   display: flex;
 }
-.rightIcon {
+
+/* need to remove the commented code  */
+/* .rightIcon {
   margin-right: 5px;
   transform: rotate(275deg);
   width: 11px;
 }
 .iconClick {
   transform: rotate(0deg);
+  margin-right: 5px;
+  width: 11px;
+  cursor: pointer;
+} */
+.rightIcon {
+  margin-right: 5px;
+  transform: rotate(0deg);
+  width: 11px;
+  cursor: pointer;
+}
+.iconClick {
+  transform: rotate(91deg);
   margin-right: 5px;
   width: 11px;
   cursor: pointer;

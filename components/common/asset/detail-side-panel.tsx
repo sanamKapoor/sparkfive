@@ -772,7 +772,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                     <SearchModal filteredData={filteredData} input={input} setInput={setInput} />
                   </div>
                   <div className={`${styles["modal-heading"]}`}>
-                    <span>Collection({folders.length ?? ""})</span>
+                    <span>Collection</span>
                   </div>
                   <div className={`${styles["outer-wrapper"]}`}>
                     {folders.map((folder, index) => (
@@ -783,7 +783,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                               onClick={() => { toggleDropdown(folder.id, true) }}
                             >
                               <img
-                                className={showDropdown.includes(folder.id) ? styles.iconClick : styles.rightIcon}
+                                className={showDropdown.includes(folder.id) ? styles.iconClick : styles.caretRightSolid}
                                 src={Utilities.arrowBlue}
                                 alt="Right Arrow Icon"
                                 onClick={() => { toggleDropdown(folder.id, true) }}
