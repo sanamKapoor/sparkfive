@@ -613,7 +613,7 @@ const AssetAddition = ({
       setActiveModal("");
       setDisableButtons(false);
       toastUtils.error
-        (err?.response?.data || "Collection created successfully");
+        (err?.response?.data || "Collection does not created at this please try after some time");
     }
   };
 
