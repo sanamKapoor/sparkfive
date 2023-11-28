@@ -1,6 +1,6 @@
 import dateFnsFormat from "date-fns/format";
 import dateFnsParse from "date-fns/parse";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { DateUtils } from "react-day-picker";
 import { Utilities } from "../../../../assets";
 import { dateRanges } from "../../../../config/data/filter";
@@ -8,21 +8,22 @@ import { IDateRange } from "../../../../interfaces/filters";
 import IconClickable from "../../buttons/icon-clickable";
 
 import DayPickerInput from "react-day-picker/DayPickerInput";
+import { FilterContext } from "../../../../context";
 import styles from "../date-uploaded.module.css";
 
 interface DateTypeFilterProps {
   filterKeyName: string;
   options: IDateRange;
   setOptions: (options: IDateRange) => void;
-  setFilters: (val: unknown) => void;
 }
 
 const DateTypeFilter: React.FC<DateTypeFilterProps> = ({
   filterKeyName,
   options,
   setOptions,
-  setFilters,
 }) => {
+  const { activeSortFilter, setActiveSortFilter } = useContext(FilterContext);
+
   const [showCustomRange, setShowCustomRange] = useState(
     options?.id === "custom" ? true : false
   );
@@ -30,14 +31,18 @@ const DateTypeFilter: React.FC<DateTypeFilterProps> = ({
 
   const onSelectDateRange = (dateRange: IDateRange) => {
     setOptions(dateRange);
-    setFilters({
+
+    setActiveSortFilter({
+      ...activeSortFilter,
       [filterKeyName]: dateRange,
     });
   };
 
   const onDeselectDateRange = () => {
     setOptions(undefined);
-    setFilters({
+
+    setActiveSortFilter({
+      ...activeSortFilter,
       [filterKeyName]: undefined,
     });
   };
@@ -65,7 +70,9 @@ const DateTypeFilter: React.FC<DateTypeFilterProps> = ({
       endDate: options?.endDate,
     };
     setOptions(obj);
-    setFilters({
+
+    setActiveSortFilter({
+      ...activeSortFilter,
       [filterKeyName]: obj,
     });
   };
@@ -81,7 +88,10 @@ const DateTypeFilter: React.FC<DateTypeFilterProps> = ({
     };
 
     setOptions(obj);
-    setFilters({ [filterKeyName]: obj });
+    setActiveSortFilter({
+      ...activeSortFilter,
+      [filterKeyName]: obj,
+    });
   };
 
   const parseDate = (str, format, locale) => {

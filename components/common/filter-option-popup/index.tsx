@@ -45,8 +45,6 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const showRules = activeAttribute.selectionType === "selectMultiple";
 
-  console.log("activeSortFilter: ", activeSortFilter);
-
   const hideSearch = (
     [
       FilterAttributeVariants.DIMENSIONS,
@@ -59,20 +57,12 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   ).includes(activeAttribute.id);
 
   const onApply = (id: string, data: any) => {
-    //TODO: handle case if some filters already exists and new ones are added for a particular filterKey
     if (data) {
-      const filterKey = filterKeyMap[id] || `custom-p${activeAttribute.id}`;
-
       if (id === FilterAttributeVariants.DIMENSIONS) {
         setActiveSortFilter({
           ...activeSortFilter,
           dimensionWidth: data.dimensionWidth,
           dimensionHeight: data.dimensionHeight,
-        });
-      } else {
-        setActiveSortFilter({
-          ...activeSortFilter,
-          [filterKey]: data[filterKey],
         });
       }
     }
@@ -179,26 +169,13 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
 
   return (
     <div className={`${styles["main-container"]}`}>
-      <div className={`${styles["outer-wrapper"]}`}>
-        {checkIfValuesExist() ? (
-          <>
-            <div className={`${styles["popup-mobile-view"]}`}>
-              <div className={`${styles["popup-mobile-header"]}`}>
-                <img src={Utilities.leftArrow} alt="left-arrow" />
-                <span className={`${styles["main-heading"]}`}>
-                  Select {activeAttribute?.name}
-                </span>
-                <button
-                  className={styles.clear}
-                  disabled={loading}
-                  onClick={() => setActiveAttribute(null)}
-                >
-                  Clear
-                </button>
-              </div>
-            </div>
-
-            <div className={`${styles["popup-header"]}`}>
+    <div className={`${styles["outer-wrapper"]}`}>
+   
+      {checkIfValuesExist() ? (
+        <>
+          <div className={`${styles["popup-mobile-view"]}`}>
+            <div className={`${styles["popup-mobile-header"]}`}>
+              <img src={Utilities.leftArrow} alt="left-arrow" />
               <span className={`${styles["main-heading"]}`}>
                 Select {activeAttribute?.name}
               </span>
@@ -214,60 +191,82 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
                   className={styles.closeIcon}
                   src={Utilities.closeIcon}
                   onClick={onClose}
+                  onKeyDown={onClose}
                 />
               </div>
             </div>
-            {!hideSearch && (
-              <div className={`${styles["search-btn"]}`}>
-                <Search
-                  className={styles.customStyles}
-                  buttonClassName={styles.icon}
-                  placeholder={`Search ${activeAttribute.name}`}
-                  onSubmit={onSearch}
-                />
-              </div>
-            )}
+          </div>
 
-            {loading ? (
-              <Loader className={styles.customLoader} />
-            ) : (
-              <FilterContent
-                options={options}
-                setOptions={setOptions}
-                setFilters={setFilters}
-                activeAttribute={activeAttribute}
+          <div className={`${styles["popup-header"]}`}>
+            <span className={`${styles["main-heading"]}`}>
+              Select {activeAttribute?.name}
+            </span>
+            <div className={styles.buttons}>
+              <button
+                className={styles.clear}
+                disabled={loading}
+                onClick={onClear}
+              >
+                clear
+              </button>
+              <img
+                className={styles.closeIcon}
+                src={Utilities.closeIcon}
+                onClick={onClose}
               />
-            )}
+            </div>
+          </div>
+          {!hideSearch && (
+            <div className={`${styles["search-btn"]}`}>
+              <Search
+                className={styles.customStyles}
+                buttonClassName={styles.icon}
+                placeholder={`Search ${activeAttribute.name}`}
+                onSubmit={onSearch}
+              />
+            </div>
+          )}
 
-            {showRules && (
-              <RulesOptions
-                showDropdown={showDropdown}
-                setShowDropdown={setShowDropdown}
-                onChangeRule={onChangeRule}
-                activeRuleName={activeRuleName}
+          {loading ? (
+            <Loader className={styles.customLoader} />
+          ) : (
+            <FilterContent
+              options={options}
+              setOptions={setOptions}
+              setFilters={setFilters}
+              activeAttribute={activeAttribute}
+            />
+          )}
+
+          {showRules && (
+            <RulesOptions
+              showDropdown={showDropdown}
+              setShowDropdown={setShowDropdown}
+              onChangeRule={onChangeRule}
+              activeRuleName={activeRuleName}
+            />
+          )}
+          {showModalActionBtns && (
+            <div className={`${styles["Modal-btn"]}`}>
+              <Button
+                className={"apply"}
+                text={"Apply"}
+                disabled={loading}
+                onClick={() => onApply(activeAttribute.id, filters)}
               />
-            )}
-            {showModalActionBtns && (
-              <div className={`${styles["Modal-btn"]}`}>
-                <Button
-                  className={"apply"}
-                  text={"Apply"}
-                  disabled={loading}
-                  onClick={() => onApply(activeAttribute.id, filters)}
-                />
-                <Button
-                  className={"cancel"}
-                  text={"Cancel"}
-                  disabled={loading}
-                  onClick={onCancel}
-                />
-              </div>
-            )}
-          </>
-        ) : (
-          <NoResultsPopup onClose={onClose} />
-        )}
-      </div>
+              <Button
+                className={"cancel"}
+                text={"Cancel"}
+                disabled={loading}
+                onClick={onCancel}
+              />
+            </div>
+          )}
+        </>
+      ) : (
+        <NoResultsPopup onClose={onClose} />
+      )}
+    </div>
     </div>
   );
 };

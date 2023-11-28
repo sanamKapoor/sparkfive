@@ -72,26 +72,23 @@ const OptionsData: React.FC<OptionsDataProps> = ({
   };
 
   return (
-    <>
-      <div className={styles["outer-wrapper"]}>
-        {options.length === 0 ? (
-          <p>No Results Found.</p>
-        ) : (
-          options.map((item, index) => (
-            <div className={styles["grid-item"]} key={index}>
-              <OptionDataItem
-                name={item[dataKey]}
-                count={item.count}
-                isSelected={item.isSelected}
-                onSelect={() => onSelectOption(item)}
-                onDeselect={() => onDeselectOption(item)}
-              />
-            </div>
-          ))
-        )}
-      </div>
-     
-    </>
+    <div className={styles["outer-wrapper"]}>
+      {options?.length === 0 ? (
+        <p>No Results Found.</p>
+      ) : (
+        options?.map((item, index) => (
+          <div className={styles["grid-item"]} key={index}>
+            <OptionDataItem
+              name={item[dataKey]}
+              count={item.count}
+              isSelected={item.isSelected}
+              onSelect={() => onSelectOption(item)}
+              onDeselect={() => onDeselectOption(item)}
+            />
+          </div>
+        ))
+      )}
+    </div>
   );
 };
 

@@ -121,6 +121,7 @@ export interface IDateRange {
 }
 
 export interface OptionsDataProps {
+  id: FilterAttributeVariants;
   filterKey: string;
   dataKey: string;
   compareKey: string;
@@ -131,7 +132,10 @@ export interface OptionsDataProps {
 }
 
 export interface CommonFilterProps
-  extends Pick<OptionsDataProps, "options" | "setFilters" | "setOptions"> {}
+  extends Pick<
+    OptionsDataProps,
+    "options" | "setFilters" | "setOptions" | "activeAttribute"
+  > {}
 
 export interface ISelectedFilter {
   id: string;

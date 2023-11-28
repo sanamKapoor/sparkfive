@@ -15,9 +15,8 @@ interface ResolutionFilterProps extends CommonFilterProps {}
 const ResolutionFilter: React.FC<ResolutionFilterProps> = ({
   options,
   setOptions,
-  setFilters,
 }) => {
-  const { activeSortFilter } = useContext(FilterContext);
+  const { activeSortFilter, setActiveSortFilter } = useContext(FilterContext);
 
   const [highResActive, setHighResActive] = useState<boolean>(
     !!activeSortFilter?.filterResolutions.find((item) => item.dpi === "highres")
@@ -56,38 +55,32 @@ const ResolutionFilter: React.FC<ResolutionFilterProps> = ({
 
     setOptions([...options]);
 
-    setFilters((prevState) => {
-      let newState;
+    let newState;
 
-      if (
-        activeSortFilter[filterKey] &&
-        activeSortFilter[filterKey].length > 0
-      ) {
-        newState = [
-          ...new Set([
-            ...activeSortFilter[filterKey],
-            ...((prevState && prevState[filterKey]) ?? []),
-            {
-              value: val,
-              dpi: val,
-              label: val === "highres" ? highResLabel : val,
-            },
-          ]),
-        ];
-      } else {
-        newState = [
-          ...((prevState && prevState[filterKey]) ?? []),
+    if (activeSortFilter[filterKey] && activeSortFilter[filterKey].length > 0) {
+      newState = [
+        ...new Set([
+          ...activeSortFilter[filterKey],
           {
             value: val,
             dpi: val,
             label: val === "highres" ? highResLabel : val,
           },
-        ];
-      }
+        ]),
+      ];
+    } else {
+      newState = [
+        {
+          value: val,
+          dpi: val,
+          label: val === "highres" ? highResLabel : val,
+        },
+      ];
+    }
 
-      return {
-        [filterKey]: newState,
-      };
+    setActiveSortFilter({
+      ...activeSortFilter,
+      [filterKey]: newState,
     });
   };
 
@@ -107,7 +100,8 @@ const ResolutionFilter: React.FC<ResolutionFilterProps> = ({
         label: val === "highres" ? highResLabel : item.dpi,
       }));
 
-    setFilters({
+    setActiveSortFilter({
+      ...activeSortFilter,
       filterResolutions: newFilters,
     });
   };
@@ -129,7 +123,7 @@ const ResolutionFilter: React.FC<ResolutionFilterProps> = ({
         <span>{highResLabel}</span>
       </div>
       <div className={styles["outer-wrapper"]}>
-        {options.map((item) =>
+        {options?.map((item) =>
           item.dpi === "highres" ? null : (
             <div className={styles["grid-item"]} key={item.dpi}>
               <OptionDataItem
@@ -143,7 +137,6 @@ const ResolutionFilter: React.FC<ResolutionFilterProps> = ({
           )
         )}
       </div>
-     
     </>
   );
 };
