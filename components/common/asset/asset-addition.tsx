@@ -596,7 +596,8 @@ const AssetAddition = ({
       if (activeSortFilter?.mainFilter === "SubCollectionView" && activeSubFolders) {
         setSubFoldersViewList({
           ...subFoldersViewList,
-          results: [data, ...subFoldersViewList.results],
+          total: subFoldersViewList.total + 1,
+          results: [data, ...subFoldersViewList.results]
         });
       }
 
@@ -850,7 +851,6 @@ const AssetAddition = ({
     );
   }
 
-
   if (activePageMode === "library") {
     dropdownOptions = dropdownOptions.filter(
       (item) => ["library"].indexOf(item.id) === -1
@@ -892,10 +892,14 @@ const AssetAddition = ({
     if (attachQuery) {
       queryData = { ...queryData, ...attachQuery };
     }
-
+    ;
+    if (uploadToFolders.length === 0) {
+      uploadToFolders = [attachQuery?.folderId || ""]
+    }
     queryData.folderId = !attachQuery.versionGroup
       ? uploadToFolders.join(",")
       : "";
+
     return queryData;
   };
 
@@ -1112,7 +1116,11 @@ const AssetAddition = ({
           uploadApproval={true}
         />
       ) : (
-        <DropDownOptions />
+        <div>
+          {
+            !hasPermission([ASSET_UPLOAD_APPROVAL]) && <DropDownOptions />
+          }
+        </div>
       )}
 
       <FolderModal

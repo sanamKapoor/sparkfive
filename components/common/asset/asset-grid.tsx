@@ -30,25 +30,26 @@ import styles from "./asset-grid.module.css";
 import AssetThumbail from "./asset-thumbail";
 import AssetUpload from "./asset-upload";
 import DetailOverlay from "./detail-overlay";
+import { ASSET_UPLOAD_APPROVAL } from "../../../constants/permissions";
 
 // Components
 
 const AssetGrid = ({
   activeView = "grid",
   isShare = false,
-  onFilesDataGet = (files: any) => {},
+  onFilesDataGet = (files: any) => { },
   toggleSelected,
   mode = "assets",
-  deleteFolder = (id: string) => {},
+  deleteFolder = (id: string) => { },
   itemSize = "regular",
   activeFolder = "",
   type = "",
   itemId = "",
-  getFolders = () => {},
-  loadMore = () => {},
-  viewFolder = (id: string) => {},
+  getFolders = () => { },
+  loadMore = () => { },
+  viewFolder = (id: string) => { },
   sharePath = "",
-  onCloseDetailOverlay = (assetData) => {},
+  onCloseDetailOverlay = (assetData) => { },
   setWidthCard,
   widthCard,
   getSubCollectionsAssetData,
@@ -217,15 +218,13 @@ const AssetGrid = ({
       }
 
       toastUtils.success(
-        `Assets ${
-          newState === "archived" ? "archived" : "unarchived"
+        `Assets ${newState === "archived" ? "archived" : "unarchived"
         } successfully`
       );
     } catch (err) {
       // TODO: Error handling
       toastUtils.error(
-        `Could not ${
-          newState === "archived" ? "archive" : "unarchive"
+        `Could not ${newState === "archived" ? "archive" : "unarchive"
         } assets, please try again later.`
       );
     }
@@ -384,10 +383,9 @@ const AssetGrid = ({
       setWidthCard(ref.current.clientWidth);
     }
   }, [ref.current, windowWidth]);
-
   return (
     <section className={`${styles.container}`}>
-      {(shouldShowUpload || isDragging) && !isShare && (
+      {(shouldShowUpload || isDragging) && !isShare && !hasPermission([ASSET_UPLOAD_APPROVAL]) && (
         <AssetUpload
           onDragText={"Drop files here to upload"}
           preDragText={
@@ -417,16 +415,13 @@ const AssetGrid = ({
           {/* testing component starts from here */}
           {
             <ul
-              className={`${
-                mode === "SubCollectionView" ? "" : styles["grid-list"]
-              } ${styles[itemSize]} ${
-                activeView === "list" && styles["list-view"]
-              } 
-            ${
-              mode === "assets"
-                ? styles["grid-" + advancedConfig.assetThumbnail]
-                : styles["grid-" + advancedConfig.collectionThumbnail]
-            }
+              className={`${mode === "SubCollectionView" ? "" : styles["grid-list"]
+                } ${styles[itemSize]} ${activeView === "list" && styles["list-view"]
+                } 
+            ${mode === "assets"
+                  ? styles["grid-" + advancedConfig.assetThumbnail]
+                  : styles["grid-" + advancedConfig.collectionThumbnail]
+                }
             `}
             >
               {mode === "SubCollectionView" && (
@@ -611,7 +606,7 @@ const AssetGrid = ({
         additionalClasses={["visible-block"]}
         modalData={modalData}
         modalIsOpen={modalOpen}
-        confirmAction={() => {}}
+        confirmAction={() => { }}
         getSubFolders={getSubFolders}
       />
 
@@ -641,15 +636,13 @@ const AssetGrid = ({
           setActiveAssetId("");
           setActiveArchiveAsset(undefined);
         }}
-        confirmText={`${
-          activeArchiveAsset?.stage !== "archived" ? "Archive" : "Unarchive"
-        }`}
+        confirmText={`${activeArchiveAsset?.stage !== "archived" ? "Archive" : "Unarchive"
+          }`}
         message={
           <span>
             Are you sure you want to &nbsp;
-            <strong>{`${
-              activeArchiveAsset?.stage !== "archived" ? "Archive" : "Unarchive"
-            }`}</strong>
+            <strong>{`${activeArchiveAsset?.stage !== "archived" ? "Archive" : "Unarchive"
+              }`}</strong>
             &nbsp; this asset?
           </span>
         }

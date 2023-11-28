@@ -902,10 +902,11 @@ export default ({ getAssets }) => {
     try {
       const { data } = await folderApi.createFolder({ name: newFolderName });
       setFolders(update(folders, { $push: [data] }));
-      setSubFoldersViewList({
-        ...subFoldersViewList,
-        results: [data, ...subFoldersViewList.results],
-      }, false);
+      // TODO Comment because we don't want to create collection inside the subcollection view port
+      // setSubFoldersViewList({
+      //   ...subFoldersViewList,
+      //   results: [data, ...subFoldersViewList.results],
+      // }, false);
       setSidenavFolderList({ results: [data, ...sidenavFolderList] });
       loadFolders();
     } catch (err) {
@@ -1165,7 +1166,6 @@ export default ({ getAssets }) => {
       : selectedAllAssets ? totalAssets : selectedAssets.length;
   }
 
-  console.log(activeOperation, "activeOperation")
   return (
     <>
       <MoveReplaceModal
