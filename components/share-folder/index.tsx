@@ -53,6 +53,9 @@ const ShareFolderMain = () => {
     subFoldersAssetsViewList,
     setSubFoldersAssetsViewList,
     setSelectedAllSubFoldersAndAssets,
+    selectedAllSubAssets,
+    setSelectedAllSubAssets,
+    selectedAllSubFoldersAndAssets
   } = useContext(AssetContext);
 
   const { user, advancedConfig, setAdvancedConfig } = useContext(UserContext);
@@ -189,6 +192,11 @@ const ShareFolderMain = () => {
     if (selectedAllFolders) {
       selectAllFolders(false);
     }
+    if (selectedAllSubAssets) {
+      setSelectedAllSubAssets(false)
+    }
+    if (selectedAllSubFoldersAndAssets)
+      setSelectedAllSubFoldersAndAssets(false);
   }, [activeMode]);
 
   useEffect(() => {
@@ -390,31 +398,54 @@ const ShareFolderMain = () => {
     if (activeMode === "assets") {
       // Mark select all
       selectAllAssets();
-
       setAssets(
         assets.map((assetItem) => ({ ...assetItem, isSelected: true }))
       );
     } else if (activeMode === "folders") {
       selectAllFolders();
-
       setFolders(folders.map((folder) => ({ ...folder, isSelected: true })));
     } else if (activeMode === "SubCollectionView") {
-      setSelectedAllSubFoldersAndAssets(true);
-      // For selecting the folders only subcollection view
-      setSubFoldersViewList({
-        ...subFoldersViewList,
-        results: subFoldersViewList.results.map((folder: any) => ({
-          ...folder,
-          isSelected: true,
-        })),
-      });
-      setSubFoldersAssetsViewList({
-        ...subFoldersAssetsViewList,
-        results: subFoldersAssetsViewList.results.map((asset: any) => ({
-          ...asset,
-          isSelected: false,
-        })),
-      });
+
+      if (subFoldersAssetsViewList.results.length > 0) {
+        setSelectedAllSubAssets(true)
+        setSelectedAllSubFoldersAndAssets(false);
+
+        setSubFoldersAssetsViewList({
+          ...subFoldersAssetsViewList,
+          results: subFoldersAssetsViewList.results.map((asset: any) => ({ ...asset, isSelected: true }))
+        })
+        setSubFoldersViewList({
+          ...subFoldersViewList,
+          results: subFoldersViewList.results.map((folder: any) => ({
+            ...folder,
+            isSelected: false,
+          })),
+        });
+      } else {
+        setSelectedAllSubFoldersAndAssets(true);
+        setSelectedAllSubAssets(false)
+        // For selecting the folders only subcollection view
+        setSubFoldersViewList({
+          ...subFoldersViewList,
+          results: subFoldersViewList.results.map((folder: any) => ({
+            ...folder,
+            isSelected: true,
+          })),
+        });
+        setSubFoldersAssetsViewList({
+          ...subFoldersAssetsViewList,
+          results: subFoldersAssetsViewList.results.map((asset: any) => ({
+            ...asset,
+            isSelected: false,
+          })),
+        });
+      }
+
+
+      // For selecting the assets only subcollection view
+      // setSubFoldersAssetsViewList({
+      //   ...subFoldersAssetsViewList, results: subFoldersAssetsViewList.results.map((asset) => ({ ...asset, isSelected: true }))
+      // })
     }
   };
 
@@ -545,7 +576,7 @@ const ShareFolderMain = () => {
           folderName
             ? folderName
             : sidenavFolderList.find((folder: any) => folder.id === id)?.name ||
-                ""
+            ""
         );
       } else {
         getFolderInfo();
@@ -560,7 +591,7 @@ const ShareFolderMain = () => {
         setActiveFolder("");
         let sort =
           folderInfo?.customAdvanceOptions?.collectionSortView ===
-          "alphabetical"
+            "alphabetical"
             ? selectOptions.sort[3]
             : selectOptions.sort[1];
         setActiveSortFilter({
@@ -606,7 +637,7 @@ const ShareFolderMain = () => {
 
   const assetGridWrapperStyle =
     !!folderInfo.singleSharedCollectionId ||
-    activeSortFilter.mainFilter === "folders"
+      activeSortFilter.mainFilter === "folders"
       ? styles["col-wrapperview"]
       : styles["col-wrapper"];
 

@@ -43,6 +43,7 @@ const NestedButton: React.FC<MyComponentProps> = ({ type, parentId }) => {
       (type === "subCollection" && parentId === activeSubFolders) &&
         setSubFoldersViewList({
           ...subFoldersViewList,
+          total: subFoldersViewList.total + 1,
           results: [data, ...subFoldersViewList.results],
         });
       setDisableButtons(false)
