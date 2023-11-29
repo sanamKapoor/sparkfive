@@ -27,7 +27,7 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
   const { isPublic, sharePath } = useContext(FilterContext);
 
   const { advancedConfig } = useContext(UserContext);
- 
+
   const [options, setOptions] = useState([]);
 
   useEffect(() => {
@@ -102,43 +102,43 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
   };
 
   return (
-      <div className={`${styles["more-filter-wrapper"]}`} >
-        <div className={`${indexStyles["popup-header"]}`}>
-          <span className={`${indexStyles["main-heading"]}`}>More Filters</span>
-          <div className={indexStyles.buttons}>
-            <img
-              className={indexStyles.closeIcon}
-              src={Utilities.closeIcon}
-              onClick={onClose}
-            />
-          </div>
-        </div>
-
-        <div className={`${styles["outer-Box"]}`}>
-          <div className={styles["outer-wrapper"]}>
-            {options.length === 0 ? (
-              <p>No Results Found.</p>
-            ) : (
-              options.map((item, index) => (
-                <div className={styles["grid-item"]} key={item.id}>
-                  <OptionDataItem
-                    name={item.name}
-                    count={item.count}
-                    isSelected={item.isSelected}
-                    onSelect={() => onSelectOption(item)}
-                    onDeselect={() => onDeselectOption(item)}
-                  />
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-
-        <div className={`${indexStyles["Modal-btn"]}`}>
-          <Button className={"apply"} text={"Apply"} onClick={onApply} />
-          <Button className={"cancel"} text={"Cancel"} onClick={onCancel} />
+    <div className={`${styles["more-filter-wrapper"]}`}>
+      <div className={`${indexStyles["popup-header"]}`}>
+        <span className={`${indexStyles["main-heading"]}`}>More Filters</span>
+        <div className={indexStyles.buttons}>
+          <img
+            className={indexStyles.closeIcon}
+            src={Utilities.closeIcon}
+            onClick={onClose}
+          />
         </div>
       </div>
+
+      <div className={`${styles["outer-Box"]}`}>
+        <div className={styles["outer-wrapper"]}>
+          {options.length === 0 ? (
+            <p>No Results Found.</p>
+          ) : (
+            options.map((item, index) => (
+              <div className={styles["grid-item"]} key={item.id}>
+                <OptionDataItem
+                  name={item.name}
+                  count={item.count}
+                  isSelected={item.isSelected}
+                  onSelect={() => onSelectOption(item)}
+                  onDeselect={() => onDeselectOption(item)}
+                />
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
+      <div className={`${indexStyles["Modal-btn"]}`}>
+        <Button className={"apply"} text={"Apply"} onClick={onApply} />
+        <Button className={"cancel"} text={"Cancel"} onClick={onCancel} />
+      </div>
+    </div>
   );
 };
 

@@ -11,7 +11,13 @@
   flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 12px;
-  padding:7px 0 10px 0;
+  padding: 7px 0 10px 0;
+}
+
+.main-container {
+  display: flex;
+  justify-content: end;
+
 }
 
 .inner-wrapper {
@@ -83,15 +89,12 @@
   margin-left: 14px;
   width: 15px;
 }
-.close-icon-light{
+
+.close-icon-light {
   width: 10px;
   margin-left: 5px;
 }
-.main-container{
-  display: flex;
-  justify-content: end;
-  
-}
+
 
 @media (max-width: 820px) {
   .outer-wrapper {

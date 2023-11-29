@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { Utilities } from "../../../assets";
 
@@ -157,9 +157,11 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
       ) {
         return true;
       } else {
-        return values instanceof Array
-          ? values.length > 0
-          : Object.keys(values).length > 0;
+        if (values) {
+          return values instanceof Array
+            ? values.length > 0
+            : Object.keys(values).length > 0;
+        }
       }
     }
   };
@@ -169,13 +171,37 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
 
   return (
     <div className={`${styles["main-container"]}`}>
-    <div className={`${styles["outer-wrapper"]}`}>
-   
-      {checkIfValuesExist() ? (
-        <>
-          <div className={`${styles["popup-mobile-view"]}`}>
-            <div className={`${styles["popup-mobile-header"]}`}>
-              <img src={Utilities.leftArrow} alt="left-arrow" />
+      <div className={`${styles["outer-wrapper"]}`}>
+        {loading ? (
+              <Loader className={styles.customLoader} />
+            ) :
+        checkIfValuesExist() ? (
+          <>
+            <div className={`${styles["popup-mobile-view"]}`}>
+              <div className={`${styles["popup-mobile-header"]}`}>
+                <img src={Utilities.leftArrow} alt="left-arrow" />
+                <span className={`${styles["main-heading"]}`}>
+                  Select {activeAttribute?.name}
+                </span>
+                <div className={styles.buttons}>
+                  <button
+                    className={styles.clear}
+                    disabled={loading}
+                    onClick={onClear}
+                  >
+                    clear
+                  </button>
+                  <img
+                    className={styles.closeIcon}
+                    src={Utilities.closeIcon}
+                    onClick={onClose}
+                    onKeyDown={onClose}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className={`${styles["popup-header"]}`}>
               <span className={`${styles["main-heading"]}`}>
                 Select {activeAttribute?.name}
               </span>
@@ -191,82 +217,58 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
                   className={styles.closeIcon}
                   src={Utilities.closeIcon}
                   onClick={onClose}
-                  onKeyDown={onClose}
                 />
               </div>
             </div>
-          </div>
+            {!hideSearch && (
+              <div className={`${styles["search-btn"]}`}>
+                <Search
+                  className={styles.customStyles}
+                  buttonClassName={styles.icon}
+                  placeholder={`Search ${activeAttribute.name}`}
+                  onSubmit={onSearch}
+                />
+              </div>
+            )}
 
-          <div className={`${styles["popup-header"]}`}>
-            <span className={`${styles["main-heading"]}`}>
-              Select {activeAttribute?.name}
-            </span>
-            <div className={styles.buttons}>
-              <button
-                className={styles.clear}
-                disabled={loading}
-                onClick={onClear}
-              >
-                clear
-              </button>
-              <img
-                className={styles.closeIcon}
-                src={Utilities.closeIcon}
-                onClick={onClose}
+            { options ? (
+              <FilterContent
+                options={options}
+                setOptions={setOptions}
+                setFilters={setFilters}
+                activeAttribute={activeAttribute}
               />
-            </div>
-          </div>
-          {!hideSearch && (
-            <div className={`${styles["search-btn"]}`}>
-              <Search
-                className={styles.customStyles}
-                buttonClassName={styles.icon}
-                placeholder={`Search ${activeAttribute.name}`}
-                onSubmit={onSearch}
-              />
-            </div>
-          )}
+            ) : <NoResultsPopup onClose={onClose} />}
 
-          {loading ? (
-            <Loader className={styles.customLoader} />
-          ) : (
-            <FilterContent
-              options={options}
-              setOptions={setOptions}
-              setFilters={setFilters}
-              activeAttribute={activeAttribute}
-            />
-          )}
-
-          {showRules && (
-            <RulesOptions
-              showDropdown={showDropdown}
-              setShowDropdown={setShowDropdown}
-              onChangeRule={onChangeRule}
-              activeRuleName={activeRuleName}
-            />
-          )}
-          {showModalActionBtns && (
-            <div className={`${styles["Modal-btn"]}`}>
-              <Button
-                className={"apply"}
-                text={"Apply"}
-                disabled={loading}
-                onClick={() => onApply(activeAttribute.id, filters)}
+            {showRules && (
+              <RulesOptions
+                showDropdown={showDropdown}
+                setShowDropdown={setShowDropdown}
+                onChangeRule={onChangeRule}
+                activeRuleName={activeRuleName}
               />
-              <Button
-                className={"cancel"}
-                text={"Cancel"}
-                disabled={loading}
-                onClick={onCancel}
-              />
-            </div>
-          )}
-        </>
-      ) : (
-        <NoResultsPopup onClose={onClose} />
-      )}
-    </div>
+            )}
+            {showModalActionBtns && (
+              <div className={`${styles["Modal-btn"]}`}>
+                <Button
+                  className={"apply"}
+                  text={"Apply"}
+                  disabled={loading}
+                  onClick={() => onApply(activeAttribute.id, filters)}
+                />
+                <Button
+                  className={"cancel"}
+                  text={"Cancel"}
+                  disabled={loading}
+                  onClick={onCancel}
+                />
+              </div>
+            )}
+          </>
+        ) : (
+          <NoResultsPopup onClose={onClose} />
+        )}
+      </div>
     </div>
   );
 };
