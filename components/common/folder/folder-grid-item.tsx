@@ -497,7 +497,9 @@ const FolderGridItem = ({
           setDeleteOpen(false);
         }}
         confirmText={"Delete"}
-        message={"Are you sure you want to delete this Collection?"}
+        message={`Are you sure you want to delete this ${
+          mode === "SubCollectionView" ? "Subcollection" : "Collection"
+        }?`}
         modalIsOpen={deleteOpen}
       />
     </div>
