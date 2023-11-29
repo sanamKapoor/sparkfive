@@ -1,5 +1,5 @@
 import { filterKeyMap } from "../config/data/filter";
-import { FilterAttributeVariants } from "../interfaces/filters";
+import { FilterAttributeVariants, IAttribute } from "../interfaces/filters";
 
 export const getFilterKeyForAttribute = (id: keyof typeof filterKeyMap) => {
   const filterKey = filterKeyMap[id] ? filterKeyMap[id] : `custom-p${id}`;
@@ -34,4 +34,39 @@ export const checkIfBadgeVisible = (
   }
 
   return result;
+};
+
+const getAttributeById = (
+  id: FilterAttributeVariants,
+  attributes: IAttribute[]
+) => {
+  return attributes.filter((item) => item.id === id) ?? [];
+};
+
+const getCustomAttributes = (attributes: IAttribute[]) => {
+  return attributes.filter((item) => item.type === "custom") ?? [];
+};
+
+const getRemainingAttributes = (attributes: IAttribute[]) => {
+  const ids = [
+    "dimensions",
+    "dateUploaded",
+    "lastUpdated",
+    "orientation",
+    "resolution",
+  ];
+
+  return attributes.filter((item) => ids.includes(item.id)) ?? [];
+};
+
+export const getSortedAttributes = (attributes: IAttribute[]) => {
+  return [
+    ...getAttributeById(FilterAttributeVariants.TAGS, attributes),
+    ...getAttributeById(FilterAttributeVariants.AI_TAGS, attributes),
+    ...getCustomAttributes(attributes),
+    ...getAttributeById(FilterAttributeVariants.CAMPAIGNS, attributes),
+    ...getAttributeById(FilterAttributeVariants.PRODUCTS, attributes),
+    ...getAttributeById(FilterAttributeVariants.FILE_TYPES, attributes),
+    ...getRemainingAttributes(attributes),
+  ];
 };

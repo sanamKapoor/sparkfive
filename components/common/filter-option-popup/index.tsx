@@ -173,13 +173,37 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
     <div className={`${styles["main-container"]}`}>
       <div className={`${styles["outer-wrapper"]}`}>
         {loading ? (
-              <Loader className={styles.customLoader} />
-            ) :
-        checkIfValuesExist() ? (
-          <>
-            <div className={`${styles["popup-mobile-view"]}`}>
-              <div className={`${styles["popup-mobile-header"]}`}>
-                <img src={Utilities.leftArrow} alt="left-arrow" />
+          <div className={styles["loader-wrapper"]}>
+            <Loader className={styles["customLoader-center"]} />
+          </div>
+        ) :
+          checkIfValuesExist() ? (
+            <>
+              <div className={`${styles["popup-mobile-view"]}`}>
+                <div className={`${styles["popup-mobile-header"]}`}>
+                  <img src={Utilities.leftArrow} alt="left-arrow" />
+                  <span className={`${styles["main-heading"]}`}>
+                    Select {activeAttribute?.name}
+                  </span>
+                  <div className={styles.buttons}>
+                    <button
+                      className={styles.clear}
+                      disabled={loading}
+                      onClick={onClear}
+                    >
+                      clear
+                    </button>
+                    <img
+                      className={styles.closeIcon}
+                      src={Utilities.closeIcon}
+                      onClick={onClose}
+                      onKeyDown={onClose}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className={`${styles["popup-header"]}`}>
                 <span className={`${styles["main-heading"]}`}>
                   Select {activeAttribute?.name}
                 </span>
@@ -195,79 +219,57 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
                     className={styles.closeIcon}
                     src={Utilities.closeIcon}
                     onClick={onClose}
-                    onKeyDown={onClose}
                   />
                 </div>
               </div>
-            </div>
+              {!hideSearch && (
+                <div className={`${styles["search-btn"]}`}>
+                  <Search
+                    className={styles.customStyles}
+                    buttonClassName={styles.icon}
+                    placeholder={`Search ${activeAttribute.name}`}
+                    onSubmit={onSearch}
+                  />
+                </div>
+              )}
 
-            <div className={`${styles["popup-header"]}`}>
-              <span className={`${styles["main-heading"]}`}>
-                Select {activeAttribute?.name}
-              </span>
-              <div className={styles.buttons}>
-                <button
-                  className={styles.clear}
-                  disabled={loading}
-                  onClick={onClear}
-                >
-                  clear
-                </button>
-                <img
-                  className={styles.closeIcon}
-                  src={Utilities.closeIcon}
-                  onClick={onClose}
+              {options ? (
+                <FilterContent
+                  options={options}
+                  setOptions={setOptions}
+                  setFilters={setFilters}
+                  activeAttribute={activeAttribute}
                 />
-              </div>
-            </div>
-            {!hideSearch && (
-              <div className={`${styles["search-btn"]}`}>
-                <Search
-                  className={styles.customStyles}
-                  buttonClassName={styles.icon}
-                  placeholder={`Search ${activeAttribute.name}`}
-                  onSubmit={onSearch}
-                />
-              </div>
-            )}
+              ) : <NoResultsPopup onClose={onClose} />}
 
-            { options ? (
-              <FilterContent
-                options={options}
-                setOptions={setOptions}
-                setFilters={setFilters}
-                activeAttribute={activeAttribute}
-              />
-            ) : <NoResultsPopup onClose={onClose} />}
-
-            {showRules && (
-              <RulesOptions
-                showDropdown={showDropdown}
-                setShowDropdown={setShowDropdown}
-                onChangeRule={onChangeRule}
-                activeRuleName={activeRuleName}
-              />
-            )}
-            {showModalActionBtns && (
-              <div className={`${styles["Modal-btn"]}`}>
-                <Button
-                  className={"apply"}
-                  text={"Apply"}
-                  disabled={loading}
-                  onClick={() => onApply(activeAttribute.id, filters)}
+              {showRules && (
+                <RulesOptions
+                  showDropdown={showDropdown}
+                  setShowDropdown={setShowDropdown}
+                  onChangeRule={onChangeRule}
+                  activeRuleName={activeRuleName}
                 />
-                <Button
-                  className={"cancel"}
-                  text={"Cancel"}
-                  disabled={loading}
-                  onClick={onCancel}
-                />
-              </div>
-            )}
-          </>
-        ) : (
-          <NoResultsPopup onClose={onClose} />
-        )}
+              )}
+              {showModalActionBtns && (
+                <div className={`${styles["Modal-btn"]}`}>
+                  <Button
+                    className={"apply"}
+                    text={"Apply"}
+                    disabled={loading}
+                    onClick={() => onApply(activeAttribute.id, filters)}
+                  />
+                  <Button
+                    className={"cancel"}
+                    text={"Cancel"}
+                    disabled={loading}
+                    onClick={onCancel}
+                  />
+                </div>
+              )}
+            </>
+          ) : (
+            <NoResultsPopup onClose={onClose} />
+          )}
       </div>
     </div>
   );

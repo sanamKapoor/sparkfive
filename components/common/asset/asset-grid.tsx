@@ -30,25 +30,26 @@ import styles from "./asset-grid.module.css";
 import AssetThumbail from "./asset-thumbail";
 import AssetUpload from "./asset-upload";
 import DetailOverlay from "./detail-overlay";
+import { ASSET_UPLOAD_APPROVAL } from "../../../constants/permissions";
 
 // Components
 
 const AssetGrid = ({
   activeView = "grid",
   isShare = false,
-  onFilesDataGet = (files: any) => {},
+  onFilesDataGet = (files: any) => { },
   toggleSelected,
   mode = "assets",
-  deleteFolder = (id: string) => {},
+  deleteFolder = (id: string) => { },
   itemSize = "regular",
   activeFolder = "",
   type = "",
   itemId = "",
-  getFolders = () => {},
-  loadMore = () => {},
-  viewFolder = (id: string) => {},
+  getFolders = () => { },
+  loadMore = () => { },
+  viewFolder = (id: string) => { },
   sharePath = "",
-  onCloseDetailOverlay = (assetData) => {},
+  onCloseDetailOverlay = (assetData) => { },
   setWidthCard,
   widthCard,
   getSubCollectionsAssetData,
@@ -217,15 +218,13 @@ const AssetGrid = ({
       }
 
       toastUtils.success(
-        `Assets ${
-          newState === "archived" ? "archived" : "unarchived"
+        `Assets ${newState === "archived" ? "archived" : "unarchived"
         } successfully`
       );
     } catch (err) {
       // TODO: Error handling
       toastUtils.error(
-        `Could not ${
-          newState === "archived" ? "archive" : "unarchive"
+        `Could not ${newState === "archived" ? "archive" : "unarchive"
         } assets, please try again later.`
       );
     }
@@ -384,83 +383,79 @@ const AssetGrid = ({
       setWidthCard(ref.current.clientWidth);
     }
   }, [ref.current, windowWidth]);
-
   return (
     <>
-      <div className={styles["assetFilter-wrapper"]}>
-      {mode === "assets" && <FilterView />}
-      </div>
       <section className={`${styles.container}`}>
-          {(shouldShowUpload || isDragging) && !isShare && (
-            <AssetUpload
-              onDragText={"Drop files here to upload"}
-              preDragText={
-                shouldShowUpload
-                  ? `Drag and drop your files here to upload (png, jpg, gif, doc, xlsx, pdf or mp4)`
-                  : ""
-              }
-              onFilesDataGet={onFilesDataGet}
-            />
-          )}
-          {shouldShowUpload && !isShare && (
-            <AssetAddition
-              displayMode="regular"
-              folderAdd={false}
-              activeFolder={activeFolder}
-              getFolders={getFolders}
-              type={type}
-              itemId={itemId}
-              activeSearchOverlay={activeSearchOverlay}
-              setActiveSearchOverlay={setActiveSearchOverlay}
-            />
-          )}
-          {
-            <div className={styles["list-wrapper"]}>
-              {
-                <ul
-                  className={`${
-                    mode === "SubCollectionView" ? "" : styles["grid-list"]
-                  } ${styles[itemSize]} ${
-                    activeView === "list" && styles["list-view"]
+        {(shouldShowUpload || isDragging) && !isShare && !hasPermission([ASSET_UPLOAD_APPROVAL]) && (
+          <AssetUpload
+            onDragText={"Drop files here to upload"}
+            preDragText={
+              shouldShowUpload
+                ? `Drag and drop your files here to upload (png, jpg, gif, doc, xlsx, pdf or mp4)`
+                : ""
+            }
+            onFilesDataGet={onFilesDataGet}
+          />
+        )}
+        {shouldShowUpload && !isShare && (
+          <AssetAddition
+            displayMode="regular"
+            folderAdd={false}
+            activeFolder={activeFolder}
+            getFolders={getFolders}
+            type={type}
+            itemId={itemId}
+            activeSearchOverlay={activeSearchOverlay}
+            setActiveSearchOverlay={setActiveSearchOverlay}
+          />
+        )}
+
+        {
+          <div className={styles["list-wrapper"]}>
+            {mode === "assets" && <FilterView />}
+            {/* testing component starts from here */}
+            {
+              <ul
+                className={`${mode === "SubCollectionView" ? "" : styles["grid-list"]
+                  } ${styles[itemSize]} ${activeView === "list" && styles["list-view"]
                   } 
-              ${
-                mode === "assets"
-                  ? styles["grid-" + advancedConfig.assetThumbnail]
-                  : styles["grid-" + advancedConfig.collectionThumbnail]
-              }
-              `}
-                >
-                  {mode === "SubCollectionView" && (
-                    <SubCollection
-                      activeView={activeView}
-                      isShare={isShare}
-                      toggleSelected={toggleSelected}
-                      mode={mode}
-                      deleteFolder={deleteFolder}
-                      viewFolder={viewFolder}
-                      sharePath={sharePath}
-                      widthCard
-                      ref={ref}
-                      copyShareLink
-                      getShareIsEnabled={getShareIsEnabled}
-                      beginAssetOperation={beginAssetOperation}
-                      beginChangeThumbnailOperation={
-                        beginChangeThumbnailOperation
-                      }
-                      deleteThumbnail={deleteThumbnail}
-                      isThumbnailNameEditable={isThumbnailNameEditable}
-                      setFocusedItem={setFocusedItem}
-                      focusedItem={focusedItem}
-                      handleFocusChange={handleFocusChange}
-                      loadMoreSubCollctions={getSubFolders}
-                      openArchiveAsset={openArchiveAsset}
-                      openDeleteAsset={openDeleteAsset}
-                      downloadAsset={downloadAsset}
-                      refreshVersion={refreshVersion}
-                      loadMoreAssets={getSubCollectionsAssetData}
-                      onCloseDetailOverlay={onCloseDetailOverlay}
-                    />
-                  )}
+            ${mode === "assets"
+                    ? styles["grid-" + advancedConfig.assetThumbnail]
+                    : styles["grid-" + advancedConfig.collectionThumbnail]
+                  }
+            `}
+              >
+                {mode === "SubCollectionView" && (
+                  <SubCollection
+                    activeView={activeView}
+                    isShare={isShare}
+                    toggleSelected={toggleSelected}
+                    mode={mode}
+                    deleteFolder={deleteFolder}
+                    viewFolder={viewFolder}
+                    sharePath={sharePath}
+                    widthCard
+                    ref={ref}
+                    copyShareLink
+                    getShareIsEnabled={getShareIsEnabled}
+                    beginAssetOperation={beginAssetOperation}
+                    beginChangeThumbnailOperation={
+                      beginChangeThumbnailOperation
+                    }
+                    deleteThumbnail={deleteThumbnail}
+                    isThumbnailNameEditable={isThumbnailNameEditable}
+                    setFocusedItem={setFocusedItem}
+                    focusedItem={focusedItem}
+                    handleFocusChange={handleFocusChange}
+                    loadMoreSubCollctions={getSubFolders}
+                    openArchiveAsset={openArchiveAsset}
+                    openDeleteAsset={openDeleteAsset}
+                    downloadAsset={downloadAsset}
+                    refreshVersion={refreshVersion}
+                    loadMoreAssets={getSubCollectionsAssetData}
+                    onCloseDetailOverlay={onCloseDetailOverlay}
+                  />
+                )}
 
                   {mode === "assets" && (
                     <>
@@ -615,19 +610,19 @@ const AssetGrid = ({
             </div>
           }
 
-          {/* Change thumbnail modal */}
-          <ChangeThumbnail
-            closeModal={() => {
-              setModalData({});
-              setModalOpen(false);
-            }}
-            cleareProps={modalData}
-            additionalClasses={["visible-block"]}
-            modalData={modalData}
-            modalIsOpen={modalOpen}
-            confirmAction={() => {}}
-            getSubFolders={getSubFolders}
-          />
+        {/* Change thumbnail modal */}
+        <ChangeThumbnail
+          closeModal={() => {
+            setModalData({});
+            setModalOpen(false);
+          }}
+          cleareProps={modalData}
+          additionalClasses={["visible-block"]}
+          modalData={modalData}
+          modalIsOpen={modalOpen}
+          confirmAction={() => { }}
+          getSubFolders={getSubFolders}
+        />
 
           {/* Delete modal */}
           <ConfirmModal
@@ -647,33 +642,29 @@ const AssetGrid = ({
             modalIsOpen={deleteModalOpen}
           />
 
-          {/* Archive modal */}
-          <ConfirmModal
-            closeModal={() => setActiveArchiveAsset(undefined)}
-            confirmAction={() => {
-              archiveAsset(activeAssetId);
-              setActiveAssetId("");
-              setActiveArchiveAsset(undefined);
-            }}
-            confirmText={`${
-              activeArchiveAsset?.stage !== "archived" ? "Archive" : "Unarchive"
+        {/* Archive modal */}
+        <ConfirmModal
+          closeModal={() => setActiveArchiveAsset(undefined)}
+          confirmAction={() => {
+            archiveAsset(activeAssetId);
+            setActiveAssetId("");
+            setActiveArchiveAsset(undefined);
+          }}
+          confirmText={`${activeArchiveAsset?.stage !== "archived" ? "Archive" : "Unarchive"
             }`}
-            message={
-              <span>
-                Are you sure you want to &nbsp;
-                <strong>{`${
-                  activeArchiveAsset?.stage !== "archived"
-                    ? "Archive"
-                    : "Unarchive"
+          message={
+            <span>
+              Are you sure you want to &nbsp;
+              <strong>{`${activeArchiveAsset?.stage !== "archived" ? "Archive" : "Unarchive"
                 }`}</strong>
-                &nbsp; this asset?
-              </span>
-            }
-            modalIsOpen={activeArchiveAsset}
-          />
-
-          {/* Overlay exclusive to page load assets */}
-          {initAsset && (
+              &nbsp; this asset?
+            </span>
+          }
+          modalIsOpen={activeArchiveAsset}
+        />
+        {/* Overlay exclusive to page load assets */}
+        {
+          initAsset && (
             <DetailOverlay
               isShare={isShare}
               sharePath={sharePath}
@@ -688,8 +679,9 @@ const AssetGrid = ({
               loadMore={loadMore}
               availableNext={nextPage !== -1}
             />
-          )}
-      </section>
+          )
+        }
+      </section >
     </>
   );
 };

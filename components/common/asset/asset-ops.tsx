@@ -50,10 +50,12 @@ export default ({ getAssets }) => {
     setListUpdateFlag,
     selectedAllSubAssets,
     setSelectedAllSubAssets,
+    setNeedsFetch
   } = useContext(AssetContext);
 
   const { setIsLoading } = useContext(LoadingContext);
 
+  const [completedSubAssets, setCompletedSubAssets] = useState([])
   const { loadFolders, activeSortFilter, term, searchFilterParams } =
     useContext(FilterContext);
 
@@ -61,7 +63,9 @@ export default ({ getAssets }) => {
   const unSelectedAssets = selectedAllAssets
     ? assets.filter((asset) => !asset.isSelected)
     : [];
-
+  const unSelectedSubAssets = selectedAllSubAssets
+    ? subFoldersAssetsViewList?.results.filter((asset) => !asset.isSelected)
+    : [];
   const router = useRouter();
 
   const [currentItem, setCurrentItem] = useState({
@@ -95,11 +99,10 @@ export default ({ getAssets }) => {
       //  Get all assets without pagination
       getSelectedAssets(unSelectedAssets.map((data) => data.asset.id));
     }
-    // TODO start from here itself
-    // if (activeOperation === "edit" && selectedAllSubAssets && activeSortFilter?.mainFilter === "SubCollectionView") {
-    //   //  Get all assets without pagination
-    //   getSelectedAssets(unSelectedAssets.map((data) => data.asset.id));
-    // }
+    if (activeOperation === "edit" && selectedAllSubAssets && activeSortFilter?.mainFilter === "SubCollectionView") {
+      //  Get all assets without pagination
+      getSelectedAssets(unSelectedSubAssets.map((data) => data.asset.id));
+    }
   }, [activeOperation]);
 
   useEffect(() => {
@@ -161,29 +164,34 @@ export default ({ getAssets }) => {
       let filters = {
         ...getAssetsFilters({
           replace: false,
-          activeFolder,
+          activeFolder: selectedAllAssets ? activeFolder : activeSubFolders,
           addedIds: excludeIds,
           nextPage: 1,
           userFilterObject: activeSortFilter,
         }),
         complete: "1",
       };
-
       if (term) {
         // @ts-ignore
         filters.term = term;
       }
       const { data } = await assetApi.getAssets(filters);
-      setCompletedAssets(
-        {
-          ...data,
-          results: data.results.map((asset) => ({
-            ...asset,
-            isSelected: true,
-          })),
-        },
-        true
-      );
+      selectedAllAssets ?
+        setCompletedAssets(
+          {
+            ...data,
+            results: data?.results.map((asset) => ({
+              ...asset,
+              isSelected: true,
+            })),
+          },
+          true
+        )
+        : setCompletedSubAssets(data?.results.map((asset) => ({
+          ...asset,
+          isSelected: true,
+        })))
+        ;
     } catch (err) {
       //TODO: Handle error
       console.log(err);
@@ -237,11 +245,11 @@ export default ({ getAssets }) => {
       }
 
       // Select all assets without pagination
-      if (selectedAllAssets) {
+      if (selectedAllAssets || selectedAllSubAssets) {
         filters = {
           ...getAssetsFilters({
             replace: false,
-            activeFolder,
+            activeFolder: selectedAllAssets ? activeFolder : activeSubFolders,
             addedIds: [],
             nextPage: 1,
             userFilterObject: activeSortFilter,
@@ -289,11 +297,11 @@ export default ({ getAssets }) => {
       }
 
       // Select all assets without pagination
-      if (selectedAllAssets) {
+      if (selectedAllAssets || selectedAllSubAssets) {
         filters = {
           ...getAssetsFilters({
             replace: false,
-            activeFolder,
+            activeFolder: selectedAllAssets ? activeFolder : activeSubFolders,
             addedIds: [],
             nextPage: 1,
             userFilterObject: activeSortFilter,
@@ -365,11 +373,11 @@ export default ({ getAssets }) => {
       }
 
       // Select all assets without pagination
-      if (selectedAllAssets) {
+      if (selectedAllAssets || selectedAllSubAssets) {
         filters = {
           ...getAssetsFilters({
             replace: false,
-            activeFolder,
+            activeFolder: selectedAllAssets ? activeFolder : activeSubFolders,
             addedIds: [],
             nextPage: 1,
             userFilterObject: activeSortFilter,
@@ -471,11 +479,11 @@ export default ({ getAssets }) => {
       }
 
       // Select all assets without pagination
-      if (selectedAllAssets) {
+      if (selectedAllAssets || selectedAllSubAssets) {
         filters = {
           ...getAssetsFilters({
             replace: false,
-            activeFolder,
+            activeFolder: selectedAllAssets ? activeFolder : activeSubFolders,
             addedIds: [],
             nextPage: 2,
             userFilterObject: activeSortFilter,
@@ -578,11 +586,11 @@ export default ({ getAssets }) => {
         }
 
         // Select all assets without pagination
-        if (selectedAllAssets) {
+        if (selectedAllAssets || selectedAllSubAssets) {
           filters = {
             ...getAssetsFilters({
               replace: false,
-              activeFolder,
+              activeFolder: selectedAllAssets ? activeFolder : activeSubFolders,
               addedIds: [],
               nextPage: 1,
               userFilterObject: activeSortFilter,
@@ -704,11 +712,11 @@ export default ({ getAssets }) => {
       }
 
       // Select all assets without pagination
-      if (selectedAllAssets) {
+      if (selectedAllAssets || selectedAllSubAssets) {
         filters = {
           ...getAssetsFilters({
             replace: false,
-            activeFolder,
+            activeFolder: selectedAllAssets ? activeFolder : activeSubFolders,
             addedIds: [],
             nextPage: 1,
             userFilterObject: activeSortFilter,
@@ -851,11 +859,11 @@ export default ({ getAssets }) => {
         }
 
       // Select all assets without pagination
-      if (selectedAllAssets) {
+      if (selectedAllAssets || selectedAllSubAssets) {
         filters = {
           ...getAssetsFilters({
             replace: false,
-            activeFolder,
+            activeFolder: selectedAllAssets ? activeFolder : activeSubFolders,
             addedIds: [],
             nextPage: 1,
             userFilterObject: activeSortFilter,
@@ -894,10 +902,11 @@ export default ({ getAssets }) => {
     try {
       const { data } = await folderApi.createFolder({ name: newFolderName });
       setFolders(update(folders, { $push: [data] }));
-      setSubFoldersViewList({
-        ...subFoldersViewList,
-        results: [data, ...subFoldersViewList.results],
-      }, false);
+      // TODO Comment because we don't want to create collection inside the subcollection view port
+      // setSubFoldersViewList({
+      //   ...subFoldersViewList,
+      //   results: [data, ...subFoldersViewList.results],
+      // }, false);
       setSidenavFolderList({ results: [data, ...sidenavFolderList] });
       loadFolders();
     } catch (err) {
@@ -1114,9 +1123,16 @@ export default ({ getAssets }) => {
 
   const generateAssetsThumbnails = async () => {
     try {
-      const assetIds = selectedAssets.map((assetItem) => assetItem.asset.id);
-      const { data } = await assetApi.generateThumbnails({ assetIds });
+      let assetIds = [];
+      assetIds = selectedAssets.map((assetItem) => assetItem.asset.id);
+      if (selectedSubFolderAssetId.length && activeSortFilter?.mainFilter === "SubCollectionView") {
+        assetIds = selectedSubFolderAssetId.map((assetItem) => assetItem.asset.id);
+      }
 
+      const { data } = await assetApi.generateThumbnails({ assetIds });
+      if (activeSortFilter?.mainFilter === "SubCollectionView") {
+        setNeedsFetch("SubCollectionView");
+      }
       setAssets([
         ...assets.map((item) => ({
           ...item,
@@ -1146,7 +1162,7 @@ export default ({ getAssets }) => {
     operationLength = operationAssets.length;
   } else {
     operationLength = (activeSortFilter?.mainFilter === "SubCollectionView" && selectedSubFolderAssetId.length > 0)
-      ? selectedSubFolderAssetId.length
+      ? selectedAllAssets ? subFoldersAssetsViewList.total : selectedSubFolderAssetId.length
       : selectedAllAssets ? totalAssets : selectedAssets.length;
   }
 
@@ -1258,7 +1274,7 @@ export default ({ getAssets }) => {
           handleBackButton={() => setActiveOperation("")}
           selectedAssets={
             activeSortFilter?.mainFilter === "SubCollectionView" ?
-              selectedSubFolderAssetId
+              selectedAllSubAssets ? completedSubAssets : selectedSubFolderAssetId
               :
               selectedAllAssets ? completedAssets : selectedAssets}
         />
