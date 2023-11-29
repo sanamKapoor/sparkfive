@@ -127,11 +127,13 @@ const DateTypeFilter: React.FC<DateTypeFilterProps> = ({
         <div key={option.id} className={`${styles["outer-wrapper"]}`}>
           {options && option.id === options?.id ? (
             <IconClickable
+            additionalClass={styles["radio-icon"]}
               src={Utilities.radioButtonEnabled}
               onClick={() => onDeselectDateRange()}
             />
           ) : (
             <IconClickable
+            additionalClass={styles["radio-icon"]}
               src={Utilities.radioButtonNormal}
               onClick={() => onSelectDateRange(option)}
             />
@@ -146,11 +148,13 @@ const DateTypeFilter: React.FC<DateTypeFilterProps> = ({
             <IconClickable
               src={Utilities.radioButtonEnabled}
               onClick={onDeselectCustomRange}
+              additionalClass={styles["radio-icon"]}
             />
           ) : (
             <IconClickable
               src={Utilities.radioButtonNormal}
               onClick={onSelectCustomRange}
+              additionalClass={styles["radio-icon"]}
             />
           )}
           <span className={`${styles["select-name"]}`}>Custom Range</span>

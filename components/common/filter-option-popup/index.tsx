@@ -170,7 +170,6 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   return (
     <div className={`${styles["main-container"]}`}>
     <div className={`${styles["outer-wrapper"]}`}>
-   
       {checkIfValuesExist() ? (
         <>
           <div className={`${styles["popup-mobile-view"]}`}>

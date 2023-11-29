@@ -2,12 +2,11 @@
   /* position: relative; */
   position: fixed;
   width: 100%;
-  top: 81px;
+  top: 72px;
   left: 0;
   z-index: 1300;
-
   background-color: white;
-  padding: 33.5px 40px;
+  padding: 33.5px 30px;
   width: calc(100% - 320px);
   margin-left: 327px;
 }
@@ -18,7 +17,7 @@
   left: 0;
   z-index: 1300;
   background-color: white;
-  padding: 33.5px 40px;
+  padding: 54.5px 40px;
   }
   .outer-box{
     display: flex;

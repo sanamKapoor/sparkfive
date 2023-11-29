@@ -119,9 +119,10 @@ const SubCollection = ({
               onClick={() => {
                 handleHideClick();
               }}
-              src={collectionHide ? Utilities.up : Utilities.downIcon}
+              src={collectionHide ? Utilities.arrowUpGrey : Utilities.caretDownLight }
             />
           </div>
+         
         </div>
       )}
       {!collectionHide && (
@@ -200,7 +201,7 @@ const SubCollection = ({
                     onClick={() => {
                       handleAssetsHideClick();
                     }}
-                    src={assetsHide ? Utilities.up : Utilities.downIcon}
+                    src={assetsHide ?  Utilities.arrowUpGrey : Utilities.caretDownLight}
                   />
                 </div>
               )}

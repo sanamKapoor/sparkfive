@@ -176,7 +176,16 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
             className={`${styles["more-filter-btn"]}`}
             onClick={onMoreFiltersClick}
           >
+            <div  className={`${styles["filter-button"]}`}>
             <Button text="More filters" className="text-primary-btn" />
+            <img
+                  className={`${styles["more-filter-arrow"]}`}
+                  src={Utilities.downIconLight}
+                  alt=""
+                />
+
+            </div>
+          
           </div>
         )}
       </div>

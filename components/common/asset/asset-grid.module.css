@@ -73,7 +73,7 @@
     margin-top: 145px;
   }
 }
-@media screen and (max-width: 580px) {
+@media screen and (max-width: 800px) {
   .grid-list{
     margin-top: 160px !important;
     padding: 0 20px;
@@ -94,7 +94,7 @@
 .list-view {
   display: flex;
   flex-direction: column;
-  grid-gap: 40px;
+  grid-gap: 16px;
 
 }
 

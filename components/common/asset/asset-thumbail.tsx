@@ -250,11 +250,11 @@ const AssetThumbail = ({
   };
   return (
     <>
-      <div
+    <div>
+    <div
         className={`${styles.container} ${activeView === "list" && styles.listContainer
           } ${isLoading && "loadable"}`}
       >
-        {/* select wrapper is for list view  */}
         <div className={activeView === "list" && styles["list-item-wrapper"]}>
           {activeView === "list" ? (
             <div
@@ -427,7 +427,7 @@ const AssetThumbail = ({
 
         {activeView === "list" &&
           (<div className={styles.extension}>
-            <span>{asset.extension}</span>
+            <span className={styles.format}>{asset.extension}</span>
           </div>)}
 
         {!isUploading && showAssetOption && (
@@ -458,8 +458,10 @@ const AssetThumbail = ({
             dissociateAsset={onDisassociate}
           />
         )}
-        {/* </div> */}
       </div>
+
+    </div>
+    
 
       {customIconComponent}
 

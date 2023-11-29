@@ -356,13 +356,11 @@ const FolderGridItem = ({
               id="editable-preview"
               onClick={handleOnFocus}
               className={
-                isThumbnailNameEditable
-                  ? `normal-text ${styles["wrap-text"]} ${
+                `normal-text ${styles["wrap-text"]} ${
                       activeView === "list" && styles["list-wrap-text"]
                     } ${gridStyles["editable-preview"]} ${
                       activeView === "list" && styles["list-text"]
                     }`
-                  : `normal-text ${styles["wrap-text"]} ${gridStyles["editable-preview"]} ${gridStyles["non-editable-preview"]}`
               }
             >
               {thumbnailName}
@@ -497,7 +495,7 @@ const FolderGridItem = ({
           setDeleteOpen(false);
         }}
         confirmText={"Delete"}
-        message={"Are you sure you want to delete this Collection?"}
+        message={"Are you sure you want to delete this collection?"}
         modalIsOpen={deleteOpen}
       />
     </div>

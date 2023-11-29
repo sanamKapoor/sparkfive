@@ -4,12 +4,11 @@
     justify-content: space-between;
     flex-wrap: wrap;
     padding: 5px 0 16px 0;
-    margin-top:15px;
 }
 .sub-collection-heading span{
     font-family: "Noto Sans", sans-serif;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 500;
     margin-right: 11px;
     color: #817D9D;
 }
@@ -126,14 +125,15 @@
   .cardsWrapper{
     display: grid;
     grid-template-columns: repeat(auto-fill,minmax(246px,1fr));
-    grid-gap: 40px
+    grid-gap: 20px;
+  
     
  
   }
   .assetWrapper{
     display: grid;
     grid-template-columns: repeat(auto-fill,minmax(246px,1fr));
-    grid-gap: 40px;
+   grid-gap:20px;
   }
   .LoadMorebtn{
     display:flex;
@@ -162,17 +162,26 @@
     .cardsWrapper{
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(246px, 1fr));
+        padding: 0 20px;
     }
    
   }
-  @media (max-width:400px){
+  @media (max-width:420px){
     .sub-collection-heading{
       flex-wrap: wrap;
-      align-items: flex-start;
+      align-items: center;
+      padding: 10px 20px;
     }
     .TagsInfo{
       margin-top:10px;
       align-items: flex-start;
+    }
+    .cardsWrapper{
+      padding: 0 20px;
+    }
+    .assetWrapper{
+      padding: 20px 20px;
+      grid-gap:10px;
     }
   }
   
@@ -189,3 +198,4 @@
     grid-template-columns: unset;
 
   }
+

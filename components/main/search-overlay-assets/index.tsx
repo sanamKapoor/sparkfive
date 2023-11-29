@@ -122,7 +122,7 @@ const SearchOverlayAssets = ({
 
   //TODO: we can have an enum for these modes and use that all over the app to ensure consistency
   const isSubCollectionMode =
-    mode === "SubCollectionView" ? "Sub Collections" : "assets";
+    mode === "SubCollectionView" ? "Subcollections" : "assets";
 
   const searchText = mode === "folders" ? "Collections" : isSubCollectionMode;
 
