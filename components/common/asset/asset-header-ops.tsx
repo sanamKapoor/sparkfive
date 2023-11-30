@@ -500,13 +500,13 @@ const AssetHeaderOps = ({
                       showShareActionList(e, false);
                     }}
                   />
-                  {/*<img*/}
+                  {/* <img*/}
                   {/*  src={Utilities.blueClose}*/}
                   {/*  alt={"close"}*/}
                   {/*  onClick={(e) => {*/}
                   {/*    showShareActionList(e, false);*/}
                   {/*  }}*/}
-                  {/*/>*/}
+                  {/*/> */}
                 </div>
                 <ul>
                   <li
@@ -646,7 +646,7 @@ const AssetHeaderOps = ({
         {!deselectHidden && (
           <img
             className={styles.close}
-            src={Utilities.blueClose}
+            src={Utilities.blueCloses}
             onClick={deselectAll}
           />
         )}

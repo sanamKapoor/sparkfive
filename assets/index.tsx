@@ -68,6 +68,7 @@ export const LoginImg = {
 
 export const Navigation = {
   alert: require("./Icons/Navigation/icn-nav-alert-white.svg"),
+  alertBlues: require("./Icons/Navigation/icn-nav-alert.svg"),
   alertBlue: AlertBlue,
   overview: require("./Icons/Navigation/icn-nav-dashboard-#E9EEFA.svg"),
   overviewSelected: require("./Icons/Navigation/icn-nav-dashboard-white.svg"),
@@ -83,6 +84,39 @@ export const Navigation = {
 };
 
 export const Utilities = {
+  images: require("./Icons/Utilities/nestedCollection/images.svg"),
+  vedio: require("./Icons/Utilities/nestedCollection/vedio.svg"),
+  product: require("./Icons/Utilities/nestedCollection/product.svg"),
+  archive: require("./Icons/Utilities/nestedCollection/archived.svg"),
+  assets: require("./Icons/Utilities/nestedCollection/assets.svg"),
+  caretRightSolid:require("./Icons/Utilities/arrow/CaretRight.svg"),
+  toggleLight:require("./Icons/Utilities/nestedCollection/toggleLight.svg"),
+  folder: require("./Icons/Utilities/nestedCollection/folder.svg"),
+  foldernew: require("./Icons/Utilities/nestedCollection/foldernew.svg"),
+  load: require("./Icons/Utilities/nestedCollection/load.svg"),
+  caretRightSolids:require("./Icons/Utilities/arrow/CaretRight.svg"),
+  caretRightsingle:require("./Icons/Utilities/arrow/CaretRightsingle.svg"),
+  CaretDown:require("./Icons/Utilities/arrow/CaretDown.svg"),
+  line: require("./Icons/Utilities/nestedCollection/Line.svg"),
+  dots: require("./Icons/Utilities/nestedCollection/dots.svg"),
+  closeIcon: require("./Icons/Utilities/nestedCollection/close.svg"),
+  closeIconLight: require("./Icons/Utilities/nestedCollection/closeIconLight.svg"),
+  searchIcon: require("./Icons/Utilities/nestedCollection/search.svg"),
+  checkIcon: require("./Icons/Utilities/nestedCollection/checkIcon.svg"),
+  doubleCheck: require("./Icons/Utilities/nestedCollection/DoubleChecks.svg"),
+  addCollection: require("./Icons/Utilities/nestedCollection/Add-collection.svg"),
+  redCheck: require("./Icons/Utilities/nestedCollection/dcheckred.svg"),
+  horizontalDots: require("./Icons/Utilities/nestedCollection/horixzontaldots.svg"),
+  downIcon: require("./Icons/Utilities/nestedCollection/downIcon.svg"),
+  downIconLight: require("./Icons/Utilities/nestedCollection/downIconlight.svg"),
+  arrowDownUp: require("./Icons/Utilities/collection/ArrowsDownUp.svg"),
+  arrowDownUpLight: require("./Icons/Utilities/collection/ArrowsDownUpLight.svg"),
+  edits: require("./Icons/Utilities/collection/edit.svg"),
+  tabulardots: require("./Icons/Utilities/collection/tabler-icon-dots.svg"),
+  up: require("./Icons/Utilities/icons8-chevron-up-30.png"),
+  oggleLight:require("./Icons/Utilities/nestedCollection/toggleLight.svg"),
+    arrowright: require("./Icons/Utilities/nestedCollection/arrow-square-right.svg"),
+
   edit: EditFill,
   editLight: require("./Icons/Utilities/Description-Edit/icn-utilities-description_edit-light.svg"),
   editWhite: require("./Icons/Utilities/Description-Edit/icn-utilities-description_edit-fill-white.svg"),
@@ -150,6 +184,7 @@ export const Utilities = {
   file: FilterFile,
   close: require("./Icons/Utilities/Close/close.svg"),
   closeTag: require("./Icons/Utilities/Close/close-tag.svg"),
+  blueCloses: require("./Icons/Utilities/Close/blue-close.svg"),
   blueClose: BlueClose,
   bigblueClose: require("./Icons/Utilities/Close/bigclose.svg"),
   grayClose: require("./Icons/Utilities/Close/gray-close.svg"),
@@ -268,6 +303,7 @@ export const Integrations = {
 };
 
 export const AssetOps = {
+  deletes: require("./Icons/Utilities/Delete/icn-utilities-delete.svg"),
   edit: Edit,
   delete: Delete,
   deleteGray: require("./Icons/Utilities/Delete/icn-utilities-delete-gray.svg"),
