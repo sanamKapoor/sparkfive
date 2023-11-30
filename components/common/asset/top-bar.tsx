@@ -425,7 +425,7 @@ const TopBar = ({
         {(amountSelected === 0 || mode === "folders") &&
           showAssetAddition &&
           hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL]) && (
-            <AssetAddition activeFolder={activeFolder} getFolders={getFolders} />
+            <AssetAddition triggerUploadComplete={undefined} />
           )}
       </div>
     </section>

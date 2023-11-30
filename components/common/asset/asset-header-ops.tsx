@@ -44,11 +44,11 @@ const AssetHeaderOps = ({
 
   const router = useRouter();
 
-  const [sharePath, setSharePath] = useState("");
-  const [showShareAction, setShowShareAction] = useState(false);
-  const contentRef = useRef(null);
-  const [showMoreActions, setShowMoreActions] = useState(false);
-  const [showAssociateModalOpen, setShowAssociateModalOpen] = useState(false);
+  // const [sharePath, setSharePath] = useState("");
+  // const [showShareAction, setShowShareAction] = useState(false);
+  // const contentRef = useRef(null);
+  // const [showMoreActions, setShowMoreActions] = useState(false);
+  // const [showAssociateModalOpen, setShowAssociateModalOpen] = useState(false);
 
   const {
     assets,

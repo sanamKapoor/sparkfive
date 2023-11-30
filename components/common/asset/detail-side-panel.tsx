@@ -308,21 +308,21 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     }
   };
 
-  const updateAssetState = (updatedata) => {
-    const assetIndex = assets.findIndex((assetItem) => assetItem.asset.id === id);
-    if (assetIndex >= 0) {
-      setAssets(
-        update(assets, {
-          [assetIndex]: {
-            asset: updatedata,
-          },
-        }),
-      );
-      setAssetDetail(update(asset, updatedata));
-    }
+  // const updateAssetState = (updatedata) => {
+  //   const assetIndex = assets.findIndex((assetItem) => assetItem.asset.id === id);
+  //   if (assetIndex >= 0) {
+  //     setAssets(
+  //       update(assets, {
+  //         [assetIndex]: {
+  //           asset: updatedata,
+  //         },
+  //       }),
+  //     );
+  //     setAssetDetail(update(asset, updatedata));
+  //   }
 
-    setActiveDropdown("");
-  };
+  //   setActiveDropdown("");
+  // };
 
   const handleProjectChange = async (selected, actionMeta) => {
     if (actionMeta.action === "create-option") {

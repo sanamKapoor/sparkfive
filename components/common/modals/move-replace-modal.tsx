@@ -242,9 +242,7 @@ const MoveReplaceModal = ({
             </div>
             }
           </div>
-      {/**
-    TODO Check the svg element in the ICONCLICABLE Conflict issue
-    */}
+          //TODO Check the svg element in the ICONCLICABLE Conflict issue
           // <ul className={styles.list}>
           //   {folders.map((folder) => (
           //     <li key={folder.id} onClick={() => toggleSelected(folder.id, !selectedFolder.includes(folder.id))}>
