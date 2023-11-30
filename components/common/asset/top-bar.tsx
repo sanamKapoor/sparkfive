@@ -85,20 +85,20 @@ const TopBar = ({
     // And uploaded folder needed to show at first
     setLastUploadedFolder(undefined);
 
-    if (reset) {
-      setActiveSortFilter({
-        ...activeSortFilter,
-        [key]: value,
-        sort,
-        ...DEFAULT_FILTERS,
-      });
-    } else {
-      setActiveSortFilter({
-        ...activeSortFilter,
-        [key]: value,
-        sort,
-      });
-    }
+    // if (reset) {
+    //   setActiveSortFilter({
+    //     ...activeSortFilter,
+    //     [key]: value,
+    //     sort,
+    //     ...DEFAULT_FILTERS,
+    //   });
+    // } else {
+    setActiveSortFilter({
+      ...activeSortFilter,
+      [key]: value,
+      sort,
+    });
+    // }
   };
 
   const toggleSelectAll = () => {
