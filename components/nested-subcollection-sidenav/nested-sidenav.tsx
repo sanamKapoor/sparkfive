@@ -63,6 +63,9 @@ const NestedSidenav = ({ viewFolder }) => {
       ["mainFilter"]: value,
       sort,
     });
+    if (window.innerWidth < 767) {
+      setSidebarOpen(false)
+    }
   };
 
   return (

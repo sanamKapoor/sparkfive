@@ -202,7 +202,10 @@ const AssetAddition = ({
         if (currentUploadingFolderId) {
           attachedQuery["folderId"] = currentUploadingFolderId;
         }
-
+        if (!currentUploadingFolderId && !folderId && activeSortFilter?.mainFilter === "SubCollectionView") {
+          attachedQuery["parentId"] = activeSubFolders;
+        }
+        debugger
         // Call API to upload
         let { data } = await assetApi.uploadAssets(
           formData,
@@ -258,6 +261,7 @@ const AssetAddition = ({
         }
       }
     } catch (e) {
+
       // Violate validation, mark failure
       const updatedAssets = assets.map((asset, index) =>
         index === i
@@ -330,6 +334,7 @@ const AssetAddition = ({
   };
 
   const onFilesDataGet = async (files) => {
+
     const currentDataClone = [...assets];
     const currenFolderClone = [...folders];
 
@@ -417,7 +422,7 @@ const AssetAddition = ({
 
       let uploadToFolders: any = [];
 
-      if (activeSortFilter?.mainFilter === "SubCollectionView") {
+      if (activeSortFilter?.mainFilter === "SubCollectionView" && foldersUploaded?.length <= 0) {
         uploadToFolders = [activeSubFolders];
       } else if (activeFolder) {
         uploadToFolders = [activeFolder];
@@ -883,7 +888,7 @@ const AssetAddition = ({
     if (targetFolders.length > 0) {
       uploadToFolders = targetFolders.map((folder) => folder.id);
     } else {
-      if (activeSortFilter?.mainFilter === "SubCollectionView") {
+      if (activeSortFilter?.mainFilter === "SubCollectionView" && !attachQuery?.parentId && !attachQuery?.folderId) {
         uploadToFolders = [activeSubFolders];
       } else if (activeSortFilter?.mainFilter !== "folders" && activeFolder) {
         uploadToFolders = [activeFolder];
