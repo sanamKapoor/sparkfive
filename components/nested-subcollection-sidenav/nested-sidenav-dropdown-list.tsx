@@ -51,7 +51,8 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
     setSidenavFolderChildList,
     listUpdateFlag,
     setListUpdateFlag,
-    activeFolder
+    activeFolder,
+    setSidebarOpen
   } = useContext(AssetContext);
 
   const { term, activeSortFilter } = useContext(FilterContext) as {
@@ -211,7 +212,12 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
               >
                 <div
                   className={styles.w100}
-                  onClick={() => viewFolder(item.id, true, "", item.name)}
+                  onClick={() => {
+                    viewFolder(item.id, true, "", item.name);
+                    if (window.innerWidth < 767) {
+                      setSidebarOpen(false)
+                    }
+                  }}
                 >
                   <div className={styles.mainWrapper}>
                     <div className={styles.flex}>
@@ -251,13 +257,17 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
                             <div className={styles.dropdownOptions}>
                               <div
                                 className={styles["folder-lists"]}
-                                onClick={() =>
+                                onClick={() => {
                                   viewFolder(
                                     record.id,
                                     false,
                                     item.id,
                                     record.name
-                                  )
+                                  );
+                                  if (window.innerWidth < 767) {
+                                    setSidebarOpen(false)
+                                  }
+                                }
                                 }
                               >
                                 <div className={styles.dropdownIcons}>
@@ -306,29 +316,31 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
                     </>
                   )}
                 </div>
-              </div>
+              </div >
             )}
           </>
         );
       })}
-      {sidenavFolderNextPage >= 0 && (
-        <div onClick={() => getFolders(false)}>
-          {isFolderLoading ? (
-            <>
-              <div className={styles.loader}></div>
-            </>
-          ) : (
-            <div className={`${styles["load-wrapper"]}`}>
-              <IconClickable
-                additionalClass={styles.loadIcon}
-                src={Utilities.load}
-              />
-              <button className={styles.loadMore}>Load More</button>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
+      {
+        sidenavFolderNextPage >= 0 && (
+          <div onClick={() => getFolders(false)}>
+            {isFolderLoading ? (
+              <>
+                <div className={styles.loader}></div>
+              </>
+            ) : (
+              <div className={`${styles["load-wrapper"]}`}>
+                <IconClickable
+                  additionalClass={styles.loadIcon}
+                  src={Utilities.load}
+                />
+                <button className={styles.loadMore}>Load More</button>
+              </div>
+            )}
+          </div>
+        )
+      }
+    </div >
   );
 };
 

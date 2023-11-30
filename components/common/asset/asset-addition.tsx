@@ -23,7 +23,7 @@ import AssetDuplicateModal from "./asset-duplicate-modal";
 
 const AssetAddition = ({
   activeSearchOverlay = false,
-  setActiveSearchOverlay = (active: any) => {},
+  setActiveSearchOverlay = (active: any) => { },
   folderAdd = true,
   type = "",
   itemId = "",
@@ -105,11 +105,11 @@ const AssetAddition = ({
         const updatedAssets = assets.map((asset, index) =>
           index === i
             ? {
-                ...asset,
-                status: "fail",
-                index,
-                error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
-              }
+              ...asset,
+              status: "fail",
+              index,
+              error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
+            }
             : asset
         );
 
@@ -202,7 +202,10 @@ const AssetAddition = ({
         if (currentUploadingFolderId) {
           attachedQuery["folderId"] = currentUploadingFolderId;
         }
-
+        if (!currentUploadingFolderId && !folderId && activeSortFilter?.mainFilter === "SubCollectionView") {
+          attachedQuery["parentId"] = activeSubFolders;
+        }
+        debugger
         // Call API to upload
         let { data } = await assetApi.uploadAssets(
           formData,
@@ -258,6 +261,7 @@ const AssetAddition = ({
         }
       }
     } catch (e) {
+
       // Violate validation, mark failure
       const updatedAssets = assets.map((asset, index) =>
         index === i
@@ -330,6 +334,7 @@ const AssetAddition = ({
   };
 
   const onFilesDataGet = async (files) => {
+
     const currentDataClone = [...assets];
     const currenFolderClone = [...folders];
 
@@ -417,7 +422,7 @@ const AssetAddition = ({
 
       let uploadToFolders: any = [];
 
-      if (activeSortFilter?.mainFilter === "SubCollectionView") {
+      if (activeSortFilter?.mainFilter === "SubCollectionView" && foldersUploaded?.length <= 0) {
         uploadToFolders = [activeSubFolders];
       } else if (activeFolder) {
         uploadToFolders = [activeFolder];
@@ -600,7 +605,8 @@ const AssetAddition = ({
       ) {
         setSubFoldersViewList({
           ...subFoldersViewList,
-          results: [data, ...subFoldersViewList.results],
+          total: subFoldersViewList.total + 1,
+          results: [data, ...subFoldersViewList.results]
         });
       }
 
@@ -615,6 +621,8 @@ const AssetAddition = ({
       toastUtils.success("Collection created successfully");
     } catch (err) {
       setDisableButtons(false);
+      toastUtils.error
+        (err?.response?.data || "Collection does not created at this please try after some time");
     }
   };
 
@@ -824,7 +832,7 @@ const AssetAddition = ({
       id: "gdrive",
       label: "Upload from Drive",
       text: "Import files",
-      onClick: () => {},
+      onClick: () => { },
       icon: Assets.gdrive,
       CustomContent: ({ children }) => {
         return (
@@ -880,20 +888,27 @@ const AssetAddition = ({
     if (targetFolders.length > 0) {
       uploadToFolders = targetFolders.map((folder) => folder.id);
     } else {
-      if (activeSortFilter?.mainFilter === "SubCollectionView") {
+      if (activeSortFilter?.mainFilter === "SubCollectionView" && !attachQuery?.parentId && !attachQuery?.folderId) {
         uploadToFolders = [activeSubFolders];
       } else if (activeSortFilter?.mainFilter !== "folders" && activeFolder) {
         uploadToFolders = [activeFolder];
       }
     }
 
-    queryData.folderId = uploadToFolders.join(",");
     if (type === "project") queryData.projectId = itemId;
     if (type === "task") queryData.taskId = itemId;
     // Attach extra query
     if (attachQuery) {
       queryData = { ...queryData, ...attachQuery };
     }
+    ;
+    if (uploadToFolders.length === 0) {
+      uploadToFolders = [attachQuery?.folderId || ""]
+    }
+    queryData.folderId = !attachQuery.versionGroup
+      ? uploadToFolders.join(",")
+      : "";
+
     return queryData;
   };
 
@@ -976,9 +991,8 @@ const AssetAddition = ({
 
   const SimpleButtonWrapper = ({ children }) => (
     <div
-      className={`${styles["button-wrapper"]} ${
-        !folderAdd && styles["button-wrapper-displaced"]
-      } asset-addition`}
+      className={`${styles["button-wrapper"]} ${!folderAdd && styles["button-wrapper-displaced"]
+        } asset-addition`}
     >
       {!hasPermission([ASSET_UPLOAD_APPROVAL]) && (
         // <Button text="+" className="container add"/>
@@ -1051,7 +1065,11 @@ const AssetAddition = ({
           uploadApproval={true}
         />
       ) : (
-        <DropDownOptions />
+        <div>
+          {
+            !hasPermission([ASSET_UPLOAD_APPROVAL]) && <DropDownOptions />
+          }
+        </div>
       )}
 
       <FolderModal

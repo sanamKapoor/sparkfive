@@ -72,11 +72,9 @@ const NestedFirstlist = ({
         {sideNavFirstList.map((item, index) => (
           <li
             onClick={() => headingClick(item.name, item.description)}
-            className={`${styles["list1-description"]} ${
-              styles["border-bottom"]
-            }  ${
-              activeSortFilter?.mainFilter === item.name ? styles["active"] : ""
-            }`}
+            className={`${styles["list1-description"]} ${styles["border-bottom"]
+              }  ${activeSortFilter?.mainFilter === item.name ? styles["active"] : ""
+              }`}
             key={index}
           >
             <div className={styles["list1-left-contents"]}>

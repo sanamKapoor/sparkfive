@@ -17,8 +17,8 @@ const SubCollection = ({
   isShare = false,
   toggleSelected,
   mode = "assets",
-  deleteFolder = (id: string) => {},
-  viewFolder = (id: string) => {},
+  deleteFolder = (id: string) => { },
+  viewFolder = (id: string) => { },
   sharePath = "",
   widthCard,
   ref,
@@ -128,9 +128,8 @@ const SubCollection = ({
         <>
           {/* list wrapper for list view */}
           <div
-            className={`${styles["cardsWrapper"]} ${
-              activeView === "list" && styles["list-wrapper"]
-            }`}
+            className={`${styles["cardsWrapper"]} ${activeView === "list" && styles["list-wrapper"]
+              }`}
           >
             {activeView === "list" && (
               <FolderTableHeader
@@ -192,7 +191,7 @@ const SubCollection = ({
         <>
           <>
             <div className={`${styles["sub-collection-heading"]}`}>
-              {sortedFolders.length > 0 && (
+              {sortedAssets.length > 0 && (
                 <div className={styles.rightSide}>
                   <span>Assets ({totalAssets})</span>
                   <img
@@ -209,9 +208,8 @@ const SubCollection = ({
                   <div className={styles.left}>
                     <div className={styles.TagsInfo}>
                       <div
-                        className={`${styles.circle} ${
-                          isChecked ? styles.checked : ""
-                        }`}
+                        className={`${styles.circle} ${isChecked ? styles.checked : ""
+                          }`}
                         onClick={handleCircleClick}
                       >
                         {isChecked && <img src={Utilities.checkIcon} />}
@@ -228,9 +226,8 @@ const SubCollection = ({
           </>
 
           <div
-            className={`${styles["assetWrapper"]} ${
-              activeView === "list" && styles["list-wrapper"]
-            }`}
+            className={`${styles["assetWrapper"]} ${activeView === "list" && styles["list-wrapper"]
+              }`}
           >
             {!assetsHide && (
               <>

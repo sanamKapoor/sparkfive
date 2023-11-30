@@ -65,7 +65,6 @@ const AssetHeaderOps = ({
     setSelectedAllSubFoldersAndAssets,
     setSubFoldersViewList,
     selectedAllSubAssets,
-    setSelectedAllSubAssets,
     setSubFoldersAssetsViewList,
   } = useContext(AssetContext);
 
@@ -160,13 +159,13 @@ const AssetHeaderOps = ({
         estimateTime: 1,
       };
       // Have implemented the functionality for the Download Sub Collection assets
-      if (selectedAllAssets) {
+      if (selectedAllAssets || selectedAllSubAssets) {
         totalDownloadingAssets = totalAssets;
         // Download all assets without pagination
         filters = {
           ...getAssetsFilters({
             replace: false,
-            activeFolder,
+            activeFolder: selectedAllAssets ? activeFolder : activeSubFolders,
             addedIds: [],
             nextPage: 1,
             userFilterObject: activeSortFilter,
