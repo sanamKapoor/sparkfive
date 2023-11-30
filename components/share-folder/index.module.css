@@ -1,5 +1,5 @@
 .container {
-  padding: 0 40px;
+  padding: 0 0 0 40px;
 }
 
 .mainContainer {
@@ -8,9 +8,8 @@
   left: 283px;
   padding: 60px 35px;
   width: 100%;
-  top:81px;
- 
- 
+  top: 81px;
+  top: 15px;
 }
 
 .filterViewWrapper {
@@ -19,19 +18,10 @@
   background: #fff;
   z-index: 999;
   width: 100%;
-  top:179px;
-  top:162px;
-  margin-bottom:30px;
-
-
+  top: 179px;
+  top: 162px;
+  margin-bottom: 30px;
 }
-
-@media (min-width: 1200px) {
-  .container {
-    /* margin-top: 199px; */
-  }
-}
-
 @media screen and (max-width: 900px) {
   .container {
     padding: 17.5px 16px;

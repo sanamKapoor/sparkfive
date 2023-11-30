@@ -5,7 +5,6 @@
   position: relative;
   border-radius: 8px;
   border: 1px solid var(--color-secondary-border);
-
 }
 
 .image-wrapper {
@@ -124,7 +123,7 @@
 
 .details-wrapper > div:first-child {
   flex: 1;
-  margin:10px 0 10px 10px;
+  margin: 10px 0 10px 10px;
 }
 
 .selectable-wrapper {
@@ -153,11 +152,7 @@
   height: 100%;
   /* border: 1px solid var(--color-secondary-border); */
   border-radius: 8px 8px 0 0;
-
   position: relative;
-}
-
-.list-grid-border {
 }
 
 .wrap-text {
@@ -215,13 +210,12 @@
 
 .list-image-wrapper {
   max-width: 64px;
-height: 100%;
-margin-right:12px;
+  height: 100%;
+  margin-right: 12px;
 }
 .listContainer img {
   max-width: 64px;
   width: 100%;
- 
 }
 
 .list-main-border {
@@ -261,8 +255,7 @@ margin-right:12px;
   position: relative;
 }
 .modified-date {
-  color:
-  #AEB0C2;
+  color: #aeb0c2;
 }
 
 @media (max-width: 480px) {
@@ -276,5 +269,4 @@ margin-right:12px;
     display: grid;
     grid-template-columns: 50% 25% 25%;
   }
-  
 }

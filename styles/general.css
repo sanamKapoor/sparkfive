@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&display=swap");
 
 :root {
   /* Colors */
@@ -57,7 +57,6 @@ body {
   height: 100%;
   /*!*overflow-x: hidden;*! THis prevent sticky*/
   /* overflow: hidden; */
- 
 }
 
 #__next {
@@ -323,7 +322,6 @@ input[role="combobox"] {
   .sharefolderOuter #top-bar {
     margin-top: 50px;
   }
-
 }
 
 @media screen and (max-width: 717px) {
@@ -339,26 +337,23 @@ input[role="combobox"] {
     overflow-y: hidden !important;
   }
 
-  .collection-share-modal>div:last-child {
+  .collection-share-modal > div:last-child {
     height: calc(100vh - 333px);
   }
 }
-
 
 @media screen and (max-width: 600px) {
   .collection-share-modal {
     max-height: 711px !important;
   }
 
-  .collection-share-modal>div:last-child {
+  .collection-share-modal > div:last-child {
     height: calc(100vh - 140px);
   }
 }
 
 .sharefolderOuter #top-bar {
-  top: 58px;
-  /* border-top: 1px solid #e9eefa; */
-
+  top: 54px;
 }
 
 .colOuter {
@@ -369,19 +364,18 @@ input[role="combobox"] {
   padding: 0;
 }
 
-@media (max-width:600px) {
+@media (max-width: 600px) {
   .sharefolderOuter #top-bar {
     top: 70px;
   }
 }
-
 
 .ReactCrop__child-wrapper {
   height: 100%;
   width: 100%;
 }
 
-.ReactCrop__child-wrapper>img {
+.ReactCrop__child-wrapper > img {
   height: 100%;
   width: 100%;
   object-fit: contain;
