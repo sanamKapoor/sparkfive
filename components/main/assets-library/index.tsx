@@ -1182,7 +1182,7 @@ const AssetsLibrary = () => {
                 >
                   <DropzoneProvider>
                     {advancedConfig.set && (
-                      <AssetGrid
+            <AssetGrid
                         activeFolder={activeFolder}
                         getFolders={getFolders}
                         getSubFolders={getSubCollectionsFolderData}

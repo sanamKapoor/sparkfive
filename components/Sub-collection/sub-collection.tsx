@@ -128,53 +128,55 @@ const SubCollection = ({
       {!collectionHide && (
         <>
           {/* list wrapper for list view */}
-          <div
-            className={`${styles["cardsWrapper"]} ${
-              activeView === "list" && styles["list-wrapper"]
-            }`}
-          >
-            {activeView === "list" && (
-              <FolderTableHeader
-                activeView={activeView}
-                setSortAttribute={setSortFolderAttribute}
-              />
-            )}
-            {sortedFolders.map((folder, index) => {
-              return (
-                <li
-                  className={styles["grid-item"]}
-                  key={folder.id || index}
-                  onClick={(e) => handleFocusChange(e, folder.id)}
-                  ref={ref}
-                  style={{ width: `$${widthCard}px` }}
-                >
-                  <FolderGridItem
-                    {...folder}
-                    isShare={isShare}
-                    sharePath={sharePath}
-                    toggleSelected={() => toggleSelected(folder.id)}
-                    viewFolder={() => viewFolder(folder.id)}
-                    deleteFolder={() => deleteFolder(folder.id)}
-                    copyShareLink={() => copyShareLink(folder)}
-                    copyEnabled={getShareIsEnabled(folder)}
-                    shareAssets={() =>
-                      beginAssetOperation({ folder }, "shareFolders")
-                    }
-                    changeThumbnail={beginChangeThumbnailOperation}
-                    deleteThumbnail={() =>
-                      deleteThumbnail({ folder }, "shareFolders")
-                    }
-                    activeView={activeView}
-                    isThumbnailNameEditable={isThumbnailNameEditable}
-                    focusedItem={focusedItem}
-                    setFocusedItem={setFocusedItem}
-                    folderType="SubCollection"
-                    mode={mode}
-                  />
-                </li>
-              );
-            })}
-          </div>
+          {sortedFolders.length > 0 && (
+            <div
+              className={`${styles["cardsWrapper"]} ${
+                activeView === "list" && styles["list-wrapper"]
+              }`}
+            >
+              {activeView === "list" && (
+                <FolderTableHeader
+                  activeView={activeView}
+                  setSortAttribute={setSortFolderAttribute}
+                />
+              )}
+              {sortedFolders.map((folder, index) => {
+                return (
+                  <li
+                    className={styles["grid-item"]}
+                    key={folder.id || index}
+                    onClick={(e) => handleFocusChange(e, folder.id)}
+                    ref={ref}
+                    style={{ width: `$${widthCard}px` }}
+                  >
+                    <FolderGridItem
+                      {...folder}
+                      isShare={isShare}
+                      sharePath={sharePath}
+                      toggleSelected={() => toggleSelected(folder.id)}
+                      viewFolder={() => viewFolder(folder.id)}
+                      deleteFolder={() => deleteFolder(folder.id)}
+                      copyShareLink={() => copyShareLink(folder)}
+                      copyEnabled={getShareIsEnabled(folder)}
+                      shareAssets={() =>
+                        beginAssetOperation({ folder }, "shareFolders")
+                      }
+                      changeThumbnail={beginChangeThumbnailOperation}
+                      deleteThumbnail={() =>
+                        deleteThumbnail({ folder }, "shareFolders")
+                      }
+                      activeView={activeView}
+                      isThumbnailNameEditable={isThumbnailNameEditable}
+                      focusedItem={focusedItem}
+                      setFocusedItem={setFocusedItem}
+                      folderType="SubCollection"
+                      mode={mode}
+                    />
+                  </li>
+                );
+              })}
+            </div>
+          )}
           {next > 0 && (
             <div className={styles.LoadMorebtn}>
               <Button
@@ -193,7 +195,7 @@ const SubCollection = ({
         <>
           <>
             <div className={`${styles["sub-collection-heading"]}`}>
-              {sortedFolders.length > 0 && (
+              {sortedAssets.length > 0 && (
                 <div className={styles.rightSide}>
                   <span>Assets ({totalAssets})</span>
                   <img

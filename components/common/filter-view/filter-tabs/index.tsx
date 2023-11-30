@@ -6,6 +6,7 @@ import teamApi from "../../../../server-api/team";
 import {
   checkIfBadgeVisible,
   getFilterKeyForAttribute,
+  getSortedAttributes,
 } from "../../../../utils/filter";
 
 import { Utilities } from "../../../../assets";
@@ -63,7 +64,8 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
         const filteredAttrs = res.data.data.filter(
           (item) => advancedConfig?.hideFilterElements[item.id] !== true
         );
-        setAttributes(filteredAttrs);
+
+        setAttributes(getSortedAttributes(filteredAttrs));
       }
     } catch (err) {
       console.log("[GET_ATTRIBUTES]: ", err);
@@ -81,6 +83,7 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
   const onClickOutsideAttribute = (e) => {
     e.stopPropagation();
     setActiveAttribute((prev) => null);
+    setFilteredOptions([]);
   };
 
   const onClickOutsideMoreFilters = () => {
@@ -148,14 +151,13 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
                       }
                     />
                   )}
-
                 <img
                   className={`${styles["arrow-down"]}`}
                   src={Utilities.downIconLight}
                   alt=""
                 />
               </div>
-              {activeAttribute !== null && activeAttribute?.id === attr.id && (
+              {(activeAttribute !== null && activeAttribute?.id === attr.id) && (
                 <div ref={exceptionRef}>
                   <FilterOptionPopup
                     values={values}
@@ -175,6 +177,7 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
           <div
             className={`${styles["more-filter-btn"]}`}
             onClick={onMoreFiltersClick}
+            onKeyDown={onMoreFiltersClick}
           >
             <div  className={`${styles["filter-button"]}`}>
             <Button text="More filters" className="text-primary-btn" />
