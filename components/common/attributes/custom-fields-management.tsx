@@ -92,8 +92,7 @@ const CustomFieldsManagement = () => {
       // Refresh the list
       getCustomFields();
     } catch (err) {
-      if (err.response?.status === 400)
-        toastUtils.error(err.response.data.message);
+      if (err.response?.status === 400) toastUtils.error(err.response.data.message);
       else toastUtils.error("Could not create tag, please try again later.");
 
       // Show loading
@@ -134,25 +133,16 @@ const CustomFieldsManagement = () => {
   }, []);
 
   return (
-    <div className={`${styles['main-wrapper']} ${styles['custom-fields-managements']}`}>
+    <div className={`${styles["main-wrapper"]} ${styles["custom-fields-managements"]}`}>
       <h3>Custom Fields</h3>
       {customFieldList.map((field, index) => {
         return (
-          <div
-            className={`${styles["row"]} ${styles["field-block"]}`}
-            key={index}
-          >
+          <div className={`${styles["row"]} ${styles["field-block"]}`} key={index}>
             <div className={`${styles["col-50"]} ${styles["col-md-100"]}`}>
               <div className={styles["row"]}>
-                <div
-                  className={`${styles["col-100"]} ${styles["flex-display"]}`}
-                >
-                  <span className={styles["font-weight-600"]}>
-                    {index + 1}.
-                  </span>
-                  <span className={`${styles["row-header"]}`}>
-                    Custom Field
-                  </span>
+                <div className={`${styles["col-100"]} ${styles["flex-display"]}`}>
+                  <span className={styles["font-weight-600"]}>{index + 1}.</span>
+                  <span className={`${styles["row-header"]}`}>Custom Field</span>
                 </div>
                 <div className={`${styles["col-100"]}`}>
                   <Input
@@ -166,16 +156,10 @@ const CustomFieldsManagement = () => {
                 </div>
               </div>
             </div>
-            <div
-              className={`${styles["col-25"]} ${styles["col-md-100"]} ${styles["p-l-30"]}`}
-            >
+            <div className={`${styles["col-25"]} ${styles["col-md-100"]} ${styles["p-l-30"]}`}>
               <div className={styles["row"]}>
-                <div
-                  className={`${styles["col-100"]} ${styles["flex-display"]}`}
-                >
-                  <span className={`${styles["row-header"]}`}>
-                    Custom Values
-                  </span>
+                <div className={`${styles["col-100"]} ${styles["flex-display"]}`}>
+                  <span className={`${styles["row-header"]}`}>Custom Values</span>
                 </div>
                 <div className={`${styles["col-100"]}`}>
                   <ul className={styles["tag-wrapper"]}>
@@ -207,9 +191,7 @@ const CustomFieldsManagement = () => {
                     setSelectedItems={() => {}}
                     onAddOperationFinished={() => {}}
                     onRemoveOperationFinished={() => {}}
-                    onOperationFailedSkipped={() =>
-                      setActiveDropdown(undefined)
-                    }
+                    onOperationFailedSkipped={() => setActiveDropdown(undefined)}
                     isShare={false}
                     asyncCreateFn={(item) => {
                       createValue(index, item);
@@ -220,9 +202,7 @@ const CustomFieldsManagement = () => {
                 </div>
               </div>
             </div>
-            <div
-              className={`${styles["col-15"]} ${styles["col-md-100"]} ${styles["p-l-30"]}`}
-            >
+            <div className={`${styles["col-15"]} ${styles["col-md-100"]} ${styles["p-l-30"]}`}>
               <div className={styles["row"]}>
                 <div className={`${styles["col-100"]}`}>
                   <span className={styles["row-header"]}>Type</span>
@@ -239,9 +219,7 @@ const CustomFieldsManagement = () => {
                 </div>
               </div>
             </div>
-            <div
-              className={`${styles["col-10"]} ${styles["col-md-100"]} ${styles["button-row"]} ${styles["p-l-30"]}`}
-            >
+            <div className={`${styles["col-10"]} ${styles["col-md-100"]} ${styles["button-row"]} ${styles["p-l-30"]}`}>
               <Button
                 className={"container exclude-min-height primary field-btn"}
                 type={"button"}
@@ -254,7 +232,7 @@ const CustomFieldsManagement = () => {
               {field.id && (
                 <IconClickable
                   additionalClass={styles["action-button"]}
-                  src={AssetOps[`delete`]}
+                  SVGElement={AssetOps[`delete`]}
                   tooltipText={"Delete"}
                   tooltipId={"Delete"}
                   onClick={() => {
@@ -279,8 +257,8 @@ const CustomFieldsManagement = () => {
         confirmText={"Delete"}
         message={
           <span>
-            This custom field will be deleted and removed from any file that has
-            it.&nbsp; Are you sure you want to delete this?
+            This custom field will be deleted and removed from any file that has it.&nbsp; Are you sure you want to
+            delete this?
           </span>
         }
         closeButtonClass={styles["close-modal-btn"]}

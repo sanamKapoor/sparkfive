@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 
 import { AssetContext, FilterContext, UserContext } from "../context";
 
@@ -17,21 +17,16 @@ import { DEFAULT_FILTERS, getAssetsFilters } from "../utils/asset";
 import selectOptions from "../utils/select-options";
 
 export default ({ children, isPublic = false }) => {
-  const location = useRouter();
-  const { activeFolder } = useContext(AssetContext);
+  const router = useRouter();
+  const { activeFolder, setPlaceHolders } = useContext(AssetContext);
   const { advancedConfig } = useContext(UserContext);
 
   const [searchFilterParams, setSearchFilterParams] = useState({});
 
-  const assetSort =
-    advancedConfig.assetSortView === "newest"
-      ? selectOptions.sort[1]
-      : selectOptions.sort[3];
+  const assetSort = advancedConfig.assetSortView === "newest" ? selectOptions.sort[1] : selectOptions.sort[3];
 
   const collectionSort =
-    advancedConfig.collectionSortView === "alphabetical"
-      ? selectOptions.sort[3]
-      : selectOptions.sort[1];
+    advancedConfig.collectionSortView === "alphabetical" ? selectOptions.sort[3] : selectOptions.sort[1];
 
   const [activeSortFilter, setActiveSortFilter] = useState<any>({
     sort:
@@ -45,6 +40,8 @@ export default ({ children, isPublic = false }) => {
     lastUpdated: undefined,
     dateUploaded: undefined,
   } as any);
+
+  const preparingAssets = useRef(true);
 
   const [sharePath, setSharePath] = useState("");
   const [tags, setTags] = useState([]);
@@ -100,15 +97,13 @@ export default ({ children, isPublic = false }) => {
         ...basicFilter,
         ...getCommonParams(activeSortFilter.allNonAiTags !== "any"),
       }),
-      setTags
+      setTags,
     );
   };
 
   const loadCustomFields = (id) => {
     return new Promise((resolve) => {
-      const fetchMethod = isPublic
-        ? shareCollectionApi.getCustomField
-        : customFieldsApi.getCustomFieldWithCount;
+      const fetchMethod = isPublic ? shareCollectionApi.getCustomField : customFieldsApi.getCustomFieldWithCount;
 
       const setCustomFieldsValue = (values) => {
         if (typeof values === "object") {
@@ -129,7 +124,7 @@ export default ({ children, isPublic = false }) => {
           ...basicFilter,
           ...getCommonParams(activeSortFilter[`all-p${id}`] !== "any"),
         }),
-        setCustomFieldsValue
+        setCustomFieldsValue,
       );
     });
   };
@@ -146,14 +141,11 @@ export default ({ children, isPublic = false }) => {
         ...basicFilter,
         ...getCommonParams(false, ignoreCurrentSelectedFolder),
       }),
-      setFolders
+      setFolders,
     );
   };
 
-  const loadSharedFolders = (
-    ignoreCurrentSelectedFolder = false,
-    sharePath = ""
-  ) => {
+  const loadSharedFolders = (ignoreCurrentSelectedFolder = false, sharePath = "") => {
     const fetchMethod = shareCollectionApi.getFoldersSimple;
     let basicFilter = { assetsCount: "yes" };
     if (activeFolder) {
@@ -166,22 +158,17 @@ export default ({ children, isPublic = false }) => {
         ...getCommonParams(false, ignoreCurrentSelectedFolder),
         sharePath,
       }),
-      setFolders
+      setFolders,
     );
   };
 
   const loadAllFolders = () => {
     const fetchMethod = fodlerApi.getFoldersSimple;
-    loadFromEndpoint(
-      fetchMethod({ assetsCount: "yes", ...getCommonParams(), selectAll: 1 }),
-      setFolders
-    );
+    loadFromEndpoint(fetchMethod({ assetsCount: "yes", ...getCommonParams(), selectAll: 1 }), setFolders);
   };
 
   const loadCampaigns = () => {
-    const fetchMethod = isPublic
-      ? shareCollectionApi.getCampaigns
-      : campaignApi.getCampaigns;
+    const fetchMethod = isPublic ? shareCollectionApi.getCampaigns : campaignApi.getCampaigns;
 
     let basicFilter = { assetsCount: "yes", sharePath };
     if (activeFolder) {
@@ -194,14 +181,12 @@ export default ({ children, isPublic = false }) => {
         ...basicFilter,
         ...getCommonParams(activeSortFilter.allCampaigns !== "any"),
       }),
-      setCampaigns
+      setCampaigns,
     );
   };
 
   const loadChannels = () => {
-    const fetchMethod = isPublic
-      ? shareCollectionApi.getAssetChannels
-      : filterApi.getAssetChannels;
+    const fetchMethod = isPublic ? shareCollectionApi.getAssetChannels : filterApi.getAssetChannels;
 
     let basicFilter = { sharePath };
     if (activeFolder) {
@@ -209,16 +194,11 @@ export default ({ children, isPublic = false }) => {
       basicFilter = { ...basicFilter, folderId: activeFolder };
     }
 
-    loadFromEndpoint(
-      fetchMethod({ ...basicFilter, ...getCommonParams() }),
-      setChannels
-    );
+    loadFromEndpoint(fetchMethod({ ...basicFilter, ...getCommonParams() }), setChannels);
   };
 
   const loadProjects = () => {
-    const fetchMethod = isPublic
-      ? shareCollectionApi.getProjects
-      : projectApi.getProjects;
+    const fetchMethod = isPublic ? shareCollectionApi.getProjects : projectApi.getProjects;
 
     let basicFilter = { assetsCount: "yes", sharePath };
     if (activeFolder) {
@@ -231,14 +211,12 @@ export default ({ children, isPublic = false }) => {
         ...basicFilter,
         ...getCommonParams(activeSortFilter.allProjects !== "any"),
       }),
-      setProjects
+      setProjects,
     );
   };
 
   const loadFileTypes = () => {
-    const fetchMethod = isPublic
-      ? shareCollectionApi.getAssetFileExtensions
-      : filterApi.getAssetFileExtensions;
+    const fetchMethod = isPublic ? shareCollectionApi.getAssetFileExtensions : filterApi.getAssetFileExtensions;
 
     let basicFilter = { sharePath };
     if (activeFolder) {
@@ -246,16 +224,11 @@ export default ({ children, isPublic = false }) => {
       basicFilter = { ...basicFilter, folderId: activeFolder };
     }
 
-    loadFromEndpoint(
-      fetchMethod({ ...basicFilter, ...getCommonParams() }),
-      setFileTypes
-    );
+    loadFromEndpoint(fetchMethod({ ...basicFilter, ...getCommonParams() }), setFileTypes);
   };
 
   const loadAssetDimensionLimits = () => {
-    const fetchMethod = isPublic
-      ? shareCollectionApi.getAssetDimensionLimits
-      : filterApi.getAssetDimensionLimits;
+    const fetchMethod = isPublic ? shareCollectionApi.getAssetDimensionLimits : filterApi.getAssetDimensionLimits;
 
     let basicFilter = { sharePath };
     if (activeFolder) {
@@ -263,16 +236,11 @@ export default ({ children, isPublic = false }) => {
       basicFilter = { ...basicFilter, folderId: activeFolder };
     }
 
-    loadFromEndpoint(
-      fetchMethod({ ...basicFilter, ...getCommonParams() }),
-      setAssetDimensionLimits
-    );
+    loadFromEndpoint(fetchMethod({ ...basicFilter, ...getCommonParams() }), setAssetDimensionLimits);
   };
 
   const loadAssetOrientations = () => {
-    const fetchMethod = isPublic
-      ? shareCollectionApi.getAssetOrientations
-      : filterApi.getAssetOrientations;
+    const fetchMethod = isPublic ? shareCollectionApi.getAssetOrientations : filterApi.getAssetOrientations;
 
     let basicFilter = { sharePath };
     if (activeFolder) {
@@ -280,16 +248,11 @@ export default ({ children, isPublic = false }) => {
       basicFilter = { ...basicFilter, folderId: activeFolder };
     }
 
-    loadFromEndpoint(
-      fetchMethod({ ...basicFilter, ...getCommonParams() }),
-      setAssetOrientations
-    );
+    loadFromEndpoint(fetchMethod({ ...basicFilter, ...getCommonParams() }), setAssetOrientations);
   };
 
   const loadAssetResolutions = () => {
-    const fetchMethod = isPublic
-      ? shareCollectionApi.getAssetResolutions
-      : filterApi.getAssetResolutions;
+    const fetchMethod = isPublic ? shareCollectionApi.getAssetResolutions : filterApi.getAssetResolutions;
 
     let basicFilter = { sharePath };
     if (activeFolder) {
@@ -297,16 +260,11 @@ export default ({ children, isPublic = false }) => {
       basicFilter = { ...basicFilter, folderId: activeFolder };
     }
 
-    loadFromEndpoint(
-      fetchMethod({ ...basicFilter, ...getCommonParams() }),
-      setAssetResolutions
-    );
+    loadFromEndpoint(fetchMethod({ ...basicFilter, ...getCommonParams() }), setAssetResolutions);
   };
   const loadProductFields = async () => {
     try {
-      const fetchMethod = isPublic
-        ? shareCollectionApi.getTags
-        : tagApi.getTags;
+      const fetchMethod = isPublic ? shareCollectionApi.getTags : tagApi.getTags;
       const { data: categories } = await fetchMethod({
         type: "product_category",
         sharePath,
@@ -360,10 +318,7 @@ export default ({ children, isPublic = false }) => {
           // Get all keys
           const index = key.split("custom-p")[1];
 
-          if (
-            activeSortFilter[`all-p${index}`] !== "any" &&
-            activeSortFilter[`custom-p${index}`].length > 0
-          ) {
+          if (activeSortFilter[`all-p${index}`] !== "any" && activeSortFilter[`custom-p${index}`].length > 0) {
             check = true;
           }
         }
@@ -381,10 +336,7 @@ export default ({ children, isPublic = false }) => {
     );
   };
 
-  const getCommonParams = (
-    assetLim = false,
-    ignoreCurrentSelectedFolder = false
-  ) => {
+  const getCommonParams = (assetLim = false, ignoreCurrentSelectedFolder = false) => {
     const filterData = { ...activeSortFilter };
 
     // This ignore apply current folder filter to filter APIs. because in Collection views, just have folders, we want to select multiple without apply new filters
@@ -457,6 +409,109 @@ export default ({ children, isPublic = false }) => {
     setTerm(value);
   };
 
+  // When tag, campaigns, collection changes, used for click on tag/campaigns/collection in admin attribute management
+  useEffect(() => {
+    if (!preparingAssets.current) return;
+    if (!router.query.tag && !router.query.product && !router.query.collection && !router.query.campaign) {
+      preparingAssets.current = false;
+      return;
+    }
+    if (router.query.tag && !tags.length) {
+      setPlaceHolders("asset", true);
+      loadTags();
+      return;
+    }
+    if (router.query.product && !productFields.sku.length) {
+      setPlaceHolders("asset", true);
+      loadProductFields();
+      return;
+    }
+
+    if (router.query.collection && !folders.length) {
+      setPlaceHolders("asset", true);
+      loadFolders();
+      return;
+    }
+
+    if (router.query.campaign && !campaigns.length) {
+      setPlaceHolders("asset", true);
+      loadCampaigns();
+      return;
+    }
+
+    const newSortFilter: any = { ...activeSortFilter };
+
+    if (router.query.campaign) {
+      const foundCampaign = campaigns.find(({ name }) => name === router.query.campaign);
+      if (foundCampaign) {
+        newSortFilter.mainFilter = "all";
+
+        newSortFilter.filterCampaigns = [
+          {
+            ...foundCampaign,
+            value: foundCampaign.id,
+          },
+        ];
+      }
+      preparingAssets.current = false;
+      setActiveSortFilter(newSortFilter);
+      return;
+    }
+
+    // Query folder
+    if (router.query.collection) {
+      const foundCollection = folders.find(({ name }) => name === router.query.collection);
+      if (foundCollection) {
+        newSortFilter.filterFolders = [
+          {
+            ...foundCollection,
+            value: foundCollection.id,
+          },
+        ];
+        newSortFilter.mainFilter = "folders";
+      }
+      preparingAssets.current = false;
+      setActiveSortFilter(newSortFilter);
+      return;
+    }
+
+    if (router.query.product) {
+      const foundProduct = productFields.sku.find(({ sku }) => sku === router.query.product);
+      if (foundProduct) {
+        newSortFilter.mainFilter = "all";
+
+        newSortFilter.filterProductSku = [
+          {
+            ...foundProduct,
+            value: foundProduct.sku,
+          },
+        ];
+      }
+      preparingAssets.current = false;
+      setActiveSortFilter(newSortFilter);
+      return;
+    }
+
+    if (router.query.tag) {
+      setRenderedFlag(true);
+      const foundTag = tags.find(({ name }) => name === router.query.tag);
+      if (foundTag) {
+        newSortFilter.mainFilter = "all";
+
+        newSortFilter.filterNonAiTags = [
+          {
+            ...foundTag,
+            value: foundTag.id,
+          },
+        ];
+      }
+      preparingAssets.current = false;
+
+      setActiveSortFilter(newSortFilter);
+      return;
+    }
+  }, [tags, productFields.sku, folders, campaigns]);
+
   const filterValue = {
     loadAll,
     tags,
@@ -495,11 +550,8 @@ export default ({ children, isPublic = false }) => {
     setSearchFilterParams,
     setRenderedFlag,
     renderFlag,
+    preparingAssets,
   };
 
-  return (
-    <FilterContext.Provider value={filterValue}>
-      {children}
-    </FilterContext.Provider>
-  );
+  return <FilterContext.Provider value={filterValue}>{children}</FilterContext.Provider>;
 };

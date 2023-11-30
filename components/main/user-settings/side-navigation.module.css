@@ -3,9 +3,9 @@
   min-height: 100vh;
   height: 100%;
   padding: 26px 0;
-  background-color: var(--color-prim-navy);
+  background-color: var(--header-navigation-color);
   color: white;
-  border-top: 1px solid #2D377E;
+  border-top: 1px solid var(--lighter-header-navigation-color);
   position: fixed;
   width: 218px;
 
@@ -28,7 +28,7 @@
 
 .selected,
 .setting:hover {
-  background-color: #374186
+  background-color: var(--lighter-header-navigation-color)
 }
 
 @media screen and (max-width: 900px) {

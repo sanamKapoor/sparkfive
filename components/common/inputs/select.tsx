@@ -1,5 +1,13 @@
 import ReactSelect from "react-select";
 import styles from "./select.module.css";
+import { getThemeFromLocalStorage } from "../../../utils/theme";
+import {
+  defaultAdditionalColor,
+  defaultHeadNavColor,
+  defaultPrimaryColor,
+  defaultSecondaryColor,
+} from "../../../constants/theme";
+import { useEffect, useState } from "react";
 
 const Select = ({
   label = "",
@@ -13,7 +21,7 @@ const Select = ({
   isMulti = false,
   additionalClass = "",
   containerClass = "",
-  additionalStyles=null,
+  additionalStyles = null,
 }) => {
   const customOptions = [
     {
@@ -23,7 +31,20 @@ const Select = ({
     ...options,
   ];
 
- 
+  const [secondaryColor, setSecondaryColor] = useState(defaultSecondaryColor);
+  const [additionalColor, setAdditionalColor] = useState(defaultAdditionalColor);
+
+  const loadCurrentTheme = () => {
+    // Call API to get team theme then set to local storage
+    const theme = getThemeFromLocalStorage();
+
+    setSecondaryColor(theme?.secondary || defaultSecondaryColor);
+    setAdditionalColor(theme?.additional || defaultAdditionalColor);
+  };
+
+  useEffect(() => {
+    loadCurrentTheme();
+  }, []);
 
   return (
     <ReactSelect
@@ -41,18 +62,13 @@ const Select = ({
       styles={{
         option: (provided, state) => ({
           ...provided,
-           backgroundColor: state.isSelected ? '#FAF8F5' : 'transparent', 
-           color: state.isSelected && '#08135e' , 
-          ':hover': {
-            backgroundColor: '#00b8d91a',
-           
+          backgroundColor: state.isSelected ? "#FAF8F5" : "transparent",
+          ":hover": {
+            backgroundColor: additionalColor,
           },
           ...(additionalStyles && { ...additionalStyles }),
         }),
-        
-        
       }}
-    
     />
   );
 };

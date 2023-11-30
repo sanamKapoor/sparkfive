@@ -1,15 +1,14 @@
 import { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
 import styles from "./button-icon.module.css";
 
-interface ButtonIconProps
-  extends DetailedHTMLProps<
-    ButtonHTMLAttributes<HTMLButtonElement>,
-    HTMLButtonElement
-  > {
+import { getSecondaryColor } from "../../../utils/theme";
+
+interface ButtonIconProps extends DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
   text: string;
-  icon: string;
+  icon?: string;
   isGray?: boolean;
   additionalClass?: string;
+  SVGElement?: any;
 }
 
 const ButtonIcon: React.FC<ButtonIconProps> = ({
@@ -18,7 +17,8 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
   icon,
   onClick,
   isGray = false,
-  additionalClass = '',
+  additionalClass = "",
+  SVGElement,
 }) => {
   return (
     <button
@@ -27,7 +27,8 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
       onClick={onClick}
     >
       <span className={styles.icon}>
-        <img src={icon} />
+        {!SVGElement && <img src={icon} alt={"icon"} />}
+        {SVGElement && <SVGElement />}
       </span>
       <span className={styles.text}>{text}</span>
     </button>

@@ -20,6 +20,10 @@ import Dropdown from "../inputs/dropdown";
 import Select from "../inputs/select";
 import styles from "./top-bar.module.css";
 
+import { useRouter } from "next/router";
+
+import { DEFAULT_FILTERS } from "../../../utils/asset";
+
 const TopBar = ({
   activeSortFilter,
   setActiveSearchOverlay,
@@ -56,6 +60,7 @@ const TopBar = ({
     setSelectedAllSubFoldersAndAssets,
     activeSubFolders,
   } = useContext(AssetContext);
+  const router = useRouter();
 
   const { hasPermission, advancedConfig } = useContext(UserContext) as any;
   const [hideFilterElements] = useState(advancedConfig.hideFilterElements);
@@ -68,15 +73,9 @@ const TopBar = ({
     let sort = key === "sort" ? value : activeSortFilter.sort;
     if (key === "mainFilter") {
       if (value === "folders") {
-        sort =
-          advancedConfig.collectionSortView === "alphabetical"
-            ? selectOptions.sort[3]
-            : selectOptions.sort[1];
+        sort = advancedConfig.collectionSortView === "alphabetical" ? selectOptions.sort[3] : selectOptions.sort[1];
       } else {
-        sort =
-          advancedConfig.assetSortView === "newest"
-            ? selectOptions.sort[1]
-            : selectOptions.sort[3];
+        sort = advancedConfig.assetSortView === "newest" ? selectOptions.sort[1] : selectOptions.sort[3];
       }
     }
     // Reset select all status
@@ -86,11 +85,20 @@ const TopBar = ({
     // And uploaded folder needed to show at first
     setLastUploadedFolder(undefined);
 
-    setActiveSortFilter({
-      ...activeSortFilter,
-      [key]: value,
-      sort,
-    });
+    if (reset) {
+      setActiveSortFilter({
+        ...activeSortFilter,
+        [key]: value,
+        sort,
+        ...DEFAULT_FILTERS,
+      });
+    } else {
+      setActiveSortFilter({
+        ...activeSortFilter,
+        [key]: value,
+        sort,
+      });
+    }
   };
 
   const toggleSelectAll = () => {
@@ -116,6 +124,7 @@ const TopBar = ({
       }
       return shouldShow;
     });
+
     setTabs(_tabs);
   };
 
@@ -267,31 +276,39 @@ const TopBar = ({
             )}
           <div className={styles.gridOuter}>
             {!deletedAssets && (
-              <img
-                className={styles.gridList}
-                src={
-                  activeView === "grid"
-                    ? Utilities.gridView
-                    : Utilities.listView
-                }
-                onClick={() => setShowViewDropdown(true)}
-              />
+              <>
+                {activeView === "grid" && (
+                  <Utilities.gridView className={styles.gridList} onClick={() => setShowViewDropdown(true)} />
+                )}
+                {activeView === "list" && (
+                  <Utilities.listView className={styles.gridList} onClick={() => setShowViewDropdown(true)} />
+                )}
+              </>
+
+              // <img
+              //   className={styles.gridList}
+              //   src={
+              //     activeView === "grid"
+              //       ? Utilities.gridView
+              //       : Utilities.listView
+              //   }
+              //   onClick={() => setShowViewDropdown(true)}
+              // />
             )}
             {showViewDropdown && (
               <Dropdown
                 additionalClass={styles["view-dropdown"]}
                 onClickOutside={() => setShowViewDropdown(false)}
+                svgIcon
                 options={[
                   {
                     id: "view",
-                    OverrideComp: () => (
-                      <li className={styles["dropdown-title"]}>View</li>
-                    ),
+                    OverrideComp: () => <li className={styles["dropdown-title"]}>View</li>,
                   },
                   {
                     label: "Grid",
                     id: "grid",
-                    icon: Utilities.gridView,
+                    icon: <Utilities.gridView />,
                     onClick: () => {
                       setActiveView("grid");
                     },
@@ -299,7 +316,7 @@ const TopBar = ({
                   {
                     label: "List",
                     id: "list",
-                    icon: Utilities.listView,
+                    icon: <Utilities.listView />,
                     onClick: () => {
                       setActiveView("list");
                     },
@@ -309,10 +326,7 @@ const TopBar = ({
             )}
           </div>
           {selectedAllAssets && (
-            <span
-              className={styles["select-only-shown-items-text"]}
-              onClick={toggleSelectAll}
-            >
+            <span className={styles["select-only-shown-items-text"]} onClick={toggleSelectAll}>
               Select only 25 assets shown
             </span>
           )}
@@ -360,16 +374,10 @@ const TopBar = ({
             <Select
               label={"Sort By"}
               options={selectOptions.sort.filter((item) => {
-                if (
-                  activeSortFilter.mainFilter === "folders" &&
-                  item.value === "size"
-                ) {
+                if (activeSortFilter.mainFilter === "folders" && item.value === "size") {
                   return !item;
                 }
-                return activeSortFilter.mainFilter === "folders" &&
-                  item.value === "none"
-                  ? !item
-                  : item;
+                return activeSortFilter.mainFilter === "folders" && item.value === "none" ? !item : item;
               })}
               value={activeSortFilter.sort}
               styleType="filter filter-schedule"
@@ -417,7 +425,7 @@ const TopBar = ({
         {(amountSelected === 0 || mode === "folders") &&
           showAssetAddition &&
           hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL]) && (
-            <AssetAddition triggerUploadComplete={undefined} />
+            <AssetAddition activeFolder={activeFolder} getFolders={getFolders} />
           )}
       </div>
     </section>

@@ -1,15 +1,21 @@
 import Router, { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
+
 import { LoadingContext, UserContext } from "../context";
+
+import SpinnerOverlay from "../components/common/spinners/spinner-overlay";
+
+import teamApi from "../server-api/team";
+import userApi from "../server-api/user";
+
+import advancedConfigParams from "../utils/advance-config-params";
+import url from "../utils/url";
 import cookiesUtils from "../utils/cookies";
 import { getSubdomain } from "../utils/domain";
 import requestsUtils from "../utils/requests";
+import { loadTheme, resetTheme } from "../utils/theme";
 
-import SpinnerOverlay from "../components/common/spinners/spinner-overlay";
-import teamApi from "../server-api/team";
-import userApi from "../server-api/user";
-import advancedConfigParams from "../utils/advance-config-params";
-import url from "../utils/url";
+import { defaultLogo } from "../constants/theme";
 
 const allowedBase = [
   "/signup",
@@ -30,6 +36,8 @@ export default ({ children }) => {
   const [cdnAccess, setCdnAccess] = useState(false);
   const [transcriptAccess, setTranscriptAccess] = useState(false);
   const [advancedConfig, setAdvancedConfig] = useState(advancedConfigParams);
+  const [logo, setLogo] = useState<string>(defaultLogo);
+  const [logoId, setLogoId] = useState<string>();
 
   const { setIsLoading } = useContext(LoadingContext);
 
@@ -47,6 +55,7 @@ export default ({ children }) => {
     if (jwt) requestsUtils.setAuthToken(jwt);
 
     const needTwoFactor = cookiesUtils.get("twoFactor");
+
     cookiesUtils.remove("twoFactor");
     if (needTwoFactor && Router.pathname.indexOf("/two-factor") === -1) {
       return Router.replace("/two-factor");
@@ -70,16 +79,33 @@ export default ({ children }) => {
           data.permissions = data.role.permissions;
         }
         setUser(data);
-        if (
-          !data.firstTimeLogin &&
-          Router.pathname.indexOf("/main/setup") === -1
-        ) {
+
+        // If theme customization was turned on by admin
+        if (teamResponse.data.themeCustomization) {
+          // There is team theme set
+          if (teamResponse.data.theme) {
+            // Load theme from team settings
+            const currentTheme = loadTheme(teamResponse.data.theme);
+
+            console.log(`Current sync theme`, currentTheme);
+            setLogo(currentTheme.logoImage?.realUrl || defaultLogo);
+            setLogoId(currentTheme.logoImage?.asset?.id);
+          } else {
+            // Load theme from local storage
+            const currentTheme = loadTheme();
+            console.log(`Current logo theme`, currentTheme);
+            setLogo(currentTheme.logo?.url || defaultLogo);
+            setLogoId(currentTheme.logo?.id);
+          }
+        } else {
+          resetTheme();
+        }
+
+        if (!data.firstTimeLogin && Router.pathname.indexOf("/main/setup") === -1) {
           await Router.replace("/main/setup");
         } else if (Router.pathname.indexOf("/main") === -1) {
           if (data.team.plan.type === "dam") {
-            await Router.replace(
-              "/main/assets" + (query === "" ? "" : `?${query}`)
-            );
+            await Router.replace("/main/assets" + (query === "" ? "" : `?${query}`));
           } else {
             await Router.replace("/main/overview");
           }
@@ -90,9 +116,7 @@ export default ({ children }) => {
           Router.pathname.indexOf("/advanced-options") !== -1 &&
           Router.pathname.indexOf("/deleted-assets-list") === -1
         ) {
-          await Router.replace(
-            "/main/assets" + (query === "" ? "" : `?${query}`)
-          );
+          await Router.replace("/main/assets" + (query === "" ? "" : `?${query}`));
         }
       } catch (err) {
         console.log(err);
@@ -104,36 +128,53 @@ export default ({ children }) => {
   };
 
   const initialRedirect = () => {
+    console.log(`itnitial`, Router.pathname);
     if (!allowedBase.some((url) => Router.pathname.indexOf(url) !== -1)) {
       Router.replace("/login");
     }
   };
 
   const logOut = () => {
+    // Reset Logo
+    setLogo(defaultLogo);
+    setLogoId(undefined);
+
+    // Reset theme
+    resetTheme();
+
     setUser(null);
     cookiesUtils.remove("jwt");
     requestsUtils.removeAuthToken();
     Router.replace("/login");
   };
 
-  const hasPermission = (requiredPermissions = []) => {
+  const resetLogo = () => {
+    // Reset Logo
+    setLogo(defaultLogo);
+    setLogoId(undefined);
+  };
+
+  const hasPermission = (requiredPermissions = [], requiredTeamSettings = []) => {
     // console.warn(`Check permission: `, requiredPermissions, user?.permissions)
-    if (requiredPermissions.length === 0) return true;
+    if (requiredPermissions.length === 0 && requiredTeamSettings.length === 0) return true;
     // check by features/permissions
-    let allowed = requiredPermissions.some(
-      (perm) => user?.permissions.map((userPerm) => userPerm.id).includes(perm)
-    );
+    let allowed = requiredPermissions.some((perm) => user?.permissions.map((userPerm) => userPerm.id).includes(perm));
 
     // check by roleId
     if (!allowed) {
-      allowed = requiredPermissions.some(
-        (role) => user && role === user.roleId
-      );
+      allowed = requiredPermissions.some((role) => user && role === user.roleId);
     }
+
+    // Check by team settings
+    if (requiredTeamSettings.length > 0) {
+      allowed = requiredTeamSettings.some((setting) => user.team[setting]);
+    }
+
     return allowed;
   };
 
   const afterAuth = async ({ twoFactor, token }) => {
+    console.log(`>>> After auth process`);
     cookiesUtils.setUserJWT(token);
     if (twoFactor) {
       cookiesUtils.set("twoFactor", "true");
@@ -191,9 +232,11 @@ export default ({ children }) => {
     afterAuth,
     vanityCompanyInfo,
     cdnAccess,
-    advancedConfig,
-    setAdvancedConfig,
     transcriptAccess,
+    logo,
+    setLogo,
+    logoId,
+    resetLogo,
   };
 
   return (

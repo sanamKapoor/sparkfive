@@ -13,7 +13,7 @@
   display: flex;
   background-color: #F9FAFF;
   padding: 16px;
-  border: 1px solid #E9EEFA;
+  border: 1px solid var(--additional-color);
 }
 
 .main-headers h3 {

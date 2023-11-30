@@ -87,14 +87,7 @@ const AssetOptions = ({
       Wrapper={({ children }) => (
 
         <>
-          <IconClickable
-            src={Utilities.more}
-            additionalClass={styles.thumbnailDots}
-          />
-          {/* this is for list view  */}
-
-
-
+          <IconClickable SVGElement={Utilities.more} additionalClass={styles.thumbnailDots} />
           {children}
         </>
       )}

@@ -61,7 +61,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
   // Custom fields
   const [inputCustomFields, setInputCustomFields] = useState([]);
   const [assetCustomFields, setAssetCustomFields] = useState(
-    mappingCustomFieldData(inputCustomFields, originalInputs.customs)
+    mappingCustomFieldData(inputCustomFields, originalInputs.customs),
   );
 
   const getCustomFieldsInputData = async () => {
@@ -90,15 +90,12 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
     });
 
     // Default custom field values
-    const updatedMappingCustomFieldData = mappingCustomFieldData(
-      inputCustomFields,
-      []
-    );
+    const updatedMappingCustomFieldData = mappingCustomFieldData(inputCustomFields, []);
 
     setAssetCustomFields(
       update(assetCustomFields, {
         $set: updatedMappingCustomFieldData,
-      })
+      }),
     );
   };
 
@@ -114,15 +111,12 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 
       // Custom fields
       if (inputCustomFields.length > 0) {
-        const updatedMappingCustomFieldData = mappingCustomFieldData(
-          inputCustomFields,
-          originalInputs.customs
-        );
+        const updatedMappingCustomFieldData = mappingCustomFieldData(inputCustomFields, originalInputs.customs);
 
         setAssetCustomFields(
           update(assetCustomFields, {
             $set: updatedMappingCustomFieldData,
-          })
+          }),
         );
       } else {
         setAssetCustomFields(originalInputs.customs);
@@ -156,9 +150,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
       // Get custom fields list
       await getCustomFieldsInputData();
 
-      const assetIds = editAssets
-        .filter(({ isEditSelected }) => isEditSelected)
-        .map(({ asset: { id } }) => id);
+      const assetIds = editAssets.filter(({ isEditSelected }) => isEditSelected).map(({ asset: { id } }) => id);
 
       const {
         data: { tags, projects, campaigns, customs, folders },
@@ -185,15 +177,13 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
   };
 
   const toggleSelectedEdit = (id) => {
-    const assetIndex = editAssets.findIndex(
-      (assetItem) => assetItem.asset.id === id
-    );
+    const assetIndex = editAssets.findIndex((assetItem) => assetItem.asset.id === id);
     setEditAssets(
       update(editAssets, {
         [assetIndex]: {
           isEditSelected: { $set: !editAssets[assetIndex].isEditSelected },
         },
-      })
+      }),
     );
   };
 
@@ -205,16 +195,12 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
   };
 
   const deselectAll = () => {
-    setEditAssets(
-      editAssets.map((asset) => ({ ...asset, isEditSelected: false }))
-    );
+    setEditAssets(editAssets.map((asset) => ({ ...asset, isEditSelected: false })));
 
     resetSelectedFieldValue();
   };
 
-  const editSelectedAssets = editAssets.filter(
-    ({ isEditSelected }) => isEditSelected
-  );
+  const editSelectedAssets = editAssets.filter(({ isEditSelected }) => isEditSelected);
 
   // On change custom fields (add/remove)
   const onChangeCustomField = (index, data) => {
@@ -224,7 +210,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
         [index]: {
           values: { $set: data },
         },
-      })
+      }),
     );
   };
 
@@ -233,19 +219,14 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
       {loading && <SpinnerOverlay />}
       <section className={styles.content}>
         <div className={styles.back} onClick={handleBackButton}>
-          <IconClickable src={Utilities.back} />
+          <IconClickable SVGElement={Utilities.back} />
           <span>Back</span>
         </div>
         <div className={styles["top-wrapper"]}>
           <div className={styles.name}>
             <h3>Edit Assets</h3>
             <div className={styles["asset-actions"]}>
-              <Button
-                text={"Select All"}
-                type={"button"}
-                className={"container secondary"}
-                onClick={selectAll}
-              />
+              <Button text={"Select All"} type={"button"} className={"container secondary"} onClick={selectAll} />
               <Button
                 text={`Deselect All (${editSelectedAssets.length})`}
                 type={"button"}
@@ -268,11 +249,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
               }
             >
               <IconClickable
-                src={
-                  addMode
-                    ? Utilities.radioButtonEnabled
-                    : Utilities.radioButtonNormal
-                }
+                src={addMode ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                 additionalClass={styles["select-icon"]}
               />
               Add
@@ -287,11 +264,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
               }
             >
               <IconClickable
-                src={
-                  !addMode
-                    ? Utilities.radioButtonEnabled
-                    : Utilities.radioButtonNormal
-                }
+                src={!addMode ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                 additionalClass={styles["select-icon"]}
               />
               Remove
@@ -342,12 +315,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
             <h3>Edit Assets</h3>
           </div>
           <div className={styles["asset-actions"]}>
-            <Button
-              text={"Select All"}
-              type={"button"}
-              className={"container secondary"}
-              onClick={selectAll}
-            />
+            <Button text={"Select All"} type={"button"} className={"container secondary"} onClick={selectAll} />
             <Button
               text={`Deselect All (${editSelectedAssets.length})`}
               type={"button"}
@@ -369,11 +337,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
               }
             >
               <IconClickable
-                src={
-                  addMode
-                    ? Utilities.radioButtonEnabled
-                    : Utilities.radioButtonNormal
-                }
+                src={addMode ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                 additionalClass={styles["select-icon"]}
               />
               Add
@@ -388,11 +352,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
               }
             >
               <IconClickable
-                src={
-                  !addMode
-                    ? Utilities.radioButtonEnabled
-                    : Utilities.radioButtonNormal
-                }
+                src={!addMode ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                 additionalClass={styles["select-icon"]}
               />
               Remove
@@ -404,10 +364,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
         <div className={styles.wrapper}>
           {loading && <SpinnerOverlay />}
           <section className={styles.content}>
-            <EditGrid
-              assets={editAssets}
-              toggleSelectedEdit={toggleSelectedEdit}
-            />
+            <EditGrid assets={editAssets} toggleSelectedEdit={toggleSelectedEdit} />
           </section>
           {sideOpen && (
             <section className={styles.side}>
@@ -435,9 +392,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
             <IconClickable
               src={Utilities.closePanelLight}
               onClick={() => toggleSideMenu()}
-              additionalClass={`${styles["menu-icon"]} ${
-                !sideOpen && "mirror"
-              }`}
+              additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"}`}
             />
           </section>
         </div>

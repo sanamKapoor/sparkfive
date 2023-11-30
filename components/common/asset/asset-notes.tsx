@@ -74,7 +74,7 @@ const AssetNotes = ({ asset, notes, applyCrud }) => {
         <h2>Notes</h2>
         <h3>{notes.length} Note(s)</h3>
       </div>
-      {notes.length < 2 && (
+      {notes.length < 4 && (
         <span>
           <TextArea
             placeholder="Add a note"
@@ -87,27 +87,17 @@ const AssetNotes = ({ asset, notes, applyCrud }) => {
           <div className={styles.radios}>
             <div className={styles["radio-wrapper"]}>
               <IconClickable
-                src={
-                  internal
-                    ? Utilities.radioButtonEnabled
-                    : Utilities.radioButtonNormal
-                }
+                src={internal ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                 onClick={() => setInternal(true)}
               />
               <div className={"font-12 m-l-10"}>For internal use only</div>
             </div>
             <div className={styles["radio-wrapper"]}>
               <IconClickable
-                src={
-                  !internal
-                    ? Utilities.radioButtonEnabled
-                    : Utilities.radioButtonNormal
-                }
+                src={!internal ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                 onClick={() => setInternal(false)}
               />
-              <div className={"font-12 m-l-10"}>
-                Display internally and externally
-              </div>
+              <div className={"font-12 m-l-10"}>Display internally and externally</div>
             </div>
           </div>
           <Button

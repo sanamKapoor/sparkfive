@@ -53,9 +53,7 @@ const ShareModal = ({
   const [isPublic, setIsPublic] = useState(true);
   const [expired, setExpired] = useState(false);
   const [expiredPeriod, setExpiredPeriod] = useState(expireOptions[1]);
-  const [expiredAt, setExpiredAt] = useState(
-    getDayToCurrentDate(expireOptions[1].value)
-  );
+  const [expiredAt, setExpiredAt] = useState(getDayToCurrentDate(expireOptions[1].value));
   const [shareJWT, setShareJWT] = useState("");
   const [hash, setHash] = useState("");
   const [sharable, setSharable] = useState(false);
@@ -116,10 +114,7 @@ const ShareModal = ({
         setShareJWT(data.currentSharedLinks.sharedJwt);
         setHash(data.currentSharedLinks.hash);
         setExpiredPeriod(
-          expireOptions.filter(
-            (item) =>
-              item.value === parseInt(data.currentSharedLinks.expiredPeriod)
-          )[0]
+          expireOptions.filter((item) => item.value === parseInt(data.currentSharedLinks.expiredPeriod))[0],
         );
         if (data.currentSharedLinks.expiredAt) {
           setExpiredAt(new Date(data.currentSharedLinks.expiredAt));
@@ -127,11 +122,7 @@ const ShareModal = ({
           setExpiredAt(null);
         }
 
-        setExpired(
-          data.currentSharedLinks.expired !== undefined
-            ? data.currentSharedLinks.expired
-            : false
-        ); // default is false
+        setExpired(data.currentSharedLinks.expired !== undefined ? data.currentSharedLinks.expired : false); // default is false
         setName(data.currentSharedLinks.name);
 
         if (data.currentSharedLinks.name) {
@@ -140,27 +131,17 @@ const ShareModal = ({
 
         setRecipients(data.currentSharedLinks.sharedEmails);
         setShareId(data.currentSharedLinks.id);
-        setIsPublic(
-          data.currentSharedLinks.isPublic !== undefined
-            ? data.currentSharedLinks.isPublic
-            : true
-        ); // default is true
+        setIsPublic(data.currentSharedLinks.isPublic !== undefined ? data.currentSharedLinks.isPublic : true); // default is true
 
         if (subCollectionShare) {
           setBasic(!data.currentSharedLinks.team.advancedCollectionShareLink); // default is true
         }
 
         setMessage(data.currentSharedLinks.message);
-        setSharable(
-          data.currentSharedLinks.sharable !== undefined
-            ? data.currentSharedLinks.sharable
-            : false
-        ); // default is false
+        setSharable(data.currentSharedLinks.sharable !== undefined ? data.currentSharedLinks.sharable : false); // default is false
 
         setDisplayAttributes(
-          data.currentSharedLinks.displayAttributes !== undefined
-            ? data.currentSharedLinks.displayAttributes
-            : false
+          data.currentSharedLinks.displayAttributes !== undefined ? data.currentSharedLinks.displayAttributes : false,
         ); // default is false
 
         if (showInternalLoading) {
@@ -196,11 +177,7 @@ const ShareModal = ({
     if (!data.expiredPeriod) {
       setExpiredPeriod(expireOptions[expireOptions.length - 1]);
     } else {
-      setExpiredPeriod(
-        expireOptions.filter(
-          (item) => item.value === parseInt(data.expiredPeriod)
-        )[0]
-      );
+      setExpiredPeriod(expireOptions.filter((item) => item.value === parseInt(data.expiredPeriod))[0]);
     }
 
     if (data.expiredAt) {
@@ -251,7 +228,7 @@ const ShareModal = ({
     expiredPeriodValue = undefined,
     expiredAtValue = undefined,
     sharableValue = undefined,
-    displayAttributes = undefined
+    displayAttributes = undefined,
   ) => {
     setIsLoading(true);
 
@@ -269,20 +246,14 @@ const ShareModal = ({
           name,
           isPublic: isPublicValue === undefined ? isPublic : isPublicValue,
           expired: expiredValue === undefined ? expired : expiredValue,
-          expiredPeriod:
-            expiredPeriodValue === undefined
-              ? expiredPeriod
-              : expiredPeriodValue,
+          expiredPeriod: expiredPeriodValue === undefined ? expiredPeriod : expiredPeriodValue,
           expiredAt: expiredAtValue === undefined ? expiredAt : expiredAtValue,
           sharable: sharableValue === undefined ? sharable : sharableValue,
-          displayAttributes:
-            displayAttributes === undefined
-              ? displayAttributes
-              : displayAttributes,
+          displayAttributes: displayAttributes === undefined ? displayAttributes : displayAttributes,
           shareId,
         },
         false,
-        false
+        false,
       );
 
       if (field === "name") {
@@ -302,13 +273,7 @@ const ShareModal = ({
       // Switch from off
       if (currentValue === false) {
         // Set 60 days expired as default
-        saveChanges(
-          "",
-          undefined,
-          nextValue,
-          expireOptions[1],
-          getDayToCurrentDate(expireOptions[1].value)
-        );
+        saveChanges("", undefined, nextValue, expireOptions[1], getDayToCurrentDate(expireOptions[1].value));
         setExpiredPeriod(expireOptions[1]);
         setExpiredAt(getDayToCurrentDate(expireOptions[1].value));
       } else {
@@ -332,15 +297,7 @@ const ShareModal = ({
   const changeDisplayAttributes = (value) => {
     setDisplayAttributes(value);
 
-    saveChanges(
-      "",
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      value
-    );
+    saveChanges("", undefined, undefined, undefined, undefined, undefined, value);
   };
 
   const changeExpiredAt = (value) => {
@@ -373,9 +330,7 @@ const ShareModal = ({
     <Base
       modalIsOpen={modalIsOpen}
       closeModal={closemoveModal}
-      confirmText={
-        sharable ? (currentShareLink ? "Save Changes" : "Send Email") : ""
-      }
+      confirmText={sharable ? (currentShareLink ? "Save Changes" : "Send Email") : ""}
       headText={title ? title : `Share ${itemsAmount} asset(s)`}
       disabledConfirm={!name}
       additionalClasses={[`visible-block ${styles.shareModal}`]}
@@ -400,9 +355,7 @@ const ShareModal = ({
       {loading && <Spinner className={styles["spinner"]} />}
       {!loading && (
         <div className={styles["wrapper"]}>
-          <div
-            className={`${styles["input-wrapper"]} d-flex align-items-center`}
-          >
+          <div className={`${styles["input-wrapper"]} d-flex align-items-center`}>
             <Input
               value={name}
               onChange={(e) => {
@@ -425,30 +378,22 @@ const ShareModal = ({
           </div>
 
           {basic && subCollectionShare && (
-            <div
-              className={`${styles["input-wrapper"]} d-flex align-items-center p-t-0`}
-            >
+            <div className={`${styles["input-wrapper"]} d-flex align-items-center p-t-0`}>
               <Input
                 additionalClasses={"w-50 m-r-15"}
                 disabled={!collectionLink || !currentName}
                 placeholder={""}
-                value={
-                  currentName
-                    ? `${process.env.CLIENT_BASE_URL}/collections/${collectionLink}`
-                    : ""
-                }
+                value={currentName ? `${process.env.CLIENT_BASE_URL}/collections/${collectionLink}` : ""}
                 styleType={"regular-short"}
               />
               <IconClickable
                 additionalClass={`${styles["action-button"]} m-r-5 cursor-pointer`}
-                src={AssetOps[`copy${""}`]}
+                SVGElement={AssetOps[`copy${""}`]}
                 tooltipText={"Copy"}
                 tooltipId={"Copy"}
                 onClick={() => {
                   if (currentName) {
-                    copy(
-                      `${process.env.CLIENT_BASE_URL}/collections/${collectionLink}`
-                    );
+                    copy(`${process.env.CLIENT_BASE_URL}/collections/${collectionLink}`);
                     toastUtils.bottomSuccess("Link copied");
                   }
                 }}
@@ -457,9 +402,7 @@ const ShareModal = ({
                 className={`${styles["helper-text"]} cursor-pointer`}
                 onClick={() => {
                   if (currentName) {
-                    copy(
-                      `${process.env.CLIENT_BASE_URL}/collections/${collectionLink}`
-                    );
+                    copy(`${process.env.CLIENT_BASE_URL}/collections/${collectionLink}`);
                     toastUtils.bottomSuccess("Link copied");
                   }
                 }}
@@ -470,9 +413,7 @@ const ShareModal = ({
           )}
 
           {(!basic || !subCollectionShare) && (
-            <div
-              className={`${styles["input-wrapper"]} d-flex align-items-center p-t-0`}
-            >
+            <div className={`${styles["input-wrapper"]} d-flex align-items-center p-t-0`}>
               <Input
                 additionalClasses={"w-50 m-r-15"}
                 disabled={!url || !currentName}
@@ -482,7 +423,7 @@ const ShareModal = ({
               />
               <IconClickable
                 additionalClass={`${styles["action-button"]} m-r-5 cursor-pointer`}
-                src={AssetOps[`copy${""}`]}
+                SVGElement={AssetOps[`copy${""}`]}
                 tooltipText={"Copy"}
                 tooltipId={"Copy"}
                 onClick={() => {
@@ -512,11 +453,7 @@ const ShareModal = ({
               <div className={styles["field-radio-wrapper"]}>
                 <div className={`${styles["radio-button-wrapper"]} m-r-20`}>
                   <IconClickable
-                    src={
-                      isPublic
-                        ? Utilities.radioButtonEnabled
-                        : Utilities.radioButtonNormal
-                    }
+                    src={isPublic ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                     additionalClass={styles["select-icon"]}
                     onClick={() => {
                       changeIsPublic(true);
@@ -527,28 +464,20 @@ const ShareModal = ({
 
                 <div className={`${styles["radio-button-wrapper"]} m-r-20`}>
                   <IconClickable
-                    src={
-                      !isPublic
-                        ? Utilities.radioButtonEnabled
-                        : Utilities.radioButtonNormal
-                    }
+                    src={!isPublic ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                     additionalClass={styles["select-icon"]}
                     onClick={() => {
                       changeIsPublic(false);
                     }}
                   />
-                  <div className={"font-12 m-l-10"}>
-                    Restrict access by email address
-                  </div>
+                  <div className={"font-12 m-l-10"}>Restrict access by email address</div>
                 </div>
               </div>
             </div>
           </div>
 
           {!isPublic && (
-            <div
-              className={`${styles["input-wrapper"]} d-flex align-items-center p-l-30`}
-            >
+            <div className={`${styles["input-wrapper"]} d-flex align-items-center p-l-30`}>
               <TextArea
                 value={recipients}
                 placeholder={"Emails separated with comma"}
@@ -581,11 +510,7 @@ const ShareModal = ({
               <div className={styles["field-radio-wrapper"]}>
                 <div className={`${styles["radio-button-wrapper"]} m-r-25`}>
                   <IconClickable
-                    src={
-                      expired
-                        ? Utilities.radioButtonEnabled
-                        : Utilities.radioButtonNormal
-                    }
+                    src={expired ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                     additionalClass={styles["select-icon"]}
                     onClick={() => {
                       changeExpired(expired, true);
@@ -596,11 +521,7 @@ const ShareModal = ({
 
                 <div className={`${styles["radio-button-wrapper"]} m-r-25`}>
                   <IconClickable
-                    src={
-                      !expired
-                        ? Utilities.radioButtonEnabled
-                        : Utilities.radioButtonNormal
-                    }
+                    src={!expired ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                     additionalClass={styles["select-icon"]}
                     onClick={() => {
                       changeExpired(expired, false);
@@ -613,12 +534,8 @@ const ShareModal = ({
           </div>
 
           {expired && (
-            <div
-              className={`${styles["input-wrapper"]} d-flex align-items-center`}
-            >
-              <div
-                className={`${styles["row-field-content"]} row w-100 colOuter`}
-              >
+            <div className={`${styles["input-wrapper"]} d-flex align-items-center`}>
+              <div className={`${styles["row-field-content"]} row w-100 colOuter`}>
                 <div className={"col-50"}>
                   <Select
                     options={expireOptions}
@@ -658,9 +575,7 @@ const ShareModal = ({
                   )}
 
                   {/*<Input additionalClasses={"w-50 m-r-15"} disabled={!url} placeholder={'Loading share link...'} value={url} styleType={'regular-short'} />*/}
-                  <span className={"font-12 m-l-20 w-100"}>
-                    {expiredAt ? expiredAt.toDateString() : ""}
-                  </span>
+                  <span className={"font-12 m-l-20 w-100"}>{expiredAt ? expiredAt.toDateString() : ""}</span>
                 </div>
               </div>
             </div>
@@ -672,11 +587,7 @@ const ShareModal = ({
               <div className={styles["field-radio-wrapper"]}>
                 <div className={`${styles["radio-button-wrapper"]} m-r-25`}>
                   <IconClickable
-                    src={
-                      sharable
-                        ? Utilities.radioButtonEnabled
-                        : Utilities.radioButtonNormal
-                    }
+                    src={sharable ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                     additionalClass={styles["select-icon"]}
                     onClick={() => {
                       changeSharable(true);
@@ -687,11 +598,7 @@ const ShareModal = ({
 
                 <div className={`${styles["radio-button-wrapper"]} m-r-25`}>
                   <IconClickable
-                    src={
-                      !sharable
-                        ? Utilities.radioButtonEnabled
-                        : Utilities.radioButtonNormal
-                    }
+                    src={!sharable ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                     additionalClass={styles["select-icon"]}
                     onClick={() => {
                       changeSharable(false);
@@ -718,21 +625,13 @@ const ShareModal = ({
             </div>
           )}
 
-          <div
-            className={`${styles["input-wrapper"]} ${
-              displayAttributes ? "" : ""
-            }`}
-          >
+          <div className={`${styles["input-wrapper"]} ${displayAttributes ? "" : ""}`}>
             <div className={`${styles.title}`}>Display attributes</div>
             <div className={styles["field-content"]}>
               <div className={styles["field-radio-wrapper"]}>
                 <div className={`${styles["radio-button-wrapper"]} m-r-25`}>
                   <IconClickable
-                    src={
-                      displayAttributes
-                        ? Utilities.radioButtonEnabled
-                        : Utilities.radioButtonNormal
-                    }
+                    src={displayAttributes ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                     additionalClass={styles["select-icon"]}
                     onClick={() => {
                       changeDisplayAttributes(true);
@@ -743,11 +642,7 @@ const ShareModal = ({
 
                 <div className={`${styles["radio-button-wrapper"]} m-r-25`}>
                   <IconClickable
-                    src={
-                      !displayAttributes
-                        ? Utilities.radioButtonEnabled
-                        : Utilities.radioButtonNormal
-                    }
+                    src={!displayAttributes ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                     additionalClass={styles["select-icon"]}
                     onClick={() => {
                       changeDisplayAttributes(false);

@@ -141,7 +141,7 @@ const CopyModal = ({
             onClick={() => setSelectedFolder(folder.id)}
             className={selectedFolder === folder.id && styles.selected}
           >
-            <IconClickable src={Assets.folder} />
+            <IconClickable SVGElement={Assets.folder} />
             <div className={styles.name}>{folder.name}</div>
           </li>
         ))}
@@ -278,10 +278,7 @@ const CopyModal = ({
       <div className={styles["folder-wrapper"]}>
         {folderInputActive ? (
           <form onSubmit={onSubmit}>
-            <div
-              className={styles["create-new"]}
-              onClick={() => setFolderInputActive(false)}
-            >
+            <div className={styles["create-new"]} onClick={() => setFolderInputActive(false)}>
               X
             </div>
             <Input
@@ -298,10 +295,7 @@ const CopyModal = ({
             />
           </form>
         ) : (
-          <span
-            onClick={() => setFolderInputActive(true)}
-            className={styles["create-new"]}
-          >
+          <span onClick={() => setFolderInputActive(true)} className={styles["create-new"]}>
             + Create New Collection
           </span>
         )}

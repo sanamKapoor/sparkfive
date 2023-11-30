@@ -33,13 +33,7 @@ const type = [
   },
 ];
 
-const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({
-  onBack,
-  data,
-  loading,
-  setLoading,
-  benefits,
-}) => {
+const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({ onBack, data, loading, setLoading, benefits }) => {
   console.log("team data: ", data);
   const [settings, setSettings] = useState({
     vanity: data?.vanity,
@@ -48,6 +42,7 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({
     advancedCollectionShareLink: data?.advancedCollectionShareLink,
     transcript: data?.transcript,
     ocr: data?.ocr,
+    themeCustomization: data?.themeCustomization || false,
   });
   const [showPlanModal, setShowPlanModal] = useState<boolean>(false);
 
@@ -108,33 +103,21 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({
   return (
     <>
       <div className={styles.back} onClick={onBack}>
-        <IconClickable src={Utilities.back} />
+        <IconClickable SVGElement={Utilities.back} />
         <span>Back to all accounts</span>
       </div>
       <div className={styles.container}>
         <ul className={styles.list}>
           <li>
             <div className={styles.row}>
-              <div
-                className={`${styles["name-email"]} ${styles["header-title"]}`}
-              >
+              <div className={`${styles["name-email"]} ${styles["header-title"]}`}>
                 <div>Company Name</div>
               </div>
-              <div className={`${styles.company} ${styles["header-title"]}`}>
-                Account Senior Admin
-              </div>
-              <div className={`${styles.role} ${styles["header-title"]}`}>
-                Plan
-              </div>
-              <div className={`${styles.role} ${styles["header-title"]}`}>
-                Status
-              </div>
-              <div className={`${styles.role} ${styles["header-title"]}`}>
-                Expired date
-              </div>
-              <div className={`${styles.role} ${styles["header-title"]}`}>
-                Action
-              </div>
+              <div className={`${styles.company} ${styles["header-title"]}`}>Account Senior Admin</div>
+              <div className={`${styles.role} ${styles["header-title"]}`}>Plan</div>
+              <div className={`${styles.role} ${styles["header-title"]}`}>Status</div>
+              <div className={`${styles.role} ${styles["header-title"]}`}>Expired date</div>
+              <div className={`${styles.role} ${styles["header-title"]}`}>Action</div>
             </div>
           </li>
 
@@ -153,13 +136,7 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({
               <div>
                 <p>{getStatusBadge(data?.plan?.status)}</p>
               </div>
-              <div>
-                {data?.plan?.endDate && (
-                  <p>
-                    End at {moment(data?.plan?.endDate).format("DD/MM/YYYY")}
-                  </p>
-                )}
-              </div>
+              <div>{data?.plan?.endDate && <p>End at {moment(data?.plan?.endDate).format("DD/MM/YYYY")}</p>}</div>
               <div>
                 <Button
                   className={"container exclude-min-height primary"}
@@ -177,9 +154,7 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({
         </ul>
       </div>
       <div className={styles.features}>
-        <div className={`${styles["header-title"]} m-t-40 m-b-20`}>
-          Added Features
-        </div>
+        <div className={`${styles["header-title"]} m-t-40 m-b-20`}>Added Features</div>
         <div className={"row align-flex-start"}>
           <div className={"col-20 font-weight-600"}>Vanity Url</div>
           <div className={"col-20"}>
@@ -217,9 +192,7 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({
 
           <div className={"col-20"}>
             <OptionList
-              setValue={(value) =>
-                setSettings({ ...settings, cdnAccess: value })
-              }
+              setValue={(value) => setSettings({ ...settings, cdnAccess: value })}
               data={type}
               oneColumn={false}
               value={settings.cdnAccess}
@@ -229,15 +202,11 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({
           <div className={"col-20 align-self-flex-end"}></div>
         </div>
         <div className={`row align-flex-start ${styles.cdnEmbedding}`}>
-          <div className={"col-20 font-weight-600"}>
-            Advance Collection Shared Links
-          </div>
+          <div className={"col-20 font-weight-600"}>Advance Collection Shared Links</div>
 
           <div className={"col-20"}>
             <OptionList
-              setValue={(value) =>
-                setSettings({ ...settings, advancedCollectionShareLink: value })
-              }
+              setValue={(value) => setSettings({ ...settings, advancedCollectionShareLink: value })}
               data={type}
               oneColumn={false}
               value={settings.advancedCollectionShareLink}
@@ -251,9 +220,7 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({
 
           <div className={"col-20"}>
             <OptionList
-              setValue={(value) =>
-                setSettings({ ...settings, transcript: value })
-              }
+              setValue={(value) => setSettings({ ...settings, transcript: value })}
               data={type}
               oneColumn={false}
               value={settings.transcript}
@@ -276,6 +243,22 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({
 
           <div className={"col-20 align-self-flex-end"}></div>
         </div>
+
+        <div className={`row align-flex-start ${styles.cdnEmbedding}`}>
+          <div className={"col-20 font-weight-600"}>Theme Customization</div>
+
+          <div className={"col-20"}>
+            <OptionList
+              setValue={(value) => setSettings({ ...settings, themeCustomization: value })}
+              data={type}
+              oneColumn={false}
+              value={settings.themeCustomization}
+            />
+          </div>
+
+          <div className={"col-20 align-self-flex-end"}></div>
+        </div>
+
         <div className={styles.featuresbtn}>
           <Button
             className={"container exclude-min-height primary"}

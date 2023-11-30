@@ -45,12 +45,12 @@
 }
 
 .menu li:hover {
-  background-color: var(--color-sec-lightblue);
+  background-color: var(--additional-color);
 }
 
 .menu li span {
   display: inline-flex;
-  color: var(--color-prim-navy);
+  color: var(--primary-color);
 }
 
 
@@ -59,8 +59,13 @@
   height: auto;
 }
 
+.menu li svg {
+  width: 14px;
+  height: auto;
+}
+
 .user {
-  color: var(--color-prim-navy);
+  color: var(--primary-color);
   display: flex;
   align-items: center;
   gap: 10px;
