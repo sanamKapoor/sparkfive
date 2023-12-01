@@ -116,6 +116,7 @@ export const Utilities = {
   up: require("./Icons/Utilities/icons8-chevron-up-30.png"),
   oggleLight:require("./Icons/Utilities/nestedCollection/toggleLight.svg"),
     arrowright: require("./Icons/Utilities/nestedCollection/arrow-square-right.svg"),
+    leftArrow: require("./Icons/Utilities/arrow/arrow-left.svg"),
 
   edit: EditFill,
   editLight: require("./Icons/Utilities/Description-Edit/icn-utilities-description_edit-light.svg"),
@@ -144,7 +145,8 @@ export const Utilities = {
   arrowGrey: require("./Icons/Utilities/arrow/arrow-down-grey.png"),
   arrowUp: require("./Icons/Utilities/arrow/arrow-up-white.svg"),
   arrowUpGrey: require("./Icons/Utilities/arrow/arrow-up-grey.png"),
-  arrowBlue: ArrowDownBlue,
+  arrowBlue: require("./Icons/Utilities/arrow/arrow-down-blue.svg"),
+  caretDownLight:require("./Icons/Utilities/arrow/caret-down-light.svg"),
   arrowDark: require("./Icons/Utilities/arrow/arrow-down-dark.svg"),
   arrowUpDark: require("./Icons/Utilities/arrow/arrow-up-dark.svg"),
   arrowNext: require("./Icons/Utilities/arrow/arrow-next.svg"),

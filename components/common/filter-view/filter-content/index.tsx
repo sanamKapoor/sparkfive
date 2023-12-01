@@ -49,7 +49,7 @@ const FilterContent: React.FC<FilterContentProps> = ({
   if (!Component) {
     // Handle unknown or unsupported attribute types or IDs
     return null;
-  }
+  }  
 
   return (
     <Component

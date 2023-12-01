@@ -385,6 +385,11 @@ const AssetGrid = ({
   }, [ref.current, windowWidth]);
   return (
     <>
+    <div className={styles["filter-view-container"]}>
+    {mode === "assets" && <FilterView />}
+
+    </div>
+  
       <section className={`${styles.container}`}>
         {(shouldShowUpload || isDragging) && !isShare && !hasPermission([ASSET_UPLOAD_APPROVAL]) && (
           <AssetUpload
@@ -412,7 +417,7 @@ const AssetGrid = ({
 
         {
           <div className={styles["list-wrapper"]}>
-            {mode === "assets" && <FilterView />}
+          
             {/* testing component starts from here */}
             {
               <ul
@@ -457,156 +462,158 @@ const AssetGrid = ({
                   />
                 )}
 
-                {mode === "assets" && (
-                  <>
-                    {activeView === "list" && (
-                      <AssetTableHeader
-                        activeView={activeView}
-                        setSortAttribute={setSortAssetAttribute}
-                      />
-                    )}
-                    {sortedAssets.map((assetItem, index) => {
-                      if (assetItem.status !== "fail") {
+                  {mode === "assets" && (
+                    <>
+                      {activeView === "list" && (
+                        <AssetTableHeader
+                          activeView={activeView}
+                          setSortAttribute={setSortAssetAttribute}
+                        />
+                      )}
+                      {sortedAssets.map((assetItem, index) => {
+                        if (assetItem.status !== "fail") {
+                          return (
+                            <li
+                              className={styles["grid-item"]}
+                              key={assetItem.asset.id || index}
+                              onClick={(e) =>
+                                handleFocusChange(e, assetItem.asset.id)
+                              }
+                              ref={ref}
+                              style={{ width: `$${widthCard}px` }}
+                            >
+                              <AssetThumbail
+                                {...assetItem}
+                                sharePath={sharePath}
+                                activeFolder={activeFolder}
+                                isShare={isShare}
+                                type={type}
+                                toggleSelected={() =>
+                                  toggleSelected(assetItem.asset.id)
+                                }
+                                openArchiveAsset={() =>
+                                  openArchiveAsset(assetItem.asset)
+                                }
+                                openDeleteAsset={() =>
+                                  openDeleteAsset(assetItem.asset.id)
+                                }
+                                openMoveAsset={() =>
+                                  beginAssetOperation(
+                                    { asset: assetItem },
+                                    "move"
+                                  )
+                                }
+                                openCopyAsset={() =>
+                                  beginAssetOperation(
+                                    { asset: assetItem },
+                                    "copy"
+                                  )
+                                }
+                                openShareAsset={() =>
+                                  beginAssetOperation(
+                                    { asset: assetItem },
+                                    "share"
+                                  )
+                                }
+                                downloadAsset={() => downloadAsset(assetItem)}
+                                openRemoveAsset={() =>
+                                  beginAssetOperation(
+                                    { asset: assetItem },
+                                    "remove_item"
+                                  )
+                                }
+                                handleVersionChange={refreshVersion}
+                                loadMore={loadMore}
+                                onCloseDetailOverlay={onCloseDetailOverlay}
+                                isThumbnailNameEditable={isThumbnailNameEditable}
+                                focusedItem={focusedItem}
+                                setFocusedItem={setFocusedItem}
+                                activeView={activeView}
+                                mode={mode}
+                              />
+                            </li>
+                          );
+                        }
+                      })}
+                    </>
+                  )}
+
+                  {mode === "folders" && (
+                    <>
+                      {activeView === "list" && (
+                        <FolderTableHeader
+                          activeView={activeView}
+                          setSortAttribute={setSortFolderAttribute}
+                        />
+                      )}
+
+                      {sortedFolders.map((folder, index) => {
+                        if(folder.name === "sparker") console.log({ folder });
+                        
                         return (
                           <li
                             className={styles["grid-item"]}
-                            key={assetItem.asset.id || index}
-                            onClick={(e) =>
-                              handleFocusChange(e, assetItem.asset.id)
-                            }
+                            key={folder.id || index}
+                            onClick={(e) => handleFocusChange(e, folder.id)}
                             ref={ref}
                             style={{ width: `$${widthCard}px` }}
                           >
-                            <AssetThumbail
-                              {...assetItem}
-                              sharePath={sharePath}
-                              activeFolder={activeFolder}
+                            <FolderGridItem
+                              {...folder}
                               isShare={isShare}
-                              type={type}
-                              toggleSelected={() =>
-                                toggleSelected(assetItem.asset.id)
+                              sharePath={sharePath}
+                              toggleSelected={() => toggleSelected(folder.id)}
+                              viewFolder={() => viewFolder(folder.id, true)}
+                              deleteFolder={() => deleteFolder(folder.id)}
+                              copyShareLink={() => copyShareLink(folder)}
+                              copyEnabled={getShareIsEnabled(folder)}
+                              shareAssets={() =>
+                                beginAssetOperation({ folder }, "shareFolders")
                               }
-                              openArchiveAsset={() =>
-                                openArchiveAsset(assetItem.asset)
+                              changeThumbnail={beginChangeThumbnailOperation}
+                              deleteThumbnail={() =>
+                                deleteThumbnail({ folder }, "shareFolders")
                               }
-                              openDeleteAsset={() =>
-                                openDeleteAsset(assetItem.asset.id)
-                              }
-                              openMoveAsset={() =>
-                                beginAssetOperation(
-                                  { asset: assetItem },
-                                  "move"
-                                )
-                              }
-                              openCopyAsset={() =>
-                                beginAssetOperation(
-                                  { asset: assetItem },
-                                  "copy"
-                                )
-                              }
-                              openShareAsset={() =>
-                                beginAssetOperation(
-                                  { asset: assetItem },
-                                  "share"
-                                )
-                              }
-                              downloadAsset={() => downloadAsset(assetItem)}
-                              openRemoveAsset={() =>
-                                beginAssetOperation(
-                                  { asset: assetItem },
-                                  "remove_item"
-                                )
-                              }
-                              handleVersionChange={refreshVersion}
-                              loadMore={loadMore}
-                              onCloseDetailOverlay={onCloseDetailOverlay}
+                              activeView={activeView}
                               isThumbnailNameEditable={isThumbnailNameEditable}
                               focusedItem={focusedItem}
                               setFocusedItem={setFocusedItem}
-                              activeView={activeView}
                               mode={mode}
                             />
                           </li>
                         );
-                      }
-                    })}
-                  </>
-                )}
+                      })}
+                    </>
+                  )}
+                </ul>
+              }
 
-                {mode === "folders" && (
-                  <>
-                    {activeView === "list" && (
-                      <FolderTableHeader
-                        activeView={activeView}
-                        setSortAttribute={setSortFolderAttribute}
-                      />
-                    )}
-
-                    {sortedFolders.map((folder, index) => {
-                      return (
-                        <li
-                          className={styles["grid-item"]}
-                          key={folder.id || index}
-                          onClick={(e) => handleFocusChange(e, folder.id)}
-                          ref={ref}
-                          style={{ width: `$${widthCard}px` }}
-                        >
-                          <FolderGridItem
-                            {...folder}
-                            isShare={isShare}
-                            sharePath={sharePath}
-                            toggleSelected={() => toggleSelected(folder.id)}
-                            viewFolder={() => viewFolder(folder.id, true)}
-                            deleteFolder={() => deleteFolder(folder.id)}
-                            copyShareLink={() => copyShareLink(folder)}
-                            copyEnabled={getShareIsEnabled(folder)}
-                            shareAssets={() =>
-                              beginAssetOperation({ folder }, "shareFolders")
-                            }
-                            changeThumbnail={beginChangeThumbnailOperation}
-                            deleteThumbnail={() =>
-                              deleteThumbnail({ folder }, "shareFolders")
-                            }
-                            activeView={activeView}
-                            isThumbnailNameEditable={isThumbnailNameEditable}
-                            focusedItem={focusedItem}
-                            setFocusedItem={setFocusedItem}
-                            mode={mode}
+              {showLoadMore && nextPage !== -1 && (
+                <>
+                  {nextPage > 2 || mode === "folders" ? (
+                    <>
+                      {!loadingAssetsFolders && (
+                        <Waypoint onEnter={loadMore} fireOnRapidScroll={false} />
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      {!loadingAssetsFolders && (
+                        <div className={styles["button-wrapper"]}>
+                          <Button
+                            text="Load More"
+                            type="button"
+                            className="container primary"
+                            onClick={loadMore}
                           />
-                        </li>
-                      );
-                    })}
-                  </>
-                )}
-              </ul>
-            }
-
-            {showLoadMore && nextPage !== -1 && (
-              <>
-                {nextPage > 2 || mode === "folders" ? (
-                  <>
-                    {!loadingAssetsFolders && (
-                      <Waypoint onEnter={loadMore} fireOnRapidScroll={false} />
-                    )}
-                  </>
-                ) : (
-                  <>
-                    {!loadingAssetsFolders && (
-                      <div className={styles["button-wrapper"]}>
-                        <Button
-                          text="Load More"
-                          type="button"
-                          className="container primary"
-                          onClick={loadMore}
-                        />
-                      </div>
-                    )}
-                  </>
-                )}
-              </>
-            )}
-          </div>
-        }
+                        </div>
+                      )}
+                    </>
+                  )}
+                </>
+              )}
+            </div>
+          }
 
         {/* Change thumbnail modal */}
         <ChangeThumbnail
@@ -622,23 +629,23 @@ const AssetGrid = ({
           getSubFolders={getSubFolders}
         />
 
-        {/* Delete modal */}
-        <ConfirmModal
-          closeModal={() => setDeleteModalOpen(false)}
-          confirmAction={() => {
-            deleteAsset(activeAssetId);
-            setActiveAssetId("");
-            setDeleteModalOpen(false);
-          }}
-          confirmText={"Delete"}
-          message={
-            <span>
-              Are you sure you want to &nbsp;<strong>Delete</strong>&nbsp; this
-              asset?
-            </span>
-          }
-          modalIsOpen={deleteModalOpen}
-        />
+          {/* Delete modal */}
+          <ConfirmModal
+            closeModal={() => setDeleteModalOpen(false)}
+            confirmAction={() => {
+              deleteAsset(activeAssetId);
+              setActiveAssetId("");
+              setDeleteModalOpen(false);
+            }}
+            confirmText={"Delete"}
+            message={
+              <span>
+                Are you sure you want to &nbsp;<strong>Delete</strong>&nbsp; this
+                asset?
+              </span>
+            }
+            modalIsOpen={deleteModalOpen}
+          />
 
         {/* Archive modal */}
         <ConfirmModal

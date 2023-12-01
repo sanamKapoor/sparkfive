@@ -17,8 +17,8 @@ const SubCollection = ({
   isShare = false,
   toggleSelected,
   mode = "assets",
-  deleteFolder = (id: string) => { },
-  viewFolder = (id: string) => { },
+  deleteFolder = (id: string) => {},
+  viewFolder = (id: string) => {},
   sharePath = "",
   widthCard,
   ref,
@@ -113,66 +113,73 @@ const SubCollection = ({
       {sortedFolders.length > 0 && (
         <div className={`${styles["sub-collection-heading"]}`}>
           <div className={styles.rightSide}>
+          <div className={`${styles["sub-collection-heading-outer"]}`}>
             <span>Subcollection ({total})</span>
-            <img
+          
+           <img
               className={styles.ExpandIcons}
               onClick={() => {
                 handleHideClick();
               }}
-              src={collectionHide ? Utilities.up : Utilities.downIcon}
+              src={collectionHide ? Utilities.arrowUpGrey : Utilities.caretDownLight }
             />
+              </div>
           </div>
+         
         </div>
       )}
       {!collectionHide && (
         <>
           {/* list wrapper for list view */}
-          <div
-            className={`${styles["cardsWrapper"]} ${activeView === "list" && styles["list-wrapper"]
+          {sortedFolders.length > 0 && (
+            <div
+              className={`${styles["cardsWrapper"]} ${
+                activeView === "list" && styles["list-wrapper"]
               }`}
-          >
-            {activeView === "list" && (
-              <FolderTableHeader
-                activeView={activeView}
-                setSortAttribute={setSortFolderAttribute}
-              />
-            )}
-            {sortedFolders.map((folder, index) => {
-              return (
-                <li
-                  className={styles["grid-item"]}
-                  key={folder.id || index}
-                  onClick={(e) => handleFocusChange(e, folder.id)}
-                  ref={ref}
-                  style={{ width: `$${widthCard}px` }}
-                >
-                  <FolderGridItem
-                    {...folder}
-                    isShare={isShare}
-                    sharePath={sharePath}
-                    toggleSelected={() => toggleSelected(folder.id)}
-                    viewFolder={() => viewFolder(folder.id)}
-                    deleteFolder={() => deleteFolder(folder.id)}
-                    copyShareLink={() => copyShareLink(folder)}
-                    copyEnabled={getShareIsEnabled(folder)}
-                    shareAssets={() =>
-                      beginAssetOperation({ folder }, "shareFolders")
-                    }
-                    changeThumbnail={beginChangeThumbnailOperation}
-                    deleteThumbnail={() =>
-                      deleteThumbnail({ folder }, "shareFolders")
-                    }
-                    activeView={activeView}
-                    isThumbnailNameEditable={isThumbnailNameEditable}
-                    focusedItem={focusedItem}
-                    setFocusedItem={setFocusedItem}
-                    folderType="SubCollection"
-                    mode={mode}
-                  />
-                </li>
-              );
-            })}
-          </div>
+            >
+              {activeView === "list" && (
+                <FolderTableHeader
+                  activeView={activeView}
+                  setSortAttribute={setSortFolderAttribute}
+                />
+              )}
+              {sortedFolders.map((folder, index) => {
+                return (
+                  <li
+                    className={styles["grid-item"]}
+                    key={folder.id || index}
+                    onClick={(e) => handleFocusChange(e, folder.id)}
+                    ref={ref}
+                    style={{ width: `$${widthCard}px` }}
+                  >
+                    <FolderGridItem
+                      {...folder}
+                      isShare={isShare}
+                      sharePath={sharePath}
+                      toggleSelected={() => toggleSelected(folder.id)}
+                      viewFolder={() => viewFolder(folder.id)}
+                      deleteFolder={() => deleteFolder(folder.id)}
+                      copyShareLink={() => copyShareLink(folder)}
+                      copyEnabled={getShareIsEnabled(folder)}
+                      shareAssets={() =>
+                        beginAssetOperation({ folder }, "shareFolders")
+                      }
+                      changeThumbnail={beginChangeThumbnailOperation}
+                      deleteThumbnail={() =>
+                        deleteThumbnail({ folder }, "shareFolders")
+                      }
+                      activeView={activeView}
+                      isThumbnailNameEditable={isThumbnailNameEditable}
+                      focusedItem={focusedItem}
+                      setFocusedItem={setFocusedItem}
+                      folderType="SubCollection"
+                      mode={mode}
+                    />
+                  </li>
+                );
+              })}
+            </div>
+          )}
           {next > 0 && (
             <div className={styles.LoadMorebtn}>
               <Button
@@ -190,7 +197,8 @@ const SubCollection = ({
       {
         <>
           <>
-            <div className={`${styles["sub-collection-heading"]}`}>
+          <div className={`${styles["heading-wrapper"]}`}>
+          <div className={`${styles["sub-collection-heading"]}`}>
               {sortedAssets.length > 0 && (
                 <div className={styles.rightSide}>
                   <span>Assets ({totalAssets})</span>
@@ -199,7 +207,7 @@ const SubCollection = ({
                     onClick={() => {
                       handleAssetsHideClick();
                     }}
-                    src={assetsHide ? Utilities.up : Utilities.downIcon}
+                    src={assetsHide ?  Utilities.arrowUpGrey : Utilities.caretDownLight}
                   />
                 </div>
               )}
@@ -208,8 +216,9 @@ const SubCollection = ({
                   <div className={styles.left}>
                     <div className={styles.TagsInfo}>
                       <div
-                        className={`${styles.circle} ${isChecked ? styles.checked : ""
-                          }`}
+                        className={`${styles.circle} ${
+                          isChecked ? styles.checked : ""
+                        }`}
                         onClick={handleCircleClick}
                       >
                         {isChecked && <img src={Utilities.checkIcon} />}
@@ -222,12 +231,16 @@ const SubCollection = ({
                 </div>
               )}
             </div>
+
+          </div>
+           
             <FilterView />
           </>
 
           <div
-            className={`${styles["assetWrapper"]} ${activeView === "list" && styles["list-wrapper"]
-              }`}
+            className={`${styles["assetWrapper"]} ${
+              activeView === "list" && styles["list-wrapper"]
+            }`}
           >
             {!assetsHide && (
               <>
