@@ -78,6 +78,7 @@ const ShareFolderMain = () => {
   const [sharePath, setSharePath] = useState("");
   const [activeMode, setActiveMode] = useState("assets");
   const [openFilter, setOpenFilter] = useState(activeMode === "assets" && !isMobile ? true : false);
+  const [parentFolders, setParentFolders] = useState([]);
 
   const [sidenavFolderList, setSidenavFolderList] = useState([]);
   const [widthCard, setWidthCard] = useState(0);
@@ -647,13 +648,22 @@ const ShareFolderMain = () => {
     (folderInfo.singleSharedCollectionId || activeMode === "assets") &&
     !activePasswordOverlay;
 
+  const headingClick = (value: string, description: string) => {
+    if (!value) {
+      return false;
+
+    };
+  }
+
   return (
     <>
       {!loading && (
         <main className={`${styles.container} sharefolderOuter`}>
           <SharedPageSidenav
             viewFolder={viewFolder}
+            headingClick={headingClick}
             sidenavFolderList={sidenavFolderList}
+            parentFolders={parentFolders}
           />
           <TopBar
             activeSearchOverlay={activeSearchOverlay}
