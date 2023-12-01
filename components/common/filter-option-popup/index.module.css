@@ -29,7 +29,7 @@
 }
 
 .main-heading {
-  font-weight: 600;
+  font-weight: 500;
   font-size: 14px;
   font-family: "Noto Sans", sans-serif;
 }
@@ -119,6 +119,17 @@
   position: absolute !important;
   top: 40% !important;
   left: 40% !important;
+  transform: translate(-50%, -50%);
+}
+
+.loader-wrapper{
+  height: 100px;
+}
+
+.customLoader-center {
+  position: absolute !important;
+  top: 20% !important;
+  left: 37% !important;
   transform: translate(-50%, -50%);
 }
 

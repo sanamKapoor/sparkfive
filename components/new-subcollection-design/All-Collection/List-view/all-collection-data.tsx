@@ -55,7 +55,7 @@ const CollectionData = () => {
           <td>
             <div className={styles.actionBtn}>
               <IconClickable
-                src={Utilities.edit}
+                src={Utilities.edits}
                 additionalClass={styles["edit-icon"]}
               />
               <IconClickable
@@ -87,7 +87,7 @@ const CollectionData = () => {
           <td>
             <div className={styles.actionBtn}>
               <IconClickable
-                src={Utilities.edit}
+                src={Utilities.edits}
                 additionalClass={styles["edit-icon"]}
               />
               <IconClickable
@@ -119,7 +119,7 @@ const CollectionData = () => {
           <td>
             <div className={styles.actionBtn}>
               <IconClickable
-                src={Utilities.edit}
+                src={Utilities.edits}
                 additionalClass={styles["edit-icon"]}
               />
               <IconClickable
@@ -151,7 +151,8 @@ const CollectionData = () => {
           <td>
             <div className={styles.actionBtn}>
               <IconClickable
-                src={Utilities.edit}
+                src={Utilities.edits
+                }
                 additionalClass={styles["edit-icon"]}
               />
               <IconClickable
@@ -183,7 +184,7 @@ const CollectionData = () => {
           <td>
             <div className={styles.actionBtn}>
               <IconClickable
-                src={Utilities.edit}
+                src={Utilities.edits}
                 additionalClass={styles["edit-icon"]}
               />
               <IconClickable
@@ -215,7 +216,7 @@ const CollectionData = () => {
           <td>
             <div className={styles.actionBtn}>
               <IconClickable
-                src={Utilities.edit}
+                src={Utilities.edits}
                 additionalClass={styles["edit-icon"]}
               />
               <IconClickable

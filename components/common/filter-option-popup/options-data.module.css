@@ -5,8 +5,8 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   box-sizing: border-box;
-  gap: 32px;
-  max-height: 407px;
+  gap: 10px;
+  max-height: 288px;
   scrollbar-width: thin;
   padding-right: 10px;
 }

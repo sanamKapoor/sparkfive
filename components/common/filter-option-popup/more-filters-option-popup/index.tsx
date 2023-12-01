@@ -11,6 +11,7 @@ import { FilterContext, UserContext } from "../../../../context";
 import shareCollectionApi from "../../../../server-api/share-collection";
 import teamApi from "../../../../server-api/team";
 
+import { getSortedAttributes } from "../../../../utils/filter";
 import toastUtils from "../../../../utils/toast";
 
 interface MoreFiltersOptionPopupProps {
@@ -44,7 +45,7 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
       //check for filter elements to hide
       if (advancedConfig?.hideFilterElements) {
         const filteredAttrs = res.data.data.filter(
-          (item) => advancedConfig?.hideFilterElements[item.id] !== false
+          (item) => advancedConfig?.hideFilterElements[item.id] !== true
         );
 
         const mapFilteredAttrs = filteredAttrs.map((item) => {
@@ -88,7 +89,8 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
       toastUtils.error("Please select at least one filter type!");
     } else {
       const selectedAttributes = options.filter((option) => option.isSelected);
-      setAttributes([...selectedAttributes]);
+
+      setAttributes([...getSortedAttributes(selectedAttributes)]);
       setShowModal(false);
     }
   };

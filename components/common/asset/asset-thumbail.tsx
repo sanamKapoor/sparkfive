@@ -248,11 +248,11 @@ const AssetThumbail = ({
   };
   return (
     <>
-      <div
+    <div>
+    <div
         className={`${styles.container} ${activeView === "list" && styles.listContainer
           } ${isLoading && "loadable"}`}
       >
-        {/* select wrapper is for list view  */}
         <div className={activeView === "list" && styles["list-item-wrapper"]}>
           {activeView === "list" ? (
             <div
@@ -411,7 +411,7 @@ const AssetThumbail = ({
           </div>
         )}
         <div className={activeView === "grid" && styles.sizeMargin}  >
-          <div className={activeView !== "list" ? `secondary-text ${styles["modified-date"]}` : ""}>
+          <div className={activeView !== "list" ? `secondary-text ${styles["modified-date"]}` : ""} style={{ color: '#AEB0C2' }}>
             {format(new Date(asset.createdAt), dateFormat)}
           </div>
         </div>
@@ -425,7 +425,7 @@ const AssetThumbail = ({
 
         {activeView === "list" &&
           (<div className={styles.extension}>
-            <span>{asset.extension}</span>
+            <span className={styles.format}>{asset.extension}</span>
           </div>)}
 
         {!isUploading && showAssetOption && (
@@ -456,8 +456,10 @@ const AssetThumbail = ({
             dissociateAsset={onDisassociate}
           />
         )}
-        {/* </div> */}
       </div>
+
+    </div>
+    
 
       {customIconComponent}
 

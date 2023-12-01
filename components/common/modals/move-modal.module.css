@@ -176,12 +176,15 @@
 }
 .rightIcon {
   margin-right: 5px;
-  transform: rotate(275deg);
+  transform: rotate(0deg);
+  width: 11px;
+  cursor: pointer;
 }
 .iconClick {
-  transform: rotate(0deg);
+  transform: rotate(91deg);
   margin-right: 5px;
-  cursor:pointer;
+  width: 11px;
+  cursor: pointer;
 }
 .dropdownOptions {
   /* margin-top: 16px; */

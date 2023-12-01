@@ -18,7 +18,7 @@
   max-width: calc(100% - 283px);
   position: relative;
   left: 283px;
-  padding-top: 40px;
+  padding-top: 30px;
 }
 
 @media screen and (max-width: 600px) {

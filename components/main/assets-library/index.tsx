@@ -994,7 +994,7 @@ const AssetsLibrary = () => {
         }
 
         appendNewSubSidenavFolders([], activeSubFolders, true, id);
-        toastUtils.success("Sub collection deleted successfully");
+        toastUtils.success("Subcollection deleted successfully");
       } else {
         const modFolderIndex = folders.findIndex(
           (folder: any) => folder.id === id
@@ -1116,7 +1116,7 @@ const AssetsLibrary = () => {
                 >
                   <DropzoneProvider>
                     {advancedConfig.set && (
-                      <AssetGrid
+            <AssetGrid
                         activeFolder={activeFolder}
                         getFolders={getFolders}
                         getSubFolders={getSubCollectionsFolderData}

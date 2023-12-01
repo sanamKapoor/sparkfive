@@ -3,6 +3,7 @@
   top: calc((2*81)px); */
   z-index: 999;
   background: #fff;
+  width:100%;
 }
 
 .outer-wrapper {
@@ -27,6 +28,9 @@
   cursor: pointer;
   display: flex;
   align-items: center;
+  color:#817D9D;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .attribute-active {
@@ -94,6 +98,10 @@
   width: 10px;
   margin-left: 5px;
 }
+.filter-button{
+  display: flex;
+  align-items: center;
+}
 
 
 @media (max-width: 820px) {
@@ -129,11 +137,11 @@
   border-radius: 44px;
   padding: 0px 10px;
   height: 30px;
-  margin: 6px 12px;
+  margin: 6px 6px;
 }
 
 .selected-filter-item p {
-  font-weight: 500;
+  font-weight: 400;
   font-size: 12px;
 }
 
