@@ -12,6 +12,7 @@
   top: 15px;
 }
 
+
 .filterViewWrapper {
   /* margin-top: 200px; */
   /* position: fixed; */
@@ -43,4 +44,18 @@
   .col-wrapperview {
     padding-top: 0;
   }
+}
+
+.rightToggle {
+  width: 100%;
+  padding: 0 35px;
+}
+
+
+.toggleContainer{
+  margin-top: 80px;
+  max-width: 100%;
+  margin-left: 0;
+ 
+
 }

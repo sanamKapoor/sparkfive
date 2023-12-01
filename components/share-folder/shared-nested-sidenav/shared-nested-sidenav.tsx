@@ -92,8 +92,8 @@ export default function SharedPageSidenav({ sidenavFolderList, viewFolder, headi
     <>
       <div className={`${styles["shared-sidenav-outer"]}`}>
         <ReusableHeading
-          customStyle={{ padding: "0px 23px 0px 23px" }}
-          text={`${folderInfo?.folderName || ""}.`}
+          customStyle={{ padding: "10px 23px 0px 23px" }}
+          text={`Collections`}
           headingClick={headingClick}
           icon={
             <img
@@ -105,6 +105,7 @@ export default function SharedPageSidenav({ sidenavFolderList, viewFolder, headi
           }
         />
         <ReusableHeading
+         customStyle={{ padding: "10px 23px 0px 23px" }}
           description="All Collections"
           text="Collections"
           headingClickType="folders"
@@ -118,7 +119,9 @@ export default function SharedPageSidenav({ sidenavFolderList, viewFolder, headi
             {foldersList.length > 0 && (<ul>
               {foldersList?.map((item: Item, index: number) => (
                 <>
-                  {item?.childFolders?.length > 0 ?
+                <div style={{display:'flex'}}>
+                
+                {item?.childFolders?.length > 0 ?
                     (<div className={styles.clickable}
                       onClick={() => toggleDropdown(index, item, true)}
                     >
@@ -130,10 +133,19 @@ export default function SharedPageSidenav({ sidenavFolderList, viewFolder, headi
                     :
                     <div className={styles.emptyBox}></div>
                   }
+                
+{/*                  
                   <li
                     key={index}
                     className={`${styles["list1-description"]} ${styles["border-bottom"]} ${item?.sidenavShowSelected ? styles["collection-list-active"] : ""}`}
-                  >
+                  > */}
+                  <li
+                      key={index}
+                      className={`${styles["list1-description"]} ${styles["border-bottom"]} ${
+                        foldersList[index]?.sidenavShowSelected ? styles.activeDropdown : ""
+                      }`}
+                    >
+                    
 
                     <div className={styles["list1-left-contents"]} onClick={() => {
                       console.log(item, "item")
@@ -154,6 +166,8 @@ export default function SharedPageSidenav({ sidenavFolderList, viewFolder, headi
                       <span>{item.assetsCount}</span>
                     </div>
                   </li>
+                </div>
+               
                   {showDropdown[index] && (
                     <div className={styles.folder}>
                       <div className={styles.subfolderList}>

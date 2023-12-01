@@ -691,6 +691,8 @@ const ShareFolderMain = () => {
             className={`${assetGridWrapperStyle} ${styles["mainContainer"]}`}
             style={{ marginTop: top }}
           >
+             
+            
             <AssetGrid
               activeFolder={activeFolder}
               getFolders={getFolders}
