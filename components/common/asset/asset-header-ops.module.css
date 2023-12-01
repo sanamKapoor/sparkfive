@@ -35,7 +35,6 @@
 .text {
   font-size: 13px;
   font-weight: 500;
-  color: var(--color-prim-navy);
 }
 
 .action-button {

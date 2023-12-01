@@ -79,7 +79,7 @@ const NestedFirstlist = ({
           >
             <div className={styles["list1-left-contents"]}>
               <div className={styles.icon}>
-                <img  src={item.icon}  alt={item.description} />
+                <img src={item.icon} alt={item.description} />
               </div>
               <div className={styles["icon-description"]}>
                 <span title={item.toString()}>{item.description}</span>

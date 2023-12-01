@@ -77,7 +77,7 @@ const AssetData = () => {
           <td>
             <div className={styles.actionBtn}>
               <IconClickable
-                src={Utilities.edits}
+                src={Utilities.edit}
                 additionalClass={styles["edit-icon"]}
               />
               <IconClickable
@@ -119,7 +119,7 @@ const AssetData = () => {
           <td>
             <div className={styles.actionBtn}>
               <IconClickable
-                src={Utilities.edits}
+                src={Utilities.edit}
                 additionalClass={styles["edit-icon"]}
               />
               <IconClickable
@@ -161,7 +161,7 @@ const AssetData = () => {
           <td>
             <div className={styles.actionBtn}>
               <IconClickable
-                src={Utilities.edits}
+                src={Utilities.edit}
                 additionalClass={styles["edit-icon"]}
               />
               <IconClickable
@@ -203,7 +203,7 @@ const AssetData = () => {
           <td>
             <div className={styles.actionBtn}>
               <IconClickable
-                src={Utilities.edits}
+                src={Utilities.edit}
                 additionalClass={styles["edit-icon"]}
               />
               <IconClickable
@@ -245,7 +245,7 @@ const AssetData = () => {
           <td>
             <div className={styles.actionBtn}>
               <IconClickable
-                src={Utilities.edits}
+                src={Utilities.edit}
                 additionalClass={styles["edit-icon"]}
               />
               <IconClickable
@@ -287,7 +287,7 @@ const AssetData = () => {
           <td>
             <div className={styles.actionBtn}>
               <IconClickable
-                src={Utilities.edits}
+                src={Utilities.edit}
                 additionalClass={styles["edit-icon"]}
               />
               <IconClickable
@@ -329,7 +329,7 @@ const AssetData = () => {
           <td>
             <div className={styles.actionBtn}>
               <IconClickable
-                src={Utilities.edits}
+                src={Utilities.edit}
                 additionalClass={styles["edit-icon"]}
               />
               <IconClickable
@@ -371,7 +371,7 @@ const AssetData = () => {
           <td>
             <div className={styles.actionBtn}>
               <IconClickable
-                src={Utilities.edits}
+                src={Utilities.edit}
                 additionalClass={styles["edit-icon"]}
               />
               <IconClickable

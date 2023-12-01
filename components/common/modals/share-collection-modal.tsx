@@ -683,7 +683,7 @@ const ShareCollectionModal = ({
             <div className={`${styles["input-wrapper"]}`}>
               <div className={`${styles.title}`}>
                 <p>Upload Logo</p>
-                <IconClickable SVGElement={Utilities.arrowBlue} additionalClass={styles["arrow-icon"]} />
+                <IconClickable src={Utilities.arrowBlue} additionalClass={styles["arrow-icon"]} />
               </div>
               <ShareIconFilesSearch onSelect={changeLogo} logo={logo} />
             </div>

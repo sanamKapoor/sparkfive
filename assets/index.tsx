@@ -68,7 +68,6 @@ export const LoginImg = {
 
 export const Navigation = {
   alert: require("./Icons/Navigation/icn-nav-alert-white.svg"),
-  alertBlues: require("./Icons/Navigation/icn-nav-alert.svg"),
   alertBlue: AlertBlue,
   overview: require("./Icons/Navigation/icn-nav-dashboard-#E9EEFA.svg"),
   overviewSelected: require("./Icons/Navigation/icn-nav-dashboard-white.svg"),
@@ -186,7 +185,6 @@ export const Utilities = {
   file: FilterFile,
   close: require("./Icons/Utilities/Close/close.svg"),
   closeTag: require("./Icons/Utilities/Close/close-tag.svg"),
-  blueCloses: require("./Icons/Utilities/Close/blue-close.svg"),
   blueClose: BlueClose,
   bigblueClose: require("./Icons/Utilities/Close/bigclose.svg"),
   grayClose: require("./Icons/Utilities/Close/gray-close.svg"),
@@ -305,7 +303,6 @@ export const Integrations = {
 };
 
 export const AssetOps = {
-  deletes: require("./Icons/Utilities/Delete/icn-utilities-delete.svg"),
   edit: Edit,
   delete: Delete,
   deleteGray: require("./Icons/Utilities/Delete/icn-utilities-delete-gray.svg"),
