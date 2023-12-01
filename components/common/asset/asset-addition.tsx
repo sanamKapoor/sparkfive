@@ -189,7 +189,6 @@ const AssetAddition = ({
         if (!currentUploadingFolderId && !folderId && activeSortFilter?.mainFilter === "SubCollectionView") {
           attachedQuery["parentId"] = activeSubFolders;
         }
-        debugger
         // Call API to upload
         let { data } = await assetApi.uploadAssets(formData, getCreationParameters(attachedQuery));
 
