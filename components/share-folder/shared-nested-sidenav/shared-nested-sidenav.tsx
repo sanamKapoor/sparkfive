@@ -104,69 +104,56 @@ export default function SharedPageSidenav({ sidenavFolderList, viewFolder, headi
             />
           }
         />
-        {/* <ReusableHeading
-          description="All Collections"
-          text="Collections"
-          headingClickType="folders"
-          headingTrue={activeSortFilter.mainFilter === "folders"}
-          headingClick={headingClick}
-          totalCount={collAssetsCount}
-          icon={undefined}
-        /> */}
         <div className={styles["sidenavScroll"]} >
           <div className={styles["sidenav-list1"]}>
             {foldersList.length > 0 && (<ul>
               {foldersList?.map((item: Item, index: number) => (
                 <>
-                <div style={{display:'flex'}}>
-                
-                {item?.childFolders?.length > 0 ?
-                    (<div className={styles.clickable}
-                      onClick={() => toggleDropdown(index, item, true)}
-                    >
-                      <img className={
-                        showDropdown[index]
-                          ? styles.iconClick : styles.rightIcon} src={Utilities.caretRightSolid} />
+                  <div style={{ display: 'flex' }}>
 
-                    </div>)
-                    :
-                    <div className={styles.emptyBox}></div>
-                  }
-                
-{/*                  
+                    {item?.childFolders?.length > 0 ?
+                      (<div className={styles.clickable}
+                        onClick={() => toggleDropdown(index, item, true)}
+                      >
+                        <img className={
+                          showDropdown[index]
+                            ? styles.iconClick : styles.rightIcon} src={Utilities.caretRightSolid} />
+
+                      </div>)
+                      :
+                      <div className={styles.emptyBox}></div>
+                    }
+
+                    {/*                  
                   <li
                     key={index}
                     className={`${styles["list1-description"]} ${styles["border-bottom"]} ${item?.sidenavShowSelected ? styles["collection-list-active"] : ""}`}
                   > */}
-                  <li
+                    <li
                       key={index}
-                      className={`${styles["list1-description"]} ${styles["border-bottom"]} ${
-                        foldersList[index]?.sidenavShowSelected ? styles.activeDropdown : ""
-                      }`}
+                      className={`${styles["list1-description"]} ${styles["border-bottom"]} ${item?.sidenavShowSelected ? styles.activeDropdown : parentFolders.length > 0 ? styles.activeDropdown : ""
+                        }`}
                     >
-                    
+                      <div className={styles["list1-left-contents"]} onClick={() => {
+                        if (!item?.parentId) {
+                          viewFolder()
+                        } else {
+                          viewFolder(item.id, true)
+                        }
+                      }}>
+                        <div className={styles.icon}>
+                          <img src={Utilities.folder} alt="" />
+                        </div>
+                        <div className={styles["icon-description"]}>
+                          <span>{item.name}</span>
+                        </div>
+                      </div>
+                      <div className={styles["list1-right-contents"]}>
+                        <span>{item.assetsCount}</span>
+                      </div>
+                    </li>
+                  </div>
 
-                    <div className={styles["list1-left-contents"]} onClick={() => {
-                      console.log(item, "item")
-                      if (!item?.parentId) {
-                        viewFolder()
-                      } else {
-                        viewFolder(item.id, true)
-                      }
-                    }}>
-                      <div className={styles.icon}>
-                        <img src={Utilities.folder} alt="" />
-                      </div>
-                      <div className={styles["icon-description"]}>
-                        <span>{item.name}</span>
-                      </div>
-                    </div>
-                    <div className={styles["list1-right-contents"]}>
-                      <span>{item.assetsCount}</span>
-                    </div>
-                  </li>
-                </div>
-               
                   {showDropdown[index] && (
                     <div className={styles.folder}>
                       <div className={styles.subfolderList}>
@@ -180,7 +167,8 @@ export default function SharedPageSidenav({ sidenavFolderList, viewFolder, headi
                                   >
                                     <div className={styles.dropdownOptions}>
                                       <div
-                                        className={styles["folder-lists"]}
+
+                                        className={`${styles["folder-lists"]} ${record?.sidenavShowSelected ? styles.activeDropdown : ""}`}
                                         onClick={() => {
                                           viewFolder(record.id, true)
                                           if (window.innerWidth < 767) {

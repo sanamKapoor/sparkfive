@@ -152,7 +152,7 @@ const MoveModal = ({
                 <div className={`${styles["height"]}`}
                   onClick={() => { toggleDropdown(folder.id, true) }}
                 >
-                  
+
                   <img
                     className={showDropdown.includes(folder.id) ? styles.iconClick : styles.rightIcon}
                     src={Utilities.caretRightSolid}

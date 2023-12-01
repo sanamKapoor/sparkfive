@@ -646,7 +646,7 @@ const AssetHeaderOps = ({
         {!deselectHidden && (
           <img
             className={styles.close}
-            src={Utilities.blueClose}
+            src={Utilities.blueCloses}
             onClick={deselectAll}
           />
         )}
