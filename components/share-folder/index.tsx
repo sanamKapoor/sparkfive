@@ -75,7 +75,7 @@ const ShareFolderMain = () => {
 
   const [firstLoaded, setFirstLoaded] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [activeSearchOverlay, setActiveSearchOverlay] = useState(true);
+  const [activeSearchOverlay, setActiveSearchOverlay] = useState(false);
   const [activeView, setActiveView] = useState("grid");
   const [sharePath, setSharePath] = useState("");
   const [activeMode, setActiveMode] = useState("assets");
@@ -363,8 +363,8 @@ const ShareFolderMain = () => {
       setActivePasswordOverlay(false);
       setFolderInfo(data);
       setAdvancedConfig(data.customAdvanceOptions);
-      if (folderInfo.singleSharedCollectionId && !folderInfo?.sharedFolder.parentId) {
-        setHeaderName(folderInfo?.sharedFolder?.name || "")
+      if (data.singleSharedCollectionId) {
+        setHeaderName(data?.sharedFolder?.name || "")
       } else {
         setHeaderName(data.folderName);
       }
@@ -375,7 +375,6 @@ const ShareFolderMain = () => {
       if (sharedFolder) {
         const folders = [{ ...sharedFolder, assets: [...assets] }];
         if (!sharedFolder?.parentId) {
-          console.log("helo", sharedFolder.id, activeSubFolders)
           setActiveSubFolders(sharedFolder.id);
         } else {
           setActiveFolder(sharedFolder.id);
@@ -554,6 +553,7 @@ const ShareFolderMain = () => {
         { ...data, results: data.results.map(mapWithToggleSelection) },
         replace
       );
+      setParentFolders(folderInfo.singleSharedCollectionId ? [folderInfo?.sharedFolder] : [])
       // setFirstLoaded(true);
     } catch (err) {
       //TODO: Handle error
@@ -660,11 +660,15 @@ const ShareFolderMain = () => {
     };
     viewFolder()
   }
+  const closeSearchOverlay = () => {
+    getAssets();
+    setActiveSearchOverlay(false);
+  };
 
   return (
     <>
       {!loading && (
-        <main className={`${styles.container} sharefolderOuter`}>
+        <main className={`${sidebarOpen?styles["container"]:styles['rightToggle']} sharefolderOuter`}>
           {sidebarOpen ? <SharedPageSidenav
             viewFolder={viewFolder}
             headingClick={headingClick}
@@ -685,10 +689,11 @@ const ShareFolderMain = () => {
             isFolder={activeSortFilter.mainFilter === "folders"}
             sharePath={sharePath}
             activeFolder={activeFolder}
+            closeSearchOverlay={closeSearchOverlay}
             mode={activeMode}
           />
           <div
-            className={`${assetGridWrapperStyle} ${styles["mainContainer"]}`}
+            className={`${assetGridWrapperStyle} ${sidebarOpen?styles["mainContainer"]:styles['toggleContainer']} `}
             style={{ marginTop: top }}
           >
              

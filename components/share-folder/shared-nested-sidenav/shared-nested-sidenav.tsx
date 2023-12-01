@@ -79,7 +79,7 @@ export default function SharedPageSidenav({ sidenavFolderList, viewFolder, headi
     });
   }
 
-  const collAssetsCount = folderInfo?.sharedFolder?.assetsCount ? folderInfo.sharedFolder.assetsCount : 0;
+  // const collAssetsCount = folderInfo?.sharedFolder?.assetsCount ? folderInfo.sharedFolder.assetsCount : 0;
 
   const toggleDropdown = async (
     index: number,
@@ -104,8 +104,7 @@ export default function SharedPageSidenav({ sidenavFolderList, viewFolder, headi
             />
           }
         />
-        <ReusableHeading
-         customStyle={{ padding: "10px 23px 0px 23px" }}
+        {/* <ReusableHeading
           description="All Collections"
           text="Collections"
           headingClickType="folders"
@@ -113,7 +112,7 @@ export default function SharedPageSidenav({ sidenavFolderList, viewFolder, headi
           headingClick={headingClick}
           totalCount={collAssetsCount}
           icon={undefined}
-        />
+        /> */}
         <div className={styles["sidenavScroll"]} >
           <div className={styles["sidenav-list1"]}>
             {foldersList.length > 0 && (<ul>

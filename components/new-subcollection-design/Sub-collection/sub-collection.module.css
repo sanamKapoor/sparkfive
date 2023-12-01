@@ -116,7 +116,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(246px, 1fr));
   grid-gap: 20px;
-  margin-top: 30px;
+  
  
 }
 .assetWrapper {
