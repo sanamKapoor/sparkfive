@@ -224,7 +224,7 @@ const TopBar = ({
           </div>
         </div>
         <div className={styles["sec-filters"]}>
-          {!isMobile && !isShare && !activeSearchOverlay && (
+          {!isMobile && !activeSearchOverlay && (
             <div className={styles["search-icon"]}>
               <img
                 src={Utilities.search}
@@ -284,16 +284,6 @@ const TopBar = ({
                   <Utilities.listView className={styles.gridList} onClick={() => setShowViewDropdown(true)} />
                 )}
               </>
-
-              // <img
-              //   className={styles.gridList}
-              //   src={
-              //     activeView === "grid"
-              //       ? Utilities.gridView
-              //       : Utilities.listView
-              //   }
-              //   onClick={() => setShowViewDropdown(true)}
-              // />
             )}
             {showViewDropdown && (
               <Dropdown
@@ -330,15 +320,6 @@ const TopBar = ({
               Select only 25 assets shown
             </span>
           )}
-          {/* {selectedAllSubFoldersAndAssets && (
-            <span
-              className={styles["select-only-shown-items-text"]}
-              onClick={toggleSelectSubCollection}
-            >
-              Select only 5 Sub collections and 25 Assets shown
-            </span>
-          )} */}
-
           {selectedAllFolders && (
             <span
               className={styles["select-only-shown-items-text"]}
