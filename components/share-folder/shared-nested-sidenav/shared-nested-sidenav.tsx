@@ -35,6 +35,7 @@ interface Item {
   assets: Asset[];
   size: string;
   length: number;
+  childFolders?: any
 }
 export default function SharedPageSidenav({ sidenavFolderList, viewFolder, headingClick, parentFolders }) {
   const { folderInfo } = useContext(ShareContext);
@@ -47,8 +48,13 @@ export default function SharedPageSidenav({ sidenavFolderList, viewFolder, headi
   } = useContext(AssetContext);
   const { activeSortFilter } = useContext(FilterContext)
 
+  const [showDropdown, setShowDropdown] = useState(
+    new Array(parentFolders.length).fill(false)
+  );
   let foldersList: any = [];
-  if (
+  if (parentFolders.length > 0) {
+    foldersList = parentFolders
+  } else if (
     activeSortFilter.mainFilter === "SubCollectionView" &&
     activeSubFolders !== ""
   ) {
@@ -65,10 +71,23 @@ export default function SharedPageSidenav({ sidenavFolderList, viewFolder, headi
       }
       return item;
     });
+    sidenavFolderList = sidenavFolderList.map((item) => {
+      if (item.id === activeFolder) {
+        return { ...item, sidenavShowSelected: true };
+      }
+      return item;
+    });
   }
 
   const collAssetsCount = folderInfo?.sharedFolder?.assetsCount ? folderInfo.sharedFolder.assetsCount : 0;
 
+  const toggleDropdown = async (
+    index: number,
+  ) => {
+    const updatedShowDropdown = [...showDropdown];
+    updatedShowDropdown[index] = !updatedShowDropdown[index]; //Toggle dropdown on img click event
+    setShowDropdown(updatedShowDropdown);
+  };
   return (
     <>
       <div className={`${styles["shared-sidenav-outer"]}`}>
@@ -98,100 +117,95 @@ export default function SharedPageSidenav({ sidenavFolderList, viewFolder, headi
           <div className={styles["sidenav-list1"]}>
             {foldersList.length > 0 && (<ul>
               {foldersList?.map((item: Item, index: number) => (
-                <li
-                  key={index}
-                  className={`${styles["list1-description"]} ${styles["border-bottom"]} ${item?.sidenavShowSelected ? styles["collection-list-active"] : ""}`}
-                >
-                  <div className={styles["list1-left-contents"]} onClick={() => viewFolder(item.id, true)}>
-                    <div className={styles.icon}>
-                      <img src={Utilities.folder} alt="" />
+                <>
+                  {item?.childFolders?.length > 0 ?
+                    (<div className={styles.clickable}
+                      onClick={() => toggleDropdown(index, item, true)}
+                    >
+                      <img className={
+                        showDropdown[index]
+                          ? styles.iconClick : styles.rightIcon} src={Utilities.caretRightSolid} />
+
+                    </div>)
+                    :
+                    <div className={styles.emptyBox}></div>
+                  }
+                  <li
+                    key={index}
+                    className={`${styles["list1-description"]} ${styles["border-bottom"]} ${item?.sidenavShowSelected ? styles["collection-list-active"] : ""}`}
+                  >
+
+                    <div className={styles["list1-left-contents"]} onClick={() => {
+                      console.log(item, "item")
+                      if (!item?.parentId) {
+                        viewFolder()
+                      } else {
+                        viewFolder(item.id, true)
+                      }
+                    }}>
+                      <div className={styles.icon}>
+                        <img src={Utilities.folder} alt="" />
+                      </div>
+                      <div className={styles["icon-description"]}>
+                        <span>{item.name}</span>
+                      </div>
                     </div>
-                    <div className={styles["icon-description"]}>
-                      <span>{item.name}</span>
+                    <div className={styles["list1-right-contents"]}>
+                      <span>{item.assetsCount}</span>
                     </div>
-                  </div>
-                  <div className={styles["list1-right-contents"]}>
-                    <span>{item.assetsCount}</span>
-                  </div>
-                </li>
+                  </li>
+                  {showDropdown[index] && (
+                    <div className={styles.folder}>
+                      <div className={styles.subfolderList}>
+                        {
+                          (
+                            <>
+                              {sidenavFolderList.map(
+                                (record: Item, recordIndex: number) => (
+                                  <div
+                                    key={recordIndex}
+                                  >
+                                    <div className={styles.dropdownOptions}>
+                                      <div
+                                        className={styles["folder-lists"]}
+                                        onClick={() => {
+                                          viewFolder(record.id, true)
+                                          if (window.innerWidth < 767) {
+                                            setSidebarOpen(false)
+                                          }
+                                        }
+                                        }
+                                      >
+                                        <div className={styles.dropdownIcons}>
+                                          <img
+                                            className={styles.subfolder}
+                                            src={Utilities.folder}
+                                          />
+                                          <div className={styles["icon-descriptions"]}>
+                                            <span>{record.name}</span>
+                                          </div>
+                                        </div>
+                                        <div className={styles["list1-right-contents"]}>
+                                          <span>{record.assetsCount ?? 0}</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )
+                              )}
+                            </>
+                          )}
+                      </div>
+                    </div >
+                  )}
+                </>
               ))}
             </ul>)}
-
           </div>
         </div>
-      </div>
+      </div >
       <div>
-
-
       </div>
-
-      {/* portals */}
-      {/* <div className={`${styles["shared-sidenav-outer"]}`}>
-        <div
-          className={`${styles["collection-heading"]} ${styles["collection-heading-active"]}`}
-        >
-          <span>New collection(4)</span>
-        </div>
-        <div className={styles["sidenavScroll"]}>
-          <div>
-             <div className={`${styles["flex"]} ${styles.nestedbox}`}>
-            <div className={styles.clickable}>
-              <img className={styles.rightIcon} src={Utilities.arrowBlue} />
-            </div>
-
-            <div className={`${styles["dropdownMenu"]} ${styles.active}`}>
-              <div className={styles.w100}>
-                <div className={styles.mainWrapper}>
-                  <div className={styles.flex}>
-                    <img src={Utilities.folder} />
-                    <div className={styles["icon-descriptions"]}>
-                      <span>name</span>
-                    </div>
-                  </div>
-                  <div className={styles.totalCount}>
-                    <div className={styles["list1-right-contents"]}>
-                      <span>10</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        <div className={styles.folder}>
-            <div className={styles.subfolderList}>
-              <>
-                <Draggable
-                  axis="both"
-                  defaultPosition={{ x: 0, y: 0 }}
-                  grid={[25, 25]}
-                  scale={1}
-                >
-                  <div className={styles.dropdownOptions}>
-                    <div className={styles["folder-lists"]}>
-                      <div className={styles.dropdownIcons}>
-                        <img
-                          className={styles.subfolder}
-                          src={Utilities.folder}
-                        />
-                        <div className={styles["icon-descriptions"]}>
-                          <span>name</span>
-                        </div>
-                      </div>
-                      <div className={styles["list1-right-contents"]}>
-                        <span>content</span>
-                      </div>
-                    </div>
-                    
-                  </div>
-                </Draggable>
-              </>
-            </div>
-          </div>
-
-          </div>
-         
-        </div>
-      </div> */}
     </>
   );
 }

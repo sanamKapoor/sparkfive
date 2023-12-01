@@ -56,7 +56,9 @@ const ShareFolderMain = () => {
     setSelectedAllSubFoldersAndAssets,
     selectedAllSubAssets,
     setSelectedAllSubAssets,
-    selectedAllSubFoldersAndAssets
+    selectedAllSubFoldersAndAssets,
+    setSidebarOpen,
+    sidebarOpen
   } = useContext(AssetContext);
 
   const { user, advancedConfig, setAdvancedConfig, setLogo } = useContext(UserContext);
@@ -131,10 +133,6 @@ const ShareFolderMain = () => {
         ...(term && { term }),
       });
       let assetList = { ...data, results: data.results };
-      // if (lastUploadedFolder && activeSortFilter.mainFilter === "folders" && activeSortFilter.sort.value === "alphabetical") {
-      //     const lastFolder = {...lastUploadedFolder}
-      //     assetList.results.unshift(lastFolder)
-      // }
 
       setFolders(assetList, replace);
     } catch (err) {
@@ -292,6 +290,7 @@ const ShareFolderMain = () => {
       if (activeSortFilter.mainFilter !== "SubCollectionView") {
         return;
       }
+      setParentFolders(folderInfo.singleSharedCollectionId ? [folderInfo?.sharedFolder] : [])
       const { field, order } = activeSortFilter.sort;
       const { next } = subFoldersViewList;
 
@@ -361,16 +360,22 @@ const ShareFolderMain = () => {
   const getFolderInfo = async (displayError = false) => {
     try {
       const { data } = await shareCollectionApi.getFolderInfo({ sharePath });
+      setActivePasswordOverlay(false);
       setFolderInfo(data);
       setAdvancedConfig(data.customAdvanceOptions);
-      setActivePasswordOverlay(false);
-      setHeaderName(data.folderName);
+      if (folderInfo.singleSharedCollectionId && !folderInfo?.sharedFolder.parentId) {
+        setHeaderName(folderInfo?.sharedFolder?.name || "")
+      } else {
+        setHeaderName(data.folderName);
+      }
+
       const sharedFolder = data.sharedFolder;
 
       // Needed for navigation(arrows) information in detail-overlay
       if (sharedFolder) {
         const folders = [{ ...sharedFolder, assets: [...assets] }];
         if (!sharedFolder?.parentId) {
+          console.log("helo", sharedFolder.id, activeSubFolders)
           setActiveSubFolders(sharedFolder.id);
         } else {
           setActiveFolder(sharedFolder.id);
@@ -588,6 +593,7 @@ const ShareFolderMain = () => {
       }
     } else if (!Boolean(folderInfo?.singleSharedCollectionId)) {
       if (id) {
+
         setActiveFolder(id);
         setHeaderName(
           folders.find((folder: any) => folder.id === id)?.name || ""
@@ -651,20 +657,20 @@ const ShareFolderMain = () => {
   const headingClick = (value: string, description: string) => {
     if (!value) {
       return false;
-
     };
+    viewFolder()
   }
 
   return (
     <>
       {!loading && (
         <main className={`${styles.container} sharefolderOuter`}>
-          <SharedPageSidenav
+          {sidebarOpen ? <SharedPageSidenav
             viewFolder={viewFolder}
             headingClick={headingClick}
             sidenavFolderList={sidenavFolderList}
             parentFolders={parentFolders}
-          />
+          /> : null}
           <TopBar
             activeSearchOverlay={activeSearchOverlay}
             activeSortFilter={activeSortFilter}
