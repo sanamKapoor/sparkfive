@@ -12,12 +12,7 @@ const TableHead: React.FC<TableHeadProps> = ({ sortData, setSortData }) => {
     setSortData({
       ...defaultSortData,
       sortBy: sortId,
-      sortDirection:
-        sortId !== sortData.sortBy
-          ? "ASC"
-          : sortData.sortDirection === "ASC"
-          ? "DESC"
-          : "ASC",
+      sortDirection: sortId !== sortData.sortBy ? "ASC" : sortData.sortDirection === "ASC" ? "DESC" : "ASC",
     });
 
   return (
@@ -26,64 +21,46 @@ const TableHead: React.FC<TableHeadProps> = ({ sortData, setSortData }) => {
         <th className={styles.username}>
           <div className={styles.thead}>
             <span> User name</span>
-            <img
-              className={styles.image}
-              src={Utilities.updown}
-              onClick={() => onSort("users.name")}
-            />
+            <Utilities.updown className={styles.image} onClick={() => onSort("users.name")} />
+            {/*<img className={styles.image} src={Utilities.updown} onClick={() => onSort("users.name")} />*/}
           </div>
         </th>
         <th className={styles.headcontent}>
           <div className={styles.thead}>
             <span> Last Login</span>
-            <img
-              className={styles.image}
-              src={Utilities.updown}
-              onClick={() => onSort("users.lastLogin")}
-            />
+            <Utilities.updown className={styles.image} onClick={() => onSort("users.lastLogin")} />
+            {/*<img className={styles.image} src={Utilities.updown} onClick={() => onSort("users.lastLogin")} />*/}
           </div>
         </th>
         <th className={styles.headcontent}>
           <div className={styles.thead}>
             <span> Created at</span>
-            <img
-              className={styles.image}
-              src={Utilities.updown}
-              onClick={() => onSort("users.createdAt")}
-            />
+            <Utilities.updown className={styles.image} onClick={() => onSort("users.createdAt")} />
+            {/*<img className={styles.image} src={Utilities.updown} onClick={() => onSort("users.createdAt")} />*/}
           </div>
         </th>
         <th>
           <div className={styles.thead}>
             <span> Role</span>
-            <img
-              className={styles.image}
-              src={Utilities.updown}
-              onClick={() => onSort("users.roleId")}
-            />
+            <Utilities.updown className={styles.image} onClick={() => onSort("users.roleId")} />
+            {/*<img className={styles.image} src={Utilities.updown} onClick={() => onSort("users.roleId")} />*/}
           </div>
         </th>
         <th>
           <div className={styles.thead}>
             <span> Company</span>
-            <img
-              className={styles.image}
-              src={Utilities.updown}
-              onClick={() => onSort("team.company")}
-            />
+            <Utilities.updown className={styles.image} onClick={() => onSort("team.company")} />
+            {/*<img className={styles.image} src={Utilities.updown} onClick={() => onSort("team.company")} />*/}
           </div>
         </th>
-         <th>
+        <th>
           <div className={styles.thead}>
             <span> Plan</span>
-            <img
-              className={styles.image}
-              src={Utilities.updown}
-           onClick={() => onSort("plan.name")}
-            />
+            <Utilities.updown className={styles.image} onClick={() => onSort("plan.name")} />
+            {/*<img className={styles.image} src={Utilities.updown} onClick={() => onSort("plan.name")} />*/}
           </div>
         </th>
-         <th>
+        <th>
           <div className={styles.thead}>
             <span> Status</span>
           </div>

@@ -63,7 +63,7 @@
 }
 
 .header h1 {
-    color: var(--color-prim-navy);
+    color: var(--primary-color);
     font-weight: 600;
     flex: 1;
     position: absolute;
@@ -84,8 +84,8 @@
 .image-wrapper{
     display: flex;
     align-items: center;
-    justify-content: center;
     width: 100%;
+    justify-content: center;
 }
 
 

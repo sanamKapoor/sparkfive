@@ -10,7 +10,7 @@
   border: 1px solid var(--color-secondary-border);
   background-color: var(--color-sec-lightivory);
   min-height: 50px;
-  color: var(--color-prim-navy);
+  color: var(--primary-color);
   resize: none;
   overflow-y: hidden;
   outline: none;

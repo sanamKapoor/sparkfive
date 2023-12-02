@@ -18,7 +18,6 @@ import { getFolderKeyAndNewNameByFileName } from "../../../utils/upload";
 import AssetDuplicateModal from "./asset-duplicate-modal";
 import DriveSelector from "./drive-selector";
 
-
 import { maximumAssociateFiles } from "../../../constants/asset-associate";
 import { ASSET_UPLOAD_APPROVAL } from "../../../constants/permissions";
 import Button from "../buttons/button";
@@ -80,7 +79,7 @@ export default function AssetRelatedAddition({
     totalSize: number,
     folderId,
     folderGroup = {},
-    subFolderAutoTag = true
+    subFolderAutoTag = true,
   ) => {
     let folderUploadInfo;
     try {
@@ -91,10 +90,7 @@ export default function AssetRelatedAddition({
       let newAssets = 0;
 
       // Get file group info, this returns folderKey and newName of file
-      let fileGroupInfo = getFolderKeyAndNewNameByFileName(
-        file.webkitRelativePath,
-        subFolderAutoTag
-      );
+      let fileGroupInfo = getFolderKeyAndNewNameByFileName(file.webkitRelativePath, subFolderAutoTag);
       folderUploadInfo = { name: fileGroupInfo.folderKey, size: totalSize };
 
       // Do validation
@@ -108,7 +104,7 @@ export default function AssetRelatedAddition({
                 index,
                 error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
               }
-            : asset
+            : asset,
         );
 
         setUploadingAssets(updatedAssets);
@@ -120,15 +116,7 @@ export default function AssetRelatedAddition({
           return folderGroup;
         } else {
           // Keep going
-          await uploadAsset(
-            i + 1,
-            updatedAssets,
-            currentDataClone,
-            totalSize,
-            folderId,
-            folderGroup,
-            subFolderAutoTag
-          );
+          await uploadAsset(i + 1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, subFolderAutoTag);
         }
       } else {
         // Show uploading toast
@@ -154,9 +142,7 @@ export default function AssetRelatedAddition({
         formData.append("asset", file);
         formData.append(
           "fileModifiedAt",
-          new Date(
-            (file.lastModifiedDate || new Date(file.lastModified)).toUTCString()
-          ).toISOString()
+          new Date((file.lastModifiedDate || new Date(file.lastModified)).toUTCString()).toISOString(),
         );
 
         let size = totalSize;
@@ -191,10 +177,7 @@ export default function AssetRelatedAddition({
         }
 
         // Call API to upload
-        let { data } = await assetApi.uploadAssets(
-          formData,
-          getCreationParameters(attachedQuery)
-        );
+        let { data } = await assetApi.uploadAssets(formData, getCreationParameters(attachedQuery));
 
         // If user is uploading files in folder which is not saved from server yet
         // Save folders data in response to use for subsequence request so that files in same folder can be located correctly
@@ -221,9 +204,7 @@ export default function AssetRelatedAddition({
         // setTotalAssets(totalAssets + newAssets +1)
 
         // Mark this asset as done
-        const updatedAssets = assets.map((asset, index) =>
-          index === i ? { ...asset, status: "done" } : asset
-        );
+        const updatedAssets = assets.map((asset, index) => (index === i ? { ...asset, status: "done" } : asset));
         setUploadingAssets(updatedAssets);
         // Update uploading assets
         setUploadUpdate(updatedAssets);
@@ -233,24 +214,14 @@ export default function AssetRelatedAddition({
           return;
         } else {
           // Keep going
-          await uploadAsset(
-            i + 1,
-            updatedAssets,
-            currentDataClone,
-            totalSize,
-            folderId,
-            folderGroup,
-            subFolderAutoTag
-          );
+          await uploadAsset(i + 1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, subFolderAutoTag);
         }
       }
       showUploadProcess("done");
     } catch (e) {
       // Violate validation, mark failure
       const updatedAssets = assets.map((asset, index) =>
-        index === i
-          ? { ...asset, index, status: "fail", error: "Processing file error" }
-          : asset
+        index === i ? { ...asset, index, status: "fail", error: "Processing file error" } : asset,
       );
 
       setUploadingAssets(updatedAssets);
@@ -268,15 +239,7 @@ export default function AssetRelatedAddition({
         return folderGroup;
       } else {
         // Keep going
-        await uploadAsset(
-          i + 1,
-          updatedAssets,
-          currentDataClone,
-          totalSize,
-          folderId,
-          folderGroup,
-          subFolderAutoTag
-        );
+        await uploadAsset(i + 1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, subFolderAutoTag);
       }
     }
   };
@@ -289,7 +252,7 @@ export default function AssetRelatedAddition({
     totalSize: number,
     folderId,
     folderGroup = {},
-    subFolderAutoTag = true
+    subFolderAutoTag = true,
   ) => {
     let folderUploadInfo;
     try {
@@ -300,10 +263,7 @@ export default function AssetRelatedAddition({
       let newAssets = 0;
 
       // Get file group info, this returns folderKey and newName of file
-      let fileGroupInfo = getFolderKeyAndNewNameByFileName(
-        file.webkitRelativePath,
-        subFolderAutoTag
-      );
+      let fileGroupInfo = getFolderKeyAndNewNameByFileName(file.webkitRelativePath, subFolderAutoTag);
       folderUploadInfo = { name: fileGroupInfo.folderKey, size: totalSize };
 
       // Do validation
@@ -317,7 +277,7 @@ export default function AssetRelatedAddition({
                 index,
                 error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
               }
-            : asset
+            : asset,
         );
 
         // Update uploading assets
@@ -348,9 +308,7 @@ export default function AssetRelatedAddition({
         formData.append("asset", file);
         formData.append(
           "fileModifiedAt",
-          new Date(
-            (file.lastModifiedDate || new Date(file.lastModified)).toUTCString()
-          ).toISOString()
+          new Date((file.lastModifiedDate || new Date(file.lastModified)).toUTCString()).toISOString(),
         );
 
         let size = totalSize;
@@ -385,10 +343,7 @@ export default function AssetRelatedAddition({
         }
 
         // Call API to upload
-        let { data } = await assetApi.uploadAssets(
-          formData,
-          getCreationParameters(attachedQuery)
-        );
+        let { data } = await assetApi.uploadAssets(formData, getCreationParameters(attachedQuery));
 
         // If user is uploading files in folder which is not saved from server yet
         // Save folders data in response to use for subsequence request so that files in same folder can be located correctly
@@ -415,9 +370,7 @@ export default function AssetRelatedAddition({
         // setTotalAssets(totalAssets + newAssets +1)
 
         // Mark this asset as done
-        const updatedAssets = assets.map((asset, index) =>
-          index === i ? { ...asset, status: "done" } : asset
-        );
+        const updatedAssets = assets.map((asset, index) => (index === i ? { ...asset, status: "done" } : asset));
 
         // Update uploading assets
         setUploadUpdate(updatedAssets);
@@ -427,9 +380,7 @@ export default function AssetRelatedAddition({
     } catch (e) {
       // Violate validation, mark failure
       const updatedAssets = assets.map((asset, index) =>
-        index === i
-          ? { ...asset, index, status: "fail", error: "Processing file error" }
-          : asset
+        index === i ? { ...asset, index, status: "fail", error: "Processing file error" } : asset,
       );
 
       // Update uploading assets
@@ -461,9 +412,7 @@ export default function AssetRelatedAddition({
             stage: "draft",
             type: "image",
             mimeType: file.originalFile.type,
-            fileModifiedAt:
-              file.originalFile.lastModifiedDate ||
-              new Date(file.originalFile.lastModified),
+            fileModifiedAt: file.originalFile.lastModifiedDate || new Date(file.originalFile.lastModified),
             // from duplicate handle
             versionGroup: file.versionGroup,
             changedName: file.changedName,
@@ -497,15 +446,7 @@ export default function AssetRelatedAddition({
 
         // Start to upload assets
 
-        await uploadAsset(
-          0,
-          newPlaceholders,
-          currentDataClone,
-          totalSize,
-          undefined,
-          undefined,
-          subFolderAutoTag
-        );
+        await uploadAsset(0, newPlaceholders, currentDataClone, totalSize, undefined, undefined, subFolderAutoTag);
 
         setUploadingPercent(0);
 
@@ -517,15 +458,11 @@ export default function AssetRelatedAddition({
 
         setAssets(currentDataClone);
         console.log(err);
-        if (err.response?.status === 402)
-          toastUtils.error(err.response.data.message);
-        else
-          toastUtils.error("Could not upload assets, please try again later.");
+        if (err.response?.status === 402) toastUtils.error(err.response.data.message);
+        else toastUtils.error("Could not upload assets, please try again later.");
       }
     } else {
-      toastUtils.error(
-        `You already reached the maximum ${maximumAssociateFiles} associated files`
-      );
+      toastUtils.error(`You already reached the maximum ${maximumAssociateFiles} associated files`);
     }
   };
 
@@ -605,7 +542,7 @@ export default function AssetRelatedAddition({
             versionGroup: file.versionGroup,
             changedName: file.changedName,
           })),
-          getCreationParameters({ estimateTime: 1, totalSize })
+          getCreationParameters({ estimateTime: 1, totalSize }),
         );
 
         setUploadingPercent(0);
@@ -623,15 +560,11 @@ export default function AssetRelatedAddition({
         setAssets(currentDataClone);
 
         console.log(err);
-        if (err.response?.status === 402)
-          toastUtils.error(err.response.data.message);
-        else
-          toastUtils.error("Could not import assets, please try again later.");
+        if (err.response?.status === 402) toastUtils.error(err.response.data.message);
+        else toastUtils.error("Could not import assets, please try again later.");
       }
     } else {
-      toastUtils.error(
-        `You already reached the maximum ${maximumAssociateFiles} associated files`
-      );
+      toastUtils.error(`You already reached the maximum ${maximumAssociateFiles} associated files`);
     }
   };
 
@@ -679,7 +612,7 @@ export default function AssetRelatedAddition({
             versionGroup: file.versionGroup,
             changedName: file.changedName,
           })),
-          getCreationParameters({ estimateTime: 1, totalSize })
+          getCreationParameters({ estimateTime: 1, totalSize }),
         );
 
         // Mark done
@@ -695,15 +628,11 @@ export default function AssetRelatedAddition({
       } catch (err) {
         setAssets(currentDataClone);
         console.log(err);
-        if (err.response?.status === 402)
-          toastUtils.error(err.response.data.message);
-        else
-          toastUtils.error("Could not import assets, please try again later.");
+        if (err.response?.status === 402) toastUtils.error(err.response.data.message);
+        else toastUtils.error("Could not import assets, please try again later.");
       }
     } else {
-      toastUtils.error(
-        `You already reached the maximum ${maximumAssociateFiles} associated files`
-      );
+      toastUtils.error(`You already reached the maximum ${maximumAssociateFiles} associated files`);
     }
   };
 
@@ -740,16 +669,12 @@ export default function AssetRelatedAddition({
 
     // eliminate canceled
     files = files.filter((file) => {
-      const cancelledItem = nameHistories.find(
-        (item) => item.oldName === file.name && item.action === "cancel"
-      );
+      const cancelledItem = nameHistories.find((item) => item.oldName === file.name && item.action === "cancel");
       return !cancelledItem;
     });
 
     files = files.map((file) => {
-      const handledItem = nameHistories.find(
-        (histItem) => histItem.oldName === file.name
-      );
+      const handledItem = nameHistories.find((histItem) => histItem.oldName === file.name);
       if (handledItem) {
         if (handledItem.action === "change") {
           file.changedName = handledItem.newName;
@@ -814,7 +739,7 @@ export default function AssetRelatedAddition({
   const SimpleButtonWrapper = ({ children }) => (
     <div className={`${styles["button-wrapper"]} asset-addition`}>
       {/* {hasPermission([ASSET_UPLOAD_APPROVAL]) && <span className={styles['approval-text']}>Upload for approval</span>} */}
-      {!hasPermission([ASSET_UPLOAD_APPROVAL]) && <Button text="+" className="container primary add"/>}
+      {!hasPermission([ASSET_UPLOAD_APPROVAL]) && <Button text="+" className="container primary add" />}
       {children}
     </div>
   );
@@ -823,7 +748,7 @@ export default function AssetRelatedAddition({
     const Content = (option) => {
       return (
         <span className={styles.option} onClick={option.onClick}>
-          <IconClickable src={option.icon} additionalClass={styles.icon} />
+          <IconClickable SVGElement={option.icon} additionalClass={styles.icon} />
           <div className={styles["option-label"]}>{option.label}</div>
         </span>
       );
@@ -856,11 +781,7 @@ export default function AssetRelatedAddition({
         type="file"
         onChange={onFileChange}
       />
-      <ToggleableAbsoluteWrapper
-        Wrapper={SimpleButtonWrapper}
-        Content={DropDownOptions}
-        uploadApproval={true}
-      />
+      <ToggleableAbsoluteWrapper Wrapper={SimpleButtonWrapper} Content={DropDownOptions} uploadApproval={true} />
       {duplicateAssets?.length > 0 && (
         <AssetDuplicateModal
           duplicateNames={duplicateAssets.map((asset) => asset.name)}

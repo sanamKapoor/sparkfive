@@ -7,12 +7,14 @@ interface DropdownProps {
   options: IDropdownOption[];
   additionalClass?: string;
   onClickOutside?: () => void;
+  svgIcon?: boolean
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
   options = [],
   additionalClass = "",
   onClickOutside,
+  svgIcon = false
 }) => {
   const { hasPermission } = useContext(UserContext);
   const ref = useRef(null);
@@ -44,7 +46,8 @@ const Dropdown: React.FC<DropdownProps> = ({
                     onClickOutside && onClickOutside();
                   }}
                 >
-                  <span>{option.icon && <img src={option.icon} />}</span>
+                  {!svgIcon && <span>{option.icon && <img src={option.icon} />}</span>}
+                  {svgIcon && option.icon}
                   <span>{option.label}</span>
                 </li>
               )}

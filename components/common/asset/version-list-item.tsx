@@ -9,18 +9,11 @@ import ConfirmModal from "../modals/confirm-modal";
 import AssetIcon from "./asset-icon";
 import styles from "./version-list.module.css";
 
-const VersionListItem = ({
-  current,
-  asset,
-  currentAction,
-  downloadAction,
-  deleteAction,
-}) => {
+const VersionListItem = ({ current, asset, currentAction, downloadAction, deleteAction }) => {
   const [currentModaOpen, setCurrentModalOpen] = useState(false);
   const [deleteModaOpen, setDeleteModalOpen] = useState(false);
 
-  const { name, realUrl, thumbailUrl, user, createdAt, size, displayVersion } =
-    asset;
+  const { name, realUrl, thumbailUrl, user, createdAt, size, displayVersion } = asset;
 
   const options = [
     { label: "Make Current", onClick: () => setCurrentModalOpen(true) },
@@ -33,12 +26,8 @@ const VersionListItem = ({
       <h6>{current ? "Current Version" : "V" + (displayVersion - 1)}</h6>
       <div className={styles["item-wrapper"]}>
         <div className={styles.thumbnail}>
-          {thumbailUrl && (
-            <img src={thumbailUrl || Assets.unknown} alt={name} />
-          )}
-          {!thumbailUrl && (
-            <AssetIcon extension={asset.extension} onList={true} />
-          )}
+          {thumbailUrl && <img src={thumbailUrl || Assets.unknown} alt={name} />}
+          {!thumbailUrl && <AssetIcon extension={asset.extension} onList={true} />}
         </div>
         <div className={styles["info-wrapper"]}>
           <div>
@@ -57,7 +46,7 @@ const VersionListItem = ({
                 wrapperClass={styles["item-actions-wrapper"]}
                 Wrapper={({ children }) => (
                   <>
-                    <IconClickable src={Utilities.moreLight} />
+                    <IconClickable SVGElement={Utilities.moreLight} />
                     {children}
                   </>
                 )}

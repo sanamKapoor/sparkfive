@@ -145,9 +145,7 @@ const UploadRequest = () => {
   const [customs, setCustoms] = useState([]);
   const [activeCustomField, setActiveCustomField] = useState<number>();
   const [inputCustomFields, setInputCustomFields] = useState([]);
-  const [assetCustomFields, setAssetCustomFields] = useState(
-    mappingCustomFieldData(inputCustomFields, customs)
-  );
+  const [assetCustomFields, setAssetCustomFields] = useState(mappingCustomFieldData(inputCustomFields, customs));
 
   // Campaigns
   const [inputCampaigns, setInputCampaigns] = useState([]);
@@ -343,12 +341,7 @@ const UploadRequest = () => {
     setTempTags(assets[index]?.asset?.tags || []);
 
     // @ts-ignore
-    setTempCustoms(
-      mappingCustomFieldData(
-        inputCustomFields,
-        assets[index]?.asset?.customs || []
-      )
-    );
+    setTempCustoms(mappingCustomFieldData(inputCustomFields, assets[index]?.asset?.customs || []));
 
     // @ts-ignore
     setTempCampaigns(assets[index]?.asset?.campaigns || []);
@@ -427,14 +420,8 @@ const UploadRequest = () => {
 
           // Find the new tags
           // @ts-ignore
-          const newTags = _.differenceBy(
-            tempTags,
-            assets[selectedAsset]?.asset?.tags || []
-          );
-          const removeTags = _.differenceBy(
-            assets[selectedAsset]?.asset?.tags || [],
-            tempTags
-          );
+          const newTags = _.differenceBy(tempTags, assets[selectedAsset]?.asset?.tags || []);
+          const removeTags = _.differenceBy(assets[selectedAsset]?.asset?.tags || [], tempTags);
 
           for (const tag of newTags) {
             tagPromises.push(assetApi.addTag(asset.id, tag));
@@ -459,7 +446,7 @@ const UploadRequest = () => {
             uploadApprovalApi.addComments(asset.id, {
               comments: tempComments,
               approvalId,
-            })
+            }),
           );
         }
 
@@ -839,9 +826,7 @@ const UploadRequest = () => {
 
   // Toggle select assets
   const toggleSelectedAsset = (id) => {
-    const assetIndex = assets.findIndex(
-      (assetItem) => assetItem.asset.id === id
-    );
+    const assetIndex = assets.findIndex((assetItem) => assetItem.asset.id === id);
     const selectedValue = !assets[assetIndex].isSelected;
     // Toggle unselect when selected all will disable selected all
     if (!selectedValue && selectedAllAssets) {
@@ -852,7 +837,7 @@ const UploadRequest = () => {
         [assetIndex]: {
           isSelected: { $set: !assets[assetIndex].isSelected },
         },
-      })
+      }),
     );
   };
 
@@ -984,9 +969,7 @@ const UploadRequest = () => {
   };
 
   const filterUploadItems = (data) => {
-    const approvalIds = data
-      .filter((item) => item.uploadType === "approval")
-      .map((item) => item.id);
+    const approvalIds = data.filter((item) => item.uploadType === "approval").map((item) => item.id);
     const guestUploadIds = data
       .filter((item) => item.uploadType === "guest")
       .map((item) => ({ id: item.id, assets: item.assets }));
@@ -997,9 +980,7 @@ const UploadRequest = () => {
     setIsLoading(true);
     const ids = filterUploadItems(data);
 
-    const assetIds = ids["guestUploadIds"]
-      .map((item) => item.assets.map((a) => a.asset))
-      .flat(2);
+    const assetIds = ids["guestUploadIds"].map((item) => item.assets.map((a) => a.asset)).flat(2);
 
     const updateObject = {
       assetIds,
@@ -1014,9 +995,7 @@ const UploadRequest = () => {
     let approvalArrData = [...approvals];
     // @ts-ignore
     approvalArrData.map((approval) => {
-      const approvalId =
-        ids["approvalIds"].includes(approval.id) ||
-        ids["guestUploadIds"].includes(approval.id);
+      const approvalId = ids["approvalIds"].includes(approval.id) || ids["guestUploadIds"].includes(approval.id);
       if (approvalId && approval.uploadType === "approval") {
         approval.status = 2;
       } else if (approvalId && approval.uploadType === "guest") {
@@ -1062,9 +1041,7 @@ const UploadRequest = () => {
 
     await uploadApprovalApi.bulkReject({ rejectIds: ids.approvalIds });
 
-    const assetIds = ids["guestUploadIds"]
-      .map((item) => item.assets.map((a) => a.asset))
-      .flat(2);
+    const assetIds = ids["guestUploadIds"].map((item) => item.assets.map((a) => a.asset)).flat(2);
 
     const updateObject = {
       assetIds,
@@ -1079,9 +1056,7 @@ const UploadRequest = () => {
 
     // @ts-ignore
     approvalArrData.map((approval) => {
-      const approvalId =
-        ids["approvalIds"].includes(approval.id) ||
-        ids["guestUploadIds"].includes(approval.id);
+      const approvalId = ids["approvalIds"].includes(approval.id) || ids["guestUploadIds"].includes(approval.id);
       if (approvalId && approval.uploadType === "approval") {
         approval.status = -1;
       } else if (approvalId && approval.uploadType === "guest") {
@@ -1106,9 +1081,7 @@ const UploadRequest = () => {
     setIsLoading(true);
     const ids = filterUploadItems(data);
 
-    const assetIds = ids["guestUploadIds"]
-      .map((item) => item.assets.map((a) => a.asset))
-      .flat(2);
+    const assetIds = ids["guestUploadIds"].map((item) => item.assets.map((a) => a.asset)).flat(2);
 
     const updateObject = {
       assetIds,
@@ -1123,9 +1096,7 @@ const UploadRequest = () => {
     let approvalArrData = [...approvals];
 
     approvalArrData = approvalArrData.filter((approval) => {
-      const approvalId =
-        ids["approvalIds"].includes(approval.id) ||
-        ids["guestUploadIds"].includes(approval.id);
+      const approvalId = ids["approvalIds"].includes(approval.id) || ids["guestUploadIds"].includes(approval.id);
       return !approvalId;
     });
 
@@ -1139,9 +1110,7 @@ const UploadRequest = () => {
   };
 
   const getSelectedAssets = () => {
-    return assets
-      .filter((asset) => asset.isSelected)
-      .map((asset) => asset.asset.id);
+    return assets.filter((asset) => asset.isSelected).map((asset) => asset.asset.id);
   };
 
   const getSelectedApprovals = () => {
@@ -1166,7 +1135,7 @@ const UploadRequest = () => {
         [index]: {
           values: { $set: data },
         },
-      })
+      }),
     );
   };
 
@@ -1180,7 +1149,7 @@ const UploadRequest = () => {
         [index]: {
           values: { $set: data },
         },
-      })
+      }),
     );
   };
 
@@ -1195,7 +1164,7 @@ const UploadRequest = () => {
         [index]: {
           values: { $set: [selected] },
         },
-      })
+      }),
     );
   };
 
@@ -1218,7 +1187,7 @@ const UploadRequest = () => {
         [index]: {
           values: { $set: [selected] },
         },
-      })
+      }),
     );
 
     // Hide loading
@@ -1236,30 +1205,22 @@ const UploadRequest = () => {
   useEffect(() => {
     if (approvalIndex !== undefined) {
       // @ts-ignore
-      const currentData = approvals[approvalIndex]
-        ? approvals[approvalIndex].assets
-        : [];
+      const currentData = approvals[approvalIndex] ? approvals[approvalIndex].assets : [];
       if (filter && currentData.length > 0) {
         // @ts-ignore
         switch (filter.value) {
           case -1: {
-            const newAssets = [...currentData].filter(
-              ({ asset }) => asset.status === -1
-            );
+            const newAssets = [...currentData].filter(({ asset }) => asset.status === -1);
             setAssets(newAssets);
             break;
           }
           case 0: {
-            const newAssets = [...currentData].filter(
-              ({ asset }) => asset.status === 0
-            );
+            const newAssets = [...currentData].filter(({ asset }) => asset.status === 0);
             setAssets(newAssets);
             break;
           }
           case 2: {
-            const newAssets = [...currentData].filter(
-              ({ asset }) => asset.status === 2
-            );
+            const newAssets = [...currentData].filter(({ asset }) => asset.status === 2);
             setAssets(newAssets);
             break;
           }
@@ -1277,15 +1238,12 @@ const UploadRequest = () => {
 
   useEffect(() => {
     if (inputCustomFields.length > 0) {
-      const updatedMappingCustomFieldData = mappingCustomFieldData(
-        inputCustomFields,
-        customs
-      );
+      const updatedMappingCustomFieldData = mappingCustomFieldData(inputCustomFields, customs);
 
       setAssetCustomFields(
         update(assetCustomFields, {
           $set: updatedMappingCustomFieldData,
-        })
+        }),
       );
 
       setCustoms(updatedMappingCustomFieldData);
@@ -1340,9 +1298,7 @@ const UploadRequest = () => {
     // Update status to approval list
     let approvalArrData = [...approvals];
 
-    approvalArrData = approvalArrData.filter(
-      (approval) => approval.id !== data.id
-    );
+    approvalArrData = approvalArrData.filter((approval) => approval.id !== data.id);
 
     setApprovals(approvalArrData);
 
@@ -1367,10 +1323,7 @@ const UploadRequest = () => {
         titleText={"Upload Requests"}
         showAssetAddition={false}
       />
-      <div
-        className={`row ${mode === "view" ? styles["root-row"] : ""}`}
-        style={{ marginTop: top }}
-      >
+      <div className={`row ${mode === "view" ? styles["root-row"] : ""}`} style={{ marginTop: top }}>
         <div className={styles["uploadContainer"]}>
           <main className={`${styles.container}`}>
             {mode === "view" && (
@@ -1385,11 +1338,7 @@ const UploadRequest = () => {
                         className={"back-button"}
                       ></Button>
                       <span>
-                        <img
-                          src={Utilities.arrowNav}
-                          alt="arrow"
-                          className={styles.close}
-                        />
+                        <img src={Utilities.arrowNav} alt="arrow" className={styles.close} />
                       </span>
                     </p>
                     {currentApproval?.name || "Untitled"}
@@ -1401,30 +1350,26 @@ const UploadRequest = () => {
                 </div>
 
                 <div className={styles["upload-section"]}>
-                  {assets.length > 0 &&
-                    (currentViewStatus === 0 || isAdmin()) &&
-                    !selectedAllAssets && (
-                      <Button
-                        type="button"
-                        text="Select All"
-                        className="container secondary select-all"
-                        onClick={selectAllAssets}
-                      />
-                    )}
+                  {assets.length > 0 && (currentViewStatus === 0 || isAdmin()) && !selectedAllAssets && (
+                    <Button
+                      type="button"
+                      text="Select All"
+                      className="container secondary select-all"
+                      onClick={selectAllAssets}
+                    />
+                  )}
 
                   <div className={styles["upload-request-button"]}>
-                    {assets.length > 0 &&
-                      (currentViewStatus === 0 || isAdmin()) &&
-                      hasSelectedAssets() && (
-                        <Button
-                          type="button"
-                          text="Deselect"
-                          className="container secondary"
-                          onClick={() => {
-                            selectAllAssets(false);
-                          }}
-                        />
-                      )}
+                    {assets.length > 0 && (currentViewStatus === 0 || isAdmin()) && hasSelectedAssets() && (
+                      <Button
+                        type="button"
+                        text="Deselect"
+                        className="container secondary"
+                        onClick={() => {
+                          selectAllAssets(false);
+                        }}
+                      />
+                    )}
 
                     {assets.length > 0 && currentViewStatus === 0 && (
                       <Button
@@ -1433,9 +1378,7 @@ const UploadRequest = () => {
                         className="container primary"
                         onClick={() => {
                           if (!batchName) {
-                            toastUtils.error(
-                              "Please enter the batch name to submit"
-                            );
+                            toastUtils.error("Please enter the batch name to submit");
                           } else {
                             setShowConfirmModal(true);
                           }
@@ -1482,12 +1425,7 @@ const UploadRequest = () => {
                       </div>
                     )}
 
-                    <Button
-                      type="button"
-                      text={"Back"}
-                      className="container secondary"
-                      onClick={onCancelView}
-                    />
+                    <Button type="button" text={"Back"} className="container secondary" onClick={onCancelView} />
                   </div>
                 </div>
               </div>
@@ -1534,34 +1472,28 @@ const UploadRequest = () => {
                         />
                       )}
 
-                      {isAdmin() &&
-                        approvals.length > 0 &&
-                        isAdmin() &&
-                        hasSelectedApprovals() && (
-                          <Button
-                            type="button"
-                            text="Reject Selected"
-                            className="container primary"
-                            onClick={() => {
-                              setTempApprovals(getSelectedApprovals());
-                              setShowRejectConfirm(true);
-                            }}
-                          />
-                        )}
-                      {isAdmin() &&
-                        approvals.length > 0 &&
-                        isAdmin() &&
-                        hasSelectedApprovals() && (
-                          <Button
-                            type="button"
-                            text="Approve Selected"
-                            className="container primary"
-                            onClick={() => {
-                              setTempApprovals(getSelectedApprovals());
-                              setShowApproveConfirm(true);
-                            }}
-                          />
-                        )}
+                      {isAdmin() && approvals.length > 0 && isAdmin() && hasSelectedApprovals() && (
+                        <Button
+                          type="button"
+                          text="Reject Selected"
+                          className="container primary"
+                          onClick={() => {
+                            setTempApprovals(getSelectedApprovals());
+                            setShowRejectConfirm(true);
+                          }}
+                        />
+                      )}
+                      {isAdmin() && approvals.length > 0 && isAdmin() && hasSelectedApprovals() && (
+                        <Button
+                          type="button"
+                          text="Approve Selected"
+                          className="container primary"
+                          onClick={() => {
+                            setTempApprovals(getSelectedApprovals());
+                            setShowApproveConfirm(true);
+                          }}
+                        />
+                      )}
                     </div>
                   </div>
                 </div>
@@ -1577,10 +1509,7 @@ const UploadRequest = () => {
                     )}
                     {approvals.map((approval, index) => {
                       return (
-                        <li
-                          className={assetGridStyles["regular-item"]}
-                          key={approval.id || index}
-                        >
+                        <li className={assetGridStyles["regular-item"]} key={approval.id || index}>
                           <ListItem
                             handleDeleteApproval={handleDeleteApproval}
                             data={approval}
@@ -1608,10 +1537,7 @@ const UploadRequest = () => {
                     {assets.map((assetItem, index) => {
                       if (assetItem.status !== "fail") {
                         return (
-                          <li
-                            className={assetGridStyles["grid-item"]}
-                            key={assetItem.asset.id || index}
-                          >
+                          <li className={assetGridStyles["grid-item"]} key={assetItem.asset.id || index}>
                             <AssetThumbail
                               {...assetItem}
                               sharePath={""}
@@ -1636,12 +1562,8 @@ const UploadRequest = () => {
                               onView={() => {
                                 onViewAsset(index);
                               }}
-                              customComponent={
-                                <TagWrapper status={assetItem.asset.status} />
-                              }
-                              infoWrapperClass={
-                                styles["asset-grid-info-wrapper"]
-                              }
+                              customComponent={<TagWrapper status={assetItem.asset.status} />}
+                              infoWrapperClass={styles["asset-grid-info-wrapper"]}
                               textWrapperClass={
                                 hasTagOrComments(assetItem.asset)
                                   ? hasBothTagAndComments(assetItem.asset)
@@ -1650,13 +1572,11 @@ const UploadRequest = () => {
                                   : "w-100"
                               }
                               customIconComponent={
-                                <div
-                                  className={`${styles["icon-wrapper"]} d-flex`}
-                                >
+                                <div className={`${styles["icon-wrapper"]} d-flex`}>
                                   {assetItem?.asset?.comments && (
                                     <IconClickable
                                       additionalClass={styles["edit-icon"]}
-                                      src={Utilities.comment}
+                                      SVGElement={Utilities.comment}
                                       onClick={() => { }}
                                     />
                                   )}
@@ -1689,29 +1609,19 @@ const UploadRequest = () => {
               }
             >
               <div className={detailPanelStyles.container}>
-                <h2 className={styles["detail-title"]}>
-                  {isAdmin() ? "Batch Details" : "Tagging"}
-                </h2>
+                <h2 className={styles["detail-title"]}>{isAdmin() ? "Batch Details" : "Tagging"}</h2>
 
                 {(currentViewStatus !== 0 || isAdmin()) && (
                   <div className={detailPanelStyles["field-wrapper"]}>
-                    <div
-                      className={`secondary-text ${detailPanelStyles.field} ${styles["field-name"]}`}
-                    >
-                      Message
-                    </div>
+                    <div className={`secondary-text ${detailPanelStyles.field} ${styles["field-name"]}`}>Message</div>
                     <p>{currentApproval?.message}</p>
                   </div>
                 )}
 
                 {!isAdmin() && currentViewStatus == 0 && (
                   <div className={detailPanelStyles["first-section"]}>
-                    <div
-                      className={`${detailPanelStyles["field-wrapper"]} ${styles["batchSidePanel"]}`}
-                    >
-                      <div
-                        className={`secondary-text ${detailPanelStyles.field} ${styles["field-name"]}`}
-                      >
+                    <div className={`${detailPanelStyles["field-wrapper"]} ${styles["batchSidePanel"]}`}>
+                      <div className={`secondary-text ${detailPanelStyles.field} ${styles["field-name"]}`}>
                         Batch Name
                       </div>
                       <Input
@@ -1824,13 +1734,8 @@ const UploadRequest = () => {
                       inputCustomFields.map((field, index) => {
                         if (field.type === "selectOne") {
                           return (
-                            <div
-                              className={detailPanelStyles["field-wrapper"]}
-                              key={index}
-                            >
-                              <div className={`secondary-text ${styles.field}`}>
-                                {field.name}
-                              </div>
+                            <div className={detailPanelStyles["field-wrapper"]} key={index}>
+                              <div className={`secondary-text ${styles.field}`}>{field.name}</div>
                               <CustomFieldSelector
                                 data={assetCustomFields[index]?.values[0]?.name}
                                 options={field.values}
@@ -1892,12 +1797,7 @@ const UploadRequest = () => {
                         }
                       })}
 
-                    <Button
-                      className={` container bulk-tag`}
-                      type="button"
-                      text="Save changes"
-                      onClick={saveBulkTag}
-                    />
+                    <Button className={` container bulk-tag`} type="button" text="Save changes" onClick={saveBulkTag} />
                   </>
                 )}
               </div>
@@ -1905,17 +1805,8 @@ const UploadRequest = () => {
           )}
 
           {mode === "view" && (
-            <div
-              className={styles.back}
-              onClick={() => setRightPanelOpen(!rightPanelOpen)}
-            >
-              <IconClickable
-                src={
-                  rightPanelOpen
-                    ? Utilities.closePaneReverse
-                    : Utilities.closePanelDark
-                }
-              />
+            <div className={styles.back} onClick={() => setRightPanelOpen(!rightPanelOpen)}>
+              <IconClickable src={rightPanelOpen ? Utilities.closePaneReverse : Utilities.closePanelDark} />
             </div>
           )}
         </div>
@@ -1942,7 +1833,7 @@ const UploadRequest = () => {
               {(currentViewStatus === 0 || isAdmin()) && (
                 <IconClickable
                   additionalClass={styles["edit-icon"]}
-                  src={Utilities.edit}
+                  SVGElement={Utilities.edit}
                   onClick={() => {
                     setShowRenameModal(true);
                   }}
@@ -1950,9 +1841,7 @@ const UploadRequest = () => {
               )}
             </div>
             <div className={styles["date"]}>
-              {moment(assets[selectedAsset]?.asset?.createdAt).format(
-                "MMM DD, YYYY, hh:mm a"
-              )}
+              {moment(assets[selectedAsset]?.asset?.createdAt).format("MMM DD, YYYY, hh:mm a")}
             </div>
             <div className={styles["centerImg"]}>
               {assets[selectedAsset]?.asset.type === "image" && (
@@ -2001,14 +1890,8 @@ const UploadRequest = () => {
             </div>
 
             {(isAdmin() || currentViewStatus !== 0) && (
-              <div
-                className={`${detailPanelStyles["field-wrapper"]} ${detailPanelStyles["comments-wrapper"]}`}
-              >
-                <div
-                  className={`secondary-text ${detailPanelStyles.field} ${styles["field-name"]}`}
-                >
-                  Comments
-                </div>
+              <div className={`${detailPanelStyles["field-wrapper"]} ${detailPanelStyles["comments-wrapper"]}`}>
+                <div className={`secondary-text ${detailPanelStyles.field} ${styles["field-name"]}`}>Comments</div>
                 <p>{tempComments}</p>
               </div>
             )}
@@ -2031,12 +1914,8 @@ const UploadRequest = () => {
             </div>
           </div>
           <div className={`${styles["right-side"]}`}>
-            <div
-              className={`${detailPanelStyles.container} ${styles["right-form"]}`}
-            >
-              <h2 className={styles["detail-title"]}>
-                Add Attributes to Selected Assets
-              </h2>
+            <div className={`${detailPanelStyles.container} ${styles["right-form"]}`}>
+              <h2 className={styles["detail-title"]}>Add Attributes to Selected Assets</h2>
 
               <div className={detailPanelStyles["field-wrapper"]}>
                 <div className={styles["creatable-select-container"]}>
@@ -2176,13 +2055,8 @@ const UploadRequest = () => {
                 inputCustomFields.map((field, index) => {
                   if (field.type === "selectOne") {
                     return (
-                      <div
-                        className={detailPanelStyles["field-wrapper"]}
-                        key={index}
-                      >
-                        <div className={`secondary-text ${styles.field}`}>
-                          {field.name}
-                        </div>
+                      <div className={detailPanelStyles["field-wrapper"]} key={index}>
+                        <div className={`secondary-text ${styles.field}`}>{field.name}</div>
                         <CustomFieldSelector
                           data={tempCustoms[index]?.values[0]?.name}
                           options={field.values}
@@ -2361,11 +2235,7 @@ const UploadRequest = () => {
         <div className={styles["confirm-modal-wrapper"]}>
           {!submitted && (
             <>
-              <div
-                className={`${styles["modal-field-title"]} ${styles["titleAdmin"]}`}
-              >
-                Message for Admin
-              </div>
+              <div className={`${styles["modal-field-title"]} ${styles["titleAdmin"]}`}>Message for Admin</div>
 
               <TextArea
                 type={"textarea"}
@@ -2385,18 +2255,11 @@ const UploadRequest = () => {
             </>
           )}
 
-          {submitted && (
-            <img
-              src={Utilities.grayClose}
-              alt={"close"}
-              className={styles["modalClose"]}
-            />
-          )}
+          {submitted && <img src={Utilities.grayClose} alt={"close"} className={styles["modalClose"]} />}
           {submitted && (
             <p className={styles["modal-field-title"]}>
               Thanks for submitting your assets for approval. <br />
-              The admin will be notified of your submission and will be able to
-              review it
+              The admin will be notified of your submission and will be able to review it
             </p>
           )}
 
@@ -2412,12 +2275,7 @@ const UploadRequest = () => {
                     setMessage("");
                   }}
                 />
-                <Button
-                  className={`${styles["add-tag-btn"]} primary`}
-                  type="button"
-                  text="Submit"
-                  onClick={submit}
-                />
+                <Button className={`${styles["add-tag-btn"]} primary`} type="button" text="Submit" onClick={submit} />
               </>
             )}
             {submitted && (
@@ -2441,7 +2299,7 @@ const UploadRequest = () => {
         type={"Asset"}
         initialValue={assets[selectedAsset]?.asset?.name?.substring(
           0,
-          assets[selectedAsset]?.asset?.name.lastIndexOf(".")
+          assets[selectedAsset]?.asset?.name.lastIndexOf("."),
         )}
       />
 

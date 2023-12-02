@@ -140,9 +140,9 @@ const MoveModal = ({
       </div>
       <div className={`${styles["modal-heading"]}`}>
         <div className={`${styles["heading-border"]}`}>
-        <span>Collection({folders.length ?? ""})</span>
+          <span>Collection({folders.length ?? ""})</span>
         </div>
-      
+
       </div>
       <div className={`${styles["outer-wrapper"]}`}>
         {folders.map((folder, index) => (
@@ -152,9 +152,10 @@ const MoveModal = ({
                 <div className={`${styles["height"]}`}
                   onClick={() => { toggleDropdown(folder.id, true) }}
                 >
+
                   <img
                     className={showDropdown.includes(folder.id) ? styles.iconClick : styles.rightIcon}
-                    src={Utilities.arrowBlue}
+                    src={Utilities.caretRightSolid}
                     alt="Right Arrow Icon"
                     onClick={() => { toggleDropdown(folder.id, true) }}
                   />
@@ -273,10 +274,7 @@ const MoveModal = ({
       <div className={styles["folder-wrapper"]}>
         {folderInputActive ? (
           <form onSubmit={onSubmit}>
-            <div
-              className={styles["create-new"]}
-              onClick={() => setFolderInputActive(false)}
-            >
+            <div className={styles["create-new"]} onClick={() => setFolderInputActive(false)}>
               X
             </div>
             <Input
@@ -293,10 +291,7 @@ const MoveModal = ({
             />
           </form>
         ) : (
-          <span
-            onClick={() => setFolderInputActive(true)}
-            className={styles["create-new"]}
-          >
+          <span onClick={() => setFolderInputActive(true)} className={styles["create-new"]}>
             + Create New Collection
           </span>
         )}

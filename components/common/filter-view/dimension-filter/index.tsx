@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FilterContext } from "../../../../context";
 import { CommonFilterProps } from "../../../../interfaces/filters";
 import styles from "./index.module.css";
@@ -29,11 +29,22 @@ const DimensionsFilter: React.FC<DimensionsFilterProps> = ({
     max: activeSortFilter?.dimensionHeight?.max || height?.max,
   });
 
+  useEffect(() => {
+    if(options?.dimensionHeight?.min && options?.dimensionHeight?.max) setDimensionHeight({
+      min: options?.dimensionHeight?.min,
+      max: options?.dimensionHeight?.max,
+    })
+    if(options?.dimensionWidth?.min && options?.dimensionWidth?.max) setDimensionWidth({
+      min: options?.dimensionWidth?.min,
+      max: options?.dimensionWidth?.max,
+    })
+  }, [options?.dimensionHeight, options?.dimensionWidth])
+
   const handleWidthChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     prop: "min" | "max"
   ) => {
-    const value = e.target.value;
+    const value = parseInt(e.target.value);
 
     setDimensionWidth({ ...dimensionWidth, [prop]: value });
 
@@ -53,7 +64,7 @@ const DimensionsFilter: React.FC<DimensionsFilterProps> = ({
     e: React.ChangeEvent<HTMLInputElement>,
     prop: "min" | "max"
   ) => {
-    const value = e.target.value;
+    const value = parseInt(e.target.value);
 
     setDimensionHeight({ ...dimensionHeight, [prop]: value });
 

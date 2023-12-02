@@ -27,7 +27,7 @@ const Search = (props) => {
   let isOpen = openFilters;
 
   useEffect(() => {
-    if(openFilters) applyingSerchAndFilters()
+    if (openFilters) applyingSerchAndFilters()
   }, [filtersTags])
 
   const { advancedConfig } = useContext(UserContext);
@@ -55,27 +55,27 @@ const Search = (props) => {
     {
       label: "Tags only",
       value: "tags.name",
-      icon: Utilities.tags,
+      icon: <Utilities.tags />,
     },
     {
       label: "Custom fields only",
       value: "attributes.name",
-      icon: Utilities.custom,
+      icon: <Utilities.custom />,
     },
     {
       label: "Collections only",
       value: "folders.name",
-      icon: Utilities.collections,
+      icon: <Utilities.collections />,
     },
     {
       label: "File name only",
       value: "assets.name",
-      icon: Utilities.file,
+      icon: <Utilities.file />,
     },
     {
       label: "Notes",
       value: "notes.text",
-      icon: Utilities.notes,
+      icon: <Utilities.notes />,
     },
   ];
 
@@ -153,7 +153,7 @@ const Search = (props) => {
   return (
     <form
       onSubmit={(e) => {
-        e.preventDefault();        
+        e.preventDefault();
         applyingSerchAndFilters();
       }}
     >
@@ -180,7 +180,11 @@ const Search = (props) => {
             <div className={styles.tags}>
               {filtersTags?.map((tag, index) => (
                 <div className={styles.tag} key={index}>
-                  {tag.icon && <img src={tag.icon} />}
+                  {/**
+                   * TODO Antra change icon has to rectify conflict/issue
+                   */}
+                  {/* {tag.icon && <img src={tag.icon} />} */}
+                  {tag.icon}
                   {tag.label}
                   <span onClick={() => removeTag(index)}>
                     <img src={Utilities.close} />
@@ -228,7 +232,13 @@ const Search = (props) => {
                         }`}
                       onClick={() => addTag(item, false)}
                     >
-                      <img src={item.icon} />
+                      {
+                        /**
+                         * conflict issue TODO
+                         */
+                      }
+                      {/* <img src={item.icon} /> */}
+                      {item.icon}
                       {item.label}
                     </li>
                   );

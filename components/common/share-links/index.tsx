@@ -41,7 +41,7 @@ export default function ShareLinks() {
   const [page, setPage] = useState<number>(0);
   const [nextPage, setNextPage] = useState<number>(0);
   const [sortData, setSortData] = useState({
-    sortField: "expiredAt",
+    sortField: "createdAt",
     sortType: "desc",
   });
   const [colorGroups, setColorGroups] = useState<any>({});
@@ -50,9 +50,7 @@ export default function ShareLinks() {
   const getFilterObject = (page) => {
     let filters: any = { page };
     if (sharedBy) {
-      filters.sharedBy = sharedBy
-        ? sharedBy.map((item) => item.value).join(",")
-        : "";
+      filters.sharedBy = sharedBy ? sharedBy.map((item) => item.value).join(",") : "";
     }
 
     if (type) {
@@ -60,9 +58,7 @@ export default function ShareLinks() {
     }
 
     if (sharedWith) {
-      filters.sharedWith = sharedWith
-        ? sharedWith.map((item) => item.value).join(",")
-        : "";
+      filters.sharedWith = sharedWith ? sharedWith.map((item) => item.value).join(",") : "";
     }
 
     if (status) {
@@ -133,12 +129,12 @@ export default function ShareLinks() {
     setShareByList(
       results[0].data.map((item) => {
         return { label: item, value: item };
-      })
+      }),
     );
     setShareWithList(
       results[1].data.map((item) => {
         return { label: item, value: item };
-      })
+      }),
     );
 
     if (refresh) {
@@ -146,10 +142,7 @@ export default function ShareLinks() {
       let dataWithColor = formatDataColor(data.results, {});
       setLinks(dataWithColor);
     } else {
-      let dataWithColor = formatDataColor(
-        links.concat(data.results),
-        colorGroups
-      );
+      let dataWithColor = formatDataColor(links.concat(data.results), colorGroups);
       setLinks(dataWithColor);
     }
 
@@ -193,18 +186,14 @@ export default function ShareLinks() {
       setPage(page + 1);
       getLinks(
         {
-          sharedBy: sharedBy
-            ? sharedBy.map((item) => item.value).join(",")
-            : "",
-          sharedWith: sharedWith
-            ? sharedWith.map((item) => item.value).join(",")
-            : "",
+          sharedBy: sharedBy ? sharedBy.map((item) => item.value).join(",") : "",
+          sharedWith: sharedWith ? sharedWith.map((item) => item.value).join(",") : "",
           type: type ? type.map((item) => item.value).join(",") : "",
           status: status ? status?.value : "",
           page: page + 1,
           ...sortData,
         },
-        false
+        false,
       );
     }
   };
@@ -254,9 +243,7 @@ export default function ShareLinks() {
     setNextPage(-1);
     getLinks({
       sharedBy: sharedBy ? sharedBy.map((item) => item.value).join(",") : "",
-      sharedWith: sharedWith
-        ? sharedWith.map((item) => item.value).join(",")
-        : "",
+      sharedWith: sharedWith ? sharedWith.map((item) => item.value).join(",") : "",
       type: type ? type.map((item) => item.value).join(",") : "",
       status: status ? status?.value : "",
       page: 1,
@@ -269,9 +256,7 @@ export default function ShareLinks() {
     if (links.length > 0) {
       getLinks({
         sharedBy: sharedBy ? sharedBy.map((item) => item.value).join(",") : "",
-        sharedWith: sharedWith
-          ? sharedWith.map((item) => item.value).join(",")
-          : "",
+        sharedWith: sharedWith ? sharedWith.map((item) => item.value).join(",") : "",
         type: type ? type.map((item) => item.value).join(",") : "",
         status: status ? status?.value : "",
         page: 1,
@@ -340,19 +325,11 @@ export default function ShareLinks() {
             </div>
           </div>
         </div>
-        {links.length === 0 && (
-          <div className={"row align-center justify-content-center m-t-30"}>
-            No data
-          </div>
-        )}
+        {links.length === 0 && <div className={"row align-center justify-content-center m-t-30"}>No data</div>}
         {links.length > 0 && (
-          <div
-            className={`row align-center ${styles["row-heading"]} ${styles.desktop} font-weight-600`}
-          >
+          <div className={`row align-center ${styles["row-heading"]} ${styles.desktop} font-weight-600`}>
             <div
-              className={
-                "col-10 col-sm-100 cursor-pointer d-flex align-items-center"
-              }
+              className={"col-10 col-sm-100 cursor-pointer d-flex align-items-center"}
               onClick={() => {
                 sort("createdAt", sortData.sortType === "asc" ? "desc" : "asc");
               }}
@@ -363,19 +340,13 @@ export default function ShareLinks() {
                 className={`
                           ${styles["sort-icon"]} 
                           ${styles["drop-down-icon"]} 
-                          ${
-                            sortData.sortField === "createdAt"
-                              ? styles["sort-icon-active"]
-                              : ""
-                          } 
+                          ${sortData.sortField === "createdAt" ? styles["sort-icon-active"] : ""} 
                           ${sortData.sortType === "asc" ? "" : styles.desc}
                         `}
               />
             </div>
             <div
-              className={
-                "col-10 col-sm-100 cursor-pointer d-flex justify-content-center align-items-center"
-              }
+              className={"col-10 col-sm-100 cursor-pointer d-flex justify-content-center align-items-center"}
               onClick={() => {
                 sort("name", getSortType("name"));
               }}
@@ -383,9 +354,7 @@ export default function ShareLinks() {
               <span className={"font-12"}>Name</span>
             </div>
             <div
-              className={
-                "col-10 col-sm-100 cursor-pointer d-flex justify-content-center align-items-center"
-              }
+              className={"col-10 col-sm-100 cursor-pointer d-flex justify-content-center align-items-center"}
               onClick={() => {
                 sort("type", getSortType("type"));
               }}
@@ -393,9 +362,7 @@ export default function ShareLinks() {
               <span className={"font-12"}>Type</span>
             </div>
             <div
-              className={
-                "col-15 col-sm-100 cursor-pointer d-flex justify-content-center align-items-center"
-              }
+              className={"col-15 col-sm-100 cursor-pointer d-flex justify-content-center align-items-center"}
               onClick={() => {
                 sort("user.name", getSortType("user.name"));
               }}
@@ -403,9 +370,7 @@ export default function ShareLinks() {
               <span className={"font-12"}>Shared By</span>
             </div>
             <div
-              className={
-                "col-25 col-sm-100 justify-content-center cursor-pointer d-flex align-items-center"
-              }
+              className={"col-25 col-sm-100 justify-content-center cursor-pointer d-flex align-items-center"}
               onClick={() => {
                 sort("sharedLink", getSortType("sharedLink"));
               }}
@@ -413,9 +378,7 @@ export default function ShareLinks() {
               <span className={"font-12"}>Link</span>
             </div>
             <div
-              className={
-                "col-10 col-sm-100 cursor-pointer d-flex justify-content-center align-items-center"
-              }
+              className={"col-10 col-sm-100 cursor-pointer d-flex justify-content-center align-items-center"}
               onClick={() => {
                 sort("sharedCount", getSortType("sharedCount"));
               }}
@@ -423,9 +386,7 @@ export default function ShareLinks() {
               <span className={"font-12"}>Shared With</span>
             </div>
             <div
-              className={
-                "col-15 col-sm-100 cursor-pointer d-flex justify-content-center align-items-center"
-              }
+              className={"col-15 col-sm-100 cursor-pointer d-flex justify-content-center align-items-center"}
               onClick={() => {
                 sort("expiredAt", getSortType("expiredAt"));
               }}
@@ -436,11 +397,7 @@ export default function ShareLinks() {
                 className={`
                           ${styles["sort-icon"]} 
                           ${styles["drop-down-icon"]} 
-                          ${
-                            sortData.sortField === "expiredAt"
-                              ? styles["sort-icon-active"]
-                              : ""
-                          } 
+                          ${sortData.sortField === "expiredAt" ? styles["sort-icon-active"] : ""} 
                           ${sortData.sortType === "asc" ? "" : styles.desc}
                         `}
               />
@@ -448,61 +405,29 @@ export default function ShareLinks() {
             <div className={"col-5"}></div>
           </div>
         )}
-        <div
-          className={`row align-center ${styles["row-heading"]} ${styles.mobile} font-weight-600`}
-        >
-          Image Name
-        </div>
+        <div className={`row align-center ${styles["row-heading"]} ${styles.mobile} font-weight-600`}>Image Name</div>
         <div className={styles.desktop}>
           {links.map((link, index) => {
             return (
-              <div
-                className={`row align-center ${styles["data-row"]}`}
-                key={index}
-              >
+              <div className={`row align-center ${styles["data-row"]}`} key={index}>
                 <div className={"col-10 d-flex align-items-center col-sm-100"}>
-                  <span className={"font-12"}>
-                    {moment(link.createdAt).format("MM/DD/YY")}
-                  </span>
+                  <span className={"font-12"}>{moment(link.createdAt).format("MM/DD/YY")}</span>
                 </div>
-                <div
-                  className={
-                    "col-10 d-flex justify-content-center align-items-center col-sm-100"
-                  }
-                >
-                  <span
-                    style={{ backgroundColor: link.color }}
-                    className={`${styles["name-tag"]} font-12`}
-                  >
+                <div className={"col-10 d-flex justify-content-center align-items-center col-sm-100"}>
+                  <span style={{ backgroundColor: link.color }} className={`${styles["name-tag"]} font-12`}>
                     {link.name || "None"}
                   </span>
                 </div>
-                <div
-                  className={
-                    "col-10 d-flex justify-content-center align-items-center col-sm-100 word-break-text"
-                  }
-                >
+                <div className={"col-10 d-flex justify-content-center align-items-center col-sm-100 word-break-text"}>
                   <span className={`${styles["name-tag"]} font-12`}>
                     {parseTypeName(link.type, link.singleSharedCollectionId)}
                   </span>
                 </div>
-                <div
-                  className={
-                    "col-15 d-flex justify-content-center align-items-center col-sm-100"
-                  }
-                >
-                  <UserPhoto
-                    photoUrl={link.user.profilePhoto || ""}
-                    extraClass={styles.profile}
-                    sizePx={35}
-                  />
+                <div className={"col-15 d-flex justify-content-center align-items-center col-sm-100"}>
+                  <UserPhoto photoUrl={link.user.profilePhoto || ""} extraClass={styles.profile} sizePx={35} />
                   <span className={"m-l-15 font-12"}>{link.user.name}</span>
                 </div>
-                <div
-                  className={
-                    "col-25 d-flex justify-content-center align-items-center word-break-text col-sm-100"
-                  }
-                >
+                <div className={"col-25 d-flex justify-content-center align-items-center word-break-text col-sm-100"}>
                   <div className={styles.linkWrapper}>
                     <span className={"font-12"}>
                       {link.type === "folder"
@@ -511,57 +436,43 @@ export default function ShareLinks() {
                           : link.sharedLink
                         : link.sharedLink}
                     </span>
-                    <IconClickable
-                      additionalClass={`${styles["action-button"]} ${styles["copy-icon"]}  m-l-15 cursor-pointer`}
-                      src={AssetOps[`copy${""}`]}
-                      tooltipText={"Copy"}
-                      tooltipId={"Copy"}
-                      onClick={() => {
-                        copy(
-                          link.type === "folder"
-                            ? !link.team.advancedCollectionShareLink
-                              ? `${process.env.CLIENT_BASE_URL}/collections/${link.collectionLink}`
-                              : link.sharedLink
-                            : link.sharedLink
-                        );
-                        toastUtils.bottomSuccess("Link copied");
-                      }}
-                    />
+                    <div className={`${styles["copy-icon"]}  m-l-15`}>
+                      <IconClickable
+                        additionalClass={`${styles["action-button"]} ${styles["copy-icon"]} cursor-pointer`}
+                        SVGElement={AssetOps.copy}
+                        tooltipText={"Copy"}
+                        tooltipId={"Copy"}
+                        onClick={() => {
+                          copy(
+                            link.type === "folder"
+                              ? !link.team.advancedCollectionShareLink
+                                ? `${process.env.CLIENT_BASE_URL}/collections/${link.collectionLink}`
+                                : link.sharedLink
+                              : link.sharedLink,
+                          );
+                          toastUtils.bottomSuccess("Link copied");
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
-                <div
-                  className={
-                    "col-10 d-flex justify-content-center align-items-center col-sm-100"
-                  }
-                >
-                  <img
-                    src={ItemFields.member}
-                    alt="member icon"
-                    className={styles.sharedIconimg}
-                  />
-                  <span className={"m-l-15 font-weight-400 font-14"}>
-                    {link.sharedCount}
-                  </span>
+                <div className={"col-10 d-flex justify-content-center align-items-center col-sm-100"}>
+                  <ItemFields.member className={styles.sharedIconimg} />
+                  {/**
+                   * TODO merge conflict
+                   */}
+                  {/* <img src={ItemFields.member} alt="member icon" className={styles.sharedIconimg} /> */}
+                  <span className={"m-l-15 font-weight-400 font-14"}>{link.sharedCount}</span>
                 </div>
-                <div
-                  className={
-                    "col-15 d-flex justify-content-center align-items-center col-sm-100"
-                  }
-                >
+                <div className={"col-15 d-flex justify-content-center align-items-center col-sm-100"}>
                   <span className={"font-12"}>
-                    {link.expiredAt && link.expired
-                      ? moment(link.expiredAt).format("MM/DD/YY")
-                      : "None"}
+                    {link.expiredAt && link.expired ? moment(link.expiredAt).format("MM/DD/YY") : "None"}
                   </span>
                 </div>
-                <div
-                  className={
-                    "col-5 d-flex justify-content-center align-items-center col-sm-100"
-                  }
-                >
+                <div className={"col-5 d-flex justify-content-center align-items-center col-sm-100"}>
                   <IconClickable
                     additionalClass={`${styles["action-button"]} ${styles["edit-btn"]}`}
-                    src={AssetOps[`edit`]}
+                    SVGElement={AssetOps[`edit`]}
                     tooltipText={"Edit"}
                     tooltipId={"Edit"}
                     onClick={() => {
@@ -572,7 +483,7 @@ export default function ShareLinks() {
                   />
                   <IconClickable
                     additionalClass={`${styles["action-button"]} ${styles["delete-btn"]} m-l-10`}
-                    src={AssetOps[`delete`]}
+                    SVGElement={AssetOps[`delete`]}
                     tooltipText={"Delete"}
                     tooltipId={"Delete"}
                     onClick={() => {
@@ -590,19 +501,11 @@ export default function ShareLinks() {
             return (
               <div className={`row ${styles["data-row"]}`} key={index}>
                 <div className="d-flex align-items-center">
-                  <div
-                    className={`${styles["file-name}"]} font-14 font-weight-600`}
-                  >
-                    {link.name || "None"}
-                  </div>
-                  <div
-                    className={
-                      "d-flex justify-content-center align-items-center m-l-10"
-                    }
-                  >
+                  <div className={`${styles["file-name}"]} font-14 font-weight-600`}>{link.name || "None"}</div>
+                  <div className={"d-flex justify-content-center align-items-center m-l-10"}>
                     <IconClickable
                       additionalClass={styles["action-button"]}
-                      src={AssetOps[`edit`]}
+                      SVGElement={AssetOps[`edit`]}
                       tooltipText={"Edit"}
                       tooltipId={"Edit"}
                       onClick={() => {
@@ -613,7 +516,7 @@ export default function ShareLinks() {
                     />
                     <IconClickable
                       additionalClass={`${styles["action-button"]} m-l-10`}
-                      src={AssetOps[`delete`]}
+                      SVGElement={AssetOps[`delete`]}
                       tooltipText={"Delete"}
                       tooltipId={"Delete"}
                       onClick={() => {
@@ -625,21 +528,15 @@ export default function ShareLinks() {
                 </div>
                 <div className={"row align-items-center gap-10"}>
                   <div className="d-flex align-items-center">
-                    <UserPhoto
-                      photoUrl={link.user.profilePhoto || ""}
-                      extraClass={styles.profile}
-                      sizePx={19}
-                    />
+                    <UserPhoto photoUrl={link.user.profilePhoto || ""} extraClass={styles.profile} sizePx={19} />
                     <span className={"m-l-10 font-12"}>{link.user.name}</span>
                   </div>
-                  <span className={"font-12"}>
-                    Date Created: {moment(link.createdAt).format("MM/DD/YY")}
-                  </span>
+                  <span className={"font-12"}>Date Created: {moment(link.createdAt).format("MM/DD/YY")}</span>
                   <div className={"d-flex align-items-center"}>
                     <span className={"font-12"}>Copy Link</span>
                     <IconClickable
                       additionalClass={`${styles["action-button"]} m-l-10 cursor-pointer`}
-                      src={AssetOps[`copy${""}`]}
+                      SVGElement={AssetOps.copy}
                       tooltipText={"Copy"}
                       tooltipId={"Copy"}
                       onClick={() => {
@@ -648,32 +545,21 @@ export default function ShareLinks() {
                             ? !link.team.advancedCollectionShareLink
                               ? `${process.env.CLIENT_BASE_URL}/collections/${link.collectionLink}`
                               : link.sharedLink
-                            : link.sharedLink
+                            : link.sharedLink,
                         );
                         toastUtils.bottomSuccess("Link copied");
                       }}
                     />
                   </div>
-                  <span className={`font-12`}>
-                    Type:{" "}
-                    {parseTypeName(link.type, link.singleSharedCollectionId)}
-                  </span>
+                  <span className={`font-12`}>Type: {parseTypeName(link.type, link.singleSharedCollectionId)}</span>
                   <span className={"font-12"}>
                     Expiration Date:{" "}
-                    {link.expiredAt && link.expired
-                      ? moment(link.expiredAt).format("MM/DD/YY")
-                      : "None"}
+                    {link.expiredAt && link.expired ? moment(link.expiredAt).format("MM/DD/YY") : "None"}
                   </span>
                   <div className={"d-flex align-items-center"}>
                     <span className={"font-12"}>shared with:</span>
-                    <img
-                      src={ItemFields.member}
-                      alt="member icon"
-                      width={`10px`}
-                    />
-                    <span className={"m-l-10 font-weight-400 font-14"}>
-                      {link.sharedCount}
-                    </span>
+                    <ItemFields.member alt="member icon" width={`10px`} />
+                    <span className={"m-l-10 font-weight-400 font-14"}>{link.sharedCount}</span>
                   </div>
                 </div>
               </div>
@@ -702,7 +588,7 @@ export default function ShareLinks() {
               setShowEditModal(false);
             }}
             shareAssets={updateLink}
-            getShareLink={() => {}}
+            getShareLink={() => { }}
             currentShareLink={currentLink}
             title={"Update shared link"}
           />
@@ -714,7 +600,7 @@ export default function ShareLinks() {
               setShowEditModal(false);
             }}
             shareAssets={updateLink}
-            getShareLink={() => {}}
+            getShareLink={() => { }}
             currentShareLink={currentLink}
             title={"Update shared link"}
           />

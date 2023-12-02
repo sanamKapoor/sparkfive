@@ -1,5 +1,5 @@
 .header {
-  background-color: var(--color-prim-navy);
+  background-color: var(--header-navigation-color);
   padding: 20px 40px;
   display: flex;
   position: fixed;
@@ -124,5 +124,11 @@
     right: 0;
     display: flex;
     justify-content: center;
+  }
+}
+
+@media (max-width:420px){
+  .menu-dropdown{
+    display: none;
   }
 }

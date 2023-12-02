@@ -13,7 +13,7 @@ import styles from "./index.module.css";
 const SearchOverlayAssets = ({
   closeOverlay,
   importEnabled = false,
-  importAssets = () => {},
+  importAssets = () => { },
   sharePath = "",
   activeFolder = "",
   isFolder,
@@ -122,7 +122,7 @@ const SearchOverlayAssets = ({
 
   //TODO: we can have an enum for these modes and use that all over the app to ensure consistency
   const isSubCollectionMode =
-    mode === "SubCollectionView" ? "Sub Collections" : "assets";
+    mode === "SubCollectionView" ? "Subcollections" : "assets";
 
   const searchText = mode === "folders" ? "Collections" : isSubCollectionMode;
 
@@ -145,7 +145,7 @@ const SearchOverlayAssets = ({
                 <img src={Utilities.filterGray} alt={"filter"} />
               </div>
             )}
-            {!sharePath && (
+            {(
               <div className={"search-close"} onClick={closeSearchModal}>
                 <img src={Utilities.grayClose} alt={"close"} />
               </div>

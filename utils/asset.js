@@ -121,13 +121,7 @@ export const getParsedExtension = (extension) => {
   }
 };
 
-export const getAssetsFilters = ({
-  replace,
-  userFilterObject,
-  activeFolder = "",
-  addedIds,
-  nextPage,
-}) => {
+export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = "", addedIds, nextPage }) => {
   const filters = {};
   const {
     mainFilter,
@@ -262,53 +256,40 @@ export const getAssetsFilters = ({
   //TODO: don't use
   if (fileModifiedBeginDate && fileModifiedEndDate) {
     // a range in different day
-    if (
-      fileModifiedBeginDate.toDateString() !==
-      fileModifiedEndDate.toDateString()
-    ) {
+    if (fileModifiedBeginDate.toDateString() !== fileModifiedEndDate.toDateString()) {
       if (fileModifiedBeginDate) {
         const d = new Date(fileModifiedBeginDate);
         const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate());
 
-        filters.fileModifiedBeginDate = new Date(
-          newDate.toUTCString()
-        ).toISOString();
+        filters.fileModifiedBeginDate = new Date(newDate.toUTCString()).toISOString();
       }
 
       if (fileModifiedEndDate) {
         const d = new Date(fileModifiedEndDate);
         const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate());
 
-        filters.fileModifiedEndDate = new Date(
-          newDate.toUTCString()
-        ).toISOString();
+        filters.fileModifiedEndDate = new Date(newDate.toUTCString()).toISOString();
       }
     } else {
       // Same date
       const d = new Date(fileModifiedBeginDate);
       const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate());
 
-      filters.fileModifiedBeginDate = new Date(
-        newDate.toUTCString()
-      ).toISOString();
+      filters.fileModifiedBeginDate = new Date(newDate.toUTCString()).toISOString();
     }
   } else {
     if (fileModifiedBeginDate) {
       const d = new Date(fileModifiedBeginDate);
       const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate());
 
-      filters.fileModifiedBeginDate = new Date(
-        newDate.toUTCString()
-      ).toISOString();
+      filters.fileModifiedBeginDate = new Date(newDate.toUTCString()).toISOString();
     }
 
     if (fileModifiedEndDate) {
       const d = new Date(fileModifiedEndDate);
       const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate());
 
-      filters.fileModifiedEndDate = new Date(
-        newDate.toUTCString()
-      ).toISOString();
+      filters.fileModifiedEndDate = new Date(newDate.toUTCString()).toISOString();
     }
   }
 
@@ -364,29 +345,25 @@ export const getAssetsFilters = ({
   }
 
   if (filterProductType && filterProductFields?.length > 0) {
-    filters.productFields = filterProductFields
-      .map((item) => item.value)
-      .join(",");
+    filters.productFields = filterProductFields.map((item) => item.value).join(",");
   }
 
   if (filterProductSku && filterProductSku.length > 0) {
-    filters.filterProductSku = filterProductSku
-      .map((item) => item.sku)
-      .join(",");
+    filters.filterProductSku = filterProductSku.map((item) => item.sku).join(",");
   }
 
-  if (
-    (filterNonAiTags && filterNonAiTags.length > 0 && allNonAiTags) ||
-    allNonAiTags === "none"
-  )
+  if ((filterNonAiTags && filterNonAiTags.length > 0 && allNonAiTags) || allNonAiTags === "none")
     filters.allNonAiTags = allNonAiTags;
 
-  if (filterAiTags && filterAiTags.length > 0 && allAiTags)
-    filters.allAiTags = allAiTags;
-  if (filterCampaigns?.length > 0 && allCampaigns)
-    filters.allCampaigns = allCampaigns;
+  if (filterAiTags && filterAiTags.length > 0 && allAiTags) filters.allAiTags = allAiTags;
+  if (filterCampaigns?.length > 0 && allCampaigns) filters.allCampaigns = allCampaigns;
 
   filters.page = replace ? 1 : nextPage;
+
+  if (userFilterObject.usageType) {
+    filters.usageType = userFilterObject.usageType;
+  }
+
   return filters;
 };
 
@@ -427,13 +404,7 @@ const addFilterToQuery = (filters, filterItems, key, valueKey = "value") => {
   }
 };
 
-const addFilterTagsToQuery = (
-  filters,
-  filterItems1,
-  filterItems2,
-  key,
-  valueKey = "value"
-) => {
+const addFilterTagsToQuery = (filters, filterItems1, filterItems2, key, valueKey = "value") => {
   const items = [];
   if (filterItems1?.length > 0) {
     items.push(...filterItems1.map((item) => item[valueKey]));

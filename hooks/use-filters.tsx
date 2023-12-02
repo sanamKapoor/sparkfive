@@ -221,6 +221,8 @@ const useFilters = (attributes) => {
   const fetchValuesById = async (id: string) => {
     let values: IFilterAttributeValues = [];
     setLoading(true);
+    console.log({ id });
+    
     try {
       switch (id) {
         case FilterAttributeVariants.TAGS:
@@ -295,11 +297,10 @@ const useFilters = (attributes) => {
   };
 
   const onAttributeClick = async (data: IAttribute) => {
-    const values = await fetchValuesById(data.id);
-
+    setActiveAttribute(data);
+    const values = await fetchValuesById(data.id);    
     setValues(values);
     setFilteredOptions(values);
-    setActiveAttribute(data);
   };
 
   const fetchTags = async (params?: Record<string, unknown>) => {

@@ -51,7 +51,7 @@
   align-items: center;
 }
 .clickable{
-  padding: 7.5px 0 7.5px 5px;
+  padding: 7.5px 0 7.5px 2px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -100,7 +100,6 @@
   display: flex;
 }
 .rightIcon {
-  margin-right: 5px;
   transform: rotate(0deg);
   width: 11px;
   cursor: pointer;
@@ -245,8 +244,8 @@
   align-items: center;
 }
 .emptyBox{
-  width: 24px;
-  height:24px;
+  width: 10px;
+  height:10px;
 }
 .collectionHeading{
 

@@ -145,7 +145,7 @@ const MoveReplaceModal = ({
                 >
                   <img
                     className={showDropdown.includes(folder.id) ? styles.iconClick : styles.rightIcon}
-                    src={Utilities.arrowBlue}
+                    src={Utilities.caretRightSolid}
                     alt="Right Arrow Icon"
                     onClick={() => { toggleDropdown(folder.id, true) }}
                   />
@@ -242,15 +242,24 @@ const MoveReplaceModal = ({
             </div>
             }
           </div>
+          //TODO Check the svg element in the ICONCLICABLE Conflict issue
+          // <ul className={styles.list}>
+          //   {folders.map((folder) => (
+          //     <li key={folder.id} onClick={() => toggleSelected(folder.id, !selectedFolder.includes(folder.id))}>
+          //       {selectedFolder.includes(folder.id) ? (
+          //         <IconClickable src={Utilities.radioButtonEnabled} additionalClass={styles["select-icon"]} />
+          //       ) : (
+          //         <IconClickable src={Utilities.radioButtonNormal} additionalClass={styles["select-icon"]} />
+          //       )}
+          //       <IconClickable SVGElement={Assets.folder} />
+          //       <div className={styles.name}>{folder.name}</div>
+          //     </li>
         ))}
       </div>
       <div className={styles["folder-wrapper"]}>
         {folderInputActive ? (
           <form onSubmit={onSubmit}>
-            <div
-              className={styles["create-new"]}
-              onClick={() => setFolderInputActive(false)}
-            >
+            <div className={styles["create-new"]} onClick={() => setFolderInputActive(false)}>
               X
             </div>
             <Input
@@ -267,10 +276,7 @@ const MoveReplaceModal = ({
             />
           </form>
         ) : (
-          <span
-            onClick={() => setFolderInputActive(true)}
-            className={styles["create-new"]}
-          >
+          <span onClick={() => setFolderInputActive(true)} className={styles["create-new"]}>
             + Create New Collection
           </span>
         )}

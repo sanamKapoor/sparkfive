@@ -85,7 +85,7 @@
 }
 
 .task {
-  background-color: var(--color-sec-lightblue);
+  background-color: var(--additional-color);
 }
 
 .social {
@@ -101,7 +101,7 @@
 }
 
 .banners {
-  background-color: var(--color-sec-lightblue);
+  background-color: var(--additional-color);
 }
 
 .email {

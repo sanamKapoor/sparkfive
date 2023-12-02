@@ -123,7 +123,9 @@ const ResolutionFilter: React.FC<ResolutionFilterProps> = ({
         <span>{highResLabel}</span>
       </div>
       <div className={styles["outer-wrapper"]}>
-        {options?.map((item) =>
+        {(options?.length === 0) ? (
+        <p>No Results Found.</p>
+      ) : options?.map((item) =>
           item.dpi === "highres" ? null : (
             <div className={styles["grid-item"]} key={item.dpi}>
               <OptionDataItem

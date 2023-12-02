@@ -26,5 +26,9 @@
   /* for list view  */
   
   .edit-icon{
-    width: 15px;
+    width: 16px;
+  }
+
+  svg.thumbnailDots {
+    width: 16px;
   }

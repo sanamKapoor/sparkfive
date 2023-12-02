@@ -1,0 +1,149 @@
+.dropdown-wrapper {
+    z-index: 1400;
+    background-color: white;
+    border: 1px solid var(--color-secondary-border);
+    border-radius: 8px;
+    position: absolute;
+    left: 0;
+    top: 1px;
+    width: 564px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.save-btn{
+    padding: 11px 24px;
+    width: 137px;
+    text-align: center;
+    color: white;
+    border-radius: 4px;
+    background: var(--secondary-color);
+    cursor: pointer;
+}
+
+.input-container{
+    margin-right: 0;
+}
+
+.search-input-container{
+    margin-right: 0;
+    width: 100%
+}
+
+.search-input-container input{
+   width: 100% !important;
+    border:none;
+}
+
+.search-input{
+    margin-right: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.tab{
+    display: flex;
+    color: var(--primary-color);
+    font-size: 14px;
+    line-height: 18px;
+}
+
+.tab li{
+    margin-right: 24px;
+    padding: 12px 0;
+}
+
+.header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    border-bottom: solid 1px #dddad4;
+}
+
+.close-btn{
+    cursor: pointer;
+}
+
+.close-btn-mobile{
+    cursor: pointer;
+    display: none
+}
+
+.content{
+    padding: 16px;
+}
+
+.icon{
+    width: 18px;
+    height: auto;
+    margin-right: 8px;
+}
+
+.nav-item{
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.nav-item-selected{
+    border-bottom: 2px solid var(--secondary-color);
+
+}
+
+.mobile-header{
+    color: var(--primary-color);
+    font-weight: 700;
+    padding: 16px;
+    text-align: center;
+    border-bottom: solid 1px #dddad4;
+    display: none;
+    position: relative;
+}
+
+.loading{
+    text-align: center;
+    padding: 24px 0;
+}
+
+.drive-upload{
+    display: flex;
+    align-items: center;
+}
+
+@media screen and (max-width: 600px) {
+    .dropdown-wrapper {
+        position: fixed;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 20%;
+        width: calc(100% - 32px);
+    }
+
+    .mobile-header{
+        display: block;
+    }
+
+    .close-btn{
+     display: none;
+    }
+
+    .close-btn-mobile{
+        display: block;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 16px;
+    }
+
+    .save-btn{
+        width: 100%
+    }
+
+    .nav-item{
+        font-size: 12px;
+    }
+
+    .icon{
+        width: 16px;
+    }
+}

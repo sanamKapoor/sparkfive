@@ -51,21 +51,13 @@ const ItemSublayout = ({
           <div className={styles[layout]}>
             <Button
               text="Details"
-              className={
-                activeMain === "details"
-                  ? "section-container section-active"
-                  : "section-container"
-              }
+              className={activeMain === "details" ? "section-container section-active" : "section-container"}
               onClick={() => setActiveMain("details")}
             />
             {hasAssets && hasPermission([ASSET_ACCESS]) && (
               <Button
                 text="Assets"
-                className={
-                  activeMain === "assets"
-                    ? "section-container section-active"
-                    : "section-container"
-                }
+                className={activeMain === "assets" ? "section-container section-active" : "section-container"}
                 onClick={() => setActiveMain("assets")}
               />
             )}
@@ -73,15 +65,11 @@ const ItemSublayout = ({
         </div>
         <div className={styles.children}>
           {activeMain === "details" && <>{children}</>}
-          {activeMain === "assets" && (
-            <ItemAssets type={type} itemId={itemId} />
-          )}
+          {activeMain === "assets" && <ItemAssets type={type} itemId={itemId} />}
         </div>
       </div>
 
-      {SideComponent && sideOpen && (
-        <div className={styles["side-component"]}>{SideComponent}</div>
-      )}
+      {SideComponent && sideOpen && <div className={styles["side-component"]}>{SideComponent}</div>}
 
       <div className={styles["side-bar"]}>
         {navElements.length > 0 && (
@@ -96,11 +84,7 @@ const ItemSublayout = ({
             <div className={styles.separator}></div>
             <div className={styles.elements}>
               {navElements.map((navElement, index) => (
-                <img
-                  key={index}
-                  src={navElement.icon}
-                  onClick={navElement.onClick}
-                />
+                <img key={index} src={navElement.icon} onClick={navElement.onClick} />
               ))}
             </div>
             <div className={styles.separator}></div>
@@ -110,7 +94,7 @@ const ItemSublayout = ({
           wrapperClass={styles.more}
           Wrapper={({ children }) => (
             <>
-              <img src={Utilities.moreLight} />
+              <Utilities.moreLight />
               {children}
             </>
           )}
@@ -141,8 +125,7 @@ const ItemSublayout = ({
         confirmText={"Delete"}
         message={
           <span>
-            Are you sure you want to &nbsp;<strong>Delete</strong>&nbsp; this{" "}
-            {type}?
+            Are you sure you want to &nbsp;<strong>Delete</strong>&nbsp; this {type}?
           </span>
         }
         modalIsOpen={modalOpen}

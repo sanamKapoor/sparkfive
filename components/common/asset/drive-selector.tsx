@@ -3,12 +3,7 @@ import toastUtils from "../../../utils/toast";
 
 import cookiesUtils from "../../../utils/cookies";
 
-const DriveSelector = ({
-  children,
-  onFilesSelect,
-  multiSelect = true,
-  folderSelect = true,
-}) => {
+const DriveSelector = ({ children, onFilesSelect, multiSelect = true, folderSelect = true }) => {
   const selectDriveFiles = (data) => {
     if (data.action === "picked") {
       onFilesSelect(data.docs);
@@ -19,17 +14,12 @@ const DriveSelector = ({
     <GooglePicker
       clientId={process.env.GOOGLE_CLIENT_ID}
       developerKey={process.env.GOOGLE_DEVELOPER_KEY}
-      scope={[
-        "https://www.googleapis.com/auth/drive",
-        "https://www.googleapis.com/auth/drive.readonly",
-      ]}
+      scope={["https://www.googleapis.com/auth/drive", "https://www.googleapis.com/auth/drive.readonly"]}
       onChange={selectDriveFiles}
       onAuthenticate={(token) => cookiesUtils.set("gdriveToken", token)}
       onAuthFailed={(error) => {
         if (error.error === "popup_closed_by_user") return;
-        toastUtils.error(
-          `Could not get google drive data, please try again alter`
-        );
+        toastUtils.error(`Could not get google drive data, please try again alter`);
         console.log(error);
       }}
       multiselect={multiSelect}

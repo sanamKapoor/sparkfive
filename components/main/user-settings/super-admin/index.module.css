@@ -39,7 +39,7 @@
 
 }
 
-.back img {
+.back img, .back svg {
   margin-right: 0.5rem;
   width: 16px;
   height: 16px;

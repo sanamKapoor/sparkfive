@@ -3,10 +3,7 @@ import { useRouter } from "next/router";
 import React, { useContext, useEffect, useRef, useState } from "react";
 
 import { validation } from "../../../constants/file-validation";
-import {
-  ASSET_ACCESS,
-  ASSET_UPLOAD_APPROVAL,
-} from "../../../constants/permissions";
+import { ASSET_ACCESS, ASSET_UPLOAD_APPROVAL } from "../../../constants/permissions";
 import { AssetContext, FilterContext, UserContext } from "../../../context";
 import assetApi from "../../../server-api/asset";
 import folderApi from "../../../server-api/folder";
@@ -231,7 +228,13 @@ const AssetsLibrary = () => {
       }
       if (firstLoaded) {
         setActivePageMode("library");
-        if (activeSortFilter.mainFilter === "folders") {
+
+        if (
+          activeSortFilter.mainFilter === "folders" &&
+          !router.query.tag &&
+          !router.query.campaign &&
+          !router.query.product
+        ) {
           setActiveMode("folders");
           getFolders();
         } else if (
@@ -322,11 +325,12 @@ const AssetsLibrary = () => {
     return () => clearTimeout(timer);
   }, [loadingAssets]);
 
-  const clearFilters = () => {
+  const clearFilters = (data = {}) => {
     setActiveSortFilter({
       ...activeSortFilter,
       ...DEFAULT_FILTERS,
       ...DEFAULT_CUSTOM_FIELD_FILTERS(activeSortFilter),
+      ...data,
     });
   };
 
@@ -341,15 +345,9 @@ const AssetsLibrary = () => {
 
     let sort = { ...activeSortFilter.sort };
     if (defaultTab === "folders" && !params.folderId) {
-      sort =
-        advancedConfig.collectionSortView === "alphabetical"
-          ? selectOptions.sort[3]
-          : selectOptions.sort[1];
+      sort = advancedConfig.collectionSortView === "alphabetical" ? selectOptions.sort[3] : selectOptions.sort[1];
     } else {
-      sort =
-        advancedConfig.assetSortView === "newest"
-          ? selectOptions.sort[1]
-          : selectOptions.sort[3];
+      sort = advancedConfig.assetSortView === "newest" ? selectOptions.sort[1] : selectOptions.sort[3];
     }
 
     setActiveSortFilter({
@@ -361,8 +359,7 @@ const AssetsLibrary = () => {
 
   const getDefaultTab = (advConf: any = null) => {
     const config = advConf || advancedConfig;
-    const defaultTab =
-      config.defaultLandingPage === "allTab" ? "all" : "folders";
+    const defaultTab = config.defaultLandingPage === "allTab" ? "all" : "folders";
     return defaultTab;
   };
 
@@ -374,7 +371,7 @@ const AssetsLibrary = () => {
     totalSize: number,
     folderId,
     folderGroup = {},
-    subFolderAutoTag = true
+    subFolderAutoTag = true,
   ) => {
     try {
       const formData = new FormData();
@@ -400,9 +397,7 @@ const AssetsLibrary = () => {
         setUploadingAssets(updatedAssets);
 
         // Remove current asset from asset placeholder
-        let newAssetPlaceholder = updatedAssets.filter(
-          (asset) => asset.status !== "fail"
-        );
+        let newAssetPlaceholder = updatedAssets.filter((asset) => asset.status !== "fail");
 
         // At this point, file place holder will be removed
         setAssets([...newAssetPlaceholder, ...currentDataClone]);
@@ -412,15 +407,7 @@ const AssetsLibrary = () => {
           return folderGroup;
         } else {
           // Keep going
-          await uploadAsset(
-            i + 1,
-            updatedAssets,
-            currentDataClone,
-            totalSize,
-            folderId,
-            folderGroup,
-            subFolderAutoTag
-          );
+          await uploadAsset(i + 1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, subFolderAutoTag);
         }
       } else {
         // Show uploading toast
@@ -431,10 +418,7 @@ const AssetsLibrary = () => {
         // If user is uploading files in folder which is not saved from server yet
         if (assets[i].dragDropFolderUpload && !folderId) {
           // Get file group info, this returns folderKey and newName of file
-          let fileGroupInfo = getFolderKeyAndNewNameByFileName(
-            file.name,
-            subFolderAutoTag
-          );
+          let fileGroupInfo = getFolderKeyAndNewNameByFileName(file.name, subFolderAutoTag);
 
           // Current folder Group have the key
           if (fileGroupInfo.folderKey && folderGroup[fileGroupInfo.folderKey]) {
@@ -443,10 +427,7 @@ const AssetsLibrary = () => {
         }
 
         // Append file to form data
-        formData.append(
-          "asset",
-          assets[i].dragDropFolderUpload ? file : file.originalFile
-        );
+        formData.append("asset", assets[i].dragDropFolderUpload ? file : file.originalFile);
         formData.append(
           "fileModifiedAt",
           assets[i].dragDropFolderUpload
@@ -486,24 +467,15 @@ const AssetsLibrary = () => {
         }
 
         // Call API to upload
-        let { data } = await assetApi.uploadAssets(
-          formData,
-          getCreationParameters(attachedQuery)
-        );
+        let { data } = await assetApi.uploadAssets(formData, getCreationParameters(attachedQuery));
 
         // If user is uploading files in folder which is not saved from server yet
         if (assets[i].dragDropFolderUpload && !folderId) {
           // Get file group info, this returns folderKey and newName of file
-          let fileGroupInfo = getFolderKeyAndNewNameByFileName(
-            file.name,
-            subFolderAutoTag
-          );
+          let fileGroupInfo = getFolderKeyAndNewNameByFileName(file.name, subFolderAutoTag);
 
           /// If user is uploading new folder and this one still does not have folder Id, add it to folder group
-          if (
-            fileGroupInfo.folderKey &&
-            !folderGroup[fileGroupInfo.folderKey]
-          ) {
+          if (fileGroupInfo.folderKey && !folderGroup[fileGroupInfo.folderKey]) {
             folderGroup[fileGroupInfo.folderKey] = data[0].asset.folders[0];
           }
         }
@@ -520,9 +492,7 @@ const AssetsLibrary = () => {
         setAddedIds(data.map((assetItem) => assetItem.asset.id));
 
         // Mark this asset as done
-        const updatedAssets = assets.map((asset, index) =>
-          index === i ? { ...asset, status: "done" } : asset
-        );
+        const updatedAssets = assets.map((asset, index) => (index === i ? { ...asset, status: "done" } : asset));
 
         setUploadingAssets(updatedAssets);
 
@@ -534,33 +504,21 @@ const AssetsLibrary = () => {
           return folderGroup;
         } else {
           // Keep going
-          await uploadAsset(
-            i + 1,
-            updatedAssets,
-            currentDataClone,
-            totalSize,
-            folderId,
-            folderGroup,
-            subFolderAutoTag
-          );
+          await uploadAsset(i + 1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, subFolderAutoTag);
         }
       }
     } catch (e) {
       console.log(e);
       // Violate validation, mark failure
       const updatedAssets = assets.map((asset, index) =>
-        index === i
-          ? { ...asset, status: "fail", index, error: "Processing file error" }
-          : asset
+        index === i ? { ...asset, status: "fail", index, error: "Processing file error" } : asset,
       );
 
       // Update uploading assets
       setUploadingAssets(updatedAssets);
 
       // Remove current asset from asset placeholder
-      let newAssetPlaceholder = updatedAssets.filter(
-        (asset) => asset.status !== "fail"
-      );
+      let newAssetPlaceholder = updatedAssets.filter((asset) => asset.status !== "fail");
 
       // At this point, file place holder will be removed
       setAssets([...newAssetPlaceholder, ...currentDataClone]);
@@ -570,15 +528,7 @@ const AssetsLibrary = () => {
         return folderGroup;
       } else {
         // Keep going
-        await uploadAsset(
-          i + 1,
-          updatedAssets,
-          currentDataClone,
-          totalSize,
-          folderId,
-          folderGroup,
-          subFolderAutoTag
-        );
+        await uploadAsset(i + 1, updatedAssets, currentDataClone, totalSize, folderId, folderGroup, subFolderAutoTag);
       }
     }
   };
@@ -614,23 +564,12 @@ const AssetsLibrary = () => {
           if (file.originalFile.path.includes("/")) {
             dragDropFolderUpload = true;
             fileToUpload = new File(
-              [
-                file.originalFile.slice(
-                  0,
-                  file.originalFile.size,
-                  file.originalFile.type
-                ),
-              ],
-              file.originalFile.path.substring(
-                1,
-                file.originalFile.path.length
-              ),
+              [file.originalFile.slice(0, file.originalFile.size, file.originalFile.type)],
+              file.originalFile.path.substring(1, file.originalFile.path.length),
               {
                 type: file.originalFile.type,
-                lastModified:
-                  file.originalFile.lastModifiedDate ||
-                  new Date(file.originalFile.lastModified),
-              }
+                lastModified: file.originalFile.lastModifiedDate || new Date(file.originalFile.lastModified),
+              },
             );
           } else {
             fileToUpload.path = null;
@@ -682,7 +621,7 @@ const AssetsLibrary = () => {
             ? activeSubFolders
             : activeFolder,
           undefined,
-          subFolderAutoTag
+          subFolderAutoTag,
         );
 
         // Save this for retry failure files later
@@ -743,10 +682,7 @@ const AssetsLibrary = () => {
         ...getAssetsSort(activeSortFilter),
       });
 
-      setAssets(
-        { ...data, results: data.results.map(mapWithToggleSelection) },
-        replace
-      );
+      setAssets({ ...data, results: data.results.map(mapWithToggleSelection) }, replace);
       setFirstLoaded(true);
     } catch (err) {
       //TODO: Handle error
@@ -876,7 +812,7 @@ const AssetsLibrary = () => {
           [assetIndex]: {
             isSelected: { $set: !assets[assetIndex].isSelected },
           },
-        })
+        }),
       );
     } else if (activeMode === "folders") {
       const folderIndex = folders.findIndex((folder) => folder.id === id);
@@ -885,7 +821,7 @@ const AssetsLibrary = () => {
           [folderIndex]: {
             isSelected: { $set: !folders[folderIndex].isSelected },
           },
-        })
+        }),
       );
     } else if (activeMode === "SubCollectionView") {
       const assetIndex = subFoldersAssetsViewList.results.findIndex(
@@ -1058,7 +994,7 @@ const AssetsLibrary = () => {
         }
 
         appendNewSubSidenavFolders([], activeSubFolders, true, id);
-        toastUtils.success("Sub collection deleted successfully");
+        toastUtils.success("Subcollection deleted successfully");
       } else {
         const modFolderIndex = folders.findIndex(
           (folder: any) => folder.id === id
@@ -1094,15 +1030,13 @@ const AssetsLibrary = () => {
   const confirmFolderRename = async (newValue) => {
     try {
       await folderApi.updateFolder(activeFolder, { name: newValue });
-      const modFolderIndex = folders.findIndex(
-        (folder) => folder.id === activeFolder
-      );
+      const modFolderIndex = folders.findIndex((folder) => folder.id === activeFolder);
       setFolders(
         update(folders, {
           [modFolderIndex]: {
             name: { $set: newValue },
           },
-        })
+        }),
       );
       toastUtils.success("Collection name updated");
     } catch (err) {
@@ -1182,7 +1116,7 @@ const AssetsLibrary = () => {
                 >
                   <DropzoneProvider>
                     {advancedConfig.set && (
-                      <AssetGrid
+            <AssetGrid
                         activeFolder={activeFolder}
                         getFolders={getFolders}
                         getSubFolders={getSubCollectionsFolderData}
@@ -1218,10 +1152,7 @@ const AssetsLibrary = () => {
         modalIsOpen={renameModalOpen}
         renameConfirm={confirmFolderRename}
         type={"Folder"}
-        initialValue={
-          activeFolder &&
-          folders.find((folder) => folder.id === activeFolder)?.name
-        }
+        initialValue={activeFolder && folders.find((folder) => folder.id === activeFolder)?.name}
       />
       {uploadDetailOverlay && (
         <UploadStatusOverlayAssets

@@ -24,6 +24,7 @@ import "../styles/slider.css";
 import "../styles/text.css";
 import "../styles/time-picker.css";
 import "../styles/toast.css";
+import "../styles/color-picker.css";
 // Import stripe as a side effect so it helps detect fraudulent activy
 import "@stripe/stripe-js";
 import { useRouter } from "next/router";
@@ -39,6 +40,7 @@ import ShareProvider from "../context/share-provider";
 import SocketProvider from "../context/socket-provider";
 import TeamContextProvider from "../context/team-provider";
 import UserContextProvider from "../context/user-provider";
+import ErrorBoundary from "./ErrorBoumdary"
 // FB pixel
 import FBPixel from "../components/common/scripts/fb-pixel";
 
@@ -85,6 +87,7 @@ export default function MyApp({ Component, pageProps }) {
   }, [router.asPath]);
 
   return (
+
     <LoadingContextProvider>
       <UserContextProvider>
         <SocketProvider>
@@ -103,8 +106,12 @@ export default function MyApp({ Component, pageProps }) {
                         ></script>
                       </Head>
                       {process.env.INCLUDE_PIXEL === "yes" && <FBPixel />}
+                      {/**
+                       * todo handle Errorboundary design in refactoring later
+                       */}
+                      {/* <ErrorBoundary> */}
                       <Component {...pageProps} />
-
+                      {/* </ErrorBoundary> */}
                     </TeamContextProvider>
                   </AssetContextProvider>
                 </ThemeContext.Provider>
