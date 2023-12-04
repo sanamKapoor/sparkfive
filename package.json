@@ -12,7 +12,7 @@
     "@sentry/nextjs": "^6.15.0",
     "@stripe/react-stripe-js": "^1.1.0",
     "@stripe/stripe-js": "^1.2.0",
-    "axios": "^1.5.1",
+    "axios": "^0.19.2",
     "change-case": "^4.1.1",
     "chart.js": "^2.9.3",
     "clsx": "^1.1.1",
@@ -73,7 +73,7 @@
     "@types/react": "18.0.0",
     "@types/react-modal": "^3.16.0",
     "@types/react-select": "^5.0.1",
-    "typescript": "^3.8.2",
-    "prettier": "^2.8.2"
+    "prettier": "^2.8.2",
+    "typescript": "^3.8.2"
   }
 }
