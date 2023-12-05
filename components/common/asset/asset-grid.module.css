@@ -42,16 +42,16 @@
 
 @media screen and (max-width: 600px) {
   .grid-list {
-    margin-top: 85px !important;
+    margin-top: 140px !important;
   }
 
 }
 
-@media screen and (min-width: 410px) and (max-width: 809px) {
+/* @media screen and (min-width: 410px) and (max-width: 809px) {
   .grid-list {
     grid-template-columns: repeat(auto-fill, minmax(181px, 1fr));
   }
-}
+} */
 
 @media screen and (min-width: 811px) and (max-width: 1280px) {
   .grid-list {
@@ -68,17 +68,21 @@
   }
 }
 
-@media screen and (max-width: 810px) {
-  .grid-list {
-    margin-top: 145px;
-  }
-}
+
 @media screen and (max-width: 800px) {
   .grid-list{
-    margin-top: 160px !important;
+    margin-top: 145px;
     padding: 0 20px;
   }
 
+}
+
+@media (max-width:500px){
+  .uploadAsset{
+    display: flex;
+    flex-direction: column;
+  }
+  
 }
 
 

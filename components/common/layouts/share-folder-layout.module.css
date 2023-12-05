@@ -3,12 +3,13 @@
     padding: 0px 32px;
     display: flex;
     align-items: center;
-    position: sticky;
+    position: fixed;
     top: 0;
     left: 0;
     z-index: 1499;
     /* min-height: 90px; */
     border-bottom: 1px solid #DEDAD4;
+    width: 100%;
 }
 
 .logo-img {

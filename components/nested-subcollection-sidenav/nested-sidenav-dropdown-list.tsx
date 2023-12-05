@@ -194,6 +194,7 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
         totalCount={sidenavTotalCollectionCount}
         icon={undefined}
         customStyle={{cursor:'pointer'}}
+        fontSize='13px'
        
       />
       {sidenavFolderList.map((item: Item, index: number) => {

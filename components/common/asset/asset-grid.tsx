@@ -390,7 +390,7 @@ const AssetGrid = ({
 
     </div>
   
-      <section className={`${styles.container}`}>
+      <section className={`${styles.container}  ${shouldShowUpload ? styles.uploadAsset : ''}`}>
         {(shouldShowUpload || isDragging) && !isShare && !hasPermission([ASSET_UPLOAD_APPROVAL]) && (
           <AssetUpload
             onDragText={"Drop files here to upload"}

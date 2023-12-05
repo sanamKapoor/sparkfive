@@ -106,7 +106,7 @@
 
 @media (max-width: 820px) {
   .outer-wrapper {
-    margin-top: 170px;
+    margin-top: 10px;
   }
 }
 
@@ -116,11 +116,11 @@
   }
 }
 
-@media (max-width: 600px) {
+/* @media (max-width: 600px) {
   .outer-wrapper {
     margin-top: 60px;
   }
-}
+} */
 
 
 .selected-filters-wrapper {

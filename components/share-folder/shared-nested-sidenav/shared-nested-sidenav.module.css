@@ -1,10 +1,11 @@
 .shared-sidenav-outer {
-  max-width: 283px;
-  width: 100%;
+  width: 283px;
+
   border-radius: 6px;
   border: 1px solid #dedad4;
   position: fixed;
   top: 95px;
+  height: 75vh;
 }
 .collection-heading {
   margin: 24px;
@@ -118,21 +119,6 @@
   cursor: pointer;
 }
 
-@media (max-width: 820px) {
-  .border-bottom {
-    border-bottom: 1px solid #dfdad4;
-    padding: 10px 23px;
-  }
-  .list1-description {
-    margin-bottom: 0px;
-  }
-  .active {
-    padding: 10px 23px;
-  }
-  .list1-description:hover {
-    padding: 10px 23px;
-  }
-}
 
 /* css for the New portal */
 .icon-descriptions span {
@@ -257,7 +243,7 @@
   padding: 7.5px;
 }
 .subfolderList {
-  padding: 0px 0px 0px 16px;
+  padding: 0px 16px 0px 16px;
   border-left: 1px solid #dedad4;
 }
 
@@ -367,17 +353,6 @@
   align-items: center;
 }
 
-@media (max-width: 820px) {
-  .nestedbox {
-    margin-top: 0px;
-    padding: 0px 23px;
-    border-bottom: 1px solid #dfdad4;
-    height: 43px;
-  }
-  .active {
-    padding: 10px 0;
-  }
-}
 
 .collection-list-active {
   background: var(--color-sec-lightblue);
@@ -398,3 +373,46 @@
   width: 100%;
 }
  
+@media (max-width: 820px) {
+  .nestedbox {
+    margin-top: 0px;
+    padding: 0px 23px;
+    border-bottom: 1px solid #dfdad4;
+    height: 43px;
+  }
+  .active {
+    padding: 10px 0;
+  }
+  .border-bottom {
+    border-bottom: 1px solid #dfdad4;
+    padding: 10px 23px;
+  }
+  .list1-description {
+    margin-bottom: 0px;
+  }
+  .active {
+    padding: 10px 23px;
+  }
+  .list1-description:hover {
+    padding: 10px 23px;
+  }
+  .shared-sidenav-outer{
+    background: #fff;
+    z-index: 99999;
+  top:121px;
+    width: 100%;
+    border: none;
+    height: 100%;
+
+  }
+  .sidenavScroll{
+    padding: 0;
+  }
+}
+
+@media (max-width:490px){
+  .shared-sidenav-outer{
+    top:126px;
+  }
+
+}
