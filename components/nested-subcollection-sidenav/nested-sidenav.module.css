@@ -1,12 +1,11 @@
 /* nested-sidenav.module.css */
 .nestedsidenav {
     width: 283px;
-    border: 1px solid #DEDAD4;
+    border-right:1px solid #DEDAD4;
     height: fit-content;
-    border-radius: 6px;
     position: relative;
     z-index: 999;
-    padding: 24px 0;
+    padding: 0 0 24px 0;
     opacity: 1;
     display: block;
     transition: opacity 0.1s ease-in-out, display 0s linear 0.1s;
@@ -26,7 +25,7 @@
   .sidenavScroll{
     max-height: calc(100vh - 260px);
     overflow-y: auto;
-    padding: 0px 23px 0px 23px;
+    padding: 0px 23px 0px 0px;
 
   }
   .sidenavScroll::-webkit-scrollbar {

@@ -473,7 +473,7 @@ const AssetGrid = ({
 
   return (
     <>
-      <DragSelection />
+      {/* <DragSelection /> */}
       <section className={`${styles.container}`}>
         {(shouldShowUpload || isDragging) && !isShare && !hasPermission([ASSET_UPLOAD_APPROVAL]) && (
           <AssetUpload
@@ -558,7 +558,6 @@ const AssetGrid = ({
                       if (assetItem.status !== "fail") {
                         return (
                           <li
-                            id={assetItem.asset.id}
                             className={styles["grid-item"]}
                             key={assetItem.asset.id || index}
                             onClick={(e) =>
@@ -621,8 +620,6 @@ const AssetGrid = ({
                       }
                     })}
                   </>
-
-
                 )}
 
                 {mode === "folders" && (
@@ -635,8 +632,11 @@ const AssetGrid = ({
                     )}
 
                     {sortedFolders.map((folder, index) => {
+                      if (folder.name === "sparker") console.log({ folder });
+
                       return (
                         <li
+                          // id={assetItem.asset.id}
                           className={styles["grid-item"]}
                           key={folder.id || index}
                           onClick={(e) => handleFocusChange(e, folder.id)}

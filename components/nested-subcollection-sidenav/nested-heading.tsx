@@ -35,7 +35,7 @@ const ReusableHeading = ({
       <div
         className={`${styles["sidenav-heading"]} ${headingTrue ? styles["active"] : ""
           }`}
-        style={{ cursor: "default" }}
+       
       >
         <div onClick={() => headingClick(headingClickType, description)}>
           {`${text} ${totalCount ? `(${totalCount})` : ""}`}

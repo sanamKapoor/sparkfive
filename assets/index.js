@@ -85,6 +85,7 @@ export const Utilities = {
   arrowUp: require("./Icons/Utilities/arrow/arrow-up-white.svg"),
   arrowUpGrey: require("./Icons/Utilities/arrow/arrow-up-grey.png"),
   arrowBlue: require("./Icons/Utilities/arrow/arrow-down-blue.svg"),
+  caretDownLight:require("./Icons/Utilities/arrow/caret-down-light.svg"),
  caretRightSolid:require("./Icons/Utilities/arrow/CaretRight.svg"),
  caretRightsingle:require("./Icons/Utilities/arrow/CaretRightsingle.svg"),
  CaretDown:require("./Icons/Utilities/arrow/CaretDown.svg"),

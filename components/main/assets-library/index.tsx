@@ -1059,7 +1059,7 @@ const AssetsLibrary = () => {
         }
         appendNewSubSidenavFolders([], activeSubFolders, true, id);
         setListUpdateFlag(true);
-        toastUtils.success("Sub collection deleted successfully");
+        toastUtils.success("Subcollection deleted successfully");
       } else {
         const modFolderIndex = folders.findIndex(
           (folder: any) => folder.id === id

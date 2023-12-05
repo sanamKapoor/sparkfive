@@ -127,7 +127,7 @@ const CollectionSubcollectionListing = ({
                         <SearchModal filteredData={filteredData} input={input} setInput={setInput} />
                     </div>
                     <div className={`${styles["modal-heading"]}`}>
-                        <span>Collection({folders.length ?? ""})</span>
+                        <span>Collections</span>
                     </div>
                     <div className={`${styles["outer-wrapper"]}`}>
                         {folders.map((folder, index) => (

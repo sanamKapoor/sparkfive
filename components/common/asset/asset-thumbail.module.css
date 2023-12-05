@@ -205,6 +205,8 @@
 }
 .list-text{
   /* width: 40%; */
+  padding-top: 0;
+  max-width: 400px;
 }
 .list-main-border{
   border:none;
@@ -216,12 +218,14 @@
   border:none;
 }
 .list-select-icon{
-  width: 25px;
+  width: 22px;
   margin-right: 10px;
 }
 .size{
   display: block;
   /* width: 20% ; */
+  color:
+  #AEB0C2;
 }
 .list-item-wrapper{
   display: flex;
@@ -231,6 +235,13 @@
 
 .modified-date{
   margin-left:10px;
+  color:
+  #AEB0C2;
+}
+.format{
+  color:
+  #AEB0C2;
+
 }
 
 @media (max-width:420px){
@@ -241,12 +252,14 @@
 
   .extension{
     display: none;
+    color:#AEB0C2;
   }
   /* .modified-date{
     display: none;
   } */
   .modified-date-list{
     display: none;
+    
   }
 
 }
