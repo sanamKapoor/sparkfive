@@ -39,6 +39,7 @@ interface Item {
   size: string;
   length: number;
   childFolders: Item[];
+  totalchildassests?: string
 }
 
 const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
@@ -52,7 +53,8 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
     listUpdateFlag,
     setListUpdateFlag,
     activeFolder,
-    setSidebarOpen
+    setSidebarOpen,
+    activeSubFolders,
   } = useContext(AssetContext);
 
   const { term, activeSortFilter } = useContext(FilterContext) as {
@@ -143,6 +145,7 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
       const { data } = await folderApi.getFolders({
         ...queryParams,
       });
+      console.log("🚀 ~ file: nested-sidenav-dropdown-list.tsx:148 ~ getFolders ~ data:", data)
       let collectionList = { ...data };
       setSidenavFolderList(collectionList, replace);
       SetIsFolderLoading(false);
@@ -154,17 +157,18 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
   };
 
   useEffect(() => {
-    if (firstLoaded && activeSortFilter.mainFilter === "folders") {
-      getFolders(true);
-      console.log(showDropdown)
-
-    }
-    else if (firstLoaded) {
+    if (firstLoaded) {
       getFolders(true);
     }
     setFirstLoaded(true);
-  }, [firstLoaded, activeSortFilter]);
+  }, [firstLoaded]);
 
+  useEffect(() => {
+    if (firstLoaded && activeSortFilter.mainFilter === "folders") {
+      getFolders(true);
+    }
+    setFirstLoaded(true);
+  }, [activeSortFilter]);
 
   const getFoldersOnUpdate = async () => {
     if (listUpdateFlag) {
@@ -182,6 +186,32 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
   useEffect(() => {
     getFoldersOnUpdate()
   }, [listUpdateFlag]);
+
+
+  const vewFolderSidenavStateActive = (recordId: string, isParentCollection: boolean, parentId: string, parentName: string) => {
+    viewFolder(
+      recordId,
+      isParentCollection,
+      parentId,
+      parentName
+    );
+    if (window.innerWidth < 767) {
+      setSidebarOpen(false)
+    }
+    // if (!parentId) {
+    //   setSidenavFolderList({
+    //     results: [
+    //       ...sidenavFolderList.map((folder: any) => {
+    //         if (folder.id === recordId) {
+    //           folder['currentSelected'] = true
+    //         }
+    //         return folder
+    //       }),
+    //     ],
+    //   });
+    // }
+
+  }
 
   return (
     <div>
@@ -207,16 +237,13 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
                 <div className={styles.emptyBox}></div>
               }
               <div
-                className={`${styles["dropdownMenu"]} ${showDropdown[index] ? styles.active : ""
+                className={`${styles["dropdownMenu"]} ${(showDropdown[index] || (item.id === activeSubFolders)) ? styles.active : ""
                   }`}
               >
                 <div
                   className={styles.w100}
                   onClick={() => {
-                    viewFolder(item.id, true, "", item.name);
-                    if (window.innerWidth < 767) {
-                      setSidebarOpen(false)
-                    }
+                    vewFolderSidenavStateActive(item.id, true, "", item.name)
                   }}
                 >
                   <div className={styles.mainWrapper}>
@@ -230,7 +257,7 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
                     </div>
                     <div className={styles.totalCount}>
                       <div className={styles["list1-right-contents"]}>
-                        <span>{item.assetsCount}</span>
+                        <span>{item.assetsCount + item.totalchildassests}</span>
                       </div>
                     </div>
                   </div>
@@ -254,19 +281,14 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
                             grid={[25, 25]}
                             scale={1}
                           >
-                            <div className={styles.dropdownOptions}>
+                            <div className={`${styles["dropdownOptions"]} ${activeFolder === record.id ? styles.active : ""}`}>
                               <div
                                 className={styles["folder-lists"]}
                                 onClick={() => {
-                                  viewFolder(
-                                    record.id,
+                                  vewFolderSidenavStateActive(record.id,
                                     false,
                                     item.id,
-                                    record.name
-                                  );
-                                  if (window.innerWidth < 767) {
-                                    setSidebarOpen(false)
-                                  }
+                                    record.name)
                                 }
                                 }
                               >
@@ -325,9 +347,7 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
         sidenavFolderNextPage >= 0 && (
           <div onClick={() => getFolders(false)}>
             {isFolderLoading ? (
-              <>
-                <div className={styles.loader}></div>
-              </>
+              <div className={styles.loader}></div>
             ) : (
               <div className={`${styles["load-wrapper"]}`}>
                 <IconClickable

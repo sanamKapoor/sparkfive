@@ -108,6 +108,11 @@ const SubCollection = ({
     };
   }, []);
 
+  //For handling the show subcollection checkbox button for collection change 
+  useEffect(() => {
+    setIsChecked(false);
+  }, [activeSubFolders])
+
   return (
     <>
       {sortedFolders.length > 0 && (
