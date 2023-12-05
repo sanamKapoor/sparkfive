@@ -4,15 +4,10 @@
 import update from "immutability-helper";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
-import {
-  AssetContext,
-  FilterContext,
-  ShareContext,
-  UserContext,
-} from "../../context";
+import { AssetContext, FilterContext, ShareContext, UserContext } from "../../context";
 import folderApi from "../../server-api/folder";
 import shareCollectionApi from "../../server-api/share-collection";
-import { getAssetsFilters, getAssetsSort } from "../../utils/asset";
+import { DEFAULT_CUSTOM_FIELD_FILTERS, DEFAULT_FILTERS, getAssetsFilters, getAssetsSort } from "../../utils/asset";
 import requestUtils from "../../utils/requests";
 import toastUtils from "../../utils/toast";
 import styles from "./index.module.css";
@@ -29,6 +24,8 @@ import selectOptions from "../../utils/select-options";
 // Utils
 import { getSubdomain } from "../../utils/domain";
 import Spinner from "../common/spinners/spinner";
+
+import { loadTheme } from "../../utils/theme";
 
 const ShareCollectionMain = () => {
   const router = useRouter();
@@ -55,11 +52,7 @@ const ShareCollectionMain = () => {
 
   const { folderInfo, setFolderInfo } = useContext(ShareContext);
 
-  const {
-    activeSortFilter,
-    setActiveSortFilter,
-    setSharePath: setContextPath,
-  } = useContext(FilterContext);
+  const { activeSortFilter, setActiveSortFilter, setSharePath: setContextPath } = useContext(FilterContext);
 
   const [firstLoaded, setFirstLoaded] = useState(false);
   const [activePasswordOverlay, setActivePasswordOverlay] = useState(true);
@@ -110,6 +103,7 @@ const ShareCollectionMain = () => {
       setAdvancedConfig(data.customAdvanceOptions);
       setActivePasswordOverlay(false);
 
+      loadTheme();
       setLoading(false);
     } catch (err) {
       // If not 500, must be auth error, request user password
@@ -119,9 +113,7 @@ const ShareCollectionMain = () => {
       }
       console.log(err);
       if (displayError) {
-        toastUtils.error(
-          "Wrong email/password or invalid link, please try again"
-        );
+        toastUtils.error("Wrong email/password or invalid link, please try again");
       }
 
       setLoading(false);
@@ -135,11 +127,7 @@ const ShareCollectionMain = () => {
 
     const idPath = splitPath[1].split("/");
 
-    if (
-      idPath &&
-      !idPath[0].includes("[team]") &&
-      !idPath[1].includes("[id]")
-    ) {
+    if (idPath && !idPath[0].includes("[team]") && !idPath[1].includes("[id]")) {
       const path = `${processSubdomain()}/${idPath[1]}/${idPath[0]}`;
       setSharePath(path);
       setContextPath(path);
@@ -210,9 +198,7 @@ const ShareCollectionMain = () => {
       // Mark select all
       selectAllAssets();
 
-      setAssets(
-        assets.map((assetItem) => ({ ...assetItem, isSelected: true }))
-      );
+      setAssets(assets.map((assetItem) => ({ ...assetItem, isSelected: true })));
     } else if (activeMode === "folders") {
       selectAllFolders();
 
@@ -227,15 +213,13 @@ const ShareCollectionMain = () => {
 
   const toggleSelected = (id) => {
     if (activeMode === "assets") {
-      const assetIndex = assets.findIndex(
-        (assetItem) => assetItem.asset.id === id
-      );
+      const assetIndex = assets.findIndex((assetItem) => assetItem.asset.id === id);
       setAssets(
         update(assets, {
           [assetIndex]: {
             isSelected: { $set: !assets[assetIndex].isSelected },
           },
-        })
+        }),
       );
     } else if (activeMode === "folders") {
       const folderIndex = folders.findIndex((folder) => folder.id === id);
@@ -244,7 +228,7 @@ const ShareCollectionMain = () => {
           [folderIndex]: {
             isSelected: { $set: !folders[folderIndex].isSelected },
           },
-        })
+        }),
       );
     }
   };
@@ -268,10 +252,7 @@ const ShareCollectionMain = () => {
         ...getAssetsSort(activeSortFilter),
         sharePath,
       });
-      setAssets(
-        { ...data, results: data.results.map(mapWithToggleSelection) },
-        replace
-      );
+      setAssets({ ...data, results: data.results.map(mapWithToggleSelection) }, replace);
       setFirstLoaded(true);
     } catch (err) {
       //TODO: Handle error
@@ -301,9 +282,7 @@ const ShareCollectionMain = () => {
       }
       if (activeSortFilter.filterFolders?.length > 0) {
         // @ts-ignore
-        queryParams.folders = activeSortFilter.filterFolders
-          .map((item) => item.value)
-          .join(",");
+        queryParams.folders = activeSortFilter.filterFolders.map((item) => item.value).join(",");
       }
       const { data } = await shareCollectionApi.getFolders(queryParams);
 
@@ -339,9 +318,7 @@ const ShareCollectionMain = () => {
       let style = getComputedStyle(el);
 
       const headerTop = document.getElementById("top-bar")?.offsetHeight || 55;
-      setTop(
-        `calc(${headerTop}px + ${remValue} - ${style.paddingBottom} - ${style.paddingTop})`
-      );
+      setTop(`calc(${headerTop}px + ${remValue} - ${style.paddingBottom} - ${style.paddingTop})`);
     }
   };
 
@@ -371,7 +348,7 @@ const ShareCollectionMain = () => {
             singleCollection={!!folderInfo.singleSharedCollectionId}
             sharedAdvanceConfig={user ? undefined : advancedConfig}
           />
-          <div style={{ marginTop: top }}>
+          <div className={`${openFilter && styles["col-wrapper"]}`} style={{ marginTop: top }}>
             <AssetGrid
               activeFolder={activeFolder}
               getFolders={getFolders}
@@ -395,11 +372,7 @@ const ShareCollectionMain = () => {
       )}
       {activePasswordOverlay && !loading && (
         <PasswordOverlay
-          fields={
-            folderInfo?.requiredFields?.length > 0
-              ? folderInfo?.requiredFields
-              : ["password"]
-          }
+          fields={folderInfo?.requiredFields?.length > 0 ? folderInfo?.requiredFields : ["password"]}
           onPasswordSubmit={submitPassword}
           logo={folderInfo?.teamIcon}
         />

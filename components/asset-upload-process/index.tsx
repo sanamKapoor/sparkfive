@@ -25,9 +25,7 @@ const AssetUploadProcess = () => {
     folderGroups,
   } = useContext(AssetContext);
 
-  const uploadFailedAssets = uploadingAssets.filter(
-    (asset) => asset.status === "fail"
-  );
+  const uploadFailedAssets = uploadingAssets.filter((asset) => asset.status === "fail");
 
   const handleRetry = async (i) => {
     const failedAssets = uploadFailedAssets.map((item) => ({
@@ -48,20 +46,10 @@ const AssetUploadProcess = () => {
 
     const { data: subFolderAutoTag } = await teamApi.getAdvanceOptions();
 
-    await reUploadAsset(
-      i,
-      failedAssets,
-      assets,
-      totalSize,
-      failedAssets,
-      activeFolder,
-      folderGroups,
-      subFolderAutoTag
-    );
+    await reUploadAsset(i, failedAssets, assets, totalSize, failedAssets, activeFolder, folderGroups, subFolderAutoTag);
   };
 
-  const uploadInProgress =
-    uploadingStatus === "uploading" || uploadingStatus === "re-uploading";
+  const uploadInProgress = uploadingStatus === "uploading" || uploadingStatus === "re-uploading";
 
   return (
     <>
@@ -70,27 +58,20 @@ const AssetUploadProcess = () => {
           {uploadInProgress &&
             (uploadSourceType === "dropbox" ? (
               <div className={styles.mainHeading}>
-                Uploading {!dropboxUploadingFile ? 1 : dropboxUploadingFile + 1}{" "}
-                of {uploadingAssets.length} assets
+                Uploading {!dropboxUploadingFile ? 1 : dropboxUploadingFile + 1} of {uploadingAssets.length} assets
               </div>
             ) : (
               <div className={styles.mainHeading}>
                 Uploading {!uploadingFile ? 1 : uploadingFile + 1} of{" "}
-                {uploadingStatus === "re-uploading"
-                  ? retryListCount
-                  : uploadingAssets.length}{" "}
-                assets
+                {uploadingStatus === "re-uploading" ? retryListCount : uploadingAssets.length} assets
               </div>
             ))}
           {uploadingStatus === "done" && (
             <div className={styles.mainHeading}>
-              {uploadingAssets.length - uploadFailedAssets.length} of{" "}
-              {uploadingAssets.length} assets uploaded
+              {uploadingAssets.length - uploadFailedAssets.length} of {uploadingAssets.length} assets uploaded
             </div>
           )}
-          <img
-            src={Utilities.blueClose}
-            alt={"close"}
+          <Utilities.blueClose
             className={styles.closebtn}
             onClick={() => {
               showUploadProcess("none");
@@ -104,12 +85,7 @@ const AssetUploadProcess = () => {
           ) : (
             uploadingAssets.length > 0 &&
             uploadingAssets.map((item, index) => (
-              <AssetUploadItem
-                key={index}
-                item={item}
-                index={index}
-                handleRetry={handleRetry}
-              />
+              <AssetUploadItem key={index} item={item} index={index} handleRetry={handleRetry} />
             ))
           )}
         </div>

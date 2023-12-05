@@ -29,7 +29,6 @@
   cursor: pointer;
   padding: 6px 6px;
   background: #fff;
-  margin-bottom: 10px;
   box-sizing: border-box;
 }
 
@@ -106,15 +105,17 @@
   height: 6px;
   transition: background-color 0.3s, width 0.3s, height 0.3s;
 }
+
 .rightIcon {
-  margin-right: 5px;
-  transform: rotate(275deg);
+  transform: rotate(0deg);
   width: 11px;
+  cursor: pointer;
 }
 .iconClick {
-  transform: rotate(0deg);
+  transform: rotate(90deg);
   margin-right: 5px;
   width: 11px;
+  cursor: pointer;
 }
 
 @media (max-width: 820px) {
@@ -206,7 +207,7 @@
 }
 
 .folder {
-  padding: 0 24px 0 24px;
+  padding: 0 0px 0 24px;
 }
 .folder-lists {
   display: flex;
@@ -225,7 +226,7 @@
 .dropdownIcons {
   display: flex;
 }
-.rightIcon {
+/* .rightIcon {
   margin-right: 5px;
   transform: rotate(275deg);
   width: 11px;
@@ -234,7 +235,7 @@
   transform: rotate(0deg);
   margin-right: 5px;
   width: 11px;
-}
+} */
 .dropdownOptions {
   position: relative;
 }
@@ -381,3 +382,19 @@
 .collection-list-active {
   background: var(--color-sec-lightblue);
 }
+
+.rightSide {
+  width: 100%;
+  padding: 0 35px;
+}
+
+.rightSideToggle {
+  width: 100%;
+  padding: 0 35px 0 0;
+}
+
+.activeDropdown {
+  background-color:var(--color-sec-lightblue);
+  width: 100%;
+}
+ 

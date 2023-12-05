@@ -118,14 +118,17 @@ const SubCollection = ({
       {sortedFolders.length > 0 && (
         <div className={`${styles["sub-collection-heading"]}`}>
           <div className={styles.rightSide}>
+          <div className={`${styles["sub-collection-heading-outer"]}`}>
             <span>Subcollection ({total})</span>
-            <img
+          
+           <img
               className={styles.ExpandIcons}
               onClick={() => {
                 handleHideClick();
               }}
               src={collectionHide ? Utilities.arrowUpGrey : Utilities.caretDownLight }
             />
+              </div>
           </div>
          
         </div>
@@ -199,7 +202,8 @@ const SubCollection = ({
       {
         <>
           <>
-            <div className={`${styles["sub-collection-heading"]}`}>
+          <div className={`${styles["heading-wrapper"]}`}>
+          <div className={`${styles["sub-collection-heading"]}`}>
               {sortedAssets.length > 0 && (
                 <div className={styles.rightSide}>
                   <span>Assets ({totalAssets})</span>
@@ -232,6 +236,9 @@ const SubCollection = ({
                 </div>
               )}
             </div>
+
+          </div>
+           
             <FilterView />
           </>
 

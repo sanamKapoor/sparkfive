@@ -35,12 +35,7 @@ const mappingCustomFieldData = (list, valueList) => {
   return rs;
 };
 
-const GuestUploadApprovalOverlay = ({
-  handleBackButton,
-  selectedAssets,
-  loadingAssets = true,
-  requestInfo = {},
-}) => {
+const GuestUploadApprovalOverlay = ({ handleBackButton, selectedAssets, loadingAssets = true, requestInfo = {} }) => {
   const [loading, setLoading] = useState(true);
 
   const [sideOpen, setSideOpen] = useState(true);
@@ -69,7 +64,7 @@ const GuestUploadApprovalOverlay = ({
   // Custom fields
   const [inputCustomFields, setInputCustomFields] = useState([]);
   const [assetCustomFields, setAssetCustomFields] = useState(
-    mappingCustomFieldData(inputCustomFields, originalInputs.customs)
+    mappingCustomFieldData(inputCustomFields, originalInputs.customs),
   );
 
   const getCustomFieldsInputData = async () => {
@@ -95,15 +90,12 @@ const GuestUploadApprovalOverlay = ({
     setFolders([]);
 
     // Default custom field values
-    const updatedMappingCustomFieldData = mappingCustomFieldData(
-      inputCustomFields,
-      []
-    );
+    const updatedMappingCustomFieldData = mappingCustomFieldData(inputCustomFields, []);
 
     setAssetCustomFields(
       update(assetCustomFields, {
         $set: updatedMappingCustomFieldData,
-      })
+      }),
     );
   };
 
@@ -122,15 +114,12 @@ const GuestUploadApprovalOverlay = ({
 
       // Custom fields
       if (inputCustomFields.length > 0) {
-        const updatedMappingCustomFieldData = mappingCustomFieldData(
-          inputCustomFields,
-          originalInputs.customs
-        );
+        const updatedMappingCustomFieldData = mappingCustomFieldData(inputCustomFields, originalInputs.customs);
 
         setAssetCustomFields(
           update(assetCustomFields, {
             $set: updatedMappingCustomFieldData,
-          })
+          }),
         );
       } else {
         setAssetCustomFields(originalInputs.customs);
@@ -145,7 +134,7 @@ const GuestUploadApprovalOverlay = ({
         selectedAssets.map((assetItem) => ({
           ...assetItem,
           isEditSelected: true,
-        }))
+        })),
       );
       getInitialAttributes();
     }
@@ -192,37 +181,29 @@ const GuestUploadApprovalOverlay = ({
   };
 
   const toggleSelectedEdit = (id) => {
-    const assetIndex = editAssets.findIndex(
-      (assetItem) => assetItem.asset.id === id
-    );
+    const assetIndex = editAssets.findIndex((assetItem) => assetItem.asset.id === id);
     setEditAssets(
       update(editAssets, {
         [assetIndex]: {
           isEditSelected: { $set: !editAssets[assetIndex].isEditSelected },
         },
-      })
+      }),
     );
   };
 
   const selectAll = () => {
-    setEditAssets(
-      editAssets.map((assetItem) => ({ ...assetItem, isEditSelected: true }))
-    );
+    setEditAssets(editAssets.map((assetItem) => ({ ...assetItem, isEditSelected: true })));
 
     initialize();
   };
 
   const deselectAll = () => {
-    setEditAssets(
-      editAssets.map((asset) => ({ ...asset, isEditSelected: false }))
-    );
+    setEditAssets(editAssets.map((asset) => ({ ...asset, isEditSelected: false })));
 
     resetSelectedFieldValue();
   };
 
-  const editSelectedAssets = editAssets.filter(
-    ({ isEditSelected }) => isEditSelected
-  );
+  const editSelectedAssets = editAssets.filter(({ isEditSelected }) => isEditSelected);
 
   // On change custom fields (add/remove)
   const onChangeCustomField = (index, data) => {
@@ -231,7 +212,7 @@ const GuestUploadApprovalOverlay = ({
         [index]: {
           values: { $set: data },
         },
-      })
+      }),
     );
   };
 
@@ -245,7 +226,7 @@ const GuestUploadApprovalOverlay = ({
       <section className={styles.content}>
         <div className={styles["top-wrapper"]}>
           <div className={styles.back} onClick={handleBackButton}>
-            <IconClickable src={Utilities.back} />
+            <IconClickable SVGElement={Utilities.back} />
             <span>Back</span>
           </div>
           <div className={styles.name}>
@@ -253,12 +234,7 @@ const GuestUploadApprovalOverlay = ({
             <span>{moment(requestInfo.createdAt).format("DD/MM/YYYY")}</span>
 
             <div className={styles["asset-actions"]}>
-              <Button
-                text={"Select All"}
-                type={"button"}
-                className="container secondary"
-                onClick={selectAll}
-              />
+              <Button text={"Select All"} type={"button"} className="container secondary" onClick={selectAll} />
               <Button
                 text={`Deselect All (${editSelectedAssets.length})`}
                 type={"button"}
@@ -274,11 +250,7 @@ const GuestUploadApprovalOverlay = ({
                 onChange={(selected) => onChangeApproval(selected)}
                 placeholder={`Action on ${editSelectedAssets.length} Selected`}
                 styleType="regular"
-                value={
-                  approvalList.filter(
-                    (item) => item.value === approvalStatus
-                  )[0]
-                }
+                value={approvalList.filter((item) => item.value === approvalStatus)[0]}
               />
             </div>
           </div>

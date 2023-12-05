@@ -1,3 +1,57 @@
+import ViewGrid from "./Icons/Utilities/View Grid";
+import ViewList from "./Icons/Utilities/View List";
+import More from "./Icons/Utilities/More";
+import Delete from "./Icons/Utilities/Delete";
+import Info from "./Icons/Utilities/Information";
+import InfoGray from "./Icons/Utilities/Information/gray";
+import CommentGray from "./Icons/Utilities/Comments/CommentGray";
+import CommentLight from "./Icons/Utilities/Comments/CommentLight";
+import EmbedCDN from "./Icons/Utilities/EmbedCDN/EmbedCDN";
+import EmbedCDNGrey from "./Icons/Utilities/EmbedCDN/EmbedCDNGrey";
+import Download from "./Icons/Utilities/Download/Download";
+import Related from "./Icons/Utilities/Related/Related";
+import RelatedLight from "./Icons/Utilities/Related/RelatedLight";
+import NoteLight from "./Icons/Utilities/Notes/NoteLight";
+import Note from "./Icons/Utilities/Notes/Note";
+import VersionLight from "./Icons/Utilities/Versions/VersionLight";
+import Version from "./Icons/Utilities/Versions/Version";
+import Transcript from "./Icons/Utilities/Transcript/Transcript";
+import LockClosed from "./Icons/Utilities/Lock/LockClosed";
+import LockOpened from "./Icons/Utilities/Lock/LockOpened";
+import Edit from "./Icons/Utilities/Description-Edit/Edit";
+import MoveFolder from "./Icons/Utilities/Move Folder/MoveFolder";
+import Share from "./Icons/Asset Actions/Share";
+import BlueClose from "./Icons/Utilities/Close/Close";
+import ShareUtil from "./Icons/Utilities/Share/Share";
+import AssociateBlue from "./Icons/Asset Actions/AssociateBlue";
+import Move from "./Icons/Asset Actions/Move";
+import Archive from "./Icons/Asset Actions/Archive";
+import Copy from "./Icons/Asset Actions/Copy";
+import Wrench from "./Icons/Asset Actions/Wrench";
+import MoveFolderV2 from "./Icons/Assets/MoveFolder";
+import FilterTag from "./Icons/Utilities/FiltersTags/FilterTag";
+import FilterCustom from "./Icons/Utilities/FiltersTags/FilterCustom";
+import FilterCollection from "./Icons/Utilities/FiltersTags/FilterCollection";
+import FilterFile from "././Icons/Utilities/FiltersTags/FilterFile";
+import Asset from "./Icons/Assets/Asset";
+import NewCollection from "./Icons/Asset Addition/NewCollection";
+import UploadFolder from "./Icons/Asset Addition/UploadFolder";
+import Dropbox from "./Icons/Assets/Dropbox";
+import GoogleDrive from "./Icons/Assets/GoogleDrive";
+import ArrowDownBlue from "./Icons/Utilities/arrow/ArrowDownBlue";
+import MemberProfile from "./Icons/Utilities/Member Profile/MemberProfile";
+import EditFill from "./Icons/Utilities/Description-Edit/EditFill";
+import ArrowDownUp from "./Icons/Utilities/ArrowDownUp";
+import Member from "./Icons/Utilities/Member/Member";
+import CirclePlusGreen from "./Icons/Utilities/CirclePlusGreen";
+import AddAlt from "./Icons/Utilities/Add +/AddAlt";
+import AlertBlue from "./Icons/Navigation/AlertBlue";
+import Back from "./Icons/Utilities/Back/Back";
+import Hide from "./Icons/Utilities/Hide/Hide";
+import Upload from "./Icons/Assets/Upload";
+import MoreLight from "./Icons/Utilities/More/MoreLight";
+import CheckMark from "./Icons/Utilities/CheckMark/CheckMark";
+
 export const GeneralImg = {
   logoHorizontal: require("./general/logo-horizontal-sparkfive-RGB.png"),
   logo: require("./general/logo-motif-sparkfive-RGB-scaled.png"),
@@ -5,34 +59,6 @@ export const GeneralImg = {
 
 export const AppImg = {
   guestCover: require("./app-images/guest-cover.png"),
-  abstraction1: require("./app-images/abstractImg1.svg"),
-  abstraction2: require("./app-images/abstractImg 2.svg"),
-  abstraction3: require("./app-images/abstractImg 3.svg"),
-  abstraction4: require("./app-images/abstractImg4.svg"),
-  subcollection5: require("./app-images/subcollection5.svg"),
-  subcollection6: require("./app-images/subcollection6.svg"),
-  subcollection7: require("./app-images/subcollection7.svg"),
-  subcollection8: require("./app-images/subcollection8.svg"),
-  subcollection9: require("./app-images/subcollection9.svg"),
-  subcollection10: require("./app-images/subcollection10.svg"),
-  subcollection11: require("./app-images/subcollection11.svg"),
-  subcollection12: require("./app-images/subcollection12.svg"),
-  subcollection13: require("./app-images/subcollection13.svg"),
-  subcollection14: require("./app-images/subcollection14.svg"),
-  subcollection15: require("./app-images/subcollection15.svg"),
-  subcollection16: require("./app-images/subcollection16.svg"),
-  collection1: require("./app-images/collection1.svg"),
-  collection2: require("./app-images/collection2.svg"),
-  collection3: require("./app-images/collection3.svg"),
-  collection4: require("./app-images/collection4.svg"),
-  collection5: require("./app-images/collection5.svg"),
-  collection6: require("./app-images/collection6.svg"),
-  collection7: require("./app-images/collection7.svg"),
-  collection8: require("./app-images/collection8.svg"),
-  collection9: require("./app-images/collection9.svg"),
-  collection10: require("./app-images/collection10.svg"),
-  collection11: require("./app-images/collection11.svg"),
-  collection12: require("./app-images/collection12.svg"),
 };
 
 export const LoginImg = {
@@ -42,7 +68,7 @@ export const LoginImg = {
 
 export const Navigation = {
   alert: require("./Icons/Navigation/icn-nav-alert-white.svg"),
-  alertBlue: require("./Icons/Navigation/icn-nav-alert.svg"),
+  alertBlue: AlertBlue,
   overview: require("./Icons/Navigation/icn-nav-dashboard-#E9EEFA.svg"),
   overviewSelected: require("./Icons/Navigation/icn-nav-dashboard-white.svg"),
   schedulePrimary: require("./Icons/Navigation/icn-nav-schedule.svg"),
@@ -57,22 +83,57 @@ export const Navigation = {
 };
 
 export const Utilities = {
-  edit: require("./Icons/Utilities/Description-Edit/icn-utilities-description_edit-fill.svg"),
+  images: require("./Icons/Utilities/nestedCollection/images.svg"),
+  vedio: require("./Icons/Utilities/nestedCollection/vedio.svg"),
+  product: require("./Icons/Utilities/nestedCollection/product.svg"),
+  archive: require("./Icons/Utilities/nestedCollection/archived.svg"),
+  assets: require("./Icons/Utilities/nestedCollection/assets.svg"),
+  caretRightSolid: require("./Icons/Utilities/arrow/CaretRight.svg"),
+  toggleLight: require("./Icons/Utilities/nestedCollection/toggleLight.svg"),
+  folder: require("./Icons/Utilities/nestedCollection/folder.svg"),
+  foldernew: require("./Icons/Utilities/nestedCollection/foldernew.svg"),
+  load: require("./Icons/Utilities/nestedCollection/load.svg"),
+  caretRightSolids: require("./Icons/Utilities/arrow/CaretRight.svg"),
+  caretRightsingle: require("./Icons/Utilities/arrow/CaretRightsingle.svg"),
+  CaretDown: require("./Icons/Utilities/arrow/CaretDown.svg"),
+  line: require("./Icons/Utilities/nestedCollection/Line.svg"),
+  dots: require("./Icons/Utilities/nestedCollection/dots.svg"),
+  closeIcon: require("./Icons/Utilities/nestedCollection/close.svg"),
+  closeIconLight: require("./Icons/Utilities/nestedCollection/closeIconLight.svg"),
+  searchIcon: require("./Icons/Utilities/nestedCollection/search.svg"),
+  checkIcon: require("./Icons/Utilities/nestedCollection/checkIcon.svg"),
+  doubleCheck: require("./Icons/Utilities/nestedCollection/DoubleChecks.svg"),
+  addCollection: require("./Icons/Utilities/nestedCollection/Add-collection.svg"),
+  redCheck: require("./Icons/Utilities/nestedCollection/dcheckred.svg"),
+  horizontalDots: require("./Icons/Utilities/nestedCollection/horixzontaldots.svg"),
+  downIcon: require("./Icons/Utilities/nestedCollection/downIcon.svg"),
+  downIconLight: require("./Icons/Utilities/nestedCollection/downIconlight.svg"),
+  arrowDownUp: require("./Icons/Utilities/collection/ArrowsDownUp.svg"),
+  arrowDownUpLight: require("./Icons/Utilities/collection/ArrowsDownUpLight.svg"),
+  edits: require("./Icons/Utilities/collection/edit.svg"),
+  tabulardots: require("./Icons/Utilities/collection/tabler-icon-dots.svg"),
+  up: require("./Icons/Utilities/icons8-chevron-up-30.png"),
+  oggleLight: require("./Icons/Utilities/nestedCollection/toggleLight.svg"),
+  arrowright: require("./Icons/Utilities/nestedCollection/arrow-square-right.svg"),
+  leftArrow: require("./Icons/Utilities/arrow/arrow-left.svg"),
+  blueCloses: require("./Icons/Utilities/Close/blue-close.svg"),
+
+  edit: EditFill,
   editLight: require("./Icons/Utilities/Description-Edit/icn-utilities-description_edit-light.svg"),
   editWhite: require("./Icons/Utilities/Description-Edit/icn-utilities-description_edit-fill-white.svg"),
-  delete: require("./Icons/Utilities/Delete/icn-utilities-delete.svg"),
+  delete: Delete,
   add: require("./Icons/Utilities/Add +/icn-utilities-add+.svg"),
   addLight: require("./Icons/Utilities/Add +/icn-utilities-add+light.svg"),
   addWhite: require("./Icons/Utilities/Add +/icn-utilities-add+white.svg"),
-  addAlt: require("./Icons/Utilities/Add +/icn-utilities-add+alt.svg"),
+  addAlt: AddAlt,
   adddark: require("./Icons/Utilities/Add +/adddark.png"),
-  comment: require("./Icons/Utilities/Comments/icn-utilities-comments.svg"),
-  commentLight: require("./Icons/Utilities/Comments/icn-utilities-comments-light.svg"),
-  commentGray: require("./Icons/Utilities/Comments/icn-utilities-comments-gray.svg"),
+  comment: CommentLight,
+  commentLight: CommentLight,
+  commentGray: CommentGray,
   assignMember: require("./Icons/Utilities/Assign Member/icn-utilities-assignmember.svg"),
   assignMemberLight: require("./Icons/Utilities/Assign Member/icn-utilities-assignmember-light.svg"),
-  more: require("./Icons/Utilities/More/icn-utilities-more.svg"),
-  moreLight: require("./Icons/Utilities/More/icn-utilities-more-light.svg"),
+  more: More,
+  moreLight: MoreLight,
   moreWhite: require("./Icons/Utilities/More/icn-utilities-more-white.svg"),
   moreLighter: require("./Icons/Utilities/More/icn-utilities-more-lighter.svg"),
   closePanel: require("./Icons/Utilities/Close Panel/icn-utilities-closepanel.svg"),
@@ -85,108 +146,67 @@ export const Utilities = {
   arrowUp: require("./Icons/Utilities/arrow/arrow-up-white.svg"),
   arrowUpGrey: require("./Icons/Utilities/arrow/arrow-up-grey.png"),
   arrowBlue: require("./Icons/Utilities/arrow/arrow-down-blue.svg"),
-  caretDownLight:require("./Icons/Utilities/arrow/caret-down-light.svg"),
- caretRightSolid:require("./Icons/Utilities/arrow/CaretRight.svg"),
- caretRightsingle:require("./Icons/Utilities/arrow/CaretRightsingle.svg"),
- CaretDown:require("./Icons/Utilities/arrow/CaretDown.svg"),
+  caretDownLight: require("./Icons/Utilities/arrow/caret-down-light.svg"),
   arrowDark: require("./Icons/Utilities/arrow/arrow-down-dark.svg"),
   arrowUpDark: require("./Icons/Utilities/arrow/arrow-up-dark.svg"),
   arrowNext: require("./Icons/Utilities/arrow/arrow-next.svg"),
-
   arrowPrev: require("./Icons/Utilities/arrow/arrow-prev.svg"),
   arrowNav: require("./Icons/Utilities/arrow/nav-arrow.svg"),
   circleArrowRight: require("./Icons/Utilities/arrow/arrow-circle-right.svg"),
   circleArrowLeft: require("./Icons/Utilities/arrow/arrow-circle-left.svg"),
-  back: require("./Icons/Utilities/Back/icn-utilities-back.svg"),
+  back: Back,
   backWhite: require("./Icons/Utilities/Back/icn-utilities-back-white.svg"),
-  memberProfile: require("./Icons/Utilities/Member Profile/icn-nav-memberprofile.svg"),
+  memberProfile: MemberProfile,
   radioButtonNormal: require("./Icons/Utilities/Radio Button/Normal/icn-utilities-radionormal.svg"),
   radioButtonEnabled: require("./Icons/Utilities/Radio Button/Enabled/icn-utilities-radioenabled.svg"),
   print: require("./Icons/Utilities/Print/icn-utilities-print.svg"),
   search: require("./Icons/Utilities/Search/icn-utilities-search.svg"),
-  gridView: require("./Icons/Utilities/View Grid/icn-utilities-gridview.svg"),
-  listView: require("./Icons/Utilities/View List/icn-utilities-listview.svg"),
-  info: require("./Icons/Utilities/Information/icn-utilities-information.svg"),
-  infoGray: require("./Icons/Utilities/Information/icn-utilities-information-gray.svg"),
-  filterSetting: require("./Icons/Utilities/Filter/filter-setting.svg"),
+  gridView: ViewGrid,
+  listView: ViewList,
+  info: Info,
+  infoGray: InfoGray,
   filter: require("./Icons/External/filter.svg"),
   filterBlue: require("./Icons/Utilities/Filter/filter-blue.svg"),
   calendar: require("./Icons/Navigation/icn-nav-schedule-alt.svg"),
-  versions: require("./Icons/Utilities/Versions/VersioningLatest.svg"),
-  versionsLight: require("./Icons/Utilities/Versions/versions-light.svg"),
+  versions: Version,
+  versionsLight: VersionLight,
   addVersion: require("./Icons/Utilities/Versions/add-version.svg"),
-  embedCdn: require("./Icons/Utilities/EmbedCDN/embed-cdn.svg"),
-  embedCdnGrey: require("./Icons/Utilities/EmbedCDN/embed-cdn-grey.svg"),
-  lockClosed: require("./Icons/Utilities/Lock/lock-closed.svg"),
-  lockOpened: require("./Icons/Utilities/Lock/lock-opened.svg"),
+  embedCdn: EmbedCDN,
+  embedCdnGrey: EmbedCDNGrey,
+  lockClosed: LockClosed,
+  lockOpened: LockOpened,
   xMark: require("./Icons/Utilities/X-Mark/xmark-solid.svg"),
   check: require("./Icons/Utilities/Check/check-solid.svg"),
-  checkBlue: require("./Icons/Utilities/Check/check-blue.svg"),
-  notes: require("./Icons/Utilities/Notes/notes.svg"),
-  notesLight: require("./Icons/Utilities/Notes/notes-light.svg"),
-  hide: require("./Icons/Utilities/Hide/hide.svg"),
-  tags: require("./Icons/Utilities/FiltersTags/tags.svg"),
-  custom: require("./Icons/Utilities/FiltersTags/custom.svg"),
-  collections: require("./Icons/Utilities/FiltersTags/collections.svg"),
-  file: require("./Icons/Utilities/FiltersTags/file.svg"),
+  notes: Note,
+  notesLight: NoteLight,
+  hide: Hide,
+  tags: FilterTag,
+  custom: FilterCustom,
+  collections: FilterCollection,
+  file: FilterFile,
   close: require("./Icons/Utilities/Close/close.svg"),
-  closeAttribute:require("./Icons/Utilities/Close/close-attribute.svg"),
   closeTag: require("./Icons/Utilities/Close/close-tag.svg"),
-  blueClose: require("./Icons/Utilities/Close/blue-close.svg"),
+  blueClose: BlueClose,
   bigblueClose: require("./Icons/Utilities/Close/bigclose.svg"),
   grayClose: require("./Icons/Utilities/Close/gray-close.svg"),
-  share: require("./Icons/Utilities/Share/share.svg"),
+  share: ShareUtil,
   greenTag: require("./Icons/Utilities/green-tag.svg"),
   thumbsUp: require("./Icons/Utilities/Thumbs Up/thumbs-up.svg"),
   menu: require("./Icons/Utilities/Menu/menu.svg"),
   filterGray: require("./Icons/Utilities/Filter/filter.svg"),
   ellipse: require("./Icons/Utilities/Ellipse/ellipse.svg"),
   tagGray: require("./Icons/Utilities/Tags/icn-utilities-tag-gray.svg"),
-  related: require("./Icons/Utilities/Related/related.svg"),
-  relatedLight: require("./Icons/Utilities/Related/related-light.svg"),
+  related: Related,
+  relatedLight: RelatedLight,
   sort: require("./Icons/Utilities/arrow/sort.svg"),
-  uparrowThin: require("./Icons/Utilities/arrow/up-arrow-thin.svg"),
-  downarrowThin:require("./Icons/Utilities/arrow/down-arrow-thin.svg"),
-  leftArrow: require("./Icons/Utilities/arrow/arrow-left.svg"),
   sortUp: require("./Icons/Utilities/arrow/sort-up.svg"),
   caretRight: require("./Icons/Utilities/Caret/caret-right.svg"),
-  checkMark: require("./Icons/Utilities/CheckMark/checkmark.svg"),
-  add: require("./Icons/Utilities/nestedCollection/add.svg"),
-  archive: require("./Icons/Utilities/nestedCollection/archived.svg"),
-  arrowleft: require("./Icons/Utilities/nestedCollection/arrow-square-left.svg"),
-  toggleLight:require("./Icons/Utilities/nestedCollection/toggleLight.svg"),
-  arrowright: require("./Icons/Utilities/nestedCollection/arrow-square-right.svg"),
-  assets: require("./Icons/Utilities/nestedCollection/assets.svg"),
-  folder: require("./Icons/Utilities/nestedCollection/folder.svg"),
-  foldernew: require("./Icons/Utilities/nestedCollection/foldernew.svg"),
-  images: require("./Icons/Utilities/nestedCollection/images.svg"),
-  product: require("./Icons/Utilities/nestedCollection/product.svg"),
-  right: require("./Icons/Utilities/nestedCollection/right.svg"),
-  vedio: require("./Icons/Utilities/nestedCollection/vedio.svg"),
-  line: require("./Icons/Utilities/nestedCollection/Line.svg"),
-  dots: require("./Icons/Utilities/nestedCollection/dots.svg"),
-  menu: require("./Icons/Utilities/nestedCollection/menu.svg"),
-  closeIcon: require("./Icons/Utilities/nestedCollection/close.svg"),
-  closeIconLight: require("./Icons/Utilities/nestedCollection/closeIconLight.svg"),
-  searchIcon: require("./Icons/Utilities/nestedCollection/search.svg"),
-  checkIcon: require("./Icons/Utilities/nestedCollection/checkIcon.svg"),
-  load: require("./Icons/Utilities/nestedCollection/load.svg"),
-  doubleCheck: require("./Icons/Utilities/nestedCollection/DoubleChecks.svg"),
-  addCollection: require("./Icons/Utilities/nestedCollection/Add-collection.svg"),
-  redCheck: require("./Icons/Utilities/nestedCollection/dcheckred.svg"),
-  horizontalDots: require("./Icons/Utilities/nestedCollection/horixzontaldots.svg"),
-  downIcon: require("./Icons/Utilities/nestedCollection/downIcon.svg"),
-  downIconLight: require("./Icons/Utilities/nestedCollection/downIconlight.svg"),
-  arrowDownUp: require("./Icons/Utilities/collection/ArrowsDownUp.svg"),
-  arrowDownUpLight: require("./Icons/Utilities/collection/ArrowsDownUpLight.svg"),
-  edit: require("./Icons/Utilities/collection/edit.svg"),
-  tabulardots: require("./Icons/Utilities/collection/tabler-icon-dots.svg"),
-  up: require("./Icons/Utilities/icons8-chevron-up-30.png"),
-
-  transcript: require("./Icons/Utilities/Transcript/Transcript.svg"),
-  updown: require("./Icons/Utilities/ArrowsDownUp.svg"),
+  checkMark: CheckMark,
+  transcript: Transcript,
+  updown: ArrowDownUp,
   download: require("./Icons/Utilities/download.svg"),
   document: require("./Icons/Utilities/document.svg"),
+  circlePlusGreen: CirclePlusGreen,
 };
 
 export const ProjectTypes = {
@@ -204,7 +224,7 @@ export const Placeholders = {
 
 export const ItemFields = {
   date: require("./Icons/Status/Scheduled/icn-status-scheduled.svg"),
-  member: require("./Icons/Utilities/Member/icn-utilities-member.svg"),
+  member: Member,
   tag: require("./Icons/Utilities/Tags/icn-utilities-tag.svg"),
   description: require("./Icons/Utilities/Description-Edit/icn-utilities-description_edit.svg"),
 };
@@ -244,13 +264,13 @@ export const Status = {
 };
 
 export const Assets = {
-  asset: require("./Icons/Assets/icn-assets.svg"),
+  asset: Asset,
   file: require("./Icons/Project Type/Campaign/icn-projecttype-campaign.svg"),
-  folder: require("./Icons/Assets/icn-utilities-movefolder2.svg"),
+  folder: MoveFolderV2,
   empty: require("./general/empty.png"),
   videoThumbnail: require("./general/thumbnail-video.png"),
-  dropbox: require("./Icons/Assets/Dropbox_Icon.svg"),
-  gdrive: require("./Icons/Assets/icons8-google-drive-1.svg"),
+  dropbox: Dropbox,
+  gdrive: GoogleDrive,
   msword: require("./Icons/Assets/msword.svg"),
   msexcel: require("./Icons/Assets/msexcel.svg"),
   msppt: require("./Icons/Assets/msppt.svg"),
@@ -265,7 +285,7 @@ export const Assets = {
   unknown: require("./Icons/Assets/unknown.svg"),
   arrowDown: require("./Icons/Assets/arrow-down.svg"),
   computer: require("./Icons/Assets/computer.svg"),
-  upload: require("./Icons/Assets/upload.svg"),
+  upload: Upload,
   downarrow: require("./Icons/Assets/downvector.svg"),
 };
 
@@ -284,16 +304,16 @@ export const Integrations = {
 };
 
 export const AssetOps = {
-  edit: require("./Icons/Utilities/Description-Edit/icn-utilities-description_edit.svg"),
-  delete: require("./Icons/Utilities/Delete/icn-utilities-delete.svg"),
+  edit: Edit,
+  delete: Delete,
   deleteGray: require("./Icons/Utilities/Delete/icn-utilities-delete-gray.svg"),
   deleteRed: require("./Icons/Utilities/Delete/icn-utilities-delete-red.svg"),
-  archive: require("./Icons/Asset Actions/archive.svg"),
-  download: require("./Icons/Utilities/Download/icn-utilities-download.svg"),
-  move: require("./Icons/Utilities/Move Folder/icn-utilities-movefolder.svg"),
+  archive: Archive,
+  download: Download,
+  move: MoveFolder,
   moveGray: require("./Icons/Utilities/Move Folder/icn-utilities-movefolder-gray.svg"),
-  copy: require("./Icons/Asset Actions/copy.svg"),
-  share: require("./Icons/Asset Actions/share.svg"),
+  copy: Copy,
+  share: Share,
   reload: require("./Icons/Asset Actions/reload.png"),
   editWhite: require("./Icons/Utilities/Description-Edit/icn-utilities-description_edit-fill-white.svg"),
   deleteWhite: require("./Icons/Utilities/Delete/icn-utilities-delete-white.svg"),
@@ -303,17 +323,17 @@ export const AssetOps = {
   copyWhite: require("./Icons/Asset Actions/copy-white.svg"),
   shareWhite: require("./Icons/Asset Actions/share-white.svg"),
   generateThumbnail: require("./Icons/Asset Actions/wrench.svg"),
-  recreateThumbnail: require("./Icons/Asset Actions/wrench-blue.svg"),
+  recreateThumbnail: Wrench,
   upload: require("./Icons/Asset Actions/upload.svg"),
   associate: require("./Icons/Asset Actions/associate.svg"),
-  associateBlue: require("./Icons/Asset Actions/associate-blue.svg"),
-  moveReplace: require("./Icons/Asset Actions/move.svg"),
+  associateBlue: AssociateBlue,
+  moveReplace: Move,
   moveReplaceWhite: require("./Icons/Asset Actions/white-move.svg"),
-  newCollection: require("./Icons/Asset Addition/new-collection.svg"),
+  newCollection: NewCollection,
   newCollectionGray: require("./Icons/Asset Addition/new-collection-gray.svg"),
   uploadFiles: require("./Icons/Asset Addition/upload-files.svg"),
   uploadFilesGray: require("./Icons/Asset Addition/upload-files-gray.svg"),
-  uploadFolder: require("./Icons/Asset Addition/upload-folder.svg"),
+  uploadFolder: UploadFolder,
   editGray: require("./Icons/Asset Actions/edit-gray.svg"),
   cancel: require("./Icons/Utilities/Close/blue-close.svg"),
 };

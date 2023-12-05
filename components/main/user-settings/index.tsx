@@ -5,13 +5,11 @@ import { isMobile } from "react-device-detect";
 import { UserContext } from "../../../context";
 import LocationContextProvider from "../../../context/location-provider";
 import urlUtils from "../../../utils/url";
+// @ts-ignore
 import styles from "./index.module.css";
 
-import {
-  SETTINGS_COMPANY,
-  SETTINGS_TEAM,
-  SUPERADMIN_ACCESS,
-} from "../../../constants/permissions";
+// @ts-ignore
+import { SETTINGS_COMPANY, SETTINGS_TEAM, SUPERADMIN_ACCESS } from "../../../constants/permissions";
 
 // Components
 import { Utilities } from "../../../assets";
@@ -27,6 +25,7 @@ import ShareLinks from "./share-links";
 import SideNavigation from "./side-navigation";
 import SuperAdmin from "./super-admin";
 import Team from "./team";
+import ThemeCustomization from "./theme-customization";
 
 export const SETTING_OPTIONS = {
   account: { label: "Account", permissions: [], content: Account },
@@ -68,10 +67,17 @@ export const SETTING_OPTIONS = {
     permissions: [SETTINGS_TEAM, SETTINGS_COMPANY],
     content: CustomSettings,
   },
+  ["theme-customization"]: {
+    label: "Theme Customization",
+    contentTitle: "Theme Customization",
+    permissions: [SETTINGS_TEAM, SETTINGS_COMPANY],
+    requiredTeamSettings: ["themeCustomization"],
+    content: ThemeCustomization,
+  },
 };
 
 const UserSettings: React.FC = () => {
-  const { hasPermission } = useContext(UserContext);
+  const { hasPermission, user } = useContext(UserContext);
 
   const router = useRouter();
 
@@ -84,8 +90,7 @@ const UserSettings: React.FC = () => {
   const [menuActive, setMenuActive] = useState<boolean>(true);
 
   let ActiveContent = () => <></>;
-  if (SETTING_OPTIONS[activeView])
-    ActiveContent = SETTING_OPTIONS[activeView].content;
+  if (SETTING_OPTIONS[activeView]) ActiveContent = SETTING_OPTIONS[activeView].content;
 
   const toggleSettings = () => {
     setMenuActive(!menuActive);
@@ -99,9 +104,7 @@ const UserSettings: React.FC = () => {
 
   const getTitle = (activeView) => {
     if (SETTING_OPTIONS[activeView]) {
-      return SETTING_OPTIONS[activeView].contentTitle
-        ? SETTING_OPTIONS[activeView].contentTitle
-        : activeView;
+      return SETTING_OPTIONS[activeView].contentTitle ? SETTING_OPTIONS[activeView].contentTitle : activeView;
     } else {
       return activeView;
     }
@@ -117,7 +120,10 @@ const UserSettings: React.FC = () => {
               <IconClickable src={Utilities.menu} onClick={toggleSettings} />
               <h2>{capitalCase(getTitle(activeView))}</h2>
             </div>
-            {hasPermission(SETTING_OPTIONS[activeView]?.permissions) ? (
+            {hasPermission(
+              SETTING_OPTIONS[activeView]?.permissions,
+              SETTING_OPTIONS[activeView]?.requiredTeamSettings,
+            ) ? (
               <ActiveContent />
             ) : (
               <NoPermissionNotice />

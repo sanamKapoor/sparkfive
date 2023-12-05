@@ -31,12 +31,12 @@ import AssetThumbail from "./asset-thumbail";
 import AssetUpload from "./asset-upload";
 import DetailOverlay from "./detail-overlay";
 import { ASSET_UPLOAD_APPROVAL } from "../../../constants/permissions";
-import { useDrag } from 'react-dnd';
-import {
-  Box,
-  boxesIntersect,
-  useSelectionContainer
-} from "@air/react-drag-to-select";
+// import { useDrag } from 'react-dnd';
+// import {
+//   Box,
+//   boxesIntersect,
+//   useSelectionContainer
+// } from "@air/react-drag-to-select";
 // Components
 
 const AssetGrid = ({
@@ -116,46 +116,48 @@ const AssetGrid = ({
     if (assetId) getInitialAsset(assetId);
   }, []);
 
-  const { DragSelection } = useSelectionContainer({
-    eventsElement: document.getElementById("root"),
-    onSelectionChange: (box) => {
-      /**
-       * Here we make sure to adjust the box's left and top with the scroll position of the window
-       * @see https://github.com/AirLabsTeam/react-drag-to-select/#scrolling
-       */
-      const scrollAwareBox: Box = {
-        ...box,
-        top: box.top + window.scrollY,
-        left: box.left + window.scrollX
-      };
+  // const { DragSelection } = useSelectionContainer({
+  //   eventsElement: document.getElementById("root"),
+  //   onSelectionChange: (box) => {
+  //     /**
+  //      * Here we make sure to adjust the box's left and top with the scroll position of the window
+  //      * @see https://github.com/AirLabsTeam/react-drag-to-select/#scrolling
+  //      */
+  //     const scrollAwareBox: Box = {
+  //       ...box,
+  //       top: box.top + window.scrollY,
+  //       left: box.left + window.scrollX
+  //     };
 
-      // setSelectionBox(scrollAwareBox);
-      const indexesToSelect: string[] = [];
-      selectableItems.current.forEach((item, index) => {
-        if (boxesIntersect(scrollAwareBox, item)) {
-          indexesToSelect.push(item.id);
-        }
-      });
+  //     // setSelectionBox(scrollAwareBox);
+  //     const indexesToSelect: string[] = [];
+  //     selectableItems.current.forEach((item, index) => {
+  //       if (boxesIntersect(scrollAwareBox, item)) {
+  //         indexesToSelect.push(item.id);
+  //       }
+  //     });
 
-      setSelectedIndexes(indexesToSelect);
-      console.log("🚀 ~ file: asset-grid.tsx:141 ~ indexesToSelect:", indexesToSelect)
-    },
-    onSelectionStart: () => {
-      console.log("OnSelectionStart");
-    },
-    onSelectionEnd: () => console.log("OnSelectionEnd", selectedIndexes),
-    selectionProps: {
-      style: {
-        border: "2px dashed purple",
-        borderRadius: 4,
-        backgroundColor: "brown",
-        opacity: 0.5
-      }
-    },
-    isEnabled: true
-  });
+  //     setSelectedIndexes(indexesToSelect);
+  //     console.log("🚀 ~ file: asset-grid.tsx:141 ~ indexesToSelect:", indexesToSelect)
+  //   },
+  //   onSelectionStart: () => {
+  //     console.log("OnSelectionStart");
+  //   },
+  //   onSelectionEnd: () => console.log("OnSelectionEnd", selectedIndexes),
+  //   selectionProps: {
+  //     style: {
+  //       border: "2px dashed purple",
+  //       borderRadius: 4,
+  //       backgroundColor: "brown",
+  //       opacity: 0.5
+  //     }
+  //   },
+  //   isEnabled: true
+  // });
 
   // For sorting the list view the hook in folder and asset view ----
+
+
   const setSortAssetAttribute = (attribute) => {
     if (attribute === currentSortAttribute) {
       setCurrentSortAttribute("-" + attribute);
@@ -420,25 +422,25 @@ const AssetGrid = ({
     }
   };
 
-  useEffect(() => {
-    if (mode === "assets") {
-      if (elementsContainerRef.current) {
-        Array.from(elementsContainerRef.current.children).forEach((item) => {
-          const { left, top, width, height, ...rest } = item.getBoundingClientRect();
+  // useEffect(() => {
+  //   if (mode === "assets") {
+  //     if (elementsContainerRef.current) {
+  //       Array.from(elementsContainerRef.current.children).forEach((item) => {
+  //         const { left, top, width, height, ...rest } = item.getBoundingClientRect();
 
-          console.log("qwerty", left, top, width, height, item.id)
-          selectableItems.current.push({
-            left,
-            top,
-            width,
-            height,
-            id: item.id
-          });
-        });
-      }
-    }
+  //         console.log("qwerty", left, top, width, height, item.id)
+  //         selectableItems.current.push({
+  //           left,
+  //           top,
+  //           width,
+  //           height,
+  //           id: item.id
+  //         });
+  //       });
+  //     }
+  //   }
 
-  }, [mode])
+  // }, [mode])
 
   useEffect(() => {
     const handleResize = () => {
@@ -456,24 +458,29 @@ const AssetGrid = ({
     }
   }, [ref.current, windowWidth]);
 
-  const handleMouseDown = (e) => {
-    // Logic to start selection on mouse down
-    console.log("🚀 ~ file: asset-grid.tsx:392 ~ handleMouseDown ~ handleMouseDown:", handleMouseDown)
-  };
+  // const handleMouseDown = (e) => {
+  //   // Logic to start selection on mouse down
+  //   console.log("🚀 ~ file: asset-grid.tsx:392 ~ handleMouseDown ~ handleMouseDown:", handleMouseDown)
+  // };
 
-  const handleMouseMove = (e) => {
-    // Logic to update selection area on mouse move
-    console.log("🚀 ~ file: asset-grid.tsx:397 ~ handleMouseMove ~ handleMouseMove:", handleMouseMove)
-  };
+  // const handleMouseMove = (e) => {
+  //   // Logic to update selection area on mouse move
+  //   console.log("🚀 ~ file: asset-grid.tsx:397 ~ handleMouseMove ~ handleMouseMove:", handleMouseMove)
+  // };
 
-  const handleMouseUp = (e) => {
-    // Logic to end selection on mouse up
-    console.log("🚀 ~ file: asset-grid.tsx:402 ~ handleMouseUp ~ handleMouseUp:", handleMouseUp)
-  };
+  // const handleMouseUp = (e) => {
+  //   // Logic to end selection on mouse up
+  //   console.log("🚀 ~ file: asset-grid.tsx:402 ~ handleMouseUp ~ handleMouseUp:", handleMouseUp)
+  // };
 
   return (
     <>
       {/* <DragSelection /> */}
+      <div className={styles["filter-view-container"]}>
+        {mode === "assets" && <FilterView />}
+
+      </div>
+
       <section className={`${styles.container}`}>
         {(shouldShowUpload || isDragging) && !isShare && !hasPermission([ASSET_UPLOAD_APPROVAL]) && (
           <AssetUpload
@@ -501,7 +508,7 @@ const AssetGrid = ({
 
         {
           <div className={styles["list-wrapper"]}>
-            {mode === "assets" && <FilterView />}
+
             {/* testing component starts from here */}
             {
               <ul

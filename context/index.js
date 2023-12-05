@@ -12,15 +12,18 @@ export const UserContext = createContext({
   setAdvancedConfig: (config) => { },
   fetchUser: (redirectUser) => { },
   logOut: () => { },
-  hasPermission: (requiredPermissions) => {
+  hasPermission: (requiredPermissions, requiredTeamSetting) => {
     return true;
   },
   afterAuth: ({ twoFactor, token }) => { },
+  initialLoadFinished: false,
   vanityCompanyInfo: undefined,
   cdnAccess: false,
-  advancedConfig: {},
-  setAdvancedConfig: (conf) => { },
   transcriptAccess: false,
+  logo: "",
+  setLogo: (logo) => { },
+  logoId: "",
+  resetLogo: () => { },
 });
 
 export const ThemeContext = createContext({
@@ -179,7 +182,9 @@ export const AssetContext = createContext({
     id,
     remove,
 
-    removeId) => { }
+    removeId) => { },
+  downloadController: undefined,
+  setDownloadController: (controller) => { },
 });
 
 export const TeamContext = createContext({
@@ -269,6 +274,8 @@ export const FilterContext = createContext({
   sharePath: "",
   renderFlag: false,
   setRenderedFlag: (val) => { },
+  preparingAssets: { current: "" },
+
 });
 
 export const ShareContext = createContext({

@@ -6,20 +6,28 @@ const UserPhoto = ({
   photoUrl = "",
   extraClass = "",
   sizePx = 27,
-  noPhoto = Utilities.memberProfile,
+  NoPhotoElement = Utilities.memberProfile,
   tooltipId = "",
   tooltipText = "",
 }) => (
   <>
-    <img
-      data-tip
-      data-for={tooltipId}
-      className={`${
-        photoUrl ? styles.current : styles["no-photo"]
-      } ${extraClass}`}
-      src={photoUrl || noPhoto}
-      style={{ width: sizePx, height: sizePx }}
-    />
+    {photoUrl && (
+      <img
+        data-tip
+        data-for={tooltipId}
+        className={`${photoUrl ? styles.current : styles["no-photo"]} ${extraClass}`}
+        src={photoUrl}
+        style={{ width: sizePx, height: sizePx }}
+      />
+    )}
+    {!photoUrl && (
+      <NoPhotoElement
+        data-tip
+        data-for={tooltipId}
+        className={`${styles["no-photo"]} ${extraClass}`}
+        style={{ width: sizePx, height: sizePx }}
+      />
+    )}
     {tooltipText && (
       <ReactTooltip id={tooltipId} delayShow={500} effect="solid">
         {tooltipText}

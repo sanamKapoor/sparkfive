@@ -45,7 +45,7 @@
 }
 
 .task {
-  background-color: var(--color-sec-lightblue);
+  background-color: var(--additional-color);
   position: relative;
 }
 
@@ -59,7 +59,7 @@
   height: 30px;
   width: 100%;
   left: 0;
-  border: 2px solid var(--color-sec-lightblue);
+  border: 2px solid var(--additional-color);
   top: 30px;
   align-items: center;
   box-sizing: border-box;

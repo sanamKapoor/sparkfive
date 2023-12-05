@@ -1,5 +1,5 @@
 .header {
-  background-color: var(--color-prim-navy);
+  background-color: var(--header-navigation-color);
   padding: 20px 40px;
   display: flex;
   position: fixed;

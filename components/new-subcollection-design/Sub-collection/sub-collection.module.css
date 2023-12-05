@@ -1,201 +1,198 @@
-.sub-collection-heading{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    padding: 5px 0 16px 0;
+.sub-collection-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  
 }
-.sub-collection-heading span{
-    font-family: "Noto Sans", sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    margin-right: 11px;
-    color: #817D9D;
+.sub-collection-heading span {
+  font-family: "Noto Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  margin-right: 11px;
+  color: #817d9d;
 }
 /* //subcollection card */
-.subcollectionCard{
-    max-width: 282px;
-    width: 100%;
-    border-radius: 6px 6px 0 0;
-    border: 1px solid
-    #DEDAD4 ;
-    padding: 12px;
-    position: relative;
-   
-  }
-  .subcollectionCard:hover{
-    animation: halfopacity 0.5s;
-    opacity: 0.5;
-  }
-  .subcollectionCard:hover .image-button-wrapper{
-    display: block;
+.subcollectionCard {
+  max-width: 282px;
+  width: 100%;
+  border-radius: 6px 6px 0 0;
+  border: 1px solid #dedad4;
+  padding: 12px;
+  position: relative;
+}
+.subcollectionCard:hover {
+  animation: halfopacity 0.5s;
+  opacity: 0.5;
+}
+.subcollectionCard:hover .image-button-wrapper {
+  display: block;
+}
+.imageGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
 
+.image img {
+  width: 100%;
+}
+.cardFooter {
+  max-width: 282px;
+  padding: 12px;
+  border-radius: 0 0 6px 6px;
+  border: 1px solid #dedad4;
+  border-top: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.cardFooter span {
+  display: block;
+}
+.heading {
+  font-family: "Noto Sans";
+  font-weight: 500;
+  font-size: 14px;
+}
+.totalCount {
+  font-family: "Noto Sans";
+  font-weight: 400;
+  font-size: 12px;
+  color: #aeb0c2;
+}
+.image-button-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+}
+.circle {
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  border: 1px solid #dedad4;
+}
+.checkIcon {
+  font-size: 24px;
+  color: white;
+  display: none;
+  border: 1px solid #dedad4;
+}
+
+.checked {
+  background-color: #dedad4;
+}
+
+.checked .checkIcon {
+  display: inline;
+}
+.TagsInfo {
+  display: flex;
+  align-items: center;
+}
+.tagOuter {
+  display: flex;
+  flex-wrap: wrap;
+}
+.TagsInfo span {
+  font-family: "Noto Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  margin-left: 11px;
+}
+.rightSide {
+  display: flex;
+  align-items: center;
+}
+.cardsWrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(246px, 1fr));
+  grid-gap: 20px;
+  
+ 
+}
+.assetWrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(246px, 1fr));
+  grid-gap: 20px;
+}
+.LoadMorebtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+}
+.ExpandIcons {
+  width: 15px;
+}
+.heading-wrapper{
+  margin:20px 0px;
+}
+.sub-collection-heading-outer{
+  display: flex;
+  align-items: center;
+  margin: 0 0 20px 0;
+
+}
+@media screen and (max-width: 810px) {
+  .cardsWrapper {
+    margin-top: 100px;
+    padding: 0 20px;
   }
-  .imageGrid {
+}
+@media screen and (min-width: 811px) and (max-width: 1280px) {
+  .cardsWrapper {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); 
-    gap: 10px; 
-   
+    grid-template-columns: repeat(auto-fill, minmax(187px, 1fr)) !important;
   }
-  
-  .image img {
-    width: 100%;
-   
+}
+@media screen and (max-width: 475px) {
+  .cardsWrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(246px, 1fr));
+    padding: 0 20px;
   }
-  .cardFooter{
-    max-width: 282px;
-    padding: 12px;
-    border-radius: 0 0 6px 6px;
-    border: 1px solid
-    #DEDAD4;
-    border-top: none;
-    display: flex;
+}
+@media (max-width: 420px) {
+  .sub-collection-heading {
+    flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
-  }
-  .cardFooter span{
-    display: block;
-  }
-  .heading{
-    font-family: "Noto Sans";
-    font-weight: 500;
-    font-size: 14px;
-  }
-  .totalCount{
-    font-family: "Noto Sans";
-    font-weight: 400;
-    font-size: 12px;
-    color:#AEB0C2;
-  
-  }
-  .image-button-wrapper {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: none;
-    
-
-  }
-  .circle {
-    width: 20px;
-    height: 20px;
-    background-color: #fff;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition:background-color 0.3s,
-    color 0.3s;
-    border: 1px solid #dedad4;
-  }
-  .checkIcon {
-    font-size: 24px;
-    color: white;
-    display: none;
-    border: 1px solid #dedad4;
-  }
-  
-  .checked {
-    background-color: #dedad4;
-  }
-  
-  .checked .checkIcon {
-    display: inline;
+    padding: 10px 20px;
   }
   .TagsInfo {
-    display: flex;
-    align-items: center;
+    margin-top: 10px;
+    align-items: flex-start;
   }
-  .tagOuter {
-    display: flex;
-    flex-wrap: wrap;
+  .cardsWrapper {
+    padding: 0 20px;
   }
-  .TagsInfo span{
-    font-family: "Noto Sans", sans-serif;
-    font-size: 14px;
-    font-weight: 400;
-    margin-left: 11px;
+  .assetWrapper {
+    padding: 20px 20px;
+    grid-gap: 10px;
+    margin-top: 100px;
   }
-  .rightSide{
-    display: flex;
-    align-items: center;
-  }
-  .cardsWrapper{
-    display: grid;
-    grid-template-columns: repeat(auto-fill,minmax(246px,1fr));
-    grid-gap: 20px;
-  
-    
- 
-  }
-  .assetWrapper{
-    display: grid;
-    grid-template-columns: repeat(auto-fill,minmax(246px,1fr));
-   grid-gap:20px;
-  }
-  .LoadMorebtn{
-    display:flex;
-    align-items: center;
-    justify-content: center;
-    margin-top:30px;
+}
 
+@media (min-width: 420px) and (max-width: 800px) {
+  .assetWrapper {
+    padding: 0 20px;
+    margin-top: 100px;
   }
-  .ExpandIcons{
-    width: 15px;
-  }
-   
-   @media screen and (max-width: 1280px) {
-    .cardsWrapper{
-        display: grid;
-        grid-template-columns: repeat(5, 231px); 
-    }
-  }
-  @media screen and (max-width: 810px){
-     .cardsWrapper{
-      margin-top:100px;
-     }
+}
 
-  }
-  @media screen and (max-width: 475px) {
-    .cardsWrapper{
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(246px, 1fr));
-        padding: 0 20px;
-    }
-   
-  }
-  @media (max-width:420px){
-    .sub-collection-heading{
-      flex-wrap: wrap;
-      align-items: center;
-      padding: 10px 20px;
-    }
-    .TagsInfo{
-      margin-top:10px;
-      align-items: flex-start;
-    }
-    .cardsWrapper{
-      padding: 0 20px;
-    }
-    .assetWrapper{
-      padding: 20px 20px;
-      grid-gap:10px;
-    }
-  }
-  
+/* list view css starts from here */
+.list-wrapper {
+  grid-template-columns: unset;
+}
 
-  
-  /* list view css starts from here */
-  .list-wrapper{
-    grid-template-columns: unset;
-    
-
-  }
-
-  .list-asset-wrapper{
-    grid-template-columns: unset;
-
-  }
-
+.list-asset-wrapper {
+  grid-template-columns: unset;
+}

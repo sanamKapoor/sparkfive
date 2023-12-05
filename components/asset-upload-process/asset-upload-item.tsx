@@ -1,9 +1,11 @@
 import { Line } from "rc-progress";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { Utilities } from "../../assets";
 import { AssetContext } from "../../context";
 import styles from "./index.module.css";
+import { getThemeFromLocalStorage } from "../../utils/theme";
+import { defaultPrimaryColor, defaultSecondaryColor } from "../../constants/theme";
 
 const AssetUploadItem = ({ item, index, handleRetry }) => {
   const {
@@ -17,17 +19,25 @@ const AssetUploadItem = ({ item, index, handleRetry }) => {
 
   const uploadSuccess = item?.status === "done" && uploadingStatus === "done";
   const uploadFail = item?.status === "fail" && uploadingStatus === "done";
-  const uploadInProgress =
-    uploadingStatus === "uploading" || uploadingStatus === "re-uploading";
+  const uploadInProgress = uploadingStatus === "uploading" || uploadingStatus === "re-uploading";
 
-  const uploadingFileIndex =
-    uploadSourceType === "dropbox" ? dropboxUploadingFile : uploadingFile;
+  const uploadingFileIndex = uploadSourceType === "dropbox" ? dropboxUploadingFile : uploadingFile;
 
-  const isUploadComplete =
-    item?.status === "done" || item?.status === "fail" ? 100 : 0;
+  const isUploadComplete = item?.status === "done" || item?.status === "fail" ? 100 : 0;
 
-  const uploadProgressPercent =
-    uploadingFileIndex === index ? uploadingPercent : isUploadComplete;
+  const uploadProgressPercent = uploadingFileIndex === index ? uploadingPercent : isUploadComplete;
+
+  const [loadingColor, setLoadingColor] = useState(defaultSecondaryColor);
+
+  const loadCurrentTheme = () => {
+    // Call API to get team theme then set to local storage
+    const theme = getThemeFromLocalStorage();
+    setLoadingColor(theme?.secondary || defaultSecondaryColor);
+  };
+
+  useEffect(() => {
+    loadCurrentTheme();
+  }, []);
 
   return (
     <div className={styles.innerUploadList}>
@@ -37,7 +47,7 @@ const AssetUploadItem = ({ item, index, handleRetry }) => {
           <>
             <div>Complete</div>
             <div className={styles.flexdiv}>
-              <img src={Utilities.checkMark} alt={"complete"} />
+              <Utilities.checkMark />
             </div>
           </>
         )}
@@ -58,7 +68,7 @@ const AssetUploadItem = ({ item, index, handleRetry }) => {
             <Line
               percent={uploadProgressPercent}
               strokeWidth={1}
-              strokeColor="#10bda5"
+              strokeColor={loadingColor}
               className={styles.linePercent}
               trailColor="#9597a6"
             />
@@ -66,9 +76,7 @@ const AssetUploadItem = ({ item, index, handleRetry }) => {
           </div>
         )}
       </div>
-      {(uploadInProgress ||
-        item?.status === "done" ||
-        item?.status === "fail") && (
+      {(uploadInProgress || item?.status === "done" || item?.status === "fail") && (
         <div className={styles.subHeading}>
           Estimated Time:{" "}
           {item?.status === "done" || item?.status === "fail"

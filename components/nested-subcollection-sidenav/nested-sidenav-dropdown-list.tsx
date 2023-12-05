@@ -223,8 +223,8 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
         headingClick={headingClick}
         totalCount={sidenavTotalCollectionCount}
         icon={undefined}
-        customStyle={{cursor:'pointer'}}
-       
+        customStyle={{ cursor: 'pointer' }}
+
       />
       {sidenavFolderList.map((item: Item, index: number) => {
         return (
@@ -259,7 +259,7 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
                     </div>
                     <div className={styles.totalCount}>
                       <div className={styles["list1-right-contents"]}>
-                        <span>{item.assetsCount + item.totalchildassests}</span>
+                        <span>{Number(item.assetsCount) + Number(item.totalchildassests)}</span>
                       </div>
                     </div>
                   </div>

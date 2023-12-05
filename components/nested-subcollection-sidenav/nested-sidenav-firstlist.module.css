@@ -5,7 +5,7 @@
     cursor: pointer;
     padding: 7.5px 2px;
     background: #fff;
-    margin-bottom:10px;
+    margin:10px 0;
     box-sizing: border-box;
     
 }
@@ -34,11 +34,7 @@
     line-height: 18px;
     color:var(--color-prim-navy);
 }
-/* .active {
-    background:var(--color-sec-lightblue);
-    border-radius: 4px;
-    padding: 4px;
-  } */
+
 .icon-description{
     max-width: 15ch;
     overflow: hidden;

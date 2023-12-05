@@ -42,4 +42,5 @@ export default {
   removeOcrCollection: (id) => axios.delete(`${teamUrl}/ocr-folders/${id}`),
   getTeamAttributes: (query = {}) =>
     axios.get(`${teamUrl}/attributes?${querystring.encode(query)}`),
+  updateTheme: (patchData) => axios.put(`${teamUrl}/theme`, patchData),
 };

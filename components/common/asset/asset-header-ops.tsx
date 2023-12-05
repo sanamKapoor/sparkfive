@@ -16,12 +16,16 @@ import assetApi from "../../../server-api/asset";
 import folderApi from "../../../server-api/folder";
 import shareApi from "../../../server-api/share-collection";
 import { getAssetsFilters } from "../../../utils/asset";
+import downloadUtils from "../../../utils/download";
+
+// Utils
 import { getSubdomain } from "../../../utils/domain";
 import toastUtils from "../../../utils/toast";
 import IconClickable from "../../common/buttons/icon-clickable";
 import Dropdown from "../inputs/dropdown";
 import ConfirmModal from "../modals/confirm-modal";
 import styles from "./asset-header-ops.module.css";
+import { sizeToZipDownload } from "../../../constants/download";
 
 const AssetHeaderOps = ({
   isUnarchive = false,
@@ -40,11 +44,11 @@ const AssetHeaderOps = ({
 
   const router = useRouter();
 
-  const [sharePath, setSharePath] = useState("");
-  const [showShareAction, setShowShareAction] = useState(false);
-  const contentRef = useRef(null);
-  const [showMoreActions, setShowMoreActions] = useState(false);
-  const [showAssociateModalOpen, setShowAssociateModalOpen] = useState(false);
+  // const [sharePath, setSharePath] = useState("");
+  // const [showShareAction, setShowShareAction] = useState(false);
+  // const contentRef = useRef(null);
+  // const [showMoreActions, setShowMoreActions] = useState(false);
+  // const [showAssociateModalOpen, setShowAssociateModalOpen] = useState(false);
 
   const {
     assets,
@@ -66,16 +70,18 @@ const AssetHeaderOps = ({
     setSubFoldersViewList,
     selectedAllSubAssets,
     setSubFoldersAssetsViewList,
+    setDownloadController,
   } = useContext(AssetContext);
 
   const { setIsLoading } = useContext(LoadingContext);
   const { hasPermission } = useContext(UserContext);
 
-  const {
-    activeSortFilter,
-    term,
-    setSharePath: setContextPath,
-  } = useContext(FilterContext);
+  const { activeSortFilter, term, setSharePath: setContextPath } = useContext(FilterContext);
+  const [sharePath, setSharePath] = useState("");
+  const [showShareAction, setShowShareAction] = useState(false);
+  const contentRef = useRef(null);
+  const [showMoreActions, setShowMoreActions] = useState(false);
+  const [showAssociateModalOpen, setShowAssociateModalOpen] = useState(false);
 
   const selectedAssets = assets.filter((asset) => asset.isSelected);
   const selectedSubFolderAssetId =
@@ -195,9 +201,7 @@ const AssetHeaderOps = ({
         );
       } else {
         totalDownloadingAssets = selectedAssets.length;
-        payload.assetIds = selectedAssets.map(
-          (assetItem) => assetItem.asset.id
-        );
+        payload.assetIds = selectedAssets.map((assetItem) => assetItem.asset.id);
       }
       // Add sharePath property if user is at share collection page
       if (sharePath) {
@@ -205,13 +209,18 @@ const AssetHeaderOps = ({
       }
       // Show processing bar
       updateDownloadingStatus("zipping", 0, totalDownloadingAssets);
-      let api = assetApi;
+      let api: any = assetApi;
 
       if (payload.assetIds.length > 0 || selectedAllAssets) {
         if (isShare) {
           api = shareApi;
         }
-        const { data } = await api.downloadAll(payload, filters);
+
+        const controller = new AbortController();
+        setDownloadController(controller);
+
+        const { data } = await api.downloadAll(payload, filters, controller);
+
         // Download file to storage
         fileDownload(data, "assets.zip");
 
@@ -259,7 +268,7 @@ const AssetHeaderOps = ({
         if (assetsToAssociate?.length !== associateAssets?.length) {
           setIsLoading(false);
           toastUtils.error(
-            `Some of your selected assets have already maximum ${maximumAssociateFiles} associated files`
+            `Some of your selected assets have already maximum ${maximumAssociateFiles} associated files`,
           );
         } else {
           await assetApi.associate(assetIds);
@@ -312,6 +321,45 @@ const AssetHeaderOps = ({
     return getSubdomain() || "danner";
   };
 
+  const downloadAssets = () => {
+    // updateDownloadingStatus("zipping", 0, 1);
+    // return;
+    // Only select 1 asset or select all but there is only 1 asset
+    if (selectedAssets.length === 1 || (selectedAllAssets && totalAssets === 1)) {
+      const size = parseInt(selectedAssets[0].asset?.size || 0);
+      // Asset size larger than limit size
+      if (size >= sizeToZipDownload || selectedAssets[0].asset?.type === "video") {
+        downloadSelectedAssets();
+      } else {
+        downloadUtils.downloadFile(selectedAssets[0].realUrl, selectedAssets[0]?.asset.name);
+      }
+    } else {
+      downloadSelectedAssets();
+    }
+  };
+
+  useEffect(() => {
+    const { asPath } = router;
+    if (asPath) {
+      if (advancedLink) {
+        // TODO: Optimize exact path
+        const splitPath = asPath.split("/collections/");
+
+        const idPath = splitPath[1].split("/");
+
+        if (idPath && !idPath[0].includes("[team]") && !idPath[1].includes("[id]")) {
+          const path = `${processSubdomain()}/${idPath[1]}/${idPath[0]}`;
+          setSharePath(path);
+          setContextPath(path);
+        }
+      } else {
+        // Get shareUrl from path
+        const splitPath = asPath.split("collections/");
+        setSharePath(splitPath[1]);
+      }
+    }
+  }, [router.asPath]);
+
   const handleClickOutside = (event) => {
     if (contentRef.current && !contentRef.current.contains(event.target)) {
       showShareActionList(null, false);
@@ -355,11 +403,7 @@ const AssetHeaderOps = ({
     const customFields = getCustomFields(filters);
 
     // Select all assets in folder
-    if (
-      filters["folderId"] &&
-      (customFields || filters["tags"]) &&
-      selectedAllAssets
-    ) {
+    if (filters["folderId"] && (customFields || filters["tags"]) && selectedAllAssets) {
       setShowShareAction(visible);
       if (visible) {
         document.addEventListener("mousedown", handleClickOutside);
@@ -380,7 +424,7 @@ const AssetHeaderOps = ({
       props: {
         place: "top",
         additionalClass: styles["action-button"],
-        src: AssetOps[`edit`],
+        SVGElement: AssetOps[`edit`],
         tooltipText: "Edit",
         tooltipId: "Edit",
         onClick: () => setActiveOperation("edit"),
@@ -395,7 +439,7 @@ const AssetHeaderOps = ({
       props: {
         place: "top",
         additionalClass: styles["action-button"],
-        src: AssetOps[`delete`],
+        SVGElement: AssetOps[`delete`],
         tooltipText: "Delete",
         tooltipId: "Delete",
         onClick: () => setActiveOperation("update"),
@@ -407,7 +451,7 @@ const AssetHeaderOps = ({
       props: {
         place: "top",
         additionalClass: styles["action-button"],
-        src: AssetOps[`download`],
+        SVGElement: AssetOps[`download`],
         tooltipId: "Download",
         tooltipText: "Download",
         onClick: downloadSelectedAssets,
@@ -422,7 +466,7 @@ const AssetHeaderOps = ({
       props: {
         place: "top",
         additionalClass: styles["action-button"],
-        src: AssetOps[`move`],
+        SVGElement: AssetOps[`move`],
         tooltipText: "Add to Collection",
         tooltipId: "Move",
         onClick: () => setActiveOperation("move"),
@@ -440,7 +484,7 @@ const AssetHeaderOps = ({
             <IconClickable
               place={"top"}
               additionalClass={`${styles["action-button"]}`}
-              src={AssetOps[`share`]}
+              SVGElement={AssetOps[`share`]}
               tooltipText={"Share"}
               tooltipId={"Share"}
               onClick={(e) => {
@@ -451,13 +495,18 @@ const AssetHeaderOps = ({
               <div className={styles["share-popover"]}>
                 <div className={styles["share-title"]}>
                   Share
-                  <img
-                    src={Utilities.blueClose}
-                    alt={"close"}
+                  <Utilities.blueClose
                     onClick={(e) => {
                       showShareActionList(e, false);
                     }}
                   />
+                  {/*<img*/}
+                  {/*  src={Utilities.blueClose}*/}
+                  {/*  alt={"close"}*/}
+                  {/*  onClick={(e) => {*/}
+                  {/*    showShareActionList(e, false);*/}
+                  {/*  }}*/}
+                  {/*/>*/}
                 </div>
                 <ul>
                   <li
@@ -467,13 +516,10 @@ const AssetHeaderOps = ({
                       setActiveOperation("share-as-subcollection");
                     }}
                   >
-                    <img src={Utilities.gridView} alt={"share-collection"} />
-                    <span className={"font-weight-500"}>
-                      Share as Collection
-                    </span>
-                    <p className={styles["share-description"]}>
-                      Create a branded collection
-                    </p>
+                    <Utilities.gridView />
+                    {/*<img src={Utilities.gridView} alt={"share-collection"} />*/}
+                    <span className={"font-weight-500"}>Share as Collection</span>
+                    <p className={styles["share-description"]}>Create a branded collection</p>
                   </li>
                   <li
                     className={styles["share-item"]}
@@ -482,11 +528,10 @@ const AssetHeaderOps = ({
                       setActiveOperation("share");
                     }}
                   >
-                    <img src={Utilities.share} alt={"share-file"} />
+                    <Utilities.share />
+                    {/*<img src={Utilities.share} alt={"share-file"} />*/}
                     <span className={"font-weight-500"}>Share Files</span>
-                    <p className={styles["share-description"]}>
-                      Create a link to shared file(s)
-                    </p>
+                    <p className={styles["share-description"]}>Create a link to shared file(s)</p>
                   </li>
                 </ul>
               </div>
@@ -502,7 +547,7 @@ const AssetHeaderOps = ({
       props: {
         place: "top",
         additionalClass: styles["action-button"],
-        src: AssetOps[`share`],
+        SVGElement: AssetOps[`share`],
         tooltipText: "Share",
         tooltipId: "Share",
         onClick: () => setActiveOperation("shareCollections"),
@@ -514,7 +559,7 @@ const AssetHeaderOps = ({
       props: {
         place: "top",
         additionalClass: styles["action-button"],
-        src: AssetOps[`move`],
+        SVGElement: AssetOps[`move`],
         tooltipText: "Recover Asset",
         tooltipId: "Recover",
         onClick: () => setActiveOperation("recover"),
@@ -526,7 +571,7 @@ const AssetHeaderOps = ({
       props: {
         place: "top",
         additionalClass: styles["action-button"],
-        src: AssetOps[`delete`],
+        SVGElement: AssetOps[`delete`],
         tooltipText: "Delete",
         tooltipId: "Delete",
         onClick: () => setActiveOperation("delete"),
@@ -541,7 +586,7 @@ const AssetHeaderOps = ({
             <IconClickable
               place={"top"}
               additionalClass={`${styles["action-button"]}`}
-              src={Utilities.more}
+              SVGElement={Utilities.more}
               tooltipText={"More"}
               tooltipId={"More"}
               onClick={() => setShowMoreActions(true)}
@@ -552,38 +597,36 @@ const AssetHeaderOps = ({
                 <Dropdown
                   onClickOutside={() => setShowMoreActions(false)}
                   additionalClass={styles["more-dropdown"]}
+                  svgIcon
                   options={[
                     {
                       id: "associate",
                       label: "Associate",
-                      icon: AssetOps.associateBlue,
+                      icon: <AssetOps.associateBlue />,
                       onClick: () => setShowAssociateModalOpen(true),
                     },
                     {
                       id: "move",
                       label: "Move",
-                      icon: AssetOps.moveReplace,
+                      icon: <AssetOps.moveReplace />,
                       onClick: () => setActiveOperation("moveReplace"),
                     },
                     {
                       id: "archive",
                       label: "Archive",
-                      icon: AssetOps.archive,
-                      onClick: () =>
-                        setActiveOperation(
-                          isUnarchive ? "unarchive" : "archive"
-                        ),
+                      icon: <AssetOps.archive />,
+                      onClick: () => setActiveOperation(isUnarchive ? "unarchive" : "archive"),
                     },
                     {
                       id: "copy",
                       label: "Copy",
-                      icon: AssetOps.copy,
+                      icon: <AssetOps.copy />,
                       onClick: () => setActiveOperation("copy"),
                     },
                     {
                       id: "thumbnail",
                       label: "Recreate Thumbnail",
-                      icon: AssetOps.recreateThumbnail,
+                      icon: <AssetOps.recreateThumbnail />,
                       onClick: () => setActiveOperation("generate_thumbnails"),
                     },
                   ]}
@@ -603,7 +646,7 @@ const AssetHeaderOps = ({
         {!deselectHidden && (
           <img
             className={styles.close}
-            src={Utilities.blueClose}
+            src={Utilities.blueCloses}
             onClick={deselectAll}
           />
         )}

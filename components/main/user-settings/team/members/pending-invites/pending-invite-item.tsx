@@ -1,3 +1,4 @@
+
 import copyClipboard from "copy-to-clipboard";
 import React, { useContext } from "react";
 
@@ -18,12 +19,7 @@ interface PendingInviteItemProps {
   resend: (id: string) => void;
 }
 
-const PendingInviteItem: React.FC<PendingInviteItemProps> = ({
-  invite,
-  editAction,
-  deleteAction,
-  resend,
-}) => {
+const PendingInviteItem: React.FC<PendingInviteItemProps> = ({ invite, editAction, deleteAction, resend }) => {
   const { user } = useContext(UserContext);
 
   const copyLink = (code: string) => {
@@ -39,22 +35,22 @@ const PendingInviteItem: React.FC<PendingInviteItemProps> = ({
       <div className={styles.details_wrapper_invite}>
         <div className={styles["operation-buttons"]}>
           <div
-            className={`${styles["expire-date"]} ${
+            className={`${styles["expire-date"]} ${styles["w-25"]} ${
               getExpireDate(invite.expirationDate, true)
                 ? styles["red-text"]
                 : styles["grey-text"]
             }`}
           >
-            {getExpireDate(invite.expirationDate)}
+            {getExpireDate(invite.expirationDate)} 
           </div>
-          <div
-            className={`${styles["resend-button"]} ${
+          
+          <div  className={`${styles["resend-button"]} ${
               !checkExpireDate(invite.expirationDate) ? styles["hidden"] : ""
-            }`}
-          >
+            }`}>
+          
             <IconClickable
               additionalClass={styles["resend-image"]}
-              src={Navigation.alertBlue}
+              SVGElement={Navigation.alertBlue}
               tooltipText={"Resend"}
               tooltipId={"Resend"}
               onClick={() => {
@@ -65,7 +61,7 @@ const PendingInviteItem: React.FC<PendingInviteItemProps> = ({
           <div className={styles["copy-button"]}>
             <IconClickable
               additionalClass={styles["action-button"]}
-              src={AssetOps[`copy${""}`]}
+              SVGElement={AssetOps[`copy${""}`]}
               tooltipText={"Copy Link"}
               tooltipId={"Copy"}
               onClick={() => {
@@ -77,20 +73,10 @@ const PendingInviteItem: React.FC<PendingInviteItemProps> = ({
         <div className={styles.details}>
           <div className={styles.role}>{capitalCase(invite.role.name)}</div>
           <div className={styles.actions}>
-            <div
-              onClick={editAction}
-              className={`${styles.action} ${
-                user.id === invite.id ? styles.hidden : ""
-              }`}
-            >
+            <div onClick={editAction} className={`${styles.action} ${user.id === invite.id ? styles.hidden : ""}`}>
               Edit
             </div>
-            <div
-              onClick={deleteAction}
-              className={`${styles.action} ${
-                user.id === invite.id ? styles.hidden : ""
-              }`}
-            >
+            <div onClick={deleteAction} className={`${styles.action} ${user.id === invite.id ? styles.hidden : ""}`}>
               Delete
             </div>
           </div>

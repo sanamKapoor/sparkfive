@@ -5,12 +5,7 @@ import styles from "./integration-item.module.css";
 import Button from "../buttons/button";
 import ButtonIcon from "../buttons/button-icon";
 
-const IntegrationItem = ({
-  integrationName,
-  integrationId,
-  onClick,
-  createdAt = "",
-}) => {
+const IntegrationItem = ({ integrationName, integrationId, onClick, createdAt = "" }) => {
   let existingIntegration = createdAt;
 
   return (
@@ -20,18 +15,9 @@ const IntegrationItem = ({
         <div>{integrationName}</div>
       </div>
       {existingIntegration ? (
-        <Button
-          text={"Connected"}
-          type={"button"}
-          className={"container secondary input-height"}
-          disabled={true}
-        />
+        <Button text={"Connected"} type={"button"} className={"container secondary input-height"} disabled={true} />
       ) : (
-        <ButtonIcon
-          text={"Add Integration"}
-          icon={Utilities.addAlt}
-          onClick={onClick}
-        />
+        <ButtonIcon text={"Add Integration"} SVGElement={Utilities.addAlt} onClick={onClick} />
       )}
     </div>
   );

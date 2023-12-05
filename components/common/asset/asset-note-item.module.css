@@ -40,7 +40,7 @@
     display: flex;
     align-items: flex-start;
 }
-.actions img {
+.actions img, .actions svg {
     width: 16px;
 }
 

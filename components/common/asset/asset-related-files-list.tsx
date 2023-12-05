@@ -23,11 +23,7 @@ const AssetRelatedFilesList = ({
   onChangeRelatedFiles,
   onAddRelatedFiles,
 }) => {
-  const {
-    setActiveOperation,
-    updateDownloadingStatus,
-    setOperationAssets,
-  } = useContext(AssetContext);
+  const { activeOperation, setActiveOperation, updateDownloadingStatus, setOperationAssets } = useContext(AssetContext);
 
   const { setIsLoading } = useContext(LoadingContext);
 
@@ -65,13 +61,7 @@ const AssetRelatedFilesList = ({
 
       console.log(`Error in asset-related-files-list`);
       console.error(e);
-      updateDownloadingStatus(
-        "error",
-        0,
-        0,
-        parsedErrorResponse.message ||
-        "Internal Server Error. Please try again."
-      );
+      updateDownloadingStatus("error", 0, 0, parsedErrorResponse.message || "Internal Server Error. Please try again.");
     }
 
     // downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets')
@@ -100,14 +90,10 @@ const AssetRelatedFilesList = ({
       setIsLoading(true);
       await assetApi.disassociate([associateFileId, id]);
 
-      const assetIndex = relatedAssets.find(
-        (assetItem) => assetItem.asset.id === id
-      );
+      const assetIndex = relatedAssets.find((assetItem) => assetItem.asset.id === id);
 
       if (assetIndex !== -1) {
-        onChangeRelatedFiles([
-          ...relatedAssets.filter((item) => item.asset.id !== id),
-        ]);
+        onChangeRelatedFiles([...relatedAssets.filter((item) => item.asset.id !== id)]);
       }
 
       setIsLoading(false);
@@ -115,9 +101,7 @@ const AssetRelatedFilesList = ({
     } catch (err) {
       // TODO: Error handling
       setIsLoading(false);
-      toastUtils.error(
-        "Could not disassociate assets, please try again later."
-      );
+      toastUtils.error("Could not disassociate assets, please try again later.");
     }
   };
 
@@ -132,14 +116,12 @@ const AssetRelatedFilesList = ({
           deletedAt: new Date(new Date().toUTCString()).toISOString(),
         },
       });
-      const assetIndex = relatedAssets.findIndex(
-        (assetItem) => assetItem.asset.id === id
-      );
+      const assetIndex = relatedAssets.findIndex((assetItem) => assetItem.asset.id === id);
       if (assetIndex !== -1)
         onChangeRelatedFiles(
           update(relatedAssets, {
             $splice: [[assetIndex, 1]],
-          })
+          }),
         );
 
       setIsLoading(false);
@@ -160,11 +142,8 @@ const AssetRelatedFilesList = ({
       <div className={styles.head}>
         <h2>Related Files</h2>
         <div className={styles.actions}>
-          <IconClickable
-            src={AssetOps.download}
-            onClick={downloadAllRelatedAssets}
-          />
-          <IconClickable src={AssetOps.share} onClick={shareAllRelatedAssets} />
+          <IconClickable SVGElement={AssetOps.download} onClick={downloadAllRelatedAssets} />
+          <IconClickable SVGElement={AssetOps.share} onClick={shareAllRelatedAssets} />
           <div className={styles.actionsPlus}>
             <AssetRelatedAddition
               currentRelatedAssets={relatedAssets}
@@ -181,15 +160,8 @@ const AssetRelatedFilesList = ({
             <li className={styles.item} key={asset?.asset?.id}>
               <div className={styles["item-wrapper"]}>
                 <div className={styles.thumbnail}>
-                  {asset.thumbailUrl && (
-                    <img src={asset.thumbailUrl || Assets.unknown} alt={name} />
-                  )}
-                  {!asset.thumbailUrl && (
-                    <AssetIcon
-                      extension={asset?.asset?.extension}
-                      onList={true}
-                    />
-                  )}
+                  {asset.thumbailUrl && <img src={asset.thumbailUrl || Assets.unknown} alt={name} />}
+                  {!asset.thumbailUrl && <AssetIcon extension={asset?.asset?.extension} onList={true} />}
                 </div>
                 <div className={styles["info-wrapper"]}>
                   <div>
@@ -213,7 +185,7 @@ const AssetRelatedFilesList = ({
                       wrapperClass={styles["item-actions-wrapper"]}
                       Wrapper={({ children }) => (
                         <>
-                          <IconClickable src={Utilities.more} />
+                          <IconClickable SVGElement={Utilities.more} />
                           {children}
                         </>
                       )}
@@ -227,13 +199,11 @@ const AssetRelatedFilesList = ({
                               },
                               {
                                 label: "Disassociate",
-                                onClick: () =>
-                                  openDisassociateModal(asset?.asset?.id),
+                                onClick: () => openDisassociateModal(asset?.asset?.id),
                               },
                               {
                                 label: "Delete",
-                                onClick: () =>
-                                  openDeleteAsset(asset?.asset?.id),
+                                onClick: () => openDeleteAsset(asset?.asset?.id),
                               },
                             ]}
                           />
@@ -263,8 +233,7 @@ const AssetRelatedFilesList = ({
                       confirmText={"Disassociate"}
                       message={
                         <div>
-                          Are you sure you want to <strong>Disassociate</strong>{" "}
-                          this asset?
+                          Are you sure you want to <strong>Disassociate</strong> this asset?
                         </div>
                       }
                       modalIsOpen={disassociateModal}

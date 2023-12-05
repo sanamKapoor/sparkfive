@@ -39,7 +39,7 @@
 }
 
 .alt-color-blue {
-  background-color: var(--color-sec-lightblue);
+  background-color: var(--additional-color);
 }
 
 .pointer {
@@ -49,5 +49,5 @@
 .tag-icon {
   margin-right: 10px;
   width: 13px;
-  background-color: var(--color-sec-lightblue);
+  background-color: var(--secondary-color);
 }

@@ -6,7 +6,6 @@ import { validation } from '../constants/file-validation';
 import { AssetContext, SocketContext } from '../context';
 import assetApi from '../server-api/asset';
 import { convertTimeFromSeconds, getFolderKeyAndNewNameByFileName } from '../utils/upload';
-
 interface Asset {
   id: string;
   name: string;
@@ -108,6 +107,7 @@ export default ({ children }) => {
   const [downloadingStatus, setDownloadingStatus] = useState("none"); // Allowed value: "none", "zipping", "preparing", "done", "error"
   const [downloadingPercent, setDownloadingPercent] = useState(0); // Percent of uploading process: 0 - 100
   const [downloadingError, setDownloadingError] = useState(""); // Percent of uploading process: 0 - 100
+  const [downloadController, setDownloadController] = useState(); // Need to keep this controller when downloading to cancel process
 
   // Asset navigation
   const [detailOverlayId, setDetailOverlayId] = useState(undefined);
@@ -156,11 +156,7 @@ export default ({ children }) => {
     if (total) setTotalAssets(total);
 
     if (replace) setAssets(inputAssets);
-    else
-      setAssets([
-        ...assets.filter((asset) => !asset.isLoading),
-        ...inputAssets,
-      ]);
+    else setAssets([...assets.filter((asset) => !asset.isLoading), ...inputAssets]);
   };
 
   const setCompletedAssetItems = (inputAssets, replace = true) => {
@@ -168,18 +164,10 @@ export default ({ children }) => {
     if (results) inputAssets = results;
 
     if (replace) setCompletedAssets(inputAssets);
-    else
-      setCompletedAssets([
-        ...completedAssets.filter((asset) => !asset.isLoading),
-        ...inputAssets,
-      ]);
+    else setCompletedAssets([...completedAssets.filter((asset) => !asset.isLoading), ...inputAssets]);
   };
 
-  const setFolderItems = (
-    inputFolders,
-    replace = true,
-    ignoreTotalItem = false
-  ) => {
+  const setFolderItems = (inputFolders, replace = true, ignoreTotalItem = false) => {
     const { results, next, total } = inputFolders;
     if (results) inputFolders = results;
     if (next) setNextPage(next);
@@ -353,7 +341,7 @@ export default ({ children }) => {
     retryList: any[],
     folderId,
     folderGroup = {},
-    subFolderAutoTag = true
+    subFolderAutoTag = true,
   ) => {
     try {
       const formData = new FormData();
@@ -363,10 +351,7 @@ export default ({ children }) => {
       let currentUploadingFolderId = null;
 
       // Get file group info, this returns folderKey and newName of file
-      let fileGroupInfo = getFolderKeyAndNewNameByFileName(
-        file.webkitRelativePath,
-        subFolderAutoTag
-      );
+      let fileGroupInfo = getFolderKeyAndNewNameByFileName(file.webkitRelativePath, subFolderAutoTag);
 
       // Do validation
       if (retryList[i].asset.size > validation.UPLOAD.MAX_SIZE.VALUE) {
@@ -398,7 +383,7 @@ export default ({ children }) => {
             retryList,
             folderId,
             folderGroup,
-            subFolderAutoTag
+            subFolderAutoTag,
           );
         }
       }
@@ -446,10 +431,7 @@ export default ({ children }) => {
       }
 
       // Call API to upload
-      let { data } = await assetApi.uploadAssets(
-        formData,
-        getCreationParameters(attachedQuery)
-      );
+      let { data } = await assetApi.uploadAssets(formData, getCreationParameters(attachedQuery));
 
       // If user is uploading files in folder which is not saved from server yet
       if (fileGroupInfo.folderKey && !folderId) {
@@ -476,7 +458,7 @@ export default ({ children }) => {
 
       // Mark this asset as done
       const updatedAssets = assets.map((asset, index) =>
-        index === retryList[i].index ? { ...asset, status: "done" } : asset
+        index === retryList[i].index ? { ...asset, status: "done" } : asset,
       );
 
       setUploadingAssets(updatedAssets);
@@ -495,7 +477,7 @@ export default ({ children }) => {
           retryList,
           folderId,
           folderGroup,
-          subFolderAutoTag
+          subFolderAutoTag,
         );
       }
     } catch (e) {
@@ -523,7 +505,7 @@ export default ({ children }) => {
           retryList,
           folderId,
           folderGroup,
-          subFolderAutoTag
+          subFolderAutoTag,
         );
       }
     }
@@ -545,12 +527,7 @@ export default ({ children }) => {
     setTotalAssets(value);
   };
 
-  const updateDownloadingStatus = (
-    status,
-    percent,
-    totalDownloadingAssets,
-    error
-  ) => {
+  const updateDownloadingStatus = (status, percent, totalDownloadingAssets, error) => {
     if (status) {
       setDownloadingStatus(status);
     }
@@ -576,9 +553,7 @@ export default ({ children }) => {
       // Listen upload file process event
       socket.on("uploadFilesProgress", function (data) {
         setUploadingPercent(data.percent);
-        setUploadRemainingTime(
-          `${convertTimeFromSeconds(data.timeLeft)} remaining`
-        );
+        setUploadRemainingTime(`${convertTimeFromSeconds(data.timeLeft)} remaining`);
 
         // setUploadingFileName("Test.png")
         if (data.fileName) {
@@ -709,11 +684,9 @@ export default ({ children }) => {
     setSelectedAllSubAssets,
     appendNewSubSidenavFolders,
     setListUpdateFlag,
-    listUpdateFlag
+    listUpdateFlag,
+    downloadController,
+    setDownloadController,
   };
-  return (
-    <AssetContext.Provider value={assetsValue}>
-      {children}
-    </AssetContext.Provider>
-  );
+  return <AssetContext.Provider value={assetsValue}>{children}</AssetContext.Provider>;
 };
