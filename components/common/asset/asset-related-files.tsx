@@ -18,6 +18,9 @@ import AssetThumbail from "./asset-thumbail";
 import IconClickable from "../buttons/icon-clickable";
 import AssetRelatedFileUpload from "./asset-related-files-upload";
 
+import {events} from '../../../constants/analytics';
+import useAnalytics from '../../../hooks/useAnalytics'
+
 const NextArrow = ({ onClick }) => (
   <img
     className={styles.arrow}
@@ -52,6 +55,8 @@ const AssetRelatedFIles = ({
   } = useContext(AssetContext);
 
   const { setIsLoading } = useContext(LoadingContext);
+
+  const {trackEvent} = useAnalytics();
 
   const [activeAssetId, setActiveAssetId] = useState("");
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -221,7 +226,12 @@ const AssetRelatedFIles = ({
           {assets.length > 0 && <h3>Related Files</h3>}
           <IconClickable
             src={AssetOps.upload}
-            onClick={() => setUploadModalOpen(true)}
+            onClick={() => {
+              trackEvent(events.UPLOAD_ASSET, {
+                uploadType: "Related Files",
+              });
+              setUploadModalOpen(true)
+            }}
           />
           <ReactTooltip
             id={"upload"}

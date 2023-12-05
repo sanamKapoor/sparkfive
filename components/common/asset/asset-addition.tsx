@@ -21,6 +21,9 @@ import ToggleAbleAbsoluteWrapper from "../misc/toggleable-absolute-wrapper";
 import styles from "./asset-addition.module.css";
 import AssetDuplicateModal from "./asset-duplicate-modal";
 
+import {events} from '../../../constants/analytics'
+import useAnalytics from '../../../hooks/useAnalytics'
+
 const AssetAddition = ({
   activeSearchOverlay = false,
   setActiveSearchOverlay = (active: any) => { },
@@ -42,6 +45,8 @@ const AssetAddition = ({
   const [disableButtons, setDisableButtons] = useState(false);
   const { activeSortFilter } = useContext(FilterContext) as any;
   const { advancedConfig, hasPermission } = useContext(UserContext);
+
+  const { trackEvent } = useAnalytics();
 
   const {
     assets,
@@ -757,7 +762,12 @@ const AssetAddition = ({
       id: "file",
       label: "Upload From Computer",
       text: "png, jpg, mp4 and more",
-      onClick: () => fileBrowserRef.current.click(),
+      onClick: () => {
+        fileBrowserRef.current.click();
+        trackEvent(events.UPLOAD_ASSET, {
+          uploadType: 'Device'
+        });
+      },
       icon: AssetOps.newCollection,
     },
     {
@@ -771,14 +781,23 @@ const AssetAddition = ({
       id: "dropbox",
       label: "Upload from Dropbox",
       text: "Import files",
-      onClick: openDropboxSelector,
+      onClick: (e) => {
+        openDropboxSelector(e);
+        trackEvent(events.UPLOAD_ASSET, {
+          uploadType: 'Dropbox'
+        });
+      },
       icon: Assets.dropbox,
     },
     {
       id: "gdrive",
       label: "Upload from Drive",
       text: "Import files",
-      onClick: () => { },
+      onClick: () => {
+        trackEvent(events.UPLOAD_ASSET, {
+          uploadType: 'Google Drive'
+        });
+      },
       icon: Assets.gdrive,
       CustomContent: ({ children }) => {
         return (

@@ -12,6 +12,9 @@ import { useContext } from "react";
 import { UserContext } from "../../../context";
 import React from "react";
 
+import {events} from '../../../constants/analytics';
+import useAnalytics from '../../../hooks/useAnalytics'
+
 const AssetOptions = ({
   itemType = "",
   asset,
@@ -35,13 +38,29 @@ const AssetOptions = ({
     return user?.role?.id === "admin" || user?.role?.id === "super_admin";
   };
 
+	const {trackEvent} = useAnalytics();
+
   const options = [
     {
       label: "Download",
-      onClick: downloadAsset,
+      onClick: () => {
+        trackEvent(events.DOWNLOAD_ASSET, {
+         assetId: asset.id,
+         assetName: asset.name,
+       });
+       downloadAsset();
+     },
       permissions: [ASSET_DOWNLOAD],
     },
-    { label: "Share", onClick: openShareAsset },
+    { label: "Share", 
+    onClick: () => {
+      trackEvent(events.SHARE_ASSET, {
+        assetId: asset.id,
+        assetName: asset.name,
+      });
+      openShareAsset();
+    },
+  },
   ];
 
   const assetRelatedOptions: any = [
