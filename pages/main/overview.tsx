@@ -4,8 +4,19 @@ import { CALENDAR_ACCESS } from "../../constants/permissions";
 import AppLayout from "../../components/common/layouts/app-layout";
 import MainLayout from "../../components/common/layouts/main-layout";
 import Overview from "../../components/main/overview";
+import useAnalytics from "../../hooks/useAnalytics";
+import { useEffect } from "react";
+import { pages } from "../../constants/analytics";
 
-const OverviewPage = () => (
+const OverviewPage = () => {
+
+  const {trackPage} = useAnalytics();
+
+  useEffect(() => {
+    trackPage(pages.UPLOAD_APPROVAL)
+},[]);
+
+  return (
   <>
     <AppLayout title="Overview">
       <MainLayout requiredPermissions={[CALENDAR_ACCESS]}>
@@ -13,6 +24,6 @@ const OverviewPage = () => (
       </MainLayout>
     </AppLayout>
   </>
-);
+)};
 
 export default OverviewPage;

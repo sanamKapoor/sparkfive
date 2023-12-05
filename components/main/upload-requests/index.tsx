@@ -249,10 +249,6 @@ const UploadRequest = () => {
   } = useAssetDetailCollecion(addFolderAssetView, updateAssetStateAssetView, tempFolders, deleteFolderAssetView)
 
 
-
-
-
-
   const updateName = async (value) => {
     if (approvalId) {
       await uploadApprovalApi.update(approvalId, { name: value });

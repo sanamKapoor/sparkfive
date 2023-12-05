@@ -8,21 +8,21 @@ const useAnalytics = () => {
   const isTrackingEnabled = advancedConfig?.insights || insightAllowed;
 
   const trackPage = (pageName: string) => {
-    if (isTrackingEnabled || pageName === "LOGIN") {
+    // if (isTrackingEnabled || pageName === "LOGIN") {
       AnalyticsService.trackPage(pageName);
-    }
+    // }
   };
 
   const trackEvent = (
     eventName: string,
     infoObject?: Record<string, unknown>
   ) => {
-    if (isTrackingEnabled || eventName === "LOGOUT") {
+    // if (isTrackingEnabled || eventName === "LOGOUT") {
       AnalyticsService.trackEvent('USER_ACTION', {
         actionName: eventName,
         actionInfo: infoObject
       });
-    }
+    // }
   };
 
   const identify = (userId: string, infoObject?: Record<string, unknown>) => {

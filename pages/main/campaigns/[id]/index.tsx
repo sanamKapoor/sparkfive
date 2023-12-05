@@ -4,8 +4,19 @@ import { CALENDAR_ACCESS } from "../../../../constants/permissions";
 import AppLayout from "../../../../components/common/layouts/app-layout";
 import MainLayout from "../../../../components/common/layouts/main-layout";
 import CampaignDetail from "../../../../components/main/campaign/detail";
+import useAnalytics from "../../../../hooks/useAnalytics";
+import { useEffect } from "react";
+import { pages } from "../../../../constants/analytics";
 
-const CampaignDetailPage = () => (
+const CampaignDetailPage = () => {
+
+  const {trackPage} = useAnalytics();
+
+  useEffect(() => {
+    trackPage(pages.UPLOAD_APPROVAL)
+},[]);
+
+  return (
   <>
     <AppLayout title="Campaign">
       <MainLayout requiredPermissions={[CALENDAR_ACCESS]}>
@@ -13,6 +24,6 @@ const CampaignDetailPage = () => (
       </MainLayout>
     </AppLayout>
   </>
-);
+)};
 
 export default CampaignDetailPage;

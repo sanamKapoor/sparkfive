@@ -4,6 +4,8 @@ import userApi from "../../server-api/user";
 import cookiesUtil from "../../utils/cookies";
 import toastUtils from "../../utils/toast";
 import urlUtils from "../../utils/url";
+import useAnalytics from "../../hooks/useAnalytics";
+import { pages } from "../../constants/analytics";
 
 // Simple redirect page
 const OauthCbPage = () => {
@@ -29,6 +31,13 @@ const OauthCbPage = () => {
       Router.replace(redirectUrl);
     }
   };
+
+
+  const {trackPage} = useAnalytics();
+
+  useEffect(() => {
+    trackPage(pages.UPLOAD_APPROVAL)
+},[]);
 
   return (
     <div className="container">

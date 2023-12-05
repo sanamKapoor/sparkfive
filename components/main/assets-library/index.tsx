@@ -30,10 +30,11 @@ import NestedSidenav from "../../nested-subcollection-sidenav/nested-sidenav";
 import UploadStatusOverlayAssets from "../../upload-status-overlay-assets";
 import styles from "./index.module.css";
 
-import { initialActiveSortFilters } from "../../../config/data/filter";
+
 // Components
 
 const AssetsLibrary = () => {
+
   const [activeView, setActiveView] = useState("grid");
   const [showOverlayLoader, setShowOverlayLoader] = useState(false);
 
@@ -117,6 +118,8 @@ const AssetsLibrary = () => {
   const router = useRouter();
 
   const preparingAssets = useRef(true);
+
+
   // When tag, campaigns, collection changes, used for click on tag/campaigns/collection in admin attribute management
   useEffect(() => {
     if (!preparingAssets.current) return;

@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 
 // Components
 import AppLayout from "../../../../components/common/layouts/app-layout";
@@ -7,9 +7,17 @@ import UserSettings from "../../../../components/main/user-settings";
 import AssetDownloadProcess from "../../../../components/asset-download-process";
 
 import { AssetContext } from "../../../../context";
+import useAnalytics from "../../../../hooks/useAnalytics";
+import { pages } from "../../../../constants/analytics";
 
 const UserSettingsPage: React.FC = () => {
   const { downloadingStatus } = useContext(AssetContext);
+
+  const {trackPage} = useAnalytics();
+
+  useEffect(() => {
+    trackPage(pages.UPLOAD_APPROVAL)
+},[]);
 
   return (
     <>

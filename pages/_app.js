@@ -48,6 +48,9 @@ import requestUtils from "../utils/requests";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+// import { AnalyticsBrowser } from '@segment/analytics-next'
+
+// export const analytics = AnalyticsBrowser.load({ writeKey: 'IYsMt7f2NFZDj7X740DqFP9upGOAv8D8' })
 
 toast.configure();
 
@@ -86,8 +89,9 @@ export default function MyApp({ Component, pageProps }) {
     }
   }, [router.asPath]);
 
-  return (
+  
 
+  return (
     <LoadingContextProvider>
       <UserContextProvider>
         <SocketProvider>

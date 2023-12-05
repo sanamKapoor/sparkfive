@@ -4,15 +4,22 @@ import FilterProvider from "../../../../context/filter-provider";
 // Components
 import MainLayout from "../../../../components/common/layouts/main-layout";
 
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import DeletedAssetsLibrary from "../../../../components/common/custom-settings/deleted-assets";
 import AppLayout from "../../../../components/common/layouts/app-layout";
 import NoPermissionNotice from "../../../../components/common/misc/no-permission-notice";
 import { UserContext } from "../../../../context";
 import { UserRole } from "../../../../interfaces/user/role";
+import useAnalytics from "../../../../hooks/useAnalytics";
+import { pages } from "../../../../constants/analytics";
 
 const AssetsPage: React.FC = () => {
   const { user } = useContext(UserContext);
+  const {trackPage} = useAnalytics();
+
+  useEffect(() => {
+    trackPage(pages.UPLOAD_APPROVAL)
+},[]);
 
   return (
     <FilterProvider>

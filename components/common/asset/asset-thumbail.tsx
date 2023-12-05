@@ -1,7 +1,6 @@
 import { format } from "date-fns";
 import filesize from "filesize";
-import { ChangeEvent, useContext, useEffect, useState } from "react";
-import React from "react";
+import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import HoverVideoPlayer from "react-hover-video-player";
 
 import { Utilities } from "../../../assets";
@@ -10,9 +9,12 @@ import {
   FAILED_TO_UPDATE_ASSET_NAME,
 } from "../../../constants/messages";
 import { AssetContext } from "../../../context";
+import useAnalytics from "../../../hooks/useAnalytics";
 import assetApi from "../../../server-api/asset";
-import { getParsedExtension, removeExtension } from "../../../utils/asset";
+import AnalyticsService from "../../../utils/analytics-service";
+import { removeExtension } from "../../../utils/asset";
 import toastUtils from "../../../utils/toast";
+import RenameModal from "../../common/modals/rename-modal";
 import Button from "../buttons/button";
 import IconClickable from "../buttons/icon-clickable";
 import Spinner from "../spinners/spinner";
@@ -22,8 +24,7 @@ import AssetImg from "./asset-img";
 import AssetOptions from "./asset-options";
 import styles from "./asset-thumbail.module.css";
 import DetailOverlay from "./detail-overlay";
-import RenameModal from "../../common/modals/rename-modal";
-import update from "immutability-helper";
+import { analytics } from "../../../pages/_app";
 
 // Components
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
@@ -92,6 +93,8 @@ const AssetThumbail = ({
   const dateFormat = "MMM do, yyyy";
   const [assetRenameModalOpen, setAssetRenameModalOpen] = useState(false);
 
+  const {trackEvent} = useAnalytics();
+  
   useEffect(() => {
     setThumbnailName(assetName);
   }, [assetName]);

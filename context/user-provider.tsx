@@ -16,6 +16,9 @@ import requestsUtils from "../utils/requests";
 import { loadTheme, resetTheme } from "../utils/theme";
 
 import { defaultLogo } from "../constants/theme";
+import {events} from '../constants/analytics';
+
+import useAnalytics from '../hooks/useAnalytics';
 
 const allowedBase = [
   "/signup",
@@ -38,6 +41,8 @@ export default ({ children }) => {
   const [advancedConfig, setAdvancedConfig] = useState(advancedConfigParams);
   const [logo, setLogo] = useState<string>(defaultLogo);
   const [logoId, setLogoId] = useState<string>();
+
+  const {trackEvent} = useAnalytics();
 
   const { setIsLoading } = useContext(LoadingContext);
 
@@ -145,6 +150,7 @@ export default ({ children }) => {
     setUser(null);
     cookiesUtils.remove("jwt");
     requestsUtils.removeAuthToken();
+    trackEvent(events.LOGOUT);
     Router.replace("/login");
   };
 

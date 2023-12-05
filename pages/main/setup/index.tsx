@@ -1,9 +1,20 @@
 // Components
+import { useEffect } from "react";
 import AppLayout from "../../../components/common/layouts/app-layout";
 import AuthLayout from "../../../components/common/layouts/auth-layout";
 import SetupMain from "../../../components/main/setup";
+import useAnalytics from "../../../hooks/useAnalytics";
+import { pages } from "../../../constants/analytics";
 
-const AssetsPage = () => (
+const AssetsPage = () => {
+
+  const {trackPage} = useAnalytics();
+
+  useEffect(() => {
+    trackPage(pages.UPLOAD_APPROVAL)
+},[]);
+
+  return (
   <>
     <AppLayout title="Account Setup">
       <AuthLayout>
@@ -11,6 +22,6 @@ const AssetsPage = () => (
       </AuthLayout>
     </AppLayout>
   </>
-);
+)};
 
 export default AssetsPage;
