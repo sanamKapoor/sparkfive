@@ -30,6 +30,9 @@ import { defaultLogo } from "../../constants/theme";
 import { sizeToZipDownload } from "../../constants/download";
 import downloadUtils from "../../utils/download";
 
+import {events} from '../../constants/analytics';
+import useAnalytics from "../../hooks/useAnalytics"
+
 const AssetShare = () => {
   const { logo: themeLogo, setLogo: setThemeLogo } = useContext(UserContext);
   const [assets, setAssets] = useState([]);
@@ -44,6 +47,8 @@ const AssetShare = () => {
   const [error, setError] = useState(false);
   const [shareUserName, setShareUserName] = useState("");
   const [sharedCode, setSharedCode] = useState("");
+
+	const {trackEvent} = useAnalytics();
 
   // Toggle select asset
   const toggleSelected = (id) => {
@@ -192,6 +197,7 @@ const AssetShare = () => {
   const onSubmitAuth = async (e) => {
     e.preventDefault();
     setLoading(true);
+		trackEvent(events.ACCESS_SHARED_LINK, {email});
     const { shareJWT, code } = urlUtils.getQueryParameters();
     const { data } = await assetApi.getSharedAssets({ shareJWT, email, code });
 

@@ -25,6 +25,7 @@ import AssetOptions from "./asset-options";
 import styles from "./asset-thumbail.module.css";
 import DetailOverlay from "./detail-overlay";
 import { analytics } from "../../../pages/_app";
+import { events } from "../../../constants/analytics";
 
 // Components
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
@@ -366,6 +367,10 @@ const AssetThumbail = ({
                       text={"View Details"}
                       type={"button"}
                       onClick={() => {
+                        trackEvent(events.VIEW_ASSET, {
+                          assetId: asset.id,
+                          assetName: asset.name,
+                        });
                         if (onView) {
                           onView(asset.id);
                         } else {

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
+import jwt_decode from 'jwt-decode';
 import { LoadingContext, UserContext } from "../../context";
 import userApi from "../../server-api/user";
 import styles from "./login-form.module.css";
@@ -9,12 +10,15 @@ import styles from "./login-form.module.css";
 import Button from "../common/buttons/button";
 import FormInput from "../common/inputs/form-input";
 import Input from "../common/inputs/input";
+import useAnalytics from '../../hooks/useAnalytics'
 
 const Form = ({ teamId }) => {
   const { control, handleSubmit, errors } = useForm();
   const [submitError, setSubmitError] = useState("");
   const { afterAuth } = useContext(UserContext);
   const { setIsLoading } = useContext(LoadingContext);
+  const {identify}  = useAnalytics();
+
   const onSubmit = async (loginData) => {
     try {
       setIsLoading(true);
@@ -22,8 +26,14 @@ const Form = ({ teamId }) => {
         email: loginData.email,
         password: loginData.password,
       };
-      const { data } = await userApi.signIn(signInData, teamId);
+      const { data } = await userApi.signIn(signInData, teamId);      
       await afterAuth(data);
+
+      const decoded = jwt_decode(data.token);
+
+      identify(decoded.id, {
+        email: loginData.email,
+      });
     } catch (err) {
       // TODO: Show error message
       if (err.response?.data?.message) {

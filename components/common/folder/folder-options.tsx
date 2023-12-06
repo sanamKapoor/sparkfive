@@ -13,6 +13,9 @@ import ToggleableAbsoluteWrapper from "../misc/toggleable-absolute-wrapper";
 
 import { ASSET_EDIT } from "../../../constants/permissions";
 
+import { events } from '../../../constants/analytics';
+import useAnalytics from '../../../hooks/useAnalytics';
+
 const FolderOptions = ({
   downloadFoldercontents,
   setDeleteOpen,
@@ -31,13 +34,25 @@ const FolderOptions = ({
   renameCollection,
 }) => {
   const { user, hasPermission } = useContext(UserContext);
+  const { trackEvent } = useAnalytics();
 
   const options = isShare
-    ? [{ label: "Download", onClick: downloadFoldercontents }]
+    ? [{
+      label: "Download", onClick: () => {
+        trackEvent(events.DOWNLOAD_COLLECTION);
+        downloadFoldercontents();
+      }
+    }]
     : [
-      { label: "Download", onClick: downloadFoldercontents },
+      { label: "Download", onClick: () => {
+        trackEvent(events.DOWNLOAD_COLLECTION);
+        downloadFoldercontents(); 
+      }},
       // { label: "Delete", onClick: () => setDeleteOpen(true) },
-      { label: "Share", onClick: shareAssets },
+      { label: "Share", onClick: () => {
+        trackEvent(events.SHARE_COLLECTION);
+        shareAssets(); 
+      }},
       {
         label: "Rename Folder",
         onClick: () => {

@@ -30,7 +30,7 @@ import NestedSidenav from "../../nested-subcollection-sidenav/nested-sidenav";
 import UploadStatusOverlayAssets from "../../upload-status-overlay-assets";
 import styles from "./index.module.css";
 
-
+import { initialActiveSortFilters } from "../../../config/data/filter";
 // Components
 
 const AssetsLibrary = () => {
