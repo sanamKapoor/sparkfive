@@ -163,8 +163,8 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
               <HeaderLink
                 active={Router.pathname.indexOf("insights") !== -1}
                 href="/main/insights"
-                img={Router.pathname.indexOf("insights") !== -1 ? Navigation.assetsSelected : Navigation.assets}
-                imgHover={Navigation.assetsSelected}
+                img={Router.pathname.indexOf("insights") !== -1 ? Navigation.assetsSelected : Navigation.insights}
+                imgHover={Navigation.insights}
                 text="Insights"
               />
               <HeaderLink

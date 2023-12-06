@@ -80,7 +80,15 @@ export const Navigation = {
   assetsSelected: require("./Icons/Navigation/icn-nav-assets-white.svg"),
   reports: require("./Icons/Navigation/icn-nav-reports-#E9EEFA.svg"),
   reportsSelected: require("./Icons/Navigation/icn-nav-reports-white.svg"),
+  insights:require("./Icons/Navigation/insights.svg"),
 };
+export const insights={
+  insightAsset:require("./Icons/insights/insights-assets.svg"),
+  insightDashboard:require("./Icons/insights/insights-dashboard.svg"),
+  insightShare:require("./Icons/insights/insights-share.svg"),
+  insightUser:require("./Icons/insights/insights-user.svg"),
+  insightGroups:require("./Icons/insights/insights-users-group.svg"),
+}
 
 export const Utilities = {
   images: require("./Icons/Utilities/nestedCollection/images.svg"),
