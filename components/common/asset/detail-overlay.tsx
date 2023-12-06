@@ -962,6 +962,7 @@ const DetailOverlay = ({
                   <AssetAddition
                     folderAdd={false}
                     versionGroup={assetDetail.versionGroup}
+                    assetDetailPage={true}
                     triggerUploadComplete={onUserEvent}
                   />
                 </div>

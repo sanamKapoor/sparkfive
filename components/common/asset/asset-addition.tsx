@@ -30,6 +30,7 @@ const AssetAddition = ({
   displayMode = "dropdown",
   versionGroup = "",
   triggerUploadComplete,
+  assetDetailPage = false
 }: any) => {
   const fileBrowserRef = useRef(undefined);
   const folderBrowserRef = useRef(undefined);
@@ -800,7 +801,7 @@ const AssetAddition = ({
       (item) => ["collection"].indexOf(item.id) === -1
     );
   }
-  if (activeFolder && !activeSubFolders) {
+  if ((activeFolder && !activeSubFolders)) {
     dropdownOptions = dropdownOptions.filter(
       (item) => ["subCollection"].indexOf(item.id) === -1
     );
@@ -813,6 +814,11 @@ const AssetAddition = ({
   if (!activeFolder && !activeSubFolders) {
     dropdownOptions = dropdownOptions.filter(
       (item) => ["subCollection"].indexOf(item.id) === -1
+    );
+  }
+  if (assetDetailPage) {
+    dropdownOptions = dropdownOptions.filter(
+      (item) => ["folder", "subCollection"].indexOf(item.id) === -1
     );
   }
 

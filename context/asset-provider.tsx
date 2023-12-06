@@ -234,7 +234,6 @@ export default ({ children }) => {
     if (!data) return;
 
     const { results = [], next = -1, total = 0 } = sidenavFolderChildList.get(id);
-    console.log("🚀 ~ file: asset-provider.tsx:245 ~ results:", results)
 
     if (!remove) {
       setSidenavFolderChildList((map) => {
