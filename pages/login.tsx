@@ -11,7 +11,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     trackPage(pages.UPLOAD_APPROVAL)
-},[]);
+  },[]);
 
   return (
     <AppLayout title="Log In">
