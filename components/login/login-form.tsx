@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
-import jwt_decode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { LoadingContext, UserContext } from "../../context";
 import userApi from "../../server-api/user";
 import styles from "./login-form.module.css";
@@ -29,7 +29,7 @@ const Form = ({ teamId }) => {
       const { data } = await userApi.signIn(signInData, teamId);      
       await afterAuth(data);
 
-      const decoded = jwt_decode(data.token);
+      const decoded = jwtDecode(data.token);
 
       identify(decoded.id, {
         email: loginData.email,
