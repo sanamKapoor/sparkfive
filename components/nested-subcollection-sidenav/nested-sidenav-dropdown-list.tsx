@@ -145,7 +145,6 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
       const { data } = await folderApi.getFolders({
         ...queryParams,
       });
-      console.log("🚀 ~ file: nested-sidenav-dropdown-list.tsx:148 ~ getFolders ~ data:", data)
       let collectionList = { ...data };
       setSidenavFolderList(collectionList, replace);
       SetIsFolderLoading(false);
