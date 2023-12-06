@@ -18,7 +18,7 @@
   left: 0;
   z-index: 1300;
   background-color: white;
-  padding: 54.5px 40px;
+  padding: 60px 40px 0 40px;
   }
   .outer-box{
     display: flex;

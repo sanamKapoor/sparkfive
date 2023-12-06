@@ -3,7 +3,7 @@
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
-    padding: 7.5px 2px;
+    padding: 4px 2px;
     background: #fff;
     margin:10px 0;
     box-sizing: border-box;
@@ -15,7 +15,7 @@
 }
 .list1-description:hover{
     background: var(--color-sec-lightblue);
-    padding: 7.5px 2px;
+    padding: 4px 2px;
 }
 .icon{
     margin-right: 5px;
@@ -56,7 +56,7 @@
 .active{
     background:var(--color-sec-lightblue);
     border-radius: 4px;
-    padding: 7.5px 2px;
+    padding: 4px 2px;
 }
 .sidenav-list1{
     margin-bottom: 22px;

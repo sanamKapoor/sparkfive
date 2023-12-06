@@ -85,7 +85,13 @@ const CollectionSubcollectionListing = ({
 
     return (
         <section className={styles["field-wrapper"]}>
-            {<div className={`${styles["tag-container-wrapper"]}`}>
+          
+            {(hasPermission([ASSET_EDIT])) && (activeDropdown === "" || activeDropdown !== "collections") && (
+                <>
+                    <div className={`${styles['top-heading']}`}>
+                        <span>Collection</span>
+                    </div>
+                    {<div className={`${styles["tag-container-wrapper"]}`}>
                 {
                     [...completeSelectedFolder.entries()].map(([key, value], index) => (
                         <div className={`${styles["tag-container"]}`} key={index}>
@@ -99,11 +105,6 @@ const CollectionSubcollectionListing = ({
                     ))
                 }
             </div>}
-            {(hasPermission([ASSET_EDIT])) && (activeDropdown === "" || activeDropdown !== "collections") && (
-                <>
-                    <div className={`${styles['top-heading']}`}>
-                        <span>Collection</span>
-                    </div>
 
                     <div
                         className={`add ${styles["select-add"]}`}

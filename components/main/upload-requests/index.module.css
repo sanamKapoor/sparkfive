@@ -1080,3 +1080,11 @@ form.search button {
   margin-left: 0;
   margin-top: 1.5rem;
 }
+.tag-outer-box{
+  padding: 0 0 12px 0;
+}
+.tag-attribute-outer{
+  border-bottom: 1px solid #dedad4;
+  padding: 0 0 15px 0;
+
+}

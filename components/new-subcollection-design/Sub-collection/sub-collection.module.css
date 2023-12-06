@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  
+  margin-top:20px;
 }
 .sub-collection-heading span {
   font-family: "Noto Sans", sans-serif;
@@ -154,12 +154,22 @@
     grid-template-columns: repeat(auto-fill, minmax(187px, 1fr)) !important;
   }
 }
+@media (max-width:600px){
+  .heading-wrapper{
+    margin:20px;
+  }
+  .assetWrapper {
+    margin-top: 40px !important;
+  }
+
+}
 @media screen and (max-width: 475px) {
   .cardsWrapper {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(246px, 1fr));
     padding: 0 20px;
   }
+ 
 }
 @media (max-width: 420px) {
   .sub-collection-heading {
@@ -179,6 +189,7 @@
     grid-gap: 10px;
     margin-top: 100px;
   }
+  
 }
 
 @media (min-width: 420px) and (max-width: 800px) {
