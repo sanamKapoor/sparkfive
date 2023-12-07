@@ -803,10 +803,9 @@ const AssetAddition = ({
   }
   if ((activeFolder && !activeSubFolders)) {
     dropdownOptions = dropdownOptions.filter(
-      (item) => ["subCollection"].indexOf(item.id) === -1
+      (item) => ["subCollection", "collection"].indexOf(item.id) === -1
     );
   }
-
   if (activePageMode === "library") {
     dropdownOptions = dropdownOptions.filter((item) => ["library"].indexOf(item.id) === -1);
   }
