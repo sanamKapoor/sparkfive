@@ -26,6 +26,8 @@ import Dropdown from "../inputs/dropdown";
 import ConfirmModal from "../modals/confirm-modal";
 import styles from "./asset-header-ops.module.css";
 import { sizeToZipDownload } from "../../../constants/download";
+import { events } from "../../../constants/analytics";
+import useAnalytics from "../../../hooks/useAnalytics";
 
 const AssetHeaderOps = ({
   isUnarchive = false,
@@ -72,6 +74,8 @@ const AssetHeaderOps = ({
     setSubFoldersAssetsViewList,
     setDownloadController,
   } = useContext(AssetContext);
+
+  const { trackEvent } = useAnalytics();
 
   const { setIsLoading } = useContext(LoadingContext);
   const { hasPermission } = useContext(UserContext);
@@ -153,6 +157,12 @@ const AssetHeaderOps = ({
 
   const downloadSelectedAssets = async () => {
     try {
+      console.log({ activeMode });
+      return;
+      if (activeMode === "folders") {
+        trackEvent(events.DOWNLOAD_COLLECTION);
+      }
+      
       let payload = {
         assetIds: [],
         folderIds: [],
@@ -235,6 +245,8 @@ const AssetHeaderOps = ({
         fileDownload(data, "assets.zip");
         updateDownloadingStatus("done", 0, 0);
       }
+
+
     } catch (e) {
       console.error(e);
       const errMsg =
@@ -550,7 +562,12 @@ const AssetHeaderOps = ({
         SVGElement: AssetOps[`share`],
         tooltipText: "Share",
         tooltipId: "Share",
-        onClick: () => setActiveOperation("shareCollections"),
+        onClick: () => {
+          if (activeMode === "folders") {
+            trackEvent(events.SHARE_COLLECTION);
+          }
+          setActiveOperation("shareCollections")
+        },
         child: null,
       },
     },

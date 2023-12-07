@@ -13,7 +13,7 @@ const OverviewPage = () => {
   const {trackPage} = useAnalytics();
 
   useEffect(() => {
-    trackPage(pages.UPLOAD_APPROVAL)
+    trackPage(pages.OVERVIEW)
 },[]);
 
   return (

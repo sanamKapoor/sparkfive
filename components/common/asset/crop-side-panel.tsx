@@ -20,6 +20,8 @@ import IconClickable from "../buttons/icon-clickable";
 import Input from "../inputs/input";
 import SizeSelect from "../inputs/size-select";
 import ConfirmModal from "../modals/confirm-with-rename-modal";
+import { events } from "../../../constants/analytics";
+import useAnalytics from "../../../hooks/useAnalytics";
 
 // Utils
 
@@ -49,6 +51,8 @@ const CropSidePanel = ({
 }) => {
   const { updateDownloadingStatus } = useContext(AssetContext);
   const { setIsLoading } = useContext(LoadingContext);
+
+  const { trackEvent } = useAnalytics();
 
   const [resizeOption, setResizeOption] = useState("px");
   const [sizesValue, setSizesValue] = useState({
@@ -435,6 +439,10 @@ const CropSidePanel = ({
           text={"Download Edited"}
           type={"button"}
           onClick={() => {
+            trackEvent(events.DOWNLOAD_ASSET, {
+              assetId: asset.id,
+              assetName: asset.name,
+            });
             if (mode === "crop") {
               document.getElementById("download-crop-image").click();
             } else {

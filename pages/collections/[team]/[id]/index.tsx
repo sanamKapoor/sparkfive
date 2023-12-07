@@ -17,7 +17,7 @@ const ShareFolder = () => {
   const {trackPage} = useAnalytics();
 
   useEffect(() => {
-    trackPage(pages.UPLOAD_APPROVAL)
+    trackPage(pages.COLLECTIONS)
 },[]);
 
   return (

@@ -10,7 +10,7 @@ const RequestAccessPage = () => {
   const {trackPage} = useAnalytics();
 
   useEffect(() => {
-    trackPage(pages.UPLOAD_APPROVAL)
+    trackPage(pages.REQUEST_ACCESS)
 },[]);
 
   return (

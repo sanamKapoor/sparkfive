@@ -45,7 +45,6 @@ const SearchOverlayAssets = ({
     replace = true,
     _filterParams = filterParams
   ) => {
-    trackEvent(events.SEARCH_ASSET, {searchTerm: inputTerm});
     try {
       if (mode === "assets") {
         let fetchFn = assetApi.getAssets;
@@ -94,6 +93,10 @@ const SearchOverlayAssets = ({
         const { data } = await folderApi.getFolders(query);
         setFolders(data, true, true);
       }
+
+      
+    trackEvent(events.SEARCH_ASSET, {searchTerm: inputTerm});
+
     } catch (err) {
       // TODO: Handle this error
       console.log(err);

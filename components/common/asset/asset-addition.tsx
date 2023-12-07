@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { useContext, useRef, useState } from "react";
+import { useContext, useRef, useState, useEffect } from "react";
 
 import { AssetOps, Assets } from "../../../assets";
 import { validation } from "../../../constants/file-validation";
@@ -763,7 +763,7 @@ const AssetAddition = ({
       label: "Upload From Computer",
       text: "png, jpg, mp4 and more",
       onClick: () => {
-        fileBrowserRef.current.click();
+        fileBrowserRef.current.click();        
         trackEvent(events.UPLOAD_ASSET, {
           uploadType: 'Device'
         });

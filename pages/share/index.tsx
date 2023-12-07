@@ -15,7 +15,7 @@ const SharePage = () => {
   const {trackPage} = useAnalytics();
 
   useEffect(() => {
-    trackPage(pages.UPLOAD_APPROVAL)
+    trackPage(pages.SHARED_LINKS)
 },[]);
 
   return (
