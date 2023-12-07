@@ -209,10 +209,11 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
                 :
                 <div className={styles.emptyBox}></div>
               }
-              <div
-                className={`${styles["dropdownMenu"]} ${showDropdown[index] ? styles.active : ""
-                  }`}
-              >
+            <div
+  className={`${styles["dropdownMenu"]} ${
+    showDropdown[index] ? styles.active : ""
+  } ${item?.childFolders?.length === 0 ? styles.noIconMargin : ""}`}
+>
                 <div
                   className={styles.w100}
                   onClick={() => {

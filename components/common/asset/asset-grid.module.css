@@ -42,7 +42,7 @@
 
 @media screen and (max-width: 600px) {
   .grid-list {
-    margin-top: 140px !important;
+    margin-top: 30px !important;
   }
 
 }
@@ -71,7 +71,7 @@
 
 @media screen and (max-width: 800px) {
   .grid-list{
-    margin-top: 145px;
+    margin-top: 30px;
     padding: 0 20px;
   }
 

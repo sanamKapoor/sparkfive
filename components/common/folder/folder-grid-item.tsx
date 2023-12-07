@@ -453,8 +453,12 @@ const FolderGridItem = ({
           <div className="secondary-text">{`${
             Number(assetsCount ?? 0) + Number(totalchildassests ?? 0)
           } Assets 
-              ${Number(totalchild) !== 0 ? Number(totalchild ?? 0) : ""}${
-            Number(totalchild) !== 0 ? " Subcollection" : ""
+          ${
+            Number(totalchild) === 1
+              ? "Subcollection"
+              : Number(totalchild) > 1
+              ? "Subcollections"
+              : ""
           }`}</div>
         )}
       </div>

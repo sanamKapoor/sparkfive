@@ -207,3 +207,37 @@
 .list-asset-wrapper {
   grid-template-columns: unset;
 }
+
+@media only screen and (min-width: 270px) and (max-width: 390px) {
+ .rightSide{
+  margin-top: 171px;
+ }
+ .cardsWrapper {
+  margin-top:0px;
+  
+}
+}
+@media only screen and (min-width: 390px) and (max-width: 540px) {
+  .rightSide{
+   margin-top: 130px;
+   margin-left: 10px;
+  }
+  .cardsWrapper {
+   margin-top:0px;
+   
+ }
+ }
+ 
+ @media only screen and (min-width: 600px) and (max-width: 805px) {
+  .rightSide{
+   margin-top: 125px;
+   margin-left: 22px;
+  }
+  .cardsWrapper {
+   margin-top:0px;
+   
+ }
+ }
+ 
+ 
+

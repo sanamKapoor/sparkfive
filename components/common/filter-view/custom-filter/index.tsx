@@ -96,7 +96,6 @@ const CustomFilter: React.FC<CustomFilterProps> = ({
           <NoResults />
         )}
       </div>
-      <Divider />
     </>
   );
 };

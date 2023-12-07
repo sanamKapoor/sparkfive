@@ -5,7 +5,7 @@
   border-radius: 12px;
   padding: 16px;
   margin-top: 10px;
-  z-index: 10000;
+  z-index: 1000;
   position: absolute;
   background: #fff;
   min-width: 350px;
@@ -69,8 +69,10 @@
 .rule-tag {
   display: flex;
   align-items: center;
-  padding: 16px;
+  padding: 10px 16px 16px 16px;
   justify-content: flex-end;
+  border-top: 1px solid #DEDAD4;
+    margin-top: 22px;
 }
 
 .rule-tag label {
