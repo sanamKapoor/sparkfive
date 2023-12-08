@@ -197,6 +197,11 @@ const SubCollection = ({
       {
         <>
           <>
+          <div className={`${styles["collection-filter-wrap"]}`}>
+          <FilterView />
+
+          </div>
+        
           <div className={`${styles["heading-wrapper"]}`}>
           <div className={`${styles["sub-collection-heading"]}`}>
               {sortedAssets.length > 0 && (
@@ -234,7 +239,7 @@ const SubCollection = ({
 
           </div>
            
-            <FilterView />
+          
           </>
 
           <div

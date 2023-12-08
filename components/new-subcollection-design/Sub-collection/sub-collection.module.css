@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  margin-top:20px;
+  margin-top:5px;
 }
 .sub-collection-heading span {
   font-family: "Noto Sans", sans-serif;
@@ -128,7 +128,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 30px;
+  margin: 25px 0;
 }
 .ExpandIcons {
   width: 15px;
@@ -141,6 +141,9 @@
   align-items: center;
   margin: 0 0 20px 0;
 
+}
+.collection-filter-wrap{
+  margin-top:2px;
 }
 @media screen and (max-width: 810px) {
   .cardsWrapper {

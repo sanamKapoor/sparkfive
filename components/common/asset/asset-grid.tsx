@@ -558,6 +558,7 @@ const AssetGrid = ({
                             ref={ref}
                             style={{ width: `$${widthCard}px` }}
                           >
+                            <div className={activeView === "grid" && styles["collection-assets"]}>
                             <FolderGridItem
                               {...folder}
                               isShare={isShare}
@@ -580,6 +581,9 @@ const AssetGrid = ({
                               setFocusedItem={setFocusedItem}
                               mode={mode}
                             />
+
+                            </div>
+                          
                           </li>
                         );
                       })}

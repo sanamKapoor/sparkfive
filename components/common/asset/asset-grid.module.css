@@ -13,6 +13,10 @@
 .assetFilter-wrapper{
   margin-top:20px;
 }
+.filter-view-container{
+  margin-top:50px;
+
+}
 
 @media screen and (max-width: 1023px) {
   .filter {
@@ -22,6 +26,7 @@
 
 .list-wrapper {
   width: 100%;
+  /* margin-top: 40px; */
 }
 
 .regularlist {
@@ -37,7 +42,6 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(246px, 1fr));
   grid-gap: 40px;
-  margin-top: 10px;
 }
 
 @media screen and (max-width: 600px) {
@@ -138,4 +142,7 @@
 
 .headContent4 {
   width: 20%;
+}
+.collection-assets{
+  margin-top: 30px;
 }

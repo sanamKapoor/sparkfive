@@ -774,7 +774,7 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                     onClick={() => setActiveDropdown("collections")}
                   >
                     <IconClickable src={Utilities.addLight} />
-                    <span>{"Add to Collection"}</span>
+                    <span>{"Add to Collections"}</span>
                   </div>
                 )
               }
@@ -801,8 +801,8 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                               onClick={() => { toggleDropdown(folder.id, true) }}
                             >
                               <img
-                                className={showDropdown.includes(folder.id) ? styles.iconClick : styles.caretRightSolid}
-                                src={Utilities.arrowBlue}
+                                className={showDropdown.includes(folder.id) ? styles.iconClick : styles.rightIcon}
+                                src={Utilities.caretRightSolid}
                                 alt="Right Arrow Icon"
                                 onClick={() => { toggleDropdown(folder.id, true) }}
                               />
