@@ -17,8 +17,8 @@ const SubCollection = ({
   isShare = false,
   toggleSelected,
   mode = "assets",
-  deleteFolder = (id: string) => {},
-  viewFolder = (id: string) => {},
+  deleteFolder = (id: string) => { },
+  viewFolder = (id: string) => { },
   sharePath = "",
   widthCard,
   ref,
@@ -108,24 +108,29 @@ const SubCollection = ({
     };
   }, []);
 
+  //For handling the show subcollection checkbox button for collection change 
+  useEffect(() => {
+    setIsChecked(false);
+  }, [activeSubFolders])
+
   return (
     <>
       {sortedFolders.length > 0 && (
         <div className={`${styles["sub-collection-heading"]}`}>
           <div className={styles.rightSide}>
-          <div className={`${styles["sub-collection-heading-outer"]}`}>
-            <span>Subcollection ({total})</span>
-          
-           <img
-              className={styles.ExpandIcons}
-              onClick={() => {
-                handleHideClick();
-              }}
-              src={collectionHide ? Utilities.arrowUpGrey : Utilities.caretDownLight }
-            />
-              </div>
+            <div className={`${styles["sub-collection-heading-outer"]}`}>
+              <span>Subcollection ({total})</span>
+
+              <img
+                className={styles.ExpandIcons}
+                onClick={() => {
+                  handleHideClick();
+                }}
+                src={collectionHide ? Utilities.arrowUpGrey : Utilities.caretDownLight}
+              />
+            </div>
           </div>
-         
+
         </div>
       )}
       {!collectionHide && (
@@ -133,9 +138,8 @@ const SubCollection = ({
           {/* list wrapper for list view */}
           {sortedFolders.length > 0 && (
             <div
-              className={`${styles["cardsWrapper"]} ${
-                activeView === "list" && styles["list-wrapper"]
-              }`}
+              className={`${styles["cardsWrapper"]} ${activeView === "list" && styles["list-wrapper"]
+                }`}
             >
               {activeView === "list" && (
                 <FolderTableHeader
@@ -227,25 +231,21 @@ const SubCollection = ({
                         onClick={handleCircleClick}
                       >
                         {isChecked && <img src={Utilities.checkIcon} />}
+                        </div>
+                        <span className={`${styles["sub-collection-content"]}`}>
+                          Show all assets in parent collection
+                        </span>
                       </div>
-                      <span className={`${styles["sub-collection-content"]}`}>
-                        Show all assets in parent collection
-                      </span>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
-
-          </div>
-           
-          
           </>
 
           <div
-            className={`${styles["assetWrapper"]} ${
-              activeView === "list" && styles["list-wrapper"]
-            }`}
+            className={`${styles["assetWrapper"]} ${activeView === "list" && styles["list-wrapper"]
+              }`}
           >
             {!assetsHide && (
               <>
