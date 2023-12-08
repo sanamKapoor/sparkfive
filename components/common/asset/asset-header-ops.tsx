@@ -157,12 +157,12 @@ const AssetHeaderOps = ({
 
   const downloadSelectedAssets = async () => {
     try {
-      console.log({ activeMode });
-      return;
       if (activeMode === "folders") {
         trackEvent(events.DOWNLOAD_COLLECTION);
+      } else if (activeMode === "assets") {
+        trackEvent(events.DOWNLOAD_ASSET);
       }
-      
+
       let payload = {
         assetIds: [],
         folderIds: [],
@@ -205,6 +205,8 @@ const AssetHeaderOps = ({
           (folder) => folder.id
         );
       } else if (selectedSubFoldersAndAssets.assets.length > 0) {
+        trackEvent(events.DOWNLOAD_ASSET);
+
         totalDownloadingAssets = selectedSubFoldersAndAssets.assets.length;
         payload.assetIds = selectedSubFoldersAndAssets.assets.map(
           (assetItem) => assetItem.asset.id
@@ -213,6 +215,9 @@ const AssetHeaderOps = ({
         totalDownloadingAssets = selectedAssets.length;
         payload.assetIds = selectedAssets.map((assetItem) => assetItem.asset.id);
       }
+
+      return;
+
       // Add sharePath property if user is at share collection page
       if (sharePath) {
         filters["sharePath"] = sharePath;
@@ -500,6 +505,16 @@ const AssetHeaderOps = ({
               tooltipText={"Share"}
               tooltipId={"Share"}
               onClick={(e) => {
+                const sharedAssets = selectedSubFoldersAndAssets.assets.length > 0 ? selectedSubFoldersAndAssets.assets : selectedAssets.length > 0 ?  selectedAssets : [];
+
+                if (sharedAssets.length > 0) {
+                  sharedAssets.map(({ asset }) => {
+                    trackEvent(events.SHARE_ASSET, {
+                      assetId: asset.id,
+                      assetName: asset.name,
+                    });
+                  })
+                } 
                 showShareActionList(e, true);
               }}
             />
