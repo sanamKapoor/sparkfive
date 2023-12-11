@@ -553,7 +553,7 @@ export default ({ getAssets }) => {
         }
 
       }
-
+      setListUpdateFlag(true);
       closeModalAndClearOpAsset();
       toastUtils.success("Assets deleted successfully");
     } catch (err) {

@@ -55,6 +55,7 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
     activeFolder,
     setSidebarOpen,
     activeSubFolders,
+    setCurrentFolder
   } = useContext(AssetContext);
 
   const { term, activeSortFilter } = useContext(FilterContext) as {
@@ -178,6 +179,10 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
           const data = subFoldersParentId.get(activeFolder)
           getSubFolders(data, 1, true);
         }
+      } else if (activeSortFilter.mainFilter === "SubCollectionView" && activeSubFolders !== "") {
+        if (Array.from(subFoldersParentId.values()).includes(activeSubFolders)) {
+          getSubFolders(activeSubFolders, 1, true);
+        }
       }
     }
   }
@@ -187,13 +192,14 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
   }, [listUpdateFlag]);
 
 
-  const vewFolderSidenavStateActive = (recordId: string, isParentCollection: boolean, parentId: string, parentName: string) => {
+  const vewFolderSidenavStateActive = (recordId: string, isParentCollection: boolean, parentId: string, parentName: string, folder?: any) => {
     viewFolder(
       recordId,
       isParentCollection,
       parentId,
       parentName
     );
+    setCurrentFolder(folder)
     if (window.innerWidth < 767) {
       setSidebarOpen(false)
     }
@@ -239,13 +245,13 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
                 <div className={styles.emptyBox}></div>
               }
               <div
-                className={`${styles["dropdownMenu"]} ${(showDropdown[index] || (item.id === activeSubFolders)) ? styles.active : ""
+                className={`${styles["dropdownMenu"]} ${((item.id === activeSubFolders)) ? styles.active : ""
                   }`}
               >
                 <div
                   className={styles.w100}
                   onClick={() => {
-                    vewFolderSidenavStateActive(item.id, true, "", item.name)
+                    vewFolderSidenavStateActive(item.id, true, "", item.name, item)
                   }}
                 >
                   <div className={styles.mainWrapper}>
@@ -290,7 +296,7 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
                                   vewFolderSidenavStateActive(record.id,
                                     false,
                                     item.id,
-                                    record.name)
+                                    record.name, record)
                                 }
                                 }
                               >

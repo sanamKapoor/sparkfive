@@ -138,6 +138,8 @@ export default ({ children }) => {
 
   const [selectedAllSubAssets, setSelectedAllSubAssets] = useState(false)
   const [listUpdateFlag, setListUpdateFlag] = useState(false);
+  const [currentFolder,
+    setCurrentFolder] = useState(null)
 
   const setPlaceHolders = (type, replace = true) => {
     if (type === "asset") {
@@ -687,6 +689,8 @@ export default ({ children }) => {
     listUpdateFlag,
     downloadController,
     setDownloadController,
+    currentFolder,
+    setCurrentFolder,
   };
   return <AssetContext.Provider value={assetsValue}>{children}</AssetContext.Provider>;
 };

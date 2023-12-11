@@ -100,10 +100,13 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
     dpi,
   } = asset;
 
-  const { assets, setAssets, activeFolder } = useContext(AssetContext);
+  const { assets, subFoldersAssetsViewList: {
+    results: subcollectionAssets,
+    next: nextAsset,
+    total: totalAssets }, setAssets, activeFolder, setSubFoldersAssetsViewList } = useContext(AssetContext);
 
   const { hasPermission, advancedConfig } = useContext(UserContext);
-  const { loadCampaigns, loadProjects, loadTags } = useContext(FilterContext);
+  const { loadCampaigns, loadProjects, loadTags, activeSortFilter } = useContext(FilterContext);
 
   const [hideFilterElements] = useState(advancedConfig.hideFilterElements);
 
@@ -160,20 +163,39 @@ const SidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
   };
 
   const updateAssetState = (updatedata) => {
-    console.log(updatedata, "hello updated Data", assets)
-    const assetIndex = assets.findIndex(
-      (assetItem) => assetItem.asset.id === id
-    );
-    if (assetIndex >= 0) {
-      const updatedAssets = update(assets, {
-        [assetIndex]: {
-          asset: updatedata
-        },
-      })
-      setAssets(updatedAssets);
-      setAssetDetail(update(asset, updatedata));
+    if (activeSortFilter.mainFilter === "SubCollectionView") {
+      const assetIndex = subcollectionAssets.findIndex(
+        (asst) => asst?.asset?.id === asset?.id)
+      if (assetIndex >= 0) {
+        const updatedAssets = update(subcollectionAssets, {
+          [assetIndex]: {
+            asset: updatedata
+          },
+        })
+        // setAssets(updatedAssets);
+        setSubFoldersAssetsViewList({
+          next: nextAsset,
+          total: totalAssets,
+          results: updatedAssets
+        });
+        setAssetDetail(update(asset, updatedata));
+      }
+    } else {
+      const assetIndex = assets.findIndex(
+        (assetItem) => assetItem.asset.id === id
+      );
+      if (assetIndex >= 0) {
+        const updatedAssets = update(assets, {
+          [assetIndex]: {
+            asset: updatedata
+          },
+        })
+        // setAssets(updatedAssets);
+        setAssetDetail(update(asset, updatedata));
+      }
+      setActiveDropdown("");
     }
-    setActiveDropdown("");
+
   };
 
   const {

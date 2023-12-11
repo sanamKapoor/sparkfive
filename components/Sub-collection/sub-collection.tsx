@@ -70,6 +70,7 @@ const SubCollection = ({
   // Sorting in SubcollectionView
   const [sortedAssets, currentSortAttribute, setCurrentSortAttribute] =
     useSortedAssets(assets);
+
   const [
     sortedFolders,
     currentSortFolderAttribute,
@@ -120,7 +121,6 @@ const SubCollection = ({
           <div className={styles.rightSide}>
             <div className={`${styles["sub-collection-heading-outer"]}`}>
               <span>Subcollection ({total})</span>
-
               <img
                 className={styles.ExpandIcons}
                 onClick={() => {
@@ -189,7 +189,7 @@ const SubCollection = ({
               <Button
                 text="Load More"
                 onClick={() => {
-                  loadMoreSubCollctions(false, 5);
+                  loadMoreSubCollctions(false, 10);
                 }}
                 type="button"
                 className="container primary"
@@ -203,7 +203,7 @@ const SubCollection = ({
           <>
             <div className={`${styles["heading-wrapper"]}`}>
               <div className={`${styles["sub-collection-heading"]}`}>
-                {sortedAssets.length > 0 && (
+                {sortedFolders.length > 0 && sortedAssets.length > 0 && (
                   <div className={styles.rightSide}>
                     <span>Assets ({totalAssets})</span>
                     <img
@@ -237,7 +237,6 @@ const SubCollection = ({
             </div>
             <FilterView />
           </>
-
           <div
             className={`${styles["assetWrapper"]} ${activeView === "list" && styles["list-wrapper"]
               }`}

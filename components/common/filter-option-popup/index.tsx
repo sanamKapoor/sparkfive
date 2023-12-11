@@ -157,37 +157,40 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
           FilterAttributeVariants.DIMENSIONS,
         ].includes(activeAttribute?.id)
       ) {
+        filterModalPosition();
         return true;
       } else {
         if (values) {
+          filterModalPosition();
           return values instanceof Array
             ? values.length > 0
             : Object.keys(values).length > 0;
         }
       }
     }
+    return false;
   };
-
   const showModalActionBtns =
     activeAttribute.id === FilterAttributeVariants.DIMENSIONS;
 
-  var mianFilterModal = document.getElementById('mianFilterModal');
-  var modal = document.getElementById('modal');
-
-  if (mianFilterModal && modal) {
-    var viewportWidth = window.innerWidth;// View port length total
-    var modalWidth = modal.offsetWidth; // length of modal opened on click
-    var leftelemnt = mianFilterModal.offsetLeft // left width from filter to the clicked element
-    const additionlalength = sidebarOpen ? 378 : 0 // addition length of sidebar and space between modal
-    // Adjust the left or right position based on the available space
-    if (viewportWidth < (leftelemnt + modalWidth + additionlalength)) {
-      // There is enough space on the right
-      modal.style.right = '0px';
-      modal.style.left = 'unset';
-    } else {
-      // Not enough space on the right, position on the left
-      modal.style.left = "0px";
-      modal.style.right = 'unset';
+  const filterModalPosition = () => {
+    var mianFilterModal = document.getElementById('mianFilterModal');
+    var modal = document.getElementById('modal');
+    if (mianFilterModal && modal) {
+      var viewportWidth = window.innerWidth;// View port length total
+      var modalWidth = modal.offsetWidth; // length of modal opened on click
+      var leftelemnt = mianFilterModal.offsetLeft // left width from filter to the clicked element
+      const additionlalength = sidebarOpen ? 378 : 0 // addition length of sidebar and space between modal
+      // Adjust the left or right position based on the available space
+      if (viewportWidth < (leftelemnt + modalWidth + additionlalength)) {
+        // There is enough space on the right
+        modal.style.right = '0px';
+        modal.style.left = 'unset';
+      } else {
+        // Not enough space on the right, position on the left
+        modal.style.left = "0px";
+        modal.style.right = 'unset';
+      }
     }
   }
 

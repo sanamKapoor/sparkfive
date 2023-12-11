@@ -552,7 +552,6 @@ const AssetGrid = ({
                     onCloseDetailOverlay={onCloseDetailOverlay}
                   />
                 )}
-
                 {mode === "assets" && (
                   <>
                     {activeView === "list" && (
@@ -628,7 +627,6 @@ const AssetGrid = ({
                     })}
                   </>
                 )}
-
                 {mode === "folders" && (
                   <>
                     {activeView === "list" && (

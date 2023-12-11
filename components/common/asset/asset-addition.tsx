@@ -309,7 +309,6 @@ const AssetAddition = ({
       if (foldersUploaded.length > 0 || selectedFolderToUpload.length > 0) {
         needsFolderFetch = true;
       }
-
       // Only show uploading folder placeholder when not selecting multi folders to upload
       if (selectedFolderToUpload.length === 0) {
         foldersUploaded.forEach((folder) => {
@@ -402,11 +401,13 @@ const AssetAddition = ({
       // Finish uploading process
       showUploadProcess("done");
       setListUpdateFlag(true);
-      if (activeSortFilter?.mainFilter === "SubCollectionView") {
+      ;
+      if (activeSortFilter?.mainFilter === "SubCollectionView" && !assetDetailPage) {
         setNeedsFetch("SubCollectionView");
-      } else if (needsFolderFetch) {
-        setNeedsFetch("folders");
-      }
+      } else
+        if (needsFolderFetch) {
+          setNeedsFetch("folders");
+        }
 
       // Do not need toast here because we have already process toast
       // toastUtils.success(`${data.length} Asset(s) uploaded.`)
@@ -882,6 +883,7 @@ const AssetAddition = ({
           folderBrowserRef.current.value;
         }
       } else {
+        ;
         onFilesDataGet(files);
       }
     } else {
