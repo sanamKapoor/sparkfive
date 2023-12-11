@@ -122,15 +122,14 @@ const SubCollection = ({
             <div className={`${styles["sub-collection-heading-outer"]}`}>
               <span>Subcollection ({total})</span>
               <img
-                className={styles.ExpandIcons}
+                className={`${collectionHide ? styles.iconClick : styles.rightIcon} ${styles.ExpandIcons}`}
                 onClick={() => {
                   handleHideClick();
                 }}
-                src={collectionHide ? Utilities.arrowUpGrey : Utilities.caretDownLight}
+                src={Utilities.caretDownLight}
               />
             </div>
           </div>
-
         </div>
       )}
       {!collectionHide && (
@@ -201,19 +200,23 @@ const SubCollection = ({
       {
         <>
           <>
+            <div className={`${styles["collection-filter-wrap"]}`}>
+              <FilterView />
+            </div>
             <div className={`${styles["heading-wrapper"]}`}>
               <div className={`${styles["sub-collection-heading"]}`}>
-                {sortedFolders.length > 0 && sortedAssets.length > 0 && (
+                {sortedAssets.length > 0 && sortedFolders.length > 0 && (
                   <div className={styles.rightSide}>
                     <span>Assets ({totalAssets})</span>
                     <img
-                      className={styles.ExpandIcons}
+                      className={`${assetsHide ? styles.iconClick : styles.rightIcon} ${styles.ExpandIcons}`}
                       onClick={() => {
                         handleAssetsHideClick();
                       }}
-                      src={assetsHide ? Utilities.arrowUpGrey : Utilities.caretDownLight}
+                      src={Utilities.caretDownLight}
                     />
                   </div>
+
                 )}
                 {sortedFolders.length > 0 && (
                   <div className={styles.tagOuter}>
@@ -235,7 +238,6 @@ const SubCollection = ({
                 )}
               </div>
             </div>
-            <FilterView />
           </>
           <div
             className={`${styles["assetWrapper"]} ${activeView === "list" && styles["list-wrapper"]

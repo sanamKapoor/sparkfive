@@ -6,7 +6,7 @@
   left: 0;
   z-index: 1300;
   background-color: white;
-  padding: 33.5px 30px;
+  padding: 39px 30px;
   padding:34.5px 30px 0 30px;
   width: calc(100% - 320px);
   margin-left: 327px;
@@ -18,7 +18,7 @@
   left: 0;
   z-index: 1300;
   background-color: white;
-  padding: 60px 40px 0 40px;
+  padding: 40px 40px 0 40px;
   }
   .outer-box{
     display: flex;

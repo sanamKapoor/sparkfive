@@ -5,11 +5,12 @@
   height: fit-content;
   position: relative;
   z-index: 999;
-  padding: 0 0 24px 0;
+  padding: 35px 0 24px 0;
   opacity: 1;
   display: block;
   transition: opacity 0.1s ease-in-out, display 0s linear 0.1s;
   position: fixed;
+  min-height:100vh;
 }
 
 .nestedsidenav.hidden {

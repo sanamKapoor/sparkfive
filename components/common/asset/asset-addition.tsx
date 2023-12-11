@@ -748,7 +748,7 @@ const AssetAddition = ({
     },
     {
       id: "subCollection",
-      label: "Add Sub Collection",
+      label: "Add SubCollection",
       text: "Add Sub Collection",
       onClick: () => {
         setAddSubCollection(true), setActiveModal("folder");

@@ -572,6 +572,7 @@ const AssetGrid = ({
                             ref={ref}
                             style={{ width: `$${widthCard}px` }}
                           >
+                            <div className={activeView === "grid" && styles["collection-assets"]}>
                             <AssetThumbail
                               {...assetItem}
                               sharePath={sharePath}
@@ -621,6 +622,9 @@ const AssetGrid = ({
                               activeView={activeView}
                               mode={mode}
                             />
+
+                            </div>
+                          
                           </li>
                         );
                       }

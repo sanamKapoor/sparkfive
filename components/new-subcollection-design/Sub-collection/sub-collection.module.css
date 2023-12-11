@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  margin-top:20px;
+  margin-top:5px;
 }
 .sub-collection-heading span {
   font-family: "Noto Sans", sans-serif;
@@ -115,7 +115,7 @@
 .cardsWrapper {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(246px, 1fr));
-  grid-gap: 20px;
+  grid-gap: 40px;
   
  
 }
@@ -128,10 +128,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 30px;
+  margin: 25px 0;
 }
 .ExpandIcons {
-  width: 15px;
+  width: 18px;
+  cursor: pointer;
+}
+.rightIcon {
+  transform: rotate(0deg);
+  cursor: pointer;
+}
+.iconClick {
+  transform: rotate(180deg);
+  margin-right: 5px;
+  cursor: pointer;
 }
 .heading-wrapper{
   margin:20px 0px;
@@ -141,6 +151,9 @@
   align-items: center;
   margin: 0 0 20px 0;
 
+}
+.collection-filter-wrap{
+  margin-top:25px;
 }
 @media screen and (max-width: 810px) {
   .cardsWrapper {
@@ -207,3 +220,36 @@
 .list-asset-wrapper {
   grid-template-columns: unset;
 }
+
+@media only screen and (min-width: 270px) and (max-width: 390px) {
+ .rightSide{
+  margin-top: 171px;
+ }
+ .cardsWrapper {
+  margin-top:0px;
+  
+}
+}
+@media only screen and (min-width: 390px) and (max-width: 540px) {
+  .rightSide{
+   margin-top: 130px;
+   margin-left: 10px;
+  }
+  .cardsWrapper {
+   margin-top:0px;
+   
+ }
+ }
+ 
+ @media only screen and (min-width: 600px) and (max-width: 805px) {
+  .rightSide{
+   margin-top: 125px;
+   margin-left: 22px;
+  }
+  .cardsWrapper {
+   margin-top:0px;
+   }
+ }
+ 
+ 
+
