@@ -307,9 +307,6 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
                                   <span>{record.assetsCount ?? 0}</span>
                                 </div>
                               </div>
-                              <div className={styles["list1-right-contents"]}>
-                                <span>{record.assetsCount ?? 0}</span>
-                              </div>
                             </div>
                           </div>
                         </Draggable>
