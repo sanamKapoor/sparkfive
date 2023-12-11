@@ -4,6 +4,7 @@ import {
   defaultPrimaryColor,
   defaultSecondaryColor,
   defaultAdditionalColor,
+  defaultLightnerHeadNavColor,
 } from "../constants/theme";
 
 import { pSBC } from "./color";
@@ -136,4 +137,5 @@ export const resetTheme = () => {
   document.documentElement.style.setProperty("--primary-color", defaultPrimaryColor);
   document.documentElement.style.setProperty("--secondary-color", defaultSecondaryColor);
   document.documentElement.style.setProperty("--additional-color", defaultAdditionalColor);
+  document.documentElement.style.setProperty("--lighter-header-navigation-color", defaultLightnerHeadNavColor);
 };
