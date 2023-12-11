@@ -42,7 +42,7 @@ export default ({ children }) => {
   const [logo, setLogo] = useState<string>(defaultLogo);
   const [logoId, setLogoId] = useState<string>();
 
-  const {trackEvent} = useAnalytics();
+  const {trackEvent, identify } = useAnalytics();
 
   const { setIsLoading } = useContext(LoadingContext);
 
@@ -151,6 +151,10 @@ export default ({ children }) => {
     cookiesUtils.remove("jwt");
     requestsUtils.removeAuthToken();
     trackEvent(events.LOGOUT);
+    window.analytics.identify({
+      subscriptionStatus: 'inactive'
+    });
+    
     Router.replace("/login");
   };
 

@@ -47,6 +47,7 @@ const AssetOptions = ({
         trackEvent(events.DOWNLOAD_ASSET, {
          assetId: asset.id,
          assetName: asset.name,
+         assetType: asset.type
        });
        downloadAsset();
      },
@@ -57,6 +58,7 @@ const AssetOptions = ({
       trackEvent(events.SHARE_ASSET, {
         assetId: asset.id,
         assetName: asset.name,
+        assetType: asset.type
       });
       openShareAsset();
     },

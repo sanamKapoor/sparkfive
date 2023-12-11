@@ -21,7 +21,7 @@ import ToggleAbleAbsoluteWrapper from "../misc/toggleable-absolute-wrapper";
 import styles from "./asset-addition.module.css";
 import AssetDuplicateModal from "./asset-duplicate-modal";
 
-import {events} from '../../../constants/analytics'
+import { events } from '../../../constants/analytics'
 import useAnalytics from '../../../hooks/useAnalytics'
 
 const AssetAddition = ({
@@ -207,6 +207,14 @@ const AssetAddition = ({
         }
 
         data = data.map((item) => {
+          // Track uploaded asset info
+          trackEvent(events.UPLOAD_ASSET, {
+            uploadType: 'Device',
+            assetId: item.asset.id,
+            assetName: item.asset.name,
+            assetType: item.asset.type,
+          });
+
           item.isSelected = true;
           return item;
         });
@@ -511,6 +519,14 @@ const AssetAddition = ({
       setAddedIds(data.id);
       // Mark done
       const updatedAssets = data.map((asset) => {
+      // Track uploaded asset info
+      trackEvent(events.UPLOAD_ASSET, {
+        uploadType: 'Dropbox',
+        assetId: asset.asset.id,
+        assetName: asset.asset.name,
+        assetType: asset.asset.type
+      });
+
         return { ...asset, status: "done" };
       });
 
@@ -679,6 +695,15 @@ const AssetAddition = ({
 
       // Mark done
       const updatedAssets = data.map((asset) => {
+
+        // Track uploaded asset info
+        trackEvent(events.UPLOAD_ASSET, {
+          uploadType: 'Google Drive',
+          assetId: asset.asset.id,
+          assetName: asset.asset.name,
+          assetType: asset.asset.type
+        });
+
         return { ...asset, status: "done" };
       });
 
@@ -763,10 +788,7 @@ const AssetAddition = ({
       label: "Upload From Computer",
       text: "png, jpg, mp4 and more",
       onClick: () => {
-        fileBrowserRef.current.click();        
-        trackEvent(events.UPLOAD_ASSET, {
-          uploadType: 'Device'
-        });
+        fileBrowserRef.current.click();
       },
       icon: AssetOps.newCollection,
     },
@@ -783,9 +805,6 @@ const AssetAddition = ({
       text: "Import files",
       onClick: (e) => {
         openDropboxSelector(e);
-        trackEvent(events.UPLOAD_ASSET, {
-          uploadType: 'Dropbox'
-        });
       },
       icon: Assets.dropbox,
     },
@@ -793,11 +812,6 @@ const AssetAddition = ({
       id: "gdrive",
       label: "Upload from Drive",
       text: "Import files",
-      onClick: () => {
-        trackEvent(events.UPLOAD_ASSET, {
-          uploadType: 'Google Drive'
-        });
-      },
       icon: Assets.gdrive,
       CustomContent: ({ children }) => {
         return (

@@ -1,11 +1,11 @@
 // External import
 import update from "immutability-helper";
 import { useContext, useEffect, useRef, useState } from "react";
-
+ 
 // Styles
 import styles from "./index.module.css";
 
-import assetApi from "../../server-api/asset";
+import assetApi from "../../server-api/asset"; 
 import toastUtils from "../../utils/toast";
 import urlUtils from "../../utils/url";
 
@@ -30,7 +30,7 @@ import { defaultLogo } from "../../constants/theme";
 import { sizeToZipDownload } from "../../constants/download";
 import downloadUtils from "../../utils/download";
 
-import {events} from '../../constants/analytics';
+import { events } from '../../constants/analytics';
 import useAnalytics from "../../hooks/useAnalytics"
 
 const AssetShare = () => {
@@ -48,7 +48,7 @@ const AssetShare = () => {
   const [shareUserName, setShareUserName] = useState("");
   const [sharedCode, setSharedCode] = useState("");
 
-	const {trackEvent} = useAnalytics();
+  const { trackEvent } = useAnalytics();
 
   // Toggle select asset
   const toggleSelected = (id) => {
@@ -147,7 +147,7 @@ const AssetShare = () => {
       }
 
       // downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets.zip')
-    } catch (e) {}
+    } catch (e) { }
   };
 
   useEffect(() => {
@@ -177,6 +177,7 @@ const AssetShare = () => {
           setShareUserName(data.sharedBy);
           setSharedCode(code as string);
           setLogo(data.data.team?.workspaceIcon);
+          trackEvent(events.ACCESS_SHARED_LINK, { link: window.location.href });
         }
 
         // There is team theme set
@@ -197,7 +198,6 @@ const AssetShare = () => {
   const onSubmitAuth = async (e) => {
     e.preventDefault();
     setLoading(true);
-		trackEvent(events.ACCESS_SHARED_LINK, {email});
     const { shareJWT, code } = urlUtils.getQueryParameters();
     const { data } = await assetApi.getSharedAssets({ shareJWT, email, code });
 
@@ -209,6 +209,7 @@ const AssetShare = () => {
       setError(false);
       setLoading(false);
       setAssets(data.data);
+      trackEvent(events.ACCESS_SHARED_LINK, { email, link: window.location.href });
     }
 
     // There is team theme set

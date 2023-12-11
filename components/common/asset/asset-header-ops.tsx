@@ -157,9 +157,15 @@ const AssetHeaderOps = ({
 
   const downloadSelectedAssets = async () => {
     try {
-      if (activeMode === "folders") {
-        trackEvent(events.DOWNLOAD_COLLECTION);
-      } else if (activeMode === "assets") {
+      if (activeMode === "folders" && selectedFolders.length > 0) {
+        selectedFolders.map(folder => {
+          trackEvent(events.DOWNLOAD_COLLECTION, {
+            collectionId: folder.id
+          });
+        })
+      }
+
+      if (activeMode === "assets") {
         trackEvent(events.DOWNLOAD_ASSET);
       }
 
@@ -216,8 +222,6 @@ const AssetHeaderOps = ({
         payload.assetIds = selectedAssets.map((assetItem) => assetItem.asset.id);
       }
 
-      return;
-
       // Add sharePath property if user is at share collection page
       if (sharePath) {
         filters["sharePath"] = sharePath;
@@ -272,8 +276,9 @@ const AssetHeaderOps = ({
         associateAssets = selectedAssets;
       }
 
+      console.log({ associateAssets });
+      
       const assetIds = associateAssets.map((assetItem) => assetItem.asset.id);
-
       if (assetIds?.length > 1) {
         const assetsToAssociate = associateAssets.filter(
           (assetItem) =>
@@ -288,6 +293,11 @@ const AssetHeaderOps = ({
             `Some of your selected assets have already maximum ${maximumAssociateFiles} associated files`,
           );
         } else {
+          console.log({
+            assetsToAssociate, 
+            assetIds
+          });
+          
           await assetApi.associate(assetIds);
           if (activeSortFilter?.mainFilter === "SubCollectionView") {
             setNeedsFetch("SubCollectionView");
@@ -505,16 +515,17 @@ const AssetHeaderOps = ({
               tooltipText={"Share"}
               tooltipId={"Share"}
               onClick={(e) => {
-                const sharedAssets = selectedSubFoldersAndAssets.assets.length > 0 ? selectedSubFoldersAndAssets.assets : selectedAssets.length > 0 ?  selectedAssets : [];
+                const sharedAssets = selectedSubFoldersAndAssets.assets.length > 0 ? selectedSubFoldersAndAssets.assets : selectedAssets.length > 0 ? selectedAssets : [];
 
                 if (sharedAssets.length > 0) {
                   sharedAssets.map(({ asset }) => {
                     trackEvent(events.SHARE_ASSET, {
                       assetId: asset.id,
                       assetName: asset.name,
+                      assetType: asset.type
                     });
                   })
-                } 
+                }
                 showShareActionList(e, true);
               }}
             />
@@ -579,7 +590,11 @@ const AssetHeaderOps = ({
         tooltipId: "Share",
         onClick: () => {
           if (activeMode === "folders") {
-            trackEvent(events.SHARE_COLLECTION);
+            selectedFolders.map(folder => {
+              trackEvent(events.SHARE_COLLECTION, {
+                collectionId: folder.id
+              });
+            })
           }
           setActiveOperation("shareCollections")
         },
@@ -670,7 +685,6 @@ const AssetHeaderOps = ({
       },
     },
   ];
-
 
   return (
     <div className={styles.bar}>

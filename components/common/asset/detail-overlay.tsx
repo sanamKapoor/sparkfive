@@ -42,7 +42,7 @@ import AssetRelatedFilesList from "./asset-related-files-list";
 import downloadUtils from "../../../utils/download";
 import { sizeToZipDownload } from "../../../constants/download";
 
-import {events} from '../../../constants/analytics';
+import { events } from '../../../constants/analytics';
 import useAnalytics from "../../../hooks/useAnalytics";
 
 const getDefaultDownloadImageType = (extension) => {
@@ -130,7 +130,7 @@ const DetailOverlay = ({
   outsideDetailOverlay = false,
   sharedCode = "",
 }) => {
-  const {trackEvent} = useAnalytics();
+  const { trackEvent } = useAnalytics();
 
   const { hasPermission } = useContext(UserContext);
   const { user, cdnAccess, transcriptAccess } = useContext(UserContext);
@@ -981,11 +981,11 @@ const DetailOverlay = ({
                       trackEvent(events.SHARE_ASSET, {
                         assetId: asset.id,
                         assetName: asset.name,
+                        assetType: asset.type
                       });
                       openShareAsset();
                     }}
                   />
-
                   <div className={styles["only-mobile-button"]}>
                     <IconClickable
                       additionalClass={styles["only-mobile-button"]}
@@ -1006,7 +1006,11 @@ const DetailOverlay = ({
                         isShare
                           ? events.DOWNLOAD_SHARED_ASSET
                           : events.DOWNLOAD_ASSET,
-                        { assetId: asset.id, assetName: asset.name }
+                        { 
+                          assetId: asset.id, 
+                          assetName: asset.name, 
+                          assetType: asset.type     
+                        }
                       );
                       if (editThenDownload) {
                         setDownloadDropdownOpen(true);

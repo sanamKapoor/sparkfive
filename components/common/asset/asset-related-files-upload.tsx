@@ -21,6 +21,8 @@ import AssetRelatedFilesSearch from "./asset-related-files-search";
 import DriveSelector from "./drive-selector";
 
 import { maximumAssociateFiles } from "../../../constants/asset-associate";
+import { events } from "../../../constants/analytics";
+import useAnalytics from "../../../hooks/useAnalytics";
 
 export default function AssetRelatedFileUpload({
   assets: assetData = [],
@@ -30,6 +32,8 @@ export default function AssetRelatedFileUpload({
 }) {
   const { advancedConfig } = useContext(UserContext);
   const { uploadingPercent, setUploadingPercent } = useContext(AssetContext);
+
+  const { trackEvent } = useAnalytics();
 
   const fileBrowserRef = useRef(undefined);
   const folderBrowserRef = useRef(undefined);
@@ -166,6 +170,14 @@ export default function AssetRelatedFileUpload({
         }
 
         data = data.map((item) => {
+           // Track uploaded asset info
+           trackEvent(events.UPLOAD_ASSET, {
+            uploadType: 'Device',
+            assetId: item.asset.id,
+            assetName: item.asset.name,
+            assetType: item.asset.type
+          });
+
           item.isSelected = true;
           return item;
         });
@@ -306,6 +318,13 @@ export default function AssetRelatedFileUpload({
         }
 
         data = data.map((item) => {
+           // Track uploaded asset info
+           trackEvent(events.UPLOAD_ASSET, {
+            uploadType: 'Device',
+            assetId: item.asset.id,
+            assetName: item.asset.name,
+            assetType: item.asset.type
+          });
           item.isSelected = true;
           return item;
         });
@@ -516,6 +535,13 @@ export default function AssetRelatedFileUpload({
 
         // Mark done
         const updatedAssets = data.map((asset) => {
+          // Track uploaded asset info
+          trackEvent(events.UPLOAD_ASSET, {
+            uploadType: 'Google Drive',
+            assetId: asset.asset.id,
+            assetName: asset.asset.name,
+            assetType: asset.asset.type
+          });
           return { ...asset, status: "done" };
         });
 
@@ -575,6 +601,13 @@ export default function AssetRelatedFileUpload({
 
         // Mark done
         const updatedAssets = data.map((asset) => {
+          // Track uploaded asset info
+          trackEvent(events.UPLOAD_ASSET, {
+            uploadType: 'Dropbox',
+            assetId: asset.asset.id,
+            assetName: asset.asset.name,
+            assetType: asset.asset.type
+          });
           return { ...asset, status: "done" };
         });
 

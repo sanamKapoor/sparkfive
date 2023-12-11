@@ -1,5 +1,6 @@
 export const pages = {
     LOGIN: 'LOGIN',
+    AUTH_CALLBACK: 'AUTH_CALLBACK',
     TWO_FECTOR: 'TWO_FECTOR',
     SIGNUP: 'SIGNUP',
     TRIAL_SIGNUP: 'TRIAL_SIGNUP',

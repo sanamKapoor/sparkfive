@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { UserContext } from "../context";
+import { TeamContext, UserContext } from "../context";
 import AnalyticsService from "../utils/analytics-service";
 
 const useAnalytics = () => {

@@ -442,6 +442,7 @@ const CropSidePanel = ({
             trackEvent(events.DOWNLOAD_ASSET, {
               assetId: asset.id,
               assetName: asset.name,
+              assetType: asset.type
             });
             if (mode === "crop") {
               document.getElementById("download-crop-image").click();
