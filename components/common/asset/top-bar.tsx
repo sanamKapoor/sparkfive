@@ -315,7 +315,7 @@ const TopBar = ({
               />
             )}
           </div>
-          {selectedAllAssets && (
+          {/* {selectedAllAssets && (
             <span className={styles["select-only-shown-items-text"]} onClick={toggleSelectAll}>
               Select only 25 assets shown
             </span>
@@ -327,7 +327,7 @@ const TopBar = ({
             >
               Select only 25 collections shown
             </span>
-          )}
+          )} */}
           <div className={styles["selected-wrapper"]}>
             <Button
               type="button"

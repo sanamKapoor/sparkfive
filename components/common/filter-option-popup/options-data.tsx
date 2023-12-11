@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-
 import { FilterContext } from "../../../context";
 import { OptionsDataProps } from "../../../interfaces/filters";
 import OptionDataItem from "./option-data-item";
@@ -71,20 +70,23 @@ const OptionsData: React.FC<OptionsDataProps> = ({
     });
   };
 
+  const containerClass = options && options.length >= 10 ? styles["outer-wrapper"] : styles["outer-grid"];
+
+
   return (
-    <div className={styles["outer-wrapper"]}>
-      {(options?.length === 0) ? (
+    <div className={containerClass}>
+      {options?.length === 0 ? (
         <p>No Results Found.</p>
       ) : (
         options?.map((item, index) => (
           <div className={styles["grid-item"]} key={index}>
-           <OptionDataItem
-                name={item[dataKey]}
-                count={item.count}
-                isSelected={item.isSelected}
-                onSelect={() => onSelectOption(item)}
-                onDeselect={() => onDeselectOption(item)}
-              /> 
+            <OptionDataItem
+              name={item[dataKey]}
+              count={item.count}
+              isSelected={item.isSelected}
+              onSelect={() => onSelectOption(item)}
+              onDeselect={() => onDeselectOption(item)}
+            />
           </div>
         ))
       )}

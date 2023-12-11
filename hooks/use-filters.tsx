@@ -1,18 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import {
-  FilterAttributeVariants,
-  IAttribute,
-  IFilterAttributeValues,
-  ISelectedFilter,
-} from "../interfaces/filters";
+import { FilterAttributeVariants, IAttribute, IFilterAttributeValues, ISelectedFilter } from "../interfaces/filters";
 
 import { getFilterKeyForAttribute } from "../utils/filter";
 
-import {
-  filterKeyMap,
-  initialActiveSortFilters,
-  labelKeyMap,
-} from "../config/data/filter";
+import { filterKeyMap, initialActiveSortFilters, labelKeyMap } from "../config/data/filter";
 import { AssetContext, FilterContext } from "../context";
 import customFieldsApi from "../server-api/attribute";
 import campaignApi from "../server-api/campaign";
@@ -23,14 +14,11 @@ import tagsApi from "../server-api/tag";
 import { getAssetsFilters } from "../utils/asset";
 
 const useFilters = (attributes) => {
-  const { activeSortFilter, setActiveSortFilter, sharePath, isPublic } =
-    useContext(FilterContext);
+  const { activeSortFilter, setActiveSortFilter, sharePath, isPublic } = useContext(FilterContext);
   const { activeFolder, activeSubFolders } = useContext(AssetContext);
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [activeAttribute, setActiveAttribute] = useState<IAttribute | null>(
-    null
-  );
+  const [activeAttribute, setActiveAttribute] = useState<IAttribute | null>(null);
 
   const [values, setValues] = useState<IFilterAttributeValues[]>([]);
   const [filteredOptions, setFilteredOptions] = useState<unknown>([]);
@@ -61,10 +49,7 @@ const useFilters = (attributes) => {
           };
           data.push(filterValues);
         }
-      } else if (
-        key.includes("dimensionWidth") ||
-        key.includes("dimensionHeight")
-      ) {
+      } else if (key.includes("dimensionWidth") || key.includes("dimensionHeight")) {
         const item = filters[key];
         if (item) {
           let filterValues = {
@@ -87,7 +72,7 @@ const useFilters = (attributes) => {
   const fetchValues = async (
     id: keyof typeof filterKeyMap,
     fetchFunction: (params?: Record<string, unknown>) => Promise<any>,
-    keysToFilter: string[]
+    keysToFilter: string[],
   ) => {
     let type, hasProducts;
 
@@ -143,19 +128,16 @@ const useFilters = (attributes) => {
       }
     } else {
       const filterKey = getFilterKeyForAttribute(id);
+      fetchedValues = fetchedValues.filter((item) => Number(item.count) !== 0);
 
       if (activeSortFilter[filterKey]?.length > 0) {
         fetchedValues = fetchedValues.map((item) => ({
           ...item,
           isSelected: keysToFilter?.some((key) => {
             if (key === "id") {
-              return activeSortFilter[filterKey]?.some(
-                (filter) => filter.id === item.id
-              );
+              return activeSortFilter[filterKey]?.some((filter) => filter.id === item.id);
             }
-            return activeSortFilter[filterKey]?.some(
-              (filter) => filter[key] === item[key]
-            );
+            return activeSortFilter[filterKey]?.some((filter) => filter[key] === item[key]);
           }),
         }));
       }
@@ -165,9 +147,7 @@ const useFilters = (attributes) => {
   };
 
   const getCustomInitialFilters = () => {
-    const customAttributes = attributes.filter(
-      (attr) => attr.type === "custom"
-    );
+    const customAttributes = attributes.filter((attr) => attr.type === "custom");
 
     const fields = {};
 
@@ -222,7 +202,7 @@ const useFilters = (attributes) => {
     let values: IFilterAttributeValues = [];
     setLoading(true);
     console.log({ id });
-    
+
     try {
       switch (id) {
         case FilterAttributeVariants.TAGS:
@@ -282,11 +262,7 @@ const useFilters = (attributes) => {
           break;
 
         default:
-          values = await fetchValues(
-            id,
-            (params) => fetchCustomField(id, params),
-            ["id"]
-          );
+          values = await fetchValues(id, (params) => fetchCustomField(id, params), ["id"]);
       }
       return values;
     } catch (err) {
@@ -298,7 +274,7 @@ const useFilters = (attributes) => {
 
   const onAttributeClick = async (data: IAttribute) => {
     setActiveAttribute(data);
-    const values = await fetchValuesById(data.id);    
+    const values = await fetchValuesById(data.id);
     setValues(values);
     setFilteredOptions(values);
   };
@@ -342,18 +318,13 @@ const useFilters = (attributes) => {
     return res.data;
   };
 
-  const fetchAssetDimensionLimits = async (
-    params?: Record<string, unknown>
-  ) => {
+  const fetchAssetDimensionLimits = async (params?: Record<string, unknown>) => {
     const fetchApi = isPublic ? shareCollectionApi : filterApi;
     const res = await fetchApi.getAssetDimensionLimits(params);
     return res.data;
   };
 
-  const fetchCustomField = async (
-    customFieldId: string,
-    params?: Record<string, unknown>
-  ) => {
+  const fetchCustomField = async (customFieldId: string, params?: Record<string, unknown>) => {
     const fetchApi = isPublic ? shareCollectionApi : customFieldsApi;
     const res = await fetchApi.getCustomFieldWithCount(customFieldId, params);
     return res.data;

@@ -13,6 +13,10 @@
 .assetFilter-wrapper{
   margin-top:20px;
 }
+.filter-view-container{
+  margin-top:54px;
+
+}
 
 @media screen and (max-width: 1023px) {
   .filter {
@@ -22,6 +26,7 @@
 
 .list-wrapper {
   width: 100%;
+  /* margin-top: 40px; */
 }
 
 .regularlist {
@@ -37,12 +42,11 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(246px, 1fr));
   grid-gap: 40px;
-  margin-top: 10px;
 }
 
 @media screen and (max-width: 600px) {
   .grid-list {
-    margin-top: 140px !important;
+    margin-top: 30px !important;
   }
 
 }
@@ -71,7 +75,7 @@
 
 @media screen and (max-width: 800px) {
   .grid-list{
-    margin-top: 145px;
+    margin-top: 30px;
     padding: 0 20px;
   }
 
@@ -138,4 +142,7 @@
 
 .headContent4 {
   width: 20%;
+}
+.collection-assets{
+  margin-top: 30px;
 }
