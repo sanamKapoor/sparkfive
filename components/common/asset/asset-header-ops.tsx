@@ -73,6 +73,7 @@ const AssetHeaderOps = ({
     selectedAllSubAssets,
     setSubFoldersAssetsViewList,
     setDownloadController,
+    setSelectedAllSubAssets
   } = useContext(AssetContext);
 
   const { trackEvent } = useAnalytics();
@@ -325,8 +326,8 @@ const AssetHeaderOps = ({
       setFolders(folders.map((folder) => ({ ...folder, isSelected: false })));
     } else if (activeMode === "SubCollectionView") {
       // Mark deselect all
-      setSubFoldersAssetsViewList(false)
       setSelectedAllSubFoldersAndAssets(false);
+      setSelectedAllSubAssets(false)
       setSubFoldersViewList({
         ...subFoldersViewList,
         results: subFoldersViewList.results.map((folder) => ({

@@ -35,10 +35,10 @@ const FolderGridItem = ({
   isLoading = false,
   deleteFolder,
   createdAt,
-  shareAssets = (folder: string) => {},
+  shareAssets = (folder: string) => { },
   changeThumbnail,
-  deleteThumbnail = (folder: string) => {},
-  copyShareLink = (folder: string) => {},
+  deleteThumbnail = (folder: string) => { },
+  copyShareLink = (folder: string) => { },
   toggleSelected,
   copyEnabled,
   sharePath = "",
@@ -239,17 +239,15 @@ const FolderGridItem = ({
 
   return (
     <div
-      className={`${styles.container} ${
-        activeView === "list" && styles.listContainer
-      } ${isLoading && "loadable"}`}
+      className={`${styles.container} ${activeView === "list" && styles.listContainer
+        } ${isLoading && "loadable"}`}
     >
       {/* select wrapper is for list view  */}
       <div className={activeView === "list" && styles["list-item-wrapper"]}>
         {activeView === "list" ? (
           <div
-            className={`${
-              activeView === "list" && styles["list-select-icon"]
-            } ${isSelected && styles["selected-wrapper"]}`}
+            className={`${activeView === "list" && styles["list-select-icon"]
+              } ${isSelected && styles["selected-wrapper"]}`}
           >
             <IconClickable
               src={
@@ -263,9 +261,8 @@ const FolderGridItem = ({
           </div>
         ) : null}
         <div
-          className={`${styles["main-border"]} ${
-            activeView === "list" && styles["list-main-border"]
-          }`}
+          className={`${styles["main-border"]} ${activeView === "list" && styles["list-main-border"]
+            }`}
         >
           <div
             className={
@@ -320,9 +317,8 @@ const FolderGridItem = ({
               )}
               {activeView !== "list" && (
                 <div
-                  className={`${styles["selectable-wrapper"]} ${
-                    isSelected && styles["selected-wrapper"]
-                  }`}
+                  className={`${styles["selectable-wrapper"]} ${isSelected && styles["selected-wrapper"]
+                    }`}
                 >
                   <IconClickable
                     src={
@@ -356,11 +352,9 @@ const FolderGridItem = ({
               id="editable-preview"
               onClick={handleOnFocus}
               className={
-                `normal-text ${styles["wrap-text"]} ${
-                      activeView === "list" && styles["list-wrap-text"]
-                    } ${gridStyles["editable-preview"]} ${
-                      activeView === "list" && styles["list-text"]
-                    }`
+                `normal-text ${styles["wrap-text"]} ${activeView === "list" && styles["list-wrap-text"]
+                } ${gridStyles["editable-preview"]} ${activeView === "list" && styles["list-text"]
+                }`
               }
             >
               {thumbnailName}
@@ -442,20 +436,17 @@ const FolderGridItem = ({
       </div> */}
 
       <div
-        className={`${styles["details-wrapper"]} ${
-          activeView === "list" && styles["list-detail-wrapper"]
-        }`}
+        className={`${styles["details-wrapper"]} ${activeView === "list" && styles["list-detail-wrapper"]
+          }`}
       >
         {folderType === "SubCollection" ? (
           <div className="secondary-text">{`${assetsCount ?? 0} 
           Assets`}</div>
         ) : (
-          <div className="secondary-text">{`${
-            Number(assetsCount ?? 0) + Number(totalchildassests ?? 0)
-          } Assets 
-              ${Number(totalchild) !== 0 ? Number(totalchild ?? 0) : ""}${
-            Number(totalchild) !== 0 ? " Subcollection" : ""
-          }`}</div>
+          <div className="secondary-text">{`${Number(assetsCount ?? 0) + Number(totalchildassests ?? 0)
+            } Assets 
+              ${Number(totalchild) !== 0 ? Number(totalchild ?? 0) : ""}${Number(totalchild) !== 0 ? " Subcollection" : ""
+            }`}</div>
         )}
       </div>
       {activeView === "list" && (
@@ -486,7 +477,7 @@ const FolderGridItem = ({
         modalIsOpen={folderRenameModalOpen}
         renameConfirm={confirmFolderRename}
         type={"Folder"}
-        initialValue={name}
+        initialValue={thumbnailName}
       />
       <ConfirmModal
         closeModal={() => setDeleteOpen(false)}
@@ -495,9 +486,8 @@ const FolderGridItem = ({
           setDeleteOpen(false);
         }}
         confirmText={"Delete"}
-        message={`Are you sure you want to delete this ${
-          mode === "SubCollectionView" ? "Subcollection" : "Collection"
-        }?`}
+        message={`Are you sure you want to delete this ${mode === "SubCollectionView" ? "Subcollection" : "Collection"
+          }?`}
         modalIsOpen={deleteOpen}
       />
     </div>

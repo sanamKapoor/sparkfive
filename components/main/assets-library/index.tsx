@@ -85,6 +85,9 @@ const AssetsLibrary = () => {
     appendNewSubSidenavFolders,
     selectedAllSubAssets,
     setSelectedAllSubAssets,
+    setListUpdateFlag,
+    currentFolder,
+    setCurrentFolder
   } = useContext(AssetContext);
 
   const {
@@ -245,7 +248,7 @@ const AssetsLibrary = () => {
           activeSubFolders !== ""
         ) {
           setActiveMode("SubCollectionView");
-          getSubCollectionsFolderData(true, 5);
+          getSubCollectionsFolderData(true, 10);
           getSubCollectionsAssetData();
         } else {
           setActiveMode("assets");
@@ -282,7 +285,7 @@ const AssetsLibrary = () => {
     } else if (needsFetch === "folders") {
       getFolders();
     } else if (needsFetch === "SubCollectionView") {
-      getSubCollectionsFolderData(true, 5);
+      getSubCollectionsFolderData(true, 10);
       getSubCollectionsAssetData();
     }
     setNeedsFetch("");
@@ -753,7 +756,13 @@ const AssetsLibrary = () => {
       if (activeSortFilter.mainFilter !== "SubCollectionView") {
         return;
       }
-      const { field, order } = activeSortFilter.sort;
+      let sort;
+      sort =
+        advancedConfig.collectionSortView === "alphabetical"
+          ? selectOptions.sort[3]
+          : selectOptions.sort[1];
+
+      const { field, order } = sort;
       const { next } = subFoldersViewList;
       const queryParams = {
         page: replace ? 1 : next,
@@ -768,7 +777,6 @@ const AssetsLibrary = () => {
         },
         nestedSubFolderId ? nestedSubFolderId : activeSubFolders
       );
-
       setSubFoldersViewList(subFolders, replace);
     } catch (err) {
       // TODO: Handle Error
@@ -784,7 +792,16 @@ const AssetsLibrary = () => {
       if (activeSortFilter.mainFilter !== "SubCollectionView") {
         return;
       }
+      const obj = {
+        ...getAssetsSort(activeSortFilter)
+      }
 
+      let sort;
+      sort =
+        advancedConfig.collectionSortView === "alphabetical"
+          ? selectOptions.sort[3]
+          : selectOptions.sort[1];
+      const sortingString = `${sort.field},${sort.order}`;
       const { next } = subFoldersAssetsViewList;
       const { data: subFolderAssets } = await assetApi.getAssets({
         ...getAssetsFilters({
@@ -794,7 +811,8 @@ const AssetsLibrary = () => {
           nextPage: next,
           userFilterObject: activeSortFilter,
         }),
-        ...getAssetsSort(activeSortFilter),
+        sort: sortingString,
+        // ...getAssetsSort(activeSortFilter),
         // ...searchFilterParams, commented because we don't search in case of sub-collection
         showAllAssets: showAllAssets,
       });
@@ -833,7 +851,6 @@ const AssetsLibrary = () => {
       const folderIndex = subFoldersViewList.results.findIndex(
         (folder) => folder.id === id
       );
-
       if (folderIndex !== -1) {
         setSubFoldersViewList({
           ...subFoldersViewList,
@@ -995,8 +1012,8 @@ const AssetsLibrary = () => {
               subFoldersViewList.total > 0 ? subFoldersViewList.total - 1 : 0,
           });
         }
-
         appendNewSubSidenavFolders([], activeSubFolders, true, id);
+        setListUpdateFlag(true);
         toastUtils.success("Subcollection deleted successfully");
       } else {
         const modFolderIndex = folders.findIndex(
@@ -1119,7 +1136,7 @@ const AssetsLibrary = () => {
                 >
                   <DropzoneProvider>
                     {advancedConfig.set && (
-            <AssetGrid
+                      <AssetGrid
                         activeFolder={activeFolder}
                         getFolders={getFolders}
                         getSubFolders={getSubCollectionsFolderData}

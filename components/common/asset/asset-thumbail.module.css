@@ -82,7 +82,7 @@
   overflow: hidden;
   font-size: 13px;
   font-weight: 500;
-  max-width: 150px;
+  max-width: 220px;
   padding-left:10px;
   padding-top: 10px;
 }
@@ -218,7 +218,7 @@
   border:none;
 }
 .list-select-icon{
-  width: 22px;
+  width: 18px;
   margin-right: 10px;
 }
 .size{
@@ -261,5 +261,13 @@
     display: none;
     
   }
+  .wrap-text{
+    max-width: 200px !important;
+  }
 
+}
+@media (max-width:945px){
+  .wrap-text{
+    max-width: 130px;
+  }
 }

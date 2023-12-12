@@ -14,6 +14,7 @@
   font-size: 14px;
   font-weight: 500;
   color: var(--primary-color);
+  /* padding-bottom: 15px; */
 }
 
 .select-add img {

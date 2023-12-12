@@ -1,5 +1,5 @@
 .container {
-  padding: 35px 0px 25px 35px;
+  padding: 0px 0px 25px 35px;
   margin-top: 81px;
 }
 
@@ -9,7 +9,7 @@
 
 .grid-wrapper {
   /* margin-top: calc(81px + 51px); */
-  margin-top: 80px;
+  margin-top: 50px;
 
 
 }

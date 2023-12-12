@@ -267,6 +267,7 @@ export default ({ getAssets }) => {
 
       await assetApi.updateMultiple(updateAssets, filters);
       setListUpdateFlag(true);
+      removeSelectedFromList();
       closeModalAndClearOpAsset();
       if (activeFolder && activeFolder !== selectedFolder) {
         removeSelectedFromList();
@@ -283,7 +284,6 @@ export default ({ getAssets }) => {
     try {
       let copyAssetIds;
       let filters = {};
-      console.log("hello")
       if (activeSortFilter?.mainFilter === "SubCollectionView" && !operationAsset) {
         copyAssetIds = selectedSubFolderAssetId.map(
           (selectedAsset) => selectedAsset.asset.id
@@ -553,7 +553,7 @@ export default ({ getAssets }) => {
         }
 
       }
-
+      setListUpdateFlag(true);
       closeModalAndClearOpAsset();
       toastUtils.success("Assets deleted successfully");
     } catch (err) {
