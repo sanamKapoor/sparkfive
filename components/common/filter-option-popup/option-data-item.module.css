@@ -31,8 +31,7 @@
     height:18px;
   }
   .filterCount{
-    color:
-    #817D9D;
+    color:var(--color--primary-color);
     font-size: 13px;
     font-weight: 400;
   }

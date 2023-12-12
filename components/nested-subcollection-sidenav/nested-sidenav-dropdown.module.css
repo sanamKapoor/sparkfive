@@ -32,7 +32,7 @@
   font-weight: 400;
   font-size: 12px;
   line-height: 18px;
-  color: #817D9D;
+  color:var(--color--primary-color);
 }
 .flex {
   display: flex;
