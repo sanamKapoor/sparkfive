@@ -443,7 +443,7 @@ console
 .text-primary-btn{
   font-weight: 500;
   font-size: 13px;
-  color:#817D9D;
+  color:var(--primary-color);
   background: transparent;
   cursor: pointer;
 }

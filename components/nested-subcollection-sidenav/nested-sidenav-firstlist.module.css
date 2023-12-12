@@ -32,7 +32,7 @@
     font-weight: 500;
     font-size: 13px;
     line-height: 18px;
-    color:var(--color-prim-navy);
+    color:var(--color--primary-color);
 }
 
 .icon-description{
@@ -51,7 +51,7 @@
     font-weight: 400;
     font-size: 12px;
     line-height: 18px;
-    color:#817D9D;
+    color:var(--primary-color);
 }
 .active{
     background:var(--color-sec-lightblue);
