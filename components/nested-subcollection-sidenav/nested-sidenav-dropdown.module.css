@@ -219,15 +219,18 @@
   display: flex;
   align-items: center;
   margin-top: 10px;
+  color:var(--secondary-color)
 }
 .loadIcon {
   width: 18px;
+  color:var(--secondary-color)
 }
 .loadMore {
   background: transparent;
   color: #10bda5;
   cursor: pointer;
   font-size: 13px;
+  color:var(--secondary-color)
 }
 .addIcon {
   width: 10.5px;
