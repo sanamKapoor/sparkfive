@@ -121,7 +121,7 @@
  
 }
 .nestedbox:hover{
-  background: var(--color-sec-lightblue);
+  background: var(--additional-color);
   cursor: pointer;
   /* padding: 4px; */
 }
@@ -149,8 +149,7 @@
   font-weight: 400;
   font-size: 13px;
   line-height: 18px;
-  color: var(--color-prim-navy);
-  margin-left: 5px;
+  color:var(--primary-color);  margin-left: 5px;
 }
 
 .active {
@@ -190,8 +189,9 @@
   padding: 4px;
 }
 .dropdownOptions:hover{
-  background: var(--color-sec-lightblue);
+  background: var(--additional-color);
   padding: 4px;
+
   
   
 }

@@ -59,7 +59,7 @@
 
 .image-wrapper>img,
 .image-wrapper>.video-wrapper {
-  width: inherit;
+  width: inherit;  color: #10bda5;
   height: inherit;
   object-fit: contain;
 }
