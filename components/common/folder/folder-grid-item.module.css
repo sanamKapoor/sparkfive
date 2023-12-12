@@ -57,7 +57,7 @@
 .sub-image-wrapper:nth-child(2) {
   border-radius: 0 8px 0 0;
 }
-secondary-text
+
 .sub-image-wrapper > img {
   object-fit: cover;
 }
@@ -251,9 +251,7 @@ secondary-text
   position: relative;
 }
 .modified-date {
-color:var(--primary-color);
-font-size: 13px;
-font-weight: 500;
+  color: #aeb0c2;
 }
 
 @media (max-width: 480px) {
