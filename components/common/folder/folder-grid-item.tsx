@@ -443,7 +443,7 @@ const FolderGridItem = ({
           <div className="secondary-text">{`${assetsCount ?? 0} 
           Assets`}</div>
         ) : (
-          <div className={styles["modified-date"]}>{`${Number(assetsCount ?? 0) + Number(totalchildassests ?? 0)
+          < div className={styles["modified-date"]}>{`${Number(assetsCount ?? 0) + Number(totalchildassests ?? 0)
             } Assets 
               ${Number(totalchild) !== 0 ? Number(totalchild ?? 0) : ""}${Number(totalchild) !== 0 ? " Subcollection" : ""
             }`}</div>
