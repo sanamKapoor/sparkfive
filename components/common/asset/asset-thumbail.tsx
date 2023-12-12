@@ -411,7 +411,7 @@ const AssetThumbail = ({
             </div>
           )}
           <div className={activeView === "grid" && styles.sizeMargin}  >
-            <div className={activeView !== "list" ? `secondary-text ${styles["modified-date"]}` : ""} style={{ color: '#AEB0C2' }}>
+            <div className={activeView !== "list" ? `secondary-text ${styles["modified-date"]}` : ""} >
               {format(new Date(asset.createdAt), dateFormat)}
             </div>
           </div>

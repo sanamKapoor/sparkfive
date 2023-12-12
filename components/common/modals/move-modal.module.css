@@ -149,8 +149,7 @@
   font-weight: 400;
   font-size: 13px;
   line-height: 18px;
-  color: var(--color-prim-navy);
-  margin-left: 5px;
+  color:var(--primary-color);  margin-left: 5px;
 }
 
 .active {

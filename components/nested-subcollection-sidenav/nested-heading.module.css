@@ -14,7 +14,7 @@
     font-weight: 600;
     /* font-size: 14px; */
     Line-height:21.79px;
-    color:var(--color-prim-navy);
+    color:var(--color--primary-color);
     display: flex;
     align-items: center;
     justify-content: space-between;

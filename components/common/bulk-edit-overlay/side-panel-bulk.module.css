@@ -204,7 +204,7 @@ form.search button {
   font-weight: 500;
   font-size: 13px;
   line-height: 18px;
-  color: var(--color-prim-navy);
+  color:var(--primary-color);
   margin-left: 5px;
 }
 .active {
