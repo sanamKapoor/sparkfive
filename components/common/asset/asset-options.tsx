@@ -12,12 +12,14 @@ import { useContext } from "react";
 import { UserContext } from "../../../context";
 import React from "react";
 
-import {events} from '../../../constants/analytics';
+import { events } from '../../../constants/analytics';
 import useAnalytics from '../../../hooks/useAnalytics'
 
 const AssetOptions = ({
   itemType = "",
   asset,
+  realUrl,
+  thumbailUrl,
   downloadAsset,
   openMoveAsset,
   openCopyAsset,
@@ -32,37 +34,45 @@ const AssetOptions = ({
   isAssetRelated = false,
   renameAsset
 }) => {
+
   const { hasPermission, user } = useContext(UserContext);
 
   const isAdmin = () => {
     return user?.role?.id === "admin" || user?.role?.id === "super_admin";
   };
 
-	const {trackEvent} = useAnalytics();
+  const { trackEvent } = useAnalytics();
 
   const options = [
     {
       label: "Download",
       onClick: () => {
-        trackEvent(events.DOWNLOAD_ASSET, {
-         assetId: asset.id,
-         assetName: asset.name,
-         assetType: asset.type
-       });
-       downloadAsset();
-     },
+        trackEvent(isShare
+          ? events.DOWNLOAD_SHARED_ASSET
+          : events.DOWNLOAD_ASSET, {
+          assetId: asset.id,
+          assetName: asset.name,
+          assetType: asset.type,
+          thumbnail: thumbailUrl,
+          url: realUrl,
+        });
+        downloadAsset();
+      },
       permissions: [ASSET_DOWNLOAD],
     },
-    { label: "Share", 
-    onClick: () => {
-      trackEvent(events.SHARE_ASSET, {
-        assetId: asset.id,
-        assetName: asset.name,
-        assetType: asset.type
-      });
-      openShareAsset();
+    {
+      label: "Share",
+      onClick: () => {
+        trackEvent(events.SHARE_ASSET, {
+          assetId: asset.id,
+          assetName: asset.name,
+          assetType: asset.type,
+          thumbnail: thumbailUrl,
+          url: realUrl,
+        });
+        openShareAsset();
+      },
     },
-  },
   ];
 
   const assetRelatedOptions: any = [

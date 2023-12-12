@@ -198,7 +198,9 @@ export default function AssetRelatedAddition({
             uploadType: 'Device',
             assetId: item.asset.id,
             assetName: item.asset.name,
-            assetType: item.asset.type
+            assetType: item.asset.type,
+            thumbnail: item.thumbailUrl,
+            url: item.realUrl,
           });
 
           item.isSelected = true;
@@ -566,7 +568,9 @@ export default function AssetRelatedAddition({
             uploadType: 'Google Drive',
             assetId: asset.asset.id,
             assetName: asset.asset.name,
-            assetType: asset.asset.type
+            assetType: asset.asset.type,
+            thumbnail: asset.thumbailUrl,
+            url: asset.realUrl,
           });
           return { ...asset, status: "done" };
         });
@@ -641,7 +645,9 @@ export default function AssetRelatedAddition({
             uploadType: 'Dropbox',
             assetId: asset.asset.id,
             assetName: asset.asset.name,
-            assetType: asset.asset.type
+            assetType: asset.asset.type,
+            thumbnail: asset.thumbailUrl,
+            url: asset.realUrl,
           });
           return { ...asset, status: "done" };
         });

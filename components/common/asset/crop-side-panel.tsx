@@ -46,6 +46,8 @@ const CropSidePanel = ({
   sizeOfCrop,
   setSizeOfCrop,
   detailPosSize,
+  versionRealUrl,
+  versionThumbnailUrl,
   onAddAssociate = (data) => {},
   setRenameData = (data) => {},
 }) => {
@@ -439,10 +441,14 @@ const CropSidePanel = ({
           text={"Download Edited"}
           type={"button"}
           onClick={() => {
-            trackEvent(events.DOWNLOAD_ASSET, {
+            trackEvent(isShare
+              ? events.DOWNLOAD_SHARED_ASSET
+              : events.DOWNLOAD_ASSET, {
               assetId: asset.id,
               assetName: asset.name,
-              assetType: asset.type
+              assetType: asset.type,
+              thumbnail: versionThumbnailUrl,
+              url: versionRealUrl
             });
             if (mode === "crop") {
               document.getElementById("download-crop-image").click();

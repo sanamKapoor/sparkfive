@@ -117,6 +117,18 @@ const AssetShare = () => {
 
       const selectedAssets = assets.filter((asset) => asset.isSelected);
 
+      selectedAssets.map(assetItem => {
+        // Track assets download event
+        trackEvent(events.DOWNLOAD_SHARED_ASSET, {
+            assetId: assetItem.asset.id,
+            assetName: assetItem.asset.name,
+            assetType: assetItem.asset.type,
+            thumbnail: assetItem.thumbailUrl,
+            url: assetItem.realUrl,
+          });
+        return assetItem;
+      })
+
       const downloadAsZip = async () => {
         let payload = {
           assetIds: selectedAssets.map((item) => item.asset.id),
@@ -201,6 +213,9 @@ const AssetShare = () => {
     const { shareJWT, code } = urlUtils.getQueryParameters();
     const { data } = await assetApi.getSharedAssets({ shareJWT, email, code });
 
+    console.log({ data });
+    
+
     if (data.error) {
       toastUtils.error(data.errorMessage);
       setError(true);
@@ -280,7 +295,7 @@ const AssetShare = () => {
             />
             <div className={styles["list-wrapper"]}>
               <ul className={styles["grid-list"]}>
-                {assets.map((assetItem) => {
+                {assets.map((assetItem) => {                  
                   return (
                     <li className={styles["grid-item"]} key={assetItem.asset.id}>
                       <ShareItem

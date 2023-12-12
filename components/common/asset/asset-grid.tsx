@@ -111,6 +111,7 @@ const AssetGrid = ({
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [selectionArea, setSelectionArea] = useState(null);
   const ref = useRef(null);
+  
   useEffect(() => {
     const { assetId } = urlUtils.getQueryParameters();
     if (assetId) getInitialAsset(assetId);

@@ -72,6 +72,7 @@ export default ({ children }) => {
         const query = url.getQueryStringFromObject(Router.query);
 
         const { data } = await userApi.getUserData();
+      
         const teamResponse = await teamApi.getTeam();
         setCdnAccess(teamResponse.data.cdnAccess);
         setTranscriptAccess(teamResponse.data.transcript);
@@ -150,11 +151,7 @@ export default ({ children }) => {
     setUser(null);
     cookiesUtils.remove("jwt");
     requestsUtils.removeAuthToken();
-    trackEvent(events.LOGOUT);
-    window.analytics.identify({
-      subscriptionStatus: 'inactive'
-    });
-    
+    trackEvent(events.LOGOUT); 
     Router.replace("/login");
   };
 
@@ -188,12 +185,12 @@ export default ({ children }) => {
     cookiesUtils.setUserJWT(token);
     if (twoFactor) {
       cookiesUtils.set("twoFactor", "true");
-    }
+    }    
     await fetchUser();
   };
 
   useEffect(() => {
-    if (router.route) {
+    if (router.route) {      
       getUserData();
     }
   }, [router.route]);

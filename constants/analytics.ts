@@ -22,6 +22,19 @@ export const pages = {
     USER_SETTING: 'USER_SETTING',
     UPLOAD_APPROVAL: 'UPLOAD_APPROVAL',
     ASSETS_DELETE: 'ASSET_DELETE',
+
+    // previously they were pages, but now they are tabs inside user-settings. Still we will track those sections as page visit
+
+    PROFILE: 'PROFILE',
+    NOTIFICATIONS: 'NOTIFICATIONS',
+    INTEGRATIONS: 'INTEGRATIONS',
+    BILLING: 'BILLING',
+    COMPANY: 'COMPANY',
+    SECURITY: 'SECURITY',
+    TEAM: 'TEAM',
+    ATTRIBUTES: 'ATTRIBUTES',
+    CUSTOM_SETTINGS: 'CUSTOM_SETTINGS',
+    GUEST_UPLOAD_LINKS: 'GUEST_UPLOAD_LINKS',
 }
 
 export const events = {

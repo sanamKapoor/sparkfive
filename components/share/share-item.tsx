@@ -81,7 +81,9 @@ const ShareItem = ({
                 trackEvent(events.VIEW_SHARED_ASSET, {
                   assetId: asset.id,
                   assetName: asset.name,
-                  assetType: asset.type
+                  assetType: asset.type,
+                  thumbnail: thumbailUrl,
+                  url: realUrl,
                 });
                 setVisibleOVerlay(true);
               }}

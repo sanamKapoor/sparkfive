@@ -166,10 +166,6 @@ const AssetHeaderOps = ({
         })
       }
 
-      if (activeMode === "assets") {
-        trackEvent(events.DOWNLOAD_ASSET);
-      }
-
       let payload = {
         assetIds: [],
         folderIds: [],
@@ -212,15 +208,39 @@ const AssetHeaderOps = ({
           (folder) => folder.id
         );
       } else if (selectedSubFoldersAndAssets.assets.length > 0) {
-        trackEvent(events.DOWNLOAD_ASSET);
-
         totalDownloadingAssets = selectedSubFoldersAndAssets.assets.length;
         payload.assetIds = selectedSubFoldersAndAssets.assets.map(
-          (assetItem) => assetItem.asset.id
+          (assetItem) => {            
+            // Track assets download event
+            trackEvent(isShare
+              ? events.DOWNLOAD_SHARED_ASSET
+              : events.DOWNLOAD_ASSET, {
+                assetId: assetItem.asset.id,
+                assetName: assetItem.asset.name,
+                assetType: assetItem.asset.type,
+                thumbnail: assetItem.thumbailUrl,
+                url: assetItem.realUrl,
+              });
+
+            return assetItem.asset.id
+          }
         );
-      } else {
+      } else {        
         totalDownloadingAssets = selectedAssets.length;
-        payload.assetIds = selectedAssets.map((assetItem) => assetItem.asset.id);
+        payload.assetIds = selectedAssets.map((assetItem) => {
+          // Track assets download event
+          trackEvent(isShare
+            ? events.DOWNLOAD_SHARED_ASSET
+            : events.DOWNLOAD_ASSET, {
+              assetId: assetItem.asset.id,
+              assetName: assetItem.asset.name,
+              assetType: assetItem.asset.type,
+              thumbnail: assetItem.thumbailUrl,
+              url: assetItem.realUrl,
+            });
+
+          return assetItem.asset.id
+        });
       }
 
       // Add sharePath property if user is at share collection page
@@ -276,8 +296,6 @@ const AssetHeaderOps = ({
       } else {
         associateAssets = selectedAssets;
       }
-
-      console.log({ associateAssets });
       
       const assetIds = associateAssets.map((assetItem) => assetItem.asset.id);
       if (assetIds?.length > 1) {
@@ -294,11 +312,6 @@ const AssetHeaderOps = ({
             `Some of your selected assets have already maximum ${maximumAssociateFiles} associated files`,
           );
         } else {
-          console.log({
-            assetsToAssociate, 
-            assetIds
-          });
-          
           await assetApi.associate(assetIds);
           if (activeSortFilter?.mainFilter === "SubCollectionView") {
             setNeedsFetch("SubCollectionView");
@@ -519,11 +532,13 @@ const AssetHeaderOps = ({
                 const sharedAssets = selectedSubFoldersAndAssets.assets.length > 0 ? selectedSubFoldersAndAssets.assets : selectedAssets.length > 0 ? selectedAssets : [];
 
                 if (sharedAssets.length > 0) {
-                  sharedAssets.map(({ asset }) => {
+                  sharedAssets.map((assetItem) => {
                     trackEvent(events.SHARE_ASSET, {
-                      assetId: asset.id,
-                      assetName: asset.name,
-                      assetType: asset.type
+                      assetId: assetItem.asset.id,
+                      assetName: assetItem.asset.name,
+                      assetType: assetItem.asset.type,
+                      thumbnail: assetItem.thumbailUrl,
+                      url: assetItem.realUrl,
                     });
                   })
                 }

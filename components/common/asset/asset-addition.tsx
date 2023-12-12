@@ -214,6 +214,8 @@ const AssetAddition = ({
             assetId: item.asset.id,
             assetName: item.asset.name,
             assetType: item.asset.type,
+            thumbnail: item.thumbailUrl,
+            url: item.realUrl,
           });
 
           item.isSelected = true;
@@ -526,7 +528,9 @@ const AssetAddition = ({
         uploadType: 'Dropbox',
         assetId: asset.asset.id,
         assetName: asset.asset.name,
-        assetType: asset.asset.type
+        assetType: asset.asset.type,
+        thumbnail: asset.thumbailUrl,
+        url: asset.realUrl,
       });
 
         return { ...asset, status: "done" };
@@ -703,7 +707,9 @@ const AssetAddition = ({
           uploadType: 'Google Drive',
           assetId: asset.asset.id,
           assetName: asset.asset.name,
-          assetType: asset.asset.type
+          assetType: asset.asset.type,
+          thumbnail: asset.thumbailUrl,
+          url: asset.realUrl,
         });
 
         return { ...asset, status: "done" };

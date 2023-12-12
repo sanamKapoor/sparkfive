@@ -367,10 +367,12 @@ const AssetThumbail = ({
                         text={"View Details"}
                         type={"button"}
                         onClick={() => {
-                          trackEvent(events.VIEW_ASSET, {
+                          trackEvent(isShare ? events.VIEW_SHARED_ASSET : events.VIEW_ASSET, {
                             assetId: asset.id,
                             assetName: asset.name,
-                            assetType: asset.type
+                            assetType: asset.type,
+                            thumbnail: thumbailUrl,
+                            url: realUrl,
                           });
                           if (onView) {
                             onView(asset.id);
@@ -441,6 +443,8 @@ const AssetThumbail = ({
             <AssetOptions
               itemType={type}
               asset={asset}
+              thumbailUrl={thumbailUrl}
+              realUrl={realUrl}
               openArchiveAsset={openArchiveAsset}
               openDeleteAsset={openDeleteAsset}
               openMoveAsset={openMoveAsset}
@@ -459,6 +463,8 @@ const AssetThumbail = ({
             <AssetOptions
               itemType={type}
               asset={asset}
+              thumbailUrl={thumbailUrl}
+              realUrl={realUrl}
               openDeleteAsset={openDeleteAsset}
               downloadAsset={downloadAsset}
               isAssetRelated
