@@ -322,7 +322,7 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
                             <span style={{ color: "#10BDA5" }}>Loading...</span>
                           ) : (
                             <>
-                              <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} />
+                              {/* <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} /> */}
                               <button className={`${styles["loadMore"]}`}>Load More</button>
                             </>
                           )}
@@ -343,7 +343,7 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
               <div className={styles.loader}></div>
             ) : (
               <div className={`${styles["load-wrapper"]}`}>
-                <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} />
+                {/* <IconClickable additionalClass={styles.loadIcon} SVGElement={Utilities.load}  /> */}
                 <button className={styles.loadMore}>Load More</button>
               </div>
             )}

@@ -130,6 +130,11 @@
     display: flex;
     align-items: center;
 }
+.dropdown-icon{
+    width: 24px;
+    height:24px;
+
+}
 .attribute-tag-list{
     width: 100%;
     border-bottom: 1px solid #DEDAD4;

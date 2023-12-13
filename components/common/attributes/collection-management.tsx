@@ -318,11 +318,13 @@ const CollectionManagement = () => {
                         <IconClickable
                           src={Utilities.CaretDown}
                           onClick={() => toggleDropdown(index, folder, true)}
+                          additionalClass={styles["dropdown-icon"]}
                         />
                       ) : (
                         <IconClickable
                           src={Utilities.caretRightsingle}
                           onClick={() => toggleDropdown(index, folder, true)}
+                          additionalClass={styles["dropdown-icon"]}
                         />
                       )
                     ) : (
