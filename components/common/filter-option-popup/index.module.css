@@ -42,7 +42,7 @@
 .clear {
   border: none;
   background: #fff;
-  color: #10bda5;
+  color:var(--secondary-color);
   font-weight: 400;
   font-size: 12px;
   font-family: "Noto Sans", sans-serif;

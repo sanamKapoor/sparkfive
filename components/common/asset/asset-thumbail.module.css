@@ -59,7 +59,7 @@
 
 .image-wrapper>img,
 .image-wrapper>.video-wrapper {
-  width: inherit;
+  width: inherit;  color: #10bda5;
   height: inherit;
   object-fit: contain;
 }
@@ -224,8 +224,7 @@
 .size{
   display: block;
   /* width: 20% ; */
-  color:
-  #AEB0C2;
+  color:var(--primary-color);
 }
 .list-item-wrapper{
   display: flex;
@@ -235,13 +234,10 @@
 
 .modified-date{
   margin-left:10px;
-  color:
-  #AEB0C2;
+  color:var(--primary-color);
 }
 .format{
-  color:
-  #AEB0C2;
-
+  color:var(--primary-color);
 }
 
 @media (max-width:420px){
