@@ -1,32 +1,83 @@
 .container {
-    padding: 0 40px;
-  }
-  
-
-@media (min-width:1200px){
-  .container {
-    margin-top: 199px;
-  } 
+  padding: 0 0 0 40px;
 }
 
-  @media screen and (max-width: 900px) {
-    .container {
-      padding: 17.5px 16px;
-    }
+.mainContainer {
+  max-width: calc(100% - 283px);
+  position: relative;
+  left: 283px;
+  padding: 60px 35px;
+  width: 100%;
+  top: 81px;
+  top: 15px;
+}
+
+
+.filterViewWrapper {
+  /* margin-top: 200px; */
+  /* position: fixed; */
+  background: #fff;
+  z-index: 999;
+  width: 100%;
+  top: 179px;
+  top: 162px;
+  margin-bottom: 30px;
+}
+@media screen and (max-width: 900px) {
+  .container {
+    padding: 17.5px 16px;
   }
-  
-  .col-wrapper,.col-wrapperview {
-    display: flex;
-    justify-content: space-between;
-    gap: 40px;
+}
+
+/* .col-wrapper,
+.col-wrapperview {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+} */
+
+@media screen and (min-width: 1024px) {
+  .col-wrapper {
+    padding-top: 85px;
   }
 
-  
-  @media screen and (min-width:1024px){
-    .col-wrapper {
-      padding-top: 85px;
-    }
-    .col-wrapperview{
-      padding-top: 0;
-    }
+  .col-wrapperview {
+    padding-top: 0;
   }
+}
+
+.rightToggle {
+  width: 100%;
+  padding: 0 35px;
+}
+
+
+.toggleContainer{
+  margin-top: 80px;
+  max-width: 100%;
+  margin-left: 0;
+  padding-top: 5px;
+ 
+
+}
+
+@media (max-width:820px){
+  .mainContainer {
+ max-width: 100%;
+ left: 0;
+  }
+
+}
+@media screen and (max-width: 800px) {
+  .container {
+    padding: 17.5px 0px;
+  }
+}
+
+@media (max-width:600px){
+  .rightToggle {
+    width: 100%;
+    padding: 0;
+  }
+  
+}

@@ -31,7 +31,6 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import ReactGA from "react-ga";
 import dragndropPolyfill from "../polyfills/dragndroptouch";
-
 // Contexts
 import { LanguageContext, ThemeContext } from "../context";
 import AssetContextProvider from "../context/asset-provider";
@@ -41,7 +40,7 @@ import ShareProvider from "../context/share-provider";
 import SocketProvider from "../context/socket-provider";
 import TeamContextProvider from "../context/team-provider";
 import UserContextProvider from "../context/user-provider";
-
+import ErrorBoundary from "./ErrorBoumdary"
 // FB pixel
 import FBPixel from "../components/common/scripts/fb-pixel";
 
@@ -88,6 +87,7 @@ export default function MyApp({ Component, pageProps }) {
   }, [router.asPath]);
 
   return (
+
     <LoadingContextProvider>
       <UserContextProvider>
         <SocketProvider>
@@ -106,7 +106,12 @@ export default function MyApp({ Component, pageProps }) {
                         ></script>
                       </Head>
                       {process.env.INCLUDE_PIXEL === "yes" && <FBPixel />}
+                      {/**
+                       * todo handle Errorboundary design in refactoring later
+                       */}
+                      {/* <ErrorBoundary> */}
                       <Component {...pageProps} />
+                      {/* </ErrorBoundary> */}
                     </TeamContextProvider>
                   </AssetContextProvider>
                 </ThemeContext.Provider>

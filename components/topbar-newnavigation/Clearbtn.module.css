@@ -1,0 +1,9 @@
+.clearBtn{
+    border:none;
+    background: #fff;
+    color:#10BDA5;
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    cursor: pointer;
+}

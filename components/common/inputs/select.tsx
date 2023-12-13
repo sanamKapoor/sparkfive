@@ -62,6 +62,7 @@ const Select = ({
       styles={{
         option: (provided, state) => ({
           ...provided,
+          outline: 'none',
           backgroundColor: state.isSelected ? "#FAF8F5" : "transparent",
           ":hover": {
             backgroundColor: additionalColor,

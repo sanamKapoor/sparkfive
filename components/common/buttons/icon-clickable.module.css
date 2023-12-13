@@ -3,3 +3,7 @@
   width: 25px;
   height: auto;
 }
+
+.button:focus{
+  outline: none;
+}

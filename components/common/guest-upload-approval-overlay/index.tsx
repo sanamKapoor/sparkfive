@@ -100,11 +100,9 @@ const GuestUploadApprovalOverlay = ({ handleBackButton, selectedAssets, loadingA
   };
 
   useEffect(() => {
-    console.log(assetCustomFields);
   }, [assetCustomFields]);
 
   const initialize = () => {
-    console.log(`Initialized: ${addMode}`);
     if (addMode) {
       resetSelectedFieldValue();
     } else if (!addMode) {
@@ -153,7 +151,6 @@ const GuestUploadApprovalOverlay = ({ handleBackButton, selectedAssets, loadingA
   }, [addMode, originalInputs, inputCustomFields]);
 
   const getInitialAttributes = async () => {
-    console.log(`getInitialAttributes`);
     try {
       // Get custom fields list
       await getCustomFieldsInputData();

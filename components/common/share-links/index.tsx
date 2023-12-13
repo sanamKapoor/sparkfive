@@ -20,10 +20,10 @@ import ShareCollectionModal from "../modals/share-collection-modal";
 import ShareModal from "../modals/share-modal";
 
 // Constants
+import React from "react";
 import { Waypoint } from "react-waypoint";
 import { typeList } from "../../../config/data/shared-links";
 import { colorList, statusList } from "../../../constants/shared-links";
-import React from "react";
 
 export default function ShareLinks() {
   const [links, setLinks] = useState([]);
@@ -183,7 +183,6 @@ export default function ShareLinks() {
   const loadMore = () => {
     // still have page to load
     if (nextPage !== -1) {
-      console.log(`load more`);
       setPage(page + 1);
       getLinks(
         {
@@ -459,7 +458,10 @@ export default function ShareLinks() {
                 </div>
                 <div className={"col-10 d-flex justify-content-center align-items-center col-sm-100"}>
                   <ItemFields.member className={styles.sharedIconimg} />
-                  {/*<img src={ItemFields.member} alt="member icon" className={styles.sharedIconimg} />*/}
+                  {/**
+                   * TODO merge conflict
+                   */}
+                  {/* <img src={ItemFields.member} alt="member icon" className={styles.sharedIconimg} /> */}
                   <span className={"m-l-15 font-weight-400 font-14"}>{link.sharedCount}</span>
                 </div>
                 <div className={"col-15 d-flex justify-content-center align-items-center col-sm-100"}>
@@ -586,7 +588,7 @@ export default function ShareLinks() {
               setShowEditModal(false);
             }}
             shareAssets={updateLink}
-            getShareLink={() => {}}
+            getShareLink={() => { }}
             currentShareLink={currentLink}
             title={"Update shared link"}
           />
@@ -598,7 +600,7 @@ export default function ShareLinks() {
               setShowEditModal(false);
             }}
             shareAssets={updateLink}
-            getShareLink={() => {}}
+            getShareLink={() => { }}
             currentShareLink={currentLink}
             title={"Update shared link"}
           />

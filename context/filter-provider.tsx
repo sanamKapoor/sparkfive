@@ -28,12 +28,18 @@ export default ({ children, isPublic = false }) => {
   const collectionSort =
     advancedConfig.collectionSortView === "alphabetical" ? selectOptions.sort[3] : selectOptions.sort[1];
 
-  const [activeSortFilter, setActiveSortFilter] = useState({
-    sort: advancedConfig.defaultLandingPage === "allTab" || router.query.tag ? assetSort : collectionSort,
-    mainFilter: advancedConfig.defaultLandingPage === "allTab" || router.query.tag ? "all" : "folders",
+  const [activeSortFilter, setActiveSortFilter] = useState<any>({
+    sort:
+      advancedConfig.defaultLandingPage === "allTab"
+        ? assetSort
+        : collectionSort,
+    mainFilter:
+      advancedConfig.defaultLandingPage === "allTab" ? "all" : "folders",
     ...DEFAULT_FILTERS,
     dimensionsActive: false,
-  });
+    lastUpdated: undefined,
+    dateUploaded: undefined,
+  } as any);
 
   const preparingAssets = useRef(true);
 
@@ -542,8 +548,8 @@ export default ({ children, isPublic = false }) => {
     loadSharedFolders,
     searchFilterParams,
     setSearchFilterParams,
-    renderFlag,
     setRenderedFlag,
+    renderFlag,
     preparingAssets,
   };
 

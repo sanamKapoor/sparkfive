@@ -62,7 +62,6 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({ onBack, data,
         toastUtils.success("Setting changes saved");
       } catch (e) {
         setLoading(false);
-        console.log(e.response.data?.message);
         toastUtils.error(e.response.data?.message || "Internal server error");
       }
     }
