@@ -88,6 +88,11 @@ export const insights={
   insightShare:require("./Icons/insights/insights-share.svg"),
   insightUser:require("./Icons/insights/insights-user.svg"),
   insightGroups:require("./Icons/insights/insights-users-group.svg"),
+  userImg1:require("./Icons/insights/user-img1.svg"),
+  userImg2:require("./Icons/insights/user-img2.svg"),
+  userImg3:require("./Icons/insights/user-img3.svg"),
+  userImg4:require("./Icons/insights/user-img4.svg"),
+
 }
 
 export const Utilities = {
