@@ -30,7 +30,11 @@ const useAnalytics = () => {
     AnalyticsService.identify(userId, infoObject);
   };
 
-  return { trackPage, trackEvent, identify };
+  const group = (groupId: string, infoObject?: Record<string, unknown>) => {
+    AnalyticsService.group(groupId, infoObject);
+  };
+
+  return { trackPage, trackEvent, identify, group };
 };
 
 export default useAnalytics;
