@@ -90,7 +90,7 @@
   height: 24px;
   max-width: 108px;
   cursor: pointer;
-  color:#817D9D;
+  color:var(--primary-color);
   font-size: 12px;
   font-weight: 400;
 }

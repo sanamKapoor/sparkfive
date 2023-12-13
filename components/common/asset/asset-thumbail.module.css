@@ -224,7 +224,8 @@
 .size{
   display: block;
   /* width: 20% ; */
-  color:var(--primary-color);
+  color:
+  #AEB0C2;
 }
 .list-item-wrapper{
   display: flex;
@@ -234,10 +235,12 @@
 
 .modified-date{
   margin-left:10px;
-  color:var(--primary-color);
+  color:
+  #AEB0C2;
 }
 .format{
-  color:var(--primary-color);
+  color:
+  #AEB0C2;
 }
 
 @media (max-width:420px){

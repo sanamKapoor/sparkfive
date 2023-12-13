@@ -152,9 +152,6 @@
   color:var(--primary-color);  margin-left: 5px;
 }
 
-.active {
-  background: #e9eefa;
-}
 
 
 .folder {
@@ -207,7 +204,7 @@
   height: 1px;
 }
 .active {
-  background: var(--color-sec-lightblue);
+  background: var(--additional-color);
   border-radius: 4px;
   /* padding: 7.5px; */
 }
