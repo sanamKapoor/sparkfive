@@ -1,13 +1,13 @@
 .icon-descriptions span {
-  font-family: "Noto Sans", sans-serif;
+  font-family: "Noto Sans",sans-serif;
   font-weight: 500;
   font-size: 13px;
   line-height: 18px;
-  color: var(--color-primary);
+  color: var(--color--primary-color);
   margin-left: 5px;
 }
 .icon-descriptions {
-  max-width: 15ch;
+  max-width: 22ch;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -29,8 +29,8 @@
  
 .list1-right-contents span {
   font-family: "Noto Sans", sans-serif;
-  font-weight: 500;
-  font-size: 14px;
+  font-weight: 400;
+  font-size: 12px;
   line-height: 18px;
   color: #817D9D;
 }
@@ -58,7 +58,7 @@
 }
 
 .nestedbox:hover {
-  background: var(--color-sec-lightblue);
+  background: var(--additional-color);
   /* padding: 0 4x; */
 }
 .loadbtn {
@@ -92,7 +92,7 @@
   padding: 4px;
 }
 .folder-lists:hover {
-  background: var(--color-sec-lightblue);
+  background: var(--additional-color);
   padding: 4px;
 }
 
@@ -126,12 +126,12 @@
 }
 
 .active {
-  background: var(--color-sec-lightblue);
+  background: var(--additional-color);
   border-radius: 4px;
   /* padding: 7.5px; */
 }
 .subfolderList {
-  padding: 0px 24px 0px 16px;
+  padding: 0px 0px 0px 16px;
   border-left: 1px solid #dedad4;
 }
 
@@ -219,15 +219,18 @@
   display: flex;
   align-items: center;
   margin-top: 10px;
+  color:var(--secondary-color)
 }
 .loadIcon {
   width: 18px;
+  color:var(--secondary-color)
 }
 .loadMore {
   background: transparent;
   color: #10bda5;
   cursor: pointer;
   font-size: 13px;
+  color:var(--secondary-color)
 }
 .addIcon {
   width: 10.5px;
@@ -288,4 +291,8 @@
     height:unset;
     }
  
+}
+
+.noIconMargin {
+  margin-left: 5px;
 }

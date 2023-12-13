@@ -5,7 +5,7 @@
   border-radius: 12px;
   padding: 16px;
   margin-top: 10px;
-  z-index: 10000;
+  z-index: 1000;
   position: absolute;
   background: #fff;
   min-width: 350px;
@@ -42,7 +42,7 @@
 .clear {
   border: none;
   background: #fff;
-  color: #10bda5;
+  color:var(--secondary-color);
   font-weight: 400;
   font-size: 12px;
   font-family: "Noto Sans", sans-serif;
@@ -69,8 +69,10 @@
 .rule-tag {
   display: flex;
   align-items: center;
-  padding: 16px;
+  padding: 10px 16px 16px 16px;
   justify-content: flex-end;
+  border-top: 1px solid #DEDAD4;
+    margin-top: 22px;
 }
 
 .rule-tag label {
@@ -88,7 +90,7 @@
   height: 24px;
   max-width: 108px;
   cursor: pointer;
-  color:#817D9D;
+  color:var(--primary-color);
   font-size: 12px;
   font-weight: 400;
 }

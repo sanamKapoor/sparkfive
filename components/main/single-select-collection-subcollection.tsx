@@ -176,7 +176,7 @@ const SingleCollectionSubcollectionListing = ({
                                         }
                                         {(keyExists(folder.id) && (keyResultsFetch(folder.id, "next") as number) >= 0) && <div className={`${styles['outer-load-wrapper']}`}><div className={`${styles['load-wrapper']}`}
                                             onClick={() => { getSubFolders(folder.id, (keyResultsFetch(folder.id, "next") as number), false) }}>
-                                            <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} />
+                                            {/* <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} /> */}
                                             <button className={styles.loadMore}>{
                                                 subFolderLoadingState.get(folder.id)
                                                     ?

@@ -125,6 +125,14 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
   };
 
   useEffect(() => {
+    if (inputCustomFields.length > 0) {
+      setAssetCustomFields(
+        mappingCustomFieldData(inputCustomFields, originalInputs.customs),
+      )
+    }
+  }, [inputCustomFields])
+
+  useEffect(() => {
     if (!loadingAssets && !initialSelect && selectedAssets.length > 0) {
       setInitialSelect(true);
       setEditAssets(initialEditAssets);
