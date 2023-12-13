@@ -25,6 +25,7 @@
 .maxHeight {
     height: inherit;
     max-height: 100%;
+   ;
 }
 
 .filter_open {

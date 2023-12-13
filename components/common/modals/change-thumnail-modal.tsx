@@ -32,7 +32,9 @@ const ChangeThumbnail = ({
   noHeightMax = false,
   additionalClasses = [""],
   closeButtonOnly = false,
+  getSubFolders
 }) => {
+
   const initialModalView =
     !modalData?.thumbnailPath && !modalData?.thumbnailExtension
       ? defaultChangeThumbnailModalView
@@ -40,42 +42,21 @@ const ChangeThumbnail = ({
 
   const initialThumbnailsData = modalData?.thumbnails?.thumbnails
     ? modalData?.thumbnails?.thumbnails.map((thumb) => {
-        const name = decodeURI(thumb.storageId?.split("/").at(-1));
+      const name = decodeURI(thumb.storageId?.split("/").at(-1));
 
-        return {
-          index: thumb.index,
-          name: thumb.name,
-          src: thumb.filePath ? thumb.filePath : Assets.empty,
-          isEmpty: false,
-          isChanging: false,
-          mode: "",
-          data: thumb,
-        };
-      })
-    : ["1", "2", "3", "4"].map((index) => {
-        return {
-          index,
-          name: "",
-          src: "",
-          isEmpty: true,
-          isChanging: false,
-          mode: "",
-          data: null,
-        };
-      });
-
-  const initialLocalThumbnail = modalData?.thumbnailPath
-    ? {
-        index: "0",
-        name: modalData?.thumbnailName,
-        src: modalData?.thumbnailPath,
+      return {
+        index: thumb.index,
+        name: thumb.name,
+        src: thumb.filePath ? thumb.filePath : Assets.empty,
         isEmpty: false,
         isChanging: false,
         mode: "",
-        data: null,
-      }
-    : {
-        index: "0",
+        data: thumb,
+      };
+    })
+    : ["1", "2", "3", "4"].map((index) => {
+      return {
+        index,
         name: "",
         src: "",
         isEmpty: true,
@@ -83,6 +64,27 @@ const ChangeThumbnail = ({
         mode: "",
         data: null,
       };
+    });
+
+  const initialLocalThumbnail = modalData?.thumbnailPath
+    ? {
+      index: "0",
+      name: modalData?.thumbnailName,
+      src: modalData?.thumbnailPath,
+      isEmpty: false,
+      isChanging: false,
+      mode: "",
+      data: null,
+    }
+    : {
+      index: "0",
+      name: "",
+      src: "",
+      isEmpty: true,
+      isChanging: false,
+      mode: "",
+      data: null,
+    };
 
   const [modalView, setModalView] = useState(initialModalView);
   const [localThumbnails, setLocalThumbnails] = useState(initialThumbnailsData);
@@ -93,6 +95,7 @@ const ChangeThumbnail = ({
   const fileBrowseForSecondtIndex = useRef(undefined);
   const fileBrowseForThirdtIndex = useRef(undefined);
   const fileBrowseForFourtIndex = useRef(undefined);
+
   const [FileBrowser, setFileBrowser] = useState({
     1: fileBrowseForFirstIndex,
     2: fileBrowseForSecondtIndex,
@@ -101,7 +104,7 @@ const ChangeThumbnail = ({
   });
 
   const { setIsLoading } = useContext(LoadingContext);
-  const { setFolders, folders } = useContext(AssetContext);
+  const { setFolders, folders, activeSubFolders } = useContext(AssetContext);
   const { activeSortFilter } = useContext(FilterContext);
 
   useEffect(() => {
@@ -261,7 +264,14 @@ const ChangeThumbnail = ({
         thumbnailName: localThumbnail.data?.name,
       });
     }
-    getFolders();
+    if (activeSubFolders !== "") {
+      await getSubFolders(true, 5);
+      toastUtils.success(THUMBNAIL_UPDATED);
+      setIsLoading(false);
+      closeModal();
+    } else {
+      getFolders();
+    }
   };
 
   const validateSave = (thumbnails) => {
@@ -356,7 +366,14 @@ const ChangeThumbnail = ({
         thumbnails: { thumbnails },
         thumbnailName: null,
       });
-      getFolders();
+      if (activeSubFolders !== "") {
+        await getSubFolders(true, 5);
+        toastUtils.success(THUMBNAIL_UPDATED);
+        setIsLoading(false);
+        closeModal();
+      } else {
+        getFolders();
+      }
     }
   };
 
@@ -380,9 +397,8 @@ const ChangeThumbnail = ({
   return (
     <ReactModal
       isOpen={modalIsOpen}
-      className={`${styles.modal} ${styles.changeThumb} ${
-        noHeightMax && styles["no-height-max"]
-      } ${additionalClasses.join(" ")}`}
+      className={`${styles.modal} ${styles.changeThumb} ${noHeightMax && styles["no-height-max"]
+        } ${additionalClasses.join(" ")}`}
       overlayClassName={styles.overlay}
       onRequestClose={closeModal}
       shouldCloseOnOverlayClick={true}
@@ -396,9 +412,8 @@ const ChangeThumbnail = ({
       }}
     >
       <div
-        className={`${styles.text} ${
-          closeButtonOnly ? styles["no-border"] : ""
-        } ${textWidth && styles["full-width"]}`}
+        className={`${styles.text} ${closeButtonOnly ? styles["no-border"] : ""
+          } ${textWidth && styles["full-width"]}`}
       >
         {
           <p className={(styles["overflow-text"], styles["modalTitle"])}>

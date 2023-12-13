@@ -47,7 +47,7 @@ const UserTable = () => {
 
   const getUsers = async ({
     page = 1,
-    searchTerm = term,
+    searchTerm = "",
     reset = false,
     sortBy = "users.lastLogin",
     sortDirection = "ASC",
@@ -63,6 +63,7 @@ const UserTable = () => {
         sortBy,
         sortOrder: sortDirection,
       });
+
       const users = [...newUsers, ...data.users];
 
       setUserData({
@@ -78,8 +79,7 @@ const UserTable = () => {
     }
   };
 
-  const searchAndGetUsers = (searchTerm: string) => {
-    console.log("searchTerm: ", searchTerm);
+  const searchAndGetUsers = async (searchTerm: string) => {
     getUsers({
       searchTerm,
       page: 1,
@@ -87,7 +87,7 @@ const UserTable = () => {
       sortBy: sortData.sortBy,
       sortDirection: sortData.sortDirection,
     });
-    setTerm(searchTerm);
+
     setTermForDownload(searchTerm);
   };
 

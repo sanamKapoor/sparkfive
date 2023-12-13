@@ -4,6 +4,10 @@
   width: 100%;
 }
 
+.container div{
+  box-shadow: none;
+  cursor: pointer;
+}
 .container:focus-visible{
   outline-color: var(--primary-color);
 }

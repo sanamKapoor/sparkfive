@@ -1,0 +1,35 @@
+.chipSet{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.chips{
+ 
+  margin-top:20px;
+}
+.chip {
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    height: 30px;
+    font-weight: 500;
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 14px;
+    line-height: 18px;
+    border-radius: 44px;
+    background-color: #F6EFE4;
+    margin-right: 10px;
+  }
+  
+  .closebtn {
+    padding-left: 10px;
+    color: #08135E;
+    font-weight: bold;
+    float: right;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  .closebtn:hover {
+    color: #000;
+  }

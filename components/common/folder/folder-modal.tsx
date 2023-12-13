@@ -7,20 +7,27 @@ import FormInput from "../../common/inputs/form-input";
 import Input from "../../common/inputs/input";
 import Base from "../../common/modals/base";
 
-const FolderModal = ({ modalIsOpen, closeModal, onSubmit }) => {
+interface FolderModalProps {
+  modalIsOpen: boolean;
+  closeModal: () => void;
+  onSubmit: (formData: { name: string }) => void;
+  disableButtons?: boolean;
+  addSubCollection?: boolean;
+}
+const FolderModal: React.FC<FolderModalProps> = ({ modalIsOpen, closeModal, onSubmit, disableButtons = false, addSubCollection = false }) => {
   const { control, handleSubmit, errors } = useForm();
 
   return (
     <Base modalIsOpen={modalIsOpen} closeModal={closeModal}>
       <div className={styles.folder_modal}>
-        <h3>Create Your New Collection</h3>
+        <h3>{addSubCollection ? "Create Your New SubCollection" : "Create Your New Collection"}</h3>
         <div className={styles.folder_modal_input}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <FormInput
               InputComponent={
                 <Input
                   type="text"
-                  placeholder="Name Your Collection"
+                  placeholder={`Name Your ${addSubCollection ? "SubCollection" : "Collection"} `}
                   styleType="regular-short"
                 />
               }
@@ -33,12 +40,13 @@ const FolderModal = ({ modalIsOpen, closeModal, onSubmit }) => {
             <div className={styles.buttons_container}>
               <div className={styles.cancel_button}>
                 <Button
+                  disabled={disableButtons}
                   text="Cancel"
                   onClick={closeModal}
                   className="container secondary"
                 />
               </div>
-              <Button text="Save" className="container normal-height primary" />
+              <Button disabled={disableButtons} text="Save" className="container normal-height primary" />
             </div>
           </form>
         </div>

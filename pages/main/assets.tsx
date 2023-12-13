@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { ASSET_ACCESS } from "../../constants/permissions";
 import FilterProvider from "../../context/filter-provider";
 

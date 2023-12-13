@@ -1,22 +1,67 @@
-.container {
+.container { 
+  /* position: relative; */
   position: fixed;
   width: 100%;
-  top: 81px;
+  top: 72px;
   left: 0;
-  z-index: 1499;
-  /* To be lower than top bar so that upoad popup is not hidden */
+  z-index: 1300;
   background-color: white;
-  padding: 33.5px 40px;
-  min-height: 99px;
+  padding: 39px 30px;
+  padding:34.5px 30px 0 30px;
+  width: calc(100% - 320px);
+  margin-left: 327px;
 }
+.container-on-toggle{
+  position: fixed;
+  width: 100%;
+  top: 54px;
+  left: 0;
+  z-index: 1300;
+  background-color: white;
+  padding: 40px 40px 0 40px;
+  }
+  .outer-box{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap:10px;
+  }
+  .mobile-app{
+  
+    display: none;
+  }
+  .search-icon{
+    display: flex;
+    align-items: center;
+  }
+  .search-icon img{
+    width: 24px;
+    height:24px;
+  }
 
 .wrapper {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  /* position: fixed;
+  width: 100%; */
+  /* left: 283px;
+  max-width: calc(100% - 283px); */
+  flex-wrap: wrap;
 }
+.main-heading-wrapper{
+  display: flex;
+  align-items: end;
+ 
 
+
+}
+.newsidenav{
+  margin-right: 10px;
+
+}
 .plusIcon {
   padding: 0px;
 }
@@ -37,10 +82,10 @@
 }
 
 .tab-list {
-  display: flex;
+  /* display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 18px;
+  gap: 18px; */
   width: 100%;
 }
 
@@ -78,6 +123,7 @@
   align-items: center;
   gap: 17px;
   position: relative;
+  
 }
 
 .sec-filters button span {
@@ -95,6 +141,9 @@
   display: flex;
   align-items: center;
 }
+.nested-wrapper Button{
+  display: none;
+}
 
 .filter {
   display: none;
@@ -103,6 +152,9 @@
 .container .search {
   margin-left: 0;
   margin-right: -14px;
+}
+.SearchMobile{
+  display: none;
 }
 
 @media screen and (max-width: 1210px) {
@@ -181,13 +233,20 @@ li.dropdown-title {
     width: 100%;
     max-width: 290px;
   }
+ 
+}
+@media screen and (max-width: 810px){
+  .container{
+    width: 100%;
+    margin-left: 0;
+  }
 }
 
 @media screen and (min-width: 810px) {
   .hamburger {
     display: none;
   }
-
+ 
 
 }
 
@@ -204,11 +263,14 @@ li.dropdown-title {
     display: none;
   }
 
+
 }
 
 @media screen and (max-width: 810px) {
   .sec-filters {
     gap: 8px;
+    margin-top: 20px;
+    padding: 0 20px;
   }
 
   .sec-filters button {
@@ -224,12 +286,18 @@ li.dropdown-title {
     gap: 0;
   }
 
-  .wrapper .innerwrapper .tab-list-item {
+
+.innerwrapper{
+  width: 100%;
+}
+
+.wrapper .innerwrapper .tab-list-item {
     /* width: calc(100% - 35px);
     overflow: hidden; */
     padding: 0;
   }
 
+   /* as per new mobile design there is no need for this 
 
   .mobile-tabs {
     position: relative;
@@ -237,7 +305,7 @@ li.dropdown-title {
     align-items: center;
     gap: 8px;
     width: 100%;
-  }
+  } */
 
   .dropdown {
     left: 0;
@@ -245,8 +313,37 @@ li.dropdown-title {
   }
 
   .container {
-    padding: 20px;
+    padding: 20px 0px;
   }
+  .wrapper{
+    display: block;
+  }
+  .SearchWeb{
+    display: none;
+  }
+  .SearchMobile{
+    display: block;
+  }
+  .mobilePlus{
+    display: none;
+  }
+  .mobile-bottom {
+    background-color: var(--color-prim-navy);
+    height: 36px;
+    width: 100%;
+    justify-content: center;
+    position: fixed;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+  }
+   .newsidenav{
+    display: none;
+  }
+
+
 }
 
 @media screen and (max-width: 600px) {
@@ -260,7 +357,7 @@ li.dropdown-title {
   }
 
   .container {
-    top: calc(55px + 36px);
+    top: calc(55px + -1px);
     min-height: 75px;
   }
 
@@ -283,13 +380,16 @@ li.dropdown-title {
     display: flex;
     align-items: center;
   }
+  .filter-mobile {
+    display: none;
+  }
 }
 
 .gridOuter {
   display: flex;
   position: relative;
   cursor: pointer;
-  margin-left: -14px;
+  /* margin-left: -14px; */
   margin-right: 4px;
 }
 
@@ -316,6 +416,7 @@ li.dropdown-title {
     min-width: 89px;
   }
 
+
   .sort-wrapper div+div+div:first-child {
     padding: 0 7px !important;
   }
@@ -335,8 +436,62 @@ li.dropdown-title {
     right: 0;
     top: 40px;
   }
+  .gridOuter{
+    display: none;
+  }
+  .sort-wrapper{
+    display: none;
+  }
+  .sort-wrapper div>div>{
+    outline: none;
+  }
+ 
+  .selected-wrapper{
+    display: none;
+  }
+  .sec-filters {
+   justify-content: space-between;
+   padding: 0 20px;
+  }
+  .mobile-app{
+    display: block;
+    padding-top:20px;
+  }
+  .sort-wrapper-mob{
+    width: 100%;
+  }
+  .selected-wrapper-mob{
+    width: 100%;
+  }
+  .nested-wrapper Button{
+    display: block;
+  }
+  
+  .newsidenav{
+    display: none;
+  }
+  .container-on-toggle{
+    top:23px;
+  }
+   .outer-box{
+    padding:0 20px;
+   }
+
 }
 
 .container button span {
   font-size: 24px;
+}
+@media (min-width:700px) {
+  .sec-filters {
+   flex-wrap: wrap;
+    
+  }
+  
+}
+
+@media (max-width:800px) {
+  .container-on-toggle{
+   padding:33.5px 0;
+  }
 }

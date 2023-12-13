@@ -16,7 +16,6 @@ import styles from "./index.module.css";
 import AssetGrid from "../common/asset/asset-grid";
 import AssetOps from "../common/asset/asset-ops";
 import TopBar from "../common/asset/top-bar";
-import FilterContainer from "../common/filter/filter-container";
 import SearchOverlay from "../main/search-overlay-assets";
 import PasswordOverlay from "./password-overlay";
 
@@ -58,7 +57,6 @@ const ShareCollectionMain = () => {
   const [firstLoaded, setFirstLoaded] = useState(false);
   const [activePasswordOverlay, setActivePasswordOverlay] = useState(true);
   const [activeSearchOverlay, setActiveSearchOverlay] = useState(false);
-  const [openFilter, setOpenFilter] = useState(false);
   const [activeView, setActiveView] = useState("grid");
   const [sharePath, setSharePath] = useState("");
   const [activeMode, setActiveMode] = useState("assets");
@@ -141,14 +139,6 @@ const ShareCollectionMain = () => {
       getShareInfo();
     }
   }, [sharePath]);
-
-  const clearFilters = () => {
-    setActiveSortFilter({
-      ...activeSortFilter,
-      ...DEFAULT_FILTERS,
-      ...DEFAULT_CUSTOM_FIELD_FILTERS(activeSortFilter),
-    });
-  };
 
   const setInitialLoad = async (folderInfo) => {
     if (!firstLoaded && folderInfo) {
@@ -354,8 +344,6 @@ const ShareCollectionMain = () => {
             setActiveView={setActiveView}
             setActiveSearchOverlay={() => setActiveSearchOverlay(true)}
             selectAll={selectAll}
-            setOpenFilter={setOpenFilter}
-            openFilter={openFilter}
             isShare={true}
             singleCollection={!!folderInfo.singleSharedCollectionId}
             sharedAdvanceConfig={user ? undefined : advancedConfig}
@@ -371,20 +359,8 @@ const ShareCollectionMain = () => {
               mode={activeMode}
               viewFolder={viewFolder}
               loadMore={loadMore}
-              openFilter={openFilter}
               sharePath={sharePath}
             />
-            {openFilter && (
-              <FilterContainer
-                isShare={true}
-                clearFilters={clearFilters}
-                openFilter={openFilter}
-                setOpenFilter={setOpenFilter}
-                activeSortFilter={activeSortFilter}
-                setActiveSortFilter={setActiveSortFilter}
-                isFolder={activeSortFilter.mainFilter === "folders"}
-              />
-            )}
           </div>
         </main>
       )}

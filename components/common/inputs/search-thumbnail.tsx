@@ -44,7 +44,6 @@ const SearchThumbnail = ({
         setSearchData(data.results);
         setIsSearched(true);
         setSearching(false);
-        console.log("search data: ", searchData);
       } catch (err) {
         console.log("err: ", err);
         setSearching(false);

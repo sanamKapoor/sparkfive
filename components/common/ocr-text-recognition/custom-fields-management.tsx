@@ -131,8 +131,6 @@ const CustomFieldsManagement = () => {
         let { data } = await teamApi.getOcrCustomFields()
 
         const mapping = mappingCustomFieldData(customFieldList, data)
-        console.log({ data, customFieldList, mapping})
-
 
         setOcrCustomFields(mapping)
 

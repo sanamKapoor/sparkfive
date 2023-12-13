@@ -35,16 +35,16 @@ const FolderListItem = ({
   assets,
   viewFolder,
   isLoading = false,
-  deleteFolder = () => {},
-  shareAssets = (folder) => {},
-  copyShareLink = (folder) => {},
-  setCurrentSortAttribute = (attribute) => {},
+  deleteFolder = () => { },
+  shareAssets = (folder) => { },
+  copyShareLink = (folder) => { },
+  setCurrentSortAttribute = (attribute) => { },
   copyEnabled,
   toggleSelected,
   isSelected,
   sortAttribute,
-  changeThumbnail = (folder) => {},
-  deleteThumbnail = (folder) => {},
+  changeThumbnail = (folder) => { },
+  deleteThumbnail = (folder) => { },
   thumbnailPath,
   thumbnailExtension,
   thumbnails,
@@ -199,37 +199,34 @@ const FolderListItem = ({
                 Name
                 <IconClickable
                   src={arrowIcon}
-                  additionalClass={`${
-                    styles["sort-icon"]
-                  } ${getSortAttributeClassName("folder.name")}`}
+                  additionalClass={`${styles["sort-icon"]
+                    } ${getSortAttributeClassName("folder.name")}`}
                 />
               </h4>
               <h4></h4>
-              <h4 onClick={() => setSortAttribute("folder.length")}>
-                Assets
-                <IconClickable
-                  src={arrowIcon}
-                  additionalClass={`${
-                    styles["sort-icon"]
-                  } ${getSortAttributeClassName("folder.length")}`}
-                />
-              </h4>
               <h4 onClick={() => setSortAttribute("folder.created-at")}>
                 Create Date
                 <IconClickable
                   src={arrowIcon}
-                  additionalClass={`${
-                    styles["sort-icon"]
-                  } ${getSortAttributeClassName("folder.created-at")}`}
+                  additionalClass={`${styles["sort-icon"]
+                    } ${getSortAttributeClassName("folder.created-at")}`}
                 />
               </h4>
+              <h4 onClick={() => setSortAttribute("folder.length")}>
+                Assets
+                <IconClickable
+                  src={arrowIcon}
+                  additionalClass={`${styles["sort-icon"]
+                    } ${getSortAttributeClassName("folder.length")}`}
+                />
+              </h4>
+
             </div>
           </div>
         )}
         <div
-          className={`${styles.item} ${
-            isSelected ? styles["item--selected"] : ""
-          }`}
+          className={`${styles.item} ${isSelected ? styles["item--selected"] : ""
+            }`}
           onClick={toggleSelected}
         >
           <div
@@ -245,12 +242,12 @@ const FolderListItem = ({
 
           <div
             className={`${styles.name} ${isLoading && "loadable"}`}
-            onClick={!isNameEditable ? viewFolder : () => {}}
+            onClick={!isNameEditable ? viewFolder : () => { }}
           >
             {isNameEditable &&
-            isEditing &&
-            focusedItem &&
-            focusedItem === id ? (
+              isEditing &&
+              focusedItem &&
+              focusedItem === id ? (
               <input
                 autoFocus
                 className={`normal-text ${gridStyles["editable-input"]}`}
@@ -301,9 +298,8 @@ const FolderListItem = ({
             {!isLoading && `${assetsCount} Assets`}
           </div>
           <div
-            className={`${styles.field_name} ${isLoading && "loadable"} ${
-              styles["date-created"]
-            }`}
+            className={`${styles.field_name} ${isLoading && "loadable"} ${styles["date-created"]
+              }`}
           >
             {format(new Date(createdAt), dateFormat)}
           </div>

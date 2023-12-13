@@ -7,14 +7,22 @@ import AssetHeaderOps from "../asset/asset-header-ops";
 
 const ShareFolderLayout = ({ children, advancedLink = false }) => {
   const { folderInfo, activePasswordOverlay } = useContext(ShareContext);
-  const { assets, folders } = useContext(AssetContext);
+  const { assets, folders, subFoldersAssetsViewList, subFoldersViewList } = useContext(AssetContext);
   const { activeSortFilter } = useContext(FilterContext);
   const { logo } = useContext(UserContext);
 
   const selectedAssets = assets.filter((asset) => asset.isSelected);
   const selectedFolders = folders.filter((folder) => folder.isSelected);
-
-  const amountSelected = activeSortFilter.mainFilter === "folders" ? selectedFolders.length : selectedAssets.length;
+  const selectedSubFoldersAndAssets = {
+    assets: subFoldersAssetsViewList.results.filter(
+      (asset: any) => asset.isSelected
+    ),
+    folders: subFoldersViewList.results.filter((folder: any) => folder.isSelected),
+  };
+  const amountSelected = activeSortFilter.mainFilter === "SubCollectionView" ? selectedSubFoldersAndAssets.folders.length || selectedSubFoldersAndAssets.assets.length :
+    activeSortFilter.mainFilter === "folders"
+      ? selectedFolders.length
+      : selectedAssets.length;
 
   return (
     <>
@@ -23,7 +31,9 @@ const ShareFolderLayout = ({ children, advancedLink = false }) => {
           <div className={styles["image-wrapper"]}>
             <img className={styles["logo-img"]} src={folderInfo?.teamIcon || logo} />
           </div>
-          <h1 className={styles["collection-name"]}>{folderInfo?.folderName}</h1>
+          {/* <h1 className={styles["collection-name"]}>
+            {folderInfo?.folderName}
+          </h1> */}
         </header>
       )}
       {amountSelected > 0 && (
@@ -31,7 +41,11 @@ const ShareFolderLayout = ({ children, advancedLink = false }) => {
           <AssetHeaderOps
             isShare={true}
             advancedLink={advancedLink}
+            activeMode={activeSortFilter.mainFilter === "SubCollectionView" ?
+              "SubCollectionView" : activeSortFilter.mainFilter === "folders" ? "folders" : "assets"}
             isFolder={activeSortFilter.mainFilter === "folders"}
+            selectedFolders={selectedFolders}
+            selectedSubFoldersAndAssets={selectedSubFoldersAndAssets}
           />
         </div>
       )}

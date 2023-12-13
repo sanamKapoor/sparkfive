@@ -1,3 +1,5 @@
+//TODO: refactor this file
+
 import { Utilities } from "../../../assets";
 import styles from "./folder-options.module.css";
 
@@ -25,16 +27,24 @@ const FolderOptions = ({
   thumbnails = null,
   activeView,
   activeFolderId,
+  onClickFilterSettings,
+  renameCollection,
 }) => {
   const { user, hasPermission } = useContext(UserContext);
 
   const options = isShare
     ? [{ label: "Download", onClick: downloadFoldercontents }]
     : [
-        { label: "Download", onClick: downloadFoldercontents },
-        // { label: "Delete", onClick: () => setDeleteOpen(true) },
-        { label: "Share", onClick: shareAssets },
-      ];
+      { label: "Download", onClick: downloadFoldercontents },
+      // { label: "Delete", onClick: () => setDeleteOpen(true) },
+      { label: "Share", onClick: shareAssets },
+      {
+        label: "Rename Folder",
+        onClick: () => {
+          renameCollection();
+        },
+      },
+    ];
 
   if (hasPermission([ASSET_EDIT])) {
     options.push({ label: "Delete", onClick: () => setDeleteOpen(true) });
@@ -108,14 +118,32 @@ const FolderOptions = ({
   return (
     <ToggleableAbsoluteWrapper
       contentClass={styles["asset-actions"]}
-      wrapperClass={styles["asset-actions-wrapper"]}
+      wrapperClass={`${styles["asset-actions-wrapper"]} ${activeView === "list" && styles["list-actions-wrapper"]
+        }`}
       Wrapper={({ children }) => (
         <>
           <IconClickable SVGElement={Utilities.more} additionalClass={styles.folderDots} />
           {children}
         </>
       )}
-      Content={() => <div className={styles.more}>{adminOption.length > 0 && <Dropdown options={adminOption} />}</div>}
+      Content={() => (
+        <div className={styles.more}>
+          {adminOption.length > 0 && (
+            //TODO: handle Filter Settings click
+            <Dropdown
+              options={[
+                ...adminOption,
+                // {
+                //   label: "Filter Settings",
+                //   onClick: () => {
+                //     console.log("Filter Settings");
+                //   },
+                // },
+              ]}
+            />
+          )}
+        </div>
+      )}
     />
   );
 };

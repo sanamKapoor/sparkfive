@@ -36,27 +36,12 @@ const mappingCustomFieldData = (list, valueList) => {
 
 const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
   const { loadingAssets } = useContext(AssetContext);
-
   const [loading, setLoading] = useState(true);
-
   const [sideOpen, setSideOpen] = useState(true);
-
   const [initialSelect, setInitialSelect] = useState(false);
-
   const [assetProjects, setAssetProjects] = useState([]);
   const [assetTags, setTags] = useState([]);
   const [assetCampaigns, setCampaigns] = useState([]);
-  const [assetFolders, setFolders] = useState([]);
-
-  const initialEditAssets = selectedAssets.map((assetItem) => ({
-    ...assetItem,
-    isEditSelected: true,
-  }));
-
-  const [editAssets, setEditAssets] = useState(initialEditAssets);
-
-  const [addMode, setAddMode] = useState(true);
-
   const [originalInputs, setOriginalInputs] = useState({
     campaigns: [],
     projects: [],
@@ -64,6 +49,14 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
     customs: [],
     folders: [],
   });
+
+  const [assetFolders, setFolders] = useState([]);
+  const initialEditAssets = selectedAssets.map((assetItem) => ({
+    ...assetItem,
+    isEditSelected: true,
+  }));
+  const [editAssets, setEditAssets] = useState(initialEditAssets);
+  const [addMode, setAddMode] = useState(true);
 
   // Custom fields
   const [inputCustomFields, setInputCustomFields] = useState([]);
@@ -91,7 +84,10 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
     setAssetProjects([]);
     setTags([]);
     setCampaigns([]);
-    setFolders([]);
+    setFolders((prev) => {
+      prev.length = 0;
+      return prev;
+    });
 
     // Default custom field values
     const updatedMappingCustomFieldData = mappingCustomFieldData(inputCustomFields, []);
@@ -129,6 +125,14 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
   };
 
   useEffect(() => {
+    if (inputCustomFields.length > 0) {
+      setAssetCustomFields(
+        mappingCustomFieldData(inputCustomFields, originalInputs.customs),
+      )
+    }
+  }, [inputCustomFields])
+
+  useEffect(() => {
     if (!loadingAssets && !initialSelect && selectedAssets.length > 0) {
       setInitialSelect(true);
       setEditAssets(initialEditAssets);
@@ -145,6 +149,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
   }, [addMode, originalInputs]);
 
   useEffect(() => {
+    // // debugger
     getInitialAttributes();
   }, [editAssets]);
 
@@ -158,12 +163,14 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
       const {
         data: { tags, projects, campaigns, customs, folders },
       } = await assetApi.getBulkProperties({ assetIds });
-      setOriginalInputs({
-        campaigns,
-        projects,
-        tags,
-        customs,
-        folders,
+      setOriginalInputs((prev) => {
+        // // debugger
+        prev.campaigns = campaigns;
+        prev.projects = projects;
+        prev.tags = tags;
+        prev.customs = customs;
+        prev.folders = folders;
+        return prev;
       });
     } catch (err) {
       // TODO: Maybe show error?
@@ -189,8 +196,9 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
   };
 
   const selectAll = () => {
-    setEditAssets(editAssets.map((assetItem) => ({ ...assetItem, isEditSelected: true })));
-
+    setEditAssets(
+      editAssets.map((assetItem) => ({ ...assetItem, isEditSelected: true }))
+    );
     initialize();
   };
 
@@ -237,14 +245,32 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
           </div>
           <div className={styles.mode}>
             <p>Mode: </p>
-            <div className={styles.option} onClick={() => setAddMode(true)}>
+            <div
+              className={styles.option}
+              onClick={() =>
+                setAddMode(() => {
+                  setFolders((prev) => {
+                    return [];
+                  });
+                  return true;
+                })
+              }
+            >
               <IconClickable
                 src={addMode ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                 additionalClass={styles["select-icon"]}
               />
               Add
             </div>
-            <div className={styles.option} onClick={() => setAddMode(false)}>
+            <div
+              className={styles.option}
+              onClick={() =>
+                setAddMode(() => {
+                  setFolders(() => [...originalInputs.folders]);
+                  return false;
+                })
+              }
+            >
               <IconClickable
                 src={!addMode ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                 additionalClass={styles["select-icon"]}
@@ -307,14 +333,32 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
           </div>
           <div className={styles.mode}>
             <p>Mode: </p>
-            <div className={styles.option} onClick={() => setAddMode(true)}>
+            <div
+              className={styles.option}
+              onClick={() =>
+                setAddMode(() => {
+                  setFolders((prev) => {
+                    return [];
+                  });
+                  return true;
+                })
+              }
+            >
               <IconClickable
                 src={addMode ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                 additionalClass={styles["select-icon"]}
               />
               Add
             </div>
-            <div className={styles.option} onClick={() => setAddMode(false)}>
+            <div
+              className={styles.option}
+              onClick={() =>
+                setAddMode(() => {
+                  setFolders(() => [...originalInputs.folders]);
+                  return false;
+                })
+              }
+            >
               <IconClickable
                 src={!addMode ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                 additionalClass={styles["select-icon"]}

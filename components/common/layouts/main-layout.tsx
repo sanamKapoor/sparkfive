@@ -127,17 +127,17 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
                     {
                       id: "assets",
                       label: "Assets",
-                      onClick: () => {},
+                      onClick: () => { },
                     },
                     {
                       id: "insights",
                       label: "Insights",
-                      onClick: () => {},
+                      onClick: () => { },
                     },
                     {
                       id: "templates",
                       label: "Templates",
-                      onClick: () => {},
+                      onClick: () => { },
                     },
                   ]}
                 />

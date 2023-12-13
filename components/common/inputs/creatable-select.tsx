@@ -43,7 +43,7 @@ const CreatableSelect = ({
   ignorePermission = false,
   menuPosition = "absolute",
   sortDisplayValue = false,
-  isAddIconDark= false,
+  isAddIconDark = false,
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
 
@@ -102,6 +102,7 @@ const CreatableSelect = ({
           (selectedItem) => item.label === selectedItem.name
         ) === -1
       ) {
+        console.log("inside index", item);
         const newItem = { name: item.label };
         if (!isNew) newItem.id = item.value;
         if (type) {
@@ -185,7 +186,7 @@ const CreatableSelect = ({
       {selectOneComponent}
       <div className={`normal-text`}>
         <ul className={`tags-list ${styles["tags-list"]}`}>
-          {(selectedItems || []).slice(0, 9).map((item, index) => {
+          {(selectedItems || []).slice(0, 10).map((item, index) => {
             return (
               <li key={item.id || item.value}>
                 <Tag
@@ -263,7 +264,6 @@ const CreatableSelect = ({
                     menuPlacement={"auto"}
                     menuPosition={menuPosition}
                     isClearable={true}
-                    // className="creatable-select"
                     className={`${styles["creatable-select"]}`}
                     styles={menuStyles}
                   />
@@ -276,7 +276,11 @@ const CreatableSelect = ({
                     className={`add ${styles["select-add"]}`}
                     onClick={onAddClick}
                   >
-                    <IconClickable src={isAddIconDark ? Utilities.adddark : Utilities.addLight} />
+                    <IconClickable
+                      src={
+                        isAddIconDark ? Utilities.adddark : Utilities.addLight
+                      }
+                    />
                     <span>{addText}</span>
                   </div>
                 )}
