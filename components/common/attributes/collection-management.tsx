@@ -267,9 +267,9 @@ const CollectionManagement = () => {
         {/**
          * todo once confirmed the changes for modal
          */}
-        <NestedButton type={"collection"}  iconSrc={Utilities.addLight}
-                              text="Add collection"
-                              textColor="
+        <NestedButton type={"collection"} iconSrc={Utilities.addLight}
+          text="Add collection"
+          textColor="
                               #08135E" updateFolders={getFolderList} />
         {/* <CreatableSelect
           altColor="blue"
@@ -398,18 +398,17 @@ const CollectionManagement = () => {
                         <div className={styles.addButton}>
                           {showDropdown[index] && (
                             <div className={styles["attribute-add-subcollection"]}>
-                                <NestedButton
-                              updateFolders={getSubFolders}
-                              type={"subCollection"}
-                              parentId={folder.id}
-                              iconSrc={Utilities.add}
-                              text="Add subcollection"
-                              textColor="
-                              #10BDA5"
-                            />
-                          
+                              <NestedButton
+                                updateFolders={getSubFolders}
+                                type={"subCollection"}
+                                parentId={folder.id}
+                                iconSrc={Utilities.add}
+                                text="Add subcollection"
+                                textColor="var(--secondary-color)"
+                              />
+
                             </div>
-                          
+
                           )}
                         </div>
                       </>
