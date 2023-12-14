@@ -7,7 +7,7 @@
   }
 
   .container.selected {
-    border-color: var(--color-prim-turquoise);
+    /* border-color: var(--color-prim-turquoise); */
   }
 
   .image-wrapper {

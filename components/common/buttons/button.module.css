@@ -435,7 +435,7 @@ console
 .text-success-btn{
   font-weight: 400;
   font-size: 12px;
-  color:#10BDA5;
+  color:var(--secondary-color);
   background: transparent;
   cursor: pointer;
 

@@ -187,11 +187,10 @@ const AssetThumbail = ({
         const activeAsset = subAssets.find(
           (asst) => asst?.asset?.id === asset?.id
         );
-        const fileName = thumbnailName + "." + asset.extension;
 
-        const editedName = `${newValue}.${activeAsset?.extension}`;
+        const editedName = `${newValue}.${activeAsset?.asset?.extension}`;
         const data = await assetApi.updateAsset(asset.id, {
-          updateData: { name: isAssetACopy ? fileName + " - COPY" : fileName },
+          updateData: { name: isAssetACopy ? editedName + " - COPY" : editedName },
           associations: {},
         });
         if (data && removeExtension(data?.data?.name) !== assetName) {
@@ -202,7 +201,7 @@ const AssetThumbail = ({
                   ...item,
                   asset: {
                     ...item.asset,
-                    name: isAssetACopy ? fileName + " - COPY" : fileName,
+                    name: isAssetACopy ? editedName + " - COPY" : editedName,
                   },
                 };
               } else {
@@ -219,11 +218,10 @@ const AssetThumbail = ({
         const activeAsset = assets.find(
           (asst) => asst?.asset?.id === asset?.id
         );
-        const fileName = thumbnailName + "." + asset.extension;
 
-        const editedName = `${newValue}.${activeAsset?.extension}`;
+        const editedName = `${newValue}.${activeAsset?.asset?.extension}`;
         const data = await assetApi.updateAsset(asset.id, {
-          updateData: { name: isAssetACopy ? fileName + " - COPY" : fileName },
+          updateData: { name: isAssetACopy ? editedName + " - COPY" : editedName },
           associations: {},
         });
         if (data && removeExtension(data?.data?.name) !== assetName) {
@@ -234,7 +232,7 @@ const AssetThumbail = ({
                   ...item,
                   asset: {
                     ...item.asset,
-                    name: isAssetACopy ? fileName + " - COPY" : fileName,
+                    name: isAssetACopy ? editedName + " - COPY" : editedName,
                   },
                 };
               } else {
@@ -424,7 +422,7 @@ const AssetThumbail = ({
             </div>
           )}
           <div className={activeView === "grid" && styles.sizeMargin}  >
-            <div className={activeView !== "list" ? `secondary-text ${styles["modified-date"]}` : ""}>
+            <div className={activeView !== "list" ? `secondary-text ${styles["modified-date"]}` : ""} style={{ color: '#AEB0C2' }}>
               {format(new Date(asset.createdAt), dateFormat)}
             </div>
           </div>

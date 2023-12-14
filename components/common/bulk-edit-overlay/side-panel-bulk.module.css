@@ -207,9 +207,6 @@ form.search button {
   color:var(--primary-color);
   margin-left: 5px;
 }
-.active {
-  background: #e9eefa;
-}
 
 .folder {
   padding: 0 24px 0 32px;
@@ -271,7 +268,7 @@ form.search button {
   height: 1px;
 }
 .active {
-  background: var(--color-sec-lightblue);
+  background: var(--additional-color);
   border-radius: 4px;
   /* padding: 7.5px; */
 }

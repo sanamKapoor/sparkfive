@@ -14,7 +14,7 @@
     border-bottom: none;
 }
 .list1-description:hover{
-    background: var(--color-sec-lightblue);
+    background: var(--additional-color);
     padding: 4px 2px;
 }
 .icon{
@@ -54,7 +54,7 @@
     color:#817D9D;
 }
 .active{
-    background:var(--color-sec-lightblue);
+    background: var(--additional-color);
     border-radius: 4px;
     padding: 4px 2px;
 }

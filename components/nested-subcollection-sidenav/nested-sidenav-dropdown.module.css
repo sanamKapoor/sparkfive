@@ -58,7 +58,7 @@
 }
 
 .nestedbox:hover {
-  background: var(--color-sec-lightblue);
+  background: var(--additional-color);
   /* padding: 0 4x; */
 }
 .loadbtn {
@@ -92,7 +92,7 @@
   padding: 4px;
 }
 .folder-lists:hover {
-  background: var(--color-sec-lightblue);
+  background: var(--additional-color);
   padding: 4px;
 }
 
@@ -126,7 +126,7 @@
 }
 
 .active {
-  background: var(--color-sec-lightblue);
+  background: var(--additional-color);
   border-radius: 4px;
   /* padding: 7.5px; */
 }

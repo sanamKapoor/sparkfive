@@ -33,7 +33,7 @@ const ReusableHeading = ({
   return (
     <div className={`${styles["heading-contents"]} ${icon ? styles["heading-mob"] : ""}`} style={{...customStyle,fontSize}}>
       <div
-        className={`${styles["sidenav-heading"]} ${headingTrue ? styles["active"] : ""
+        className={`normal-text ${styles["sidenav-heading"]} ${headingTrue ? styles["active"] : ""
           }`}
        
       >
