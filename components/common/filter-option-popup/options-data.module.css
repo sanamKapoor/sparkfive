@@ -31,9 +31,11 @@
   background: #fff;
   z-index: 999;
   padding: 30px;
-  margin-top: 5px;
+  margin-top: 20px;
   border: 1px solid lightgray;
   border-radius: 10px;
+  right: 0;
+
 }
 
 .tags-wrapper {
@@ -89,4 +91,7 @@
       margin-top: -1px;
     }
   }
+}
+.main-container{
+  position: relative;
 }

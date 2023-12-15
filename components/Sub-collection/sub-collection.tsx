@@ -200,9 +200,7 @@ const SubCollection = ({
       {
         <>
           <>
-            <div className={`${styles["collection-filter-wrap"]}`}>
-              <FilterView />
-            </div>
+           
             <div className={`${styles["heading-wrapper"]}`}>
               <div className={`${styles["sub-collection-heading"]}`}>
                 {sortedAssets.length > 0 && sortedFolders.length > 0 && (
@@ -238,6 +236,10 @@ const SubCollection = ({
                 )}
               </div>
             </div>
+            <div className={`${styles["collection-filter-wrap"]}`}>
+            <FilterView />
+             </div>
+          
           </>
           <div
             className={`${styles["assetWrapper"]} ${activeView === "list" && styles["list-wrapper"]
@@ -255,7 +257,7 @@ const SubCollection = ({
                   if (assetItem.status !== "fail") {
                     return (
                       <li
-                        className={styles["grid-item"]}
+                      className={`${styles["grid-item"]} ${activeView === "grid" ? styles["grid-item-new"] : ""}`}
                         key={assetItem.asset.id || index}
                         onClick={(e) =>
                           handleFocusChange(e, assetItem.asset.id)
