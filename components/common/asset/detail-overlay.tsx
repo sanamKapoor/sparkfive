@@ -891,7 +891,7 @@ const DetailOverlay = ({
 
   const _closeOverlay = () => {
     setOperationAssets([]);
-    closeOverlay(undefined);
+    closeOverlay(changedVersion ? currentAsset : undefined);
     setDetailOverlayId(undefined);
   };
 

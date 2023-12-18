@@ -41,24 +41,24 @@ const AssetThumbail = ({
   isSelected = false,
   isLoading = false,
   activeFolder = "",
-  toggleSelected = () => {},
-  openDeleteAsset = () => {},
-  openMoveAsset = () => {},
-  openCopyAsset = () => {},
-  openShareAsset = () => {},
-  openArchiveAsset = () => {},
-  downloadAsset = () => {},
-  openRemoveAsset = () => {},
-  loadMore = () => {},
+  toggleSelected = () => { },
+  openDeleteAsset = () => { },
+  openMoveAsset = () => { },
+  openCopyAsset = () => { },
+  openShareAsset = () => { },
+  openArchiveAsset = () => { },
+  downloadAsset = () => { },
+  openRemoveAsset = () => { },
+  loadMore = () => { },
   handleVersionChange,
   onView = null,
   customComponent = <></>,
   infoWrapperClass = "",
   textWrapperClass = "",
   customIconComponent = <></>,
-  onDisassociate = () => {},
+  onDisassociate = () => { },
   detailOverlay = true,
-  onCloseDetailOverlay = (asset) => {},
+  onCloseDetailOverlay = (asset) => { },
   isThumbnailNameEditable = false,
   focusedItem,
   setFocusedItem,
@@ -110,14 +110,11 @@ const AssetThumbail = ({
 
   const onCloseOverlay = (changedVersion, outsideDetailOverlayAsset) => {
     if (outsideDetailOverlayAsset) {
-      setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: false });
       onCloseDetailOverlay(outsideDetailOverlayAsset);
-    } else {
-      if (changedVersion) {
-        handleVersionChange(changedVersion);
-      }
-      setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: false });
+    } else if (changedVersion) {
+      handleVersionChange(changedVersion);
     }
+    setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: false });
   };
 
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -239,9 +236,8 @@ const AssetThumbail = ({
     <>
       <div>
         <div
-          className={`${styles.uploadUproval} ${styles.container} ${activeView === "list" && styles.listContainer} ${
-            isLoading && "loadable"
-          }`}
+          className={`${styles.uploadUproval} ${styles.container} ${activeView === "list" && styles.listContainer} ${isLoading && "loadable"
+            }`}
         >
           <div className={activeView === "list" && styles["list-item-wrapper"]}>
             {activeView === "list" ? (
@@ -377,11 +373,10 @@ const AssetThumbail = ({
           )}
           <div className={activeView === "grid" && styles.sizeMargin}>
             <div
-              className={`${
-                activeView !== "list"
-                  ? `secondary-text ${styles["modified-date"]} ${styles["uploadModified"]}`
-                  : ""
-              }`}
+              className={`${activeView !== "list"
+                ? `secondary-text ${styles["modified-date"]} ${styles["uploadModified"]}`
+                : ""
+                }`}
               style={{ color: "#AEB0C2" }}
             >
               {format(new Date(asset.createdAt), dateFormat)}
