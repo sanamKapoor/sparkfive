@@ -26,7 +26,8 @@ const NestedButton: React.FC<MyComponentProps> = ({ type, parentId }) => {
     activeSubFolders,
     appendNewSubSidenavFolders,
     setSubFoldersViewList,
-    subFoldersViewList
+    subFoldersViewList,
+    setListUpdateFlag
   } = useContext(AssetContext);
 
   const onSubmit = async (folderData: { name: string, parent_id?: string }) => {
@@ -46,8 +47,13 @@ const NestedButton: React.FC<MyComponentProps> = ({ type, parentId }) => {
           total: subFoldersViewList.total + 1,
           results: [data, ...subFoldersViewList.results],
         });
+      setListUpdateFlag(true);
       setDisableButtons(false)
-      toastUtils.success("Collection created successfully");
+      if (parentId) {
+        toastUtils.success("Subcollection created successfully");
+      } else {
+        toastUtils.success("Collection created successfully");
+      }
     } catch (err: any) {
       setDisableButtons(false);
       setActiveModal("");
