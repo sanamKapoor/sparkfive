@@ -3,10 +3,7 @@ import fileDownload from "js-file-download";
 import React, { ChangeEvent, useContext, useState } from "react";
 
 import { Utilities } from "../../../assets";
-import {
-  COLLECTION_NAME_UPDATED,
-  FAILED_TO_UPDATE_COLLECTION_NAME,
-} from "../../../constants/messages";
+import { COLLECTION_NAME_UPDATED, FAILED_TO_UPDATE_COLLECTION_NAME } from "../../../constants/messages";
 import { AssetContext } from "../../../context";
 import folderApi from "../../../server-api/folder";
 import shareFolderApi from "../../../server-api/share-collection";
@@ -35,10 +32,10 @@ const FolderGridItem = ({
   isLoading = false,
   deleteFolder,
   createdAt,
-  shareAssets = (folder: string) => { },
+  shareAssets = (folder: string) => {},
   changeThumbnail,
-  deleteThumbnail = (folder: string) => { },
-  copyShareLink = (folder: string) => { },
+  deleteThumbnail = (folder: string) => {},
+  copyShareLink = (folder: string) => {},
   toggleSelected,
   copyEnabled,
   sharePath = "",
@@ -81,14 +78,12 @@ const FolderGridItem = ({
   }
 
   if (thumbnails && thumbnails.thumbnails) {
-    previews = thumbnails.thumbnails
-      .sort(GetSortOrder("index"))
-      .map((thumb: any, index) => ({
-        name: "thumbnail",
-        assetImg: thumb?.filePath || "",
-        type: thumb?.type || "thumbnail",
-        extension: thumb?.extension,
-      }));
+    previews = thumbnails.thumbnails.sort(GetSortOrder("index")).map((thumb: any, index) => ({
+      name: "thumbnail",
+      assetImg: thumb?.filePath || "",
+      type: thumb?.type || "thumbnail",
+      extension: thumb?.extension,
+    }));
   } else {
     const assetsCopy = [];
     let maxCount = 4;
@@ -170,7 +165,7 @@ const FolderGridItem = ({
               } else {
                 return folder;
               }
-            })
+            }),
           );
         }
 
@@ -224,7 +219,7 @@ const FolderGridItem = ({
               } else {
                 return folder;
               }
-            })
+            }),
           );
           setListUpdateFlag(true);
           setThumbnailName(newValue);
@@ -238,94 +233,58 @@ const FolderGridItem = ({
   };
 
   return (
-    <div
-      className={`${styles.container} ${activeView === "list" && styles.listContainer
-        } ${isLoading && "loadable"}`}
-    >
+    <div className={`${styles.container} ${activeView === "list" && styles.listContainer} ${isLoading && "loadable"}`}>
       {/* select wrapper is for list view  */}
       <div className={activeView === "list" && styles["list-item-wrapper"]}>
         {activeView === "list" ? (
           <div
-            className={`${activeView === "list" && styles["list-select-icon"]
-              } ${isSelected && styles["selected-wrapper"]}`}
+            className={`${activeView === "list" && styles["list-select-icon"]} ${
+              isSelected && styles["selected-wrapper"]
+            }`}
           >
             <IconClickable
-              src={
-                isSelected
-                  ? Utilities.radioButtonEnabled
-                  : Utilities.radioButtonNormal
-              }
+              src={isSelected ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
               additionalClass={styles["select-icon"]}
               onClick={toggleSelected}
             />
           </div>
         ) : null}
-        <div
-          className={`${styles["main-border"]} ${activeView === "list" && styles["list-main-border"]
-            }`}
-        >
+        <div className={`${styles["main-border"]} ${activeView === "list" && styles["list-main-border"]}`}>
           <div
             className={
               thumbnailPath || thumbnailExtension
-                ? `${styles.grid_border} `
-                : `${styles["image-wrapper"]}
-                ${activeView === "list" && styles["list-image-wrapper"]}
-                `
+                ? `${styles.grid_border} ${activeView === "list" ? styles.grid_border_list : ""}`
+                : `${styles["image-wrapper"]} ${activeView === "list" ? styles["list-image-wrapper"] : ""}`
             }
             onClick={activeView === "list" && viewFolder}
           >
             <>
               {thumbnailPath && (
-                <AssetImg
-                  assetImg={thumbnailPath}
-                  imgClass="maxHeight"
-                  style={{ maxWidth: "330px !important" }}
-                />
+                <AssetImg assetImg={thumbnailPath} imgClass="maxHeight" style={{ maxWidth: "330px !important" }} />
               )}
               {thumbnailExtension && !thumbnailPath && (
-                <AssetIcon
-                  extension={thumbnailExtension}
-                  imgClass="maxHeight"
-                />
+                <AssetIcon extension={thumbnailExtension} imgClass="maxHeight" />
               )}
               {!thumbnailPath &&
                 !thumbnailExtension &&
                 previews.map((preview: any, index: number) => (
-                  <div
-                    className={styles["sub-image-wrapper"]}
-                    key={index.toString()}
-                  >
+                  <div className={styles["sub-image-wrapper"]} key={index.toString()}>
                     {preview.assetImg || preview.name === "empty" ? (
                       <AssetImg {...preview} />
                     ) : (
-                      <AssetIcon
-                        extension={preview.extension}
-                        isCollection={true}
-                      />
+                      <AssetIcon extension={preview.extension} isCollection={true} />
                     )}
                   </div>
                 ))}
               {activeView !== "list" && (
                 <div className={styles["image-button-wrapper"]}>
-                  <Button
-                    className="container primary"
-                    text={"View Collection"}
-                    type={"button"}
-                    onClick={viewFolder}
-                  />
+                  <Button className="container primary" text={"View Collection"} type={"button"} onClick={viewFolder} />
                 </div>
               )}
               {activeView !== "list" && (
-                <div
-                  className={`${styles["selectable-wrapper"]} ${isSelected && styles["selected-wrapper"]
-                    }`}
-                >
+                <div className={`${styles["selectable-wrapper"]} ${isSelected && styles["selected-wrapper"]}`}>
                   <IconClickable
-                    src={
-                      isSelected
-                        ? Utilities.radioButtonEnabled
-                        : Utilities.radioButtonNormal
-                    }
+                    src={isSelected ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
                     additionalClass={styles["select-icon"]}
                     onClick={toggleSelected}
                   />
@@ -351,11 +310,9 @@ const FolderGridItem = ({
             <span
               id="editable-preview"
               onClick={handleOnFocus}
-              className={
-                `normal-text ${styles["wrap-text"]} ${activeView === "list" && styles["list-wrap-text"]
-                } ${gridStyles["editable-preview"]} ${activeView === "list" && styles["list-text"]
-                }`
-              }
+              className={`normal-text ${styles["wrap-text"]} ${activeView === "list" && styles["list-wrap-text"]} ${
+                gridStyles["editable-preview"]
+              } ${activeView === "list" && styles["list-text"]}`}
             >
               {thumbnailName}
             </span>
@@ -435,25 +392,21 @@ const FolderGridItem = ({
         </div>
       </div> */}
 
-      <div
-        className={`${styles["details-wrapper"]} ${activeView === "list" && styles["list-detail-wrapper"]
-          }`}
-      >
+      <div className={`${styles["details-wrapper"]} ${activeView === "list" && styles["list-detail-wrapper"]}`}>
         {folderType === "SubCollection" ? (
-          <div className="secondary-text">{`${assetsCount ?? 0} 
-          Assets`}</div>
+          <div className="secondary-text">{`${assetsCount ?? 0} Asset${assetsCount !== 1 ? "s" : ""}`}</div>
         ) : (
-          < div className={styles["modified-date"]}>{`${Number(assetsCount ?? 0) + Number(totalchildassests ?? 0)
-            } Assets 
-              ${Number(totalchild) !== 0 ? Number(totalchild ?? 0) : ""}${Number(totalchild) !== 0 ? " Subcollection" : ""
-            }`}</div>
+          <div className={styles["modified-date"]}>
+            {`${Number(assetsCount ?? 0) + Number(totalchildassests ?? 0)} Asset${
+              Number(assetsCount ?? 0) + Number(totalchildassests ?? 0) !== 1 ? "s" : ""
+            } ${
+              Number(totalchild) !== 0 ? `${totalchild ?? 0} Subcollection${Number(totalchild) !== 1 ? "s" : ""}` : ""
+            }`}
+          </div>
         )}
       </div>
       {activeView === "list" && (
-        <div className={styles["modified-date"]}>
-          {" "}
-          {format(new Date(createdAt), dateFormat)}
-        </div>
+        <div className={styles["modified-date"]}> {format(new Date(createdAt), dateFormat)}</div>
       )}
 
       <FolderOptions
@@ -486,8 +439,9 @@ const FolderGridItem = ({
           setDeleteOpen(false);
         }}
         confirmText={"Delete"}
-        message={`Are you sure you want to delete this ${mode === "SubCollectionView" ? "Subcollection" : "Collection"
-          }?`}
+        message={`Are you sure you want to delete this ${
+          mode === "SubCollectionView" ? "Subcollection" : "Collection"
+        }?`}
         modalIsOpen={deleteOpen}
       />
     </div>
