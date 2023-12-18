@@ -214,6 +214,7 @@
 /* list view css starts from here */
 .list-wrapper {
   grid-template-columns: unset;
+  grid-gap:20px;
 }
 
 .list-asset-wrapper {

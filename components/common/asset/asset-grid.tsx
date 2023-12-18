@@ -572,9 +572,9 @@ const AssetGrid = ({
                     onCloseDetailOverlay={onCloseDetailOverlay}
                   />
                 )}
-                {mode === "assets" && (
+                {mode === "assets" && assets.length > 0 && (
                   <>
-                    {activeView === "list" && (
+                    {activeView === "list" &&  (
                       <AssetTableHeader
                         activeView={activeView}
                         setSortAttribute={setSortAssetAttribute}
