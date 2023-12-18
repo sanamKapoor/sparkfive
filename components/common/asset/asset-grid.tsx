@@ -74,6 +74,7 @@ const AssetGrid = ({
     activeSubFolders,
     subFoldersAssetsViewList,
     setSubFoldersAssetsViewList,
+    setListUpdateFlag
   } = useContext(AssetContext);
   const {
     activeSortFilter
@@ -238,6 +239,7 @@ const AssetGrid = ({
             })
           );
       }
+      setListUpdateFlag(true);
       toastUtils.success("Assets deleted successfully");
     } catch (err) {
       // TODO: Error handling
@@ -570,9 +572,9 @@ const AssetGrid = ({
                     onCloseDetailOverlay={onCloseDetailOverlay}
                   />
                 )}
-                {mode === "assets" && (
+                {mode === "assets" && assets.length > 0 && (
                   <>
-                    {activeView === "list" && (
+                    {activeView === "list" &&  (
                       <AssetTableHeader
                         activeView={activeView}
                         setSortAttribute={setSortAssetAttribute}
