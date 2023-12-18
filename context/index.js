@@ -149,7 +149,7 @@ export const AssetContext = createContext({
 
   // Sidenav parent Folder count
   sidenavTotalCollectionCount: 0,
-  setSidenavTotalCollectionCount: () => { },
+  setSidenavTotalCollectionCount: (value) => { },
 
   sidenavFolderChildList: {},
   setSidenavFolderChildList: (data, id, replace) => { },

@@ -568,7 +568,11 @@ const AssetAddition = ({
 
       setListUpdateFlag(true);
       setDisableButtons(false);
-      toastUtils.success("SubCollection created successfully");
+      if (activeSubFolders) {
+        toastUtils.success("Subcollection created successfully");
+      } else {
+        toastUtils.success("Collection created successfully");
+      }
     } catch (err) {
       setDisableButtons(false);
       toastUtils.error

@@ -176,38 +176,40 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
         })}
 
         {attributes.length > 0 && (
+          <>
+          
           <div
             className={`${styles["more-filter-btn"]}`}
-            onClick={onMoreFiltersClick}
-            onKeyDown={onMoreFiltersClick}
+            
           >
-            <div className={`${styles["filter-button"]}`}>
-              <Button text="More filters" className="text-primary-btn" />
+            <div className={`${styles["filter-button"]}`} onClick={onMoreFiltersClick}
+            onKeyDown={onMoreFiltersClick}>
+              <Button text="More Filters" className="text-primary-btn" />
               <img
                 className={`${styles["more-filter-arrow"]}`}
                 src={Utilities.downIconLight}
                 alt=""
               />
-
             </div>
-
+            <ClickOutside
+          className={`${styles["main-wrapper"]}`}
+          onClick={onClickOutsideMoreFilters}
+        >
+          {showMoreFilters && (
+            
+              <MoreFiltersOptionPopup
+                attributes={attributes}
+                setAttributes={setAttributes}
+                setShowModal={setShowMoreFilters}
+              />
+            
+          )}
+        </ClickOutside>
           </div>
+          </>
         )}
       </div>
-      <ClickOutside
-        className={`${styles["main-wrapper"]}`}
-        onClick={onClickOutsideMoreFilters}
-      >
-        {showMoreFilters && (
-          <div className={`${styles["main-container"]}`}>
-            <MoreFiltersOptionPopup
-              attributes={attributes}
-              setAttributes={setAttributes}
-              setShowModal={setShowMoreFilters}
-            />
-          </div>
-        )}
-      </ClickOutside>
+      
     </div>
   );
 };

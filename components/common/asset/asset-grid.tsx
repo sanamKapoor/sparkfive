@@ -564,7 +564,7 @@ const AssetGrid = ({
                       if (assetItem.status !== "fail") {
                         return (
                           <li
-                            className={styles["grid-item"]}
+                          className={`${styles["grid-item"]} ${activeView === "grid" ? styles["grid-item-new"] : ""}`}
                             key={assetItem.asset.id || index}
                             onClick={(e) =>
                               handleFocusChange(e, assetItem.asset.id)

@@ -363,12 +363,12 @@ const ShareFolderMain = () => {
       setActivePasswordOverlay(false);
       setFolderInfo(data);
       setAdvancedConfig(data.customAdvanceOptions);
-      if (data.singleSharedCollectionId) {
-        setHeaderName(data?.sharedFolder?.name || "")
-      } else {
-        setHeaderName(data.folderName);
-      }
-
+      // if (data.singleSharedCollectionId) {
+      //   setHeaderName(data?.sharedFolder?.name || "")
+      // } else {
+      //   setHeaderName(data.folderName);
+      // }
+      setHeaderName(data.folderName);
       const sharedFolder = data.sharedFolder;
 
       // Needed for navigation(arrows) information in detail-overlay
@@ -582,12 +582,12 @@ const ShareFolderMain = () => {
     ) {
       if (id) {
         setActiveFolder(id);
-        setHeaderName(
-          folderName
-            ? folderName
-            : sidenavFolderList.find((folder: any) => folder.id === id)?.name ||
-            ""
-        );
+        // setHeaderName(
+        //   folderName
+        //     ? folderName
+        //     : sidenavFolderList.find((folder: any) => folder.id === id)?.name ||
+        //     ""
+        // );
       } else {
         getFolderInfo();
       }
@@ -595,9 +595,9 @@ const ShareFolderMain = () => {
       if (id) {
 
         setActiveFolder(id);
-        setHeaderName(
-          folders.find((folder: any) => folder.id === id)?.name || ""
-        );
+        // setHeaderName(
+        //   folders.find((folder: any) => folder.id === id)?.name || ""
+        // );
       } else {
         setActiveFolder("");
         let sort =
@@ -668,7 +668,7 @@ const ShareFolderMain = () => {
   return (
     <>
       {!loading && (
-        <main className={`${sidebarOpen?styles["container"]:styles['rightToggle']} sharefolderOuter`}>
+        <main className={`${sidebarOpen ? styles["container"] : styles['rightToggle']} sharefolderOuter`}>
           {sidebarOpen ? <SharedPageSidenav
             viewFolder={viewFolder}
             headingClick={headingClick}
@@ -693,11 +693,11 @@ const ShareFolderMain = () => {
             mode={activeMode}
           />
           <div
-            className={`${assetGridWrapperStyle} ${sidebarOpen?styles["mainContainer"]:styles['toggleContainer']} `}
+            className={`${assetGridWrapperStyle} ${sidebarOpen ? styles["mainContainer"] : styles['toggleContainer']} `}
             style={{ marginTop: top }}
           >
-             
-            
+
+
             <AssetGrid
               activeFolder={activeFolder}
               getFolders={getFolders}

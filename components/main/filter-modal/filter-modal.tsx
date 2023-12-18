@@ -13,7 +13,7 @@ const Filtermodal = ({ onClose }) => {
     <div className={styles.modalContainer}>
     <div className={styles.tagModal}>
       <div className={styles.modalHead}>
-        <span>More filters</span>
+        <span>More Filters</span>
         <div className={styles.buttons}>
           <button onClick={onClose}  className={styles.clear}>clear</button>
           <img src={Utilities.closeIcon} />

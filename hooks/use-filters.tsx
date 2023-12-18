@@ -287,7 +287,8 @@ const useFilters = (attributes) => {
   };
 
   const fetchAITags = async (params?: Record<string, unknown>) => {
-    return fetchTags({ includeAi: true, ...params });
+    const allTags = await fetchTags({ includeAi: true, ...params });
+    return allTags?.filter((item) => item.type === "AI")
   };
 
   const fetchProductSku = async (params?: Record<string, unknown>) => {

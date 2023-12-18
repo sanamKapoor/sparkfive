@@ -44,12 +44,6 @@ const AssetHeaderOps = ({
 
   const router = useRouter();
 
-  // const [sharePath, setSharePath] = useState("");
-  // const [showShareAction, setShowShareAction] = useState(false);
-  // const contentRef = useRef(null);
-  // const [showMoreActions, setShowMoreActions] = useState(false);
-  // const [showAssociateModalOpen, setShowAssociateModalOpen] = useState(false);
-
   const {
     assets,
     setAssets,
@@ -143,6 +137,7 @@ const AssetHeaderOps = ({
           ?.length || 0,
     };
   }
+
   if (selectedAllSubAssets) {
     const currentUnSelectedAssets = subFoldersAssetsViewList.results.filter((asset) => !asset.isSelected);
     totalSelectAssets = subFoldersAssetsViewList.total - currentUnSelectedAssets.length;
