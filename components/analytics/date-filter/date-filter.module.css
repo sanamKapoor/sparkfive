@@ -1,0 +1,69 @@
+.dateFilter{
+    max-width: 292px;
+    width: 100%;
+    height:32px;
+    border:1px solid #DEDAD4;
+    display: flex;
+    align-items: center;
+  
+    
+}
+.gridBox{
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-gap:13px;
+    padding: 0 2px;
+
+}
+.data{
+    font-weight: 400;
+    font-size: 14px;
+    color:var(--color-prim-light);
+    padding:4px 12px;
+}
+
+.active{
+    background: var(--primary-color);
+    color:var(--color-prim-white);
+    padding:4px 15px;
+    border-radius: 2px;
+}
+.date-filter-teb{
+    display: none;
+}
+.calender-filer{
+    border:1px solid #DEDAD4;
+    padding: 0 8px;
+    border-radius: 4px;
+    height: 32px;
+    width: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+.calender-filer{
+    display: none;
+}
+@media (max-width:810px){
+    .date-filter-teb{
+        display: block;
+    }
+    .dateFilter{
+        display: none;
+    }
+}
+
+@media (max-width:475px){
+    .calender-filer{
+        display: block;
+    }
+    .date-filter-teb{
+        display: none;
+    }
+    .calender-filer-outer{
+        display: flex;
+        align-items: center;
+    }
+
+}

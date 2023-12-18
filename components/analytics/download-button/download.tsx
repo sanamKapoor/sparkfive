@@ -6,9 +6,9 @@ import ButtonIcon from "../../common/buttons/button-icon";
 export default function Download() {
   return (
    <section>
-    {/* <button className={`${styles['download-btn']}`}>
-        Download
-    </button> */}
+    <button className={`${styles['download-btn']}`}>
+        Download CSV
+    </button>
     <div className={styles.downloadIcon}>
       <ButtonIcon  text=""  icon={Utilities.download} additionalClass={styles.downloadBtnIcon} />
       </div>

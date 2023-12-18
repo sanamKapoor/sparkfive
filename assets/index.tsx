@@ -81,6 +81,7 @@ export const Navigation = {
   reports: require("./Icons/Navigation/icn-nav-reports-#E9EEFA.svg"),
   reportsSelected: require("./Icons/Navigation/icn-nav-reports-white.svg"),
   insights:require("./Icons/Navigation/insights.svg"),
+
 };
 export const insights={
   insightAsset:require("./Icons/insights/insights-assets.svg"),
@@ -92,6 +93,9 @@ export const insights={
   userImg2:require("./Icons/insights/user-img2.svg"),
   userImg3:require("./Icons/insights/user-img3.svg"),
   userImg4:require("./Icons/insights/user-img4.svg"),
+  calender:require("./Icons/insights/calender.svg"),
+  paginationLeft:require("./Icons/insights/pagination-left.svg"),
+  paginationRight:require("./Icons/insights/pagination-right.svg"),
 
 }
 

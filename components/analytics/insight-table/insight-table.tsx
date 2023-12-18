@@ -6,17 +6,51 @@ import { Utilities } from "../../../assets";
 import TableHeading from "./table-heading";
 import SearchButton from "./analytics-search-button/analytics-search";
 import Download from "../download-button/download";
+import Datefilter from "../date-filter/date-filter";
+import Pagination from "../Pagination/pagination";
 const TableComponent = ({ columns, data, arrowColumns, buttonColumns, buttonTexts }) => {
   return (
-    <div className={styles.tableResponsive}>
-      <div className={`${styles["heading-wrap"]}`}>
+    <section className={`${styles["outer-wrapper"]}`}>
+      <div className={styles.tableResponsive}>
+      {/* for web */}
+      <div className={`${styles["heading-wrap"]} ${styles["web-view"]}`}>
         <TableHeading mainText="User Engagement" descriptionText="May 18 - May 25, 2023" />
-        <SearchButton label="Search User" />
-        <Download/>
-      
-        
+        <div className={`${styles["table-header-tabs"]}`}>
+          <SearchButton label="Search User" />
+          <Datefilter />
+          <Download />
+        </div>
       </div>
-      
+      {/* for laptop */}
+      <div className={`${styles["laptop-view"]}`}>
+        <div className={`${styles["heading-wrap"]}`}>
+          <div>
+            <TableHeading mainText="User Engagement" descriptionText="May 18 - May 25, 2023" />
+            <div style={{ marginTop: "22px" }}>
+              <SearchButton label="Search User" />
+            </div>
+          </div>
+          <div className={`${styles["table-header-tabs"]}`}>
+            <Datefilter />
+            <Download />
+          </div>
+        </div>
+      </div>
+      {/* for mobile */}
+      <div className={`${styles["heading-wrap"]} ${styles["mobile-view"]}`}>
+        <div className={`${styles["mobile-wrap"]}`}>
+        <TableHeading mainText="User Engagement" descriptionText="May 18 - May 25, 2023" />
+        <div className={`${styles["table-header-tabs"]}`}>
+          <Datefilter />
+          <Download />
+        </div>
+        </div>
+        
+        <div style={{ marginTop: "22px" }}>
+          <SearchButton label="Search User" />
+        </div>
+      </div>
+
       <table className={styles.table}>
         <thead>
           <tr>
@@ -59,7 +93,11 @@ const TableComponent = ({ columns, data, arrowColumns, buttonColumns, buttonText
           ))}
         </tbody>
       </table>
+      <Pagination />
     </div>
+
+    </section>
+    
   );
 };
 

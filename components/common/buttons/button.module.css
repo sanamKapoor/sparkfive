@@ -462,6 +462,19 @@ console
   justify-content: center;
 }
 
+.outline-text-btn{
+  min-width:84px;
+  background: #fff;
+  color:var(--color-prim-navy);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px;
+  border:1px solid #DEDAD4;
+
+
+
+}
+
 
 
 @media screen and (max-width: 1000px) {
