@@ -73,7 +73,7 @@ const NestedSidenav = ({ viewFolder }) => {
       <div className={styles["sidenav-content"]}>
         <ReusableHeading
           customStyle={{ padding: "0px 23px 0px 0px" }}
-          text={`${team?.company}.`}
+          text={`${team?.company}`}
           headingClick={headingClick}
           icon={
             <img

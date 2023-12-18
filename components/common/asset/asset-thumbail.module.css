@@ -7,13 +7,17 @@
   position: relative;
   border-radius: 6px;
   box-sizing: border-box;
-  border:1px solid var(--color-secondary-border);
-}
+  /* border:1px solid var(--color-secondary-border); */
 
+}
+/* .uploadUproval{
+  min-height: 320px;
+
+} */
 .image-wrapper {
   width: 100%;
   position: relative;
-  display: flex;
+  /* display: flex; */
   justify-content: center;
   align-items: center;
   border-bottom:1px solid var(--color-secondary-border);
@@ -41,10 +45,10 @@
 
 .selectable-wrapper {
   position: absolute;
-  top: 0.5rem;
+  top: -0.5rem;
   left: 0.5rem;
   display: none;
-  z-index: 1498;
+  z-index: 999;
 }
 
 .selectable-wrapper.selected-wrapper {
@@ -237,7 +241,12 @@
   margin-left:10px;
   color:
   #AEB0C2;
+  
 }
+/* .uploadModified{
+  margin-bottom: 45px;
+
+} */
 .format{
   color:
   #AEB0C2;
