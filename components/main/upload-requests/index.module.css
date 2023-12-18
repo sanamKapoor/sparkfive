@@ -1077,7 +1077,7 @@ form.search button {
   display: flex;
   align-items: center;
   cursor: pointer;
-  margin-left: 0;
+margin-left: 0;
   margin-top: 1.5rem;
 }
 .tag-outer-box{
@@ -1087,4 +1087,21 @@ form.search button {
   border-bottom: 1px solid #dedad4;
   padding: 0 0 15px 0;
 
+}
+.outer-wrap{
+  position: relative;
+}
+.icon-wrapper{
+  position: absolute;
+  bottom: 56px;
+  right:18px;
+}
+.wrapper{
+  position: absolute;
+  bottom: 16px;
+  left: 8px;
+}
+.grid-item-new{
+  border:1px solid var(--color-secondary-border) !important;
+  padding-bottom:44px;
 }

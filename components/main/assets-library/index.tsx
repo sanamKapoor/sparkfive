@@ -263,6 +263,10 @@ const AssetsLibrary = () => {
         mainFilter: activeSubFolders
           ? "SubCollectionView"
           : activeSortFilter.mainFilter,
+        sort:
+          advancedConfig.collectionSortView === "alphabetical"
+            ? selectOptions.sort[3]
+            : selectOptions.sort[1]
       });
     }
   }, [activeSubFolders]);
@@ -338,6 +342,7 @@ const AssetsLibrary = () => {
   };
 
   const updateSortFilterByAdvConfig = async (params: any = {}) => {
+    console.log("hello")
     let defaultTab = getDefaultTab();
     const filters = Object.keys(router.query);
     if (filters && filters.length) {
@@ -753,13 +758,15 @@ const AssetsLibrary = () => {
       if (activeSortFilter.mainFilter !== "SubCollectionView") {
         return;
       }
-      let sort;
-      sort =
-        advancedConfig.collectionSortView === "alphabetical"
-          ? selectOptions.sort[3]
-          : selectOptions.sort[1];
+      // let sort;
+      // sort =
+      //   advancedConfig.collectionSortView === "alphabetical"
+      //     ? selectOptions.sort[3]
+      //     : selectOptions.sort[1];
 
-      const { field, order } = sort;
+      // const { field, order } = sort;
+      const { field, order } = activeSortFilter.sort;
+
       const { next } = subFoldersViewList;
       const queryParams = {
         page: replace ? 1 : next,
@@ -789,16 +796,20 @@ const AssetsLibrary = () => {
       if (activeSortFilter.mainFilter !== "SubCollectionView") {
         return;
       }
-      const obj = {
-        ...getAssetsSort(activeSortFilter)
-      }
 
-      let sort;
-      sort =
-        advancedConfig.collectionSortView === "alphabetical"
-          ? selectOptions.sort[3]
-          : selectOptions.sort[1];
-      const sortingString = `${sort.field},${sort.order}`;
+      const { results: SubFolders } = subFoldersViewList
+
+      // const obj = {
+      //   ...getAssetsSort(activeSortFilter)
+      // }
+
+      // let sort;
+      // sort =
+      //   advancedConfig.collectionSortView === "alphabetical"
+      //     ? selectOptions.sort[3]
+      //     : selectOptions.sort[1];
+      // const sortingString = `${sort.field},${sort.order}`;
+
       const { next } = subFoldersAssetsViewList;
       const { data: subFolderAssets } = await assetApi.getAssets({
         ...getAssetsFilters({
@@ -808,8 +819,9 @@ const AssetsLibrary = () => {
           nextPage: next,
           userFilterObject: activeSortFilter,
         }),
-        sort: sortingString,
-        // ...getAssetsSort(activeSortFilter),
+        // sort: sortingString,
+        ...((SubFolders.length === 0 && term) && { term }),
+        ...getAssetsSort(activeSortFilter),
         // ...searchFilterParams, commented because we don't search in case of sub-collection
         showAllAssets: showAllAssets,
       });
@@ -848,7 +860,9 @@ const AssetsLibrary = () => {
       const folderIndex = subFoldersViewList.results.findIndex(
         (folder) => folder.id === id
       );
+
       if (folderIndex !== -1) {
+        setSelectedAllSubAssets(false)
         setSubFoldersViewList({
           ...subFoldersViewList,
           results: update(subFoldersViewList.results, {
@@ -868,6 +882,7 @@ const AssetsLibrary = () => {
         });
       }
       if (assetIndex !== -1) {
+        setSelectedAllSubFoldersAndAssets(false);
         setSubFoldersAssetsViewList({
           ...subFoldersAssetsViewList,
           results: update(subFoldersAssetsViewList.results, {

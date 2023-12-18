@@ -15,7 +15,7 @@
 
 .icon {
   object-fit: scale-down;
-  /* width: 10rem !important; */
+  width: 10rem !important;
   max-width: 100%;
 }
 

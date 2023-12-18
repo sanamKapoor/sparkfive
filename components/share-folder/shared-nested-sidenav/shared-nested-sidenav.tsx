@@ -145,7 +145,7 @@ export default function SharedPageSidenav({ sidenavFolderList, viewFolder, headi
                           <img src={Utilities.folder} alt="" />
                         </div>
                         <div className={styles["icon-description"]}>
-                          <span>{item.name}</span>
+                          <span title={item.name}>{item.name}</span>
                         </div>
                       </div>
                       <div className={styles["list1-right-contents"]}>
@@ -183,7 +183,7 @@ export default function SharedPageSidenav({ sidenavFolderList, viewFolder, headi
                                             src={Utilities.folder}
                                           />
                                           <div className={styles["icon-descriptions"]}>
-                                            <span>{record.name}</span>
+                                            <span title={item.name}>{record.name}</span>
                                           </div>
                                         </div>
                                         <div className={styles["list1-right-contents"]}>
