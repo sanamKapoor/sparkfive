@@ -267,7 +267,6 @@ export default ({ getAssets }) => {
 
       await assetApi.updateMultiple(updateAssets, filters);
       setListUpdateFlag(true);
-      removeSelectedFromList();
       closeModalAndClearOpAsset();
       if (activeFolder && activeFolder !== selectedFolder) {
         removeSelectedFromList();
