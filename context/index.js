@@ -186,6 +186,8 @@ export const AssetContext = createContext({
   setDownloadController: (controller) => { },
   currentFolder: null,
   setCurrentFolder: (value) => { },
+  showSubCollectionContent: false,
+  setShowSubCollectionContent: (value) => { }
 });
 
 export const TeamContext = createContext({
