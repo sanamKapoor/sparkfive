@@ -4,7 +4,7 @@
   border-radius: 6px;
   border: 1px solid #dedad4;
   position: fixed;
-  top: 95px;
+  top: 78px;
   height: 75vh;
 }
 .collection-heading {
@@ -31,6 +31,7 @@
   padding: 6px 6px;
   background: #fff;
   box-sizing: border-box;
+  width: 100%;
 }
 
 .border-bottom {
