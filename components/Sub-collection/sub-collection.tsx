@@ -44,8 +44,8 @@ const SubCollection = ({
   const [assetsHide, setAssetsHide] = useState(false);
 
   const handleCircleClick = () => {
-    loadMoreAssets(true, !isChecked);
-    setIsChecked(!isChecked);
+    loadMoreAssets(true, !showSubCollectionContent);
+    setShowSubCollectionContent(!showSubCollectionContent);
   };
   const handleHideClick = () => {
     setCollectionHide(!collectionHide);
@@ -64,6 +64,8 @@ const SubCollection = ({
       next: nextAsset,
       total: totalAssets,
     },
+    showSubCollectionContent,
+    setShowSubCollectionContent,
     activeSubFolders,
   } = useContext(AssetContext);
 
@@ -106,12 +108,13 @@ const SubCollection = ({
       setActiveSubFolders("");
       setSubFoldersViewList({ results: [], next: 0, total: 0 });
       setSubFoldersAssetsViewList({ results: [], next: 0, total: 0 });
+      setShowSubCollectionContent(false);
     };
   }, []);
 
   //For handling the show subcollection checkbox button for collection change 
   useEffect(() => {
-    setIsChecked(false);
+    setShowSubCollectionContent(false);
   }, [activeSubFolders])
 
   return (
@@ -200,7 +203,7 @@ const SubCollection = ({
       {
         <>
           <>
-           
+
             <div className={`${styles["heading-wrapper"]}`}>
               <div className={`${styles["sub-collection-heading"]}`}>
                 {sortedAssets.length > 0 && sortedFolders.length > 0 && (
@@ -221,11 +224,11 @@ const SubCollection = ({
                     <div className={styles.left}>
                       <div className={styles.TagsInfo}>
                         <div
-                          className={`${styles.circle} ${isChecked ? styles.checked : ""
+                          className={`${styles.circle} ${showSubCollectionContent ? styles.checked : ""
                             }`}
                           onClick={handleCircleClick}
                         >
-                          {isChecked && <img src={Utilities.checkIcon} />}
+                          {showSubCollectionContent && <img src={Utilities.checkIcon} />}
                         </div>
                         <span className={`${styles["sub-collection-content"]}`}>
                           Show all assets in parent collection
@@ -237,9 +240,9 @@ const SubCollection = ({
               </div>
             </div>
             <div className={`${styles["collection-filter-wrap"]}`}>
-            <FilterView />
-             </div>
-          
+              <FilterView />
+            </div>
+
           </>
           <div
             className={`${styles["assetWrapper"]} ${activeView === "list" && styles["list-wrapper"]
@@ -257,7 +260,7 @@ const SubCollection = ({
                   if (assetItem.status !== "fail") {
                     return (
                       <li
-                      className={`${styles["grid-item"]} ${activeView === "grid" ? styles["grid-item-new"] : ""}`}
+                        className={`${styles["grid-item"]} ${activeView === "grid" ? styles["grid-item-new"] : ""}`}
                         key={assetItem.asset.id || index}
                         onClick={(e) =>
                           handleFocusChange(e, assetItem.asset.id)
@@ -319,7 +322,7 @@ const SubCollection = ({
                   {!loadingAssetsFolders && (
                     <Waypoint
                       onEnter={() => {
-                        loadMoreAssets(false, isChecked);
+                        loadMoreAssets(false, showSubCollectionContent);
                       }}
                       fireOnRapidScroll={false}
                     />
@@ -334,7 +337,7 @@ const SubCollection = ({
                         type="button"
                         className="container primary"
                         onClick={() => {
-                          loadMoreAssets(false, isChecked);
+                          loadMoreAssets(false, showSubCollectionContent);
                         }}
                       />
                     </div>

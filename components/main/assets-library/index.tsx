@@ -86,7 +86,9 @@ const AssetsLibrary = () => {
     setSelectedAllSubAssets,
     setListUpdateFlag,
     currentFolder,
-    setCurrentFolder
+    setCurrentFolder,
+    showSubCollectionContent,
+    setShowSubCollectionContent,
   } = useContext(AssetContext);
 
   const {
@@ -239,6 +241,7 @@ const AssetsLibrary = () => {
           !router.query.product
         ) {
           setActiveMode("folders");
+          setShowSubCollectionContent(false);
           getFolders();
         } else if (
           activeSortFilter.mainFilter === "SubCollectionView" &&
@@ -246,10 +249,11 @@ const AssetsLibrary = () => {
         ) {
           setActiveMode("SubCollectionView");
           getSubCollectionsFolderData(true, 10);
-          getSubCollectionsAssetData();
+          getSubCollectionsAssetData(true, showSubCollectionContent);
         } else {
           setActiveMode("assets");
           setAssets([]);
+          setShowSubCollectionContent(false);
           getAssets();
         }
       }
@@ -792,24 +796,21 @@ const AssetsLibrary = () => {
     replace = true,
     showAllAssets: boolean = false
   ) => {
+    console.log("hllo")
     try {
       if (activeSortFilter.mainFilter !== "SubCollectionView") {
         return;
       }
-
       const { results: SubFolders } = subFoldersViewList
-
       // const obj = {
       //   ...getAssetsSort(activeSortFilter)
       // }
-
       // let sort;
       // sort =
       //   advancedConfig.collectionSortView === "alphabetical"
       //     ? selectOptions.sort[3]
       //     : selectOptions.sort[1];
       // const sortingString = `${sort.field},${sort.order}`;
-
       const { next } = subFoldersAssetsViewList;
       const { data: subFolderAssets } = await assetApi.getAssets({
         ...getAssetsFilters({
