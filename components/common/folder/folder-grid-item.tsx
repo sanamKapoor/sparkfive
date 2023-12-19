@@ -32,10 +32,10 @@ const FolderGridItem = ({
   isLoading = false,
   deleteFolder,
   createdAt,
-  shareAssets = (folder: string) => {},
+  shareAssets = (folder: string) => { },
   changeThumbnail,
-  deleteThumbnail = (folder: string) => {},
-  copyShareLink = (folder: string) => {},
+  deleteThumbnail = (folder: string) => { },
+  copyShareLink = (folder: string) => { },
   toggleSelected,
   copyEnabled,
   sharePath = "",
@@ -50,12 +50,14 @@ const FolderGridItem = ({
   folderType,
   mode,
 }: any) => {
+
   const {
     updateDownloadingStatus,
     folders,
     setFolders,
     setListUpdateFlag,
-    subFoldersViewList: { SubFolders, next, total },
+    subFoldersViewList: { results: SubFolders, next, total },
+    setSubFoldersViewList,
   } = useContext(AssetContext);
 
   const [folderRenameModalOpen, setFolderRenameModalOpen] = useState(false);
@@ -193,7 +195,7 @@ const FolderGridItem = ({
         });
         if (data) {
           const updatedAssets = [
-            ...folders.map((folder) => {
+            ...SubFolders.map((folder) => {
               if (folder.id === data.data.id) {
                 return { ...folder, name: data.data.name };
               } else {
@@ -201,8 +203,11 @@ const FolderGridItem = ({
               }
             }),
           ];
+          setSubFoldersViewList({
+            next: next, total: total,
+            results: updatedAssets
 
-          setFolders(updatedAssets);
+          });
           setListUpdateFlag(true);
           setThumbnailName(newValue);
         }
@@ -238,9 +243,8 @@ const FolderGridItem = ({
       <div className={activeView === "list" && styles["list-item-wrapper"]}>
         {activeView === "list" ? (
           <div
-            className={`${activeView === "list" && styles["list-select-icon"]} ${
-              isSelected && styles["selected-wrapper"]
-            }`}
+            className={`${activeView === "list" && styles["list-select-icon"]} ${isSelected && styles["selected-wrapper"]
+              }`}
           >
             <IconClickable
               src={isSelected ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
@@ -310,9 +314,8 @@ const FolderGridItem = ({
             <span
               id="editable-preview"
               onClick={handleOnFocus}
-              className={`normal-text ${styles["wrap-text"]} ${activeView === "list" && styles["list-wrap-text"]} ${
-                gridStyles["editable-preview"]
-              } ${activeView === "list" && styles["list-text"]}`}
+              className={`normal-text ${styles["wrap-text"]} ${activeView === "list" && styles["list-wrap-text"]} ${gridStyles["editable-preview"]
+                } ${activeView === "list" && styles["list-text"]}`}
             >
               {thumbnailName}
             </span>
@@ -397,11 +400,9 @@ const FolderGridItem = ({
           <div className="secondary-text">{`${assetsCount ?? 0} Asset${assetsCount !== 1 ? "s" : ""}`}</div>
         ) : (
           <div className={styles["modified-date"]}>
-            {`${Number(assetsCount ?? 0) + Number(totalchildassests ?? 0)} Asset${
-              Number(assetsCount ?? 0) + Number(totalchildassests ?? 0) !== 1 ? "s" : ""
-            } ${
-              Number(totalchild) !== 0 ? `${totalchild ?? 0} Subcollection${Number(totalchild) !== 1 ? "s" : ""}` : ""
-            }`}
+            {`${Number(assetsCount ?? 0) + Number(totalchildassests ?? 0)} Asset${Number(assetsCount ?? 0) + Number(totalchildassests ?? 0) !== 1 ? "s" : ""
+              } ${Number(totalchild) !== 0 ? `${totalchild ?? 0} Subcollection${Number(totalchild) !== 1 ? "s" : ""}` : ""
+              }`}
           </div>
         )}
       </div>
@@ -439,9 +440,8 @@ const FolderGridItem = ({
           setDeleteOpen(false);
         }}
         confirmText={"Delete"}
-        message={`Are you sure you want to delete this ${
-          mode === "SubCollectionView" ? "Subcollection" : "Collection"
-        }?`}
+        message={`Are you sure you want to delete this ${mode === "SubCollectionView" ? "Subcollection" : "Collection"
+          }?`}
         modalIsOpen={deleteOpen}
       />
     </div>

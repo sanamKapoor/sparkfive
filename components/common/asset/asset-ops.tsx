@@ -267,11 +267,10 @@ export default ({ getAssets }) => {
 
       await assetApi.updateMultiple(updateAssets, filters);
       setListUpdateFlag(true);
-      removeSelectedFromList();
       closeModalAndClearOpAsset();
-      if (activeFolder && activeFolder !== selectedFolder) {
-        removeSelectedFromList();
-      }
+      // if (activeFolder && activeFolder !== selectedFolder) {
+      //   removeSelectedFromList();
+      // }
       setIsLoading(false);
       toastUtils.success("Assets moved successfully");
     } catch (err) {

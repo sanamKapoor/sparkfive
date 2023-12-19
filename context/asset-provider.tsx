@@ -141,6 +141,8 @@ export default ({ children }) => {
   const [currentFolder,
     setCurrentFolder] = useState(null)
 
+  const [showSubCollectionContent, setShowSubCollectionContent] = useState(false);
+
   const setPlaceHolders = (type, replace = true) => {
     if (type === "asset") {
       if (replace) setAssets(Array(10).fill(loadingDefaultAsset));
@@ -691,6 +693,7 @@ export default ({ children }) => {
     setDownloadController,
     currentFolder,
     setCurrentFolder,
+    showSubCollectionContent, setShowSubCollectionContent
   };
   return <AssetContext.Provider value={assetsValue}>{children}</AssetContext.Provider>;
 };
