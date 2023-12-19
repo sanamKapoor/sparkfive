@@ -3,6 +3,7 @@ import TableComponent from './insight-table/insight-table'
 import InsightsHeader from './insights-header/insights.header';
 import styles from "./index.module.css";
 import { insights } from '../../assets';
+import UserModal from './Modals/user-modal/user-modal';
 export default function Account() {
     const columns = ["Username", "Role","Last session date","Sessions","Downloads","Shares", "Actions",];
     const data = [
@@ -15,8 +16,7 @@ export default function Account() {
       { Username: "Eugene Atkinson",  Role: "Role name", "Last session date": "Today at 04:01pm", Sessions:"93",Downloads:"77",Shares:"30",  Actions: "Delete" },
       { Username: "Eugene Atkinson",icon: insights.userImg3,  Role: "Role name", "Last session date": "Today at 04:01pm", Sessions:"93",Downloads:"77",Shares:"30",  Actions: "Delete" },
       
-      
-    ];
+       ];
   
     const arrowColumns = ["Username", "Role","Last session date","Sessions","Downloads","Shares"];
     const buttonColumns = ["Actions"]; 
@@ -27,6 +27,7 @@ export default function Account() {
       <InsightsHeader title="Users" companyName="Holli Inc." />
       </div>   
      <TableComponent columns={columns} data={data} arrowColumns={arrowColumns} buttonColumns={buttonColumns} buttonTexts={buttonTexts}  imageSource="ImageSource" />
+     <UserModal/>
     </>
   )
 }
