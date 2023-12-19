@@ -707,10 +707,6 @@ const DetailOverlay = ({
           : events.DOWNLOAD_ASSET,
         { 
           assetId: asset.id, 
-          assetName: asset.name, 
-          assetType: asset.type,
-          thumbnail: thumbailUrl,
-          url: realUrl   
         }
       );
     } catch (e) {
@@ -767,10 +763,6 @@ const DetailOverlay = ({
           : events.DOWNLOAD_ASSET,
         { 
           assetId: asset.id, 
-          assetName: asset.name, 
-          assetType: asset.type,
-          thumbnail: thumbailUrl,
-          url: realUrl     
         }
       );
 
@@ -1072,10 +1064,6 @@ const DetailOverlay = ({
                     onClick={() => {
                       trackEvent(events.SHARE_ASSET, {
                         assetId: asset.id,
-                        assetName: asset.name,
-                        assetType: asset.type,
-                        thumbnail: thumbailUrl,
-                        url: realUrl
                       });
                       openShareAsset();
                     }}

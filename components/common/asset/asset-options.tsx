@@ -51,10 +51,6 @@ const AssetOptions = ({
           ? events.DOWNLOAD_SHARED_ASSET
           : events.DOWNLOAD_ASSET, {
           assetId: asset.id,
-          assetName: asset.name,
-          assetType: asset.type,
-          thumbnail: thumbailUrl,
-          url: realUrl,
         });
         downloadAsset();
       },
@@ -65,10 +61,6 @@ const AssetOptions = ({
       onClick: () => {
         trackEvent(events.SHARE_ASSET, {
           assetId: asset.id,
-          assetName: asset.name,
-          assetType: asset.type,
-          thumbnail: thumbailUrl,
-          url: realUrl,
         });
         openShareAsset();
       },

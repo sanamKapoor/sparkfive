@@ -112,16 +112,7 @@ export default ({ children }) => {
           // Track loggedIn user data for analytics
           identify(data.id, {
             id: data.id,
-            name: data.name,
-            email: data.email,
-            role: data.role,
-            timezone: data.timezone,
-            team: data.team,
-            profilePhoto: data.profilePhoto,
-            firstTimeLogin: data.firstTimeLogin,
           });
-
-          group(data.team.id, data.team);
         }
 
         if (!data.firstTimeLogin && Router.pathname.indexOf("/main/setup") === -1) {

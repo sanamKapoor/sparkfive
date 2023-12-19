@@ -80,10 +80,6 @@ const ShareItem = ({
               onClick={() => {
                 trackEvent(events.VIEW_SHARED_ASSET, {
                   assetId: asset.id,
-                  assetName: asset.name,
-                  assetType: asset.type,
-                  thumbnail: thumbailUrl,
-                  url: realUrl,
                 });
                 setVisibleOVerlay(true);
               }}

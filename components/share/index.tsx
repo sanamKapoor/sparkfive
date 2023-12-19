@@ -121,10 +121,6 @@ const AssetShare = () => {
         // Track assets download event
         trackEvent(events.DOWNLOAD_SHARED_ASSET, {
             assetId: assetItem.asset.id,
-            assetName: assetItem.asset.name,
-            assetType: assetItem.asset.type,
-            thumbnail: assetItem.thumbailUrl,
-            url: assetItem.realUrl,
           });
         return assetItem;
       })

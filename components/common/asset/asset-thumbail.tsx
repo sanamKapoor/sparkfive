@@ -369,10 +369,6 @@ const AssetThumbail = ({
                         onClick={() => {
                           trackEvent(isShare ? events.VIEW_SHARED_ASSET : events.VIEW_ASSET, {
                             assetId: asset.id,
-                            assetName: asset.name,
-                            assetType: asset.type,
-                            thumbnail: thumbailUrl,
-                            url: realUrl,
                           });
                           if (onView) {
                             onView(asset.id);

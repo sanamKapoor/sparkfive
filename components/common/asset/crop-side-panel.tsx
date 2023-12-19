@@ -445,10 +445,6 @@ const CropSidePanel = ({
               ? events.DOWNLOAD_SHARED_ASSET
               : events.DOWNLOAD_ASSET, {
               assetId: asset.id,
-              assetName: asset.name,
-              assetType: asset.type,
-              thumbnail: versionThumbnailUrl,
-              url: versionRealUrl
             });
             if (mode === "crop") {
               document.getElementById("download-crop-image").click();

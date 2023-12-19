@@ -174,10 +174,6 @@ export default function AssetRelatedFileUpload({
            trackEvent(events.UPLOAD_ASSET, {
             uploadType: 'Device',
             assetId: item.asset.id,
-            assetName: item.asset.name,
-            assetType: item.asset.type,
-            thumbnail: item.thumbailUrl,
-            url: item.realUrl,
           });
 
           item.isSelected = true;
@@ -324,10 +320,6 @@ export default function AssetRelatedFileUpload({
            trackEvent(events.UPLOAD_ASSET, {
             uploadType: 'Device',
             assetId: item.asset.id,
-            assetName: item.asset.name,
-            assetType: item.asset.type,
-            thumbnail: item.thumbailUrl,
-            url: item.realUrl,
           });
           item.isSelected = true;
           return item;
@@ -543,10 +535,6 @@ export default function AssetRelatedFileUpload({
           trackEvent(events.UPLOAD_ASSET, {
             uploadType: 'Google Drive',
             assetId: asset.asset.id,
-            assetName: asset.asset.name,
-            assetType: asset.asset.type,
-            thumbnail: asset.thumbailUrl,
-            url: asset.realUrl,
           });
           return { ...asset, status: "done" };
         });
@@ -611,10 +599,6 @@ export default function AssetRelatedFileUpload({
           trackEvent(events.UPLOAD_ASSET, {
             uploadType: 'Dropbox',
             assetId: asset.asset.id,
-            assetName: asset.asset.name,
-            assetType: asset.asset.type,
-            thumbnail: asset.thumbailUrl,
-            url: asset.realUrl,
           });
           return { ...asset, status: "done" };
         });

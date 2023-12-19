@@ -216,10 +216,6 @@ const AssetHeaderOps = ({
               ? events.DOWNLOAD_SHARED_ASSET
               : events.DOWNLOAD_ASSET, {
                 assetId: assetItem.asset.id,
-                assetName: assetItem.asset.name,
-                assetType: assetItem.asset.type,
-                thumbnail: assetItem.thumbailUrl,
-                url: assetItem.realUrl,
               });
 
             return assetItem.asset.id
@@ -233,10 +229,6 @@ const AssetHeaderOps = ({
             ? events.DOWNLOAD_SHARED_ASSET
             : events.DOWNLOAD_ASSET, {
               assetId: assetItem.asset.id,
-              assetName: assetItem.asset.name,
-              assetType: assetItem.asset.type,
-              thumbnail: assetItem.thumbailUrl,
-              url: assetItem.realUrl,
             });
 
           return assetItem.asset.id
@@ -535,10 +527,6 @@ const AssetHeaderOps = ({
                   sharedAssets.map((assetItem) => {
                     trackEvent(events.SHARE_ASSET, {
                       assetId: assetItem.asset.id,
-                      assetName: assetItem.asset.name,
-                      assetType: assetItem.asset.type,
-                      thumbnail: assetItem.thumbailUrl,
-                      url: assetItem.realUrl,
                     });
                   })
                 }
