@@ -212,3 +212,6 @@
     background-color: var(--color-prim-turquoise);
     color: white;
 }
+.grid-item-new{
+    border:1px solid var(--color-secondary-border);
+  }

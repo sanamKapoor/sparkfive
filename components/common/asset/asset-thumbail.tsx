@@ -4,10 +4,7 @@ import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import HoverVideoPlayer from "react-hover-video-player";
 
 import { Utilities } from "../../../assets";
-import {
-  ASSET_NAME_UPDATED,
-  FAILED_TO_UPDATE_ASSET_NAME,
-} from "../../../constants/messages";
+import { ASSET_NAME_UPDATED, FAILED_TO_UPDATE_ASSET_NAME } from "../../../constants/messages";
 import { AssetContext } from "../../../context";
 import useAnalytics from "../../../hooks/useAnalytics";
 import assetApi from "../../../server-api/asset";
@@ -69,18 +66,14 @@ const AssetThumbail = ({
   setFocusedItem,
   activeView,
   mode,
+  style,
 }) => {
-  const [overlayProperties, setOverlayProperties] =
-    useState(DEFAULT_DETAIL_PROPS);
+  const [overlayProperties, setOverlayProperties] = useState(DEFAULT_DETAIL_PROPS);
   const {
     detailOverlayId,
     assets,
     setAssets,
-    subFoldersAssetsViewList: {
-      results: subAssets,
-      next: nextAsset,
-      total: totalAssets,
-    },
+    subFoldersAssetsViewList: { results: subAssets, next: nextAsset, total: totalAssets },
     setListUpdateFlag,
   } = useContext(AssetContext);
 
@@ -121,14 +114,11 @@ const AssetThumbail = ({
 
   const onCloseOverlay = (changedVersion, outsideDetailOverlayAsset) => {
     if (outsideDetailOverlayAsset) {
-      setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: false });
       onCloseDetailOverlay(outsideDetailOverlayAsset);
-    } else {
-      if (changedVersion) {
-        handleVersionChange(changedVersion);
-      }
-      setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: false });
+    } else if (changedVersion) {
+      handleVersionChange(changedVersion);
     }
+    setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: false });
   };
 
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -184,9 +174,7 @@ const AssetThumbail = ({
   const confirmAssetRename = async (newValue) => {
     try {
       if (mode === "SubCollectionView") {
-        const activeAsset = subAssets.find(
-          (asst) => asst?.asset?.id === asset?.id
-        );
+        const activeAsset = subAssets.find((asst) => asst?.asset?.id === asset?.id);
 
         const editedName = `${newValue}.${activeAsset?.asset?.extension}`;
         const data = await assetApi.updateAsset(asset.id, {
@@ -215,9 +203,7 @@ const AssetThumbail = ({
         setThumbnailName(editedName);
         toastUtils.success("Asset name updated");
       } else {
-        const activeAsset = assets.find(
-          (asst) => asst?.asset?.id === asset?.id
-        );
+        const activeAsset = assets.find((asst) => asst?.asset?.id === asset?.id);
 
         const editedName = `${newValue}.${activeAsset?.asset?.extension}`;
         const data = await assetApi.updateAsset(asset.id, {
@@ -252,115 +238,95 @@ const AssetThumbail = ({
   };
   return (
     <>
-    <div>
-    <div
-        className={`${styles.container} ${activeView === "list" && styles.listContainer
-          } ${isLoading && "loadable"}`}
-      >
-        <div className={activeView === "list" && styles["list-item-wrapper"]}>
-          {activeView === "list" ? (
-            <div
-              className={`${styles["list-select-icon"]} ${isSelected && styles["selected-wrapper"]
-                }`}
-            >
-              <IconClickable
-                src={
-                  isSelected
-                    ? Utilities.radioButtonEnabled
-                    : Utilities.radioButtonNormal
-                }
-                additionalClass={styles["select-icon"]}
-                onClick={toggleSelected}
-              />
-            </div>
-          ) : null}
+      <div>
+        <div
+          className={`${styles.uploadUproval} ${styles.container} ${activeView === "list" && styles.listContainer} ${isLoading && "loadable"
+            }`}
+        >
+          <div className={activeView === "list" && styles["list-item-wrapper"]}>
+            {activeView === "list" ? (
+              <div className={`${styles["list-select-icon"]} ${isSelected && styles["selected-wrapper"]}`}>
+                <IconClickable
+                  src={isSelected ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                  additionalClass={styles["select-icon"]}
+                  onClick={toggleSelected}
+                />
+              </div>
+            ) : null}
 
-          <div
-            className={`${styles["image-wrapper"]} ${activeView === "list" && styles["list-image-wrapper"]
-              }`}
-            onClick={() => {
-              if (onView && activeView === "list") {
-                onView(asset.id);
-              } else if (activeView === "list") {
-                setOverlayProperties({
-                  ...DEFAULT_DETAIL_PROPS,
-                  visible: !overlayProperties.visible,
-                });
-              }
-            }}
-          >
-            {isUploading && (
-              <>
-                <p className={styles.uploading}>Uploading...</p>
-              </>
-            )}
-            {asset.type !== "video" ? (
-              thumbailUrl ? (
+            <div
+              className={`${styles["image-wrapper"]} ${activeView === "list" && styles["list-image-wrapper"]}`}
+              onClick={() => {
+                if (onView && activeView === "list") {
+                  onView(asset.id);
+                } else if (activeView === "list") {
+                  setOverlayProperties({
+                    ...DEFAULT_DETAIL_PROPS,
+                    visible: !overlayProperties.visible,
+                  });
+                }
+              }}
+            >
+              {isUploading && (
+                <>
+                  <p className={styles.uploading}>Uploading...</p>
+                </>
+              )}
+              {asset.type !== "video" ? (
+                thumbailUrl ? (
+                  <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} opaque={isUploading} />
+                ) : (
+                  <AssetIcon extension={asset.extension} />
+                )
+              ) : activeView === "list" ? (
                 <AssetImg
                   assetImg={thumbailUrl}
                   type={asset.type}
                   name={asset.name}
                   opaque={isUploading}
+                  imgClass={styles["video-thumbnail"]}
                 />
               ) : (
-                <AssetIcon extension={asset.extension} />
-              )
-            ) : activeView === "list" ? (
-              <AssetImg
-                assetImg={thumbailUrl}
-                type={asset.type}
-                name={asset.name}
-                opaque={isUploading}
-                imgClass={styles["video-thumbnail"]}
-              />
-            ) : (
-              <HoverVideoPlayer
-                controls
-                className={styles["hover-video-player-wrapper"]}
-                videoClassName={styles["video-style"]}
-                videoSrc={previewUrl ?? realUrl}
-                pausedOverlay={
-                  <AssetImg
-                    assetImg={thumbailUrl}
-                    type={asset.type}
-                    name={asset.name}
-                    opaque={isUploading}
-                    imgClass={styles["video-thumbnail"]}
-                  />
-                }
-                loadingOverlay={
-                  <div className={styles["loading-overlay"]}>
-                    <Spinner />
-                  </div>
-                }
-              />
-            )}
-            {activeView !== "list" &&
-              !isUploading &&
-              !isLoading &&
-              (showAssetOption || showViewButtonOnly) && (
+                <HoverVideoPlayer
+                  controls
+                  className={styles["hover-video-player-wrapper"]}
+                  videoClassName={styles["video-style"]}
+                  videoSrc={previewUrl ?? realUrl}
+                  pausedOverlay={
+                    <AssetImg
+                      assetImg={thumbailUrl}
+                      type={asset.type}
+                      name={asset.name}
+                      opaque={isUploading}
+                      imgClass={styles["video-thumbnail"]}
+                    />
+                  }
+                  loadingOverlay={
+                    <div className={styles["loading-overlay"]}>
+                      <Spinner />
+                    </div>
+                  }
+                />
+              )}
+              {activeView !== "list" && !isUploading && !isLoading && (showAssetOption || showViewButtonOnly) && (
                 <>
-                  {(!showViewButtonOnly ||
-                    (showViewButtonOnly && showSelectedAsset)) && (
-                      <div
-                        className={`${styles["selectable-wrapper"]} ${isSelected && styles["selected-wrapper"]
-                          }`}
-                      >
-                        {isSelected ? (
-                          <IconClickable
-                            src={Utilities.radioButtonEnabled}
-                            additionalClass={styles["select-icon"]}
-                            onClick={toggleSelected}
-                          />
-                        ) : (
-                          <IconClickable
-                            src={Utilities.radioButtonNormal}
-                            additionalClass={styles["select-icon"]}
-                            onClick={toggleSelected}
-                          />
-                        )}
-                      </div>
-                    )}
+                  {(!showViewButtonOnly || (showViewButtonOnly && showSelectedAsset)) && (
+                    <div className={`${styles["selectable-wrapper"]} ${isSelected && styles["selected-wrapper"]}`}>
+                      {isSelected ? (
+                        <IconClickable
+                          src={Utilities.radioButtonEnabled}
+                          additionalClass={styles["select-icon"]}
+                          onClick={toggleSelected}
+                        />
+                      ) : (
+                        <IconClickable
+                          src={Utilities.radioButtonNormal}
+                          additionalClass={styles["select-icon"]}
+                          onClick={toggleSelected}
+                        />
+                      )}
+                    </div>
+                  )}
                   <div className={styles["image-button-wrapper"]}>
                     <Button
                       className={"container primary"}
@@ -384,90 +350,90 @@ const AssetThumbail = ({
                   </div>
                 </>
               )}
-          </div>
+            </div>
 
-          <div
-            className={`normal-text ${styles["wrap-text"]} ${activeView === "list" && styles["list-text"]
-              }`}
-          >
-            <span
-              id="editable-preview"
-              onClick={() => {
-                if (onView) {
-                  onView(asset.id);
-                } else {
-                  setOverlayProperties({
-                    ...DEFAULT_DETAIL_PROPS,
-                    visible: !overlayProperties.visible,
-                  });
+            <div className={`normal-text ${styles["wrap-text"]} ${activeView === "list" && styles["list-text"]}`}>
+              <span
+                id="editable-preview"
+                onClick={() => {
+                  if (onView) {
+                    onView(asset.id);
+                  } else {
+                    setOverlayProperties({
+                      ...DEFAULT_DETAIL_PROPS,
+                      visible: !overlayProperties.visible,
+                    });
+                  }
+                }}
+                className={
+                  isThumbnailNameEditable
+                    ? gridStyles["editable-preview"]
+                    : `${gridStyles["editable-preview"]} ${gridStyles["non-editable-preview"]}`
                 }
-              }}
-              className={
-                isThumbnailNameEditable
-                  ? gridStyles["editable-preview"]
-                  : `${gridStyles["editable-preview"]} ${gridStyles["non-editable-preview"]}`
-              }
+              >
+                {thumbnailName}.{asset.extension}
+                {isAssetACopy && ` - COPY`}
+              </span>
+            </div>
+          </div>
+          {activeView === "list" && (
+            <div className={styles["size"]}>{parseInt(asset.size) !== 0 && asset.size && filesize(asset.size)}</div>
+          )}
+          <div className={activeView === "grid" && styles.sizeMargin}>
+            <div
+              className={`${activeView !== "list"
+                ? `secondary-text ${styles["modified-date"]} ${styles["uploadModified"]}`
+                : ""
+                }`}
+              style={{ color: "#AEB0C2" }}
             >
-              {thumbnailName}.{asset.extension}
-              {isAssetACopy && ` - COPY`}
-            </span>
+              {format(new Date(asset.createdAt), dateFormat)}
+            </div>
           </div>
+
+          {activeView === "list" && (
+            <div className={`${styles["modified-date"]} ${activeView === "list" && styles["modified-date-list"]}`}>
+              {" "}
+              {format(new Date(asset.createdAt), dateFormat)}
+            </div>
+          )}
+
+          {activeView === "list" && (
+            <div className={styles.extension}>
+              <span className={styles.format}>{asset.extension}</span>
+            </div>
+          )}
+
+          {!isUploading && showAssetOption && (
+            <AssetOptions
+              itemType={type}
+              asset={asset}
+              openArchiveAsset={openArchiveAsset}
+              openDeleteAsset={openDeleteAsset}
+              openMoveAsset={openMoveAsset}
+              openCopyAsset={openCopyAsset}
+              downloadAsset={downloadAsset}
+              openShareAsset={openShareAsset}
+              openComments={openComments}
+              openRemoveAsset={openRemoveAsset}
+              isShare={isShare}
+              dissociateAsset={onDisassociate}
+              renameAsset={renameAsset}
+              activeView={activeView}
+            />
+          )}
+          {showAssetRelatedOption && (
+            <AssetOptions
+              itemType={type}
+              asset={asset}
+              openDeleteAsset={openDeleteAsset}
+              downloadAsset={downloadAsset}
+              isAssetRelated
+              dissociateAsset={onDisassociate}
+            />
+          )}
         </div>
-        {activeView === "list" && (
-          <div className={styles["size"]}>
-            {parseInt(asset.size) !== 0 && asset.size && filesize(asset.size)}
-          </div>
-        )}
-        <div className={activeView === "grid" && styles.sizeMargin}  >
-          <div className={activeView !== "list" ? `secondary-text ${styles["modified-date"]}` : ""} style={{ color: '#AEB0C2' }}>
-            {format(new Date(asset.createdAt), dateFormat)}
-          </div>
-        </div>
-
-        {activeView === "list" && (
-          <div className={`${styles["modified-date"]} ${activeView === "list" && styles["modified-date-list"]}`}>
-            {" "}
-            {format(new Date(asset.createdAt), dateFormat)}
-          </div>
-        )}
-
-        {activeView === "list" &&
-          (<div className={styles.extension}>
-            <span className={styles.format}>{asset.extension}</span>
-          </div>)}
-
-        {!isUploading && showAssetOption && (
-          <AssetOptions
-            itemType={type}
-            asset={asset}
-            openArchiveAsset={openArchiveAsset}
-            openDeleteAsset={openDeleteAsset}
-            openMoveAsset={openMoveAsset}
-            openCopyAsset={openCopyAsset}
-            downloadAsset={downloadAsset}
-            openShareAsset={openShareAsset}
-            openComments={openComments}
-            openRemoveAsset={openRemoveAsset}
-            isShare={isShare}
-            dissociateAsset={onDisassociate}
-            renameAsset={renameAsset}
-            activeView={activeView}
-          />
-        )}
-        {showAssetRelatedOption && (
-          <AssetOptions
-            itemType={type}
-            asset={asset}
-            openDeleteAsset={openDeleteAsset}
-            downloadAsset={downloadAsset}
-            isAssetRelated
-            dissociateAsset={onDisassociate}
-          />
-        )}
       </div>
-
-    </div>
-    
 
       {customIconComponent}
 
@@ -485,11 +451,7 @@ const AssetThumbail = ({
           sharePath={sharePath}
           isShare={isShare}
           asset={asset}
-          realUrl={
-            asset.extension === "tiff" || asset.extension === "tif"
-              ? thumbailUrl
-              : realUrl
-          }
+          realUrl={asset.extension === "tiff" || asset.extension === "tif" ? thumbailUrl : realUrl}
           activeFolder={activeFolder}
           thumbailUrl={thumbailUrl}
           initialParams={overlayProperties}

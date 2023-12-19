@@ -44,12 +44,6 @@ const AssetHeaderOps = ({
 
   const router = useRouter();
 
-  // const [sharePath, setSharePath] = useState("");
-  // const [showShareAction, setShowShareAction] = useState(false);
-  // const contentRef = useRef(null);
-  // const [showMoreActions, setShowMoreActions] = useState(false);
-  // const [showAssociateModalOpen, setShowAssociateModalOpen] = useState(false);
-
   const {
     assets,
     setAssets,
@@ -71,6 +65,7 @@ const AssetHeaderOps = ({
     selectedAllSubAssets,
     setSubFoldersAssetsViewList,
     setDownloadController,
+    setSelectedAllSubAssets
   } = useContext(AssetContext);
 
   const { setIsLoading } = useContext(LoadingContext);
@@ -142,6 +137,7 @@ const AssetHeaderOps = ({
           ?.length || 0,
     };
   }
+
   if (selectedAllSubAssets) {
     const currentUnSelectedAssets = subFoldersAssetsViewList.results.filter((asset) => !asset.isSelected);
     totalSelectAssets = subFoldersAssetsViewList.total - currentUnSelectedAssets.length;
@@ -298,8 +294,8 @@ const AssetHeaderOps = ({
       setFolders(folders.map((folder) => ({ ...folder, isSelected: false })));
     } else if (activeMode === "SubCollectionView") {
       // Mark deselect all
-      setSubFoldersAssetsViewList(false)
       setSelectedAllSubFoldersAndAssets(false);
+      setSelectedAllSubAssets(false)
       setSubFoldersViewList({
         ...subFoldersViewList,
         results: subFoldersViewList.results.map((folder) => ({

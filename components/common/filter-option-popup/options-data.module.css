@@ -11,15 +11,31 @@
   padding-right: 10px;
 }
 
+.outer-grid{
+  margin-top: 24px;
+  overflow: auto;
+  padding: 0 10px 0 0;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  box-sizing: border-box;
+  gap: 10px;
+  max-height: 288px;
+  scrollbar-width: thin;
+  padding-right: 10px;
+
+}
+
 
 .more-filter-wrapper {
   position: absolute;
   background: #fff;
   z-index: 999;
   padding: 30px;
-  margin-top: 5px;
+  margin-top: 20px;
   border: 1px solid lightgray;
   border-radius: 10px;
+  right: 0;
+
 }
 
 .tags-wrapper {
@@ -75,4 +91,7 @@
       margin-top: -1px;
     }
   }
+}
+.main-container{
+  position: relative;
 }

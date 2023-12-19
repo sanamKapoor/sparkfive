@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  
+  margin-top:5px;
 }
 .sub-collection-heading span {
   font-family: "Noto Sans", sans-serif;
@@ -115,10 +115,9 @@
 .cardsWrapper {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(246px, 1fr));
-  grid-gap: 20px;
-  
- 
-}
+  grid-gap: 40px;
+  margin-bottom: 40px;
+  }
 .assetWrapper {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(246px, 1fr));
@@ -128,19 +127,32 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 30px;
+  margin: 25px 0;
 }
 .ExpandIcons {
-  width: 15px;
+  width: 18px;
+  cursor: pointer;
+}
+.rightIcon {
+  transform: rotate(0deg);
+  cursor: pointer;
+}
+.iconClick {
+  transform: rotate(180deg);
+  margin-right: 5px;
+  cursor: pointer;
 }
 .heading-wrapper{
-  margin:20px 0px;
+  margin:-20px 0px 8px 0
 }
 .sub-collection-heading-outer{
   display: flex;
   align-items: center;
   margin: 0 0 20px 0;
 
+}
+.collection-filter-wrap{
+  /* margin-top:25px; */
 }
 @media screen and (max-width: 810px) {
   .cardsWrapper {
@@ -154,12 +166,22 @@
     grid-template-columns: repeat(auto-fill, minmax(187px, 1fr)) !important;
   }
 }
+@media (max-width:600px){
+  .heading-wrapper{
+    margin:20px;
+  }
+  .assetWrapper {
+    margin-top: 40px !important;
+  }
+
+}
 @media screen and (max-width: 475px) {
   .cardsWrapper {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(246px, 1fr));
     padding: 0 20px;
   }
+ 
 }
 @media (max-width: 420px) {
   .sub-collection-heading {
@@ -179,6 +201,7 @@
     grid-gap: 10px;
     margin-top: 100px;
   }
+  
 }
 
 @media (min-width: 420px) and (max-width: 800px) {
@@ -191,8 +214,43 @@
 /* list view css starts from here */
 .list-wrapper {
   grid-template-columns: unset;
+  grid-gap:20px;
 }
 
 .list-asset-wrapper {
   grid-template-columns: unset;
+}
+
+@media only screen and (min-width: 270px) and (max-width: 390px) {
+ .rightSide{
+  margin-top: 171px;
+ }
+ .cardsWrapper {
+  margin-top:0px;
+  
+}
+}
+@media only screen and (min-width: 390px) and (max-width: 540px) {
+  .rightSide{
+   margin-top: 130px;
+   margin-left: 10px;
+  }
+  .cardsWrapper {
+   margin-top:0px;
+   
+ }
+ }
+ 
+ @media only screen and (min-width: 600px) and (max-width: 805px) {
+  .rightSide{
+   margin-top: 125px;
+   margin-left: 22px;
+  }
+  .cardsWrapper {
+   margin-top:0px;
+   }
+ }
+ 
+ .grid-item-new{
+  border:1px solid var(--color-secondary-border);
 }

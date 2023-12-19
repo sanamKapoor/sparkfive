@@ -1,10 +1,11 @@
 .shared-sidenav-outer {
-  max-width: 283px;
-  width: 100%;
+  width: 283px;
+
   border-radius: 6px;
   border: 1px solid #dedad4;
   position: fixed;
   top: 95px;
+  height: 75vh;
 }
 .collection-heading {
   margin: 24px;
@@ -36,7 +37,7 @@
   border-bottom: none;
 }
 .list1-description:hover {
-  background: var(--color-sec-lightblue);
+  background: var(--additional-color);
   padding: 6px 6px;
 }
 .icon {
@@ -56,7 +57,7 @@
 }
 
 .icon-description {
-  max-width: 15ch;
+  max-width: 20ch;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -64,6 +65,7 @@
 .icon-description:hover {
   overflow: visible;
   text-overflow: visible;
+  /* text-wrap: wrap; */
 }
 .list1-right-contents span {
   font-family: "Noto Sans", sans-serif;
@@ -73,7 +75,7 @@
   color: var(--color-prim-navy);
 }
 .active {
-  background: var(--color-sec-lightblue);
+  background: var(--additional-color);
   border-radius: 4px;
   padding: 6px 6px;
 }
@@ -118,21 +120,6 @@
   cursor: pointer;
 }
 
-@media (max-width: 820px) {
-  .border-bottom {
-    border-bottom: 1px solid #dfdad4;
-    padding: 10px 23px;
-  }
-  .list1-description {
-    margin-bottom: 0px;
-  }
-  .active {
-    padding: 10px 23px;
-  }
-  .list1-description:hover {
-    padding: 10px 23px;
-  }
-}
 
 /* css for the New portal */
 .icon-descriptions span {
@@ -185,7 +172,7 @@
 }
 
 .nestedbox:hover {
-  background: var(--color-sec-lightblue);
+  background: var(--additional-color);
   /* padding: 0 4x; */
 }
 .loadbtn {
@@ -207,7 +194,7 @@
 }
 
 .folder {
-  padding: 0 24px 0 24px;
+  padding: 0 0px 0 24px;
 }
 .folder-lists {
   display: flex;
@@ -219,7 +206,7 @@
   padding: 4px;
 }
 .folder-lists:hover {
-  background: var(--color-sec-lightblue);
+  background: var(--additional-color);
   padding: 4px;
 }
 
@@ -252,7 +239,7 @@
 }
 
 .active {
-  background: var(--color-sec-lightblue);
+  background: var(--additional-color);
   border-radius: 4px;
   padding: 7.5px;
 }
@@ -367,17 +354,6 @@
   align-items: center;
 }
 
-@media (max-width: 820px) {
-  .nestedbox {
-    margin-top: 0px;
-    padding: 0px 23px;
-    border-bottom: 1px solid #dfdad4;
-    height: 43px;
-  }
-  .active {
-    padding: 10px 0;
-  }
-}
 
 .collection-list-active {
   background: var(--color-sec-lightblue);
@@ -394,6 +370,50 @@
 }
 
 .activeDropdown {
-  background-color:var(--color-sec-lightblue);
+  background: var(--additional-color);
+  width: 100%;
 }
  
+@media (max-width: 820px) {
+  .nestedbox {
+    margin-top: 0px;
+    padding: 0px 23px;
+    border-bottom: 1px solid #dfdad4;
+    height: 43px;
+  }
+  .active {
+    padding: 10px 0;
+  }
+  .border-bottom {
+    border-bottom: 1px solid #dfdad4;
+    padding: 10px 23px;
+  }
+  .list1-description {
+    margin-bottom: 0px;
+  }
+  .active {
+    padding: 10px 23px;
+  }
+  .list1-description:hover {
+    padding: 10px 23px;
+  }
+  .shared-sidenav-outer{
+    background: #fff;
+    z-index: 99999;
+  top:121px;
+    width: 100%;
+    border: none;
+    height: 100%;
+
+  }
+  .sidenavScroll{
+    padding: 0;
+  }
+}
+
+@media (max-width:490px){
+  .shared-sidenav-outer{
+    top:126px;
+  }
+
+}

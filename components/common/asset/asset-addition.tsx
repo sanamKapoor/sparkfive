@@ -33,6 +33,7 @@ const AssetAddition = ({
   displayMode = "dropdown",
   versionGroup = "",
   triggerUploadComplete,
+  assetDetailPage = false
 }: any) => {
   const fileBrowserRef = useRef(undefined);
   const folderBrowserRef = useRef(undefined);
@@ -313,7 +314,6 @@ const AssetAddition = ({
       if (foldersUploaded.length > 0 || selectedFolderToUpload.length > 0) {
         needsFolderFetch = true;
       }
-
       // Only show uploading folder placeholder when not selecting multi folders to upload
       if (selectedFolderToUpload.length === 0) {
         foldersUploaded.forEach((folder) => {
@@ -406,11 +406,13 @@ const AssetAddition = ({
       // Finish uploading process
       showUploadProcess("done");
       setListUpdateFlag(true);
-      if (activeSortFilter?.mainFilter === "SubCollectionView") {
+      ;
+      if (activeSortFilter?.mainFilter === "SubCollectionView" && !assetDetailPage) {
         setNeedsFetch("SubCollectionView");
-      } else if (needsFolderFetch) {
-        setNeedsFetch("folders");
-      }
+      } else
+        if (needsFolderFetch) {
+          setNeedsFetch("folders");
+        }
 
       // Do not need toast here because we have already process toast
       // toastUtils.success(`${data.length} Asset(s) uploaded.`)
@@ -571,7 +573,11 @@ const AssetAddition = ({
 
       setListUpdateFlag(true);
       setDisableButtons(false);
-      toastUtils.success("Collection created successfully");
+      if (activeSubFolders) {
+        toastUtils.success("Subcollection created successfully");
+      } else {
+        toastUtils.success("Collection created successfully");
+      }
     } catch (err) {
       setDisableButtons(false);
       toastUtils.error
@@ -751,7 +757,7 @@ const AssetAddition = ({
     },
     {
       id: "subCollection",
-      label: "Add Sub Collection",
+      label: "Add SubCollection",
       text: "Add Sub Collection",
       onClick: () => {
         setAddSubCollection(true), setActiveModal("folder");
@@ -819,12 +825,11 @@ const AssetAddition = ({
       (item) => ["collection"].indexOf(item.id) === -1
     );
   }
-  if (activeFolder && !activeSubFolders) {
+  if ((activeFolder && !activeSubFolders)) {
     dropdownOptions = dropdownOptions.filter(
-      (item) => ["subCollection"].indexOf(item.id) === -1
+      (item) => ["subCollection", "collection"].indexOf(item.id) === -1
     );
   }
-
   if (activePageMode === "library") {
     dropdownOptions = dropdownOptions.filter((item) => ["library"].indexOf(item.id) === -1);
   }
@@ -832,6 +837,11 @@ const AssetAddition = ({
   if (!activeFolder && !activeSubFolders) {
     dropdownOptions = dropdownOptions.filter(
       (item) => ["subCollection"].indexOf(item.id) === -1
+    );
+  }
+  if (assetDetailPage) {
+    dropdownOptions = dropdownOptions.filter(
+      (item) => ["folder", "subCollection"].indexOf(item.id) === -1
     );
   }
 
@@ -896,6 +906,7 @@ const AssetAddition = ({
           folderBrowserRef.current.value;
         }
       } else {
+        ;
         onFilesDataGet(files);
       }
     } else {
