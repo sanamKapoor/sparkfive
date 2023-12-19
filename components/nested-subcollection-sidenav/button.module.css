@@ -1,0 +1,28 @@
+.nestedButton{
+    background:transparent;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 0px;
+ }
+
+.nestedButton span{
+    font-family: "Noto Sans", sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+    margin-left: 5px;
+
+}
+.addIcon{
+    width: 12px;
+   margin-right: 5px;
+   margin-left:10px;
+   
+  }
+  .addBlock{
+    display: flex;
+    align-items: center;
+    justify-content: end;
+  }
+

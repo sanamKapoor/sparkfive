@@ -119,6 +119,10 @@
   border-bottom-left-radius: 5px;
   font-weight: 600;
 }
+.tag-select .select-prefix__placeholder,
+.regular .select-prefix__placeholder{
+  font-weight: 400!important;
+}
 
 .search-filters .select-prefix__value-container {
   padding-left: 39px;
@@ -150,6 +154,13 @@
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
   max-height: 34px;
+
+}
+.tag-select .select-prefix__indicators,
+.regular .select-prefix__indicators svg {
+color:var(--color-prim-navy);
+width: 16px;
+
 }
 
 .uploadSelect .select-prefix__indicators {

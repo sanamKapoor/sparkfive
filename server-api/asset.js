@@ -18,11 +18,12 @@ export default {
       },
     }),
   getAssets: (queryData = {}) => axios.get(`${assetUrl}?${querystring.encode(queryData)}`),
+  getAssetsCountDropdown: (queryData = {}) => axios.get(`${assetUrl}/assetsCount?${querystring.encode(queryData)}`),
+
   searchAssets: (queryData = {}) => axios.get(`${assetUrl}/search/filename?${querystring.encode(queryData)}`),
   getVersions: (versionGroup) => axios.get(`${assetUrl}/versions-of/${versionGroup}`),
   checkDuplicates: (fileNames) => axios.post(`${assetUrl}/check-duplicates`, { fileNames }),
-  revertVersion: ({ revertAssetId, versionGroup } = {}) =>
-    axios.post(`${assetUrl}/revert-version`, { revertAssetId, versionGroup }),
+  revertVersion: ({ revertAssetId, versionGroup } = {}) => axios.post(`${assetUrl}/revert-version`, { revertAssetId, versionGroup }),
   getNotes: (id) => axios.get(`${assetUrl}/get-notes/${id}`),
   saveNote: (note = {}) => axios.post(`${assetUrl}/save-note`, note),
   deleteNote: (id) => axios.delete(`${assetUrl}/delete-note/${id}`),

@@ -12,8 +12,8 @@ const Tag = ({
   data,
   type = null,
   canRemove = false,
-  removeFunction = () => {},
-  editFunction = () => {},
+  removeFunction = () => { },
+  editFunction = () => { },
   altColor = "",
 }) => {
   const { push, asPath } = useRouter();
@@ -54,12 +54,21 @@ const Tag = ({
     <div
       onMouseEnter={(_) => setMouseOver(true)}
       onMouseLeave={(_) => setMouseOver(false)}
-      className={`${styles.container} ${hasPermission([SETTINGS_TEAM, SETTINGS_COMPANY]) ? styles["pointer"] : ""} ${
-        altColor && styles[`alt-color-${altColor}`]
-      }`}
+      className={`${styles.container} ${hasPermission([SETTINGS_TEAM, SETTINGS_COMPANY]) ? styles["pointer"] : ""} ${altColor && styles[`alt-color-${altColor}`]
+        }`}
     >
       <span>{tagRender}</span>
 
+      {/**
+ * TODO conflict issue
+ */}
+      {/* {canRemove && (
+        <IconClickable
+          additionalClass={styles.remove}
+          onClick={removeFunction}
+          src={Utilities.closeAttribute}
+        />
+      )} */}
       {canRemove && <IconClickable additionalClass={styles.remove} onClick={removeFunction} src={Utilities.closeTag} />}
     </div>
   );

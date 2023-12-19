@@ -1,150 +1,145 @@
-import update from "immutability-helper";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Utilities } from "../../../assets";
+import { filterKeyMap } from "../../../config/data/filter";
 import { FilterContext } from "../../../context";
-import styles from "./filter-selector.module.css";
-
-// Components
+import {
+  CommonFilterProps,
+  FilterAttributeVariants,
+} from "../../../interfaces/filters";
 import IconClickable from "../buttons/icon-clickable";
+import OptionDataItem from "../filter-option-popup/option-data-item";
+import styles from "../filter-option-popup/options-data.module.css";
 
-const ResolutionFilter = ({
-  filters,
-  oneColumn = false,
-  setValue,
-  value,
-  loadFn,
-  addtionalClass = "",
-  capitalize = false,
-  internalFilter = false, // Filter list will be get from loadFn resolve directly (useful for custom fields),
-  mappingValueName = "value",
+interface ResolutionFilterProps extends CommonFilterProps {}
+
+const ResolutionFilter: React.FC<ResolutionFilterProps> = ({
+  options,
+  setOptions,
 }) => {
-  const { activeSortFilter } = useContext(FilterContext);
-  const [internalFilters, setInternalFilters] = useState([]);
+  const { activeSortFilter, setActiveSortFilter } = useContext(FilterContext);
 
-  const anyHighRes = {
-    dpi: "highres",
-    value: "highres",
+  const [highResActive, setHighResActive] = useState<boolean>(
+    !!activeSortFilter?.filterResolutions.find((item) => item.dpi === "highres")
+  );
+
+  const highResLabel = "All High-Res (above 250 DPI)";
+
+  const onSelectHighResFilter = () => {
+    setHighResActive(true);
+    onSelectResolution("highres");
   };
 
-  const getFilterList = async () => {
-    let filterValues = await loadFn();
-    filterValues = filterValues.map((value) => ({
-      ...value,
-      label: value.name,
-      value: value.id,
-    }));
-    setInternalFilters(filterValues);
+  const onDeselectHighResFilter = () => {
+    setHighResActive(false);
+    onDeselectResolution("highres");
   };
 
-  useEffect(() => {
-    // Get filter list directly without by context
-    if (internalFilter) {
-      getFilterList();
+  const onSelectResolution = (val: number | "highres") => {
+    const filterKey = filterKeyMap[FilterAttributeVariants.RESOLUTION];
+    if (val !== "highres") {
+      const index = options.findIndex((value) => value.dpi === val);
+      if (index !== -1) {
+        options[index].isSelected = true;
+      }
     } else {
-      loadFn();
+      options = [
+        ...options,
+        {
+          value: "highres",
+          dpi: "highres",
+          label: highResLabel,
+          isSelected: true,
+        },
+      ];
     }
-  }, [activeSortFilter]);
 
-  const toggleSelected = (selected) => {
-    let index =
-      value &&
-      value.findIndex(
-        (item) => item[mappingValueName] === selected[mappingValueName]
-      );
-    if (!value || index !== -1) {
-      setValue(
-        update(value, {
-          $splice: [[index, 1]],
-        })
-      );
+    setOptions([...options]);
+
+    let newState;
+
+    if (activeSortFilter[filterKey] && activeSortFilter[filterKey].length > 0) {
+      newState = [
+        ...new Set([
+          ...activeSortFilter[filterKey],
+          {
+            value: val,
+            dpi: val,
+            label: val === "highres" ? highResLabel : val,
+          },
+        ]),
+      ];
     } else {
-      setValue(
-        update(value, {
-          $push: [selected],
-        })
-      );
+      newState = [
+        {
+          value: val,
+          dpi: val,
+          label: val === "highres" ? highResLabel : val,
+        },
+      ];
     }
+
+    setActiveSortFilter({
+      ...activeSortFilter,
+      [filterKey]: newState,
+    });
   };
 
-  // Set value and filters as selected
-  let visibleFilters = internalFilter ? internalFilters : filters;
+  const onDeselectResolution = (val: number | "highres") => {
+    const index = options.findIndex((value) => value.dpi === val);
 
-  if (value)
-    visibleFilters = [
-      ...visibleFilters,
-      ...value.filter(
-        (selected) =>
-          !visibleFilters.map(({ value }) => value).includes(selected.value)
-      ),
-    ];
+    if (index !== -1) {
+      options[index].isSelected = false;
+    }
+    setOptions([...options]);
+
+    let newFilters = options
+      .filter((item) => item.isSelected)
+      .map((item) => ({
+        value: item.dpi,
+        dpi: item.dpi,
+        label: val === "highres" ? highResLabel : item.dpi,
+      }));
+
+    setActiveSortFilter({
+      ...activeSortFilter,
+      filterResolutions: newFilters,
+    });
+  };
 
   return (
-    <div className={`${styles.container}`}>
-      <div className={styles["any-all-wrapper"]}>
-        <div>
+    <>
+      <div className={styles["heading-tag"]}>
+        {highResActive ? (
           <IconClickable
-            src={
-              value &&
-              value.findIndex(
-                (item) =>
-                  item[mappingValueName] === anyHighRes[mappingValueName]
-              ) !== -1
-                ? Utilities.radioButtonEnabled
-                : Utilities.radioButtonNormal
-            }
-            additionalClass={styles["select-icon"]}
-            onClick={() => toggleSelected(anyHighRes)}
+            src={Utilities.radioButtonEnabled}
+            onClick={onDeselectHighResFilter}
           />
-          <div className={styles["any-all-text"]}>
-            All High-Res (above 250 DPI)
-          </div>
-        </div>
+        ) : (
+          <IconClickable
+            src={Utilities.radioButtonNormal}
+            onClick={onSelectHighResFilter}
+          />
+        )}
+        <span>{highResLabel}</span>
       </div>
-      <ul
-        className={`${styles["item-list"]} ${
-          oneColumn && styles["one-column"]
-        } ${capitalize && "capitalize"}`}
-      >
-        {visibleFilters.map((filter, index) => {
-          const isSelected =
-            value &&
-            value.findIndex(
-              (item) => item[mappingValueName] === filter[mappingValueName]
-            ) !== -1;
-          const isHighRes = filter.value === "highres";
-          return (
-            !isHighRes && (
-              <li
-                key={index}
-                className={`${styles["select-item"]} ${styles[addtionalClass]}`}
-              >
-                <div
-                  className={`${styles["selectable-wrapper"]} ${
-                    isSelected && styles["selected-wrapper"]
-                  }`}
-                >
-                  {isSelected ? (
-                    <IconClickable
-                      src={Utilities.radioButtonEnabled}
-                      additionalClass={styles["select-icon"]}
-                      onClick={() => toggleSelected(filter)}
-                    />
-                  ) : (
-                    <IconClickable
-                      src={Utilities.radioButtonNormal}
-                      additionalClass={styles["select-icon"]}
-                      onClick={() => toggleSelected(filter)}
-                    />
-                  )}
-                </div>
-                <p className={styles["item-name"]}>{filter.dpi}</p>
-                <div className={styles["item-total"]}>{filter.count}</div>
-              </li>
-            )
-          );
-        })}
-      </ul>
-    </div>
+      <div className={styles["outer-wrapper"]}>
+        {(options?.length === 0) ? (
+        <p>No Results Found.</p>
+      ) : options?.map((item) =>
+          item.dpi === "highres" ? null : (
+            <div className={styles["grid-item"]} key={item.dpi}>
+              <OptionDataItem
+                name={item.dpi}
+                count={item.count}
+                isSelected={item.isSelected}
+                onSelect={() => onSelectResolution(item.dpi)}
+                onDeselect={() => onDeselectResolution(item.dpi)}
+              />
+            </div>
+          )
+        )}
+      </div>
+    </>
   );
 };
 

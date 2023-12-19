@@ -41,12 +41,12 @@ const sort = (data) => {
 
 // Server DO NOT return full custom field slots including empty array, so we will generate empty array here
 // The order of result should be match with order of custom field list
-const mappingCustomFieldData = (list, valueList) => {
+const mappingCustomFieldData = (list: any = [], valueList: any = []) => {
   let rs = [];
-  list.map((field) => {
-    let value = valueList.filter((valueField) => valueField.id === field.id);
+  list?.map((field) => {
+    let value = valueList?.filter((valueField) => valueField.id === field.id);
 
-    if (value.length > 0) {
+    if (value?.length > 0) {
       value[0].values = sort(value[0].values);
       rs.push(value[0]);
     } else {
@@ -303,7 +303,6 @@ const EditSidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
 
   // On custom field select one changes
   const onChangeSelectOneCustomField = async (selected, index) => {
-    // console.log(selected)
     // Show loading
     setIsLoading(true);
 
@@ -478,7 +477,7 @@ const EditSidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                 data={assetCustomFields[index]?.values[0]?.name}
                 options={field.values}
                 isShare={isShare}
-                onLabelClick={() => {}}
+                onLabelClick={() => { }}
                 handleFieldChange={(option) => {
                   onChangeSelectOneCustomField(option, index);
                 }}
@@ -497,7 +496,7 @@ const EditSidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                 onAddClick={() => setActiveCustomField(index)}
                 selectPlaceholder={"Select an existing one"}
                 avilableItems={field.values}
-                setAvailableItems={() => {}}
+                setAvailableItems={() => { }}
                 selectedItems={
                   assetCustomFields.filter(
                     (assetField) => assetField.id === field.id
@@ -596,7 +595,6 @@ const EditSidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
                     isShare={isShare || !hasPermission([ASSET_EDIT])}
                     activeDropdown={activeDropdown}
                     setActiveDropdown={(value) => {
-                      console.log(value);
                       setActiveDropdown(`${value}-${index}`);
                     }}
                     assetId={id}

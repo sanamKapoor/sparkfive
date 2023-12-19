@@ -24,6 +24,8 @@ export const DEFAULT_FILTERS = {
   endDate: undefined,
   fileModifiedBeginDate: undefined,
   fileModifiedEndDate: undefined,
+  dateUploaded: undefined,
+  lastUpdated: undefined,
 };
 
 export const DEFAULT_CUSTOM_FIELD_FILTERS = (userFilterObject) => {
@@ -145,6 +147,8 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = "",
     filterProductFields,
     filterProductType,
     filterProductSku,
+    dateUploaded,
+    lastUpdated,
   } = userFilterObject;
 
   if (mainFilter === "images") {
@@ -161,7 +165,9 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = "",
 
   addFilterToQuery(filters, filterCampaigns, "campaigns");
   addFilterToQuery(filters, filterProjects, "projects");
-  addFilterToQuery(filters, filterFolders, "folders");
+  activeFolder
+    ? addFilterToQuery(filters, [activeFolder], "folders")
+    : addFilterToQuery(filters, filterFolders, "folders");
   addFilterToQuery(filters, filterChannels, "channels");
   addFilterTagsToQuery(filters, filterNonAiTags, filterAiTags, "tags");
   addFilterToQuery(filters, filterFileTypes, "fileTypes");
@@ -189,18 +195,19 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = "",
     filters.folderId = activeFolder;
   }
 
-  if (!replace && addedIds.length > 0) {
+  if (!replace && addedIds?.length > 0) {
     filters.excludeIds = addedIds.join(",");
   }
 
-  if (dimensionsActive && dimensionWidth) {
+  if (dimensionWidth) {
     filters.dimensionWidth = `${dimensionWidth.min},${dimensionWidth.max}`;
   }
 
-  if (dimensionsActive && dimensionHeight) {
+  if (dimensionHeight) {
     filters.dimensionHeight = `${dimensionHeight.min},${dimensionHeight.max}`;
   }
 
+  //TODO: don't use
   if (beginDate && endDate) {
     // a range in different day
     if (beginDate.toDateString() !== endDate.toDateString()) {
@@ -246,6 +253,7 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = "",
     }
   }
 
+  //TODO: don't use
   if (fileModifiedBeginDate && fileModifiedEndDate) {
     // a range in different day
     if (fileModifiedBeginDate.toDateString() !== fileModifiedEndDate.toDateString()) {
@@ -282,6 +290,57 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = "",
       const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate());
 
       filters.fileModifiedEndDate = new Date(newDate.toUTCString()).toISOString();
+    }
+  }
+
+  if (dateUploaded) {
+    if (dateUploaded.beginDate) {
+      const bd = new Date(dateUploaded.beginDate);
+      const newBeginDate = new Date(
+        bd.getFullYear(),
+        bd.getMonth(),
+        bd.getDate()
+      );
+
+      filters.beginDate = new Date(newBeginDate.toUTCString()).toISOString();
+    }
+    if (dateUploaded.endDate) {
+      const ed = new Date(dateUploaded.endDate);
+      const newEndDate = new Date(
+        ed.getFullYear(),
+        ed.getMonth(),
+        ed.getDate()
+      );
+
+      filters.endDate = new Date(newEndDate.toUTCString()).toISOString();
+    }
+  }
+
+  if (lastUpdated) {
+    if (lastUpdated.beginDate) {
+      const ld = new Date(lastUpdated.beginDate);
+      const newBeginDate = new Date(
+        ld.getFullYear(),
+        ld.getMonth(),
+        ld.getDate()
+      );
+
+      filters.fileModifiedBeginDate = new Date(
+        newBeginDate.toUTCString()
+      ).toISOString();
+    }
+
+    if (lastUpdated.endDate) {
+      const ed = new Date(lastUpdated.endDate);
+      const newEndDate = new Date(
+        ed.getFullYear(),
+        ed.getMonth(),
+        ed.getDate()
+      );
+
+      filters.fileModifiedEndDate = new Date(
+        newEndDate.toUTCString()
+      ).toISOString();
     }
   }
 
@@ -337,7 +396,11 @@ export const getFoldersFromUploads = (files, isRegular = false) => {
 
 const addFilterToQuery = (filters, filterItems, key, valueKey = "value") => {
   if (filterItems?.length > 0) {
-    filters[key] = filterItems.map((item) => item[valueKey]).join(",");
+    if (filterItems?.length == 1 && key === "folders") {
+      filters[key] = filterItems[0];
+    } else {
+      filters[key] = filterItems.map((item) => item[valueKey]).join(",");
+    }
   }
 };
 

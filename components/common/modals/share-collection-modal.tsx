@@ -27,6 +27,9 @@ import dateStyles from "../filter/date-uploaded.module.css";
 // Contexts
 import { LoadingContext, UserContext } from "../../../context";
 
+// Accordion
+// import 'react-accessible-accordion/dist/fancy-example.css'; 
+
 const getDayToCurrentDate = (day: number = 1) => {
   return new Date(moment().add(day, "d").toDate());
 };
@@ -39,7 +42,7 @@ const ShareCollectionModal = ({
   itemsAmount = 0,
   shareAssets,
   title = "",
-  getShareLink = (name) => {},
+  getShareLink = (name) => { },
   currentShareLink = undefined,
 }) => {
   const { setIsLoading } = useContext(LoadingContext);
@@ -91,6 +94,10 @@ const ShareCollectionModal = ({
     setLoading(true);
     setLogo("");
     closeModal();
+  };
+  const [isAccordionOpen, setIsAccordionOpen] = useState(false);
+  const toggleAccordion = () => {
+    setIsAccordionOpen(!isAccordionOpen);
   };
 
   const getInitialSharedLink = async (showInternalLoading = true) => {
@@ -220,7 +227,6 @@ const ShareCollectionModal = ({
   ) => {
     setIsLoading(true);
 
-    console.log("logo inside save changes: ", logo);
     // Link is not created yet due to lacking name, saving name then getting url back
     if (firstInit === false && field === "name") {
       getInitialSharedLink(false);
@@ -380,7 +386,7 @@ const ShareCollectionModal = ({
                 disabled={!collectionLink || !currentName}
                 placeholder={""}
                 value={currentName ? `${process.env.CLIENT_BASE_URL}/collections/${collectionLink}` : ""}
-                onChange={() => {}}
+                onChange={() => { }}
                 styleType={"regular-short"}
               />
 
@@ -548,9 +554,8 @@ const ShareCollectionModal = ({
                   />
                 </div>
                 <div
-                  className={`col-50 d-flex align-items-center ${
-                    expiredPeriod?.value === 0 ? "flex-direction-column" : ""
-                  }`}
+                  className={`col-50 d-flex align-items-center ${expiredPeriod?.value === 0 ? "flex-direction-column" : ""
+                    }`}
                 >
                   {expiredPeriod?.value === 0 && (
                     <div className={"row w-100 m-b-5"}>
@@ -623,11 +628,62 @@ const ShareCollectionModal = ({
             </div>
           )}
 
+          {/* TODO: required code  */}
+          {/* <div
+            className={`${styles["filter-value-wrapper"]}  ${styles["accordion-container"]}`}
+          >
+            <Accordion allowZeroExpanded>
+              <AccordionItem>
+                <AccordionItemHeading>
+                  <AccordionItemButton className={styles.button}>
+                    <div className={`${styles.title}`}>
+                      <p>Filter values</p>
+
+                      <IconClickable
+          
+                        src={
+                          isAccordionOpen
+                            ? Utilities.uparrowThin
+                            : Utilities.downarrowThin
+                        }
+                        additionalClass={styles["arrow-icon"]}
+                        onClick={toggleAccordion}
+                      />
+                    </div>
+                  </AccordionItemButton>
+                </AccordionItemHeading>
+                <AccordionItemPanel>
+                  <div className={`${styles["filter-data"]}`}>
+                    <div className={`${styles["tags-wrapper"]}`}>
+                      <div className={`${styles["tags-left-side"]}`}>
+                        <IconClickable src={Utilities.radioButtonEnabled} />
+                      
+                        <span className={`${styles["select-name"]}`}>Tags</span>
+                      </div>
+                    </div>
+                    <div className={`${styles["tags-wrapper"]}`}>
+                      <div className={`${styles["tags-left-side"]}`}>
+                        <IconClickable src={Utilities.radioButtonEnabled} />
+                        <span className={`${styles["select-name"]}`}>Tags</span>
+                      </div>
+                    </div>
+                    <div className={`${styles["tags-wrapper"]}`}>
+                      <div className={`${styles["tags-left-side"]}`}>
+                        <IconClickable src={Utilities.radioButtonEnabled} />
+                        <span className={`${styles["select-name"]}`}>Tags</span>
+                      </div>
+                    </div>
+                  </div>
+                </AccordionItemPanel>
+              </AccordionItem>
+            </Accordion>
+          </div> */}
+
           {isAdmin() && (
             <div className={`${styles["input-wrapper"]}`}>
               <div className={`${styles.title}`}>
                 <p>Upload Logo</p>
-                <IconClickable SVGElement={Utilities.arrowBlue} additionalClass={styles["arrow-icon"]} />
+                <IconClickable src={Utilities.arrowBlue} additionalClass={styles["arrow-icon"]} />
               </div>
               <ShareIconFilesSearch onSelect={changeLogo} logo={logo} />
             </div>

@@ -34,7 +34,7 @@ export default ({ children }) => {
 
       // Connect success
       client.on("connect", function () {
-        console.log(`Socket init successfully`);
+      console.log(`Socket init successfully`);
 
         setSocketInstance(client);
         setConnected(true);
@@ -67,6 +67,32 @@ export default ({ children }) => {
       });
     }
   };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   const logout = () => {
     if (socketInstance) {

@@ -1,6 +1,7 @@
 .container h5 {
     font-weight: 400;
     font-size: 13px;
+   
 }
 
 .select-filter {
@@ -13,3 +14,32 @@
     margin: 0 auto;
     position: relative;
 }
+
+.container{
+    margin-top:24px;
+    max-height: 407px;
+    overflow: auto;
+
+}
+.outer-wrapper{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 30px;
+
+}
+.container::-webkit-scrollbar {
+    width: 3px;
+   
+  }
+  
+  .container::-webkit-scrollbar-thumb {
+    background-color: 
+    #AEB0C2;
+    border-radius: 50px;
+    
+  }
+  .container::-webkit-scrollbar-track {
+    background-color: #f0f0f0;
+    border-radius: 50px;
+  }

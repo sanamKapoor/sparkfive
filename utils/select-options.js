@@ -68,6 +68,13 @@ export default {
       omitShare: true,
       requirePermissions: [permission.ASSET_EDIT],
     },
+    {
+      text: "SubCollction",
+      name: "subCollction",
+      omitFolder: true,
+      omitShare: false,
+      requirePermissions: [],
+    },
   ],
 
   channels: [

@@ -3,7 +3,8 @@ import dateCompare from "../utils/date-compare";
 
 export default function useSortedAssets(
   assets,
-  initialSortValue = ""
+  initialSortValue = "",
+  sub_collection = false
 ): [any[], string, any] {
   const [sortedAssets, setSortedAssets] = useState([]);
   const [currentSortAttribute, setCurrentSortAttribute] =
@@ -33,6 +34,7 @@ export default function useSortedAssets(
         item.asset.extension = "z";
         item.asset.size = 0;
         item.asset.createdAt = new Date("1977-01-01");
+        // item.asset.updatedAt = new Date("1977-01-01");
         item.asset.deletedAt = new Date("1977-01-01");
       }
 
@@ -61,12 +63,19 @@ export default function useSortedAssets(
             (parseInt(a.asset.size) - parseInt(b.asset.size)) * direction
         );
         break;
+
       case "asset.created-at":
         newSortedAssets.sort(
           (a, b) =>
             dateCompare(a.asset.createdAt, b.asset.createdAt) * direction
         );
         break;
+      // case "asset.updated-at":
+      //   newSortedAssets.sort(
+      //     (a, b) =>
+      //       dateCompare(a.asset.updatedAt, b.asset.updatedAt) * direction
+      //   );
+      //   break;
       case "asset.deleted-at":
         newSortedAssets.sort(
           (a, b) =>
@@ -79,9 +88,16 @@ export default function useSortedAssets(
         );
         break;
       case "folder.length":
-        newSortedAssets.sort(
-          (a, b) => (b.assetsCount - a.assetsCount) * direction
-        );
+        if (sub_collection) {
+          newSortedAssets.sort(
+            (a, b) => (b.assets?.length - a.assets?.length) * direction
+          );
+        }
+        else {
+          newSortedAssets.sort(
+            (a, b) => (b.assetsCount - a.assetsCount) * direction
+          );
+        }
         break;
       case "folder.created-at":
         newSortedAssets.sort(

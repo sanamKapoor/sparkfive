@@ -24,4 +24,5 @@ export default {
   },
   getShareUrl: (data, filters = {}) => axios.post(`${folderUrl}/share-url?${querystring.encode(filters)}`, data),
   generateAndSendShareUrl: (data, filters = {}) => axios.post(`${folderUrl}/share?${querystring.encode(filters)}`, data),
+  getSubFolders: (queryParams = {}, id) => axios.get(`${folderUrl}/${id}/subCollection?${queryString.stringify(queryParams)}`),
 }

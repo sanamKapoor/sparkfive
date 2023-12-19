@@ -1,0 +1,86 @@
+.table-head{
+    border-collapse: collapse;
+    width: 100%;
+    text-align: left;
+}
+.table-head-row td{
+    padding: 12px 8px;
+}
+.table-head-row span{
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+
+}
+.list-img-box span{
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+
+}
+.imageWrapper{
+    width: 100%;
+    max-width: 64px;
+    border-radius: 4px;
+   
+}
+.imageWrapper img{
+    max-width: 64px;
+    width: 100%;
+    height: 50px;
+    border-radius: 4px;
+}
+.DataContainer{
+    display: flex;
+    align-items: center;
+}
+.edit-icon{
+    width: 15.33px;
+    margin-right: 24px;
+}
+.dot-icon{
+    width: 24px;
+}
+.actionBtn{
+    display: flex;
+    align-items: center;
+   
+}
+
+.headContent{
+    display: flex;
+    align-items: center;
+}
+.firstColumn {
+    /* width: 56%;
+    */
+    width: 50%;
+  }
+  .secondColumn {
+    /* width: 20%; */
+    
+   
+  }
+  .thirdColumn {
+    /* width: 20%; */
+   
+  }
+  .fourthColumn {
+    /* width: 20%; */
+   
+  }
+  .tableHead-row{
+    background: #F6EFE4;
+  }
+  .tableHead-row th{
+    padding: 12px 8px;
+  }
+  @media (max-width: 768px) {
+    .firstColumn,
+    .secondColumn,
+    .thirdColumn,
+    .fourthColumn {
+      width: auto; 
+    }
+  }
+  

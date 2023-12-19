@@ -1,0 +1,19 @@
+.nestedMenu{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.menuDesc span{
+    font-family: "Noto Sans", sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    Line-height:24px;
+    color:var(--color-prim-navy);
+
+}
+.menuIcon{
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+    cursor: pointer;
+}
