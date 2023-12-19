@@ -17,6 +17,7 @@ import AssetThumbail from "./asset-thumbail";
 
 import IconClickable from "../buttons/icon-clickable";
 import AssetRelatedFileUpload from "./asset-related-files-upload";
+import React from "react";
 
 const NextArrow = ({ onClick }) => (
   <img
@@ -256,7 +257,8 @@ const AssetRelatedFIles = ({
             <div className={styles.slider}>
               <Slider {...settings}>
                 {assets.map((assetItem, index) => (
-                  <AssetThumbail
+                  <div className={`${styles["grid-item-new"]}`}>
+                      <AssetThumbail
                     {...assetItem}
                     key={index}
                     onView={(id) => {
@@ -277,6 +279,9 @@ const AssetRelatedFIles = ({
                     }}
                     detailOverlay={false}
                   />
+
+                  </div>
+                
                 ))}
               </Slider>
             </div>

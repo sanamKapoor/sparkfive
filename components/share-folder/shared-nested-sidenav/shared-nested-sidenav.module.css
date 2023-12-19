@@ -57,7 +57,7 @@
 }
 
 .icon-description {
-  max-width: 15ch;
+  max-width: 20ch;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -65,6 +65,7 @@
 .icon-description:hover {
   overflow: visible;
   text-overflow: visible;
+  /* text-wrap: wrap; */
 }
 .list1-right-contents span {
   font-family: "Noto Sans", sans-serif;
@@ -243,7 +244,7 @@
   padding: 7.5px;
 }
 .subfolderList {
-  padding: 0px 16px 0px 16px;
+  padding: 0px 0px 0px 16px;
   border-left: 1px solid #dedad4;
 }
 

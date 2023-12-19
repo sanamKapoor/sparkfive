@@ -32,6 +32,7 @@ import downloadUtils from "../../utils/download";
 
 import { events } from '../../constants/analytics';
 import useAnalytics from "../../hooks/useAnalytics"
+import cookiesApi from "../../utils/cookies";
 
 const AssetShare = () => {
   const { logo: themeLogo, setLogo: setThemeLogo } = useContext(UserContext);
@@ -120,6 +121,7 @@ const AssetShare = () => {
       selectedAssets.map(assetItem => {
         // Track assets download event
         trackEvent(events.DOWNLOAD_SHARED_ASSET, {
+            email: cookiesApi.get('shared_email') || null,
             assetId: assetItem.asset.id,
           });
         return assetItem;
@@ -207,10 +209,7 @@ const AssetShare = () => {
     e.preventDefault();
     setLoading(true);
     const { shareJWT, code } = urlUtils.getQueryParameters();
-    const { data } = await assetApi.getSharedAssets({ shareJWT, email, code });
-
-    console.log({ data });
-    
+    const { data } = await assetApi.getSharedAssets({ shareJWT, email, code });    
 
     if (data.error) {
       toastUtils.error(data.errorMessage);
@@ -220,6 +219,7 @@ const AssetShare = () => {
       setError(false);
       setLoading(false);
       setAssets(data.data);
+      cookiesApi.set('shared_email', email);
       trackEvent(events.ACCESS_SHARED_LINK, { email, link: window.location.href });
     }
 

@@ -55,7 +55,8 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
     activeFolder,
     setSidebarOpen,
     activeSubFolders,
-    setCurrentFolder
+    setCurrentFolder,
+    setSidenavTotalCollectionCount
   } = useContext(AssetContext);
 
   const { term, activeSortFilter } = useContext(FilterContext) as {
@@ -146,6 +147,10 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
       console.log(err);
     }
   };
+
+  useEffect(() => {
+    setSidenavTotalCollectionCount(0)
+  }, []);
 
   useEffect(() => {
     if (firstLoaded) {
@@ -258,7 +263,7 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
                     </div>
                     <div className={styles.totalCount}>
                       <div className={styles["list1-right-contents"]}>
-                        <span>{Number(item.assetsCount) + Number(item.totalchildassests)}</span>
+                        <span>{Number(item?.assetsCount || 0) + Number(item.totalchildassests || 0)}</span>
                       </div>
                     </div>
                   </div>
@@ -342,7 +347,7 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
             {isFolderLoading ? (
               <div className={styles.loader}></div>
             ) : (
-              <div className={`${styles["load-wrapper"]}`}>
+              <div className={`${styles["load-wrapper"]}`} style={{marginLeft:"10px"}}>
                 {/* <IconClickable additionalClass={styles.loadIcon} SVGElement={Utilities.load}  /> */}
                 <button className={styles.loadMore}>Load More</button>
               </div>

@@ -7,7 +7,7 @@ import { Waypoint } from "react-waypoint";
 import React from "react";
 import { sizeToZipDownload } from "../../../constants/download";
 import { ASSET_ACCESS } from "../../../constants/permissions";
-import { AssetContext, LoadingContext, UserContext } from "../../../context";
+import { AssetContext, FilterContext, LoadingContext, UserContext } from "../../../context";
 import useSortedAssets from "../../../hooks/use-sorted-assets";
 import assetApi from "../../../server-api/asset";
 import folderApi from "../../../server-api/folder";
@@ -74,7 +74,11 @@ const AssetGrid = ({
     activeSubFolders,
     subFoldersAssetsViewList,
     setSubFoldersAssetsViewList,
+    setListUpdateFlag
   } = useContext(AssetContext);
+  const {
+    activeSortFilter
+  } = useContext(FilterContext);
   //Drog select assets
   const [selectedIndexes, setSelectedIndexes] = useState<string[]>([]);
   const selectableItems = useRef([]);
@@ -236,6 +240,7 @@ const AssetGrid = ({
             })
           );
       }
+      setListUpdateFlag(true);
       toastUtils.success("Assets deleted successfully");
     } catch (err) {
       // TODO: Error handling
@@ -396,11 +401,17 @@ const AssetGrid = ({
     (folders.length > 0 && folders[folders.length - 1].isLoading);
 
   const refreshVersion = (currentVersion) => {
-    if (currentVersion) {
-      const clonedAssets = [...assets].filter((asset) => !asset.isUploading);
-      const versionIndex = clonedAssets.findIndex(
-        (item) => item.asset.versionGroup === currentVersion.versionGroup
-      );
+    if (!currentVersion) {
+      return;
+    }
+    const assetsList = activeSortFilter.mainFilter === "SubCollectionView"
+      ? subFoldersAssetsViewList.results
+      : assets;
+
+    const clonedAssets = [...assetsList].filter(asset => !asset.isUploading);
+    const versionIndex = clonedAssets.findIndex(item => item.asset.versionGroup === currentVersion.versionGroup);
+
+    if (versionIndex !== -1) {
       const oldAsset = clonedAssets[versionIndex];
       const newVersionAsset = {
         asset: currentVersion,
@@ -408,8 +419,17 @@ const AssetGrid = ({
         thumbailUrl: currentVersion.thumbailUrl,
         toggleSelected: { ...oldAsset.toggleSelected },
       };
+
       clonedAssets[versionIndex] = newVersionAsset;
-      setAssets(clonedAssets);
+
+      if (activeSortFilter.mainFilter === "SubCollectionView") {
+        setSubFoldersAssetsViewList({
+          ...subFoldersAssetsViewList,
+          results: clonedAssets,
+        });
+      } else {
+        setAssets(clonedAssets);
+      }
     }
   };
 
@@ -553,9 +573,9 @@ const AssetGrid = ({
                     onCloseDetailOverlay={onCloseDetailOverlay}
                   />
                 )}
-                {mode === "assets" && (
+                {mode === "assets" && assets.length > 0 && (
                   <>
-                    {activeView === "list" && (
+                    {activeView === "list" &&  (
                       <AssetTableHeader
                         activeView={activeView}
                         setSortAttribute={setSortAssetAttribute}
@@ -565,7 +585,7 @@ const AssetGrid = ({
                       if (assetItem.status !== "fail") {
                         return (
                           <li
-                            className={styles["grid-item"]}
+                            className={`${styles["grid-item"]} ${activeView === "grid" ? styles["grid-item-new"] : ""}`}
                             key={assetItem.asset.id || index}
                             onClick={(e) =>
                               handleFocusChange(e, assetItem.asset.id)
@@ -574,58 +594,58 @@ const AssetGrid = ({
                             style={{ width: `$${widthCard}px` }}
                           >
                             <div className={activeView === "grid" && styles["collection-assets"]}>
-                            <AssetThumbail
-                              {...assetItem}
-                              sharePath={sharePath}
-                              activeFolder={activeFolder}
-                              isShare={isShare}
-                              type={type}
-                              toggleSelected={() =>
-                                toggleSelected(assetItem.asset.id)
-                              }
-                              openArchiveAsset={() =>
-                                openArchiveAsset(assetItem.asset)
-                              }
-                              openDeleteAsset={() =>
-                                openDeleteAsset(assetItem.asset.id)
-                              }
-                              openMoveAsset={() =>
-                                beginAssetOperation(
-                                  { asset: assetItem },
-                                  "move"
-                                )
-                              }
-                              openCopyAsset={() =>
-                                beginAssetOperation(
-                                  { asset: assetItem },
-                                  "copy"
-                                )
-                              }
-                              openShareAsset={() =>
-                                beginAssetOperation(
-                                  { asset: assetItem },
-                                  "share"
-                                )
-                              }
-                              downloadAsset={() => downloadAsset(assetItem)}
-                              openRemoveAsset={() =>
-                                beginAssetOperation(
-                                  { asset: assetItem },
-                                  "remove_item"
-                                )
-                              }
-                              handleVersionChange={refreshVersion}
-                              loadMore={loadMore}
-                              onCloseDetailOverlay={onCloseDetailOverlay}
-                              isThumbnailNameEditable={isThumbnailNameEditable}
-                              focusedItem={focusedItem}
-                              setFocusedItem={setFocusedItem}
-                              activeView={activeView}
-                              mode={mode}
-                            />
+                              <AssetThumbail
+                                {...assetItem}
+                                sharePath={sharePath}
+                                activeFolder={activeFolder}
+                                isShare={isShare}
+                                type={type}
+                                toggleSelected={() =>
+                                  toggleSelected(assetItem.asset.id)
+                                }
+                                openArchiveAsset={() =>
+                                  openArchiveAsset(assetItem.asset)
+                                }
+                                openDeleteAsset={() =>
+                                  openDeleteAsset(assetItem.asset.id)
+                                }
+                                openMoveAsset={() =>
+                                  beginAssetOperation(
+                                    { asset: assetItem },
+                                    "move"
+                                  )
+                                }
+                                openCopyAsset={() =>
+                                  beginAssetOperation(
+                                    { asset: assetItem },
+                                    "copy"
+                                  )
+                                }
+                                openShareAsset={() =>
+                                  beginAssetOperation(
+                                    { asset: assetItem },
+                                    "share"
+                                  )
+                                }
+                                downloadAsset={() => downloadAsset(assetItem)}
+                                openRemoveAsset={() =>
+                                  beginAssetOperation(
+                                    { asset: assetItem },
+                                    "remove_item"
+                                  )
+                                }
+                                handleVersionChange={refreshVersion}
+                                loadMore={loadMore}
+                                onCloseDetailOverlay={onCloseDetailOverlay}
+                                isThumbnailNameEditable={isThumbnailNameEditable}
+                                focusedItem={focusedItem}
+                                setFocusedItem={setFocusedItem}
+                                activeView={activeView}
+                                mode={mode}
+                              />
 
                             </div>
-                          
+
                           </li>
                         );
                       }

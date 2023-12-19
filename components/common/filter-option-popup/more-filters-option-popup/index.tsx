@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-
 import { Utilities } from "../../../../assets";
 import { IAttribute } from "../../../../interfaces/filters";
 import Button from "../../buttons/button";
@@ -10,9 +9,10 @@ import styles from "../options-data.module.css";
 import { FilterContext, UserContext } from "../../../../context";
 import shareCollectionApi from "../../../../server-api/share-collection";
 import teamApi from "../../../../server-api/team";
-
 import { getSortedAttributes } from "../../../../utils/filter";
 import toastUtils from "../../../../utils/toast";
+
+import { FilterAttributeVariants } from "../../../../interfaces/filters"; // Import FilterAttributeVariants
 
 interface MoreFiltersOptionPopupProps {
   attributes: IAttribute[];
@@ -30,10 +30,16 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
   const { advancedConfig } = useContext(UserContext);
 
   const [options, setOptions] = useState([]);
+  const [activeAttribute, setActiveAttribute] = useState<IAttribute | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   useEffect(() => {
     getMoreFilters();
-  }, []);
+  }, [/* Dependencies */]);
+
+  useEffect(() => {
+    checkIfValuesExist(); // Call checkIfValuesExist on mount or when dependencies change
+  }, [activeAttribute, options, sidebarOpen]);
 
   const getMoreFilters = async () => {
     try {
@@ -42,7 +48,8 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
       const res = await fetchApi.getTeamAttributes({
         ...(sharePath && { sharePath }),
       });
-      //check for filter elements to hide
+
+      // Check for filter elements to hide
       if (advancedConfig?.hideFilterElements) {
         const filteredAttrs = res.data.data.filter(
           (item) => advancedConfig?.hideFilterElements[item.id] !== true
@@ -59,6 +66,7 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
           }
           return { ...item, isSelected: false };
         });
+
         setOptions(mapFilteredAttrs);
       }
     } catch (err) {
@@ -66,6 +74,58 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
     }
   };
 
+  const checkIfValuesExist = () => {
+    if (activeAttribute) {
+      if (
+        [
+          FilterAttributeVariants.LAST_UPDATED,
+          FilterAttributeVariants.DATE_UPLOADED,
+          FilterAttributeVariants.DIMENSIONS,
+        ].includes(activeAttribute?.id)
+      ) {
+        filterModalPosition();
+        return true;
+      } else {
+        // Update this part based on your component's structure and data
+        if (options) {
+          filterModalPosition();
+          return options instanceof Array
+            ? options.length > 0
+            : Object.keys(options).length > 0;
+        }
+      }
+    }
+    return false;
+  };
+
+  const filterModalPosition = () => {
+    const mianFilterModal = document.getElementById('mianFilterModal');
+    const modal = document.getElementById('modal');
+  
+    if (mianFilterModal && modal) {
+      const viewportWidth = window.innerWidth;
+      const modalWidth = modal.offsetWidth;
+      const leftelemnt = mianFilterModal.offsetLeft;
+      const additionlalength = sidebarOpen ? 378 : 0;
+  
+      console.log("viewportWidth:", viewportWidth);
+      console.log("modalWidth:", modalWidth);
+      console.log("leftelemnt:", leftelemnt);
+  
+      // Calculate the available space on the right
+      const availableSpaceRight = viewportWidth - leftelemnt - mianFilterModal.offsetWidth;
+  
+      if (modalWidth + additionlalength > availableSpaceRight) {
+        // If there is not enough space on the right, position the modal on the left
+        modal.style.right = 'unset';
+        modal.style.left = '0';
+      } else {
+        // Otherwise, position the modal on the right
+        modal.style.left = 'unset';
+        modal.style.right = '0';
+      }
+    }
+  };
   const onSelectOption = (data: IAttribute) => {
     const index = options.findIndex((item) => item.id === data.id);
     if (index !== -1) {
@@ -104,7 +164,11 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
   };
 
   return (
-    <div className={`${styles["more-filter-wrapper"]}`}>
+    <div
+    id="mianFilterModal"
+    className={`${styles["main-container"]}`
+    }>
+    <div id="modal" className={`${styles["more-filter-wrapper"]}`}>
       <div className={`${indexStyles["popup-header"]}`}>
         <span className={`${indexStyles["main-heading"]}`}>More Filters</span>
         <div className={indexStyles.buttons}>
@@ -140,6 +204,7 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
         <Button className={"apply"} text={"Apply"} onClick={onApply} />
         <Button className={"cancel"} text={"Cancel"} onClick={onCancel} />
       </div>
+    </div>
     </div>
   );
 };

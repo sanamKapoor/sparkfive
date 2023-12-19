@@ -116,9 +116,8 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(246px, 1fr));
   grid-gap: 40px;
-  
- 
-}
+  margin-bottom: 40px;
+  }
 .assetWrapper {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(246px, 1fr));
@@ -144,7 +143,7 @@
   cursor: pointer;
 }
 .heading-wrapper{
-  margin:20px 0px;
+  margin:-20px 0px 8px 0
 }
 .sub-collection-heading-outer{
   display: flex;
@@ -153,7 +152,7 @@
 
 }
 .collection-filter-wrap{
-  margin-top:25px;
+  /* margin-top:25px; */
 }
 @media screen and (max-width: 810px) {
   .cardsWrapper {
@@ -215,6 +214,7 @@
 /* list view css starts from here */
 .list-wrapper {
   grid-template-columns: unset;
+  grid-gap:20px;
 }
 
 .list-asset-wrapper {
@@ -251,5 +251,6 @@
    }
  }
  
- 
-
+ .grid-item-new{
+  border:1px solid var(--color-secondary-border);
+}
