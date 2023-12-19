@@ -100,7 +100,7 @@ function UserModal() {
           </div>
         </div>
         {/* for mobile */}
-        <div className={`${styles["heading-wrap"]} ${styles["mobile-view"]}`}>
+        <div className={`${styles["mobile-view"]}`}>
           <div className={`${styles["heading-wraps"]}`}>
             <div className={`${styles["teb-mob-view"]}`}>
               <div className={`${styles["user-detail"]}`}>
