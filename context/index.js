@@ -149,7 +149,7 @@ export const AssetContext = createContext({
 
   // Sidenav parent Folder count
   sidenavTotalCollectionCount: 0,
-  setSidenavTotalCollectionCount: () => { },
+  setSidenavTotalCollectionCount: (value) => { },
 
   sidenavFolderChildList: {},
   setSidenavFolderChildList: (data, id, replace) => { },
@@ -186,6 +186,8 @@ export const AssetContext = createContext({
   setDownloadController: (controller) => { },
   currentFolder: null,
   setCurrentFolder: (value) => { },
+  showSubCollectionContent: false,
+  setShowSubCollectionContent: (value) => { }
 });
 
 export const TeamContext = createContext({

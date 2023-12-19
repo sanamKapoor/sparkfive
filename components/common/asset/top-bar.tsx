@@ -59,6 +59,7 @@ const TopBar = ({
     selectedAllSubFoldersAndAssets,
     setSelectedAllSubFoldersAndAssets,
     activeSubFolders,
+    setSelectedAllSubAssets
   } = useContext(AssetContext);
   const router = useRouter();
 
@@ -70,9 +71,10 @@ const TopBar = ({
   const [tabs, setTabs] = useState(selectOptions.views);
 
   const setSortFilterValue = (key: string, value: string) => {
+
     let sort = key === "sort" ? value : activeSortFilter.sort;
     if (key === "mainFilter") {
-      if (value === "folders") {
+      if (value === "folders" || value === "SubCollectionView") {
         sort = advancedConfig.collectionSortView === "alphabetical" ? selectOptions.sort[3] : selectOptions.sort[1];
       } else {
         sort = advancedConfig.assetSortView === "newest" ? selectOptions.sort[1] : selectOptions.sort[3];
@@ -81,6 +83,9 @@ const TopBar = ({
     // Reset select all status
     selectAllAssets(false);
     selectAllFolders(false);
+    setSelectedAllSubAssets(false)
+    setSelectedAllSubFoldersAndAssets(false);
+
     // Needed to reset because it is set for collection upload when alphabetical sort active
     // And uploaded folder needed to show at first
     setLastUploadedFolder(undefined);
@@ -124,7 +129,6 @@ const TopBar = ({
       }
       return shouldShow;
     });
-
     setTabs(_tabs);
   };
 
@@ -135,19 +139,6 @@ const TopBar = ({
   const handleOpenFilter = () => {
     //TODO
   };
-
-  // const mobileTabs = tabs.filter((view) => {
-  //   return (
-  //     (!activeFolder || !view.omitFolder) &&
-  //     (!isShare ||
-  //       (isShare &&
-  //         !view.omitShare &&
-  //         view.hideOnSingle !== singleCollection)) &&
-  //     (view.requirePermissions.length === 0 ||
-  //       (view.requirePermissions.length > 0 &&
-  //         hasPermission(view.requirePermissions)))
-  //   );
-  // });
 
   return (
     <section
@@ -161,25 +152,6 @@ const TopBar = ({
       >
         <img src={Utilities.filterBlue} alt={"filter"} />
       </div>
-      {/**
-       * Todo manage the case for share collection
-       */}
-      {/* <div className={styles.titleBreadcrumbs}>
-        {activeFolder && mode === "assets" && !singleCollection && (
-          <Breadcrumbs
-            links={[
-              {
-                name: "Collections",
-                action: () => {
-                  setActiveFolder("");
-                  setSortFilterValue("mainFilter", "folders");
-                },
-              },
-            ]}
-            current={folderData[0]?.name}
-          />
-        )}
-      </div> */}
       <div className={styles.wrapper}>
         <div className={`${styles["main-heading-wrapper"]}`}>
           {sidebarOpen ? null : (
@@ -193,9 +165,6 @@ const TopBar = ({
               />
             </div>
           )}
-          {/* {activeFolder && mode === "assets" && (
-            <SubHeader pageTitle={folderData[0]?.name} children={undefined} />
-          )} */}
           <div className={styles.innerwrapper}>
             {!deletedAssets ? (
               <div className={styles.filters}>
@@ -315,19 +284,6 @@ const TopBar = ({
               />
             )}
           </div>
-          {/* {selectedAllAssets && (
-            <span className={styles["select-only-shown-items-text"]} onClick={toggleSelectAll}>
-              Select only 25 assets shown
-            </span>
-          )}
-          {selectedAllFolders && (
-            <span
-              className={styles["select-only-shown-items-text"]}
-              onClick={toggleSelectAllFolders}
-            >
-              Select only 25 collections shown
-            </span>
-          )} */}
           <div className={styles["selected-wrapper"]}>
             <Button
               type="button"
@@ -337,9 +293,7 @@ const TopBar = ({
             />
           </div>
 
-          {/* {!deletedAssets && !isMobile && ( */}
           <div className={styles["nested-wrapper"]}>
-            {/* old filter button needed to be removed */}
             <Button
               text="Filters"
               type="button"
@@ -354,11 +308,18 @@ const TopBar = ({
           <div className={styles["sort-wrapper"]}>
             <Select
               label={"Sort By"}
-              options={selectOptions.sort.filter((item) => {
-                if (activeSortFilter.mainFilter === "folders" && item.value === "size") {
-                  return !item;
-                }
-                return activeSortFilter.mainFilter === "folders" && item.value === "none" ? !item : item;
+              options={selectOptions.sort.filter(item => {
+                const filters = {
+                  folders: ['size', 'none'],
+                  SubCollectionView: ['size', 'none'],
+                };
+
+                const shouldExcludeItem = (
+                  filters[activeSortFilter.mainFilter] &&
+                  filters[activeSortFilter.mainFilter].includes(item.value)
+                );
+
+                return !shouldExcludeItem;
               })}
               value={activeSortFilter.sort}
               styleType="filter filter-schedule"
