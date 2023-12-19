@@ -19,9 +19,6 @@ import IconClickable from "../buttons/icon-clickable";
 import AssetRelatedFileUpload from "./asset-related-files-upload";
 import React from "react";
 
-import {events} from '../../../constants/analytics';
-import useAnalytics from '../../../hooks/useAnalytics'
-
 const NextArrow = ({ onClick }) => (
   <img
     className={styles.arrow}
@@ -56,8 +53,6 @@ const AssetRelatedFIles = ({
   } = useContext(AssetContext);
 
   const { setIsLoading } = useContext(LoadingContext);
-
-  const {trackEvent} = useAnalytics();
 
   const [activeAssetId, setActiveAssetId] = useState("");
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -228,9 +223,6 @@ const AssetRelatedFIles = ({
           <IconClickable
             src={AssetOps.upload}
             onClick={() => {
-              trackEvent(events.UPLOAD_ASSET, {
-                uploadType: "Related Files",
-              });
               setUploadModalOpen(true)
             }}
           />

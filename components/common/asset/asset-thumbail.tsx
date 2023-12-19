@@ -87,8 +87,8 @@ const AssetThumbail = ({
   const dateFormat = "MMM do, yyyy";
   const [assetRenameModalOpen, setAssetRenameModalOpen] = useState(false);
 
-  const {trackEvent} = useAnalytics();
-  
+  const { trackEvent } = useAnalytics();
+
   useEffect(() => {
     setThumbnailName(assetName);
   }, [assetName]);
@@ -325,6 +325,26 @@ const AssetThumbail = ({
                           onClick={toggleSelected}
                         />
                       )}
+                    <div className={styles["image-button-wrapper"]}>
+                      <Button
+                        className={"container primary"}
+                        text={"View Details"}
+                        type={"button"}
+                        onClick={() => {
+                          trackEvent(isShare ? events.VIEW_SHARED_ASSET : events.VIEW_ASSET, {
+                            assetId: asset.id,
+                          });
+                          if (onView) {
+                            onView(asset.id);
+                          } else {
+                            setOverlayProperties({
+                              ...DEFAULT_DETAIL_PROPS,
+                              visible: !overlayProperties.visible,
+                            });
+                          }
+                        }}
+                      />
+                    </div>
                     </div>
                   )}
                   <div className={styles["image-button-wrapper"]}>
@@ -408,6 +428,8 @@ const AssetThumbail = ({
             <AssetOptions
               itemType={type}
               asset={asset}
+              thumbailUrl={thumbailUrl}
+              realUrl={realUrl}
               openArchiveAsset={openArchiveAsset}
               openDeleteAsset={openDeleteAsset}
               openMoveAsset={openMoveAsset}
@@ -426,6 +448,8 @@ const AssetThumbail = ({
             <AssetOptions
               itemType={type}
               asset={asset}
+              thumbailUrl={thumbailUrl}
+              realUrl={realUrl}
               openDeleteAsset={openDeleteAsset}
               downloadAsset={downloadAsset}
               isAssetRelated

@@ -10,7 +10,7 @@ const ResetPasswordPage = () => {
   const {trackPage} = useAnalytics();
 
   useEffect(() => {
-    trackPage(pages.UPLOAD_APPROVAL)
+    trackPage(pages.RESET_PASSWORD)
 },[]);
 
   return (

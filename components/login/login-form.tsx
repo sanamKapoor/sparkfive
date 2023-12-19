@@ -10,14 +10,12 @@ import styles from "./login-form.module.css";
 import Button from "../common/buttons/button";
 import FormInput from "../common/inputs/form-input";
 import Input from "../common/inputs/input";
-import useAnalytics from '../../hooks/useAnalytics'
 
 const Form = ({ teamId }) => {
   const { control, handleSubmit, errors } = useForm();
   const [submitError, setSubmitError] = useState("");
   const { afterAuth } = useContext(UserContext);
   const { setIsLoading } = useContext(LoadingContext);
-  const {identify}  = useAnalytics();
 
   const onSubmit = async (loginData) => {
     try {
@@ -28,12 +26,6 @@ const Form = ({ teamId }) => {
       };
       const { data } = await userApi.signIn(signInData, teamId);      
       await afterAuth(data);
-
-      const decoded = jwtDecode(data.token);
-
-      identify(decoded.id, {
-        email: loginData.email,
-      });
     } catch (err) {
       // TODO: Show error message
       if (err.response?.data?.message) {

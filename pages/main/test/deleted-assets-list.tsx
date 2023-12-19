@@ -17,7 +17,7 @@ const AssetsPage = () => {
   const {trackPage} = useAnalytics();
 
   useEffect(() => {
-    trackPage(pages.UPLOAD_APPROVAL)
+    trackPage(pages.ASSETS_DELETE)
 },[]);
 
   return (

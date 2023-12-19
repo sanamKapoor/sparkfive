@@ -13,4 +13,8 @@ export default class AnalyticsService {
   static identify(userId: string, infoObject?: Record<string, unknown>): void {
     window.analytics.identify(userId, infoObject);
   }
+
+  static group(groupId: string, infoObject?: Record<string, unknown>): void {
+    window.analytics.group(groupId, infoObject);
+  }
 }

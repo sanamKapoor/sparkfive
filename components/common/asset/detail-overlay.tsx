@@ -42,7 +42,7 @@ import AssetRelatedFilesList from "./asset-related-files-list";
 import downloadUtils from "../../../utils/download";
 import { sizeToZipDownload } from "../../../constants/download";
 
-import {events} from '../../../constants/analytics';
+import { events } from '../../../constants/analytics';
 import useAnalytics from "../../../hooks/useAnalytics";
 
 const getDefaultDownloadImageType = (extension) => {
@@ -130,7 +130,7 @@ const DetailOverlay = ({
   outsideDetailOverlay = false,
   sharedCode = "",
 }) => {
-  const {trackEvent} = useAnalytics();
+  const { trackEvent } = useAnalytics();
 
   const { hasPermission } = useContext(UserContext);
   const { user, cdnAccess, transcriptAccess } = useContext(UserContext);
@@ -699,6 +699,16 @@ const DetailOverlay = ({
           updateDownloadingStatus("done", 0, 0);
         }
       }
+
+      // Track download asset event
+      trackEvent(
+        isShare
+          ? events.DOWNLOAD_SHARED_ASSET
+          : events.DOWNLOAD_ASSET,
+        { 
+          assetId: asset.id, 
+        }
+      );
     } catch (e) {
       const errorResponse = (await e.response.data.text()) || "{}";
       const parsedErrorResponse = JSON.parse(errorResponse);
@@ -746,6 +756,16 @@ const DetailOverlay = ({
     if (currentAsset >= sizeToZipDownload || currentAsset.type === "video") {
       downloadSelectedAssets(id);
     } else {
+       // Track download asset event
+       trackEvent(
+        isShare
+          ? events.DOWNLOAD_SHARED_ASSET
+          : events.DOWNLOAD_ASSET,
+        { 
+          assetId: asset.id, 
+        }
+      );
+
       downloadUtils.downloadFile(versionRealUrl, currentAsset.name);
     }
   };
@@ -1044,12 +1064,10 @@ const DetailOverlay = ({
                     onClick={() => {
                       trackEvent(events.SHARE_ASSET, {
                         assetId: asset.id,
-                        assetName: asset.name,
                       });
                       openShareAsset();
                     }}
                   />
-
                   <div className={styles["only-mobile-button"]}>
                     <IconClickable
                       additionalClass={styles["only-mobile-button"]}
@@ -1066,12 +1084,6 @@ const DetailOverlay = ({
                     type={"button"}
                     className={`container ${styles["only-desktop-button"]} secondary`}
                     onClick={() => {
-                      trackEvent(
-                        isShare
-                          ? events.DOWNLOAD_SHARED_ASSET
-                          : events.DOWNLOAD_ASSET,
-                        { assetId: asset.id, assetName: asset.name }
-                      );
                       if (editThenDownload) {
                         setDownloadDropdownOpen(true);
                       } else {
@@ -1329,6 +1341,8 @@ const DetailOverlay = ({
                 onSelectChange={onSelectChange}
                 onSizeInputChange={onSizeInputChange}
                 asset={assetDetail}
+                versionRealUrl={versionRealUrl}
+                versionThumbnailUrl={versionThumbnailUrl}
                 onResetImageSize={() => {
                   resetValues();
                   setDetailPosSize({

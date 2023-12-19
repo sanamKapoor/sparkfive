@@ -11,11 +11,19 @@ import {
   SECURITY_TITLE,
 } from "../../../../../constants/strings";
 import UserPreference from "../../../../common/account/user-preference";
+import useAnalytics from "../../../../../hooks/useAnalytics";
+import { pages } from "../../../../../constants/analytics";
 
 const Notifications: React.FC = () => {
   const { user, setUser } = useContext(UserContext);
 
   const [enabledTwoFactor, setEnabledTwoFactor] = useState<boolean>(false);
+
+  const {trackPage} = useAnalytics();
+
+  useEffect(() => {
+    trackPage(pages.SECURITY)
+  },[]);
 
   useEffect(() => {
     if (user) {

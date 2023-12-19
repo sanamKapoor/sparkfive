@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./index.module.css";
 
 // Components
@@ -8,6 +8,8 @@ import SwitchableTabsWithProps from "../../../common/switchable-tabs-with-props"
 import AddCustomRole from "./add-custom-role";
 import Members from "./members";
 import Roles from "./roles";
+import useAnalytics from "../../../../hooks/useAnalytics";
+import { pages } from "../../../../constants/analytics";
 
 const Team: React.FC = () => {
   const [selectedRole, setSelectedRole] = useState<IRole | undefined>(
@@ -17,6 +19,12 @@ const Team: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>("members");
 
   const [loading, setLoading] = useState<boolean>(false);
+
+  const {trackPage} = useAnalytics();
+
+  useEffect(() => {
+    trackPage(pages.TEAM)
+  },[]);
 
   const onAddCustomRole = () => {
     setActiveTab("roles");

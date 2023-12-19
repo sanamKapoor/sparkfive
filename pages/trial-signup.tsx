@@ -10,7 +10,7 @@ const SignupPage = () => {
   const { trackPage } = useAnalytics();
 
   useEffect(() => {
-    trackPage(pages.UPLOAD_APPROVAL)
+    trackPage(pages.TRIAL_SIGNUP)
   }, []);
   
   return (
