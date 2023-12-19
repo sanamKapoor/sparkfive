@@ -25,7 +25,7 @@
     margin-top: 16px;
 }
 .active {
-    background:var(--color-sec-lightblue);
+    background:var(--additional-color);
     border-radius: 4px;
     padding: 4px;
     width: 100%;
