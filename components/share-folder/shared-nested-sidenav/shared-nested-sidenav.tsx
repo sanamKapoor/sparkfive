@@ -109,7 +109,7 @@ export default function SharedPageSidenav({ sidenavFolderList, viewFolder, headi
             {foldersList.length > 0 && (<ul>
               {foldersList?.map((item: Item, index: number) => (
                 <>
-                  <div style={{ display: 'flex' }}>
+                  <div style={{ display: 'flex',marginBottom:'4px' }}>
 
                     {item?.childFolders?.length > 0 ?
                       (<div className={styles.clickable}
