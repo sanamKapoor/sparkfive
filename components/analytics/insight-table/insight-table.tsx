@@ -8,7 +8,7 @@ import SearchButton from "./analytics-search-button/analytics-search";
 import Download from "../download-button/download";
 import Datefilter from "../date-filter/date-filter";
 import Pagination from "../Pagination/pagination";
-const TableComponent = ({ columns, data, arrowColumns, buttonColumns, buttonTexts }) => {
+const TableComponent = ({ columns, data, arrowColumns, buttonColumns, buttonTexts,imageSource }) => {
   return (
     <section className={`${styles["outer-wrapper"]}`}>
       <div className={styles.tableResponsive}>
@@ -75,7 +75,7 @@ const TableComponent = ({ columns, data, arrowColumns, buttonColumns, buttonText
                   {column === "Username" ? (
                     <div className={styles.usernameWithImage}>
                       <div className={`${styles["image-wrapper"]}`}>
-                        <img src={row["ImageSource"]} alt="user" className={styles.userImage} />
+                      {row.icon && <img src={row.icon} alt="user" className={styles.userImage} />}
                       </div>
 
                       {row[column]}
