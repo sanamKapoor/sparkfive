@@ -26,6 +26,7 @@ const UserTable = () => {
   const arrowColumns = ["Username", "Role","Last session date","Sessions","Downloads","Shares"];
   const buttonColumns = ["Actions"]; 
   const buttonTexts = { Actions: "User Info" };
+  
   return (
     <section className={`${styles["outer-wrapper"]}`}>
       <div className={styles.tableResponsive}>
