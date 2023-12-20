@@ -3,6 +3,7 @@ import styles from "./insights.header.module.css";
 
 export default function InsightsHeader({ title, companyName }) {
   return (
+    // header-on-toggle this will be added conditionally 
     <section className={styles.header}>
       <span className={styles.titles}>
         {title}

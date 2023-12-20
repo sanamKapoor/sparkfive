@@ -12,8 +12,7 @@ const search = () => {
             placeholder="Search User"
             name="search2"
             className={styles.searchinput}
-           
-          />
+           />
         </div>
         <div className={`${styles.searchbtn}`}>
           <img className={styles.image} src={Utilities.search} alt="Search Icon" />

@@ -5,6 +5,10 @@
   margin-left: 218px;
   border-bottom: 1px solid #dedad4;
 }
+.header-on-toggle{
+  width: 100%;
+  margin-left:0;
+}
 .titles {
   font-weight: 700;
   font-size: 22px;

@@ -2,13 +2,30 @@
 
 import React from "react";
 import styles from "./insight-table.module.css";
-import { Utilities } from "../../../assets";
+import { insights,Utilities } from "../../../assets";
 import TableHeading from "./table-heading";
 import SearchButton from "./analytics-search-button/analytics-search";
 import Download from "../download-button/download";
 import Datefilter from "../date-filter/date-filter";
 import Pagination from "../Pagination/pagination";
-const TableComponent = ({ columns, data, arrowColumns, buttonColumns, buttonTexts,imageSource }) => {
+import TableData from "../table-data/table-data";
+const UserTable = () => {
+  const columns = ["Username", "Role","Last session date","Sessions","Downloads","Shares", "Actions",];
+  const data = [
+    { Username: "Seraphina Alexandra Montgomery-Smith",icon: insights.userImg1,  Role: "Admin", "Last session date": "Today at 04:22pm", Sessions:"1.27",Downloads:"77",Shares:"30", Actions: "Edit" ,},
+    { Username: "Charles Wells",icon: insights.userImg2,  Role: "Role name", "Last session date": "Today at 04:01pm", Sessions:"93",Downloads:"77",Shares:"30",  Actions: "Delete" },
+    { Username: "Harvey Elliott",icon: insights.userImg3,  Role: "Role name", "Last session date": "Today at 04:01pm", Sessions:"93",Downloads:"77",Shares:"30",  Actions: "Delete" },
+    { Username: "John Ali",icon: insights.userImg4,  Role: "Role name", "Last session date": "Today at 04:01pm", Sessions:"93",Downloads:"77",Shares:"30",  Actions: "Delete" },
+    { Username: "John Ali",  Role: "Role name", "Last session date": "Today at 04:01pm", Sessions:"93",Downloads:"77",Shares:"30",  Actions: "Delete" },
+    { Username: "Betty Anderson",  Role: "Role name", "Last session date": "Today at 04:01pm", Sessions:"93",Downloads:"77",Shares:"30",  Actions: "Delete" },
+    { Username: "Eugene Atkinson",  Role: "Role name", "Last session date": "Today at 04:01pm", Sessions:"93",Downloads:"77",Shares:"30",  Actions: "Delete" },
+    { Username: "Eugene Atkinson",icon: insights.userImg3,  Role: "Role name", "Last session date": "Today at 04:01pm", Sessions:"93",Downloads:"77",Shares:"30",  Actions: "Delete" },
+    
+     ];
+
+  const arrowColumns = ["Username", "Role","Last session date","Sessions","Downloads","Shares"];
+  const buttonColumns = ["Actions"]; 
+  const buttonTexts = { Actions: "User Info" };
   return (
     <section className={`${styles["outer-wrapper"]}`}>
       <div className={styles.tableResponsive}>
@@ -51,48 +68,7 @@ const TableComponent = ({ columns, data, arrowColumns, buttonColumns, buttonText
         </div>
       </div>
 
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            {columns.map((column, index) => (
-              <th key={index}>
-                {arrowColumns.includes(column) ? (
-                  <div className={styles.headingIcon}>
-                    {column} <img src={Utilities.arrowDownUp} alt="flip icon" />
-                  </div>
-                ) : (
-                  column
-                )}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((row, rowIndex) => (
-            <tr key={rowIndex}>
-              {columns.map((column, colIndex) => (
-                <td key={colIndex}>
-                  {column === "Username" ? (
-                    <div className={styles.usernameWithImage}>
-                      <div className={`${styles["image-wrapper"]}`}>
-                      {row.icon && <img src={row.icon} alt="user" className={styles.userImage} />}
-                      </div>
-
-                      {row[column]}
-                    </div>
-                  ) : buttonColumns.includes(column) ? (
-                    <button className={styles.actionButton} onClick={() => console.log(`Button clicked in ${column}`)}>
-                      {buttonTexts[column] || "Click me"}
-                    </button>
-                  ) : (
-                    row[column]
-                  )}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+     <TableData  columns={columns} data={data} arrowColumns={arrowColumns} buttonColumns={buttonColumns} buttonTexts={buttonTexts}  imageSource="ImageSource" />
       <Pagination />
     </div>
 
@@ -101,4 +77,4 @@ const TableComponent = ({ columns, data, arrowColumns, buttonColumns, buttonText
   );
 };
 
-export default TableComponent;
+export default UserTable;
