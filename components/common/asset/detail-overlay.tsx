@@ -2,7 +2,7 @@ import update from "immutability-helper";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Rnd } from "react-rnd";
 import { AssetOps, Utilities } from "../../../assets";
-import { AssetContext, UserContext } from "../../../context";
+import { AssetContext, UserContext, FilterContext } from "../../../context";
 import assetApi from "../../../server-api/asset";
 import shareApi from "../../../server-api/share-collection";
 import customFileSizeApi from "../../../server-api/size";
@@ -42,8 +42,9 @@ import AssetRelatedFilesList from "./asset-related-files-list";
 import downloadUtils from "../../../utils/download";
 import { sizeToZipDownload } from "../../../constants/download";
 
-import {events} from '../../../constants/analytics';
+import { events } from '../../../constants/analytics';
 import useAnalytics from "../../../hooks/useAnalytics";
+import cookiesApi from "../../../utils/cookies";
 
 const getDefaultDownloadImageType = (extension) => {
   const defaultDownloadImageTypes = [
@@ -130,11 +131,11 @@ const DetailOverlay = ({
   outsideDetailOverlay = false,
   sharedCode = "",
 }) => {
-  const {trackEvent} = useAnalytics();
+  const { trackEvent } = useAnalytics();
 
   const { hasPermission } = useContext(UserContext);
   const { user, cdnAccess, transcriptAccess } = useContext(UserContext);
-
+  const { activeSortFilter } = useContext(FilterContext);
   const [assetDetail, setAssetDetail] = useState(undefined);
 
   const [renameModalOpen, setRenameModalOpen] = useState(false);
@@ -149,7 +150,16 @@ const DetailOverlay = ({
 
   const [activeSideComponent, setActiveSidecomponent] = useState("detail");
 
-  const { assets, setAssets, folders, needsFetch, updateDownloadingStatus, setDetailOverlayId, setOperationAssets } =
+  const { assets, setAssets, folders, needsFetch, updateDownloadingStatus, setDetailOverlayId, setOperationAssets,
+    subFoldersAssetsViewList: {
+      results: subcollectionAssets,
+      next: nextAsset,
+      total: totalAssets,
+    },
+    activeSubFolders,
+    setSubFoldersAssetsViewList,
+    subFoldersViewList,
+    currentFolder } =
     useContext(AssetContext);
 
   const [sideOpen, setSideOpen] = useState(true);
@@ -261,10 +271,27 @@ const DetailOverlay = ({
 
   const _setActiveCollection = () => {
     // TODO: ? What is purpose of this ?
-    if (activeFolder) {
-      const folder = folders.find((folder) => folder.id === activeFolder);
+    if (activeFolder && activeSubFolders !== "") {
+      const folder = folders.find((folder) => folder.id === activeSubFolders);
       if (folder) {
         setActiveCollection(folder);
+        const assetIndx = subcollectionAssets.findIndex((item) => item.asset && item.asset.id === asset.id) + 1;
+        setAssetIndex(assetIndx);
+      } else if (currentFolder) {
+        setActiveCollection(currentFolder);
+        const assetIndx = subcollectionAssets.findIndex((item) => item.asset && item.asset.id === asset.id) + 1;
+        setAssetIndex(assetIndx);
+      }
+    } else if (activeFolder && activeSubFolders === "") {
+      const folder = subFoldersViewList?.results?.find((folder) => {
+        return folder.id === activeFolder
+      })
+      if (folder) {
+        setActiveCollection(folder);
+        const assetIndx = assets.findIndex((item) => item.asset && item.asset.id === asset.id) + 1;
+        setAssetIndex(assetIndx);
+      } else if (currentFolder) {
+        setActiveCollection(currentFolder);
         const assetIndx = assets.findIndex((item) => item.asset && item.asset.id === asset.id) + 1;
         setAssetIndex(assetIndx);
       }
@@ -376,25 +403,49 @@ const DetailOverlay = ({
 
   const confirmAssetRename = async (newValue) => {
     try {
-      const editedName = `${newValue}.${assetDetail.extension}`;
-      await assetApi.updateAsset(currentAsset.id, {
-        updateData: { name: editedName },
-      });
-      const modAssetIndex = assets.findIndex((assetItem) => assetItem.asset.id === currentAsset.id);
-      setAssets(
-        update(assets, {
-          [modAssetIndex]: {
-            asset: {
-              name: { $set: editedName },
+      if (activeSortFilter.mainFilter === "SubCollectionView") {
+        const editedName = `${newValue}.${assetDetail.extension}`;
+        await assetApi.updateAsset(currentAsset.id, {
+          updateData: { name: editedName },
+        });
+        const modAssetIndex = subcollectionAssets.findIndex((assetItem) => assetItem.asset.id === currentAsset.id);
+        setSubFoldersAssetsViewList({
+          next: nextAsset,
+          total: totalAssets,
+          results: update(subcollectionAssets, {
+            [modAssetIndex]: {
+              asset: {
+                name: { $set: editedName },
+              },
             },
-          },
-        }),
-      );
-      setAssetDetail(
-        update(assetDetail, {
-          name: { $set: editedName },
-        }),
-      );
+          }),
+        });
+        setAssetDetail(
+          update(assetDetail, {
+            name: { $set: editedName },
+          }),
+        );
+      } else {
+        const editedName = `${newValue}.${assetDetail.extension}`;
+        await assetApi.updateAsset(currentAsset.id, {
+          updateData: { name: editedName },
+        });
+        const modAssetIndex = assets.findIndex((assetItem) => assetItem.asset.id === currentAsset.id);
+        setAssets(
+          update(assets, {
+            [modAssetIndex]: {
+              asset: {
+                name: { $set: editedName },
+              },
+            },
+          }),
+        );
+        setAssetDetail(
+          update(assetDetail, {
+            name: { $set: editedName },
+          }),
+        );
+      }
       toastUtils.success("Asset name updated");
     } catch (err) {
       toastUtils.error("Could not update asset name");
@@ -649,6 +700,20 @@ const DetailOverlay = ({
           updateDownloadingStatus("done", 0, 0);
         }
       }
+
+      // Track download asset event
+      if(isShare){
+        trackEvent(
+          events.DOWNLOAD_SHARED_ASSET,
+          {
+            email: cookiesApi.get('shared_email') || null,
+            assetId: asset.id,
+          });
+      } else {
+        trackEvent(events.DOWNLOAD_ASSET, {
+          assetId: asset.id,
+        });
+      }
     } catch (e) {
       const errorResponse = (await e.response.data.text()) || "{}";
       const parsedErrorResponse = JSON.parse(errorResponse);
@@ -696,6 +761,20 @@ const DetailOverlay = ({
     if (currentAsset >= sizeToZipDownload || currentAsset.type === "video") {
       downloadSelectedAssets(id);
     } else {
+       // Track download asset event
+       if(isShare){
+        trackEvent(
+          events.DOWNLOAD_SHARED_ASSET,
+          {
+            email: cookiesApi.get('shared_email') || null,
+            assetId: asset.id,
+          });
+      } else {
+        trackEvent(events.DOWNLOAD_ASSET, {
+          assetId: asset.id,
+        });
+      }
+
       downloadUtils.downloadFile(versionRealUrl, currentAsset.name);
     }
   };
@@ -819,14 +898,27 @@ const DetailOverlay = ({
   };
 
   const navigateOverlay = (navBy) => {
-    const currentIndx = assets.findIndex((item) => asset && item.asset && item.asset.id === asset.id);
-    const newIndx = currentIndx + navBy;
-    setAssetIndex(newIndx);
-    if (assets[newIndx]) {
-      closeOverlay();
-      setDetailOverlayId(assets[newIndx].asset.id);
-      if (newIndx === assets.length - 1) {
-        loadMore();
+    if (activeSortFilter.mainFilter === "SubCollectionView") {
+      const currentIndx = subcollectionAssets.findIndex((item) => asset && item.asset && item.asset.id === asset.id);
+      const newIndx = currentIndx + navBy;
+      setAssetIndex(newIndx);
+      if (subcollectionAssets[newIndx]) {
+        closeOverlay();
+        setDetailOverlayId(subcollectionAssets[newIndx].asset.id);
+        if (newIndx === subcollectionAssets.length - 1) {
+          loadMore();
+        }
+      }
+    } else {
+      const currentIndx = assets.findIndex((item) => asset && item.asset && item.asset.id === asset.id);
+      const newIndx = currentIndx + navBy;
+      setAssetIndex(newIndx);
+      if (assets[newIndx]) {
+        closeOverlay();
+        setDetailOverlayId(assets[newIndx].asset.id);
+        if (newIndx === assets.length - 1) {
+          loadMore();
+        }
       }
     }
   };
@@ -967,6 +1059,7 @@ const DetailOverlay = ({
                   <AssetAddition
                     folderAdd={false}
                     versionGroup={assetDetail.versionGroup}
+                    assetDetailPage={true}
                     triggerUploadComplete={onUserEvent}
                   />
                 </div>
@@ -980,12 +1073,10 @@ const DetailOverlay = ({
                     onClick={() => {
                       trackEvent(events.SHARE_ASSET, {
                         assetId: asset.id,
-                        assetName: asset.name,
                       });
                       openShareAsset();
                     }}
                   />
-
                   <div className={styles["only-mobile-button"]}>
                     <IconClickable
                       additionalClass={styles["only-mobile-button"]}
@@ -1002,12 +1093,6 @@ const DetailOverlay = ({
                     type={"button"}
                     className={`container ${styles["only-desktop-button"]} secondary`}
                     onClick={() => {
-                      trackEvent(
-                        isShare
-                          ? events.DOWNLOAD_SHARED_ASSET
-                          : events.DOWNLOAD_ASSET,
-                        { assetId: asset.id, assetName: asset.name }
-                      );
                       if (editThenDownload) {
                         setDownloadDropdownOpen(true);
                       } else {
@@ -1171,7 +1256,31 @@ const DetailOverlay = ({
                 )
               }
               {
-                activeFolder && (
+                activeFolder && activeSubFolders !== "" && (
+                  <div className={styles.arrows}>
+                    <div>
+                      {subcollectionAssets.length &&
+                        subcollectionAssets[0].asset &&
+                        subcollectionAssets[0].asset.id !== asset.id && (
+                          <span className={styles["arrow-prev"]}>
+                            <IconClickable src={Utilities.arrowPrev} onClick={() => navigateOverlay(-1)} />
+                          </span>
+                        )}
+                      {availableNext && (
+                        <span className={styles["arrow-next"]}>
+                          <IconClickable src={Utilities.arrowNext} onClick={() => navigateOverlay(1)} />
+                        </span>
+                      )}
+                    </div>
+                    <span>
+                      {(assetIndex % activeCollection?.assetsCount) + 1} of {activeCollection?.assetsCount} in{" "}
+                      {activeCollection?.name} collection
+                    </span>
+                  </div>
+                )
+              }
+              {
+                activeFolder && activeSubFolders === "" && (
                   <div className={styles.arrows}>
                     <div>
                       {assets.length &&
@@ -1241,6 +1350,8 @@ const DetailOverlay = ({
                 onSelectChange={onSelectChange}
                 onSizeInputChange={onSizeInputChange}
                 asset={assetDetail}
+                versionRealUrl={versionRealUrl}
+                versionThumbnailUrl={versionThumbnailUrl}
                 onResetImageSize={() => {
                   resetValues();
                   setDetailPosSize({

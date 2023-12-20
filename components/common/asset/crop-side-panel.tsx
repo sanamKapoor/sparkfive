@@ -20,6 +20,9 @@ import IconClickable from "../buttons/icon-clickable";
 import Input from "../inputs/input";
 import SizeSelect from "../inputs/size-select";
 import ConfirmModal from "../modals/confirm-with-rename-modal";
+import { events } from "../../../constants/analytics";
+import useAnalytics from "../../../hooks/useAnalytics";
+import cookiesApi from "../../../utils/cookies";
 
 // Utils
 
@@ -44,11 +47,15 @@ const CropSidePanel = ({
   sizeOfCrop,
   setSizeOfCrop,
   detailPosSize,
+  versionRealUrl,
+  versionThumbnailUrl,
   onAddAssociate = (data) => {},
   setRenameData = (data) => {},
 }) => {
   const { updateDownloadingStatus } = useContext(AssetContext);
   const { setIsLoading } = useContext(LoadingContext);
+
+  const { trackEvent } = useAnalytics();
 
   const [resizeOption, setResizeOption] = useState("px");
   const [sizesValue, setSizesValue] = useState({
@@ -435,6 +442,18 @@ const CropSidePanel = ({
           text={"Download Edited"}
           type={"button"}
           onClick={() => {
+            if(isShare){
+              trackEvent(
+                events.DOWNLOAD_SHARED_ASSET,
+                {
+                  email: cookiesApi.get('shared_email') || null,
+                  assetId: asset.id,
+                });
+            } else {
+              trackEvent(events.DOWNLOAD_ASSET, {
+                assetId: asset.id,
+              });
+            }
             if (mode === "crop") {
               document.getElementById("download-crop-image").click();
             } else {

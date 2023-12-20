@@ -10,7 +10,7 @@ const ForgotPasswordPage = () => {
   const {trackPage} = useAnalytics();
 
   useEffect(() => {
-    trackPage(pages.UPLOAD_APPROVAL)
+    trackPage(pages.FORGOT_PASSWORD)
 },[]);
 
   return (

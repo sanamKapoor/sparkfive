@@ -1,11 +1,11 @@
 // External import
 import update from "immutability-helper";
 import { useContext, useEffect, useRef, useState } from "react";
-
+ 
 // Styles
 import styles from "./index.module.css";
 
-import assetApi from "../../server-api/asset";
+import assetApi from "../../server-api/asset"; 
 import toastUtils from "../../utils/toast";
 import urlUtils from "../../utils/url";
 
@@ -30,8 +30,9 @@ import { defaultLogo } from "../../constants/theme";
 import { sizeToZipDownload } from "../../constants/download";
 import downloadUtils from "../../utils/download";
 
-import {events} from '../../constants/analytics';
+import { events } from '../../constants/analytics';
 import useAnalytics from "../../hooks/useAnalytics"
+import cookiesApi from "../../utils/cookies";
 
 const AssetShare = () => {
   const { logo: themeLogo, setLogo: setThemeLogo } = useContext(UserContext);
@@ -48,7 +49,7 @@ const AssetShare = () => {
   const [shareUserName, setShareUserName] = useState("");
   const [sharedCode, setSharedCode] = useState("");
 
-	const {trackEvent} = useAnalytics();
+  const { trackEvent } = useAnalytics();
 
   // Toggle select asset
   const toggleSelected = (id) => {
@@ -117,6 +118,15 @@ const AssetShare = () => {
 
       const selectedAssets = assets.filter((asset) => asset.isSelected);
 
+      selectedAssets.map(assetItem => {
+        // Track assets download event
+        trackEvent(events.DOWNLOAD_SHARED_ASSET, {
+            email: cookiesApi.get('shared_email') || null,
+            assetId: assetItem.asset.id,
+          });
+        return assetItem;
+      })
+
       const downloadAsZip = async () => {
         let payload = {
           assetIds: selectedAssets.map((item) => item.asset.id),
@@ -147,7 +157,7 @@ const AssetShare = () => {
       }
 
       // downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets.zip')
-    } catch (e) {}
+    } catch (e) { }
   };
 
   useEffect(() => {
@@ -177,6 +187,7 @@ const AssetShare = () => {
           setShareUserName(data.sharedBy);
           setSharedCode(code as string);
           setLogo(data.data.team?.workspaceIcon);
+          trackEvent(events.ACCESS_SHARED_LINK, { link: window.location.href });
         }
 
         // There is team theme set
@@ -197,9 +208,8 @@ const AssetShare = () => {
   const onSubmitAuth = async (e) => {
     e.preventDefault();
     setLoading(true);
-		trackEvent(events.ACCESS_SHARED_LINK, {email});
     const { shareJWT, code } = urlUtils.getQueryParameters();
-    const { data } = await assetApi.getSharedAssets({ shareJWT, email, code });
+    const { data } = await assetApi.getSharedAssets({ shareJWT, email, code });    
 
     if (data.error) {
       toastUtils.error(data.errorMessage);
@@ -209,6 +219,8 @@ const AssetShare = () => {
       setError(false);
       setLoading(false);
       setAssets(data.data);
+      cookiesApi.set('shared_email', email);
+      trackEvent(events.ACCESS_SHARED_LINK, { email, link: window.location.href });
     }
 
     // There is team theme set
@@ -279,7 +291,7 @@ const AssetShare = () => {
             />
             <div className={styles["list-wrapper"]}>
               <ul className={styles["grid-list"]}>
-                {assets.map((assetItem) => {
+                {assets.map((assetItem) => {                  
                   return (
                     <li className={styles["grid-item"]} key={assetItem.asset.id}>
                       <ShareItem

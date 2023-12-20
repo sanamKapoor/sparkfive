@@ -204,15 +204,12 @@ form.search button {
   font-weight: 500;
   font-size: 13px;
   line-height: 18px;
-  color: var(--color-prim-navy);
+  color:var(--primary-color);
   margin-left: 5px;
-}
-.active {
-  background: #e9eefa;
 }
 
 .folder {
-  padding: 0 24px 0 20px;
+  padding: 0 24px 0 32px;
 }
 .folder-lists {
   display: flex;
@@ -223,7 +220,7 @@ form.search button {
   padding: 4px;
 }
 .folder-lists:hover {
-  background: #d5dcef;
+  background: var(--additional-color);
   border-radius: 4px;
   padding: 4px;
 }
@@ -271,7 +268,7 @@ form.search button {
   height: 1px;
 }
 .active {
-  background: var(--color-sec-lightblue);
+  background: var(--additional-color);
   border-radius: 4px;
   /* padding: 7.5px; */
 }
@@ -290,7 +287,7 @@ form.search button {
   padding: 0px 5px;
 }
 .nestedbox:hover {
-  background: var(--color-sec-lightblue);
+  background: var(--additional-color);
   border-radius: 4px;
 }
 .list1-right-contents {

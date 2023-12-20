@@ -1,8 +1,19 @@
 // Components
 import AppLayout from "../components/common/layouts/app-layout";
 import Spinner from "../components/common/spinners/spinner";
+import useAnalytics from "../hooks/useAnalytics";
+import { pages } from "../constants/analytics";
+import { useEffect } from "react";
 
-const MainPage = () => (
+const MainPage = () => {
+
+  const {trackPage} = useAnalytics();
+
+  useEffect(() => {
+    trackPage(pages.HOME)
+},[]);
+
+  return (
   <>
     <AppLayout title="Sparkfive">
       <div
@@ -13,6 +24,6 @@ const MainPage = () => (
       </div>
     </AppLayout>
   </>
-);
+)};
 
 export default MainPage;

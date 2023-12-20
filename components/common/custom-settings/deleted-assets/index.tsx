@@ -131,14 +131,14 @@ const DeletedAssetsLibrary = () => {
           </span>
         </div>
         <div className={styles.subHeader}>
-          {selectedAllAssets && (
+          {/* {selectedAllAssets && (
             <span
               className={styles["select-only-shown-items-text"]}
               onClick={toggleSelectAll}
             >
               Select only 25 assets shown
             </span>
-          )}
+          )} */}
           <div className={styles.newbtn}>
             <Button
               type="button"

@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 
 import { sideNavFirstList } from "../../constants/firstList-sidenav";
-import { AssetContext, FilterContext } from "../../context";
+import { AssetContext, FilterContext, UserContext } from "../../context";
 import assetApi from "../../server-api/asset";
 import { getAssetsFilters, getAssetsSort } from "../../utils/asset";
 import styles from "./nested-sidenav-firstlist.module.css";
@@ -15,6 +15,9 @@ const NestedFirstlist = ({
 
   const { activeSortFilter, searchFilterParams, term } =
     useContext(FilterContext);
+  const { hasPermission, advancedConfig } = useContext(UserContext) as any;
+
+  const [hideFilterElements] = useState(advancedConfig.hideFilterElements);
 
   const [listingData, setListingData] = useState({
     image: "",
@@ -62,6 +65,20 @@ const NestedFirstlist = ({
     }
   };
 
+
+  const setTabsVisibility = useMemo(() => {
+    const filterElements = hideFilterElements;
+    const tabs = sideNavFirstList.filter((tab) => {
+      let tabName = tab.hiddenKeyName.toLowerCase();
+      let shouldShow = true;
+      if (filterElements && filterElements.hasOwnProperty(tabName)) {
+        shouldShow = !filterElements[tabName];
+      }
+      return shouldShow;
+    });
+    return tabs
+  }, [hideFilterElements]);
+
   useEffect(() => {
     getAssets(true);
   }, []);
@@ -69,7 +86,7 @@ const NestedFirstlist = ({
   return (
     <div className={styles["sidenav-list1"]}>
       <ul>
-        {sideNavFirstList.map((item, index) => (
+        {setTabsVisibility.map((item, index) => (
           <li
             onClick={() => headingClick(item.name, item.description)}
             className={`${styles["list1-description"]} ${styles["border-bottom"]

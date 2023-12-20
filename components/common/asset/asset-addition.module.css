@@ -130,6 +130,14 @@
     }
     
 }
+@media (max-width:480px){
+    .options-list {
+        position: absolute;
+        top: 43%;
+        right: 30%;
+      
+    }
+}
 
 @media screen and (max-width: 380px) {
     .options-list.dropdown {

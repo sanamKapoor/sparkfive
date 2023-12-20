@@ -18,7 +18,7 @@ const AssetsPage: React.FC = () => {
   const {trackPage} = useAnalytics();
 
   useEffect(() => {
-    trackPage(pages.UPLOAD_APPROVAL)
+    trackPage(pages.USER_SETTING)
 },[]);
 
   return (

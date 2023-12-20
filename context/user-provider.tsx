@@ -16,7 +16,7 @@ import requestsUtils from "../utils/requests";
 import { loadTheme, resetTheme } from "../utils/theme";
 
 import { defaultLogo } from "../constants/theme";
-import {events} from '../constants/analytics';
+import { events } from '../constants/analytics';
 
 import useAnalytics from '../hooks/useAnalytics';
 
@@ -42,13 +42,13 @@ export default ({ children }) => {
   const [logo, setLogo] = useState<string>(defaultLogo);
   const [logoId, setLogoId] = useState<string>();
 
-  const {trackEvent} = useAnalytics();
+  const { trackEvent, identify, group } = useAnalytics();
 
   const { setIsLoading } = useContext(LoadingContext);
 
   const router = useRouter();
 
-  const fetchUser = async (redirectLogin = false) => {
+  const fetchUser = async (trackUser = false, redirectLogin = false) => {
     // Skip fetching user if on collections page
     if (Router.pathname.indexOf("/collections") !== -1) return;
 
@@ -72,6 +72,7 @@ export default ({ children }) => {
         const query = url.getQueryStringFromObject(Router.query);
 
         const { data } = await userApi.getUserData();
+
         const teamResponse = await teamApi.getTeam();
         setCdnAccess(teamResponse.data.cdnAccess);
         setTranscriptAccess(teamResponse.data.transcript);
@@ -104,6 +105,14 @@ export default ({ children }) => {
           }
         } else {
           resetTheme();
+        }
+
+        if (trackUser) {
+
+          // Track loggedIn user data for analytics
+          identify(data.id, {
+            id: data.id,
+          });
         }
 
         if (!data.firstTimeLogin && Router.pathname.indexOf("/main/setup") === -1) {
@@ -146,11 +155,23 @@ export default ({ children }) => {
 
     // Reset theme
     resetTheme();
-
-    setUser(null);
     cookiesUtils.remove("jwt");
     requestsUtils.removeAuthToken();
-    trackEvent(events.LOGOUT);
+
+    // Track the logout event and remove the userId
+    trackEvent(events.LOGOUT, {
+      id: user?.id,
+      name: user?.name,
+      email: user?.email,
+      role: user?.role,
+      timezone: user?.timezone,
+      team: user?.team,
+      profilePhoto: user?.profilePhoto,
+      firstTimeLogin: user?.firstTimeLogin,
+    });
+    window.analytics.reset();
+
+    setUser(null);
     Router.replace("/login");
   };
 
@@ -185,7 +206,7 @@ export default ({ children }) => {
     if (twoFactor) {
       cookiesUtils.set("twoFactor", "true");
     }
-    await fetchUser();
+    await fetchUser(true);
   };
 
   useEffect(() => {

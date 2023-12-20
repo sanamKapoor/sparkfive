@@ -1,13 +1,14 @@
 import { useContext } from "react";
-import { UserContext } from "../context";
+import { TeamContext, UserContext } from "../context";
 import AnalyticsService from "../utils/analytics-service";
 
 const useAnalytics = () => {
-  const { insightAllowed, advancedConfig } = useContext(UserContext);
+  const { user } = useContext(UserContext);
+  const { team } = useContext(TeamContext);
 
-  const isTrackingEnabled = advancedConfig?.insights || insightAllowed;
+  const isTrackingEnabled = user?.team?.analytics || team?.analytics;
 
-  const trackPage = (pageName: string) => {
+  const trackPage = (pageName: string) => {    
     // if (isTrackingEnabled || pageName === "LOGIN") {
       AnalyticsService.trackPage(pageName);
     // }
@@ -29,7 +30,11 @@ const useAnalytics = () => {
     AnalyticsService.identify(userId, infoObject);
   };
 
-  return { trackPage, trackEvent, identify };
+  const group = (groupId: string, infoObject?: Record<string, unknown>) => {
+    AnalyticsService.group(groupId, infoObject);
+  };
+
+  return { trackPage, trackEvent, identify, group };
 };
 
 export default useAnalytics;

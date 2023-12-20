@@ -39,20 +39,30 @@ const FolderOptions = ({
   const options = isShare
     ? [{
       label: "Download", onClick: () => {
-        trackEvent(events.DOWNLOAD_COLLECTION);
+        trackEvent(events.DOWNLOAD_COLLECTION, {
+          collectionId: activeFolderId
+        });
         downloadFoldercontents();
       }
     }]
     : [
-      { label: "Download", onClick: () => {
-        trackEvent(events.DOWNLOAD_COLLECTION);
-        downloadFoldercontents(); 
-      }},
+      {
+        label: "Download", onClick: () => {
+          trackEvent(events.DOWNLOAD_COLLECTION, {
+            collectionId: activeFolderId
+          });
+          downloadFoldercontents(); 
+        }
+      },
       // { label: "Delete", onClick: () => setDeleteOpen(true) },
-      { label: "Share", onClick: () => {
-        trackEvent(events.SHARE_COLLECTION);
-        shareAssets(); 
-      }},
+      {
+        label: "Share", onClick: () => {
+          trackEvent(events.SHARE_COLLECTION, {
+            collectionId: activeFolderId
+          });
+          shareAssets();
+        }
+      },
       {
         label: "Rename Folder",
         onClick: () => {

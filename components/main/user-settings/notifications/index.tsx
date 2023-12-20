@@ -14,6 +14,8 @@ import {
 } from "../../../../constants/strings";
 import UserPreference from "../../../common/account/user-preference";
 import NotificationList from "../../../common/notifications/notification-list";
+import useAnalytics from "../../../../hooks/useAnalytics";
+import { pages } from "../../../../constants/analytics";
 
 const Notifications: React.FC = () => {
   const { user, setUser } = useContext(UserContext);
@@ -22,6 +24,12 @@ const Notifications: React.FC = () => {
     useState<boolean>(false);
 
   const [notifications, setNotifications] = useState([]);
+
+  const {trackPage} = useAnalytics();
+
+  useEffect(() => {
+    trackPage(pages.NOTIFICATIONS)
+  },[]);
 
   useEffect(() => {
     if (user) {

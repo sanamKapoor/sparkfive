@@ -20,14 +20,14 @@ const FolderModal: React.FC<FolderModalProps> = ({ modalIsOpen, closeModal, onSu
   return (
     <Base modalIsOpen={modalIsOpen} closeModal={closeModal}>
       <div className={styles.folder_modal}>
-        <h3>{addSubCollection ? "Create Your New Sub Collection" : "Create Your New Collection"}</h3>
+        <h3>{addSubCollection ? "Create Your New SubCollection" : "Create Your New Collection"}</h3>
         <div className={styles.folder_modal_input}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <FormInput
               InputComponent={
                 <Input
                   type="text"
-                  placeholder={`Name Your ${addSubCollection ? "Sub Collection" : "Collection"} `}
+                  placeholder={`Name Your ${addSubCollection ? "SubCollection" : "Collection"} `}
                   styleType="regular-short"
                 />
               }

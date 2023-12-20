@@ -26,6 +26,9 @@ import Dropdown from "../inputs/dropdown";
 import ConfirmModal from "../modals/confirm-modal";
 import styles from "./asset-header-ops.module.css";
 import { sizeToZipDownload } from "../../../constants/download";
+import { events } from "../../../constants/analytics";
+import useAnalytics from "../../../hooks/useAnalytics";
+import cookiesApi from "../../../utils/cookies";
 
 const AssetHeaderOps = ({
   isUnarchive = false,
@@ -43,12 +46,6 @@ const AssetHeaderOps = ({
 }) => {
 
   const router = useRouter();
-
-  // const [sharePath, setSharePath] = useState("");
-  // const [showShareAction, setShowShareAction] = useState(false);
-  // const contentRef = useRef(null);
-  // const [showMoreActions, setShowMoreActions] = useState(false);
-  // const [showAssociateModalOpen, setShowAssociateModalOpen] = useState(false);
 
   const {
     assets,
@@ -71,7 +68,10 @@ const AssetHeaderOps = ({
     selectedAllSubAssets,
     setSubFoldersAssetsViewList,
     setDownloadController,
+    setSelectedAllSubAssets
   } = useContext(AssetContext);
+
+  const { trackEvent } = useAnalytics();
 
   const { setIsLoading } = useContext(LoadingContext);
   const { hasPermission } = useContext(UserContext);
@@ -142,6 +142,7 @@ const AssetHeaderOps = ({
           ?.length || 0,
     };
   }
+
   if (selectedAllSubAssets) {
     const currentUnSelectedAssets = subFoldersAssetsViewList.results.filter((asset) => !asset.isSelected);
     totalSelectAssets = subFoldersAssetsViewList.total - currentUnSelectedAssets.length;
@@ -153,6 +154,14 @@ const AssetHeaderOps = ({
 
   const downloadSelectedAssets = async () => {
     try {
+      if (activeMode === "folders" && selectedFolders.length > 0) {
+        selectedFolders.map(folder => {
+          trackEvent(events.DOWNLOAD_COLLECTION, {
+            collectionId: folder.id
+          });
+        })
+      }
+
       let payload = {
         assetIds: [],
         folderIds: [],
@@ -197,12 +206,46 @@ const AssetHeaderOps = ({
       } else if (selectedSubFoldersAndAssets.assets.length > 0) {
         totalDownloadingAssets = selectedSubFoldersAndAssets.assets.length;
         payload.assetIds = selectedSubFoldersAndAssets.assets.map(
-          (assetItem) => assetItem.asset.id
+          (assetItem) => {            
+            // Track assets download event
+            if(isShare){
+              trackEvent(
+                events.DOWNLOAD_SHARED_ASSET,
+                {
+                  email: cookiesApi.get('shared_email') || null,
+                  assetId: assetItem.asset.id,
+                });
+            } else {
+              trackEvent(events.DOWNLOAD_ASSET, {
+                assetId: assetItem.asset.id,
+              });
+            }
+           
+
+            return assetItem.asset.id
+          }
         );
-      } else {
+      } else {        
         totalDownloadingAssets = selectedAssets.length;
-        payload.assetIds = selectedAssets.map((assetItem) => assetItem.asset.id);
+        payload.assetIds = selectedAssets.map((assetItem) => {
+          // Track assets download event
+          if(isShare){
+            trackEvent(
+              events.DOWNLOAD_SHARED_ASSET,
+              {
+                email: cookiesApi.get('shared_email') || null,
+                assetId: assetItem.asset.id,
+              });
+          } else {
+            trackEvent(events.DOWNLOAD_ASSET, {
+              assetId: assetItem.asset.id,
+            });
+          }
+
+          return assetItem.asset.id
+        });
       }
+
       // Add sharePath property if user is at share collection page
       if (sharePath) {
         filters["sharePath"] = sharePath;
@@ -235,6 +278,8 @@ const AssetHeaderOps = ({
         fileDownload(data, "assets.zip");
         updateDownloadingStatus("done", 0, 0);
       }
+
+
     } catch (e) {
       console.error(e);
       const errMsg =
@@ -254,9 +299,8 @@ const AssetHeaderOps = ({
       } else {
         associateAssets = selectedAssets;
       }
-
+      
       const assetIds = associateAssets.map((assetItem) => assetItem.asset.id);
-
       if (assetIds?.length > 1) {
         const assetsToAssociate = associateAssets.filter(
           (assetItem) =>
@@ -298,8 +342,8 @@ const AssetHeaderOps = ({
       setFolders(folders.map((folder) => ({ ...folder, isSelected: false })));
     } else if (activeMode === "SubCollectionView") {
       // Mark deselect all
-      setSubFoldersAssetsViewList(false)
       setSelectedAllSubFoldersAndAssets(false);
+      setSelectedAllSubAssets(false)
       setSubFoldersViewList({
         ...subFoldersViewList,
         results: subFoldersViewList.results.map((folder) => ({
@@ -488,6 +532,15 @@ const AssetHeaderOps = ({
               tooltipText={"Share"}
               tooltipId={"Share"}
               onClick={(e) => {
+                const sharedAssets = selectedSubFoldersAndAssets.assets.length > 0 ? selectedSubFoldersAndAssets.assets : selectedAssets.length > 0 ? selectedAssets : [];
+
+                if (sharedAssets.length > 0) {
+                  sharedAssets.map((assetItem) => {
+                    trackEvent(events.SHARE_ASSET, {
+                      assetId: assetItem.asset.id,
+                    });
+                  })
+                }
                 showShareActionList(e, true);
               }}
             />
@@ -550,7 +603,16 @@ const AssetHeaderOps = ({
         SVGElement: AssetOps[`share`],
         tooltipText: "Share",
         tooltipId: "Share",
-        onClick: () => setActiveOperation("shareCollections"),
+        onClick: () => {
+          if (activeMode === "folders") {
+            selectedFolders.map(folder => {
+              trackEvent(events.SHARE_COLLECTION, {
+                collectionId: folder.id
+              });
+            })
+          }
+          setActiveOperation("shareCollections")
+        },
         child: null,
       },
     },
@@ -638,7 +700,6 @@ const AssetHeaderOps = ({
       },
     },
   ];
-
 
   return (
     <div className={styles.bar}>

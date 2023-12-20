@@ -138,6 +138,10 @@ export default ({ children }) => {
 
   const [selectedAllSubAssets, setSelectedAllSubAssets] = useState(false)
   const [listUpdateFlag, setListUpdateFlag] = useState(false);
+  const [currentFolder,
+    setCurrentFolder] = useState(null)
+
+  const [showSubCollectionContent, setShowSubCollectionContent] = useState(false);
 
   const setPlaceHolders = (type, replace = true) => {
     if (type === "asset") {
@@ -234,7 +238,6 @@ export default ({ children }) => {
     if (!data) return;
 
     const { results = [], next = -1, total = 0 } = sidenavFolderChildList.get(id);
-    console.log("🚀 ~ file: asset-provider.tsx:245 ~ results:", results)
 
     if (!remove) {
       setSidenavFolderChildList((map) => {
@@ -688,6 +691,9 @@ export default ({ children }) => {
     listUpdateFlag,
     downloadController,
     setDownloadController,
+    currentFolder,
+    setCurrentFolder,
+    showSubCollectionContent, setShowSubCollectionContent
   };
   return <AssetContext.Provider value={assetsValue}>{children}</AssetContext.Provider>;
 };

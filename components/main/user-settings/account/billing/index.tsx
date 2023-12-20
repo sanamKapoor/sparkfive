@@ -11,6 +11,8 @@ import { BillingTabs } from "../../../../../interfaces/common/tabs";
 import Invoices from "./invoices";
 import PaymentMethod from "./payment-method";
 import Subscription from "./subscription";
+import useAnalytics from "../../../../../hooks/useAnalytics";
+import { pages } from "../../../../../constants/analytics";
 
 const SETTING_SECTIONS_CONTENT = {
   subscription: Subscription,
@@ -40,6 +42,12 @@ const Billing = () => {
   useEffect(() => {
     getPaymentMethod();
   }, []);
+
+  const {trackPage} = useAnalytics();
+
+  useEffect(() => {
+    trackPage(pages.BILLING)
+  },[]);
 
   const getPaymentMethod = async () => {
     try {

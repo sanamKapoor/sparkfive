@@ -14,6 +14,7 @@ import IconClickable from "../common/buttons/icon-clickable";
 import {events} from '../../constants/analytics';
 import useAnalytics from '../../hooks/useAnalytics'
 import { UserContext } from "../../context";
+import cookiesApi from "../../utils/cookies";
 
 const ShareItem = ({
   asset,
@@ -80,7 +81,7 @@ const ShareItem = ({
               onClick={() => {
                 trackEvent(events.VIEW_SHARED_ASSET, {
                   assetId: asset.id,
-                  assetName: asset.name,
+                  email: cookiesApi.get('shared_email') || null
                 });
                 setVisibleOVerlay(true);
               }}

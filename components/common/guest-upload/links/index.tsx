@@ -28,6 +28,8 @@ import {
 } from "../../../../constants/guest-upload";
 import { IGuestUploadLink, ILinkDefaultPayload } from "../../../../interfaces/guest-upload/guest-upload";
 import ButtonIcon from "../../buttons/button-icon";
+import useAnalytics from "../../../../hooks/useAnalytics";
+import { pages } from "../../../../constants/analytics";
 
 const Links = () => {
   const [loading, setLoading] = useState(false);
@@ -40,6 +42,12 @@ const Links = () => {
   const [showPasswordId, setShowPasswordId] = useState<string>();
 
   const fileInputRefs = {};
+
+  const {trackPage} = useAnalytics();
+
+  useEffect(() => {
+    trackPage(pages.GUEST_UPLOAD_LINKS)
+  },[]);
 
   const getLinks = async () => {
     try {

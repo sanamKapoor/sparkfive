@@ -17,9 +17,7 @@ import AssetThumbail from "./asset-thumbail";
 
 import IconClickable from "../buttons/icon-clickable";
 import AssetRelatedFileUpload from "./asset-related-files-upload";
-
-import {events} from '../../../constants/analytics';
-import useAnalytics from '../../../hooks/useAnalytics'
+import React from "react";
 
 const NextArrow = ({ onClick }) => (
   <img
@@ -55,8 +53,6 @@ const AssetRelatedFIles = ({
   } = useContext(AssetContext);
 
   const { setIsLoading } = useContext(LoadingContext);
-
-  const {trackEvent} = useAnalytics();
 
   const [activeAssetId, setActiveAssetId] = useState("");
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -227,9 +223,6 @@ const AssetRelatedFIles = ({
           <IconClickable
             src={AssetOps.upload}
             onClick={() => {
-              trackEvent(events.UPLOAD_ASSET, {
-                uploadType: "Related Files",
-              });
               setUploadModalOpen(true)
             }}
           />
@@ -264,7 +257,8 @@ const AssetRelatedFIles = ({
             <div className={styles.slider}>
               <Slider {...settings}>
                 {assets.map((assetItem, index) => (
-                  <AssetThumbail
+                  <div className={`${styles["grid-item-new"]}`}>
+                      <AssetThumbail
                     {...assetItem}
                     key={index}
                     onView={(id) => {
@@ -285,6 +279,9 @@ const AssetRelatedFIles = ({
                     }}
                     detailOverlay={false}
                   />
+
+                  </div>
+                
                 ))}
               </Slider>
             </div>

@@ -3,9 +3,17 @@ import { useEffect, useState } from "react";
 import userApi from "../../../server-api/user";
 import IntegrationItem from "./integration-item";
 import styles from "./integrations.module.css";
+import useAnalytics from "../../../hooks/useAnalytics";
+import { pages } from "../../../constants/analytics";
 
 const EnabledIntegrations = () => {
   const [integrations, setIntegrations] = useState([]);
+
+  const {trackPage} = useAnalytics();
+
+  useEffect(() => {
+    trackPage(pages.INTEGRATIONS)
+  },[]);
 
   useEffect(() => {
     getIntegrations();

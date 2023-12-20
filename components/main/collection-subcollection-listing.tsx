@@ -85,7 +85,13 @@ const CollectionSubcollectionListing = ({
 
     return (
         <section className={styles["field-wrapper"]}>
-            {<div className={`${styles["tag-container-wrapper"]}`}>
+          
+            {(hasPermission([ASSET_EDIT])) && (activeDropdown === "" || activeDropdown !== "collections") && (
+                <>
+                    <div className={`${styles['top-heading']}`}>
+                        <span>Collection</span>
+                    </div>
+                    {<div className={`${styles["tag-container-wrapper"]}`}>
                 {
                     [...completeSelectedFolder.entries()].map(([key, value], index) => (
                         <div className={`${styles["tag-container"]}`} key={index}>
@@ -99,11 +105,6 @@ const CollectionSubcollectionListing = ({
                     ))
                 }
             </div>}
-            {(hasPermission([ASSET_EDIT])) && (activeDropdown === "" || activeDropdown !== "collections") && (
-                <>
-                    <div className={`${styles['top-heading']}`}>
-                        <span>Collection</span>
-                    </div>
 
                     <div
                         className={`add ${styles["select-add"]}`}
@@ -227,7 +228,7 @@ const CollectionSubcollectionListing = ({
                                         }
                                         {(keyExists(folder.id) && (keyResultsFetch(folder.id, "next") as number) >= 0) && <div className={`${styles['outer-load-wrapper']}`}><div className={`${styles['load-wrapper']}`}
                                             onClick={() => { getSubFolders(folder.id, (keyResultsFetch(folder.id, "next") as number), false) }}>
-                                            <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} />
+                                            {/* <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} /> */}
                                             <button className={styles.loadMore}>{
                                                 subFolderLoadingState.get(folder.id)
                                                     ?

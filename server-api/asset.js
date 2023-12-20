@@ -5,7 +5,7 @@ const assetUrl = `${process.env.SERVER_BASE_URL}/assets`;
 const transcriptUrl = `${process.env.SERVER_BASE_URL}/transcribe`;
 
 export default {
-  uploadAssets: (formData, queryData = {}) =>
+  uploadAssets: (formData, queryData = {}) => 
     axios.post(`${assetUrl}/upload?${querystring.encode(queryData)}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",

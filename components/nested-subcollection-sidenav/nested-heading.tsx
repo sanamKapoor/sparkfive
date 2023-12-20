@@ -31,9 +31,9 @@ const ReusableHeading = ({
     text === "All Collections" && hasPermission([ASSET_UPLOAD_NO_APPROVAL]);
 
   return (
-    <div className={`${styles["heading-contents"]} ${icon ? styles["heading-mob"] : ""}`} style={customStyle}>
+    <div className={`${styles["heading-contents"]} ${icon ? styles["heading-mob"] : ""}`} style={{...customStyle,fontSize}}>
       <div
-        className={`${styles["sidenav-heading"]} ${headingTrue ? styles["active"] : ""
+        className={`normal-text ${styles["sidenav-heading"]} ${headingTrue ? styles["active"] : ""
           }`}
        
       >

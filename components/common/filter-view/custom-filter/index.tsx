@@ -77,9 +77,12 @@ const CustomFilter: React.FC<CustomFilterProps> = ({
     });
   };
 
+  const containerClass = options && options.length >= 10 ? styles["outer-wrapper"] : styles["outer-grid"];
+
+
   return (
     <>
-      <div className={`${styles["outer-wrapper"]}`}>
+      <div className={containerClass}>
         {options?.length > 0 ? (
           options?.map((item) => (
             <div className={styles["grid-item"]} key={item.id}>
@@ -96,7 +99,6 @@ const CustomFilter: React.FC<CustomFilterProps> = ({
           <NoResults />
         )}
       </div>
-      <Divider />
     </>
   );
 };

@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { useContext, useRef, useState } from "react";
+import { useContext, useRef, useState, useEffect } from "react";
 
 import { AssetOps, Assets } from "../../../assets";
 import { validation } from "../../../constants/file-validation";
@@ -21,7 +21,7 @@ import ToggleAbleAbsoluteWrapper from "../misc/toggleable-absolute-wrapper";
 import styles from "./asset-addition.module.css";
 import AssetDuplicateModal from "./asset-duplicate-modal";
 
-import {events} from '../../../constants/analytics'
+import { events } from '../../../constants/analytics'
 import useAnalytics from '../../../hooks/useAnalytics'
 
 const AssetAddition = ({
@@ -33,6 +33,7 @@ const AssetAddition = ({
   displayMode = "dropdown",
   versionGroup = "",
   triggerUploadComplete,
+  assetDetailPage = false
 }: any) => {
   const fileBrowserRef = useRef(undefined);
   const folderBrowserRef = useRef(undefined);
@@ -207,6 +208,12 @@ const AssetAddition = ({
         }
 
         data = data.map((item) => {
+          // Track uploaded asset info
+          trackEvent(events.UPLOAD_ASSET, {
+            uploadType: 'Device',
+            assetId: item.asset.id,
+          });
+
           item.isSelected = true;
           return item;
         });
@@ -279,6 +286,7 @@ const AssetAddition = ({
             ...folderUploadInfo,
             id,
             length: newAssetPlaceholder.length,
+            assetsCount: [...newAssetPlaceholder].length || 0
           });
         }
         let allAssets = [...newAssetPlaceholder, ...currentDataClone];
@@ -313,7 +321,6 @@ const AssetAddition = ({
       if (foldersUploaded.length > 0 || selectedFolderToUpload.length > 0) {
         needsFolderFetch = true;
       }
-
       // Only show uploading folder placeholder when not selecting multi folders to upload
       if (selectedFolderToUpload.length === 0) {
         foldersUploaded.forEach((folder) => {
@@ -406,11 +413,13 @@ const AssetAddition = ({
       // Finish uploading process
       showUploadProcess("done");
       setListUpdateFlag(true);
-      if (activeSortFilter?.mainFilter === "SubCollectionView") {
+      ;
+      if (activeSortFilter?.mainFilter === "SubCollectionView" && !assetDetailPage) {
         setNeedsFetch("SubCollectionView");
-      } else if (needsFolderFetch) {
-        setNeedsFetch("folders");
-      }
+      } else
+        if (needsFolderFetch) {
+          setNeedsFetch("folders");
+        }
 
       // Do not need toast here because we have already process toast
       // toastUtils.success(`${data.length} Asset(s) uploaded.`)
@@ -511,6 +520,12 @@ const AssetAddition = ({
       setAddedIds(data.id);
       // Mark done
       const updatedAssets = data.map((asset) => {
+      // Track uploaded asset info
+      trackEvent(events.UPLOAD_ASSET, {
+        uploadType: 'Dropbox',
+        assetId: asset.asset.id,
+      });
+
         return { ...asset, status: "done" };
       });
 
@@ -571,7 +586,11 @@ const AssetAddition = ({
 
       setListUpdateFlag(true);
       setDisableButtons(false);
-      toastUtils.success("Collection created successfully");
+      if (activeSubFolders) {
+        toastUtils.success("Subcollection created successfully");
+      } else {
+        toastUtils.success("Collection created successfully");
+      }
     } catch (err) {
       setDisableButtons(false);
       toastUtils.error
@@ -679,6 +698,13 @@ const AssetAddition = ({
 
       // Mark done
       const updatedAssets = data.map((asset) => {
+
+        // Track uploaded asset info
+        trackEvent(events.UPLOAD_ASSET, {
+          uploadType: 'Google Drive',
+          assetId: asset.asset.id,
+        });
+
         return { ...asset, status: "done" };
       });
 
@@ -751,7 +777,7 @@ const AssetAddition = ({
     },
     {
       id: "subCollection",
-      label: "Add Sub Collection",
+      label: "Add SubCollection",
       text: "Add Sub Collection",
       onClick: () => {
         setAddSubCollection(true), setActiveModal("folder");
@@ -764,9 +790,6 @@ const AssetAddition = ({
       text: "png, jpg, mp4 and more",
       onClick: () => {
         fileBrowserRef.current.click();
-        trackEvent(events.UPLOAD_ASSET, {
-          uploadType: 'Device'
-        });
       },
       icon: AssetOps.newCollection,
     },
@@ -783,9 +806,6 @@ const AssetAddition = ({
       text: "Import files",
       onClick: (e) => {
         openDropboxSelector(e);
-        trackEvent(events.UPLOAD_ASSET, {
-          uploadType: 'Dropbox'
-        });
       },
       icon: Assets.dropbox,
     },
@@ -793,11 +813,6 @@ const AssetAddition = ({
       id: "gdrive",
       label: "Upload from Drive",
       text: "Import files",
-      onClick: () => {
-        trackEvent(events.UPLOAD_ASSET, {
-          uploadType: 'Google Drive'
-        });
-      },
       icon: Assets.gdrive,
       CustomContent: ({ children }) => {
         return (
@@ -819,12 +834,11 @@ const AssetAddition = ({
       (item) => ["collection"].indexOf(item.id) === -1
     );
   }
-  if (activeFolder && !activeSubFolders) {
+  if ((activeFolder && !activeSubFolders)) {
     dropdownOptions = dropdownOptions.filter(
-      (item) => ["subCollection"].indexOf(item.id) === -1
+      (item) => ["subCollection", "collection"].indexOf(item.id) === -1
     );
   }
-
   if (activePageMode === "library") {
     dropdownOptions = dropdownOptions.filter((item) => ["library"].indexOf(item.id) === -1);
   }
@@ -832,6 +846,11 @@ const AssetAddition = ({
   if (!activeFolder && !activeSubFolders) {
     dropdownOptions = dropdownOptions.filter(
       (item) => ["subCollection"].indexOf(item.id) === -1
+    );
+  }
+  if (assetDetailPage) {
+    dropdownOptions = dropdownOptions.filter(
+      (item) => ["folder", "subCollection"].indexOf(item.id) === -1
     );
   }
 
@@ -896,6 +915,7 @@ const AssetAddition = ({
           folderBrowserRef.current.value;
         }
       } else {
+        ;
         onFilesDataGet(files);
       }
     } else {
@@ -1026,7 +1046,6 @@ const AssetAddition = ({
           }
         </div>
       )}
-
       <FolderModal
         modalIsOpen={activeModal === "folder"}
         closeModal={() => {
@@ -1037,7 +1056,6 @@ const AssetAddition = ({
         onSubmit={onSubmit}
         addSubCollection={addSubCollection}
       />
-
       {activeSearchOverlay && (
         <SearchOverlay closeOverlay={closeSearchOverlay} importAssets={onLibraryImport} importEnabled={true} />
       )}
