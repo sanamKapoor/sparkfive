@@ -28,6 +28,7 @@ import styles from "./asset-header-ops.module.css";
 import { sizeToZipDownload } from "../../../constants/download";
 import { events } from "../../../constants/analytics";
 import useAnalytics from "../../../hooks/useAnalytics";
+import cookiesApi from "../../../utils/cookies";
 
 const AssetHeaderOps = ({
   isUnarchive = false,
@@ -207,11 +208,19 @@ const AssetHeaderOps = ({
         payload.assetIds = selectedSubFoldersAndAssets.assets.map(
           (assetItem) => {            
             // Track assets download event
-            trackEvent(isShare
-              ? events.DOWNLOAD_SHARED_ASSET
-              : events.DOWNLOAD_ASSET, {
+            if(isShare){
+              trackEvent(
+                events.DOWNLOAD_SHARED_ASSET,
+                {
+                  email: cookiesApi.get('shared_email') || null,
+                  assetId: assetItem.asset.id,
+                });
+            } else {
+              trackEvent(events.DOWNLOAD_ASSET, {
                 assetId: assetItem.asset.id,
               });
+            }
+           
 
             return assetItem.asset.id
           }
@@ -220,11 +229,18 @@ const AssetHeaderOps = ({
         totalDownloadingAssets = selectedAssets.length;
         payload.assetIds = selectedAssets.map((assetItem) => {
           // Track assets download event
-          trackEvent(isShare
-            ? events.DOWNLOAD_SHARED_ASSET
-            : events.DOWNLOAD_ASSET, {
+          if(isShare){
+            trackEvent(
+              events.DOWNLOAD_SHARED_ASSET,
+              {
+                email: cookiesApi.get('shared_email') || null,
+                assetId: assetItem.asset.id,
+              });
+          } else {
+            trackEvent(events.DOWNLOAD_ASSET, {
               assetId: assetItem.asset.id,
             });
+          }
 
           return assetItem.asset.id
         });

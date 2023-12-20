@@ -29,7 +29,7 @@
 .more-filter-wrapper {
   position: absolute;
   background: #fff;
-  z-index: 999;
+  z-index: 9999;
   padding: 30px;
   margin-top: 20px;
   border: 1px solid lightgray;

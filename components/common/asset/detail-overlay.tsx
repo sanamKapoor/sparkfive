@@ -44,6 +44,7 @@ import { sizeToZipDownload } from "../../../constants/download";
 
 import { events } from '../../../constants/analytics';
 import useAnalytics from "../../../hooks/useAnalytics";
+import cookiesApi from "../../../utils/cookies";
 
 const getDefaultDownloadImageType = (extension) => {
   const defaultDownloadImageTypes = [
@@ -701,14 +702,18 @@ const DetailOverlay = ({
       }
 
       // Track download asset event
-      trackEvent(
-        isShare
-          ? events.DOWNLOAD_SHARED_ASSET
-          : events.DOWNLOAD_ASSET,
-        { 
-          assetId: asset.id, 
-        }
-      );
+      if(isShare){
+        trackEvent(
+          events.DOWNLOAD_SHARED_ASSET,
+          {
+            email: cookiesApi.get('shared_email') || null,
+            assetId: asset.id,
+          });
+      } else {
+        trackEvent(events.DOWNLOAD_ASSET, {
+          assetId: asset.id,
+        });
+      }
     } catch (e) {
       const errorResponse = (await e.response.data.text()) || "{}";
       const parsedErrorResponse = JSON.parse(errorResponse);
@@ -757,14 +762,18 @@ const DetailOverlay = ({
       downloadSelectedAssets(id);
     } else {
        // Track download asset event
-       trackEvent(
-        isShare
-          ? events.DOWNLOAD_SHARED_ASSET
-          : events.DOWNLOAD_ASSET,
-        { 
-          assetId: asset.id, 
-        }
-      );
+       if(isShare){
+        trackEvent(
+          events.DOWNLOAD_SHARED_ASSET,
+          {
+            email: cookiesApi.get('shared_email') || null,
+            assetId: asset.id,
+          });
+      } else {
+        trackEvent(events.DOWNLOAD_ASSET, {
+          assetId: asset.id,
+        });
+      }
 
       downloadUtils.downloadFile(versionRealUrl, currentAsset.name);
     }

@@ -128,7 +128,7 @@ const useFilters = (attributes) => {
       }
     } else {
       const filterKey = getFilterKeyForAttribute(id);
-      fetchedValues = fetchedValues.filter((item) => Number(item.count) !== 0);
+      // fetchedValues = fetchedValues.filter((item) => Number(item.count) !== 0);
 
       if (activeSortFilter[filterKey]?.length > 0) {
         fetchedValues = fetchedValues.map((item) => ({
@@ -282,13 +282,15 @@ const useFilters = (attributes) => {
   const fetchTags = async (params?: Record<string, unknown>) => {
     const fetchApi = isPublic ? shareCollectionApi : tagsApi;
 
-    const res = await fetchApi.getTags({ ...params });
-    return res.data;
+    const res = await fetchApi.getTags({ ...params, includeAi: true });
+    return res.data?.filter((item) => item.type !== "AI");
   };
 
   const fetchAITags = async (params?: Record<string, unknown>) => {
-    const allTags = await fetchTags({ includeAi: true, ...params });
-    return allTags?.filter((item) => item.type === "AI")
+    const fetchApi = isPublic ? shareCollectionApi : tagsApi;
+
+    const allTags = await fetchApi.getTags({ includeAi: true, ...params });
+    return allTags?.data?.filter((item) => item.type === "AI")
   };
 
   const fetchProductSku = async (params?: Record<string, unknown>) => {

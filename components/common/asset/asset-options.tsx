@@ -14,6 +14,7 @@ import React from "react";
 
 import { events } from '../../../constants/analytics';
 import useAnalytics from '../../../hooks/useAnalytics'
+import cookiesApi from "../../../utils/cookies";
 
 const AssetOptions = ({
   itemType = "",
@@ -47,11 +48,18 @@ const AssetOptions = ({
     {
       label: "Download",
       onClick: () => {
-        trackEvent(isShare
-          ? events.DOWNLOAD_SHARED_ASSET
-          : events.DOWNLOAD_ASSET, {
-          assetId: asset.id,
-        });
+        if(isShare){
+          trackEvent(
+            events.DOWNLOAD_SHARED_ASSET,
+            {
+              email: cookiesApi.get('shared_email') || null,
+              assetId: asset.id,
+            });
+        } else {
+          trackEvent(events.DOWNLOAD_ASSET, {
+            assetId: asset.id,
+          });
+        }
         downloadAsset();
       },
       permissions: [ASSET_DOWNLOAD],

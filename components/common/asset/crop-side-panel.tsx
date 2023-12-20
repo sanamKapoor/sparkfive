@@ -22,6 +22,7 @@ import SizeSelect from "../inputs/size-select";
 import ConfirmModal from "../modals/confirm-with-rename-modal";
 import { events } from "../../../constants/analytics";
 import useAnalytics from "../../../hooks/useAnalytics";
+import cookiesApi from "../../../utils/cookies";
 
 // Utils
 
@@ -441,11 +442,18 @@ const CropSidePanel = ({
           text={"Download Edited"}
           type={"button"}
           onClick={() => {
-            trackEvent(isShare
-              ? events.DOWNLOAD_SHARED_ASSET
-              : events.DOWNLOAD_ASSET, {
-              assetId: asset.id,
-            });
+            if(isShare){
+              trackEvent(
+                events.DOWNLOAD_SHARED_ASSET,
+                {
+                  email: cookiesApi.get('shared_email') || null,
+                  assetId: asset.id,
+                });
+            } else {
+              trackEvent(events.DOWNLOAD_ASSET, {
+                assetId: asset.id,
+              });
+            }
             if (mode === "crop") {
               document.getElementById("download-crop-image").click();
             } else {

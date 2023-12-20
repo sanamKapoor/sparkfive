@@ -23,6 +23,7 @@ import styles from "./asset-thumbail.module.css";
 import DetailOverlay from "./detail-overlay";
 import { analytics } from "../../../pages/_app";
 import { events } from "../../../constants/analytics";
+import cookiesApi from "../../../utils/cookies";
 
 // Components
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
@@ -325,26 +326,6 @@ const AssetThumbail = ({
                           onClick={toggleSelected}
                         />
                       )}
-                    <div className={styles["image-button-wrapper"]}>
-                      <Button
-                        className={"container primary"}
-                        text={"View Details"}
-                        type={"button"}
-                        onClick={() => {
-                          trackEvent(isShare ? events.VIEW_SHARED_ASSET : events.VIEW_ASSET, {
-                            assetId: asset.id,
-                          });
-                          if (onView) {
-                            onView(asset.id);
-                          } else {
-                            setOverlayProperties({
-                              ...DEFAULT_DETAIL_PROPS,
-                              visible: !overlayProperties.visible,
-                            });
-                          }
-                        }}
-                      />
-                    </div>
                     </div>
                   )}
                   <div className={styles["image-button-wrapper"]}>
@@ -353,10 +334,17 @@ const AssetThumbail = ({
                       text={"View Details"}
                       type={"button"}
                       onClick={() => {
-                        trackEvent(events.VIEW_ASSET, {
-                          assetId: asset.id,
-                          assetName: asset.name,
-                        });
+                        if(isShare){
+                          trackEvent(events.VIEW_SHARED_ASSET, {
+                            assetId: asset.id,
+                            email: cookiesApi.get('shared_email') || null
+                          })
+                        } else {
+                          trackEvent(events.VIEW_ASSET, {
+                            assetId: asset.id,
+                          });
+                        }
+                        
                         if (onView) {
                           onView(asset.id);
                         } else {

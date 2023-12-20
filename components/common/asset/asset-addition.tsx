@@ -286,6 +286,7 @@ const AssetAddition = ({
             ...folderUploadInfo,
             id,
             length: newAssetPlaceholder.length,
+            assetsCount: [...newAssetPlaceholder].length || 0
           });
         }
         let allAssets = [...newAssetPlaceholder, ...currentDataClone];
@@ -1045,7 +1046,6 @@ const AssetAddition = ({
           }
         </div>
       )}
-
       <FolderModal
         modalIsOpen={activeModal === "folder"}
         closeModal={() => {
@@ -1056,7 +1056,6 @@ const AssetAddition = ({
         onSubmit={onSubmit}
         addSubCollection={addSubCollection}
       />
-
       {activeSearchOverlay && (
         <SearchOverlay closeOverlay={closeSearchOverlay} importAssets={onLibraryImport} importEnabled={true} />
       )}
