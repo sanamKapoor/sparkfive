@@ -19,10 +19,16 @@ export default {
       order: "asc",
     },
     {
-      label: "Alphabetical",
+      label: "Alphabetical (A-Z)",
       value: "alphabetical",
       field: "name",
       order: "asc",
+    },
+    {
+      label: "Alphabetical (Z-A)",
+      value: "alphabetical",
+      field: "name",
+      order: "desc",
     },
     {
       label: "File Size",
