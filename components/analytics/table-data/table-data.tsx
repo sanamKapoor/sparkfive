@@ -26,7 +26,7 @@ export default function TableData({ columns, data, arrowColumns, buttonColumns, 
             <tr key={rowIndex}>
               {columns.map((column, colIndex) => (
                 <td key={colIndex}>
-                  {column === "Username" || column === "Asset name" ? (
+                  {column === "User name" || column === "Asset name" ? (
                     <div className={styles.usernameWithImage}>
                       <div className={`${styles["image-wrapper"]}`}>
                         {row.icon && <img src={row.icon} alt="user" className={styles.userImage} />}

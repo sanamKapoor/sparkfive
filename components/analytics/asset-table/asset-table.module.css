@@ -1,7 +1,7 @@
 .outer-wrapper{
-    width: calc(100% - 218px);
+    /* width: calc(100% - 218px);
     margin-left: 218px;
-    padding: 40px;
+    padding: 40px; */
   }
   .outer-wrapper-toggle{
     width:100%;

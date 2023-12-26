@@ -1,6 +1,11 @@
 .tableResponsive {
     overflow-x: auto;
     margin-top: 16px;
+  
+  }
+  .tableOuter{
+  border: 1px solid#DEDAD4;
+  padding:16px;
   }
  
   .table {

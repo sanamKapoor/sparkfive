@@ -1,3 +1,36 @@
 .tableHeader{
     margin-top:81px;
 }
+/* .outerLayout{
+    width: calc(100% -218px);
+    margin-left:218px;
+    padding: 30px 40px;
+} */
+.inner-wrapper{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap:30px;
+    width: 100%;
+}
+.total-session{
+    border:1px solid 
+    #DEDAD4;
+    border-radius: 4px;
+    padding: 20px;
+}
+.mainContainer{
+    width: calc(100% -218px);
+    margin-left:218px;
+}
+.inner-container{
+    padding: 30px 40px;
+}
+
+@media (max-width :1682px){
+    .inner-wrapper{
+        grid-template-columns: repeat(1,1fr);
+    }
+  
+
+    
+}

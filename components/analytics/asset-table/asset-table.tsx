@@ -73,7 +73,7 @@ function AssetTable() {
       Actions: "Delete",
     },
   ];
-  const arrowColumns = ["Username", "Role", "Last session date", "Sessions", "Downloads", "Shares"];
+  const arrowColumns = ["Asset name", "Role", "Last session date", "Sessions", "Downloads", "Shares","Views"];
   const buttonColumns = ["Actions"];
   const buttonTexts = { Actions: "view chart" };
   return (
