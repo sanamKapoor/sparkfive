@@ -16,7 +16,7 @@ const SharePage = () => {
 
   useEffect(() => {
     trackPage(pages.SHARED_LINKS)
-},[]);
+  },[]);
 
   return (
     <>
