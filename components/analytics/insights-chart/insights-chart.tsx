@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import styles from "./insights-chart.module.css"
-import { Line } from 'react-chartjs-2';
+// import { Line } from 'react-chartjs-2';
 
-import {Chart as ChartJS,Title,Tooltip,LineElement,Legend,CategoryScale,LinearScale,PointElement} from 'chart.js'
+// import {Chart as ChartJS,Title,Tooltip,LineElement,Legend,CategoryScale,LinearScale,PointElement} from 'chart.js'
 
-ChartJS.register(
-    Title,Tooltip,LineElement,Legend,CategoryScale,LinearScale,PointElement
-)
+// ChartJS.register(
+//     Title,Tooltip,LineElement,Legend,CategoryScale,LinearScale,PointElement
+// )
 
 
 
@@ -24,7 +24,7 @@ function AssetChart() {
   return (
     <>
      <div  className={`${styles['chart-wrapper']}`}>insights-chart</div>
-     <Line data={data}/>
+     {/* <Line data={data}/> */}
    
     </>
    
