@@ -1,10 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useLayoutEffect } from "react";
 import { Utilities } from "../../../../assets";
 import { IAttribute } from "../../../../interfaces/filters";
 import Button from "../../buttons/button";
 import indexStyles from "../index.module.css";
 import OptionDataItem from "../option-data-item";
 import styles from "../options-data.module.css";
+import Loader from "../../UI/Loader/loader";
 
 import { FilterContext, UserContext } from "../../../../context";
 import shareCollectionApi from "../../../../server-api/share-collection";
@@ -32,10 +33,11 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
   const [options, setOptions] = useState([]);
   const [activeAttribute, setActiveAttribute] = useState<IAttribute | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [loader, setLoader] = useState(true)
 
   useEffect(() => {
     getMoreFilters();
-  }, [/* Dependencies */]);
+  }, []);
 
   useEffect(() => {
     checkIfValuesExist(); // Call checkIfValuesExist on mount or when dependencies change
@@ -67,6 +69,7 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
           return { ...item, isSelected: false };
         });
 
+        setLoader(false)
         setOptions(mapFilteredAttrs);
       }
     } catch (err) {
@@ -83,12 +86,10 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
           FilterAttributeVariants.DIMENSIONS,
         ].includes(activeAttribute?.id)
       ) {
-        filterModalPosition();
         return true;
       } else {
         // Update this part based on your component's structure and data
         if (options) {
-          filterModalPosition();
           return options instanceof Array
             ? options.length > 0
             : Object.keys(options).length > 0;
@@ -99,30 +100,19 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
   };
 
   const filterModalPosition = () => {
-    const mianFilterModal = document.getElementById('mianFilterModal');
+    const mainFilterModal = document.getElementById('more-filter');
     const modal = document.getElementById('modal');
 
-    if (mianFilterModal && modal) {
+    if (mainFilterModal && modal) {
       const viewportWidth = window.innerWidth;
       const modalWidth = modal.offsetWidth;
-      const leftelemnt = mianFilterModal.offsetLeft;
-      const additionlalength = sidebarOpen ? 378 : 0;
-
-      console.log("viewportWidth:", viewportWidth);
-      console.log("modalWidth:", modalWidth);
-      console.log("leftelemnt:", leftelemnt);
-
-      // Calculate the available space on the right
-      const availableSpaceRight = viewportWidth - leftelemnt - mianFilterModal.offsetWidth;
-
-      if (modalWidth + additionlalength > availableSpaceRight) {
-        // If there is not enough space on the right, position the modal on the left
-        modal.style.right = 'unset';
-        modal.style.left = '0';
-      } else {
-        // Otherwise, position the modal on the right
+      // const leftElement = modal.offsetLeft;
+      const additionalLength = sidebarOpen ? 378 : 0;
+      var leftElement = mainFilterModal.offsetLeft // left width from filter to the clicked element
+      if (viewportWidth < (leftElement + modalWidth + additionalLength)) {
+        // There is enough space on the right
+        modal.style.right = '0px';
         modal.style.left = 'unset';
-        modal.style.right = '0';
       }
     }
   };
@@ -162,48 +152,76 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
   const onCancel = () => {
     onClose();
   };
+  useEffect(() => {
+    if (options.length > 0) {
+      filterModalPosition()
+    }
+  }, [options])
 
+  useLayoutEffect(() => {
+    const mainFilterModal = document.getElementById('more-filter');
+    const modal = document.getElementById('modal');
+    if (mainFilterModal && modal) {
+      var viewportWidth = window.innerWidth;
+      var leftElement = mainFilterModal.offsetLeft // left width from filter to the clicked element
+      const additionalLength = sidebarOpen ? 378 : 0 // addition length of sidebar and space between modal
+      let thresholdValue = 567
+      if (window.innerWidth > 820) {
+        thresholdValue = 865
+      }
+      const enoughSpace = viewportWidth < (leftElement + thresholdValue + additionalLength);
+      modal.style.right = enoughSpace ? '0px' : 'unset';
+      modal.style.left = enoughSpace ? 'unset' : '0px';
+    }
+  }, []);
   return (
     <div
       id="mianFilterModal"
       className={`${styles["main-container"]}`
       }>
       <div id="modal" className={`${styles["more-filter-wrapper"]}`}>
-        <div className={`${indexStyles["popup-header"]}`}>
-          <span className={`${indexStyles["main-heading"]}`}>More Filters</span>
-          <div className={indexStyles.buttons}>
-            <img
-              className={indexStyles.closeIcon}
-              src={Utilities.closeIcon}
-              onClick={onClose}
-            />
+        {loader ? (
+          <div className={styles["loader-wrapper"]}>
+            <Loader className={styles["customLoader-center"]} />
           </div>
-        </div>
-
-        <div className={`${styles["outer-Box"]}`}>
-          <div className={styles["outer-wrapper"]}>
-            {options.length === 0 ? (
-              <p>No Results Found.</p>
-            ) : (
-              options.map((item, index) => (
-                <div className={styles["grid-item"]} key={item.id}>
-                  <OptionDataItem
-                    name={item.name}
-                    count={item.count}
-                    isSelected={item.isSelected}
-                    onSelect={() => onSelectOption(item)}
-                    onDeselect={() => onDeselectOption(item)}
-                  />
-                </div>
-              ))
-            )}
+        ) : <>
+          <div className={`${indexStyles["popup-header"]}`}>
+            <span className={`${indexStyles["main-heading"]}`}>More Filters</span>
+            <div className={indexStyles.buttons}>
+              <img
+                className={indexStyles.closeIcon}
+                src={Utilities.closeIcon}
+                onClick={onClose}
+              />
+            </div>
           </div>
-        </div>
 
-        <div className={`${indexStyles["Modal-btn"]}`}>
-          <Button className={"apply"} text={"Apply"} onClick={onApply} />
-          <Button className={"cancel"} text={"Cancel"} onClick={onCancel} />
-        </div>
+          <div className={`${styles["outer-Box"]}`}>
+            <div className={styles["outer-wrapper"]}>
+              {options.length === 0 ? (
+                <p>No Results Found.</p>
+              ) : (
+                options.map((item, index) => (
+                  <div className={styles["grid-item"]} key={item.id}>
+                    <OptionDataItem
+                      name={item.name}
+                      count={item.count}
+                      isSelected={item.isSelected}
+                      onSelect={() => onSelectOption(item)}
+                      onDeselect={() => onDeselectOption(item)}
+                    />
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
+          <div className={`${indexStyles["Modal-btn"]}`}>
+            <Button className={"apply"} text={"Apply"} onClick={onApply} />
+            <Button className={"cancel"} text={"Cancel"} onClick={onCancel} />
+          </div>
+        </>
+        }
       </div>
     </div>
   );
