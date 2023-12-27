@@ -12,8 +12,12 @@ import AppLayout from "../../components/common/layouts/app-layout";
 import { AssetContext } from "../../context";
 import useAnalytics from "../../hooks/useAnalytics";
 import { pages } from "../../constants/analytics";
+import usePageInfo from "../../hooks/usePageInfo";
 
 const AssetsPage = () => {
+
+  usePageInfo();
+
   const { uploadingStatus, uploadingAssets, downloadingStatus } =
     useContext(AssetContext);
 

@@ -9,7 +9,6 @@ import { useEffect } from "react";
 import { pages } from "../../constants/analytics";
 
 const OverviewPage = () => {
-
   const {trackPage} = useAnalytics();
 
   useEffect(() => {
