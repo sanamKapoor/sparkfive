@@ -92,7 +92,7 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
   };
 
   return (
-    <div className={`${styles["outer-Box"]}`}>
+    <div className={`${styles["outer-Box"]} ${styles["asset-filter"]}`}>
       <div className={`${styles["outer-wrapper"]}`}>
         <div className={`${styles["filter-header-mobile"]}`}>
           <div className={`${styles["filter-heading-mobile"]}`}>

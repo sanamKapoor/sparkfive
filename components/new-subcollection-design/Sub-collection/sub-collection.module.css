@@ -259,3 +259,20 @@
  .grid-item-new{
   border:1px solid var(--color-secondary-border);
 }
+.collectionAssets{
+  margin-top: 30px;
+}
+@media (min-width:800px) and (max-width:1080px){
+  .collectionAssets{
+    margin-top: 80px;
+  }
+  
+
+}
+@media (min-width:1100px) and (max-width:1420px){
+  .collectionAssets{
+    margin-top: 50px;
+  }
+  
+
+}

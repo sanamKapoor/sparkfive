@@ -17,8 +17,8 @@ const SubCollection = ({
   isShare = false,
   toggleSelected,
   mode = "assets",
-  deleteFolder = (id: string) => { },
-  viewFolder = (id: string) => { },
+  deleteFolder = (id: string) => {},
+  viewFolder = (id: string) => {},
   sharePath = "",
   widthCard,
   ref,
@@ -61,33 +61,22 @@ const SubCollection = ({
     subFoldersViewList: { results, next, total },
     setSubFoldersViewList,
     setSubFoldersAssetsViewList,
-    subFoldersAssetsViewList: {
-      results: assets,
-      next: nextAsset,
-      total: totalAssets,
-    },
+    subFoldersAssetsViewList: { results: assets, next: nextAsset, total: totalAssets },
     showSubCollectionContent,
     setShowSubCollectionContent,
     activeSubFolders,
   } = useContext(AssetContext);
 
   // Sorting in SubcollectionView
-  const [sortedAssets, currentSortAttribute, setCurrentSortAttribute] =
-    useSortedAssets(assets);
+  const [sortedAssets, currentSortAttribute, setCurrentSortAttribute] = useSortedAssets(assets);
 
-  const [
-    sortedFolders,
-    currentSortFolderAttribute,
-    setCurrentSortFolderAttribute,
-  ] = useSortedAssets(results, "", true);
+  const [sortedFolders, currentSortFolderAttribute, setCurrentSortFolderAttribute] = useSortedAssets(results, "", true);
 
   const setSortAssetAttribute = (attribute) => {
     if (attribute === currentSortAttribute) {
       setCurrentSortAttribute("-" + attribute);
     } else {
-      setCurrentSortAttribute(
-        currentSortAttribute.startsWith("-") ? "" : attribute
-      );
+      setCurrentSortAttribute(currentSortAttribute.startsWith("-") ? "" : attribute);
     }
   };
 
@@ -95,15 +84,12 @@ const SubCollection = ({
     if (attribute === currentSortFolderAttribute) {
       setCurrentSortFolderAttribute("-" + attribute);
     } else {
-      setCurrentSortFolderAttribute(
-        currentSortFolderAttribute.startsWith("-") ? attribute : "-" + attribute
-      );
+      setCurrentSortFolderAttribute(currentSortFolderAttribute.startsWith("-") ? attribute : "-" + attribute);
     }
   };
   //End of logic for Sorting in subCollection view
 
-  const loadingAssetsFolders =
-    assets.length > 0 && assets[assets.length - 1].isLoading;
+  const loadingAssetsFolders = assets.length > 0 && assets[assets.length - 1].isLoading;
 
   useEffect(() => {
     return () => {
@@ -114,7 +100,7 @@ const SubCollection = ({
     };
   }, []);
 
-  //For handling the show subcollection checkbox button for collection change 
+  //For handling the show subcollection checkbox button for collection change
   useEffect(() => {
     setShowSubCollectionContent(false);
   }, [activeSubFolders])
@@ -171,15 +157,9 @@ const SubCollection = ({
         <>
           {/* list wrapper for list view */}
           {sortedFolders.length > 0 && (
-            <div
-              className={`${styles["cardsWrapper"]} ${activeView === "list" && styles["list-wrapper"]
-                }`}
-            >
+            <div className={`${styles["cardsWrapper"]} ${activeView === "list" && styles["list-wrapper"]}`}>
               {activeView === "list" && (
-                <FolderTableHeader
-                  activeView={activeView}
-                  setSortAttribute={setSortFolderAttribute}
-                />
+                <FolderTableHeader activeView={activeView} setSortAttribute={setSortFolderAttribute} />
               )}
               {sortedFolders.map((folder, index) => {
                 return (
@@ -199,13 +179,9 @@ const SubCollection = ({
                       deleteFolder={() => deleteFolder(folder.id)}
                       copyShareLink={() => copyShareLink(folder)}
                       copyEnabled={getShareIsEnabled(folder)}
-                      shareAssets={() =>
-                        beginAssetOperation({ folder }, "shareFolders")
-                      }
+                      shareAssets={() => beginAssetOperation({ folder }, "shareFolders")}
                       changeThumbnail={beginChangeThumbnailOperation}
-                      deleteThumbnail={() =>
-                        deleteThumbnail({ folder }, "shareFolders")
-                      }
+                      deleteThumbnail={() => deleteThumbnail({ folder }, "shareFolders")}
                       activeView={activeView}
                       isThumbnailNameEditable={isThumbnailNameEditable}
                       focusedItem={focusedItem}
@@ -235,7 +211,6 @@ const SubCollection = ({
       {
         <>
           <>
-
             <div className={`${styles["heading-wrapper"]}`}>
               <div className={`${styles["sub-collection-heading"]}`}>
                 {sortedAssets.length > 0 && sortedFolders.length > 0 && (
@@ -251,7 +226,7 @@ const SubCollection = ({
                   </div>
 
                 )}
-                {sortedFolders.length > 0 && (
+                {sortedFolders.length > 0 && sortedAssets.length > 0 && (
                   <div className={styles.tagOuter}>
                     <div className={styles.left}>
                       <div className={styles.TagsInfo}>
@@ -271,10 +246,13 @@ const SubCollection = ({
                 )}
               </div>
             </div>
-            <div id="filter-view" className={`${styles["collection-filter-wrap"]} ${isSticky ? styles["sticky"] : ""}`} style={getStyling()}>
-              <FilterView />
+            <div id="filter-view" className={`${styles["collection-filter-wrap"]} ${isSticky ? styles["sticky"] : ""}  ${assetsHide ? styles.hidden : ""}`} style={getStyling()}>
+              { !assetsHide &&   <FilterView />}
             </div>
-
+{/* 
+            <div className={`${styles["collection-filter-wrap"]}  ${assetsHide ? styles.hidden : ""}`}>
+          { !assetsHide &&   <FilterView />}
+            </div> */}
           </>
           <div
             id='asset-view'
@@ -284,10 +262,7 @@ const SubCollection = ({
             {!assetsHide && (
               <>
                 {activeView === "list" && (
-                  <AssetTableHeader
-                    activeView={activeView}
-                    setSortAttribute={setSortAssetAttribute}
-                  />
+                  <AssetTableHeader activeView={activeView} setSortAttribute={setSortAssetAttribute} />
                 )}
                 {sortedAssets.map((assetItem, index) => {
                   if (assetItem.status !== "fail") {
@@ -295,9 +270,7 @@ const SubCollection = ({
                       <li
                         className={`${styles["grid-item"]} ${activeView === "grid" ? styles["grid-item-new"] : ""}`}
                         key={assetItem.asset.id || index}
-                        onClick={(e) =>
-                          handleFocusChange(e, assetItem.asset.id)
-                        }
+                        onClick={(e) => handleFocusChange(e, assetItem.asset.id)}
                         ref={ref}
                         style={{ width: `$${widthCard}px` }}
                       >
@@ -307,31 +280,14 @@ const SubCollection = ({
                           activeFolder={activeSubFolders}
                           isShare={isShare}
                           type={""}
-                          toggleSelected={() =>
-                            toggleSelected(assetItem.asset.id)
-                          }
-                          openArchiveAsset={() =>
-                            openArchiveAsset(assetItem.asset)
-                          }
-                          openDeleteAsset={() =>
-                            openDeleteAsset(assetItem.asset.id)
-                          }
-                          openMoveAsset={() =>
-                            beginAssetOperation({ asset: assetItem }, "move")
-                          }
-                          openCopyAsset={() =>
-                            beginAssetOperation({ asset: assetItem }, "copy")
-                          }
-                          openShareAsset={() =>
-                            beginAssetOperation({ asset: assetItem }, "share")
-                          }
+                          toggleSelected={() => toggleSelected(assetItem.asset.id)}
+                          openArchiveAsset={() => openArchiveAsset(assetItem.asset)}
+                          openDeleteAsset={() => openDeleteAsset(assetItem.asset.id)}
+                          openMoveAsset={() => beginAssetOperation({ asset: assetItem }, "move")}
+                          openCopyAsset={() => beginAssetOperation({ asset: assetItem }, "copy")}
+                          openShareAsset={() => beginAssetOperation({ asset: assetItem }, "share")}
                           downloadAsset={() => downloadAsset(assetItem)}
-                          openRemoveAsset={() =>
-                            beginAssetOperation(
-                              { asset: assetItem },
-                              "remove_item"
-                            )
-                          }
+                          openRemoveAsset={() => beginAssetOperation({ asset: assetItem }, "remove_item")}
                           handleVersionChange={refreshVersion}
                           // loadMore={loadMore}
                           onCloseDetailOverlay={onCloseDetailOverlay}
@@ -341,7 +297,7 @@ const SubCollection = ({
                           activeView={activeView}
                           mode={mode}
                         />
-                      </li>
+                    </li>
                     );
                   }
                 })}
