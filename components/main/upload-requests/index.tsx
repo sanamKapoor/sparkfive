@@ -355,7 +355,6 @@ const UploadRequest = () => {
     })
     setSelectedFolderAssetView((prev) => [...prev, ...originalSelectedFolders])
 
-
     // @ts-ignore
     setTempComments(assets[index]?.asset?.comments || "");
   };
@@ -901,7 +900,7 @@ const UploadRequest = () => {
           [styles["yellow"]]: status === 0 || status === "pending",
           [styles["red"]]: status === -1 || status === "rejected",
         },
-        styles["wrapper"]
+          styles["wrapper"]
         )}
       >
         <span>{getStatusName(status)}</span>
@@ -1641,7 +1640,7 @@ const UploadRequest = () => {
                 {(currentViewStatus === 0 || isAdmin()) && (
                   <>
                     <div className={detailPanelStyles["field-wrapper"]}>
-                    <div className={`${styles["creatable-select-container"]} ${styles["tag-outer-box"]}`}>
+                      <div className={`${styles["creatable-select-container"]} ${styles["tag-outer-box"]}`}>
                         <CreatableSelect
                           title="Tags"
                           addText="Add Tags"
@@ -1920,7 +1919,7 @@ const UploadRequest = () => {
               <h2 className={styles["detail-title"]}>Add Attributes to Selected Assets</h2>
 
               <div className={detailPanelStyles["field-wrapper"]}>
-              <div className={`${styles["creatable-select-container"]} ${styles["tag-attribute-outer"]}`}>
+                <div className={`${styles["creatable-select-container"]} ${styles["tag-attribute-outer"]}`}>
                   <CreatableSelect
                     title="Tags"
                     addText="Add Tags"

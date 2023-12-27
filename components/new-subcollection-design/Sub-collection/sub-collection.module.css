@@ -5,6 +5,11 @@
   flex-wrap: wrap;
   margin-top:5px;
 }
+/* .sticky {
+  position: fixed;
+  top: 151px;
+  width: 100%;
+} */
 .sub-collection-heading span {
   font-family: "Noto Sans", sans-serif;
   font-size: 14px;

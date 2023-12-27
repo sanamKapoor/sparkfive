@@ -101,20 +101,20 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
   const filterModalPosition = () => {
     const mianFilterModal = document.getElementById('mianFilterModal');
     const modal = document.getElementById('modal');
-  
+
     if (mianFilterModal && modal) {
       const viewportWidth = window.innerWidth;
       const modalWidth = modal.offsetWidth;
       const leftelemnt = mianFilterModal.offsetLeft;
       const additionlalength = sidebarOpen ? 378 : 0;
-  
+
       console.log("viewportWidth:", viewportWidth);
       console.log("modalWidth:", modalWidth);
       console.log("leftelemnt:", leftelemnt);
-  
+
       // Calculate the available space on the right
       const availableSpaceRight = viewportWidth - leftelemnt - mianFilterModal.offsetWidth;
-  
+
       if (modalWidth + additionlalength > availableSpaceRight) {
         // If there is not enough space on the right, position the modal on the left
         modal.style.right = 'unset';
@@ -165,46 +165,46 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
 
   return (
     <div
-    id="mianFilterModal"
-    className={`${styles["main-container"]}`
-    }>
-    <div id="modal" className={`${styles["more-filter-wrapper"]}`}>
-      <div className={`${indexStyles["popup-header"]}`}>
-        <span className={`${indexStyles["main-heading"]}`}>More Filters</span>
-        <div className={indexStyles.buttons}>
-          <img
-            className={indexStyles.closeIcon}
-            src={Utilities.closeIcon}
-            onClick={onClose}
-          />
+      id="mianFilterModal"
+      className={`${styles["main-container"]}`
+      }>
+      <div id="modal" className={`${styles["more-filter-wrapper"]}`}>
+        <div className={`${indexStyles["popup-header"]}`}>
+          <span className={`${indexStyles["main-heading"]}`}>More Filters</span>
+          <div className={indexStyles.buttons}>
+            <img
+              className={indexStyles.closeIcon}
+              src={Utilities.closeIcon}
+              onClick={onClose}
+            />
+          </div>
+        </div>
+
+        <div className={`${styles["outer-Box"]}`}>
+          <div className={styles["outer-wrapper"]}>
+            {options.length === 0 ? (
+              <p>No Results Found.</p>
+            ) : (
+              options.map((item, index) => (
+                <div className={styles["grid-item"]} key={item.id}>
+                  <OptionDataItem
+                    name={item.name}
+                    count={item.count}
+                    isSelected={item.isSelected}
+                    onSelect={() => onSelectOption(item)}
+                    onDeselect={() => onDeselectOption(item)}
+                  />
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        <div className={`${indexStyles["Modal-btn"]}`}>
+          <Button className={"apply"} text={"Apply"} onClick={onApply} />
+          <Button className={"cancel"} text={"Cancel"} onClick={onCancel} />
         </div>
       </div>
-
-      <div className={`${styles["outer-Box"]}`}>
-        <div className={styles["outer-wrapper"]}>
-          {options.length === 0 ? (
-            <p>No Results Found.</p>
-          ) : (
-            options.map((item, index) => (
-              <div className={styles["grid-item"]} key={item.id}>
-                <OptionDataItem
-                  name={item.name}
-                  count={item.count}
-                  isSelected={item.isSelected}
-                  onSelect={() => onSelectOption(item)}
-                  onDeselect={() => onDeselectOption(item)}
-                />
-              </div>
-            ))
-          )}
-        </div>
-      </div>
-
-      <div className={`${indexStyles["Modal-btn"]}`}>
-        <Button className={"apply"} text={"Apply"} onClick={onApply} />
-        <Button className={"cancel"} text={"Cancel"} onClick={onCancel} />
-      </div>
-    </div>
     </div>
   );
 };

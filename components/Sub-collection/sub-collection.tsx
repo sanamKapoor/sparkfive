@@ -1,16 +1,16 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Waypoint } from "react-waypoint";
-import { Utilities } from "../../assets";
-import { AssetContext } from "../../context";
-import AssetThumbail from "../common/asset/asset-thumbail";
-import Button from "../common/buttons/button";
-import FolderGridItem from "../common/folder/folder-grid-item";
-import styles from "../new-subcollection-design/Sub-collection/sub-collection.module.css";
+import React, { CSSProperties, useContext, useEffect, useState } from 'react';
+import { Waypoint } from 'react-waypoint';
 
-import useSortedAssets from "../../hooks/use-sorted-assets";
-import AssetTableHeader from "../common/asset/Asset-table-header/asset-table-header";
-import FolderTableHeader from "../common/asset/Folder-table-header/folder-table-header";
-import FilterView from "../common/filter-view";
+import { Utilities } from '../../assets';
+import { AssetContext } from '../../context';
+import useSortedAssets from '../../hooks/use-sorted-assets';
+import AssetTableHeader from '../common/asset/Asset-table-header/asset-table-header';
+import AssetThumbail from '../common/asset/asset-thumbail';
+import FolderTableHeader from '../common/asset/Folder-table-header/folder-table-header';
+import Button from '../common/buttons/button';
+import FilterView from '../common/filter-view';
+import FolderGridItem from '../common/folder/folder-grid-item';
+import styles from '../new-subcollection-design/Sub-collection/sub-collection.module.css';
 
 const SubCollection = ({
   activeView = "grid",
@@ -42,6 +42,8 @@ const SubCollection = ({
   const [isChecked, setIsChecked] = useState(false);
   const [collectionHide, setCollectionHide] = useState(false);
   const [assetsHide, setAssetsHide] = useState(false);
+  const [isSticky, setIsSticky] = useState(false);
+  const [bottom1, setBottom1] = useState(0); // Assuming a default value, adjust as needed
 
   const handleCircleClick = () => {
     loadMoreAssets(true, !showSubCollectionContent);
@@ -106,7 +108,7 @@ const SubCollection = ({
   useEffect(() => {
     return () => {
       setActiveSubFolders("");
-      setSubFoldersViewList({ results: [], next: 0, total: 0 });
+      // setSubFoldersViewList({ results: [], next: 0, total: 0 });
       setSubFoldersAssetsViewList({ results: [], next: 0, total: 0 });
       setShowSubCollectionContent(false);
     };
@@ -117,13 +119,43 @@ const SubCollection = ({
     setShowSubCollectionContent(false);
   }, [activeSubFolders])
 
+
+
+  const handleScroll = (e: any) => {
+    const element = document.getElementById('filter-view') as HTMLElement;
+    const { top, height } = element.getBoundingClientRect();
+    const element2 = document.getElementById('asset-view') as HTMLElement;
+    const { top: top2 } = element2.getBoundingClientRect();
+    const element3 = document.getElementById('top-bar') as HTMLElement;
+    const { bottom } = element3.getBoundingClientRect();
+
+    if (top < bottom) {
+      setBottom1((prev) => { return bottom })
+      setIsSticky(true);
+    } else if (top2 > bottom + height) {
+      setIsSticky(false);
+    }
+  };
+  useEffect(() => {
+    // Add scroll event listener when the component mounts
+    window.addEventListener('scroll', handleScroll);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  const getStyling = (): CSSProperties => {
+    return isSticky ? { position: "fixed", width: "100%", top: bottom1, zIndex: 10 } : {};
+  }
   return (
     <>
       {sortedFolders.length > 0 && (
         <div className={`${styles["sub-collection-heading"]}`}>
           <div className={styles.rightSide}>
             <div className={`${styles["sub-collection-heading-outer"]}`}>
-              <span>Subcollection ({total})</span>
+              <span>{sortedFolders.length == 1 ? "Subcollection" : "Subcollections"} ({total})</span>
               <img
                 className={`${collectionHide ? styles.iconClick : styles.rightIcon} ${styles.ExpandIcons}`}
                 onClick={() => {
@@ -239,12 +271,13 @@ const SubCollection = ({
                 )}
               </div>
             </div>
-            <div className={`${styles["collection-filter-wrap"]}`}>
+            <div id="filter-view" className={`${styles["collection-filter-wrap"]} ${isSticky ? styles["sticky"] : ""}`} style={getStyling()}>
               <FilterView />
             </div>
 
           </>
           <div
+            id='asset-view'
             className={`${styles["assetWrapper"]} ${activeView === "list" && styles["list-wrapper"]
               }`}
           >

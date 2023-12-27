@@ -31,14 +31,15 @@ import AssetThumbail from "./asset-thumbail";
 import AssetUpload from "./asset-upload";
 import DetailOverlay from "./detail-overlay";
 import { ASSET_UPLOAD_APPROVAL } from "../../../constants/permissions";
+
 // import { useDrag } from 'react-dnd';
 // import {
 //   Box,
 //   boxesIntersect,
 //   useSelectionContainer
 // } from "@air/react-drag-to-select";
-// Components
 
+// Components
 const AssetGrid = ({
   activeView = "grid",
   isShare = false,
@@ -103,6 +104,7 @@ const AssetGrid = ({
 
   const [sortedAssets, currentSortAttribute, setCurrentSortAttribute] =
     useSortedAssets(assets);
+
   const [
     sortedFolders,
     currentSortFolderAttribute,
@@ -442,26 +444,6 @@ const AssetGrid = ({
     }
   };
 
-  // useEffect(() => {
-  //   if (mode === "assets") {
-  //     if (elementsContainerRef.current) {
-  //       Array.from(elementsContainerRef.current.children).forEach((item) => {
-  //         const { left, top, width, height, ...rest } = item.getBoundingClientRect();
-
-  //         console.log("qwerty", left, top, width, height, item.id)
-  //         selectableItems.current.push({
-  //           left,
-  //           top,
-  //           width,
-  //           height,
-  //           id: item.id
-  //         });
-  //       });
-  //     }
-  //   }
-
-  // }, [mode])
-
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -498,9 +480,7 @@ const AssetGrid = ({
       {/* <DragSelection /> */}
       <div className={styles["filter-view-container"]}>
         {mode === "assets" && <FilterView />}
-
       </div>
-
       <section className={`${styles.container}  ${shouldShowUpload ? styles.uploadAsset : ''}`}>
         {(shouldShowUpload || isDragging) && !isShare && !hasPermission([ASSET_UPLOAD_APPROVAL]) && (
           <AssetUpload
@@ -525,7 +505,6 @@ const AssetGrid = ({
             setActiveSearchOverlay={setActiveSearchOverlay}
           />
         )}
-
         {
           <div className={styles["list-wrapper"]}>
 

@@ -73,6 +73,7 @@ const AssetThumbail = ({
     setAssets,
     subFoldersAssetsViewList: { results: subAssets, next: nextAsset, total: totalAssets },
     setListUpdateFlag,
+    setSubFoldersAssetsViewList,
   } = useContext(AssetContext);
 
   const isAssetACopy = asset.name.endsWith(" - COPY");
@@ -163,10 +164,12 @@ const AssetThumbail = ({
   const handleOnFocus = () => {
     setIsEditing(true);
   };
+
   // HAndle the New action Button Change name for assets
   const renameAsset = () => {
     setAssetRenameModalOpen(true);
   };
+
   const confirmAssetRename = async (newValue) => {
     try {
       if (mode === "SubCollectionView") {
@@ -193,7 +196,11 @@ const AssetThumbail = ({
               }
             }),
           ];
-          setAssets(updatedAssets);
+          setSubFoldersAssetsViewList({
+            results: updatedAssets,
+            next: nextAsset,
+            total: totalAssets
+          });
           setListUpdateFlag(true);
         }
         setThumbnailName(editedName);
@@ -232,6 +239,7 @@ const AssetThumbail = ({
       toastUtils.error("Could not update asset name");
     }
   };
+
   return (
     <>
       <div>

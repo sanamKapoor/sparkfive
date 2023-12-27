@@ -38,6 +38,7 @@ const AssetsLibrary = () => {
   const [showOverlayLoader, setShowOverlayLoader] = useState(false);
 
   const {
+    sidenavTotalCollectionCount,
     assets,
     sidenavFolderList,
     setSidenavFolderList,
@@ -122,6 +123,8 @@ const AssetsLibrary = () => {
   const router = useRouter();
 
   const preparingAssets = useRef(true);
+
+
   // When tag, campaigns, collection changes, used for click on tag/campaigns/collection in admin attribute management
   useEffect(() => {
     if (!preparingAssets.current) return;
@@ -233,7 +236,7 @@ const AssetsLibrary = () => {
       }
       if (firstLoaded) {
         setActivePageMode("library");
-
+        document.body.scrollTop = document.documentElement.scrollTop = 0;
         if (
           activeSortFilter.mainFilter === "folders" &&
           !router.query.tag &&
@@ -520,7 +523,6 @@ const AssetsLibrary = () => {
         }
       }
     } catch (e) {
-      console.log(e);
       // Violate validation, mark failure
       const updatedAssets = assets.map((asset, index) =>
         index === i ? { ...asset, status: "fail", index, error: "Processing file error" } : asset,
@@ -838,6 +840,9 @@ const AssetsLibrary = () => {
       const assetIndex = assets.findIndex(
         (assetItem) => assetItem.asset.id === id
       );
+      if (assets[assetIndex].isSelected) {
+        selectAllAssets(false);
+      }
       setAssets(
         update(assets, {
           [assetIndex]: {
@@ -847,6 +852,10 @@ const AssetsLibrary = () => {
       );
     } else if (activeMode === "folders") {
       const folderIndex = folders.findIndex((folder) => folder.id === id);
+      if (folders[folderIndex].isSelected) {
+        selectAllFolders(false);
+      }
+
       setFolders(
         update(folders, {
           [folderIndex]: {
@@ -863,6 +872,9 @@ const AssetsLibrary = () => {
       );
 
       if (folderIndex !== -1) {
+        if (subFoldersViewList.results[folderIndex]?.isSelected) {
+          setSelectedAllSubFoldersAndAssets(false)
+        }
         setSelectedAllSubAssets(false)
         setSubFoldersViewList({
           ...subFoldersViewList,
@@ -884,6 +896,10 @@ const AssetsLibrary = () => {
       }
       if (assetIndex !== -1) {
         setSelectedAllSubFoldersAndAssets(false);
+        if (subFoldersAssetsViewList.results[assetIndex]?.isSelected) {
+          setSelectedAllSubAssets(false)
+        }
+
         setSubFoldersAssetsViewList({
           ...subFoldersAssetsViewList,
           results: update(subFoldersAssetsViewList.results, {
@@ -1041,6 +1057,7 @@ const AssetsLibrary = () => {
           results: [
             ...sidenavFolderList.filter((folder: any) => folder.id !== id),
           ],
+          total: sidenavTotalCollectionCount - 1
         });
 
         toastUtils.success("Collection deleted successfully");
