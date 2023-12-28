@@ -126,7 +126,8 @@
 .assetWrapper {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(246px, 1fr));
-  grid-gap: 20px;
+  grid-gap: 40px;
+  margin-top: 40px;
 }
 .LoadMorebtn {
   display: flex;
@@ -156,9 +157,7 @@
   margin: 0 0 20px 0;
 
 }
-.collection-filter-wrap{
-  /* margin-top:25px; */
-}
+
 @media screen and (max-width: 810px) {
   .cardsWrapper {
     margin-top: 100px;

@@ -5,6 +5,9 @@
   min-height: 60vh;
   margin-top: 44px;
 }
+.container-on-toggle{
+  margin-top:75px;
+}
 .uploadAsset{
   position: fixed;
   width: 100%;
@@ -25,6 +28,7 @@
   z-index: 99;
   top:94px;
   width:100%;
+
 }
 .list-asset-view{
   margin-top:95px;

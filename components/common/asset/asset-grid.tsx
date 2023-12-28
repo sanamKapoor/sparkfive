@@ -76,6 +76,7 @@ const AssetGrid = ({
     subFoldersAssetsViewList,
     setSubFoldersAssetsViewList,
     setListUpdateFlag,
+    sidebarOpen
   } = useContext(AssetContext);
   const { activeSortFilter } = useContext(FilterContext);
   //Drog select assets
@@ -446,7 +447,7 @@ const AssetGrid = ({
       <div className={styles["filter-view-container"]}>
         {mode === "assets" && <FilterView />}
       </div>
-      <section className={`${styles.container}  ${shouldShowUpload ? styles.uploadAsset : ''}`}>
+      <section className={`${styles.container}  ${shouldShowUpload ? styles.uploadAsset : ''} ${!sidebarOpen?styles['container-on-toggle']:""}`}>
         {(shouldShowUpload || isDragging) && !isShare && !hasPermission([ASSET_UPLOAD_APPROVAL]) && (
           <AssetUpload
             onDragText={"Drop files here to upload"}
@@ -484,7 +485,9 @@ const AssetGrid = ({
                 : styles["grid-" + advancedConfig.collectionThumbnail]
             }
             `}
-            {...(mode === "assets" && { style: { marginTop: '58px' } })}
+            {...(mode === "assets" && { style: { marginTop: '60px' } })}
+            // {...(mode === "assets" && !sidebarOpen && { style: { marginTop: '60px' } })}
+
               >
                 {mode === "SubCollectionView" && (
                   <SubCollection
