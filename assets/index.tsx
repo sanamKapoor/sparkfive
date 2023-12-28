@@ -96,7 +96,8 @@ export const insights={
   calender:require("./Icons/insights/calender.svg"),
   paginationLeft:require("./Icons/insights/pagination-left.svg"),
   paginationRight:require("./Icons/insights/pagination-right.svg"),
-  insightClose:require("./Icons/insights/insight-close.svg")
+  insightClose:require("./Icons/insights/insight-close.svg"),
+  noData:require("./Icons/insights/nodata.svg"),
 
 }
 
