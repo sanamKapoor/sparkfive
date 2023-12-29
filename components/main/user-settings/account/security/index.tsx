@@ -11,18 +11,19 @@ import {
   SECURITY_TITLE,
 } from "../../../../../constants/strings";
 import UserPreference from "../../../../common/account/user-preference";
-import useAnalytics from "../../../../../hooks/useAnalytics";
 import { pages } from "../../../../../constants/analytics";
+import usePageInfo from "../../../../../hooks/usePageInfo";
+import analyticsApi from "../../../../../server-api/analytics";
 
 const Notifications: React.FC = () => {
   const { user, setUser } = useContext(UserContext);
 
   const [enabledTwoFactor, setEnabledTwoFactor] = useState<boolean>(false);
 
-  const {trackPage} = useAnalytics();
+  const data = usePageInfo();
 
-  useEffect(() => {
-    trackPage(pages.SECURITY)
+  useEffect(() => {    
+    analyticsApi.capturePageVisit({ name: pages.SECURITY, ...data })
   },[]);
 
   useEffect(() => {

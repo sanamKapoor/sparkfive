@@ -3,24 +3,26 @@ import { useEffect } from "react";
 import AppLayout from "../components/common/layouts/app-layout";
 import AuthLayout from "../components/common/layouts/auth-layout";
 import ResetPassword from "../components/reset-password";
-import useAnalytics from "../hooks/useAnalytics";
 import { pages } from "../constants/analytics";
+import usePageInfo from "../hooks/usePageInfo";
+import analyticsApi from "../server-api/analytics";
 
 const ResetPasswordPage = () => {
-  const {trackPage} = useAnalytics();
+  const data = usePageInfo();
 
   useEffect(() => {
-    trackPage(pages.RESET_PASSWORD)
-},[]);
+    analyticsApi.capturePageVisit({ name: pages.RESET_PASSWORD, ...data })
+  }, []);
 
   return (
-  <>
-    <AppLayout title="Reset Password">
-      <AuthLayout>
-        <ResetPassword />
-      </AuthLayout>
-    </AppLayout>
-  </>
-)};
+    <>
+      <AppLayout title="Reset Password">
+        <AuthLayout>
+          <ResetPassword />
+        </AuthLayout>
+      </AppLayout>
+    </>
+  )
+};
 
 export default ResetPasswordPage;

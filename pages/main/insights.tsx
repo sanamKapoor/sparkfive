@@ -3,30 +3,30 @@ import { CALENDAR_ACCESS } from "../../constants/permissions";
 // Components
 import AppLayout from "../../components/common/layouts/app-layout";
 import MainLayout from "../../components/common/layouts/main-layout";
-import Overview from "../../components/main/overview";
-import useAnalytics from "../../hooks/useAnalytics";
 import { useEffect } from "react";
 import { pages } from "../../constants/analytics";
-import TableComponent from "../../components/analytics/insight-table/insight-table";
 import Analytics from "../../components/analytics";
 import React from "react";
+import usePageInfo from "../../hooks/usePageInfo";
+import analyticsApi from "../../server-api/analytics";
 
 const OverviewPage = () => {
 
-  const {trackPage} = useAnalytics();
+  const data = usePageInfo();
 
   useEffect(() => {
-    trackPage(pages.UPLOAD_APPROVAL)
-},[]);
+    analyticsApi.capturePageVisit({ name: pages.INSIGHTS, ...data })
+  }, []);
 
   return (
-  <>
-    <AppLayout title="Overview">
-      <MainLayout requiredPermissions={[CALENDAR_ACCESS]}>
-    <Analytics/>
-      </MainLayout>
-    </AppLayout>
-  </>
-)};
+    <>
+      <AppLayout title="Overview">
+        <MainLayout requiredPermissions={[CALENDAR_ACCESS]}>
+          <Analytics />
+        </MainLayout>
+      </AppLayout>
+    </>
+  )
+};
 
 export default OverviewPage;

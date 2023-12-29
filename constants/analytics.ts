@@ -22,6 +22,7 @@ export const pages = {
     USER_SETTING: 'USER_SETTING',
     UPLOAD_APPROVAL: 'UPLOAD_APPROVAL',
     ASSETS_DELETE: 'ASSET_DELETE',
+    INSIGHTS: 'INSIGHTS',
 
     // previously they were pages, but now they are tabs inside user-settings. Still we will track those sections as page visit
 

@@ -7,13 +7,15 @@ import TwoFactor from "../components/two-factor";
 import { useEffect } from "react";
 import useAnalytics from "../hooks/useAnalytics";
 import { pages } from "../constants/analytics";
+import usePageInfo from "../hooks/usePageInfo";
+import analyticsApi from "../server-api/analytics";
 
 const TwoFactorPage = () => {
-  const {trackPage} = useAnalytics();
+  const data = usePageInfo();
 
   useEffect(() => {
-    trackPage(pages.TWO_FECTOR)
-},[]);
+    analyticsApi.capturePageVisit({ name: pages.TWO_FECTOR, ...data })
+  }, []);
 
   return (
     <>

@@ -8,16 +8,17 @@ import ShareCollectionMain from "../../../../components/share-collections";
 
 import AppLayout from "../../../../components/common/layouts/app-layout";
 import { AssetContext } from "../../../../context";
-import useAnalytics from "../../../../hooks/useAnalytics";
 import { pages } from "../../../../constants/analytics";
+import usePageInfo from "../../../../hooks/usePageInfo";
+import analyticsApi from "../../../../server-api/analytics";
 
 const ShareFolder = () => {
   const { downloadingStatus } = useContext(AssetContext);
 
-  const {trackPage} = useAnalytics();
+const data = usePageInfo();
 
-  useEffect(() => {
-    trackPage(pages.COLLECTIONS)
+useEffect(() => {    
+  analyticsApi.capturePageVisit({ name: pages.COLLECTIONS, ...data })
 },[]);
 
   return (

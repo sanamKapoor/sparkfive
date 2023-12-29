@@ -3,16 +3,17 @@ import { useEffect } from "react";
 import AppLayout from "../components/common/layouts/app-layout";
 import AuthLayout from "../components/common/layouts/auth-layout";
 import Signup from "../components/signup";
-import useAnalytics from "../hooks/useAnalytics";
 import { pages } from "../constants/analytics";
+import usePageInfo from "../hooks/usePageInfo";
+import analyticsApi from "../server-api/analytics";
 
-const SignupPage = () => {
-  const { trackPage } = useAnalytics();
+const SignupPage = () => { 
+  const data = usePageInfo();
 
-  useEffect(() => {
-    trackPage(pages.TRIAL_SIGNUP)
-  }, []);
-  
+  useEffect(() => {    
+    analyticsApi.capturePageVisit({ name: pages.TRIAL_SIGNUP, ...data })
+  },[]);
+
   return (
     <>
       <AppLayout title="Sign Up">

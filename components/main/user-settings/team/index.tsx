@@ -8,8 +8,9 @@ import SwitchableTabsWithProps from "../../../common/switchable-tabs-with-props"
 import AddCustomRole from "./add-custom-role";
 import Members from "./members";
 import Roles from "./roles";
-import useAnalytics from "../../../../hooks/useAnalytics";
 import { pages } from "../../../../constants/analytics";
+import usePageInfo from "../../../../hooks/usePageInfo";
+import analyticsApi from "../../../../server-api/analytics";
 
 const Team: React.FC = () => {
   const [selectedRole, setSelectedRole] = useState<IRole | undefined>(
@@ -20,10 +21,10 @@ const Team: React.FC = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const {trackPage} = useAnalytics();
+  const pageInfo = usePageInfo();
 
-  useEffect(() => {
-    trackPage(pages.TEAM)
+  useEffect(() => {    
+    analyticsApi.capturePageVisit({ name: pages.TEAM, ...pageInfo })
   },[]);
 
   const onAddCustomRole = () => {

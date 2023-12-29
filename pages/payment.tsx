@@ -3,14 +3,16 @@ import { useEffect } from "react";
 import AppLayout from "../components/common/layouts/app-layout";
 import AuthLayout from "../components/common/layouts/auth-layout";
 import Payment from "../components/payment";
-import useAnalytics from "../hooks/useAnalytics";
 import { pages } from "../constants/analytics";
+import usePageInfo from "../hooks/usePageInfo";
+import analyticsApi from "../server-api/analytics";
 
 const PaymentPage = () => {
-  const {trackPage} = useAnalytics();
 
-  useEffect(() => {
-    trackPage(pages.PAYMENT)
+const data = usePageInfo();
+
+useEffect(() => {    
+  analyticsApi.capturePageVisit({ name: pages.PAYMENT, ...data })
 },[]);
 
   return(

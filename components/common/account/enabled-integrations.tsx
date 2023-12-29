@@ -10,10 +10,10 @@ import usePageInfo from "../../../hooks/usePageInfo";
 const EnabledIntegrations = () => {
   const [integrations, setIntegrations] = useState([]);
 
-  // usePageInfo();
+  const data = usePageInfo();
 
-  useEffect(() => {
-    analyticsApi.capturePageVisit(pages.INTEGRATIONS)
+  useEffect(() => {    
+    analyticsApi.capturePageVisit({ name: pages.INTEGRATIONS, ...data })
   },[]);
 
   useEffect(() => {

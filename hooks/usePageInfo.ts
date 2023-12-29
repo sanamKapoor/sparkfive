@@ -1,9 +1,17 @@
-import { useRouter } from "next/router";
+import { useContext } from "react";
+import { UserContext } from "../context";
 
 const usePageInfo = () => {
-    const router = useRouter();
+  const { user } = useContext(UserContext);
 
-    console.log(router);
+    return {
+        url: window.location.href,
+        origin: window.location.origin,
+        path: window.location.pathname,
+        search: window.location.search,
+        eventType: "PAGE",
+        userId: user?.id || null
+    }
 }
 
 export default usePageInfo;

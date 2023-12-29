@@ -112,6 +112,7 @@ export default ({ children }) => {
           // Track loggedIn user data for analytics
           identify(data.id, {
             id: data.id,
+            email: data.email,
           });
         }
 

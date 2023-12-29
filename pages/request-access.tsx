@@ -3,24 +3,26 @@ import { useEffect } from "react";
 import AppLayout from "../components/common/layouts/app-layout";
 import AuthLayout from "../components/common/layouts/auth-layout";
 import RequestAccess from "../components/request-access";
-import useAnalytics from "../hooks/useAnalytics";
 import { pages } from "../constants/analytics";
+import usePageInfo from "../hooks/usePageInfo";
+import analyticsApi from "../server-api/analytics";
 
 const RequestAccessPage = () => {
-  const {trackPage} = useAnalytics();
+  const data = usePageInfo();
 
   useEffect(() => {
-    trackPage(pages.REQUEST_ACCESS)
-},[]);
+    analyticsApi.capturePageVisit({ name: pages.REQUEST_ACCESS, ...data })
+  }, []);
 
   return (
-  <>
-    <AppLayout title="Request Access">
-      <AuthLayout>
-        <RequestAccess />
-      </AuthLayout>
-    </AppLayout>
-  </>
-)};
+    <>
+      <AppLayout title="Request Access">
+        <AuthLayout>
+          <RequestAccess />
+        </AuthLayout>
+      </AppLayout>
+    </>
+  )
+};
 
 export default RequestAccessPage;

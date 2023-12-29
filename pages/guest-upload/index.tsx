@@ -5,19 +5,20 @@ import { useEffect, useState } from "react";
 import { AppImg, GeneralImg } from "../../assets";
 import AppLayout from "../../components/common/layouts/app-layout";
 import GuestUploadContextProvider from "../../context/share-upload-link-provider";
-import useAnalytics from "../../hooks/useAnalytics";
 import { pages } from "../../constants/analytics";
+import usePageInfo from "../../hooks/usePageInfo";
+import analyticsApi from "../../server-api/analytics";
 
 
 const GuestUploadPage = () => {
   const [logo, setLogo] = useState<string>(GeneralImg.logo);
   const [banner, setBanner] = useState<string>(AppImg.guestCover);
 
-  const {trackPage} = useAnalytics();
+  const data = usePageInfo();
 
   useEffect(() => {
-    trackPage(pages.GUEST_UPLOAD)
-},[]);
+    analyticsApi.capturePageVisit({ name: pages.GUEST_UPLOAD, ...data })
+  }, []);
 
   return (
     <>

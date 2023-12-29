@@ -5,16 +5,17 @@ import styles from "./index.module.css";
 // Components
 import PhotoUpload from "../../../../common/account/photo-upload";
 import Basic from "./basic";
-import useAnalytics from "../../../../../hooks/useAnalytics";
 import { pages } from "../../../../../constants/analytics";
+import usePageInfo from "../../../../../hooks/usePageInfo";
+import analyticsApi from "../../../../../server-api/analytics";
 
 const Profile: React.FC = () => {
   const { user } = useContext(UserContext);
 
-  const {trackPage} = useAnalytics();
+  const data = usePageInfo();
 
-  useEffect(() => {
-    trackPage(pages.PROFILE)
+  useEffect(() => {    
+    analyticsApi.capturePageVisit({ name: pages.PROFILE, ...data })
   },[]);
 
   return (

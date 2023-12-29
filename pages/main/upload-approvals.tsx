@@ -9,17 +9,18 @@ import UploadRequest from "../../components/main/upload-requests";
 
 import AppLayout from "../../components/common/layouts/app-layout";
 import { AssetContext } from "../../context";
-import useAnalytics from "../../hooks/useAnalytics";
 import { pages } from "../../constants/analytics";
+import usePageInfo from "../../hooks/usePageInfo";
+import analyticsApi from "../../server-api/analytics";
 
 const UploadRequestsPage = () => {
   const { uploadingStatus, uploadingAssets, downloadingStatus } =
     useContext(AssetContext);
 
-    const {trackPage} = useAnalytics();
+  const data = usePageInfo();
 
-    useEffect(() => {
-      trackPage(pages.UPLOAD_APPROVAL)
+  useEffect(() => {    
+    analyticsApi.capturePageVisit({ name: pages.UPLOAD_APPROVAL, ...data })
   },[]);
 
   return (

@@ -11,8 +11,9 @@ import { BillingTabs } from "../../../../../interfaces/common/tabs";
 import Invoices from "./invoices";
 import PaymentMethod from "./payment-method";
 import Subscription from "./subscription";
-import useAnalytics from "../../../../../hooks/useAnalytics";
 import { pages } from "../../../../../constants/analytics";
+import usePageInfo from "../../../../../hooks/usePageInfo";
+import analyticsApi from "../../../../../server-api/analytics";
 
 const SETTING_SECTIONS_CONTENT = {
   subscription: Subscription,
@@ -43,10 +44,10 @@ const Billing = () => {
     getPaymentMethod();
   }, []);
 
-  const {trackPage} = useAnalytics();
+  const data = usePageInfo();
 
-  useEffect(() => {
-    trackPage(pages.BILLING)
+  useEffect(() => {    
+    analyticsApi.capturePageVisit({ name: pages.BILLING, ...data })
   },[]);
 
   const getPaymentMethod = async () => {
