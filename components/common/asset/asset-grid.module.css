@@ -27,11 +27,18 @@
   background: #fff;
   z-index: 99;
   top:94px;
-  width:100%;
+  width:calc(100% - 300px);
 
 }
 .list-asset-view{
   margin-top:95px;
+}
+@media (min-width:700px) and (max-width:1024px){
+  .filter-view-container{
+    width:calc(100% - 10px);
+  }
+
+
 }
 
 @media screen and (max-width: 1023px) {
@@ -226,7 +233,7 @@
 }
 @media (min-width:500px) and (max-width:764px){
   .list-wrapper-asset{
-  margin-top: 248px;
+  /* margin-top: 248px; */
   }
   .filter-view-container{
     top:220px;

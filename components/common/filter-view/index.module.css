@@ -150,7 +150,7 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  padding-top: 10px;
+  /* padding-top: 10px; */
 }
 
 .selected-filter-item {
