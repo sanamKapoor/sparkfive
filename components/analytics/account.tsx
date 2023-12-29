@@ -8,6 +8,9 @@ import AssetTable from "./asset-table/asset-table";
 import AssetChart from "./insights-chart/insights-chart";
 import Dashboard from "./Dashboard";
 import NoData from "./no-data/no-data";
+import ShareLinkTable from "./shared-links/share-link-table";
+import ShareLinkPage from "./shared-links";
+import SharedUserModal from "./Modals/user-modal/shared-user-modal";
 export default function Account() {
   return (
     <section className={styles.mainContainer}>
@@ -17,9 +20,13 @@ export default function Account() {
       <div className={`${styles["inner-container"]}`}>
         <UserTable />
       </div>
-      <div>
+      {/* <div>
       <NoData/>
       </div>
+      <div>
+      <ShareLinkPage/>
+      </div> */}
+      <SharedUserModal/>
     </section>
   );
 }
