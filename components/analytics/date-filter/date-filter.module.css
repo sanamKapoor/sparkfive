@@ -20,6 +20,7 @@
     font-size: 14px;
     color:var(--color-prim-light);
     padding:4px 12px;
+    cursor:pointer;
 }
 
 .active{
