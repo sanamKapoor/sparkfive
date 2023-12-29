@@ -10,23 +10,25 @@ import AppLayout from "../../../../components/common/layouts/app-layout";
 import NoPermissionNotice from "../../../../components/common/misc/no-permission-notice";
 import { UserContext } from "../../../../context";
 import { UserRole } from "../../../../interfaces/user/role";
-import useAnalytics from "../../../../hooks/useAnalytics";
 import { pages } from "../../../../constants/analytics";
+import usePageInfo from "../../../../hooks/usePageInfo";
+import analyticsApi from "../../../../server-api/analytics";
 
 const AssetsPage: React.FC = () => {
   const { user } = useContext(UserContext);
-  const {trackPage} = useAnalytics();
+
+  const data = usePageInfo();
 
   useEffect(() => {
-    trackPage(pages.USER_SETTING)
-},[]);
+    analyticsApi.capturePageVisit({ name: pages.USER_SETTING, ...data })
+  }, []);
 
   return (
     <FilterProvider>
       <AppLayout title="User Settings">
         <MainLayout requiredPermissions={[ASSET_ACCESS]}>
           {user.roleId === UserRole.ADMIN ||
-          user.roleId === UserRole.SUPER_ADMIN ? (
+            user.roleId === UserRole.SUPER_ADMIN ? (
             <DeletedAssetsLibrary />
           ) : (
             <NoPermissionNotice />

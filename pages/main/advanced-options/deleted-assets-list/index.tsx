@@ -10,16 +10,18 @@ import AppLayout from "../../../../components/common/layouts/app-layout";
 import NoPermissionNotice from "../../../../components/common/misc/no-permission-notice";
 import { UserContext } from "../../../../context";
 import LoginPage from "../../../login";
-import useAnalytics from "../../../../hooks/useAnalytics";
 import { pages } from "../../../../constants/analytics";
+import usePageInfo from "../../../../hooks/usePageInfo";
+import analyticsApi from "../../../../server-api/analytics";
 
 const AssetsPage = () => {
   const { user } = useContext(UserContext);
 
-  const {trackPage} = useAnalytics();
 
-  useEffect(() => {
-    trackPage(pages.ASSETS_DELETE)
+const data = usePageInfo();
+
+useEffect(() => {    
+  analyticsApi.capturePageVisit({ name: pages.ASSETS_DELETE, ...data })
 },[]);
 
   return (

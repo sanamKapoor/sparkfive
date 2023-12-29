@@ -3,25 +3,27 @@ import { useEffect } from "react";
 import AppLayout from "../../../components/common/layouts/app-layout";
 import AuthLayout from "../../../components/common/layouts/auth-layout";
 import SetupMain from "../../../components/main/setup";
-import useAnalytics from "../../../hooks/useAnalytics";
 import { pages } from "../../../constants/analytics";
+import usePageInfo from "../../../hooks/usePageInfo";
+import analyticsApi from "../../../server-api/analytics";
 
 const AssetsPage = () => {
 
-  const {trackPage} = useAnalytics();
+  const data = usePageInfo();
 
   useEffect(() => {
-    trackPage(pages.SETUP)
-},[]);
+    analyticsApi.capturePageVisit({ name: pages.SETUP, ...data })
+  }, []);
 
   return (
-  <>
-    <AppLayout title="Account Setup">
-      <AuthLayout>
-        <SetupMain />
-      </AuthLayout>
-    </AppLayout>
-  </>
-)};
+    <>
+      <AppLayout title="Account Setup">
+        <AuthLayout>
+          <SetupMain />
+        </AuthLayout>
+      </AppLayout>
+    </>
+  )
+};
 
 export default AssetsPage;

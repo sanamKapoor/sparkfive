@@ -2,15 +2,17 @@ import styles from "./index.module.css";
 
 // Component
 import Main from "../../../common/custom-settings/main";
-import useAnalytics from "../../../../hooks/useAnalytics";
 import { useEffect } from "react";
 import { pages } from "../../../../constants/analytics";
+import usePageInfo from "../../../../hooks/usePageInfo";
+import analyticsApi from "../../../../server-api/analytics";
 
 const CustomSettings: React.FC = () => {
-  const {trackPage} = useAnalytics();
 
-  useEffect(() => {
-    trackPage(pages.CUSTOM_SETTINGS)
+  const data = usePageInfo();
+
+  useEffect(() => {    
+    analyticsApi.capturePageVisit({ name: pages.CUSTOM_SETTINGS, ...data })
   },[]);
 
   return (

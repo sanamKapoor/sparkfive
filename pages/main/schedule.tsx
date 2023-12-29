@@ -4,26 +4,27 @@ import { CALENDAR_ACCESS } from "../../constants/permissions";
 import AppLayout from "../../components/common/layouts/app-layout";
 import MainLayout from "../../components/common/layouts/main-layout";
 import Schedule from "../../components/main/schedule";
-import useAnalytics from "../../hooks/useAnalytics";
 import { useEffect } from "react";
 import { pages } from "../../constants/analytics";
+import usePageInfo from "../../hooks/usePageInfo";
+import analyticsApi from "../../server-api/analytics";
 
 const SchedulePage = () => {
-
-  const {trackPage} = useAnalytics();
+  const data = usePageInfo();
 
   useEffect(() => {
-    trackPage(pages.SCHEDULE)
-},[]);
+    analyticsApi.capturePageVisit({ name: pages.SCHEDULE, ...data })
+  }, []);
 
   return (
-  <>
-    <AppLayout title="Schedule">
-      <MainLayout requiredPermissions={[CALENDAR_ACCESS]}>
-        <Schedule />
-      </MainLayout>
-    </AppLayout>
-  </>
-)};
+    <>
+      <AppLayout title="Schedule">
+        <MainLayout requiredPermissions={[CALENDAR_ACCESS]}>
+          <Schedule />
+        </MainLayout>
+      </AppLayout>
+    </>
+  )
+};
 
 export default SchedulePage;

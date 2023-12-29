@@ -5,12 +5,15 @@ import IntegrationItem from "./integration-item";
 import styles from "./integrations.module.css";
 import analyticsApi from "../../../server-api/analytics";
 import { pages } from "../../../constants/analytics";
+import usePageInfo from "../../../hooks/usePageInfo";
 
 const EnabledIntegrations = () => {
   const [integrations, setIntegrations] = useState([]);
 
-  useEffect(() => {
-    analyticsApi.capturePageVisit(pages.INTEGRATIONS)
+  const data = usePageInfo();
+
+  useEffect(() => {    
+    analyticsApi.capturePageVisit({ name: pages.INTEGRATIONS, ...data })
   },[]);
 
   useEffect(() => {

@@ -7,17 +7,18 @@ import UserSettings from "../../../../components/main/user-settings";
 import AssetDownloadProcess from "../../../../components/asset-download-process";
 
 import { AssetContext } from "../../../../context";
-import useAnalytics from "../../../../hooks/useAnalytics";
 import { pages } from "../../../../constants/analytics";
+import usePageInfo from "../../../../hooks/usePageInfo";
+import analyticsApi from "../../../../server-api/analytics";
 
 const UserSettingsPage: React.FC = () => {
   const { downloadingStatus } = useContext(AssetContext);
 
-  const {trackPage} = useAnalytics();
+  const data = usePageInfo();
 
   useEffect(() => {
-    trackPage(pages.USER_SETTING)
-},[]);
+    analyticsApi.capturePageVisit({ name: pages.USER_SETTING, ...data })
+  }, []);
 
   return (
     <>

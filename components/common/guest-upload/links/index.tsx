@@ -28,8 +28,9 @@ import {
 } from "../../../../constants/guest-upload";
 import { IGuestUploadLink, ILinkDefaultPayload } from "../../../../interfaces/guest-upload/guest-upload";
 import ButtonIcon from "../../buttons/button-icon";
-import useAnalytics from "../../../../hooks/useAnalytics";
 import { pages } from "../../../../constants/analytics";
+import usePageInfo from "../../../../hooks/usePageInfo";
+import analyticsApi from "../../../../server-api/analytics";
 
 const Links = () => {
   const [loading, setLoading] = useState(false);
@@ -43,10 +44,10 @@ const Links = () => {
 
   const fileInputRefs = {};
 
-  const {trackPage} = useAnalytics();
+  const data = usePageInfo();
 
-  useEffect(() => {
-    trackPage(pages.GUEST_UPLOAD_LINKS)
+  useEffect(() => {    
+    analyticsApi.capturePageVisit({ name: pages.GUEST_UPLOAD_LINKS, ...data })
   },[]);
 
   const getLinks = async () => {

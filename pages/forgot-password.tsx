@@ -3,15 +3,16 @@ import { useEffect } from "react";
 import AppLayout from "../components/common/layouts/app-layout";
 import AuthLayout from "../components/common/layouts/auth-layout";
 import ForgotPassword from "../components/forgot-password";
-import useAnalytics from "../hooks/useAnalytics";
 import { pages } from "../constants/analytics";
+import usePageInfo from "../hooks/usePageInfo";
+import analyticsApi from "../server-api/analytics";
 
 const ForgotPasswordPage = () => {
-  const {trackPage} = useAnalytics();
+  const data = usePageInfo();
 
   useEffect(() => {
-    trackPage(pages.FORGOT_PASSWORD)
-},[]);
+    analyticsApi.capturePageVisit({ name: pages.FORGOT_PASSWORD, ...data })
+  }, []);
 
   return (
     <>

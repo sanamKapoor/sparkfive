@@ -7,15 +7,17 @@ import ShareMain from "../../components/share";
 import AssetDownloadProcess from "../../components/asset-download-process";
 import AppLayout from "../../components/common/layouts/app-layout";
 import { AssetContext } from "../../context";
-import useAnalytics from "../../hooks/useAnalytics";
 import { pages } from "../../constants/analytics";
+import usePageInfo from "../../hooks/usePageInfo";
+import analyticsApi from "../../server-api/analytics";
 
 const SharePage = () => {
   const { downloadingStatus } = useContext(AssetContext);
-  const {trackPage} = useAnalytics();
 
-  useEffect(() => {
-    trackPage(pages.SHARED_LINKS)
+  const data = usePageInfo();
+
+  useEffect(() => {    
+    analyticsApi.capturePageVisit({ name: pages.SHARED_LINKS, ...data })
   },[]);
 
   return (

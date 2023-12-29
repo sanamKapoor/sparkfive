@@ -4,26 +4,28 @@ import { CALENDAR_ACCESS } from "../../../../constants/permissions";
 import AppLayout from "../../../../components/common/layouts/app-layout";
 import MainLayout from "../../../../components/common/layouts/main-layout";
 import ProjectDetail from "../../../../components/main/project/detail";
-import useAnalytics from "../../../../hooks/useAnalytics";
 import { useEffect } from "react";
 import { pages } from "../../../../constants/analytics";
+import usePageInfo from "../../../../hooks/usePageInfo";
+import analyticsApi from "../../../../server-api/analytics";
 
 const ProjectDetailPage = () => {
 
-  const {trackPage} = useAnalytics();
+  const data = usePageInfo();
 
   useEffect(() => {
-    trackPage(pages.PROJECTS)
-},[]);
+    analyticsApi.capturePageVisit({ name: pages.PROJECTS, ...data })
+  }, []);
 
   return (
-  <>
-    <AppLayout title="Project">
-      <MainLayout requiredPermissions={[CALENDAR_ACCESS]}>
-        <ProjectDetail />
-      </MainLayout>
-    </AppLayout>
-  </>
-)};
+    <>
+      <AppLayout title="Project">
+        <MainLayout requiredPermissions={[CALENDAR_ACCESS]}>
+          <ProjectDetail />
+        </MainLayout>
+      </AppLayout>
+    </>
+  )
+};
 
 export default ProjectDetailPage;
