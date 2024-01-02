@@ -76,7 +76,7 @@ const AssetGrid = ({
     subFoldersAssetsViewList,
     setSubFoldersAssetsViewList,
     setListUpdateFlag,
-    sidebarOpen
+    sidebarOpen,
   } = useContext(AssetContext);
   const { activeSortFilter } = useContext(FilterContext);
   //Drog select assets
@@ -444,10 +444,12 @@ const AssetGrid = ({
   return (
     <>
       {/* <DragSelection /> */}
-      <div className={styles["filter-view-container"]}>
-        {mode === "assets" && <FilterView />}
-      </div>
-      <section className={`${styles.container}  ${shouldShowUpload ? styles.uploadAsset : ''} ${!sidebarOpen?styles['container-on-toggle']:""}`}>
+      <div className={styles["filter-view-container"]}>{mode === "assets" && <FilterView />}</div>
+      <section
+        className={`${styles.container}  ${shouldShowUpload ? styles.uploadAsset : ""} ${
+          !sidebarOpen ? styles["container-on-toggle"] : ""
+        }`}
+      >
         {(shouldShowUpload || isDragging) && !isShare && !hasPermission([ASSET_UPLOAD_APPROVAL]) && (
           <AssetUpload
             onDragText={"Drop files here to upload"}
@@ -470,14 +472,12 @@ const AssetGrid = ({
           />
         )}
         {
-          <div
-            className={`${styles["collectionAssets"]} ${styles["w-100"]} `}
-          >
+          <div className={`${styles["collectionAssets"]} ${styles["w-100"]} `}>
             {/* testing component starts from here */}
             {
               <ul
-                className={`${mode === "SubCollectionView" ? "" : styles["grid-list"]} ${styles[itemSize]}${
-                  activeView === "list" && styles["list-view"]
+                className={`${mode === "SubCollectionView" ? "" : styles["grid-list"]} ${styles[itemSize]} ${
+                  activeView === "list" ? styles["list-view"] : ""
                 } 
             ${
               mode === "assets"
@@ -485,9 +485,8 @@ const AssetGrid = ({
                 : styles["grid-" + advancedConfig.collectionThumbnail]
             }
             `}
-            {...(mode === "assets" && { style: { marginTop: '60px' } })}
-            // {...(mode === "assets" && !sidebarOpen && { style: { marginTop: '60px' } })}
-
+               {...(mode === "assets" && activeView !== "list" ? { style: { marginTop: "60px" } } : {})}
+                // {...(mode === "assets" && !sidebarOpen && { style: { marginTop: '60px' } })}
               >
                 {mode === "SubCollectionView" && (
                   <SubCollection
@@ -522,15 +521,13 @@ const AssetGrid = ({
                   <>
                     {activeView === "list" && (
                       <AssetTableHeader activeView={activeView} setSortAttribute={setSortAssetAttribute} />
-                      
                     )}
                     {sortedAssets.map((assetItem, index) => {
                       if (assetItem.status !== "fail") {
                         return (
                           <li
                             className={`${styles["grid-item"]} ${activeView === "grid" ? styles["grid-item-new"] : ""}
-                            ${
-                              activeView === "grid" && styles["list-wrapper-asset"]}
+                            ${activeView === "grid" && styles["list-wrapper-asset"]}
                             
                             `}
                             key={assetItem.asset.id || index}
