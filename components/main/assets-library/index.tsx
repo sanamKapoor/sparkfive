@@ -349,7 +349,6 @@ const AssetsLibrary = () => {
   };
 
   const updateSortFilterByAdvConfig = async (params: any = {}) => {
-    console.log("hello")
     let defaultTab = getDefaultTab();
     const filters = Object.keys(router.query);
     if (filters && filters.length) {
@@ -798,7 +797,6 @@ const AssetsLibrary = () => {
     replace = true,
     showAllAssets: boolean = false
   ) => {
-    console.log("hllo")
     try {
       if (activeSortFilter.mainFilter !== "SubCollectionView") {
         return;

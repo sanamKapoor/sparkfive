@@ -108,7 +108,6 @@ export const setTheme = (type: string, value: any, ignoreSetStorage = false) => 
 };
 
 export const loadTheme = (themeData?: any) => {
-  console.log(`>>> Load theme...`);
 
   let theme = {};
 

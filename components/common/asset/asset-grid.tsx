@@ -640,7 +640,6 @@ const AssetGrid = ({
                     )}
 
                     {sortedFolders.map((folder, index) => {
-                      if (folder.name === "sparker") console.log({ folder });
 
                       return (
                         <li

@@ -34,7 +34,6 @@ export const useCollectionMoveModal = (parentId: string | null): MoveModalReturn
     const getFolders = async () => {
         try {
             const { data } = await folderApi.getFoldersSimple();
-            console.log(parentId)
             const filteredParent = data.filter((folder: Item) => {
                 return (!folder?.parentId && folder.id !== parentId)
             })

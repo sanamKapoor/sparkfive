@@ -15,7 +15,6 @@ const useRoles = () => {
       const { data } = await roleApi.getroles();
       setRoles(data);
     } catch (err) {
-      console.log(err);
     }
   };
 
