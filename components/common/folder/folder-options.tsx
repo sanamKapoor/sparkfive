@@ -29,6 +29,8 @@ const FolderOptions = ({
   activeFolderId,
   onClickFilterSettings,
   renameCollection,
+  childFolders,
+  moveCollection
 }) => {
   const { user, hasPermission } = useContext(UserContext);
 
@@ -44,7 +46,23 @@ const FolderOptions = ({
           renameCollection();
         },
       },
+      {
+        label: "Add to Collection",
+        onClick: () => {
+          moveCollection();
+        },
+      },
     ];
+
+  if (childFolders?.length > 0) {
+
+    const indexToRemove = options.findIndex((ele) => ele.label === 'Add to Collection');
+
+    // Remove the object at the found index using splice
+    if (indexToRemove !== -1) {
+      options.splice(indexToRemove, 1);
+    }
+  }
 
   if (hasPermission([ASSET_EDIT])) {
     options.push({ label: "Delete", onClick: () => setDeleteOpen(true) });

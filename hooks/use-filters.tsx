@@ -201,7 +201,6 @@ const useFilters = (attributes) => {
   const fetchValuesById = async (id: string) => {
     let values: IFilterAttributeValues = [];
     setLoading(true);
-    console.log({ id });
 
     try {
       switch (id) {

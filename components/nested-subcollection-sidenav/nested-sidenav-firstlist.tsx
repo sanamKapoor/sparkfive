@@ -11,7 +11,7 @@ const NestedFirstlist = ({
 }: {
   headingClick?: (name, description) => void;
 }) => {
-  const { activeFolder, nextPage, addedIds } = useContext(AssetContext);
+  const { activeFolder, nextPage, addedIds, listUpdateFlag } = useContext(AssetContext);
 
   const { activeSortFilter, searchFilterParams, term } =
     useContext(FilterContext);
@@ -36,7 +36,7 @@ const NestedFirstlist = ({
           nextPage,
           userFilterObject: activeSortFilter,
         }),
-        term,
+        // term,
         ...searchFilterParams,
         ...getAssetsSort(activeSortFilter),
       });
@@ -57,14 +57,12 @@ const NestedFirstlist = ({
           }
         }
       }
-
       setListingData(dataInfo); // Update the listingData with the received data
     } catch (err) {
       // TODO: Handle error
       console.log(err);
     }
   };
-
 
   const setTabsVisibility = useMemo(() => {
     const filterElements = hideFilterElements;
@@ -82,7 +80,9 @@ const NestedFirstlist = ({
   useEffect(() => {
     getAssets(true);
   }, []);
-
+  useEffect(() => {
+    listUpdateFlag ? getAssets(true) : null;
+  }, [listUpdateFlag]);
   return (
     <div className={styles["sidenav-list1"]}>
       <ul>

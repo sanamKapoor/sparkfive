@@ -14,6 +14,7 @@ import { AssetContext } from "../../context";
 const AssetsPage = () => {
   const { uploadingStatus, uploadingAssets, downloadingStatus } =
     useContext(AssetContext);
+
   return (
     <FilterProvider>
       <AppLayout title="Assets">

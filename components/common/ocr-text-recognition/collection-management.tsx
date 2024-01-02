@@ -71,7 +71,7 @@ const CollectionManagement = () => {
 
     const getTagList = async () => {
         try {
-            let { data } = await folderApi.getFolders({ isAll: 1});
+            let { data } = await folderApi.getFolders({ isAll: 1 });
 
             setCollectionList(data)
         } catch (err) {
@@ -79,10 +79,10 @@ const CollectionManagement = () => {
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getTagList()
         getCollectionTags();
-    },[])
+    }, [])
 
     return (
         <div className={styles['main-wrapper']}>
@@ -97,7 +97,6 @@ const CollectionManagement = () => {
                     selectedItems={[]}
                     setSelectedItems={() => { }}
                     onAddOperationFinished={(stateUpdate) => {
-                        console.log(stateUpdate)
                         // updateAssetState({
                         //     tags: { $set: stateUpdate.concat(aiTags) }
                         // })
@@ -106,7 +105,7 @@ const CollectionManagement = () => {
                     onRemoveOperationFinished={() => { }}
                     onOperationFailedSkipped={() => setActiveDropdown('')}
                     isShare={false}
-                    asyncCreateFn={(newItem)=>{
+                    asyncCreateFn={(newItem) => {
                         addCollectionTag(newItem)
                     }}
                     dropdownIsActive={activeDropdown === 'tags'}
@@ -124,7 +123,7 @@ const CollectionManagement = () => {
                         data={tag}
                         type="tag"
                         canRemove={true}
-                        editFunction={() => {}}
+                        editFunction={() => { }}
                         removeFunction={() => {
                             setCurrentDeleteId(tag.id)
                             setConfirmDeleteModal(true)

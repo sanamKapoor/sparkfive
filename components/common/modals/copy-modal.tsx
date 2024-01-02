@@ -48,10 +48,6 @@ const CopyModal = ({
   createFolder,
   confirmText = "Move",
 }) => {
-  // const [folders, setFolders] = useState([]);
-  // const [selectedFolder, setSelectedFolder] = useState("");
-  // const [newFolderName, setNewFolderName] = useState("");
-  // const [folderInputActive, setFolderInputActive] = useState(false);
   const {
     folders,
     selectedFolder,

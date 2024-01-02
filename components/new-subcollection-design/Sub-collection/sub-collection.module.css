@@ -5,6 +5,11 @@
   flex-wrap: wrap;
   margin-top:5px;
 }
+/* .sticky {
+  position: fixed;
+  top: 151px;
+  width: 100%;
+} */
 .sub-collection-heading span {
   font-family: "Noto Sans", sans-serif;
   font-size: 14px;
@@ -121,7 +126,8 @@
 .assetWrapper {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(246px, 1fr));
-  grid-gap: 20px;
+  grid-gap: 40px;
+  margin-top: 40px;
 }
 .LoadMorebtn {
   display: flex;
@@ -151,9 +157,7 @@
   margin: 0 0 20px 0;
 
 }
-.collection-filter-wrap{
-  /* margin-top:25px; */
-}
+
 @media screen and (max-width: 810px) {
   .cardsWrapper {
     margin-top: 100px;
@@ -253,4 +257,21 @@
  
  .grid-item-new{
   border:1px solid var(--color-secondary-border);
+}
+.collectionAssets{
+  margin-top: 30px;
+}
+@media (min-width:800px) and (max-width:1080px){
+  .collectionAssets{
+    margin-top: 80px;
+  }
+  
+
+}
+@media (min-width:1100px) and (max-width:1420px){
+  .collectionAssets{
+    margin-top: 50px;
+  }
+  
+
 }

@@ -290,6 +290,13 @@
     padding: 9px 23px;
     height:unset;
     }
+    .folder {
+      padding: 0 0px 0 46px;
+    }
+    .subfolderList {
+      padding: 0px 22px 0px 16px;
+      
+    }
  
 }
 
