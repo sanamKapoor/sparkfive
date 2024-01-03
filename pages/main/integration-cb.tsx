@@ -19,7 +19,6 @@ const OauthCbPage = () => {
     try {
       await userApi.addIntegration({ code, type });
     } catch (err) {
-      console.log(err);
       toastUtils.error("Could not add integration, please try again later");
     } finally {
       let redirectUrl;

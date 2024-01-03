@@ -65,7 +65,7 @@ export default {
   removeCustomFields: (id, tagId) => axios.delete(`${assetUrl}/${id}/custom-fields/${tagId}`),
 
   generateThumbnails: ({ assetIds }) => axios.post(`${assetUrl}/generate-thumbnails`, { assetIds }),
-
+  reindexingData: ({ assetIds, teamId }) => axios.post(`${assetUrl}/re-indexing`, { assetIds, teamId }),
   downloadAll: (data, filters, controller) => {
     if (controller) {
       return axios({

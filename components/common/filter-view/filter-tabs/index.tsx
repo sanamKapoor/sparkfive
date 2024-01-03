@@ -92,7 +92,7 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
   };
 
   return (
-    <div className={`${styles["outer-Box"]}`}>
+    <div className={`${styles["outer-Box"]} ${styles["asset-filter"]}`}>
       <div className={`${styles["outer-wrapper"]}`}>
         <div className={`${styles["filter-header-mobile"]}`}>
           <div className={`${styles["filter-heading-mobile"]}`}>
@@ -177,39 +177,38 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
 
         {attributes.length > 0 && (
           <>
-          
-          <div
-            className={`${styles["more-filter-btn"]}`}
-            
-          >
-            <div className={`${styles["filter-button"]}`} onClick={onMoreFiltersClick}
-            onKeyDown={onMoreFiltersClick}>
-              <Button text="More Filters" className="text-primary-btn" />
-              <img
-                className={`${styles["more-filter-arrow"]}`}
-                src={Utilities.downIconLight}
-                alt=""
-              />
+
+            <div
+              className={`${styles["more-filter-btn"]}`}
+              id="more-filter"
+            >
+              <div className={`${styles["filter-button"]}`} onClick={onMoreFiltersClick}
+                onKeyDown={onMoreFiltersClick}>
+                <Button text="More Filters" className="text-primary-btn" />
+                <img
+                  className={`${styles["more-filter-arrow"]}`}
+                  src={Utilities.downIconLight}
+                  alt=""
+                />
+              </div>
+              <ClickOutside
+                className={`${styles["main-wrapper"]}`}
+                onClick={onClickOutsideMoreFilters}
+              >
+                {showMoreFilters && (
+                  <MoreFiltersOptionPopup
+                    attributes={attributes}
+                    setAttributes={setAttributes}
+                    setShowModal={setShowMoreFilters}
+                  />
+
+                )}
+              </ClickOutside>
             </div>
-            <ClickOutside
-          className={`${styles["main-wrapper"]}`}
-          onClick={onClickOutsideMoreFilters}
-        >
-          {showMoreFilters && (
-            
-              <MoreFiltersOptionPopup
-                attributes={attributes}
-                setAttributes={setAttributes}
-                setShowModal={setShowMoreFilters}
-              />
-            
-          )}
-        </ClickOutside>
-          </div>
           </>
         )}
       </div>
-      
+
     </div>
   );
 };

@@ -1161,7 +1161,7 @@ export default ({ getAssets }) => {
     operationLength = operationAssets.length;
   } else {
     operationLength = (activeSortFilter?.mainFilter === "SubCollectionView" && selectedSubFolderAssetId.length > 0)
-      ? selectedAllAssets ? subFoldersAssetsViewList.total : selectedSubFolderAssetId.length
+      ? selectedAllSubAssets ? subFoldersAssetsViewList.total : selectedSubFolderAssetId.length
       : selectedAllAssets ? totalAssets : selectedAssets.length;
   }
 

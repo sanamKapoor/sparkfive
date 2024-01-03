@@ -192,6 +192,7 @@ const DetailOverlay = ({
   const [transcripts, setTranscript] = useState([]);
 
   const renameValue = useRef("");
+
   const setRenameValue = (value) => {
     renameValue.current = value;
   };
@@ -272,14 +273,16 @@ const DetailOverlay = ({
   const _setActiveCollection = () => {
     // TODO: ? What is purpose of this ?
     if (activeFolder && activeSubFolders !== "") {
-      const folder = folders.find((folder) => folder.id === activeSubFolders);
+      const folder = folders.find((folder) => {
+        return folder.id === activeSubFolders
+      })
       if (folder) {
         setActiveCollection(folder);
-        const assetIndx = subcollectionAssets.findIndex((item) => item.asset && item.asset.id === asset.id) + 1;
+        const assetIndx = subcollectionAssets.findIndex((item) => item.asset && item.asset.id === asset.id);
         setAssetIndex(assetIndx);
       } else if (currentFolder) {
         setActiveCollection(currentFolder);
-        const assetIndx = subcollectionAssets.findIndex((item) => item.asset && item.asset.id === asset.id) + 1;
+        const assetIndx = subcollectionAssets.findIndex((item) => item.asset && item.asset.id === asset.id);
         setAssetIndex(assetIndx);
       }
     } else if (activeFolder && activeSubFolders === "") {
@@ -288,11 +291,11 @@ const DetailOverlay = ({
       })
       if (folder) {
         setActiveCollection(folder);
-        const assetIndx = assets.findIndex((item) => item.asset && item.asset.id === asset.id) + 1;
+        const assetIndx = assets.findIndex((item) => item.asset && item.asset.id === asset.id);
         setAssetIndex(assetIndx);
       } else if (currentFolder) {
         setActiveCollection(currentFolder);
-        const assetIndx = assets.findIndex((item) => item.asset && item.asset.id === asset.id) + 1;
+        const assetIndx = assets.findIndex((item) => item.asset && item.asset.id === asset.id);
         setAssetIndex(assetIndx);
       }
     }
@@ -1004,7 +1007,6 @@ const DetailOverlay = ({
       }
     }
   };
-
   return (
     <div className={`app-overlay ${styles.container} ${isShare ? styles.share : ""}`}>
       {assetDetail && (
@@ -1266,11 +1268,15 @@ const DetailOverlay = ({
                             <IconClickable src={Utilities.arrowPrev} onClick={() => navigateOverlay(-1)} />
                           </span>
                         )}
-                      {availableNext && (
-                        <span className={styles["arrow-next"]}>
-                          <IconClickable src={Utilities.arrowNext} onClick={() => navigateOverlay(1)} />
-                        </span>
-                      )}
+                      {availableNext &&
+                        subcollectionAssets.length &&
+                        subcollectionAssets[subcollectionAssets.length - 1].asset &&
+                        subcollectionAssets[subcollectionAssets.length - 1].asset.id !== asset.id && (
+                          <span className={styles["arrow-next"]}>
+                            <IconClickable src={Utilities.arrowNext} onClick={() => navigateOverlay(1)} />
+                          </span>
+                        )
+                      }
                     </div>
                     <span>
                       {(assetIndex % activeCollection?.assetsCount) + 1} of {activeCollection?.assetsCount} in{" "}
@@ -1290,11 +1296,12 @@ const DetailOverlay = ({
                             <IconClickable src={Utilities.arrowPrev} onClick={() => navigateOverlay(-1)} />
                           </span>
                         )}
-                      {availableNext && (
-                        <span className={styles["arrow-next"]}>
-                          <IconClickable src={Utilities.arrowNext} onClick={() => navigateOverlay(1)} />
-                        </span>
-                      )}
+                      {availableNext && assets.length && assets[assets.length - 1].asset &&
+                        assets[assets.length - 1].asset.id !== asset.id && (
+                          <span className={styles["arrow-next"]}>
+                            <IconClickable src={Utilities.arrowNext} onClick={() => navigateOverlay(1)} />
+                          </span>
+                        )}
                     </div>
                     <span>
                       {(assetIndex % activeCollection?.assetsCount) + 1} of {activeCollection?.assetsCount} in{" "}

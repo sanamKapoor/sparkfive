@@ -34,7 +34,6 @@ const type = [
 ];
 
 const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({ onBack, data, loading, setLoading, benefits }) => {
-  console.log("team data: ", data);
   const [settings, setSettings] = useState({
     vanity: data?.vanity,
     subdomain: data?.subdomain,
@@ -95,7 +94,6 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({ onBack, data,
 
       toastUtils.success("Setting changes saved");
     } catch (e) {
-      console.log(e.response.data?.message);
       toastUtils.error(e.response.data?.message || "Internal server error");
     } finally {
       setLoading(false);
@@ -176,7 +174,7 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({ onBack, data,
                 </label>
                 <Input
                   id={"link"}
-                  onChange={(e) => {}}
+                  onChange={(e) => { }}
                   value={settings.subdomain}
                   additionalClasses={"font-14"}
                   placeholder={"Link URL"}

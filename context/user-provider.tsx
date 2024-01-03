@@ -143,7 +143,6 @@ export default ({ children }) => {
   };
 
   const initialRedirect = () => {
-    console.log(`itnitial`, Router.pathname);
     if (!allowedBase.some((url) => Router.pathname.indexOf(url) !== -1)) {
       Router.replace("/login");
     }
@@ -202,7 +201,6 @@ export default ({ children }) => {
   };
 
   const afterAuth = async ({ twoFactor, token }) => {
-    console.log(`>>> After auth process`);
     cookiesUtils.setUserJWT(token);
     if (twoFactor) {
       cookiesUtils.set("twoFactor", "true");

@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-
 import useFilters from "../../../hooks/use-filters";
 import { IAttribute } from "../../../interfaces/filters";
 import FilterTabs from "./filter-tabs";
 import SelectedFilters from "./selected-filters";
 
-const FilterView = () => {
+const FilterView: React.FC = () => {
   const [attributes, setAttributes] = useState<IAttribute[]>([]);
 
   const { onClearAll, onRemoveFilter, selectedFilters } =
