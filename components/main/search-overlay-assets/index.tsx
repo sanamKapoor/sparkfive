@@ -13,7 +13,7 @@ import styles from "./index.module.css";
 const SearchOverlayAssets = ({
   closeOverlay,
   importEnabled = false,
-  importAssets = () => { },
+  importAssets = () => {},
   sharePath = "",
   activeFolder = "",
   isFolder,
@@ -30,17 +30,12 @@ const SearchOverlayAssets = ({
     setSubFoldersViewList,
   } = useContext(AssetContext);
 
-  const { setSearchTerm, setSearchFilterParams, activeSortFilter } =
-    useContext(FilterContext);
+  const { setSearchTerm, setSearchFilterParams, activeSortFilter } = useContext(FilterContext);
 
   const [filterParams, setFilterParams] = useState({});
   const [openFilters, setOpenFilters] = useState(false);
 
-  const getData = async (
-    inputTerm,
-    replace = true,
-    _filterParams = filterParams
-  ) => {
+  const getData = async (inputTerm, replace = true, _filterParams = filterParams) => {
     try {
       if (mode === "assets") {
         let fetchFn = assetApi.getAssets;
@@ -54,8 +49,7 @@ const SearchOverlayAssets = ({
         }
         const params: any = {
           term: inputTerm,
-          stage:
-            activeSortFilter?.mainFilter === "archived" ? "archived" : "draft",
+          stage: activeSortFilter?.mainFilter === "archived" ? "archived" : "draft",
           page: replace ? 1 : nextPage,
           sharePath,
           ..._filterParams,
@@ -73,10 +67,7 @@ const SearchOverlayAssets = ({
           sortOrder: activeSortFilter.sort?.order || "desc",
           term: inputTerm,
         };
-        const { data: subFolders } = await folderApi.getSubFolders(
-          query,
-          activeFolder
-        );
+        const { data: subFolders } = await folderApi.getSubFolders(query, activeFolder);
 
         setSubFoldersViewList(subFolders, true);
       } else if (mode === "folders") {
@@ -121,42 +112,30 @@ const SearchOverlayAssets = ({
   };
 
   //TODO: we can have an enum for these modes and use that all over the app to ensure consistency
-  const isSubCollectionMode =
-    mode === "SubCollectionView" ? "Subcollections" : "assets";
+  const isSubCollectionMode = mode === "SubCollectionView" ? "Collections, Sub Collections, Assets" : "assets";
 
   const searchText = mode === "folders" ? "Collections" : isSubCollectionMode;
 
   return (
     <div>
-      <div
-        className={
-          sharePath
-            ? `${styles["share-landing-search"]} search-content`
-            : "search-content"
-        }
-      >
+      <div className={sharePath ? `${styles["share-landing-search"]} search-content` : "search-content"}>
         <div className={"search-cont"}>
           <div className={"search-actions"}>
-            {mode === "assets" && (
-              <div
-                className={"search-filter"}
-                onClick={() => setOpenFilters(!openFilters)}
-              >
+            {(mode === "assets" || mode === "SubCollectionView") && (
+              <div className={"search-filter"} onClick={() => setOpenFilters(!openFilters)}>
                 <img src={Utilities.filterGray} alt={"filter"} />
               </div>
             )}
-            {(
+            {
               <div className={"search-close"} onClick={closeSearchModal}>
                 <img src={Utilities.grayClose} alt={"close"} />
               </div>
-            )}
+            }
           </div>
           {/* TODO: When is a collecttion change placeholter to "Search Collections" */}
           <Search
             placeholder={`Search ${searchText}`}
-            onSubmit={(inputTerm, filterParams) =>
-              getData(inputTerm, true, filterParams)
-            }
+            onSubmit={(inputTerm, filterParams) => getData(inputTerm, true, filterParams)}
             openFilters={openFilters}
           />
         </div>
