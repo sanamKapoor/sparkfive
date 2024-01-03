@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { TeamContext, UserContext } from "../context";
-import AnalyticsService from "../utils/analytics-service";
 import analyticsApi from "../server-api/analytics";
+import { eventTypes } from "../constants/analytics";
 
 const useAnalytics = () => {
   const { user } = useContext(UserContext);
@@ -11,7 +11,6 @@ const useAnalytics = () => {
 
   const trackPage = (pageName: string) => {    
     // if (isTrackingEnabled || pageName === "LOGIN") {
-      AnalyticsService.trackPage(pageName);
     // }
   };
 
@@ -20,25 +19,18 @@ const useAnalytics = () => {
     infoObject?: Record<string, unknown>
   ) => {
     // if (isTrackingEnabled || eventName === "LOGOUT") {
-      // AnalyticsService.trackEvent('USER_ACTION', {
-      //   actionName: eventName,
-      //   actionInfo: infoObject
-      // });
+      analyticsApi.capturePageVisit({
+        eventType: eventTypes.TRACK,
+        actionName: eventName,
+        actionInfo: infoObject,
+        userId: user?.id || null
+      })
     // }
-
-    analyticsApi.capturePageVisit({
-      eventType: "TRACK",
-      actionName: eventName,
-      actionInfo: infoObject,
-      userId: user?.id || null
-    })
   };
 
   const identify = (userId: string, infoObject?: Record<string, unknown>) => {
-    // AnalyticsService.identify(userId, infoObject);
-
     analyticsApi.capturePageVisit({
-      eventType: "IDENTITY",
+      eventType: eventTypes.IDENTITY,
       userId,
       infoObject
     })

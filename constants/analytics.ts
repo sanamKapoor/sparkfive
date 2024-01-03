@@ -52,3 +52,9 @@ export const events = {
     ACCESS_SHARED_LINK: 'ACCESS_SHARED_LINK',
     VIEW_TAB: 'VIEW_TAB'
 }
+
+export const eventTypes = {
+    TRACK: 'TRACK',
+    IDENTITY: 'IDENTITY',
+    PAGE: 'PAGE',
+}

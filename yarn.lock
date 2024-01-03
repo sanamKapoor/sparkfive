@@ -216,25 +216,6 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@ndhoule/each@^2.0.1":
-  "integrity" "sha512-wHuJw6x+rF6Q9Skgra++KccjBozCr9ymtna0FhxmV/8xT/hZ2ExGYR8SV8prg8x4AH/7mzDYErNGIVHuzHeybw=="
-  "resolved" "https://registry.npmjs.org/@ndhoule/each/-/each-2.0.1.tgz"
-  "version" "2.0.1"
-  dependencies:
-    "@ndhoule/keys" "^2.0.0"
-
-"@ndhoule/keys@^2.0.0":
-  "integrity" "sha512-vtCqKBC1Av6dsBA8xpAO+cgk051nfaI+PnmTZep2Px0vYrDvpUmLxv7z40COlWH5yCpu3gzNhepk+02yiQiZNw=="
-  "resolved" "https://registry.npmjs.org/@ndhoule/keys/-/keys-2.0.0.tgz"
-  "version" "2.0.0"
-
-"@ndhoule/map@^2.0.1":
-  "integrity" "sha512-WOEf2An9mL4DVY6NHgaRmFC82pZGrmzW4I0hpPPdczDP4Gp5+Q1Nny77x3w0qzENA8+cbgd9+Lx2ClSTLvkB0g=="
-  "resolved" "https://registry.npmjs.org/@ndhoule/map/-/map-2.0.1.tgz"
-  "version" "2.0.1"
-  dependencies:
-    "@ndhoule/each" "^2.0.1"
-
 "@next/env@10.2.3":
   "integrity" "sha512-uBOjRBjsWC4C8X3DfmWWP6ekwLnf2JCCwQX9KVnJtJkqfDsv1yQPakdOEwvJzXQc3JC/v5KKffYPVmV2wHXCgQ=="
   "resolved" "https://registry.npmjs.org/@next/env/-/env-10.2.3.tgz"
@@ -293,13 +274,6 @@
   "integrity" "sha512-/RVXdLvJxLg4QKvMoM5WlwNR9ViO9z8B/qPcc+C0Sa/teJY7QG7kJ441DwzOjMYEY7GmU4dj5EcGHIkKZiQZCA=="
   "resolved" "https://registry.npmjs.org/@react-dnd/shallowequal/-/shallowequal-4.0.2.tgz"
   "version" "4.0.2"
-
-"@segment/snippet@^5.2.0":
-  "integrity" "sha512-WgffvpWmT74htS+Let52Ca3VvlSxyqHZMLveBs0jX0RRF8aOqx63d+kLIbAyWLccXZZJ0Vc3gFvJTc2gpN1JjA=="
-  "resolved" "https://registry.npmjs.org/@segment/snippet/-/snippet-5.2.0.tgz"
-  "version" "5.2.0"
-  dependencies:
-    "@ndhoule/map" "^2.0.1"
 
 "@sentry/browser@6.19.7":
   "integrity" "sha512-oDbklp4O3MtAM4mtuwyZLrgO1qDVYIujzNJQzXmi9YzymJCuzMLSRDvhY83NNDCRxf0pds4DShgYeZdbSyKraA=="

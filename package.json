@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@air/react-drag-to-select": "^5.0.8",
-    "@segment/snippet": "^5.2.0",
     "@sentry/nextjs": "^6.15.0",
     "@stripe/react-stripe-js": "^1.1.0",
     "@stripe/stripe-js": "^1.2.0",
