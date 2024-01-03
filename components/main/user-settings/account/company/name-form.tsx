@@ -8,17 +8,16 @@ import Button from "../../../../common/buttons/button";
 import FormInput from "../../../../common/inputs/form-input";
 import Input from "../../../../common/inputs/input";
 import { pages } from "../../../../../constants/analytics";
-import usePageInfo from "../../../../../hooks/usePageInfo";
-import analyticsApi from "../../../../../server-api/analytics";
+import useAnalytics from "../../../../../hooks/useAnalytics";
 
 const NameForm: React.FC = () => {
   const { team, patchTeam } = useContext(TeamContext);
   const { control, handleSubmit, errors } = useForm();
 
-  const data = usePageInfo();
+  const { pageVisit } = useAnalytics();
 
   useEffect(() => {    
-    analyticsApi.capturePageVisit({ name: pages.COMPANY, ...data })
+    pageVisit(pages.COMPANY)
   },[]);
 
   const onSubmit = (fieldData) => {

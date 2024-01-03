@@ -4,15 +4,14 @@ import styles from "./index.module.css";
 import Main from "../../../common/custom-settings/main";
 import { useEffect } from "react";
 import { pages } from "../../../../constants/analytics";
-import usePageInfo from "../../../../hooks/usePageInfo";
-import analyticsApi from "../../../../server-api/analytics";
+import useAnalytics from "../../../../hooks/useAnalytics";
 
 const CustomSettings: React.FC = () => {
 
-  const data = usePageInfo();
+  const { pageVisit } = useAnalytics();
 
   useEffect(() => {    
-    analyticsApi.capturePageVisit({ name: pages.CUSTOM_SETTINGS, ...data })
+    pageVisit(pages.CUSTOM_SETTINGS)
   },[]);
 
   return (

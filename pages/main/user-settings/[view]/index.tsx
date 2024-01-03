@@ -8,16 +8,15 @@ import AssetDownloadProcess from "../../../../components/asset-download-process"
 
 import { AssetContext } from "../../../../context";
 import { pages } from "../../../../constants/analytics";
-import usePageInfo from "../../../../hooks/usePageInfo";
-import analyticsApi from "../../../../server-api/analytics";
+import useAnalytics from "../../../../hooks/useAnalytics";
 
 const UserSettingsPage: React.FC = () => {
   const { downloadingStatus } = useContext(AssetContext);
 
-  const data = usePageInfo();
+  const { pageVisit } = useAnalytics();
 
   useEffect(() => {
-    analyticsApi.capturePageVisit({ name: pages.USER_SETTING, ...data })
+    pageVisit(pages.USER_SETTING)
   }, []);
 
   return (

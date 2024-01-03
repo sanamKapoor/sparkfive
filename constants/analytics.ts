@@ -41,7 +41,7 @@ export const pages = {
 export const events = {
     LOGOUT: 'LOGOUT',
     UPLOAD_ASSET: 'UPLOAD_ASSET', 
-    SEARCH_ASSET:'SEARCH_ASSET', // Done
+    SEARCH_ASSET:'SEARCH_ASSET', 
     VIEW_ASSET: 'VIEW_ASSET',
     DOWNLOAD_ASSET: 'DOWNLOAD_ASSET',
     SHARE_ASSET: 'SHARE_ASSET',

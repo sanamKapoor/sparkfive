@@ -15,8 +15,7 @@ import {
 import UserPreference from "../../../common/account/user-preference";
 import NotificationList from "../../../common/notifications/notification-list";
 import { pages } from "../../../../constants/analytics";
-import usePageInfo from "../../../../hooks/usePageInfo";
-import analyticsApi from "../../../../server-api/analytics";
+import useAnalytics from "../../../../hooks/useAnalytics";
 
 const Notifications: React.FC = () => {
   const { user, setUser } = useContext(UserContext);
@@ -26,10 +25,10 @@ const Notifications: React.FC = () => {
 
   const [notifications, setNotifications] = useState([]);
 
-  const data = usePageInfo();
+  const { pageVisit } = useAnalytics();
 
   useEffect(() => {    
-    analyticsApi.capturePageVisit({ name: pages.NOTIFICATIONS, ...data })
+    pageVisit(pages.NOTIFICATIONS)
   },[]);
 
   useEffect(() => {

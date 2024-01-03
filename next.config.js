@@ -34,6 +34,7 @@ module.exports = {...withSentryConfig(
       INCLUDE_PIXEL: process.env.INCLUDE_PIXEL,
       INCLUDE_GOOGLE_ANALYTICS: process.env.INCLUDE_GOOGLE_ANALYTICS,
       SENTRY_ENV: process.env.SENTRY_ENV,
+      ANALYTICS_LAMBDA_ENDPOINT:process.env.ANALYTICS_LAMBDA_ENDPOINT
     },
   }),
   sentryWebpackPluginOptions

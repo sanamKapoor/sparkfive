@@ -4,14 +4,13 @@ import AppLayout from "../components/common/layouts/app-layout";
 import AuthLayout from "../components/common/layouts/auth-layout";
 import ForgotPassword from "../components/forgot-password";
 import { pages } from "../constants/analytics";
-import usePageInfo from "../hooks/usePageInfo";
-import analyticsApi from "../server-api/analytics";
+import useAnalytics from "../hooks/useAnalytics";
 
 const ForgotPasswordPage = () => {
-  const data = usePageInfo();
+  const { pageVisit } = useAnalytics();
 
   useEffect(() => {
-    analyticsApi.capturePageVisit({ name: pages.FORGOT_PASSWORD, ...data })
+    pageVisit(pages.FORGOT_PASSWORD)
   }, []);
 
   return (

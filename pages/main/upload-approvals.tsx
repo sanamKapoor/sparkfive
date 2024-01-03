@@ -10,17 +10,16 @@ import UploadRequest from "../../components/main/upload-requests";
 import AppLayout from "../../components/common/layouts/app-layout";
 import { AssetContext } from "../../context";
 import { pages } from "../../constants/analytics";
-import usePageInfo from "../../hooks/usePageInfo";
-import analyticsApi from "../../server-api/analytics";
+import useAnalytics from "../../hooks/useAnalytics";
 
 const UploadRequestsPage = () => {
   const { uploadingStatus, uploadingAssets, downloadingStatus } =
     useContext(AssetContext);
 
-  const data = usePageInfo();
+  const { pageVisit } = useAnalytics();
 
   useEffect(() => {    
-    analyticsApi.capturePageVisit({ name: pages.UPLOAD_APPROVAL, ...data })
+    pageVisit(pages.UPLOAD_APPROVAL)
   },[]);
 
   return (

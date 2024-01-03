@@ -4,14 +4,13 @@ import AppLayout from "../components/common/layouts/app-layout";
 import AuthLayout from "../components/common/layouts/auth-layout";
 import ResetPassword from "../components/reset-password";
 import { pages } from "../constants/analytics";
-import usePageInfo from "../hooks/usePageInfo";
-import analyticsApi from "../server-api/analytics";
+import useAnalytics from "../hooks/useAnalytics";
 
 const ResetPasswordPage = () => {
-  const data = usePageInfo();
+  const { pageVisit } = useAnalytics();
 
   useEffect(() => {
-    analyticsApi.capturePageVisit({ name: pages.RESET_PASSWORD, ...data })
+    pageVisit(pages.RESET_PASSWORD)
   }, []);
 
   return (

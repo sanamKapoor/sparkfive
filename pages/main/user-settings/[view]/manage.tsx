@@ -11,16 +11,15 @@ import NoPermissionNotice from "../../../../components/common/misc/no-permission
 import { UserContext } from "../../../../context";
 import { UserRole } from "../../../../interfaces/user/role";
 import { pages } from "../../../../constants/analytics";
-import usePageInfo from "../../../../hooks/usePageInfo";
-import analyticsApi from "../../../../server-api/analytics";
+import useAnalytics from "../../../../hooks/useAnalytics";
 
 const AssetsPage: React.FC = () => {
   const { user } = useContext(UserContext);
 
-  const data = usePageInfo();
+  const { pageVisit } = useAnalytics();
 
   useEffect(() => {
-    analyticsApi.capturePageVisit({ name: pages.USER_SETTING, ...data })
+    pageVisit(pages.USER_SETTING)
   }, []);
 
   return (

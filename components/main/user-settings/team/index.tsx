@@ -9,8 +9,7 @@ import AddCustomRole from "./add-custom-role";
 import Members from "./members";
 import Roles from "./roles";
 import { pages } from "../../../../constants/analytics";
-import usePageInfo from "../../../../hooks/usePageInfo";
-import analyticsApi from "../../../../server-api/analytics";
+import useAnalytics from "../../../../hooks/useAnalytics";
 
 const Team: React.FC = () => {
   const [selectedRole, setSelectedRole] = useState<IRole | undefined>(
@@ -21,10 +20,10 @@ const Team: React.FC = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const pageInfo = usePageInfo();
+  const { pageVisit } = useAnalytics();
 
   useEffect(() => {    
-    analyticsApi.capturePageVisit({ name: pages.TEAM, ...pageInfo })
+    pageVisit(pages.TEAM)
   },[]);
 
   const onAddCustomRole = () => {

@@ -42,7 +42,7 @@ export default ({ children }) => {
   const [logo, setLogo] = useState<string>(defaultLogo);
   const [logoId, setLogoId] = useState<string>();
 
-  const { trackEvent, identify, group } = useAnalytics();
+  const { trackEvent, identify } = useAnalytics();
 
   const { setIsLoading } = useContext(LoadingContext);
 
@@ -110,7 +110,7 @@ export default ({ children }) => {
         if (trackUser) {
 
           // Track loggedIn user data for analytics
-          identify(data.id, {
+          identify({
             id: data.id,
             email: data.email,
           });
@@ -161,15 +161,8 @@ export default ({ children }) => {
     // Track the logout event and remove the userId
     trackEvent(events.LOGOUT, {
       id: user?.id,
-      name: user?.name,
       email: user?.email,
-      role: user?.role,
-      timezone: user?.timezone,
-      team: user?.team,
-      profilePhoto: user?.profilePhoto,
-      firstTimeLogin: user?.firstTimeLogin,
     });
-    window.analytics.reset();
 
     setUser(null);
     Router.replace("/login");

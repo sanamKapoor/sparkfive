@@ -6,15 +6,14 @@ import MainLayout from "../../components/common/layouts/main-layout";
 import Overview from "../../components/main/overview";
 import { useEffect } from "react";
 import { pages } from "../../constants/analytics";
-import usePageInfo from "../../hooks/usePageInfo";
-import analyticsApi from "../../server-api/analytics";
+import useAnalytics from "../../hooks/useAnalytics";
 
 const OverviewPage = () => {
 
-const data = usePageInfo();
+const { pageVisit } = useAnalytics();
 
 useEffect(() => {    
-  analyticsApi.capturePageVisit({ name: pages.OVERVIEW, ...data })
+  pageVisit(pages.OVERVIEW)
 },[]);
 
   return (

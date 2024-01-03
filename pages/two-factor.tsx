@@ -7,14 +7,12 @@ import TwoFactor from "../components/two-factor";
 import { useEffect } from "react";
 import useAnalytics from "../hooks/useAnalytics";
 import { pages } from "../constants/analytics";
-import usePageInfo from "../hooks/usePageInfo";
-import analyticsApi from "../server-api/analytics";
 
 const TwoFactorPage = () => {
-  const data = usePageInfo();
+  const { pageVisit } = useAnalytics();
 
   useEffect(() => {
-    analyticsApi.capturePageVisit({ name: pages.TWO_FECTOR, ...data })
+    pageVisit(pages.TWO_FECTOR)
   }, []);
 
   return (

@@ -6,14 +6,13 @@ import MainLayout from "../../components/common/layouts/main-layout";
 import Schedule from "../../components/main/schedule";
 import { useEffect } from "react";
 import { pages } from "../../constants/analytics";
-import usePageInfo from "../../hooks/usePageInfo";
-import analyticsApi from "../../server-api/analytics";
+import useAnalytics from "../../hooks/useAnalytics";
 
 const SchedulePage = () => {
-  const data = usePageInfo();
+  const { pageVisit } = useAnalytics();
 
   useEffect(() => {
-    analyticsApi.capturePageVisit({ name: pages.SCHEDULE, ...data })
+    pageVisit(pages.SCHEDULE)
   }, []);
 
   return (

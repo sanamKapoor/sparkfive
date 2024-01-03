@@ -12,8 +12,7 @@ import Invoices from "./invoices";
 import PaymentMethod from "./payment-method";
 import Subscription from "./subscription";
 import { pages } from "../../../../../constants/analytics";
-import usePageInfo from "../../../../../hooks/usePageInfo";
-import analyticsApi from "../../../../../server-api/analytics";
+import useAnalytics from "../../../../../hooks/useAnalytics";
 
 const SETTING_SECTIONS_CONTENT = {
   subscription: Subscription,
@@ -44,10 +43,10 @@ const Billing = () => {
     getPaymentMethod();
   }, []);
 
-  const data = usePageInfo();
+  const { pageVisit } = useAnalytics();
 
   useEffect(() => {    
-    analyticsApi.capturePageVisit({ name: pages.BILLING, ...data })
+    pageVisit(pages.BILLING)
   },[]);
 
   const getPaymentMethod = async () => {

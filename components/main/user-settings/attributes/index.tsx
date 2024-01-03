@@ -4,14 +4,13 @@ import styles from "./index.module.css";
 import Main from "../../../common/attributes/main";
 import { pages } from "../../../../constants/analytics";
 import { useEffect } from "react";
-import analyticsApi from "../../../../server-api/analytics";
-import usePageInfo from "../../../../hooks/usePageInfo";
+import useAnalytics from "../../../../hooks/useAnalytics";
 
 const Attributes: React.FC = () => {
-  const data = usePageInfo();
+  const { pageVisit } = useAnalytics();
 
   useEffect(() => {    
-    analyticsApi.capturePageVisit({ name: pages.ATTRIBUTES, ...data })
+    pageVisit(pages.ATTRIBUTES)
   },[]);
 
   return (

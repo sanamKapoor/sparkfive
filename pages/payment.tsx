@@ -4,15 +4,14 @@ import AppLayout from "../components/common/layouts/app-layout";
 import AuthLayout from "../components/common/layouts/auth-layout";
 import Payment from "../components/payment";
 import { pages } from "../constants/analytics";
-import usePageInfo from "../hooks/usePageInfo";
-import analyticsApi from "../server-api/analytics";
+import useAnalytics from "../hooks/useAnalytics";
 
 const PaymentPage = () => {
 
-const data = usePageInfo();
+const { pageVisit } = useAnalytics();
 
 useEffect(() => {    
-  analyticsApi.capturePageVisit({ name: pages.PAYMENT, ...data })
+  pageVisit(pages.PAYMENT)
 },[]);
 
   return(

@@ -6,12 +6,13 @@ import Signup from "../components/signup";
 import { pages } from "../constants/analytics";
 import usePageInfo from "../hooks/usePageInfo";
 import analyticsApi from "../server-api/analytics";
+import useAnalytics from "../hooks/useAnalytics";
 
 const SignupPage = () => { 
-  const data = usePageInfo();
+  const { pageVisit } = useAnalytics();
 
   useEffect(() => {    
-    analyticsApi.capturePageVisit({ name: pages.TRIAL_SIGNUP, ...data })
+    pageVisit(pages.TRIAL_SIGNUP)
   },[]);
 
   return (

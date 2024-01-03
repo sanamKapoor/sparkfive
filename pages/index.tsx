@@ -4,15 +4,13 @@ import Spinner from "../components/common/spinners/spinner";
 import useAnalytics from "../hooks/useAnalytics";
 import { pages } from "../constants/analytics";
 import { useEffect } from "react";
-import usePageInfo from "../hooks/usePageInfo";
-import analyticsApi from "../server-api/analytics";
 
 const MainPage = () => {
 
-  const data = usePageInfo();
+  const { pageVisit } = useAnalytics();
 
   useEffect(() => {
-    analyticsApi.capturePageVisit({ name: pages.HOME, ...data })
+    pageVisit(pages.HOME)
   }, []);
 
   return (

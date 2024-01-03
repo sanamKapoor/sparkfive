@@ -6,14 +6,13 @@ import MainLayout from "../../../../components/common/layouts/main-layout";
 import TaskDetail from "../../../../components/main/task/detail";
 import { useEffect } from "react";
 import { pages } from "../../../../constants/analytics";
-import usePageInfo from "../../../../hooks/usePageInfo";
-import analyticsApi from "../../../../server-api/analytics";
+import useAnalytics from "../../../../hooks/useAnalytics";
 
 const TaskDetailPage = () => {
-  const data = usePageInfo();
+  const { pageVisit } = useAnalytics();
 
   useEffect(() => {
-    analyticsApi.capturePageVisit({ name: pages.TASKS, ...data })
+    pageVisit(pages.TASKS)
   }, []);
 
   return (

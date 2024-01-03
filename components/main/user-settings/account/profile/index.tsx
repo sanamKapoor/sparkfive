@@ -6,16 +6,15 @@ import styles from "./index.module.css";
 import PhotoUpload from "../../../../common/account/photo-upload";
 import Basic from "./basic";
 import { pages } from "../../../../../constants/analytics";
-import usePageInfo from "../../../../../hooks/usePageInfo";
-import analyticsApi from "../../../../../server-api/analytics";
+import useAnalytics from "../../../../../hooks/useAnalytics";
 
 const Profile: React.FC = () => {
   const { user } = useContext(UserContext);
 
-  const data = usePageInfo();
+  const { pageVisit } = useAnalytics();
 
   useEffect(() => {    
-    analyticsApi.capturePageVisit({ name: pages.PROFILE, ...data })
+    pageVisit(pages.PROFILE)
   },[]);
 
   return (

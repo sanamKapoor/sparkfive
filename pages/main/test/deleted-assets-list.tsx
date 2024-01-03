@@ -10,16 +10,15 @@ import AppLayout from "../../../components/common/layouts/app-layout";
 import NoPermissionNotice from "../../../components/common/misc/no-permission-notice";
 import { UserContext } from "../../../context";
 import { pages } from "../../../constants/analytics";
-import usePageInfo from "../../../hooks/usePageInfo";
-import analyticsApi from "../../../server-api/analytics";
+import useAnalytics from "../../../hooks/useAnalytics";
 
 const AssetsPage = () => {
   const { user } = useContext(UserContext);
 
-  const data = usePageInfo();
+  const { pageVisit } = useAnalytics();
 
   useEffect(() => {
-    analyticsApi.capturePageVisit({ name: pages.ASSETS_DELETE, ...data })
+    pageVisit(pages.ASSETS_DELETE)
   }, []);
 
   return (

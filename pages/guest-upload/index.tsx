@@ -6,18 +6,17 @@ import { AppImg, GeneralImg } from "../../assets";
 import AppLayout from "../../components/common/layouts/app-layout";
 import GuestUploadContextProvider from "../../context/share-upload-link-provider";
 import { pages } from "../../constants/analytics";
-import usePageInfo from "../../hooks/usePageInfo";
-import analyticsApi from "../../server-api/analytics";
+import useAnalytics from "../../hooks/useAnalytics";
 
 
 const GuestUploadPage = () => {
   const [logo, setLogo] = useState<string>(GeneralImg.logo);
   const [banner, setBanner] = useState<string>(AppImg.guestCover);
 
-  const data = usePageInfo();
+  const { pageVisit } = useAnalytics();
 
   useEffect(() => {
-    analyticsApi.capturePageVisit({ name: pages.GUEST_UPLOAD, ...data })
+    pageVisit(pages.GUEST_UPLOAD)
   }, []);
 
   return (
