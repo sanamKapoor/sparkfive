@@ -1,11 +1,11 @@
-import update from 'immutability-helper';
-import { useRouter } from 'next/router';
-import { useContext, useEffect, useState } from 'react';
+import update from "immutability-helper";
+import { useRouter } from "next/router";
+import { useContext, useEffect, useState } from "react";
 
-import { validation } from '../constants/file-validation';
-import { AssetContext, SocketContext } from '../context';
-import assetApi from '../server-api/asset';
-import { convertTimeFromSeconds, getFolderKeyAndNewNameByFileName } from '../utils/upload';
+import { validation } from "../constants/file-validation";
+import { AssetContext, SocketContext } from "../context";
+import assetApi from "../server-api/asset";
+import { convertTimeFromSeconds, getFolderKeyAndNewNameByFileName } from "../utils/upload";
 interface Asset {
   id: string;
   name: string;
@@ -36,7 +36,6 @@ interface Item {
   length: number;
   [key: string]: any;
 }
-
 
 const loadingDefaultAsset = {
   asset: {
@@ -113,33 +112,32 @@ export default ({ children }) => {
   const [detailOverlayId, setDetailOverlayId] = useState(undefined);
 
   // sidenamv list count states declared below
-  const [sidenavFolderList, setSidenavFolderList] = useState([])
+  const [sidenavFolderList, setSidenavFolderList] = useState([]);
   const [sidenavFolderNextPage, setSidenavFolderNextPage] = useState(1);
-  const [sidenavTotalCollectionCount, setSidenavTotalCollectionCount] = useState(0)
+  const [sidenavTotalCollectionCount, setSidenavTotalCollectionCount] = useState(0);
 
-  // Sidenav folders child Listing in particular collection collections area 
-  const [sidenavFolderChildList, setSidenavFolderChildList] = useState(new Map())
+  // Sidenav folders child Listing in particular collection collections area
+  const [sidenavFolderChildList, setSidenavFolderChildList] = useState(new Map());
 
-  // Folder id for sub Collection view  
-  const [activeSubFolders, setActiveSubFolders] = useState("")
+  // Folder id for sub Collection view
+  const [activeSubFolders, setActiveSubFolders] = useState("");
 
   // Sidebar navigation
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // For viewing asset in file associations
   const [currentViewAsset, setCurrentViewAsset] = useState();
 
   // For subcollection page states for collection and asset associations
   const [subFoldersViewList, setSubFoldersViewList] = useState({ results: [], next: 0, total: 0 });
-  const [subFoldersAssetsViewList, setSubFoldersAssetsViewList] = useState({ results: [], next: 0, total: 0 })
-  const [headerName, setHeaderName] = useState("All Assets")
+  const [subFoldersAssetsViewList, setSubFoldersAssetsViewList] = useState({ results: [], next: 0, total: 0 });
+  const [headerName, setHeaderName] = useState("All Assets");
 
-  const [selectedAllSubFoldersAndAssets, setSelectedAllSubFoldersAndAssets] = useState(false)
+  const [selectedAllSubFoldersAndAssets, setSelectedAllSubFoldersAndAssets] = useState(false);
 
-  const [selectedAllSubAssets, setSelectedAllSubAssets] = useState(false)
+  const [selectedAllSubAssets, setSelectedAllSubAssets] = useState(false);
   const [listUpdateFlag, setListUpdateFlag] = useState(false);
-  const [currentFolder,
-    setCurrentFolder] = useState(null)
+  const [currentFolder, setCurrentFolder] = useState(null);
 
   const [showSubCollectionContent, setShowSubCollectionContent] = useState(false);
 
@@ -178,27 +176,22 @@ export default ({ children }) => {
     if (total && !ignoreTotalItem) setTotalAssets(total);
     if (replace) {
       setFolders((prev) => inputFolders);
-    }
-    else
-      setFolders([
-        ...folders.filter((folder) => !folder.isLoading),
-        ...inputFolders,
-      ]);
+    } else setFolders([...folders.filter((folder) => !folder.isLoading), ...inputFolders]);
   };
 
-  const subFoldersList = (inputFolders: { results: Item[], next: number, total: number }, replace = true) => {
+  const subFoldersList = (inputFolders: { results: Item[]; next: number; total: number }, replace = true) => {
     const { results, next, total } = inputFolders;
     setSubFoldersViewList((previousValue) => {
       return {
         ...previousValue,
         results: replace ? results : [...previousValue.results, ...results],
         next,
-        total
+        total,
       };
     });
   };
 
-  const subFoldersAssetList = (inputFolders: { results: Item[], next: number, total: number }, replace = true) => {
+  const subFoldersAssetList = (inputFolders: { results: Item[]; next: number; total: number }, replace = true) => {
     const { results, next, total } = inputFolders;
 
     setSubFoldersAssetsViewList((previousValue) => {
@@ -206,34 +199,27 @@ export default ({ children }) => {
         ...previousValue,
         results: replace ? results : [...previousValue.results, ...results],
         next,
-        total
+        total,
       };
     });
   };
 
-  const setSidenavFolderChildListItems = (
-    inputFolders: any,
-    id: string,
-    replace = true,
-  ) => {
+  const setSidenavFolderChildListItems = (inputFolders: any, id: string, replace = true) => {
     const { results, next, total } = inputFolders;
     if (replace) {
       if (results.length > 0) {
-        setSidenavFolderChildList((map) => { return new Map(map.set(id, { results, next, total })) })
+        setSidenavFolderChildList((map) => {
+          return new Map(map.set(id, { results, next, total }));
+        });
       }
-    }
-    else {
-      setSidenavFolderChildList((map) => { return new Map(map.set(id, { results: [...map.get(id)?.results || {}, ...results], next, total })) })
+    } else {
+      setSidenavFolderChildList((map) => {
+        return new Map(map.set(id, { results: [...(map.get(id)?.results || {}), ...results], next, total }));
+      });
     }
   };
 
-  const appendNewSubSidenavFolders = (
-    inputFolders: any,
-    id: string,
-    remove: boolean,
-    removeId?: string
-
-  ) => {
+  const appendNewSubSidenavFolders = (inputFolders: any, id: string, remove: boolean, removeId?: string) => {
     const data = sidenavFolderChildList.get(id);
     if (!data) return;
 
@@ -241,25 +227,25 @@ export default ({ children }) => {
 
     if (!remove) {
       setSidenavFolderChildList((map) => {
-        return new Map(map.set(id, { results: [...inputFolders, ...results], next, total: total + 1 }))
-      })
+        return new Map(map.set(id, { results: [...inputFolders, ...results], next, total: total + 1 }));
+      });
     } else {
-      const folderIndex = results?.findIndex(
-        (folder) => folder.id === removeId
-      );
+      const folderIndex = results?.findIndex((folder) => folder.id === removeId);
 
       if (folderIndex !== -1) {
         setSidenavFolderChildList((map) => {
-          return new Map(map.set(id, { results: update(results, { $splice: [[folderIndex, 1]], }), next, total: total - 1 }))
-        })
+          return new Map(
+            map.set(id, { results: update(results, { $splice: [[folderIndex, 1]] }), next, total: total - 1 }),
+          );
+        });
       }
     }
   };
 
   const setSidenavFolderItems = (
-    inputFolders: { results: Item[], next: number, total: number },
+    inputFolders: { results: Item[]; next: number; total: number },
     replace = true,
-    ignoreTotalItem = false
+    ignoreTotalItem = false,
   ) => {
     const { results, next, total } = inputFolders;
     let resultedArray: Item[] = [];
@@ -267,11 +253,7 @@ export default ({ children }) => {
     if (next) setSidenavFolderNextPage(next);
     if (total && !ignoreTotalItem) setSidenavTotalCollectionCount(total);
     if (replace) setSidenavFolderList(resultedArray);
-    else
-      setSidenavFolderList([
-        ...sidenavFolderList.filter((folder) => !folder.isLoading),
-        ...resultedArray,
-      ]);
+    else setSidenavFolderList([...sidenavFolderList.filter((folder) => !folder.isLoading), ...resultedArray]);
   };
 
   // Mark assets have been selected all even assets do not exist in pagination
@@ -288,7 +270,6 @@ export default ({ children }) => {
   const selectAllSubFoldersAndAssetsViewList = (value: boolean = true) => {
     setSelectedAllSubFoldersAndAssets(value);
   };
-
 
   // Show upload process toast
   const showUploadProcess = (value: string, fileIndex?: number) => {
@@ -363,12 +344,12 @@ export default ({ children }) => {
         const updatedAssets = assets.map((asset, index) =>
           index === retryList[i].index
             ? {
-              ...asset,
-              status: "fail",
-              index,
-              error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
-            }
-            : asset
+                ...asset,
+                status: "fail",
+                index,
+                error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
+              }
+            : asset,
         );
 
         // Update uploading assets
@@ -487,9 +468,7 @@ export default ({ children }) => {
     } catch (e) {
       // Violate validation, mark failure
       const updatedAssets = assets.map((asset, index) =>
-        index === retryList[i]?.index
-          ? { ...asset, index, status: "fail", error: "Processing file error" }
-          : asset
+        index === retryList[i]?.index ? { ...asset, index, status: "fail", error: "Processing file error" } : asset,
       );
 
       // Update uploading assets
@@ -693,7 +672,8 @@ export default ({ children }) => {
     setDownloadController,
     currentFolder,
     setCurrentFolder,
-    showSubCollectionContent, setShowSubCollectionContent
+    showSubCollectionContent,
+    setShowSubCollectionContent,
   };
   return <AssetContext.Provider value={assetsValue}>{children}</AssetContext.Provider>;
 };
