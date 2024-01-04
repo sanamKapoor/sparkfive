@@ -786,7 +786,7 @@ const AssetsLibrary = () => {
         // sort: sortingString,
         ...(term && { term }),
         ...getAssetsSort(activeSortFilter),
-        // ...searchFilterParams, commented because we don't search in case of sub-collection
+        ...searchFilterParams, //commented because we don't search in case of sub-collection
         showAllAssets: showAllAssets,
       });
       setSubFoldersAssetsViewList(subFolderAssets, replace);
@@ -1013,6 +1013,10 @@ const AssetsLibrary = () => {
       getFolders(false);
     }
   };
+
+  useEffect(() => {
+    getSubCollectionsAssetData();
+  }, [searchFilterParams]);
 
   return (
     <>
