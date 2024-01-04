@@ -36,7 +36,32 @@ const SearchOverlayAssets = ({
   const [openFilters, setOpenFilters] = useState(false);
 
   const getData = async (inputTerm, replace = true, _filterParams = filterParams) => {
+    console.log({ inputTerm, replace, _filterParams });
     try {
+      const loadAssets = async () => {
+        let fetchFn = assetApi.getAssets;
+        if (sharePath) {
+          fetchFn = shareCollectionApi.getAssets;
+        }
+        setPlaceHolders("asset", replace);
+        if (Object.keys(_filterParams).length > 0) {
+          setFilterParams(_filterParams);
+          setSearchFilterParams(_filterParams);
+        }
+        const params: any = {
+          term: inputTerm,
+          stage: activeSortFilter?.mainFilter === "archived" ? "archived" : "draft",
+          page: replace ? 1 : nextPage,
+          sharePath,
+          ..._filterParams,
+        };
+        // search from inside collection
+        if (activeFolder) {
+          params.folderId = activeFolder;
+        }
+        const { data } = await fetchFn(params);
+        setAssets(data, replace);
+      };
       if (mode === "assets") {
         let fetchFn = assetApi.getAssets;
         if (sharePath) {
@@ -61,6 +86,8 @@ const SearchOverlayAssets = ({
         const { data } = await fetchFn(params);
         setAssets(data, replace);
       } else if (mode === "SubCollectionView") {
+        setSearchFilterParams(_filterParams);
+
         let query = {
           page: 1,
           sortField: activeSortFilter.sort?.field || "createdAt",

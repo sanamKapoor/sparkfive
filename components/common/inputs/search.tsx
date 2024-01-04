@@ -11,7 +11,7 @@ const Search = (props) => {
 
   const [input, setInput] = useState("");
 
-  const { setSearchTerm } = useContext(FilterContext);
+  const { setSearchTerm, searchFilterParams, setActiveSortFilter } = useContext(FilterContext);
 
   const debouncedSearchTerm = useDebounce(input, 500);
 
@@ -27,8 +27,8 @@ const Search = (props) => {
   let isOpen = openFilters;
 
   useEffect(() => {
-    if (openFilters) applyingSerchAndFilters()
-  }, [filtersTags])
+    if (openFilters) applyingSerchAndFilters();
+  }, [filtersTags]);
 
   const { advancedConfig } = useContext(UserContext);
 
@@ -88,15 +88,11 @@ const Search = (props) => {
 
     if (isFilter) {
       selectedItems = selectedItems?.filter((item) => {
-        const isSelected = searchModes?.some(
-          (fItem) => fItem.value === item.value
-        );
+        const isSelected = searchModes?.some((fItem) => fItem.value === item.value);
         return !isSelected;
       });
     } else {
-      selectedItems = selectedItems?.filter(
-        (filter) => filter.value !== tag.value
-      );
+      selectedItems = selectedItems?.filter((filter) => filter.value !== tag.value);
     }
 
     setFiltersTags([...selectedItems, tag]);
@@ -148,7 +144,7 @@ const Search = (props) => {
       advSearchMode: selectedModes,
       advSearchFrom: from,
     });
-  }
+  };
 
   return (
     <form
@@ -158,11 +154,7 @@ const Search = (props) => {
       }}
     >
       <div className={styles.form}>
-        <div
-          className={styles["input-container"]}
-          ref={contentRef}
-          onClick={() => setFiltersVisible(null, true)}
-        >
+        <div className={styles["input-container"]} ref={contentRef} onClick={() => setFiltersVisible(null, true)}>
           <div className={styles["input-wrapper"]}>
             <img src={Utilities.search} />
             <input
@@ -171,8 +163,7 @@ const Search = (props) => {
               onKeyUp={(e) => hideSearchOnEnter(e)}
               value={input}
               placeholder={props.placeholder || "Search"}
-              className={`${styles.container} ${props.styleType && styles[props.styleType]
-                }`}
+              className={`${styles.container} ${props.styleType && styles[props.styleType]}`}
             />
           </div>
 
@@ -199,17 +190,12 @@ const Search = (props) => {
               <h5>Search Filters</h5>
               <ul>
                 {searchModes?.map((filter, index) => {
-                  let active = filtersTags?.some(
-                    (tag) => tag.value === filter.value
-                  )
-                    ? true
-                    : false;
+                  let active = filtersTags?.some((tag) => tag.value === filter.value) ? true : false;
 
                   return (
                     <li
                       key={`filter-${index}`}
-                      className={`${styles.filter} ${active ? styles["filter-active"] : ""
-                        }`}
+                      className={`${styles.filter} ${active ? styles["filter-active"] : ""}`}
                       onClick={() => addTag(filter, true)}
                     >
                       {filter.label}
@@ -219,24 +205,17 @@ const Search = (props) => {
               </ul>
               <ul>
                 {searchFrom?.map((item, index) => {
-                  let active = filtersTags.some(
-                    (tag) => tag.value === item.value
-                  )
-                    ? true
-                    : false;
+                  let active = filtersTags.some((tag) => tag.value === item.value) ? true : false;
 
                   return (
                     <li
                       key={`limit-by-${index}`}
-                      className={`${styles.limit} ${active ? styles["limit-active"] : ""
-                        }`}
+                      className={`${styles.limit} ${active ? styles["limit-active"] : ""}`}
                       onClick={() => addTag(item, false)}
                     >
-                      {
-                        /**
-                         * conflict issue TODO
-                         */
-                      }
+                      {/**
+                       * conflict issue TODO
+                       */}
                       {/* <img src={item.icon} /> */}
                       {item.icon}
                       {item.label}
