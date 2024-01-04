@@ -19,14 +19,14 @@ const UploadOptions: React.FC<UploadOptionsProps> = ({ onFileChange }) => {
       label: "Upload",
       text: "Files",
       onClick: () => fileBrowserRef.current.click(),
-      icon: Assets.upload,
+      icon: Assets.folderupload,
       CustomContent: null,
     },
     {
       label: "Upload",
       text: "Folder",
       onClick: () => folderBrowserRef.current.click(),
-      icon: Assets.folder,
+      icon: Assets.fileupload,
       CustomContent: null,
     },
   ];

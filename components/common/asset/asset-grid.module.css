@@ -25,9 +25,10 @@
   margin-top:54px;
   position: fixed;
   background: #fff;
-  z-index: 99;
+  z-index: 9999;
+  /* z-index:99; */
   top:94px;
-  width:calc(100% - 300px);
+  width:calc(100% - 355px);
 
 }
 .list-asset-view{
