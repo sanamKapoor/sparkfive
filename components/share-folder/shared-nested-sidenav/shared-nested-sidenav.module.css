@@ -54,7 +54,7 @@
   font-weight: 500;
   font-size: 14px;
   line-height: 18px;
-  color: var(--color-prim-navy);
+  color: var(--color--primary-color);
 }
 
 .icon-description {
@@ -147,7 +147,7 @@
   font-weight: 500;
   font-size: 14px;
   line-height: 18px;
-  color: var(--color-prim-navy);
+  color: var(--color--primary-color);
 }
 .flex {
   display: flex;

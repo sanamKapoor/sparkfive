@@ -531,6 +531,7 @@ const AssetGrid = ({
 
   }, [render, mode])
 
+
   return (
     <>
       <div ref={filterRef} id="filter-container-height" className={`${isShare ? styles["share-page-filter"] : ""} ${styles["filter-view-container"]} ${!sidebarOpen && isShare ? styles["share-page-open"] : ""}`}>{mode === "assets" && <FilterView render={render} setRender={setRender} />}</div>
@@ -574,7 +575,7 @@ const AssetGrid = ({
             {
               <ul
                 className={`${mode === "SubCollectionView" ? "" : styles["grid-list"]} ${styles[itemSize]} ${activeView === "list" ? styles["list-view"] : ""
-                  } 
+                  }    ${!sidebarOpen ? styles["marginTop"] : ""}
             ${mode === "assets"
                     ? styles["grid-" + advancedConfig.assetThumbnail]
                     : styles["grid-" + advancedConfig.collectionThumbnail]
