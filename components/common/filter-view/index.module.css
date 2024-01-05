@@ -162,7 +162,8 @@
   border-radius: 44px;
   padding: 0px 10px;
   height: 30px;
-  margin: 6px 6px;
+  /* margin: 6px 6px; */
+  margin:6px 6px 0 0;
 }
 
 .selected-filter-item p {

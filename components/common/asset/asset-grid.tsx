@@ -527,7 +527,15 @@ const AssetGrid = ({
 
   return (
     <>
-      <div ref={filterRef} id="filter-container-height" className={styles["filter-view-container"]}>{mode === "assets" && <FilterView render={render} setRender={setRender} />}</div>
+      {/* <DragSelection /> */}
+      <div
+        className={`${styles["filter-view-container"]} ${
+          sidebarOpen ? styles["filter-view-container-open"] : styles["filter-view-container-closed"]
+        }`}
+      >
+        {mode === "assets" && <FilterView />}
+      </div>
+      {/* <div className={styles["filter-view-container"]}>{mode === "assets" && <FilterView />}</div> */}
       <section
         className={`${styles.container}  ${shouldShowUpload ? styles.uploadAsset : ""} ${!sidebarOpen ? styles["container-on-toggle"] : ""
           }`}
