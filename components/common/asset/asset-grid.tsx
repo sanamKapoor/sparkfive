@@ -444,7 +444,14 @@ const AssetGrid = ({
   return (
     <>
       {/* <DragSelection /> */}
-      <div className={styles["filter-view-container"]}>{mode === "assets" && <FilterView />}</div>
+      <div
+        className={`${styles["filter-view-container"]} ${
+          sidebarOpen ? styles["filter-view-container-open"] : styles["filter-view-container-closed"]
+        }`}
+      >
+        {mode === "assets" && <FilterView />}
+      </div>
+      {/* <div className={styles["filter-view-container"]}>{mode === "assets" && <FilterView />}</div> */}
       <section
         className={`${styles.container}  ${shouldShowUpload ? styles.uploadAsset : ""} ${
           !sidebarOpen ? styles["container-on-toggle"] : ""
@@ -485,7 +492,7 @@ const AssetGrid = ({
                 : styles["grid-" + advancedConfig.collectionThumbnail]
             }
             `}
-               {...(mode === "assets" && activeView !== "list" ? { style: { marginTop: "60px" } } : {})}
+                {...(mode === "assets" && activeView !== "list" ? { style: { marginTop: "60px" } } : {})}
                 // {...(mode === "assets" && !sidebarOpen && { style: { marginTop: '60px' } })}
               >
                 {mode === "SubCollectionView" && (

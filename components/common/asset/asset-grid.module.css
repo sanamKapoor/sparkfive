@@ -28,7 +28,15 @@
   z-index: 9999;
   /* z-index:99; */
   top:94px;
+
+
+}
+.filter-view-container-open{
   width:calc(100% - 355px);
+
+}
+.filter-view-container-closed{
+  width:calc(100% - 90px);
 
 }
 .list-asset-view{
