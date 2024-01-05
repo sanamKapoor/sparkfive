@@ -525,17 +525,13 @@ const AssetGrid = ({
     return { marginTop: filterRef?.current?.clientHeight };
   }, [render, mode])
 
+
   return (
     <>
       {/* <DragSelection /> */}
-      <div
-        className={`${styles["filter-view-container"]} ${
-          sidebarOpen ? styles["filter-view-container-open"] : styles["filter-view-container-closed"]
-        }`}
-      >
-        {mode === "assets" && <FilterView />}
-      </div>
-      {/* <div className={styles["filter-view-container"]}>{mode === "assets" && <FilterView />}</div> */}
+     
+        <div ref={filterRef} id="filter-container-height" className={styles["filter-view-container"]}>{mode === "assets" && <FilterView render={render} setRender={setRender} />}</div>
+     
       <section
         className={`${styles.container}  ${shouldShowUpload ? styles.uploadAsset : ""} ${!sidebarOpen ? styles["container-on-toggle"] : ""
           }`}
@@ -576,7 +572,7 @@ const AssetGrid = ({
             {
               <ul
                 className={`${mode === "SubCollectionView" ? "" : styles["grid-list"]} ${styles[itemSize]} ${activeView === "list" ? styles["list-view"] : ""
-                  } 
+                  }    ${!sidebarOpen ? styles["marginTop"] : ""}
             ${mode === "assets"
                     ? styles["grid-" + advancedConfig.assetThumbnail]
                     : styles["grid-" + advancedConfig.collectionThumbnail]

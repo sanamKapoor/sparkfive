@@ -28,10 +28,14 @@
   /* z-index: 9999; */
   z-index:99;
   top:94px;
+  width:calc(100% - 355px);
   
 
 
 
+}
+.marginTop{
+  margin-top: 26px;
 }
 .filter-view-container-open{
   width:calc(100% - 355px);
