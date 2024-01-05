@@ -15,7 +15,7 @@
   flex-direction: row;
   flex-wrap: wrap;
   gap: 10px;
-  margin-bottom: 12px;
+  /* margin-bottom: 12px; */
   /* padding: 7px 0 10px 0; */
 
 }
@@ -151,6 +151,7 @@
   align-items: center;
   flex-wrap: wrap;
   /* padding-top: 10px; */
+  background: #fff; 
 }
 
 .selected-filter-item {

@@ -139,7 +139,6 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
       toastUtils.error("Please select at least one filter type!");
     } else {
       const selectedAttributes = options.filter((option) => option.isSelected);
-
       setAttributes([...getSortedAttributes(selectedAttributes)]);
       setShowModal(false);
     }

@@ -1,7 +1,7 @@
 import copyClipboard from "copy-to-clipboard";
 import update from "immutability-helper";
 import fileDownload from "js-file-download";
-import { useContext, useEffect, useRef, useState } from "react";
+import { CSSProperties, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Waypoint } from "react-waypoint";
 
 import React from "react";
@@ -31,7 +31,7 @@ import AssetThumbail from "./asset-thumbail";
 import AssetUpload from "./asset-upload";
 import DetailOverlay from "./detail-overlay";
 import { ASSET_UPLOAD_APPROVAL } from "../../../constants/permissions";
-
+import DragSelect from "dragselect";
 // import { useDrag } from 'react-dnd';
 // import {
 //   Box,
@@ -43,19 +43,19 @@ import { ASSET_UPLOAD_APPROVAL } from "../../../constants/permissions";
 const AssetGrid = ({
   activeView = "grid",
   isShare = false,
-  onFilesDataGet = (files: any) => {},
+  onFilesDataGet = (files: any) => { },
   toggleSelected,
   mode = "assets",
-  deleteFolder = (id: string) => {},
+  deleteFolder = (id: string) => { },
   itemSize = "regular",
   activeFolder = "",
   type = "",
   itemId = "",
-  getFolders = () => {},
-  loadMore = () => {},
-  viewFolder = (id: string) => {},
+  getFolders = () => { },
+  loadMore = () => { },
+  viewFolder = (id: string) => { },
   sharePath = "",
-  onCloseDetailOverlay = (assetData) => {},
+  onCloseDetailOverlay = (assetData) => { },
   setWidthCard,
   widthCard,
   getSubCollectionsAssetData,
@@ -80,9 +80,11 @@ const AssetGrid = ({
   } = useContext(AssetContext);
   const { activeSortFilter } = useContext(FilterContext);
   //Drog select assets
-  const [selectedIndexes, setSelectedIndexes] = useState<string[]>([]);
-  const selectableItems = useRef([]);
-  const elementsContainerRef = useRef<HTMLDivElement | null>(null);
+
+
+  // const [selectedIndexes, setSelectedIndexes] = useState<string[]>([]);
+  // const selectableItems = useRef([]);
+  // const elementsContainerRef = useRef<HTMLDivElement | null>(null);
 
   // Drag selection states
 
@@ -107,9 +109,13 @@ const AssetGrid = ({
 
   const [focusedItem, setFocusedItem] = useState(null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [selectionArea, setSelectionArea] = useState(null);
 
+  const [selectionArea, setSelectionArea] = useState(null);
+  const [coordinates, setCoordinates] = useState({ x: 0, y: 0 })
+  const [visible, setVisible] = useState(false)
+  const [render, setRender] = useState(false);
   const ref = useRef(null);
+
   useEffect(() => {
     const { assetId } = urlUtils.getQueryParameters();
     if (assetId) getInitialAsset(assetId);
@@ -176,7 +182,6 @@ const AssetGrid = ({
   const getInitialAsset = async (id) => {
     try {
       let assetsApi: any = assetApi;
-
       const { data } = await assetsApi.getById(id);
       setInitAsset(data);
     } catch (err) {
@@ -441,14 +446,100 @@ const AssetGrid = ({
   //   console.log("🚀 ~ file: asset-grid.tsx:402 ~ handleMouseUp ~ handleMouseUp:", handleMouseUp)
   // };
 
+
+
+  // const itemsRef: any = useRef([]);
+  // const [selectedItems, setSelectedItems] = useState([]);
+
+  // const ds = new DragSelect({
+  //   selectables: document.getElementsByClassName("dragSelection"),
+  // draggability: false,
+  // dragselect: true,
+  // keyboardDrag: true,
+  // multiSelectKeys: ['Control', 'Shift', 'Meta'],
+  // dragKeys: { up: ['ArrowUp'], down: ['ArrowDown'], left: ['ArrowLeft'], right: ['ArrowRight'] },
+  // });
+
+  // useEffect(() => {
+  // ds.subscribe("callback", (e) => {
+
+
+  // const haveShorterLength =
+  //   ((e.event.clientX - coordinates.x) ** 2 +
+  //     (e.event.clientY - coordinates.y) ** 2) **
+  //   0.5
+  // console.log("🚀 ~ file: asset-grid.tsx:465 ~ ds.subscribe ~ haveShorterLength:", haveShorterLength)
+
+
+  // Check if the event contains selected items, it's not a MouseEvent, and the selection area meets your criteria
+  // if (e.items.length > 0 && haveShorterLength > 100) {
+  // console.log(e.items)
+  // setSelectedItems(e.items);
+  // }
+  // });
+
+  //   return () => {
+  //     ds.unsubscribe();
+  //   };
+  // }, []);
+
+  // useEffect(() => {
+  //   let selectData = document.getElementsByClassName("ds-selected")
+
+  //   let selectDataArray = []
+  //   selectData = Array.from(selectData);
+  //   selectData.forEach(item => {
+  //     selectDataArray.push(item.id)
+  //   });
+  //   if (selectDataArray.length > 0) {
+  //     // debugger
+  //     let arrayDel = []
+  //     assets.forEach((item, ind) => {
+  //       if (selectDataArray.includes(item.asset.id)) {
+  //         item.isSelected = true
+  //       }
+  //       else {
+  //         item.isSelected = false
+  //       }
+  //       arrayDel.push(item)
+  //     })
+  //     setAssets(arrayDel)
+  //   }
+  //   console.log(JSON.stringify(selectDataArray), 22222222222222);
+  // }, [selectedItems])
+
+  const filterRef = useRef<HTMLDivElement>(null)
+  const getStyling = useMemo((): CSSProperties => {
+    if (mode === "folders") {
+      return { marginTop: 60 }
+    }
+    if (mode === "SubCollectionView") {
+      if (!sidebarOpen) {
+        return { marginTop: 44 + 14 };
+      }
+      return { marginTop: 44 }
+    }
+    if (!sidebarOpen) {
+      return { marginTop: (filterRef?.current?.clientHeight ?? 0) + 14 };
+    }
+    return { marginTop: filterRef?.current?.clientHeight };
+  }, [render, mode])
+
   return (
     <>
-      {/* <DragSelection /> */}
-      <div className={styles["filter-view-container"]}>{mode === "assets" && <FilterView />}</div>
+      <div ref={filterRef} id="filter-container-height" className={styles["filter-view-container"]}>{mode === "assets" && <FilterView render={render} setRender={setRender} />}</div>
       <section
-        className={`${styles.container}  ${shouldShowUpload ? styles.uploadAsset : ""} ${
-          !sidebarOpen ? styles["container-on-toggle"] : ""
-        }`}
+        className={`${styles.container}  ${shouldShowUpload ? styles.uploadAsset : ""} ${!sidebarOpen ? styles["container-on-toggle"] : ""
+          }`}
+        style={getStyling}
+      // onMouseDown={(e) => {
+      //   console.log(e.clientX, e.clientY)
+      //   setCoordinates((prev) => {
+      //     prev.x = e.clientX;
+      //     prev.y = e.clientY;
+      //     return prev
+      //   })
+      // }}
       >
         {(shouldShowUpload || isDragging) && !isShare && !hasPermission([ASSET_UPLOAD_APPROVAL]) && (
           <AssetUpload
@@ -472,21 +563,25 @@ const AssetGrid = ({
           />
         )}
         {
-          <div className={`${styles["collectionAssets"]} ${styles["w-100"]} `}>
+          <div className={`${styles["collectionAssets"]} ${styles["w-100"]} `} >
             {/* testing component starts from here */}
             {
               <ul
-                className={`${mode === "SubCollectionView" ? "" : styles["grid-list"]} ${styles[itemSize]} ${
-                  activeView === "list" ? styles["list-view"] : ""
-                } 
-            ${
-              mode === "assets"
-                ? styles["grid-" + advancedConfig.assetThumbnail]
-                : styles["grid-" + advancedConfig.collectionThumbnail]
-            }
+                className={`${mode === "SubCollectionView" ? "" : styles["grid-list"]} ${styles[itemSize]} ${activeView === "list" ? styles["list-view"] : ""
+                  } 
+            ${mode === "assets"
+                    ? styles["grid-" + advancedConfig.assetThumbnail]
+                    : styles["grid-" + advancedConfig.collectionThumbnail]
+                  }
             `}
-               {...(mode === "assets" && activeView !== "list" ? { style: { marginTop: "60px" } } : {})}
-                // {...(mode === "assets" && !sidebarOpen && { style: { marginTop: '60px' } })}
+                {...(mode === "assets" && activeView !== "list" ? { style: { marginTop: "60px" } } : {})}
+                id="asset-parent"
+
+              // onMouseUp={(e) => {
+              //   console.log("Mai mouse up", e.clientX, e.clientY)
+              // }}
+              // {...(mode === "assets" && !sidebarOpen && { style: { marginTop: '60px' } })}
+
               >
                 {mode === "SubCollectionView" && (
                   <SubCollection
@@ -517,23 +612,25 @@ const AssetGrid = ({
                     onCloseDetailOverlay={onCloseDetailOverlay}
                   />
                 )}
-                {mode === "assets" && assets?.length > 0 && (
+                {mode === "assets" && assets?.length > 0 && !visible && (
                   <>
                     {activeView === "list" && (
                       <AssetTableHeader activeView={activeView} setSortAttribute={setSortAssetAttribute} />
                     )}
+
                     {sortedAssets.map((assetItem, index) => {
                       if (assetItem.status !== "fail") {
                         return (
                           <li
                             className={`${styles["grid-item"]} ${activeView === "grid" ? styles["grid-item-new"] : ""}
                             ${activeView === "grid" && styles["list-wrapper-asset"]}
-                            
-                            `}
-                            key={assetItem.asset.id || index}
+                            dragSelection`}
+
+                            key={index}
+                            // id={assetItem.asset?.id}
+                            // ref={(el) => (itemsRef.current[index] = assetItem)}
                             onClick={(e) => handleFocusChange(e, assetItem.asset.id)}
-                            ref={ref}
-                            style={{ width: `$${widthCard}px` }}
+                            style={{ width: `$${widthCard} px` }}
                           >
                             <div className={activeView === "grid" && styles["collection-assets"]}>
                               <AssetThumbail
@@ -558,6 +655,7 @@ const AssetGrid = ({
                                 setFocusedItem={setFocusedItem}
                                 activeView={activeView}
                                 mode={mode}
+                                setVisible={setVisible}
                               />
                             </div>
                           </li>
@@ -581,7 +679,7 @@ const AssetGrid = ({
                           key={folder.id || index}
                           onClick={(e) => handleFocusChange(e, folder.id)}
                           ref={ref}
-                          style={{ width: `$${widthCard}px` }}
+                          style={{ width: `$${widthCard} px` }}
                         >
                           <FolderGridItem
                             {...folder}
@@ -637,7 +735,7 @@ const AssetGrid = ({
           additionalClasses={["visible-block"]}
           modalData={modalData}
           modalIsOpen={modalOpen}
-          confirmAction={() => {}}
+          confirmAction={() => { }}
           getSubFolders={getSubFolders}
         />
 
@@ -666,11 +764,11 @@ const AssetGrid = ({
             setActiveAssetId("");
             setActiveArchiveAsset(undefined);
           }}
-          confirmText={`${activeArchiveAsset?.stage !== "archived" ? "Archive" : "Unarchive"}`}
+          confirmText={`${activeArchiveAsset?.stage !== "archived" ? "Archive" : "Unarchive"} `}
           message={
             <span>
               Are you sure you want to &nbsp;
-              <strong>{`${activeArchiveAsset?.stage !== "archived" ? "Archive" : "Unarchive"}`}</strong>
+              <strong>{`${activeArchiveAsset?.stage !== "archived" ? "Archive" : "Unarchive"} `}</strong>
               &nbsp; this asset?
             </span>
           }
@@ -691,7 +789,7 @@ const AssetGrid = ({
             availableNext={nextPage !== -1}
           />
         )}
-      </section>
+      </section >
     </>
   );
 };

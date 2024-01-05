@@ -4,15 +4,23 @@ import { IAttribute } from "../../../interfaces/filters";
 import FilterTabs from "./filter-tabs";
 import SelectedFilters from "./selected-filters";
 
-const FilterView: React.FC = () => {
+const FilterView: React.FC<{ setRender: any, render: boolean }> = ({ setRender = null, render = false }) => {
   const [attributes, setAttributes] = useState<IAttribute[]>([]);
 
   const { onClearAll, onRemoveFilter, selectedFilters } =
-    useFilters(attributes);
+    useFilters(attributes, setRender);
 
   return (
     <>
-      <FilterTabs attributes={attributes} setAttributes={setAttributes} />
+      <FilterTabs attributes={attributes} setAttributes={(args) => {
+        setAttributes(args);
+        if (setRender) {
+          setTimeout(() => {
+            setRender(!render)
+          })
+        }
+
+      }} />
       {selectedFilters.length > 0 && (
         <SelectedFilters
           data={selectedFilters}
