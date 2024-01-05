@@ -106,7 +106,6 @@ const SubCollection = ({
   }, [activeSubFolders])
 
 
-
   const handleScroll = (e: any) => {
     const element = document.getElementById('filter-view') as HTMLElement;
     const { top, height } = element.getBoundingClientRect();
@@ -121,6 +120,7 @@ const SubCollection = ({
       setIsSticky(false);
     }
   };
+
   useEffect(() => {
     // Add scroll event listener when the component mounts
     window.addEventListener('scroll', handleScroll);
@@ -134,6 +134,7 @@ const SubCollection = ({
   const getStyling = (): CSSProperties => {
     return isSticky ? { position: "fixed", width: "calc(100% - 350px)", top: bottom1, zIndex: 10 } : {};
   }
+
   return (
     <>
       {sortedFolders.length > 0 && (

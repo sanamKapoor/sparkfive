@@ -509,25 +509,31 @@ const AssetGrid = ({
   // }, [selectedItems])
 
   const filterRef = useRef<HTMLDivElement>(null)
+
   const getStyling = useMemo((): CSSProperties => {
-    if (mode === "folders") {
-      return { marginTop: 60 }
-    }
-    if (mode === "SubCollectionView") {
-      if (!sidebarOpen) {
-        return { marginTop: 44 + 14 };
+    if (!isShare) {
+      if (mode === "folders") {
+        return { marginTop: 60 }
       }
-      return { marginTop: 44 }
+      if (mode === "SubCollectionView") {
+        if (!sidebarOpen) {
+          return { marginTop: 44 + 14 };
+        }
+        return { marginTop: 44 }
+      }
+      if (!sidebarOpen) {
+        return { marginTop: (filterRef?.current?.clientHeight ?? 0) + 14 };
+      }
+      return { marginTop: filterRef?.current?.clientHeight };
+    } else {
+      return {}
     }
-    if (!sidebarOpen) {
-      return { marginTop: (filterRef?.current?.clientHeight ?? 0) + 14 };
-    }
-    return { marginTop: filterRef?.current?.clientHeight };
+
   }, [render, mode])
 
   return (
     <>
-      <div ref={filterRef} id="filter-container-height" className={styles["filter-view-container"]}>{mode === "assets" && <FilterView render={render} setRender={setRender} />}</div>
+      <div ref={filterRef} id="filter-container-height" className={`${isShare ? styles["share-page-filter"] : ""} ${styles["filter-view-container"]} ${!sidebarOpen && isShare ? styles["share-page-open"] : ""}`}>{mode === "assets" && <FilterView render={render} setRender={setRender} />}</div>
       <section
         className={`${styles.container}  ${shouldShowUpload ? styles.uploadAsset : ""} ${!sidebarOpen ? styles["container-on-toggle"] : ""
           }`}
@@ -576,12 +582,10 @@ const AssetGrid = ({
             `}
                 {...(mode === "assets" && activeView !== "list" ? { style: { marginTop: "60px" } } : {})}
                 id="asset-parent"
-
               // onMouseUp={(e) => {
               //   console.log("Mai mouse up", e.clientX, e.clientY)
               // }}
               // {...(mode === "assets" && !sidebarOpen && { style: { marginTop: '60px' } })}
-
               >
                 {mode === "SubCollectionView" && (
                   <SubCollection
