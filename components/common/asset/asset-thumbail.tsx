@@ -65,6 +65,7 @@ const AssetThumbail = ({
   activeView,
   mode,
   style,
+  setVisible
 }) => {
   const [overlayProperties, setOverlayProperties] = useState(DEFAULT_DETAIL_PROPS);
   const {
@@ -338,8 +339,11 @@ const AssetThumbail = ({
                       type={"button"}
                       onClick={() => {
                         if (onView) {
+                          console.log("hello223")
+                          setVisible(true);
                           onView(asset.id);
                         } else {
+                          console.log("hello223456")
                           setOverlayProperties({
                             ...DEFAULT_DETAIL_PROPS,
                             visible: !overlayProperties.visible,
@@ -351,7 +355,6 @@ const AssetThumbail = ({
                 </>
               )}
             </div>
-
             <div className={`normal-text ${styles["wrap-text"]} ${activeView === "list" && styles["list-text"]}`}>
               <span
                 id="editable-preview"

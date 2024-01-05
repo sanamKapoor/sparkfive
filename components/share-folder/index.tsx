@@ -696,8 +696,6 @@ const ShareFolderMain = () => {
             className={`${assetGridWrapperStyle} ${sidebarOpen ? styles["mainContainer"] : styles['toggleContainer']} `}
             style={{ marginTop: top }}
           >
-
-
             <AssetGrid
               activeFolder={activeFolder}
               getFolders={getFolders}

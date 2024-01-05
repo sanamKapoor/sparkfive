@@ -9,7 +9,7 @@ import styles from './move-modal.module.css';
 
 // Components
 
-const MoveCollectionModal = ({ modalIsOpen, closeModal, itemsAmount, moveFolder, confirmText = "Add", parentId }) => {
+const MoveCollectionModal = ({ modalIsOpen, closeModal, itemsAmount, moveFolder, confirmText = "Add", parentId = null }) => {
     const {
         folders,
         selectedFolder,
@@ -67,9 +67,9 @@ const MoveCollectionModal = ({ modalIsOpen, closeModal, itemsAmount, moveFolder,
             overlayAdditionalClass={styles["move-modal-outer"]}
             modalIsOpen={modalIsOpen}
             closeModal={closemoveModal}
-            confirmText="Add to Collection"
-            headText={`${confirmText} ${itemsAmount} item(s) to Collection`}
-            subText="The collection will be added as sub-colloection and removed from their current collection if any"
+            confirmText={parentId ? "Move Subcollection" : "Make Collection a Subcollection"}
+            headText={parentId ? "Move Subcollection" : "Make Collection a Subcollection"}
+            subText={parentId ? "The selected subcollection will be moved from its current location and made a subcollection of the selected parent collection" : "The selected collection will be moved from its current location and made a subcollection of the selected parent collection"}
             disabledConfirm={!selectedFolder}
             confirmAction={() => {
                 moveFolder(selectedFolder);

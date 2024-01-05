@@ -189,7 +189,7 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
     }
   }
   useEffect(() => {
-    if (options.length > 0) {
+    if (options?.length > 0) {
       filterModalPosition()
     }
   }, [options])
@@ -224,9 +224,9 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
             <Loader className={styles["customLoader-center"]} />
           </div>
         ) :
-          checkIfValuesExist() ? <>
+          checkIfValuesExist() && options.length > 0 ? <>
             {
-              options.length > 0 && <>
+              <>
                 <div className={`${styles["popup-mobile-view"]}`}>
                   <div className={`${styles["popup-mobile-header"]}`}>
                     <img src={Utilities.leftArrow} alt="left-arrow" />

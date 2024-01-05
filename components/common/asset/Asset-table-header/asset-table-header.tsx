@@ -2,9 +2,9 @@ import React from "react";
 import { Utilities } from "../../../../assets";
 import styles from "./asset-table-header.module.css";
 
-const AssetTableHeader = ({ index, activeView, setSortAttribute }) => {
+const AssetTableHeader = ({ index, activeView, setSortAttribute, type = false }) => {
   return (
-    <div className={styles.listHeader}>
+    <div className={type ? styles.listHeaderCollection : styles.listHeader}>
       <div className={styles.listWrapper}>
         <div className={styles.headContent}>
           <span>Name</span>

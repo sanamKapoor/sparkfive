@@ -13,7 +13,7 @@ import tagsApi from "../server-api/tag";
 
 import { getAssetsFilters } from "../utils/asset";
 
-const useFilters = (attributes) => {
+const useFilters = (attributes, setRender = null) => {
   const { activeSortFilter, setActiveSortFilter, sharePath, isPublic } = useContext(FilterContext);
   const { activeFolder, activeSubFolders } = useContext(AssetContext);
 
@@ -63,6 +63,11 @@ const useFilters = (attributes) => {
     });
 
     setSelectedFilters(data.flat(1));
+    if (setRender) {
+      setTimeout(() => {
+        setRender((prev) => !prev)
+      })
+    }
   };
 
   useEffect(() => {

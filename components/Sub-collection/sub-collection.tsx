@@ -17,8 +17,8 @@ const SubCollection = ({
   isShare = false,
   toggleSelected,
   mode = "assets",
-  deleteFolder = (id: string) => {},
-  viewFolder = (id: string) => {},
+  deleteFolder = (id: string) => { },
+  viewFolder = (id: string) => { },
   sharePath = "",
   widthCard,
   ref,
@@ -106,7 +106,6 @@ const SubCollection = ({
   }, [activeSubFolders])
 
 
-
   const handleScroll = (e: any) => {
     const element = document.getElementById('filter-view') as HTMLElement;
     const { top, height } = element.getBoundingClientRect();
@@ -114,7 +113,6 @@ const SubCollection = ({
     const { top: top2 } = element2.getBoundingClientRect();
     const element3 = document.getElementById('top-bar') as HTMLElement;
     const { bottom } = element3.getBoundingClientRect();
-
     if (top < bottom) {
       setBottom1((prev) => { return bottom })
       setIsSticky(true);
@@ -122,6 +120,7 @@ const SubCollection = ({
       setIsSticky(false);
     }
   };
+
   useEffect(() => {
     // Add scroll event listener when the component mounts
     window.addEventListener('scroll', handleScroll);
@@ -133,8 +132,9 @@ const SubCollection = ({
   }, []);
 
   const getStyling = (): CSSProperties => {
-    return isSticky ? { position: "fixed", width: "100%", top: bottom1, zIndex: 10 } : {};
+    return isSticky ? { position: "fixed", width: "calc(100% - 350px)", top: bottom1, zIndex: 10 } : {};
   }
+
   return (
     <>
       {sortedFolders.length > 0 && (
@@ -224,7 +224,6 @@ const SubCollection = ({
                       src={Utilities.caretDownLight}
                     />
                   </div>
-
                 )}
                 {sortedFolders.length > 0 && sortedAssets.length > 0 && (
                   <div className={styles.tagOuter}>
@@ -247,12 +246,8 @@ const SubCollection = ({
               </div>
             </div>
             <div id="filter-view" className={`${styles["collection-filter-wrap"]} ${isSticky ? styles["sticky"] : ""}  ${assetsHide ? styles.hidden : ""}`} style={getStyling()}>
-              { !assetsHide &&   <FilterView />}
+              {!assetsHide && <FilterView />}
             </div>
-{/* 
-            <div className={`${styles["collection-filter-wrap"]}  ${assetsHide ? styles.hidden : ""}`}>
-          { !assetsHide &&   <FilterView />}
-            </div> */}
           </>
           <div
             id='asset-view'
@@ -262,7 +257,7 @@ const SubCollection = ({
             {!assetsHide && (
               <>
                 {activeView === "list" && (
-                  <AssetTableHeader activeView={activeView} setSortAttribute={setSortAssetAttribute} />
+                  <AssetTableHeader activeView={activeView} type={true} setSortAttribute={setSortAssetAttribute} />
                 )}
                 {sortedAssets.map((assetItem, index) => {
                   if (assetItem.status !== "fail") {
@@ -297,7 +292,7 @@ const SubCollection = ({
                           activeView={activeView}
                           mode={mode}
                         />
-                    </li>
+                      </li>
                     );
                   }
                 })}

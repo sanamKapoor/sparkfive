@@ -25,9 +25,24 @@
   margin-top:54px;
   position: fixed;
   background: #fff;
-  z-index: 99;
+  /* z-index: 9999; */
+  z-index:99;
   top:94px;
-  width:calc(100% - 300px);
+  width:calc(100% - 355px);
+  
+
+
+
+}
+.marginTop{
+  margin-top: 26px;
+}
+.filter-view-container-open{
+  width:calc(100% - 355px);
+
+}
+.filter-view-container-closed{
+  width:calc(100% - 90px);
 
 }
 .list-asset-view{
@@ -248,4 +263,12 @@
     margin-top: 195px;
   }
 
+}
+
+.share-page-filter{
+  margin-top:20px;
+
+}
+.share-page-open{
+  margin-top:42px;
 }
