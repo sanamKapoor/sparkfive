@@ -20,6 +20,7 @@ useEffect(() => {
   pageVisit(pages.COLLECTIONS)
 },[]);
 
+
   return (
     <FilterProvider isPublic={true}>
       <AppLayout title="Shared Collections">

@@ -10,6 +10,7 @@ import {
   AssetContext,
   FilterContext,
   LoadingContext,
+  TeamContext,
   UserContext,
 } from "../../../context";
 import assetApi from "../../../server-api/asset";
@@ -26,7 +27,7 @@ import Dropdown from "../inputs/dropdown";
 import ConfirmModal from "../modals/confirm-modal";
 import styles from "./asset-header-ops.module.css";
 import { sizeToZipDownload } from "../../../constants/download";
-import { events } from "../../../constants/analytics";
+import { events, shareLinkEvents } from "../../../constants/analytics";
 import useAnalytics from "../../../hooks/useAnalytics";
 import cookiesApi from "../../../utils/cookies";
 
@@ -71,10 +72,10 @@ const AssetHeaderOps = ({
     setSelectedAllSubAssets
   } = useContext(AssetContext);
 
-  const { trackEvent } = useAnalytics();
+  const { trackEvent, trackLinkEvent } = useAnalytics();
 
   const { setIsLoading } = useContext(LoadingContext);
-  const { hasPermission } = useContext(UserContext);
+  const { hasPermission, user } = useContext(UserContext);
 
   const { activeSortFilter, term, setSharePath: setContextPath } = useContext(FilterContext);
   const [sharePath, setSharePath] = useState("");
@@ -209,10 +210,11 @@ const AssetHeaderOps = ({
           (assetItem) => {            
             // Track assets download event
             if(isShare){
-              trackEvent(
-                events.DOWNLOAD_SHARED_ASSET,
+              trackLinkEvent(
+                shareLinkEvents.DOWNLOAD_SHARED_ASSET,
                 {
                   email: cookiesApi.get('shared_email') || null,
+                  teamId: cookiesApi.get('teamId') || null,
                   assetId: assetItem.asset.id,
                 });
             } else {
@@ -230,10 +232,11 @@ const AssetHeaderOps = ({
         payload.assetIds = selectedAssets.map((assetItem) => {
           // Track assets download event
           if(isShare){
-            trackEvent(
-              events.DOWNLOAD_SHARED_ASSET,
+            trackLinkEvent(
+              shareLinkEvents.DOWNLOAD_SHARED_ASSET,
               {
                 email: cookiesApi.get('shared_email') || null,
+                teamId: cookiesApi.get('teamId') || null,
                 assetId: assetItem.asset.id,
               });
           } else {

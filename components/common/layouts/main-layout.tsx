@@ -28,6 +28,27 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
 
   const [menuOpen, setMenuOpen] = useState(false);
 
+  let menuOptions = [
+    {
+      id: "assets",
+      label: "Assets",
+      onClick: () => { },
+    },
+    {
+      id: "templates",
+      label: "Templates",
+      onClick: () => { },
+    },
+  ]
+
+  if(user?.team?.analytics && user?.roleId === 'admin') {
+    menuOptions.push({
+      id: "insights",
+      label: "Insights",
+      onClick: () => { },
+    })
+  }
+
   const SettingsLink = ({ settingRef, name }) => (
     <Link href={`/main/user-settings/${settingRef}`}>
       <a>
@@ -123,23 +144,7 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
                 <Dropdown
                   additionalClass={styles["menu-dropdown"]}
                   onClickOutside={() => setMenuOpen(false)}
-                  options={[
-                    {
-                      id: "assets",
-                      label: "Assets",
-                      onClick: () => { },
-                    },
-                    {
-                      id: "insights",
-                      label: "Insights",
-                      onClick: () => { },
-                    },
-                    {
-                      id: "templates",
-                      label: "Templates",
-                      onClick: () => { },
-                    },
-                  ]}
+                  options={menuOptions}
                 />
               )}
             </div>
@@ -160,13 +165,14 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
                 imgHover={Navigation.assetsSelected}
                 text="Assets"
               />
-              <HeaderLink
+              
+              { (user?.team?.analytics && user?.roleId === 'admin') && <HeaderLink
                 active={Router.pathname.indexOf("insights") !== -1}
                 href="/main/insights"
                 img={Router.pathname.indexOf("insights") !== -1 ? Navigation.assetsSelected : Navigation.insights}
                 imgHover={Navigation.insights}
                 text="Insights"
-              />
+              />}
               <HeaderLink
                 active={Router.pathname.indexOf("templates") !== -1}
                 href="/main/templates"

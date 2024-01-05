@@ -12,9 +12,8 @@ import useAnalytics from "../../hooks/useAnalytics";
 
 const SharePage = () => {
   const { downloadingStatus } = useContext(AssetContext);
-
   const { pageVisit } = useAnalytics();
-
+  
   useEffect(() => {    
     pageVisit(pages.SHARED_LINKS)
   },[]);

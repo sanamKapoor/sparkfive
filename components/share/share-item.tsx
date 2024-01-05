@@ -11,7 +11,7 @@ import DetailOverlay from "../common/asset/detail-overlay";
 import Button from "../common/buttons/button";
 import IconClickable from "../common/buttons/icon-clickable";
 
-import {events} from '../../constants/analytics';
+import {events, shareLinkEvents} from '../../constants/analytics';
 import useAnalytics from '../../hooks/useAnalytics'
 import { UserContext } from "../../context";
 import cookiesApi from "../../utils/cookies";
@@ -26,8 +26,8 @@ const ShareItem = ({
 }) => {
   const [visibleOverlay, setVisibleOVerlay] = useState(false);
 
-  const {trackEvent} = useAnalytics();
   const { user } = useContext(UserContext);
+  const {trackLinkEvent} = useAnalytics();
 
   useEffect(() => {
     if (visibleOverlay) {
@@ -79,9 +79,10 @@ const ShareItem = ({
               text={"View Details"}
               type={"button"}
               onClick={() => {
-                trackEvent(events.VIEW_SHARED_ASSET, {
+                trackLinkEvent(shareLinkEvents.VIEW_SHARED_ASSET, {
                   assetId: asset.id,
-                  email: cookiesApi.get('shared_email') || null
+                  email: cookiesApi.get('shared_email') || null,
+                  teamId: cookiesApi.get('teamId') || null,
                 });
                 setVisibleOVerlay(true);
               }}

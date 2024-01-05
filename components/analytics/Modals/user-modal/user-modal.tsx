@@ -9,7 +9,9 @@ import IconClickable from "../../../common/buttons/icon-clickable";
 import TableComponent from "../../insight-table/insight-table";
 import TableData from "../../table-data/table-data";
 
-function UserModal() {
+function UserModal({
+  setShowModal
+}: { setShowModal: (show: boolean) => void }) {
   const columns = ["Viewed Link", "Viewed File", "Download File", "Date", "Actions"];
   const data = [
     {
@@ -73,7 +75,7 @@ function UserModal() {
             <SearchButton label="Search User" />
             <Datefilter />
             <Download />
-            <IconClickable src={insights.insightClose} additionalClass={styles.closeIcon} text={""} />
+            <IconClickable src={insights.insightClose} additionalClass={styles.closeIcon} text={""} onClick={() => setShowModal(false)} />
           </div>
         </div>
         {/* for laptop */}
@@ -95,7 +97,7 @@ function UserModal() {
             <div className={`${styles["table-header-tabs"]}`}>
               <Datefilter />
               <Download />
-              <IconClickable src={insights.insightClose} additionalClass={styles.closeIcon} text={""} />
+              <IconClickable src={insights.insightClose} additionalClass={styles.closeIcon} text={""} onClick={() => setShowModal(false)} />
             </div>
           </div>
         </div>
@@ -112,7 +114,7 @@ function UserModal() {
                 </p>
               </div>
               <div className={`${styles["close-mob"]}`}>
-                <IconClickable src={insights.insightClose} additionalClass={styles.closeIcon} text={""} />
+                <IconClickable src={insights.insightClose} additionalClass={styles.closeIcon} text={""} onClick={() => setShowModal(false)} />
               </div>
             </div>
             <div className={`${styles["filter-mob"]}`}>

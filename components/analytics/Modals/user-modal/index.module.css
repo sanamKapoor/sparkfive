@@ -1,7 +1,10 @@
 .user-modal-outer {
   /* width: calc(100% - 218px);
   margin-left: 218px; */
-  padding: 40px;
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  background: white;
 }
 .user-modal-toggle{
   width:100%;
@@ -13,6 +16,7 @@
   border: 1px solid #dedad4;
   width: 100%;
   padding: 16px;
+ 
 }
 .user-detail {
   display: flex;

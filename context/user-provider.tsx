@@ -106,13 +106,13 @@ export default ({ children }) => {
         } else {
           resetTheme();
         }
-
-        if (trackUser) {
-
+        
+        if(trackUser && data?.team && data?.team?.analytics){          
           // Track loggedIn user data for analytics
           identify({
             id: data.id,
             email: data.email,
+            teamId: data.team.id
           });
         }
 

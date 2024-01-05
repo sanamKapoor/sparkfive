@@ -8,20 +8,19 @@ import ShareFolderMain from "../../../../../components/share-folder";
 
 import AppLayout from "../../../../../components/common/layouts/app-layout";
 import { AssetContext } from "../../../../../context";
-import { pages } from "../../../../../constants/analytics";
-import usePageInfo from "../../../../../hooks/usePageInfo";
-import analyticsApi from "../../../../../server-api/analytics";
+import { pages, shareLinkEvents } from "../../../../../constants/analytics";
 import useAnalytics from "../../../../../hooks/useAnalytics";
+import cookiesApi from "../../../../../utils/cookies";
 
 
 const ShareFolder = () => {
   const { downloadingStatus } = useContext(AssetContext);
 
-const { pageVisit } = useAnalytics();
+  const { pageVisit, trackLinkEvent } = useAnalytics();
 
-useEffect(() => {    
-  pageVisit(pages.COLLECTIONS)
-},[]);
+  useEffect(() => {    
+    pageVisit(pages.COLLECTIONS)
+  },[]);
 
   return (
     <FilterProvider isPublic={true}>

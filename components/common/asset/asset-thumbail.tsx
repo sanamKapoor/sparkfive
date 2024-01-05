@@ -5,7 +5,7 @@ import HoverVideoPlayer from "react-hover-video-player";
 
 import { Utilities } from "../../../assets";
 import { ASSET_NAME_UPDATED, FAILED_TO_UPDATE_ASSET_NAME } from "../../../constants/messages";
-import { AssetContext } from "../../../context";
+import { AssetContext, UserContext } from "../../../context";
 import useAnalytics from "../../../hooks/useAnalytics";
 import assetApi from "../../../server-api/asset";
 import AnalyticsService from "../../../utils/analytics-service";
@@ -22,7 +22,7 @@ import AssetOptions from "./asset-options";
 import styles from "./asset-thumbail.module.css";
 import DetailOverlay from "./detail-overlay";
 import { analytics } from "../../../pages/_app";
-import { events } from "../../../constants/analytics";
+import { events, shareLinkEvents } from "../../../constants/analytics";
 import cookiesApi from "../../../utils/cookies";
 
 // Components
@@ -78,6 +78,7 @@ const AssetThumbail = ({
     setListUpdateFlag,
     setSubFoldersAssetsViewList,
   } = useContext(AssetContext);
+  const { user } = useContext(UserContext);
 
   const isAssetACopy = asset.name.endsWith(" - COPY");
 
@@ -89,7 +90,7 @@ const AssetThumbail = ({
   const dateFormat = "MMM do, yyyy";
   const [assetRenameModalOpen, setAssetRenameModalOpen] = useState(false);
 
-  const { trackEvent } = useAnalytics();
+  const { trackEvent, trackLinkEvent } = useAnalytics();
 
   useEffect(() => {
     setThumbnailName(assetName);
@@ -343,9 +344,10 @@ const AssetThumbail = ({
                       type={"button"}
                       onClick={() => {
                         if(isShare){
-                          trackEvent(events.VIEW_SHARED_ASSET, {
+                          trackLinkEvent(shareLinkEvents.VIEW_SHARED_ASSET, {
                             assetId: asset.id,
-                            email: cookiesApi.get('shared_email') || null
+                            email: cookiesApi.get('shared_email') || null,
+                            teamId: cookiesApi.get('teamId') || null,
                           })
                         } else {
                           trackEvent(events.VIEW_ASSET, {

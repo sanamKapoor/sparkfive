@@ -12,7 +12,7 @@ import { useContext } from "react";
 import { UserContext } from "../../../context";
 import React from "react";
 
-import { events } from '../../../constants/analytics';
+import { events, shareLinkEvents } from '../../../constants/analytics';
 import useAnalytics from '../../../hooks/useAnalytics'
 import cookiesApi from "../../../utils/cookies";
 
@@ -42,17 +42,18 @@ const AssetOptions = ({
     return user?.role?.id === "admin" || user?.role?.id === "super_admin";
   };
 
-  const { trackEvent } = useAnalytics();
+  const { trackEvent, trackLinkEvent } = useAnalytics();
 
   const options = [
     {
       label: "Download",
       onClick: () => {
         if(isShare){
-          trackEvent(
-            events.DOWNLOAD_SHARED_ASSET,
+          trackLinkEvent(
+            shareLinkEvents.DOWNLOAD_SHARED_ASSET,
             {
               email: cookiesApi.get('shared_email') || null,
+              teamId: cookiesApi.get('teamId') || null,
               assetId: asset.id,
             });
         } else {

@@ -1,13 +1,12 @@
 .tableResponsive {
     overflow-x: auto;
     border:1px solid#DEDAD4;
-    margin-top: 16px;
+    /* margin-top: 16px; */
     padding: 16px;
-   
 }
-.outerContainer{
+/* .outerContainer{
     padding: 30px 40px;
-}
+} */
   .tableOuter{
   border: 1px solid#DEDAD4;
   padding:16px;

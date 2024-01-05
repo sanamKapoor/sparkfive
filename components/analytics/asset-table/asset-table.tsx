@@ -8,7 +8,9 @@ import Datefilter from "../date-filter/date-filter";
 import Pagination from "../Pagination/pagination";
 import TableData from "../table-data/table-data";
 
-function AssetTable() {
+function AssetTable({
+  dashboardView = false
+}: { dashboardView: boolean }) {
   const columns = ["Asset name", "Views", "Downloads", "Shares", "Actions"];
   const data = [
     {
@@ -45,6 +47,7 @@ function AssetTable() {
     },
     {
       "Asset name": "sparkfive_emily_rodriguez_94820356.png",
+      icon: insights.userImg2,
       Views: "639",
       Downloads: "77",
       Shares: "30",
@@ -52,6 +55,7 @@ function AssetTable() {
     },
     {
       "Asset name": "sparkfive_alexander_davis_75361982.png",
+      icon: insights.userImg1,
       Views: "639",
       Downloads: "77",
       Shares: "30",
@@ -59,6 +63,7 @@ function AssetTable() {
     },
     {
       "Asset name": "sparkfive_emily_rodriguez_94820356.png",
+      icon: insights.userImg3,
       Views: "105",
       Downloads: "77",
       Shares: "30",
@@ -73,40 +78,40 @@ function AssetTable() {
       Actions: "Delete",
     },
   ];
-  const arrowColumns = ["Asset name", "Role", "Last session date", "Sessions", "Downloads", "Shares","Views"];
+  const arrowColumns = ["Asset name", "Role", "Last session date", "Sessions", "Downloads", "Shares", "Views"];
   const buttonColumns = ["Actions"];
-  const buttonTexts = { Actions: "view chart" };
+  const buttonTexts = { Actions: "View chart" };
   return (
     <section className={`${styles["outer-wrapper"]}`}>
       <div className={styles.tableResponsive}>
         {/* for web */}
         <div className={`${styles["heading-wrap"]} ${styles["web-view"]}`}>
-          <TableHeading mainText="Top Assets" descriptionText="May 18 - May 25, 2023" />
+          <TableHeading mainText="Top Assets" descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"} smallHeading={true} />
           <div className={`${styles["table-header-tabs"]}`}>
-            <SearchButton label="Search User" />
+            {!dashboardView && <SearchButton label="Search User" />}
             <Datefilter />
-            <Download />
+            {!dashboardView && <Download />}
           </div>
         </div>
         {/* for laptop */}
         <div className={`${styles["laptop-view"]}`}>
           <div className={`${styles["heading-wrap"]}`}>
             <div>
-              <TableHeading mainText="User Engagement" descriptionText="May 18 - May 25, 2023" />
-              <div style={{ marginTop: "22px" }}>
+              <TableHeading mainText="User Engagement" descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"} smallHeading={true} />
+              {!dashboardView && <div style={{ marginTop: "22px" }}>
                 <SearchButton label="Search User" />
-              </div>
+              </div>}
             </div>
             <div className={`${styles["table-header-tabs"]}`}>
               <Datefilter />
-              <Download />
+              {!dashboardView && <Download />}
             </div>
           </div>
         </div>
         {/* for mobile */}
         <div className={`${styles["heading-wrap"]} ${styles["mobile-view"]}`}>
           <div className={`${styles["mobile-wrap"]}`}>
-            <TableHeading mainText="User Engagement" descriptionText="May 18 - May 25, 2023" />
+            <TableHeading mainText="User Engagement" descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"} smallHeading={true} />
             <div className={`${styles["table-header-tabs"]}`}>
               <Datefilter />
               <Download />
@@ -126,7 +131,10 @@ function AssetTable() {
           buttonTexts={buttonTexts}
           imageSource="ImageSource"
         />
-        <Pagination />
+        {
+          !dashboardView && <Pagination />
+        }
+
       </div>
     </section>
   );

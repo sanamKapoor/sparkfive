@@ -24,7 +24,7 @@ const Form = ({ teamId }) => {
         email: loginData.email,
         password: loginData.password,
       };
-      const { data } = await userApi.signIn(signInData, teamId);      
+      const { data } = await userApi.signIn(signInData, teamId);            
       await afterAuth(data);
     } catch (err) {
       // TODO: Show error message

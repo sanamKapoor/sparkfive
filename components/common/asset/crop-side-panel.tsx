@@ -11,7 +11,7 @@ import sizeApi from "../../../server-api/size";
 import { Utilities } from "../../../assets";
 
 // Contexts
-import { AssetContext, LoadingContext } from "../../../context";
+import { AssetContext, LoadingContext, UserContext } from "../../../context";
 
 // Components
 import { useContext, useEffect, useState } from "react";
@@ -20,7 +20,7 @@ import IconClickable from "../buttons/icon-clickable";
 import Input from "../inputs/input";
 import SizeSelect from "../inputs/size-select";
 import ConfirmModal from "../modals/confirm-with-rename-modal";
-import { events } from "../../../constants/analytics";
+import { events, shareLinkEvents } from "../../../constants/analytics";
 import useAnalytics from "../../../hooks/useAnalytics";
 import cookiesApi from "../../../utils/cookies";
 
@@ -54,8 +54,9 @@ const CropSidePanel = ({
 }) => {
   const { updateDownloadingStatus } = useContext(AssetContext);
   const { setIsLoading } = useContext(LoadingContext);
+  const { user } = useContext(UserContext);
 
-  const { trackEvent } = useAnalytics();
+  const { trackEvent, trackLinkEvent } = useAnalytics();
 
   const [resizeOption, setResizeOption] = useState("px");
   const [sizesValue, setSizesValue] = useState({
@@ -443,10 +444,11 @@ const CropSidePanel = ({
           type={"button"}
           onClick={() => {
             if(isShare){
-              trackEvent(
-                events.DOWNLOAD_SHARED_ASSET,
+              trackLinkEvent(
+                shareLinkEvents.DOWNLOAD_SHARED_ASSET,
                 {
                   email: cookiesApi.get('shared_email') || null,
+                  teamId: cookiesApi.get('teamId') || null,
                   assetId: asset.id,
                 });
             } else {

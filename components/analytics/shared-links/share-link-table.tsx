@@ -2,7 +2,7 @@ import React from 'react'
 import styles from "./index.module.css";
 import { Utilities } from "../../../assets";
 
-function ShareLinkTable({ columns, data, arrowColumns, buttonColumns, buttonTexts, imageSource,}) {
+function ShareLinkTable({ columns, data, arrowColumns, buttonColumns, buttonTexts, imageSource, dashboardView}) {
   return (
     <div className={styles.wrapper}>
           <div className={styles.wrap}>
@@ -35,14 +35,13 @@ function ShareLinkTable({ columns, data, arrowColumns, buttonColumns, buttonText
                    <span className={`${styles["user-name"]}`}>{row[column]}</span>
                  </div>
                ) : buttonColumns.includes(column) ? (
-            
                  <img
                    src={row.Actions}
                    alt={`Icon for ${column}`}
                    className={styles.actionIcon}
                    onClick={() => console.log(`Icon clicked in ${column}`)}
                  />
-               ) : (
+               ) : (column ===  "Actions" && dashboardView) ? "View Link" : (
                  row[column]
                )}
              </td>

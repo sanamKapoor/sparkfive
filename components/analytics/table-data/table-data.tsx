@@ -1,9 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./table-data.module.css";
 import { Utilities } from "../../../assets";
+import UserModal from "../Modals/user-modal/user-modal";
+import { analyticsLayoutSection } from "../../../constants/analytics";
 
-export default function TableData({ columns, data, arrowColumns, buttonColumns, buttonTexts, imageSource,}) {
+export default function TableData({ columns, data, arrowColumns, buttonColumns, buttonTexts, imageSource, activeSection }) {
+
+  const [showModal, setShowModal] = useState(false);
+  const [activeModal, setActiveModal] = useState<React.ReactElement | null>(null);
+
+  const handleModals = () => {
+    setShowModal(true);
+    setActiveModal(activeSection === analyticsLayoutSection.ACCOUNT_USERS ? <UserModal setShowModal={setShowModal} /> : null)
+  }
+
   return (
+    <>
     <div className={styles.tableResponsive}>
       <table className={styles.table}>
         <thead>
@@ -34,7 +46,7 @@ export default function TableData({ columns, data, arrowColumns, buttonColumns, 
                       <span  className={`${styles["user-name"]}`}>{row[column]}</span>
                     </div>
                   ) : buttonColumns.includes(column) ? (
-                    <button className={styles.actionButton} onClick={() => console.log(`Button clicked in ${column}`)}>
+                    <button className={styles.actionButton} onClick={handleModals}>
                       {buttonTexts[column] || "Click me"}
                     </button>
                   ) : (
@@ -47,5 +59,9 @@ export default function TableData({ columns, data, arrowColumns, buttonColumns, 
         </tbody>
       </table>
     </div>
+    {
+      showModal && activeModal
+    }
+    </>
   );
 }

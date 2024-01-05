@@ -42,7 +42,7 @@ import AssetRelatedFilesList from "./asset-related-files-list";
 import downloadUtils from "../../../utils/download";
 import { sizeToZipDownload } from "../../../constants/download";
 
-import { events } from '../../../constants/analytics';
+import { events, shareLinkEvents } from '../../../constants/analytics';
 import useAnalytics from "../../../hooks/useAnalytics";
 import cookiesApi from "../../../utils/cookies";
 
@@ -131,7 +131,7 @@ const DetailOverlay = ({
   outsideDetailOverlay = false,
   sharedCode = "",
 }) => {
-  const { trackEvent } = useAnalytics();
+  const { trackEvent, trackLinkEvent } = useAnalytics();
 
   const { hasPermission } = useContext(UserContext);
   const { user, cdnAccess, transcriptAccess } = useContext(UserContext);
@@ -706,10 +706,11 @@ const DetailOverlay = ({
 
       // Track download asset event
       if(isShare){
-        trackEvent(
-          events.DOWNLOAD_SHARED_ASSET,
+        trackLinkEvent(
+          shareLinkEvents.DOWNLOAD_SHARED_ASSET,
           {
             email: cookiesApi.get('shared_email') || null,
+            teamId: cookiesApi.get('teamId') || null,
             assetId: asset.id,
           });
       } else {
@@ -766,10 +767,11 @@ const DetailOverlay = ({
     } else {
        // Track download asset event
        if(isShare){
-        trackEvent(
-          events.DOWNLOAD_SHARED_ASSET,
+        trackLinkEvent(
+          shareLinkEvents.DOWNLOAD_SHARED_ASSET,
           {
             email: cookiesApi.get('shared_email') || null,
+            teamId: cookiesApi.get('teamId') || null,
             assetId: asset.id,
           });
       } else {
