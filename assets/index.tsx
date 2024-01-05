@@ -294,6 +294,8 @@ export const Assets = {
   dropbox: Dropbox,
   gdrive: GoogleDrive,
   msword: require("./Icons/Assets/msword.svg"),
+  folderupload:require("./Icons/Assets/file-upload.svg"),
+  fileupload:require("./Icons/Assets/links-upload.svg"),
   msexcel: require("./Icons/Assets/msexcel.svg"),
   msppt: require("./Icons/Assets/msppt.svg"),
   pdf: require("./Icons/Assets/pdf.svg"),

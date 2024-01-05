@@ -18,6 +18,7 @@ import ConfirmModal from "../modals/confirm-modal";
 import styles from "./folder-grid-item.module.css";
 import FolderOptions from "./folder-options";
 import MoveCollectionModal from "../modals/move-collection-modal";
+import SpinnerOverlay from "../spinners/spinner-overlay";
 
 // Context
 // Components
@@ -65,7 +66,7 @@ const FolderGridItem = ({
 
   const [folderRenameModalOpen, setFolderRenameModalOpen] = useState(false);
   const [moveCollectionOpenModal, setMoveCollectionOpenModal] = useState(false);
-
+  const [loader, setLoader] = useState(false);
 
   const [thumbnailName, setThumbnailName] = useState(name);
   const [isEditing, setIsEditing] = useState(false);
@@ -198,7 +199,7 @@ const FolderGridItem = ({
 
   const confirmMoveCollection = async (parentFolder) => {
     try {
-
+      setLoader(true);
       const data = await folderApi.updateParent({
         parentId: parentFolder[0] || "",
         folderId: id,
@@ -218,8 +219,11 @@ const FolderGridItem = ({
         }
       }
       setListUpdateFlag(true);
-      toastUtils.success("Successfully Become sub-collection");
+      setLoader(false);
+
+      toastUtils.success("Collection successfully moved");
     } catch (err) {
+      setLoader(false);
       toastUtils.error(err.response.data.error);
     }
   };
@@ -368,6 +372,7 @@ const FolderGridItem = ({
       {activeView === "list" && (
         <div className={styles["modified-date"]}> {format(new Date(createdAt), dateFormat)}</div>
       )}
+      {loader && <SpinnerOverlay />}
 
       <FolderOptions
         activeFolderId={id}
@@ -386,6 +391,7 @@ const FolderGridItem = ({
         renameCollection={renameCollection}
         moveCollection={moveCollection}
         childFolders={childFolders}
+        parentId={parentId}
       />
       <RenameModal
         closeModal={() => setFolderRenameModalOpen(false)}
