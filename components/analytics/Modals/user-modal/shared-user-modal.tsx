@@ -2,15 +2,15 @@ import React from "react";
 import styles from "./index.module.css";
 import TableData from "../../table-data/table-data";
 import SearchButton from "../../insight-table/analytics-search-button/analytics-search";
-import Download from "../../download-button/download";
-import Datefilter from "../../date-filter/date-filter";
+import Download from "../../common/download-button/download";
+import Datefilter from "../../common/date-filter/date-filter";
 import Pagination from "../../Pagination/pagination";
 import IconClickable from "../../../common/buttons/icon-clickable";
 import { insights } from "../../../../assets";
 
 
 function SharedUserModal() {
-  const columns = ["Activity", "User name", "Date"];
+
   const data = [
     {
       Activity: "Downloaded sparkfive_julia_martinez_23540872.png",

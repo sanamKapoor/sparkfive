@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from "./download.module.css";
-import { Utilities } from "../../../assets";
-import ButtonIcon from "../../common/buttons/button-icon";
+import { Utilities } from "../../../../assets";
+import ButtonIcon from "../../../common/buttons/button-icon";
 
 export default function Download() {
   return (

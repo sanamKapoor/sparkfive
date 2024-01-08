@@ -1,8 +1,8 @@
 import React from "react";
 import styles from "./index.module.css";
-import SearchButton from "../../insight-table/analytics-search-button/analytics-search";
-import Download from "../../download-button/download";
-import Datefilter from "../../date-filter/date-filter";
+import SearchButton from "../../common/analytics-search-button/analytics-search";
+import Download from "../../common/download-button/download";
+import Datefilter from "../../common/date-filter/date-filter";
 import Pagination from "../../Pagination/pagination";
 import { insights } from "../../../../assets";
 import IconClickable from "../../../common/buttons/icon-clickable";

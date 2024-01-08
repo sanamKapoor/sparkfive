@@ -2,16 +2,18 @@ import React from "react";
 import styles from "./asset-table.module.css";
 import { insights, Utilities } from "../../../assets";
 import TableHeading from "../insight-table/table-heading";
-import SearchButton from "../insight-table/analytics-search-button/analytics-search";
-import Download from "../download-button/download";
-import Datefilter from "../date-filter/date-filter";
+import SearchButton from "../common/analytics-search-button/analytics-search";
+import Download from "../common/download-button/download";
+import Datefilter from "../common/date-filter/date-filter";
 import Pagination from "../Pagination/pagination";
 import TableData from "../table-data/table-data";
+import {columns} from "../../../data/analytics"
+import {assetarrowColumns,assetbuttonColumns,assetbuttonTexts} from "../../../data/analytics";
 
 function AssetTable({
   dashboardView = false
 }: { dashboardView: boolean }) {
-  const columns = ["Asset name", "Views", "Downloads", "Shares", "Actions"];
+
   const data = [
     {
       "Asset name": "sparkfive_julia_martinez_23540872.png",
@@ -78,9 +80,8 @@ function AssetTable({
       Actions: "Delete",
     },
   ];
-  const arrowColumns = ["Asset name", "Role", "Last session date", "Sessions", "Downloads", "Shares", "Views"];
-  const buttonColumns = ["Actions"];
-  const buttonTexts = { Actions: "View chart" };
+
+
   return (
     <section className={`${styles["outer-wrapper"]}`}>
       <div className={styles.tableResponsive}>
@@ -126,9 +127,9 @@ function AssetTable({
         <TableData
           columns={columns}
           data={data}
-          arrowColumns={arrowColumns}
-          buttonColumns={buttonColumns}
-          buttonTexts={buttonTexts}
+          arrowColumns={assetarrowColumns}
+          buttonColumns={assetbuttonColumns}
+          buttonTexts={assetbuttonTexts}
           imageSource="ImageSource"
         />
         {

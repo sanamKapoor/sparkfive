@@ -3,8 +3,9 @@ import dateFnsFormat from "date-fns/format";
 
 import styles from "./date-filter.module.css";
 import DayPickerInput from 'react-day-picker/types/DayPickerInput';
-import { insights } from "../../../assets";
-import Button from '../../common/buttons/button';
+import { insights } from "../../../../assets";
+import Button from "../../../common/buttons/button"
+
 
 const FORMAT = "MM/dd/yyyy";
 
@@ -116,7 +117,7 @@ export default function DateFilter() {
           <img src={insights.calender} alt="" />
         </div>
     </div>
-   
+      
 
    </section>
  </>
