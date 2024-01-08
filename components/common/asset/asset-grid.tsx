@@ -112,7 +112,6 @@ const AssetGrid = ({
 
   const [selectionArea, setSelectionArea] = useState(null);
   const [coordinates, setCoordinates] = useState({ x: 0, y: 0 })
-  const [visible, setVisible] = useState(false)
   const [render, setRender] = useState(false);
   const ref = useRef(null);
 
@@ -120,45 +119,6 @@ const AssetGrid = ({
     const { assetId } = urlUtils.getQueryParameters();
     if (assetId) getInitialAsset(assetId);
   }, []);
-
-  // const { DragSelection } = useSelectionContainer({
-  //   eventsElement: document.getElementById("root"),
-  //   onSelectionChange: (box) => {
-  //     /**
-  //      * Here we make sure to adjust the box's left and top with the scroll position of the window
-  //      * @see https://github.com/AirLabsTeam/react-drag-to-select/#scrolling
-  //      */
-  //     const scrollAwareBox: Box = {
-  //       ...box,
-  //       top: box.top + window.scrollY,
-  //       left: box.left + window.scrollX
-  //     };
-
-  //     // setSelectionBox(scrollAwareBox);
-  //     const indexesToSelect: string[] = [];
-  //     selectableItems.current.forEach((item, index) => {
-  //       if (boxesIntersect(scrollAwareBox, item)) {
-  //         indexesToSelect.push(item.id);
-  //       }
-  //     });
-
-  //     setSelectedIndexes(indexesToSelect);
-  //     console.log("🚀 ~ file: asset-grid.tsx:141 ~ indexesToSelect:", indexesToSelect)
-  //   },
-  //   onSelectionStart: () => {
-  //     console.log("OnSelectionStart");
-  //   },
-  //   onSelectionEnd: () => console.log("OnSelectionEnd", selectedIndexes),
-  //   selectionProps: {
-  //     style: {
-  //       border: "2px dashed purple",
-  //       borderRadius: 4,
-  //       backgroundColor: "brown",
-  //       opacity: 0.5
-  //     }
-  //   },
-  //   isEnabled: true
-  // });
 
   // For sorting the list view the hook in folder and asset view ----
 
@@ -202,7 +162,6 @@ const AssetGrid = ({
   const deleteAsset = async (id) => {
     try {
       let assetsApi: any = assetApi;
-
       await assetsApi.updateAsset(id, {
         updateData: {
           status: "deleted",
@@ -617,7 +576,7 @@ const AssetGrid = ({
                     onCloseDetailOverlay={onCloseDetailOverlay}
                   />
                 )}
-                {mode === "assets" && assets?.length > 0 && !visible && (
+                {mode === "assets" && assets?.length > 0 && (
                   <>
                     {activeView === "list" && (
                       <AssetTableHeader activeView={activeView} setSortAttribute={setSortAssetAttribute} />
@@ -660,7 +619,6 @@ const AssetGrid = ({
                                 setFocusedItem={setFocusedItem}
                                 activeView={activeView}
                                 mode={mode}
-                                setVisible={setVisible}
                               />
                             </div>
                           </li>

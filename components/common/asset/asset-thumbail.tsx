@@ -65,7 +65,6 @@ const AssetThumbail = ({
   activeView,
   mode,
   style,
-  setVisible
 }) => {
   const [overlayProperties, setOverlayProperties] = useState(DEFAULT_DETAIL_PROPS);
   const {
@@ -241,6 +240,25 @@ const AssetThumbail = ({
     }
   };
 
+  const handleViewDetails = (type: string) => {
+    if (type === "button" || (type === "wrapper" && activeView === "list")) {
+      if (onView) {
+        onView(asset.id);
+      } else {
+        setOverlayProperties({
+          ...DEFAULT_DETAIL_PROPS,
+          visible: !overlayProperties.visible,
+        });
+        // if (!overlayProperties.visible) {
+        //   Router.push(`/main/assets/${asset.id}`)
+        // }
+      }
+    }
+  };
+
+
+
+
   return (
     <>
       <div>
@@ -258,19 +276,9 @@ const AssetThumbail = ({
                 />
               </div>
             ) : null}
-
             <div
               className={`${styles["image-wrapper"]} ${activeView === "list" && styles["list-image-wrapper"]}`}
-              onClick={() => {
-                if (onView && activeView === "list") {
-                  onView(asset.id);
-                } else if (activeView === "list") {
-                  setOverlayProperties({
-                    ...DEFAULT_DETAIL_PROPS,
-                    visible: !overlayProperties.visible,
-                  });
-                }
-              }}
+              onClick={() => handleViewDetails("wrapper")}
             >
               {isUploading && (
                 <>
@@ -337,19 +345,7 @@ const AssetThumbail = ({
                       className={"container primary"}
                       text={"View Details"}
                       type={"button"}
-                      onClick={() => {
-                        if (onView) {
-                          console.log("hello223")
-                          setVisible(true);
-                          onView(asset.id);
-                        } else {
-                          console.log("hello223456")
-                          setOverlayProperties({
-                            ...DEFAULT_DETAIL_PROPS,
-                            visible: !overlayProperties.visible,
-                          });
-                        }
-                      }}
+                      onClick={() => handleViewDetails("button")}
                     />
                   </div>
                 </>
