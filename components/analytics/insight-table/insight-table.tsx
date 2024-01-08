@@ -34,6 +34,12 @@ const UserTable = ({
   
 
 
+  const fetchUserEngagements = async () => {
+    try {
+    } catch (error) {
+    }
+  }
+
   return (
     <section className={`${styles["outer-wrapper"]}`}>
       <div className={styles.tableResponsive}>

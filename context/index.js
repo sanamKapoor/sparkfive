@@ -1,8 +1,14 @@
 import { createContext } from "react";
+import { analyticsLayoutSection } from "../constants/analytics";
 
 export const LoadingContext = createContext({
   isLoading: false,
   setIsLoading: (value) => { },
+});
+
+export const AnalyticsContext = createContext({
+  activeSection: '',
+  setActiveSection: (value) => { },
 });
 
 export const UserContext = createContext({

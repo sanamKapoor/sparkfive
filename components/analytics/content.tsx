@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import UserTable from "./insight-table/insight-table";
 import InsightsHeader from "./insights-header/insights.header";
 import styles from "./index.module.css";
@@ -13,11 +13,11 @@ import ShareLinkPage from "./shared-links";
 import SharedUserModal from "./Modals/user-modal/shared-user-modal";
 import { analyticsLayoutSection } from "../../constants/analytics";
 import Team from "./team";
+import { AnalyticsContext } from "../../context";
 
-export default function Content({
-  activeSection
-}: { activeSection: string }) {
+export default function Content() {
 
+  const { activeSection } = useContext(AnalyticsContext);
   const [heading, setheading] = useState("Dashboard");
   const [content, setContent] = useState<React.ReactElement | null>(null);
 

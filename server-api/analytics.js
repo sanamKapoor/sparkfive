@@ -9,5 +9,8 @@ export default {
   },
   captureSharedLinkAnalytics: (data) => {
     axios.post(`${analyticsUrl}/share-link/events`, data)
+  },
+  getUserEngagementAnalytics: (data) => {
+    axios.post(`${analyticsUrl}/users`, data)
   }
 };
