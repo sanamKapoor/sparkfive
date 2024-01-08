@@ -302,3 +302,9 @@ export const GuestUploadContext = createContext({
   banner: "",
   setBanner: (banner) => { },
 });
+
+
+export const AssetDetailContext = createContext({
+
+
+});
