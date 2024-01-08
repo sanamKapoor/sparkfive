@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import styles from "./insights-sidennav.module.css";
 import { insights } from "../../../assets";
 import { analyticsLayoutSection } from "../../../constants/analytics";
+import { AnalyticsContext } from "../../../context";
 
 interface NavItem {
   id: number,
@@ -69,13 +70,8 @@ const navItems: NavItem[] = [
   }
 ]
 
-export default function InsightsSidenav({
-  activeSection,
-  setActiveSection
-}: {
-  activeSection: string,
-  setActiveSection: (section: string) => void
-}) {
+export default function InsightsSidenav() {
+  const { activeSection, setActiveSection } = useContext(AnalyticsContext);
 
   const handleItemClick = (section) => {
     setActiveSection(section);
@@ -99,9 +95,9 @@ export default function InsightsSidenav({
             {
               item.components.map((comp, index) => {
                 return (
-                  <li 
-                    key={index} 
-                    className={`${styles.setting} ${activeSection === comp.type && styles.selected}`} 
+                  <li
+                    key={index}
+                    className={`${styles.setting} ${activeSection === comp.type && styles.selected}`}
                     onClick={() => handleItemClick(comp.type)}
                   >
                     <a

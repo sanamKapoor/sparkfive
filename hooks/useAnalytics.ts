@@ -18,7 +18,7 @@ const useAnalytics = () => {
         title,
         eventType: eventTypes.PAGE,
         userId: user?.id || null,
-        teamId: team?.id || null,
+        teamId: user?.team?.id || team?.id || null,
         url: window.location.href,
         origin: window.location.origin,
         path: window.location.pathname,
@@ -35,7 +35,7 @@ const useAnalytics = () => {
         actionName: eventName,
         actionInfo: infoObject,
         userId: user?.id || null,
-        teamId: team?.id || null,
+        teamId: user?.team?.id || team?.id || null,
       });
     }
   };

@@ -33,6 +33,12 @@ const UserTable = ({
   const buttonColumns = ["Actions"];
   const buttonTexts = { Actions: "User Info" };
 
+  const fetchUserEngagements = async () => {
+    try {
+    } catch (error) {
+    }
+  }
+
   return (
     <section className={`${styles["outer-wrapper"]}`}>
       <div className={styles.tableResponsive}>
