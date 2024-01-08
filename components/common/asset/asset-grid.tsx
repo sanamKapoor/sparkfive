@@ -43,19 +43,19 @@ import DragSelect from "dragselect";
 const AssetGrid = ({
   activeView = "grid",
   isShare = false,
-  onFilesDataGet = (files: any) => { },
+  onFilesDataGet = (files: any) => {},
   toggleSelected,
   mode = "assets",
-  deleteFolder = (id: string) => { },
+  deleteFolder = (id: string) => {},
   itemSize = "regular",
   activeFolder = "",
   type = "",
   itemId = "",
-  getFolders = () => { },
-  loadMore = () => { },
-  viewFolder = (id: string) => { },
+  getFolders = () => {},
+  loadMore = () => {},
+  viewFolder = (id: string) => {},
   sharePath = "",
-  onCloseDetailOverlay = (assetData) => { },
+  onCloseDetailOverlay = (assetData) => {},
   setWidthCard,
   widthCard,
   getSubCollectionsAssetData,
@@ -80,7 +80,6 @@ const AssetGrid = ({
   } = useContext(AssetContext);
   const { activeSortFilter } = useContext(FilterContext);
   //Drog select assets
-
 
   // const [selectedIndexes, setSelectedIndexes] = useState<string[]>([]);
   // const selectableItems = useRef([]);
@@ -111,8 +110,8 @@ const AssetGrid = ({
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const [selectionArea, setSelectionArea] = useState(null);
-  const [coordinates, setCoordinates] = useState({ x: 0, y: 0 })
-  const [visible, setVisible] = useState(false)
+  const [coordinates, setCoordinates] = useState({ x: 0, y: 0 });
+  const [visible, setVisible] = useState(false);
   const [render, setRender] = useState(false);
   const ref = useRef(null);
 
@@ -446,8 +445,6 @@ const AssetGrid = ({
   //   console.log("🚀 ~ file: asset-grid.tsx:402 ~ handleMouseUp ~ handleMouseUp:", handleMouseUp)
   // };
 
-
-
   // const itemsRef: any = useRef([]);
   // const [selectedItems, setSelectedItems] = useState([]);
 
@@ -463,13 +460,11 @@ const AssetGrid = ({
   // useEffect(() => {
   // ds.subscribe("callback", (e) => {
 
-
   // const haveShorterLength =
   //   ((e.event.clientX - coordinates.x) ** 2 +
   //     (e.event.clientY - coordinates.y) ** 2) **
   //   0.5
   // console.log("🚀 ~ file: asset-grid.tsx:465 ~ ds.subscribe ~ haveShorterLength:", haveShorterLength)
-
 
   // Check if the event contains selected items, it's not a MouseEvent, and the selection area meets your criteria
   // if (e.items.length > 0 && haveShorterLength > 100) {
@@ -508,45 +503,52 @@ const AssetGrid = ({
   //   console.log(JSON.stringify(selectDataArray), 22222222222222);
   // }, [selectedItems])
 
-  const filterRef = useRef<HTMLDivElement>(null)
+  const filterRef = useRef<HTMLDivElement>(null);
 
   const getStyling = useMemo((): CSSProperties => {
     if (!isShare) {
       if (mode === "folders") {
-        return { marginTop: 60 }
+        return { marginTop: 60 };
       }
       if (mode === "SubCollectionView") {
         if (!sidebarOpen) {
           return { marginTop: 44 + 14 };
         }
-        return { marginTop: 44 }
+        return { marginTop: 44 };
       }
       if (!sidebarOpen) {
         return { marginTop: (filterRef?.current?.clientHeight ?? 0) + 14 };
       }
       return { marginTop: filterRef?.current?.clientHeight };
     } else {
-      return {}
+      return {};
     }
-
-  }, [render, mode])
-
+  }, [render, mode]);
 
   return (
     <>
-      <div ref={filterRef} id="filter-container-height" className={`${isShare ? styles["share-page-filter"] : ""} ${styles["filter-view-container"]} ${!sidebarOpen && isShare ? styles["share-page-open"] : ""}`}>{mode === "assets" && <FilterView render={render} setRender={setRender} />}</div>
+      <div
+        ref={filterRef}
+        id="filter-container-height"
+        className={`${isShare ? styles["share-page-filter"] : ""} ${styles["filter-view-container"]} ${
+          !sidebarOpen && isShare ? styles["share-page-open"] : ""
+        }`}
+      >
+        {mode === "assets" && <FilterView render={render} setRender={setRender} />}
+      </div>
       <section
-        className={`${styles.container}  ${shouldShowUpload ? styles.uploadAsset : ""} ${!sidebarOpen ? styles["container-on-toggle"] : ""
-          }`}
+        className={`${styles.container}  ${shouldShowUpload ? styles.uploadAsset : ""} ${
+          !sidebarOpen ? styles["container-on-toggle"] : ""
+        }`}
         style={getStyling}
-      // onMouseDown={(e) => {
-      //   console.log(e.clientX, e.clientY)
-      //   setCoordinates((prev) => {
-      //     prev.x = e.clientX;
-      //     prev.y = e.clientY;
-      //     return prev
-      //   })
-      // }}
+        // onMouseDown={(e) => {
+        //   console.log(e.clientX, e.clientY)
+        //   setCoordinates((prev) => {
+        //     prev.x = e.clientX;
+        //     prev.y = e.clientY;
+        //     return prev
+        //   })
+        // }}
       >
         {(shouldShowUpload || isDragging) && !isShare && !hasPermission([ASSET_UPLOAD_APPROVAL]) && (
           <AssetUpload
@@ -570,23 +572,25 @@ const AssetGrid = ({
           />
         )}
         {
-          <div className={`${styles["collectionAssets"]} ${styles["w-100"]} `} >
+          <div className={`${styles["collectionAssets"]} ${styles["w-100"]} `}>
             {/* testing component starts from here */}
             {
               <ul
-                className={`${mode === "SubCollectionView" ? "" : styles["grid-list"]} ${styles[itemSize]} ${activeView === "list" ? styles["list-view"] : ""
-                  }    ${!sidebarOpen ? styles["marginTop"] : ""}
-            ${mode === "assets"
-                    ? styles["grid-" + advancedConfig.assetThumbnail]
-                    : styles["grid-" + advancedConfig.collectionThumbnail]
-                  }
+                className={`${mode === "SubCollectionView" ? "" : styles["grid-list"]} ${styles[itemSize]} ${
+                  activeView === "list" ? styles["list-view"] : ""
+                }    ${!sidebarOpen ? styles["marginTop"] : ""}
+            ${
+              mode === "assets"
+                ? styles["grid-" + advancedConfig.assetThumbnail]
+                : styles["grid-" + advancedConfig.collectionThumbnail]
+            }
             `}
                 {...(mode === "assets" && activeView !== "list" ? { style: { marginTop: "60px" } } : {})}
                 id="asset-parent"
-              // onMouseUp={(e) => {
-              //   console.log("Mai mouse up", e.clientX, e.clientY)
-              // }}
-              // {...(mode === "assets" && !sidebarOpen && { style: { marginTop: '60px' } })}
+                // onMouseUp={(e) => {
+                //   console.log("Mai mouse up", e.clientX, e.clientY)
+                // }}
+                // {...(mode === "assets" && !sidebarOpen && { style: { marginTop: '60px' } })}
               >
                 {mode === "SubCollectionView" && (
                   <SubCollection
@@ -630,7 +634,6 @@ const AssetGrid = ({
                             className={`${styles["grid-item"]} ${activeView === "grid" ? styles["grid-item-new"] : ""}
                             ${activeView === "grid" && styles["list-wrapper-asset"]}
                             dragSelection`}
-
                             key={index}
                             // id={assetItem.asset?.id}
                             // ref={(el) => (itemsRef.current[index] = assetItem)}
@@ -676,7 +679,6 @@ const AssetGrid = ({
                     )}
 
                     {sortedFolders.map((folder, index) => {
-
                       return (
                         <li
                           // id={assetItem.asset.id}
@@ -740,7 +742,7 @@ const AssetGrid = ({
           additionalClasses={["visible-block"]}
           modalData={modalData}
           modalIsOpen={modalOpen}
-          confirmAction={() => { }}
+          confirmAction={() => {}}
           getSubFolders={getSubFolders}
         />
 
@@ -794,7 +796,7 @@ const AssetGrid = ({
             availableNext={nextPage !== -1}
           />
         )}
-      </section >
+      </section>
     </>
   );
 };
