@@ -132,7 +132,7 @@ const SubCollection = ({
   }, []);
 
   const getStyling = (): CSSProperties => {
-    return isSticky ? { position: "fixed", width: "calc(100% - 350px)", top: bottom1, zIndex: 10 } : {};
+    return isSticky ? { position: "fixed", width: "calc(100% - 350px)", top: bottom1, zIndex: 1200 } : {};
   }
 
   return (
