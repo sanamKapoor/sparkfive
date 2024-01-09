@@ -2,14 +2,12 @@ import { useContext } from "react";
 import { eventTypes } from "../constants/analytics";
 import { TeamContext, UserContext } from "../context";
 import analyticsApi from "../server-api/analytics";
-import { checkIfPLanIsActive } from "../utils/team";
 
 const useAnalytics = () => {
   const { user } = useContext(UserContext);
   const { team } = useContext(TeamContext);
 
   const isTrackingEnabled = user?.team?.analytics || team?.analytics;
-  const plan = user?.team?.plan?.name || team?.plan?.name;
 
   // For all page track (No Auth)
   const pageVisit = (title: string) => {

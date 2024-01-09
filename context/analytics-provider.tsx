@@ -1,20 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnalyticsContext } from "../context";
 import { analyticsLayoutSection } from "../constants/analytics";
+import AnalyticsApi from "../server-api/analytics";
 
 export default ({ children }) => {
-    const [activeSection, setActiveSection] = useState(analyticsLayoutSection.DASHBOARD);
-    const [search, setSearch] = useState('');
-    const [page, setPage] = useState(1);
-    const [limit, setLimit] = useState(10);
-    const [error, setError] = useState('');
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [totalRecords, setTotalRecords] = useState(0);
+  const [activeSection, setActiveSection] = useState(analyticsLayoutSection.DASHBOARD);
+  const [search, setSearch] = useState('');
+  const [filter, setFilter] = useState({
+    beginDate: new Date(),
+    endDate: new Date()
+  });
+  const [sortBy, setSortBy] = useState([]);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [error, setError] = useState('');
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [totalRecords, setTotalRecords] = useState(0);
+  const [apiEndpoint, setApiEndpoint] = useState("dashboard");
 
   const analyticsValue = {
     activeSection,
     search,
+    filter,
+    sortBy,
     page,
     limit,
     error,
@@ -23,6 +32,8 @@ export default ({ children }) => {
     totalRecords,
     setActiveSection,
     setSearch,
+    setFilter,
+    setSortBy,
     setPage,
     setLimit,
     setError,
@@ -30,6 +41,52 @@ export default ({ children }) => {
     setLoading,
     setTotalRecords
   };
+
+
+  const analyticsApiHandler = async () => {
+    try {
+      setLoading(true);
+      setError('');
+      setData(null);
+
+      console.log({ apiEndpoint });
+
+      const { data } = await AnalyticsApi.getAnalyticsData(apiEndpoint, {
+        page,
+        limit,
+        search,
+        sortBy,
+        filter
+      });
+
+      setTotalRecords(data.totalRecords)
+      setData(data.data);
+      setLoading(false);
+      setError('');
+    } catch (error) {
+      setLoading(false);
+      setError(error.message || 'Users not found!');
+      setData(null);
+    }
+  }
+
+  useEffect(() => {
+    analyticsApiHandler();
+  }, [apiEndpoint, page, limit, search, sortBy, filter])
+
+  const handleApiEndpoint = async () => {
+    switch (activeSection) {
+      case analyticsLayoutSection.ACCOUNT_USERS:
+        setApiEndpoint("users")
+        break;
+      default:
+        setApiEndpoint("dashboard")
+    }
+  }
+
+  useEffect(() => {
+    handleApiEndpoint();
+  }, [activeSection])
 
   return (
     <AnalyticsContext.Provider value={analyticsValue}>

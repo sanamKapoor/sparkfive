@@ -1,6 +1,6 @@
 import { FilterAttributeVariants, IDateRange } from "../../interfaces/filters";
 
-const calculateBeginDate = (daysAgo: number) => {
+export const calculateBeginDate = (daysAgo: number) => {
   const endDate = new Date();
   const beginDate = new Date(endDate);
   beginDate.setDate(endDate.getDate() - daysAgo);

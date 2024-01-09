@@ -3,6 +3,7 @@ import styles from "./table-data.module.css";
 import { Utilities } from "../../../assets";
 import UserModal from "../Modals/user-modal/user-modal";
 import { analyticsLayoutSection } from "../../../constants/analytics";
+import DateFormatter from "../../../utils/date";
 
 export default function TableData({ columns, data, arrowColumns, buttonColumns, buttonTexts, imageSource, activeSection }) {
 
@@ -16,27 +17,40 @@ export default function TableData({ columns, data, arrowColumns, buttonColumns, 
 
   return (
     <>
-    <div className={styles.tableResponsive}>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            {columns.map((column, index) => (
-              <th key={index}>
-                {arrowColumns.includes(column) ? (
-                  <div className={styles.headingIcon}>
-                    {column} <img src={Utilities.arrowDownUp} alt="flip icon" />
-                  </div>
-                ) : (
-                  column
-                )}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((row, rowIndex) => (
-            <tr key={rowIndex}>
-              {columns.map((column, colIndex) => (
+      <div className={styles.tableResponsive}>
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              {columns.map((column, index) => (
+                <th key={index}>
+                  {arrowColumns.includes(column) ? (
+                    <div className={styles.headingIcon}>
+                      {column} <img src={Utilities.arrowDownUp} alt="flip icon" />
+                    </div>
+                  ) : (
+                    column
+                  )}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          {
+            data && data.length > 0 &&
+            <tbody>
+              {data.map((row) => (
+                <tr key={row.id}>
+                  <td>{row.name}</td>
+                  <td>{row.roleId}</td>
+                  <td>{DateFormatter.analyticsDateFormatter(row.last_session)}</td>
+                  <td>{row.session_count}</td>
+                  <td>{row.downloads}</td>
+                  <td>{row.shares}</td>
+                  <td>
+                  <button className={styles.actionButton} onClick={handleModals}>
+                    User Info  
+                  </button>
+                  </td>
+                  {/* {columns.map((column, colIndex) => (
                 <td key={colIndex}>
                   {column === "User name" || column === "Asset name" ? (
                     <div className={styles.usernameWithImage}>
@@ -53,15 +67,16 @@ export default function TableData({ columns, data, arrowColumns, buttonColumns, 
                     row[column]
                   )}
                 </td>
+              ))} */}
+                </tr>
               ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-    {
-      showModal && activeModal
-    }
+            </tbody>
+          }
+        </table>
+      </div>
+      {
+        showModal && activeModal
+      }
     </>
   );
 }
