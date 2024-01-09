@@ -124,14 +124,6 @@ const DetailOverlay = ({
         thumbnailUrl: thumbailUrl
     } = useContext(AssetDetailContext)
 
-    console.log(asset,
-        realUrl,
-        isShare,
-        sharePath,
-        activeFolder,
-        initialParams,
-        thumbailUrl)
-
     const { hasPermission } = useContext(UserContext);
 
     const { user, cdnAccess, transcriptAccess } = useContext(UserContext);

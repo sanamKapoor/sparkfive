@@ -79,13 +79,14 @@ const AssetThumbail = ({
     setSubFoldersAssetsViewList,
   } = useContext(AssetContext);
 
-  // const { setSharePath,
-  //   setisShare,
-  //   setAsset,
-  //   setrealUrl,
-  //   setactiveFolder,
-  //   setThumbnailURL,
-  //   setInitialParam } = useContext(AssetDetailContext)
+  const {
+    setSharePath,
+    setisShare,
+    setAsset,
+    setrealUrl,
+    setactiveFolder,
+    setThumbnailURL,
+    setInitialParam } = useContext(AssetDetailContext)
 
   const isAssetACopy = asset.name.endsWith(" - COPY");
 
@@ -213,6 +214,7 @@ const AssetThumbail = ({
           ...DEFAULT_DETAIL_PROPS,
           visible: !overlayProperties.visible,
         });
+        // console.log(thumbailUrl, "thumbailUrl")
 
         // setSharePath(sharePath);
         // setisShare(isShare);
