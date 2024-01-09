@@ -10,6 +10,7 @@ export default {
   getFoldersSimple: (queryParams = {}) => axios.get(`${folderUrl}/simple?${queryString.stringify(queryParams)}`),
   createFolder: (data) => axios.post(folderUrl, data),
   updateFolder: (id, data) => axios.patch(`${folderUrl}/${id}`, data),
+  updateParent: (data) => axios.patch(`${folderUrl}/updateParent`, data),
   deleteFolder: (id) => axios.delete(`${folderUrl}/${id}`),
   shareFolder: (id, data) => axios.put(`${folderUrl}/${id}/share`, data),
   authenticateCollection: (data) => axios.post(`${folderUrl}/collection-auth`, data),

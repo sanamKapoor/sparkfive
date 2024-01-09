@@ -38,7 +38,6 @@ export const useMoveModal = (): MoveModalReturnType => {
             setResultedSearchFolders(filteredParent)
             setFolders(filteredParent);
         } catch (err) {
-            console.log(err);
         }
     };
 

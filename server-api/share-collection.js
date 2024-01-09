@@ -109,8 +109,14 @@ export default {
         queryParams
       )}`
     ),
+
   getTeamAttributes: (queryParams = {}) =>
     axios.get(
       `${shareCollectionsUrl}/attributes?${queryString.stringify(queryParams)}`
     ),
+
+  getCustomFieldWithCount: (id, queryParams) => axios.get(`${shareCollectionsUrl}/custom-fields/${id}?${querystring.stringify(queryParams)}`),
+
+  getCustomFieldsWithCount: (queryParams) => axios.get(`${shareCollectionsUrl}/custom-fields?${querystring.stringify(queryParams)}`),
+
 };

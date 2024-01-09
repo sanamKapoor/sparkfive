@@ -3,19 +3,50 @@
   justify-content: center;
   position: relative;
   min-height: 60vh;
-  margin-top: 20px;
+
+  margin-top: 44px; 
+}
+/* .container-on-toggle {
+  margin-top: 75px remove for testing;
+} */
+.uploadAsset {
+  position: fixed;
+  width: 100%;
+  margin-top: 83px;
 }
 
 .filter {
   width: 100%;
   order: 2;
 }
-.assetFilter-wrapper{
-  margin-top:20px;
+.assetFilter-wrapper {
+  margin-top: 20px;
 }
-.filter-view-container{
-  margin-top:54px;
-
+.filter-view-container {
+  margin-top: 54px;
+  position: fixed;
+  background: #fff;
+  /* z-index: 9999; */
+  z-index: 1200;
+  top: 94px;
+  width: calc(100% - 355px);
+}
+.marginTop {
+  margin-top: 26px;
+}
+.filter-view-container-open {
+  width: calc(100% - 355px);
+}
+.filter-view-container-closed {
+  width: calc(100% - 90px);
+}
+.list-asset-view {
+  margin-top: 95px;
+}
+@media (min-width: 700px) and (max-width: 1024px) {
+  .filter-view-container {
+    width: calc(100% - 10px);
+  }
 }
 
 @media screen and (max-width: 1023px) {
@@ -26,16 +57,22 @@
 
 .list-wrapper {
   width: 100%;
-  /* margin-top: 40px; */
+  margin-top: 40px;
 }
+
+.w-100 {
+  width: 100%;
+}
+/* .list-wrapper-asset{
+  margin-top: 63px;
+} */
 
 .regularlist {
   padding: 0;
 }
 
-.list-wrapper .regularlist li:first-child>div ul,
-.list-wrapper .regularlist li:nth-child(2)>div ul {
-
+.list-wrapper .regularlist li:first-child > div ul,
+.list-wrapper .regularlist li:nth-child(2) > div ul {
   bottom: inherit;
 }
 .grid-list {
@@ -43,12 +80,14 @@
   grid-template-columns: repeat(auto-fill, minmax(246px, 1fr));
   grid-gap: 40px;
 }
+.margintop {
+  margin-top: 58px;
+}
 
 @media screen and (max-width: 600px) {
   .grid-list {
     margin-top: 30px !important;
   }
-
 }
 
 /* @media screen and (min-width: 410px) and (max-width: 809px) {
@@ -68,27 +107,41 @@
   .grid-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(163px, 1fr));
-
   }
 }
 
+@media (min-width: 800px) and (max-width: 1000px) {
+  .uploadAsset {
+    margin-top: 105px;
+  }
+}
+@media (min-width: 1001px) and (max-width: 1422px) {
+  .uploadAsset {
+    margin-top: 122px;
+  }
+}
+@media (min-width: 500px) and (max-width: 810px) {
+  .uploadAsset {
+    margin-top: 200px;
+  }
+}
 
 @media screen and (max-width: 800px) {
-  .grid-list{
-    margin-top: 30px;
+  .grid-list {
+    margin-top: 149px;
     padding: 0 20px;
   }
-
 }
 
-@media (max-width:500px){
-  .uploadAsset{
+@media (max-width: 500px) {
+  .uploadAsset {
     display: flex;
     flex-direction: column;
   }
-  
+  .filter-view-container {
+    width: 100%;
+  }
 }
-
 
 .button-wrapper {
   margin-top: 1.5rem;
@@ -97,20 +150,17 @@
   margin-bottom: 2.5rem;
 }
 
-
 /* List view code starts form here */
 .list-view {
   display: flex;
   flex-direction: column;
   grid-gap: 16px;
-
 }
 
 .listHeader {
   width: 100%;
   height: 40px;
-  background:
-    #F6EFE4;
+  background: #f6efe4;
   padding: 10px;
   margin-bottom: 10px;
 }
@@ -120,7 +170,6 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-
 }
 
 .listWrapper {
@@ -143,9 +192,53 @@
 .headContent4 {
   width: 20%;
 }
-/* .collection-assets{
+.grid-item-new {
+  border: 1px solid var(--color-secondary-border);
+}
+
+@media (min-width: 800px) and (max-width: 1080px) {
+  .collectionAssets {
+    margin-top: 50px;
+  }
+}
+@media (min-width: 775px) and (max-width: 825px) {
+  .filter-view-container {
+    top: 75px;
+  }
+  .collectionAssets {
+    margin-top: 105px;
+  }
+}
+@media (min-width: 760px) and (max-width: 768px) {
+  .filter-view-container {
+    top: 211px;
+  }
+  .collectionAssets {
+    margin-top: 105px;
+  }
+}
+@media (min-width: 1100px) and (max-width: 1420px) {
+  .collectionAssets {
+    margin-top: 98px;
+  }
+}
+@media (min-width: 500px) and (max-width: 764px) {
+  .list-wrapper-asset {
+    /* margin-top: 248px; */
+  }
+  .filter-view-container {
+    top: 220px;
+  }
+}
+@media (max-width: 500px) {
+  .container {
+    margin-top: 195px;
+  }
+}
+
+.share-page-filter {
   margin-top: 30px;
-} */
-.grid-item-new{
-  border:1px solid var(--color-secondary-border);
+}
+.share-page-open {
+  margin-top: 42px;
 }

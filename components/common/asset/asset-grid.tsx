@@ -1,7 +1,7 @@
 import copyClipboard from "copy-to-clipboard";
 import update from "immutability-helper";
 import fileDownload from "js-file-download";
-import { useContext, useEffect, useRef, useState } from "react";
+import { CSSProperties, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Waypoint } from "react-waypoint";
 
 import React from "react";
@@ -31,14 +31,15 @@ import AssetThumbail from "./asset-thumbail";
 import AssetUpload from "./asset-upload";
 import DetailOverlay from "./detail-overlay";
 import { ASSET_UPLOAD_APPROVAL } from "../../../constants/permissions";
+import DragSelect from "dragselect";
 // import { useDrag } from 'react-dnd';
 // import {
 //   Box,
 //   boxesIntersect,
 //   useSelectionContainer
 // } from "@air/react-drag-to-select";
-// Components
 
+// Components
 const AssetGrid = ({
   activeView = "grid",
   isShare = false,
@@ -74,16 +75,15 @@ const AssetGrid = ({
     activeSubFolders,
     subFoldersAssetsViewList,
     setSubFoldersAssetsViewList,
-    setListUpdateFlag
+    setListUpdateFlag,
+    sidebarOpen,
   } = useContext(AssetContext);
-  const {
-    activeSortFilter
-  } = useContext(FilterContext);
+  const { activeSortFilter } = useContext(FilterContext);
   //Drog select assets
-  const [selectedIndexes, setSelectedIndexes] = useState<string[]>([]);
-  const selectableItems = useRef([]);
-  const elementsContainerRef = useRef<HTMLDivElement | null>(null);
 
+  // const [selectedIndexes, setSelectedIndexes] = useState<string[]>([]);
+  // const selectableItems = useRef([]);
+  // const elementsContainerRef = useRef<HTMLDivElement | null>(null);
 
   // Drag selection states
 
@@ -101,74 +101,31 @@ const AssetGrid = ({
 
   const [modalData, setModalData] = useState({}); // load or unload data for change thumbnail modal
 
-  const [sortedAssets, currentSortAttribute, setCurrentSortAttribute] =
-    useSortedAssets(assets);
-  const [
-    sortedFolders,
-    currentSortFolderAttribute,
-    setCurrentSortFolderAttribute,
-  ] = useSortedAssets(folders);
+  const [sortedAssets, currentSortAttribute, setCurrentSortAttribute] = useSortedAssets(assets);
+  const [sortedFolders, currentSortFolderAttribute, setCurrentSortFolderAttribute] = useSortedAssets(folders);
 
   const { setIsLoading } = useContext(LoadingContext);
 
   const [focusedItem, setFocusedItem] = useState(null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
   const [selectionArea, setSelectionArea] = useState(null);
+  const [coordinates, setCoordinates] = useState({ x: 0, y: 0 })
+  const [render, setRender] = useState(false);
   const ref = useRef(null);
+
   useEffect(() => {
     const { assetId } = urlUtils.getQueryParameters();
     if (assetId) getInitialAsset(assetId);
   }, []);
 
-  // const { DragSelection } = useSelectionContainer({
-  //   eventsElement: document.getElementById("root"),
-  //   onSelectionChange: (box) => {
-  //     /**
-  //      * Here we make sure to adjust the box's left and top with the scroll position of the window
-  //      * @see https://github.com/AirLabsTeam/react-drag-to-select/#scrolling
-  //      */
-  //     const scrollAwareBox: Box = {
-  //       ...box,
-  //       top: box.top + window.scrollY,
-  //       left: box.left + window.scrollX
-  //     };
-
-  //     // setSelectionBox(scrollAwareBox);
-  //     const indexesToSelect: string[] = [];
-  //     selectableItems.current.forEach((item, index) => {
-  //       if (boxesIntersect(scrollAwareBox, item)) {
-  //         indexesToSelect.push(item.id);
-  //       }
-  //     });
-
-  //     setSelectedIndexes(indexesToSelect);
-  //     console.log("🚀 ~ file: asset-grid.tsx:141 ~ indexesToSelect:", indexesToSelect)
-  //   },
-  //   onSelectionStart: () => {
-  //     console.log("OnSelectionStart");
-  //   },
-  //   onSelectionEnd: () => console.log("OnSelectionEnd", selectedIndexes),
-  //   selectionProps: {
-  //     style: {
-  //       border: "2px dashed purple",
-  //       borderRadius: 4,
-  //       backgroundColor: "brown",
-  //       opacity: 0.5
-  //     }
-  //   },
-  //   isEnabled: true
-  // });
-
   // For sorting the list view the hook in folder and asset view ----
-
 
   const setSortAssetAttribute = (attribute) => {
     if (attribute === currentSortAttribute) {
       setCurrentSortAttribute("-" + attribute);
     } else {
-      setCurrentSortAttribute(
-        currentSortAttribute.startsWith("-") ? "" : attribute
-      );
+      setCurrentSortAttribute(currentSortAttribute.startsWith("-") ? "" : attribute);
     }
   };
 
@@ -176,9 +133,7 @@ const AssetGrid = ({
     if (attribute === currentSortFolderAttribute) {
       setCurrentSortFolderAttribute("-" + attribute);
     } else {
-      setCurrentSortFolderAttribute(
-        currentSortFolderAttribute.startsWith("-") ? attribute : "-" + attribute
-      );
+      setCurrentSortFolderAttribute(currentSortFolderAttribute.startsWith("-") ? attribute : "-" + attribute);
     }
   };
   //----
@@ -186,7 +141,6 @@ const AssetGrid = ({
   const getInitialAsset = async (id) => {
     try {
       let assetsApi: any = assetApi;
-
       const { data } = await assetsApi.getById(id);
       setInitAsset(data);
     } catch (err) {
@@ -207,7 +161,6 @@ const AssetGrid = ({
   const deleteAsset = async (id) => {
     try {
       let assetsApi: any = assetApi;
-
       await assetsApi.updateAsset(id, {
         updateData: {
           status: "deleted",
@@ -216,9 +169,7 @@ const AssetGrid = ({
         },
       });
       if (mode === "SubCollectionView") {
-        const assetIndex = subFoldersAssetsViewList.results.findIndex(
-          (assetItem) => assetItem.asset.id === id
-        );
+        const assetIndex = subFoldersAssetsViewList.results.findIndex((assetItem) => assetItem.asset.id === id);
         if (assetIndex !== -1) {
           setSubFoldersAssetsViewList({
             ...subFoldersAssetsViewList,
@@ -229,14 +180,12 @@ const AssetGrid = ({
           });
         }
       } else {
-        const assetIndex = assets.findIndex(
-          (assetItem) => assetItem.asset.id === id
-        );
+        const assetIndex = assets.findIndex((assetItem) => assetItem.asset.id === id);
         if (assetIndex !== -1)
           setAssets(
             update(assets, {
               $splice: [[assetIndex, 1]],
-            })
+            }),
           );
       }
       setListUpdateFlag(true);
@@ -248,15 +197,12 @@ const AssetGrid = ({
   };
 
   const archiveAsset = async (id) => {
-    const newState =
-      activeArchiveAsset?.stage !== "archived" ? "archived" : "draft";
+    const newState = activeArchiveAsset?.stage !== "archived" ? "archived" : "draft";
     try {
       let assetsApi: any = assetApi;
       await assetsApi.updateAsset(id, { updateData: { stage: newState } });
       if (mode === "SubCollectionView") {
-        const assetIndex = subFoldersAssetsViewList.results.findIndex(
-          (assetItem) => assetItem.asset.id === id
-        );
+        const assetIndex = subFoldersAssetsViewList.results.findIndex((assetItem) => assetItem.asset.id === id);
         if (assetIndex !== -1) {
           setSubFoldersAssetsViewList({
             ...subFoldersAssetsViewList,
@@ -266,25 +212,19 @@ const AssetGrid = ({
           });
         }
       } else {
-        const assetIndex = assets.findIndex(
-          (assetItem) => assetItem.asset.id === id
-        );
+        const assetIndex = assets.findIndex((assetItem) => assetItem.asset.id === id);
         setAssets(
           update(assets, {
             $splice: [[assetIndex, 1]],
-          })
+          }),
         );
       }
 
-      toastUtils.success(
-        `Assets ${newState === "archived" ? "archived" : "unarchived"
-        } successfully`
-      );
+      toastUtils.success(`Assets ${newState === "archived" ? "archived" : "unarchived"} successfully`);
     } catch (err) {
       // TODO: Error handling
       toastUtils.error(
-        `Could not ${newState === "archived" ? "archive" : "unarchive"
-        } assets, please try again later.`
+        `Could not ${newState === "archived" ? "archive" : "unarchive"} assets, please try again later.`,
       );
     }
   };
@@ -353,12 +293,7 @@ const AssetGrid = ({
 
       updateDownloadingStatus("done", 0, 0);
     } catch (e) {
-      updateDownloadingStatus(
-        "error",
-        0,
-        0,
-        "Internal Server Error. Please try again."
-      );
+      updateDownloadingStatus("error", 0, 0, "Internal Server Error. Please try again.");
     }
 
     // downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets')
@@ -391,9 +326,7 @@ const AssetGrid = ({
     return sharedLinks && sharedLinks.length > 0;
   };
 
-  const showLoadMore =
-    (mode === "assets" && assets.length > 0) ||
-    (mode === "folders" && folders.length > 0);
+  const showLoadMore = (mode === "assets" && assets.length > 0) || (mode === "folders" && folders.length > 0);
 
   const loadingAssetsFolders =
     (assets.length > 0 && assets[assets.length - 1].isLoading) ||
@@ -403,12 +336,10 @@ const AssetGrid = ({
     if (!currentVersion) {
       return;
     }
-    const assetsList = activeSortFilter.mainFilter === "SubCollectionView"
-      ? subFoldersAssetsViewList.results
-      : assets;
+    const assetsList = activeSortFilter.mainFilter === "SubCollectionView" ? subFoldersAssetsViewList.results : assets;
 
-    const clonedAssets = [...assetsList].filter(asset => !asset.isUploading);
-    const versionIndex = clonedAssets.findIndex(item => item.asset.versionGroup === currentVersion.versionGroup);
+    const clonedAssets = [...assetsList].filter((asset) => !asset.isUploading);
+    const versionIndex = clonedAssets.findIndex((item) => item.asset.versionGroup === currentVersion.versionGroup);
 
     if (versionIndex !== -1) {
       const oldAsset = clonedAssets[versionIndex];
@@ -442,26 +373,6 @@ const AssetGrid = ({
     }
   };
 
-  // useEffect(() => {
-  //   if (mode === "assets") {
-  //     if (elementsContainerRef.current) {
-  //       Array.from(elementsContainerRef.current.children).forEach((item) => {
-  //         const { left, top, width, height, ...rest } = item.getBoundingClientRect();
-
-  //         console.log("qwerty", left, top, width, height, item.id)
-  //         selectableItems.current.push({
-  //           left,
-  //           top,
-  //           width,
-  //           height,
-  //           id: item.id
-  //         });
-  //       });
-  //     }
-  //   }
-
-  // }, [mode])
-
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -493,22 +404,114 @@ const AssetGrid = ({
   //   console.log("🚀 ~ file: asset-grid.tsx:402 ~ handleMouseUp ~ handleMouseUp:", handleMouseUp)
   // };
 
+  // const itemsRef: any = useRef([]);
+  // const [selectedItems, setSelectedItems] = useState([]);
+
+  // const ds = new DragSelect({
+  //   selectables: document.getElementsByClassName("dragSelection"),
+  // draggability: false,
+  // dragselect: true,
+  // keyboardDrag: true,
+  // multiSelectKeys: ['Control', 'Shift', 'Meta'],
+  // dragKeys: { up: ['ArrowUp'], down: ['ArrowDown'], left: ['ArrowLeft'], right: ['ArrowRight'] },
+  // });
+
+  // useEffect(() => {
+  // ds.subscribe("callback", (e) => {
+
+  // const haveShorterLength =
+  //   ((e.event.clientX - coordinates.x) ** 2 +
+  //     (e.event.clientY - coordinates.y) ** 2) **
+  //   0.5
+  // console.log("🚀 ~ file: asset-grid.tsx:465 ~ ds.subscribe ~ haveShorterLength:", haveShorterLength)
+
+  // Check if the event contains selected items, it's not a MouseEvent, and the selection area meets your criteria
+  // if (e.items.length > 0 && haveShorterLength > 100) {
+  // console.log(e.items)
+  // setSelectedItems(e.items);
+  // }
+  // });
+
+  //   return () => {
+  //     ds.unsubscribe();
+  //   };
+  // }, []);
+
+  // useEffect(() => {
+  //   let selectData = document.getElementsByClassName("ds-selected")
+
+  //   let selectDataArray = []
+  //   selectData = Array.from(selectData);
+  //   selectData.forEach(item => {
+  //     selectDataArray.push(item.id)
+  //   });
+  //   if (selectDataArray.length > 0) {
+  //     // debugger
+  //     let arrayDel = []
+  //     assets.forEach((item, ind) => {
+  //       if (selectDataArray.includes(item.asset.id)) {
+  //         item.isSelected = true
+  //       }
+  //       else {
+  //         item.isSelected = false
+  //       }
+  //       arrayDel.push(item)
+  //     })
+  //     setAssets(arrayDel)
+  //   }
+  //   console.log(JSON.stringify(selectDataArray), 22222222222222);
+  // }, [selectedItems])
+
+  const filterRef = useRef<HTMLDivElement>(null);
+
+  const getStyling = useMemo((): CSSProperties => {
+    if (!isShare) {
+      if (mode === "folders") {
+        return { marginTop: 60 };
+      }
+      if (mode === "SubCollectionView") {
+        if (!sidebarOpen) {
+          return { marginTop: 44 + 14 };
+        }
+        return { marginTop: 44 };
+      }
+      if (!sidebarOpen) {
+        return { marginTop: (filterRef?.current?.clientHeight ?? 0) + 14 };
+      }
+      return { marginTop: filterRef?.current?.clientHeight };
+    } else {
+      return {};
+    }
+  }, [render, mode]);
+
   return (
     <>
-      {/* <DragSelection /> */}
-      <div className={styles["filter-view-container"]}>
-        {mode === "assets" && <FilterView />}
-
+      <div
+        ref={filterRef}
+        id="filter-container-height"
+        className={`${isShare ? styles["share-page-filter"] : ""} ${styles["filter-view-container"]} ${!sidebarOpen && isShare ? styles["share-page-open"] : ""
+          }`}
+      >
+        {mode === "assets" && <FilterView render={render} setRender={setRender} />}
       </div>
-
-      <section className={`${styles.container}  ${shouldShowUpload ? styles.uploadAsset : ''}`}>
+      <section
+        className={`${styles.container}  ${shouldShowUpload ? styles.uploadAsset : ""} ${!sidebarOpen ? styles["container-on-toggle"] : ""
+          }`}
+        style={getStyling}
+      // onMouseDown={(e) => {
+      //   console.log(e.clientX, e.clientY)
+      //   setCoordinates((prev) => {
+      //     prev.x = e.clientX;
+      //     prev.y = e.clientY;
+      //     return prev
+      //   })
+      // }}
+      >
         {(shouldShowUpload || isDragging) && !isShare && !hasPermission([ASSET_UPLOAD_APPROVAL]) && (
           <AssetUpload
             onDragText={"Drop files here to upload"}
             preDragText={
-              shouldShowUpload
-                ? `Drag and drop your files here to upload (png, jpg, gif, doc, xlsx, pdf or mp4)`
-                : ""
+              shouldShowUpload ? `Drag and drop your files here to upload (png, jpg, gif, doc, xlsx, pdf or mp4)` : ""
             }
             onFilesDataGet={onFilesDataGet}
           />
@@ -525,21 +528,24 @@ const AssetGrid = ({
             setActiveSearchOverlay={setActiveSearchOverlay}
           />
         )}
-
         {
-          <div className={styles["list-wrapper"]}>
-
+          <div className={`${styles["collectionAssets"]} ${styles["w-100"]} `}>
             {/* testing component starts from here */}
             {
               <ul
-                className={`${mode === "SubCollectionView" ? "" : styles["grid-list"]
-                  } ${styles[itemSize]} ${activeView === "list" && styles["list-view"]
-                  } 
+                className={`${mode === "SubCollectionView" ? "" : styles["grid-list"]} ${styles[itemSize]} ${activeView === "list" ? styles["list-view"] : ""
+                  }    ${!sidebarOpen ? styles["marginTop"] : ""}
             ${mode === "assets"
                     ? styles["grid-" + advancedConfig.assetThumbnail]
                     : styles["grid-" + advancedConfig.collectionThumbnail]
                   }
             `}
+                {...(mode === "assets" && activeView !== "list" ? { style: { marginTop: "60px" } } : {})}
+                id="asset-parent"
+              // onMouseUp={(e) => {
+              //   console.log("Mai mouse up", e.clientX, e.clientY)
+              // }}
+              // {...(mode === "assets" && !sidebarOpen && { style: { marginTop: '60px' } })}
               >
                 {mode === "SubCollectionView" && (
                   <SubCollection
@@ -555,9 +561,7 @@ const AssetGrid = ({
                     copyShareLink
                     getShareIsEnabled={getShareIsEnabled}
                     beginAssetOperation={beginAssetOperation}
-                    beginChangeThumbnailOperation={
-                      beginChangeThumbnailOperation
-                    }
+                    beginChangeThumbnailOperation={beginChangeThumbnailOperation}
                     deleteThumbnail={deleteThumbnail}
                     isThumbnailNameEditable={isThumbnailNameEditable}
                     setFocusedItem={setFocusedItem}
@@ -575,22 +579,21 @@ const AssetGrid = ({
                 {mode === "assets" && assets?.length > 0 && (
                   <>
                     {activeView === "list" && (
-                      <AssetTableHeader
-                        activeView={activeView}
-                        setSortAttribute={setSortAssetAttribute}
-                      />
+                      <AssetTableHeader activeView={activeView} setSortAttribute={setSortAssetAttribute} />
                     )}
+
                     {sortedAssets.map((assetItem, index) => {
                       if (assetItem.status !== "fail") {
                         return (
                           <li
-                            className={`${styles["grid-item"]} ${activeView === "grid" ? styles["grid-item-new"] : ""}`}
-                            key={assetItem.asset.id || index}
-                            onClick={(e) =>
-                              handleFocusChange(e, assetItem.asset.id)
-                            }
-                            ref={ref}
-                            style={{ width: `$${widthCard}px` }}
+                            className={`${styles["grid-item"]} ${activeView === "grid" ? styles["grid-item-new"] : ""}
+                            ${activeView === "grid" && styles["list-wrapper-asset"]}
+                            dragSelection`}
+                            key={index}
+                            // id={assetItem.asset?.id}
+                            // ref={(el) => (itemsRef.current[index] = assetItem)}
+                            onClick={(e) => handleFocusChange(e, assetItem.asset.id)}
+                            style={{ width: `$${widthCard} px` }}
                           >
                             <div className={activeView === "grid" && styles["collection-assets"]}>
                               <AssetThumbail
@@ -599,40 +602,14 @@ const AssetGrid = ({
                                 activeFolder={activeFolder}
                                 isShare={isShare}
                                 type={type}
-                                toggleSelected={() =>
-                                  toggleSelected(assetItem.asset.id)
-                                }
-                                openArchiveAsset={() =>
-                                  openArchiveAsset(assetItem.asset)
-                                }
-                                openDeleteAsset={() =>
-                                  openDeleteAsset(assetItem.asset.id)
-                                }
-                                openMoveAsset={() =>
-                                  beginAssetOperation(
-                                    { asset: assetItem },
-                                    "move"
-                                  )
-                                }
-                                openCopyAsset={() =>
-                                  beginAssetOperation(
-                                    { asset: assetItem },
-                                    "copy"
-                                  )
-                                }
-                                openShareAsset={() =>
-                                  beginAssetOperation(
-                                    { asset: assetItem },
-                                    "share"
-                                  )
-                                }
+                                toggleSelected={() => toggleSelected(assetItem.asset.id)}
+                                openArchiveAsset={() => openArchiveAsset(assetItem.asset)}
+                                openDeleteAsset={() => openDeleteAsset(assetItem.asset.id)}
+                                openMoveAsset={() => beginAssetOperation({ asset: assetItem }, "move")}
+                                openCopyAsset={() => beginAssetOperation({ asset: assetItem }, "copy")}
+                                openShareAsset={() => beginAssetOperation({ asset: assetItem }, "share")}
                                 downloadAsset={() => downloadAsset(assetItem)}
-                                openRemoveAsset={() =>
-                                  beginAssetOperation(
-                                    { asset: assetItem },
-                                    "remove_item"
-                                  )
-                                }
+                                openRemoveAsset={() => beginAssetOperation({ asset: assetItem }, "remove_item")}
                                 handleVersionChange={refreshVersion}
                                 loadMore={loadMore}
                                 onCloseDetailOverlay={onCloseDetailOverlay}
@@ -642,9 +619,7 @@ const AssetGrid = ({
                                 activeView={activeView}
                                 mode={mode}
                               />
-
                             </div>
-
                           </li>
                         );
                       }
@@ -654,15 +629,10 @@ const AssetGrid = ({
                 {mode === "folders" && (
                   <>
                     {activeView === "list" && (
-                      <FolderTableHeader
-                        activeView={activeView}
-                        setSortAttribute={setSortFolderAttribute}
-                      />
+                      <FolderTableHeader activeView={activeView} setSortAttribute={setSortFolderAttribute} />
                     )}
 
                     {sortedFolders.map((folder, index) => {
-                      if (folder.name === "sparker") console.log({ folder });
-
                       return (
                         <li
                           // id={assetItem.asset.id}
@@ -670,7 +640,7 @@ const AssetGrid = ({
                           key={folder.id || index}
                           onClick={(e) => handleFocusChange(e, folder.id)}
                           ref={ref}
-                          style={{ width: `$${widthCard}px` }}
+                          style={{ width: `$${widthCard} px` }}
                         >
                           <FolderGridItem
                             {...folder}
@@ -681,13 +651,9 @@ const AssetGrid = ({
                             deleteFolder={() => deleteFolder(folder.id)}
                             copyShareLink={() => copyShareLink(folder)}
                             copyEnabled={getShareIsEnabled(folder)}
-                            shareAssets={() =>
-                              beginAssetOperation({ folder }, "shareFolders")
-                            }
+                            shareAssets={() => beginAssetOperation({ folder }, "shareFolders")}
                             changeThumbnail={beginChangeThumbnailOperation}
-                            deleteThumbnail={() =>
-                              deleteThumbnail({ folder }, "shareFolders")
-                            }
+                            deleteThumbnail={() => deleteThumbnail({ folder }, "shareFolders")}
                             activeView={activeView}
                             isThumbnailNameEditable={isThumbnailNameEditable}
                             focusedItem={focusedItem}
@@ -705,21 +671,12 @@ const AssetGrid = ({
             {showLoadMore && nextPage !== -1 && (
               <>
                 {nextPage > 2 || mode === "folders" ? (
-                  <>
-                    {!loadingAssetsFolders && (
-                      <Waypoint onEnter={loadMore} fireOnRapidScroll={false} />
-                    )}
-                  </>
+                  <>{!loadingAssetsFolders && <Waypoint onEnter={loadMore} fireOnRapidScroll={false} />}</>
                 ) : (
                   <>
                     {!loadingAssetsFolders && (
                       <div className={styles["button-wrapper"]}>
-                        <Button
-                          text="Load More"
-                          type="button"
-                          className="container primary"
-                          onClick={loadMore}
-                        />
+                        <Button text="Load More" type="button" className="container primary" onClick={loadMore} />
                       </div>
                     )}
                   </>
@@ -754,8 +711,7 @@ const AssetGrid = ({
           confirmText={"Delete"}
           message={
             <span>
-              Are you sure you want to &nbsp;<strong>Delete</strong>&nbsp; this
-              asset?
+              Are you sure you want to &nbsp;<strong>Delete</strong>&nbsp; this asset?
             </span>
           }
           modalIsOpen={deleteModalOpen}
@@ -769,38 +725,32 @@ const AssetGrid = ({
             setActiveAssetId("");
             setActiveArchiveAsset(undefined);
           }}
-          confirmText={`${activeArchiveAsset?.stage !== "archived" ? "Archive" : "Unarchive"
-            }`}
+          confirmText={`${activeArchiveAsset?.stage !== "archived" ? "Archive" : "Unarchive"} `}
           message={
             <span>
               Are you sure you want to &nbsp;
-              <strong>{`${activeArchiveAsset?.stage !== "archived" ? "Archive" : "Unarchive"
-                }`}</strong>
+              <strong>{`${activeArchiveAsset?.stage !== "archived" ? "Archive" : "Unarchive"} `}</strong>
               &nbsp; this asset?
             </span>
           }
           modalIsOpen={activeArchiveAsset}
         />
         {/* Overlay exclusive to page load assets */}
-        {
-          initAsset && (
-            <DetailOverlay
-              isShare={isShare}
-              sharePath={sharePath}
-              asset={initAsset.asset}
-              realUrl={initAsset.realUrl}
-              initialParams={{ side: "comments" }}
-              openShareAsset={() =>
-                beginAssetOperation({ asset: initAsset }, "share")
-              }
-              openDeleteAsset={() => openDeleteAsset(initAsset.asset.id)}
-              closeOverlay={() => setInitAsset(undefined)}
-              loadMore={loadMore}
-              availableNext={nextPage !== -1}
-            />
-          )
-        }
-      </section >
+        {initAsset && (
+          <DetailOverlay
+            isShare={isShare}
+            sharePath={sharePath}
+            asset={initAsset.asset}
+            realUrl={initAsset.realUrl}
+            initialParams={{ side: "comments" }}
+            openShareAsset={() => beginAssetOperation({ asset: initAsset }, "share")}
+            openDeleteAsset={() => openDeleteAsset(initAsset.asset.id)}
+            closeOverlay={() => setInitAsset(undefined)}
+            loadMore={loadMore}
+            availableNext={nextPage !== -1}
+          />
+        )}
+      </section>
     </>
   );
 };

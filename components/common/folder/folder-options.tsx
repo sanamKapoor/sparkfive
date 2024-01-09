@@ -29,14 +29,15 @@ const FolderOptions = ({
   activeFolderId,
   onClickFilterSettings,
   renameCollection,
+  childFolders,
+  moveCollection,
+  parentId = null,
 }) => {
   const { user, hasPermission } = useContext(UserContext);
-
   const options = isShare
     ? [{ label: "Download", onClick: downloadFoldercontents }]
     : [
       { label: "Download", onClick: downloadFoldercontents },
-      // { label: "Delete", onClick: () => setDeleteOpen(true) },
       { label: "Share", onClick: shareAssets },
       {
         label: "Rename Folder",
@@ -44,7 +45,29 @@ const FolderOptions = ({
           renameCollection();
         },
       },
+      {
+        label: "Make Subcollection",
+        onClick: () => {
+          moveCollection();
+        },
+      },
     ];
+
+  if (childFolders?.length > 0) {
+    const indexToRemove = options.findIndex((ele) => ele.label === 'Make Subcollection');
+    // Remove the object at the found index using splice
+    if (indexToRemove !== -1) {
+      options.splice(indexToRemove, 1);
+    }
+  }
+
+  if (parentId) {
+    options.forEach((option) => {
+      if (option.label === "Make Subcollection") {
+        option.label = "Move Subcollection";
+      }
+    });
+  }
 
   if (hasPermission([ASSET_EDIT])) {
     options.push({ label: "Delete", onClick: () => setDeleteOpen(true) });

@@ -35,34 +35,23 @@ interface Item {
   assets: Asset[];
   size: string;
   length: number;
-  childFolders?: any
+  childFolders?: any;
 }
 export default function SharedPageSidenav({ sidenavFolderList, viewFolder, headingClick, parentFolders }) {
   const { folderInfo } = useContext(ShareContext);
-  const {
-    folders,
-    activeSubFolders,
-    activeFolder,
-    setSidebarOpen,
-    sidebarOpen
-  } = useContext(AssetContext);
-  const { activeSortFilter } = useContext(FilterContext)
+  const { folders, activeSubFolders, activeFolder, setSidebarOpen, sidebarOpen } = useContext(AssetContext);
+  const { activeSortFilter } = useContext(FilterContext);
 
-  const [showDropdown, setShowDropdown] = useState(
-    new Array(parentFolders.length).fill(false)
-  );
+  const [showDropdown, setShowDropdown] = useState(new Array(parentFolders.length).fill(false));
   let foldersList: any = [];
   if (parentFolders.length > 0) {
-    foldersList = parentFolders
-  } else if (
-    activeSortFilter.mainFilter === "SubCollectionView" &&
-    activeSubFolders !== ""
-  ) {
-    foldersList = sidenavFolderList
+    foldersList = parentFolders;
+  } else if (activeSortFilter.mainFilter === "SubCollectionView" && activeSubFolders !== "") {
+    foldersList = sidenavFolderList;
   } else if (!Boolean(folderInfo?.singleSharedCollectionId)) {
-    foldersList = folders
+    foldersList = folders;
   } else if (Boolean(folderInfo?.singleSharedCollectionId)) {
-    foldersList = sidenavFolderList
+    foldersList = sidenavFolderList;
   }
   if (activeFolder) {
     foldersList = foldersList.map((item) => {
@@ -81,9 +70,7 @@ export default function SharedPageSidenav({ sidenavFolderList, viewFolder, headi
 
   // const collAssetsCount = folderInfo?.sharedFolder?.assetsCount ? folderInfo.sharedFolder.assetsCount : 0;
 
-  const toggleDropdown = async (
-    index: number,
-  ) => {
+  const toggleDropdown = async (index: number) => {
     const updatedShowDropdown = [...showDropdown];
     updatedShowDropdown[index] = !updatedShowDropdown[index]; //Toggle dropdown on img click event
     setShowDropdown(updatedShowDropdown);
@@ -104,108 +91,105 @@ export default function SharedPageSidenav({ sidenavFolderList, viewFolder, headi
             />
           }
         />
-        <div className={styles["sidenavScroll"]} >
+        <div className={styles["sidenavScroll"]}>
           <div className={styles["sidenav-list1"]}>
-            {foldersList.length > 0 && (<ul>
-              {foldersList?.map((item: Item, index: number) => (
-                <>
-                  <div style={{ display: 'flex',marginBottom:'4px' }}>
+            {foldersList.length > 0 && (
+              <ul>
+                {foldersList?.map((item: Item, index: number) => (
+                  <>
+                    <div style={{ display: "flex", marginBottom: "4px" }}>
+                      {item?.childFolders?.length > 0 ? (
+                        <div className={styles.clickable} onClick={() => toggleDropdown(index, item, true)}>
+                          <img
+                            className={showDropdown[index] ? styles.iconClick : styles.rightIcon}
+                            src={Utilities.caretRightSolid}
+                          />
+                        </div>
+                      ) : (
+                        <div className={styles.emptyBox}></div>
+                      )}
 
-                    {item?.childFolders?.length > 0 ?
-                      (<div className={styles.clickable}
-                        onClick={() => toggleDropdown(index, item, true)}
-                      >
-                        <img className={
-                          showDropdown[index]
-                            ? styles.iconClick : styles.rightIcon} src={Utilities.caretRightSolid} />
-
-                      </div>)
-                      :
-                      <div className={styles.emptyBox}></div>
-                    }
-
-                    {/*                  
+                      {/*                  
                   <li
                     key={index}
                     className={`${styles["list1-description"]} ${styles["border-bottom"]} ${item?.sidenavShowSelected ? styles["collection-list-active"] : ""}`}
                   > */}
-                    <li
-                      key={index}
-                      className={`${styles["list1-description"]} ${styles["border-bottom"]} ${item?.sidenavShowSelected ? styles.activeDropdown : parentFolders.length > 0 ? styles.activeDropdown : ""
+                      <li
+                        key={index}
+                        className={`${styles["list1-description"]} ${styles["border-bottom"]} ${
+                          item?.sidenavShowSelected
+                            ? styles.activeDropdown
+                            : parentFolders.length > 0
+                            ? styles.activeDropdown
+                            : ""
                         }`}
-                    >
-                      <div className={styles["list1-left-contents"]} onClick={() => {
-                        if (!item?.parentId) {
-                          viewFolder()
-                        } else {
-                          viewFolder(item.id, true)
-                        }
-                      }}>
-                        <div className={styles.icon}>
-                          <img src={Utilities.folder} alt="" />
+                      >
+                        <div
+                          className={styles["list1-left-contents"]}
+                          onClick={() => {
+                            if (!item?.parentId) {
+                              viewFolder();
+                            } else {
+                              viewFolder(item.id, true);
+                            }
+                          }}
+                        >
+                          <div className={styles.icon}>
+                            <img src={Utilities.folder} alt="" />
+                          </div>
+                          <div className={styles["icon-description"]}>
+                            <span title={item.name}>{item.name}</span>
+                          </div>
                         </div>
-                        <div className={styles["icon-description"]}>
-                          <span title={item.name}>{item.name}</span>
+                        <div className={styles["list1-right-contents"]}>
+                          <span>{item.assetsCount}</span>
                         </div>
-                      </div>
-                      <div className={styles["list1-right-contents"]}>
-                        <span>{item.assetsCount}</span>
-                      </div>
-                    </li>
-                  </div>
+                      </li>
+                    </div>
 
-                  {showDropdown[index] && (
-                    <div className={styles.folder}>
-                      <div className={styles.subfolderList}>
-                        {
-                          (
+                    {showDropdown[index] && (
+                      <div className={styles.folder}>
+                        <div className={styles.subfolderList}>
+                          {
                             <>
-                              {sidenavFolderList.map(
-                                (record: Item, recordIndex: number) => (
-                                  <div
-                                    key={recordIndex}
-                                  >
-                                    <div className={styles.dropdownOptions}>
-                                      <div
-
-                                        className={`${styles["folder-lists"]} ${record?.sidenavShowSelected ? styles.activeDropdown : ""}`}
-                                        onClick={() => {
-                                          viewFolder(record.id, true)
-                                          if (window.innerWidth < 767) {
-                                            setSidebarOpen(false)
-                                          }
+                              {sidenavFolderList.map((record: Item, recordIndex: number) => (
+                                <div key={recordIndex}>
+                                  <div className={styles.dropdownOptions}>
+                                    <div
+                                      className={`${styles["folder-lists"]} ${
+                                        record?.sidenavShowSelected ? styles.activeDropdown : ""
+                                      }`}
+                                      onClick={() => {
+                                        viewFolder(record.id, true);
+                                        if (window.innerWidth < 767) {
+                                          setSidebarOpen(false);
                                         }
-                                        }
-                                      >
-                                        <div className={styles.dropdownIcons}>
-                                          <img
-                                            className={styles.subfolder}
-                                            src={Utilities.folder}
-                                          />
-                                          <div className={styles["icon-descriptions"]}>
-                                            <span title={item.name}>{record.name}</span>
-                                          </div>
+                                      }}
+                                    >
+                                      <div className={styles.dropdownIcons}>
+                                        <img className={styles.subfolder} src={Utilities.folder} />
+                                        <div className={styles["icon-descriptions"]}>
+                                          <span title={item.name}>{record.name}</span>
                                         </div>
-                                        <div className={styles["list1-right-contents"]}>
-                                          <span>{record.assetsCount ?? 0}</span>
-                                        </div>
+                                      </div>
+                                      <div className={styles["list1-right-contents"]}>
+                                        <span>{record.assetsCount ?? 0}</span>
                                       </div>
                                     </div>
                                   </div>
-                                )
-                              )}
+                                </div>
+                              ))}
                             </>
-                          )}
+                          }
+                        </div>
                       </div>
-                    </div >
-                  )}
-                </>
-              ))}
-            </ul>)}
+                    )}
+                  </>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
-      </div >
-      <div>
       </div>
     </>
   );
