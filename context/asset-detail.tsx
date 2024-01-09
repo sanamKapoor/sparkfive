@@ -11,6 +11,7 @@ export default ({ children }) => {
     const [thumbnailUrl, setThumbnailURL] = useState<string>("");
     const [initialParams, setInitialParam] = useState<Record<string, any>>({});
 
+
     const assetDetail = {
         sharePath,
         isShare,

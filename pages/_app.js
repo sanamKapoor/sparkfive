@@ -34,6 +34,7 @@ import dragndropPolyfill from "../polyfills/dragndroptouch";
 // Contexts
 import { LanguageContext, ThemeContext } from "../context";
 import AssetContextProvider from "../context/asset-provider";
+import AssetContextDetailProvider from "../context/asset-detail";
 import LoadingContextProvider from "../context/loading-provider";
 import ScheduleProvider from "../context/schedule-provider";
 import ShareProvider from "../context/share-provider";
@@ -97,21 +98,23 @@ export default function MyApp({ Component, pageProps }) {
                 <ThemeContext.Provider value={themeValue}>
                   <AssetContextProvider>
                     <TeamContextProvider>
-                      <Head>
-                        <script
-                          type="text/javascript"
-                          src="https://www.dropbox.com/static/api/2/dropins.js"
-                          id="dropboxjs"
-                          data-app-key={process.env.DROPBOX_API_KEY}
-                        ></script>
-                      </Head>
-                      {process.env.INCLUDE_PIXEL === "yes" && <FBPixel />}
-                      {/**
+                      <AssetContextDetailProvider>
+                        <Head>
+                          <script
+                            type="text/javascript"
+                            src="https://www.dropbox.com/static/api/2/dropins.js"
+                            id="dropboxjs"
+                            data-app-key={process.env.DROPBOX_API_KEY}
+                          ></script>
+                        </Head>
+                        {process.env.INCLUDE_PIXEL === "yes" && <FBPixel />}
+                        {/**
                        * todo handle Errorboundary design in refactoring later
                        */}
-                      {/* <ErrorBoundary> */}
-                      <Component {...pageProps} />
-                      {/* </ErrorBoundary> */}
+                        {/* <ErrorBoundary> */}
+                        <Component {...pageProps} />
+                        {/* </ErrorBoundary> */}
+                      </AssetContextDetailProvider>
                     </TeamContextProvider>
                   </AssetContextProvider>
                 </ThemeContext.Provider>
@@ -120,6 +123,6 @@ export default function MyApp({ Component, pageProps }) {
           </ShareProvider>
         </SocketProvider>
       </UserContextProvider>
-    </LoadingContextProvider>
+    </LoadingContextProvider >
   );
 }
