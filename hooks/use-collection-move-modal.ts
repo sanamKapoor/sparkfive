@@ -24,10 +24,16 @@ export const useCollectionMoveModal = (parentId: string | null): MoveModalReturn
 
     // Filter folders based on the input search string
     const filteredData = () => {
-        setFolders(resultedSearchFolders.filter(item =>
+        const filteredFolders = resultedSearchFolders.filter((item) =>
             item.name.toLowerCase().includes(input.toLowerCase())
-        )
-        )
+        );
+
+        // Sort the filtered folders alphabetically
+        const sortedFolders = [...filteredFolders].sort((a, b) =>
+            a.name.localeCompare(b.name)
+        );
+
+        setFolders(sortedFolders);
     }
 
     // Fetch folders from the API

@@ -11,11 +11,11 @@ const NestedFirstlist = ({
 }: {
   headingClick?: (name, description) => void;
 }) => {
-  const { activeFolder, nextPage, addedIds, listUpdateFlag } = useContext(AssetContext);
+  const { nextPage, addedIds, listUpdateFlag } = useContext(AssetContext);
 
   const { activeSortFilter, searchFilterParams, term } =
     useContext(FilterContext);
-  const { hasPermission, advancedConfig } = useContext(UserContext) as any;
+  const { advancedConfig } = useContext(UserContext) as any;
 
   const [hideFilterElements] = useState(advancedConfig.hideFilterElements);
 
@@ -27,15 +27,20 @@ const NestedFirstlist = ({
 
   const getAssets = async (replace = true) => {
     try {
+      const filters: { type?: string, [key: string]: any } = getAssetsFilters({
+        replace,
+        // activeFolder,
+        addedIds,
+        nextPage,
+        userFilterObject: activeSortFilter,
+      });
+      if (filters && filters.type) {
+        delete filters.type;
+      }
+
       //TODO: confirm if activeFolder is not required here
       const { data } = await assetApi.getAssetsCountDropdown({
-        ...getAssetsFilters({
-          replace,
-          // activeFolder,
-          addedIds,
-          nextPage,
-          userFilterObject: activeSortFilter,
-        }),
+        ...filters,
         // term,
         ...searchFilterParams,
         ...getAssetsSort(activeSortFilter),
@@ -80,9 +85,11 @@ const NestedFirstlist = ({
   useEffect(() => {
     getAssets(true);
   }, []);
+
   useEffect(() => {
     listUpdateFlag ? getAssets(true) : null;
   }, [listUpdateFlag]);
+
   return (
     <div className={styles["sidenav-list1"]}>
       <ul>

@@ -3,10 +3,9 @@ import filesize from "filesize";
 import { ChangeEvent, useContext, useEffect, useState } from "react";
 import React from "react";
 import HoverVideoPlayer from "react-hover-video-player";
-
 import { Utilities } from "../../../assets";
 import { ASSET_NAME_UPDATED, FAILED_TO_UPDATE_ASSET_NAME } from "../../../constants/messages";
-import { AssetContext } from "../../../context";
+import { AssetContext, AssetDetailContext } from "../../../context";
 import assetApi from "../../../server-api/asset";
 import { getParsedExtension, removeExtension } from "../../../utils/asset";
 import toastUtils from "../../../utils/toast";
@@ -21,6 +20,7 @@ import styles from "./asset-thumbail.module.css";
 import DetailOverlay from "./detail-overlay";
 import RenameModal from "../../common/modals/rename-modal";
 import update from "immutability-helper";
+import { useRouter } from "next/router";
 
 // Components
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
@@ -66,7 +66,10 @@ const AssetThumbail = ({
   mode,
   style,
 }) => {
+
   const [overlayProperties, setOverlayProperties] = useState(DEFAULT_DETAIL_PROPS);
+  const router = useRouter();
+
   const {
     detailOverlayId,
     assets,
@@ -75,6 +78,14 @@ const AssetThumbail = ({
     setListUpdateFlag,
     setSubFoldersAssetsViewList,
   } = useContext(AssetContext);
+
+  // const { setSharePath,
+  //   setisShare,
+  //   setAsset,
+  //   setrealUrl,
+  //   setactiveFolder,
+  //   setThumbnailURL,
+  //   setInitialParam } = useContext(AssetDetailContext)
 
   const isAssetACopy = asset.name.endsWith(" - COPY");
 
@@ -116,53 +127,6 @@ const AssetThumbail = ({
       handleVersionChange(changedVersion);
     }
     setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: false });
-  };
-
-  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setThumbnailName(e.target.value);
-  };
-
-  const updateNameOnBlur = async (e) => {
-    setIsEditing(false);
-    setFocusedItem(null);
-
-    if (thumbnailName && assetName !== thumbnailName) {
-      try {
-        const fileName = thumbnailName + "." + asset.extension;
-        const data = await assetApi.updateAsset(asset.id, {
-          updateData: { name: isAssetACopy ? fileName + " - COPY" : fileName },
-          associations: {},
-        });
-
-        if (data && removeExtension(data?.data?.name) !== assetName) {
-          const updatedAssets = [
-            ...assets.map((item) => {
-              if (item.asset.id === data?.data?.id) {
-                return {
-                  ...item,
-                  asset: {
-                    ...item.asset,
-                    name: isAssetACopy ? fileName + " - COPY" : fileName,
-                  },
-                };
-              } else {
-                return item;
-              }
-            }),
-          ];
-          setAssets(updatedAssets);
-        }
-        toastUtils.success(ASSET_NAME_UPDATED);
-      } catch (e) {
-        toastUtils.error(FAILED_TO_UPDATE_ASSET_NAME);
-      }
-    } else {
-      setThumbnailName(assetName);
-    }
-  };
-
-  const handleOnFocus = () => {
-    setIsEditing(true);
   };
 
   // HAndle the New action Button Change name for assets
@@ -249,9 +213,19 @@ const AssetThumbail = ({
           ...DEFAULT_DETAIL_PROPS,
           visible: !overlayProperties.visible,
         });
+
+        // setSharePath(sharePath);
+        // setisShare(isShare);
+        // setAsset(asset);
+        // setrealUrl(asset.extension === "tiff" || asset.extension === "tif" ? thumbailUrl : realUrl);
+        // setactiveFolder(activeFolder);
+        // setThumbnailURL(thumbailUrl);
+        // setInitialParam(overlayProperties);
+
         // if (!overlayProperties.visible) {
-        //   Router.push(`/main/assets/${asset.id}`)
+        //   router.push(`/main/assets/${asset.id}`)
         // }
+
       }
     }
   };
