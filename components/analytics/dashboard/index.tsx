@@ -7,6 +7,7 @@ import UserTable from "../insight-table/insight-table";
 import ActivityFeedTable from "../activity-feed/activity-feed";
 import { analyticsLayoutSection } from "../../../constants/analytics";
 import ShareLinkPage from "../shared-links";
+import TableData from "../table-data/table-data";
 
 function Dashboard({
   activeSection
@@ -30,6 +31,7 @@ function Dashboard({
           <div>
             <ActivityFeedTable />
           </div>
+        
          </div>
       </div>
     </section>

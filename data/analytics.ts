@@ -241,3 +241,87 @@ export const activitybuttonColumns = ["Actions"];
 export const activitybuttonTexts = { Actions: "User info" };
 
 //modal
+// shared user modal
+export const shareModaldata = [
+  {
+    Activity: "Downloaded sparkfive_julia_martinez_23540872.png",
+    "User name": "rsorwheide@acme.com",
+    Date: "Today at 04:22 pm",
+  },
+  {
+    Activity: "Viewed sparkfive_david_anderson_67215691.png",
+    "User name": "dmoon@acme.com",
+    Date: "Today at 04:22 pm",
+  },
+  {
+      Activity: "Viewed sparkfive_sarah_johnson_81754025.png",
+      "User name": "tweber@acme.com",
+      Date: "Yesterday 03:55 pm"
+  },
+  {
+      Activity: "Downloaded sparkfive_emily_rodriguez_94820356.png",
+      "User name": "ajefferson@acme.com",
+      Date: "05/14/23"
+  },
+  {
+      Activity: "Downloaded sparkfive_leo_graham_94820356.png",
+      "User name": "jgraham@acme.com",
+      Date: "05/14/23"
+  },
+];
+export const shareModalColumns = ["Activity", "User name", "Date"];
+export const shareModalarrowColumns = ["Activity", "User name", "Date"];
+export const shareModalbuttonColumns = ["Actions"];
+ 
+export const shareModalbuttonTexts = { Actions: "View Asset" };
+
+// User modal
+export const userModalcolumns = ["Viewed Link", "Viewed File", "Download File", "Date", "Actions"];
+export const userModaldata = [
+  {
+    "Viewed Link": "Best Tips for Gardening",
+    "Viewed File": "sparkfive_noah_johnson_78652439.png",
+    "Download File": "—",
+    Date: "Today at 04:22 pm",
+    Actions: "Edit",
+  },
+  {
+    "Viewed Link": "Delicious Recipes to Try at Home",
+    "Viewed File": "sparkfive_noah_johnson_78652439.png",
+    "Download File": "sparkfive_ava_anderson_75849321_3.png",
+    Date: "Yesterday 03:55 pm",
+    Actions: "Edit",
+  },
+  {
+    "Viewed Link": "Ultimate Guide to Traveling Solo",
+    "Viewed File": "sparkfive_sophia_wilson_36548712.png",
+    "Download File": "sparkfive_william_martinez_35671248_3.png",
+    Date: "Yesterday 03:55 pm",
+    Actions: "Edit",
+  },
+  {
+    "Viewed Link": "Fitness Workout Routines for Beginners",
+    "Viewed File": "sparkfive_ethan_thompson_92468135.png",
+    "Download File": "sparkfive_olivia_smith_12458967_2.pngg",
+    Date: "05/14/23",
+    Actions: "Edit",
+  },
+  {
+    "Viewed Link": "Learn Spanish in 30 Days",
+    "Viewed File": "—",
+    "Download File": "—",
+    Date: "05/14/23",
+  },
+  {
+    "Viewed Link": "Chief Science Officer",
+    "Viewed File": "sparkfive_william_martinez_35671248.png",
+    "Download File": "sparkfive_ethan_thompson_92468135_2.png",
+    Date: "05/14/23",
+  },
+];
+
+
+export const userModalarrowColumns = ["Viewed Link", "Viewed File", "Download File", "Sessions", "Date"];
+export const userModalbuttonColumns = ["Actions"];
+
+export const userModalbuttonTexts = { Actions: "View Asset" };

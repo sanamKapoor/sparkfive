@@ -7,41 +7,13 @@ import Datefilter from "../../common/date-filter/date-filter";
 import Pagination from "../../Pagination/pagination";
 import IconClickable from "../../../common/buttons/icon-clickable";
 import { insights } from "../../../../assets";
+import { shareModaldata,shareModalarrowColumns,shareModalbuttonColumns,shareModalbuttonTexts,shareModalColumns } from "../../../../data/analytics";
 
 
 function SharedUserModal() {
 
-  const data = [
-    {
-      Activity: "Downloaded sparkfive_julia_martinez_23540872.png",
-      "User name": "rsorwheide@acme.com",
-      Date: "Today at 04:22 pm",
-    },
-    {
-      Activity: "Viewed sparkfive_david_anderson_67215691.png",
-      "User name": "dmoon@acme.com",
-      Date: "Today at 04:22 pm",
-    },
-    {
-        Activity: "Viewed sparkfive_sarah_johnson_81754025.png",
-        "User name": "tweber@acme.com",
-        Date: "Yesterday 03:55 pm"
-    },
-    {
-        Activity: "Downloaded sparkfive_emily_rodriguez_94820356.png",
-        "User name": "ajefferson@acme.com",
-        Date: "05/14/23"
-    },
-    {
-        Activity: "Downloaded sparkfive_leo_graham_94820356.png",
-        "User name": "jgraham@acme.com",
-        Date: "05/14/23"
-    },
-  ];
 
-  const arrowColumns = ["Activity", "User name", "Date"];
-  const buttonColumns = ["Actions"];
-  const buttonTexts = { Actions: "View Asset" };
+
   return (
     <section className={`${styles["user-modal-outer"]}`}>
     <div className={`${styles["user-modal"]}`}>
@@ -100,11 +72,11 @@ function SharedUserModal() {
           </div>
         </div>
       <TableData
-        columns={columns}
-        data={data}
-        arrowColumns={arrowColumns}
-        buttonColumns={buttonColumns}
-        buttonTexts={buttonTexts}
+        columns={shareModalColumns}
+        data={shareModaldata}
+        arrowColumns={shareModalarrowColumns}
+        buttonColumns={shareModalbuttonColumns}
+        buttonTexts={shareModalbuttonTexts}
         imageSource="ImageSource"
       />
       <Pagination />
