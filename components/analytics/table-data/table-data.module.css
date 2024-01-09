@@ -31,6 +31,8 @@
     text-align: left;
     padding: 12px 8px;
     cursor: default;
+    height:41px;
+    padding: 0 8px;
   }
   .table tr:nth-child(even) {
     background-color: #FAF8F5;
@@ -99,7 +101,7 @@
 
   }
 
- .table td span:hover {
+ /* .table td span:hover {
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
     padding: 10px 8px;
     width: 100%;
@@ -113,4 +115,4 @@
 .table thead tr th:first-child{
   box-shadow: 12px 0 16px -4px rgba(154, 161, 167, 0.2);
 
-}
+} */

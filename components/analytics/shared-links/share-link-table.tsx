@@ -41,8 +41,15 @@ function ShareLinkTable({ columns, data, arrowColumns, buttonColumns, buttonText
                    className={styles.actionIcon}
                    onClick={() => console.log(`Icon clicked in ${column}`)}
                  />
-               ) : (column ===  "Actions" && dashboardView) ? "View Link" : (
-                 row[column]
+               ) 
+              //  : (column ===  "Actions" && dashboardView) ? "View Link" : (
+              //    row[column]
+              : column === "Actions" && dashboardView ? (
+                <button className={styles.actionButton}>
+                  View Link
+                </button>
+              ) : (
+                row[column]
                )}
              </td>
            ))}

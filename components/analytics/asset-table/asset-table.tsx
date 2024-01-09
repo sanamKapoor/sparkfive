@@ -7,87 +7,20 @@ import Download from "../common/download-button/download";
 import Datefilter from "../common/date-filter/date-filter";
 import Pagination from "../Pagination/pagination";
 import TableData from "../table-data/table-data";
-import {columns} from "../../../data/analytics"
-import {assetarrowColumns,assetbuttonColumns,assetbuttonTexts} from "../../../data/analytics";
+import { columns } from "../../../data/analytics";
+import { assetarrowColumns, assetbuttonColumns, assetbuttonTexts, data } from "../../../data/analytics";
 
-function AssetTable({
-  dashboardView = false
-}: { dashboardView: boolean }) {
-
-  const data = [
-    {
-      "Asset name": "sparkfive_julia_martinez_23540872.png",
-      icon: insights.userImg1,
-      Views: "812",
-      Downloads: "77",
-      Shares: "30",
-      Actions: "Edit",
-    },
-    {
-      "Asset name": "sparkfive_david_anderson_67215691.png",
-      icon: insights.userImg2,
-      Views: "762",
-      Downloads: "77",
-      Shares: "30",
-      Actions: "Delete",
-    },
-    {
-      "Asset name": "sparkfive_sarah_johnson_81754025.png",
-      icon: insights.userImg3,
-      Views: "742",
-      Downloads: "77",
-      Shares: "30",
-      Actions: "Delete",
-    },
-    {
-      "Asset name": "sparkfive_long_name_michael_thompson_49276284.png",
-      icon: insights.userImg4,
-      Views: "639",
-      Downloads: "77",
-      Shares: "30",
-      Actions: "Delete",
-    },
-    {
-      "Asset name": "sparkfive_emily_rodriguez_94820356.png",
-      icon: insights.userImg2,
-      Views: "639",
-      Downloads: "77",
-      Shares: "30",
-      Actions: "Delete",
-    },
-    {
-      "Asset name": "sparkfive_alexander_davis_75361982.png",
-      icon: insights.userImg1,
-      Views: "639",
-      Downloads: "77",
-      Shares: "30",
-      Actions: "Delete",
-    },
-    {
-      "Asset name": "sparkfive_emily_rodriguez_94820356.png",
-      icon: insights.userImg3,
-      Views: "105",
-      Downloads: "77",
-      Shares: "30",
-      Actions: "Delete",
-    },
-    {
-      "Asset name": "sparkfive_alexander_davis_75361982.png",
-      icon: insights.userImg3,
-      Views: "92",
-      Downloads: "77",
-      Shares: "30",
-      Actions: "Delete",
-    },
-  ];
-
-
+function AssetTable({ dashboardView = false }: { dashboardView: boolean }) {
   return (
     <section className={`${styles["outer-wrapper"]}`}>
       <div className={styles.tableResponsive}>
         {/* for web */}
         <div className={`${styles["heading-wrap"]} ${styles["web-view"]}`}>
-          <TableHeading mainText="Top Assets" descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"} smallHeading={true} />
+          <TableHeading
+            mainText="Top Assets"
+            descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"}
+            smallHeading={true}
+          />
           <div className={`${styles["table-header-tabs"]}`}>
             {!dashboardView && <SearchButton label="Search User" />}
             <Datefilter />
@@ -98,10 +31,16 @@ function AssetTable({
         <div className={`${styles["laptop-view"]}`}>
           <div className={`${styles["heading-wrap"]}`}>
             <div>
-              <TableHeading mainText="User Engagement" descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"} smallHeading={true} />
-              {!dashboardView && <div style={{ marginTop: "22px" }}>
-                <SearchButton label="Search User" />
-              </div>}
+              <TableHeading
+                mainText="User Engagement"
+                descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"}
+                smallHeading={true}
+              />
+              {!dashboardView && (
+                <div style={{ marginTop: "22px" }}>
+                  <SearchButton label="Search User" />
+                </div>
+              )}
             </div>
             <div className={`${styles["table-header-tabs"]}`}>
               <Datefilter />
@@ -112,7 +51,11 @@ function AssetTable({
         {/* for mobile */}
         <div className={`${styles["heading-wrap"]} ${styles["mobile-view"]}`}>
           <div className={`${styles["mobile-wrap"]}`}>
-            <TableHeading mainText="User Engagement" descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"} smallHeading={true} />
+            <TableHeading
+              mainText="User Engagement"
+              descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"}
+              smallHeading={true}
+            />
             <div className={`${styles["table-header-tabs"]}`}>
               <Datefilter />
               <Download />
@@ -132,10 +75,7 @@ function AssetTable({
           buttonTexts={assetbuttonTexts}
           imageSource="ImageSource"
         />
-        {
-          !dashboardView && <Pagination />
-        }
-
+        {!dashboardView && <Pagination />}
       </div>
     </section>
   );
