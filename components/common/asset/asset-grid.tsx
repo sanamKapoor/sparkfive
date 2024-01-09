@@ -81,7 +81,6 @@ const AssetGrid = ({
   const { activeSortFilter } = useContext(FilterContext);
   //Drog select assets
 
-
   // const [selectedIndexes, setSelectedIndexes] = useState<string[]>([]);
   // const selectableItems = useRef([]);
   // const elementsContainerRef = useRef<HTMLDivElement | null>(null);
@@ -112,7 +111,6 @@ const AssetGrid = ({
 
   const [selectionArea, setSelectionArea] = useState(null);
   const [coordinates, setCoordinates] = useState({ x: 0, y: 0 })
-  const [visible, setVisible] = useState(false)
   const [render, setRender] = useState(false);
   const ref = useRef(null);
   
@@ -120,45 +118,6 @@ const AssetGrid = ({
     const { assetId } = urlUtils.getQueryParameters();
     if (assetId) getInitialAsset(assetId);
   }, []);
-
-  // const { DragSelection } = useSelectionContainer({
-  //   eventsElement: document.getElementById("root"),
-  //   onSelectionChange: (box) => {
-  //     /**
-  //      * Here we make sure to adjust the box's left and top with the scroll position of the window
-  //      * @see https://github.com/AirLabsTeam/react-drag-to-select/#scrolling
-  //      */
-  //     const scrollAwareBox: Box = {
-  //       ...box,
-  //       top: box.top + window.scrollY,
-  //       left: box.left + window.scrollX
-  //     };
-
-  //     // setSelectionBox(scrollAwareBox);
-  //     const indexesToSelect: string[] = [];
-  //     selectableItems.current.forEach((item, index) => {
-  //       if (boxesIntersect(scrollAwareBox, item)) {
-  //         indexesToSelect.push(item.id);
-  //       }
-  //     });
-
-  //     setSelectedIndexes(indexesToSelect);
-  //     console.log("🚀 ~ file: asset-grid.tsx:141 ~ indexesToSelect:", indexesToSelect)
-  //   },
-  //   onSelectionStart: () => {
-  //     console.log("OnSelectionStart");
-  //   },
-  //   onSelectionEnd: () => console.log("OnSelectionEnd", selectedIndexes),
-  //   selectionProps: {
-  //     style: {
-  //       border: "2px dashed purple",
-  //       borderRadius: 4,
-  //       backgroundColor: "brown",
-  //       opacity: 0.5
-  //     }
-  //   },
-  //   isEnabled: true
-  // });
 
   // For sorting the list view the hook in folder and asset view ----
 
@@ -202,7 +161,6 @@ const AssetGrid = ({
   const deleteAsset = async (id) => {
     try {
       let assetsApi: any = assetApi;
-
       await assetsApi.updateAsset(id, {
         updateData: {
           status: "deleted",
@@ -446,8 +404,6 @@ const AssetGrid = ({
   //   console.log("🚀 ~ file: asset-grid.tsx:402 ~ handleMouseUp ~ handleMouseUp:", handleMouseUp)
   // };
 
-
-
   // const itemsRef: any = useRef([]);
   // const [selectedItems, setSelectedItems] = useState([]);
 
@@ -463,13 +419,11 @@ const AssetGrid = ({
   // useEffect(() => {
   // ds.subscribe("callback", (e) => {
 
-
   // const haveShorterLength =
   //   ((e.event.clientX - coordinates.x) ** 2 +
   //     (e.event.clientY - coordinates.y) ** 2) **
   //   0.5
   // console.log("🚀 ~ file: asset-grid.tsx:465 ~ ds.subscribe ~ haveShorterLength:", haveShorterLength)
-
 
   // Check if the event contains selected items, it's not a MouseEvent, and the selection area meets your criteria
   // if (e.items.length > 0 && haveShorterLength > 100) {
@@ -508,33 +462,38 @@ const AssetGrid = ({
   //   console.log(JSON.stringify(selectDataArray), 22222222222222);
   // }, [selectedItems])
 
-  const filterRef = useRef<HTMLDivElement>(null)
+  const filterRef = useRef<HTMLDivElement>(null);
 
   const getStyling = useMemo((): CSSProperties => {
     if (!isShare) {
       if (mode === "folders") {
-        return { marginTop: 60 }
+        return { marginTop: 60 };
       }
       if (mode === "SubCollectionView") {
         if (!sidebarOpen) {
           return { marginTop: 44 + 14 };
         }
-        return { marginTop: 44 }
+        return { marginTop: 44 };
       }
       if (!sidebarOpen) {
         return { marginTop: (filterRef?.current?.clientHeight ?? 0) + 14 };
       }
       return { marginTop: filterRef?.current?.clientHeight };
     } else {
-      return {}
+      return {};
     }
-
-  }, [render, mode])
-
+  }, [render, mode]);
 
   return (
     <>
-      <div ref={filterRef} id="filter-container-height" className={`${isShare ? styles["share-page-filter"] : ""} ${styles["filter-view-container"]} ${!sidebarOpen && isShare ? styles["share-page-open"] : ""}`}>{mode === "assets" && <FilterView render={render} setRender={setRender} />}</div>
+      <div
+        ref={filterRef}
+        id="filter-container-height"
+        className={`${isShare ? styles["share-page-filter"] : ""} ${styles["filter-view-container"]} ${!sidebarOpen && isShare ? styles["share-page-open"] : ""
+          }`}
+      >
+        {mode === "assets" && <FilterView render={render} setRender={setRender} />}
+      </div>
       <section
         className={`${styles.container}  ${shouldShowUpload ? styles.uploadAsset : ""} ${!sidebarOpen ? styles["container-on-toggle"] : ""
           }`}
@@ -570,7 +529,7 @@ const AssetGrid = ({
           />
         )}
         {
-          <div className={`${styles["collectionAssets"]} ${styles["w-100"]} `} >
+          <div className={`${styles["collectionAssets"]} ${styles["w-100"]} `}>
             {/* testing component starts from here */}
             {
               <ul
@@ -617,7 +576,7 @@ const AssetGrid = ({
                     onCloseDetailOverlay={onCloseDetailOverlay}
                   />
                 )}
-                {mode === "assets" && assets?.length > 0 && !visible && (
+                {mode === "assets" && assets?.length > 0 && (
                   <>
                     {activeView === "list" && (
                       <AssetTableHeader activeView={activeView} setSortAttribute={setSortAssetAttribute} />
@@ -630,7 +589,6 @@ const AssetGrid = ({
                             className={`${styles["grid-item"]} ${activeView === "grid" ? styles["grid-item-new"] : ""}
                             ${activeView === "grid" && styles["list-wrapper-asset"]}
                             dragSelection`}
-
                             key={index}
                             // id={assetItem.asset?.id}
                             // ref={(el) => (itemsRef.current[index] = assetItem)}
@@ -660,7 +618,6 @@ const AssetGrid = ({
                                 setFocusedItem={setFocusedItem}
                                 activeView={activeView}
                                 mode={mode}
-                                setVisible={setVisible}
                               />
                             </div>
                           </li>
@@ -676,7 +633,6 @@ const AssetGrid = ({
                     )}
 
                     {sortedFolders.map((folder, index) => {
-
                       return (
                         <li
                           // id={assetItem.asset.id}
@@ -794,7 +750,7 @@ const AssetGrid = ({
             availableNext={nextPage !== -1}
           />
         )}
-      </section >
+      </section>
     </>
   );
 };

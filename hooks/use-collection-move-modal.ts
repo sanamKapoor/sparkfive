@@ -24,10 +24,16 @@ export const useCollectionMoveModal = (parentId: string | null): MoveModalReturn
 
     // Filter folders based on the input search string
     const filteredData = () => {
-        setFolders(resultedSearchFolders.filter(item =>
+        const filteredFolders = resultedSearchFolders.filter((item) =>
             item.name.toLowerCase().includes(input.toLowerCase())
-        )
-        )
+        );
+
+        // Sort the filtered folders alphabetically
+        const sortedFolders = [...filteredFolders].sort((a, b) =>
+            a.name.localeCompare(b.name)
+        );
+
+        setFolders(sortedFolders);
     }
 
     // Fetch folders from the API
@@ -37,8 +43,11 @@ export const useCollectionMoveModal = (parentId: string | null): MoveModalReturn
             const filteredParent = data.filter((folder: Item) => {
                 return (!folder?.parentId && folder.id !== parentId)
             })
-            setResultedSearchFolders(filteredParent)
-            setFolders(filteredParent);
+            const sortedFolders = [...filteredParent].sort((a, b) =>
+                a.name.localeCompare(b.name)
+            );
+            setResultedSearchFolders(sortedFolders)
+            setFolders(sortedFolders);
         } catch (err) {
             console.log(err);
         }

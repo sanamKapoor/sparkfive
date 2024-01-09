@@ -2,11 +2,14 @@ import { format } from "date-fns";
 import filesize from "filesize";
 import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import HoverVideoPlayer from "react-hover-video-player";
-
 import { Utilities } from "../../../assets";
 import { ASSET_NAME_UPDATED, FAILED_TO_UPDATE_ASSET_NAME } from "../../../constants/messages";
+<<<<<<< HEAD
 import { AssetContext, UserContext } from "../../../context";
 import useAnalytics from "../../../hooks/useAnalytics";
+=======
+import { AssetContext, AssetDetailContext } from "../../../context";
+>>>>>>> d0c9489ab6e6066e41a8be5cb02df87671a5d8c7
 import assetApi from "../../../server-api/asset";
 import AnalyticsService from "../../../utils/analytics-service";
 import { removeExtension } from "../../../utils/asset";
@@ -21,9 +24,15 @@ import AssetImg from "./asset-img";
 import AssetOptions from "./asset-options";
 import styles from "./asset-thumbail.module.css";
 import DetailOverlay from "./detail-overlay";
+<<<<<<< HEAD
 import { analytics } from "../../../pages/_app";
 import { events, shareLinkEvents } from "../../../constants/analytics";
 import cookiesApi from "../../../utils/cookies";
+=======
+import RenameModal from "../../common/modals/rename-modal";
+import update from "immutability-helper";
+import { useRouter } from "next/router";
+>>>>>>> d0c9489ab6e6066e41a8be5cb02df87671a5d8c7
 
 // Components
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
@@ -68,9 +77,11 @@ const AssetThumbail = ({
   activeView,
   mode,
   style,
-  setVisible
 }) => {
+
   const [overlayProperties, setOverlayProperties] = useState(DEFAULT_DETAIL_PROPS);
+  const router = useRouter();
+
   const {
     detailOverlayId,
     assets,
@@ -80,6 +91,15 @@ const AssetThumbail = ({
     setSubFoldersAssetsViewList,
   } = useContext(AssetContext);
   const { user } = useContext(UserContext);
+
+  const {
+    setSharePath,
+    setisShare,
+    setAsset,
+    setrealUrl,
+    setactiveFolder,
+    setThumbnailURL,
+    setInitialParam } = useContext(AssetDetailContext)
 
   const isAssetACopy = asset.name.endsWith(" - COPY");
 
@@ -123,53 +143,6 @@ const AssetThumbail = ({
       handleVersionChange(changedVersion);
     }
     setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: false });
-  };
-
-  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setThumbnailName(e.target.value);
-  };
-
-  const updateNameOnBlur = async (e) => {
-    setIsEditing(false);
-    setFocusedItem(null);
-
-    if (thumbnailName && assetName !== thumbnailName) {
-      try {
-        const fileName = thumbnailName + "." + asset.extension;
-        const data = await assetApi.updateAsset(asset.id, {
-          updateData: { name: isAssetACopy ? fileName + " - COPY" : fileName },
-          associations: {},
-        });
-
-        if (data && removeExtension(data?.data?.name) !== assetName) {
-          const updatedAssets = [
-            ...assets.map((item) => {
-              if (item.asset.id === data?.data?.id) {
-                return {
-                  ...item,
-                  asset: {
-                    ...item.asset,
-                    name: isAssetACopy ? fileName + " - COPY" : fileName,
-                  },
-                };
-              } else {
-                return item;
-              }
-            }),
-          ];
-          setAssets(updatedAssets);
-        }
-        toastUtils.success(ASSET_NAME_UPDATED);
-      } catch (e) {
-        toastUtils.error(FAILED_TO_UPDATE_ASSET_NAME);
-      }
-    } else {
-      setThumbnailName(assetName);
-    }
-  };
-
-  const handleOnFocus = () => {
-    setIsEditing(true);
   };
 
   // HAndle the New action Button Change name for assets
@@ -247,6 +220,36 @@ const AssetThumbail = ({
     }
   };
 
+  const handleViewDetails = (type: string) => {
+    if (type === "button" || (type === "wrapper" && activeView === "list")) {
+      if (onView) {
+        onView(asset.id);
+      } else {
+        setOverlayProperties({
+          ...DEFAULT_DETAIL_PROPS,
+          visible: !overlayProperties.visible,
+        });
+        // console.log(thumbailUrl, "thumbailUrl")
+
+        // setSharePath(sharePath);
+        // setisShare(isShare);
+        // setAsset(asset);
+        // setrealUrl(asset.extension === "tiff" || asset.extension === "tif" ? thumbailUrl : realUrl);
+        // setactiveFolder(activeFolder);
+        // setThumbnailURL(thumbailUrl);
+        // setInitialParam(overlayProperties);
+
+        // if (!overlayProperties.visible) {
+        //   router.push(`/main/assets/${asset.id}`)
+        // }
+
+      }
+    }
+  };
+
+
+
+
   return (
     <>
       <div>
@@ -264,19 +267,9 @@ const AssetThumbail = ({
                 />
               </div>
             ) : null}
-
             <div
               className={`${styles["image-wrapper"]} ${activeView === "list" && styles["list-image-wrapper"]}`}
-              onClick={() => {
-                if (onView && activeView === "list") {
-                  onView(asset.id);
-                } else if (activeView === "list") {
-                  setOverlayProperties({
-                    ...DEFAULT_DETAIL_PROPS,
-                    visible: !overlayProperties.visible,
-                  });
-                }
-              }}
+              onClick={() => handleViewDetails("wrapper")}
             >
               {isUploading && (
                 <>
@@ -343,6 +336,7 @@ const AssetThumbail = ({
                       className={"container primary"}
                       text={"View Details"}
                       type={"button"}
+<<<<<<< HEAD
                       onClick={() => {
                         if(isShare){
                           trackLinkEvent(shareLinkEvents.VIEW_SHARED_ASSET, {
@@ -368,6 +362,9 @@ const AssetThumbail = ({
                           });
                         }
                       }}
+=======
+                      onClick={() => handleViewDetails("button")}
+>>>>>>> d0c9489ab6e6066e41a8be5cb02df87671a5d8c7
                     />
                   </div>
                 </>

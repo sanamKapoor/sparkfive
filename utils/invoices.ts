@@ -2,11 +2,7 @@ import { IUpcomingInvoice, Invoice } from "../interfaces/account/invoice";
 
 const getInvoiceDate = (invoice: Invoice) => {
   if (invoice.status === "paid") {
-    return (
-      (!isNaN(invoice.statusTransitions.paid_at) &&
-        new Date(invoice.statusTransitions.paid_at * 1000)) ||
-      ""
-    );
+    return (!isNaN(invoice.statusTransitions.paid_at) && new Date(invoice.statusTransitions.paid_at * 1000)) || "";
   } else {
     return new Date(invoice.statusTransitions.finalized_at * 1000);
   }
@@ -22,11 +18,11 @@ export const getParsedInvoices = (invoices: Invoice[]) =>
   invoices
     .filter(
       ({ product, status, statusTransitions }) =>
-        product !== process.env.STRIPE_EXPIRE_PRODUCT_NAME &&
-        (status !== "draft" || statusTransitions.finalized_at)
+        product !== process.env.STRIPE_EXPIRE_PRODUCT_NAME && (status !== "draft" || statusTransitions.finalized_at),
     )
     .map((invoice) => ({
       ...invoice,
+      amount: invoice.amount / 100, // Divided by 100 because data getting from Stripe is cent, not in dollar
       date: getInvoiceDate(invoice),
       status: getInvoiceStatus(invoice),
     }));
@@ -34,4 +30,8 @@ export const getParsedInvoices = (invoices: Invoice[]) =>
 export const getParsedUpcomingInvoices = (invoices: IUpcomingInvoice[]) =>
   invoices
     .filter(({ product }) => product !== process.env.STRIPE_EXPIRE_PRODUCT_NAME)
-    .map((upcoming) => ({ ...upcoming, date: new Date(upcoming.date * 1000) }));
+    .map((upcoming) => ({
+      ...upcoming,
+      amount: upcoming.amount / 100, // Divided by 100 because data getting from Stripe is cent, not in dollar
+      date: new Date(upcoming.date * 1000),
+    }));
