@@ -303,8 +303,19 @@ export const GuestUploadContext = createContext({
   setBanner: (banner) => { },
 });
 
-
 export const AssetDetailContext = createContext({
-
-
+  sharePath: "",
+  isShare: "",
+  asset: {},
+  realUrl: "",
+  activeFolder: "",
+  thumbnailUrl: "",
+  initialParams: {},
+  setSharePath: (url) => { },
+  setisShare: (url) => { },
+  setAsset: (record) => { },
+  setrealUrl: (url) => { },
+  setactiveFolder: (url) => { },
+  setThumbnailURL: (url) => { },
+  setInitialParam: (record) => { },
 });

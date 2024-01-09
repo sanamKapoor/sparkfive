@@ -26,7 +26,7 @@ import Dropdown from '../../../components/common/inputs/dropdown';
 import RenameModal from '../../../components/common/modals/rename-modal';
 import { sizeToZipDownload } from '../../../constants/download';
 import { ASSET_DOWNLOAD } from '../../../constants/permissions';
-import { AssetContext, FilterContext, UserContext } from '../../../context';
+import { AssetContext, FilterContext, UserContext, AssetDetailContext } from '../../../context';
 import assetApi from '../../../server-api/asset';
 import shareApi from '../../../server-api/share-collection';
 import customFileSizeApi from '../../../server-api/size';
@@ -102,24 +102,42 @@ const getResizeSize = (assetWidth, assetHeight): any => {
 };
 
 const DetailOverlay = ({
-    asset,
-    realUrl,
-    thumbailUrl,
     closeOverlay,
     openShareAsset = () => { },
     openDeleteAsset = () => { },
     loadMore = () => { },
-    isShare = false,
-    sharePath = "",
-    activeFolder = "",
-    initialParams,
+    // isShare = false,
+    // sharePath = "",
+    // activeFolder = "",
+    // initialParams,
     availableNext = true,
-    outsideDetailOverlay = false,
     sharedCode = "",
 }) => {
+
+    const {
+        asset,
+        realUrl,
+        isShare,
+        sharePath,
+        activeFolder,
+        initialParams,
+        thumbnailUrl: thumbailUrl
+    } = useContext(AssetDetailContext)
+
+    console.log(asset,
+        realUrl,
+        isShare,
+        sharePath,
+        activeFolder,
+        initialParams,
+        thumbailUrl)
+
     const { hasPermission } = useContext(UserContext);
+
     const { user, cdnAccess, transcriptAccess } = useContext(UserContext);
+
     const { activeSortFilter } = useContext(FilterContext);
+
     const [assetDetail, setAssetDetail] = useState(undefined);
 
     const [renameModalOpen, setRenameModalOpen] = useState(false);
@@ -130,6 +148,7 @@ const DetailOverlay = ({
         name: "",
         assets: [],
     });
+
     const [assetIndex, setAssetIndex] = useState(0);
 
     const [activeSideComponent, setActiveSidecomponent] = useState("detail");
