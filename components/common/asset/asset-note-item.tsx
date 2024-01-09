@@ -67,7 +67,7 @@ const AssetNoteItem = ({ title, note, saveChanges, deleteNote }) => {
         </>
       ) : (
         <div className={styles.wrapper}>
-          <p>{note.text}</p>
+          <p className={styles["note-text"]}>{note.text}</p>
           <div className={styles.actions}>
             <IconClickable SVGElement={Utilities.edit} onClick={() => setEditMode(true)} />
             <IconClickable SVGElement={Utilities.delete} onClick={() => setModalOpen(true)} />
