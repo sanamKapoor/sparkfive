@@ -2,21 +2,24 @@ import React from "react";
 import { insights } from "../../../assets";
 import IconClickable from "../../common/buttons/icon-clickable";
 import Pagination from "../Pagination/pagination";
-import Datefilter from "../date-filter/date-filter";
-import Download from "../download-button/download";
-import SearchButton from "../insight-table/analytics-search-button/analytics-search";
+import Datefilter from "../common/date-filter/date-filter";
+import Download from "../common/download-button/download";
+import SearchButton from "../common/analytics-search-button/analytics-search";
 import TableHeading from "../insight-table/table-heading";
 import styles from "./index.module.css";
 import ShareLinkTable from "./share-link-table";
+import {
+  sharedcolumns,
+  shareddashboardColumns,
+  sharedarrowColumns,
+  sharedbuttonColumns,
+  sharedbuttonTexts,
+} from "../../../data/analytics";
 
-function ShareLinkPage({
-  dashboardView = false
-}: { dashboardView: boolean }) {
-  const columns = ["Link", "Shared by", "Views", "Downloads", "Date created", "Types", "Actions"];
-  const dashboardColumns = ["Link","Views", "Downloads", "Types", "Actions"];
+function ShareLinkPage({ dashboardView = false }: { dashboardView: boolean }) {
   const data = [
     {
-      "Link": "Best Tips for Gardening",
+      Link: "Best Tips for Gardening",
       "Shared by": "Seraphina Alexandra Montgomery-Smith",
       icon: insights.userImg1,
       Views: "4,1388",
@@ -30,7 +33,7 @@ function ShareLinkPage({
       ],
     },
     {
-      "Link": "Delicious Recipes to Try at Home",
+      Link: "Delicious Recipes to Try at Home",
       "Shared by": "Harvey Elliott",
       icon: insights.userImg2,
       Views: "4,077",
@@ -44,7 +47,7 @@ function ShareLinkPage({
       ],
     },
     {
-      "Link": "Ultimate Guide to Traveling Solo",
+      Link: "Ultimate Guide to Traveling Solo",
       "Shared by": "Charles Wells",
       icon: insights.userImg3,
       Views: "4,077",
@@ -58,7 +61,7 @@ function ShareLinkPage({
       ],
     },
     {
-      "Link": "Fitness Workout Routines for Beginners",
+      Link: "Fitness Workout Routines for Beginners",
       "Shared by": "John Ali",
       icon: insights.userImg4,
       Views: "4,077",
@@ -72,7 +75,7 @@ function ShareLinkPage({
       ],
     },
     {
-      "Link": "Learn Spanish in 30 Days",
+      Link: "Learn Spanish in 30 Days",
       "Shared by": "Clyde Booth",
       icon: insights.userImg1,
       Views: "4,077",
@@ -86,7 +89,7 @@ function ShareLinkPage({
       ],
     },
     {
-      "Link": "Top Destinations for Adventure Enthusiasts",
+      Link: "Top Destinations for Adventure Enthusiasts",
       "Shared by": "Beverly Marshall",
       icon: insights.userImg2,
       Views: "4,077",
@@ -100,7 +103,7 @@ function ShareLinkPage({
       ],
     },
     {
-      "Link": "Learn Spanish in 30 Days",
+      Link: "Learn Spanish in 30 Days",
       "Shared by": "Irene James",
       icon: insights.userImg4,
       Views: "4,077",
@@ -114,7 +117,7 @@ function ShareLinkPage({
       ],
     },
     {
-      "Link": "Top Destinations for Adventure Enthusiasts",
+      Link: "Top Destinations for Adventure Enthusiasts",
       "Shared by": "Betty Anderson",
       icon: insights.userImg3,
       Views: "4,077",
@@ -129,15 +132,16 @@ function ShareLinkPage({
     },
   ];
 
-  const arrowColumns = ["Link", "Shared by", "Views", "Downloads", "Date created", "Types"];
-  const buttonColumns = ["Action"];
-  const buttonTexts = { Actions: "User Info" };
   return (
     <>
       <div className={styles.outerContainer}>
         <div className={styles.tableResponsive}>
           <div className={`${styles["heading-wrap"]} ${styles["web-view"]}`}>
-            <TableHeading mainText={dashboardView ? "External Links" : "Top Shared Links"} descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"} smallHeading={true} />
+            <TableHeading
+              mainText={dashboardView ? "External Links" : "Top Shared Links"}
+              descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"}
+              smallHeading={true}
+            />
             <div className={`${styles["table-header-tabs"]}`}>
               {!dashboardView && <SearchButton label="Search User" />}
               <Datefilter />
@@ -148,10 +152,12 @@ function ShareLinkPage({
           <div className={`${styles["laptop-view"]}`}>
             <div className={`${styles["heading-wrap"]}`}>
               <div>
-                <TableHeading mainText={dashboardView ? "External Links" : "Top Shared Links"} descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"} smallHeading={true} />
-                <div style={{ marginTop: "22px" }}>
-                  {!dashboardView && <SearchButton label="Search User" />}
-                </div>
+                <TableHeading
+                  mainText={dashboardView ? "External Links" : "Top Shared Links"}
+                  descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"}
+                  smallHeading={true}
+                />
+                <div style={{ marginTop: "22px" }}>{!dashboardView && <SearchButton label="Search User" />}</div>
               </div>
               <div className={`${styles["table-header-tabs"]}`}>
                 <Datefilter />
@@ -162,7 +168,11 @@ function ShareLinkPage({
           {/* for mobile */}
           <div className={`${styles["heading-wrap"]} ${styles["mobile-view"]}`}>
             <div className={`${styles["mobile-wrap"]}`}>
-              <TableHeading mainText={dashboardView ? "External Links" : "Top Shared Links"} descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"} smallHeading={true} />
+              <TableHeading
+                mainText={dashboardView ? "External Links" : "Top Shared Links"}
+                descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"}
+                smallHeading={true}
+              />
               <div className={`${styles["table-header-tabs"]}`}>
                 <Datefilter />
                 {!dashboardView && <Download />}
@@ -173,20 +183,22 @@ function ShareLinkPage({
               <SearchButton label="Search User" />
             </div>
           </div>
-          <div style={{ marginTop: "20px" }}>
+          <div style={{ marginTop: "16px" }}>
             <ShareLinkTable
-              columns={dashboardView ? dashboardColumns : columns}
+              columns={dashboardView ? shareddashboardColumns : sharedcolumns}
               data={data}
-              arrowColumns={arrowColumns}
-              buttonColumns={buttonColumns}
-              buttonTexts={buttonTexts}
+              arrowColumns={sharedarrowColumns}
+              buttonColumns={sharedbuttonColumns}
+              buttonTexts={sharedbuttonTexts}
               imageSource="ImageSource"
               dashboardView={dashboardView}
             />
           </div>
-          {!dashboardView && <div>
-            <Pagination/>
-          </div>}
+          {!dashboardView && (
+            <div>
+              <Pagination />
+            </div>
+          )}
         </div>
       </div>
     </>

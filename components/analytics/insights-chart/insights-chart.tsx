@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styles from "./insights-chart.module.css"
-import DateFilter from '../date-filter/date-filter'
+import DateFilter from '../common/date-filter/date-filter'
 import TableHeading from '../insight-table/table-heading'
 
 
