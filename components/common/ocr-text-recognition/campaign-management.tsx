@@ -71,7 +71,7 @@ const CampaignManagement = () => {
 
     const getTagList = async () => {
         try {
-            const { data } = await campaignApi.getCampaigns({includeAi: false})
+            const { data } = await campaignApi.getCampaigns({ includeAi: false })
 
             setTagList(data)
         } catch (err) {
@@ -79,10 +79,10 @@ const CampaignManagement = () => {
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getTagList()
         getOcrCampaigns();
-    },[])
+    }, [])
 
     return (
         <div className={styles['main-wrapper']}>
@@ -97,7 +97,6 @@ const CampaignManagement = () => {
                     selectedItems={[]}
                     setSelectedItems={() => { }}
                     onAddOperationFinished={(stateUpdate) => {
-                        console.log(stateUpdate)
                         // updateAssetState({
                         //     tags: { $set: stateUpdate.concat(aiTags) }
                         // })
@@ -106,7 +105,7 @@ const CampaignManagement = () => {
                     onRemoveOperationFinished={() => { }}
                     onOperationFailedSkipped={() => setActiveDropdown('')}
                     isShare={false}
-                    asyncCreateFn={(newItem)=>{
+                    asyncCreateFn={(newItem) => {
                         addOcrCampaign(newItem)
                     }}
                     dropdownIsActive={activeDropdown === 'tags'}
@@ -124,7 +123,7 @@ const CampaignManagement = () => {
                         data={tag}
                         type="tag"
                         canRemove={true}
-                        editFunction={() => {}}
+                        editFunction={() => { }}
                         removeFunction={() => {
                             setCurrentDeleteId(tag.id)
                             setConfirmDeleteModal(true)

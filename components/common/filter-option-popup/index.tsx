@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useLayoutEffect } from "react";
 
 import { Utilities } from "../../../assets";
 
@@ -23,7 +23,7 @@ import RulesOptions from "./rules-options";
 
 interface FilterOptionPopupProps {
   values: Array<unknown> | Record<string, unknown>;
-  options: unknown;
+  options: Array<unknown>;
   setOptions: (data: unknown) => void;
   activeAttribute: IAttribute;
   setActiveAttribute: (val: IAttribute | null) => void;
@@ -157,11 +157,9 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
           FilterAttributeVariants.DIMENSIONS,
         ].includes(activeAttribute?.id)
       ) {
-        filterModalPosition();
         return true;
       } else {
         if (values) {
-          filterModalPosition();
           return values instanceof Array
             ? values.length > 0
             : Object.keys(values).length > 0;
@@ -170,32 +168,50 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
     }
     return false;
   };
+
   const showModalActionBtns =
     activeAttribute.id === FilterAttributeVariants.DIMENSIONS;
 
   const filterModalPosition = () => {
-    var mianFilterModal = document.getElementById('mianFilterModal');
+    var mainFilterModal = document.getElementById('mianFilterModal');
     var modal = document.getElementById('modal');
-    if (mianFilterModal && modal) {
+    if (mainFilterModal && modal) {
       var viewportWidth = window.innerWidth;// View port length total
       var modalWidth = modal.offsetWidth; // length of modal opened on click
-      var leftelemnt = mianFilterModal.offsetLeft // left width from filter to the clicked element
-      const additionlalength = sidebarOpen ? 378 : 0 // addition length of sidebar and space between modal
+      var leftElement = mainFilterModal.offsetLeft // left width from filter to the clicked element
+      const additionalLength = sidebarOpen ? 378 : 0 // addition length of sidebar and space between modal
       // Adjust the left or right position based on the available space
-      if (viewportWidth < (leftelemnt + modalWidth + additionlalength)) {
+      if (viewportWidth < (leftElement + modalWidth + additionalLength)) {
         // There is enough space on the right
         modal.style.right = '0px';
         modal.style.left = 'unset';
-      } else {
-        // Not enough space on the right, position on the left
-        modal.style.left = "0px";
-        modal.style.right = 'unset';
       }
     }
   }
+  useEffect(() => {
+    if (options?.length > 0) {
+      filterModalPosition()
+    }
+  }, [options])
 
+  useLayoutEffect(() => {
+    var mainFilterModal = document.getElementById('mianFilterModal');
+    var modal = document.getElementById('modal');
+    if (mainFilterModal && modal) {
+      var viewportWidth = window.innerWidth;
+      var leftElement = mainFilterModal.offsetLeft // left width from filter to the clicked element
+      const additionalLength = sidebarOpen ? 378 : 0 // addition length of sidebar and space between modal
+
+      let thresholdValue = 567
+      if (window.innerWidth > 820) {
+        thresholdValue = 865
+      }
+      const enoughSpace = viewportWidth < (leftElement + thresholdValue + additionalLength);
+      modal.style.right = enoughSpace ? '0px' : 'unset';
+      modal.style.left = enoughSpace ? 'unset' : '0px';
+    }
+  }, []);
   return (
-
     <div
       id="mianFilterModal"
       className={`${styles["main-container"]}`
@@ -208,11 +224,34 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
             <Loader className={styles["customLoader-center"]} />
           </div>
         ) :
-          checkIfValuesExist() ? (
-            <>
-              <div className={`${styles["popup-mobile-view"]}`}>
-                <div className={`${styles["popup-mobile-header"]}`}>
-                  <img src={Utilities.leftArrow} alt="left-arrow" />
+          checkIfValuesExist() && options.length > 0 ? <>
+            {
+              <>
+                <div className={`${styles["popup-mobile-view"]}`}>
+                  <div className={`${styles["popup-mobile-header"]}`}>
+                    <img src={Utilities.leftArrow} alt="left-arrow" />
+                    <span className={`${styles["main-heading"]}`}>
+                      Select {activeAttribute?.name}
+                    </span>
+                    <div className={styles.buttons}>
+                      <button
+                        className={styles.clear}
+                        disabled={loading}
+                        onClick={onClear}
+                      >
+                        clear
+                      </button>
+                      <img
+                        className={styles.closeIcon}
+                        src={Utilities.closeIcon}
+                        onClick={onClose}
+                        onKeyDown={onClose}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className={`${styles["popup-header"]}`}>
                   <span className={`${styles["main-heading"]}`}>
                     Select {activeAttribute?.name}
                   </span>
@@ -228,79 +267,59 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
                       className={styles.closeIcon}
                       src={Utilities.closeIcon}
                       onClick={onClose}
-                      onKeyDown={onClose}
                     />
                   </div>
                 </div>
-              </div>
+                {!hideSearch && (
+                  <div className={`${styles["search-btn"]}`}>
+                    <Search
+                      className={styles.customStyles}
+                      buttonClassName={styles.icon}
+                      placeholder={`Search ${activeAttribute.name}`}
+                      onSubmit={onSearch}
+                    />
+                  </div>
+                )}
 
-              <div className={`${styles["popup-header"]}`}>
-                <span className={`${styles["main-heading"]}`}>
-                  Select {activeAttribute?.name}
-                </span>
-                <div className={styles.buttons}>
-                  <button
-                    className={styles.clear}
-                    disabled={loading}
-                    onClick={onClear}
-                  >
-                    clear
-                  </button>
-                  <img
-                    className={styles.closeIcon}
-                    src={Utilities.closeIcon}
-                    onClick={onClose}
+                {options ? (
+                  <FilterContent
+                    options={options}
+                    setOptions={setOptions}
+                    setFilters={setFilters}
+                    activeAttribute={activeAttribute}
                   />
-                </div>
-              </div>
-              {!hideSearch && (
-                <div className={`${styles["search-btn"]}`}>
-                  <Search
-                    className={styles.customStyles}
-                    buttonClassName={styles.icon}
-                    placeholder={`Search ${activeAttribute.name}`}
-                    onSubmit={onSearch}
-                  />
-                </div>
-              )}
+                ) : <NoResultsPopup onClose={onClose} />}
 
-              {options ? (
-                <FilterContent
-                  options={options}
-                  setOptions={setOptions}
-                  setFilters={setFilters}
-                  activeAttribute={activeAttribute}
-                />
-              ) : <NoResultsPopup onClose={onClose} />}
-
-              {showRules && (
-                <RulesOptions
-                  showDropdown={showDropdown}
-                  setShowDropdown={setShowDropdown}
-                  onChangeRule={onChangeRule}
-                  activeRuleName={activeRuleName}
-                />
-              )}
-              {showModalActionBtns && (
-                <div className={`${styles["Modal-btn"]}`}>
-                  <Button
-                    className={"apply"}
-                    text={"Apply"}
-                    disabled={loading}
-                    onClick={() => onApply(activeAttribute.id, filters)}
+                {showRules && (
+                  <RulesOptions
+                    showDropdown={showDropdown}
+                    setShowDropdown={setShowDropdown}
+                    onChangeRule={onChangeRule}
+                    activeRuleName={activeRuleName}
                   />
-                  <Button
-                    className={"cancel"}
-                    text={"Cancel"}
-                    disabled={loading}
-                    onClick={onCancel}
-                  />
-                </div>
-              )}
-            </>
-          ) : (
-            <NoResultsPopup onClose={onClose} />
-          )}
+                )}
+                {showModalActionBtns && (
+                  <div className={`${styles["Modal-btn"]}`}>
+                    <Button
+                      className={"apply"}
+                      text={"Apply"}
+                      disabled={loading}
+                      onClick={() => onApply(activeAttribute.id, filters)}
+                    />
+                    <Button
+                      className={"cancel"}
+                      text={"Cancel"}
+                      disabled={loading}
+                      onClick={onCancel}
+                    />
+                  </div>
+                )}
+              </>
+            }
+          </>
+            : (
+              <NoResultsPopup onClose={onClose} />
+            )}
       </div>
     </div>
   );

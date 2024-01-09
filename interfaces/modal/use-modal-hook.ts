@@ -27,6 +27,7 @@ export interface Item {
     size: string;
     length: number;
     parentId: string | null
+    childFolders?: Array<unknown>
 }
 export interface MoveModalReturnType {
     folders: Item[]; // Replace 'Item' with the actual type of your folders
@@ -48,8 +49,8 @@ export interface MoveModalReturnType {
     getSubFolders: (id: string, page: number, replace: boolean) => Promise<Map<string, { results: Item[], next: number, total: number }>>;
     toggleSelected: (folderId: string, selected: boolean, subFolderToggle?: boolean, mainFolderId?: string, name?: string, customRole?: boolean) => void;
     toggleDropdown: (folderId: string, replace: boolean) => void;
-    ToggleAllSelectedFolders: (folderId: string, selectAll: boolean) => void;
-    toggleSelectAllChildList: (folderId: string, name?: string) => void;
+    ToggleAllSelectedFolders?: (folderId: string, selectAll: boolean) => void;
+    toggleSelectAllChildList?: (folderId: string, name?: string) => void;
     setNewFolderName: (value: string) => void;
     setFolderInputActive: (value: boolean) => void;
     [key: string]: any

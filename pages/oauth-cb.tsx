@@ -38,7 +38,6 @@ const OauthCbPage = () => {
     } catch (err) {
       if (err.response?.data?.message)
         toastUtils.error(err.response.data.message);
-      console.log(err);
       if (cookieInviteCode && cookieInviteCode !== "undefined") {
         Router.replace(`/signup?inviteCode=${cookieInviteCode}`);
       } else {
