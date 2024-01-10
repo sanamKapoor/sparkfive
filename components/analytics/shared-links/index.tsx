@@ -1,136 +1,21 @@
 import React from "react";
-import { insights } from "../../../assets";
-import IconClickable from "../../common/buttons/icon-clickable";
-import Pagination from "../Pagination/pagination";
-import Datefilter from "../common/date-filter/date-filter";
-import Download from "../common/download-button/download";
-import SearchButton from "../common/analytics-search-button/analytics-search";
-import TableHeading from "../insight-table/table-heading";
-import styles from "./index.module.css";
-import ShareLinkTable from "./share-link-table";
 import {
-  sharedcolumns,
-  shareddashboardColumns,
+  shareLinksData,
   sharedarrowColumns,
   sharedbuttonColumns,
   sharedbuttonTexts,
+  sharedcolumns,
+  shareddashboardColumns,
 } from "../../../data/analytics";
+import SearchButton from "../common/search";
+import Datefilter from "../common/date-filter";
+import Download from "../common/download-button";
+import Pagination from "../common/pagination";
+import TableHeading from "../insight-table/table-heading";
+import styles from "./shared-links.module.css";
+import ShareLinkTable from "./share-link-table";
 
-function ShareLinkPage({ dashboardView = false }: { dashboardView: boolean }) {
-  const data = [
-    {
-      Link: "Best Tips for Gardening",
-      "Shared by": "Seraphina Alexandra Montgomery-Smith",
-      icon: insights.userImg1,
-      Views: "4,1388",
-      Downloads: "444",
-      "Date created": "01/03/23",
-      Types: "Collection",
-      Actions: [
-        <IconClickable src={insights.tableEye} additionalClass={`${styles["action-icon"]} ${styles["eye-icon"]}`} />,
-        <IconClickable src={insights.tableUser} additionalClass={`${styles["action-icon"]} ${styles["eye-icon"]}`} />,
-        <IconClickable src={insights.tableHome} additionalClass={`${styles["action-icon"]}`} />,
-      ],
-    },
-    {
-      Link: "Delicious Recipes to Try at Home",
-      "Shared by": "Harvey Elliott",
-      icon: insights.userImg2,
-      Views: "4,077",
-      Downloads: "572",
-      "Date created": "03/23/23",
-      Types: "Portal",
-      Actions: [
-        <IconClickable src={insights.tableEye} additionalClass={`${styles["action-icon"]} ${styles["eye-icon"]}`} />,
-        <IconClickable src={insights.tableUser} additionalClass={`${styles["action-icon"]} ${styles["eye-icon"]}`} />,
-        <IconClickable src={insights.tableHome} additionalClass={`${styles["action-icon"]}`} />,
-      ],
-    },
-    {
-      Link: "Ultimate Guide to Traveling Solo",
-      "Shared by": "Charles Wells",
-      icon: insights.userImg3,
-      Views: "4,077",
-      Downloads: "572",
-      "Date created": "03/23/23",
-      Types: "Collection",
-      Actions: [
-        <IconClickable src={insights.tableEye} additionalClass={`${styles["action-icon"]} ${styles["eye-icon"]}`} />,
-        <IconClickable src={insights.tableUser} additionalClass={`${styles["action-icon"]} ${styles["eye-icon"]}`} />,
-        <IconClickable src={insights.tableHome} additionalClass={`${styles["action-icon"]}`} />,
-      ],
-    },
-    {
-      Link: "Fitness Workout Routines for Beginners",
-      "Shared by": "John Ali",
-      icon: insights.userImg4,
-      Views: "4,077",
-      Downloads: "572",
-      "Date created": "03/23/23",
-      Types: "Portal",
-      Actions: [
-        <IconClickable src={insights.tableEye} additionalClass={`${styles["action-icon"]} ${styles["eye-icon"]}`} />,
-        <IconClickable src={insights.tableUser} additionalClass={`${styles["action-icon"]} ${styles["eye-icon"]}`} />,
-        <IconClickable src={insights.tableHome} additionalClass={`${styles["action-icon"]}`} />,
-      ],
-    },
-    {
-      Link: "Learn Spanish in 30 Days",
-      "Shared by": "Clyde Booth",
-      icon: insights.userImg1,
-      Views: "4,077",
-      Downloads: "572",
-      "Date created": "03/23/23",
-      Types: "Collection",
-      Actions: [
-        <IconClickable src={insights.tableEye} additionalClass={`${styles["action-icon"]} ${styles["eye-icon"]}`} />,
-        <IconClickable src={insights.tableUser} additionalClass={`${styles["action-icon"]} ${styles["eye-icon"]}`} />,
-        <IconClickable src={insights.tableHome} additionalClass={`${styles["action-icon"]}`} />,
-      ],
-    },
-    {
-      Link: "Top Destinations for Adventure Enthusiasts",
-      "Shared by": "Beverly Marshall",
-      icon: insights.userImg2,
-      Views: "4,077",
-      Downloads: "572",
-      "Date created": "03/23/23",
-      Types: "Files",
-      Actions: [
-        <IconClickable src={insights.tableEye} additionalClass={`${styles["action-icon"]} ${styles["eye-icon"]}`} />,
-        <IconClickable src={insights.tableUser} additionalClass={`${styles["action-icon"]} ${styles["eye-icon"]}`} />,
-        <IconClickable src={insights.tableHome} additionalClass={`${styles["action-icon"]}`} />,
-      ],
-    },
-    {
-      Link: "Learn Spanish in 30 Days",
-      "Shared by": "Irene James",
-      icon: insights.userImg4,
-      Views: "4,077",
-      Downloads: "377",
-      "Date created": "03/23/23",
-      Types: "Collection",
-      Actions: [
-        <IconClickable src={insights.tableEye} additionalClass={`${styles["action-icon"]} ${styles["eye-icon"]}`} />,
-        <IconClickable src={insights.tableUser} additionalClass={`${styles["action-icon"]} ${styles["eye-icon"]}`} />,
-        <IconClickable src={insights.tableHome} additionalClass={`${styles["action-icon"]}`} />,
-      ],
-    },
-    {
-      Link: "Top Destinations for Adventure Enthusiasts",
-      "Shared by": "Betty Anderson",
-      icon: insights.userImg3,
-      Views: "4,077",
-      Downloads: "377",
-      "Date created": "03/23/23",
-      Types: "Files",
-      Actions: [
-        <IconClickable src={insights.tableEye} additionalClass={`${styles["action-icon"]} ${styles["eye-icon"]}`} />,
-        <IconClickable src={insights.tableUser} additionalClass={`${styles["action-icon"]} ${styles["eye-icon"]}`} />,
-        <IconClickable src={insights.tableHome} additionalClass={`${styles["action-icon"]}`} />,
-      ],
-    },
-  ];
+function ShareLink({ dashboardView = false }: { dashboardView: boolean }) {
 
   return (
     <>
@@ -186,7 +71,7 @@ function ShareLinkPage({ dashboardView = false }: { dashboardView: boolean }) {
           <div style={{ marginTop: "16px" }}>
             <ShareLinkTable
               columns={dashboardView ? shareddashboardColumns : sharedcolumns}
-              data={data}
+              data={shareLinksData}
               arrowColumns={sharedarrowColumns}
               buttonColumns={sharedbuttonColumns}
               buttonTexts={sharedbuttonTexts}
@@ -205,4 +90,4 @@ function ShareLinkPage({ dashboardView = false }: { dashboardView: boolean }) {
   );
 }
 
-export default ShareLinkPage;
+export default ShareLink;

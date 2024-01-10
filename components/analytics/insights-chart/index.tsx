@@ -1,14 +1,9 @@
-import React, { useState } from 'react'
-import styles from "./insights-chart.module.css"
-import DateFilter from '../common/date-filter/date-filter'
+import React from 'react'
+import DateFilter from '../common/date-filter'
 import TableHeading from '../insight-table/table-heading'
+import styles from "./insights-chart.module.css"
 
-
-
-function AssetChart({
-  activeSection
-}: { activeSection: string }) {
-
+function Chart() {
   return (
     <>
       <div style={{
@@ -27,4 +22,4 @@ function AssetChart({
   )
 }
 
-export default AssetChart
+export default Chart

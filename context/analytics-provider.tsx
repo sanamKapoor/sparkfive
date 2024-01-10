@@ -18,6 +18,7 @@ export default ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [totalRecords, setTotalRecords] = useState(0);
   const [apiEndpoint, setApiEndpoint] = useState("dashboard");
+  const [initialRender, setInitialRender] = useState(false);
 
   const analyticsValue = {
     activeSection,
@@ -45,11 +46,11 @@ export default ({ children }) => {
 
   const analyticsApiHandler = async () => {
     try {
-      setLoading(true);
-      setError('');
-      setData(null);
-
-      console.log({ apiEndpoint });
+      if (!search) {
+        setLoading(true);
+        setError('');
+        setData(null);
+      }
 
       const { data } = await AnalyticsApi.getAnalyticsData(apiEndpoint, {
         page,
@@ -86,6 +87,7 @@ export default ({ children }) => {
 
   useEffect(() => {
     handleApiEndpoint();
+    setInitialRender(true);
   }, [activeSection])
 
   return (

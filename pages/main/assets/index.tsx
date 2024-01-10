@@ -8,10 +8,10 @@ import AssetUploadProcess from "../../../components/asset-upload-process";
 import MainLayout from "../../../components/common/layouts/main-layout";
 import AssetsLibrary from "../../../components/main/assets-library";
 
-import AppLayout from "../../components/common/layouts/app-layout";
-import { AssetContext } from "../../context";
-import useAnalytics from "../../hooks/useAnalytics";
-import { pages } from "../../constants/analytics";
+import AppLayout from "../../../components/common/layouts/app-layout";
+import { AssetContext } from "../../../context";
+import useAnalytics from "../../../hooks/useAnalytics";
+import { pages } from "../../../constants/analytics";
 
 const AssetsPage = () => {
 

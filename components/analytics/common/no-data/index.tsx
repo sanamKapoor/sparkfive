@@ -1,6 +1,6 @@
 import React from 'react'
-import styles from "./index.module.css"
-import {insights} from "../../../assets"
+import { insights } from "../../../../assets"
+import styles from "./no-data.module.css"
 
 function NoData({ message = '' }) {
   return (

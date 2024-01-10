@@ -3,9 +3,12 @@ import { Utilities } from "../../../../assets";
 import styles from './analytics-search.module.css'
 import { AnalyticsContext } from "../../../../context";
 
-const search = () => {
-
+const AnalyticsSearch = () => {
   const { search, setSearch } = useContext(AnalyticsContext);
+
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+  }
 
   return (
     <>
@@ -16,7 +19,7 @@ const search = () => {
             placeholder="Search User"
             name="search2"
             value={search}
-            onChange={e => setSearch(e.target.value)}
+            onChange={handleSearch}
             className={styles.searchinput}
            />
         </div>
@@ -29,4 +32,4 @@ const search = () => {
 };
 
 
-export default search;
+export default AnalyticsSearch;

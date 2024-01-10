@@ -1,28 +1,24 @@
 import React from "react";
+import ActivityFeedTable from "../activity";
+import AssetTable from "../asset";
 import styles from "../index.module.css";
-import InsightsHeader from "../insights-header/insights.header";
-import AssetChart from "../insights-chart/insights-chart";
-import AssetTable from "../asset-table/asset-table";
-import UserTable from "../insight-table/insight-table";
-import ActivityFeedTable from "../activity-feed/activity-feed";
-import { analyticsLayoutSection } from "../../../constants/analytics";
+import UserTable from "../insight-table";
+import AssetChart from "../insights-chart";
 import ShareLinkPage from "../shared-links";
 
-function Dashboard({
-  activeSection
-}: { activeSection: string }) {
+function Dashboard() {
   return (
     <section>
       <div className={styles.outerLayout}>
         <div className={`${styles["inner-wrapper"]}`}>
           <div className={`${styles["total-session"]}`}>
-            <AssetChart activeSection={analyticsLayoutSection.DASHBOARD} />
+            <AssetChart />
           </div>
           <div>
             <AssetTable dashboardView={true} />
           </div>
           <div>
-            <UserTable activeSection={activeSection} dashboardView={true} />
+            <UserTable dashboardView={true} />
           </div>
           <div>
             <ShareLinkPage dashboardView={true} />
@@ -30,6 +26,7 @@ function Dashboard({
           <div>
             <ActivityFeedTable />
           </div>
+        
          </div>
       </div>
     </section>

@@ -2,10 +2,10 @@ import React, { useContext, useState } from 'react';
 import DayPickerInput from "react-day-picker/DayPickerInput";
 
 import styles from "./date-filter.module.css";
-import { insights } from "../../../assets";
-import Button from '../../common/buttons/button';
-import { AnalyticsContext } from '../../../context';
-import { calculateBeginDate } from '../../../config/data/filter';
+import { insights } from "../../../../assets";
+import Button from '../../../common/buttons/button';
+import { AnalyticsContext } from '../../../../context';
+import { calculateBeginDate } from '../../../../config/data/filter';
 
 const FORMAT = "MM/dd/yyyy";
 
@@ -103,24 +103,6 @@ export default function DateFilter() {
           </div>
         }
       </section>
-<<<<<<< HEAD:components/analytics/date-filter/date-filter.tsx
-=======
-   
- {/* tab-view */}
- <section>
-    <div className={`${styles['date-filter-teb']}`}>
-    <Button text="Date Range" className={'outline-text-btn'}/>
-    </div>
-   </section>
-   {/* mobile-view */}
-   <section className={`${styles['calender-filer-outer']}`} >
-    <div className={`${styles['calender-filer']}`}>
-    <div className={styles.calenderDate} onClick={() => handleFilterClick('custom')}>
-          <img src={insights.calender} alt="" />
-        </div>
-    </div>
-      
->>>>>>> 422390eca163ccc0a28188cb36ed6d376a413294:components/analytics/common/date-filter/date-filter.tsx
 
       {/* tab-view */}
       <section>

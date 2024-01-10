@@ -1,17 +1,16 @@
 import React from "react";
-import TableData from "../table-data/table-data";
-import { insights, Utilities } from "../../../assets";
-import styles from "../table-data/table-data.module.css";
-import TableHeading from "../insight-table/table-heading";
 import {
-  activitycolumns,
-  activitydata,
   activityarrowColumns,
   activitybuttonColumns,
   activitybuttonTexts,
+  activitycolumns,
+  activitydata,
 } from "../../../data/analytics";
+import TableHeading from "../insight-table/table-heading";
+import TableData from "../table-data";
+import styles from "../table-data/table-data.module.css";
 
-function ActivityFeedTable() {
+function Activity() {
   return (
     <div className={styles.tableOuter}>
       <TableHeading mainText="Activity Feed" descriptionText="" smallHeading={true} />
@@ -27,4 +26,4 @@ function ActivityFeedTable() {
   );
 }
 
-export default ActivityFeedTable;
+export default Activity;

@@ -1,19 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
-import UserTable from "./insight-table/insight-table";
-import InsightsHeader from "./insights-header/insights.header";
-import styles from "./index.module.css";
-import { insights } from "../../assets";
-import UserModal from "./Modals/user-modal/user-modal";
-import AssetTable from "./asset-table/asset-table";
-import AssetChart from "./insights-chart/insights-chart";
-import Dashboard from "./dashboard";
-import NoData from "./no-data/no-data";
-import ShareLinkTable from "./shared-links/share-link-table";
-import ShareLinkPage from "./shared-links";
-import SharedUserModal from "./Modals/user-modal/shared-user-modal";
-import { analyticsLayoutSection } from "../../constants/analytics";
-import Team from "./team";
-import { AnalyticsContext } from "../../context";
+import { analyticsLayoutSection } from "../../../constants/analytics";
+import { AnalyticsContext } from "../../../context";
+import AssetTable from "../asset";
+import Dashboard from "../dashboard";
+import styles from "../index.module.css";
+import UserTable from "../insight-table";
+import InsightsHeader from "../insights-header";
+import ShareLinkPage from "../shared-links";
+import Team from "../team";
 
 export default function Content() {
 
@@ -25,7 +19,7 @@ export default function Content() {
     switch (activeSection) {
       case analyticsLayoutSection.ACCOUNT_USERS:
         setheading("Users");
-        setContent(<UserTable activeSection={activeSection} dashboardView={false} />);
+        setContent(<UserTable dashboardView={false} />);
         break;
       case analyticsLayoutSection.EXTERNAL_USERS:
         setheading("Users");
@@ -49,7 +43,7 @@ export default function Content() {
         break;
       default:
         setheading("Dashboard");
-        setContent(<Dashboard activeSection={activeSection} />);
+        setContent(<Dashboard />);
     }
   }
 

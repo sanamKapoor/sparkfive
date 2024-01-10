@@ -70,7 +70,7 @@ const navItems: NavItem[] = [
   }
 ]
 
-export default function InsightsSidenav() {
+export default function InsightsSideNav() {
   const { activeSection, setActiveSection } = useContext(AnalyticsContext);
 
   const handleItemClick = (section) => {
@@ -80,40 +80,39 @@ export default function InsightsSidenav() {
   return (
     <section className={styles.container}>
       {
-        navItems.map((item) => <RenderSideBar key={item.id} item={item} />)
+        navItems.map((item) => <RenderSideBar key={item.id} item={item} activeSection={activeSection} handleItemClick={handleItemClick} />)
       }
     </section>
   );
+}
 
+function RenderSideBar({ item, activeSection, handleItemClick }: { item: NavItem, activeSection: string, handleItemClick: (string) => void }) {
+  return (
+    <>
+      <h6>{item.parent}</h6>
+      {item.components.length > 0 &&
+        <ul>
+          {
+            item.components.map((comp, index) => {
+              return (
+                <li
+                  key={index}
+                  className={`${styles.setting} ${activeSection === comp.type && styles.selected}`}
+                  onClick={() => handleItemClick(comp.type)}
+                >
+                  <a
+                    className={styles.info}
 
-  function RenderSideBar({ item }: { item: NavItem }) {
-    return (
-      <>
-        <h6>{item.parent}</h6>
-        {item.components.length > 0 &&
-          <ul>
-            {
-              item.components.map((comp, index) => {
-                return (
-                  <li
-                    key={index}
-                    className={`${styles.setting} ${activeSection === comp.type && styles.selected}`}
-                    onClick={() => handleItemClick(comp.type)}
                   >
-                    <a
-                      className={styles.info}
-
-                    >
-                      <img src={comp.image} alt={`${comp.label}-img`} />
-                      <span>{comp.label}</span>
-                    </a>
-                  </li>
-                )
-              })
-            }
-          </ul>
-        }
-      </>
-    )
-  }
+                    <img src={comp.image} alt={`${comp.label}-img`} />
+                    <span>{comp.label}</span>
+                  </a>
+                </li>
+              )
+            })
+          }
+        </ul>
+      }
+    </>
+  )
 }

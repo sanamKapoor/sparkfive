@@ -4,12 +4,8 @@ import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import HoverVideoPlayer from "react-hover-video-player";
 import { Utilities } from "../../../assets";
 import { ASSET_NAME_UPDATED, FAILED_TO_UPDATE_ASSET_NAME } from "../../../constants/messages";
-<<<<<<< HEAD
-import { AssetContext, UserContext } from "../../../context";
+import { AssetContext, UserContext, AssetDetailContext } from "../../../context";
 import useAnalytics from "../../../hooks/useAnalytics";
-=======
-import { AssetContext, AssetDetailContext } from "../../../context";
->>>>>>> d0c9489ab6e6066e41a8be5cb02df87671a5d8c7
 import assetApi from "../../../server-api/asset";
 import AnalyticsService from "../../../utils/analytics-service";
 import { removeExtension } from "../../../utils/asset";
@@ -24,15 +20,9 @@ import AssetImg from "./asset-img";
 import AssetOptions from "./asset-options";
 import styles from "./asset-thumbail.module.css";
 import DetailOverlay from "./detail-overlay";
-<<<<<<< HEAD
-import { analytics } from "../../../pages/_app";
 import { events, shareLinkEvents } from "../../../constants/analytics";
 import cookiesApi from "../../../utils/cookies";
-=======
-import RenameModal from "../../common/modals/rename-modal";
-import update from "immutability-helper";
 import { useRouter } from "next/router";
->>>>>>> d0c9489ab6e6066e41a8be5cb02df87671a5d8c7
 
 // Components
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
@@ -336,7 +326,6 @@ const AssetThumbail = ({
                       className={"container primary"}
                       text={"View Details"}
                       type={"button"}
-<<<<<<< HEAD
                       onClick={() => {
                         if(isShare){
                           trackLinkEvent(shareLinkEvents.VIEW_SHARED_ASSET, {
@@ -362,9 +351,7 @@ const AssetThumbail = ({
                           });
                         }
                       }}
-=======
-                      onClick={() => handleViewDetails("button")}
->>>>>>> d0c9489ab6e6066e41a8be5cb02df87671a5d8c7
+                      // onClick={() => handleViewDetails("button")}
                     />
                   </div>
                 </>

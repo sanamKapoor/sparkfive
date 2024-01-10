@@ -1,64 +1,17 @@
 import React from "react";
-import styles from "./index.module.css";
-import SearchButton from "../../common/analytics-search-button/analytics-search";
-import Download from "../../common/download-button/download";
-import Datefilter from "../../common/date-filter/date-filter";
-import Pagination from "../../Pagination/pagination";
 import { insights } from "../../../../assets";
+import { userModalarrowColumns, userModalbuttonColumns, userModalbuttonTexts, userModalcolumns, userModaldata } from "../../../../data/analytics";
 import IconClickable from "../../../common/buttons/icon-clickable";
-import TableComponent from "../../insight-table/insight-table";
-import TableData from "../../table-data/table-data";
+import SearchButton from "../../common/search";
+import Datefilter from "../../common/date-filter";
+import Download from "../../common/download-button";
+import Pagination from "../../common/pagination";
+import TableData from "../../table-data";
+import styles from "./models.module.css";
 
 function UserModal({
   setShowModal
 }: { setShowModal: (show: boolean) => void }) {
-  const columns = ["Viewed Link", "Viewed File", "Download File", "Date", "Actions"];
-  const data = [
-    {
-      "Viewed Link": "Best Tips for Gardening",
-      "Viewed File": "sparkfive_noah_johnson_78652439.png",
-      "Download File": "—",
-      Date: "Today at 04:22 pm",
-      Actions: "Edit",
-    },
-    {
-      "Viewed Link": "Delicious Recipes to Try at Home",
-      "Viewed File": "sparkfive_noah_johnson_78652439.png",
-      "Download File": "sparkfive_ava_anderson_75849321_3.png",
-      Date: "Yesterday 03:55 pm",
-      Actions: "Edit",
-    },
-    {
-      "Viewed Link": "Ultimate Guide to Traveling Solo",
-      "Viewed File": "sparkfive_sophia_wilson_36548712.png",
-      "Download File": "sparkfive_william_martinez_35671248_3.png",
-      Date: "Yesterday 03:55 pm",
-      Actions: "Edit",
-    },
-    {
-      "Viewed Link": "Fitness Workout Routines for Beginners",
-      "Viewed File": "sparkfive_ethan_thompson_92468135.png",
-      "Download File": "sparkfive_olivia_smith_12458967_2.pngg",
-      Date: "05/14/23",
-      Actions: "Edit",
-    },
-    {
-      "Viewed Link": "Learn Spanish in 30 Days",
-      "Viewed File": "—",
-      "Download File": "—",
-      Date: "05/14/23",
-    },
-    {
-      "Viewed Link": "Chief Science Officer",
-      "Viewed File": "sparkfive_william_martinez_35671248.png",
-      "Download File": "sparkfive_ethan_thompson_92468135_2.png",
-      Date: "05/14/23",
-    },
-  ];
-
-  const arrowColumns = ["Viewed Link", "Viewed File", "Download File", "Sessions", "Date"];
-  const buttonColumns = ["Actions"];
-  const buttonTexts = { Actions: "View Asset" };
   return (
     <section className={`${styles["user-modal-outer"]}`}>
       <div className={`${styles["user-modal"]}`}>
@@ -129,11 +82,11 @@ function UserModal({
         </div>
 
         <TableData
-          columns={columns}
-          data={data}
-          arrowColumns={arrowColumns}
-          buttonColumns={buttonColumns}
-          buttonTexts={buttonTexts}
+          columns={userModalcolumns}
+          data={userModaldata}
+          arrowColumns={userModalarrowColumns}
+          buttonColumns={userModalbuttonColumns}
+          buttonTexts={userModalbuttonTexts}
           imageSource="ImageSource"
         />
         <Pagination />

@@ -1,16 +1,14 @@
 import React from "react";
-import styles from "./asset-table.module.css";
-import { insights, Utilities } from "../../../assets";
+import { assetarrowColumns, assetbuttonColumns, assetbuttonTexts, columns, data } from "../../../data/analytics";
+import SearchButton from "../common/search";
+import Datefilter from "../common/date-filter";
+import Download from "../common/download-button";
+import Pagination from "../common/pagination";
 import TableHeading from "../insight-table/table-heading";
-import SearchButton from "../common/analytics-search-button/analytics-search";
-import Download from "../common/download-button/download";
-import Datefilter from "../common/date-filter/date-filter";
-import Pagination from "../Pagination/pagination";
-import TableData from "../table-data/table-data";
-import { columns } from "../../../data/analytics";
-import { assetarrowColumns, assetbuttonColumns, assetbuttonTexts, data } from "../../../data/analytics";
+import TableData from "../table-data";
+import styles from "./asset.module.css";
 
-function AssetTable({ dashboardView = false }: { dashboardView: boolean }) {
+function Asset({ dashboardView = false }: { dashboardView: boolean }) {
   return (
     <section className={`${styles["outer-wrapper"]}`}>
       <div className={styles.tableResponsive}>
@@ -81,4 +79,4 @@ function AssetTable({ dashboardView = false }: { dashboardView: boolean }) {
   );
 }
 
-export default AssetTable;
+export default Asset;
