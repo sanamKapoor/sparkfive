@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import styles from "./table-data.module.css";
 import { Utilities } from "../../../assets";
 import UserModal from "../modals/user-modal/user-modal";
 import { analyticsLayoutSection } from "../../../constants/analytics";
 import DateFormatter from "../../../utils/date";
+import { AnalyticsContext } from "../../../context";
 
 export default function TableData({ columns, data, arrowColumns, buttonColumns, buttonTexts, imageSource, activeSection }) {
 
   const [showModal, setShowModal] = useState(false);
   const [activeModal, setActiveModal] = useState<React.ReactElement | null>(null);
+  const { setSortBy, setSortOrder, sortOrder } = useContext(AnalyticsContext);
 
   const handleModals = () => {
     setShowModal(true);
@@ -21,17 +23,23 @@ export default function TableData({ columns, data, arrowColumns, buttonColumns, 
         <table className={styles.table}>
           <thead>
             <tr>
-              {columns.map((column, index) => (
-                <th key={index}>
-                  {arrowColumns.includes(column) ? (
-                    <div className={styles.headingIcon}>
-                      {column} <img src={Utilities.arrowDownUp} alt="flip icon" />
-                    </div>
-                  ) : (
-                    column
-                  )}
-                </th>
-              ))}
+              {columns.map((column, index) => {
+                let sortCol = arrowColumns.filter(col => col.label === column)[0];
+                return (
+                  <th key={index}>
+                    {sortCol ? (
+                      <div className={styles.headingIcon}>
+                        {column} <img src={Utilities.arrowDownUp} alt="flip icon" onClick={() => {
+                          setSortBy(sortCol.value);
+                          setSortOrder(!sortOrder);
+                        }} />
+                      </div>
+                    ) : (
+                      column
+                    )}
+                  </th>
+                )
+              })}
             </tr>
           </thead>
           {

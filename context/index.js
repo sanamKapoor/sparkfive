@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { analyticsLayoutSection } from "../constants/analytics";
+import { calculateBeginDate } from "../config/data/filter";
 
 export const LoadingContext = createContext({
   isLoading: false,
@@ -11,10 +11,11 @@ export const AnalyticsContext = createContext({
   setActiveSection: (value) => {},
   search: '',
   filter: {
-    beginDate: new Date(),
-    endDate: new Date()
+    endDate: new Date(),
+    beginDate: calculateBeginDate(7, 1)
   },
-  sortBy: [],
+  sortBy: '',
+  sortOrder: true,
   page: 1,
   limit: 10,
   error: "",
@@ -24,6 +25,7 @@ export const AnalyticsContext = createContext({
   setSearch: (value) => {},
   setFilter: (value) => {},
   setSortBy: (value) => {},
+  setSortOrder: (value) => {},
   setPage: (value) => {},
   setLimit: (value) => {},
   setError: (value) => {},

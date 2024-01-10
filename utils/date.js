@@ -23,8 +23,6 @@ const getSecondsFromHhMmSs =  (hms) => {
   return (+value[0]) * 60 * 60 + (+value[1]) * 60 + (+value[2])
 }
 
-
-
 const getSpecialDateString = (inputDate) => {
   let specialDate = ''
   const today = new Date()
@@ -193,6 +191,16 @@ const reorderItems = (items, calendarDays) => {
   return newItems
 }
 
+const analyticsRecordsDateRange = ({
+  beginDate,
+  endDate
+}) => {
+  beginDate = new Date(beginDate);
+  endDate = new Date(endDate);
+
+  return `${format(beginDate, 'PP')} - ${format(endDate, 'PP')}`
+}
+
 export default {
   areSameDates,
   getDateKey,
@@ -201,5 +209,6 @@ export default {
   reorderItems,
   parseDateToString,
   getSpecialDateString,
-  analyticsDateFormatter
+  analyticsDateFormatter,
+  analyticsRecordsDateRange
 }

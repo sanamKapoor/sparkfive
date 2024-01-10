@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { insights } from "../../../../assets";
 import { userModalarrowColumns, userModalbuttonColumns, userModalbuttonTexts, userModalcolumns, userModaldata } from "../../../../data/analytics";
 import IconClickable from "../../../common/buttons/icon-clickable";
@@ -8,18 +8,26 @@ import Download from "../../common/download-button";
 import Pagination from "../../common/pagination";
 import TableData from "../../table-data";
 import styles from "./models.module.css";
+import { AnalyticsContext } from "../../../../context";
+import { analyticsLayoutSection } from "../../../../constants/analytics";
 
 function UserModal({
   setShowModal
 }: { setShowModal: (show: boolean) => void }) {
+
+  const { activeSection } = useContext(AnalyticsContext);
+
   return (
     <section className={`${styles["user-modal-outer"]}`}>
       <div className={`${styles["user-modal"]}`}>
         <div className={`${styles["user-detail-top"]}  ${styles["web-view"]}`}>
           <div className={`${styles["user-detail"]}`}>
-            <p>
-              Email: <span>harveyelliott@mail.com</span>
-            </p>
+            {
+              activeSection === analyticsLayoutSection.ACCOUNT_USERS ?
+                <p>User name: <span>Devil</span></p>
+                :
+                <p>Email: <span>harveyelliott@mail.com</span></p>
+            }
             <p>
               Last Session Date: <span>05/14/23</span>
             </p>

@@ -7,7 +7,7 @@ const AnalyticsSearch = () => {
   const { search, setSearch } = useContext(AnalyticsContext);
 
   const handleSearch = (e) => {
-    setSearch(e.target.value);
+    setSearch(e.target.value.trim());
   }
 
   return (

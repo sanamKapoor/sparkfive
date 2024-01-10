@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import DayPickerInput from "react-day-picker/DayPickerInput";
 
 import styles from "./date-filter.module.css";
@@ -19,7 +19,7 @@ export default function DateFilter() {
     setActiveFilter(filter);
     setFilter(prev => ({
       endDate: new Date(),
-      beginDate: calculateBeginDate(days)
+      beginDate: calculateBeginDate(days, 1)
     }))
   };
 

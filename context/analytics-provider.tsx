@@ -2,15 +2,17 @@ import { useEffect, useState } from "react";
 import { AnalyticsContext } from "../context";
 import { analyticsLayoutSection } from "../constants/analytics";
 import AnalyticsApi from "../server-api/analytics";
+import { calculateBeginDate } from "../config/data/filter";
 
 export default ({ children }) => {
   const [activeSection, setActiveSection] = useState(analyticsLayoutSection.DASHBOARD);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState({
-    beginDate: new Date(),
-    endDate: new Date()
+    endDate: new Date(),
+    beginDate: calculateBeginDate(7, 1)
   });
-  const [sortBy, setSortBy] = useState([]);
+  const [sortBy, setSortBy] = useState('');
+  const [sortOrder, setSortOrder] = useState(true);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [error, setError] = useState('');
@@ -25,6 +27,7 @@ export default ({ children }) => {
     search,
     filter,
     sortBy,
+    sortOrder,
     page,
     limit,
     error,
@@ -35,6 +38,7 @@ export default ({ children }) => {
     setSearch,
     setFilter,
     setSortBy,
+    setSortOrder,
     setPage,
     setLimit,
     setError,
@@ -46,10 +50,11 @@ export default ({ children }) => {
 
   const analyticsApiHandler = async () => {
     try {
-      if (!search) {
+      if (initialRender) {
         setLoading(true);
         setError('');
         setData(null);
+        setTotalRecords(0);
       }
 
       const { data } = await AnalyticsApi.getAnalyticsData(apiEndpoint, {
@@ -57,6 +62,7 @@ export default ({ children }) => {
         limit,
         search,
         sortBy,
+        sortOrder,
         filter
       });
 
@@ -68,12 +74,17 @@ export default ({ children }) => {
       setLoading(false);
       setError(error.message || 'Users not found!');
       setData(null);
+      setTotalRecords(0);
     }
   }
 
   useEffect(() => {
     analyticsApiHandler();
-  }, [apiEndpoint, page, limit, search, sortBy, filter])
+  }, [apiEndpoint, page, limit, search, sortBy, sortOrder, filter])
+
+  useEffect(() => {
+    setInitialRender(false);
+  }, [page, limit, search, sortBy, sortOrder, filter])
 
   const handleApiEndpoint = async () => {
     switch (activeSection) {
@@ -88,6 +99,14 @@ export default ({ children }) => {
   useEffect(() => {
     handleApiEndpoint();
     setInitialRender(true);
+    setSearch('');
+    setPage(1);
+    setSortBy('');
+    setSortOrder(true);
+    setFilter({
+      endDate: new Date(),
+      beginDate: calculateBeginDate(7, 1)
+    })
   }, [activeSection])
 
   return (

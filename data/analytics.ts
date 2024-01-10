@@ -10,7 +10,32 @@ export const UserTableColumns = [
   "Actions",
 ];
 export const dashboardColumns = ["User name", "Sessions", "Last session date", "Actions"];
-export const arrowColumns = ["User name", "Role", "Last session date", "Sessions", "Downloads", "Shares"];
+export const arrowColumns = [
+  {
+    label: "User name",
+    value: "name"
+  },
+  {
+    label: "Role",
+    value: "roleId"
+  },
+  {
+    label: "Last session date",
+    value: "last_session"
+  },
+  {
+    label: "Sessions",
+    value: "session_count"
+  },
+  {
+    label: "Downloads",
+    value: "downloads"
+  },
+  {
+    label: "Shares",
+    value: "shares"
+  }
+];
 export const buttonColumns = ["Actions"];
 export const buttonTexts = { Actions: "User Info" };
 export const insightdata = [

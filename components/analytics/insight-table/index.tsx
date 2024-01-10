@@ -16,7 +16,7 @@ const UserTable = ({
   dashboardView = false
 }: { dashboardView: boolean }
 ) => {
-  const { loading, error, data, activeSection } = useContext(AnalyticsContext);
+  const { loading, error, data, activeSection, totalRecords } = useContext(AnalyticsContext);
   
   return (
     <section className={`${styles["outer-wrapper"]}`}>
@@ -64,7 +64,7 @@ const UserTable = ({
           </div>
 
           <TableData columns={dashboardView ? dashboardColumns : UserTableColumns} data={data} arrowColumns={arrowColumns} buttonColumns={buttonColumns} buttonTexts={buttonTexts} imageSource="ImageSource" activeSection={activeSection} />
-          {!dashboardView && <Pagination />}
+          {(!dashboardView && totalRecords > 0) && <Pagination />}
         </div>
       }
     </section>
