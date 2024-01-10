@@ -474,6 +474,38 @@ console
 
 
 }
+.apply-btn{
+  min-width: 140px;
+  background: 
+  #AEB0C2;
+  color:#fff;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+}
+.cancel-btn{
+  min-width: 140px;
+  background: 
+  #fff;
+  color:
+  #817D9D;
+  border:1px solid 
+  #DEDAD4;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+
+}
 
 
 

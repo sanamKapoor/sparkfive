@@ -13,7 +13,8 @@ function UserModal({
   setShowModal
 }: { setShowModal: (show: boolean) => void }) {
   return (
-    <section className={`${styles["user-modal-outer"]}`}>
+    <div className={`${styles.backdrop}`}>
+ <section className={`${styles["user-modal-outer"]}`}>
       <div className={`${styles["user-modal"]}`}>
         <div className={`${styles["user-detail-top"]}  ${styles["web-view"]}`}>
           <div className={`${styles["user-detail"]}`}>
@@ -92,6 +93,8 @@ function UserModal({
         <Pagination />
       </div>
     </section>
+    </div>
+   
   );
 }
 
