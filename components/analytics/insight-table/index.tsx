@@ -1,6 +1,6 @@
 // TableComponent.js
 
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { AnalyticsContext } from "../../../context";
 import { UserTableColumns, arrowColumns, buttonColumns, buttonTexts, dashboardColumns } from "../../../data/analytics";
 import SearchButton from "../common/search";
@@ -16,8 +16,12 @@ const UserTable = ({
   dashboardView = false
 }: { dashboardView: boolean }
 ) => {
-  const { loading, error, data, activeSection, totalRecords } = useContext(AnalyticsContext);
+  const { loading, error, data, activeSection, totalRecords, setSortBy } = useContext(AnalyticsContext);
   
+  useEffect(() => {
+    setSortBy("last_session")
+  }, [])
+
   return (
     <section className={`${styles["outer-wrapper"]}`}>
       {
