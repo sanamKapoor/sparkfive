@@ -7,16 +7,16 @@ import { analyticsLayoutSection } from '../../../../constants/analytics';
 function Pagination() {
   const pageNumbers = ["1", "2", "3", "4"]
   const { page, limit, setPage, totalRecords, activeSection } = useContext(AnalyticsContext);
-  const totalPages = totalRecords > limit ? Math.ceil(totalRecords / limit) : totalRecords;
+  const totalPages = Math.ceil(totalRecords / limit);
 
   const handlePrevClick = () => {
     if (page === 1) return;
-    setPage(Math.max(page - 1, 1))
+    setPage(page - 1)
   };
 
   const handleNextClick = () => {
     if (page === totalPages) return;
-    setPage(Math.min(page + 1, totalPages))
+    setPage(page + 1)
   };
 
   const handlePageClick = (newPage) => {
@@ -25,7 +25,7 @@ function Pagination() {
 
   const renderNumericPagination = () => {
     const pages = [];
-    const maxPagesToShow = 5; // Adjust this based on how many pages you want to show
+    const maxPagesToShow = 3; // Adjust this based on how many pages you want to show
 
     if (totalPages <= maxPagesToShow) {
       // Show all pages if there are fewer than or equal to maxPagesToShow
@@ -33,7 +33,7 @@ function Pagination() {
         pages.push(
           <span
             key={i}
-            className={i === page ? 'active' : ''}
+            className={`${styles['pagination-left-arrow']} ${styles['pagination-box']}`}
             onClick={() => handlePageClick(i)}
           >
             {i}
@@ -53,7 +53,7 @@ function Pagination() {
         pages.push(
           <span
             key={i}
-            className={i === page ? 'active' : ''}
+            className={`${styles['pagination-left-arrow']} ${styles['pagination-box']}`}
             onClick={() => handlePageClick(i)}
           >
             {i}

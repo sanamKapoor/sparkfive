@@ -72,7 +72,7 @@ export default ({ children }) => {
       setError('');
     } catch (error) {
       setLoading(false);
-      setError(error.message || 'Users not found!');
+      setError(error.message || 'Data not found.');
       setData(null);
       setTotalRecords(0);
     }
@@ -88,6 +88,7 @@ export default ({ children }) => {
 
   const handleApiEndpoint = async () => {
     switch (activeSection) {
+      case analyticsLayoutSection.DASHBOARD:
       case analyticsLayoutSection.ACCOUNT_USERS:
         setApiEndpoint("users")
         break;

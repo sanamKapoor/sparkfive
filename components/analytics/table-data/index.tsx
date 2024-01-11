@@ -1,10 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./table-data.module.css";
 import { Utilities } from "../../../assets";
 import UserModal from "../modals/user-modal/user-modal";
 import { analyticsLayoutSection } from "../../../constants/analytics";
 import DateFormatter from "../../../utils/date";
 import { AnalyticsContext } from "../../../context";
+import NoData from "../common/no-data";
 
 export default function TableData({ columns, data, arrowColumns, buttonColumns, buttonTexts, imageSource, activeSection }) {
 
@@ -12,10 +13,11 @@ export default function TableData({ columns, data, arrowColumns, buttonColumns, 
   const [activeModal, setActiveModal] = useState<React.ReactElement | null>(null);
   const { setSortBy, setSortOrder, sortOrder } = useContext(AnalyticsContext);
 
-  const handleModals = () => {
+  const handleModals = (name, last_session) => {
     setShowModal(true);
-    setActiveModal(activeSection === analyticsLayoutSection.ACCOUNT_USERS ? <UserModal setShowModal={setShowModal} /> : null)
+    setActiveModal(activeSection === analyticsLayoutSection.ACCOUNT_USERS ? <UserModal setShowModal={setShowModal} name={name} last_session={last_session} /> : null)
   }
+
 
   return (
     <>
@@ -46,18 +48,21 @@ export default function TableData({ columns, data, arrowColumns, buttonColumns, 
             data && data.length > 0 &&
             <tbody>
               {
-                (activeSection === analyticsLayoutSection.ACCOUNT_USERS) ?
+                (
+                  activeSection === analyticsLayoutSection.ACCOUNT_USERS ||
+                  activeSection === analyticsLayoutSection.DASHBOARD
+                ) ?
                   data.map((row) => {
                     return (
                       <tr key={row.id}>
                         <td>{row.name}</td>
-                        <td>{row.roleId}</td>
+                        {activeSection === analyticsLayoutSection.ACCOUNT_USERS && <td>{row.roleId}</td>}
                         <td>{DateFormatter.analyticsDateFormatter(row.last_session)}</td>
                         <td>{row.session_count}</td>
-                        <td>{row.downloads}</td>
-                        <td>{row.shares}</td>
+                        {activeSection === analyticsLayoutSection.ACCOUNT_USERS && <td>{row.downloads}</td>}
+                        {activeSection === analyticsLayoutSection.ACCOUNT_USERS && <td>{row.shares}</td>}
                         <td>
-                          <button className={styles.actionButton} onClick={handleModals}>
+                          <button className={styles.actionButton} onClick={() => handleModals(row.name, DateFormatter.analyticsDateFormatter(row.last_session))}>
                             User Info
                           </button>
                         </td>
@@ -93,6 +98,11 @@ export default function TableData({ columns, data, arrowColumns, buttonColumns, 
       </div>
       {
         showModal && activeModal
+      }
+      {
+        (!data || data.length === 0) && <div className={styles.empty}>
+          <NoData message="Data not found." wrapper={false} />
+        </div>
       }
     </>
   );

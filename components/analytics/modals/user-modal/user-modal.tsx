@@ -12,8 +12,10 @@ import { AnalyticsContext } from "../../../../context";
 import { analyticsLayoutSection } from "../../../../constants/analytics";
 
 function UserModal({
-  setShowModal
-}: { setShowModal: (show: boolean) => void }) {
+  setShowModal,
+  name,
+  last_session
+}: { setShowModal: (show: boolean) => void, name: string, last_session: string }) {
 
   const { activeSection } = useContext(AnalyticsContext);
 
@@ -25,12 +27,12 @@ function UserModal({
           <div className={`${styles["user-detail"]}`}>
             {
               activeSection === analyticsLayoutSection.ACCOUNT_USERS ?
-                <p>User name: <span>Devil</span></p>
+                <p>User name: <span>{name}</span></p>
                 :
                 <p>Email: <span>harveyelliott@mail.com</span></p>
             }
             <p>
-              Last Session Date: <span>05/14/23</span>
+              Last Session Date: <span>{last_session ? last_session : "05/14/23"}</span>
             </p>
           </div>
           <div className={`${styles["table-header-tabs"]}`}>

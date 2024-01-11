@@ -9,6 +9,7 @@ import { calculateBeginDate } from "../../../../config/data/filter";
 
 import dateStyles from "../../../common/filter/date-uploaded.module.css";
 import IconClickable from "../../../common/buttons/icon-clickable";
+import { format } from 'date-fns';
 
 export default function DateFilter() {
   const { filter, setFilter } = useContext(AnalyticsContext);
@@ -50,6 +51,7 @@ export default function DateFilter() {
 
   const handleApplyCustomDate = () => {
     if(!customDate.beginDate) setDateError('Invalid Dates.')
+    setFilter(customDate);
   }
 
   return (
@@ -102,7 +104,7 @@ export default function DateFilter() {
               <label className={styles.label} htmlFor="">From Date</label>
                 <DayPickerInput
                   onDayChange={(day) => handleStartDay(day)}
-                  placeholder={"YYYY-MM-DD"}
+                  // placeholder={"YYYY-MM-DD"}
                   dayPickerProps={{
                     disabledDays: {
                       before: calculateBeginDate(365, 1),
@@ -116,7 +118,7 @@ export default function DateFilter() {
                 <DayPickerInput
                   onDayChange={(day) => handleEndDay(day)}
                   hideOnDayClick={true}
-                  placeholder={"YYYY-MM-DD"}
+                  // placeholder={"YYYY-MM-DD"}
                   dayPickerProps={{
                     className: styles.calendar,
                     disabledDays: {

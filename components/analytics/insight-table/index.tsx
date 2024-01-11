@@ -11,6 +11,8 @@ import Pagination from "../common/pagination";
 import TableData from "../table-data";
 import styles from "./insight-table.module.css";
 import TableHeading from "./table-heading";
+import { analyticsLayoutSection } from "../../../constants/analytics";
+import Loader from "../../common/UI/Loader/loader";
 
 const UserTable = ({
   dashboardView = false
@@ -18,14 +20,10 @@ const UserTable = ({
 ) => {
   const { loading, error, data, activeSection, totalRecords, setSortBy } = useContext(AnalyticsContext);
   
-  useEffect(() => {
-    setSortBy("last_session")
-  }, [])
-
   return (
     <section className={`${styles["outer-wrapper"]}`}>
       {
-        loading ? <div>Loading...</div> :
+        loading ? <div><Loader /></div> :
         (error || !data) ? <NoData message={error} /> :
         <div className={styles.tableResponsive}>
           {/* for web */}
@@ -68,7 +66,7 @@ const UserTable = ({
           </div>
 
           <TableData columns={dashboardView ? dashboardColumns : UserTableColumns} data={data} arrowColumns={arrowColumns} buttonColumns={buttonColumns} buttonTexts={buttonTexts} imageSource="ImageSource" activeSection={activeSection} />
-          {(!dashboardView && totalRecords > 0) && <Pagination />}
+          {(!dashboardView && data && data?.length > 0) && <Pagination />}
         </div>
       }
     </section>
