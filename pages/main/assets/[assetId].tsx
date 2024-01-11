@@ -1,8 +1,11 @@
 import update from 'immutability-helper';
 import fileDownload from 'js-file-download';
+import { useRouter } from 'next/router';
+import querystring from 'querystring';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { Rnd } from 'react-rnd';
+import Cookies from 'universal-cookie';
 
 import { AssetOps, Utilities } from '../../../assets';
 import AssetAddition from '../../../components/common/asset/asset-addition';
@@ -23,15 +26,18 @@ import Button from '../../../components/common/buttons/button';
 import IconClickable from '../../../components/common/buttons/icon-clickable';
 import ConversationList from '../../../components/common/conversation/conversation-list';
 import Dropdown from '../../../components/common/inputs/dropdown';
+import ConfirmModal from '../../../components/common/modals/confirm-modal';
 import RenameModal from '../../../components/common/modals/rename-modal';
+import ShareModal from '../../../components/common/modals/share-modal';
 import { sizeToZipDownload } from '../../../constants/download';
 import { ASSET_DOWNLOAD } from '../../../constants/permissions';
-import { AssetContext, FilterContext, UserContext, AssetDetailContext } from '../../../context';
+import { AssetContext, FilterContext, UserContext } from '../../../context';
 import assetApi from '../../../server-api/asset';
 import shareApi from '../../../server-api/share-collection';
 import customFileSizeApi from '../../../server-api/size';
 import downloadUtils from '../../../utils/download';
 import { isImageType } from '../../../utils/file';
+import selectOptions from '../../../utils/select-options';
 import toastUtils from '../../../utils/toast';
 import urlUtils from '../../../utils/url';
 
@@ -77,7 +83,6 @@ const getDefaultDownloadImageType = (extension) => {
         ]);
     }
 };
-
 const getResizeSize = (assetWidth, assetHeight): any => {
     const maximumWidth = 900;
     const maximumHeight = 900;
@@ -101,34 +106,110 @@ const getResizeSize = (assetWidth, assetHeight): any => {
     };
 };
 
+export async function getServerSideProps({ req, res, query }) {
+    try {
+        const { assetId, isShare, sharePath, sharedCode, activeFolder, availableNext, activeSubFolders } = query;
+
+        const cookies = new Cookies(req.headers.cookie, { path: '/' });
+        // Adding custom headers to the fetch request
+        const headers = {
+            'Content-Type': 'application/json', // Add any headers you need
+            // Additional headers...
+            'Authorization': `Bearer ${cookies.get("jwt")}`
+        };
+        const share = isShare === 'true' ? true : false
+
+        // Using fetch to get data from the API with custom headers
+        let apiUrl = `${process.env.SERVER_BASE_URL}/assets/${assetId} `;
+        if (share) {
+            apiUrl = `${process.env.SERVER_BASE_URL}/share-collections/assets/${assetId}?${querystring.encode({ sharePath, sharedCode })}`;
+        }
+
+        const res = await fetch(apiUrl, { headers });
+
+        // Checking if the response was successful
+        if (!res.ok) {
+            throw new Error(`Failed to fetch data: ${res.statusText} `);
+        }
+        // Parsing the JSON data from the response
+        const data = await res.json();
+
+        const { asset, realUrl, thumbailUrl } = data;
+
+        return {
+            props: {
+                asset: data.asset,
+                realUrl: asset.extension === "tiff" || asset.extension === "tif" ? thumbailUrl : realUrl,
+                thumbailUrl: thumbailUrl,
+                sharePath,
+                isShare: share,
+                sharedCode,
+                activeFolder,
+                availableNext: availableNext === 'true' ? true : false,
+                completeAsset: data,
+                activeSubFolders
+            },
+        };
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        return {
+            props: {
+                realUrl: "",
+                thumbailUrl: "",
+                asset: null,
+                sharePath: "",
+                sharedCode: "",
+                isShare: false,
+                activeFolder: "",
+                availableNext: false,
+                completeAsset: {},
+                activeSubFolders: ""
+            },
+        };
+    }
+}
+
 const DetailOverlay = ({
-    closeOverlay,
-    openShareAsset = () => { },
-    openDeleteAsset = () => { },
-    loadMore = () => { },
-    // isShare = false,
-    // sharePath = "",
-    // activeFolder = "",
-    // initialParams,
+    realUrl,
+    thumbailUrl,
+    asset,
     availableNext = true,
     sharedCode = "",
+    isShare,
+    sharePath,
+    completeAsset,
+    loadMore = () => { },
+    activeSubFolders,
+    activeFolder
 }) => {
+    const router = useRouter();
 
-    const {
-        asset,
-        realUrl,
-        isShare,
-        sharePath,
-        activeFolder,
-        initialParams,
-        thumbnailUrl: thumbailUrl
-    } = useContext(AssetDetailContext)
+    if (!asset) {
+        router.push('/main/assets')
+    }
 
-    const { hasPermission } = useContext(UserContext);
+    const { user, cdnAccess, transcriptAccess, hasPermission, advancedConfig } = useContext(UserContext);
+    const { activeOperation, assets, setAssets, folders, needsFetch, updateDownloadingStatus, setDetailOverlayId, setOperationAssets,
+        subFoldersAssetsViewList: {
+            results: subcollectionAssets,
+            next: nextAsset,
+            total: totalAssets,
+        },
+        setSubFoldersAssetsViewList,
+        subFoldersViewList,
+        currentFolder,
+        setActiveOperation,
+        setOperationAsset,
+        setOperationFolder,
+        operationAsset,
+        operationFolder,
+        operationAssets,
+        setCurrentViewAsset,
+        setActiveFolder,
+        setActiveSubFolders
+    } = useContext(AssetContext);
 
-    const { user, cdnAccess, transcriptAccess } = useContext(UserContext);
-
-    const { activeSortFilter } = useContext(FilterContext);
+    const { activeSortFilter, setActiveSortFilter } = useContext(FilterContext);
 
     const [assetDetail, setAssetDetail] = useState(undefined);
 
@@ -145,18 +226,6 @@ const DetailOverlay = ({
 
     const [activeSideComponent, setActiveSidecomponent] = useState("detail");
 
-    const { assets, setAssets, folders, needsFetch, updateDownloadingStatus, setDetailOverlayId, setOperationAssets,
-        subFoldersAssetsViewList: {
-            results: subcollectionAssets,
-            next: nextAsset,
-            total: totalAssets,
-        },
-        activeSubFolders,
-        setSubFoldersAssetsViewList,
-        subFoldersViewList,
-        currentFolder } =
-        useContext(AssetContext);
-
     const [sideOpen, setSideOpen] = useState(true);
 
     const [versionCount, setVersionCount] = useState(0);
@@ -166,7 +235,6 @@ const DetailOverlay = ({
     const [versionRealUrl, setVersionRealUrl] = useState(realUrl);
     const [versionThumbnailUrl, setVersionThumbnailUrl] = useState(thumbailUrl);
     const [previewUrl, setPreviewUrl] = useState(null);
-
     const resizeSizes = getResizeSize(currentAsset.dimensionWidth, currentAsset.dimensionHeight);
 
     const [detailPosSize, setDetailPosSize] = useState({
@@ -175,25 +243,31 @@ const DetailOverlay = ({
         width: resizeSizes.width,
         height: resizeSizes.height,
     });
+
     const [defaultSize, setDefaultSize] = useState({
         width: currentAsset.dimensionWidth,
         height: currentAsset.dimensionHeight,
     });
+
     const [notes, setNotes] = useState([]);
     const [sizeOfCrop, setSizeOfCrop] = useState({
         width: defaultSize.width,
         height: defaultSize.height,
     });
+
     const [transcripts, setTranscript] = useState([]);
 
-    const renameValue = useRef("");
+    // delete state
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [activeAssetId, setActiveAssetId] = useState("");
 
+    const renameValue = useRef("");
     const setRenameValue = (value) => {
         renameValue.current = value;
     };
 
     const calculateNoteHeight = () => {
-        const element = document.getElementById(`notes-${currentAsset.id}`);
+        const element = document.getElementById(`notes - ${currentAsset.id} `);
         return element ? element.offsetHeight + 90 : 0;
     };
 
@@ -306,7 +380,6 @@ const DetailOverlay = ({
         if (transcriptAccess) {
             getTranscript();
         }
-
         getCropResizeOptions();
         getDetail();
         checkInitialParams();
@@ -331,15 +404,57 @@ const DetailOverlay = ({
         };
     }, []);
 
-    const checkInitialParams = () => {
-        if (initialParams?.side) {
-            setActiveSidecomponent(initialParams.side);
+    useEffect(() => {
+        if (asset) {
+            if ((!needsFetch || needsFetch === "versions") && !isShare) {
+                loadVersions();
+            }
+            if (!needsFetch) {
+                loadNotes();
+            }
         }
+    }, [needsFetch]);
+
+    // Subscribe mode change, if user back/enter to detail page, should reset all size value do default
+    useEffect(() => {
+        if (mode === "detail") {
+            // Set default size to none
+            setSizes([
+                {
+                    label: "Original",
+                    value: "none",
+                    width: currentAsset.dimensionWidth,
+                    height: currentAsset.dimensionHeight,
+                },
+            ]);
+
+            setSize({
+                label: "Original",
+                value: "none",
+                width: currentAsset.dimensionWidth,
+                height: currentAsset.dimensionHeight,
+            });
+
+            setPreset({
+                label: "None",
+                value: "none",
+                width: currentAsset.dimensionWidth,
+                height: currentAsset.dimensionHeight,
+            });
+
+            setWidth(currentAsset.dimensionWidth);
+            setHeight(currentAsset.dimensionHeight);
+        }
+    }, [mode, currentAsset]);
+
+    const checkInitialParams = () => {
+        setActiveSidecomponent("detail");
     };
 
     const getDetail = async (curAsset?) => {
         try {
             const asset = curAsset || currentAsset;
+            console.log(isShare, typeof isShare)
             if (isShare) {
                 const { data } = await shareApi.getAssetById(asset.id, { sharePath, sharedCode });
 
@@ -399,54 +514,45 @@ const DetailOverlay = ({
         }
     };
 
+    const updateAssetName = async (assetId, newValue, assetsList, setAssetsList) => {
+        try {
+            const editedName = `${newValue}.${assetDetail.extension} `;
+            await assetApi.updateAsset(assetId, {
+                updateData: { name: editedName },
+            });
+            const modAssetIndex = assetsList.findIndex((assetItem) => assetItem.asset.id === assetId);
+            if (modAssetIndex !== -1) {
+                setAssetsList(
+                    update(assetsList, {
+                        [modAssetIndex]: {
+                            asset: {
+                                name: { $set: editedName },
+                            },
+                        },
+                    })
+                );
+                setAssetDetail(
+                    update(assetDetail, {
+                        name: { $set: editedName },
+                    })
+                );
+                toastUtils.success("Asset name updated");
+            }
+
+        } catch (err) {
+            toastUtils.error("Could not update asset name");
+        }
+    };
+
     const confirmAssetRename = async (newValue) => {
         try {
             if (activeSortFilter.mainFilter === "SubCollectionView") {
-                const editedName = `${newValue}.${assetDetail.extension}`;
-                await assetApi.updateAsset(currentAsset.id, {
-                    updateData: { name: editedName },
-                });
-                const modAssetIndex = subcollectionAssets.findIndex((assetItem) => assetItem.asset.id === currentAsset.id);
-                setSubFoldersAssetsViewList({
-                    next: nextAsset,
-                    total: totalAssets,
-                    results: update(subcollectionAssets, {
-                        [modAssetIndex]: {
-                            asset: {
-                                name: { $set: editedName },
-                            },
-                        },
-                    }),
-                });
-                setAssetDetail(
-                    update(assetDetail, {
-                        name: { $set: editedName },
-                    }),
-                );
+                await updateAssetName(currentAsset.id, newValue, subcollectionAssets, setSubFoldersAssetsViewList);
             } else {
-                const editedName = `${newValue}.${assetDetail.extension}`;
-                await assetApi.updateAsset(currentAsset.id, {
-                    updateData: { name: editedName },
-                });
-                const modAssetIndex = assets.findIndex((assetItem) => assetItem.asset.id === currentAsset.id);
-                setAssets(
-                    update(assets, {
-                        [modAssetIndex]: {
-                            asset: {
-                                name: { $set: editedName },
-                            },
-                        },
-                    }),
-                );
-                setAssetDetail(
-                    update(assetDetail, {
-                        name: { $set: editedName },
-                    }),
-                );
+                await updateAssetName(currentAsset.id, newValue, assets, setAssets);
             }
-            toastUtils.success("Asset name updated");
         } catch (err) {
-            toastUtils.error("Could not update asset name");
+            // Handle the error if needed
         }
     };
 
@@ -611,38 +717,6 @@ const DetailOverlay = ({
         return (preset && preset.value !== "none") || (size && size.value !== "none");
     };
 
-    // Subscribe mode change, if user back/enter to detail page, should reset all size value do default
-    useEffect(() => {
-        if (mode === "detail") {
-            // Set default size to none
-            setSizes([
-                {
-                    label: "Original",
-                    value: "none",
-                    width: currentAsset.dimensionWidth,
-                    height: currentAsset.dimensionHeight,
-                },
-            ]);
-
-            setSize({
-                label: "Original",
-                value: "none",
-                width: currentAsset.dimensionWidth,
-                height: currentAsset.dimensionHeight,
-            });
-            setPreset({
-                label: "None",
-                value: "none",
-                width: currentAsset.dimensionWidth,
-                height: currentAsset.dimensionHeight,
-            });
-
-            setWidth(currentAsset.dimensionWidth);
-            setHeight(currentAsset.dimensionHeight);
-        }
-    }, [mode, currentAsset]);
-
-
     const downloadSelectedAssets = async (id) => {
         const { shareJWT, code } = urlUtils.getQueryParameters();
 
@@ -698,7 +772,7 @@ const DetailOverlay = ({
         } catch (e) {
             const errorResponse = (await e.response.data.text()) || "{}";
             const parsedErrorResponse = JSON.parse(errorResponse);
-            console.log(`Error in detail-overlay`);
+            console.log(`Error in detail - overlay`);
             updateDownloadingStatus("error", 0, 0, parsedErrorResponse.message || "Internal Server Error. Please try again.");
         }
     };
@@ -755,15 +829,6 @@ const DetailOverlay = ({
             // console.log(err)
         }
     };
-
-    useEffect(() => {
-        if ((!needsFetch || needsFetch === "versions") && !isShare) {
-            loadVersions();
-        }
-        if (!needsFetch) {
-            loadNotes();
-        }
-    }, [needsFetch]);
 
     const revertToCurrent = async (version) => {
         try {
@@ -890,12 +955,6 @@ const DetailOverlay = ({
         }
     };
 
-    const _closeOverlay = () => {
-        setOperationAssets([]);
-        closeOverlay(changedVersion ? currentAsset : undefined);
-        setDetailOverlayId(undefined);
-    };
-
     const resetImageSettings = (newWidth, newHeight) => {
         const img = document.querySelector(".app-overlay img.img-preview") as HTMLImageElement;
         // const draggable = document.querySelector('.app-overlay .react-draggable') as HTMLDivElement;
@@ -940,9 +999,71 @@ const DetailOverlay = ({
                 },
             ),
         );
-
         setWidth(w);
         setHeight(h);
+    };
+
+    //close overlay
+    const _closeOverlay = () => {
+        setOperationAssets([]);
+        onCloseOverlay(changedVersion ? currentAsset : undefined);
+        setDetailOverlayId(undefined);
+    };
+
+    const onCloseOverlay = (changedVersion = null) => {
+        if (changedVersion) {
+            refreshVersion(changedVersion);
+        }
+        if (activeFolder !== "" && activeSubFolders !== "") {
+            setActiveFolder("");
+            setActiveSubFolders(activeFolder);
+            setActiveSortFilter({
+                ...activeSortFilter,
+                mainFilter: activeSubFolders ? "SubCollectionView" : activeSortFilter.mainFilter,
+                sort: advancedConfig.collectionSortView === "alphabetical" ? selectOptions.sort[3] : selectOptions.sort[1],
+            });
+        } else if (activeFolder !== "" && activeSubFolders === "") {
+            setActiveFolder(activeFolder);
+            setActiveSubFolders("");
+            setActiveSortFilter({
+                ...activeSortFilter,
+                mainFilter: activeSubFolders ? "SubCollectionView" : activeSortFilter.mainFilter,
+                sort: advancedConfig.collectionSortView === "alphabetical" ? selectOptions.sort[3] : selectOptions.sort[1],
+            });
+        }
+        router.push("/main/assets")
+    };
+
+    const refreshVersion = (currentVersion) => {
+        if (!currentVersion) {
+            return;
+        }
+        const assetsList = activeSortFilter.mainFilter === "SubCollectionView" ? subcollectionAssets : assets;
+
+        const clonedAssets = [...assetsList].filter((asset) => !asset.isUploading);
+        const versionIndex = clonedAssets.findIndex((item) => item.asset.versionGroup === currentVersion.versionGroup);
+
+        if (versionIndex !== -1) {
+            const oldAsset = clonedAssets[versionIndex];
+            const newVersionAsset = {
+                asset: currentVersion,
+                realUrl: currentVersion.realUrl,
+                thumbailUrl: currentVersion.thumbailUrl,
+                toggleSelected: { ...oldAsset.toggleSelected },
+            };
+
+            clonedAssets[versionIndex] = newVersionAsset;
+
+            if (activeSortFilter.mainFilter === "SubCollectionView") {
+                setSubFoldersAssetsViewList({
+                    nextAsset,
+                    totalAssets,
+                    results: clonedAssets,
+                });
+            } else {
+                setAssets(clonedAssets);
+            }
+        }
     };
 
     const editThenDownload =
@@ -971,13 +1092,183 @@ const DetailOverlay = ({
             }
         }
     };
+
+    const beginAssetOperation = ({ asset = null, folder = null }, operation) => {
+        console.log("hhhhhhhhh")
+        if (asset) setOperationAsset(asset);
+        if (folder) setOperationFolder(folder);
+        setActiveOperation(operation);
+    };
+    let operationLength = 0;
+
+    // Check selected assets to be operated
+    if (operationAsset) {
+        operationLength = 1;
+    } else if (operationFolder) {
+        operationLength = operationFolder.assets.length;
+    } else if (operationAssets.length > 0) {
+        operationLength = operationAssets.length;
+    }
+
+    // ------- share asset functionality ------- //
+
+    const openShareAsset = () => {
+        return beginAssetOperation({ asset: completeAsset }, "share")
+    }
+
+    const shareAssets = async (recipients, message, sharedLinkData, closeAfterDone = true, showStatusToast = true) => {
+        return new Promise<any>(async (resolve) => {
+            try {
+                let assetIds;
+                let filters = {};
+                if (operationAsset) {
+                    assetIds = operationAsset.asset.id;
+                } else if (operationFolder) {
+                    assetIds = operationFolder.assets.map((asset) => asset.id).join(",");
+                } else if (operationAssets.length > 0) {
+                    assetIds = operationAssets.map((item) => item.asset.id).join(",");
+                }
+
+                const result = await assetApi.generateAndSendShareUrl(
+                    {
+                        recipients,
+                        message,
+                        ...sharedLinkData,
+                        expiredPeriod: sharedLinkData.expiredPeriod?.value || "",
+                        assetIds,
+                    },
+                    filters,
+                );
+
+                if (showStatusToast) {
+                    toastUtils.success("Assets shared succesfully");
+                }
+
+                if (closeAfterDone) {
+                    closeModalAndClearOpAsset();
+                }
+
+                resolve(result);
+            } catch (err) {
+                console.log(err);
+                if (showStatusToast) {
+                    toastUtils.error("Could not share assets, please try again later.");
+                }
+                resolve({});
+            }
+        });
+    };
+
+    const getShareLink = async (name, subCollectionShare = false) => {
+        try {
+            let versionGroups;
+            let assetIds;
+            let filters = {};
+            if (operationAsset) {
+                versionGroups = operationAsset.asset.versionGroup;
+                assetIds = operationAsset.asset.id;
+            } else if (operationFolder) {
+                versionGroups = operationFolder.assets.map((asset) => asset.versionGroup).join(",");
+                assetIds = operationFolder.assets.map((asset) => asset.id).join(",");
+            } else if (operationAssets.length > 0) {
+                versionGroups = operationAssets.map((item) => item.asset.versionGroup).join(",");
+                assetIds = operationAssets.map((item) => item.asset.id).join(",");
+            }
+            filters["name"] = name;
+            const getCustomFields = (filters) => {
+                let fields = "";
+                Object.keys(filters).map((key) => {
+                    if (key.includes("custom-p")) {
+                        if (fields) {
+                            fields = `${fields},${filters[key]} `;
+                        } else {
+                            fields = `${filters[key]} `;
+                        }
+                    }
+                });
+                return fields;
+            };
+
+            const customFields = getCustomFields(filters);
+            const params = {
+                versionGroups,
+                assetIds,
+            };
+            // Create sub collection from tags/custom fields (only create sub colleciton if all filtered assets selected)
+            if (filters["folderId"] && (customFields || filters["tags"]) && filters["selectedAll"] && subCollectionShare) {
+                params["customFields"] = customFields;
+                params["folderId"] = filters["folderId"];
+                params["tags"] = filters["tags"];
+                filters["subCollection"] = "1";
+            }
+            return await assetApi.getShareUrl(params, filters);
+        } catch (err) {
+            console.log(err);
+            return "";
+        }
+    };
+
+    const closeModalAndClearOpAsset = () => {
+        setActiveOperation("");
+        setOperationAsset(null);
+        setOperationFolder(null);
+    };
+
+    // -------  delete Overlay single module ------- //
+
+    const openDeleteAsset = (id) => {
+        setActiveAssetId(id);
+        setDeleteModalOpen(true);
+    };
+
+    const deleteAsset = async (id) => {
+        try {
+            let assetsApi: any = assetApi;
+            await assetsApi.updateAsset(id, {
+                updateData: {
+                    status: "deleted",
+                    stage: "draft",
+                    deletedAt: new Date(new Date().toUTCString()).toISOString(),
+                },
+            });
+            if (mode === "SubCollectionView") {
+                const assetIndex = subcollectionAssets.findIndex((assetItem) => assetItem.asset.id === id);
+                if (assetIndex !== -1) {
+                    setSubFoldersAssetsViewList({
+                        next: nextAsset,
+                        results: update(subcollectionAssets, {
+                            $splice: [[assetIndex, 1]],
+                        }),
+                        total: totalAssets - 1,
+                    });
+                }
+            } else {
+                const assetIndex = assets.findIndex((assetItem) => assetItem.asset.id === id);
+                if (assetIndex !== -1)
+                    setAssets(
+                        update(assets, {
+                            $splice: [[assetIndex, 1]],
+                        }),
+                    );
+            }
+            onCloseOverlay()
+            toastUtils.success("Assets deleted successfully");
+        } catch (err) {
+            console.log("🚀 ~ deleteAsset ~ err:", err)
+            // TODO: Error handling
+            toastUtils.error("Could not delete assets, please try again later.");
+        }
+    };
+
     return (
-        <div className={`app-overlay ${styles.container} ${isShare ? styles.share : ""}`}>
+        <div className={`app - overlay ${styles.container} ${isShare ? styles.share : ""} `}>
             {assetDetail && (
                 <section id={"detail-overlay"} className={styles.content}>
                     <div className={styles["top-wrapper"]}>
                         <div className={styles["back-name"]}>
-                            <div className={styles.back} onClick={_closeOverlay}>
+                            <div className={styles.back}
+                                onClick={_closeOverlay}
+                            >
                                 <IconClickable src={Utilities.backWhite} />
                                 <span>Back</span>
                             </div>
@@ -1038,7 +1329,6 @@ const DetailOverlay = ({
                                         className={`container ${styles["only-desktop-button"]} primary`}
                                         onClick={openShareAsset}
                                     />
-
                                     <div className={styles["only-mobile-button"]}>
                                         <IconClickable
                                             additionalClass={styles["only-mobile-button"]}
@@ -1098,13 +1388,13 @@ const DetailOverlay = ({
                         </div>
                     </div>
                     <div className={styles["notes-container"]}>
-                        <div className={styles["notes-wrapper"]} id={`notes-${currentAsset.id}`}>
+                        <div className={styles["notes-wrapper"]} id={`notes - ${currentAsset.id} `}>
                             {notes.map(
                                 (note, indx) =>
                                     ((isShare && !note.internal) || !isShare) && (
                                         <AssetNote
                                             key={indx.toString()}
-                                            title={`Note ${indx + 1}`}
+                                            title={`Note ${indx + 1} `}
                                             note={note.text}
                                             onShowClick={() => {
                                                 onChangeNoteHeight();
@@ -1116,8 +1406,8 @@ const DetailOverlay = ({
 
                         <div
                             className={`${!isShare ? styles["img-wrapper"] : styles["share-img-wrapper"]}${activeFolder && ` ${styles["active-folderimg"]}`
-                                }`}
-                            style={{ height: `calc(100% - ${noteHeight}px)` }}
+                                } `}
+                            style={{ height: `calc(100 % - ${noteHeight}px)` }}
                         >
                             {assetDetail.type === "image" && (
                                 <>
@@ -1146,7 +1436,7 @@ const DetailOverlay = ({
                                                 width: detailPosSize.width,
                                                 height: detailPosSize.height,
                                             }}
-                                            className={`${styles["react-draggable"]}`}
+                                            className={`${styles["react-draggable"]} `}
                                             lockAspectRatio={true}
                                             onResizeStop={(e, direction, ref, delta, position) =>
                                                 onResizeStop(ref.style.width, ref.style.height, position)
@@ -1380,7 +1670,7 @@ const DetailOverlay = ({
                         <IconClickable
                             src={Utilities.closePanelLight}
                             onClick={() => toggleSideMenu()}
-                            additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"}`}
+                            additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"} `}
                         />{" "}
                         <IconClickable
                             SVGElement={isMobile ? Utilities.infoGray : Utilities.info}
@@ -1401,15 +1691,15 @@ const DetailOverlay = ({
                             src={Utilities.closePanelLight}
                             onClick={() => toggleSideMenu()}
                             additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"} ${styles.expand
-                                }`}
+                                } `}
                         />
                         {!isShare && (
                             <>
-                                <div className={`${styles.separator} ${styles.expand}`}></div>
+                                <div className={`${styles.separator} ${styles.expand} `}></div>
                                 <IconClickable
                                     SVGElement={Utilities.delete}
                                     additionalClass={styles["menu-icon"] + " " + styles["only-desktop-button"]}
-                                    onClick={openDeleteAsset}
+                                    onClick={() => openDeleteAsset(assetDetail.id)}
                                 />
                             </>
                         )}
@@ -1535,7 +1825,30 @@ const DetailOverlay = ({
                 type={"Asset"}
                 initialValue={assetDetail?.name?.substring(0, assetDetail?.name.lastIndexOf("."))}
             />
-        </div >
+            <ShareModal
+                modalIsOpen={activeOperation === "share"}
+                closeModal={closeModalAndClearOpAsset}
+                itemsAmount={operationLength}
+                shareAssets={shareAssets}
+                getShareLink={getShareLink}
+            />
+            {/* Delete modal */}
+            <ConfirmModal
+                closeModal={() => setDeleteModalOpen(false)}
+                confirmAction={() => {
+                    deleteAsset(activeAssetId);
+                    setActiveAssetId("");
+                    setDeleteModalOpen(false);
+                }}
+                confirmText={"Delete"}
+                message={
+                    <span>
+                        Are you sure you want to &nbsp;<strong>Delete</strong>&nbsp; this asset?
+                    </span>
+                }
+                modalIsOpen={deleteModalOpen}
+            />
+        </div>
     );
 };
 

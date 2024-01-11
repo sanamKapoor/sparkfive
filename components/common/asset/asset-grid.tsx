@@ -1,37 +1,36 @@
-import copyClipboard from "copy-to-clipboard";
-import update from "immutability-helper";
-import fileDownload from "js-file-download";
-import { CSSProperties, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { Waypoint } from "react-waypoint";
+import copyClipboard from 'copy-to-clipboard';
+import update from 'immutability-helper';
+import fileDownload from 'js-file-download';
+import { CSSProperties, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React from 'react';
+import { Waypoint } from 'react-waypoint';
 
-import React from "react";
-import { sizeToZipDownload } from "../../../constants/download";
-import { ASSET_ACCESS } from "../../../constants/permissions";
-import { AssetContext, FilterContext, LoadingContext, UserContext } from "../../../context";
-import useSortedAssets from "../../../hooks/use-sorted-assets";
-import assetApi from "../../../server-api/asset";
-import folderApi from "../../../server-api/folder";
-import shareApi from "../../../server-api/share-collection";
-import { checkIfUserCanEditThumbnail } from "../../../utils/asset";
-import downloadUtils from "../../../utils/download";
-import toastUtils from "../../../utils/toast";
-import urlUtils from "../../../utils/url";
-import SubCollection from "../../Sub-collection/sub-collection";
-import Button from "../buttons/button";
-import FilterView from "../filter-view";
-import FolderGridItem from "../folder/folder-grid-item";
-import useDropzone from "../misc/dropzone";
-import ChangeThumbnail from "../modals/change-thumnail-modal";
-import ConfirmModal from "../modals/confirm-modal";
-import AssetTableHeader from "./Asset-table-header/asset-table-header";
-import FolderTableHeader from "./Folder-table-header/folder-table-header";
-import AssetAddition from "./asset-addition";
-import styles from "./asset-grid.module.css";
-import AssetThumbail from "./asset-thumbail";
-import AssetUpload from "./asset-upload";
-import DetailOverlay from "./detail-overlay";
-import { ASSET_UPLOAD_APPROVAL } from "../../../constants/permissions";
-import DragSelect from "dragselect";
+import { sizeToZipDownload } from '../../../constants/download';
+import { ASSET_ACCESS, ASSET_UPLOAD_APPROVAL } from '../../../constants/permissions';
+import { AssetContext, FilterContext, LoadingContext, UserContext } from '../../../context';
+import useSortedAssets from '../../../hooks/use-sorted-assets';
+import assetApi from '../../../server-api/asset';
+import folderApi from '../../../server-api/folder';
+import shareApi from '../../../server-api/share-collection';
+import { checkIfUserCanEditThumbnail } from '../../../utils/asset';
+import downloadUtils from '../../../utils/download';
+import toastUtils from '../../../utils/toast';
+import urlUtils from '../../../utils/url';
+import SubCollection from '../../Sub-collection/sub-collection';
+import Button from '../buttons/button';
+import FilterView from '../filter-view';
+import FolderGridItem from '../folder/folder-grid-item';
+import useDropzone from '../misc/dropzone';
+import ChangeThumbnail from '../modals/change-thumnail-modal';
+import ConfirmModal from '../modals/confirm-modal';
+import AssetAddition from './asset-addition';
+import styles from './asset-grid.module.css';
+import AssetTableHeader from './Asset-table-header/asset-table-header';
+import AssetThumbail from './asset-thumbail';
+import AssetUpload from './asset-upload';
+import DetailOverlay from './detail-overlay';
+import FolderTableHeader from './Folder-table-header/folder-table-header';
+
 // import { useDrag } from 'react-dnd';
 // import {
 //   Box,
@@ -61,8 +60,11 @@ const AssetGrid = ({
   getSubCollectionsAssetData,
   getSubFolders,
 }) => {
+
   let isDragging;
+
   if (!isShare) isDragging = useDropzone();
+
   const {
     assets,
     setAssets,
@@ -78,7 +80,9 @@ const AssetGrid = ({
     setListUpdateFlag,
     sidebarOpen,
   } = useContext(AssetContext);
+
   const { activeSortFilter } = useContext(FilterContext);
+
   //Drog select assets
 
   // const [selectedIndexes, setSelectedIndexes] = useState<string[]>([]);
@@ -90,8 +94,8 @@ const AssetGrid = ({
   const { advancedConfig, hasPermission, user } = useContext(UserContext);
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [activeArchiveAsset, setActiveArchiveAsset] = useState(undefined);
   const [activeAssetId, setActiveAssetId] = useState("");
+  const [activeArchiveAsset, setActiveArchiveAsset] = useState(undefined);
 
   const [activeSearchOverlay, setActiveSearchOverlay] = useState(false);
 
@@ -598,6 +602,7 @@ const AssetGrid = ({
                             <div className={activeView === "grid" && styles["collection-assets"]}>
                               <AssetThumbail
                                 {...assetItem}
+                                assetItem={assetItem}
                                 sharePath={sharePath}
                                 activeFolder={activeFolder}
                                 isShare={isShare}

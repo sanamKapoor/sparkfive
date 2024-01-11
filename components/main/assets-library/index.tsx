@@ -124,9 +124,9 @@ const AssetsLibrary = () => {
 
   const preparingAssets = useRef(true);
 
-
   // When tag, campaigns, collection changes, used for click on tag/campaigns/collection in admin attribute management
   useEffect(() => {
+    console.log("1")
     if (!preparingAssets.current) return;
     if (!router.query.tag && !router.query.product && !router.query.collection && !router.query.campaign) {
       preparingAssets.current = false;
@@ -214,6 +214,7 @@ const AssetsLibrary = () => {
   }, [tags, productFields.sku, collection, campaigns]);
 
   useEffect(() => {
+    console.log("2")
     if (hasPermission([ASSET_ACCESS])) {
       // Assets are under preparing (for query etc)
       if (preparingAssets.current) {
@@ -250,6 +251,7 @@ const AssetsLibrary = () => {
   }, [activeSortFilter, firstLoaded, term]);
 
   useEffect(() => {
+    console.log("3")
     if (firstLoaded && activeSubFolders) {
       setActiveSortFilter({
         ...activeSortFilter,
@@ -260,6 +262,7 @@ const AssetsLibrary = () => {
   }, [activeSubFolders]);
 
   useEffect(() => {
+    console.log("4")
     if (firstLoaded && activeFolder) {
       setActiveSortFilter({
         ...activeSortFilter,
@@ -269,6 +272,7 @@ const AssetsLibrary = () => {
   }, [activeFolder]);
 
   useEffect(() => {
+    console.log("5")
     if (needsFetch === "assets") {
       getAssets();
     } else if (needsFetch === "folders") {
@@ -281,9 +285,11 @@ const AssetsLibrary = () => {
   }, [needsFetch]);
 
   useEffect(() => {
+    console.log("6")
     if (activeMode === "folders") {
       setAssets(assets.map((asset) => ({ ...asset, isSelected: false })));
     }
+
     if (activeMode === "assets") {
       setFolders(folders.map((folder) => ({ ...folder, isSelected: false })));
     }
@@ -302,13 +308,16 @@ const AssetsLibrary = () => {
       ...initialActiveSortFilters,
       ...DEFAULT_CUSTOM_FIELD_FILTERS(activeSortFilter),
     });
+
   }, [activeMode]);
 
   useEffect(() => {
+    console.log("7")
     updateSortFilterByAdvConfig();
   }, [advancedConfig.set]);
 
   useEffect(() => {
+    console.log("8")
     const timer = setTimeout(() => {
       if (loadingAssets) {
         setShowOverlayLoader(true);
@@ -336,14 +345,12 @@ const AssetsLibrary = () => {
     } else if (params.mainFilter) {
       defaultTab = params.mainFilter;
     }
-
     let sort = { ...activeSortFilter.sort };
     if (defaultTab === "folders" && !params.folderId) {
       sort = advancedConfig.collectionSortView === "alphabetical" ? selectOptions.sort[3] : selectOptions.sort[1];
     } else {
       sort = advancedConfig.assetSortView === "newest" ? selectOptions.sort[1] : selectOptions.sort[3];
     }
-
     setActiveSortFilter({
       ...activeSortFilter,
       mainFilter: defaultTab,
@@ -379,11 +386,11 @@ const AssetsLibrary = () => {
         const updatedAssets = assets.map((asset, index) =>
           index === i
             ? {
-                ...asset,
-                status: "fail",
-                index,
-                error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
-              }
+              ...asset,
+              status: "fail",
+              index,
+              error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
+            }
             : asset,
         );
 
@@ -427,8 +434,8 @@ const AssetsLibrary = () => {
           assets[i].dragDropFolderUpload
             ? new Date((file.lastModifiedDate || new Date(file.lastModified)).toUTCString()).toISOString()
             : new Date(
-                (file.originalFile.lastModifiedDate || new Date(file.originalFile.lastModified)).toUTCString(),
-              ).toISOString(),
+              (file.originalFile.lastModifiedDate || new Date(file.originalFile.lastModified)).toUTCString(),
+            ).toISOString(),
         );
 
         let size = totalSize;
@@ -1047,17 +1054,17 @@ const AssetsLibrary = () => {
       {(activeMode === "assets"
         ? selectedAssets.length
         : activeMode === "folders"
-        ? selectedFolders.length
-        : selectedSubFoldersAndAssets.folders.length || selectedSubFoldersAndAssets.assets.length) > 0 && (
-        <AssetHeaderOps
-          isUnarchive={activeSortFilter.mainFilter === "archived"}
-          isFolder={activeMode === "folders"}
-          deletedAssets={false}
-          activeMode={activeMode}
-          selectedFolders={selectedFolders}
-          selectedSubFoldersAndAssets={selectedSubFoldersAndAssets}
-        />
-      )}
+          ? selectedFolders.length
+          : selectedSubFoldersAndAssets.folders.length || selectedSubFoldersAndAssets.assets.length) > 0 && (
+          <AssetHeaderOps
+            isUnarchive={activeSortFilter.mainFilter === "archived"}
+            isFolder={activeMode === "folders"}
+            deletedAssets={false}
+            activeMode={activeMode}
+            selectedFolders={selectedFolders}
+            selectedSubFoldersAndAssets={selectedSubFoldersAndAssets}
+          />
+        )}
       {hasPermission([ASSET_ACCESS]) || hasPermission([ASSET_UPLOAD_APPROVAL]) ? (
         <>
           <main className={`${styles.container}`}>
@@ -1093,9 +1100,8 @@ const AssetsLibrary = () => {
                   )}
                 </div>
                 <div
-                  className={`${sidebarOpen ? styles["grid-wrapper-web"] : styles["grid-wrapper"]} ${
-                    activeFolder && styles["active-breadcrumb-item"]
-                  }`}
+                  className={`${sidebarOpen ? styles["grid-wrapper-web"] : styles["grid-wrapper"]} ${activeFolder && styles["active-breadcrumb-item"]
+                    }`}
                 >
                   <DropzoneProvider>
                     {advancedConfig.set && (

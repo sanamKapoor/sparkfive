@@ -1,26 +1,24 @@
-import { format } from "date-fns";
-import filesize from "filesize";
-import { ChangeEvent, useContext, useEffect, useState } from "react";
-import React from "react";
-import HoverVideoPlayer from "react-hover-video-player";
-import { Utilities } from "../../../assets";
-import { ASSET_NAME_UPDATED, FAILED_TO_UPDATE_ASSET_NAME } from "../../../constants/messages";
-import { AssetContext, AssetDetailContext } from "../../../context";
-import assetApi from "../../../server-api/asset";
-import { getParsedExtension, removeExtension } from "../../../utils/asset";
-import toastUtils from "../../../utils/toast";
-import Button from "../buttons/button";
-import IconClickable from "../buttons/icon-clickable";
-import Spinner from "../spinners/spinner";
-import gridStyles from "./asset-grid.module.css";
-import AssetIcon from "./asset-icon";
-import AssetImg from "./asset-img";
-import AssetOptions from "./asset-options";
-import styles from "./asset-thumbail.module.css";
-import DetailOverlay from "./detail-overlay";
-import RenameModal from "../../common/modals/rename-modal";
-import update from "immutability-helper";
-import { useRouter } from "next/router";
+import { format } from 'date-fns';
+import filesize from 'filesize';
+import { useRouter } from 'next/router';
+import { useContext, useEffect, useState } from 'react';
+import React from 'react';
+import HoverVideoPlayer from 'react-hover-video-player';
+
+import { Utilities } from '../../../assets';
+import { AssetContext } from '../../../context';
+import assetApi from '../../../server-api/asset';
+import { removeExtension } from '../../../utils/asset';
+import toastUtils from '../../../utils/toast';
+import RenameModal from '../../common/modals/rename-modal';
+import Button from '../buttons/button';
+import IconClickable from '../buttons/icon-clickable';
+import Spinner from '../spinners/spinner';
+import gridStyles from './asset-grid.module.css';
+import AssetIcon from './asset-icon';
+import AssetImg from './asset-img';
+import AssetOptions from './asset-options';
+import styles from './asset-thumbail.module.css';
 
 // Components
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
@@ -65,6 +63,8 @@ const AssetThumbail = ({
   activeView,
   mode,
   style,
+  assetItem,
+  availableNext = true
 }) => {
 
   const [overlayProperties, setOverlayProperties] = useState(DEFAULT_DETAIL_PROPS);
@@ -77,16 +77,8 @@ const AssetThumbail = ({
     subFoldersAssetsViewList: { results: subAssets, next: nextAsset, total: totalAssets },
     setListUpdateFlag,
     setSubFoldersAssetsViewList,
+    activeSubFolders
   } = useContext(AssetContext);
-
-  const {
-    setSharePath,
-    setisShare,
-    setAsset,
-    setrealUrl,
-    setactiveFolder,
-    setThumbnailURL,
-    setInitialParam } = useContext(AssetDetailContext)
 
   const isAssetACopy = asset.name.endsWith(" - COPY");
 
@@ -214,26 +206,16 @@ const AssetThumbail = ({
           ...DEFAULT_DETAIL_PROPS,
           visible: !overlayProperties.visible,
         });
-        // console.log(thumbailUrl, "thumbailUrl")
 
-        // setSharePath(sharePath);
-        // setisShare(isShare);
-        // setAsset(asset);
-        // setrealUrl(asset.extension === "tiff" || asset.extension === "tif" ? thumbailUrl : realUrl);
-        // setactiveFolder(activeFolder);
-        // setThumbnailURL(thumbailUrl);
-        // setInitialParam(overlayProperties);
-
-        // if (!overlayProperties.visible) {
-        //   router.push(`/main/assets/${asset.id}`)
-        // }
-
+        if (!overlayProperties.visible) {
+          router.push({
+            pathname: `/main/assets/${asset.id}`,
+            query: { isShare, sharePath, sharedCode: "", activeFolder, availableNext, activeSubFolders }
+          });
+        }
       }
     }
   };
-
-
-
 
   return (
     <>
@@ -421,7 +403,7 @@ const AssetThumbail = ({
         type={"Asset"}
         initialValue={assetName}
       />
-      {overlayProperties.visible && (
+      {/* {overlayProperties.visible && (
         <DetailOverlay
           sharePath={sharePath}
           isShare={isShare}
@@ -435,7 +417,7 @@ const AssetThumbail = ({
           closeOverlay={onCloseOverlay}
           loadMore={loadMore}
         />
-      )}
+      )} */}
     </>
   );
 };

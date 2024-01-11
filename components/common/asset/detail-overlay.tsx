@@ -1,47 +1,41 @@
-import update from "immutability-helper";
-import { useContext, useEffect, useRef, useState } from "react";
-import { Rnd } from "react-rnd";
-import { AssetOps, Utilities } from "../../../assets";
-import { AssetContext, UserContext, FilterContext } from "../../../context";
-import assetApi from "../../../server-api/asset";
-import shareApi from "../../../server-api/share-collection";
-import customFileSizeApi from "../../../server-api/size";
-import toastUtils from "../../../utils/toast";
-import urlUtils from "../../../utils/url";
-import AssetAddition from "./asset-addition";
-import styles from "./detail-overlay.module.css";
-import VersionList from "./version-list";
+import update from 'immutability-helper';
+import fileDownload from 'js-file-download';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { isMobile } from 'react-device-detect';
+import { Rnd } from 'react-rnd';
 
-import { isMobile } from "react-device-detect";
-
-import { ASSET_DOWNLOAD } from "../../../constants/permissions";
+import { AssetOps, Utilities } from '../../../assets';
+import { sizeToZipDownload } from '../../../constants/download';
+import { ASSET_DOWNLOAD } from '../../../constants/permissions';
+import { AssetContext, FilterContext, UserContext } from '../../../context';
+import assetApi from '../../../server-api/asset';
+import shareApi from '../../../server-api/share-collection';
+import customFileSizeApi from '../../../server-api/size';
+import downloadUtils from '../../../utils/download';
+import { isImageType } from '../../../utils/file';
+import toastUtils from '../../../utils/toast';
+import urlUtils from '../../../utils/url';
+import Button from '../buttons/button';
+import IconClickable from '../buttons/icon-clickable';
+import ConversationList from '../conversation/conversation-list';
+import Dropdown from '../inputs/dropdown';
+import RenameModal from '../modals/rename-modal';
+import AssetAddition from './asset-addition';
+import AssetCropImg from './asset-crop-img';
+import AssetIcon from './asset-icon';
+import AssetImg from './asset-img';
+import AssetNote from './asset-note';
+import AssetNotes from './asset-notes';
+import AssetPdf from './asset-pdf';
+import AssetRelatedFilesList from './asset-related-files-list';
+import AssetTranscript from './asset-transcript';
+import CdnPanel from './cdn-panel';
+import CropSidePanel from './crop-side-panel';
+import styles from './detail-overlay.module.css';
+import SidePanel from './detail-side-panel';
+import VersionList from './version-list';
 
 // Components
-import fileDownload from "js-file-download";
-import Button from "../buttons/button";
-import IconClickable from "../buttons/icon-clickable";
-import ConversationList from "../conversation/conversation-list";
-import RenameModal from "../modals/rename-modal";
-import AssetCropImg from "./asset-crop-img";
-import AssetIcon from "./asset-icon";
-import AssetImg from "./asset-img";
-import AssetPdf from "./asset-pdf";
-import CdnPanel from "./cdn-panel";
-import CropSidePanel from "./crop-side-panel";
-import SidePanel from "./detail-side-panel";
-
-import { isImageType } from "../../../utils/file";
-
-import AssetNote from "./asset-note";
-import AssetNotes from "./asset-notes";
-import AssetTranscript from "./asset-transcript";
-
-import Dropdown from "../inputs/dropdown";
-import AssetRelatedFilesList from "./asset-related-files-list";
-
-import downloadUtils from "../../../utils/download";
-import { sizeToZipDownload } from "../../../constants/download";
-
 const getDefaultDownloadImageType = (extension) => {
   const defaultDownloadImageTypes = [
     {
@@ -124,11 +118,9 @@ const DetailOverlay = ({
   activeFolder = "",
   initialParams,
   availableNext = true,
-  outsideDetailOverlay = false,
   sharedCode = "",
 }) => {
-  const { hasPermission } = useContext(UserContext);
-  const { user, cdnAccess, transcriptAccess } = useContext(UserContext);
+  const { user, cdnAccess, transcriptAccess, hasPermission } = useContext(UserContext);
   const { activeSortFilter } = useContext(FilterContext);
   const [assetDetail, setAssetDetail] = useState(undefined);
 
@@ -144,7 +136,14 @@ const DetailOverlay = ({
 
   const [activeSideComponent, setActiveSidecomponent] = useState("detail");
 
-  const { assets, setAssets, folders, needsFetch, updateDownloadingStatus, setDetailOverlayId, setOperationAssets,
+  const {
+    assets,
+    setAssets,
+    folders,
+    needsFetch,
+    updateDownloadingStatus,
+    setDetailOverlayId,
+    setOperationAssets,
     subFoldersAssetsViewList: {
       results: subcollectionAssets,
       next: nextAsset,
@@ -973,6 +972,7 @@ const DetailOverlay = ({
       }
     }
   };
+
   return (
     <div className={`app-overlay ${styles.container} ${isShare ? styles.share : ""}`}>
       {assetDetail && (

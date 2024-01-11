@@ -69,6 +69,7 @@ export default ({ getAssets }) => {
     type: "",
     id: "",
   });
+
   const selectedAssets = assets.filter((asset) => asset.isSelected);
   const selectedFolders = folders.filter((folder) => folder.isSelected);
   const selectedSubFolderAssetId = subFoldersAssetsViewList?.results?.filter((asset) => asset.isSelected) || [];
@@ -174,21 +175,21 @@ export default ({ getAssets }) => {
       const { data } = await assetApi.getAssets(filters);
       selectedAllAssets
         ? setCompletedAssets(
-            {
-              ...data,
-              results: data?.results.map((asset) => ({
-                ...asset,
-                isSelected: true,
-              })),
-            },
-            true,
-          )
-        : setCompletedSubAssets(
-            data?.results.map((asset) => ({
+          {
+            ...data,
+            results: data?.results.map((asset) => ({
               ...asset,
               isSelected: true,
             })),
-          );
+          },
+          true,
+        )
+        : setCompletedSubAssets(
+          data?.results.map((asset) => ({
+            ...asset,
+            isSelected: true,
+          })),
+        );
     } catch (err) {
       //TODO: Handle error
       console.log(err);
@@ -1100,8 +1101,8 @@ export default ({ getAssets }) => {
           ? subFoldersAssetsViewList.total
           : selectedSubFolderAssetId.length
         : selectedAllAssets
-        ? totalAssets
-        : selectedAssets.length;
+          ? totalAssets
+          : selectedAssets.length;
   }
 
   return (
@@ -1213,8 +1214,8 @@ export default ({ getAssets }) => {
                 ? completedSubAssets
                 : selectedSubFolderAssetId
               : selectedAllAssets
-              ? completedAssets
-              : selectedAssets
+                ? completedAssets
+                : selectedAssets
           }
         />
       )}
