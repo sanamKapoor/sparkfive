@@ -57,9 +57,11 @@ export default function TableData({ columns, data, arrowColumns, buttonColumns, 
                         <td>{row.downloads}</td>
                         <td>{row.shares}</td>
                         <td>
-                          <button className={styles.actionButton} onClick={handleModals}>
-                            User Info
-                          </button>
+                          {row.name && ( 
+                            <button className={styles.actionButton} onClick={handleModals}>
+                              User Info
+                            </button>
+                          )}
                         </td>
                       </tr>
                     )
