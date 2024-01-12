@@ -15,10 +15,11 @@ export default ({ children }) => {
   const [sortBy, setSortBy] = useState('');
   const [sortOrder, setSortOrder] = useState(true);
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(3);
   const [error, setError] = useState('');
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [tableLoading, setTableLoading] = useState(false);
   const [totalRecords, setTotalRecords] = useState(0);
   const [apiEndpoint, setApiEndpoint] = useState("dashboard");
   const [initialRender, setInitialRender] = useState(false);
@@ -36,6 +37,7 @@ export default ({ children }) => {
     error,
     data,
     loading,
+    tableLoading,
     totalRecords,
     downloadCSV,
     setActiveSection,
@@ -49,6 +51,7 @@ export default ({ children }) => {
     setError,
     setData,
     setLoading,
+    setTableLoading,
     setTotalRecords,
     setDownloadCSV
   };
@@ -58,9 +61,12 @@ export default ({ children }) => {
     try {
       if (initialRender) {
         setLoading(true);
+        setTableLoading(false);
         setError('');
         setData(null);
         setTotalRecords(0);
+      } else {
+        setTableLoading(true)
       }
 
       const { data } = await AnalyticsApi.getAnalyticsData(apiEndpoint, {
@@ -75,10 +81,10 @@ export default ({ children }) => {
 
       setTotalRecords(data.totalRecords)
       setData(data.data);
-      setLoading(false);
+      initialRender ? setLoading(false) : setTableLoading(false)
       setError('');
     } catch (error) {
-      setLoading(false);
+      initialRender ? setLoading(false) : setTableLoading(false)
       setError(error.message || 'Data not found.');
       setData(null);
       setTotalRecords(0);

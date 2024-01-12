@@ -1,23 +1,22 @@
-import React, { useContext, useEffect, useState } from "react";
-import styles from "./table-data.module.css";
-import { Utilities, insights } from "../../../assets";
-import UserModal from "../modals/user-modal/user-modal";
+import React, { useContext, useState } from "react";
+import { insights } from "../../../assets";
 import { analyticsLayoutSection } from "../../../constants/analytics";
-import DateFormatter from "../../../utils/date";
 import { AnalyticsContext } from "../../../context";
+import DateFormatter from "../../../utils/date";
 import NoData from "../common/no-data";
+import UserModal from "../modals/user-modal/user-modal";
+import styles from "./table-data.module.css";
 
 export default function TableData({ columns, data, arrowColumns, buttonColumns, buttonTexts, imageSource, activeSection }) {
 
   const [showModal, setShowModal] = useState(false);
   const [activeModal, setActiveModal] = useState<React.ReactElement | null>(null);
-  const { setSortBy, setSortOrder, sortOrder } = useContext(AnalyticsContext);
+  const { setSortBy, setSortOrder, sortOrder, sortBy, tableLoading } = useContext(AnalyticsContext);
 
   const handleModals = (name, last_session) => {
     setShowModal(true);
     setActiveModal(activeSection === analyticsLayoutSection.ACCOUNT_USERS ? <UserModal setShowModal={setShowModal} name={name} last_session={last_session} /> : null)
   }
-
 
   return (
     <>
@@ -30,13 +29,12 @@ export default function TableData({ columns, data, arrowColumns, buttonColumns, 
                 return (
                   <th key={index}>
                     {sortCol ? (
-                         <div className={`${styles['headingIcon']}`}>
+                      <div className={`${styles['headingIcon']} ${sortBy === sortCol.value ? styles['active_table-head'] : ''}`}>
                         {column} <div className={`${styles['flip-direction']} ${styles['outer-wrapper']}`}>
-                          <img  src={Utilities.arrowDownUp}  alt="flip icon" onClick={() => {
-                          setSortBy(sortCol.value);
-                          setSortOrder(!sortOrder);
-                        }} />
-                        {/* <img src={insights.flipUpDown} alt="" /> */}
+                          <img src={sortBy === sortCol.value ? (sortOrder ? insights.flipUp : insights.flipDown) : insights.flipUpDown} alt="flip icon" onClick={() => {
+                            setSortBy(sortCol.value);
+                            setSortOrder(!sortOrder);
+                          }} />
                         </div>
                       </div>
                     ) : (
@@ -58,16 +56,22 @@ export default function TableData({ columns, data, arrowColumns, buttonColumns, 
                   data.map((row) => {
                     return (
                       <tr key={row.id}>
-                        <td>{row.name}</td>
+                        <td style={{
+                          width: '300px'
+                        }}>{row.name}</td>
                         {activeSection === analyticsLayoutSection.ACCOUNT_USERS && <td>{row.roleId}</td>}
-                        <td>{DateFormatter.analyticsDateFormatter(row.last_session)}</td>
+                        <td>{row.last_session ? DateFormatter.analyticsDateFormatter(row.last_session) : ''}</td>
                         <td>{row.session_count}</td>
                         {activeSection === analyticsLayoutSection.ACCOUNT_USERS && <td>{row.downloads}</td>}
                         {activeSection === analyticsLayoutSection.ACCOUNT_USERS && <td>{row.shares}</td>}
                         <td>
-                          <button className={styles.actionButton} onClick={() => handleModals(row.name, DateFormatter.analyticsDateFormatter(row.last_session))}>
-                            User Info
-                          </button>
+                          {
+                            row.name ?
+                              <button className={styles.actionButton} onClick={() => handleModals(row.name, DateFormatter.analyticsDateFormatter(row.last_session))}>
+                                User Info
+                              </button>
+                              : ''
+                          }
                         </td>
                       </tr>
                     )
@@ -98,6 +102,7 @@ export default function TableData({ columns, data, arrowColumns, buttonColumns, 
             </tbody>
           }
         </table>
+        {tableLoading ? <div className={styles.backdrop}></div> : null}
       </div>
       {
         showModal && activeModal

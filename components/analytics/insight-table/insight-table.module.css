@@ -14,7 +14,8 @@
   width:calc(100% - 218px);
   margin-left:218px;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(255, 255, 255, 0.947);
+  
   display: flex;
   align-items: center;
   justify-content: center;

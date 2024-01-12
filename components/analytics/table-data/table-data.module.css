@@ -1,7 +1,7 @@
 .tableResponsive {
     overflow-x: auto;
     margin-top: 16px;
-  
+    position:relative;
   }
   .tableOuter{
   border: 1px solid#DEDAD4;
@@ -17,11 +17,25 @@
     color:#08135E;
     font-weight: 500;
     font-size: 12px;
+
+  }
+ 
+  .backdrop {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 40px);
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
   }
 /* active class when we click on flip icon */
   /* ${styles['active_table-head']} */
   .active_table-head{
-    background:gainsboro;
+    background:#e5d3b8;
     height:41px;
     padding-left: 10px;
   }

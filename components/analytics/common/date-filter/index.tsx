@@ -168,7 +168,7 @@ export default function DateFilter() {
             </div>
             {dateError && <small>{dateError}</small>}
             <div className={`${styles["datepicker-buttons-outer"]}`}>
-              <Button text={"Apply"} className={"apply-btn"} onClick={handleApplyCustomDate}></Button>
+              <Button text={"Apply"} className={(!customDateVal.beginDate || !customDateVal.endDate) ? "apply-btn-disable" : "apply-btn"} onClick={handleApplyCustomDate} disabled={!customDateVal.beginDate || !customDateVal.endDate}></Button>
               <Button text={"Cancel"} className={"cancel-btn"} onClick={handleCustomDateSelector}></Button>
             </div>
           </div>

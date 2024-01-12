@@ -75,7 +75,9 @@ function Pagination() {
         <span>{(page - 1) * limit + 1}-{Math.min(page * limit, totalRecords)} of {totalRecords}</span>
       </div>
       <div className={`${styles['pagination-right']}`}>
-        <div className={`${styles['pagination-left-arrow']} ${styles['pagination-box']}`} onClick={handlePrevClick}>
+        <div className={`${styles['pagination-left-arrow']} ${styles['pagination-box']}`} style={{
+          cursor: page === 1 ? 'not-allowed' : 'pointer'
+        }} onClick={handlePrevClick}>
           <img src={insights.paginationLeft} alt="left -arrow" />
         </div>
         {activeSection === analyticsLayoutSection.ACCOUNT_USERS ? renderNumericPagination() :
@@ -85,7 +87,9 @@ function Pagination() {
             </div>
           ))
         }
-        <div className={`${styles['pagination-left-arrow']} ${styles['pagination-box']}`} onClick={handleNextClick}>
+        <div className={`${styles['pagination-left-arrow']} ${styles['pagination-box']}`} style={{
+          cursor: page === totalPages ? 'not-allowed' : 'pointer'
+        }} onClick={handleNextClick}>
           <img src={insights.paginationRight} alt="right-arrow" />
         </div>
       </div>
