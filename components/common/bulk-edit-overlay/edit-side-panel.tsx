@@ -155,6 +155,7 @@ const EditSidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
       setInputProjects(projectsResponse.data);
       setInputCampaigns(campaignsResponse.data);
     } catch (err) {
+      console.log("🚀 ~ getInputData ~ err:", err)
       // TODO: Maybe show error?
     }
   };
