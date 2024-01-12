@@ -11,6 +11,7 @@
   border: 1px solid#DEDAD4;
   padding:16px;
   }
+
  
   .table {
     width: 100%;
@@ -214,5 +215,6 @@
     .mobile-wrap{
       display: flex;
       align-items: center;
+      justify-content: space-between;
     }
   }

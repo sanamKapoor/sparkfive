@@ -14,10 +14,7 @@ import TableHeading from "./table-heading";
 import { analyticsLayoutSection } from "../../../constants/analytics";
 import Loader from "../../common/UI/Loader/loader";
 
-const UserTable = ({
-  dashboardView = false
-}: { dashboardView: boolean }
-) => {
+const UserTable = ({ dashboardView = false }: { dashboardView: boolean }) => {
   const { loading, error, data, activeSection, totalRecords, setSortBy } = useContext(AnalyticsContext);
   
   return (
@@ -28,7 +25,11 @@ const UserTable = ({
         <div className={styles.tableResponsive}>
           {/* for web */}
           <div className={`${styles["heading-wrap"]} ${styles["web-view"]}`}>
-            <TableHeading mainText="User Engagement" descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"} smallHeading={true} />
+            <TableHeading
+              mainText="User Engagement"
+              descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"}
+              smallHeading={true}
+            />
             <div className={`${styles["table-header-tabs"]}`}>
               {!dashboardView && <SearchButton label="Search User" />}
               <Datefilter />
@@ -39,7 +40,11 @@ const UserTable = ({
           <div className={`${styles["laptop-view"]}`}>
             <div className={`${styles["heading-wrap"]}`}>
               <div>
-                <TableHeading mainText="User Engagement" descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"} smallHeading={true} />
+                <TableHeading
+                  mainText="User Engagement"
+                  descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"}
+                  smallHeading={true}
+                />
                 <div style={{ marginTop: "22px" }}>
                   <SearchButton label="Search User" />
                 </div>
@@ -53,7 +58,11 @@ const UserTable = ({
           {/* for mobile */}
           <div className={`${styles["heading-wrap"]} ${styles["mobile-view"]}`}>
             <div className={`${styles["mobile-wrap"]}`}>
-              <TableHeading mainText="User Engagement" descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"} smallHeading={true} />
+              <TableHeading
+                mainText="User Engagement"
+                descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"}
+                smallHeading={true}
+              />
               <div className={`${styles["table-header-tabs"]}`}>
                 <Datefilter />
                 <Download />
