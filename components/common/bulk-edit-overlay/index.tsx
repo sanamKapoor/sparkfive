@@ -75,6 +75,8 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
 
       return data;
     } catch (err) {
+      console.log("🚀 ~ getCustomFieldsInputData ~ err:", err)
+
       // TODO: Maybe show error?
     }
   };
@@ -173,6 +175,7 @@ const BulkEditOverlay = ({ handleBackButton, selectedAssets }) => {
         return prev;
       });
     } catch (err) {
+      console.log("🚀 ~ get Bulk Properties ~ err:", err)
       // TODO: Maybe show error?
     } finally {
       setLoading(false);
