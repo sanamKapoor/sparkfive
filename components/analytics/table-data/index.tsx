@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import styles from "./table-data.module.css";
-import { Utilities } from "../../../assets";
+import { Utilities, insights } from "../../../assets";
 import UserModal from "../modals/user-modal/user-modal";
 import { analyticsLayoutSection } from "../../../constants/analytics";
 import DateFormatter from "../../../utils/date";
@@ -30,11 +30,14 @@ export default function TableData({ columns, data, arrowColumns, buttonColumns, 
                 return (
                   <th key={index}>
                     {sortCol ? (
-                      <div className={styles.headingIcon}>
-                        {column} <img src={Utilities.arrowDownUp} alt="flip icon" onClick={() => {
+                         <div className={`${styles['headingIcon']}`}>
+                        {column} <div className={`${styles['flip-direction']} ${styles['outer-wrapper']}`}>
+                          <img  src={Utilities.arrowDownUp}  alt="flip icon" onClick={() => {
                           setSortBy(sortCol.value);
                           setSortOrder(!sortOrder);
                         }} />
+                        {/* <img src={insights.flipUpDown} alt="" /> */}
+                        </div>
                       </div>
                     ) : (
                       column

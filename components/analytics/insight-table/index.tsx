@@ -20,7 +20,7 @@ const UserTable = ({ dashboardView = false }: { dashboardView: boolean }) => {
   return (
     <section className={`${styles["outer-wrapper"]}`}>
       {
-        loading ? <div><Loader /></div> :
+        loading ? <div>  <div className={styles.backdrop} /> <Loader /></div> :
         (error || !data) ? <NoData message={error} /> :
         <div className={styles.tableResponsive}>
           {/* for web */}

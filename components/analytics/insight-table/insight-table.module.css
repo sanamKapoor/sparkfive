@@ -4,6 +4,21 @@
   /* width: calc(100% - 218px);
   margin-left: 218px;
   padding: 40px; */
+  position: relative;
+}
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  width:calc(100% - 218px);
+  margin-left:218px;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
 }
 .outer-wrapper-toggle{
   width:100%;

@@ -101,6 +101,9 @@ export const insights={
   tableHome:require("./Icons/insights/tabler-icon-home.svg"),
   tableEye:require("./Icons/insights/tabler-icon-eye.svg"),
   tableUser:require("./Icons/insights/tabler-icon-user.svg"),
+  flipUp:require("./Icons/insights/insight-up.svg"),
+  flipDown:require("./Icons/insights/insight-down.svg"),
+  flipUpDown:require("./Icons/insights/up-down-insight.svg")
 
 }
 
