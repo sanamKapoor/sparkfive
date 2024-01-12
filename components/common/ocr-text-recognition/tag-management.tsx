@@ -71,7 +71,7 @@ const TagManagement = () => {
 
     const getTagList = async () => {
         try {
-            const { data } = await tagApi.getTags({includeAi: false})
+            const { data } = await tagApi.getTags({ includeAi: false })
 
             setTagList(data)
         } catch (err) {
@@ -79,10 +79,10 @@ const TagManagement = () => {
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getTagList()
         getOcrTags();
-    },[])
+    }, [])
 
     return (
         <div className={styles['main-wrapper']}>
@@ -97,7 +97,6 @@ const TagManagement = () => {
                     selectedItems={[]}
                     setSelectedItems={() => { }}
                     onAddOperationFinished={(stateUpdate) => {
-                        console.log(stateUpdate)
                         // updateAssetState({
                         //     tags: { $set: stateUpdate.concat(aiTags) }
                         // })
@@ -106,7 +105,7 @@ const TagManagement = () => {
                     onRemoveOperationFinished={() => { }}
                     onOperationFailedSkipped={() => setActiveDropdown('')}
                     isShare={false}
-                    asyncCreateFn={(newItem)=>{
+                    asyncCreateFn={(newItem) => {
                         addOcrTag(newItem)
                     }}
                     dropdownIsActive={activeDropdown === 'tags'}
@@ -124,7 +123,7 @@ const TagManagement = () => {
                         data={tag}
                         type="tag"
                         canRemove={true}
-                        editFunction={() => {}}
+                        editFunction={() => { }}
                         removeFunction={() => {
                             setCurrentDeleteId(tag.id)
                             setConfirmDeleteModal(true)

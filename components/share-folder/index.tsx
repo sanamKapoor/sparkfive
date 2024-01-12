@@ -58,7 +58,7 @@ const ShareFolderMain = () => {
     setSelectedAllSubAssets,
     selectedAllSubFoldersAndAssets,
     setSidebarOpen,
-    sidebarOpen
+    sidebarOpen,
   } = useContext(AssetContext);
 
   const { user, advancedConfig, setAdvancedConfig, setLogo } = useContext(UserContext);
@@ -188,10 +188,9 @@ const ShareFolderMain = () => {
       selectAllFolders(false);
     }
     if (selectedAllSubAssets) {
-      setSelectedAllSubAssets(false)
+      setSelectedAllSubAssets(false);
     }
-    if (selectedAllSubFoldersAndAssets)
-      setSelectedAllSubFoldersAndAssets(false);
+    if (selectedAllSubFoldersAndAssets) setSelectedAllSubFoldersAndAssets(false);
   }, [activeMode]);
 
   useEffect(() => {
@@ -233,10 +232,7 @@ const ShareFolderMain = () => {
       if (activeSortFilter.mainFilter === "folders") {
         setActiveMode("folders");
         getFolders();
-      } else if (
-        activeSortFilter.mainFilter === "SubCollectionView" &&
-        activeSubFolders !== ""
-      ) {
+      } else if (activeSortFilter.mainFilter === "SubCollectionView" && activeSubFolders !== "") {
         setActiveMode("SubCollectionView");
         getSubCollectionsFolderData(true, 50);
         getSubCollectionsAssetData();
@@ -257,9 +253,7 @@ const ShareFolderMain = () => {
       if (firstLoaded && activeSubFolders) {
         setActiveSortFilter({
           ...activeSortFilter,
-          mainFilter: activeSubFolders
-            ? "SubCollectionView"
-            : activeSortFilter.mainFilter,
+          mainFilter: activeSubFolders ? "SubCollectionView" : activeSortFilter.mainFilter,
           sort,
         });
       }
@@ -282,15 +276,12 @@ const ShareFolderMain = () => {
     }
   }, [activeFolder]);
 
-  const getSubCollectionsFolderData = async (
-    replace = true,
-    pageSize?: number = 50
-  ) => {
+  const getSubCollectionsFolderData = async (replace = true, pageSize?: number = 50) => {
     try {
       if (activeSortFilter.mainFilter !== "SubCollectionView") {
         return;
       }
-      setParentFolders(folderInfo.singleSharedCollectionId ? [folderInfo?.sharedFolder] : [])
+      setParentFolders(folderInfo.singleSharedCollectionId ? [folderInfo?.sharedFolder] : []);
       const { field, order } = activeSortFilter.sort;
       const { next } = subFoldersViewList;
 
@@ -303,16 +294,14 @@ const ShareFolderMain = () => {
       };
       if (activeSortFilter.filterFolders?.length > 0) {
         // @ts-ignore
-        queryParams.folders = activeSortFilter.filterFolders
-          .map((item) => item.value)
-          .join(",");
+        queryParams.folders = activeSortFilter.filterFolders.map((item) => item.value).join(",");
       }
       const { data: subFolders } = await shareCollectionApi.getSubFolders(
         {
           ...queryParams,
           ...(term && { term }),
         },
-        activeSubFolders
+        activeSubFolders,
       );
       setSubFoldersViewList(subFolders, replace);
       setSidenavFolderList(subFolders?.results || []);
@@ -322,10 +311,7 @@ const ShareFolderMain = () => {
     }
   };
 
-  const getSubCollectionsAssetData = async (
-    replace = true,
-    showAllAssets: boolean = false
-  ) => {
+  const getSubCollectionsAssetData = async (replace = true, showAllAssets: boolean = false) => {
     try {
       if (activeSortFilter.mainFilter !== "SubCollectionView") {
         return;
@@ -416,15 +402,14 @@ const ShareFolderMain = () => {
       selectAllFolders();
       setFolders(folders.map((folder) => ({ ...folder, isSelected: true })));
     } else if (activeMode === "SubCollectionView") {
-
       if (subFoldersAssetsViewList.results.length > 0) {
-        setSelectedAllSubAssets(true)
+        setSelectedAllSubAssets(true);
         setSelectedAllSubFoldersAndAssets(false);
 
         setSubFoldersAssetsViewList({
           ...subFoldersAssetsViewList,
-          results: subFoldersAssetsViewList.results.map((asset: any) => ({ ...asset, isSelected: true }))
-        })
+          results: subFoldersAssetsViewList.results.map((asset: any) => ({ ...asset, isSelected: true })),
+        });
         setSubFoldersViewList({
           ...subFoldersViewList,
           results: subFoldersViewList.results.map((folder: any) => ({
@@ -434,7 +419,7 @@ const ShareFolderMain = () => {
         });
       } else {
         setSelectedAllSubFoldersAndAssets(true);
-        setSelectedAllSubAssets(false)
+        setSelectedAllSubAssets(false);
         // For selecting the folders only subcollection view
         setSubFoldersViewList({
           ...subFoldersViewList,
@@ -451,7 +436,6 @@ const ShareFolderMain = () => {
           })),
         });
       }
-
 
       // For selecting the assets only subcollection view
       // setSubFoldersAssetsViewList({
@@ -480,12 +464,8 @@ const ShareFolderMain = () => {
         }),
       );
     } else if (activeMode === "SubCollectionView") {
-      const assetIndex = subFoldersAssetsViewList.results.findIndex(
-        (assetItem) => assetItem.asset.id === id
-      );
-      const folderIndex = subFoldersViewList.results.findIndex(
-        (folder) => folder.id === id
-      );
+      const assetIndex = subFoldersAssetsViewList.results.findIndex((assetItem) => assetItem.asset.id === id);
+      const folderIndex = subFoldersViewList.results.findIndex((folder) => folder.id === id);
 
       if (folderIndex !== -1) {
         setSubFoldersViewList({
@@ -549,11 +529,8 @@ const ShareFolderMain = () => {
         ...getAssetsSort(activeSortFilter),
         sharePath,
       });
-      setAssets(
-        { ...data, results: data.results.map(mapWithToggleSelection) },
-        replace
-      );
-      setParentFolders(folderInfo.singleSharedCollectionId ? [folderInfo?.sharedFolder] : [])
+      setAssets({ ...data, results: data.results.map(mapWithToggleSelection) }, replace);
+      setParentFolders(folderInfo.singleSharedCollectionId ? [folderInfo?.sharedFolder] : []);
       // setFirstLoaded(true);
     } catch (err) {
       //TODO: Handle error
@@ -569,15 +546,9 @@ const ShareFolderMain = () => {
     }
   };
 
-  const viewFolder = async (
-    id: string,
-    subCollection: boolean,
-    nestedSubFolderId = "",
-    folderName = ""
-  ) => {
+  const viewFolder = async (id: string, subCollection: boolean, nestedSubFolderId = "", folderName = "") => {
     if (
-      (activeSortFilter.mainFilter === "SubCollectionView" &&
-        activeSubFolders !== "") ||
+      (activeSortFilter.mainFilter === "SubCollectionView" && activeSubFolders !== "") ||
       (subCollection && Boolean(folderInfo?.singleSharedCollectionId))
     ) {
       if (id) {
@@ -593,7 +564,6 @@ const ShareFolderMain = () => {
       }
     } else if (!Boolean(folderInfo?.singleSharedCollectionId)) {
       if (id) {
-
         setActiveFolder(id);
         // setHeaderName(
         //   folders.find((folder: any) => folder.id === id)?.name || ""
@@ -601,8 +571,7 @@ const ShareFolderMain = () => {
       } else {
         setActiveFolder("");
         let sort =
-          folderInfo?.customAdvanceOptions?.collectionSortView ===
-            "alphabetical"
+          folderInfo?.customAdvanceOptions?.collectionSortView === "alphabetical"
             ? selectOptions.sort[3]
             : selectOptions.sort[1];
         setActiveSortFilter({
@@ -645,21 +614,18 @@ const ShareFolderMain = () => {
   }, [loading]);
 
   const assetGridWrapperStyle =
-    !!folderInfo.singleSharedCollectionId ||
-      activeSortFilter.mainFilter === "folders"
+    !!folderInfo.singleSharedCollectionId || activeSortFilter.mainFilter === "folders"
       ? styles["col-wrapperview"]
       : styles["col-wrapper"];
 
-  const showFilterView =
-    (folderInfo.singleSharedCollectionId || activeMode === "assets") &&
-    !activePasswordOverlay;
+  const showFilterView = (folderInfo.singleSharedCollectionId || activeMode === "assets") && !activePasswordOverlay;
 
   const headingClick = (value: string, description: string) => {
     if (!value) {
       return false;
-    };
-    viewFolder()
-  }
+    }
+    viewFolder();
+  };
   const closeSearchOverlay = () => {
     getAssets();
     setActiveSearchOverlay(false);
@@ -668,13 +634,15 @@ const ShareFolderMain = () => {
   return (
     <>
       {!loading && (
-        <main className={`${sidebarOpen ? styles["container"] : styles['rightToggle']} sharefolderOuter`}>
-          {sidebarOpen ? <SharedPageSidenav
-            viewFolder={viewFolder}
-            headingClick={headingClick}
-            sidenavFolderList={sidenavFolderList}
-            parentFolders={parentFolders}
-          /> : null}
+        <main className={`${sidebarOpen ? styles["container"] : styles["rightToggle"]} sharefolderOuter`}>
+          {sidebarOpen ? (
+            <SharedPageSidenav
+              viewFolder={viewFolder}
+              headingClick={headingClick}
+              sidenavFolderList={sidenavFolderList}
+              parentFolders={parentFolders}
+            />
+          ) : null}
           <TopBar
             activeSearchOverlay={activeSearchOverlay}
             activeSortFilter={activeSortFilter}
@@ -693,11 +661,9 @@ const ShareFolderMain = () => {
             mode={activeMode}
           />
           <div
-            className={`${assetGridWrapperStyle} ${sidebarOpen ? styles["mainContainer"] : styles['toggleContainer']} `}
+            className={`${assetGridWrapperStyle} ${sidebarOpen ? styles["mainContainer"] : styles["toggleContainer"]} `}
             style={{ marginTop: top }}
           >
-
-
             <AssetGrid
               activeFolder={activeFolder}
               getFolders={getFolders}

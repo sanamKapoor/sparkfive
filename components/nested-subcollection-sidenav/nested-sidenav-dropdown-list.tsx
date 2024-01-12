@@ -43,6 +43,7 @@ interface Item {
 }
 
 const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
+
   const {
     sidenavTotalCollectionCount,
     sidenavFolderList,
@@ -65,6 +66,8 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
   };
 
   const [showDropdown, setShowDropdown] = useState(new Array(sidenavFolderList.length).fill(false));
+  const [showDropdownIds, setShowDropdownIds] = useState(new Array);
+
   const [isFolderLoading, SetIsFolderLoading] = useState(false);
   const [subFolderLoadingState, setSubFolderLoadingState] = useState(new Map());
   const [firstLoaded, setFirstLoaded] = useState(false);
@@ -98,12 +101,20 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
   };
 
   const toggleDropdown = async (index: number, item: Item, replace: boolean) => {
-    if (!showDropdown[index]) {
+    const isDropdownOpen = showDropdown[index];
+
+    if (!isDropdownOpen) {
       await getSubFolders(item.id, 1, replace);
+      setShowDropdownIds((prevIds) => [...prevIds, item.id]);
+    } else {
+      setShowDropdownIds((prevIds) => prevIds.filter((id) => id !== item.id));
     }
-    const updatedShowDropdown = [...showDropdown];
-    updatedShowDropdown[index] = !updatedShowDropdown[index]; //Toggle dropdown on img click event
-    setShowDropdown(updatedShowDropdown);
+
+    setShowDropdown((prevShowDropdown) => {
+      const updatedShowDropdown = [...prevShowDropdown];
+      updatedShowDropdown[index] = !isDropdownOpen;
+      return updatedShowDropdown;
+    });
   };
 
   const keyExists = (key: string) => {
@@ -170,6 +181,9 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
     if (listUpdateFlag) {
       setListUpdateFlag(false);
       await getFolders(true);
+      Promise.all(showDropdownIds.map(async (item) => {
+        await getSubFolders(item, 1, true);
+      }))
       if (
         activeSortFilter.mainFilter !== "SubCollectionView" &&
         activeSortFilter.mainFilter !== "folders" &&
@@ -181,7 +195,8 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
         }
       } else if (activeSortFilter.mainFilter === "SubCollectionView" && activeSubFolders !== "") {
         if (Array.from(subFoldersParentId.values()).includes(activeSubFolders)) {
-          getSubFolders(activeSubFolders, 1, true);
+          await getSubFolders(activeSubFolders, 1, true);
+
         }
       }
     }
@@ -190,7 +205,6 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
   useEffect(() => {
     getFoldersOnUpdate();
   }, [listUpdateFlag]);
-
 
   const vewFolderSidenavStateActive = (recordId: string, isParentCollection: boolean, parentId: string, parentName: string, folder?: any) => {
     viewFolder(
@@ -347,7 +361,7 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
             {isFolderLoading ? (
               <div className={styles.loader}></div>
             ) : (
-              <div className={`${styles["load-wrapper"]}`} style={{marginLeft:"10px"}}>
+              <div className={`${styles["load-wrapper"]}`} style={{ marginLeft: "10px" }}>
                 {/* <IconClickable additionalClass={styles.loadIcon} SVGElement={Utilities.load}  /> */}
                 <button className={styles.loadMore}>Load More</button>
               </div>
@@ -355,7 +369,7 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
           </div>
         )
       }
-    </div >
+    </div>
   );
 };
 

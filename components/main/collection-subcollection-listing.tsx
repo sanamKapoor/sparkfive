@@ -61,7 +61,6 @@ const CollectionSubcollectionListing = ({
     isCustomRestriction
 }) => {
     const { hasPermission } = useContext(UserContext);
-    console.log(folders)
 
 
     const keyExists = (key: string) => {
@@ -85,26 +84,26 @@ const CollectionSubcollectionListing = ({
 
     return (
         <section className={styles["field-wrapper"]}>
-          
+
             {(hasPermission([ASSET_EDIT])) && (activeDropdown === "" || activeDropdown !== "collections") && (
                 <>
                     <div className={`${styles['top-heading']}`}>
                         <span>Collection</span>
                     </div>
                     {<div className={`${styles["tag-container-wrapper"]}`}>
-                {
-                    [...completeSelectedFolder.entries()].map(([key, value], index) => (
-                        <div className={`${styles["tag-container"]}`} key={index}>
-                            <span>{value.name}</span>
-                            <IconClickable
-                                additionalClass={styles.remove}
-                                src={Utilities.closeTag}
-                                onClick={() => toggleSelected(key, !selectedFolder.includes(key), false, "", value.name, isCustomRestriction ? true : false)}
-                            />
-                        </div>
-                    ))
-                }
-            </div>}
+                        {
+                            [...completeSelectedFolder.entries()].map(([key, value], index) => (
+                                <div className={`${styles["tag-container"]}`} key={index}>
+                                    <span>{value.name}</span>
+                                    <IconClickable
+                                        additionalClass={styles.remove}
+                                        src={Utilities.closeTag}
+                                        onClick={() => toggleSelected(key, !selectedFolder.includes(key), false, "", value.name, isCustomRestriction ? true : false)}
+                                    />
+                                </div>
+                            ))
+                        }
+                    </div>}
 
                     <div
                         className={`add ${styles["select-add"]}`}

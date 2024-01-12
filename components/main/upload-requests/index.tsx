@@ -6,7 +6,7 @@ import React, { useContext, useEffect, useState } from 'react';
 
 import { Utilities } from '../../../assets';
 import GuestUploadApprovalOverlay from '../../../components/common/guest-upload-approval-overlay';
-import { LoadingContext, UserContext } from '../../../context';
+import { LoadingContext, UserContext, TeamContext } from '../../../context';
 import { useMoveModal } from '../../../hooks/use-modal';
 import { useAssetDetailCollecion } from '../../../hooks/use-asset-detail-collection'
 import { useDebounce } from '../../../hooks/useDebounce';
@@ -105,6 +105,7 @@ const mappingCustomFieldData = (list, valueList) => {
 };
 
 const UploadRequest = () => {
+  const { team } = useContext(TeamContext);
   const { user, hasPermission } = useContext(UserContext);
   const [top, setTop] = useState("calc(55px + 2rem)");
   const { setIsLoading } = useContext(LoadingContext);
@@ -355,7 +356,6 @@ const UploadRequest = () => {
     })
     setSelectedFolderAssetView((prev) => [...prev, ...originalSelectedFolders])
 
-
     // @ts-ignore
     setTempComments(assets[index]?.asset?.comments || "");
   };
@@ -488,7 +488,7 @@ const UploadRequest = () => {
           name: value.name
         }
       });
-
+      const selectedAssetIds = []
       for (const { asset, isSelected } of assets) {
         let tagPromises = [];
         let removeTagPromises = [];
@@ -499,6 +499,7 @@ const UploadRequest = () => {
         let folderPromises = [];
 
         if (isSelected) {
+          selectedAssetIds.push(asset.id)
           submitApi = true;
           const newTags = _.differenceBy(currentAssetTags, asset?.tags || []);
           const newCampaigns = _.differenceBy(
@@ -639,7 +640,6 @@ const UploadRequest = () => {
             }
           }
         }
-
         await Promise.all(tagPromises);
         await Promise.all(removeTagPromises);
 
@@ -655,7 +655,10 @@ const UploadRequest = () => {
           await Promise.all(removeFolderPromises);
         }
       }
-
+      if (selectedAssetIds.length > 0 && team?.id) {
+        console.log(selectedAssetIds, team?.id)
+        await assetApi.reindexingData({ assetIds: selectedAssetIds, teamId: team?.id || "" });
+      }
       // Save tags to asset
       let assetArr = [...assets];
       assetArr.map((asset) => {
@@ -901,7 +904,7 @@ const UploadRequest = () => {
           [styles["yellow"]]: status === 0 || status === "pending",
           [styles["red"]]: status === -1 || status === "rejected",
         },
-        styles["wrapper"]
+          styles["wrapper"]
         )}
       >
         <span>{getStatusName(status)}</span>
@@ -1641,7 +1644,7 @@ const UploadRequest = () => {
                 {(currentViewStatus === 0 || isAdmin()) && (
                   <>
                     <div className={detailPanelStyles["field-wrapper"]}>
-                    <div className={`${styles["creatable-select-container"]} ${styles["tag-outer-box"]}`}>
+                      <div className={`${styles["creatable-select-container"]} ${styles["tag-outer-box"]}`}>
                         <CreatableSelect
                           title="Tags"
                           addText="Add Tags"
@@ -1920,7 +1923,7 @@ const UploadRequest = () => {
               <h2 className={styles["detail-title"]}>Add Attributes to Selected Assets</h2>
 
               <div className={detailPanelStyles["field-wrapper"]}>
-              <div className={`${styles["creatable-select-container"]} ${styles["tag-attribute-outer"]}`}>
+                <div className={`${styles["creatable-select-container"]} ${styles["tag-attribute-outer"]}`}>
                   <CreatableSelect
                     title="Tags"
                     addText="Add Tags"
