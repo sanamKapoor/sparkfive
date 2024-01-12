@@ -264,6 +264,8 @@ const AssetsLibrary = () => {
   useEffect(() => {
     console.log("4")
     if (firstLoaded && activeFolder) {
+
+      console.log(activeFolder ? "all" : activeSortFilter.mainFilter, "all 4")
       setActiveSortFilter({
         ...activeSortFilter,
         mainFilter: activeFolder ? "all" : activeSortFilter.mainFilter,
@@ -351,9 +353,12 @@ const AssetsLibrary = () => {
     } else {
       sort = advancedConfig.assetSortView === "newest" ? selectOptions.sort[1] : selectOptions.sort[3];
     }
+
+    console.log(filters[0] === "collection" ? "folders" : "all", "all 7")
+
     setActiveSortFilter({
       ...activeSortFilter,
-      mainFilter: defaultTab,
+      mainFilter: activeFolder ? "all" : activeSubFolders ? "SubCollectionView" : defaultTab,
       sort,
     });
   };
@@ -652,11 +657,15 @@ const AssetsLibrary = () => {
 
   const getAssets = async (replace = true, complete: any = null) => {
     try {
+
       setLoadingAssets(true);
+
       if (replace) {
         setAddedIds([]);
       }
+
       setPlaceHolders("asset", replace);
+
       const { data } = await assetApi.getAssets({
         ...getAssetsFilters({
           replace,
@@ -967,6 +976,7 @@ const AssetsLibrary = () => {
         folderName ? folderName : subFoldersViewList.results.find((folder: any) => folder.id === id)?.name || "",
       );
     } else {
+      console.log("hello in view Folder")
       setActiveFolder("");
       setActiveSubFolders(id);
       setHeaderName(folderName ? folderName : folders.find((folder: any) => folder.id === id)?.name || "");

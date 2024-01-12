@@ -614,7 +614,6 @@ const DetailOverlay = ({
                 setSizes(value.data);
             }
         }
-
         if (type === "size") {
             if (mode === "crop") {
                 setSizeOfCrop({
@@ -935,7 +934,7 @@ const DetailOverlay = ({
             const newIndx = currentIndx + navBy;
             setAssetIndex(newIndx);
             if (subcollectionAssets[newIndx]) {
-                closeOverlay();
+                onCloseOverlay();
                 setDetailOverlayId(subcollectionAssets[newIndx].asset.id);
                 if (newIndx === subcollectionAssets.length - 1) {
                     loadMore();
@@ -946,7 +945,7 @@ const DetailOverlay = ({
             const newIndx = currentIndx + navBy;
             setAssetIndex(newIndx);
             if (assets[newIndx]) {
-                closeOverlay();
+                onCloseOverlay();
                 setDetailOverlayId(assets[newIndx].asset.id);
                 if (newIndx === assets.length - 1) {
                     loadMore();
@@ -1015,21 +1014,23 @@ const DetailOverlay = ({
             refreshVersion(changedVersion);
         }
         if (activeFolder !== "" && activeSubFolders !== "") {
+            console.log("in here")
             setActiveFolder("");
             setActiveSubFolders(activeFolder);
-            setActiveSortFilter({
-                ...activeSortFilter,
-                mainFilter: activeSubFolders ? "SubCollectionView" : activeSortFilter.mainFilter,
-                sort: advancedConfig.collectionSortView === "alphabetical" ? selectOptions.sort[3] : selectOptions.sort[1],
-            });
+            // setActiveSortFilter({
+            //     ...activeSortFilter,
+            //     mainFilter: activeSubFolders ? "SubCollectionView" : activeSortFilter.mainFilter,
+            //     sort: advancedConfig.collectionSortView === "alphabetical" ? selectOptions.sort[3] : selectOptions.sort[1],
+            // });
         } else if (activeFolder !== "" && activeSubFolders === "") {
+            console.log("hello1111", activeFolder)
             setActiveFolder(activeFolder);
             setActiveSubFolders("");
-            setActiveSortFilter({
-                ...activeSortFilter,
-                mainFilter: activeSubFolders ? "SubCollectionView" : activeSortFilter.mainFilter,
-                sort: advancedConfig.collectionSortView === "alphabetical" ? selectOptions.sort[3] : selectOptions.sort[1],
-            });
+            // setActiveSortFilter({
+            //     ...activeSortFilter,
+            //     mainFilter: activeSubFolders ? "SubCollectionView" : activeSortFilter.mainFilter,
+            //     sort: advancedConfig.collectionSortView === "alphabetical" ? selectOptions.sort[3] : selectOptions.sort[1],
+            // });
         }
         router.push("/main/assets")
     };
@@ -1099,6 +1100,7 @@ const DetailOverlay = ({
         if (folder) setOperationFolder(folder);
         setActiveOperation(operation);
     };
+
     let operationLength = 0;
 
     // Check selected assets to be operated
@@ -1111,7 +1113,6 @@ const DetailOverlay = ({
     }
 
     // ------- share asset functionality ------- //
-
     const openShareAsset = () => {
         return beginAssetOperation({ asset: completeAsset }, "share")
     }
@@ -1215,7 +1216,6 @@ const DetailOverlay = ({
     };
 
     // -------  delete Overlay single module ------- //
-
     const openDeleteAsset = (id) => {
         setActiveAssetId(id);
         setDeleteModalOpen(true);

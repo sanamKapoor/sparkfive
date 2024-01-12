@@ -6,6 +6,7 @@ import { validation } from "../constants/file-validation";
 import { AssetContext, SocketContext } from "../context";
 import assetApi from "../server-api/asset";
 import { convertTimeFromSeconds, getFolderKeyAndNewNameByFileName } from "../utils/upload";
+import useHistory from "../hooks/use-history"
 interface Asset {
   id: string;
   name: string;
@@ -83,7 +84,7 @@ export default ({ children }) => {
   const [selectedAllAssets, setSelectedAllAssets] = useState(false);
   const [selectedAllFolders, setSelectedAllFolders] = useState(false);
   const [completedAssets, setCompletedAssets] = useState([]);
-
+  const [history, setHistory] = useState("");
   // Upload process
   const [uploadingAssets, setUploadingAssets] = useState([]);
   const [uploadingType, setUploadingType] = useState();
@@ -344,11 +345,11 @@ export default ({ children }) => {
         const updatedAssets = assets.map((asset, index) =>
           index === retryList[i].index
             ? {
-                ...asset,
-                status: "fail",
-                index,
-                error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
-              }
+              ...asset,
+              status: "fail",
+              index,
+              error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
+            }
             : asset,
         );
 
@@ -556,12 +557,24 @@ export default ({ children }) => {
 
   // Reset active folders if user navigate to other pages
   useEffect(() => {
+
+
+
+
     const handleRouteChange = (url, { shallow }) => {
-      setActiveFolder("");
+      console.log("🚀 ~ handleRouteChange ~ url:", url, history)
+      // const history = useHistory();
+
+      const parts = history.split('/');
+      console.log("🚀 ~ handleRouteChange ~ parts:", parts)
+      if (parts.length > 2 && parts[1] === 'main' && parts[2] === 'assets') {
+        console.log("hello")
+      } else {
+        setActiveFolder("");
+      }
+      setHistory(url)
     };
-
     router.events.on("routeChangeStart", handleRouteChange);
-
     // If the component is unmounted, unsubscribe
     // from the event with the `off` method:
     return () => {
