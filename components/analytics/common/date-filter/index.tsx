@@ -67,6 +67,7 @@ export default function DateFilter() {
       endDate: '',
       beginDate: ''
     })
+    setFilter(null)
   }
 
   useEffect(() => {

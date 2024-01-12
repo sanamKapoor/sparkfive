@@ -30,7 +30,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    z-index: 99;
   }
 /* active class when we click on flip icon */
   /* ${styles['active_table-head']} */

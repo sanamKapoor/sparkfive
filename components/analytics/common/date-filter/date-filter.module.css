@@ -23,7 +23,7 @@
     padding: 16px;
     margin-top:16px;
     background: #fff;
-    z-index: 99;
+    z-index: 999;
 }
 .gridBox{
     display: grid;

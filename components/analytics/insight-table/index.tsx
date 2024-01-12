@@ -15,7 +15,7 @@ import { analyticsLayoutSection } from "../../../constants/analytics";
 import Loader from "../../common/UI/Loader/loader";
 
 const UserTable = ({ dashboardView = false }: { dashboardView: boolean }) => {
-  const { loading, error, data, activeSection, totalRecords, setSortBy } = useContext(AnalyticsContext);
+  const { loading, error, data, activeSection, limit, totalRecords } = useContext(AnalyticsContext);
   const emptyRows = Array.from({ length: Math.max(10 - (data ? data.length : 0), 0) }, (_, index) => ({}));
 
   return (
@@ -76,7 +76,7 @@ const UserTable = ({ dashboardView = false }: { dashboardView: boolean }) => {
           </div>
 
           <TableData columns={dashboardView ? dashboardColumns : UserTableColumns} data={dashboardView ? data : (data ? [...data, ...emptyRows] : emptyRows)} arrowColumns={arrowColumns} buttonColumns={buttonColumns} buttonTexts={buttonTexts} imageSource="ImageSource" activeSection={activeSection} />
-          {(!dashboardView && data && data?.length > 0) && <Pagination />}
+          {(!dashboardView && data && data?.length > 0 && totalRecords > limit) && <Pagination />}
         </div>
       }
     </section>
