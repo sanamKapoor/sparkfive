@@ -1,14 +1,22 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Utilities } from "../../../../assets";
 import styles from './analytics-search.module.css'
 import { AnalyticsContext } from "../../../../context";
+import { useDebounce } from "../../../../hooks/useDebounce";
 
 const AnalyticsSearch = () => {
-  const { search, setSearch } = useContext(AnalyticsContext);
+  const { setSearch } = useContext(AnalyticsContext);
+
+  const [input, setInput] = useState("");
+  const debouncedSearchTerm = useDebounce(input, 500);
 
   const handleSearch = (e) => {
-    setSearch(e.target.value.trim());
+    setInput(e.target.value.trim());
   }
+
+  useEffect(() => {
+    setSearch(debouncedSearchTerm);
+  }, [debouncedSearchTerm]);
 
   return (
     <>
@@ -18,7 +26,7 @@ const AnalyticsSearch = () => {
             type="text"
             placeholder="Search User"
             name="search2"
-            value={search}
+            value={input}
             onChange={handleSearch}
             className={styles.searchinput}
            />

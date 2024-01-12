@@ -33,7 +33,7 @@ function Pagination() {
         pages.push(
           <span
             key={i}
-            className={`${styles['pagination-left-arrow']} ${styles['pagination-box']}`}
+            className={`${styles['pagination-left-arrow']} ${styles['pagination-box']} ${page === i && styles['active']}`}
             onClick={() => handlePageClick(i)}
           >
             {i}
@@ -53,7 +53,7 @@ function Pagination() {
         pages.push(
           <span
             key={i}
-            className={`${styles['pagination-left-arrow']} ${styles['pagination-box']}`}
+            className={`${styles['pagination-left-arrow']} ${styles['pagination-box']} ${page === i && styles['active']}`}
             onClick={() => handlePageClick(i)}
           >
             {i}
@@ -72,7 +72,7 @@ function Pagination() {
   return (
     <section className={styles.pagination}>
       <div className={`${styles['pagination-left']}`}>
-        <span>{page}-{totalRecords > limit ? limit : totalRecords} of {totalRecords} items</span>
+        <span>{(page - 1) * limit + 1}-{Math.min(page * limit, totalRecords)} of {totalRecords}</span>
       </div>
       <div className={`${styles['pagination-right']}`}>
         <div className={`${styles['pagination-left-arrow']} ${styles['pagination-box']}`} onClick={handlePrevClick}>
@@ -81,7 +81,7 @@ function Pagination() {
         {activeSection === analyticsLayoutSection.ACCOUNT_USERS ? renderNumericPagination() :
           pageNumbers.map((pageNumber) => (
             <div key={pageNumber} className={`${styles['pagination-left-arrow']} ${styles['pagination-box']}`}>
-              <span className={pageNumber === 1 ? styles['active'] : ''}>{pageNumber}</span>
+              <span className={page === 1 ? styles['active'] : ''}>{pageNumber}</span>
             </div>
           ))
         }

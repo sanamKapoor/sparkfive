@@ -11,10 +11,11 @@ export default ({ children }) => {
     endDate: new Date(),
     beginDate: calculateBeginDate(7, 1)
   });
+  const [customDates, setCustomDates] = useState('');
   const [sortBy, setSortBy] = useState('');
   const [sortOrder, setSortOrder] = useState(true);
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(5);
   const [error, setError] = useState('');
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -26,6 +27,7 @@ export default ({ children }) => {
     activeSection,
     search,
     filter,
+    customDates,
     sortBy,
     sortOrder,
     page,
@@ -37,6 +39,7 @@ export default ({ children }) => {
     setActiveSection,
     setSearch,
     setFilter,
+    setCustomDates,
     setSortBy,
     setSortOrder,
     setPage,
