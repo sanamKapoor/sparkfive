@@ -40,6 +40,7 @@ import { isImageType } from '../../../utils/file';
 import selectOptions from '../../../utils/select-options';
 import toastUtils from '../../../utils/toast';
 import urlUtils from '../../../utils/url';
+import AssetUploadProcess from '../../../components/asset-upload-process';
 
 // Components
 const getDefaultDownloadImageType = (extension) => {
@@ -117,6 +118,7 @@ export async function getServerSideProps({ req, res, query }) {
             // Additional headers...
             'Authorization': `Bearer ${cookies.get("jwt")}`
         };
+        console.log("hello")
         const share = isShare === 'true' ? true : false
 
         // Using fetch to get data from the API with custom headers
@@ -124,8 +126,11 @@ export async function getServerSideProps({ req, res, query }) {
         if (share) {
             apiUrl = `${process.env.SERVER_BASE_URL}/share-collections/assets/${assetId}?${querystring.encode({ sharePath, sharedCode })}`;
         }
+        console.log(apiUrl,"res")
 
         const res = await fetch(apiUrl, { headers });
+
+console.log(res,"res")
 
         // Checking if the response was successful
         if (!res.ok) {
@@ -187,7 +192,8 @@ const DetailOverlay = ({
     if (!asset) {
         router.push('/main/assets')
     }
-
+    const { uploadingStatus, uploadingAssets, downloadingStatus } =
+    useContext(AssetContext);
     const { user, cdnAccess, transcriptAccess, hasPermission, advancedConfig } = useContext(UserContext);
     const { activeOperation, assets, setAssets, folders, needsFetch, updateDownloadingStatus, setDetailOverlayId, setOperationAssets,
         subFoldersAssetsViewList: {
@@ -1261,7 +1267,10 @@ const DetailOverlay = ({
     };
 
     return (
-        <div className={`app - overlay ${styles.container} ${isShare ? styles.share : ""} `}>
+        <>
+
+            <AssetUploadProcess/>
+            <div className={`app - overlay ${styles.container} ${isShare ? styles.share : ""} `}>
             {assetDetail && (
                 <section id={"detail-overlay"} className={styles.content}>
                     <div className={styles["top-wrapper"]}>
@@ -1412,6 +1421,7 @@ const DetailOverlay = ({
                             {assetDetail.type === "image" && (
                                 <>
                                     {mode === "detail" && (
+                                        
                                         <AssetImg
                                             imgClass="img-preview"
                                             name={assetDetail.name}
@@ -1445,6 +1455,7 @@ const DetailOverlay = ({
                                             <AssetImg name={assetDetail.name} assetImg={versionRealUrl} imgClass="img-preview" isResize />
                                         </Rnd>
                                     )}
+                                   
 
                                     {mode === "crop" && (
                                         <AssetCropImg
@@ -1479,6 +1490,7 @@ const DetailOverlay = ({
                                     <AssetPdf asset={asset} />
                                 ) : (
                                     <AssetImg name={assetDetail.name} assetImg={versionThumbnailUrl} imgClass="img-preview" />
+                                 
                                 ))}
                             {assetDetail.type !== "image" && assetDetail.type !== "video" && !versionThumbnailUrl && (
                                 <AssetIcon extension={currentAsset.extension} />
@@ -1848,7 +1860,13 @@ const DetailOverlay = ({
                 }
                 modalIsOpen={deleteModalOpen}
             />
+
+            {/* <AssetUploadProcess /> */}
+
+
         </div>
+        </>
+    
     );
 };
 
