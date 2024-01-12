@@ -23,6 +23,7 @@ export const AnalyticsContext = createContext({
   data: null,
   loading: false,
   totalRecords: 0,
+  downloadCSV: false,
   setSearch: (value) => {},
   setFilter: (value) => {},
   setCustomDates: (value) => {},
@@ -34,6 +35,7 @@ export const AnalyticsContext = createContext({
   setData: (value) => {},
   setLoading: (value) => {},
   setTotalRecords: (value) => {},
+  setDownloadCSV: (value) => {},
 });
 
 export const UserContext = createContext({

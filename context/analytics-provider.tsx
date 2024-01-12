@@ -22,6 +22,7 @@ export default ({ children }) => {
   const [totalRecords, setTotalRecords] = useState(0);
   const [apiEndpoint, setApiEndpoint] = useState("dashboard");
   const [initialRender, setInitialRender] = useState(false);
+  const [downloadCSV, setDownloadCSV] = useState(false);
 
   const analyticsValue = {
     activeSection,
@@ -36,6 +37,7 @@ export default ({ children }) => {
     data,
     loading,
     totalRecords,
+    downloadCSV,
     setActiveSection,
     setSearch,
     setFilter,
@@ -47,7 +49,8 @@ export default ({ children }) => {
     setError,
     setData,
     setLoading,
-    setTotalRecords
+    setTotalRecords,
+    setDownloadCSV
   };
 
 
@@ -66,7 +69,8 @@ export default ({ children }) => {
         search,
         sortBy,
         sortOrder,
-        filter
+        filter,
+        downloadCSV
       });
 
       setTotalRecords(data.totalRecords)
@@ -83,10 +87,11 @@ export default ({ children }) => {
 
   useEffect(() => {
     analyticsApiHandler();
-  }, [apiEndpoint, page, limit, search, sortBy, sortOrder, filter])
+  }, [apiEndpoint, page, limit, search, sortBy, sortOrder, filter, downloadCSV])
 
   useEffect(() => {
     setInitialRender(false);
+    setDownloadCSV(false);
   }, [page, limit, search, sortBy, sortOrder, filter])
 
   const handleApiEndpoint = async () => {
