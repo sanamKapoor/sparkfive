@@ -17,7 +17,7 @@ export const arrowColumns = [
   },
   {
     label: "Role",
-    value: "roleId"
+    value: "role"
   },
   {
     label: "Last session date",

@@ -6,7 +6,7 @@ import { insights } from "../../../../assets";
 import Button from "../../../common/buttons/button";
 import { AnalyticsContext } from "../../../../context";
 import { calculateBeginDate } from "../../../../config/data/filter";
-
+import DateUtils from "../../../../utils/date";
 import dateStyles from "../../../common/filter/date-uploaded.module.css";
 import IconClickable from "../../../common/buttons/icon-clickable";
 
@@ -143,7 +143,7 @@ export default function DateFilter() {
                 <label className={styles.label} htmlFor="">From Date</label>
                 <DayPickerInput
                   onDayChange={(day) => handleStartDay(day)}
-                  value={customDateVal.beginDate !== null ? customDateVal.beginDate : ''}
+                  value={customDateVal.beginDate !== null ? DateUtils.parseDateToStringForAnalytics(customDateVal.beginDate) : ''}
                   dayPickerProps={{
                     disabledDays: {
                       before: calculateBeginDate(365, 1),
@@ -156,7 +156,7 @@ export default function DateFilter() {
                 <label className={styles.label} htmlFor="">To Date</label>
                 <DayPickerInput
                   onDayChange={(day) => handleEndDay(day)}
-                  value={customDateVal.endDate !== null ? customDateVal.endDate : ''}
+                  value={customDateVal.endDate !== null ? DateUtils.parseDateToStringForAnalytics(customDateVal.endDate) : ''}
                   dayPickerProps={{
                     className: styles.calendar,
                     disabledDays: {

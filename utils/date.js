@@ -16,6 +16,14 @@ const parseDateToString = (d) => {
   return format(date, 'MM/dd/yyyy')
 }
 
+const parseDateToStringForAnalytics = (d) => {
+  const date = new Date(d)
+
+  if (!d) return 'MM/DD/YY'
+
+  return format(date, 'MM/dd/yy')
+}
+
 const getSecondsFromHhMmSs =  (hms) => {
   const value = hms.split(':') // split it at the colons
 
@@ -95,7 +103,7 @@ const analyticsDateFormatter = (date) => {
   const inputDate = new Date(date);
   const isNearByDate = getSpecialDateString(inputDate);
   if(isNearByDate) return `${isNearByDate} at ${formatTime(inputDate)}`;
-  else return parseDateToString(date)
+  else return parseDateToStringForAnalytics(date)
 }
 
 const processDayItem = (item, mappedItems, Component) => {
@@ -201,6 +209,23 @@ const analyticsRecordsDateRange = ({
   return `${format(beginDate, 'PP')} - ${format(endDate, 'PP')}`
 }
 
+const calculateDateDifference = ({
+  beginDate,
+  endDate
+}) => {
+  // Convert both dates to UTC to avoid issues with daylight saving time
+  const utcDate1 = new Date(beginDate.getFullYear(), beginDate.getMonth(), beginDate.getDate());
+  const utcDate2 = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+
+  // Calculate the difference in milliseconds
+  const timeDifference = Math.abs(utcDate2 - utcDate1);
+
+  // Convert the difference from milliseconds to days
+  const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+  return daysDifference;
+}
+
 export default {
   areSameDates,
   getDateKey,
@@ -208,7 +233,9 @@ export default {
   processDayItem,
   reorderItems,
   parseDateToString,
+  parseDateToStringForAnalytics,
   getSpecialDateString,
   analyticsDateFormatter,
-  analyticsRecordsDateRange
+  analyticsRecordsDateRange,
+  calculateDateDifference
 }

@@ -28,3 +28,5 @@ export const GUEST_UPLOAD_SUCCESS_MESSAGE =
 //TODO: verify if content is correct
 export const GUEST_UPLOAD_WELCOME_MESSAGE =
   "Please upload your files or folders that you would like to submit to us. This is more of text here.Please upload your files or folders that you would like to submit to us.";
+
+export const SOMETHING_WENT_WRONG = 'Something went wrong.'

@@ -11,7 +11,7 @@ export default function TableData({ columns, data, arrowColumns, buttonColumns, 
 
   const [showModal, setShowModal] = useState(false);
   const [activeModal, setActiveModal] = useState<React.ReactElement | null>(null);
-  const { setSortBy, setSortOrder, sortOrder, sortBy, tableLoading } = useContext(AnalyticsContext);
+  const { setSortBy, setSortOrder, sortOrder, sortBy, tableLoading, totalRecords, data: apiData } = useContext(AnalyticsContext);
 
   const handleModals = (name, last_session) => {
     setShowModal(true);
@@ -28,10 +28,10 @@ export default function TableData({ columns, data, arrowColumns, buttonColumns, 
                 let sortCol = arrowColumns.filter(col => col.label === column)[0];
                 return (
                   <th key={index}>
-                    {sortCol ? (
+                    {(sortCol && totalRecords > 0) ? (
                       <div className={`${styles['headingIcon']} ${sortBy === sortCol.value ? styles['active_table-head'] : ''}`}>
                         {column} <div className={`${styles['flip-direction']} ${styles['outer-wrapper']}`}>
-                          <img src={sortBy === sortCol.value ? (sortOrder ? insights.flipUp : insights.flipDown) : insights.flipUpDown} alt="flip icon" onClick={() => {
+                          <img src={sortBy === sortCol.value ? (sortOrder ? insights.flipDown : insights.flipUp) : insights.flipUpDown} alt="flip icon" onClick={() => {
                             setSortBy(sortCol.value);
                             setSortOrder(!sortOrder);
                           }} />
@@ -46,20 +46,27 @@ export default function TableData({ columns, data, arrowColumns, buttonColumns, 
             </tr>
           </thead>
           {
-            data && data.length > 0 &&
+            (data && data.length > 0) &&
             <tbody>
               {
                 (
                   activeSection === analyticsLayoutSection.ACCOUNT_USERS ||
                   activeSection === analyticsLayoutSection.DASHBOARD
                 ) ?
-                  data.map((row) => {
+                  data.map((row) => {                    
                     return (
                       <tr key={row.id}>
                         <td style={{
                           width: '300px'
-                        }}>{row.name}</td>
-                        {activeSection === analyticsLayoutSection.ACCOUNT_USERS && <td>{row.roleId}</td>}
+                        }}>
+                          {row.name && <div className={styles["usernameWithImage"]}> 
+                            <div className={`${styles["image-wrapper"]}`}>
+                              <img src={row.profilePhoto !== null ? row.profilePhoto : insights.avatar} alt="user" className={styles.userImage} />
+                            </div>
+                            <span className={`${styles["user-name"]}`}>{row.name}</span>
+                          </div>}
+                        </td>
+                        {activeSection === analyticsLayoutSection.ACCOUNT_USERS && <td className={`${styles["user-role"]}`}>{row.roleId}</td>}
                         <td>{row.last_session ? DateFormatter.analyticsDateFormatter(row.last_session) : ''}</td>
                         <td>{row.session_count}</td>
                         {activeSection === analyticsLayoutSection.ACCOUNT_USERS && <td>{row.downloads}</td>}
@@ -108,7 +115,7 @@ export default function TableData({ columns, data, arrowColumns, buttonColumns, 
         showModal && activeModal
       }
       {
-        (!data || data.length === 0) && <div className={styles.empty}>
+        (apiData && apiData.length === 0) && <div className={styles.empty}>
           <NoData message="Data not found." wrapper={false} />
         </div>
       }

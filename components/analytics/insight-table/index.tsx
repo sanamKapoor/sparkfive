@@ -1,6 +1,6 @@
 // TableComponent.js
 
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AnalyticsContext } from "../../../context";
 import { UserTableColumns, arrowColumns, buttonColumns, buttonTexts, dashboardColumns } from "../../../data/analytics";
 import SearchButton from "../common/search";
@@ -15,14 +15,27 @@ import { analyticsLayoutSection } from "../../../constants/analytics";
 import Loader from "../../common/UI/Loader/loader";
 
 const UserTable = ({ dashboardView = false }: { dashboardView: boolean }) => {
-  const { loading, error, data, activeSection, limit, totalRecords } = useContext(AnalyticsContext);
-  const emptyRows = (totalRecords > 0) && Array.from({ length: Math.max(10 - (data ? data.length : 0), 0) }, (_, index) => ({}));
+  const { loading, error, data, activeSection, limit, totalRecords, sortBy, setSortBy, setSortOrder, initialRender } = useContext(AnalyticsContext);
+  const [emptyRows, setEmptyRows] = useState([]);
+
+  useEffect(() => {
+    if (totalRecords > 0 && data && data.length > 0) {
+      setEmptyRows(Array.from({ length: Math.max(15 - (data ? data.length : 0), 0) }, (_, index) => ({})))
+    } else {
+      setEmptyRows([])
+    }
+  }, [totalRecords, data])
+
+  const handleClearSorting = () => {
+    setSortBy('');
+    setSortOrder(true);
+  }
 
   return (
     <section className={`${styles["outer-wrapper"]}`}>
       {
-        loading ? <div>  <div className={styles.backdrop} /> <Loader /></div> :
-        (error || !data) ? <NoData message={error} /> :
+        loading ? <div className={styles.backdrop}><Loader /></div> :
+        (error) ? <NoData message={error} /> :
         <div className={styles.tableResponsive}>
           {/* for web */}
           <div className={`${styles["heading-wrap"]} ${styles["web-view"]}`}>
@@ -74,8 +87,8 @@ const UserTable = ({ dashboardView = false }: { dashboardView: boolean }) => {
               <SearchButton label="Search User" />
             </div>
           </div>
-
-          <TableData columns={dashboardView ? dashboardColumns : UserTableColumns} data={dashboardView ? data : (data ? [...data, ...emptyRows] : emptyRows)} arrowColumns={arrowColumns} buttonColumns={buttonColumns} buttonTexts={buttonTexts} imageSource="ImageSource" activeSection={activeSection} />
+          {(!dashboardView && data && data?.length > 0 && sortBy) && <small className={`${styles["clear-sort"]}`} onClick={handleClearSorting}>Clear sorting</small>}
+          <TableData columns={dashboardView ? dashboardColumns : UserTableColumns} data={dashboardView ? data : ((data && emptyRows.length > 0) ? [...data, ...emptyRows] : null)} arrowColumns={arrowColumns} buttonColumns={buttonColumns} buttonTexts={buttonTexts} imageSource="ImageSource" activeSection={activeSection} />
           {(!dashboardView && data && data?.length > 0 && totalRecords > limit) && <Pagination />}
         </div>
       }

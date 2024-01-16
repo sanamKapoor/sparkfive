@@ -98,6 +98,7 @@ export const insights={
   paginationRight:require("./Icons/insights/pagination-right.svg"),
   insightClose:require("./Icons/insights/insight-close.svg"),
   noData:require("./Icons/insights/nodata.svg"),
+  avatar:require("./Icons/insights/profile.svg"),
   tableHome:require("./Icons/insights/tabler-icon-home.svg"),
   tableEye:require("./Icons/insights/tabler-icon-eye.svg"),
   tableUser:require("./Icons/insights/tabler-icon-user.svg"),

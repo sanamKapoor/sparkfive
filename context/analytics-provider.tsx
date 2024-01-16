@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
+import { saveAs } from "file-saver";
 import { AnalyticsContext } from "../context";
 import { analyticsLayoutSection } from "../constants/analytics";
 import AnalyticsApi from "../server-api/analytics";
 import { calculateBeginDate } from "../config/data/filter";
+import toastUtils from "../utils/toast";
+import { SOMETHING_WENT_WRONG, USERS_DOWNLOADED } from "../constants/messages";
 
 export default ({ children }) => {
   const [activeSection, setActiveSection] = useState(analyticsLayoutSection.DASHBOARD);
@@ -15,9 +18,9 @@ export default ({ children }) => {
   const [sortBy, setSortBy] = useState('');
   const [sortOrder, setSortOrder] = useState(true);
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(3);
+  const [limit, setLimit] = useState(10);
   const [error, setError] = useState('');
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [tableLoading, setTableLoading] = useState(false);
   const [totalRecords, setTotalRecords] = useState(0);
@@ -40,6 +43,7 @@ export default ({ children }) => {
     tableLoading,
     totalRecords,
     downloadCSV,
+    initialRender,
     setActiveSection,
     setSearch,
     setFilter,
@@ -53,7 +57,8 @@ export default ({ children }) => {
     setLoading,
     setTableLoading,
     setTotalRecords,
-    setDownloadCSV
+    setDownloadCSV,
+    setInitialRender
   };
 
 
@@ -63,7 +68,7 @@ export default ({ children }) => {
         setLoading(true);
         setTableLoading(false);
         setError('');
-        setData(null);
+        setData([]);
         setTotalRecords(0);
       } else {
         setTableLoading(true)
@@ -79,26 +84,43 @@ export default ({ children }) => {
         downloadCSV
       });
 
-      setTotalRecords(data.totalRecords)
-      setData(data.data);
+      if (data.csvData) {
+        const fileData = new Blob([data], {
+          type: "text/csv;charset=utf-8",
+        });
+        saveAs(fileData, `Users-Details-${new Date().getTime()}`);
+        toastUtils.success(USERS_DOWNLOADED);
+      } else {
+        setTotalRecords(data.totalRecords)
+        setData(data.data);
+      }
+
       initialRender ? setLoading(false) : setTableLoading(false)
       setError('');
+      if (downloadCSV) setDownloadCSV(false);
     } catch (error) {
       initialRender ? setLoading(false) : setTableLoading(false)
-      setError(error.message || 'Data not found.');
-      setData(null);
+      setError(SOMETHING_WENT_WRONG);
+      setData([]);
       setTotalRecords(0);
     }
   }
 
   useEffect(() => {
     analyticsApiHandler();
-  }, [apiEndpoint, page, limit, search, sortBy, sortOrder, filter, downloadCSV])
+  }, [apiEndpoint, page, limit, search, sortBy, sortOrder, filter])
+
+  useEffect(() => {
+    if (downloadCSV) analyticsApiHandler();
+  }, [downloadCSV])
 
   useEffect(() => {
     setInitialRender(false);
-    setDownloadCSV(false);
   }, [page, limit, search, sortBy, sortOrder, filter])
+
+  // useEffect(() => {
+  //   if (page !== 1) setPage(1);
+  // }, [search, filter, limit, sortBy])
 
   const handleApiEndpoint = async () => {
     switch (activeSection) {

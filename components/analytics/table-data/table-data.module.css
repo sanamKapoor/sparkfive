@@ -92,27 +92,35 @@
     cursor: pointer;
   
   }
-  .image-wrapper{
+  /* .image-wrapper{
     max-width: 28px;
     height:28px;
     width: 100%;
     object-fit: cover;
-  
+  } */
+  .userImage{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
   }
+
   .usernameWithImage{
     display: flex;
     align-items: center;
- 
   }
 
   .image-wrapper{
-    margin-right:8px;
+    margin: 2px 8px;
+  }
+  .user-name, .user-role{
+    text-transform: capitalize;
   }
   .empty{
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
+    padding: 20px 0;
   }
   @media (max-width:820px){
     .user-name{

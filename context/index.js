@@ -18,13 +18,14 @@ export const AnalyticsContext = createContext({
   sortBy: '',
   sortOrder: true,
   page: 1,
-  limit: 3,
+  limit: 10,
   error: "",
-  data: null,
+  data: [],
   loading: false,
   tableLoading: false,
   totalRecords: 0,
   downloadCSV: false,
+  initialRender: false,
   setSearch: (value) => {},
   setFilter: (value) => {},
   setCustomDates: (value) => {},
@@ -38,6 +39,7 @@ export const AnalyticsContext = createContext({
   setTableLoading: (value) => {},
   setTotalRecords: (value) => {},
   setDownloadCSV: (value) => {},
+  setInitialRender: (value) => {},
 });
 
 export const UserContext = createContext({

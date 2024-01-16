@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styles from './pagination.module.css';
 import { insights } from '../../../../assets';
 import { AnalyticsContext } from '../../../../context';
@@ -7,7 +7,11 @@ import { analyticsLayoutSection } from '../../../../constants/analytics';
 function Pagination() {
   const pageNumbers = ["1", "2", "3", "4"]
   const { page, limit, setPage, totalRecords, activeSection } = useContext(AnalyticsContext);
-  const totalPages = Math.ceil(totalRecords / limit);
+  const [totalPages, setTotalPages] = useState(0);
+
+  useEffect(() => {
+    if(totalRecords > 0 && limit > 0) setTotalPages(Math.ceil(totalRecords / limit))
+  }, [totalRecords, limit])
 
   const handlePrevClick = () => {
     if (page === 1) return;
@@ -75,9 +79,7 @@ function Pagination() {
         <span>{(page - 1) * limit + 1}-{Math.min(page * limit, totalRecords)} of {totalRecords}</span>
       </div>
       <div className={`${styles['pagination-right']}`}>
-        <div className={`${styles['pagination-left-arrow']} ${styles['pagination-box']}`} style={{
-          cursor: page === 1 ? 'not-allowed' : 'pointer'
-        }} onClick={handlePrevClick}>
+        <div className={`${styles['pagination-left-arrow']} ${styles['pagination-box']} ${page === 1 ? styles['disable'] : ''}`} onClick={handlePrevClick}>
           <img src={insights.paginationLeft} alt="left -arrow" />
         </div>
         {activeSection === analyticsLayoutSection.ACCOUNT_USERS ? renderNumericPagination() :
@@ -87,9 +89,7 @@ function Pagination() {
             </div>
           ))
         }
-        <div className={`${styles['pagination-left-arrow']} ${styles['pagination-box']}`} style={{
-          cursor: page === totalPages ? 'not-allowed' : 'pointer'
-        }} onClick={handleNextClick}>
+        <div className={`${styles['pagination-left-arrow']} ${styles['pagination-box']} ${page === totalPages ? styles['disable'] : ''}`} onClick={handleNextClick}>
           <img src={insights.paginationRight} alt="right-arrow" />
         </div>
       </div>
