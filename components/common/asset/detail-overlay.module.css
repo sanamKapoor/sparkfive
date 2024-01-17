@@ -117,7 +117,7 @@
   grid-area: content-asset;
   padding-right: 25px;
   padding-left: 25px;
-  overflow: auto;
+  /* overflow: auto; */
 }
 
 .side {

@@ -56,6 +56,7 @@ const NestedSidenav = ({ viewFolder }) => {
     setLastUploadedFolder(undefined);
     //setting the HeaderName
     setHeaderName(description);
+    console.log("in heading click")
     setActiveFolder("");
     setActiveSubFolders("");
     setActiveSortFilter({

@@ -264,6 +264,8 @@ const AssetsLibrary = () => {
   useEffect(() => {
     console.log("4")
     if (firstLoaded && activeFolder) {
+
+      console.log(activeFolder ? "all" : activeSortFilter.mainFilter, "all 4")
       setActiveSortFilter({
         ...activeSortFilter,
         mainFilter: activeFolder ? "all" : activeSortFilter.mainFilter,
@@ -351,9 +353,12 @@ const AssetsLibrary = () => {
     } else {
       sort = advancedConfig.assetSortView === "newest" ? selectOptions.sort[1] : selectOptions.sort[3];
     }
+
+    console.log(filters[0] === "collection" ? "folders" : "all", "all 7")
+
     setActiveSortFilter({
       ...activeSortFilter,
-      mainFilter: defaultTab,
+      mainFilter: activeFolder ? "all" : activeSubFolders ? "SubCollectionView" : defaultTab,
       sort,
     });
   };
@@ -737,15 +742,7 @@ const AssetsLibrary = () => {
       if (activeSortFilter.mainFilter !== "SubCollectionView") {
         return;
       }
-      // let sort;
-      // sort =
-      //   advancedConfig.collectionSortView === "alphabetical"
-      //     ? selectOptions.sort[3]
-      //     : selectOptions.sort[1];
-
-      // const { field, order } = sort;
       const { field, order } = activeSortFilter.sort;
-
       const { next } = subFoldersViewList;
       const queryParams = {
         page: replace ? 1 : next,
@@ -776,17 +773,7 @@ const AssetsLibrary = () => {
         return;
       }
       const { results: SubFolders } = subFoldersViewList;
-      // const obj = {
-      //   ...getAssetsSort(activeSortFilter)
-      // }
-      // let sort;
-      // sort =
-      //   advancedConfig.collectionSortView === "alphabetical"
-      //     ? selectOptions.sort[3]
-      //     : selectOptions.sort[1];
-      // const sortingString = `${sort.field},${sort.order}`;
       const { next } = subFoldersAssetsViewList;
-
       const { data: subFolderAssets } = await assetApi.getAssets({
         ...getAssetsFilters({
           replace,
@@ -967,6 +954,7 @@ const AssetsLibrary = () => {
         folderName ? folderName : subFoldersViewList.results.find((folder: any) => folder.id === id)?.name || "",
       );
     } else {
+      console.log("hello in view Folder")
       setActiveFolder("");
       setActiveSubFolders(id);
       setHeaderName(folderName ? folderName : folders.find((folder: any) => folder.id === id)?.name || "");

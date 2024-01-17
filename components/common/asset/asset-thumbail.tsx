@@ -19,7 +19,7 @@ import AssetIcon from './asset-icon';
 import AssetImg from './asset-img';
 import AssetOptions from './asset-options';
 import styles from './asset-thumbail.module.css';
-
+// import Cookies from 'universal-cookie';
 // Components
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
 
@@ -77,7 +77,8 @@ const AssetThumbail = ({
     subFoldersAssetsViewList: { results: subAssets, next: nextAsset, total: totalAssets },
     setListUpdateFlag,
     setSubFoldersAssetsViewList,
-    activeSubFolders
+    activeSubFolders,
+    headerName
   } = useContext(AssetContext);
 
   const isAssetACopy = asset.name.endsWith(" - COPY");
@@ -206,12 +207,20 @@ const AssetThumbail = ({
           ...DEFAULT_DETAIL_PROPS,
           visible: !overlayProperties.visible,
         });
-
         if (!overlayProperties.visible) {
-          router.push({
-            pathname: `/main/assets/${asset.id}`,
-            query: { isShare, sharePath, sharedCode: "", activeFolder, availableNext, activeSubFolders }
-          });
+          console.log(isShare, "isShare")
+          if (isShare) {
+            console.log("hello")
+            router.push({
+              pathname: `/collections/assetDetail/${asset.id}`,
+              query: { isShare, sharePath, sharedCode: "", headerName, activeFolder, availableNext, activeSubFolders }
+            });
+          } else {
+            router.push({
+              pathname: `/main/assets/${asset.id}`,
+              query: { isShare, sharePath, sharedCode: "", headerName, activeFolder, availableNext, activeSubFolders }
+            });
+          }
         }
       }
     }

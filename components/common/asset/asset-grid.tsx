@@ -31,13 +31,6 @@ import AssetUpload from './asset-upload';
 import DetailOverlay from './detail-overlay';
 import FolderTableHeader from './Folder-table-header/folder-table-header';
 
-// import { useDrag } from 'react-dnd';
-// import {
-//   Box,
-//   boxesIntersect,
-//   useSelectionContainer
-// } from "@air/react-drag-to-select";
-
 // Components
 const AssetGrid = ({
   activeView = "grid",
@@ -62,7 +55,6 @@ const AssetGrid = ({
 }) => {
 
   let isDragging;
-
   if (!isShare) isDragging = useDropzone();
 
   const {
