@@ -80,7 +80,7 @@ function Pagination() {
       </div>
       <div className={`${styles['pagination-right']}`}>
         <div className={`${styles['pagination-left-arrow']} ${styles['pagination-box']} ${page === 1 ? styles['disable'] : ''}`} onClick={handlePrevClick}>
-          <img src={insights.paginationLeft} alt="left -arrow" />
+        {page === 1 ? <img src={insights.paginationDisable} alt="disabled-left-arrow" /> : <img src={insights.paginationLeft} alt="left-arrow" />}
         </div>
         {activeSection === analyticsLayoutSection.ACCOUNT_USERS ? renderNumericPagination() :
           pageNumbers.map((pageNumber) => (
