@@ -43,5 +43,9 @@ module.exports = {
   typescript: {
     ignoreBuildErrors: true,
   },
-
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
+  },
 };

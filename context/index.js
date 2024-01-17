@@ -187,7 +187,9 @@ export const AssetContext = createContext({
   currentFolder: null,
   setCurrentFolder: (value) => { },
   showSubCollectionContent: false,
-  setShowSubCollectionContent: (value) => { }
+  setShowSubCollectionContent: (value) => { },
+  history: "",
+  setHistory: (value) => { }
 });
 
 export const TeamContext = createContext({

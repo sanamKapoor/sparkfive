@@ -473,9 +473,7 @@ const UploadRequest = () => {
 
   // Save bulk tag from right pannel
   const saveBulkTag = async () => {
-
     try {
-
       setIsLoading(true);
       let submitApi = false;
       let currentAssetTags = [...assetTags];

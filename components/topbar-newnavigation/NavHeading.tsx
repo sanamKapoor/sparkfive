@@ -18,7 +18,8 @@ const NavHeading = ({ isShare = false }) => {
   } = useContext(FilterContext) as any;
 
   useEffect(() => {
-    if (!isShare) {
+    if (!isShare && headerName === "") {
+      console.log("hello header", headerName)
       setHeaderName(`${activeSortFilter.mainFilter === "folders" ? "All Collections" : "All Assets"}`)
     }
   }, [])

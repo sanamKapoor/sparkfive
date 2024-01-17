@@ -657,15 +657,11 @@ const AssetsLibrary = () => {
 
   const getAssets = async (replace = true, complete: any = null) => {
     try {
-
       setLoadingAssets(true);
-
       if (replace) {
         setAddedIds([]);
       }
-
       setPlaceHolders("asset", replace);
-
       const { data } = await assetApi.getAssets({
         ...getAssetsFilters({
           replace,
@@ -746,15 +742,7 @@ const AssetsLibrary = () => {
       if (activeSortFilter.mainFilter !== "SubCollectionView") {
         return;
       }
-      // let sort;
-      // sort =
-      //   advancedConfig.collectionSortView === "alphabetical"
-      //     ? selectOptions.sort[3]
-      //     : selectOptions.sort[1];
-
-      // const { field, order } = sort;
       const { field, order } = activeSortFilter.sort;
-
       const { next } = subFoldersViewList;
       const queryParams = {
         page: replace ? 1 : next,
@@ -785,17 +773,7 @@ const AssetsLibrary = () => {
         return;
       }
       const { results: SubFolders } = subFoldersViewList;
-      // const obj = {
-      //   ...getAssetsSort(activeSortFilter)
-      // }
-      // let sort;
-      // sort =
-      //   advancedConfig.collectionSortView === "alphabetical"
-      //     ? selectOptions.sort[3]
-      //     : selectOptions.sort[1];
-      // const sortingString = `${sort.field},${sort.order}`;
       const { next } = subFoldersAssetsViewList;
-
       const { data: subFolderAssets } = await assetApi.getAssets({
         ...getAssetsFilters({
           replace,

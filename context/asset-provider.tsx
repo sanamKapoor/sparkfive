@@ -558,21 +558,16 @@ export default ({ children }) => {
   // Reset active folders if user navigate to other pages
   useEffect(() => {
 
-
-
-
     const handleRouteChange = (url, { shallow }) => {
-      console.log("🚀 ~ handleRouteChange ~ url:", url, history)
-      // const history = useHistory();
+      const parts = localStorage.getItem('history')?.split('/');
 
-      const parts = history.split('/');
-      console.log("🚀 ~ handleRouteChange ~ parts:", parts)
-      if (parts.length > 2 && parts[1] === 'main' && parts[2] === 'assets') {
-        console.log("hello")
+      if (parts && parts.length > 3 && parts[1] === 'main' && parts[2] === 'assets') {
+        localStorage.setItem("history", url)
       } else {
         setActiveFolder("");
+        localStorage.setItem("history", url)
       }
-      setHistory(url)
+
     };
     router.events.on("routeChangeStart", handleRouteChange);
     // If the component is unmounted, unsubscribe
@@ -687,6 +682,7 @@ export default ({ children }) => {
     setCurrentFolder,
     showSubCollectionContent,
     setShowSubCollectionContent,
+    history, setHistory
   };
   return <AssetContext.Provider value={assetsValue}>{children}</AssetContext.Provider>;
 };
