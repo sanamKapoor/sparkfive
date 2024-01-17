@@ -18,7 +18,7 @@ export const AnalyticsContext = createContext({
   sortBy: '',
   sortOrder: true,
   page: 1,
-  limit: 10,
+  limit: 3,
   error: "",
   data: [],
   loading: false,
