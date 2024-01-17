@@ -13,6 +13,7 @@ import styles from "./insight-table.module.css";
 import TableHeading from "./table-heading";
 import { analyticsLayoutSection } from "../../../constants/analytics";
 import Loader from "../../common/UI/Loader/loader";
+import Button from "../../common/buttons/button";
 
 const UserTable = ({ dashboardView = false }: { dashboardView: boolean }) => {
   const { loading, error, data, activeSection, limit, totalRecords, sortBy, setSortBy, setSortOrder, initialRender } = useContext(AnalyticsContext);
@@ -87,7 +88,7 @@ const UserTable = ({ dashboardView = false }: { dashboardView: boolean }) => {
               <SearchButton label="Search User" />
             </div>
           </div>
-          {(!dashboardView && data && data?.length > 0 && sortBy) && <small className={`${styles["clear-sort"]}`} onClick={handleClearSorting}>Clear sorting</small>}
+          {(!dashboardView && data && data?.length > 0 && sortBy) && <div className={`${styles["clear-sort"]}`}><Button text="Clear sorting"  className={'clear-sort-btn'} onClick={handleClearSorting}  /></div>}
           <TableData columns={dashboardView ? dashboardColumns : UserTableColumns} data={dashboardView ? data : ((data && emptyRows.length > 0) ? [...data, ...emptyRows] : null)} arrowColumns={arrowColumns} buttonColumns={buttonColumns} buttonTexts={buttonTexts} imageSource="ImageSource" activeSection={activeSection} />
           {(!dashboardView && data && data?.length > 0 && totalRecords > limit) && <Pagination />}
         </div>

@@ -104,7 +104,8 @@ export const insights={
   tableUser:require("./Icons/insights/tabler-icon-user.svg"),
   flipUp:require("./Icons/insights/insight-up.svg"),
   flipDown:require("./Icons/insights/insight-down.svg"),
-  flipUpDown:require("./Icons/insights/up-down-insight.svg")
+  flipUpDown:require("./Icons/insights/up-down-insight.svg"),
+  paginationDisable:require("./Icons/insights/pagination-disable.svg"),
 
 }
 
