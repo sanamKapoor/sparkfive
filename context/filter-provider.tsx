@@ -29,12 +29,8 @@ export default ({ children, isPublic = false }) => {
     advancedConfig.collectionSortView === "alphabetical" ? selectOptions.sort[3] : selectOptions.sort[1];
 
   const [activeSortFilter, setActiveSortFilter] = useState<any>({
-    sort:
-      advancedConfig.defaultLandingPage === "allTab"
-        ? assetSort
-        : collectionSort,
-    mainFilter:
-      advancedConfig.defaultLandingPage === "allTab" ? "all" : "folders",
+    sort: advancedConfig.defaultLandingPage === "allTab" ? assetSort : collectionSort,
+    mainFilter: advancedConfig.defaultLandingPage === "allTab" ? "all" : "folders",
     ...DEFAULT_FILTERS,
     dimensionsActive: false,
     lastUpdated: undefined,
