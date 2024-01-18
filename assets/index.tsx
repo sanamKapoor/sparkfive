@@ -107,7 +107,6 @@ export const insights={
   flipUpDown:require("./Icons/insights/up-down-insight.svg"),
   paginationDisableLeft:require("./Icons/insights/pagination-disable-left.svg"),
   paginationDisableRight:require("./Icons/insights/pagination-disable-right.svg"),
-
 }
 
 export const Utilities = {

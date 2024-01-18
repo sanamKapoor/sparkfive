@@ -10,6 +10,7 @@ import TableData from "../../table-data";
 import styles from "./models.module.css";
 import { AnalyticsContext } from "../../../../context";
 import { analyticsLayoutSection } from "../../../../constants/analytics";
+import { useAnalyticsHold } from "../../../../hooks/use-analytics-hold";
 
 function UserModal({
   setShowModal,
@@ -17,7 +18,13 @@ function UserModal({
   last_session
 }: { setShowModal: (show: boolean) => void, name: string, last_session: string }) {
 
+  const { restoreState } = useAnalyticsHold();
   const { activeSection } = useContext(AnalyticsContext);
+
+  const handleCloseModal = () => {
+    setShowModal(false)
+    // restoreState();
+  }
 
   return (
     <div className={`${styles.backdrop}`}>
@@ -39,7 +46,7 @@ function UserModal({
             <SearchButton label="Search User" />
             <Datefilter />
             <Download />
-            <IconClickable src={insights.insightClose} additionalClass={styles.closeIcon} text={""} onClick={() => setShowModal(false)} />
+            <IconClickable src={insights.insightClose} additionalClass={styles.closeIcon} text={""} onClick={handleCloseModal} />
           </div>
         </div>
         {/* for laptop */}

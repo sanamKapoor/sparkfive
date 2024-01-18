@@ -1,11 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react';
-import styles from './pagination.module.css';
-import { insights } from '../../../../assets';
-import { AnalyticsContext } from '../../../../context';
-import { analyticsLayoutSection } from '../../../../constants/analytics';
+import React, { useContext, useEffect, useState } from "react";
+import styles from "./pagination.module.css";
+import { insights } from "../../../../assets";
+import { AnalyticsContext } from "../../../../context";
+import { analyticsLayoutSection } from "../../../../constants/analytics";
 
 function Pagination() {
-  const pageNumbers = ["1", "2", "3", "4"]
+  const pageNumbers = ["1", "2", "3", "4"];
   const { page, limit, setPage, totalRecords, activeSection } = useContext(AnalyticsContext);
   const [totalPages, setTotalPages] = useState(0);
   const [activePage, setActivePage] = useState(0);
@@ -15,8 +15,8 @@ function Pagination() {
   }, [page])
 
   useEffect(() => {
-    if(totalRecords > 0 && limit > 0) setTotalPages(Math.ceil(totalRecords / limit))
-  }, [totalRecords, limit])
+    if (totalRecords > 0 && limit > 0) setTotalPages(Math.ceil(totalRecords / limit));
+  }, [totalRecords, limit]);
 
   const handlePrevClick = () => {
     if (activePage === 1) return;
@@ -49,7 +49,7 @@ function Pagination() {
             onClick={() => handlePageClick(i)}
           >
             {i}
-          </span>
+          </span>,
         );
       }
     } else {
@@ -69,7 +69,7 @@ function Pagination() {
             onClick={() => handlePageClick(i)}
           >
             {i}
-          </span>
+          </span>,
         );
       }
 

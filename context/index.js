@@ -9,7 +9,6 @@ export const LoadingContext = createContext({
 export const AnalyticsContext = createContext({
   apiEndpoint: "dashboard",
   activeSection: "",
-  setActiveSection: (value) => {},
   search: '',
   filter: {
     endDate: new Date(),
@@ -27,6 +26,7 @@ export const AnalyticsContext = createContext({
   totalRecords: 0,
   downloadCSV: false,
   initialRender: true,
+  setActiveSection: (value) => {},
   setApiEndpoint: (value) => {},
   setSearch: (value) => {},
   setFilter: (value) => {},
