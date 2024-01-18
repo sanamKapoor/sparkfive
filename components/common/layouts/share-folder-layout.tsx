@@ -5,7 +5,10 @@ import styles from "./share-folder-layout.module.css";
 
 import AssetHeaderOps from "../asset/asset-header-ops";
 
-const ShareFolderLayout = ({ children, advancedLink = false }) => {
+const ShareFolderLayout = ({ children, advancedLink = false ,headerZIndex}) => {
+  const headerStyle = {
+    zIndex: typeof headerZIndex !== 'undefined' ? headerZIndex : '1500',
+  };
   const { folderInfo, activePasswordOverlay } = useContext(ShareContext);
   const { assets, folders, subFoldersAssetsViewList, subFoldersViewList } = useContext(AssetContext);
   const { activeSortFilter } = useContext(FilterContext);
@@ -27,7 +30,7 @@ const ShareFolderLayout = ({ children, advancedLink = false }) => {
   return (
     <>
       {!activePasswordOverlay && (
-        <header className={styles.header} id={"share-header"}>
+        <header className={styles.header} id={"share-header"} style={headerStyle}>
           <div className={styles["image-wrapper"]}>
             <img className={styles["logo-img"]} src={folderInfo?.teamIcon || logo} />
           </div>

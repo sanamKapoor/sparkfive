@@ -75,7 +75,7 @@ const DetailPage = (props) => {
         useContext(AssetContext);
 
     return (
-        <MainLayout requiredPermissions={[ASSET_ACCESS]}>
+        <MainLayout headerZIndex={'unset'} requiredPermissions={[ASSET_ACCESS]}>
             {uploadingStatus !== "none" && uploadingAssets.length > 0 && (
                 <AssetUploadProcess />
             )}

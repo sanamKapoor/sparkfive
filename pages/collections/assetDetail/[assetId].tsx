@@ -74,7 +74,7 @@ const ShareDetailPage = (props) => {
     const { downloadingStatus } = useContext(AssetContext);
 
     return (
-        <ShareFolderLayout>
+        <ShareFolderLayout headerZIndex={'unset'}>
             {downloadingStatus !== "none" && <AssetDownloadProcess />}
             <DetailOverlay {...props} />
         </ShareFolderLayout>
