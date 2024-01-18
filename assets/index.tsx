@@ -106,6 +106,7 @@ export const insights={
   flipDown:require("./Icons/insights/insight-down.svg"),
   flipUpDown:require("./Icons/insights/up-down-insight.svg"),
   paginationDisable:require("./Icons/insights/pagination-disable.svg"),
+  rightLight:require("./Icons/insights/right-light.svg"),
 
 }
 

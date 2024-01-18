@@ -1,30 +1,30 @@
-import React, { useContext, useEffect, useState } from 'react';
-import styles from './pagination.module.css';
-import { insights } from '../../../../assets';
-import { AnalyticsContext } from '../../../../context';
-import { analyticsLayoutSection } from '../../../../constants/analytics';
+import React, { useContext, useEffect, useState } from "react";
+import styles from "./pagination.module.css";
+import { insights } from "../../../../assets";
+import { AnalyticsContext } from "../../../../context";
+import { analyticsLayoutSection } from "../../../../constants/analytics";
 
 function Pagination() {
-  const pageNumbers = ["1", "2", "3", "4"]
+  const pageNumbers = ["1", "2", "3", "4"];
   const { page, limit, setPage, totalRecords, activeSection } = useContext(AnalyticsContext);
   const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
-    if(totalRecords > 0 && limit > 0) setTotalPages(Math.ceil(totalRecords / limit))
-  }, [totalRecords, limit])
+    if (totalRecords > 0 && limit > 0) setTotalPages(Math.ceil(totalRecords / limit));
+  }, [totalRecords, limit]);
 
   const handlePrevClick = () => {
     if (page === 1) return;
-    setPage(page - 1)
+    setPage(page - 1);
   };
 
   const handleNextClick = () => {
     if (page === totalPages) return;
-    setPage(page + 1)
+    setPage(page + 1);
   };
 
   const handlePageClick = (newPage) => {
-    setPage(newPage)
+    setPage(newPage);
   };
 
   const renderNumericPagination = () => {
@@ -37,11 +37,13 @@ function Pagination() {
         pages.push(
           <span
             key={i}
-            className={`${styles['pagination-left-arrow']} ${styles['pagination-box']} ${page === i && styles['active']}`}
+            className={`${styles["pagination-left-arrow"]} ${styles["pagination-box"]} ${
+              page === i && styles["active"]
+            }`}
             onClick={() => handlePageClick(i)}
           >
             {i}
-          </span>
+          </span>,
         );
       }
     } else {
@@ -57,11 +59,13 @@ function Pagination() {
         pages.push(
           <span
             key={i}
-            className={`${styles['pagination-left-arrow']} ${styles['pagination-box']} ${page === i && styles['active']}`}
+            className={`${styles["pagination-left-arrow"]} ${styles["pagination-box"]} ${
+              page === i && styles["active"]
+            }`}
             onClick={() => handlePageClick(i)}
           >
             {i}
-          </span>
+          </span>,
         );
       }
 
@@ -75,22 +79,42 @@ function Pagination() {
 
   return (
     <section className={styles.pagination}>
-      <div className={`${styles['pagination-left']}`}>
-        <span>{(page - 1) * limit + 1}-{Math.min(page * limit, totalRecords)} of {totalRecords}</span>
+      <div className={`${styles["pagination-left"]}`}>
+        <span>
+          {(page - 1) * limit + 1}-{Math.min(page * limit, totalRecords)} of {totalRecords}
+        </span>
       </div>
-      <div className={`${styles['pagination-right']}`}>
-        <div className={`${styles['pagination-left-arrow']} ${styles['pagination-box']} ${page === 1 ? styles['disable'] : ''}`} onClick={handlePrevClick}>
-        {page === 1 ? <img src={insights.paginationDisable} alt="disabled-left-arrow" /> : <img src={insights.paginationLeft} alt="left-arrow" />}
+      <div className={`${styles["pagination-right"]}`}>
+        <div
+          className={`${styles["pagination-left-arrow"]} ${styles["pagination-box"]} ${
+            page === 1 ? styles["disable"] : ""
+          }`}
+          onClick={handlePrevClick}
+        >
+          {page === 1 ? (
+            <img src={insights.paginationDisable} alt="disabled-left-arrow" />
+          ) : (
+            <img src={insights.paginationLeft} alt="left-arrow" />
+          )}
         </div>
-        {activeSection === analyticsLayoutSection.ACCOUNT_USERS ? renderNumericPagination() :
-          pageNumbers.map((pageNumber) => (
-            <div key={pageNumber} className={`${styles['pagination-left-arrow']} ${styles['pagination-box']}`}>
-              <span className={page === 1 ? styles['active'] : ''}>{pageNumber}</span>
-            </div>
-          ))
-        }
-        <div className={`${styles['pagination-left-arrow']} ${styles['pagination-box']} ${page === totalPages ? styles['disable'] : ''}`} onClick={handleNextClick}>
-          <img src={insights.paginationRight} alt="right-arrow" />
+        {activeSection === analyticsLayoutSection.ACCOUNT_USERS
+          ? renderNumericPagination()
+          : pageNumbers.map((pageNumber) => (
+              <div key={pageNumber} className={`${styles["pagination-left-arrow"]} ${styles["pagination-box"]}`}>
+                <span className={page === 1 ? styles["active"] : ""}>{pageNumber}</span>
+              </div>
+            ))}
+        <div
+          className={`${styles["pagination-left-arrow"]} ${styles["pagination-box"]} ${
+            page === totalPages ? styles["disable"] : ""
+          }`}
+          onClick={handleNextClick}
+        >
+          {page === totalPages ? (
+            <img src={insights.rightLight} alt="right-light" />
+          ) : (
+            <img src={insights.paginationRight} alt="right-arrow" />
+          )}
         </div>
       </div>
     </section>
