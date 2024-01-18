@@ -31,12 +31,16 @@ export default function DateFilter() {
   };
 
   const handleCustomDateSelector = () => {
-    setActiveFilter("custom");
+    if (showCustomRange) {
+      handleFilterClick("7d", 7)
+    } else {
+      setActiveFilter("custom");
+      setCustomDateVal({
+        endDate: '',
+        beginDate: ''
+      });
+    }
     setShowCustomRange(!showCustomRange);
-    setCustomDateVal({
-      endDate: '',
-      beginDate: ''
-    });
   };
 
   const handleStartDay = (value) => {
@@ -67,11 +71,14 @@ export default function DateFilter() {
       endDate: '',
       beginDate: ''
     })
-    setFilter(null)
+    // setFilter(null)
+    handleFilterClick("7d", 7)
   }
 
   useEffect(() => {
-    if (customDates && filter && showCustomRange) {      
+    if (customDates && filter !== null && showCustomRange) {
+      console.log({ filter });
+
       setCustomDateVal({
         beginDate: filter.beginDate.toDateString(),
         endDate: filter.endDate.toDateString()
@@ -161,7 +168,7 @@ export default function DateFilter() {
                     className: styles.calendar,
                     disabledDays: {
                       before: customDateVal.beginDate ? new Date(customDateVal.beginDate) : calculateBeginDate(365, 1),
-                      after: customDateVal.endDate ? new Date(customDateVal.endDate) : new Date(),
+                      after: new Date(),
                     },
                   }}
                 />

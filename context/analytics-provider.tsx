@@ -74,6 +74,11 @@ export default ({ children }) => {
         setTableLoading(true)
       }
 
+      if (downloadCSV) {
+        setLoading(true);
+        setTableLoading(false);
+      }
+
       const { data } = await AnalyticsApi.getAnalyticsData(apiEndpoint, {
         page,
         limit,
@@ -84,11 +89,12 @@ export default ({ children }) => {
         downloadCSV
       });
 
-      if (data.csvData) {
+      if (downloadCSV) {
         const fileData = new Blob([data], {
           type: "text/csv;charset=utf-8",
         });
-        saveAs(fileData, `Users-Details-${new Date().getTime()}`);
+
+        saveAs(fileData, `Users-Engagement-${new Date().getTime()}`);
         toastUtils.success(USERS_DOWNLOADED);
       } else {
         setTotalRecords(data.totalRecords)
@@ -97,9 +103,16 @@ export default ({ children }) => {
 
       initialRender ? setLoading(false) : setTableLoading(false)
       setError('');
-      if (downloadCSV) setDownloadCSV(false);
+      if (downloadCSV) {
+        setLoading(false);
+        setDownloadCSV(false);
+      }
     } catch (error) {
       initialRender ? setLoading(false) : setTableLoading(false)
+      if (downloadCSV) {
+        setLoading(false);
+        setDownloadCSV(false);
+      }
       setError(SOMETHING_WENT_WRONG);
       setData([]);
       setTotalRecords(0);
@@ -118,9 +131,9 @@ export default ({ children }) => {
     setInitialRender(false);
   }, [page, limit, search, sortBy, sortOrder, filter])
 
-  // useEffect(() => {
-  //   if (page !== 1) setPage(1);
-  // }, [search, filter, limit, sortBy])
+  useEffect(() => {
+    if (page !== 1) setPage(1);
+  }, [search, filter, limit, sortBy])
 
   const handleApiEndpoint = async () => {
     switch (activeSection) {
