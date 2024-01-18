@@ -30,7 +30,7 @@ import AssetThumbail from './asset-thumbail';
 import AssetUpload from './asset-upload';
 import DetailOverlay from './detail-overlay';
 import FolderTableHeader from './Folder-table-header/folder-table-header';
-
+import DragSelect from "dragselect";
 // Components
 const AssetGrid = ({
   activeView = "grid",
@@ -75,16 +75,13 @@ const AssetGrid = ({
 
   const { activeSortFilter } = useContext(FilterContext);
 
-  //Drog select assets
-
-  // const [selectedIndexes, setSelectedIndexes] = useState<string[]>([]);
-  // const selectableItems = useRef([]);
-  // const elementsContainerRef = useRef<HTMLDivElement | null>(null);
+  //Drag select assets
+  const [selectedIndexes, setSelectedIndexes] = useState<string[]>([]);
+  const selectableItems = useRef([]);
+  const elementsContainerRef = useRef<HTMLDivElement | null>(null);
 
   // Drag selection states
-
   const { advancedConfig, hasPermission, user } = useContext(UserContext);
-
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [activeAssetId, setActiveAssetId] = useState("");
   const [activeArchiveAsset, setActiveArchiveAsset] = useState(undefined);
@@ -400,63 +397,63 @@ const AssetGrid = ({
   //   console.log("🚀 ~ file: asset-grid.tsx:402 ~ handleMouseUp ~ handleMouseUp:", handleMouseUp)
   // };
 
-  // const itemsRef: any = useRef([]);
-  // const [selectedItems, setSelectedItems] = useState([]);
+  const itemsRef: any = useRef([]);
+  const [selectedItems, setSelectedItems] = useState([]);
 
-  // const ds = new DragSelect({
-  //   selectables: document.getElementsByClassName("dragSelection"),
-  // draggability: false,
-  // dragselect: true,
-  // keyboardDrag: true,
-  // multiSelectKeys: ['Control', 'Shift', 'Meta'],
-  // dragKeys: { up: ['ArrowUp'], down: ['ArrowDown'], left: ['ArrowLeft'], right: ['ArrowRight'] },
-  // });
+  const ds = new DragSelect({
+    selectables: document.getElementsByClassName("dragSelection"),
+    draggability: false,
+    dragselect: true,
+    keyboardDrag: true,
+    multiSelectKeys: ['Control', 'Shift', 'Meta'],
+    dragKeys: { up: ['ArrowUp'], down: ['ArrowDown'], left: ['ArrowLeft'], right: ['ArrowRight'] },
+  });
 
-  // useEffect(() => {
-  // ds.subscribe("callback", (e) => {
+  useEffect(() => {
+    ds.subscribe("callback", (e) => {
 
-  // const haveShorterLength =
-  //   ((e.event.clientX - coordinates.x) ** 2 +
-  //     (e.event.clientY - coordinates.y) ** 2) **
-  //   0.5
-  // console.log("🚀 ~ file: asset-grid.tsx:465 ~ ds.subscribe ~ haveShorterLength:", haveShorterLength)
+      const haveShorterLength =
+        ((e.event.clientX - coordinates.x) ** 2 +
+          (e.event.clientY - coordinates.y) ** 2) **
+        0.5
+      console.log("🚀 ~ file: asset-grid.tsx:465 ~ ds.subscribe ~ haveShorterLength:", haveShorterLength)
 
-  // Check if the event contains selected items, it's not a MouseEvent, and the selection area meets your criteria
-  // if (e.items.length > 0 && haveShorterLength > 100) {
-  // console.log(e.items)
-  // setSelectedItems(e.items);
-  // }
-  // });
+      // Check if the event contains selected items, it's not a MouseEvent, and the selection area meets your criteria
+      if (e.items.length > 0 && haveShorterLength > 100) {
+        console.log(e.items)
+        setSelectedItems(e.items);
+      }
+    });
 
-  //   return () => {
-  //     ds.unsubscribe();
-  //   };
-  // }, []);
+    return () => {
+      ds.unsubscribe();
+    };
+  }, []);
 
-  // useEffect(() => {
-  //   let selectData = document.getElementsByClassName("ds-selected")
+  useEffect(() => {
+    let selectData = document.getElementsByClassName("ds-selected")
 
-  //   let selectDataArray = []
-  //   selectData = Array.from(selectData);
-  //   selectData.forEach(item => {
-  //     selectDataArray.push(item.id)
-  //   });
-  //   if (selectDataArray.length > 0) {
-  //     // debugger
-  //     let arrayDel = []
-  //     assets.forEach((item, ind) => {
-  //       if (selectDataArray.includes(item.asset.id)) {
-  //         item.isSelected = true
-  //       }
-  //       else {
-  //         item.isSelected = false
-  //       }
-  //       arrayDel.push(item)
-  //     })
-  //     setAssets(arrayDel)
-  //   }
-  //   console.log(JSON.stringify(selectDataArray), 22222222222222);
-  // }, [selectedItems])
+    let selectDataArray = []
+    selectData = Array.from(selectData);
+    selectData.forEach(item => {
+      selectDataArray.push(item.id)
+    });
+    if (selectDataArray.length > 0) {
+      // debugger
+      let arrayDel = []
+      assets.forEach((item, ind) => {
+        if (selectDataArray.includes(item.asset.id)) {
+          item.isSelected = true
+        }
+        else {
+          item.isSelected = false
+        }
+        arrayDel.push(item)
+      })
+      setAssets(arrayDel)
+    }
+    console.log(JSON.stringify(selectDataArray), 22222222222222);
+  }, [selectedItems])
 
   const filterRef = useRef<HTMLDivElement>(null);
 
@@ -586,8 +583,8 @@ const AssetGrid = ({
                             ${activeView === "grid" && styles["list-wrapper-asset"]}
                             dragSelection`}
                             key={index}
-                            // id={assetItem.asset?.id}
-                            // ref={(el) => (itemsRef.current[index] = assetItem)}
+                            id={assetItem.asset?.id}
+                            ref={(el) => (itemsRef.current[index] = assetItem)}
                             onClick={(e) => handleFocusChange(e, assetItem.asset.id)}
                             style={{ width: `$${widthCard} px` }}
                           >

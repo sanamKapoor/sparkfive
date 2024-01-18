@@ -1,24 +1,18 @@
 import querystring from 'querystring';
 import { useContext } from 'react';
-// import Cookies from 'universal-cookie';
 
 import AssetDownloadProcess from '../../../components/asset-download-process';
-import ShareFolderLayout from '../../../components/common/layouts/share-folder-layout';
+import ShareLayout from '../../../components/common/layouts/share-layout';
+import DetailOverlay from '../../../components/main/assets-library/assetDetail';
 import { AssetContext } from '../../../context';
 
 // Components
-import DetailOverlay from "../../../components/main/assets-library/assetDetail";
-
 export async function getServerSideProps({ req, res, query }) {
     try {
         const { assetId, isShare, sharePath, sharedCode, activeFolder, availableNext, activeSubFolders, headerName } = query;
-        // const cookies = new Cookies(req.headers.cookie, { path: '/' });
         // Adding custom headers to the fetch request
         const share = isShare === 'true' ? true : false
-        // const headers = {
-        //     'Content-Type': 'application/json', // Add any headers you need
-        //     'Authorization': `Bearer ${cookies.get("jwt")}`
-        // };
+
         // Using fetch to get data from the API with custom headers
         let apiUrl = `${process.env.SERVER_BASE_URL}/assets/${assetId} `;
         if (share) {
@@ -32,7 +26,6 @@ export async function getServerSideProps({ req, res, query }) {
         // Parsing the JSON data from the response
         const data = await fetchRes.json();
         const { asset, realUrl, thumbailUrl } = data;
-
         return {
             props: {
                 asset: data.asset,
@@ -67,16 +60,19 @@ export async function getServerSideProps({ req, res, query }) {
         };
     }
 }
-
-const ShareDetailPage = (props) => {
+const ShareAssetDetailPage = (props) => {
     const { downloadingStatus } = useContext(AssetContext);
 
     return (
-        <ShareFolderLayout headerZIndex={'unset'}>
-            {downloadingStatus !== "none" && <AssetDownloadProcess />}
-            <DetailOverlay {...props} />
-        </ShareFolderLayout>
+        <>
+            <ShareLayout>
+                {downloadingStatus !== "none" && <AssetDownloadProcess />}
+                <DetailOverlay
+                    {...props}
+                />
+            </ShareLayout>
+        </>
     );
 };
 
-export default ShareDetailPage;
+export default ShareAssetDetailPage;

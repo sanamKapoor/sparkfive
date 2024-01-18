@@ -147,7 +147,7 @@ const ShareFolderMain = () => {
     if (!firstLoaded && folderInfo && folderInfo.customAdvanceOptions) {
       setFirstLoaded(true);
 
-      const mode = folderInfo.singleSharedCollectionId ? "all" : "folders";
+      const mode = folderInfo.singleSharedCollectionId ? !folderInfo?.sharedFolder?.parentId ? "SubCollectionView" : "all" : "folders";
 
       let sort = { ...activeSortFilter.sort };
       if (mode === "folders") {
@@ -333,14 +333,15 @@ const ShareFolderMain = () => {
     }
   };
 
-  const getFolderInfo = async (displayError = false) => {
+  const getFolderInfo = async (displayError = false, ignoreFolder = false) => {
     try {
       const { data } = await shareCollectionApi.getFolderInfo({ sharePath });
 
       const sharedFolder = data.sharedFolder;
-
       // Needed for navigation(arrows) information in detail-overlay
-      if (sharedFolder && activeFolder === "" && activeSubFolders === "") {
+      let condition = true
+      ignoreFolder ? null : condition = (activeFolder === "" && activeSubFolders === "")
+      if (sharedFolder && condition) {
         const folders = [{ ...sharedFolder, assets: [...assets] }];
         if (!sharedFolder?.parentId) {
           setActiveSubFolders(sharedFolder.id);
@@ -558,7 +559,7 @@ const ShareFolderMain = () => {
       }
     } else if (Boolean(folderInfo?.singleSharedCollectionId)) {
       setActiveFolder("");
-      getFolderInfo();
+      getFolderInfo(false, true);
     }
   };
 

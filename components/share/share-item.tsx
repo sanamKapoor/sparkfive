@@ -1,25 +1,26 @@
-import { format } from "date-fns";
-import { useEffect, useState } from "react";
-import styles from "./share-item.module.css";
+import { format } from 'date-fns';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
-import { Utilities } from "../../assets";
+import { Utilities } from '../../assets';
+import AssetIcon from '../common/asset/asset-icon';
+import AssetImg from '../common/asset/asset-img';
+import DetailOverlay from '../common/asset/detail-overlay';
+import Button from '../common/buttons/button';
+import IconClickable from '../common/buttons/icon-clickable';
+import styles from './share-item.module.css';
 
 // Component
-import AssetIcon from "../common/asset/asset-icon";
-import AssetImg from "../common/asset/asset-img";
-import DetailOverlay from "../common/asset/detail-overlay";
-import Button from "../common/buttons/button";
-import IconClickable from "../common/buttons/icon-clickable";
-
 const ShareItem = ({
   asset,
   thumbailUrl,
   realUrl,
   isSelected = false,
-  toggleSelected = () => {},
+  toggleSelected = () => { },
   sharedCode = ""
 }) => {
   const [visibleOverlay, setVisibleOVerlay] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (visibleOverlay) {
@@ -28,6 +29,15 @@ const ShareItem = ({
       document.body.classList.remove("no-overflow");
     }
   }, [visibleOverlay]);
+
+
+  const viewDetails = (value) => {
+    setVisibleOVerlay(true)
+    router.push({
+      pathname: `/share/assetDetail/${asset.id}`,
+      query: { isShare: true, sharePath: "", sharedCode, headerName: "", activeFolder: "", availableNext: "", activeSubFolders: "" }
+    });
+  }
 
   return (
     <>
@@ -47,9 +57,8 @@ const ShareItem = ({
           )}
 
           <div
-            className={`${styles["selectable-wrapper"]} ${
-              isSelected && styles["selected-wrapper"]
-            }`}
+            className={`${styles["selectable-wrapper"]} ${isSelected && styles["selected-wrapper"]
+              }`}
           >
             {isSelected ? (
               <IconClickable
@@ -70,7 +79,7 @@ const ShareItem = ({
               className={"container primary"}
               text={"View Details"}
               type={"button"}
-              onClick={() => setVisibleOVerlay(true)}
+              onClick={() => viewDetails(true)}
             />
           </div>
         </div>
@@ -85,7 +94,7 @@ const ShareItem = ({
           </div>
         </div>
       </div>
-      {visibleOverlay && (
+      {/* {visibleOverlay && (
         <DetailOverlay
           initiaParams={{ side: "detail" }}
           asset={asset}
@@ -95,7 +104,7 @@ const ShareItem = ({
           sharedCode={sharedCode}
           closeOverlay={() => setVisibleOVerlay(false)}
         />
-      )}
+      )} */}
     </>
   );
 };

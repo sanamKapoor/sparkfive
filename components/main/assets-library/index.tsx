@@ -126,7 +126,6 @@ const AssetsLibrary = () => {
 
   // When tag, campaigns, collection changes, used for click on tag/campaigns/collection in admin attribute management
   useEffect(() => {
-    console.log("1")
     if (!preparingAssets.current) return;
     if (!router.query.tag && !router.query.product && !router.query.collection && !router.query.campaign) {
       preparingAssets.current = false;
@@ -214,7 +213,6 @@ const AssetsLibrary = () => {
   }, [tags, productFields.sku, collection, campaigns]);
 
   useEffect(() => {
-    console.log("2")
     if (hasPermission([ASSET_ACCESS])) {
       // Assets are under preparing (for query etc)
       if (preparingAssets.current) {
@@ -251,7 +249,6 @@ const AssetsLibrary = () => {
   }, [activeSortFilter, firstLoaded, term]);
 
   useEffect(() => {
-    console.log("3")
     if (firstLoaded && activeSubFolders) {
       setActiveSortFilter({
         ...activeSortFilter,
@@ -262,10 +259,8 @@ const AssetsLibrary = () => {
   }, [activeSubFolders]);
 
   useEffect(() => {
-    console.log("4")
     if (firstLoaded && activeFolder) {
 
-      console.log(activeFolder ? "all" : activeSortFilter.mainFilter, "all 4")
       setActiveSortFilter({
         ...activeSortFilter,
         mainFilter: activeFolder ? "all" : activeSortFilter.mainFilter,
@@ -274,7 +269,6 @@ const AssetsLibrary = () => {
   }, [activeFolder]);
 
   useEffect(() => {
-    console.log("5")
     if (needsFetch === "assets") {
       getAssets();
     } else if (needsFetch === "folders") {
@@ -287,7 +281,6 @@ const AssetsLibrary = () => {
   }, [needsFetch]);
 
   useEffect(() => {
-    console.log("6")
     if (activeMode === "folders") {
       setAssets(assets.map((asset) => ({ ...asset, isSelected: false })));
     }
@@ -314,12 +307,10 @@ const AssetsLibrary = () => {
   }, [activeMode]);
 
   useEffect(() => {
-    console.log("7")
     updateSortFilterByAdvConfig();
   }, [advancedConfig.set]);
 
   useEffect(() => {
-    console.log("8")
     const timer = setTimeout(() => {
       if (loadingAssets) {
         setShowOverlayLoader(true);
@@ -353,8 +344,6 @@ const AssetsLibrary = () => {
     } else {
       sort = advancedConfig.assetSortView === "newest" ? selectOptions.sort[1] : selectOptions.sort[3];
     }
-
-    console.log(filters[0] === "collection" ? "folders" : "all", "all 7")
 
     setActiveSortFilter({
       ...activeSortFilter,
@@ -954,7 +943,6 @@ const AssetsLibrary = () => {
         folderName ? folderName : subFoldersViewList.results.find((folder: any) => folder.id === id)?.name || "",
       );
     } else {
-      console.log("hello in view Folder")
       setActiveFolder("");
       setActiveSubFolders(id);
       setHeaderName(folderName ? folderName : folders.find((folder: any) => folder.id === id)?.name || "");
