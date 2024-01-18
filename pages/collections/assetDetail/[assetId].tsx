@@ -76,9 +76,7 @@ const ShareDetailPage = (props) => {
     return (
         <ShareFolderLayout>
             {downloadingStatus !== "none" && <AssetDownloadProcess />}
-            <DetailOverlay
-                {...props}
-            />
+            <DetailOverlay {...props} />
         </ShareFolderLayout>
     );
 };

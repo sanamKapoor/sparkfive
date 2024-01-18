@@ -106,12 +106,12 @@ const ShareFolderMain = () => {
 
   const getFolders = async (replace = true) => {
     try {
-      setActiveFolder("");
-
       if (replace) {
         setAddedIds([]);
       }
+
       setPlaceHolders("folder", replace);
+
       const { field, order } = activeSortFilter.sort;
       const queryParams = {
         page: replace ? 1 : nextPage,
@@ -132,9 +132,11 @@ const ShareFolderMain = () => {
         ...queryParams,
         ...(term && { term }),
       });
+
       let assetList = { ...data, results: data.results };
 
       setFolders(assetList, replace);
+
     } catch (err) {
       //TODO: Handle error
       console.log(err);
@@ -162,7 +164,7 @@ const ShareFolderMain = () => {
 
       setActiveSortFilter({
         ...activeSortFilter,
-        mainFilter: folderInfo.singleSharedCollectionId ? "all" : "folders", // Set to all if only folder is shared
+        mainFilter: mode, // Set to all if only folder is shared
         sort: sort,
       });
     }
@@ -183,7 +185,6 @@ const ShareFolderMain = () => {
     if (selectedAllAssets) {
       selectAllAssets(false);
     }
-
     if (selectedAllFolders) {
       selectAllFolders(false);
     }
@@ -198,23 +199,6 @@ const ShareFolderMain = () => {
       getFolderInfo();
     }
   }, [sharePath]);
-
-  useEffect(() => {
-    const { asPath } = router;
-
-    if (asPath) {
-      const splitPath = asPath.split("collections/");
-      const newPath = splitPath[1];
-      if (newPath && newPath !== "[team]/[id]/[name]") {
-        setSharePath((prevSharePath) => {
-          return newPath;
-        });
-        setContextPath((prevContextPath) => newPath);
-
-        getFolderInfo();
-      }
-    }
-  }, [router.asPath]);
 
   useEffect(() => {
     if (needsFetch === "assets") {
@@ -242,7 +226,7 @@ const ShareFolderMain = () => {
         getAssets();
       }
     }
-  }, [activeSortFilter, sharePath, folderInfo, term]);
+  }, [activeSortFilter, folderInfo, term]);
 
   useEffect(() => {
     if (firstLoaded && activeSubFolders) {
@@ -275,6 +259,12 @@ const ShareFolderMain = () => {
       }
     }
   }, [activeFolder]);
+
+  useEffect(() => {
+    onChangeWidth();
+    window.addEventListener("resize", onChangeWidth);
+    return () => window.removeEventListener("resize", onChangeWidth);
+  }, []);
 
   const getSubCollectionsFolderData = async (replace = true, pageSize?: number = 50) => {
     try {
@@ -346,19 +336,11 @@ const ShareFolderMain = () => {
   const getFolderInfo = async (displayError = false) => {
     try {
       const { data } = await shareCollectionApi.getFolderInfo({ sharePath });
-      setActivePasswordOverlay(false);
-      setFolderInfo(data);
-      setAdvancedConfig(data.customAdvanceOptions);
-      // if (data.singleSharedCollectionId) {
-      //   setHeaderName(data?.sharedFolder?.name || "")
-      // } else {
-      //   setHeaderName(data.folderName);
-      // }
-      setHeaderName(data.folderName);
+
       const sharedFolder = data.sharedFolder;
 
       // Needed for navigation(arrows) information in detail-overlay
-      if (sharedFolder) {
+      if (sharedFolder && activeFolder === "" && activeSubFolders === "") {
         const folders = [{ ...sharedFolder, assets: [...assets] }];
         if (!sharedFolder?.parentId) {
           setActiveSubFolders(sharedFolder.id);
@@ -367,16 +349,18 @@ const ShareFolderMain = () => {
           setFolders(folders);
         }
       }
+      setActivePasswordOverlay(false);
+      setFolderInfo(data);
+      setAdvancedConfig(data.customAdvanceOptions);
 
+      setHeaderName(data.folderName);
       // There is team theme set
       if (data.theme) {
         // Load theme from team settings
         const currentTheme = loadTheme(data.theme);
-
         // @ts-ignore
         setLogo(currentTheme.logoImage?.realUrl || defaultLogo);
       }
-
       setLoading(false);
     } catch (err) {
       console.log(err);
@@ -553,21 +537,12 @@ const ShareFolderMain = () => {
     ) {
       if (id) {
         setActiveFolder(id);
-        // setHeaderName(
-        //   folderName
-        //     ? folderName
-        //     : sidenavFolderList.find((folder: any) => folder.id === id)?.name ||
-        //     ""
-        // );
       } else {
         getFolderInfo();
       }
     } else if (!Boolean(folderInfo?.singleSharedCollectionId)) {
       if (id) {
         setActiveFolder(id);
-        // setHeaderName(
-        //   folders.find((folder: any) => folder.id === id)?.name || ""
-        // );
       } else {
         setActiveFolder("");
         let sort =
@@ -603,22 +578,10 @@ const ShareFolderMain = () => {
     }
   };
 
-  useEffect(() => {
-    onChangeWidth();
-    window.addEventListener("resize", onChangeWidth);
-    return () => window.removeEventListener("resize", onChangeWidth);
-  }, []);
-
-  useEffect(() => {
-    onChangeWidth();
-  }, [loading]);
-
   const assetGridWrapperStyle =
     !!folderInfo.singleSharedCollectionId || activeSortFilter.mainFilter === "folders"
       ? styles["col-wrapperview"]
       : styles["col-wrapper"];
-
-  const showFilterView = (folderInfo.singleSharedCollectionId || activeMode === "assets") && !activePasswordOverlay;
 
   const headingClick = (value: string, description: string) => {
     if (!value) {
@@ -630,7 +593,6 @@ const ShareFolderMain = () => {
     getAssets();
     setActiveSearchOverlay(false);
   };
-
   return (
     <>
       {!loading && (

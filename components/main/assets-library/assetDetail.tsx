@@ -124,7 +124,11 @@ const DetailOverlay = ({
     const router = useRouter();
 
     if (!asset) {
-        router.push('/main/assets')
+        if (isShare) {
+            router.back()
+        } else {
+            router.push('/main/assets')
+        }
     }
 
     const { user, cdnAccess, transcriptAccess, hasPermission, advancedConfig } = useContext(UserContext);
@@ -191,6 +195,7 @@ const DetailOverlay = ({
     });
 
     const [notes, setNotes] = useState([]);
+
     const [sizeOfCrop, setSizeOfCrop] = useState({
         width: defaultSize.width,
         height: defaultSize.height,
@@ -200,6 +205,7 @@ const DetailOverlay = ({
 
     // delete state
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
     const [activeAssetId, setActiveAssetId] = useState("");
 
     const renameValue = useRef("");
@@ -954,14 +960,17 @@ const DetailOverlay = ({
         if (activeFolder !== "" && activeSubFolders !== "") {
             setActiveFolder("");
             setActiveSubFolders(activeFolder);
-            setHeaderName(headerName);
+            if (!isShare) setHeaderName(headerName);
         } else if (activeFolder !== "" && activeSubFolders === "") {
             setActiveFolder(activeFolder);
             setActiveSubFolders("");
-            setHeaderName(headerName);
+            if (!isShare) setHeaderName(headerName);
         }
-        console.log(headerName + ": " + "headerName")
-        router.push("/main/assets")
+        if (isShare) {
+            router.back()
+        } else {
+            router.push("/main/assets")
+        }
     };
 
     const refreshVersion = (currentVersion) => {
@@ -1330,7 +1339,6 @@ const DetailOverlay = ({
                                     ),
                             )}
                         </div>
-
                         <div
                             className={`${!isShare ? styles["img-wrapper"] : styles["share-img-wrapper"]}${activeFolder && ` ${styles["active-folderimg"]}`
                                 } `}
@@ -1355,7 +1363,6 @@ const DetailOverlay = ({
                                             }
                                         />
                                     )}
-
                                     {mode === "resize" && (
                                         <Rnd
                                             position={{ x: detailPosSize.x, y: detailPosSize.y }}

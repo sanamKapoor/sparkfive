@@ -563,6 +563,8 @@ export default ({ children }) => {
 
       if (parts && parts.length > 3 && parts[1] === 'main' && parts[2] === 'assets') {
         localStorage.setItem("history", url)
+      } else if (parts && parts.length > 3 && parts[1] === 'collections' && parts[2] === 'assetDetail') {
+        localStorage.setItem("history", url)
       } else {
         setActiveFolder("");
         localStorage.setItem("history", url)

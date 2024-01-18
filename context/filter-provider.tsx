@@ -262,6 +262,7 @@ export default ({ children, isPublic = false }) => {
 
     loadFromEndpoint(fetchMethod({ ...basicFilter, ...getCommonParams() }), setAssetResolutions);
   };
+
   const loadProductFields = async () => {
     try {
       const fetchMethod = isPublic ? shareCollectionApi.getTags : tagApi.getTags;

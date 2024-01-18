@@ -68,7 +68,6 @@ export default function SharedPageSidenav({ sidenavFolderList, viewFolder, headi
     });
   }
 
-  // const collAssetsCount = folderInfo?.sharedFolder?.assetsCount ? folderInfo.sharedFolder.assetsCount : 0;
 
   const toggleDropdown = async (index: number) => {
     const updatedShowDropdown = [...showDropdown];
@@ -116,13 +115,12 @@ export default function SharedPageSidenav({ sidenavFolderList, viewFolder, headi
                   > */}
                       <li
                         key={index}
-                        className={`${styles["list1-description"]} ${styles["border-bottom"]} ${
-                          item?.sidenavShowSelected
-                            ? styles.activeDropdown
-                            : parentFolders.length > 0
+                        className={`${styles["list1-description"]} ${styles["border-bottom"]} ${item?.sidenavShowSelected
+                          ? styles.activeDropdown
+                          : parentFolders.length > 0
                             ? styles.activeDropdown
                             : ""
-                        }`}
+                          }`}
                       >
                         <div
                           className={styles["list1-left-contents"]}
@@ -156,9 +154,8 @@ export default function SharedPageSidenav({ sidenavFolderList, viewFolder, headi
                                 <div key={recordIndex}>
                                   <div className={styles.dropdownOptions}>
                                     <div
-                                      className={`${styles["folder-lists"]} ${
-                                        record?.sidenavShowSelected ? styles.activeDropdown : ""
-                                      }`}
+                                      className={`${styles["folder-lists"]} ${record?.sidenavShowSelected ? styles.activeDropdown : ""
+                                        }`}
                                       onClick={() => {
                                         viewFolder(record.id, true);
                                         if (window.innerWidth < 767) {

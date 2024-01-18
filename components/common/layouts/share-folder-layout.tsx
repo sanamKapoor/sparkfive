@@ -31,9 +31,6 @@ const ShareFolderLayout = ({ children, advancedLink = false }) => {
           <div className={styles["image-wrapper"]}>
             <img className={styles["logo-img"]} src={folderInfo?.teamIcon || logo} />
           </div>
-          {/* <h1 className={styles["collection-name"]}>
-            {folderInfo?.folderName}
-          </h1> */}
         </header>
       )}
       {amountSelected > 0 && (
