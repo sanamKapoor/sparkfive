@@ -13,6 +13,7 @@ import IconClickable from "../../../common/buttons/icon-clickable";
 export default function DateFilter() {
   const { filter, setFilter, customDates, setCustomDates } = useContext(AnalyticsContext);
   const [activeFilter, setActiveFilter] = useState("7d");
+  const [activeDays, setActiveDays] = useState(7);
   const [showCustomRange, setShowCustomRange] = useState(false);
   const [customDateVal, setCustomDateVal] = useState({
     endDate: '',
@@ -22,13 +23,17 @@ export default function DateFilter() {
 
   const handleFilterClick = (filter, days) => {
     setShowCustomRange(false);
-    setActiveFilter(filter);
     setCustomDates(false);
-    setFilter((prev) => ({
-      endDate: new Date(),
-      beginDate: calculateBeginDate(days, 1)
-    }))
+    setActiveFilter(filter);
+    if (days !== activeDays) {
+      setFilter({
+        endDate: new Date(),
+        beginDate: calculateBeginDate(days, 1)
+      })
+    }
+    setActiveDays(days);
   };
+
 
   const handleCustomDateSelector = () => {
     if (showCustomRange) {
@@ -62,23 +67,13 @@ export default function DateFilter() {
       setDateError('Invalid Dates.');
       return;
     }
+    setActiveDays(DateUtils.daysBetweenDates(customDateVal.beginDate, customDateVal.endDate));
     setFilter(customDateVal);
     setCustomDates(true);
   }
 
-  const handleClearDates = () => {
-    setCustomDateVal({
-      endDate: '',
-      beginDate: ''
-    })
-    // setFilter(null)
-    handleFilterClick("7d", 7)
-  }
-
   useEffect(() => {
     if (customDates && filter !== null && showCustomRange) {
-      console.log({ filter });
-
       setCustomDateVal({
         beginDate: filter.beginDate.toDateString(),
         endDate: filter.endDate.toDateString()
@@ -141,7 +136,6 @@ export default function DateFilter() {
             <div className={`${styles["date-picker-top"]}`}>
               <div className={`${styles["left-side"]}`}>Date Range</div>
               <div className={`${styles["right-side"]}`}>
-                {(customDateVal.beginDate && customDateVal.endDate) && <Button text={"Clear"} className={"text-success-btn"} onClick={handleClearDates}></Button>}
                 <IconClickable src={insights.insightClose} additionalClass={styles["close-icon"]} onClick={handleCustomDateSelector} />
               </div>
             </div>

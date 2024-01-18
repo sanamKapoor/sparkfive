@@ -8,22 +8,30 @@ function Pagination() {
   const pageNumbers = ["1", "2", "3", "4"]
   const { page, limit, setPage, totalRecords, activeSection } = useContext(AnalyticsContext);
   const [totalPages, setTotalPages] = useState(0);
+  const [activePage, setActivePage] = useState(0);
+
+  useEffect(() => {
+    setActivePage(typeof page === 'number' ? page : 1)
+  }, [page])
 
   useEffect(() => {
     if(totalRecords > 0 && limit > 0) setTotalPages(Math.ceil(totalRecords / limit))
   }, [totalRecords, limit])
 
   const handlePrevClick = () => {
-    if (page === 1) return;
-    setPage(page - 1)
+    if (activePage === 1) return;
+    setActivePage(activePage - 1)
+    setPage(activePage - 1)
   };
 
   const handleNextClick = () => {
-    if (page === totalPages) return;
-    setPage(page + 1)
+    if (activePage === totalPages) return;
+    setActivePage(activePage + 1)
+    setPage(activePage + 1)
   };
 
   const handlePageClick = (newPage) => {
+    setActivePage(newPage)
     setPage(newPage)
   };
 
@@ -37,7 +45,7 @@ function Pagination() {
         pages.push(
           <span
             key={i}
-            className={`${styles['pagination-left-arrow']} ${styles['pagination-box']} ${page === i && styles['active']}`}
+            className={`${styles['pagination-left-arrow']} ${styles['pagination-box']} ${activePage === i && styles['active']}`}
             onClick={() => handlePageClick(i)}
           >
             {i}
@@ -46,7 +54,7 @@ function Pagination() {
       }
     } else {
       // Show ellipsis before and after the current page
-      const startPage = Math.max(1, page - Math.floor(maxPagesToShow / 2));
+      const startPage = Math.max(1, activePage - Math.floor(maxPagesToShow / 2));
       const endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
 
       if (startPage > 1) {
@@ -57,7 +65,7 @@ function Pagination() {
         pages.push(
           <span
             key={i}
-            className={`${styles['pagination-left-arrow']} ${styles['pagination-box']} ${page === i && styles['active']}`}
+            className={`${styles['pagination-left-arrow']} ${styles['pagination-box']} ${activePage === i && styles['active']}`}
             onClick={() => handlePageClick(i)}
           >
             {i}
@@ -76,21 +84,21 @@ function Pagination() {
   return (
     <section className={styles.pagination}>
       <div className={`${styles['pagination-left']}`}>
-        <span>{(page - 1) * limit + 1}-{Math.min(page * limit, totalRecords)} of {totalRecords}</span>
+        <span>{(activePage - 1) * limit + 1}-{Math.min(activePage * limit, totalRecords)} of {totalRecords}</span>
       </div>
       <div className={`${styles['pagination-right']}`}>
-        <div className={`${styles['pagination-left-arrow']} ${styles['pagination-box']} ${page === 1 ? styles['disable'] : ''}`} onClick={handlePrevClick}>
-        {page === 1 ? <img src={insights.paginationDisable} alt="disabled-left-arrow" /> : <img src={insights.paginationLeft} alt="left-arrow" />}
+        <div className={`${styles['pagination-left-arrow']} ${styles['pagination-box']} ${activePage === 1 ? styles['disable'] : ''}`} onClick={handlePrevClick}>
+        <img src={activePage === 1 ? insights.paginationDisableLeft : insights.paginationLeft} alt="disabled-left-arrow" />
         </div>
         {activeSection === analyticsLayoutSection.ACCOUNT_USERS ? renderNumericPagination() :
           pageNumbers.map((pageNumber) => (
             <div key={pageNumber} className={`${styles['pagination-left-arrow']} ${styles['pagination-box']}`}>
-              <span className={page === 1 ? styles['active'] : ''}>{pageNumber}</span>
+              <span className={activePage === 1 ? styles['active'] : ''}>{pageNumber}</span>
             </div>
           ))
         }
-        <div className={`${styles['pagination-left-arrow']} ${styles['pagination-box']} ${page === totalPages ? styles['disable'] : ''}`} onClick={handleNextClick}>
-          <img src={insights.paginationRight} alt="right-arrow" />
+        <div className={`${styles['pagination-left-arrow']} ${styles['pagination-box']} ${activePage === totalPages ? styles['disable'] : ''}`} onClick={handleNextClick}>
+          <img src={activePage === totalPages ? insights.paginationDisableRight : insights.paginationRight} alt="right-arrow" />
         </div>
       </div>
     </section>

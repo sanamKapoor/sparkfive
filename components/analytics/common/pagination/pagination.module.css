@@ -22,7 +22,8 @@
     border-radius: 4px;
 }
 .active{
-    color:var(--color-prim-navy) !important;
+    background:var(--color-prim-navy) !important;
+    color: #DEDAD4;
 }
 .disable{
     color: lightgray !important;

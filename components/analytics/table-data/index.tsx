@@ -115,7 +115,7 @@ export default function TableData({ columns, data, arrowColumns, buttonColumns, 
         showModal && activeModal
       }
       {
-        (apiData && apiData.length === 0) && <div className={styles.empty}>
+        (apiData && apiData.length === 0 && activeSection === analyticsLayoutSection.ACCOUNT_USERS) && <div className={styles.empty}>
           <NoData message="Data not found." wrapper={false} />
         </div>
       }

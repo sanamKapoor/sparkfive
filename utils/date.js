@@ -226,6 +226,21 @@ const calculateDateDifference = ({
   return daysDifference;
 }
 
+function daysBetweenDates(startDate, endDate) {
+  // Convert both dates to UTC to avoid issues with daylight saving time
+  const utcDate1 = Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+  const utcDate2 = Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+
+  // Calculate the difference in milliseconds
+  const millisecondsPerDay = 24 * 60 * 60 * 1000;
+  const timeDifference = Math.abs(utcDate2 - utcDate1);
+
+  // Calculate the number of days
+  const daysDifference = Math.floor(timeDifference / millisecondsPerDay);
+
+  return daysDifference;
+}
+
 export default {
   areSameDates,
   getDateKey,
@@ -237,5 +252,6 @@ export default {
   getSpecialDateString,
   analyticsDateFormatter,
   analyticsRecordsDateRange,
-  calculateDateDifference
+  calculateDateDifference,
+  daysBetweenDates
 }

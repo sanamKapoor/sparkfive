@@ -1,11 +1,7 @@
-import { useEffect, useState } from "react";
-import { saveAs } from "file-saver";
+import { useState } from "react";
 import { AnalyticsContext } from "../context";
 import { analyticsLayoutSection } from "../constants/analytics";
-import AnalyticsApi from "../server-api/analytics";
 import { calculateBeginDate } from "../config/data/filter";
-import toastUtils from "../utils/toast";
-import { SOMETHING_WENT_WRONG, USERS_DOWNLOADED } from "../constants/messages";
 
 export default ({ children }) => {
   const [activeSection, setActiveSection] = useState(analyticsLayoutSection.DASHBOARD);
@@ -25,10 +21,11 @@ export default ({ children }) => {
   const [tableLoading, setTableLoading] = useState(false);
   const [totalRecords, setTotalRecords] = useState(0);
   const [apiEndpoint, setApiEndpoint] = useState("dashboard");
-  const [initialRender, setInitialRender] = useState(false);
+  const [initialRender, setInitialRender] = useState(true);
   const [downloadCSV, setDownloadCSV] = useState(false);
 
   const analyticsValue = {
+    apiEndpoint,
     activeSection,
     search,
     filter,
@@ -44,6 +41,7 @@ export default ({ children }) => {
     totalRecords,
     downloadCSV,
     initialRender,
+    setApiEndpoint,
     setActiveSection,
     setSearch,
     setFilter,
@@ -60,104 +58,6 @@ export default ({ children }) => {
     setDownloadCSV,
     setInitialRender
   };
-
-
-  const analyticsApiHandler = async () => {
-    try {
-      if (initialRender) {
-        setLoading(true);
-        setTableLoading(false);
-        setError('');
-        setData([]);
-        setTotalRecords(0);
-      } else {
-        setTableLoading(true)
-      }
-
-      if (downloadCSV) {
-        setLoading(true);
-        setTableLoading(false);
-      }
-
-      const { data } = await AnalyticsApi.getAnalyticsData(apiEndpoint, {
-        page,
-        limit,
-        search,
-        sortBy,
-        sortOrder,
-        filter,
-        downloadCSV
-      });
-
-      if (downloadCSV) {
-        const fileData = new Blob([data], {
-          type: "text/csv;charset=utf-8",
-        });
-
-        saveAs(fileData, `Users-Engagement-${new Date().getTime()}`);
-        toastUtils.success(USERS_DOWNLOADED);
-      } else {
-        setTotalRecords(data.totalRecords)
-        setData(data.data);
-      }
-
-      initialRender ? setLoading(false) : setTableLoading(false)
-      setError('');
-      if (downloadCSV) {
-        setLoading(false);
-        setDownloadCSV(false);
-      }
-    } catch (error) {
-      initialRender ? setLoading(false) : setTableLoading(false)
-      if (downloadCSV) {
-        setLoading(false);
-        setDownloadCSV(false);
-      }
-      setError(SOMETHING_WENT_WRONG);
-      setData([]);
-      setTotalRecords(0);
-    }
-  }
-
-  useEffect(() => {
-    analyticsApiHandler();
-  }, [apiEndpoint, page, limit, search, sortBy, sortOrder, filter])
-
-  useEffect(() => {
-    if (downloadCSV) analyticsApiHandler();
-  }, [downloadCSV])
-
-  useEffect(() => {
-    setInitialRender(false);
-  }, [page, limit, search, sortBy, sortOrder, filter])
-
-  useEffect(() => {
-    if (page !== 1) setPage(1);
-  }, [search, filter, limit, sortBy])
-
-  const handleApiEndpoint = async () => {
-    switch (activeSection) {
-      case analyticsLayoutSection.DASHBOARD:
-      case analyticsLayoutSection.ACCOUNT_USERS:
-        setApiEndpoint("users")
-        break;
-      default:
-        setApiEndpoint("dashboard")
-    }
-  }
-
-  useEffect(() => {
-    handleApiEndpoint();
-    setInitialRender(true);
-    setSearch('');
-    setPage(1);
-    setSortBy('');
-    setSortOrder(true);
-    setFilter({
-      endDate: new Date(),
-      beginDate: calculateBeginDate(7, 1)
-    })
-  }, [activeSection])
 
   return (
     <AnalyticsContext.Provider value={analyticsValue}>

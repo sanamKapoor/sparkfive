@@ -1,8 +1,9 @@
 import React from 'react'
 import Content from './content';
 import InsightsSidenav from './insights-sidenav';
+import AnalyticsHOC from './hoc';
 
-export default function Analytics() {
+ function Analytics() {
   return (
     <div>
       <InsightsSidenav />
@@ -10,3 +11,5 @@ export default function Analytics() {
     </div>
   )
 }
+
+export default AnalyticsHOC(Analytics)
