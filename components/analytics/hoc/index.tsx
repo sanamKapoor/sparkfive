@@ -103,15 +103,18 @@ const AnalyticsHOC = (Component) => {
         }, [page])
 
         useEffect(() => {
-            analyticsApiHandler();
+            if(initialRender) analyticsApiHandler();
             setInitialRender(false);
-        }, [apiEndpoint, activeSection])
+        }, [apiEndpoint, initialRender])
 
         const handleApiEndpoint = async () => {
             switch (activeSection) {
                 case analyticsLayoutSection.DASHBOARD:
                 case analyticsLayoutSection.ACCOUNT_USERS:
                     setApiEndpoint("users")
+                    break;
+                case analyticsLayoutSection.ACCOUNT_ASSETS:
+                    setApiEndpoint("assets")
                     break;
                 default:
                     setApiEndpoint("dashboard")

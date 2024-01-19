@@ -21,11 +21,11 @@ export const arrowColumns = [
   },
   {
     label: "Last session date",
-    value: "last_session"
+    value: "lastSession"
   },
   {
     label: "Sessions",
-    value: "session_count"
+    value: "sessionCount"
   },
   {
     label: "Downloads",
@@ -124,13 +124,26 @@ export const insightdata = [
 // Asset table
 export const columns = ["Asset name", "Views", "Downloads", "Shares", "Actions"];
 export const assetarrowColumns = [
-  "Asset name",
-  "Role",
-  "Last session date",
-  "Sessions",
-  "Downloads",
-  "Shares",
-  "Views",
+  {
+    label: "Asset name",
+    value: "name"
+  },
+  {
+    label: "Sessions",
+    value: "session_count"
+  },
+  {
+    label: "Downloads",
+    value: "downloads"
+  },
+  {
+    label: "Shares",
+    value: "shares"
+  },
+  {
+    label: "Views",
+    value: "views"
+  }
 ];
 export const assetbuttonColumns = ["Actions"];
 export const assetbuttonTexts = { Actions: "View chart" };

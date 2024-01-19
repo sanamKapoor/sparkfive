@@ -23,6 +23,7 @@ export default ({ children }) => {
   const [apiEndpoint, setApiEndpoint] = useState("dashboard");
   const [initialRender, setInitialRender] = useState(true);
   const [downloadCSV, setDownloadCSV] = useState(false);
+  const [tableRows, setTableRows] = useState(15);
 
   const analyticsValue = {
     apiEndpoint,
@@ -41,6 +42,7 @@ export default ({ children }) => {
     totalRecords,
     downloadCSV,
     initialRender,
+    tableRows,
     setApiEndpoint,
     setActiveSection,
     setSearch,
@@ -56,7 +58,8 @@ export default ({ children }) => {
     setTableLoading,
     setTotalRecords,
     setDownloadCSV,
-    setInitialRender
+    setInitialRender,
+    setTableRows
   };
 
   return (

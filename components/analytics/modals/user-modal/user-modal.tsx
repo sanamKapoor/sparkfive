@@ -6,7 +6,7 @@ import SearchButton from "../../common/search";
 import Datefilter from "../../common/date-filter";
 import Download from "../../common/download-button";
 import Pagination from "../../common/pagination";
-import TableData from "../../table-data";
+import TableData from "../../common/table";
 import styles from "./models.module.css";
 import { AnalyticsContext } from "../../../../context";
 import { analyticsLayoutSection } from "../../../../constants/analytics";

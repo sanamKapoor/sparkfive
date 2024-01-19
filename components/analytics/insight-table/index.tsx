@@ -11,17 +11,17 @@ import Download from "../common/download-button";
 import NoData from "../common/no-data";
 import Pagination from "../common/pagination";
 import SearchButton from "../common/search";
-import TableData from "../table-data";
-import styles from "./insight-table.module.css";
+import TableData from "../common/table";
 import TableHeading from "./table-heading";
+import styles from "./insight-table.module.css";
 
 const UserTable = ({ dashboardView = false }: { dashboardView: boolean }) => {
-  const { loading, error, data, activeSection, limit, totalRecords, sortBy, setSortBy, setSortOrder , setInitialPage} = useContext(AnalyticsContext);
+  const { loading, error, data, activeSection, limit, totalRecords, sortBy, setSortBy, setSortOrder, tableRows } = useContext(AnalyticsContext);
   const [emptyRows, setEmptyRows] = useState([]);
 
   useEffect(() => {
     if (totalRecords > 0 && data && data.length > 0) {
-      setEmptyRows(Array.from({ length: Math.max(15 - (data ? data.length : 0), 0) }, (_, index) => ({})))
+      setEmptyRows(Array.from({ length: Math.max(tableRows - (data ? data.length : 0), 0) }, (_, index) => ({})))
     } else {
       setEmptyRows([])
     }

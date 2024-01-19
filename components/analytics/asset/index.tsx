@@ -1,80 +1,117 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { analyticsLayoutSection } from "../../../constants/analytics";
+import { AnalyticsContext } from "../../../context";
 import { assetarrowColumns, assetbuttonColumns, assetbuttonTexts, columns, data } from "../../../data/analytics";
-import SearchButton from "../common/search";
+import Loader from "../../common/UI/Loader/loader";
+import Button from "../../common/buttons/button";
 import Datefilter from "../common/date-filter";
 import Download from "../common/download-button";
+import NoData from "../common/no-data";
 import Pagination from "../common/pagination";
+import SearchButton from "../common/search";
+import TableData from "../common/table";
 import TableHeading from "../insight-table/table-heading";
-import TableData from "../table-data";
 import styles from "./asset.module.css";
 
 function Asset({ dashboardView = false }: { dashboardView: boolean }) {
+
+  const {
+    activeSection,
+    totalRecords,
+    limit,
+    loading,
+    error,
+    setSortBy,
+    setSortOrder,
+    tableRows,
+    sortBy
+  } = useContext(AnalyticsContext);
+  const [emptyRows, setEmptyRows] = useState([]);
+
+  useEffect(() => {
+    if (totalRecords > 0 && data && data.length > 0) {
+      setEmptyRows(Array.from({ length: Math.max(tableRows - (data ? data.length : 0), 0) }, (_, index) => ({})))
+    } else {
+      setEmptyRows([])
+    }
+  }, [totalRecords, data])
+
+  const handleClearSorting = () => {
+    setSortBy('');
+    setSortOrder(true);
+  }
+
   return (
     <section className={`${styles["outer-wrapper"]}`}>
-      <div className={styles.tableResponsive}>
-        {/* for web */}
-        <div className={`${styles["heading-wrap"]} ${styles["web-view"]}`}>
-          <TableHeading
-            mainText="Top Assets"
-            descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"}
-            smallHeading={true}
-          />
-          <div className={`${styles["table-header-tabs"]}`}>
-            {!dashboardView && <SearchButton label="Search User" />}
-            <Datefilter />
-            {!dashboardView && <Download />}
-          </div>
-        </div>
-        {/* for laptop */}
-        <div className={`${styles["laptop-view"]}`}>
-          <div className={`${styles["heading-wrap"]}`}>
-            <div>
-              <TableHeading
-                mainText="User Engagement"
-                descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"}
-                smallHeading={true}
-              />
-              {!dashboardView && (
+      {
+        loading ? <div className={styles.backdrop}><Loader /></div> :
+          (error) ? <NoData message={error} /> :
+            <div className={styles.tableResponsive}>
+              {/* for web */}
+              <div className={`${styles["heading-wrap"]} ${styles["web-view"]}`}>
+                <TableHeading
+                  mainText="Top Assets"
+                  descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"}
+                  smallHeading={true}
+                />
+                <div className={`${styles["table-header-tabs"]}`}>
+                  {!dashboardView && <SearchButton label="Search User" />}
+                  <Datefilter />
+                  {!dashboardView && <Download />}
+                </div>
+              </div>
+              {/* for laptop */}
+              <div className={`${styles["laptop-view"]}`}>
+                <div className={`${styles["heading-wrap"]}`}>
+                  <div>
+                    <TableHeading
+                      mainText="User Engagement"
+                      descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"}
+                      smallHeading={true}
+                    />
+                    {!dashboardView && (
+                      <div style={{ marginTop: "22px" }}>
+                        <SearchButton label="Search User" />
+                      </div>
+                    )}
+                  </div>
+                  <div className={`${styles["table-header-tabs"]}`}>
+                    <Datefilter />
+                    {!dashboardView && <Download />}
+                  </div>
+                </div>
+              </div>
+              {/* for mobile */}
+              <div className={`${styles["heading-wrap"]} ${styles["mobile-view"]}`}>
+                <div className={`${styles["mobile-wrap"]}`}>
+                  <TableHeading
+                    mainText="User Engagement"
+                    descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"}
+                    smallHeading={true}
+                  />
+                  <div className={`${styles["table-header-tabs"]}`}>
+                    <Datefilter />
+                    <Download />
+                  </div>
+                </div>
+
                 <div style={{ marginTop: "22px" }}>
                   <SearchButton label="Search User" />
                 </div>
-              )}
+              </div>
+              {(!dashboardView && data && data?.length > 0 && sortBy) && <div className={`${styles["clear-sort"]}`}><Button text="Clear sorting" className={'clear-sort-btn'} onClick={handleClearSorting} /></div>}
+              {/* <TableData
+                columns={columns}
+                data={data}
+                arrowColumns={assetarrowColumns}
+                buttonColumns={assetbuttonColumns}
+                buttonTexts={assetbuttonTexts}
+                imageSource="ImageSource"
+              /> */}
+              <TableData columns={columns} data={dashboardView ? data : ((data && emptyRows.length > 0) ? [...data, ...emptyRows] : null)} arrowColumns={assetarrowColumns} buttonColumns={assetbuttonColumns} buttonTexts={assetbuttonTexts} activeSection={activeSection} />
+              {(!dashboardView && activeSection === analyticsLayoutSection.ACCOUNT_ASSETS && data && data?.length > 0 && totalRecords > limit) && <Pagination />}
             </div>
-            <div className={`${styles["table-header-tabs"]}`}>
-              <Datefilter />
-              {!dashboardView && <Download />}
-            </div>
-          </div>
-        </div>
-        {/* for mobile */}
-        <div className={`${styles["heading-wrap"]} ${styles["mobile-view"]}`}>
-          <div className={`${styles["mobile-wrap"]}`}>
-            <TableHeading
-              mainText="User Engagement"
-              descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"}
-              smallHeading={true}
-            />
-            <div className={`${styles["table-header-tabs"]}`}>
-              <Datefilter />
-              <Download />
-            </div>
-          </div>
-
-          <div style={{ marginTop: "22px" }}>
-            <SearchButton label="Search User" />
-          </div>
-        </div>
-
-        <TableData
-          columns={columns}
-          data={data}
-          arrowColumns={assetarrowColumns}
-          buttonColumns={assetbuttonColumns}
-          buttonTexts={assetbuttonTexts}
-          imageSource="ImageSource"
-        />
-        {!dashboardView && <Pagination />}
-      </div>
+      }
     </section>
   );
 }

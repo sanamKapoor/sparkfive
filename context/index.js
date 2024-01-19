@@ -26,6 +26,7 @@ export const AnalyticsContext = createContext({
   totalRecords: 0,
   downloadCSV: false,
   initialRender: true,
+  tableRows: 15,
   setActiveSection: (value) => {},
   setApiEndpoint: (value) => {},
   setSearch: (value) => {},
@@ -42,6 +43,7 @@ export const AnalyticsContext = createContext({
   setTotalRecords: (value) => {},
   setDownloadCSV: (value) => {},
   setInitialRender: (value) => {},
+  setTableRows: (value) => {}
 });
 
 export const UserContext = createContext({

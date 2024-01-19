@@ -6,9 +6,9 @@ import {
   activitycolumns,
   activitydata,
 } from "../../../data/analytics";
+import TableData from "../common/table";
 import TableHeading from "../insight-table/table-heading";
-import TableData from "../table-data";
-import styles from "../table-data/table-data.module.css";
+import styles from "../common/table/table-data.module.css";
 
 function Activity() {
   return (

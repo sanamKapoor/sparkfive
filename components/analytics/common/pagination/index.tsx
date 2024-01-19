@@ -90,12 +90,13 @@ function Pagination() {
         <div className={`${styles['pagination-left-arrow']} ${styles['pagination-box']} ${activePage === 1 ? styles['disable'] : ''}`} onClick={handlePrevClick}>
         <img src={activePage === 1 ? insights.paginationDisableLeft : insights.paginationLeft} alt="disabled-left-arrow" />
         </div>
-        {activeSection === analyticsLayoutSection.ACCOUNT_USERS ? renderNumericPagination() :
-          pageNumbers.map((pageNumber) => (
-            <div key={pageNumber} className={`${styles['pagination-left-arrow']} ${styles['pagination-box']}`}>
-              <span className={activePage === 1 ? styles['active'] : ''}>{pageNumber}</span>
-            </div>
-          ))
+        {
+          renderNumericPagination() 
+          // pageNumbers.map((pageNumber) => (
+          //   <div key={pageNumber} className={`${styles['pagination-left-arrow']} ${styles['pagination-box']}`}>
+          //     <span className={activePage === 1 ? styles['active'] : ''}>{pageNumber}</span>
+          //   </div>
+          // ))
         }
         <div className={`${styles['pagination-left-arrow']} ${styles['pagination-box']} ${activePage === totalPages ? styles['disable'] : ''}`} onClick={handleNextClick}>
           <img src={activePage === totalPages ? insights.paginationDisableRight : insights.paginationRight} alt="right-arrow" />
