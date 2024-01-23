@@ -1,4 +1,5 @@
-import React, { CSSProperties, useContext, useEffect, useState } from 'react';
+import { boxesIntersect, useSelectionContainer } from '@air/react-drag-to-select';
+import React, { CSSProperties, useContext, useEffect, useRef, useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 
 import { Utilities } from '../../assets';
@@ -11,6 +12,14 @@ import Button from '../common/buttons/button';
 import FilterView from '../common/filter-view';
 import FolderGridItem from '../common/folder/folder-grid-item';
 import styles from '../new-subcollection-design/Sub-collection/sub-collection.module.css';
+
+interface Box {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+  id: string;
+}
 
 const SubCollection = ({
   activeView = "grid",
@@ -39,23 +48,6 @@ const SubCollection = ({
   loadMoreAssets,
   onCloseDetailOverlay,
 }: any) => {
-  const [isChecked, setIsChecked] = useState(false);
-  const [collectionHide, setCollectionHide] = useState(false);
-  const [assetsHide, setAssetsHide] = useState(false);
-  const [isSticky, setIsSticky] = useState(false);
-  const [bottom1, setBottom1] = useState(0); // Assuming a default value, adjust as needed
-
-  const handleCircleClick = () => {
-    loadMoreAssets(true, !showSubCollectionContent);
-    setShowSubCollectionContent(!showSubCollectionContent);
-  };
-  const handleHideClick = () => {
-    setCollectionHide(!collectionHide);
-  };
-  const handleAssetsHideClick = () => {
-    setAssetsHide(!assetsHide);
-  };
-
   const {
     setActiveSubFolders,
     subFoldersViewList: { results, next, total },
@@ -65,12 +57,44 @@ const SubCollection = ({
     showSubCollectionContent,
     setShowSubCollectionContent,
     activeSubFolders,
+    setSelectedAllSubFoldersAndAssets,
+    setSelectedAllSubAssets,
   } = useContext(AssetContext);
+  const [collectionHide, setCollectionHide] = useState(false);
+  const [assetsHide, setAssetsHide] = useState(false);
+  const [isSticky, setIsSticky] = useState(false);
+  const [bottom1, setBottom1] = useState(0); // Assuming a default value, adjust as needed
 
   // Sorting in SubcollectionView
   const [sortedAssets, currentSortAttribute, setCurrentSortAttribute] = useSortedAssets(assets);
-
   const [sortedFolders, currentSortFolderAttribute, setCurrentSortFolderAttribute] = useSortedAssets(results, "", true);
+
+  // new library air drag
+  const selectionArea = useRef(null);
+  const selectableItems = useRef<Box[]>([]);
+  const elementsAssetContainerRef = useRef<HTMLDivElement | null>(null);
+  const elementsContainerRef = useRef<HTMLDivElement | null>(null);
+
+
+  //End of logic for Sorting in subCollection view
+
+  const loadingAssetsFolders = assets.length > 0 && assets[assets.length - 1].isLoading;
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      setActiveSubFolders("");
+      // setSubFoldersViewList({ results: [], next: 0, total: 0 });
+      setSubFoldersAssetsViewList({ results: [], next: 0, total: 0 });
+      setShowSubCollectionContent(false);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  //For handling the show subcollection checkbox button for collection change
+  useEffect(() => {
+    setShowSubCollectionContent(false);
+  }, [activeSubFolders])
 
   const setSortAssetAttribute = (attribute) => {
     if (attribute === currentSortAttribute) {
@@ -87,24 +111,19 @@ const SubCollection = ({
       setCurrentSortFolderAttribute(currentSortFolderAttribute.startsWith("-") ? attribute : "-" + attribute);
     }
   };
-  //End of logic for Sorting in subCollection view
 
-  const loadingAssetsFolders = assets.length > 0 && assets[assets.length - 1].isLoading;
+  const handleCircleClick = () => {
+    loadMoreAssets(true, !showSubCollectionContent);
+    setShowSubCollectionContent(!showSubCollectionContent);
+  };
 
-  useEffect(() => {
-    return () => {
-      setActiveSubFolders("");
-      // setSubFoldersViewList({ results: [], next: 0, total: 0 });
-      setSubFoldersAssetsViewList({ results: [], next: 0, total: 0 });
-      setShowSubCollectionContent(false);
-    };
-  }, []);
+  const handleHideClick = () => {
+    setCollectionHide(!collectionHide);
+  };
 
-  //For handling the show subcollection checkbox button for collection change
-  useEffect(() => {
-    setShowSubCollectionContent(false);
-  }, [activeSubFolders])
-
+  const handleAssetsHideClick = () => {
+    setAssetsHide(!assetsHide);
+  };
 
   const handleScroll = (e: any) => {
     const element = document.getElementById('filter-view') as HTMLElement;
@@ -121,19 +140,119 @@ const SubCollection = ({
     }
   };
 
-  useEffect(() => {
-    // Add scroll event listener when the component mounts
-    window.addEventListener('scroll', handleScroll);
-
-    // Clean up the event listener when the component unmounts
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
+  //Handle the dynamically stopage of filters at top of page position on scroll down  
   const getStyling = (): CSSProperties => {
     return isSticky ? { position: "fixed", width: "calc(100% - 350px)", top: bottom1, zIndex: 1200 } : {};
   }
+
+  //------Drag-Select-area-------Start======//
+  // Set the co-ordinates for the selected area of dragged area 
+  const onSelectionChange = (box) => {
+    if (elementsContainerRef.current) {
+      const containerRect = elementsContainerRef.current.getBoundingClientRect();
+      const scrollAwareBox = {
+        ...box,
+        top: box.top - containerRect.top,
+        left: box.left - containerRect.left
+      };
+      selectionArea.current = scrollAwareBox
+    }
+  };
+
+  // Toggling the state for the selectionall asset and collection 
+  const bulkToggle = async (idsToFind) => {
+    if (sortedFolders.length !== 0) {
+      setSelectedAllSubFoldersAndAssets(false)
+      setSelectedAllSubAssets(false)
+      const updatedFolders = results.map((folder, index) => {
+        // Check if the object's ID is in the idsToFind array
+        if (idsToFind.includes(folder.id)) {
+          return {
+            ...folder,
+            isSelected: true
+          };
+        }
+        return folder; // Return the original object for non-matching IDs
+      });
+      setSubFoldersAssetsViewList({
+        results: updatedFolders, next, total
+      });
+    }
+
+  }
+
+  //library initialization
+  const { DragSelection } = useSelectionContainer({
+    eventsElement: document.getElementById("__next"),
+    onSelectionChange,
+    onSelectionStart: () => { },
+    onSelectionEnd: () => {
+      const indexesToSelect: string[] = [];
+      selectableItems.current.forEach((item, index) => {
+        console.log(selectionArea.current)
+        if (boxesIntersect(selectionArea.current, item)) {
+          indexesToSelect.push(item.id);
+        }
+      })
+      if (indexesToSelect.length > 0) {
+        bulkToggle(indexesToSelect);
+      }
+    },
+    selectionProps: {
+      style: {
+        border: "2px dashed purple",
+        borderRadius: 4,
+        backgroundColor: "brown",
+        opacity: 0.5,
+      },
+    },
+    isEnabled: true,
+  });
+
+  //Handle the selctable Item for the drag selct area at initial load and load more functionality 
+  useEffect(() => {
+    if (elementsContainerRef.current && sortedFolders?.length) {
+      console.log(elementsContainerRef.current, "hello")
+      const containerRect = elementsContainerRef.current.getBoundingClientRect();
+      const liElements = elementsContainerRef.current.querySelectorAll('li');
+      console.log("🚀 ~ useEffect ~ liElements:", liElements)
+      selectableItems.current = new Array();
+      Array.from(liElements).forEach((item) => {
+        const { left, top, width, height } = item.getBoundingClientRect();
+        const adjustedTop = top - containerRect.top;
+        const adjustedLeft = left - containerRect.left;
+        if (item.id !== "") selectableItems.current.push({
+          left: adjustedLeft,
+          top: adjustedTop,
+          width,
+          height,
+          id: item.id,
+        })
+      })
+    };
+    // } else if (sortedAssets?.length && elementsAssetContainerRef.current) {
+    //   const containerRect = elementsAssetContainerRef.current.getBoundingClientRect();
+    //   const liElements = elementsAssetContainerRef.current.querySelectorAll('li');
+    //   console.log("🚀 ~ useEffect ~ liElements:", liElements)
+    //   selectableItems.current = new Array();
+    //   Array.from(liElements).forEach((item) => {
+    //     const { left, top, width, height } = item.getBoundingClientRect();
+    //     const adjustedTop = top - containerRect.top;
+    //     const adjustedLeft = left - containerRect.left;
+    //     if (item.id !== "") selectableItems.current.push({
+    //       left: adjustedLeft,
+    //       top: adjustedTop,
+    //       width,
+    //       height,
+    //       id: item.id,
+    //     })
+
+    //   });
+    // }
+
+  }, [sortedFolders?.length, activeView, sortedAssets?.length]);
+  //------Drag-Select-area-------End======//
+
 
   return (
     <>
@@ -153,17 +272,19 @@ const SubCollection = ({
           </div>
         </div>
       )}
+      <DragSelection />
       {!collectionHide && (
         <>
           {/* list wrapper for list view */}
           {sortedFolders.length > 0 && (
-            <div className={`${styles["cardsWrapper"]} ${activeView === "list" && styles["list-wrapper"]}`}>
+            <div className={`${styles["cardsWrapper"]} ${activeView === "list" && styles["list-wrapper"]}`} ref={elementsContainerRef} >
               {activeView === "list" && (
                 <FolderTableHeader activeView={activeView} setSortAttribute={setSortFolderAttribute} />
               )}
               {sortedFolders.map((folder, index) => {
                 return (
                   <li
+                    id={folder.id}
                     className={styles["grid-item"]}
                     key={folder.id || index}
                     onClick={(e) => handleFocusChange(e, folder.id)}
@@ -177,7 +298,7 @@ const SubCollection = ({
                       toggleSelected={() => toggleSelected(folder.id)}
                       viewFolder={() => viewFolder(folder.id)}
                       deleteFolder={() => deleteFolder(folder.id)}
-                      copyShareLink={() => copyShareLink(folder)}
+                      copySideLink={() => copyShareLink(folder)}
                       copyEnabled={getShareIsEnabled(folder)}
                       shareAssets={() => beginAssetOperation({ folder }, "shareFolders")}
                       changeThumbnail={beginChangeThumbnailOperation}
@@ -210,49 +331,48 @@ const SubCollection = ({
       )}
       {
         <>
-          <>
-            <div className={`${styles["heading-wrapper"]}`}>
-              <div className={`${styles["sub-collection-heading"]}`}>
-                {sortedAssets.length > 0 && sortedFolders.length > 0 && (
-                  <div className={styles.rightSide}>
-                    <span>Assets ({totalAssets})</span>
-                    <img
-                      className={`${assetsHide ? styles.iconClick : styles.rightIcon} ${styles.ExpandIcons}`}
-                      onClick={() => {
-                        handleAssetsHideClick();
-                      }}
-                      src={Utilities.caretDownLight}
-                    />
-                  </div>
-                )}
-                {sortedFolders.length > 0 && sortedAssets.length > 0 && (
-                  <div className={styles.tagOuter}>
-                    <div className={styles.left}>
-                      <div className={styles.TagsInfo}>
-                        <div
-                          className={`${styles.circle} ${showSubCollectionContent ? styles.checked : ""
-                            }`}
-                          onClick={handleCircleClick}
-                        >
-                          {showSubCollectionContent && <img src={Utilities.checkIcon} />}
-                        </div>
-                        <span className={`${styles["sub-collection-content"]}`}>
-                          Show all assets in parent collection
-                        </span>
+          <div className={`${styles["heading-wrapper"]}`}>
+            <div className={`${styles["sub-collection-heading"]}`}>
+              {sortedAssets.length > 0 && sortedFolders.length > 0 && (
+                <div className={styles.rightSide}>
+                  <span>Assets ({totalAssets})</span>
+                  <img
+                    className={`${assetsHide ? styles.iconClick : styles.rightIcon} ${styles.ExpandIcons}`}
+                    onClick={() => {
+                      handleAssetsHideClick();
+                    }}
+                    src={Utilities.caretDownLight}
+                  />
+                </div>
+              )}
+              {sortedFolders.length > 0 && sortedAssets.length > 0 && (
+                <div className={styles.tagOuter}>
+                  <div className={styles.left}>
+                    <div className={styles.TagsInfo}>
+                      <div
+                        className={`${styles.circle} ${showSubCollectionContent ? styles.checked : ""
+                          }`}
+                        onClick={handleCircleClick}
+                      >
+                        {showSubCollectionContent && <img src={Utilities.checkIcon} />}
                       </div>
+                      <span className={`${styles["sub-collection-content"]}`}>
+                        Show all assets in parent collection
+                      </span>
                     </div>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
-            <div id="filter-view" className={`${styles["collection-filter-wrap"]} ${isSticky ? styles["sticky"] : ""}  ${assetsHide ? styles.hidden : ""}`} style={getStyling()}>
-              {!assetsHide && <FilterView />}
-            </div>
-          </>
+          </div>
+          <div id="filter-view" className={`${styles["collection-filter-wrap"]} ${isSticky ? styles["sticky"] : ""}  ${assetsHide ? styles.hidden : ""}`} style={getStyling()}>
+            {!assetsHide && <FilterView />}
+          </div>
           <div
             id='asset-view'
             className={`${styles["assetWrapper"]} ${activeView === "list" && styles["list-wrapper"]
               }`}
+            ref={elementsAssetContainerRef}
           >
             {!assetsHide && (
               <>

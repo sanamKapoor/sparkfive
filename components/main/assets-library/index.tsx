@@ -784,27 +784,23 @@ const AssetsLibrary = () => {
     }
   };
 
-  const toggleSelected = (id: string) => {
+  const toggleSelected = async (id: string) => {
     if (activeMode === "assets") {
       const assetIndex = assets.findIndex(
         (assetItem) => assetItem.asset.id === id
       );
-      if (assets[assetIndex].isSelected) {
-        selectAllAssets(false);
-      }
-      setAssets(
-        update(assets, {
-          [assetIndex]: {
-            isSelected: { $set: !assets[assetIndex].isSelected },
-          },
-        }),
+
+      setAssets((prev) => update(prev, {
+        [assetIndex]: {
+          isSelected: { $set: !prev[assetIndex].isSelected },
+        },
+      }),
       );
     } else if (activeMode === "folders") {
       const folderIndex = folders.findIndex((folder) => folder.id === id);
       if (folders[folderIndex].isSelected) {
         selectAllFolders(false);
       }
-
       setFolders(
         update(folders, {
           [folderIndex]: {
@@ -815,7 +811,6 @@ const AssetsLibrary = () => {
     } else if (activeMode === "SubCollectionView") {
       const assetIndex = subFoldersAssetsViewList.results.findIndex((assetItem) => assetItem.asset.id === id);
       const folderIndex = subFoldersViewList.results.findIndex((folder) => folder.id === id);
-
       if (folderIndex !== -1) {
         if (subFoldersViewList.results[folderIndex]?.isSelected) {
           setSelectedAllSubFoldersAndAssets(false)
@@ -844,7 +839,6 @@ const AssetsLibrary = () => {
         if (subFoldersAssetsViewList.results[assetIndex]?.isSelected) {
           setSelectedAllSubAssets(false)
         }
-
         setSubFoldersAssetsViewList({
           ...subFoldersAssetsViewList,
           results: update(subFoldersAssetsViewList.results, {

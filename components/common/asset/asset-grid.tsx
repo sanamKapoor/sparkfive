@@ -1,3 +1,4 @@
+import { boxesIntersect, useSelectionContainer } from '@air/react-drag-to-select';
 import copyClipboard from 'copy-to-clipboard';
 import update from 'immutability-helper';
 import fileDownload from 'js-file-download';
@@ -30,7 +31,16 @@ import AssetThumbail from './asset-thumbail';
 import AssetUpload from './asset-upload';
 import DetailOverlay from './detail-overlay';
 import FolderTableHeader from './Folder-table-header/folder-table-header';
-import DragSelect from "dragselect";
+
+interface Box {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+  id: string;
+}
+
+// import DragSelect from "dragselect";
 // Components
 const AssetGrid = ({
   activeView = "grid",
@@ -71,47 +81,55 @@ const AssetGrid = ({
     setSubFoldersAssetsViewList,
     setListUpdateFlag,
     sidebarOpen,
+    setFolders,
+    selectAllFolders,
+    selectAllAssets
   } = useContext(AssetContext);
-
+  const { advancedConfig, hasPermission, user } = useContext(UserContext);
   const { activeSortFilter } = useContext(FilterContext);
+  const { setIsLoading } = useContext(LoadingContext);
 
-  //Drag select assets
-  const [selectedIndexes, setSelectedIndexes] = useState<string[]>([]);
-  const selectableItems = useRef([]);
+  // Ref values
+  const ref = useRef(null);
+  const selectionArea = useRef(null);
+  const selectableItems = useRef<Box[]>([]);
   const elementsContainerRef = useRef<HTMLDivElement | null>(null);
 
   // Drag selection states
-  const { advancedConfig, hasPermission, user } = useContext(UserContext);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [activeAssetId, setActiveAssetId] = useState("");
   const [activeArchiveAsset, setActiveArchiveAsset] = useState(undefined);
-
   const [activeSearchOverlay, setActiveSearchOverlay] = useState(false);
-
   const [initAsset, setInitAsset] = useState(undefined);
-
   const [modalOpen, setModalOpen] = useState(false); // Open or close modal of change thumbnail
-
   const [modalData, setModalData] = useState({}); // load or unload data for change thumbnail modal
+  const [focusedItem, setFocusedItem] = useState(null);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [render, setRender] = useState(false);
 
   const [sortedAssets, currentSortAttribute, setCurrentSortAttribute] = useSortedAssets(assets);
   const [sortedFolders, currentSortFolderAttribute, setCurrentSortFolderAttribute] = useSortedAssets(folders);
 
-  const { setIsLoading } = useContext(LoadingContext);
-
-  const [focusedItem, setFocusedItem] = useState(null);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-  const [selectionArea, setSelectionArea] = useState(null);
-  const [coordinates, setCoordinates] = useState({ x: 0, y: 0 })
-  const [render, setRender] = useState(false);
-  const ref = useRef(null);
 
   useEffect(() => {
     const { assetId } = urlUtils.getQueryParameters();
     if (assetId) getInitialAsset(assetId);
   }, []);
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
+  useEffect(() => {
+    if (ref.current) {
+      setWidthCard(ref.current.clientWidth);
+    }
+  }, [ref.current, windowWidth]);
   // For sorting the list view the hook in folder and asset view ----
 
   const setSortAssetAttribute = (attribute) => {
@@ -366,95 +384,124 @@ const AssetGrid = ({
     }
   };
 
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (ref.current) {
-      setWidthCard(ref.current.clientWidth);
+  //------Drag-Select-area-------Start======//
+  // Set the co-ordinates for the selected area of dragged area 
+  const onSelectionChange = (box) => {
+    if (elementsContainerRef.current) {
+      const containerRect = elementsContainerRef.current.getBoundingClientRect();
+      const scrollAwareBox = {
+        ...box,
+        top: box.top - containerRect.top,
+        left: box.left - containerRect.left
+      };
+      selectionArea.current = scrollAwareBox
     }
-  }, [ref.current, windowWidth]);
+  };
 
-  // const handleMouseDown = (e) => {
-  //   // Logic to start selection on mouse down
-  //   console.log("🚀 ~ file: asset-grid.tsx:392 ~ handleMouseDown ~ handleMouseDown:", handleMouseDown)
-  // };
-
-  // const handleMouseMove = (e) => {
-  //   // Logic to update selection area on mouse move
-  //   console.log("🚀 ~ file: asset-grid.tsx:397 ~ handleMouseMove ~ handleMouseMove:", handleMouseMove)
-  // };
-
-  // const handleMouseUp = (e) => {
-  //   // Logic to end selection on mouse up
-  //   console.log("🚀 ~ file: asset-grid.tsx:402 ~ handleMouseUp ~ handleMouseUp:", handleMouseUp)
-  // };
-
-  const itemsRef: any = useRef([]);
-  const [selectedItems, setSelectedItems] = useState([]);
-
-  const ds = new DragSelect({
-    selectables: document.getElementsByClassName("dragSelection"),
-    draggability: false,
-    dragselect: true,
-    keyboardDrag: true,
-    multiSelectKeys: ['Control', 'Shift', 'Meta'],
-    dragKeys: { up: ['ArrowUp'], down: ['ArrowDown'], left: ['ArrowLeft'], right: ['ArrowRight'] },
+  // Toggling the state for the selectionall asset and collection 
+  const bulkToggle = async (idsToFind) => {
+    if (mode === "assets") {
+      const updatedAssets = assets.map((asset, index) => {
+        // Check if the object's ID is in the idsToFind array
+        if (idsToFind.includes(asset.asset.id)) {
+          return {
+            ...asset,
+            isSelected: true
+          };
+        }
+        return asset; // Return the original object for non-matching IDs
+      });
+      selectAllAssets(false);
+      setAssets(updatedAssets);
+    }
+    else if (mode === "folders") {
+      const updatedFolders = folders.map((folder, index) => {
+        // Check if the object's ID is in the idsToFind array
+        if (idsToFind.includes(folder.id)) {
+          return {
+            ...folder,
+            isSelected: true
+          };
+        }
+        return folder; // Return the original object for non-matching IDs
+      });
+      selectAllFolders(false);
+      setFolders(updatedFolders);
+    };
+  }
+  //library initialization
+  const { DragSelection } = useSelectionContainer({
+    eventsElement: document.getElementById("__next"),
+    onSelectionChange,
+    onSelectionStart: () => { },
+    onSelectionEnd: (box) => {
+      const indexesToSelect: string[] = [];
+      selectableItems.current.forEach((item, index) => {
+        if (boxesIntersect(selectionArea.current, item)) {
+          indexesToSelect.push(item.id);
+        }
+      })
+      if (indexesToSelect.length > 0) {
+        bulkToggle(indexesToSelect);
+      }
+    },
+    selectionProps: {
+      style: {
+        border: "2px dashed purple",
+        borderRadius: 4,
+        backgroundColor: "pink",
+        opacity: 0.5,
+      },
+    },
+    isEnabled: true,
   });
 
+
+  //Handle the selctable Item for the drag selct area at initial load and load more functionality 
   useEffect(() => {
-    ds.subscribe("callback", (e) => {
+    if (elementsContainerRef.current) {
+      if (sortedFolders?.length) {
+        const containerRect = elementsContainerRef.current.getBoundingClientRect();
+        const liElements = elementsContainerRef.current.querySelectorAll('li');
+        selectableItems.current = new Array();
+        Array.from(liElements).forEach((item) => {
+          const { left, top, width, height } = item.getBoundingClientRect();
+          const adjustedTop = top - containerRect.top;
+          const adjustedLeft = left - containerRect.left;
+          if (item.id !== "") selectableItems.current.push({
+            left: adjustedLeft,
+            top: adjustedTop,
+            width,
+            height,
+            id: item.id,
+          })
 
-      const haveShorterLength =
-        ((e.event.clientX - coordinates.x) ** 2 +
-          (e.event.clientY - coordinates.y) ** 2) **
-        0.5
-      console.log("🚀 ~ file: asset-grid.tsx:465 ~ ds.subscribe ~ haveShorterLength:", haveShorterLength)
+        });
+      } else if (sortedAssets?.length) {
+        const containerRect = elementsContainerRef.current.getBoundingClientRect();
+        const liElements = elementsContainerRef.current.querySelectorAll('li');
+        selectableItems.current = new Array();
+        Array.from(liElements).forEach((item) => {
+          const { left, top, width, height } = item.getBoundingClientRect();
+          const adjustedTop = top - containerRect.top;
+          const adjustedLeft = left - containerRect.left;
+          if (item.id !== "") selectableItems.current.push({
+            left: adjustedLeft,
+            top: adjustedTop,
+            width,
+            height,
+            id: item.id,
+          })
 
-      // Check if the event contains selected items, it's not a MouseEvent, and the selection area meets your criteria
-      if (e.items.length > 0 && haveShorterLength > 100) {
-        console.log(e.items)
-        setSelectedItems(e.items);
+        });
       }
-    });
-
-    return () => {
-      ds.unsubscribe();
-    };
-  }, []);
-
-  useEffect(() => {
-    let selectData = document.getElementsByClassName("ds-selected")
-
-    let selectDataArray = []
-    selectData = Array.from(selectData);
-    selectData.forEach(item => {
-      selectDataArray.push(item.id)
-    });
-    if (selectDataArray.length > 0) {
-      // debugger
-      let arrayDel = []
-      assets.forEach((item, ind) => {
-        if (selectDataArray.includes(item.asset.id)) {
-          item.isSelected = true
-        }
-        else {
-          item.isSelected = false
-        }
-        arrayDel.push(item)
-      })
-      setAssets(arrayDel)
     }
-    console.log(JSON.stringify(selectDataArray), 22222222222222);
-  }, [selectedItems])
 
+  }, [sortedFolders?.length, activeView, sortedAssets?.length]);
+  //------Drag-Select-area-------End======//
+
+
+  //Handle the dynamically stopage of filters at top of page position on scroll down  
   const filterRef = useRef<HTMLDivElement>(null);
 
   const getStyling = useMemo((): CSSProperties => {
@@ -491,14 +538,6 @@ const AssetGrid = ({
         className={`${styles.container}  ${shouldShowUpload ? styles.uploadAsset : ""} ${!sidebarOpen ? styles["container-on-toggle"] : ""
           }`}
         style={getStyling}
-      // onMouseDown={(e) => {
-      //   console.log(e.clientX, e.clientY)
-      //   setCoordinates((prev) => {
-      //     prev.x = e.clientX;
-      //     prev.y = e.clientY;
-      //     return prev
-      //   })
-      // }}
       >
         {(shouldShowUpload || isDragging) && !isShare && !hasPermission([ASSET_UPLOAD_APPROVAL]) && (
           <AssetUpload
@@ -521,9 +560,9 @@ const AssetGrid = ({
             setActiveSearchOverlay={setActiveSearchOverlay}
           />
         )}
+        {mode !== "SubCollectionView" && <DragSelection />}
         {
-          <div className={`${styles["collectionAssets"]} ${styles["w-100"]} `}>
-            {/* testing component starts from here */}
+          <div className={`${styles["collectionAssets"]} ${styles["w-100"]} `} >
             {
               <ul
                 className={`${mode === "SubCollectionView" ? "" : styles["grid-list"]} ${styles[itemSize]} ${activeView === "list" ? styles["list-view"] : ""
@@ -535,10 +574,7 @@ const AssetGrid = ({
             `}
                 {...(mode === "assets" && activeView !== "list" ? { style: { marginTop: "60px" } } : {})}
                 id="asset-parent"
-              // onMouseUp={(e) => {
-              //   console.log("Mai mouse up", e.clientX, e.clientY)
-              // }}
-              // {...(mode === "assets" && !sidebarOpen && { style: { marginTop: '60px' } })}
+                ref={elementsContainerRef}
               >
                 {mode === "SubCollectionView" && (
                   <SubCollection
@@ -574,17 +610,17 @@ const AssetGrid = ({
                     {activeView === "list" && (
                       <AssetTableHeader activeView={activeView} setSortAttribute={setSortAssetAttribute} />
                     )}
-
                     {sortedAssets.map((assetItem, index) => {
                       if (assetItem.status !== "fail") {
                         return (
                           <li
                             className={`${styles["grid-item"]} ${activeView === "grid" ? styles["grid-item-new"] : ""}
                             ${activeView === "grid" && styles["list-wrapper-asset"]}
-                            dragSelection`}
+                            `}
                             key={index}
                             id={assetItem.asset?.id}
-                            ref={(el) => (itemsRef.current[index] = assetItem)}
+                            // ref={(el) => (itemsRef.current[index] = assetItem)}
+
                             onClick={(e) => handleFocusChange(e, assetItem.asset.id)}
                             style={{ width: `$${widthCard} px` }}
                           >
@@ -629,7 +665,7 @@ const AssetGrid = ({
                     {sortedFolders.map((folder, index) => {
                       return (
                         <li
-                          // id={assetItem.asset.id}
+                          id={folder.id}
                           className={styles["grid-item"]}
                           key={folder.id || index}
                           onClick={(e) => handleFocusChange(e, folder.id)}
@@ -748,5 +784,11 @@ const AssetGrid = ({
     </>
   );
 };
+
+// element.style {
+//   overflow-y: auto;
+//   min-height: 90vh;
+//   height: 100vh;
+// }
 
 export default AssetGrid;

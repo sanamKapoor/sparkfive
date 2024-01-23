@@ -1,35 +1,35 @@
 // External import
-import update from "immutability-helper";
-import { useContext, useEffect, useRef, useState } from "react";
+import { boxesIntersect, useSelectionContainer } from '@air/react-drag-to-select';
+import update from 'immutability-helper';
+import fileDownload from 'js-file-download';
+import { useContext, useEffect, useRef, useState } from 'react';
 
+import { sizeToZipDownload } from '../../constants/download';
+import { defaultLogo } from '../../constants/theme';
+import { UserContext } from '../../context';
+import assetApi from '../../server-api/asset';
+import downloadUtils from '../../utils/download';
+import { loadTheme } from '../../utils/theme';
+import toastUtils from '../../utils/toast';
+import urlUtils from '../../utils/url';
+import Button from '../common/buttons/button';
+import AuthContainer from '../common/containers/auth-container';
+import Input from '../common/inputs/input';
+import Spinner from '../common/spinners/spinner';
+import AssetDownloadProcess from './asset-download-process';
+import styles from './index.module.css';
+import ShareItem from './share-item';
+import ShareOperationButtons from './share-operation-buttons';
+interface Box {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+  id: string;
+}
 // Styles
-import styles from "./index.module.css";
-
-import assetApi from "../../server-api/asset";
-import toastUtils from "../../utils/toast";
-import urlUtils from "../../utils/url";
-
 // Components
-import fileDownload from "js-file-download";
-import { GeneralImg } from "../../assets";
-import AuthContainer from "../common/containers/auth-container";
-import AssetDownloadProcess from "./asset-download-process";
-import ShareItem from "./share-item";
-import ShareOperationButtons from "./share-operation-buttons";
-
 // Contexts
-import Button from "../common/buttons/button";
-import Input from "../common/inputs/input";
-import Spinner from "../common/spinners/spinner";
-
-import { loadTheme } from "../../utils/theme";
-
-import { UserContext } from "../../context";
-import { defaultLogo } from "../../constants/theme";
-
-import { sizeToZipDownload } from "../../constants/download";
-import downloadUtils from "../../utils/download";
-
 const AssetShare = () => {
   const { logo: themeLogo, setLogo: setThemeLogo } = useContext(UserContext);
   const [assets, setAssets] = useState([]);
@@ -44,6 +44,11 @@ const AssetShare = () => {
   const [error, setError] = useState(false);
   const [shareUserName, setShareUserName] = useState("");
   const [sharedCode, setSharedCode] = useState("");
+
+  // new library air drag
+  const selectableItems = useRef<Box[]>([]);
+  const elementsContainerRef = useRef<HTMLDivElement | null>(null);
+  const selectionArea = useRef(null);
 
   // Toggle select asset
   const toggleSelected = (id) => {
@@ -142,7 +147,7 @@ const AssetShare = () => {
       }
 
       // downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets.zip')
-    } catch (e) {}
+    } catch (e) { }
   };
 
   useEffect(() => {
@@ -223,6 +228,82 @@ const AssetShare = () => {
       setThemeLogo(currentTheme.logoImage?.realUrl || defaultLogo);
     }
   };
+  const onSelectionChange = (box) => {
+    if (elementsContainerRef.current) {
+      const containerRect = elementsContainerRef.current.getBoundingClientRect();
+      const scrollAwareBox = {
+        ...box,
+        top: box.top - containerRect.top,
+        left: box.left - containerRect.left
+      };
+      selectionArea.current = scrollAwareBox
+    }
+  };
+  const bulkToggle = async (idsToFind) => {
+    const updatedAssets = assets.map((asset, index) => {
+      // Check if the object's ID is in the idsToFind array
+      if (idsToFind.includes(asset.asset.id)) {
+        // You can perform your update logic here
+        // For example, toggle the isSelected property
+        return {
+          ...asset,
+          isSelected: !asset.isSelected
+        };
+      }
+      return asset; // Return the original object for non-matching IDs
+    });
+    setSelectedAsset(idsToFind.length);
+    setAssets(updatedAssets);
+  };
+
+  const { DragSelection } = useSelectionContainer({
+    eventsElement: document.getElementById("__next"),
+    onSelectionChange,
+    onSelectionStart: () => { },
+    onSelectionEnd: (box) => {
+      const indexesToSelect: string[] = [];
+      selectableItems.current.forEach((item, index) => {
+        if (boxesIntersect(selectionArea.current, item)) {
+          indexesToSelect.push(item.id);
+        }
+      })
+      console.log("🚀 ~ selectableItems.current.forEach ~ indexesToSelect:", indexesToSelect)
+      if (indexesToSelect.length > 0) {
+        bulkToggle(indexesToSelect);
+      }
+    },
+    selectionProps: {
+      style: {
+        border: "2px dashed purple",
+        borderRadius: 4,
+        backgroundColor: "brown",
+        opacity: 0.5,
+      },
+    },
+    isEnabled: true,
+  });
+
+  useEffect(() => {
+    if (elementsContainerRef.current && assets?.length) {
+      const containerRect = elementsContainerRef.current.getBoundingClientRect();
+      const liElements = elementsContainerRef.current.querySelectorAll('li');
+      console.log("🚀 ~ useEffect ~ liElements:", liElements)
+      selectableItems.current = new Array();
+      Array.from(liElements).forEach((item) => {
+        const { left, top, width, height } = item.getBoundingClientRect();
+        const adjustedTop = top - containerRect.top;
+        const adjustedLeft = left - containerRect.left;
+        if (item.id !== "") selectableItems.current.push({
+          left: adjustedLeft,
+          top: adjustedTop,
+          width,
+          height,
+          id: item.id,
+        })
+
+      });
+    }
+  }, [assets?.length]);
 
   return (
     <>
@@ -271,11 +352,13 @@ const AssetShare = () => {
               selectedAsset={selectedAsset}
               downloadSelectedAssets={downloadSelectedAssets}
             />
+            <DragSelection />
             <div className={styles["list-wrapper"]}>
-              <ul className={styles["grid-list"]}>
+              <ul className={styles["grid-list"]}
+                ref={elementsContainerRef}>
                 {assets.map((assetItem) => {
                   return (
-                    <li className={styles["grid-item"]} key={assetItem.asset.id}>
+                    <li className={styles["grid-item"]} key={assetItem.asset.id} id={assetItem.asset.id}>
                       <ShareItem
                         {...assetItem}
                         toggleSelected={() => {
