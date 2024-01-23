@@ -75,7 +75,6 @@ function ShareLink({ dashboardView = false }: { dashboardView: boolean }) {
               arrowColumns={sharedarrowColumns}
               buttonColumns={sharedbuttonColumns}
               buttonTexts={sharedbuttonTexts}
-              imageSource="ImageSource"
               dashboardView={dashboardView}
             />
           </div>

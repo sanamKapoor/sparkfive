@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { analyticsLayoutSection } from "../../../constants/analytics";
 import { AnalyticsContext } from "../../../context";
-import { assetarrowColumns, assetbuttonColumns, assetbuttonTexts, columns, data } from "../../../data/analytics";
+import { assetarrowColumns, assetbuttonColumns, assetbuttonTexts, columns } from "../../../data/analytics";
 import Loader from "../../common/UI/Loader/loader";
 import Button from "../../common/buttons/button";
 import Datefilter from "../common/date-filter";
@@ -21,8 +21,19 @@ function Asset({ dashboardView = false }: { dashboardView: boolean }) {
     limit,
     loading,
     error,
+    filter,
+    customDates,
+    page,
+    data,
+    tableLoading,
+    sortOrder,
+    setPage,
     setSortBy,
     setSortOrder,
+    setSearch,
+    setDownloadCSV,
+    setFilter,
+    setCustomDates,
     tableRows,
     sortBy
   } = useContext(AnalyticsContext);
@@ -51,13 +62,19 @@ function Asset({ dashboardView = false }: { dashboardView: boolean }) {
               <div className={`${styles["heading-wrap"]} ${styles["web-view"]}`}>
                 <TableHeading
                   mainText="Top Assets"
-                  descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"}
                   smallHeading={true}
+                  filter={filter}
+                  activeSection={activeSection}
                 />
                 <div className={`${styles["table-header-tabs"]}`}>
-                  {!dashboardView && <SearchButton label="Search User" />}
-                  <Datefilter />
-                  {!dashboardView && <Download />}
+                  {!dashboardView && <SearchButton label="Search Asset" setSearch={setSearch} />}
+                  <Datefilter
+                    filter={filter}
+                    setFilter={setFilter}
+                    customDates={customDates}
+                    setCustomDates={setCustomDates}
+                  />
+                  {!dashboardView && <Download setDownloadCSV={setDownloadCSV} />}
                 </div>
               </div>
               {/* for laptop */}
@@ -65,19 +82,25 @@ function Asset({ dashboardView = false }: { dashboardView: boolean }) {
                 <div className={`${styles["heading-wrap"]}`}>
                   <div>
                     <TableHeading
-                      mainText="User Engagement"
-                      descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"}
+                      mainText="Top Assets"
                       smallHeading={true}
+                      filter={filter}
+                      activeSection={activeSection}
                     />
                     {!dashboardView && (
                       <div style={{ marginTop: "22px" }}>
-                        <SearchButton label="Search User" />
+                        <SearchButton label="Search Asset" setSearch={setSearch} />
                       </div>
                     )}
                   </div>
                   <div className={`${styles["table-header-tabs"]}`}>
-                    <Datefilter />
-                    {!dashboardView && <Download />}
+                    <Datefilter
+                      filter={filter}
+                      setFilter={setFilter}
+                      customDates={customDates}
+                      setCustomDates={setCustomDates}
+                    />
+                    {!dashboardView && <Download setDownloadCSV={setDownloadCSV} />}
                   </div>
                 </div>
               </div>
@@ -85,31 +108,48 @@ function Asset({ dashboardView = false }: { dashboardView: boolean }) {
               <div className={`${styles["heading-wrap"]} ${styles["mobile-view"]}`}>
                 <div className={`${styles["mobile-wrap"]}`}>
                   <TableHeading
-                    mainText="User Engagement"
-                    descriptionText={dashboardView ? "View All" : "May 18 - May 25, 2023"}
+                    mainText="Top Assets"
                     smallHeading={true}
+                    filter={filter}
+                    activeSection={activeSection}
                   />
                   <div className={`${styles["table-header-tabs"]}`}>
-                    <Datefilter />
-                    <Download />
+                    <Datefilter
+                      filter={filter}
+                      setFilter={setFilter}
+                      customDates={customDates}
+                      setCustomDates={setCustomDates}
+                    />
+                    <Download setDownloadCSV={setDownloadCSV} />
                   </div>
                 </div>
 
                 <div style={{ marginTop: "22px" }}>
-                  <SearchButton label="Search User" />
+                  <SearchButton label="Search Asset" setSearch={setSearch} />
                 </div>
               </div>
               {(!dashboardView && data && data?.length > 0 && sortBy) && <div className={`${styles["clear-sort"]}`}><Button text="Clear sorting" className={'clear-sort-btn'} onClick={handleClearSorting} /></div>}
-              {/* <TableData
+              <TableData
                 columns={columns}
-                data={data}
+                data={dashboardView ? data : ((data && emptyRows.length > 0) ? [...data, ...emptyRows] : null)}
+                apiData={data}
                 arrowColumns={assetarrowColumns}
                 buttonColumns={assetbuttonColumns}
                 buttonTexts={assetbuttonTexts}
-                imageSource="ImageSource"
-              /> */}
-              <TableData columns={columns} data={dashboardView ? data : ((data && emptyRows.length > 0) ? [...data, ...emptyRows] : null)} arrowColumns={assetarrowColumns} buttonColumns={assetbuttonColumns} buttonTexts={assetbuttonTexts} activeSection={activeSection} />
-              {(!dashboardView && activeSection === analyticsLayoutSection.ACCOUNT_ASSETS && data && data?.length > 0 && totalRecords > limit) && <Pagination />}
+                activeSection={activeSection}
+                tableLoading={tableLoading}
+                totalRecords={totalRecords}
+                sortBy={sortBy}
+                sortOrder={sortOrder}
+                setSortBy={setSortBy}
+                setSortOrder={setSortOrder}
+              />
+              {(!dashboardView && activeSection === analyticsLayoutSection.ACCOUNT_ASSETS && data && data?.length > 0 && totalRecords > limit) && <Pagination
+                page={page}
+                limit={limit}
+                totalRecords={totalRecords}
+                setPage={setPage}
+              />}
             </div>
       }
     </section>

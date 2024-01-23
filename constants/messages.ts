@@ -29,4 +29,10 @@ export const GUEST_UPLOAD_SUCCESS_MESSAGE =
 export const GUEST_UPLOAD_WELCOME_MESSAGE =
   "Please upload your files or folders that you would like to submit to us. This is more of text here.Please upload your files or folders that you would like to submit to us.";
 
+// analytics
 export const SOMETHING_WENT_WRONG = 'Something went wrong.'
+export const USERS_ENG_DOWNLOADED = 'User engagement list downloaded.'
+export const TOP_ASSETS_DOWNLOADED = 'Top assets list downloaded.'
+export const USER_ACTIVITY_DOWNLOADED = 'User activity list downloaded.'
+export const ASSET_CHART_DOWNLOADED = 'Asset chart downloaded.'
+export const ANALYTICS_DOWNLOADED = 'Analytics data downloaded.'

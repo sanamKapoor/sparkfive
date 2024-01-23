@@ -6,9 +6,7 @@ import { AnalyticsContext } from '../../../context';
 import { analyticsLayoutSection } from '../../../constants/analytics';
 import DateFormatter from '../../../utils/date';
 
-const TableHeading = ({ mainText, descriptionText, smallHeading = false }) => {
-
-  const { filter, activeSection } = useContext(AnalyticsContext);
+const TableHeading = ({ mainText, filter, activeSection, smallHeading = false }) => {
   
   return (
     <section className={styles.tableHeading}>

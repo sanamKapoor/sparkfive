@@ -1,11 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Utilities } from "../../../../assets";
 import styles from './analytics-search.module.css'
-import { AnalyticsContext } from "../../../../context";
 import { useDebounce } from "../../../../hooks/useDebounce";
 
-const AnalyticsSearch = () => {
-  const { setSearch } = useContext(AnalyticsContext);
+const AnalyticsSearch = ({ label, setSearch }: {
+  label: string,
+  setSearch: (search: string) => void
+}) => {
 
   const [input, setInput] = useState("");
   const debouncedSearchTerm = useDebounce(input, 500);
@@ -15,7 +16,7 @@ const AnalyticsSearch = () => {
   }
 
   useEffect(() => {
-    setSearch(debouncedSearchTerm);
+    if(setSearch) setSearch(debouncedSearchTerm);
   }, [debouncedSearchTerm]);
 
   return (
@@ -24,7 +25,7 @@ const AnalyticsSearch = () => {
         <div className={`${styles['search-wrapper']}`}>
           <input
             type="text"
-            placeholder="Search User"
+            placeholder={label ? label : "Search"}
             name="search2"
             value={input}
             onChange={handleSearch}

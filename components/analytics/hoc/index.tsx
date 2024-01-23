@@ -5,11 +5,11 @@ import { analyticsLayoutSection } from "../../../constants/analytics";
 import { SOMETHING_WENT_WRONG, USERS_DOWNLOADED } from "../../../constants/messages";
 import { AnalyticsContext } from "../../../context";
 import AnalyticsApi from "../../../server-api/analytics";
+import { getCSVFileName } from "../../../utils/analytics";
 import toastUtils from "./../../../utils/toast";
 
 const AnalyticsHOC = (Component) => {
     return (props) => {
-
 
         const {
             page, limit, search, sortBy, sortOrder, filter, downloadCSV, apiEndpoint, initialRender, activeSection,
@@ -60,8 +60,9 @@ const AnalyticsHOC = (Component) => {
                         type: "text/csv;charset=utf-8",
                     });
 
-                    saveAs(fileData, `Users-Engagement-${new Date().getTime()}`);
-                    toastUtils.success(USERS_DOWNLOADED);
+                    const { fileName, successMsg } = getCSVFileName(activeSection);
+                    saveAs(fileData, fileName);
+                    toastUtils.success(successMsg);
                 } else {
                     setTotalRecords(data.totalRecords)
                     setData(data.data);
@@ -96,20 +97,19 @@ const AnalyticsHOC = (Component) => {
             }
         }, [limit, search, sortBy, sortOrder, filter])
 
-        useEffect(() => {
+        useEffect(() => {            
             if (!initialRender && typeof page === 'number') {
                 analyticsApiHandler();
             }
         }, [page])
 
-        useEffect(() => {
+        useEffect(() => {            
             if(initialRender) analyticsApiHandler();
             setInitialRender(false);
         }, [apiEndpoint, initialRender])
 
         const handleApiEndpoint = async () => {
             switch (activeSection) {
-                case analyticsLayoutSection.DASHBOARD:
                 case analyticsLayoutSection.ACCOUNT_USERS:
                     setApiEndpoint("users")
                     break;
@@ -121,7 +121,7 @@ const AnalyticsHOC = (Component) => {
             }
         }
 
-        useEffect(() => {
+        useEffect(() => {            
             handleApiEndpoint();
             setInitialRender(true);
             setSearch('');

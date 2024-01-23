@@ -1,17 +1,16 @@
-import React, { useContext } from 'react'
-import { AnalyticsContext } from '../../../../context';
+import React from 'react'
 import styles from "./table-data.module.css";
 import { insights } from "../../../../assets";
 
-const TableHeader = ({ columns, arrowColumns }) => {
-
-    const {
-        totalRecords,
-        sortBy,
-        sortOrder,
-        setSortBy,
-        setSortOrder
-    } = useContext(AnalyticsContext);
+const TableHeader = ({
+    columns,
+    arrowColumns,
+    totalRecords,
+    sortBy,
+    sortOrder,
+    setSortBy,
+    setSortOrder
+}) => {
 
     return (
         <thead>

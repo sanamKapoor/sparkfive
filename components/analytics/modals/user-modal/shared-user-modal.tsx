@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./models.module.css";
-import TableData from "../../table-data";
+import TableData from "../../common/table";
 import SearchButton from "../../common/search";
 import Download from "../../common/download-button";
 import Datefilter from "../../common/date-filter";
@@ -74,7 +74,6 @@ function SharedUserModal() {
         arrowColumns={shareModalarrowColumns}
         buttonColumns={shareModalbuttonColumns}
         buttonTexts={shareModalbuttonTexts}
-        imageSource="ImageSource"
       />
       <Pagination />
     </div>

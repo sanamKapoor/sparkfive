@@ -1,44 +1,33 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { analyticsLayoutSection } from "../../../../constants/analytics";
-import { AnalyticsContext } from "../../../../context";
-import { useAnalyticsHold } from "../../../../hooks/use-analytics-hold";
-import UserModal from "../../modals/user-modal/user-modal";
 import NoData from "../no-data";
 import styles from "./table-data.module.css";
 import TableHeader from "./table-header";
 import TableBody from "./table-body";
+import Modal from "../modal";
 
 export default function TableData({
   columns,
-  data,
   arrowColumns,
   buttonColumns,
   buttonTexts,
+  tableLoading,
+  data,
+  apiData,
   activeSection,
+  totalRecords,
+  sortBy,
+  sortOrder,
+  setSortBy,
+  setSortOrder
 }) {
+  const [activeId, setActiveId] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const [activeModal, setActiveModal] = useState<React.ReactElement | null>(null);
-  const {
-    tableLoading,
-    data: apiData,
-  } = useContext(AnalyticsContext);
 
-  const { captureState } = useAnalyticsHold();
-
-  const handleModals = (name, last_session) => {
+  const handleModals = async (id: string) => {
     setShowModal(true);
-    setActiveModal(
-      activeSection === analyticsLayoutSection.ACCOUNT_USERS ? (
-        <UserModal setShowModal={setShowModal} name={name} last_session={last_session} />
-      ) : null,
-    );
-
-    // if (activeSection === analyticsLayoutSection.ACCOUNT_USERS) {
-    //   captureState()
-    // }
+    setActiveId(id)
   };
-
-
 
   return (
     <>
@@ -47,6 +36,11 @@ export default function TableData({
           <TableHeader
             columns={columns}
             arrowColumns={arrowColumns}
+            totalRecords={totalRecords}
+            sortBy={sortBy}
+            sortOrder={sortOrder}
+            setSortBy={setSortBy}
+            setSortOrder={setSortOrder}
           />
           {data && data.length > 0 &&
             <TableBody
@@ -54,13 +48,15 @@ export default function TableData({
               buttonColumns={buttonColumns}
               buttonTexts={buttonTexts}
               handleModals={handleModals}
+              activeSection={activeSection}
+              data={data}
             />
           }
         </table>
         {tableLoading ? <div className={styles.backdrop}></div> : null}
       </div>
       {
-        showModal && activeModal
+        showModal && <Modal section={activeSection} setShowModal={setShowModal} id={activeId} />
       }
       {
         (apiData && apiData.length === 0 && (activeSection === analyticsLayoutSection.ACCOUNT_USERS || activeSection === analyticsLayoutSection.ACCOUNT_ASSETS)) &&

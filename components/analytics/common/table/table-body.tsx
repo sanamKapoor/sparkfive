@@ -1,33 +1,33 @@
-import React, { useContext } from 'react'
-import { analyticsLayoutSection } from '../../../../constants/analytics'
-import { AnalyticsContext } from '../../../../context'
+import React, { useEffect } from 'react'
+import { analyticsActiveModal, analyticsLayoutSection } from '../../../../constants/analytics'
 import DateFormatter from "../../../../utils/date";
 import styles from "./table-data.module.css";
+import AssetIcon from '../../../common/asset/asset-icon';
 
 const TableBody = ({
     columns,
     buttonColumns,
     buttonTexts,
-    handleModals
+    handleModals,
+    activeSection,
+    data
 }) => {
 
-    const {
-        activeSection,
-        data
-    } = useContext(AnalyticsContext);
-
     const renderTableData = () => {
-        switch (activeSection) {
+        switch (activeSection) {            
             case analyticsLayoutSection.ACCOUNT_USERS:
                 return <UserTableRows
                     data={data}
-                    activeSection={activeSection}
                     handleModals={handleModals}
                 />
             case analyticsLayoutSection.ACCOUNT_ASSETS:
                 return <AssetTableRows
                     data={data}
-                    activeSection={activeSection}
+                    handleModals={handleModals}
+                />
+            case analyticsActiveModal.USER_ACTIVITY:
+                return <UserActivityRows
+                    data={data}
                     handleModals={handleModals}
                 />
             default:
@@ -77,7 +77,7 @@ export const DefaultTableRows = ({ data, columns, buttonColumns, buttonTexts, ha
     )
 }
 
-export const UserTableRows = ({ data, handleModals, activeSection }) => {
+export const UserTableRows = ({ data, handleModals }) => {
     return (
         <tbody>
             {
@@ -108,7 +108,7 @@ export const UserTableRows = ({ data, handleModals, activeSection }) => {
                                     <button
                                         className={styles.actionButton}
                                         onClick={() =>
-                                            handleModals(row.name, DateFormatter.analyticsDateFormatter(row.lastSession))
+                                            handleModals(row.userId)
                                         }
                                     >
                                         User Info
@@ -125,7 +125,7 @@ export const UserTableRows = ({ data, handleModals, activeSection }) => {
     )
 }
 
-export const AssetTableRows = ({ data, handleModals, activeSection }) => {
+export const AssetTableRows = ({ data, handleModals }) => {
     return (
         <tbody>
             {
@@ -133,26 +133,63 @@ export const AssetTableRows = ({ data, handleModals, activeSection }) => {
                     return (
                         <tr key={row.id}>
                             <td>
-                                <div className={styles["usernameWithImage"]}>
-                                    {row.thumbnail && <div className={`${styles["image-wrapper"]}`}>
-                                        <img src={row.thumbnail} alt="user" className={styles.userImage} />
-                                    </div>}
+                                {row.name && <div className={styles["usernameWithImage"]}>
+                                    <div className={`${styles["image-wrapper"]}`}>
+                                        {row.thumbnail ? <img src={row.thumbnail} alt="user" className={styles.userImage} /> :
+                                            <AssetIcon extension={row.extension} />}
+                                    </div>
                                     <span className={`${styles["user-name"]}`}>{row.name}</span>
-                                </div>
+                                </div>}
                             </td>
                             <td>{row.views}</td>
                             <td>{row.downloads}</td>
                             <td>{row.shares}</td>
                             <td>
-                                <button
+                                {row._id && <button
                                     className={styles.actionButton}
                                     onClick={() =>
-                                        handleModals(row.name, DateFormatter.analyticsDateFormatter(row.last_session))
+                                        handleModals(row._id)
                                     }
                                 >
                                     View chart
-                                </button>
+                                </button>}
+                            </td>
+                        </tr>
+                    );
+                })
+            }
+        </tbody>
+    )
+}
 
+export const UserActivityRows = ({ data, handleModals }) => {
+    let activityTitle = '';
+    let activityDate = '';
+    return (
+        <tbody>
+            {
+                data.map((row) => {
+                    activityTitle = row.last_download ? 'Download' : row.last_viewed ? 'Viewed' : row.last_shared ? 'Shared' : ''
+                    activityDate = row.last_download ? row.last_download : row.last_viewed ? row.last_viewed : row.last_shared ? row.last_shared : ''
+                    return (
+                        <tr key={row._id}>
+                            <td>{activityTitle} {row.name}</td>
+                            <td>
+                                {
+                                    activityDate ? 
+                                    DateFormatter.analyticsDateFormatter(activityDate) 
+                                    : ""
+                                }</td>
+                            <td>
+                                {row.assetId ? (
+                                    <button
+                                        className={styles.actionButton}
+                                    >
+                                        View Link
+                                    </button>
+                                ) : (
+                                    ""
+                                )}
                             </td>
                         </tr>
                     );

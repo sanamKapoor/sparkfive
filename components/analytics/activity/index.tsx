@@ -20,7 +20,6 @@ function Activity() {
         arrowColumns={activityarrowColumns}
         buttonColumns={activitybuttonColumns}
         buttonTexts={activitybuttonTexts}
-        imageSource="ImageSource"
       />
     </div>
   );

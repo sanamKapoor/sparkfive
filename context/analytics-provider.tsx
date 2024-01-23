@@ -59,7 +59,7 @@ export default ({ children }) => {
     setTotalRecords,
     setDownloadCSV,
     setInitialRender,
-    setTableRows
+    setTableRows,
   };
 
   return (

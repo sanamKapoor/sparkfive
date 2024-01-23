@@ -1,12 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import styles from "./pagination.module.css";
 import { insights } from "../../../../assets";
-import { AnalyticsContext } from "../../../../context";
-import { analyticsLayoutSection } from "../../../../constants/analytics";
 
-function Pagination() {
-  const pageNumbers = ["1", "2", "3", "4"];
-  const { page, limit, setPage, totalRecords, activeSection } = useContext(AnalyticsContext);
+function Pagination({
+  page, limit, setPage, totalRecords
+}) {
   const [totalPages, setTotalPages] = useState(0);
   const [activePage, setActivePage] = useState(0);
 
@@ -92,11 +90,6 @@ function Pagination() {
         </div>
         {
           renderNumericPagination() 
-          // pageNumbers.map((pageNumber) => (
-          //   <div key={pageNumber} className={`${styles['pagination-left-arrow']} ${styles['pagination-box']}`}>
-          //     <span className={activePage === 1 ? styles['active'] : ''}>{pageNumber}</span>
-          //   </div>
-          // ))
         }
         <div className={`${styles['pagination-left-arrow']} ${styles['pagination-box']} ${activePage === totalPages ? styles['disable'] : ''}`} onClick={handleNextClick}>
           <img src={activePage === totalPages ? insights.paginationDisableRight : insights.paginationRight} alt="right-arrow" />

@@ -4,9 +4,9 @@ import { Utilities } from "../../../../assets";
 import ButtonIcon from "../../../common/buttons/button-icon";
 import { AnalyticsContext } from '../../../../context';
 
-export default function Download() {
-
-  const { setDownloadCSV } = useContext(AnalyticsContext);
+export default function Download({ setDownloadCSV }: {
+  setDownloadCSV: (download: boolean) => void
+}) {
 
   return (
    <section>

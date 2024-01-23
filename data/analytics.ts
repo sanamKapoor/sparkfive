@@ -544,8 +544,22 @@ export const userModaldata = [
   },
 ];
 
-
 export const userModalarrowColumns = ["Viewed Link", "Viewed File", "Download File", "Sessions", "Date"];
 export const userModalbuttonColumns = ["Actions"];
 
 export const userModalbuttonTexts = { Actions: "View Asset" };
+
+// User Activity
+export const userActivityModalcolumns = ["Activity", "Date", "Action"];
+export const userActivityModalArrowColumns = [
+  {
+    label: "Activity",
+    value: "name"
+  },
+  {
+    label: "Date",
+    value: "updatedAt"
+  },
+];
+export const userActivityModalButtonColumns = ["Action"];
+export const userActivityModalButtonTexts = { Actions: "View Link" };

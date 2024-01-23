@@ -71,3 +71,8 @@ export const analyticsLayoutSection = {
     EXTERNAL_ASSETS: 'EXTERNAL_ASSETS',
     SHARED_LINK: 'SHARED_LINK',
 }
+
+export const analyticsActiveModal = {
+    USER_ACTIVITY: 'USER_ACTIVITY',
+    ASSET_CHART: 'ASSET_CHART'
+}

@@ -1,17 +1,17 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DayPickerInput from "react-day-picker/DayPickerInput";
 
 import styles from "./date-filter.module.css";
 import { insights } from "../../../../assets";
 import Button from "../../../common/buttons/button";
-import { AnalyticsContext } from "../../../../context";
 import { calculateBeginDate } from "../../../../config/data/filter";
 import DateUtils from "../../../../utils/date";
 import dateStyles from "../../../common/filter/date-uploaded.module.css";
 import IconClickable from "../../../common/buttons/icon-clickable";
 
-export default function DateFilter() {
-  const { filter, setFilter, customDates, setCustomDates } = useContext(AnalyticsContext);
+export default function DateFilter({
+  filter, setFilter, customDates, setCustomDates
+}) {
   const [activeFilter, setActiveFilter] = useState("7d");
   const [activeDays, setActiveDays] = useState(7);
   const [showCustomRange, setShowCustomRange] = useState(false);
@@ -180,13 +180,13 @@ export default function DateFilter() {
       {/* tab-view */}
       <section>
         <div className={`${styles["date-filter-teb"]}`}>
-          <Button text="Date Range" className={"outline-text-btn"} />
+          <Button text="Date Range" className={"outline-text-btn"} onClick={handleCustomDateSelector} />
         </div>
       </section>
       {/* mobile-view */}
       <section className={`${styles["calender-filer-outer"]}`}>
         <div className={`${styles["calender-filer"]}`}>
-          <div className={styles.calenderDate}>
+          <div className={styles.calenderDate} onClick={handleCustomDateSelector}>
             <img src={insights.calender} alt="" />
           </div>
         </div>

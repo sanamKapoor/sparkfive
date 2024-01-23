@@ -43,7 +43,7 @@ export const AnalyticsContext = createContext({
   setTotalRecords: (value) => {},
   setDownloadCSV: (value) => {},
   setInitialRender: (value) => {},
-  setTableRows: (value) => {}
+  setTableRows: (value) => {},
 });
 
 export const UserContext = createContext({
