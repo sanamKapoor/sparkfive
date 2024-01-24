@@ -4,7 +4,7 @@ import { CALENDAR_ACCESS } from "../../constants/permissions";
 import AppLayout from "../../components/common/layouts/app-layout";
 import MainLayout from "../../components/common/layouts/main-layout";
 import { useContext, useEffect } from "react";
-import { pages } from "../../constants/analytics";
+import { DashboardApiEndpoints, pages } from "../../constants/analytics";
 import Analytics from "../../components/analytics";
 import React from "react";
 import useAnalytics from "../../hooks/useAnalytics";

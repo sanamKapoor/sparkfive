@@ -29,6 +29,7 @@ const AnalyticsHOC = (Component) => {
         } = useContext(AnalyticsContext);
 
         const analyticsApiHandler = async (defaultPage?: number) => {
+            if(!apiEndpoint) return;
             try {
                 if (initialRender) {
                     setLoading(true);
@@ -117,7 +118,7 @@ const AnalyticsHOC = (Component) => {
                     setApiEndpoint("assets")
                     break;
                 default:
-                    setApiEndpoint("dashboard")
+                    setApiEndpoint("")
             }
         }
 

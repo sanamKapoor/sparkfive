@@ -14,7 +14,6 @@ import TableHeading from "../insight-table/table-heading";
 import styles from "./asset.module.css";
 
 function Asset({ dashboardView = false }: { dashboardView: boolean }) {
-
   const {
     activeSection,
     totalRecords,

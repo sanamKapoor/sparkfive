@@ -76,3 +76,8 @@ export const analyticsActiveModal = {
     USER_ACTIVITY: 'USER_ACTIVITY',
     ASSET_CHART: 'ASSET_CHART'
 }
+
+export const DashboardApiEndpoints = [
+    'users',
+    'assets'
+]
