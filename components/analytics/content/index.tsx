@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useRouter } from 'next/router';
 import { analyticsLayoutSection } from "../../../constants/analytics";
 import { AnalyticsContext } from "../../../context";
 import AssetTable from "../asset";
@@ -11,6 +12,7 @@ import Team from "../team";
 
 export default function Content() {
 
+  const router = useRouter();
   const { activeSection } = useContext(AnalyticsContext);
   const [heading, setheading] = useState("Dashboard");
   const [content, setContent] = useState<React.ReactElement | null>(null);
@@ -42,6 +44,7 @@ export default function Content() {
         setContent(<Team />);
         break;
       default:
+        router.push('?section=dashboard&page=1&limit=6')
         setheading("Dashboard");
         setContent(<Dashboard />);
     }
