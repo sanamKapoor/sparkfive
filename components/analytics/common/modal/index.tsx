@@ -215,24 +215,28 @@ const Modal = ({ section, setShowModal, id }: {
 
   const { loading, error, sortBy, limit, totalRecords } = modalData;
   return (
-    <div className={`${styles.backdrop}`} onClick={handleCloseModal}>
+    <div className={`${styles.backdrop}`}>
       <section className={`${styles["user-modal-outer"]}`}>
         {
           loading ? <Loader /> :
             (error) ?
               <>
-                <IconClickable
+              <div  className={`${styles["data-close-icon"]}`}>
+              <IconClickable
                   src={insights.insightClose}
                   additionalClass={styles.closeIcon}
                   text={""}
                   onClick={handleCloseModal}
                 />
+              </div>
+             
                 <NoData message={error} />
-              </> :
+              </> 
+              :
               <div className={`${styles["user-modal"]}`}>
                 {
                   (modalHeaderData && modalHeaderData?.name) &&
-                  <div className={styles["usernameWithImage"]}>
+                  <div className={styles["profile-img-wrapper"]}>
                     <div className={`${styles["image-wrapper"]}`}>
                       {modalHeaderData?.profilePhoto !== null ? (
                         <img src={modalHeaderData?.profilePhoto} alt="user" className={styles.userImage} />

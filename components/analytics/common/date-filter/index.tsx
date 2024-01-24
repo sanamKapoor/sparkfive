@@ -96,7 +96,7 @@ export default function DateFilter({
   }, [])
 
   return (
-    <>
+    <div className={styles.dateOuterBox}>
       {/* web-view  */}
       <section className={styles.dateFilter}>
         <div className={styles.gridBox}>
@@ -192,6 +192,6 @@ export default function DateFilter({
             </div>
           </div>
         )}
-    </>
+    </div>
   );
 }

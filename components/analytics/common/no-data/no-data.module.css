@@ -5,7 +5,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border:1px solid #DEDAD4;
+    /* border:1px solid #DEDAD4; */
 }
 .heading{
     font-weight: 600;

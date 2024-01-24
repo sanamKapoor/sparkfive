@@ -3,6 +3,7 @@
     border:1px solid#DEDAD4;
     /* margin-top: 16px; */
     padding: 16px;
+    overflow: visible;
 }
 /* .outerContainer{
     padding: 30px 40px;
