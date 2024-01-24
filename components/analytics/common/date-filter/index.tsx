@@ -131,7 +131,24 @@ export default function DateFilter({
             <img src={insights.calender} alt="" />
           </div>
         </div>
-        {showCustomRange && (
+      </section>
+
+      {/* tab-view */}
+      <section>
+        <div className={`${styles["date-filter-teb"]}`}>
+          <Button text="Date Range" className={"outline-text-btn"} onClick={handleCustomDateSelector} />
+        </div>
+      </section>
+      {/* mobile-view */}
+      <section className={`${styles["calender-filer-outer"]}`}>
+        <div className={`${styles["calender-filer"]}`}>
+          <div className={styles.calenderDate} onClick={handleCustomDateSelector}>
+            <img src={insights.calender} alt="" />
+          </div>
+        </div>
+      </section>
+
+      {showCustomRange && (
           <div className={`${styles["date-picker-wrapper"]}`}>
             <div className={`${styles["date-picker-top"]}`}>
               <div className={`${styles["left-side"]}`}>Date Range</div>
@@ -175,22 +192,6 @@ export default function DateFilter({
             </div>
           </div>
         )}
-      </section>
-
-      {/* tab-view */}
-      <section>
-        <div className={`${styles["date-filter-teb"]}`}>
-          <Button text="Date Range" className={"outline-text-btn"} onClick={handleCustomDateSelector} />
-        </div>
-      </section>
-      {/* mobile-view */}
-      <section className={`${styles["calender-filer-outer"]}`}>
-        <div className={`${styles["calender-filer"]}`}>
-          <div className={styles.calenderDate} onClick={handleCustomDateSelector}>
-            <img src={insights.calender} alt="" />
-          </div>
-        </div>
-      </section>
     </>
   );
 }

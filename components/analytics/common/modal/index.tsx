@@ -215,7 +215,7 @@ const Modal = ({ section, setShowModal, id }: {
 
   const { loading, error, sortBy, limit, totalRecords } = modalData;
   return (
-    <div className={`${styles.backdrop}`}>
+    <div className={`${styles.backdrop}`} onClick={handleCloseModal}>
       <section className={`${styles["user-modal-outer"]}`}>
         {
           loading ? <Loader /> :

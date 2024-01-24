@@ -26,7 +26,7 @@ const TableHeader = ({
                                 >
                                     {column}{" "}
                                     <div className={`${styles["flip-direction"]} ${styles["outer-wrapper"]}`}>
-                                        <img
+                                        {sortCol['disable'] ? '' : <img
                                             src={
                                                 sortBy === sortCol.value
                                                     ? sortOrder
@@ -39,7 +39,7 @@ const TableHeader = ({
                                                 setSortBy(sortCol.value);
                                                 setSortOrder(!sortOrder);
                                             }}
-                                        />
+                                        />}
                                     </div>
                                 </div>
                             ) : (

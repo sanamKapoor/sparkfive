@@ -554,7 +554,8 @@ export const userActivityModalcolumns = ["Activity", "Date", "Action"];
 export const userActivityModalArrowColumns = [
   {
     label: "Activity",
-    value: "name"
+    value: "name",
+    disable: true
   },
   {
     label: "Date",
