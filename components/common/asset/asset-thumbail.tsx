@@ -254,12 +254,13 @@ const AssetThumbail = ({
               )}
               {asset.type !== "video" ? (
                 thumbailUrl ? (
-                  <AssetImg assetImg={thumbailUrl} type={asset.type} name={asset.name} opaque={isUploading} />
+                  <AssetImg imgClass="userEvents" assetImg={thumbailUrl} type={asset.type} name={asset.name} opaque={isUploading} />
                 ) : (
-                  <AssetIcon extension={asset.extension} />
+                  <AssetIcon imgClass="userEvents" extension={asset.extension} />
                 )
               ) : activeView === "list" ? (
                 <AssetImg
+                imgClass="userEvents"
                   assetImg={thumbailUrl}
                   type={asset.type}
                   name={asset.name}
@@ -274,11 +275,12 @@ const AssetThumbail = ({
                   videoSrc={previewUrl ?? realUrl}
                   pausedOverlay={
                     <AssetImg
+                    
                       assetImg={thumbailUrl}
                       type={asset.type}
                       name={asset.name}
                       opaque={isUploading}
-                      imgClass={styles["video-thumbnail"]}
+                      imgClass={styles["video-thumbnail userEvents"]}
                     />
                   }
                   loadingOverlay={

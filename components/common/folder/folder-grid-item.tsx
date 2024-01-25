@@ -308,19 +308,19 @@ const FolderGridItem = ({
           >
             <>
               {thumbnailPath && (
-                <AssetImg assetImg={thumbnailPath} imgClass="maxHeight" style={{ maxWidth: "330px !important" }} />
+                <AssetImg assetImg={thumbnailPath} imgClass="maxHeight userEvents" style={{ maxWidth: "330px !important" }} />
               )}
               {thumbnailExtension && !thumbnailPath && (
-                <AssetIcon extension={thumbnailExtension} imgClass="maxHeight" />
+                <AssetIcon  extension={thumbnailExtension} imgClass="maxHeight userEvents" />
               )}
               {!thumbnailPath &&
                 !thumbnailExtension &&
                 previews.map((preview: any, index: number) => (
                   <div className={styles["sub-image-wrapper"]} key={index.toString()}>
                     {preview.assetImg || preview.name === "empty" ? (
-                      <AssetImg {...preview} />
+                      <AssetImg imgClass="userEvents" {...preview} />
                     ) : (
-                      <AssetIcon extension={preview.extension} isCollection={true} />
+                      <AssetIcon imgClass="userEvents"  extension={preview.extension} isCollection={true} />
                     )}
                   </div>
                 ))}

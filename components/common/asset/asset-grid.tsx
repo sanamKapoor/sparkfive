@@ -735,6 +735,7 @@ const AssetGrid = ({
                     {sortedFolders.map((folder, index) => {
                       return (
                         <li
+                        draggable={folder?.childFolders?.length > 0 ? false : true} draggable={folder?.childFolders?.length > 0 ? false : true}
                         data-drag="false"
                           className={`${styles["grid-item"]}`}
                           id={folder.id}

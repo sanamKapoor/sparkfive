@@ -257,7 +257,12 @@
 .modified-date {
   color: #aeb0c2;
 }
+.userEvents{
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
 
+}
 @media (max-width: 480px) {
   .createdDate {
     display: none;
