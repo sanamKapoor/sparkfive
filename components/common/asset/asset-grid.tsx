@@ -31,6 +31,7 @@ import AssetThumbail from "./asset-thumbail";
 import AssetUpload from "./asset-upload";
 import DetailOverlay from "./detail-overlay";
 import FolderTableHeader from "./Folder-table-header/folder-table-header";
+import SpinnerOverlay from "../spinners/spinner-overlay";
 
 interface Box {
   left: number;
@@ -40,7 +41,6 @@ interface Box {
   id: string;
 }
 
-// import DragSelect from "dragselect";
 // Components
 const AssetGrid = ({
   activeView = "grid",
@@ -92,7 +92,9 @@ const AssetGrid = ({
   const { activeSortFilter } = useContext(FilterContext);
   const { setIsLoading } = useContext(LoadingContext);
 
+
   // Ref values
+  const parentFolder = useRef("")
   const ref = useRef(null);
   const selectionArea = useRef(null);
   const selectableItemsRef = useRef<Box[]>([]);
@@ -101,6 +103,7 @@ const AssetGrid = ({
   const elementsFolderContainerRef = useRef<HTMLDivElement | null>(null);
 
   // Drag selection states
+  const [loader, setLoader] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [activeAssetId, setActiveAssetId] = useState("");
   const [activeArchiveAsset, setActiveArchiveAsset] = useState(undefined);
@@ -128,7 +131,6 @@ const AssetGrid = ({
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
   useEffect(() => {
     if (ref.current) {
       setWidthCard(ref.current.clientWidth);
@@ -580,19 +582,71 @@ const AssetGrid = ({
       return {};
     }
   }, [render, mode]);
+
   const onDragStart = (evt) => {
-    let element = evt.currentTarget;
-    console.log("🚀 ~ element:", element, evt.currentTarget.id)
-    // element.classList.add("dragged");
-    // evt.dataTransfer.setData("text/plain", evt.currentTarget.id);
-    // evt.dataTransfer.effectAllowed = "move";
+    const element = evt.currentTarget;
+    parentFolder.current = element.id
   };
-  const onDragEnd = (evt) => {
-    console.log("🚀 ~ onDragEnd ~ evt:", evt, evt.currentTarget.id)
-    evt.currentTarget.classList.remove("dragged");
+
+  const filterFolderInList = (folderList, updatedFolder) => {
+    return folderList.filter((folder) => {
+      return folder.id === updatedFolder.id ? false : true;
+    });
   };
+
+  const onDragDrop = async (evt) => {
+    try {
+      const element = evt.currentTarget
+      setLoader(true);
+      if (parentFolder.current !== "" && parentFolder.current !== element.id) {
+        const data = await folderApi.updateParent({
+          parentId: element.id,
+          folderId: parentFolder.current,
+        });
+        if (data) {
+          const updatedFolders = filterFolderInList(folders, data.data);
+          setFolders(updatedFolders);
+        }
+        setListUpdateFlag(true);
+        parentFolder.current = ""
+
+        toastUtils.success("Collection successfully moved");
+      }
+      setLoader(false);
+    } catch (err) {
+      setLoader(false);
+      toastUtils.error(err.response.data.error);
+    }
+  };
+
+  const isAdmin = () => {
+    return user?.role?.id === "admin" || user?.role?.id === "super_admin";
+  };
+
+
+
+  // Helper function to determine if the item is draggable
+  const isDraggable = (folder) => {
+    return folder?.childFolders?.length === 0 && isAdmin();
+  };
+
+  // Helper function to handle drag start
+  const handleDragStart = (e, folder) => {
+    if (!folder?.childFolders?.length > 0) {
+      onDragStart(e);
+    }
+  };
+
+  // Helper function to handle drop (assuming onDragDrop is your drop handler)
+  const handleDrop = (e, folder) => {
+    if (isAdmin()) {
+      onDragDrop(e);
+    }
+  };
+
   return (
     <>
+      {loader && <SpinnerOverlay />}
       <div
         ref={filterRef}
         id="filter-container-height"
@@ -727,6 +781,7 @@ const AssetGrid = ({
                     })}
                   </>
                 )}
+
                 {mode === "folders" && (
                   <>
                     {activeView === "list" && (
@@ -735,17 +790,18 @@ const AssetGrid = ({
                     {sortedFolders.map((folder, index) => {
                       return (
                         <li
-                          className={`${styles["grid-item"]} ${styles["testing"]} `}
-                          id={folder.name}
+                          draggable={isDraggable(folder)}
+                          onDragStart={(e) => handleDragStart(e, folder)}
+                          onDragOver={(ev) => ev.preventDefault()}
+                          onDrop={(e) => handleDrop(e, folder)}
+                          data-drag="false"
+                          className={`${styles["grid-item"]}`}
+                          id={folder.id}
                           key={folder.id || index}
                           onClick={(e) => handleFocusChange(e, folder.id)}
                           ref={ref}
                           style={{ width: `$${widthCard} px` }}
-                          draggable={folder?.childFolders?.length > 0 ? false : true}
-                          onDragStart={(e) => onDragStart(e)}
-                          // onDragEnd={(e) => onDragEnd(e)}
-                          onDragOver={(ev) => ev.preventDefault()}
-                          onDrop={(e) => onDragEnd(e)}
+
                         >
                           <FolderGridItem
                             {...folder}
@@ -860,10 +916,5 @@ const AssetGrid = ({
   );
 };
 
-// element.style {
-//   overflow-y: auto;
-//   min-height: 90vh;
-//   height: 100vh;
-// }
 
 export default AssetGrid;

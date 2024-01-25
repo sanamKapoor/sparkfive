@@ -9,7 +9,7 @@ import styles from './move-modal.module.css';
 
 // Components
 
-const MoveCollectionModal = ({ modalIsOpen, closeModal, itemsAmount, moveFolder, confirmText = "Add", parentId = null }) => {
+const MoveCollectionModal = ({ modalIsOpen, closeModal, moveFolder, parentId = null }) => {
     const {
         folders,
         selectedFolder,

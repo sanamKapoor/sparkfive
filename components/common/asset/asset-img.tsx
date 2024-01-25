@@ -32,7 +32,7 @@ const AssetImg = ({
         src={Assets.empty}
         data-drag="false"
         alt={"blank"}
-        className={`${styles[activeFilter]} ${styles['testing']}`}
+        className={`${styles[activeFilter]}`}
         style={
           loaded
             ? { display: "none" }
@@ -47,7 +47,7 @@ const AssetImg = ({
         data-drag="false"
         onClick={onClick}
         src={finalImg}
-        className={` ${styles['testing']} asset-img ${!isResize ? styles.asset : styles.asset__crop
+        className={`asset-img ${!isResize ? styles.asset : styles.asset__crop
           } ${opaque && styles.opaque} ${imgClass} ${styles[imgClass]} ${styles[activeFilter]
           }`}
         onLoad={() => setLoaded(true)}
