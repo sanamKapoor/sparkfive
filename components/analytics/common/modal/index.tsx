@@ -257,12 +257,13 @@ const Modal = ({ section, setShowModal, id }: {
                       <p>Last Session Date: <span>{DateFormatter.analyticsDateFormatter(modalHeaderData?.lastSession)}</span></p>}
                   </div>
                   <div className={`${styles["table-header-tabs"]}`}>
-                    <SearchButton label="Search" setSearch={handleSearch} />
+                    {/* <SearchButton label="Search" setSearch={handleSearch} /> */}
                     <Datefilter
                       filter={modalData.filter}
                       customDates={modalData.customDates}
                       setFilter={handleFilter}
                       setCustomDates={handleCustomDate}
+                      activeFilterFor=""
                     />
                     <Download setDownloadCSV={setDownloadCSV} />
                     <IconClickable
@@ -286,7 +287,7 @@ const Modal = ({ section, setShowModal, id }: {
                           <p>Last Session Date: <span>{DateFormatter.analyticsDateFormatter(modalHeaderData?.lastSession)}</span></p>}
                       </div>
                       <div>
-                        <SearchButton label="Search" setSearch={handleSearch} />
+                        {/* <SearchButton label="Search" setSearch={handleSearch} /> */}
                       </div>
                     </div>
                     <div className={`${styles["table-header-tabs"]}`}>
@@ -295,6 +296,8 @@ const Modal = ({ section, setShowModal, id }: {
                         customDates={modalData.customDates}
                         setFilter={handleFilter}
                         setCustomDates={handleCustomDate}
+                      activeFilterFor=""
+
                       />
                       <Download setDownloadCSV={setDownloadCSV} />
                       <IconClickable
@@ -333,13 +336,15 @@ const Modal = ({ section, setShowModal, id }: {
                         customDates={modalData.customDates}
                         setFilter={handleFilter}
                         setCustomDates={handleCustomDate}
+                      activeFilterFor=""
+
                       />
                       <Download setDownloadCSV={setDownloadCSV} />
                     </div>
                   </div>
 
                   <div style={{ marginTop: "22px" }}>
-                    <SearchButton label="Search" setSearch={handleSearch} />
+                    {/* <SearchButton label="Search" setSearch={handleSearch} /> */}
                   </div>
                 </div>
                 {(apiData && apiData?.length > 0 && sortBy) && <div className={`${styles["clear-sort"]}`}><Button text="Clear sorting" className={'clear-sort-btn'} onClick={handleClearSorting} /></div>}
@@ -357,6 +362,7 @@ const Modal = ({ section, setShowModal, id }: {
                   sortOrder={modalData.sortOrder}
                   setSortBy={(val: string) => setModalData(prev => ({ ...prev, sortBy: val }))}
                   setSortOrder={(val: boolean) => setModalData(prev => ({ ...prev, sortOrder: val }))}
+                  tableFor={activeModal}
                 />
                 {apiData && apiData?.length > 0 && totalRecords > limit &&
                   <Pagination

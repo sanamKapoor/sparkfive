@@ -1,18 +1,19 @@
-import React, { useEffect } from "react";
-import { analyticsActiveModal, analyticsLayoutSection } from "../../../../constants/analytics";
+import React from "react";
+import { TableBodySection } from "../../../../constants/analytics";
 import DateFormatter from "../../../../utils/date";
-import styles from "./table-data.module.css";
 import AssetIcon from "../../../common/asset/asset-icon";
+import styles from "./table-data.module.css";
 
-const TableBody = ({ columns, buttonColumns, buttonTexts, handleModals, activeSection, data }) => {
+const TableBody = ({ columns, buttonColumns, buttonTexts, handleModals, data, dashboardView, tableFor }) => {
+
   const renderTableData = () => {
-    switch (activeSection) {
-      case analyticsLayoutSection.ACCOUNT_USERS:
-        return <UserTableRows data={data} handleModals={handleModals} />;
-      case analyticsLayoutSection.ACCOUNT_ASSETS:
-        return <AssetTableRows data={data} handleModals={handleModals} />;
-      case analyticsActiveModal.USER_ACTIVITY:
-        return <UserActivityRows data={data} handleModals={handleModals} />;
+    switch (tableFor) {
+      case TableBodySection.USER:
+        return <UserTableRows data={data} handleModals={handleModals} dashboardView={dashboardView} />;
+      case TableBodySection.ASSET:
+        return <AssetTableRows data={data} handleModals={handleModals} dashboardView={dashboardView} />;
+      case TableBodySection.USER_ACTIVITY:
+        return <UserActivityRows data={data} handleModals={handleModals} dashboardView={dashboardView} />;
       default:
         return (
           <DefaultTableRows
@@ -31,7 +32,7 @@ const TableBody = ({ columns, buttonColumns, buttonTexts, handleModals, activeSe
 
 export default TableBody;
 
-export const DefaultTableRows = ({ data, columns, buttonColumns, buttonTexts, handleModals, activeSection }) => {
+export const DefaultTableRows = ({ data, columns, buttonColumns, buttonTexts, handleModals, activeSection }) => {  
   return (
     <tbody>
       {data.map((row, rowIndex) => (
@@ -65,7 +66,7 @@ export const DefaultTableRows = ({ data, columns, buttonColumns, buttonTexts, ha
   );
 };
 
-export const UserTableRows = ({ data, handleModals }) => {
+export const UserTableRows = ({ data, handleModals, dashboardView }) => {  
   return (
     <tbody>
       {data.map((row) => {
@@ -85,7 +86,7 @@ export const UserTableRows = ({ data, handleModals }) => {
                 </div>
               )}
             </td>
-            <td className={`${styles["user-role"]}`}>{row.roleId}</td>
+            {!dashboardView && <td className={`${styles["user-role"]}`}>{row.roleId}</td>}
             <td>
               <div style={{ display: "flex" }}>
                 <span className={`${styles["user-name"]}`}>
@@ -93,10 +94,9 @@ export const UserTableRows = ({ data, handleModals }) => {
                 </span>
               </div>
             </td>
-
             <td>{row.sessionCount}</td>
-            <td>{row.downloads}</td>
-            <td>{row.shares}</td>
+            {!dashboardView && <td>{row.downloads}</td>}
+            {!dashboardView && <td>{row.shares}</td>}
             <td>
               {row.name ? (
                 <button className={styles.actionButton} onClick={() => handleModals(row.userId)}>
@@ -113,7 +113,7 @@ export const UserTableRows = ({ data, handleModals }) => {
   );
 };
 
-export const AssetTableRows = ({ data, handleModals }) => {
+export const AssetTableRows = ({ data, handleModals, dashboardView }) => {
   return (
     <tbody>
       {data.map((row) => {
@@ -126,7 +126,7 @@ export const AssetTableRows = ({ data, handleModals }) => {
                     {row.thumbnail ? (
                       <img src={row.thumbnail} alt="user" className={styles.assetImage} />
                     ) : (
-                      <AssetIcon imgClass = {"analytics-icon"} extension={row.extension} />
+                      <AssetIcon imgClass={"analytics-icon"} extension={row.extension} />
                     )}
                   </div>
                   <span className={`${styles["user-name"]}`}>{row.name}</span>
@@ -150,7 +150,7 @@ export const AssetTableRows = ({ data, handleModals }) => {
   );
 };
 
-export const UserActivityRows = ({ data, handleModals }) => {
+export const UserActivityRows = ({ data, handleModals, dashboardView }) => {
   let activityTitle = "";
   let activityDate = "";
   return (
@@ -160,10 +160,10 @@ export const UserActivityRows = ({ data, handleModals }) => {
         activityDate = row.last_download
           ? row.last_download
           : row.last_viewed
-          ? row.last_viewed
-          : row.last_shared
-          ? row.last_shared
-          : "";
+            ? row.last_viewed
+            : row.last_shared
+              ? row.last_shared
+              : "";
         return (
           <tr key={row._id}>
             <td>
@@ -182,6 +182,43 @@ export const UserActivityRows = ({ data, handleModals }) => {
               </div>
             </td>
             <td>{row.assetId ? <button className={styles.actionButton}>View Link</button> : ""}</td>
+          </tr>
+        );
+      })}
+    </tbody>
+  );
+};
+
+export const AssetTableDashboardRows = ({ data, handleModals }) => {
+  return (
+    <tbody>
+      {data.map((row) => {
+        return (
+          <tr key={row.id}>
+            <td>
+              {row.name && (
+                <div className={styles["usernameWithImage"]}>
+                  <div className={`${styles["image-wrapper"]}`}>
+                    {row.thumbnail ? (
+                      <img src={row.thumbnail} alt="user" className={styles.assetImage} />
+                    ) : (
+                      <AssetIcon imgClass={"analytics-icon"} extension={row.extension} />
+                    )}
+                  </div>
+                  <span className={`${styles["user-name"]}`}>{row.name}</span>
+                </div>
+              )}
+            </td>
+            <td>{row.views}</td>
+            <td>{row.downloads}</td>
+            <td>{row.shares}</td>
+            <td>
+              {row._id && (
+                <button className={styles.actionButton} onClick={() => handleModals(row._id)}>
+                  View chart
+                </button>
+              )}
+            </td>
           </tr>
         );
       })}

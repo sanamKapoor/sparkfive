@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { analyticsLayoutSection } from "../../../../constants/analytics";
 import NoData from "../no-data";
 import styles from "./table-data.module.css";
 import TableHeader from "./table-header";
 import TableBody from "./table-body";
 import Modal from "../modal";
+import { AnalyticsContext } from "../../../../context";
 
 export default function TableData({
   columns,
@@ -19,10 +20,12 @@ export default function TableData({
   sortBy,
   sortOrder,
   setSortBy,
-  setSortOrder
+  setSortOrder,
+  tableFor
 }) {
   const [activeId, setActiveId] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const { dashboardView } = useContext(AnalyticsContext);
 
   const handleModals = async (id: string) => {
     setShowModal(true);
@@ -42,14 +45,15 @@ export default function TableData({
             setSortBy={setSortBy}
             setSortOrder={setSortOrder}
           />
-          {data && data.length > 0 &&
+          {data?.length > 0 &&
             <TableBody
               columns={columns}
               buttonColumns={buttonColumns}
               buttonTexts={buttonTexts}
               handleModals={handleModals}
-              activeSection={activeSection}
               data={data}
+              dashboardView={dashboardView}
+              tableFor={tableFor}
             />
           }
         </table>

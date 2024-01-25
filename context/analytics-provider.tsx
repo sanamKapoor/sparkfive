@@ -2,6 +2,7 @@ import { useState } from "react";
 import { AnalyticsContext } from "../context";
 import { analyticsLayoutSection } from "../constants/analytics";
 import { calculateBeginDate } from "../config/data/filter";
+import { DashboardSectionI } from "../interfaces/analytics";
 
 export default ({ children }) => {
   const [activeSection, setActiveSection] = useState(analyticsLayoutSection.DASHBOARD);
@@ -10,7 +11,7 @@ export default ({ children }) => {
     endDate: new Date(),
     beginDate: calculateBeginDate(7, 1)
   });
-  const [customDates, setCustomDates] = useState('');
+  const [customDates, setCustomDates] = useState(false);
   const [sortBy, setSortBy] = useState('');
   const [sortOrder, setSortOrder] = useState(true);
   const [page, setPage] = useState(1);
@@ -25,14 +26,28 @@ export default ({ children }) => {
   const [downloadCSV, setDownloadCSV] = useState(false);
   const [tableRows, setTableRows] = useState(15);
 
+  // Dashboard States
+  const [dashboardView, setDashboardView] = useState(false);
+  const [dashboardData, setDashboardData] = useState({});
+  const [dashboardSections, setDashboardSections] = useState<DashboardSectionI[]>([]);
+
+  const [filterFor, setFilterFor] = useState([]);
+  const [customDatesFor, setCustomDatesFor] = useState([]);
+  const [sortFor, setSortFor] = useState([]);
+  const [errorFor, setErrorFor] = useState([]);
+  const [loadingFor, setLoadingFor] = useState([]);
+  const [tableLoadingFor, setTableLoadingFor] = useState([]);
+
   const analyticsValue = {
     apiEndpoint,
     activeSection,
     search,
     filter,
+    filterFor,
     customDates,
     sortBy,
     sortOrder,
+    sortFor,
     page,
     limit,
     error,
@@ -43,6 +58,12 @@ export default ({ children }) => {
     downloadCSV,
     initialRender,
     tableRows,
+    dashboardView,
+    dashboardData,
+    customDatesFor,
+    errorFor,
+    loadingFor,
+    tableLoadingFor,
     setApiEndpoint,
     setActiveSection,
     setSearch,
@@ -52,6 +73,8 @@ export default ({ children }) => {
     setSortOrder,
     setPage,
     setLimit,
+    setSortFor,
+    setFilterFor,
     setError,
     setData,
     setLoading,
@@ -60,6 +83,12 @@ export default ({ children }) => {
     setDownloadCSV,
     setInitialRender,
     setTableRows,
+    setDashboardView,
+    setDashboardData,
+    setCustomDatesFor,
+    setErrorFor,
+    setLoadingFor,
+    setTableLoadingFor,
   };
 
   return (

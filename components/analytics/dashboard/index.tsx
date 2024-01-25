@@ -1,12 +1,14 @@
-import React from "react";
-import ActivityFeedTable from "../activity";
+import React, { useContext } from "react";
+import { DashboardSections } from "../../../constants/analytics";
+import { AnalyticsContext } from "../../../context";
 import AssetTable from "../asset";
 import styles from "../index.module.css";
 import UserTable from "../insight-table";
 import AssetChart from "../insights-chart";
-import ShareLinkPage from "../shared-links";
 
 function Dashboard() {
+  const { dashboardData } = useContext(AnalyticsContext);
+
   return (
     <section>
       <div className={styles.outerLayout}>
@@ -15,19 +17,18 @@ function Dashboard() {
             <AssetChart />
           </div>
           <div>
-            <AssetTable dashboardView={true} />
+            <AssetTable dashboardView={true} dashboardData={dashboardData[DashboardSections.ASSET]} />
           </div>
           <div>
-            <UserTable dashboardView={true} />
+            <UserTable dashboardView={true} dashboardData={dashboardData[DashboardSections.USER]} />
           </div>
-          <div>
+          {/* <div>
             <ShareLinkPage dashboardView={true} />
           </div>
           <div>
             <ActivityFeedTable />
-          </div>
-        
-         </div>
+          </div> */}
+        </div>
       </div>
     </section>
   );

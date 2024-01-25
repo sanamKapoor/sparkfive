@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import DayPickerInput from "react-day-picker/DayPickerInput";
 
 import styles from "./date-filter.module.css";
@@ -8,10 +8,12 @@ import { calculateBeginDate } from "../../../../config/data/filter";
 import DateUtils from "../../../../utils/date";
 import dateStyles from "../../../common/filter/date-uploaded.module.css";
 import IconClickable from "../../../common/buttons/icon-clickable";
+import { AnalyticsContext } from '../../../../context';
 
 export default function DateFilter({
-  filter, setFilter, customDates, setCustomDates
+  filter, setFilter, customDates, setCustomDates, activeFilterFor
 }) {
+  const { dashboardView, filterFor, setFilterFor, customDatesFor, setCustomDatesFor } = useContext(AnalyticsContext);
   const [activeFilter, setActiveFilter] = useState("7d");
   const [activeDays, setActiveDays] = useState(7);
   const [showCustomRange, setShowCustomRange] = useState(false);
@@ -23,13 +25,36 @@ export default function DateFilter({
 
   const handleFilterClick = (filter, days) => {
     setShowCustomRange(false);
-    setCustomDates(false);
     setActiveFilter(filter);
+    if (dashboardView) {
+      const others = customDatesFor.filter(d => d.for !== activeFilterFor)
+      setCustomDatesFor([
+        ...others,
+        {
+          for: activeFilterFor,
+          customeDates: false
+        }
+      ])
+    } else {
+      setCustomDates(false);
+    }
     if (days !== activeDays) {
-      setFilter({
+      const dateObj = {
         endDate: new Date(),
         beginDate: calculateBeginDate(days, 1)
-      })
+      };
+      if (dashboardView) {
+        const others = filterFor.filter(d => d.for !== activeFilterFor)
+        setFilterFor([
+          ...others,
+          {
+            for: activeFilterFor,
+            ...dateObj
+          }
+        ])
+      } else {
+        setFilter(dateObj)
+      }
     }
     setActiveDays(days);
   };
@@ -68,8 +93,30 @@ export default function DateFilter({
       return;
     }
     setActiveDays(DateUtils.daysBetweenDates(customDateVal.beginDate, customDateVal.endDate));
-    setFilter(customDateVal);
-    setCustomDates(true);
+    if (dashboardView) {
+      const otherFilters = filterFor.filter(d => d.for !== activeFilterFor)
+      setFilterFor(([
+        ...otherFilters,
+        {
+          for: activeFilterFor,
+          ...customDateVal
+        }
+      ]))
+
+      const otherCustomFilters = customDatesFor.filter(d => d.for !== activeFilterFor)
+      setCustomDatesFor([
+        ...otherCustomFilters,
+        {
+          for: activeFilterFor,
+          customeDates: true
+        }
+      ])
+    } else {
+      setFilter(customDateVal);
+      setCustomDates(true);
+    }
+
+
   }
 
   useEffect(() => {
@@ -149,49 +196,49 @@ export default function DateFilter({
       </section>
 
       {showCustomRange && (
-          <div className={`${styles["date-picker-wrapper"]}`}>
-            <div className={`${styles["date-picker-top"]}`}>
-              <div className={`${styles["left-side"]}`}>Date Range</div>
-              <div className={`${styles["right-side"]}`}>
-                <IconClickable src={insights.insightClose} additionalClass={styles["close-icon"]} onClick={handleCustomDateSelector} />
-              </div>
-            </div>
-            <div className={`${styles["date-filters"]}`}>
-              <div className={styles.dummy}>
-                <label className={styles.label} htmlFor="">From Date</label>
-                <DayPickerInput
-                  onDayChange={(day) => handleStartDay(day)}
-                  value={customDateVal.beginDate !== null ? DateUtils.parseDateToStringForAnalytics(customDateVal.beginDate) : ''}
-                  dayPickerProps={{
-                    disabledDays: {
-                      before: calculateBeginDate(365, 1),
-                      after: customDateVal.endDate ? new Date(customDateVal.endDate) : new Date(),
-                    }
-                  }}
-                />
-              </div>
-              <div className={styles.dummy}>
-                <label className={styles.label} htmlFor="">To Date</label>
-                <DayPickerInput
-                  onDayChange={(day) => handleEndDay(day)}
-                  value={customDateVal.endDate !== null ? DateUtils.parseDateToStringForAnalytics(customDateVal.endDate) : ''}
-                  dayPickerProps={{
-                    className: styles.calendar,
-                    disabledDays: {
-                      before: customDateVal.beginDate ? new Date(customDateVal.beginDate) : calculateBeginDate(365, 1),
-                      after: new Date(),
-                    },
-                  }}
-                />
-              </div>
-            </div>
-            {dateError && <small>{dateError}</small>}
-            <div className={`${styles["datepicker-buttons-outer"]}`}>
-              <Button text={"Apply"} className={(!customDateVal.beginDate || !customDateVal.endDate) ? "apply-btn-disable" : "apply-btn"} onClick={handleApplyCustomDate} disabled={!customDateVal.beginDate || !customDateVal.endDate}></Button>
-              <Button text={"Cancel"} className={"cancel-btn"} onClick={handleCustomDateSelector}></Button>
+        <div className={`${styles["date-picker-wrapper"]}`}>
+          <div className={`${styles["date-picker-top"]}`}>
+            <div className={`${styles["left-side"]}`}>Date Range</div>
+            <div className={`${styles["right-side"]}`}>
+              <IconClickable src={insights.insightClose} additionalClass={styles["close-icon"]} onClick={handleCustomDateSelector} />
             </div>
           </div>
-        )}
+          <div className={`${styles["date-filters"]}`}>
+            <div className={styles.dummy}>
+              <label className={styles.label} htmlFor="">From Date</label>
+              <DayPickerInput
+                onDayChange={(day) => handleStartDay(day)}
+                value={customDateVal.beginDate !== null ? DateUtils.parseDateToStringForAnalytics(customDateVal.beginDate) : ''}
+                dayPickerProps={{
+                  disabledDays: {
+                    before: calculateBeginDate(365, 1),
+                    after: customDateVal.endDate ? new Date(customDateVal.endDate) : new Date(),
+                  }
+                }}
+              />
+            </div>
+            <div className={styles.dummy}>
+              <label className={styles.label} htmlFor="">To Date</label>
+              <DayPickerInput
+                onDayChange={(day) => handleEndDay(day)}
+                value={customDateVal.endDate !== null ? DateUtils.parseDateToStringForAnalytics(customDateVal.endDate) : ''}
+                dayPickerProps={{
+                  className: styles.calendar,
+                  disabledDays: {
+                    before: customDateVal.beginDate ? new Date(customDateVal.beginDate) : calculateBeginDate(365, 1),
+                    after: new Date(),
+                  },
+                }}
+              />
+            </div>
+          </div>
+          {dateError && <small>{dateError}</small>}
+          <div className={`${styles["datepicker-buttons-outer"]}`}>
+            <Button text={"Apply"} className={(!customDateVal.beginDate || !customDateVal.endDate) ? "apply-btn-disable" : "apply-btn"} onClick={handleApplyCustomDate} disabled={!customDateVal.beginDate || !customDateVal.endDate}></Button>
+            <Button text={"Cancel"} className={"cancel-btn"} onClick={handleCustomDateSelector}></Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

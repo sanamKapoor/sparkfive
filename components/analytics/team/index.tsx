@@ -6,7 +6,7 @@ const Team = () => {
   return (
     <div className={styles.teamContainer}>
         <h3>Coming soon...</h3>
-        {/* <ChartComp /> */}
+        <ChartComp />
     </div>
   )
 }

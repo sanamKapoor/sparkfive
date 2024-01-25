@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { analyticsLayoutSection } from "../../../constants/analytics";
+import { DashboardSections, analyticsLayoutSection } from "../../../constants/analytics";
 import { AnalyticsContext } from "../../../context";
 import { assetarrowColumns, assetbuttonColumns, assetbuttonTexts, columns } from "../../../data/analytics";
 import Loader from "../../common/UI/Loader/loader";
@@ -13,7 +13,7 @@ import TableData from "../common/table";
 import TableHeading from "../insight-table/table-heading";
 import styles from "./asset.module.css";
 
-function Asset({ dashboardView = false }: { dashboardView: boolean }) {
+function Asset({ dashboardView = false, dashboardData }: { dashboardView: boolean, dashboardData?: Record<string, any> }) {
   const {
     activeSection,
     totalRecords,
@@ -37,10 +37,14 @@ function Asset({ dashboardView = false }: { dashboardView: boolean }) {
     sortBy
   } = useContext(AnalyticsContext);
   const [emptyRows, setEmptyRows] = useState([]);
+  const [totalAssets, setTotalAssets] = useState(0);
+  const [totalAssetsData, setTotalAssetsData] = useState([]);
 
   useEffect(() => {
     if (totalRecords > 0 && data && data.length > 0) {
       setEmptyRows(Array.from({ length: Math.max(tableRows - (data ? data.length : 0), 0) }, (_, index) => ({})))
+      setTotalAssets(totalRecords)
+      setTotalAssetsData(data)
     } else {
       setEmptyRows([])
     }
@@ -50,6 +54,13 @@ function Asset({ dashboardView = false }: { dashboardView: boolean }) {
     setSortBy('');
     setSortOrder(true);
   }
+
+  useEffect(() => {
+    if (dashboardData) {
+      setTotalAssetsData(dashboardData.data);
+      setTotalAssets(dashboardData.totalRecords);
+    }
+  }, [dashboardData])
 
   return (
     <section className={`${styles["outer-wrapper"]}`}>
@@ -72,6 +83,7 @@ function Asset({ dashboardView = false }: { dashboardView: boolean }) {
                     setFilter={setFilter}
                     customDates={customDates}
                     setCustomDates={setCustomDates}
+                    activeFilterFor={DashboardSections.ASSET}
                   />
                   {!dashboardView && <Download setDownloadCSV={setDownloadCSV} />}
                 </div>
@@ -98,6 +110,7 @@ function Asset({ dashboardView = false }: { dashboardView: boolean }) {
                       setFilter={setFilter}
                       customDates={customDates}
                       setCustomDates={setCustomDates}
+                      activeFilterFor={DashboardSections.ASSET}
                     />
                     {!dashboardView && <Download setDownloadCSV={setDownloadCSV} />}
                   </div>
@@ -118,6 +131,8 @@ function Asset({ dashboardView = false }: { dashboardView: boolean }) {
                       setFilter={setFilter}
                       customDates={customDates}
                       setCustomDates={setCustomDates}
+                      activeFilterFor={DashboardSections.ASSET}
+
                     />
                     <Download setDownloadCSV={setDownloadCSV} />
                   </div>
@@ -127,26 +142,28 @@ function Asset({ dashboardView = false }: { dashboardView: boolean }) {
                   <SearchButton label="Search Asset" setSearch={setSearch} />
                 </div>
               </div>
-              {(!dashboardView && data && data?.length > 0 && sortBy) && <div className={`${styles["clear-sort"]}`}><Button text="Clear sorting" className={'clear-sort-btn'} onClick={handleClearSorting} /></div>}
+              {(!dashboardView && totalAssetsData && totalAssetsData?.length > 0 && sortBy) && <div className={`${styles["clear-sort"]}`}><Button text="Clear sorting" className={'clear-sort-btn'} onClick={handleClearSorting} /></div>}
               <TableData
                 columns={columns}
-                data={dashboardView ? data : ((data && emptyRows.length > 0) ? [...data, ...emptyRows] : null)}
-                apiData={data}
+                data={dashboardView ? totalAssetsData : ((totalAssetsData && emptyRows.length > 0) ? [...totalAssetsData, ...emptyRows] : null)}
+                apiData={totalAssetsData}
                 arrowColumns={assetarrowColumns}
                 buttonColumns={assetbuttonColumns}
                 buttonTexts={assetbuttonTexts}
                 activeSection={activeSection}
                 tableLoading={tableLoading}
-                totalRecords={totalRecords}
+                totalRecords={totalAssets}
                 sortBy={sortBy}
                 sortOrder={sortOrder}
                 setSortBy={setSortBy}
                 setSortOrder={setSortOrder}
+                tableFor={DashboardSections.ASSET}
               />
-              {(!dashboardView && activeSection === analyticsLayoutSection.ACCOUNT_ASSETS && data && data?.length > 0 && totalRecords > limit) && <Pagination
+              {(!dashboardView && activeSection === analyticsLayoutSection.ACCOUNT_ASSETS && totalAssetsData && totalAssetsData?.length > 0 && totalAssets > limit) && 
+              <Pagination
                 page={page}
                 limit={limit}
-                totalRecords={totalRecords}
+                totalRecords={totalAssets}
                 setPage={setPage}
               />}
             </div>

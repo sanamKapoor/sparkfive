@@ -1,8 +1,8 @@
 import { saveAs } from "file-saver";
 import { useContext, useEffect } from "react";
 import { calculateBeginDate } from "../../../config/data/filter";
-import { analyticsLayoutSection } from "../../../constants/analytics";
-import { SOMETHING_WENT_WRONG, USERS_DOWNLOADED } from "../../../constants/messages";
+import { DashboardSections, analyticsLayoutSection } from "../../../constants/analytics";
+import { SOMETHING_WENT_WRONG } from "../../../constants/messages";
 import { AnalyticsContext } from "../../../context";
 import AnalyticsApi from "../../../server-api/analytics";
 import { getCSVFileName } from "../../../utils/analytics";
@@ -12,7 +12,7 @@ const AnalyticsHOC = (Component) => {
     return (props) => {
 
         const {
-            page, limit, search, sortBy, sortOrder, filter, downloadCSV, apiEndpoint, initialRender, activeSection,
+            page, limit, search, sortBy, sortOrder, filter, filterFor, sortFor, downloadCSV, apiEndpoint, initialRender, activeSection, dashboardView, dashboardData,
             setApiEndpoint,
             setSearch,
             setFilter,
@@ -26,10 +26,18 @@ const AnalyticsHOC = (Component) => {
             setTotalRecords,
             setDownloadCSV,
             setInitialRender,
+            setDashboardView,
+            setDashboardData,
+            setFilterFor,
+            setSortFor,
+            setCustomDatesFor,
+            setErrorFor,
+            setLoadingFor,
+            setTableLoadingFor
         } = useContext(AnalyticsContext);
 
         const analyticsApiHandler = async (defaultPage?: number) => {
-            if(!apiEndpoint) return;
+            if (!apiEndpoint && !dashboardView) return;
             try {
                 if (initialRender) {
                     setLoading(true);
@@ -46,27 +54,56 @@ const AnalyticsHOC = (Component) => {
                     setTableLoading(false);
                 }
 
-                const { data } = await AnalyticsApi.getAnalyticsData(apiEndpoint, {
-                    page: defaultPage ? defaultPage : page,
-                    limit,
-                    search,
-                    sortBy,
-                    sortOrder,
-                    filter,
-                    downloadCSV
-                });
 
-                if (downloadCSV) {
-                    const fileData = new Blob([data], {
-                        type: "text/csv;charset=utf-8",
+                if (dashboardView) {
+                    
+                    for (const key in DashboardSections) {
+
+                        let endpoint = DashboardSections[key]  
+                        const sort = sortFor.find(e => e.for === endpoint) 
+                        const filter = filterFor.find(e => e.for === endpoint)    
+                                                
+                        const { data } = await AnalyticsApi.getAnalyticsData(endpoint, {
+                            page: 1,
+                            limit: 6,
+                            sortBy: sort?.sortBy || '',
+                            sortOrder: sort?.sortOrder || true,
+                            filter: {
+                                endDate: filter?.endDate || new Date(),
+                                beginDate: filter?.beginDate || calculateBeginDate(7, 1)
+                            },
+                        });
+
+                        if (!dashboardData[endpoint]) {
+                            setDashboardData(prev => ({
+                                ...prev,
+                                [endpoint]: data
+                            }))
+                        }
+                    }
+                } else {
+                    const { data } = await AnalyticsApi.getAnalyticsData(apiEndpoint, {
+                        page: defaultPage ? defaultPage : page,
+                        limit,
+                        search,
+                        sortBy,
+                        sortOrder,
+                        filter,
+                        downloadCSV
                     });
 
-                    const { fileName, successMsg } = getCSVFileName(activeSection);
-                    saveAs(fileData, fileName);
-                    toastUtils.success(successMsg);
-                } else {
-                    setTotalRecords(data.totalRecords)
-                    setData(data.data);
+                    if (downloadCSV) {
+                        const fileData = new Blob([data], {
+                            type: "text/csv;charset=utf-8",
+                        });
+
+                        const { fileName, successMsg } = getCSVFileName(activeSection);
+                        saveAs(fileData, fileName);
+                        toastUtils.success(successMsg);
+                    } else {
+                        setTotalRecords(data.totalRecords)
+                        setData(data.data);
+                    }
                 }
 
                 initialRender ? setLoading(false) : setTableLoading(false)
@@ -98,16 +135,24 @@ const AnalyticsHOC = (Component) => {
             }
         }, [limit, search, sortBy, sortOrder, filter])
 
-        useEffect(() => {            
+        useEffect(() => {
             if (!initialRender && typeof page === 'number') {
                 analyticsApiHandler();
             }
         }, [page])
 
-        useEffect(() => {            
-            if(initialRender) analyticsApiHandler();
+        useEffect(() => {
+            if (initialRender) analyticsApiHandler();
             setInitialRender(false);
         }, [apiEndpoint, initialRender])
+
+        useEffect(() => {
+            analyticsApiHandler()
+        }, [dashboardView])
+
+        useEffect(() => {
+            console.log(filterFor);
+        }, [filterFor])
 
         const handleApiEndpoint = async () => {
             switch (activeSection) {
@@ -122,8 +167,70 @@ const AnalyticsHOC = (Component) => {
             }
         }
 
-        useEffect(() => {            
+        const handleDashboardStates = () => {
+            if (activeSection === analyticsLayoutSection.DASHBOARD) {
+                setDashboardView(true)
+                for (const section in DashboardSections) {
+                    setFilterFor(prev => ([
+                        ...prev,
+                        {
+                            for: DashboardSections[section],
+                            endDate: new Date(),
+                            beginDate: calculateBeginDate(7, 1)
+                        }
+                    ]))
+                    setSortFor(prev => ([
+                        ...prev,
+                        {
+                            for: DashboardSections[section],
+                            sortBy: '',
+                            sortOrder: true
+                        }
+                    ]))
+                    setCustomDatesFor(prev => ([
+                        ...prev,
+                        {
+                            for: DashboardSections[section],
+                            customeDates: false
+                        }
+                    ]))
+                    setErrorFor(prev => ([
+                        ...prev,
+                        {
+                            for: DashboardSections[section],
+                            error: ''
+                        }
+                    ]))
+                    setLoadingFor(prev => ([
+                        ...prev,
+                        {
+                            for: DashboardSections[section],
+                            loading: false
+                        }
+                    ]))
+                    setTableLoadingFor(prev => ([
+                        ...prev,
+                        {
+                            for: DashboardSections[section],
+                            tableLoading: false
+                        }
+                    ]))
+                }
+            } else {
+                setDashboardView(false)
+                setDashboardData([])
+                setFilterFor([])
+                setCustomDatesFor([])
+                setSortFor([])
+                setErrorFor([])
+                setLoadingFor([])
+                setTableLoadingFor([])
+            }
+        }
+
+        useEffect(() => {
             handleApiEndpoint();
+            handleDashboardStates();
             setInitialRender(true);
             setSearch('');
             setPage(1);

@@ -74,7 +74,7 @@ export default function InsightsSideNav() {
   const { activeSection, setActiveSection } = useContext(AnalyticsContext);
 
   const handleItemClick = (section) => {
-    setActiveSection(section);
+    setActiveSection(section);    
   };
 
   return (

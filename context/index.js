@@ -1,5 +1,6 @@
 import { createContext } from "react";
 import { calculateBeginDate } from "../config/data/filter";
+import { analyticsLayoutSection } from "../constants/analytics";
 
 export const LoadingContext = createContext({
   isLoading: false,
@@ -7,8 +8,8 @@ export const LoadingContext = createContext({
 });
 
 export const AnalyticsContext = createContext({
-  apiEndpoint: "dashboard",
-  activeSection: "",
+  apiEndpoint: "",
+  activeSection: analyticsLayoutSection.DASHBOARD,
   search: '',
   filter: {
     endDate: new Date(),
@@ -27,6 +28,14 @@ export const AnalyticsContext = createContext({
   downloadCSV: false,
   initialRender: true,
   tableRows: 15,
+  dashboardView: false,
+  dashboardData: {},
+  sortFor: [],
+  filterFor: [],
+  customDatesFor: [],
+  errorFor: [],
+  loadingFor: [],
+  tableLoadingFor: [],
   setActiveSection: (value) => {},
   setApiEndpoint: (value) => {},
   setSearch: (value) => {},
@@ -44,6 +53,14 @@ export const AnalyticsContext = createContext({
   setDownloadCSV: (value) => {},
   setInitialRender: (value) => {},
   setTableRows: (value) => {},
+  setDashboardView: (value) => {},
+  setSortFor: (value) => {},
+  setFilterFor: (value) => {},
+  setDashboardData: (value) => {},
+  setCustomDatesFor: (value) => {},
+  setErrorFor: (value) => {},
+  setLoadingFor: (value) => {},
+  setTableLoadingFor: (value) => {},
 });
 
 export const UserContext = createContext({

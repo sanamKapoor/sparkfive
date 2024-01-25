@@ -73,11 +73,17 @@ export const analyticsLayoutSection = {
 }
 
 export const analyticsActiveModal = {
-    USER_ACTIVITY: 'USER_ACTIVITY',
-    ASSET_CHART: 'ASSET_CHART'
+    USER_ACTIVITY: 'activity',
+    ASSET_CHART: 'chart'
 }
 
-export const DashboardApiEndpoints = [
-    'users',
-    'assets'
-]
+export const DashboardSections = {
+    USER: 'users',
+    ASSET: 'assets'
+}
+
+export const TableBodySection = {
+    USER_ACTIVITY: 'activity',
+    USER: 'users',
+    ASSET: 'assets'
+}
