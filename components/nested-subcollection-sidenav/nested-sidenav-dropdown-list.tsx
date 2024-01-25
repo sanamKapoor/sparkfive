@@ -213,7 +213,7 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
     parentName: string,
     folder?: any,
   ) => {
-    viewFolder(recordId, !isParentCollection, parentId, parentName);
+    viewFolder(recordId, isParentCollection, parentId, parentName);
     setCurrentFolder(folder);
     if (window.innerWidth < 767) {
       setSidebarOpen(false);
