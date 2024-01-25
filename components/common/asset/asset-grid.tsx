@@ -83,7 +83,11 @@ const AssetGrid = ({
     sidebarOpen,
     setFolders,
     selectAllFolders,
-    selectAllAssets
+    selectAllAssets,
+    setSelectedAllSubFoldersAndAssets,
+    setSelectedAllSubAssets,
+    setSubFoldersViewList,
+    subFoldersViewList: { results, next, total }
   } = useContext(AssetContext);
   const { advancedConfig, hasPermission, user } = useContext(UserContext);
   const { activeSortFilter } = useContext(FilterContext);
@@ -92,8 +96,10 @@ const AssetGrid = ({
   // Ref values
   const ref = useRef(null);
   const selectionArea = useRef(null);
-  const selectableItems = useRef<Box[]>([]);
+  const selectableItemsRef = useRef<Box[]>([]);
   const elementsContainerRef = useRef<HTMLDivElement | null>(null);
+  const elementsAssetContainerRef = useRef<HTMLDivElement | null>(null);
+  const elementsFolderContainerRef = useRef<HTMLDivElement | null>(null);
 
   // Drag selection states
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -383,12 +389,30 @@ const AssetGrid = ({
       setFocusedItem(id);
     }
   };
-
   //------Drag-Select-area-------Start======//
   // Set the co-ordinates for the selected area of dragged area 
   const onSelectionChange = (box) => {
-    if (elementsContainerRef.current) {
+    if (elementsContainerRef.current && mode !== "SubCollectionView") {
       const containerRect = elementsContainerRef.current.getBoundingClientRect();
+      const scrollAwareBox = {
+        ...box,
+        top: box.top - containerRect.top,
+        left: box.left - containerRect.left
+      };
+      selectionArea.current = scrollAwareBox
+    } else if (elementsFolderContainerRef.current
+      && subFoldersAssetsViewList.results.length === 0
+    ) {
+      const containerRect = elementsFolderContainerRef.current.getBoundingClientRect();
+      const scrollAwareBox = {
+        ...box,
+        top: box.top - containerRect.top,
+        left: box.left - containerRect.left
+      };
+      selectionArea.current = scrollAwareBox
+    }
+    else if (elementsAssetContainerRef.current && subFoldersAssetsViewList.results.length > 0) {
+      const containerRect = elementsAssetContainerRef.current.getBoundingClientRect();
       const scrollAwareBox = {
         ...box,
         top: box.top - containerRect.top,
@@ -427,16 +451,54 @@ const AssetGrid = ({
       });
       selectAllFolders(false);
       setFolders(updatedFolders);
-    };
+    }
+    else if (mode === "SubCollectionView") {
+      if (results.length !== 0 && subFoldersAssetsViewList.results.length === 0) {
+        setSelectedAllSubFoldersAndAssets(false)
+        setSelectedAllSubAssets(false)
+        const updatedFolders = results.map((folder, index) => {
+          // Check if the object's ID is in the idsToFind array
+          if (idsToFind.includes(folder.id)) {
+            return {
+              ...folder,
+              isSelected: true
+            };
+          }
+          return folder; // Return the original object for non-matching IDs
+        });
+        setSubFoldersViewList({
+          results: updatedFolders, next, total
+        });
+      } else if (subFoldersAssetsViewList.results.length > 0) {
+        setSelectedAllSubFoldersAndAssets(false)
+        setSelectedAllSubAssets(false)
+
+        const updatedAssets = subFoldersAssetsViewList.results.map((asset, index) => {
+          if (idsToFind.includes(asset.asset.id)) {
+            return {
+              ...asset,
+              isSelected: true
+            };
+          }
+          return asset; // Return the original object for non-matching IDs
+        });
+        setSubFoldersAssetsViewList({ ...subFoldersAssetsViewList, results: updatedAssets });
+      }
+    }
   }
   //library initialization
   const { DragSelection } = useSelectionContainer({
     eventsElement: document.getElementById("__next"),
     onSelectionChange,
+    shouldStartSelecting: (target) => {
+      const dragValue = target.dataset.drag
+      const isDraggable = dragValue === "false" ? false : true; // Adjust the condition based on your needs
+      return isDraggable;
+    },
     onSelectionStart: () => { },
-    onSelectionEnd: (box) => {
+    onSelectionEnd: () => {
       const indexesToSelect: string[] = [];
-      selectableItems.current.forEach((item, index) => {
+      selectableItemsRef.current.forEach((item) => {
         if (boxesIntersect(selectionArea.current, item)) {
           indexesToSelect.push(item.id);
         }
@@ -451,24 +513,24 @@ const AssetGrid = ({
         borderRadius: 4,
         backgroundColor: "pink",
         opacity: 0.5,
+        zIndex: 9999
       },
     },
-    isEnabled: true,
+    isEnabled: true
   });
-
 
   //Handle the selctable Item for the drag selct area at initial load and load more functionality 
   useEffect(() => {
-    if (elementsContainerRef.current) {
+    if (elementsContainerRef.current && mode !== "SubCollectionView") {
       if (sortedFolders?.length) {
         const containerRect = elementsContainerRef.current.getBoundingClientRect();
         const liElements = elementsContainerRef.current.querySelectorAll('li');
-        selectableItems.current = new Array();
+        selectableItemsRef.current = new Array();
         Array.from(liElements).forEach((item) => {
           const { left, top, width, height } = item.getBoundingClientRect();
           const adjustedTop = top - containerRect.top;
           const adjustedLeft = left - containerRect.left;
-          if (item.id !== "") selectableItems.current.push({
+          if (item.id !== "") selectableItemsRef.current.push({
             left: adjustedLeft,
             top: adjustedTop,
             width,
@@ -480,12 +542,12 @@ const AssetGrid = ({
       } else if (sortedAssets?.length) {
         const containerRect = elementsContainerRef.current.getBoundingClientRect();
         const liElements = elementsContainerRef.current.querySelectorAll('li');
-        selectableItems.current = new Array();
+        selectableItemsRef.current = new Array();
         Array.from(liElements).forEach((item) => {
           const { left, top, width, height } = item.getBoundingClientRect();
           const adjustedTop = top - containerRect.top;
           const adjustedLeft = left - containerRect.left;
-          if (item.id !== "") selectableItems.current.push({
+          if (item.id !== "") selectableItemsRef.current.push({
             left: adjustedLeft,
             top: adjustedTop,
             width,
@@ -496,10 +558,8 @@ const AssetGrid = ({
         });
       }
     }
-
   }, [sortedFolders?.length, activeView, sortedAssets?.length]);
   //------Drag-Select-area-------End======//
-
 
   //Handle the dynamically stopage of filters at top of page position on scroll down  
   const filterRef = useRef<HTMLDivElement>(null);
@@ -523,7 +583,17 @@ const AssetGrid = ({
       return {};
     }
   }, [render, mode]);
-
+  const onDragStart = (evt) => {
+    let element = evt.currentTarget;
+    console.log("🚀 ~ element:", element)
+    // element.classList.add("dragged");
+    // evt.dataTransfer.setData("text/plain", evt.currentTarget.id);
+    // evt.dataTransfer.effectAllowed = "move";
+  };
+  const onDragEnd = (evt) => {
+    console.log("🚀 ~ onDragEnd ~ evt:", evt)
+    evt.currentTarget.classList.remove("dragged");
+  };
   return (
     <>
       <div
@@ -560,7 +630,7 @@ const AssetGrid = ({
             setActiveSearchOverlay={setActiveSearchOverlay}
           />
         )}
-        {mode !== "SubCollectionView" && <DragSelection />}
+        <DragSelection />
         {
           <div className={`${styles["collectionAssets"]} ${styles["w-100"]} `} >
             {
@@ -603,6 +673,9 @@ const AssetGrid = ({
                     refreshVersion={refreshVersion}
                     loadMoreAssets={getSubCollectionsAssetData}
                     onCloseDetailOverlay={onCloseDetailOverlay}
+                    elementsFolderContainerRef={elementsFolderContainerRef}
+                    elementsAssetContainerRef={elementsAssetContainerRef}
+                    selectableItemsRef={selectableItemsRef}
                   />
                 )}
                 {mode === "assets" && assets?.length > 0 && (
@@ -661,16 +734,18 @@ const AssetGrid = ({
                     {activeView === "list" && (
                       <FolderTableHeader activeView={activeView} setSortAttribute={setSortFolderAttribute} />
                     )}
-
                     {sortedFolders.map((folder, index) => {
                       return (
                         <li
+                          className={`${styles["grid-item"]} ${styles["testing"]} `}
                           id={folder.id}
-                          className={styles["grid-item"]}
                           key={folder.id || index}
                           onClick={(e) => handleFocusChange(e, folder.id)}
                           ref={ref}
                           style={{ width: `$${widthCard} px` }}
+                          draggable
+                          onDragStart={(e) => onDragStart(e)}
+                          onDragEnd={(e) => onDragEnd(e)}
                         >
                           <FolderGridItem
                             {...folder}

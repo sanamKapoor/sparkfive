@@ -5,6 +5,9 @@
     object-fit: contain;
     aspect-ratio: 1 / 1;
 }
+.testing{
+    
+}
 
 .asset__crop {
     transition: opacity 0.5s ease;

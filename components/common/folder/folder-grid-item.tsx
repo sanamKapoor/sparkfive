@@ -272,18 +272,19 @@ const FolderGridItem = ({
   };
 
   return (
-    <div className={`${styles.container} ${activeView === "list" && styles.listContainer} ${isLoading && "loadable"}`}>
+    <div className={`${styles.container} ${styles["testing"]} ${activeView === "list" && styles.listContainer} ${isLoading && "loadable"}`}>
       {/* select wrapper is for list view  */}
-      <div className={activeView === "list" && styles["list-item-wrapper"]}>
+      <div className={activeView === "list" && styles["list-item-wrapper"] && styles["testing"]}>
         {activeView === "list" ? (
           <div
             className={`${activeView === "list" && styles["list-select-icon"]} ${isSelected && styles["selected-wrapper"]
-              }`}
+              }` && styles["testing"]}
           >
             <IconClickable
               src={isSelected ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
               additionalClass={styles["select-icon"]}
               onClick={toggleSelected}
+
             />
           </div>
         ) : null}
@@ -291,8 +292,8 @@ const FolderGridItem = ({
           <div
             className={
               thumbnailPath || thumbnailExtension
-                ? `${styles.grid_border} ${activeView === "list" ? styles.grid_border_list : ""}`
-                : `${styles["image-wrapper"]} ${activeView === "list" ? styles["list-image-wrapper"] : ""}`
+                ? `${styles["testing"]}  ${styles.grid_border} ${activeView === "list" ? styles.grid_border_list : ""} `
+                : `${styles["testing"]} ${styles["image-wrapper"]} ${activeView === "list" ? styles["list-image-wrapper"] : ""}`
             }
             onClick={activeView === "list" && viewFolder}
           >

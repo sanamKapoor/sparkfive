@@ -47,18 +47,21 @@ const SubCollection = ({
   refreshVersion,
   loadMoreAssets,
   onCloseDetailOverlay,
+  selectableItemsRef,
+  elementsAssetContainerRef,
+  elementsFolderContainerRef
 }: any) => {
   const {
     setActiveSubFolders,
     subFoldersViewList: { results, next, total },
-    setSubFoldersViewList,
+    // setSubFoldersViewList,
     setSubFoldersAssetsViewList,
     subFoldersAssetsViewList: { results: assets, next: nextAsset, total: totalAssets },
     showSubCollectionContent,
     setShowSubCollectionContent,
     activeSubFolders,
-    setSelectedAllSubFoldersAndAssets,
-    setSelectedAllSubAssets,
+    // setSelectedAllSubFoldersAndAssets,
+    // setSelectedAllSubAssets,
   } = useContext(AssetContext);
   const [collectionHide, setCollectionHide] = useState(false);
   const [assetsHide, setAssetsHide] = useState(false);
@@ -69,27 +72,22 @@ const SubCollection = ({
   const [sortedAssets, currentSortAttribute, setCurrentSortAttribute] = useSortedAssets(assets);
   const [sortedFolders, currentSortFolderAttribute, setCurrentSortFolderAttribute] = useSortedAssets(results, "", true);
 
-  // new library air drag
-  const selectionArea = useRef(null);
-  const selectableItems = useRef<Box[]>([]);
-  const elementsAssetContainerRef = useRef<HTMLDivElement | null>(null);
-  const elementsContainerRef = useRef<HTMLDivElement | null>(null);
-
-
   //End of logic for Sorting in subCollection view
-
   const loadingAssetsFolders = assets.length > 0 && assets[assets.length - 1].isLoading;
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
     return () => {
       setActiveSubFolders("");
-      // setSubFoldersViewList({ results: [], next: 0, total: 0 });
       setSubFoldersAssetsViewList({ results: [], next: 0, total: 0 });
       setShowSubCollectionContent(false);
-      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    }
+  })
 
   //For handling the show subcollection checkbox button for collection change
   useEffect(() => {
@@ -145,83 +143,17 @@ const SubCollection = ({
     return isSticky ? { position: "fixed", width: "calc(100% - 350px)", top: bottom1, zIndex: 1200 } : {};
   }
 
-  //------Drag-Select-area-------Start======//
-  // Set the co-ordinates for the selected area of dragged area 
-  const onSelectionChange = (box) => {
-    if (elementsContainerRef.current) {
-      const containerRect = elementsContainerRef.current.getBoundingClientRect();
-      const scrollAwareBox = {
-        ...box,
-        top: box.top - containerRect.top,
-        left: box.left - containerRect.left
-      };
-      selectionArea.current = scrollAwareBox
-    }
-  };
-
-  // Toggling the state for the selectionall asset and collection 
-  const bulkToggle = async (idsToFind) => {
-    if (sortedFolders.length !== 0) {
-      setSelectedAllSubFoldersAndAssets(false)
-      setSelectedAllSubAssets(false)
-      const updatedFolders = results.map((folder, index) => {
-        // Check if the object's ID is in the idsToFind array
-        if (idsToFind.includes(folder.id)) {
-          return {
-            ...folder,
-            isSelected: true
-          };
-        }
-        return folder; // Return the original object for non-matching IDs
-      });
-      setSubFoldersAssetsViewList({
-        results: updatedFolders, next, total
-      });
-    }
-
-  }
-
-  //library initialization
-  const { DragSelection } = useSelectionContainer({
-    eventsElement: document.getElementById("__next"),
-    onSelectionChange,
-    onSelectionStart: () => { },
-    onSelectionEnd: () => {
-      const indexesToSelect: string[] = [];
-      selectableItems.current.forEach((item, index) => {
-        console.log(selectionArea.current)
-        if (boxesIntersect(selectionArea.current, item)) {
-          indexesToSelect.push(item.id);
-        }
-      })
-      if (indexesToSelect.length > 0) {
-        bulkToggle(indexesToSelect);
-      }
-    },
-    selectionProps: {
-      style: {
-        border: "2px dashed purple",
-        borderRadius: 4,
-        backgroundColor: "brown",
-        opacity: 0.5,
-      },
-    },
-    isEnabled: true,
-  });
-
   //Handle the selctable Item for the drag selct area at initial load and load more functionality 
   useEffect(() => {
-    if (elementsContainerRef.current && sortedFolders?.length) {
-      console.log(elementsContainerRef.current, "hello")
-      const containerRect = elementsContainerRef.current.getBoundingClientRect();
-      const liElements = elementsContainerRef.current.querySelectorAll('li');
-      console.log("🚀 ~ useEffect ~ liElements:", liElements)
-      selectableItems.current = new Array();
+    if (elementsFolderContainerRef.current && sortedFolders?.length && sortedAssets?.length === 0) {
+      const containerRect = elementsFolderContainerRef.current.getBoundingClientRect();
+      const liElements = elementsFolderContainerRef.current.querySelectorAll('li');
+      selectableItemsRef.current = new Array();
       Array.from(liElements).forEach((item) => {
         const { left, top, width, height } = item.getBoundingClientRect();
         const adjustedTop = top - containerRect.top;
         const adjustedLeft = left - containerRect.left;
-        if (item.id !== "") selectableItems.current.push({
+        if (item.id !== "") selectableItemsRef.current.push({
           left: adjustedLeft,
           top: adjustedTop,
           width,
@@ -229,30 +161,25 @@ const SubCollection = ({
           id: item.id,
         })
       })
-    };
-    // } else if (sortedAssets?.length && elementsAssetContainerRef.current) {
-    //   const containerRect = elementsAssetContainerRef.current.getBoundingClientRect();
-    //   const liElements = elementsAssetContainerRef.current.querySelectorAll('li');
-    //   console.log("🚀 ~ useEffect ~ liElements:", liElements)
-    //   selectableItems.current = new Array();
-    //   Array.from(liElements).forEach((item) => {
-    //     const { left, top, width, height } = item.getBoundingClientRect();
-    //     const adjustedTop = top - containerRect.top;
-    //     const adjustedLeft = left - containerRect.left;
-    //     if (item.id !== "") selectableItems.current.push({
-    //       left: adjustedLeft,
-    //       top: adjustedTop,
-    //       width,
-    //       height,
-    //       id: item.id,
-    //     })
-
-    //   });
-    // }
-
+    } else if (sortedAssets?.length && elementsAssetContainerRef.current) {
+      const containerRect = elementsAssetContainerRef.current.getBoundingClientRect();
+      const liElements = elementsAssetContainerRef.current.querySelectorAll('li');
+      selectableItemsRef.current = new Array();
+      Array.from(liElements).forEach((item) => {
+        const { left, top, width, height } = item.getBoundingClientRect();
+        const adjustedTop = top - containerRect.top;
+        const adjustedLeft = left - containerRect.left;
+        if (item.id !== "") selectableItemsRef.current.push({
+          left: adjustedLeft,
+          top: adjustedTop,
+          width,
+          height,
+          id: item.id,
+        })
+      });
+    }
   }, [sortedFolders?.length, activeView, sortedAssets?.length]);
   //------Drag-Select-area-------End======//
-
 
   return (
     <>
@@ -272,12 +199,12 @@ const SubCollection = ({
           </div>
         </div>
       )}
-      <DragSelection />
+      {/* <DragSelection /> */}
       {!collectionHide && (
         <>
           {/* list wrapper for list view */}
           {sortedFolders.length > 0 && (
-            <div className={`${styles["cardsWrapper"]} ${activeView === "list" && styles["list-wrapper"]}`} ref={elementsContainerRef} >
+            <div className={`${styles["cardsWrapper"]} ${activeView === "list" && styles["list-wrapper"]}`} ref={elementsFolderContainerRef} >
               {activeView === "list" && (
                 <FolderTableHeader activeView={activeView} setSortAttribute={setSortFolderAttribute} />
               )}
@@ -374,7 +301,7 @@ const SubCollection = ({
               }`}
             ref={elementsAssetContainerRef}
           >
-            {!assetsHide && (
+            {!assetsHide && sortedAssets.length && (
               <>
                 {activeView === "list" && (
                   <AssetTableHeader activeView={activeView} type={true} setSortAttribute={setSortAssetAttribute} />
@@ -388,6 +315,7 @@ const SubCollection = ({
                         onClick={(e) => handleFocusChange(e, assetItem.asset.id)}
                         ref={ref}
                         style={{ width: `$${widthCard}px` }}
+                        id={assetItem.asset.id}
                       >
                         <AssetThumbail
                           {...assetItem}
