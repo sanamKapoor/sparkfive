@@ -1,0 +1,167 @@
+.container{
+    padding: 24px;
+    width: 100%;
+    overflow-y: scroll;
+    padding-top: 0;
+}
+
+.avatar{
+    min-width: 40px;
+    max-width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 12px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar img{
+    width: 100%;
+    height: auto;
+}
+
+.icon{
+    width: 14px;
+    height: 14px;
+    margin-left: 16px;
+}
+
+.input{
+    min-height: auto;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.buttons button{
+    width: 100%
+}
+
+.option-item{
+    display: flex;
+    align-items: center;
+}
+
+.modal-root{
+    max-height: calc(100vh - 50%);
+    max-width: 470px;
+    min-width: 470px;
+}
+
+.container{
+    display: flex;
+    align-items: center;
+}
+
+.label {
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.dropdown {
+    position: absolute;
+    top: 1rem;
+}
+
+.dropdown-wrapper {
+    color: white;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.dropdown-list {
+    background-color: white;
+    border: 1px solid var(--color-secondary-border);
+    border-radius: 8px;
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 282px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.dropdown-list li {
+    text-align: left;
+    min-width: 150px;
+    display: flex;
+    cursor: pointer;
+    min-height: 28px;
+    align-items: center;
+    padding: 12px;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--primary-color)
+}
+
+
+.dropdown-list li a {
+    padding-left: 10px;
+    min-width: inherit;
+    display: inherit;
+}
+
+.dropdown-list li:hover {
+    background-color: var(--additional-color);
+}
+
+.user-dropdown li:hover {
+    background-color: white;
+}
+
+.dropdown-list li span {
+    display: inline-flex;
+    color: var(--primary-color);
+}
+
+
+.dropdown-list li span img {
+    width: 14px;
+    height: auto;
+}
+
+.operation-row{
+    display: flex;
+    align-items: center;
+}
+
+.first-item{
+    border-bottom: 1px solid #E5E5E5;
+}
+
+.user-item{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
+
+.user-row{
+    display: flex;
+    align-items: center;
+}
+
+.user-item svg{
+    width: 14px;
+}
+
+.img-text{
+    color: #AEB0C2;
+}
+
+.title{
+    font-size: 16px !important;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #E5E5E5;
+
+}

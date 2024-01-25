@@ -73,6 +73,10 @@
     margin-bottom: 15px;
 }
 
+.m-b-16{
+    margin-bottom: 16px;
+}
+
 .m-b-20{
     margin-bottom: 20px;
 }
@@ -95,6 +99,10 @@
 
 .m-r-5{
     margin-right: 5px;
+}
+
+.m-r-8{
+    margin-right: 8px;
 }
 
 .m-r-17{
@@ -128,6 +136,10 @@
 
 .m-l-5{
     margin-left: 5px;
+}
+
+.m-l-8{
+    margin-left: 8px;
 }
 
 .m-l-10{
