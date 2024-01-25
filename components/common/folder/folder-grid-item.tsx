@@ -34,10 +34,10 @@ const FolderGridItem = ({
   isLoading = false,
   deleteFolder,
   createdAt,
-  shareAssets = (folder: string) => { },
+  shareAssets = (folder: string) => {},
   changeThumbnail,
-  deleteThumbnail = (folder: string) => { },
-  copyShareLink = (folder: string) => { },
+  deleteThumbnail = (folder: string) => {},
+  copyShareLink = (folder: string) => {},
   toggleSelected,
   copyEnabled,
   sharePath = "",
@@ -52,9 +52,8 @@ const FolderGridItem = ({
   folderType,
   mode,
   childFolders,
-  parentId
+  parentId,
 }: any) => {
-
   const {
     updateDownloadingStatus,
     folders,
@@ -210,7 +209,8 @@ const FolderGridItem = ({
         if (mode === "SubCollectionView") {
           updatedAssets = filterFolderInList(SubFolders, data.data);
           setSubFoldersViewList({
-            next: next, total: total - 1,
+            next: next,
+            total: total - 1,
             results: updatedAssets,
           });
         } else {
@@ -240,7 +240,8 @@ const FolderGridItem = ({
         if (mode === "SubCollectionView") {
           updatedAssets = updateFolderInList(SubFolders, data.data);
           setSubFoldersViewList({
-            next: next, total: total,
+            next: next,
+            total: total,
             results: updatedAssets,
           });
         } else {
@@ -272,28 +273,36 @@ const FolderGridItem = ({
   };
 
   return (
-    <div className={`${styles.container} ${styles["testing"]} ${activeView === "list" && styles.listContainer} ${isLoading && "loadable"}`}>
+    <div
+      data-drag="false"
+      className={`${styles.container} ${activeView === "list" && styles.listContainer} ${isLoading && "loadable"}`}
+    >
       {/* select wrapper is for list view  */}
-      <div className={activeView === "list" && styles["list-item-wrapper"] && styles["testing"]}>
+      <div data-drag="false" className={activeView === "list" && styles["list-item-wrapper"]}>
         {activeView === "list" ? (
           <div
-            className={`${activeView === "list" && styles["list-select-icon"]} ${isSelected && styles["selected-wrapper"]
-              }` && styles["testing"]}
+            data-drag="false"
+            className={`${activeView === "list" && styles["list-select-icon"]} ${
+              isSelected && styles["selected-wrapper"]
+            }`}
           >
             <IconClickable
               src={isSelected ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
               additionalClass={styles["select-icon"]}
               onClick={toggleSelected}
-
             />
           </div>
         ) : null}
-        <div className={`${styles["main-border"]} ${activeView === "list" && styles["list-main-border"]}`}>
+        <div
+          data-drag="false"
+          className={`${styles["main-border"]} ${activeView === "list" && styles["list-main-border"]}`}
+        >
           <div
+            data-drag="false"
             className={
               thumbnailPath || thumbnailExtension
-                ? `${styles["testing"]}  ${styles.grid_border} ${activeView === "list" ? styles.grid_border_list : ""} `
-                : `${styles["testing"]} ${styles["image-wrapper"]} ${activeView === "list" ? styles["list-image-wrapper"] : ""}`
+                ? `${styles.grid_border} ${activeView === "list" ? styles.grid_border_list : ""} `
+                : `${styles["image-wrapper"]} ${activeView === "list" ? styles["list-image-wrapper"] : ""}`
             }
             onClick={activeView === "list" && viewFolder}
           >
@@ -347,10 +356,12 @@ const FolderGridItem = ({
             //   />
             // ) : (
             <span
+              data-drag="false"
               id="editable-preview"
               onClick={handleOnFocus}
-              className={`normal-text ${styles["wrap-text"]} ${activeView === "list" && styles["list-wrap-text"]} ${gridStyles["editable-preview"]
-                } ${activeView === "list" && styles["list-text"]}`}
+              className={`normal-text ${styles["wrap-text"]} ${activeView === "list" && styles["list-wrap-text"]} ${
+                gridStyles["editable-preview"]
+              } ${activeView === "list" && styles["list-text"]}`}
             >
               {thumbnailName}
             </span>
@@ -359,14 +370,19 @@ const FolderGridItem = ({
         </div>
       </div>
 
-      <div className={`${styles["details-wrapper"]} ${activeView === "list" && styles["list-detail-wrapper"]}`}>
+      <div
+        data-drag="false"
+        className={`${styles["details-wrapper"]} ${activeView === "list" && styles["list-detail-wrapper"]}`}
+      >
         {folderType === "SubCollection" ? (
           <div className="secondary-text">{`${assetsCount ?? 0} Asset${assetsCount !== 1 ? "s" : ""}`}</div>
         ) : (
-          <div className={styles["modified-date"]}>
-            {`${Number(assetsCount ?? 0) + Number(totalchildassests ?? 0)} Asset${Number(assetsCount ?? 0) + Number(totalchildassests ?? 0) !== 1 ? "s" : ""
-              } ${Number(totalchild) !== 0 ? `${totalchild ?? 0} Subcollection${Number(totalchild) !== 1 ? "s" : ""}` : ""
-              }`}
+          <div data-drag="false" className={styles["modified-date"]}>
+            {`${Number(assetsCount ?? 0) + Number(totalchildassests ?? 0)} Asset${
+              Number(assetsCount ?? 0) + Number(totalchildassests ?? 0) !== 1 ? "s" : ""
+            } ${
+              Number(totalchild) !== 0 ? `${totalchild ?? 0} Subcollection${Number(totalchild) !== 1 ? "s" : ""}` : ""
+            }`}
           </div>
         )}
       </div>
@@ -415,8 +431,9 @@ const FolderGridItem = ({
           setDeleteOpen(false);
         }}
         confirmText={"Delete"}
-        message={`Are you sure you want to delete this ${mode === "SubCollectionView" ? "Subcollection" : "Collection"
-          }?`}
+        message={`Are you sure you want to delete this ${
+          mode === "SubCollectionView" ? "Subcollection" : "Collection"
+        }?`}
         modalIsOpen={deleteOpen}
       />
     </div>

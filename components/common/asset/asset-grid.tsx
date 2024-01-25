@@ -735,7 +735,8 @@ const AssetGrid = ({
                     {sortedFolders.map((folder, index) => {
                       return (
                         <li
-                          className={`${styles["grid-item"]} ${styles["testing"]} `}
+                        data-drag="false"
+                          className={`${styles["grid-item"]}`}
                           id={folder.id}
                           key={folder.id || index}
                           onClick={(e) => handleFocusChange(e, folder.id)}
