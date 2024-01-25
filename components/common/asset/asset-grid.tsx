@@ -582,13 +582,13 @@ const AssetGrid = ({
   }, [render, mode]);
   const onDragStart = (evt) => {
     let element = evt.currentTarget;
-    console.log("🚀 ~ element:", element)
+    console.log("🚀 ~ element:", element, evt.currentTarget.id)
     // element.classList.add("dragged");
     // evt.dataTransfer.setData("text/plain", evt.currentTarget.id);
     // evt.dataTransfer.effectAllowed = "move";
   };
   const onDragEnd = (evt) => {
-    console.log("🚀 ~ onDragEnd ~ evt:", evt)
+    console.log("🚀 ~ onDragEnd ~ evt:", evt, evt.currentTarget.id)
     evt.currentTarget.classList.remove("dragged");
   };
   return (
@@ -736,14 +736,16 @@ const AssetGrid = ({
                       return (
                         <li
                           className={`${styles["grid-item"]} ${styles["testing"]} `}
-                          id={folder.id}
+                          id={folder.name}
                           key={folder.id || index}
                           onClick={(e) => handleFocusChange(e, folder.id)}
                           ref={ref}
                           style={{ width: `$${widthCard} px` }}
-                          draggable
+                          draggable={folder?.childFolders?.length > 0 ? false : true}
                           onDragStart={(e) => onDragStart(e)}
-                          onDragEnd={(e) => onDragEnd(e)}
+                          // onDragEnd={(e) => onDragEnd(e)}
+                          onDragOver={(ev) => ev.preventDefault()}
+                          onDrop={(e) => onDragEnd(e)}
                         >
                           <FolderGridItem
                             {...folder}
@@ -853,7 +855,7 @@ const AssetGrid = ({
             availableNext={nextPage !== -1}
           />
         )}
-      </section>
+      </section >
     </>
   );
 };
