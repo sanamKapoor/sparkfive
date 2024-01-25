@@ -125,6 +125,12 @@
     align-items: center;
     justify-content: center;
   }
+  .clear-sort{
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    margin-top: 15px;
+  }
   @media (min-width: 475px) and (max-width: 1280px) {
     .laptop-view {
       display: block;
