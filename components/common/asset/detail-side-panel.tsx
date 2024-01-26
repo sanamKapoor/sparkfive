@@ -43,7 +43,7 @@ interface Item {
 
 // Server DO NOT return full custom field slots including empty array, so we will generate empty array here
 // The order of result should be match with order of custom field list
-const SidePanel = ({ asset, isShare }: Props) => {
+const SidePanel = ({ asset, isShare, closeOverlay }: Props) => {
   const { createdAt, fileModifiedAt, extension, dimension, size, dpi } = asset;
 
   const {
@@ -108,7 +108,7 @@ const SidePanel = ({ asset, isShare }: Props) => {
               <div className={`normal-text ${styles["meta-text"]}`}>{fieldvalue.value}</div>
             </div>
           ))}
-          {asset.facialUser && <RecognitionUser user={asset.facialUser} />}
+          {asset.facialUser && <RecognitionUser user={asset.facialUser} onApplyFilter={closeOverlay} />}
         </div>
       </div>
     </>
@@ -118,6 +118,7 @@ const SidePanel = ({ asset, isShare }: Props) => {
 interface Props {
   asset: any;
   isShare: boolean;
+  closeOverlay: () => void;
 }
 
 export default SidePanel;

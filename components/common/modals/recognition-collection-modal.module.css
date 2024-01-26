@@ -1,9 +1,15 @@
+/*.container{*/
+/*    padding: 24px;*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    width: 100%;*/
+/*    justify-content: space-between;*/
+/*}*/
+
 .container{
     padding: 24px;
-    display: flex;
-    align-items: center;
     width: 100%;
-    justify-content: space-between;
+    overflow-y: scroll;
 }
 
 .avatar{
@@ -52,4 +58,26 @@
     max-height: calc(100vh - 50%);
     max-width: 470px;
     min-width: 470px;
+}
+
+.folder-right-icon {
+    transform: rotate(91deg);
+    margin-right: 5px;
+    width: 11px;
+    cursor: pointer;
+}
+.folder-normal-icon {
+    transform: rotate(0deg);
+    width: 11px;
+    cursor: pointer;
+}
+
+.folder-without-sub{
+    margin-left: 11px;
+}
+
+@media screen and (max-width: 600px) {
+    .modal-root{
+        min-width: 90%;
+    }
 }

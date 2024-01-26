@@ -146,6 +146,8 @@
 .user-row{
     display: flex;
     align-items: center;
+    width: 100%;
+    position: relative;
 }
 
 .user-item svg{
@@ -156,6 +158,12 @@
     color: #AEB0C2;
 }
 
+.img-input-text{
+    color: #AEB0C2;
+    position: absolute;
+    right: 16px;
+}
+
 .title{
     font-size: 16px !important;
     color: var(--primary-color);
@@ -164,4 +172,17 @@
     justify-content: space-between;
     border-bottom: 1px solid #E5E5E5;
 
+}
+
+.input{
+    width: auto;
+    min-height: auto;
+    flex-grow: 1;
+    padding-right: 88px;
+}
+
+@media screen and (max-width: 600px) {
+    .modal-root{
+        min-width: 90%;
+    }
 }

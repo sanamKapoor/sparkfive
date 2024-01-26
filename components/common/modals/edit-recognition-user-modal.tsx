@@ -17,7 +17,11 @@ interface ConfirmModalProps {
 const EditRecognitionUserModal: React.FC<ConfirmModalProps> = ({ open, onClose, onSave, user = {} }) => {
   const { name, faceBase64Image } = user;
 
-  const [inputName, setInputName] = useState(name || "");
+  const [inputName, setInputName] = useState(name || "Unnamed");
+
+  useEffect(() => {
+    setInputName(user.name || "Unnamed");
+  }, [user]);
   return (
     <Base modalIsOpen={open} closeModal={onClose} headText={"Name this Person"} subText={""}>
       <div className={`${editRecognitionUserStyles.container} ${editRecognitionUserStyles.row}`}>

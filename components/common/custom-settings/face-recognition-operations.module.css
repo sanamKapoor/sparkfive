@@ -1,6 +1,7 @@
 .container{
   display: flex;
   align-items: center;
+  width: 50%
 }
 
 .label {
@@ -113,5 +114,8 @@
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid #E5E5E5;
+}
 
+.select-icon{
+  cursor: pointer;
 }

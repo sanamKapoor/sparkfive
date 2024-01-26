@@ -80,7 +80,7 @@ const mappingCustomFieldData = (list, valueList) => {
   return rs;
 };
 
-const AttributeSidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
+const FolderSidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => {
   const {
     id,
     createdAt,
@@ -504,274 +504,176 @@ const AttributeSidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => 
   return (
     <>
       <div className={` ${!isShare ? styles.fieldWrapper : styles.shareWrapper}`}>
-        <h2 className={styles["details-heading"]}>Attributes</h2>
+        <h2 className={styles["details-heading"]}>Collections</h2>
 
         {(!isShare || (isShare && asset.displayAttributes)) && (
           <>
-            {!hideFilterElements.campaigns && (
-              <div className={styles["field-wrapper"]}>
-                <CreatableSelect
-                  title="Campaigns"
-                  addText="Add to Campaign"
-                  onAddClick={() => setActiveDropdown("campaigns")}
-                  selectPlaceholder={"Enter a new campaign or select an existing one"}
-                  avilableItems={inputCampaigns}
-                  setAvailableItems={setInputCampaigns}
-                  selectedItems={assetCampaigns}
-                  setSelectedItems={(value) => {
-                    setIsLoading(false);
-                    setCampaigns(value);
-                  }}
-                  onAddOperationFinished={(stateUpdate) => {
-                    updateAssetState({
-                      campaigns: { $set: stateUpdate },
-                    });
-                    loadCampaigns();
-                  }}
-                  onRemoveOperationFinished={async (index, stateUpdate) => {
-                    setIsLoading(true);
-
-                    await assetApi.removeCampaign(id, assetCampaigns[index].id);
-                    updateAssetState({
-                      campaigns: { $set: stateUpdate },
-                    });
-
-                    setIsLoading(false);
-                  }}
-                  onOperationFailedSkipped={() => setActiveDropdown("")}
-                  isShare={isShare}
-                  asyncCreateFn={(newItem) => {
-                    setIsLoading(true);
-                    return assetApi.addCampaign(id, newItem);
-                  }}
-                  dropdownIsActive={activeDropdown === "campaigns"}
-                  altColor="yellow"
-                />
-              </div>
-            )}
-
-            <div className={styles["field-wrapper"]}>
-              <CreatableSelect
-                title="Tags"
-                addText="Add Tags"
-                onAddClick={() => setActiveDropdown("tags")}
-                selectPlaceholder={"Enter a New Tag or Existing One"}
-                avilableItems={availNonAiTags}
-                setAvailableItems={setAvailNonAiTags}
-                selectedItems={nonAiTags}
-                setSelectedItems={(value) => {
-                  setIsLoading(false);
-                  setNonAiTags(value);
-                }}
-                onAddOperationFinished={(stateUpdate) => {
-                  updateAssetState({
-                    tags: { $set: stateUpdate.concat(aiTags) },
-                  });
-                  loadTags({ includeAi: true });
-                }}
-                onRemoveOperationFinished={async (index, stateUpdate) => {
-                  setIsLoading(true);
-
-                  await assetApi.removeTag(id, nonAiTags[index].id);
-                  updateAssetState({
-                    tags: { $set: stateUpdate.concat(aiTags) },
-                  });
-
-                  setIsLoading(false);
-                }}
-                onOperationFailedSkipped={() => setActiveDropdown("")}
-                isShare={isShare}
-                asyncCreateFn={(newItem) => {
-                  setIsLoading(true);
-                  return assetApi.addTag(id, { ...newItem, type: "regular" });
-                }}
-                dropdownIsActive={activeDropdown === "tags"}
-                sortDisplayValue={true}
-              />
-            </div>
-
-            {advancedConfig.aiTagging && ["png", "jpg", "jpeg"].indexOf(asset.extension.toLowerCase()) > -1 && (
-              <div className={styles["field-wrapper"]}>
-                <CreatableSelect
-                  title="AI Tags"
-                  addText="Add AI Tags"
-                  type="AI"
-                  creatable={false}
-                  onAddClick={() => setActiveDropdown("ai-tags")}
-                  selectPlaceholder={"Select an existing one"}
-                  avilableItems={availAiTags}
-                  setAvailableItems={setAvailNonAiTags}
-                  selectedItems={aiTags}
-                  setSelectedItems={(value) => {
-                    setIsLoading(false);
-                    setAiTags(value);
-                  }}
-                  onAddOperationFinished={(stateUpdate) => {
-                    updateAssetState({
-                      tags: { $set: stateUpdate.concat(nonAiTags) },
-                    });
-                    loadTags({ includeAi: true });
-                  }}
-                  onRemoveOperationFinished={async (index, stateUpdate) => {
-                    setIsLoading(true);
-
-                    await assetApi.removeTag(id, aiTags[index].id);
-                    updateAssetState({
-                      tags: { $set: stateUpdate.concat(nonAiTags) },
-                    });
-
-                    setIsLoading(false);
-                  }}
-                  onOperationFailedSkipped={() => setActiveDropdown("")}
-                  isShare={isShare}
-                  asyncCreateFn={(newItem) => {
-                    setIsLoading(true);
-
-                    return assetApi.addTag(id, { ...newItem, type: "AI" });
-                  }}
-                  dropdownIsActive={activeDropdown === "ai-tags"}
-                  sortDisplayValue={true}
-                />
-              </div>
-            )}
-
-            {inputCustomFields.map((field, index) => {
-              if (field.type === "selectOne") {
-                return (
-                  <div className={`${styles["field-wrapper"]} ${styles["cus-dropdown"]}`} key={index}>
-                    <div className={`secondary-text ${styles.field}`}>{field.name}</div>
-                    <CustomFieldSelector
-                      data={assetCustomFields[index]?.values[0]?.name}
-                      options={field.values}
-                      isShare={isShare}
-                      onLabelClick={() => {}}
-                      handleFieldChange={(option) => {
-                        onChangeSelectOneCustomField(option, index);
-                      }}
-                    />
-                  </div>
-                );
-              }
-
-              if (field.type === "selectMultiple") {
-                return (
-                  <div className={styles["field-wrapper"]} key={index}>
-                    <CreatableSelect
-                      creatable={false}
-                      title={field.name}
-                      addText={`Add ${field.name}`}
-                      onAddClick={() => setActiveCustomField(index)}
-                      selectPlaceholder={"Select an existing one"}
-                      avilableItems={field.values}
-                      setAvailableItems={() => {}}
-                      selectedItems={
-                        assetCustomFields.filter((assetField) => assetField.id === field.id)[0]?.values || []
-                      }
-                      setSelectedItems={(data) => {
-                        onChangeCustomField(index, data);
-                      }}
-                      onAddOperationFinished={(stateUpdate) => {
-                        updateAssetState({
-                          customs: {
-                            [index]: { values: { $set: stateUpdate } },
-                          },
-                        });
-                      }}
-                      onRemoveOperationFinished={async (itemIndex, stateUpdate, removeId) => {
-                        setIsLoading(true);
-
-                        await assetApi.removeCustomFields(id, removeId);
-
-                        updateAssetState({
-                          customs: {
-                            [index]: { values: { $set: stateUpdate } },
-                          },
-                        });
-
-                        setIsLoading(false);
-                      }}
-                      onOperationFailedSkipped={() => setActiveCustomField(undefined)}
-                      isShare={isShare}
-                      asyncCreateFn={(newItem) => {
-                        // Show loading
-                        setIsLoading(true);
-                        return assetApi.addCustomFields(id, {
-                          ...newItem,
-                          folderId: activeFolder,
-                        });
-                      }}
-                      dropdownIsActive={activeCustomField === index}
-                      sortDisplayValue={true}
-                    />
-                  </div>
-                );
-              }
-            })}
-
             {/**
              * new component
              */}
-
-            {!hideFilterElements.products && (
-              <>
-                <div className={styles["field-wrapper"]}>
-                  <div className={`secondary-text ${styles.field}`}>Products</div>
+            <div className={styles["field-wrapper"]}>
+              {
+                <div className={`${styles["tag-container-wrapper"]}`}>
+                  {[...completeSelectedFolder.entries()].map(([key, value], index) => (
+                    <div className={`${styles["tag-container"]}`} key={index}>
+                      <span>{value.name}</span>
+                      <IconClickable
+                        additionalClass={styles.remove}
+                        src={Utilities.closeTag}
+                        onClick={() => toggleSelected(key, !selectedFolder.includes(key), false, "", value.name)}
+                      />
+                    </div>
+                  ))}
                 </div>
-
-                {productList &&
-                  productList.map((product, index) => {
-                    return (
-                      <div className={styles["product-wrapper"]} key={index}>
-                        <ProductAddition
-                          noTitle
-                          skuActiveDropdownValue={`sku-${index}`}
-                          productFieldActiveDropdownValue={`product_field-${index}`}
-                          productVendorActiveDropdownValue={`product_vendor-${index}`}
-                          productCategoryActiveDropdownValue={`product_category-${index}`}
-                          productRetailerActiveDropdownValue={`product_retailer-${index}`}
-                          FieldWrapper={({ children }) => <div className={styles["field-wrapper"]}>{children}</div>}
-                          isShare={isShare || !hasPermission([ASSET_EDIT])}
-                          activeDropdown={activeDropdown}
-                          setActiveDropdown={(value) => {
-                            setActiveDropdown(`${value}-${index}`);
-                          }}
-                          assetId={id}
-                          onAdd={(item) => {
-                            let arr = [...products];
-                            arr.push(item);
-                            updateAssetState({
-                              products: { $set: arr },
-                            });
-                          }}
-                          onDelete={() => {
-                            let arr = [...products];
-                            arr.splice(index, 1);
-                            updateAssetState({
-                              products: { $set: arr },
-                            });
-                          }}
-                          // updateAssetState={updateAssetState}
-                          product={product}
-                        />
-                      </div>
-                    );
-                  })}
-
-                {!isShare && hasPermission([ASSET_EDIT]) && (
-                  <div className={`add ${styles["select-add"]}`} onClick={addProductBlock}>
-                    <IconClickable src={Utilities.add} />
-                    <span className={"normal-text"}>Add Product</span>
+              }
+              {hasPermission([ASSET_EDIT]) && (activeDropdown === "" || activeDropdown !== "collections") && (
+                <div className={`add ${styles["select-add"]}`} onClick={() => setActiveDropdown("collections")}>
+                  <IconClickable src={Utilities.addLight} />
+                  <span>{"Add to Collections"}</span>
+                </div>
+              )}
+              {hasPermission([ASSET_EDIT]) && activeDropdown === "collections" && (
+                <div className={`${styles["edit-bulk-outer-wrapper"]}`}>
+                  <div className={`${styles["close-popup"]}`}>
+                    {" "}
+                    <IconClickable
+                      additionalClass={styles.remove}
+                      src={Utilities.closeTag}
+                      onClick={() => setActiveDropdown("")}
+                    />
                   </div>
-                )}
-
-                <ProjectCreationModal
-                  initialValue={newProjectName}
-                  closeModal={() => setNewProjectName("")}
-                  confirmCreation={addNewProject}
-                  modalIsOpen={newProjectName ? true : false}
-                />
-              </>
-            )}
+                  <div className={`${styles["search-btn"]}`}>
+                    <SearchModal filteredData={filteredData} input={input} setInput={setInput} />
+                  </div>
+                  <div className={`${styles["modal-heading"]}`}>
+                    <span>Collection</span>
+                  </div>
+                  <div className={`${styles["outer-wrapper"]}`}>
+                    {folders.map((folder, index) => (
+                      <div key={index}>
+                        <div className={`${styles["flex"]} ${styles.nestedbox}`}>
+                          {folder?.childFolders?.length > 0 ? (
+                            <div
+                              className={`${styles["height"]} ${styles["flex"]}`}
+                              onClick={() => {
+                                toggleDropdown(folder.id, true);
+                              }}
+                            >
+                              <img
+                                className={showDropdown.includes(folder.id) ? styles.iconClick : styles.rightIcon}
+                                src={Utilities.caretRightSolid}
+                                alt="Right Arrow Icon"
+                                onClick={() => {
+                                  toggleDropdown(folder.id, true);
+                                }}
+                              />
+                            </div>
+                          ) : (
+                            <div className={styles.emptyBox}></div>
+                          )}
+                          <div className={styles.w100}>
+                            <div
+                              className={`${styles["dropdownMenu"]} ${
+                                selectedFolder.includes(folder.id) ? styles["active"] : ""
+                              }`}
+                            >
+                              <div className={styles.flex}>
+                                <div
+                                  className={`${styles.circle} ${
+                                    selectedFolder.includes(folder.id) ? styles.checked : ""
+                                  }`}
+                                  onClick={() =>
+                                    toggleSelected(
+                                      folder.id,
+                                      !selectedFolder.includes(folder.id),
+                                      false,
+                                      "",
+                                      folder.name,
+                                    )
+                                  }
+                                >
+                                  {selectedFolder.includes(folder.id) && <img src={Utilities.checkIcon} />}
+                                </div>
+                                <div className={styles["icon-descriptions"]} title={folder.name}>
+                                  <span>{folder.name}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {showDropdown.includes(folder.id) && (
+                          <div className={styles.folder}>
+                            <div className={styles.subfolderList}>
+                              {keyExists(folder.id) &&
+                                (keyResultsFetch(folder.id, "record") as Item[]).map(
+                                  ({ id, name, parentId, ...rest }) => (
+                                    <>
+                                      <div
+                                        key={id}
+                                        className={styles.dropdownOptions}
+                                        onClick={() =>
+                                          toggleSelected(
+                                            id,
+                                            !selectedFolder.includes(id),
+                                            true,
+                                            folder.id,
+                                            name,
+                                            parentId,
+                                          )
+                                        }
+                                      >
+                                        <div className={styles["folder-lists"]}>
+                                          <div className={styles.dropdownIcons}>
+                                            <div
+                                              className={`${styles.circle} ${
+                                                selectedFolder.includes(id) ? styles.checked : ""
+                                              }`}
+                                            >
+                                              {selectedFolder.includes(id) && <img src={Utilities.checkIcon} />}
+                                            </div>
+                                            <div className={styles["icon-descriptions"]} title={folder.name}>
+                                              <span>{name}</span>
+                                            </div>
+                                          </div>
+                                          <div className={styles["list1-right-contents"]}>
+                                            {selectedFolder.includes(id) && <span></span>}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </>
+                                  ),
+                                )}
+                              {keyExists(folder.id) && (keyResultsFetch(folder.id, "next") as number) >= 0 && (
+                                <div className={`${styles["outer-load-wrapper"]}`}>
+                                  <div
+                                    className={`${styles["load-wrapper"]}`}
+                                    onClick={() => {
+                                      getSubFolders(folder.id, keyResultsFetch(folder.id, "next") as number, false);
+                                    }}
+                                  >
+                                    <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} />
+                                    <button className={styles.loadMore}>
+                                      {subFolderLoadingState.get(folder.id) ? "Loading..." : "Load More"}
+                                    </button>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  <div className={styles["modal-btns"]}>
+                    <Button
+                      className="container secondary bulk-edit-btn"
+                      text="Close"
+                      onClick={() => setActiveDropdown("")}
+                    ></Button>
+                  </div>
+                </div>
+              )}
+            </div>
           </>
         )}
       </div>
@@ -779,4 +681,4 @@ const AttributeSidePanel = ({ asset, updateAsset, setAssetDetail, isShare }) => 
   );
 };
 
-export default AttributeSidePanel;
+export default FolderSidePanel;

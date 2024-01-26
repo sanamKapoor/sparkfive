@@ -2,6 +2,7 @@ import ViewGrid from "./Icons/Utilities/View Grid";
 import ViewList from "./Icons/Utilities/View List";
 import More from "./Icons/Utilities/More";
 import Delete from "./Icons/Utilities/Delete";
+import DeleteGray from "./Icons/Utilities/DeleteGray/DeleteGray";
 import Info from "./Icons/Utilities/Information";
 import InfoGray from "./Icons/Utilities/Information/gray";
 import CommentGray from "./Icons/Utilities/Comments/CommentGray";
@@ -126,6 +127,7 @@ export const Utilities = {
   editLight: require("./Icons/Utilities/Description-Edit/icn-utilities-description_edit-light.svg"),
   editWhite: require("./Icons/Utilities/Description-Edit/icn-utilities-description_edit-fill-white.svg"),
   delete: Delete,
+  deleteGray: DeleteGray,
   add: require("./Icons/Utilities/Add +/icn-utilities-add+.svg"),
   addLight: require("./Icons/Utilities/Add +/icn-utilities-add+light.svg"),
   addWhite: require("./Icons/Utilities/Add +/icn-utilities-add+white.svg"),

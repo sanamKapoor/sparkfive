@@ -29,11 +29,11 @@ export default function FaceRecognitionOperations() {
 
   return (
     <div className={styles.container}>
-      <span className={`${styles.label} m-r-8`}>Face recognition</span>
+      <span className={`${styles.label} m-r-8`}>Facial recognition</span>
       <ToggleableAbsoluteWrapper
         wrapperClass={styles["dropdown-wrapper"]}
         Wrapper={({ children }) => (
-          <div className={"m-r-8 cursor-pointer"}>
+          <div className={"m-r-8 cursor-pointer d-flex align-items-center"}>
             <IconClickable SVGElement={Utilities.run} additionalClass={styles["select-icon"]} onClick={() => {}} />
             {children}
           </div>
@@ -47,14 +47,14 @@ export default function FaceRecognitionOperations() {
             </li>
             <li className={styles["operation-row"]} onClick={onRunSpecificCollection}>
               <IconClickable SVGElement={Utilities.run} additionalClass={styles["select-icon"]} />
-              <div className={"m-l-8"}>Run recognition in a specific collections</div>
+              <div className={"m-l-8"}>Run recognition in a specific collection(s)</div>
             </li>
           </ul>
         )}
       />
 
       <div
-        className={"m-r-8 cursor-pointer"}
+        className={"m-r-8 cursor-pointer d-flex align-items-center"}
         onClick={() => {
           setShowUserList(true);
         }}

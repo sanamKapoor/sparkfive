@@ -71,7 +71,10 @@ const Automations = () => {
         <h3>Automations</h3>
 
         <div className={styles.row}>
-          <span className={styles.label}>AI Tagging</span>
+          <div className={styles["label-wrapper"]}>
+            <span className={styles.label}>AI Tagging</span>
+          </div>
+
           <div className={styles["field-radio-wrapper"]}>
             <div className={styles.radio}>
               <div>On</div>
@@ -92,7 +95,7 @@ const Automations = () => {
           </div>
         </div>
 
-        <div className={styles.row}>
+        <div className={`${styles.row} ${styles["no-border"]}`}>
           <FaceRecognitionOperations />
           <div className={styles["field-radio-wrapper"]}>
             <div className={styles.radio}>

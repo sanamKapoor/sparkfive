@@ -2,10 +2,12 @@
     padding: 24px;
     width: 100%;
     overflow-y: scroll;
+    padding-top: 0;
 }
 
 .row{
     display: flex;
+    padding-top: 24px;
 }
 
 .avatar{

@@ -12,6 +12,7 @@ import AssetAddition from "./asset-addition";
 import styles from "./detail-overlay.module.css";
 import VersionList from "./version-list";
 import AttributeSidePanel from "./attribute-side-panel";
+import FolderSidePanel from "./folder-side-panel";
 
 import { isMobile } from "react-device-detect";
 
@@ -977,6 +978,7 @@ const DetailOverlay = ({
       }
     }
   };
+
   return (
     <div className={`app-overlay ${styles.container} ${isShare ? styles.share : ""}`}>
       {assetDetail && (
@@ -1276,6 +1278,7 @@ const DetailOverlay = ({
                   updateAsset={updateAsset}
                   setAssetDetail={setAssetDetail}
                   isShare={isShare}
+                  closeOverlay={closeOverlay}
                 />
               )}
             </>
@@ -1284,6 +1287,19 @@ const DetailOverlay = ({
             <>
               {mode === "detail" && (
                 <AttributeSidePanel
+                  asset={assetDetail}
+                  updateAsset={updateAsset}
+                  setAssetDetail={setAssetDetail}
+                  isShare={isShare}
+                />
+              )}
+            </>
+          )}
+
+          {assetDetail && activeSideComponent === "folder" && (
+            <>
+              {mode === "detail" && (
+                <FolderSidePanel
                   asset={assetDetail}
                   updateAsset={updateAsset}
                   setAssetDetail={setAssetDetail}
@@ -1405,8 +1421,8 @@ const DetailOverlay = ({
             <>
               <div className={`${styles.separator} ${styles.expand}`}></div>
               <IconClickable
-                SVGElement={Utilities.delete}
-                additionalClass={styles["menu-icon"] + " " + styles["only-desktop-button"]}
+                SVGElement={isMobile ? Utilities.deleteGray : Utilities.delete}
+                additionalClass={styles["menu-icon"]}
                 onClick={openDeleteAsset}
               />
             </>
@@ -1414,7 +1430,9 @@ const DetailOverlay = ({
           <div className={styles.separator + " " + styles["only-desktop-button"]}></div>
           <IconClickable
             SVGElement={isMobile ? Utilities.infoGray : Utilities.info}
-            additionalClass={styles["menu-icon"]}
+            additionalClass={`${styles["menu-icon"]} ${
+              activeSideComponent !== "detail" ? styles["selected-menu"] : ""
+            }`}
             onClick={() => {
               setMode("detail");
               resetValues();
@@ -1422,24 +1440,34 @@ const DetailOverlay = ({
             }}
           />
           <IconClickable
-            SVGElement={isMobile ? Utilities.infoGray : Utilities.tags}
-            additionalClass={styles["menu-icon"]}
+            SVGElement={isMobile ? Utilities.tags : Utilities.tags}
+            additionalClass={`${styles["menu-icon"]} ${
+              activeSideComponent !== "attributes" ? styles["selected-menu"] : ""
+            }`}
             onClick={() => {
               setMode("detail");
               resetValues();
               changeActiveSide("attributes");
             }}
           />
+          <IconClickable
+            SVGElement={isMobile ? AssetOps.move : AssetOps.move}
+            additionalClass={`${styles["menu-icon"]} ${
+              activeSideComponent !== "folder" ? styles["selected-menu"] : ""
+            }`}
+            onClick={() => {
+              setMode("detail");
+              resetValues();
+              changeActiveSide("folder");
+            }}
+          />
           {!isShare && (
             <>
               <IconClickable
-                src={Utilities.tagGray}
-                additionalClass={styles["menu-icon"] + " " + styles["only-mobile-button"]}
-                onClick={() => {}}
-              />
-              <IconClickable
                 SVGElement={isMobile ? Utilities.commentLight : Utilities.comment}
-                additionalClass={styles["menu-icon"]}
+                additionalClass={`${styles["menu-icon"]} ${
+                  activeSideComponent !== "comments" ? styles["selected-menu"] : ""
+                }`}
                 onClick={() => {
                   setMode("detail");
                   resetValues();
@@ -1459,7 +1487,9 @@ const DetailOverlay = ({
                 <IconClickable
                   // src={Utilities.embedCdn}
                   SVGElement={isMobile ? Utilities.embedCdnGrey : Utilities.embedCdn}
-                  additionalClass={styles["menu-icon"] + " " + styles["cdn-icon"]}
+                  additionalClass={`${styles["menu-icon"]} ${
+                    activeSideComponent !== "cdn" ? styles["selected-menu"] : ""
+                  }`}
                   onClick={() => {
                     setMode("detail");
                     resetValues();
@@ -1470,7 +1500,9 @@ const DetailOverlay = ({
               {editThenDownload && hasPermission([ASSET_DOWNLOAD]) && (
                 <IconClickable
                   SVGElement={AssetOps.download}
-                  additionalClass={styles["menu-icon"] + " " + styles["only-desktop-button"]}
+                  additionalClass={`${styles["menu-icon"]} ${
+                    activeSideComponent !== "download" ? styles["selected-menu"] : ""
+                  }`}
                   onClick={() => {
                     if (currentAsset.type === "image" && isImageType(currentAsset.extension)) {
                       if (mode !== "resize" && mode !== "crop") {
@@ -1487,7 +1519,9 @@ const DetailOverlay = ({
 
               <IconClickable
                 SVGElement={isMobile ? Utilities.relatedLight : Utilities.related}
-                additionalClass={styles["menu-icon"]}
+                additionalClass={`${styles["menu-icon"]} ${
+                  activeSideComponent !== "related" ? styles["selected-menu"] : ""
+                }`}
                 onClick={() => {
                   setMode("detail");
                   resetValues();
@@ -1497,7 +1531,9 @@ const DetailOverlay = ({
               {hasPermission(["admin", "super_admin"]) && (
                 <IconClickable
                   SVGElement={isMobile ? Utilities.notesLight : Utilities.notes}
-                  additionalClass={styles["menu-icon"]}
+                  additionalClass={`${styles["menu-icon"]} ${
+                    activeSideComponent !== "notes" ? styles["selected-menu"] : ""
+                  }`}
                   onClick={() => {
                     setMode("detail");
                     resetValues();
@@ -1509,7 +1545,9 @@ const DetailOverlay = ({
               {hasPermission(["admin", "super_admin"]) && versionCount > 0 && (
                 <IconClickable
                   SVGElement={isMobile ? Utilities.versionsLight : Utilities.versions}
-                  additionalClass={styles["menu-icon"]}
+                  additionalClass={`${styles["menu-icon"]} ${
+                    activeSideComponent !== "versions" ? styles["selected-menu"] : ""
+                  }`}
                   onClick={() => {
                     setMode("detail");
                     resetValues();
@@ -1522,7 +1560,9 @@ const DetailOverlay = ({
           {transcriptAccess && assetDetail?.type === "video" && (
             <IconClickable
               SVGElement={Utilities.transcript}
-              additionalClass={styles[""]}
+              additionalClass={`${styles["menu-icon"]} ${
+                activeSideComponent !== "transcript" ? styles["selected-menu"] : ""
+              }`}
               onClick={() => {
                 setMode("detail");
                 resetValues();
