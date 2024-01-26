@@ -19,7 +19,14 @@ export default function FaceRecognitionOperations() {
 
   const onRunEntireAccount = async () => {
     setFaceRecognitionScanning(true);
-    await recognitionApi.bulkRecognitionAll();
+    const { data } = await recognitionApi.bulkRecognitionAll();
+
+    // Set response data
+    setFaceBulkEditList(data?.unnameFace || []);
+
+    // Show bulk edit list
+    setShowBulkEditListModal(true);
+
     setFaceRecognitionScanning(false);
   };
 
